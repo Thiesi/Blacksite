@@ -3,7 +3,7 @@
 **Status:** planned
 **Primary model:** Opus · **Reviewer:** Astra (independent read of the profiling conclusions)
 **Depends on:** S15, S22 · **Milestone:** M6
-**Issue:** (filled in when filed)
+**Issue:** https://github.com/Thiesi/blacksite/issues/29
 
 ## Goal
 

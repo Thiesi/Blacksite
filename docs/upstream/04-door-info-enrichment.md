@@ -1,6 +1,6 @@
 # 04 — Enrich `door_info.json`
 
-**NetBBS issue:** (to be filled in when filed)
+**NetBBS issue:** https://github.com/Thiesi/NetBBS/issues/469
 **Blocks:** nothing hard. Blacksite S04 reads what exists; S32 (federation readiness) wants the node identity field.
 **Recommended model for the NetBBS side:** Sonnet (a few fields in `_write_door_info`, the door guide's metadata table, and tests).
 

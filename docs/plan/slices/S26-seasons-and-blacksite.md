@@ -3,7 +3,7 @@
 **Status:** planned
 **Primary model:** Opus · **Reviewer:** Fable (level design and finale review before merge)
 **Depends on:** S21, S19, S24 · **Milestone:** M5
-**Issue:** (filled in when filed)
+**Issue:** https://github.com/Thiesi/blacksite/issues/26
 
 ## Goal
 

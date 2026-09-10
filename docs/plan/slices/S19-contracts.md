@@ -3,7 +3,7 @@
 **Status:** planned
 **Primary model:** Opus (engine) · **Reviewer:** Gemini or Sonnet writes the content half from the world docs; Opus reviews it
 **Depends on:** S11, S14 · **Milestone:** M3
-**Issue:** (filled in when filed)
+**Issue:** https://github.com/Thiesi/blacksite/issues/19
 
 ## Goal
 

@@ -3,7 +3,7 @@
 **Status:** planned
 **Primary model:** Opus · **Reviewer:** Sonnet (test pass)
 **Depends on:** S10 · **Milestone:** M1
-**Issue:** (filled in when filed)
+**Issue:** https://github.com/Thiesi/blacksite/issues/11
 
 ## Goal
 

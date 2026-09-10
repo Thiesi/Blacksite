@@ -3,7 +3,7 @@
 **Status:** planned
 **Primary model:** Sonnet · **Reviewer:** Opus (backup/restore and migrations)
 **Depends on:** S05, S16 · **Milestone:** M6
-**Issue:** (filled in when filed)
+**Issue:** https://github.com/Thiesi/blacksite/issues/28
 
 ## Goal
 

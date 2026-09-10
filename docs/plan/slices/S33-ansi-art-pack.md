@@ -3,7 +3,7 @@
 **Status:** planned
 **Primary model:** Opus (composition and `.ans` authoring) · Sonnet (sidecars, loader, fallbacks) · **Reviewer:** Human (view every piece on a real terminal at three tiers)
 **Depends on:** S04 · **Milestone:** M6
-**Issue:** (filled in when filed)
+**Issue:** https://github.com/Thiesi/blacksite/issues/33
 
 ## Goal
 

@@ -1,6 +1,6 @@
 # 01 — Door services: a supervised long-lived companion process per door
 
-**NetBBS issue:** (to be filled in when filed)
+**NetBBS issue:** https://github.com/Thiesi/NetBBS/issues/466
 **Blocks:** Blacksite S31 (target integration). S05 ships the interim path.
 **Recommended model for the NetBBS side:** Opus 5 (touches `netbbs.doors.runtime`, the SysOp door screens, shutdown ordering, and NetBSD rc.d behaviour; needs the shutdown-hang lessons from PRs #228/#283).
 

@@ -3,7 +3,7 @@
 **Status:** planned
 **Primary model:** Sonnet · **Reviewer:** Opus (map review of the hub zones)
 **Depends on:** S06 · **Milestone:** M1
-**Issue:** (filled in when filed)
+**Issue:** https://github.com/Thiesi/blacksite/issues/8
 
 ## Goal
 

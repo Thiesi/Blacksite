@@ -1,6 +1,6 @@
 # 06 — Third-party door install path: interpreter-module preset and guide section
 
-**NetBBS issue:** (to be filled in when filed)
+**NetBBS issue:** https://github.com/Thiesi/NetBBS/issues/471
 **Blocks:** nothing. Blacksite S31 documents the manual path either way.
 **Recommended model for the NetBBS side:** Sonnet (a preset JSON, a door-guide section, and a Gallery-adjacent hint).
 

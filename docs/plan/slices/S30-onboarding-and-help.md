@@ -3,7 +3,7 @@
 **Status:** planned
 **Primary model:** Sonnet · **Reviewer:** Human (a first-time player pass by the user)
 **Depends on:** S07, S09 · **Milestone:** M6
-**Issue:** (filled in when filed)
+**Issue:** https://github.com/Thiesi/blacksite/issues/30
 
 ## Goal
 

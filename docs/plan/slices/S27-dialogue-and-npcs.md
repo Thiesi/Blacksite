@@ -3,7 +3,7 @@
 **Status:** planned
 **Primary model:** Sonnet (engine) · Gemini or Sonnet (content) · **Reviewer:** Sonnet reads every talker file; Opus reads the ten fixed-cast files
 **Depends on:** S19 · **Milestone:** M5
-**Issue:** (filled in when filed)
+**Issue:** https://github.com/Thiesi/blacksite/issues/27
 
 ## Goal
 

@@ -1,6 +1,6 @@
 # 02 — Per-door CPU and wall-time limits for service-backed doors
 
-**NetBBS issue:** (to be filled in when filed)
+**NetBBS issue:** https://github.com/Thiesi/NetBBS/issues/467
 **Blocks:** nothing hard. Blacksite S30 (session-limit UX) and S29 (client CPU budget) work around it.
 **Recommended model for the NetBBS side:** Sonnet (small, well-bounded change in `runtime.py`, `profiles.py`, the profile editor, and the door guide).
 

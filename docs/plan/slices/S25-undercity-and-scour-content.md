@@ -3,7 +3,7 @@
 **Status:** planned
 **Primary model:** Gemini or Sonnet · **Reviewer:** Sonnet (validator plus a read of each zone), Human for `under-shaft-foot` and `scour-ring-4`
 **Depends on:** S08, S11, S17 · **Milestone:** M5
-**Issue:** (filled in when filed)
+**Issue:** https://github.com/Thiesi/blacksite/issues/25
 
 ## Goal
 

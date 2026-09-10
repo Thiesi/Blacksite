@@ -3,7 +3,7 @@
 **Status:** planned
 **Primary model:** Sonnet · **Reviewer:** none
 **Depends on:** S12 · **Milestone:** M3
-**Issue:** (filled in when filed)
+**Issue:** https://github.com/Thiesi/blacksite/issues/17
 
 ## Goal
 

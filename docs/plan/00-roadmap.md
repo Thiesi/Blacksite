@@ -57,6 +57,9 @@ A slice names one primary model and may name a reviewer.
 
 ## 4. Slice index
 
+Every slice is filed as an issue in this repository whose number equals
+the slice number (S07 is issue #7). The tracking epic is issue #34.
+
 Dependencies are hard: a slice cannot start until its dependencies are
 merged. "Content" slices can run in parallel with engine slices once
 S02's formats exist.

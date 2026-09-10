@@ -3,7 +3,7 @@
 **Status:** planned
 **Primary model:** Fable · **Reviewer:** Astra (independent critique of the bridge design)
 **Depends on:** S21, S26 · **Milestone:** M6
-**Issue:** (filled in when filed)
+**Issue:** https://github.com/Thiesi/blacksite/issues/32
 
 ## Goal
 

@@ -1,6 +1,6 @@
 # 05 — Door name in who-is-online, and a narrow outbound hook
 
-**NetBBS issue:** (to be filled in when filed)
+**NetBBS issue:** https://github.com/Thiesi/NetBBS/issues/470
 **Blocks:** nothing. Blacksite S28 has an optional step behind it.
 **Recommended model for the NetBBS side:** Opus 5 for the outbound hook (touches the capability model discussed under issue #200 in design doc §16); Sonnet for the presence half alone.
 

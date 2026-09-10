@@ -3,7 +3,7 @@
 **Status:** planned
 **Primary model:** Opus · **Reviewer:** Astra or Fable (balance read of the numbers against the catalog before merge, per roadmap §4)
 **Depends on:** S10, S12 · **Milestone:** M3
-**Issue:** (filled in when filed)
+**Issue:** https://github.com/Thiesi/blacksite/issues/16
 
 ## Goal
 

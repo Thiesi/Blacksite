@@ -3,7 +3,7 @@
 **Status:** planned
 **Primary model:** Opus · **Reviewer:** Astra (hacking-model critique before start; balance read after)
 **Depends on:** S13 · **Milestone:** M2
-**Issue:** (filled in when filed)
+**Issue:** https://github.com/Thiesi/blacksite/issues/14
 
 ## Goal
 

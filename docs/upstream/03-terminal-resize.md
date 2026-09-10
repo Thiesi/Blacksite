@@ -1,6 +1,6 @@
 # 03 — Forward terminal resize to running native doors
 
-**NetBBS issue:** (to be filled in when filed)
+**NetBBS issue:** https://github.com/Thiesi/NetBBS/issues/468
 **Blocks:** nothing. Blacksite S04 lays out for the size at launch.
 **Recommended model for the NetBBS side:** Opus 5 (touches the session resize path for Telnet NAWS, SSH window-change, and the web transport, plus PTY window-size ioctls and a side channel for stdio doors).
 

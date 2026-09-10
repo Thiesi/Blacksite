@@ -3,7 +3,7 @@
 **Status:** planned
 **Primary model:** Opus · **Reviewer:** none
 **Depends on:** S11, S13, S17 · **Milestone:** M5
-**Issue:** (filled in when filed)
+**Issue:** https://github.com/Thiesi/blacksite/issues/24
 
 ## Goal
 
