@@ -1,0 +1,120 @@
+# Blacksite — Asset Manifest
+
+Everything that must exist for the game to ship, grouped by kind, with
+where it is authored, who is expected to make it, and which slice
+consumes it. "Written" means the asset already exists as prose in
+`docs/world/` and the slice converts it into the content format;
+"to build" means nobody has made it yet.
+
+Model and tool recommendations use the labels in
+`docs/plan/00-roadmap.md` §3.
+
+---
+
+## 1. Lore and text (written, convert in slice S02/S27)
+
+| Asset class | Source document | Count | Format at runtime |
+|---|---|---|---|
+| World bible | `docs/world/00-bible.md` | 1 | not shipped in game; canon |
+| Zone atmosphere paragraphs | `01-gazetteer.md` | one per zone | `text/zone-<id>.md`, shown on first entry and in the map overview |
+| Faction dossiers, recruiter pitches, rank titles, chat samples | `02-factions.md` | 8 + Freelance | `factions.json` fields and `text/faction-<id>-*.md` |
+| Lattice prose, core lore, ICE descriptions | `03-lattice.md` | 30 cores, 23 ICE | `cores/*.json` lore fields, `ice.json` lore |
+| NPC bios, voice notes, sample lines | `04-dramatis-personae.md` | 10 major + ~25 minor | `dialogue/<npc>.json`, `npcs.json` |
+| Story arcs, season definitions, Blacksite level concepts | `05-story-arcs.md` | 3 seasons | `seasons/<n>.json`, `contracts.json` story entries |
+| Wake briefing, Tin Halo script, event announcements, MOTDs | `05-story-arcs.md` | 3 + 1 + 15 + 30 | `text/wake-*.md`, `text/event-*.md`, `text/motd.txt` |
+| Item descriptions | `06-catalog.md` | one per item | `items.json` description field |
+| Glossary | `07-glossary.md` | 1 | in-game help `TextView` |
+| Found texts | `08-found-texts.md` | 14 entries (~40 pieces) | `text/<asset-id>.md` |
+
+## 2. Data tables (written as tables, implement in S02 and the owning slice)
+
+| Table | Source | Consumed by |
+|---|---|---|
+| `tiles.json` | `03-terminal-ui.md` §1, gazetteer legend | S06 |
+| `glyphs.json`, `palette.json` (3 tiers × 3 variants) | `03-terminal-ui.md` | S04 |
+| `factions.json` incl. relations matrix and ranks | `00-game-design.md` §7, `02-factions.md` | S20 |
+| `items.json` (weapons, armour, implants, resonance, rigs, drugs, consumables, drones, salvage, schematics, keys, passes) | `06-catalog.md` | S12, S16, S17 |
+| `programs.json`, `ice.json` | `03-lattice.md` | S14 |
+| `npcs.json`, behaviours, loot tables | `04-dramatis-personae.md`, gazetteer spawners | S11 |
+| `contracts.json` (templates + story chains) | `00-game-design.md` §9, `02-factions.md`, `05-story-arcs.md` | S19 |
+| `events.json` | `00-game-design.md` §12, `05-story-arcs.md` texts | S24 |
+| `seasons/1.json` … `3.json` | `05-story-arcs.md` | S26 |
+| `vendors.json` | `06-catalog.md` per-faction inventories | S12 |
+| `hymns.json` (Cantor abilities) | `06-catalog.md` | S10 |
+| `keymaps.json` | `03-terminal-ui.md` §5 | S04 |
+
+## 3. Maps (to build; sketches exist)
+
+| Asset | Count | Author | Slice |
+|---|---|---|---|
+| Zone maps `zones/<id>.map` + `.json` | ~30 (see gazetteer table) | agent-authored from the gazetteer sketches; Opus for the hub zones (Core, Vatside, Sodium Row, Tramyard), Sonnet or Gemini for the rest, human review of the four hubs | S06 (3 zones), S08 (city graph), S25 (Undercity + Scour), S26 (Blacksite level 1) |
+| Sector layouts `sectors/<id>.json` with cell positions | 11 | agent-authored from `03-lattice.md` | S13 |
+| Core room graphs `cores/<id>.json` | 30 | agent-authored from `03-lattice.md` | S13, S15 |
+| Silt generator parameters | 1 | S14 | S14 |
+
+Map authoring rules: a zone `.map` is a UTF-8 text grid using the legend
+in `tiles.json`; a `.json` sidecar holds everything else. A map must load
+under the validator; the validator checks size limits, that every exit
+and object sits on a passable tile, and that every spawner region is
+non-empty.
+
+## 4. ANSI art (to build)
+
+The one asset class agents do poorly. Plan for a human-in-the-loop or a
+render pipeline (image → ANSI conversion with a fixed palette), and keep
+every piece optional at runtime: the client shows a text fallback if an
+art file is missing or too wide.
+
+| Piece | Size | Tiers | Where shown |
+|---|---|---|---|
+| Title block | 80×20, 132×30 variant | truecolor/256/16 | title screen |
+| Faction sigils | 8 × (22×6) | 3 | side panel on faction screens, recruiter dialogue |
+| District vignettes | 7 × (56×12) | 3 | first entry to a district, map overview |
+| The Ring (night sky) | 80×8 | 3 | Scour zone header art |
+| Wake Hall vat | 40×14 | 3 | Wake screen |
+| Dead screen | 56×10 | 3 | decant timer |
+| Lattice jack-in transition | 3 frames, 56×17 | 3 | jack in/out |
+| Blacksite level 1 establishing shot | 80×20 | 3 | level entry |
+
+Recommended process: an agent produces the layout and palette
+assignments as `.ans` with a JSON sidecar; the user (or a human artist)
+reviews on a real terminal; the four most visible pieces (title, Ring,
+Wake Hall, dead screen) get a hand pass. Model: Opus for composition,
+with the sidecar generated by Sonnet. ChatGPT or Gemini image generation
+followed by a conversion script is an alternative for the vignettes, as
+long as the result is checked at 16 colours.
+
+## 5. Operator-facing (to build)
+
+| Asset | Slice |
+|---|---|
+| SysOp guide `docs/ops/sysop-guide.md` (install, register, service, backup, restore, moderation, seasons) | S28, S31 |
+| `deploy/netbbs-door-profile.json` preset | S31 |
+| `deploy/rc.d/blacksite` (NetBSD) and `deploy/systemd/blacksite.service` | S05 |
+| Admin CLI reference | S28 |
+| Release notes per version | every release |
+
+## 6. Player-facing documents (to build)
+
+| Asset | Slice |
+|---|---|
+| In-game help pages (keys per context, glossary) | S30 |
+| "What is this" first-run screen (written in `08-found-texts.md`) | S30 |
+| README player section | S31 |
+
+## 7. Test fixtures (to build)
+
+| Fixture | Slice |
+|---|---|
+| A minimal 3-zone, 1-sector, 2-core content tree for tests | S02 |
+| Golden protocol frames | S03 |
+| Fake terminal recorder and 80×24 / 132×50 golden screens | S04 |
+| Bot scripts for load | S29 |
+
+## 8. Naming
+
+- Asset IDs are lowercase slugs with hyphens.
+- Text assets: `text-<topic>-<n>` (found texts), `zone-<zone id>`,
+  `faction-<id>-pitch`, `event-<id>-start|mid|end`, `npc-<id>-<line id>`.
+- Art assets: `art-<name>` with `-256` and `-16` suffixes for tier
+  variants, `-w132` for the wide variant.
