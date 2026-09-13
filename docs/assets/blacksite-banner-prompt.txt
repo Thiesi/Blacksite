@@ -1,5 +1,13 @@
 Generated with the built-in image_gen tool.
 
+Revision: larger text, edited with the built-in image_gen tool.
+Edit the supplied BLACKSITE banner. Preserve the exact existing scene, colors, city, orbital wreckage, Spire, tram, foreground pipes, lighting and cyan Lattice composition as closely as possible. Maintain original 3:1 aspect ratio. Change typography only: ALL text must be larger and easier to read. Enlarge centered BLACKSITE title by about 35%, preserving its exact off-white industrial type style. Most importantly enlarge the tagline to roughly THREE TIMES its current letter height, medium-bold warm white, highly readable even at small GitHub display size. Set the exact tagline on TWO centered lines below the title:
+"The city was built to keep something in."
+"Nobody remembers what."
+Use generous dark contrast behind text and clean spacing without changing the rest of the artwork. Enlarge the existing environmental wall text on right too, retaining wording "CONTROL STABILIZES / PEOPLE COMPLY / CITIES ENDURE" and any existing district numerals, but preserve their subdued painted-on-wall look. No new words. Do not redesign, replace, crop or reimagine the image; this is a precise legibility update to the existing much-loved artwork.
+
+Original generation prompt:
+
 Use case: stylized-concept.
 Create a polished panoramic GitHub repository banner for BLACKSITE, an original real-time multiplayer cyberpunk terminal game. Wide 3:1 composition, preferably 2400x800.
 Atmospheric premium painted science-fiction game key art with the industrial dystopian mood of Neocron and the gritty network noir atmosphere of Neuromancer, entirely original imagery and no names or logos from those works.
