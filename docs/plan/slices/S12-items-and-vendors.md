@@ -62,7 +62,7 @@ bank chits, and die without losing what is banked or secured.
   a separate column and never touched by S10's clone debt.
 - Starter kit issuance at the end of the Wake (S07 calls
   `grant_starter_kit(player)`), per catalog §11 including archetype
-  extras (Ghost programs are placeholders until S14; Cantor First Ear
+  extras (all starters learn Pick and Umbrella, executable in S14; Cantor First Ear
   and Operator mule are granted as items and take effect in S16/S11).
 - `door/` renders `MenuView` kinds `inventory`, `equipment`, `vendor`,
   `bank`, `cache`; all server-driven per `03-terminal-ui.md` §4, with
@@ -162,3 +162,11 @@ detail pane.
   reviewable.
 - The `use` intent for drugs must exist but route to a stub that logs
   "S16" until that slice lands; do not implement effects here.
+
+## Lore review integration
+
+Main design 8.2/17.1 owns resale and stock; essential supplies have no
+finite buy-back budget dependency. Recovery loan items and service-job
+supplies are bound, cannot be traded/cached/crafted and use receipt-based
+replacement. Store learned programs and schematics separately from loose
+inventory. Public terminal loan rigs support every archetype (S13).

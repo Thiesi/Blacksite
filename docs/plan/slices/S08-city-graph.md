@@ -35,8 +35,8 @@ Clinic Row to Meridian Plaza, ride the tram, and reach the Tin Halo.
   tile; kinds `street` (instant), `door` (instant, may be locked:
   requirement `key`, `pass`, `faction standing`, or a control state set
   by S15), `ladder`/`lift` (1 s), `gate` (requirement), `cable`
-  (3 s), `tram` (board at a platform; departure every 90 s of zone
-  time; 10 s ride shown as a `TextView` "The tram hums."; arrival at
+  (3 s), `tram` (board at a platform; departure every 90 s of the persistent service
+  clock; 10 s ride shown as a `TextView` "The tram hums."; arrival at
   the destination platform); requirement failures post a log line and
   do nothing else.
 - `src/blacksite/server/world/safety.py`: `safety_at(zone, tile)`
@@ -53,8 +53,11 @@ Clinic Row to Meridian Plaza, ride the tram, and reach the Tin Halo.
   relay, vendor anchor and pocket region placed by ID (behaviour for
   vendors, terminals and relays arrives in S12/S13/S21; they render as
   objects now). `text/zone-<id>.md` for each.
-- Tram schedule uses zone ticks and the lazy-wake rule so a tram is
-  "always about to leave" for a zone that just woke.
+- Tram departures use the persistent clock. Waking a zone cannot reset
+  its timetable. S15 may hold a departure for 30 s at most, then 120 s
+  immunity; in-flight rides complete and outbound Core travel remains
+  available during Curfew. Clinic service counters are safe pockets;
+  the Cold Chain capture terminal remains in the contested street.
 
 ## Out of scope
 
@@ -121,3 +124,11 @@ Clinic Row to Meridian Plaza, ride the tram, and reach the Tin Halo.
   as "look at the log" without cancelling the ride.
 - Ten zones at up to 120×40 is ~50 000 tiles; the validator must stay
   fast (< 1 s) — precompute passability grids once.
+
+## Active content boundary
+
+The ten-zone hub is a complete playable bundle. Exits to S25 maps are
+shown as unavailable construction boundaries until that bundle lands;
+never load a dangling target or invent a fake copy of a future zone.
+S25 joins every real exit into the full ordinary city and S26 activates
+the season door. Baseline return routes remain visible and passable.

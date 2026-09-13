@@ -62,7 +62,7 @@ and can leave with `Ctrl-X`.
   `welcome.palette`; SGR emitters for each tier; the `deutan`/`protan`
   variants.
 - `src/blacksite/door/layout.py`: computes header, viewport, side panel,
-  log rows, hint row from the terminal size per §2 (56×17 viewport at
+  log rows, hint row from the terminal size per §2 (55×17 viewport at
   80×24; log rows 3 at height 24 growing to 8 at ≥40).
 - `src/blacksite/door/views/`: renderers for `TextView` (title, lines,
   paging), `MenuView` (overlay up to 70×20, cursor row reverse, detail
@@ -175,3 +175,12 @@ and can leave with `Ctrl-X`.
 - Never spawn the server from the client (`AGENTS.md` §8).
 - Windows development: use `msvcrt` for raw stdin only under a
   `--local` development flag; the NetBBS path is POSIX stdio.
+
+## Lore review integration
+
+Use terminal UI section 2's exact geometry (55x17 at 80x24; 107x38 at
+132x50), not the proportional sketch. Verify vi j remains movement,
+Ctrl-O jacks, Ctrl-F opens faction chat and Ctrl-P scrollback. Printable
+vi letters type normally in line prompts. Keep objective, danger, cost
+and escape readable at both sizes with a wide handle; menus never pause
+combat. Optional art cannot cover a warning or block input.

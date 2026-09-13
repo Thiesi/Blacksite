@@ -41,7 +41,7 @@ right numbers on the side panel.
   raise rule (every 10 skill points across a line's group raises the
   attribute by 1; Vitals only via grade and implants), grade table
   (1–30 from cumulative XP, 3 grade points and +1 Vitals per grade,
-  grade names), `legal_at` set at grade 5.
+  grade names), `legal_at` set at grade 5 or after 90 real days, whichever is earlier.
 - `src/blacksite/server/players.py`: `Player` (entity §2.1) creation,
   lookup by `(origin, bbs_user_id)`, one character per BBS user
   (SysOp-raisable cap stored in `meta`), load on `hello`, attach to the
@@ -107,7 +107,7 @@ right numbers on the side panel.
   `::test_stamina_formula`, `::test_tolerance_min_4`,
   `::test_evasion_nerve_over_3`, `::test_carry_frame_over_2`,
   `::test_archetype_start_tables`, `::test_skill_group_raises_attribute_per_10`,
-  `::test_grade_table_monotonic_and_30_max`, `::test_legal_at_grade_5`.
+  `::test_grade_table_monotonic_and_30_max`, `::test_legal_at_grade_5_or_90_days_without_reset`.
 - `tests/server/test_players.py::test_one_character_per_bbs_user`,
   `::test_identity_origin_plus_user_id`, `::test_position_persists_across_restart`,
   `::test_sleeper_60s_then_safe_zone`, `::test_reconnect_within_60s_no_sleeper`,
@@ -150,3 +150,12 @@ right numbers on the side panel.
 - Keep the Wake's frames as ordinary `TextView`/`MenuView`s so S04's
   renderers need no change.
 - Persist remembered tiles compactly; a 200×100 zone is 20 000 bits.
+
+## Lore review integration
+
+The lease clock and XP target are separate visible fields. Decanting,
+deleting/recreating a character, changing factions or season advance
+cannot reset identity-scoped receipts; grade protection remains separate.
+All starters learn Pick and Umbrella. Tutorial combat/ICE are private,
+nonlethal practice with bound loan equipment, and cannot injure another
+resident. Vesper's card leads to S19's playable two-route first job.

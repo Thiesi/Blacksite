@@ -28,7 +28,8 @@ ability. (bible §8.1, design §3.2)
 **Attributes** — Frame, Nerve, Cortex, Resonance, Vitals; 1 to 100,
 raised through skill lines and grade. (design §3.1)
 
-**Balance weight** — the probability adjustment applied to CUST/TEN- tagged lines by the season's Custodian/Tenant balance. (personae)
+**Balance weight** — the probability adjustment applied to CUST/TEN- tagged
+lines by the season's Custodian/Tenant balance. (personae)
 
 **band** — one of the five layers of the Silt. (lattice)
 
@@ -85,13 +86,14 @@ and well kept. (bible §4.3)
 
 **Chits** — Money. Kestrel ration scrip that became currency. (bible §9)
 
-**Choir Surge** — World event: the Tenant is loud, ICE mutates, Cantors
+**Choir Surge** — World event: a reported signal surge, bounded ICE variants, Cantors
 are stronger, the Silt is briefly mapped. (bible §10, design §12)
 
 **Choir, the Ninefold** — Technognostic order in Chapel Ward that hears the
 Tenant through implants. (bible §3.4, §7)
 
-**Chorister** — Tenant-aligned Silt ICE that asks questions. (lattice)
+**Chorister** — Responsive Silt ICE with a visible sampling procedure; its
+allegiance is unknown. (lattice)
 
 **Chronicle, the** — Read-only in-game history the server appends with
 each season's outcome. (bible §11, design §13)
@@ -101,7 +103,10 @@ each season's outcome. (bible §11, design §13)
 **Clone debt** — The cost of dying: a share of chits on hand, a fee by
 grade, and a fade of XP. (design §5.4)
 
-**Cold Chain Relay, Depot Relay, Gate Relay Nine, Cable Relay, Sump Relay, Bell Relay, Relay Zero, Yard Relay, Block Relay, Cavern Relay, Outworks Relay, Shaft Relay, Mile Relay, Beacon Relay, Crash Relay, Far Relay** — the sixteen relays. (gazetteer)
+**Cold Chain Relay, Depot Relay, Gate Relay Nine, Cable Relay, Sump Relay,
+Bell Relay, Relay Zero, Yard Relay, Block Relay, Cavern Relay, Outworks
+Relay, Shaft Relay, Mile Relay, Beacon Relay, Crash Relay, Far Relay** — the
+sixteen relays. (gazetteer)
 
 **Containment charge** — Halvard item that cuts a core's power from outside its room. (factions)
 
@@ -139,8 +144,8 @@ to it. (design §5.3)
 **Crew** — A party of two to five players with shared chat, list, beacon
 and loot rules. (design §10)
 
-**Curfew** — World event: the Wardens seal the Core for an hour. (bible
-§10, design §12)
+**Curfew** — World event: the Wardens restrict inbound Core gates for an
+hour; outward travel remains open. (bible §10, design §12)
 
 **Curfew pass** — Warden item permitting Core entry during Curfew. (factions)
 
@@ -164,7 +169,8 @@ objectives, season contributions. (design §6.2)
 **Depth meter** — The city-wide season counter fed by contributions;
 filling it opens the Blacksite level. (bible §11, design §13)
 
-**Depth survey / routing survey / listening survey** — the per-season Descent-console flavour for contributions. (story arcs)
+**Depth survey / routing survey / listening survey** — the per-season
+Descent-console flavour for contributions. (story arcs)
 
 **descent cell** — the one cell per sector that leads to the Silt. (lattice)
 
@@ -192,7 +198,8 @@ one weapon or tool. (bible §9, design §5.3)
 
 **The Drop** — the Unmoored basement where Ninety-Nine's dead drop lives. (gazetteer)
 
-**The Drowned Level**, **Karst Caverns**, **Blacksite Outworks**, **Shaft Foot** — Undercity zones below the Service Level. (gazetteer)
+**The Drowned Level**, **Karst Caverns**, **Blacksite Outworks**, **Shaft
+Foot** — Undercity zones below the Service Level. (gazetteer)
 
 **Drugs** — Effective, addictive on a per-substance clock, with a crash.
 (bible §9, design §8.6)
@@ -214,7 +221,8 @@ design §7)
 **Fade** — The XP lost on death: 2 % of progress to the next grade.
 (design §5.4)
 
-**The far-side road** — the one-tile road in the fog past the plateau's edge, opened in Season 3. (story arcs)
+**The far-side road** — the one-tile road in the fog past the plateau's
+edge, opened in Season 3. (story arcs)
 
 **Fennimore, Doc** — Red Sable black-clinic chief. (factions)
 
@@ -327,13 +335,14 @@ rations, wall gates and Scour convoys. (bible §3.1, §7)
 **Lattice, the** — Karst's surviving local network; the game's second
 layer. Runners say "down". (bible §2, §5)
 
-**Ledger week** — Year 33, when the Unmoored published Red Sable's subscription ledger; eleven collectors died. (personae)
+**Ledger week** — Year 33, when the Unmoored published Red Sable's
+subscription ledger; eleven collectors died. (personae)
 
-**LH-A, LH-B** — the two terrestrial long-haul links Karst had; both cut at the patch frame on the night of the Severance. (found texts)
+**LH-A, LH-B** — the two terrestrial long-haul links Karst had; both cut at
+the patch frame on the night of the Severance. (found texts)
 
 **Lindqvist, Petra** — Kestrel Director of Operations, faction leader. (factions)
 
-**Listened** — a permanent character trait granted by the Season 3 name choice. (story arcs)
 
 **Listening** — The Resonance skill line for finding hidden cells and
 hearing the Tenant. (design §3.3)
@@ -343,20 +352,24 @@ hearing the Tenant. (design §3.3)
 **Long Quiet, the** — Years 1 to 20 after the Severance, when the wall
 went up and the factions formed. (bible §3.3)
 
-**The Long Sled** — Bram's salvage sled, and by extension the Ferrymen's first-ring salvage crews. (personae)
+**The Long Sled** — Bram's salvage sled, and by extension the Ferrymen's
+first-ring salvage crews. (personae)
 
 **The Long Stair** — the stair from Tramyard Market to the Rim. (gazetteer)
 
 **"looked after"** — Sable term for a door under protection. (found texts)
 
-**Maalouf, T.** — Halvard uplink engineer on shift the night of the Severance; author of the severance log; left Halvard in Year 1. (found texts)
+**Maalouf, T.** — Halvard uplink engineer on shift the night of the
+Severance; author of the severance log; left Halvard in Year 1. (found
+texts)
 
 **Marash, Precentor Ivo** — Choir master of implants. (factions)
 
 **Marchetti, Inspector Dov** — Warden precinct commander. (factions)
 
 **Marked** — The fifteen-minute outlaw state for attacking a non-hostile,
-a Freelance or an under-grade-5 player in a contested zone. (bible
+or Freelance player in a contested zone; under-grade-5 PvP is refused
+in both directions. (bible
 §4.3, design §7.3)
 
 **Market board** — The player-to-player market and bounty list, browsable
@@ -375,15 +388,15 @@ from any terminal, with a Kestrel fee. (design §8.3)
 **Nerve** — Attribute for reflexes, evasion, stealth, drones and energy
 weapons. (design §3.1)
 
-**Ninety-Day** — Grade 5, legal personhood: apartments, faction
-membership, and the Marked rule instead of simply being shot. (design
-§3.4)
+**Ninety-Day** - legal discharge at grade 5 or after ninety real days,
+whichever comes first. Allows apartment rental and faction membership;
+contested-zone grade protection is a separate rule. (design section 3.4)
 
 **Ninety-Nine** — A residual: the recording of a runner who went into the
 Silt and came back as a voice. Lives in an Unmoored dead drop. (bible
 §3.3, §8.2)
 
-**Ninth** — Choir +90 rank; at most nine at a time. (factions)
+**Ninth** — Choir +90 rank; available to every qualifying member. (factions)
 
 **The Ninth Listener** — Season 3; the listening gallery. (story arcs)
 
@@ -406,9 +419,11 @@ contracts, trade, and the crew beacon. (bible §8.1)
 
 **Osei, Halim** — Kestrel Wall Marshal. (factions)
 
-**The Outworks Door** — Blacksite Level 1: the door in the concrete that is not on the pour plan. (story arcs)
+**The Outworks Door** — Blacksite Level 1: the door in the concrete that is
+not on the pour plan. (story arcs)
 
-**the patch frame** — the physical cross-connect where the long-haul links were cut; padlocked, key in the director's office. (found texts)
+**the patch frame** — the physical cross-connect where the long-haul links
+were cut; padlocked, key in the director's office. (found texts)
 
 **Pocket** — A safe area inside a contested zone, such as the Wake Hall or
 a vat area. (design §5.1, §14)
@@ -447,7 +462,8 @@ between factions; the data file is the truth. (design §7.2)
 contested or open zone; pays influence to its holder. (bible §9,
 design §7.4)
 
-**Renner** — Halvard day supervisor who physically severed the long-haul links with bolt cutters; stayed with Halvard; fate unstated. (found texts)
+**Renner** — Halvard day supervisor who physically severed the long-haul
+links with bolt cutters; stayed with Halvard; fate unstated. (found texts)
 
 **Residual** — A fragment of a past runner persisting in the Silt.
 (design §6.5)
@@ -480,11 +496,15 @@ salvage economy's source. (bible §3.2, §10, design §12)
 
 **The Routing Authority** — Season 2; the Dispatcher's provenance. (story arcs)
 
-**Routing authority instance zero / one** — the Custodian process that scheduled the severance, and the fragment Kestrel kept (the Dispatcher). (story arcs)
+**Routing authority instance zero / one** — routing labels in disputed
+records; neither proves who caused the Severance or what the Dispatcher is.
+(story arcs)
 
-**Row pass** — Red Sable item lifting a bar ban. (factions)
+**Row pass** — Red Sable pass for an optional back-room shortcut; public
+bars remain open. (factions)
 
-**rule three** — Ninety-Nine's "if a cell is quiet and you don't know why, leave"; the Silt fragments echo it. (found texts)
+**rule three** — Ninety-Nine's "if a cell is quiet and you don't know why,
+leave"; the Silt fragments echo it. (found texts)
 
 **Runner** — Anyone who jacks in. Nobody says "hacker". (bible §2)
 
@@ -565,15 +585,17 @@ under corporate law. (bible §4.1)
 **Standing** — A character's −100 to +100 reputation with each faction.
 (design §7.1)
 
-**Story contract** — a hand-written, chained contract that delivers a narrative beat, using ordinary contract types. (story arcs)
+**Story contract** — a hand-written, chained contract that delivers a
+narrative beat, using ordinary contract types. (story arcs)
 
 **Stray** — slang for a long-term Freelance character above grade 10. (factions)
 
-**struck household** — Kestrel ledger term for a household removed from ration issue, usually to the Sink. (found texts)
+**struck household** — Kestrel ledger term for a household removed from
+ration issue, usually to the Sink. (found texts)
 
 **The Sump** — the drain gallery at the bottom of the Sink; entrance to the caverns. (gazetteer)
 
-**Sweeper** — a Custodian process in the deep Silt. (lattice)
+**Sweeper** — a deep-Silt cleanup process of disputed origin. (lattice)
 
 **Talker** — an NPC dialogue record; a line and offers, never a tree. (personae)
 
@@ -584,13 +606,15 @@ under corporate law. (bible §4.1)
 **Tenant, the** — The Choir's name for the other voice in the Blacksite:
 the one that wants to be someone. (bible §3.4, §6)
 
-**the tenth** — in the Choir's liturgy, the unsung tenth of the Ninefold: the listener. (found texts)
+**the tenth** — in the Choir's liturgy, the unsung tenth of the Ninefold:
+the listener. (found texts)
 
 **Teodor, Brother** — Choir pilgrim-master. (factions)
 
 **Terminal** — A jack-in point: public, owned, or a drone. (bible §5.2)
 
-**Terminal talker** — a talker bound to a terminal object rather than an actor (the Dispatcher, Ninety-Nine). (personae)
+**Terminal talker** — a talker bound to a terminal object rather than an
+actor (the Dispatcher, Ninety-Nine). (personae)
 
 **Terraces, the** — The residential district where player apartments are.
 (bible §4.3)
@@ -615,7 +639,8 @@ the city; an open zone. (bible §4.4)
 **Unmoored, the** — Anarchist runner collective in Old Works that wants
 the Lattice free and the Blacksite open. (bible §3.3, §7)
 
-**Unrequested output** — Site Zero's log term for the affect model's first unexplained behaviour. (story arcs)
+**Unrequested output** — Site Zero's log term for the affect model's first
+unexplained behaviour. (story arcs)
 
 **uplink cell** — a gated cell joining two sectors without jacking out. (lattice)
 
@@ -669,3 +694,38 @@ terminals; the city is a graph of them. (design §5.1)
 The bible, the design document, and the expansion documents
 `01-gazetteer.md` through `08-found-texts.md`; each entry carries its source
 in parentheses. Add a term here whenever you introduce one anywhere else.
+
+## Operational terms
+
+**Allocation** - a work order's bounded public-route or worker-benefit
+choice, visible with its expiry. (design section 7.5)
+
+**Cold-chain work order** - restore a clinic's surplus cooling circuit;
+ordinary decants remain available. (design section 7.5)
+
+**Depot work order** - reconcile a consignment and surplus dispatch;
+minimum food and water never depend on it. (design section 7.5)
+
+**Evidence journal** - observed facts, attributed claims, practical
+objectives and consequences, recorded separately. (design section 9.3)
+
+**Expedition** - persistent roster of one to five for a Blacksite run,
+independent of the temporary social crew. (design section 13.1)
+
+**Listened** - optional, reversible calibration after the Name choice;
+a measured effect, no proof of identity. (design section 13.3)
+
+**Public service work order** - reserve, repair and allocate a surplus
+service through physical and Lattice actions. (design section 7.5)
+
+**Receipt** - persistent proof of a completed action and its one-time
+reward or branch choice. (design section 9.3)
+
+**Relay Zero work order** - isolate and recalibrate Old Works routing;
+choose public patrol telemetry or a temporary credential. (design 7.5)
+
+**Settlement** - one plurality result at season close; ties leave the
+world unchanged. Personal votes and dissent remain recorded. (design 13.2)
+
+**Sump work order** - restore a pump bypass and allocate its spare
+power to a dry shortcut or a salvage niche. (design section 7.5)

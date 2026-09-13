@@ -129,12 +129,56 @@ implants.
 
 The Wake program is Sablier's answer to a labour shortage: decant clones
 from the old specialist templates, wipe them, and lease them to whoever
-pays. Wakes are legally people after ninety days. Most do not last that
-long. Players are Wakes. The Blacksite has begun, for the first time in
+pays. Wakes receive personhood after ninety days, or earlier through a
+Civic-certified discharge earned by completed work. Many disappear from
+the lease rolls before either milestone; a missing entry is not proof of
+a final death. Players are Wakes. The Blacksite has begun, for the first time in
 forty years, to exhale: warm air and old data rising up the sealed shafts
 into the Undercity, and the Lattice beneath the sectors is lighting up
 level by level, as if something down there were turning the lights on for
 visitors.
+
+### 3.6 What keeps four million people alive
+
+Karst eats food grown in covered beds, fungal halls, and fermentation
+vats on the plateau. Water comes from the limestone aquifer, then goes
+through the Civic treatment works. Heat and power come from Site Zero's
+old geothermal plant and the city's repaired generators. Kestrel moves
+these supplies; it does not conjure them out of the Scour. Ring salvage
+provides scarce replacement electronics and alloys, not the daily food
+supply. The city survives by repairing more than it replaces.
+
+No faction can keep the whole system working alone. Halvard owns plant;
+Wardens maintain public service; Kestrel allocates capacity; Sablier
+needs cold storage; the Sink catches what the pumps cannot lift. The
+Unmoored can expose a queue without being able to feed it. The Choir can
+hear a failing controller before it fails, but cannot prove why it hums.
+Ferrymen know which wreck holds the part and what the road will cost.
+
+A relay gives authority over a service's surplus and access controls.
+It cannot switch off the city's minimum water, food, or clone provision.
+Local outages change routes, work, and opportunities; they do not kill
+offline residents or turn the game into a hunger-clock simulation.
+People keep shops, mend clothes, raise children, and argue about tram
+seats here. They defend a city they actually use.
+
+### 3.7 Fixed dates and the limits of records
+
+These dates describe public history, not the machine mind's identity.
+Ninety-Nine disappears in Year 17. The Choir forms in Year 21. The Sink
+Riot and Brann's command begin in Year 22. The first Sable client-list
+leak is in Year 28; Reyes takes over in Year 29; the subscription-ledger
+release and its eleven collector deaths are in Year 33. These are two
+separate leaks. Kestrel announces its routing office in Year 6; the name
+Dispatcher becomes public in Year 9. The Wake program begins in Year 38;
+older specialist clones, including Vantongeren, predate it. Ute is the
+tenth Ferry, retired; Anouk is the eleventh and Ute's daughter.
+
+The surviving uplink log records first light near 05:30 on the Severance
+morning. Later records can contradict a witness's explanation, but an
+author must identify the source of the disagreement. An accidental date
+or name mismatch is not a mystery. No authenticated record establishes
+who or what speaks through the Blacksite now.
 
 ## 4. Geography
 
@@ -161,7 +205,9 @@ the Core. This is the social hub and the safe place to log out.
 
 Each district leans toward one faction, has one or more **relays** that
 factions can capture, and is policed weakly or not at all. Player-versus-
-player combat is allowed. Attacking a player whose faction is not hostile
+player combat is allowed once both players reach grade 5. Below that,
+contested-zone attacks are refused in both directions. Calendar discharge
+does not remove this protection. Attacking an eligible player whose faction is not hostile
 to yours makes you **Marked**, which has consequences described in the
 design document.
 
@@ -203,7 +249,7 @@ rarest artifacts land. Relays in the Scour are the most valuable in the game.
 ### 4.6 The Blacksite (instanced, seasonal)
 
 Sealed levels below the Undercity. Each season of play unlocks one more
-level for crews to enter. What is on each level is defined in the story
+level for solo residents or crews to enter. What is on each level is defined in the story
 arcs document and revealed only through play.
 
 ## 5. The Lattice
@@ -245,9 +291,26 @@ of the two-layer design.
 
 A successful run has consequences upstairs, immediately: a Halvard core
 hack opens a Spire security door for a crew standing at it; a turret in the
-Sink goes quiet; a tram stops between stations; a relay's control terminal
+Sink goes quiet; a tram holds briefly at a station, with another way out; a relay's control terminal
 flips. And the reverse: a crew that physically reaches a core's hardware
 can cut its power, and the runner inside feels the floor go.
+
+### 5.4 What a run takes from the city
+
+The valuable thing behind a core is often a decision already made:
+which vat receives a spare, which stair stays dry, which cargo gets an
+escort. A runner can change that decision. The street crew must reach
+the affected hardware, carry the part, or protect the people using the
+new route. Some jobs can be prepared and completed alone; a crew can
+work on both sides at once and keep more options open.
+
+Records have owners, dates, omissions, and uses. A stolen schedule can
+get you through a patrol; comparing it with the gate's actual cycle can
+show who changed it. Publishing that difference helps other residents
+and exposes the source. Keeping it private buys a narrower advantage.
+The action and its foreseeable cost are legible even when the reason
+for the discrepancy is not. Neither reading long documents nor guessing
+a dialogue phrase is required to operate the city.
 
 ## 6. The machine mind
 
@@ -294,6 +357,13 @@ document is the mechanical truth; this paragraph is the narrative reason.
 **Freelance** characters belong to nobody, can walk anywhere a pass allows,
 cannot capture relays, and pay full price for everything.
 
+The dossiers distinguish leaders, recruiters, and operational handlers.
+They may be different people. Faction allegiance is a choice about whose
+methods you support, not a required archetype or a lock on the mystery.
+Freelance residents can finish the Descent and contribute under their
+own names. Their independence costs member services and territory rights,
+not access to the central experience.
+
 ## 8. People
 
 Player characters and the named cast.
@@ -301,8 +371,8 @@ Player characters and the named cast.
 ### 8.1 Wakes
 
 Every player character is a Wake: decanted in the Wake Hall in Vatside
-from one of Sablier's old specialist templates, wiped, and ninety days from
-legal personhood. The template you were decanted from is your
+from one of Sablier's old specialist templates, wiped, and under a
+ninety-day lease with an earned early-discharge route. The template is your
 **archetype**; the name you choose is your own, and the BBS handle you
 carry is how the city knows you.
 
@@ -316,6 +386,26 @@ carry is how the city knows you.
 - **Operator** — decanted from a logistics and negotiation template. Drones,
   contracts, trade, people. The archetype that keeps a crew alive by
   never being the one in front.
+
+A template supplies a body and learned motor routines. A new Wake's
+first wipe removes autobiographical memories. Subsequent decants restore
+the player's registered continuity record: name, choices, legal status,
+and acquired skills survive. Fade is imperfect recovery of recent
+training, not a second character wipe. Secured kit is insured and
+replaced; it does not teleport out of a corpse.
+
+The ninety-day clause originated with specialist clones before the Wake
+program. Vantongeren defended it when mass leasing began. Civic-certified
+work can discharge the lease early; grade 5 is that mechanical milestone.
+The calendar route remains, and neither debt nor decanting restarts it.
+The lease grants a labour claim, not permission to sell a person between
+players. Legal status cannot be revoked by a faction or season result.
+
+Cantor effects are neural hardware, local signals, and medical control
+loops. Hymns coordinate implants and drug delivery; dissonance disrupts
+sensors and nerves. A song cannot repair a wall, read an unconnected
+mind, or cast a spell. Listening finds detectable signal patterns; it
+does not certify a speaker's identity.
 
 ### 8.2 The named cast
 
@@ -371,10 +461,11 @@ The catalog document defines every item class with numbers. Canon here:
 
 - **Ring-fall.** Debris rain over a Scour ring. Salvage spawns; so does
   everything that wants it.
-- **Curfew.** The Wardens seal the Core for an hour. Everyone inside is
-  safe; everyone outside is not.
-- **Choir Surge.** The Tenant is loud. ICE behaves strangely; Cantors are
-  stronger; the Silt is briefly mapped.
+- **Curfew.** The Wardens ration passage through the Core for an hour.
+  Ordinary inbound gates close; outbound evacuation and basic shelter
+  remain. The districts are abandoned, not the callers imprisoned.
+- **Choir Surge.** The voice the Choir calls the Tenant grows loud. ICE
+  behaves strangely; Cantors are stronger; the Silt is briefly mapped.
 - **Exhale.** The Blacksite breathes. The Undercity fills with warm air,
   old data, and things from below.
 - **Convoy.** A Kestrel convoy crosses the Scour. Escort it, raid it, or
@@ -383,13 +474,19 @@ The catalog document defines every item class with numbers. Canon here:
 ## 11. Seasons: the Descent
 
 A season is roughly three months of real time. The city-wide **Depth
-meter** rises as crews deliver season contributions (data from cores,
+meter** rises as residents deliver season contributions (data from cores,
 artifacts from the outer Scour, keys from the Undercity). When it fills,
-the next Blacksite level opens as an instanced crew raid for the rest of
-the season. The season's outcome (which faction contributed most, what the
-crews chose at the bottom) is written into the **Chronicle**, an in-game
-history every player can read, and shifts the balance between the
-Custodian and the Tenant for the next season.
+the next Blacksite level opens for expeditions of one to five residents.
+Crews work in parallel; lone residents prepare and switch layers in
+sequence. Both reach the same choices. The season's outcome is written
+into the **Chronicle**, an in-game history every player can read.
+
+Every participating resident records their own decision. A published
+settlement rule combines those decisions once; repeating a raid cannot
+buy another voice. The Chronicle preserves dissent as well as the
+resulting city policy. The observed balance of procedural and responsive
+behaviour shifts for the next season. Custodian and Tenant are names for
+interpretations, not a morality meter or a revealed count of minds.
 
 Characters persist across seasons. The world does not reset. Relays and
 faction standings are tallied per season for the leaderboards.
@@ -414,3 +511,23 @@ faction standings are tallied per season for the leaderboards.
 - Do not name a district, faction, or major NPC after a real person,
   company, or a place in another work of fiction.
 - Every new proper noun goes into the glossary.
+
+## 14. What the player should have to decide
+
+Blacksite's recurring question is who gets the next working piece of a
+city that cannot replace itself. The scale stays human: a cold-store
+compressor, a flooded stair, an escort who can cover only one load.
+Choices expose a faction's useful work and the exclusion that pays for
+it. No faction gets a monopoly on kindness or competence.
+
+The city remembers through observable service states, records, and
+relationships. A district lamp, a changed patrol, a handler's available
+job, and a Chronicle entry should agree about the same action. Repeated
+work competes for a route, a safe body location, and limited equipment
+slots, not just a larger enemy health pool.
+
+The deepest discoveries answer a local question and complicate a larger
+one. You can prove that a controller diverted a ration load. You cannot
+prove from its voice that it is a lonely person, a surviving operator,
+or an affect model. Future seasons preserve that boundary while giving
+players a concrete problem they can finish.

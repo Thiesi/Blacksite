@@ -2,19 +2,18 @@
 
 **Status:** planned
 **Primary model:** Opus · **Reviewer:** none
-**Depends on:** S20, S15 · **Milestone:** M4
+**Depends on:** S20, S15, S17, S18, S22 · **Milestone:** M4
 **Issue:** https://github.com/Thiesi/blacksite/issues/21
 
 ## Goal
 
-Give factions something to fight over. Sixteen relays in contested and
-open zones with a control terminal and a core, capture by holding plus
-hacking (3 min) or holding alone (8 min), influence per hour to the
-holding faction as the season score, per-relay zone buffs and relay
-vendors, Scour relays paying triple, Curfew immunity, and core
-ownership flowing down to S15's control persistence. After this slice
-the two-crew relay fight from the architecture's test list is a real
-evening.
+Give factions something to fight over. Sixteen relays in contested and open
+areas with a control terminal and a core, capture by holding plus hacking (3
+min) or holding alone (8 min), influence per hour to the holding faction as
+the season score, per-relay zone buffs and relay vendors, Scour relays
+paying triple, Curfew claim pauses, and core ownership flowing down to S15's
+control persistence. After this slice the two-crew relay fight from the
+architecture's test list is a real evening.
 
 ## Spec references
 
@@ -27,61 +26,43 @@ evening.
   standing deltas).
 - `docs/design/01-entities.md` §2.4 (relay state), §2.5 (faction
   state: treasury, influence), §1.1 (`relay` object kind).
-- `docs/world/01-gazetteer.md`: the sixteen relays and their effects
-  (Shaft Relay in `spire-shaft-head`; Cold Chain in Vatside: surgery
-  discount; Depot: vendor restock ×2; Gate Relay Nine: gate on demand
-  and toll; Cable: free rides and stop; Sump: pumps; Bell: +10 % hymn
-  range; Relay Zero: −10 % trace Lattice-wide; Yard: +5 % fabrication
-  quality; Block: rent −10 %, +1 private ICE slot; Cavern: cavern map;
-  Outworks: Descent +10 %, Exhale capture is a season event; Mile:
-  convoys safe on Wall Ring road; Beacon: Ring-fall sites 5 min early;
-  Crash: Ring Three salvage +1 grade; Far: hear the Custodian's carrier).
+- `docs/world/01-gazetteer.md`: physical placement and atmosphere for
+  the sixteen relays. Game design section 7.7 owns effects and core tiers.
 - `docs/world/02-factions.md`: relay interests per faction, the
   Sodium Row "no relay" agreement, Sable's war rule.
-- `docs/world/03-lattice.md` §2 (Scour uplink cells exist only while
-  the relay is held), §3.11 (Relay Uplink core template).
+- `docs/world/03-lattice.md` §2 (Scour public uplinks always exist;
+  ownership grants optional shortcuts), §3.11 (Relay Uplink core template).
 
 ## Scope
 
-- `content/relays.json`: sixteen relays with zone, terminal object,
-  core (instantiated from the Relay Uplink template at tier 2, tier 3
-  for Scour and Outworks), influence rate (base 10 per hour; Scour
-  relays 30; Shaft Relay "Halvard-tier": 20 and story-gated by S26),
-  buff spec (one typed effect each from the list above, implemented as
-  modifiers through S16's aggregator or as hooks into the owning
-  slice), vendor inventory id (a relay vendor object appears at the
-  terminal for members of the holder).
-- `server/relays.py`: capture state machine per relay: `neutral |
-  held(faction) | contested(faction, since, holder_present, hacked)`.
-  A member (S20 faction, not Freelance) adjacent to the terminal
-  pressing `E` starts a hold; the hold continues while any member of
-  that faction stays adjacent (leaving for > 5 s aborts); at 3 min
-  with `hacked == True` (a runner of the same faction has lifted the
-  uplink core's `relay_open` data during the window, S14 data kind) the
-  relay flips; at 8 min without, it flips; members of a different
-  faction holding at once reset both (contest: the terminal shows
-  "contested" and nobody's clock runs while two factions are adjacent).
-  Flip: `captured_at`, `captured_by`, +15 standing with the faction for
-  everyone of that faction present, −15 with the loser for the
-  capturer, XP 100 to present members, zone and faction log lines,
-  core `owner_faction` set (S15 control persistence), Scour uplink cell
-  added to the Scour sector (S13).
-- Curfew: capture attempts refused with a log line while S24's Curfew
+- `content/relays.json`: the sixteen exact IDs, zones, tiers, rates
+  and typed benefits in game design 7.7. Core IDs are `lat-relay-<id>`;
+  they are distinct from a nearby named service core. Use the central
+  table, not a universal tier-2/3 template. Shaft opens with S26's door.
+- `server/relays.py`: explicit active claims. The holder is a conscious
+  faction member adjacent to the terminal, in physical space and
+  channelling. A jacked body does not count. A runner of any faction or
+  Freelance may explicitly support that named claim. A current-window
+  core lift plus 3 min hold captures; without a runner, 8 min. Opposing
+  active claims freeze clocks; bystanders do not contest. Absence over
+  5 s aborts. The clinic relay stands in the contested street; the clinic counter
+  remains protected.
+- On capture, update ownership, logs and receipts atomically. Use design
+  7.4's 100 XP, +15 member/-15 former-owner deltas and same-identity,
+  same-relay 24 h reward limit. Presence alone grants no participation
+  reward. Public Scour uplinks remain reachable under neutral ownership.
+- Curfew: new capture attempts refused and existing clocks paused while S24's Curfew
   is active (flag read from the event engine; default false).
-- Influence: lazy clock per relay: on any read, pay (elapsed hours ×
-  rate) into `faction_state.influence` (season score) and `treasury`;
-  members receive a share on login: treasury × 1 % per member login
-  per day, capped at 200 chits (a new number; see notes).
-- Buffs: applied to members while in the relay's zone (or
-  Lattice-wide for Relay Zero, city-wide for Block rent): implemented
-  as modifier flags read by S16 (surgery discount, fabrication
-  quality), S12 (restock rate), S08 (gate on demand, cable car free
-  ride, toll of 25 chits for non-members at Gate Nine), S15 (Sump
-  pumps default state), S10 (hymn range), S14 (trace −10 %), S18 (rent,
-  ICE slot), S25 (cavern map reveal), S26 (Descent +10 %), S24 (convoy
-  safety, Ring-fall warning, Beacon), S17 (Crash grade step), S27 (Far
-  Relay carrier text). Each buff is a named flag; consuming slices that
-  have not landed ignore it.
+- Influence: settle whole elapsed points at 10/hour, Scour 30/hour,
+  Shaft 20/hour, carrying fractions and stopping at season end. Treasury
+  receives the same amount. Daily login share is floor(1% treasury),
+  capped 200, debited once per BBS identity per UTC day in one transaction.
+- Buffs: implement exactly game design 7.7 using the relevant subsystem's
+  modifier API. Range gains use tiles, fabrication caps at 1.15, salvage
+  grade increase caps below intact, and route telemetry grants neither
+  immunity nor exclusive basic geometry. Travel holds keep design 6.4's
+  bounds; ownership cannot lock a public service or safe zone. Optional
+  event/season consumers are completed by S24/S26 and tested there.
 - Relay vendor: `vendor` object with `relay: <id>` visible and usable
   only by members of the holder; inventory ids in `relays.json`.
 - Sodium Row has no relay (content assertion). Sable's war rule is
@@ -124,12 +105,12 @@ evening.
 - `tests/test_relays.py::test_hold_3min_with_hack_flips`
 - `tests/test_relays.py::test_hold_8min_without_hack_flips`
 - `tests/test_relays.py::test_hold_aborts_after_5s_absence`
-- `tests/test_relays.py::test_two_factions_adjacent_contest_no_clock`
+- `tests/test_relays.py::test_opposing_active_claims_freeze_bystanders_do_not`
 - `tests/test_relays.py::test_freelance_cannot_hold`
 - `tests/test_relays.py::test_curfew_refuses_capture`
 - `tests/test_relays.py::test_influence_lazy_hours_times_rate_scour_triple`
 - `tests/test_relays.py::test_flip_sets_core_owner_and_controls_persist`
-- `tests/test_relays.py::test_scour_uplink_cell_appears_and_disappears`
+- `tests/test_relays.py::test_public_scour_uplink_remains_under_neutral_ownership`
 - `tests/test_relays.py::test_standing_plus_15_minus_15_and_xp_100`
 - `tests/test_relays.py::test_relay_vendor_members_only`
 - `tests/test_relays.py::test_buff_flags_per_relay`
@@ -147,11 +128,11 @@ evening.
    `E`; the object shows a progress bar; B jacks in, enters the uplink
    core, lifts `relay_open`; at 3 minutes the relay flips, both get
    the log lines and standing.
-2. A third caller of a hostile faction walks up to the terminal: the
+2. A third caller starts an opposing claim at the terminal: the
    relay shows "contested" and A's clock stops until one leaves.
 3. The relay vendor at the terminal is usable by A and B, refused for
    the third caller.
-4. The SysOp advances the clock 2 hours with the admin CLI: the relays
+4. In the deterministic manual-clock harness, advance 2 hours: the relays
    menu shows the faction's influence increased by 20 (or 60 for a
    Scour relay).
 
@@ -163,11 +144,10 @@ present, consumer pending" with the consuming slice ID.
 
 ## Implementer notes
 
-- The influence rate, the treasury share, and the toll are new
-  numbers; add to `00-game-design.md` §7.4 and §8.1 in this PR.
-- Contest freezes clocks rather than resetting them; a 20-minute
-  standoff should be decided by who leaves, not by who arrived first.
-- The Shaft Relay is story-gated: capturable only when S26's season
-  state allows; until S26, it is present but refuses with "sealed".
-- `hacked` must be set by S14's data lift within the current hold
-  window only; a lift before the hold started does not count.
+Capture clocks freeze without losing progress under opposition/Curfew.
+Hardware and private-core permission rules still apply to relay owners.
+Test conscious holder plus Freelance runner, solo eight-minute capture,
+passers-by, death, competing active claims, daily payout races, recapture
+farming, fractional accrual and settlement cutoff. All sixteen benefits
+must resolve to their named consumer; a pending consumer is not a
+working feature and must be closed by S24/S26 before release.

@@ -2,7 +2,7 @@
 
 **Status:** planned
 **Primary model:** Sonnet · **Reviewer:** none
-**Depends on:** S12 · **Milestone:** M3
+**Depends on:** S12, S15, S16 · **Milestone:** M3
 **Issue:** https://github.com/Thiesi/blacksite/issues/17
 
 ## Goal
@@ -35,17 +35,18 @@ node objects, a baseline trickle spawner, and the whole crafting path.
 - `server/salvage.py`: `salvage_node` zone object with `grade`, `units`
   (1–6), harvest by `E` (2 s per unit, interruptible), yields
   `slv_<grade>` items by weight; baseline spawner: each Scour ring keeps
-  2–6 nodes alive, respawning one every 10 min of elapsed time (lazy
+  2–6 nodes alive, respawning one every 10 min of server uptime (lazy
   clock), grade weights per ring: ring 1 hull 90 / optics 10; ring 2
   hull 55 / optics 25 / power 20; ring 3 hull 35 / optics 25 / power 25 /
-  compute 15; ring 4 adds intact 5 with the rest scaled. Hazard tile
+  compute 15; ring 4 hull 20 / optics 20 / power 25 / compute 30 /
+  intact 5. Hazard tile
   `meteor` around fresh nodes is S24's.
 - `server/fabrication.py`: `workshop` object kind with a `makes`
   filter (`any`, `rigs_programs`, `chemical_melee`); `MenuView` kind
   `workshop` listing the player's schematics, the salvage required,
   what they carry, and the roll range; fabricate = consume inputs,
-  create the output item with quality = 1.0 + (roll in ±0.15 scaled by
-  (Fabrication / 100)); skill minimum enforced; Fabrication +1.0 per
+  create the output item with quality = 0.85 + 0.15 * skill/100 +
+  U(0, 0.15), capped at 1.15 after relay modifiers; skill minimum enforced; Fabrication +1.0 per
   item; XP tier × 15; a 3 s craft channel.
 - Schematics as items (`sch_*`, `schematic` class) consumed? No: a
   schematic is permanent once learned; `use` on a schematic item learns
@@ -134,3 +135,11 @@ with its listed inputs.
   the loader rather than per item.
 - Keep harvest and craft channels on the same `channel` mechanism S15
   introduces; if S15 has not merged, introduce it here and S15 reuses.
+
+## Lore review integration
+
+Baseline node weights, 2 s harvest, 3 s fabrication, quality formula and
+cap are game design 8.4. The four service-order caches use bound supplied
+units, separate from baseline resource nodes. Intact salvage has no NPC
+sale source; player trade is allowed. Relay quality/grade bonuses cap as
+specified and never manufacture intact salvage from a lower grade.

@@ -157,3 +157,12 @@ first real zone. No combat, no NPCs, no chat yet.
 - Two callers may share one NetBBS node with `max_sessions` ≥ 2; the
   registered profile must have that raised (S04 acceptance step 1).
 - Never read wall time in `movement.py` or `sight.py`; ticks only.
+
+## Lore review integration
+
+Implement day/night sight fields and typed state-dependent geometry now,
+including service layout variants, warning tiles and alternate routes.
+These are generic content capabilities consumed by S19/S24/S25. Safety
+checks include delayed and indirect damage, forced movement, physical
+bodies left at terminals and pocket boundaries. The view has compact
+objective, hazard, service-expiry and escape fields (architecture 15).

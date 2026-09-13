@@ -206,15 +206,15 @@ Re:   The ninety-day rule, again
 
 I am writing this down so I can stop saying it in meetings.
 
-A Wake is a person on day ninety-one. Not day ninety. Not "when
-they've shown initiative". Ninety-one. The Civic Authority put the
-number in the concession and the number is the only reason the
-Wardens let us run the program at all. If a supervisor "loses" a
-Wake on day eighty-eight, that is a body, and I will treat it as one
-and so will Marshal Brann.
+A Wake is a person when ninety full days have elapsed, or when
+Civic records certify their work for early discharge. Grade five
+is that certificate. Not a supervisor's favour. Neither a death
+nor a new body starts the lease again. The Wardens have the same
+record. If a supervisor loses a Wake's record, I will investigate.
 
-Yes, most Wakes do not reach ninety-one. I have the figures and so
-do you. That is a statement about the city, not a licence.
+Many files close before the deadline. A closed file does not tell
+you whether its holder is dead, missing, discharged or misfiled.
+I have the figures. They do not say what Legal says they say.
 
 Yes, the templates are old. Yes, some of them were never meant to
 be walked around above ground. If a Cantor-line decant asks you
@@ -223,8 +223,7 @@ template", and the answer is complete. Do not speculate on the
 floor. Do not speculate in writing. I am aware I am speculating in
 writing.
 
-Leasing is a Kestrel matter until day ninety-one and a nobody's
-matter afterwards. A Wake who walks out of the Hall with a
+Leasing ends at discharge. Kestrel has no claim afterwards. A Wake who walks out of the Hall with a
 recruiter's card in their hand is not our problem and, I would
 gently suggest, not our property either, whatever Legal's draft
 says. Strike the draft.
@@ -379,7 +378,7 @@ THE ROAD IS THE LAW  (Ferrymen, as kept since the first Ferry)
   Inside the wall is not our business. Outside it, nothing else is.
   A guide who loses a walker walks home alone.
   When the sky is loud, stop and look up. Then run.
-  Eleven Ferries. Every one of them died on the road.
+  Eleven Ferries. Some die on the road. Some hand over the name.
   That's not a warning. That's the job.
 ```
 
@@ -559,7 +558,7 @@ The record begins.
 NINETY-NINE LIVES (crossed out) NINETY-NINE TALKS
 THE LID STAYS ON  <- written by a coward
 sable sells doors. we sell nothing. -- U
-day 91 or nothing
+ninety days, or show them your work receipt
 IT HUMS IF YOU LISTEN. STOP LISTENING.
 kestrel water tastes like the tram
 Renner had bolt cutters. Who has them now?
@@ -624,23 +623,24 @@ look up. no, really. look up.
 ```
  WHAT THIS IS
 
- Blacksite is a real-time, multiplayer game in a terminal. Other
- callers on this system are in the same city as you, right now.
- What they do, you will see. What you do, they will see.
+ You wake in Karst with a lease and no memories.
+ Ninety days end the lease. Paid work can end it sooner.
+ Other callers move through the same streets in real time.
 
- You play a Wake: a clone with no memories, ninety days from being
- a person. There are streets, and there is the Lattice, the city's
- network, and what you do in one changes the other.
+ Fix a pump. Sell the record. Open a route for someone else.
+ Street hardware and the Lattice control the same city.
+ Read the safety label before you cross a boundary.
+ Safe streets protect you. The outer rings do not.
 
- Where you stand tells you what can happen to you. The Core is
- safe. The districts are not. Outside the wall, nothing is.
+ Death keeps your identity, skills and secured gear.
+ Loose gear and carried chits can be lost. Debt can follow.
+ Open your journal for objectives, costs and escape routes.
+ You need no special words to use a terminal.
 
- You cannot lose your character. You can lose everything else.
+ The BBS sets your session limit. Your work stays recorded.
+ Reconnect to a safe position under the logout rules.
 
- This session ends when the BBS says so; the city does not.
- Come back and you will be where you left.
-
-                        [ any key to open your eyes ]
+                  [ any key to open your eyes ]
 ```
 
 ---
@@ -649,11 +649,10 @@ look up. no, really. look up.
 
 Glossary: merged into 07-glossary.md.
 
-## Canon decisions taken here
+## Source status
 
-Canon decided by this document, binding unless the bible changes: the Severance
-happened at night with first light around 05:30; the Choir's "ninefold"
-is nine sung lines for the city's wounds and an unsung tenth for the
-listener; Ninety-Nine's drop counts runs and Silt descents; the Silt
-fragments imply the Custodian counts salvage and the Tenant counts
-names, without either being named.
+These are attributed documents and voices, subordinate to the bible and
+rules. The bible fixes first light at 05:30 and the lease rule; the
+Choir's tenth line and the Silt's counting are reported interpretations.
+No document identifies either voice's true origin. Found texts unlock
+journal records when inspected; their wording is never an input puzzle.

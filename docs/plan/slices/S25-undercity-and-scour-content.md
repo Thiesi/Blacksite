@@ -2,22 +2,23 @@
 
 **Status:** planned
 **Primary model:** Gemini or Sonnet · **Reviewer:** Sonnet (validator plus a read of each zone), Human for `under-shaft-foot` and `scour-ring-4`
-**Depends on:** S08, S11, S17 · **Milestone:** M5
+**Depends on:** S08, S11, S14, S17, S21, S24 · **Milestone:** M5
 **Issue:** https://github.com/Thiesi/blacksite/issues/25
 
 ## Goal
 
-Author every zone map the game still lacks after S08: the five Undercity
-zones and the five Scour zones, with their spawners, relays, terminals,
-hardware objects, exits, and lore hooks, exactly as the gazetteer
-describes them. This is a bulk content slice: no engine code, every
-file must pass the validator, and every zone must be walkable end to
-end through its listed exits.
+Author every zone map the game still lacks after S08: the fourteen remaining
+Spire, Tramyard, Sink, Chapel and Old Works zones, five Undercity zones and
+five Scour zones, with their spawners, relays, terminals, hardware objects,
+exits, and lore hooks, exactly as the gazetteer describes them. This is a
+bulk content slice: no engine code, every file must pass the validator, and
+every zone must be walkable end to end through its listed exits.
 
 ## Spec references
 
-- `docs/world/01-gazetteer.md`: the ten zone entries below, the sketch
-  legend, and the overview table (sizes).
+- `docs/world/01-gazetteer.md`: all 24 remaining ordinary zone entries,
+  including the ten below, the sketch legend, and the overview table
+  (sizes).
 - `docs/design/01-entities.md` §1.1 (zone file fields), §1.2 (tile
   types), §5 (invariants: exits resolve, objects on passable tiles,
   spawner regions non-empty, hardware tiles for cores).
@@ -42,7 +43,7 @@ Deliver, for each zone, `content/zones/<id>.map` and
 | `under-caverns` | 150 × 80 | open | exits `under-service`, `sink-floor` (Sump grate), `under-outworks` (fissure); **Cavern Relay** with orphan terminal; Ferrymen way-station vendor; spawners: feral things (several templates), blind swarms |
 | `under-outworks` | 120 × 70 | open | exits `under-drowned`, `under-caverns`, `under-shaft-foot` (inner door); **Outworks Relay**; hardware terminal for the Outworks core (tier 4); Halvard survey markers (lore objects); spawners: Blacksite maintenance drones (guard) |
 | `under-shaft-foot` | 60 × 60 | open | exit `under-outworks`, `spire-shaft-head` (shaft, requirement: story); hardware terminal for the Shaft core (tier 5, shared with Shaft Head, the one two-location core); the **season door** object (`descent_console` kind with a `season_door` param); spawners: maintenance drones (guard, many) plus an Exhale-conditioned spawner |
-| `scour-landing` | 60 × 30 | pocket | exits `scour-ring-1` (causeway), `scour-ring-2` (Ferrymen track), `tramyard-wall-gate` per gazetteer; Ferrymen terminal (Landing core, tier 2); anchors: Anouk, quartermaster, contract handler, salvage buyer; spawners: Ferrymen guards (aggro on Halvard and Kestrel) |
+| `scour-landing` | 60 × 30 | pocket | exits `scour-ring-1` (causeway), `scour-ring-2` (Ferrymen track), `tramyard-wall-gate` per gazetteer; Ferrymen terminal (Landing core, tier 2); anchors: Anouk, quartermaster, contract handler, salvage buyer; spawners: Ferrymen guards (warn only within the safe pocket; perimeter aggro outside) |
 | `scour-ring-1` | 160 × 80 | open | exits `tramyard-wall-gate`, `scour-landing`, `scour-ring-2`; **Mile Relay**; the convoy road as a marked tile line with waypoint objects; spawners: Halvard patrols, Kestrel road crews, scavengers; Ring-fall region |
 | `scour-ring-2` | 180 × 90 | open | exits `scour-ring-1`, `scour-landing`, `scour-ring-3`; **Beacon Relay**; Ferrymen way-camp with light objects; spawners: Ferrymen salvage crews (neutral), wildlife; Ring-fall region |
 | `scour-ring-3` | 200 × 100 | open | exits `scour-ring-2`, `scour-ring-4` (bearing, no road); **Crash Relay** inside the largest wreck; wreck-field landmarks as cover clusters; spawners: wildlife packs, scavenger gangs, Halvard recovery; Ring-fall region |
@@ -50,10 +51,15 @@ Deliver, for each zone, `content/zones/<id>.map` and
 
 Also:
 
-- Day/night sight for the Scour: the `.json` carries `sight_radius` and
-  `sight_radius_night` (gazetteer: 20:00–06:00 node-local); the engine
-  side of that field is a one-line addition to S06's loader and is in
-  scope here only if S06 did not ship it.
+- Day/night sight is content only here. S06 owns the sight fields and
+  S24 their event composition; do not add engine branches in this slice.
+- Also deliver every remaining Spire (3), Tramyard (3), Sink (3), Chapel
+  Ward (2) and Old Works (3) map from the gazetteer. Place their named
+  handlers, core hardware, relay objects, service work-order targets and
+  both allocation layouts. This closes the original unmapped-city gap.
+- Validate the complete 34-zone ordinary city as one connected bundle,
+  including all eight halls, 16 relays, public uplinks, mission permits
+  and every S19/S27 target. S26 supplies the separate finale instance.
 - Ring-fall regions: each Scour ring `.json` has a `salvage_regions[]`
   list with grade weights rising outward (ring 1: hull/optics; ring 4:
   power/compute/intact) per design §8.4 and the gazetteer.
@@ -66,7 +72,8 @@ Also:
 
 - Engine behaviour of relays (S21), salvage nodes (S17), spawners and
   behaviours (S11), the season door (S26), Blacksite Level 1 (S26).
-- The city zones (S08). Sector and core files (S13/S14).
+- The ten initial Core, Vatside, Sodium Row and Terraces hub maps (S08).
+  Sector and core files (S13/S14).
 - ANSI vignettes for districts (S33).
 
 ## Data and content
@@ -88,7 +95,7 @@ None. Content only.
 
 ## Tests
 
-- `test_all_ten_zones_load_under_validator`
+- `test_all_24_remaining_zones_load_under_validator`
 - `test_zone_sizes_match_gazetteer_targets_within_10_percent`
 - `test_every_exit_resolves_both_ways` (each exit has a return exit in
   the target zone unless the gazetteer says one-way)
@@ -105,24 +112,25 @@ None. Content only.
 ## Acceptance script
 
 1. Start the server with the full content tree; `blacksite admin status`
-   reports 35 zones loaded.
+   reports 34 ordinary zones loaded; the 35th is S26's instanced finale.
 2. At 80×24, walk from `vatside-vat-row` down the ladder into
    `under-service`; the sight radius visibly drops to 5; find both orphan
    terminals; descend to `under-drowned` (water slows movement), then
    with an Undercity key through the bulkhead to `under-outworks`, and
    through the inner door to `under-shaft-foot`; interact with the season
-   door and see the Depth text.
+   door and see the sealed/pending-season status (S26 supplies live Depth).
 3. From `tramyard-wall-gate` walk `scour-ring-1` → `-2` → `-3` → `-4`,
    touching each relay's terminal (interaction shows its name) and the
    Far Relay's orphan terminal.
 4. `blacksite admin event force ringfall scour-ring-3`: salvage nodes
    appear inside the ring's regions only.
 5. Open the zone map overview (`M`) in `under-caverns` at 132×50: the
-   whole 150 × 80 map renders without horizontal scroll artefacts.
+   overview scales to its rectangle and the detailed map pans without
+   clipping; a 150x80 map is not shown tile-for-tile on that terminal.
 
 ## Definition of done
 
-- Validator and tests green for all ten zones plus the fixture tree.
+- Validator and tests green for all 24 remaining zones plus the fixture tree.
 - Reviewer has walked each zone once; the two human-review zones signed
   off by the user.
 - Slice file marked done with PR number.
@@ -143,3 +151,12 @@ None. Content only.
   entries).
 - A Gemini batch should be split per zone and each file validated before
   the next is generated; do not accept a batch that fails walkability.
+
+## Lore-to-layout acceptance
+
+Walk each public-service variant and the permanent alternative route.
+A shortcut must save travel or exposure visibly; its loss must not deny
+food, water, cloning, public jobs or outward travel. Check gated routes
+under Curfew, neutral relay ownership and expired controls. The world is
+closed: the Far Road is a local ridge, never an exit from Karst. S26,
+not this slice, activates season story flags after complete validation.

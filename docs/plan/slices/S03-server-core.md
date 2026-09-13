@@ -2,7 +2,7 @@
 
 **Status:** planned
 **Primary model:** Opus · **Reviewer:** Astra (protocol and auth critique before start)
-**Depends on:** S01 · **Milestone:** M0
+**Depends on:** S01, S02 · **Milestone:** M0
 **Issue:** https://github.com/Thiesi/blacksite/issues/3
 
 ## Goal

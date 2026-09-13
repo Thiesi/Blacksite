@@ -41,7 +41,7 @@ feel it less. Inside a core, rooms are close and the delay is the same,
 but the walls listen.
 
 Your presence in the Lattice has integrity, which is a number, and trace,
-which is a countdown you cannot see the end of. Losing integrity feels
+whose thresholds and next consequences the display always shows. Losing integrity feels
 like losing your footing. Losing all of it throws you back up into your
 body with your ears ringing and your hands shaking, shock all the way up,
 and a crew member standing over you saying your name. If black ICE did
@@ -51,16 +51,18 @@ with their eyes open, and the Lattice recorded nothing.
 Runners talk about it the way divers talk. You go down, you go deep, you
 come up. The Silt is what is under the sectors, and the Silt is where you
 do not come up from unless you are lucky, or somebody is listening for
-you. Ninety-Nine went down in Year 12 and is still talking, so make of
+you. Ninety-Nine went down in Year 17 and is still talking, so make of
 that what you will.
 
 ## 2. Sectors
 
 Every sector has a public entrance cell (where terminals in that district
-drop you), a spread of public, gated, and hidden cells, its cores, and
-exactly one descent cell into the Silt. Uplink cells are the only way to
-move between sectors without jacking out: they are gated, and each one is
-a place a faction can lock during a season.
+drop you), a spread of public, gated, and hidden cells, its cores, and one
+sector descent cell into the Silt; Listening Post has one additional
+interior route to that same descent instance. Uplink cells join sectors
+without jacking out. Public links remain open; gated service shortcuts can
+require temporary credentials. A faction cannot lock every route to another
+district.
 
 | Sector | Cells | Public / gated / hidden | Notable cells | Descent cell |
 |---|---|---|---|---|
@@ -79,23 +81,25 @@ a place a faction can lock during a season.
 
 Notes:
 
-- Hidden cells are found by a Listening check (Resonance skill line) on
+- Hidden cells are found by a Listening scan (game design §6.5) on
   an adjacent cell, by the *Lantern* program, or during a Choir Surge,
-  which reveals all hidden cells for its duration.
+  which maps the current band or sector for its duration.
 - The Scour sector is thin by design: it exists only where a relay's
-  uplink reaches. Losing a relay in meatspace removes its uplink cell
-  from the sector until the relay is re-established.
+  uplink reaches. Losing relay ownership changes the uplink's owner and shortcut
+  credential, not the existence of the cell. Neutral relays still run.
+  A power cut takes its core offline but preserves an escape route.
 - The Undercity sector has more hidden than public cells because nobody
   maintains the map. Runners who map it sell the map.
 
 ## 3. Cores
 
-A core's **hardware location** is the zone and the object in that zone
-where a crew can cut power (design doc §6.4). **Controls** are named in
-the form `object @ zone-slug` and each maps to one meatspace object.
-Each core's ID is given in parentheses after its name; every other
-document references a core by that ID. **Data** is what a successful run lifts. ICE listed is what the core runs
-at its base tier; owned relays and season state can add one class.
+A core's **hardware location** is the zone and the object in that zone where
+a crew can cut power (design doc §6.4). **Controls** are named in the form
+`object @ zone-slug` and each maps to one meatspace object. Each core's ID
+is given in parentheses after its name; every other document references a
+core by that ID. **Data** is what a successful run lifts. ICE listed is what
+the core runs at its base tier; owned relays and season state can add one
+class.
 
 ### 3.1 Spire
 
@@ -122,12 +126,12 @@ ICE: Sandman, Hornets, Glasshouse, Kiln, Mirror.
 
 ### 3.2 Core
 
-**Precinct** (`lat-precinct`) — Wardens, tier 3, 8 rooms. Hardware: precinct switch room @
-`core-precinct`. Data: Marked registry (lift to clear your own Mark once
-per day), bounty ledger, Warden heat records. Controls: `camera net @
-core-plaza` (blinds Wardens to one attack for 10 s), `curfew shutters @
-core-plaza`, `holding cell doors @ core-precinct`. ICE: Tripwire ×2,
-Ticker, Bluecoat ×2, Mastiff.
+**Precinct** (`lat-precinct`) — Wardens, tier 3, 8 rooms. Hardware: precinct
+switch room @ `core-precinct`. Data: Marked registry (an evidence record;
+cannot erase a live Mark), bounty ledger, Warden heat records. Controls:
+`camera net @ core-plaza` (reveals a mission patrol recording; cannot
+disable safety), `curfew shutters @ core-plaza`, `holding cell doors @
+core-precinct`. ICE: Tripwire ×2, Ticker, Bluecoat ×2, Mastiff.
 
 **Civic Ledger** (`lat-civic-ledger`) — Civic Authority, tier 2, 5 rooms. Hardware: records
 annex @ `core-plaza`. Data: ration registry, personhood records (a story
@@ -137,9 +141,9 @@ Ticker.
 
 **Tram Signal** (`lat-tram-signal`) — Kestrel on Civic lease, tier 2, 5 rooms. Hardware:
 signal cabinet @ `core-tram-hub`. Data: timetable (nothing sells; the
-control is the point). Controls: `tram hold @ core-tram-hub` (holds the
-next tram between stations for 60 s: a crew inside is trapped, a crew
-outside gets a free window at the gates), `platform gates @ core-tram-hub`.
+control is the point). Controls: `tram hold @ core-tram-hub` (delays the
+next departure for at most 30 s, followed by 120 s immunity; in-flight
+journeys always finish), `platform gates @ core-tram-hub`.
 ICE: Turnstile, Lockstep, Ticker.
 
 **Kestrel Branch** (`lat-kestrel-branch`) — Kestrel, tier 3, 6 rooms. Hardware: vault door @
@@ -154,12 +158,12 @@ holds). ICE: Tripwire, Glasshouse ×2, Lockstep, Mastiff.
 core cannot be cut). Data: your own decant record. Controls: `exit door @
 vatside-wake-hall`. ICE: Tripwire (one, integrity 10, deals 5).
 
-**Vatline** (`lat-vatline`) — Sablier, tier 4, 9 rooms. Hardware: vat control @
-`vatside-vat-row`. Data: decant queue, template archive index (Cantor origin
-story arc; season contribution). Controls: `vat lockdown @ vatside-vat-row`
-(adds 20 s to every hostile-faction decant for 5 min; the vat area stays
-a safe pocket), `clinic doors @ vatside-clinics`. ICE: Tripwire,
-Glasshouse, Suture ×2, Sandman, Kiln.
+**Vatline** (`lat-vatline`) — Sablier, tier 4, 9 rooms. Hardware: vat
+control @ `vatside-vat-row`. Data: decant queue, template archive index
+(Cantor origin story arc; season contribution). Controls: `vat lockdown @
+vatside-vat-row` (isolates a mission test vat; never delays or denies player
+decants), `clinic doors @ vatside-clinics`. ICE: Tripwire, Glasshouse,
+Suture ×2, Sandman, Kiln.
 
 **Sablier Clinical** (`lat-sablier-clinical`) — Sablier, tier 3, 6 rooms. Hardware: scheduler
 cabinet @ `vatside-clinics`. Data: implant schematics (fabrication),
@@ -168,9 +172,10 @@ lock @ vatside-clinics`. ICE: Tripwire, Suture, Glasshouse, Mastiff.
 
 ### 3.4 Tramyard
 
-**Gatehouse East** (`lat-gatehouse-east`) — Kestrel, tier 3, 7 rooms. Hardware: gate control
-hut @ `tramyard-wall-gate`. Data: convoy manifests (predict Convoy events and
-cargo), gate schedules. Controls: `Gate 4 @ tramyard-wall-gate`, `Gate 5 @
+**Gatehouse East** (`lat-gatehouse-east`) — Kestrel, tier 3, 7 rooms.
+Hardware: gate control hut @ `tramyard-wall-gate`. Data: convoy manifests
+(predict Convoy events and cargo), gate schedules. Controls: `Gate Nine
+outbound @ tramyard-wall-gate`, `Gate Nine service latch @
 tramyard-wall-gate`, `gate turret @ tramyard-wall-gate`. ICE: Tripwire,
 Turnstile, Lockstep, Mastiff, Hornets.
 
@@ -225,8 +230,8 @@ a descent cell *inside* it, the only core that does. ICE: Cantillation
 ### 3.7 Old Works
 
 **Ninety-Nine's Drop** (`lat-ninety-nines-drop`) — Unmoored, tier 2, 4 rooms. Hardware: the tape
-cabinet @ `oldworks-drop` (cutting it silences Ninety-Nine for an hour;
-the Unmoored will know who did it). Data: Silt maps, Unmoored dead drops
+cabinet @ `oldworks-drop` (service is mission-scoped; it cannot remove Ninety-Nine's public
+advice or another player's story access). Data: Silt maps, Unmoored dead drops
 (contract hand-offs). Controls: `drop lights @ oldworks-drop`. ICE: none
 that belongs to anyone; Ninety-Nine runs a Liar as a joke and tells you
 so.
@@ -246,14 +251,15 @@ oldworks-yards`. ICE: Tripwire ×2, Glasshouse, Mirror, Kiln, Blackglass
 
 ### 3.8 Terraces
 
-**Private core (template)** (`lat-private-core`) — resident, tier 1 to 3, 3 to 5 rooms.
-Hardware: the apartment's wall panel @ the apartment's zone slug
+**Private core (template)** (`lat-private-core`) — resident, tier 1 to 3, 3
+to 5 rooms. Hardware: the apartment's wall panel @ the apartment's zone slug
 (`terraces-blocks` (Block A or Block B)). Data: storage manifest; one
 unsecured item may be lifted per successful run per apartment per day
-(design doc §6.4). Controls: `apartment door` (opens for the runner's
-crew for 60 s), `apartment lights`. ICE: tier 1, one Tripwire; tier 2,
-Tripwire and Turnstile; tier 3, Tripwire, Glasshouse, Mastiff. Residents
-pay for ICE upgrades in chits.
+(design doc §6.4). Controls: `apartment door` (opens the delivery vestibule
+for 30 s, never the resident's occupied room or additional storage),
+`apartment lights`. ICE: tier 1, one Tripwire; tier 2, Tripwire and
+Turnstile; tier 3, Tripwire, Glasshouse, Mastiff. Residents pay for ICE
+upgrades in chits.
 
 **Block Super** (`lat-block-super`) — Kestrel property, tier 2, 5 rooms. Hardware: super's
 office @ `terraces-blocks`. Data: rent ledger, impound manifest. Controls:
@@ -268,17 +274,17 @@ min). ICE: Tripwire, Bluecoat.
 ### 3.9 Sodium Row
 
 **Tin Halo** (`lat-tin-halo`) — Vesper, tier 2, 4 rooms. Hardware: back bar cabinet @
-`sodium-tin-halo`. Data: rumours (a lifted rumour names the next world
-event and its start within 20 min; Vesper sells the same thing for
+`sodium-tin-halo`. Data: rumours (a lifted rumour names a committed event
+plan and its forecast window; Vesper sells the same thing for
 chits and prefers that), contract archive. Controls: `back door @
 sodium-tin-halo`. ICE: Tripwire, Liar, Turnstile. Vesper knows when it has
-been run and adjusts prices for the runner accordingly.
+been run and comments on it; prices still follow the documented vendor rules.
 
 **House Lights** (`lat-house-lights`) — neutral, Sable-enforced, tier 3, 6 rooms. Hardware:
 sign grid room @ `sodium-row`. Data: patron ledger (who visited the Row
 and when; a contract staple). Controls: `Row lighting @ sodium-row`
 (blackout for 30 s; stealth for everyone), `sign grid @ sodium-row`
-(displays a runner-chosen 20-character message on every sign for 60 s;
+(displays a runner-chosen 20-display-column message on every sign for 60 s;
 the Row's favourite prank). ICE: Tripwire, Shiv, Liar, Glasshouse.
 
 ### 3.10 Undercity
@@ -289,12 +295,12 @@ under-service`, `drain cistern @ under-caverns` (each opens one
 passage and closes another; the Undercity's route changes for 10 min).
 ICE: Tripwire, Tar, Drift, Mastiff.
 
-**Outworks Seal** (`lat-outworks-seal`) — Halvard, tier 5, 12 rooms. Hardware: seal plant @
-`under-outworks`. Data: seal telemetry (the Exhale is visible here
-first), Undercity keys. Controls: `seal blast door @ under-outworks`
-(opens only during an Exhale, and only while the season's Blacksite
-level is open), `shaft-door-east @ under-outworks` (the Season 1 story
-door). Story rooms `shaft-monitor` and `shaft-lamps`; story data
+**Outworks Seal** (`lat-outworks-seal`) — Halvard, tier 5, 12 rooms.
+Hardware: seal plant @ `under-outworks`. Data: seal telemetry (the Exhale is
+visible here first), Undercity keys. Controls: `seal blast door @
+under-outworks` (optional shortcut during an Exhale; cannot gate pre-opening
+story work), `shaft-door-east @ under-outworks` (the Season 1 story door).
+Story rooms `shaft-monitor` and `shaft-lamps`; story data
 `activation-log-last-page`. ICE: Tripwire ×2, Glasshouse ×2, Mirror,
 Blackglass ×2, Sweeper (only during an Exhale), Hound (at trace 100).
 
@@ -315,9 +321,30 @@ the Choir adds Cantillation, others add Glasshouse).
 scour-ring-2` (recalls the current Halvard patrol NPC crew to the wall).
 ICE: Tripwire, Hornets, Mastiff, Lockstep.
 
-Thirty cores including the two templates, plus the season cores below.
+The registry includes the named cores, the templates, and the additional
+service cores below. Use IDs, not a manually maintained count.
 
-### 3.12 Season cores
+### 3.12 Service cores and hardware registry
+
+These close the gazetteer's previously unbound hardware references.
+They use existing names and the same control model; no special engine.
+
+| Core ID | Name | Tier / rooms | Hardware zone(s) | Controls / ICE |
+|---|---|---|---|---|
+| `lat-sump` | Sump | 2 / 4 | `sink-floor` | pump regions and grate; Tripwire, Turnstile |
+| `lat-drowned` | Drowned | 3 / 6 | `under-drowned` | bulkhead and local pumps; Tar, Drift, Mastiff |
+| `lat-shaft` | Shaft | 5 / 8 | `spire-shaft-head`, `under-shaft-foot` | maintenance cage and telemetry; Glasshouse, Mirror, Hound |
+| `lat-landing` | Landing | 2 / 4 | `scour-landing` | local survey display; Tripwire, Turnstile |
+
+`lat-shaft` alone has two hardware locations. The Halvard Citadel is a
+separate server hall at Shaft Head. Neither is the instanced finale core.
+Every relay additionally has a distinct instance of `lat-relay-uplink`
+with a stable ID `lat-relay-<relay slug>`, including neutral relays.
+Its hardware is the mast beside the physical capture terminal. Its
+`relay_open` control targets that relay, not unrelated service hardware.
+All relay instance IDs and tiers are game design §7.7.
+
+### 3.13 Season cores
 
 Defined by `05-story-arcs.md` and built with their Blacksite level; listed
 here so the ID space stays in one place.
@@ -328,15 +355,18 @@ defined by the story arcs). Hardware: the patch frame in the level itself.
 Data: the Year 0 severance procedure. Controls: none outside the level.
 ICE: Blackglass ×2, Sweeper, Hound.
 
-**Story data IDs** referenced by the story arcs, by core: `lat-depot-control`
-— `routing-audit-y0`, `dispatch-channel-log`; `lat-vatline` —
-`template-lineage`, `template-cantor-origin`, `template-source-drive`,
+**Story data IDs** referenced by the story arcs, by core:
+`lat-depot-control` — `routing-audit-y0`, `dispatch-channel-log`;
+`lat-vatline` — `template-lineage`, `template-cantor-origin`,
 `decant-audio-y41`; `lat-sables-back-room` — `sink-power-schedule`;
 `lat-precinct` — `curfew-orders-y22`, `brann-private-ledger`; `lat-dispatch`
-— `routing-authority-image`, `severance-procedure-y0`, `sink-allocation-rule`,
-controls `dispatch-mute-1s`, `unmoored-mirror`; `lat-uplink-hall` —
-`dispatch-echo`; the Silt — `silt-echo`, `listener-3-residual`. A data ID
-lives in exactly one core; the content validator asserts it.
+— `routing-authority-image`, `severance-procedure-y0`,
+`sink-allocation-rule`, controls `dispatch-mute-1s`, `unmoored-mirror`;
+`lat-uplink-hall` — `dispatch-echo`; the Silt — `silt-echo`,
+`listener-3-residual`. A source record has one canonical source ID; mission
+fetch copies and journal evidence refer back to it. `template-source-drive`
+is at the archived Level 1 gallery, `brann-private-ledger` at the precinct
+archive; neither is an unrelated second loot spawn. Validate all references.
 
 ## 4. ICE
 
@@ -370,84 +400,67 @@ data or flipping a control), *trace N* (runner's trace reaches N),
 | Blackglass | 5 | 200 | 35 +20 meat / 1.5 s | touch | Halvard flagship. Sits on the best data in the city. | yes | a crew: one runner shields, one attacks; Blackout |
 | Drift | Silt, 2 | 40 | 10 / 1.0 s | always | Unowned. Random-walks cells; some drift up into district sectors. | no | avoid; Anchor holds position against it |
 | Undertow | Silt, 3 | 70 | none | entry | Pulls the runner one band deeper on a failed cast. | no | Anchor; Redline to out-cast it |
-| Chorister | Silt, 3–4 | 60 | 15 / 2.0 s | entry | Tenant-aligned. Asks a question (dialogue). A good answer turns it into a 5-minute buff; a bad one, a fight. | no | Listening skill; answer |
+| Chorister | Silt, 3–4 | 60 | 15 / 2.0 s | entry | Responsive process. Shows a repeating signal. Use the labelled sampling procedure in design §6.6; no answer quiz. | no | survey its pattern; hold or withdraw |
 | Shade | Silt, 4 | 80 | 20 / 1.2 s | entry | A hostile residual: a dead runner's habits with none of the runner. Copies the last program you cast. | no | do not cast attacks first; Umbrella |
-| Sweeper | Silt, 5 | 250 | 40 +25 meat / 2.0 s | always | A Custodian process. Systematic, slow, cleans a band cell by cell. It is not interested in you until you are in its way. | yes | leave the band; nothing kills it in one run |
+| Sweeper | Silt, 4-5 | 250 | 40 +25 meat / 2.0 s | always | Attributed by some to the Custodian. Systematic, slow, cleans a band cell by cell. It is not interested in you until you are in its way. | yes | leave the band; nothing kills it in one run |
 
 Twenty-three classes.
 
 ## 5. Programs
 
-Slot cost, cast time, cooldown, and effect are per program; a rig has 3
-to 7 slots. `Obtained` is the primary source; most also appear as core
-data at their tier and on the market board.
+This roster mirrors game design §17.2. Thirty base programs plus Burn,
+Hunter-killer, two Cantillations, and Residual Fragment: 35 total.
+Programs are learned; loading respects slots, not one program per key.
+Purchase prices are initial values. Any attack program may target only
+its stated target class; Burn handles player presences under §6.1 safety.
 
-### Attack
+| ID | Name | Class | Tier | Slots | Cast | Cooldown | Effect | Price |
+|---|---|---|---|---|---|---|---|---|
+| `prg_pick` | Pick | attack | 1 | 1 | 0.8 s | 1.0 s | 10 integrity damage | 150 |
+| `prg_chisel` | Chisel | attack | 2 | 1 | 1.0 s | 1.5 s | 18 damage | 800 |
+| `prg_drill` | Drill | attack | 3 | 1 | 1.2 s | 2.0 s | 30 damage; 45 against ICE with integrity ≤ 30 | 1200 |
+| `prg_mallet` | Mallet | attack | 3 | 2 | 1.5 s | 3.0 s | 20 damage to every ICE in the room | 1200 |
+| `prg_lance` | Lance | attack | 4 | 2 | 1.5 s | 2.5 s | 45 damage, ignores Mirror once per cast | 1600 |
+| `prg_blackout` | Blackout | attack | 5 | 2 | 2.0 s | 30 s | 120 damage to one ICE; then the runner's trace +25 | 2000 |
+| `prg_umbrella` | Umbrella | shield | 1 | 1 | 0.5 s | 4.0 s | absorbs the next 15 damage | 200 |
+| `prg_slicker` | Slicker | shield | 2 | 1 | 0.5 s | 5.0 s | absorbs 25; absorbs a Bluecoat pin | 800 |
+| `prg_wetsuit` | Wetsuit | shield | 3 | 1 | 0.8 s | 6.0 s | absorbs 40; Cantillation damage halved | 1200 |
+| `prg_bunker` | Bunker | shield | 4 | 2 | 1.0 s | 8.0 s | absorbs 60 and all meat damage from the next black hit | 1600 |
+| `prg_smoke` | Smoke | decoy | 1 | 1 | 0.5 s | 10 s | trace gain −25 % for 10 s | 200 |
+| `prg_alibi` | Alibi | decoy | 2 | 1 | 0.8 s | 15 s | trace −10 now | 800 |
+| `prg_understudy` | Understudy | decoy | 3 | 1 | 1.0 s | 20 s | for 8 s, ICE attacks the decoy instead (it has 30 integrity) | 1200 |
+| `prg_cutout` | Cutout | decoy | 4 | 2 | 1.2 s | 60 s | breaks a Hound's follow once; trace −20 | 1600 |
+| `prg_caffeine` | Caffeine | loader | 1 | 1 | 0.3 s | 15 s | next cast time −30 % | 400 |
+| `prg_overclock` | Overclock | loader | 2 | 1 | 0.5 s | 20 s | all cast times −25 % for 10 s; cancels Tar for that time | 800 |
+| `prg_redline` | Redline | loader | 3 | 1 | 0.5 s | 30 s | cell-to-cell moves 0.4 s for 10 s; costs 5 integrity per move | 1200 |
+| `prg_skeleton` | Skeleton | key | 1 | 1 | 1.5 s | 5 s | opens a tier-1 gated cell or Turnstile | 200 |
+| `prg_locksmith` | Locksmith | key | 2 | 1 | 1.5 s | 5 s | opens tier ≤ 2 gates and Lockstep off-schedule | 800 |
+| `prg_passkey` | Passkey | key | 3 | 1 | 2.0 s | 8 s | opens tier ≤ 3 gates; opens a private core's door control without a fight | 1200 |
+| `prg_signet` | Signet | key | 4 | 1 | 2.0 s | 10 s | opens any Halvard gate; Halvard ICE ignores the runner for 5 s after | 1600 |
+| `prg_sneakers` | Sneakers | stealth | 1 | 1 | 0.5 s | 12 s | entry-triggered ICE fires 3 s late | 400 |
+| `prg_shroud` | Shroud | stealth | 2 | 1 | 0.8 s | 20 s | Mastiff ignores runner for 6 s; Sandman is delayed 5 s | 800 |
+| `prg_nobody` | Nobody | stealth | 3 | 2 | 1.0 s | 30 s | invisible to all ICE for 5 s; trace does not rise | 1200 |
+| `prg_compass` | Compass | utility | 1 | 1 | 1.0 s | 30 s | shows the core's true room map; Liar rooms marked | 150 |
+| `prg_ledger` | Ledger | utility | 1 | 1 | — | — | passive: data lift time −25 % | 400 |
+| `prg_lantern` | Lantern | utility | 2 | 1 | 1.5 s | 30 s | reveals hidden cells adjacent to the runner | 500 |
+| `prg_pulse` | Pulse | utility | 3 | 1 | 1.0 s | 20 s | crew members in meatspace see the runner's cell and trace for 20 s | 1200 |
+| `prg_tourniquet` | Tourniquet | utility | 3 | 1 | 1.5 s | 25 s | restores 30 integrity | 1200 |
+| `prg_anchor` | Anchor | utility | 4 | 1 | 0.5 s | 30 s | immune to Undertow and Drift displacement for 15 s | 1600 |
+| `prg_burn` | Burn | attack | 2 | 1 | 0.8 s | 3 s | 18 integrity damage to a permitted runner; +15 trace replaces attack trace | 1200 |
+| `prg_hunter_killer` | Hunter-killer | attack | 4 | 2 | 2 s | 15 s | 80 integrity damage to hunter ICE only | 4200 |
+| `prg_choir_cantillation_1` | Cantillation I | attack | 2 | 1 | 0.8 s | 4 s | Cantor: 20 damage + Resonance / 5; normal attack trace | 1000 |
+| `prg_choir_cantillation_2` | Cantillation II | attack | 3 | 1 | 1.2 s | 6 s | Cantor, Choir +50 to acquire: 40 damage + Resonance / 3; normal attack trace | 3600 |
+| `prg_residual_fragment` | Residual Fragment | utility | 3 | 1 | 1 s | single use | +25 effective Programs until jack-out, capped 100; bound faction loan | 0 |
 
-| Program | Tier | Slots | Cast | Cooldown | Effect | Obtained |
-|---|---|---|---|---|---|---|
-| Pick | 1 | 1 | 0.8 s | 1.0 s | 10 integrity damage | Wake, any vendor |
-| Chisel | 2 | 1 | 1.0 s | 1.5 s | 18 damage | Old Works vendor, Foundry data |
-| Drill | 3 | 1 | 1.2 s | 2.0 s | 30 damage; 45 against ICE with integrity ≤ 30 | Foundry data, Unmoored contracts |
-| Mallet | 3 | 2 | 1.5 s | 3.0 s | 20 damage to every ICE in the room | Ferrymen vendor |
-| Lance | 4 | 2 | 1.5 s | 2.5 s | 45 damage, ignores Mirror once per cast | Site Zero Annex data |
-| Blackout | 5 | 2 | 2.0 s | 30 s | 120 damage to one ICE; then the runner's trace +25 | Halvard Citadel data; one per season per runner |
+Attack casts add +5 trace; Blackout adds +25 instead, Burn +15
+instead in civic/corporate space. Effects otherwise use the trace table.
+Cooldown begins when casting completes. Shield absorbs successive hits
+until its budget is exhausted, expires on jack-out, and does not stack
+with another shield. Blackout's acquisition cap does not limit casting.
 
-### Shield
-
-| Program | Tier | Slots | Cast | Cooldown | Effect | Obtained |
-|---|---|---|---|---|---|---|
-| Umbrella | 1 | 1 | 0.5 s | 4.0 s | absorbs the next 15 damage | Wake, any vendor |
-| Slicker | 2 | 1 | 0.5 s | 5.0 s | absorbs 25; absorbs a Bluecoat pin | Core vendor |
-| Wetsuit | 3 | 1 | 0.8 s | 6.0 s | absorbs 40; Cantillation damage halved | Chapel Ward vendor |
-| Bunker | 4 | 2 | 1.0 s | 8.0 s | absorbs 60 and all meat damage from the next black hit | Site Zero Annex, Halvard contracts |
-
-### Decoy
-
-| Program | Tier | Slots | Cast | Cooldown | Effect | Obtained |
-|---|---|---|---|---|---|---|
-| Smoke | 1 | 1 | 0.5 s | 10 s | trace gain −25 % for 10 s | any vendor |
-| Alibi | 2 | 1 | 0.8 s | 15 s | trace −10 now | Sodium Row vendor |
-| Understudy | 3 | 1 | 1.0 s | 20 s | for 8 s, ICE attacks the decoy instead (it has 30 integrity) | Sable vendor |
-| Cutout | 4 | 2 | 1.2 s | 60 s | breaks a Hound's follow once; trace −20 | Precinct data, Unmoored contracts |
-
-### Loader
-
-| Program | Tier | Slots | Cast | Cooldown | Effect | Obtained |
-|---|---|---|---|---|---|---|
-| Caffeine | 1 | 1 | 0.3 s | 15 s | next cast time −30 % | any vendor |
-| Overclock | 2 | 1 | 0.5 s | 20 s | all cast times −25 % for 10 s; cancels Tar for that time | Old Works vendor |
-| Redline | 3 | 1 | 0.5 s | 30 s | cell-to-cell moves 0.4 s for 10 s; costs 5 integrity per move | Foundry data |
-
-### Key
-
-| Program | Tier | Slots | Cast | Cooldown | Effect | Obtained |
-|---|---|---|---|---|---|---|
-| Skeleton | 1 | 1 | 1.5 s | 5 s | opens a tier-1 gated cell or Turnstile | any vendor |
-| Locksmith | 2 | 1 | 1.5 s | 5 s | opens tier ≤ 2 gates and Lockstep off-schedule | Core vendor, Sable vendor |
-| Passkey | 3 | 1 | 2.0 s | 8 s | opens tier ≤ 3 gates; opens a private core's door control without a fight | Precinct data |
-| Signet | 4 | 1 | 2.0 s | 10 s | opens any Halvard gate; Halvard ICE ignores the runner for 5 s after | Gatehouse data (Halvard members only) |
-
-### Stealth
-
-| Program | Tier | Slots | Cast | Cooldown | Effect | Obtained |
-|---|---|---|---|---|---|---|
-| Sneakers | 1 | 1 | 0.5 s | 12 s | entry-triggered ICE fires 3 s late | any vendor |
-| Shroud | 2 | 1 | 0.8 s | 20 s | Mastiff and Sandman do not notice the runner for 6 s | Old Works vendor |
-| Nobody | 3 | 2 | 1.0 s | 30 s | invisible to all ICE for 5 s; trace does not rise | Sable's Back Room data |
-
-### Utility
-
-| Program | Tier | Slots | Cast | Cooldown | Effect | Obtained |
-|---|---|---|---|---|---|---|
-| Compass | 1 | 1 | 1.0 s | 30 s | shows the core's true room map; Liar rooms marked | any vendor |
-| Ledger | 1 | 1 | — | — | passive: data lift time −25 % | any vendor |
-| Lantern | 2 | 1 | 1.5 s | 30 s | reveals hidden cells adjacent to the runner | Chapel Ward vendor |
-| Pulse | 3 | 1 | 1.0 s | 20 s | crew members in meatspace see the runner's cell and trace for 20 s | Operator contracts |
-| Tourniquet | 3 | 1 | 1.5 s | 25 s | restores 30 integrity | Sablier vendor |
-| Anchor | 4 | 1 | 0.5 s | 30 s | immune to Undertow and Drift displacement for 15 s | Listening Post data, Ferrymen vendor |
-
-Thirty programs.
+Old catalog IDs are pre-implementation renames, not saved-game aliases.
+In particular Shroud is stealth; Umbrella is the starter shield. There
+is no Masterkey that bypasses every gate or gates the whole Silt.
 
 ## 6. The Silt
 
@@ -456,10 +469,11 @@ Thirty programs.
 Every descent generates a fresh Silt graph from a seed made of the season
 number, the sector descended from, and a per-descent nonce. A crew who
 descend together share the seed. The graph is a chain of five **bands**,
-each 8 to 20 cells, connected downward by one to three **sinks** (cells
-that lead to the next band) and upward by exactly one **riser** per band,
-which is always the cell you arrived in. A runner who loses their riser
-(Undertow) must find a sink or jack out.
+each 8 to 20 cells, connected downward by one to three **sinks** (cells that
+lead to the next band) and upward by exactly one **riser** per band, which
+is always the cell you arrived in. Undertow may displace a runner from the
+arrival riser but cannot delete it or its return path. Find that path or use
+emergency jack-out.
 
 | Band | Name | Depth | Contains |
 |---|---|---|---|
@@ -467,11 +481,12 @@ which is always the cell you arrived in. A runner who loses their riser
 | 2 | Drift | 1 | Drift in numbers, Undertow, unowned Tripwires and Turnstiles left by nobody, a runner's dead rig with programs in it (1 in 3) |
 | 3 | The Reach | 2 | Choristers, Shades, the first Tenant recordings, season-contribution data |
 | 4 | The Floor | 3 | Shades, one Sweeper on a loop, Blacksite conduit cells that show the sealed levels' telemetry, rare contribution data |
-| 5 | The Conduit | 4 | the Sweeper's origin cell, the Tenant's voice, one choice-bearing dialogue per season; nobody has jacked out from here without a Chorister's buff |
+| 5 | The Conduit | 4 | the Sweeper's origin cell, the Tenant's voice, one choice-bearing dialogue per season; emergency jack-out remains available without a buff |
 
-A descent cannot skip a band. Sinks in band 4 and 5 are hidden and need
-Listening or Lantern. A Choir Surge maps the current band for its
-duration.
+A descent cannot skip a band. Sinks in band 4 are hidden; band 5 has no
+deeper sink. Hidden routes need Listening or Lantern, with a visible
+surveyed bypass for required routes. A Choir Surge maps the current band for
+its duration.
 
 ### 6.2 Residuals
 
@@ -530,48 +545,31 @@ cores, Halvard cores anywhere), **black** (Sink, Sodium Row), **street**
 Meatspace consequences of a forced jack-out: shock as stated, and any
 black-ICE meat damage already taken stays taken.
 
-### 7.1 A worked run: Gatehouse East
+### 7.1 A worked operation: Gate Nine
 
-A Ghost, grade 8, Cortex 46, Lattice skill 40, Programs skill 35, on a
-four-slot portable rig loaded with Chisel, Slicker, Alibi, Locksmith. The
-crew's Hardline is standing at Gate 4 in `tramyard-wall-gate` with a Kestrel
-gate turret looking at her. The job: flip `Gate 4` and get out.
+The crew wants the optional outbound latch open before the next patrol.
+Its Ghost uses a public loan terminal with Pick, Umbrella, and Skeleton;
+its street member covers the terminal and watches the gate. Inspect the
+core's published tier and patrol route before entering. Each program
+cast has the cooldown in design §17.2 and the trace cost in §7; movement
+rounds up to simulation ticks. No prose example overrides those rules.
 
-Cell moves take 1.0 − 46/100 = 0.54 s. The Ghost jacks in at a public
-terminal in Tramyard Market, crosses six public cells to Gate Bus East
-(3.2 s), and casts Locksmith on the gated core entrance (1.5 s, trace
-stays 0 outside the core).
+The first room's Tripwire can be destroyed, avoided during a mapped
+patrol gap, or isolated by a street member at mission hardware. Breaking
+it is noisy; isolating it exposes the person at the cabinet. Skeleton
+handles the tier-1 Turnstile, not every later lock. A three-second latch
+flip opens the outbound service route and logs the event upstairs.
+The gate's mandatory inward pedestrian route remains usable throughout.
 
-Room 1, entry. A **Tripwire** fires: 8 damage, integrity 92, and trace
-starts at tier 3, +1.5 per second. The Ghost casts Chisel (1.0 s): 18
-damage, Tripwire at 2. Second Tripwire hit lands during the cast: 84.
-Chisel again: Tripwire dead at 2.0 s. Trace 3.
+A solo runner uses the same terminal and the 120 s mission latch, jacks
+out, then crosses. A mixed-faction crew can cooperate, with the mission
+permission naming its participants. Additional manifests lie past a
+patrolling Mastiff: taking them costs exposure and trace. Leaving with
+the latch receipt is a successful run, even without clearing every room.
 
-Room 2, a **Turnstile** across the exit. Locksmith opens it (1.5 s,
-cooldown 5 s). Trace 5.
-
-Room 3, **Lockstep** on the passage into the control room, schedule
-visible: opens in 22 s. Locksmith is on cooldown for another 3.5 s; the
-Ghost waits it out and casts (1.5 s). Trace 12.
-
-Room 4, the control room, and a **Mastiff** on its loop is one room away.
-The Ghost touches the `Gate 4` control (a 3 s flip): trace +10, then
-+1.5/s. The Mastiff walks in at 2 s into the flip and bites: 14, integrity
-70. The flip completes at trace 26. Upstairs, the Hardline sees the log
-line *"Gate 4 cycles open. Nobody touched it."* and walks through. The
-Ghost casts Slicker (0.5 s, absorbs 25): the Mastiff's next two bites
-(28) cost only 3 integrity, 67.
-
-Now the choice: fight a 60-integrity Mastiff with an 18-damage Chisel
-(four casts, 6 s, and it bites every 1.2 s for 14: roughly 56 more damage
-without the shield), or leave. The Ghost leaves. Four rooms back at 0.54
-s each, the Mastiff following for two of them (one more bite, 53), trace
-climbing to 34 by the entrance cell. Alibi on the way out for tidiness
-(trace 24), then out of the core: trace stops. Jack out at the terminal:
-trace 0, integrity 53 recovers at 5 per second once out.
-
-Hornets, listed in this core, were in room 5 with the manifests. The
-Ghost never went there. That is what a job is.
+S14/S15 must calculate an exact deterministic replay from content and
+tick rules; the old hand-counted example omitted cast trace, cooldowns,
+and movement rounding and must not be used as a numerical golden.
 
 ## Glossary
 

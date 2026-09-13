@@ -51,8 +51,9 @@ migration.
 | `scour-ring-4` | Far Ring | The Scour | open | none | 200 × 100 |
 | `blacksite-l1` | Blacksite Level One | The Blacksite | instanced | none | see story arcs |
 
-Thirty-five zones. Five safe, six pockets, sixteen contested, seven open,
-one instanced.
+Thirty-five zone templates. Instancing is separate from safety;
+`blacksite-l1` has open mission areas and a protected decision room.
+Count the safety classes from the overview instead of a second tally.
 
 ## Sketch legend
 
@@ -108,8 +109,8 @@ too.
 - **Exits:** `spire-atrium` (lift); `spire-shaft-head` (service lift,
   locked: Halvard member or a story contract key).
 - **Relays:** none.
-- **Terminals:** one Halvard-member terminal (Spire core entrance,
-  tier 4).
+- **Terminals:** one Halvard-member terminal (Halvard Citadel entrance,
+  tier 5).
 - **Vendors / anchors:** Halvard quartermaster (heavy weapons, armour),
   Halvard contract handler, Director Halvard's outer office (story
   anchor, not enterable).
@@ -306,13 +307,15 @@ of rain that never falls.
 - **Exits:** `vatside-wake-hall` (door); `core-plaza` (street, Sablier
   Boulevard); `vatside-vat-row` (street); `core-tram-hub` (tram
   platform).
-- **Relays:** **Cold Chain Relay** (controls Vatside's refrigeration
-  grid; holders get a discount on surgery).
+- **Relays:** **Cold Chain Relay** (controls elective cold-storage capacity; member surgery benefit
+  and public work orders follow game design §7.5 and §7.7).
 - **Terminals:** two public terminals; one Sablier-member terminal
-  (Clinic core, tier 2).
-- **Vendors / anchors:** Sablier main clinic (implant surgery, detox),
+  (Sablier Clinical core, tier 3).
+- **Vendors / anchors:** protected clinic-interior pockets contain
+  Sablier main clinic (implant surgery, detox),
   Sablier recruiter, pharmacy vendor (meds, licensed drugs), Descent
-  console (Sablier).
+  console (Sablier). The Cold Chain capture terminal stays in the
+  contested street; repairs never require fighting at the clinic counter.
 - **Spawners:** Sablier security (guard, slow), patients, one Warden
   patrol on a long loop.
 
@@ -340,7 +343,7 @@ Sablier security arrives afterwards to bill both parties for the repair.
 - **Exits:** `vatside-clinics` (street); `terraces-blocks` (street);
   `under-service` (maintenance ladder behind the vat halls, unlocked).
 - **Relays:** none.
-- **Terminals:** one hardware terminal (Vat core, tier 3; its controls
+- **Terminals:** one hardware terminal (Vatline core, tier 4; its controls
   include the Sablier faction vat and the cold-storage doors).
 - **Vendors / anchors:** black-clinic front door (Sable-run; surgery at
   60 %); Sablier vat technicians (talkers, gossip).
@@ -377,7 +380,7 @@ ladder behind that goes down to where the vats drain.
   `oldworks-main` (freight siding).
 - **Relays:** **Depot Relay** (controls the ration distribution
   schedule; holders' faction vendors restock twice as fast).
-- **Terminals:** one hardware terminal (Depot core, tier 3; controls the
+- **Terminals:** one hardware terminal (Depot Control core, tier 2; controls the
   warehouse doors and the freight cranes).
 - **Vendors / anchors:** Kestrel quartermaster (tools, drones, carrier
   frames), Kestrel contract handler (convoy contracts), impound office
@@ -415,8 +418,7 @@ one pallet at a time.
   second-hand gear (rotating stock), Ferrymen salvage buyer (the one
   place inside the wall that pays for Ring-fall), Kestrel recruiter.
 - **Spawners:** Kestrel security, market crowds, pickpocket NPCs
-  (steal small chit amounts from players standing still too long; a
-  Nerve check resists).
+  (ambient attempts and mission targets; no passive theft from readers).
 
 Every stall in Karst that could not afford a plaza frontage. Tarpaulin
 roofs, shouted prices, a Ferrymen buyer with a set of scales and a
@@ -444,7 +446,7 @@ and Sable can stand at adjacent stalls and both pretend not to notice.
   Gate core control, or for a convoy).
 - **Relays:** **Gate Relay Nine** (controls the gate schedule; holders
   open the gate on demand and tax non-members a toll in chits).
-- **Terminals:** one hardware terminal (Gate core, tier 3).
+- **Terminals:** one hardware terminal (Gatehouse East core, tier 3).
 - **Vendors / anchors:** Kestrel convoy master (escort contracts),
   Halvard checkpoint (searches for contraband on the way in; Halvard
   members exempt), Ferrymen guide (Scour passage, ring maps).
@@ -481,7 +483,7 @@ Karst stand here and watch the count and then do not.
   platform); `sink-terraces` (cable car, three stations along the rim;
   or a rope descent, hazard).
 - **Relays:** **Cable Relay** (controls the cable cars; holders ride
-  free and can stop the cars).
+  free and can hold cars for at most 30 s, followed by 120 s immunity).
 - **Terminals:** two public terminals (Sink sector; the Sink's public
   cells are unusually well connected to Old Works).
 - **Vendors / anchors:** rim bars, a Sable enforcer post (talkers, the
@@ -522,9 +524,9 @@ lanterns.
   location), Sable contract handler, Sable's cable car (Tomasz Reyes's
   moving office; a story anchor that appears at a random station every
   few minutes).
-- **Spawners:** Sable enforcers, terrace residents, rival gang NPCs
-  (aggro on everyone including Sable, in the lower terraces), Marked
-  players hiding out.
+- **Spawners:** Sable enforcers, terrace residents, rival gang NPCs (aggro
+  on everyone including Sable, in the lower terraces), places where Marked
+  players may hide (not NPC spawners).
 - **Vats:** the Sable faction vat, in a clinic that does not put its name
   on the door.
 
@@ -554,8 +556,9 @@ owns a hillside.
   (Ring-light on water only).
 - **Exits:** `sink-terraces` (stairs, ladders); `under-caverns` (the
   Sump: a drain gallery at the lowest point, unlocked, hazardous).
-- **Relays:** **Sump Relay** (controls the pumps; holders keep the Floor
-  drained; when neutral, water tiles spread over an hour).
+- **Relays:** **Sump Relay** (controls the pumps; controls authored pump
+  regions; normal operation remains when neutral. Bounded work orders
+  determine public or salvage drainage).
 - **Terminals:** one hardware terminal (Sump core, tier 2; controls the
   pumps and the drain gallery grate).
 - **Vendors / anchors:** none regular. A Ferrymen smuggler who sometimes
@@ -591,7 +594,7 @@ who wants it guarded can hold the Floor for long.
   door); `terraces-blocks` (street); `under-service` (a tower's drain
   stair, unlocked).
 - **Relays:** **Bell Relay** (controls the towers' resonance bells;
-  holders' Cantors get +10 % hymn range in Chapel Ward).
+  holders' Cantors get +1 tile hymn range in Chapel Ward).
 - **Terminals:** two public terminals (Chapel sector; hidden cells are
   denser here than anywhere else).
 - **Vendors / anchors:** Choir recruiter (a novice at the tower door),
@@ -669,8 +672,8 @@ about the thing under the city.
   network hub; holders get a Lattice-wide −10 % trace gain).
 - **Terminals:** four public terminals with unusual reach (Old Works
   sector cells connect to every district's public cells); two of them
-  are illegal Lattice taps (no trace in civic cells while used, until a
-  Warden patrol notices the tap).
+  are illegal Lattice taps (mission credentials reveal local bypasses; ordinary trace
+  and safety checks still apply).
 - **Vendors / anchors:** program dealer (attack, decoy, stealth
   programs), rig workshop (rig upgrades, slot expansions), Unmoored
   recruiter (a graffiti tag you have to interact with).
@@ -707,8 +710,8 @@ as they need it, an anarchist.
 - **Exits:** `oldworks-main` (street); `sink-terraces` (tunnel,
   Sable-tolled); `under-service` (a collapsed floor; a ladder, unlocked).
 - **Relays:** **Yard Relay** (controls the yard power; holders'
-  fabrication rolls +5 % quality).
-- **Terminals:** one hardware terminal (Yard core, tier 2; controls the
+  fabrication quality +0.05, capped 1.15).
+- **Terminals:** one hardware terminal (Foundry core, tier 3; controls the
   gantry and the yard lights).
 - **Vendors / anchors:** the fabrication workshop (public workshop, the
   main one in the city), schematic trader (Unmoored), scrap dealer.
@@ -740,7 +743,7 @@ are building something.
 - **Class:** pocket. **Lean:** Unmoored. **Size:** 40 × 20. **Sight:** 6.
 - **Exits:** `oldworks-main` (the unmarked door).
 - **Relays:** none.
-- **Terminals:** one member terminal (Unmoored core, tier 3; the core is
+- **Terminals:** one member terminal (Ninety-Nine's Drop core, tier 2; the core is
   small, well defended, and hosts Ninety-Nine's dead drop cell).
 - **Vendors / anchors:** Ninety-Nine (accessible via the terminal, not in
   the room), Unmoored contract handler, Unmoored quartermaster (energy
@@ -822,7 +825,7 @@ Between the blocks, alleys where the block lights do not reach.
 
 Every block shares a lobby, in the way that every apartment in the game
 shares a floor plan. A concierge who remembers faces, a lift, a wall of
-mailboxes, and a door with your name on it, which after ninety days as a
+mailboxes, and a door with your name on it, which after a discharged lease as a
 number is the whole point.
 
 ```
@@ -924,7 +927,7 @@ things. Some of the things are true.
 - **Vendors / anchors:** an Unmoored dead drop (contract objectives), a
   Choir shrine (Listening aid consumable, free, one per day).
 - **Spawners:** rogue maintenance drones (hunt), feral dogs (hunt in
-  packs), Marked players, Sable smugglers (flee, carrying loot).
+  packs), hiding alcoves for players, Sable smugglers (flee, carrying loot).
 
 The city's plumbing. Service tunnels wide enough for a truck, pipes as
 thick as a tram, and the emergency lights that were supposed to last a
@@ -988,8 +991,8 @@ has had forty years alone to think about visitors.
   outside the wall: the Ferrymen's way in, known only to them and to
   players who have found it).
 - **Relays:** **Cavern Relay** (an Unmoored-built relay on a stolen
-  generator; holders can see the cavern map; when neutral, the caverns
-  are unmapped for everyone).
+  generator; holders see the current patrol overlay; explored geometry
+  is remembered by everyone, even when ownership changes).
 - **Terminals:** one orphan terminal on the relay.
 - **Vendors / anchors:** a Ferrymen way-station (buys salvage, sells
   lights and water), a Choir pilgrim camp (talkers).
@@ -1026,9 +1029,9 @@ water does.
   `under-shaft-foot` (the outworks' inner door: an Undercity key item,
   consumed; or the Outworks core control during an Exhale).
 - **Relays:** **Outworks Relay** (the deepest relay; holders' Descent
-  contributions count +10 %; capturing it during an Exhale is a season
-  contribution in itself).
-- **Terminals:** one hardware terminal (Outworks core, tier 4; the
+  contributions count +10 %, with no extra ballot weight; an Exhale capture
+  is recorded in the Chronicle, without a repeatable contribution grant).
+- **Terminals:** one hardware terminal (Outworks Seal core, tier 5; the
   first core in the game whose ICE includes a hunter by default; its
   descent cell reaches the Silt in one step).
 - **Vendors / anchors:** none. Halvard survey markers (story anchors: the
@@ -1065,7 +1068,7 @@ being the city and starts being the thing the city was built on top of.
   (the shaft is lit from above and below).
 - **Exits:** `under-outworks` (inner door); `spire-shaft-head` (the
   Shaft: the cage lift, story-gated, finale arc only); `blacksite-l1`
-  (the season door: opens when the Depth meter fills; crews of 3 to 5
+  (the season door: opens when the Depth meter fills; expeditions of 1 to 5
   enter an instance).
 - **Relays:** none.
 - **Terminals:** one hardware terminal (Shaft core, tier 5; shared
@@ -1108,14 +1111,15 @@ sign. The Choir have carved it again.
 - **Exits:** `scour-ring-1` (the causeway); `scour-ring-2` (the Ferrymen
   road, a marked route that skips most of Ring One's patrols).
 - **Relays:** none.
-- **Terminals:** one Ferrymen terminal (Landing core, tier 2; the only
+- **Terminals:** one Ferrymen terminal (Landing core, tier 2; the public shelter's
   Lattice access outside the wall; the Ferrymen keep it on a salvaged
   satellite ground-station dish that still points at nothing).
 - **Vendors / anchors:** Anouk, the Ferry (story anchor, recruiter),
   Ferrymen quartermaster (Ring-fall weapons, lights, water, ring maps),
   Ferrymen contract handler (salvage contracts), a salvage buyer at full
   price, Descent console (Ferrymen), the fabrication tent (workshop).
-- **Spawners:** Ferrymen (guard, aggro on Halvard and Kestrel members),
+- **Spawners:** Ferrymen (guard; refuse restricted services to enemies,
+  never attack inside the pocket),
   dogs, salvage crews resting.
 - **Vats:** the Ferrymen faction vat, inside a crashed orbital module.
 
@@ -1143,7 +1147,7 @@ They will feed you. They will also remember what you owe.
 - **Exits:** `tramyard-wall-gate` (the gate); `scour-landing`
   (causeway); `scour-ring-2` (the convoy road; several tracks).
 - **Relays:** **Mile Relay** (a Kestrel road marker one mile out;
-  holders' convoys are safe on the Wall Ring road; pays triple like all
+  holders see the current Wall Ring patrol route; no PvP immunity; pays triple like all
   Scour relays).
 - **Terminals:** none.
 - **Vendors / anchors:** the convoy road (Convoy events run along it),
@@ -1211,7 +1215,7 @@ that the crews do not look up when it does. They look at where it went.
 - **Exits:** `scour-ring-2` (beacon line); `scour-ring-4` (no road; a
   bearing).
 - **Relays:** **Crash Relay** (built into the largest intact wreck;
-  holders' salvage nodes in Ring Three yield +1 grade step; the most
+  holders' Ring Three nodes yield +1 grade step, capped at compute; the most
   contested relay in the game).
 - **Terminals:** none.
 - **Vendors / anchors:** the wreck field (landmarks; several large
@@ -1288,7 +1292,7 @@ date.
 - **Class:** instanced. **Lean:** none. **Size:** defined by the story
   arcs document.
 - **Exits:** entered from `under-shaft-foot` (the season door) by a crew
-  of 3 to 5 when the season's Depth meter fills; leaves the same way.
+  of 1 to 5 when the season's published Depth target is met; leaves the same way.
 - **Relays / terminals / vendors:** defined by the story arcs document.
   One instanced sector accompanies the zone.
 - **Spawners:** defined by the story arcs document.
@@ -1306,12 +1310,13 @@ asset manifest can reference it.
 - **Trams** are zone transitions with a 10-second ride, not driveable
   objects. The Central Tram Hub is the only zone with platforms to more
   than one destination; district platforms go to the hub only.
-- **Instanced interiors** (apartments, `blacksite-l1`) are zones whose
-  instances are keyed by tenant or crew. They share the zone model.
+- **Interiors:** apartments are protected rooms in the Terraces map
+  with owner-only object permissions and a separate vestibule. The
+  Blacksite uses a separate persistent expedition instance.
 - **Hidden exits** (`under-caverns` cave mouth, the Drop's door) are
   exits with a `hidden` flag revealed by a Listening check, a program, or
   an NPC's dialogue flag on the character.
-- **Shared cores** (`spire-shaft-head` and `under-shaft-foot`) are one
+- **Shared core** (`lat-shaft` at `spire-shaft-head` and `under-shaft-foot`) are one
   core with two hardware locations; cutting power at either affects
   both. This is the only such core and the content loader should assert
   it.
@@ -1321,3 +1326,43 @@ asset manifest can reference it.
 ## Glossary
 
 Glossary: merged into 07-glossary.md.
+
+## Playable infrastructure and content bindings
+
+All service-state durations, relay modifiers, and safety rules are game
+design §7.5-§7.7. A map authors their targets, never invents another rule.
+Safe and pocket gates cannot turn those areas into kill boxes. Marked,
+heat, faction enemies, and Curfew do not disable protection.
+
+| Gazetteer shorthand | Canonical core ID |
+|---|---|
+| Spire / Citadel | `lat-halvard-citadel` |
+| Clinic / Vat | `lat-sablier-clinical` / `lat-vatline` |
+| Depot / Gate | `lat-depot-control` / `lat-gatehouse-east` |
+| Sump / Choir | `lat-sump` / `lat-nave` |
+| Yard / Unmoored | `lat-foundry` / `lat-ninety-nines-drop` |
+| Drowned / Outworks | `lat-drowned` / `lat-outworks-seal` |
+| Shaft Head and Shaft Foot | `lat-shaft`, two hardware locations |
+| Landing | `lat-landing` |
+
+Add every named core's hardware and controls to its listed zone, even
+when an early sketch omitted the cabinet. Safe hardware uses mission
+permissions. Add protected faction vats at `spire-atrium`,
+`tramyard-depots`, and `core-precinct`, alongside those already listed.
+Every relay has its own uplink core and local hardware; it never doubles
+as an unrelated city's core. Public terminal access reaches its district
+sector, whose public uplinks connect every district, including Scour.
+
+Sump work orders require two explicitly marked flood regions: the short
+public stair and the salvage niche. Both retain a dry perimeter return.
+Cold Chain places its replacement socket beside a sheltered loan
+terminal. Depot places its manifest inspection point before the surplus
+warehouse fork. Relay Zero places a physical reset cabinet whose cover
+protects a solo player's body from routine NPC patrols. A crew can guard
+it in contested PvP. Every map shows these costs through geometry.
+
+The existing `under-shaft-foot` is permanent geography, never an Open
+ending reward. That ending changes only an optional east maintenance
+shortcut within `under-outworks`. The Far Ring has a fenced service
+ledge inside its existing bounds. Its returning signal provides local
+salvage telemetry; it never becomes an exit to another city.

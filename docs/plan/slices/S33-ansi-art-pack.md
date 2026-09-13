@@ -45,11 +45,11 @@ row per line, plus `<id>.json` sidecar:
 |---|---|---|---|
 | `art-title` | 80×20 | `-256`, `-16`, `-w132` (132×30) | the tagline block from the found texts |
 | `art-sigil-<faction>` × 8 | 22×6 | `-256`, `-16` | faction short name in its colour, centred |
-| `art-vignette-<district>` × 7 | 56×12 | `-256`, `-16` | the zone atmosphere text's first two lines |
+| `art-vignette-<district>` × 7 | 55×12 | `-256`, `-16` | the zone atmosphere text's first two lines |
 | `art-ring` | 80×8 | `-256`, `-16` | one line: "The Ring is up." |
 | `art-wake-hall` | 40×14 | `-256`, `-16` | none (Wake shows text only) |
 | `art-dead` | 56×10 | `-256`, `-16` | the decant timer line only |
-| `art-jack-in-1..3` | 56×17 | `-256`, `-16` | no transition (cut) |
+| `art-jack-in-1..3` | 55×17 | `-256`, `-16` | no transition (cut) |
 | `art-blacksite-l1` | 80×20 | `-256`, `-16` | the level's first log line |
 
 - Sidecar: `{"id", "width", "height", "min_tier": "16|256|truecolor",

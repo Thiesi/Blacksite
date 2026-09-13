@@ -58,16 +58,23 @@ core_entrance, descent), neighbours[], requirement, label, core_id
 
 ### 1.4 Core (`cores/<id>.json`)
 
-`id, name, owner (faction id or "private"), tier 1–5, hardware (list of
-one or two (zone id, tile) locations; two only for the Shaft core that
-spans Shaft Head and Shaft Foot, and the validator rejects any other
-multi-location core), rooms[]` where a room is `id, neighbours[], data[] (DataSpec),
-controls[] (ControlSpec), ice[] (ice template ids), lore`.
+`id, name, owner (faction id or "private"), tier 1–5 (0 only for the Wake
+training core), hardware (list of one or two (zone id, tile) locations; two
+only for the Shaft core that spans Shaft Head and Shaft Foot, and the
+validator rejects any other multi-location core), rooms[]` where a room is
+`id, neighbours[], data[] (DataSpec), controls[] (ControlSpec), ice[] (ice
+template ids), lore`.
 
 - DataSpec: `id, kind (chits, salvage_data, contribution, contract_key,
   schematic, text asset), amount or asset id, respawn seconds`.
 - ControlSpec: `id, label, target (zone id, object id), action (open,
-  close, disable, enable, toggle, call), reset seconds`.
+  close, disable, enable, toggle, call), reset seconds, scope (public,
+mission, private_vestibule, expedition), permission, safety_policy,
+owner_policy, warning seconds, alternate_route, revision`.
+
+A control cannot invent arbitrary code. Its action and permission are
+closed enums; safe-zone hazards, private storage access and essential
+service denial fail validation. Expiry is independent of relay ownership.
 
 ### 1.5 ICE template (`ice.json`)
 
@@ -78,7 +85,10 @@ hunter), black (bool), meat_damage, counters[] (program classes), lore`.
 ### 1.6 Program template (`programs.json`)
 
 `id, name, class, tier, slots, cast_seconds, cooldown_seconds, effect
-(dict), source`.
+(typed record), source, price, acquisition_requires, cast_requires,
+trace_cost, target_class, duration, stacking_group`. The 35 records are
+game design section 17.2; no parallel catalog aliases. Acquisition and
+continued use are distinct requirements.
 
 ### 1.7 Item template (`items.json`)
 
@@ -113,20 +123,30 @@ threshold, title), vendor inventory id, contract templates[]`.
 ### 1.10 Contract template (`contracts.json`)
 
 `id, faction or "vesper", type (fetch, hack, escort, clear, plant,
-survey), params (ranges and pools), reward (chits range, standing deltas,
-xp, item pool), min_grade, crew_scaling, story (bool), season, chain
-(next id)`.
+survey), stages[], params (ranges and pools), reward (chits range,
+explicit standing deltas, xp, item pool), min_grade, crew_scaling,
+story (bool), season, chain (next id), branch_group, permit_scope,
+publication_options[], evidence_assets[], unlock_conditions`.
+
+Each stage uses one of the six verbs, a resolved target and a completion
+condition. Escort includes willing mission NPCs; clear declares lethal
+or subdue resolution. Inspect, carry, interact and wait are explicit
+input actions; no text parser or answer matching. A stage declares its
+failure/retry state and receipt key. Story bundles declare all required
+maps, NPCs, dialogue, cores, items and season IDs before activation.
 
 ### 1.11 Dialogue (`dialogue/<npc>.json`)
 
 Talkers with ordered conditional lines, first match wins: `lines[]` of
 `id, text asset, conditions (a closed set: standing, grade, faction,
-marked, contract state, season, event, season flag), offers[] (label,
+marked, contract state, season, event, season flag, legal status,
+evidence, receipt, service state), offers[] (label,
 hotkey, effect: contract offer, join, vendor, text asset), bark (bool),
 balance tag (CUST, TEN, or none)`. The full shape, including terminal
 talkers (the Dispatcher, Ninety-Nine) and the validation tests, is
-"Dialogue system notes" in `docs/world/04-dramatis-personae.md`, which
-governs.
+"Dialogue system notes" in `docs/world/04-dramatis-personae.md`.
+This contract and game design section 13.4 govern weighting and required
+lines; flavour cannot remove a warning, objective or offered action.
 
 ### 1.12 Event template (`events.json`)
 
@@ -180,7 +200,8 @@ variants`. See `04-assets.md`.
 | crew_id | live only, not persisted |
 | settings | keymap variant, palette, sitrep visibility, log verbosity |
 | stats | kills, deaths, runs, contributions, relays; per season |
-| created_at, last_seen_at, legal_at | legal_at = grade-5 timestamp |
+| clone_debt, recovery_kit_id, listened_enabled | debt survives decant; calibration is reversible |
+| created_at, last_seen_at, legal_at | legal_at = earlier of grade-5 timestamp and created_at + 90 days |
 
 ### 2.2 Item instance
 
@@ -190,8 +211,9 @@ created_at`.
 
 ### 2.3 Apartment
 
-`id, owner player id, zone, door object id, rent_paid_until, storage[]
-(item instance ids), safe_chits, core_tier, last_hacked_at, hack_log[]`.
+`id, owner player id, zone, door object id, rent_paid_until, storage[] (item
+instance ids), safe_chits, core_tier, last_hacked_at, hack_log[],
+theft_receipts[], vestibule_access_until`.
 
 ### 2.4 Relay state
 
@@ -211,13 +233,24 @@ influence_paid_until`.
 
 `contract instance id, template, player or crew, params (resolved),
 progress, state (offered, active, complete, failed, turned_in),
-expires_at`.
+expires_at, frozen_roster[], branch_group, stage_receipts[], permits[],
+publication, reward_receipt`. One claim per eligible identity, atomically.
+Story jobs have no overall expiry; bounded field steps may be retried.
 
 ### 2.8 Season and chronicle
 
-`season number, started_at, depth, level_open_since, finale_choices[]
-(crew, choice, at), ended_at, leaderboard snapshot`; `chronicle entries[]
-(season, asset id, rendered text, at)`.
+`season number, started_at, depth_target, depth, level_open_since,
+status (active, settled, archived), contribution_receipts[], ended_at,
+leaderboard snapshot, settlement_id, winning_choice or null,
+balance_before, balance_after, public_modifiers[]`.
+
+`Ballot`: `origin, bbs_user_id, season, expedition_id, choice,
+consenting_name or null, accepted_at, reward_receipt`. Unique on origin,
+BBS identity and season, independent of character and crew changes.
+
+`ChronicleEntry`: `season, kind (expedition, vote, settlement), source,
+asset_id, rendered_text, at, settlement_id`. Expedition accounts are
+attributed reports; only settlement changes public routes and balance.
 
 ### 2.9 Core state
 
@@ -232,7 +265,51 @@ target, at)`, `reports (reporter, target, text, at)`.
 ### 2.11 World meta
 
 `schema version, origin id, created_at, season pointer, event cooldowns,
-rng seeds per zone`.
+rng seeds per zone, balance (-3..+3), committed_event_plans[],
+next_event_roll_at, season_modifiers[]`.
+
+### 2.12 Evidence and receipts
+
+`JournalRecord`: `player, evidence_id, observed_at, location,
+observation, source, claim, confidence_label, related_objective,
+publication_state`. Confidence labels describe source status, never an
+omniscient truth score. Journals hold no unseen maps or private ballots.
+
+`ActionReceipt`: `id, identity, scope, action_key, accepted_revision,
+result, rewards, committed_at`. A uniqueness constraint covers branch,
+contribution, theft, daily perk and settlement claims. Retry returns the
+same result. Journal, reward and authoritative state commit together.
+
+### 2.13 Work order and service node
+
+`ServiceNode`: `id, zone, core, target_objects[], state (normal, fault,
+repairing, allocated), revision, next_fault_uptime, fault_expires,
+order_id, allocation, allocation_expires, authored_route_variants[]`.
+
+`WorkOrder`: `id, service_node, roster[], reserved_until, stage,
+supplied_bound_items[], completed_actions[], allocation_vote,
+reward_receipts[]`. The reserving player chooses the disclosed
+allocation; the frozen roster sees it before accepting and shares the
+reward. Departure of the whole roster releases the reservation. No
+inventory supplies or money may be consumed twice on an interrupted step.
+
+### 2.14 Expedition
+
+`id, season, roster[], origin_instance, seed, checkpoint, phase,
+completed_objectives[], decision_receipts[], empty_since, status`.
+Roster locks at entry. Ordinary crew leadership never changes it.
+Checkpoint recovery rebuilds mission hazards and places participants at
+safe entry; it does not replay rewards. The FIFO entry queue is live,
+while admitted expeditions and personal decisions are persistent.
+
+### 2.15 Committed event plan
+
+`id, template, where, announced_at, starts_at, ends_at, seed,
+variant_ids[], state (planned, active, complete, cancelled), revision,
+cancel_reason, reward_receipts[]`. Forecasts read this record, never an
+independent random roll. Persist both planned and active schedules.
+Timers declare wall-time or uptime basis per game design section 12;
+restart reconciles expired effects before sessions receive a view.
 
 ---
 
@@ -265,8 +342,10 @@ target}, data taken flags, control states, presences[]`.
 
 ### 3.5 Silt instance
 
-`presence id (one per descending runner), seed, graph, depth, residual
-encounters, contributions found`.
+`id, participant presence IDs[], seed, graph, depth, residual
+encounters, contributions found, chorister_phase, scan_cooldowns`.
+A solo descent has one participant. Joining crew members must enter the
+same instance through its entrance; remote beacons do not grant sight.
 
 ### 3.6 Session
 
@@ -280,7 +359,8 @@ input tick, rate counters, pending prompts, view revision`.
 
 ### 3.8 Event instance
 
-`template, started_at, ends_at, where, state`.
+`committed_plan_id, template, started_at, ends_at, where, state,
+effect_layers[], warning_deadlines`. No fresh random schedule on restart.
 
 ---
 
@@ -304,8 +384,9 @@ Defined precisely in `02-architecture.md` §5. Summary of shapes:
 
 ## 5. Invariants a test suite must hold
 
-- A player exists in at most one zone instance or one sector at a time,
-  never both; a jacked-in player's meat actor is present and helpless.
+- A player has exactly one physical actor while connected and at most
+  one Lattice presence. Jacking leaves the physical actor at its terminal;
+  it never duplicates, moves or deletes that body.
 - Chits never go negative; banked chits are untouched by death.
 - Secured inventory never appears in a corpse cache.
 - Every control in every core resolves to an existing zone object at
@@ -316,3 +397,14 @@ Defined precisely in `02-architecture.md` §5. Summary of shapes:
 - Every text and art asset referenced by content exists at load.
 - Entity IDs carry the origin prefix; two worlds with different origins
   have disjoint instance ID spaces.
+
+- Safe-body harm checks apply at action acceptance and effect delivery,
+  with indirect actions attributed to their initiator. Risky NPC-core
+  black ICE uses the explicit opt-in exception, never player damage.
+- Every completed objective, contribution and ballot has one receipt;
+  resends, death, reconnect and a different crew cannot duplicate it.
+- Essential clinic, public uplink and outward escape remain reachable in
+  every control, service and event state, including stacked modifiers.
+- Expiry, ownership and season layers do not overwrite each other's
+  baseline. No apartment control exposes storage or impounded items.
+- A season settlement runs once; a tie applies no world or balance delta.
