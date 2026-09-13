@@ -58,17 +58,14 @@ Plaza punishes anyone who draws.
   where `none`-lean zones' spawners (feral, drones) are hostile to all.
   A player who attacks an NPC becomes that NPC's target and hostile to
   its spawner group for 5 minutes.
-- Wardens: `npc_warden_patrol` and `npc_warden_response` templates;
-  in `safe` zones any `fire` intent by a player (even the refused one
-  from S10) or any damage to any actor triggers a response within 2 s
-  (20 ticks): first two Wardens with batons and a 30 s "stand down"
-  window during which further violence escalates to four with HV-7s,
-  then to lethal with shock rounds; the attacker gets `warden_heat`
-  for 10 min (persisted): Wardens in `contested` zones engage on sight
-  while heat lasts; heat shows as a header word and a role colour on
-  the player's glyph to others. Wardens never pursue into `pocket`
-  zones (Sable's rule on Sodium Row is an enforcer spawner, not
-  Wardens).
+- Wardens: patrol/response templates show a warning within 2 s for a
+  refused safe-zone attack, recording 10 min heat. Safe/pocket actors
+  cannot be damaged by Wardens or other NPCs. Outside safety, use design
+  5.5's patrol/response behaviour and heat; Curfew doubles new heat only.
+  An enemy's faction never overrides the physical safety label. Freelance
+  residents are neutral to faction patrols unless an explicit unsafe
+  perimeter or provocation rule applies. Perimeter danger is labelled
+  before entry; the Landing pocket remains safe for everyone.
 - Wake drone spawner moves onto this engine (`per_player`).
 - NPC death: XP hook (value on the template; awarded in S16), loot
   table roll into a corpse cache (S10's cache with the NPC's table).
@@ -112,8 +109,8 @@ Plaza punishes anyone who draws.
 - `tests/npcs/test_aggro.py::test_hostile_matrix_attacks`,
   `::test_neutral_ignored`, `::test_freelance_neutral_in_contested`,
   `::test_open_none_lean_hostile_to_all`, `::test_attacker_becomes_target_5min`.
-- `tests/npcs/test_wardens.py::test_response_within_2s_in_safe`,
-  `::test_escalation_ladder`, `::test_heat_10min_persisted`,
+- `tests/npcs/test_wardens.py::test_warning_within_2s_in_safe_without_damage`,
+  `::test_safe_warning_never_escalates_to_damage`, `::test_heat_10min_persisted`,
   `::test_heat_engaged_on_sight_in_contested`,
   `::test_no_pursuit_into_pocket`.
 - `tests/harness/test_plaza.py::test_fire_in_plaza_summons_wardens`.
@@ -124,14 +121,14 @@ Plaza punishes anyone who draws.
 1. Enter Meridian Plaza: Wardens patrol, civilians wander, a courier
    drone crosses. NEARBY shows `~` tags.
 2. `Tab` a civilian, `F`: refused (S10), and within 2 s two Wardens
-   arrive and stand you down; fire again: four with rifles; you go
-   down; you decant with `heat` in the header.
+   arrive and issue a warning. Repeated refused shots cannot injure you
+   or the civilian; heat appears in the header.
 3. Walk into Clinic Row with heat: a Warden patrol engages on sight.
    Ten minutes later it does not.
 4. On Sodium Row, attack a regular: Sable enforcers, not Wardens,
    respond.
 5. Leave a zone for 35 minutes (or use a manual-clock test): the
-   spawners are empty on return and refill at respawn rate.
+   dormant actors are rebuilt from their spawners on return.
 6. `admin status` tick p99 under 10 ms with all hub zones active.
 
 ## Definition of done
@@ -153,3 +150,12 @@ Plaza punishes anyone who draws.
 - `RLIMIT_NPROC` and process limits are irrelevant here (single
   server process), but the tick budget is not: staggered evaluation
   is required, not optional.
+
+## Lore review integration
+
+Mission NPCs have scoped ownership and consent/subdue states; removing a
+mission guard never kills the city's permanent handler. Implement generic
+warned maintenance drones and bounded spawners from main design 18.
+Test safe-clinic availability, willingness on escort, nonlethal subdue,
+public service fallback and indirect harm attribution. No essential
+vendor, vat or story contact can be permanently removed by another player.

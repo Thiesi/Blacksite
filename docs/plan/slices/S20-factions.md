@@ -2,7 +2,7 @@
 
 **Status:** planned
 **Primary model:** Opus · **Reviewer:** none
-**Depends on:** S11 · **Milestone:** M4
+**Depends on:** S11, S12, S16 · **Milestone:** M4
 **Issue:** https://github.com/Thiesi/blacksite/issues/20
 
 ## Goal
@@ -19,7 +19,7 @@ bible says it does.
 
 - `docs/design/00-game-design.md` §7.1 (standing −100..+100, Wake
   recruiter +10, contracts/kills/relay deltas with allies and enemies
-  halved, join at +30 and grade 5, one faction, leave −50 and 7-day
+  halved, join at +30 and legal discharge, one faction, leave −50 and 7-day
   cooldown, member benefits, ranks and +90 perks never a flat combat
   multiplier), §7.2 (relations matrix; symmetric except documented
   asymmetries; data file is truth), §7.3 (Marked: 15 min, anyone may
@@ -33,10 +33,9 @@ bible says it does.
 - `docs/design/03-terminal-ui.md` §1 (faction colour roles), §8
   (relation tags `!`, `~`, `+`).
 - `docs/world/02-factions.md`: ranks at +30/+50/+70/+90 per faction,
-  +90 perks (Custodial Officer, Attending vat access, Route Master
-  convoy call, Inspector sees Marked city-wide, Ninth hears the Tenant
-  line, Sable's Hand bar ban, Deep trusted with Ninety-Nine, Charter at
-  +70 reads the chart, Kin), recruiter NPCs, hall slugs, colours with
+  +90 perks (Custodial Officer, Attending vat choice, Route Master reservation, Inspector telemetry,
+  Ninth variant preview, Hand stock reservation, Deep loan and Kin
+  forecast; numeric rules are design 7.6), recruiter NPCs, hall slugs, colours with
   256/16 fallbacks, relations rationale, Freelance page, chat culture.
 - `docs/world/00-bible.md` §7.
 
@@ -59,35 +58,30 @@ bible says it does.
   capture (S21 emits +15 / −15), cut-power (S15 hook: −10 with the core
   owner), private-core theft (−10 with the Wardens if reported by the
   resident).
-- Join: recruiter `talker` action when standing ≥ 30 and grade ≥ 5;
+- Join: recruiter `talker` action when standing >= 30 and legal_at set;
   sets `faction`, grants member benefits; leave: −50 standing,
   `faction_cooldown_until` +7 days, loses benefits at once.
 - Relations: `relation(a, b)` returns H/N/A for faction pairs with
   Freelance treated as N to all; used by S10's attack legality, S11's
   aggro, S13's presence colour, and the Marked check.
-- Marked: on attacking (first damage) a player in a `contested` zone
-  whose faction is not hostile to the attacker's, or who is Freelance,
-  or below grade 5: `marked_until` = now + 15 min; while Marked: name
-  role `player_marked`, any player may attack without consequence
-  anywhere outside `safe`/`pocket`, Wardens (S11) engage on sight in
-  contested zones, sitrep shows the Mark; killing a Marked player: +5
-  Warden standing, no Mark. Open zones never mark. Safe zones refuse
-  the attack entirely (S10 already). Attacking a hostile-faction
-  member in contested is legal and unmarked.
-- Warden heat: `warden_heat_until` set by S11 (safe-zone attack) and
-  S14 (civic trace 100); while hot, Warden NPCs in safe and contested
-  zones hunt the player; heat doubles under Curfew (S24).
-- Ranks: title from standing thresholds shown after the name in sitrep
-  and on target; +90 perks implemented as flags read elsewhere:
-  `sees_marked_citywide` (Inspector: sitrep), `vat_anywhere`
-  (Attending: S10 respawn choice), `can_call_convoy` (Route Master:
-  S24 once per season), `hears_tenant_line` (Ninth: S24 Surge text),
-  `bar_ban` (Sable's Hand: an intent that pockets a named player out of
-  Sodium Row bars for an hour), `knows_drop` (Deep: S27 dialogue gate),
-  `reads_chart` (Charter +70: Ring-fall chart object shows next ring an
-  hour early, S24), `custodial` (Halvard: Shaft Relay story gate, S26),
-  `kin` (Ferrymen: Landing vendor member tier at Kin only where flagged).
-  A test asserts no perk touches damage, accuracy, or armour.
+- Marked: apply game design 7.3 at hostile action commitment, including
+  misses, remote controls, drones and burning. Below grade 5, contested
+  PvP is refused in both directions before marking. For eligible actors,
+  nonhostile/Freelance attacks mark for 15 min; an already Marked target
+  is exempt. Safe/pocket harm is always refused and safety rechecked at
+  impact. Open zones never mark; permission to post a bounty grants no
+  combat exemption. NPC missions use their own standing/permit rules.
+- Warden heat: 10 min after the documented trigger, doubled for new heat
+  during Curfew. Safe-zone response is a warning only; pursuit deals
+  damage in contested/open zones, never safe/pocket. Legal personhood
+  does not remove the independent under-grade protection.
+- Ranks: titles at +30/+50/+70/+90 and exactly the eight perks in game
+  design 7.6. Use daily receipt keys and the owning subsystem's typed
+  interface. Perks stop below +90 or on leaving; no combat multiplier,
+  forced player displacement, public-service ban or essential story
+  gate. Choir Ninth has no population cap; Charter at +70 is a title.
+  Preview/reservation perks consume S24's committed plans after it lands;
+  S24 must complete that integration before reporting them usable.
 - Faction chat: channel `faction` (S09 channels) for members only;
   colour role per faction; a member leaving loses it at once.
 - Faction vats (S10 respawn list gains the member's hall vat), faction
@@ -133,10 +127,10 @@ bible says it does.
 - `tests/test_standing.py::test_delta_propagates_half_to_allies_and_hostiles`
 - `tests/test_standing.py::test_clamped_minus100_plus100`
 - `tests/test_standing.py::test_wake_card_sets_plus_10`
-- `tests/test_standing.py::test_join_requires_30_and_grade_5`
+- `tests/test_standing.py::test_join_requires_30_and_legal_discharge`
 - `tests/test_standing.py::test_leave_minus_50_and_7_day_cooldown`
 - `tests/test_marked.py::test_attack_non_hostile_in_contested_marks_15min`
-- `tests/test_marked.py::test_attack_freelance_or_below_grade_5_marks`
+- `tests/test_marked.py::test_undergrade_contested_pvp_refused_both_directions`
 - `tests/test_marked.py::test_attack_hostile_faction_does_not_mark`
 - `tests/test_marked.py::test_open_zone_never_marks`
 - `tests/test_marked.py::test_attacking_marked_player_does_not_mark_attacker`
@@ -146,7 +140,7 @@ bible says it does.
 - `tests/test_ranks.py::test_titles_at_thresholds_per_faction`
 - `tests/test_ranks.py::test_no_perk_touches_combat_numbers`
 - `tests/test_ranks.py::test_inspector_sees_marked_citywide_in_sitrep`
-- `tests/test_ranks.py::test_bar_ban_pockets_player_out_for_1h`
+- `tests/test_ranks.py::test_hand_reserves_optional_stock_without_blocking_public_vendor`
 - `tests/test_sim_multi.py::test_two_sessions_marked_name_turns_red_for_the_other`
 - `tests/test_sim_multi.py::test_faction_chat_only_reaches_members`
 - `tests/test_sim_multi.py::test_hostile_faction_members_fight_unmarked_in_sink`
@@ -170,15 +164,13 @@ declares (currently none) and the combat-number test for perks passes.
 
 ## Implementer notes
 
-- The design doc lists no numeric standing deltas for kills, cut-power,
-  or theft; the values above are new and go into `00-game-design.md`
-  §7.1 in this PR.
-- The factions doc uses hall slugs (`vatside-clinic-hall`,
-  `tramyard-dispatch-hall`, `chapel-ward-cooling-hall`,
-  `sink-cable-car-terminus`, `old-works-switchhouse`,
-  `spire-public-atrium`) that do not exist in the gazetteer; map them
-  to the gazetteer IDs listed in Scope and note the mapping in the PR
-  for the docs reconciliation.
-- Marked is checked at first damage, not at target selection.
-- Relations are read through one function; never compare faction IDs
-  inline elsewhere.
+Main design 7.1 and 9.3 own standing propagation: explicit multi-faction
+outcomes apply once without secondary propagation. Ordinary single-source
+reputation propagates halves toward zero. A perk receipt keys on BBS
+identity, so relogging or changing character cannot refresh it. The hall
+and vat mapping is reconciled in the faction dossier; do not create old
+alias zones. Relations use one function and the canonical matrix.
+
+Add tests for missed shots, indirect attacks, grade-4 legal residents,
+safe-body effects, daily perk races and every perk's loss-of-standing
+path. A Freelance can finish every main-season objective.

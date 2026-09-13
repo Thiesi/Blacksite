@@ -69,11 +69,11 @@ art file is missing or too wide.
 |---|---|---|---|
 | Title block | 80×20, 132×30 variant | truecolor/256/16 | title screen |
 | Faction sigils | 8 × (22×6) | 3 | side panel on faction screens, recruiter dialogue |
-| District vignettes | 7 × (56×12) | 3 | first entry to a district, map overview |
+| District vignettes | 7 × (55×12) | 3 | first entry to a district, map overview |
 | The Ring (night sky) | 80×8 | 3 | Scour zone header art |
 | Wake Hall vat | 40×14 | 3 | Wake screen |
 | Dead screen | 56×10 | 3 | decant timer |
-| Lattice jack-in transition | 3 frames, 56×17 | 3 | jack in/out |
+| Lattice jack-in transition | 3 frames, 55×17 | 3 | jack in/out |
 | Blacksite level 1 establishing shot | 80×20 | 3 | level entry |
 
 Recommended process: an agent produces the layout and palette
@@ -118,3 +118,28 @@ long as the result is checked at 16 colours.
   `faction-<id>-pitch`, `event-<id>-start|mid|end`, `npc-<id>-<line id>`.
 - Art assets: `art-<name>` with `-256` and `-16` suffixes for tier
   variants, `-w132` for the wide variant.
+
+## 9. Content that expresses the rules
+
+Author each job as a readable physical/Lattice situation: named
+hardware, visible states, an alternate route, a supplied-item source,
+a progress indicator, a consequence preview and a persistent receipt.
+Include both public and worker layouts for the four service nodes in
+game design section 7.5. Essential paths survive every layout variant.
+
+Evidence assets declare observation, speaker/document source, claim and
+related objective separately. Writing may disagree; controls and costs
+must agree. A source cannot silently change a numerical rule or identify
+the Custodian/Tenant. Proper nouns belong in the world glossary.
+
+Every active season bundle references complete maps, legal exits,
+encounter records, dialogue, finale choices, Chronicle templates and
+journal entries. No Season 2 or 3 placeholder is activated by a flag.
+S25 supplies the ordinary city, S27 its voices, S26 the Season 1 bundle.
+
+Faction sigils in prose describe emblems. Tactical markers use the fixed
+CP437-compatible glyph registry, not arbitrary Unicode emblems copied
+from a heading. Always pair faction colour/glyph with a name or short
+label. Full-screen art is optional and never delays an escape action or
+covers a timed hazard. A piece too large for its rectangle uses its
+smaller variant or text fallback, never clipping game state.

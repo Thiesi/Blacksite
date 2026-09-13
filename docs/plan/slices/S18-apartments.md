@@ -2,7 +2,7 @@
 
 **Status:** planned
 **Primary model:** Sonnet · **Reviewer:** none
-**Depends on:** S12, S15 · **Milestone:** M3
+**Depends on:** S12, S15, S16 · **Milestone:** M3
 **Issue:** https://github.com/Thiesi/blacksite/issues/18
 
 ## Goal
@@ -38,7 +38,7 @@ things are.
 - `server/apartments.py`: `content/apartments.json` (three classes);
   a pool of apartment door objects in `terraces-blocks` (at least 24
   doors across the three classes; S25/S08 place them; fixture has 3);
-  letting via the lobby terminal `MenuView` kind `letting` (grade ≥ 5,
+  letting via the lobby terminal `MenuView` kind `letting` (legal_at set,
   one apartment per character, first week paid on signing from bank or
   hand).
 - Rent: `rent_paid_until`; a lazy-clock check on login and on any
@@ -51,9 +51,9 @@ things are.
 - Door: `apartment_door` object; owner enters with `E`; the interior is
   a small pocket region inside `terraces-blocks` (a 6×4 room per
   apartment, `pocket` safety); non-owners face a lock (tier 1, upgrade
-  to tier 3 for 800 chits) that S15's Passkey or a matching key item
-  opens; a forced door is out of scope (no breach charges on apartment
-  doors: content flag).
+  to tier 3 for 800 chits) that a matching key/Passkey opens only into
+  a 30 s vestibule. A visitor gets no access to storage, bank, bed or
+  terminal. No breach charge can target an apartment door.
 - Interior objects: storage (`MenuView` kind `storage`, move items both
   ways, capacity per class), safe (S12's bank API with the apartment as
   the account; banked chits, never lost to death), terminal (S13
@@ -94,7 +94,7 @@ things are.
 
 ## Tests
 
-- `tests/test_apartments.py::test_grade_5_required`
+- `tests/test_apartments.py::test_legal_discharge_required_grade_or_calendar`
 - `tests/test_apartments.py::test_one_apartment_per_character`
 - `tests/test_apartments.py::test_rent_charged_lazily_bank_then_hand`
 - `tests/test_apartments.py::test_two_weeks_lapsed_evicts_to_impound`
@@ -136,3 +136,11 @@ without duplication or loss in a persistence test.
 - The impound is per player; multiple evictions append.
 - Keep the private core's storage manifest as a view over `storage[]`
   filtered by `secured == False`; do not copy items.
+
+## Lore review integration
+
+Use game design 8.2 and 6.4 for rental and theft: legal discharge by
+work or calendar, protected impound, at most one unsecured unit per
+apartment per rolling 24 h, and a resident receipt. Interior permissions
+are server-side on every action, including stale menus. Rent discounts
+apply to the next invoice once; expiry cannot rewrite a paid invoice.

@@ -139,3 +139,19 @@ None.
   a background task.
 - Windows: open files with explicit `encoding="utf-8"`, `newline=""`
   for maps.
+
+## Lore review integration
+
+Include entity model 2.12-2.15 and architecture 15's closed contracts:
+evidence/receipts, permits, branch groups, service nodes, expedition
+checkpoints, individual ballots, committed event plans and compatible
+ICE variants. Validate item/program ID conventions separately from
+hyphenated zone IDs. The program roster has 35 entries, no aliases.
+
+Bundles explicitly declare active/authoring status and dependencies.
+Every active reference must resolve; incomplete future content cannot
+produce offers, exits or finale choices. The fixture is a complete small
+bundle, not an excuse to accept dangling references in the release tree.
+Add route validation across every service/event/control variant, safe
+hazard rejection, unique branch/ballot keys, training-tier exception and
+both required-voice lines. Numeric fixtures source main design 17/18.

@@ -2,7 +2,7 @@
 
 **Status:** planned
 **Primary model:** Opus · **Reviewer:** Astra or Fable (balance read of the numbers against the catalog before merge, per roadmap §4)
-**Depends on:** S10, S12 · **Milestone:** M3
+**Depends on:** S10, S12, S14 · **Milestone:** M3
 **Issue:** https://github.com/Thiesi/blacksite/issues/16
 
 ## Goal
@@ -22,7 +22,7 @@ the catalog's implant and drug tables do what they say.
   uniques: Hardline +2 tolerance, Operator two drone slots), §3.3 (12
   lines, 10 skill points → +1 attribute; Vitals only by grade and
   implants), §3.4 (grades 1–30, 3 grade points and +1 Vitals per grade,
-  grade 5 = Ninety-Day; XP sources), §8.5 (slots, one per slot except
+  grade 5 = early Ninety-Day discharge; XP sources), §8.5 (slots, one per slot except
   arms ×2, Sablier 2 % failure at list, black clinic 60 % and 15 %,
   resonance needs Cantor + Choir +20), §8.6 (drugs: effect, duration,
   crash for half, three doses in window = dependency, detox), §5.3
@@ -33,7 +33,7 @@ the catalog's implant and drug tables do what they say.
 - `docs/design/03-terminal-ui.md` §4 (character sheet, skills menu).
 - `docs/world/06-catalog.md` §3 (31 implants incl. rig and resonance
   with effects), §4 (hymns/dissonance tiers gated by implants), §6 (11
-  drugs), §14 (price ladder: grade 10 at ~4 h; tier 3 at grade 18+).
+  drugs), §14 (unvalidated earning-curve and equipment-affordability targets).
 
 ## Scope
 
@@ -44,26 +44,21 @@ the catalog's implant and drug tables do what they say.
   `craft` (S17: tier × 15), `discovery` (zone 25, cell 5, first visit
   per character), `contribution` (S26). Grade thresholds: XP for grade
   n = 100 × n × (n + 1) / 2 cumulative (grade 5 at 1 500, grade 10 at
-  5 500, grade 30 at 46 500); a test asserts grade 10 is reachable in
-  the catalog's four-hour assumption at the fixture's earning rates.
+  5 500, grade 30 at 46 500); a harness reports the observed earning curve; the 4-6 hour target
+  remains an unvalidated human pacing goal.
 - Grade-up: +3 grade points, +1 Vitals (recompute health max, keep
   current health ratio), grade title from a `content/grades.json` list
   (Wake, Ninety-Day, Resident, Citizen, Notable, Name, then six more
-  in voice), `legal_at` set at grade 5, log line and toast.
-- `server/skills.py`: twelve lines 0–100; skill-by-use hooks: each
-  successful weapon hit +0.2 to the weapon's line, melee hit +0.3,
-  damage taken with armour worn +0.1 Armour, stealth stance while an
-  enemy is in sight +0.05/s Stealth, drone command +0.1 Drones, cell
-  move +0.05 Lattice, program cast +0.15 Programs, fabrication +1.0 per
-  item (S17), hymn/dissonance cast +0.15, hidden cell found +0.5
-  Listening. Grade points spend 1 point = +1 skill in any line (menu).
-  Attribute recompute: every 10 points summed across a group's three
-  lines = +1 to that attribute above the archetype base; Vitals excluded.
+  in voice), `legal_at` set at the earlier grade-5 or 90-day discharge, log line and toast.
+- `server/skills.py`: implement the twelve lines, spending and capped
+  meaningful-use schedule in game design 3.5. Apply skill once for a
+  valid action receipt; empty casts, repeated cell loops, repeated
+  Chorister samples and harmless self/crew attacks earn nothing.
+  Recompute attribute groups from permanent skills, not temporary gear.
 - Hooks consumed by other slices: to-hit `+ skill / 2`, damage
   `× (1 + skill / 200)` (S10 reads via `player.skill(line)`), Programs
   scaling (S14), Fabrication quality (S17), Listening check for hidden
-  cells (S13: chance = Listening / 100 per adjacent hidden cell per
-  10 s).
+  cells (S13: explicit survey with the threshold and cooldown in design 6.5).
 - `server/implants.py`: slots `head, eyes, spine, arms×2, torso, legs,
   rig`; tolerance = Vitals / 10 (min 4) + Hardline 2 + temporary Chrome
   +1; installing checks slot free, tolerance, `requires` (Cantor and
@@ -75,7 +70,7 @@ the catalog's implant and drug tables do what they say.
 - Surgery: `vendor` objects with `clinic: sablier` (list price + 20 %,
   2 % failure) or `clinic: black` (60 % list, 15 % failure); failure
   destroys the item and applies 30 s of shock 100; removal at any clinic
-  returns the item at 50 % quality loss. Ghost native rig: present at
+  returns the item with unchanged quality; service costs design 8.5. Ghost native rig: present at
   creation at 0 tolerance, replaced when a rig implant is installed.
 - Chrome: temporary +1 tolerance for 20 min; an implant installed under
   it is ejected (item kept, 30 s shock) when it wears off unless Vitals
@@ -128,15 +123,15 @@ the catalog's implant and drug tables do what they say.
 ## Tests
 
 - `tests/test_xp.py::test_grade_thresholds_formula`
-- `tests/test_xp.py::test_grade_10_reachable_in_four_fixture_hours`
+- `tests/test_xp.py::test_earning_curve_report_with_receipt_and_daily_caps`
 - `tests/test_xp.py::test_combat_xp_scales_with_grade_gap_min_5`
 - `tests/test_xp.py::test_discovery_xp_once_per_character`
 - `tests/test_grades.py::test_grade_up_gives_3_points_and_1_vitals`
-- `tests/test_grades.py::test_legal_at_set_on_grade_5`
+- `tests/test_grades.py::test_legal_at_earlier_grade_5_or_90_days`
 - `tests/test_skills.py::test_use_rates_per_line`
 - `tests/test_skills.py::test_ten_points_across_group_raises_attribute`
 - `tests/test_skills.py::test_vitals_never_from_skills`
-- `tests/test_skills.py::test_listening_check_chance_per_10s`
+- `tests/test_skills.py::test_listening_survey_threshold_and_cooldown`
 - `tests/test_implants.py::test_tolerance_vitals_over_10_min_4_hardline_plus_2`
 - `tests/test_implants.py::test_ghost_native_rig_zero_tolerance_replaced_by_implant`
 - `tests/test_implants.py::test_arms_two_others_one_per_slot`
@@ -184,3 +179,14 @@ balance reviewer has signed off on the XP curve in the PR.
   modifiers will have nowhere to compose.
 - Detox pockets the player at the clinic: reuse S08's pocket regions,
   do not invent a new safety state.
+
+## Lore review integration
+
+Grade 1 starts at zero XP, no initial grade benefit. Legal discharge is
+permanent and independent of contested grade protection. Main design
+3.5 owns earning rates, caps and receipts; do not test that assumed human
+pacing is fact. Resonance acquisition uses Choir standing with the First
+Ear starter exception; standing loss never disables installed abilities.
+Use main 8.5 for bought/owned-item surgery fees and failure, and 17.1 for
+Chord's tier-2 access and retained dissonance. Listened calibration is a
+reversible S26 personal flag, not a permanent stat penalty.

@@ -2,7 +2,7 @@
 
 **Status:** planned
 **Primary model:** Opus · **Reviewer:** Astra (spec critique of the hacking model before start, per roadmap §4)
-**Depends on:** S06 · **Milestone:** M2
+**Depends on:** S07, S08, S12 · **Milestone:** M2
 **Issue:** https://github.com/Thiesi/blacksite/issues/13
 
 ## Goal
@@ -42,14 +42,13 @@ and trace are S14.
   tier, faction, standing), `label`, optional `core_id` (resolved in
   S14; the loader accepts the field and validates it against S14's core
   files when present), and one `descent` cell per sector.
-- Uplink cells between sectors (gated) per §2; Scour uplink cells exist
-  only while the corresponding relay is held (hook for S21; until then
-  always present).
+- Uplink cells between sectors (gated) per §2; public Scour uplinks are
+  always present; S21 adds optional ownership shortcuts.
 - `server/lattice/presence.py`: `Presence` per `01-entities.md` §3.3
   with integrity 100, trace 0, rig slots from the player's rig (native
   for Ghosts; a rig implant or a carried portable rig otherwise, S16
-  decides which; here: Ghost native or any rig item in a secured slot),
-  cell, move timer (1.0 s − Cortex / 100 s), `visible_to`.
+  decides which; here: Ghost native, carried rig, or a three-slot public-terminal loan),
+  cell, move timer (max(0.2, 1.0 - Cortex/100) s, tick-rounded), `visible_to`.
 - Jack in: at a `terminal` object (adjacent + `E` or `J`) or anywhere
   with a rig implant (`J`). The meat actor gets stance `jacked`
   (helpless: cannot move, act, or evade; attacks on it use evasion 0;
@@ -70,9 +69,9 @@ and trace are S14.
   it with the `jacked` stance glyph.
 - `door/views/lattice.py`: render `LatticeView` per `03-terminal-ui.md`
   §3: `(nn)` cells at layout positions scaled to the viewport, edges by
-  kind (`─│╱╲`, double for gated, dotted for found-hidden), `[Cn]`
+  kind (`─│/\`, double for gated, dotted for found-hidden), `[Cn]`
   placeholders for core entrances (coloured by owner in S14), reverse-
-  video self marker, `◊` other presences with relation colour, side
+  video self marker, `♦` other presences with relation colour, side
   panel INTEGRITY / TRACE / RIG / ROOM (ROOM empty until S14).
 - Jack-in and jack-out transition frames (3 frames, from `art/` when
   present, text fallback otherwise).
@@ -135,11 +134,12 @@ and trace are S14.
 2. Caller A presses `E` at a public terminal: the transition frames
    play, the Lattice view shows the Core sector with `(nn)` cells and A's
    marker at Plaza Exchange; the side panel shows INTEGRITY 100, TRACE 0,
-   RIG with 3 empty slots (or A's programs if a Ghost).
+   RIG with the shared starter programs Pick and Umbrella.
 3. Caller B sees A's glyph change to the jacked stance in the zone and
-   cannot be targeted normally (evasion 0 shows on target).
+   sees body safety. In this safe zone every attack is refused; repeat in
+   an unsafe fixture to observe the helpless body's evasion of zero.
 4. Caller B jacks in at the second terminal; both walk to the same cell
-   and see each other's `◊` and name in the side panel.
+   and see each other's `♦` and name in the side panel.
 5. A tries a gated cell without the key: a log line names the
    requirement; nothing else happens.
 6. Both press `J`: instant jack-out from a public cell; zone view
@@ -164,3 +164,14 @@ Roadmap §7, plus: all 11 sectors render without overlap at 80×24 and
 - The `jacked` stance must be a first-class stance in S06's actor model
   so S10 can treat it as evasion 0 without special-casing.
 - Keep the presence's move timer on the sector's tick, not wall time.
+
+## Lore review integration
+
+Enforce exactly one physical body plus at most one Lattice presence.
+Jacking never teleports the body. Every archetype can use public loan
+terminals and later descend; native/portable rigs are advantages, not
+story access gates. Required routes have visible alternatives. One Silt
+entrance per sector is baseline; the Listening Post has its authored
+extra route. S14 adds explicit survey/sample actions, not random repeated
+Listening rolls. Public jack-out is immediate; other escape channels
+have design 6.1's bounded interruption, always shown in the view.

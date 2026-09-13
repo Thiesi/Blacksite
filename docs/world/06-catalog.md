@@ -1,10 +1,11 @@
 # Blacksite — Catalog
 
-Every item class in the game with numbers. Canon for what things *are* is
+Every item class in the game with initial equipment schedules. Canon for what things *are* is
 `00-bible.md` §9; the rules these numbers plug into are
 `../design/00-game-design.md` §3 (attributes), §5.3 (combat), §6.3
 (programs), §8 (economy). Numbers are initial values for the balance
-slice; a slice that changes one changes it here too and keeps the test.
+slice. These tables mirror game design §17.1; update both together.
+The design document owns all rules and numbers, including these schedules.
 
 Every row has an ID slug. The content slice turns these tables into data
 files keyed by that slug; the slug is the stable contract, the display
@@ -84,7 +85,7 @@ Manufacturers, so the brand language stays consistent:
 | `wpn_halvard_anvil` | Halvard Anvil LMG | Halvard Ordnance | kinetic | 10 | 26 | 0.5 | 45 | `ammo_7x` | 11.0 | 6800 | Heavy weapon (Hardline only). Suppression as a personality. |
 | `wpn_ostrom_scalpel` | Ostrom Scalpel | Ostrom Optical | energy | 14 | 48 | 2.0 | 80 | `ammo_cell` | 3.0 | 6500 | Surgical laser rifle. Ostrom says it's for eye clinics. Ostrom says a lot of things. |
 | `wpn_ostrom_sunlance` | Ostrom Sunlance | Ostrom Optical | energy | 8 | 70 | 3.0 | 60 | `ammo_cell` | 8.5 | 7400 | Heavy weapon (Hardline only). Brief, bright, final. |
-| `wpn_sable_widow` | Sable Works Widow | Sable Works | chemical | 9 | 18 (+9/s, 5 s) | 1.0 | 65 | `ammo_needle` | 2.2 | 5600 | Needler with a nerve-agent reservoir. Illegal in the Core, which is where it's used. |
+| `wpn_sable_widow` | Sable Works Widow | Sable Works | chemical | 9 | 18 (+9/s, 5 s) | 1.0 | 65 | `ammo_needle` | 2.2 | 5600 | Needler with a nerve-agent reservoir. Illegal in the Core, which is where it is confiscated. |
 | `wpn_ow_railpistol` | Old Works Railpistol | Old Works Collective | kinetic | 8 | 38 | 1.3 | 60 | `ammo_flechette` | 1.9 | 5000 | Coilgun tech, pocket size. Runners' choice for the walk home. |
 | `wpn_ferry_ringfall_rifle` | Ferry-make Ring-fall Rifle | Ferry-make | kinetic | 15 | 55 | 2.6 | 60 | `ammo_scrap` | 7.0 | 4800 | Barrel from a satellite boom, sight from an optics grade. Nobody makes two alike. |
 | `wpn_kestrel_gate_gun` | Kestrel Issue Gate Gun | Kestrel Issue | kinetic | 9 | 30 | 0.7 | 55 | `ammo_5x` | 5.0 | 4600 | Gate-guard carbine, Kestrel's only tier-3 design. Ugly, cheap for what it is, replaces itself. |
@@ -118,7 +119,7 @@ of armour, and has a fixed 1.0 s cooldown (design §5.3). Range is 1.
 | `ammo_shell` | shotgun shells | 24 | 45 | Sable Works and Kestrel |
 | `ammo_cell` | energy cell | 30 charges | 70 | Ostrom pattern; rechargeable at any terminal for 10 chits |
 | `ammo_gel` | caustic gel canister | 20 | 55 | Sable Works |
-| `ammo_needle` | needle darts | 30 | 90 | Sable Works; loaded with whatever drug or agent you choose |
+| `ammo_needle` | needle darts | 30 | 90 | Sable Works; loaded with the weapon's fixed agent (no custom mixing in v1) |
 | `ammo_flechette` | flechette rails | 30 | 80 | Old Works |
 | `ammo_scrap` | scrap bolts | 20 | 15 | Ferry-make; fabricated from hull salvage 1:20 |
 | `ammo_flare` | flares | 6 | 30 | Kestrel Issue |
@@ -149,11 +150,11 @@ reduces Evasion by the listed amount.
 
 ## 3. Implants
 
-Implants cost **tolerance** points (character has Vitals / 10, minimum 4; a Ghost's native rig costs 0;
-Hardline +2) and occupy a slot. Sablier install: list price plus 20 %
-surgery fee, 2 % failure. Black clinic (Sink): 60 % of list, 15 %
-failure. Resonance implants require the Cantor archetype and Choir
-standing +20; rig implants require Cortex 20 (Ghosts start above it).
+Implants cost **tolerance** points (character has Vitals / 10, minimum 4; a
+Ghost's native rig costs 0; Hardline +2) and occupy a slot. Sablier install:
+list price plus 20 % surgery fee, 2 % failure. Black clinic (Sink): 60 % of
+list, 15 % failure. Resonance implants require the Cantor archetype and
+Choir standing +20; rig implants require Cortex 20 (Ghosts start above it).
 
 ### 3.1 Standard implants
 
@@ -190,11 +191,12 @@ they may still install a better one, which replaces it.
 | `imp_rig_native` | Native Rig (Ghost only, built in) | Sablier template | rig | 0 | 3 | jack in anywhere | — | — |
 | `imp_rig_ow_jury` | Old Works Jury Rig | Old Works Collective | rig | 1 | 3 | jack in anywhere; trace gain +10 % | 1 | 1200 |
 | `imp_rig_sablier_clinical` | Sablier Clinical Rig | Sablier | rig | 2 | 4 | jack in anywhere; integrity +10 | 2 | 3600 |
-| `imp_rig_ow_deepwater` | Old Works Deepwater Rig | Old Works Collective | rig | 3 | 6 | jack in anywhere; cell move time −20 %; Silt descent allowed | 3 | 8000 |
+| `imp_rig_ow_deepwater` | Old Works Deepwater Rig | Old Works Collective | rig | 3 | 6 | jack in anywhere; cell move time −20 %; Silt movement benefit; descent allowed with any rig | 3 | 8000 |
 
 Portable rigs (`item_rig_portable_*`, §5) give the same slot counts
-without the implant, but only at a terminal and only while carried in a
-secured slot.
+without the implant, but only at a terminal and while carried. A secured
+slot protects the portable rig from loss; it is not required to use it.
+A public terminal supplies a basic three-slot loan even without a rig.
 
 ### 3.3 Resonance implants (Cantor only)
 
@@ -203,9 +205,9 @@ secured slot.
 | `imp_res_first_ear` | Chapel First Ear | Chapel Foundry | head | 1 | unlocks hymns tier 1; Listening +10 | 1 | 900 |
 | `imp_res_throat` | Chapel Throat | Chapel Foundry | spine | 1 | unlocks dissonance tier 1 | 1 | 900 |
 | `imp_res_second_ear` | Chapel Second Ear | Chapel Foundry | eyes | 2 | hidden cells visible within 2 cells; Listening +15 | 2 | 2600 |
-| `imp_res_chord` | Chapel Chord | Chapel Foundry | spine | 2 | hymns affect 8 tiles instead of 6; replaces Throat | 2 | 2800 |
+| `imp_res_chord` | Chapel Chord | Chapel Foundry | spine | 2 | unlocks hymns tier 2; hymns affect 8 tiles; unlocks dissonance tiers 1-2; replaces Throat | 2 | 2800 |
 | `imp_res_tremor` | Chapel Tremor | Chapel Foundry | arms | 2 | dissonance abilities +20 % damage | 2 | 2700 |
-| `imp_res_ninefold_lattice` | Chapel Ninefold Lattice | Chapel Foundry | head | 3 | unlocks hymns and dissonance tier 3; replaces First Ear | 3 | 7000 |
+| `imp_res_ninefold_lattice` | Chapel Ninefold Lattice | Chapel Foundry | head | 3 | unlocks hymns and dissonance tiers 1-3; replaces First Ear | 3 | 7000 |
 | `imp_res_tenant_ear` | Chapel Tenant's Ear | Chapel Foundry | eyes | 3 | during Choir Surge: sees all ICE class and integrity; Silt residuals speak first | 3 | 7500 |
 | `imp_res_silence` | Chapel Silence | Chapel Foundry | torso | 2 | arm_d +15; immune to knockdown from dissonance | 3 | 4500 |
 
@@ -231,27 +233,11 @@ by (1 + skill / 200). Tier 3 requires `imp_res_ninefold_lattice`.
 
 ## 5. Rigs, programs and Lattice gear
 
-Programs load into rig slots (design §6.3). Program strength scales with
-*Programs* skill; trace numbers are per use.
-
-| ID | Name | Maker | Class | Cast | CD | Effect | Trace | Tier | Price |
-|---|---|---|---|---|---|---|---|---|---|
-| `prg_ow_pick` | Pick | Old Works Collective | attack | 0.5 s | 2 s | 10 ICE integrity damage | +2 | 1 | 150 |
-| `prg_ow_shroud` | Shroud | Old Works Collective | shield | 0.5 s | 6 s | absorb 15 for 5 s | 0 | 1 | 200 |
-| `prg_ow_echo` | Echo | Old Works Collective | decoy | 1.0 s | 12 s | trace gain −50 % for 8 s | 0 | 1 | 250 |
-| `prg_ow_skeleton` | Skeleton | Old Works Collective | key | 1.0 s | 5 s | opens gated cells up to tier 2 | +5 | 1 | 300 |
-| `prg_ow_hammer` | Hammer | Old Works Collective | attack | 1.0 s | 4 s | 24 ICE integrity damage | +4 | 2 | 900 |
-| `prg_ow_mirror` | Mirror | Old Works Collective | shield | 0.5 s | 10 s | reflect next ICE attack | 0 | 2 | 1100 |
-| `prg_ow_lift` | Lift | Old Works Collective | utility | 1.5 s | 8 s | pull data from a room without touching its ICE trigger | +6 | 2 | 1000 |
-| `prg_ow_creep` | Creep | Old Works Collective | stealth | 1.0 s | 20 s | ICE activation delayed 4 s on next room entry | 0 | 2 | 950 |
-| `prg_ow_loader` | Loader | Old Works Collective | loader | 0 | passive | cast times −20 % | 0 | 2 | 800 |
-| `prg_ow_map` | Map | Old Works Collective | utility | 2.0 s | 30 s | reveals room graph of current core | +3 | 2 | 700 |
-| `prg_ow_burn` | Burn | Old Works Collective | attack (runner) | 0.8 s | 3 s | 18 integrity damage to a runner in the same cell | +8 (civic) | 2 | 1200 |
-| `prg_ow_sledge` | Sledge | Old Works Collective | attack | 1.5 s | 6 s | 50 ICE integrity damage | +8 | 3 | 3800 |
-| `prg_ow_null` | Null | Old Works Collective | decoy | 1.0 s | 45 s | trace reset to 0 once; core remembers you | 0 | 3 | 4500 |
-| `prg_ow_masterkey` | Masterkey | Old Works Collective | key | 1.5 s | 8 s | opens any gated cell; opens Silt descent | +10 | 3 | 4000 |
-| `prg_ow_lantern` | Lantern | Old Works Collective | utility | 1.0 s | 20 s | reveals hidden cells within 3; Silt-safe | +2 | 3 | 3500 |
-| `prg_ow_hunterkiller` | Hunter-killer | Old Works Collective | attack | 2.0 s | 15 s | 80 damage to hunter-class ICE only | +6 | 3 | 4200 |
+Programs use the single roster in `03-lattice.md` ?5 and game design
+§17.2. The catalog does not define a second set of spellings or effects.
+Shroud is stealth; Umbrella is the starter shield. Programs are learned
+and persist through decanting. Public loan terminals let every archetype
+use its learned loadout without purchasing a portable rig.
 
 Portable rigs:
 
@@ -338,7 +324,8 @@ place `intact` lands outside story content.
 ## 10. Schematics
 
 A schematic plus salvage at a workshop makes one item; *Fabrication*
-skill rolls quality ±15 % on the item's main stat. Workshops: Tramyard
+skill raises the quality floor under game design 8.4 on the item's
+main stat. Workshops: Tramyard
 (Kestrel, public), the Landing (Ferrymen), Old Works (Unmoored, rigs and
 programs only), the Sink (Sable, chemical and melee only).
 
@@ -361,7 +348,7 @@ programs only), the Sink (Sable, chemical and melee only).
 | `sch_stinger` | `drn_sable_stinger` | hull 2, power 2, compute 1 | 30 | Sable vendor, standing +20, 1000 |
 | `sch_etcher` | `wpn_sable_acid_blade` | hull 2, intact 1 | 50 | Sable, standing +50, 3000 |
 | `sch_mirror_shell` | `arm_ostrom_mirror` | optics 8, hull 3, intact 1 | 65 | core data, Spire tier-3 core only |
-| `sch_hunterkiller` | `prg_ow_hunterkiller` | compute 5, intact 1 | 60 | core data, Silt only |
+| `sch_hunterkiller` | `prg_hunter_killer` | compute 5, intact 1 | 60 | core data, Silt only |
 
 ## 11. Starter kit (end of the Wake, design §4)
 
@@ -376,11 +363,11 @@ programs only), the Sink (Sable, chemical and melee only).
 | chits | 200 |
 | `story_vesper_card` (*Vesper, Tin Halo, Sodium Row*) | 1 |
 
-Ghosts also start with `prg_ow_pick` and `prg_ow_shroud` loaded in the
-native rig. Cantors start with `imp_res_first_ear` installed (Sablier's
-template came with it) and `hymn_steady`. Operators start with
-`drn_kestrel_mule`. Hardlines start with `arm_kestrel_vest` instead of the
-coverall.
+All archetypes learn `prg_pick` and `prg_umbrella`. Ghosts load them in the
+native rig; other archetypes use public terminal loan rigs. Cantors start
+with `imp_res_first_ear` installed (Sablier's template came with it) and
+`hymn_steady`. Operators start with `drn_kestrel_mule`. Hardlines start with
+`arm_kestrel_vest` instead of the coverall.
 
 ## 12. Vendor inventories
 
@@ -427,37 +414,27 @@ lapsed; impound reclaim fee 10 % of stored value.
 
 ## 14. Balance notes
 
-- **Time to kill.** At equal grade with tier-matched gear, an uncovered
-  target should drop in 6 to 10 seconds of sustained fire; cover of 2 or
-  more should stretch that past 15 seconds. Worked example, tier 1:
-  `wpn_halvard_hv7` (16 dmg, 1.0 s CD, acc 55) against a grade-5 Ghost
-  (Vitals 25, health 100, evasion 20, `arm_sable_leathers` arm_k 5) at
-  Kinetic skill 20: to-hit 55 + 10 − 20 = 45 %; damage 16 × 1.1 − 5 ≈
-  12.6; expected 5.7 per second; about 17 s uncovered. That is *too slow*
-  for the pillar, and the fix in the balance slice should raise tier-1
-  base accuracy by about 15 (starter gear should hit 60 % of the time
-  against starter evasion) rather than raise damage. Tier 2 and 3 already
-  land inside the window against tier-matched armour.
-- **Shock.** Half of damage becomes shock; a target in the 6–10 s window
-  reaches shock 80 (slowed) around second 5, which is the intended "you
-  are losing, decide now" signal.
-- **Price ladder.** A grade-10 character with about four hours of play
-  should have earned 6 000 to 9 000 chits net of clone debt and ammo,
-  enough for one tier-2 weapon, one tier-2 armour piece, and one tier-2
-  implant with surgery. Tier 3 is a grade-18-plus purchase or a faction
-  member's fabrication project.
-- **Ammunition** is a real sink: a tier-2 rifle burns about 120 chits of
-  ammo per hour of contested play.
-- **Rig economy.** A Ghost never needs to buy a rig; every other archetype
-  pays 1 200 chits and one tolerance point to jack in away from a
-  terminal, which is the intended asymmetry.
-- **Dissonance** ignores kinetic, energy and chemical armour entirely;
-  only `arm_d` reduces it, and only two items grant `arm_d`. Cantors are
-  the anti-Hardline, and the Choir vestment is the counter.
-- **Drugs.** Every Sable drug's effect is worth roughly one tier of gear
-  for its duration; the addiction window is the price. Sablier's labelled
-  drugs are weaker and the window is the same, on purpose: the only safe
-  thing about them is the label.
+All numbers are design hypotheses, not measured combat results. The
+combat model currently predicts longer duels than the old 6-10 s claim.
+At grade 5, Ghost Vitals = 24 and health = 98; with Nerve 40, evasion is
+13.333. At Kinetic 20, an HV-7 against Sable Leathers without cover or
+range penalty hits at 51.667 % for 12.6 damage. Expected damage per
+second is 6.51, giving roughly 15.1 seconds before healing, shock,
+movement, or shot discretisation. Do not call this a playtest.
+
+Design targets: 12-20 s equal-grade uncovered duels; at least 20 s with
+cover 2; a starter drone in 6-10 s. Tune content only after deterministic
+simulations and human sessions show retreat, support, and counterplay
+are useful. Shock is not guaranteed to reach 80 before death: health
+and shock must each give a readable warning. S10/S16 own the balance
+checks; there is no separate, unnamed balance slice.
+
+Target grade 5 in 45-90 minutes of varied successful work, grade 10 in
+4-6 hours; test the earning routes before declaring those timings met.
+A failed outing must leave a route back to productive work. High-tier
+gear trades price, weight, slots, and exposure against performance.
+Every archetype can run from a public terminal; a rig implant buys
+location freedom, not admission to half the game.
 
 ## 15. Passes, charges and story items
 
@@ -470,18 +447,15 @@ secured by default, and cannot be sold.
 |---|---|---|---|---|---|---|
 | `key_containment_charge` | Containment Charge | consumable | Halvard vendor, standing +50 | 1.5 | 1 500 | Cuts a core's power from any tile within 3 of its hardware, through the wall. Single use. Halvard's answer to a locked server room. |
 | `key_curfew_pass` | Curfew Pass | pass | Warden vendor, standing +30 | 0.1 | 400 | Admits the holder to the Core during a Curfew. Expires after 7 days. Marked holders are refused at the line. |
-| `key_row_pass` | Row Pass | pass | Red Sable vendor, standing +30 | 0.1 | 250 | Lifts a Tin Halo or Sodium Row bar ban. The Row remembers the ban; the pass makes it look away. |
+| `key_row_pass` | Row Pass | pass | Red Sable vendor, standing +30 | 0.1 | 250 | Opens a nonessential Sable back-room shortcut. Public bars and boards remain available. |
 | `key_visitor_pass` | Spire Visitor's Pass | pass | Halvard vendor, or lifted from the Gatehouse pass registry | 0.1 | 600 | Admits one non-Halvard character to the Spire Mezzanine for 30 minutes. |
 | `key_silt_beacon` | Silt Beacon | consumable | Choir vendor, standing +30 | 0.5 | 900 | Marks a descent cell for the crew for one hour; crew members see it on the sector view from any cell. |
 | `key_ringfall_chart` | Ring-fall Chart | data | Ferrymen Charter rank (+70) reads it at the Landing | 0.2 | 1 200 | Names the next Ring-fall ring one hour early. Sells to anyone who did not earn it. |
-| `prg_choir_cantillation_1` | Cantillation I | program (attack) | Choir vendor, Cantor only, tier 2 | — | 1 000 | 0.8 s cast, 4 s cooldown, 20 ICE damage plus Resonance / 5, +4 trace. The Choir's programs are sung, not run. |
-| `prg_choir_cantillation_2` | Cantillation II | program (attack) | Choir vendor, Cantor only, standing +50, tier 3 | — | 3 600 | 1.2 s cast, 6 s cooldown, 40 ICE damage plus Resonance / 3, +6 trace. Cantillation ICE takes double. |
-| `prg_ow_residual_fragment` | Residual Fragment | program (utility), single use | Unmoored Deep rank (+90) | — | not sold | Loads a dead runner's hands for one run: +25 Programs skill until jack-out, then the fragment is gone. |
 | `story_vesper_card` | Vesper's Card | misc | starter kit | 0.1 | — | A contract card. *Vesper, Tin Halo, Sodium Row.* |
 | `story_telemetry_unit_warm` | Warm Telemetry Unit | data | Halvard Season 1 | 0.5 | — | Site Zero salvage that is still warm. |
 | `story_halvard_seal_beacon` | Seal Beacon | misc | Halvard Season 1 | 0.5 | — | A monitor beacon Halvard wants planted at the seal. |
 | `story_sealed_template_canister` | Sealed Template Canister | misc | Sablier Season 1 | 0.5 | — | A canister from below the outworks. Sablier does not say what is in it. |
-| `story_template_shield_rig` | Template Shield Rig | misc | Sablier Season 1 | 0.5 | — | Shields walked templates from Sablier's recall signal. |
+| `story_template_shield_rig` | Template Shield Rig | misc | Unmoored Season 1 | 0.5 | — | Shields walked templates from Sablier's recall signal. |
 | `story_resonance_beacon` | Resonance Beacon | misc | Choir Season 1 | 0.5 | — | Quell's beacon for a cell that should not exist. |
 | `story_listening_stake` | Listening Stake | misc | Ferrymen Season 1 | 0.5 | — | A stake the Ferrymen drive at a conduit head to hear it hum. |
 | `story_residual_fragment_99b` | Residual Fragment 99-B | data | Unmoored Season 1 | 0.5 | — | A second copy of Ninety-Nine that says one thing. |

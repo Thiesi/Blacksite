@@ -2,7 +2,7 @@
 
 **Status:** planned
 **Primary model:** Sonnet · **Reviewer:** Human (a first-time player pass by the user)
-**Depends on:** S07, S09 · **Milestone:** M6
+**Depends on:** S07, S09, S13, S19 · **Milestone:** M6
 **Issue:** https://github.com/Thiesi/blacksite/issues/30
 
 ## Goal
@@ -154,3 +154,13 @@ together. Nothing here changes a rule; it explains them.
   re-emitting the last frame with new colours.
 - Keep help text under 76 columns in the source; the client wraps by
   display width anyway but golden screens are easier to read.
+
+## Lore review integration
+
+Use the revised first-run text and terminal UI 11. Teach the lease/grade
+distinction, secured recovery and debt, physical-body risk while jacked,
+public loan rig, journal provenance, work-order allocation and personal
+finale choice. Finish Vesper's job with optional prose closed at 80x24;
+repeat at 132x50 and all palette tiers with a wide handle. Each confusion
+observed in the human run becomes a concrete UI/content fix, not a claim
+that automated tests establish fun or balance.

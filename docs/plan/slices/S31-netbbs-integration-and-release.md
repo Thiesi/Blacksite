@@ -2,7 +2,7 @@
 
 **Status:** planned
 **Primary model:** Sonnet · **Reviewer:** Human (install on the ReLink test node)
-**Depends on:** S28, S30 · **Milestone:** M6
+**Depends on:** S26, S28, S29, S30, S32, S33 · **Milestone:** M6
 **Issue:** https://github.com/Thiesi/blacksite/issues/31
 
 ## Goal

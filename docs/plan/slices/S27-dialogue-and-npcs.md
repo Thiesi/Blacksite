@@ -2,7 +2,7 @@
 
 **Status:** planned
 **Primary model:** Sonnet (engine) · Gemini or Sonnet (content) · **Reviewer:** Sonnet reads every talker file; Opus reads the ten fixed-cast files
-**Depends on:** S19 · **Milestone:** M5
+**Depends on:** S19, S20, S24 · **Milestone:** M5
 **Issue:** https://github.com/Thiesi/blacksite/issues/27
 
 ## Goal
@@ -19,7 +19,7 @@ the work.
 
 - `docs/world/04-dramatis-personae.md` Part III "Dialogue system notes"
   (talker shape, the closed condition set, `CUST`/`TEN` tags with the
-  0.7 skip probability, offers and their hotkeys, delivery rules,
+  optional-line weighting from main design 13.4, offers and their hotkeys, delivery rules,
   terminal talkers, content validation list); Parts I and II for every
   NPC's lines.
 - `docs/design/01-entities.md` §1.11 (dialogue file; this slice replaces
@@ -41,13 +41,14 @@ the work.
   player, world) -> line`, `eligible_offers(...)`, `bark_scheduler`
   (one bark per talker per 90 s by default, only with a player within
   6 tiles, suppressed during interaction), balance-tag weighting with
-  the 0.7 skip using the zone's seeded RNG.
+  design 13.4's optional-line weighting using the seeded RNG.
 - Condition evaluators for the closed set: `first_meeting`,
   `grade_below/at_least`, `is_wake`, `standing_below/at_least`,
   `member_of/not_member_of`, `enemy_of_me`, `marked/not_marked`,
   `has_contract/contract_stage/completed_contract`, `has_item`,
   `season_stage`, `chronicle_choice`, `event_active`, `archetype`,
-  `balance`. Unknown condition names fail content validation, not
+  `balance`, `legal/not_legal`, `has_evidence`, `receipt`, `service_state`.
+  Unknown condition names fail content validation, not
   runtime.
 - Offers → action-bar hotkeys `[C]ontract`, `[V]endor`, `[S]ervice`,
   `[J]oin`, `[T]ravel`, each dispatching to the owning subsystem (S19
@@ -130,7 +131,8 @@ the work.
    without any actor on the map.
 5. Jack in from the Old Works drop and find Ninety-Nine's cell: its line
    arrives coloured with the `//99` suffix.
-6. Let another caller shoot you while talking to Brann: health drops,
+6. Talk to a mission NPC outside safety and let another eligible caller
+   shoot you: health drops,
    the talker menu stays open, `B` closes it.
 
 ## Definition of done
@@ -152,3 +154,18 @@ the work.
   the Custodian/Tenant question.
 - Keep `first_meeting` sets bounded: a set of talker slugs on the player
   row is small; do not store per-line history.
+
+## Lore review integration
+
+Entity model 1.11 and main design 13.4 govern the talker contract; the
+world personae supply voice and situational examples. Required warnings,
+objectives and both finale registers never disappear through weighting.
+`is_wake` means legal_at unset; day-count lines use actual elapsed days
+and never fixed sample values. Evidence observations differ from source
+claims. No narrator line certifies the Custodian/Tenant, clone origin or
+Dispatcher identity. Dialogue adds interest, never a correct-answer gate.
+
+Test Brann in the safe precinct separately: a shot is refused, no damage.
+Author all Season 1 NPC/record assets now; S26 activates and tests their
+full map/chain bundle. Future-season barks require the relevant settled
+condition and remain inactive until their complete content exists.

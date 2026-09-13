@@ -185,8 +185,8 @@ array form under the same frame type with `enc: "compact"`.
 |---|---|---|
 | hello | proto, door_info, hmac, client_version, caps {width, height, tier, unicode} | first frame |
 | resize | width, height | if the platform ever forwards it |
-| key | k (normalised key name), t (client ms) | movement, actions; the server maps keys to intents using the session's keymap so a rebind is client-only |
-| intent | name, args | explicit intents: move, sprint, target, fire, interact, use item, jack, program, chat, emote, menu open/close/select, contract accept, market action, crew action, settings |
+| key | k (normalised key name), t (client ms) | movement, actions; the server maps keys to intents using the session's keymap so a rebind is a server-owned setting |
+| intent | name, args, request_id, expected_revision (for stateful selections) | explicit intents: move, sprint, target, fire, interact, use item, jack, program, chat, emote, menu open/close/select, contract accept, market action, crew action, settings |
 | line | prompt id, text | answer to a line prompt |
 | ack | rev | last view revision rendered (flow control) |
 | ping | t | |
@@ -272,9 +272,13 @@ Chronicle, help.
 - SQLite in WAL mode with a single writer task. Live entities are marked
   dirty; the writer flushes dirty players every 5 s, world state every
   30 s, and immediately on: death, trade, market action, item transfer,
-  relay change, contract state change, season change, logout.
+  relay change, contract state change, season change, logout, evidence
+  publication, work-order allocation, contribution, ballot, settlement
+  and event-plan commitment.
 - Every flush is one transaction. A crash loses at most 5 s of position
-  and health, never a transaction.
+  and health. Rewarded actions and their receipts are committed before
+  success is acknowledged or broadcast; ordinary dirty-state flushes
+  cannot make that guarantee on their own.
 - Backups: `blacksite admin backup` uses SQLite's online backup API into
   `backups/<timestamp>/world.db` plus a manifest with content hash and
   schema version, the pattern War Dialer established.
@@ -424,3 +428,68 @@ machine.
   because the door profile names the interpreter explicitly.
 - Versioning: semantic. The protocol major is independent of the package
   version and is asserted by both ends.
+
+## 15. Operational contracts from the lore
+
+### 15.1 Actions and readable state
+
+Add typed intents to the existing protocol, not a command parser:
+`journal.open`, `evidence.inspect`, `evidence.publish`,
+`work_order.reserve`, `work_order.perform`, `work_order.allocate`,
+`lat.survey`, `lat.sample`, `expedition.enter`, `expedition.resume`,
+`finale.choose`, and `calibration.set`. Each includes a target ID where
+needed. Physical position, permissions, costs, expiry, safety and the
+stage's input verb are checked by the server. Text fields are names or
+chat, never secret answers. Duplicate request IDs return stored results.
+
+A stale allocation, market purchase or finale selection returns the
+current detail view without spending resources or selecting a different
+row. The player's chosen hotkey opens the concrete cost/consequence
+preview; confirmation is the last action only where irreversible.
+
+`ZoneView` and `LatticeView` add `objective` (next action, target, cost,
+progress, retry rule), `hazards[]` (scope, warning, active duration,
+escape), `service` (state, allocation, expiry) and `escape` (available
+route/action). `LatticeView` includes body safety and black-ICE risk.
+`MenuView` detail can show a record's observation, source, claim,
+publication choices, expiry and expected revision. Required information
+has a compact summary; paginated source prose is optional.
+
+The server reveals only authorized journal records, visible geometry
+and public forecasts. Opponents' ballots, unchosen names, sealed
+publication and hidden core data never appear in a view or generic log.
+
+### 15.2 Atomic effects and restart
+
+The pure simulation returns proposed state deltas, receipts and outbound
+messages. The storage layer commits a stateful rewarded action and its
+receipt in one transaction; the I/O layer publishes success only after
+commit. While commit is pending, the affected action key is reserved.
+Failure releases it with a retryable result. Ordinary movement remains
+on the dirty-state schedule. Tests inject commit failure before and
+after durable write, then resend the same request.
+
+One settlement transaction consumes the season's eligible ballots,
+freezes rankings, writes the winning choice or tie, applies one bounded
+balance delta, records the Chronicle and installs next-season modifiers.
+Personal finale receipts change only that identity's standing/benefits.
+A second caller, repeated run or recovery cannot repeat either effect.
+
+Persist committed event plans and seeds before selling their forecasts.
+At restart, reconcile wall-time expiry before input; resume uptime timers
+without catching up an offline backlog. Rebuild expeditions from their
+safe checkpoint. Service reservation, allocation, public control expiry,
+relay ownership and season/event overlays remain separate fields so
+removing one layer cannot undo another. Their composed map must preserve
+essential services, outward travel and safe-zone immunity.
+
+### 15.3 Delivery boundaries
+
+S02 defines the full closed data schema and validates explicit bundle
+manifests. A fixture bundle may omit city content; an activated release
+bundle may not have unresolved references. S19 delivers contract stages,
+receipts, evidence and work orders; S24 supplies scheduled event overlays;
+S25 authors all remaining ordinary city maps; S27 supplies dialogue and
+records. S26 activates and validates the complete Season 1 bundle and its
+solo/crew finale. Seasons 2 and 3 remain design specifications until their
+own complete bundles and acceptance runs exist.

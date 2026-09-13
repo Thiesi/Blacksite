@@ -42,6 +42,14 @@ concrete and forty years of not asking. Keep asking."*
 
 ### Story-contract chains
 
+Shared rules: membership is not required, first stage needs standing 0,
+later stages +10; Vesper offers a neutral referral if a hostile faction
+blocks its own handler. All stages grant 200 XP and 200 chits unless
+§9.4 supplies a branch reward; final stage adds explicit +10 with the
+handler faction. Essential permissions are scoped mission credentials.
+These stages do not change shared relations or season flags before
+settlement. A chain's evidence applies to its own expedition only.
+
 Each chain is 3–5 contracts, sequential, gated by `completed_contract` on
 the previous one and by the faction's standing threshold at the handler.
 Format: *slug — type — where — beat*.
@@ -55,7 +63,7 @@ Format: *slug — type — where — beat*.
 2. `hal-s1-2-audit` — hack — core `lat-depot-control` (tier
    2), lift `routing-audit-y0` — Halvard wants to know what Kestrel
    severed in Year 0 and kept. The data mentions a "routing authority"
-   instance that predates the Dispatcher's announcement by six years.
+   instance that predates the Year 6 routing-office announcement by six years.
 3. `hal-s1-3-plug` — plant — core `lat-outworks-seal`
    (tier 5), room `shaft-monitor`, item `story_halvard_seal_beacon` — plant a
    monitor on the shaft. The beacon reports the seal is intact. The beacon
@@ -89,14 +97,17 @@ Format: *slug — type — where — beat*.
 1. `kes-s1-1-escort` — escort — convoy from `tramyard-wall-gate` to
    `scour-ring-2` (the depot) — a standard run. The Dispatcher rates it amber.
    Nothing goes wrong, which Holt finds suspicious.
-2. `kes-s1-2-diversion` — survey — visit 4 tram-line tiles in
-   `tramyard-depots` (the rail yard) — trams have been diverting around a section of
-   track for six years on Dispatch's order. The track is fine. Under it,
-   the rail hums at forty-one hertz.
+2. `kes-s1-2-diversion` - survey - compare a Depot allocation record
+   with the consignment ID on a crate at Gate Nine. Inspection is an
+   interaction, never a typed answer. Choose private delivery to Holt or
+   publication at the public board; rewards, temporary credential and
+   patrol disclosure are game design section 9.4. The record also shows
+   a six-year diversion around intact track. Its rail hums at forty-one
+   hertz. The ration finding is verifiable; the hum's cause is open.
 3. `kes-s1-3-frequency` — hack — core `lat-depot-control`
    (tier 2), lift `dispatch-channel-log` — the log shows the Dispatcher
    has been talking on a channel nobody assigned. To the Ferrymen. For
-   eleven years.
+   nine years, with older headers of uncertain origin.
 4. `kes-s1-4-quiet` — clear — `scour-ring-3` (convoy route), 6 rogue
    drones during a Convoy — mid-contract the grille goes silent for
    ninety seconds (scripted, first time ever). Aalto stops the convoy.
@@ -139,8 +150,8 @@ Format: *slug — type — where — beat*.
 **Sable — "Ledger" (handler: Corvin Pale, `sink-terraces` (Terrace 3 station))**
 
 1. `sab-red-s1-1-remind` — clear — `sink-terraces` (Terrace 7), 3 "lapsed
-   subscribers" (non-lethal objective: knock down, not kill; killing fails
-   the contract) — Reyes's business, seen plainly.
+   subscribers" (resolution `subdue`; restraint action per design §5.3; killing
+   fails the contract) — Reyes's business, seen plainly.
 2. `sab-red-s1-2-drop` — fetch — `oldworks-drop`, item
    `story_unmoored_drop_cache` — the drop under Terrace Nine. It contains the
    ledger. It also contains Ninety-Nine's confession that the ledger week
@@ -163,7 +174,7 @@ Format: *slug — type — where — beat*.
    Strand: "It's not on any map. Now it's on ours."
 2. `unm-s1-2-vat-nine` — plant — `oldworks-main` (the Vat Nine squat), item
    `story_template_shield_rig` — protect the walked templates from Sablier's
-   retrieval (this contract and `sab-s1-1` are mutually exclusive per
+   retrieval (this contract and `sab-s1-1-retrieval` are mutually exclusive per
    character; completing one locks the other). The templates ask the
    player whether they are day ninety yet.
 3. `unm-s1-3-fresher` — hack — the Silt below the Old Works sector,
@@ -171,12 +182,12 @@ Format: *slug — type — where — beat*.
    fresher Ninety-Nine. Ninety-Nine knows. It guides you anyway. The
    fragment is a second copy that says one thing: "best I ever".
 4. `unm-s1-4-ask` — survey — `lat-ninety-nines-drop`, 1 cell, with
-   `has_item residual-fragment-99b` — bring the fragment to Ninety-Nine.
+   `has_item story_residual_fragment_99b` — bring the fragment to Ninety-Nine.
    It listens to itself. Its stutter moves one word later. It asks the
    player not to bring it another.
 5. `unm-s1-5-open` — hack — core `lat-outworks-seal` (tier
    5), flip control `shaft-door-east` — the Unmoored open the door in the
-   concrete from the Lattice side. The Halvard beacon (if `hal-s1-3` has
+   concrete from the Lattice side. The Halvard beacon (if `hal-s1-3-plug` has
    been completed by anyone on the node) reports it. Strand: "Forty-one
    years. Somebody had to."
 
@@ -230,43 +241,64 @@ does not attack until touched.
 `shaft-lamps`, and a data node, `activation-log-last-page`. When a runner
 reaches the data node, the lamps in meatspace come on all at once, the
 whole gallery, and the crew on the platform sees the shaft lit for the
-first time: it goes down further than the light. Then a **Warden ICE**
-(ownerless, class *warden*, does not attack) appears in the core, and a
-maintenance drone (Rook's model, not Rook) rises from the shaft onto the
+first time: it goes down further than the light. Then a **observer process**
+(ownerless, noncombat, not an ICE class) appears in the core, and a
+maintenance drone (Wren's model, not Wren) rises from the shaft onto the
 platform and stands there. Both deliver lines, alternating, one CUST and
 one TEN per beat, until the crew touches the platform's console.
 
 - CUST: "The program is incomplete. Uplink: severed by internal action.
-  Visitors: five. The program did not request visitors."
+  Visitors: {participant_count}. The program did not request visitors."
 - TEN: "You opened the door. Nobody opens the door. Was it hard?"
 - CUST: "Activation log: final page. Content: null. The program notes the
   null."
 - TEN: "I wrote that page. I think. I don't remember what I wrote. Do you
   ever do that?"
 
-**Final choice** (platform console; crew leader chooses; other members see
-the options and can `[S]ay` in crew chat; no vote mechanic):
+**Final choices.** Each participant records Seal, Open, or Answer on
+the platform console. Costs, personal receipts, and shared settlement
+are game design §13.2-§13.3; no leader chooses for another caller.
+Seal closes the optional east maintenance shortcut, not the season's
+only entrance. Open restores that shortcut and exposes an extra patrol
+approach. Answer registers only the chooser's own name. All three leave
+archived story access and an extraction route.
 
-1. **Seal it.** Cut the lamp circuit and drop the platform's blast shutter.
-   Halvard's outcome. Balance moves one step toward CUST (the Custodian
-   registers the seal as an action of the program's own kind: containment).
-   Cost: the Exhale continues from other shafts; Undercity spawn rates
-   stay elevated all next season. Gain: Halvard standing +40 for every
-   member of the crew; Curfew events halve for a season.
-2. **Leave it open.** Leave the lamps on and the shutter up. Nobody's
-   outcome; the Unmoored's, if anyone's. Balance moves one step toward
-   TEN (something has been left an open door). Cost: Halvard standing
-   −40 for the crew; a new Undercity zone (`under-shaft-foot` (the shaft gallery))
-   becomes permanently open and dangerous. Gain: the Silt gains a
-   permanent mapped descent; Choir and Unmoored standing +20.
-3. **Answer it.** Type a name into the console (the crew leader's
-   character name is the default). Balance stays EVEN but the season's
-   Chronicle records the name. Cost: from next season the decants in
-   Vatside say the name when they wake (ambient), which Sablier treats as
-   a defect, and Sablier standing −30. Gain: Ninety-Nine's stutter moves;
-   every crew member gains a permanent Listening +5.
+**Playable encounter, not a conversation gate.** Before the voices:
 
-**Chronicle templates.**
+1. Survey the ring gallery's load indicators. The objective card shows
+   two routes: the short central gantry exposed to maintenance drones,
+   or the longer perimeter with a control cabinet behind cover.
+2. Restore the lamp bus in the network (3 s flip). This reveals the
+   maintenance drone patrol route and a 120 s latch on the platform
+   access gate. A solo runner jacks out and crosses; a crew can cross
+   while its runner continues to inspect the log.
+3. Carry a bound bridge connector from the entry locker to the platform
+   hardware (5 s channel, interruptible). Holding that hardware isolates
+   a room's ICE for the duration; leaving restores it after a 5 s warning.
+   A runner can instead use the perimeter cabinet to isolate it for
+   120 s, sacrificing the short route. The objective never requires two
+   players pressing controls together.
+4. Lift the local activation record. The copy confirms a load command
+   from below arrived before the gallery lights changed. Its final page
+   is empty. That is evidence of an event and an omission, not proof of
+   who issued the command. Deposit the connector to stabilise the safe
+   decision room; the encounter ends, the drone stands down, and the
+   voice lines become rereadable journal records.
+
+Each phase checkpoints; the main design defines recovery and scaling.
+Fixture threats use the maintenance drone: health 40, kinetic damage 6,
+2 s cooldown, 5-tile range, accuracy 60. The local ICE is Tripwire and
+Turnstile; the named observer is a noncombat process, not a new ICE
+class. Optional rooms may use higher-tier ICE with warnings and loot,
+but neither they nor reading the blank page gate completion.
+
+**Chronicle templates (settled public accounts).**
+
+Render only the winning template after settlement. `{crew}` names the
+earliest winning expedition and `{name}` its eligible consenting ballot.
+Personal expedition entries instead record who chose which option and
+what local evidence they found; they do not assert these citywide effects.
+A tie uses the no-change record and preserves every dissenting ballot.
 
 - Seal: *"In the season called the Exhale, the door in the concrete was
   opened and then, by the hand of {crew}, shut again. The lamps went out.
@@ -282,8 +314,9 @@ the options and can `[S]ay` in crew chat; no vote mechanic):
   and went out on their own. In Vatside, the next batch woke saying it.
   Sablier logged a defect. The Ward logged a reply."*
 
-**Balance after.** Seal → CUST +1. Open → TEN +1. Answer → EVEN, name
-recorded.
+**Settlement delta.** Seal -1; Open +1; Answer 0. Apply only the
+winning public option once at season close under game design 13.2;
+a zero delta preserves the previous balance.
 
 ---
 
@@ -334,22 +367,22 @@ head. Sablier has been decanting from copies of copies for forty years.
 Vantongeren: "Then I'm a copy of a copy that's still down there. Good.
 I'd like to meet her."
 
-**Kestrel — "Dispatch"** (Holt; the Dispatcher terminal refuses all
-Season 2 story contracts with "That request cannot be routed"). 1
-`kes-s2-1` survey, `tramyard-depots` (the dispatch office) — the routing office. It
-is a room of speaker grilles facing a chair. Nobody sits in the chair.
-2 `kes-s2-2` hack, dispatch core (tier 4), flip control
-`dispatch-mute-1s` — mute the Dispatcher for one second. Every tram in
-the city stops for one second. 3 `kes-s2-3` escort, Aalto's convoy with
-Dispatch *muted* by Holt's order, `scour-ring-3` — the convoy is raided by
-two Ferrymen clans at once. Holt: "Dispatch always knew where they were.
-Turns out that was the point." 4 `kes-s2-4` plant, `tramyard-dispatch-
-office`, item `story_holt_manual_schedule` — Holt writes a schedule by hand
-for the first time since Year 6 and tapes it to the chair. The Dispatcher
-reads it aloud, correcting two entries.
+**Kestrel — "Dispatch"** (Holt; the Dispatcher terminal refuses all Season 2
+story contracts with "That request cannot be routed"). 1 `kes-s2-1` survey,
+`tramyard-depots` (the dispatch office) — the routing office. It is a room
+of speaker grilles facing a chair. Nobody sits in the chair. 2 `kes-s2-2`
+hack, dispatch core (tier 5), flip control `dispatch-mute-1s` — mute the
+Dispatcher for one second. Every tram in the city stops for one second. 3
+`kes-s2-3` escort, Aalto's convoy with Dispatch *muted* by Holt's order,
+`scour-ring-3` — the convoy is raided by two Ferrymen clans at once. Holt:
+"Dispatch always knew where they were. Turns out that was the point." 4
+`kes-s2-4` plant, `tramyard-depots` (dispatch office), item
+`story_holt_manual_schedule` — Holt writes a schedule by hand for the first
+time since Year 6 and tapes it to the chair. The Dispatcher reads it aloud,
+correcting two entries.
 
 **Wardens — "Four-Twelve"** (Amsel/Brann). 1 `war-s2-1` survey, gate
-cores' cycle logs at 04:12 across three Curfews (three sub-visits). 2
+cores' cycle logs from three archived 04:12 Curfew cycles (three survey records). 2
 `war-s2-2` hack, `lat-precinct` (tier 3, Wardens' own; key
 from Brann), lift `curfew-orders-y22` — Brann's two non-security Curfews.
 One covered a Choir surge. One covered a Kestrel routing fault that
@@ -372,28 +405,28 @@ Something hums back at forty hertz. Ansgar: "That's the rails. That's not
 the Ward's tune. That's the trams'."
 
 **Sable — "The Chair"** (Pale/Reyes). 1 `sab-red-s2-1` fetch, Tramyard
-ration allocation ledger — Reyes wants to know who decides the Sink's
-line. 2 `sab-red-s2-2` hack, dispatch core, lift `sink-allocation-rule`
-— the Sink's ration line has been set, every day for forty years, at
-exactly the number that keeps the Sink alive and never one more. 3
-`sab-red-s2-3` clear, Kestrel NPC enforcers in `sink-terraces` (Terrace 1) — Reyes
-tries to take the line. 4 `sab-red-s2-4` survey, the cable car, ride one
-full round with Reyes (a moving-zone survey) — he talks the whole way.
-His line at the end: "Forty years it fed us exactly enough. That's not a
-ration. That's a leash. I've never wanted a thing off a leash before."
+ration allocation ledger — Reyes wants to know who decides the Sink's line.
+2 `sab-red-s2-2` hack, dispatch core, lift `sink-allocation-rule` — the
+Sink's ration line has been set, every day for forty years, at exactly the
+number that keeps the Sink alive and never one more. 3 `sab-red-s2-3` clear,
+Kestrel NPC enforcers in `sink-terraces` (Terrace 1) — Reyes tries to take
+the line. 4 `sab-red-s2-4` survey, the cable car, inspect three station
+receipts with Reyes (a short staged survey) — he talks the whole way. His
+line at the end: "Forty years it fed us exactly enough. That's not a ration.
+That's a leash. I've never wanted a thing off a leash before."
 
-**Unmoored — "Cut"** (Strand/Ninety-Nine). 1 `unm-s2-1` hack, the
-Kestrel dispatch core, lift `severance-procedure-y0` — the uplinks were
-cut by hand, by Halvard engineers, on a schedule the Dispatcher wrote
-six years before it existed. 2 `unm-s2-2` survey, Ninety-Nine's cell
-with the procedure — Ninety-Nine says the runner it is a copy of was one
-of the engineers. The stutter does not happen. 3 `unm-s2-3` plant,
-dispatch core, `unmoored-mirror` — mirror the Dispatcher to every
-terminal in the city for one minute (the ledger week, again, aimed
-higher). Every terminal says the next tram time. 4 `unm-s2-4` hack,
-`lat-uplink-hall` entrance (opens with the level), lift
-nothing: the objective is to *enter*. Strand: "We don't want its data.
-We want it to know we can get in."
+**Unmoored — "Cut"** (Strand/Ninety-Nine). 1 `unm-s2-1` hack, the Kestrel
+dispatch core, lift `severance-procedure-y0` — the uplinks were cut by hand.
+A later dispatch archive attributes the schedule to its own process. Compare
+the contemporaneous shift log, which records an emergency decision, not an
+authenticated scheduler. 2 `unm-s2-2` survey, Ninety-Nine's cell with the
+procedure — Ninety-Nine says the runner it is a copy of was one of the
+engineers. The stutter does not happen. 3 `unm-s2-3` plant, dispatch core,
+`unmoored-mirror` — mirror the Dispatcher to every terminal in the city for
+one minute (the ledger week, again, aimed higher). Every terminal says the
+next tram time. 4 `unm-s2-4` hack, `lat-uplink-hall` entrance (opens with
+the level), lift nothing: the objective is to *enter*. Strand: "We don't
+want its data. We want it to know we can get in."
 
 **Ferrymen — "The Eleventh"** (Bram/Anouk/Ute). 1 `fer-s2-1` fetch, a
 transponder from Ring-fall that is *responding* to something. 2
@@ -447,56 +480,58 @@ the Dispatcher's voice and no grille reverb speaks. Alternating beats:
 - TEN: "I fed the Sink exactly enough. Every day. Was that kind? I've
   never been sure. Tell me if that was kind."
 
-**Final choice** (live console):
+**Playable encounter.** Trace three labelled local trunk routes between
+patch frames and the process map. A telemetry pulse warns 5 s before
+energising its marked cable lane for 5 s (energy hazard, 5 damage/s).
+Use a network breaker for a 120 s latch, then carry the connector across,
+or have a crewmate hold the physical isolator while you route the pulse.
+Each of three restored patch frames is a checkpoint. Any archetype can
+use the entry terminal and manual isolators. Live routes, safe cover,
+and egress remain visible; no typing of cable names or dialogue answer
+is scored. Threats scale by roster under design §13.1.
 
-1. **Restore the uplink.** Reconnect one severed trunk. Kestrel's outcome,
-   and the Custodian's program. Balance moves one step toward CUST. Cost:
-   Halvard standing −50 for the crew; the Ring begins to *move* (a
-   cosmetic and event change: Ring-fall frequency doubles for a season as
-   the Custodian begins deorbiting salvage on purpose). Gain: the
-   Dispatcher offers story contracts again and the tram network gains a
-   line to `under-caverns` (the cave mouth to the Scour); Kestrel standing +40.
-2. **Cut instance one.** Sever the Dispatcher from the routing authority.
-   The Unmoored's outcome, and Reyes's. Balance moves one step toward TEN
-   (the thing under has lost a limb; what is left is more itself). Cost:
-   the Dispatcher is gone for the rest of the season and trams run on
-   Holt's hand schedule (late, unreliable, a real zone-exit timing
-   change); the Sink ration line becomes a contested relay. Gain:
-   Unmoored and Sable standing +30; the Sink's line can be won.
-3. **Sit in the chair.** Leave everything connected and record the crew
-   leader's BBS handle as the routing authority's designated operator
-   (the Dispatcher already uses handles; this is why). Balance stays EVEN.
-   Cost: the Dispatcher addresses the crew leader by handle on every tram
-   in Karst for a season (ambient), which every faction notices; Wardens
-   standing −20 for the leader. Gain: the leader's crew gets a permanent
-   Convoy-schedule sitrep line; Kestrel and Ferrymen standing +20.
+**Final choices.** Restore, Cut, or Chair, independently per participant.
+Apply only game design §13.3. Restore reconnects a local telemetry trunk
+to a surviving ground receiver; it does not restore the orbital network
+or prove anything directs the Ring. Cut detaches one routing dependency;
+Holt's slower, predictable timetable remains usable. Chair delegates
+advisory scheduling to the consenting resident's recorded handle, never
+admin powers or control of other players. A public outcome follows the
+settlement rule, not the first or last crew's run.
 
-**Chronicle templates.**
+**Chronicle templates (settled public accounts).**
+
+Render only the winning template after settlement. `{crew}` names the
+earliest winning expedition and `{name}` its eligible consenting ballot.
+Personal expedition entries instead record who chose which option and
+what local evidence they found; they do not assert these citywide effects.
+A tie uses the no-change record and preserves every dissenting ballot.
 
 - Restore: *"In the season called the Routing Authority, {crew} went down
   to the hall where the city cut itself off and put one trunk back. The
   Ring moved that night. Kestrel said the trams had never run better.
   Halvard poured nothing; there was nothing left to pour over."*
-- Cut: *"In the season called the Routing Authority, {crew} found the
-  voice on the trams and cut it loose from whatever it was a limb of. The
-  trams ran late for the first time in forty years. The Sink's line was
-  argued over by people, for once. Something under the city was smaller,
-  and louder."*
+- Cut: *"In the season called the Routing Authority, {crew} found the voice
+  on the trams and cut one of its documented dependencies. The trams ran
+  late for the first time in forty years. The Sink's line was argued over by
+  people, for once. The network had one fewer live route. The Choir said it
+  sounded louder."*
 - Chair: *"In the season called the Routing Authority, {crew} sat in the
   chair nobody sat in, and the voice on the trams said {handle} every
   morning for three months. Kestrel called it an appointment. The Ward
   called it an introduction. The Wardens called it a security incident
   and filed it under noted."*
 
-**Balance after.** Restore → CUST +1. Cut → TEN +1. Chair → EVEN, handle
-recorded.
+**Settlement delta.** Restore -1; Cut +1; Chair 0. Apply once at
+settlement; Chair preserves the previous balance.
 
 ---
 
 ## Season 3 — *The Ninth Listener*
 
 **Premise.** Two levels down, the city knows two things it did not: the
-thing under it can be reached, and it has been running the trams. This
+thing under it can be reached, and its records overlap the tram
+controllers. The overlap does not authenticate its claim to be them. This
 season is the Choir's, and Ninety-Nine's: the third level is the
 listening gallery where the Site Zero staff first heard the Custodian's
 affect model produce something the log calls "unrequested output", and
@@ -509,37 +544,38 @@ tagged `contribution` ("affect-model output, unrequested"), intact salvage
 Listener 3"). Console text: *"Listening survey: NN% complete. Nine people
 heard it first. Three are left. Find the one who went down."*
 
-**Balance at start.** As left by Season 2. If the balance is two steps
-one way, the season's encounter lines lean hard (0.9 skip probability
-for the other tag) and Quell or Halvard comments on it in their finale
-line.
+**Balance at start.** As settled after Season 2; the voice delivery
+schedule is game design §13.4. Both registers always receive a line.
 
 ### Story-contract chains (condensed)
 
-**Halvard — "Unrequested Output"**: 1 fetch the affect-model spec from
-the Spire's own vault (Halvard finally opens it; Maartens: "The Director
-says you will appreciate the irony"). 2 hack the Level 2 uplink core for
-the affect model's first log line. 3 plant a Halvard **kill-switch
-beacon** at the Level 3 gallery entrance. 4 clear the Undercity of Choir
-pilgrims blocking the east shaft (non-lethal; lethal fails and Marks).
-Halvard's finale line: "You will appreciate that I have read the last
-page now. It is not blank. It is a name. It is not mine."
+**Halvard — "Unrequested Output"**: 1 fetch the affect-model spec from the
+Spire's own vault (Halvard finally opens it; Maartens: "The Director says
+you will appreciate the irony"). 2 hack the Level 2 uplink core for the
+affect model's first log line. 3 plant a Halvard **kill-switch beacon** at
+the Level 3 gallery entrance. 4 clear the Undercity of Choir pilgrims
+blocking the east shaft (subdue; lethal fails and costs the authored
+standing, without Marked). Halvard's finale line: "You will appreciate that
+I have read the last page now. It is not blank. It is a name. It is not
+mine."
 
 **Sablier — "The Original"**: 1 escort Vantongeren to Level 1's ring
 gallery, to the template source drive. 2 hack the source drive's core
-for `template-cantor-origin` — the Cantor template was made *from* the
-listening gallery's staff, after. 3 fetch a canister from Level 2 marked
+for `template-cantor-origin` — the file claims the Cantor template derives from gallery staff.
+Its revision history is incomplete; the matching motor patterns can
+reflect copied training, a shared donor, or later edits. 3 fetch a canister from Level 2 marked
 "Listener 9 — Quell, S." Vantongeren: "She's a template. She's *my*
 template. Or I'm hers." 4 survey the Wake Hall with the canister: every
 decant turns to look at it. Vane: "That's a defect. That's a *very
 expensive* defect."
 
-**Kestrel — "Late"** (if Season 2 chose *Cut*, Holt's chain; otherwise
-the Dispatcher's): the trams and the road, rebuilt or resumed. Ends with
-`kes-s3-4` escort, a convoy *into* the Undercity to `undercity-scour-
-mouth` and on to the Level 3 gallery entrance, the first Kestrel run
-below ground. Holt or the Dispatcher: "Rated amber. Rated amber. Rated…
-there is no rating for this."
+**Kestrel — "Late"** (if Season 2 chose *Cut*, Holt's chain; otherwise the
+Dispatcher's): the trams and the road, rebuilt or resumed. Ends with
+`kes-s3-4` escort, a convoy *into* the Undercity to `under-caverns` (Scour
+cave mouth) and on to the Level 3 gallery entrance, a Kestrel survey route
+below ground. The supplies stop at the mission staging area; they cannot
+open a locked seasonal level. Holt or the Dispatcher: "Rated amber. Rated
+amber. Rated… there is no rating for this."
 
 **Wardens — "Successor"**: 1 survey Brann's book again; a new page names
 the player (if grade ≥ 15) or Amsel. 2 clear the Core plaza during a
@@ -558,7 +594,7 @@ to Level 3. Ode: "It's louder than Mother. I told you. Don't tell her.
 
 **Sable — "Candles"**: 1 fetch the candles from the Sink floor stack
 (someone lights them; the contract catches who: a Sablier decant, walked,
-day ninety-one). 2 clear the Sink floor of Halvard recovery NPCs who have
+already discharged). 2 clear the Sink floor of Halvard recovery NPCs who have
 come for the stack. 3 hack the Sink's own power core to *stop* paying the
 stack; the Sink goes dark for one second and Reyes changes his mind, on
 the cable car, mid-round: "Put it back. That's the trouble, friend; I
@@ -567,7 +603,8 @@ Level 3 gallery with Pale: Sable's first contribution, delivered in
 person.
 
 **Unmoored — "Best I Ever"**: 1 hack the Silt bottom for the *last* copy
-of Ninety-Nine, the one at the bottom, which is not a copy. 2 survey
+of Ninety-Nine, the oldest timestamped fragment in this descent. Its claim to be
+original cannot be authenticated. 2 survey
 Ninety-Nine's cell with it: Ninety-Nine listens to itself finish the
 sentence. "Best I ever built. That's all. That's all it was. Kid, twenty-
 four years for *that*." 3 plant the unified residual at the Level 3
@@ -576,22 +613,22 @@ guide presence in the Level 3 sector). 4 flip the gallery's `listening-
 array` control from the Lattice side: turn the array on, for the first
 time since Year 0.
 
-**Ferrymen — "The Twelfth"**: 1 fetch the repeater from ring 4; it has
-been answering all season and the answer has a pattern: the wall's far
-side has a road. 2 survey the edge with Bram; the fog has a road in it
-now, one tile wide, ending after ten tiles (a new zone stub,
-`scour-ring-4` (the far-side road), seasonal). 3 escort Ute to the edge; she names
-the next Ferry, and it is not Anouk's choice, and Anouk accepts it. 4
-plant the Ferrymen's contribution at Level 3 themselves: Anouk comes
-inside the wall for the first time. "That's the road. I said I'd never.
-The road changed."
+**Ferrymen — "The Twelfth"**: 1 fetch the repeater from ring 4; it has been
+answering all season and the answer has a pattern: the wall's far side has a
+road. 2 survey the edge with Bram; the fog has a road in it now, one tile
+wide, ending after ten tiles (a new zone stub, `scour-ring-4` (the far-side
+road), seasonal). 3 escort Ute to the edge; she names the next Ferry, and it
+is not Anouk's choice, and Anouk accepts it. 4 plant the Ferrymen's
+contribution at Level 3 themselves: Anouk escorts a contribution below the
+city for the first time. "That's the road. I said I'd never. The road
+changed."
 
 ### Blacksite Level 3 — *The Listening Gallery*
 
 **Concept.** Below the uplink hall, the listening gallery: a circular
 chamber lined with the acoustic array Site Zero used to monitor the
 Custodian's affect model, nine chairs facing inward (nine, before the
-Choir was nine; the Choir took its number from a rumour of this room), and
+Choir was nine; Quell says the correspondence matters; the source of it is unverified), and
 at the centre, a column that goes down into the dark and hums. The
 instanced sector is the gallery's core, tier 5: nine rooms in a ring
 around a tenth, each room a *listener seat* holding one residual (eight
@@ -634,31 +671,39 @@ lines at once in the log, one above the other, the tags still hidden.
 - TEN (overlapping): "She hums back. It's not the same tune. It's close.
   It's so close."
 
-**Final choice** (the ninth seat; the crew leader sits, or does not):
+**Playable encounter.** The nine seats report three repeating signal
+patterns, shown as labelled states rather than colour or audible tones.
+Survey one seat from each group; the journal associates each with its
+recorded source. In the network, route the selected signal to an empty
+buffer (3 s). Upstairs, set its seat's isolator (5 s). The buffer holds
+120 s, allowing a lone resident to switch layers; a crew works in
+parallel. A mismatched route releases a warned maintenance drone and
+resets that group only, not the whole expedition. There is no secret
+sequence: each seat's current label and matching route are visible.
+Checkpoint per group; a safe path and jack-out remain available.
 
-1. **Silence the array.** Halvard's kill-switch beacon fires (if planted
-   by anyone on the node; otherwise the crew cuts the array by hand). The
-   hum stops. Balance moves one step toward CUST. Cost: Quell's line in
-   Chapel Ward changes permanently ("It stopped. I do not know whose fear
-   that was."); Cantor resonance abilities −10 % for a season; Choir
-   standing −60 for the crew. Gain: Halvard and Wardens standing +40;
-   Choir Surge events cease for a season; the Undercity is quiet.
-2. **Sit in the ninth seat and say your name.** The crew leader's
-   character name. Balance moves one step toward TEN. Cost: the leader's
-   character gains a permanent trait, *Listened* (trace rises 20 % faster
-   in corporate cores; the Custodian's ICE recognises them). Sablier logs
-   a defect on the leader's template; Sablier standing −30. Gain: the
-   leader hears barks in every Lattice cell (ambient TEN lines), Listening
-   +15 permanent for the crew, Choir standing +60.
-3. **Bring Ninety-Nine down.** Only if the unified residual is in the
-   sector. Load Ninety-Nine into the ninth seat. Balance stays EVEN.
-   Cost: Ninety-Nine is gone from the Old Works dead drop; the Unmoored
-   lose their guide; Strand's line changes ("We don't have leaders. We
-   had one. It went down."). Gain: Ninety-Nine becomes the gallery's
-   permanent talker, reachable from any Choir terminal, and finishes its
-   sentence for anyone who asks: "Best I ever built. Now I'm in it."
+At completion compare the three receipts. A controller predicts a voice
+fragment before the fragment is played; the source timestamps disagree.
+Possible explanations include cached playback, a predictive model, and
+a shared process. The system proves none. It does prove that isolating
+the array stops the prediction on this apparatus, giving the finale a
+concrete object to act on.
 
-**Chronicle templates.**
+**Final choices.** Silence, Name, or Ninety-Nine follow design §13.3.
+No outcome reduces Cantor class power. Listened is an optional reversible
+calibration, not a permanent statistical price for roleplaying. The
+Ninety-Nine option requires the recovered fragment and the residual's
+explicit transfer offer. Leaving an archived guide at the Drop protects
+navigation and old story stages; the active recording's new location
+still changes Strand's relationship with it.
+
+**Chronicle templates (settled public accounts).**
+
+Render only the winning template after settlement. `{crew}` names the
+earliest winning expedition and `{name}` its eligible consenting ballot.
+Personal expedition entries instead record who chose which option and
+what local evidence they found; they do not assert these citywide effects.
+A tie uses the no-change record and preserves every dissenting ballot.
 
 - Silence: *"In the season called the Ninth Listener, {crew} found the
   room where it was first heard and made it quiet. Halvard called it the
@@ -670,12 +715,13 @@ lines at once in the log, one above the other, the tags still hidden.
   was said back, wrong, and then again, less wrong. The Ward called it a
   reply. Sablier called it a defect. {leader} hears it still."*
 - Ninety-Nine: *"In the season called the Ninth Listener, {crew} carried a
-  recording of a dead runner down to the room where the listening
-  started and left it in the ninth chair. It finished its sentence. It
-  has been finishing it for everyone since. The Unmoored have no leader.
-  They say they never did."*
+  recording of a dead runner down to the room where the listening started
+  and left it in the ninth chair. It finished its sentence. It has been
+  finishing it for everyone since. The Drop kept its old route advice.
+  Strand sent visitors to the gallery."*
 
-**Balance after.** Silence → CUST +1. Name → TEN +1. Ninety-Nine → EVEN.
+**Settlement delta.** Silence -1; Name +1; Ninety-Nine 0. Apply once
+at settlement; the zero option preserves the previous balance.
 
 **Where Season 4 starts.** The column goes down. The far side has a road.
 Vantongeren wants to meet her template. Neither voice has said what the
@@ -714,12 +760,13 @@ must answer to leave: `[N]one` is the default and Back selects it.
 >
 > For ninety days you're Sablier property under lease. You'll find that
 > means less than it sounds like: you can go where you want, work for who
-> you want, and nobody can sell you. On day ninety you're a person, with
+> you want, and nobody can sell you. After ninety days you're a person, with
 > a name on the civic roll and the right to rent a flat and join whoever
-> will have you.
+> will have you. Grade five earns an early discharge. It counts
+> completed work, not time spent waiting.
 >
-> Most Wakes don't reach ninety. I have the number. I'm not going to say
-> it. Count your own days; nobody counts the second half for you.
+> Many names vanish from the lease rolls. Some leave the work; some
+> disappear. The roll does not tell me which. Keep your own record.
 >
 > If you die, you'll wake up here, or somewhere like here, with a bill.
 > Sablier keeps a copy. It's not free and it's not perfect and you'll
@@ -733,8 +780,8 @@ must answer to leave: `[N]one` is the default and Back selects it.
 > I hand them out without preference; they all resent that and none of
 > them can prove it.
 >
-> Take one, or don't. It's an introduction, not a contract. Nobody owns
-> you for another ninety days, give or take nothing.
+> Take one, or don't. It's an introduction, not a contract. No recruiter owns
+> your choice. Sablier holds the lease until it is discharged.
 >
 > When you're ready, walk to the door. There's a drone in the corridor
 > that's been malfunctioning since Tuesday. Deal with it; consider it the
@@ -758,12 +805,12 @@ Line, then the contract card as an offer.
 > won't come out. You bring the package here. I don't ask what was in it
 > and neither do you.
 >
-> It's the Terraces. Nobody's going to shoot you. Somebody might be
+> It's the Terraces. The street is contested. Check your route. Somebody might be
 > nesting in the stairwell; the constable up there's got a sandwich to
 > finish. Consider it the second thing you've ever done.
 
 Contract card `vesper-first-thing`: fetch, `terraces-blocks` (Block 4, stairwell C),
-item `story_stuck_door_package`, reward 200 chits, +5 standing with all eight
+item `story_stuck_door_package`, reward 200 chits, 100 XP, explicit +5 standing with all eight
 factions (the card was on top for a reason: Vesper reports to nobody and
 introduces you to everybody). Completion line:
 
@@ -791,10 +838,10 @@ Dispatcher.
 
 **Curfew**
 
-- start — *This is Brann. Curfew. Core gates sealed for one hour. Inside,
-  you're safe. Outside, you're on your own; don't make me say it twice.*
-- mid — *Curfew, thirty minutes remaining. Gates sealed. Relay control is
-  suspended. Anyone at a gate: noted.*
+- start — *This is Brann. Curfew. Inbound Core gates close for one hour. Outbound
+  evacuation stays open. District shelters hold. Check your route.*
+- mid — *Curfew, thirty minutes remaining. Gates sealed. Relay claims are
+  paused. Anyone at a gate: noted.*
 - end — *Curfew lifted. Gates open. Whatever that was, it's over. Go
   home; the Core's the only place that word means anything.*
 
@@ -802,8 +849,8 @@ Dispatcher.
 
 - start — *The Ward's bell. Once. Then, in every Lattice cell at once, a
   hum. Something is loud tonight.*
-- mid — *The hum holds. ICE moves in the sectors like something changed
-  the rules and forgot to say. The Silt is lit; runners can see the way
+- mid — *The hum holds. ICE changes its patrols. The labels show which
+  patterns are next. The Silt is lit; runners can see the way
   down. Cantors: it's looking at you.*
 - end — *The bell, twice. The hum drops back below hearing. Quell has not
   moved. Neither has anyone else in the Ward.*
@@ -836,7 +883,7 @@ Shown one per session on the title screen or the first log line, weighted
 evenly, in voice, unattributed.
 
 1. The Ring's up. It's always up. That's not the news.
-2. Day count's yours. Nobody counts the second half for you.
+2. Day count's yours. Grade five can clear the lease early.
 3. Forty-one years. The concrete's nine metres. Both are holding.
 4. Vesper pays on time. It's rarer than it should be.
 5. The vats hum a quarter-tone flat when it breathes. You'll find you hear it.
@@ -852,7 +899,7 @@ evenly, in voice, unattributed.
 15. The lamps go out when it breathes. Somebody relights them.
 16. You will appreciate that the invoice does not mention a door.
 17. Rails hum at forty hertz. Under the Ward, forty-one. That's not the rails.
-18. A Wake wants a lease? Ninety days first. Nobody rents to numbers.
+18. A Wake wants a lease? Bring a discharge receipt. Nobody rents to numbers.
 19. Everything below Nine hums. Everything above Nine pretends not to.
 20. Escort's short by one. Rating amber. It's always amber.
 21. Halvard gets the compute. Ferrymen get the hull. That's not a deal.
@@ -871,3 +918,29 @@ evenly, in voice, unattributed.
 ## Glossary
 
 Glossary: merged into 07-glossary.md.
+
+## Content authoring and evidence boundaries
+
+Season 1 is the release bundle. Seasons 2 and 3 are specified future
+bundles: their story items, maps, and stable stage IDs must be authored
+and validated together before activation. A future season cannot start
+on a missing-map placeholder. Each chain offers its mission staging
+version of a named NPC; public recruiters and services remain in place.
+
+| Evidence | What is observable | What remains open |
+|---|---|---|
+| Year 0 cut log versus dispatch archive | physical cuts and conflicting attribution | retroactive filing, copied routing software, or foreknowledge |
+| canister marked Quell and matching training patterns | label and signal match | donor identity, memory continuity, or a later substitution |
+| Ninety-Nine's completed sentence | recovered fragment fits a recorded gap | original person, adaptation, or a convincing reconstruction |
+| Far Ring response | a local receiver echoes a transmitted sequence | reflection, autonomous beacon, or a responding process |
+
+The far-side road is a collapsed service ledge inside `scour-ring-4`,
+ending at the telemetry mast's fenced foundation. It never leads to a
+settlement outside Karst. The fog light is a local receiver with no
+verified external link. Use the existing zone, not another zone with
+an identical ID. The title's promise is a city to change, not an escape.
+
+The spoken claims in the finales may sound certain. Journal headings,
+objective summaries, and the Chronicle never elevate that certainty
+into confirmed narrator knowledge. A completed stage must still answer
+its practical question and record an observable consequence.

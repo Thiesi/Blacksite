@@ -2,161 +2,114 @@
 
 **Status:** planned
 **Primary model:** Opus (engine) · **Reviewer:** Gemini or Sonnet writes the content half from the world docs; Opus reviews it
-**Depends on:** S11, S14 · **Milestone:** M3
+**Depends on:** S11, S14, S15, S16, S22 · **Milestone:** M3
 **Issue:** https://github.com/Thiesi/blacksite/issues/19
 
 ## Goal
 
-Give the city work to hand out. A contract engine that instantiates the
-six contract types from templates with parameter pools, contract boards
-at every faction hall and at the Tin Halo, Vesper as the Freelance
-handler, crew-scaled objectives and rewards, expiry, turn-in, and story
-chains that advance a season. After this slice a Wake's contract card
-leads to Vesper, and Vesper always has something.
+Build replayable jobs whose physical and Lattice actions produce visible
+consequences: six composable verbs, evidence, branch receipts and four
+public service work orders. Deliver Vesper's first job and author the
+Season 1 chains for activation with the complete world in S26.
 
 ## Spec references
 
-- `docs/design/00-game-design.md` §9 (types fetch, hack, escort, clear,
-  plant, survey; rewards chits, standing, items, XP; templates plus
-  story contracts; crew scaling; boards at halls and the Tin Halo), §4
-  step 7 (Wake contract card), §7.1 (standing from contracts), §10
-  (crew XP sharing).
-- `docs/design/01-entities.md` §1.10 (contract template fields), §2.7
-  (contract instance and states), §1.11 (dialogue hook for handlers:
-  S27).
-- `docs/design/03-terminal-ui.md` §4 (contract board, active
-  contracts), §5.1 (`Q` contracts).
-- `docs/world/02-factions.md`: per-faction "Contracts" sections (three
-  template ideas each and story hooks per season), handler names.
-- `docs/world/05-story-arcs.md`: season 1 story-contract chains per
-  faction (3–5 each) with objectives, zone/core slugs, and beats; the
-  Tin Halo first-contract script.
-- `docs/world/04-dramatis-personae.md`: Vesper and handler voices.
+Game design sections 7.5, 9 and 18; entity model sections 1.10, 2.7,
+2.12-2.13; architecture section 15; terminal UI section 11; world story
+arcs for Vesper, all eight Season 1 chains and their attributed evidence.
 
 ## Scope
 
-- `server/contracts/engine.py`: load `content/contracts.json`; template
-  fields per `01-entities.md` §1.10; instantiate with resolved params
-  from pools (zone, core, NPC template, item, count, room); states
-  `offered → active → complete | failed → turned_in`; expiry (default
-  60 min real time for generated, none for story); at most 3 active
-  generated contracts per player plus any story contracts; a board
-  offers 5 generated contracts per faction refreshed every 30 min (lazy
-  clock) plus the player's available story contract.
-- Types and their progress hooks:
-  - `fetch`: bring item `X` (spawned as a world object in zone `Z` or
-    an existing item class) to the handler; progress on pickup, complete
-    on turn-in.
-  - `hack`: lift data `D` from core `C` (S14 `contract_key` data kind;
-    the engine registers a keyed data entry in the core at offer time,
-    removed at expiry).
-  - `escort`: walk NPC `N` (S11 `follow` behaviour) from zone `A` to
-    tile in zone `B`; fails if the NPC dies; scales by adding threat
-    spawners along the route.
-  - `clear`: kill `n` of NPC template `T` in zone `Z` (S11 death
-    events); crew kills count.
-  - `plant`: place item `X` in room `R` of core `C` (S14 `lat.plant`,
-    3 s, +10 trace; add the intent here).
-  - `survey`: visit `k` cells in sector `S` or tiles/regions in zone
-    `Z` (S13/S06 visit events).
-- Rewards on turn-in: chits (range × crew factor), standing deltas
-  (with the faction, halved to allies, negative halved to enemies per
-  §7.1: S20 applies; until then stored), XP (S16 `contract` source),
-  item from a pool; crew scaling: objectives × (1 + 0.5 × (crew − 1)),
-  rewards to every crew member in the zone at turn-in × (1 + 0.25 ×
-  (crew − 1)).
-- Story chains: `story: true`, `season`, `chain` next id; offered only
-  by the chain's handler when the previous is turned in and the
-  season matches; beats delivered as `TextView` on offer and turn-in
-  (texts from the story-arcs doc); a chain's final contract calls a
-  season hook (`on_story_chain_complete`, S26).
-- Handlers: `talker` NPCs with a `contracts` role (S11/S27) at each
-  hall; Vesper at `sodium-tin-halo` offers Freelance contracts from
-  every faction's non-member pool plus her own; the Wake contract card
-  is a `fetch` (deliver yourself: `survey` of the Tin Halo tile) that
-  turns in with the first-contract script.
-- Boards: `contract_board` object kind (halls, Tin Halo) opening
-  `MenuView` kind `contracts` with tabs offered / active / done; accept
-  from the board or the handler; turn in at the handler only.
-- Player-issued bounties are S23.
-- Persistence: contract instances with resolved params, progress, and
-  timestamps; flush on every state change.
+- `server/contracts/engine.py`: deterministic template instantiation,
+  resolved target pools, frozen rosters, offered/active/complete/failed/
+  turned-in states, retries, limits, expiry and atomic reward receipts.
+  Implement the board/reward schedules exactly from game design 9.
+- Compose fetch, hack, escort, clear, plant and survey stages. Clear
+  declares lethal/subdue resolution; escort uses willing mission actors;
+  survey can inspect a labelled object, compare recorded IDs or observe
+  telemetry. No natural-language input or moral-answer scoring.
+- Keyed mission data is scoped to its instance and roster, persisted
+  through restart and removed on expiry; other players' evidence and
+  public core loot are separate. Supplied items are bound and cannot be
+  sold, stockpiled or consumed by someone outside the job.
+- Generated objectives scale by the frozen accepted roster; rewards
+  use the documented factor, paid once to that roster under participation
+  rules. Joining for turn-in cannot add an eligible recipient. Story
+  forks and work orders use their fixed listed rewards.
+- Evidence journal records observation, source claim, location, open
+  question and next action separately. Inspecting acquires the record;
+  reading its optional prose is not required. Publication shows its
+  exact route/credential/standing consequence before commitment.
+- Mutually exclusive choices share a branch-group receipt. A replay,
+  another handler, another crew or reconnect cannot collect both sides.
+  Explicit multi-faction deltas do not also propagate by relationship;
+  ordinary single-faction deltas use design 9.3's rule once.
+- Implement the four service-node state machines from design 7.5:
+  normal, fault, repairing, allocated; uptime timers, bounded reservation,
+  NPC restoration, supplied units, public/worker layouts and expiry.
+  Use S15 typed controls; changing allocation updates the actual map or
+  service and journal, with warning/escape. Minimum clinics, food, water,
+  public uplinks and outward travel never become rewards to withhold.
+- Boards at halls and Tin Halo, Vesper's non-member pool and six own
+  templates. New Wakes complete the equal-reward two-route first job.
+  First-job evidence and costs appear in the default compact UI.
+- Author at least three generated templates per faction and all Season
+  1 chains. Bundle manifests distinguish usable hub jobs from inactive
+  authored chains awaiting S25 maps and S27 dialogue. S26 activates the
+  complete validated Season 1 bundle; nothing live may dangle.
 
 ## Out of scope
 
-- Dialogue trees for handlers and Vesper beyond the contract offer and
-  turn-in texts: S27.
-- Standing application and Marked effects: S20 (engine emits deltas).
-- Season hooks and the Chronicle: S26.
-- Bounties: S23.
-- Convoy event's auto-posted escort/raid contract: S24 (uses this
-  engine's `escort` and `clear` types with an `event` flag).
+S20 consumes standing deltas and membership; S24 schedules world events;
+S25 authors remaining city maps; S27 supplies named dialogue; S26 owns
+season settlement and integrated story-chain acceptance. This slice
+implements all contract/work-order logic and fixture scenarios now.
 
-## Data and content
+## Data and protocol
 
-- `content/contracts.json`: at least 3 generated templates per faction
-  (24) plus 6 for Vesper, and the season-1 story chains for all eight
-  factions from the story-arcs doc; `content/text/contract-*.md` for
-  offer and turn-in texts; `content/text/tin-halo-first.md`.
-- Content half (Gemini or Sonnet): templates and story chains as data
-  with the world docs' slugs, run through the validator (every zone,
-  core, room, NPC template, and item it names must exist).
-
-## Protocol and view models
-
-- `MenuView` kind `contracts`: rows type, title, handler, objective
-  summary, reward summary, expiry; detail pane with the offer text;
-  actions accept / abandon / track.
-- `ZoneView.hint` shows the tracked contract's next objective; `me`
-  gains `tracked {title, progress}`.
-- Intents: `contract.accept`, `contract.abandon`, `contract.track`,
-  `contract.turn_in`, `lat.plant`.
+`contracts.json`, service-node records, evidence/text assets and bundle
+manifests follow the entity schema. Menus expose offered/active/done,
+record provenance, current objective, roster, consequence and expiry.
+Use typed contract, evidence and work-order intents from architecture
+15, with request ID/revision and atomic completion receipts.
 
 ## Tests
 
-- `tests/test_contracts_content.py::test_all_templates_resolve_slugs`
-- `tests/test_contracts_content.py::test_story_chains_link_and_season_tag`
-- `tests/test_contracts.py::test_instantiate_from_pools_deterministic_seed`
-- `tests/test_contracts.py::test_max_3_generated_active`
-- `tests/test_contracts.py::test_board_refresh_30min_lazy`
-- `tests/test_contracts.py::test_expiry_60min_fails_and_removes_core_key`
-- `tests/test_contracts.py::test_fetch_pickup_and_turn_in`
-- `tests/test_contracts.py::test_hack_lifts_registered_key_data`
-- `tests/test_contracts.py::test_escort_fails_on_npc_death`
-- `tests/test_contracts.py::test_clear_counts_crew_kills`
-- `tests/test_contracts.py::test_plant_3s_trace_plus_10`
-- `tests/test_contracts.py::test_survey_cells_and_tiles`
-- `tests/test_contracts.py::test_crew_scaling_objectives_and_rewards`
-- `tests/test_contracts.py::test_story_chain_offered_only_in_sequence`
-- `tests/test_contracts.py::test_wake_card_leads_to_tin_halo_script`
-- `tests/test_sim_multi.py::test_two_crew_members_share_clear_progress_and_rewards`
-- `tests/test_sim_multi.py::test_escort_npc_follows_leader_across_zone_exit`
-- `tests/test_door_menus.py::test_contract_board_golden_80x24`
+- Deterministic pool selection, five offers, 30-min refresh, three active
+  generated jobs, 60-min expiry and nonexpiring story jobs.
+- Every verb's progress/failure/retry path; subdue never counts a kill;
+  willing escort and composed physical/Lattice stages.
+- Frozen-roster scaling and participant rewards; no late-join or crew
+  multiplication; no duplicate reward after commit failure/restart.
+- Both branches of walked templates and ration discrepancy, independently:
+  exact explicit standing/rewards, source claims, public effects/expiry,
+  mutually exclusive receipts and continued main-story availability.
+- Each work-order state and both allocations, unattended restoration,
+  reservation race/expiry, bound supplies, map reachability, safe-body
+  protection, stacked control layers and offline restart.
+- Active bundle rejects missing references. Inactive future bundles
+  cannot publish offers. All eight chains have resolved stage sequences
+  and fixture execution; full shipped-map end-to-end acceptance is S26.
 
 ## Acceptance script
 
-1. A fresh Wake walks to the Tin Halo, presses `E` on Vesper, sees the
-   first-contract script, and the board shows five offers.
-2. Accept a `clear` contract for fixture drones in Vatside; the hint
-   line tracks "0/4"; kill four; return; turn in; chits, standing, and
-   XP lines appear.
-3. Two callers crew up (S22) and accept the same `clear` contract: the
-   objective reads 6 and both get the scaled reward.
-4. A faction member at their hall sees the season-1 story contract
-   with its offer text; complete it; the next chain entry appears.
+1. At 80x24 a fresh Wake follows the card to Vesper and completes the
+   first job using its labelled physical route. A second Wake uses the
+   Lattice route. Both receive the same stated base reward and evidence.
+2. Two callers accept a generated four-target clear job: six required
+   targets, both accepted participants receive their disclosed reward.
+   Invite a third at turn-in and verify no added reward eligibility.
+3. In the Sump fixture, reserve a public repair, carry the supplied unit,
+   flip its controller and watch the dry route open with its expiry.
+   Complete the worker variant separately; observe the salvage niche.
+4. Exercise each other service fixture and both evidence forks. Inspect
+   the Chronicle-independent journal; a second claimant/reconnect cannot
+   repeat a payout or overwrite the completed branch.
+5. End a session during a repair and after an acknowledged turn-in;
+   reconnect to the recorded progress/reward without loss or duplication.
 
 ## Definition of done
 
-Roadmap §7, plus: the validator rejects a template naming a missing
-slug, and every faction has a season-1 chain that plays end to end in
-a test.
-
-## Implementer notes
-
-- Reward ranges and the crew factors above are new numbers; add them
-  to `00-game-design.md` §9 in this PR.
-- The `hack` type must register its key data in the live core instance
-  and in the core state row so a restart keeps it.
-- Story texts live in `content/text/`; the engine never embeds prose.
-- Vesper's pool is "every faction's non-member templates": implement
-  as a `handler_pool` field, not a copy of the templates.
+Roadmap section 7; all verbs, four service nodes and branch invariants
+pass in fixtures, Vesper's job works in the shipped hub, and every
+inactive Season 1 dependency is declared for S26 integration.

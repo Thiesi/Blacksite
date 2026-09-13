@@ -46,7 +46,7 @@ Computed from the terminal size at start; never hard-coded. At 80×24:
 │                                                        │ (none)          │
 │                                                        │─────────────────│
 │                                                        │ NEARBY          │
-│               map viewport 56 × 17                     │ Vesper    fixer │
+│               map viewport 55 × 17                     │ Vesper    fixer │
 │                                                        │ Kale_9   Sable  │
 │                                                        │ Mara     crew   │
 │                                                        │─────────────────│
@@ -71,13 +71,14 @@ Rules:
 
 - **Header** (1 row): zone, safety class in its colour, clock, event
   countdown.
-- **Viewport**: everything left of the side panel, everything between
-  header and log. Width = columns − 24 − borders. Height = rows − 1 −
-  log − 1 − borders. At 80×24 that is 56×17; at 132×50 it is 108×43.
+- **Viewport**: width = columns - 2 outer borders - 1 divider - 22
+  side-panel columns. Height = rows - 2 outer border/header rows - 1
+  separator - log rows - 1 hint row. Thus 55x17 at 80x24 and 107x38 at
+  132x50. The sketch above is schematic; geometry follows this formula.
 - **Side panel** (22 columns): target, nearby, crew, vitals. Sections
   shrink from the bottom up if the height is short; vitals always show.
 - **Log**: 3 rows at height 24, growing to 8 at height 40 and beyond.
-  `Shift-L` opens the full scrollback as a `TextView`.
+  `Ctrl-P` opens the full scrollback as a `TextView`.
 - **Hint line**: contextual keys, or the active line prompt.
 - Borders use box-drawing at all tiers.
 
@@ -147,7 +148,7 @@ Two shipped keymaps, switchable in settings and remembered per player:
 | target next/prev | Tab / Shift-Tab | Tab / Shift-Tab |
 | fire / attack | F | f |
 | interact | E | e |
-| jack in/out | J | j |
+| jack in/out | J | Ctrl-O |
 | inventory | I | i |
 | character | P | p |
 | rig | R | r |
@@ -156,11 +157,11 @@ Two shipped keymaps, switchable in settings and remembered per player:
 | map (zone overview) | M | m |
 | contracts | Q | q |
 | chat (say) | C or Enter | c or Enter |
-| whisper / crew / faction | ` / T / Y | same |
+| whisper / crew / faction | ` / T / Ctrl-F | same |
 | use quick slot 1–5 | 1–5 | 1–5 |
 | programs in rig slot 1–7 (Lattice) | 1–7 | 1–7 |
 | help | ? | ? |
-| log scrollback | Shift-L | Shift-L |
+| log scrollback | Ctrl-P | Ctrl-P |
 | redraw | Ctrl-L | Ctrl-L |
 | leave door | Ctrl-X then confirm key | same |
 
@@ -173,8 +174,8 @@ client feature.
 Chat, names, market prices, whisper targets. The hint line becomes the
 prompt with a label, local echo, `Backspace`, `Ctrl-U`, `Esc` cancel,
 `Enter` submit. Input is bounded (chat 200 columns, names 24). While a
-line prompt is open, single-key actions are suspended; movement keys
-type nothing and are ignored.
+line prompt is open, single-key actions are suspended; printable vi movement letters
+are ordinary text. Arrow navigation cannot move the character.
 
 ### 5.3 Key decoding
 
@@ -199,7 +200,7 @@ type nothing and are ignored.
   cells; combining marks are not in the glyph set but may appear in
   names and are measured as zero width; control characters never reach
   the buffer.
-- Names and chat are truncated with `…` to fit; the truncation is by
+- Names and chat are truncated with `...` to fit; the truncation is by
   display width, not code points.
 - A `view` message forces a full redraw; `Ctrl-L` clears and redraws.
 - Frame rate is bounded by view revisions: the client renders when a
@@ -243,3 +244,42 @@ Lattice, menu) followed by the full keymap. Every menu's action bar is
 its own help. The first three sessions of a new character show a
 one-line hint on the hint line for the next useful key until the player
 uses it; the hint system is server-driven (`hint` in the view).
+
+## 11. Playable information, journals and decisions
+
+The default play screen answers four questions without scrollback:
+what is dangerous now, what action advances the job, what it costs,
+and how to leave. Vitals and safety remain visible when an objective or
+hazard compresses the nearby list. Warning timers use a word and digits,
+not colour or a one-frame flash alone. Menus do not pause the world;
+show body safety and provide the current escape action while jacked in.
+
+`Q`/`q` opens contracts and its journal tab. The journal separates
+**Observed**, **Source says**, **Open question**, and **Next action**.
+A record is acquired by inspection, not by reading every prose page.
+Inspection shows operational controls before optional source text; a
+player can execute the whole job using labels, target markers and
+progress bars. No parser, quiz or correct conversation answer exists.
+
+Work-order panels show reservation owner, stage, supplied item, target,
+public/worker allocation, recipients and expiry. The reserving player's
+choice is visible before others join. Expired or stale choices refresh
+the panel and consume nothing. Route changes appear in the map and
+header; costs appear before the player commits the action.
+
+The Silt panel labels the repeating signal and sampling window, counts
+the channel, marks a known riser and shows Sweeper warning/escape. A
+Chorister may speak during this procedure; its prose is optional.
+
+The finale has a safe decision room. Each participant receives their
+own options, standing deltas, name-publication scope, ballot status and
+settlement explanation. A leader cannot select another player's choice.
+The name field edits only the choosing player's displayed name and only
+where that choice calls for it. The Chronicle labels expedition report,
+personal choice and settled public result separately, including dissent.
+
+Human acceptance: finish the first job, a pump repair, a Silt survey and
+a solo finale at 80x24 using the compact labels without opening a lore
+page; then read the records and check that they deepen the same events.
+Repeat with a wide handle and all colour tiers. These remain required
+playtests, not a claim that the design has already been played.

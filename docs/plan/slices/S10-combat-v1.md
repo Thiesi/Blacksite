@@ -2,7 +2,7 @@
 
 **Status:** planned
 **Primary model:** Opus · **Reviewer:** Astra or Fable (balance read against the catalog before merge)
-**Depends on:** S07 · **Milestone:** M1
+**Depends on:** S07, S08, S12 · **Milestone:** M1
 **Issue:** https://github.com/Thiesi/blacksite/issues/10
 
 ## Goal
@@ -30,7 +30,7 @@ can wake up in a vat.
 - `docs/world/06-catalog.md` §1 (weapons: range, damage, cooldown,
   accuracy, ammo, damage type; melee), §1.6 (ammo), §2 (armour by
   layer and type), §4 (hymns and dissonance), §7 (consumables), §14
-  (balance notes: 6–10 s time to kill).
+  (unvalidated balance targets: 12-20 s equal-grade duel, 6-10 s starter drone).
 
 ## Scope
 
@@ -39,21 +39,21 @@ can wake up in a vat.
   skill/2 − evasion − cover×10 − range_penalty (range penalty 5 per
   tile beyond half the weapon's range; 0 within); `damage(base, skill,
   armour_vs_type)` = base × (1 + skill/200) − armour, min 1; shock
-  added = damage/2; melee ignores half of armour, 1.0 s cooldown,
-  stamina cost 10; shock ≥ 80 slows actions by 50 %, shock 100 =
+  added = damage/2; melee ignores half of armour, with the equipped weapon's listed
+  cooldown and stamina cost; shock ≥ 80 slows actions by 50 %, shock 100 =
   knockdown 2 s; shock decays 5/s when not damaged for 3 s; chemical
   damage-over-time from the catalog's `(+n/s, t s)` fields; dissonance
   reduced only by `arm_d`.
-- `src/blacksite/server/combat/engine.py`: per-zone combat subsystem
-  ticked at 10 Hz: target selection (`target_next/prev` cycling
-  visible hostiles by distance; in this slice every other player is a
-  valid target outside safe/pocket zones, relation rules arrive in
-  S20), `fire` intent resolves against the equipped weapon's cooldown,
-  ammo (consumes one round of the matching `ammo_*` stack; "click" log
-  line when empty), range and line of sight; melee via `fire` when
-  adjacent with a melee weapon; combat log lines with the roll and
-  reasons on request (`intent combat_log_verbose`); `in_combat` flag
-  for 10 s after any exchange (read by S07's sleeper penalty).
+- `src/blacksite/server/combat/engine.py`: per-zone combat subsystem ticked
+  at 10 Hz: target selection (`target_next/prev` cycling visible hostiles by
+  distance; implement the design safety and under-grade refusal now using
+  fixture faction relations; S20 supplies membership/Marked integration),
+  `fire` intent resolves against the equipped weapon's cooldown, ammo
+  (consumes one round of the matching `ammo_*` stack; "click" log line when
+  empty), range and line of sight; melee via `fire` when adjacent with a
+  melee weapon; combat log lines with the roll and reasons on request
+  (`intent combat_log_verbose`); `in_combat` flag for 10 s after any
+  exchange (read by S07's sleeper penalty).
 - Safe and pocket zones: `fire` at a player is refused with a log line;
   the Warden response itself is S11.
 - Down and dead: health 0 → `down` stance for 5 s (any crew member
@@ -65,11 +65,11 @@ can wake up in a vat.
   10, from the design doc's "fixed fee by grade": make the table
   explicit in `00-game-design.md` in this PR), fade 2 % of XP toward
   next grade.
-- Corpse cache: in contested/open zones a `cache` object at the death
-  tile holding all unsecured inventory for 5 min; killer may loot at
-  once, others after 60 s; `E` opens a `MenuView` to take items; secured
-  slots (3 by default, `secured` flag on item instances) never drop;
-  safe/pocket: nothing drops.
+- Corpse cache: in contested/open zones a `cache` object at the death tile
+  holding all unsecured inventory for 5 min; killer may loot at once; the
+  victim also immediately, others after 60 s; `E` opens a `MenuView` to take
+  items; secured slots (3 by default, `secured` flag on item instances)
+  never drop; safe/pocket: nothing drops.
 - Consumables: quick slots 1–5 bound in the inventory (S12 provides the
   binding UI; here a default binding of the first patch); instant with
   10 s cooldown per class; `con_sablier_patch` +25 health.
@@ -127,7 +127,7 @@ can wake up in a vat.
   `::test_range_penalty_beyond_half_range`, `::test_damage_min_1`,
   `::test_shock_half_of_damage`, `::test_shock_80_slows_100_knockdown`,
   `::test_melee_half_armour_and_stamina`, `::test_chemical_dot`,
-  `::test_dissonance_only_arm_d`, `::test_ttk_hv7_vs_grade5_ghost_between_6_and_10s`
+  `::test_dissonance_only_arm_d`, `::test_ttk_hv7_vs_grade5_ghost_matches_documented_model`
   (with the raised tier-1 accuracy or Nerve/3 evasion; assert the
   catalog's balance-note scenario lands in the window).
 - `tests/combat/test_engine.py::test_cooldown_enforced`,
@@ -150,12 +150,13 @@ can wake up in a vat.
 
 1. New character: the corridor drone shoots; `Tab`, `F` repeatedly;
    it dies in a few seconds; the Wake continues.
-2. Two callers in Clinic Row with starter sidearms: `Tab` targets the
-   other; `F` fires on cooldown; both HP bars fall; shock slows the
-   loser around second 5; the loser is down, then dead, then in a vat
-   after 20 s with 5 % fewer chits. The winner opens the cache with `E`
-   and takes the loser's ration bars; the coverall (secured) is not
-   there.
+2. Two eligible grade-5 callers in the contested part of Clinic Row with
+   starter sidearms: `Tab` targets the other; `F` fires on cooldown; both HP
+   bars fall; shock slows the loser as the displayed shock crosses its
+   threshold; the loser is down, then dead, then in a vat after 20 s with
+   the displayed 5%-plus-grade-fee debt settlement. The winner opens the
+   cache with `E` and takes the loser's ration bars; the coverall (secured)
+   is not there.
 3. Same in Meridian Plaza: `F` refused with a log line.
 4. A Cantor uses `hymn_steady` (key `1` after binding) and sees shock
    drop by 20; `dis_jam` on a target slows their fire.
@@ -164,7 +165,7 @@ can wake up in a vat.
 ## Definition of done
 
 - Roadmap §7 holds; the balance read is summarised in the PR and the
-  design doc's §3.1/§5.3 numbers (and the new clone-fee table) are the
+  design doc's §3.1/§5.3 numbers (and the canonical clone-fee rule) are the
   ones the tests assert.
 
 ## Implementer notes
@@ -180,3 +181,15 @@ can wake up in a vat.
   survive the zone going dormant (lazy expiry on wake).
 - `RLIMIT_CPU`: the client's border flash is one frame; never animate
   with timers on the client.
+
+## Lore review integration
+
+Use game design 5.3/5.4's clamped hit/damage, tick-rounded timings,
+mission subdue, persistent identity/debt and bound recovery kit. The
+victim can recover their own cache immediately; secured gear, learned
+programs and installed implants persist. Debt takes 25% of future earned
+chits, never principal transfers. No player-origin effect can harm a
+safe body, including a core power cut or remote presence attack. The
+explicit NPC black-core risk and private tutorial are separate scoped
+exceptions. Add race/indirect safety tests; human duel and cover pacing
+remain measured playtests, not fabricated passing timing assertions.

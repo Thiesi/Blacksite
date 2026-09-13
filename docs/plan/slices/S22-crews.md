@@ -2,7 +2,7 @@
 
 **Status:** planned
 **Primary model:** Sonnet · **Reviewer:** none
-**Depends on:** S09, S10 · **Milestone:** M4
+**Depends on:** S09, S10, S13, S16 · **Milestone:** M4
 **Issue:** https://github.com/Thiesi/blacksite/issues/22
 
 ## Goal
@@ -53,18 +53,20 @@ state.
   bypass for their crew's kills) and `round_robin` (a cache or data
   item is offered to the next member in rotation for 10 s, then falls
   through); mode changes take effect on the next drop.
-- Shared XP: on a kill or a first data lift by a member, every member
-  in the same zone or sector receives full XP if within 5 grades of
-  the earner, else scaled by 1 − (gap − 5) / 20 (min 0.25); contract
-  rewards are S19's crew scaling; relay XP is S21's.
+- Shared XP follows game design 10: local participation (within six
+  tiles for ten seconds, or a relevant action/heal in the last 60 s),
+  then the grade-gap multiplier, once per reward receipt and identity.
+  Merely occupying the same large zone or joining at turn-in is not
+  participation. Contract/relay rewards use their own fixed rosters.
 - Pick-up: any crew member adjacent to a downed member may `E` to
   pick up within the 5 s window (S10's down state); `Ninefold` hymn
   and `con_sablier_pickup` modify per catalog.
 - Crew chat: channel `crew` (S09) with its own colour role; `T` opens
   the line prompt on it.
-- Crew as instance key: `crew.seed_nonce` for S14's Silt (members
-  descending within 5 min of each other share a graph) and S26's
-  Blacksite instance; exposed as an attribute, consumers land later.
+- Silt joining uses its explicit shared instance entrance and roster,
+  never a remote beacon. S26 expedition IDs/rosters are persistent and
+  independent of the live social crew; leaving, kicking, dissolving or
+  restarting a crew cannot reassign ballots or destroy checkpoints.
 - Sitrep (S09) shows crew membership as a column.
 - Persistence: none (live only); crews vanish on server restart, which
   is acceptable and logged.
@@ -135,7 +137,7 @@ deterministic ticks and the panel golden holds at 80×24 and 132×50.
 ## Implementer notes
 
 - The XP scaling formula past five grades and the round-robin timer are
-  new numbers; add to `00-game-design.md` §10 in this PR.
+  canonical numbers in game design section 10; use them directly.
 - Crews are live-only by design; do not add a table. Log the dissolve
   on restart so the SysOp guide can explain it.
 - The crew relation must be checked before the faction relation in

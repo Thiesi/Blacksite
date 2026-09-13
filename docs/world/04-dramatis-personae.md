@@ -28,19 +28,21 @@ Conventions used below:
 Ilse Vantongeren was decanted, not born, and she tells every Wake this in
 the first thirty seconds because she has learned that it is the only thing
 that makes them trust her. She came out of the same specialist templates
-they do, forty years ago, when Sablier was still cloning shaft technicians
+they do, before the Severance, when Sablier was still cloning shaft technicians
 for Site Zero and losing one a week to whatever was down there. She was a
 medic template. She was good. When the Severance came she was the most
 senior clone in Vatside, and when the personhood statute was written she
 was its test case: Ninety Days was her number before it was anyone's.
 
-She built the Wake program because the alternative was worse. Sablier's
-board wanted to decant labour under a service contract with no personhood
-path at all; Vantongeren wrote the ninety-day rule into the concession
-agreement with the Civic Authority and then made herself indispensable to
-enforcing it. She is the reason a Wake is a person at all. She is also the
-reason there are Wakes, and she knows that most of them die before day
-ninety, and she has a number for that, too. She does not say it out loud.
+She built the Wake program because she believed the alternative was worse.
+Sablier's board wanted to decant labour under a service contract with no
+personhood path at all; Vantongeren wrote the ninety-day rule into the
+concession agreement with the Civic Authority and then made herself
+indispensable to enforcing it, including the Civic early-discharge
+certificate. She is the reason a Wake is a person at all. She is also the
+reason there are Wakes, and she knows that many disappear from the lease
+records before discharge, and she has a number for that, too. She does not
+say it out loud.
 
 Her kindness is real and it is a tool. She has the manner of a person who
 has had the same conversation eleven thousand times and has decided to
@@ -71,7 +73,7 @@ files this and tells nobody but Brann.
 **Voice.** Measured. Complete sentences. Never uses a Wake's name until
 they have chosen one, then uses it constantly. Says "you'll find" instead
 of "you will". Never swears. Her tic is precision about numbers followed
-by a softening: "Ninety days. Give or take nothing."
+by a softening: "Ninety days. Or bring me the work certificate."
 
 **Sample lines.**
 
@@ -85,8 +87,9 @@ by a softening: "Ninety days. Give or take nothing."
   rules."
 - *player is Marked* — "You've a mark on you. I don't ask why. But the
   Wardens will, and they ask with the safety off."
-- *player is a Wake (below grade 5)* — "Day forty-one. You're halfway.
-  Nobody counts the second half for you; count it yourself."
+- *player is a Wake (`legal_at` unset; example on elapsed day 41 only)* -
+  "Day forty-one. You're nearly halfway. Nobody counts the second half for
+  you; count it yourself."
 - *player is a faction enemy (Unmoored)* — "You've chosen the people who
   break into my vats for the templates. I'll treat you anyway. That's the
   job."
@@ -127,7 +130,7 @@ coming up the shafts, but the fact that when it comes, the Core will not
 be enough, and everyone will finally see the shape of what she chose not
 to protect.
 
-**Appearance.** Fifties. Tall, square, a Warden's blue coat worn open over
+**Appearance.** Fifty-eight. Tall, square, a Warden's blue coat worn open over
 body armour that has been shot. Grey hair cut close. A civic-issue
 sidearm she has fired in anger four times and can name each one.
 
@@ -196,7 +199,7 @@ What he wants is for the shaft to stay sealed until the templates run out
 and the city dies of natural causes, quietly, in a century or two, and
 takes the thing with it. What he fears is being wrong about the concrete.
 
-**Appearance.** Forties. Immaculate charcoal suit, no jewellery, an
+**Appearance.** Fifty-one. Immaculate charcoal suit, no jewellery, an
 amber Halvard sigil at the lapel that is also a rank badge. Pale from a
 life under filtered light. Looks like a man who reads.
 
@@ -267,7 +270,7 @@ Halvard tomorrow if Halvard would stop calling it a fault.
 What she wants is for it to answer. What she fears is that it already
 has, and that what it said was *stop*.
 
-**Appearance.** Seventies. Small, upright, a violet coat with gold
+**Appearance.** Seventy-three. Small, upright, a violet coat with gold
 cabling stitched into the seams that is also a functional antenna. Her
 resonance implant shows as a fine gold line from her left temple into her
 hairline. She hums. She does not know she hums.
@@ -337,7 +340,7 @@ map. What he fears is Kestrel: not the Wardens, not Halvard, Kestrel,
 because the day Kestrel decides the Sink does not need its ration line is
 the day he has nothing left to sell.
 
-**Appearance.** Fifties. Heavy, well-dressed in red and black, a
+**Appearance.** Fifty-four. Heavy, well-dressed in red and black, a
 Ferrymen-made kinetic pistol he treats as jewellery. A clone-white scar
 across the throat from the Year 29 incident that he has never had Sablier
 tidy. Sits in the cable car's forward seat with the door open.
@@ -383,7 +386,7 @@ the trouble".
 
 Anouk is the eleventh Ferry. The title passes to whoever the clans agree
 knows the road best, and Anouk has known the road since she was seven and
-her mother, the ninth Ferry, put her on a salvage sled and told her that
+her mother, the tenth Ferry, put her on a salvage sled and told her that
 the Ring falls where it falls and the only thing a person controls is
 whether they are standing there. She has walked every ring of the Scour.
 She has been to the wall's far side, where the plateau drops off into
@@ -477,9 +480,9 @@ out is the most frightening thing about it.
 
 What it wants is for the trams to run on time. What it fears is not a
 thing anyone can say, because it has never been asked in a way it
-answered. The Chronicle records that in one season finale, the Dispatcher
-was silent for exactly the duration of the crew's time on the level, and
-resumed mid-sentence.
+answered. A future Chronicle may record an expedition hearing it fall silent;
+only a settled outcome can mute the public ambient channel. No event is
+prewritten as having happened before players make it happen.
 
 **Appearance.** None. A speaker grille, orange-lit, at every tram stop
 and gate.
@@ -493,7 +496,8 @@ player asks, the terminal returns the next tram time.
 
 **Voice.** Even, kind, informational. Always states a time or a place.
 Never uses "I". Refers to the player by BBS handle, not character name,
-which nothing else in the city does, and nobody knows how it knows.
+drawn from the same civic registration used by sitrep. Why it repeats
+a handle in the old uplink hall remains a question, not a data leak.
 
 **Sample lines.**
 
@@ -734,7 +738,7 @@ with real feeling.
 
 ### The Spire
 
-**Captain Ines Maartens** [Halvard] — Commander of Spire Security and
+**Captain Ines Maartens** [Halvard] — field captain under Commander Ashgrove and
 Halvard's contract handler. Precise, unsmiling, the person who actually
 runs the Scour recovery patrols. Respects Hardlines and nobody else.
 - "Directorate has a recovery in the third ring. You are expendable
@@ -835,8 +839,8 @@ track gauge.
   That's not the rails."
 - "Halvard calls it a fault. I've fixed faults. This isn't a fault."
 
-**Sister Ode** [Choir] — Resonance implant vendor and installer, the only
-one in the city who will fit a resonance implant, and only to Cantors with
+**Sister Ode** [Choir] — Resonance implant vendor and installer, the Choir's
+public installer of resonance implants; Sablier also supplies them, and only to Cantors with
 Choir standing. Very young. Hears it more clearly than Quell and is
 afraid of that.
 - "Cantor. It's already looking at you. Sit; I'll make it easier to look
@@ -875,7 +879,7 @@ rent status to the day and will say it out loud in the lobby.
   rule. Now you do."
 - "Private core comes with the flat. Tier one. Runners get in; that's
   your problem, sweetheart, not mine."
-- "A Wake wants a lease? Ninety days first. I don't rent to numbers."
+- "A Wake wants a lease? Bring the discharge receipt. I don't rent to numbers."
 
 **Warden Constable Teo Marsh** [Wardens] — The Terraces' lone outpost
 Warden. Slow to respond, and knows it, and is bitter about being the
@@ -930,7 +934,7 @@ listen with her, and will not go back up.
 like a person. Found deep in the Undercity; trades salvage for compute
 grade and speaks in fragments of the Custodian's maintenance protocols.
 Content-tagged as neither CUST nor TEN, deliberately.
-- "MAINTENANCE. UNIT. ROOK. Trade. Compute grade. For… for what you
+- "MAINTENANCE. UNIT. WREN. Trade. Compute grade. For… for what you
   call it. Salvage."
 - "The shaft is sealed. The shaft was sealed. The shaft. Tense error."
 - "It sends me up. To look. At you. I look. I go down. I say what I
@@ -1014,7 +1018,7 @@ slice change:
 |---|---|
 | `first_meeting` | player has never interacted with this talker |
 | `grade_below N` / `grade_at_least N` | character grade |
-| `is_wake` | grade below 5 (shorthand) |
+| `is_wake` | `legal_at` unset; grade protection is a separate check |
 | `standing_below FACTION N` / `standing_at_least FACTION N` | standing with a faction |
 | `member_of FACTION` / `not_member_of FACTION` | membership |
 | `enemy_of_me` | player's faction is hostile to the talker's in the relations matrix |
@@ -1025,13 +1029,14 @@ slice change:
 | `chronicle_choice SEASON OPTION` | what a past season's finale recorded |
 | `event_active EVENT` | a world event is running |
 | `archetype ARCH` | character archetype |
-| `balance CUST` / `balance TEN` / `balance EVEN` | current Custodian/Tenant balance |
+| `balance CUST` / `balance TEN` / `balance EVEN` | settled internal voice weight |
+| `has_evidence ID` / `receipt ID` | recorded discovery or completed action |
+| `service_state ID STATE` | current bounded work-order state |
+| `legal` / `not_legal` | recorded discharge status |
 
-A line's `tag` is `CUST`, `TEN`, or absent. For lines tagged either way,
-the engine adds a **balance weight**: when the balance leans the tagged
-way, the line is eligible; when it leans the other way, it is skipped
-with a probability of 0.7. This is how the machine mind's voice shifts
-without any line being rewritten. Tags are never displayed.
+Tagged ambient lines use game design §13.4's seeded weights. Required
+instructions and one line from each voice register in a finale cannot
+be skipped. A tag never reaches the client or journal.
 
 ### Offers
 
@@ -1051,8 +1056,8 @@ a further question.
   should keep lines under about 140 characters and prefer two short
   lines to one long one.
 - A talker interaction is instant and non-blocking: the world does not
-  pause. A player being shot while talking to Vesper is a player being
-  shot.
+  pause. Danger remains active at exposed mission talkers. Vesper
+  and Brann remain protected in their safe/pocket locations.
 - Barks are rate-limited per talker (default one per 90 seconds) and
   suppressed while any player is interacting with that talker.
 
@@ -1082,3 +1087,27 @@ with the presence's colour, suffixed `//99`).
 ## Glossary
 
 Glossary: merged into 07-glossary.md.
+
+## Operational character writing
+
+A named character needs something the player can do, evidence the player
+can check, and a limit to what that character knows. These are authoring
+constraints for ordinary contract stages, not additional dialogue trees.
+
+| Character | Actionable need | Evidence and limit |
+|---|---|---|
+| Vantongeren | escort willing decants or compare a thermal record | knows the treatment and invoice; cannot certify the source of a remembered voice |
+| Brann | clear a route and record who was left outside | her signed orders establish her decisions, not the Blacksite's intent |
+| Halvard | isolate a failing controller without losing its data | has sealing records; a missing page does not prove containment is right |
+| Quell | compare signals before choosing a calibration | detects repeatable patterns; cannot label consciousness from resemblance |
+| Reyes | keep a route open without exposing a subscriber list | knows who pays; may conceal who cannot |
+| Anouk | recover a working part and bring the injured home | has local forecasts; no verified route out of Karst |
+| Dispatcher | reconcile a manifest with an actual delivery | produces reliable receipts; self-attribution is unverified |
+| Ninety-Nine | recover a fragment without silently replacing it | recognises routines; resemblance is not authenticated continuity |
+| Vesper | arrange work between opponents | quotes explicit costs; cannot promise safety in a contested street |
+
+Samples with specific days or future outcomes are conditional examples,
+not unconditional barks. Render actual lease days, only a settled public
+outcome, or the viewing player's receipt. A line threatening violence
+inside a safe room is bluster; it cannot enable damage. The player can
+leave every interaction and consult its record later from shelter.
