@@ -1,3 +1,5 @@
+![Blacksite: Karst beneath orbital wreckage, with the Lattice below.](docs/assets/blacksite-banner.png)
+
 # Blacksite
 
 *The city was built to keep something in. Nobody remembers what.*
