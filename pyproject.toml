@@ -1,0 +1,38 @@
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "blacksite"
+version = "0.0.1"
+description = "A real-time multiplayer door game for NetBBS."
+readme = "README.md"
+license = { file = "LICENSE" }
+requires-python = ">=3.12"
+# Standard library only at runtime (AGENTS.md section 1,
+# 02-architecture.md section 14). Do not add anything here.
+dependencies = []
+
+[project.optional-dependencies]
+test = ["pytest"]
+
+[project.scripts]
+# Conveniences for humans. NetBBS launches the door with the venv
+# interpreter and `-m blacksite.door` (02-architecture.md section 8.1).
+blacksite-server = "blacksite.server.__main__:main"
+blacksite-door = "blacksite.door.__main__:main"
+blacksite-admin = "blacksite.admin.__main__:main"
+blacksite-bot = "blacksite.bot.__main__:main"
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.setuptools.package-data]
+blacksite = ["content/**/*"]
+
+[tool.setuptools.exclude-package-data]
+# The broad content glob would otherwise ship bytecode caches.
+blacksite = ["**/__pycache__/*"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
