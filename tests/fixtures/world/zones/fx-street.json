@@ -1,0 +1,113 @@
+{
+  "schema": 1,
+  "id": "fx-street",
+  "name": "Fixture Street",
+  "district": "Fixture",
+  "safety": "contested",
+  "sight_radius": 10,
+  "exits": [
+    {
+      "id": "to-safe",
+      "tile": [
+        1,
+        12
+      ],
+      "target_zone": "fx-safe",
+      "target_tile": [
+        37,
+        10
+      ],
+      "kind": "street"
+    },
+    {
+      "id": "to-open-gate",
+      "tile": [
+        58,
+        6
+      ],
+      "target_zone": "fx-open",
+      "target_tile": [
+        2,
+        6
+      ],
+      "kind": "gate"
+    },
+    {
+      "id": "to-open-alley",
+      "tile": [
+        58,
+        18
+      ],
+      "target_zone": "fx-open",
+      "target_tile": [
+        2,
+        14
+      ],
+      "kind": "street"
+    }
+  ],
+  "objects": [
+    {
+      "id": "fx-street-gate",
+      "tile": [
+        58,
+        6
+      ],
+      "kind": "door"
+    },
+    {
+      "id": "fx-street-hw",
+      "tile": [
+        30,
+        3
+      ],
+      "kind": "hardware"
+    },
+    {
+      "id": "fx-street-terminal",
+      "tile": [
+        31,
+        3
+      ],
+      "kind": "terminal"
+    },
+    {
+      "id": "fx-street-cache",
+      "tile": [
+        40,
+        20
+      ],
+      "kind": "cache"
+    },
+    {
+      "id": "fx-street-vendor",
+      "tile": [
+        5,
+        4
+      ],
+      "kind": "vendor"
+    }
+  ],
+  "spawners": [
+    {
+      "id": "fx-street-thugs",
+      "npc": "fx-thug",
+      "count": 2,
+      "respawn_seconds": 120,
+      "region": {
+        "x": 35,
+        "y": 10,
+        "w": 10,
+        "h": 5
+      }
+    }
+  ],
+  "pockets": [
+    {
+      "x": 2,
+      "y": 2,
+      "w": 8,
+      "h": 6
+    }
+  ]
+}

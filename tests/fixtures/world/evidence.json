@@ -1,0 +1,13 @@
+{
+  "schema": 1,
+  "evidence": [
+    {
+      "id": "fx-gate-log",
+      "asset": "text-fx-gate-1",
+      "observation": "The gate cycled twice after midnight.",
+      "source": "Gatehouse controller log",
+      "claim": "Nobody touched the gate.",
+      "related_objective": "fx-first-job"
+    }
+  ]
+}

@@ -1,0 +1,60 @@
+{
+  "schema": 1,
+  "id": "fx-open",
+  "name": "Fixture Waste",
+  "district": "Fixture",
+  "safety": "open",
+  "sight_radius": 5,
+  "exits": [
+    {
+      "id": "to-street-gate",
+      "tile": [
+        1,
+        6
+      ],
+      "target_zone": "fx-street",
+      "target_tile": [
+        57,
+        6
+      ],
+      "kind": "gate"
+    },
+    {
+      "id": "to-street-alley",
+      "tile": [
+        1,
+        14
+      ],
+      "target_zone": "fx-street",
+      "target_tile": [
+        57,
+        18
+      ],
+      "kind": "street"
+    }
+  ],
+  "objects": [
+    {
+      "id": "fx-open-hw",
+      "tile": [
+        20,
+        10
+      ],
+      "kind": "hardware"
+    }
+  ],
+  "spawners": [
+    {
+      "id": "fx-open-thugs",
+      "npc": "fx-thug",
+      "count": 1,
+      "respawn_seconds": 300,
+      "region": {
+        "x": 30,
+        "y": 2,
+        "w": 6,
+        "h": 6
+      }
+    }
+  ]
+}

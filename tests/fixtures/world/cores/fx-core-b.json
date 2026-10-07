@@ -1,0 +1,48 @@
+{
+  "schema": 1,
+  "id": "fx-core-b",
+  "name": "Fixture Vault",
+  "owner": "fx-beta",
+  "tier": 2,
+  "hardware": [
+    {
+      "zone": "fx-open",
+      "tile": [
+        20,
+        10
+      ]
+    }
+  ],
+  "rooms": [
+    {
+      "id": "r-entry",
+      "neighbours": [
+        "r-vault",
+        "r-ice"
+      ]
+    },
+    {
+      "id": "r-vault",
+      "neighbours": [
+        "r-entry"
+      ],
+      "data": [
+        {
+          "id": "d-log",
+          "kind": "text",
+          "asset": "text-fx-gate-1",
+          "respawn_seconds": 3600
+        }
+      ]
+    },
+    {
+      "id": "r-ice",
+      "neighbours": [
+        "r-entry"
+      ],
+      "ice": [
+        "ice_ticker"
+      ]
+    }
+  ]
+}

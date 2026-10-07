@@ -1,0 +1,51 @@
+{
+  "schema": 1,
+  "factions": [
+    {
+      "id": "fx-alpha",
+      "name": "Fixture Alpha",
+      "short": "Alpha",
+      "colour": "faction_kestrel",
+      "relations": {
+        "fx-beta": "H"
+      },
+      "hall": "fx-safe",
+      "vat": {
+        "zone": "fx-safe",
+        "tile": [
+          5,
+          5
+        ]
+      },
+      "recruiter": "fx-recruiter",
+      "ranks": [
+        {
+          "standing": 30,
+          "title": "Member"
+        },
+        {
+          "standing": 90,
+          "title": "Elder"
+        }
+      ],
+      "contracts": [
+        "fx-first-job"
+      ]
+    },
+    {
+      "id": "fx-beta",
+      "name": "Fixture Beta",
+      "short": "Beta",
+      "colour": "faction_sable",
+      "relations": {
+        "fx-alpha": "N"
+      }
+    }
+  ],
+  "asymmetries": [
+    [
+      "fx-alpha",
+      "fx-beta"
+    ]
+  ]
+}

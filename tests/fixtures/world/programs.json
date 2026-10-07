@@ -1,0 +1,51 @@
+{
+  "schema": 1,
+  "programs": [
+    {
+      "id": "prg_pick",
+      "name": "Pick",
+      "class": "attack",
+      "tier": 1,
+      "slots": 1,
+      "cast_seconds": 0.8,
+      "cooldown_seconds": 1.0,
+      "effect": {
+        "kind": "damage",
+        "amount": 10
+      },
+      "price": 150,
+      "target_class": "ice"
+    },
+    {
+      "id": "prg_umbrella",
+      "name": "Umbrella",
+      "class": "shield",
+      "tier": 1,
+      "slots": 1,
+      "cast_seconds": 0.5,
+      "cooldown_seconds": 4.0,
+      "effect": {
+        "kind": "absorb",
+        "amount": 15
+      },
+      "price": 200
+    },
+    {
+      "id": "prg_skeleton",
+      "name": "Skeleton",
+      "class": "key",
+      "tier": 1,
+      "slots": 1,
+      "cast_seconds": 1.5,
+      "cooldown_seconds": 5,
+      "effect": {
+        "kind": "open_gate",
+        "params": {
+          "max_tier": 1
+        }
+      },
+      "price": 200,
+      "target_class": "cell"
+    }
+  ]
+}

@@ -1,0 +1,134 @@
+{
+  "schema": 1,
+  "tiles": [
+    {
+      "id": "wall",
+      "char": "#",
+      "glyph": "wall",
+      "colour": "wall",
+      "passable": false,
+      "opaque": true
+    },
+    {
+      "id": "floor",
+      "char": ".",
+      "glyph": "floor",
+      "colour": "floor",
+      "passable": true
+    },
+    {
+      "id": "cover-1",
+      "char": ";",
+      "glyph": "cover-1",
+      "colour": "cover",
+      "passable": true,
+      "cover": 1
+    },
+    {
+      "id": "cover-2",
+      "char": "%",
+      "glyph": "cover-2",
+      "colour": "cover",
+      "passable": true,
+      "cover": 2
+    },
+    {
+      "id": "cover-3",
+      "char": "&",
+      "glyph": "cover-3",
+      "colour": "cover",
+      "passable": true,
+      "cover": 3
+    },
+    {
+      "id": "door",
+      "char": "+",
+      "glyph": "door",
+      "colour": "door",
+      "passable": true,
+      "interaction": "door"
+    },
+    {
+      "id": "locked-door",
+      "char": "=",
+      "glyph": "locked-door",
+      "colour": "door",
+      "passable": false,
+      "opaque": true,
+      "interaction": "door"
+    },
+    {
+      "id": "terminal",
+      "char": "T",
+      "glyph": "terminal",
+      "colour": "terminal",
+      "passable": true,
+      "interaction": "terminal"
+    },
+    {
+      "id": "relay",
+      "char": "R",
+      "glyph": "relay",
+      "colour": "relay",
+      "passable": true,
+      "interaction": "relay"
+    },
+    {
+      "id": "exit",
+      "char": ">",
+      "glyph": "exit",
+      "colour": "exit",
+      "passable": true
+    },
+    {
+      "id": "water",
+      "char": "~",
+      "glyph": "water",
+      "colour": "water",
+      "passable": true
+    },
+    {
+      "id": "hazard",
+      "char": "!",
+      "glyph": "hazard",
+      "colour": "hazard",
+      "passable": true,
+      "hazard": {
+        "damage_per_second": 5,
+        "type": "chemical"
+      }
+    },
+    {
+      "id": "vendor",
+      "char": "$",
+      "glyph": "vendor",
+      "colour": "vendor",
+      "passable": true,
+      "interaction": "vendor"
+    },
+    {
+      "id": "vat",
+      "char": "V",
+      "glyph": "vat",
+      "colour": "vat",
+      "passable": true,
+      "interaction": "vat"
+    },
+    {
+      "id": "light",
+      "char": "L",
+      "glyph": "light",
+      "colour": "light",
+      "passable": true,
+      "interaction": "light"
+    },
+    {
+      "id": "hardware",
+      "char": "H",
+      "glyph": "hardware",
+      "colour": "hardware",
+      "passable": true,
+      "interaction": "hardware"
+    }
+  ]
+}
