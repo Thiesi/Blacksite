@@ -1,0 +1,55 @@
+{
+  "schema": 1,
+  "npcs": [
+    {
+      "id": "fx-thug",
+      "name": "Fixture Thug",
+      "faction": "fx-beta",
+      "grade": 1,
+      "attributes": {
+        "frame": 20,
+        "nerve": 20,
+        "cortex": 10,
+        "resonance": 5,
+        "vitals": 20
+      },
+      "weapon": "wpn_kestrel_sidearm",
+      "armour": "arm_wake_coverall",
+      "behaviours": [
+        {
+          "kind": "aggro",
+          "params": {
+            "radius": 6
+          }
+        }
+      ],
+      "loot": [
+        {
+          "item": "ammo_9x",
+          "chance": 0.5,
+          "count": 10
+        }
+      ],
+      "xp": 20
+    },
+    {
+      "id": "fx-recruiter",
+      "name": "Fixture Recruiter",
+      "faction": "fx-alpha",
+      "grade": 3,
+      "attributes": {
+        "frame": 15,
+        "nerve": 25,
+        "cortex": 25,
+        "resonance": 10,
+        "vitals": 25
+      },
+      "behaviours": [
+        {
+          "kind": "talker"
+        }
+      ],
+      "xp": 0
+    }
+  ]
+}

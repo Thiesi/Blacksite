@@ -1,0 +1,64 @@
+{
+  "schema": 1,
+  "id": "fx-core-a",
+  "name": "Fixture Gatehouse",
+  "owner": "fx-alpha",
+  "tier": 1,
+  "hardware": [
+    {
+      "zone": "fx-street",
+      "tile": [
+        30,
+        3
+      ]
+    }
+  ],
+  "rooms": [
+    {
+      "id": "r-entry",
+      "neighbours": [
+        "r-data"
+      ]
+    },
+    {
+      "id": "r-data",
+      "neighbours": [
+        "r-entry",
+        "r-control"
+      ],
+      "ice": [
+        "ice_tripwire"
+      ],
+      "data": [
+        {
+          "id": "d-chits",
+          "kind": "chits",
+          "amount": 50,
+          "respawn_seconds": 600
+        }
+      ]
+    },
+    {
+      "id": "r-control",
+      "neighbours": [
+        "r-data"
+      ],
+      "controls": [
+        {
+          "id": "c-gate",
+          "label": "Street gate",
+          "target": {
+            "zone": "fx-street",
+            "object": "fx-street-gate"
+          },
+          "action": "close",
+          "reset_seconds": 600,
+          "scope": "public",
+          "permission": "public",
+          "safety_policy": "route",
+          "alternate_route": "to-open-alley"
+        }
+      ]
+    }
+  ]
+}

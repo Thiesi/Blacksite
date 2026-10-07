@@ -1,0 +1,43 @@
+{
+  "schema": 1,
+  "services": [
+    {
+      "id": "fx-pump",
+      "name": "Fixture Pump",
+      "zone": "fx-street",
+      "core": "fx-core-a",
+      "target_objects": [
+        "fx-street-cache",
+        "fx-street-gate"
+      ],
+      "allocations": [
+        {
+          "id": "common",
+          "label": "Publish the gate schedule",
+          "effects": [
+            {
+              "type": "reveal",
+              "zone": "fx-street",
+              "params": {
+                "what": "patrol_route"
+              }
+            }
+          ]
+        },
+        {
+          "id": "reserve",
+          "label": "Stock the workers' cache",
+          "effects": [
+            {
+              "type": "cache",
+              "zone": "fx-street",
+              "params": {
+                "object": "fx-street-cache"
+              }
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

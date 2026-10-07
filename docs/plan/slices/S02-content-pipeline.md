@@ -1,6 +1,6 @@
 # S02 — Content formats, loaders, validator, test fixture world
 
-**Status:** planned
+**Status:** done (PR #40)
 **Primary model:** Opus · **Reviewer:** Sonnet (test coverage)
 **Depends on:** S01 · **Milestone:** M0
 **Issue:** https://github.com/Thiesi/blacksite/issues/2

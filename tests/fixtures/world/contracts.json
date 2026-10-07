@@ -1,0 +1,52 @@
+{
+  "schema": 1,
+  "contracts": [
+    {
+      "id": "fx-first-job",
+      "faction": "vesper",
+      "type": "hack",
+      "stages": [
+        {
+          "id": "s1",
+          "verb": "survey",
+          "input": "inspect",
+          "completion": "inspected",
+          "receipt_key": "fx-first-job/s1",
+          "target": {
+            "kind": "zone_object",
+            "zone": "fx-street",
+            "object": "fx-street-gate"
+          }
+        },
+        {
+          "id": "s2",
+          "verb": "hack",
+          "input": "flip",
+          "completion": "control_flipped",
+          "receipt_key": "fx-first-job/s2",
+          "target": {
+            "kind": "core_control",
+            "core": "fx-core-a",
+            "control": "c-gate"
+          }
+        }
+      ],
+      "reward": {
+        "chits": [
+          200,
+          200
+        ],
+        "standing": {
+          "fx-alpha": 5,
+          "fx-beta": 5
+        },
+        "standing_mode": "explicit",
+        "xp": 100
+      },
+      "crew_scaling": false,
+      "evidence_assets": [
+        "fx-gate-log"
+      ]
+    }
+  ]
+}

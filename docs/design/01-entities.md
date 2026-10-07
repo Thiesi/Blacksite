@@ -25,6 +25,14 @@ Conventions:
 
 ## 1. World and content (loaded from files)
 
+Every content file is decoded into the typed records of
+`blacksite/content/schema.py`; JSON keys equal the field names below.
+Unknown keys, missing required fields and values outside a closed set
+fail at load with the file and, where it can be found, the line. Table
+files are `{"schema": 1, "<kind>": [records]}`; one-record files
+(`sectors/`, `cores/`, `dialogue/`, `seasons/`, `bundles/`) are named
+after their id.
+
 ### 1.1 Zone (`zones/<id>.map` + `zones/<id>.json`)
 
 | Field | Type | Notes |
@@ -33,33 +41,40 @@ Conventions:
 | name, district | str | |
 | safety | enum | safe, pocket, contested, open |
 | lean | faction id or null | |
-| width, height | int | 40–200, 20–100 |
+| width, height | int | 40–200, 20–100; derived from the `.map`, not written in the sidecar |
 | tiles | grid of TileRef | from the `.map` legend |
 | sight_radius | int | |
 | sight_radius_night | int, optional | Scour zones: used 20:00–06:00 node local time |
-| exits | list of Exit | tile, target zone, target tile, kind (street, tram, ladder, lift, gate, cable), requirement (pass, key, faction) |
-| spawners | list of Spawner | tile or region, npc template, count, respawn seconds, condition |
-| objects | list of ObjectSpec | tile, kind (door, terminal, vendor, vat, relay, cache, tram_stop, apartment_door, light, hardware, descent_console, workshop, bank), params |
+| exits | list of Exit | id, tile, target zone, target tile, kind (street, tram, ladder, lift, gate, cable), requirement (pass, key, faction), hidden |
+| spawners | list of Spawner | id, tile or region, npc template, count, respawn seconds, condition |
+| objects | list of ObjectSpec | id, tile, kind (door, terminal, vendor, vat, relay, cache, tram_stop, apartment_door, light, hardware, descent_console, workshop, bank), params, essential (clinic, public vat, public uplink) |
 | pockets | list of Region | rectangles that are `pocket` safety inside a contested zone |
 | lore | list of asset ids | ambient log lines, found texts |
 | instanced | bool | Blacksite levels only |
 
 ### 1.2 Tile type (`tiles.json`)
 
-`id, glyph, colour (per tier), passable, cover (0–3), opaque, hazard
+`id, char, glyph, colour, passable, cover (0–3), opaque, hazard
 (damage per second, type), interaction (object kind or null), sound_line
-(optional ambient log)`.
+(optional ambient log)`. `char` is the single character that stands for
+the tile in `.map` files; `glyph` is a `glyphs.json` id used to draw it;
+`colour` is a palette role whose per-tier values live in `palette.json`.
+
+The terminal tables beside it: `glyphs.json` (`glyphs`: glyph id to one
+CP437 character), `palette.json` (`roles`: role to tier to variant to
+value) and `keymaps.json` (`actions`: action id to context and label;
+`keymaps`: id, label, bindings of action id to normalised key names).
 
 ### 1.3 Sector (`sectors/<id>.json`)
 
 `id, district, cells[]` where a cell is `id, kind (public, gated, hidden,
-core_entrance, descent), neighbours[], requirement, label, core_id
-(optional), lore`.
+core_entrance, descent), pos (grid position on the sector view),
+neighbours[], requirement, label, core_id (optional), lore`.
 
 ### 1.4 Core (`cores/<id>.json`)
 
 `id, name, owner (faction id or "private"), tier 1–5 (0 only for the Wake
-training core), hardware (list of one or two (zone id, tile) locations; two
+training core, which sets `training`), hardware (list of one or two (zone id, tile) locations; two
 only for the Shaft core that spans Shaft Head and Shaft Foot, and the
 validator rejects any other multi-location core), rooms[]` where a room is
 `id, neighbours[], data[] (DataSpec), controls[] (ControlSpec), ice[] (ice
@@ -75,12 +90,20 @@ owner_policy, warning seconds, alternate_route, revision`.
 A control cannot invent arbitrary code. Its action and permission are
 closed enums; safe-zone hazards, private storage access and essential
 service denial fail validation. Expiry is independent of relay ownership.
+Permission is `public`, `contract`, `member`, `owner` or `resident`.
+`safety_policy` is `none`, `route` (may close travel; must name an
+`alternate_route` exit in the target zone) or `hazard` (never in a safe
+zone or pocket; at least 5 s warning). `owner_policy` is refused on
+route and hazard controls, which always expire.
 
 ### 1.5 ICE template (`ice.json`)
 
-`id, name, class, tier, integrity, attack, cast_seconds, cooldown_seconds,
-trigger (entry, data, trace >= n, timer), behaviour (static, roaming,
-hunter), black (bool), meat_damage, counters[] (program classes), lore`.
+`id, name, class, role (gate, alarm, patrol, deception, displacement,
+feedback), tier, integrity, attack, cast_seconds, cooldown_seconds,
+trigger (entry, data, trace with `trigger_trace` n, timer, touch,
+passage, always), behaviour (static, roaming, hunter), black (bool),
+meat_damage, counters[] (program classes), variants[] (ICE a Surge may
+swap in: non-black, equal or lower tier), lore`.
 
 ### 1.6 Program template (`programs.json`)
 
@@ -92,14 +115,20 @@ continued use are distinct requirements.
 
 ### 1.7 Item template (`items.json`)
 
-Shared header: `id, name, class (weapon, armour, implant, resonance,
-rig, drug, consumable, drone, salvage, schematic, key, pass, data, misc),
-tier, weight, base_price, secured_default (bool), description asset,
-stack_max`. Class-specific blocks:
+Shared header: `id, name, class (weapon, armour, ammo, implant,
+resonance, rig, drug, consumable, drone, salvage, schematic, key, pass,
+data, misc), tier, weight, base_price, secured_default (bool),
+description (the catalog line, inline), stack_max, maker`. The item
+carries exactly the block its class names (resonance and rig use the
+implant block; key, pass, data and misc carry none). Class-specific
+blocks:
 
-- weapon: `range, damage, cooldown, accuracy, ammo, damage_type, heavy,
-  melee`
-- armour: `slot, armour {kinetic, energy, chemical, dissonance}, heavy`
+- weapon: `range (none for melee), damage, cooldown, accuracy, ammo,
+  damage_type, heavy, melee, stamina (melee), dot {per_second, seconds},
+  shock`
+- armour: `slot, armour {kinetic, energy, chemical, dissonance}, evasion,
+  heavy`
+- ammo: `recharge_price` (energy cells only)
 - implant / resonance / rig: `slot, tolerance, effects (dict of attribute
   or derived deltas), requires (archetype, standing)`
 - drug: `effects, duration, crash, addiction_window, addiction_doses`
@@ -111,22 +140,29 @@ stack_max`. Class-specific blocks:
 ### 1.8 NPC template (`npcs.json`)
 
 `id, name, faction, grade, attributes, weapon, armour, behaviours[]
-(with params), dialogue (asset id or null), vendor (inventory id or null),
-loot_table, xp, lore`.
+(with params), dialogue (talker id or null), vendor (inventory id or null),
+loot[] (item, chance, count), xp, lore`.
 
 ### 1.9 Faction (`factions.json`)
 
-`id, name, short, colours (tiers), hall (zone id), vat (zone id, tile),
-recruiter (npc id), relations {faction id → H/N/A}, ranks[] (standing
-threshold, title), vendor inventory id, contract templates[]`.
+`id, name, short, colour (palette role), hall (zone id), vat (zone id,
+tile), recruiter (npc id), relations {faction id → H/N/A}, ranks[]
+(standing threshold, title), vendor inventory id, contracts[]`.
+`factions.json` also holds `asymmetries`, the unordered pairs whose
+relation differs by direction; it must equal the set the matrix has.
 
 ### 1.10 Contract template (`contracts.json`)
 
 `id, faction or "vesper", type (fetch, hack, escort, clear, plant,
 survey), stages[], params (ranges and pools), reward (chits range,
 explicit standing deltas, xp, item pool), min_grade, crew_scaling,
-story (bool), season, chain (next id), branch_group, permit_scope,
-publication_options[], evidence_assets[], unlock_conditions`.
+story (bool), season, chain (next id), branch_group, branch (this
+outcome's key in the group), permit_scope, publication_options[],
+evidence_assets[] (evidence ids), unlock_conditions[]`.
+
+A stage is `id, verb, target {kind, ...}, input, completion,
+receipt_key, retry, resolution`. Receipt keys are unique across all
+contracts, as is each `(branch_group, branch)`.
 
 Each stage uses one of the six verbs, a resolved target and a completion
 condition. Escort includes willing mission NPCs; clear declares lethal
@@ -138,11 +174,13 @@ maps, NPCs, dialogue, cores, items and season IDs before activation.
 ### 1.11 Dialogue (`dialogue/<npc>.json`)
 
 Talkers with ordered conditional lines, first match wins: `lines[]` of
-`id, text asset, conditions (a closed set: standing, grade, faction,
+`id, text (inline, at most 200 characters), when (conditions (a closed set: standing, grade, faction,
 marked, contract state, season, event, season flag, legal status,
 evidence, receipt, service state), offers[] (label,
-hotkey, effect: contract offer, join, vendor, text asset), bark (bool),
-balance tag (CUST, TEN, or none)`. The full shape, including terminal
+hotkey, effect: contract offer, join, vendor, text asset), barks[],
+tag (CUST, TEN, or none)`, plus `required` on lines the balance weights
+may never skip and `machine_mind` on talkers that need a line in each
+voice. The full shape, including terminal
 talkers (the Dispatcher, Ninety-Nine) and the validation tests, is
 "Dialogue system notes" in `docs/world/04-dramatis-personae.md`.
 This contract and game design section 13.4 govern weighting and required
@@ -151,16 +189,21 @@ lines; flavour cannot remove a warning, objective or offered action.
 ### 1.12 Event template (`events.json`)
 
 `id, name, where (zone ids or sector ids), duration, cooldown, weight,
-effects[] (typed), announce (asset ids: start, mid, end), route
-(optional route id)`. Routes (`routes.json`): `id, waypoints[] (zone id,
+basis (wall or uptime), effects[] (typed), variants[] (id, effects[]),
+announce (asset ids: start, mid, end), route (optional route id)`.
+An effect is `type (hazard, spawn_multiplier, entry_restriction,
+ice_variant, salvage, route_hold, price_modifier, reveal, cache), zone,
+region, sector, warning_seconds, exits_closed[] ("zone/exit"), params`. Routes (`routes.json`): `id, waypoints[] (zone id,
 tile), speed`, used by the Convoy event's NPC crew.
 
 ### 1.13 Season definition (`seasons/<n>.json`)
 
-`number, title, depth_target, contribution weights, blacksite level
-(zone id, sector id), finale choices[] (id, label, chronicle asset,
-balance delta, condition), relations_override[] (faction a, faction b,
-value), story contract chains[]`.
+`number, title, depth_target, contribution weights, level (zone id,
+sector id), phases[] (expedition checkpoint ids), finale_choices[] (id,
+label, chronicle asset, balance delta, standing, condition),
+finale_lines[] (text asset, tag, guaranteed; one guaranteed line per
+voice), relations_override[] (faction a, faction b, value), story
+contract chains[]`.
 
 ### 1.14 Text asset (`text/<id>.md` or `.txt`)
 
@@ -171,6 +214,33 @@ minimal markup the client knows how to colour.
 
 ANSI art blocks with a JSON sidecar: `width, height, min_tier, palette
 variants`. See `04-assets.md`.
+
+### 1.16 Evidence record (`evidence.json`)
+
+`id, asset (text asset), observation, source, claim, related_objective
+(contract id)`. What a journal record shows when acquired; the source's
+claim is a separate field, never the finding (`04-assets.md` §9).
+
+### 1.17 Service node template (`services.json`)
+
+`id, name, zone, core, target_objects[] (object ids in the zone),
+allocations[]` with exactly one `common` and one `reserve` allocation,
+each `id, label, effects[]` (event effect records). Live state is the
+`ServiceNode` of §2.13.
+
+### 1.18 Vendor and hymn tables (`vendors.json`, `hymns.json`)
+
+Vendor: `id, name, tier (list, member, restricted), stock[] (item,
+standing), faction, zone`. Hymn: `id, name, kind (hymn, dissonance),
+tier, cast_seconds, cooldown_seconds, effect, description`.
+
+### 1.19 Bundle (`bundles/<id>.json`)
+
+`id, status (active, authoring), depends[] (bundle ids), members {kind →
+ids}`. Content no bundle lists is base content and always active. A
+record in an `authoring` bundle may hold unresolved references; active
+content may reference only content that exists and is itself active,
+and an active bundle depends only on active bundles.
 
 ---
 

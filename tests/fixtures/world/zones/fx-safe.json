@@ -1,0 +1,66 @@
+{
+  "schema": 1,
+  "id": "fx-safe",
+  "name": "Fixture Hall",
+  "district": "Fixture",
+  "safety": "safe",
+  "lean": "fx-alpha",
+  "sight_radius": 12,
+  "exits": [
+    {
+      "id": "to-street",
+      "tile": [
+        38,
+        10
+      ],
+      "target_zone": "fx-street",
+      "target_tile": [
+        1,
+        12
+      ],
+      "kind": "street"
+    }
+  ],
+  "objects": [
+    {
+      "id": "fx-safe-vat",
+      "tile": [
+        5,
+        5
+      ],
+      "kind": "vat",
+      "essential": true
+    },
+    {
+      "id": "fx-safe-terminal",
+      "tile": [
+        10,
+        5
+      ],
+      "kind": "terminal"
+    },
+    {
+      "id": "fx-safe-light",
+      "tile": [
+        20,
+        3
+      ],
+      "kind": "light"
+    }
+  ],
+  "spawners": [
+    {
+      "id": "fx-safe-recruiter",
+      "npc": "fx-recruiter",
+      "count": 1,
+      "respawn_seconds": 60,
+      "tile": [
+        12,
+        8
+      ]
+    }
+  ],
+  "lore": [
+    "text-fx-gate-1"
+  ]
+}

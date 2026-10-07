@@ -1,0 +1,69 @@
+{
+  "schema": 1,
+  "items": [
+    {
+      "id": "wpn_kestrel_sidearm",
+      "name": "Kestrel Issue Sidearm",
+      "class": "weapon",
+      "tier": 1,
+      "weight": 1.0,
+      "base_price": 120,
+      "maker": "Kestrel Issue",
+      "description": "The starter pistol. Everyone in Karst has fired one; most of them at the wrong person.",
+      "weapon": {
+        "damage": 12,
+        "cooldown": 0.8,
+        "accuracy": 55,
+        "damage_type": "kinetic",
+        "range": 6,
+        "ammo": "ammo_9x"
+      }
+    },
+    {
+      "id": "ammo_9x",
+      "name": "9x pistol rounds",
+      "class": "ammo",
+      "tier": 1,
+      "base_price": 25,
+      "stack_max": 50,
+      "maker": "Kestrel Issue",
+      "description": "Kestrel Issue, everywhere.",
+      "ammo": {}
+    },
+    {
+      "id": "arm_wake_coverall",
+      "name": "Sablier Wake Coverall",
+      "class": "armour",
+      "tier": 1,
+      "weight": 1.0,
+      "base_price": 0,
+      "maker": "Sablier",
+      "description": "What you wake up in.",
+      "armour": {
+        "slot": "body",
+        "armour": {
+          "kinetic": 2,
+          "energy": 2,
+          "chemical": 4,
+          "dissonance": 0
+        }
+      }
+    },
+    {
+      "id": "con_sablier_patch",
+      "name": "Sablier Med Patch",
+      "class": "consumable",
+      "tier": 1,
+      "base_price": 40,
+      "stack_max": 10,
+      "maker": "Sablier",
+      "description": "Sticks on, takes the edge off.",
+      "consumable": {
+        "effects": {
+          "health": 25
+        },
+        "cooldown_class": "heal"
+      }
+    }
+  ]
+}

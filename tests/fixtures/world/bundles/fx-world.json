@@ -1,0 +1,60 @@
+{
+  "schema": 1,
+  "id": "fx-world",
+  "status": "active",
+  "members": {
+    "zones": [
+      "fx-safe",
+      "fx-street",
+      "fx-open"
+    ],
+    "sectors": [
+      "fx-sector"
+    ],
+    "cores": [
+      "fx-core-a",
+      "fx-core-b"
+    ],
+    "items": [
+      "wpn_kestrel_sidearm",
+      "ammo_9x",
+      "arm_wake_coverall",
+      "con_sablier_patch"
+    ],
+    "programs": [
+      "prg_pick",
+      "prg_umbrella",
+      "prg_skeleton"
+    ],
+    "ice": [
+      "ice_tripwire",
+      "ice_ticker"
+    ],
+    "npcs": [
+      "fx-thug",
+      "fx-recruiter"
+    ],
+    "factions": [
+      "fx-alpha",
+      "fx-beta"
+    ],
+    "contracts": [
+      "fx-first-job"
+    ],
+    "events": [
+      "fx-flare"
+    ],
+    "evidence": [
+      "fx-gate-log"
+    ],
+    "services": [
+      "fx-pump"
+    ],
+    "text": [
+      "text-fx-gate-1"
+    ],
+    "art": [
+      "art-fx-sigil"
+    ]
+  }
+}

@@ -1,0 +1,52 @@
+{
+  "schema": 1,
+  "events": [
+    {
+      "id": "fx-flare",
+      "name": "Fixture Flare",
+      "where": [
+        "fx-open"
+      ],
+      "duration_seconds": 1200,
+      "cooldown_seconds": 5400,
+      "weight": 5,
+      "basis": "wall",
+      "effects": [
+        {
+          "type": "hazard",
+          "zone": "fx-open",
+          "region": {
+            "x": 10,
+            "y": 4,
+            "w": 6,
+            "h": 4
+          },
+          "warning_seconds": 5,
+          "params": {
+            "damage_per_second": 5
+          }
+        }
+      ],
+      "variants": [
+        {
+          "id": "gate-held",
+          "effects": [
+            {
+              "type": "route_hold",
+              "zone": "fx-open",
+              "exits_closed": [
+                "fx-open/to-street-gate"
+              ],
+              "params": {
+                "seconds": 30
+              }
+            }
+          ]
+        }
+      ],
+      "announce": {
+        "start": "text-fx-gate-1"
+      }
+    }
+  ]
+}

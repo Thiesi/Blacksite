@@ -1,0 +1,73 @@
+{
+  "schema": 1,
+  "id": "fx-sector",
+  "district": "Fixture",
+  "cells": [
+    {
+      "id": "c-plaza",
+      "kind": "public",
+      "pos": [
+        0,
+        0
+      ],
+      "neighbours": [
+        "c-gate",
+        "c-hidden"
+      ],
+      "label": "01"
+    },
+    {
+      "id": "c-gate",
+      "kind": "gated",
+      "pos": [
+        2,
+        0
+      ],
+      "neighbours": [
+        "c-plaza",
+        "c-core-a"
+      ],
+      "label": "02",
+      "requirement": "prg_skeleton"
+    },
+    {
+      "id": "c-core-a",
+      "kind": "core_entrance",
+      "pos": [
+        4,
+        0
+      ],
+      "neighbours": [
+        "c-gate"
+      ],
+      "label": "C1",
+      "core_id": "fx-core-a"
+    },
+    {
+      "id": "c-hidden",
+      "kind": "hidden",
+      "pos": [
+        0,
+        2
+      ],
+      "neighbours": [
+        "c-plaza",
+        "c-core-b"
+      ],
+      "label": "03"
+    },
+    {
+      "id": "c-core-b",
+      "kind": "core_entrance",
+      "pos": [
+        2,
+        2
+      ],
+      "neighbours": [
+        "c-hidden"
+      ],
+      "label": "C2",
+      "core_id": "fx-core-b"
+    }
+  ]
+}

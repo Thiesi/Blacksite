@@ -1,0 +1,513 @@
+{
+  "schema": 1,
+  "actions": {
+    "move_up": {
+      "context": "any",
+      "label": "move up"
+    },
+    "sprint_up": {
+      "context": "zone",
+      "label": "sprint up"
+    },
+    "move_down": {
+      "context": "any",
+      "label": "move down"
+    },
+    "sprint_down": {
+      "context": "zone",
+      "label": "sprint down"
+    },
+    "move_left": {
+      "context": "any",
+      "label": "move left"
+    },
+    "sprint_left": {
+      "context": "zone",
+      "label": "sprint left"
+    },
+    "move_right": {
+      "context": "any",
+      "label": "move right"
+    },
+    "sprint_right": {
+      "context": "zone",
+      "label": "sprint right"
+    },
+    "move_up_left": {
+      "context": "any",
+      "label": "move up left"
+    },
+    "sprint_up_left": {
+      "context": "zone",
+      "label": "sprint up left"
+    },
+    "move_up_right": {
+      "context": "any",
+      "label": "move up right"
+    },
+    "sprint_up_right": {
+      "context": "zone",
+      "label": "sprint up right"
+    },
+    "move_down_left": {
+      "context": "any",
+      "label": "move down left"
+    },
+    "sprint_down_left": {
+      "context": "zone",
+      "label": "sprint down left"
+    },
+    "move_down_right": {
+      "context": "any",
+      "label": "move down right"
+    },
+    "sprint_down_right": {
+      "context": "zone",
+      "label": "sprint down right"
+    },
+    "target_next": {
+      "context": "any",
+      "label": "target next"
+    },
+    "target_prev": {
+      "context": "any",
+      "label": "target previous"
+    },
+    "fire": {
+      "context": "zone",
+      "label": "fire / attack"
+    },
+    "interact": {
+      "context": "any",
+      "label": "interact"
+    },
+    "jack": {
+      "context": "any",
+      "label": "jack in/out"
+    },
+    "inventory": {
+      "context": "any",
+      "label": "inventory"
+    },
+    "character": {
+      "context": "any",
+      "label": "character"
+    },
+    "rig": {
+      "context": "any",
+      "label": "rig"
+    },
+    "crew": {
+      "context": "any",
+      "label": "crew"
+    },
+    "sitrep": {
+      "context": "any",
+      "label": "sitrep"
+    },
+    "map": {
+      "context": "zone",
+      "label": "map"
+    },
+    "contracts": {
+      "context": "any",
+      "label": "contracts"
+    },
+    "chat_say": {
+      "context": "any",
+      "label": "chat (say)"
+    },
+    "chat_whisper": {
+      "context": "any",
+      "label": "whisper"
+    },
+    "chat_crew": {
+      "context": "any",
+      "label": "crew chat"
+    },
+    "chat_faction": {
+      "context": "any",
+      "label": "faction chat"
+    },
+    "help": {
+      "context": "any",
+      "label": "help"
+    },
+    "scrollback": {
+      "context": "any",
+      "label": "log scrollback"
+    },
+    "redraw": {
+      "context": "any",
+      "label": "redraw"
+    },
+    "leave": {
+      "context": "any",
+      "label": "leave door"
+    },
+    "quick_1": {
+      "context": "zone",
+      "label": "quick slot 1"
+    },
+    "quick_2": {
+      "context": "zone",
+      "label": "quick slot 2"
+    },
+    "quick_3": {
+      "context": "zone",
+      "label": "quick slot 3"
+    },
+    "quick_4": {
+      "context": "zone",
+      "label": "quick slot 4"
+    },
+    "quick_5": {
+      "context": "zone",
+      "label": "quick slot 5"
+    },
+    "program_1": {
+      "context": "lattice",
+      "label": "program slot 1"
+    },
+    "program_2": {
+      "context": "lattice",
+      "label": "program slot 2"
+    },
+    "program_3": {
+      "context": "lattice",
+      "label": "program slot 3"
+    },
+    "program_4": {
+      "context": "lattice",
+      "label": "program slot 4"
+    },
+    "program_5": {
+      "context": "lattice",
+      "label": "program slot 5"
+    },
+    "program_6": {
+      "context": "lattice",
+      "label": "program slot 6"
+    },
+    "program_7": {
+      "context": "lattice",
+      "label": "program slot 7"
+    }
+  },
+  "keymaps": [
+    {
+      "id": "arrows",
+      "label": "Arrows",
+      "bindings": {
+        "move_up": [
+          "up"
+        ],
+        "sprint_up": [
+          "shift-up"
+        ],
+        "move_down": [
+          "down"
+        ],
+        "sprint_down": [
+          "shift-down"
+        ],
+        "move_left": [
+          "left"
+        ],
+        "sprint_left": [
+          "shift-left"
+        ],
+        "move_right": [
+          "right"
+        ],
+        "sprint_right": [
+          "shift-right"
+        ],
+        "move_up_left": [
+          "home"
+        ],
+        "sprint_up_left": [
+          "shift-home"
+        ],
+        "move_up_right": [
+          "pgup"
+        ],
+        "sprint_up_right": [
+          "shift-pgup"
+        ],
+        "move_down_left": [
+          "end"
+        ],
+        "sprint_down_left": [
+          "shift-end"
+        ],
+        "move_down_right": [
+          "pgdn"
+        ],
+        "sprint_down_right": [
+          "shift-pgdn"
+        ],
+        "fire": [
+          "f",
+          "F"
+        ],
+        "interact": [
+          "e",
+          "E"
+        ],
+        "inventory": [
+          "i",
+          "I"
+        ],
+        "character": [
+          "p",
+          "P"
+        ],
+        "rig": [
+          "r",
+          "R"
+        ],
+        "crew": [
+          "g",
+          "G"
+        ],
+        "sitrep": [
+          "w",
+          "W"
+        ],
+        "map": [
+          "m",
+          "M"
+        ],
+        "contracts": [
+          "q",
+          "Q"
+        ],
+        "chat_say": [
+          "c",
+          "C",
+          "enter"
+        ],
+        "jack": [
+          "j",
+          "J"
+        ],
+        "chat_crew": [
+          "t",
+          "T"
+        ],
+        "target_next": [
+          "tab"
+        ],
+        "target_prev": [
+          "shift-tab"
+        ],
+        "chat_whisper": [
+          "`"
+        ],
+        "chat_faction": [
+          "ctrl-f"
+        ],
+        "help": [
+          "?"
+        ],
+        "scrollback": [
+          "ctrl-p"
+        ],
+        "redraw": [
+          "ctrl-l"
+        ],
+        "leave": [
+          "ctrl-x"
+        ],
+        "quick_1": [
+          "1"
+        ],
+        "quick_2": [
+          "2"
+        ],
+        "quick_3": [
+          "3"
+        ],
+        "quick_4": [
+          "4"
+        ],
+        "quick_5": [
+          "5"
+        ],
+        "program_1": [
+          "1"
+        ],
+        "program_2": [
+          "2"
+        ],
+        "program_3": [
+          "3"
+        ],
+        "program_4": [
+          "4"
+        ],
+        "program_5": [
+          "5"
+        ],
+        "program_6": [
+          "6"
+        ],
+        "program_7": [
+          "7"
+        ]
+      }
+    },
+    {
+      "id": "vi",
+      "label": "Vi",
+      "bindings": {
+        "move_up": [
+          "k"
+        ],
+        "sprint_up": [
+          "K"
+        ],
+        "move_down": [
+          "j"
+        ],
+        "sprint_down": [
+          "J"
+        ],
+        "move_left": [
+          "h"
+        ],
+        "sprint_left": [
+          "H"
+        ],
+        "move_right": [
+          "l"
+        ],
+        "sprint_right": [
+          "L"
+        ],
+        "move_up_left": [
+          "y"
+        ],
+        "sprint_up_left": [
+          "Y"
+        ],
+        "move_up_right": [
+          "u"
+        ],
+        "sprint_up_right": [
+          "U"
+        ],
+        "move_down_left": [
+          "b"
+        ],
+        "sprint_down_left": [
+          "B"
+        ],
+        "move_down_right": [
+          "n"
+        ],
+        "sprint_down_right": [
+          "N"
+        ],
+        "fire": [
+          "f"
+        ],
+        "interact": [
+          "e"
+        ],
+        "inventory": [
+          "i"
+        ],
+        "character": [
+          "p"
+        ],
+        "rig": [
+          "r"
+        ],
+        "crew": [
+          "g"
+        ],
+        "sitrep": [
+          "w"
+        ],
+        "map": [
+          "m"
+        ],
+        "contracts": [
+          "q"
+        ],
+        "chat_say": [
+          "c",
+          "enter"
+        ],
+        "jack": [
+          "ctrl-o"
+        ],
+        "chat_crew": [
+          "T"
+        ],
+        "target_next": [
+          "tab"
+        ],
+        "target_prev": [
+          "shift-tab"
+        ],
+        "chat_whisper": [
+          "`"
+        ],
+        "chat_faction": [
+          "ctrl-f"
+        ],
+        "help": [
+          "?"
+        ],
+        "scrollback": [
+          "ctrl-p"
+        ],
+        "redraw": [
+          "ctrl-l"
+        ],
+        "leave": [
+          "ctrl-x"
+        ],
+        "quick_1": [
+          "1"
+        ],
+        "quick_2": [
+          "2"
+        ],
+        "quick_3": [
+          "3"
+        ],
+        "quick_4": [
+          "4"
+        ],
+        "quick_5": [
+          "5"
+        ],
+        "program_1": [
+          "1"
+        ],
+        "program_2": [
+          "2"
+        ],
+        "program_3": [
+          "3"
+        ],
+        "program_4": [
+          "4"
+        ],
+        "program_5": [
+          "5"
+        ],
+        "program_6": [
+          "6"
+        ],
+        "program_7": [
+          "7"
+        ]
+      }
+    }
+  ]
+}

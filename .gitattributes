@@ -1,0 +1,9 @@
+# Content is hashed byte for byte (02-architecture.md section 6.2), so it
+# must check out identically on every platform: LF line endings, and ANSI
+# art untouched.
+*.map   text eol=lf
+*.json  text eol=lf
+*.md    text eol=lf
+*.txt   text eol=lf
+*.py    text eol=lf
+*.ans   binary

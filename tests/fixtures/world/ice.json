@@ -1,0 +1,40 @@
+{
+  "schema": 1,
+  "ice": [
+    {
+      "id": "ice_tripwire",
+      "name": "Tripwire",
+      "class": "tripwire",
+      "role": "alarm",
+      "tier": 1,
+      "integrity": 20,
+      "attack": 8,
+      "cast_seconds": 1.0,
+      "cooldown_seconds": 1.0,
+      "trigger": "entry",
+      "behaviour": "static",
+      "counters": [
+        "attack",
+        "stealth"
+      ],
+      "variants": [
+        "ice_ticker"
+      ]
+    },
+    {
+      "id": "ice_ticker",
+      "name": "Ticker",
+      "class": "ticker",
+      "role": "alarm",
+      "tier": 1,
+      "integrity": 15,
+      "attack": 0,
+      "trigger": "touch",
+      "behaviour": "static",
+      "counters": [
+        "attack",
+        "decoy"
+      ]
+    }
+  ]
+}

@@ -106,10 +106,27 @@ long as the result is checked at 16 colours.
 
 | Fixture | Slice |
 |---|---|
-| A minimal 3-zone, 1-sector, 2-core content tree for tests | S02 |
+| A minimal 3-zone, 1-sector, 2-core content tree for tests (`tests/fixtures/world/`, listed below) | S02 |
 | Golden protocol frames | S03 |
 | Fake terminal recorder and 80×24 / 132×50 golden screens | S04 |
 | Bot scripts for load | S29 |
+
+The S02 fixture world is one complete active bundle, `fx-world`, that
+validates with no problems. Engine tests build on it; tests that need a
+broken world copy it into a scratch directory and change one thing.
+
+| Kind | Contents |
+|---|---|
+| Zones | `fx-safe` 40×20 safe (public vat, essential; terminal; light), `fx-street` 60×24 contested (pocket 2,2 8×6; gate door, core hardware, cache, vendor; two routes to `fx-open`), `fx-open` 40×20 open (hazard tiles, water, second core's hardware) |
+| Sector | `fx-sector`: five cells, one each of public, gated and hidden, and two core entrances |
+| Cores | `fx-core-a` tier 1, owner `fx-alpha`, a route control that closes the `fx-street` gate with the alley as alternate route; `fx-core-b` tier 2, owner `fx-beta`, a text data drop and a Ticker |
+| Factions | `fx-alpha` and `fx-beta`; one declared asymmetry (alpha sees beta as hostile, beta sees alpha as neutral) |
+| Items | `wpn_kestrel_sidearm`, `ammo_9x`, `arm_wake_coverall`, `con_sablier_patch` with game design §17.1 numbers |
+| ICE, programs | `ice_tripwire` (variant: `ice_ticker`), `ice_ticker`; `prg_pick`, `prg_umbrella`, `prg_skeleton` with §17.2 and §17.3 numbers |
+| NPCs | `fx-thug` (hostile, spawns in `fx-street` and `fx-open`), `fx-recruiter` (talker in `fx-safe`) |
+| Contract, evidence | `fx-first-job` (survey the gate, flip its control; §9.4 reward shape), evidence `fx-gate-log` |
+| Event, service | `fx-flare` (hazard in `fx-open`, variant holding the gate route), service `fx-pump` with common and reserve allocations |
+| Assets | text `text-fx-gate-1`, art `art-fx-sigil` |
 
 ## 8. Naming
 
