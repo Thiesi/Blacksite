@@ -1,6 +1,6 @@
 # S01 — Repository skeleton, package layout, CI, test harness conventions
 
-**Status:** planned
+**Status:** done (PR #39)
 **Primary model:** Sonnet · **Reviewer:** none
 **Depends on:** — · **Milestone:** M0
 **Issue:** https://github.com/Thiesi/blacksite/issues/1
