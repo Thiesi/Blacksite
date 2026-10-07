@@ -17,6 +17,14 @@ def test_round_trip_grid() -> None:
     assert again == grid
 
 
+def test_round_trip_keeps_trailing_space() -> None:
+    # A trailing space is a "void" cell here and must survive a dump.
+    text = "### \n#.# \n### \n"
+    grid, problems = parse_map(text, "x.map", LEGEND)
+    assert problems == [] and grid is not None and grid[0][-1] == "void"
+    assert dump_map(grid, CHARS) == text
+
+
 def test_ragged_rows_rejected() -> None:
     grid, problems = parse_map("####\n#..\n####\n", "x.map", LEGEND)
     assert grid is None

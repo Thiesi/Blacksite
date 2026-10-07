@@ -2,6 +2,8 @@
 
 from typing import Any
 
+import pytest
+
 from blacksite.content.loader import load_content
 from blacksite.content.validate import validate
 from tests.content.support import FIXTURE_WORLD, World, find
@@ -216,19 +218,20 @@ def _resize(world: World, zone: str, width: int, height: int) -> None:
     world.write_text(f"zones/{zone}.map", "\n".join(rows) + "\n")
 
 
-def test_zone_size_limits(world: World) -> None:
-    def strip(d: dict) -> None:
-        d.update(exits=[], objects=[], spawners=[])
-    for zone in ("fx-safe", "fx-street", "fx-open"):
-        world.edit(f"zones/{zone}.json", strip)
-    world.write("cores/fx-core-a.json", world.read("cores/fx-core-a.json") | {"hardware": []})
-    _resize(world, "fx-open", 39, 20)
-    _resize(world, "fx-safe", 200, 100)
-    _resize(world, "fx-street", 201, 19)
-    messages = [m for m in world.messages() if "zones are" in m]
-    assert any(m.startswith("content/zones/fx-open.map") and "39x20" in m for m in messages)
-    assert any("fx-street is 201x19" in m for m in messages)
-    assert not any("fx-safe" in m for m in messages)
+@pytest.mark.parametrize(("width", "height", "ok"), [
+    (40, 20, True), (200, 100, True),
+    (39, 20, False), (201, 20, False), (40, 19, False), (40, 101, False),
+])
+def test_zone_size_limits(world: World, width: int, height: int, ok: bool) -> None:
+    # 00-game-design.md 5.1: width 40-200, height 20-100, each bound alone.
+    # The resized map is all floor, so every fixture tile stays passable.
+    _resize(world, "fx-open", width, height)
+    sized = [m for m in world.messages() if "zones are" in m]
+    if ok:
+        assert world.messages() == []
+    else:
+        assert len(sized) == 1 and sized[0].startswith("content/zones/fx-open.map")
+        assert f"is {width}x{height}" in sized[0]
 
 
 def test_object_on_impassable_tile(world: World) -> None:

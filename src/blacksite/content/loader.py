@@ -166,12 +166,17 @@ def load_content(root: Path, local: Path | None = None) -> ContentTree:
     """Load the content tree at `root`, overlaid by `local` if given."""
     tree = ContentTree(root=root, local=local)
     layers = [_Layer(root, "content")]
-    if local is not None and local.is_dir():
-        layers.append(_Layer(local, "content.local"))
     if not root.is_dir():
         tree.load_problems.append(Problem(str(root), None, "content directory does not exist"))
         return tree
+    if local is not None:
+        if local.is_dir():
+            layers.append(_Layer(local, "content.local"))
+        else:
+            # A mistyped override path must not validate as "ok".
+            tree.load_problems.append(Problem(str(local), None, "local override directory does not exist"))
     for layer in layers:
+        _check_unclaimed(tree, layer)
         _load_singletons(tree, layer)
         _load_tables(tree, layer)
         _load_record_dirs(tree, layer)
@@ -179,6 +184,30 @@ def load_content(root: Path, local: Path | None = None) -> ContentTree:
     _load_zones(tree, layers)
     tree.hash = content_hash(root, local)
     return tree
+
+
+def _claimed(rel: Path) -> bool:
+    """Whether a file at this relative path is one the loader reads."""
+    parts = rel.parts
+    if len(parts) == 1:
+        return parts[0] in TABLE_FILES or parts[0] in SINGLETON_FILES
+    if len(parts) != 2:
+        return False
+    folder, suffix = parts[0], rel.suffix
+    if folder in RECORD_DIRS:
+        return suffix == ".json"
+    return (folder, suffix) in {
+        ("zones", ".json"), ("zones", ".map"), ("text", ".md"), ("text", ".txt"),
+        ("art", ".ans"), ("art", ".json"),
+    }
+
+
+def _check_unclaimed(tree: ContentTree, layer: _Layer) -> None:
+    # A misnamed file (`item.json`, `zones/x.txt`) would otherwise be
+    # skipped silently and the tree would validate without it.
+    for path in content_files(layer.base):
+        if not _claimed(path.relative_to(layer.base)):
+            tree.load_problems.append(Problem(layer.rel(path), None, "not a content file (unknown name or location)"))
 
 
 def _remember(tree: ContentTree, rel: str, text: str) -> None:
@@ -290,10 +319,15 @@ def _load_record_dirs(tree: ContentTree, layer: _Layer) -> None:
 
 
 def _load_assets(tree: ContentTree, layer: _Layer) -> None:
+    seen_text: set[str] = set()
     for path in layer.dir("text", (".md", ".txt")):
         rel = layer.rel(path)
         if not _check_id(tree, "text", path.stem, rel, ""):
             continue
+        if path.stem in seen_text:
+            tree.load_problems.append(Problem(rel, None, f"text asset {path.stem!r} exists as both .md and .txt"))
+            continue
+        seen_text.add(path.stem)
         tree.text[path.stem] = read_text_asset(path.stem, _read(path), path.suffix)
         tree.sources[("text", path.stem)] = rel
     for path in layer.dir("art", (".ans",)):

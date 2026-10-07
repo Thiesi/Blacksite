@@ -67,7 +67,8 @@ def _decode(tp: Any, value: Any, where: str) -> Any:
     if tp is Any or tp is object:
         return value
     if origin is Literal:
-        if value not in get_args(tp):
+        # Compare type too: JSON true must not match a Literal 1.
+        if not any(value == a and type(value) is type(a) for a in get_args(tp)):
             allowed = ", ".join(str(a) for a in get_args(tp))
             raise DecodeError(where, f"{_describe(value)} is not one of: {allowed}")
         return value
@@ -173,19 +174,90 @@ def id_needles(record_id: str) -> tuple[str, ...]:
     return (f'"id": "{record_id}"', f'"id":"{record_id}"', f'"{record_id}"')
 
 
+class _JsonContentError(ValueError):
+    """A value JSON allows but content does not (duplicate key, NaN)."""
+
+
+def _no_duplicate_keys(pairs: list[tuple[str, Any]]) -> dict[str, Any]:
+    out: dict[str, Any] = {}
+    for key, value in pairs:
+        if key in out:
+            raise _JsonContentError(f"duplicate key {key!r}")
+        out[key] = value
+    return out
+
+
+def _no_constant(name: str) -> Any:
+    raise _JsonContentError(f"{name} is not a number content can use")
+
+
 def parse_json(text: str, path: str) -> tuple[Any, list[Problem]]:
-    """Parse JSON text, turning a syntax error into a located Problem."""
+    """Parse JSON text, turning a syntax error into a located Problem.
+
+    Duplicate keys and NaN/Infinity are rejected rather than silently
+    taking the last value or poisoning comparisons.
+    """
     try:
-        return json.loads(text), []
+        return json.loads(text, object_pairs_hook=_no_duplicate_keys, parse_constant=_no_constant), []
     except json.JSONDecodeError as exc:
         return None, [Problem(path, exc.lineno, f"invalid JSON: {exc.msg}")]
+    except _JsonContentError as exc:
+        key = str(exc).split("'")[1] if "'" in str(exc) else ""
+        return None, [Problem(path, find_line(text, f'"{key}"') if key else None, f"invalid JSON: {exc}")]
 
 
-def _locate(text: str, where: str) -> int | None:
-    """Best-effort line for a decode error path like `items[3].weapon.ammo`."""
+_DECODER = json.JSONDecoder()
+
+
+def _skip_ws(text: str, pos: int) -> int:
+    while pos < len(text) and text[pos] in " \t\r\n":
+        pos += 1
+    return pos
+
+
+def locate_path(text: str, where: str) -> int | None:
+    """The line of the value at a decode path like `rooms[1].neighbours`.
+
+    Walks the JSON text along the path, skipping sibling values with the
+    standard decoder, so a key repeated in several records resolves to
+    the right one. Stops at the deepest part it can find, so a missing
+    key reports its enclosing object.
+    """
     parts = [p for p in where.replace("]", "").replace("[", ".").split(".") if p]
-    leaf = next((p for p in reversed(parts) if not p.isdigit()), None)
-    return find_line(text, f'"{leaf}"') if leaf else None
+    pos = _skip_ws(text, 0)
+    try:
+        for part in parts:
+            if pos >= len(text):
+                break
+            if text[pos] == "{":
+                found, start = None, pos
+                pos = _skip_ws(text, pos + 1)
+                while pos < len(text) and text[pos] != "}":
+                    key, pos = _DECODER.raw_decode(text, pos)
+                    pos = _skip_ws(text, pos)
+                    pos = _skip_ws(text, pos + 1)  # the colon
+                    if key == part:
+                        found = pos
+                        break
+                    _, pos = _DECODER.raw_decode(text, pos)
+                    pos = _skip_ws(text, pos)
+                    if pos < len(text) and text[pos] == ",":
+                        pos = _skip_ws(text, pos + 1)
+                if found is None:
+                    pos = start
+                    break
+                pos = found
+            elif text[pos] == "[" and part.isdigit():
+                pos = _skip_ws(text, pos + 1)
+                for _ in range(int(part)):
+                    _, pos = _DECODER.raw_decode(text, pos)
+                    pos = _skip_ws(text, pos)
+                    pos = _skip_ws(text, pos + 1)  # the comma
+            else:
+                break
+    except (json.JSONDecodeError, ValueError):
+        return None
+    return text.count("\n", 0, pos) + 1
 
 
 def read_table(
@@ -212,9 +284,7 @@ def read_table(
         try:
             records.append(decode(cls, item, f"{list_key}[{i}]"))
         except DecodeError as exc:
-            rid = item.get("id") if isinstance(item, dict) else None
-            line = find_line(text, *id_needles(rid)) if isinstance(rid, str) else None
-            problems.append(Problem(path, line or _locate(text, exc.where), str(exc)))
+            problems.append(Problem(path, locate_path(text, exc.where), str(exc)))
     return records, data, problems
 
 
@@ -226,7 +296,7 @@ def read_record(text: str, path: str, cls: type[T]) -> tuple[T | None, list[Prob
     try:
         return decode(cls, data), []
     except DecodeError as exc:
-        return None, [Problem(path, _locate(text, exc.where), str(exc))]
+        return None, [Problem(path, locate_path(text, exc.where), str(exc))]
 
 
 # --- the .map grid -----------------------------------------------------------

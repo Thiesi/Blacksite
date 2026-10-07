@@ -163,6 +163,14 @@ class Region:
     w: int
     h: int
 
+    def contains(self, tile: Tile) -> bool:
+        x, y = tile
+        return self.x <= x < self.x + self.w and self.y <= y < self.y + self.h
+
+    def overlaps(self, other: "Region") -> bool:
+        return (self.x < other.x + other.w and other.x < self.x + self.w
+                and self.y < other.y + other.h and other.y < self.y + self.h)
+
     def tiles(self) -> list[Tile]:
         return [
             (x, y)

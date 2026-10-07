@@ -61,6 +61,18 @@ def test_hash_stable_across_order(scratch_dir: Path) -> None:
     assert content_hash(first) != content_hash(second)
 
 
+def test_hash_covers_paths_and_layers(scratch_dir: Path) -> None:
+    a, b = scratch_dir / "a", scratch_dir / "b"
+    for root, name in ((a, "one.json"), (b, "two.json")):
+        root.mkdir()
+        (root / name).write_bytes(b"same bytes")
+    assert content_hash(a) != content_hash(b)  # same bytes, different path
+    empty = scratch_dir / "empty"
+    empty.mkdir()
+    # The same file in the shipped layer or the local layer hashes differently.
+    assert content_hash(a, empty) != content_hash(empty, a)
+
+
 def test_hash_ignores_package_files(scratch_dir: Path) -> None:
     root = scratch_dir / "tree"
     root.mkdir()
@@ -84,7 +96,7 @@ def test_wrong_type_names_field_and_line(world: World) -> None:
     assert len(problems) == 1
     assert "ice[1].trigger" in problems[0].message and "is not one of" in problems[0].message
     assert problems[0].line == world.path("ice.json").read_text().splitlines().index(
-        '      "id": "ice_ticker",') + 1
+        '      "trigger": "sometimes",') + 1
 
 
 def test_unknown_field_rejected(world: World) -> None:
@@ -100,6 +112,54 @@ def test_duplicate_id_in_table(world: World) -> None:
 def test_file_name_must_match_id(world: World) -> None:
     world.edit("sectors/fx-sector.json", lambda d: d.update(id="fx-other"))
     assert any("file name must be fx-other.json" in p.message for p in world.load().load_problems)
+
+
+def test_local_terminal_tables_merge(world: World, scratch_dir: Path) -> None:
+    local = World(scratch_dir / "local")
+    local.write("glyphs.json", {"schema": 1, "glyphs": {"extra": "♣"}})
+    palette = world.read("palette.json")
+    local.write("palette.json", {"schema": 1, "roles": {"wall": palette["roles"]["floor"]}})
+    keymaps = world.read("keymaps.json")
+    vi = find(keymaps["keymaps"], "vi")
+    vi["bindings"]["help"] = ["F1"]
+    local.write("keymaps.json", {"schema": 1, "actions": {}, "keymaps": [vi]})
+    tree = load_content(world.root, local.root)
+    assert tree.load_problems == []
+    assert tree.glyphs.glyphs["extra"] == "♣" and tree.glyphs.glyphs["wall"] == "█"
+    assert tree.palette.roles["wall"] == tree.palette.roles["floor"]
+    assert "cover" in tree.palette.roles
+    maps = {k.id: k for k in tree.keymaps.keymaps}
+    assert maps["vi"].bindings["help"] == ("F1",) and maps["arrows"].bindings["help"] == ("?",)
+    assert "fire" in tree.keymaps.actions
+
+
+def test_malformed_asymmetries(world: World) -> None:
+    world.edit("factions.json", lambda d: d.update(asymmetries=[["fx-alpha"]]))
+    assert any("must be a pair of faction ids" in p.message for p in world.load().load_problems)
+    world.edit("factions.json", lambda d: d.update(asymmetries="fx-alpha"))
+    assert any("asymmetries must be a list of pairs" in p.message for p in world.load().load_problems)
+
+
+def test_missing_root(scratch_dir: Path) -> None:
+    tree = load_content(scratch_dir / "nothing")
+    assert [p.message for p in tree.load_problems] == ["content directory does not exist"]
+
+
+def test_sidecar_without_art(world: World) -> None:
+    world.path("art/art-fx-sigil.ans").unlink()
+    assert any("sidecar without art-fx-sigil.ans" in p.message for p in world.load().load_problems)
+
+
+def test_table_shape_problems(world: World) -> None:
+    world.write_text("npcs.json", "[]\n")
+    world.write("hymns.json", {"schema": 1, "hymn": []})
+    world.write("routes.json", {"schema": 2, "routes": []})
+    world.edit("items.json", lambda d: d["items"][0].update(schema=2))
+    messages = [p.message for p in world.load().load_problems]
+    assert "top level must be an object" in messages
+    assert 'missing list "hymns"' in messages
+    assert "schema must be 1" in messages
+    assert any("items[0].schema: is 2, this build reads 1" in m for m in messages)
 
 
 def test_loader_is_not_imported_by_the_door() -> None:

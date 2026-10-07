@@ -18,6 +18,7 @@ active may reference only content that exists and is itself active.
 """
 
 import argparse
+import re
 import sys
 from collections.abc import Iterable, Iterator
 from pathlib import Path
@@ -61,6 +62,7 @@ REQUIRED_ROLES = frozenset({
 })
 
 _CLOSING_ACTIONS = frozenset({"close", "disable", "toggle"})
+_INTEGER = re.compile(r"-?[0-9]+")
 
 
 def validate(tree: ContentTree) -> list[Problem]:
@@ -75,7 +77,9 @@ class _Validator:
         self.t = tree
         self.problems: list[Problem] = []
         self.status: dict[tuple[str, str], str] = {}
+        self.bundle_of: dict[tuple[str, str], str] = {}
         self.current_active = True
+        self.current_bundle: str | None = None
 
     # --- reporting -------------------------------------------------------
 
@@ -106,17 +110,42 @@ class _Validator:
         found = self.exists(kind, target)
         if not self.current_active:
             return found
+        name = _KIND_NAMES.get(kind, kind)
         if not found:
-            self.report(*owner, f"{what}: {_KIND_NAMES.get(kind, kind)} {target!r} does not exist", needle)
+            self.report(*owner, f"{what}: {name} {target!r} does not exist", needle)
         elif not self.is_active(kind, target):
-            self.report(*owner, f"{what}: {_KIND_NAMES.get(kind, kind)} {target!r} is in an authoring bundle", needle)
+            self.report(*owner, f"{what}: {name} {target!r} is in an authoring bundle", needle)
+        else:
+            # A bundle declares the bundles it uses. Base content has no
+            # manifest; it may use active bundles, and the authoring rule
+            # above catches it if one is ever withdrawn.
+            home = self.bundle_of.get((kind, target))
+            mine = self.current_bundle
+            if mine is not None and home is not None and home != mine and home not in self.depends_on(mine):
+                self.report(*owner, f"{what}: {name} {target!r} is in bundle {home!r}, "
+                            f"which bundle {mine!r} does not depend on", needle)
         return found
+
+    def depends_on(self, bundle: str | None) -> set[str]:
+        """Every bundle `bundle` depends on, directly or through others."""
+        if bundle is None or bundle not in self.t.bundles:
+            return set()
+        seen: set[str] = set()
+        stack = list(self.t.bundles[bundle].depends)
+        while stack:
+            dep = stack.pop()
+            if dep not in seen and dep in self.t.bundles:
+                seen.add(dep)
+                stack.extend(self.t.bundles[dep].depends)
+        return seen
 
     def each(self, kind: str) -> Iterator[tuple[str, object]]:
         for record_id, record in sorted(getattr(self.t, kind).items()):
             self.current_active = self.is_active(kind, record_id)
+            self.current_bundle = self.bundle_of.get((kind, record_id))
             yield record_id, record
         self.current_active = True
+        self.current_bundle = None
 
     # --- run ----------------------------------------------------------------
 
@@ -167,6 +196,7 @@ class _Validator:
                         continue
                     owner_of[key] = bid
                     self.status[key] = bundle.status
+                    self.bundle_of[key] = bid
             for dep in bundle.depends:
                 if dep not in self.t.bundles:
                     self.report("bundles", bid, f"depends on missing bundle {dep!r}", dep)
@@ -289,7 +319,7 @@ class _Validator:
         return tid is not None and tid in self.t.tiles and self.t.tiles[tid].passable
 
     def in_pocket(self, zone: s.Zone, tile: s.Tile) -> bool:
-        return any(tile in p.tiles() for p in zone.meta.pockets)
+        return any(p.contains(tile) for p in zone.meta.pockets)
 
     def protected(self, zone: s.Zone, tile: s.Tile | None = None) -> bool:
         """Safe zones and pocket regions cannot hold hazards."""
@@ -808,7 +838,7 @@ class _Validator:
         for kind, arg in zip(kinds, args):
             label = f"{what} {name}"
             if kind == "N":
-                if not arg.lstrip("-").isdigit():
+                if not _INTEGER.fullmatch(arg):
                     self.report(*owner, f"{label}: {arg!r} is not a number", name)
             elif kind == "FACTION":
                 self.ref("factions", arg, owner, label, name)
@@ -850,15 +880,17 @@ class _Validator:
         if e.zone is not None and self.ref("zones", e.zone, owner, label):
             zone = self.t.zones[e.zone]
         self.ref("sectors", e.sector, owner, label)
+        region_ok = True
         if zone is not None and e.region is not None and not self._region_in_bounds(zone, e.region):
             self.report(*owner, f"{label}: region is outside {zone.id}")
+            region_ok = False
         if e.type == "hazard":
             if zone is None:
                 if e.zone is None:
                     self.report(*owner, f"{label}: a hazard needs a zone")
-            elif zone.meta.safety in ("safe", "pocket") or (
-                e.region is not None and any(self.in_pocket(zone, t) for t in e.region.tiles())
-            ) or (e.region is None and zone.meta.pockets):
+            elif region_ok and (zone.meta.safety in ("safe", "pocket") or (
+                e.region is not None and any(e.region.overlaps(p) for p in zone.meta.pockets)
+            ) or (e.region is None and zone.meta.pockets)):
                 self.report(*owner, f"{label}: a hazard cannot touch a safe zone or pocket")
             if e.warning_seconds < HAZARD_WARNING_SECONDS:
                 self.report(*owner, f"{label}: a hazard needs at least {HAZARD_WARNING_SECONDS} s warning")
