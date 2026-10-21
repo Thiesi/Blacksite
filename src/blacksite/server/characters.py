@@ -442,6 +442,7 @@ class Characters:
                 "in_combat": self.clock.now_utc().timestamp()-player.progress.get("last_exchange",0)<combat_rules.COMBAT_SECONDS,
                 "hit_serial": self.sim.avatars[session.user_id].actor.behaviour.get("hit_serial",0),
                 "marked_until": player.marked_until,
+                "heat_until": player.warden_heat_until if player.warden_heat_until and datetime.fromisoformat(player.warden_heat_until) > self.clock.now_utc() else None,
                 "lease_days": days, "legal_at": player.legal_at,
                 "discharge_xp": rules.grade_threshold(rules.DISCHARGE_GRADE), "xp": player.xp}
 

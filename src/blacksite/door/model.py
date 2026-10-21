@@ -11,6 +11,7 @@ from blacksite.door.palette import Palette, resolve_tier
 from blacksite.door.screens import SessionWarnings, first_run, help_pages, title
 from blacksite.door.views import LinePrompt, Renderer, menu_rect, render_frame, render_menu, render_text
 from blacksite.door.views.zone import render_zone
+from blacksite.door.views.lattice import render_lattice
 from blacksite.door.log import rows as log_rows
 from blacksite.server.protocol import Frame
 
@@ -44,7 +45,7 @@ class Display:
         self.request_prefix = request_prefix
         self.selected_keymap = "arrows"
         self.warnings = SessionWarnings(info.session_limit)
-        self.renderers: dict[str, Renderer] = {"text": render_text, "dead": render_text, "menu": render_menu, "zone": render_zone}
+        self.renderers: dict[str, Renderer] = {"text": render_text, "dead": render_text, "menu": render_menu, "zone": render_zone, "lattice": render_lattice}
 
     def resize(self, info: DoorInfo) -> None:
         self.info = info
@@ -55,7 +56,7 @@ class Display:
             self.open_help(log_rows(list(self.logs), self.layout.viewport.width - 2), "SCROLLBACK")
 
     def receive(self, frame: Frame, now: float) -> list[Frame]:
-        old_hit = self.body.get("me",{}).get("hit_serial") if self.kind == "zone" else None
+        old_hit = self.body.get("me",{}).get("hit_serial") if self.kind in ("zone", "lattice") else None
         data = frame.data
         result: list[Frame] = []
         if frame.type == "welcome":
@@ -111,7 +112,7 @@ class Display:
             self.connected = False
         elif frame.type == "pong":
             return []
-        new_hit = self.body.get("me",{}).get("hit_serial") if self.kind == "zone" else None
+        new_hit = self.body.get("me",{}).get("hit_serial") if self.kind in ("zone", "lattice") else None
         if old_hit is not None and new_hit is not None and new_hit != old_hit:
             self.hit_flash = True
         self.dirty = True

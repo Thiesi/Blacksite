@@ -11,7 +11,7 @@ section 2) and live simulation state (section 3) belong to the server.
 """
 
 from dataclasses import dataclass, field
-from typing import Literal
+from typing import Any, Literal
 
 from blacksite.version import CONTENT_SCHEMA
 
@@ -245,6 +245,7 @@ class ZoneMeta:
     instanced: bool = False
     spawn: Tile | None = None
     layouts: tuple[ZoneLayout, ...] = ()
+    sector: str | None = None
     schema: int = CONTENT_SCHEMA
 
 
@@ -280,6 +281,13 @@ CellKind = Literal["public", "gated", "hidden", "core_entrance", "descent"]
 
 
 @dataclass(frozen=True)
+class Uplink:
+    sector: str
+    cell: str
+    requirement: str | None = None
+
+
+@dataclass(frozen=True)
 class Cell:
     id: str
     kind: CellKind
@@ -290,6 +298,14 @@ class Cell:
     requirement: str | None = None
     core_id: str | None = None
     lore: tuple[str, ...] = ()
+    access: Literal["public", "gated", "hidden"] | None = None
+    core_placeholder: bool = False
+    planned_core: str | None = None
+    uplink: Uplink | None = None
+
+    @property
+    def access_kind(self) -> str:
+        return self.access or (self.kind if self.kind in ("public", "gated", "hidden") else "public")
 
 
 @dataclass(frozen=True)
@@ -298,6 +314,8 @@ class Sector:
     district: str
     cells: tuple[Cell, ...]
     schema: int = CONTENT_SCHEMA
+    entry: str | None = None
+    layout_size: Tile = (8, 6)  # Game design 6.1: readable at 80x24.
 
 
 DataKind = Literal[
@@ -672,7 +690,7 @@ class Vendor:
 
 # --- NPCs and factions (sections 1.8 and 1.9) ------------------------------
 
-BehaviourKind = Literal["idle", "patrol", "guard", "aggro", "flee", "vendor", "talker", "warden"]
+BehaviourKind = Literal["idle", "wander", "patrol", "guard", "hunt", "aggro", "flee", "vendor", "talker", "warden"]
 
 
 @dataclass(frozen=True)
@@ -687,7 +705,7 @@ class Attributes:
 @dataclass(frozen=True)
 class Behaviour:
     kind: BehaviourKind
-    params: dict[str, Number | str | bool] = field(default_factory=dict)
+    params: dict[str, Any] = field(default_factory=dict)
 
 
 @dataclass(frozen=True)

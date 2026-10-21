@@ -67,6 +67,15 @@ runner can plan, act, retreat and learn without a dialogue answer quiz.
 
 ## Out of scope
 
+S13 provides all district entrances as explicit `planned_core`
+placeholders. Activate cores whose real hardware is in the ten-zone hub,
+replacing their placeholders with resolved `core_id` references. Author
+future-map cores in inactive bundles; S25 activates them at their actual
+hardware locations. Never invent physical stubs to satisfy a reference.
+The sixteen relay instances are `lat-relay-<slug>` from game design 7.7;
+`lat-relay-uplink` and `lat-private-core` are templates, not static
+district instances. S18 owns private apartment entrances.
+
 Control effects and hardware cuts are S15; progression/modifiers are
 S16; crew invitations S22; contribution delivery S26; optional talker
 prose S27; scheduled Surge variants S24. Their interfaces use the

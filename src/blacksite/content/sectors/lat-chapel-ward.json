@@ -1,0 +1,340 @@
+{
+  "schema": 1,
+  "id": "lat-chapel-ward",
+  "district": "Chapel Ward",
+  "entry": "lat-chapel-ward-c01",
+  "layout_size": [
+    8,
+    6
+  ],
+  "cells": [
+    {
+      "id": "lat-chapel-ward-c01",
+      "kind": "public",
+      "pos": [
+        0,
+        0
+      ],
+      "neighbours": [
+        "lat-chapel-ward-c02",
+        "lat-chapel-ward-c09"
+      ],
+      "label": "Nave Node"
+    },
+    {
+      "id": "lat-chapel-ward-c02",
+      "kind": "public",
+      "pos": [
+        1,
+        0
+      ],
+      "neighbours": [
+        "lat-chapel-ward-c01",
+        "lat-chapel-ward-c03",
+        "lat-chapel-ward-c10"
+      ],
+      "label": "Core uplink",
+      "uplink": {
+        "sector": "lat-core",
+        "cell": "lat-core-c06"
+      }
+    },
+    {
+      "id": "lat-chapel-ward-c03",
+      "kind": "public",
+      "pos": [
+        2,
+        0
+      ],
+      "neighbours": [
+        "lat-chapel-ward-c02",
+        "lat-chapel-ward-c04",
+        "lat-chapel-ward-c11"
+      ],
+      "label": "Bell Gallery"
+    },
+    {
+      "id": "lat-chapel-ward-c04",
+      "kind": "public",
+      "pos": [
+        3,
+        0
+      ],
+      "neighbours": [
+        "lat-chapel-ward-c03",
+        "lat-chapel-ward-c05",
+        "lat-chapel-ward-c12"
+      ],
+      "label": "Listening Post Approach"
+    },
+    {
+      "id": "lat-chapel-ward-c05",
+      "kind": "public",
+      "pos": [
+        4,
+        0
+      ],
+      "neighbours": [
+        "lat-chapel-ward-c04",
+        "lat-chapel-ward-c06",
+        "lat-chapel-ward-c13"
+      ],
+      "label": "Signal rack 05"
+    },
+    {
+      "id": "lat-chapel-ward-c06",
+      "kind": "public",
+      "pos": [
+        5,
+        0
+      ],
+      "neighbours": [
+        "lat-chapel-ward-c05",
+        "lat-chapel-ward-c07",
+        "lat-chapel-ward-c14"
+      ],
+      "label": "Signal rack 06"
+    },
+    {
+      "id": "lat-chapel-ward-c07",
+      "kind": "public",
+      "pos": [
+        6,
+        0
+      ],
+      "neighbours": [
+        "lat-chapel-ward-c06",
+        "lat-chapel-ward-c08",
+        "lat-chapel-ward-c15"
+      ],
+      "label": "Signal rack 07"
+    },
+    {
+      "id": "lat-chapel-ward-c08",
+      "kind": "public",
+      "pos": [
+        7,
+        0
+      ],
+      "neighbours": [
+        "lat-chapel-ward-c07",
+        "lat-chapel-ward-c16"
+      ],
+      "label": "Signal rack 08"
+    },
+    {
+      "id": "lat-chapel-ward-c09",
+      "kind": "public",
+      "pos": [
+        0,
+        1
+      ],
+      "neighbours": [
+        "lat-chapel-ward-c10",
+        "lat-chapel-ward-c01",
+        "lat-chapel-ward-c17"
+      ],
+      "label": "Signal rack 09"
+    },
+    {
+      "id": "lat-chapel-ward-c10",
+      "kind": "descent",
+      "pos": [
+        1,
+        1
+      ],
+      "neighbours": [
+        "lat-chapel-ward-c09",
+        "lat-chapel-ward-c11",
+        "lat-chapel-ward-c02",
+        "lat-chapel-ward-c18"
+      ],
+      "label": "The Well",
+      "access": "public"
+    },
+    {
+      "id": "lat-chapel-ward-c11",
+      "kind": "core_entrance",
+      "pos": [
+        2,
+        1
+      ],
+      "neighbours": [
+        "lat-chapel-ward-c10",
+        "lat-chapel-ward-c12",
+        "lat-chapel-ward-c03",
+        "lat-chapel-ward-c19"
+      ],
+      "label": "Nave entrance",
+      "requirement": "program:key:2",
+      "access": "gated",
+      "core_placeholder": true,
+      "planned_core": "lat-nave"
+    },
+    {
+      "id": "lat-chapel-ward-c12",
+      "kind": "core_entrance",
+      "pos": [
+        3,
+        1
+      ],
+      "neighbours": [
+        "lat-chapel-ward-c11",
+        "lat-chapel-ward-c13",
+        "lat-chapel-ward-c04",
+        "lat-chapel-ward-c20"
+      ],
+      "label": "Listening Post entrance",
+      "requirement": "program:key:2",
+      "access": "gated",
+      "core_placeholder": true,
+      "planned_core": "lat-listening-post"
+    },
+    {
+      "id": "lat-chapel-ward-c13",
+      "kind": "core_entrance",
+      "pos": [
+        4,
+        1
+      ],
+      "neighbours": [
+        "lat-chapel-ward-c12",
+        "lat-chapel-ward-c14",
+        "lat-chapel-ward-c05",
+        "lat-chapel-ward-c21"
+      ],
+      "label": "Bell Relay entrance",
+      "requirement": "program:key:2",
+      "access": "gated",
+      "core_placeholder": true,
+      "planned_core": "lat-relay-bell"
+    },
+    {
+      "id": "lat-chapel-ward-c14",
+      "kind": "gated",
+      "pos": [
+        5,
+        1
+      ],
+      "neighbours": [
+        "lat-chapel-ward-c13",
+        "lat-chapel-ward-c15",
+        "lat-chapel-ward-c06",
+        "lat-chapel-ward-c22"
+      ],
+      "label": "Signal rack 14",
+      "requirement": "program:key:2"
+    },
+    {
+      "id": "lat-chapel-ward-c15",
+      "kind": "gated",
+      "pos": [
+        6,
+        1
+      ],
+      "neighbours": [
+        "lat-chapel-ward-c14",
+        "lat-chapel-ward-c16",
+        "lat-chapel-ward-c07"
+      ],
+      "label": "Signal rack 15",
+      "requirement": "program:key:2"
+    },
+    {
+      "id": "lat-chapel-ward-c16",
+      "kind": "gated",
+      "pos": [
+        7,
+        1
+      ],
+      "neighbours": [
+        "lat-chapel-ward-c15",
+        "lat-chapel-ward-c08"
+      ],
+      "label": "Signal rack 16",
+      "requirement": "program:key:2"
+    },
+    {
+      "id": "lat-chapel-ward-c17",
+      "kind": "hidden",
+      "pos": [
+        0,
+        2
+      ],
+      "neighbours": [
+        "lat-chapel-ward-c18",
+        "lat-chapel-ward-c09"
+      ],
+      "label": "Signal rack 17"
+    },
+    {
+      "id": "lat-chapel-ward-c18",
+      "kind": "hidden",
+      "pos": [
+        1,
+        2
+      ],
+      "neighbours": [
+        "lat-chapel-ward-c17",
+        "lat-chapel-ward-c19",
+        "lat-chapel-ward-c10"
+      ],
+      "label": "Signal rack 18"
+    },
+    {
+      "id": "lat-chapel-ward-c19",
+      "kind": "hidden",
+      "pos": [
+        2,
+        2
+      ],
+      "neighbours": [
+        "lat-chapel-ward-c18",
+        "lat-chapel-ward-c20",
+        "lat-chapel-ward-c11"
+      ],
+      "label": "Signal rack 19"
+    },
+    {
+      "id": "lat-chapel-ward-c20",
+      "kind": "hidden",
+      "pos": [
+        3,
+        2
+      ],
+      "neighbours": [
+        "lat-chapel-ward-c19",
+        "lat-chapel-ward-c21",
+        "lat-chapel-ward-c12"
+      ],
+      "label": "Signal rack 20"
+    },
+    {
+      "id": "lat-chapel-ward-c21",
+      "kind": "hidden",
+      "pos": [
+        4,
+        2
+      ],
+      "neighbours": [
+        "lat-chapel-ward-c20",
+        "lat-chapel-ward-c22",
+        "lat-chapel-ward-c13"
+      ],
+      "label": "Signal rack 21"
+    },
+    {
+      "id": "lat-chapel-ward-c22",
+      "kind": "hidden",
+      "pos": [
+        5,
+        2
+      ],
+      "neighbours": [
+        "lat-chapel-ward-c21",
+        "lat-chapel-ward-c14"
+      ],
+      "label": "Signal rack 22"
+    }
+  ]
+}

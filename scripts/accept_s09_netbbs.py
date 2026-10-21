@@ -118,7 +118,10 @@ async def accept(root: Path, door_python: Path, show: bool) -> None:
             await wait(lambda:f'[say] Alpha界{width}: hello' in text(a) and f'[say] Alpha界{width}: hello' in text(b))
             for _ in range(25):
                 before=b[4].actor.position
-                await b[0].write(b'\x1b[C');await wait(lambda:b[4].actor.position!=before);await asyncio.sleep(.21)
+                async with asyncio.timeout(5):
+                    while b[4].actor.position==before:
+                        await b[0].write(b'\x1b[C')
+                        await asyncio.sleep(.22)
             mark=len(b[0].output)
             await say(a,'far say')
             assert b'far say' not in b[0].output[mark:]

@@ -12,11 +12,79 @@ on:
       - 'scripts/accept_s09_netbbs.py'
       - 'scripts/accept_s12_netbbs.py'
       - 'scripts/accept_s10_netbbs.py'
+      - 'scripts/accept_s11_netbbs.py'
+      - 'scripts/accept_s13_netbbs.py'
       - '.github/workflows/service-acceptance.yml'
       - 'pyproject.toml'
       - 'MANIFEST.in'
 
+concurrency:
+  group: service-acceptance-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
+
 jobs:
+  lattice-netbbs:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    permissions:
+      contents: read
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - uses: actions/checkout@v4
+        with:
+          repository: Thiesi/NetBBS
+          ref: v7.31.0
+          path: .test-tmp/netbbs
+      - name: Build and install the wheel for real Lattice acceptance
+        shell: bash
+        run: |
+          python -m pip install './.test-tmp/netbbs[ssh,web]'
+          python -m pip wheel --no-deps . -w "$RUNNER_TEMP/s13-wheels"
+          python -m venv "$RUNNER_TEMP/s13-venv"
+          "$RUNNER_TEMP/s13-venv/bin/python" -m pip install "$RUNNER_TEMP"/s13-wheels/*.whl
+      - name: Accept bodies and Lattice traversal through NetBBS
+        shell: bash
+        run: |
+          python scripts/accept_s13_netbbs.py --root "$RUNNER_TEMP/s13-proof" --door-python "$RUNNER_TEMP/s13-venv/bin/python"
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: s13-lattice-proof
+          path: ${{ runner.temp }}/s13-proof
+  npcs-netbbs:
+    runs-on: ubuntu-latest
+    timeout-minutes: 40
+    permissions:
+      contents: read
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - uses: actions/checkout@v4
+        with:
+          repository: Thiesi/NetBBS
+          ref: v7.31.0
+          path: .test-tmp/netbbs
+      - name: Build and install the wheel for real NPC acceptance
+        shell: bash
+        run: |
+          python -m pip install './.test-tmp/netbbs[ssh,web]'
+          python -m pip wheel --no-deps . -w "$RUNNER_TEMP/s11-wheels"
+          python -m venv "$RUNNER_TEMP/s11-venv"
+          "$RUNNER_TEMP/s11-venv/bin/python" -m pip install "$RUNNER_TEMP"/s11-wheels/*.whl
+      - name: Accept NPCs and actual heat deadlines through NetBBS
+        shell: bash
+        run: |
+          python scripts/accept_s11_netbbs.py --root "$RUNNER_TEMP/s11-proof" --door-python "$RUNNER_TEMP/s11-venv/bin/python"
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: s11-npcs-proof
+          path: ${{ runner.temp }}/s11-proof
   combat-netbbs:
     runs-on: ubuntu-latest
     timeout-minutes: 20

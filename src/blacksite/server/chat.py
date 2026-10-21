@@ -54,6 +54,7 @@ class Chat:
         self.outbox: list[dict[str, Any]] = []
         self.settings_fallback: dict[str, dict[str, Any]] = {}
         self.crew_of: Callable[[Session], str | None] = lambda s: None  # S22 installs membership.
+        self.lattice_at: Callable[[Session], tuple[str, str] | None] = lambda s: None
 
     def ready(self, session: Session) -> bool:
         av = self.sim.avatars.get(session.user_id)
@@ -114,10 +115,17 @@ class Chat:
             group = self.crew_of if channel == "crew" else self.faction
             membership = group(sender)
             return [s for s in self.online() if membership and group(s) == membership]
+        location = self.lattice_at(sender)
+        if location:
+            return [s for s in self.online() if self.lattice_at(s) is not None
+                    and (self.lattice_at(s)[0] == location[0] if channel == "shout"
+                         else self.lattice_at(s) == location)]
         if actor.zone is None:
             return []
         result = []
         for session in self.online():
+            if self.lattice_at(session) is not None:
+                continue
             other = self.sim.avatars[session.user_id].actor
             if other.zone == actor.zone and (channel != "say" or (other.x-actor.x)**2 + (other.y-actor.y)**2 <= SAY_RADIUS**2):
                 result.append(session)
@@ -145,7 +153,8 @@ class Chat:
         if not recipients:
             self.toast(sender, "You have no audience on that channel.")
         for recipient in recipients:
-            self.emit(recipient, channel, f"{self.name(sender)}: {text}", sender)
+            self.emit(recipient, "lat" if self.lattice_at(sender) and channel in ("say", "shout") else channel,
+                      f"{self.name(sender)}: {text}", sender)
 
     def emote(self, sender: Session, eid: str, target: str, text: str, tick: int) -> None:
         free = sanitize(text)
@@ -154,7 +163,7 @@ class Chat:
             self.toast(sender, "You do not know that emote.")
             return
         peer = self.target(target) if target else None
-        if target and (peer is None or self.sim.avatars[peer.user_id].actor.zone != self.sim.avatars[sender.user_id].actor.zone):
+        if target and (peer is None or peer not in self.recipients(sender, "zone")):
             self.toast(sender, "No unique caller is here by that name.")
             return
         if not self.allowed(sender, tick):
@@ -167,7 +176,7 @@ class Chat:
                 line = form.format(name=self.name(sender), target="you" if recipient is peer else self.name(peer))
             else:
                 line = (spec.first if recipient is sender else spec.third).format(name=self.name(sender), target="")
-            self.emit(recipient, "zone", line, sender)
+            self.emit(recipient, "lat" if self.lattice_at(sender) else "zone", line, sender)
 
     def prompt(self, session: Session, channel: str) -> None:
         self.serial += 1

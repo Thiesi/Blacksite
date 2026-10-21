@@ -166,5 +166,47 @@
   "pockets": [],
   "lore": [
     "zone-core-precinct"
-  ]
+  ],
+  "spawners": [
+    {
+      "id": "warden-response",
+      "npc": "npc-warden-response",
+      "count": 6,
+      "respawn_seconds": 60,
+      "condition": "always",
+      "region": {
+        "x": 5,
+        "y": 3,
+        "w": 20,
+        "h": 2
+      }
+    },
+    {
+      "id": "vendor-core-precinct-warden-quartermaster",
+      "npc": "npc-vendor-core-precinct-warden-quartermaster",
+      "count": 1,
+      "respawn_seconds": 60,
+      "condition": "always",
+      "region": {
+        "x": 4,
+        "y": 2,
+        "w": 3,
+        "h": 3
+      }
+    },
+    {
+      "id": "vendor-core-precinct-precinct-clinic",
+      "npc": "npc-vendor-core-precinct-precinct-clinic",
+      "count": 1,
+      "respawn_seconds": 60,
+      "condition": "always",
+      "region": {
+        "x": 14,
+        "y": 5,
+        "w": 3,
+        "h": 3
+      }
+    }
+  ],
+  "sector": "lat-core"
 }

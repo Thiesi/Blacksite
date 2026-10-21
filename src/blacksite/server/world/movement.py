@@ -20,7 +20,7 @@ def direction(name: str) -> tuple[int, int] | None:
 def move(actor: Actor, zone: ZoneInstance, name: str, tick: int, sprint: bool = False,
          forced: bool = False) -> bool:
     vector = direction(name)
-    if vector is None or actor.stance in ("down", "dead", "sleeper") or tick < max(actor.cooldowns.get("move", 0),actor.cooldowns.get("knockdown",0)):
+    if vector is None or actor.stance in ("down", "dead", "sleeper", "jacked") or tick < max(actor.cooldowns.get("move", 0),actor.cooldowns.get("knockdown",0)):
         return False
     target = actor.x + vector[0], actor.y + vector[1]
     if forced and (not zone.allows_hostile(actor.position) or not zone.allows_hostile(target)):

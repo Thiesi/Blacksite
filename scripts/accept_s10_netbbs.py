@@ -121,7 +121,9 @@ class NativeProbe:
     async def walk(self, connection: Connection, target: tuple[int,int]) -> None:
         av=connection.avatar
         zone=self.service.world.zones[av.zone]
+        deadline=time.monotonic()+120
         while av.actor.position!=target:
+            assert time.monotonic()<deadline,("walk timeout",zone.id,av.actor.position,target)
             start=av.actor.position
             occupied={a.position for a in zone.actors.values() if a is not av.actor and not (a.behaviour.get("training") and a.owner!=av.actor.id)}
             pending,previous=deque([start]),{start:None}
@@ -131,14 +133,28 @@ class NativeProbe:
                 for tile in ((x+1,y),(x,y+1),(x-1,y),(x,y-1)):
                     if tile not in previous and tile not in occupied and zone.passable(tile) and (tile not in exits or tile==target):
                         previous[tile]=(x,y);pending.append(tile)
-            assert target in previous,(zone.id,start,target)
+            if target not in previous:
+                await asyncio.sleep(.2)
+                continue
             step=target
             while previous[step]!=start: step=previous[step]
             await wait(lambda:self.service.clock.now_tick()>=max(av.actor.cooldowns.get("move",0),av.actor.cooldowns.get("knockdown",0)))
             vector=step[0]-start[0],step[1]-start[1]
             await connection.caller.write({(1,0):b"\x1b[C",(-1,0):b"\x1b[D",(0,1):b"\x1b[B",(0,-1):b"\x1b[A"}[vector])
-            await wait(lambda:av.actor.position!=start or av.zone!=zone.id)
+            try:
+                await wait(lambda:av.actor.position!=start or av.zone!=zone.id,.6)
+            except TimeoutError:
+                # Moving traffic may claim the planned tile before the input.
+                # Replan from the acknowledged body rather than stall ten seconds.
+                continue
             if av.zone!=zone.id: break
+
+    async def target(self, connection: Connection, actor_id: str) -> None:
+        async with asyncio.timeout(10):
+            while connection.avatar.actor.target!=actor_id:
+                old=connection.avatar.actor.target
+                await connection.caller.write(b"\t")
+                await wait(lambda:connection.avatar.actor.target!=old,1)
 
     async def travel(self, connection: Connection, destination: str) -> None:
         av=connection.avatar
@@ -225,12 +241,13 @@ async def accept(root: Path, door_python: Path, show: bool) -> None:
             actor.shock=60;actor.cooldowns["last_hit"]=probe.service.clock.now_tick()
             await a.caller.write(b"1");await wait(lambda:actor.cooldowns.get("ability:hymn_steady",0)>probe.service.clock.now_tick())
             assert actor.shock<=40
-            for connection,tile in ((a,(25,3)),(b,(27,3))):
+            # A quiet alley keeps this focused duel separate from S11's
+            # integrated Warden/heat scenario. The real population stays live.
+            for connection,tile in ((a,(25,25)),(b,(27,25))):
                 await probe.travel(connection,"vatside-clinics");await probe.walk(connection,tile)
             for connection in (a,b): probe.fixture(connection)
             for connection,other in ((a,b),(b,a)):
-                await connection.caller.write(b"\t")
-                await wait(lambda:connection.avatar.actor.target==other.avatar.actor.id)
+                await probe.target(connection,other.avatar.actor.id)
                 await wait(lambda:"TARGET" in connection.caller.screen.screen_text())
                 await connection.caller.write(b"f")
             await asyncio.sleep(2.2)
@@ -272,7 +289,7 @@ async def accept(root: Path, door_python: Path, show: bool) -> None:
                 if connection.avatar.zone=="vatside-wake-hall": await probe.travel(connection,"vatside-clinics")
                 await probe.travel(connection,"core-plaza");await probe.walk(connection,tile)
             before=b.avatar.actor.health
-            await a.caller.write(b"\t");await wait(lambda:a.avatar.actor.target==b.avatar.actor.id)
+            await probe.target(a,b.avatar.actor.id)
             await a.caller.write(b"f");await asyncio.sleep(.3)
             assert b.avatar.actor.health==before
             assert any("Protected" in row["text"] for row in a.session.log_ring)

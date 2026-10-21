@@ -138,5 +138,21 @@
   "pockets": [],
   "lore": [
     "zone-terraces-lobby"
-  ]
+  ],
+  "spawners": [
+    {
+      "id": "resident",
+      "npc": "npc-resident",
+      "count": 3,
+      "respawn_seconds": 60,
+      "condition": "always",
+      "region": {
+        "x": 5,
+        "y": 3,
+        "w": 12,
+        "h": 2
+      }
+    }
+  ],
+  "sector": "lat-terraces"
 }

@@ -227,5 +227,60 @@
   "pockets": [],
   "lore": [
     "zone-core-plaza"
-  ]
+  ],
+  "spawners": [
+    {
+      "id": "warden-patrol",
+      "npc": "npc-warden-patrol",
+      "count": 2,
+      "respawn_seconds": 60,
+      "condition": "always",
+      "region": {
+        "x": 23,
+        "y": 3,
+        "w": 18,
+        "h": 2
+      }
+    },
+    {
+      "id": "civilian",
+      "npc": "npc-civilian",
+      "count": 5,
+      "respawn_seconds": 60,
+      "condition": "always",
+      "region": {
+        "x": 5,
+        "y": 3,
+        "w": 18,
+        "h": 6
+      }
+    },
+    {
+      "id": "courier",
+      "npc": "npc-courier",
+      "count": 1,
+      "respawn_seconds": 60,
+      "condition": "always",
+      "region": {
+        "x": 8,
+        "y": 4,
+        "w": 14,
+        "h": 1
+      }
+    },
+    {
+      "id": "vendor-core-plaza-plaza-general-vendor",
+      "npc": "npc-vendor-core-plaza-plaza-general-vendor",
+      "count": 1,
+      "respawn_seconds": 60,
+      "condition": "always",
+      "region": {
+        "x": 75,
+        "y": 4,
+        "w": 3,
+        "h": 3
+      }
+    }
+  ],
+  "sector": "lat-core"
 }

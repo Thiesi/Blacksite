@@ -46,6 +46,7 @@ after their id.
 | sight_radius | int | |
 | sight_radius_night | int, optional | Scour zones: used 20:00–06:00 node local time |
 | spawn | Tile, optional | passable preview/initial entry tile |
+| sector | sector id, optional | native/portable rig's district entry; terminals may override with `params.sector` |
 | layouts | list of ZoneLayout, optional | named service/event geometry variants |
 | exits | list of Exit | id, tile, target zone, target tile, kind (street, door, tram, ladder, lift, gate, cable), requirement (pass, key, faction), hidden |
 | spawners | list of Spawner | id, tile or region, npc template, count, respawn seconds, condition |
@@ -85,7 +86,24 @@ value) and `keymaps.json` (`actions`: action id to context and label;
 
 `id, district, cells[]` where a cell is `id, kind (public, gated, hidden,
 core_entrance, descent), pos (grid position on the sector view),
-neighbours[], requirement, label, core_id (optional), lore`.
+neighbours[], requirement, label, core_id (optional), lore`. A sector also
+names its public `entry` cell and `layout_size` (at most 8 by 6).
+
+`access` optionally separates public/gated/hidden access from a functional
+`core_entrance` or `descent` kind. An `uplink` names a sector, its cell and
+an optional requirement; links are reciprocal and never name a file path.
+Requirements are item/program IDs, or `item:<id>`, `program:<id>`, `program:<class>:<tier>`,
+`faction:<id>`, `standing:<id>:<minimum>` and `event:<id>` credentials.
+The server names the missing credential before changing a presence.
+
+`core_placeholder: true` explicitly marks an unavailable entrance, with a
+`planned_core` slug instead of a live `core_id`. This is declared staged
+content, not a missing reference silently accepted by the loader. Normal
+entrances still require a resolved core. Once the planned core is active,
+validation requires replacing its placeholder. S14 activates hub cores;
+future-map hardware remains staged until S25, preserving dependency order.
+Core and Silt interaction remains unavailable in S13, while public movement
+and jack-out remain usable by every archetype.
 
 ### 1.4 Core (`cores/<id>.json`)
 
@@ -176,6 +194,23 @@ the actor to its server-assigned owner. Ordinary NPCs derive health
 from attributes and use their authored equipment. Recovery quantities
 live in each character start's `recovery_items` mapping. Hymn records
 list `requires_one_of` implant IDs for tiers above one.
+
+S11 behaviours include `wander` and `hunt` as well as the original kinds.
+Patrol params hold `waypoints: [[x,y], ...]` and optional `bounce`; every
+spawner validates these against its own map. `anchor: true` preserves a
+named service attendant during dormancy; `hostile_all: true` is an explicit
+unsafe threat rather than an inference from open ground. Embedded health
+and attack also support the generic maintenance drone from design 18.
+`per_player` spawners require private training templates. Canonical NPC
+template IDs are hyphenated slugs (`npc-wake-drone`); item IDs retain their
+existing underscore format.
+
+Spawner slots retain absolute UTC respawn deadlines and a monotonic actor
+serial in `meta.npc_state`. NPC death writes its slot deadline atomically
+with corpse goods. Ordinary live NPC positions/HP rebuild on process
+restart; this does not replay dead slots before their saved deadline.
+Mission ownership, willingness and restraint channels are live hooks for
+S19, which owns persistence and objective failure/completion receipts.
 
 ### 1.9 Faction (`factions.json`)
 

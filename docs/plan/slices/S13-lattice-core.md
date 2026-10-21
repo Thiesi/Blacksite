@@ -165,6 +165,33 @@ Roadmap §7, plus: all 11 sectors render without overlap at 80×24 and
   so S10 can treat it as evasion 0 without special-casing.
 - Keep the presence's move timer on the sector's tick, not wall time.
 
+## Implementation contracts
+
+Access class is distinct from a core/descent role, preserving the exact
+public/gated/hidden counts in the world table. Authored layout bounds are
+8x6, with reciprocal explicit uplinks and one public entrance per sector.
+Unavailable entrances use `core_placeholder: true` and a `planned_core`
+slug; ordinary unresolved core references still fail validation. An active
+core cannot retain a placeholder. S14 activates hub cores and Silt, while
+future-map hardware remains staged until S25 rather than introducing a
+dependency cycle. S13 invents no stub hardware or future physical maps.
+
+Zones name an explicit `sector`; terminal `params.sector` can override
+it. This avoids joining display names such as The Core and Core. All
+sixteen canonical relay core instances use game design 7.7's IDs;
+service cores use world 3.12. Private apartment cores remain instances.
+The ordinary authored gate credential is a tier-two key program, an
+alternative to later named keys; event-gated Static requires Ring-fall.
+S14 refines core access alongside its program catalog, without changing
+the public baseline network. Public core-entrance approach cells still
+allow instant jack-out; actual core-room escape belongs to S14.
+
+Game design 11 now specifies cell say/emotes and sector shout while
+jacked. These use the Lattice colour, with no physical audience leakage;
+whisper, faction and crew keep their ordinary audiences. No rule numbers
+change. The body panel retains safety, HP and hit feedback. Debug reveal
+is an authenticated, audited operator action, scoped to player/sector/cell.
+
 ## Lore review integration
 
 Enforce exactly one physical body plus at most one Lattice presence.

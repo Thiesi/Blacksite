@@ -327,6 +327,16 @@ submission accepts that default on the server.
 `me` (integrity, trace, rig slots with cooldowns), `room` (data, controls,
 ice with integrity), `hint`.
 
+S13 adds `sector`, `layout_size`, explicit `edges`, cell access/labels and
+uplink markers. Hidden cells and their edges are omitted until found.
+`me` includes body HP, hit serial, movement ticks and bounded escape
+progress; `body_safety` stays visible. The body remains a physical actor,
+while its session subscribes to a sector. Social menus preserve this
+subscription and resume the Lattice view on close. Optional three-frame
+`transition {direction, frame}` decoration does not delay mechanics.
+Operators use `admin.lattice.who` (no payload) or the audited debugging
+`admin.lattice.reveal {player, sector, cell}`; callers cannot send either.
+
 `MenuView.body`: `title, kind, columns[], rows[] (cells + id), cursor,
 actions[] (key, label), page, pages, detail (text for the selected
 row)`. Cursor movement is an `intent` so the server can keep the menu's

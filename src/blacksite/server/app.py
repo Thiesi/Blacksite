@@ -49,6 +49,7 @@ class Server:
         self.characters = characters
         self.world: World | None = None
         self.failure: BaseException | None = None
+        self.npc_revision = -1
 
     def _content(self) -> ContentTree:
         assert self.storage is not None
@@ -164,6 +165,9 @@ class Server:
         if self.core is None or self.core.characters is None or self.storage is None:
             return
         game = self.core.characters
+        if self.core.npcs and self.npc_revision != self.core.npcs.spawners.revision:
+            self.storage.mark_dirty("meta", "npc_state", self.core.npcs.spawners.record())
+            self.npc_revision = self.core.npcs.spawners.revision
         while game.outbox:
             effect = game.outbox.pop(0)
             try:

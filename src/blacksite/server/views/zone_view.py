@@ -11,6 +11,7 @@ from blacksite.server.world.sight import sees_actor, visible_tiles
 from blacksite.server.world.zone import ZoneInstance
 from blacksite.server.world.safety import safety_at
 from blacksite.server.clock import TICK_HZ
+from blacksite.server.npcs.templates import relation
 
 SCROLL_MARGIN = 4  # Terminal UI section 2.
 MAX_VIEW_CELLS = 4096  # Architecture 5.4: bound large-terminal snapshots.
@@ -88,8 +89,8 @@ def build(actor: Actor, zone: ZoneInstance, perception: Perception, content: Con
         if other is not actor and not sees_actor(actor, other, visible, radius):
             continue
         entry = {"id": other.id, "x": other.x, "y": other.y,
-                 "glyph": glyphs.get("actor-self" if other is actor else "actor-drone" if other.kind == "drone" else "actor-player", "@"),
-                 "role": "player_self" if other is actor else "player_hostile" if other.marked or other.behaviour.get("training") else "player_neutral", "stance": other.stance}
+                 "glyph": glyphs.get("actor-jacked" if other.stance == "jacked" else "actor-self" if other is actor else "actor-drone" if other.kind == "drone" else "actor-npc" if other.kind == "npc" else "actor-player", "@"),
+                 "role": "player_self" if other is actor else "npc_"+(other.faction or "neutral") if other.kind != "player" else "player_hostile" if other.marked else "player_neutral", "stance": other.stance}
         if other is actor:
             entry["name"] = other.name
         actors.append(entry)
@@ -103,6 +104,11 @@ def build(actor: Actor, zone: ZoneInstance, perception: Perception, content: Con
                 "escape": list(layer.layout.alternate_routes)} for layer in zone.layers.values()
                if any(tile in visible for tile in layer.layout.warning_tiles)]
     escapes = [ex.id for ex in zone.template.meta.exits if not ex.hidden and ex.tile in visible]
+    nearby = [{"id": entry["id"], "name": zone.actors[entry["id"]].name, "role": entry["role"],
+               "relation": "!" if zone.actors[entry["id"]].marked or zone.actors[entry["id"]].target == actor.id or zone.actors[entry["id"]].behaviour.get("training") else {"H":"!","N":"~","A":"+"}[relation(content, actor.faction, zone.actors[entry["id"]].faction)]}
+              for entry in actors if entry["id"] != actor.id]
+    nearby.sort(key=lambda entry: (entry["relation"] != "!", zone.actors[entry["id"]].kind != "player",
+        (zone.actors[entry["id"]].x-actor.x)**2+(zone.actors[entry["id"]].y-actor.y)**2, entry["id"]))
     return {"viewport": viewport, "tiles": perception.tiles, "remembered": perception.memory, "legend": perception.legend,
             "actors": actors, "objects": objects,
             "me": {"name": actor.name, "handle": actor.handle, "faction": actor.faction, "grade": None,
@@ -110,8 +116,7 @@ def build(actor: Actor, zone: ZoneInstance, perception: Perception, content: Con
                    "shock": actor.shock, "chits": None, "marked_until": None, "heat_until": None,
                    "zone": zone.id, "zone_name": zone.template.meta.name, "safety": safety_at(zone, actor.position),
                    "clock": clock, "cooldowns": dict(actor.cooldowns), "effects": deepcopy(actor.effects)},
-            "target": None, "nearby": [{"id": entry["id"], "name": zone.actors[entry["id"]].name, "role": entry["role"], "relation": "~"}
-                                        for entry in actors if entry["id"] != actor.id],
+            "target": None, "nearby": nearby,
             "crew": [], "event": None, "objective": None, "hazards": hazards,
             "service": None, "escape": {"routes": escapes, "action": "Ctrl-X leaves"},
             "hint": "Move: arrows  Shift: sprint  E interact  M map  ? help  Ctrl-X leave"}

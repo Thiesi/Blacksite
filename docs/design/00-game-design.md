@@ -361,6 +361,45 @@ wake. Wardens log refused attacks in safe zones and issue a warning within 2
 seconds. Warden **heat** lasts 10 minutes and causes pursuit only outside
 safe/pocket areas. Curfew doubles new heat durations, not damage.
 
+S11 evaluates decisions every five ticks, staggered by actor identity;
+movement and weapon cooldowns still run at ten ticks per second. Patrols
+loop or bounce through authored passable waypoints. Hunt follows the last
+seen position and stops immediately when its reason to attack expires.
+Provoking an NPC makes its spawner group hostile for five minutes.
+Unarmed residents retreat from an active threat rather than chase it;
+armed actors flee below the 20 % threshold. Local guards of that NPC's
+faction answer too; Sable residents summon Sable
+enforcers rather than remote Wardens. Local guards investigate the reported
+position even beyond their sight; without a sighting they lose the trail
+after the normal 20 seconds. Warning responders number two per caller,
+refresh rather than accumulate, and stay local to their zone.
+They arrive on unoccupied floor within three tiles of the caller.
+Heat is recorded immediately, survives logout/restart, and expires in
+real elapsed time. Repeated refused attacks refresh its deadline.
+The first refusal saves immediately. Repeated input coalesces warning
+logs and saves to one per second; a crash can shorten the final refresh
+by less than one second. Summoned responders grant no loot or XP, so
+repeated warnings cannot become a reward source.
+
+The first hub population uses grade 1, Frame/Nerve/Vitals 20, Cortex 10
+and Resonance 5. Ordinary health follows the normal attribute formula;
+guards use the existing Kestrel sidearm and Wake coverall. Ordinary hub
+respawns take 60 seconds. Armed templates expose base XP 20 to S16's
+eligibility/scaling hook and roll ten 9x rounds at chance 0.5; wanderers
+drop one ration. No NPC XP is awarded before S16. Private training grants
+neither loot nor XP. A saved NPC death commits its cache and respawn
+deadline together. Catch-up fills only vacant slots, never every missed
+respawn. Named service anchors stay during dormancy; their counters remain
+available even while their physical attendant is absent.
+
+Mission actors are owned copies. Another caller cannot harm or command
+them. Escort requires explicit willingness; subdue requires adjacent
+shock 80 and an uninterrupted three-second channel. Subdue creates no
+kill loot or XP. S19 supplies the objective/consent UI and durable mission
+receipts; S22 extends owner permissions to eligible crew. A maintenance
+drone template uses section 18's warning and combat numbers, without
+activating future maps or finale encounters in the hub.
+
 ### 5.6 Interactions
 
 The interact key on an adjacent object: doors (open, locked, hackable),
@@ -387,6 +426,11 @@ the ride. After offline arrival, ordinary destination logout rules apply.
   UI document). Cells have a type: public, gated (needs a key or a program),
   hidden (found by a Listening check or a program), core entrance, and
   Silt descent.
+  Access (public/gated/hidden) is separate from a cell's core/descent
+  role, so a hidden descent still counts among its sector's hidden cells.
+  District layouts use at most eight columns and six rows, preserving
+  four-column cell markers at 80x24. Public baseline uplinks connect all
+  eleven districts; gated shortcuts never replace those public routes.
 - Moving between adjacent cells takes max(0.2, 1.0 - Cortex / 100) s,
   rounded up to ticks after modifiers, with the same 0.2 s floor.
   Lifting data or flipping a control takes 3 s. Integrity recovers 5 per
@@ -915,6 +959,10 @@ specifications until separately authored and accepted.
 - Emotes: `/me <text>` free-form in the zone channel, plus a fixed list
   with optional targets: wave, nod, shrug, salute, point, laugh, sigh,
   bow, glare, spit. Emotes are rate-limited with chat.
+- While jacked in, say and emotes reach the same cell; shout reaches
+  the sector. These lines use the Lattice log colour. Street audiences
+  and Lattice audiences are separate. Whisper, faction and crew retain
+  their ordinary audiences.
 - The client keeps a 500-line log ring; on reconnect the server replays
   the last 50 lines the session could see.
 - **Sitrep**: who is online, where (zone only, not tile), in which

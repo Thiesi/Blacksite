@@ -81,6 +81,11 @@ district.
 
 Notes:
 
+- Gated cells accept a suitable key program as an alternative to the
+  named physical credential, following game design 6.1. S13's authored
+  baseline is `program:key:2`; S14 refines access with its live catalog.
+  Static also retains its Ring-fall requirement. These gates never
+  replace the public inter-district network.
 - Hidden cells are found by a Listening scan (game design §6.5) on
   an adjacent cell, by the *Lantern* program, or during a Choir Surge,
   which maps the current band or sector for its duration.

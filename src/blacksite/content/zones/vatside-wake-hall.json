@@ -150,5 +150,45 @@
   "lore": [
     "zone-vatside-wake-hall"
   ],
-  "pockets": []
+  "pockets": [],
+  "spawners": [
+    {
+      "id": "sablier-orderly",
+      "npc": "npc-sablier-orderly",
+      "count": 2,
+      "respawn_seconds": 60,
+      "condition": "always",
+      "region": {
+        "x": 8,
+        "y": 3,
+        "w": 6,
+        "h": 2
+      }
+    },
+    {
+      "id": "wake-training",
+      "npc": "npc-wake-drone",
+      "count": 1,
+      "respawn_seconds": 0,
+      "condition": "per_player",
+      "tile": [
+        23,
+        14
+      ]
+    },
+    {
+      "id": "vendor-vatside-wake-hall-wake-outfitter",
+      "npc": "npc-vendor-vatside-wake-hall-wake-outfitter",
+      "count": 1,
+      "respawn_seconds": 60,
+      "condition": "always",
+      "region": {
+        "x": 33,
+        "y": 14,
+        "w": 3,
+        "h": 3
+      }
+    }
+  ],
+  "sector": "lat-vatside"
 }

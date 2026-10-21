@@ -129,6 +129,12 @@ definitions. S25 owns their real anchors and activation, and must run
 the deferred Tramyard rifle-purchase acceptance from its explicit S12
 handoff checklist. S12's live acceptance uses canonical hub vendors.
 
+S13 supplies explicit district core placeholders. S14 activates real hub
+hardware and stages future-map cores; S25 anchors and activates those
+ordinary cores and all sixteen canonical relay instances. A complete
+34-map city cannot retain district core placeholders. Private apartment
+and seasonal instances remain owned by their respective slices.
+
 - The slice file's acceptance script passes on a real terminal at 80×24
   and at one larger size, through a NetBBS node for anything caller-
   facing (a local NetBBS checkout is fine).
