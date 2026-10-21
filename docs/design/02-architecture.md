@@ -334,6 +334,8 @@ progress; `body_safety` stays visible. The body remains a physical actor,
 while its session subscribes to a sector. Social menus preserve this
 subscription and resume the Lattice view on close. Optional three-frame
 `transition {direction, frame}` decoration does not delay mechanics.
+Ordinary sector updates use the same revisioned delta path as zone views;
+kind/sector changes, overlay return and resync start with a full snapshot.
 Operators use `admin.lattice.who` (no payload) or the audited debugging
 `admin.lattice.reveal {player, sector, cell}`; callers cannot send either.
 

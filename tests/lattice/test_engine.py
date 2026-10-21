@@ -7,7 +7,7 @@ import pytest
 
 from blacksite.content.loader import load_content
 from blacksite.server.items import make_item
-from blacksite.server.protocol import Frame
+from blacksite.server.protocol import Frame, encode
 from blacksite.server.world.movement import move
 from tests.character_helpers import act, create, place, state
 from tests.harness import ADMIN_SECRET, HeadlessServer, hello
@@ -281,3 +281,34 @@ def test_design_6_1_jack_waits_for_real_pending_transfer(runners):
     game.commit_commerce()
     jack(game, a)
     assert actor(game, a).stance == "jacked"
+
+
+def test_architecture_11_moving_lattice_deltas_fit_budget_and_menu_return(runners):
+    game, a, b, c = runners
+    presence = jack(game, a)
+    game.frames_for(a)
+    a.session.acknowledge(a.session.view_revision)
+    a.send(Frame("intent", {"name": "move", "args": {"dir": "right"}}))
+    sizes = []
+    while True:
+        game.step()
+        frames = [f for f in game.frames_for(a) if f.type in ("view", "delta")]
+        for frame in frames:
+            assert frame.type == "delta"
+            sizes.append(len(encode(frame)))
+            a.session.acknowledge(frame.data["rev"])
+        if presence.destination is None:
+            break
+    assert sizes and max(sizes) <= 2048  # Architecture 11 typical update.
+    act(game, a, Frame("key", {"k": "w", "t": 0}))
+    menu = [f for f in game.frames_for(a) if f.type == "view"][-1]
+    assert menu.data["kind"] == "menu"
+    a.session.acknowledge(menu.data["rev"])
+    intent(game, a, "menu_close")
+    resumed = [f for f in game.frames_for(a) if f.type in ("view", "delta")][-1]
+    assert resumed.type == "view" and resumed.data["kind"] == "lattice"
+    assert resumed.data["body"]["me"]["cell"] == presence.cell
+    a.session.acknowledge(resumed.data["rev"])
+    intent(game, a, "resync")
+    resync = [f for f in game.frames_for(a) if f.type == "view"][-1]
+    assert resync.data["kind"] == "lattice"
