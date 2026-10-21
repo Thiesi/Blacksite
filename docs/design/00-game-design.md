@@ -110,7 +110,7 @@ one thing each archetype can do that others cannot:
 | Archetype | Start | Unique |
 |---|---|---|
 | Hardline | 40 / 20 / 15 / 5 / 40 | Heavy weapons and heavy armour; +2 tolerance |
-| Ghost | 15 / 40 / 35 / 10 / 20 | Native rig (jack in anywhere); stealth stance |
+| Ghost | 15 / 40 / 35 / 10 / 20 | Native rig (jack in anywhere, three starting slots); stealth stance |
 | Cantor | 10 / 20 / 25 / 45 / 25 | Resonance implants; hymns (crew buffs), dissonance (nerve-jam attacks) |
 | Operator | 20 / 30 / 30 / 5 / 30 | Two drone slots; contract and vendor price bonuses; crew beacon |
 

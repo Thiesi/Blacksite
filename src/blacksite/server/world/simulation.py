@@ -2,6 +2,7 @@
 
 from dataclasses import dataclass, field
 from typing import Any
+from collections.abc import Callable
 
 from blacksite.server.clock import Clock
 from blacksite.server.loop import TickContext
@@ -37,6 +38,7 @@ class ZoneSimulation:
         self.views: dict[str, ViewStore] = {}
         self.published: dict[str, tuple[object, ...]] = {}
         self.serial = 0
+        self.me_provider: Callable[[Session], dict[str, Any]] = lambda session: {}
 
     def connect(self, session: Session) -> None:
         if session.role != "caller":
@@ -127,12 +129,13 @@ class ZoneSimulation:
             avatar = self.avatars[session.user_id]
             zone = self.world.zones[avatar.zone]
             local = self.clock.now_local(session.door_info.get("timezone")).strftime("%H:%M")
-            stamp = (zone.revision, local, night, session.caps["width"], session.caps["height"],
+            stamp = (zone.id, zone.revision, local, night, session.caps["width"], session.caps["height"],
                      ctx.tick if zone.layers else None)
             if stamp == self.published.get(session.id) and not session.needs_full_view:
                 continue
             body = build(avatar.actor, zone, avatar.perception, self.world.content,
                          session.caps["width"], session.caps["height"], local, night, ctx.tick)
+            body["me"].update(self.me_provider(session))
             if self.views[session.id].publish(session, body, ctx.tick):
                 self.published[session.id] = stamp
             elif body == (self.views[session.id].previous or {}).get("body"):

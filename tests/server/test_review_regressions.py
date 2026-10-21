@@ -26,7 +26,7 @@ def test_upgrade_discovers_second_migration_by_numeric_prefix(
     Storage(path, ManualClock()).close()
     package = scratch_dir / "migrations"
     package.mkdir()
-    name = "0002_add_upgrade_marker"
+    name = "0003_add_upgrade_marker"
     (package / f"{name}.py").write_text(
         "def apply(db):\n"
         "    db.execute(\"INSERT INTO meta(key,value) VALUES('upgraded', 'true')\")\n",
@@ -34,10 +34,10 @@ def test_upgrade_discovers_second_migration_by_numeric_prefix(
     )
     monkeypatch.setattr(migrations, "__file__", str(package / "__init__.py"))
     monkeypatch.setattr(migrations, "__path__", [str(package)])
-    monkeypatch.setattr(migrations, "WORLD_SCHEMA", 2)
+    monkeypatch.setattr(migrations, "WORLD_SCHEMA", 3)
     try:
         store = Storage(path, ManualClock())
-        assert store.meta("schema_version") == 2
+        assert store.meta("schema_version") == 3
         assert store.meta("upgraded") is True
         store.close()
     finally:
@@ -47,11 +47,11 @@ def test_upgrade_discovers_second_migration_by_numeric_prefix(
 def test_missing_upgrade_keeps_original_schema(scratch_dir: Path, monkeypatch: pytest.MonkeyPatch) -> None:
     path = scratch_dir / "world.db"
     Storage(path, ManualClock()).close()
-    monkeypatch.setattr(migrations, "WORLD_SCHEMA", 2)
+    monkeypatch.setattr(migrations, "WORLD_SCHEMA", 3)
     with pytest.raises(ValueError, match="exactly one migration"):
         Storage(path, ManualClock())
     with sqlite3.connect(path) as db:
-        assert db.execute("SELECT value FROM meta WHERE key='schema_version'").fetchone()[0] == "1"
+        assert db.execute("SELECT value FROM meta WHERE key='schema_version'").fetchone()[0] == "2"
 
 
 def test_sigterm_during_bootstrap_is_honored_after_start(

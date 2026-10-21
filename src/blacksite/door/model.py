@@ -68,6 +68,9 @@ class Display:
             self.revision, self.kind, self.body = data["rev"], data["kind"], deepcopy(data["body"])
             self.resync_pending = False
             self.force_full = True
+            shown = self.body.get("body", {}) if self.kind == "wake" else self.body
+            if shown.get("clear_prompt"):
+                self.prompt = self.key_prompt = None
         elif frame.type == "delta":
             try:
                 if self.resync_pending or data["base"] != self.revision or data["rev"] <= self.revision:
@@ -193,19 +196,21 @@ class Display:
             return []
         if not self.connected:
             return []
-        if self.kind == "menu":
+        effective_kind = self.body.get("kind") if self.kind == "wake" else self.kind
+        effective_body = self.body.get("body", {}) if self.kind == "wake" else self.body
+        if effective_kind == "menu":
             if key in ("escape", "b", "B"):
                 return [Frame("intent", {"name": "menu_close", "args": {}})]
             if key in ("up", "down", "pageup", "pagedown", "pgup", "pgdn"):
                 return [Frame("intent", {"name": "menu_cursor", "args": {"delta": -1 if key in ("up", "pageup", "pgup") else 1}})]
-            actions = {action.get("key") for action in self.body.get("actions", [])}
-            if key == "enter" or key in actions:
-                rows = self.body.get("rows", [])
-                cursor = self.body.get("cursor", 0)
+            actions = {action.get("key") for action in effective_body.get("actions", [])}
+            if key == "enter" or key in actions or key.lower() in actions:
+                rows = effective_body.get("rows", [])
+                cursor = effective_body.get("cursor", 0)
                 selected = rows[cursor] if type(cursor) is int and 0 <= cursor < len(rows) else next((r for r in rows if r.get("id") == cursor), None)
                 if selected is not None:
                     self.counter += 1
-                    return [Frame("intent", {"name": "menu_select", "args": {"row": selected["id"], "key": key},
+                    return [Frame("intent", {"name": "menu_select", "args": {"row": selected["id"], "key": key.lower()},
                         "request_id": f"{self.request_prefix}-{self.counter}", "expected_revision": self.revision})]
             return []
         return [Frame("key", {"k": key, "t": max(0, int(now * 1000))})]
@@ -241,8 +246,11 @@ class Display:
             body = {**self.local, "lines": self.local_lines[self.local_page * count:(self.local_page + 1) * count],
                     "page": self.local_page + 1, "pages": max(1, (len(self.local_lines) + count - 1) // count)}
             render_text(buffer, body, area, self.palette)
-        elif self.kind in self.renderers:
-            self.renderers[self.kind](buffer, self.body, menu_rect(self.layout) if self.kind == "menu" else area, self.palette)
+        else:
+            kind = self.body.get("kind") if self.kind == "wake" else self.kind
+            body = self.body.get("body", {}) if self.kind == "wake" else self.body
+            if kind in self.renderers:
+                self.renderers[kind](buffer, body, menu_rect(self.layout) if kind == "menu" else area, self.palette)
         if self.toast:
             buffer.put(1, self.layout.separator, truncate(self.toast[0], self.layout.width - 2), self.palette.style(self.toast[1]))
         output = buffer.diff(None if self.force_full else self.previous)

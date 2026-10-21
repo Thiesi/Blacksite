@@ -1,0 +1,99 @@
+{
+  "schema": 1,
+  "starts": [
+    {
+      "id": "hardline",
+      "items": {
+        "wpn_kestrel_sidearm": 1,
+        "ammo_9x": 50,
+        "wpn_kestrel_baton": 1,
+        "con_sablier_patch": 2,
+        "con_kestrel_ration": 2,
+        "story_vesper_card": 1,
+        "arm_kestrel_vest": 1
+      },
+      "equipment": {
+        "body": "arm_kestrel_vest"
+      },
+      "implants": {},
+      "programs": [
+        "prg_pick",
+        "prg_umbrella"
+      ],
+      "hymns": [],
+      "rig_slots": 0
+    },
+    {
+      "id": "ghost",
+      "items": {
+        "wpn_kestrel_sidearm": 1,
+        "ammo_9x": 50,
+        "wpn_kestrel_baton": 1,
+        "con_sablier_patch": 2,
+        "con_kestrel_ration": 2,
+        "story_vesper_card": 1,
+        "arm_wake_coverall": 1
+      },
+      "equipment": {
+        "body": "arm_wake_coverall"
+      },
+      "implants": {},
+      "programs": [
+        "prg_pick",
+        "prg_umbrella"
+      ],
+      "hymns": [],
+      "rig_slots": 3
+    },
+    {
+      "id": "cantor",
+      "items": {
+        "wpn_kestrel_sidearm": 1,
+        "ammo_9x": 50,
+        "wpn_kestrel_baton": 1,
+        "con_sablier_patch": 2,
+        "con_kestrel_ration": 2,
+        "story_vesper_card": 1,
+        "arm_wake_coverall": 1,
+        "imp_res_first_ear": 1
+      },
+      "equipment": {
+        "body": "arm_wake_coverall"
+      },
+      "implants": {
+        "head": "imp_res_first_ear"
+      },
+      "programs": [
+        "prg_pick",
+        "prg_umbrella"
+      ],
+      "hymns": [
+        "hymn_steady"
+      ],
+      "rig_slots": 0
+    },
+    {
+      "id": "operator",
+      "items": {
+        "wpn_kestrel_sidearm": 1,
+        "ammo_9x": 50,
+        "wpn_kestrel_baton": 1,
+        "con_sablier_patch": 2,
+        "con_kestrel_ration": 2,
+        "story_vesper_card": 1,
+        "arm_wake_coverall": 1,
+        "drn_kestrel_mule": 1
+      },
+      "equipment": {
+        "body": "arm_wake_coverall"
+      },
+      "implants": {},
+      "programs": [
+        "prg_pick",
+        "prg_umbrella"
+      ],
+      "hymns": [],
+      "rig_slots": 0
+    }
+  ]
+}

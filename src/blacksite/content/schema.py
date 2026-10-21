@@ -438,6 +438,26 @@ class ProgramTemplate:
     schema: int = CONTENT_SCHEMA
 
 
+@dataclass(frozen=True)
+class CharacterStart:
+    id: Literal["hardline", "ghost", "cantor", "operator"]
+    items: dict[str, int]
+    equipment: dict[str, str] = field(default_factory=dict)
+    implants: dict[str, str] = field(default_factory=dict)
+    programs: tuple[str, ...] = ()
+    hymns: tuple[str, ...] = ()
+    rig_slots: int = 0
+    schema: int = CONTENT_SCHEMA
+
+
+@dataclass(frozen=True)
+class WakeCard:
+    id: str
+    name: str
+    pitch: str
+    schema: int = CONTENT_SCHEMA
+
+
 # --- items (section 1.7) ---------------------------------------------------
 
 ItemClass = Literal[
@@ -446,7 +466,7 @@ ItemClass = Literal[
     "misc",
 ]
 ArmourSlot = Literal["body", "head", "legs", "hands"]
-ImplantSlot = Literal["eyes", "arms", "legs", "spine", "skin", "cortex", "ears", "throat", "rig"]
+ImplantSlot = Literal["eyes", "arms", "legs", "spine", "skin", "cortex", "ears", "throat", "rig", "head"]
 
 
 @dataclass(frozen=True)
@@ -459,7 +479,7 @@ class DamageOverTime:
 class WeaponBlock:
     damage: int
     cooldown: Number
-    accuracy: int
+    accuracy: int | None
     damage_type: DamageType
     range: int | None = None
     """None for melee."""
@@ -1067,7 +1087,7 @@ class ArtAsset:
 BUNDLE_KINDS = (
     "zones", "sectors", "cores", "items", "programs", "ice", "npcs",
     "factions", "contracts", "events", "routes", "seasons", "dialogue",
-    "text", "art", "evidence", "services", "vendors", "hymns",
+    "text", "art", "evidence", "services", "vendors", "hymns", "starts", "wake_cards",
 )
 
 

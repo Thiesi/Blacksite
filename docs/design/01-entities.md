@@ -142,6 +142,11 @@ blocks:
 - weapon: `range (none for melee), damage, cooldown, accuracy, ammo,
   damage_type, heavy, melee, stamina (melee), dot {per_second, seconds},
   shock`
+
+Melee catalog rows do not specify ranged accuracy. Their `accuracy` may
+be null; ranged weapon records require it. S10 owns the combat rule that
+consumes melee records. Implant slots include `head`, matching First Ear
+in the game design's starter schedule.
 - armour: `slot, armour {kinetic, energy, chemical, dissonance}, evasion,
   heavy`
 - ammo: `recharge_price` (energy cells only)
@@ -258,6 +263,18 @@ record in an `authoring` bundle may hold unresolved references; active
 content may reference only content that exists and is itself active,
 and an active bundle depends only on active bundles.
 
+### 1.20 Character starts and recruiter cards
+
+`starts.json`: `id` (archetype), `items` (template ID to quantity),
+`equipment` and `implants` (slot to granted template), `programs`, `hymns`,
+`rig_slots`. The validator resolves all grants and rejects equipment that
+the start does not grant. These records carry no equipment or combat
+execution; the consuming slices supply those systems.
+
+`wake_cards.json`: `id` (future faction ID), `name`, `pitch` (text asset).
+The eight introductions set standing, not membership. They do not
+activate incomplete faction content or handlers.
+
 ---
 
 ## 2. Persistent state (SQLite)
@@ -288,6 +305,21 @@ and an active bundle depends only on active bundles.
 | stats | kills, deaths, runs, contributions, relays; per season |
 | clone_debt, recovery_kit_id, listened_enabled | debt survives decant; calibration is reversible |
 | created_at, last_seen_at, legal_at | legal_at = earlier of grade-5 timestamp and created_at + 90 days |
+| name_key | NFC-normalized Unicode casefold; unique per origin |
+| progress | unspent points, learned programs/hymns, seen zones, compressed terrain memory, offline timestamp |
+
+The identity record, keyed by BBS user ID within the world's origin,
+stores `first_decanted_at`, `legal_at`, receipts, carried clone debt and
+resumable Wake progress. Character deletion removes its items and row,
+and retains this record. Lease days use the identity's first decant;
+character `created_at` is its own creation time. The world setting
+`character_cap` defaults to one; raising it exposes an owned-character
+selection menu on login. Only one body per identity is connected at once.
+
+Remembered terrain stores a visibility bitmap (20,000 bits for a 200x100
+zone), a tile-ID legend and the last-seen indices, compressed together in
+a base64 blob in `progress`. It retains old terrain rather than revealing
+current hidden geometry. A changed map extent invalidates its old bitmap.
 
 ### 2.2 Item instance
 

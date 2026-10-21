@@ -16,7 +16,7 @@ def dispatch(session: Session, frame: Frame, sessions: Sessions,
         session.send(Frame("bye", {"reason": "forbidden", "text": "Operator credential required."}))
         return
     if frame.type == "admin.who":
-        result = [{"handle": s.door_info["handle"], "player_name": None, "zone": s.subscribed,
+        result = [{"handle": s.door_info["handle"], "player_name": s.player_name, "zone": s.subscribed,
                    "connected_s": max(0, sessions.clock.now_tick() - s.connected_tick) / TICK_HZ}
                   for s in sessions.active.values() if not s.closed and s.role == "caller"]
     else:

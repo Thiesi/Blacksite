@@ -33,7 +33,7 @@ def test_who_lists_sessions_and_connected_time() -> None:
 
 def test_status_json_shape_and_stop_sends_bye_then_exits(scratch_dir: Path) -> None:
     async def scenario() -> None:
-        server = Server(scratch_dir, tcp=True)
+        server = Server(scratch_dir, tcp=True, characters=False)
         await server.start()
         # Use a real caller and the real foreground lifecycle after bootstrap.
         from blacksite.server.auth import sign

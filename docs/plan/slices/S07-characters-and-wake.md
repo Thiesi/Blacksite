@@ -34,7 +34,8 @@ right numbers on the side panel.
 - `src/blacksite/server/rules/character.py`: pure functions with the
   design doc's numbers: `health_max(vitals) = 50 + 2*vitals`,
   `stamina_max(nerve, frame) = 30 + nerve + frame//2`, `tolerance(vitals)
-  = max(4, vitals//10)`, `evasion(nerve, cover) = nerve//3 + cover`,
+  = max(4, vitals//10)`, `evasion(nerve, equipment) = nerve//3 + equipment`
+  (cover remains separate per design 3.1),
   `carry_kg(frame) = frame/2`, shock decay 5/s out of combat, archetype
   start tables (Hardline 40/20/15/5/40, Ghost 15/40/35/10/20, Cantor
   10/20/25/45/25, Operator 20/30/30/5/30), skill lines (12), attribute
@@ -55,7 +56,7 @@ right numbers on the side panel.
   of `TextView` and `MenuView` frames: screen 1 archetype cards (four
   rows, detail pane with the one-paragraph card), screen 2 name line
   prompt (default the BBS handle; 2–24 columns display width; letters,
-  digits, space, hyphen, apostrophe; uniqueness per node), screen 3
+  digits, space, hyphen, underscore, apostrophe; uniqueness per node), screen 3
   Vantongeren's briefing (three `TextView`s from the story-arcs script),
   screen 4 the card rack menu (eight recruiter pitches plus "take no
   card"; sets standing +10 with the chosen faction), then placement at
@@ -64,8 +65,8 @@ right numbers on the side panel.
   S10/S13 replace them ("The corridor is quiet today.").
 - Skippable: a returning player with a character never sees the Wake;
   `intent {name: "delete_character"}` requires typing the character's
-  name at a line prompt (the type-the-name exception in `AGENTS.md`
-  §4) and then re-runs the Wake.
+  name at a line prompt behind the chosen delete action, then re-runs
+  the Wake. Esc cancels before deletion.
 - Persistence: `players` table columns per entity §2.1; dirty on every
   change; flush cadence 5 s and immediate on logout; remembered tiles
   per zone stored as a compact bitmap blob.
@@ -159,3 +160,62 @@ cannot reset identity-scoped receipts; grade protection remains separate.
 All starters learn Pick and Umbrella. Tutorial combat/ICE are private,
 nonlethal practice with bound loan equipment, and cannot injure another
 resident. Vesper's card leads to S19's playable two-route first job.
+
+## Implementation notes
+
+Implemented by Codex rather than the named Opus primary; review follows
+the automated Claude workflow in AGENTS.md. The existing renderers now
+unwrap a Wake menu/text body, scroll a selected row into view, and keep
+the name prompt and movement input separate. Briefing prose paginates
+at the negotiated size; S skips it, and disconnect saves its exact place.
+
+World schema 2 adds Unicode-folded name uniqueness, player progress and
+identity records. Creation returns an outbox proposal, and the I/O layer
+commits player, starter items and identity before exposing rewards.
+Deletion cannot be undone by a stale write-behind snapshot. Calendar
+lease, legal discharge, receipts and debt survive deleting/recreating.
+Compact memory retains a 20,000-bit visibility map plus old tile IDs.
+
+The ordinary service now starts the saved-character M1 development flow.
+The temporary spawn flag still selects S06 bodies for movement probes.
+Future exits, services, membership, equipment use and combat remain
+inactive; the existing authoring bundle is not activated. A raised
+character cap is configured by the offline admin command and exposes
+selection on login. Grade labels beyond the explicitly named Wake and
+Ninety-Day use the numeric grade; the design supplies no further rank
+thresholds yet.
+
+The technical schema accepts the catalog's `head` implant slot and null
+melee ranged-accuracy field, rather than inventing a missing combat
+number. S10 consumes melee and training actors. Existing balance values
+are unchanged. Design 3.2 now makes the previously unspecified native rig
+capacity explicit at three starting slots, matching the public loan rig.
+S07 creates the listed equipment/ability rows; S12/S16 apply their effects.
+The Ghost's native rig uses the same three initial slots as the public
+loan rig, with Pick and Umbrella loaded. S13 owns rig execution/upgrades.
+
+The real-node sleeper scenario uses explicit server-side placement in
+Clinic Row because S08 travel is not merged. This checks the actual
+physical body and a real 120-second logout interval, without claiming
+exit behavior. Same-zone revision numbers cannot suppress a zone change:
+the view cache includes zone ID as well as revision.
+
+## Acceptance record (2026-10-21)
+
+- Windows Python 3.12, NetBBS v7.31.0, registered native stdio door
+  through the real Telnet picker. The complete probe runs with `--show`
+  in a real 132x50 terminal and negotiates both 80x24 and 132x50 callers.
+  Ghost creation, the default handle, all three briefing screens,
+  Unmoored standing, kit/200 chits, P, same-tile re-entry, service restart
+  and a real 120-second contested logout all pass.
+- The driven title-to-Hall sequence takes 4.640 seconds. This measures
+  automated inputs, not a human reading-time study. Final proof:
+  `.test-tmp/s07-netbbs4/result.json` and its four ANSI captures.
+- Deterministic tests cover first-decant/personhood, twelve skill lines,
+  grade thresholds/benefits, all starter variants, name width/uniqueness,
+  one-character defaults and raised caps, failed commits, stale queued
+  deletion writes, logout retry, idle-online crash grace and compact
+  last-seen terrain. The fake terminal covers both sizes and all tiers.
+- Final local root gate on Windows Python 3.12:
+  `pytest -q --basetemp=.test-tmp/s07-final-root -p no:cacheprovider`:
+  494 passed, 1 platform skip. The shipped content validator passes.

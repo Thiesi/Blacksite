@@ -26,6 +26,7 @@ class Session:
     door_info: dict[str, Any]
     caps: dict[str, Any]
     player_id: str | None = None
+    player_name: str | None = None
     subscribed: str | None = None
     keymap_id: str = "arrows"
     input_queue: deque[Frame] = field(default_factory=deque)

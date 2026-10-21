@@ -1,0 +1,45 @@
+{
+  "schema": 1,
+  "wake_cards": [
+    {
+      "id": "halvard",
+      "name": "Halvard-Ostrom",
+      "pitch": "faction-halvard-pitch"
+    },
+    {
+      "id": "sablier",
+      "name": "Sablier",
+      "pitch": "faction-sablier-pitch"
+    },
+    {
+      "id": "kestrel",
+      "name": "Kestrel",
+      "pitch": "faction-kestrel-pitch"
+    },
+    {
+      "id": "wardens",
+      "name": "Wardens",
+      "pitch": "faction-wardens-pitch"
+    },
+    {
+      "id": "choir",
+      "name": "Ninefold Choir",
+      "pitch": "faction-choir-pitch"
+    },
+    {
+      "id": "red-sable",
+      "name": "Red Sable",
+      "pitch": "faction-red-sable-pitch"
+    },
+    {
+      "id": "unmoored",
+      "name": "Unmoored",
+      "pitch": "faction-unmoored-pitch"
+    },
+    {
+      "id": "ferrymen",
+      "name": "Ferrymen",
+      "pitch": "faction-ferrymen-pitch"
+    }
+  ]
+}

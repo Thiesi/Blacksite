@@ -1,0 +1,137 @@
+{
+  "schema": 1,
+  "items": [
+    {
+      "id": "wpn_kestrel_sidearm",
+      "name": "Kestrel Issue Sidearm",
+      "class": "weapon",
+      "weight": 1,
+      "base_price": 120,
+      "maker": "Kestrel Issue",
+      "weapon": {
+        "damage": 12,
+        "cooldown": 0.8,
+        "accuracy": 55,
+        "damage_type": "kinetic",
+        "range": 6,
+        "ammo": "ammo_9x"
+      }
+    },
+    {
+      "id": "wpn_kestrel_baton",
+      "name": "Kestrel Issue Baton",
+      "class": "weapon",
+      "weight": 1,
+      "base_price": 40,
+      "maker": "Kestrel Issue",
+      "weapon": {
+        "damage": 14,
+        "cooldown": 0.9,
+        "accuracy": null,
+        "damage_type": "kinetic",
+        "melee": true,
+        "stamina": 6
+      }
+    },
+    {
+      "id": "ammo_9x",
+      "name": "9x pistol rounds",
+      "class": "ammo",
+      "base_price": 25,
+      "stack_max": 50,
+      "ammo": {}
+    },
+    {
+      "id": "con_sablier_patch",
+      "name": "Sablier Med Patch",
+      "class": "consumable",
+      "base_price": 40,
+      "consumable": {
+        "effects": {
+          "health": 25
+        },
+        "cooldown_class": "heal"
+      }
+    },
+    {
+      "id": "con_kestrel_ration",
+      "name": "Kestrel Ration Bar",
+      "class": "consumable",
+      "base_price": 10,
+      "consumable": {
+        "effects": {
+          "stamina": 20,
+          "remove_ring_dust_crash": 1
+        },
+        "cooldown_class": "food"
+      }
+    },
+    {
+      "id": "story_vesper_card",
+      "name": "Vesper's Card",
+      "class": "misc",
+      "weight": 0.1,
+      "description": "A contract card. Vesper, Tin Halo, Sodium Row."
+    },
+    {
+      "id": "imp_res_first_ear",
+      "name": "Chapel First Ear",
+      "class": "resonance",
+      "tier": 1,
+      "base_price": 900,
+      "implant": {
+        "slot": "head",
+        "tolerance": 1,
+        "effects": {
+          "listening": 10,
+          "hymns_tier": 1
+        },
+        "requires": {
+          "archetype": "cantor"
+        }
+      }
+    },
+    {
+      "id": "drn_kestrel_mule",
+      "name": "Kestrel Mule",
+      "class": "drone",
+      "base_price": 400,
+      "drone": {
+        "health": 60,
+        "speed": 5,
+        "sight": 8,
+        "tool": "carrier:+20kg"
+      }
+    },
+    {
+      "id": "arm_wake_coverall",
+      "name": "Sablier Wake Coverall",
+      "class": "armour",
+      "weight": 1,
+      "base_price": 0,
+      "armour": {
+        "slot": "body",
+        "armour": {
+          "kinetic": 2,
+          "energy": 2,
+          "chemical": 4
+        }
+      }
+    },
+    {
+      "id": "arm_kestrel_vest",
+      "name": "Kestrel Issue Vest",
+      "class": "armour",
+      "weight": 3,
+      "base_price": 220,
+      "armour": {
+        "slot": "body",
+        "armour": {
+          "kinetic": 6,
+          "energy": 3,
+          "chemical": 2
+        }
+      }
+    }
+  ]
+}
