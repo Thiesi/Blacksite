@@ -327,3 +327,20 @@ def test_upgrade_from_shipped_schema_one_preserves_origin_and_old_rows(scratch_d
         assert store.meta("character_cap")==1
     finally:
         store.close()
+
+
+def test_raised_cap_chooser_cannot_undo_sleeper_recovery_or_create_a_zoneless_sleeper(game: HeadlessServer) -> None:
+    a=game.connect();create(game,a)
+    game.core.characters.cap=2
+    place(game,a,"vatside-clinics",(30,18))
+    pid=a.session.player_id
+    game.core.sessions.disconnect(a.session)
+    chooser=game.connect()
+    game.step(650)
+    assert game.core.characters.players[pid].zone=="vatside-wake-hall"
+    # Leaving the chooser must not treat an unattached avatar as a fresh
+    # logout and later try to recover a physical body whose zone is None.
+    game.core.sessions.disconnect(chooser.session)
+    game.step(601)
+    assert not game.core.characters.sleepers
+    assert not game.core.world.actors

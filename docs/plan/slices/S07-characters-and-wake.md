@@ -218,3 +218,13 @@ the view cache includes zone ID as well as revision.
   494 passed, 1 platform skip. The shipped content validator passes.
 - The delivered Claude review, product-impact triage and final Linux/CI
   acceptance are recorded in PR #46 before merge.
+- Claude Sonnet 5.5's raised-cap reconnect finding reproduces beyond
+  redundant saves: a chooser could undo safe recovery and later create a
+  zoneless sleeper that stopped the tick loop. The chooser now clears
+  inherited body ownership until selection. The focused post-fix gate is
+  218 passed, 1 Windows platform skip. Re-review is required before merge.
+- Linux installed-wheel acceptance passes in
+  [run 39602781456](https://github.com/Thiesi/Blacksite/actions/runs/39602781456):
+  full Wake, saved return, restart and actual 120-second recovery, plus
+  the S05/S06 native-door/service checks. CI before the review fix is
+  496 passed on Linux; 495 passed, 1 skipped on Windows.

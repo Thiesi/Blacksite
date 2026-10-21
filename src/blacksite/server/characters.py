@@ -76,6 +76,9 @@ class Characters:
     def connect(self, session: Session) -> None:
         if session.role != "caller":
             return
+        # Sessions carries reconnect metadata, but the chooser has no attached
+        # character. Only attach() may assign body ownership in S07.
+        session.player_id = session.subscribed = session.player_name = None
         identity = self.identity(session.user_id)
         owned = self.owned(session.user_id)
         if len(owned) == 1 and self.cap == 1:
