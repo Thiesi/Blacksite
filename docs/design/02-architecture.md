@@ -116,7 +116,7 @@ DIR/
   content.local/  operator overrides (same layout; wins on ID collision; may be empty)
   world.db        SQLite, WAL mode
   world.db.sessions   advisory-lock sidecar (same pattern War Dialer uses)
-  run/            socket, pid, port file (created at start, removed at stop)
+  run/            socket, blacksite.pid, port file (created/removed by server)
   secrets/        door.secret, admin.secret (0600, created on first start)
   logs/           server.log (rotating), audit.log
   backups/        created by `blacksite admin backup`

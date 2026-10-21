@@ -48,7 +48,6 @@ def parser() -> argparse.ArgumentParser:
     common.add_argument("--install-dir", type=Path, default=argparse.SUPPRESS)
     common.add_argument("--json", action="store_true", default=argparse.SUPPRESS)
     root = argparse.ArgumentParser(description="Blacksite service and operator tools", parents=[common])
-    root.set_defaults(install_dir=os.environ.get("BLACKSITE_INSTALL_DIR"), json=False)
     commands = root.add_subparsers(dest="command", required=True)
     serve = commands.add_parser("serve", parents=[common], help="run the service in the foreground")
     serve.add_argument("--tcp", action="store_true")
@@ -75,6 +74,8 @@ def emit(result: Any, machine: bool) -> None:
 def main(argv: list[str] | None = None) -> int:
     cli = parser()
     args = cli.parse_args(argv)
+    args.install_dir = getattr(args, "install_dir", os.environ.get("BLACKSITE_INSTALL_DIR"))
+    args.json = getattr(args, "json", False)
     if args.install_dir is None:
         cli.error("--install-dir or BLACKSITE_INSTALL_DIR is required")
     install = Path(args.install_dir).resolve()
@@ -87,7 +88,8 @@ def main(argv: list[str] | None = None) -> int:
             source = install / "content"
             if not source.exists():
                 source = Path(content.__file__).parent
-            tree = load_content(source, install / "content.local")
+            local = install / "content.local"
+            tree = load_content(source, local if local.exists() else None)
             problems = validate(tree)
             emit({"ok": not problems, "content_hash": tree.hash,
                   "problems": [str(problem) for problem in problems]}, args.json)

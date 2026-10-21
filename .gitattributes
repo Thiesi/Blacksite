@@ -7,3 +7,5 @@
 *.txt   text eol=lf
 *.py    text eol=lf
 *.ans   binary
+deploy/** text eol=lf
+*.yml text eol=lf

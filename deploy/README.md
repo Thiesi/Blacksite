@@ -95,5 +95,5 @@ that service-manager acceptance passed.
   (venv interpreter, argv `-m blacksite.door`), and its door-service
   variant once the upstream request lands.
 
-Until then, `docs/design/02-architecture.md` §3 and §8 describe how the
+Until then, `docs/design/02-architecture.md` sections 3 and 8 describe how the
 pieces are meant to run.

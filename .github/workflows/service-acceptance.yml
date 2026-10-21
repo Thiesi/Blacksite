@@ -1,0 +1,66 @@
+name: S05 Linux service acceptance
+
+on:
+  pull_request:
+    paths:
+      - 'src/blacksite/**'
+      - 'deploy/**'
+      - 'scripts/accept_s05_systemd.py'
+      - '.github/workflows/service-acceptance.yml'
+      - 'pyproject.toml'
+      - 'MANIFEST.in'
+
+jobs:
+  systemd-netbbs:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    permissions:
+      contents: read
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - uses: actions/checkout@v4
+        with:
+          repository: Thiesi/NetBBS
+          ref: v7.31.0
+          path: .test-tmp/netbbs
+      - name: Build wheel and prepare isolated service account installation
+        shell: bash
+        run: |
+          python -m pip install './.test-tmp/netbbs[ssh,web]'
+          python -m pip wheel --no-deps . -w "$RUNNER_TEMP/s05-wheels"
+          python -m venv "$RUNNER_TEMP/s05-venv"
+          "$RUNNER_TEMP/s05-venv/bin/python" -m pip install "$RUNNER_TEMP"/s05-wheels/*.whl
+          mkdir "$RUNNER_TEMP/s05-world"
+          "$RUNNER_TEMP/s05-venv/bin/blacksite" admin --install-dir "$RUNNER_TEMP/s05-world" validate --json
+          python - <<'PY'
+          import grp, os, pwd
+          from pathlib import Path
+          root = Path(os.environ['RUNNER_TEMP'])
+          unit = Path('deploy/systemd/blacksite.service').read_text()
+          unit = unit.replace('/opt/blacksite/venv', str(root / 's05-venv'))
+          unit = unit.replace('/var/db/blacksite', str(root / 's05-world'))
+          unit = unit.replace('User=netbbs', 'User=' + pwd.getpwuid(os.getuid()).pw_name)
+          unit = unit.replace('Group=netbbs', 'Group=' + grp.getgrgid(os.getgid()).gr_name)
+          (root / 'blacksite-s05.service').write_text(unit)
+          PY
+          sudo cp "$RUNNER_TEMP/blacksite-s05.service" /etc/systemd/system/blacksite-s05.service
+          sudo systemctl daemon-reload
+          sudo systemctl enable blacksite-s05.service
+      - name: Accept real systemd lifecycle through NetBBS native stdio
+        shell: bash
+        run: |
+          python scripts/accept_s05_systemd.py --root "$RUNNER_TEMP/s05-proof" --install-dir "$RUNNER_TEMP/s05-world" --python "$RUNNER_TEMP/s05-venv/bin/python" --unit blacksite-s05.service
+      - name: Service diagnostics and cleanup
+        if: always()
+        shell: bash
+        run: |
+          sudo journalctl -u blacksite-s05 --no-pager || true
+          sudo systemctl stop blacksite-s05.service || true
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: s05-linux-service-proof
+          path: ${{ runner.temp }}/s05-proof
