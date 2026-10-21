@@ -88,13 +88,13 @@ def build(actor: Actor, zone: ZoneInstance, perception: Perception, content: Con
         if other is not actor and not sees_actor(actor, other, visible, radius):
             continue
         entry = {"id": other.id, "x": other.x, "y": other.y,
-                 "glyph": glyphs.get("actor-self" if other is actor else "actor-player", "@"),
-                 "role": "player_self" if other is actor else "player_neutral", "stance": other.stance}
+                 "glyph": glyphs.get("actor-self" if other is actor else "actor-drone" if other.kind == "drone" else "actor-player", "@"),
+                 "role": "player_self" if other is actor else "player_hostile" if other.marked or other.behaviour.get("training") else "player_neutral", "stance": other.stance}
         if other is actor:
             entry["name"] = other.name
         actors.append(entry)
     objects = [{"id": obj.spec.id, "x": obj.spec.tile[0], "y": obj.spec.tile[1], "kind": obj.spec.kind,
-                "state": {"open": obj.open, "in_use": obj.in_use, "progress": obj.progress},
+                "state": {"open": obj.open, "in_use": obj.in_use, "progress": obj.progress, **obj.spec.params.get("cache_state",{})},
                 "glyph": glyphs.get("cache" if obj.spec.params.get("dropped_item") else "bank" if obj.spec.kind == "bank" else "vendor" if obj.spec.params.get("vendor") else "locked-door" if obj.open is False else content.tiles[zone.tile_id(obj.spec.tile)].glyph, ".")}
                for obj in zone.objects.values() if obj.spec.tile in visible]
     hazards = [{"scope": "geometry", "warning": max(0, layer.starts - tick) / TICK_HZ,

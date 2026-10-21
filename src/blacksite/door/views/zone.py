@@ -47,7 +47,14 @@ def render_zone(buffer: CellBuffer, body: dict[str, Any], area: Rect, palette: P
     service = body.get("service")
     if service:
         rows += [f"SERVICE {service.get('state', '')}", f"Expires {service.get('expiry', '')}"]
-    rows += ["TARGET", "None"]
+    target = body.get("target")
+    if target:
+        filled=max(0,min(8,target["hp_percent"]*8//100))
+        rows += ["TARGET",target["name"],f"HP {'#'*filled}{'.'*(8-filled)} {target['hp_percent']}%",
+            f"Range {target['range']:g} Cover {target['cover']}",target["faction"],target["relation"]]
+        if target.get("warning"): rows.append(target["warning"])
+    else:
+        rows += ["TARGET", "None"]
     if me.get("weapon") and me["weapon"] != "None":
         rows += ["WEAPON", me["weapon"]]
     rows += ["NEARBY"]

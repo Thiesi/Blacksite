@@ -39,11 +39,12 @@ class Display:
         self.last_render = -1.0
         self.previous: CellBuffer | None = None
         self.resync_pending = False
+        self.hit_flash = False
         self.counter = 0
         self.request_prefix = request_prefix
         self.selected_keymap = "arrows"
         self.warnings = SessionWarnings(info.session_limit)
-        self.renderers: dict[str, Renderer] = {"text": render_text, "menu": render_menu, "zone": render_zone}
+        self.renderers: dict[str, Renderer] = {"text": render_text, "dead": render_text, "menu": render_menu, "zone": render_zone}
 
     def resize(self, info: DoorInfo) -> None:
         self.info = info
@@ -54,6 +55,7 @@ class Display:
             self.open_help(log_rows(list(self.logs), self.layout.viewport.width - 2), "SCROLLBACK")
 
     def receive(self, frame: Frame, now: float) -> list[Frame]:
+        old_hit = self.body.get("me",{}).get("hit_serial") if self.kind == "zone" else None
         data = frame.data
         result: list[Frame] = []
         if frame.type == "welcome":
@@ -109,6 +111,9 @@ class Display:
             self.connected = False
         elif frame.type == "pong":
             return []
+        new_hit = self.body.get("me",{}).get("hit_serial") if self.kind == "zone" else None
+        if old_hit is not None and new_hit is not None and new_hit != old_hit:
+            self.hit_flash = True
         self.dirty = True
         return result
 
@@ -270,6 +275,14 @@ class Display:
                 self.renderers[kind](buffer, body, menu_rect(self.layout) if kind == "menu" else area, self.palette)
         if self.toast:
             buffer.put(1, self.layout.separator, truncate(self.toast[0], self.layout.width - 2), self.palette.style(self.toast[1]))
+        flashed = self.hit_flash
+        if flashed:
+            for x in range(buffer.width-1):
+                buffer.put(x,0,"-",self.palette.style("warning"))
+            for y in range(1,buffer.height-1):
+                buffer.put(0,y,"|",self.palette.style("warning"))
+                buffer.put(buffer.width-1,y,"|",self.palette.style("warning"))
+            self.hit_flash = False
         output = buffer.diff(None if self.force_full else self.previous)
         if self.prompt and not self.confirm_exit:
             output += f"\x1b[{self.layout.hint + 1};{min(self.layout.width - 1, 2 + display_width(hint))}H\x1b[?25h".encode("ascii")
@@ -277,5 +290,6 @@ class Display:
             output += b"\x1b[?25l"
         self.previous = buffer
         self.last_render = now
-        self.force_full = self.dirty = False
+        self.force_full = False
+        self.dirty = flashed
         return output, Frame("ack", {"rev": self.revision}) if self.connected else None

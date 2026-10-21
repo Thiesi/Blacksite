@@ -43,6 +43,8 @@ def visible_tiles(actor: Actor, zone: ZoneInstance, radius: int) -> set[Tile]:
 
 
 def sees_actor(observer: Actor, target: Actor, visible: set[Tile], radius: int) -> bool:
+    if target.behaviour.get("training") and target.owner != observer.id:
+        return False
     if target.position not in visible:
         return False
     limit = radius / 2 if target.stance == "stealth" else radius

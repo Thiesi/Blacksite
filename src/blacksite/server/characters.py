@@ -13,6 +13,7 @@ from blacksite.server.items import ItemInstance, grant_starter_kit
 from blacksite.server.inventory import Inventory
 from blacksite.server.protocol import Frame
 from blacksite.server.rules import character as rules
+from blacksite.server.rules import combat as combat_rules
 from blacksite.server.sessions import Session, Sessions
 from blacksite.server.views.delta import ViewStore
 from blacksite.server.wake import Wake, menu, wrapped
@@ -47,6 +48,8 @@ class Characters:
         self.deleting: set[str] = set()
         # Reconcile elapsed offline time before any caller can attach.
         for player in self.players.values():
+            if player.progress.get("combat",{}).get("stage") in ("down","dead"):
+                continue  # S10 resumes the durable down/decant timer, including offline.
             travel = player.progress.get("travel")
             if travel:
                 self.arrive_offline(player)
@@ -139,6 +142,7 @@ class Characters:
             self.world.zones[player.zone].deactivate("sleeper:" + player.id, self.clock.now_tick())
             self.world.leave(actor)
         actor.stance, actor.handle = "normal", session.door_info["handle"]
+        if hasattr(self,"combat"): self.combat.restore(player,actor)
         player.bbs_handle = actor.handle
         avatar = Avatar(actor, player.zone)
         for zone_id, blob in player.progress.get("memory", {}).items():
@@ -210,6 +214,11 @@ class Characters:
         self.sim.overlays.pop(session.id, None)
         self.world.zones[player.zone].deactivate(session.id, self.clock.now_tick())
         player.progress["offline_at"] = self.clock.now_utc().isoformat()
+        if self.clock.now_utc().timestamp()-player.progress.get("last_exchange",0)<combat_rules.COMBAT_SECONDS:
+            player.progress["sleeper_combat"] = True
+        if player.progress.get("combat",{}).get("stage") in ("down","dead"):
+            self.queue("save", session.user_id, player, immediate=True)
+            return
         if avatar.travel and avatar.travel.departed:
             self.queue("save", session.user_id, player, immediate=True)
             return
@@ -241,7 +250,13 @@ class Characters:
             pending.extend((ex.target_zone, ex.target_tile) for ex in zone.template.meta.exits if not ex.hidden)
         player.zone, player.tile = destination or ("vatside-wake-hall", self.world.zones["vatside-wake-hall"].template.meta.spawn)
         player.progress.pop("offline_at", None)
-        # S10 supplies combat/death consequences; S07 has no combat producer.
+        if player.progress.pop("sleeper_combat",False):
+            player.chits_hand,player.clone_debt,player.xp,_ = combat_rules.clone_settlement(player.chits_hand,player.grade,player.xp,
+                rules.grade_threshold(player.grade),player.clone_debt)
+            self.identities[player.bbs_user_id]["clone_debt"] = player.clone_debt
+            player.zone = "vatside-wake-hall"
+            player.tile = self.world.zones[player.zone].template.meta.spawn
+            player.health,player.shock = rules.health_max(player.attributes["vitals"]),0
         self.queue("save", player.bbs_user_id, player, immediate=True)
 
     def create(self, session: Session, card: str) -> None:
@@ -290,7 +305,7 @@ class Characters:
             self.identities[player.bbs_user_id]["wake"] = {}
             if session is not None and not session.closed:
                 self.attach(session, player)
-                session.send(Frame("toast", {"text": "The corridor is quiet today. Vesper's card points to the Tin Halo.", "role": "ui_text", "seconds": 8}))
+                session.send(Frame("toast", {"text": "The corridor teaches targeting. Tab selects; F fires; B skips training.", "role": "ui_text", "seconds": 8}))
         elif action == "delete":
             self.deleting.discard(effect["player"]["id"])
             if not error:
@@ -421,8 +436,12 @@ class Characters:
         player = self.players[session.player_id]
         identity = self.identities[session.user_id]
         days = max(0, (self.clock.now_utc() - datetime.fromisoformat(identity["first_decanted_at"])).days)
+        equipped = self.combat.weapon(player) if hasattr(self,"combat") else None
         return {"name": player.name, "handle": player.bbs_handle, "grade": player.grade,
-                "chits": player.chits_hand, "weapon": self.content.items[self.items[player.equipment.get("weapon_main", player.equipment.get("weapon_side"))].template].name if player.equipment.get("weapon_main", player.equipment.get("weapon_side")) in self.items else "None",
+                "chits": player.chits_hand, "weapon": self.content.items[equipped[0].template].name if equipped else "None",
+                "in_combat": self.clock.now_utc().timestamp()-player.progress.get("last_exchange",0)<combat_rules.COMBAT_SECONDS,
+                "hit_serial": self.sim.avatars[session.user_id].actor.behaviour.get("hit_serial",0),
+                "marked_until": player.marked_until,
                 "lease_days": days, "legal_at": player.legal_at,
                 "discharge_xp": rules.grade_threshold(rules.DISCHARGE_GRADE), "xp": player.xp}
 
@@ -449,6 +468,8 @@ class Characters:
         for pid, (actor, due) in tuple(self.sleepers.items()):
             if ctx.tick >= due:
                 player = self.players[pid]
+                if player.progress.get("combat",{}).get("stage") in ("down","dead"):
+                    continue  # Combat owns the down/decant lifecycle.
                 self.world.zones[actor.zone].deactivate("sleeper:" + pid, ctx.tick)
                 self.world.leave(actor)
                 del self.sleepers[pid]

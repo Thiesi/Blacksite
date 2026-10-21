@@ -1,6 +1,6 @@
 # S10 — Combat v1: targeting, weapons, cooldowns, cover, damage, shock, down/dead, clone vats, corpse caches, hymns
 
-**Status:** planned
+**Status:** done (PR #50)
 **Primary model:** Opus · **Reviewer:** Astra or Fable (balance read against the catalog before merge)
 **Depends on:** S07, S08, S12 · **Milestone:** M1
 **Issue:** https://github.com/Thiesi/blacksite/issues/10
@@ -39,8 +39,9 @@ can wake up in a vat.
   skill/2 − evasion − cover×10 − range_penalty (range penalty 5 per
   tile beyond half the weapon's range; 0 within); `damage(base, skill,
   armour_vs_type)` = base × (1 + skill/200) − armour, min 1; shock
-  added = damage/2; melee ignores half of armour, with the equipped weapon's listed
-  cooldown and stamina cost; shock ≥ 80 slows actions by 50 %, shock 100 =
+  added = damage/2; melee ignores half of armour, uses a fixed 1.0 s
+  cooldown and the weapon's listed stamina cost; shock ≥ 80 slows actions
+  by 50 %, shock 100 =
   knockdown 2 s; shock decays 5/s when not damaged for 3 s; chemical
   damage-over-time from the catalog's `(+n/s, t s)` fields; dissonance
   reduced only by `arm_d`.
@@ -80,7 +81,7 @@ can wake up in a vat.
   (crew in S22; until then self only).
 - Stealth stance toggle (`intent stance {stealth}`) for Ghosts:
   halves range at which others see you (S06 rule), broken by firing.
-- Wake step 5: the corridor drone NPC template `npc_wake_drone`
+- Wake step 5: the corridor drone NPC template `npc-wake-drone`
   (grade 1, 20 health, a 5-damage 1.5 s weapon) spawned per new
   character, hostile only to that character, despawns on death; the
   Wake advances when it dies.
@@ -109,7 +110,7 @@ can wake up in a vat.
   `arm_sable_leathers`, `arm_ferry_scrap_plate`, `arm_kestrel_helmet`,
   `con_sablier_patch`, `con_kestrel_ration`, `con_sable_stim`) if S12
   has not shipped them; `hymns.json` with all ten abilities;
-  `npcs.json` with `npc_wake_drone`; `text/dead-screen.md`.
+  `npcs.json` with `npc-wake-drone`; `text/dead-screen.md`.
 
 ## Protocol and view models
 
@@ -193,3 +194,22 @@ safe body, including a core power cut or remote presence attack. The
 explicit NPC black-core risk and private tutorial are separate scoped
 exceptions. Add race/indirect safety tests; human duel and cover pacing
 remain measured playtests, not fabricated passing timing assertions.
+
+## Implementation decisions
+
+Game design 5.3/5.4 records melee accuracy 75, whole-point damage rounding,
+25%-health pickup, first-threat warnings, empty rechargeable containers
+and the combat-sleeper settlement. X/V/Z preserve sitrep and vi controls.
+Visible protected targets can be inspected; firing still refuses harm.
+The private drone has an authored corridor spawn tile and cannot affect
+another caller. `docs/ops/combat.md` records consumer hooks for S11,
+S13/S14, S16, S20 and S22. Ninefold requires a downed local crew recipient;
+there is no invented automatic resurrection buff before crews arrive.
+
+`scripts/accept_s10_netbbs.py` performs the real-key scenario at both
+sizes. Because S16 earning is not available, it explicitly creates a
+grade-five fixture with 1 000 hand chits, 500 banked, 200 pistol rounds
+and shock 75 to exercise slowing. It uses no player teleport. The clone
+charge is 100, bank principal stays 500, and fade changes 1 700 XP to
+1 696. These are acceptance fixtures, not evidence for earning or human
+duel pacing. All input and displayed outcomes pass through NetBBS.

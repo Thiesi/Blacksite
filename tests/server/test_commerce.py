@@ -75,11 +75,11 @@ def test_inventory_design_5_4_three_secured_slots_and_stack_limits(game) -> None
     client = caller(game)
     player = game.core.characters.players[client.session.player_id]
     inv = Inventory(game.core.commerce.items,game.core.loop.content.items)
-    assert sum(i.secured for i in inv.items.values()) == 1  # Vesper's card.
+    assert sum(i.secured for i in inv.items.values()) == 2  # Coverall and Vesper's card.
     unsecured = [i for i in player.inventory if not inv.items[i].secured]
-    inv.secure(player,unsecured[0]); inv.secure(player,unsecured[1])
+    inv.secure(player,unsecured[0])
     with pytest.raises(ValueError,match="three"):
-        inv.secure(player,unsecured[2])
+        inv.secure(player,unsecured[1])
     ammo = carried(game,client,"ammo_9x")
     serial = iter(("split1","split2"))
     inv.items[ammo].secured=False

@@ -272,6 +272,9 @@ Real time, cooldown-based, server-resolved.
   to damage / 2.
 - **Melee** costs the weapon's listed stamina, ignores half of armour, and has a 1.0 s
   cooldown.
+  Melee's base accuracy is 75; adjacent diagonals are in reach. Damage
+  rounds down to a whole health point after modifiers, with minimum 1.
+  Hit probability retains its fractional value until the roll.
 - **Cover** is a tile property. Standing adjacent to a cover tile with the
   attacker on the other side applies it.
 - **Consumables** (med patches, stims) are instant with a 10 s cooldown
@@ -280,6 +283,26 @@ Real time, cooldown-based, server-resolved.
   model; hymns affect crew members within 6 tiles.
 - **Drones** are Operator-controlled actors with their own position,
   health, and one weapon or tool; they follow or hold.
+
+The first hostile attack against a new visible threat raises a weapon
+for 2 s. The player presses fire again to commit; moving to safety or
+out of sight remains a response. Continued exchanges do not repeat that
+warning; 10 s without an exchange ends combat. Neutral eligible players
+can be selected, with the Marked consequence shown before firing.
+Ability casts cancel on movement, damage or disconnection. Single-target
+dissonance reaches 6 tiles and requires sight. Arc weapons can jump to
+one actor within 2 tiles of the primary target, within weapon range;
+cones use their listed depth in a 90-degree forward arc. Every secondary
+target receives the same safety and first-threat checks. Reapplying one
+attacker's chemical agent refreshes its duration instead of stacking it.
+
+The Wake equips the issued sidearm, baton and first patch. X cycles
+equipped weapons; V opens abilities and 1-5 binds an ability there.
+W retains sitrep, and the vi movement bindings remain unchanged.
+An exhausted rechargeable cell remains carried at zero charges; it can
+be refilled rather than silently discarded. Other ammunition is spent.
+New Wake coveralls start secured, using one of the three slots. The
+Hardline's replacement vest remains an ordinary risk unless secured.
 
 For `clear` objectives with `resolution: subdue`, a supplied restraint
 action channels for 3 s against an adjacent NPC at shock 80 or higher.
@@ -291,6 +314,8 @@ damage fails the objective. This never permits player imprisonment.
 
 - Health 0 is **down**: five seconds during which a crew member can pick
   you up. Then **dead**.
+  Pickup restores 25 % of maximum health, rounded up. Before crews land,
+  an adjacent non-hostile caller can pick you up; the attacker cannot.
 - Dead characters wake in the nearest Sablier vat (Vatside, or a faction
   vat if a member) after a 20 s decant timer.
 - **Clone debt**: 5 % of chits on hand (not banked) plus a fixed fee of
@@ -310,6 +335,15 @@ not drop. Wake Hall supplies a free recovery loan when usable gear is
 missing: bound sidearm, 50 rounds, coverall, two patches. Loan goods
 cannot be sold, traded, cached, crafted, or stockpiled; only missing
 loan quantities are replaced. Recovery never requires another player.
+Missing compatible weapon/ammunition or body armour enables recovery;
+bound loan goods need no free secured slot because binding protects them.
+
+Down and decant deadlines, debt, cooldowns, temporary effects and corpse
+cache rights survive restart. A combat sleeper still present after the
+60 s logout interval returns to Wake Hall with the same clone charge
+and fade, retaining carried equipment; actual death uses the normal
+corpse-cache rule. Bank principal is never charged. Private training
+exchanges create neither combat-logout penalties nor death debt.
 
 ### 5.5 NPCs
 

@@ -11,7 +11,150 @@
       "effect": {
         "shock": -20
       },
-      "description": "You steady your crew."
+      "description": "You settle your breathing. Shock falls by twenty.",
+      "requires_one_of": []
+    },
+    {
+      "id": "hymn_mend",
+      "name": "Mend",
+      "kind": "hymn",
+      "tier": 1,
+      "cast_seconds": 1,
+      "cooldown_seconds": 15,
+      "effect": {
+        "heal": 3,
+        "seconds": 5
+      },
+      "description": "You hold the note. Health returns over five seconds.",
+      "requires_one_of": []
+    },
+    {
+      "id": "hymn_march",
+      "name": "March",
+      "kind": "hymn",
+      "tier": 2,
+      "cast_seconds": 1,
+      "cooldown_seconds": 30,
+      "effect": {
+        "stamina_multiplier": 0.5,
+        "seconds": 10
+      },
+      "description": "You keep time. Sprinting costs half the stamina.",
+      "requires_one_of": [
+        "imp_res_chord",
+        "imp_res_ninefold_lattice"
+      ]
+    },
+    {
+      "id": "hymn_ward",
+      "name": "Ward",
+      "kind": "hymn",
+      "tier": 2,
+      "cast_seconds": 1.5,
+      "cooldown_seconds": 40,
+      "effect": {
+        "armour": 5,
+        "seconds": 12
+      },
+      "description": "You brace. Every armour type gains five.",
+      "requires_one_of": [
+        "imp_res_chord",
+        "imp_res_ninefold_lattice"
+      ]
+    },
+    {
+      "id": "hymn_ninefold",
+      "name": "Ninefold",
+      "kind": "hymn",
+      "tier": 3,
+      "cast_seconds": 2,
+      "cooldown_seconds": 90,
+      "effect": {
+        "revive": 1
+      },
+      "description": "You pick up one downed crew member within hymn range.",
+      "requires_one_of": [
+        "imp_res_ninefold_lattice"
+      ]
+    },
+    {
+      "id": "dis_jam",
+      "name": "Nerve-jam",
+      "kind": "dissonance",
+      "tier": 1,
+      "cast_seconds": 0.5,
+      "cooldown_seconds": 8,
+      "effect": {
+        "weapon_multiplier": 1.5,
+        "seconds": 4
+      },
+      "description": "You break the rhythm. The target's weapon takes longer to recover.",
+      "requires_one_of": []
+    },
+    {
+      "id": "dis_stutter",
+      "name": "Stutter",
+      "kind": "dissonance",
+      "tier": 1,
+      "cast_seconds": 0.5,
+      "cooldown_seconds": 10,
+      "effect": {
+        "move_ticks": 4,
+        "seconds": 4
+      },
+      "description": "You catch a step. The target moves at four ticks per tile.",
+      "requires_one_of": []
+    },
+    {
+      "id": "dis_shear",
+      "name": "Shear",
+      "kind": "dissonance",
+      "tier": 2,
+      "cast_seconds": 1,
+      "cooldown_seconds": 14,
+      "effect": {
+        "damage": 25,
+        "shock": 20
+      },
+      "description": "You pull the note apart. The target takes dissonance and shock.",
+      "requires_one_of": [
+        "imp_res_chord",
+        "imp_res_ninefold_lattice"
+      ]
+    },
+    {
+      "id": "dis_hush",
+      "name": "Hush",
+      "kind": "dissonance",
+      "tier": 2,
+      "cast_seconds": 1,
+      "cooldown_seconds": 20,
+      "effect": {
+        "hush": 1,
+        "seconds": 6
+      },
+      "description": "You close the note. The target cannot use consumables or hymns.",
+      "requires_one_of": [
+        "imp_res_chord",
+        "imp_res_ninefold_lattice"
+      ]
+    },
+    {
+      "id": "dis_choir",
+      "name": "Choir",
+      "kind": "dissonance",
+      "tier": 3,
+      "cast_seconds": 2,
+      "cooldown_seconds": 60,
+      "effect": {
+        "damage": 30,
+        "shock": 30,
+        "area": 4
+      },
+      "description": "You release the chord. Hostile bodies within four tiles take dissonance.",
+      "requires_one_of": [
+        "imp_res_ninefold_lattice"
+      ]
     }
   ]
 }

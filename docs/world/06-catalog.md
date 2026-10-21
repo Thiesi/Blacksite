@@ -95,7 +95,8 @@ Manufacturers, so the brand language stays consistent:
 ### 1.5 Melee
 
 Melee uses Frame and *Melee* skill, costs stamina per swing, ignores half
-of armour, and has a fixed 1.0 s cooldown (design §5.3). Range is 1.
+of armour, and has a fixed 1.0 s cooldown and base accuracy 75 (design
+§5.3). Range is 1, including adjacent diagonals.
 
 | ID | Name | Maker | Type | Dmg | Stamina | Wt | Tier | Price | Line |
 |---|---|---|---|---|---|---|---|---|---|
@@ -369,6 +370,10 @@ with `imp_res_first_ear` installed (Sablier's template came with it) and
 `hymn_steady`. Operators start with `drn_kestrel_mule`. Hardlines start with
 `arm_kestrel_vest` instead of the coverall.
 
+The issued coverall starts secured, consuming one of the three slots.
+The Hardline vest does not. Existing characters keep their chosen item
+flags. Bound recovery coveralls do not consume an additional secured slot.
+
 ## 12. Vendor inventories
 
 Price tier: **list** (design §8.2 standing modifiers apply), **member**
@@ -419,9 +424,11 @@ All numbers are design hypotheses, not measured combat results. The
 combat model currently predicts longer duels than the old 6-10 s claim.
 At grade 5, Ghost Vitals = 24 and health = 98; with Nerve 40, evasion is
 13.333. At Kinetic 20, an HV-7 against Sable Leathers without cover or
-range penalty hits at 51.667 % for 12.6 damage. Expected damage per
-second is 6.51, giving roughly 15.1 seconds before healing, shock,
-movement, or shot discretisation. Do not call this a playtest.
+range penalty hits at 51.667 % for 12 whole damage after rounding down.
+Expected damage per second is 6.20, giving roughly 15.8 seconds before
+healing, shock, movement or shot discretisation. Nine hits are required;
+the expected time from the first shot is about 16.4 s, plus the initial
+two-second threat warning. Do not call this a playtest.
 
 Design targets: 12-20 s equal-grade uncovered duels; at least 20 s with
 cover 2; a starter drone in 6-10 s. Tune content only after deterministic

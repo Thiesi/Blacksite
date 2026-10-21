@@ -180,6 +180,12 @@ The client sends normalised key names; the server maps names to intents
 by the session's keymap. Rebinding is therefore a settings change, not a
 client feature.
 
+S10 adds X to cycle equipped weapons, V for abilities, and Z for Ghost
+stealth in both keymaps. In abilities, 1-5 binds the selected action;
+Enter uses it. A selected target shows name, faction, HP percent, range,
+cover and relation. A hit changes the border for one rendered frame at
+every tier. Down/decant views retain the log and cannot dismiss the timer.
+
 ### 5.2 Line prompts
 
 Chat, names, market prices, whisper targets. The hint line becomes the

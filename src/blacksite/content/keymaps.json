@@ -192,6 +192,18 @@
     "program_7": {
       "context": "lattice",
       "label": "program slot 7"
+    },
+    "abilities": {
+      "context": "zone",
+      "label": "abilities"
+    },
+    "weapon_cycle": {
+      "context": "zone",
+      "label": "switch equipped weapon"
+    },
+    "stealth": {
+      "context": "zone",
+      "label": "toggle stealth"
     }
   },
   "keymaps": [
@@ -356,6 +368,18 @@
         ],
         "program_7": [
           "7"
+        ],
+        "abilities": [
+          "v",
+          "V"
+        ],
+        "weapon_cycle": [
+          "x",
+          "X"
+        ],
+        "stealth": [
+          "z",
+          "Z"
         ]
       }
     },
@@ -507,6 +531,18 @@
         ],
         "program_7": [
           "7"
+        ],
+        "abilities": [
+          "v",
+          "V"
+        ],
+        "weapon_cycle": [
+          "x",
+          "X"
+        ],
+        "stealth": [
+          "z",
+          "Z"
         ]
       }
     }

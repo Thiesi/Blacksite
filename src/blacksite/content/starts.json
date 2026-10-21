@@ -13,7 +13,10 @@
         "arm_kestrel_vest": 1
       },
       "equipment": {
-        "body": "arm_kestrel_vest"
+        "body": "arm_kestrel_vest",
+        "weapon_side": "wpn_kestrel_sidearm",
+        "melee": "wpn_kestrel_baton",
+        "quick1": "con_sablier_patch"
       },
       "implants": {},
       "programs": [
@@ -21,7 +24,13 @@
         "prg_umbrella"
       ],
       "hymns": [],
-      "rig_slots": 0
+      "rig_slots": 0,
+      "recovery_items": {
+        "wpn_kestrel_sidearm": 1,
+        "ammo_9x": 50,
+        "arm_wake_coverall": 1,
+        "con_sablier_patch": 2
+      }
     },
     {
       "id": "ghost",
@@ -35,7 +44,10 @@
         "arm_wake_coverall": 1
       },
       "equipment": {
-        "body": "arm_wake_coverall"
+        "body": "arm_wake_coverall",
+        "weapon_side": "wpn_kestrel_sidearm",
+        "melee": "wpn_kestrel_baton",
+        "quick1": "con_sablier_patch"
       },
       "implants": {},
       "programs": [
@@ -43,7 +55,13 @@
         "prg_umbrella"
       ],
       "hymns": [],
-      "rig_slots": 3
+      "rig_slots": 3,
+      "recovery_items": {
+        "wpn_kestrel_sidearm": 1,
+        "ammo_9x": 50,
+        "arm_wake_coverall": 1,
+        "con_sablier_patch": 2
+      }
     },
     {
       "id": "cantor",
@@ -58,7 +76,10 @@
         "imp_res_first_ear": 1
       },
       "equipment": {
-        "body": "arm_wake_coverall"
+        "body": "arm_wake_coverall",
+        "weapon_side": "wpn_kestrel_sidearm",
+        "melee": "wpn_kestrel_baton",
+        "quick1": "con_sablier_patch"
       },
       "implants": {
         "head": "imp_res_first_ear"
@@ -70,7 +91,13 @@
       "hymns": [
         "hymn_steady"
       ],
-      "rig_slots": 0
+      "rig_slots": 0,
+      "recovery_items": {
+        "wpn_kestrel_sidearm": 1,
+        "ammo_9x": 50,
+        "arm_wake_coverall": 1,
+        "con_sablier_patch": 2
+      }
     },
     {
       "id": "operator",
@@ -85,7 +112,10 @@
         "drn_kestrel_mule": 1
       },
       "equipment": {
-        "body": "arm_wake_coverall"
+        "body": "arm_wake_coverall",
+        "weapon_side": "wpn_kestrel_sidearm",
+        "melee": "wpn_kestrel_baton",
+        "quick1": "con_sablier_patch"
       },
       "implants": {},
       "programs": [
@@ -93,7 +123,13 @@
         "prg_umbrella"
       ],
       "hymns": [],
-      "rig_slots": 0
+      "rig_slots": 0,
+      "recovery_items": {
+        "wpn_kestrel_sidearm": 1,
+        "ammo_9x": 50,
+        "arm_wake_coverall": 1,
+        "con_sablier_patch": 2
+      }
     }
   ]
 }

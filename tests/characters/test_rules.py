@@ -50,12 +50,12 @@ def test_name_width_and_characters(name: str, valid: bool) -> None:
     assert c.name_key("STRASSE") == c.name_key("Straße")
 
 
-def test_starter_melee_keeps_unspecified_accuracy_but_ranged_requires_it(repo_root: object) -> None:
+def test_starter_melee_uses_design_5_3_accuracy_but_ranged_requires_it(repo_root: object) -> None:
     from dataclasses import replace
     from blacksite.content.loader import load_content
     from blacksite.content.validate import validate
     content=load_content(repo_root/"src/blacksite/content")
-    assert content.items["wpn_kestrel_baton"].weapon.accuracy is None
+    assert content.items["wpn_kestrel_baton"].weapon.accuracy == 75
     ranged=content.items["wpn_kestrel_sidearm"]
     content.items[ranged.id]=replace(ranged,weapon=replace(ranged.weapon,accuracy=None))
     assert any("ranged weapon needs accuracy" in str(problem) for problem in validate(content))

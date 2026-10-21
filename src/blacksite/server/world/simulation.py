@@ -44,6 +44,7 @@ class ZoneSimulation:
         self.published: dict[str, tuple[object, ...]] = {}
         self.serial = 0
         self.me_provider: Callable[[Session], dict[str, Any]] = lambda session: {}
+        self.target_provider: Callable[[Actor], dict[str, Any] | None] | None = None
         self.access_provider: Callable[[Session], dict[str, Any]] = lambda session: {}
         self.maps: dict[str, tuple[int, int | None]] = {}
         self.map_opened: dict[str, int] = {}
@@ -305,6 +306,11 @@ class ZoneSimulation:
             body = build(avatar.actor, zone, avatar.perception, self.world.content,
                          session.caps["width"], session.caps["height"], local, night, ctx.tick)
             body["me"].update(self.me_provider(session))
+            if self.target_provider:
+                body["target"] = self.target_provider(avatar.actor)
+                body["hint"] = "Tab target  F fire  X weapon  1-5 quick  V abilities  E interact  I inventory  ? help"
+                remaining = max(0,avatar.actor.cooldowns.get("weapon",0)-ctx.tick)/TICK_HZ
+                if remaining: body["hint"] = f"Weapon {remaining:.1f}s  " + body["hint"]
             if self.views[session.id].publish(session, body, ctx.tick):
                 self.published[session.id] = stamp
             elif body == (self.views[session.id].previous or {}).get("body"):

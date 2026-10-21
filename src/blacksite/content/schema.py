@@ -456,6 +456,7 @@ class CharacterStart:
     programs: tuple[str, ...] = ()
     hymns: tuple[str, ...] = ()
     rig_slots: int = 0
+    recovery_items: dict[str, int] = field(default_factory=dict)
     schema: int = CONTENT_SCHEMA
 
 
@@ -636,6 +637,7 @@ class HymnTemplate:
     cooldown_seconds: Number
     effect: dict[str, Number | str] = field(default_factory=dict)
     description: str = ""
+    requires_one_of: tuple[str, ...] = ()
     schema: int = CONTENT_SCHEMA
 
 
@@ -709,6 +711,9 @@ class NpcTemplate:
     vendor: str | None = None
     loot: tuple[LootEntry, ...] = ()
     xp: int = 0
+    health: int | None = None
+    attack: WeaponBlock | None = None
+    training: bool = False
     lore: tuple[str, ...] = ()
     schema: int = CONTENT_SCHEMA
 
