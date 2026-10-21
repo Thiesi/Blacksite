@@ -44,6 +44,7 @@ fields remain null until their engine slices land.
 Stop the service before `blacksite admin --install-dir DIR secrets rotate`.
 Rotation takes the service's exclusive lease and refuses while it runs.
 Both HMAC credentials change; none are printed. Restart afterwards.
+Each door connection reads its credential from `DIR/secrets/door.secret`.
 
 ## NetBSD rc.d
 

@@ -2,13 +2,14 @@
 
 import asyncio
 import json
+import io
 import os
 from pathlib import Path
 import sys
 
 import pytest
 
-from blacksite.admin.__main__ import main, rotate
+from blacksite.admin.__main__ import emit, main, rotate
 from blacksite.admin.client import request
 from blacksite.server.app import Server
 from blacksite.server.protocol import Frame, encode, read_frame
@@ -114,3 +115,20 @@ def test_real_console_alias_serve_status_stop(scratch_dir: Path) -> None:
                 process.kill()
                 await process.wait()
     asyncio.run(scenario())
+
+
+def test_json_who_works_on_an_ascii_operator_console(monkeypatch: pytest.MonkeyPatch) -> None:
+    stream = io.BytesIO()
+    console = io.TextIOWrapper(stream, encoding="ascii")
+    monkeypatch.setattr(sys, "stdout", console)
+    emit([{"handle": "Caller界\u202e"}], True)
+    console.flush()
+    assert json.loads(stream.getvalue()) == [{"handle": "Caller界\u202e"}]
+
+
+def test_bad_admin_secret_is_an_error(scratch_dir: Path, capsys: pytest.CaptureFixture[str]) -> None:
+    secrets = scratch_dir / "secrets"
+    secrets.mkdir()
+    (secrets / "admin.secret").write_text("not-hex", encoding="ascii")
+    assert main(["--install-dir", str(scratch_dir), "stop"]) == 1
+    assert "blacksite admin:" in capsys.readouterr().err

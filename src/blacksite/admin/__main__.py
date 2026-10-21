@@ -61,7 +61,7 @@ def parser() -> argparse.ArgumentParser:
 
 def emit(result: Any, machine: bool) -> None:
     if machine:
-        print(json.dumps(result, ensure_ascii=False, allow_nan=False))
+        print(json.dumps(result, ensure_ascii=True, allow_nan=False))
     elif isinstance(result, dict):
         for key, value in result.items():
             print(f"{key}: {json.dumps(value, ensure_ascii=True)}")
