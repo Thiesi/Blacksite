@@ -1,6 +1,6 @@
 # S03 — Server core: socket, framing, hello/auth, sessions, tick loop, event bus, persistence layer
 
-**Status:** implemented; review pending
+**Status:** implemented; review pending (PR #41)
 **Primary model:** Opus · **Reviewer:** Astra (protocol and auth critique before start)
 **Depends on:** S01, S02 · **Milestone:** M0
 **Issue:** https://github.com/Thiesi/blacksite/issues/3
@@ -181,7 +181,7 @@ validation and the rebuild hook finish.
 Verification on Windows, Python 3.14:
 
 - Full suite: `python -m pytest -q --basetemp=.test-tmp/pre-pr`.
-  The final result is recorded in the PR. The Unix socket test is
+  Result: 325 passed, 1 skipped. The Unix socket test is
   intentionally skipped on Windows; the existing CI matrix runs Python
   3.12 on Ubuntu and Windows.
 - Real PowerShell terminals at 80×24 and 132×50, direct loopback TCP,
