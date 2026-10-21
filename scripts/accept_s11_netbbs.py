@@ -12,6 +12,19 @@ import time
 
 from accept_s10_netbbs import Connection, NativeProbe, wait
 from blacksite.admin.client import request
+from blacksite.server.world.actors import Actor
+
+
+async def approach(probe: NativeProbe, caller: Connection, target: Actor) -> None:
+    actor=caller.avatar.actor
+    zone=probe.service.world.zones[actor.zone]
+    async with asyncio.timeout(20):
+        while not probe.combat.visible(target,actor) or (actor.x-target.x)**2+(actor.y-target.y)**2>16:
+            occupied={a.position for a in zone.actors.values()}
+            candidates=[(x,y) for x in range(target.x-3,target.x+4) for y in range(target.y-3,target.y+4)
+                if zone.passable((x,y)) and zone.allows_hostile((x,y)) and (x,y) not in occupied]
+            tile=min(candidates,key=lambda p:(p[0]-actor.x)**2+(p[1]-actor.y)**2)
+            await probe.walk(caller,tile)
 
 
 async def profile(probe: NativeProbe, width: int, height: int) -> float:
@@ -96,6 +109,7 @@ async def accept(root: Path, door_python: Path, show: bool) -> None:
             await probe.travel(caller,"vatside-clinics")
             await probe.walk(caller,(44,3))
             patrol=next(a for a in probe.service.world.zones[actor.zone].actors.values() if a.behaviour.get("template")=="npc-warden-patrol")
+            await approach(probe,caller,patrol)
             await wait(lambda:patrol.target==actor.id,3)
             probe.report(f"PASS heat pursuit {width}x{height}: Clinic Row patrol targets caller after visible warning")
             # Retreat to the real public-clinic pocket before waiting out heat.
@@ -111,6 +125,7 @@ async def accept(root: Path, door_python: Path, show: bool) -> None:
                 probe.report(f"WAIT heat {width}x{height}: {max(0,datetime.fromisoformat(until).timestamp()-probe.combat.now()):.0f}s remain in protected clinic")
                 assert actor.health==safe_hp
             await probe.walk(caller,(44,3))
+            await approach(probe,caller,patrol)
             await asyncio.sleep(3)
             assert patrol.target is None
             assert not probe.game.me(caller.session)["heat_until"]
