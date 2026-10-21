@@ -18,7 +18,12 @@ from tests.harness import HeadlessServer
 
 
 def build_duel(repo_root: Path):
-    game = HeadlessServer(load_content(repo_root/"src/blacksite/content"),character_state={})
+    content = load_content(repo_root/"src/blacksite/content")
+    # Controlled duel scenarios exclude unrelated city traffic. S11 tests
+    # exercise the integrated population and patrol response separately.
+    content.zones = {key: replace(zone, meta=replace(zone.meta, spawners=tuple(
+        sp for sp in zone.meta.spawners if sp.condition == "per_player"))) for key, zone in content.zones.items()}
+    game = HeadlessServer(content,character_state={})
     clients = []
     for uid,pos in ((1,(25,3)),(2,(27,3))):
         client = game.connect({"user_id":uid,"handle":f"Wake界{uid}","node_name":"test"})

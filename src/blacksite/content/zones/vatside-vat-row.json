@@ -103,5 +103,33 @@
   "pockets": [],
   "lore": [
     "zone-vatside-vat-row"
+  ],
+  "spawners": [
+    {
+      "id": "sablier-guard",
+      "npc": "npc-sablier-guard",
+      "count": 3,
+      "respawn_seconds": 60,
+      "condition": "always",
+      "region": {
+        "x": 10,
+        "y": 3,
+        "w": 15,
+        "h": 1
+      }
+    },
+    {
+      "id": "sablier-orderly",
+      "npc": "npc-sablier-orderly",
+      "count": 2,
+      "respawn_seconds": 60,
+      "condition": "always",
+      "region": {
+        "x": 26,
+        "y": 3,
+        "w": 6,
+        "h": 1
+      }
+    }
   ]
 }

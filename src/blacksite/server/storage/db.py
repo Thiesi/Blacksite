@@ -131,6 +131,7 @@ class Storage:
                             for key, value in dict(row).items()})
         return {"players": players, "identities": {row[0]: json.loads(row[1]) for row in self.db.execute("SELECT * FROM identities")},
                 "serial": self.meta("player_serial") or 0, "cap": self.meta("character_cap"),
+                "npcs": self.meta("npc_state") or {},
                 "items": [json.loads(row[0]) for row in self.db.execute("SELECT data FROM items")],
                 "commerce": {"item_serial": self.meta("item_serial") or 0,
                     "budgets": {row[0]: {"hour":row[1], "remaining":row[2]} for row in self.db.execute("SELECT * FROM vendor_budgets")},
@@ -159,10 +160,13 @@ class Storage:
             for key, cache in effect["caches"].items():
                 self.db.execute("INSERT INTO caches VALUES(?,?)", (key,self._json(cache)))
             self.db.execute("INSERT OR REPLACE INTO meta(key,value) VALUES('item_serial',?)", (self._json(effect["serial"]),))
+            if "npc_state" in effect:
+                self.db.execute("INSERT OR REPLACE INTO meta(key,value) VALUES('npc_state',?)", (self._json(effect["npc_state"]),))
             self.db.execute("INSERT INTO audit(at,data) VALUES(?,?)", (self.clock.now_utc().isoformat(), self._json({"action":"item_transfer", "player":player["id"] if player else None})))
         # Never let an older write-behind snapshot overwrite this receipt.
         settled = {("items", item["id"]) for item in effect["items"]} | {("items", iid) for iid in effect["delete_items"]}
         if player: settled.add(("players",player["id"]))
+        if "npc_state" in effect: settled.add(("meta", "npc_state"))
         if "identity" in effect: settled.add(("identities",effect["user"]))
         for key in settled:
             self.dirty.pop(key,None); self.dirty_since.pop(key,None)

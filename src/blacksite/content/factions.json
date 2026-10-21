@@ -1,0 +1,126 @@
+{
+  "schema": 1,
+  "asymmetries": [],
+  "factions": [
+    {
+      "id": "halvard",
+      "name": "Halvard-Ostrom Dynamics",
+      "short": "Halvard",
+      "colour": "faction_halvard",
+      "relations": {
+        "sablier": "A",
+        "kestrel": "A",
+        "wardens": "N",
+        "choir": "H",
+        "sable": "H",
+        "unmoored": "H",
+        "ferrymen": "H"
+      }
+    },
+    {
+      "id": "sablier",
+      "name": "Sablier Biomedical",
+      "short": "Sablier",
+      "colour": "faction_sablier",
+      "relations": {
+        "halvard": "A",
+        "kestrel": "N",
+        "wardens": "N",
+        "choir": "N",
+        "sable": "N",
+        "unmoored": "H",
+        "ferrymen": "N"
+      }
+    },
+    {
+      "id": "kestrel",
+      "name": "Kestrel Logistics",
+      "short": "Kestrel",
+      "colour": "faction_kestrel",
+      "relations": {
+        "halvard": "A",
+        "sablier": "N",
+        "wardens": "A",
+        "choir": "N",
+        "sable": "H",
+        "unmoored": "N",
+        "ferrymen": "H"
+      }
+    },
+    {
+      "id": "wardens",
+      "name": "Karst Civic Authority",
+      "short": "Wardens",
+      "colour": "faction_wardens",
+      "relations": {
+        "halvard": "N",
+        "sablier": "N",
+        "kestrel": "A",
+        "choir": "N",
+        "sable": "H",
+        "unmoored": "H",
+        "ferrymen": "N"
+      }
+    },
+    {
+      "id": "choir",
+      "name": "The Ninefold Choir",
+      "short": "Choir",
+      "colour": "faction_choir",
+      "relations": {
+        "halvard": "H",
+        "sablier": "N",
+        "kestrel": "N",
+        "wardens": "N",
+        "sable": "N",
+        "unmoored": "A",
+        "ferrymen": "A"
+      }
+    },
+    {
+      "id": "sable",
+      "name": "Red Sable",
+      "short": "Sable",
+      "colour": "faction_sable",
+      "relations": {
+        "halvard": "H",
+        "sablier": "N",
+        "kestrel": "H",
+        "wardens": "H",
+        "choir": "N",
+        "unmoored": "H",
+        "ferrymen": "N"
+      }
+    },
+    {
+      "id": "unmoored",
+      "name": "The Unmoored",
+      "short": "Unmoored",
+      "colour": "faction_unmoored",
+      "relations": {
+        "halvard": "H",
+        "sablier": "H",
+        "kestrel": "N",
+        "wardens": "H",
+        "choir": "A",
+        "sable": "H",
+        "ferrymen": "N"
+      }
+    },
+    {
+      "id": "ferrymen",
+      "name": "The Ferrymen",
+      "short": "Ferrymen",
+      "colour": "faction_ferrymen",
+      "relations": {
+        "halvard": "H",
+        "sablier": "N",
+        "kestrel": "H",
+        "wardens": "N",
+        "choir": "A",
+        "sable": "N",
+        "unmoored": "N"
+      }
+    }
+  ]
+}

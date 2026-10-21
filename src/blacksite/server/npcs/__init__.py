@@ -1,0 +1,1 @@
+"""Deterministic physical NPC simulation."""

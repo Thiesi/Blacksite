@@ -177,6 +177,23 @@ from attributes and use their authored equipment. Recovery quantities
 live in each character start's `recovery_items` mapping. Hymn records
 list `requires_one_of` implant IDs for tiers above one.
 
+S11 behaviours include `wander` and `hunt` as well as the original kinds.
+Patrol params hold `waypoints: [[x,y], ...]` and optional `bounce`; every
+spawner validates these against its own map. `anchor: true` preserves a
+named service attendant during dormancy; `hostile_all: true` is an explicit
+unsafe threat rather than an inference from open ground. Embedded health
+and attack also support the generic maintenance drone from design 18.
+`per_player` spawners require private training templates. Canonical NPC
+template IDs are hyphenated slugs (`npc-wake-drone`); item IDs retain their
+existing underscore format.
+
+Spawner slots retain absolute UTC respawn deadlines and a monotonic actor
+serial in `meta.npc_state`. NPC death writes its slot deadline atomically
+with corpse goods. Ordinary live NPC positions/HP rebuild on process
+restart; this does not replay dead slots before their saved deadline.
+Mission ownership, willingness and restraint channels are live hooks for
+S19, which owns persistence and objective failure/completion receipts.
+
 ### 1.9 Faction (`factions.json`)
 
 `id, name, short, colour (palette role), hall (zone id), vat (zone id,
