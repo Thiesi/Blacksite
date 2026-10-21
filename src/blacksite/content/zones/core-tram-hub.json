@@ -1,0 +1,180 @@
+{
+  "schema": 1,
+  "id": "core-tram-hub",
+  "name": "Central Tram Hub",
+  "district": "The Core",
+  "safety": "safe",
+  "sight_radius": 12,
+  "spawn": [
+    3,
+    3
+  ],
+  "exits": [
+    {
+      "id": "to-core-plaza",
+      "tile": [
+        18,
+        27
+      ],
+      "target_zone": "core-plaza",
+      "target_tile": [
+        3,
+        38
+      ],
+      "kind": "street"
+    },
+    {
+      "id": "to-clinics",
+      "tile": [
+        24,
+        14
+      ],
+      "target_zone": "vatside-clinics",
+      "target_tile": [
+        3,
+        32
+      ],
+      "kind": "tram"
+    },
+    {
+      "id": "to-terraces-blocks",
+      "tile": [
+        39,
+        14
+      ],
+      "target_zone": "terraces-blocks",
+      "target_tile": [
+        8,
+        3
+      ],
+      "kind": "tram"
+    }
+  ],
+  "objects": [
+    {
+      "id": "kestrel-ticket-office",
+      "tile": [
+        8,
+        4
+      ],
+      "kind": "vendor",
+      "essential": false,
+      "params": {
+        "name": "Kestrel ticket office"
+      }
+    },
+    {
+      "id": "kestrel-recruiter",
+      "tile": [
+        38,
+        4
+      ],
+      "kind": "vendor",
+      "essential": false,
+      "params": {
+        "name": "Kestrel recruiter"
+      }
+    },
+    {
+      "id": "hub-noodle-counter",
+      "tile": [
+        68,
+        4
+      ],
+      "kind": "vendor",
+      "essential": false,
+      "params": {
+        "name": "Hub noodle counter"
+      }
+    },
+    {
+      "id": "hub-public-west",
+      "tile": [
+        23,
+        4
+      ],
+      "kind": "terminal",
+      "essential": true,
+      "params": {
+        "name": "Hub public west"
+      }
+    },
+    {
+      "id": "hub-public-east",
+      "tile": [
+        53,
+        4
+      ],
+      "kind": "terminal",
+      "essential": true,
+      "params": {
+        "name": "Hub public east"
+      }
+    },
+    {
+      "id": "boundary-tramyard-market",
+      "tile": [
+        9,
+        14
+      ],
+      "kind": "door",
+      "params": {
+        "open": true,
+        "unavailable_target": "tramyard-market",
+        "name": "Construction boundary"
+      }
+    },
+    {
+      "id": "boundary-chapel-towers",
+      "tile": [
+        54,
+        14
+      ],
+      "kind": "door",
+      "params": {
+        "open": true,
+        "unavailable_target": "chapel-towers",
+        "name": "Construction boundary"
+      }
+    },
+    {
+      "id": "boundary-sink-rim",
+      "tile": [
+        69,
+        14
+      ],
+      "kind": "door",
+      "params": {
+        "open": true,
+        "unavailable_target": "sink-rim",
+        "name": "Construction boundary"
+      }
+    },
+    {
+      "id": "platform-vatside-clinics",
+      "tile": [
+        24,
+        14
+      ],
+      "kind": "tram_stop",
+      "params": {
+        "name": "Tram platform"
+      }
+    },
+    {
+      "id": "platform-terraces-blocks",
+      "tile": [
+        39,
+        14
+      ],
+      "kind": "tram_stop",
+      "params": {
+        "name": "Tram platform"
+      }
+    }
+  ],
+  "pockets": [],
+  "lore": [
+    "zone-core-tram-hub"
+  ]
+}

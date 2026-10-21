@@ -45,7 +45,7 @@ XP target are also separate; personhood does not remove grade protection.
 
 The package upgrades world schema 1 to 2 transactionally. Ordinary player
 and terrain-memory changes flush every five seconds, logout immediately.
-The installed package-owned content copy refreshes to 0.0.3; local
+The installed package-owned content copy refreshes to 0.0.4; local
 overrides remain under `content.local`. Back up the install directory
 before a normal package upgrade.
 
@@ -59,7 +59,7 @@ NETBBS_PYTHON scripts/accept_s07_netbbs.py `
 It uses a private registered native stdio door and NetBBS's real Telnet
 picker at 80x24 and 132x50. It records Wake timing, Ghost numbers, Unmoored
 standing, starter grants, same-tile return, restart and a real 120-second
-offline interval. Since S08 travel is absent, contested logout uses
-explicit server-side scenario placement; the probe claims no exit
-behavior. Actual ANSI and `result.json` remain under its private root.
+offline interval. This S07 probe uses explicit scenario placement for
+contested logout; it claims no exit behavior. The [S08 city probe](city.md)
+walks actual exits. Actual ANSI and `result.json` remain under its private root.
 CI repeats the sequence on Linux against an installed wheel.

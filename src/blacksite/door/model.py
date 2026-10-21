@@ -196,6 +196,9 @@ class Display:
             return []
         if not self.connected:
             return []
+        if self.kind == "text" and self.body.get("title") == "The tram hums." and key == "escape":
+            self.open_help([f"[{line.get('channel', 'system')}] {line.get('text', '')}" for line in self.logs], "SCROLLBACK")
+            return []
         effective_kind = self.body.get("kind") if self.kind == "wake" else self.kind
         effective_body = self.body.get("body", {}) if self.kind == "wake" else self.body
         if effective_kind == "menu":

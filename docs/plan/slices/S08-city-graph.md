@@ -1,6 +1,6 @@
 # S08 — City graph: exits, transitions, safety classes, pockets, the Core and Vatside and Sodium Row maps
 
-**Status:** planned
+**Status:** done (PR #47)
 **Primary model:** Sonnet · **Reviewer:** Opus (map review of the hub zones)
 **Depends on:** S06 · **Milestone:** M1
 **Issue:** https://github.com/Thiesi/blacksite/issues/8
@@ -132,3 +132,38 @@ shown as unavailable construction boundaries until that bundle lands;
 never load a dangling target or invent a fake copy of a future zone.
 S25 joins every real exit into the full ordinary city and S26 activates
 the season door. Baseline return routes remain visible and passable.
+
+## Delivery notes
+
+Implemented by Codex rather than the preferred Sonnet assignment. The
+automated Claude review includes the four-hub map review; record its
+actual model and outcome in the PR under the repository's review policy.
+
+The hub bundle is active. S25 exits are construction objects, and faction
+lean remains lore until S20 supplies full faction records. NPCs and service
+actions remain in their consuming slices. No additional city map or
+apartment interior is invented. Gazetteer sizes, landmarks and connections
+are preserved; sketches expand into broad connected return corridors.
+
+Game design §5.6 now records the existing gazetteer tram numbers and the
+persistent UTC schedule, plus disconnect/arrival behavior. Entity §1.1
+adds `door` to Exit kinds to match the gazetteer and this slice. No balance
+value changes. Package 0.0.4 refreshes installed content; world schema 2
+and protocol major 1 remain unchanged.
+
+`scripts/accept_s08_netbbs.py` walks the actual route through a private
+NetBBS Telnet/native stdio node at 80x24 and 132x50, waits for real tram
+departures and ten-second rides, opens the log in flight, reads the map,
+and verifies a second caller sees arrival. The socket-free route test is
+`tests/world/test_walk_city.py`; no `tests/harness/` package is created
+because `tests/harness.py` already supplies the production-core harness.
+
+Local validation: Python 3.12 `pytest -q
+--basetemp=.test-tmp/final6` from the repository root: 526 passed,
+1 Windows-only skip. The final real-terminal run used a 132x50 parent
+terminal and negotiated both 80x24 and 132x50 through NetBBS v7.31.0
+Telnet/native stdio. `.test-tmp/s08-netbbs3/result.json` records both
+successful routes, map views and observer checks. Actual boarding plus
+ride took 80.4 s and 58.6 s; neither clock was accelerated. The probe
+writes three ANSI captures and verifies the native picker return.
+Final CI and the delivered four-hub review are recorded in the PR.

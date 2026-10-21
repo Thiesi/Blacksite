@@ -1,0 +1,230 @@
+{
+  "schema": 1,
+  "id": "core-plaza",
+  "name": "Meridian Plaza",
+  "district": "The Core",
+  "safety": "safe",
+  "sight_radius": 12,
+  "spawn": [
+    3,
+    3
+  ],
+  "exits": [
+    {
+      "id": "to-clinics",
+      "tile": [
+        87,
+        2
+      ],
+      "target_zone": "vatside-clinics",
+      "target_tile": [
+        77,
+        3
+      ],
+      "kind": "street"
+    },
+    {
+      "id": "to-tram-hub",
+      "tile": [
+        3,
+        37
+      ],
+      "target_zone": "core-tram-hub",
+      "target_tile": [
+        18,
+        28
+      ],
+      "kind": "street"
+    },
+    {
+      "id": "to-core-precinct",
+      "tile": [
+        33,
+        37
+      ],
+      "target_zone": "core-precinct",
+      "target_tile": [
+        24,
+        22
+      ],
+      "kind": "street"
+    },
+    {
+      "id": "to-sodium-row",
+      "tile": [
+        62,
+        37
+      ],
+      "target_zone": "sodium-row",
+      "target_tile": [
+        2,
+        3
+      ],
+      "kind": "street"
+    },
+    {
+      "id": "to-terraces-blocks",
+      "tile": [
+        86,
+        37
+      ],
+      "target_zone": "terraces-blocks",
+      "target_tile": [
+        45,
+        3
+      ],
+      "kind": "street"
+    }
+  ],
+  "objects": [
+    {
+      "id": "kestrel-bank",
+      "tile": [
+        9,
+        5
+      ],
+      "kind": "bank",
+      "essential": true,
+      "params": {
+        "name": "Kestrel bank"
+      }
+    },
+    {
+      "id": "plaza-general-vendor",
+      "tile": [
+        76,
+        5
+      ],
+      "kind": "vendor",
+      "essential": false,
+      "params": {
+        "name": "Plaza general vendor"
+      }
+    },
+    {
+      "id": "warden-recruiter",
+      "tile": [
+        17,
+        30
+      ],
+      "kind": "vendor",
+      "essential": false,
+      "params": {
+        "name": "Warden recruiter"
+      }
+    },
+    {
+      "id": "civic-notice-board",
+      "tile": [
+        69,
+        30
+      ],
+      "kind": "terminal",
+      "essential": false,
+      "params": {
+        "name": "Civic notice board"
+      }
+    },
+    {
+      "id": "civic-descent",
+      "tile": [
+        72,
+        30
+      ],
+      "kind": "descent_console",
+      "essential": false,
+      "params": {
+        "name": "Civic descent"
+      }
+    },
+    {
+      "id": "plaza-light-west",
+      "tile": [
+        36,
+        13
+      ],
+      "kind": "light",
+      "essential": false,
+      "params": {
+        "name": "Plaza light west"
+      }
+    },
+    {
+      "id": "plaza-light-east",
+      "tile": [
+        54,
+        13
+      ],
+      "kind": "light",
+      "essential": false,
+      "params": {
+        "name": "Plaza light east"
+      }
+    },
+    {
+      "id": "plaza-public-1",
+      "tile": [
+        31,
+        5
+      ],
+      "kind": "terminal",
+      "essential": true,
+      "params": {
+        "name": "Plaza public 1"
+      }
+    },
+    {
+      "id": "plaza-public-2",
+      "tile": [
+        57,
+        5
+      ],
+      "kind": "terminal",
+      "essential": true,
+      "params": {
+        "name": "Plaza public 2"
+      }
+    },
+    {
+      "id": "plaza-public-3",
+      "tile": [
+        9,
+        30
+      ],
+      "kind": "terminal",
+      "essential": true,
+      "params": {
+        "name": "Plaza public 3"
+      }
+    },
+    {
+      "id": "plaza-public-4",
+      "tile": [
+        80,
+        30
+      ],
+      "kind": "terminal",
+      "essential": true,
+      "params": {
+        "name": "Plaza public 4"
+      }
+    },
+    {
+      "id": "boundary-spire-atrium",
+      "tile": [
+        2,
+        2
+      ],
+      "kind": "door",
+      "params": {
+        "open": true,
+        "unavailable_target": "spire-atrium",
+        "name": "Construction boundary"
+      }
+    }
+  ],
+  "pockets": [],
+  "lore": [
+    "zone-core-plaza"
+  ]
+}

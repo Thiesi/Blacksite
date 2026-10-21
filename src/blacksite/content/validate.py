@@ -30,7 +30,7 @@ from blacksite.content.formats import Problem, find_line, id_needles
 from blacksite.content.ids import display_width
 from blacksite.content.loader import ContentTree, load_content
 
-__all__ = ["Problem", "validate", "main"]
+__all__ = ["Problem", "validate", "exit_warnings", "main"]
 
 # 00-game-design.md section 5.1: zone width 40-200, height 20-100.
 ZONE_WIDTH = (40, 200)
@@ -73,6 +73,15 @@ def validate(tree: ContentTree) -> list[Problem]:
     return list(tree.load_problems) + v.problems
 
 
+def exit_warnings(tree: ContentTree) -> list[Problem]:
+    """S08: report one-way links without rejecting intentional one-way maps."""
+    return [Problem(tree.source("zones", zone.id), None,
+                    f"exit {ex.id}: no return exit from {ex.target_zone}")
+            for zone in tree.zones.values() for ex in zone.meta.exits
+            if ex.target_zone in tree.zones and not any(back.target_zone == zone.id
+                for back in tree.zones[ex.target_zone].meta.exits)]
+
+
 class _Validator:
     def __init__(self, tree: ContentTree) -> None:
         self.t = tree
@@ -81,6 +90,9 @@ class _Validator:
         self.bundle_of: dict[tuple[str, str], str] = {}
         self.current_active = True
         self.current_bundle: str | None = None
+        self.passable_tiles = {zid: {(x, y) for y, row in enumerate(zone.grid) for x, key in enumerate(row)
+                                     if key in tree.tiles and tree.tiles[key].passable}
+                               for zid, zone in tree.zones.items()}
 
     # --- reporting -------------------------------------------------------
 
@@ -317,8 +329,7 @@ class _Validator:
     # --- zones -------------------------------------------------------------
 
     def passable(self, zone: s.Zone, tile: s.Tile) -> bool:
-        tid = zone.tile_at(tile)
-        return tid is not None and tid in self.t.tiles and self.t.tiles[tid].passable
+        return tile in self.passable_tiles[zone.id]
 
     def in_pocket(self, zone: s.Zone, tile: s.Tile) -> bool:
         return any(p.contains(tile) for p in zone.meta.pockets)
@@ -1210,6 +1221,8 @@ def main(argv: list[str] | None = None) -> int:
     parser.add_argument("--local", type=Path, default=None, help="operator override directory")
     args = parser.parse_args(argv)
     tree = load_content(args.content, args.local)
+    for warning in exit_warnings(tree):
+        print("warning: " + str(warning), file=sys.stderr)
     problems = validate(tree)
     if problems:
         for problem in problems:

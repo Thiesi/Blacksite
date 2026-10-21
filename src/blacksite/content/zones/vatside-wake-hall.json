@@ -4,7 +4,7 @@
   "name": "Wake Hall",
   "district": "Vatside",
   "safety": "pocket",
-  "lean": "sablier",
+  "lean": null,
   "sight_radius": 10,
   "spawn": [
     6,
@@ -20,9 +20,9 @@
       "target_zone": "vatside-clinics",
       "target_tile": [
         2,
-        2
+        3
       ],
-      "kind": "gate"
+      "kind": "door"
     }
   ],
   "objects": [
@@ -131,5 +131,6 @@
   ],
   "lore": [
     "zone-vatside-wake-hall"
-  ]
+  ],
+  "pockets": []
 }

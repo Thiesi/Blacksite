@@ -10,7 +10,7 @@ from blacksite.server.protocol import Frame
 from tests.harness import ADMIN_SECRET, HeadlessServer, hello
 
 
-def test_shipped_maps_match_gazetteer_and_remain_authoring(content_tree: ContentTree) -> None:
+def test_shipped_maps_match_gazetteer_and_activate_with_hub(content_tree: ContentTree) -> None:
     assert validate(content_tree) == []
     hall, clinics = content_tree.zones["vatside-wake-hall"], content_tree.zones["vatside-clinics"]
     assert (hall.width, hall.height, hall.meta.sight_radius) == (40, 20, 10)
@@ -22,9 +22,8 @@ def test_shipped_maps_match_gazetteer_and_remain_authoring(content_tree: Content
     assert not any(pocket.contains(relay.tile) for pocket in clinics.meta.pockets)
     tree = deepcopy(content_tree)
     manifest = tree.bundles["m1-zone-preview"]
-    assert manifest.status == "authoring"
-    tree.bundles[manifest.id] = replace(manifest, status="active")
-    assert any("does not exist" in str(problem) for problem in validate(tree))
+    assert manifest.status == "active"
+    assert validate(tree) == []
 
 
 def test_unsafe_geometry_and_night_radius_fail_validation(content_tree: ContentTree) -> None:

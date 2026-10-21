@@ -4,7 +4,7 @@ from dataclasses import dataclass, field
 from typing import Any
 from collections.abc import Callable
 
-from blacksite.server.clock import Clock
+from blacksite.server.clock import Clock, TICK_HZ
 from blacksite.server.loop import TickContext
 from blacksite.server.protocol import Frame
 from blacksite.server.sessions import Session, Sessions
@@ -13,9 +13,13 @@ from blacksite.server.views.zone_view import Perception, build
 from blacksite.server.world.actors import Actor
 from blacksite.server.world.movement import move, regenerate
 from blacksite.server.world.registry import World
+from blacksite.server.world.exits import DepartureHolds, Travel, permitted, schedule
+from blacksite.server.world.city import overview
+from blacksite.server.wake import wrapped
 
 NIGHT_START_HOUR = 20  # Entity model 1.1: night lighting 20:00-06:00.
 NIGHT_END_HOUR = 6
+MENU_TIMEOUT_SECONDS = 60  # Terminal UI §4: contested/open menu timeout.
 
 
 @dataclass
@@ -24,6 +28,7 @@ class Avatar:
     zone: str
     perception: Perception = field(default_factory=Perception)
     seen_zones: set[str] = field(default_factory=set)
+    travel: Travel | None = None
 
 
 class ZoneSimulation:
@@ -39,6 +44,90 @@ class ZoneSimulation:
         self.published: dict[str, tuple[object, ...]] = {}
         self.serial = 0
         self.me_provider: Callable[[Session], dict[str, Any]] = lambda session: {}
+        self.access_provider: Callable[[Session], dict[str, Any]] = lambda session: {}
+        self.maps: dict[str, tuple[int, int | None]] = {}
+        self.map_opened: dict[str, int] = {}
+        self.overlays: dict[str, object] = {}
+        self.departures = DepartureHolds()
+        self.locked_exits: set[tuple[str, str]] = set()  # S15-owned control state.
+
+    def discover(self, session: Session, avatar: Avatar) -> None:
+        if avatar.zone in avatar.seen_zones:
+            return
+        avatar.seen_zones.add(avatar.zone)
+        for asset_id in self.world.zones[avatar.zone].template.meta.lore[:1]:
+            asset = self.world.content.text.get(asset_id)
+            if asset:
+                session.send(Frame("toast", {"text": asset.body.splitlines()[0], "role": "ui_text", "seconds": 8}))
+
+    def reset_view(self, session: Session, avatar: Avatar) -> None:
+        avatar.perception.viewport = avatar.perception.grid_key = None
+        self.views[session.id] = ViewStore()
+        self.published.pop(session.id, None)
+        self.overlays.pop(session.id, None)
+        session.needs_full_view = True
+
+    def log(self, session: Session, text: str) -> None:
+        session.send(Frame("log", {"lines": [{"channel": "system", "text": text, "role": "ui_text",
+                                                "at": self.clock.now_utc().isoformat()}]}))
+
+    def transition(self, session: Session, avatar: Avatar, now: float, tick: int) -> None:
+        travel = avatar.travel
+        if travel is None:
+            return
+        if travel.exit.kind == "tram" and not travel.departed:
+            self.departures.apply((avatar.zone, travel.exit.id), travel)
+        if now >= travel.departure and not travel.departed:
+            self.world.zones[avatar.zone].deactivate(session.id, tick)
+            self.world.leave(avatar.actor)
+            travel.departed = True
+            self.reset_view(session, avatar)
+        if travel.departed and now >= travel.arrival:
+            target = travel.exit.target_zone
+            try:
+                tile = self.world.free_tile(target, travel.exit.target_tile)
+            except ValueError:
+                # A temporarily occupied arrival never crashes the tick or
+                # drops the body. Retry while absent from both zones.
+                return
+            self.world.enter(avatar.actor, target, tile)
+            avatar.zone = session.subscribed = target
+            self.world.zones[target].activate(session.id, tick)
+            avatar.travel = None
+            self.reset_view(session, avatar)
+            self.discover(session, avatar)
+
+    def interact(self, session: Session, avatar: Avatar, tick: int, *, street: bool = False) -> None:
+        zone = self.world.zones[avatar.zone]
+        actor = avatar.actor
+        adjacent = lambda tile: max(abs(tile[0] - actor.x), abs(tile[1] - actor.y)) <= 1
+        candidates = [ex for ex in zone.template.meta.exits if not ex.hidden
+                      and (ex.tile == actor.position if street else adjacent(ex.tile))
+                      and (not street or ex.kind == "street")]
+        candidates.sort(key=lambda ex: (ex.tile != actor.position, ex.id))
+        if candidates:
+            ex = candidates[0]
+            if ex.target_zone not in self.world.zones:
+                self.log(session, "Construction blocks this route.")
+            elif (zone.id, ex.id) in self.locked_exits or not permitted(ex, self.access_provider(session)):
+                self.log(session, "You do not meet this exit's requirement.")
+            else:
+                avatar.travel = schedule(ex, self.clock.now_utc().timestamp())
+                self.reset_view(session, avatar)
+                self.transition(session, avatar, self.clock.now_utc().timestamp(), tick)
+            return
+        if street:
+            return
+        objects = sorted((obj for obj in zone.objects.values() if adjacent(obj.spec.tile)),
+                         key=lambda obj: (obj.spec.tile != actor.position, obj.spec.id))
+        if objects:
+            obj = objects[0]
+            if obj.spec.params.get("unavailable_target"):
+                self.log(session, "Construction blocks this route.")
+            elif obj.spec.kind == "door":
+                zone.set_door(obj.spec.id, not obj.open)
+            else:
+                self.log(session, str(obj.spec.params.get("name", obj.spec.id)))
 
     def connect(self, session: Session) -> None:
         if session.role != "caller":
@@ -63,16 +152,14 @@ class ZoneSimulation:
         # short-lived reconnect avatar (persistent character memory is S07).
         avatar.perception.viewport = None
         self.views[session.id] = ViewStore()
-        if avatar.zone not in avatar.seen_zones:
-            for asset_id in self.world.zones[avatar.zone].template.meta.lore[:1]:
-                asset = self.world.content.text.get(asset_id)
-                if asset:
-                    session.send(Frame("toast", {"text": asset.body.splitlines()[0], "role": "ui_text", "seconds": 8}))
-            avatar.seen_zones.add(avatar.zone)
+        self.discover(session, avatar)
 
     def disconnect(self, session: Session) -> None:
         self.views.pop(session.id, None)
         self.published.pop(session.id, None)
+        self.maps.pop(session.id, None)
+        self.map_opened.pop(session.id, None)
+        self.overlays.pop(session.id, None)
         avatar = self.avatars.get(session.user_id)
         if session.role != "caller" or avatar is None or avatar.actor.id != session.player_id:
             return
@@ -91,7 +178,41 @@ class ZoneSimulation:
             table = next((item for item in self.keymap.get("keymaps", []) if item["id"] == selected), None)
             if table is not None:
                 action = next((name for name, keys in table["bindings"].items() if frame.data["k"] in keys), "")
-        if action == "resync":
+        key = frame.data.get("k", "") if frame.type == "key" else ""
+        if avatar.travel:
+            leaving_platform = key in ("escape", "b", "B") or action in ("move", "sprint") or action.startswith(("move_", "sprint_"))
+            if not avatar.travel.departed and leaving_platform:
+                avatar.travel = None
+                self.reset_view(session, avatar)
+                if key in ("escape", "b", "B"):
+                    return
+            else:
+                if key == "escape":
+                    session.send(Frame("toast", {"text": "The log remains below. Your journey continues.", "role": "ui_text", "seconds": 8}))
+                if action == "resync":
+                    session.needs_full_view = True
+                return
+        if session.id in self.maps:
+            cursor, page = self.maps[session.id]
+            if action == "menu_close" or key in ("escape", "b", "B"):
+                self.maps.pop(session.id, None)
+                self.map_opened.pop(session.id, None)
+                self.reset_view(session, avatar)
+            elif action == "menu_cursor":
+                rows = overview(self.world.content, avatar.zone, avatar.seen_zones, cursor, session.caps["width"])["rows"]
+                self.maps[session.id] = (max(0, min(len(rows)-1, cursor + frame.data.get("args", {}).get("delta", 0))), None)
+            elif action == "menu_select":
+                self.maps[session.id] = (cursor, 0)
+            elif page is not None and key:
+                delta = -1 if key in ("pageup", "pgup", "up") else 1
+                self.maps[session.id] = (cursor, max(0, page + delta))
+            return
+        if action == "map" or key in ("m", "M"):
+            self.maps[session.id] = (0, None)
+            self.map_opened[session.id] = tick
+        elif action == "interact" or key in ("e", "E"):
+            self.interact(session, avatar, tick)
+        elif action == "resync":
             session.needs_full_view = True
         else:
             vector = frame.data.get("args", {}).get("dir")
@@ -102,13 +223,27 @@ class ZoneSimulation:
             if action in ("move", "sprint") and isinstance(vector, str):
                 actor = avatar.actor
                 if actor.zone in self.world.zones:
-                    move(actor, self.world.zones[actor.zone], vector, tick, action == "sprint")
+                    if move(actor, self.world.zones[actor.zone], vector, tick, action == "sprint"):
+                        self.interact(session, avatar, tick, street=True)
 
     def tick(self, ctx: TickContext) -> None:
         for session in tuple(self.sessions.active.values()):
             if session.closed:
                 self.sessions.disconnect(session)
         live = {s.user_id for s in self.sessions.active.values() if s.role == "caller"}
+        now = self.clock.now_utc().timestamp()
+        for session in tuple(self.sessions.active.values()):
+            avatar = self.avatars.get(session.user_id)
+            if avatar and not session.closed:
+                self.transition(session, avatar, now, ctx.tick)
+                # UI §4: menus do not pause a body in dangerous streets.
+                if (session.id in self.maps and ctx.tick - self.map_opened[session.id] >= MENU_TIMEOUT_SECONDS * TICK_HZ
+                        and self.world.zones[avatar.zone].allows_hostile(avatar.actor.position)):
+                    self.maps.pop(session.id)
+                    self.map_opened.pop(session.id)
+                    self.reset_view(session, avatar)
+                    session.send(Frame("toast", {"text": "Your map closes. The street is not protected.",
+                                                  "role": "ui_text", "seconds": 8}))
         for user_id in set(self.avatars) - live - self.sessions.retired.keys():
             del self.avatars[user_id]
         for zone in self.world.zones.values():
@@ -127,6 +262,34 @@ class ZoneSimulation:
             if session.id not in self.views or session.closed:
                 continue
             avatar = self.avatars[session.user_id]
+            overlay = None
+            kind = "text"
+            if avatar.travel:
+                ride = avatar.travel
+                riding_text = "The tram hums." if ride.exit.kind == "tram" else "You travel between zones."
+                overlay = {"title": "The tram hums." if ride.exit.kind == "tram" and ride.departed else "TRAVEL",
+                           "lines": [riding_text if ride.departed else "You wait on the platform.",
+                                     "Arrival follows departure." if ride.departed else f"Departure in {max(0, int(ride.departure - self.clock.now_utc().timestamp()))} s."],
+                           "hint": "Esc shows the log. The journey continues. Ctrl-X leaves." if ride.departed
+                                   else "Move or Esc/B cancels boarding. Ctrl-X leaves."}
+            elif session.id in self.maps:
+                cursor, page = self.maps[session.id]
+                body = overview(self.world.content, avatar.zone, avatar.seen_zones, cursor, session.caps["width"])
+                if page is None:
+                    kind, overlay = "menu", body
+                else:
+                    lines = wrapped(body["detail"], session.caps["width"] - 28)
+                    count = max(1, session.caps["height"] - 10)
+                    pages = max(1, (len(lines) + count - 1) // count)
+                    page = min(page, pages - 1)
+                    self.maps[session.id] = cursor, page
+                    overlay = {"title": body["title"], "lines": lines[page*count:(page+1)*count],
+                               "page": page+1, "pages": pages, "hint": "PgUp/PgDn reads  Esc/B returns to the street"}
+            if overlay is not None:
+                if (kind, overlay) != self.overlays.get(session.id) or session.needs_full_view:
+                    if session.publish_view(Frame("view", {"rev": session.view_revision+1, "kind": kind, "body": overlay}), None, ctx.tick):
+                        self.overlays[session.id] = kind, overlay
+                continue
             zone = self.world.zones[avatar.zone]
             local = self.clock.now_local(session.door_info.get("timezone")).strftime("%H:%M")
             stamp = (zone.id, zone.revision, local, night, session.caps["width"], session.caps["height"],

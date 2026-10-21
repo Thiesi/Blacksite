@@ -1,16 +1,32 @@
 {
   "schema": 1,
   "id": "m1-zone-preview",
-  "status": "authoring",
+  "status": "active",
   "depends": [],
   "members": {
     "zones": [
-      "vatside-wake-hall",
-      "vatside-clinics"
+      "core-plaza",
+      "core-precinct",
+      "core-tram-hub",
+      "sodium-row",
+      "sodium-tin-halo",
+      "terraces-blocks",
+      "terraces-lobby",
+      "vatside-clinics",
+      "vatside-vat-row",
+      "vatside-wake-hall"
     ],
     "text": [
-      "zone-vatside-wake-hall",
-      "zone-vatside-clinics"
+      "zone-core-plaza",
+      "zone-core-precinct",
+      "zone-core-tram-hub",
+      "zone-sodium-row",
+      "zone-sodium-tin-halo",
+      "zone-terraces-blocks",
+      "zone-terraces-lobby",
+      "zone-vatside-clinics",
+      "zone-vatside-vat-row",
+      "zone-vatside-wake-hall"
     ]
   }
 }

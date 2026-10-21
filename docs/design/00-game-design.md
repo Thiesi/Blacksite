@@ -334,6 +334,15 @@ time during which the actor is absent from both zones: street exits are
 instant, ladders and lifts 1 s, cable cars 3 s, trams 10 s (hub and
 spoke: every district platform goes to the Core tram hub only).
 
+Trams depart every 90 seconds on a stable UTC schedule. Waking a zone or
+restarting the service does not restart that schedule. S15 may hold a
+departure for at most 30 seconds, followed by 120 seconds of immunity.
+An in-flight ride always completes; Curfew preserves outbound Core travel.
+Leaving the platform before departure cancels boarding. Disconnecting in
+flight preserves the destination and arrival deadline; reconnecting
+continues the same ride. There is no physical body in either zone during
+the ride. After offline arrival, ordinary destination logout rules apply.
+
 ## 6. The Lattice
 
 ### 6.1 Sectors and cells

@@ -1,0 +1,300 @@
+{
+  "schema": 1,
+  "id": "terraces-blocks",
+  "name": "Block Street",
+  "district": "The Terraces",
+  "safety": "contested",
+  "sight_radius": 11,
+  "spawn": [
+    3,
+    3
+  ],
+  "exits": [
+    {
+      "id": "to-lobby-1",
+      "tile": [
+        17,
+        24
+      ],
+      "target_zone": "terraces-lobby",
+      "target_tile": [
+        3,
+        3
+      ],
+      "kind": "door"
+    },
+    {
+      "id": "to-lobby-2",
+      "tile": [
+        36,
+        24
+      ],
+      "target_zone": "terraces-lobby",
+      "target_tile": [
+        3,
+        3
+      ],
+      "kind": "door"
+    },
+    {
+      "id": "to-lobby-3",
+      "tile": [
+        55,
+        24
+      ],
+      "target_zone": "terraces-lobby",
+      "target_tile": [
+        3,
+        3
+      ],
+      "kind": "door"
+    },
+    {
+      "id": "to-lobby-4",
+      "tile": [
+        74,
+        24
+      ],
+      "target_zone": "terraces-lobby",
+      "target_tile": [
+        3,
+        3
+      ],
+      "kind": "door"
+    },
+    {
+      "id": "to-lobby-5",
+      "tile": [
+        93,
+        24
+      ],
+      "target_zone": "terraces-lobby",
+      "target_tile": [
+        3,
+        3
+      ],
+      "kind": "door"
+    },
+    {
+      "id": "to-core-plaza",
+      "tile": [
+        45,
+        2
+      ],
+      "target_zone": "core-plaza",
+      "target_tile": [
+        86,
+        38
+      ],
+      "kind": "street"
+    },
+    {
+      "id": "to-vat-row",
+      "tile": [
+        79,
+        2
+      ],
+      "target_zone": "vatside-vat-row",
+      "target_tile": [
+        87,
+        3
+      ],
+      "kind": "street"
+    },
+    {
+      "id": "to-tram-hub",
+      "tile": [
+        8,
+        2
+      ],
+      "target_zone": "core-tram-hub",
+      "target_tile": [
+        39,
+        15
+      ],
+      "kind": "tram"
+    }
+  ],
+  "objects": [
+    {
+      "id": "letting-office",
+      "tile": [
+        103,
+        10
+      ],
+      "kind": "vendor",
+      "essential": false,
+      "params": {
+        "name": "Letting office"
+      }
+    },
+    {
+      "id": "corner-grocer",
+      "tile": [
+        96,
+        29
+      ],
+      "kind": "vendor",
+      "essential": false,
+      "params": {
+        "name": "Corner grocer"
+      }
+    },
+    {
+      "id": "warden-outpost",
+      "tile": [
+        108,
+        30
+      ],
+      "kind": "door",
+      "essential": false,
+      "params": {
+        "name": "Warden outpost",
+        "open": true
+      }
+    },
+    {
+      "id": "block-relay",
+      "tile": [
+        57,
+        29
+      ],
+      "kind": "relay",
+      "essential": false,
+      "params": {
+        "name": "Block relay"
+      }
+    },
+    {
+      "id": "block-relay-hardware",
+      "tile": [
+        60,
+        29
+      ],
+      "kind": "hardware",
+      "essential": false,
+      "params": {
+        "name": "Block relay hardware"
+      }
+    },
+    {
+      "id": "blocks-public-1",
+      "tile": [
+        105,
+        21
+      ],
+      "kind": "terminal",
+      "essential": true,
+      "params": {
+        "name": "Blocks public 1"
+      }
+    },
+    {
+      "id": "blocks-public-2",
+      "tile": [
+        105,
+        29
+      ],
+      "kind": "terminal",
+      "essential": true,
+      "params": {
+        "name": "Blocks public 2"
+      }
+    },
+    {
+      "id": "blocks-public-3",
+      "tile": [
+        92,
+        34
+      ],
+      "kind": "terminal",
+      "essential": true,
+      "params": {
+        "name": "Blocks public 3"
+      }
+    },
+    {
+      "id": "block-door-1",
+      "tile": [
+        17,
+        24
+      ],
+      "kind": "door",
+      "params": {
+        "open": true
+      }
+    },
+    {
+      "id": "block-door-2",
+      "tile": [
+        36,
+        24
+      ],
+      "kind": "door",
+      "params": {
+        "open": true
+      }
+    },
+    {
+      "id": "block-door-3",
+      "tile": [
+        55,
+        24
+      ],
+      "kind": "door",
+      "params": {
+        "open": true
+      }
+    },
+    {
+      "id": "block-door-4",
+      "tile": [
+        74,
+        24
+      ],
+      "kind": "door",
+      "params": {
+        "open": true
+      }
+    },
+    {
+      "id": "block-door-5",
+      "tile": [
+        93,
+        24
+      ],
+      "kind": "door",
+      "params": {
+        "open": true
+      }
+    },
+    {
+      "id": "boundary-chapel-towers",
+      "tile": [
+        116,
+        2
+      ],
+      "kind": "door",
+      "params": {
+        "open": true,
+        "unavailable_target": "chapel-towers",
+        "name": "Construction boundary"
+      }
+    },
+    {
+      "id": "platform-core-tram-hub",
+      "tile": [
+        8,
+        2
+      ],
+      "kind": "tram_stop",
+      "params": {
+        "name": "Tram platform"
+      }
+    }
+  ],
+  "pockets": [],
+  "lore": [
+    "zone-terraces-blocks"
+  ]
+}
