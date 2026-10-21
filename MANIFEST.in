@@ -1,0 +1,2 @@
+recursive-include deploy *
+recursive-exclude * __pycache__ *.pyc

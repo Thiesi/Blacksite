@@ -1,6 +1,6 @@
 # S05 — Interim service runner, admin CLI skeleton, deploy templates
 
-**Status:** planned
+**Status:** done (PR #44)
 **Primary model:** Sonnet · **Reviewer:** none
 **Depends on:** S03 · **Milestone:** M0
 **Issue:** https://github.com/Thiesi/blacksite/issues/5
@@ -112,3 +112,50 @@ None.
   callers get `bye` before the socket disappears; the units still fall
   back to `SIGTERM`.
 - Keep every deploy file ASCII; SysOps edit them on the box.
+
+## Implementation notes
+
+Implemented by Codex; Sonnet is the preferred primary model. Reuses the
+S03 authenticated operator endpoint and maintenance shutdown. The
+`blacksite` convenience command and module now expose `serve` and
+`admin`; existing module/console aliases remain available. Command
+options work before or after the subcommand.
+
+Status adds the specified field names while retaining S03 status keys.
+Who reports handles and connection duration; player names and zone stay
+null until S06/S07 own that state. The server writes its own
+`run/blacksite.pid`, removed during shutdown. Secret rotation is offline,
+holds the same exclusive lease, atomically replaces each secret, and
+never prints credentials. Fresh-install validation uses packaged content
+plus local overrides before the server bootstraps the readable copy.
+
+NetBSD's `command_interpreter` matches shebang processes; it does not
+daemonize an executable. The template leaves it empty for the Python
+binary and explicitly backgrounds the foreground server as the service
+account. It checks interpreter availability and startup success, and
+uses the specified bounded stop/TERM fallback. Deployment files use
+ASCII and LF on every checkout.
+
+`scripts/accept_s05_systemd.py` and the service-acceptance workflow run
+the acceptance on an isolated Ubuntu systemd host with a wheel-installed
+service under a non-root account and real local NetBBS native stdio.
+They exercise 80x24 and 132x50 callers, status/who, maintenance shutdown,
+empty run files, process exit and unit restart. Native NetBSD rc.d
+execution remains a separate platform check.
+
+## Acceptance record (2026-10-21)
+
+- Real Ubuntu systemd host (GitHub runner), Python 3.12, installed wheel,
+  non-root service account and NetBBS v7.31.0 native stdio/Telnet picker.
+  Status, who, connected-caller maintenance stop, empty run files, process
+  exit and enabled-unit restart pass at 80x24 and 132x50.
+- The final unit result remains successful after a direct admin stop.
+  Proof and ANSI captures are attached to service acceptance run
+  [39585522074](https://github.com/Thiesi/Blacksite/actions/runs/39585522074).
+- Full local suite before the review fixes: 416 passed, 1 skipped on
+  Windows. Final focused operator/deploy checks: 9 passed. Final full CI:
+  419 passed on Ubuntu; 418 passed, 1 skipped on Windows Python 3.12.
+- Claude re-review reports no blockers and accepts the scenario-based
+  rejections. No balance numbers or runtime dependencies changed.
+- NetBSD script passes shell syntax validation; actual NetBSD execution
+  is not claimed. S05's required real-host acceptance uses Linux.

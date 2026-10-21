@@ -21,12 +21,12 @@ they go down into the Blacksite together.
 
 ## Status
 
-**Foundation in progress.** The package skeleton and validated content
-pipeline are merged (S01/S02). The local server core, protocol, sessions,
-persistence and smoke bot are available (S03). S04 adds the native
-terminal client, width-safe views, help and reconnect handling;
-gameplay follows in later
-slices. See `docs/plan/00-roadmap.md` for the plan and the
+**M0 foundation implemented (S01-S05).** The package and content pipeline,
+local server, protocol, persistence, native terminal client and interim
+service runner are available. Callers can view the title and help;
+shared-zone movement and gameplay begin with S06. The
+[deployment guide](deploy/README.md) covers service units and operator
+commands. See `docs/plan/00-roadmap.md` for the plan and the
 [issues](../../issues) for what is being worked on. The foreground
 [server smoke test](docs/ops/server-core.md) documents the current tools.
 The [door client guide](docs/ops/door-client.md) covers registration and

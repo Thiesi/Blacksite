@@ -32,6 +32,7 @@ class Session:
     rate_counters: dict[str, deque[int]] = field(default_factory=dict)
     pending_prompts: dict[str, Any] = field(default_factory=dict)
     last_input_tick: int = 0
+    connected_tick: int = 0
     view_revision: int = 0
     ack_revision: int = 0
     needs_full_view: bool = False
@@ -136,6 +137,7 @@ class Sessions:
         previous = self.retired.pop(user_id, None) if role == "caller" else None
         self.serial += 1
         session = Session(f"{self.origin}:session:{self.serial}", role, dict(info), dict(caps))
+        session.connected_tick = self.clock.now_tick()
         if previous is not None:
             session.player_id = previous.player_id
             # Reconnect cannot reset abuse limits.
