@@ -1,6 +1,6 @@
 # S10 — Combat v1: targeting, weapons, cooldowns, cover, damage, shock, down/dead, clone vats, corpse caches, hymns
 
-**Status:** planned
+**Status:** done (PR #50)
 **Primary model:** Opus · **Reviewer:** Astra or Fable (balance read against the catalog before merge)
 **Depends on:** S07, S08, S12 · **Milestone:** M1
 **Issue:** https://github.com/Thiesi/blacksite/issues/10
