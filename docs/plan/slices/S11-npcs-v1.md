@@ -1,6 +1,6 @@
 # S11 — NPCs v1: templates, spawners, behaviours, aggro by relations, Wardens
 
-**Status:** planned
+**Status:** done (PR #51)
 **Primary model:** Opus · **Reviewer:** Sonnet (test pass)
 **Depends on:** S10 · **Milestone:** M1
 **Issue:** https://github.com/Thiesi/blacksite/issues/11
