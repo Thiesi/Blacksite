@@ -1,0 +1,18 @@
+[Unit]
+Description=Blacksite game service
+After=network.target
+
+[Service]
+Type=simple
+User=netbbs
+Group=netbbs
+WorkingDirectory=/var/db/blacksite
+ExecStart=/opt/blacksite/venv/bin/python -m blacksite.server --install-dir /var/db/blacksite
+ExecStop=/opt/blacksite/venv/bin/python -m blacksite.admin --install-dir /var/db/blacksite stop
+TimeoutStopSec=15
+Restart=on-failure
+RestartSec=2
+UMask=0077
+
+[Install]
+WantedBy=multi-user.target

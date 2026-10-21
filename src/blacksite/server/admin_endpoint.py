@@ -5,6 +5,7 @@ from collections.abc import Callable
 from typing import Any
 
 from blacksite.server.protocol import Frame
+from blacksite.server.clock import TICK_HZ
 from blacksite.server.sessions import Session, Sessions
 
 
@@ -15,10 +16,11 @@ def dispatch(session: Session, frame: Frame, sessions: Sessions,
         session.send(Frame("bye", {"reason": "forbidden", "text": "Operator credential required."}))
         return
     if frame.type == "admin.who":
-        result = [{"session": s.id, "user_id": s.user_id, "player": s.player_id}
+        result = [{"handle": s.door_info["handle"], "player_name": None, "zone": None,
+                   "connected_s": max(0, sessions.clock.now_tick() - s.connected_tick) / TICK_HZ}
                   for s in sessions.active.values() if not s.closed and s.role == "caller"]
     else:
-        result = status() if frame.type == "admin.status" else {"stopping": True}
+        result = status() if frame.type == "admin.status" else {"ok": True}
     audit({"operator": session.user_id, "command": frame.type, "target": None, "outcome": "ok"})
     session.view_revision += 1
     session.publish_view(Frame("view", {"rev": session.view_revision, "kind": "text", "body": {

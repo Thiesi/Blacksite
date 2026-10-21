@@ -39,7 +39,7 @@ class Listener:
             self.server = await asyncio.start_unix_server(connected, path=path)
             self.owned.append(path)
             path.chmod(0o600)
-        pid = self.run / "pid"
+        pid = self.run / "blacksite.pid"
         self.owned.append(pid)
         pid.write_text(str(os.getpid()), encoding="ascii")
         if os.name != "nt":

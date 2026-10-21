@@ -1,0 +1,82 @@
+#!/bin/sh
+# PROVIDE: blacksite
+# REQUIRE: LOGIN
+# KEYWORD: shutdown
+
+. /etc/rc.subr
+name="blacksite"
+rcvar="blacksite"
+load_rc_config "$name"
+: ${blacksite:=NO}
+: ${blacksite_user:=netbbs}
+: ${blacksite_dir:=/var/db/blacksite}
+: ${blacksite_python:=/opt/blacksite/venv/bin/python}
+: ${blacksite_flags:=}
+command="$blacksite_python"
+# This is a binary, not a shebang script. Backgrounding is explicit.
+command_interpreter=""
+command_args="-m blacksite.server --install-dir '$blacksite_dir'"
+pidfile="$blacksite_dir/run/blacksite.pid"
+start_cmd="blacksite_start"
+stop_cmd="blacksite_stop"
+
+blacksite_as_user()
+{
+    if [ "$(id -un)" = "$blacksite_user" ]; then
+        /bin/sh -c "$1"
+    else
+        su -m "$blacksite_user" -c "$1"
+    fi
+}
+
+blacksite_start()
+{
+    if [ ! -x "$command" ]; then
+        echo "blacksite: interpreter is not executable: $command" >&2
+        return 1
+    fi
+    if [ "$blacksite_user" = root ] || [ "$(id -u "$blacksite_user")" = 0 ]; then
+        echo "blacksite: choose a non-root service account" >&2
+        return 1
+    fi
+    if [ -n "$(check_pidfile "$pidfile" "$command")" ]; then
+        echo "blacksite: already running" >&2
+        return 1
+    fi
+    # rc_flags must follow -m and the module, not the interpreter.
+    blacksite_as_user "mkdir -p '$blacksite_dir/logs' && exec '$command' $command_args $rc_flags </dev/null >>'$blacksite_dir/logs/service.log' 2>&1" &
+    count=0
+    while [ "$count" -lt 10 ]; do
+        [ -n "$(check_pidfile "$pidfile" "$command")" ] && return 0
+        sleep 1
+        count=$((count + 1))
+    done
+    echo "blacksite: startup failed; inspect $blacksite_dir/logs/service.log" >&2
+    return 1
+}
+
+blacksite_stop()
+{
+    service_pid=$(check_pidfile "$pidfile" "$command")
+    [ -n "$service_pid" ] || return 1
+    blacksite_as_user "exec '$command' -m blacksite.admin --install-dir '$blacksite_dir' stop" || :
+    count=0
+    while [ "$count" -lt 10 ]; do
+        [ "$(check_pidfile "$pidfile" "$command")" = "$service_pid" ] || return 0
+        sleep 1
+        count=$((count + 1))
+    done
+    if [ "$(check_pidfile "$pidfile" "$command")" = "$service_pid" ]; then
+        kill -TERM "$service_pid" || return 1
+    fi
+    count=0
+    while [ "$count" -lt 10 ]; do
+        [ "$(check_pidfile "$pidfile" "$command")" = "$service_pid" ] || return 0
+        sleep 1
+        count=$((count + 1))
+    done
+    echo "blacksite: service did not stop" >&2
+    return 1
+}
+
+run_rc_command "$1"

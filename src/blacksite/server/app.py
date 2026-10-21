@@ -129,6 +129,9 @@ class Server:
         assert self.core is not None and self.storage is not None
         result = self.core.status()
         result["persistence_lag"] = self.storage.persistence_lag()
+        result.update(uptime_s=result["uptime"], tick_p50_ms=result["tick"]["p50_ms"],
+                      tick_p99_ms=result["tick"]["p99_ms"], persist_lag_s=result["persistence_lag"],
+                      content_hash=self.core.loop.content.hash, season=self.storage.meta("season"))
         return result
 
     def _audit(self, row: dict[str, Any]) -> None:

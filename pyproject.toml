@@ -17,6 +17,7 @@ dependencies = []
 test = ["pytest"]
 
 [project.scripts]
+blacksite = "blacksite.__main__:main"
 # Conveniences for humans. NetBBS launches the door with the venv
 # interpreter and `-m blacksite.door` (02-architecture.md section 8.1).
 blacksite-server = "blacksite.server.__main__:main"
