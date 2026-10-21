@@ -1,0 +1,17 @@
+{
+  "proto": 1,
+  "door_info": {
+    "user_id": 1,
+    "handle": "Wide界",
+    "node_name": "test"
+  },
+  "hmac": "87cf26003da6faceed2c01d6a7a6c6c54e789ec2332539572978be03137c5fa9",
+  "client_version": "0.0.1",
+  "caps": {
+    "width": 80,
+    "height": 24,
+    "tier": "256",
+    "unicode": true
+  },
+  "type": "hello"
+}

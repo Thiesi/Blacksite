@@ -1,6 +1,6 @@
 # S03 — Server core: socket, framing, hello/auth, sessions, tick loop, event bus, persistence layer
 
-**Status:** planned
+**Status:** implemented; review pending
 **Primary model:** Opus · **Reviewer:** Astra (protocol and auth critique before start)
 **Depends on:** S01, S02 · **Milestone:** M0
 **Issue:** https://github.com/Thiesi/blacksite/issues/3
@@ -157,3 +157,43 @@ told goodbye on shutdown; no game rules exist yet.
   `127.0.0.1`.
 - Keep the simulation-facing API free of sockets: subsystems receive a
   `TickContext` (clock, bus, sessions view, content) and return nothing.
+
+## Implementation and verification (2026-10-21)
+
+Implemented by Codex; the primary model is Opus. Independent Opus review
+and the named Astra critique remain outstanding. This slice is not marked
+done until the review and merge gates are satisfied.
+
+The pre-implementation protocol read identified ambiguous HMAC bytes,
+NetBBS's `user_id` spelling, operator/caller session collisions, queue
+overflow and shutdown ordering. Architecture §4/§5 now states the wire
+encoding and field spellings. No game-design numbers changed. Content
+bootstrap belongs to this server slice; S05 will reuse it.
+
+The core, event bus, sessions and tick hooks are socket-free. A single
+event-loop writer owns periodic SQLite flushes; explicit `flush_now`
+commits synchronously before a caller may publish success. The initial
+schema reserves the entity fields without implementing player rules.
+The server opens schema metadata before validating copied content so it
+can compare the installed package version; no client is accepted until
+validation and the rebuild hook finish.
+
+Verification on Windows, Python 3.14:
+
+- Full suite: `python -m pytest -q --basetemp=.test-tmp/pre-pr`.
+  The final result is recorded in the PR. The Unix socket test is
+  intentionally skipped on Windows; the existing CI matrix runs Python
+  3.12 on Ubuntu and Windows.
+- Real PowerShell terminals at 80×24 and 132×50, direct loopback TCP,
+  service started independently from the client. Watching bot pongs:
+  0.464 ms and 0.920 ms; both receive `bye maintenance` on authenticated
+  `admin.stop`, and both service processes exit zero.
+- A second server refuses the same installation with the lease message.
+- Process signal probes at 80×24 and 132×50: Windows Ctrl-Break yields
+  `bye maintenance`, exit zero, empty `run/`, shutdown 0.085 s and
+  0.066 s. Probe pongs are 0.434 ms and 2.645 ms.
+- Unix SIGTERM and production NetBSD have not been exercised locally.
+  No NetBBS transport is used: this slice has no door renderer yet.
+
+The smoke bot is a local diagnostic. It does not render caller text or
+start the service. See `docs/ops/server-core.md` for reproduction commands.

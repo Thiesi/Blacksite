@@ -106,8 +106,8 @@ DIR/
 The content tree is copied out of the installed package on first start
 (so an operator can read and override it) and re-synced when the package
 version changes; `content.local/` is never touched. This bootstrap is
-S05's job (the interim service runner), so it exists before the first
-zone loads.
+S03's job (the server bootstrap); S05's runner uses the same startup
+path, so it exists before the first zone loads.
 
 ## 3. Process lifecycle
 
@@ -153,7 +153,12 @@ Hard limit 10 s, then exit anyway; persistence is crash-safe.
 - Everything runs as the same OS user. The socket is `0600`. Trust is
   the filesystem, exactly as NetBBS's door guide states for native doors.
 - The door client presents `hello {proto, door_info, hmac}` where the
-  HMAC is over the door_info bytes with `secrets/door.secret`. This does
+  HMAC is over canonical door_info bytes with `secrets/door.secret`:
+  UTF-8 JSON, keys sorted, compact separators (`,` and `:`), Unicode
+  unescaped, no non-finite numbers or duplicate keys. The hex secret is
+  decoded to 32 bytes before HMAC-SHA256. Sign the object as sent,
+  before normalizing NetBBS's `user_id` to `bbs_user_id`; conflicting
+  identity fields are rejected. This does
   not defend against a hostile process running as the service account (nothing
   can); it defends against a stray process on a multi-user development
   box and against a misconfigured install pointing at the wrong
@@ -201,6 +206,20 @@ Frame types prefixed `admin.` are reserved for operator sessions
 (`admin.status`, `admin.who`, `admin.stop` from S03/S05; later slices
 add more) and `peer.*` for a future federation bridge; a caller session
 that sends either is disconnected.
+
+S03 wire spellings: `line.id` identifies the prompt, `caps.tier` is
+`"16"`, `"256"` or `"truecolor"`, and `caps.unicode` is `true`.
+Terminal dimensions are integers, at least 80×24 and at most 1000×1000.
+Timestamps `t` are nonnegative integer client milliseconds. `rev` and
+`base` are nonnegative integers; an ack beyond the last sent revision
+is ignored. `request_id` and `expected_revision` are required for
+stateful selections, optional for ordinary movement. Both directions
+reject duplicate object keys and non-finite JSON numbers.
+
+`admin.status`, `admin.who` and `admin.stop` have no required payload.
+Their result is a private `view` of kind `text`; the body's `lines`
+contains the JSON result. Every accepted operator command is audited.
+An operator hello never replaces a caller with the same user ID.
 
 ### 5.3 Server → client
 
@@ -282,7 +301,7 @@ Chronicle, help.
 - Backups: `blacksite admin backup` uses SQLite's online backup API into
   `backups/<timestamp>/world.db` plus a manifest with content hash and
   schema version, the pattern War Dialer established.
-- Migrations: numbered Python modules under `blacksite/storage/migrations`,
+- Migrations: numbered Python modules under `blacksite/server/storage/migrations`,
   applied in a transaction at start; refuse to open a newer schema.
 
 ### 6.3 Content loading
