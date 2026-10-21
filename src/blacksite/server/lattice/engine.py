@@ -48,6 +48,9 @@ class Lattice:
         session.send(Frame("log", {"lines": [{"channel": "lat", "text": text,
             "role": "warning" if warning else "chan_lat", "at": self.clock.now_utc().isoformat()}]}))
 
+    def jack_key(self, session: Session) -> str:
+        return "Ctrl-O" if session.keymap_id == "vi" else "J"
+
     def saved(self, player: Player) -> dict[str, Any]:
         return player.progress.setdefault("lattice", {})
 
@@ -271,6 +274,10 @@ class Lattice:
                         self.log(session, "The descent has no stable route yet.")
                 elif key in tuple("1234567") or action.startswith("program_") or name.startswith("program"):
                     self.log(session, "Programs are not online yet.")
+                elif (action in ("inventory", "map", "character", "abilities", "fire", "weapon_cycle", "stealth")
+                      or name.startswith(("inv.", "bank.", "vendor.", "ability", "pickup", "recovery", "stance", "sprint"))):
+                    if session.allow("lattice_body_hint", tick, 1, 1):
+                        self.log(session, "Your body cannot act here. "+self.jack_key(session)+" returns to the street.")
             except (ValueError, KeyError, TypeError) as exc:
                 self.log(session, str(exc) if isinstance(exc, ValueError) else "Choose a known linked cell.", True)
             return True  # The helpless body never receives physical controls.
@@ -327,7 +334,7 @@ class Lattice:
                 "hit_serial": actor.behaviour.get("hit_serial", 0)},
             "room": None, "label": cell.label,
             "body_safety": self.game.world.zones[actor.zone].safety_at(actor.position),
-            "hint": "Arrows follow links  E uplink / enter  J jack out  1-7 programs"}
+            "hint": "Arrows follow links  E uplink / enter  "+self.jack_key(session)+" jack out  1-7 programs"}
 
     def tick(self, ctx: TickContext) -> None:
         for pid, presence in tuple(self.presences.items()):

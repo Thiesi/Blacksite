@@ -40,13 +40,14 @@ async def lat_walk(probe: NativeProbe, caller: Connection, target: str) -> None:
             await wait(lambda: presence.cell == step, 3)
 
 
-async def accept(root: Path, door_python: Path, show: bool) -> None:
+async def accept(root: Path, door_python: Path, show: bool,
+                 sizes: tuple[tuple[int, int], ...] = ((80, 24), (132, 50))) -> None:
     probe = NativeProbe(root, door_python, show)
     await probe.start()
     results = []
     try:
         lattice = probe.service.core.lattice
-        for width, height in ((80, 24), (132, 50)):
+        for width, height in sizes:
             a = await probe.open(width, height, "LatticeA", 0, True)
             b = await probe.open(width, height, "LatticeB", 1)
             for caller in (a, b):
@@ -112,6 +113,7 @@ async def accept(root: Path, door_python: Path, show: bool) -> None:
                 await wait(lambda: caller.session.player_id not in lattice.presences)
                 await wait(lambda: probe.service.world.zones["core-plaza"].template.meta.name in caller.caller.screen.screen_text().splitlines()[0])
                 assert caller.session.subscribed == "core-plaza" and caller.avatar.actor.stance == "normal"
+            probe.report(f"PASS public jack-out {width}x{height}: both bodies normal, zone subscriptions restored")
 
             # Canonical quiet Clinic alley: real shot at a native-rig body.
             # Clear prior heat before walking through the contested street.
@@ -152,6 +154,21 @@ async def accept(root: Path, door_python: Path, show: bool) -> None:
         (probe.root/"result.json").write_text(json.dumps({"passed": True,
             "transport": "NetBBS Telnet native stdio", "teleports": False,
             "human_playtest": False, "runs": results}, indent=2), encoding="utf-8")
+    except BaseException:
+        diagnostic = []
+        for index, caller in enumerate(probe.connections):
+            probe.save(caller, f"s13-failed-{index}")
+            av = caller.avatar
+            if av:
+                overlay = probe.game.sim.external_views.get(caller.session.id)
+                diagnostic.append({"player": caller.session.player_id, "zone": av.zone,
+                    "stance": av.actor.stance, "position": av.actor.position,
+                    "chat": caller.session.pending_prompts.get("chat"),
+                    "screen": probe.game.screens.get(caller.session.id),
+                    "map": probe.game.sim.maps.get(caller.session.id),
+                    "overlay": (overlay[0], overlay[1].get("title")) if overlay else None})
+        (probe.root/"failure-state.json").write_text(json.dumps(diagnostic, indent=2), encoding="utf-8")
+        raise
     finally:
         await probe.close()
 
@@ -161,5 +178,7 @@ if __name__ == "__main__":
     parser.add_argument("--root", type=Path, required=True)
     parser.add_argument("--door-python", type=Path, required=True)
     parser.add_argument("--show", action="store_true")
+    parser.add_argument("--size", choices=("both", "80", "132"), default="both", help="isolate a failed profile; default runs both")
     args = parser.parse_args()
-    asyncio.run(accept(args.root, args.door_python, args.show))
+    sizes = ((80, 24), (132, 50)) if args.size == "both" else ((80, 24),) if args.size == "80" else ((132, 50),)
+    asyncio.run(accept(args.root, args.door_python, args.show, sizes))

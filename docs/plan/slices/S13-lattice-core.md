@@ -1,6 +1,6 @@
 # S13 — Lattice: sectors, cells, jack in/out, presences, LatticeView, sector layouts
 
-**Status:** planned
+**Status:** done (PR #52)
 **Primary model:** Opus · **Reviewer:** Astra (spec critique of the hacking model before start, per roadmap §4)
 **Depends on:** S07, S08, S12 · **Milestone:** M2
 **Issue:** https://github.com/Thiesi/blacksite/issues/13

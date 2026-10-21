@@ -81,6 +81,8 @@ def test_design_5_2_jacked_body_cannot_move_act_or_evade(runners):
     assert body.position == before and body.stance == "jacked"
     assert not game.core.commerce.outbox and not game.core.commerce.ready(a.session)
     assert not game.core.combat.legal(body, actor(game, b))
+    logs = [line["text"] for f in game.frames_for(a) if f.type == "log" for line in f.data["lines"]]
+    assert any("Your body cannot act here. J returns" in line for line in logs)
 
 
 def test_design_6_1_traversal_deadline_gate_hidden_and_cross_sector(runners):
@@ -182,6 +184,7 @@ def test_design_6_1_rig_access_and_vi_keymap(runners):
     presence = jack(game, a)
     assert len(presence.rig) == 3
     a.session.keymap_id = "vi"
+    assert "Ctrl-O jack out" in game.core.lattice.view(a.session, presence)["hint"]
     start = presence.cell
     act(game, a, Frame("key", {"k": "j", "t": 0}))
     assert presence.player_id in game.core.lattice.presences
@@ -263,3 +266,18 @@ def test_design_6_1_debug_reveal_is_scoped_and_audited(runners):
     assert audit[-1]["target"] == data and audit[-1]["outcome"] == "ok"
     act(game, operator, Frame("admin.lattice.reveal", {**data, "cell": "missing"}))
     assert audit[-1]["outcome"] == "unavailable"
+
+
+def test_design_6_1_jack_waits_for_real_pending_transfer(runners):
+    game, a, b, c = runners
+    player = game.core.characters.players[a.session.player_id]
+    item = next(game.core.characters.items[iid] for iid in player.inventory
+                if not game.core.characters.items[iid].secured and not game.core.characters.items[iid].bound)
+    intent(game, a, "inv.drop", item=item.id)
+    assert game.core.commerce.pending and game.core.commerce.outbox
+    intent(game, a, "lat.jack_in")
+    assert player.id not in game.core.lattice.presences
+    assert actor(game, a).stance == "normal"
+    game.commit_commerce()
+    jack(game, a)
+    assert actor(game, a).stance == "jacked"
