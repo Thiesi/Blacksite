@@ -42,6 +42,7 @@ def build() -> None:
         return nid
 
     npc("warden-response", "Warden responder", "wardens", "warden", True)
+    npcs[-1].update(xp=0, loot=[])  # Summoned warnings are not a reward source.
     npc("warden-patrol", "Warden patrol", "wardens", "patrol", True, waypoints=[[23,3],[40,3],[40,4],[23,4]])
     npc("civilian", "Plaza resident", None, "wander")
     npc("courier", "Courier drone", "kestrel", "patrol", waypoints=[[8,4],[22,4]], bounce=True)

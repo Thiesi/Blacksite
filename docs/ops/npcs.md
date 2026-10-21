@@ -15,6 +15,13 @@ safe zone or pocket, and stop pursuing once heat/provocation expires.
 Sodium residents call local Sable guards. NPC attacks use the shared
 two-second threat warning and physical safety checks.
 
+Summoned responders drop no loot and award no XP. First heat saves at
+once; repeated refusals coalesce warnings and saves to one per second,
+while retaining the live deadline. A crash can shorten the final refresh
+by less than a second. Nonfatal HP/shock updates follow architecture
+6.2's five-second player checkpoint; down/death, spent goods and action
+cooldowns remain immediate.
+
 Ordinary NPCs return after their authored respawn delay. Their loot and
 dead-slot deadline commit together. A failed save publishes no loot.
 Zones dormant for thirty minutes rebuild ordinary actors on return;

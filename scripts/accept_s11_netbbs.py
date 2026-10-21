@@ -10,7 +10,7 @@ import json
 from pathlib import Path
 import time
 
-from accept_s10_netbbs import NativeProbe, wait
+from accept_s10_netbbs import Connection, NativeProbe, wait
 from blacksite.admin.client import request
 
 
@@ -28,6 +28,31 @@ async def profile(probe: NativeProbe, width: int, height: int) -> float:
     finally:
         for zone in probe.service.world.zones.values():
             zone.deactivate("s11-profiling",probe.service.clock.now_tick())
+
+
+async def sodium_response(probe: NativeProbe, caller: Connection, width: int, height: int) -> None:
+    actor=caller.avatar.actor
+    await probe.walk(caller,(16,5))
+    sodium=probe.service.world.zones[actor.zone]
+    guards=[a for a in sodium.actors.values() if a.behaviour.get("template")=="npc-sable-enforcer"]
+    regular=min((a for a in sodium.actors.values() if a.behaviour.get("template")=="npc-sodium-regular"),
+                key=lambda a:(a.x-actor.x)**2+(a.y-actor.y)**2)
+    # A moving civilian can leave weapon range between warning and firing.
+    # Approach and keep pressing real F until an actual shot provokes guards.
+    async with asyncio.timeout(30):
+        while not any(a.target==actor.id for a in guards):
+            if (regular.x-actor.x)**2+(regular.y-actor.y)**2>16:
+                occupied={a.position for a in sodium.actors.values()}
+                candidates=[(x,y) for x in range(regular.x-1,regular.x+2) for y in range(regular.y-1,regular.y+2)
+                    if sodium.passable((x,y)) and (x,y) not in occupied]
+                tile=min(candidates,key=lambda p:(p[0]-actor.x)**2+(p[1]-actor.y)**2)
+                await probe.walk(caller,tile)
+            await probe.target(caller,regular.id)
+            await caller.caller.write(b"f")
+            await asyncio.sleep(.25)
+    assert not any(a.faction=="wardens" and a.target==actor.id for a in sodium.actors.values())
+    probe.save(caller,f"s11-sodium-{width}x{height}")
+    probe.report(f"PASS local response {width}x{height}: Sable enforcers answer provocation, no Wardens")
 
 
 async def accept(root: Path, door_python: Path, show: bool) -> None:
@@ -92,17 +117,7 @@ async def accept(root: Path, door_python: Path, show: bool) -> None:
             probe.report(f"PASS actual ten-minute heat expiry {width}x{height}: patrol ignores Freelance again")
             await probe.travel(caller,"core-plaza")
             await probe.travel(caller,"sodium-row")
-            await probe.walk(caller,(16,5))
-            sodium=probe.service.world.zones[actor.zone]
-            regular=next(a for a in sodium.actors.values() if a.behaviour.get("template")=="npc-sodium-regular" and probe.combat.visible(actor,a))
-            await probe.target(caller,regular.id)
-            await caller.caller.write(b"f");await asyncio.sleep(2.2)
-            await caller.caller.write(b"f")
-            guards=[a for a in sodium.actors.values() if a.behaviour.get("template")=="npc-sable-enforcer"]
-            await wait(lambda:any(a.target==actor.id for a in guards),3)
-            assert not any(a.faction=="wardens" and a.target==actor.id for a in sodium.actors.values())
-            probe.save(caller,f"s11-sodium-{width}x{height}")
-            probe.report(f"PASS local response {width}x{height}: Sable enforcers answer provocation, no Wardens")
+            await sodium_response(probe,caller,width,height)
             p99=await profile(probe,width,height)
             await probe.leave(caller,f"s11-complete-{width}x{height}")
             results.append({"size":[width,height],"warning_seconds":response,"heat_wait":"actual 600-second deadline",

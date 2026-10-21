@@ -18,6 +18,7 @@ from blacksite.server.npcs.templates import (
     LOST_SIGHT_SECONDS, PROVOCATION_SECONDS, WANDER_PAUSE_TICKS,
     SUBDUE_SECONDS, SUBDUE_SHOCK, make_actor, relation, weapon,
     RESPONSE_COUNT, RESPONSE_RADIUS,
+    HEAT_SAVE_SECONDS,
 )
 from blacksite.server.players import Player
 from blacksite.server.protocol import Frame
@@ -41,6 +42,7 @@ class Npcs:
         self.menus: set[str] = set()
         self.pending_deaths: set[str] = set()
         self.restraints: dict[str, dict[str, Any]] = {}
+        self.heat_saved_at: dict[str, float] = {}
         self.heat_multiplier: float = 1  # S24 composes Curfew's x2.
         self.xp_hook: Callable[[Actor, Actor, int], None] = lambda source, target, xp: None
         combat.refused_hook = self.refused
@@ -112,6 +114,7 @@ class Npcs:
         group = str(target.behaviour.get("spawner"))
         self.provocations[target.zone, group, source.id] = self.combat.now() + PROVOCATION_SECONDS
         target.target = source.id
+        target.behaviour.update(last_seen=self.clock.now_tick(), last_position=source.position, state="hunt")
         # Local faction guards protect their residents, without summoning
         # rival police into a district. The same safety checks still apply.
         for actor in self.world.zones[target.zone].actors.values():
@@ -119,6 +122,8 @@ class Npcs:
                 template = self.content.npcs.get(actor.behaviour.get("template"))
                 if template and any(b.kind in ("guard", "warden") for b in template.behaviours):
                     self.provocations[actor.zone, str(actor.behaviour.get("spawner")), source.id] = self.combat.now() + PROVOCATION_SECONDS
+                    actor.target = source.id
+                    actor.behaviour.update(last_seen=self.clock.now_tick(), last_position=source.position, state="hunt")
 
     def refused(self, source: Actor, target: Actor) -> None:
         zone = self.world.zones.get(source.zone)
@@ -128,6 +133,9 @@ class Npcs:
         until = self.combat.now() + HEAT_SECONDS * self.heat_multiplier
         previous = datetime.fromisoformat(player.warden_heat_until).timestamp() if player.warden_heat_until else 0
         player.warden_heat_until = datetime.fromtimestamp(max(previous, until), timezone.utc).isoformat()
+        if self.combat.now()-self.heat_saved_at.get(player.id, -HEAT_SAVE_SECONDS) < HEAT_SAVE_SECONDS:
+            return
+        self.heat_saved_at[player.id] = self.combat.now()
         self.game.queue("save", player.bbs_user_id, player, immediate=True)
         self.combat.log(source, f"Wardens: lower your weapon. Heat for {ceil((max(previous, until)-self.combat.now())/60)} minutes; patrols pursue outside safety.", True)
         # Responders enter on nearby legal floor, never on a player or exit.
@@ -185,7 +193,8 @@ class Npcs:
                     return
                 self.spawners.removed(actor, self.combat.now())
                 self.world.leave(actor)
-                self.xp_hook(source, actor, template.xp)
+                if template.xp > 0:
+                    self.xp_hook(source, actor, template.xp)
             self.commerce.settle(None, {}, items, caches, serial, committed)
             receipt = deepcopy(self.spawners.record())
             slot = receipt["slots"].get(str(actor.behaviour.get("slot")))

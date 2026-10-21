@@ -40,16 +40,10 @@
           "params": {}
         }
       ],
-      "xp": 20,
+      "xp": 0,
       "weapon": "wpn_kestrel_sidearm",
       "armour": "arm_wake_coverall",
-      "loot": [
-        {
-          "item": "ammo_9x",
-          "chance": 0.5,
-          "count": 10
-        }
-      ]
+      "loot": []
     },
     {
       "id": "npc-warden-patrol",

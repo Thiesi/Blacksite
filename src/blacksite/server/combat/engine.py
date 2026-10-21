@@ -311,10 +311,11 @@ class Combat:
                 self.log(target,"You are down. A nearby ally can press E to pick you up.",True)
             else:
                 self.npc_death_hook(source, target)
-        if target.id in self.game.players: self.remember(self.game.players[target.id],target)
+        if target.id in self.game.players:
+            self.remember(self.game.players[target.id],target,immediate=target.health <= 0)
         if target.zone: self.world.zones[target.zone].revision += 1
 
-    def remember(self, player: Player, actor: Actor) -> None:
+    def remember(self, player: Player, actor: Actor, immediate: bool = True) -> None:
         player.health,player.stamina,player.shock = actor.health,actor.stamina,actor.shock
         if "last_hit" in actor.cooldowns:
             player.progress["last_hit_at"] = self.now()-(self.clock.now_tick()-actor.cooldowns["last_hit"])/10
@@ -323,7 +324,10 @@ class Combat:
             for e in actor.effects if "until_tick" in e]
         player.progress["combat_cooldowns"] = {k:self.now()+max(0,v-self.clock.now_tick())/10 for k,v in actor.cooldowns.items()
             if k in ("weapon","knockdown") or k.startswith("ability:")}
-        self.game.queue("save",player.bbs_user_id,player,immediate=True)
+        # Architecture 6.2: ordinary HP/shock writes use the five-second
+        # player checkpoint. Death, spent goods and action cooldowns remain
+        # immediate. A nonfatal NPC hit must not fsync the whole street.
+        self.game.queue("save",player.bbs_user_id,player,immediate=immediate)
 
     def next_serial(self) -> int:
         return max(self.commerce.serial,max((int(i.rsplit(":",1)[-1]) for i in self.commerce.items),default=0))

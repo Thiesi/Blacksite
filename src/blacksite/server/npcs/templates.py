@@ -12,6 +12,7 @@ PROVOCATION_SECONDS = 5 * 60
 HEAT_SECONDS = 10 * 60
 RESPONSE_COUNT = 2
 RESPONSE_RADIUS = 3
+HEAT_SAVE_SECONDS = 1  # Game design 5.5: coalesce repeated refused inputs.
 FLEE_FRACTION = .20
 WANDER_PAUSE_TICKS = (2, 10)
 SUBDUE_SECONDS = 3  # Game design 5.3.

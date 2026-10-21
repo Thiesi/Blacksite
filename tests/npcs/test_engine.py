@@ -165,6 +165,22 @@ def test_design_5_5_provocation_expires_after_five_minutes(city):
     assert actor.target is None
 
 
+def test_design_5_5_local_guard_investigates_report_beyond_sight(city):
+    game,caller=city
+    guard=spawn(game)[0]
+    zone=game.core.world.zones[guard.zone]
+    runner=body(game,caller)
+    game.core.world.enter(guard,zone.id,(50,3))
+    from blacksite.server.npcs.templates import make_actor
+    resident=make_actor(game.core.world.content.npcs["npc-sodium-regular"],"reported-resident",{"spawner":"residents"})
+    game.core.world.enter(resident,zone.id,(22,3))
+    assert not game.core.combat.visible(guard,runner)
+    game.core.npcs.provoked(runner,resident)
+    assert guard.target==runner.id and guard.behaviour["last_position"]==runner.position
+    game.step(5)
+    assert guard.x<50
+
+
 def test_design_5_5_hunt_loses_sight_after_twenty_seconds(city):
     game,caller=city
     actor=spawn(game)[0];runner=body(game,caller)
@@ -226,6 +242,45 @@ def test_design_5_5_heat_restart_curfew_and_expiry(city,tmp_path):
     with_store.close()
     game.clock.advance(12000);game.step()
     assert not game.core.characters.me(caller.session)["heat_until"]
+
+
+def test_design_5_5_refused_input_coalesces_saves_and_logs(city):
+    game,caller=city
+    place(game,caller,"core-plaza",(20,3))
+    source=body(game,caller);game.core.characters.outbox.clear()
+    for _ in range(20):
+        game.core.npcs.refused(source,source)
+    assert len(game.core.characters.outbox)==1
+    assert sum("Wardens: lower" in line["text"] for line in caller.session.log_ring)==1
+    game.clock.advance(9)
+    game.core.npcs.refused(source,source)
+    assert len(game.core.characters.outbox)==1
+    player=game.core.characters.players[source.id]
+    assert (datetime.fromisoformat(player.warden_heat_until)-game.clock.now_utc()).total_seconds()==600
+    game.clock.advance()
+    game.core.npcs.refused(source,source)
+    assert len(game.core.characters.outbox)==2
+
+
+def test_design_5_5_summoned_responders_never_reward_kills(city):
+    game,caller=city
+    responder=spawn(game,"npc-warden-response")[0]
+    rewards=[]
+    game.core.npcs.xp_hook=lambda source,target,xp:rewards.append(xp)
+    game.core.combat.hurt(body(game,caller),responder,1000)
+    game.commit_commerce()
+    assert not game.core.commerce.caches and not rewards
+
+
+def test_architecture_6_2_nonfatal_npc_damage_checkpoints_but_down_is_immediate(city):
+    game,caller=city
+    guard=spawn(game)[0];runner=body(game,caller)
+    game.core.characters.outbox.clear()
+    game.core.combat.hurt(guard,runner,3)
+    assert game.core.characters.outbox[-1]["immediate"] is False
+    assert game.core.characters.outbox[-1]["player"]["health"]==runner.health
+    game.core.combat.hurt(guard,runner,1000)
+    assert runner.stance=="down" and game.core.characters.outbox[-1]["immediate"] is True
 
 
 def test_design_5_5_heat_pursuit_stops_at_pocket_and_expiry(city):

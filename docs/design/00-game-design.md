@@ -369,11 +369,17 @@ Provoking an NPC makes its spawner group hostile for five minutes.
 Unarmed residents retreat from an active threat rather than chase it;
 armed actors flee below the 20 % threshold. Local guards of that NPC's
 faction answer too; Sable residents summon Sable
-enforcers rather than remote Wardens. Warning responders number two per
-caller, refresh rather than accumulate, and stay local to their zone.
+enforcers rather than remote Wardens. Local guards investigate the reported
+position even beyond their sight; without a sighting they lose the trail
+after the normal 20 seconds. Warning responders number two per caller,
+refresh rather than accumulate, and stay local to their zone.
 They arrive on unoccupied floor within three tiles of the caller.
 Heat is recorded immediately, survives logout/restart, and expires in
 real elapsed time. Repeated refused attacks refresh its deadline.
+The first refusal saves immediately. Repeated input coalesces warning
+logs and saves to one per second; a crash can shorten the final refresh
+by less than one second. Summoned responders grant no loot or XP, so
+repeated warnings cannot become a reward source.
 
 The first hub population uses grade 1, Frame/Nerve/Vitals 20, Cortex 10
 and Resonance 5. Ordinary health follows the normal attribute formula;
