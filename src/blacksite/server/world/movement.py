@@ -33,7 +33,8 @@ def move(actor: Actor, zone: ZoneInstance, name: str, tick: int, sprint: bool = 
     sprint = sprint and actor.stamina >= SPRINT_COST
     actor.x, actor.y = target
     actor.facing = name
-    actor.cooldowns["move"] = tick + (SPRINT_TICKS if sprint else WALK_TICKS)
+    # Game design 3.1 / S12: excess carry weight doubles tile time.
+    actor.cooldowns["move"] = tick + (SPRINT_TICKS if sprint else WALK_TICKS) * (2 if actor.overweight else 1)
     if sprint:
         actor.stamina -= SPRINT_COST
         actor.last_sprint_tick = tick

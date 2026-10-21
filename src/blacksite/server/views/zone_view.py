@@ -54,6 +54,7 @@ def build(actor: Actor, zone: ZoneInstance, perception: Perception, content: Con
           width: int, height: int, clock: str, night: bool, tick: int) -> dict[str, Any]:
     radius = zone.template.meta.sight_radius_night if night else None
     radius = radius or zone.template.meta.sight_radius
+    radius = max(radius, max((int(effect.get("dark_sight",0)) for effect in actor.effects), default=0))
     visible = visible_tiles(actor, zone, radius)
     remembered = perception.remembered.setdefault(zone.id, {})
     viewport = camera(actor, zone, width, height, perception.viewport)
@@ -94,7 +95,7 @@ def build(actor: Actor, zone: ZoneInstance, perception: Perception, content: Con
         actors.append(entry)
     objects = [{"id": obj.spec.id, "x": obj.spec.tile[0], "y": obj.spec.tile[1], "kind": obj.spec.kind,
                 "state": {"open": obj.open, "in_use": obj.in_use, "progress": obj.progress},
-                "glyph": glyphs.get("locked-door" if obj.open is False else content.tiles[zone.tile_id(obj.spec.tile)].glyph, ".")}
+                "glyph": glyphs.get("cache" if obj.spec.params.get("dropped_item") else "bank" if obj.spec.kind == "bank" else "vendor" if obj.spec.params.get("vendor") else "locked-door" if obj.open is False else content.tiles[zone.tile_id(obj.spec.tile)].glyph, ".")}
                for obj in zone.objects.values() if obj.spec.tile in visible]
     hazards = [{"scope": "geometry", "warning": max(0, layer.starts - tick) / TICK_HZ,
                 "remaining": max(0, layer.expires - tick) / TICK_HZ,

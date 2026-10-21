@@ -10,6 +10,7 @@ on:
       - 'scripts/accept_s07_netbbs.py'
       - 'scripts/accept_s08_netbbs.py'
       - 'scripts/accept_s09_netbbs.py'
+      - 'scripts/accept_s12_netbbs.py'
       - '.github/workflows/service-acceptance.yml'
       - 'pyproject.toml'
       - 'MANIFEST.in'
@@ -104,3 +105,12 @@ jobs:
         with:
           name: s09-social-proof
           path: ${{ runner.temp }}/s09-proof
+      - name: Accept hub inventory, vendors, caches and banking through NetBBS
+        shell: bash
+        run: |
+          python scripts/accept_s12_netbbs.py --root "$RUNNER_TEMP/s12-proof" --door-python "$RUNNER_TEMP/s05-venv/bin/python"
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: s12-commerce-proof
+          path: ${{ runner.temp }}/s12-proof

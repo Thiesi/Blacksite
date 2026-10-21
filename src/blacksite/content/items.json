@@ -5,47 +5,2064 @@
       "id": "wpn_kestrel_sidearm",
       "name": "Kestrel Issue Sidearm",
       "class": "weapon",
-      "weight": 1,
+      "tier": 1,
+      "weight": 1.0,
       "base_price": 120,
+      "description": "The starter pistol. Everyone in Karst has fired one; most of them at the wrong person.",
       "maker": "Kestrel Issue",
       "weapon": {
         "damage": 12,
         "cooldown": 0.8,
         "accuracy": 55,
         "damage_type": "kinetic",
+        "melee": false,
+        "heavy": false,
         "range": 6,
         "ammo": "ammo_9x"
+      }
+    },
+    {
+      "id": "wpn_halvard_hv7",
+      "name": "Halvard HV-7 Carbine",
+      "class": "weapon",
+      "tier": 1,
+      "weight": 3.2,
+      "base_price": 340,
+      "description": "A guard's rifle. Boring, accurate, never jams, never surprises anyone.",
+      "maker": "Halvard Ordnance",
+      "weapon": {
+        "damage": 16,
+        "cooldown": 1.0,
+        "accuracy": 55,
+        "damage_type": "kinetic",
+        "melee": false,
+        "heavy": false,
+        "range": 9,
+        "ammo": "ammo_5x"
+      }
+    },
+    {
+      "id": "wpn_sable_streetsweeper",
+      "name": "Sable Works Streetsweeper",
+      "class": "weapon",
+      "tier": 1,
+      "weight": 3.8,
+      "base_price": 300,
+      "description": "Pipe shotgun. In the Sink, \"nice to meet you\" is a sound.",
+      "maker": "Sable Works",
+      "weapon": {
+        "damage": 28,
+        "cooldown": 1.6,
+        "accuracy": 40,
+        "damage_type": "kinetic",
+        "melee": false,
+        "heavy": false,
+        "range": 3,
+        "ammo": "ammo_shell"
+      }
+    },
+    {
+      "id": "wpn_ostrom_pinlight",
+      "name": "Ostrom Pinlight",
+      "class": "weapon",
+      "tier": 1,
+      "weight": 1.1,
+      "base_price": 260,
+      "description": "A laser pointer that grew up. Quiet, precise, useless against plate.",
+      "maker": "Ostrom Optical",
+      "weapon": {
+        "damage": 10,
+        "cooldown": 0.6,
+        "accuracy": 65,
+        "damage_type": "energy",
+        "melee": false,
+        "heavy": false,
+        "range": 7,
+        "ammo": "ammo_cell"
+      }
+    },
+    {
+      "id": "wpn_sable_spitter",
+      "name": "Sable Works Spitter",
+      "class": "weapon",
+      "tier": 1,
+      "weight": 2.0,
+      "base_price": 280,
+      "description": "Sprays a caustic gel that keeps working after you stop. Don't stand downwind.",
+      "maker": "Sable Works",
+      "weapon": {
+        "damage": 9,
+        "cooldown": 1.2,
+        "accuracy": 50,
+        "damage_type": "chemical",
+        "melee": false,
+        "heavy": false,
+        "range": 4,
+        "ammo": "ammo_gel",
+        "dot": {
+          "per_second": 4,
+          "seconds": 3
+        }
+      }
+    },
+    {
+      "id": "wpn_ferry_slugthrower",
+      "name": "Ferry-make Slugthrower",
+      "class": "weapon",
+      "tier": 1,
+      "weight": 4.5,
+      "base_price": 200,
+      "description": "Half of it fell out of the sky. The other half is a bicycle.",
+      "maker": "Ferry-make",
+      "weapon": {
+        "damage": 22,
+        "cooldown": 1.5,
+        "accuracy": 45,
+        "damage_type": "kinetic",
+        "melee": false,
+        "heavy": false,
+        "range": 5,
+        "ammo": "ammo_scrap"
+      }
+    },
+    {
+      "id": "wpn_kestrel_flare_pistol",
+      "name": "Kestrel Issue Flare Pistol",
+      "class": "weapon",
+      "tier": 1,
+      "weight": 1.2,
+      "base_price": 90,
+      "description": "Meant to call a convoy. Also sets things on fire, which sometimes calls a convoy.",
+      "maker": "Kestrel Issue",
+      "weapon": {
+        "damage": 6,
+        "cooldown": 2.0,
+        "accuracy": 35,
+        "damage_type": "chemical",
+        "melee": false,
+        "heavy": false,
+        "range": 8,
+        "ammo": "ammo_flare",
+        "dot": {
+          "per_second": 6,
+          "seconds": 4
+        }
+      }
+    },
+    {
+      "id": "wpn_ow_arcpen",
+      "name": "Old Works Arc-Pen",
+      "class": "weapon",
+      "tier": 1,
+      "weight": 0.8,
+      "base_price": 240,
+      "description": "A soldering tool with ambitions. Runners carry it because it fits next to a rig.",
+      "maker": "Old Works Collective",
+      "weapon": {
+        "damage": 11,
+        "cooldown": 0.7,
+        "accuracy": 60,
+        "damage_type": "energy",
+        "melee": false,
+        "heavy": false,
+        "range": 5,
+        "ammo": "ammo_cell"
+      }
+    },
+    {
+      "id": "wpn_halvard_hv9",
+      "name": "Halvard HV-9 Battle Rifle",
+      "class": "weapon",
+      "tier": 2,
+      "weight": 4.0,
+      "base_price": 1400,
+      "description": "The rifle the HV-7 wanted to be. Spire security carry it with the safety off.",
+      "maker": "Halvard Ordnance",
+      "weapon": {
+        "damage": 24,
+        "cooldown": 1.1,
+        "accuracy": 60,
+        "damage_type": "kinetic",
+        "melee": false,
+        "heavy": false,
+        "range": 11,
+        "ammo": "ammo_5x"
+      }
+    },
+    {
+      "id": "wpn_halvard_dmr",
+      "name": "Halvard Longline DMR",
+      "class": "weapon",
+      "tier": 2,
+      "weight": 5.5,
+      "base_price": 1900,
+      "description": "Marksman's rifle. In the Scour, you hear it after you're already down.",
+      "maker": "Halvard Ordnance",
+      "weapon": {
+        "damage": 40,
+        "cooldown": 2.4,
+        "accuracy": 70,
+        "damage_type": "kinetic",
+        "melee": false,
+        "heavy": false,
+        "range": 16,
+        "ammo": "ammo_7x"
+      }
+    },
+    {
+      "id": "wpn_ostrom_lance",
+      "name": "Ostrom Lance",
+      "class": "weapon",
+      "tier": 2,
+      "weight": 2.6,
+      "base_price": 1600,
+      "description": "Corporate laser rifle. Draws a line from you to the problem and removes the problem.",
+      "maker": "Ostrom Optical",
+      "weapon": {
+        "damage": 22,
+        "cooldown": 1.0,
+        "accuracy": 70,
+        "damage_type": "energy",
+        "melee": false,
+        "heavy": false,
+        "range": 10,
+        "ammo": "ammo_cell"
+      }
+    },
+    {
+      "id": "wpn_ow_coilgun",
+      "name": "Old Works Coilgun",
+      "class": "weapon",
+      "tier": 2,
+      "weight": 3.4,
+      "base_price": 1200,
+      "description": "Rails from a tram motor, capacitor from a vat. Sounds like a slammed door.",
+      "maker": "Old Works Collective",
+      "weapon": {
+        "damage": 30,
+        "cooldown": 1.8,
+        "accuracy": 50,
+        "damage_type": "kinetic",
+        "melee": false,
+        "heavy": false,
+        "range": 9,
+        "ammo": "ammo_flechette"
+      }
+    },
+    {
+      "id": "wpn_sable_needler",
+      "name": "Sable Works Needler",
+      "class": "weapon",
+      "tier": 2,
+      "weight": 1.8,
+      "base_price": 1300,
+      "description": "Fires hypodermic darts. What's in them is up to you.",
+      "maker": "Sable Works",
+      "weapon": {
+        "damage": 14,
+        "cooldown": 0.9,
+        "accuracy": 60,
+        "damage_type": "chemical",
+        "melee": false,
+        "heavy": false,
+        "range": 8,
+        "ammo": "ammo_needle",
+        "dot": {
+          "per_second": 5,
+          "seconds": 4
+        }
+      }
+    },
+    {
+      "id": "wpn_sable_pump",
+      "name": "Sable Works Twelve",
+      "class": "weapon",
+      "tier": 2,
+      "weight": 4.2,
+      "base_price": 1100,
+      "description": "A proper shotgun, machined, with the maker's mark filed off out of habit.",
+      "maker": "Sable Works",
+      "weapon": {
+        "damage": 42,
+        "cooldown": 1.9,
+        "accuracy": 45,
+        "damage_type": "kinetic",
+        "melee": false,
+        "heavy": false,
+        "range": 4,
+        "ammo": "ammo_shell"
+      }
+    },
+    {
+      "id": "wpn_kestrel_convoy_smg",
+      "name": "Kestrel Issue Convoy SMG",
+      "class": "weapon",
+      "tier": 2,
+      "weight": 2.8,
+      "base_price": 1000,
+      "description": "Convoy guards get one each and a box of magazines. Spray, reload, repeat.",
+      "maker": "Kestrel Issue",
+      "weapon": {
+        "damage": 13,
+        "cooldown": 0.5,
+        "accuracy": 50,
+        "damage_type": "kinetic",
+        "melee": false,
+        "heavy": false,
+        "range": 7,
+        "ammo": "ammo_9x"
+      }
+    },
+    {
+      "id": "wpn_ferry_meteor_cannon",
+      "name": "Ferry-make Meteor Cannon",
+      "class": "weapon",
+      "tier": 2,
+      "weight": 9.0,
+      "base_price": 1500,
+      "description": "A satellite thruster housing loaded with bolts. Heavy weapon (Hardline only).",
+      "maker": "Ferry-make",
+      "weapon": {
+        "damage": 60,
+        "cooldown": 3.0,
+        "accuracy": 40,
+        "damage_type": "kinetic",
+        "melee": false,
+        "heavy": true,
+        "range": 6,
+        "ammo": "ammo_scrap"
+      }
+    },
+    {
+      "id": "wpn_ostrom_arc_projector",
+      "name": "Ostrom Arc Projector",
+      "class": "weapon",
+      "tier": 2,
+      "weight": 3.9,
+      "base_price": 1700,
+      "description": "Jumps between targets. Halvard uses it on crowds and calls it \"de-escalation\".",
+      "maker": "Ostrom Optical",
+      "weapon": {
+        "damage": 18,
+        "cooldown": 1.4,
+        "accuracy": 55,
+        "damage_type": "energy",
+        "melee": false,
+        "heavy": false,
+        "range": 5,
+        "ammo": "ammo_cell",
+        "targets": 2
+      }
+    },
+    {
+      "id": "wpn_sable_torch",
+      "name": "Sable Works Torch",
+      "class": "weapon",
+      "tier": 2,
+      "weight": 5.0,
+      "base_price": 1250,
+      "description": "Flamethrower. The Sink's answer to a locked door. Heavy weapon (Hardline only).",
+      "maker": "Sable Works",
+      "weapon": {
+        "damage": 20,
+        "cooldown": 1.5,
+        "accuracy": 50,
+        "damage_type": "chemical",
+        "melee": false,
+        "heavy": true,
+        "range": 3,
+        "ammo": "ammo_gel",
+        "dot": {
+          "per_second": 8,
+          "seconds": 3
+        }
+      }
+    },
+    {
+      "id": "wpn_chapel_tuning_fork",
+      "name": "Chapel Foundry Tuning Fork",
+      "class": "weapon",
+      "tier": 2,
+      "weight": 1.4,
+      "base_price": 1500,
+      "description": "A dissonance projector. Cantor only. It does not make a sound you can hear; the target disagrees.",
+      "maker": "Chapel Foundry",
+      "weapon": {
+        "damage": 15,
+        "cooldown": 1.2,
+        "accuracy": 65,
+        "damage_type": "dissonance",
+        "melee": false,
+        "heavy": false,
+        "range": 6,
+        "ammo": null
+      },
+      "requires_archetype": "cantor"
+    },
+    {
+      "id": "wpn_halvard_hv12",
+      "name": "Halvard HV-12 Assault Rifle",
+      "class": "weapon",
+      "tier": 3,
+      "weight": 4.4,
+      "base_price": 5200,
+      "description": "Spire issue. If you see one outside the Spire, someone died for it.",
+      "maker": "Halvard Ordnance",
+      "weapon": {
+        "damage": 32,
+        "cooldown": 0.9,
+        "accuracy": 65,
+        "damage_type": "kinetic",
+        "melee": false,
+        "heavy": false,
+        "range": 12,
+        "ammo": "ammo_5x"
+      }
+    },
+    {
+      "id": "wpn_halvard_anvil",
+      "name": "Halvard Anvil LMG",
+      "class": "weapon",
+      "tier": 3,
+      "weight": 11.0,
+      "base_price": 6800,
+      "description": "Heavy weapon (Hardline only). Suppression as a personality.",
+      "maker": "Halvard Ordnance",
+      "weapon": {
+        "damage": 26,
+        "cooldown": 0.5,
+        "accuracy": 45,
+        "damage_type": "kinetic",
+        "melee": false,
+        "heavy": true,
+        "range": 10,
+        "ammo": "ammo_7x"
+      }
+    },
+    {
+      "id": "wpn_ostrom_scalpel",
+      "name": "Ostrom Scalpel",
+      "class": "weapon",
+      "tier": 3,
+      "weight": 3.0,
+      "base_price": 6500,
+      "description": "Surgical laser rifle. Ostrom says it's for eye clinics. Ostrom says a lot of things.",
+      "maker": "Ostrom Optical",
+      "weapon": {
+        "damage": 48,
+        "cooldown": 2.0,
+        "accuracy": 80,
+        "damage_type": "energy",
+        "melee": false,
+        "heavy": false,
+        "range": 14,
+        "ammo": "ammo_cell"
+      }
+    },
+    {
+      "id": "wpn_ostrom_sunlance",
+      "name": "Ostrom Sunlance",
+      "class": "weapon",
+      "tier": 3,
+      "weight": 8.5,
+      "base_price": 7400,
+      "description": "Heavy weapon (Hardline only). Brief, bright, final.",
+      "maker": "Ostrom Optical",
+      "weapon": {
+        "damage": 70,
+        "cooldown": 3.0,
+        "accuracy": 60,
+        "damage_type": "energy",
+        "melee": false,
+        "heavy": true,
+        "range": 8,
+        "ammo": "ammo_cell"
+      }
+    },
+    {
+      "id": "wpn_sable_widow",
+      "name": "Sable Works Widow",
+      "class": "weapon",
+      "tier": 3,
+      "weight": 2.2,
+      "base_price": 5600,
+      "description": "Needler with a nerve-agent reservoir. Illegal in the Core, which is where it is confiscated.",
+      "maker": "Sable Works",
+      "weapon": {
+        "damage": 18,
+        "cooldown": 1.0,
+        "accuracy": 65,
+        "damage_type": "chemical",
+        "melee": false,
+        "heavy": false,
+        "range": 9,
+        "ammo": "ammo_needle",
+        "dot": {
+          "per_second": 9,
+          "seconds": 5
+        }
+      }
+    },
+    {
+      "id": "wpn_ow_railpistol",
+      "name": "Old Works Railpistol",
+      "class": "weapon",
+      "tier": 3,
+      "weight": 1.9,
+      "base_price": 5000,
+      "description": "Coilgun tech, pocket size. Runners' choice for the walk home.",
+      "maker": "Old Works Collective",
+      "weapon": {
+        "damage": 38,
+        "cooldown": 1.3,
+        "accuracy": 60,
+        "damage_type": "kinetic",
+        "melee": false,
+        "heavy": false,
+        "range": 8,
+        "ammo": "ammo_flechette"
+      }
+    },
+    {
+      "id": "wpn_ferry_ringfall_rifle",
+      "name": "Ferry-make Ring-fall Rifle",
+      "class": "weapon",
+      "tier": 3,
+      "weight": 7.0,
+      "base_price": 4800,
+      "description": "Barrel from a satellite boom, sight from an optics grade. Nobody makes two alike.",
+      "maker": "Ferry-make",
+      "weapon": {
+        "damage": 55,
+        "cooldown": 2.6,
+        "accuracy": 60,
+        "damage_type": "kinetic",
+        "melee": false,
+        "heavy": false,
+        "range": 15,
+        "ammo": "ammo_scrap"
+      }
+    },
+    {
+      "id": "wpn_kestrel_gate_gun",
+      "name": "Kestrel Issue Gate Gun",
+      "class": "weapon",
+      "tier": 3,
+      "weight": 5.0,
+      "base_price": 4600,
+      "description": "Gate-guard carbine, Kestrel's only tier-3 design. Ugly, cheap for what it is, replaces itself.",
+      "maker": "Kestrel Issue",
+      "weapon": {
+        "damage": 30,
+        "cooldown": 0.7,
+        "accuracy": 55,
+        "damage_type": "kinetic",
+        "melee": false,
+        "heavy": false,
+        "range": 9,
+        "ammo": "ammo_5x"
+      }
+    },
+    {
+      "id": "wpn_chapel_choir_bell",
+      "name": "Chapel Foundry Choir Bell",
+      "class": "weapon",
+      "tier": 3,
+      "weight": 2.8,
+      "base_price": 6000,
+      "description": "Cantor only. A cone of pure disagreement. Wardens classify it as a musical instrument.",
+      "maker": "Chapel Foundry",
+      "weapon": {
+        "damage": 30,
+        "cooldown": 2.2,
+        "accuracy": 60,
+        "damage_type": "dissonance",
+        "melee": false,
+        "heavy": false,
+        "range": 7,
+        "ammo": null,
+        "cone": 3
+      },
+      "requires_archetype": "cantor"
+    },
+    {
+      "id": "wpn_ostrom_pulse_carbine",
+      "name": "Ostrom Pulse Carbine",
+      "class": "weapon",
+      "tier": 3,
+      "weight": 3.3,
+      "base_price": 5400,
+      "description": "Energy counterpart to the HV-12, sold to Sablier security. Cleaner. Same result.",
+      "maker": "Ostrom Optical",
+      "weapon": {
+        "damage": 28,
+        "cooldown": 0.8,
+        "accuracy": 65,
+        "damage_type": "energy",
+        "melee": false,
+        "heavy": false,
+        "range": 10,
+        "ammo": "ammo_cell"
       }
     },
     {
       "id": "wpn_kestrel_baton",
       "name": "Kestrel Issue Baton",
       "class": "weapon",
-      "weight": 1,
+      "tier": 1,
+      "weight": 0.9,
       "base_price": 40,
+      "description": "Starter melee. A stick that has been to meetings.",
       "maker": "Kestrel Issue",
       "weapon": {
         "damage": 14,
-        "cooldown": 0.9,
+        "cooldown": null,
         "accuracy": null,
         "damage_type": "kinetic",
         "melee": true,
+        "heavy": false,
         "stamina": 6
       }
+    },
+    {
+      "id": "wpn_sable_shiv",
+      "name": "Sable Works Shiv",
+      "class": "weapon",
+      "tier": 1,
+      "weight": 0.3,
+      "base_price": 60,
+      "description": "Fast, quiet, easily lost, easily replaced.",
+      "maker": "Sable Works",
+      "weapon": {
+        "damage": 18,
+        "cooldown": null,
+        "accuracy": null,
+        "damage_type": "kinetic",
+        "melee": true,
+        "heavy": false,
+        "stamina": 5
+      }
+    },
+    {
+      "id": "wpn_ferry_wrench",
+      "name": "Ferry-make Ring Wrench",
+      "class": "weapon",
+      "tier": 1,
+      "weight": 3.0,
+      "base_price": 110,
+      "description": "A tool for satellites. Also for people who touch your salvage.",
+      "maker": "Ferry-make",
+      "weapon": {
+        "damage": 26,
+        "cooldown": null,
+        "accuracy": null,
+        "damage_type": "kinetic",
+        "melee": true,
+        "heavy": false,
+        "stamina": 10
+      }
+    },
+    {
+      "id": "wpn_halvard_shock_baton",
+      "name": "Halvard Shock Baton",
+      "class": "weapon",
+      "tier": 2,
+      "weight": 1.2,
+      "base_price": 700,
+      "description": "Adds shock on hit. Security issue; the humane option, by Halvard's definition.",
+      "maker": "Halvard Ordnance",
+      "weapon": {
+        "damage": 22,
+        "cooldown": null,
+        "accuracy": null,
+        "damage_type": "energy",
+        "melee": true,
+        "heavy": false,
+        "stamina": 8,
+        "shock": 10
+      }
+    },
+    {
+      "id": "wpn_sable_machete",
+      "name": "Sable Works Machete",
+      "class": "weapon",
+      "tier": 2,
+      "weight": 1.6,
+      "base_price": 650,
+      "description": "The Sink's ceremonial blade. The ceremony is short.",
+      "maker": "Sable Works",
+      "weapon": {
+        "damage": 34,
+        "cooldown": null,
+        "accuracy": null,
+        "damage_type": "kinetic",
+        "melee": true,
+        "heavy": false,
+        "stamina": 9
+      }
+    },
+    {
+      "id": "wpn_ow_arc_knuckles",
+      "name": "Old Works Arc Knuckles",
+      "class": "weapon",
+      "tier": 2,
+      "weight": 0.7,
+      "base_price": 800,
+      "description": "Capacitor gloves. Two fast hits per swing. Don't shake hands.",
+      "maker": "Old Works Collective",
+      "weapon": {
+        "damage": 20,
+        "cooldown": null,
+        "accuracy": null,
+        "damage_type": "energy",
+        "melee": true,
+        "heavy": false,
+        "stamina": 7,
+        "hits": 2
+      }
+    },
+    {
+      "id": "wpn_sable_acid_blade",
+      "name": "Sable Works Etcher",
+      "class": "weapon",
+      "tier": 3,
+      "weight": 1.4,
+      "base_price": 3200,
+      "description": "A blade that keeps cutting after you've put it away.",
+      "maker": "Sable Works",
+      "weapon": {
+        "damage": 24,
+        "cooldown": null,
+        "accuracy": null,
+        "damage_type": "chemical",
+        "melee": true,
+        "heavy": false,
+        "stamina": 9,
+        "dot": {
+          "per_second": 6,
+          "seconds": 3
+        }
+      }
+    },
+    {
+      "id": "wpn_halvard_ram",
+      "name": "Halvard Breaching Ram",
+      "class": "weapon",
+      "tier": 3,
+      "weight": 9.0,
+      "base_price": 4000,
+      "description": "Heavy weapon (Hardline only). Knocks down anything smaller than a door. Most things are.",
+      "maker": "Halvard Ordnance",
+      "weapon": {
+        "damage": 60,
+        "cooldown": null,
+        "accuracy": null,
+        "damage_type": "kinetic",
+        "melee": true,
+        "heavy": true,
+        "stamina": 20,
+        "shock": 30
+      }
+    },
+    {
+      "id": "wpn_chapel_hand_bell",
+      "name": "Chapel Foundry Hand Bell",
+      "class": "weapon",
+      "tier": 3,
+      "weight": 0.9,
+      "base_price": 3600,
+      "description": "Cantor only. Touch-range dissonance. Mother Quell carries one and has never been seen to use it.",
+      "maker": "Chapel Foundry",
+      "weapon": {
+        "damage": 28,
+        "cooldown": null,
+        "accuracy": null,
+        "damage_type": "dissonance",
+        "melee": true,
+        "heavy": false,
+        "stamina": 6
+      },
+      "requires_archetype": "cantor"
     },
     {
       "id": "ammo_9x",
       "name": "9x pistol rounds",
       "class": "ammo",
+      "tier": 1,
+      "weight": 0.0,
       "base_price": 25,
+      "description": "Kestrel Issue, everywhere",
       "stack_max": 50,
       "ammo": {}
+    },
+    {
+      "id": "ammo_5x",
+      "name": "5x rifle rounds",
+      "class": "ammo",
+      "tier": 1,
+      "weight": 0.0,
+      "base_price": 60,
+      "description": "Halvard pattern",
+      "stack_max": 60,
+      "ammo": {}
+    },
+    {
+      "id": "ammo_7x",
+      "name": "7x heavy rounds",
+      "class": "ammo",
+      "tier": 1,
+      "weight": 0.0,
+      "base_price": 110,
+      "description": "Halvard pattern; DMR and LMG",
+      "stack_max": 40,
+      "ammo": {}
+    },
+    {
+      "id": "ammo_shell",
+      "name": "shotgun shells",
+      "class": "ammo",
+      "tier": 1,
+      "weight": 0.0,
+      "base_price": 45,
+      "description": "Sable Works and Kestrel",
+      "stack_max": 24,
+      "ammo": {}
+    },
+    {
+      "id": "ammo_cell",
+      "name": "energy cell",
+      "class": "ammo",
+      "tier": 1,
+      "weight": 0.0,
+      "base_price": 70,
+      "description": "Ostrom pattern; rechargeable at any terminal for 10 chits",
+      "stack_max": 30,
+      "ammo": {
+        "recharge_price": 10
+      }
+    },
+    {
+      "id": "ammo_gel",
+      "name": "caustic gel canister",
+      "class": "ammo",
+      "tier": 1,
+      "weight": 0.0,
+      "base_price": 55,
+      "description": "Sable Works",
+      "stack_max": 20,
+      "ammo": {}
+    },
+    {
+      "id": "ammo_needle",
+      "name": "needle darts",
+      "class": "ammo",
+      "tier": 1,
+      "weight": 0.0,
+      "base_price": 90,
+      "description": "Sable Works; loaded with the weapon's fixed agent (no custom mixing in v1)",
+      "stack_max": 30,
+      "ammo": {}
+    },
+    {
+      "id": "ammo_flechette",
+      "name": "flechette rails",
+      "class": "ammo",
+      "tier": 1,
+      "weight": 0.0,
+      "base_price": 80,
+      "description": "Old Works",
+      "stack_max": 30,
+      "ammo": {}
+    },
+    {
+      "id": "ammo_scrap",
+      "name": "scrap bolts",
+      "class": "ammo",
+      "tier": 1,
+      "weight": 0.0,
+      "base_price": 15,
+      "description": "Ferry-make; fabricated from hull salvage 1:20",
+      "stack_max": 20,
+      "ammo": {}
+    },
+    {
+      "id": "ammo_flare",
+      "name": "flares",
+      "class": "ammo",
+      "tier": 1,
+      "weight": 0.0,
+      "base_price": 30,
+      "description": "Kestrel Issue",
+      "stack_max": 6,
+      "ammo": {}
+    },
+    {
+      "id": "arm_wake_coverall",
+      "name": "Sablier Wake Coverall",
+      "class": "armour",
+      "tier": 1,
+      "weight": 1.0,
+      "base_price": 0,
+      "description": "",
+      "maker": "Sablier",
+      "armour": {
+        "slot": "body",
+        "armour": {
+          "kinetic": 2,
+          "energy": 2,
+          "chemical": 4,
+          "dissonance": 0
+        },
+        "evasion": 0,
+        "heavy": false
+      }
+    },
+    {
+      "id": "arm_kestrel_vest",
+      "name": "Kestrel Issue Vest",
+      "class": "armour",
+      "tier": 1,
+      "weight": 3.0,
+      "base_price": 220,
+      "description": "",
+      "maker": "Kestrel Issue",
+      "armour": {
+        "slot": "body",
+        "armour": {
+          "kinetic": 6,
+          "energy": 3,
+          "chemical": 2,
+          "dissonance": 0
+        },
+        "evasion": 0,
+        "heavy": false
+      }
+    },
+    {
+      "id": "arm_sable_leathers",
+      "name": "Sable Works Leathers",
+      "class": "armour",
+      "tier": 1,
+      "weight": 2.5,
+      "base_price": 260,
+      "description": "",
+      "maker": "Sable Works",
+      "armour": {
+        "slot": "body",
+        "armour": {
+          "kinetic": 5,
+          "energy": 4,
+          "chemical": 6,
+          "dissonance": 0
+        },
+        "evasion": 0,
+        "heavy": false
+      }
+    },
+    {
+      "id": "arm_ferry_scrap_plate",
+      "name": "Ferry-make Scrap Plate",
+      "class": "armour",
+      "tier": 1,
+      "weight": 7.0,
+      "base_price": 300,
+      "description": "",
+      "maker": "Ferry-make",
+      "armour": {
+        "slot": "body",
+        "armour": {
+          "kinetic": 10,
+          "energy": 4,
+          "chemical": 3,
+          "dissonance": 0
+        },
+        "evasion": -4,
+        "heavy": false
+      }
+    },
+    {
+      "id": "arm_kestrel_helmet",
+      "name": "Kestrel Issue Helmet",
+      "class": "armour",
+      "tier": 1,
+      "weight": 1.0,
+      "base_price": 120,
+      "description": "",
+      "maker": "Kestrel Issue",
+      "armour": {
+        "slot": "head",
+        "armour": {
+          "kinetic": 4,
+          "energy": 2,
+          "chemical": 1,
+          "dissonance": 0
+        },
+        "evasion": 0,
+        "heavy": false
+      }
+    },
+    {
+      "id": "arm_halvard_guard_suit",
+      "name": "Halvard Guard Suit",
+      "class": "armour",
+      "tier": 2,
+      "weight": 5.0,
+      "base_price": 1500,
+      "description": "",
+      "maker": "Halvard Ordnance",
+      "armour": {
+        "slot": "body",
+        "armour": {
+          "kinetic": 12,
+          "energy": 8,
+          "chemical": 6,
+          "dissonance": 0
+        },
+        "evasion": -2,
+        "heavy": false
+      }
+    },
+    {
+      "id": "arm_ostrom_weave",
+      "name": "Ostrom Reflective Weave",
+      "class": "armour",
+      "tier": 2,
+      "weight": 2.0,
+      "base_price": 1600,
+      "description": "",
+      "maker": "Ostrom Optical",
+      "armour": {
+        "slot": "body",
+        "armour": {
+          "kinetic": 6,
+          "energy": 14,
+          "chemical": 4,
+          "dissonance": 0
+        },
+        "evasion": 0,
+        "heavy": false
+      }
+    },
+    {
+      "id": "arm_sable_chem_suit",
+      "name": "Sable Works Chem Suit",
+      "class": "armour",
+      "tier": 2,
+      "weight": 3.5,
+      "base_price": 1400,
+      "description": "",
+      "maker": "Sable Works",
+      "armour": {
+        "slot": "body",
+        "armour": {
+          "kinetic": 6,
+          "energy": 5,
+          "chemical": 16,
+          "dissonance": 0
+        },
+        "evasion": 0,
+        "heavy": false
+      }
+    },
+    {
+      "id": "arm_halvard_visor",
+      "name": "Halvard Tactical Visor",
+      "class": "armour",
+      "tier": 2,
+      "weight": 1.5,
+      "base_price": 800,
+      "description": "",
+      "maker": "Halvard Ordnance",
+      "armour": {
+        "slot": "head",
+        "armour": {
+          "kinetic": 8,
+          "energy": 6,
+          "chemical": 3,
+          "dissonance": 0
+        },
+        "evasion": 0,
+        "heavy": false
+      }
+    },
+    {
+      "id": "arm_kestrel_greaves",
+      "name": "Kestrel Issue Greaves",
+      "class": "armour",
+      "tier": 2,
+      "weight": 2.5,
+      "base_price": 700,
+      "description": "",
+      "maker": "Kestrel Issue",
+      "armour": {
+        "slot": "legs",
+        "armour": {
+          "kinetic": 6,
+          "energy": 3,
+          "chemical": 3,
+          "dissonance": 0
+        },
+        "evasion": -1,
+        "heavy": false
+      }
+    },
+    {
+      "id": "arm_chapel_vestment",
+      "name": "Chapel Foundry Vestment",
+      "class": "armour",
+      "tier": 2,
+      "weight": 2.0,
+      "base_price": 1500,
+      "description": "",
+      "maker": "Chapel Foundry",
+      "armour": {
+        "slot": "body",
+        "armour": {
+          "kinetic": 5,
+          "energy": 5,
+          "chemical": 5,
+          "dissonance": 12
+        },
+        "evasion": 0,
+        "heavy": false
+      }
+    },
+    {
+      "id": "arm_halvard_plate",
+      "name": "Halvard Breacher Plate",
+      "class": "armour",
+      "tier": 3,
+      "weight": 14.0,
+      "base_price": 6000,
+      "description": "",
+      "maker": "Halvard Ordnance",
+      "armour": {
+        "slot": "body",
+        "armour": {
+          "kinetic": 24,
+          "energy": 14,
+          "chemical": 10,
+          "dissonance": 0
+        },
+        "evasion": -10,
+        "heavy": false
+      }
+    },
+    {
+      "id": "arm_ostrom_mirror",
+      "name": "Ostrom Mirror Shell",
+      "class": "armour",
+      "tier": 3,
+      "weight": 5.0,
+      "base_price": 6200,
+      "description": "",
+      "maker": "Ostrom Optical",
+      "armour": {
+        "slot": "body",
+        "armour": {
+          "kinetic": 10,
+          "energy": 26,
+          "chemical": 8,
+          "dissonance": 0
+        },
+        "evasion": -3,
+        "heavy": false
+      }
+    },
+    {
+      "id": "arm_sable_widow_suit",
+      "name": "Sable Works Widow Suit",
+      "class": "armour",
+      "tier": 3,
+      "weight": 4.5,
+      "base_price": 5800,
+      "description": "",
+      "maker": "Sable Works",
+      "armour": {
+        "slot": "body",
+        "armour": {
+          "kinetic": 12,
+          "energy": 10,
+          "chemical": 26,
+          "dissonance": 0
+        },
+        "evasion": -2,
+        "heavy": false
+      }
+    },
+    {
+      "id": "arm_halvard_breacher_helm",
+      "name": "Halvard Breacher Helm",
+      "class": "armour",
+      "tier": 3,
+      "weight": 3.0,
+      "base_price": 2800,
+      "description": "",
+      "maker": "Halvard Ordnance",
+      "armour": {
+        "slot": "head",
+        "armour": {
+          "kinetic": 14,
+          "energy": 10,
+          "chemical": 6,
+          "dissonance": 0
+        },
+        "evasion": -2,
+        "heavy": false
+      }
+    },
+    {
+      "id": "imp_ostrom_lowlight",
+      "name": "Ostrom Lowlight Eyes",
+      "class": "implant",
+      "tier": 1,
+      "weight": 0.0,
+      "base_price": 600,
+      "description": "sight radius +3 in dark zones",
+      "maker": "Ostrom Optical",
+      "implant": {
+        "slot": "eyes",
+        "tolerance": 1,
+        "effects": {
+          "dark_sight": 3
+        }
+      }
+    },
+    {
+      "id": "imp_sablier_sub_dermal",
+      "name": "Sablier Subdermal Mesh",
+      "class": "implant",
+      "tier": 1,
+      "weight": 0.0,
+      "base_price": 700,
+      "description": "arm_k +3",
+      "maker": "Sablier",
+      "implant": {
+        "slot": "torso",
+        "tolerance": 1,
+        "effects": {
+          "arm_k": 3
+        }
+      }
+    },
+    {
+      "id": "imp_sablier_adrenal",
+      "name": "Sablier Adrenal Governor",
+      "class": "implant",
+      "tier": 1,
+      "weight": 0.0,
+      "base_price": 650,
+      "description": "stamina regen +50 %",
+      "maker": "Sablier",
+      "implant": {
+        "slot": "torso",
+        "tolerance": 1,
+        "effects": {
+          "stamina_regen_multiplier": 1.5
+        }
+      }
+    },
+    {
+      "id": "imp_kestrel_loadframe",
+      "name": "Kestrel Loadframe Spine",
+      "class": "implant",
+      "tier": 1,
+      "weight": 0.0,
+      "base_price": 500,
+      "description": "carry weight +15 kg",
+      "maker": "Kestrel Issue",
+      "implant": {
+        "slot": "spine",
+        "tolerance": 1,
+        "effects": {
+          "carry_kg": 15
+        }
+      }
+    },
+    {
+      "id": "imp_sablier_secure_pocket",
+      "name": "Sablier Secure Pocket",
+      "class": "implant",
+      "tier": 1,
+      "weight": 0.0,
+      "base_price": 900,
+      "description": "+1 secured inventory slot",
+      "maker": "Sablier",
+      "implant": {
+        "slot": "torso",
+        "tolerance": 1,
+        "effects": {
+          "secured_slots": 1
+        }
+      }
+    },
+    {
+      "id": "imp_ostrom_rangefinder",
+      "name": "Ostrom Rangefinder",
+      "class": "implant",
+      "tier": 2,
+      "weight": 0.0,
+      "base_price": 1800,
+      "description": "range penalty halved",
+      "maker": "Ostrom Optical",
+      "implant": {
+        "slot": "eyes",
+        "tolerance": 1,
+        "effects": {
+          "range_penalty_multiplier": 0.5
+        }
+      }
+    },
+    {
+      "id": "imp_halvard_reflex_arm",
+      "name": "Halvard Reflex Arm",
+      "class": "implant",
+      "tier": 2,
+      "weight": 0.0,
+      "base_price": 2200,
+      "description": "weapon cooldown −10 %",
+      "maker": "Halvard Ordnance",
+      "implant": {
+        "slot": "arms",
+        "tolerance": 2,
+        "effects": {
+          "weapon_cooldown_multiplier": 0.9
+        }
+      }
+    },
+    {
+      "id": "imp_halvard_stabiliser",
+      "name": "Halvard Stabiliser Arm",
+      "class": "implant",
+      "tier": 2,
+      "weight": 0.0,
+      "base_price": 2000,
+      "description": "accuracy +8 with kinetic",
+      "maker": "Halvard Ordnance",
+      "implant": {
+        "slot": "arms",
+        "tolerance": 2,
+        "effects": {
+          "kinetic_accuracy": 8
+        }
+      }
+    },
+    {
+      "id": "imp_sablier_shock_sink",
+      "name": "Sablier Shock Sink",
+      "class": "implant",
+      "tier": 2,
+      "weight": 0.0,
+      "base_price": 2100,
+      "description": "shock decay ×2",
+      "maker": "Sablier",
+      "implant": {
+        "slot": "spine",
+        "tolerance": 2,
+        "effects": {
+          "shock_decay_multiplier": 2
+        }
+      }
+    },
+    {
+      "id": "imp_sablier_clotting",
+      "name": "Sablier Clotting Glands",
+      "class": "implant",
+      "tier": 2,
+      "weight": 0.0,
+      "base_price": 1900,
+      "description": "chemical damage-over-time halved",
+      "maker": "Sablier",
+      "implant": {
+        "slot": "torso",
+        "tolerance": 2,
+        "effects": {
+          "chemical_dot_multiplier": 0.5
+        }
+      }
+    },
+    {
+      "id": "imp_sablier_sprint_legs",
+      "name": "Sablier Sprint Legs",
+      "class": "implant",
+      "tier": 2,
+      "weight": 0.0,
+      "base_price": 2400,
+      "description": "sprint tile time 80 ms; stamina cost −20 %",
+      "maker": "Sablier",
+      "implant": {
+        "slot": "legs",
+        "tolerance": 2,
+        "effects": {
+          "sprint_ms": 80,
+          "stamina_cost_multiplier": 0.8
+        }
+      }
+    },
+    {
+      "id": "imp_ow_ghost_step",
+      "name": "Old Works Ghost Step",
+      "class": "implant",
+      "tier": 2,
+      "weight": 0.0,
+      "base_price": 2300,
+      "description": "stealth stance sight reduction 60 % instead of 50 %",
+      "maker": "Old Works Collective",
+      "implant": {
+        "slot": "legs",
+        "tolerance": 2,
+        "effects": {
+          "stealth_sight_reduction": 0.6
+        }
+      }
+    },
+    {
+      "id": "imp_ostrom_target_lock",
+      "name": "Ostrom Target Lock",
+      "class": "implant",
+      "tier": 2,
+      "weight": 0.0,
+      "base_price": 1700,
+      "description": "target retained through cover; shows target health",
+      "maker": "Ostrom Optical",
+      "implant": {
+        "slot": "head",
+        "tolerance": 2,
+        "effects": {
+          "target_through_cover": 1
+        }
+      }
+    },
+    {
+      "id": "imp_sablier_second_heart",
+      "name": "Sablier Second Heart",
+      "class": "implant",
+      "tier": 3,
+      "weight": 0.0,
+      "base_price": 5500,
+      "description": "health +40",
+      "maker": "Sablier",
+      "implant": {
+        "slot": "torso",
+        "tolerance": 3,
+        "effects": {
+          "health": 40
+        }
+      }
+    },
+    {
+      "id": "imp_halvard_dermal_plate",
+      "name": "Halvard Dermal Plate",
+      "class": "implant",
+      "tier": 3,
+      "weight": 0.0,
+      "base_price": 5200,
+      "description": "arm_k +8, arm_e +4; evasion −3",
+      "maker": "Halvard Ordnance",
+      "implant": {
+        "slot": "torso",
+        "tolerance": 3,
+        "effects": {
+          "arm_k": 8,
+          "arm_e": 4,
+          "evasion": -3
+        }
+      }
+    },
+    {
+      "id": "imp_sablier_secure_vault",
+      "name": "Sablier Secure Vault",
+      "class": "implant",
+      "tier": 3,
+      "weight": 0.0,
+      "base_price": 4800,
+      "description": "+2 secured slots",
+      "maker": "Sablier",
+      "implant": {
+        "slot": "spine",
+        "tolerance": 2,
+        "effects": {
+          "secured_slots": 2
+        }
+      }
+    },
+    {
+      "id": "imp_sablier_detox_gland",
+      "name": "Sablier Detox Gland",
+      "class": "implant",
+      "tier": 3,
+      "weight": 0.0,
+      "base_price": 4400,
+      "description": "drug crash duration halved; addiction window halved",
+      "maker": "Sablier",
+      "implant": {
+        "slot": "torso",
+        "tolerance": 2,
+        "effects": {
+          "crash_duration_multiplier": 0.5,
+          "addiction_window_multiplier": 0.5
+        }
+      }
+    },
+    {
+      "id": "imp_ow_drone_uplink",
+      "name": "Old Works Drone Uplink",
+      "class": "implant",
+      "tier": 3,
+      "weight": 0.0,
+      "base_price": 5000,
+      "description": "Operator: +1 drone slot; others: may run one drone",
+      "maker": "Old Works Collective",
+      "implant": {
+        "slot": "head",
+        "tolerance": 2,
+        "effects": {
+          "drone_slots": 1
+        }
+      }
+    },
+    {
+      "id": "imp_halvard_heavy_mount",
+      "name": "Halvard Heavy Mount",
+      "class": "implant",
+      "tier": 3,
+      "weight": 0.0,
+      "base_price": 5800,
+      "description": "Hardline: heavy weapon cooldown −15 %",
+      "maker": "Halvard Ordnance",
+      "implant": {
+        "slot": "arms",
+        "tolerance": 3,
+        "effects": {
+          "heavy_cooldown_multiplier": 0.85
+        }
+      }
+    },
+    {
+      "id": "imp_rig_native",
+      "name": "Native Rig (Ghost only, built in)",
+      "class": "rig",
+      "tier": 1,
+      "weight": 0.0,
+      "base_price": 0,
+      "description": "jack in anywhere",
+      "maker": "Sablier template",
+      "implant": {
+        "slot": "rig",
+        "tolerance": 0,
+        "effects": {
+          "jack_anywhere": 1
+        },
+        "rig_slots": 3,
+        "requires": {
+          "archetype": "ghost"
+        }
+      }
+    },
+    {
+      "id": "imp_rig_ow_jury",
+      "name": "Old Works Jury Rig",
+      "class": "rig",
+      "tier": 1,
+      "weight": 0.0,
+      "base_price": 1200,
+      "description": "jack in anywhere; trace gain +10 %",
+      "maker": "Old Works Collective",
+      "implant": {
+        "slot": "rig",
+        "tolerance": 1,
+        "effects": {
+          "jack_anywhere": 1,
+          "trace_multiplier": 1.1
+        },
+        "rig_slots": 3
+      }
+    },
+    {
+      "id": "imp_rig_sablier_clinical",
+      "name": "Sablier Clinical Rig",
+      "class": "rig",
+      "tier": 2,
+      "weight": 0.0,
+      "base_price": 3600,
+      "description": "jack in anywhere; integrity +10",
+      "maker": "Sablier",
+      "implant": {
+        "slot": "rig",
+        "tolerance": 2,
+        "effects": {
+          "jack_anywhere": 1,
+          "integrity": 10
+        },
+        "rig_slots": 4
+      }
+    },
+    {
+      "id": "imp_rig_ow_deepwater",
+      "name": "Old Works Deepwater Rig",
+      "class": "rig",
+      "tier": 3,
+      "weight": 0.0,
+      "base_price": 8000,
+      "description": "jack in anywhere; cell move time −20 %; Silt movement benefit; descent allowed with any rig",
+      "maker": "Old Works Collective",
+      "implant": {
+        "slot": "rig",
+        "tolerance": 3,
+        "effects": {
+          "jack_anywhere": 1,
+          "cell_move_multiplier": 0.8
+        },
+        "rig_slots": 6
+      }
+    },
+    {
+      "id": "imp_res_first_ear",
+      "name": "Chapel First Ear",
+      "class": "resonance",
+      "tier": 1,
+      "weight": 0.0,
+      "base_price": 900,
+      "description": "unlocks hymns tier 1; Listening +10",
+      "maker": "Chapel Foundry",
+      "implant": {
+        "slot": "head",
+        "tolerance": 1,
+        "effects": {
+          "hymn_tier": 1,
+          "listening": 10
+        },
+        "requires": {
+          "archetype": "cantor"
+        }
+      }
+    },
+    {
+      "id": "imp_res_throat",
+      "name": "Chapel Throat",
+      "class": "resonance",
+      "tier": 1,
+      "weight": 0.0,
+      "base_price": 900,
+      "description": "unlocks dissonance tier 1",
+      "maker": "Chapel Foundry",
+      "implant": {
+        "slot": "spine",
+        "tolerance": 1,
+        "effects": {
+          "dissonance_tier": 1
+        },
+        "requires": {
+          "archetype": "cantor"
+        }
+      }
+    },
+    {
+      "id": "imp_res_second_ear",
+      "name": "Chapel Second Ear",
+      "class": "resonance",
+      "tier": 2,
+      "weight": 0.0,
+      "base_price": 2600,
+      "description": "hidden cells visible within 2 cells; Listening +15",
+      "maker": "Chapel Foundry",
+      "implant": {
+        "slot": "eyes",
+        "tolerance": 2,
+        "effects": {
+          "hidden_cell_radius": 2,
+          "listening": 15
+        },
+        "requires": {
+          "archetype": "cantor"
+        }
+      }
+    },
+    {
+      "id": "imp_res_chord",
+      "name": "Chapel Chord",
+      "class": "resonance",
+      "tier": 2,
+      "weight": 0.0,
+      "base_price": 2800,
+      "description": "unlocks hymns tier 2; hymns affect 8 tiles; unlocks dissonance tiers 1-2; replaces Throat",
+      "maker": "Chapel Foundry",
+      "implant": {
+        "slot": "spine",
+        "tolerance": 2,
+        "effects": {
+          "hymn_tier": 2,
+          "hymn_radius": 8,
+          "dissonance_tier": 2
+        },
+        "requires": {
+          "archetype": "cantor"
+        }
+      }
+    },
+    {
+      "id": "imp_res_tremor",
+      "name": "Chapel Tremor",
+      "class": "resonance",
+      "tier": 2,
+      "weight": 0.0,
+      "base_price": 2700,
+      "description": "dissonance abilities +20 % damage",
+      "maker": "Chapel Foundry",
+      "implant": {
+        "slot": "arms",
+        "tolerance": 2,
+        "effects": {
+          "dissonance_damage_multiplier": 1.2
+        },
+        "requires": {
+          "archetype": "cantor"
+        }
+      }
+    },
+    {
+      "id": "imp_res_ninefold_lattice",
+      "name": "Chapel Ninefold Lattice",
+      "class": "resonance",
+      "tier": 3,
+      "weight": 0.0,
+      "base_price": 7000,
+      "description": "unlocks hymns and dissonance tiers 1-3; replaces First Ear",
+      "maker": "Chapel Foundry",
+      "implant": {
+        "slot": "head",
+        "tolerance": 3,
+        "effects": {
+          "hymn_tier": 3,
+          "dissonance_tier": 3
+        },
+        "requires": {
+          "archetype": "cantor"
+        }
+      }
+    },
+    {
+      "id": "imp_res_tenant_ear",
+      "name": "Chapel Tenant's Ear",
+      "class": "resonance",
+      "tier": 3,
+      "weight": 0.0,
+      "base_price": 7500,
+      "description": "during Choir Surge: sees all ICE class and integrity; Silt residuals speak first",
+      "maker": "Chapel Foundry",
+      "implant": {
+        "slot": "eyes",
+        "tolerance": 3,
+        "effects": {
+          "surge_inspect": 1
+        },
+        "requires": {
+          "archetype": "cantor"
+        }
+      }
+    },
+    {
+      "id": "imp_res_silence",
+      "name": "Chapel Silence",
+      "class": "resonance",
+      "tier": 3,
+      "weight": 0.0,
+      "base_price": 4500,
+      "description": "arm_d +15; immune to knockdown from dissonance",
+      "maker": "Chapel Foundry",
+      "implant": {
+        "slot": "torso",
+        "tolerance": 2,
+        "effects": {
+          "arm_d": 15,
+          "dissonance_knockdown_immune": 1
+        },
+        "requires": {
+          "archetype": "cantor"
+        }
+      }
+    },
+    {
+      "id": "item_rig_portable_ow_brick",
+      "name": "Old Works Brick",
+      "class": "rig",
+      "tier": 1,
+      "weight": 2.0,
+      "base_price": 800,
+      "description": "",
+      "implant": {
+        "slot": "rig",
+        "tolerance": 0,
+        "effects": {},
+        "rig_slots": 3
+      }
+    },
+    {
+      "id": "item_rig_portable_ow_slab",
+      "name": "Old Works Slab",
+      "class": "rig",
+      "tier": 2,
+      "weight": 2.5,
+      "base_price": 3000,
+      "description": "",
+      "implant": {
+        "slot": "rig",
+        "tolerance": 0,
+        "effects": {},
+        "rig_slots": 5
+      }
+    },
+    {
+      "id": "item_rig_portable_halvard_case",
+      "name": "Halvard Field Case",
+      "class": "rig",
+      "tier": 3,
+      "weight": 3.5,
+      "base_price": 7000,
+      "description": "",
+      "implant": {
+        "slot": "rig",
+        "tolerance": 0,
+        "effects": {},
+        "rig_slots": 6
+      }
+    },
+    {
+      "id": "drug_sablier_focus",
+      "name": "Focus (labelled)",
+      "class": "drug",
+      "tier": 1,
+      "weight": 0.0,
+      "base_price": 60,
+      "description": "accuracy +10. Crash: accuracy −10.",
+      "maker": "Sablier",
+      "drug": {
+        "effects": {
+          "accuracy": 10
+        },
+        "duration": 120.0,
+        "crash": {
+          "accuracy": -10
+        },
+        "addiction_window": 1800.0
+      }
+    },
+    {
+      "id": "drug_sablier_calm",
+      "name": "Calm (labelled)",
+      "class": "drug",
+      "tier": 1,
+      "weight": 0.0,
+      "base_price": 50,
+      "description": "shock decay ×2. Crash: shock decay ×0.5.",
+      "maker": "Sablier",
+      "drug": {
+        "effects": {
+          "shock_decay_multiplier": 2
+        },
+        "duration": 180.0,
+        "crash": {
+          "shock_decay_multiplier": 0.5
+        },
+        "addiction_window": 1800.0
+      }
+    },
+    {
+      "id": "drug_sable_redline",
+      "name": "Redline",
+      "class": "drug",
+      "tier": 1,
+      "weight": 0.0,
+      "base_price": 120,
+      "description": "weapon cooldown −20 %. Crash: cooldown +20 %.",
+      "maker": "Sable Works",
+      "drug": {
+        "effects": {
+          "weapon_cooldown_multiplier": 0.8
+        },
+        "duration": 90.0,
+        "crash": {
+          "weapon_cooldown_multiplier": 1.2
+        },
+        "addiction_window": 1200.0
+      }
+    },
+    {
+      "id": "drug_sable_glass",
+      "name": "Glass",
+      "class": "drug",
+      "tier": 1,
+      "weight": 0.0,
+      "base_price": 130,
+      "description": "evasion +10, sight +2. Crash: evasion −10.",
+      "maker": "Sable Works",
+      "drug": {
+        "effects": {
+          "evasion": 10,
+          "sight": 2
+        },
+        "duration": 90.0,
+        "crash": {
+          "evasion": -10
+        },
+        "addiction_window": 1200.0
+      }
+    },
+    {
+      "id": "drug_sable_brick",
+      "name": "Brick",
+      "class": "drug",
+      "tier": 1,
+      "weight": 0.0,
+      "base_price": 110,
+      "description": "arm_k +8, stamina cost +20 %. Crash: arm_k −8.",
+      "maker": "Sable Works",
+      "drug": {
+        "effects": {
+          "arm_k": 8,
+          "stamina_cost_multiplier": 1.2
+        },
+        "duration": 120.0,
+        "crash": {
+          "arm_k": -8
+        },
+        "addiction_window": 1800.0
+      }
+    },
+    {
+      "id": "drug_sable_deepwater",
+      "name": "Deepwater",
+      "class": "drug",
+      "tier": 1,
+      "weight": 0.0,
+      "base_price": 180,
+      "description": "Lattice: cell move −30 %, trace gain +20 %. Crash: move +30 %.",
+      "maker": "Sable Works",
+      "drug": {
+        "effects": {
+          "cell_move_multiplier": 0.7,
+          "trace_multiplier": 1.2
+        },
+        "duration": 300.0,
+        "crash": {
+          "cell_move_multiplier": 1.3
+        },
+        "addiction_window": 1800.0
+      }
+    },
+    {
+      "id": "drug_ow_static",
+      "name": "Static",
+      "class": "drug",
+      "tier": 1,
+      "weight": 0.0,
+      "base_price": 200,
+      "description": "Lattice: integrity +20. Crash: integrity −20.",
+      "maker": "Old Works Collective",
+      "drug": {
+        "effects": {
+          "integrity": 20
+        },
+        "duration": 240.0,
+        "crash": {
+          "integrity": -20
+        },
+        "addiction_window": 2400.0
+      }
+    },
+    {
+      "id": "drug_chapel_hush",
+      "name": "Hush (sacrament)",
+      "class": "drug",
+      "tier": 1,
+      "weight": 0.0,
+      "base_price": 150,
+      "description": "Listening +20; Cantor cast −25 %. Crash: Listening −20.",
+      "maker": "Chapel Foundry",
+      "drug": {
+        "effects": {
+          "listening": 20,
+          "cantor_cast_multiplier": 0.75
+        },
+        "duration": 180.0,
+        "crash": {
+          "listening": -20
+        },
+        "addiction_window": 3600.0
+      }
+    },
+    {
+      "id": "drug_ferry_ringdust",
+      "name": "Ring-dust",
+      "class": "drug",
+      "tier": 1,
+      "weight": 0.0,
+      "base_price": 40,
+      "description": "stamina regen ×3; health −1/s. Crash: stamina regen ×0.3.",
+      "maker": "Ferry-make",
+      "drug": {
+        "effects": {
+          "stamina_regen_multiplier": 3,
+          "health_per_second": -1
+        },
+        "duration": 60.0,
+        "crash": {
+          "stamina_regen_multiplier": 0.3
+        },
+        "addiction_window": 900.0
+      }
+    },
+    {
+      "id": "drug_sable_lullaby",
+      "name": "Lullaby",
+      "class": "drug",
+      "tier": 1,
+      "weight": 0.0,
+      "base_price": 90,
+      "description": "health +30 over 10 s; movement 400 ms/tile. Crash: health −10.",
+      "maker": "Sable Works",
+      "drug": {
+        "effects": {
+          "health_over_time": 30,
+          "heal_seconds": 10,
+          "move_ms": 400
+        },
+        "duration": 30.0,
+        "crash": {
+          "health": -10
+        },
+        "addiction_window": 1200.0
+      }
+    },
+    {
+      "id": "drug_sable_chrome",
+      "name": "Chrome",
+      "class": "drug",
+      "tier": 1,
+      "weight": 0.0,
+      "base_price": 500,
+      "description": "tolerance +1 (temporary; implant installed under it fails when it wears off unless Vitals grew). Crash: shock +40.",
+      "maker": "Sable Works",
+      "drug": {
+        "effects": {
+          "tolerance": 1
+        },
+        "duration": 1200.0,
+        "crash": {
+          "shock": 40
+        },
+        "addiction_window": 86400.0
+      }
     },
     {
       "id": "con_sablier_patch",
       "name": "Sablier Med Patch",
       "class": "consumable",
+      "tier": 1,
+      "weight": 0.0,
       "base_price": 40,
+      "description": "health +25",
+      "maker": "Sablier",
       "consumable": {
         "effects": {
           "health": 25
@@ -54,10 +2071,31 @@
       }
     },
     {
+      "id": "con_sablier_trauma_kit",
+      "name": "Sablier Trauma Kit",
+      "class": "consumable",
+      "tier": 1,
+      "weight": 0.0,
+      "base_price": 150,
+      "description": "health +60; 2 s use time",
+      "maker": "Sablier",
+      "consumable": {
+        "effects": {
+          "health": 60
+        },
+        "cooldown_class": "heal",
+        "use_seconds": 2
+      }
+    },
+    {
       "id": "con_kestrel_ration",
       "name": "Kestrel Ration Bar",
       "class": "consumable",
+      "tier": 1,
+      "weight": 0.0,
       "base_price": 10,
+      "description": "stamina +20; removes Ring-dust crash",
+      "maker": "Kestrel Issue",
       "consumable": {
         "effects": {
           "stamina": 20,
@@ -67,70 +2105,918 @@
       }
     },
     {
-      "id": "story_vesper_card",
-      "name": "Vesper's Card",
-      "class": "misc",
-      "weight": 0.1,
-      "description": "A contract card. Vesper, Tin Halo, Sodium Row."
+      "id": "con_sable_stim",
+      "name": "Sable Works Stim",
+      "class": "consumable",
+      "tier": 1,
+      "weight": 0.0,
+      "base_price": 45,
+      "description": "stamina full; shock +10",
+      "maker": "Sable Works",
+      "consumable": {
+        "effects": {
+          "stamina_full": 1,
+          "shock": 10
+        },
+        "cooldown_class": "stim"
+      }
     },
     {
-      "id": "imp_res_first_ear",
-      "name": "Chapel First Ear",
-      "class": "resonance",
+      "id": "con_sablier_neutraliser",
+      "name": "Sablier Neutraliser",
+      "class": "consumable",
       "tier": 1,
-      "base_price": 900,
-      "implant": {
-        "slot": "head",
-        "tolerance": 1,
+      "weight": 0.0,
+      "base_price": 60,
+      "description": "ends chemical damage-over-time",
+      "maker": "Sablier",
+      "consumable": {
         "effects": {
-          "listening": 10,
-          "hymns_tier": 1
+          "end_chemical_dot": 1
         },
-        "requires": {
-          "archetype": "cantor"
-        }
+        "cooldown_class": "antidote"
+      }
+    },
+    {
+      "id": "con_ow_cell_charger",
+      "name": "Old Works Cell Charger",
+      "class": "consumable",
+      "tier": 1,
+      "weight": 0.0,
+      "base_price": 200,
+      "description": "recharges one energy cell anywhere; 3 uses",
+      "maker": "Old Works Collective",
+      "consumable": {
+        "effects": {
+          "recharge_cell": 1
+        },
+        "cooldown_class": "tool",
+        "uses": 3
+      }
+    },
+    {
+      "id": "con_ferry_flare_stick",
+      "name": "Ferry-make Flare Stick",
+      "class": "consumable",
+      "tier": 1,
+      "weight": 0.0,
+      "base_price": 15,
+      "description": "sight radius 8 for 3 min in dark zones",
+      "maker": "Ferry-make",
+      "consumable": {
+        "effects": {
+          "dark_sight": 8,
+          "seconds": 180
+        },
+        "cooldown_class": "light"
+      }
+    },
+    {
+      "id": "con_halvard_breach_charge",
+      "name": "Halvard Breach Charge",
+      "class": "consumable",
+      "tier": 1,
+      "weight": 0.0,
+      "base_price": 350,
+      "description": "destroys a locked (not hackable-only) door; 5 s fuse; noise alerts zone",
+      "maker": "Halvard Ordnance",
+      "consumable": {
+        "effects": {
+          "breach_door": 1,
+          "fuse_seconds": 5
+        },
+        "cooldown_class": "tool"
+      }
+    },
+    {
+      "id": "con_sablier_pickup",
+      "name": "Sablier Pickup Kit",
+      "class": "consumable",
+      "tier": 1,
+      "weight": 0.0,
+      "base_price": 120,
+      "description": "pick up a downed crew member in 2 s instead of 5",
+      "maker": "Sablier",
+      "consumable": {
+        "effects": {
+          "revive_seconds": 2
+        },
+        "cooldown_class": "revive"
+      }
+    },
+    {
+      "id": "con_kestrel_beacon",
+      "name": "Kestrel Convoy Beacon",
+      "class": "consumable",
+      "tier": 1,
+      "weight": 0.0,
+      "base_price": 80,
+      "description": "during a Convoy event, marks your position to the convoy; the convoy detours",
+      "maker": "Kestrel Issue",
+      "consumable": {
+        "effects": {
+          "convoy_mark": 1
+        },
+        "cooldown_class": "tool"
       }
     },
     {
       "id": "drn_kestrel_mule",
       "name": "Kestrel Mule",
       "class": "drone",
+      "tier": 1,
+      "weight": 0.0,
       "base_price": 400,
+      "description": "carrier: +20 kg carry",
+      "maker": "Kestrel Issue",
       "drone": {
         "health": 60,
-        "speed": 5,
-        "sight": 8,
-        "tool": "carrier:+20kg"
+        "evasion": 5,
+        "control_range": 8,
+        "sight": null,
+        "speed": null,
+        "tool": "carrier: +20 kg carry"
       }
     },
     {
-      "id": "arm_wake_coverall",
-      "name": "Sablier Wake Coverall",
-      "class": "armour",
-      "weight": 1,
+      "id": "drn_ostrom_eye",
+      "name": "Ostrom Eye",
+      "class": "drone",
+      "tier": 1,
+      "weight": 0.0,
+      "base_price": 500,
+      "description": "scout: reveals sight radius 6 around itself; silent",
+      "maker": "Ostrom Optical",
+      "drone": {
+        "health": 20,
+        "evasion": 25,
+        "control_range": 14,
+        "sight": 6,
+        "speed": null,
+        "tool": "scout: reveals sight radius 6 around itself; silent"
+      }
+    },
+    {
+      "id": "drn_halvard_sentry",
+      "name": "Halvard Sentry",
+      "class": "drone",
+      "tier": 2,
+      "weight": 0.0,
+      "base_price": 1800,
+      "description": "kinetic 12 dmg, range 6, CD 1.0",
+      "maker": "Halvard Ordnance",
+      "drone": {
+        "health": 80,
+        "evasion": 5,
+        "control_range": 6,
+        "sight": null,
+        "speed": null,
+        "tool": "kinetic 12 dmg, range 6, CD 1.0",
+        "attack": {
+          "damage_type": "kinetic",
+          "damage": 12,
+          "range": 6,
+          "melee": false,
+          "accuracy": null,
+          "cooldown": 1.0
+        }
+      }
+    },
+    {
+      "id": "drn_sable_stinger",
+      "name": "Sable Works Stinger",
+      "class": "drone",
+      "tier": 2,
+      "weight": 0.0,
+      "base_price": 1600,
+      "description": "chemical 8 (+4/s 3 s), range 4, CD 1.2",
+      "maker": "Sable Works",
+      "drone": {
+        "health": 35,
+        "evasion": 20,
+        "control_range": 8,
+        "sight": null,
+        "speed": null,
+        "tool": "chemical 8 (+4/s 3 s), range 4, CD 1.2",
+        "attack": {
+          "damage_type": "chemical",
+          "damage": 8,
+          "range": 4,
+          "melee": false,
+          "accuracy": null,
+          "cooldown": 1.2,
+          "dot": {
+            "per_second": 4,
+            "seconds": 3
+          }
+        }
+      }
+    },
+    {
+      "id": "drn_sablier_medic",
+      "name": "Sablier Medic",
+      "class": "drone",
+      "tier": 2,
+      "weight": 0.0,
+      "base_price": 2000,
+      "description": "heals crew +8/s within 2 tiles",
+      "maker": "Sablier",
+      "drone": {
+        "health": 40,
+        "evasion": 15,
+        "control_range": 6,
+        "sight": null,
+        "speed": null,
+        "tool": "heals crew +8/s within 2 tiles"
+      }
+    },
+    {
+      "id": "drn_ow_relay",
+      "name": "Old Works Relay",
+      "class": "drone",
+      "tier": 3,
+      "weight": 0.0,
+      "base_price": 4200,
+      "description": "terminal on legs: jack in from the drone's tile; drone destroyed = forced jack-out",
+      "maker": "Old Works Collective",
+      "drone": {
+        "health": 30,
+        "evasion": 15,
+        "control_range": 10,
+        "sight": null,
+        "speed": null,
+        "tool": "terminal on legs: jack in from the drone's tile; drone destroyed = forced jack-out"
+      }
+    },
+    {
+      "id": "drn_halvard_hound",
+      "name": "Halvard Hound",
+      "class": "drone",
+      "tier": 3,
+      "weight": 0.0,
+      "base_price": 5000,
+      "description": "melee 30 kinetic, CD 1.0; hunts a target you mark",
+      "maker": "Halvard Ordnance",
+      "drone": {
+        "health": 120,
+        "evasion": 10,
+        "control_range": 8,
+        "sight": null,
+        "speed": null,
+        "tool": "melee 30 kinetic, CD 1.0; hunts a target you mark"
+      }
+    },
+    {
+      "id": "drn_ferry_lifter",
+      "name": "Ferry-make Lifter",
+      "class": "drone",
+      "tier": 3,
+      "weight": 0.0,
+      "base_price": 3800,
+      "description": "carrier: +60 kg; can carry salvage grade intact",
+      "maker": "Ferry-make",
+      "drone": {
+        "health": 90,
+        "evasion": 5,
+        "control_range": 6,
+        "sight": null,
+        "speed": null,
+        "tool": "carrier: +60 kg; can carry salvage grade intact"
+      }
+    },
+    {
+      "id": "slv_hull",
+      "name": "Hull salvage",
+      "class": "salvage",
+      "tier": 1,
+      "weight": 4.0,
+      "base_price": 15,
+      "description": "panels, booms, shielding; frames, plate, scrap bolts",
+      "salvage": {
+        "grade": "hull"
+      }
+    },
+    {
+      "id": "slv_optics",
+      "name": "Optics salvage",
+      "class": "salvage",
+      "tier": 1,
+      "weight": 1.0,
+      "base_price": 60,
+      "description": "lenses, sensors, mirrors; sights, eyes, energy emitters",
+      "salvage": {
+        "grade": "optics"
+      }
+    },
+    {
+      "id": "slv_power",
+      "name": "Power salvage",
+      "class": "salvage",
+      "tier": 1,
+      "weight": 2.5,
+      "base_price": 80,
+      "description": "cells, capacitors, radioisotope units; energy weapons, cells, drones",
+      "salvage": {
+        "grade": "power"
+      }
+    },
+    {
+      "id": "slv_compute",
+      "name": "Compute salvage",
+      "class": "salvage",
+      "tier": 1,
+      "weight": 0.5,
+      "base_price": 120,
+      "description": "boards, memory, radiation-hardened cores; rigs, programs, drone brains",
+      "salvage": {
+        "grade": "compute"
+      }
+    },
+    {
+      "id": "slv_intact",
+      "name": "Intact salvage",
+      "class": "salvage",
+      "tier": 1,
+      "weight": 3.0,
       "base_price": 0,
-      "armour": {
-        "slot": "body",
-        "armour": {
-          "kinetic": 2,
-          "energy": 2,
-          "chemical": 4
-        }
+      "description": "a component that still works; season contribution; tier-3 schematics",
+      "salvage": {
+        "grade": "intact"
       }
     },
     {
-      "id": "arm_kestrel_vest",
-      "name": "Kestrel Issue Vest",
+      "id": "sch_scrap_bolts",
+      "name": "Plan: scrap bolts",
+      "class": "schematic",
+      "tier": 1,
+      "weight": 0.0,
+      "base_price": 50,
+      "description": "Makes ammo_scrap ×20.",
+      "schematic": {
+        "output": "ammo_scrap",
+        "inputs": {
+          "hull": 1
+        },
+        "skill_min": 0
+      }
+    },
+    {
+      "id": "sch_scrap_plate",
+      "name": "Plan: Ferry-make Scrap Plate",
+      "class": "schematic",
+      "tier": 1,
+      "weight": 0.0,
+      "base_price": 200,
+      "description": "Makes arm_ferry_scrap_plate.",
+      "schematic": {
+        "output": "arm_ferry_scrap_plate",
+        "inputs": {
+          "hull": 6
+        },
+        "skill_min": 10
+      }
+    },
+    {
+      "id": "sch_slugthrower",
+      "name": "Plan: Ferry-make Slugthrower",
+      "class": "schematic",
+      "tier": 1,
+      "weight": 0.0,
+      "base_price": 250,
+      "description": "Makes wpn_ferry_slugthrower.",
+      "schematic": {
+        "output": "wpn_ferry_slugthrower",
+        "inputs": {
+          "hull": 4,
+          "power": 1
+        },
+        "skill_min": 10
+      }
+    },
+    {
+      "id": "sch_ring_wrench",
+      "name": "Plan: Ferry-make Ring Wrench",
+      "class": "schematic",
+      "tier": 1,
+      "weight": 0.0,
+      "base_price": 80,
+      "description": "Makes wpn_ferry_wrench.",
+      "schematic": {
+        "output": "wpn_ferry_wrench",
+        "inputs": {
+          "hull": 2
+        },
+        "skill_min": 0
+      }
+    },
+    {
+      "id": "sch_flare_stick",
+      "name": "Plan: Ferry-make Flare Stick",
+      "class": "schematic",
+      "tier": 1,
+      "weight": 0.0,
+      "base_price": 60,
+      "description": "Makes con_ferry_flare_stick ×5.",
+      "schematic": {
+        "output": "con_ferry_flare_stick",
+        "inputs": {
+          "power": 1
+        },
+        "skill_min": 0
+      }
+    },
+    {
+      "id": "sch_cell",
+      "name": "Plan: energy cell",
+      "class": "schematic",
+      "tier": 1,
+      "weight": 0.0,
+      "base_price": 300,
+      "description": "Makes ammo_cell ×1.",
+      "schematic": {
+        "output": "ammo_cell",
+        "inputs": {
+          "power": 1
+        },
+        "skill_min": 15
+      }
+    },
+    {
+      "id": "sch_arcpen",
+      "name": "Plan: Old Works Arc-Pen",
+      "class": "schematic",
+      "tier": 1,
+      "weight": 0.0,
+      "base_price": 400,
+      "description": "Makes wpn_ow_arcpen.",
+      "schematic": {
+        "output": "wpn_ow_arcpen",
+        "inputs": {
+          "power": 2,
+          "optics": 1
+        },
+        "skill_min": 20
+      }
+    },
+    {
+      "id": "sch_coilgun",
+      "name": "Plan: Old Works Coilgun",
+      "class": "schematic",
+      "tier": 1,
+      "weight": 0.0,
+      "base_price": 1500,
+      "description": "Makes wpn_ow_coilgun.",
+      "schematic": {
+        "output": "wpn_ow_coilgun",
+        "inputs": {
+          "hull": 3,
+          "power": 3,
+          "compute": 1
+        },
+        "skill_min": 35
+      }
+    },
+    {
+      "id": "sch_jury_rig",
+      "name": "Plan: Old Works Jury Rig",
+      "class": "schematic",
+      "tier": 1,
+      "weight": 0.0,
+      "base_price": 1200,
+      "description": "Makes imp_rig_ow_jury.",
+      "schematic": {
+        "output": "imp_rig_ow_jury",
+        "inputs": {
+          "compute": 3,
+          "power": 1
+        },
+        "skill_min": 30
+      }
+    },
+    {
+      "id": "sch_meteor_cannon",
+      "name": "Plan: Ferry-make Meteor Cannon",
+      "class": "schematic",
+      "tier": 1,
+      "weight": 0.0,
+      "base_price": 1800,
+      "description": "Makes wpn_ferry_meteor_cannon.",
+      "schematic": {
+        "output": "wpn_ferry_meteor_cannon",
+        "inputs": {
+          "hull": 8,
+          "power": 2
+        },
+        "skill_min": 40
+      }
+    },
+    {
+      "id": "sch_ringfall_rifle",
+      "name": "Plan: Ferry-make Ring-fall Rifle",
+      "class": "schematic",
+      "tier": 1,
+      "weight": 0.0,
+      "base_price": 4000,
+      "description": "Makes wpn_ferry_ringfall_rifle.",
+      "schematic": {
+        "output": "wpn_ferry_ringfall_rifle",
+        "inputs": {
+          "hull": 6,
+          "optics": 3,
+          "intact": 1
+        },
+        "skill_min": 60
+      }
+    },
+    {
+      "id": "sch_railpistol",
+      "name": "Plan: Old Works Railpistol",
+      "class": "schematic",
+      "tier": 1,
+      "weight": 0.0,
+      "base_price": 4500,
+      "description": "Makes wpn_ow_railpistol.",
+      "schematic": {
+        "output": "wpn_ow_railpistol",
+        "inputs": {
+          "power": 4,
+          "compute": 2,
+          "intact": 1
+        },
+        "skill_min": 60
+      }
+    },
+    {
+      "id": "sch_deepwater_rig",
+      "name": "Plan: Old Works Deepwater Rig",
+      "class": "schematic",
+      "tier": 1,
+      "weight": 0.0,
+      "base_price": 0,
+      "description": "Makes imp_rig_ow_deepwater.",
+      "schematic": {
+        "output": "imp_rig_ow_deepwater",
+        "inputs": {
+          "compute": 6,
+          "power": 3,
+          "intact": 2
+        },
+        "skill_min": 70
+      }
+    },
+    {
+      "id": "sch_lifter",
+      "name": "Plan: Ferry-make Lifter",
+      "class": "schematic",
+      "tier": 1,
+      "weight": 0.0,
+      "base_price": 2500,
+      "description": "Makes drn_ferry_lifter.",
+      "schematic": {
+        "output": "drn_ferry_lifter",
+        "inputs": {
+          "hull": 8,
+          "power": 3,
+          "compute": 1
+        },
+        "skill_min": 45
+      }
+    },
+    {
+      "id": "sch_stinger",
+      "name": "Plan: Sable Works Stinger",
+      "class": "schematic",
+      "tier": 1,
+      "weight": 0.0,
+      "base_price": 1000,
+      "description": "Makes drn_sable_stinger.",
+      "schematic": {
+        "output": "drn_sable_stinger",
+        "inputs": {
+          "hull": 2,
+          "power": 2,
+          "compute": 1
+        },
+        "skill_min": 30
+      }
+    },
+    {
+      "id": "sch_etcher",
+      "name": "Plan: Sable Works Etcher",
+      "class": "schematic",
+      "tier": 1,
+      "weight": 0.0,
+      "base_price": 3000,
+      "description": "Makes wpn_sable_acid_blade.",
+      "schematic": {
+        "output": "wpn_sable_acid_blade",
+        "inputs": {
+          "hull": 2,
+          "intact": 1
+        },
+        "skill_min": 50
+      }
+    },
+    {
+      "id": "sch_mirror_shell",
+      "name": "Plan: Ostrom Mirror Shell",
+      "class": "schematic",
+      "tier": 1,
+      "weight": 0.0,
+      "base_price": 0,
+      "description": "Makes arm_ostrom_mirror.",
+      "schematic": {
+        "output": "arm_ostrom_mirror",
+        "inputs": {
+          "optics": 8,
+          "hull": 3,
+          "intact": 1
+        },
+        "skill_min": 65
+      }
+    },
+    {
+      "id": "sch_hunterkiller",
+      "name": "Plan: Hunter-killer",
+      "class": "schematic",
+      "tier": 1,
+      "weight": 0.0,
+      "base_price": 0,
+      "description": "Makes prg_hunter_killer.",
+      "schematic": {
+        "output": "prg_hunter_killer",
+        "inputs": {
+          "compute": 5,
+          "intact": 1
+        },
+        "skill_min": 60
+      }
+    },
+    {
+      "id": "key_containment_charge",
+      "name": "Containment Charge",
+      "class": "consumable",
+      "tier": 1,
+      "weight": 1.5,
+      "base_price": 1500,
+      "description": "Cuts a core's power from any tile within 3 of its hardware, through the wall. Single use. Halvard's answer to a locked server room.",
+      "consumable": {
+        "effects": {
+          "cut_power_radius": 3
+        },
+        "cooldown_class": "tool"
+      }
+    },
+    {
+      "id": "key_curfew_pass",
+      "name": "Curfew Pass",
+      "class": "pass",
+      "tier": 1,
+      "weight": 0.1,
+      "base_price": 400,
+      "description": "Admits the holder to the Core during a Curfew. Expires after 7 days. Marked holders are refused at the line."
+    },
+    {
+      "id": "key_row_pass",
+      "name": "Row Pass",
+      "class": "pass",
+      "tier": 1,
+      "weight": 0.1,
+      "base_price": 250,
+      "description": "Opens a nonessential Sable back-room shortcut. Public bars and boards remain available."
+    },
+    {
+      "id": "key_visitor_pass",
+      "name": "Spire Visitor's Pass",
+      "class": "pass",
+      "tier": 1,
+      "weight": 0.1,
+      "base_price": 600,
+      "description": "Admits one non-Halvard character to the Spire Mezzanine for 30 minutes."
+    },
+    {
+      "id": "key_silt_beacon",
+      "name": "Silt Beacon",
+      "class": "consumable",
+      "tier": 1,
+      "weight": 0.5,
+      "base_price": 900,
+      "description": "Marks a descent cell for the crew for one hour; crew members see it on the sector view from any cell.",
+      "consumable": {
+        "effects": {
+          "beacon_seconds": 3600
+        },
+        "cooldown_class": "tool"
+      }
+    },
+    {
+      "id": "key_ringfall_chart",
+      "name": "Ring-fall Chart",
+      "class": "data",
+      "tier": 1,
+      "weight": 0.2,
+      "base_price": 1200,
+      "description": "Names the next Ring-fall ring one hour early. Sells to anyone who did not earn it."
+    },
+    {
+      "id": "story_vesper_card",
+      "name": "Vesper's Card",
+      "class": "misc",
+      "tier": 1,
+      "weight": 0.1,
+      "base_price": 0,
+      "description": "A contract card. *Vesper, Tin Halo, Sodium Row.*",
+      "secured_default": true
+    },
+    {
+      "id": "story_telemetry_unit_warm",
+      "name": "Warm Telemetry Unit",
+      "class": "data",
+      "tier": 1,
+      "weight": 0.5,
+      "base_price": 0,
+      "description": "Site Zero salvage that is still warm.",
+      "secured_default": true
+    },
+    {
+      "id": "story_halvard_seal_beacon",
+      "name": "Seal Beacon",
+      "class": "misc",
+      "tier": 1,
+      "weight": 0.5,
+      "base_price": 0,
+      "description": "A monitor beacon Halvard wants planted at the seal.",
+      "secured_default": true
+    },
+    {
+      "id": "story_sealed_template_canister",
+      "name": "Sealed Template Canister",
+      "class": "misc",
+      "tier": 1,
+      "weight": 0.5,
+      "base_price": 0,
+      "description": "A canister from below the outworks. Sablier does not say what is in it.",
+      "secured_default": true
+    },
+    {
+      "id": "story_template_shield_rig",
+      "name": "Template Shield Rig",
+      "class": "misc",
+      "tier": 1,
+      "weight": 0.5,
+      "base_price": 0,
+      "description": "Shields walked templates from Sablier's recall signal.",
+      "secured_default": true
+    },
+    {
+      "id": "story_resonance_beacon",
+      "name": "Resonance Beacon",
+      "class": "misc",
+      "tier": 1,
+      "weight": 0.5,
+      "base_price": 0,
+      "description": "Quell's beacon for a cell that should not exist.",
+      "secured_default": true
+    },
+    {
+      "id": "story_listening_stake",
+      "name": "Listening Stake",
+      "class": "misc",
+      "tier": 1,
+      "weight": 0.5,
+      "base_price": 0,
+      "description": "A stake the Ferrymen drive at a conduit head to hear it hum.",
+      "secured_default": true
+    },
+    {
+      "id": "story_residual_fragment_99b",
+      "name": "Residual Fragment 99-B",
+      "class": "data",
+      "tier": 1,
+      "weight": 0.5,
+      "base_price": 0,
+      "description": "A second copy of Ninety-Nine that says one thing.",
+      "secured_default": true
+    },
+    {
+      "id": "story_unmoored_drop_cache",
+      "name": "Drop Cache",
+      "class": "misc",
+      "tier": 1,
+      "weight": 0.5,
+      "base_price": 0,
+      "description": "The cache under Terrace Nine.",
+      "secured_default": true
+    },
+    {
+      "id": "story_authority_image_copy",
+      "name": "Authority Image Copy",
+      "class": "data",
+      "tier": 1,
+      "weight": 0.5,
+      "base_price": 0,
+      "description": "A copy of the Dispatcher's process image.",
+      "secured_default": true
+    },
+    {
+      "id": "story_holt_manual_schedule",
+      "name": "Holt's Hand Schedule",
+      "class": "data",
+      "tier": 1,
+      "weight": 0.5,
+      "base_price": 0,
+      "description": "A convoy schedule written by hand. Late, unreliable, human.",
+      "secured_default": true
+    },
+    {
+      "id": "story_choir_beacon_2",
+      "name": "Choir Beacon II",
+      "class": "misc",
+      "tier": 1,
+      "weight": 0.5,
+      "base_price": 0,
+      "description": "A beacon for the shaft head.",
+      "secured_default": true
+    },
+    {
+      "id": "story_ferrymen_repeater",
+      "name": "Ferrymen Repeater",
+      "class": "misc",
+      "tier": 1,
+      "weight": 0.5,
+      "base_price": 0,
+      "description": "A repeater for the Far Relay.",
+      "secured_default": true
+    },
+    {
+      "id": "story_stuck_door_package",
+      "name": "Stuck-door Package",
+      "class": "misc",
+      "tier": 1,
+      "weight": 0.5,
+      "base_price": 0,
+      "description": "A package behind a door that sticks.",
+      "secured_default": true
+    },
+    {
+      "id": "arm_civic_guard_suit",
+      "name": "Civic Pattern guard suit",
       "class": "armour",
-      "weight": 3,
-      "base_price": 220,
+      "tier": 2,
+      "weight": 5.0,
+      "base_price": 1500,
+      "description": "Warden issue. The finish is blue.",
+      "maker": "Civic Pattern",
       "armour": {
         "slot": "body",
         "armour": {
-          "kinetic": 6,
-          "energy": 3,
-          "chemical": 2
-        }
+          "kinetic": 12,
+          "energy": 8,
+          "chemical": 6,
+          "dissonance": 0
+        },
+        "evasion": -2,
+        "heavy": false
+      }
+    },
+    {
+      "id": "wpn_civic_hv9",
+      "name": "Civic Pattern battle rifle",
+      "class": "weapon",
+      "tier": 2,
+      "weight": 4.0,
+      "base_price": 1400,
+      "description": "Warden issue. The finish is blue.",
+      "maker": "Civic Pattern",
+      "weapon": {
+        "damage": 24,
+        "cooldown": 1.1,
+        "accuracy": 60,
+        "damage_type": "kinetic",
+        "melee": false,
+        "heavy": false,
+        "range": 11,
+        "ammo": "ammo_5x"
+      }
+    },
+    {
+      "id": "wpn_civic_shock_baton",
+      "name": "Civic Pattern shock baton",
+      "class": "weapon",
+      "tier": 2,
+      "weight": 1.2,
+      "base_price": 700,
+      "description": "Warden issue. The finish is blue.",
+      "maker": "Civic Pattern",
+      "weapon": {
+        "damage": 22,
+        "cooldown": null,
+        "accuracy": null,
+        "damage_type": "energy",
+        "melee": true,
+        "heavy": false,
+        "stamina": 8,
+        "shock": 10
       }
     }
   ]

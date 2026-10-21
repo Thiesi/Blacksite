@@ -35,7 +35,8 @@ def create(game: HeadlessServer, client: FakeClient, archetype: int = 1, name: s
 def state(game: HeadlessServer) -> dict[str, Any]:
     manager = game.core.characters
     return deepcopy({"players": [p.record() for p in manager.players.values()], "identities": manager.identities,
-                     "serial": manager.serial, "cap": manager.cap})
+                     "serial": manager.serial, "cap": manager.cap,
+                     "items": [item.record() for item in manager.items.values()]})
 
 
 def place(game: HeadlessServer, client: FakeClient, zone_id: str, tile: tuple[int, int]) -> None:

@@ -127,6 +127,19 @@
         "name": "Corridor door",
         "open": true
       }
+    },
+    {
+      "id": "wake-outfitter",
+      "tile": [
+        34,
+        15
+      ],
+      "kind": "vendor",
+      "essential": true,
+      "params": {
+        "vendor": "wake-outfitter",
+        "name": "Sablier Wake Outfitter"
+      }
     }
   ],
   "lore": [

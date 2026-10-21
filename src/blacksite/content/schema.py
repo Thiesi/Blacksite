@@ -475,7 +475,7 @@ ItemClass = Literal[
     "misc",
 ]
 ArmourSlot = Literal["body", "head", "legs", "hands"]
-ImplantSlot = Literal["eyes", "arms", "legs", "spine", "skin", "cortex", "ears", "throat", "rig", "head"]
+ImplantSlot = Literal["eyes", "arms", "legs", "spine", "skin", "cortex", "ears", "throat", "rig", "head", "torso"]
 
 
 @dataclass(frozen=True)
@@ -487,7 +487,7 @@ class DamageOverTime:
 @dataclass(frozen=True)
 class WeaponBlock:
     damage: int
-    cooldown: Number
+    cooldown: Number | None
     accuracy: int | None
     damage_type: DamageType
     range: int | None = None
@@ -499,6 +499,9 @@ class WeaponBlock:
     """Stamina per swing, melee only."""
     dot: DamageOverTime | None = None
     shock: int = 0
+    hits: int = 1
+    targets: int = 1
+    cone: int = 0
 
 
 @dataclass(frozen=True)
@@ -559,10 +562,13 @@ class ConsumableBlock:
 @dataclass(frozen=True)
 class DroneBlock:
     health: int
-    speed: Number
-    sight: int
+    speed: Number | None
+    sight: int | None
     weapon: str | None = None
     tool: str | None = None
+    evasion: int = 0
+    attack: WeaponBlock | None = None
+    control_range: int | None = None
 
 
 @dataclass(frozen=True)
@@ -590,6 +596,7 @@ class ItemTemplate:
     """Inline catalog line (04-assets.md section 1)."""
     stack_max: int = 1
     maker: str | None = None
+    requires_archetype: str | None = None
     weapon: WeaponBlock | None = None
     armour: ArmourBlock | None = None
     ammo: AmmoBlock | None = None
@@ -639,6 +646,9 @@ VendorTier = Literal["list", "member", "restricted"]
 class VendorStock:
     item: str
     standing: int | None = None
+    factions: tuple[str, ...] = ()
+    archetype: str | None = None
+    price_multiplier: Number = 1
 
 
 @dataclass(frozen=True)
@@ -649,6 +659,12 @@ class Vendor:
     stock: tuple[VendorStock, ...]
     faction: str | None = None
     zone: str | None = None
+    object_id: str | None = None
+    requires_factions: tuple[str, ...] = ()
+    requires_archetype: str | None = None
+    price_multiplier: Number = 1
+    salvage_multiplier: Number = 1
+    daily_rotation: bool = False
     schema: int = CONTENT_SCHEMA
 
 

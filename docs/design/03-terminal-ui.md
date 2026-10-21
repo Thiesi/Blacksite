@@ -29,6 +29,10 @@ suits (`♦♣♥♠`), and a few symbols (`§°±≡`). No emoji, no combining 
 and a test asserts every glyph in `glyphs.json` round-trips through
 CP437.
 
+Commerce objects use the registered `$` for counters/banks and `*` for
+dropped-item caches. These are object overlays, so an anchor remains
+visible even when its underlying terrain is ordinary floor.
+
 Every colour in the game is a **role** (`palette.json`): `wall`, `floor`,
 `cover`, `water`, `hazard`, `player_self`, `player_crew`, `player_neutral`,
 `player_hostile`, `player_marked`, `npc_*`, per-faction, `ice_*`, per

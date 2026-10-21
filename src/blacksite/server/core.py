@@ -14,6 +14,7 @@ from blacksite.server.world.registry import World
 from blacksite.server.world.simulation import ZoneSimulation
 from blacksite.server.characters import Characters
 from blacksite.server.chat import Chat
+from blacksite.server.commerce import Commerce
 from blacksite.version import PACKAGE_VERSION, PROTOCOL_MAJOR
 
 
@@ -49,6 +50,9 @@ class Core:
         self.chat = Chat(self.sessions, sim, clock, self.characters) if sim else None
         if self.chat:
             self.loop.subsystems.append(self.chat)
+        self.commerce = Commerce(self.characters, character_state.get("commerce", {})) if self.characters else None
+        if self.commerce:
+            self.loop.subsystems.append(self.commerce)
 
     def connect(self, frame: Frame) -> Session:
         if frame.type != "hello":
@@ -105,6 +109,8 @@ class Core:
             return
         if frame.type == "intent" and frame.data["name"] == "resync":
             session.replay_log()
+        if self.commerce and self.commerce.input(session, frame, event.data["tick"]):
+            return
         if self.chat and self.chat.input(session, frame, event.data["tick"]):
             return
         # Echo only the verb, never args, arbitrary chat, or private data.

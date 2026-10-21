@@ -103,6 +103,11 @@ class ContentTree:
         """The relative path a record came from, or a placeholder."""
         return self.sources.get((kind, record_id), f"<{kind}:{record_id}>")
 
+    def active(self, kind: str, record_id: str) -> bool:
+        """Authoring records remain data; they never activate a live service."""
+        return not any(bundle.status != "active" and record_id in bundle.members.get(kind, ())
+                       for bundle in self.bundles.values())
+
 
 def content_files(root: Path) -> list[Path]:
     """Every content file under `root`, sorted by relative POSIX path."""

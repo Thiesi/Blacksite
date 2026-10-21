@@ -74,7 +74,8 @@
       "kind": "vendor",
       "essential": true,
       "params": {
-        "name": "Sablier main clinic"
+        "name": "Sablier Clinic (any)",
+        "vendor": "sablier-clinic"
       }
     },
     {
@@ -239,6 +240,18 @@
       "kind": "tram_stop",
       "params": {
         "name": "Tram platform"
+      }
+    },
+    {
+      "id": "kestrel-bank",
+      "tile": [
+        12,
+        10
+      ],
+      "kind": "bank",
+      "essential": true,
+      "params": {
+        "name": "Kestrel bank"
       }
     }
   ],

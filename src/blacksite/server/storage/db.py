@@ -131,7 +131,38 @@ class Storage:
                             for key, value in dict(row).items()})
         return {"players": players, "identities": {row[0]: json.loads(row[1]) for row in self.db.execute("SELECT * FROM identities")},
                 "serial": self.meta("player_serial") or 0, "cap": self.meta("character_cap"),
-                "items": [json.loads(row[0]) for row in self.db.execute("SELECT data FROM items")]}
+                "items": [json.loads(row[0]) for row in self.db.execute("SELECT data FROM items")],
+                "commerce": {"item_serial": self.meta("item_serial") or 0,
+                    "budgets": {row[0]: {"hour":row[1], "remaining":row[2]} for row in self.db.execute("SELECT * FROM vendor_budgets")},
+                    "caches": {row[0]: json.loads(row[1]) for row in self.db.execute("SELECT * FROM caches")}}}
+
+    def commerce_write(self, effect: dict[str, Any]) -> None:
+        """Architecture 6.2: transfer, money, ownership and receipt are atomic."""
+        player = effect["player"]
+        with self.db:
+            if player:
+                cols = list(player)
+                if not set(cols) <= self.player_columns: raise ValueError("unknown player fields")
+                quoted = ",".join(f'"{c}"' for c in cols)
+                updates = ",".join(f'"{c}"=excluded."{c}"' for c in cols if c != "id")
+                values = [self._json(player[c]) if isinstance(player[c], (dict,list,tuple)) else player[c] for c in cols]
+                self.db.execute(f'INSERT INTO players ({quoted}) VALUES ({",".join("?" for _ in cols)}) ON CONFLICT(id) DO UPDATE SET {updates}', values)
+            for item in effect["items"]:
+                self.db.execute("INSERT OR REPLACE INTO items(id,authority,data) VALUES(?,?,?)", (item["id"],self.origin,self._json(item)))
+            for iid in effect["delete_items"]:
+                self.db.execute("DELETE FROM items WHERE id=?", (iid,))
+            for key, budget in effect["budgets"].items():
+                self.db.execute("INSERT OR REPLACE INTO vendor_budgets VALUES(?,?,?)", (key,budget["hour"],budget["remaining"]))
+            self.db.execute("DELETE FROM caches")
+            for key, cache in effect["caches"].items():
+                self.db.execute("INSERT INTO caches VALUES(?,?)", (key,self._json(cache)))
+            self.db.execute("INSERT OR REPLACE INTO meta(key,value) VALUES('item_serial',?)", (self._json(effect["serial"]),))
+            self.db.execute("INSERT INTO audit(at,data) VALUES(?,?)", (self.clock.now_utc().isoformat(), self._json({"action":"item_transfer", "player":player["id"] if player else None})))
+        # Never let an older write-behind snapshot overwrite this receipt.
+        settled = {("items", item["id"]) for item in effect["items"]} | {("items", iid) for iid in effect["delete_items"]}
+        if player: settled.add(("players",player["id"]))
+        for key in settled:
+            self.dirty.pop(key,None); self.dirty_since.pop(key,None)
 
     def character_write(self, effect: dict[str, Any]) -> None:
         """Commit creation rewards/deletion before the simulation acknowledges."""

@@ -1,0 +1,788 @@
+{
+  "schema": 1,
+  "vendors": [
+    {
+      "id": "kestrel-depot",
+      "name": "Kestrel Depot Counter",
+      "tier": "list",
+      "stock": [
+        {
+          "item": "wpn_kestrel_sidearm"
+        },
+        {
+          "item": "wpn_halvard_hv7"
+        },
+        {
+          "item": "wpn_kestrel_flare_pistol"
+        },
+        {
+          "item": "wpn_kestrel_baton"
+        },
+        {
+          "item": "arm_kestrel_vest"
+        },
+        {
+          "item": "arm_kestrel_helmet"
+        },
+        {
+          "item": "con_kestrel_ration"
+        },
+        {
+          "item": "con_kestrel_beacon"
+        },
+        {
+          "item": "imp_kestrel_loadframe"
+        }
+      ],
+      "faction": "kestrel",
+      "zone": "tramyard-market"
+    },
+    {
+      "id": "kestrel-armoury",
+      "name": "Kestrel Convoy Armoury",
+      "tier": "member",
+      "stock": [
+        {
+          "item": "wpn_kestrel_convoy_smg"
+        },
+        {
+          "item": "arm_kestrel_greaves"
+        },
+        {
+          "item": "wpn_kestrel_gate_gun",
+          "standing": 60
+        }
+      ],
+      "faction": "kestrel",
+      "zone": "tramyard-depots"
+    },
+    {
+      "id": "halvard-public",
+      "name": "Halvard Public Concourse",
+      "tier": "list",
+      "stock": [
+        {
+          "item": "wpn_halvard_hv7"
+        },
+        {
+          "item": "arm_halvard_visor"
+        },
+        {
+          "item": "imp_halvard_stabiliser"
+        },
+        {
+          "item": "wpn_halvard_shock_baton"
+        }
+      ],
+      "faction": "halvard",
+      "zone": "spire-atrium"
+    },
+    {
+      "id": "halvard-security",
+      "name": "Halvard Security Issue",
+      "tier": "member",
+      "stock": [
+        {
+          "item": "wpn_halvard_hv9"
+        },
+        {
+          "item": "wpn_halvard_dmr"
+        },
+        {
+          "item": "arm_halvard_guard_suit"
+        },
+        {
+          "item": "imp_halvard_reflex_arm"
+        },
+        {
+          "item": "drn_halvard_sentry"
+        },
+        {
+          "item": "wpn_halvard_hv12",
+          "standing": 60
+        },
+        {
+          "item": "wpn_halvard_anvil",
+          "standing": 60
+        },
+        {
+          "item": "arm_halvard_plate",
+          "standing": 60
+        },
+        {
+          "item": "arm_halvard_breacher_helm",
+          "standing": 60
+        },
+        {
+          "item": "wpn_halvard_ram",
+          "standing": 60
+        },
+        {
+          "item": "imp_halvard_dermal_plate",
+          "standing": 60
+        },
+        {
+          "item": "imp_halvard_heavy_mount",
+          "standing": 60
+        },
+        {
+          "item": "drn_halvard_hound",
+          "standing": 60
+        }
+      ],
+      "faction": "halvard",
+      "zone": "spire-mezzanine"
+    },
+    {
+      "id": "ostrom-showroom",
+      "name": "Ostrom Showroom",
+      "tier": "list",
+      "stock": [
+        {
+          "item": "wpn_ostrom_pinlight"
+        },
+        {
+          "item": "imp_ostrom_lowlight"
+        },
+        {
+          "item": "imp_ostrom_rangefinder"
+        },
+        {
+          "item": "drn_ostrom_eye"
+        },
+        {
+          "item": "ammo_cell"
+        }
+      ],
+      "faction": "halvard",
+      "zone": "core-plaza",
+      "object_id": "plaza-general-vendor"
+    },
+    {
+      "id": "ostrom-contract",
+      "name": "Ostrom Contract Sales",
+      "tier": "restricted",
+      "stock": [
+        {
+          "item": "wpn_ostrom_lance"
+        },
+        {
+          "item": "wpn_ostrom_arc_projector"
+        },
+        {
+          "item": "arm_ostrom_weave"
+        },
+        {
+          "item": "imp_ostrom_target_lock"
+        },
+        {
+          "item": "wpn_ostrom_scalpel",
+          "standing": 50,
+          "factions": [
+            "halvard",
+            "sablier"
+          ]
+        },
+        {
+          "item": "wpn_ostrom_sunlance",
+          "standing": 50,
+          "factions": [
+            "halvard",
+            "sablier"
+          ]
+        },
+        {
+          "item": "wpn_ostrom_pulse_carbine",
+          "standing": 50,
+          "factions": [
+            "halvard",
+            "sablier"
+          ]
+        }
+      ],
+      "faction": "halvard",
+      "zone": "spire-mezzanine"
+    },
+    {
+      "id": "sablier-clinic",
+      "name": "Sablier Clinic (any)",
+      "tier": "list",
+      "stock": [
+        {
+          "item": "con_sablier_patch"
+        },
+        {
+          "item": "con_sablier_trauma_kit"
+        },
+        {
+          "item": "con_sablier_neutraliser"
+        },
+        {
+          "item": "con_sablier_pickup"
+        },
+        {
+          "item": "drug_sablier_focus"
+        },
+        {
+          "item": "drug_sablier_calm"
+        },
+        {
+          "item": "imp_sablier_sub_dermal"
+        },
+        {
+          "item": "imp_sablier_adrenal"
+        },
+        {
+          "item": "imp_sablier_secure_pocket"
+        },
+        {
+          "item": "imp_sablier_shock_sink"
+        },
+        {
+          "item": "imp_sablier_clotting"
+        },
+        {
+          "item": "imp_sablier_sprint_legs"
+        },
+        {
+          "item": "imp_sablier_second_heart"
+        },
+        {
+          "item": "imp_sablier_secure_vault"
+        },
+        {
+          "item": "imp_sablier_detox_gland"
+        }
+      ],
+      "faction": "sablier",
+      "zone": "vatside-clinics",
+      "object_id": "sablier-main-clinic"
+    },
+    {
+      "id": "wake-outfitter",
+      "name": "Sablier Wake Outfitter",
+      "tier": "list",
+      "stock": [
+        {
+          "item": "arm_wake_coverall"
+        },
+        {
+          "item": "wpn_kestrel_sidearm"
+        },
+        {
+          "item": "ammo_9x"
+        },
+        {
+          "item": "wpn_kestrel_baton"
+        },
+        {
+          "item": "con_sablier_patch"
+        },
+        {
+          "item": "con_kestrel_ration"
+        },
+        {
+          "item": "story_vesper_card"
+        },
+        {
+          "item": "arm_kestrel_vest"
+        },
+        {
+          "item": "imp_res_first_ear"
+        },
+        {
+          "item": "drn_kestrel_mule"
+        }
+      ],
+      "faction": "sablier",
+      "zone": "vatside-wake-hall",
+      "object_id": "wake-outfitter"
+    },
+    {
+      "id": "warden-quartermaster",
+      "name": "Warden Quartermaster",
+      "tier": "member",
+      "stock": [
+        {
+          "item": "arm_civic_guard_suit"
+        },
+        {
+          "item": "wpn_civic_hv9"
+        },
+        {
+          "item": "wpn_civic_shock_baton"
+        }
+      ],
+      "faction": "wardens",
+      "zone": "core-precinct",
+      "object_id": "warden-quartermaster"
+    },
+    {
+      "id": "sink-market",
+      "name": "Sink Market",
+      "tier": "list",
+      "stock": [
+        {
+          "item": "wpn_sable_streetsweeper"
+        },
+        {
+          "item": "wpn_sable_spitter"
+        },
+        {
+          "item": "wpn_sable_shiv"
+        },
+        {
+          "item": "arm_sable_leathers"
+        },
+        {
+          "item": "con_sable_stim"
+        },
+        {
+          "item": "ammo_gel"
+        },
+        {
+          "item": "ammo_needle"
+        },
+        {
+          "item": "drug_sable_redline"
+        },
+        {
+          "item": "drug_sable_glass"
+        },
+        {
+          "item": "drug_sable_brick"
+        },
+        {
+          "item": "drug_sable_deepwater"
+        },
+        {
+          "item": "drug_sable_lullaby"
+        },
+        {
+          "item": "drug_sable_chrome"
+        }
+      ],
+      "faction": "red-sable",
+      "zone": "sink-rim"
+    },
+    {
+      "id": "sable-back-room",
+      "name": "Sable Works Back Room",
+      "tier": "member",
+      "stock": [
+        {
+          "item": "wpn_sable_needler"
+        },
+        {
+          "item": "wpn_sable_pump"
+        },
+        {
+          "item": "wpn_sable_torch"
+        },
+        {
+          "item": "wpn_sable_machete"
+        },
+        {
+          "item": "arm_sable_chem_suit"
+        },
+        {
+          "item": "drn_sable_stinger"
+        },
+        {
+          "item": "wpn_sable_widow",
+          "standing": 50
+        },
+        {
+          "item": "arm_sable_widow_suit",
+          "standing": 50
+        },
+        {
+          "item": "sch_etcher",
+          "standing": 50
+        }
+      ],
+      "faction": "red-sable",
+      "zone": "sink-terraces"
+    },
+    {
+      "id": "black-clinic",
+      "name": "Black Clinic",
+      "tier": "list",
+      "stock": [
+        {
+          "item": "drug_sable_chrome"
+        },
+        {
+          "item": "imp_ostrom_lowlight"
+        },
+        {
+          "item": "imp_sablier_sub_dermal"
+        },
+        {
+          "item": "imp_sablier_adrenal"
+        },
+        {
+          "item": "imp_kestrel_loadframe"
+        },
+        {
+          "item": "imp_sablier_secure_pocket"
+        },
+        {
+          "item": "imp_ostrom_rangefinder"
+        },
+        {
+          "item": "imp_halvard_reflex_arm"
+        },
+        {
+          "item": "imp_halvard_stabiliser"
+        },
+        {
+          "item": "imp_sablier_shock_sink"
+        },
+        {
+          "item": "imp_sablier_clotting"
+        },
+        {
+          "item": "imp_sablier_sprint_legs"
+        },
+        {
+          "item": "imp_ow_ghost_step"
+        },
+        {
+          "item": "imp_ostrom_target_lock"
+        },
+        {
+          "item": "imp_sablier_second_heart"
+        },
+        {
+          "item": "imp_halvard_dermal_plate"
+        },
+        {
+          "item": "imp_sablier_secure_vault"
+        },
+        {
+          "item": "imp_sablier_detox_gland"
+        },
+        {
+          "item": "imp_ow_drone_uplink"
+        },
+        {
+          "item": "imp_halvard_heavy_mount"
+        }
+      ],
+      "faction": "red-sable",
+      "zone": "sink-floor",
+      "price_multiplier": 0.6
+    },
+    {
+      "id": "oldworks-bench",
+      "name": "Old Works Bench",
+      "tier": "list",
+      "stock": [
+        {
+          "item": "wpn_ow_arcpen"
+        },
+        {
+          "item": "item_rig_portable_ow_brick"
+        },
+        {
+          "item": "item_rig_portable_ow_slab"
+        },
+        {
+          "item": "imp_rig_ow_jury"
+        },
+        {
+          "item": "con_ow_cell_charger"
+        },
+        {
+          "item": "drug_ow_static"
+        },
+        {
+          "item": "sch_cell"
+        },
+        {
+          "item": "sch_arcpen"
+        },
+        {
+          "item": "prg_pick"
+        },
+        {
+          "item": "prg_chisel"
+        },
+        {
+          "item": "prg_umbrella"
+        },
+        {
+          "item": "prg_slicker"
+        },
+        {
+          "item": "prg_smoke"
+        },
+        {
+          "item": "prg_alibi"
+        },
+        {
+          "item": "prg_caffeine"
+        },
+        {
+          "item": "prg_overclock"
+        },
+        {
+          "item": "prg_skeleton"
+        },
+        {
+          "item": "prg_locksmith"
+        },
+        {
+          "item": "prg_sneakers"
+        },
+        {
+          "item": "prg_shroud"
+        },
+        {
+          "item": "prg_compass"
+        },
+        {
+          "item": "prg_ledger"
+        },
+        {
+          "item": "prg_lantern"
+        },
+        {
+          "item": "prg_burn"
+        },
+        {
+          "item": "prg_choir_cantillation_1"
+        }
+      ],
+      "faction": "unmoored",
+      "zone": "oldworks-main"
+    },
+    {
+      "id": "oldworks-deep",
+      "name": "Old Works Deep Bench",
+      "tier": "member",
+      "stock": [
+        {
+          "item": "wpn_ow_coilgun"
+        },
+        {
+          "item": "wpn_ow_arc_knuckles"
+        },
+        {
+          "item": "imp_ow_ghost_step"
+        },
+        {
+          "item": "imp_rig_sablier_clinical"
+        },
+        {
+          "item": "imp_ow_drone_uplink"
+        },
+        {
+          "item": "wpn_ow_railpistol",
+          "standing": 60
+        },
+        {
+          "item": "sch_railpistol",
+          "standing": 60
+        },
+        {
+          "item": "drn_ow_relay",
+          "standing": 60
+        },
+        {
+          "item": "prg_drill"
+        },
+        {
+          "item": "prg_mallet"
+        },
+        {
+          "item": "prg_wetsuit"
+        },
+        {
+          "item": "prg_understudy"
+        },
+        {
+          "item": "prg_redline"
+        },
+        {
+          "item": "prg_passkey"
+        },
+        {
+          "item": "prg_nobody"
+        },
+        {
+          "item": "prg_pulse"
+        },
+        {
+          "item": "prg_tourniquet"
+        },
+        {
+          "item": "prg_choir_cantillation_2"
+        },
+        {
+          "item": "prg_residual_fragment"
+        }
+      ],
+      "faction": "unmoored",
+      "zone": "oldworks-drop"
+    },
+    {
+      "id": "chapel-almoner",
+      "name": "Chapel Almoner",
+      "tier": "restricted",
+      "stock": [
+        {
+          "item": "arm_chapel_vestment",
+          "standing": 20,
+          "archetype": "cantor"
+        },
+        {
+          "item": "drug_chapel_hush",
+          "standing": 20,
+          "archetype": "cantor"
+        },
+        {
+          "item": "imp_res_first_ear",
+          "standing": 20,
+          "archetype": "cantor"
+        },
+        {
+          "item": "imp_res_throat",
+          "standing": 20,
+          "archetype": "cantor"
+        }
+      ],
+      "faction": "choir",
+      "zone": "chapel-nave"
+    },
+    {
+      "id": "chapel-foundry",
+      "name": "Chapel Foundry",
+      "tier": "member",
+      "stock": [
+        {
+          "item": "wpn_chapel_tuning_fork"
+        },
+        {
+          "item": "wpn_chapel_choir_bell",
+          "standing": 60
+        },
+        {
+          "item": "wpn_chapel_hand_bell",
+          "standing": 60
+        },
+        {
+          "item": "imp_res_second_ear"
+        },
+        {
+          "item": "imp_res_chord"
+        },
+        {
+          "item": "imp_res_tremor"
+        },
+        {
+          "item": "imp_res_ninefold_lattice",
+          "standing": 60
+        },
+        {
+          "item": "imp_res_tenant_ear",
+          "standing": 60
+        },
+        {
+          "item": "imp_res_silence",
+          "standing": 60
+        }
+      ],
+      "faction": "choir",
+      "zone": "chapel-nave"
+    },
+    {
+      "id": "landing-trade",
+      "name": "The Landing Trade Post",
+      "tier": "list",
+      "stock": [
+        {
+          "item": "wpn_ferry_slugthrower"
+        },
+        {
+          "item": "wpn_ferry_wrench"
+        },
+        {
+          "item": "arm_ferry_scrap_plate"
+        },
+        {
+          "item": "con_ferry_flare_stick"
+        },
+        {
+          "item": "drug_ferry_ringdust"
+        },
+        {
+          "item": "ammo_scrap"
+        },
+        {
+          "item": "sch_scrap_bolts"
+        },
+        {
+          "item": "sch_scrap_plate"
+        },
+        {
+          "item": "sch_slugthrower"
+        },
+        {
+          "item": "sch_ring_wrench"
+        },
+        {
+          "item": "sch_flare_stick"
+        }
+      ],
+      "faction": "ferrymen",
+      "zone": "scour-landing",
+      "salvage_multiplier": 1.2
+    },
+    {
+      "id": "ferrys-own",
+      "name": "Ferry's Own",
+      "tier": "member",
+      "stock": [
+        {
+          "item": "wpn_ferry_meteor_cannon"
+        },
+        {
+          "item": "drn_ferry_lifter"
+        },
+        {
+          "item": "sch_meteor_cannon",
+          "standing": 30
+        },
+        {
+          "item": "sch_ringfall_rifle",
+          "standing": 60
+        },
+        {
+          "item": "sch_lifter",
+          "standing": 40
+        }
+      ],
+      "faction": "ferrymen",
+      "zone": "scour-landing"
+    },
+    {
+      "id": "vesper",
+      "name": "The Tin Halo (Vesper)",
+      "tier": "list",
+      "stock": [
+        {
+          "item": "drug_sable_glass"
+        },
+        {
+          "item": "con_sable_stim"
+        }
+      ],
+      "faction": "red-sable",
+      "zone": "sodium-tin-halo",
+      "object_id": "vesper",
+      "daily_rotation": true
+    }
+  ]
+}

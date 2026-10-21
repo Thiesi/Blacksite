@@ -27,6 +27,25 @@
       },
       "source": "starter",
       "price": 200
+    },
+    {
+      "id": "prg_hunter_killer",
+      "name": "Hunter-killer",
+      "class": "attack",
+      "tier": 4,
+      "slots": 2,
+      "cast_seconds": 2,
+      "cooldown_seconds": 15,
+      "effect": {
+        "kind": "damage",
+        "amount": 80,
+        "params": {
+          "hunter_only": true
+        }
+      },
+      "price": 4200,
+      "target_class": "ice",
+      "source": "core data"
     }
   ]
 }

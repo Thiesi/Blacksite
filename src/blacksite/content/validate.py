@@ -698,7 +698,8 @@ class _Validator:
             if item.weapon is not None:
                 self._check_weapon(item)
             if item.schematic is not None:
-                self.ref("items", item.schematic.output, owner, "schematic output")
+                kind = "programs" if item.schematic.output.startswith("prg_") else "items"
+                self.ref(kind, item.schematic.output, owner, "schematic output")
             if item.drone is not None:
                 self.ref("items", item.drone.weapon, owner, "drone weapon")
 
@@ -744,10 +745,22 @@ class _Validator:
         for vid, vendor in self.each("vendors"):
             assert isinstance(vendor, s.Vendor)
             owner = ("vendors", vid)
-            self.ref("factions", vendor.faction, owner, "faction")
+            # S07 recruiter identities supply pricing affiliations until S20
+            # installs the complete faction records; this grants no membership.
+            if vendor.faction not in self.t.wake_cards:
+                self.ref("factions", vendor.faction, owner, "faction")
             self.ref("zones", vendor.zone, owner, "zone")
             for entry in vendor.stock:
-                self.ref("items", entry.item, owner, "stock", entry.item)
+                kind = "programs" if entry.item.startswith("prg_") else "items"
+                self.ref(kind, entry.item, owner, "stock", entry.item)
+                if entry.price_multiplier <= 0:
+                    self.report(*owner, "stock price multiplier must be positive")
+            if vendor.price_multiplier <= 0 or vendor.salvage_multiplier <= 0:
+                self.report(*owner, "vendor price multipliers must be positive")
+            if self.current_active and vendor.object_id:
+                zone = self.t.zones.get(vendor.zone)
+                if zone and not any(o.id == vendor.object_id and o.kind == "vendor" for o in zone.meta.objects):
+                    self.report(*owner, "vendor object anchor is missing")
 
     # --- NPCs and factions --------------------------------------------------
 
