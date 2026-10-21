@@ -9,6 +9,7 @@ on:
       - 'scripts/accept_s06_netbbs.py'
       - 'scripts/accept_s07_netbbs.py'
       - 'scripts/accept_s08_netbbs.py'
+      - 'scripts/accept_s09_netbbs.py'
       - '.github/workflows/service-acceptance.yml'
       - 'pyproject.toml'
       - 'MANIFEST.in'
@@ -74,6 +75,10 @@ jobs:
         shell: bash
         run: |
           python scripts/accept_s08_netbbs.py --root "$RUNNER_TEMP/s08-proof" --door-python "$RUNNER_TEMP/s05-venv/bin/python"
+      - name: Accept social routing and log UI through NetBBS
+        shell: bash
+        run: |
+          python scripts/accept_s09_netbbs.py --root "$RUNNER_TEMP/s09-proof" --door-python "$RUNNER_TEMP/s05-venv/bin/python"
       - uses: actions/upload-artifact@v4
         if: always()
         with:
@@ -94,3 +99,8 @@ jobs:
         with:
           name: s08-city-proof
           path: ${{ runner.temp }}/s08-proof
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: s09-social-proof
+          path: ${{ runner.temp }}/s09-proof

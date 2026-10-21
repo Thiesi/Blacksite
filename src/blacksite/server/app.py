@@ -4,6 +4,7 @@ import asyncio
 import os
 import random
 import shutil
+import sqlite3
 import time
 from dataclasses import asdict
 from pathlib import Path
@@ -148,6 +149,18 @@ class Server:
             raise
 
     def _character_writes(self) -> None:
+        if self.core and self.core.chat and self.storage and self.logs:
+            chat = self.core.chat
+            while chat.outbox:
+                effect = chat.outbox.pop(0)
+                try:
+                    self.storage.report(effect["row"])
+                    self.logs.audit(effect["row"])
+                except (OSError, sqlite3.Error):
+                    chat.committed(effect, False)
+                    self.logs.event("report commit failed", level="ERROR")
+                else:
+                    chat.committed(effect, True)
         if self.core is None or self.core.characters is None or self.storage is None:
             return
         game = self.core.characters

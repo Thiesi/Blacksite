@@ -136,7 +136,8 @@ async def accept(root: Path, door_python: Path, show: bool) -> None:
             await wait(lambda:av.travel is not None)
             started = time.monotonic()
             await wait(lambda:av.travel is not None and av.travel.departed,95)
-            await wait(lambda:"The tram hums." in connection[0].screen.screen_text())
+            # The same words also appear in the log before the travel view.
+            await wait(lambda:"The tram hums." in connection[0].screen.screen_text().splitlines()[1])
             assert av.actor.id not in service.world.actors
             await connection[0].write(b"\x1b")
             await wait(lambda:"SCROLLBACK" in connection[0].screen.screen_text())
@@ -145,7 +146,9 @@ async def accept(root: Path, door_python: Path, show: bool) -> None:
             report(f"PASS real scheduled tram: {time.monotonic()-started:.1f}s boarding+ride")
         else:
             await wait(lambda:av.zone==target)
-        await wait(lambda:service.world.zones[target].template.meta.name in connection[0].screen.screen_text())
+        # Arrival logs may name the destination before its ZoneView is drawn.
+        # Wait for the actual header so safety assertions inspect that view.
+        await wait(lambda:service.world.zones[target].template.meta.name in connection[0].screen.screen_text().splitlines()[0])
         assert av.actor.zone==target
 
     async def leave(connection: tuple,label: str) -> None:
@@ -192,7 +195,7 @@ async def accept(root: Path, door_python: Path, show: bool) -> None:
             await a[0].write(b"\r")
             await wait(lambda:"KNOWN EXITS" in a[0].screen.screen_text())
             await a[0].write(b"\x1b")
-            await wait(lambda:"The Tin Halo" in a[0].screen.screen_text())
+            await wait(lambda:"The Tin Halo" in a[0].screen.screen_text().splitlines()[0])
             results.append({"size":[width,height],"walked":True,"scheduled_tram":True,"observer":True,"map":True})
             report(f"PASS {width}x{height}: Neon Stair -> Tin Halo pocket, visited map overview")
             # Return the same character to the Hall for the next terminal size.

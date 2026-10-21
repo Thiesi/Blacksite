@@ -13,6 +13,7 @@ from blacksite.server.sessions import INPUTS_PER_SECOND, Session, Sessions
 from blacksite.server.world.registry import World
 from blacksite.server.world.simulation import ZoneSimulation
 from blacksite.server.characters import Characters
+from blacksite.server.chat import Chat
 from blacksite.version import PACKAGE_VERSION, PROTOCOL_MAJOR
 
 
@@ -44,6 +45,10 @@ class Core:
             self.sessions.on_disconnect = self.characters.disconnect
             self.loop.subsystems.append(self.characters)
             self.loop.publishers.append(self.characters.publish)
+        sim = self.characters.sim if self.characters else self.simulation
+        self.chat = Chat(self.sessions, sim, clock, self.characters) if sim else None
+        if self.chat:
+            self.loop.subsystems.append(self.chat)
 
     def connect(self, frame: Frame) -> Session:
         if frame.type != "hello":
@@ -51,6 +56,7 @@ class Core:
         validate(frame.type, frame.data, "client")
         role = self.auth.authenticate(frame.data["door_info"], frame.data["hmac"])
         session = self.sessions.connect(role, frame.data["door_info"], frame.data["caps"])
+        session.chat_managed = self.chat is not None
         session.send(Frame("welcome", {"proto": PROTOCOL_MAJOR, "server_version": PACKAGE_VERSION,
             "player": self.characters.summary(session.user_id) if self.characters and role == "caller" else None,
             "keymap": self.keymap, "palette": self.palette, "motd": self.motd}))
@@ -58,6 +64,7 @@ class Core:
             self.simulation.connect(session)
         if self.characters is not None:
             self.characters.connect(session)
+        session.replay_log()
         return session
 
     def receive(self, session: Session, frame: Frame) -> None:
@@ -95,6 +102,10 @@ class Core:
         if frame.type.startswith("admin."):
             admin_endpoint.dispatch(session, frame, self.sessions, self.status_provider,
                                     self.request_stop, self.audit)
+            return
+        if frame.type == "intent" and frame.data["name"] == "resync":
+            session.replay_log()
+        if self.chat and self.chat.input(session, frame, event.data["tick"]):
             return
         # Echo only the verb, never args, arbitrary chat, or private data.
         if self.simulation is not None:

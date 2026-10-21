@@ -165,6 +165,13 @@ Two shipped keymaps, switchable in settings and remembered per player:
 | redraw | Ctrl-L | Ctrl-L |
 | leave door | Ctrl-X then confirm key | same |
 
+S09 also accepts Y for faction chat and Shift-L for scrollback with the
+arrow keymap. The vi keymap retains Y/L as sprint movement; Ctrl-F and
+Ctrl-P work in both keymaps. Sitrep's H action hides or shows your zone;
+hidden callers see only hidden locations for others. The selected row's
+detail pane keeps name, handle, faction, location and link state readable
+when the full row does not fit at 80 columns.
+
 The client sends normalised key names; the server maps names to intents
 by the session's keymap. Rebinding is therefore a settings change, not a
 client feature.

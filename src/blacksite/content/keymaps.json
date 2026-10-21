@@ -306,7 +306,8 @@
           "`"
         ],
         "chat_faction": [
-          "ctrl-f"
+          "ctrl-f",
+          "Y"
         ],
         "help": [
           "?"

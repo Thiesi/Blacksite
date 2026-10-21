@@ -7,6 +7,7 @@ from typing import Any
 from blacksite.door.cells import CellBuffer, clean_text, display_width, truncate
 from blacksite.door.layout import Layout, Rect
 from blacksite.door.palette import Palette
+from blacksite.door.log import rows as log_rows
 
 Renderer = Callable[[CellBuffer, dict[str, Any], Rect, Palette], None]
 
@@ -28,7 +29,9 @@ def render_text(buffer: CellBuffer, body: dict[str, Any], area: Rect, palette: P
     buffer.put(area.x + 1, area.y, truncate(str(body.get("title", "")), area.width - 2), palette.style("title"))
     lines = body.get("lines", [])
     for index, line in enumerate(lines[:max(0, area.height - 2)]):
-        buffer.put(area.x + 1, area.y + index + 1, truncate(str(line), area.width - 2), palette.style())
+        text = line.get("text", "") if isinstance(line, dict) else str(line)
+        role = line.get("role", "text") if isinstance(line, dict) else "text"
+        buffer.put(area.x + 1, area.y + index + 1, truncate(text, area.width - 2), palette.style(role))
     if body.get("pages", 1) > 1:
         buffer.put(area.x + 1, area.y + area.height - 1,
                    f"Page {body.get('page', 1)}/{body['pages']}  PgUp/PgDn  Esc back", palette.style("hint"))
@@ -75,9 +78,8 @@ def render_frame(buffer: CellBuffer, layout: Layout, palette: Palette, header: s
     buffer.put(0, layout.separator, "├" + "─" * (layout.width - 2) + "┤", style)
     for y in range(1, layout.separator):
         buffer.put(layout.side.x - 1, y, "│", style)
-    for index, line in enumerate(lines[-layout.log.height:]):
-        text = f"[{line.get('channel', 'system')}] {line.get('text', '')}"
-        buffer.put(layout.log.x, layout.log.y + index, truncate(text, layout.log.width), palette.style(str(line.get("role", "text"))))
+    for index, line in enumerate(log_rows(lines[-layout.log.height:], layout.log.width)[-layout.log.height:]):
+        buffer.put(layout.log.x, layout.log.y + index, line["text"], palette.style(line["role"]))
     buffer.put(1, layout.hint, truncate(hint, layout.width - 2), palette.style("hint"))
 
 

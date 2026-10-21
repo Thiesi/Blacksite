@@ -103,6 +103,67 @@ def test_connection_uses_server_hmac_and_rejects_missing_secrets(info: DoorInfo)
     asyncio.run(scenario())
 
 
+def test_log_burst_does_not_delay_the_following_view(info: DoorInfo) -> None:
+    """S09: queued social frames must not stall travel or menu updates."""
+    class MemoryIO(FakeTerminal):
+        def __init__(self) -> None:
+            super().__init__()
+            self.inputs: asyncio.Queue[bytes] = asyncio.Queue()
+            self.ready = asyncio.Event()
+            self.arrived = asyncio.Event()
+            self.lines: asyncio.Queue[int] = asyncio.Queue()
+            self.last_line = -1
+
+        def enter(self) -> None:
+            self.write(ENTER)
+
+        def write(self, data: bytes) -> None:
+            super().write(data)
+            text = self.screen_text()
+            if "You hear the vents" in text or "You watch the rain" in text:
+                self.ready.set()
+            if "BURST COMPLETE" in text:
+                self.arrived.set()
+            for index in range(self.last_line + 1, 8):
+                if f"A caller speaks {index}." in text:
+                    self.last_line = index
+                    self.lines.put_nowait(index)
+
+        async def read(self) -> bytes:
+            return await self.inputs.get()
+
+        def leave(self, farewell: bytes) -> None:
+            self.write(LEAVE + farewell + b"\r\n")
+
+    async def scenario() -> None:
+        server = Server(info.install, tcp=True, characters=False)
+        await server.start()
+        terminal = MemoryIO()
+        task = asyncio.create_task(run(info, terminal))
+        try:
+            await asyncio.wait_for(terminal.ready.wait(), 3)
+            session = next(iter(server.core.sessions.active.values()))
+            # Send after each render so a single buffered batch cannot hide
+            # an idle pause between reads. No simulation time is advanced.
+            async with asyncio.timeout(3):
+                for index in range(8):
+                    asyncio.get_running_loop().call_later(.15, session.send, Frame("log", {"lines": [{"channel": "say",
+                        "text": f"A caller speaks {index}.", "role": "chan_say",
+                        "at": server.clock.now_utc().isoformat()}]}))
+                    assert await terminal.lines.get() == index
+                session.send(Frame("view", {"rev": session.view_revision + 1,
+                    "kind": "text", "body": {"title": "BURST COMPLETE", "lines": []}}))
+                await terminal.arrived.wait()
+            terminal.inputs.put_nowait(b"\x18y")
+            await asyncio.wait_for(task, 2)
+        finally:
+            task.cancel()
+            await asyncio.gather(task, return_exceptions=True)
+            await server.stop()
+
+    asyncio.run(scenario())
+
+
 def test_entry_configuration_error_and_small_terminal(monkeypatch: pytest.MonkeyPatch, capsys: pytest.CaptureFixture[str]) -> None:
     from blacksite.door import __main__ as entry
     monkeypatch.delenv("NETBBS_DOOR_INFO", raising=False)
