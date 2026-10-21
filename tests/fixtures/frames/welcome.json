@@ -1,0 +1,9 @@
+{
+  "proto": 1,
+  "server_version": "0.0.1",
+  "player": null,
+  "keymap": {},
+  "palette": {},
+  "motd": "You hear the vents.",
+  "type": "welcome"
+}

@@ -21,11 +21,12 @@ they go down into the Blacksite together.
 
 ## Status
 
-**Design complete, implementation not started.** This repository
-currently holds the world bible, the game design, the technical
-architecture, the asset manifest, and a build plan broken into slices
-that are filed as issues. See `docs/plan/00-roadmap.md` for the plan and
-the [issues](../../issues) for what is being worked on.
+**Foundation in progress.** The package skeleton and validated content
+pipeline are merged (S01/S02). S03 adds the local server core, protocol,
+sessions, persistence and a smoke bot; a playable door follows in later
+slices. See `docs/plan/00-roadmap.md` for the plan and the
+[issues](../../issues) for what is being worked on. The foreground
+[server smoke test](docs/ops/server-core.md) documents the current tools.
 
 Blacksite is developed as a third-party native door: it has no commit
 access to NetBBS. What it needs from the platform is written up in

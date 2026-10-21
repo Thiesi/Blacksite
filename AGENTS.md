@@ -39,8 +39,8 @@ contradiction by editing only the lower document.
   the file and in the roadmap) are not merged.
 - Each slice names a **primary model** (Fable, Opus, Sonnet, Astra,
   Gemini, Human; see the roadmap §3). If you are a different model, you
-  may still do the work, but say so in the PR and expect a review by the
-  named one.
+  may still do the work, but say so in the PR. Model labels guide
+  assignments; review follows the automated workflow below.
 - Branch names: `slice/S07-characters`. One slice per branch. Commit
   messages: imperative, first line ≤ 72 columns, body says what and why.
 - Work in a **git worktree**, never directly in a checkout another agent
@@ -51,6 +51,16 @@ contradiction by editing only the lower document.
   numbers changed and why.
 - A slice is done when everything in the roadmap's "definition of done"
   holds. Mark the slice file `Status: done (PR #n)` in the same PR.
+- Opening a PR triggers the automated Claude review. Use that delivered
+  review for the merge gate and record the actual reviewer model; model
+  labels remain preferred assignments, not additional manual gates.
+  Triage findings by realistic caller, operator or product impact. Fix
+  credible breakage, data loss and security exposure; reject theoretical
+  correctness changes with no practical scenario and explain why in the
+  PR. After pushing fixes, request another pass with a PR comment
+  containing `@claude review`, wait for the result, and apply the same
+  triage. Validate fixes and resolve all worthwhile findings before
+  merging.
 
 ## 4. Coding rules
 

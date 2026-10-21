@@ -1,0 +1,95 @@
+"""Shared socket-free protocol application for real and headless clients."""
+
+from collections.abc import Callable
+from typing import Any
+
+from blacksite.server import admin_endpoint
+from blacksite.server.auth import Authenticator
+from blacksite.server.bus import Event, EventBus
+from blacksite.server.clock import Clock, TICK_HZ
+from blacksite.server.loop import TickLoop
+from blacksite.server.protocol import Frame, ProtocolError, validate
+from blacksite.server.sessions import INPUTS_PER_SECOND, Session, Sessions
+from blacksite.version import PACKAGE_VERSION, PROTOCOL_MAJOR
+
+
+class Core:
+    def __init__(self, clock: Clock, origin: str, auth: Authenticator,
+                 keymap: dict[str, Any] | None = None, palette: dict[str, Any] | None = None,
+                 motd: str = "", content: Any = None) -> None:
+        self.clock = clock
+        self.auth = auth
+        self.sessions = Sessions(clock, origin)
+        self.bus = EventBus()
+        self.loop = TickLoop(clock, self.bus, self.sessions, content)
+        self.keymap = keymap or {}
+        self.palette = palette or {}
+        self.motd = motd
+        self.stop_requested = False
+        self.status_provider: Callable[[], dict[str, Any]] = self.status
+        self.audit: Callable[[dict[str, Any]], None] = lambda row: None
+        self.bus.subscribe("input", self._echo)
+
+    def connect(self, frame: Frame) -> Session:
+        if frame.type != "hello":
+            raise ProtocolError("hello must be first")
+        validate(frame.type, frame.data, "client")
+        role = self.auth.authenticate(frame.data["door_info"], frame.data["hmac"])
+        session = self.sessions.connect(role, frame.data["door_info"], frame.data["caps"])
+        session.send(Frame("welcome", {"proto": PROTOCOL_MAJOR, "server_version": PACKAGE_VERSION,
+            "player": None, "keymap": self.keymap, "palette": self.palette, "motd": self.motd}))
+        return session
+
+    def receive(self, session: Session, frame: Frame) -> None:
+        if session.closed:
+            return
+        try:
+            validate(frame.type, frame.data, "client")
+        except (ValueError, TypeError):
+            session.send(Frame("bye", {"reason": "protocol", "text": "Invalid frame."}))
+            return
+        if frame.type.startswith(("admin.", "peer.")):
+            if session.role != "operator" or frame.type.startswith("peer."):
+                session.send(Frame("bye", {"reason": "forbidden", "text": "Operator credential required."}))
+            else:
+                session.enqueue(frame, self.clock.now_tick())
+        elif frame.type == "hello":
+            session.send(Frame("bye", {"reason": "protocol", "text": "Hello already received."}))
+        elif frame.type == "bye":
+            session.send(Frame("bye", {"reason": "logout", "text": "You disconnect."}))
+        elif frame.type == "ack":
+            session.acknowledge(frame.data["rev"])
+        elif frame.type == "ping":
+            if session.allow("input", self.clock.now_tick(), INPUTS_PER_SECOND, 1):
+                session.send(Frame("pong", {"t": frame.data["t"]}))
+        elif frame.type == "resize":
+            if session.allow("input", self.clock.now_tick(), INPUTS_PER_SECOND, 1):
+                session.caps.update(frame.data)
+        else:
+            session.enqueue(frame, self.clock.now_tick())
+
+    def _echo(self, event: Event) -> None:
+        session = event.data["session"]
+        frame = event.data["frame"]
+        if frame.type.startswith("admin."):
+            admin_endpoint.dispatch(session, frame, self.sessions, self.status_provider,
+                                    self.request_stop, self.audit)
+            return
+        # Echo only the verb, never args, arbitrary chat, or private data.
+        label = "intent" if frame.type == "intent" else frame.type
+        session.send(Frame("log", {"lines": [{"channel": "system", "text": f"You send {label}.",
+            "role": "muted", "at": self.clock.now_utc().isoformat()}]}))
+
+    def status(self) -> dict[str, Any]:
+        return {"uptime": self.clock.now_tick() / TICK_HZ, "players": sum(
+            s.role == "caller" and not s.closed for s in self.sessions.active.values()),
+            "active_zones": 0, "tick": self.loop.timing(), "persistence_lag": 0,
+            "event_state": None, "season_depth": 0}
+
+    def request_stop(self) -> None:
+        self.stop_requested = True
+
+    def shutdown(self) -> None:
+        for session in tuple(self.sessions.active.values()):
+            session.send(Frame("bye", {"reason": "maintenance", "text": "The city closes for maintenance."}))
+            self.sessions.disconnect(session)

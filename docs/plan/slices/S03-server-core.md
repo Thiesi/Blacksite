@@ -1,6 +1,6 @@
 # S03 — Server core: socket, framing, hello/auth, sessions, tick loop, event bus, persistence layer
 
-**Status:** planned
+**Status:** done (PR #41)
 **Primary model:** Opus · **Reviewer:** Astra (protocol and auth critique before start)
 **Depends on:** S01, S02 · **Milestone:** M0
 **Issue:** https://github.com/Thiesi/blacksite/issues/3
@@ -157,3 +157,97 @@ told goodbye on shutdown; no game rules exist yet.
   `127.0.0.1`.
 - Keep the simulation-facing API free of sockets: subsystems receive a
   `TickContext` (clock, bus, sessions view, content) and return nothing.
+
+## Implementation and verification (2026-10-21)
+
+Implemented by Codex; the primary model label is Opus. Claude Sonnet
+delivered the automated review on PR #41. The user's review workflow
+uses that delivered review and product-impact triage as the merge gate,
+as recorded in `AGENTS.md` §3; additional manual model reviews are not
+required. The pre-start protocol read was performed by the implementer,
+not an independent Astra reviewer.
+
+The pre-implementation protocol read identified ambiguous HMAC bytes,
+NetBBS's `user_id` spelling, operator/caller session collisions, queue
+overflow and shutdown ordering. Architecture §4/§5 now states the wire
+encoding and field spellings. No game-design numbers changed. Content
+bootstrap belongs to this server slice; S05 will reuse it.
+
+The core, event bus, sessions and tick hooks are socket-free. A single
+event-loop writer owns periodic SQLite flushes; explicit `flush_now`
+commits synchronously before a caller may publish success. The initial
+schema reserves the entity fields without implementing player rules.
+The server opens schema metadata before validating copied content so it
+can compare the installed package version; no client is accepted until
+validation and the rebuild hook finish.
+
+Verification on Windows, Python 3.14:
+
+- Full suite: `python -m pytest -q --basetemp=.test-tmp/pre-pr`.
+  Result: 325 passed, 1 skipped. The Unix socket test is
+  intentionally skipped on Windows; the existing CI matrix runs Python
+  3.12 on Ubuntu and Windows.
+- Real PowerShell terminals at 80×24 and 132×50, direct loopback TCP,
+  service started independently from the client. Watching bot pongs:
+  0.464 ms and 0.920 ms; both receive `bye maintenance` on authenticated
+  `admin.stop`, and both service processes exit zero.
+- A second server refuses the same installation with the lease message.
+- Process signal probes at 80×24 and 132×50: Windows Ctrl-Break yields
+  `bye maintenance`, exit zero, empty `run/`, shutdown 0.085 s and
+  0.066 s. Probe pongs are 0.434 ms and 2.645 ms.
+- Unix SIGTERM and production NetBSD have not been exercised locally.
+  No NetBBS transport is used: this slice has no door renderer yet.
+
+The smoke bot is a local diagnostic. It does not render caller text or
+start the service. See `docs/ops/server-core.md` for reproduction commands.
+
+## Automatic review triage
+
+The fixes address ordinary operator and maintenance scenarios: discover
+numbered migrations by prefix so future upgrades work; retain a stop
+signal received during bootstrap; clean the unpublished content copy on
+copy/load failure so retry works; close a stalled writer without blaming
+credentials; report the age of uncommitted proposals as persistence lag.
+Regression tests inject those failures and use manual time for lag.
+After review fixes, `python -m pytest -q
+--basetemp=.test-tmp/review-full` passes: 332 passed, 1 Windows-specific
+skip. Real-terminal signal probes pass again at 80×24 and 132×50:
+pongs 4.405 ms / 4.952 ms, shutdown 0.098 s / 0.113 s, exit zero and
+empty `run/` in both cases.
+
+Rejected findings and rationale:
+
+- Tick catch-up: S03 has no simulation rules to lose. S06 must choose
+  elapsed-time versus catch-up semantics alongside the first real rules;
+  adding a scheduler policy here would design a later slice speculatively.
+- Silent rate-limit drops: intentional bounded abuse handling. Adding a
+  toast for every rejected input would amplify the same flood.
+- Redundant role checks and unreachable peer handling: reserved peers
+  already disconnect, and the extra admin check protects direct callers.
+  Removing either changes no ordinary caller or operator behavior.
+- Non-hex HMAC exception class: network I/O and the harness already
+  reject and close correctly. Changing only the internal exception type
+  has no product effect.
+- Nonces and pre-hello flood protection: a hostile service-account process
+  is outside the filesystem trust model in architecture §4. No new remote
+  listener or authentication claim is introduced by this slice.
+- Ban-check comment, audit rotation and shutdown queue priority: operator
+  access is intentional, the spec requires an append-only audit log, and
+  maintenance gives bye priority. Durable state commits precede success;
+  future sessions rebuild their views. These do not require a redesign.
+
+Claude Sonnet re-reviewed code head `249260b` in
+[PR #41's review](https://github.com/Thiesi/Blacksite/pull/41#issuecomment-6311764477)
+and found no blocking findings. It confirmed all five fixes and the four
+main rejections. The timeout wire reason and startup-stop behavior are
+now documented. The rare combination of copy failure plus cleanup
+failure remains an actionable startup error, with the pre-existing
+staging guard and manual recovery instructions; changing exception
+presentation alone does not justify another implementation change.
+An additional early-stop log line is unnecessary because clean shutdown
+already logs `world closed`. The regression suite explicitly injects
+SIGTERM before the core exists and a timeout on an authenticated writer.
+
+Python 3.12 CI at that code head passes on Ubuntu (333 passed, including
+Unix socket recovery/permissions) and Windows (332 passed, 1 platform
+skip). Subsequent completion edits change documentation only.
