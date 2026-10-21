@@ -5,6 +5,8 @@ three-slot rig with Pick and Umbrella. Ghosts have a native rig; a carried
 portable rig also allows J away from a terminal. The zone's explicit
 sector ID chooses the district; terminals can override it. With the vi
 keymap, j moves down and Ctrl-O jacks in or out.
+Where a counter, cache or conversation shares the terminal's reach, E
+keeps that existing service action. Use J to choose the terminal explicitly.
 
 Arrows follow the nearest link in that direction. Traversal takes
 max(0.2, 1.0 - Cortex/100) seconds, rounded up to server ticks. E uses an

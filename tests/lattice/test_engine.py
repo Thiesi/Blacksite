@@ -312,3 +312,15 @@ def test_architecture_11_moving_lattice_deltas_fit_budget_and_menu_return(runner
     intent(game, a, "resync")
     resync = [f for f in game.frames_for(a) if f.type == "view"][-1]
     assert resync.data["kind"] == "lattice"
+
+
+def test_terminal_e_preserves_nearby_counter_and_explicit_jack(runners):
+    game, a, b, c = runners
+    place(game, a, "vatside-wake-hall", (34, 15))
+    assert game.core.lattice.terminal(actor(game, a))
+    act(game, a, Frame("key", {"k": "e", "t": 0}))
+    assert a.session.player_id not in game.core.lattice.presences
+    assert game.core.commerce.menus[a.session.id].kind == "vendor"
+    intent(game, a, "menu_close")
+    jack(game, a)
+    assert actor(game, a).stance == "jacked"

@@ -288,6 +288,18 @@ class Lattice:
             return True
         if name.startswith("lat."):
             return True
+        return False
+
+    def terminal_input(self, session: Session, frame: Frame, tick: int) -> bool:
+        """Fallback E interaction after counters, recovery and NPC services.
+
+        J remains an explicit jack action. Sharing a tile or adjacency
+        with a terminal must not make an existing counter unusable.
+        """
+        name = frame.data.get("name", "") if frame.type == "intent" else ""
+        key = frame.data.get("k", "") if frame.type == "key" else ""
+        table = next((m for m in self.sim.keymap.get("keymaps", []) if m["id"] == session.keymap_id), {})
+        action = next((a for a, keys in table.get("bindings", {}).items() if key in keys), name)
         if action == "interact" or key in ("e", "E"):
             avatar = self.sim.avatars.get(session.user_id)
             if avatar and avatar.actor.zone and self.terminal(avatar.actor):
