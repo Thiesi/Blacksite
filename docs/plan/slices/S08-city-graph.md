@@ -1,6 +1,6 @@
 # S08 — City graph: exits, transitions, safety classes, pockets, the Core and Vatside and Sodium Row maps
 
-**Status:** planned
+**Status:** done (PR #47)
 **Primary model:** Sonnet · **Reviewer:** Opus (map review of the hub zones)
 **Depends on:** S06 · **Milestone:** M1
 **Issue:** https://github.com/Thiesi/blacksite/issues/8
