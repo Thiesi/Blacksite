@@ -48,7 +48,9 @@ class Connection:
 
 class NativeProbe:
     def __init__(self, root: Path, python: Path, show: bool) -> None:
-        self.root,self.python,self.show = root.resolve(),python.resolve(),show
+        # Resolving a Unix venv's Python symlink launches the base interpreter
+        # instead, losing the installed wheel. Preserve the venv path.
+        self.root,self.python,self.show = root.resolve(),python.absolute(),show
         self.service = Server(self.root/"world",tcp=True)
         self.connections: list[Connection] = []
         self.accounts: deque[tuple[Any,bool]] = deque()
@@ -89,7 +91,13 @@ class NativeProbe:
         writer.write(b"\xff\xfb\x18\xff\xfa\x18\x00xterm-256color\xff\xf0");await writer.drain()
         caller=CombatCaller(lambda:reader.read(65536),send,width,height,self.show and sixteen)
         await caller.expect("Available doors");await caller.write(b"\x1b[B\r")
-        await caller.until(lambda:"THE WAKE" in caller.screen.screen_text())
+        try:
+            await caller.until(lambda:"THE WAKE" in caller.screen.screen_text(),timeout=10)
+        except BaseException:
+            (self.root/f"failed-launch-{label}-{width}.ans").write_bytes(caller.output)
+            (self.root/f"failed-launch-{label}-{width}.txt").write_text(caller.screen.screen_text(),encoding="utf-8")
+            writer.close();await writer.wait_closed()
+            raise
         async def pump() -> None:
             while chunk:=await reader.read(65536): caller.output.extend(chunk);caller.replay()
         task=asyncio.create_task(pump())
