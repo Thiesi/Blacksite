@@ -138,10 +138,10 @@ the replay flag are additive. Ignore can be explicitly reversed with
 identity. Reports can target known offline characters.
 
 Local validation: repository-root Python 3.12 `pytest -q
---basetemp=.test-tmp/final6`: 560 passed, 1 Windows-only skip. The focused
-social/content/terminal gate after adding durable report attribution:
-31 passed (`--basetemp=.test-tmp/final7`). Final CI results and the actual
-Claude reviewer model are recorded in the PR.
+--basetemp=.test-tmp/final9`: 563 passed, 1 Windows-only skip. The focused
+social/content/terminal gate after durable report attribution and the
+private-channel command guard: 34 passed (`--basetemp=.test-tmp/private8`).
+Final CI results and the actual Claude reviewer model are in the PR.
 
 Real-terminal acceptance passed at 80x24 and 132x50 through NetBBS v7.31.0
 Telnet/native stdio, in a 132x50 parent terminal with `--show`. The final

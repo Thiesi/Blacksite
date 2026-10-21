@@ -145,7 +145,9 @@ async def accept(root: Path, door_python: Path, show: bool) -> None:
             report(f"PASS real scheduled tram: {time.monotonic()-started:.1f}s boarding+ride")
         else:
             await wait(lambda:av.zone==target)
-        await wait(lambda:service.world.zones[target].template.meta.name in connection[0].screen.screen_text())
+        # Arrival logs may name the destination before its ZoneView is drawn.
+        # Wait for the actual header so safety assertions inspect that view.
+        await wait(lambda:service.world.zones[target].template.meta.name in connection[0].screen.screen_text().splitlines()[0])
         assert av.actor.zone==target
 
     async def leave(connection: tuple,label: str) -> None:
