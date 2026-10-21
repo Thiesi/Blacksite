@@ -1,6 +1,6 @@
 # S05 — Interim service runner, admin CLI skeleton, deploy templates
 
-**Status:** implemented; verification and review in progress
+**Status:** done (PR #44)
 **Primary model:** Sonnet · **Reviewer:** none
 **Depends on:** S03 · **Milestone:** M0
 **Issue:** https://github.com/Thiesi/blacksite/issues/5
@@ -142,3 +142,20 @@ service under a non-root account and real local NetBBS native stdio.
 They exercise 80x24 and 132x50 callers, status/who, maintenance shutdown,
 empty run files, process exit and unit restart. Native NetBSD rc.d
 execution remains a separate platform check.
+
+## Acceptance record (2026-10-21)
+
+- Real Ubuntu systemd host (GitHub runner), Python 3.12, installed wheel,
+  non-root service account and NetBBS v7.31.0 native stdio/Telnet picker.
+  Status, who, connected-caller maintenance stop, empty run files, process
+  exit and enabled-unit restart pass at 80x24 and 132x50.
+- The final unit result remains successful after a direct admin stop.
+  Proof and ANSI captures are attached to service acceptance run
+  [39585522074](https://github.com/Thiesi/Blacksite/actions/runs/39585522074).
+- Full local suite before the review fixes: 416 passed, 1 skipped on
+  Windows. Final focused operator/deploy checks: 9 passed. Final full CI:
+  419 passed on Ubuntu; 418 passed, 1 skipped on Windows Python 3.12.
+- Claude re-review reports no blockers and accepts the scenario-based
+  rejections. No balance numbers or runtime dependencies changed.
+- NetBSD script passes shell syntax validation; actual NetBSD execution
+  is not claimed. S05's required real-host acceptance uses Linux.
