@@ -1,6 +1,6 @@
 # S09 — Chat and log: channels, prompts, emotes, sitrep, ignore/report
 
-**Status:** planned
+**Status:** done (PR #48)
 **Primary model:** Sonnet · **Reviewer:** none
 **Depends on:** S06 · **Milestone:** M1
 **Issue:** https://github.com/Thiesi/blacksite/issues/9
