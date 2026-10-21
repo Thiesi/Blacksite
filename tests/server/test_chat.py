@@ -226,3 +226,11 @@ def test_replay_budget_handles_quotes_wide_and_combining_text(social):
     replay=next(f for f in game.frames_for(a) if f.type=='log')
     assert len(replay.data['lines'])==50
     assert len(encode(replay))<65536
+
+
+@pytest.mark.parametrize('channel',['whisper','crew','faction'])
+def test_private_prompt_never_executes_public_commands(social,channel):
+    game,a,b=social
+    game.core.chat.command(a.session,channel,'/shout private text',game.clock.now_tick())
+    assert not lines(game,b)
+    assert not lines(game,a)

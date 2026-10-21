@@ -28,6 +28,8 @@ reach the zone; whispers reach a unique attached character anywhere.
 Whispers display both character names and BBS handles. Ambiguous targets
 are refused rather than guessed. Crew/faction routing cannot be selected
 by naming a group in a request; server membership owns the audience.
+Slash commands are interpreted only in the say prompt. Private prompts
+never reroute text onto a public channel.
 Joining those groups arrives in S20/S22.
 
 Chat and emotes share four lines per five seconds. Reports use that same

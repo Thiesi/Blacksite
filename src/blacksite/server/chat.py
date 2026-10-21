@@ -178,7 +178,7 @@ class Chat:
 
     def command(self, session: Session, channel: str, text: str, tick: int) -> None:
         text = sanitize(text)
-        if text.startswith("/"):
+        if channel == "say" and text.startswith("/"):
             verb, _, rest = text[1:].partition(" ")
             verb = verb.casefold()
             if verb == "me":
