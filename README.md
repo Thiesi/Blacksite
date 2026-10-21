@@ -21,7 +21,7 @@ they go down into the Blacksite together.
 
 ## Status
 
-**M1 inventory and commerce implemented (S12).** The M0 foundation,
+**M1 combat and commerce implemented (S10/S12).** The M0 foundation,
 shared movement, sight, fog memory, ten maps and persistent characters are
 available. The service now starts the Wake for new callers. See the
 [character guide](docs/ops/characters.md) for persistence, sleeper recovery
@@ -31,7 +31,9 @@ scheduled trams, safety pockets and the visited-zone overview. Other
 gameplay follows in later slices. The [social guide](docs/ops/chat.md)
 covers chat, emotes, sitrep privacy, ignore/report and replayed logs. The
 [item guide](docs/ops/items.md) covers equipment, counter trading,
-five-minute caches and banking. Future-zone vendors remain staged for
+five-minute caches and banking. The [combat guide](docs/ops/combat.md)
+covers targeting, abilities, clone settlement and recovery. Future-zone
+vendors remain staged for
 S25; the playable city stays the ten-zone hub. The
 [deployment guide](deploy/README.md) covers service units and operator
 commands. See `docs/plan/00-roadmap.md` for the plan and the

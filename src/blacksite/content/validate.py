@@ -465,6 +465,11 @@ class _Validator:
         owner = ("zones", zone.id)
         seen: set[str] = set()
         for obj in zone.meta.objects:
+            if obj.params.get("training_npc"):
+                self.ref("npcs",str(obj.params["training_npc"]),owner,"training NPC")
+                tile = obj.params.get("training_tile")
+                if not isinstance(tile,(list,tuple)) or len(tile)!=2 or any(type(n) is not int for n in tile) or not self.passable(zone,tuple(tile)):
+                    self.report(*owner,"training NPC needs a passable authored training tile",obj.id)
             if obj.id in seen:
                 self.report(*owner, f"object {obj.id}: duplicate object id", obj.id)
             seen.add(obj.id)
@@ -707,6 +712,9 @@ class _Validator:
         owner = ("items", item.id)
         w = item.weapon
         assert w is not None
+        self._weapon_block(w,owner)
+
+    def _weapon_block(self, w: s.WeaponBlock, owner: tuple[str,str]) -> None:
         if w.melee:
             if w.range is not None or w.stamina is None:
                 self.report(*owner, "a melee weapon has stamina and no range")
@@ -720,6 +728,9 @@ class _Validator:
 
     def check_starts(self) -> None:
         for sid, start in self.each("starts"):
+            for item,count in start.recovery_items.items():
+                self.ref("items",item,("starts",sid),"recovery item")
+                if count < 1: self.report("starts",sid,"recovery quantity must be positive")
             for item, count in start.items.items():
                 self.ref("items", item, ("starts", sid), "starter item")
                 if count < 1:
@@ -740,6 +751,9 @@ class _Validator:
             assert isinstance(hymn, s.HymnTemplate)
             if not ITEM_TIER[0] <= hymn.tier <= ITEM_TIER[1]:
                 self.report("hymns", hid, f"tier {hymn.tier} is outside {ITEM_TIER[0]}-{ITEM_TIER[1]}")
+            if hymn.cast_seconds < 0 or hymn.cooldown_seconds <= 0:
+                self.report("hymns",hid,"cast must be nonnegative and cooldown positive")
+            for iid in hymn.requires_one_of: self.ref("items",iid,("hymns",hid),"required resonance implant")
 
     def check_vendors(self) -> None:
         for vid, vendor in self.each("vendors"):
@@ -768,6 +782,10 @@ class _Validator:
         for nid, npc in self.each("npcs"):
             assert isinstance(npc, s.NpcTemplate)
             owner = ("npcs", nid)
+            if npc.health is not None and npc.health <= 0: self.report(*owner,"health must be positive")
+            if npc.attack: self._weapon_block(npc.attack,owner)
+            if npc.training and (npc.health is None or npc.attack is None):
+                self.report(*owner,"a private training actor requires explicit health and attack")
             self.ref("factions", npc.faction, owner, "faction")
             if npc.weapon is not None and self.ref("items", npc.weapon, owner, "weapon"):
                 if self.t.items[npc.weapon].class_ != "weapon":

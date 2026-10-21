@@ -616,8 +616,8 @@
       "maker": "Kestrel Issue",
       "weapon": {
         "damage": 14,
-        "cooldown": null,
-        "accuracy": null,
+        "cooldown": 1.0,
+        "accuracy": 75,
         "damage_type": "kinetic",
         "melee": true,
         "heavy": false,
@@ -635,8 +635,8 @@
       "maker": "Sable Works",
       "weapon": {
         "damage": 18,
-        "cooldown": null,
-        "accuracy": null,
+        "cooldown": 1.0,
+        "accuracy": 75,
         "damage_type": "kinetic",
         "melee": true,
         "heavy": false,
@@ -654,8 +654,8 @@
       "maker": "Ferry-make",
       "weapon": {
         "damage": 26,
-        "cooldown": null,
-        "accuracy": null,
+        "cooldown": 1.0,
+        "accuracy": 75,
         "damage_type": "kinetic",
         "melee": true,
         "heavy": false,
@@ -673,8 +673,8 @@
       "maker": "Halvard Ordnance",
       "weapon": {
         "damage": 22,
-        "cooldown": null,
-        "accuracy": null,
+        "cooldown": 1.0,
+        "accuracy": 75,
         "damage_type": "energy",
         "melee": true,
         "heavy": false,
@@ -693,8 +693,8 @@
       "maker": "Sable Works",
       "weapon": {
         "damage": 34,
-        "cooldown": null,
-        "accuracy": null,
+        "cooldown": 1.0,
+        "accuracy": 75,
         "damage_type": "kinetic",
         "melee": true,
         "heavy": false,
@@ -712,8 +712,8 @@
       "maker": "Old Works Collective",
       "weapon": {
         "damage": 20,
-        "cooldown": null,
-        "accuracy": null,
+        "cooldown": 1.0,
+        "accuracy": 75,
         "damage_type": "energy",
         "melee": true,
         "heavy": false,
@@ -732,8 +732,8 @@
       "maker": "Sable Works",
       "weapon": {
         "damage": 24,
-        "cooldown": null,
-        "accuracy": null,
+        "cooldown": 1.0,
+        "accuracy": 75,
         "damage_type": "chemical",
         "melee": true,
         "heavy": false,
@@ -755,8 +755,8 @@
       "maker": "Halvard Ordnance",
       "weapon": {
         "damage": 60,
-        "cooldown": null,
-        "accuracy": null,
+        "cooldown": 1.0,
+        "accuracy": 75,
         "damage_type": "kinetic",
         "melee": true,
         "heavy": true,
@@ -775,8 +775,8 @@
       "maker": "Chapel Foundry",
       "weapon": {
         "damage": 28,
-        "cooldown": null,
-        "accuracy": null,
+        "cooldown": 1.0,
+        "accuracy": 75,
         "damage_type": "dissonance",
         "melee": true,
         "heavy": false,
@@ -915,7 +915,8 @@
         },
         "evasion": 0,
         "heavy": false
-      }
+      },
+      "secured_default": true
     },
     {
       "id": "arm_kestrel_vest",
@@ -3010,8 +3011,8 @@
       "maker": "Civic Pattern",
       "weapon": {
         "damage": 22,
-        "cooldown": null,
-        "accuracy": null,
+        "cooldown": 1.0,
+        "accuracy": 75,
         "damage_type": "energy",
         "melee": true,
         "heavy": false,

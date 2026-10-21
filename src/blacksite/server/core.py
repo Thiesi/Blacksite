@@ -15,6 +15,7 @@ from blacksite.server.world.simulation import ZoneSimulation
 from blacksite.server.characters import Characters
 from blacksite.server.chat import Chat
 from blacksite.server.commerce import Commerce
+from blacksite.server.combat.engine import Combat
 from blacksite.version import PACKAGE_VERSION, PROTOCOL_MAJOR
 
 
@@ -53,6 +54,9 @@ class Core:
         self.commerce = Commerce(self.characters, character_state.get("commerce", {})) if self.characters else None
         if self.commerce:
             self.loop.subsystems.append(self.commerce)
+        self.combat = Combat(self.commerce) if self.commerce else None
+        if self.combat:
+            self.loop.subsystems.append(self.combat)
 
     def connect(self, frame: Frame) -> Session:
         if frame.type != "hello":
@@ -109,6 +113,8 @@ class Core:
             return
         if frame.type == "intent" and frame.data["name"] == "resync":
             session.replay_log()
+        if self.combat and self.combat.input(session, frame, event.data["tick"]):
+            return
         if self.commerce and self.commerce.input(session, frame, event.data["tick"]):
             return
         if self.chat and self.chat.input(session, frame, event.data["tick"]):

@@ -18,7 +18,7 @@ class World:
         zone = self.zones[zone_id]
         pending = deque([start])
         seen = {start}
-        occupied = {actor.position for actor in zone.actors.values()}
+        occupied = {actor.position for actor in zone.actors.values() if not actor.behaviour.get("training")}
         while pending:
             tile = pending.popleft()
             key = zone.tile_id(tile)
@@ -36,7 +36,7 @@ class World:
         if actor.id in self.actors and self.actors[actor.id] is not actor:
             raise ValueError("actor id is already owned by another body")
         zone = self.zones[zone_id]
-        if not zone.passable(tile) or any(a.id != actor.id and a.position == tile for a in zone.actors.values()):
+        if not zone.passable(tile) or any(a.id != actor.id and a.position == tile and not a.behaviour.get("training") for a in zone.actors.values()):
             raise ValueError("entry tile is blocked")
         self.leave(actor)
         actor.zone, (actor.x, actor.y) = zone_id, tile

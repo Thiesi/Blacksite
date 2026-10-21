@@ -140,6 +140,8 @@ class Storage:
         """Architecture 6.2: transfer, money, ownership and receipt are atomic."""
         player = effect["player"]
         with self.db:
+            if "identity" in effect:
+                self.db.execute("INSERT OR REPLACE INTO identities VALUES(?,?)", (effect["user"],self._json(effect["identity"])))
             if player:
                 cols = list(player)
                 if not set(cols) <= self.player_columns: raise ValueError("unknown player fields")
@@ -161,6 +163,7 @@ class Storage:
         # Never let an older write-behind snapshot overwrite this receipt.
         settled = {("items", item["id"]) for item in effect["items"]} | {("items", iid) for iid in effect["delete_items"]}
         if player: settled.add(("players",player["id"]))
+        if "identity" in effect: settled.add(("identities",effect["user"]))
         for key in settled:
             self.dirty.pop(key,None); self.dirty_since.pop(key,None)
 

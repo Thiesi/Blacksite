@@ -143,12 +143,10 @@ blocks:
   damage_type, heavy, melee, stamina (melee), dot {per_second, seconds},
   shock`
 
-Melee catalog rows do not specify ranged accuracy. Their `accuracy` may
-be null; ranged weapon records require it. S10 owns the combat rule that
-consumes melee records. Implant slots include `head`, matching First Ear
-in the game design's starter schedule.
-Melee cooldowns are also absent from the catalog; null marks unspecified
-timing until S10 defines it. It is never an executable zero cooldown.
+S10 gives melee the design's fixed 1.0 s cooldown and base accuracy 75.
+The authoring schema can retain unknown timing as null; consumers must
+never execute that as a zero cooldown. Ranged weapons require accuracy.
+Implant slots include `head`, matching First Ear in the starter schedule.
 Drone speed remains unimplemented until S11 supplies its movement rule.
 Drone `control_range` preserves the catalog range; nullable sight/speed
 mark values the catalog does not give. Embedded attack blocks retain
@@ -171,6 +169,13 @@ catalog's multi-hit/arc/cone annotations for S10.
 `id, name, faction, grade, attributes, weapon, armour, behaviours[]
 (with params), dialogue (talker id or null), vendor (inventory id or null),
 loot[] (item, chance, count), xp, lore`.
+
+An optional explicit `health` pool and embedded `attack` weapon block
+support private training actors. `training` requires both and scopes
+the actor to its server-assigned owner. Ordinary NPCs derive health
+from attributes and use their authored equipment. Recovery quantities
+live in each character start's `recovery_items` mapping. Hymn records
+list `requires_one_of` implant IDs for tiers above one.
 
 ### 1.9 Faction (`factions.json`)
 
@@ -349,6 +354,13 @@ enforces the transfer boundary; S10/S19 own those grants. SQLite world
 schema 3 adds `vendor_budgets` (counter ID, UTC hour, remaining chits)
 and `caches` (zone, tile, item IDs, expiry); item ownership and player
 balances commit with these records in one transaction.
+
+S10 adds cache victim/killer IDs and a first-recovery deadline. Clone
+charge, identity debt and item transfer settle in that same transaction.
+`progress.combat` holds durable down/dead phase and a UTC deadline;
+combat cooldowns and temporary effects keep UTC expiries for reconnect
+and restart. A zero stack is permitted only for an exhausted rechargeable
+ammo container; the container remains carried until refilled or removed.
 
 ### 2.3 Apartment
 

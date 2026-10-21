@@ -55,8 +55,8 @@ def build(root: Path) -> None:
             melee = "1.5 " in section
             damage = row["Dmg"]
             item.update({"class": "weapon", "tier": money(row.get("Tier", section[-1])) if not melee else money(row["Tier"])})
-            item["weapon"] = {"damage": money(damage), "cooldown": None if melee else number(row["CD"]),
-                "accuracy": None if melee else money(row["Acc"]), "damage_type": row["Type"],
+            item["weapon"] = {"damage": money(damage), "cooldown": 1.0 if melee else number(row["CD"]),
+                "accuracy": 75 if melee else money(row["Acc"]), "damage_type": row["Type"],
                 "melee": melee, "heavy": "Hardline only" in row["Line"]}
             if melee:
                 item["weapon"]["stamina"] = money(row["Stamina"])
@@ -131,6 +131,7 @@ def build(root: Path) -> None:
                 item["consumable"] = {"effects": {}, "cooldown_class": "tool"}
             if iid.startswith("story_"):
                 item["secured_default"] = True
+        if iid == "arm_wake_coverall": item["secured_default"] = True
         records.append(item)
 
     effects = {

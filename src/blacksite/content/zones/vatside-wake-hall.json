@@ -125,7 +125,12 @@
       "essential": false,
       "params": {
         "name": "Corridor door",
-        "open": true
+        "open": true,
+        "training_npc": "npc-wake-drone",
+        "training_tile": [
+          23,
+          14
+        ]
       }
     },
     {

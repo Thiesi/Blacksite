@@ -19,11 +19,13 @@ class Inventory:
         return item
 
     def weight(self, player: Player) -> float:
-        return sum(self.templates[self.items[i].template].weight * self.items[i].stack
+        return sum(self.templates[self.items[i].template].weight * max(1,self.items[i].stack)
                    for i in player.inventory if i in self.items and i not in player.implants.values())
 
     def add(self, player: Player, item: ItemInstance) -> None:
         template = self.templates[item.template]
+        if item.stack == 0 and not (template.ammo and template.ammo.recharge_price is not None):
+            raise ValueError("Only rechargeable ammunition can retain an empty container.")
         item.owner = player.id
         # Installed/equipped stacks cannot absorb other instances.
         for iid in player.inventory:
@@ -44,7 +46,8 @@ class Inventory:
 
     def remove(self, player: Player, iid: str, count: int, next_id: Callable[[], str]) -> ItemInstance:
         item = self.owned(player, iid)
-        if type(count) is not int or not 1 <= count <= item.stack:
+        empty_cell = item.stack == count == 0 and self.templates[item.template].ammo and self.templates[item.template].ammo.recharge_price is not None
+        if type(count) is not int or not (1 <= count <= item.stack or empty_cell):
             raise ValueError("Choose a quantity you carry.")
         if iid in player.implants.values():
             raise ValueError("Installed implants require surgery.")
@@ -100,6 +103,8 @@ class Inventory:
             raise ValueError("That item does not fit that slot.")
         player.equipment = {s: value for s, value in player.equipment.items() if value != iid}
         player.equipment[slot] = iid
+        if slot.startswith("quick"):
+            player.progress.get("quick_abilities",{}).pop(slot[5:],None)
 
     def unequip(self, player: Player, slot: str) -> None:
         if slot not in player.equipment:

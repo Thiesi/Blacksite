@@ -5,6 +5,7 @@ from collections import deque
 from dataclasses import asdict, dataclass
 from fractions import Fraction
 from typing import Any
+from collections.abc import Callable
 
 from blacksite.content.schema import ObjectSpec, Vendor, VendorStock
 from blacksite.server import bank
@@ -45,7 +46,7 @@ class Commerce:
         self.requests: dict[str, list[str]] = {}
         self.outbox: list[dict[str, Any]] = []
         self.pending = False
-        self.waiting: deque[tuple[str,str,dict[str,Any],bool]] = deque()
+        self.waiting: deque[tuple[str,str,dict[str,Any],bool] | Callable[[], None]] = deque()
         self.prompt_serial = 0
         self.sync_caches()
 
@@ -211,6 +212,8 @@ class Commerce:
             cache = caches.get(target)
             if not cache or cache["expires"] <= now or iid not in cache["items"]:
                 raise ValueError("That cache is empty.")
+            if cache.get("private_until",0)>now and draft.id not in (cache.get("killer"),cache.get("victim")):
+                raise ValueError("The victim and killer have first recovery rights for sixty seconds.")
             item = items[iid]
             if item.owner != target:
                 raise ValueError("That item is no longer in the cache.")
@@ -219,6 +222,8 @@ class Commerce:
             if not cache["items"]: del caches[target]
             message = "You pick up the item."
         elif name == "inv.use":
+            if any(effect.get("hush") for effect in av.actor.effects):
+                raise ValueError("You cannot use consumables yet.")
             item = inventory.owned(draft, iid)
             template = self.content.items[item.template]
             block = template.consumable
@@ -265,6 +270,7 @@ class Commerce:
         patches = {key: deepcopy(getattr(draft, key)) for key in ("inventory", "equipment", "chits_hand", "chits_bank", "health", "stamina", "shock", "progress")
                    if getattr(draft, key) != getattr(player, key)}
         self.outbox.append({"session": session.id, "player_id": player.id, "patch": patches,
+            "progress_base":deepcopy(player.progress),
             "items": {key: item for key, item in items.items() if item != self.items.get(key)},
             "delete_items": sorted(set(self.items) - set(items)), "caches": caches, "budgets": budgets, "serial": serial,
             "message": message, "actor_effects": actor_effects})
@@ -272,10 +278,49 @@ class Commerce:
 
     def prepare(self, effect: dict[str, Any]) -> dict[str, Any]:
         player = self.game.players.get(effect["player_id"])
-        return {"player": {**player.record(), **effect["patch"]} if player else None,
+        return {"player": {**player.record(), **self.settled_patch(effect)} if player else None,
             "items": [item.record() for item in effect["items"].values()],
             "delete_items": effect["delete_items"], "caches": effect["caches"],
-            "budgets": {key: asdict(value) for key, value in effect["budgets"].items()}, "serial": effect["serial"]}
+            "budgets": {key: asdict(value) for key, value in effect["budgets"].items()}, "serial": effect["serial"],
+            **({"identity":effect["identity"], "user":player.bbs_user_id} if "identity" in effect else {})}
+
+    def settled_patch(self, effect: dict[str, Any]) -> dict[str, Any]:
+        patch = deepcopy(effect["patch"])
+        player = self.game.players.get(effect["player_id"])
+        if player and "progress" in patch and "progress_base" in effect:
+            base,desired = effect["progress_base"],patch["progress"]
+            current = deepcopy(player.progress)
+            for key in base.keys()|desired.keys():
+                if key not in desired: current.pop(key,None)
+                elif key not in base or desired[key] != base[key]: current[key] = deepcopy(desired[key])
+            patch["progress"] = current
+        return patch
+
+    def enqueue_system(self, action: Callable[[], None]) -> None:
+        """Server-owned combat actions share the bounded transfer queue."""
+        if self.pending:
+            if len(self.waiting) >= QUEUE_LIMIT:
+                raise ValueError("The city is busy. Try again.")
+            self.waiting.append(action)
+        else:
+            action()
+
+    def settle(self, player: Player, patch: dict[str, Any], items: dict[str, ItemInstance],
+               caches: dict[str, dict[str, Any]], serial: int,
+               callback: Callable[[bool], None], identity: dict[str, Any] | None = None) -> bool:
+        """A server proposal; only its commit callback changes live combat."""
+        if self.pending:
+            return False
+        effect = {"session":"", "player_id":player.id, "patch":deepcopy(patch),
+            "progress_base":deepcopy(player.progress),
+            "items":{key:value for key,value in items.items() if value != self.items.get(key)},
+            "delete_items":sorted(set(self.items)-set(items)), "caches":deepcopy(caches),
+            "budgets":deepcopy(self.budgets), "serial":serial, "message":"", "actor_effects":None,
+            "callback":callback}
+        if identity is not None: effect["identity"] = deepcopy(identity)
+        self.outbox.append(effect)
+        self.pending = True
+        return True
 
     def committed(self, effect: dict[str, Any], success: bool) -> None:
         self.pending = False
@@ -283,7 +328,8 @@ class Commerce:
         if success:
             player = self.game.players.get(effect["player_id"])
             if player:
-                for key, value in effect["patch"].items(): setattr(player, key, value)
+                for key, value in self.settled_patch(effect).items(): setattr(player, key, value)
+                if "identity" in effect: self.game.identities[player.bbs_user_id] = effect["identity"]
             for iid in effect["delete_items"]: self.items.pop(iid, None)
             self.items.update(effect["items"])
             self.game.item_templates = {key: item.template for key, item in self.items.items()}
@@ -301,8 +347,13 @@ class Commerce:
                 self.toast(session, effect["message"])
         elif session:
             self.toast(session, "The transfer could not be saved. Your goods remain.")
+        if effect.get("callback"): effect["callback"](success)
         while self.waiting and not self.pending:
-            sid,name,args,from_channel = self.waiting.popleft()
+            job = self.waiting.popleft()
+            if callable(job):
+                job()
+                continue
+            sid,name,args,from_channel = job
             queued = self.game.sessions.active.get(sid)
             if queued is None or not self.ready(queued): continue
             try:
@@ -318,7 +369,9 @@ class Commerce:
         for key, cache in self.caches.items():
             zone = self.sim.world.zones.get(cache["zone"])
             if zone and key not in zone.objects:
-                zone.objects[key] = ObjectState(ObjectSpec(key, tuple(cache["tile"]), "cache", params={"dropped_item": True, "name": "Dropped goods"}))
+                zone.objects[key] = ObjectState(ObjectSpec(key, tuple(cache["tile"]), "cache", params={"dropped_item": True,
+                    "name": "Corpse cache" if cache.get("victim") else "Dropped goods",
+                    "cache_state":{"items":len(cache["items"]),"killer_only_until":cache.get("private_until",0)}}))
                 zone.revision += 1
 
     def prompt(self, session: Session, name: str, args: dict[str, Any]) -> None:

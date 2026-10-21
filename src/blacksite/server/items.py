@@ -27,7 +27,9 @@ class ItemInstance:
     bound: bool = False
 
     def __post_init__(self) -> None:
-        if not QUALITY_MIN <= self.quality <= QUALITY_MAX or self.stack < 1:
+        # Exhausted rechargeable ammunition retains its container at zero.
+        # Inventory enforces that template-specific exception.
+        if not QUALITY_MIN <= self.quality <= QUALITY_MAX or self.stack < 0:
             raise ValueError("invalid item quality or stack")
 
     @classmethod
@@ -49,7 +51,7 @@ def make_item(iid: str, template: ItemTemplate, owner: str, at: str,
 
 def availability(template: ItemTemplate) -> str:
     """State future behaviour openly when selling physical items now."""
-    owner = {"weapon": "combat", "armour": "protection", "drone": "drone operation",
+    owner = {"drone": "drone operation",
              "implant": "surgery", "resonance": "surgery", "drug": "drug effects",
              "rig": "rig operation", "pass": "restricted access", "key": "controls",
              "data": "objectives", "misc": "objectives", "salvage": "fabrication"}
