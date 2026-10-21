@@ -36,13 +36,23 @@ class FakeClient:
 
 
 class HeadlessServer:
-    def __init__(self, content: ContentTree | None = None, spawn_zone: str | None = None) -> None:
-        self.clock = ManualClock()
-        world = World(content, {zone: index for index, zone in enumerate(sorted(content.zones))}) if content and spawn_zone else None
+    def __init__(self, content: ContentTree | None = None, spawn_zone: str | None = None,
+                 character_state: dict[str, Any] | None = None, clock: ManualClock | None = None) -> None:
+        self.clock = clock or ManualClock()
+        world = World(content, {zone: index for index, zone in enumerate(sorted(content.zones))}) if content and (spawn_zone or character_state is not None) else None
         self.core = Core(self.clock, "test-origin", Authenticator(DOOR_SECRET, ADMIN_SECRET),
                          asdict(content.keymaps) if content and content.keymaps else {},
                          asdict(content.palette) if content and content.palette else {},
-                         content=content, world=world, spawn_zone=spawn_zone)
+                         content=content, world=world, spawn_zone=spawn_zone, character_state=character_state)
+
+    def commit_characters(self, error: bool = False) -> list[dict[str, Any]]:
+        game = self.core.characters
+        effects = []
+        while game and game.outbox:
+            effect = game.outbox.pop(0)
+            effects.append(effect)
+            game.committed(effect, error=error if effect["action"] in ("create", "delete") else False)
+        return effects
 
     def connect(self, door_info: dict[str, Any] | None = None, *,
                 frame: Frame | None = None, width: int = 80, height: int = 24) -> FakeClient:

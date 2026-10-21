@@ -74,6 +74,8 @@ class ContentTree:
     sectors: dict[str, s.Sector] = field(default_factory=dict)
     cores: dict[str, s.Core] = field(default_factory=dict)
     items: dict[str, s.ItemTemplate] = field(default_factory=dict)
+    starts: dict[str, s.CharacterStart] = field(default_factory=dict)
+    wake_cards: dict[str, s.WakeCard] = field(default_factory=dict)
     programs: dict[str, s.ProgramTemplate] = field(default_factory=dict)
     ice: dict[str, s.IceTemplate] = field(default_factory=dict)
     npcs: dict[str, s.NpcTemplate] = field(default_factory=dict)

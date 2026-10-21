@@ -60,7 +60,7 @@ class Storage:
         return self.meta("origin")
 
     def mark_dirty(self, kind: str, record_id: str, value: Any = ...) -> None:
-        if kind not in {"players", "items", "meta"}:
+        if kind not in {"players", "items", "meta", "identities"}:
             raise ValueError("unknown persistent entity kind")
         key = (kind, record_id)
         if value is ... and key not in self.dirty:
@@ -79,7 +79,7 @@ class Storage:
         tick = self.clock.now_tick()
         kinds: set[str] = set()
         if tick - self.last_players >= PLAYER_FLUSH_SECONDS * TICK_HZ:
-            kinds.add("players")
+            kinds.update({"players", "identities"})
         if tick - self.last_world >= WORLD_FLUSH_SECONDS * TICK_HZ:
             kinds.update({"meta", "items"})
         self._flush(kinds)
@@ -91,7 +91,7 @@ class Storage:
     def flush_now(self, reason: str | None = None) -> None:
         if reason is not None and reason not in IMMEDIATE_REASONS:
             raise ValueError("unknown immediate persistence reason")
-        self._flush({"players", "items", "meta"})
+        self._flush({"players", "items", "meta", "identities"})
         self.last_players = self.last_world = self.clock.now_tick()
 
     def _flush(self, kinds: set[str]) -> None:
@@ -103,6 +103,9 @@ class Storage:
                 elif kind == "items":
                     self.db.execute("INSERT OR REPLACE INTO items(id,authority,data) VALUES(?,?,?)",
                                     (record_id, self.origin, self._json(value)))
+                elif kind == "identities":
+                    self.db.execute("INSERT OR REPLACE INTO identities(bbs_user_id,data) VALUES(?,?)",
+                                    (record_id, self._json(value)))
                 else:
                     row = {**value, "id": record_id}
                     if not set(row) <= self.player_columns:
@@ -117,6 +120,51 @@ class Storage:
         for key in pending:
             del self.dirty[key]
             del self.dirty_since[key]
+
+    def character_state(self) -> dict[str, Any]:
+        """Load once in the I/O layer; the simulation owns pure copies."""
+        json_columns = {"attributes", "skills", "standing", "tile", "implants", "equipment", "inventory", "rig",
+                        "drugs_active", "dependencies", "settings", "stats", "progress"}
+        players = []
+        for row in self.db.execute("SELECT * FROM players WHERE archetype IS NOT NULL"):
+            players.append({key: json.loads(value) if key in json_columns and value is not None else value
+                            for key, value in dict(row).items()})
+        return {"players": players, "identities": {row[0]: json.loads(row[1]) for row in self.db.execute("SELECT * FROM identities")},
+                "serial": self.meta("player_serial") or 0, "cap": self.meta("character_cap")}
+
+    def character_write(self, effect: dict[str, Any]) -> None:
+        """Commit creation rewards/deletion before the simulation acknowledges."""
+        action = effect["action"]
+        if action == "delete":
+            record_id = effect["player"]["id"]
+            with self.db:
+                owned = [row[0] for row in self.db.execute("SELECT id,data FROM items") if json.loads(row[1]).get("owner") == record_id]
+                self.db.executemany("DELETE FROM items WHERE id=?", [(iid,) for iid in owned])
+                self.db.execute("DELETE FROM players WHERE id=? AND origin=?", (record_id, self.origin))
+                self.db.execute("INSERT OR REPLACE INTO identities(bbs_user_id,data) VALUES(?,?)",
+                                (effect["user"], self._json(effect["identity"])))
+            for key in tuple(self.dirty):
+                if key in (("players", record_id), ("identities", effect["user"])) or (key[0] == "items" and self.dirty[key].get("owner") == record_id):
+                    self.dirty.pop(key)
+                    self.dirty_since.pop(key, None)
+            return
+        previous, ages = dict(self.dirty), dict(self.dirty_since)
+        try:
+            self.mark_dirty("identities", effect["user"], effect["identity"])
+            if effect.get("player"):
+                self.mark_dirty("players", effect["player"]["id"], effect["player"])
+            for item in effect.get("items", []):
+                self.mark_dirty("items", item["id"], item)
+            if action == "create":
+                self.mark_dirty("meta", "player_serial", effect["serial"])
+            if action in ("create", "identity") or effect.get("immediate"):
+                self.flush_now()
+        except Exception:
+            # Rejected creation must not leak into a later periodic flush.
+            # Ordinary state retains its frozen snapshot for write-behind retry.
+            if action == "create":
+                self.dirty, self.dirty_since = previous, ages
+            raise
 
     def banned(self, user_id: str) -> bool:
         row = self.db.execute("SELECT expires_at FROM bans WHERE bbs_user_id=?", (user_id,)).fetchone()

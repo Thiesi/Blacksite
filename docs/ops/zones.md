@@ -15,7 +15,7 @@ The server maps arrows/diagonals and Shift movement, enforces movement
 cooldowns and stamina, and sends only authorized terrain and presences.
 `?` opens help; Ctrl-X then Y leaves through NetBBS's normal picker.
 
-Without `--spawn-zone`, callers see the M0 title. Preview bodies use the
+Without `--spawn-zone`, S07 starts saved characters and the Wake. Preview bodies use the
 handle and temporary HP/STA pools. Position and terrain memory survive
 a reconnect within 60 seconds, but not a service restart or grace expiry.
 Character creation and persistence arrive in S07. Travel arrives in S08;

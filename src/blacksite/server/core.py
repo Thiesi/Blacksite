@@ -12,6 +12,7 @@ from blacksite.server.protocol import Frame, ProtocolError, validate
 from blacksite.server.sessions import INPUTS_PER_SECOND, Session, Sessions
 from blacksite.server.world.registry import World
 from blacksite.server.world.simulation import ZoneSimulation
+from blacksite.server.characters import Characters
 from blacksite.version import PACKAGE_VERSION, PROTOCOL_MAJOR
 
 
@@ -19,7 +20,7 @@ class Core:
     def __init__(self, clock: Clock, origin: str, auth: Authenticator,
                  keymap: dict[str, Any] | None = None, palette: dict[str, Any] | None = None,
                  motd: str = "", content: Any = None, world: World | None = None,
-                 spawn_zone: str | None = None) -> None:
+                 spawn_zone: str | None = None, character_state: dict[str, Any] | None = None) -> None:
         self.clock = clock
         self.auth = auth
         self.sessions = Sessions(clock, origin)
@@ -33,11 +34,16 @@ class Core:
         self.audit: Callable[[dict[str, Any]], None] = lambda row: None
         self.bus.subscribe("input", self._echo)
         self.world = world
+        self.characters = Characters(world, self.sessions, clock, content, self.keymap, character_state) if character_state is not None else None
         self.simulation = ZoneSimulation(world, self.sessions, clock, spawn_zone, self.keymap) if world is not None and spawn_zone else None
         if self.simulation is not None:
             self.sessions.on_disconnect = self.simulation.disconnect
             self.loop.subsystems.append(self.simulation)
             self.loop.publishers.append(self.simulation.publish)
+        if self.characters is not None:
+            self.sessions.on_disconnect = self.characters.disconnect
+            self.loop.subsystems.append(self.characters)
+            self.loop.publishers.append(self.characters.publish)
 
     def connect(self, frame: Frame) -> Session:
         if frame.type != "hello":
@@ -46,9 +52,12 @@ class Core:
         role = self.auth.authenticate(frame.data["door_info"], frame.data["hmac"])
         session = self.sessions.connect(role, frame.data["door_info"], frame.data["caps"])
         session.send(Frame("welcome", {"proto": PROTOCOL_MAJOR, "server_version": PACKAGE_VERSION,
-            "player": None, "keymap": self.keymap, "palette": self.palette, "motd": self.motd}))
+            "player": self.characters.summary(session.user_id) if self.characters and role == "caller" else None,
+            "keymap": self.keymap, "palette": self.palette, "motd": self.motd}))
         if self.simulation is not None:
             self.simulation.connect(session)
+        if self.characters is not None:
+            self.characters.connect(session)
         return session
 
     def receive(self, session: Session, frame: Frame) -> None:
@@ -76,6 +85,7 @@ class Core:
         elif frame.type == "resize":
             if session.allow("input", self.clock.now_tick(), INPUTS_PER_SECOND, 1):
                 session.caps.update(frame.data)
+                session.needs_full_view = True
         else:
             session.enqueue(frame, self.clock.now_tick())
 
@@ -89,6 +99,9 @@ class Core:
         # Echo only the verb, never args, arbitrary chat, or private data.
         if self.simulation is not None:
             self.simulation.input(session, frame, event.data["tick"])
+            return
+        if self.characters is not None:
+            self.characters.input(session, frame, event.data["tick"])
             return
         label = "intent" if frame.type == "intent" else frame.type
         session.send(Frame("log", {"lines": [{"channel": "system", "text": f"You send {label}.",

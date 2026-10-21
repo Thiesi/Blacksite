@@ -21,10 +21,12 @@ they go down into the Blacksite together.
 
 ## Status
 
-**M1 shared-zone preview implemented (S06).** The M0 foundation
-(S01-S05), shared movement, sight, fog memory and two authored maps are
-available. Use the [zone preview guide](docs/ops/zones.md) for the temporary
-spawn flag; characters, travel and other gameplay follow in later slices. The
+**M1 characters and Wake implemented (S07).** The M0 foundation,
+shared movement, sight, fog memory, two maps and persistent characters are
+available. The service now starts the Wake for new callers. See the
+[character guide](docs/ops/characters.md) for persistence, sleeper recovery
+and acceptance. The [zone preview guide](docs/ops/zones.md) covers temporary
+bodies; travel and other gameplay follow in later slices. The
 [deployment guide](deploy/README.md) covers service units and operator
 commands. See `docs/plan/00-roadmap.md` for the plan and the
 [issues](../../issues) for what is being worked on. The foreground

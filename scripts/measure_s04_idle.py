@@ -22,7 +22,7 @@ from tests.fake_terminal import FakeTerminal
 
 async def measure(root: Path, seconds: int) -> None:
     root.mkdir(parents=True, exist_ok=True)
-    service = Server(root / "world", tcp=True)
+    service = Server(root / "world", tcp=True, characters=False)
     await service.start()
     drop = root / "door_info.json"
     drop.write_text(json.dumps({"handle": "Idle界", "user_id": "idle-probe", "terminal_width": 80,

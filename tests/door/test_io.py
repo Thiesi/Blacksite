@@ -59,7 +59,7 @@ def test_two_pumps_connect_help_exit_and_restore_terminal(info: DoorInfo) -> Non
             self.closed = True
 
     async def scenario() -> None:
-        server = Server(info.install, tcp=True)
+        server = Server(info.install, tcp=True, characters=False)
         await server.start()
         terminal = MemoryIO()
         task = asyncio.create_task(run(info, terminal))
@@ -88,7 +88,7 @@ def test_connection_uses_server_hmac_and_rejects_missing_secrets(info: DoorInfo)
         with pytest.raises(OSError):
             await connection.open(info)
         assert not (info.install / "secrets").exists()
-        server = Server(info.install, tcp=True)
+        server = Server(info.install, tcp=True, characters=False)
         await server.start()
         try:
             assert (await connection.open(info)).type == "welcome"
@@ -126,7 +126,7 @@ def test_refuse_below_80x24_without_entering_terminal(info: DoorInfo, monkeypatc
 def test_real_module_uses_native_stdio_pipes(info: DoorInfo, minimal_environment: bool) -> None:
     async def scenario() -> None:
         info.path.write_text(json.dumps({**info.raw, "terminal_width": 80, "terminal_height": 24, "color_depth": "256"}), encoding="utf-8")
-        server = Server(info.install, tcp=True)
+        server = Server(info.install, tcp=True, characters=False)
         await server.start()
         env = {} if minimal_environment else dict(os.environ)
         if os.name == "nt" and "USERPROFILE" in os.environ:

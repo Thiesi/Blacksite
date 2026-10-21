@@ -50,14 +50,22 @@ def render_zone(buffer: CellBuffer, body: dict[str, Any], area: Rect, palette: P
     rows += ["TARGET", "None", "NEARBY"]
     rows += [f"{entry.get('relation', '~')} {entry.get('name', 'Another Wake')}" for entry in body.get("nearby", [])[:3]]
     rows += ["CREW", "None"]
-    for index, text in enumerate(rows[:max(0, area.height - 6)]):
+    extra = 4 if me.get("grade") is not None else 0
+    for index, text in enumerate(rows[:max(0, area.height - 6 - extra)]):
         buffer.put(side_x, area.y + index, truncate(text, side_w), palette.style())
-    bottom = area.y + area.height - 5
+    bottom = area.y + area.height - 5 - extra
     buffer.put(side_x, bottom, truncate(me.get("name", me.get("handle", "")), side_w), palette.style("title"))
+    handle_row = int(bool(extra))
+    if extra:
+        buffer.put(side_x, bottom + 1, truncate("BBS: " + me["handle"], side_w), palette.style())
     for offset, key in ((1, "hp"), (2, "sta")):
         value, maximum = int(me[key]), max(1, int(me[key + "_max"]))
         filled = max(0, min(8, value * 8 // maximum))
         text = f"{key.upper()} {'#' * filled}{'.' * (8 - filled)} {value}/{maximum}"
-        buffer.put(side_x, bottom + offset, truncate(text, side_w), palette.style("hp_ok" if key == "hp" else "ui_highlight"))
-    buffer.put(side_x, bottom + 3, truncate(f"Shock {me.get('shock', 0)}", side_w), palette.style())
-    buffer.put(side_x, bottom + 4, "Ctrl-X leaves", palette.style("hint"))
+        buffer.put(side_x, bottom + offset + handle_row, truncate(text, side_w), palette.style("hp_ok" if key == "hp" else "ui_highlight"))
+    if extra:
+        buffer.put(side_x, bottom + 4, truncate(f"Chits {me['chits']}  Grade {me['grade']}", side_w), palette.style())
+        buffer.put(side_x, bottom + 5, truncate(f"Lease days {me['lease_days']}/90", side_w), palette.style())
+        buffer.put(side_x, bottom + 6, truncate(f"Discharge XP {me['xp']}/{me['discharge_xp']}", side_w), palette.style())
+    buffer.put(side_x, bottom + 3 + extra, truncate(f"Shock {me.get('shock', 0):g}", side_w), palette.style())
+    buffer.put(side_x, bottom + 4 + extra, "Ctrl-X leaves", palette.style("hint"))

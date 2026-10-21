@@ -1,0 +1,17 @@
+{
+  "schema": 1,
+  "hymns": [
+    {
+      "id": "hymn_steady",
+      "name": "Steady",
+      "kind": "hymn",
+      "tier": 1,
+      "cast_seconds": 0.5,
+      "cooldown_seconds": 12,
+      "effect": {
+        "shock": -20
+      },
+      "description": "You steady your crew."
+    }
+  ]
+}

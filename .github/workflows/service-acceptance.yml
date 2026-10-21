@@ -7,6 +7,7 @@ on:
       - 'deploy/**'
       - 'scripts/accept_s05_systemd.py'
       - 'scripts/accept_s06_netbbs.py'
+      - 'scripts/accept_s07_netbbs.py'
       - '.github/workflows/service-acceptance.yml'
       - 'pyproject.toml'
       - 'MANIFEST.in'
@@ -14,7 +15,7 @@ on:
 jobs:
   systemd-netbbs:
     runs-on: ubuntu-latest
-    timeout-minutes: 10
+    timeout-minutes: 15
     permissions:
       contents: read
     steps:
@@ -64,6 +65,10 @@ jobs:
         shell: bash
         run: |
           python scripts/accept_s06_netbbs.py --root "$RUNNER_TEMP/s06-proof" --door-python "$RUNNER_TEMP/s05-venv/bin/python"
+      - name: Accept the Wake, restart and real sleeper interval
+        shell: bash
+        run: |
+          python scripts/accept_s07_netbbs.py --root "$RUNNER_TEMP/s07-proof" --door-python "$RUNNER_TEMP/s05-venv/bin/python"
       - uses: actions/upload-artifact@v4
         if: always()
         with:
@@ -74,3 +79,8 @@ jobs:
         with:
           name: s06-shared-zone-proof
           path: ${{ runner.temp }}/s06-proof
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: s07-character-proof
+          path: ${{ runner.temp }}/s07-proof

@@ -300,6 +300,14 @@ snapshots for unusually large terminals. Usual layout dimensions and
 four-tile scrolling are unchanged. Camera changes send a full snapshot;
 other updates use the JSON-pointer operations in section 5.3.
 
+S07 adds `me.grade`, `chits`, `lease_days`, `legal_at`, `xp` and
+`discharge_xp`. Lease days and the early-discharge XP target are separate
+visible fields; personhood does not remove grade-based protection.
+`WakeView.body` is `{kind: "menu" | "text", body, stage, hint}`. The nested
+body uses the existing menu/text renderer and input contract. Art remains
+the S33 extension. A name prompt shows its BBS-derived default; an empty
+submission accepts that default on the server.
+
 `LatticeView.body`: `cells` (positions and edges in view), `presences`,
 `me` (integrity, trace, rig slots with cooldowns), `room` (data, controls,
 ice with integrity), `hint`.
@@ -330,6 +338,22 @@ Chronicle, help.
   a zone forward with scripted inputs and assert outcomes.
 
 ### 6.2 Persistence
+
+The character subsystem loads pure snapshots at boot and returns a write
+outbox. Only the I/O layer executes it through storage. Creation commits
+the player, item grants, identity state and instance serial in one
+transaction; only its successful receipt attaches the body and exposes
+rewards. Failure returns the card screen for an explicit retry. Deletion
+commits removal of the player and owned items while retaining identity
+history before the Wake restarts. A failed proposal cannot fall through
+into a later periodic flush.
+
+Safe/pocket logout removes the body and flushes immediately. Elsewhere a
+sleeper stays for 60 seconds; reconnect reclaims that same body. Its UTC
+offline timestamp reconciles remaining sleeper time at restart before
+input. Expiry follows authored zone links to the nearest safe/pocket zone;
+the Wake Hall is the fallback while the city graph is incomplete. S10
+supplies combat flags and clone-debt consequences; S07 has no combat.
 
 - SQLite in WAL mode with a single writer task. Live entities are marked
   dirty; the writer flushes dirty players every 5 s, world state every
@@ -562,4 +586,10 @@ S06's `m1-zone-preview` is an authoring bundle for the two Vatside maps.
 Their future city exits, faction and service references remain unresolved.
 `serve --spawn-zone <id>` previews a supplied map with temporary bodies;
 it does not activate that bundle or enter an absent destination. Without
-the flag, the M0 title remains available. Transitions arrive in S08.
+the flag, S07 starts the persistent Wake flow. Transitions arrive in S08.
+
+From S07 the ordinary service starts persistent characters and the Wake
+in the supplied Hall. This is the M1 development world, not a complete
+city release: absent destinations and all unimplemented map services
+remain inert. The spawn flag still selects temporary S06 bodies for
+movement probes. It does not create saved characters.

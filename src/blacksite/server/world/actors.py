@@ -20,7 +20,7 @@ class Actor:
     health_max: int = 130
     stamina: int = 70
     stamina_max: int = 70
-    shock: int = 0
+    shock: float = 0
     cooldowns: dict[str, int] = field(default_factory=dict)
     effects: list[dict[str, object]] = field(default_factory=list)
     target: str | None = None

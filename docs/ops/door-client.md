@@ -56,7 +56,8 @@ NETBBS_PYTHON scripts/accept_s04_netbbs.py `
 python scripts/measure_s04_idle.py --root .test-tmp/idle --seconds 600
 ```
 
-The first script creates an isolated NetBBS database, registers the
+The first script creates an isolated NetBBS database and starts the
+client-only M0 smoke service (`characters=False`). It registers the
 actual door profile and runs NetBBS's production picker, subprocess
 runtime and Telnet/SSH/web listeners on loopback ports. It tests both
 80×24 and 132×50, help paging, Esc, leave confirmation and the real

@@ -15,6 +15,28 @@ from blacksite.admin.client import request
 from blacksite.content.loader import load_content
 from blacksite.content.validate import validate
 from blacksite.server.storage.lease import Lease
+from blacksite.server.storage.db import Storage
+from blacksite.server.clock import RealClock
+
+
+def character_cap(install: Path, value: int) -> dict[str, int]:
+    """Offline world setting; never edit a live world's database."""
+    if value < 1:
+        raise ValueError("character cap must be positive")
+    install.mkdir(parents=True, exist_ok=True)
+    lease = Lease(install / "world.db.sessions")
+    lease.acquire()
+    try:
+        store = Storage(install / "world.db", RealClock())
+        try:
+            store.mark_dirty("meta", "character_cap", value)
+            store.flush_now()
+            store.audit({"operator": "offline", "command": "character_cap", "target": value, "outcome": "ok"})
+        finally:
+            store.close()
+    finally:
+        lease.release()
+    return {"character_cap": value}
 
 
 def rotate(install: Path) -> dict[str, bool]:
@@ -57,6 +79,8 @@ def parser() -> argparse.ArgumentParser:
         commands.add_parser(name, parents=[common])
     secret = commands.add_parser("secrets", parents=[common])
     secret.add_subparsers(dest="secret_command", required=True).add_parser("rotate", parents=[common])
+    cap = commands.add_parser("character-cap", parents=[common], help="set the offline per-identity character cap")
+    cap.add_argument("value", type=int)
     return root
 
 
@@ -97,7 +121,7 @@ def main(argv: list[str] | None = None) -> int:
             emit({"ok": not problems, "content_hash": tree.hash,
                   "problems": [str(problem) for problem in problems]}, args.json)
             return int(bool(problems))
-        result = rotate(install) if args.command == "secrets" else asyncio.run(request(install, args.command))
+        result = character_cap(install, args.value) if args.command == "character-cap" else rotate(install) if args.command == "secrets" else asyncio.run(request(install, args.command))
         emit(result, args.json)
         return 0
     except (OSError, ValueError, RuntimeError, asyncio.TimeoutError, asyncio.IncompleteReadError) as exc:

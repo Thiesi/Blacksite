@@ -163,6 +163,7 @@ class _Validator:
         self.check_ice()
         self.check_programs()
         self.check_items()
+        self.check_starts()
         self.check_hymns()
         self.check_vendors()
         self.check_npcs()
@@ -682,9 +683,28 @@ class _Validator:
                 self.report(*owner, "a melee weapon has stamina and no range")
         elif w.range is None or w.range <= 0:
             self.report(*owner, "a ranged weapon needs a positive range")
+        if not w.melee and w.accuracy is None:
+            self.report(*owner, "a ranged weapon needs accuracy")
         if w.ammo is not None and self.ref("items", w.ammo, owner, "ammo"):
             if self.t.items[w.ammo].class_ != "ammo":
                 self.report(*owner, f"ammo {w.ammo!r} is not an ammo item")
+
+    def check_starts(self) -> None:
+        for sid, start in self.each("starts"):
+            for item, count in start.items.items():
+                self.ref("items", item, ("starts", sid), "starter item")
+                if count < 1:
+                    self.report("starts", sid, "starter quantity must be positive")
+            for item in (*start.equipment.values(), *start.implants.values()):
+                if item not in start.items:
+                    self.report("starts", sid, "equipped starter item was not granted")
+            for kind in ("programs", "hymns"):
+                for target in getattr(start, kind):
+                    self.ref(kind, target, ("starts", sid), "starter ability")
+            if start.rig_slots < 0:
+                self.report("starts", sid, "rig slots cannot be negative")
+        for cid, card in self.each("wake_cards"):
+            self.ref("text", card.pitch, ("wake_cards", cid), "recruiter pitch")
 
     def check_hymns(self) -> None:
         for hid, hymn in self.each("hymns"):

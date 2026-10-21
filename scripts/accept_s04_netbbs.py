@@ -116,7 +116,7 @@ class Caller:
 async def accept(root: Path, door_python: Path) -> None:
     root = root.resolve()
     root.mkdir(parents=True, exist_ok=True)
-    service = Server(root / "world", tcp=True)
+    service = Server(root / "world", tcp=True, characters=False)
     await service.start()
     db = Database(root / "node.db")
     lane = DatabaseLane(db.path)

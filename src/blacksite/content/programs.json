@@ -1,0 +1,32 @@
+{
+  "schema": 1,
+  "programs": [
+    {
+      "id": "prg_pick",
+      "name": "Pick",
+      "class": "attack",
+      "cast_seconds": 0.8,
+      "cooldown_seconds": 1,
+      "effect": {
+        "kind": "damage",
+        "amount": 10
+      },
+      "source": "starter",
+      "price": 150,
+      "target_class": "ice"
+    },
+    {
+      "id": "prg_umbrella",
+      "name": "Umbrella",
+      "class": "shield",
+      "cast_seconds": 0.5,
+      "cooldown_seconds": 4,
+      "effect": {
+        "kind": "absorb",
+        "amount": 15
+      },
+      "source": "starter",
+      "price": 200
+    }
+  ]
+}

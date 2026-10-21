@@ -30,7 +30,7 @@ HELLO_SECONDS = 5  # Local transport policy, not a gameplay timer.
 
 class Server:
     def __init__(self, install_dir: Path, tcp: bool = False, log_level: str = "INFO",
-                 clock: Clock | None = None, spawn_zone: str | None = None) -> None:
+                 clock: Clock | None = None, spawn_zone: str | None = None, characters: bool = True) -> None:
         self.install_dir = install_dir.resolve()
         self.clock = clock or RealClock()
         self.log_level = log_level
@@ -45,6 +45,7 @@ class Server:
         self.stopping = False
         self.stop_requested = False
         self.spawn_zone = spawn_zone
+        self.characters = characters
         self.world: World | None = None
         self.failure: BaseException | None = None
 
@@ -130,7 +131,9 @@ class Server:
                 asdict(content.keymaps) if content.keymaps else {},
                 asdict(content.palette) if content.palette else {},
                 random.SystemRandom().choice(lines) if lines else "", content,
-                world=self.world if self.spawn_zone else None, spawn_zone=self.spawn_zone)
+                world=self.world if self.spawn_zone or self.characters else None, spawn_zone=self.spawn_zone,
+                character_state=self.storage.character_state() if self.characters and not self.spawn_zone else None)
+            self._character_writes()
             self.core.audit = self._audit
             self.core.status_provider = self.status
             if self.stop_requested:
@@ -143,6 +146,23 @@ class Server:
         except BaseException:
             await self.stop()
             raise
+
+    def _character_writes(self) -> None:
+        if self.core is None or self.core.characters is None or self.storage is None:
+            return
+        game = self.core.characters
+        while game.outbox:
+            effect = game.outbox.pop(0)
+            try:
+                self.storage.character_write(effect)
+            except Exception:
+                if effect["action"] not in ("create", "delete"):
+                    raise
+                game.committed(effect, error=True)
+                if self.logs:
+                    self.logs.event("character commit failed", level="ERROR", action=effect["action"])
+            else:
+                game.committed(effect)
 
     def status(self) -> dict[str, Any]:
         assert self.core is not None and self.storage is not None
@@ -190,6 +210,7 @@ class Server:
             if self.stopping:
                 raise ConnectionRefusedError("service is stopping")
             session = self.core.connect(hello)
+            self._character_writes()
             available = asyncio.Event()
             session.notify = available.set
 
@@ -241,13 +262,16 @@ class Server:
             if receiver:
                 receiver.cancel()
                 await asyncio.gather(receiver, return_exceptions=True)
-            if session is not None:
-                self.core.sessions.disconnect(session)
-            writer.close()
             try:
-                await asyncio.wait_for(writer.wait_closed(), 1)
-            except (OSError, asyncio.TimeoutError):
-                pass
+                if session is not None:
+                    self.core.sessions.disconnect(session)
+                    self._character_writes()
+            finally:
+                writer.close()
+                try:
+                    await asyncio.wait_for(writer.wait_closed(), 1)
+                except (OSError, asyncio.TimeoutError):
+                    pass
 
     async def _ticks(self) -> None:
         assert self.core is not None
@@ -255,6 +279,7 @@ class Server:
             if self.clock.now_tick() > self.core.loop.last_tick:
                 began = time.perf_counter()
                 self.core.loop.step()
+                self._character_writes()
                 self.core.loop.record_timing(time.perf_counter() - began)
             await asyncio.sleep(1 / TICK_HZ / 2)
 
@@ -291,6 +316,7 @@ class Server:
                 await self.listener.stop_accepting()
                 if self.core:
                     self.core.shutdown()
+                    self._character_writes()
                 for task in self.tasks:
                     task.cancel()
                 await asyncio.gather(*self.tasks, return_exceptions=True)

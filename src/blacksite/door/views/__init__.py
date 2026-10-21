@@ -50,11 +50,13 @@ def render_menu(buffer: CellBuffer, body: dict[str, Any], area: Rect, palette: P
     label = "  ".join(str(c.get("label", c)) if isinstance(c, dict) else str(c) for c in columns)
     buffer.put(area.x + 2, area.y + 1, truncate(label, list_width), palette.style("muted"))
     cursor = body.get("cursor", 0)
-    for index, row in enumerate(rows[:max(0, available)]):
+    selected_index = cursor if type(cursor) is int else next((i for i, row in enumerate(rows) if row.get("id") == cursor), 0)
+    first = max(0, min(len(rows) - max(1, available), selected_index - max(1, available) + 1))
+    for index, row in enumerate(rows[first:first + max(0, available)], first):
         cells = row.get("cells", [])
         text = "  ".join(str(cell) for cell in cells)
         selected = cursor == index or cursor == row.get("id")
-        buffer.put(area.x + 2, area.y + 2 + index, truncate(text, list_width).ljust(list_width),
+        buffer.put(area.x + 2, area.y + 2 + index - first, truncate(text, list_width).ljust(list_width),
                    palette.style("text", reverse=selected))
     detail = str(body.get("detail", ""))
     dx = area.x + list_width + 3 if right else area.x + 2
