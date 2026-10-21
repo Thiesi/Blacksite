@@ -20,6 +20,9 @@ python3 -m venv /opt/blacksite/venv
 /opt/blacksite/venv/bin/blacksite serve --install-dir /var/db/blacksite
 ```
 
+Add `/opt/blacksite/venv/bin` to PATH for the shorter commands below,
+or keep using their absolute paths.
+
 Before first start, validation checks the package content plus
 `DIR/content.local`. After bootstrap it checks `DIR/content` and the
 overrides. Invalid content returns exit 1. Startup creates credentials,
