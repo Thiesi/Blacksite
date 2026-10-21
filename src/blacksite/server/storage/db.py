@@ -29,6 +29,7 @@ class Storage:
         self.db = sqlite3.connect(path, timeout=1.0)
         self.db.row_factory = sqlite3.Row
         self.dirty: dict[tuple[str, str], dict[str, Any] | Any] = {}
+        self.dirty_since: dict[tuple[str, str], int] = {}
         self.last_players = self.last_world = clock.now_tick()
         try:
             self.db.execute("PRAGMA journal_mode=WAL")
@@ -67,6 +68,12 @@ class Storage:
         if value is not ...:
             # Freeze the proposal; mutations after marking cannot change the write.
             self.dirty[key] = json.loads(self._json(value))
+            self.dirty_since.setdefault(key, self.clock.now_tick())
+
+    def persistence_lag(self) -> float:
+        """Age of the oldest uncommitted proposal, zero when nothing is dirty."""
+        oldest = min(self.dirty_since.values(), default=self.clock.now_tick())
+        return (self.clock.now_tick() - oldest) / TICK_HZ
 
     def flush_due(self) -> None:
         tick = self.clock.now_tick()
@@ -109,6 +116,7 @@ class Storage:
         # Preserve dirty marks on transaction failure, for a safe retry.
         for key in pending:
             del self.dirty[key]
+            del self.dirty_since[key]
 
     def banned(self, user_id: str) -> bool:
         row = self.db.execute("SELECT expires_at FROM bans WHERE bbs_user_id=?", (user_id,)).fetchone()

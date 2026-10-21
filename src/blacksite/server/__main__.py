@@ -12,12 +12,10 @@ from blacksite.server.app import Server
 
 async def run(args: argparse.Namespace) -> None:
     server = Server(args.install_dir, args.tcp, args.log_level)
-    loop = asyncio.get_running_loop()
     previous: dict[signal.Signals, object] = {}
 
     def stop(signum: int, frame: object) -> None:
-        if server.core:
-            loop.call_soon_threadsafe(server.core.request_stop)
+        server.request_stop()
 
     signals = [signal.SIGINT, signal.SIGTERM]
     if hasattr(signal, "SIGBREAK"):

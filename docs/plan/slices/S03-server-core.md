@@ -160,9 +160,12 @@ told goodbye on shutdown; no game rules exist yet.
 
 ## Implementation and verification (2026-10-21)
 
-Implemented by Codex; the primary model is Opus. Independent Opus review
-and the named Astra critique remain outstanding. This slice is not marked
-done until the review and merge gates are satisfied.
+Implemented by Codex; the primary model label is Opus. Claude Sonnet
+delivered the automated review on PR #41. The user's review workflow
+uses that delivered review and product-impact triage as the merge gate,
+as recorded in `AGENTS.md` §3; additional manual model reviews are not
+required. The pre-start protocol read was performed by the implementer,
+not an independent Astra reviewer.
 
 The pre-implementation protocol read identified ambiguous HMAC bytes,
 NetBBS's `user_id` spelling, operator/caller session collisions, queue
@@ -197,3 +200,38 @@ Verification on Windows, Python 3.14:
 
 The smoke bot is a local diagnostic. It does not render caller text or
 start the service. See `docs/ops/server-core.md` for reproduction commands.
+
+## Automatic review triage
+
+The fixes address ordinary operator and maintenance scenarios: discover
+numbered migrations by prefix so future upgrades work; retain a stop
+signal received during bootstrap; clean the unpublished content copy on
+copy/load failure so retry works; close a stalled writer without blaming
+credentials; report the age of uncommitted proposals as persistence lag.
+Regression tests inject those failures and use manual time for lag.
+After review fixes, `python -m pytest -q
+--basetemp=.test-tmp/review-full` passes: 332 passed, 1 Windows-specific
+skip. Real-terminal signal probes pass again at 80×24 and 132×50:
+pongs 4.405 ms / 4.952 ms, shutdown 0.098 s / 0.113 s, exit zero and
+empty `run/` in both cases.
+
+Rejected findings and rationale:
+
+- Tick catch-up: S03 has no simulation rules to lose. S06 must choose
+  elapsed-time versus catch-up semantics alongside the first real rules;
+  adding a scheduler policy here would design a later slice speculatively.
+- Silent rate-limit drops: intentional bounded abuse handling. Adding a
+  toast for every rejected input would amplify the same flood.
+- Redundant role checks and unreachable peer handling: reserved peers
+  already disconnect, and the extra admin check protects direct callers.
+  Removing either changes no ordinary caller or operator behavior.
+- Non-hex HMAC exception class: network I/O and the harness already
+  reject and close correctly. Changing only the internal exception type
+  has no product effect.
+- Nonces and pre-hello flood protection: a hostile service-account process
+  is outside the filesystem trust model in architecture §4. No new remote
+  listener or authentication claim is introduced by this slice.
+- Ban-check comment, audit rotation and shutdown queue priority: operator
+  access is intentional, the spec requires an append-only audit log, and
+  maintenance gives bye priority. Durable state commits precede success;
+  future sessions rebuild their views. These do not require a redesign.

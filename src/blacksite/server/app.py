@@ -42,6 +42,7 @@ class Server:
         self.connections: set[asyncio.Task[None]] = set()
         self.stopped = asyncio.Event()
         self.stopping = False
+        self.stop_requested = False
         self.failure: BaseException | None = None
 
     def _content(self) -> ContentTree:
@@ -53,15 +54,19 @@ class Server:
             if staging.exists():
                 raise RuntimeError("content.next exists; inspect interrupted content bootstrap")
             staging.mkdir()
-            for path in content_files(source):
-                destination = staging / path.relative_to(source)
-                destination.parent.mkdir(parents=True, exist_ok=True)
-                shutil.copyfile(path, destination)
-            tree = load_content(staging, self.install_dir / "content.local")
-            problems = validate(tree)
-            if problems:
-                shutil.rmtree(staging)  # Created exclusively by this bootstrap.
-                raise ValueError("invalid content: " + "; ".join(str(p) for p in problems))
+            try:
+                for path in content_files(source):
+                    destination = staging / path.relative_to(source)
+                    destination.parent.mkdir(parents=True, exist_ok=True)
+                    shutil.copyfile(path, destination)
+                tree = load_content(staging, self.install_dir / "content.local")
+                problems = validate(tree)
+                if problems:
+                    raise ValueError("invalid content: " + "; ".join(str(p) for p in problems))
+            except BaseException:
+                # Only remove the unpublished tree created by this attempt.
+                shutil.rmtree(staging)
+                raise
             previous = self.install_dir / "content.previous"
             if previous.exists():
                 raise RuntimeError("content.previous exists; inspect interrupted content bootstrap")
@@ -109,6 +114,9 @@ class Server:
                 random.SystemRandom().choice(lines) if lines else "", content)
             self.core.audit = self._audit
             self.core.status_provider = self.status
+            if self.stop_requested:
+                self.core.request_stop()
+                return
             await self.listener.start(self._connected)
             self._task(self._ticks())
             self._task(self._writer())
@@ -120,7 +128,7 @@ class Server:
     def status(self) -> dict[str, Any]:
         assert self.core is not None and self.storage is not None
         result = self.core.status()
-        result["persistence_lag"] = (self.clock.now_tick() - min(self.storage.last_players, self.storage.last_world)) / TICK_HZ if self.storage.dirty else 0
+        result["persistence_lag"] = self.storage.persistence_lag()
         return result
 
     def _audit(self, row: dict[str, Any]) -> None:
@@ -186,7 +194,16 @@ class Server:
                 wakeup.cancel()
                 await asyncio.gather(wakeup, return_exceptions=True)
                 wakeup = None
-        except (ValueError, TypeError, UnicodeError, asyncio.TimeoutError) as exc:
+        except asyncio.TimeoutError:
+            # Before hello this is an idle handshake; afterwards the writer
+            # is stalled. Neither condition says the credential was wrong.
+            if session is None:
+                writer.write(encode(Frame("bye", {"reason": "timeout", "text": "Connection timed out."})))
+                try:
+                    await asyncio.wait_for(writer.drain(), 1)
+                except (OSError, asyncio.TimeoutError):
+                    pass
+        except (ValueError, TypeError, UnicodeError) as exc:
             reason = "banned" if str(exc) == "banned" else "protocol" if isinstance(exc, ProtocolError) else "auth"
             writer.write(encode(Frame("bye", {"reason": reason, "text": "Connection refused."})))
             try:
@@ -235,6 +252,12 @@ class Server:
                 raise RuntimeError("service task failed; see logs/server.log") from self.failure
         finally:
             await self.stop()
+
+    def request_stop(self) -> None:
+        """Latch OS stop requests even before the core has been built."""
+        self.stop_requested = True
+        if self.core:
+            self.core.request_stop()
 
     async def stop(self) -> None:
         if self.stopping:

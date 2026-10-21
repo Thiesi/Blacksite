@@ -1,6 +1,7 @@
 """Ordered transactional SQLite schema migrations."""
 
 from importlib import import_module
+from pathlib import Path
 import sqlite3
 
 from blacksite.version import WORLD_SCHEMA
@@ -22,6 +23,9 @@ def migrate(db: sqlite3.Connection) -> None:
         if version < WORLD_SCHEMA:
             db.execute("BEGIN IMMEDIATE")
         for number in range(version + 1, WORLD_SCHEMA + 1):
-            module = import_module(f"{__name__}.{number:04d}_initial")
+            candidates = sorted(Path(__file__).parent.glob(f"{number:04d}_*.py"))
+            if len(candidates) != 1:
+                raise ValueError(f"expected exactly one migration for schema {number}")
+            module = import_module(f"{__name__}.{candidates[0].stem}")
             module.apply(db)
             db.execute("INSERT OR REPLACE INTO meta(key,value) VALUES('schema_version',?)", (str(number),))
