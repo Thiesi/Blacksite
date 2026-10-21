@@ -1,6 +1,6 @@
 # S12 — Items, inventory, equipment, vendors, bank, currency
 
-**Status:** planned
+**Status:** done (PR #49)
 **Primary model:** Sonnet · **Reviewer:** Opus (data model review before merge)
 **Depends on:** S07 · **Milestone:** M1
 **Issue:** https://github.com/Thiesi/blacksite/issues/12
