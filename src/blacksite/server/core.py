@@ -16,6 +16,7 @@ from blacksite.server.characters import Characters
 from blacksite.server.chat import Chat
 from blacksite.server.commerce import Commerce
 from blacksite.server.combat.engine import Combat
+from blacksite.server.npcs.engine import Npcs
 from blacksite.version import PACKAGE_VERSION, PROTOCOL_MAJOR
 
 
@@ -57,6 +58,9 @@ class Core:
         self.combat = Combat(self.commerce) if self.commerce else None
         if self.combat:
             self.loop.subsystems.append(self.combat)
+        self.npcs = Npcs(self.combat, character_state.get("npcs", {})) if self.combat else None
+        if self.npcs:
+            self.loop.subsystems.append(self.npcs)
 
     def connect(self, frame: Frame) -> Session:
         if frame.type != "hello":
@@ -116,6 +120,8 @@ class Core:
         if self.combat and self.combat.input(session, frame, event.data["tick"]):
             return
         if self.commerce and self.commerce.input(session, frame, event.data["tick"]):
+            return
+        if self.npcs and self.npcs.input(session, frame, event.data["tick"]):
             return
         if self.chat and self.chat.input(session, frame, event.data["tick"]):
             return

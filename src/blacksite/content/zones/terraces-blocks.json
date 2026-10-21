@@ -296,5 +296,20 @@
   "pockets": [],
   "lore": [
     "zone-terraces-blocks"
+  ],
+  "spawners": [
+    {
+      "id": "resident",
+      "npc": "npc-resident",
+      "count": 7,
+      "respawn_seconds": 60,
+      "condition": "always",
+      "region": {
+        "x": 5,
+        "y": 3,
+        "w": 22,
+        "h": 2
+      }
+    }
   ]
 }

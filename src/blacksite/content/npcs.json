@@ -21,6 +21,593 @@
         "damage_type": "kinetic",
         "range": 6
       }
+    },
+    {
+      "id": "npc-warden-response",
+      "name": "Warden responder",
+      "faction": "wardens",
+      "grade": 1,
+      "attributes": {
+        "frame": 20,
+        "nerve": 20,
+        "cortex": 10,
+        "resonance": 5,
+        "vitals": 20
+      },
+      "behaviours": [
+        {
+          "kind": "warden",
+          "params": {}
+        }
+      ],
+      "xp": 20,
+      "weapon": "wpn_kestrel_sidearm",
+      "armour": "arm_wake_coverall",
+      "loot": [
+        {
+          "item": "ammo_9x",
+          "chance": 0.5,
+          "count": 10
+        }
+      ]
+    },
+    {
+      "id": "npc-warden-patrol",
+      "name": "Warden patrol",
+      "faction": "wardens",
+      "grade": 1,
+      "attributes": {
+        "frame": 20,
+        "nerve": 20,
+        "cortex": 10,
+        "resonance": 5,
+        "vitals": 20
+      },
+      "behaviours": [
+        {
+          "kind": "patrol",
+          "params": {
+            "waypoints": [
+              [
+                23,
+                3
+              ],
+              [
+                40,
+                3
+              ],
+              [
+                40,
+                4
+              ],
+              [
+                23,
+                4
+              ]
+            ]
+          }
+        }
+      ],
+      "xp": 20,
+      "weapon": "wpn_kestrel_sidearm",
+      "armour": "arm_wake_coverall",
+      "loot": [
+        {
+          "item": "ammo_9x",
+          "chance": 0.5,
+          "count": 10
+        }
+      ]
+    },
+    {
+      "id": "npc-civilian",
+      "name": "Plaza resident",
+      "faction": null,
+      "grade": 1,
+      "attributes": {
+        "frame": 20,
+        "nerve": 20,
+        "cortex": 10,
+        "resonance": 5,
+        "vitals": 20
+      },
+      "behaviours": [
+        {
+          "kind": "wander",
+          "params": {}
+        }
+      ],
+      "xp": 0,
+      "loot": [
+        {
+          "item": "con_kestrel_ration",
+          "chance": 1,
+          "count": 1
+        }
+      ]
+    },
+    {
+      "id": "npc-courier",
+      "name": "Courier drone",
+      "faction": "kestrel",
+      "grade": 1,
+      "attributes": {
+        "frame": 20,
+        "nerve": 20,
+        "cortex": 10,
+        "resonance": 5,
+        "vitals": 20
+      },
+      "behaviours": [
+        {
+          "kind": "patrol",
+          "params": {
+            "waypoints": [
+              [
+                8,
+                4
+              ],
+              [
+                22,
+                4
+              ]
+            ],
+            "bounce": true
+          }
+        }
+      ],
+      "xp": 0
+    },
+    {
+      "id": "npc-kestrel-staff",
+      "name": "Kestrel clerk",
+      "faction": "kestrel",
+      "grade": 1,
+      "attributes": {
+        "frame": 20,
+        "nerve": 20,
+        "cortex": 10,
+        "resonance": 5,
+        "vitals": 20
+      },
+      "behaviours": [
+        {
+          "kind": "talker",
+          "params": {
+            "anchor": true
+          }
+        }
+      ],
+      "xp": 0
+    },
+    {
+      "id": "npc-commuter",
+      "name": "Commuter",
+      "faction": null,
+      "grade": 1,
+      "attributes": {
+        "frame": 20,
+        "nerve": 20,
+        "cortex": 10,
+        "resonance": 5,
+        "vitals": 20
+      },
+      "behaviours": [
+        {
+          "kind": "wander",
+          "params": {}
+        }
+      ],
+      "xp": 0,
+      "loot": [
+        {
+          "item": "con_kestrel_ration",
+          "chance": 1,
+          "count": 1
+        }
+      ]
+    },
+    {
+      "id": "npc-sablier-orderly",
+      "name": "Sablier orderly",
+      "faction": "sablier",
+      "grade": 1,
+      "attributes": {
+        "frame": 20,
+        "nerve": 20,
+        "cortex": 10,
+        "resonance": 5,
+        "vitals": 20
+      },
+      "behaviours": [
+        {
+          "kind": "talker",
+          "params": {
+            "anchor": true
+          }
+        }
+      ],
+      "xp": 0
+    },
+    {
+      "id": "npc-sablier-guard",
+      "name": "Sablier security",
+      "faction": "sablier",
+      "grade": 1,
+      "attributes": {
+        "frame": 20,
+        "nerve": 20,
+        "cortex": 10,
+        "resonance": 5,
+        "vitals": 20
+      },
+      "behaviours": [
+        {
+          "kind": "guard",
+          "params": {}
+        }
+      ],
+      "xp": 20,
+      "weapon": "wpn_kestrel_sidearm",
+      "armour": "arm_wake_coverall",
+      "loot": [
+        {
+          "item": "ammo_9x",
+          "chance": 0.5,
+          "count": 10
+        }
+      ]
+    },
+    {
+      "id": "npc-patient",
+      "name": "Clinic patient",
+      "faction": null,
+      "grade": 1,
+      "attributes": {
+        "frame": 20,
+        "nerve": 20,
+        "cortex": 10,
+        "resonance": 5,
+        "vitals": 20
+      },
+      "behaviours": [
+        {
+          "kind": "wander",
+          "params": {}
+        }
+      ],
+      "xp": 0,
+      "loot": [
+        {
+          "item": "con_kestrel_ration",
+          "chance": 1,
+          "count": 1
+        }
+      ]
+    },
+    {
+      "id": "npc-sable-enforcer",
+      "name": "Sable enforcer",
+      "faction": "sable",
+      "grade": 1,
+      "attributes": {
+        "frame": 20,
+        "nerve": 20,
+        "cortex": 10,
+        "resonance": 5,
+        "vitals": 20
+      },
+      "behaviours": [
+        {
+          "kind": "guard",
+          "params": {}
+        }
+      ],
+      "xp": 20,
+      "weapon": "wpn_kestrel_sidearm",
+      "armour": "arm_wake_coverall",
+      "loot": [
+        {
+          "item": "ammo_9x",
+          "chance": 0.5,
+          "count": 10
+        }
+      ]
+    },
+    {
+      "id": "npc-sodium-regular",
+      "name": "Sodium regular",
+      "faction": "sable",
+      "grade": 1,
+      "attributes": {
+        "frame": 20,
+        "nerve": 20,
+        "cortex": 10,
+        "resonance": 5,
+        "vitals": 20
+      },
+      "behaviours": [
+        {
+          "kind": "wander",
+          "params": {}
+        }
+      ],
+      "xp": 0,
+      "loot": [
+        {
+          "item": "con_kestrel_ration",
+          "chance": 1,
+          "count": 1
+        }
+      ]
+    },
+    {
+      "id": "npc-halo-bouncer",
+      "name": "Halo bouncer",
+      "faction": "sable",
+      "grade": 1,
+      "attributes": {
+        "frame": 20,
+        "nerve": 20,
+        "cortex": 10,
+        "resonance": 5,
+        "vitals": 20
+      },
+      "behaviours": [
+        {
+          "kind": "guard",
+          "params": {}
+        }
+      ],
+      "xp": 20,
+      "weapon": "wpn_kestrel_sidearm",
+      "armour": "arm_wake_coverall",
+      "loot": [
+        {
+          "item": "ammo_9x",
+          "chance": 0.5,
+          "count": 10
+        }
+      ]
+    },
+    {
+      "id": "npc-halo-regular",
+      "name": "Halo regular",
+      "faction": "sable",
+      "grade": 1,
+      "attributes": {
+        "frame": 20,
+        "nerve": 20,
+        "cortex": 10,
+        "resonance": 5,
+        "vitals": 20
+      },
+      "behaviours": [
+        {
+          "kind": "talker",
+          "params": {
+            "anchor": true
+          }
+        }
+      ],
+      "xp": 0
+    },
+    {
+      "id": "npc-resident",
+      "name": "Block resident",
+      "faction": null,
+      "grade": 1,
+      "attributes": {
+        "frame": 20,
+        "nerve": 20,
+        "cortex": 10,
+        "resonance": 5,
+        "vitals": 20
+      },
+      "behaviours": [
+        {
+          "kind": "wander",
+          "params": {}
+        }
+      ],
+      "xp": 0,
+      "loot": [
+        {
+          "item": "con_kestrel_ration",
+          "chance": 1,
+          "count": 1
+        }
+      ]
+    },
+    {
+      "id": "npc-plainclothes-warden",
+      "name": "Plainclothes Warden",
+      "faction": "wardens",
+      "grade": 1,
+      "attributes": {
+        "frame": 20,
+        "nerve": 20,
+        "cortex": 10,
+        "resonance": 5,
+        "vitals": 20
+      },
+      "behaviours": [
+        {
+          "kind": "talker",
+          "params": {
+            "anchor": true
+          }
+        }
+      ],
+      "xp": 0
+    },
+    {
+      "id": "npc-maintenance-drone",
+      "name": "Maintenance drone",
+      "faction": null,
+      "grade": 1,
+      "attributes": {
+        "frame": 20,
+        "nerve": 20,
+        "cortex": 10,
+        "resonance": 5,
+        "vitals": 20
+      },
+      "behaviours": [
+        {
+          "kind": "guard",
+          "params": {
+            "hostile_all": true
+          }
+        }
+      ],
+      "xp": 20,
+      "health": 40,
+      "attack": {
+        "damage": 6,
+        "cooldown": 2,
+        "range": 5,
+        "accuracy": 60,
+        "damage_type": "kinetic"
+      }
+    },
+    {
+      "id": "npc-vendor-core-plaza-plaza-general-vendor",
+      "name": "Ostrom Showroom",
+      "faction": null,
+      "grade": 1,
+      "attributes": {
+        "frame": 20,
+        "nerve": 20,
+        "cortex": 10,
+        "resonance": 5,
+        "vitals": 20
+      },
+      "behaviours": [
+        {
+          "kind": "vendor",
+          "params": {
+            "anchor": true
+          }
+        }
+      ],
+      "xp": 0,
+      "vendor": "ostrom-showroom"
+    },
+    {
+      "id": "npc-vendor-core-precinct-warden-quartermaster",
+      "name": "Warden Quartermaster",
+      "faction": null,
+      "grade": 1,
+      "attributes": {
+        "frame": 20,
+        "nerve": 20,
+        "cortex": 10,
+        "resonance": 5,
+        "vitals": 20
+      },
+      "behaviours": [
+        {
+          "kind": "vendor",
+          "params": {
+            "anchor": true
+          }
+        }
+      ],
+      "xp": 0,
+      "vendor": "warden-quartermaster"
+    },
+    {
+      "id": "npc-vendor-core-precinct-precinct-clinic",
+      "name": "Sablier Clinic",
+      "faction": null,
+      "grade": 1,
+      "attributes": {
+        "frame": 20,
+        "nerve": 20,
+        "cortex": 10,
+        "resonance": 5,
+        "vitals": 20
+      },
+      "behaviours": [
+        {
+          "kind": "vendor",
+          "params": {
+            "anchor": true
+          }
+        }
+      ],
+      "xp": 0,
+      "vendor": "sablier-clinic"
+    },
+    {
+      "id": "npc-vendor-vatside-wake-hall-wake-outfitter",
+      "name": "Sablier Wake Outfitter",
+      "faction": null,
+      "grade": 1,
+      "attributes": {
+        "frame": 20,
+        "nerve": 20,
+        "cortex": 10,
+        "resonance": 5,
+        "vitals": 20
+      },
+      "behaviours": [
+        {
+          "kind": "vendor",
+          "params": {
+            "anchor": true
+          }
+        }
+      ],
+      "xp": 0,
+      "vendor": "wake-outfitter"
+    },
+    {
+      "id": "npc-vendor-vatside-clinics-sablier-main-clinic",
+      "name": "Sablier Clinic (any)",
+      "faction": null,
+      "grade": 1,
+      "attributes": {
+        "frame": 20,
+        "nerve": 20,
+        "cortex": 10,
+        "resonance": 5,
+        "vitals": 20
+      },
+      "behaviours": [
+        {
+          "kind": "vendor",
+          "params": {
+            "anchor": true
+          }
+        }
+      ],
+      "xp": 0,
+      "vendor": "sablier-clinic"
+    },
+    {
+      "id": "npc-vendor-sodium-tin-halo-vesper",
+      "name": "The Tin Halo (Vesper)",
+      "faction": null,
+      "grade": 1,
+      "attributes": {
+        "frame": 20,
+        "nerve": 20,
+        "cortex": 10,
+        "resonance": 5,
+        "vitals": 20
+      },
+      "behaviours": [
+        {
+          "kind": "vendor",
+          "params": {
+            "anchor": true
+          }
+        }
+      ],
+      "xp": 0,
+      "vendor": "vesper"
     }
   ]
 }

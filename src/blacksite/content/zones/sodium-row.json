@@ -199,5 +199,46 @@
   "pockets": [],
   "lore": [
     "zone-sodium-row"
+  ],
+  "spawners": [
+    {
+      "id": "sable-enforcer",
+      "npc": "npc-sable-enforcer",
+      "count": 2,
+      "respawn_seconds": 60,
+      "condition": "always",
+      "region": {
+        "x": 8,
+        "y": 4,
+        "w": 5,
+        "h": 1
+      }
+    },
+    {
+      "id": "sodium-regular",
+      "npc": "npc-sodium-regular",
+      "count": 5,
+      "respawn_seconds": 60,
+      "condition": "always",
+      "region": {
+        "x": 15,
+        "y": 3,
+        "w": 15,
+        "h": 3
+      }
+    },
+    {
+      "id": "plainclothes-warden",
+      "npc": "npc-plainclothes-warden",
+      "count": 1,
+      "respawn_seconds": 60,
+      "condition": "always",
+      "region": {
+        "x": 90,
+        "y": 3,
+        "w": 3,
+        "h": 1
+      }
+    }
   ]
 }

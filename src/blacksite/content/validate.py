@@ -485,6 +485,20 @@ class _Validator:
         for sp in zone.meta.spawners:
             label = f"spawner {sp.id}"
             self.ref("npcs", sp.npc, owner, label, sp.id)
+            if sp.respawn_seconds < 0:
+                self.report(*owner, f"{label}: respawn seconds must be nonnegative", sp.id)
+            if sp.condition and sp.condition not in ("always", "per_player"):
+                if not sp.condition.startswith("event:") or not sp.condition[6:]:
+                    self.report(*owner, f"{label}: unknown condition", sp.id)
+            npc = self.t.npcs.get(sp.npc)
+            if sp.condition == "per_player" and npc and not npc.training:
+                self.report(*owner, f"{label}: per_player requires private training", sp.id)
+            if npc:
+                for behaviour in npc.behaviours:
+                    if behaviour.kind == "patrol":
+                        points = behaviour.params.get("waypoints")
+                        if not isinstance(points, list) or not points or any(not isinstance(p, list) or len(p) != 2 or any(type(n) is not int for n in p) or not self.passable(zone, tuple(p)) for p in points):
+                            self.report(*owner, f"{label}: patrol needs passable waypoints", sp.id)
             if sp.count < 1:
                 self.report(*owner, f"{label}: count must be at least 1", sp.id)
             if (sp.tile is None) == (sp.region is None):

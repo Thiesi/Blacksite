@@ -11,7 +11,7 @@ section 2) and live simulation state (section 3) belong to the server.
 """
 
 from dataclasses import dataclass, field
-from typing import Literal
+from typing import Any, Literal
 
 from blacksite.version import CONTENT_SCHEMA
 
@@ -672,7 +672,7 @@ class Vendor:
 
 # --- NPCs and factions (sections 1.8 and 1.9) ------------------------------
 
-BehaviourKind = Literal["idle", "patrol", "guard", "aggro", "flee", "vendor", "talker", "warden"]
+BehaviourKind = Literal["idle", "wander", "patrol", "guard", "hunt", "aggro", "flee", "vendor", "talker", "warden"]
 
 
 @dataclass(frozen=True)
@@ -687,7 +687,7 @@ class Attributes:
 @dataclass(frozen=True)
 class Behaviour:
     kind: BehaviourKind
-    params: dict[str, Number | str | bool] = field(default_factory=dict)
+    params: dict[str, Any] = field(default_factory=dict)
 
 
 @dataclass(frozen=True)

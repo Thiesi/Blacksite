@@ -41,7 +41,7 @@ def test_safe_logout_reconnect_rename_and_terrain_survive_restart(game: Headless
     player=game.core.characters.players[pid]
     tile=player.tile
     game.core.sessions.disconnect(client.session)
-    assert not game.core.world.actors
+    assert not any(a.kind == "player" for a in game.core.world.actors.values())
     other=HeadlessServer(game.core.loop.content,character_state=state(game))
     back=other.connect({"user_id":1,"handle":"New BBS Handle"})
     assert back.session.player_id==pid
@@ -115,7 +115,7 @@ def test_delete_requires_name_and_identity_clock_receipts_debt_survive(game: Hea
         if typed=="wrong":
             assert pid in manager.players and not manager.deleting
     effects=game.commit_characters()
-    assert pid not in manager.players and not game.core.world.actors
+    assert pid not in manager.players and not any(a.kind == "player" for a in game.core.world.actors.values())
     assert not any(e["action"]=="save" and e["player"]["id"]==pid for e in effects[1:])
     game.step(20)
     create(game,a,name="New Wake",card="none")
@@ -208,7 +208,7 @@ def test_raised_cap_offers_selection_without_changing_identity(game: HeadlessSer
     act(game,back,Frame("intent",{"name":"menu_select","args":{}}))
     create(game,back,name="Second Wake",card="none")
     assert len(game.core.characters.owned("1"))==2
-    assert len(game.core.world.actors)==1
+    assert sum(a.kind == "player" for a in game.core.world.actors.values())==1
 
 
 def test_grade_benefits_and_personhood_remain_after_xp_fade(game: HeadlessServer) -> None:
@@ -344,4 +344,4 @@ def test_raised_cap_chooser_cannot_undo_sleeper_recovery_or_create_a_zoneless_sl
     game.core.sessions.disconnect(chooser.session)
     game.step(601)
     assert not game.core.characters.sleepers
-    assert not game.core.world.actors
+    assert not any(a.kind == "player" for a in game.core.world.actors.values())

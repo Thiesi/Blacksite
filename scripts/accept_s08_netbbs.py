@@ -102,7 +102,9 @@ async def accept(root: Path, door_python: Path, show: bool) -> None:
         av = avatar(connection)
         zone = service.world.zones[av.zone]
         # Cardinal BFS avoids corner cutting; recompute around live bodies.
+        deadline=time.monotonic()+120
         while av.actor.position != target:
+            assert time.monotonic()<deadline, ("walk timeout", zone.id, av.actor.position, target)
             start = av.actor.position
             blocked = {a.position for a in zone.actors.values() if a is not av.actor}
             pending,previous = deque([start]),{start:None}
@@ -113,14 +115,19 @@ async def accept(root: Path, door_python: Path, show: bool) -> None:
                     if tile not in previous and tile not in blocked and zone.passable(tile) and (tile not in exits or tile==target):
                         previous[tile]=(x,y)
                         pending.append(tile)
-            assert target in previous,(zone.id,start,target)
+            if target not in previous:
+                await asyncio.sleep(.2)
+                continue
             step = target
             while previous[step] != start:
                 step = previous[step]
             dx,dy=step[0]-start[0],step[1]-start[1]
             key = {(1,0):b"\x1b[C",(-1,0):b"\x1b[D",(0,1):b"\x1b[B",(0,-1):b"\x1b[A"}[dx,dy]
             await caller.write(key)
-            await wait(lambda:av.actor.position != start or av.zone != zone.id)
+            try:
+                await wait(lambda:av.actor.position != start or av.zone != zone.id,.6)
+            except TimeoutError:
+                continue  # Moving NPC traffic can take the planned tile.
             await asyncio.sleep(.21)  # Real 200ms walk cooldown, no accelerated clock.
             if av.zone != zone.id:
                 break

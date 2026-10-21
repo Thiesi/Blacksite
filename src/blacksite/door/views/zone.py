@@ -34,9 +34,11 @@ def render_zone(buffer: CellBuffer, body: dict[str, Any], area: Rect, palette: P
     header = f"{me['zone_name']}  "
     buffer.put(2, 0, truncate(header, buffer.width - 18), palette.style("title"))
     safety = me["safety"].upper()
-    sx = min(buffer.width - len(safety) - 10, 2 + display_width(header))
+    sx = min(buffer.width - len(safety) - (16 if me.get("heat_until") else 10), 2 + display_width(header))
     buffer.put(sx, 0, safety, palette.style("safety_" + me["safety"]))
     buffer.put(buffer.width - 8, 0, me.get("clock", ""), palette.style("title"))
+    if me.get("heat_until"):
+        buffer.put(buffer.width - 14, 0, "HEAT", palette.style("warning"))
     side_x, side_w = buffer.width - 23, 22
     rows: list[str] = []
     objective = body.get("objective")

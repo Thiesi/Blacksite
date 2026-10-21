@@ -282,6 +282,7 @@ class Commerce:
             "items": [item.record() for item in effect["items"].values()],
             "delete_items": effect["delete_items"], "caches": effect["caches"],
             "budgets": {key: asdict(value) for key, value in effect["budgets"].items()}, "serial": effect["serial"],
+            **({"npc_state": effect["npc_state"]} if "npc_state" in effect else {}),
             **({"identity":effect["identity"], "user":player.bbs_user_id} if "identity" in effect else {})}
 
     def settled_patch(self, effect: dict[str, Any]) -> dict[str, Any]:
@@ -305,14 +306,14 @@ class Commerce:
         else:
             action()
 
-    def settle(self, player: Player, patch: dict[str, Any], items: dict[str, ItemInstance],
+    def settle(self, player: Player | None, patch: dict[str, Any], items: dict[str, ItemInstance],
                caches: dict[str, dict[str, Any]], serial: int,
                callback: Callable[[bool], None], identity: dict[str, Any] | None = None) -> bool:
         """A server proposal; only its commit callback changes live combat."""
         if self.pending:
             return False
-        effect = {"session":"", "player_id":player.id, "patch":deepcopy(patch),
-            "progress_base":deepcopy(player.progress),
+        effect = {"session":"", "player_id":player.id if player else "", "patch":deepcopy(patch),
+            "progress_base":deepcopy(player.progress) if player else {},
             "items":{key:value for key,value in items.items() if value != self.items.get(key)},
             "delete_items":sorted(set(self.items)-set(items)), "caches":deepcopy(caches),
             "budgets":deepcopy(self.budgets), "serial":serial, "message":"", "actor_effects":None,

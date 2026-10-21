@@ -361,6 +361,39 @@ wake. Wardens log refused attacks in safe zones and issue a warning within 2
 seconds. Warden **heat** lasts 10 minutes and causes pursuit only outside
 safe/pocket areas. Curfew doubles new heat durations, not damage.
 
+S11 evaluates decisions every five ticks, staggered by actor identity;
+movement and weapon cooldowns still run at ten ticks per second. Patrols
+loop or bounce through authored passable waypoints. Hunt follows the last
+seen position and stops immediately when its reason to attack expires.
+Provoking an NPC makes its spawner group hostile for five minutes.
+Unarmed residents retreat from an active threat rather than chase it;
+armed actors flee below the 20 % threshold. Local guards of that NPC's
+faction answer too; Sable residents summon Sable
+enforcers rather than remote Wardens. Warning responders number two per
+caller, refresh rather than accumulate, and stay local to their zone.
+They arrive on unoccupied floor within three tiles of the caller.
+Heat is recorded immediately, survives logout/restart, and expires in
+real elapsed time. Repeated refused attacks refresh its deadline.
+
+The first hub population uses grade 1, Frame/Nerve/Vitals 20, Cortex 10
+and Resonance 5. Ordinary health follows the normal attribute formula;
+guards use the existing Kestrel sidearm and Wake coverall. Ordinary hub
+respawns take 60 seconds. Armed templates expose base XP 20 to S16's
+eligibility/scaling hook and roll ten 9x rounds at chance 0.5; wanderers
+drop one ration. No NPC XP is awarded before S16. Private training grants
+neither loot nor XP. A saved NPC death commits its cache and respawn
+deadline together. Catch-up fills only vacant slots, never every missed
+respawn. Named service anchors stay during dormancy; their counters remain
+available even while their physical attendant is absent.
+
+Mission actors are owned copies. Another caller cannot harm or command
+them. Escort requires explicit willingness; subdue requires adjacent
+shock 80 and an uninterrupted three-second channel. Subdue creates no
+kill loot or XP. S19 supplies the objective/consent UI and durable mission
+receipts; S22 extends owner permissions to eligible crew. A maintenance
+drone template uses section 18's warning and combat numbers, without
+activating future maps or finale encounters in the hub.
+
 ### 5.6 Interactions
 
 The interact key on an adjacent object: doors (open, locked, hackable),

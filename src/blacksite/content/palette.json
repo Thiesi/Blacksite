@@ -901,6 +901,142 @@
         "deutan": 8,
         "protan": 8
       }
+    },
+    "npc_halvard": {
+      "truecolor": {
+        "default": "#6B7280",
+        "deutan": "#6B7280",
+        "protan": "#6B7280"
+      },
+      "256": {
+        "default": 243,
+        "deutan": 243,
+        "protan": 243
+      },
+      "16": {
+        "default": 8,
+        "deutan": 8,
+        "protan": 8
+      }
+    },
+    "npc_sablier": {
+      "truecolor": {
+        "default": "#F1F5F9",
+        "deutan": "#F1F5F9",
+        "protan": "#F1F5F9"
+      },
+      "256": {
+        "default": 255,
+        "deutan": 255,
+        "protan": 255
+      },
+      "16": {
+        "default": 15,
+        "deutan": 15,
+        "protan": 15
+      }
+    },
+    "npc_kestrel": {
+      "truecolor": {
+        "default": "#F97316",
+        "deutan": "#FB923C",
+        "protan": "#FB923C"
+      },
+      "256": {
+        "default": 208,
+        "deutan": 209,
+        "protan": 209
+      },
+      "16": {
+        "default": 11,
+        "deutan": 11,
+        "protan": 11
+      }
+    },
+    "npc_wardens": {
+      "truecolor": {
+        "default": "#2563EB",
+        "deutan": "#2563EB",
+        "protan": "#2563EB"
+      },
+      "256": {
+        "default": 27,
+        "deutan": 27,
+        "protan": 27
+      },
+      "16": {
+        "default": 4,
+        "deutan": 4,
+        "protan": 4
+      }
+    },
+    "npc_choir": {
+      "truecolor": {
+        "default": "#7C3AED",
+        "deutan": "#7C3AED",
+        "protan": "#7C3AED"
+      },
+      "256": {
+        "default": 93,
+        "deutan": 93,
+        "protan": 93
+      },
+      "16": {
+        "default": 5,
+        "deutan": 5,
+        "protan": 5
+      }
+    },
+    "npc_sable": {
+      "truecolor": {
+        "default": "#DC2626",
+        "deutan": "#C2410C",
+        "protan": "#F97316"
+      },
+      "256": {
+        "default": 160,
+        "deutan": 166,
+        "protan": 208
+      },
+      "16": {
+        "default": 1,
+        "deutan": 3,
+        "protan": 11
+      }
+    },
+    "npc_unmoored": {
+      "truecolor": {
+        "default": "#22C55E",
+        "deutan": "#60A5FA",
+        "protan": "#60A5FA"
+      },
+      "256": {
+        "default": 41,
+        "deutan": 75,
+        "protan": 75
+      },
+      "16": {
+        "default": 2,
+        "deutan": 12,
+        "protan": 12
+      }
+    },
+    "npc_ferrymen": {
+      "truecolor": {
+        "default": "#B45309",
+        "deutan": "#FDBA74",
+        "protan": "#FDBA74"
+      },
+      "256": {
+        "default": 130,
+        "deutan": 215,
+        "protan": 215
+      },
+      "16": {
+        "default": 3,
+        "deutan": 11,
+        "protan": 11
+      }
     }
   }
 }

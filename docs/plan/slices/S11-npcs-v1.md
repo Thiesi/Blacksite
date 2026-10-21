@@ -27,7 +27,7 @@ Plaza punishes anyone who draws.
 - `docs/world/01-gazetteer.md` spawner lists for the S08 hub zones;
   `docs/world/02-factions.md` (faction IDs, colours); `04-dramatis-
   personae.md` may still be in progress — name NPC template IDs by
-  convention `npc_<faction>_<role>` and `npc_<name>` for named
+  convention `npc-<faction>-<role>` and `npc-<name>` for named
   talkers, and leave dialogue to S27.
 
 ## Scope
@@ -49,7 +49,8 @@ Plaza punishes anyone who draws.
   (chase target with the movement rules; give up after 20 s without
   sight), `flee` (below 20 % health, move away from the attacker,
   toward the nearest exit or vat), `vendor` and `talker` (stand; `E`
-  opens a stub `MenuView` "Not yet." until S12/S27). Transitions
+  opens an existing anchored S12 counter for vendors, or a "Not yet."
+  dialogue view until S27). Transitions
   driven by health, sight, and relations; each actor evaluates every 5
   ticks, staggered by id to spread load.
 - Aggro rules: an NPC attacks actors whose faction is hostile to its own
@@ -87,7 +88,7 @@ Plaza punishes anyone who draws.
 
 ## Data and content
 
-- `npcs.json` with the hub templates and `npc_wake_drone`; `factions.json`
+- `npcs.json` with the hub templates and `npc-wake-drone`; `factions.json`
   with IDs, short names, colours and the relations matrix (declared
   asymmetries list empty — the factions doc keeps them narrative);
   spawner lists added to the ten hub zone sidecars.
@@ -159,3 +160,14 @@ warned maintenance drones and bounded spawners from main design 18.
 Test safe-clinic availability, willingness on escort, nonlethal subdue,
 public service fallback and indirect harm attribution. No essential
 vendor, vat or story contact can be permanently removed by another player.
+
+## Implementation handoff
+
+S12 has already landed: attendants use its static counter and budget;
+they do not create separate inventories. Canonical NPC IDs follow S02's
+hyphenated slug validator. The generic maintenance/escort/subdue APIs are
+socket-free hooks; S19 owns their objective cards, consent UI and durable
+receipts, while S22 adds crew permissions. They do not activate future
+story encounters. The hub remains ten zones, preserving S25's deferred
+commerce gate. Full release/gameplay balance remains subject to S29's
+human sessions; automated movement and legal combat do not establish fun.

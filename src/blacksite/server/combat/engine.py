@@ -34,6 +34,12 @@ class Combat:
         self.verbose: set[str] = set()
         self.restored: dict[str, Actor] = {}
         self.pending_deaths: set[str] = set()
+        self.refused_hook: Callable[[Actor, Actor], None] = lambda source, target: None
+        self.hostile_hook: Callable[[Actor, Actor], None] = lambda source, target: None
+        self.npc_death_hook: Callable[[Actor, Actor], None] = lambda source, target: None
+        self.npc_armour: Callable[[Actor, str], int] = lambda actor, kind: 0
+        self.relation_provider: Callable[[Actor, Actor], str] | None = None
+        self.training_provider: Callable[[Player, Actor, int], None] = lambda player, actor, tick: None
         self.allies_provider: Callable[[Actor], list[Actor]] = lambda actor:[actor]  # S22 supplies local crew.
         self.sim.target_provider = self.target_view
         self.game.combat = self
@@ -55,6 +61,8 @@ class Combat:
                 "role":"warning" if warning else "chan_sys", "at":self.clock.now_utc().isoformat()}]}))
 
     def relation(self, source: Actor, target: Actor) -> str:
+        if self.relation_provider:
+            return self.relation_provider(source, target)
         if target.owner == source.id and target.behaviour.get("training"): return "hostile"
         if target.marked: return "hostile"
         faction = self.content.factions.get(source.faction)
@@ -65,6 +73,12 @@ class Combat:
         if source.stance in ("down","dead","sleeper") or target.stance in ("down","dead"):
             return False
         if source.id == target.id or source.zone != target.zone or source.zone not in self.world.zones:
+            return False
+        # Mission bodies are scoped copies, never somebody else's permanent
+        # handler or escort. S22 may supply crew permissions explicitly.
+        if target.behaviour.get("mission") and source.kind == "player" and target.owner != source.id:
+            return False
+        if source.behaviour.get("mission") and target.kind == "player" and source.owner != target.id:
             return False
         training = source if source.behaviour.get("training") else target if target.behaviour.get("training") else None
         if training:
@@ -82,6 +96,13 @@ class Combat:
         hour = self.clock.now_local().hour
         radius = (zone.template.meta.sight_radius_night if hour >= 20 or hour < 6 else None) or zone.template.meta.sight_radius
         radius = max(radius, max((int(e.get("dark_sight", 0)) for e in actor.effects), default=0))
+        limit = radius / 2 if target.stance == "stealth" else radius
+        if (actor.x-target.x)**2 + (actor.y-target.y)**2 > limit**2:
+            return False
+        # An NPC asks about one target, not a rendered field of view. Use
+        # the same radius/stealth/occlusion rules without tracing 400+ tiles.
+        if actor.kind != "player":
+            return line_of_sight(zone, actor.position, target.position)
         return sees_actor(actor, target, visible_tiles(actor, zone, radius), radius)
 
     def select(self, actor: Actor, backwards: bool = False) -> None:
@@ -101,7 +122,7 @@ class Combat:
 
     def armour(self, actor: Actor, damage_type: str) -> int:
         player = self.game.players.get(actor.id)
-        total = sum(int(e.get("armour",0)) for e in actor.effects)
+        total = self.npc_armour(actor, damage_type) + sum(int(e.get("armour",0)) for e in actor.effects)
         if player:
             for iid in set(player.equipment.values()):
                 item = self.commerce.items.get(iid)
@@ -168,7 +189,10 @@ class Combat:
         target = self.world.actors.get(requested or actor.target)
         if not target or target.stance in ("down","dead") or not self.visible(actor,target):
             self.log(actor,"Select a visible target with Tab."); return
-        if not self.legal(actor,target): self.log(actor,"Protected: you cannot harm that body.",True); return
+        if not self.legal(actor,target):
+            self.log(actor,"Protected: you cannot harm that body.",True)
+            self.refused_hook(actor, target)
+            return
         equipped = self.weapon(player)
         if not equipped: self.log(actor,"Equip a weapon first."); return
         item, weapon = equipped
@@ -246,6 +270,7 @@ class Combat:
 
     def exchange(self, source: Actor, target: Actor) -> None:
         if source.behaviour.get("training") or target.behaviour.get("training"): return
+        self.hostile_hook(source, target)
         tick = self.clock.now_tick()
         for actor in (source,target):
             actor.cooldowns["combat"] = tick + rules.ticks(rules.COMBAT_SECONDS)
@@ -254,6 +279,8 @@ class Combat:
                 if actor.stance == "sleeper": self.game.players[actor.id].progress["sleeper_combat"] = True
 
     def hurt(self, source: Actor, target: Actor, amount: int, shock: float = 0) -> None:
+        if target.stance in ("down", "dead"):
+            return
         if self.commerce.pending:
             try: self.commerce.enqueue_system(lambda:self.hurt(source,target,amount,shock))
             except ValueError: self.log(source,"The city is busy. Try again.",True)
@@ -282,6 +309,8 @@ class Combat:
                 target.effects.clear()
                 self.game.players[target.id].progress["combat"] = {"stage":"down", "until":self.now()+rules.DOWN_SECONDS, "killer":source.id}
                 self.log(target,"You are down. A nearby ally can press E to pick you up.",True)
+            else:
+                self.npc_death_hook(source, target)
         if target.id in self.game.players: self.remember(self.game.players[target.id],target)
         if target.zone: self.world.zones[target.zone].revision += 1
 
@@ -450,7 +479,10 @@ class Combat:
         if player.id in self.casts or tick < max(actor.cooldowns.get("ability:"+aid,0),actor.cooldowns.get("knockdown",0)): return
         target = self.world.actors.get(actor.target) if ability.kind == "dissonance" else actor
         if ability.kind == "dissonance":
-            if not target or not self.visible(actor,target) or not self.legal(actor,target): raise ValueError("Choose an unprotected visible target.")
+            if not target or not self.visible(actor,target): raise ValueError("Choose an unprotected visible target.")
+            if not self.legal(actor,target):
+                self.refused_hook(actor, target)
+                raise ValueError("Choose an unprotected visible target.")
             if rules.distance(actor.position,target.position)>rules.ABILITY_RANGE: raise ValueError("Out of ability range.")
             if not self.warn(actor,target,tick): return
             self.mark(actor,target)
@@ -621,7 +653,7 @@ class Combat:
                             *self.content.text["dead-screen"].body.splitlines(),f"Clone charge {state.get('charge',0)}. Debt owed {player.clone_debt}."],"hint":"Your log remains below. Ctrl-X leaves; the timer continues.","clear_prompt":True}
                 continue
             if actor.zone:
-                self.training(player,actor,tick)
+                self.training_provider(player,actor,tick)
                 cast = self.casts.get(player.id)
                 if cast:
                     if (actor.zone,actor.position,actor.cooldowns.get("last_hit")) != (cast["zone"],cast["tile"],cast["last_hit"]): self.casts.pop(player.id)
@@ -671,27 +703,3 @@ class Combat:
             if effect["until"]>now:
                 actor.effects.append({**deepcopy(effect),"until_tick":tick+rules.ticks(effect["until"]-now),
                     "next_tick":tick+rules.ticks(max(0,effect.get("next",now+1)-now))})
-
-    def training(self, player: Player, actor: Actor, tick: int) -> None:
-        if player.progress.get("wake_combat") in ("done","skipped"): return
-        zone = self.world.zones[actor.zone]
-        anchor = next((o for o in zone.objects.values() if o.spec.params.get("training_npc")),None)
-        drone = next((a for a in self.world.actors.values() if a.owner==player.id and a.behaviour.get("training")),None)
-        tile = tuple(anchor.spec.params.get("training_tile",anchor.spec.tile)) if anchor else None
-        if not anchor or rules.distance(actor.position,tile)>6:
-            if drone: self.world.leave(drone)
-            return
-        if drone is None:
-            if rules.distance(actor.position,tile)>2: return
-            template = self.content.npcs[anchor.spec.params["training_npc"]]
-            tile = self.world.free_tile(actor.zone,tile)
-            drone = Actor(player.id+":training",template.name,kind="drone",owner=player.id,
-                health=template.health,health_max=template.health,behaviour={"training":True,"template":template.id,"warned":tick})
-            self.world.enter(drone,actor.zone,tile)
-            self.warnings.pop((player.id,drone.id),None)
-            self.log(actor,"Your training drone wakes. Tab targets; F fires; B skips. Its shots cannot kill.",True)
-        template = self.content.npcs[drone.behaviour["template"]]
-        if tick>=int(drone.behaviour["warned"])+rules.ticks(rules.WARNING_SECONDS) and tick>=drone.cooldowns.get("weapon",0):
-            if self.visible(drone,actor) and rules.distance(drone.position,actor.position)<=template.attack.range:
-                self.shot(drone,actor,template.attack)
-                drone.cooldowns["weapon"] = tick+rules.ticks(template.attack.cooldown)

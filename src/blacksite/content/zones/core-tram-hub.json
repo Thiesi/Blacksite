@@ -188,5 +188,46 @@
   "pockets": [],
   "lore": [
     "zone-core-tram-hub"
+  ],
+  "spawners": [
+    {
+      "id": "warden-response",
+      "npc": "npc-warden-response",
+      "count": 2,
+      "respawn_seconds": 60,
+      "condition": "always",
+      "region": {
+        "x": 8,
+        "y": 3,
+        "w": 8,
+        "h": 2
+      }
+    },
+    {
+      "id": "kestrel-staff",
+      "npc": "npc-kestrel-staff",
+      "count": 2,
+      "respawn_seconds": 60,
+      "condition": "always",
+      "region": {
+        "x": 20,
+        "y": 3,
+        "w": 6,
+        "h": 2
+      }
+    },
+    {
+      "id": "commuter",
+      "npc": "npc-commuter",
+      "count": 5,
+      "respawn_seconds": 60,
+      "condition": "always",
+      "region": {
+        "x": 28,
+        "y": 3,
+        "w": 15,
+        "h": 2
+      }
+    }
   ]
 }
