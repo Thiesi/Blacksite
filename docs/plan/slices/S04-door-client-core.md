@@ -1,6 +1,6 @@
 # S04 — Door client core: door_info, connect, terminal, key decoder, cell-buffer renderer, tiers, reconnect
 
-**Status:** implemented; verification and review in progress
+**Status:** done (PR #43)
 **Primary model:** Opus · **Reviewer:** Astra (renderer and key decoding critique before start)
 **Depends on:** S01 · **Milestone:** M0
 **Issue:** https://github.com/Thiesi/blacksite/issues/4
@@ -228,5 +228,10 @@ See `docs/ops/door-client.md` for reproducible transport and CPU checks.
   pass. Stopping the service returns cleanly after 60.422 seconds.
 - Full suite: 410 passed, 1 skipped (Unix-only socket test on Windows).
   Focused door suite after the final rendering changes: 78 passed.
+- Ten-minute idle/help run: 600.487 seconds wall, 19.203125 seconds
+  interpreter CPU, exit 0 and no stderr. CPU excludes the venv launcher.
+- Claude review reports no blocking findings; Ubuntu and Windows
+  Python 3.12 CI both pass. Rare input edge cases and import style notes
+  are deferred under the product-impact triage rule.
 - No balance numbers or runtime dependencies changed. Native NetBSD
   deployment and sustained gameplay profiling belong to later slices.
