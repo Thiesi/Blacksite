@@ -66,4 +66,6 @@ async def connect(install: Path) -> tuple[asyncio.StreamReader, asyncio.StreamWr
     port = install / "run" / "port"
     if port.exists():
         return await asyncio.open_connection("127.0.0.1", int(port.read_text(encoding="ascii")))
+    if os.name == "nt":
+        raise ConnectionRefusedError("service not running: no local TCP port file")
     return await asyncio.open_unix_connection(install / "run" / "blacksite.sock")

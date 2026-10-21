@@ -22,11 +22,15 @@ they go down into the Blacksite together.
 ## Status
 
 **Foundation in progress.** The package skeleton and validated content
-pipeline are merged (S01/S02). S03 adds the local server core, protocol,
-sessions, persistence and a smoke bot; a playable door follows in later
+pipeline are merged (S01/S02). The local server core, protocol, sessions,
+persistence and smoke bot are available (S03). S04 adds the native
+terminal client, width-safe views, help and reconnect handling;
+gameplay follows in later
 slices. See `docs/plan/00-roadmap.md` for the plan and the
 [issues](../../issues) for what is being worked on. The foreground
 [server smoke test](docs/ops/server-core.md) documents the current tools.
+The [door client guide](docs/ops/door-client.md) covers registration and
+transport acceptance.
 
 Blacksite is developed as a third-party native door: it has no commit
 access to NetBBS. What it needs from the platform is written up in

@@ -1,0 +1,254 @@
+"""Pure display/input state. Game state and menu decisions stay on the server."""
+
+from collections import deque
+from copy import deepcopy
+from typing import Any
+
+from blacksite.door.cells import CellBuffer, display_width, truncate
+from blacksite.door.doorinfo import DoorInfo
+from blacksite.door.layout import compute
+from blacksite.door.palette import Palette, resolve_tier
+from blacksite.door.screens import SessionWarnings, first_run, help_pages, title
+from blacksite.door.views import LinePrompt, Renderer, menu_rect, render_frame, render_menu, render_text
+from blacksite.server.protocol import Frame
+
+
+class Display:
+    def __init__(self, info: DoorInfo, request_prefix: str = "client") -> None:
+        self.info = info
+        self.layout = compute(info.width, info.height)
+        self.palette = Palette({}, resolve_tier(info.color_depth))
+        self.kind = "text"
+        self.body = title()
+        self.revision = 0
+        self.keymap: dict[str, Any] = {}
+        self.local: dict[str, Any] | None = None
+        self.local_lines: list[str] = []
+        self.local_page = 0
+        self.logs: deque[dict[str, Any]] = deque(maxlen=400)
+        self.prompt: LinePrompt | None = None
+        self.key_prompt: dict[str, Any] | None = None
+        self.toast: tuple[str, str, float] | None = None
+        self.confirm_exit = False
+        self.leaving = False
+        self.connected = False
+        self.dirty = self.force_full = True
+        self.last_render = -1.0
+        self.previous: CellBuffer | None = None
+        self.resync_pending = False
+        self.counter = 0
+        self.request_prefix = request_prefix
+        self.warnings = SessionWarnings(info.session_limit)
+        self.renderers: dict[str, Renderer] = {"text": render_text, "menu": render_menu}
+
+    def resize(self, info: DoorInfo) -> None:
+        self.info = info
+        self.layout = compute(info.width, info.height)
+        self.previous = None
+        self.force_full = self.dirty = True
+
+    def receive(self, frame: Frame, now: float) -> list[Frame]:
+        data = frame.data
+        result: list[Frame] = []
+        if frame.type == "welcome":
+            self.connected = True
+            self.keymap = data.get("keymap", {})
+            settings = data.get("player", {}).get("settings", {}) if isinstance(data.get("player"), dict) else {}
+            self.palette = Palette(data.get("palette", {}), resolve_tier(self.info.color_depth, settings.get("tier")), settings.get("palette", "default"))
+            self.body, self.kind = title(data.get("motd", "")), "text"
+            self.revision = 0
+            if self.local is not None and self.local.get("title") == "HELP":
+                self.local_lines = help_pages(self.keymap)
+            self.resync_pending = False
+            self.prompt = None
+            self.key_prompt = None
+            self.force_full = True
+        elif frame.type == "view":
+            self.revision, self.kind, self.body = data["rev"], data["kind"], deepcopy(data["body"])
+            self.resync_pending = False
+            self.force_full = True
+        elif frame.type == "delta":
+            try:
+                if self.resync_pending or data["base"] != self.revision or data["rev"] <= self.revision:
+                    raise ValueError("delta base mismatch")
+                document = {"kind": self.kind, "body": deepcopy(self.body)}
+                self._patch(document, data["ops"])
+                if not isinstance(document.get("body"), dict) or document.get("kind") not in ("zone", "lattice", "menu", "wake", "dead", "text"):
+                    raise ValueError("invalid patched view")
+                self.kind, self.body, self.revision = document["kind"], document["body"], data["rev"]
+            except (ValueError, KeyError, IndexError, TypeError):
+                if not self.resync_pending:
+                    result.append(Frame("intent", {"name": "resync", "args": {}}))
+                self.resync_pending = True
+        elif frame.type == "log":
+            self.logs.extend(data["lines"])
+        elif frame.type == "prompt":
+            self.prompt = LinePrompt(data["id"], data["label"], min(200, data["max_len"])) if data["kind"] == "line" else None
+            self.key_prompt = data if data["kind"] == "key" else None
+        elif frame.type == "toast":
+            self.toast = (data["text"], data["role"], now + data["seconds"])
+        elif frame.type == "bye":
+            self.connected = False
+        elif frame.type == "pong":
+            return []
+        self.dirty = True
+        return result
+
+    @staticmethod
+    def _patch(document: dict[str, Any], ops: list[dict[str, Any]]) -> None:
+        if len(ops) > 256:
+            raise ValueError("too many delta operations")
+        for op in ops:
+            path = op.get("path", "")
+            if not isinstance(path, str) or not path.startswith("/") or len(path) > 1024:
+                raise ValueError("invalid delta path")
+            parts = [part.replace("~1", "/").replace("~0", "~") for part in path[1:].split("/")]
+            if len(parts) > 16:
+                raise ValueError("delta nesting limit")
+            target: Any = document
+            for part in parts[:-1]:
+                if isinstance(target, list) and (not part.isdigit() or int(part) >= len(target)):
+                    raise ValueError("invalid delta index")
+                target = target[int(part)] if isinstance(target, list) else target[part]
+            if isinstance(target, list) and parts[-1] != "-" and not parts[-1].isdigit():
+                raise ValueError("invalid delta index")
+            key: Any = int(parts[-1]) if isinstance(target, list) and parts[-1] != "-" else parts[-1]
+            action = op.get("op")
+            if action == "remove":
+                del target[key]
+            elif action in ("add", "replace"):
+                value = deepcopy(op["value"])
+                if isinstance(target, list) and action == "add":
+                    if key == "-":
+                        target.append(value)
+                    elif isinstance(key, int) and 0 <= key <= len(target):
+                        target.insert(key, value)
+                    else:
+                        raise ValueError("invalid delta index")
+                else:
+                    if action == "replace" and ((isinstance(target, dict) and key not in target) or (isinstance(target, list) and not 0 <= key < len(target))):
+                        raise ValueError("missing replace target")
+                    target[key] = value
+            else:
+                raise ValueError("unsupported delta operation")
+
+    def open_help(self, lines: list[str] | None = None, heading: str = "HELP") -> None:
+        self.local_lines = lines if lines is not None else help_pages(self.keymap)
+        self.local_page = 0
+        self.local = {"title": heading}
+        self.dirty = True
+
+    def refused(self, reason: str) -> None:
+        self.connected = False
+        self.local = self.prompt = self.key_prompt = None
+        self.kind, self.body = "text", {"title": "DISCONNECTED", "lines": [
+            "You are barred from the city." if reason == "banned" else "You cannot enter the city.",
+            "Press any key to leave."], "page": 1, "pages": 1}
+        self.dirty = self.force_full = True
+
+    def key(self, key: str, now: float) -> list[Frame]:
+        self.dirty = True
+        if key == "ctrl-l":
+            self.force_full = True
+            return []
+        if self.confirm_exit:
+            self.confirm_exit = False
+            if key.lower() == "y":
+                self.leaving = True
+                return [Frame("bye", {"reason": "logout"})] if self.connected else []
+            return []
+        if key == "ctrl-x":
+            self.confirm_exit = True
+            return []
+        if self.prompt is not None:
+            done, text = self.prompt.key(key)
+            if done:
+                prompt_id = self.prompt.id
+                self.prompt = None
+                if text is not None and self.connected:
+                    return [Frame("line", {"id": prompt_id, "text": text})]
+                if text is None and self.connected:
+                    return [Frame("intent", {"name": "prompt_cancel", "args": {"id": prompt_id}})]
+            return []
+        if self.key_prompt is not None:
+            self.key_prompt = None
+            return [Frame("key", {"k": key, "t": max(0, int(now * 1000))})] if self.connected else []
+        if self.local is not None:
+            if key in ("escape", "b", "B"):
+                self.local = None
+            elif key in ("pagedown", "pageup", "pgdn", "pgup"):
+                count = max(1, self.layout.viewport.height - 2)
+                pages = max(1, (len(self.local_lines) + count - 1) // count)
+                self.local_page = max(0, min(pages - 1, self.local_page + (1 if key in ("pagedown", "pgdn") else -1)))
+            return []
+        if key == "?":
+            self.open_help()
+            return []  # S03 has no help subsystem; use the specified local fallback.
+        if key == "ctrl-p":
+            self.open_help([f"[{line.get('channel', 'system')}] {line.get('text', '')}" for line in self.logs], "SCROLLBACK")
+            return []
+        if self.body.get("title") == "BLACKSITE" and key in ("i", "I"):
+            self.open_help(first_run()["lines"], "WHAT THIS IS")
+            return []
+        if not self.connected:
+            return []
+        if self.kind == "menu":
+            if key in ("escape", "b", "B"):
+                return [Frame("intent", {"name": "menu_close", "args": {}})]
+            if key in ("up", "down", "pageup", "pagedown", "pgup", "pgdn"):
+                return [Frame("intent", {"name": "menu_cursor", "args": {"delta": -1 if key in ("up", "pageup", "pgup") else 1}})]
+            actions = {action.get("key") for action in self.body.get("actions", [])}
+            if key == "enter" or key in actions:
+                rows = self.body.get("rows", [])
+                cursor = self.body.get("cursor", 0)
+                selected = rows[cursor] if type(cursor) is int and 0 <= cursor < len(rows) else next((r for r in rows if r.get("id") == cursor), None)
+                if selected is not None:
+                    self.counter += 1
+                    return [Frame("intent", {"name": "menu_select", "args": {"row": selected["id"], "key": key},
+                        "request_id": f"{self.request_prefix}-{self.counter}", "expected_revision": self.revision})]
+            return []
+        return [Frame("key", {"k": key, "t": max(0, int(now * 1000))})]
+
+    def update(self, elapsed: float, now: float) -> None:
+        if self.toast is not None and now >= self.toast[2]:
+            self.toast = None
+            self.dirty = True
+        for text in self.warnings.update(elapsed):
+            self.toast = (text, "warning", now + 8)
+            self.dirty = True
+        if elapsed >= self.info.session_limit:
+            self.leaving = True
+
+    def render(self, now: float) -> tuple[bytes, Frame | None]:
+        if not self.dirty or now - self.last_render < 0.1:
+            return b"", None
+        buffer = CellBuffer(self.layout.width, self.layout.height, self.palette.style())
+        hint = "? help  I what is this  Ctrl-X leave"
+        if self.confirm_exit:
+            hint = "Leave Karst? Y confirms; any other key returns."
+        elif self.prompt:
+            hint = f"{self.prompt.label}: {self.prompt.text}"
+        elif self.key_prompt:
+            hint = str(self.key_prompt["label"])
+        elif "hint" in self.body:
+            hint = str(self.body["hint"])
+        render_frame(buffer, self.layout, self.palette, "Karst · " + truncate(self.info.handle, self.layout.width - 20), list(self.logs), hint)
+        area = self.layout.viewport
+        if self.local is not None:
+            count = max(1, area.height - 2)
+            body = {**self.local, "lines": self.local_lines[self.local_page * count:(self.local_page + 1) * count],
+                    "page": self.local_page + 1, "pages": max(1, (len(self.local_lines) + count - 1) // count)}
+            render_text(buffer, body, area, self.palette)
+        elif self.kind in self.renderers:
+            self.renderers[self.kind](buffer, self.body, menu_rect(self.layout) if self.kind == "menu" else area, self.palette)
+        if self.toast:
+            buffer.put(1, self.layout.separator, truncate(self.toast[0], self.layout.width - 2), self.palette.style(self.toast[1]))
+        output = buffer.diff(None if self.force_full else self.previous)
+        if self.prompt and not self.confirm_exit:
+            output += f"\x1b[{self.layout.hint + 1};{min(self.layout.width - 1, 2 + display_width(hint))}H\x1b[?25h".encode("ascii")
+        else:
+            output += b"\x1b[?25l"
+        self.previous = buffer
+        self.last_render = now
+        self.force_full = self.dirty = False
+        return output, Frame("ack", {"rev": self.revision}) if self.connected else None

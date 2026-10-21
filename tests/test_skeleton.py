@@ -4,8 +4,6 @@ import importlib
 import tomllib
 from pathlib import Path
 
-import pytest
-
 import blacksite
 from blacksite import version
 
@@ -18,9 +16,6 @@ PACKAGES = [
     "blacksite.bot",
     "blacksite.content",
 ]
-
-ENTRY_MODULES = ["door"]  # Real CLIs have dedicated command tests.
-
 
 def _pyproject(repo_root: Path) -> dict:
     with (repo_root / "pyproject.toml").open("rb") as f:
@@ -40,15 +35,6 @@ def test_version_constants(repo_root: Path) -> None:
     assert version.PROTOCOL_MAJOR == 1
     assert version.CONTENT_SCHEMA == 1
     assert version.WORLD_SCHEMA == 1
-
-
-def test_mains_exit_zero(capsys: pytest.CaptureFixture[str]) -> None:
-    for module in ENTRY_MODULES:
-        entry = importlib.import_module(f"blacksite.{module}.__main__")
-        assert entry.main() == 0, module
-        lines = capsys.readouterr().out.splitlines()
-        assert len(lines) == 1, module
-        assert f"blacksite {module}" in lines[0]
 
 
 def test_no_runtime_dependencies(repo_root: Path) -> None:
