@@ -582,14 +582,22 @@ records. S26 activates and validates the complete Season 1 bundle and its
 solo/crew finale. Seasons 2 and 3 remain design specifications until their
 own complete bundles and acceptance runs exist.
 
-S06's `m1-zone-preview` is an authoring bundle for the two Vatside maps.
-Their future city exits, faction and service references remain unresolved.
-`serve --spawn-zone <id>` previews a supplied map with temporary bodies;
-it does not activate that bundle or enter an absent destination. Without
-the flag, S07 starts the persistent Wake flow. Transitions arrive in S08.
+From S08, `m1-zone-preview` is the active ten-zone hub bundle. Its name
+is retained for installed overrides. Future S25 connections are visible
+construction objects without dangling exit targets. Faction lean remains
+lore until S20 supplies faction records. Map services remain anchors until
+their consuming slices land. This is the M1 development world, not the
+complete city release.
 
-From S07 the ordinary service starts persistent characters and the Wake
-in the supplied Hall. This is the M1 development world, not a complete
-city release: absent destinations and all unimplemented map services
-remain inert. The spawn flag still selects temporary S06 bodies for
-movement probes. It does not create saved characters.
+The ordinary service starts S07 persistent characters and the Wake.
+`serve --spawn-zone <id>` selects temporary S06 bodies for movement probes;
+it does not create saved characters. Both modes share S08 travel.
+
+S08 changes zone ownership and listeners together, resets the camera and
+view store on arrival, and persists per-zone memory/discovery separately.
+Timed travel uses injected UTC deadlines, removes the body from both
+zones, and saves the exact exit and arrival deadline in player progress.
+Disconnect before boarding cancels the wait. Disconnect in flight keeps
+the ride; restart reconciles arrival before destination logout rules.
+SQLite remains exclusively in the storage/I/O layer. Item template IDs
+are loaded with character state for pass/key requirements.

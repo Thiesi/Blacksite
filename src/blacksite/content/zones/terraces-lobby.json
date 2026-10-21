@@ -1,0 +1,142 @@
+{
+  "schema": 1,
+  "id": "terraces-lobby",
+  "name": "Residence Lobby",
+  "district": "The Terraces",
+  "safety": "pocket",
+  "sight_radius": 10,
+  "spawn": [
+    3,
+    3
+  ],
+  "exits": [
+    {
+      "id": "to-blocks",
+      "tile": [
+        2,
+        2
+      ],
+      "target_zone": "terraces-blocks",
+      "target_tile": [
+        17,
+        25
+      ],
+      "kind": "door"
+    }
+  ],
+  "objects": [
+    {
+      "id": "lobby-concierge",
+      "tile": [
+        13,
+        4
+      ],
+      "kind": "vendor",
+      "essential": false,
+      "params": {
+        "name": "Lobby concierge"
+      }
+    },
+    {
+      "id": "lobby-lift",
+      "tile": [
+        13,
+        8
+      ],
+      "kind": "door",
+      "essential": false,
+      "params": {
+        "name": "Lobby lift",
+        "open": true
+      }
+    },
+    {
+      "id": "lobby-public-terminal",
+      "tile": [
+        28,
+        12
+      ],
+      "kind": "terminal",
+      "essential": true,
+      "params": {
+        "name": "Lobby public terminal"
+      }
+    },
+    {
+      "id": "lobby-mailboxes",
+      "tile": [
+        10,
+        15
+      ],
+      "kind": "light",
+      "essential": false,
+      "params": {
+        "name": "Lobby mailboxes"
+      }
+    },
+    {
+      "id": "apartment-door-1",
+      "tile": [
+        6,
+        19
+      ],
+      "kind": "apartment_door",
+      "essential": false,
+      "params": {
+        "name": "Apartment door 1"
+      }
+    },
+    {
+      "id": "apartment-door-2",
+      "tile": [
+        12,
+        19
+      ],
+      "kind": "apartment_door",
+      "essential": false,
+      "params": {
+        "name": "Apartment door 2"
+      }
+    },
+    {
+      "id": "apartment-door-3",
+      "tile": [
+        18,
+        19
+      ],
+      "kind": "apartment_door",
+      "essential": false,
+      "params": {
+        "name": "Apartment door 3"
+      }
+    },
+    {
+      "id": "apartment-door-4",
+      "tile": [
+        24,
+        19
+      ],
+      "kind": "apartment_door",
+      "essential": false,
+      "params": {
+        "name": "Apartment door 4"
+      }
+    },
+    {
+      "id": "apartment-door-5",
+      "tile": [
+        30,
+        19
+      ],
+      "kind": "apartment_door",
+      "essential": false,
+      "params": {
+        "name": "Apartment door 5"
+      }
+    }
+  ],
+  "pockets": [],
+  "lore": [
+    "zone-terraces-lobby"
+  ]
+}

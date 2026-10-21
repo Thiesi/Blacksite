@@ -1,0 +1,107 @@
+{
+  "schema": 1,
+  "id": "vatside-vat-row",
+  "name": "Vat Row",
+  "district": "Vatside",
+  "safety": "contested",
+  "sight_radius": 9,
+  "spawn": [
+    3,
+    3
+  ],
+  "exits": [
+    {
+      "id": "to-clinics",
+      "tile": [
+        2,
+        2
+      ],
+      "target_zone": "vatside-clinics",
+      "target_tile": [
+        78,
+        31
+      ],
+      "kind": "street"
+    },
+    {
+      "id": "to-terraces-blocks",
+      "tile": [
+        87,
+        2
+      ],
+      "target_zone": "terraces-blocks",
+      "target_tile": [
+        79,
+        3
+      ],
+      "kind": "street"
+    }
+  ],
+  "objects": [
+    {
+      "id": "black-clinic",
+      "tile": [
+        76,
+        25
+      ],
+      "kind": "vendor",
+      "essential": false,
+      "params": {
+        "name": "Black clinic"
+      }
+    },
+    {
+      "id": "vat-technicians",
+      "tile": [
+        44,
+        28
+      ],
+      "kind": "vendor",
+      "essential": false,
+      "params": {
+        "name": "Vat technicians"
+      }
+    },
+    {
+      "id": "sablier-faction-vat",
+      "tile": [
+        15,
+        15
+      ],
+      "kind": "vat",
+      "essential": true,
+      "params": {
+        "name": "Sablier faction vat"
+      }
+    },
+    {
+      "id": "vatline-hardware",
+      "tile": [
+        79,
+        13
+      ],
+      "kind": "hardware",
+      "essential": false,
+      "params": {
+        "name": "Vatline hardware"
+      }
+    },
+    {
+      "id": "boundary-under-service",
+      "tile": [
+        82,
+        32
+      ],
+      "kind": "door",
+      "params": {
+        "open": true,
+        "unavailable_target": "under-service",
+        "name": "Construction boundary"
+      }
+    }
+  ],
+  "pockets": [],
+  "lore": [
+    "zone-vatside-vat-row"
+  ]
+}

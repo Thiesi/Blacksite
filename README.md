@@ -21,12 +21,14 @@ they go down into the Blacksite together.
 
 ## Status
 
-**M1 characters and Wake implemented (S07).** The M0 foundation,
-shared movement, sight, fog memory, two maps and persistent characters are
+**M1 city travel implemented (S08).** The M0 foundation,
+shared movement, sight, fog memory, ten maps and persistent characters are
 available. The service now starts the Wake for new callers. See the
 [character guide](docs/ops/characters.md) for persistence, sleeper recovery
 and acceptance. The [zone preview guide](docs/ops/zones.md) covers temporary
-bodies; travel and other gameplay follow in later slices. The
+bodies. The [city guide](docs/ops/city.md) covers connected hub routes,
+scheduled trams, safety pockets and the visited-zone overview. Other
+gameplay follows in later slices. The
 [deployment guide](deploy/README.md) covers service units and operator
 commands. See `docs/plan/00-roadmap.md` for the plan and the
 [issues](../../issues) for what is being worked on. The foreground

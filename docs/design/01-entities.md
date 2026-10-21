@@ -47,7 +47,7 @@ after their id.
 | sight_radius_night | int, optional | Scour zones: used 20:00–06:00 node local time |
 | spawn | Tile, optional | passable preview/initial entry tile |
 | layouts | list of ZoneLayout, optional | named service/event geometry variants |
-| exits | list of Exit | id, tile, target zone, target tile, kind (street, tram, ladder, lift, gate, cable), requirement (pass, key, faction), hidden |
+| exits | list of Exit | id, tile, target zone, target tile, kind (street, door, tram, ladder, lift, gate, cable), requirement (pass, key, faction), hidden |
 | spawners | list of Spawner | id, tile or region, npc template, count, respawn seconds, condition |
 | objects | list of ObjectSpec | id, tile, kind (door, terminal, vendor, vat, relay, cache, tram_stop, apartment_door, light, hardware, descent_console, workshop, bank), params, essential (clinic, public vat, public uplink) |
 | pockets | list of Region | rectangles that are `pocket` safety inside a contested zone |

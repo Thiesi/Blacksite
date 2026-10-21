@@ -4,7 +4,7 @@
   "name": "Clinic Row",
   "district": "Vatside",
   "safety": "contested",
-  "lean": "sablier",
+  "lean": null,
   "sight_radius": 12,
   "spawn": [
     3,
@@ -20,9 +20,9 @@
       "target_zone": "vatside-wake-hall",
       "target_tile": [
         38,
-        16
+        17
       ],
-      "kind": "gate"
+      "kind": "door"
     },
     {
       "id": "to-core-plaza",
@@ -32,8 +32,8 @@
       ],
       "target_zone": "core-plaza",
       "target_tile": [
-        2,
-        2
+        87,
+        3
       ],
       "kind": "street"
     },
@@ -46,7 +46,7 @@
       "target_zone": "vatside-vat-row",
       "target_tile": [
         2,
-        2
+        3
       ],
       "kind": "street"
     },
@@ -58,8 +58,8 @@
       ],
       "target_zone": "core-tram-hub",
       "target_tile": [
-        2,
-        2
+        24,
+        15
       ],
       "kind": "tram"
     }
@@ -196,6 +196,50 @@
       "params": {
         "open": true
       }
+    },
+    {
+      "id": "cold-chain-hardware",
+      "tile": [
+        34,
+        18
+      ],
+      "kind": "hardware",
+      "params": {
+        "name": "cold chain hardware"
+      }
+    },
+    {
+      "id": "cold-chain-replacement-socket",
+      "tile": [
+        35,
+        20
+      ],
+      "kind": "hardware",
+      "params": {
+        "name": "cold chain replacement socket"
+      }
+    },
+    {
+      "id": "cold-chain-loan-terminal",
+      "tile": [
+        36,
+        20
+      ],
+      "kind": "terminal",
+      "params": {
+        "name": "cold chain loan terminal"
+      }
+    },
+    {
+      "id": "platform-core-tram-hub",
+      "tile": [
+        3,
+        31
+      ],
+      "kind": "tram_stop",
+      "params": {
+        "name": "Tram platform"
+      }
     }
   ],
   "pockets": [
@@ -216,6 +260,12 @@
       "y": 5,
       "w": 12,
       "h": 8
+    },
+    {
+      "x": 35,
+      "y": 20,
+      "w": 3,
+      "h": 2
     }
   ],
   "layouts": [

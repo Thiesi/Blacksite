@@ -18,10 +18,10 @@ cooldowns and stamina, and sends only authorized terrain and presences.
 Without `--spawn-zone`, S07 starts saved characters and the Wake. Preview bodies use the
 handle and temporary HP/STA pools. Position and terrain memory survive
 a reconnect within 60 seconds, but not a service restart or grace expiry.
-Character creation and persistence arrive in S07. Travel arrives in S08;
+Character creation and persistence are supplied by S07. S08 adds travel;
 NPCs, terminals, vendors and faction services are inert map anchors here.
-The authoring bundle is not an activated city release. Validation still
-rejects activation while its future references are absent.
+The active ten-zone hub has no dangling routes; future maps are visible
+construction boundaries. See the [city guide](city.md).
 
 Version 0.0.2 refreshes the package-owned content copy on startup using
 the existing validated staging procedure. Keep local overrides under

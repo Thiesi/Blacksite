@@ -130,7 +130,8 @@ class Storage:
             players.append({key: json.loads(value) if key in json_columns and value is not None else value
                             for key, value in dict(row).items()})
         return {"players": players, "identities": {row[0]: json.loads(row[1]) for row in self.db.execute("SELECT * FROM identities")},
-                "serial": self.meta("player_serial") or 0, "cap": self.meta("character_cap")}
+                "serial": self.meta("player_serial") or 0, "cap": self.meta("character_cap"),
+                "items": [json.loads(row[0]) for row in self.db.execute("SELECT data FROM items")]}
 
     def character_write(self, effect: dict[str, Any]) -> None:
         """Commit creation rewards/deletion before the simulation acknowledges."""

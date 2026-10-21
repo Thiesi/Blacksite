@@ -1,0 +1,106 @@
+{
+  "schema": 1,
+  "id": "sodium-tin-halo",
+  "name": "The Tin Halo",
+  "district": "Sodium Row",
+  "safety": "pocket",
+  "sight_radius": 8,
+  "spawn": [
+    3,
+    3
+  ],
+  "exits": [
+    {
+      "id": "to-sodium-row",
+      "tile": [
+        2,
+        2
+      ],
+      "target_zone": "sodium-row",
+      "target_tile": [
+        94,
+        27
+      ],
+      "kind": "door"
+    }
+  ],
+  "objects": [
+    {
+      "id": "vesper",
+      "tile": [
+        8,
+        15
+      ],
+      "kind": "vendor",
+      "essential": false,
+      "params": {
+        "name": "Vesper"
+      }
+    },
+    {
+      "id": "halo-bar",
+      "tile": [
+        16,
+        15
+      ],
+      "kind": "vendor",
+      "essential": false,
+      "params": {
+        "name": "Halo bar"
+      }
+    },
+    {
+      "id": "halo-back-room",
+      "tile": [
+        31,
+        18
+      ],
+      "kind": "door",
+      "essential": false,
+      "params": {
+        "name": "Halo back room",
+        "open": true
+      }
+    },
+    {
+      "id": "ferrymen-liaison",
+      "tile": [
+        34,
+        15
+      ],
+      "kind": "vendor",
+      "essential": false,
+      "params": {
+        "name": "Ferrymen liaison"
+      }
+    },
+    {
+      "id": "halo-contract-board",
+      "tile": [
+        38,
+        3
+      ],
+      "kind": "terminal",
+      "essential": false,
+      "params": {
+        "name": "Halo contract board"
+      }
+    },
+    {
+      "id": "halo-market-board",
+      "tile": [
+        37,
+        16
+      ],
+      "kind": "terminal",
+      "essential": false,
+      "params": {
+        "name": "Halo market board"
+      }
+    }
+  ],
+  "pockets": [],
+  "lore": [
+    "zone-sodium-tin-halo"
+  ]
+}

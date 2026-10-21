@@ -1,0 +1,144 @@
+{
+  "schema": 1,
+  "id": "core-precinct",
+  "name": "Warden Precinct",
+  "district": "The Core",
+  "safety": "safe",
+  "sight_radius": 12,
+  "spawn": [
+    3,
+    3
+  ],
+  "exits": [
+    {
+      "id": "to-core-plaza",
+      "tile": [
+        24,
+        21
+      ],
+      "target_zone": "core-plaza",
+      "target_tile": [
+        33,
+        38
+      ],
+      "kind": "street"
+    }
+  ],
+  "objects": [
+    {
+      "id": "warden-quartermaster",
+      "tile": [
+        5,
+        3
+      ],
+      "kind": "vendor",
+      "essential": false,
+      "params": {
+        "name": "Warden quartermaster"
+      }
+    },
+    {
+      "id": "warden-contract-handler",
+      "tile": [
+        27,
+        3
+      ],
+      "kind": "vendor",
+      "essential": false,
+      "params": {
+        "name": "Warden contract handler"
+      }
+    },
+    {
+      "id": "marshal-office",
+      "tile": [
+        40,
+        16
+      ],
+      "kind": "door",
+      "essential": false,
+      "params": {
+        "name": "Marshal office",
+        "open": true
+      }
+    },
+    {
+      "id": "bounty-desk",
+      "tile": [
+        42,
+        19
+      ],
+      "kind": "terminal",
+      "essential": false,
+      "params": {
+        "name": "Bounty desk"
+      }
+    },
+    {
+      "id": "precinct-member-terminal",
+      "tile": [
+        39,
+        3
+      ],
+      "kind": "terminal",
+      "essential": false,
+      "params": {
+        "name": "Precinct member terminal"
+      }
+    },
+    {
+      "id": "precinct-vault-hardware",
+      "tile": [
+        44,
+        3
+      ],
+      "kind": "hardware",
+      "essential": false,
+      "params": {
+        "name": "Precinct vault hardware"
+      }
+    },
+    {
+      "id": "warden-faction-vat",
+      "tile": [
+        34,
+        19
+      ],
+      "kind": "vat",
+      "essential": true,
+      "params": {
+        "name": "Warden faction vat"
+      }
+    },
+    {
+      "id": "holding-cell-west",
+      "tile": [
+        8,
+        13
+      ],
+      "kind": "door",
+      "essential": false,
+      "params": {
+        "name": "Holding cell west",
+        "open": true
+      }
+    },
+    {
+      "id": "holding-cell-east",
+      "tile": [
+        31,
+        13
+      ],
+      "kind": "door",
+      "essential": false,
+      "params": {
+        "name": "Holding cell east",
+        "open": true
+      }
+    }
+  ],
+  "pockets": [],
+  "lore": [
+    "zone-core-precinct"
+  ]
+}

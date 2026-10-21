@@ -1,8 +1,8 @@
 """Pure character/Wake lifecycle. The I/O layer executes the write outbox."""
 
 from copy import deepcopy
-from dataclasses import replace
-from datetime import datetime
+from dataclasses import asdict, replace
+from datetime import datetime, timezone
 from typing import Any
 
 from blacksite.content.loader import ContentTree
@@ -16,6 +16,9 @@ from blacksite.server.views.delta import ViewStore
 from blacksite.server.wake import Wake, menu, wrapped
 from blacksite.server.world.registry import World
 from blacksite.server.world.simulation import Avatar, ZoneSimulation
+from blacksite.server.world.exits import Travel
+from blacksite.server.world.safety import safety_at
+from blacksite.content.schema import Exit, Requirement
 
 PRESENCE_CHECKPOINT_SECONDS = 5  # Architecture 6.2 player flush cadence.
 
@@ -29,6 +32,8 @@ class Characters:
         self.serial, self.cap = state.get("serial", 0), max(1, int(state.get("cap") or 1))
         self.sim = ZoneSimulation(world, sessions, clock, "vatside-wake-hall", keymap)
         self.sim.me_provider = self.me
+        self.sim.access_provider = self.access
+        self.item_templates = {row["id"]: row["template"] for row in state.get("items", [])}
         self.wakes: dict[str, Wake] = {}
         self.screens: dict[str, tuple[str, int]] = {}
         self.dirty_screens: set[str] = set()
@@ -39,6 +44,10 @@ class Characters:
         self.deleting: set[str] = set()
         # Reconcile elapsed offline time before any caller can attach.
         for player in self.players.values():
+            travel = player.progress.get("travel")
+            if travel:
+                self.arrive_offline(player)
+                continue
             offline = player.progress.get("offline_at", player.last_seen_at)
             if offline and not self.protected(player):
                 remaining = rules.SLEEPER_SECONDS - (clock.now_utc() - datetime.fromisoformat(offline)).total_seconds()
@@ -54,12 +63,40 @@ class Characters:
     def owned(self, user: str) -> list[Player]:
         return sorted((p for p in self.players.values() if p.bbs_user_id == user and p.origin == self.sessions.origin), key=lambda p: p.id)
 
+    def arrive_offline(self, player: Player) -> None:
+        travel = player.progress.get("travel")
+        now = self.clock.now_utc().timestamp()
+        if not travel or now < travel["arrival"]:
+            return
+        player.zone = travel["exit"]["target_zone"]
+        player.tile = tuple(travel["exit"]["target_tile"])
+        player.progress.pop("travel")
+        player.progress["offline_at"] = datetime.fromtimestamp(travel["arrival"], timezone.utc).isoformat()
+        if not self.protected(player):
+            remaining = rules.SLEEPER_SECONDS - (now - travel["arrival"])
+            if remaining <= 0:
+                self.recover(player)
+                return
+            actor = player.actor()
+            actor.stance = "sleeper"
+            self.world.enter(actor, player.zone, self.world.free_tile(player.zone, player.tile))
+            player.tile = actor.position
+            self.sleepers[player.id] = actor, self.clock.now_tick() + int(remaining * TICK_HZ)
+            self.world.zones[player.zone].activate("sleeper:" + player.id, self.clock.now_tick())
+        self.queue("save", player.bbs_user_id, player, immediate=True)
+
     def summary(self, user: str) -> dict[str, Any] | None:
         owned = self.owned(user)
         return owned[0].summary() if len(owned) == 1 else None
 
     def protected(self, player: Player) -> bool:
-        return player.zone in self.world.zones and self.world.zones[player.zone].safety_at(player.tile) in ("safe", "pocket")
+        if player.progress.get("travel"):
+            return True  # An in-flight character has no targetable body.
+        return player.zone in self.world.zones and safety_at(self.world.zones[player.zone], player.tile) in ("safe", "pocket")
+
+    def access(self, session: Session) -> dict[str, Any]:
+        player = self.players[session.player_id]
+        return {"standing": player.standing, "items": [self.item_templates.get(iid, iid) for iid in player.inventory]}
 
     def identity(self, user: str) -> dict[str, Any]:
         if user not in self.identities:
@@ -112,6 +149,18 @@ class Characters:
         self.sim.avatars[session.user_id] = avatar
         self.sim.views[session.id] = ViewStore()
         self.sim.published.pop(session.id, None)
+        travel = player.progress.get("travel")
+        if travel:
+            data = dict(travel["exit"])
+            data["tile"], data["target_tile"] = tuple(data["tile"]), tuple(data["target_tile"])
+            if data.get("requirement"):
+                data["requirement"] = Requirement(**data["requirement"])
+            avatar.travel = Travel(Exit(**data), travel["departure"], travel["arrival"], True)
+            self.world.zones[player.zone].deactivate(session.id, self.clock.now_tick())
+            self.world.leave(actor)
+            self.sim.transition(session, avatar, self.clock.now_utc().timestamp(), self.clock.now_tick())
+        else:
+            self.sim.discover(session, avatar)
         self.wakes.pop(session.id, None)
         self.screens.pop(session.id, None)
         player.progress.pop("offline_at", None)
@@ -130,6 +179,11 @@ class Characters:
                 zone = self.world.zones[zone_id].template
                 memory[zone_id] = pack_memory(cells, zone.width, zone.height)
         player.progress["seen_zones"] = sorted(avatar.seen_zones)
+        if avatar.travel and avatar.travel.departed:
+            player.progress["travel"] = {"exit": asdict(avatar.travel.exit), "departure": avatar.travel.departure,
+                                         "arrival": avatar.travel.arrival}
+        else:
+            player.progress.pop("travel", None)
 
     def disconnect(self, session: Session) -> None:
         wake = self.wakes.pop(session.id, None)
@@ -147,8 +201,15 @@ class Characters:
         self.snapshot(player, avatar)
         self.sim.views.pop(session.id, None)
         self.sim.published.pop(session.id, None)
+        self.sim.maps.pop(session.id, None)
+        self.sim.map_opened.pop(session.id, None)
+        self.sim.overlays.pop(session.id, None)
         self.world.zones[player.zone].deactivate(session.id, self.clock.now_tick())
         player.progress["offline_at"] = self.clock.now_utc().isoformat()
+        if avatar.travel and avatar.travel.departed:
+            self.queue("save", session.user_id, player, immediate=True)
+            return
+        avatar.travel = None  # Leaving the platform cancels boarding, not a ride.
         if player.id in self.deleting:
             return
         if self.protected(player):
@@ -218,6 +279,7 @@ class Characters:
         player.clone_debt = identity.get("clone_debt", 0)
         player.update_personhood(identity, self.clock.now_utc())
         self.pending[session.id] = player, items
+        self.item_templates.update({item["id"]: item["template"] for item in items})
         wake.stage = "saving"
         self.queue("create", session.user_id, player, items=items, serial=self.serial, token=session.id)
 
@@ -329,6 +391,9 @@ class Characters:
             return
         if player is None:
             return
+        if session.id in self.sim.maps or (self.sim.avatars.get(session.user_id) and self.sim.avatars[session.user_id].travel):
+            self.sim.input(session, frame, tick)
+            return
         if screen == "delete":
             if name == "prompt_cancel":
                 self.screens[session.id] = ("sheet", 0)
@@ -396,6 +461,10 @@ class Characters:
                 del self.sleepers[pid]
                 self.recover(player)
         self.sim.tick(ctx)
+        online = {s.player_id for s in self.sessions.active.values() if not s.closed}
+        for player in self.players.values():
+            if player.id not in online and player.progress.get("travel"):
+                self.arrive_offline(player)
         for player in self.players.values():
             previous = player.legal_at
             player.update_personhood(self.identities[player.bbs_user_id], self.clock.now_utc())
@@ -449,10 +518,13 @@ class Characters:
                 avatar = self.sim.avatars[session.user_id]
                 actor = avatar.actor
                 stamp = (actor.position, actor.health, actor.stamina, actor.shock, actor.facing, avatar.perception.grid_key,
-                         ctx.tick // (PRESENCE_CHECKPOINT_SECONDS * TICK_HZ))
+                         ctx.tick // (PRESENCE_CHECKPOINT_SECONDS * TICK_HZ), avatar.zone,
+                         avatar.travel.departed if avatar.travel else None)
                 if stamp != self.saved_stamps.get(player.id):
+                    was_in_flight = bool(player.progress.get("travel"))
                     self.snapshot(player, avatar)
-                    self.queue("save", session.user_id, player)
+                    self.queue("save", session.user_id, player,
+                               immediate=was_in_flight != bool(player.progress.get("travel")))
                     self.saved_stamps[player.id] = stamp
                     if self.screens.get(session.id, (None,))[0] == "sheet":
                         self.dirty_screens.add(session.id)

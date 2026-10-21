@@ -130,7 +130,7 @@ class TileTable:
     schema: int = CONTENT_SCHEMA
 
 
-ExitKind = Literal["street", "tram", "ladder", "lift", "gate", "cable"]
+ExitKind = Literal["street", "door", "tram", "ladder", "lift", "gate", "cable"]
 RequirementKind = Literal["pass", "key", "faction"]
 
 

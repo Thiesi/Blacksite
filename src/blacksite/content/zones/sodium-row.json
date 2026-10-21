@@ -1,0 +1,203 @@
+{
+  "schema": 1,
+  "id": "sodium-row",
+  "name": "Sodium Row",
+  "district": "Sodium Row",
+  "safety": "contested",
+  "sight_radius": 13,
+  "spawn": [
+    3,
+    3
+  ],
+  "exits": [
+    {
+      "id": "to-core-plaza",
+      "tile": [
+        2,
+        2
+      ],
+      "target_zone": "core-plaza",
+      "target_tile": [
+        62,
+        38
+      ],
+      "kind": "street"
+    },
+    {
+      "id": "to-sodium-tin-halo",
+      "tile": [
+        94,
+        26
+      ],
+      "target_zone": "sodium-tin-halo",
+      "target_tile": [
+        2,
+        3
+      ],
+      "kind": "door"
+    }
+  ],
+  "objects": [
+    {
+      "id": "row-drug-dealer",
+      "tile": [
+        48,
+        20
+      ],
+      "kind": "vendor",
+      "essential": false,
+      "params": {
+        "name": "Row drug dealer"
+      }
+    },
+    {
+      "id": "row-ticket-tout",
+      "tile": [
+        64,
+        20
+      ],
+      "kind": "vendor",
+      "essential": false,
+      "params": {
+        "name": "Row ticket tout"
+      }
+    },
+    {
+      "id": "row-stage",
+      "tile": [
+        30,
+        7
+      ],
+      "kind": "light",
+      "essential": false,
+      "params": {
+        "name": "Row stage"
+      }
+    },
+    {
+      "id": "row-card-table",
+      "tile": [
+        38,
+        20
+      ],
+      "kind": "light",
+      "essential": false,
+      "params": {
+        "name": "Row card table"
+      }
+    },
+    {
+      "id": "row-bar-1",
+      "tile": [
+        8,
+        7
+      ],
+      "kind": "vendor",
+      "essential": false,
+      "params": {
+        "name": "Row bar 1"
+      }
+    },
+    {
+      "id": "row-bar-2",
+      "tile": [
+        18,
+        7
+      ],
+      "kind": "vendor",
+      "essential": false,
+      "params": {
+        "name": "Row bar 2"
+      }
+    },
+    {
+      "id": "row-bar-3",
+      "tile": [
+        50,
+        7
+      ],
+      "kind": "vendor",
+      "essential": false,
+      "params": {
+        "name": "Row bar 3"
+      }
+    },
+    {
+      "id": "row-bar-4",
+      "tile": [
+        63,
+        7
+      ],
+      "kind": "vendor",
+      "essential": false,
+      "params": {
+        "name": "Row bar 4"
+      }
+    },
+    {
+      "id": "row-bar-5",
+      "tile": [
+        75,
+        7
+      ],
+      "kind": "vendor",
+      "essential": false,
+      "params": {
+        "name": "Row bar 5"
+      }
+    },
+    {
+      "id": "row-public-1",
+      "tile": [
+        19,
+        15
+      ],
+      "kind": "terminal",
+      "essential": true,
+      "params": {
+        "name": "Row public 1"
+      }
+    },
+    {
+      "id": "row-public-2",
+      "tile": [
+        50,
+        15
+      ],
+      "kind": "terminal",
+      "essential": true,
+      "params": {
+        "name": "Row public 2"
+      }
+    },
+    {
+      "id": "row-public-3",
+      "tile": [
+        80,
+        15
+      ],
+      "kind": "terminal",
+      "essential": true,
+      "params": {
+        "name": "Row public 3"
+      }
+    },
+    {
+      "id": "boundary-oldworks-main",
+      "tile": [
+        96,
+        2
+      ],
+      "kind": "door",
+      "params": {
+        "open": true,
+        "unavailable_target": "oldworks-main",
+        "name": "Construction boundary"
+      }
+    }
+  ],
+  "pockets": [],
+  "lore": [
+    "zone-sodium-row"
+  ]
+}
