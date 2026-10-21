@@ -1,4 +1,4 @@
-name: S05 Linux service acceptance
+name: Service and shared-zone acceptance
 
 on:
   pull_request:
@@ -6,6 +6,7 @@ on:
       - 'src/blacksite/**'
       - 'deploy/**'
       - 'scripts/accept_s05_systemd.py'
+      - 'scripts/accept_s06_netbbs.py'
       - '.github/workflows/service-acceptance.yml'
       - 'pyproject.toml'
       - 'MANIFEST.in'
@@ -59,8 +60,17 @@ jobs:
         run: |
           sudo journalctl -u blacksite-s05 --no-pager || true
           sudo systemctl stop blacksite-s05.service || true
+      - name: Accept shared zones through NetBBS Telnet and SSH
+        shell: bash
+        run: |
+          python scripts/accept_s06_netbbs.py --root "$RUNNER_TEMP/s06-proof" --door-python "$RUNNER_TEMP/s05-venv/bin/python"
       - uses: actions/upload-artifact@v4
         if: always()
         with:
           name: s05-linux-service-proof
           path: ${{ runner.temp }}/s05-proof
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: s06-shared-zone-proof
+          path: ${{ runner.temp }}/s06-proof

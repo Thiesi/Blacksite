@@ -21,10 +21,10 @@ they go down into the Blacksite together.
 
 ## Status
 
-**M0 foundation implemented (S01-S05).** The package and content pipeline,
-local server, protocol, persistence, native terminal client and interim
-service runner are available. Callers can view the title and help;
-shared-zone movement and gameplay begin with S06. The
+**M1 shared-zone preview implemented (S06).** The M0 foundation
+(S01-S05), shared movement, sight, fog memory and two authored maps are
+available. Use the [zone preview guide](docs/ops/zones.md) for the temporary
+spawn flag; characters, travel and other gameplay follow in later slices. The
 [deployment guide](deploy/README.md) covers service units and operator
 commands. See `docs/plan/00-roadmap.md` for the plan and the
 [issues](../../issues) for what is being worked on. The foreground

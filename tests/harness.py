@@ -1,6 +1,6 @@
 """Socket-free clients exercising the production Core and manual ticks."""
 
-from dataclasses import dataclass
+from dataclasses import asdict, dataclass
 from typing import Any
 
 from blacksite.server.auth import Authenticator, sign
@@ -9,6 +9,8 @@ from blacksite.server.core import Core
 from blacksite.server.protocol import Frame, ProtocolError
 from blacksite.server.sessions import Session
 from blacksite.version import PACKAGE_VERSION, PROTOCOL_MAJOR
+from blacksite.content.loader import ContentTree
+from blacksite.server.world.registry import World
 
 DOOR_SECRET = b"d" * 32
 ADMIN_SECRET = b"a" * 32
@@ -34,9 +36,13 @@ class FakeClient:
 
 
 class HeadlessServer:
-    def __init__(self) -> None:
+    def __init__(self, content: ContentTree | None = None, spawn_zone: str | None = None) -> None:
         self.clock = ManualClock()
-        self.core = Core(self.clock, "test-origin", Authenticator(DOOR_SECRET, ADMIN_SECRET))
+        world = World(content, {zone: index for index, zone in enumerate(sorted(content.zones))}) if content and spawn_zone else None
+        self.core = Core(self.clock, "test-origin", Authenticator(DOOR_SECRET, ADMIN_SECRET),
+                         asdict(content.keymaps) if content and content.keymaps else {},
+                         asdict(content.palette) if content and content.palette else {},
+                         content=content, world=world, spawn_zone=spawn_zone)
 
     def connect(self, door_info: dict[str, Any] | None = None, *,
                 frame: Frame | None = None, width: int = 80, height: int = 24) -> FakeClient:

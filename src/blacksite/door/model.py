@@ -10,6 +10,7 @@ from blacksite.door.layout import compute
 from blacksite.door.palette import Palette, resolve_tier
 from blacksite.door.screens import SessionWarnings, first_run, help_pages, title
 from blacksite.door.views import LinePrompt, Renderer, menu_rect, render_frame, render_menu, render_text
+from blacksite.door.views.zone import render_zone
 from blacksite.server.protocol import Frame
 
 
@@ -39,7 +40,7 @@ class Display:
         self.counter = 0
         self.request_prefix = request_prefix
         self.warnings = SessionWarnings(info.session_limit)
-        self.renderers: dict[str, Renderer] = {"text": render_text, "menu": render_menu}
+        self.renderers: dict[str, Renderer] = {"text": render_text, "menu": render_menu, "zone": render_zone}
 
     def resize(self, info: DoorInfo) -> None:
         self.info = info
@@ -232,7 +233,8 @@ class Display:
             hint = str(self.key_prompt["label"])
         elif "hint" in self.body:
             hint = str(self.body["hint"])
-        render_frame(buffer, self.layout, self.palette, "Karst · " + truncate(self.info.handle, self.layout.width - 20), list(self.logs), hint)
+        header = "" if self.kind == "zone" and self.local is None else "Karst · " + truncate(self.info.handle, self.layout.width - 20)
+        render_frame(buffer, self.layout, self.palette, header, list(self.logs), hint)
         area = self.layout.viewport
         if self.local is not None:
             count = max(1, area.height - 2)

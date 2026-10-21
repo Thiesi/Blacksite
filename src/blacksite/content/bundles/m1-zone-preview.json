@@ -1,0 +1,16 @@
+{
+  "schema": 1,
+  "id": "m1-zone-preview",
+  "status": "authoring",
+  "depends": [],
+  "members": {
+    "zones": [
+      "vatside-wake-hall",
+      "vatside-clinics"
+    ],
+    "text": [
+      "zone-vatside-wake-hall",
+      "zone-vatside-clinics"
+    ]
+  }
+}

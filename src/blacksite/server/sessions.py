@@ -27,6 +27,7 @@ class Session:
     caps: dict[str, Any]
     player_id: str | None = None
     subscribed: str | None = None
+    keymap_id: str = "arrows"
     input_queue: deque[Frame] = field(default_factory=deque)
     send_queue: deque[Frame] = field(default_factory=deque)
     rate_counters: dict[str, deque[int]] = field(default_factory=dict)
@@ -84,6 +85,13 @@ class Session:
         history.append(tick)
         return True
 
+    def finish(self, frame: Frame) -> None:
+        """Drain an operator receipt before the final shutdown frame."""
+        if not self.closed:
+            self.send_queue.append(frame)
+            self.closed = True
+            self.notify()
+
     def enqueue(self, frame: Frame, tick: int) -> bool:
         if self.closed or len(self.input_queue) >= QUEUE_LIMIT:
             return False
@@ -126,6 +134,7 @@ class Sessions:
         self.active: dict[str, Session] = {}
         self.retired: dict[str, Session] = {}
         self.serial = 0
+        self.on_disconnect: Callable[[Session], None] = lambda session: None
 
     def connect(self, role: Role, info: dict[str, Any], caps: dict[str, Any]) -> Session:
         self.expire()
@@ -154,6 +163,7 @@ class Sessions:
         session.disconnected_tick = self.clock.now_tick()
         if session.role == "caller":
             self.retired[session.user_id] = session
+        self.on_disconnect(session)
 
     def expire(self) -> None:
         tick = self.clock.now_tick()

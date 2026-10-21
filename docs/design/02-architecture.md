@@ -279,16 +279,26 @@ its pipe.
 
 ```
 viewport: {x, y, w, h}            zone-tile rectangle the client should draw
-tiles: [[tile id, ...], ...]      only cells visible now; -1 for unseen, -2 for remembered
+tiles: [[legend index, ...], ...] visible now; -1 unseen, -2 remembered
+remembered: [[legend index, ...], ...] last known terrain; -1 unknown
+legend: [{id, glyph, role}]      tile types in stable ID order
 actors: [{id, x, y, glyph, role, name?, stance, hp?}]
 objects: [{id, x, y, kind, state, glyph}]
-me: {name, handle, faction, grade, hp, hp_max, sta, sta_max, shock, chits, marked_until, heat_until, zone, safety, cooldowns{}, effects[]}
+me: {name, handle, faction, grade, hp, hp_max, sta, sta_max, shock, chits, marked_until, heat_until, zone, zone_name, safety, clock, cooldowns{}, effects[]}
 target: {id, name, faction, hp_pct, range, cover, relation} | null
 nearby: [{id, name, role, relation}]
 crew: [{id, name, zone, hp_pct, jacked}]
 event: {name, remaining} | null
 hint: text                         one-line contextual key help
 ```
+
+`remembered` matches the viewport and contains only terrain previously
+seen by this player. The renderer uses it when `tiles` contains `-2`;
+hidden actors and current object state never enter either memory grid.
+The viewport clips to the zone's extent and at most 4096 cells, bounding
+snapshots for unusually large terminals. Usual layout dimensions and
+four-tile scrolling are unchanged. Camera changes send a full snapshot;
+other updates use the JSON-pointer operations in section 5.3.
 
 `LatticeView.body`: `cells` (positions and edges in view), `presences`,
 `me` (integrity, trace, rig slots with cooldowns), `room` (data, controls,
@@ -547,3 +557,9 @@ S25 authors all remaining ordinary city maps; S27 supplies dialogue and
 records. S26 activates and validates the complete Season 1 bundle and its
 solo/crew finale. Seasons 2 and 3 remain design specifications until their
 own complete bundles and acceptance runs exist.
+
+S06's `m1-zone-preview` is an authoring bundle for the two Vatside maps.
+Their future city exits, faction and service references remain unresolved.
+`serve --spawn-zone <id>` previews a supplied map with temporary bodies;
+it does not activate that bundle or enter an absent destination. Without
+the flag, the M0 title remains available. Transitions arrive in S08.

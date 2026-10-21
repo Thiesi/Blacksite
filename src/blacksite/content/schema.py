@@ -202,6 +202,22 @@ class ObjectSpec:
 
 
 @dataclass(frozen=True)
+class TileChange:
+    tile: Tile
+    tile_id: str
+
+
+@dataclass(frozen=True)
+class ZoneLayout:
+    """A named, bounded geometry variant selected by a future subsystem."""
+
+    id: str
+    changes: tuple[TileChange, ...] = ()
+    warning_tiles: tuple[Tile, ...] = ()
+    alternate_routes: tuple[str, ...] = ()
+
+
+@dataclass(frozen=True)
 class ZoneMeta:
     """The `.json` sidecar of a zone, everything except the grid."""
 
@@ -218,6 +234,8 @@ class ZoneMeta:
     pockets: tuple[Region, ...] = ()
     lore: tuple[str, ...] = ()
     instanced: bool = False
+    spawn: Tile | None = None
+    layouts: tuple[ZoneLayout, ...] = ()
     schema: int = CONTENT_SCHEMA
 
 
