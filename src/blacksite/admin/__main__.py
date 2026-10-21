@@ -51,6 +51,7 @@ def parser() -> argparse.ArgumentParser:
     commands = root.add_subparsers(dest="command", required=True)
     serve = commands.add_parser("serve", parents=[common], help="run the service in the foreground")
     serve.add_argument("--tcp", action="store_true")
+    serve.add_argument("--spawn-zone", help="preview a supplied zone before character entry")
     serve.add_argument("--log-level", choices=("DEBUG", "INFO", "WARNING", "ERROR"), default="INFO")
     for name in ("status", "who", "stop", "validate"):
         commands.add_parser(name, parents=[common])
@@ -83,6 +84,8 @@ def main(argv: list[str] | None = None) -> int:
         if args.command == "serve":
             from blacksite.server.__main__ import main as serve
             flags = ["--install-dir", str(install), "--log-level", args.log_level]
+            if args.spawn_zone:
+                flags += ["--spawn-zone", args.spawn_zone]
             return serve(flags + (["--tcp"] if args.tcp else []))
         if args.command == "validate":
             source = install / "content"

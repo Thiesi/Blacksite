@@ -10,13 +10,16 @@ from blacksite.server.clock import Clock, TICK_HZ
 from blacksite.server.loop import TickLoop
 from blacksite.server.protocol import Frame, ProtocolError, validate
 from blacksite.server.sessions import INPUTS_PER_SECOND, Session, Sessions
+from blacksite.server.world.registry import World
+from blacksite.server.world.simulation import ZoneSimulation
 from blacksite.version import PACKAGE_VERSION, PROTOCOL_MAJOR
 
 
 class Core:
     def __init__(self, clock: Clock, origin: str, auth: Authenticator,
                  keymap: dict[str, Any] | None = None, palette: dict[str, Any] | None = None,
-                 motd: str = "", content: Any = None) -> None:
+                 motd: str = "", content: Any = None, world: World | None = None,
+                 spawn_zone: str | None = None) -> None:
         self.clock = clock
         self.auth = auth
         self.sessions = Sessions(clock, origin)
@@ -29,6 +32,12 @@ class Core:
         self.status_provider: Callable[[], dict[str, Any]] = self.status
         self.audit: Callable[[dict[str, Any]], None] = lambda row: None
         self.bus.subscribe("input", self._echo)
+        self.world = world
+        self.simulation = ZoneSimulation(world, self.sessions, clock, spawn_zone, self.keymap) if world is not None and spawn_zone else None
+        if self.simulation is not None:
+            self.sessions.on_disconnect = self.simulation.disconnect
+            self.loop.subsystems.append(self.simulation)
+            self.loop.publishers.append(self.simulation.publish)
 
     def connect(self, frame: Frame) -> Session:
         if frame.type != "hello":
@@ -38,6 +47,8 @@ class Core:
         session = self.sessions.connect(role, frame.data["door_info"], frame.data["caps"])
         session.send(Frame("welcome", {"proto": PROTOCOL_MAJOR, "server_version": PACKAGE_VERSION,
             "player": None, "keymap": self.keymap, "palette": self.palette, "motd": self.motd}))
+        if self.simulation is not None:
+            self.simulation.connect(session)
         return session
 
     def receive(self, session: Session, frame: Frame) -> None:
@@ -76,6 +87,9 @@ class Core:
                                     self.request_stop, self.audit)
             return
         # Echo only the verb, never args, arbitrary chat, or private data.
+        if self.simulation is not None:
+            self.simulation.input(session, frame, event.data["tick"])
+            return
         label = "intent" if frame.type == "intent" else frame.type
         session.send(Frame("log", {"lines": [{"channel": "system", "text": f"You send {label}.",
             "role": "muted", "at": self.clock.now_utc().isoformat()}]}))
@@ -83,7 +97,8 @@ class Core:
     def status(self) -> dict[str, Any]:
         return {"uptime": self.clock.now_tick() / TICK_HZ, "players": sum(
             s.role == "caller" and not s.closed for s in self.sessions.active.values()),
-            "active_zones": 0, "tick": self.loop.timing(), "persistence_lag": 0,
+            "active_zones": sum(not zone.dormant for zone in self.world.zones.values()) if self.world else 0,
+            "tick": self.loop.timing(), "persistence_lag": 0,
             "event_state": None, "season_depth": 0}
 
     def request_stop(self) -> None:
@@ -91,5 +106,9 @@ class Core:
 
     def shutdown(self) -> None:
         for session in tuple(self.sessions.active.values()):
-            session.send(Frame("bye", {"reason": "maintenance", "text": "The city closes for maintenance."}))
+            final = Frame("bye", {"reason": "maintenance", "text": "The city closes for maintenance."})
+            if session.role == "operator":
+                session.finish(final)
+            else:
+                session.send(final)
             self.sessions.disconnect(session)

@@ -1,0 +1,135 @@
+{
+  "schema": 1,
+  "id": "vatside-wake-hall",
+  "name": "Wake Hall",
+  "district": "Vatside",
+  "safety": "pocket",
+  "lean": "sablier",
+  "sight_radius": 10,
+  "spawn": [
+    6,
+    5
+  ],
+  "exits": [
+    {
+      "id": "to-clinics",
+      "tile": [
+        38,
+        16
+      ],
+      "target_zone": "vatside-clinics",
+      "target_tile": [
+        2,
+        2
+      ],
+      "kind": "gate"
+    }
+  ],
+  "objects": [
+    {
+      "id": "decant-vat-1",
+      "tile": [
+        3,
+        3
+      ],
+      "kind": "vat",
+      "essential": true,
+      "params": {}
+    },
+    {
+      "id": "decant-vat-2",
+      "tile": [
+        5,
+        3
+      ],
+      "kind": "vat",
+      "essential": true,
+      "params": {}
+    },
+    {
+      "id": "decant-vat-3",
+      "tile": [
+        7,
+        3
+      ],
+      "kind": "vat",
+      "essential": true,
+      "params": {}
+    },
+    {
+      "id": "decant-vat-4",
+      "tile": [
+        9,
+        3
+      ],
+      "kind": "vat",
+      "essential": true,
+      "params": {}
+    },
+    {
+      "id": "vantongeren-desk",
+      "tile": [
+        12,
+        5
+      ],
+      "kind": "vendor",
+      "essential": false,
+      "params": {
+        "name": "Dr. Ilse Vantongeren"
+      }
+    },
+    {
+      "id": "recruiter-cards",
+      "tile": [
+        8,
+        10
+      ],
+      "kind": "vendor",
+      "essential": false,
+      "params": {
+        "name": "Recruiter cards"
+      }
+    },
+    {
+      "id": "wake-terminal",
+      "tile": [
+        35,
+        15
+      ],
+      "kind": "terminal",
+      "essential": true,
+      "params": {
+        "name": "Tutorial terminal"
+      }
+    },
+    {
+      "id": "wake-door",
+      "tile": [
+        38,
+        16
+      ],
+      "kind": "door",
+      "essential": false,
+      "params": {
+        "name": "Wake door",
+        "open": true
+      }
+    },
+    {
+      "id": "corridor-door",
+      "tile": [
+        20,
+        14
+      ],
+      "kind": "door",
+      "essential": false,
+      "params": {
+        "name": "Corridor door",
+        "open": true
+      }
+    }
+  ],
+  "lore": [
+    "zone-vatside-wake-hall"
+  ]
+}

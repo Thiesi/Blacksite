@@ -4,6 +4,7 @@ import time
 from dataclasses import dataclass
 from datetime import datetime, timedelta, timezone
 from typing import Protocol
+from zoneinfo import ZoneInfo, ZoneInfoNotFoundError
 
 # 02-architecture.md §6.1.
 TICK_HZ = 10
@@ -12,6 +13,7 @@ TICK_HZ = 10
 class Clock(Protocol):
     def now_tick(self) -> int: ...
     def now_utc(self) -> datetime: ...
+    def now_local(self, name: str | None = None) -> datetime: ...
 
 
 class RealClock:
@@ -24,6 +26,14 @@ class RealClock:
     def now_utc(self) -> datetime:
         return datetime.now(timezone.utc)
 
+    def now_local(self, name: str | None = None) -> datetime:
+        if name is not None:
+            try:
+                return self.now_utc().astimezone(ZoneInfo(name))
+            except (ZoneInfoNotFoundError, ValueError):
+                pass
+        return self.now_utc().astimezone()
+
 
 @dataclass
 class ManualClock:
@@ -35,6 +45,14 @@ class ManualClock:
 
     def now_utc(self) -> datetime:
         return self.epoch + timedelta(seconds=self.tick / TICK_HZ)
+
+    def now_local(self, name: str | None = None) -> datetime:
+        if name is not None:
+            try:
+                return self.now_utc().astimezone(ZoneInfo(name))
+            except (ZoneInfoNotFoundError, ValueError):
+                pass
+        return self.now_utc()
 
     def advance(self, ticks: int = 1) -> None:
         if ticks < 0:

@@ -18,6 +18,7 @@ from blacksite.server.core import Core
 from blacksite.server.logging import Logs
 from blacksite.server.protocol import Frame, ProtocolError, encode, read_frame
 from blacksite.server.sessions import Session
+from blacksite.server.world.registry import World
 from blacksite.server.storage.db import Storage
 from blacksite.server.storage.lease import Lease
 from blacksite.server.transport import Listener
@@ -29,7 +30,7 @@ HELLO_SECONDS = 5  # Local transport policy, not a gameplay timer.
 
 class Server:
     def __init__(self, install_dir: Path, tcp: bool = False, log_level: str = "INFO",
-                 clock: Clock | None = None) -> None:
+                 clock: Clock | None = None, spawn_zone: str | None = None) -> None:
         self.install_dir = install_dir.resolve()
         self.clock = clock or RealClock()
         self.log_level = log_level
@@ -43,6 +44,8 @@ class Server:
         self.stopped = asyncio.Event()
         self.stopping = False
         self.stop_requested = False
+        self.spawn_zone = spawn_zone
+        self.world: World | None = None
         self.failure: BaseException | None = None
 
     def _content(self) -> ContentTree:
@@ -89,7 +92,22 @@ class Server:
         return tree
 
     def rebuild(self, content: ContentTree) -> None:
-        """S06+ rebuild live state here before the listener accepts input."""
+        """Build pure zone state from content and durable per-zone seeds."""
+        assert self.storage is not None
+        seeds = self.storage.meta("rng_seeds")
+        if not isinstance(seeds, dict):
+            raise ValueError("invalid stored zone seeds")
+        changed = False
+        for zone_id in sorted(content.zones):
+            if zone_id not in seeds:
+                seeds[zone_id] = random.SystemRandom().getrandbits(64)
+                changed = True
+            if type(seeds[zone_id]) is not int:
+                raise ValueError("invalid stored zone seed")
+        if changed:
+            self.storage.mark_dirty("meta", "rng_seeds", seeds)
+            self.storage.flush_now()
+        self.world = World(content, seeds)
 
     async def start(self) -> None:
         self.install_dir.mkdir(parents=True, exist_ok=True)
@@ -111,7 +129,8 @@ class Server:
             self.core = Core(self.clock, self.storage.origin, auth,
                 asdict(content.keymaps) if content.keymaps else {},
                 asdict(content.palette) if content.palette else {},
-                random.SystemRandom().choice(lines) if lines else "", content)
+                random.SystemRandom().choice(lines) if lines else "", content,
+                world=self.world if self.spawn_zone else None, spawn_zone=self.spawn_zone)
             self.core.audit = self._audit
             self.core.status_provider = self.status
             if self.stop_requested:

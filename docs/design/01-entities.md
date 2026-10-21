@@ -45,12 +45,28 @@ after their id.
 | tiles | grid of TileRef | from the `.map` legend |
 | sight_radius | int | |
 | sight_radius_night | int, optional | Scour zones: used 20:00–06:00 node local time |
+| spawn | Tile, optional | passable preview/initial entry tile |
+| layouts | list of ZoneLayout, optional | named service/event geometry variants |
 | exits | list of Exit | id, tile, target zone, target tile, kind (street, tram, ladder, lift, gate, cable), requirement (pass, key, faction), hidden |
 | spawners | list of Spawner | id, tile or region, npc template, count, respawn seconds, condition |
 | objects | list of ObjectSpec | id, tile, kind (door, terminal, vendor, vat, relay, cache, tram_stop, apartment_door, light, hardware, descent_console, workshop, bank), params, essential (clinic, public vat, public uplink) |
 | pockets | list of Region | rectangles that are `pocket` safety inside a contested zone |
 | lore | list of asset ids | ambient log lines, found texts |
 | instanced | bool | Blacksite levels only |
+
+`ZoneLayout` has `id`, `changes` (list of `{tile, tile_id}`),
+`warning_tiles` (list of Tile) and `alternate_routes` (exit IDs).
+Each variant must preserve access from spawn to essential services and
+public outward exits. Hazard changes require warning tiles, cannot affect
+safe zones or pockets, and warn for at least five seconds. Runtime
+composition rechecks reachability from every physical body; an unsafe
+closure waits. Layers expire independently and compose in source-ID order.
+A door's optional `params.open` overrides its base tile's passability and
+opacity; without it, the tile type supplies the initial state.
+
+S06 preview actors use Hardline's starting attributes and derived pools
+(game design 3.1–3.2: HP 130, STA 70). They are temporary bodies, not saved
+characters. S07 supplies character creation and persistent state.
 
 ### 1.2 Tile type (`tiles.json`)
 

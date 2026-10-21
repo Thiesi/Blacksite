@@ -62,8 +62,8 @@ first real zone. No combat, no NPCs, no chat yet.
   for self), `objects`, `me` (name, handle, hp/sta placeholders from
   the actor, zone, safety), `hint`.
 - `src/blacksite/server/views/delta.py`: revisioned view store per
-  session, JSON-patch-like ops (`set path value`, `del path`, `tiles`
-  row replace), full `view` when the session is >3 revisions behind or
+  session, JSON-pointer `add`, `replace` and `remove` operations per the
+  existing architecture 5.3 contract, full `view` when >3 revisions behind or
   the viewport moved.
 - `src/blacksite/door/views/zone.py`: renders `ZoneView` into the cell
   buffer per `03-terminal-ui.md` §2: header (zone, safety word in its
@@ -107,23 +107,23 @@ first real zone. No combat, no NPCs, no chat yet.
 
 ## Tests
 
-- `tests/world/test_movement.py::test_walk_200ms_per_tile`,
-  `::test_sprint_100ms_and_stamina_drain`, `::test_diagonal_same_cost`,
-  `::test_wall_blocks`, `::test_actor_blocks_actor`,
-  `::test_sprint_at_zero_stamina_walks`.
-- `tests/world/test_sight.py::test_radius_10_in_wake_hall`,
-  `::test_opaque_wall_blocks_los`, `::test_symmetric`,
-  `::test_stealth_halves_range_to_be_seen`.
-- `tests/world/test_zone_instance.py::test_dormant_until_listener`,
-  `::test_lazy_wake_elapsed_ticks`, `::test_seeded_rng_deterministic`,
-  `::test_actor_in_one_zone_only`.
-- `tests/views/test_zone_view.py::test_viewport_centred_56x17`,
-  `::test_scroll_within_4_tiles_of_edge`, `::test_unseen_minus1_remembered_minus2`,
-  `::test_two_sessions_see_each_other`, `::test_delta_then_full_after_3_behind`.
-- `tests/door/test_zone_render.py::test_golden_wake_hall_80x24`,
-  `::test_golden_wake_hall_132x50`, `::test_wide_handle_self_name`.
-- `tests/harness/test_two_players.py::test_b_sees_a_move` (headless: A
-  moves 3 tiles, B's next delta shows the new position).
+- `tests/world/test_movement.py`: tick speeds, stamina, diagonal cost,
+  blocked corners, walls and actors, zero-stamina fallback, preview pools.
+- `tests/world/test_sight.py`: Wake Hall radius, reciprocal wall
+  occlusion, stealth visibility and cached sight.
+- `tests/world/test_zone_instance.py`: dormant/lazy ticks, seeded RNG,
+  unique physical body, live door sight, independent geometry expiry,
+  essential access and safe/pocket bodies under indirect/forced effects.
+- `tests/world/test_views_and_sessions.py`: two headless sessions and
+  three observed moves, hidden names/objects, night sight, dim memory,
+  55x17 viewport and four-tile scroll, reconnect ownership, resync/lag,
+  immutable queued snapshots, idle suppression and delta byte budgets.
+- `tests/door/test_zone_render.py`: both golden sizes, all three tiers,
+  wide self name and help/resume.
+- `tests/world/test_content_and_shutdown.py` and
+  `tests/server/test_zone_lifecycle.py`: authored maps, invalid layout
+  rejection, shutdown receipt, installed-content upgrade, durable zone
+  seeds and the seeded walk bot.
 
 ## Acceptance script
 
@@ -166,3 +166,39 @@ These are generic content capabilities consumed by S19/S24/S25. Safety
 checks include delayed and indirect damage, forced movement, physical
 bodies left at terminals and pocket boundaries. The view has compact
 objective, hazard, service-expiry and escape fields (architecture 15).
+
+## Implementation notes
+
+Implemented by Codex rather than the named Opus primary; Claude reviews
+the PR. The established S04 JSON-pointer patch contract takes precedence
+over the earlier `set/del/tiles` sketch. The viewport at 80x24 is 55x17
+before clipping to map dimensions, matching terminal UI section 2.
+
+The two authored maps belong to `m1-zone-preview`, an authoring bundle.
+Future destination maps and faction/service references stay unresolved;
+activation remains invalid. The temporary spawn flag previews one supplied
+zone with Hardline-derived HP 130 / STA 70. It enables neither missing
+content nor travel, NPCs, combat or services. S07 owns saved characters.
+
+Entity 1.1 now specifies spawn and typed layout variants; architecture
+5.4 specifies the tile legend, last-known terrain and 4096-cell cap for
+large-terminal snapshots. No gameplay balance numbers changed. Package
+0.0.2 makes S03's existing content bootstrap refresh old installations.
+Operator shutdown drains its queued stop receipt before the final bye;
+the broader validation exposed that real CLI race while testing S06.
+
+## Acceptance record (2026-10-21)
+
+- Windows Python 3.12, NetBBS v7.31.0, registered native stdio door,
+  real picker and local Telnet/SSH transports. The acceptance probe ran
+  with `--show` in a real terminal. Both 80x24 callers pass; Telnet at
+  132x50 with SSH at 80x24 passes. Movement, sprint/STA, wall occlusion,
+  dim terrain memory and clean picker return pass.
+- The final local proof is `.test-tmp/netbbs-zone5/result.json` plus four
+  ANSI captures. Walking moves 5–6 tiles in 1.125 s; sprint moves 5 in
+  0.562–0.563 s. After a fresh 60-second idle timing window, admin status
+  reports tick p99 0.401 ms. The separate movement phase measured
+  11.068 ms p99 while the full test suite ran concurrently.
+- Root `pytest -q --basetemp=.test-tmp/full-s06-final -p no:cacheprovider`:
+  451 passed, 1 Windows platform skip. The shipped-content validator
+  passes with two zones. Golden screens cover both sizes and all tiers.

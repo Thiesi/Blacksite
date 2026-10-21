@@ -1,0 +1,250 @@
+{
+  "schema": 1,
+  "id": "vatside-clinics",
+  "name": "Clinic Row",
+  "district": "Vatside",
+  "safety": "contested",
+  "lean": "sablier",
+  "sight_radius": 12,
+  "spawn": [
+    3,
+    2
+  ],
+  "exits": [
+    {
+      "id": "to-wake-hall",
+      "tile": [
+        2,
+        2
+      ],
+      "target_zone": "vatside-wake-hall",
+      "target_tile": [
+        38,
+        16
+      ],
+      "kind": "gate"
+    },
+    {
+      "id": "to-core-plaza",
+      "tile": [
+        77,
+        2
+      ],
+      "target_zone": "core-plaza",
+      "target_tile": [
+        2,
+        2
+      ],
+      "kind": "street"
+    },
+    {
+      "id": "to-vat-row",
+      "tile": [
+        78,
+        30
+      ],
+      "target_zone": "vatside-vat-row",
+      "target_tile": [
+        2,
+        2
+      ],
+      "kind": "street"
+    },
+    {
+      "id": "to-tram-hub",
+      "tile": [
+        3,
+        31
+      ],
+      "target_zone": "core-tram-hub",
+      "target_tile": [
+        2,
+        2
+      ],
+      "kind": "tram"
+    }
+  ],
+  "objects": [
+    {
+      "id": "sablier-main-clinic",
+      "tile": [
+        10,
+        8
+      ],
+      "kind": "vendor",
+      "essential": true,
+      "params": {
+        "name": "Sablier main clinic"
+      }
+    },
+    {
+      "id": "clinic-public-west",
+      "tile": [
+        17,
+        8
+      ],
+      "kind": "terminal",
+      "essential": true,
+      "params": {
+        "name": "Public terminal"
+      }
+    },
+    {
+      "id": "sablier-descent",
+      "tile": [
+        16,
+        9
+      ],
+      "kind": "descent_console",
+      "essential": false,
+      "params": {
+        "name": "Descent console"
+      }
+    },
+    {
+      "id": "sablier-recruiter",
+      "tile": [
+        44,
+        8
+      ],
+      "kind": "vendor",
+      "essential": false,
+      "params": {
+        "name": "Sablier recruiter"
+      }
+    },
+    {
+      "id": "clinic-public-east",
+      "tile": [
+        52,
+        8
+      ],
+      "kind": "terminal",
+      "essential": true,
+      "params": {
+        "name": "Public terminal"
+      }
+    },
+    {
+      "id": "clinic-pharmacy",
+      "tile": [
+        50,
+        9
+      ],
+      "kind": "vendor",
+      "essential": false,
+      "params": {
+        "name": "Pharmacy"
+      }
+    },
+    {
+      "id": "sablier-member-terminal",
+      "tile": [
+        71,
+        8
+      ],
+      "kind": "terminal",
+      "essential": false,
+      "params": {
+        "name": "Member terminal"
+      }
+    },
+    {
+      "id": "cold-chain-relay",
+      "tile": [
+        32,
+        18
+      ],
+      "kind": "relay",
+      "essential": false,
+      "params": {
+        "name": "Cold Chain Relay"
+      }
+    },
+    {
+      "id": "clinic-door-12",
+      "tile": [
+        12,
+        12
+      ],
+      "kind": "door",
+      "essential": false,
+      "params": {
+        "open": true
+      }
+    },
+    {
+      "id": "clinic-door-47",
+      "tile": [
+        47,
+        12
+      ],
+      "kind": "door",
+      "essential": false,
+      "params": {
+        "open": true
+      }
+    },
+    {
+      "id": "clinic-door-70",
+      "tile": [
+        70,
+        12
+      ],
+      "kind": "door",
+      "essential": false,
+      "params": {
+        "open": true
+      }
+    }
+  ],
+  "pockets": [
+    {
+      "x": 4,
+      "y": 5,
+      "w": 18,
+      "h": 8
+    },
+    {
+      "x": 38,
+      "y": 5,
+      "w": 22,
+      "h": 8
+    },
+    {
+      "x": 65,
+      "y": 5,
+      "w": 12,
+      "h": 8
+    }
+  ],
+  "layouts": [
+    {
+      "id": "common"
+    },
+    {
+      "id": "reserve",
+      "changes": [
+        {
+          "tile": [
+            31,
+            18
+          ],
+          "tile_id": "locked-door"
+        }
+      ],
+      "warning_tiles": [
+        [
+          31,
+          18
+        ]
+      ],
+      "alternate_routes": [
+        "to-vat-row"
+      ]
+    }
+  ],
+  "lore": [
+    "zone-vatside-clinics"
+  ]
+}

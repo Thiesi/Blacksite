@@ -20,6 +20,7 @@ active may reference only content that exists and is itself active.
 import argparse
 import re
 import sys
+from collections import deque
 from collections.abc import Iterable, Iterator
 from pathlib import Path
 
@@ -339,6 +340,10 @@ class _Validator:
                     f"{ZONE_WIDTH[0]}-{ZONE_WIDTH[1]} wide and {ZONE_HEIGHT[0]}-{ZONE_HEIGHT[1]} high"))
             if meta.sight_radius <= 0:
                 self.report(*owner, "sight_radius must be positive", "sight_radius")
+            if meta.sight_radius_night is not None and meta.sight_radius_night <= 0:
+                self.report(*owner, "sight_radius_night must be positive", "sight_radius_night")
+            if meta.spawn is not None and not self.passable(zone, meta.spawn):
+                self.report(*owner, "spawn is not a passable tile", "spawn")
             if meta.lean is not None:
                 self.ref("factions", meta.lean, owner, "lean")
             for asset in meta.lore:
@@ -347,11 +352,57 @@ class _Validator:
             self._check_exits(zone)
             self._check_objects(zone)
             self._check_spawners(zone)
+            self._check_layouts(zone)
             for i, pocket in enumerate(meta.pockets):
                 if meta.safety != "contested":
                     self.report(*owner, f"pocket {i}: only contested zones have pockets", "pockets")
                 if not self._region_in_bounds(zone, pocket):
                     self.report(*owner, f"pocket {i} is outside the map", "pockets")
+
+    def _check_layouts(self, zone: s.Zone) -> None:
+        owner = ("zones", zone.id)
+        ids: set[str] = set()
+        exits = {ex.id for ex in zone.meta.exits if not ex.hidden and ex.requirement is None}
+        variants = [s.ZoneLayout("base"), *zone.meta.layouts]
+        for layout in variants:
+            if layout.id in ids:
+                self.report(*owner, f"duplicate layout {layout.id!r}", "layouts")
+            ids.add(layout.id)
+            grid: dict[s.Tile, str] = {}
+            for change in layout.changes:
+                if change.tile in grid or zone.tile_at(change.tile) is None or change.tile_id not in self.t.tiles:
+                    self.report(*owner, f"layout {layout.id}: invalid or repeated tile change", "layouts")
+                    continue
+                grid[change.tile] = change.tile_id
+                tile = self.t.tiles[change.tile_id]
+                if tile.hazard and (zone.meta.safety in ("safe", "pocket") or any(p.contains(change.tile) for p in zone.meta.pockets)):
+                    self.report(*owner, f"layout {layout.id}: hazard in safe zone or pocket", "layouts")
+                if tile.hazard and change.tile not in layout.warning_tiles:
+                    self.report(*owner, f"layout {layout.id}: hazard needs a warning tile", "layouts")
+            if any(zone.tile_at(tile) is None for tile in layout.warning_tiles):
+                self.report(*owner, f"layout {layout.id}: warning tile outside map", "layouts")
+            if not set(layout.alternate_routes) <= exits:
+                self.report(*owner, f"layout {layout.id}: unknown alternate route", "layouts")
+            if zone.meta.spawn is None:
+                continue
+            def safe(tile: s.Tile) -> bool:
+                key = grid.get(tile, zone.tile_at(tile))
+                return key in self.t.tiles and self.t.tiles[key].passable and self.t.tiles[key].hazard is None
+            if not safe(zone.meta.spawn):
+                self.report(*owner, f"layout {layout.id}: unsafe spawn", "layouts")
+                continue
+            seen = {zone.meta.spawn}
+            pending = deque(seen)
+            while pending:
+                x, y = pending.popleft()
+                for tile in ((x + 1, y), (x - 1, y), (x, y + 1), (x, y - 1)):
+                    if tile not in seen and safe(tile):
+                        seen.add(tile)
+                        pending.append(tile)
+            required = {obj.tile for obj in zone.meta.objects if obj.essential}
+            required.update(ex.tile for ex in zone.meta.exits if not ex.hidden and ex.requirement is None)
+            if not required <= seen:
+                self.report(*owner, f"layout {layout.id}: essential service or outward exit unreachable", "layouts")
 
     def _check_zone_hazards(self, zone: s.Zone) -> None:
         for y, row in enumerate(zone.grid):

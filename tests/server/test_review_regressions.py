@@ -71,10 +71,10 @@ def test_sigterm_during_bootstrap_is_honored_after_start(
         handlers[signal.SIGTERM](signal.SIGTERM, None)
         return original_content()
 
-    monkeypatch.setattr(entry, "Server", lambda *args: server)
+    monkeypatch.setattr(entry, "Server", lambda *args, **kwargs: server)
     monkeypatch.setattr(entry.signal, "signal", install)
     monkeypatch.setattr(server, "_content", content_with_signal)
-    args = argparse.Namespace(install_dir=scratch_dir, tcp=True, log_level="INFO")
+    args = argparse.Namespace(install_dir=scratch_dir, tcp=True, log_level="INFO", spawn_zone=None)
 
     async def scenario() -> None:
         await asyncio.wait_for(entry.run(args), 2)
