@@ -48,6 +48,7 @@ class ZoneSimulation:
         self.maps: dict[str, tuple[int, int | None]] = {}
         self.map_opened: dict[str, int] = {}
         self.overlays: dict[str, object] = {}
+        self.external_views: dict[str, tuple[str, dict[str, Any]]] = {}
         self.departures = DepartureHolds()
         self.locked_exits: set[tuple[str, str]] = set()  # S15-owned control state.
 
@@ -68,7 +69,7 @@ class ZoneSimulation:
         session.needs_full_view = True
 
     def log(self, session: Session, text: str) -> None:
-        session.send(Frame("log", {"lines": [{"channel": "system", "text": text, "role": "ui_text",
+        session.send(Frame("log", {"lines": [{"channel": "zone", "text": text, "role": "chan_zone",
                                                 "at": self.clock.now_utc().isoformat()}]}))
 
     def transition(self, session: Session, avatar: Avatar, now: float, tick: int) -> None:
@@ -81,6 +82,8 @@ class ZoneSimulation:
             self.world.zones[avatar.zone].deactivate(session.id, tick)
             self.world.leave(avatar.actor)
             travel.departed = True
+            if travel.exit.kind == "tram":
+                self.log(session, "The tram hums.")
             self.reset_view(session, avatar)
         if travel.departed and now >= travel.arrival:
             target = travel.exit.target_zone
@@ -96,6 +99,7 @@ class ZoneSimulation:
             avatar.travel = None
             self.reset_view(session, avatar)
             self.discover(session, avatar)
+            self.log(session, "You arrive at " + self.world.zones[target].template.meta.name + ".")
 
     def interact(self, session: Session, avatar: Avatar, tick: int, *, street: bool = False) -> None:
         zone = self.world.zones[avatar.zone]
@@ -264,7 +268,9 @@ class ZoneSimulation:
             avatar = self.avatars[session.user_id]
             overlay = None
             kind = "text"
-            if avatar.travel:
+            if session.id in self.external_views:
+                kind, overlay = self.external_views[session.id]
+            elif avatar.travel:
                 ride = avatar.travel
                 riding_text = "The tram hums." if ride.exit.kind == "tram" else "You travel between zones."
                 overlay = {"title": "The tram hums." if ride.exit.kind == "tram" and ride.departed else "TRAVEL",

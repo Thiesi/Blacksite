@@ -74,6 +74,7 @@ class ContentTree:
     sectors: dict[str, s.Sector] = field(default_factory=dict)
     cores: dict[str, s.Core] = field(default_factory=dict)
     items: dict[str, s.ItemTemplate] = field(default_factory=dict)
+    emotes: dict[str, s.Emote] = field(default_factory=dict)
     starts: dict[str, s.CharacterStart] = field(default_factory=dict)
     wake_cards: dict[str, s.WakeCard] = field(default_factory=dict)
     programs: dict[str, s.ProgramTemplate] = field(default_factory=dict)
@@ -191,6 +192,8 @@ def load_content(root: Path, local: Path | None = None) -> ContentTree:
 def _claimed(rel: Path) -> bool:
     """Whether a file at this relative path is one the loader reads."""
     parts = rel.parts
+    if rel.as_posix() in TABLE_FILES:
+        return True
     if len(parts) == 1:
         return parts[0] in TABLE_FILES or parts[0] in SINGLETON_FILES
     if len(parts) != 2:

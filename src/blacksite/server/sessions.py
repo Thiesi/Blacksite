@@ -17,6 +17,8 @@ MARKET_PER_SECOND = 1
 QUEUE_LIMIT = 64
 MAX_REVISION_LAG = 3
 RECONNECT_SECONDS = 60  # Architecture §8.2.
+LOG_RING_LINES = 500  # Game design §11.
+LOG_REPLAY_LINES = 50
 
 
 @dataclass
@@ -41,6 +43,10 @@ class Session:
     last_view_tick: int = -1
     closed: bool = False
     disconnected_tick: int | None = None
+    chat_managed: bool = False
+    log_ring: deque[dict[str, Any]] = field(default_factory=lambda: deque(maxlen=LOG_RING_LINES))
+    log_token: str = ""
+    log_serial: int = 0
     notify: Callable[[], None] = field(default=lambda: None, repr=False)
 
     @property
@@ -55,6 +61,14 @@ class Session:
         """
         if self.closed:
             return False
+        if frame.type == "log" and not frame.data.get("replay"):
+            lines = []
+            for original in frame.data["lines"]:
+                self.log_serial += 1
+                line = {**original, "id": f"{self.log_token or self.id}:{self.log_serial}"}
+                self.log_ring.append(line)
+                lines.append(line)
+            frame = Frame("log", {"lines": lines})
         if frame.type == "bye":
             self.send_queue.clear()
             self.send_queue.append(frame)
@@ -99,8 +113,9 @@ class Session:
         if not self.allow("input", tick, INPUTS_PER_SECOND, 1):
             return False
         name = frame.data.get("name", "")
-        if frame.type == "line" or name in {"chat", "emote"}:
+        if not self.chat_managed and (frame.type == "line" or name in {"chat", "emote"}):
             if not self.allow("chat", tick, CHAT_PER_WINDOW, CHAT_WINDOW_SECONDS):
+                self.send(Frame("toast", {"text": "You can send four lines every five seconds.", "role": "warning", "seconds": 3}))
                 return False
         if name.startswith("market") and not self.allow("market", tick, MARKET_PER_SECOND, 1):
             return False
@@ -111,6 +126,10 @@ class Session:
     def acknowledge(self, revision: int) -> None:
         if self.ack_revision <= revision <= self.view_revision:
             self.ack_revision = revision
+
+    def replay_log(self) -> None:
+        if self.log_ring:
+            self.send(Frame("log", {"lines": list(self.log_ring)[-LOG_REPLAY_LINES:], "replay": True}))
 
     def publish_view(self, full: Frame, delta: Frame | None, tick: int) -> bool:
         if self.closed or self.last_view_tick == tick:
@@ -148,10 +167,13 @@ class Sessions:
         self.serial += 1
         session = Session(f"{self.origin}:session:{self.serial}", role, dict(info), dict(caps))
         session.connected_tick = self.clock.now_tick()
+        session.log_token = f"{session.id}:{self.clock.now_utc().isoformat()}"
         if previous is not None:
             session.player_id = previous.player_id
             # Reconnect cannot reset abuse limits.
             session.rate_counters = previous.rate_counters
+            session.log_ring, previous.log_ring = previous.log_ring, deque(maxlen=LOG_RING_LINES)
+            session.log_token, session.log_serial = previous.log_token, previous.log_serial
         self.active[session.id] = session
         return session
 

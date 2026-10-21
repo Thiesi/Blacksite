@@ -98,6 +98,7 @@ class Delta(TypedDict):
 
 
 class LogLine(TypedDict):
+    id: NotRequired[str]
     channel: str
     text: str
     role: str
@@ -106,6 +107,7 @@ class LogLine(TypedDict):
 
 class Log(TypedDict):
     lines: list[LogLine]
+    replay: NotRequired[bool]
 
 
 class Prompt(TypedDict):

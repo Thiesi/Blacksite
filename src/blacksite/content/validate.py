@@ -164,6 +164,7 @@ class _Validator:
 
     def run(self) -> None:
         self.check_bundles()
+        self.check_emotes()
         self.check_unique_catalog_ids()
         self.check_glyphs()
         self.check_palette()
@@ -189,6 +190,22 @@ class _Validator:
         self.check_seasons()
         self.check_art()
         self.check_route_variants()
+
+    def check_emotes(self) -> None:
+        from string import Formatter
+        for eid, emote in self.t.emotes.items():
+            for form in (emote.first, emote.third, emote.targeted, emote.first_targeted):
+                try:
+                    parts = list(Formatter().parse(form))
+                    fields = [field for _, field, _, _ in parts if field is not None]
+                    valid = (bool(form) and set(fields) <= {"name", "target"} and form.isprintable()
+                             and all(not spec and conversion is None for _, _, spec, conversion in parts))
+                    if valid:
+                        form.format(name="Name", target="you")
+                except (ValueError, KeyError, IndexError, AttributeError):
+                    valid = False
+                if not valid:
+                    self.report("emotes", eid, "emote form must be printable with only name/target placeholders")
 
     # --- bundles -----------------------------------------------------------
 

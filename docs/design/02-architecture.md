@@ -261,7 +261,7 @@ disconnect rather than assuming that every disconnect is an auth error.
 | welcome | proto, server_version, player (summary), keymap, palette, motd | |
 | view | rev, kind (zone, lattice, menu, wake, dead, text), body | full snapshot |
 | delta | rev, base, ops[] | JSON-patch-like ops on the last view; the client falls back to requesting a full view if base does not match |
-| log | lines[] {channel, text, role, at} | |
+| log | lines[] {channel, text, role, at, id?}, replay? | opaque line IDs suppress replay duplicates |
 | prompt | id, kind (key, line), label, max_len | |
 | toast | text, role, seconds | transient banner |
 | bye | reason, text | |
@@ -272,6 +272,21 @@ only when something the session can see changed. It coalesces if the
 client is more than 3 revisions behind (`ack`), sending a fresh `view`
 instead of stacking deltas. This keeps a slow Telnet link from filling
 its pipe.
+
+S09 keeps 500 authorized log lines per session and transfers that ring
+once to a reconnect within the 60-second grace period. Reconnect and
+view resync replay the last 50 lines with their original opaque IDs and
+`replay: true`. Clients keep a 500-line ring and ignore repeated IDs.
+History is not persisted across service restarts. Chat strips terminal
+commands and controls, normalizes NFC, and caps each transmitted text at
+200 display columns with a UTF-8 byte budget for the 64 KiB frame limit.
+
+Social state stays in the pure core. Player reports leave through an
+outbox: the I/O layer commits the reports row and database audit row in
+one transaction, appends `logs/audit.log`, then acknowledges `Reported.`.
+A failed write never reports success. Ignore and sitrep privacy live in
+player settings; ignore keys are stable BBS identity IDs, not handles.
+S20 supplies faction membership and S22 installs crew routing membership.
 
 ### 5.4 View models
 

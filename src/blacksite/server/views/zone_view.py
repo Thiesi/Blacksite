@@ -109,7 +109,7 @@ def build(actor: Actor, zone: ZoneInstance, perception: Perception, content: Con
                    "shock": actor.shock, "chits": None, "marked_until": None, "heat_until": None,
                    "zone": zone.id, "zone_name": zone.template.meta.name, "safety": safety_at(zone, actor.position),
                    "clock": clock, "cooldowns": dict(actor.cooldowns), "effects": deepcopy(actor.effects)},
-            "target": None, "nearby": [{"id": entry["id"], "name": "Another Wake", "role": entry["role"], "relation": "~"}
+            "target": None, "nearby": [{"id": entry["id"], "name": zone.actors[entry["id"]].name, "role": entry["role"], "relation": "~"}
                                         for entry in actors if entry["id"] != actor.id],
             "crew": [], "event": None, "objective": None, "hazards": hazards,
             "service": None, "escape": {"routes": escapes, "action": "Ctrl-X leaves"},

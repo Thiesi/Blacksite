@@ -1,0 +1,15 @@
+{
+  "schema": 1,
+  "emotes": [
+    {"id":"wave","first":"You wave.","third":"{name} waves.","targeted":"{name} waves at {target}.","first_targeted":"You wave at {target}."},
+    {"id":"nod","first":"You nod.","third":"{name} nods.","targeted":"{name} nods to {target}.","first_targeted":"You nod to {target}."},
+    {"id":"shrug","first":"You shrug.","third":"{name} shrugs.","targeted":"{name} shrugs at {target}.","first_targeted":"You shrug at {target}."},
+    {"id":"salute","first":"You salute.","third":"{name} salutes.","targeted":"{name} salutes {target}.","first_targeted":"You salute {target}."},
+    {"id":"point","first":"You point.","third":"{name} points.","targeted":"{name} points at {target}.","first_targeted":"You point at {target}."},
+    {"id":"laugh","first":"You laugh.","third":"{name} laughs.","targeted":"{name} laughs with {target}.","first_targeted":"You laugh with {target}."},
+    {"id":"sigh","first":"You sigh.","third":"{name} sighs.","targeted":"{name} sighs at {target}.","first_targeted":"You sigh at {target}."},
+    {"id":"bow","first":"You bow.","third":"{name} bows.","targeted":"{name} bows to {target}.","first_targeted":"You bow to {target}."},
+    {"id":"glare","first":"You glare.","third":"{name} glares.","targeted":"{name} glares at {target}.","first_targeted":"You glare at {target}."},
+    {"id":"spit","first":"You spit.","third":"{name} spits.","targeted":"{name} spits at {target}.","first_targeted":"You spit at {target}."}
+  ]
+}

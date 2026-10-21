@@ -34,8 +34,9 @@ in the city.
   `channel, text, role, at`; server-side sanitisation: strip C0/C1 and
   ANSI escapes, normalise NFC, cap 200 display columns; rate limit 4
   lines per 5 s per session with a toast on excess.
-- Emotes: fixed list (`wave, nod, shrug, point, salute, sit, laugh,
-  glare, bow, spit`) with optional target; rendered on `zone`
+- Emotes: free-form `/me` and the game design §11 fixed list
+  (`wave, nod, shrug, salute, point, laugh, sigh, bow, glare, spit`)
+  with optional target; rendered on `zone`
   ("Kale_9 waves at you.").
 - Sitrep (`W`): `MenuView` of online characters: name, handle, faction
   (or Freelance), zone (or "hidden"), jacked-in flag (S13 sets it);
@@ -49,10 +50,10 @@ in the city.
   reconnect within 60 s replays the last 50 lines.
 - Client: log panel renders the last N lines with channel prefixes
   (`[zone] [say] [sys] [crew] [fac] [whisper]`) in their role colours,
-  wrapping long lines by display width; `Shift-L` opens the scrollback
-  `TextView` (500 lines, paged); `C`/`Enter` opens the say prompt,
+  wrapping long lines by display width; `Ctrl-P` opens the scrollback
+  `TextView` (500 lines, paged; Shift-L alias with arrows); `C`/`Enter` opens the say prompt,
   `` ` `` whisper (prompts for a name then text, or `name: text`),
-  `T` crew, `Y` faction; `/me <emote>` and `/<emote> [target]` in the
+  `T` crew, `Ctrl-F` faction (Y alias with arrows); `/me <text>` and `/<emote> [target]` in the
   say prompt.
 - `ZoneView.nearby` becomes real: visible players within sight with
   `role` and `relation` (neutral until S20).
@@ -100,8 +101,9 @@ in the city.
 5. `W` lists both with zones; B hides in settings; A sees "hidden".
 6. A types six lines quickly: the fifth and sixth are refused with a
    toast.
-7. A wide-character handle in a whisper renders without breaking the
-   panel at 80×24.
+7. A wide-character name in a whisper renders without breaking the
+   panel at 80×24. The real NetBBS node requires ASCII BBS handles;
+   headless/fake-terminal tests additionally cover wide BBS handles.
 
 ## Definition of done
 
@@ -120,3 +122,33 @@ in the city.
   frames (`03-terminal-ui.md` §5.2).
 - Keep the log ring per session, not per player, so two sessions of
   the same user within the reconnect window do not double-replay.
+
+## Delivery notes
+
+Implemented by Codex rather than the preferred Sonnet assignment; the
+delivered automated Claude review is the merge gate under AGENTS.md.
+The emote list/free-form behaviour and canonical Ctrl-F/Ctrl-P keys follow
+the higher-priority game/UI design; this file's earlier sit/Shift-L/Y
+wording is aligned above. No balance number changes.
+
+Package 0.0.5 refreshes installed content, including validated emote data.
+World schema 2 and protocol major 1 remain unchanged. Log line IDs and
+the replay flag are additive. Ignore can be explicitly reversed with
+`/unignore` or `intent ignore {name, enabled: false}` and persists by BBS
+identity. Reports can target known offline characters.
+
+Local validation: repository-root Python 3.12 `pytest -q
+--basetemp=.test-tmp/final6`: 560 passed, 1 Windows-only skip. The focused
+social/content/terminal gate after adding durable report attribution:
+31 passed (`--basetemp=.test-tmp/final7`). Final CI results and the actual
+Claude reviewer model are recorded in the PR.
+
+Real-terminal acceptance passed at 80x24 and 132x50 through NetBBS v7.31.0
+Telnet/native stdio, in a 132x50 parent terminal with `--show`. The final
+probe is `scripts/accept_s09_netbbs.py`; private results, four ANSI captures
+and progress are under `.test-tmp/s09-netbbs3/`. It explicitly places
+bodies in the Plaza, then walks the second caller 25 tiles away. It checks
+say range, shout, whisper by handle, wide names, both kinds of emote,
+symmetric privacy, four-of-six rate limiting, scrollback, ignore/report,
+and clean native picker return. Headless tests cover replay, ambiguity,
+report commit failure, offline targets and wide BBS metadata.

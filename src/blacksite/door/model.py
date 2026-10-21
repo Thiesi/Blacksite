@@ -11,6 +11,7 @@ from blacksite.door.palette import Palette, resolve_tier
 from blacksite.door.screens import SessionWarnings, first_run, help_pages, title
 from blacksite.door.views import LinePrompt, Renderer, menu_rect, render_frame, render_menu, render_text
 from blacksite.door.views.zone import render_zone
+from blacksite.door.log import rows as log_rows
 from blacksite.server.protocol import Frame
 
 
@@ -24,9 +25,10 @@ class Display:
         self.revision = 0
         self.keymap: dict[str, Any] = {}
         self.local: dict[str, Any] | None = None
-        self.local_lines: list[str] = []
+        self.local_lines: list[str | dict[str, str]] = []
         self.local_page = 0
-        self.logs: deque[dict[str, Any]] = deque(maxlen=400)
+        self.logs: deque[dict[str, Any]] = deque(maxlen=500)  # Game design §11.
+        self.log_ids: set[str] = set()
         self.prompt: LinePrompt | None = None
         self.key_prompt: dict[str, Any] | None = None
         self.toast: tuple[str, str, float] | None = None
@@ -39,6 +41,7 @@ class Display:
         self.resync_pending = False
         self.counter = 0
         self.request_prefix = request_prefix
+        self.selected_keymap = "arrows"
         self.warnings = SessionWarnings(info.session_limit)
         self.renderers: dict[str, Renderer] = {"text": render_text, "menu": render_menu, "zone": render_zone}
 
@@ -47,6 +50,8 @@ class Display:
         self.layout = compute(info.width, info.height)
         self.previous = None
         self.force_full = self.dirty = True
+        if self.local and self.local.get("title") == "SCROLLBACK":
+            self.open_help(log_rows(list(self.logs), self.layout.viewport.width - 2), "SCROLLBACK")
 
     def receive(self, frame: Frame, now: float) -> list[Frame]:
         data = frame.data
@@ -55,6 +60,7 @@ class Display:
             self.connected = True
             self.keymap = data.get("keymap", {})
             settings = data.get("player", {}).get("settings", {}) if isinstance(data.get("player"), dict) else {}
+            self.selected_keymap = settings.get("keymap", "arrows")
             self.palette = Palette(data.get("palette", {}), resolve_tier(self.info.color_depth, settings.get("tier")), settings.get("palette", "default"))
             self.body, self.kind = title(data.get("motd", "")), "text"
             self.revision = 0
@@ -85,7 +91,15 @@ class Display:
                     result.append(Frame("intent", {"name": "resync", "args": {}}))
                 self.resync_pending = True
         elif frame.type == "log":
-            self.logs.extend(data["lines"])
+            for line in data["lines"]:
+                token = line.get("id")
+                if token and token in self.log_ids:
+                    continue
+                if len(self.logs) == self.logs.maxlen:
+                    self.log_ids.discard(self.logs[0].get("id"))
+                self.logs.append(line)
+                if token:
+                    self.log_ids.add(token)
         elif frame.type == "prompt":
             self.prompt = LinePrompt(data["id"], data["label"], min(200, data["max_len"])) if data["kind"] == "line" else None
             self.key_prompt = data if data["kind"] == "key" else None
@@ -136,7 +150,7 @@ class Display:
             else:
                 raise ValueError("unsupported delta operation")
 
-    def open_help(self, lines: list[str] | None = None, heading: str = "HELP") -> None:
+    def open_help(self, lines: list[str | dict[str, str]] | None = None, heading: str = "HELP") -> None:
         self.local_lines = lines if lines is not None else help_pages(self.keymap)
         self.local_page = 0
         self.local = {"title": heading}
@@ -188,8 +202,8 @@ class Display:
         if key == "?":
             self.open_help()
             return []  # S03 has no help subsystem; use the specified local fallback.
-        if key == "ctrl-p":
-            self.open_help([f"[{line.get('channel', 'system')}] {line.get('text', '')}" for line in self.logs], "SCROLLBACK")
+        if key == "ctrl-p" or (key == "L" and self.kind == "zone" and self.selected_keymap != "vi"):
+            self.open_help(log_rows(list(self.logs), self.layout.viewport.width - 2), "SCROLLBACK")
             return []
         if self.body.get("title") == "BLACKSITE" and key in ("i", "I"):
             self.open_help(first_run()["lines"], "WHAT THIS IS")
@@ -197,7 +211,7 @@ class Display:
         if not self.connected:
             return []
         if self.kind == "text" and self.body.get("title") == "The tram hums." and key == "escape":
-            self.open_help([f"[{line.get('channel', 'system')}] {line.get('text', '')}" for line in self.logs], "SCROLLBACK")
+            self.open_help(log_rows(list(self.logs), self.layout.viewport.width - 2), "SCROLLBACK")
             return []
         effective_kind = self.body.get("kind") if self.kind == "wake" else self.kind
         effective_body = self.body.get("body", {}) if self.kind == "wake" else self.body

@@ -130,6 +130,15 @@ class TileTable:
     schema: int = CONTENT_SCHEMA
 
 
+@dataclass(frozen=True)
+class Emote:
+    id: str
+    first: str
+    third: str
+    targeted: str
+    first_targeted: str
+
+
 ExitKind = Literal["street", "door", "tram", "ladder", "lift", "gate", "cable"]
 RequirementKind = Literal["pass", "key", "faction"]
 
@@ -1087,7 +1096,7 @@ class ArtAsset:
 BUNDLE_KINDS = (
     "zones", "sectors", "cores", "items", "programs", "ice", "npcs",
     "factions", "contracts", "events", "routes", "seasons", "dialogue",
-    "text", "art", "evidence", "services", "vendors", "hymns", "starts", "wake_cards",
+    "text", "art", "evidence", "services", "vendors", "hymns", "starts", "wake_cards", "emotes",
 )
 
 

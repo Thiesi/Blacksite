@@ -866,7 +866,8 @@ specifications until separately authored and accepted.
 ## 11. Social layer
 
 - **Say** (zone, 20-tile radius), **shout** (zone), **whisper** (player,
-  anywhere), **faction**, **crew**, and **system** channels, colour coded.
+  anywhere), **faction**, **crew**, **zone** (ambient lines and emotes),
+  and **system** channels, colour coded.
 - Emotes: `/me <text>` free-form in the zone channel, plus a fixed list
   with optional targets: wave, nod, shrug, salute, point, laugh, sigh,
   bow, glare, spit. Emotes are rate-limited with chat.

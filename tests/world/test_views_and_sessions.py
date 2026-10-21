@@ -29,7 +29,7 @@ def receive(game: HeadlessServer, client: FakeClient, model: Display, ack: bool 
     return frames
 
 
-def test_b_sees_a_move_and_never_receives_other_private_name(game: HeadlessServer) -> None:
+def test_b_sees_a_move_and_visible_name_only_in_nearby(game: HeadlessServer) -> None:
     a = game.connect({"user_id": 1, "handle": "AlphaSecretName界"})
     b = game.connect({"user_id": 2, "handle": "Beta"})
     left, right = display(game, a), display(game, b)
@@ -46,7 +46,8 @@ def test_b_sees_a_move_and_never_receives_other_private_name(game: HeadlessServe
         assert any(frame.type == "delta" for frame in packets)
     other = next(actor for actor in right.body["actors"] if actor["id"] == actor_id)
     assert (other["x"], other["y"]) == (6, 8)
-    assert "AlphaSecretName" not in json.dumps(right.body)
+    assert "name" not in other  # Actor labels remain target/crew-only.
+    assert right.body["nearby"][0]["name"] == "AlphaSecretName界"
     assert left.body["me"]["name"] == "AlphaSecretName界"
 
 

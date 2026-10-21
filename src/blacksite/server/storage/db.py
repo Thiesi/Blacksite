@@ -175,6 +175,12 @@ class Storage:
         with self.db:
             self.db.execute("INSERT INTO audit(at,data) VALUES(?,?)", (self.clock.now_utc().isoformat(), self._json(row)))
 
+    def report(self, row: dict[str, Any]) -> None:
+        """Entity §2.10: report and audit receipt commit together."""
+        with self.db:
+            self.db.execute("INSERT INTO reports(at,data) VALUES(?,?)", (row["at"], self._json(row)))
+            self.db.execute("INSERT INTO audit(at,data) VALUES(?,?)", (row["at"], self._json(row)))
+
     def close(self) -> None:
         try:
             self.flush_now()
