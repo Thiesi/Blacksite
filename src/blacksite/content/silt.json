@@ -1,0 +1,49 @@
+{
+  "schema": 1,
+  "minimum_cells": 8,
+  "maximum_cells": 20,
+  "minimum_sinks": 1,
+  "maximum_sinks": 3,
+  "hidden_fraction": 0.2,
+  "bands": [
+    {
+      "id": "shallows", "name": "Shallows", "depth": 0,
+      "ice": [{"template": "ice_drift", "minimum": 1, "maximum": 2}],
+      "data": [
+        {"id": "fragment", "label": "Residual fragment", "kind": "text", "asset": "lattice-residual", "scope": "identity", "respawn_seconds": 0},
+        {"id": "residual-name", "label": "Residual name", "kind": "contribution", "asset": "residual-names", "amount": 1, "respawn_seconds": 3600}
+      ]
+    },
+    {
+      "id": "drift", "name": "Drift", "depth": 1,
+      "ice": [{"template": "ice_drift", "minimum": 2, "maximum": 3}, {"template": "ice_undertow"}, {"template": "ice_tripwire"}, {"template": "ice_turnstile"}],
+      "data": [
+        {"id": "dead-rig", "label": "Dead rig with Skeleton", "kind": "item", "asset": "item_rig_portable_ow_brick", "amount": 1, "programs": ["prg_skeleton"], "respawn_seconds": 1800, "chance": 0.3333333333333333},
+        {"id": "residual-name", "label": "Residual name", "kind": "contribution", "asset": "residual-names", "amount": 1, "respawn_seconds": 3600}
+      ]
+    },
+    {
+      "id": "reach", "name": "The Reach", "depth": 2,
+      "ice": [{"template": "ice_chorister", "route": "signal"}, {"template": "ice_shade"}],
+      "data": [
+        {"id": "tenant-recording", "label": "Tenant recording", "kind": "contribution", "asset": "tenant-recordings", "amount": 1, "respawn_seconds": 3600},
+        {"id": "residual-name", "label": "Residual name", "kind": "contribution", "asset": "residual-names", "amount": 1, "respawn_seconds": 3600}
+      ]
+    },
+    {
+      "id": "floor", "name": "The Floor", "depth": 3,
+      "ice": [{"template": "ice_shade", "minimum": 2, "maximum": 2}, {"template": "ice_sweeper", "route": "patrol"}],
+      "data": [
+        {"id": "conduit-telemetry", "label": "Conduit telemetry", "kind": "contribution", "asset": "conduit-telemetry", "amount": 1, "respawn_seconds": 3600},
+        {"id": "tenant-recording", "label": "Tenant recording", "kind": "contribution", "asset": "tenant-recordings", "amount": 1, "respawn_seconds": 3600}
+      ]
+    },
+    {
+      "id": "conduit", "name": "The Conduit", "depth": 4, "ice": [],
+      "data": [
+        {"id": "tenant-voice", "label": "The voice field", "kind": "text", "asset": "lattice-conduit", "scope": "identity", "respawn_seconds": 0},
+        {"id": "tenant-recording", "label": "Tenant recording", "kind": "contribution", "asset": "tenant-recordings", "amount": 1, "respawn_seconds": 3600}
+      ]
+    }
+  ]
+}

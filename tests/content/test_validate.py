@@ -93,8 +93,19 @@ def test_core_tier_and_training_exception(world: World) -> None:
     world.edit("cores/fx-core-b.json", lambda d: d.update(tier=0))
     only(world, "tier 0 is outside 1-5")
     world.edit("cores/fx-core-b.json", lambda d: d.update(tier=0, training=True))
+    assert any("only the Wake is a training core" in m for m in world.messages())
+    world.edit("cores/fx-core-b.json", lambda d: d.update(tier=2, training=False))
+    world.edit("ice.json", lambda d: d["ice"].append({
+        "id": "ice_training", "name": "Training Tripwire", "class": "tripwire",
+        "integrity": 10, "attack": 5, "cooldown_seconds": 1}))
+    world.write("cores/lat-wake-hall.json", {
+        "id": "lat-wake-hall", "name": "Wake Hall", "owner": "fx-alpha",
+        "tier": 0, "training": True, "hardware": [], "rooms": [{
+            "id": "r-entry", "neighbours": [], "pos": [0, 0], "ice": ["ice_training"],
+            "data": [{"id": "decant", "kind": "text", "asset": "text-fx-gate-1",
+                      "scope": "identity", "respawn_seconds": 0}]}]})
     assert world.messages() == []
-    world.edit("cores/fx-core-b.json", lambda d: d.update(tier=1, training=True))
+    world.edit("cores/lat-wake-hall.json", lambda d: d.update(tier=1))
     only(world, "the training core must be tier 0")
 
 

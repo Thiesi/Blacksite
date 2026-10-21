@@ -18,7 +18,12 @@
       "id": "r-entry",
       "neighbours": [
         "r-data"
-      ]
+      ],
+      "pos": [
+        0,
+        0
+      ],
+      "label": "Entry"
     },
     {
       "id": "r-data",
@@ -36,7 +41,12 @@
           "amount": 50,
           "respawn_seconds": 600
         }
-      ]
+      ],
+      "pos": [
+        1,
+        0
+      ],
+      "label": "Data"
     },
     {
       "id": "r-control",
@@ -58,7 +68,12 @@
           "safety_policy": "route",
           "alternate_route": "to-open-alley"
         }
-      ]
+      ],
+      "pos": [
+        2,
+        0
+      ],
+      "label": "Control"
     }
   ]
 }

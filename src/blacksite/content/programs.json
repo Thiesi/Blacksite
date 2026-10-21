@@ -5,28 +5,764 @@
       "id": "prg_pick",
       "name": "Pick",
       "class": "attack",
+      "tier": 1,
+      "slots": 1,
       "cast_seconds": 0.8,
-      "cooldown_seconds": 1,
+      "cooldown_seconds": 1.0,
       "effect": {
         "kind": "damage",
-        "amount": 10
+        "amount": 10,
+        "params": {}
       },
       "source": "starter",
       "price": 150,
-      "target_class": "ice"
+      "acquisition_requires": [],
+      "cast_requires": [],
+      "trace_cost": 5,
+      "target_class": "ice",
+      "duration": 0,
+      "stacking_group": "pick",
+      "description": "10 integrity damage"
+    },
+    {
+      "id": "prg_chisel",
+      "name": "Chisel",
+      "class": "attack",
+      "tier": 2,
+      "slots": 1,
+      "cast_seconds": 1.0,
+      "cooldown_seconds": 1.5,
+      "effect": {
+        "kind": "damage",
+        "amount": 18,
+        "params": {}
+      },
+      "source": "vendor",
+      "price": 800,
+      "acquisition_requires": [],
+      "cast_requires": [],
+      "trace_cost": 5,
+      "target_class": "ice",
+      "duration": 0,
+      "stacking_group": "chisel",
+      "description": "18 damage"
+    },
+    {
+      "id": "prg_drill",
+      "name": "Drill",
+      "class": "attack",
+      "tier": 3,
+      "slots": 1,
+      "cast_seconds": 1.2,
+      "cooldown_seconds": 2.0,
+      "effect": {
+        "kind": "damage",
+        "amount": 30,
+        "params": {
+          "execute_threshold": 30,
+          "execute_damage": 45
+        }
+      },
+      "source": "vendor",
+      "price": 1200,
+      "acquisition_requires": [],
+      "cast_requires": [],
+      "trace_cost": 5,
+      "target_class": "ice",
+      "duration": 0,
+      "stacking_group": "drill",
+      "description": "30 damage; 45 against ICE with integrity ≤ 30"
+    },
+    {
+      "id": "prg_mallet",
+      "name": "Mallet",
+      "class": "attack",
+      "tier": 3,
+      "slots": 2,
+      "cast_seconds": 1.5,
+      "cooldown_seconds": 3.0,
+      "effect": {
+        "kind": "area_damage",
+        "amount": 20,
+        "params": {}
+      },
+      "source": "vendor",
+      "price": 1200,
+      "acquisition_requires": [],
+      "cast_requires": [],
+      "trace_cost": 5,
+      "target_class": "room",
+      "duration": 0,
+      "stacking_group": "mallet",
+      "description": "20 damage to every ICE in the room"
+    },
+    {
+      "id": "prg_lance",
+      "name": "Lance",
+      "class": "attack",
+      "tier": 4,
+      "slots": 2,
+      "cast_seconds": 1.5,
+      "cooldown_seconds": 2.5,
+      "effect": {
+        "kind": "damage",
+        "amount": 45,
+        "params": {
+          "ignore_mirror": true
+        }
+      },
+      "source": "vendor",
+      "price": 1600,
+      "acquisition_requires": [],
+      "cast_requires": [],
+      "trace_cost": 5,
+      "target_class": "ice",
+      "duration": 0,
+      "stacking_group": "lance",
+      "description": "45 damage, ignores Mirror once per cast"
+    },
+    {
+      "id": "prg_blackout",
+      "name": "Blackout",
+      "class": "attack",
+      "tier": 5,
+      "slots": 2,
+      "cast_seconds": 2.0,
+      "cooldown_seconds": 30.0,
+      "effect": {
+        "kind": "damage",
+        "amount": 120,
+        "params": {}
+      },
+      "source": "vendor",
+      "price": 2000,
+      "acquisition_requires": [
+        "once_per_season"
+      ],
+      "cast_requires": [],
+      "trace_cost": 25,
+      "target_class": "ice",
+      "duration": 0,
+      "stacking_group": "blackout",
+      "description": "120 damage to one ICE; then the runner's trace +25"
     },
     {
       "id": "prg_umbrella",
       "name": "Umbrella",
       "class": "shield",
+      "tier": 1,
+      "slots": 1,
       "cast_seconds": 0.5,
-      "cooldown_seconds": 4,
+      "cooldown_seconds": 4.0,
       "effect": {
         "kind": "absorb",
-        "amount": 15
+        "amount": 15,
+        "params": {}
       },
       "source": "starter",
-      "price": 200
+      "price": 200,
+      "acquisition_requires": [],
+      "cast_requires": [],
+      "trace_cost": 0,
+      "target_class": "self",
+      "duration": 0,
+      "stacking_group": "shield",
+      "description": "absorbs the next 15 damage"
+    },
+    {
+      "id": "prg_slicker",
+      "name": "Slicker",
+      "class": "shield",
+      "tier": 2,
+      "slots": 1,
+      "cast_seconds": 0.5,
+      "cooldown_seconds": 5.0,
+      "effect": {
+        "kind": "absorb",
+        "amount": 25,
+        "params": {
+          "pin_once": true
+        }
+      },
+      "source": "vendor",
+      "price": 800,
+      "acquisition_requires": [],
+      "cast_requires": [],
+      "trace_cost": 0,
+      "target_class": "self",
+      "duration": 0,
+      "stacking_group": "shield",
+      "description": "absorbs 25; absorbs a Bluecoat pin"
+    },
+    {
+      "id": "prg_wetsuit",
+      "name": "Wetsuit",
+      "class": "shield",
+      "tier": 3,
+      "slots": 1,
+      "cast_seconds": 0.8,
+      "cooldown_seconds": 6.0,
+      "effect": {
+        "kind": "absorb",
+        "amount": 40,
+        "params": {
+          "cantillation_multiplier": 0.5
+        }
+      },
+      "source": "vendor",
+      "price": 1200,
+      "acquisition_requires": [],
+      "cast_requires": [],
+      "trace_cost": 0,
+      "target_class": "self",
+      "duration": 0,
+      "stacking_group": "shield",
+      "description": "absorbs 40; Cantillation damage halved"
+    },
+    {
+      "id": "prg_bunker",
+      "name": "Bunker",
+      "class": "shield",
+      "tier": 4,
+      "slots": 2,
+      "cast_seconds": 1.0,
+      "cooldown_seconds": 8.0,
+      "effect": {
+        "kind": "absorb",
+        "amount": 60,
+        "params": {
+          "black_meat_once": true
+        }
+      },
+      "source": "vendor",
+      "price": 1600,
+      "acquisition_requires": [],
+      "cast_requires": [],
+      "trace_cost": 0,
+      "target_class": "self",
+      "duration": 0,
+      "stacking_group": "shield",
+      "description": "absorbs 60 and all meat damage from the next black hit"
+    },
+    {
+      "id": "prg_smoke",
+      "name": "Smoke",
+      "class": "decoy",
+      "tier": 1,
+      "slots": 1,
+      "cast_seconds": 0.5,
+      "cooldown_seconds": 10.0,
+      "effect": {
+        "kind": "trace",
+        "amount": 0,
+        "params": {
+          "gain_multiplier": 0.75
+        }
+      },
+      "source": "vendor",
+      "price": 200,
+      "acquisition_requires": [],
+      "cast_requires": [],
+      "trace_cost": 0,
+      "target_class": "self",
+      "duration": 10,
+      "stacking_group": "smoke",
+      "description": "trace gain −25 % for 10 s"
+    },
+    {
+      "id": "prg_alibi",
+      "name": "Alibi",
+      "class": "decoy",
+      "tier": 2,
+      "slots": 1,
+      "cast_seconds": 0.8,
+      "cooldown_seconds": 15.0,
+      "effect": {
+        "kind": "trace",
+        "amount": -10,
+        "params": {}
+      },
+      "source": "vendor",
+      "price": 800,
+      "acquisition_requires": [],
+      "cast_requires": [],
+      "trace_cost": 0,
+      "target_class": "self",
+      "duration": 0,
+      "stacking_group": "alibi",
+      "description": "trace −10 now"
+    },
+    {
+      "id": "prg_understudy",
+      "name": "Understudy",
+      "class": "decoy",
+      "tier": 3,
+      "slots": 1,
+      "cast_seconds": 1.0,
+      "cooldown_seconds": 20.0,
+      "effect": {
+        "kind": "decoy",
+        "amount": 30,
+        "params": {}
+      },
+      "source": "vendor",
+      "price": 1200,
+      "acquisition_requires": [],
+      "cast_requires": [],
+      "trace_cost": 0,
+      "target_class": "self",
+      "duration": 8,
+      "stacking_group": "understudy",
+      "description": "for 8 s, ICE attacks the decoy instead (it has 30 integrity)"
+    },
+    {
+      "id": "prg_cutout",
+      "name": "Cutout",
+      "class": "decoy",
+      "tier": 4,
+      "slots": 2,
+      "cast_seconds": 1.2,
+      "cooldown_seconds": 60.0,
+      "effect": {
+        "kind": "trace",
+        "amount": -20,
+        "params": {
+          "break_hound_once": true
+        }
+      },
+      "source": "vendor",
+      "price": 1600,
+      "acquisition_requires": [],
+      "cast_requires": [],
+      "trace_cost": 0,
+      "target_class": "self",
+      "duration": 0,
+      "stacking_group": "cutout",
+      "description": "breaks a Hound's follow once; trace −20"
+    },
+    {
+      "id": "prg_caffeine",
+      "name": "Caffeine",
+      "class": "loader",
+      "tier": 1,
+      "slots": 1,
+      "cast_seconds": 0.3,
+      "cooldown_seconds": 15.0,
+      "effect": {
+        "kind": "cast_speed",
+        "amount": 0.7,
+        "params": {
+          "next_cast": true
+        }
+      },
+      "source": "vendor",
+      "price": 400,
+      "acquisition_requires": [],
+      "cast_requires": [],
+      "trace_cost": 0,
+      "target_class": "self",
+      "duration": 0,
+      "stacking_group": "caffeine",
+      "description": "next cast time −30 %"
+    },
+    {
+      "id": "prg_overclock",
+      "name": "Overclock",
+      "class": "loader",
+      "tier": 2,
+      "slots": 1,
+      "cast_seconds": 0.5,
+      "cooldown_seconds": 20.0,
+      "effect": {
+        "kind": "cast_speed",
+        "amount": 0.75,
+        "params": {
+          "cancel_tar": true
+        }
+      },
+      "source": "vendor",
+      "price": 800,
+      "acquisition_requires": [],
+      "cast_requires": [],
+      "trace_cost": 0,
+      "target_class": "self",
+      "duration": 10,
+      "stacking_group": "overclock",
+      "description": "all cast times −25 % for 10 s; cancels Tar for that time"
+    },
+    {
+      "id": "prg_redline",
+      "name": "Redline",
+      "class": "loader",
+      "tier": 3,
+      "slots": 1,
+      "cast_seconds": 0.5,
+      "cooldown_seconds": 30.0,
+      "effect": {
+        "kind": "move_speed",
+        "amount": 0.4,
+        "params": {
+          "integrity_per_move": 5
+        }
+      },
+      "source": "vendor",
+      "price": 1200,
+      "acquisition_requires": [],
+      "cast_requires": [],
+      "trace_cost": 0,
+      "target_class": "self",
+      "duration": 10,
+      "stacking_group": "redline",
+      "description": "cell-to-cell moves no slower than normal, capped at 0.4 s for 10 s; costs 5 integrity per completed move"
+    },
+    {
+      "id": "prg_skeleton",
+      "name": "Skeleton",
+      "class": "key",
+      "tier": 1,
+      "slots": 1,
+      "cast_seconds": 1.5,
+      "cooldown_seconds": 5.0,
+      "effect": {
+        "kind": "open_gate",
+        "amount": 1,
+        "params": {
+          "turnstile": true
+        }
+      },
+      "source": "vendor",
+      "price": 200,
+      "acquisition_requires": [],
+      "cast_requires": [],
+      "trace_cost": 0,
+      "target_class": "cell",
+      "duration": 0,
+      "stacking_group": "skeleton",
+      "description": "opens a tier-1 gated cell or Turnstile"
+    },
+    {
+      "id": "prg_locksmith",
+      "name": "Locksmith",
+      "class": "key",
+      "tier": 2,
+      "slots": 1,
+      "cast_seconds": 1.5,
+      "cooldown_seconds": 5.0,
+      "effect": {
+        "kind": "open_gate",
+        "amount": 2,
+        "params": {
+          "lockstep": true
+        }
+      },
+      "source": "vendor",
+      "price": 800,
+      "acquisition_requires": [],
+      "cast_requires": [],
+      "trace_cost": 0,
+      "target_class": "cell",
+      "duration": 0,
+      "stacking_group": "locksmith",
+      "description": "opens tier ≤ 2 gates and Lockstep off-schedule"
+    },
+    {
+      "id": "prg_passkey",
+      "name": "Passkey",
+      "class": "key",
+      "tier": 3,
+      "slots": 1,
+      "cast_seconds": 2.0,
+      "cooldown_seconds": 8.0,
+      "effect": {
+        "kind": "open_gate",
+        "amount": 3,
+        "params": {
+          "private_vestibule": true
+        }
+      },
+      "source": "vendor",
+      "price": 1200,
+      "acquisition_requires": [],
+      "cast_requires": [],
+      "trace_cost": 0,
+      "target_class": "cell",
+      "duration": 0,
+      "stacking_group": "passkey",
+      "description": "opens tier ≤ 3 gates; opens a private core's door control without a fight"
+    },
+    {
+      "id": "prg_signet",
+      "name": "Signet",
+      "class": "key",
+      "tier": 4,
+      "slots": 1,
+      "cast_seconds": 2.0,
+      "cooldown_seconds": 10.0,
+      "effect": {
+        "kind": "open_gate",
+        "amount": 0,
+        "params": {
+          "faction": "halvard",
+          "ignore_ice_seconds": 5
+        }
+      },
+      "source": "vendor",
+      "price": 1600,
+      "acquisition_requires": [],
+      "cast_requires": [],
+      "trace_cost": 0,
+      "target_class": "cell",
+      "duration": 5,
+      "stacking_group": "signet",
+      "description": "opens any Halvard gate; Halvard ICE ignores the runner for 5 s after"
+    },
+    {
+      "id": "prg_sneakers",
+      "name": "Sneakers",
+      "class": "stealth",
+      "tier": 1,
+      "slots": 1,
+      "cast_seconds": 0.5,
+      "cooldown_seconds": 12.0,
+      "effect": {
+        "kind": "stealth",
+        "amount": 3,
+        "params": {
+          "entry_delay": true
+        }
+      },
+      "source": "vendor",
+      "price": 400,
+      "acquisition_requires": [],
+      "cast_requires": [],
+      "trace_cost": 0,
+      "target_class": "self",
+      "duration": 3,
+      "stacking_group": "sneakers",
+      "description": "entry-triggered ICE fires 3 s late"
+    },
+    {
+      "id": "prg_shroud",
+      "name": "Shroud",
+      "class": "stealth",
+      "tier": 2,
+      "slots": 1,
+      "cast_seconds": 0.8,
+      "cooldown_seconds": 20.0,
+      "effect": {
+        "kind": "stealth",
+        "amount": 6,
+        "params": {
+          "mastiff_seconds": 6,
+          "sandman_seconds": 5
+        }
+      },
+      "source": "vendor",
+      "price": 800,
+      "acquisition_requires": [],
+      "cast_requires": [],
+      "trace_cost": 0,
+      "target_class": "self",
+      "duration": 6,
+      "stacking_group": "shroud",
+      "description": "Mastiff ignores runner for 6 s; Sandman is delayed 5 s"
+    },
+    {
+      "id": "prg_nobody",
+      "name": "Nobody",
+      "class": "stealth",
+      "tier": 3,
+      "slots": 2,
+      "cast_seconds": 1.0,
+      "cooldown_seconds": 30.0,
+      "effect": {
+        "kind": "stealth",
+        "amount": 5,
+        "params": {
+          "all_ice": true,
+          "suppress_trace": true
+        }
+      },
+      "source": "vendor",
+      "price": 1200,
+      "acquisition_requires": [],
+      "cast_requires": [],
+      "trace_cost": 0,
+      "target_class": "self",
+      "duration": 5,
+      "stacking_group": "nobody",
+      "description": "invisible to all ICE for 5 s; trace does not rise"
+    },
+    {
+      "id": "prg_compass",
+      "name": "Compass",
+      "class": "utility",
+      "tier": 1,
+      "slots": 1,
+      "cast_seconds": 1.0,
+      "cooldown_seconds": 30.0,
+      "effect": {
+        "kind": "reveal",
+        "amount": 0,
+        "params": {
+          "true_core_map": true
+        }
+      },
+      "source": "vendor",
+      "price": 150,
+      "acquisition_requires": [],
+      "cast_requires": [],
+      "trace_cost": 0,
+      "target_class": "self",
+      "duration": 0,
+      "stacking_group": "compass",
+      "description": "shows the core's true room map; Liar rooms marked"
+    },
+    {
+      "id": "prg_ledger",
+      "name": "Ledger",
+      "class": "utility",
+      "tier": 1,
+      "slots": 1,
+      "cast_seconds": null,
+      "cooldown_seconds": null,
+      "effect": {
+        "kind": "passive",
+        "amount": 0,
+        "params": {
+          "lift_multiplier": 0.75
+        }
+      },
+      "source": "vendor",
+      "price": 400,
+      "acquisition_requires": [],
+      "cast_requires": [],
+      "trace_cost": 0,
+      "target_class": "self",
+      "duration": 0,
+      "stacking_group": "ledger",
+      "description": "passive: data lift time −25 %"
+    },
+    {
+      "id": "prg_lantern",
+      "name": "Lantern",
+      "class": "utility",
+      "tier": 2,
+      "slots": 1,
+      "cast_seconds": 1.5,
+      "cooldown_seconds": 30.0,
+      "effect": {
+        "kind": "reveal",
+        "amount": 1,
+        "params": {
+          "adjacent_hidden": true
+        }
+      },
+      "source": "vendor",
+      "price": 500,
+      "acquisition_requires": [],
+      "cast_requires": [],
+      "trace_cost": 0,
+      "target_class": "self",
+      "duration": 0,
+      "stacking_group": "lantern",
+      "description": "reveals hidden cells adjacent to the runner"
+    },
+    {
+      "id": "prg_pulse",
+      "name": "Pulse",
+      "class": "utility",
+      "tier": 3,
+      "slots": 1,
+      "cast_seconds": 1.0,
+      "cooldown_seconds": 20.0,
+      "effect": {
+        "kind": "reveal",
+        "amount": 0,
+        "params": {
+          "crew_beacon": true
+        }
+      },
+      "source": "vendor",
+      "price": 1200,
+      "acquisition_requires": [],
+      "cast_requires": [],
+      "trace_cost": 0,
+      "target_class": "crew",
+      "duration": 20,
+      "stacking_group": "pulse",
+      "description": "crew members in meatspace see the runner's cell and trace for 20 s"
+    },
+    {
+      "id": "prg_tourniquet",
+      "name": "Tourniquet",
+      "class": "utility",
+      "tier": 3,
+      "slots": 1,
+      "cast_seconds": 1.5,
+      "cooldown_seconds": 25.0,
+      "effect": {
+        "kind": "restore",
+        "amount": 30,
+        "params": {}
+      },
+      "source": "vendor",
+      "price": 1200,
+      "acquisition_requires": [],
+      "cast_requires": [],
+      "trace_cost": 0,
+      "target_class": "self",
+      "duration": 0,
+      "stacking_group": "tourniquet",
+      "description": "restores 30 integrity"
+    },
+    {
+      "id": "prg_anchor",
+      "name": "Anchor",
+      "class": "utility",
+      "tier": 4,
+      "slots": 1,
+      "cast_seconds": 0.5,
+      "cooldown_seconds": 30.0,
+      "effect": {
+        "kind": "immunity",
+        "amount": 0,
+        "params": {
+          "displacement": true
+        }
+      },
+      "source": "vendor",
+      "price": 1600,
+      "acquisition_requires": [],
+      "cast_requires": [],
+      "trace_cost": 0,
+      "target_class": "self",
+      "duration": 15,
+      "stacking_group": "anchor",
+      "description": "immune to Undertow and Drift displacement for 15 s"
+    },
+    {
+      "id": "prg_burn",
+      "name": "Burn",
+      "class": "attack",
+      "tier": 2,
+      "slots": 1,
+      "cast_seconds": 0.8,
+      "cooldown_seconds": 3.0,
+      "effect": {
+        "kind": "damage",
+        "amount": 18,
+        "params": {}
+      },
+      "source": "vendor",
+      "price": 1200,
+      "acquisition_requires": [],
+      "cast_requires": [],
+      "trace_cost": 15,
+      "target_class": "runner",
+      "duration": 0,
+      "stacking_group": "burn",
+      "description": "18 integrity damage to a permitted runner; +15 trace replaces attack trace"
     },
     {
       "id": "prg_hunter_killer",
@@ -34,8 +770,8 @@
       "class": "attack",
       "tier": 4,
       "slots": 2,
-      "cast_seconds": 2,
-      "cooldown_seconds": 15,
+      "cast_seconds": 2.0,
+      "cooldown_seconds": 15.0,
       "effect": {
         "kind": "damage",
         "amount": 80,
@@ -43,9 +779,105 @@
           "hunter_only": true
         }
       },
+      "source": "core data",
       "price": 4200,
+      "acquisition_requires": [],
+      "cast_requires": [],
+      "trace_cost": 5,
       "target_class": "ice",
-      "source": "core data"
+      "duration": 0,
+      "stacking_group": "hunter_killer",
+      "description": "80 integrity damage to hunter ICE only"
+    },
+    {
+      "id": "prg_choir_cantillation_1",
+      "name": "Cantillation I",
+      "class": "attack",
+      "tier": 2,
+      "slots": 1,
+      "cast_seconds": 0.8,
+      "cooldown_seconds": 4.0,
+      "effect": {
+        "kind": "damage",
+        "amount": 20,
+        "params": {
+          "resonance_divisor": 5
+        }
+      },
+      "source": "vendor",
+      "price": 1000,
+      "acquisition_requires": [
+        "archetype:cantor"
+      ],
+      "cast_requires": [
+        "archetype:cantor"
+      ],
+      "trace_cost": 5,
+      "target_class": "ice",
+      "duration": 0,
+      "stacking_group": "choir_cantillation_1",
+      "description": "Cantor: 20 damage + Resonance / 5; normal attack trace"
+    },
+    {
+      "id": "prg_choir_cantillation_2",
+      "name": "Cantillation II",
+      "class": "attack",
+      "tier": 3,
+      "slots": 1,
+      "cast_seconds": 1.2,
+      "cooldown_seconds": 6.0,
+      "effect": {
+        "kind": "damage",
+        "amount": 40,
+        "params": {
+          "resonance_divisor": 3
+        }
+      },
+      "source": "vendor",
+      "price": 3600,
+      "acquisition_requires": [
+        "archetype:cantor",
+        "standing:choir:50"
+      ],
+      "cast_requires": [
+        "archetype:cantor"
+      ],
+      "trace_cost": 5,
+      "target_class": "ice",
+      "duration": 0,
+      "stacking_group": "choir_cantillation_2",
+      "description": "Cantor, Choir +50 to acquire: 40 damage + Resonance / 3; normal attack trace"
+    },
+    {
+      "id": "prg_residual_fragment",
+      "name": "Residual Fragment",
+      "class": "utility",
+      "tier": 3,
+      "slots": 1,
+      "cast_seconds": 1.0,
+      "cooldown_seconds": null,
+      "effect": {
+        "kind": "programs_bonus",
+        "amount": 25,
+        "params": {
+          "cap": 100,
+          "single_use": true,
+          "until_jack_out": true
+        }
+      },
+      "source": "bound faction loan",
+      "price": 0,
+      "acquisition_requires": [
+        "bound_loan"
+      ],
+      "cast_requires": [
+        "bound_charge"
+      ],
+      "trace_cost": 0,
+      "target_class": "self",
+      "duration": 0,
+      "stacking_group": "residual_fragment",
+      "description": "+25 effective Programs until jack-out, capped 100; bound faction loan"
     }
   ]
 }

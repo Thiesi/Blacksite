@@ -1,6 +1,6 @@
 # S14 — ICE and programs: cores, rooms, encounters, trace, black ICE, the Silt generator
 
-**Status:** planned
+**Status:** in progress (`slice/S14-ice-and-programs`)
 **Primary model:** Opus · **Reviewer:** Astra (hacking-model critique before start; balance read after)
 **Depends on:** S13, S10 · **Milestone:** M2
 **Issue:** https://github.com/Thiesi/blacksite/issues/14
@@ -124,3 +124,28 @@ intent framing. Include target, cost, stage, warning and escape in views.
 Roadmap section 7, complete roster and behaviour coverage, reachable
 seeded escapes, and the required model critique and balance review.
 Record measured timings and remaining human balance concerns honestly.
+
+## Implementation decisions
+
+S13 merged in PR #52. Codex implements this slice in place of primary
+Opus; the independent pre-implementation critique and decisions are
+recorded in issue #14 and PR #52's written Claude critique.
+
+Game 6.7 now owns loading, persistent cooldowns, named ICE timings,
+bounded disconnect escape, per-identity street lockout, atomic source
+receipts and the initial optional loot schedule. Game 4 preserves the
+Wake's existing open exit and optional lessons. Game 7.3 covers mixed
+open/contested bodies for remote Burn. The world/entity contracts mirror
+the master; no ninth joinable faction or future map/vendor is introduced.
+
+The twelve nontraining hub approaches cannot remain behind generic
+tier-two key gates whose shops do not exist until S25. Reachable starter
+approaches and real internal encounters replace that accidental blanket
+restriction, preserving each sector's access counts and public uplinks.
+Private/relay templates and future hardware remain inactive. S15 owns
+actual control effects; S25 owns the real Gate Nine route and deferred
+hardware/commerce acceptance, including the HV7/ammo purchase.
+
+The old S09 social probe's fixed scenario tile can be occupied by a live
+NPC. Use a free scenario tile while retaining its explicit placement
+label; do not weaken production collision checks or claim real travel.

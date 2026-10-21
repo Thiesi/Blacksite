@@ -119,6 +119,14 @@ Same frame; the viewport renders the sector instead of a zone.
   and the current room's contents as a short list beneath it.
 - Black ICE hits flash the whole border red for one frame at every tier.
 
+Core graphs use at most 8x4 authored positions; the current room's
+contents sit beneath the graph rather than below seven rig slots in the
+side panel. Silt bands use a compact 5x4 graph with orthogonal visible
+links. A riser and sink have explicit UP/DOWN markers. Persistent danger,
+body safety, cast/escape progress and the next trace consequence take
+priority over optional descriptions. Every ICE shows its phase and a
+counter; Liar's suspect labels never replace authoritative controls.
+
 ## 4. Menus and overlays
 
 All menus are `MenuView`s drawn as a centred overlay (up to 70×20 at

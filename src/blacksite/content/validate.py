@@ -175,6 +175,7 @@ class _Validator:
         self.check_cores()
         self.check_ice()
         self.check_programs()
+        self.check_silt()
         self.check_items()
         self.check_starts()
         self.check_hymns()
@@ -612,17 +613,32 @@ class _Validator:
             if core.training:
                 if core.tier != TRAINING_TIER:
                     self.report(*owner, f"the training core must be tier {TRAINING_TIER}", "tier")
+                if core.id != "lat-wake-hall" or core.template:
+                    self.report(*owner, "only the Wake is a training core", "training")
             elif not CORE_TIER[0] <= core.tier <= CORE_TIER[1]:
                 self.report(*owner, f"tier {core.tier} is outside {CORE_TIER[0]}-{CORE_TIER[1]} "
                             "(tier 0 is only for the training core)", "tier")
-            if core.owner != "private":
+            if core.template and self.current_active:
+                self.report(*owner, "a core template must remain in an authoring bundle", "template")
+            if core.owner != "private" and core.owner_kind == "faction":
                 self.ref("factions", core.owner, owner, "owner")
+            if core.affiliation:
+                self.ref("factions", core.affiliation, owner, "affiliation")
+            if (core.owner == "private" or core.owner_kind == "private") and any(self.t.ice[i].black or any(v.meat_damage and v.tier <= core.tier for v in self.t.ice[i].tier_stats)
+                    for r in core.rooms for i in r.ice if i in self.t.ice):
+                self.report(*owner, "private ICE cannot cause black feedback", "owner_kind")
+            if (core.owner == "private" or core.owner_kind == "private") and not 1 <= core.tier <= 3:
+                self.report(*owner, "private core tier must be 1-3", "tier")
             self._check_hardware(core, hardware_owner)
             self._check_rooms(core)
 
     def _check_hardware(self, core: s.Core, hardware_owner: dict[tuple[str, s.Tile], str]) -> None:
         owner = ("cores", core.id)
         n = len(core.hardware)
+        if core.training or core.template:
+            if n:
+                self.report(*owner, "training and templates have no cuttable hardware", "hardware")
+            return
         if n == 0:
             self.report(*owner, "a core needs a hardware location", "hardware")
         elif n == 2:
@@ -633,6 +649,10 @@ class _Validator:
         elif n > 2:
             self.report(*owner, f"{n} hardware locations; a core has one, lat-shaft two", "hardware")
         for hw in core.hardware:
+            if hw.tile is None:
+                if self.current_active:
+                    self.report(*owner, "active hardware needs a resolved tile", "hardware")
+                continue
             key = (hw.zone, hw.tile)
             if key in hardware_owner:
                 self.report(*owner, f"hardware {hw.zone} {list(hw.tile)} is also core {hardware_owner[key]!r}", "hardware")
@@ -640,7 +660,8 @@ class _Validator:
             if not self.ref("zones", hw.zone, owner, "hardware", "hardware"):
                 continue
             zone = self.t.zones[hw.zone]
-            if not any(o.kind == "hardware" and o.tile == hw.tile for o in zone.meta.objects):
+            if not any(o.kind == "hardware" and o.tile == hw.tile and (hw.object_id is None or o.id == hw.object_id)
+                       for o in zone.meta.objects):
                 self.report(*owner, f"hardware tile {hw.zone} {list(hw.tile)} is not a hardware object", "hardware")
 
     def _check_rooms(self, core: s.Core) -> None:
@@ -648,9 +669,26 @@ class _Validator:
         rooms = {r.id: r for r in core.rooms}
         if len(rooms) != len(core.rooms):
             self.report(*owner, "room ids are not unique", "rooms")
-        if not CORE_ROOMS[0] <= len(core.rooms) <= CORE_ROOMS[1]:
+        if core.training and len(core.rooms) != 1:
+            self.report(*owner, "the training core has exactly one room", "rooms")
+        elif not core.training and not CORE_ROOMS[0] <= len(core.rooms) <= CORE_ROOMS[1]:
             self.report(*owner, f"{len(core.rooms)} rooms; a core has {CORE_ROOMS[0]}-{CORE_ROOMS[1]}", "rooms")
+        entry = core.entry or (core.rooms[0].id if core.rooms else "")
+        if entry not in rooms:
+            self.report(*owner, "core entry must name an existing room", "entry")
+        seen, pending = set(), [entry]
+        while pending:
+            rid = pending.pop()
+            if rid in seen or rid not in rooms:
+                continue
+            seen.add(rid)
+            pending.extend(rooms[rid].neighbours)
+        if set(rooms) - seen:
+            self.report(*owner, "every room must be reachable from the entry", "rooms")
+        if len({r.pos for r in core.rooms}) != len(core.rooms) or any(not (0 <= r.pos[0] < 8 and 0 <= r.pos[1] < 4) for r in core.rooms):
+            self.report(*owner, "rooms need unique authored positions in an 8x4 layout", "rooms")
         control_ids: set[str] = set()
+        data_ids: set[str] = set()
         for room in core.rooms:
             label = f"room {room.id}"
             for n in room.neighbours:
@@ -663,23 +701,54 @@ class _Validator:
             for asset in room.lore:
                 self.ref("text", asset, owner, f"{label}: lore", room.id)
             for data in room.data:
-                if data.kind == "text":
-                    if data.asset is None:
-                        self.report(*owner, f"{label}: data {data.id} of kind text needs an asset", data.id)
-                    self.ref("text", data.asset, owner, f"{label}: data {data.id}", data.id)
-                elif data.amount is None or data.amount <= 0:
-                    self.report(*owner, f"{label}: data {data.id} needs a positive amount", data.id)
+                if data.id in data_ids:
+                    self.report(*owner, f"duplicate data id {data.id}", data.id)
+                data_ids.add(data.id)
+                self._check_data(owner, data, label)
+                if core.training and (data.kind != "text" or data.scope != "identity"):
+                    self.report(*owner, "training data is a personal nonrewarding record", data.id)
+            if core.training:
+                if room.controls or len(room.ice) != 1:
+                    self.report(*owner, "training has one weak ICE and no live controls", room.id)
+                for iid in room.ice:
+                    ice = self.t.ice.get(iid)
+                    if ice and (ice.class_ != "tripwire" or ice.integrity != 10 or ice.attack != 5 or ice.black):
+                        self.report(*owner, "training Tripwire must be nonblack integrity 10 / damage 5", iid)
             for control in room.controls:
                 if control.id in control_ids:
                     self.report(*owner, f"control {control.id}: duplicate control id", control.id)
                 control_ids.add(control.id)
                 self._check_control(core, control)
 
+    def _check_data(self, owner: tuple[str, str], data: s.DataSpec, label: str) -> None:
+        if data.respawn_seconds < 0 or not 0 < data.chance <= 1:
+            self.report(*owner, f"{label}: data respawn/chance is invalid", data.id)
+        refs = {"text": "text", "item": "items", "salvage_data": "items", "schematic": "items",
+                "program": "programs", "evidence": "evidence"}
+        if data.kind in refs:
+            if data.asset is None:
+                self.report(*owner, f"{label}: data {data.id} of kind {data.kind} needs an asset", data.id)
+            self.ref(refs[data.kind], data.asset, owner, f"{label}: data {data.id}", data.id)
+        if data.kind not in ("text", "evidence") and (data.amount is None or data.amount <= 0):
+            self.report(*owner, f"{label}: data {data.id} needs a positive amount", data.id)
+        if data.kind == "contribution" and data.respawn_seconds < 3600:
+            self.report(*owner, "contribution sources need at least 3600 seconds uptime", data.id)
+        for pid in data.programs:
+            self.ref("programs", pid, owner, f"{label}: stored program", data.id)
+        if data.programs and data.kind != "item":
+            self.report(*owner, "stored program payload requires an item source", data.id)
+
     def _check_control(self, core: s.Core, c: s.ControlSpec) -> None:
         owner = ("cores", core.id)
         label = f"control {c.id}"
         lo, hi = CONTROL_RESET_SECONDS
-        if not lo <= c.reset_seconds <= hi:
+        # Game 6.4's named exceptions never weaken ordinary controls.
+        short = ((c.scope == "mission" and c.permission == "contract" and c.reset_seconds == 120)
+                 or (c.scope == "private_vestibule" and c.action == "open" and c.reset_seconds == 30)
+                 or (core.id == "lat-house-lights" and c.target.zone == "sodium-row" and c.reset_seconds in (30, 60))
+                 or (core.id == "lat-nave" and c.target.zone == "chapel-towers" and c.reset_seconds == 60)
+                 or (core.id == "lat-tram-signal" and c.action == "call" and 0 < c.reset_seconds <= 30))
+        if not short and not lo <= c.reset_seconds <= hi:
             self.report(*owner, f"{label}: reset_seconds {c.reset_seconds} is outside {lo}-{hi}", c.id)
         if c.revision < 1:
             self.report(*owner, f"{label}: revision must be at least 1", c.id)
@@ -723,6 +792,11 @@ class _Validator:
                 self.report(*owner, f"tier {ice.tier} is outside {LATTICE_TIER[0]}-{LATTICE_TIER[1]}")
             if ice.integrity <= 0:
                 self.report(*owner, "integrity must be positive")
+            if ice.attack < 0 or ice.cast_seconds < 0 or ice.cooldown_seconds < 0 or (ice.attack and not ice.cooldown_seconds):
+                self.report(*owner, "ICE damage and timing must be nonnegative, with cadence for attacks")
+            if len({v.tier for v in ice.tier_stats}) != len(ice.tier_stats) or any(
+                    not 1 <= v.tier <= 5 or v.integrity <= 0 or v.attack < 0 or v.meat_damage < 0 for v in ice.tier_stats):
+                self.report(*owner, "ICE tier stats need distinct tiers and positive integrity")
             if (ice.trigger == "trace") != (ice.trigger_trace is not None):
                 self.report(*owner, "trigger_trace is set exactly when trigger is 'trace'")
             if ice.black != (ice.meat_damage > 0):
@@ -746,11 +820,54 @@ class _Validator:
             owner = ("programs", pid)
             if not LATTICE_TIER[0] <= prg.tier <= LATTICE_TIER[1]:
                 self.report(*owner, f"tier {prg.tier} is outside {LATTICE_TIER[0]}-{LATTICE_TIER[1]}")
-            if prg.slots < 1:
+            if not 1 <= prg.slots <= 7:
                 self.report(*owner, "slots must be at least 1")
+            if prg.price < 0 or prg.trace_cost < 0 or prg.duration < 0:
+                self.report(*owner, "program price, trace and duration must be nonnegative")
+            if (prg.cast_seconds is not None and prg.cast_seconds < 0
+                    or prg.cooldown_seconds is not None and prg.cooldown_seconds < 0):
+                self.report(*owner, "program timing must be nonnegative")
+            if prg.cast_seconds is None and prg.effect.kind != "passive":
+                self.report(*owner, "only a passive program omits cast timing")
+            if prg.cooldown_seconds is None and prg.effect.kind != "passive" and not prg.effect.params.get("single_use"):
+                self.report(*owner, "only passive or single-use programs omit cooldown timing")
+            target = prg.target_class
+            if ((prg.effect.kind == "area_damage" and target != "room")
+                    or (prg.effect.kind == "damage" and target not in ("ice", "runner"))
+                    or (prg.effect.kind == "open_gate" and target != "cell")):
+                self.report(*owner, "program effect and target class disagree")
+            for requirement in (*prg.acquisition_requires, *prg.cast_requires):
+                parts = requirement.split(":")
+                if requirement in ("once_per_season", "bound_loan", "bound_charge"):
+                    continue
+                if len(parts) == 2 and parts[0] == "archetype" and parts[1] in ("hardline", "ghost", "cantor", "operator"):
+                    continue
+                if len(parts) == 3 and parts[0] == "standing" and _INTEGER.fullmatch(parts[2]) and -100 <= int(parts[2]) <= 100:
+                    self.ref("factions", parts[1], owner, "program standing")
+                    continue
+                self.report(*owner, f"invalid program requirement {requirement!r}")
             if prg.name in names:
                 self.report(*owner, f"name {prg.name!r} is also {names[prg.name]!r}; programs have no aliases")
             names[prg.name] = pid
+
+    def check_silt(self) -> None:
+        rules = self.t.silt
+        if rules is None:
+            return
+        owner = ("silt", "silt")
+        if not 8 <= rules.minimum_cells <= rules.maximum_cells <= 20:
+            self.report(*owner, "Silt bands need 8-20 cells")
+        if not 1 <= rules.minimum_sinks <= rules.maximum_sinks <= 3 or not 0 <= rules.hidden_fraction <= .2:
+            self.report(*owner, "Silt needs 1-3 sinks and at most one fifth hidden cells")
+        if len(rules.bands) != 5 or [b.depth for b in rules.bands] != list(range(5)) or len({b.id for b in rules.bands}) != 5:
+            self.report(*owner, "Silt needs five distinct ordered bands")
+        for band in rules.bands:
+            for spawn in band.ice:
+                self.ref("ice", spawn.template, owner, band.id)
+                if not 0 <= spawn.minimum <= spawn.maximum <= rules.minimum_cells:
+                    self.report(*owner, f"{band.id}: invalid ICE population")
+            for data in band.data:
+                self._check_data(owner, data, band.id)
 
     # --- items --------------------------------------------------------------
 
