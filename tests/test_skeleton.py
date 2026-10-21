@@ -19,7 +19,7 @@ PACKAGES = [
     "blacksite.content",
 ]
 
-ENTRY_MODULES = ["door", "admin"]  # Server/bot now have real S03 CLIs.
+ENTRY_MODULES = ["admin"]  # Other entry points now have real CLIs.
 
 
 def _pyproject(repo_root: Path) -> dict:

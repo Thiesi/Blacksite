@@ -1,6 +1,6 @@
 # S04 — Door client core: door_info, connect, terminal, key decoder, cell-buffer renderer, tiers, reconnect
 
-**Status:** planned
+**Status:** implemented; verification and review in progress
 **Primary model:** Opus · **Reviewer:** Astra (renderer and key decoding critique before start)
 **Depends on:** S01 · **Milestone:** M0
 **Issue:** https://github.com/Thiesi/blacksite/issues/4
@@ -184,3 +184,49 @@ Ctrl-O jacks, Ctrl-F opens faction chat and Ctrl-P scrollback. Printable
 vi letters type normally in line prompts. Keep objective, danger, cost
 and escape readable at both sizes with a wide handle; menus never pause
 combat. Optional art cannot cover a warning or block input.
+
+## Implementation notes
+
+Implemented by Codex; the primary model label is Opus. The automated
+Claude review and product-impact triage workflow in `AGENTS.md` applies.
+The implementer's pre-start risk read focused on display-cell ownership,
+split input sequences, raw stdio, reconnect deadlines and terminal cleanup.
+No independent Astra critique was run before implementation.
+
+S04 reuses the merged S03 framing and HMAC helpers. One narrow shared
+transport fix makes an absent Windows port file a connection failure,
+not an attempt to call the unavailable asyncio Unix-socket API.
+
+Architecture §1/§8 now records the verified NetBBS v7.31.0/API 5
+contract. Profiles require `DOOR_*` environment aliases, and zero
+profile dimensions preserve the negotiated size. The client retains
+the original standalone names, honors the lower effective session limit
+and forwards only metadata, excluding outbound BBS capabilities.
+The Windows entry point restores the OS loader path before importing
+asyncio in the sanitized native-door environment.
+
+Generic delta operations use JSON pointers against `{kind, body}`.
+Only add/replace/remove are accepted; invalid operations or stale bases
+request a full view without partially applying the patch. Help can stay
+open across welcome, logs continue under overlays, and menu selections
+carry the displayed row ID, request ID and expected revision.
+
+Until S07 supplies character/first-run state, `I` on the title exposes
+the first-run information without claiming persistent once-only display.
+Until S33 supplies title art through the service's view path, the client
+uses the specified title text fallback. It never reads the content tree
+or replays untrusted ANSI art directly to the terminal.
+
+See `docs/ops/door-client.md` for reproducible transport and CPU checks.
+
+## Acceptance record (2026-10-21)
+
+- Windows development host, NetBBS v7.31.0/API 5 production native-door
+  picker and stdio runtime, with private loopback Telnet/SSH/web listeners.
+  All three transports pass at both 80x24 and 132x50 with a wide handle.
+- Title/MOTD, help paging, Esc, Ctrl-L, confirmed Ctrl-X and picker redraw
+  pass. Stopping the service returns cleanly after 60.422 seconds.
+- Full suite: 410 passed, 1 skipped (Unix-only socket test on Windows).
+  Focused door suite after the final rendering changes: 78 passed.
+- No balance numbers or runtime dependencies changed. Native NetBSD
+  deployment and sustained gameplay profiling belong to later slices.
