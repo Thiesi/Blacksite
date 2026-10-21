@@ -321,7 +321,8 @@ def test_upgrade_from_shipped_schema_one_preserves_origin_and_old_rows(scratch_d
         db.execute("INSERT INTO players(id,origin,bbs_user_id,health) VALUES('old','existing-origin','1',130)")
     store=Storage(path,ManualClock())
     try:
-        assert store.origin=="existing-origin" and store.meta("schema_version")==2
+        from blacksite.version import WORLD_SCHEMA
+        assert store.origin=="existing-origin" and store.meta("schema_version")==WORLD_SCHEMA
         assert store.db.execute("SELECT health FROM players WHERE id='old'").fetchone()[0]==130
         assert {"name_key","progress"} <= store.player_columns
         assert store.meta("character_cap")==1

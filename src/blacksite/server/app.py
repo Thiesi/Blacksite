@@ -176,6 +176,17 @@ class Server:
                     self.logs.event("character commit failed", level="ERROR", action=effect["action"])
             else:
                 game.committed(effect)
+        commerce = self.core.commerce
+        if commerce:
+            while commerce.outbox:
+                effect = commerce.outbox.pop(0)
+                try:
+                    self.storage.commerce_write(commerce.prepare(effect))
+                except (OSError, sqlite3.Error):
+                    commerce.committed(effect, False)
+                    if self.logs: self.logs.event("item transfer commit failed", level="ERROR")
+                else:
+                    commerce.committed(effect, True)
 
     def status(self) -> dict[str, Any]:
         assert self.core is not None and self.storage is not None

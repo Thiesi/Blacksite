@@ -374,7 +374,8 @@ with `imp_res_first_ear` installed (Sablier's template came with it) and
 Price tier: **list** (design §8.2 standing modifiers apply), **member**
 (faction members only), **restricted** (standing gate shown). Every
 vendor carries ammunition for the weapons it sells and buys back at 40 %
-of list within its hourly budget.
+of list within its 2 000-chit budget per physical counter, refilled on
+the UTC hour (design §8.2).
 
 | Vendor | Zone | Stock | Tier |
 |---|---|---|---|

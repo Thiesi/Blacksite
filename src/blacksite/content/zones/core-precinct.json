@@ -34,7 +34,8 @@
       "kind": "vendor",
       "essential": false,
       "params": {
-        "name": "Warden quartermaster"
+        "name": "Warden Quartermaster",
+        "vendor": "warden-quartermaster"
       }
     },
     {
@@ -134,6 +135,31 @@
       "params": {
         "name": "Holding cell east",
         "open": true
+      }
+    },
+    {
+      "id": "kestrel-bank",
+      "tile": [
+        10,
+        6
+      ],
+      "kind": "bank",
+      "essential": true,
+      "params": {
+        "name": "Kestrel bank"
+      }
+    },
+    {
+      "id": "precinct-clinic",
+      "tile": [
+        15,
+        6
+      ],
+      "kind": "vendor",
+      "essential": true,
+      "params": {
+        "vendor": "sablier-clinic",
+        "name": "Sablier Clinic"
       }
     }
   ],

@@ -1,0 +1,13 @@
+{
+  "schema": 1,
+  "vendors": [
+    {
+      "id": "fx-counter",
+      "name": "Fixture counter",
+      "tier": "list",
+      "stock": [{"item": "wpn_kestrel_sidearm"}, {"item": "con_sablier_patch"}],
+      "zone": "fx-safe",
+      "object_id": "fx-counter"
+    }
+  ]
+}

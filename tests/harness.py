@@ -63,6 +63,15 @@ class HeadlessServer:
             return FakeClient(self.core, None, [Frame("bye", {
                 "reason": "protocol" if isinstance(exc, ProtocolError) else "auth", "text": "Connection refused."})])
 
+    def commit_commerce(self, error: bool = False) -> list[dict[str, Any]]:
+        commerce = self.core.commerce
+        effects = []
+        while commerce and commerce.outbox:
+            effect = commerce.outbox.pop(0)
+            effects.append(commerce.prepare(effect))
+            commerce.committed(effect, not error)
+        return effects
+
     def step(self, n_ticks: int = 1) -> None:
         for _ in range(n_ticks):
             self.clock.advance()

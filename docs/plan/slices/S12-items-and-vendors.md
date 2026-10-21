@@ -11,7 +11,7 @@ Give characters things: the item template table from the catalog, item
 instances with ownership and quality, the inventory and equipment model
 with secured slots and carry weight, faction and district vendors with
 standing-modified prices and hourly buy-back budgets, and the Kestrel
-bank. After this slice a Wake can buy a rifle in Tramyard, equip it,
+bank. After this slice a Wake can buy equipment in the active hub, equip it,
 bank chits, and die without losing what is banked or secured.
 
 ## Spec references
@@ -87,7 +87,7 @@ bank chits, and die without losing what is banked or secured.
 ## Data and content
 
 - `content/items.json` (all catalog rows), `content/vendors.json` (the
-  18 vendor inventories with zone and object anchors from the gazetteer),
+  19 catalog vendor inventories with zone and object anchors),
   `content/tiles.json` gains nothing here.
 - Fixture world (S02) gains one vendor and one bank object.
 - Text: item descriptions from the catalog as `description` fields.
@@ -130,8 +130,9 @@ bank chits, and die without losing what is banked or secured.
 
 1. Two callers enter the door on a NetBBS node at 80×24; both finish or
    skip the Wake.
-2. Caller A walks to the Tramyard Depot Counter, presses `E`, sees the
-   vendor menu with prices, buys `wpn_halvard_hv7` and a stack of
+2. Caller A walks to the Sablier Wake Outfitter, presses `E`, sees the
+   vendor menu with prices, sells the starter sidearm, buys a fresh
+   `wpn_kestrel_sidearm` and a stack of
    `ammo_9x`, equips it from the inventory menu; the side panel shows
    the new weapon on target.
 3. Caller A sells the starter baton; the sell price is 40 % of list and
@@ -170,3 +171,14 @@ finite buy-back budget dependency. Recovery loan items and service-job
 supplies are bound, cannot be traded/cached/crafted and use receipt-based
 replacement. Store learned programs and schematics separately from loose
 inventory. Public terminal loan rigs support every archetype (S13).
+
+## S25 activation handoff
+
+Approved in issue #12: keep S08's ten-zone hub. S12 activates only vendors
+and banks whose canonical zones are available. It authors the complete
+catalog and future vendor definitions without relocating or cloning
+future-zone vendors into the hub. S25 must place their real anchors and
+activate them, including the Tramyard Depot Counter and faction-hall
+banks. The original live Tramyard rifle purchase is a mandatory S25
+integration check. S12 covers rifle rules headlessly; its live acceptance
+uses the canonical Wake Outfitter and existing hub bank instead.

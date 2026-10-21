@@ -23,6 +23,18 @@
   ],
   "objects": [
     {
+      "id": "fx-counter",
+      "tile": [14, 5],
+      "kind": "vendor",
+      "params": {"vendor": "fx-counter", "name": "Fixture counter"}
+    },
+    {
+      "id": "fx-bank",
+      "tile": [16, 5],
+      "kind": "bank",
+      "params": {"name": "Fixture bank"}
+    },
+    {
       "id": "fx-safe-vat",
       "tile": [
         5,

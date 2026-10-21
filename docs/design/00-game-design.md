@@ -101,6 +101,8 @@ Derived values:
   separately in §5.3 and must not be counted twice.
 - **Carry** = Frame / 2 kg before movement slows; items carry weights in
   the catalog.
+  Above capacity, walk and sprint tile times double. Installed implants
+  do not count as carried inventory.
 
 ### 3.2 Archetypes
 
@@ -273,7 +275,7 @@ Real time, cooldown-based, server-resolved.
 - **Cover** is a tile property. Standing adjacent to a cover tile with the
   attacker on the other side applies it.
 - **Consumables** (med patches, stims) are instant with a 10 s cooldown
-  per class.
+  per class, except the trauma kit's 2 s interruptible use in §17.1.
 - **Hymns and dissonance** are Cantor abilities with the same cooldown
   model; hymns affect crew members within 6 tiles.
 - **Drones** are Operator-controlled actors with their own position,
@@ -683,6 +685,14 @@ Every faction hall and district has vendors with fixed inventories,
 prices modified by standing (−20 % at +80, +30 % at −50), and a limited
 buy-back budget that refills hourly (so selling 40 rifles to one vendor
 does not work).
+
+Each physical counter has a 2 000-chit resale budget, refilled on the UTC
+hour. Purchases use fixed, unlimited stock regardless of resale budget.
+Quotes round to the nearest chit, halves up, with a one-chit minimum for
+purchases. Ammo prices are per catalog stack; partial resale quantities
+can round to zero and are refused without consuming the item. Bound
+recovery/service supplies, story items and intact salvage cannot be sold
+to NPC vendors. Learned programs and schematics are journal state.
 
 ### 8.3 Market board
 

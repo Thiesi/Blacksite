@@ -171,6 +171,18 @@
       "params": {
         "name": "Tram platform"
       }
+    },
+    {
+      "id": "kestrel-bank",
+      "tile": [
+        12,
+        7
+      ],
+      "kind": "bank",
+      "essential": true,
+      "params": {
+        "name": "Kestrel bank"
+      }
     }
   ],
   "pockets": [],

@@ -147,6 +147,14 @@ Melee catalog rows do not specify ranged accuracy. Their `accuracy` may
 be null; ranged weapon records require it. S10 owns the combat rule that
 consumes melee records. Implant slots include `head`, matching First Ear
 in the game design's starter schedule.
+Melee cooldowns are also absent from the catalog; null marks unspecified
+timing until S10 defines it. It is never an executable zero cooldown.
+Drone speed remains unimplemented until S11 supplies its movement rule.
+Drone `control_range` preserves the catalog range; nullable sight/speed
+mark values the catalog does not give. Embedded attack blocks retain
+drone weapon stats. Weapon `hits`, `targets` and `cone` retain the
+catalog's multi-hit/arc/cone annotations for S10.
+`requires_archetype` carries the catalog's Cantor-only weapon restriction.
 - armour: `slot, armour {kinetic, energy, chemical, dissonance}, evasion,
   heavy`
 - ammo: `recharge_price` (energy cells only)
@@ -255,6 +263,14 @@ Vendor: `id, name, tier (list, member, restricted), stock[] (item,
 standing), faction, zone`. Hymn: `id, name, kind (hymn, dissonance),
 tier, cast_seconds, cooldown_seconds, effect, description`.
 
+S12 vendor records also name `object_id`, optional acquisition faction
+and archetype gates, price/salvage multipliers, and daily rotation. Stock
+rows can narrow faction/archetype access and set a price multiplier.
+Program stock refers to `programs.json`; physical stock refers to items.
+Before S20, existing S07 recruiter IDs identify pricing affiliations and
+grant no faction membership. An authoring-bundle vendor never opens a
+counter. S25 owns activation of the staged `s25-commerce` members.
+
 ### 1.19 Bundle (`bundles/<id>.json`)
 
 `id, status (active, authoring), depends[] (bundle ids), members {kind →
@@ -326,6 +342,13 @@ current hidden geometry. A changed map extent invalidates its old bitmap.
 `id, template, owner (player id, cache id, apartment id, vendor id, or
 null for world drop), quality (0.85–1.15), ammo, charges, secured, stack,
 created_at`.
+
+`bound` defaults false. Recovery and service-job producers set it for
+goods that cannot be sold, dropped, transferred or fabricated. S12
+enforces the transfer boundary; S10/S19 own those grants. SQLite world
+schema 3 adds `vendor_budgets` (counter ID, UTC hour, remaining chits)
+and `caches` (zone, tile, item IDs, expiry); item ownership and player
+balances commit with these records in one transaction.
 
 ### 2.3 Apartment
 

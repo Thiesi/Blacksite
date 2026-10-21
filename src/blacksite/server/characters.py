@@ -9,6 +9,8 @@ from blacksite.content.loader import ContentTree
 from blacksite.server.clock import Clock, TICK_HZ
 from blacksite.server.loop import TickContext
 from blacksite.server.players import Player, pack_memory, unpack_memory
+from blacksite.server.items import ItemInstance, grant_starter_kit
+from blacksite.server.inventory import Inventory
 from blacksite.server.protocol import Frame
 from blacksite.server.rules import character as rules
 from blacksite.server.sessions import Session, Sessions
@@ -34,6 +36,7 @@ class Characters:
         self.sim.me_provider = self.me
         self.sim.access_provider = self.access
         self.item_templates = {row["id"]: row["template"] for row in state.get("items", [])}
+        self.items = {row["id"]: ItemInstance.from_record(row) for row in state.get("items", [])}
         self.wakes: dict[str, Wake] = {}
         self.screens: dict[str, tuple[str, int]] = {}
         self.dirty_screens: set[str] = set()
@@ -131,6 +134,7 @@ class Characters:
     def attach(self, session: Session, player: Player) -> None:
         sleeper = self.sleepers.pop(player.id, None)
         actor = sleeper[0] if sleeper else player.actor()
+        actor.overweight = Inventory(self.items,self.content.items).weight(player) > player.attributes["frame"] / 2
         if sleeper:
             self.world.zones[player.zone].deactivate("sleeper:" + player.id, self.clock.now_tick())
             self.world.leave(actor)
@@ -256,23 +260,7 @@ class Characters:
         if card != "none":
             player.standing[card] = rules.CARD_STANDING
         start = self.content.starts[player.archetype]
-        items: list[dict[str, Any]] = []
-        for template_id, quantity in start.items.items():
-            template = self.content.items[template_id]
-            while quantity:
-                stack = min(quantity, template.stack_max)
-                iid = f"{self.sessions.origin}:item:{(self.serial << 32) + len(items)}"
-                items.append({"id": iid, "template": template_id, "owner": player.id, "quality": 1.0,
-                              "ammo": 0, "charges": 0, "secured": template.secured_default,
-                              "stack": stack, "created_at": player.created_at})
-                player.inventory.append(iid)
-                for slot, template_key in start.equipment.items():
-                    if template_key == template_id:
-                        player.equipment[slot] = iid
-                for slot, template_key in start.implants.items():
-                    if template_key == template_id:
-                        player.implants[slot] = iid
-                quantity -= stack
+        items = grant_starter_kit(player, start, self.content.items, self.serial)
         player.progress = {"points": 0, "known_programs": list(start.programs), "known_hymns": list(start.hymns), "memory": {}}
         player.rig = {"native": bool(start.rig_slots), "slots": (list(start.programs) + [None] * start.rig_slots)[:start.rig_slots]}
         identity = self.identity(session.user_id)
@@ -298,6 +286,7 @@ class Characters:
                     wake.stage, wake.error, wake.dirty = "card", "The record did not settle. Enter retries; Esc takes no card.", True
                 return
             self.players[player.id] = player
+            self.items.update({row["id"]: ItemInstance.from_record(row) for row in effect["items"]})
             self.identities[player.bbs_user_id]["wake"] = {}
             if session is not None and not session.closed:
                 self.attach(session, player)
@@ -306,6 +295,9 @@ class Characters:
             self.deleting.discard(effect["player"]["id"])
             if not error:
                 self.players.pop(effect["player"]["id"], None)
+                for iid in [key for key, item in self.items.items() if item.owner == effect["player"]["id"]]:
+                    self.items.pop(iid)
+                    self.item_templates.pop(iid, None)
                 self.identities[effect["user"]] = effect["identity"]
                 sleeper = self.sleepers.pop(effect["player"]["id"], None)
                 actor = self.world.actors.get(effect["player"]["id"])
@@ -430,14 +422,15 @@ class Characters:
         identity = self.identities[session.user_id]
         days = max(0, (self.clock.now_utc() - datetime.fromisoformat(identity["first_decanted_at"])).days)
         return {"name": player.name, "handle": player.bbs_handle, "grade": player.grade,
-                "chits": player.chits_hand, "lease_days": days, "legal_at": player.legal_at,
+                "chits": player.chits_hand, "weapon": self.content.items[self.items[player.equipment.get("weapon_main", player.equipment.get("weapon_side"))].template].name if player.equipment.get("weapon_main", player.equipment.get("weapon_side")) in self.items else "None",
+                "lease_days": days, "legal_at": player.legal_at,
                 "discharge_xp": rules.grade_threshold(rules.DISCHARGE_GRADE), "xp": player.xp}
 
     def sheet(self, player: Player, cursor: int) -> dict[str, Any]:
         me = self.me(next(s for s in self.sessions.active.values() if s.player_id == player.id))
         values = [("Archetype", player.archetype.title()), ("Grade", f"{player.grade} {rules.grade_name(player.grade)}"),
                   ("XP", f"{player.xp} / {rules.grade_threshold(min(30, player.grade + 1))}"),
-                  ("Points", player.progress.get("points", 0)), ("Health", f"{player.health}/{rules.health_max(player.attributes['vitals'])}"),
+                  ("Points", player.progress.get("points", 0)), ("Hand chits", player.chits_hand), ("Bank chits", player.chits_bank), ("Health", f"{player.health}/{rules.health_max(player.attributes['vitals'])}"),
                   ("Stamina", f"{player.stamina}/{rules.stamina_max(player.attributes['nerve'], player.attributes['frame'])}"),
                   ("Tolerance", rules.tolerance(player.attributes["vitals"], player.archetype)),
                   ("Evasion", rules.evasion(player.attributes["nerve"])), ("Carry kg", rules.carry_kg(player.attributes["frame"])),

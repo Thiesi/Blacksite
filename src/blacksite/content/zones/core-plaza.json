@@ -98,7 +98,8 @@
       "kind": "vendor",
       "essential": false,
       "params": {
-        "name": "Plaza general vendor"
+        "name": "Ostrom Showroom",
+        "vendor": "ostrom-showroom"
       }
     },
     {

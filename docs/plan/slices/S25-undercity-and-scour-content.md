@@ -134,6 +134,31 @@ None. Content only.
 - Reviewer has walked each zone once; the two human-review zones signed
   off by the user.
 - Slice file marked done with PR number.
+- Complete the S12 activation handoff below; pending S12 anchors cannot
+  remain silently inactive in newly shipped zones.
+
+## S12 vendor and bank activation handoff
+
+S12 deliberately keeps the ten-zone hub (decision in issue #12). When
+the real remaining maps land here, this slice must:
+
+- Place and activate every deferred canonical vendor at its real zone
+  anchor, including the Tramyard Depot Counter. Do not move hub vendors.
+- Place bank branches in `tramyard-market` and every faction hall.
+- Validate all vendor stock, object references, standing/member gates,
+  public essential stock and per-object resale budgets in the full city.
+- Run the original S12 live check at 80x24 and 132x50 through NetBBS:
+  walk to the Tramyard Depot Counter, buy/equip `wpn_halvard_hv7` with its
+  canonical `ammo_5x`, sell, exchange a dropped item between callers,
+  bank chits and leave every menu with Esc/B without side effects.
+- Include explicit scenario funding if needed; S12's 200-chit starter
+  grant is less than the 340-chit rifle price. Do not change balance to
+  make an acceptance scenario affordable.
+- Assert no deferred vendor/bank anchor remains unresolved for any
+  shipped ordinary zone. Record these activation results in the S25 PR.
+  `tests/content/test_commerce_catalog.py` enforces this when a future
+  zone is added: activate its vendor definitions, wire its objects, and
+  place the canonical hall/Tramyard banks before the suite can pass.
 
 ## Implementer notes
 

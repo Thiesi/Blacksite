@@ -33,6 +33,7 @@ class Actor:
     last_sprint_tick: int = -1
     sight_key: tuple[object, ...] | None = None
     visible: set[tuple[int, int]] = field(default_factory=set)
+    overweight: bool = False
 
     @property
     def position(self) -> tuple[int, int]:

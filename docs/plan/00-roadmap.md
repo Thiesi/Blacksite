@@ -124,6 +124,11 @@ features, load/ops/onboarding, art and the federation design audit.
 
 ## 7. Definition of done for any slice
 
+S12 retains S08's ten-zone hub and stages future-zone vendor/bank
+definitions. S25 owns their real anchors and activation, and must run
+the deferred Tramyard rifle-purchase acceptance from its explicit S12
+handoff checklist. S12's live acceptance uses canonical hub vendors.
+
 - The slice file's acceptance script passes on a real terminal at 80×24
   and at one larger size, through a NetBBS node for anything caller-
   facing (a local NetBBS checkout is fine).
