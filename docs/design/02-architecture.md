@@ -38,6 +38,24 @@ repository):
 
 Blacksite therefore consists of two programs and a directory.
 
+S04 integration verification against the local NetBBS v7.31.0 checkout
+(`doors/runtime.py`, door API 5; `doors/profiles.py`) adds these facts:
+
+- Door info also supplies optional `door_api`, `unicode_style`,
+  `transport`, `timezone`, `node_id` and `session_limit_seconds`. The
+  latter is the effective per-launch ceiling. Respect the lower of it
+  and an explicit Blacksite limit.
+- Native stdio profiles can opt into resize drop-file updates and
+  `SIGUSR1` with `resize_signal`. Older hosts still use the initial size.
+- Custom profile environment keys must use `DOOR_*`. Blacksite accepts
+  `DOOR_BLACKSITE_INSTALL_DIR` and `DOOR_BLACKSITE_SESSION_LIMIT` as
+  profile aliases for its original standalone environment names.
+- A drop-file can include outbound BBS capabilities. The client forwards
+  only the metadata fields named above plus the original identity and
+  terminal fields. It never forwards outbound credentials to the game.
+- NetBBS now supports companion services. The interim runner remains
+  until S31 integrates the released supervisor and version requirement.
+
 ## 2. Components
 
 ```
@@ -66,7 +84,8 @@ NetBBS node process
 
 - One process per caller, launched by NetBBS as a native stdio door:
   executable = the interpreter of the venv Blacksite is installed in,
-  argv = `-m blacksite.door`, environment `BLACKSITE_INSTALL_DIR`.
+  argv = `-m blacksite.door`, profile environment
+  `DOOR_BLACKSITE_INSTALL_DIR` (standalone: `BLACKSITE_INSTALL_DIR`).
 - Reads `NETBBS_DOOR_INFO`, connects to the socket, authenticates (§4),
   then runs two loops: terminal input → protocol commands, protocol
   view models → terminal output.
@@ -207,6 +226,13 @@ Frame types prefixed `admin.` are reserved for operator sessions
 add more) and `peer.*` for a future federation bridge; a caller session
 that sends either is disconnected.
 
+S04 uses the shipped keymap spellings `pgup`, `pgdn` and their `shift-`
+forms. Cancelling a line prompt sends `intent {name: "prompt_cancel",
+args: {id}}`, never an empty line submission. Delta add/replace/remove
+operations use JSON pointers against the last `{kind, body}` view; an
+invalid patch or base mismatch requests `intent {name: "resync", args:
+{}}` without partially changing the displayed view.
+
 S03 wire spellings: `line.id` identifies the prompt, `caps.tier` is
 `"16"`, `"256"` or `"truecolor"`, and `caps.unicode` is `true`.
 Terminal dimensions are integers, at least 80×24 and at most 1000×1000.
@@ -346,7 +372,7 @@ Detailed in `03-terminal-ui.md`. Architectural points:
 Native stdio door, `max_sessions` raised to the node's player cap (16
 by default), `multinode_certified` true, `time_limit` at the platform
 maximum, `memory_mb` 128 (the client is small), environment
-`BLACKSITE_INSTALL_DIR=<DIR>`. A preset JSON is shipped in `deploy/` for
+`DOOR_BLACKSITE_INSTALL_DIR=<DIR>`. A preset JSON is shipped in `deploy/` for
 the SysOp to import on the door's Compatibility screen. Installation
 lives in the SysOp guide.
 
@@ -357,6 +383,8 @@ as `BLACKSITE_SESSION_LIMIT` in the profile environment, defaulting to
 3600) and toasts at five minutes and one minute. Re-entering the door
 resumes the session; the server treats a reconnect within 60 s as the
 same session (no sleeper penalty).
+Current profiles use the alias `DOOR_BLACKSITE_SESSION_LIMIT`; an
+upstream `session_limit_seconds` value can reduce that ceiling.
 
 ### 8.3 Presence
 
