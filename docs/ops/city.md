@@ -16,6 +16,8 @@ platform; the ride removes the body from both zones. Esc opens the log
 without cancelling the ride. Ctrl-X leaves normally. A reconnect during
 a ride retains its arrival deadline; offline arrivals use the destination's
 normal logout protection or sleeper recovery. No new combat penalty exists.
+Before departure, movement or Esc/B cancels boarding and returns to the
+street. An accidental platform interaction never requires logging out.
 
 Press M for the district overview and its visited-zone list with safety
 classes. Up/Down selects a visited zone. Enter opens its atmosphere and

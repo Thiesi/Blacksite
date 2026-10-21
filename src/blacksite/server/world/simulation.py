@@ -180,11 +180,18 @@ class ZoneSimulation:
                 action = next((name for name, keys in table["bindings"].items() if frame.data["k"] in keys), "")
         key = frame.data.get("k", "") if frame.type == "key" else ""
         if avatar.travel:
-            if key == "escape":
-                session.send(Frame("toast", {"text": "The log remains below. Your journey continues.", "role": "ui_text", "seconds": 8}))
-            if action == "resync":
-                session.needs_full_view = True
-            return
+            leaving_platform = key in ("escape", "b", "B") or action in ("move", "sprint") or action.startswith(("move_", "sprint_"))
+            if not avatar.travel.departed and leaving_platform:
+                avatar.travel = None
+                self.reset_view(session, avatar)
+                if key in ("escape", "b", "B"):
+                    return
+            else:
+                if key == "escape":
+                    session.send(Frame("toast", {"text": "The log remains below. Your journey continues.", "role": "ui_text", "seconds": 8}))
+                if action == "resync":
+                    session.needs_full_view = True
+                return
         if session.id in self.maps:
             cursor, page = self.maps[session.id]
             if action == "menu_close" or key in ("escape", "b", "B"):
@@ -263,7 +270,8 @@ class ZoneSimulation:
                 overlay = {"title": "The tram hums." if ride.exit.kind == "tram" and ride.departed else "TRAVEL",
                            "lines": [riding_text if ride.departed else "You wait on the platform.",
                                      "Arrival follows departure." if ride.departed else f"Departure in {max(0, int(ride.departure - self.clock.now_utc().timestamp()))} s."],
-                           "hint": "Esc shows the log. The journey continues. Ctrl-X leaves."}
+                           "hint": "Esc shows the log. The journey continues. Ctrl-X leaves." if ride.departed
+                                   else "Move or Esc/B cancels boarding. Ctrl-X leaves."}
             elif session.id in self.maps:
                 cursor, page = self.maps[session.id]
                 body = overview(self.world.content, avatar.zone, avatar.seen_zones, cursor, session.caps["width"])

@@ -110,6 +110,23 @@ def test_tram_lazy_wake_departure(content_tree):
     assert ride.departure-game.clock.now_utc().timestamp() < 90
 
 
+@pytest.mark.parametrize("key",["escape","b","up"])
+def test_waiting_caller_can_leave_platform_without_logout(content_tree,key):
+    game,caller=character_game(content_tree)
+    place(game,caller,"core-tram-hub",(24,14))
+    act(game,caller,Frame("key",{"k":"e","t":0}))
+    avatar=game.core.characters.sim.avatars[caller.session.user_id]
+    assert avatar.travel and not avatar.travel.departed
+    start=avatar.actor.position
+    act(game,caller,Frame("key",{"k":key,"t":0}))
+    assert avatar.travel is None
+    assert avatar.actor.zone=="core-tram-hub"
+    assert not caller.session.closed
+    assert avatar.actor.position==((start[0],start[1]-1) if key=="up" else start)
+    game.step(1000)
+    assert avatar.actor.zone=="core-tram-hub"  # No cancelled departure fires later.
+
+
 def test_s15_hold_bounded_then_immune_and_in_flight_unaffected():
     from blacksite.server.world.exits import DepartureHolds, MAX_HOLD_SECONDS, HOLD_IMMUNITY_SECONDS
     assert (MAX_HOLD_SECONDS,HOLD_IMMUNITY_SECONDS)==(30,120)
