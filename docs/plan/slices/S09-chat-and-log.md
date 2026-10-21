@@ -138,15 +138,20 @@ the replay flag are additive. Ignore can be explicitly reversed with
 identity. Reports can target known offline characters.
 
 Local validation: repository-root Python 3.12 `pytest -q
---basetemp=.test-tmp/final9`: 563 passed, 1 Windows-only skip. The focused
-social/content/terminal gate after durable report attribution and the
-private-channel command guard: 34 passed (`--basetemp=.test-tmp/private8`).
-Final CI results and the actual Claude reviewer model are in the PR.
+--basetemp=.test-tmp/final15`: 564 passed, 1 Windows-only skip. The focused
+social/content/terminal and client I/O gate: 48 passed
+(`--basetemp=.test-tmp/pump-green14`). Final CI results and the actual
+Claude reviewer model are in the PR.
+
+The client arms its next socket read before waiting for work. This avoids
+an idle second between paced social/view frames, reproduced by an I/O
+regression test and a real tram capture before the fix. After the fix,
+the first 0.4-second capture shows the departed view and Esc opens the log.
 
 Real-terminal acceptance passed at 80x24 and 132x50 through NetBBS v7.31.0
-Telnet/native stdio, in a 132x50 parent terminal with `--show`. The final
+Telnet/native stdio with `--show`. The final
 probe is `scripts/accept_s09_netbbs.py`; private results, four ANSI captures
-and progress are under `.test-tmp/s09-netbbs3/`. It explicitly places
+and progress are under `.test-tmp/s09-netbbs4/`. It explicitly places
 bodies in the Plaza, then walks the second caller 25 tiles away. It checks
 say range, shout, whisper by handle, wide names, both kinds of emote,
 symmetric privacy, four-of-six rate limiting, scrollback, ignore/report,

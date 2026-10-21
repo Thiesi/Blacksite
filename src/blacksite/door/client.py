@@ -137,10 +137,6 @@ async def run(info: DoorInfo, terminal: Terminal) -> None:
                     except (OSError, ValueError, asyncio.TimeoutError, asyncio.IncompleteReadError):
                         await disconnected(now)
                     dial = None
-                if model.connected and incoming is None:
-                    assert connection.reader is not None
-                    incoming = asyncio.create_task(read_frame(connection.reader, "server"))
-                    incoming.add_done_callback(lambda task: changed.set())
                 if incoming is not None and incoming.done():
                     try:
                         frame = incoming.result()
@@ -159,6 +155,13 @@ async def run(info: DoorInfo, terminal: Terminal) -> None:
                         await disconnected(now)
                 if not model.connected and connection.writer is not None and dial is None:
                     await disconnected(now)
+                if model.connected and not model.leaving and incoming is None:
+                    # Keep a read armed before the idle wait. Otherwise a
+                    # rendered frame leaves no reader to wake us for the next
+                    # one, accumulating a second of lag per social/view frame.
+                    assert connection.reader is not None
+                    incoming = asyncio.create_task(read_frame(connection.reader, "server"))
+                    incoming.add_done_callback(lambda task: changed.set())
                 if model.connected and now - last_ping >= 10:
                     await send([Frame("ping", {"t": int((now - started) * 1000)})])
                     last_ping = now
