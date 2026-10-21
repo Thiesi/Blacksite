@@ -80,7 +80,10 @@ systemctl status blacksite.service
 ```
 
 `systemctl stop blacksite` requests maintenance shutdown; TERM is the
-manager's fallback. `systemctl restart blacksite` starts a fresh process.
+manager's fallback. The stop RPC is best effort, so an earlier successful
+`blacksite admin stop` does not leave the unit marked failed when systemd
+repeats that RPC after the socket disappears.
+`systemctl restart blacksite` starts a fresh process.
 Inspect failures with `journalctl -u blacksite`.
 
 ## Host acceptance

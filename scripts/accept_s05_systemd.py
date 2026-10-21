@@ -94,6 +94,10 @@ async def accept(root: Path, install: Path, python: Path, unit: str) -> None:
                         except ProcessLookupError:
                             break
                         await asyncio.sleep(.05)
+                async with asyncio.timeout(5):
+                    while (await command("systemctl", "show", unit, "--property=ActiveState", "--value")).strip() not in ("inactive", "failed"):
+                        await asyncio.sleep(.05)
+                assert (await command("systemctl", "show", unit, "--property=Result", "--value")).strip() == "success"
                 await send(b"\x18y")
                 await caller.expect("Karst keeps your place.", mark)
                 await caller.expect("Left Blacksite.", mark)

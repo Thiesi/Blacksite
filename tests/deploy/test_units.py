@@ -25,3 +25,4 @@ def test_systemd_unit_parses(repo_root: Path) -> None:
     assert service["Restart"] == "on-failure" and service["TimeoutStopSec"] == "15"
     assert "-m blacksite.server" in service["ExecStart"]
     assert "-m blacksite.admin" in service["ExecStop"]
+    assert service["ExecStop"].startswith("-/"), "a completed admin stop must not fail the unit"
