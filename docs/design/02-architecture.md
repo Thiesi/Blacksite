@@ -221,6 +221,13 @@ Their result is a private `view` of kind `text`; the body's `lines`
 contains the JSON result. Every accepted operator command is audited.
 An operator hello never replaces a caller with the same user ID.
 
+Bye reasons are strings, not a closed enum: `maintenance` for a service
+stop, `timeout` for an idle hello, `slow_consumer` for queue overflow,
+`banned`, `auth`, `protocol`, `forbidden`, `replaced` and `logout`.
+A stalled authenticated writer is closed without attempting another
+frame on that writer. Clients must handle unknown reasons as a generic
+disconnect rather than assuming that every disconnect is an auth error.
+
 ### 5.3 Server → client
 
 | type | fields | notes |

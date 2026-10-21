@@ -1,6 +1,6 @@
 # S03 — Server core: socket, framing, hello/auth, sessions, tick loop, event bus, persistence layer
 
-**Status:** implemented; review pending (PR #41)
+**Status:** done (PR #41)
 **Primary model:** Opus · **Reviewer:** Astra (protocol and auth critique before start)
 **Depends on:** S01, S02 · **Milestone:** M0
 **Issue:** https://github.com/Thiesi/blacksite/issues/3
@@ -235,3 +235,19 @@ Rejected findings and rationale:
   access is intentional, the spec requires an append-only audit log, and
   maintenance gives bye priority. Durable state commits precede success;
   future sessions rebuild their views. These do not require a redesign.
+
+Claude Sonnet re-reviewed code head `249260b` in
+[PR #41's review](https://github.com/Thiesi/Blacksite/pull/41#issuecomment-6311764477)
+and found no blocking findings. It confirmed all five fixes and the four
+main rejections. The timeout wire reason and startup-stop behavior are
+now documented. The rare combination of copy failure plus cleanup
+failure remains an actionable startup error, with the pre-existing
+staging guard and manual recovery instructions; changing exception
+presentation alone does not justify another implementation change.
+An additional early-stop log line is unnecessary because clean shutdown
+already logs `world closed`. The regression suite explicitly injects
+SIGTERM before the core exists and a timeout on an authenticated writer.
+
+Python 3.12 CI at that code head passes on Ubuntu (333 passed, including
+Unix socket recovery/permissions) and Windows (332 passed, 1 platform
+skip). Subsequent completion edits change documentation only.

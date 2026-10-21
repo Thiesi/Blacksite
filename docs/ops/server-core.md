@@ -32,6 +32,13 @@ The watching bot prints `bye maintenance`, the server exits zero,
 and `run/` becomes empty. The advisory-lock sidecar remains on disk;
 its existence does not mean a server is running. Never delete it to
 force a start while another process holds the lease.
+Stop requests received during bootstrap are retained. The service
+finishes the in-progress content copy and validation, then closes before
+opening the listener. Its log ends with `world closed`.
+
+An idle client that never completes hello receives `bye timeout`.
+A connected client whose writer stalls is simply closed, so a slow link
+is not reported as an invalid credential.
 
 The server copies shipped content on first start and on package version
 change. Put overrides in `content.local/`; the server preserves that
