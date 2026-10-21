@@ -245,6 +245,7 @@ class ZoneMeta:
     instanced: bool = False
     spawn: Tile | None = None
     layouts: tuple[ZoneLayout, ...] = ()
+    sector: str | None = None
     schema: int = CONTENT_SCHEMA
 
 
@@ -280,6 +281,13 @@ CellKind = Literal["public", "gated", "hidden", "core_entrance", "descent"]
 
 
 @dataclass(frozen=True)
+class Uplink:
+    sector: str
+    cell: str
+    requirement: str | None = None
+
+
+@dataclass(frozen=True)
 class Cell:
     id: str
     kind: CellKind
@@ -290,6 +298,14 @@ class Cell:
     requirement: str | None = None
     core_id: str | None = None
     lore: tuple[str, ...] = ()
+    access: Literal["public", "gated", "hidden"] | None = None
+    core_placeholder: bool = False
+    planned_core: str | None = None
+    uplink: Uplink | None = None
+
+    @property
+    def access_kind(self) -> str:
+        return self.access or (self.kind if self.kind in ("public", "gated", "hidden") else "public")
 
 
 @dataclass(frozen=True)
@@ -298,6 +314,8 @@ class Sector:
     district: str
     cells: tuple[Cell, ...]
     schema: int = CONTENT_SCHEMA
+    entry: str | None = None
+    layout_size: Tile = (8, 6)  # Game design 6.1: readable at 80x24.
 
 
 DataKind = Literal[

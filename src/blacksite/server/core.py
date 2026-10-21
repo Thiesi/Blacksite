@@ -17,6 +17,7 @@ from blacksite.server.chat import Chat
 from blacksite.server.commerce import Commerce
 from blacksite.server.combat.engine import Combat
 from blacksite.server.npcs.engine import Npcs
+from blacksite.server.lattice.engine import Lattice
 from blacksite.version import PACKAGE_VERSION, PROTOCOL_MAJOR
 
 
@@ -61,6 +62,19 @@ class Core:
         self.npcs = Npcs(self.combat, character_state.get("npcs", {})) if self.combat else None
         if self.npcs:
             self.loop.subsystems.append(self.npcs)
+        self.lattice = Lattice(self.combat) if self.combat else None
+        if self.lattice:
+            self.loop.subsystems.append(self.lattice)
+            self.sessions.on_disconnect = self._disconnect_character
+            if self.chat:
+                self.chat.lattice_at = self.lattice.location
+                self.lattice.social_overlay = lambda session: session.id in self.chat.sitreps
+
+    def _disconnect_character(self, session: Session) -> None:
+        if self.lattice:
+            self.lattice.disconnect(session)
+        if self.characters:
+            self.characters.disconnect(session)
 
     def connect(self, frame: Frame) -> Session:
         if frame.type != "hello":
@@ -113,10 +127,14 @@ class Core:
         frame = event.data["frame"]
         if frame.type.startswith("admin."):
             admin_endpoint.dispatch(session, frame, self.sessions, self.status_provider,
-                                    self.request_stop, self.audit)
+                                    self.request_stop, self.audit,
+                                    self.lattice.who if self.lattice else lambda: [],
+                                    self.lattice.debug_reveal if self.lattice else lambda p, s, c: {"ok": False})
             return
         if frame.type == "intent" and frame.data["name"] == "resync":
             session.replay_log()
+        if self.lattice and self.lattice.input(session, frame, event.data["tick"]):
+            return
         if self.combat and self.combat.input(session, frame, event.data["tick"]):
             return
         if self.commerce and self.commerce.input(session, frame, event.data["tick"]):
@@ -124,6 +142,8 @@ class Core:
         if self.npcs and self.npcs.input(session, frame, event.data["tick"]):
             return
         if self.chat and self.chat.input(session, frame, event.data["tick"]):
+            return
+        if self.lattice and self.lattice.terminal_input(session, frame, event.data["tick"]):
             return
         # Echo only the verb, never args, arbitrary chat, or private data.
         if self.simulation is not None:

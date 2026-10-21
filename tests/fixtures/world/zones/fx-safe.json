@@ -24,15 +24,26 @@
   "objects": [
     {
       "id": "fx-counter",
-      "tile": [14, 5],
+      "tile": [
+        14,
+        5
+      ],
       "kind": "vendor",
-      "params": {"vendor": "fx-counter", "name": "Fixture counter"}
+      "params": {
+        "vendor": "fx-counter",
+        "name": "Fixture counter"
+      }
     },
     {
       "id": "fx-bank",
-      "tile": [16, 5],
+      "tile": [
+        16,
+        5
+      ],
       "kind": "bank",
-      "params": {"name": "Fixture bank"}
+      "params": {
+        "name": "Fixture bank"
+      }
     },
     {
       "id": "fx-safe-vat",
@@ -49,7 +60,10 @@
         10,
         5
       ],
-      "kind": "terminal"
+      "kind": "terminal",
+      "params": {
+        "sector": "fx-sector"
+      }
     },
     {
       "id": "fx-safe-light",
@@ -58,6 +72,17 @@
         3
       ],
       "kind": "light"
+    },
+    {
+      "id": "fx-safe-terminal-2",
+      "kind": "terminal",
+      "tile": [
+        11,
+        5
+      ],
+      "params": {
+        "sector": "fx-sector"
+      }
     }
   ],
   "spawners": [
@@ -74,5 +99,6 @@
   ],
   "lore": [
     "text-fx-gate-1"
-  ]
+  ],
+  "sector": "fx-sector"
 }

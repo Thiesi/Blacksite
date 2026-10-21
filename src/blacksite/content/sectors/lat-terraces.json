@@ -1,0 +1,556 @@
+{
+  "schema": 1,
+  "id": "lat-terraces",
+  "district": "Terraces",
+  "entry": "lat-terraces-c01",
+  "layout_size": [
+    8,
+    6
+  ],
+  "cells": [
+    {
+      "id": "lat-terraces-c01",
+      "kind": "public",
+      "pos": [
+        0,
+        0
+      ],
+      "neighbours": [
+        "lat-terraces-c02",
+        "lat-terraces-c09"
+      ],
+      "label": "Block A Super"
+    },
+    {
+      "id": "lat-terraces-c02",
+      "kind": "public",
+      "pos": [
+        1,
+        0
+      ],
+      "neighbours": [
+        "lat-terraces-c01",
+        "lat-terraces-c03",
+        "lat-terraces-c10"
+      ],
+      "label": "Core uplink",
+      "uplink": {
+        "sector": "lat-core",
+        "cell": "lat-core-c08"
+      }
+    },
+    {
+      "id": "lat-terraces-c03",
+      "kind": "public",
+      "pos": [
+        2,
+        0
+      ],
+      "neighbours": [
+        "lat-terraces-c02",
+        "lat-terraces-c04",
+        "lat-terraces-c11"
+      ],
+      "label": "Scour uplink",
+      "uplink": {
+        "sector": "lat-scour",
+        "cell": "lat-scour-c06"
+      }
+    },
+    {
+      "id": "lat-terraces-c04",
+      "kind": "public",
+      "pos": [
+        3,
+        0
+      ],
+      "neighbours": [
+        "lat-terraces-c03",
+        "lat-terraces-c05",
+        "lat-terraces-c12"
+      ],
+      "label": "Block B Super"
+    },
+    {
+      "id": "lat-terraces-c05",
+      "kind": "public",
+      "pos": [
+        4,
+        0
+      ],
+      "neighbours": [
+        "lat-terraces-c04",
+        "lat-terraces-c06",
+        "lat-terraces-c13"
+      ],
+      "label": "Outpost Feed"
+    },
+    {
+      "id": "lat-terraces-c06",
+      "kind": "public",
+      "pos": [
+        5,
+        0
+      ],
+      "neighbours": [
+        "lat-terraces-c05",
+        "lat-terraces-c07",
+        "lat-terraces-c14"
+      ],
+      "label": "Private-core register"
+    },
+    {
+      "id": "lat-terraces-c07",
+      "kind": "public",
+      "pos": [
+        6,
+        0
+      ],
+      "neighbours": [
+        "lat-terraces-c06",
+        "lat-terraces-c08",
+        "lat-terraces-c15"
+      ],
+      "label": "Signal rack 07"
+    },
+    {
+      "id": "lat-terraces-c08",
+      "kind": "public",
+      "pos": [
+        7,
+        0
+      ],
+      "neighbours": [
+        "lat-terraces-c07",
+        "lat-terraces-c16"
+      ],
+      "label": "Signal rack 08"
+    },
+    {
+      "id": "lat-terraces-c09",
+      "kind": "public",
+      "pos": [
+        0,
+        1
+      ],
+      "neighbours": [
+        "lat-terraces-c10",
+        "lat-terraces-c01",
+        "lat-terraces-c17"
+      ],
+      "label": "Signal rack 09"
+    },
+    {
+      "id": "lat-terraces-c10",
+      "kind": "public",
+      "pos": [
+        1,
+        1
+      ],
+      "neighbours": [
+        "lat-terraces-c09",
+        "lat-terraces-c11",
+        "lat-terraces-c02",
+        "lat-terraces-c18"
+      ],
+      "label": "Signal rack 10"
+    },
+    {
+      "id": "lat-terraces-c11",
+      "kind": "public",
+      "pos": [
+        2,
+        1
+      ],
+      "neighbours": [
+        "lat-terraces-c10",
+        "lat-terraces-c12",
+        "lat-terraces-c03",
+        "lat-terraces-c19"
+      ],
+      "label": "Signal rack 11"
+    },
+    {
+      "id": "lat-terraces-c12",
+      "kind": "public",
+      "pos": [
+        3,
+        1
+      ],
+      "neighbours": [
+        "lat-terraces-c11",
+        "lat-terraces-c13",
+        "lat-terraces-c04",
+        "lat-terraces-c20"
+      ],
+      "label": "Signal rack 12"
+    },
+    {
+      "id": "lat-terraces-c13",
+      "kind": "public",
+      "pos": [
+        4,
+        1
+      ],
+      "neighbours": [
+        "lat-terraces-c12",
+        "lat-terraces-c14",
+        "lat-terraces-c05",
+        "lat-terraces-c21"
+      ],
+      "label": "Signal rack 13"
+    },
+    {
+      "id": "lat-terraces-c14",
+      "kind": "public",
+      "pos": [
+        5,
+        1
+      ],
+      "neighbours": [
+        "lat-terraces-c13",
+        "lat-terraces-c15",
+        "lat-terraces-c06",
+        "lat-terraces-c22"
+      ],
+      "label": "Signal rack 14"
+    },
+    {
+      "id": "lat-terraces-c15",
+      "kind": "public",
+      "pos": [
+        6,
+        1
+      ],
+      "neighbours": [
+        "lat-terraces-c14",
+        "lat-terraces-c16",
+        "lat-terraces-c07",
+        "lat-terraces-c23"
+      ],
+      "label": "Signal rack 15"
+    },
+    {
+      "id": "lat-terraces-c16",
+      "kind": "public",
+      "pos": [
+        7,
+        1
+      ],
+      "neighbours": [
+        "lat-terraces-c15",
+        "lat-terraces-c08",
+        "lat-terraces-c24"
+      ],
+      "label": "Signal rack 16"
+    },
+    {
+      "id": "lat-terraces-c17",
+      "kind": "public",
+      "pos": [
+        0,
+        2
+      ],
+      "neighbours": [
+        "lat-terraces-c18",
+        "lat-terraces-c09",
+        "lat-terraces-c25"
+      ],
+      "label": "Signal rack 17"
+    },
+    {
+      "id": "lat-terraces-c18",
+      "kind": "public",
+      "pos": [
+        1,
+        2
+      ],
+      "neighbours": [
+        "lat-terraces-c17",
+        "lat-terraces-c19",
+        "lat-terraces-c10",
+        "lat-terraces-c26"
+      ],
+      "label": "Signal rack 18"
+    },
+    {
+      "id": "lat-terraces-c19",
+      "kind": "public",
+      "pos": [
+        2,
+        2
+      ],
+      "neighbours": [
+        "lat-terraces-c18",
+        "lat-terraces-c20",
+        "lat-terraces-c11",
+        "lat-terraces-c27"
+      ],
+      "label": "Signal rack 19"
+    },
+    {
+      "id": "lat-terraces-c20",
+      "kind": "public",
+      "pos": [
+        3,
+        2
+      ],
+      "neighbours": [
+        "lat-terraces-c19",
+        "lat-terraces-c21",
+        "lat-terraces-c12",
+        "lat-terraces-c28"
+      ],
+      "label": "Signal rack 20"
+    },
+    {
+      "id": "lat-terraces-c21",
+      "kind": "core_entrance",
+      "pos": [
+        4,
+        2
+      ],
+      "neighbours": [
+        "lat-terraces-c20",
+        "lat-terraces-c22",
+        "lat-terraces-c13",
+        "lat-terraces-c29"
+      ],
+      "label": "Block Super entrance",
+      "requirement": "program:key:2",
+      "access": "gated",
+      "core_placeholder": true,
+      "planned_core": "lat-block-super"
+    },
+    {
+      "id": "lat-terraces-c22",
+      "kind": "core_entrance",
+      "pos": [
+        5,
+        2
+      ],
+      "neighbours": [
+        "lat-terraces-c21",
+        "lat-terraces-c23",
+        "lat-terraces-c14",
+        "lat-terraces-c30"
+      ],
+      "label": "Terrace Outpost entrance",
+      "requirement": "program:key:2",
+      "access": "gated",
+      "core_placeholder": true,
+      "planned_core": "lat-terrace-outpost"
+    },
+    {
+      "id": "lat-terraces-c23",
+      "kind": "core_entrance",
+      "pos": [
+        6,
+        2
+      ],
+      "neighbours": [
+        "lat-terraces-c22",
+        "lat-terraces-c24",
+        "lat-terraces-c15",
+        "lat-terraces-c31"
+      ],
+      "label": "Block Relay entrance",
+      "requirement": "program:key:2",
+      "access": "gated",
+      "core_placeholder": true,
+      "planned_core": "lat-relay-block"
+    },
+    {
+      "id": "lat-terraces-c24",
+      "kind": "gated",
+      "pos": [
+        7,
+        2
+      ],
+      "neighbours": [
+        "lat-terraces-c23",
+        "lat-terraces-c16",
+        "lat-terraces-c32"
+      ],
+      "label": "Signal rack 24",
+      "requirement": "program:key:2"
+    },
+    {
+      "id": "lat-terraces-c25",
+      "kind": "gated",
+      "pos": [
+        0,
+        3
+      ],
+      "neighbours": [
+        "lat-terraces-c26",
+        "lat-terraces-c17",
+        "lat-terraces-c33"
+      ],
+      "label": "Signal rack 25",
+      "requirement": "program:key:2"
+    },
+    {
+      "id": "lat-terraces-c26",
+      "kind": "gated",
+      "pos": [
+        1,
+        3
+      ],
+      "neighbours": [
+        "lat-terraces-c25",
+        "lat-terraces-c27",
+        "lat-terraces-c18",
+        "lat-terraces-c34"
+      ],
+      "label": "Signal rack 26",
+      "requirement": "program:key:2"
+    },
+    {
+      "id": "lat-terraces-c27",
+      "kind": "gated",
+      "pos": [
+        2,
+        3
+      ],
+      "neighbours": [
+        "lat-terraces-c26",
+        "lat-terraces-c28",
+        "lat-terraces-c19",
+        "lat-terraces-c35"
+      ],
+      "label": "Signal rack 27",
+      "requirement": "program:key:2"
+    },
+    {
+      "id": "lat-terraces-c28",
+      "kind": "gated",
+      "pos": [
+        3,
+        3
+      ],
+      "neighbours": [
+        "lat-terraces-c27",
+        "lat-terraces-c29",
+        "lat-terraces-c20",
+        "lat-terraces-c36"
+      ],
+      "label": "Signal rack 28",
+      "requirement": "program:key:2"
+    },
+    {
+      "id": "lat-terraces-c29",
+      "kind": "gated",
+      "pos": [
+        4,
+        3
+      ],
+      "neighbours": [
+        "lat-terraces-c28",
+        "lat-terraces-c30",
+        "lat-terraces-c21"
+      ],
+      "label": "Signal rack 29",
+      "requirement": "program:key:2"
+    },
+    {
+      "id": "lat-terraces-c30",
+      "kind": "gated",
+      "pos": [
+        5,
+        3
+      ],
+      "neighbours": [
+        "lat-terraces-c29",
+        "lat-terraces-c31",
+        "lat-terraces-c22"
+      ],
+      "label": "Signal rack 30",
+      "requirement": "program:key:2"
+    },
+    {
+      "id": "lat-terraces-c31",
+      "kind": "gated",
+      "pos": [
+        6,
+        3
+      ],
+      "neighbours": [
+        "lat-terraces-c30",
+        "lat-terraces-c32",
+        "lat-terraces-c23"
+      ],
+      "label": "Signal rack 31",
+      "requirement": "program:key:2"
+    },
+    {
+      "id": "lat-terraces-c32",
+      "kind": "descent",
+      "pos": [
+        7,
+        3
+      ],
+      "neighbours": [
+        "lat-terraces-c31",
+        "lat-terraces-c24"
+      ],
+      "label": "Basement Riser",
+      "requirement": "program:key:2",
+      "access": "gated"
+    },
+    {
+      "id": "lat-terraces-c33",
+      "kind": "hidden",
+      "pos": [
+        0,
+        4
+      ],
+      "neighbours": [
+        "lat-terraces-c34",
+        "lat-terraces-c25"
+      ],
+      "label": "Signal rack 33"
+    },
+    {
+      "id": "lat-terraces-c34",
+      "kind": "hidden",
+      "pos": [
+        1,
+        4
+      ],
+      "neighbours": [
+        "lat-terraces-c33",
+        "lat-terraces-c35",
+        "lat-terraces-c26"
+      ],
+      "label": "Signal rack 34"
+    },
+    {
+      "id": "lat-terraces-c35",
+      "kind": "hidden",
+      "pos": [
+        2,
+        4
+      ],
+      "neighbours": [
+        "lat-terraces-c34",
+        "lat-terraces-c36",
+        "lat-terraces-c27"
+      ],
+      "label": "Signal rack 35"
+    },
+    {
+      "id": "lat-terraces-c36",
+      "kind": "hidden",
+      "pos": [
+        3,
+        4
+      ],
+      "neighbours": [
+        "lat-terraces-c35",
+        "lat-terraces-c28"
+      ],
+      "label": "Signal rack 36"
+    }
+  ]
+}

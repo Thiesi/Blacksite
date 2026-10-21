@@ -293,9 +293,17 @@ class ZoneSimulation:
                     overlay = {"title": body["title"], "lines": lines[page*count:(page+1)*count],
                                "page": page+1, "pages": pages, "hint": "PgUp/PgDn reads  Esc/B returns to the street"}
             if overlay is not None:
+                if kind == "lattice":
+                    if self.views[session.id].publish(session, overlay, ctx.tick, kind="lattice"):
+                        self.overlays[session.id] = kind, overlay
+                    continue
                 if (kind, overlay) != self.overlays.get(session.id) or session.needs_full_view:
                     if session.publish_view(Frame("view", {"rev": session.view_revision+1, "kind": kind, "body": overlay}), None, ctx.tick):
                         self.overlays[session.id] = kind, overlay
+                        # A later delta must use this displayed document as
+                        # its base. Resume with a snapshot after any menu/text
+                        # overlay, rather than patching stale zone/sector data.
+                        self.views[session.id] = ViewStore()
                 continue
             zone = self.world.zones[avatar.zone]
             local = self.clock.now_local(session.door_info.get("timezone")).strftime("%H:%M")

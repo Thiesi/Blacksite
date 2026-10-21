@@ -426,6 +426,11 @@ the ride. After offline arrival, ordinary destination logout rules apply.
   UI document). Cells have a type: public, gated (needs a key or a program),
   hidden (found by a Listening check or a program), core entrance, and
   Silt descent.
+  Access (public/gated/hidden) is separate from a cell's core/descent
+  role, so a hidden descent still counts among its sector's hidden cells.
+  District layouts use at most eight columns and six rows, preserving
+  four-column cell markers at 80x24. Public baseline uplinks connect all
+  eleven districts; gated shortcuts never replace those public routes.
 - Moving between adjacent cells takes max(0.2, 1.0 - Cortex / 100) s,
   rounded up to ticks after modifiers, with the same 0.2 s floor.
   Lifting data or flipping a control takes 3 s. Integrity recovers 5 per
@@ -954,6 +959,10 @@ specifications until separately authored and accepted.
 - Emotes: `/me <text>` free-form in the zone channel, plus a fixed list
   with optional targets: wave, nod, shrug, salute, point, laugh, sigh,
   bow, glare, spit. Emotes are rate-limited with chat.
+- While jacked in, say and emotes reach the same cell; shout reaches
+  the sector. These lines use the Lattice log colour. Street audiences
+  and Lattice audiences are separate. Whisper, faction and crew retain
+  their ordinary audiences.
 - The client keeps a 500-line log ring; on reconnect the server replays
   the last 50 lines the session could see.
 - **Sitrep**: who is online, where (zone only, not tile), in which

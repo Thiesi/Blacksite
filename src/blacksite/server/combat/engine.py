@@ -70,7 +70,7 @@ class Combat:
         return {"H":"hostile","N":"neutral","A":"allied"}[value]
 
     def legal(self, source: Actor, target: Actor) -> bool:
-        if source.stance in ("down","dead","sleeper") or target.stance in ("down","dead"):
+        if source.stance in ("down","dead","sleeper","jacked") or target.stance in ("down","dead"):
             return False
         if source.id == target.id or source.zone != target.zone or source.zone not in self.world.zones:
             return False
@@ -131,6 +131,8 @@ class Combat:
         return total
 
     def evasion(self, actor: Actor) -> float:
+        if actor.stance == "jacked":
+            return 0  # Game design 5.2: the body cannot evade while jacked.
         player = self.game.players.get(actor.id)
         if not player: return float(actor.behaviour.get("evasion",0))
         value = player.attributes["nerve"] / 3
@@ -183,7 +185,7 @@ class Combat:
     def fire(self, pid: str, requested: str | None = None) -> None:
         player = self.game.players.get(pid)
         actor = self.actor(player) if player else None
-        if not actor or actor.zone is None or actor.stance in ("down","dead","sleeper"): return
+        if not actor or actor.zone is None or actor.stance in ("down","dead","sleeper","jacked"): return
         tick = self.clock.now_tick()
         if tick < max(actor.cooldowns.get("weapon",0),actor.cooldowns.get("knockdown",0)) or pid in self.casts: return
         target = self.world.actors.get(requested or actor.target)

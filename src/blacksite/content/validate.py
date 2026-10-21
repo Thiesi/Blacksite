@@ -362,6 +362,8 @@ class _Validator:
             assert isinstance(zone, s.Zone)
             owner = ("zones", zid)
             meta = zone.meta
+            if meta.sector is not None:
+                self.ref("sectors", meta.sector, owner, "sector")
             if not (ZONE_WIDTH[0] <= zone.width <= ZONE_WIDTH[1] and ZONE_HEIGHT[0] <= zone.height <= ZONE_HEIGHT[1]):
                 self.problems.append(Problem(
                     self.t.source("maps", zid), None,
@@ -465,6 +467,8 @@ class _Validator:
         owner = ("zones", zone.id)
         seen: set[str] = set()
         for obj in zone.meta.objects:
+            if obj.kind == "terminal" and obj.params.get("sector") is not None:
+                self.ref("sectors", obj.params["sector"], owner, obj.id)
             if obj.params.get("training_npc"):
                 self.ref("npcs",str(obj.params["training_npc"]),owner,"training NPC")
                 tile = obj.params.get("training_tile")
@@ -524,11 +528,27 @@ class _Validator:
             assert isinstance(sector, s.Sector)
             owner = ("sectors", sid)
             cells = {c.id: c for c in sector.cells}
+            width,height = sector.layout_size
+            if not (1 <= width <= 8 and 1 <= height <= 6):
+                self.report(*owner, "sector layout must fit eight columns by six rows")
             if len(cells) != len(sector.cells):
                 self.report(*owner, "cell ids are not unique")
+            if sector.entry is not None and (sector.entry not in cells or cells[sector.entry].access_kind != "public"):
+                self.report(*owner, "entry must name a public cell")
+            if not any(c.access_kind == "public" for c in sector.cells):
+                self.report(*owner, "sector needs a public entrance")
+            if sum(c.kind == "descent" for c in sector.cells) > 1:
+                self.report(*owner, "sector has more than one descent cell")
             positions: dict[s.Tile, str] = {}
             for cell in sector.cells:
                 label = f"cell {cell.id}"
+                if not (0 <= cell.pos[0] < width and 0 <= cell.pos[1] < height):
+                    self.report(*owner, f"{label}: position is outside layout bounds", cell.id)
+                if cell.access is not None and cell.kind in ("public", "gated", "hidden") and cell.access != cell.kind:
+                    self.report(*owner, f"{label}: access conflicts with cell kind", cell.id)
+                if cell.access_kind == "gated" and not cell.requirement:
+                    self.report(*owner, f"{label}: gated access needs a credential", cell.id)
+                self.check_credential(cell.requirement, owner, label)
                 if cell.pos in positions:
                     self.report(*owner, f"{label}: position {list(cell.pos)} is also {positions[cell.pos]}", cell.id)
                 positions[cell.pos] = cell.id
@@ -538,14 +558,51 @@ class _Validator:
                     elif cell.id not in cells[n].neighbours:
                         self.report(*owner, f"{label}: neighbour {n!r} does not list it back", cell.id)
                 if cell.kind == "core_entrance":
-                    if cell.core_id is None:
+                    if cell.core_placeholder:
+                        if cell.core_id is not None:
+                            self.report(*owner, f"{label}: placeholder cannot name an active core", cell.id)
+                        if not cell.planned_core or not re.fullmatch(r"[a-z0-9]+(-[a-z0-9]+)*",cell.planned_core):
+                            self.report(*owner, f"{label}: placeholder needs a planned core slug", cell.id)
+                        elif cell.planned_core in self.t.cores and self.t.active("cores",cell.planned_core):
+                            self.report(*owner, f"{label}: active core must replace its placeholder", cell.id)
+                    elif cell.core_id is None:
                         self.report(*owner, f"{label}: a core entrance needs core_id", cell.id)
                     else:
                         self.ref("cores", cell.core_id, owner, label, cell.id)
                 elif cell.core_id is not None:
                     self.report(*owner, f"{label}: only a core entrance has core_id", cell.id)
+                if cell.core_placeholder and cell.kind != "core_entrance":
+                    self.report(*owner, f"{label}: only a core entrance can be a placeholder", cell.id)
+                if cell.planned_core and not cell.core_placeholder:
+                    self.report(*owner, f"{label}: planned_core is only for an unavailable placeholder", cell.id)
+                if cell.uplink:
+                    self.check_credential(cell.uplink.requirement, owner, label)
+                    if self.ref("sectors",cell.uplink.sector,owner,label,cell.id):
+                        destination = next((c for c in self.t.sectors[cell.uplink.sector].cells if c.id == cell.uplink.cell), None)
+                        if destination is None:
+                            self.report(*owner, f"{label}: uplink cell does not exist", cell.id)
+                        elif not destination.uplink or (destination.uplink.sector,destination.uplink.cell) != (sid,cell.id):
+                            self.report(*owner, f"{label}: uplink is not reciprocal", cell.id)
                 for asset in cell.lore:
                     self.ref("text", asset, owner, f"{label}: lore", cell.id)
+
+    def check_credential(self, value: str | None, owner: tuple[str,str], label: str) -> None:
+        if not value:
+            return
+        parts = value.split(":")
+        if len(parts) == 1:
+            self.ref("programs" if value.startswith("prg_") else "items", value, owner, label)
+        elif len(parts) == 2 and parts[0] in ("item", "program", "faction"):
+            self.ref({"item":"items","program":"programs","faction":"factions"}[parts[0]],parts[1],owner,label)
+        elif len(parts) == 2 and parts[0] == "event" and re.fullmatch(r"[a-z0-9]+(-[a-z0-9]+)*",parts[1]):
+            # S24 supplies active event credentials; S13 declares the gate.
+            pass
+        elif len(parts) == 3 and parts[0] == "program" and parts[1] in ("attack","shield","decoy","loader","key","stealth","utility") and parts[2].isdigit() and 1 <= int(parts[2]) <= 5:
+            pass
+        elif len(parts) == 3 and parts[0] == "standing" and parts[2].isdigit() and 0 <= int(parts[2]) <= 100:
+            self.ref("factions", parts[1], owner, label)
+        else:
+            self.report(*owner,f"{label}: invalid access credential {value!r}")
 
     def check_cores(self) -> None:
         hardware_owner: dict[tuple[str, s.Tile], str] = {}

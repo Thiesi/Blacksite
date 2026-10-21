@@ -11,11 +11,14 @@ def body(game,client):
 
 def test_lists_online_with_zone(social):
     game,a,b=social
+    act(game,a,Frame('intent',{'name':'resync','args':{}}))
+    zone=[f.data['body'] for f in game.frames_for(a)
+          if f.type=='view' and f.data['kind']=='zone'][-1]
+    assert zone['nearby'][0]['name']=='Beta'
     act(game,a,Frame('key',{'k':'W','t':0}))
     rows=body(game,a)['rows']
     assert {r['cells'][0] for r in rows}=={'Alpha','Beta'}
     assert rows[1]['cells']==['Beta','Second界','Freelance','Meridian Plaza','body']
-    assert game.core.characters.sim.views[a.session.id].previous['body']['nearby'][0]['name']=='Beta'
 
 
 def test_hidden_symmetric(social):

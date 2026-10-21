@@ -18,7 +18,7 @@ MAX_FRAME = 256 * 1024  # Architecture §5.1, bytes excluding header.
 FrameType = Literal[
     "hello", "resize", "key", "intent", "line", "ack", "ping", "bye",
     "welcome", "view", "delta", "log", "prompt", "toast", "pong",
-    "admin.status", "admin.who", "admin.stop",
+    "admin.status", "admin.who", "admin.stop", "admin.lattice.who", "admin.lattice.reveal",
 ]
 
 
@@ -154,12 +154,15 @@ def _need(data: dict[str, Any], key: str, valid: bool) -> None:
 
 def validate(kind: str, data: dict[str, Any], direction: str | None = None) -> None:
     client = {"hello", "resize", "key", "intent", "line", "ack", "ping", "bye",
-              "admin.status", "admin.who", "admin.stop"}
+              "admin.status", "admin.who", "admin.stop", "admin.lattice.who", "admin.lattice.reveal"}
     server = {"welcome", "view", "delta", "log", "prompt", "toast", "pong", "bye"}
     allowed = client if direction == "client" else server if direction == "server" else client | server
     if kind not in allowed:
         raise ProtocolError("unknown or wrong-direction frame type")
-    if kind == "hello":
+    if kind == "admin.lattice.reveal":
+        for key in ("player", "sector", "cell"):
+            _need(data, key, _text(data.get(key), 256) and bool(data.get(key)))
+    elif kind == "hello":
         _need(data, "proto", type(data.get("proto")) is int)
         if data["proto"] != PROTOCOL_MAJOR:
             raise ProtocolError("unsupported protocol major")

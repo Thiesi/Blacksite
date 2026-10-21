@@ -60,7 +60,7 @@ def test_fixture_shape_matches_s02(tree) -> None:
     sizes = {z: (v.width, v.height, v.meta.safety) for z, v in tree.zones.items()}
     assert sizes == {"fx-safe": (40, 20, "safe"), "fx-street": (60, 24, "contested"), "fx-open": (40, 20, "open")}
     assert tree.zones["fx-street"].meta.pockets
-    assert len(tree.sectors["fx-sector"].cells) == 5
+    assert len(tree.sectors["fx-sector"].cells) == 6
     assert (tree.cores["fx-core-a"].tier, tree.cores["fx-core-b"].tier) == (1, 2)
     control = tree.cores["fx-core-a"].rooms[2].controls[0]
     assert (control.target.zone, control.target.object) == ("fx-street", "fx-street-gate")

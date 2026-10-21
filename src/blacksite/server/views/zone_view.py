@@ -89,7 +89,7 @@ def build(actor: Actor, zone: ZoneInstance, perception: Perception, content: Con
         if other is not actor and not sees_actor(actor, other, visible, radius):
             continue
         entry = {"id": other.id, "x": other.x, "y": other.y,
-                 "glyph": glyphs.get("actor-self" if other is actor else "actor-drone" if other.kind == "drone" else "actor-npc" if other.kind == "npc" else "actor-player", "@"),
+                 "glyph": glyphs.get("actor-jacked" if other.stance == "jacked" else "actor-self" if other is actor else "actor-drone" if other.kind == "drone" else "actor-npc" if other.kind == "npc" else "actor-player", "@"),
                  "role": "player_self" if other is actor else "npc_"+(other.faction or "neutral") if other.kind != "player" else "player_hostile" if other.marked else "player_neutral", "stance": other.stance}
         if other is actor:
             entry["name"] = other.name

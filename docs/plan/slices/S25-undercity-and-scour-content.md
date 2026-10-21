@@ -162,6 +162,16 @@ the real remaining maps land here, this slice must:
 
 ## Implementer notes
 
+S13/S14 hardware handoff: give each new zone its canonical `sector` ID,
+anchor and activate every ordinary core whose hardware now exists, and
+replace the district entrance's `planned_core` placeholder with its live
+`core_id`. All sixteen relay instances use game design 7.7's
+`lat-relay-<slug>` IDs. Keep service cores separate; Shaft is the only
+two-location core. When all 34 ordinary maps ship, no district core
+entrance may remain a placeholder. This complements the existing vendor,
+bank and clinic activation gate above; neither handoff supersedes the
+other.
+
 - Author at the gazetteer's target size; the sketches are 1:3 to 1:5
   proportion guides, not tiles.
 - Keep cover clusters (`%`) dense in the Scour rings so real-time combat

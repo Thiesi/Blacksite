@@ -33,7 +33,10 @@ covers chat, emotes, sitrep privacy, ignore/report and replayed logs. The
 [item guide](docs/ops/items.md) covers equipment, counter trading,
 five-minute caches and banking. The [combat guide](docs/ops/combat.md)
 covers targeting, abilities, clone settlement and recovery. The
-[NPC guide](docs/ops/npcs.md) covers city traffic, patrols and heat. Future-zone
+[NPC guide](docs/ops/npcs.md) covers city traffic, patrols and heat. S13 adds
+[Lattice traversal](docs/ops/lattice.md): eleven district sectors, public
+terminal loans, native/portable rigs and the body left behind. Cores,
+ICE and working programs follow in S14. Future-zone
 vendors remain staged for
 S25; the playable city stays the ten-zone hub. The
 [deployment guide](deploy/README.md) covers service units and operator

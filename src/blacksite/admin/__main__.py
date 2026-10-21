@@ -81,6 +81,12 @@ def parser() -> argparse.ArgumentParser:
     secret.add_subparsers(dest="secret_command", required=True).add_parser("rotate", parents=[common])
     cap = commands.add_parser("character-cap", parents=[common], help="set the offline per-identity character cap")
     cap.add_argument("value", type=int)
+    lattice = commands.add_parser("lattice", parents=[common], help="inspect live Lattice presences")
+    actions = lattice.add_subparsers(dest="lattice_command", required=True)
+    actions.add_parser("who", parents=[common])
+    reveal = actions.add_parser("reveal", parents=[common], help="debug: reveal one cell to one character")
+    for field in ("player", "sector", "cell"):
+        reveal.add_argument(field)
     return root
 
 
@@ -121,7 +127,11 @@ def main(argv: list[str] | None = None) -> int:
             emit({"ok": not problems, "content_hash": tree.hash,
                   "problems": [str(problem) for problem in problems]}, args.json)
             return int(bool(problems))
-        result = character_cap(install, args.value) if args.command == "character-cap" else rotate(install) if args.command == "secrets" else asyncio.run(request(install, args.command))
+        command = "lattice."+args.lattice_command if args.command == "lattice" else args.command
+        if command == "lattice.reveal":
+            result = asyncio.run(request(install, command, {key: getattr(args, key) for key in ("player", "sector", "cell")}))
+        else:
+            result = character_cap(install, args.value) if args.command == "character-cap" else rotate(install) if args.command == "secrets" else asyncio.run(request(install, command))
         emit(result, args.json)
         return 0
     except (OSError, ValueError, RuntimeError, asyncio.TimeoutError, asyncio.IncompleteReadError) as exc:

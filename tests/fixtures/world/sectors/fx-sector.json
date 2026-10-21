@@ -38,7 +38,8 @@
         0
       ],
       "neighbours": [
-        "c-gate"
+        "c-gate",
+        "c-descent"
       ],
       "label": "C1",
       "core_id": "fx-core-a"
@@ -68,6 +69,23 @@
       ],
       "label": "C2",
       "core_id": "fx-core-b"
+    },
+    {
+      "id": "c-descent",
+      "kind": "descent",
+      "pos": [
+        6,
+        0
+      ],
+      "neighbours": [
+        "c-core-a"
+      ],
+      "label": "The Well"
     }
+  ],
+  "entry": "c-plaza",
+  "layout_size": [
+    8,
+    6
   ]
 }

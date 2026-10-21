@@ -46,6 +46,7 @@ after their id.
 | sight_radius | int | |
 | sight_radius_night | int, optional | Scour zones: used 20:00–06:00 node local time |
 | spawn | Tile, optional | passable preview/initial entry tile |
+| sector | sector id, optional | native/portable rig's district entry; terminals may override with `params.sector` |
 | layouts | list of ZoneLayout, optional | named service/event geometry variants |
 | exits | list of Exit | id, tile, target zone, target tile, kind (street, door, tram, ladder, lift, gate, cable), requirement (pass, key, faction), hidden |
 | spawners | list of Spawner | id, tile or region, npc template, count, respawn seconds, condition |
@@ -85,7 +86,24 @@ value) and `keymaps.json` (`actions`: action id to context and label;
 
 `id, district, cells[]` where a cell is `id, kind (public, gated, hidden,
 core_entrance, descent), pos (grid position on the sector view),
-neighbours[], requirement, label, core_id (optional), lore`.
+neighbours[], requirement, label, core_id (optional), lore`. A sector also
+names its public `entry` cell and `layout_size` (at most 8 by 6).
+
+`access` optionally separates public/gated/hidden access from a functional
+`core_entrance` or `descent` kind. An `uplink` names a sector, its cell and
+an optional requirement; links are reciprocal and never name a file path.
+Requirements are item/program IDs, or `item:<id>`, `program:<id>`, `program:<class>:<tier>`,
+`faction:<id>`, `standing:<id>:<minimum>` and `event:<id>` credentials.
+The server names the missing credential before changing a presence.
+
+`core_placeholder: true` explicitly marks an unavailable entrance, with a
+`planned_core` slug instead of a live `core_id`. This is declared staged
+content, not a missing reference silently accepted by the loader. Normal
+entrances still require a resolved core. Once the planned core is active,
+validation requires replacing its placeholder. S14 activates hub cores;
+future-map hardware remains staged until S25, preserving dependency order.
+Core and Silt interaction remains unavailable in S13, while public movement
+and jack-out remain usable by every archetype.
 
 ### 1.4 Core (`cores/<id>.json`)
 

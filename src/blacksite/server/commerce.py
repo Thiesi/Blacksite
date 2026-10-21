@@ -55,7 +55,7 @@ class Commerce:
         return bool(session.role == "caller" and not session.closed and av and session.player_id == av.actor.id
                     and session.player_id in self.game.players
                     and session.id not in self.game.screens and not av.travel and av.actor.zone
-                    and av.actor.stance not in ("down", "dead", "sleeper"))
+                    and av.actor.stance not in ("down", "dead", "sleeper", "jacked"))
 
     def toast(self, session: Session, text: str) -> None:
         session.send(Frame("toast", {"text": text, "role": "ui_text", "seconds": 4}))

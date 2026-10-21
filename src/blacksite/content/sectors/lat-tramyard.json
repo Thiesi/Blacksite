@@ -1,0 +1,504 @@
+{
+  "schema": 1,
+  "id": "lat-tramyard",
+  "district": "Tramyard",
+  "entry": "lat-tramyard-c01",
+  "layout_size": [
+    8,
+    6
+  ],
+  "cells": [
+    {
+      "id": "lat-tramyard-c01",
+      "kind": "public",
+      "pos": [
+        0,
+        0
+      ],
+      "neighbours": [
+        "lat-tramyard-c02",
+        "lat-tramyard-c09"
+      ],
+      "label": "Gate Bus East"
+    },
+    {
+      "id": "lat-tramyard-c02",
+      "kind": "public",
+      "pos": [
+        1,
+        0
+      ],
+      "neighbours": [
+        "lat-tramyard-c01",
+        "lat-tramyard-c03",
+        "lat-tramyard-c10"
+      ],
+      "label": "Core uplink",
+      "uplink": {
+        "sector": "lat-core",
+        "cell": "lat-core-c04"
+      }
+    },
+    {
+      "id": "lat-tramyard-c03",
+      "kind": "public",
+      "pos": [
+        2,
+        0
+      ],
+      "neighbours": [
+        "lat-tramyard-c02",
+        "lat-tramyard-c04",
+        "lat-tramyard-c11"
+      ],
+      "label": "Scour uplink",
+      "uplink": {
+        "sector": "lat-scour",
+        "cell": "lat-scour-c04"
+      }
+    },
+    {
+      "id": "lat-tramyard-c04",
+      "kind": "public",
+      "pos": [
+        3,
+        0
+      ],
+      "neighbours": [
+        "lat-tramyard-c03",
+        "lat-tramyard-c05",
+        "lat-tramyard-c12"
+      ],
+      "label": "Gate Bus West"
+    },
+    {
+      "id": "lat-tramyard-c05",
+      "kind": "public",
+      "pos": [
+        4,
+        0
+      ],
+      "neighbours": [
+        "lat-tramyard-c04",
+        "lat-tramyard-c06",
+        "lat-tramyard-c13"
+      ],
+      "label": "Depot Floor"
+    },
+    {
+      "id": "lat-tramyard-c06",
+      "kind": "public",
+      "pos": [
+        5,
+        0
+      ],
+      "neighbours": [
+        "lat-tramyard-c05",
+        "lat-tramyard-c07",
+        "lat-tramyard-c14"
+      ],
+      "label": "Convoy Staging"
+    },
+    {
+      "id": "lat-tramyard-c07",
+      "kind": "public",
+      "pos": [
+        6,
+        0
+      ],
+      "neighbours": [
+        "lat-tramyard-c06",
+        "lat-tramyard-c08",
+        "lat-tramyard-c15"
+      ],
+      "label": "Dispatch Approach"
+    },
+    {
+      "id": "lat-tramyard-c08",
+      "kind": "public",
+      "pos": [
+        7,
+        0
+      ],
+      "neighbours": [
+        "lat-tramyard-c07",
+        "lat-tramyard-c16"
+      ],
+      "label": "Signal rack 08"
+    },
+    {
+      "id": "lat-tramyard-c09",
+      "kind": "public",
+      "pos": [
+        0,
+        1
+      ],
+      "neighbours": [
+        "lat-tramyard-c10",
+        "lat-tramyard-c01",
+        "lat-tramyard-c17"
+      ],
+      "label": "Signal rack 09"
+    },
+    {
+      "id": "lat-tramyard-c10",
+      "kind": "public",
+      "pos": [
+        1,
+        1
+      ],
+      "neighbours": [
+        "lat-tramyard-c09",
+        "lat-tramyard-c11",
+        "lat-tramyard-c02",
+        "lat-tramyard-c18"
+      ],
+      "label": "Signal rack 10"
+    },
+    {
+      "id": "lat-tramyard-c11",
+      "kind": "public",
+      "pos": [
+        2,
+        1
+      ],
+      "neighbours": [
+        "lat-tramyard-c10",
+        "lat-tramyard-c12",
+        "lat-tramyard-c03",
+        "lat-tramyard-c19"
+      ],
+      "label": "Signal rack 11"
+    },
+    {
+      "id": "lat-tramyard-c12",
+      "kind": "public",
+      "pos": [
+        3,
+        1
+      ],
+      "neighbours": [
+        "lat-tramyard-c11",
+        "lat-tramyard-c13",
+        "lat-tramyard-c04",
+        "lat-tramyard-c20"
+      ],
+      "label": "Signal rack 12"
+    },
+    {
+      "id": "lat-tramyard-c13",
+      "kind": "public",
+      "pos": [
+        4,
+        1
+      ],
+      "neighbours": [
+        "lat-tramyard-c12",
+        "lat-tramyard-c14",
+        "lat-tramyard-c05",
+        "lat-tramyard-c21"
+      ],
+      "label": "Signal rack 13"
+    },
+    {
+      "id": "lat-tramyard-c14",
+      "kind": "public",
+      "pos": [
+        5,
+        1
+      ],
+      "neighbours": [
+        "lat-tramyard-c13",
+        "lat-tramyard-c15",
+        "lat-tramyard-c06",
+        "lat-tramyard-c22"
+      ],
+      "label": "Signal rack 14"
+    },
+    {
+      "id": "lat-tramyard-c15",
+      "kind": "public",
+      "pos": [
+        6,
+        1
+      ],
+      "neighbours": [
+        "lat-tramyard-c14",
+        "lat-tramyard-c16",
+        "lat-tramyard-c07",
+        "lat-tramyard-c23"
+      ],
+      "label": "Signal rack 15"
+    },
+    {
+      "id": "lat-tramyard-c16",
+      "kind": "public",
+      "pos": [
+        7,
+        1
+      ],
+      "neighbours": [
+        "lat-tramyard-c15",
+        "lat-tramyard-c08",
+        "lat-tramyard-c24"
+      ],
+      "label": "Signal rack 16"
+    },
+    {
+      "id": "lat-tramyard-c17",
+      "kind": "core_entrance",
+      "pos": [
+        0,
+        2
+      ],
+      "neighbours": [
+        "lat-tramyard-c18",
+        "lat-tramyard-c09",
+        "lat-tramyard-c25"
+      ],
+      "label": "Gatehouse East entrance",
+      "requirement": "program:key:2",
+      "access": "gated",
+      "core_placeholder": true,
+      "planned_core": "lat-gatehouse-east"
+    },
+    {
+      "id": "lat-tramyard-c18",
+      "kind": "core_entrance",
+      "pos": [
+        1,
+        2
+      ],
+      "neighbours": [
+        "lat-tramyard-c17",
+        "lat-tramyard-c19",
+        "lat-tramyard-c10",
+        "lat-tramyard-c26"
+      ],
+      "label": "Depot Control entrance",
+      "requirement": "program:key:2",
+      "access": "gated",
+      "core_placeholder": true,
+      "planned_core": "lat-depot-control"
+    },
+    {
+      "id": "lat-tramyard-c19",
+      "kind": "core_entrance",
+      "pos": [
+        2,
+        2
+      ],
+      "neighbours": [
+        "lat-tramyard-c18",
+        "lat-tramyard-c20",
+        "lat-tramyard-c11",
+        "lat-tramyard-c27"
+      ],
+      "label": "Dispatch entrance",
+      "requirement": "program:key:2",
+      "access": "gated",
+      "core_placeholder": true,
+      "planned_core": "lat-dispatch"
+    },
+    {
+      "id": "lat-tramyard-c20",
+      "kind": "core_entrance",
+      "pos": [
+        3,
+        2
+      ],
+      "neighbours": [
+        "lat-tramyard-c19",
+        "lat-tramyard-c21",
+        "lat-tramyard-c12",
+        "lat-tramyard-c28"
+      ],
+      "label": "Depot Relay entrance",
+      "requirement": "program:key:2",
+      "access": "gated",
+      "core_placeholder": true,
+      "planned_core": "lat-relay-depot"
+    },
+    {
+      "id": "lat-tramyard-c21",
+      "kind": "core_entrance",
+      "pos": [
+        4,
+        2
+      ],
+      "neighbours": [
+        "lat-tramyard-c20",
+        "lat-tramyard-c22",
+        "lat-tramyard-c13",
+        "lat-tramyard-c29"
+      ],
+      "label": "Gate Relay Nine entrance",
+      "requirement": "program:key:2",
+      "access": "gated",
+      "core_placeholder": true,
+      "planned_core": "lat-relay-gate-nine"
+    },
+    {
+      "id": "lat-tramyard-c22",
+      "kind": "gated",
+      "pos": [
+        5,
+        2
+      ],
+      "neighbours": [
+        "lat-tramyard-c21",
+        "lat-tramyard-c23",
+        "lat-tramyard-c14",
+        "lat-tramyard-c30"
+      ],
+      "label": "Signal rack 22",
+      "requirement": "program:key:2"
+    },
+    {
+      "id": "lat-tramyard-c23",
+      "kind": "gated",
+      "pos": [
+        6,
+        2
+      ],
+      "neighbours": [
+        "lat-tramyard-c22",
+        "lat-tramyard-c24",
+        "lat-tramyard-c15",
+        "lat-tramyard-c31"
+      ],
+      "label": "Signal rack 23",
+      "requirement": "program:key:2"
+    },
+    {
+      "id": "lat-tramyard-c24",
+      "kind": "gated",
+      "pos": [
+        7,
+        2
+      ],
+      "neighbours": [
+        "lat-tramyard-c23",
+        "lat-tramyard-c16",
+        "lat-tramyard-c32"
+      ],
+      "label": "Signal rack 24",
+      "requirement": "program:key:2"
+    },
+    {
+      "id": "lat-tramyard-c25",
+      "kind": "gated",
+      "pos": [
+        0,
+        3
+      ],
+      "neighbours": [
+        "lat-tramyard-c26",
+        "lat-tramyard-c17"
+      ],
+      "label": "Signal rack 25",
+      "requirement": "program:key:2"
+    },
+    {
+      "id": "lat-tramyard-c26",
+      "kind": "gated",
+      "pos": [
+        1,
+        3
+      ],
+      "neighbours": [
+        "lat-tramyard-c25",
+        "lat-tramyard-c27",
+        "lat-tramyard-c18"
+      ],
+      "label": "Signal rack 26",
+      "requirement": "program:key:2"
+    },
+    {
+      "id": "lat-tramyard-c27",
+      "kind": "gated",
+      "pos": [
+        2,
+        3
+      ],
+      "neighbours": [
+        "lat-tramyard-c26",
+        "lat-tramyard-c28",
+        "lat-tramyard-c19"
+      ],
+      "label": "Signal rack 27",
+      "requirement": "program:key:2"
+    },
+    {
+      "id": "lat-tramyard-c28",
+      "kind": "descent",
+      "pos": [
+        3,
+        3
+      ],
+      "neighbours": [
+        "lat-tramyard-c27",
+        "lat-tramyard-c29",
+        "lat-tramyard-c20"
+      ],
+      "label": "Sidings",
+      "requirement": "program:key:2",
+      "access": "gated"
+    },
+    {
+      "id": "lat-tramyard-c29",
+      "kind": "hidden",
+      "pos": [
+        4,
+        3
+      ],
+      "neighbours": [
+        "lat-tramyard-c28",
+        "lat-tramyard-c30",
+        "lat-tramyard-c21"
+      ],
+      "label": "Signal rack 29"
+    },
+    {
+      "id": "lat-tramyard-c30",
+      "kind": "hidden",
+      "pos": [
+        5,
+        3
+      ],
+      "neighbours": [
+        "lat-tramyard-c29",
+        "lat-tramyard-c31",
+        "lat-tramyard-c22"
+      ],
+      "label": "Signal rack 30"
+    },
+    {
+      "id": "lat-tramyard-c31",
+      "kind": "hidden",
+      "pos": [
+        6,
+        3
+      ],
+      "neighbours": [
+        "lat-tramyard-c30",
+        "lat-tramyard-c32",
+        "lat-tramyard-c23"
+      ],
+      "label": "Signal rack 31"
+    },
+    {
+      "id": "lat-tramyard-c32",
+      "kind": "hidden",
+      "pos": [
+        7,
+        3
+      ],
+      "neighbours": [
+        "lat-tramyard-c31",
+        "lat-tramyard-c24"
+      ],
+      "label": "Signal rack 32"
+    }
+  ]
+}

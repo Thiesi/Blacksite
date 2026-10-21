@@ -13,7 +13,7 @@ from blacksite.version import PACKAGE_VERSION, PROTOCOL_MAJOR
 NOT_RUNNING = "service not running; start it with `blacksite serve` or your rc.d script"
 
 
-async def request(install: Path, command: str) -> Any:
+async def request(install: Path, command: str, data: dict[str, Any] | None = None) -> Any:
     writer: asyncio.StreamWriter | None = None
     try:
         async with asyncio.timeout(5):
@@ -32,7 +32,7 @@ async def request(install: Path, command: str) -> Any:
             await writer.drain()
             if (await read_frame(reader, "server")).type != "welcome":
                 raise RuntimeError("operator authentication refused")
-            writer.write(encode(Frame("admin." + command)))
+            writer.write(encode(Frame("admin." + command, data or {})))
             await writer.drain()
             while True:
                 frame = await read_frame(reader, "server")

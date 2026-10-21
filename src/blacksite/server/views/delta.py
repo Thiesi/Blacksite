@@ -38,15 +38,18 @@ class ViewStore:
     def __init__(self) -> None:
         self.previous: dict[str, Any] | None = None
 
-    def publish(self, session: Session, body: dict[str, Any], tick: int) -> bool:
+    def publish(self, session: Session, body: dict[str, Any], tick: int,
+                kind: str = "zone") -> bool:
         """Take ownership of a snapshot whose nested arrays stay immutable."""
-        document = {"kind": "zone", "body": body}
+        document = {"kind": kind, "body": body}
         if document == self.previous and not session.needs_full_view:
             return False
         revision = session.view_revision + 1
         full = Frame("view", {"rev": revision, **document})
         delta = None
-        if self.previous is not None and self.previous["body"]["viewport"] == body["viewport"]:
+        if (self.previous is not None and self.previous["kind"] == kind
+                and self.previous["body"].get("viewport") == body.get("viewport")
+                and self.previous["body"].get("sector") == body.get("sector")):
             ops = changes(self.previous, document)
             candidate = Frame("delta", {"rev": revision, "base": session.view_revision, "ops": ops})
             if len(ops) <= 256 and len(encode(candidate)) < len(encode(full)):
