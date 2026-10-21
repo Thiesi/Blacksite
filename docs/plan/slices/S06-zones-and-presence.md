@@ -1,6 +1,6 @@
 # S06 — Zones: map loading, movement, sight, multi-player presence, ZoneView
 
-**Status:** planned
+**Status:** done (PR #45)
 **Primary model:** Opus · **Reviewer:** Sonnet (test pass)
 **Depends on:** S02, S03, S04 · **Milestone:** M1
 **Issue:** https://github.com/Thiesi/blacksite/issues/6
@@ -202,3 +202,13 @@ the broader validation exposed that real CLI race while testing S06.
 - Root `pytest -q --basetemp=.test-tmp/full-s06-final -p no:cacheprovider`:
   451 passed, 1 Windows platform skip. The shipped-content validator
   passes with two zones. Golden screens cover both sizes and all tiers.
+- Linux wheel-installed acceptance repeats both terminal sizes through
+  NetBBS Telnet/SSH and passes, alongside the real systemd lifecycle.
+  Movement-phase tick p99 is 2.300 ms; idle p99 is 0.150 ms. Proof is
+  attached to [run 39593458588](https://github.com/Thiesi/Blacksite/actions/runs/39593458588).
+- Full CI: 452 passed on Linux; 451 passed, 1 skipped on Windows.
+  Claude reports no blockers. Timezone hardening was rejected after
+  tracing NetBBS's validated producer and checking the actual Python
+  directory-name exception; speculative future layer concerns were
+  deferred to their consuming slices. Pending timers keep zones active
+  intentionally (architecture 6.1).
