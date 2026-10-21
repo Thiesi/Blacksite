@@ -1,6 +1,6 @@
 # S07 — Characters: the Wake, archetypes, attributes, skills, persistence
 
-**Status:** planned
+**Status:** done (PR #46)
 **Primary model:** Opus · **Reviewer:** Astra (Wake flow and onboarding read)
 **Depends on:** S06 · **Milestone:** M1
 **Issue:** https://github.com/Thiesi/blacksite/issues/7
@@ -104,20 +104,17 @@ right numbers on the side panel.
 
 ## Tests
 
-- `tests/rules/test_character.py::test_health_50_plus_2_vitals`,
-  `::test_stamina_formula`, `::test_tolerance_min_4`,
-  `::test_evasion_nerve_over_3`, `::test_carry_frame_over_2`,
-  `::test_archetype_start_tables`, `::test_skill_group_raises_attribute_per_10`,
-  `::test_grade_table_monotonic_and_30_max`, `::test_legal_at_grade_5_or_90_days_without_reset`.
-- `tests/server/test_players.py::test_one_character_per_bbs_user`,
-  `::test_identity_origin_plus_user_id`, `::test_position_persists_across_restart`,
-  `::test_sleeper_60s_then_safe_zone`, `::test_reconnect_within_60s_no_sleeper`,
-  `::test_delete_requires_typed_name`.
-- `tests/server/test_wake.py::test_full_wake_under_20_frames`,
-  `::test_name_rules_and_uniqueness`, `::test_wide_name_display_width_24`,
-  `::test_card_sets_standing_plus_10`, `::test_no_card_zero_standing`,
-  `::test_starter_kit_and_200_chits`, `::test_returning_player_skips_wake`.
-- `tests/door/test_wake_render.py::test_golden_archetype_menu_80x24`.
+- `tests/characters/test_rules.py`: exact starts and derived rules,
+  twelve skill lines, grade/lease thresholds, normalized name width and
+  uniqueness keys, and starter weapon schema boundaries.
+- `tests/characters/test_lifecycle.py`: identity, commit-before-reward,
+  failed-write retry, starter grants, name ownership, reconnect/rename,
+  saved terrain, sleepers and restart, idle-online crash grace, typed
+  deletion and retained identity history, character caps, briefing
+  resume, all skill rows, grade benefits, shock and schema migration.
+- `tests/door/test_wake_render.py`: committed archetype goldens, nested
+  menu inputs, wide self name and BBS handle, all three tiers, character
+  sheet scrolling, lease days and discharge XP at both terminal sizes.
 
 ## Acceptance script
 
@@ -219,3 +216,5 @@ the view cache includes zone ID as well as revision.
 - Final local root gate on Windows Python 3.12:
   `pytest -q --basetemp=.test-tmp/s07-final-root -p no:cacheprovider`:
   494 passed, 1 platform skip. The shipped content validator passes.
+- The delivered Claude review, product-impact triage and final Linux/CI
+  acceptance are recorded in PR #46 before merge.

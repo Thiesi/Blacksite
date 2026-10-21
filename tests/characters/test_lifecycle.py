@@ -308,3 +308,22 @@ def test_shock_decays_five_per_second_after_three_second_hit_grace(game: Headles
     assert actor.shock==50
     game.step(10)
     assert actor.shock==45
+
+
+def test_upgrade_from_shipped_schema_one_preserves_origin_and_old_rows(scratch_dir: Path) -> None:
+    import sqlite3
+    from importlib import import_module
+    from blacksite.server.clock import ManualClock
+    path=scratch_dir/"world.db"
+    with sqlite3.connect(path) as db:
+        import_module("blacksite.server.storage.migrations.0001_initial").apply(db)
+        db.executemany("INSERT INTO meta(key,value) VALUES(?,?)",[("schema_version","1"),("origin",json.dumps("existing-origin"))])
+        db.execute("INSERT INTO players(id,origin,bbs_user_id,health) VALUES('old','existing-origin','1',130)")
+    store=Storage(path,ManualClock())
+    try:
+        assert store.origin=="existing-origin" and store.meta("schema_version")==2
+        assert store.db.execute("SELECT health FROM players WHERE id='old'").fetchone()[0]==130
+        assert {"name_key","progress"} <= store.player_columns
+        assert store.meta("character_cap")==1
+    finally:
+        store.close()
