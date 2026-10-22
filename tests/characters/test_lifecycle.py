@@ -259,9 +259,12 @@ def test_offline_character_cap_holds_service_lease_and_preserves_characters(scra
 def test_character_sheet_reaches_all_twelve_skills(game: HeadlessServer) -> None:
     a=game.connect();create(game,a)
     act(game,a,Frame("key",{"k":"P","t":0}))
-    for _ in range(35):
-        act(game,a,Frame("intent",{"name":"menu_cursor","args":{"delta":1}}))
     manager=game.core.characters
+    rows=manager.sheet(manager.players[a.session.player_id],0)["rows"]
+    assert sum(row["id"].startswith("skill:") for row in rows)==12
+    listening=next(i for i,row in enumerate(rows) if row["id"]=="skill:listening")
+    for _ in range(listening):
+        act(game,a,Frame("intent",{"name":"menu_cursor","args":{"delta":1}}))
     cursor=manager.screens[a.session.id][1]
     body=manager.sheet(manager.players[a.session.player_id],cursor)
     assert body["rows"][cursor]["cells"][0]=="Listening"

@@ -21,6 +21,16 @@ def ticks(seconds: float) -> int:
     return ceil(round(seconds / TICK_SECONDS, 8))
 
 
+def cooldown_deadline(tick: int, seconds: float, previous: float = 0) -> float:
+    """Game 5.2/5.3: bounded rounding credit keeps small modifiers real.
+
+    Execution still waits for an integer tick. Only the previous tick's
+    fractional remainder survives; idle time cannot accumulate a burst.
+    """
+    origin = previous if tick-1 < previous <= tick else tick
+    return round(origin+seconds/TICK_SECONDS, 8)
+
+
 def distance(a: Tile, b: Tile) -> float:
     return hypot(a[0] - b[0], a[1] - b[1])
 

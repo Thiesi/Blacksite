@@ -8,7 +8,7 @@ from typing import Any
 from collections.abc import Callable
 
 from blacksite.content.schema import ObjectSpec, Vendor, VendorStock
-from blacksite.server import bank
+from blacksite.server import bank, drugs
 from blacksite.server.characters import Characters
 from blacksite.server.inventory import Inventory
 from blacksite.server.items import CACHE_SECONDS, CONSUMABLE_SECONDS, ItemInstance, availability, make_item
@@ -121,7 +121,7 @@ class Commerce:
         self.game.snapshot(player, av)
         draft = deepcopy(player)
         items, caches, budgets = deepcopy(self.items), deepcopy(self.caches), deepcopy(self.budgets)
-        inventory = Inventory(items, self.content.items)
+        inventory = Inventory(items, self.content.items, self.game.progression.modifiers(draft).secured_slots)
         serial = max(self.serial, max((int(i.rsplit(":", 1)[-1]) for i in items), default=0))
         def next_id() -> str:
             nonlocal serial
@@ -222,6 +222,14 @@ class Commerce:
             inventory.add(draft, item)
             if not cache["items"]: del caches[target]
             message = "You pick up the item."
+        elif name == "inv.use" and self.content.items[inventory.owned(draft, iid).template].drug:
+            if any(effect.get("hush") for effect in av.actor.effects):
+                raise ValueError("You cannot use consumables yet.")
+            item = inventory.owned(draft, iid)
+            template = self.content.items[item.template]
+            note = self.game.progression.substances.consume(draft, template, now, items)
+            inventory.remove(draft, iid, 1, next_id)
+            message = f"Used {template.name}."+note
         elif name == "inv.use":
             if any(effect.get("hush") for effect in av.actor.effects):
                 raise ValueError("You cannot use consumables yet.")
@@ -248,6 +256,7 @@ class Commerce:
             draft.shock = min(100, draft.shock + effects.get("shock", 0))
             if effects.get("remove_ring_dust_crash"):
                 actor_effects = [e for e in actor_effects if e.get("kind") != "ring_dust_crash"]
+                drugs.end_ringdust_crash(draft, now); supported = True
             if effects.get("end_chemical_dot"):
                 actor_effects = [e for e in actor_effects if e.get("damage_type") != "chemical"]; supported = True
             if effects.get("recharge_cell"):
@@ -268,7 +277,7 @@ class Commerce:
             verb = {"inv.equip":"Equipped", "inv.unequip":"Unequipped", "inv.secure":"Changed secured status for", "inv.split":"Split"}.get(name, "Updated")
             label = self.content.items[self.items[iid].template].name if iid in self.items else args.get("slot", "equipment")
             message = f"{verb} {label}."
-        patches = {key: deepcopy(getattr(draft, key)) for key in ("inventory", "equipment", "chits_hand", "chits_bank", "health", "stamina", "shock", "progress")
+        patches = {key: deepcopy(getattr(draft, key)) for key in ("inventory", "equipment", "chits_hand", "chits_bank", "health", "stamina", "shock", "implants", "drugs_active", "dependencies", "progress")
                    if getattr(draft, key) != getattr(player, key)}
         self.outbox.append({"session": session.id, "player_id": player.id, "patch": patches,
             "progress_base":deepcopy(player.progress),
@@ -277,6 +286,11 @@ class Commerce:
             "message": message, "actor_effects": actor_effects})
         self.pending = True
 
+    def can_commit(self, effect: dict[str, Any]) -> bool:
+        """A character deletion invalidates all of its pending transfers."""
+        recipients = {pid for pid in (effect.get("player_id"),*effect.get("player_patches",{})) if pid}
+        return all(pid in self.game.players and pid not in self.game.deleting for pid in recipients)
+
     def prepare(self, effect: dict[str, Any]) -> dict[str, Any]:
         player = self.game.players.get(effect["player_id"])
         return {"player": {**player.record(), **self.settled_patch(effect)} if player else None,
@@ -284,6 +298,7 @@ class Commerce:
             "items": [item.record() for item in effect["items"].values()],
             "delete_items": effect["delete_items"], "caches": effect["caches"],
             "budgets": {key: asdict(value) for key, value in effect["budgets"].items()}, "serial": effect["serial"],
+            **({"identities": deepcopy(effect["identities"])} if "identities" in effect else {}),
             **({"interlock_state": deepcopy(effect["interlock_state"])} if "interlock_state" in effect else {}),
             **({"npc_state": effect["npc_state"]} if "npc_state" in effect else {}),
             **({"lattice_state": effect["lattice_state"]()} if "lattice_state" in effect else {}),
@@ -337,6 +352,7 @@ class Commerce:
         self.pending = False
         session = self.game.sessions.active.get(effect["session"])
         if success:
+            self.game.identities.update(deepcopy(effect.get("identities", {})))
             for pid, patch in effect.get("player_patches", {}).items():
                 for key, value in self.secondary_patch(pid, patch).items():
                     setattr(self.game.players[pid], key, deepcopy(value))
@@ -366,6 +382,18 @@ class Commerce:
             self.toast(session, "The transfer could not be saved. Your goods remain.")
         self.after_settle()
         if effect.get("callback"): effect["callback"](success)
+        if success:
+            # Callbacks can queue ordinary player snapshots while this
+            # outbox is draining. A later reward receipt must not be
+            # overwritten by one of those older snapshots next tick.
+            changed = {effect["player_id"], *effect.get("player_patches", {})}
+            for queued in self.game.outbox:
+                record = queued.get("player")
+                if queued["action"] == "save" and record and record["id"] in changed:
+                    current = self.game.players.get(record["id"])
+                    if current:
+                        queued["player"] = current.record()
+                        queued["identity"] = deepcopy(self.game.identities[current.bbs_user_id])
         while self.waiting and not self.pending:
             job = self.waiting.popleft()
             if callable(job):
@@ -494,7 +522,7 @@ class Commerce:
         player = self.game.players[session.player_id]
         rows: list[dict[str, Any]] = []
         detail, title, actions = "", screen.kind.upper(), []
-        inventory = Inventory(self.items, self.content.items)
+        inventory = Inventory(self.items, self.content.items, self.game.progression.modifiers(player).secured_slots)
         if screen.kind == "vendor":
             vendor, budget_key = self.vendor(session, screen.target)
             budget = deepcopy(self.budgets.get(budget_key, VendorBudget(int(self.clock.now_utc().timestamp())//3600)))
@@ -519,6 +547,8 @@ class Commerce:
                     cost = self.quote(player, vendor, entry, count) if template or entry.item in self.content.programs else 0
                     rows.append({"id": entry.item, "cells": [label, str(count), str(cost) if cost else "not for sale", "" if allowed else "locked"]})
             actions = [{"key":"enter", "label":"sell" if screen.sell else "buy"}, {"key":"t","label":"buy/sell"}]
+            if vendor.clinic:
+                actions.append({"key":"c","label":"clinic"})
         elif screen.kind == "bank":
             self.nearby(session, screen.target)
             title = "KESTREL BANK"
@@ -538,7 +568,8 @@ class Commerce:
                 item = self.items[iid]
                 slot = next((key for key,value in player.equipment.items() if value == iid), "")
                 rows.append({"id": iid, "cells": [self.content.items[item.template].name, str(item.stack), f"{self.content.items[item.template].weight*item.stack:g}kg", "S" if item.secured else "", slot]})
-            detail = f"Carry {inventory.weight(player):g}/{player.attributes['frame']/2:g} kg. Three secured slots."
+            mods = self.game.progression.modifiers(player)
+            detail = f"Carry {inventory.weight(player):g}/{mods.attribute(player,'frame')/2+mods.bonus('carry_kg'):g} kg. {inventory.secured_slots} secured slots."
             if screen.kind == "inventory":
                 actions = [{"key":k,"label":v} for k,v in (("q","equip"),("f","slot"),("e","equipment"),("s","secure"),("d","drop"),("x","split"),("u","use"))]
         screen.cursor = max(0, min(screen.cursor, len(rows)-1))
@@ -551,6 +582,10 @@ class Commerce:
                 if template.armour:
                     values=template.armour.armour
                     detail += f"\nArmour K{values.kinetic} E{values.energy} C{values.chemical} D{values.dissonance}"
+                if template.implant and not template.implant.portable:
+                    detail += "\nInstall or remove at a clinic. Open its counter and press C."
+                    if template.implant.effects.get("surge_inspect") and self.game.progression.surge_preview(player) is None:
+                        detail += "\nNo effect yet: Surge forecasts are not available."
         return {**menu(title, rows, screen.cursor, detail, "Esc/B returns"), "actions": actions,
                 "page": 2 if screen.sell else 1}
 

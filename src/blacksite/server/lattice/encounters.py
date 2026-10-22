@@ -19,12 +19,14 @@ from blacksite.server.items import make_item
 from blacksite.server.lattice.cores import CORE_IDLE_RESET_SECONDS, TRACE_PER_SECOND, CoreGraph, trace_thresholds
 from blacksite.server.lattice.ice import Ice, IceEvent, Location, Runner
 from blacksite.server.lattice.presence import INTEGRITY_MAX, Presence, Procedure, directional_neighbour, movement_ticks
-from blacksite.server.lattice.programs import Cast, attack_damage, bind, can_cast, cast_ticks, occupied_slots, ticks, trace_gain
+from blacksite.server.lattice.programs import Cast, Effects, attack_damage, bind, can_cast, cast_ticks, occupied_slots, ticks, trace_gain
 from blacksite.server.lattice.silt import Descent, adjacent_hidden, generate, survey_directions
 from blacksite.server.lattice.silt_scene import BandGraph
 from blacksite.server.players import Player
+from blacksite.server.progression import Grant, award
 from blacksite.server.sessions import Session
 from blacksite.server.protocol import Frame
+from blacksite.server.skills import Use
 from blacksite.server.wake import menu, wrapped
 
 if TYPE_CHECKING:
@@ -73,15 +75,7 @@ class Encounters:
         self.mission_of: Callable[[str, str], str | None] = lambda pid, source: None  # S19.
 
     def move_multiplier(self, player: Player) -> float:
-        native = self.content.starts[player.archetype].rig_slots
-        rigs = [self.content.items[self.game.items[iid].template] for iid in
-                set(player.inventory) | set(player.implants.values()) if iid in self.game.items]
-        rigs = [t for t in rigs if t.implant and t.implant.rig_slots and
-                (t.class_ == "rig" or any(self.game.items[i].template == t.id for i in player.implants.values()))]
-        chosen = max(rigs, key=lambda t: (t.implant.rig_slots, t.id), default=None)
-        if chosen is None or chosen.implant.rig_slots <= native:
-            return 1
-        return float(chosen.implant.effects.get("cell_move_multiplier", 1))
+        return self.game.progression.modifiers(player).multiplier("cell_move_multiplier")
 
     def publish_report(self, player: Player, owner: str, exact: bool) -> None:
         actor = self.combat.actor(player)
@@ -274,7 +268,7 @@ class Encounters:
                     self.activate(ice, presence, "passage")
                     raise ValueError(ice.template.name+" blocks passage. Use its key or destroy it; retreat stays open.")
         player = self.game.players[presence.player_id]
-        duration = movement_ticks(player.attributes["cortex"], self.move_multiplier(player))
+        duration = movement_ticks(self.game.progression.modifiers(player).attribute(player, "cortex"), self.move_multiplier(player))
         presence.redline_move = presence.effects.has("prg_redline", self.clock.now_tick())
         if presence.redline_move:
             duration = min(duration, ticks(float(self.content.programs["prg_redline"].effect.amount)))
@@ -351,13 +345,14 @@ class Encounters:
         presence.trace = 0
         presence.cast = presence.procedure = None
         presence.found_silt.setdefault(iid, set()).add(presence.room)
+        self.lat.sense_hidden(presence)
         self.follow(presence)
         self.log(presence, f"SILT / {band.name}. No trace. B follows the riser; J starts escape.")
         self.log(presence, "NPC BLACK FEEDBACK / BODY RISK below remains active.", True)
 
     def survey(self, presence: Presence, sample: bool = False) -> None:
-        if not presence.descent or not self.idle(presence):
-            raise ValueError("Survey or sample while idle in the Silt.")
+        if not self.idle(presence) or sample and not presence.descent or presence.instance and not presence.descent:
+            raise ValueError("Survey while idle in a district or the Silt; sample only in the Silt.")
         tick, player = self.clock.now_tick(), self.game.players[presence.player_id]
         signal = next((i for i in self.defenders(presence) if i.template.class_ == "chorister" and not i.provoked), None)
         if sample:
@@ -373,8 +368,24 @@ class Encounters:
 
     def complete_survey(self, presence: Presence, procedure: Procedure) -> None:
         tick = self.clock.now_tick()
-        graph = self.core(presence).graph
         player = self.game.players[presence.player_id]
+        if not presence.descent:
+            player.progress.setdefault("lattice_cooldowns", {})["survey"] = self.clock.now_utc().timestamp()+10
+            self.game.queue("save", player.bbs_user_id, player, immediate=True)
+            cells = self.lat.sectors.cells[presence.sector]
+            hidden = [cells[cid] for cid in cells[presence.cell].neighbours
+                      if cells[cid].access_kind == "hidden" and cid not in self.lat.found(player, presence.sector)]
+            if self.game.progression.modifiers(player).skill(player, "listening") >= 20:
+                for cell in hidden:
+                    self.lat.reveal(player, presence.sector, cell.id, learn=True)
+                self.log(presence, "Survey reveals adjacent hidden cells." if hidden else "No hidden signal is adjacent.")
+            else:
+                origin = cells[presence.cell].pos
+                directions = sorted({("north" if cell.pos[1] < origin[1] else "south" if cell.pos[1] > origin[1] else "")+
+                    ("west" if cell.pos[0] < origin[0] else "east" if cell.pos[0] > origin[0] else "") for cell in hidden})
+                self.log(presence,"Hidden signal directions: "+(", ".join(directions) if directions else "none adjacent")+". Listening 20 resolves them.")
+            return
+        graph = self.core(presence).graph
         known = presence.found_silt.setdefault(presence.instance, set())
         signal = self.target(presence, procedure.target)
         if procedure.kind == "sample":
@@ -392,7 +403,7 @@ class Encounters:
             if signal and not signal.provoked and signal.signal_phase(tick)[0] == "listening":
                 presence.survey_records.add(signal.id)
                 self.log(presence, "Signal recorded. Start a three-second hold in sampling.")
-            if player.skills.get("listening", 0) >= 20 or presence.mapping_until > tick:
+            if self.game.progression.modifiers(player).skill(player, "listening") >= 20 or presence.mapping_until > tick:
                 known.update(c.id for c in adjacent_hidden(graph.band, presence.room, known))
                 self.log(presence, "Survey reveals adjacent hidden branches.")
             else:
@@ -427,7 +438,8 @@ class Encounters:
         owner = instance.graph.spec.owner if instance else sector.trace_owner or ""
         previous = presence.trace
         presence.trace = min(100, max(0, previous+trace_gain(amount, presence.effects,
-                                            self.clock.now_tick(), fixed=fixed)))
+            self.clock.now_tick(), fixed=fixed,
+            multiplier=self.game.progression.modifiers(self.game.players[presence.player_id]).multiplier("trace_multiplier"))))
         seen = presence.trace_seen.setdefault(scope, set())
         player = self.game.players[presence.player_id]
         for threshold in trace_thresholds(0 if entered else previous, presence.trace, seen):
@@ -510,7 +522,7 @@ class Encounters:
             raise ValueError("There are no defenders in this room.")
         elif program.effect.kind == "absorb" and not presence.effects.can_replace_shield(program):
             raise ValueError("Your current shield already gives more protection.")
-        elif program.effect.kind == "restore" and presence.integrity >= INTEGRITY_MAX:
+        elif program.effect.kind == "restore" and presence.integrity >= presence.integrity_max:
             raise ValueError("Your integrity is already full.")
         elif pid == "prg_pulse" and not self.lat.crew_of(player.id):
             raise ValueError("You have no crew beacon audience.")
@@ -524,6 +536,18 @@ class Encounters:
         presence.cast = Cast(pid, target, tick+duration, self.location(presence)[0], self.hit_serial(presence))
         base_trace = float(program.trace_cost) if self.policy(presence) != "none" and not self.lat.public(presence) else 0
         self.log(presence, f"{program.name}: {duration/TICK_HZ:g}s cast, {base_trace:g} base trace.")
+
+    def program_state(self, presence: Presence, cast: Cast) -> object:
+        """Game 3.5: timer refreshes and bookkeeping are not a new effect."""
+        def effects(value: Effects) -> dict[str, Any]:
+            return {"active": {key: (effect.kind, effect.amount, effect.params)
+                               for key, effect in value.active.items()},
+                    "shield": value.shield, "decoy": value.decoy}
+        other = self.lat.presences.get(cast.target)
+        return deepcopy((presence.integrity, presence.trace, presence.opened, presence.key_tier,
+            presence.key_programs, effects(presence.effects), presence.verified_maps, presence.found_silt,
+            [(ice.id, ice.integrity, ice.provoked, effects(ice.effects)) for ice in self.defenders(presence)],
+            (other.integrity, effects(other.effects)) if other else None))
 
     def complete_cast(self, presence: Presence, cast: Cast, *, charge_committed: bool = False) -> None:
         program = self.content.programs[cast.program]
@@ -551,6 +575,19 @@ class Encounters:
             self.commerce.settle(player, {"progress": progress}, self.commerce.items,
                                  self.commerce.caches, self.commerce.serial, finished)
             return
+        before = self.program_state(presence, cast)
+        revealed = deferred_learning = False
+        instance = self.core(presence)
+        learn = not (instance and instance.graph.spec.training)
+        if program.target_class == "runner":
+            other_player = self.game.players.get(cast.target)
+            crew = self.game.progression.crew_of(player.id)
+            learn = bool(learn and other_player and other_player.bbs_user_id != player.bbs_user_id
+                and (crew is None or crew != self.game.progression.crew_of(other_player.id))
+                and self.game.progression.permit_combat(player.id, other_player.id))
+        use = Use("program_change", "programs",
+                  f"program:{player.id}:{program.id}:{cast.scope}:{cast.until}:{now}",
+                  bool(learn), changed=True)
         if kind == "damage" and program.target_class == "runner":
             other = self.lat.presences.get(cast.target)
             if (other is None or self.location(other) != self.location(presence)
@@ -565,7 +602,9 @@ class Encounters:
             if not targets or any(i is None for i in targets):
                 raise ValueError("That defender is no longer in this room.")
             for ice in targets:
-                amount = attack_damage(program, ice.integrity, player.attributes.get("resonance", 0))
+                mods = self.game.progression.modifiers(player)
+                amount = attack_damage(program, ice.integrity, mods.attribute(player, "resonance"),
+                                       multiplier=1+mods.skill(player, "programs")/200)
                 amount, reflected = ice.intercept(amount, player.id, tick,
                     ignore_mirror=bool(params.get("ignore_mirror")),
                     cantillation=bool(params.get("resonance_divisor")))
@@ -577,7 +616,9 @@ class Encounters:
                 self.activate(ice, presence, "attack")
                 self.log(presence, f"{program.name} hits {ice.template.name}: {amount:g}. Integrity {ice.integrity:g}.")
         elif kind == "open_gate" and params.get("private_vestibule"):
-            self.lat.interlock.open_vestibule(presence)
+            deferred_learning = True
+            self.lat.interlock.open_vestibule(presence,
+                lambda: self.game.progression.record_use(player.id, use))
         elif kind == "open_gate":
             gates = [i for i in self.defenders(presence) if i.blocks(now)]
             for ice in gates:
@@ -590,7 +631,7 @@ class Encounters:
             if program.duration:
                 presence.effects.install(program, tick)
         elif kind == "restore":
-            presence.integrity = min(INTEGRITY_MAX, presence.integrity+float(program.effect.amount))
+            presence.integrity = min(presence.integrity_max, presence.integrity+float(program.effect.amount))
         elif kind == "trace" and program.effect.amount < 0:
             presence.trace = max(0, presence.trace+float(program.effect.amount))
             if params.get("break_hound_once"):
@@ -599,9 +640,10 @@ class Encounters:
                     hunter.integrity = 0
                     self.log(presence, "Cutout breaks the Hound's follow.")
         elif kind == "reveal":
-            self.reveal(presence, program)
+            revealed = self.reveal(presence, program)
         else:
             presence.effects.install(program, tick)
+        changed = revealed or before != self.program_state(presence, cast)
         if program.cooldown_seconds is not None:
             player.progress.setdefault("lattice_cooldowns", {})[program.id] = now+float(program.cooldown_seconds)
         presence.last_program = program.id
@@ -611,8 +653,11 @@ class Encounters:
                 self.log(presence, "Shade copies "+program.name+". Two-second warning.", True)
         self.trace(presence, float(program.trace_cost), fixed=program.id in ("prg_burn", "prg_blackout"))
         self.game.queue("save", player.bbs_user_id, player, immediate=True)
+        if learn and changed and not deferred_learning:
+            self.game.progression.record_use(player.id, use)
 
-    def reveal(self, presence: Presence, program: ProgramTemplate) -> None:
+    def reveal(self, presence: Presence, program: ProgramTemplate) -> bool:
+        revealed = False
         if presence.descent:
             if program.effect.params.get("crew_beacon"):
                 raise ValueError("The Silt carries no remote crew beacon. Share the entrance in person.")
@@ -624,7 +669,7 @@ class Encounters:
             elif program.effect.params.get("true_core_map"):
                 presence.verified_maps.add(presence.instance)
                 self.log(presence, "Compass verifies the visible map and identifies decoys.")
-            return
+            return False
         if program.effect.params.get("true_core_map"):
             presence.verified_maps.add(presence.instance or presence.sector)
             self.log(presence, "Compass verifies the authored room map. Suspect labels remain marked.")
@@ -640,7 +685,8 @@ class Encounters:
             cell = self.lat.sectors.cells[presence.sector][presence.cell]
             for cid in cell.neighbours:
                 if self.lat.sectors.cells[presence.sector][cid].access_kind == "hidden":
-                    self.lat.reveal(player, presence.sector, cid)
+                    revealed |= self.lat.reveal(player, presence.sector, cid, learn=True)
+        return revealed
 
     def source(self, presence: Presence, data: DataSpec) -> str:
         player = self.game.players[presence.player_id]
@@ -679,7 +725,8 @@ class Encounters:
         multiplier = float(self.content.programs["prg_ledger"].effect.params["lift_multiplier"]) if "prg_ledger" in presence.rig else 1
         presence.procedure = Procedure("lift", target, self.clock.now_tick()+ticks(LIFT_SECONDS*multiplier),
                                       self.location(presence)[0], self.hit_serial(presence), generation, key)
-        cost = trace_gain(LIFT_TRACE, presence.effects, self.clock.now_tick()) if self.policy(presence) != "none" else 0
+        cost = trace_gain(LIFT_TRACE, presence.effects, self.clock.now_tick(),
+            multiplier=self.game.progression.modifiers(player).multiplier("trace_multiplier")) if self.policy(presence) != "none" else 0
         self.trace(presence, LIFT_TRACE)
         self.log(presence, f"Lifting {data.label or data.id}: {LIFT_SECONDS*multiplier:g}s, {cost:g} trace on start.")
 
@@ -693,8 +740,8 @@ class Encounters:
             raise ValueError("The contract or source changed before the lift completed.")
         unit_id = self.lat.sources.unit_id(key, procedure.generation)
         draft, items = deepcopy(player), deepcopy(self.commerce.items)
-        identity = deepcopy(self.game.identity(player.bbs_user_id)) if data.scope != "shared" else None
-        if identity is not None:
+        identity = deepcopy(self.game.identity(player.bbs_user_id))
+        if data.scope != "shared":
             identity.setdefault("lattice_receipts", {})[key] = unit_id
         serial = self.commerce.serial
         draft.progress.setdefault("lattice_receipts", {})[key] = unit_id
@@ -707,7 +754,7 @@ class Encounters:
                     known.append(data.asset)
             else:
                 template = self.content.items[data.asset]
-                inventory = Inventory(items, self.content.items)
+                inventory = Inventory(items, self.content.items, self.game.progression.modifiers(draft).secured_slots)
                 remaining = data.amount or 1
                 while remaining:
                     serial += 1
@@ -730,16 +777,24 @@ class Encounters:
             known = draft.progress.setdefault("known_programs", [])
             if pid not in known:
                 known.append(pid)
+        reward = None
+        if presence.core:
+            reward = award(draft, identity, Grant("run", unit_id, True,
+                scope=presence.core, core=presence.core, tier=instance.graph.spec.tier,
+                training=instance.graph.spec.training), self.clock.now_utc(),
+                self.game.progression.modifiers(draft))
         # Reserve only after inventory and reward validation succeeds.
         claim = self.lat.sources.propose(key, data, procedure.generation, self.clock.now_tick())
         def finished(success: bool) -> None:
             self.lat.sources.finish(claim, success)
             if success:
                 self.log(presence, "Transfer committed: "+(data.label or data.id)+".")
+                self.game.progression.notify_reward(player, reward)
             else:
                 self.log(presence, "The transfer could not be saved. The source remains.", True)
         patch = {"progress": draft.progress, "chits_hand": draft.chits_hand,
-                 "inventory": draft.inventory}
+                 "inventory": draft.inventory, "xp": draft.xp, "grade": draft.grade,
+                 "attributes": draft.attributes, "health": draft.health, "legal_at": draft.legal_at}
         if not self.commerce.settle(player, patch, items, self.commerce.caches, serial, finished, identity):
             self.lat.sources.finish(claim, False)
             raise ValueError("The city is settling another transfer. Try again.")
@@ -924,6 +979,7 @@ class Encounters:
                     if presence.mapping_until > tick:
                         known.update(c.id for c in adjacent_hidden(self.core(presence).graph.band, presence.room, known))
                 presence.target = ""
+                self.lat.sense_hidden(presence)
                 if presence.redline_move:
                     presence.integrity = max(0, presence.integrity-5)
                 self.follow(presence)
@@ -1020,10 +1076,11 @@ class Encounters:
             if not core_id and self.can_enter(presence, "lat-wake-hall"):
                 core_id = "lat-wake-hall"
             if cell.kind == "descent":
-                return [{"id": "descend", "cells": ["Descend with NPC risk", "BLACK ICE can injure body"]}]
+                return [{"id": "descend", "cells": ["Descend with NPC risk", "BLACK ICE can injure body"]},
+                        {"id": "survey", "cells": ["Survey", "3s / 10s cooldown"]}]
             return ([{"id": "enter:"+core_id, "cells": ["Enter "+self.content.cores[core_id].name]},
                      {"id": "risk:"+core_id, "cells": ["Enter with NPC risk", "BLACK ICE may injure body"]}]
-                    if core_id else [])
+                    if core_id else []) + [{"id": "survey", "cells": ["Survey", "3s / 10s cooldown"]}]
         room = instance.graph.room(presence.room)
         rows = [{"id": "ice:"+i.id, "cells": [i.template.name, f"{i.integrity:g} integrity", i.phase]}
                 for i in self.defenders(presence)]
@@ -1198,7 +1255,7 @@ class Encounters:
                        if other.player_id == presence.target), None)
         body["runner_target"] = ({"id": runner.player_id,
             "name": self.game.players[runner.player_id].name,
-            "integrity_percent": ceil(runner.integrity),
+            "integrity_percent": ceil(100*runner.integrity/runner.integrity_max),
             "burn_allowed": bool(not self.lat.public(presence) and not self.lat.public(runner)
                 and self.combat.permits_indirect(self.actor(presence), self.actor(runner)))} if runner else None)
         shield = presence.effects.shield

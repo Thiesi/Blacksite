@@ -38,6 +38,6 @@ def test_wake_golden_wide_name_scroll_and_character_sheet(info: DoorInfo,repo_ro
     assert model.key("D",4)[0].data["args"]["key"]=="d"
     # A long skill sheet scrolls its server-selected row into view at 80x24.
     body=model.body
-    body["cursor"]=len(body["rows"])-1
+    body["cursor"]=next(i for i,row in enumerate(body["rows"]) if row["id"]=="skill:listening")
     model.dirty=True;terminal.write(model.render(4)[0])
     assert "Listening" in terminal.screen_text()

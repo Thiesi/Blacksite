@@ -6,9 +6,8 @@ from typing import Any
 
 from blacksite.content.loader import ContentTree
 from blacksite.content.schema import Tile
-from blacksite.server.interlock_effects import lighting_radius
 from blacksite.server.world.actors import Actor
-from blacksite.server.world.sight import sees_actor, visible_tiles
+from blacksite.server.world.sight import sees_actor, visible_tiles, sight_radius
 from blacksite.server.world.zone import ZoneInstance
 from blacksite.server.world.safety import safety_at
 from blacksite.server.clock import TICK_HZ
@@ -53,12 +52,11 @@ def camera(actor: Actor, zone: ZoneInstance, width: int, height: int,
 
 
 def build(actor: Actor, zone: ZoneInstance, perception: Perception, content: ContentTree,
-          width: int, height: int, clock: str, night: bool, tick: int) -> dict[str, Any]:
-    radius = zone.template.meta.sight_radius_night if night else None
-    radius = radius or zone.template.meta.sight_radius
-    radius = lighting_radius(actor, zone, radius)
-    radius = max(radius, max((int(effect.get("dark_sight",0)) for effect in actor.effects), default=0))
-    visible = visible_tiles(actor, zone, radius)
+          width: int, height: int, clock: str, night: bool, tick: int,
+          scouted: set[tuple[int,int]] | None = None, scouted_actors: set[str] | None = None) -> dict[str, Any]:
+    radius = sight_radius(actor, zone, night)
+    body_visible = visible_tiles(actor, zone, radius)
+    visible = body_visible | (scouted or set())
     remembered = perception.remembered.setdefault(zone.id, {})
     viewport = camera(actor, zone, width, height, perception.viewport)
     perception.viewport = viewport
@@ -68,7 +66,7 @@ def build(actor: Actor, zone: ZoneInstance, perception: Perception, content: Con
         perception.indices = {key: index for index, key in enumerate(ids)}
         perception.legend = [{"id": key, "glyph": glyphs.get(content.tiles[key].glyph, "."), "role": content.tiles[key].colour}
                              for key in ids]
-    grid_key = (actor.sight_key, tuple(viewport.values()))
+    grid_key = (actor.sight_key, tuple(viewport.values()),frozenset(scouted or ()))
     if perception.grid_key != grid_key:
         for tile in visible:
             remembered[tile] = zone.tile_id(tile)
@@ -88,7 +86,9 @@ def build(actor: Actor, zone: ZoneInstance, perception: Perception, content: Con
         perception.tiles, perception.memory, perception.grid_key = tiles, memory, grid_key
     actors = []
     for other in sorted(zone.actors.values(), key=lambda a: a.id):
-        if other is not actor and not sees_actor(actor, other, visible, radius):
+        if other.behaviour.get("training") and other.owner != actor.id:
+            continue
+        if other is not actor and other.id not in (scouted_actors or ()) and not sees_actor(actor, other, body_visible, radius):
             continue
         entry = {"id": other.id, "x": other.x, "y": other.y,
                  "glyph": glyphs.get("actor-jacked" if other.stance == "jacked" else "actor-self" if other is actor else "actor-drone" if other.kind == "drone" else "actor-npc" if other.kind == "npc" else "actor-player", "@"),

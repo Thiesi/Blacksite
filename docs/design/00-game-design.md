@@ -251,6 +251,10 @@ only, never PvP. Tutorial simulation is the bounded exception in §4.
 
 - One tile per 200 ms walking, 100 ms sprinting (stamina). Diagonals cost
   the same. Movement is server-authoritative; the client predicts nothing.
+  Sprint Legs' 80 ms retains a fractional movement budget: actions resolve
+  on ticks, with at most one tick of carried credit. Idle time never
+  accumulates a burst. Fractional stamina costs and regeneration retain
+  their fractions rather than erasing small bonuses.
 - Sight is line of sight with a radius per zone lighting (Core: 12 tiles;
   Undercity: 5 unless you carry a light). Stealth stance halves the range
   at which others see you.
@@ -269,7 +273,9 @@ Real time, cooldown-based, server-resolved.
   the roll and the reasons are visible in the combat log on request.
 - Clamp hit probability to 5-95 % and damage to at least 1 after armour.
   Cooldown starts on cast completion. Durations round up to the next
-  100 ms tick. Fast repeat attacks are allowed, but new threats and
+  100 ms tick. Sustained weapon fire retains at most one tick of rounding
+  credit so small cooldown modifiers improve its actual average. Idle
+  time never accumulates an attack burst. New threats and
   hazardous state changes get at least 2 s warning with a safe response.
 - Shock decay starts 3 s after the last hit. A knockdown at shock 100
   lasts 2 s and resets shock to 60.
@@ -286,8 +292,49 @@ Real time, cooldown-based, server-resolved.
   per class, except the trauma kit's 2 s interruptible use in §17.1.
 - **Hymns and dissonance** are Cantor abilities with the same cooldown
   model; hymns affect crew members within 6 tiles.
-- **Drones** are Operator-controlled actors with their own position,
-  health, and one weapon or tool; they follow or hold.
+- **Drones** are actors controlled by a player with a drone slot. They
+  have their own position, health, and one weapon or tool; they follow
+  or hold.
+  S16 owns player tools; S11 owns city NPCs. The catalog's control range
+  bounds commands, tool effects and harm. Follow crosses a street exit
+  only with its controller; hold stays in its zone. Recalling returns
+  the same instance and health, never a repaired duplicate. Recall waits
+  for 10 quiet seconds after combat. Logout recalls units after that
+  quiet period; losing slot capacity also recalls excess units. If an
+  automatic return finds all secured slots occupied, that returning unit
+  becomes unsecured and a notice is retained for the controller.
+  All attacks
+  use the controller's body permissions and warning, including secondary
+  hits and chemical damage. Logging out, entering safety or losing range
+  stops player-attributed harm. A drone is never anonymous offline PvP.
+  Drones use the ordinary 200 ms walk interval, with no sprint. Catalog
+  attacks with no listed accuracy use base 75, matching unlisted melee
+  accuracy; Drones skill supplies their ordinary skill terms. Catalog
+  tool effects are typed data: carrier capacity, scout sight, nearby
+  crew healing or a jack-in terminal. An idle follow/hold toggle gives no
+  skill; only an objective change or actual threat damage gives use gain.
+  An explicit target order starts automated fire after the controller's
+  normal 2 s warning. Follow/hold units defend an actual hostile exchange,
+  never somebody merely selecting their controller. Pursuit stays inside
+  control range. A Hound may follow a last-seen position for the ordinary
+  20 s NPC search window; other combat units need current sight. Direct
+  firing by the player still requires the second fire press below.
+  A Relay lends the public three-slot rig to an adjacent controller or
+  crew member without a rig. It holds still while connected, and cannot
+  be recalled until those runners leave. Destruction forces jack-out
+  with the ordinary shock 100. Loss of control range, crew access or the
+  controller starts the ordinary bounded escape and blocks further
+  network actions; it does not bypass dangerous-room escape. A caller
+  using their own rig depends on the Relay only when selecting it.
+  Scouts share their own six-tile sight with the controller, preserving
+  stealth and private-training visibility. Medics restore actual health
+  deficits in nearby crew, including the controller, once per second;
+  one effective pulse grants Drones use, never Hymns use.
+  A support target order moves toward a currently visible person or
+  object inside control range, then holds at that observed position.
+  Arrival grants one objective use receipt per destination per UTC day;
+  reissuing an order already in position earns nothing. Following a
+  controller or idling at a destination never earns passive use.
 
 The first hostile attack against a new visible threat raises a weapon
 for 2 s. The player presses fire again to commit; moving to safety or
@@ -443,6 +490,10 @@ the ride. After offline arrival, ordinary destination logout rules apply.
 - A runner in the Lattice is a **presence** with its own health analog,
   **integrity** (100), and a **trace** meter (0 to 100). Integrity 0 means
   forced jack-out with shock 100 and, if black ICE did it, real damage.
+    Installed and timed integrity bonuses change the maximum. Increasing
+    that maximum does not heal a damaged presence; ordinary jack-out
+    recovery fills toward the current maximum. Expiry clamps excess
+    integrity. The HUD shows current and maximum together.
 - Runners see each other in the same cell or core room and instance and
   can attack each other with programs (**burning**). Burn adds 15 trace
   instead of the ordinary attack increment wherever trace applies.
@@ -960,12 +1011,52 @@ No random roll is needed where an item has no quality-scaled stat.
   except the starter First Ear. Installed abilities keep working after
   leaving the Choir; tier unlocks come from the installed equipment.
 
+Portable rigs explicitly declare `portable: true`; carrying an implanted
+rig grants no installed effect or slots. A Ghost replacing the native
+rig cannot turn the built-in part into a saleable item. Removing the
+replacement restores the native capability. Chrome expiry unseats the
+newest installed hardware until tolerance fits, preserves the items and
+quality, and applies shock 100 for 30 s. If Vitals has grown enough,
+nothing is unseated. Failed surgery holds shock 100 for the same 30 s.
+
+Installed secured-slot bonuses apply to securing, splitting, and incoming
+items. Voluntary surgery whose removal or failure could leave more secured
+items than the remaining capacity is refused before charging; unsecure
+the excess first. Forced
+Chrome unseating keeps story items secured and keeps the oldest remaining
+secured items up to capacity. Excess non-story entries, starting at the
+end of inventory order, become unsecured in the same transaction. The log
+names them; no item is removed or loses quality.
+
+Second Ear's hidden-cell radius counts linked graph edges in the current
+authored sector or Silt band. Revealing a cell does not count as a visit;
+generated cells still grant no discovery XP or Listening use gain.
+Tenant's Ear inspects announced Surge variants once the event service is
+available; until then its detail pane explicitly labels that effect as
+not available yet.
+
+All temporary effects compose through one modifier calculation. Flat
+bonuses add, multipliers multiply, and ability unlocks take the highest
+tier. They never raise permanent skill groups. Lowlight Eyes adds three
+dark sight tiles; a Flare Stick sets a minimum radius of eight.
+
 ### 8.6 Drugs
 
 Each substance has an effect, a duration, a **crash** (opposite effect
 for half the duration), and an addiction clock: three doses inside its
 window creates a dependency that imposes the crash until detox.
 Sablier detox costs 400 chits and takes 10 minutes, offline-safe.
+
+Redosing refreshes one timed effect; it never stacks that substance's
+bonus or clears a dependency. Dependency withdrawal also applies during
+the positive effect. Crash `health` changes the maximum by its listed
+amount; crash `shock` supplies a minimum while withdrawal lasts. A Ration
+Bar ends the timed Ring-dust crash; it does not cure dependency. Detox
+charges once, stops active substances and blocks actions in the clinic's
+existing safe pocket until its persisted UTC deadline. Logging out does
+not restart or extend treatment. Completion clears dependencies and dose
+history. Detox Gland halves the crash duration and addiction window at
+dose time, never the positive duration.
 
 ### 8.7 Apartments
 

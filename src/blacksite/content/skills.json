@@ -1,0 +1,125 @@
+{
+  "schema": 1,
+  "skills": [
+    {
+      "id": "kinetic",
+      "name": "Kinetic",
+      "attribute": "frame",
+      "uses": {
+        "weapon_hit": 0.2
+      },
+      "maximum": 100,
+      "daily_cap": 2
+    },
+    {
+      "id": "melee",
+      "name": "Melee",
+      "attribute": "frame",
+      "uses": {
+        "melee_hit": 0.3
+      },
+      "maximum": 100,
+      "daily_cap": 2
+    },
+    {
+      "id": "armour",
+      "name": "Armour",
+      "attribute": "frame",
+      "uses": {
+        "armour_absorb": 0.1
+      },
+      "maximum": 100,
+      "daily_cap": 2
+    },
+    {
+      "id": "energy",
+      "name": "Energy",
+      "attribute": "nerve",
+      "uses": {
+        "weapon_hit": 0.2
+      },
+      "maximum": 100,
+      "daily_cap": 2
+    },
+    {
+      "id": "stealth",
+      "name": "Stealth",
+      "attribute": "nerve",
+      "uses": {
+        "stealth_second": 0.05
+      },
+      "maximum": 100,
+      "daily_cap": 2
+    },
+    {
+      "id": "drones",
+      "name": "Drones",
+      "attribute": "nerve",
+      "uses": {
+        "drone_command": 0.1
+      },
+      "maximum": 100,
+      "daily_cap": 2
+    },
+    {
+      "id": "lattice",
+      "name": "Lattice",
+      "attribute": "cortex",
+      "uses": {
+        "authored_cell": 0.05
+      },
+      "maximum": 100,
+      "daily_cap": 2
+    },
+    {
+      "id": "programs",
+      "name": "Programs",
+      "attribute": "cortex",
+      "uses": {
+        "program_change": 0.15
+      },
+      "maximum": 100,
+      "daily_cap": 2
+    },
+    {
+      "id": "fabrication",
+      "name": "Fabrication",
+      "attribute": "cortex",
+      "uses": {
+        "fabricate": 1
+      },
+      "maximum": 100,
+      "daily_cap": 2
+    },
+    {
+      "id": "hymns",
+      "name": "Hymns",
+      "attribute": "resonance",
+      "uses": {
+        "hymn_restore": 0.15
+      },
+      "maximum": 100,
+      "daily_cap": 2
+    },
+    {
+      "id": "dissonance",
+      "name": "Dissonance",
+      "attribute": "resonance",
+      "uses": {
+        "dissonance_threat": 0.15
+      },
+      "maximum": 100,
+      "daily_cap": 2
+    },
+    {
+      "id": "listening",
+      "name": "Listening",
+      "attribute": "resonance",
+      "uses": {
+        "hidden_authored": 0.5
+      },
+      "maximum": 100,
+      "daily_cap": 2
+    }
+  ]
+}

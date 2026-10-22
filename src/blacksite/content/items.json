@@ -1795,7 +1795,8 @@
         "slot": "rig",
         "tolerance": 0,
         "effects": {},
-        "rig_slots": 3
+        "rig_slots": 3,
+          "portable": true
       }
     },
     {
@@ -1810,7 +1811,8 @@
         "slot": "rig",
         "tolerance": 0,
         "effects": {},
-        "rig_slots": 5
+        "rig_slots": 5,
+          "portable": true
       }
     },
     {
@@ -1825,7 +1827,8 @@
         "slot": "rig",
         "tolerance": 0,
         "effects": {},
-        "rig_slots": 6
+        "rig_slots": 6,
+          "portable": true
       }
     },
     {
@@ -2231,13 +2234,16 @@
       "description": "carrier: +20 kg carry",
       "maker": "Kestrel Issue",
       "drone": {
-        "health": 60,
-        "evasion": 5,
-        "control_range": 8,
-        "sight": null,
-        "speed": null,
-        "tool": "carrier: +20 kg carry"
-      }
+          "health": 60,
+          "evasion": 5,
+          "control_range": 8,
+          "sight": null,
+          "speed": null,
+          "tool": "carrier: +20 kg carry",
+          "effects": {
+            "carry_kg": 20
+          }
+        }
     },
     {
       "id": "drn_ostrom_eye",
@@ -2249,13 +2255,16 @@
       "description": "scout: reveals sight radius 6 around itself; silent",
       "maker": "Ostrom Optical",
       "drone": {
-        "health": 20,
-        "evasion": 25,
-        "control_range": 14,
-        "sight": 6,
-        "speed": null,
-        "tool": "scout: reveals sight radius 6 around itself; silent"
-      }
+          "health": 20,
+          "evasion": 25,
+          "control_range": 14,
+          "sight": 6,
+          "speed": null,
+          "tool": "scout: reveals sight radius 6 around itself; silent",
+          "effects": {
+            "scout_radius": 6
+          }
+        }
     },
     {
       "id": "drn_halvard_sentry",
@@ -2278,7 +2287,7 @@
           "damage": 12,
           "range": 6,
           "melee": false,
-          "accuracy": null,
+          "accuracy": 75,
           "cooldown": 1.0
         }
       }
@@ -2304,7 +2313,7 @@
           "damage": 8,
           "range": 4,
           "melee": false,
-          "accuracy": null,
+          "accuracy": 75,
           "cooldown": 1.2,
           "dot": {
             "per_second": 4,
@@ -2323,13 +2332,17 @@
       "description": "heals crew +8/s within 2 tiles",
       "maker": "Sablier",
       "drone": {
-        "health": 40,
-        "evasion": 15,
-        "control_range": 6,
-        "sight": null,
-        "speed": null,
-        "tool": "heals crew +8/s within 2 tiles"
-      }
+          "health": 40,
+          "evasion": 15,
+          "control_range": 6,
+          "sight": null,
+          "speed": null,
+          "tool": "heals crew +8/s within 2 tiles",
+          "effects": {
+            "heal_per_second": 8,
+            "heal_radius": 2
+          }
+        }
     },
     {
       "id": "drn_ow_relay",
@@ -2341,13 +2354,16 @@
       "description": "terminal on legs: jack in from the drone's tile; drone destroyed = forced jack-out",
       "maker": "Old Works Collective",
       "drone": {
-        "health": 30,
-        "evasion": 15,
-        "control_range": 10,
-        "sight": null,
-        "speed": null,
-        "tool": "terminal on legs: jack in from the drone's tile; drone destroyed = forced jack-out"
-      }
+          "health": 30,
+          "evasion": 15,
+          "control_range": 10,
+          "sight": null,
+          "speed": null,
+          "tool": "terminal on legs: jack in from the drone's tile; drone destroyed = forced jack-out",
+          "effects": {
+            "jack_terminal": 1
+          }
+        }
     },
     {
       "id": "drn_halvard_hound",
@@ -2359,13 +2375,22 @@
       "description": "melee 30 kinetic, CD 1.0; hunts a target you mark",
       "maker": "Halvard Ordnance",
       "drone": {
-        "health": 120,
-        "evasion": 10,
-        "control_range": 8,
-        "sight": null,
-        "speed": null,
-        "tool": "melee 30 kinetic, CD 1.0; hunts a target you mark"
-      }
+          "health": 120,
+          "evasion": 10,
+          "control_range": 8,
+          "sight": null,
+          "speed": null,
+          "tool": "melee 30 kinetic, CD 1.0; hunts a target you mark",
+          "hunt": true,
+          "attack": {
+            "accuracy": 75,
+            "damage_type": "kinetic",
+            "damage": 30,
+            "melee": true,
+            "stamina": 0,
+            "cooldown": 1.0
+          }
+        }
     },
     {
       "id": "drn_ferry_lifter",
@@ -2377,13 +2402,16 @@
       "description": "carrier: +60 kg; can carry salvage grade intact",
       "maker": "Ferry-make",
       "drone": {
-        "health": 90,
-        "evasion": 5,
-        "control_range": 6,
-        "sight": null,
-        "speed": null,
-        "tool": "carrier: +60 kg; can carry salvage grade intact"
-      }
+          "health": 90,
+          "evasion": 5,
+          "control_range": 6,
+          "sight": null,
+          "speed": null,
+          "tool": "carrier: +60 kg; can carry salvage grade intact",
+          "effects": {
+            "carry_kg": 60
+          }
+        }
     },
     {
       "id": "slv_hull",

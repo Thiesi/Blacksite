@@ -37,6 +37,7 @@ def actor(game, client):
 def jack(game, client):
     act(game, client, Frame("key", {"k": "j", "t": 0}))
     game.step(3)
+    game.commit_commerce()  # S16's first authored entrance-cell receipt.
     return game.core.lattice.presences[client.session.player_id]
 
 

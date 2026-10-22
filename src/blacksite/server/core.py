@@ -18,6 +18,7 @@ from blacksite.server.commerce import Commerce
 from blacksite.server.combat.engine import Combat
 from blacksite.server.npcs.engine import Npcs
 from blacksite.server.lattice.engine import Lattice
+from blacksite.server.progression_engine import ProgressionEngine
 from blacksite.version import PACKAGE_VERSION, PROTOCOL_MAJOR
 
 
@@ -74,6 +75,9 @@ class Core:
                 self.lattice.social_overlay = lambda session: session.id in self.chat.sitreps
                 self.chat.reported_location = self.lattice.encounters.reported_location
                 self.lattice.encounters.report = self.lattice.encounters.publish_report
+        self.progression = ProgressionEngine(self.commerce,self.lattice) if self.commerce else None
+        if self.progression:
+            self.loop.subsystems.append(self.progression)
 
     def _disconnect_character(self, session: Session) -> None:
         if self.lattice:
@@ -139,6 +143,8 @@ class Core:
             return
         if frame.type == "intent" and frame.data["name"] == "resync":
             session.replay_log()
+        if self.progression and self.progression.input(session, frame, event.data["tick"]):
+            return
         if self.lattice and self.lattice.input(session, frame, event.data["tick"]):
             return
         if self.lattice and self.lattice.interlock.input(session, frame, event.data["tick"]):

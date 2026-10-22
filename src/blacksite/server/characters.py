@@ -116,6 +116,8 @@ class Characters:
         return self.identities[user]
 
     def queue(self, action: str, user: str, player: Player | None = None, **extra: Any) -> None:
+        if action == "save" and player and (player.id in self.deleting or player.id not in self.players):
+            return
         effect = {"action": action, "user": user, "identity": deepcopy(self.identities[user]),
                   "player": player.record() if player else None, **extra}
         self.outbox.append(effect)
@@ -435,6 +437,10 @@ class Characters:
                 last = len(self.sheet(player, cursor)["rows"]) - 1
                 self.screens[session.id] = ("sheet", max(0, min(last, cursor + frame.data.get("args", {}).get("delta", 0))))
                 self.dirty_screens.add(session.id)
+            elif (name == "menu_select" and frame.data.get("args", {}).get("key") == "s"
+                  and frame.data.get("expected_revision") == session.view_revision
+                  and hasattr(self, "progression")):
+                self.progression.open_skills(session)
         elif key in ("p", "P"):
             self.screens[session.id] = ("sheet", 0)
             self.dirty_screens.add(session.id)
@@ -453,9 +459,13 @@ class Characters:
                 "marked_until": player.marked_until,
                 "heat_until": player.warden_heat_until if player.warden_heat_until and datetime.fromisoformat(player.warden_heat_until) > self.clock.now_utc() else None,
                 "lease_days": days, "legal_at": player.legal_at,
-                "discharge_xp": rules.grade_threshold(rules.DISCHARGE_GRADE), "xp": player.xp}
+                "discharge_xp": rules.grade_threshold(rules.DISCHARGE_GRADE), "xp": player.xp,
+                **({"effects": [*deepcopy(self.sim.avatars[session.user_id].actor.effects),
+                                 *self.progression.substances.effects(player)]} if hasattr(self, "progression") else {})}
 
     def sheet(self, player: Player, cursor: int) -> dict[str, Any]:
+        if hasattr(self, "progression"):
+            return self.progression.sheet(player, cursor)
         me = self.me(next(s for s in self.sessions.active.values() if s.player_id == player.id))
         values = [("Archetype", player.archetype.title()), ("Grade", f"{player.grade} {rules.grade_name(player.grade)}"),
                   ("XP", f"{player.xp} / {rules.grade_threshold(min(30, player.grade + 1))}"),
@@ -497,7 +507,8 @@ class Characters:
         for avatar in self.sim.avatars.values():
             actor = avatar.actor
             if actor.zone and actor.shock > 0 and ctx.tick - actor.cooldowns.get("last_hit", -3 * TICK_HZ) >= 3 * TICK_HZ:
-                actor.shock = max(0, actor.shock - rules.SHOCK_DECAY_PER_SECOND / TICK_HZ)
+                actor.shock = max(actor.modifiers.get("shock_floor", 0), actor.shock
+                    - rules.SHOCK_DECAY_PER_SECOND / TICK_HZ*actor.modifiers.get("shock_decay_multiplier", 1))
                 self.world.zones[actor.zone].revision += 1
 
     def publish(self, ctx: TickContext) -> None:

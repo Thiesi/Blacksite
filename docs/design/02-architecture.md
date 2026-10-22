@@ -597,6 +597,33 @@ Failure releases it with a retryable result. Ordinary movement remains
 on the dirty-state schedule. Tests inject commit failure before and
 after durable write, then resend the same request.
 
+S16 reward and skill-use functions operate on player/identity drafts.
+NPC defeat joins XP to the spawn retirement and loot receipt; data-lift
+XP joins the source decrement and item transfer. A post-commit callback
+may announce a reward but never decides or pays it. Per-identity core
+days, PvP windows and relay hold caps commit with the player. Generated
+Silt visits and training cannot create discovery or use rewards.
+PvP death includes both players and both identity records in that one
+receipt: the victim's clone/debt settlement and the winner's reward/cap.
+Clear stale write-behind identity records for every committed recipient.
+The I/O writer cancels transfers whose player or secondary recipient was
+deleted or is being deleted. Character deletion also blocks later ordinary
+save snapshots from background actors and old callbacks. A periodic drone
+checkpoint cannot recreate the deleted player or its owned items.
+
+One pure `Modifiers` collector composes installed items, substance phases
+and optional ability/event layers from the supplied UTC time. Consumers
+read effective stats through it, never raw implant maps. Permanent skill
+groups remain separate. Surgery, doses, Chrome ejection and detox state
+are committed before effects appear. Detox uses an existing clinic
+pocket and persisted UTC deadline, including after logout/restart.
+
+S24 binds `core.progression.surge_preview(player) -> str | None` to the
+committed public event forecast. An enabled producer returns useful text,
+including when no Surge is announced. Before that producer exists, S16
+returns `None` and the Tenant's Ear detail pane says its forecast has no
+effect yet. The hook grants no event, answer, stat bonus, or authority.
+
 One settlement transaction consumes the season's eligible ballots,
 freezes rankings, writes the winning choice or tie, applies one bounded
 balance delta, records the Chronicle and installs next-season modifiers.

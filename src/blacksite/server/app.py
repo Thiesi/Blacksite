@@ -192,6 +192,9 @@ class Server:
         if commerce:
             while commerce.outbox:
                 effect = commerce.outbox.pop(0)
+                if not commerce.can_commit(effect):
+                    commerce.committed(effect, False)
+                    continue
                 try:
                     self.storage.commerce_write(commerce.prepare(effect))
                 except (OSError, sqlite3.Error):

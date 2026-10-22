@@ -52,6 +52,8 @@ class ZoneSimulation:
         self.external_views: dict[str, tuple[str, dict[str, Any]]] = {}
         self.departures = DepartureHolds()
         self.locked_exits: set[tuple[str, str]] = set()  # S15-owned control state.
+        self.arrival_hook: Callable[[Session, Avatar], None] = lambda session, avatar: None
+        self.scout_provider: Callable[[Session], tuple[set[tuple[int,int]],set[str]]] = lambda session:(set(),set())
 
     def discover(self, session: Session, avatar: Avatar) -> None:
         if avatar.zone in avatar.seen_zones:
@@ -100,6 +102,7 @@ class ZoneSimulation:
             avatar.travel = None
             self.reset_view(session, avatar)
             self.discover(session, avatar)
+            self.arrival_hook(session, avatar)
             self.log(session, "You arrive at " + self.world.zones[target].template.meta.name + ".")
 
     def interact(self, session: Session, avatar: Avatar, tick: int, *, street: bool = False) -> None:
@@ -313,8 +316,10 @@ class ZoneSimulation:
                      ctx.tick if zone.layers else None)
             if stamp == self.published.get(session.id) and not session.needs_full_view:
                 continue
+            scouted,scouted_actors = self.scout_provider(session)
             body = build(avatar.actor, zone, avatar.perception, self.world.content,
-                         session.caps["width"], session.caps["height"], local, night, ctx.tick)
+                         session.caps["width"], session.caps["height"], local, night, ctx.tick,
+                         scouted,scouted_actors)
             body["me"].update(self.me_provider(session))
             if self.target_provider:
                 body["target"] = self.target_provider(avatar.actor)

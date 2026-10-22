@@ -17,7 +17,7 @@ from tests.character_helpers import act, create, place, state
 from tests.harness import HeadlessServer
 
 
-def build_duel(repo_root: Path):
+def build_duel(repo_root: Path, *, first_archetype: int = 0):
     content = load_content(repo_root/"src/blacksite/content")
     # Controlled duel scenarios exclude unrelated city traffic. S11 tests
     # exercise the integrated population and patrol response separately.
@@ -27,7 +27,7 @@ def build_duel(repo_root: Path):
     clients = []
     for uid,pos in ((1,(25,3)),(2,(27,3))):
         client = game.connect({"user_id":uid,"handle":f"Wake界{uid}","node_name":"test"})
-        create(game,client,archetype=0,name=f"Runner{uid}",card="none")
+        create(game,client,archetype=first_archetype if uid == 1 else 0,name=f"Runner{uid}",card="none")
         player = game.core.characters.players[client.session.player_id]
         player.update_progression(1500)
         actor = game.core.characters.sim.avatars[client.session.user_id].actor
@@ -40,6 +40,20 @@ def build_duel(repo_root: Path):
 @pytest.fixture
 def duel(repo_root: Path):
     return build_duel(repo_root)
+
+
+@pytest.fixture
+def cantor_duel(repo_root: Path):
+    game, a, b = build_duel(repo_root, first_archetype=2)
+    player = game.core.characters.players[a.session.player_id]
+    # S10 exercises execution; S16 separately tests acquisition and gates.
+    # Use an actual starter Ear and a disclosed installed Throat fixture.
+    iid = "test-origin:item:99000"
+    game.core.commerce.items[iid] = make_item(iid, game.core.loop.content.items["imp_res_throat"],
+        player.id, game.clock.now_utc().isoformat())
+    player.inventory.append(iid)
+    player.implants["spine"] = iid
+    return game, a, b
 
 
 def body(game,client):
@@ -207,9 +221,9 @@ def test_design_5_4_atomic_storage_and_restart_decant(duel,tmp_path):
     finally: with_storage.close()
 
 
-def test_design_5_3_hymn_cast_cooldown_jam_hush_and_safe_delivery(duel):
-    game,a,b=duel
-    player=game.core.characters.players[a.session.player_id];player.archetype="cantor"
+def test_design_5_3_hymn_cast_cooldown_jam_hush_and_safe_delivery(cantor_duel):
+    game,a,b=cantor_duel
+    player=game.core.characters.players[a.session.player_id]
     actor=body(game,a);actor.shock=50
     actor.cooldowns["last_hit"]=game.clock.now_tick()
     act(game,a,Frame("intent",{"name":"ability","args":{"id":"hymn_steady"}}))
@@ -217,12 +231,14 @@ def test_design_5_3_hymn_cast_cooldown_jam_hush_and_safe_delivery(duel):
     game.step(4)
     assert actor.shock<=30
     assert actor.cooldowns["ability:hymn_steady"]>=game.clock.now_tick()+119
+    game.commit_commerce()  # S16's completed restorative-use receipt.
     actor.target=body(game,b).id
     act(game,a,Frame("intent",{"name":"ability","args":{"id":"dis_jam"}}))
     game.step(20)
     act(game,a,Frame("intent",{"name":"ability","args":{"id":"dis_jam"}}))
     game.step(5)
     assert any(e.get("weapon_multiplier")==1.5 for e in body(game,b).effects)
+    game.commit_commerce()
     hp=body(game,b).health
     place(game,b,"core-plaza",(25,3))
     game.core.combat.hurt(actor,body(game,b),999)
@@ -326,10 +342,9 @@ def test_design_5_3_chemical_dot_rechecks_safe_body(duel):
     assert target.health==before
 
 
-def test_design_5_3_reconnect_restores_cooldown_before_first_input(duel):
-    game,a,b=duel
+def test_design_5_3_reconnect_restores_cooldown_before_first_input(cantor_duel):
+    game,a,b=cantor_duel
     player=game.core.characters.players[a.session.player_id]
-    player.archetype="cantor"
     actor=body(game,a);actor.shock=50;actor.cooldowns["last_hit"]=game.clock.now_tick()
     act(game,a,Frame("intent",{"name":"ability","args":{"id":"hymn_steady"}}));game.step(5)
     until=actor.cooldowns["ability:hymn_steady"]

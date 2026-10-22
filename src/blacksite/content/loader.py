@@ -75,6 +75,8 @@ class ContentTree:
     sectors: dict[str, s.Sector] = field(default_factory=dict)
     cores: dict[str, s.Core] = field(default_factory=dict)
     items: dict[str, s.ItemTemplate] = field(default_factory=dict)
+    grades: dict[str, s.GradeDefinition] = field(default_factory=dict)
+    skills: dict[str, s.SkillDefinition] = field(default_factory=dict)
     emotes: dict[str, s.Emote] = field(default_factory=dict)
     starts: dict[str, s.CharacterStart] = field(default_factory=dict)
     wake_cards: dict[str, s.WakeCard] = field(default_factory=dict)

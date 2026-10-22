@@ -78,7 +78,7 @@ def test_inventory_design_5_4_three_secured_slots_and_stack_limits(game) -> None
     assert sum(i.secured for i in inv.items.values()) == 2  # Coverall and Vesper's card.
     unsecured = [i for i in player.inventory if not inv.items[i].secured]
     inv.secure(player,unsecured[0])
-    with pytest.raises(ValueError,match="three"):
+    with pytest.raises(ValueError,match="3 secured slots"):
         inv.secure(player,unsecured[1])
     ammo = carried(game,client,"ammo_9x")
     serial = iter(("split1","split2"))

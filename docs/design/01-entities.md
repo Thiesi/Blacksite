@@ -224,22 +224,32 @@ S10 gives melee the design's fixed 1.0 s cooldown and base accuracy 75.
 The authoring schema can retain unknown timing as null; consumers must
 never execute that as a zero cooldown. Ranged weapons require accuracy.
 Implant slots include `head`, matching First Ear in the starter schedule.
-Drone speed remains unimplemented until S11 supplies its movement rule.
-Drone `control_range` preserves the catalog range; nullable sight/speed
-mark values the catalog does not give. Embedded attack blocks retain
-drone weapon stats. Weapon `hits`, `targets` and `cone` retain the
+S16 owns player drone movement and tools; S11 owns city NPCs.
+Drone `control_range` preserves the catalog range. The legacy nullable
+`speed` is descriptive only; `move_ms` defaults to ordinary walking
+(200 ms), `effects` carries typed tool values and `hunt` allows the
+marked-target pursuit command. Embedded attack blocks retain drone
+weapon stats. Weapon `hits`, `targets` and `cone` retain the
 catalog's multi-hit/arc/cone annotations for S10.
 `requires_archetype` carries the catalog's Cantor-only weapon restriction.
 - armour: `slot, armour {kinetic, energy, chemical, dissonance}, evasion,
   heavy`
 - ammo: `recharge_price` (energy cells only)
 - implant / resonance / rig: `slot, tolerance, effects (dict of attribute
-  or derived deltas), requires (archetype, standing)`
+  or derived deltas), requires (archetype, standing), rig_slots,
+  portable (default false)`. Only explicit portable rigs work while
+  carried; implanted rigs require surgery.
 - drug: `effects, duration, crash, addiction_window, addiction_doses`
 - consumable: `effects, cooldown_class`
 - drone: `health, weapon or tool, speed, sight`
 - salvage: `grade`
 - schematic: `output item id, inputs (salvage grade → count), skill_min`
+
+S16 adds `grades.json` records `{id, grade, title, promotion}` for all
+30 grades; thresholds remain the main design 3.4 formula. Its
+`skills.json` records carry `{id, name, attribute, uses {action: gain},
+maximum, daily_cap}` for the twelve game 3.3 lines. Their schedules are
+validated against game 3.5; temporary modifiers never alter these rows.
 
 ### 1.8 NPC template (`npcs.json`)
 
@@ -366,6 +376,10 @@ S12 vendor records also name `object_id`, optional acquisition faction
 and archetype gates, price/salvage multipliers, and daily rotation. Stock
 rows can narrow faction/archetype access and set a price multiplier.
 Program stock refers to `programs.json`; physical stock refers to items.
+S16 adds optional `clinic: sablier | black`. This declares surgery at the
+vendor's actual local counter; only Sablier offers detox. Clinic purchase
+and installation use the clinic's disclosed 8.5 tariff, while ordinary
+counter purchases remain carried, uninstalled items.
 Before S20, existing S07 recruiter IDs identify pricing affiliations and
 grant no faction membership. An authoring-bundle vendor never opens a
 counter. S25 owns activation of the staged `s25-commerce` members.
@@ -441,6 +455,16 @@ current hidden geometry. A changed map extent invalidates its old bitmap.
 `id, template, owner (player id, cache id, apartment id, vendor id, or
 null for world drop), quality (0.85–1.15), ammo, charges, secured, stack,
 created_at`.
+
+S16 adds optional integer `health` for a drone's current condition. New
+drone instances start at their template maximum; old records without the
+field represent unused hardware. Deployment removes the same owned item
+from carried inventory and records its actor in `progress.drones` with
+zone, tile, mode and target. Recall restores that instance with its
+current health and quality. Item JSON stores the additive field without
+a SQLite column migration. Destruction removes the item and deployment
+record together; destroying equipment does not defeat its controller
+for PvP XP.
 
 `bound` defaults false. Recovery and service-job producers set it for
 goods that cannot be sold, dropped, transferred or fabricated. S12

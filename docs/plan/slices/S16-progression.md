@@ -1,6 +1,6 @@
 # S16 — Progression: XP, grades, grade points, skill-by-use, implants and surgery, drugs and dependencies
 
-**Status:** planned
+**Status:** done (PR #55)
 **Primary model:** Opus · **Reviewer:** Astra or Fable (balance read of the numbers against the catalog before merge, per roadmap §4)
 **Depends on:** S10, S12, S14 · **Milestone:** M3
 **Issue:** https://github.com/Thiesi/blacksite/issues/16
@@ -67,6 +67,10 @@ the catalog's implant and drug tables do what they say.
   `Modifiers` aggregator (attribute deltas, derived deltas, flags such
   as `secured_slots +1`, `sight +3 dark`, `cooldown −10 %`) that S10,
   S12, S13 read instead of reaching into implant lists.
+- Player drone tools belong to S16: S11 explicitly deferred them here.
+  Resolve the circular ownership gap with the catalog's follow/hold/
+  target tools and controller-attributed safety checks. Operator has two
+  slots; Drone Uplink adds one. City NPC drones remain S11-owned.
 - Surgery: `vendor` objects with `clinic: sablier` (list price + 20 %,
   2 % failure) or `clinic: black` (60 % list, 15 % failure); failure
   destroys the item and applies 30 s of shock 100; removal at any clinic
@@ -75,6 +79,10 @@ the catalog's implant and drug tables do what they say.
 - Chrome: temporary +1 tolerance for 20 min; an implant installed under
   it is ejected (item kept, 30 s shock) when it wears off unless Vitals
   has since risen.
+- Secured-slot limits use the same modifier calculation. Main 8.5 defines
+  the capacity-loss policy: refuse voluntary surgery with excess secured
+  items; forced Chrome unseating keeps all items, protects story items,
+  and names any excess inventory entries that become unsecured.
 - `server/drugs.py`: `use` intent for drug items applies effect for
   `duration`, then crash for `duration / 2`; dose log per substance;
   three doses inside `window` → dependency (crash permanent) until detox
@@ -94,12 +102,13 @@ the catalog's implant and drug tables do what they say.
 
 - Hymn and dissonance ability execution: S10 (they exist there; this
   slice gates tiers by implant).
-- Drone slots and drone behaviour: S11 (this slice exposes
-  `drone_slots` as a modifier: Operator 2, Drone Uplink +1 or 1).
 - Fabrication rolls: S17 (reads Fabrication skill from here).
 - Relay and contribution XP amounts are defined here and paid by S21
   and S26.
 - Leaderboard by grade: S26.
+- Tenant's Ear Surge forecasts: S24 supplies the event producer through
+  the S16 preview hook. Until it exists the detail pane labels the effect
+  as unavailable, as permitted by this slice's definition of done.
 
 ## Data and content
 
@@ -169,16 +178,38 @@ balance reviewer has signed off on the XP curve in the PR.
 
 ## Implementer notes
 
-- The XP-per-grade formula and the per-use skill rates are **new
-  numbers not in the design doc**; add them to `00-game-design.md`
-  §3.3–§3.4 in this PR (roadmap §1 rule).
-- The catalog's implant table says tolerance minimum 3; the design doc
-  says 4 and wins. Fix the catalog line in this PR.
+- The grade formula and use rates are already normative in main design
+  3.4–3.5. Implement those values; the older slice note calling them new
+  numbers was stale.
+- The catalog already agrees with the design's minimum tolerance 4;
+  retain it. The older instruction to correct a minimum of 3 was stale.
 - All implant and drug effects go through the `Modifiers` aggregator;
   no other slice may query the implant map directly, or S24's event
   modifiers will have nowhere to compose.
 - Detox pockets the player at the clinic: reuse S08's pocket regions,
   do not invent a new safety state.
+
+## Delivery and deferred field checks
+
+The shipped-hub acceptance passes through real NetBBS Telnet/native stdio
+at 80x24 and 132x50 with wide-character names. Both callers earn grade 5,
+gain three points and a larger health pool, spend ten points for Frame
++1, install an owned Reflex Arm at the canonical Sablier clinic, acquire
+Redline dependency, and complete detox after 600.0 and 600.8 real seconds
+with one 400-chit charge. The probe discloses grade/funding/item/NPC
+fixtures and uses no placement or clock fixture.
+
+S25 must perform the original Reflex Arm purchase at the real Spire
+concourse and the real Sink black-clinic walk. Its checklist and issue
+retain both obligations; the owned-item loan proves surgery only.
+Tenant's Ear forecasts remain explicitly unavailable until S24 supplies
+the committed event producer.
+
+The earning report schedules NPC defeats, authored discovery and daily
+core lifts. It is not a human pacing measurement. The balance review
+accepts canonical values as an initial baseline; S19 extends the report
+with real contract/loot/vendor income and equipment affordability before
+the full-city human checks in section 18.
 
 ## Lore review integration
 

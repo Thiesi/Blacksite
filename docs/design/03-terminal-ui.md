@@ -165,6 +165,7 @@ Two shipped keymaps, switchable in settings and remembered per player:
 | interact | E | e |
 | jack in/out | J | Ctrl-O |
 | inventory | I | i |
+| drone commands | O | o |
 | character | P | p |
 | rig | R | r |
 | crew | G | g |
@@ -176,6 +177,11 @@ Two shipped keymaps, switchable in settings and remembered per player:
 | use quick slot 1–5 | 1–5 | 1–5 |
 | programs in rig slot 1–7 (Lattice) | 1–7 | 1–7 |
 | help | ? | ? |
+
+The drone panel lists packed and deployed units with their current health
+and mode. `U` deploys, `R` recalls, `F` follows, `H` holds, and `T` assigns
+the current target. Using a packed drone from inventory also deploys it.
+An idle mode toggle grants no skill. `Esc`/`B` closes the panel.
 | log scrollback | Ctrl-P | Ctrl-P |
 | redraw | Ctrl-L | Ctrl-L |
 | leave door | Ctrl-X then confirm key | same |

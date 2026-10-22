@@ -105,6 +105,10 @@ class Presence:
     sampled: set[str] = field(default_factory=set)
     mapping_until: int = 0
     verified_maps: set[str] = field(default_factory=set)
+    integrity_max: float = INTEGRITY_MAX
+    loaned_rig: bool = False
+    jack_source: str = ""
+    link_failed: bool = False
 
     def begin_move(self, sector: str, cell: str, tick: int, cortex: int,
                    multiplier: float = 1) -> bool:

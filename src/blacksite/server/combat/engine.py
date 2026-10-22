@@ -16,13 +16,14 @@ from blacksite.server.inventory import Inventory
 from blacksite.server.items import ItemInstance, make_item
 from blacksite.server.loop import TickContext
 from blacksite.server.players import Player
+from blacksite.server.progression import Grant
 from blacksite.server.protocol import Frame
 from blacksite.server.rules import character, combat as rules
 from blacksite.server.sessions import Session
+from blacksite.server.skills import Use
 from blacksite.server.wake import menu
-from blacksite.server.interlock_effects import lighting_radius
 from blacksite.server.world.actors import Actor
-from blacksite.server.world.sight import line, sees_actor, visible_tiles, line_of_sight
+from blacksite.server.world.sight import line, sees_actor, visible_tiles, line_of_sight, sight_radius, detection_limit
 
 
 class Combat:
@@ -56,7 +57,7 @@ class Combat:
         return av.actor if av and av.actor.id == player.id else self.world.actors.get(player.id)
 
     def log(self, actor: Actor, text: str, warning: bool = False) -> None:
-        session = self.session(actor.id)
+        session = self.session(actor.owner if actor.behaviour.get("player_drone") else actor.id)
         if session:
             session.send(Frame("log", {"lines":[{"channel":"combat", "text":text,
                 "role":"warning" if warning else "chan_sys", "at":self.clock.now_utc().isoformat()}]}))
@@ -101,6 +102,20 @@ class Combat:
         if source.id == target.id or source.stance in ("down", "dead", "sleeper") or target.stance in ("down", "dead"):
             return False
         if not self.world.permits_harm(source, target): return False
+        if source.behaviour.get("player_drone"):
+            source = self.game.progression.drones.controller_body(source,acting=True)
+            if source is None:
+                return False
+        if target.behaviour.get("player_drone"):
+            target = self.game.progression.drones.controller_body(target,acting=False)
+            if target is None:
+                return False
+        if source.id == target.id or not self.world.permits_harm(source,target):
+            return False
+        if target.behaviour.get("mission") and source.kind == "player" and target.owner != source.id:
+            return False
+        if source.behaviour.get("mission") and target.kind == "player" and source.owner != target.id:
+            return False
         if source.kind == target.kind == "player":
             if any(self.world.zones[a.zone].safety_at(a.position) != "open" for a in (source, target)):
                 if min(self.game.players[source.id].grade, self.game.players[target.id].grade) < 5: return False
@@ -111,10 +126,8 @@ class Combat:
         if target.behaviour.get("training") and target.owner != actor.id: return False
         zone = self.world.zones[actor.zone]
         hour = self.clock.now_local().hour
-        radius = (zone.template.meta.sight_radius_night if hour >= 20 or hour < 6 else None) or zone.template.meta.sight_radius
-        radius = lighting_radius(actor, zone, radius)
-        radius = max(radius, max((int(e.get("dark_sight", 0)) for e in actor.effects), default=0))
-        limit = radius / 2 if target.stance == "stealth" else radius
+        radius = sight_radius(actor, zone, hour >= 20 or hour < 6)
+        limit = detection_limit(radius, target)
         if (actor.x-target.x)**2 + (actor.y-target.y)**2 > limit**2:
             return False
         # An NPC asks about one target, not a rendered field of view. Use
@@ -141,6 +154,7 @@ class Combat:
     def armour(self, actor: Actor, damage_type: str) -> int:
         player = self.game.players.get(actor.id)
         total = self.npc_armour(actor, damage_type) + sum(int(e.get("armour",0)) for e in actor.effects)
+        total += int(actor.modifiers.get("arm_"+damage_type[0], 0))
         if player:
             for iid in set(player.equipment.values()):
                 item = self.commerce.items.get(iid)
@@ -153,7 +167,8 @@ class Combat:
             return 0  # Game design 5.2: the body cannot evade while jacked.
         player = self.game.players.get(actor.id)
         if not player: return float(actor.behaviour.get("evasion",0))
-        value = player.attributes["nerve"] / 3
+        value = min(100, max(0, player.attributes["nerve"]+actor.modifiers.get("nerve", 0))) / 3
+        value += actor.modifiers.get("evasion", 0)
         for iid in set(player.equipment.values()):
             item = self.commerce.items.get(iid)
             template = self.content.items[item.template] if item else None
@@ -162,13 +177,22 @@ class Combat:
 
     def target_view(self, actor: Actor) -> dict[str, Any] | None:
         target = self.world.actors.get(actor.target)
-        if not target or not self.visible(actor,target): return None
+        if not target or target.zone != actor.zone: return None
+        obscured = not self.visible(actor,target)
+        if obscured:
+            zone = self.world.zones[actor.zone]
+            hour = self.clock.now_local().hour
+            radius = sight_radius(actor, zone, hour >= 20 or hour < 6)
+            if not actor.modifiers.get("target_through_cover") or rules.distance(actor.position, target.position) > radius:
+                return None
         return {"id":target.id, "name":target.name, "handle":target.handle, "faction":target.faction or "Freelance",
             "hp_percent":max(0,ceil(100 * target.health / target.health_max)),
+            **({"hp": target.health, "hp_max": target.health_max} if actor.modifiers.get("target_through_cover") else {}),
             "range":round(rules.distance(actor.position,target.position),1), "cover":self.cover(actor,target),
             "relation":self.relation(actor,target), "stance":target.stance,
             "protected":not self.legal(actor,target),
-            "warning":"Protected" if not self.legal(actor,target) else "Firing marks you" if target.kind == "player" and self.relation(actor,target) != "hostile" else ""}
+            "warning":"Protected" if not self.legal(actor,target) else "Obscured; no clear shot" if obscured
+                else "Firing marks you" if (target.kind == "player" or target.behaviour.get("player_drone")) and self.relation(actor,target) != "hostile" else ""}
 
     def warn(self, source: Actor, target: Actor, tick: int) -> bool:
         key = source.id, target.id
@@ -182,6 +206,12 @@ class Combat:
         return tick >= self.warnings[key] + rules.ticks(rules.WARNING_SECONDS)
 
     def mark(self, source: Actor, target: Actor) -> None:
+        if source.behaviour.get("player_drone") or target.behaviour.get("player_drone"):
+            source_body = self.game.progression.drones.controller_body(source,acting=True) if source.behaviour.get("player_drone") else source
+            target_body = self.game.progression.drones.controller_body(target,acting=False) if target.behaviour.get("player_drone") else target
+            if source_body and target_body:
+                self.mark_indirect(source_body,target_body)
+            return
         if source.kind != "player" or target.kind != "player": return
         if self.world.zones[source.zone].safety_at(source.position) == "open": return
         if self.relation(source,target) == "hostile": return
@@ -247,11 +277,15 @@ class Combat:
         elif not weapon.melee and self.content.items[item.template].requires_archetype != player.archetype:
             self.log(actor,"That weapon requires its resonance interface."); return
         jam = max((float(e.get("weapon_multiplier",1)) for e in actor.effects), default=1)
+        jam *= actor.modifiers.get("weapon_cooldown_multiplier", 1)
+        if weapon.heavy:
+            jam *= actor.modifiers.get("heavy_cooldown_multiplier", 1)
         seconds = rules.action_seconds(rules.MELEE_SECONDS if weapon.melee else weapon.cooldown, actor.shock, jam)
         def resolved(success: bool) -> None:
             if not success: self.log(actor,"The shot did not settle. Try again.",True); return
             if actor.stance in ("down","dead","sleeper") or actor.zone is None: return
-            actor.cooldowns["weapon"] = self.clock.now_tick() + rules.ticks(seconds)
+            actor.cooldowns["weapon"] = rules.cooldown_deadline(self.clock.now_tick(), seconds,
+                                                               actor.cooldowns.get("weapon", 0))
             actor.stance = "normal"
             if weapon.melee: actor.stamina -= weapon.stamina
             # The queue can outlive an input frame. Recheck physical safety at impact.
@@ -282,17 +316,45 @@ class Combat:
         return [target,*candidates] if weapon.cone else [target,*candidates[:weapon.targets-1]]
 
     def shot(self, source: Actor, target: Actor, weapon: WeaponBlock, quality: float = 1, skill: float = 0) -> None:
-        if not self.legal(source,target) or target.stance in ("down","dead"): return
+        if self.commerce.pending:
+            try:
+                self.commerce.enqueue_system(lambda: self.shot(source, target, weapon, quality, skill))
+            except ValueError:
+                return  # Match hurt: overload declines harm instead of aborting the tick.
+            return
+        if (not self.legal(source,target) or target.stance in ("down","dead") or not self.visible(source,target)
+                or rules.distance(source.position,target.position) > (weapon.range or 1.5)):
+            return
         zone = self.world.zones[source.zone]
-        chance = rules.to_hit(weapon.accuracy if weapon.accuracy is not None else rules.MELEE_ACCURACY,
-            skill,self.evasion(target),self.cover(source,target),0 if weapon.melee else rules.range_penalty(rules.distance(source.position,target.position),weapon.range))
+        accuracy = (weapon.accuracy if weapon.accuracy is not None else rules.MELEE_ACCURACY)+source.modifiers.get("accuracy", 0)
+        if weapon.damage_type == "kinetic": accuracy += source.modifiers.get("kinetic_accuracy", 0)
+        penalty = 0 if weapon.melee else rules.range_penalty(rules.distance(source.position,target.position),weapon.range)
+        penalty *= source.modifiers.get("range_penalty_multiplier", 1)
+        chance = rules.to_hit(accuracy,skill,self.evasion(target),self.cover(source,target),penalty)
         roll = zone.rng.random()*100
         self.exchange(source,target)
         hit = roll < chance
         self.log(source,f"{'Hit' if hit else 'Miss'}: {target.name}." + (f" Roll {roll:.1f}, hit {chance:.1f}%, cover {self.cover(source,target)}." if source.id in self.verbose else ""))
         if not hit: return
         amount = rules.damage(weapon.damage*quality,skill,self.armour(target,weapon.damage_type),weapon.melee)
-        self.hurt(source,target,amount,weapon.shock)
+        progression = self.game.progression
+        attack_use = progression.combat_eligible(source, target)
+        armour_use = progression.combat_eligible(target, source) and amount < rules.damage(weapon.damage*quality,skill,0,weapon.melee)
+        before = target.health
+        self.hurt(source,target,amount,weapon.shock,damage_type=weapon.damage_type)
+        if target.health < before:
+            receipt = f"hit:{source.id}:{target.id}:{self.clock.now_utc().isoformat()}:{target.behaviour['hit_serial']}"
+            if attack_use:
+                player = progression.controller(source)
+                if source.behaviour.get("player_drone"):
+                    progression.record_use(player.id, Use("drone_command","drones",receipt,True,changed=True,threat=True))
+                else:
+                    line = "melee" if weapon.melee else "energy" if weapon.damage_type == "energy" else "kinetic"
+                    progression.record_use(player.id, Use("melee_hit" if weapon.melee else "weapon_hit",
+                        line, receipt, True, threat=True))
+            if armour_use:
+                progression.record_use(progression.controller(target).id,
+                    Use("armour_absorb", "armour", "armour:"+receipt, True, threat=True))
         if weapon.dot and target.stance not in ("down","dead"):
             # Reapplying the same agent refreshes, rather than stacking an unbounded DoT.
             target.effects[:] = [e for e in target.effects if not (e.get("kind")=="dot" and e.get("source")==source.id and e.get("damage_type")==weapon.damage_type)]
@@ -303,23 +365,33 @@ class Combat:
     def exchange(self, source: Actor, target: Actor) -> None:
         if source.behaviour.get("training") or target.behaviour.get("training"): return
         self.hostile_hook(source, target)
+        target.behaviour["last_attacker"] = source.id
+        target.cooldowns["attacked"] = self.clock.now_tick()+rules.ticks(rules.COMBAT_SECONDS)
+        for actor, opponent in ((source, target), (target, source)):
+            self.game.progression.hostile_contact(actor, opponent)
         tick = self.clock.now_tick()
         for actor in (source,target):
             actor.cooldowns["combat"] = tick + rules.ticks(rules.COMBAT_SECONDS)
-            if actor.id in self.game.players:
-                self.game.players[actor.id].progress["last_exchange"] = self.now()
-                if actor.stance == "sleeper": self.game.players[actor.id].progress["sleeper_combat"] = True
+            player = self.game.progression.controller(actor)
+            if player:
+                body = self.actor(player)
+                player.progress["last_exchange"] = self.now()
+                if body:
+                    body.cooldowns["combat"] = actor.cooldowns["combat"]
+                    if body.stance == "sleeper": player.progress["sleeper_combat"] = True
+                    if body is not actor:
+                        self.remember(player,body,immediate=False)
 
-    def hurt(self, source: Actor, target: Actor, amount: int, shock: float = 0) -> None:
+    def hurt(self, source: Actor, target: Actor, amount: int, shock: float = 0, *, damage_type: str = "") -> None:
         if target.stance in ("down", "dead"):
             return
         if self.commerce.pending:
-            try: self.commerce.enqueue_system(lambda:self.hurt(source,target,amount,shock))
+            try: self.commerce.enqueue_system(lambda:self.hurt(source,target,amount,shock,damage_type=damage_type))
             except ValueError: self.log(source,"The city is busy. Try again.",True)
             return
         if not self.legal(source,target) or target.stance in ("down","dead"): return
         training = source.behaviour.get("training")
-        self._apply_damage(source, target, amount, shock, source.id, source.name, bool(training))
+        self._apply_damage(source, target, amount, shock, source.id, source.name, bool(training), damage_type)
 
     def feedback_hurt(self, target: Actor, amount: int, source_id: str, source_name: str,
                       permit: Callable[[], bool]) -> bool:
@@ -339,7 +411,7 @@ class Combat:
         return True
 
     def _apply_damage(self, source: Actor | None, target: Actor, amount: int, shock: float,
-                      source_id: str, source_name: str, training: bool) -> None:
+                      source_id: str, source_name: str, training: bool, damage_type: str = "") -> None:
         target.health = max(1 if training else 0,target.health-amount)
         target.shock = min(100,target.shock+amount/2+shock)
         target.cooldowns["last_hit"] = self.clock.now_tick()
@@ -347,8 +419,11 @@ class Combat:
         self.log(target,f"{source_name} hits you for {amount}.",True)
         self.casts.pop(target.id,None)
         if target.shock >= rules.SHOCK_KNOCK:
-            target.shock = rules.SHOCK_RESET
-            target.cooldowns["knockdown"] = self.clock.now_tick()+rules.ticks(rules.KNOCK_SECONDS)
+            if damage_type == "dissonance" and target.modifiers.get("dissonance_knockdown_immune"):
+                target.shock = rules.SHOCK_KNOCK-1
+            else:
+                target.shock = rules.SHOCK_RESET
+                target.cooldowns["knockdown"] = self.clock.now_tick()+rules.ticks(rules.KNOCK_SECONDS)
         if target.health <= 0:
             if target.behaviour.get("training"):
                 self.world.leave(target)
@@ -360,7 +435,9 @@ class Combat:
             elif target.id in self.game.players:
                 target.stance = "down"
                 target.effects.clear()
-                self.game.players[target.id].progress["combat"] = {"stage":"down", "until":self.now()+rules.DOWN_SECONDS, "killer":source_id}
+                controller = self.game.progression.controller(source) if source is not None else None
+                self.game.players[target.id].progress["combat"] = {"stage":"down", "until":self.now()+rules.DOWN_SECONDS,
+                    "killer":controller.id if controller else source_id}
                 self.log(target,"You are down. A nearby ally can press E to pick you up.",True)
             else:
                 if source is not None:
@@ -406,10 +483,24 @@ class Combat:
         hand,debt,xp,charge = rules.clone_settlement(player.chits_hand,player.grade,player.xp,character.grade_threshold(player.grade),player.clone_debt)
         state["charge"] = charge
         identity = deepcopy(self.game.identities[player.bbs_user_id]); identity["clone_debt"] = debt
+        progression = self.game.progression
+        killer = self.game.players.get(state.get("killer"))
+        reward, killer_patch, killer_identity = None, {}, None
+        if (killer and killer.id not in self.game.deleting and killer.id != player.id
+                and killer.bbs_user_id != player.bbs_user_id
+                and progression.permit_combat(killer.id, player.id)):
+            crew = progression.crew_of(killer.id)
+            receipt = f"pvp:{player.id}:{state['until']}"
+            killer_patch, killer_identity, reward = progression.reward_patch(killer, Grant("combat", receipt,
+                True, scope="pvp:"+player.bbs_user_id, opponent_grade=player.grade,
+                opponent_identity=player.bbs_user_id,
+                self_or_crew=bool(crew and crew == progression.crew_of(player.id))))
         self.pending_deaths.add(player.id)
         def committed(success: bool) -> None:
             self.pending_deaths.discard(player.id)
             if not success: return
+            if killer:
+                progression.notify_reward(killer, reward)
             actor.stance = "dead"; actor.target = None
             if actor.zone:
                 self.world.zones[actor.zone].deactivate("sleeper:"+actor.id,self.clock.now_tick())
@@ -425,6 +516,12 @@ class Combat:
                 self.menus.pop(session.id,None)
         self.commerce.settle(player,{"inventory":inventory,"equipment":equipment,"progress":progress,
             "health":0,"chits_hand":hand,"clone_debt":debt,"xp":xp},items,caches,serial,committed,identity)
+        if reward is not None:
+            if "progress" in killer_patch:
+                killer_patch["progress"] = {key: value for key, value in killer_patch["progress"].items()
+                    if key not in killer.progress or value != killer.progress[key]}
+            self.commerce.outbox[-1]["player_patches"] = {killer.id: killer_patch}
+            self.commerce.outbox[-1]["identities"] = {killer.bbs_user_id: killer_identity}
 
     def vat(self, player: Player) -> tuple[str, tuple[int,int]]:
         pending,seen = deque([player.zone]),set()
@@ -441,7 +538,7 @@ class Combat:
     def recovery_items(self, player: Player) -> tuple[Player,dict[str,ItemInstance],int]:
         draft,items = deepcopy(player),deepcopy(self.commerce.items)
         serial = self.next_serial()
-        inv = Inventory(items,self.content.items)
+        inv = Inventory(items,self.content.items,self.game.progression.modifiers(draft).secured_slots)
         usable = False
         body_gear = False
         for iid in player.inventory:
@@ -526,8 +623,10 @@ class Combat:
         return True
 
     def unlocked(self, player: Player, ability: HymnTemplate) -> bool:
-        templates = {self.commerce.items[i].template for i in player.implants.values() if i in self.commerce.items}
-        return player.archetype == "cantor" and (not ability.requires_one_of or bool(templates.intersection(ability.requires_one_of)))
+        mods = self.game.progression.modifiers(player)
+        tier = mods.bonus("hymn_tier" if ability.kind == "hymn" else "dissonance_tier")
+        return player.archetype == "cantor" and tier >= ability.tier and (not ability.requires_one_of
+            or bool(mods.installed_templates.intersection(ability.requires_one_of)))
 
     def cast(self, player: Player, actor: Actor, aid: str) -> None:
         ability = self.content.hymns.get(aid)
@@ -544,7 +643,7 @@ class Combat:
             if rules.distance(actor.position,target.position)>rules.ABILITY_RANGE: raise ValueError("Out of ability range.")
             if not self.warn(actor,target,tick): return
             self.mark(actor,target)
-        self.casts[player.id] = {"ability":aid,"until":tick+rules.ticks(rules.action_seconds(ability.cast_seconds,actor.shock)),
+        self.casts[player.id] = {"ability":aid,"until":tick+rules.ticks(rules.action_seconds(ability.cast_seconds*actor.modifiers.get("cantor_cast_multiplier", 1),actor.shock)),
             "tile":actor.position,"zone":actor.zone,"target":target.id,"last_hit":actor.cooldowns.get("last_hit")}
         self.log(actor,"You begin "+ability.name+".")
 
@@ -560,11 +659,13 @@ class Combat:
         if ability.kind == "dissonance" and (not self.legal(actor,target) or not self.visible(actor,target) or rules.distance(actor.position,target.position)>rules.ABILITY_RANGE): return
         player = self.game.players[actor.id]
         factor = 1+player.skills.get("hymns" if ability.kind == "hymn" else "dissonance",0)/200
+        receipt = f"ability:{actor.id}:{ability.id}:{cast.get('until', self.clock.now_tick())}:{self.clock.now_utc().isoformat()}"
+        restored = threatened = False
         effect = ability.effect
         recipients = [target]
         if ability.kind == "hymn":
             recipients = [a for a in self.allies_provider(actor) if a.zone==actor.zone
-                and rules.distance(actor.position,a.position)<=rules.ABILITY_RANGE]
+                and rules.distance(actor.position,a.position)<=max(rules.ABILITY_RANGE, actor.modifiers.get("hymn_radius", 0))]
         if effect.get("revive"):
             recipients = [a for a in recipients if a.stance=="down"][:1]
             if not recipients:
@@ -573,23 +674,32 @@ class Combat:
             recipients = [a for a in self.world.zones[actor.zone].actors.values() if a is not actor
                 and rules.distance(actor.position,a.position)<=effect["area"] and self.visible(actor,a) and self.legal(actor,a)]
         for other in recipients:
+            before_health, before_shock = other.health, other.shock
+            if ability.kind == "dissonance":
+                threatened |= self.game.progression.combat_eligible(actor, other)
             if effect.get("revive"):
                 other.health=max(1,ceil(other.health_max*rules.REVIVE_FRACTION));other.stance="normal"
                 self.game.players[other.id].progress.pop("combat",None)
             if ability.kind == "dissonance": self.exchange(actor,other)
             if effect.get("damage"):
-                self.hurt(actor,other,rules.damage(effect["damage"],player.skills.get("dissonance",0),self.armour(other,"dissonance")),float(effect.get("shock",0)))
+                self.hurt(actor,other,rules.damage(effect["damage"]*actor.modifiers.get("dissonance_damage_multiplier", 1),
+                    player.skills.get("dissonance",0),self.armour(other,"dissonance")),float(effect.get("shock",0)),damage_type="dissonance")
             elif effect.get("shock"):
                 other.shock = max(0,other.shock+effect["shock"]*factor)
             ongoing = {key:value for key,value in effect.items() if key not in ("damage","shock","area","seconds","revive")}
             if ongoing:
                 other.effects.append({"kind":ability.id,"source":actor.id,"until_tick":self.clock.now_tick()+rules.ticks(float(effect.get("seconds",0))),
-                    "next_tick":self.clock.now_tick()+10,**ongoing,"scale":factor})
+                    "next_tick":self.clock.now_tick()+10,**ongoing,"scale":factor,"use_receipt":receipt})
+            restored |= other.health > before_health or other.shock < before_shock
             if other.id in self.game.players: self.remember(self.game.players[other.id],other)
         actor.cooldowns["ability:"+ability.id] = self.clock.now_tick()+rules.ticks(ability.cooldown_seconds)
         self.log(actor,ability.name+" settles.")
         self.remember(player,actor)
         self.world.zones[actor.zone].revision += 1
+        if ability.kind == "hymn" and restored:
+            self.game.progression.record_use(player.id, Use("hymn_restore", "hymns", receipt, True, changed=True))
+        elif ability.kind == "dissonance" and threatened:
+            self.game.progression.record_use(player.id, Use("dissonance_threat", "dissonance", receipt, True, threat=True))
 
     def input(self, session: Session, frame: Frame, tick: int) -> bool:
         player = self.game.players.get(session.player_id)
@@ -724,10 +834,13 @@ class Combat:
                     effect["next_tick"] += 10
                     source = self.world.actors.get(effect.get("source"))
                     if effect.get("kind") == "dot" and source and self.legal(source,actor):
-                        self.hurt(source,actor,max(1,int(effect["damage"])-self.armour(actor,str(effect["damage_type"]))))
+                        multiplier = actor.modifiers.get("chemical_dot_multiplier", 1) if effect["damage_type"] == "chemical" else 1
+                        self.hurt(source,actor,max(1,int(effect["damage"]*multiplier)-self.armour(actor,str(effect["damage_type"]))),
+                                  damage_type=str(effect["damage_type"]))
                     if effect.get("heal") and actor.stance not in ("down","dead"):
                         amount = ceil(effect["heal"]*effect.get("scale",1))
-                        try: self.commerce.enqueue_system(lambda actor=actor,amount=amount:self.heal(actor,amount))
+                        receipt, healer = str(effect.get("use_receipt", "")), str(effect.get("source", ""))
+                        try: self.commerce.enqueue_system(lambda actor=actor,amount=amount,receipt=receipt,healer=healer:self.heal(actor,amount,healer,receipt))
                         except ValueError: pass
                 if tick>=effect["until_tick"] and effect in actor.effects: actor.effects.remove(effect)
             if actor.zone is None: continue
@@ -743,9 +856,12 @@ class Combat:
                 ability = self.content.hymns[rows[cursor]["id"]]
                 self.sim.external_views[sid] = "menu",{**menu("ABILITIES",rows,cursor,ability.description,"Enter uses  1-5 binds  Esc/B returns"),"actions":[{"key":k,"label":"bind "+k} for k in "12345"]}
 
-    def heal(self, actor: Actor, amount: int) -> None:
+    def heal(self, actor: Actor, amount: int, healer: str = "", receipt: str = "") -> None:
         if actor.stance not in ("down","dead"):
+            before = actor.health
             actor.health = min(actor.health_max,actor.health+amount)
+            if actor.health > before and receipt and healer in self.game.players:
+                self.game.progression.record_use(healer, Use("hymn_restore", "hymns", receipt, True, changed=True))
 
     def restore(self, player: Player, actor: Actor) -> None:
         stage = player.progress.get("combat",{}).get("stage")

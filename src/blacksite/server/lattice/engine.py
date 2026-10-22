@@ -42,6 +42,8 @@ class Lattice:
         self.events: set[str] = set()  # S24 installs active event credentials.
         self.crew_of: Callable[[str], str | None] = lambda pid: None  # S22.
         self.social_overlay: Callable[[Session], bool] = lambda session: False
+        self.mobile_terminal: Callable[[Actor, str | None], Any] = lambda actor, target: None
+        self.mobile_link_status: Callable[[Presence], str] = lambda presence: "ready"
         self.orphans: dict[str, tuple[Session, Avatar]] = {}
         self.game.retained_avatar = self.retained_avatar
         self.game.attached = self.attached
@@ -98,16 +100,25 @@ class Lattice:
     def integrity(self, player: Player) -> float:
         state = self.saved(player)
         elapsed = max(0, self.clock.now_utc().timestamp()-state.get("out_at", self.clock.now_utc().timestamp()))
-        return min(INTEGRITY_MAX, max(0, state.get("integrity", INTEGRITY_MAX))+elapsed*INTEGRITY_PER_SECOND)
+        maximum = self.integrity_limit(player)
+        return min(maximum, max(0, state.get("integrity", maximum))+elapsed*INTEGRITY_PER_SECOND)
+
+    def integrity_limit(self, player: Player) -> float:
+        return max(1, INTEGRITY_MAX+self.game.progression.modifiers(player).bonus("integrity"))
 
     def found(self, player: Player, sector: str) -> set[str]:
         return set(self.saved(player).get("found_cells", {}).get(sector, []))
 
-    def reveal(self, player: Player, sector: str, cell: str) -> bool:
-        """Operator/debug hook; S14/S16/S24 supply real discovery actions."""
+    def reveal(self, player: Player, sector: str, cell: str, *, learn: bool = False) -> bool:
+        """Debug reveals do not pay skill; real survey/program actions do."""
         if sector not in self.sectors.cells or cell not in self.sectors.cells[sector]:
             return False
         found = self.found(player, sector)
+        if learn:
+            if cell in found:
+                return False
+            self.game.progression.record_discovery(player.id, "hidden", sector+"/"+cell)
+            return True
         found.add(cell)
         self.saved(player).setdefault("found_cells", {})[sector] = sorted(found)
         self.game.queue("save", player.bbs_user_id, player, immediate=True)
@@ -144,19 +155,78 @@ class Lattice:
 
     def terminal(self, actor: Actor, target: str | None = None) -> Any:
         zone = self.game.world.zones[actor.zone]
-        return next((obj for obj in sorted(zone.objects.values(), key=lambda o: o.spec.id)
+        fixed = next((obj for obj in sorted(zone.objects.values(), key=lambda o: o.spec.id)
             if obj.spec.kind == "terminal" and (target is None or obj.spec.id == target)
             and max(abs(actor.x-obj.spec.tile[0]), abs(actor.y-obj.spec.tile[1])) <= 1), None)
+        return fixed or self.mobile_terminal(actor,target)
 
     def carried_slots(self, player: Player) -> int:
-        result = 0
-        for iid in set(player.inventory) | set(player.implants.values()):
+        result = int(self.game.progression.modifiers(player).bonus("rig_slots"))
+        for iid in player.inventory:
             item = self.game.items.get(iid)
             template = self.content.items.get(item.template) if item else None
             if template and template.implant and template.implant.rig_slots:
-                if template.class_ == "rig" or iid in player.implants.values():
+                if template.implant.portable and item.owner == player.id:
                     result = max(result, template.implant.rig_slots)
         return result
+
+    def fit_rig(self, configured: list[str | None] | tuple[str | None, ...], slots: int) -> tuple[str | None, ...]:
+        occupied: set[int] = set()
+        clean: list[str | None] = [None]*slots
+        for index, pid in enumerate(configured[:slots]):
+            program = self.content.programs.get(pid)
+            if program and index+program.slots <= slots and not occupied.intersection(range(index, index+program.slots)) and pid not in clean:
+                clean[index] = pid
+                occupied.update(range(index, index+program.slots))
+        return tuple(clean)
+
+    def sync_player_modifiers(self, player: Player) -> None:
+        presence = self.presences.get(player.id)
+        if presence is None:
+            return
+        presence.integrity_max = self.integrity_limit(player)
+        presence.integrity = min(presence.integrity, presence.integrity_max)
+        slots = max(self.content.starts[player.archetype].rig_slots or 0, self.carried_slots(player))
+        if not slots:
+            if not presence.loaned_rig:
+                self.encounters.force_out(presence)
+                return
+            slots = PUBLIC_LOAN_SLOTS
+        if slots != len(presence.rig):
+            presence.rig = self.fit_rig(presence.rig, slots)
+            if presence.cast and presence.cast.program not in presence.rig:
+                presence.cast = None
+        self.sense_hidden(presence)
+
+    def sense_hidden(self, presence: Presence) -> None:
+        """Second Ear reveals the catalog's graph radius, never visited XP."""
+        player = self.game.players[presence.player_id]
+        radius = int(self.game.progression.modifiers(player).bonus("hidden_cell_radius"))
+        if not radius or presence.instance and not presence.descent:
+            return
+        if presence.descent:
+            instance = self.encounters.core(presence)
+            if instance is None:
+                return
+            cells = {cell.id: cell for cell in instance.graph.band.cells}
+            root = presence.room
+            known = presence.found_silt.setdefault(presence.instance,set())
+        else:
+            cells = self.sectors.cells[presence.sector]
+            root = presence.cell
+            known = self.found(player,presence.sector)
+        seen,frontier = {root},{root}
+        for _ in range(radius):
+            frontier = {other for cid in frontier for other in cells[cid].neighbours}-seen
+            seen.update(frontier)
+            for cid in sorted(frontier):
+                hidden = cells[cid].hidden if presence.descent else cells[cid].access_kind == "hidden"
+                if not hidden or cid in known:
+                    continue
+                if presence.descent:
+                    known.add(cid)
+                else:
+                    self.reveal(player,presence.sector,cid,learn=True)
 
     def jack_in(self, session: Session, target: str | None = None) -> None:
         player = self.game.players.get(session.player_id)
@@ -188,22 +258,17 @@ class Lattice:
         if sector not in self.sectors.records:
             self.log(session, "This terminal has no live district link.", True)
             return
-        if terminal and not slots:
+        loaned = bool(terminal and not slots)
+        if loaned:
             slots = PUBLIC_LOAN_SLOTS
         configured = player.rig.get("slots", [])
         if not configured:
             configured = list(self.content.starts[player.archetype].programs)
-        # Shrinking capacity never retains half of a multi-slot program.
-        occupied: set[int] = set()
-        clean: list[str | None] = [None]*slots
-        for index, pid in enumerate(configured[:slots]):
-            program = self.content.programs.get(pid)
-            if program and index+program.slots <= slots and not occupied.intersection(range(index, index+program.slots)) and pid not in clean:
-                clean[index] = pid
-                occupied.update(range(index, index+program.slots))
-        rig = tuple(clean)
+        rig = self.fit_rig(configured, slots)
         presence = Presence(player.id+":presence", player.id, sector, self.sectors.entrance(sector), rig,
-                            integrity=self.integrity(player))
+                            integrity=self.integrity(player), integrity_max=self.integrity_limit(player), loaned_rig=loaned)
+        if terminal and (loaned or target is not None):
+            presence.jack_source = str(terminal.spec.params.get("player_drone",""))
         self.presences[player.id] = presence
         actor.stance = "jacked"
         actor.target = None
@@ -220,9 +285,14 @@ class Lattice:
                         self.log(session, line)
             state["initiated"] = True
         self.log(session, "You enter "+self.sectors.records[sector].district+". "+self.sectors.cells[sector][presence.cell].label+" resolves.")
+        if presence.jack_source:
+            self.log(session,"Your Relay holds still. Its destruction forces you out with shock.",True)
         self.notify(presence, player.name+" arrives.", exclude=player.id)
         self.game.snapshot(player, avatar)
         self.game.queue("save", session.user_id, player, immediate=True)
+        if not (terminal and terminal.spec.params.get("training_core")):
+            self.game.progression.record_discovery(player.id, "cell", sector+"/"+presence.cell)
+            self.sense_hidden(presence)
 
     def notify(self, presence: Presence, text: str, exclude: str | None = None) -> None:
         for other in self.presences.values():
@@ -275,6 +345,19 @@ class Lattice:
                                             self.encounters.hit_serial(presence))
             self.log(session, "You start a two-second escape. Hits can interrupt it three times.")
 
+    def check_mobile_link(self, session: Session, presence: Presence) -> bool:
+        if not presence.jack_source:
+            return True
+        status = self.mobile_link_status(presence)
+        if status == "destroyed":
+            self.encounters.force_out(presence)
+            return False
+        if status != "ready" and not presence.link_failed:
+            presence.link_failed = True
+            self.log(session,"The Relay loses its link. You start escape.",True)
+            self.jack_out(session)
+        return not presence.link_failed
+
     def move(self, session: Session, sector: str, cell: str) -> None:
         presence = self.presences[session.player_id]
         if not self.encounters.idle(presence):
@@ -295,7 +378,7 @@ class Lattice:
         for owner, requirement in ((target, target.requirement), (source, source.uplink.requirement if sector != presence.sector and source.uplink else None)):
             if not self.accepts(player, presence, owner, requirement):
                 raise ValueError("This link requires "+self.label(requirement)+".")
-        if presence.begin_move(sector, cell, self.clock.now_tick(), player.attributes["cortex"],
+        if presence.begin_move(sector, cell, self.clock.now_tick(), self.game.progression.modifiers(player).attribute(player, "cortex"),
                                self.encounters.move_multiplier(player)):
             presence.redline_move = presence.effects.has("prg_redline", self.clock.now_tick())
             if presence.redline_move:
@@ -303,12 +386,18 @@ class Lattice:
                     ceil(float(self.content.programs["prg_redline"].effect.amount)*TICK_HZ))
 
     def input(self, session: Session, frame: Frame, tick: int) -> bool:
+        player = self.game.players.get(session.player_id)
+        if player:
+            self.sync_player_modifiers(player)
         name = frame.data.get("name", "") if frame.type == "intent" else ""
         key = frame.data.get("k", "") if frame.type == "key" else ""
         args = frame.data.get("args", {})
         table = next((m for m in self.sim.keymap.get("keymaps", []) if m["id"] == session.keymap_id), {})
         action = next((a for a, keys in table.get("bindings", {}).items() if key in keys), name)
         presence = self.presences.get(session.player_id)
+        if presence and not self.check_mobile_link(session,presence):
+            return not (frame.type == "line" or name.startswith("chat") or action.startswith("chat_")
+                        or name in ("resync","ignore","report","settings"))
         if session.pending_prompts.get("chat"):
             return False
         if presence:
@@ -415,7 +504,7 @@ class Lattice:
         cell = self.sectors.cells[sector.id][presence.cell]
         return {"title": sector.district.upper()+" / LATTICE", "sector": sector.id,
             "layout_size": list(sector.layout_size), "cells": cells, "edges": edges,
-            "presences": peers, "me": {"cell": presence.cell, "integrity": presence.integrity,
+            "presences": peers, "me": {"cell": presence.cell, "integrity": presence.integrity, "integrity_max": presence.integrity_max,
                 "trace": presence.trace, "rig": [{"slot": i+1, "program": pid,
                     "name": self.content.programs[pid].name if pid in self.content.programs else "Empty", "cd": 0} for i, pid in enumerate(presence.rig)],
                 "move_ticks": max(0, presence.move_until-self.clock.now_tick()) if presence.destination else 0,
@@ -428,6 +517,13 @@ class Lattice:
             "hint": "Arrows links  E uplink / enter  "+self.jack_key(session)+" jack out  Tab target  1-7 cast  R rig"}
 
     def tick(self, ctx: TickContext) -> None:
+        for pid,presence in tuple(self.presences.items()):
+            held = self.orphans.get(pid)
+            session = held[0] if held else self.session(pid)
+            if session:
+                self.check_mobile_link(session,presence)
+        for pid in tuple(self.presences):
+            self.sync_player_modifiers(self.game.players[pid])
         self.encounters.advance(ctx.tick)
         for pid, presence in tuple(self.presences.items()):
             held = self.orphans.get(pid)
@@ -471,6 +567,8 @@ class Lattice:
                     self.encounters.follow(presence)
                     session.subscribed = presence.sector
                     self.log(session, "You enter "+cell.label+".")
+                    self.game.progression.record_discovery(pid, "cell", presence.sector+"/"+presence.cell)
+                    self.sense_hidden(presence)
                     self.notify(presence, self.game.players[pid].name+" arrives.", exclude=pid)
             body = self.view(session, presence)
             transition = self.transitions.get(session.id)

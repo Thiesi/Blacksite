@@ -74,6 +74,7 @@ def test_game_6_5_generated_sites_are_stable_across_descents(runners):
 def test_game_6_6_chorister_visible_survey_hold_and_no_repeat_reward(runners):
     game, a, b, c = runners
     presence = descend(game, a)
+    before_xp = game.core.characters.players[presence.player_id].xp
     encounters = game.core.lattice.encounters
     encounters.enter_band(presence, 2)
     graph = encounters.core(presence).graph
@@ -90,7 +91,7 @@ def test_game_6_6_chorister_visible_survey_hold_and_no_repeat_reward(runners):
     assert signal.id in presence.sampled
     assert presence.mapping_until == game.clock.now_tick()+3000
     assert not game.core.characters.players[presence.player_id].progress.get("lattice_units")
-    assert game.core.characters.players[presence.player_id].xp == 0
+    assert game.core.characters.players[presence.player_id].xp == before_xp
     intent(game, a, "lat.sample")
     assert presence.procedure is None
 

@@ -177,6 +177,7 @@ class _Validator:
         self.check_programs()
         self.check_silt()
         self.check_items()
+        self.check_progression()
         self.check_starts()
         self.check_hymns()
         self.check_vendors()
@@ -934,6 +935,42 @@ class _Validator:
                 self.ref(kind, item.schematic.output, owner, "schematic output")
             if item.drone is not None:
                 self.ref("items", item.drone.weapon, owner, "drone weapon")
+                drone = item.drone
+                if drone.health < 1 or drone.move_ms < 100 or (drone.control_range is not None and drone.control_range < 1):
+                    self.report(*owner, "a drone needs positive health/range and movement of at least one tick")
+                if drone.attack is not None:
+                    self._weapon_block(drone.attack, owner)
+            if item.implant is not None:
+                block = item.implant
+                if block.tolerance < 0:
+                    self.report(*owner, "implant tolerance cannot be negative")
+                if block.portable and (item.class_ != "rig" or block.tolerance != 0
+                                       or block.effects or not block.rig_slots):
+                    self.report(*owner, "a portable rig has zero tolerance, slots and no implanted effects")
+            if item.drug is not None:
+                drug = item.drug
+                if drug.duration <= 0 or drug.addiction_window <= 0 or drug.addiction_doses < 1:
+                    self.report(*owner, "drug duration, addiction window and dose threshold must be positive")
+
+    def check_progression(self) -> None:
+        grades = list(self.each("grades"))
+        if grades and sorted(row.grade for _, row in grades) != list(range(1, 31)):
+            self.report("grades", grades[0][0], "grade titles must cover grades 1-30 exactly once")
+        for gid, grade in grades:
+            if not grade.title.strip() or not grade.promotion.strip():
+                self.report("grades", gid, "a grade needs a title and promotion line")
+            if grade.grade == 5 and grade.title != "Ninety-Day":
+                self.report("grades", gid, "grade 5 is the Ninety-Day milestone")
+        skills = list(self.each("skills"))
+        expected = {"kinetic", "melee", "armour", "energy", "stealth", "drones",
+                    "lattice", "programs", "fabrication", "hymns", "dissonance", "listening"}
+        if skills and {sid for sid, _ in skills} != expected:
+            self.report("skills", skills[0][0], "skills must define the twelve game 3.3 lines")
+        for sid, skill in skills:
+            if not skill.name.strip() or not skill.uses or any(rate <= 0 for rate in skill.uses.values()):
+                self.report("skills", sid, "a skill needs a name and positive use rates")
+            if skill.maximum != 100 or skill.daily_cap != 2:
+                self.report("skills", sid, "game 3.5 fixes the maximum at 100 and daily use cap at 2")
 
     def _check_weapon(self, item: s.ItemTemplate) -> None:
         owner = ("items", item.id)
@@ -1002,6 +1039,14 @@ class _Validator:
                 zone = self.t.zones.get(vendor.zone)
                 if zone and not any(o.id == vendor.object_id and o.kind == "vendor" for o in zone.meta.objects):
                     self.report(*owner, "vendor object anchor is missing")
+            if self.current_active and vendor.clinic == "sablier":
+                for zid, zone in self.t.zones.items():
+                    if not self.t.active("zones",zid):
+                        continue
+                    for obj in zone.meta.objects:
+                        if obj.params.get("vendor") == vid and zone.meta.safety != "safe" and not any(
+                                pocket.contains(obj.tile) for pocket in zone.meta.pockets):
+                            self.report(*owner,"Sablier clinic requires an existing safe pocket",obj.id)
 
     # --- NPCs and factions --------------------------------------------------
 

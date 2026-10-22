@@ -14,6 +14,7 @@ from blacksite.content.schema import ControlTarget, HardwareLocation
 from blacksite.server.inventory import Inventory
 from blacksite.server.lattice.presence import Presence, Procedure
 from blacksite.server.clock import TICK_HZ
+from blacksite.server.progression import Grant, award
 from blacksite.server.wake import menu, wrapped
 
 if TYPE_CHECKING:
@@ -146,7 +147,7 @@ class PrivateCores:
             items[item.id].stack -= 1
         else:
             items.pop(item.id)
-        Inventory(items, self.content.items).add(draft, stolen)
+        Inventory(items, self.content.items, self.game.progression.modifiers(draft).secured_slots).add(draft, stolen)
         proposal = deepcopy(self.interlock.state)
         record = proposal["apartments"][apartment["id"]]
         if item.stack == 1:
@@ -154,12 +155,19 @@ class PrivateCores:
         record["last_hacked_at"] = self.interlock.now()
         at = self.interlock.clock.now_utc().isoformat()
         record["hack_log"] = (record["hack_log"]+[{"at": at, "item": item.template, "unit": 1}])[-HACK_LOG_LIMIT:]
+        identity = deepcopy(self.game.identity(player.bbs_user_id))
+        reward = award(draft, identity, Grant("run", stolen.id, True,
+            scope=presence.core, core=presence.core, tier=apartment["tier"]),
+            self.interlock.clock.now_utc(), self.game.progression.modifiers(draft))
         def finished(success: bool) -> None:
             if success:
                 self.interlock.state = proposal
                 self.lat.encounters.log(presence, "Transfer committed: one unsecured unit. The resident is told.")
                 self.notify_owner(record)
-        if not commerce.settle(player, {"inventory": draft.inventory}, items, commerce.caches, serial, finished):
+                self.game.progression.notify_reward(player, reward)
+        patch = {key: deepcopy(getattr(draft, key)) for key in
+                 ("inventory", "xp", "grade", "attributes", "progress", "health", "legal_at")}
+        if not commerce.settle(player, patch, items, commerce.caches, serial, finished, identity):
             raise ValueError("Let the current transfer settle first.")
         commerce.outbox[-1]["interlock_state"] = proposal
 

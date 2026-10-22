@@ -264,19 +264,25 @@ class Interlock:
         return {"id": "control:"+control.id, "cells": ["Flip "+control.label,
                 view["state"]+" / "+reset, "3s / +10 base trace"]}
 
-    def open_vestibule(self, presence: Presence) -> None:
+    def open_vestibule(self, presence: Presence, on_changed: Callable[[], None] | None = None) -> None:
         """Passkey's typed effect: no storage, bed, bank or ICE unlock."""
         if not self.private.apartment(presence.core) or self.offline(presence.core):
             raise ValueError("No powered private vestibule is connected.")
         control = self.controls[presence.core, "apartment-door"]
+        current = self.state["effects"].get(presence.core+":"+control.id)
+        changed = not current or not current["enabled"] or current["expires"] <= self.now()
         proposal = deepcopy(self.state)
         proposal["serial"] += 1
         proposal["effects"][presence.core+":"+control.id] = {
             "core": presence.core, "control": control.id, "revision": control.revision, "enabled": True,
             "expires": self.now()+control.reset_seconds, "starts": self.now(),
             "serial": proposal["serial"], "actor": presence.player_id}
-        self.commit(proposal, lambda: self.lat.encounters.log(presence,
-            "Passkey opens the delivery vestibule for 30s. Storage stays protected."))
+        def committed() -> None:
+            self.lat.encounters.log(presence,
+                "Passkey opens the delivery vestibule for 30s. Storage stays protected.")
+            if changed and on_changed:
+                on_changed()
+        self.commit(proposal, committed)
 
     def set_owner(self, core: str, faction: str | None) -> None:
         """S21 hook: remove only old ownership effects, preserving other layers."""
