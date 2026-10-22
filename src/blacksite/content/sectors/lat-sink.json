@@ -465,5 +465,7 @@
       "label": "The Drop",
       "access": "hidden"
     }
-  ]
+  ],
+  "trace_policy": "black",
+  "trace_owner": "sable"
 }

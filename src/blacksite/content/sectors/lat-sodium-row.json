@@ -41,7 +41,7 @@
     },
     {
       "id": "lat-sodium-row-c03",
-      "kind": "public",
+      "kind": "core_entrance",
       "pos": [
         2,
         0
@@ -51,11 +51,13 @@
         "lat-sodium-row-c04",
         "lat-sodium-row-c11"
       ],
-      "label": "Tin Halo Back Bar"
+      "label": "Tin Halo entrance",
+      "access": "public",
+      "core_id": "lat-tin-halo"
     },
     {
       "id": "lat-sodium-row-c04",
-      "kind": "public",
+      "kind": "core_entrance",
       "pos": [
         3,
         0
@@ -65,7 +67,9 @@
         "lat-sodium-row-c05",
         "lat-sodium-row-c12"
       ],
-      "label": "Sign Grid"
+      "label": "House Lights entrance",
+      "access": "public",
+      "core_id": "lat-house-lights"
     },
     {
       "id": "lat-sodium-row-c05",
@@ -211,7 +215,7 @@
     },
     {
       "id": "lat-sodium-row-c15",
-      "kind": "core_entrance",
+      "kind": "gated",
       "pos": [
         6,
         1
@@ -221,15 +225,13 @@
         "lat-sodium-row-c16",
         "lat-sodium-row-c07"
       ],
-      "label": "Tin Halo entrance",
+      "label": "Tin Halo security link",
       "requirement": "program:key:2",
-      "access": "gated",
-      "core_placeholder": true,
-      "planned_core": "lat-tin-halo"
+      "access": "gated"
     },
     {
       "id": "lat-sodium-row-c16",
-      "kind": "core_entrance",
+      "kind": "gated",
       "pos": [
         7,
         1
@@ -238,11 +240,9 @@
         "lat-sodium-row-c15",
         "lat-sodium-row-c08"
       ],
-      "label": "House Lights entrance",
+      "label": "House Lights security link",
       "requirement": "program:key:2",
-      "access": "gated",
-      "core_placeholder": true,
-      "planned_core": "lat-house-lights"
+      "access": "gated"
     },
     {
       "id": "lat-sodium-row-c17",
@@ -301,5 +301,7 @@
       "label": "Stage Door",
       "access": "hidden"
     }
-  ]
+  ],
+  "trace_policy": "black",
+  "trace_owner": "sable"
 }

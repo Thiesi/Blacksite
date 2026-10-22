@@ -24,7 +24,7 @@ from blacksite.server.lattice.silt_scene import BandGraph
 from blacksite.server.players import Player
 from blacksite.server.sessions import Session
 from blacksite.server.protocol import Frame
-from blacksite.server.wake import menu
+from blacksite.server.wake import menu, wrapped
 
 if TYPE_CHECKING:
     from blacksite.server.lattice.engine import Lattice
@@ -33,6 +33,7 @@ LIFT_SECONDS = 3  # Game 6.1/6.7.
 LIFT_TRACE = 10  # World Lattice 7.
 FORCED_SHOCK = 100  # Game 6.1.
 KEY_WINDOW_SECONDS = 10  # Game 17.2, Locksmith.
+DISTRICT_HUNTER_TIER = 3  # Game 6.7: baseline hunter outside a tiered core.
 
 
 @dataclass
@@ -50,6 +51,7 @@ class EncounterMenu:
     cursor: int = 0
     slot: int = 0
     target: str = ""
+    label: str = ""
 
 
 class Encounters:
@@ -66,6 +68,8 @@ class Encounters:
         self.reports: dict[tuple[str, str], tuple[float, str, tuple[int, int]]] = {}
         self.descents: dict[str, Descent] = {}
         self.empty_descents: dict[str, int] = {}
+        self.commerce.after_settle = self.flush_hits
+        self.mission_of: Callable[[str, str], str | None] = lambda pid, source: None  # S19.
 
     def move_multiplier(self, player: Player) -> float:
         native = self.content.starts[player.archetype].rig_slots
@@ -143,11 +147,17 @@ class Encounters:
         for room in graph.rooms.values():
             for index, template_id in enumerate(room.ice):
                 template = self.content.ice[template_id]
+                if room.ice_events.get(template_id) and room.ice_events[template_id] not in self.lat.events:
+                    continue
                 if template.behaviour == "hunter":
                     continue  # Hunters are attributed to the trace-100 runner.
                 key = f"{iid}:{room.id}:{index}"
                 defenders[key] = Ice.spawn(key, template, (iid, room.id), graph.spec.tier, tick,
                                             graph.spec.affiliation)
+                if template.behaviour == "roaming" and template.class_ != "drift":
+                    route = room.ice_patrols.get(template_id) or graph.patrol(room.id)
+                    defenders[key].patrol = tuple((iid, rid) for rid in route)
+                    defenders[key].patrol_index = route.index(room.id)
         return Instance(iid, graph, defenders, Random(seed))
 
     def can_enter(self, presence: Presence, core_id: str) -> bool:
@@ -172,9 +182,11 @@ class Encounters:
         player = self.game.players[presence.player_id]
         if self.lat.sources.locked(player.bbs_user_id, core_id, self.clock.now_utc().timestamp()):
             raise ValueError("This identity's five-minute core lockout is still active.")
-        black = any(self.content.ice[i].meat_damage or
-                    any(v.meat_damage for v in self.content.ice[i].tier_stats)
-                    for room in spec.rooms for i in room.ice)
+        threats = [self.content.ice[i] for room in spec.rooms for i in room.ice]
+        if spec.trace_policy == "corporate":
+            threats.append(self.content.ice["ice_hound"])
+        black = any(Ice.spawn("inspection", template, ("", ""), spec.tier, 0).meat_damage
+                    for template in threats)
         if black and not risk:
             raise ValueError("BLACK ICE: NPC feedback can injure your body here. Choose Enter with NPC risk.")
         iid = spec.id + (":" + player.id if spec.training else "")
@@ -186,11 +198,12 @@ class Encounters:
         self.lat.notify(presence, player.name+" enters a core.", exclude=player.id)
         presence.core, presence.instance, presence.room = core_id, iid, instance.graph.entry
         presence.target = ""
-        if risk and spec.owner_kind not in ("private", "relay"):
+        if risk and black and spec.owner_kind not in ("private", "relay"):
             presence.risk_consent.add(iid)
         self.log(presence, "You enter "+spec.name+". B returns along the entry; J starts escape.")
         if black:
             self.log(presence, "BLACK ICE / NPC BODY RISK remains active for this run.", True)
+        self.trace(presence, 0, entered=True)
 
     def leave_core(self, session: Session) -> None:
         presence = self.lat.presences[session.player_id]
@@ -388,23 +401,27 @@ class Encounters:
 
     def policy(self, presence: Presence) -> str:
         instance = self.core(presence)
-        return instance.graph.spec.trace_policy or "street" if instance else "none"
+        return instance.graph.spec.trace_policy or "street" if instance else self.lat.sectors.records[presence.sector].trace_policy
 
-    def trace(self, presence: Presence, amount: float, *, fixed: bool = False) -> None:
+    def trace(self, presence: Presence, amount: float, *, fixed: bool = False, entered: bool = False) -> None:
         instance = self.core(presence)
-        if not instance or instance.graph.spec.training or self.policy(presence) == "none":
+        if (instance and instance.graph.spec.training or self.policy(presence) == "none"
+                or self.lat.public(presence)):
             return
+        sector = self.lat.sectors.records[presence.sector]
+        scope = instance.id if instance else sector.id
+        owner = instance.graph.spec.owner if instance else sector.trace_owner or ""
         previous = presence.trace
         presence.trace = min(100, max(0, previous+trace_gain(amount, presence.effects,
                                             self.clock.now_tick(), fixed=fixed)))
-        seen = presence.trace_seen.setdefault(instance.id, set())
+        seen = presence.trace_seen.setdefault(scope, set())
         player = self.game.players[presence.player_id]
-        for threshold in trace_thresholds(previous, presence.trace, seen):
+        for threshold in trace_thresholds(0 if entered else previous, presence.trace, seen):
             policy = self.policy(presence)
             self.log(presence, f"TRACE {threshold}: "+{
                 ("civic", 50): "your name enters the Precinct registry for ten minutes.",
                 ("civic", 100): "Wardens are dispatched to your body's location.",
-                ("corporate", 50): "all defenders in this core wake.",
+                ("corporate", 50): "all defenders in this core wake." if instance else "the district records a trace alert.",
                 ("corporate", 100): "a Hound follows your trail for up to three minutes.",
                 ("black", 50): "the owner is told someone is inside.",
                 ("black", 100): "the owner receives your name and body location for five minutes.",
@@ -418,15 +435,15 @@ class Encounters:
                     self.dispatch(player)
             elif policy == "corporate" and threshold == 100:
                 template = self.content.ice["ice_hound"]
-                key = instance.id+":hound:"+player.id
-                hunter = Ice.spawn(key, template, self.location(presence), instance.graph.spec.tier,
-                                   self.clock.now_tick(), instance.graph.spec.affiliation)
+                key = scope+":hound:"+player.id
+                hunter = Ice.spawn(key, template, self.location(presence), instance.graph.spec.tier if instance else DISTRICT_HUNTER_TIER,
+                                   self.clock.now_tick(), instance.graph.spec.affiliation if instance else sector.trace_owner)
                 hunter.target = player.id
                 self.hunters[key] = hunter
             elif policy in ("black", "street"):
-                self.report(player, instance.graph.spec.owner, threshold == 100 and policy == "black")
+                self.report(player, owner, threshold == 100 and policy == "black")
                 if threshold == 100 and policy == "street":
-                    self.lat.sources.lock(player.bbs_user_id, presence.core, self.clock.now_utc().timestamp())
+                    self.lat.sources.lock(player.bbs_user_id, presence.core or presence.sector, self.clock.now_utc().timestamp())
                     self.force_out(presence, 60)
             self.game.queue("save", player.bbs_user_id, player, immediate=True)
 
@@ -481,19 +498,25 @@ class Encounters:
             raise ValueError("Your integrity is already full.")
         elif pid == "prg_pulse" and not self.lat.crew_of(player.id):
             raise ValueError("You have no crew beacon audience.")
+        elif pid == "prg_pulse" and presence.descent:
+            raise ValueError("The Silt carries no remote crew beacon. Share the entrance in person.")
         defenders = self.defenders(presence)
         duration = cast_ticks(program, presence.effects, tick,
             tar=any(i.template.class_ == "tar" for i in defenders),
             sandman=any(i.template.class_ == "sandman" for i in defenders))
         presence.effects.consume_next_cast(tick)
         presence.cast = Cast(pid, target, tick+duration, self.location(presence)[0], self.hit_serial(presence))
-        self.log(presence, f"{program.name}: {duration/TICK_HZ:g}s cast, {program.trace_cost:g} trace.")
+        base_trace = float(program.trace_cost) if self.policy(presence) != "none" and not self.lat.public(presence) else 0
+        self.log(presence, f"{program.name}: {duration/TICK_HZ:g}s cast, {base_trace:g} base trace.")
 
     def complete_cast(self, presence: Presence, cast: Cast, *, charge_committed: bool = False) -> None:
         program = self.content.programs[cast.program]
         player = self.game.players[presence.player_id]
         tick, now = self.clock.now_tick(), self.clock.now_utc().timestamp()
         kind, params = program.effect.kind, program.effect.params
+        if program.target_class == "runner" and self.commerce.pending:
+            presence.cast = cast
+            return  # Nothing is charged or Marked before a hit can resolve.
         if "bound_charge" in program.cast_requires and not charge_committed:
             if self.commerce.pending:
                 presence.cast = cast
@@ -577,14 +600,23 @@ class Encounters:
                 raise ValueError("The Silt carries no remote crew beacon. Share the entrance in person.")
             graph = self.core(presence).graph
             known = presence.found_silt.setdefault(presence.instance, set())
-            known.update(c.id for c in adjacent_hidden(graph.band, presence.room, known))
-            self.log(presence, "The adjacent hidden branches resolve.")
+            if program.effect.params.get("adjacent_hidden"):
+                known.update(c.id for c in adjacent_hidden(graph.band, presence.room, known))
+                self.log(presence, "The adjacent hidden branches resolve.")
+            elif program.effect.params.get("true_core_map"):
+                presence.verified_maps.add(presence.instance)
+                self.log(presence, "Compass verifies the visible map and identifies decoys.")
             return
         if program.effect.params.get("true_core_map"):
             presence.verified_maps.add(presence.instance or presence.sector)
             self.log(presence, "Compass verifies the authored room map. Suspect labels remain marked.")
         elif program.effect.params.get("crew_beacon"):
+            presence.effects.install(program, self.clock.now_tick())
+            effect = presence.effects.active[program.id]
+            effect.params.update(sector=presence.sector, cell=presence.cell)
             self.log(presence, "Your crew beacon marks this entry for twenty seconds.")
+        elif presence.instance:
+            self.log(presence, "No hidden room branch is adjacent here.")
         else:
             player = self.game.players[presence.player_id]
             cell = self.lat.sectors.cells[presence.sector][presence.cell]
@@ -595,9 +627,11 @@ class Encounters:
     def source(self, presence: Presence, data: DataSpec) -> str:
         player = self.game.players[presence.player_id]
         suffix = ":identity:"+player.bbs_user_id if data.scope in ("identity", "mission") else ""
+        if data.scope == "mission":
+            suffix += ":mission:"+(self.mission_of(player.id, data.id) or "unassigned")
         if presence.descent:
             return f"{self.lat.season}:silt:{self.core(presence).graph.sites[data.id]}{suffix}"
-        return f"{self.lat.season}:{presence.core}:{presence.room}:{data.id}{suffix}"
+        return f"{self.lat.season}:{presence.core}:{data.id}{suffix}"
 
     def start_lift(self, presence: Presence, target: str, generation: int) -> None:
         if not self.idle(presence):
@@ -606,6 +640,8 @@ class Encounters:
         data = next((d for d in instance.graph.room(presence.room).data if d.id == target), None) if instance else None
         if not data:
             raise ValueError("Choose data in this room.")
+        if data.scope == "mission" and not self.mission_of(presence.player_id, data.id):
+            raise ValueError("This source requires an active contract objective.")
         player = self.game.players[presence.player_id]
         key = self.source(presence, data)
         if data.scope != "shared" and key in self.game.identity(player.bbs_user_id).get("lattice_receipts", {}):
@@ -614,6 +650,9 @@ class Encounters:
         if source.generation != generation or not source.available:
             raise ValueError("Inspect the current source availability before lifting.")
         for ice in self.defenders(presence):
+            if ice.template.params.get("shields_data"):
+                self.activate(ice, presence, "data")
+                raise ValueError(ice.template.name+" shields this data. Break the pane first.")
             if ice.blocks(self.clock.now_utc().timestamp()) and ice.id not in presence.opened:
                 self.activate(ice, presence, "data")
                 raise ValueError(ice.template.name+" blocks the source. Open or destroy it first.")
@@ -621,8 +660,10 @@ class Encounters:
                 self.activate(ice, presence, "data")
         multiplier = float(self.content.programs["prg_ledger"].effect.params["lift_multiplier"]) if "prg_ledger" in presence.rig else 1
         presence.procedure = Procedure("lift", target, self.clock.now_tick()+ticks(LIFT_SECONDS*multiplier),
-                                      self.location(presence)[0], self.hit_serial(presence), generation)
-        self.log(presence, f"Lifting {data.label or data.id}: {LIFT_SECONDS*multiplier:g}s, {LIFT_TRACE} trace.")
+                                      self.location(presence)[0], self.hit_serial(presence), generation, key)
+        cost = trace_gain(LIFT_TRACE, presence.effects, self.clock.now_tick()) if self.policy(presence) != "none" else 0
+        self.trace(presence, LIFT_TRACE)
+        self.log(presence, f"Lifting {data.label or data.id}: {LIFT_SECONDS*multiplier:g}s, {cost:g} trace on start.")
 
     def lift(self, presence: Presence, procedure: Procedure) -> None:
         instance = self.core(presence)
@@ -630,6 +671,8 @@ class Encounters:
             return
         data = next(d for d in instance.graph.room(presence.room).data if d.id == procedure.target)
         key, player = self.source(presence, data), self.game.players[presence.player_id]
+        if key != procedure.source:
+            raise ValueError("The contract or source changed before the lift completed.")
         unit_id = self.lat.sources.unit_id(key, procedure.generation)
         draft, items = deepcopy(player), deepcopy(self.commerce.items)
         identity = deepcopy(self.game.identity(player.bbs_user_id)) if data.scope != "shared" else None
@@ -639,7 +682,7 @@ class Encounters:
         draft.progress.setdefault("lattice_receipts", {})[key] = unit_id
         if data.kind == "chits":
             draft.chits_hand += data.amount
-        elif data.kind in ("salvage", "item", "schematic"):
+        elif data.kind in ("salvage_data", "item", "schematic"):
             if data.kind == "schematic":
                 known = draft.progress.setdefault("known_schematics", [])
                 if data.asset not in known:
@@ -675,7 +718,6 @@ class Encounters:
             self.lat.sources.finish(claim, success)
             if success:
                 self.log(presence, "Transfer committed: "+(data.label or data.id)+".")
-                self.trace(presence, LIFT_TRACE)
             else:
                 self.log(presence, "The transfer could not be saved. The source remains.", True)
         patch = {"progress": draft.progress, "chits_hand": draft.chits_hand,
@@ -700,6 +742,8 @@ class Encounters:
             source = self.game.players.get(player_source)
             if not source or not self.combat.permits_indirect(self.combat.actor(source), actor):
                 return True
+        if self.lat.public(presence) and event.meat:
+            return True  # A public district cell is not an NPC black-burn target.
         consent = bool(instance and instance.id in presence.risk_consent and
                        instance.graph.spec.owner_kind not in ("private", "relay"))
         permit = lambda: bool(actor.zone and (self.game.world.zones[actor.zone].allows_hostile(actor.position)
@@ -751,7 +795,7 @@ class Encounters:
                 if (self.lat.sectors.cells[presence.sector][cid].access_kind != "hidden" or
                     cid in self.lat.found(player, presence.sector)) and
                 (not self.lat.public(presence) or self.lat.sectors.cells[presence.sector][cid].access_kind == "public") and
-                permitted(self.lat.sectors.cells[presence.sector][cid].requirement, self.lat.credentials(player, presence))]
+                self.lat.accepts(player, presence, self.lat.sectors.cells[presence.sector][cid], self.lat.sectors.cells[presence.sector][cid].requirement)]
             if not choices:
                 return
             presence.cell = sorted(choices)[0]
@@ -809,6 +853,27 @@ class Encounters:
                 ice.integrity = min(ice.maximum, ice.integrity+float(program.effect.amount))
             self.log(presence, "Shade echoes "+program.name+" with its original effect kind.", True)
 
+    def pending_hit(self, pid: str) -> bool:
+        tick = self.clock.now_tick()
+        return any(e.target == pid and (e.at is None or e.at <= tick) for e in self.delayed)
+
+    def flush_hits(self) -> None:
+        """Apply due hits at the settlement boundary before more transfers.
+
+        Repeated shop traffic cannot starve an earned hit or erase it at
+        an escape deadline. No wall-clock wait enters the simulation.
+        """
+        tick = self.clock.now_tick()
+        delayed, self.delayed = self.delayed, []
+        for event in delayed:
+            if event.at and tick < event.at:
+                self.delayed.append(event)
+                continue
+            presence, ice = self.lat.presences.get(event.target), self.find_ice(event.source)
+            if presence and ice and (event.location is None or event.location == self.location(presence)):
+                if not self.receive(presence, event, name=ice.template.name, reflection=event.at is not None):
+                    self.delayed.append(event)
+
     def advance(self, tick: int) -> None:
         utc = self.clock.now_utc().timestamp()
         used_descents = {p.descent for p in self.lat.presences.values() if p.descent}
@@ -857,6 +922,22 @@ class Encounters:
         for instance in self.instances.values():
             if instance.id not in active_instances:
                 continue
+            if isinstance(instance.graph, CoreGraph):
+                for room in instance.graph.rooms.values():
+                    for index, template_id in enumerate(room.ice):
+                        required = room.ice_events.get(template_id)
+                        if required:
+                            iid = f"{instance.id}:{room.id}:{index}"
+                            if required not in self.lat.events:
+                                instance.ice.pop(iid, None)
+                            elif iid not in instance.ice:
+                                ice = Ice.spawn(iid, self.content.ice[template_id], (instance.id, room.id),
+                                    instance.graph.spec.tier, tick, instance.graph.spec.affiliation)
+                                if ice.template.behaviour == "roaming" and ice.template.class_ != "drift":
+                                    route = room.ice_patrols.get(template_id) or instance.graph.patrol(room.id)
+                                    ice.patrol = tuple((instance.id, rid) for rid in route)
+                                    ice.patrol_index = route.index(room.id)
+                                instance.ice[iid] = ice
             for ice in instance.ice.values():
                 for event in ice.advance(tick, utc, runners, neighbours, instance.rng):
                     self.event(ice, event)
@@ -864,15 +945,7 @@ class Encounters:
             for event in ice.advance(tick, utc, runners, neighbours, Random(0)):
                 self.event(ice, event)
         self.hunters = {key: ice for key, ice in self.hunters.items() if ice.alive}
-        delayed, self.delayed = self.delayed, []
-        for event in delayed:
-            if event.at and tick < event.at:
-                self.delayed.append(event)
-                continue
-            presence, ice = self.lat.presences.get(event.target), self.find_ice(event.source)
-            if presence and ice and (event.location is None or event.location == self.location(presence)):
-                if not self.receive(presence, event, name=ice.template.name, reflection=event.at is not None):
-                    self.delayed.append(event)
+        self.flush_hits()
         for presence in tuple(self.lat.presences.values()):
             cast, procedure = presence.cast, presence.procedure
             current = self.hit_serial(presence)
@@ -893,6 +966,8 @@ class Encounters:
                 try:
                     if procedure.kind in ("survey", "sample"):
                         self.complete_survey(presence, procedure)
+                    elif procedure.kind == "decoy":
+                        self.log(presence, "The suspect route ends without data. Compass distinguishes this decoy.", True)
                     else:
                         self.lift(presence, procedure)
                 except ValueError as exc:
@@ -903,6 +978,11 @@ class Encounters:
         if screen.kind == "record":
             text = self.content.text[screen.target]
             return [{"id": str(index), "cells": [line]} for index, line in enumerate(text.body.splitlines()) if line]
+        if screen.kind == "evidence":
+            evidence = self.content.evidence[screen.target]
+            values = ["OBSERVATION: "+evidence.observation, "SOURCE: "+evidence.source,
+                      "SOURCE CLAIM: "+evidence.claim, *self.content.text[evidence.asset].body.splitlines()]
+            return [{"id": str(index), "cells": [line]} for index, line in enumerate(values) if line]
         if screen.kind == "rig":
             occupied = occupied_slots(presence.rig, self.content.programs)
             return [{"id": str(index), "cells": [str(index+1), self.content.programs[pid].name if pid else
@@ -925,6 +1005,11 @@ class Encounters:
         room = instance.graph.room(presence.room)
         rows = [{"id": "ice:"+i.id, "cells": [i.template.name, f"{i.integrity:g} integrity", i.phase]}
                 for i in self.defenders(presence)]
+        for ice in self.defenders(presence):
+            if ice.template.class_ == "liar" and instance.id not in presence.verified_maps:
+                rows.append({"id": "bait:"+ice.id, "cells": ["UNVERIFIED data room", "suspect", "10s dead end / 15 trace"]})
+        rows += [{"id": "control:"+control.id, "cells": ["Inspect "+control.label,
+                  "3s action", f"{control.reset_seconds}s reset"]} for control in room.controls]
         if presence.descent:
             rows += [{"id": "survey", "cells": ["Survey", "3s / 10s cooldown"]},
                      {"id": "sample", "cells": ["Hold sample", "3s during sampling"]}]
@@ -936,14 +1021,16 @@ class Encounters:
             source = self.lat.sources.refresh(self.source(presence, data), data, self.clock.now_tick())
             done = data.scope != "shared" and self.source(presence, data) in self.game.identity(player.bbs_user_id).get("lattice_receipts", {})
             read = done and data.kind == "text" and data.asset in self.content.text
-            rows.append({"id": "read:"+data.asset if read else f"lift:{data.id}:{source.generation}", "cells": [data.label or data.id,
+            evidence = done and data.kind == "evidence" and data.asset in self.content.evidence
+            locked = data.scope == "mission" and not self.mission_of(player.id, data.id)
+            rows.append({"id": "read:"+data.asset if read else "evidence:"+data.asset if evidence else f"lift:{data.id}:{source.generation}", "cells": [data.label or data.id,
                 f"{data.amount} chits" if data.kind == "chits" else data.kind,
-                "recorded" if done else "ready" if source.available else "replenishing"]})
+                "needs contract" if locked else "recorded" if done else "ready" if source.available else "replenishing"]})
         return rows
 
     def select(self, session: Session, presence: Presence, row: str) -> None:
         screen = self.menus[session.id]
-        if screen.kind == "record":
+        if screen.kind in ("record", "evidence"):
             return
         if screen.kind == "rig":
             screen.kind, screen.slot, screen.cursor = "binding", int(row), 0
@@ -974,8 +1061,27 @@ class Encounters:
         elif row in ("survey", "sample"):
             self.survey(presence, row == "sample")
         elif row.startswith("read:"):
-            self.menus[session.id] = EncounterMenu("record", target=row[5:])
+            data = next(d for d in self.core(presence).graph.room(presence.room).data if d.asset == row[5:])
+            self.menus[session.id] = EncounterMenu("record", target=row[5:], label=data.label or data.id)
             return
+        elif row.startswith("evidence:"):
+            data = next(d for d in self.core(presence).graph.room(presence.room).data if d.asset == row[9:])
+            self.menus[session.id] = EncounterMenu("evidence", target=row[9:], label=data.label or data.id)
+            return
+        elif row.startswith("bait:"):
+            ice = self.target(presence, row[5:])
+            if (not ice or ice.template.class_ != "liar" or not self.idle(presence)
+                    or presence.instance in presence.verified_maps):
+                raise ValueError("That suspect route is no longer available.")
+            presence.procedure = Procedure("decoy", ice.id, self.clock.now_tick()+ticks(10),
+                self.location(presence)[0], self.hit_serial(presence))
+            self.trace(presence, 15)
+            self.log(presence, "You follow an unverified route. Esc withdraws; spent trace remains.", True)
+        elif row.startswith("control:"):
+            control = next(c for c in self.core(presence).graph.room(presence.room).controls if c.id == row[8:])
+            zone = self.content.zones.get(control.target.zone)
+            self.log(presence, f"{control.label}: {control.action}, three-second action, "
+                f"{control.reset_seconds}s reset. Target: {zone.meta.name if zone else control.target.zone}.")
         self.menus.pop(session.id, None)
 
     def input(self, session: Session, presence: Presence, name: str, action: str,
@@ -992,12 +1098,16 @@ class Encounters:
                 if any(r["id"] == row for r in rows):
                     self.select(session, presence, row)
             return True
+        if (key in ("b", "B") or name == "menu_close") and (presence.cast or presence.procedure or presence.destination or presence.room_destination):
+            presence.cast = presence.procedure = None
+            presence.destination = presence.room_destination = None
+            return True
         if name == "lat.enter":
             cell = self.lat.sectors.cells[presence.sector][presence.cell]
             self.enter(session, args.get("core", cell.core_id or "lat-wake-hall"), args.get("risk") is True)
         elif name == "lat.room":
             self.move(presence, args.get("room", ""))
-        elif name == "lat.leave" or key in ("b", "B") and presence.instance:
+        elif name == "lat.leave" or (name == "menu_close" or key in ("b", "B")) and presence.instance:
             self.leave_core(session)
         elif name == "lat.lift":
             if type(args.get("generation")) is not int:
@@ -1045,17 +1155,40 @@ class Encounters:
         tick = self.clock.now_tick()
         player = self.game.players[presence.player_id]
         body["scope"] = self.location(presence)[0]
+        body["beacons"] = []
+        crew = self.lat.crew_of(player.id)
+        if crew and not presence.instance:
+            for other in self.lat.presences.values():
+                if self.lat.crew_of(other.player_id) != crew or not other.effects.has("prg_pulse", tick):
+                    continue
+                effect = other.effects.active["prg_pulse"]
+                if effect.params.get("sector") == presence.sector:
+                    body["beacons"].append({"player": other.player_id,
+                        "name": self.game.players[other.player_id].name, "cell": effect.params["cell"]})
         body["me"]["target"] = presence.target
+        shield = presence.effects.shield
+        body["me"]["shield"] = ({"name": self.content.programs[shield.program].name,
+            "budget": shield.budget, "pin_once": shield.pin_once, "black_meat_once": shield.black_meat_once}
+            if shield else None)
+        body["me"]["decoy"] = presence.effects.decoy
+        body["me"]["effects"] = [{"name": self.content.programs[key].name,
+            "seconds": max(0, effect.until-tick)/TICK_HZ if effect.until is not None else None}
+            for key, effect in presence.effects.active.items() if presence.effects.has(key, tick)]
         body["me"]["cast"] = ({"name": self.content.programs[presence.cast.program].name,
              "ticks": max(0, presence.cast.until-tick)} if presence.cast else
              {"name": presence.procedure.kind.title(), "ticks": max(0, presence.procedure.until-tick)} if presence.procedure else None)
         body["me"]["hit_serial"] = self.hit_serial(presence)
+        occupied = occupied_slots(presence.rig, self.content.programs)
         for row in body["me"]["rig"]:
             row["cd"] = max(0, player.progress.get("lattice_cooldowns", {}).get(row["program"], 0)-self.clock.now_utc().timestamp())
+            slot = row["slot"]-1
+            if row["program"] is None and slot in occupied:
+                row["name"] = f"Reserved by {occupied[slot]+1}"
         if instance:
             graph = instance.graph
             body.update(title=graph.spec.name.upper()+" / CORE", layout_size=[8, 4],
-                label=graph.room(presence.room).label, hint="Arrows rooms  Tab target  1-7 cast  E inspect/lift  B retreat  J escape")
+                label=graph.room(presence.room).label,
+                hint=self.lat.jack_key(session)+" escape  B retreat  E room  Tab target  1-7 cast  R rig")
             body["cells"] = [{"id": room.id, "x": room.pos[0], "y": room.pos[1], "kind": "room",
                 "label": room.label} for room in graph.rooms.values()]
             body["edges"] = [{"a": room.id, "b": other, "kind": "public"}
@@ -1066,7 +1199,9 @@ class Encounters:
             body["room"] = [{"id": ice.id, "name": ice.template.name, "role": ice.template.role,
                 "trigger": ice.template.trigger, "phase": ice.phase, "integrity": ice.integrity,
                 "maximum": ice.maximum, "target": ice.target, "counter": ice.template.counter_label,
-                "damage": ice.attack, "meat": ice.meat_damage} for ice in self.defenders(presence)]
+                "damage": ice.attack, "meat": ice.meat_damage,
+                "warning_ticks": max(0, ice.activations[player.id].warned-tick) if player.id in ice.activations and ice.template.class_ != "sweeper" else 0,
+                "cooldown_ticks": max(0, ice.next_attack-tick)} for ice in self.defenders(presence)]
             body["black_risk"] = instance.id in presence.risk_consent
             if (any(i.template.class_ == "liar" for i in self.defenders(presence))
                     and instance.id not in presence.verified_maps):
@@ -1086,25 +1221,63 @@ class Encounters:
                     cell["kind"] = graph.band.cell(cell["id"]).role
                 body["edges"] = [e for e in body["edges"] if e["a"] in visible and e["b"] in visible]
                 body.update(title="SILT / "+graph.spec.name.upper(), layout_size=[5, 4],
-                    hint="Arrows linked cells  E survey/sample/lift  B riser / rise  J escape")
+                    hint=self.lat.jack_key(session)+" escape  B rise  E survey/sample/lift  Arrows links")
                 for row in body["room"]:
                     ice = self.find_ice(row["id"])
                     if ice.template.class_ == "chorister" and not ice.provoked:
                         phase, remaining = ice.signal_phase(tick)
                         row["phase"] = f"{phase} {remaining/TICK_HZ:.1f}s"
+            room = graph.room(presence.room)
+            data_rows = []
+            for data in room.data:
+                key = self.source(presence, data)
+                source = self.lat.sources.refresh(key, data, tick)
+                recorded = data.scope != "shared" and key in self.game.identity(player.bbs_user_id).get("lattice_receipts", {})
+                data_rows.append({"id": data.id, "label": data.label or data.id, "kind": data.kind,
+                    "amount": data.amount, "generation": source.generation,
+                    "available": source.available and not recorded,
+                    "recorded": recorded, "scope": data.scope,
+                    "requires_contract": data.scope == "mission" and not self.mission_of(player.id, data.id),
+                    "cast_seconds": LIFT_SECONDS*(float(self.content.programs["prg_ledger"].effect.params["lift_multiplier"]) if "prg_ledger" in presence.rig else 1),
+                    "trace_cost": 0 if self.policy(presence) == "none" else LIFT_TRACE})
+            body["room"] = {"id": room.id, "label": room.label, "ice": body["room"], "data": data_rows,
+                "controls": [{"id": c.id, "label": c.label, "action": c.action,
+                    "target": {"zone": c.target.zone, "object": c.target.object},
+                    "reset_seconds": c.reset_seconds, "scope": c.scope,
+                    "permission": c.permission, "cast_seconds": LIFT_SECONDS} for c in room.controls]}
         screen = self.menus.get(session.id)
         if screen:
             rows = self.rows(presence, screen)
             screen.cursor = min(screen.cursor, max(0, len(rows)-1))
             detail = "Programs load only while idle in a public district cell. Cooldowns survive rebinding."
+            if screen.kind in ("rig", "binding") and rows:
+                selected = rows[screen.cursor]['id']
+                pid = presence.rig[int(selected)] if screen.kind == "rig" else selected
+                program = self.content.programs.get(pid)
+                if program:
+                    detail = (program.name+": "+program.description+"\n"+
+                        f"Slots {program.slots}; cast {program.cast_seconds if program.cast_seconds is not None else 'passive'}s; "
+                        f"cooldown {program.cooldown_seconds if program.cooldown_seconds is not None else 'single use'}s.")
             if screen.kind == "room":
                 detail = "Select ICE to inspect and target. Select data to start a three-second lift."
             title = "ROOM" if screen.kind == "room" else "RIG"
-            if screen.kind == "record":
-                title = self.content.text[screen.target].title
+            if screen.kind in ("record", "evidence"):
+                title = (screen.label or screen.target.replace("-", " ")).upper()
                 detail = rows[screen.cursor]["cells"][0] if rows else "No text."
-            return "menu", menu(title, rows, screen.cursor, detail,
-                                 "Esc/B returns without acting")
+            stats = f"HP {body['me']['body_hp']}/{body['me']['body_hp_max']}  INT {presence.integrity:g}  TRACE {presence.trace:g}"
+            if shield:
+                stats += f"  SHIELD {shield.budget:g}"
+            if presence.effects.decoy:
+                stats += f"  DECOY {presence.effects.decoy:g}"
+            if body.get('black_risk'):
+                title = 'BLACK ICE / BODY RISK / '+title
+            columns = session.caps['width']//2-12 if session.caps['width'] >= 100 else session.caps['width']-16
+            detail = stats+'\n'+'\n'.join(wrapped(detail, max(20, columns)))
+            result = menu(title, rows, screen.cursor, detail,
+                          self.lat.jack_key(session)+" escape  Esc/B returns without acting")
+            result.update(me=body['me'], scope=body['scope'], sector=body['sector'],
+                          black_risk=body.get('black_risk', False), jack_key=self.lat.jack_key(session).lower())
+            return "menu", result
         return "lattice", body
 
     def leave(self, presence: Presence) -> None:

@@ -1,0 +1,291 @@
+{
+  "schema": 1,
+  "id": "lat-outworks-seal",
+  "name": "Outworks Seal",
+  "owner": "halvard",
+  "owner_kind": "faction",
+  "tier": 5,
+  "trace_policy": "corporate",
+  "hardware": [
+    {
+      "zone": "under-outworks",
+      "tile": null,
+      "label": "Outworks Seal hardware"
+    }
+  ],
+  "entry": "entry",
+  "rooms": [
+    {
+      "id": "entry",
+      "label": "Entry",
+      "pos": [
+        0,
+        0
+      ],
+      "neighbours": [
+        "room-1",
+        "room-4"
+      ],
+      "ice": [],
+      "data": [],
+      "controls": []
+    },
+    {
+      "id": "room-1",
+      "label": "Index",
+      "pos": [
+        1,
+        0
+      ],
+      "neighbours": [
+        "entry",
+        "room-2",
+        "room-5"
+      ],
+      "ice": [],
+      "data": [],
+      "controls": []
+    },
+    {
+      "id": "room-2",
+      "label": "Service room 2",
+      "pos": [
+        2,
+        0
+      ],
+      "neighbours": [
+        "room-1",
+        "room-3",
+        "room-6"
+      ],
+      "ice": [],
+      "data": [],
+      "controls": []
+    },
+    {
+      "id": "room-3",
+      "label": "Service room 3",
+      "pos": [
+        3,
+        0
+      ],
+      "neighbours": [
+        "room-2",
+        "room-7"
+      ],
+      "ice": [],
+      "data": [],
+      "controls": []
+    },
+    {
+      "id": "room-4",
+      "label": "Service room 4",
+      "pos": [
+        0,
+        1
+      ],
+      "neighbours": [
+        "entry",
+        "room-5",
+        "room-8"
+      ],
+      "ice": [],
+      "data": [],
+      "controls": []
+    },
+    {
+      "id": "room-5",
+      "label": "Service room 5",
+      "pos": [
+        1,
+        1
+      ],
+      "neighbours": [
+        "room-1",
+        "room-4",
+        "room-6",
+        "room-9"
+      ],
+      "ice": [],
+      "data": [],
+      "controls": []
+    },
+    {
+      "id": "room-6",
+      "label": "Service room 6",
+      "pos": [
+        2,
+        1
+      ],
+      "neighbours": [
+        "room-2",
+        "room-5",
+        "room-7",
+        "shaft-monitor"
+      ],
+      "ice": [
+        "ice_hound"
+      ],
+      "data": [],
+      "controls": []
+    },
+    {
+      "id": "room-7",
+      "label": "Service room 7",
+      "pos": [
+        3,
+        1
+      ],
+      "neighbours": [
+        "room-3",
+        "room-6",
+        "shaft-lamps"
+      ],
+      "ice": [],
+      "data": [],
+      "controls": []
+    },
+    {
+      "id": "room-8",
+      "label": "Service room 8",
+      "pos": [
+        0,
+        2
+      ],
+      "neighbours": [
+        "room-4",
+        "room-9"
+      ],
+      "ice": [],
+      "data": [],
+      "controls": []
+    },
+    {
+      "id": "room-9",
+      "label": "Service room 9",
+      "pos": [
+        1,
+        2
+      ],
+      "neighbours": [
+        "room-5",
+        "room-8",
+        "shaft-monitor"
+      ],
+      "ice": [
+        "ice_sweeper"
+      ],
+      "data": [
+        {
+          "id": "activation-log-last-page",
+          "label": "Activation log last page",
+          "kind": "contract_key",
+          "asset": "activation-log-last-page",
+          "amount": 1,
+          "scope": "identity",
+          "respawn_seconds": 0
+        }
+      ],
+      "controls": [],
+      "ice_events": {
+        "ice_sweeper": "exhale"
+      }
+    },
+    {
+      "id": "shaft-monitor",
+      "label": "Service room 10",
+      "pos": [
+        2,
+        2
+      ],
+      "neighbours": [
+        "room-6",
+        "room-9",
+        "shaft-lamps"
+      ],
+      "ice": [
+        "ice_tripwire",
+        "ice_glasshouse",
+        "ice_mirror",
+        "ice_blackglass"
+      ],
+      "data": [
+        {
+          "id": "undercity-keys",
+          "label": "Undercity keys",
+          "kind": "contract_key",
+          "asset": "undercity-keys",
+          "amount": 1,
+          "scope": "mission",
+          "respawn_seconds": 0
+        }
+      ],
+      "controls": [
+        {
+          "id": "shaft-door-east",
+          "label": "shaft-door-east",
+          "target": {
+            "zone": "under-outworks",
+            "object": "outworks-seal-shaft-door-east"
+          },
+          "action": "open",
+          "reset_seconds": 300,
+          "scope": "public",
+          "permission": "public",
+          "safety_policy": "none"
+        }
+      ]
+    },
+    {
+      "id": "shaft-lamps",
+      "label": "Archive",
+      "pos": [
+        3,
+        2
+      ],
+      "neighbours": [
+        "room-7",
+        "shaft-monitor"
+      ],
+      "ice": [
+        "ice_tripwire",
+        "ice_glasshouse",
+        "ice_blackglass"
+      ],
+      "data": [
+        {
+          "id": "seal-telemetry",
+          "label": "Seal telemetry",
+          "kind": "contract_key",
+          "asset": "seal-telemetry",
+          "amount": 1,
+          "scope": "identity",
+          "respawn_seconds": 0
+        },
+        {
+          "id": "core-credit",
+          "label": "Core-owned service credit",
+          "kind": "chits",
+          "amount": 200,
+          "respawn_seconds": 1800
+        }
+      ],
+      "controls": [
+        {
+          "id": "seal-blast-door",
+          "label": "seal blast door",
+          "target": {
+            "zone": "under-outworks",
+            "object": "outworks-seal-seal-blast-door"
+          },
+          "action": "open",
+          "reset_seconds": 300,
+          "scope": "public",
+          "permission": "public",
+          "safety_policy": "none"
+        }
+      ]
+    }
+  ],
+  "affiliation": "halvard"
+}

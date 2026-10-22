@@ -1,0 +1,140 @@
+{
+  "schema": 1,
+  "id": "lat-tram-signal",
+  "name": "Tram Signal",
+  "owner": "kestrel",
+  "owner_kind": "faction",
+  "tier": 2,
+  "trace_policy": "civic",
+  "hardware": [
+    {
+      "zone": "core-tram-hub",
+      "tile": [
+        25,
+        4
+      ],
+      "object_id": "tram-signal-hardware",
+      "label": "core tram hub cabinet"
+    }
+  ],
+  "entry": "entry",
+  "rooms": [
+    {
+      "id": "entry",
+      "label": "Entry",
+      "pos": [
+        0,
+        0
+      ],
+      "neighbours": [
+        "room-1",
+        "room-3"
+      ],
+      "ice": [],
+      "data": [],
+      "controls": []
+    },
+    {
+      "id": "room-1",
+      "label": "Index",
+      "pos": [
+        1,
+        0
+      ],
+      "neighbours": [
+        "entry",
+        "room-2",
+        "room-4"
+      ],
+      "ice": [],
+      "data": [],
+      "controls": []
+    },
+    {
+      "id": "room-2",
+      "label": "Service room 2",
+      "pos": [
+        2,
+        0
+      ],
+      "neighbours": [
+        "room-1"
+      ],
+      "ice": [],
+      "data": [],
+      "controls": []
+    },
+    {
+      "id": "room-3",
+      "label": "Service room 3",
+      "pos": [
+        0,
+        1
+      ],
+      "neighbours": [
+        "entry",
+        "room-4"
+      ],
+      "ice": [],
+      "data": [],
+      "controls": [
+        {
+          "id": "platform-gates",
+          "label": "platform gates",
+          "target": {
+            "zone": "core-tram-hub",
+            "object": "platform-terraces-blocks"
+          },
+          "action": "open",
+          "reset_seconds": 300,
+          "scope": "public",
+          "permission": "public",
+          "safety_policy": "none"
+        }
+      ]
+    },
+    {
+      "id": "room-4",
+      "label": "Archive",
+      "pos": [
+        1,
+        1
+      ],
+      "neighbours": [
+        "room-1",
+        "room-3"
+      ],
+      "ice": [
+        "ice_turnstile",
+        "ice_ticker",
+        "ice_lockstep"
+      ],
+      "data": [
+        {
+          "id": "timetable",
+          "label": "Tram timetable",
+          "kind": "text",
+          "asset": "lattice-timetable",
+          "scope": "identity",
+          "respawn_seconds": 0
+        }
+      ],
+      "controls": [
+        {
+          "id": "tram-hold",
+          "label": "tram hold",
+          "target": {
+            "zone": "core-tram-hub",
+            "object": "platform-vatside-clinics"
+          },
+          "action": "call",
+          "reset_seconds": 30,
+          "scope": "public",
+          "permission": "public",
+          "safety_policy": "none"
+        }
+      ]
+    }
+  ],
+  "affiliation": "kestrel"
+}

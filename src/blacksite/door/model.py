@@ -56,7 +56,7 @@ class Display:
             self.open_help(log_rows(list(self.logs), self.layout.viewport.width - 2), "SCROLLBACK")
 
     def receive(self, frame: Frame, now: float) -> list[Frame]:
-        old_hit = self.body.get("me",{}).get("hit_serial") if self.kind in ("zone", "lattice") else None
+        old_hit = self.body.get("me",{}).get("hit_serial")
         data = frame.data
         result: list[Frame] = []
         if frame.type == "welcome":
@@ -112,7 +112,7 @@ class Display:
             self.connected = False
         elif frame.type == "pong":
             return []
-        new_hit = self.body.get("me",{}).get("hit_serial") if self.kind in ("zone", "lattice") else None
+        new_hit = self.body.get("me",{}).get("hit_serial")
         if old_hit is not None and new_hit is not None and new_hit != old_hit:
             self.hit_flash = True
         self.dirty = True
@@ -222,10 +222,14 @@ class Display:
         effective_kind = self.body.get("kind") if self.kind == "wake" else self.kind
         effective_body = self.body.get("body", {}) if self.kind == "wake" else self.body
         if effective_kind == "menu":
+            if key == effective_body.get("jack_key"):
+                return [Frame("intent", {"name": "lat.jack_out", "args": {}})]
             if key in ("escape", "b", "B"):
                 return [Frame("intent", {"name": "menu_close", "args": {}})]
             if key in ("up", "down", "pageup", "pagedown", "pgup", "pgdn"):
-                return [Frame("intent", {"name": "menu_cursor", "args": {"delta": -1 if key in ("up", "pageup", "pgup") else 1}})]
+                page = max(1, menu_rect(self.layout).height-(5 if self.layout.width >= 100 else 9))
+                distance = 1 if key in ("up", "down") else page
+                return [Frame("intent", {"name": "menu_cursor", "args": {"delta": -distance if key in ("up", "pageup", "pgup") else distance}})]
             actions = {action.get("key") for action in effective_body.get("actions", [])}
             if key == "enter" or key in actions or key.lower() in actions:
                 rows = effective_body.get("rows", [])

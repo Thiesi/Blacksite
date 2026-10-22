@@ -48,6 +48,7 @@ class Commerce:
         self.pending = False
         self.waiting: deque[tuple[str,str,dict[str,Any],bool] | Callable[[], None]] = deque()
         self.prompt_serial = 0
+        self.after_settle: Callable[[], None] = lambda: None
         self.sync_caches()
 
     def ready(self, session: Session) -> bool:
@@ -349,6 +350,7 @@ class Commerce:
                 self.toast(session, effect["message"])
         elif session:
             self.toast(session, "The transfer could not be saved. Your goods remain.")
+        self.after_settle()
         if effect.get("callback"): effect["callback"](success)
         while self.waiting and not self.pending:
             job = self.waiting.popleft()

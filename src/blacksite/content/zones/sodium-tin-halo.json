@@ -98,6 +98,18 @@
       "params": {
         "name": "Halo market board"
       }
+    },
+    {
+      "id": "halo-cabinet-hardware",
+      "tile": [
+        18,
+        15
+      ],
+      "kind": "hardware",
+      "params": {
+        "name": "Tin Halo hardware",
+        "core": "lat-tin-halo"
+      }
     }
   ],
   "pockets": [],

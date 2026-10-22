@@ -51,6 +51,12 @@ def test_game_4_private_training_defeat_lift_and_leave(runners):
     assert "lattice-training-record" in player.progress["lattice_records"]
     assert effects[0]["lattice_state"]["sources"][encounters.source(presence, data)]["generation"] == 1
     assert presence.trace == 0 and player.xp == 0
+    intent(game, a, "interact")
+    intent(game, a, "menu_select", row="read:lattice-training-record")
+    view = game.core.characters.sim.external_views[a.session.id]
+    assert view[0] == "menu" and view[1]["title"] == "YOUR DECANT RECORD"
+    assert any("decant" in row["cells"][0] for row in view[1]["rows"])
+    intent(game, a, "menu_close")
     intent(game, a, "lat.leave")
     assert presence.instance is None and actor(game, a).stance == "jacked"
     intent(game, a, "lat.jack_out")
@@ -164,3 +170,14 @@ def test_game_6_7_refused_shield_downgrade_spends_no_caffeine(runners):
     intent(game, a, "lat.cast", program="prg_umbrella")
     assert presence.cast is None and presence.effects.has("prg_caffeine", game.clock.now_tick())
     assert presence.effects.shield.budget == 60
+
+
+def test_ui_3_back_after_menu_close_retreats_even_before_client_context_refresh(runners):
+    game, a, b, c = runners
+    presence = enter(game, a, 'lat-civic-ledger')
+    intent(game, a, 'interact')
+    assert a.session.id in game.core.lattice.encounters.menus
+    intent(game, a, 'menu_close')
+    assert a.session.id not in game.core.lattice.encounters.menus
+    intent(game, a, 'menu_close')
+    assert presence.instance is None and actor(game, a).stance == 'jacked'

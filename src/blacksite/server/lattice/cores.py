@@ -42,6 +42,20 @@ class CoreGraph:
                     pending.append((*path, rid))
         return ()
 
+    def patrol(self, start: str) -> tuple[str, ...]:
+        """Walk every linked room and return without jumping an edge."""
+        seen = {start}
+        route = [start]
+        def visit(rid: str) -> None:
+            for other in sorted(self.rooms[rid].neighbours):
+                if other not in seen:
+                    seen.add(other)
+                    route.append(other)
+                    visit(other)
+                    route.append(rid)
+        visit(start)
+        return tuple(route[:-1]) if len(route) > 1 else (start,)
+
 
 @dataclass(frozen=True)
 class Source:

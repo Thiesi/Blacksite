@@ -1,0 +1,139 @@
+{
+  "schema": 1,
+  "id": "lat-ninety-nines-drop",
+  "name": "Ninety-Nine's Drop",
+  "owner": "unmoored",
+  "owner_kind": "faction",
+  "tier": 2,
+  "trace_policy": "street",
+  "hardware": [
+    {
+      "zone": "oldworks-drop",
+      "tile": null,
+      "label": "Ninety-Nine's Drop hardware"
+    }
+  ],
+  "entry": "entry",
+  "rooms": [
+    {
+      "id": "entry",
+      "label": "Entry",
+      "pos": [
+        0,
+        0
+      ],
+      "neighbours": [
+        "room-1",
+        "room-2"
+      ],
+      "ice": [],
+      "data": [],
+      "controls": []
+    },
+    {
+      "id": "room-1",
+      "label": "Index",
+      "pos": [
+        1,
+        0
+      ],
+      "neighbours": [
+        "entry",
+        "room-3"
+      ],
+      "ice": [],
+      "data": [],
+      "controls": []
+    },
+    {
+      "id": "room-2",
+      "label": "Service room 2",
+      "pos": [
+        0,
+        1
+      ],
+      "neighbours": [
+        "entry",
+        "room-3"
+      ],
+      "ice": [],
+      "data": [
+        {
+          "id": "unmoored-dead-drop",
+          "label": "Unmoored dead drop",
+          "kind": "contract_key",
+          "asset": "unmoored-dead-drop",
+          "amount": 1,
+          "scope": "mission",
+          "respawn_seconds": 0
+        }
+      ],
+      "controls": []
+    },
+    {
+      "id": "room-3",
+      "label": "Archive",
+      "pos": [
+        1,
+        1
+      ],
+      "neighbours": [
+        "room-1",
+        "room-2"
+      ],
+      "ice": [
+        "ice_liar"
+      ],
+      "data": [
+        {
+          "id": "drop-silt-map",
+          "label": "Silt map",
+          "kind": "contract_key",
+          "asset": "drop-silt-map",
+          "amount": 1,
+          "scope": "identity",
+          "respawn_seconds": 0
+        },
+        {
+          "id": "core-credit",
+          "label": "Core-owned service credit",
+          "kind": "chits",
+          "amount": 80,
+          "respawn_seconds": 1800
+        },
+        {
+          "id": "text-ninety-nine-1",
+          "label": "Ninety-Nine's first note",
+          "kind": "text",
+          "asset": "text-ninety-nine-1",
+          "scope": "identity",
+          "respawn_seconds": 0
+        },
+        {
+          "id": "text-unmoored-manifesto",
+          "label": "Unmoored manifesto",
+          "kind": "text",
+          "asset": "text-unmoored-manifesto",
+          "scope": "identity",
+          "respawn_seconds": 0
+        }
+      ],
+      "controls": [
+        {
+          "id": "drop-lights",
+          "label": "drop lights",
+          "target": {
+            "zone": "oldworks-drop",
+            "object": "ninety-nines-drop-drop-lights"
+          },
+          "action": "toggle",
+          "reset_seconds": 300,
+          "scope": "public",
+          "permission": "public",
+          "safety_policy": "none"
+        }
+      ]
+    }
+  ],
+  "affiliation": "unmoored"
+}

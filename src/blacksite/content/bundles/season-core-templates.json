@@ -1,0 +1,7 @@
+{
+  "schema": 1,
+  "id": "season-core-templates",
+  "status": "authoring",
+  "depends": [],
+  "members": {"cores": ["lat-uplink-hall"]}
+}

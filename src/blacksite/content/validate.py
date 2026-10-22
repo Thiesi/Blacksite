@@ -528,6 +528,8 @@ class _Validator:
         for sid, sector in self.each("sectors"):
             assert isinstance(sector, s.Sector)
             owner = ("sectors", sid)
+            if sector.trace_owner:
+                self.ref("factions", sector.trace_owner, owner, "trace owner")
             cells = {c.id: c for c in sector.cells}
             width,height = sector.layout_size
             if not (1 <= width <= 8 and 1 <= height <= 6):
@@ -576,6 +578,8 @@ class _Validator:
                     self.report(*owner, f"{label}: only a core entrance can be a placeholder", cell.id)
                 if cell.planned_core and not cell.core_placeholder:
                     self.report(*owner, f"{label}: planned_core is only for an unavailable placeholder", cell.id)
+                if cell.gate_owner:
+                    self.ref("factions", cell.gate_owner, owner, f"{label}: gate owner", cell.id)
                 if cell.uplink:
                     self.check_credential(cell.uplink.requirement, owner, label)
                     if self.ref("sectors",cell.uplink.sector,owner,label,cell.id):
@@ -698,6 +702,16 @@ class _Validator:
                     self.report(*owner, f"{label}: neighbour {n!r} does not list it back", room.id)
             for ice in room.ice:
                 self.ref("ice", ice, owner, label, room.id)
+            for ice, event in room.ice_events.items():
+                if ice not in room.ice:
+                    self.report(*owner, f"{label}: conditional ICE is not in this room", ice)
+                self.ref("events", event, owner, f"{label}: ICE event", room.id)
+            for ice, route in room.ice_patrols.items():
+                if ice not in room.ice or room.id not in route or len(route) < 2:
+                    self.report(*owner, f"{label}: patrol needs its defender, origin and linked loop", room.id)
+                elif any(a not in rooms or b not in rooms or b not in rooms[a].neighbours
+                         for a, b in zip(route, (*route[1:], route[0]))):
+                    self.report(*owner, f"{label}: patrol cannot jump a room link", room.id)
             for asset in room.lore:
                 self.ref("text", asset, owner, f"{label}: lore", room.id)
             for data in room.data:
@@ -748,6 +762,8 @@ class _Validator:
                  or (core.id == "lat-house-lights" and c.target.zone == "sodium-row" and c.reset_seconds in (30, 60))
                  or (core.id == "lat-nave" and c.target.zone == "chapel-towers" and c.reset_seconds == 60)
                  or (core.id == "lat-tram-signal" and c.action == "call" and 0 < c.reset_seconds <= 30))
+        short = short or (core.id == "lat-foundry" and c.id == "gantry" and c.target.zone == "oldworks-yards"
+                          and c.action == "call" and c.safety_policy == "hazard" and c.reset_seconds == 30)
         if not short and not lo <= c.reset_seconds <= hi:
             self.report(*owner, f"{label}: reset_seconds {c.reset_seconds} is outside {lo}-{hi}", c.id)
         if c.revision < 1:

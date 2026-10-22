@@ -1,0 +1,76 @@
+{
+  "schema": 1,
+  "id": "lat-relay-uplink",
+  "name": "Relay Uplink",
+  "template": true,
+  "owner": "neutral",
+  "owner_kind": "relay",
+  "tier": 2,
+  "trace_policy": "street",
+  "hardware": [],
+  "entry": "entry",
+  "rooms": [
+    {
+      "id": "entry",
+      "label": "Mast index",
+      "pos": [
+        0,
+        0
+      ],
+      "neighbours": [
+        "guard"
+      ]
+    },
+    {
+      "id": "guard",
+      "label": "Relay guard",
+      "pos": [
+        1,
+        0
+      ],
+      "neighbours": [
+        "entry",
+        "uplink"
+      ],
+      "ice": [
+        "ice_tripwire"
+      ]
+    },
+    {
+      "id": "uplink",
+      "label": "Relay uplink",
+      "pos": [
+        1,
+        1
+      ],
+      "neighbours": [
+        "guard"
+      ],
+      "ice": [
+        "ice_turnstile"
+      ],
+      "controls": [
+        {
+          "id": "relay_open",
+          "label": "Relay terminal override",
+          "target": {
+            "zone": "scour-ring-1",
+            "object": "relay-mile"
+          },
+          "action": "open",
+          "reset_seconds": 300
+        },
+        {
+          "id": "relay_vendor_lock",
+          "label": "Relay vendor lock",
+          "target": {
+            "zone": "scour-ring-1",
+            "object": "relay-mile"
+          },
+          "action": "toggle",
+          "reset_seconds": 300
+        }
+      ]
+    }
+  ]
+}

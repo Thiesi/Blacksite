@@ -1,0 +1,170 @@
+{
+  "schema": 1,
+  "id": "lat-sablier-clinical",
+  "name": "Sablier Clinical",
+  "owner": "sablier",
+  "owner_kind": "faction",
+  "tier": 3,
+  "trace_policy": "corporate",
+  "hardware": [
+    {
+      "zone": "vatside-clinics",
+      "tile": [
+        69,
+        8
+      ],
+      "object_id": "clinical-scheduler-hardware",
+      "label": "vatside clinics cabinet"
+    }
+  ],
+  "entry": "entry",
+  "rooms": [
+    {
+      "id": "entry",
+      "label": "Entry",
+      "pos": [
+        0,
+        0
+      ],
+      "neighbours": [
+        "room-1",
+        "room-3"
+      ],
+      "ice": [],
+      "data": [],
+      "controls": []
+    },
+    {
+      "id": "room-1",
+      "label": "Index",
+      "pos": [
+        1,
+        0
+      ],
+      "neighbours": [
+        "entry",
+        "room-2",
+        "room-4"
+      ],
+      "ice": [],
+      "data": [],
+      "controls": []
+    },
+    {
+      "id": "room-2",
+      "label": "Service room 2",
+      "pos": [
+        2,
+        0
+      ],
+      "neighbours": [
+        "room-1",
+        "room-5"
+      ],
+      "ice": [
+        "ice_mastiff"
+      ],
+      "data": [],
+      "controls": []
+    },
+    {
+      "id": "room-3",
+      "label": "Service room 3",
+      "pos": [
+        0,
+        1
+      ],
+      "neighbours": [
+        "entry",
+        "room-4"
+      ],
+      "ice": [],
+      "data": [],
+      "controls": []
+    },
+    {
+      "id": "room-4",
+      "label": "Service room 4",
+      "pos": [
+        1,
+        1
+      ],
+      "neighbours": [
+        "room-1",
+        "room-3",
+        "room-5"
+      ],
+      "ice": [],
+      "data": [
+        {
+          "id": "surgery-schedule",
+          "label": "NPC surgery schedule",
+          "kind": "contract_key",
+          "asset": "surgery-schedule",
+          "amount": 1,
+          "scope": "mission",
+          "respawn_seconds": 0
+        }
+      ],
+      "controls": []
+    },
+    {
+      "id": "room-5",
+      "label": "Archive",
+      "pos": [
+        2,
+        1
+      ],
+      "neighbours": [
+        "room-2",
+        "room-4"
+      ],
+      "ice": [
+        "ice_tripwire",
+        "ice_glasshouse",
+        "ice_suture"
+      ],
+      "data": [
+        {
+          "id": "implant-schematic-index",
+          "label": "Implant schematic index",
+          "kind": "text",
+          "asset": "lattice-implant-schematic-index",
+          "scope": "identity",
+          "respawn_seconds": 0
+        },
+        {
+          "id": "core-credit",
+          "label": "Core-owned service credit",
+          "kind": "chits",
+          "amount": 120,
+          "respawn_seconds": 1800
+        },
+        {
+          "id": "text-sablier-ninety-day-memo",
+          "label": "Ninety-Day memorandum",
+          "kind": "text",
+          "asset": "text-sablier-ninety-day-memo",
+          "scope": "identity",
+          "respawn_seconds": 0
+        }
+      ],
+      "controls": [
+        {
+          "id": "surgery-lock",
+          "label": "surgery lock",
+          "target": {
+            "zone": "vatside-clinics",
+            "object": "clinic-door-70"
+          },
+          "action": "open",
+          "reset_seconds": 120,
+          "scope": "mission",
+          "permission": "contract",
+          "safety_policy": "none"
+        }
+      ]
+    }
+  ],
+  "affiliation": "sablier"
+}

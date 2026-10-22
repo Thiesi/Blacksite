@@ -1,0 +1,31 @@
+KESTREL LOGISTICS   RATION ISSUE   DEPOT 4 (TRAMYARD)
+Year 6, week 31.  Issuing clerk: DEMIR.  Countersign: (blank)
+
+Household   Persons   Water(L)  Grain(kg)  Protein  Notes
+---------   -------   --------  ---------  -------  --------------
+T-0412        4         84        6.0        Y      -
+T-0413        3         63        4.5        Y      -
+T-0414        5        105        7.5        N      protein short
+T-0415        2         42        3.0        Y      -
+T-0416        6        126        9.0        N      protein short
+T-0417        1         21        1.5        Y      widow, see 0418
+T-0418        -          -          -        -      struck. Sink.
+T-0419        4         84        6.0        N      protein short
+T-0420        3         63        4.5        Y      chit adv. 12
+T-0421        4         63        4.5        N      short all; dispute
+T-0422        2         42        3.0        Y      -
+
+Protein allocation exhausted at T-0413. Depot 4 requests transfer
+from Depot 2. Depot 2 declines, again.
+
+Clerk's note, not for the ledger but there's nowhere else to put
+it: T-0421 is four people and I gave them three people's water
+because that's what was in the tank. The Dispatcher says the tram
+comes at six. The Dispatcher has said that for two days. I'd like
+it noted that I asked the Dispatcher who it is and it said
+"Kestrel". That's not an answer. That's a company.
+
+Struck households this week: 1 (T-0418, relocated to the Sink,
+voluntary, per form). It is never voluntary.
+
+Countersign: (blank)

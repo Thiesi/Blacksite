@@ -7,7 +7,7 @@ import pytest
 
 from blacksite.content.loader import load_content
 from blacksite.server.lattice.ice import Ice, Runner
-from blacksite.server.lattice.programs import Effects
+from blacksite.server.lattice.programs import Effects, trace_gain
 
 
 @pytest.fixture(scope="module")
@@ -53,11 +53,24 @@ def test_design_17_2_sneakers_shroud_and_nobody_delay_real_attacks(catalog):
 
 
 def test_design_17_3_ticker_touch_and_live_decoy_counter(catalog):
-    ice, who = defender(catalog, "ticker"), runner(catalog, "prg_smoke")
+    ice, who = defender(catalog, "ticker"), runner(catalog, "prg_understudy")
     assert not any(e.kind == "trace" for _, e in step(ice, who, 0, 20))
     ice.activate(who, 20, "touch")
     events = step(ice, who, 20, 40)
     assert [(t, e.amount) for t, e in events if e.kind == "trace"] == [(30, .5), (40, .5)]
+
+
+def test_game_6_7_smoke_and_live_decoy_compound_without_counting_dead_decoys(catalog):
+    ice, who = defender(catalog, "ticker"), runner(catalog, "prg_smoke")
+    ice.activate(who, 0, "touch")
+    event = next(e for _, e in step(ice, who, 0, 10) if e.kind == "trace")
+    assert event.amount == 1 and trace_gain(event.amount, who.effects, 10) == .75
+    who.effects.install(catalog.programs['prg_understudy'], 10)
+    event = next(e for _, e in step(ice, who, 11, 20) if e.kind == "trace")
+    assert event.amount == .5 and trace_gain(event.amount, who.effects, 20) == .375
+    who.effects.decoy = 0
+    event = next(e for _, e in step(ice, who, 21, 30) if e.kind == "trace")
+    assert event.amount == 1 and trace_gain(event.amount, who.effects, 30) == .75
 
 
 def test_design_17_3_bluecoat_requires_trace_and_dispatches_only_after_real_pin(catalog):

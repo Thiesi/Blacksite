@@ -59,7 +59,7 @@
     },
     {
       "id": "lat-terraces-c04",
-      "kind": "public",
+      "kind": "core_entrance",
       "pos": [
         3,
         0
@@ -69,11 +69,13 @@
         "lat-terraces-c05",
         "lat-terraces-c12"
       ],
-      "label": "Block B Super"
+      "label": "Block Super entrance",
+      "access": "public",
+      "core_id": "lat-block-super"
     },
     {
       "id": "lat-terraces-c05",
-      "kind": "public",
+      "kind": "core_entrance",
       "pos": [
         4,
         0
@@ -83,7 +85,9 @@
         "lat-terraces-c06",
         "lat-terraces-c13"
       ],
-      "label": "Outpost Feed"
+      "label": "Terrace Outpost entrance",
+      "access": "public",
+      "core_id": "lat-terrace-outpost"
     },
     {
       "id": "lat-terraces-c06",
@@ -101,7 +105,7 @@
     },
     {
       "id": "lat-terraces-c07",
-      "kind": "public",
+      "kind": "core_entrance",
       "pos": [
         6,
         0
@@ -111,7 +115,9 @@
         "lat-terraces-c08",
         "lat-terraces-c15"
       ],
-      "label": "Signal rack 07"
+      "label": "Block Relay entrance",
+      "access": "public",
+      "core_id": "lat-relay-block"
     },
     {
       "id": "lat-terraces-c08",
@@ -305,7 +311,7 @@
     },
     {
       "id": "lat-terraces-c21",
-      "kind": "core_entrance",
+      "kind": "gated",
       "pos": [
         4,
         2
@@ -316,15 +322,13 @@
         "lat-terraces-c13",
         "lat-terraces-c29"
       ],
-      "label": "Block Super entrance",
+      "label": "Block Super security link",
       "requirement": "program:key:2",
-      "access": "gated",
-      "core_placeholder": true,
-      "planned_core": "lat-block-super"
+      "access": "gated"
     },
     {
       "id": "lat-terraces-c22",
-      "kind": "core_entrance",
+      "kind": "gated",
       "pos": [
         5,
         2
@@ -335,15 +339,13 @@
         "lat-terraces-c14",
         "lat-terraces-c30"
       ],
-      "label": "Terrace Outpost entrance",
+      "label": "Terrace Outpost security link",
       "requirement": "program:key:2",
-      "access": "gated",
-      "core_placeholder": true,
-      "planned_core": "lat-terrace-outpost"
+      "access": "gated"
     },
     {
       "id": "lat-terraces-c23",
-      "kind": "core_entrance",
+      "kind": "gated",
       "pos": [
         6,
         2
@@ -354,11 +356,9 @@
         "lat-terraces-c15",
         "lat-terraces-c31"
       ],
-      "label": "Block Relay entrance",
+      "label": "Block Relay security link",
       "requirement": "program:key:2",
-      "access": "gated",
-      "core_placeholder": true,
-      "planned_core": "lat-relay-block"
+      "access": "gated"
     },
     {
       "id": "lat-terraces-c24",
@@ -552,5 +552,6 @@
       ],
       "label": "Signal rack 36"
     }
-  ]
+  ],
+  "trace_policy": "civic"
 }

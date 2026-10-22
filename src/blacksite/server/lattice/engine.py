@@ -133,6 +133,12 @@ class Lattice:
             return f"{faction.name if faction else parts[1]} standing {parts[2]}"
         return requirement_label(requirement)
 
+    def accepts(self, player: Player, presence: Presence, cell: Any, requirement: str | None) -> bool:
+        if (requirement and requirement.startswith("program:key:") and cell.gate_owner == "halvard"
+                and "prg_signet" in presence.key_programs):
+            return True
+        return permitted(requirement, self.credentials(player, presence))
+
     def terminal(self, actor: Actor, target: str | None = None) -> Any:
         zone = self.game.world.zones[actor.zone]
         return next((obj for obj in sorted(zone.objects.values(), key=lambda o: o.spec.id)
@@ -278,12 +284,13 @@ class Lattice:
         if not self.sectors.adjacent(presence.sector, presence.cell, sector, cell):
             raise ValueError("Choose a linked cell.")
         target = self.sectors.cells[sector][cell]
+        if access(target) != "public" and self.sources.locked(player.bbs_user_id, sector, self.clock.now_utc().timestamp()):
+            raise ValueError("This identity's five-minute district lockout is still active.")
         if access(target) == "hidden" and cell not in self.found(player, sector):
             raise ValueError("No known link leads there.")
         source = self.sectors.cells[presence.sector][presence.cell]
-        credentials = self.credentials(player, presence)
-        for requirement in (target.requirement, source.uplink.requirement if sector != presence.sector and source.uplink else None):
-            if not permitted(requirement, credentials):
+        for owner, requirement in ((target, target.requirement), (source, source.uplink.requirement if sector != presence.sector and source.uplink else None)):
+            if not self.accepts(player, presence, owner, requirement):
                 raise ValueError("This link requires "+self.label(requirement)+".")
         if presence.begin_move(sector, cell, self.clock.now_tick(), player.attributes["cortex"],
                                self.encounters.move_multiplier(player)):
@@ -427,7 +434,8 @@ class Lattice:
             if actor.stance != "jacked" or not actor.zone:
                 self.leave(session, transition=False)
                 continue
-            if presence.escape and presence.escape.advance(ctx.tick, self.encounters.hit_serial(presence)):
+            waiting_hit = self.combat.commerce.pending and self.encounters.pending_hit(pid)
+            if presence.escape and not waiting_hit and presence.escape.advance(ctx.tick, self.encounters.hit_serial(presence)):
                 self.leave(session)
                 continue
             if held:
@@ -440,13 +448,17 @@ class Lattice:
                 requirements = [cell.requirement]
                 if target_sector != presence.sector and source.uplink:
                     requirements.append(source.uplink.requirement)
-                credentials = self.credentials(self.game.players[pid], presence)
-                if not all(permitted(r, credentials) for r in requirements):
+                locked = access(cell) != "public" and self.sources.locked(self.game.players[pid].bbs_user_id, target_sector, self.clock.now_utc().timestamp())
+                if locked or not (self.accepts(self.game.players[pid], presence, cell, requirements[0]) and
+                        all(self.accepts(self.game.players[pid], presence, source, r) for r in requirements[1:])):
                     presence.destination = None
                     self.log(session, "The link no longer accepts your credentials.", True)
                 else:
                     self.notify(presence, self.game.players[pid].name+" leaves.", exclude=pid)
                     presence.arrive(ctx.tick)
+                    self.encounters.trace(presence, 0, entered=True)
+                    if pid not in self.presences:
+                        continue
                     if presence.redline_move:
                         presence.integrity = max(0, presence.integrity-float(self.content.programs["prg_redline"].effect.params["integrity_per_move"]))
                         if presence.integrity <= 0:

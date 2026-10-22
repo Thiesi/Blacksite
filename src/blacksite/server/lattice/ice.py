@@ -266,7 +266,7 @@ class Ice:
             if (kind == "ticker" or kind == "tripwire" and self.shots >= int(params.get("shots", 3))) and tick >= active.next_trace:
                 active.next_trace = tick + ticks(1)
                 amount = float(params.get("trace_per_second", params.get("surviving_trace_per_second", 0)))
-                if kind == "ticker" and any(e.kind == "decoy" or e.params.get("gain_multiplier") for key, e in runner.effects.active.items() if runner.effects.has(key, tick)):
+                if kind == "ticker" and runner.effects.decoy > 0:
                     amount *= float(params.get("decoy_trace_multiplier", 1))
                 events.append(IceEvent("trace", self.id, pid, amount))
 

@@ -1,0 +1,257 @@
+{
+  "schema": 1,
+  "id": "lat-vatline",
+  "name": "Vatline",
+  "owner": "sablier",
+  "owner_kind": "faction",
+  "tier": 4,
+  "trace_policy": "corporate",
+  "hardware": [
+    {
+      "zone": "vatside-vat-row",
+      "tile": [
+        79,
+        13
+      ],
+      "object_id": "vatline-hardware",
+      "label": "vatside vat row cabinet"
+    }
+  ],
+  "entry": "entry",
+  "rooms": [
+    {
+      "id": "entry",
+      "label": "Entry",
+      "pos": [
+        0,
+        0
+      ],
+      "neighbours": [
+        "room-1",
+        "room-4"
+      ],
+      "ice": [],
+      "data": [],
+      "controls": []
+    },
+    {
+      "id": "room-1",
+      "label": "Index",
+      "pos": [
+        1,
+        0
+      ],
+      "neighbours": [
+        "entry",
+        "room-2",
+        "room-5"
+      ],
+      "ice": [],
+      "data": [],
+      "controls": []
+    },
+    {
+      "id": "room-2",
+      "label": "Service room 2",
+      "pos": [
+        2,
+        0
+      ],
+      "neighbours": [
+        "room-1",
+        "room-3",
+        "room-6"
+      ],
+      "ice": [],
+      "data": [],
+      "controls": []
+    },
+    {
+      "id": "room-3",
+      "label": "Service room 3",
+      "pos": [
+        3,
+        0
+      ],
+      "neighbours": [
+        "room-2",
+        "room-7"
+      ],
+      "ice": [],
+      "data": [],
+      "controls": []
+    },
+    {
+      "id": "room-4",
+      "label": "Service room 4",
+      "pos": [
+        0,
+        1
+      ],
+      "neighbours": [
+        "entry",
+        "room-5",
+        "room-8"
+      ],
+      "ice": [],
+      "data": [
+        {
+          "id": "decant-audio-y41",
+          "label": "Year 41 decant audio",
+          "kind": "contract_key",
+          "asset": "decant-audio-y41",
+          "amount": 1,
+          "scope": "identity",
+          "respawn_seconds": 0
+        }
+      ],
+      "controls": []
+    },
+    {
+      "id": "room-5",
+      "label": "Service room 5",
+      "pos": [
+        1,
+        1
+      ],
+      "neighbours": [
+        "room-1",
+        "room-4",
+        "room-6"
+      ],
+      "ice": [],
+      "data": [
+        {
+          "id": "template-cantor-origin",
+          "label": "Cantor origin record",
+          "kind": "contract_key",
+          "asset": "template-cantor-origin",
+          "amount": 1,
+          "scope": "identity",
+          "respawn_seconds": 0
+        }
+      ],
+      "controls": []
+    },
+    {
+      "id": "room-6",
+      "label": "Service room 6",
+      "pos": [
+        2,
+        1
+      ],
+      "neighbours": [
+        "room-2",
+        "room-5",
+        "room-7"
+      ],
+      "ice": [
+        "ice_sandman"
+      ],
+      "data": [
+        {
+          "id": "template-lineage",
+          "label": "Template lineage",
+          "kind": "evidence",
+          "asset": "template-lineage",
+          "amount": 1,
+          "scope": "identity",
+          "respawn_seconds": 0
+        }
+      ],
+      "controls": []
+    },
+    {
+      "id": "room-7",
+      "label": "Service room 7",
+      "pos": [
+        3,
+        1
+      ],
+      "neighbours": [
+        "room-3",
+        "room-6"
+      ],
+      "ice": [
+        "ice_suture"
+      ],
+      "data": [
+        {
+          "id": "template-archive-index",
+          "label": "Template archive index",
+          "kind": "contribution",
+          "asset": "template-archive-index",
+          "amount": 1,
+          "scope": "shared",
+          "respawn_seconds": 3600
+        }
+      ],
+      "controls": [
+        {
+          "id": "clinic-doors",
+          "label": "clinic doors",
+          "target": {
+            "zone": "vatside-clinics",
+            "object": "clinic-door-47"
+          },
+          "action": "open",
+          "reset_seconds": 300,
+          "scope": "public",
+          "permission": "public",
+          "safety_policy": "none"
+        }
+      ]
+    },
+    {
+      "id": "room-8",
+      "label": "Archive",
+      "pos": [
+        0,
+        2
+      ],
+      "neighbours": [
+        "room-4"
+      ],
+      "ice": [
+        "ice_tripwire",
+        "ice_glasshouse",
+        "ice_suture",
+        "ice_kiln"
+      ],
+      "data": [
+        {
+          "id": "decant-queue",
+          "label": "Decant queue",
+          "kind": "contract_key",
+          "asset": "decant-queue",
+          "amount": 1,
+          "scope": "mission",
+          "respawn_seconds": 0
+        },
+        {
+          "id": "core-credit",
+          "label": "Core-owned service credit",
+          "kind": "chits",
+          "amount": 160,
+          "respawn_seconds": 1800
+        }
+      ],
+      "controls": [
+        {
+          "id": "vat-lockdown",
+          "label": "vat lockdown",
+          "target": {
+            "zone": "vatside-vat-row",
+            "object": "vatline-vat-lockdown"
+          },
+          "action": "open",
+          "reset_seconds": 120,
+          "scope": "mission",
+          "permission": "contract",
+          "safety_policy": "none"
+        }
+      ]
+    }
+  ],
+  "affiliation": "sablier"
+}

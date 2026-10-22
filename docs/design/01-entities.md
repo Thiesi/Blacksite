@@ -88,6 +88,8 @@ value) and `keymaps.json` (`actions`: action id to context and label;
 core_entrance, descent), pos (grid position on the sector view),
 neighbours[], requirement, label, core_id (optional), lore`. A sector also
 names its public `entry` cell and `layout_size` (at most 8 by 6).
+Its `trace_policy` names the district schedule; optional `trace_owner`
+is the faction receiving named trace reports, not territorial ownership.
 
 `access` optionally separates public/gated/hidden access from a functional
 `core_entrance` or `descent` kind. An `uplink` names a sector, its cell and
@@ -95,6 +97,9 @@ an optional requirement; links are reciprocal and never name a file path.
 Requirements are item/program IDs, or `item:<id>`, `program:<id>`, `program:<class>:<tier>`,
 `faction:<id>`, `standing:<id>:<minimum>` and `event:<id>` credentials.
 The server names the missing credential before changing a presence.
+`gate_owner` is an optional faction ID for a gate. A completed Signet
+may satisfy a Halvard gate's key-program requirement; it never replaces
+an item, event, discovery or story requirement.
 
 `core_placeholder: true` explicitly marks an unavailable entrance, with a
 `planned_core` slug instead of a live `core_id`. This is declared staged
@@ -115,7 +120,11 @@ training core, which sets `training`), template, entry, hardware
 only for the Shaft core that spans Shaft Head and Shaft Foot, and the
 validator rejects any other multi-location core), rooms[]` where a room is
 `id, label, pos [x,y], neighbours[], data[] (DataSpec), controls[]
-(ControlSpec), ice[] (ICE template ids), descent, lore`. Positions are
+(ControlSpec), ice[] (ICE template ids), ice_events (optional template ID
+to event ID conditions), ice_patrols, descent, lore`.
+`ice_patrols` optionally maps a room's defender template to a linked
+closed room route including its origin. Default core patrols traverse
+the linked graph without jumping an edge. Positions are
 authored, unique in an 8x4 room layout; every room reaches the entry.
 Listening Post alone has an authored internal descent.
 
@@ -134,6 +143,9 @@ reference resolves its actual object and tile; no stub map is implied.
   Asset resolves the kind's item/program/text/evidence table. Shared
   reward sources use remaining server uptime and a source generation;
   mission keys and personal records have separate receipt scopes.
+  Core source IDs survive room rearrangement. Mission receipts include
+  the active mission ID supplied by the contracts system; a lift binds
+  that ID at start and refuses a changed mission at completion.
   A contribution needs at least 3600 s uptime. The Wake record is
   nonrewarding personal text. A stale revision cannot consume a new unit.
   An item source may contain a validated program payload, learned in the

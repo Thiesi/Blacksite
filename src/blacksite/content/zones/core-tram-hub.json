@@ -183,6 +183,18 @@
       "params": {
         "name": "Kestrel bank"
       }
+    },
+    {
+      "id": "tram-signal-hardware",
+      "tile": [
+        25,
+        4
+      ],
+      "kind": "hardware",
+      "params": {
+        "name": "Tram Signal hardware",
+        "core": "lat-tram-signal"
+      }
     }
   ],
   "pockets": [],

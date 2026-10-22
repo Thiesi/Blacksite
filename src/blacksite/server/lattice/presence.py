@@ -64,6 +64,7 @@ class Procedure:
     scope: str
     last_hit: int
     generation: int = 0
+    source: str = ""
 
 
 @dataclass

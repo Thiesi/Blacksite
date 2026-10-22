@@ -1,0 +1,103 @@
+{
+  "schema": 1,
+  "id": "lat-relay-sump",
+  "name": "Sump Relay",
+  "owner": "neutral",
+  "owner_kind": "relay",
+  "tier": 2,
+  "trace_policy": "black",
+  "hardware": [
+    {
+      "zone": "sink-floor",
+      "tile": null,
+      "label": "Sump Relay hardware"
+    }
+  ],
+  "entry": "entry",
+  "rooms": [
+    {
+      "id": "entry",
+      "label": "Entry",
+      "pos": [
+        0,
+        0
+      ],
+      "neighbours": [
+        "room-1",
+        "room-2"
+      ],
+      "ice": [],
+      "data": [],
+      "controls": []
+    },
+    {
+      "id": "room-1",
+      "label": "Index",
+      "pos": [
+        1,
+        0
+      ],
+      "neighbours": [
+        "entry"
+      ],
+      "ice": [],
+      "data": [],
+      "controls": [
+        {
+          "id": "relay_vendor_lock",
+          "label": "relay_vendor_lock",
+          "target": {
+            "zone": "sink-floor",
+            "object": "relay-sump"
+          },
+          "action": "toggle",
+          "reset_seconds": 300,
+          "scope": "public",
+          "permission": "public",
+          "safety_policy": "none"
+        }
+      ]
+    },
+    {
+      "id": "room-2",
+      "label": "Archive",
+      "pos": [
+        0,
+        1
+      ],
+      "neighbours": [
+        "entry"
+      ],
+      "ice": [
+        "ice_tripwire",
+        "ice_turnstile"
+      ],
+      "data": [
+        {
+          "id": "relay-telemetry",
+          "label": "Relay telemetry",
+          "kind": "contract_key",
+          "asset": "relay-telemetry",
+          "amount": 1,
+          "scope": "identity",
+          "respawn_seconds": 0
+        }
+      ],
+      "controls": [
+        {
+          "id": "relay_open",
+          "label": "relay_open",
+          "target": {
+            "zone": "sink-floor",
+            "object": "relay-sump"
+          },
+          "action": "open",
+          "reset_seconds": 300,
+          "scope": "public",
+          "permission": "public",
+          "safety_policy": "none"
+        }
+      ]
+    }
+  ]
+}

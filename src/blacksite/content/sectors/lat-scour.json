@@ -131,7 +131,8 @@
       "requirement": "program:key:2",
       "access": "gated",
       "core_placeholder": true,
-      "planned_core": "lat-patrol-beacon"
+      "planned_core": "lat-patrol-beacon",
+      "gate_owner": "halvard"
     },
     {
       "id": "lat-scour-c08",
@@ -311,5 +312,6 @@
       "requirement": "event:ring-fall",
       "access": "gated"
     }
-  ]
+  ],
+  "trace_policy": "street"
 }

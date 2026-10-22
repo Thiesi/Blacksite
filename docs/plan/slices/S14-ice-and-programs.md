@@ -116,8 +116,11 @@ intent framing. Include target, cost, stage, warning and escape in views.
 4. Descend solo using a public loan rig. Survey a hidden branch, sample
    a Chorister by its visible labels and evade a warned Sweeper. No lore
    page or typed answer is needed. Repeat using the same seed.
-5. Run the documented Gate Nine route with one then two callers; compare
-   operational receipts, not an invented old timing transcript.
+5. Run the authored Gate Nine core as a labelled S14 fixture with one
+   then two callers. Compare its real data receipts and inspect the
+   three-second latch target contract. S15 repeats with actual latch/cut
+   effects; S25 repeats at the real Gate Nine geography. Do not manufacture
+   a physical-control receipt or an old timing transcript in S14.
 
 ## Definition of done
 
@@ -161,3 +164,11 @@ target do not turn into invented damage (game 6.7).
 This remains in progress. The full named core/hardware/control catalog,
 complete caller acceptance and the final balance review are outstanding.
 The S25 hardware/commerce and actual Gate Nine obligations remain open.
+
+The Gate Nine acceptance is phased because its physical control effects
+belong to the dependent S15 and its map to S25. S14 proves the authored
+core, program/key counters, shared receipts and declared control target;
+it does not pretend those later effects or geography already exist.
+The named future Uplink Hall is an inactive ten-room expedition template,
+not an opened Season 2 level. Its local sweep/escape space, real patch
+frame and scripted encounter belong to the future season bundle.

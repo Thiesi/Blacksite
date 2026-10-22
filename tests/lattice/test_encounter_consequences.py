@@ -6,6 +6,7 @@ import sqlite3
 import pytest
 
 from blacksite.server.lattice.ice import IceEvent
+from blacksite.server.lattice.presence import EscapeChannel
 from blacksite.server.storage.db import Storage
 from tests.lattice.test_engine import actor, intent, jack, runners
 from tests.lattice.test_encounters import cast, enter
@@ -127,3 +128,70 @@ def test_game_6_7_anchor_and_decoy_stop_drift_displacement(runners):
     presence.effects.active.clear()
     encounters.receive(presence, event, name="Drift")
     assert presence.room in encounters.core(presence).graph.room(where).neighbours
+
+
+def test_game_6_7_public_district_refuses_npc_black_burning(runners):
+    game, a, b, c = runners
+    presence = jack(game, a)
+    hp = actor(game, a).health
+    hit = IceEvent("hit", "pursuing-hound", presence.player_id, 20, 10)
+    assert game.core.lattice.encounters.receive(presence, hit, name="Hound")
+    assert presence.integrity == 100 and actor(game, a).health == hp
+
+
+def test_game_6_7_source_identity_survives_an_authored_room_move(runners):
+    game, a, b, c = runners
+    presence = enter(game, a, "lat-civic-ledger")
+    encounters = game.core.lattice.encounters
+    data = encounters.core(presence).graph.room("r-cache").data[0]
+    first = encounters.source(presence, data)
+    presence.room = "r-cache"
+    assert encounters.source(presence, data) == first
+
+
+def test_game_6_7_burn_waits_for_other_players_transfer_without_charging(runners):
+    game, a, b, c = runners
+    first, second = enter(game, a, "lat-civic-ledger"), enter(game, b, "lat-civic-ledger")
+    # Explicit contested-body scenario; no protected-body exception for PvP.
+    zone = game.core.world.zones[actor(game, a).zone]
+    zone.template = replace(zone.template, meta=replace(zone.template.meta, safety="contested"))
+    for client in (a, b):
+        game.core.characters.players[client.session.player_id].grade = 5
+    first.rig = ("prg_burn", None, None)
+    intent(game, a, "lat.cast", program="prg_burn", target=second.player_id)
+    assert first.cast
+    commerce = game.core.commerce
+    commerce.settle(None, {}, commerce.items, commerce.caches, commerce.serial, lambda success: None)
+    game.step(first.cast.until-game.clock.now_tick())
+    player = game.core.characters.players[first.player_id]
+    assert first.cast and second.integrity == 100 and player.marked_until is None
+    assert "prg_burn" not in player.progress.get("lattice_cooldowns", {})
+    before = first.trace
+    game.commit_commerce()
+    game.step()
+    assert first.cast is None and second.integrity == 82
+    assert player.marked_until and "prg_burn" in player.progress["lattice_cooldowns"]
+    assert first.trace > before+14
+
+
+def test_game_6_7_earned_hit_settles_before_escape_and_further_transfers(runners):
+    game, a, b, c = runners
+    presence = enter(game, a, "lat-civic-ledger")
+    presence.room = "r-foyer"
+    encounters, commerce = game.core.lattice.encounters, game.core.commerce
+    ice = encounters.defenders(presence)[0]
+    presence.escape = EscapeChannel(game.clock.now_tick()+1, encounters.hit_serial(presence))
+    commerce.settle(None, {}, commerce.items, commerce.caches, commerce.serial, lambda success: None)
+    # Isolate a hit already earned by the defender's warned attack.
+    encounters.event(ice, IceEvent("hit", ice.id, presence.player_id, 10))
+    assert presence.integrity == 100 and encounters.pending_hit(presence.player_id)
+    queued = []
+    commerce.enqueue_system(lambda: queued.append(presence.integrity))
+    game.step()
+    assert presence.player_id in game.core.lattice.presences
+    game.commit_commerce()
+    assert presence.integrity == 90 and queued == [90]
+    game.step()
+    assert presence.escape.interruptions == 1
+    assert presence.player_id in game.core.lattice.presences
+    assert not encounters.pending_hit(presence.player_id)

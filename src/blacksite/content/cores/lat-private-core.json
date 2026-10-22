@@ -1,0 +1,74 @@
+{
+  "schema": 1,
+  "id": "lat-private-core",
+  "name": "Private core",
+  "template": true,
+  "owner": "private",
+  "owner_kind": "private",
+  "tier": 1,
+  "trace_policy": "street",
+  "hardware": [],
+  "entry": "vestibule",
+  "rooms": [
+    {
+      "id": "vestibule",
+      "label": "Delivery vestibule",
+      "pos": [
+        0,
+        0
+      ],
+      "neighbours": [
+        "index"
+      ]
+    },
+    {
+      "id": "index",
+      "label": "Storage index",
+      "pos": [
+        1,
+        0
+      ],
+      "neighbours": [
+        "vestibule",
+        "panel"
+      ],
+      "ice": [
+        "ice_tripwire"
+      ]
+    },
+    {
+      "id": "panel",
+      "label": "Wall panel",
+      "pos": [
+        1,
+        1
+      ],
+      "neighbours": [
+        "index"
+      ],
+      "controls": [
+        {
+          "id": "apartment-door",
+          "label": "Delivery vestibule",
+          "target": {
+            "zone": "terraces-blocks",
+            "object": "apartment-vestibule"
+          },
+          "action": "open",
+          "reset_seconds": 30,
+          "scope": "private_vestibule"
+        },
+        {
+          "id": "apartment-lights",
+          "label": "Apartment lights",
+          "target": {
+            "zone": "terraces-blocks",
+            "object": "apartment-lights"
+          },
+          "action": "toggle",
+          "reset_seconds": 300
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,33 @@
+{
+  "schema": 1,
+  "evidence": [
+    {
+      "id": "curfew-orders-y22",
+      "asset": "lattice-curfew-orders-y22",
+      "observation": "You copy a curfew order and its dated gate-cycle record.",
+      "source": "lat-precinct",
+      "claim": "The order records a gate cycle; it does not identify its cause."
+    },
+    {
+      "id": "brann-private-ledger",
+      "asset": "lattice-brann-private-ledger",
+      "observation": "You read one page of Brann's list of places she chose not to protect. The Undercity appears twice.",
+      "source": "lat-precinct",
+      "claim": "The page is Brann's account of her decisions."
+    },
+    {
+      "id": "template-lineage",
+      "asset": "lattice-template-lineage",
+      "observation": "The Cantor template has no recorded origin in this lineage index.",
+      "source": "lat-vatline",
+      "claim": "A missing origin entry does not establish where the template came from."
+    },
+    {
+      "id": "routing-audit-y0",
+      "asset": "lattice-routing-audit-y0",
+      "observation": "A Year 0 audit names a routing authority before the Year 6 routing-office announcement.",
+      "source": "lat-depot-control",
+      "claim": "Conflicting dates do not establish foreknowledge."
+    }
+  ]
+}

@@ -135,7 +135,8 @@
       "requirement": "program:key:2",
       "access": "gated",
       "core_placeholder": true,
-      "planned_core": "lat-outworks-seal"
+      "planned_core": "lat-outworks-seal",
+      "gate_owner": "halvard"
     },
     {
       "id": "lat-undercity-c09",
@@ -406,5 +407,6 @@
       ],
       "label": "Signal rack 26"
     }
-  ]
+  ],
+  "trace_policy": "street"
 }

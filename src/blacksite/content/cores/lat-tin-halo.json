@@ -1,0 +1,127 @@
+{
+  "schema": 1,
+  "id": "lat-tin-halo",
+  "name": "Tin Halo",
+  "owner": "vesper",
+  "owner_kind": "npc",
+  "tier": 2,
+  "trace_policy": "black",
+  "hardware": [
+    {
+      "zone": "sodium-tin-halo",
+      "tile": [
+        18,
+        15
+      ],
+      "object_id": "halo-cabinet-hardware",
+      "label": "sodium tin halo cabinet"
+    }
+  ],
+  "entry": "entry",
+  "rooms": [
+    {
+      "id": "entry",
+      "label": "Entry",
+      "pos": [
+        0,
+        0
+      ],
+      "neighbours": [
+        "room-1",
+        "room-2"
+      ],
+      "ice": [],
+      "data": [],
+      "controls": []
+    },
+    {
+      "id": "room-1",
+      "label": "Index",
+      "pos": [
+        1,
+        0
+      ],
+      "neighbours": [
+        "entry",
+        "room-3"
+      ],
+      "ice": [],
+      "data": [],
+      "controls": []
+    },
+    {
+      "id": "room-2",
+      "label": "Service room 2",
+      "pos": [
+        0,
+        1
+      ],
+      "neighbours": [
+        "entry",
+        "room-3"
+      ],
+      "ice": [],
+      "data": [
+        {
+          "id": "halo-contract-archive",
+          "label": "Contract archive",
+          "kind": "text",
+          "asset": "lattice-halo-contract-archive",
+          "scope": "identity",
+          "respawn_seconds": 0
+        }
+      ],
+      "controls": []
+    },
+    {
+      "id": "room-3",
+      "label": "Archive",
+      "pos": [
+        1,
+        1
+      ],
+      "neighbours": [
+        "room-1",
+        "room-2"
+      ],
+      "ice": [
+        "ice_tripwire",
+        "ice_turnstile",
+        "ice_liar"
+      ],
+      "data": [
+        {
+          "id": "committed-event-rumour",
+          "label": "Committed event forecast",
+          "kind": "contract_key",
+          "asset": "committed-event-rumour",
+          "amount": 1,
+          "scope": "identity",
+          "respawn_seconds": 0
+        },
+        {
+          "id": "core-credit",
+          "label": "Core-owned service credit",
+          "kind": "chits",
+          "amount": 80,
+          "respawn_seconds": 1800
+        }
+      ],
+      "controls": [
+        {
+          "id": "back-door",
+          "label": "back door",
+          "target": {
+            "zone": "sodium-tin-halo",
+            "object": "halo-back-room"
+          },
+          "action": "open",
+          "reset_seconds": 300,
+          "scope": "public",
+          "permission": "public",
+          "safety_policy": "none"
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,117 @@
+{
+  "schema": 1,
+  "id": "lat-terrace-outpost",
+  "name": "Terrace Outpost",
+  "owner": "wardens",
+  "owner_kind": "faction",
+  "tier": 2,
+  "trace_policy": "civic",
+  "hardware": [
+    {
+      "zone": "terraces-blocks",
+      "tile": [
+        107,
+        30
+      ],
+      "object_id": "outpost-desk-hardware",
+      "label": "terraces blocks cabinet"
+    }
+  ],
+  "entry": "entry",
+  "rooms": [
+    {
+      "id": "entry",
+      "label": "Entry",
+      "pos": [
+        0,
+        0
+      ],
+      "neighbours": [
+        "room-1",
+        "room-2"
+      ],
+      "ice": [],
+      "data": [],
+      "controls": []
+    },
+    {
+      "id": "room-1",
+      "label": "Index",
+      "pos": [
+        1,
+        0
+      ],
+      "neighbours": [
+        "entry",
+        "room-3"
+      ],
+      "ice": [],
+      "data": [],
+      "controls": []
+    },
+    {
+      "id": "room-2",
+      "label": "Service room 2",
+      "pos": [
+        0,
+        1
+      ],
+      "neighbours": [
+        "entry",
+        "room-3"
+      ],
+      "ice": [],
+      "data": [],
+      "controls": []
+    },
+    {
+      "id": "room-3",
+      "label": "Archive",
+      "pos": [
+        1,
+        1
+      ],
+      "neighbours": [
+        "room-1",
+        "room-2"
+      ],
+      "ice": [
+        "ice_tripwire",
+        "ice_bluecoat"
+      ],
+      "data": [
+        {
+          "id": "outpost-log",
+          "label": "Outpost log",
+          "kind": "text",
+          "asset": "lattice-outpost-log",
+          "scope": "identity",
+          "respawn_seconds": 0
+        },
+        {
+          "id": "core-credit",
+          "label": "Core-owned service credit",
+          "kind": "chits",
+          "amount": 80,
+          "respawn_seconds": 1800
+        }
+      ],
+      "controls": [
+        {
+          "id": "outpost-cameras",
+          "label": "outpost cameras",
+          "target": {
+            "zone": "terraces-blocks",
+            "object": "terrace-outpost-outpost-cameras"
+          },
+          "action": "toggle",
+          "reset_seconds": 300,
+          "scope": "public",
+          "permission": "public",
+          "safety_policy": "none"
+        }
+      ]
+    }
+  ],
+  "affiliation": "wardens"
+}

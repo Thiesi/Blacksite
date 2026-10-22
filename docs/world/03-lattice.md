@@ -374,6 +374,12 @@ defined by the story arcs). Hardware: the patch frame in the level itself.
 Data: the Year 0 severance procedure. Controls: none outside the level.
 ICE: Blackglass ×2, Sweeper, Hound.
 
+Its ten-room linear record is an inactive expedition template until the
+future season bundle authors the level and its local sweep/escape space.
+The template has no cuttable hardware or static district entrance; the
+expedition supplies its real patch frame. Loading its name is not opening
+the level or completing its scripted encounter.
+
 **Story data IDs** referenced by the story arcs, by core:
 `lat-depot-control` — `routing-audit-y0`, `dispatch-channel-log`;
 `lat-vatline` — `template-lineage`, `template-cantor-origin`,
@@ -485,6 +491,12 @@ acquisition cap does not limit casting.
 Shade preserves the copied effect kind after a two-second warning:
 damage targets the observed runner; shields, decoys and restoration
 apply to Shade. Utilities without a legal NPC target visibly do nothing.
+Following Liar's explicitly suspect route starts a 10 s dead-end channel
+and spends 15 trace where trace applies. Esc/B withdraws early; it does
+not refund spent trace. Compass identifies the decoy without that cost.
+Pulse marks the casting district cell or core entrance for the crew for
+20 s. The entry marker stays fixed; it exposes no interior room or Silt
+position. Pulse cannot be cast in the Silt.
 
 Old catalog IDs are pre-implementation renames, not saved-game aliases.
 In particular Shroud is stealth; Umbrella is the starter shield. There
@@ -556,7 +568,11 @@ next season's band 1.
 Trace runs from 0 to 100. It rises while the runner is inside a core, by
 tier, and per hostile action; it never rises in public cells, in the Silt,
 or while *Nobody* is active. It resets to 0 on jack-out. Decoys reduce it
-as listed above.
+as listed above. Nonpublic district actions use the sector's trace
+schedule with no passive gain outside cores; untiered corporate cells
+use the baseline tier-3 Hound. Local thresholds also inspect carried
+trace on entry, once per location per jack-in run. A street district's
+identity lockout preserves public routes.
 
 | Source | Trace |
 |---|---|

@@ -500,6 +500,7 @@ real encounter. District gate counts and public uplinks remain intact.
 Named short effects are exceptions to that ordinary reset range: a
 mission latch lasts 120 s, a private delivery vestibule 30 s, Row lighting
 blackout 30 s, Row sign message 60 s, and the bell-gallery hymn 60 s.
+Foundry gantry debris lasts 30 s after its hazard warning.
 Transit holds retain their separate 30 s limit and 120 s immunity.
 - A crew member who reaches a core's hardware in meatspace can **cut
   power**: every runner inside is jacked out with shock 100 and the core
@@ -601,6 +602,17 @@ two-second warning. Copied damage targets the observed runner; shields,
 decoys and restoration apply to Shade. A utility without a legal NPC
 target visibly does nothing. A shield is never turned into extra damage.
 
+Liar's unverified route is explicitly suspect. Following it starts a
+10 s dead-end channel and adds 15 trace where trace applies. Esc/B may
+withdraw early; already spent trace remains. Compass identifies the
+decoy without that cost. The false route never becomes an objective,
+control, source receipt or escape instruction.
+
+Pulse marks its casting district cell or core entrance for 20 s for the
+runner's crew. It does not publish an interior room or a remote Silt
+position. The marked entry stays fixed while the runner moves. The Silt
+rejects a Pulse cast before spending its cast or cooldown.
+
 Shiv reports once after a visible 4 s channel while alive. Sneakers
 delays entry activation, Nobody suppresses it, and killing Shiv prevents
 the unfinished report. Reported locations are game-body locations; hiding
@@ -627,6 +639,12 @@ once on crossing during a run. Street trace 100 gives shock 60 and a
 callers retain access. This is separate from a global hardware cut.
 Corporate hunters last at most 3 minutes; Cutout breaks one follow
 without immediately reattaching that hunter on the same threshold.
+Hostile actions in a nonpublic district cell use that sector's trace
+schedule, without passive gain outside a core. An untiered corporate
+district uses the baseline tier-3 Hound. A local core or gated district
+also reacts when an already traced runner enters; each local threshold
+fires once per jack-in run. Street district lockout blocks only that
+identity's nonpublic links; its public routes remain available.
 
 An authored ordinary core may hold at most one optional core-owned chit
 cache: 40 * tier, respawning after 30 minutes of server uptime. This is

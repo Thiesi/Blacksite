@@ -1,0 +1,121 @@
+{
+  "schema": 1,
+  "id": "lat-landing",
+  "name": "Landing",
+  "owner": "neutral",
+  "owner_kind": "neutral",
+  "tier": 2,
+  "trace_policy": "street",
+  "hardware": [
+    {
+      "zone": "scour-landing",
+      "tile": null,
+      "label": "Landing hardware"
+    }
+  ],
+  "entry": "entry",
+  "rooms": [
+    {
+      "id": "entry",
+      "label": "Entry",
+      "pos": [
+        0,
+        0
+      ],
+      "neighbours": [
+        "room-1",
+        "room-2"
+      ],
+      "ice": [],
+      "data": [],
+      "controls": []
+    },
+    {
+      "id": "room-1",
+      "label": "Index",
+      "pos": [
+        1,
+        0
+      ],
+      "neighbours": [
+        "entry",
+        "room-3"
+      ],
+      "ice": [],
+      "data": [],
+      "controls": []
+    },
+    {
+      "id": "room-2",
+      "label": "Service room 2",
+      "pos": [
+        0,
+        1
+      ],
+      "neighbours": [
+        "entry",
+        "room-3"
+      ],
+      "ice": [],
+      "data": [],
+      "controls": []
+    },
+    {
+      "id": "room-3",
+      "label": "Archive",
+      "pos": [
+        1,
+        1
+      ],
+      "neighbours": [
+        "room-1",
+        "room-2"
+      ],
+      "ice": [
+        "ice_tripwire",
+        "ice_turnstile"
+      ],
+      "data": [
+        {
+          "id": "service-telemetry",
+          "label": "Landing telemetry",
+          "kind": "contract_key",
+          "asset": "service-telemetry",
+          "amount": 1,
+          "scope": "identity",
+          "respawn_seconds": 0
+        },
+        {
+          "id": "core-credit",
+          "label": "Core-owned service credit",
+          "kind": "chits",
+          "amount": 80,
+          "respawn_seconds": 1800
+        },
+        {
+          "id": "text-ferrymen-road-rules",
+          "label": "Ferrymen road rules",
+          "kind": "text",
+          "asset": "text-ferrymen-road-rules",
+          "scope": "identity",
+          "respawn_seconds": 0
+        }
+      ],
+      "controls": [
+        {
+          "id": "local-survey-display",
+          "label": "local survey display",
+          "target": {
+            "zone": "scour-landing",
+            "object": "landing-local-survey-display"
+          },
+          "action": "call",
+          "reset_seconds": 300,
+          "scope": "public",
+          "permission": "public",
+          "safety_policy": "none"
+        }
+      ]
+    }
+  ]
+}

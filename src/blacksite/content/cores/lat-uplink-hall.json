@@ -1,0 +1,28 @@
+{
+  "schema": 1,
+  "id": "lat-uplink-hall",
+  "name": "Uplink Hall",
+  "template": true,
+  "owner": "halvard",
+  "owner_kind": "abandoned",
+  "affiliation": "halvard",
+  "tier": 5,
+  "trace_policy": "corporate",
+  "hardware": [],
+  "entry": "lift",
+  "rooms": [
+    {"id": "lift", "label": "Maintenance lift", "pos": [0, 0], "neighbours": ["trunk-1"]},
+    {"id": "trunk-1", "label": "Severed trunk", "pos": [1, 0], "neighbours": ["lift", "trunk-2"]},
+    {"id": "trunk-2", "label": "Cable vault", "pos": [2, 0], "neighbours": ["trunk-1", "trunk-3"]},
+    {"id": "trunk-3", "label": "First pane", "pos": [3, 0], "neighbours": ["trunk-2", "trunk-4"], "ice": ["ice_blackglass"]},
+    {"id": "trunk-4", "label": "Dead consoles", "pos": [4, 0], "neighbours": ["trunk-3", "trunk-5"]},
+    {"id": "trunk-5", "label": "Trunk bend", "pos": [4, 1], "neighbours": ["trunk-4", "trunk-6"]},
+    {"id": "trunk-6", "label": "Second pane", "pos": [3, 1], "neighbours": ["trunk-5", "trunk-7"], "ice": ["ice_blackglass"]},
+    {"id": "trunk-7", "label": "Sweep lane", "pos": [2, 1], "neighbours": ["trunk-6", "trunk-8"], "ice": ["ice_sweeper"]},
+    {"id": "trunk-8", "label": "Console approach", "pos": [1, 1], "neighbours": ["trunk-7", "live-console"], "ice": ["ice_hound"]},
+    {"id": "live-console", "label": "Live console", "pos": [0, 1], "neighbours": ["trunk-8"], "data": [
+      {"id": "dispatch-echo", "label": "Dispatch echo", "kind": "contract_key", "asset": "dispatch-echo", "amount": 1, "scope": "identity", "respawn_seconds": 0},
+      {"id": "year-zero-procedure", "label": "Year 0 severance procedure", "kind": "contract_key", "asset": "year-zero-procedure", "amount": 1, "scope": "identity", "respawn_seconds": 0}
+    ]}
+  ]
+}

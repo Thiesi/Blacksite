@@ -1,0 +1,132 @@
+{
+  "schema": 1,
+  "id": "lat-patrol-beacon",
+  "name": "Patrol Beacon",
+  "owner": "halvard",
+  "owner_kind": "faction",
+  "tier": 3,
+  "trace_policy": "corporate",
+  "hardware": [
+    {
+      "zone": "scour-ring-2",
+      "tile": null,
+      "label": "Patrol Beacon hardware"
+    }
+  ],
+  "entry": "entry",
+  "rooms": [
+    {
+      "id": "entry",
+      "label": "Entry",
+      "pos": [
+        0,
+        0
+      ],
+      "neighbours": [
+        "room-1",
+        "room-3"
+      ],
+      "ice": [],
+      "data": [],
+      "controls": []
+    },
+    {
+      "id": "room-1",
+      "label": "Index",
+      "pos": [
+        1,
+        0
+      ],
+      "neighbours": [
+        "entry",
+        "room-2",
+        "room-4"
+      ],
+      "ice": [],
+      "data": [],
+      "controls": []
+    },
+    {
+      "id": "room-2",
+      "label": "Service room 2",
+      "pos": [
+        2,
+        0
+      ],
+      "neighbours": [
+        "room-1"
+      ],
+      "ice": [
+        "ice_mastiff"
+      ],
+      "data": [],
+      "controls": []
+    },
+    {
+      "id": "room-3",
+      "label": "Service room 3",
+      "pos": [
+        0,
+        1
+      ],
+      "neighbours": [
+        "entry",
+        "room-4"
+      ],
+      "ice": [],
+      "data": [],
+      "controls": []
+    },
+    {
+      "id": "room-4",
+      "label": "Archive",
+      "pos": [
+        1,
+        1
+      ],
+      "neighbours": [
+        "room-1",
+        "room-3"
+      ],
+      "ice": [
+        "ice_tripwire",
+        "ice_hornets",
+        "ice_lockstep"
+      ],
+      "data": [
+        {
+          "id": "patrol-logs",
+          "label": "Patrol logs",
+          "kind": "contract_key",
+          "asset": "patrol-logs",
+          "amount": 1,
+          "scope": "mission",
+          "respawn_seconds": 0
+        },
+        {
+          "id": "core-credit",
+          "label": "Core-owned service credit",
+          "kind": "chits",
+          "amount": 120,
+          "respawn_seconds": 1800
+        }
+      ],
+      "controls": [
+        {
+          "id": "patrol-recall",
+          "label": "patrol recall",
+          "target": {
+            "zone": "scour-ring-2",
+            "object": "patrol-beacon-patrol-recall"
+          },
+          "action": "call",
+          "reset_seconds": 300,
+          "scope": "public",
+          "permission": "public",
+          "safety_policy": "none"
+        }
+      ]
+    }
+  ],
+  "affiliation": "halvard"
+}

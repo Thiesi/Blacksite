@@ -83,7 +83,8 @@
       "kind": "hardware",
       "essential": false,
       "params": {
-        "name": "Vatline hardware"
+        "name": "Vatline hardware",
+        "core": "lat-vatline"
       }
     },
     {
@@ -97,6 +98,18 @@
         "open": true,
         "unavailable_target": "under-service",
         "name": "Construction boundary"
+      }
+    },
+    {
+      "id": "vatline-vat-lockdown",
+      "tile": [
+        79,
+        12
+      ],
+      "kind": "door",
+      "params": {
+        "name": "vat lockdown",
+        "control": "vat-lockdown"
       }
     }
   ],

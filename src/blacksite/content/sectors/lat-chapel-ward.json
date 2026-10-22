@@ -336,5 +336,7 @@
       ],
       "label": "Signal rack 22"
     }
-  ]
+  ],
+  "trace_policy": "street",
+  "trace_owner": "choir"
 }

@@ -1,0 +1,24 @@
+┌─CIVIC LEDGER / CORE──────────────────────────────────────────────────────────┐
+│                                                       │INTEGRITY 100         │
+│ (01)───(♦2)───(03)───(04)                             │TRACE 1               │
+│   │                                                   │BODY SAFE             │
+│   │                                                   │HP 130/130            │
+│ (09)                                                  │Pick 0.7s             │
+│                                                       │RIG                   │
+│                                                       │1 Pick                │
+│                                                       │2 Umbrella            │
+│                                                       │3 Empty               │
+│                                                       │ROOM                  │
+│                                                       │Registry foyer        │
+│                                                       │♦ Guest界             │
+│ ROOM / Registry foyer                                 │                      │
+│ > Tripwire 20/20 [warning 2.0s]                       │                      │
+│ alarm / entry / 8 integrity, 0 body damage            │                      │
+│ any attack; Sneakers delays it 3 s                    │                      │
+│                                                       │                      │
+├──────────────────────────────────────────────────────────────────────────────┤
+│                                                                              │
+│                                                                              │
+│                                                                              │
+│J escape  B retreat  E room  Tab target  1-7 cast  R rig                      │
+└────────────────────────────────────────────────────────────────────────────── 

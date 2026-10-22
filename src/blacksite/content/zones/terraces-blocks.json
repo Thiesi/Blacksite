@@ -174,7 +174,8 @@
       "kind": "hardware",
       "essential": false,
       "params": {
-        "name": "Block relay hardware"
+        "name": "Block relay hardware",
+        "core": "lat-relay-block"
       }
     },
     {
@@ -290,6 +291,66 @@
       "kind": "tram_stop",
       "params": {
         "name": "Tram platform"
+      }
+    },
+    {
+      "id": "super-office-hardware",
+      "tile": [
+        104,
+        10
+      ],
+      "kind": "hardware",
+      "params": {
+        "name": "Block Super hardware",
+        "core": "lat-block-super"
+      }
+    },
+    {
+      "id": "outpost-desk-hardware",
+      "tile": [
+        107,
+        30
+      ],
+      "kind": "hardware",
+      "params": {
+        "name": "Terrace Outpost hardware",
+        "core": "lat-terrace-outpost"
+      }
+    },
+    {
+      "id": "kestrel-branch-impound-manifest",
+      "tile": [
+        3,
+        3
+      ],
+      "kind": "terminal",
+      "params": {
+        "name": "impound manifest",
+        "control": "impound-manifest"
+      }
+    },
+    {
+      "id": "block-super-lift-lock",
+      "tile": [
+        104,
+        9
+      ],
+      "kind": "door",
+      "params": {
+        "name": "lift lock",
+        "control": "lift-lock"
+      }
+    },
+    {
+      "id": "terrace-outpost-outpost-cameras",
+      "tile": [
+        106,
+        30
+      ],
+      "kind": "terminal",
+      "params": {
+        "name": "outpost cameras",
+        "control": "outpost-cameras"
       }
     }
   ],

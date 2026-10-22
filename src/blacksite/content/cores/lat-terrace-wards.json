@@ -1,0 +1,123 @@
+{
+  "schema": 1,
+  "id": "lat-terrace-wards",
+  "name": "Terrace Wards",
+  "owner": "sable",
+  "owner_kind": "faction",
+  "tier": 2,
+  "trace_policy": "black",
+  "hardware": [
+    {
+      "zone": "sink-terraces",
+      "tile": null,
+      "label": "Terrace Wards hardware"
+    }
+  ],
+  "entry": "entry",
+  "rooms": [
+    {
+      "id": "entry",
+      "label": "Entry",
+      "pos": [
+        0,
+        0
+      ],
+      "neighbours": [
+        "room-1",
+        "room-2"
+      ],
+      "ice": [],
+      "data": [],
+      "controls": []
+    },
+    {
+      "id": "room-1",
+      "label": "Index",
+      "pos": [
+        1,
+        0
+      ],
+      "neighbours": [
+        "entry",
+        "room-3"
+      ],
+      "ice": [],
+      "data": [],
+      "controls": []
+    },
+    {
+      "id": "room-2",
+      "label": "Service room 2",
+      "pos": [
+        0,
+        1
+      ],
+      "neighbours": [
+        "entry",
+        "room-3"
+      ],
+      "ice": [],
+      "data": [],
+      "controls": []
+    },
+    {
+      "id": "room-3",
+      "label": "Archive",
+      "pos": [
+        1,
+        1
+      ],
+      "neighbours": [
+        "room-1",
+        "room-2"
+      ],
+      "ice": [
+        "ice_tripwire",
+        "ice_shiv",
+        "ice_shiv"
+      ],
+      "data": [
+        {
+          "id": "protection-roster",
+          "label": "Protection roster",
+          "kind": "contract_key",
+          "asset": "protection-roster",
+          "amount": 1,
+          "scope": "mission",
+          "respawn_seconds": 0
+        },
+        {
+          "id": "core-credit",
+          "label": "Core-owned service credit",
+          "kind": "chits",
+          "amount": 80,
+          "respawn_seconds": 1800
+        },
+        {
+          "id": "text-sable-protection-notice",
+          "label": "Protection notice",
+          "kind": "text",
+          "asset": "text-sable-protection-notice",
+          "scope": "identity",
+          "respawn_seconds": 0
+        }
+      ],
+      "controls": [
+        {
+          "id": "ward-doors",
+          "label": "ward doors",
+          "target": {
+            "zone": "sink-terraces",
+            "object": "terrace-wards-ward-doors"
+          },
+          "action": "open",
+          "reset_seconds": 300,
+          "scope": "public",
+          "permission": "public",
+          "safety_policy": "none"
+        }
+      ]
+    }
+  ],
+  "affiliation": "sable"
+}

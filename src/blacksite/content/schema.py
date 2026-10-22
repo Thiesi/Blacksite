@@ -302,6 +302,7 @@ class Cell:
     core_placeholder: bool = False
     planned_core: str | None = None
     uplink: Uplink | None = None
+    gate_owner: str | None = None
 
     @property
     def access_kind(self) -> str:
@@ -316,6 +317,8 @@ class Sector:
     schema: int = CONTENT_SCHEMA
     entry: str | None = None
     layout_size: Tile = (8, 6)  # Game design 6.1: readable at 80x24.
+    trace_policy: Literal["civic", "corporate", "black", "street", "none"] = "none"
+    trace_owner: str | None = None
 
 
 DataKind = Literal[
@@ -380,6 +383,8 @@ class Room:
     label: str = ""
     pos: Tile = (0, 0)
     descent: bool = False
+    ice_events: dict[str, str] = field(default_factory=dict)
+    ice_patrols: dict[str, tuple[str, ...]] = field(default_factory=dict)
 
 
 @dataclass(frozen=True)

@@ -1,0 +1,127 @@
+{
+  "schema": 1,
+  "id": "lat-sump",
+  "name": "Sump",
+  "owner": "neutral",
+  "owner_kind": "neutral",
+  "tier": 2,
+  "trace_policy": "black",
+  "hardware": [
+    {
+      "zone": "sink-floor",
+      "tile": null,
+      "label": "Sump hardware"
+    }
+  ],
+  "entry": "entry",
+  "rooms": [
+    {
+      "id": "entry",
+      "label": "Entry",
+      "pos": [
+        0,
+        0
+      ],
+      "neighbours": [
+        "room-1",
+        "room-2"
+      ],
+      "ice": [],
+      "data": [],
+      "controls": []
+    },
+    {
+      "id": "room-1",
+      "label": "Index",
+      "pos": [
+        1,
+        0
+      ],
+      "neighbours": [
+        "entry",
+        "room-3"
+      ],
+      "ice": [],
+      "data": [],
+      "controls": []
+    },
+    {
+      "id": "room-2",
+      "label": "Service room 2",
+      "pos": [
+        0,
+        1
+      ],
+      "neighbours": [
+        "entry",
+        "room-3"
+      ],
+      "ice": [],
+      "data": [],
+      "controls": [
+        {
+          "id": "grate",
+          "label": "grate",
+          "target": {
+            "zone": "sink-floor",
+            "object": "sump-grate"
+          },
+          "action": "open",
+          "reset_seconds": 300,
+          "scope": "public",
+          "permission": "public",
+          "safety_policy": "none"
+        }
+      ]
+    },
+    {
+      "id": "room-3",
+      "label": "Archive",
+      "pos": [
+        1,
+        1
+      ],
+      "neighbours": [
+        "room-1",
+        "room-2"
+      ],
+      "ice": [
+        "ice_tripwire",
+        "ice_turnstile"
+      ],
+      "data": [
+        {
+          "id": "service-telemetry",
+          "label": "Sump telemetry",
+          "kind": "contract_key",
+          "asset": "service-telemetry",
+          "amount": 1,
+          "scope": "identity",
+          "respawn_seconds": 0
+        },
+        {
+          "id": "core-credit",
+          "label": "Core-owned service credit",
+          "kind": "chits",
+          "amount": 80,
+          "respawn_seconds": 1800
+        }
+      ],
+      "controls": [
+        {
+          "id": "pump-regions",
+          "label": "pump regions",
+          "target": {
+            "zone": "sink-floor",
+            "object": "sump-pump-regions"
+          },
+          "action": "toggle",
+          "reset_seconds": 300,
+          "scope": "public",
+          "permission": "public",
+          "safety_policy": "none"
+        }
+      ]
+    }
+  ]
+}

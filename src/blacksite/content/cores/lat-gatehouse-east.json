@@ -1,0 +1,215 @@
+{
+  "schema": 1,
+  "id": "lat-gatehouse-east",
+  "name": "Gatehouse East",
+  "owner": "kestrel",
+  "owner_kind": "faction",
+  "tier": 3,
+  "trace_policy": "corporate",
+  "hardware": [
+    {
+      "zone": "tramyard-wall-gate",
+      "tile": null,
+      "label": "Gatehouse East hardware"
+    }
+  ],
+  "entry": "entry",
+  "rooms": [
+    {
+      "id": "entry",
+      "label": "Gate index",
+      "pos": [
+        0,
+        0
+      ],
+      "neighbours": [
+        "turnstile",
+        "patrol-loop"
+      ],
+      "ice": [
+        "ice_tripwire"
+      ],
+      "data": [],
+      "controls": []
+    },
+    {
+      "id": "turnstile",
+      "label": "Service Turnstile",
+      "pos": [
+        1,
+        0
+      ],
+      "neighbours": [
+        "entry",
+        "service-latch",
+        "patrol-bridge"
+      ],
+      "ice": [
+        "ice_turnstile"
+      ],
+      "data": [],
+      "controls": []
+    },
+    {
+      "id": "service-latch",
+      "label": "Service latch",
+      "pos": [
+        2,
+        0
+      ],
+      "neighbours": [
+        "turnstile",
+        "signal-room",
+        "tools-archive"
+      ],
+      "ice": [],
+      "data": [
+        {
+          "id": "convoy-manifests",
+          "label": "Convoy manifests",
+          "kind": "contract_key",
+          "asset": "convoy-manifests",
+          "amount": 1,
+          "scope": "mission",
+          "respawn_seconds": 0
+        }
+      ],
+      "controls": [
+        {
+          "id": "gate-nine-service-latch",
+          "label": "Gate Nine service latch",
+          "target": {
+            "zone": "tramyard-wall-gate",
+            "object": "gatehouse-east-gate-nine-service-latch"
+          },
+          "action": "open",
+          "reset_seconds": 300,
+          "scope": "public",
+          "permission": "public",
+          "safety_policy": "none"
+        }
+      ]
+    },
+    {
+      "id": "signal-room",
+      "label": "Signal schedule",
+      "pos": [
+        3,
+        0
+      ],
+      "neighbours": [
+        "service-latch"
+      ],
+      "ice": [
+        "ice_lockstep"
+      ],
+      "data": [
+        {
+          "id": "gate-schedules",
+          "label": "Gate schedules",
+          "kind": "contract_key",
+          "asset": "gate-schedules",
+          "amount": 1,
+          "scope": "mission",
+          "respawn_seconds": 0
+        }
+      ],
+      "controls": [
+        {
+          "id": "gate-nine-outbound",
+          "label": "Gate Nine outbound",
+          "target": {
+            "zone": "tramyard-wall-gate",
+            "object": "gatehouse-east-gate-nine-outbound"
+          },
+          "action": "open",
+          "reset_seconds": 300,
+          "scope": "public",
+          "permission": "public",
+          "safety_policy": "none"
+        }
+      ]
+    },
+    {
+      "id": "patrol-loop",
+      "label": "Patrol loop",
+      "pos": [
+        0,
+        1
+      ],
+      "neighbours": [
+        "entry",
+        "patrol-bridge"
+      ],
+      "ice": [
+        "ice_mastiff"
+      ],
+      "data": [],
+      "controls": [],
+      "ice_patrols": {
+        "ice_mastiff": [
+          "patrol-loop",
+          "patrol-bridge",
+          "turnstile",
+          "entry"
+        ]
+      }
+    },
+    {
+      "id": "patrol-bridge",
+      "label": "Patrol bridge",
+      "pos": [
+        1,
+        1
+      ],
+      "neighbours": [
+        "patrol-loop",
+        "turnstile",
+        "tools-archive"
+      ],
+      "ice": [],
+      "data": [],
+      "controls": []
+    },
+    {
+      "id": "tools-archive",
+      "label": "Service credit",
+      "pos": [
+        2,
+        1
+      ],
+      "neighbours": [
+        "patrol-bridge",
+        "service-latch"
+      ],
+      "ice": [
+        "ice_hornets"
+      ],
+      "data": [
+        {
+          "id": "core-credit",
+          "label": "Core-owned service credit",
+          "kind": "chits",
+          "amount": 120,
+          "respawn_seconds": 1800
+        }
+      ],
+      "controls": [
+        {
+          "id": "gate-turret",
+          "label": "gate turret",
+          "target": {
+            "zone": "tramyard-wall-gate",
+            "object": "gatehouse-east-gate-turret"
+          },
+          "action": "open",
+          "reset_seconds": 300,
+          "scope": "public",
+          "permission": "public",
+          "safety_policy": "none"
+        }
+      ]
+    }
+  ],
+  "affiliation": "kestrel"
+}

@@ -96,7 +96,8 @@
       "kind": "hardware",
       "essential": false,
       "params": {
-        "name": "Precinct vault hardware"
+        "name": "Precinct vault hardware",
+        "core": "lat-precinct"
       }
     },
     {
