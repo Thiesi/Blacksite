@@ -435,6 +435,10 @@ class Characters:
                 last = len(self.sheet(player, cursor)["rows"]) - 1
                 self.screens[session.id] = ("sheet", max(0, min(last, cursor + frame.data.get("args", {}).get("delta", 0))))
                 self.dirty_screens.add(session.id)
+            elif (name == "menu_select" and frame.data.get("args", {}).get("key") == "s"
+                  and frame.data.get("expected_revision") == session.view_revision
+                  and hasattr(self, "progression")):
+                self.progression.open_skills(session)
         elif key in ("p", "P"):
             self.screens[session.id] = ("sheet", 0)
             self.dirty_screens.add(session.id)
@@ -456,6 +460,8 @@ class Characters:
                 "discharge_xp": rules.grade_threshold(rules.DISCHARGE_GRADE), "xp": player.xp}
 
     def sheet(self, player: Player, cursor: int) -> dict[str, Any]:
+        if hasattr(self, "progression"):
+            return self.progression.sheet(player, cursor)
         me = self.me(next(s for s in self.sessions.active.values() if s.player_id == player.id))
         values = [("Archetype", player.archetype.title()), ("Grade", f"{player.grade} {rules.grade_name(player.grade)}"),
                   ("XP", f"{player.xp} / {rules.grade_threshold(min(30, player.grade + 1))}"),

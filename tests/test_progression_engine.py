@@ -8,7 +8,7 @@ from blacksite.content.loader import load_content
 from blacksite.server.progression_engine import ProgressionEngine
 from blacksite.server.progression import Grant
 from blacksite.server.protocol import Frame
-from tests.character_helpers import create
+from tests.character_helpers import act, create
 from tests.harness import HeadlessServer
 
 
@@ -17,7 +17,7 @@ def skills_game(repo_root: Path):
     game = HeadlessServer(load_content(repo_root/"src/blacksite/content"), character_state={})
     client = game.connect()
     create(game, client, archetype=0)
-    engine = ProgressionEngine(game.core.commerce)
+    engine = game.core.progression
     player = game.core.characters.players[client.session.player_id]
     player.update_progression(1500)
     engine.open_skills(client.session)
@@ -88,3 +88,28 @@ def test_game_3_5_source_owner_can_join_reward_without_any_live_payment(skills_g
         lambda success: engine.notify_reward(player, result) if success else None, identity)
     game.commit_commerce(error=True)
     assert player.xp == old and "run_xp_days" not in game.core.characters.identities[player.bbs_user_id]
+
+
+def test_ui_4_live_core_character_sheet_opens_skills_and_commits_selected_point(skills_game):
+    game, client, player, engine = skills_game
+    engine.close_skills(client.session)
+    game.step()
+    act(game, client, Frame("intent", {"name": "menu_select", "args": {"key": "s", "row": "grade"}}))
+    assert client.session.id in engine.menus
+    act(game, client, Frame("intent", {"name": "menu_select", "args": {"key": "+", "row": "kinetic"}}))
+    assert player.skills["kinetic"] == 0
+    game.commit_commerce()
+    assert player.skills["kinetic"] == 1 and player.progress["points"] == 11
+    act(game, client, Frame("intent", {"name": "menu_close", "args": {}}))
+    assert game.core.characters.screens[client.session.id] == ("sheet", 0)
+
+
+def test_ui_4_downed_caller_keeps_combat_screen_when_skills_menu_closes(skills_game):
+    game, client, player, engine = skills_game
+    actor = game.core.combat.actor(player)
+    actor.health = player.health = 0
+    player.progress["combat"] = {"stage": "down", "until": game.clock.now_utc().timestamp()+5, "killer": "npc"}
+    game.step()
+    assert client.session.id not in engine.menus
+    assert client.session.id not in game.core.characters.screens
+    assert game.core.characters.sim.external_views[client.session.id][0] == "dead"

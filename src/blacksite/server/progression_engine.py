@@ -22,6 +22,7 @@ class ProgressionEngine:
     def __init__(self, commerce: Commerce) -> None:
         self.commerce, self.game, self.sim = commerce, commerce.game, commerce.sim
         self.clock, self.content = self.game.clock, self.game.content
+        self.game.progression = self
         self.menus: dict[str, int] = {}
         self.requests: dict[str, list[str]] = {}
 
@@ -81,10 +82,12 @@ class ProgressionEngine:
         self.sim.external_views[session.id] = ("menu", skill_menu(player, self.content,
             self.menus[session.id], self.clock.now_utc().timestamp()))
 
-    def close_skills(self, session: Session) -> None:
+    def close_skills(self, session: Session, *, return_to_sheet: bool = True) -> None:
         self.menus.pop(session.id, None)
-        self.sim.external_views.pop(session.id, None)
-        if not session.closed and session.player_id in self.game.players:
+        view = self.sim.external_views.get(session.id)
+        if view and view[0] == "menu":
+            self.sim.external_views.pop(session.id, None)
+        if return_to_sheet and not session.closed and session.player_id in self.game.players:
             self.game.screens[session.id] = ("sheet", 0)
             self.game.dirty_screens.add(session.id)
 
@@ -154,7 +157,7 @@ class ProgressionEngine:
                 continue
             actor = self.game.combat.actor(self.game.players[session.player_id])
             if actor is None or actor.stance in ("down", "dead", "sleeper"):
-                self.close_skills(session)
+                self.close_skills(session, return_to_sheet=False)
             elif ctx.tick % 10 == 0 or session.needs_full_view:
                 self.publish_menu(session)
         for sid in tuple(self.requests):
