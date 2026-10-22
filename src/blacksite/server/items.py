@@ -52,7 +52,7 @@ def make_item(iid: str, template: ItemTemplate, owner: str, at: str,
 def availability(template: ItemTemplate) -> str:
     """State future behaviour openly when selling physical items now."""
     owner = {"drone": "drone operation",
-             "implant": "surgery", "resonance": "surgery", "drug": "drug effects",
+             "implant": "surgery", "resonance": "surgery",
              "rig": "rig operation", "pass": "restricted access", "key": "controls",
              "data": "objectives", "misc": "objectives", "salvage": "fabrication"}
     supported = ("health", "stamina", "stamina_full", "end_chemical_dot", "recharge_cell", "dark_sight")

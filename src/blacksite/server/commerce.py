@@ -8,7 +8,7 @@ from typing import Any
 from collections.abc import Callable
 
 from blacksite.content.schema import ObjectSpec, Vendor, VendorStock
-from blacksite.server import bank
+from blacksite.server import bank, drugs
 from blacksite.server.characters import Characters
 from blacksite.server.inventory import Inventory
 from blacksite.server.items import CACHE_SECONDS, CONSUMABLE_SECONDS, ItemInstance, availability, make_item
@@ -222,6 +222,14 @@ class Commerce:
             inventory.add(draft, item)
             if not cache["items"]: del caches[target]
             message = "You pick up the item."
+        elif name == "inv.use" and self.content.items[inventory.owned(draft, iid).template].drug:
+            if any(effect.get("hush") for effect in av.actor.effects):
+                raise ValueError("You cannot use consumables yet.")
+            item = inventory.owned(draft, iid)
+            template = self.content.items[item.template]
+            note = self.game.progression.substances.consume(draft, template, now)
+            inventory.remove(draft, iid, 1, next_id)
+            message = f"Used {template.name}."+note
         elif name == "inv.use":
             if any(effect.get("hush") for effect in av.actor.effects):
                 raise ValueError("You cannot use consumables yet.")
@@ -248,6 +256,7 @@ class Commerce:
             draft.shock = min(100, draft.shock + effects.get("shock", 0))
             if effects.get("remove_ring_dust_crash"):
                 actor_effects = [e for e in actor_effects if e.get("kind") != "ring_dust_crash"]
+                drugs.end_ringdust_crash(draft, now); supported = True
             if effects.get("end_chemical_dot"):
                 actor_effects = [e for e in actor_effects if e.get("damage_type") != "chemical"]; supported = True
             if effects.get("recharge_cell"):
@@ -268,7 +277,7 @@ class Commerce:
             verb = {"inv.equip":"Equipped", "inv.unequip":"Unequipped", "inv.secure":"Changed secured status for", "inv.split":"Split"}.get(name, "Updated")
             label = self.content.items[self.items[iid].template].name if iid in self.items else args.get("slot", "equipment")
             message = f"{verb} {label}."
-        patches = {key: deepcopy(getattr(draft, key)) for key in ("inventory", "equipment", "chits_hand", "chits_bank", "health", "stamina", "shock", "progress")
+        patches = {key: deepcopy(getattr(draft, key)) for key in ("inventory", "equipment", "chits_hand", "chits_bank", "health", "stamina", "shock", "implants", "drugs_active", "dependencies", "progress")
                    if getattr(draft, key) != getattr(player, key)}
         self.outbox.append({"session": session.id, "player_id": player.id, "patch": patches,
             "progress_base":deepcopy(player.progress),

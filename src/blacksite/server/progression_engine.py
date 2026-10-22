@@ -32,6 +32,8 @@ class ProgressionEngine:
         self.crew_of: Callable[[str], str | None] = lambda pid: None  # S22.
         self.permit_combat: Callable[[str, str], bool] = lambda source, target: True  # S19.
         self.sim.arrival_hook = lambda session, avatar: self.record_discovery(session.player_id, "zone", avatar.zone)
+        from blacksite.server.substances import Substances
+        self.substances = Substances(self)
 
     def modifiers(self, player: Player) -> Modifiers:
         return collect(player, self.commerce.items, self.content.items,
@@ -311,6 +313,7 @@ class ProgressionEngine:
         return True
 
     def tick(self, ctx: TickContext) -> None:
+        self.substances.tick(ctx.tick)
         for player in self.game.players.values():
             self.sync_actor(player)
             self.stealth(player)

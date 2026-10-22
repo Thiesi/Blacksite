@@ -457,7 +457,9 @@ class Characters:
                 "marked_until": player.marked_until,
                 "heat_until": player.warden_heat_until if player.warden_heat_until and datetime.fromisoformat(player.warden_heat_until) > self.clock.now_utc() else None,
                 "lease_days": days, "legal_at": player.legal_at,
-                "discharge_xp": rules.grade_threshold(rules.DISCHARGE_GRADE), "xp": player.xp}
+                "discharge_xp": rules.grade_threshold(rules.DISCHARGE_GRADE), "xp": player.xp,
+                **({"effects": [*deepcopy(self.sim.avatars[session.user_id].actor.effects),
+                                 *self.progression.substances.effects(player)]} if hasattr(self, "progression") else {})}
 
     def sheet(self, player: Player, cursor: int) -> dict[str, Any]:
         if hasattr(self, "progression"):
