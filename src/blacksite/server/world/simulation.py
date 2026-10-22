@@ -129,7 +129,9 @@ class ZoneSimulation:
             obj = objects[0]
             if obj.spec.params.get("unavailable_target"):
                 self.log(session, "Construction blocks this route.")
-            elif obj.spec.kind == "door":
+            elif obj.spec.kind in ("door", "apartment_door", "gate", "shutter") and obj.spec.params.get("locked") and not obj.open:
+                self.log(session, "The door is locked. Its core controls the latch.")
+            elif obj.spec.kind in ("door", "apartment_door", "gate", "shutter"):
                 zone.set_door(obj.spec.id, not obj.open)
             else:
                 self.log(session, str(obj.spec.params.get("name", obj.spec.id)))

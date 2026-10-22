@@ -8,6 +8,8 @@ from blacksite.content.schema import ObjectSpec, Tile, TileType, Zone, ZoneLayou
 from blacksite.server.world.actors import Actor
 from blacksite.server.clock import TICK_HZ
 
+DOOR_KINDS = ("door", "apartment_door", "shutter", "gate")
+
 MIN_HAZARD_WARNING_TICKS = 5 * TICK_HZ  # Game design 7.7 / entity controls.
 
 
@@ -17,6 +19,7 @@ class ObjectState:
     open: bool | None = None
     in_use: str | None = None
     progress: int = 0
+    state: dict[str, object] = field(default_factory=dict)
 
 
 @dataclass(frozen=True)
@@ -48,9 +51,9 @@ class ZoneInstance:
 
     def __post_init__(self) -> None:
         self.rng = random.Random(self.seed)
-        self.objects = {spec.id: ObjectState(spec, spec.params.get("open", self.tiles[self.template.tile_at(spec.tile)].passable) if spec.kind == "door" else None)
+        self.objects = {spec.id: ObjectState(spec, spec.params.get("open", self.tiles[self.template.tile_at(spec.tile)].passable) if spec.kind in DOOR_KINDS else None)
                         for spec in self.template.meta.objects}
-        self.doors = {obj.spec.tile: obj for obj in self.objects.values() if obj.spec.kind == "door"}
+        self.doors = {obj.spec.tile: obj for obj in self.objects.values() if obj.spec.kind in DOOR_KINDS}
         self.base_opaque = {(x, y) for y, row in enumerate(self.template.grid) for x, key in enumerate(row)
                             if self.tiles[key].opaque}
 
@@ -109,7 +112,7 @@ class ZoneInstance:
 
     def set_door(self, object_id: str, opened: bool) -> bool:
         obj = self.objects[object_id]
-        if obj.spec.kind != "door":
+        if obj.spec.kind not in DOOR_KINDS:
             raise ValueError("object is not a door")
         if not opened and any(a.position == obj.spec.tile for a in self.actors.values()):
             return False

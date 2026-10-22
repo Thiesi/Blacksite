@@ -6,6 +6,7 @@ from typing import Any
 
 from blacksite.content.loader import ContentTree
 from blacksite.content.schema import Tile
+from blacksite.server.interlock_effects import lighting_radius
 from blacksite.server.world.actors import Actor
 from blacksite.server.world.sight import sees_actor, visible_tiles
 from blacksite.server.world.zone import ZoneInstance
@@ -55,6 +56,7 @@ def build(actor: Actor, zone: ZoneInstance, perception: Perception, content: Con
           width: int, height: int, clock: str, night: bool, tick: int) -> dict[str, Any]:
     radius = zone.template.meta.sight_radius_night if night else None
     radius = radius or zone.template.meta.sight_radius
+    radius = lighting_radius(actor, zone, radius)
     radius = max(radius, max((int(effect.get("dark_sight",0)) for effect in actor.effects), default=0))
     visible = visible_tiles(actor, zone, radius)
     remembered = perception.remembered.setdefault(zone.id, {})
@@ -95,8 +97,9 @@ def build(actor: Actor, zone: ZoneInstance, perception: Perception, content: Con
             entry["name"] = other.name
         actors.append(entry)
     objects = [{"id": obj.spec.id, "x": obj.spec.tile[0], "y": obj.spec.tile[1], "kind": obj.spec.kind,
-                "state": {"open": obj.open, "in_use": obj.in_use, "progress": obj.progress, **obj.spec.params.get("cache_state",{})},
-                "glyph": glyphs.get("cache" if obj.spec.params.get("dropped_item") else "bank" if obj.spec.kind == "bank" else "vendor" if obj.spec.params.get("vendor") else "locked-door" if obj.open is False else content.tiles[zone.tile_id(obj.spec.tile)].glyph, ".")}
+                "state": {**{key: value for key, value in obj.state.items() if key not in ("actor", "serial")}, "open": obj.open, "in_use": obj.in_use, "progress": obj.progress, **obj.spec.params.get("cache_state",{})},
+                "role": "muted" if obj.state.get("enabled") is False else "text",
+                "glyph": glyphs.get("cache" if obj.spec.params.get("dropped_item") else "bank" if obj.spec.kind == "bank" else "vendor" if obj.spec.params.get("vendor") else "locked-door" if obj.open is False else obj.spec.kind if obj.spec.kind in glyphs else content.tiles[zone.tile_id(obj.spec.tile)].glyph, ".")}
                for obj in zone.objects.values() if obj.spec.tile in visible]
     hazards = [{"scope": "geometry", "warning": max(0, layer.starts - tick) / TICK_HZ,
                 "remaining": max(0, layer.expires - tick) / TICK_HZ,

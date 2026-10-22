@@ -94,7 +94,8 @@ class KeymapTable:
 ObjectKind = Literal[
     "door", "terminal", "vendor", "vat", "relay", "cache", "tram_stop",
     "apartment_door", "light", "hardware", "descent_console", "workshop",
-    "bank",
+    "bank", "turret", "camera", "shutter", "cable_car", "pump", "lift",
+    "patrol_beacon", "gate", "gantry",
 ]
 
 

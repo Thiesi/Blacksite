@@ -36,13 +36,13 @@ def render_lattice(buffer: CellBuffer, body: dict[str, Any], area: Rect, palette
         x, y = positions[cell["id"]]
         if cell["kind"] == "core_entrance":
             cores += 1
-            token = f"[C{cores}]"
+            token = "[C?]" if cell.get("offline") else f"[C{cores}]"
         else:
             # Identity comes from the authored layout, so discovery never
             # renumbers already-visible cells.
             token = f"({int(cell['y'])*columns+int(cell['x'])+1:02})"
         reverse = cell["id"] == me.get("cell")
-        role = "ui_highlight" if reverse else "ui_text"
+        role = "muted" if cell.get("offline") else "ui_highlight" if reverse else "ui_text"
         buffer.put(x, y, token, palette.style(role, reverse=reverse))
         peer = next((p for p in peers if p["cell"] == cell["id"]), None)
         if peer:

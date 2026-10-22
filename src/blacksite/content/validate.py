@@ -779,13 +779,34 @@ class _Validator:
                 self.report(*owner, f"{label}: object {c.target.object!r} does not exist in {c.target.zone}", c.id)
             return
         zone = self.t.zones[c.target.zone]
+        if obj.essential and c.action in _CLOSING_ACTIONS:
+            self.report(*owner, f"{label}: cannot {c.action} essential object {obj.id!r}", c.id)
+            return
+        if obj.kind in ("pump", "gantry"):
+            layouts = {layout.id for layout in zone.meta.layouts}
+            commissioned = obj.params.get("layout")
+            choices = obj.params.get("work_order_layouts", [])
+            if (not isinstance(choices, (list, tuple))
+                    or not commissioned and not choices
+                    or commissioned and (not isinstance(commissioned, str) or commissioned not in layouts)
+                    or isinstance(choices, (list, tuple)) and any(not isinstance(choice, str) or choice not in layouts for choice in choices)):
+                self.report(*owner, f"{label}: machine needs authored work-order layouts", c.id)
+            if c.warning_seconds < HAZARD_WARNING_SECONDS:
+                self.report(*owner, f"{label}: machine needs five seconds warning", c.id)
+        if obj.kind in ("turret", "patrol_beacon"):
+            spawners = {sp.id for sp in zone.meta.spawners}
+            linked = obj.params.get("spawners", [])
+            if not isinstance(linked, (list, tuple)) or not linked or any(not isinstance(sid, str) or sid not in spawners for sid in linked):
+                self.report(*owner, f"{label}: machine needs local spawner bindings", c.id)
+        if c.owner_policy and (obj.kind in ("pump", "gantry", "tram_stop", "cable_car", "lift", "gate", "shutter", "vat") or c.scope != "public"):
+            self.report(*owner, f"{label}: travel, hazard and service effects cannot persist for an owner", c.id)
+        if obj.kind == "vat" and (c.scope != "mission" or c.permission != "contract"):
+            self.report(*owner, f"{label}: only a scoped mission test vat is controllable", c.id)
         if c.safety_policy == "hazard":
             if self.protected(zone, obj.tile):
                 self.report(*owner, f"{label}: a hazard control cannot target a safe zone or pocket", c.id)
             if c.warning_seconds < HAZARD_WARNING_SECONDS:
                 self.report(*owner, f"{label}: a hazard needs at least {HAZARD_WARNING_SECONDS} s warning", c.id)
-        if obj.essential and c.action in _CLOSING_ACTIONS:
-            self.report(*owner, f"{label}: cannot {c.action} essential object {obj.id!r}", c.id)
         if obj.kind == "apartment_door" and (c.scope != "private_vestibule" or c.action != "open"):
             self.report(*owner, f"{label}: an apartment door control may only open the private vestibule", c.id)
         exit_here = next((e for e in zone.meta.exits if e.tile == obj.tile), None)

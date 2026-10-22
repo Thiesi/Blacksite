@@ -46,6 +46,8 @@ class Lattice:
         self.game.retained_avatar = self.retained_avatar
         self.game.attached = self.attached
         self.encounters = Encounters(self)
+        from blacksite.server.interlock import Interlock
+        self.interlock = Interlock(self, state.get("interlock", {}))
 
     def retained_avatar(self, player: Player) -> Avatar | None:
         held = self.orphans.pop(player.id, None)
@@ -64,6 +66,7 @@ class Lattice:
         presence = self.presences.get(player.id)
         if presence:
             session.subscribed = presence.sector
+        self.interlock.private.on_login(session)
 
     def avatar(self, session: Session) -> Avatar | None:
         held = self.orphans.get(session.player_id)
@@ -389,6 +392,7 @@ class Lattice:
         cells = [{"id": c.id, "x": c.pos[0], "y": c.pos[1], "kind": c.kind,
                   "access": access(c), "label": c.label, "known": True,
                   "core": c.core_id, "placeholder": c.core_placeholder,
+                  "offline": bool(c.core_id and self.interlock.offline(c.core_id)),
                   "uplink": bool(c.uplink)} for c in known]
         edges = [{"a": c.id, "b": other, "kind": "hidden" if "hidden" in (access(c), access(self.sectors.cells[sector.id][other]))
                   else "gated" if "gated" in (access(c), access(self.sectors.cells[sector.id][other])) else "public"}

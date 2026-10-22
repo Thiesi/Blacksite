@@ -1,6 +1,6 @@
 # S15 — Interlock: controls, hardware, cut-power, private cores, core ownership
 
-**Status:** planned
+**Status:** done (PR #54)
 **Primary model:** Opus · **Reviewer:** none
 **Depends on:** S14, S11 · **Milestone:** M2
 **Issue:** https://github.com/Thiesi/blacksite/issues/15
@@ -93,8 +93,9 @@ that makes the two-layer pillar true.
   apartment and the template).
 - Faction standing deltas for cutting power or hacking: S20.
 - Turret and Warden NPC behaviour itself: S11.
-- Sump water spreading as an event timer: implement the timer here with
-  the same lazy-elapsed pattern; S24 does not own it.
+- Sump authored water layouts and their 20-minute allocation timer
+  (game design 7.5) use lazy elapsed deadlines here; S19 supplies the
+  frozen work-order choice and S24 does not own the timer.
 
 ## Data and content
 
@@ -180,3 +181,37 @@ a refused action spends no charge and damages nobody. Test all service
 and transit layouts for an outward route after control expiry, relay
 change, event cancellation and restart. S19 owns work-order lifecycle;
 this slice owns typed effects and permission enforcement.
+
+
+## Implementation and acceptance notes
+
+The runtime separates durable proposals (`server/interlock.py`), composed
+physical effects (`server/interlock_effects.py`) and apartment integration
+(`server/private_cores.py`). Controls, cuts and stolen units publish only
+after the shared transaction commits. UTC deadlines survive restart;
+contribution/source uptime retains S14's separate clock policy.
+
+The old hour-long Sump spreading description is superseded by game design
+7.5: authored allocation, five seconds warning, 20-minute expiry. S19 owns
+the frozen choice and permission. Cameras expose scoped mission records;
+the old Outpost response-delay prose is corrected. Lighting's local
+five-tile dark floor and the 15-minute linked patrol diversion are explicit
+in game design 6.4. The staged Sump control uses the 20-minute contract allocation; linked
+patrol calls retain their 15-minute window. The staged gantry warning is
+five seconds, independent
+of its three-second cast and 30-second debris interval.
+
+The real NetBBS probe is `scripts/accept_s15_netbbs.py`, with `controls`
+and `private` stages and both terminal sizes. It labels content, rental,
+storage and Passkey-loan fixtures; it does not grant money, grade, skill
+or body placement. The control fixture is tier three and isolates the
+interlock from S14's separate ICE acceptance. Actual Gate Nine geography
+remains S25; no future vendor or city map is moved into the hub.
+
+
+Validation before PR: Windows full suite, 853 passed and one Unix-socket
+skip; final focused S15 gate, 33 passed. Real Windows NetBBS Telnet to
+native stdio passed both stages at 80x24 and 132x50, with 16-colour and
+wide-name callers. The final control fixture is tier three. The new
+interlock CI job repeats both stages from the installed wheel; required
+CI and delivered Claude review remain merge gates on the PR.

@@ -67,6 +67,27 @@
           "permission": "public",
           "safety_policy": "route",
           "alternate_route": "to-open-alley"
+        },
+        {
+          "id": "c-turret",
+          "label": "Powered actors",
+          "target": {
+            "zone": "fx-street",
+            "object": "fx-street-turret"
+          },
+          "action": "disable",
+          "reset_seconds": 600
+        },
+        {
+          "id": "c-light",
+          "label": "Street light",
+          "target": {
+            "zone": "fx-street",
+            "object": "fx-street-light"
+          },
+          "action": "toggle",
+          "reset_seconds": 600,
+          "owner_policy": true
         }
       ],
       "pos": [

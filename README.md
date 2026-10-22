@@ -21,7 +21,7 @@ they go down into the Blacksite together.
 
 ## Status
 
-**M1 physical world implemented (S01-S12).** The M0 foundation,
+**M2 Lattice and interlock implemented (S01-S15).** The M0 foundation,
 shared movement, sight, fog memory, ten maps and persistent characters are
 available. The service now starts the Wake for new callers. See the
 [character guide](docs/ops/characters.md) for persistence, sleeper recovery
@@ -35,8 +35,10 @@ five-minute caches and banking. The [combat guide](docs/ops/combat.md)
 covers targeting, abilities, clone settlement and recovery. The
 [NPC guide](docs/ops/npcs.md) covers city traffic, patrols and heat. S13 adds
 [Lattice traversal](docs/ops/lattice.md): eleven district sectors, public
-terminal loans, native/portable rigs and the body left behind. Cores,
-ICE and working programs follow in S14. Future-zone
+terminal loans, native/portable rigs and the body left behind. S14 adds
+core encounters, 35 programs, readable ICE and seeded Silt descents.
+S15 joins the layers with [live controls](docs/ops/interlock.md), hardware
+power cuts and private-core integration for S18's future rentals. Future-zone
 vendors remain staged for
 S25; the playable city stays the ten-zone hub. The
 [deployment guide](deploy/README.md) covers service units and operator
