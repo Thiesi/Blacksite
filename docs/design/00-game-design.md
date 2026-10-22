@@ -463,6 +463,10 @@ the ride. After offline arrival, ordinary destination logout rules apply.
 - A runner in the Lattice is a **presence** with its own health analog,
   **integrity** (100), and a **trace** meter (0 to 100). Integrity 0 means
   forced jack-out with shock 100 and, if black ICE did it, real damage.
+    Installed and timed integrity bonuses change the maximum. Increasing
+    that maximum does not heal a damaged presence; ordinary jack-out
+    recovery fills toward the current maximum. Expiry clamps excess
+    integrity. The HUD shows current and maximum together.
 - Runners see each other in the same cell or core room and instance and
   can attack each other with programs (**burning**). Burn adds 15 trace
   instead of the ordinary attack increment wherever trace applies.

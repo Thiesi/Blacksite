@@ -51,7 +51,7 @@ def render_lattice(buffer: CellBuffer, body: dict[str, Any], area: Rect, palette
             buffer.put(x+1, y, "♦", palette.style("player_crew", reverse=reverse))
     side_x, side_w = buffer.width-23, 22
     status: list[tuple[str, str]] = [
-        (f"INTEGRITY {me.get('integrity', 100):g}", "hp_ok"),
+        (f"INTEGRITY {me.get('integrity', 100):g}/{me.get('integrity_max', 100):g}", "hp_ok"),
         (f"TRACE {me.get('trace', 0):g}", "ui_highlight"),
         ("BODY NPC RISK" if body.get("black_risk") and body.get("body_safety") == "safe"
          else "BODY "+str(body.get("body_safety", "")).upper(),

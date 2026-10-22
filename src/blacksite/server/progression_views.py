@@ -70,7 +70,8 @@ def character_sheet(player: Player, content: ContentTree,
     grade = next((g for g in content.grades.values() if g.grade == player.grade), None)
     title = grade.title if grade else character.grade_name(player.grade)
     next_xp = character.grade_threshold(player.grade+1) if player.grade < 30 else None
-    rows = [Row("grade", "Grade", f"{player.grade} {title}",
+    rows = [Row("archetype", "Archetype", player.archetype.title(), f"BBS handle: {player.bbs_handle}"),
+        Row("grade", "Grade", f"{player.grade} {title}",
                 f"Grade {player.grade}: {title}.\nEach gained grade adds 3 points and 1 Vitals.\nPersonhood stays once discharged."),
         Row("xp", "XP", str(player.xp), f"{max(0, next_xp-player.xp)} XP to grade {player.grade+1}." if next_xp else "You reach the maximum grade, 30."),
         Row("points", "Grade points", str(player.progress.get("points", 0)), "S opens skills. Select a line and press + to spend.\nSpending has no daily use-gain cap."),
@@ -79,7 +80,6 @@ def character_sheet(player: Player, content: ContentTree,
         Row("carry", "Carry kg", f"{Inventory(dict(items), content.items).weight(player):g}/{character.carry_kg(mods.attribute(player, 'frame'))+mods.bonus('carry_kg'):g}", "Carried mass / current capacity.\nAbove capacity your walk and sprint take twice as long."),
         Row("tolerance", "Tolerance", f"{tolerance_used(player, items, content.items)}/{mods.tolerance(player)}", "Installed tolerance used / current capacity.\nChrome adds one temporarily; expiry may unseat hardware."),
         Row("identity", "Personhood", "Discharged" if player.legal_at else "Under lease", f"Elapsed lease: {lease_days}/90 days.\nEarly discharge: {player.xp}/1500 XP, grade 5.\nPvP grade protection is separate from personhood."),
-        Row("archetype", "Archetype", player.archetype.title(), f"BBS handle: {player.bbs_handle}"),
         Row("hand", "Hand chits", str(player.chits_hand), "Carried chits pay ordinary counters and surgery."),
         Row("bank", "Bank chits", str(player.chits_bank), "Banked chits remain separate from carried money.")]
     gear_evasion = sum(content.items[items[iid].template].armour.evasion

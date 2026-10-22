@@ -98,7 +98,11 @@ class Lattice:
     def integrity(self, player: Player) -> float:
         state = self.saved(player)
         elapsed = max(0, self.clock.now_utc().timestamp()-state.get("out_at", self.clock.now_utc().timestamp()))
-        return min(INTEGRITY_MAX, max(0, state.get("integrity", INTEGRITY_MAX))+elapsed*INTEGRITY_PER_SECOND)
+        maximum = self.integrity_limit(player)
+        return min(maximum, max(0, state.get("integrity", maximum))+elapsed*INTEGRITY_PER_SECOND)
+
+    def integrity_limit(self, player: Player) -> float:
+        return max(1, INTEGRITY_MAX+self.game.progression.modifiers(player).bonus("integrity"))
 
     def found(self, player: Player, sector: str) -> set[str]:
         return set(self.saved(player).get("found_cells", {}).get(sector, []))
@@ -149,14 +153,41 @@ class Lattice:
             and max(abs(actor.x-obj.spec.tile[0]), abs(actor.y-obj.spec.tile[1])) <= 1), None)
 
     def carried_slots(self, player: Player) -> int:
-        result = 0
-        for iid in set(player.inventory) | set(player.implants.values()):
+        result = int(self.game.progression.modifiers(player).bonus("rig_slots"))
+        for iid in player.inventory:
             item = self.game.items.get(iid)
             template = self.content.items.get(item.template) if item else None
             if template and template.implant and template.implant.rig_slots:
-                if template.class_ == "rig" or iid in player.implants.values():
+                if template.implant.portable and item.owner == player.id:
                     result = max(result, template.implant.rig_slots)
         return result
+
+    def fit_rig(self, configured: list[str | None] | tuple[str | None, ...], slots: int) -> tuple[str | None, ...]:
+        occupied: set[int] = set()
+        clean: list[str | None] = [None]*slots
+        for index, pid in enumerate(configured[:slots]):
+            program = self.content.programs.get(pid)
+            if program and index+program.slots <= slots and not occupied.intersection(range(index, index+program.slots)) and pid not in clean:
+                clean[index] = pid
+                occupied.update(range(index, index+program.slots))
+        return tuple(clean)
+
+    def sync_player_modifiers(self, player: Player) -> None:
+        presence = self.presences.get(player.id)
+        if presence is None:
+            return
+        presence.integrity_max = self.integrity_limit(player)
+        presence.integrity = min(presence.integrity, presence.integrity_max)
+        slots = max(self.content.starts[player.archetype].rig_slots or 0, self.carried_slots(player))
+        if not slots:
+            if not presence.loaned_rig:
+                self.encounters.force_out(presence)
+                return
+            slots = PUBLIC_LOAN_SLOTS
+        if slots != len(presence.rig):
+            presence.rig = self.fit_rig(presence.rig, slots)
+            if presence.cast and presence.cast.program not in presence.rig:
+                presence.cast = None
 
     def jack_in(self, session: Session, target: str | None = None) -> None:
         player = self.game.players.get(session.player_id)
@@ -188,22 +219,15 @@ class Lattice:
         if sector not in self.sectors.records:
             self.log(session, "This terminal has no live district link.", True)
             return
-        if terminal and not slots:
+        loaned = bool(terminal and not slots)
+        if loaned:
             slots = PUBLIC_LOAN_SLOTS
         configured = player.rig.get("slots", [])
         if not configured:
             configured = list(self.content.starts[player.archetype].programs)
-        # Shrinking capacity never retains half of a multi-slot program.
-        occupied: set[int] = set()
-        clean: list[str | None] = [None]*slots
-        for index, pid in enumerate(configured[:slots]):
-            program = self.content.programs.get(pid)
-            if program and index+program.slots <= slots and not occupied.intersection(range(index, index+program.slots)) and pid not in clean:
-                clean[index] = pid
-                occupied.update(range(index, index+program.slots))
-        rig = tuple(clean)
+        rig = self.fit_rig(configured, slots)
         presence = Presence(player.id+":presence", player.id, sector, self.sectors.entrance(sector), rig,
-                            integrity=self.integrity(player))
+                            integrity=self.integrity(player), integrity_max=self.integrity_limit(player), loaned_rig=loaned)
         self.presences[player.id] = presence
         actor.stance = "jacked"
         actor.target = None
@@ -295,7 +319,7 @@ class Lattice:
         for owner, requirement in ((target, target.requirement), (source, source.uplink.requirement if sector != presence.sector and source.uplink else None)):
             if not self.accepts(player, presence, owner, requirement):
                 raise ValueError("This link requires "+self.label(requirement)+".")
-        if presence.begin_move(sector, cell, self.clock.now_tick(), player.attributes["cortex"],
+        if presence.begin_move(sector, cell, self.clock.now_tick(), self.game.progression.modifiers(player).attribute(player, "cortex"),
                                self.encounters.move_multiplier(player)):
             presence.redline_move = presence.effects.has("prg_redline", self.clock.now_tick())
             if presence.redline_move:
@@ -303,6 +327,9 @@ class Lattice:
                     ceil(float(self.content.programs["prg_redline"].effect.amount)*TICK_HZ))
 
     def input(self, session: Session, frame: Frame, tick: int) -> bool:
+        player = self.game.players.get(session.player_id)
+        if player:
+            self.sync_player_modifiers(player)
         name = frame.data.get("name", "") if frame.type == "intent" else ""
         key = frame.data.get("k", "") if frame.type == "key" else ""
         args = frame.data.get("args", {})
@@ -415,7 +442,7 @@ class Lattice:
         cell = self.sectors.cells[sector.id][presence.cell]
         return {"title": sector.district.upper()+" / LATTICE", "sector": sector.id,
             "layout_size": list(sector.layout_size), "cells": cells, "edges": edges,
-            "presences": peers, "me": {"cell": presence.cell, "integrity": presence.integrity,
+            "presences": peers, "me": {"cell": presence.cell, "integrity": presence.integrity, "integrity_max": presence.integrity_max,
                 "trace": presence.trace, "rig": [{"slot": i+1, "program": pid,
                     "name": self.content.programs[pid].name if pid in self.content.programs else "Empty", "cd": 0} for i, pid in enumerate(presence.rig)],
                 "move_ticks": max(0, presence.move_until-self.clock.now_tick()) if presence.destination else 0,
@@ -428,6 +455,8 @@ class Lattice:
             "hint": "Arrows links  E uplink / enter  "+self.jack_key(session)+" jack out  Tab target  1-7 cast  R rig"}
 
     def tick(self, ctx: TickContext) -> None:
+        for pid in tuple(self.presences):
+            self.sync_player_modifiers(self.game.players[pid])
         self.encounters.advance(ctx.tick)
         for pid, presence in tuple(self.presences.items()):
             held = self.orphans.get(pid)

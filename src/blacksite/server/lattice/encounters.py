@@ -74,15 +74,7 @@ class Encounters:
         self.mission_of: Callable[[str, str], str | None] = lambda pid, source: None  # S19.
 
     def move_multiplier(self, player: Player) -> float:
-        native = self.content.starts[player.archetype].rig_slots
-        rigs = [self.content.items[self.game.items[iid].template] for iid in
-                set(player.inventory) | set(player.implants.values()) if iid in self.game.items]
-        rigs = [t for t in rigs if t.implant and t.implant.rig_slots and
-                (t.class_ == "rig" or any(self.game.items[i].template == t.id for i in player.implants.values()))]
-        chosen = max(rigs, key=lambda t: (t.implant.rig_slots, t.id), default=None)
-        if chosen is None or chosen.implant.rig_slots <= native:
-            return 1
-        return float(chosen.implant.effects.get("cell_move_multiplier", 1))
+        return self.game.progression.modifiers(player).multiplier("cell_move_multiplier")
 
     def publish_report(self, player: Player, owner: str, exact: bool) -> None:
         actor = self.combat.actor(player)
@@ -275,7 +267,7 @@ class Encounters:
                     self.activate(ice, presence, "passage")
                     raise ValueError(ice.template.name+" blocks passage. Use its key or destroy it; retreat stays open.")
         player = self.game.players[presence.player_id]
-        duration = movement_ticks(player.attributes["cortex"], self.move_multiplier(player))
+        duration = movement_ticks(self.game.progression.modifiers(player).attribute(player, "cortex"), self.move_multiplier(player))
         presence.redline_move = presence.effects.has("prg_redline", self.clock.now_tick())
         if presence.redline_move:
             duration = min(duration, ticks(float(self.content.programs["prg_redline"].effect.amount)))
@@ -428,7 +420,8 @@ class Encounters:
         owner = instance.graph.spec.owner if instance else sector.trace_owner or ""
         previous = presence.trace
         presence.trace = min(100, max(0, previous+trace_gain(amount, presence.effects,
-                                            self.clock.now_tick(), fixed=fixed)))
+            self.clock.now_tick(), fixed=fixed,
+            multiplier=self.game.progression.modifiers(self.game.players[presence.player_id]).multiplier("trace_multiplier"))))
         seen = presence.trace_seen.setdefault(scope, set())
         player = self.game.players[presence.player_id]
         for threshold in trace_thresholds(0 if entered else previous, presence.trace, seen):
@@ -511,7 +504,7 @@ class Encounters:
             raise ValueError("There are no defenders in this room.")
         elif program.effect.kind == "absorb" and not presence.effects.can_replace_shield(program):
             raise ValueError("Your current shield already gives more protection.")
-        elif program.effect.kind == "restore" and presence.integrity >= INTEGRITY_MAX:
+        elif program.effect.kind == "restore" and presence.integrity >= presence.integrity_max:
             raise ValueError("Your integrity is already full.")
         elif pid == "prg_pulse" and not self.lat.crew_of(player.id):
             raise ValueError("You have no crew beacon audience.")
@@ -566,7 +559,9 @@ class Encounters:
             if not targets or any(i is None for i in targets):
                 raise ValueError("That defender is no longer in this room.")
             for ice in targets:
-                amount = attack_damage(program, ice.integrity, player.attributes.get("resonance", 0))
+                mods = self.game.progression.modifiers(player)
+                amount = attack_damage(program, ice.integrity, mods.attribute(player, "resonance"),
+                                       multiplier=1+mods.skill(player, "programs")/200)
                 amount, reflected = ice.intercept(amount, player.id, tick,
                     ignore_mirror=bool(params.get("ignore_mirror")),
                     cantillation=bool(params.get("resonance_divisor")))
@@ -591,7 +586,7 @@ class Encounters:
             if program.duration:
                 presence.effects.install(program, tick)
         elif kind == "restore":
-            presence.integrity = min(INTEGRITY_MAX, presence.integrity+float(program.effect.amount))
+            presence.integrity = min(presence.integrity_max, presence.integrity+float(program.effect.amount))
         elif kind == "trace" and program.effect.amount < 0:
             presence.trace = max(0, presence.trace+float(program.effect.amount))
             if params.get("break_hound_once"):
@@ -680,7 +675,8 @@ class Encounters:
         multiplier = float(self.content.programs["prg_ledger"].effect.params["lift_multiplier"]) if "prg_ledger" in presence.rig else 1
         presence.procedure = Procedure("lift", target, self.clock.now_tick()+ticks(LIFT_SECONDS*multiplier),
                                       self.location(presence)[0], self.hit_serial(presence), generation, key)
-        cost = trace_gain(LIFT_TRACE, presence.effects, self.clock.now_tick()) if self.policy(presence) != "none" else 0
+        cost = trace_gain(LIFT_TRACE, presence.effects, self.clock.now_tick(),
+            multiplier=self.game.progression.modifiers(player).multiplier("trace_multiplier")) if self.policy(presence) != "none" else 0
         self.trace(presence, LIFT_TRACE)
         self.log(presence, f"Lifting {data.label or data.id}: {LIFT_SECONDS*multiplier:g}s, {cost:g} trace on start.")
 
@@ -1207,7 +1203,7 @@ class Encounters:
                        if other.player_id == presence.target), None)
         body["runner_target"] = ({"id": runner.player_id,
             "name": self.game.players[runner.player_id].name,
-            "integrity_percent": ceil(runner.integrity),
+            "integrity_percent": ceil(100*runner.integrity/runner.integrity_max),
             "burn_allowed": bool(not self.lat.public(presence) and not self.lat.public(runner)
                 and self.combat.permits_indirect(self.actor(presence), self.actor(runner)))} if runner else None)
         shield = presence.effects.shield
