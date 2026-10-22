@@ -1,0 +1,129 @@
+"""Progression adapters: server-owned skill spending and modifier access.
+
+S16's owning engines attach reward grants to their existing transactions.
+This facade owns UI and manual spending; it never pays post-commit XP.
+"""
+
+from copy import deepcopy
+from typing import Any
+
+from blacksite.server.commerce import Commerce
+from blacksite.server.modifiers import Modifiers, collect
+from blacksite.server.loop import TickContext
+from blacksite.server.players import Player
+from blacksite.server.progression_views import character_sheet, skill_menu
+from blacksite.server.protocol import Frame
+from blacksite.server.sessions import Session
+from blacksite.server.skills import LINE_GROUP, spend
+
+
+class ProgressionEngine:
+    def __init__(self, commerce: Commerce) -> None:
+        self.commerce, self.game, self.sim = commerce, commerce.game, commerce.sim
+        self.clock, self.content = self.game.clock, self.game.content
+        self.menus: dict[str, int] = {}
+        self.requests: dict[str, list[str]] = {}
+
+    def modifiers(self, player: Player) -> Modifiers:
+        return collect(player, self.commerce.items, self.content.items,
+                       self.clock.now_utc().timestamp())
+
+    def sheet(self, player: Player, cursor: int) -> dict[str, Any]:
+        from datetime import datetime
+        identity = self.game.identities[player.bbs_user_id]
+        days = max(0, (self.clock.now_utc()-datetime.fromisoformat(identity["first_decanted_at"])).days)
+        return character_sheet(player, self.content, self.commerce.items,
+                               self.clock.now_utc().timestamp(), days, cursor, self.modifiers(player))
+
+    def open_skills(self, session: Session) -> None:
+        self.game.screens.pop(session.id, None)
+        self.menus[session.id] = 0
+        self.publish_menu(session)
+
+    def publish_menu(self, session: Session) -> None:
+        player = self.game.players[session.player_id]
+        self.sim.external_views[session.id] = ("menu", skill_menu(player, self.content,
+            self.menus[session.id], self.clock.now_utc().timestamp()))
+
+    def close_skills(self, session: Session) -> None:
+        self.menus.pop(session.id, None)
+        self.sim.external_views.pop(session.id, None)
+        if not session.closed and session.player_id in self.game.players:
+            self.game.screens[session.id] = ("sheet", 0)
+            self.game.dirty_screens.add(session.id)
+
+    def spend(self, session: Session, line: str) -> bool:
+        if self.commerce.pending:
+            self.commerce.toast(session, "The city is busy. Try again.")
+            return False
+        player = self.game.players[session.player_id]
+        draft = deepcopy(player)
+        amount = spend(draft, line)
+        patch = {"skills": draft.skills, "attributes": draft.attributes, "progress": draft.progress}
+
+        def committed(success: bool) -> None:
+            if success:
+                actor = self.game.combat.actor(player)
+                if actor:
+                    from blacksite.server.rules import character
+                    mods = self.modifiers(player)
+                    actor.health_max = mods.health_max(player)
+                    actor.stamina_max = character.stamina_max(mods.attribute(player, "nerve"), mods.attribute(player, "frame"))
+                self.commerce.toast(session, f"{line.title()} rises by {amount:g}. One grade point spent.")
+                self.game.dirty_screens.add(session.id)
+            elif not session.closed:
+                self.commerce.toast(session, "The skill did not settle. Your grade point remains.")
+            if session.id in self.menus and not session.closed:
+                self.publish_menu(session)
+
+        return self.commerce.settle(player, patch, self.commerce.items,
+            self.commerce.caches, self.commerce.serial, committed)
+
+    def input(self, session: Session, frame: Frame, tick: int) -> bool:
+        if session.id not in self.menus:
+            return False
+        if session.closed or session.player_id not in self.game.players:
+            self.close_skills(session)
+            return True
+        name = frame.data.get("name", "") if frame.type == "intent" else ""
+        args = frame.data.get("args", {})
+        if name == "menu_close":
+            self.close_skills(session)
+        elif name == "menu_cursor" and type(args.get("delta")) is int:
+            self.menus[session.id] = max(0, min(len(LINE_GROUP)-1, self.menus[session.id]+args["delta"]))
+            self.publish_menu(session)
+        elif name == "menu_select":
+            if frame.data.get("expected_revision") != session.view_revision:
+                return True
+            request = frame.data.get("request_id", "")
+            if request and request in self.requests.get(session.id, ()):
+                return True
+            line = tuple(LINE_GROUP)[self.menus[session.id]]
+            if args.get("key") != "+" or args.get("row") != line:
+                return True
+            try:
+                if self.spend(session, line) and request:
+                    self.requests.setdefault(session.id, []).append(request)
+                    self.requests[session.id] = self.requests[session.id][-128:]
+            except ValueError as exc:
+                self.commerce.toast(session, str(exc))
+        return True
+
+    def tick(self, ctx: TickContext) -> None:
+        for sid in tuple(self.menus):
+            session = self.game.sessions.active.get(sid)
+            if session is None or session.closed or session.player_id not in self.game.players:
+                self.menus.pop(sid, None)
+                self.sim.external_views.pop(sid, None)
+                continue
+            actor = self.game.combat.actor(self.game.players[session.player_id])
+            if actor is None or actor.stance in ("down", "dead", "sleeper"):
+                self.close_skills(session)
+            elif ctx.tick % 10 == 0 or session.needs_full_view:
+                self.publish_menu(session)
+        for sid in tuple(self.requests):
+            if sid not in self.game.sessions.active:
+                self.requests.pop(sid, None)
+        if ctx.tick % 10 == 0:
+            self.game.dirty_screens.update(s.id for s in ctx.sessions
+                if self.game.screens.get(s.id, (None,))[0] == "sheet")
