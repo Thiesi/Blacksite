@@ -750,6 +750,17 @@ input tick, rate counters, pending prompts, view revision`.
 
 `id, leader, members[], invites[], loot mode, beacon target, chat`.
 
+S22 IDs carry a per-service-boot namespace, supplied by the owning
+adapter, so a later crew cannot inherit a prior live ID. S22 stores the
+live member tuple in joining order; promotion changes only the leader. Invitations hold `id, inviter, target, crew_id, until_tick`.
+An uncrewed inviter has no crew record until one invite is accepted.
+A beacon records both its Operator and its target, so either leaving
+clears it. A frozen per-drop offer holds its roster, assigned character,
+mode, ten-second deadline and rotation version. Only a committed drop
+advances that version; a rejected storage write cannot consume a turn.
+These drop entitlements do not persist live social crew membership or
+replace an expedition's independent, durable consenting roster.
+
 ### 3.8 Event instance
 
 `committed_plan_id, template, started_at, ends_at, where, state,

@@ -1279,6 +1279,30 @@ specifications until separately authored and accepted.
   1 - (gap - 5) / 20). Apply once per receipt and identity, not once
   per layer. Unrelated or absent crew get none.
 
+Invitations expire after 60 seconds. Only the leader invites by default;
+the leader may allow members to invite. Acceptance rechecks membership,
+authority and the five-player limit. The first accepted invitation creates
+a two-person crew; an unanswered invitation creates no one-person crew.
+Leaving or disconnecting removes that member. On leader logout the
+longest-serving remaining member leads; a single remaining member means
+dissolution. Promotion never changes service order. Crews are live only
+and end on server restart, independently of S26 expedition rosters.
+
+Crew friendly fire is refused before faction/Marked attack checks.
+Refusal never marks or trains a skill. Marked names remain red, while a
+crew's plus tag still identifies the ally. Beacons never disclose private
+housing interiors or remote Silt rooms; entering a shared Silt instance
+requires its authorized entrance and retained roster.
+
+Round-robin offers a new cache/data unit to the next member for ten
+seconds, then ordinary loot eligibility applies. A change of loot mode
+applies to the next drop, not an existing offer. The offer and roster are
+frozen with that drop; rotation advances only when its owning receipt
+commits. The actual victim may recover their own corpse cache under 5.4,
+without being blocked by crew mode or the killer's private window.
+Shared XP is a whole-number award, rounded down after the section 10
+grade multiplier; it retains the recipient's own identity caps.
+
 ## 11. Social layer
 
 - **Say** (zone, 20-tile radius), **shout** (zone), **whisper** (player,
