@@ -68,6 +68,9 @@ class HeadlessServer:
         effects = []
         while commerce and commerce.outbox:
             effect = commerce.outbox.pop(0)
+            if not commerce.can_commit(effect):
+                commerce.committed(effect,False)
+                continue
             effects.append(commerce.prepare(effect))
             commerce.committed(effect, not error)
         return effects

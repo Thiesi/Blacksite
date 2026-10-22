@@ -606,6 +606,10 @@ Silt visits and training cannot create discovery or use rewards.
 PvP death includes both players and both identity records in that one
 receipt: the victim's clone/debt settlement and the winner's reward/cap.
 Clear stale write-behind identity records for every committed recipient.
+The I/O writer cancels transfers whose player or secondary recipient was
+deleted or is being deleted. Character deletion also blocks later ordinary
+save snapshots from background actors and old callbacks. A periodic drone
+checkpoint cannot recreate the deleted player or its owned items.
 
 One pure `Modifiers` collector composes installed items, substance phases
 and optional ability/event layers from the supplied UTC time. Consumers

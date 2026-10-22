@@ -116,6 +116,8 @@ class Characters:
         return self.identities[user]
 
     def queue(self, action: str, user: str, player: Player | None = None, **extra: Any) -> None:
+        if action == "save" and player and (player.id in self.deleting or player.id not in self.players):
+            return
         effect = {"action": action, "user": user, "identity": deepcopy(self.identities[user]),
                   "player": player.record() if player else None, **extra}
         self.outbox.append(effect)

@@ -286,6 +286,11 @@ class Commerce:
             "message": message, "actor_effects": actor_effects})
         self.pending = True
 
+    def can_commit(self, effect: dict[str, Any]) -> bool:
+        """A character deletion invalidates all of its pending transfers."""
+        recipients = {pid for pid in (effect.get("player_id"),*effect.get("player_patches",{})) if pid}
+        return all(pid in self.game.players and pid not in self.game.deleting for pid in recipients)
+
     def prepare(self, effect: dict[str, Any]) -> dict[str, Any]:
         player = self.game.players.get(effect["player_id"])
         return {"player": {**player.record(), **self.settled_patch(effect)} if player else None,

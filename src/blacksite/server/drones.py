@@ -208,6 +208,9 @@ class Drones:
         self.pending.add(iid)
         actor.stance = "dead"
         def propose() -> None:
+            if player.id not in self.game.players or player.id in self.game.deleting:
+                self.pending.discard(iid)
+                return
             draft,items = deepcopy(player),deepcopy(self.commerce.items)
             draft.progress.setdefault("drones",{}).pop(iid,None)
             items.pop(iid,None)
@@ -228,7 +231,7 @@ class Drones:
             self.pending.discard(iid)  # The dead actor retries next tick.
 
     def checkpoint(self, player: Player, iid: str, actor: Actor) -> None:
-        if self.commerce.pending or iid in self.pending:
+        if self.commerce.pending or iid in self.pending or player.id in self.game.deleting or player.id not in self.game.players:
             return
         item = self.commerce.items.get(iid)
         if not item or item.health == actor.health:
@@ -323,6 +326,8 @@ class Drones:
 
     def tick(self, tick: int) -> None:
         for player in tuple(self.game.players.values()):
+            if player.id in self.game.deleting:
+                continue
             body = self.body(player)
             if body and self.game.combat.session(player.id) and player.progress.get("drone_notices"):
                 for notice in player.progress.pop("drone_notices"):
