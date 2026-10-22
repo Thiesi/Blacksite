@@ -2,7 +2,8 @@
 
 import pytest
 
-from blacksite.content.schema import WeaponBlock
+from blacksite.content.schema import WeaponBlock, DamageOverTime
+from blacksite.server.sessions import QUEUE_LIMIT
 from blacksite.server.items import make_item
 from blacksite.server.protocol import Frame
 from blacksite.server.rules import combat as rules
@@ -18,6 +19,28 @@ def implant(game, client, tid, slot=""):
     player.inventory.append(iid)
     player.implants[slot or template.implant.slot] = iid
     game.core.progression.sync_actor(player)
+
+
+@pytest.mark.parametrize("pending",[False,True])
+def test_game_3_5_full_transfer_queue_never_aborts_combat_or_its_dot(repo_root,monkeypatch,pending):
+    game,a,b = build_duel(repo_root)
+    combat,commerce = game.core.combat,game.core.commerce
+    source,target = body(game,a),body(game,b)
+    before = target.health
+    # A committing transfer can still have a full waiting queue while its
+    # combat callback starts the first new skill write.
+    commerce.pending = pending
+    commerce.waiting.extend([lambda:None]*QUEUE_LIMIT)
+    monkeypatch.setattr(rules,"to_hit",lambda *args:100)
+    weapon = WeaponBlock(damage=12,cooldown=1,accuracy=75,damage_type="kinetic",range=6,
+                         dot=DamageOverTime(1,3))
+    combat.shot(source,target,weapon)
+    if pending:
+        assert target.health == before and not target.effects
+    else:
+        assert target.health < before
+        assert any(effect.get("kind") == "dot" for effect in target.effects)
+    assert len(commerce.waiting) == QUEUE_LIMIT
 
 
 def test_game_8_5_armour_accuracy_and_rangefinder_affect_actual_shot(repo_root, monkeypatch):

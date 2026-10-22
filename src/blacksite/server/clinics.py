@@ -123,7 +123,7 @@ class Clinics:
                 else:
                     rows.append({"id":"return","cells":["Returns",self.game.content.items[self.commerce.items[old].template].name]})
             if op.action == "detox":
-                detail = "You stay in this clinic pocket for ten minutes. You cannot act. Detox continues offline; Ctrl-X leaves."
+                detail = "Active doses end when detox starts. You stay in this clinic pocket for ten minutes. You cannot act. Detox continues offline; Ctrl-X leaves."
             else:
                 detail = "Failure destroys the chosen item and holds shock 100 for 30s. Returned hardware keeps its quality. Chrome expiry may unseat hardware and unsecure excess items."
                 if op.action == "remove":

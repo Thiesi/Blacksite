@@ -2,6 +2,8 @@
 
 Only implemented S16 sources are scheduled. Contracts, crafting, relays
 and contributions need their owning slices before a complete playtest.
+Combat schedules use NPC defeats, not PvP identities. Chit income and
+equipment affordability are deferred to S19's integrated earning report.
 """
 
 from collections import Counter

@@ -158,6 +158,8 @@ class ProgressionEngine:
             self.commerce.settle(player, {"skills": draft.skills, "attributes": draft.attributes,
                 "progress": draft.progress}, self.commerce.items, self.commerce.caches,
                 self.commerce.serial, committed)
+        if self.commerce.pending and len(self.commerce.waiting) >= QUEUE_LIMIT:
+            return  # A saturated skill queue must never abort its owning action.
         self.commerce.enqueue_system(propose)
 
     def hostile_contact(self, actor: Actor, opponent: Actor) -> str:

@@ -135,6 +135,12 @@ ordinary cores and all sixteen canonical relay instances. A complete
 34-map city cannot retain district core placeholders. Private apartment
 and seasonal instances remain owned by their respective slices.
 
+S16 validates owned-item Reflex Arm surgery at the shipped Sablier
+clinic. S25 owns its actual Spire vendor purchase and the real Sink
+black-clinic walk, at both terminal sizes through NetBBS. The S16 loan
+does not satisfy those geography and acquisition checks; the S25 slice
+retains them alongside the earlier vendor/core activation gates.
+
 - The slice file's acceptance script passes on a real terminal at 80×24
   and at one larger size, through a NetBBS node for anything caller-
   facing (a local NetBBS checkout is fine).

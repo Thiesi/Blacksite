@@ -110,6 +110,14 @@ Use typed contract, evidence and work-order intents from architecture
 
 ## Definition of done
 
+S16 balance handoff: extend its assumed XP schedules with actual contract,
+loot and vendor-sale chit income. Report time to afford canonical weapons,
+implants, surgery and detox, distinguishing solo and crew earnings. Compare
+jobs and runs with the street schedule so continuous low-risk combat does
+not become the only efficient progression loop. Keep assumed activity
+separate from measured human pacing; section 18's full-city playtests
+remain required after S25/S26 integrate the remaining sources.
+
 Roadmap section 7; all verbs, four service nodes and branch invariants
 pass in fixtures, Vesper's job works in the shipped hub, and every
 inactive Season 1 dependency is declared for S26 integration.

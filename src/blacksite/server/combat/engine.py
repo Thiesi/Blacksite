@@ -317,7 +317,10 @@ class Combat:
 
     def shot(self, source: Actor, target: Actor, weapon: WeaponBlock, quality: float = 1, skill: float = 0) -> None:
         if self.commerce.pending:
-            self.commerce.enqueue_system(lambda: self.shot(source, target, weapon, quality, skill))
+            try:
+                self.commerce.enqueue_system(lambda: self.shot(source, target, weapon, quality, skill))
+            except ValueError:
+                return  # Match hurt: overload declines harm instead of aborting the tick.
             return
         if (not self.legal(source,target) or target.stance in ("down","dead") or not self.visible(source,target)
                 or rules.distance(source.position,target.position) > (weapon.range or 1.5)):
