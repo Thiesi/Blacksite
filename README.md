@@ -21,7 +21,7 @@ they go down into the Blacksite together.
 
 ## Status
 
-**M2 Lattice and interlock implemented (S01-S15).** The M0 foundation,
+**S01-S17 implemented; M3 is in progress.** The M0 foundation,
 shared movement, sight, fog memory, ten maps and persistent characters are
 available. The service now starts the Wake for new callers. See the
 [character guide](docs/ops/characters.md) for persistence, sleeper recovery
