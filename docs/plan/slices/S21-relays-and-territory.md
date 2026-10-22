@@ -144,6 +144,15 @@ present, consumer pending" with the consuming slice ID.
 
 ## Implementer notes
 
+Issue #56: expose only committed, actually attributed capture facts for
+a possible future API-5 `capture` adapter. BBS publication is optional
+and disabled under the registered-only installation gate; no capture,
+ownership or reward depends on a host receipt. Do not invent individual
+credit for faction-only results, publish history on login, pass host
+paths/credentials into simulation, or lower guest admission to enable
+publicity. S31 owns any policy-compatible adapter; see
+`docs/plan/01-netbbs-platform.md` section 4. This adds no dependency.
+
 Capture clocks freeze without losing progress under opposition/Curfew.
 Hardware and private-core permission rules still apply to relay owners.
 Test conscious holder plus Freelance runner, solo eight-minute capture,

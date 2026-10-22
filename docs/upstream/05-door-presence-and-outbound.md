@@ -1,6 +1,11 @@
 # 05 — Door name in who-is-online, and a narrow outbound hook
 
 **NetBBS issue:** https://github.com/Thiesi/NetBBS/issues/470
+**Outcome:** closed; presence and board file drops shipped in NetBBS
+v7.3.0 (PRs #499/#506); chat in v7.12.0/API 4; events/standings in
+v7.31.0/API 5. Outbound requires min_play_level zero, conflicting with
+Blacksite's default guest-safe gate; optional publicity is deferred.
+See [issue #56 catch-up](../plan/01-netbbs-platform.md). Proposal below archived.
 **Blocks:** nothing. Blacksite S28 has an optional step behind it.
 **Recommended model for the NetBBS side:** Opus 5 for the outbound hook (touches the capability model discussed under issue #200 in design doc §16); Sonnet for the presence half alone.
 

@@ -73,8 +73,8 @@ gets one here; this slice makes them one coherent tool.
 - Player reports (`/report` from S09) listed and resolved here.
 - `docs/ops/sysop-guide.md`: install (venv, wheel, install dir),
   register the door in NetBBS (points at S31's preset), start the
-  service (interim `blacksite serve` with the rc.d/systemd units from
-  S05; the door-service profile "when NetBBS ≥ x.y"), first start and
+  service (released supervisor with NetBBS >= 7.31.0, or S05's explicit
+  rc.d/systemd alternative with the service block removed), first start and
   secrets, daily operation (`status`, `who`), moderation, events,
   seasons and the Chronicle, backup and restore with the manifest
   explained, upgrades and migrations, troubleshooting (cannot connect,
@@ -153,6 +153,15 @@ gets one here; this slice makes them one coherent tool.
 - The user has followed the guide once on a real node.
 
 ## Implementer notes
+
+Issue #56: follow `docs/plan/01-netbbs-platform.md` and architecture 6.2.
+NetBBS's installation-directory backup is node-wide opt-in, unquiesced
+and not restored automatically. Retain Blacksite's SQLite backup API
+snapshot and manifest. Verify online backup during writes, integrity and
+service-stopped/exclusive-lease restoration; a raw copy of world.db/WAL
+must not be presented as recovery proof. Document both stop grace budgets,
+the service breaker and manual node-copy recovery. Optional outbound
+cannot be advertised as working under the registered-only default gate.
 
 - Never open `world.db` directly while the lease sidecar is held by a
   running server; `--offline` must fail fast with exit 3 and the holder's

@@ -23,13 +23,13 @@ tool every later slice runs.
   ≤ 200 MiB; start ≤ 3 s), §5.1 (`enc: "compact"` reservation), §5.3
   (one view or delta per session per tick; coalescing when > 3
   revisions behind), §6.1 (dormant zones), §7 (client renders at most 10
-  times per second), §10 ("Load" bullet), §1 (platform `RLIMIT_CPU`
-  300 s).
+  times per second), §10 (Load), §1/§8.1 (configurable cumulative CPU
+  ceiling and the explicit long-session policy).
 - `docs/design/00-game-design.md` §14 (20 inputs per second per
   session).
 - `docs/design/03-terminal-ui.md` §6 (rendering rules, diffing).
-- `docs/upstream/02-session-limits.md` (why the client CPU budget is
-  40 % of the platform cap).
+- `docs/upstream/02-session-limits.md` (released outcome) and
+  `docs/plan/01-netbbs-platform.md` (issue #56 CPU/session policy).
 
 ## Scope
 
@@ -125,10 +125,15 @@ tool every later slice runs.
 
 ## Implementer notes
 
-- The platform's `RLIMIT_CPU` is 300 s per door process and unchanged
-  until upstream 02 lands: a client that busy-loops on `select` will be
-  killed mid-session. Block on the socket and stdin; render only on
-  arrival.
+- NetBBS `cpu_seconds` accepts 0-86400, defaults to 300 and is cumulative
+  per client, not per hour. Finite exhaustion may SIGKILL with no warning
+  or save callback. Primary unlimited sessions explicitly use zero;
+  host hard limits still apply. Keep the 120 CPU-seconds/hour efficiency
+  target. Measure the real renderer at both sizes on NetBSD, record
+  effective host/profile limits and size any finite operator policy from
+  whole-session CPU plus headroom. A headless socket bot alone does not
+  establish the real client's budget. Block on input; do not hide a busy
+  loop by raising limits. S31 consumes the measured deployment guidance.
 - NetBSD's Python may lack `os.sched_getaffinity` and some
   `resource` fields; keep instrumentation to `time.perf_counter_ns` and
   `resource.getrusage`.

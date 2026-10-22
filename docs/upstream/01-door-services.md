@@ -1,6 +1,11 @@
 # 01 — Door services: a supervised long-lived companion process per door
 
 **NetBBS issue:** https://github.com/Thiesi/NetBBS/issues/466
+**Outcome:** closed; shipped in NetBBS v7.3.0 (PRs #499/#506). One
+service uses exactly argv/start/stop_grace_seconds/service_memory_mb/health.
+Install-dir backup is opt-in, unquiesced and manually restored, not an
+automatic consistent backup. See architecture 3/6/8 and
+[issue #56 catch-up](../plan/01-netbbs-platform.md). Proposal below archived.
 **Blocks:** Blacksite S31 (target integration). S05 ships the interim path.
 **Recommended model for the NetBBS side:** Opus 5 (touches `netbbs.doors.runtime`, the SysOp door screens, shutdown ordering, and NetBSD rc.d behaviour; needs the shutdown-hang lessons from PRs #228/#283).
 

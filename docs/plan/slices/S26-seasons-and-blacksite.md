@@ -71,6 +71,17 @@ Chronicle voices. Main design 13.3 owns all outcome numbers and effects.
 
 ## Out of scope
 
+Issue #56 BBS integration: authoritative in-game standings and committed
+settlement facts remain available without outbound. A future optional
+API-5 adapter may export one declared canonical metric, at most the
+advertised rows and one local BBS identity per row; no undocumented sum
+or remote identities. Clear the snapshot on reset and never replay old
+awards on login. Publication failure cannot roll back a choice or reward.
+Default registered-only admission conflicts with NetBBS's level-0
+outbound requirement, so S31 records a disabled path until a compatible
+guest-safe host contract exists. See `docs/plan/01-netbbs-platform.md`;
+do not build filesystem callbacks into the season engine.
+
 Season 2/3 playable bundles require future content slices and full
 acceptance. Their lore/rules are specified now, but no flag may unlock a
 missing map. Federation merge is S32; relay/event/contract engines are
