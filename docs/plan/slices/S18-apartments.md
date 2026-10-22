@@ -1,6 +1,6 @@
 # S18 — Apartments: rent, storage, safe, private core tier, eviction, impound
 
-**Status:** planned
+**Status:** done (PR #59)
 **Primary model:** Sonnet · **Reviewer:** none
 **Depends on:** S12, S15, S16 · **Milestone:** M3
 **Issue:** https://github.com/Thiesi/blacksite/issues/18
