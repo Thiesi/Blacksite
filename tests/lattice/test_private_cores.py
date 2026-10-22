@@ -75,6 +75,8 @@ def test_game_6_4_private_manifest_daily_race_and_atomic_unit(runners):
     game.step()
     game.commit_commerce()
     assert len(receipts) == 1
+    assert receipts[0]["player"]["xp"] == 40*record["tier"]
+    assert sum(game.core.characters.players[p.player_id].xp for p in (one,two)) == 40*record["tier"]
     assert game.core.commerce.items["fixture:stack"].stack == 2
     apt = interlock.state["apartments"]["fixture"]
     assert len(apt["hack_log"]) == 1
@@ -99,6 +101,7 @@ def test_game_6_4_private_failed_receipt_leaves_stack_and_log(runners):
     intent(game, b, "lat.theft", item="fixture:stack")
     game.step(3*TICK_HZ)
     game.commit_commerce(error=True)
+    assert game.core.characters.players[presence.player_id].xp == 0
     apt = interlock.state["apartments"]["fixture"]
     assert not apt["hack_log"] and apt["last_hacked_at"] is None
     assert interlock.commerce.items["fixture:stack"].stack == 3
@@ -111,6 +114,7 @@ def test_game_6_4_private_failed_receipt_leaves_stack_and_log(runners):
     other = restored.core.lattice.interlock
     assert len(other.state["apartments"]["fixture"]["hack_log"]) == 1
     assert other.commerce.items["fixture:stack"].stack == 2
+    assert restored.core.characters.players[presence.player_id].xp == 40*record["tier"]
     assert other.lat.sectors.cells["lat-terraces"][record["cell"]].core_id == "lat-apartment-fixture"
 
 

@@ -128,21 +128,28 @@ def test_game_6_7_cash_receipt_failure_retry_and_restart(runners):
     game.core.lattice.sources.refresh(key, data, game.clock.now_tick())
     player = game.core.characters.players[presence.player_id]
     original = player.chits_hand
+    original_xp = player.xp
+    run_xp = 40*encounters.core(presence).graph.spec.tier
     def lift():
         intent(game, a, "lat.lift", target=data.id, generation=0)
         game.step(presence.procedure.until-game.clock.now_tick())
     lift()
+    assert player.xp == original_xp
     game.commit_commerce(error=True)
     assert player.chits_hand == original
+    assert player.xp == original_xp
     assert game.core.lattice.sources.sources[key].generation == 0
     lift()
     effects = game.commit_commerce()
     assert player.chits_hand == original+80
+    assert player.xp == original_xp+run_xp
+    assert effects[0]["identity"]["run_xp_days"][presence.core] == game.clock.now_utc().date().isoformat()
     assert game.core.lattice.sources.sources[key].generation == 1
     saved = state(game)
     saved["lattice"] = effects[0]["lattice_state"]
     restored = HeadlessServer(game.core.loop.content, character_state=saved, clock=game.clock)
     assert restored.core.characters.players[player.id].chits_hand == original+80
+    assert restored.core.characters.players[player.id].xp == original_xp+run_xp
     assert not restored.core.lattice.sources.refresh(key, data, game.clock.now_tick()).available
     intent(game, a, "lat.lift", target=data.id, generation=0)
     assert presence.procedure is None and player.chits_hand == original+80
@@ -225,5 +232,6 @@ def test_game_6_7_contended_lift_charges_attempts_but_pays_one_generation(runner
     assert all(p.procedure is None for p in presences)
     assert not game.core.commerce.pending
     assert sum(p.chits_hand for p in players) == before+80
+    assert sum(p.xp for p in players) == 40*encounters.core(presences[0]).graph.spec.tier
     assert game.core.lattice.sources.sources[key].generation == 1
     assert sum(key in p.progress.get('lattice_receipts', {}) for p in players) == 1

@@ -23,6 +23,7 @@ from blacksite.server.lattice.programs import Cast, attack_damage, bind, can_cas
 from blacksite.server.lattice.silt import Descent, adjacent_hidden, generate, survey_directions
 from blacksite.server.lattice.silt_scene import BandGraph
 from blacksite.server.players import Player
+from blacksite.server.progression import Grant, award
 from blacksite.server.sessions import Session
 from blacksite.server.protocol import Frame
 from blacksite.server.wake import menu, wrapped
@@ -693,8 +694,8 @@ class Encounters:
             raise ValueError("The contract or source changed before the lift completed.")
         unit_id = self.lat.sources.unit_id(key, procedure.generation)
         draft, items = deepcopy(player), deepcopy(self.commerce.items)
-        identity = deepcopy(self.game.identity(player.bbs_user_id)) if data.scope != "shared" else None
-        if identity is not None:
+        identity = deepcopy(self.game.identity(player.bbs_user_id))
+        if data.scope != "shared":
             identity.setdefault("lattice_receipts", {})[key] = unit_id
         serial = self.commerce.serial
         draft.progress.setdefault("lattice_receipts", {})[key] = unit_id
@@ -730,16 +731,24 @@ class Encounters:
             known = draft.progress.setdefault("known_programs", [])
             if pid not in known:
                 known.append(pid)
+        reward = None
+        if presence.core:
+            reward = award(draft, identity, Grant("run", unit_id, True,
+                scope=presence.core, core=presence.core, tier=instance.graph.spec.tier,
+                training=instance.graph.spec.training), self.clock.now_utc(),
+                self.game.progression.modifiers(draft))
         # Reserve only after inventory and reward validation succeeds.
         claim = self.lat.sources.propose(key, data, procedure.generation, self.clock.now_tick())
         def finished(success: bool) -> None:
             self.lat.sources.finish(claim, success)
             if success:
                 self.log(presence, "Transfer committed: "+(data.label or data.id)+".")
+                self.game.progression.notify_reward(player, reward)
             else:
                 self.log(presence, "The transfer could not be saved. The source remains.", True)
         patch = {"progress": draft.progress, "chits_hand": draft.chits_hand,
-                 "inventory": draft.inventory}
+                 "inventory": draft.inventory, "xp": draft.xp, "grade": draft.grade,
+                 "attributes": draft.attributes, "health": draft.health, "legal_at": draft.legal_at}
         if not self.commerce.settle(player, patch, items, self.commerce.caches, serial, finished, identity):
             self.lat.sources.finish(claim, False)
             raise ValueError("The city is settling another transfer. Try again.")
