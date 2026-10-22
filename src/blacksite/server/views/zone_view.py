@@ -6,9 +6,8 @@ from typing import Any
 
 from blacksite.content.loader import ContentTree
 from blacksite.content.schema import Tile
-from blacksite.server.interlock_effects import lighting_radius
 from blacksite.server.world.actors import Actor
-from blacksite.server.world.sight import sees_actor, visible_tiles
+from blacksite.server.world.sight import sees_actor, visible_tiles, sight_radius
 from blacksite.server.world.zone import ZoneInstance
 from blacksite.server.world.safety import safety_at
 from blacksite.server.clock import TICK_HZ
@@ -54,10 +53,7 @@ def camera(actor: Actor, zone: ZoneInstance, width: int, height: int,
 
 def build(actor: Actor, zone: ZoneInstance, perception: Perception, content: ContentTree,
           width: int, height: int, clock: str, night: bool, tick: int) -> dict[str, Any]:
-    radius = zone.template.meta.sight_radius_night if night else None
-    radius = radius or zone.template.meta.sight_radius
-    radius = lighting_radius(actor, zone, radius)
-    radius = max(radius, max((int(effect.get("dark_sight",0)) for effect in actor.effects), default=0))
+    radius = sight_radius(actor, zone, night)
     visible = visible_tiles(actor, zone, radius)
     remembered = perception.remembered.setdefault(zone.id, {})
     viewport = camera(actor, zone, width, height, perception.viewport)

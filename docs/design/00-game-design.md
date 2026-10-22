@@ -273,7 +273,9 @@ Real time, cooldown-based, server-resolved.
   the roll and the reasons are visible in the combat log on request.
 - Clamp hit probability to 5-95 % and damage to at least 1 after armour.
   Cooldown starts on cast completion. Durations round up to the next
-  100 ms tick. Fast repeat attacks are allowed, but new threats and
+  100 ms tick. Sustained weapon fire retains at most one tick of rounding
+  credit so small cooldown modifiers improve its actual average. Idle
+  time never accumulates an attack burst. New threats and
   hazardous state changes get at least 2 s warning with a safe response.
 - Shock decay starts 3 s after the last hit. A knockdown at shock 100
   lasts 2 s and resets shock to 60.

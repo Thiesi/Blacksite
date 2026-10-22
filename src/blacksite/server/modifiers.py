@@ -25,6 +25,7 @@ RESOURCE_KEYS = frozenset({"health_over_time", "heal_seconds", "health_per_secon
 @dataclass(frozen=True)
 class Modifiers:
     values: Mapping[str, float]
+    installed_templates: frozenset[str] = frozenset()
 
     def bonus(self, key: str) -> float:
         return self.values.get(key, 0)
@@ -76,12 +77,14 @@ def collect(player: Player, items: Mapping[str, ItemInstance],
     if player.archetype == "operator":
         layers.append({"drone_slots": 2})  # Game 3.2.
     implanted_rig = False
+    installed: set[str] = set()
     for iid in sorted(set(player.implants.values())):
         item = items.get(iid)
         template = templates.get(item.template) if item and item.owner == player.id else None
         block = template.implant if template else None
         if not block or block.portable:
             continue
+        installed.add(template.id)
         effects = dict(block.effects)
         # Catalog low-light optics adds three dark tiles; a flare supplies
         # an absolute minimum via the separate dark_sight key.
@@ -93,6 +96,7 @@ def collect(player: Player, items: Mapping[str, ItemInstance],
         layers.append(effects)
     if player.archetype == "ghost" and not implanted_rig:
         layers.append({"jack_anywhere": 1, "rig_slots": 3})
+        installed.add("imp_rig_native")
     dependent = {d["template"] for d in player.dependencies}
     crash_applied: set[str] = set()
     for state in player.drugs_active:
@@ -110,4 +114,5 @@ def collect(player: Player, items: Mapping[str, ItemInstance],
         if template and template.drug:
             layers.append(template.drug.crash)
     layers.extend(extra)
-    return compose(layers)
+    result = compose(layers)
+    return Modifiers(result.values, frozenset(installed))

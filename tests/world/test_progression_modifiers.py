@@ -4,6 +4,7 @@ import pytest
 
 from blacksite.server.world.actors import Actor
 from blacksite.server.world.movement import move, regenerate
+from blacksite.server.world.sight import sight_radius, visible_tiles, sees_actor
 
 
 def test_game_8_5_sprint_legs_keep_80ms_average_and_no_idle_burst(world):
@@ -42,3 +43,24 @@ def test_game_8_6_lullaby_slows_walk_and_sprint_without_changing_cost(world):
     assert actor.cooldowns["move"] == 5 and actor.stamina == 68
     assert not move(actor, world.zones[actor.zone], "right", 4)
     assert move(actor, world.zones[actor.zone], "right", 5)
+
+
+def test_game_8_5_lowlight_adds_dark_tiles_and_ghost_step_reduces_detection(world):
+    actor = Actor("eyes", "Eyes", modifiers={"dark_sight_bonus": 3})
+    world.enter(actor, "core-plaza", (36,13))
+    zone = world.zones[actor.zone]
+    # A real committed-style light state supplies S15's dark floor.
+    light = next(o for o in zone.objects.values() if o.spec.kind == "light")
+    actor.x, actor.y = light.spec.tile
+    light.state["enabled"] = False
+    assert sight_radius(actor, zone, False) == 8
+    actor.effects.append({"dark_sight": 8})
+    assert sight_radius(actor, zone, False) == 8
+    world.leave(actor)
+    zone = world.zones["vatside-wake-hall"]
+    observer, target = Actor("observer","Observer"), Actor("ghost","Ghost",stance="stealth")
+    world.enter(observer,zone.id,(6,5));world.enter(target,zone.id,(11,5))
+    visible = visible_tiles(observer,zone,10)
+    assert sees_actor(observer,target,visible,10)
+    target.modifiers = {"stealth_sight_reduction": .6}
+    assert not sees_actor(observer,target,visible,10)

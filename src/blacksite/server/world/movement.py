@@ -2,8 +2,7 @@
 
 from blacksite.server.world.actors import Actor
 from blacksite.server.world.zone import ZoneInstance
-from blacksite.server.rules.combat import action_seconds
-from math import ceil
+from blacksite.server.rules.combat import action_seconds, cooldown_deadline, TICK_SECONDS
 
 WALK_TICKS = 2  # Game design 5.2: 200 ms at 10 Hz.
 SPRINT_TICKS = 1  # Game design 5.2: 100 ms.
@@ -48,8 +47,7 @@ def move(actor: Actor, zone: ZoneInstance, name: str, tick: int, sprint: bool = 
     # Keep a bounded fractional budget for Sprint Legs' 80 ms. Inputs
     # still resolve on ticks, sometimes two in one tick; idle time cannot
     # accumulate a burst of free movement.
-    actor.cooldowns["move"] = round(previous+duration if duration < 1 and tick-1 < previous <= tick
-                                    else tick+(duration if duration < 1 else ceil(duration)), 8)
+    actor.cooldowns["move"] = cooldown_deadline(tick, duration*TICK_SECONDS, previous)
     if sprint:
         value = round(max(0, actor.stamina-cost), 6)
         actor.stamina = int(value) if value % 1 == 0 else value
