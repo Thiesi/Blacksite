@@ -55,6 +55,15 @@ Camera effects concern mission records and never blind combat detection.
 Powered NPC attacks and machinery damage retain the initiating body and
 recheck safety when the hit settles.
 
+An armed machine does not grant anonymous offline attacks. If the
+initiating body becomes protected, ineligible, or leaves the world, its
+player-attributed damage is suppressed even while the visible machine
+effect remains active. Ordinary NPC behaviour resumes when the control
+effect expires. Until S20 supplies faction-channel membership, owner
+reports also use the slice's hall-zone fallback: everyone physically in
+that hall can hear the report, including an exact Shiv body location.
+S20 replaces that interim audience with the owning faction's channel.
+
 Interlock records live in server-owned world meta and use the existing
 Commerce transaction boundary. Back up the world through the service's
 normal storage procedure. Never edit its database while the server runs.

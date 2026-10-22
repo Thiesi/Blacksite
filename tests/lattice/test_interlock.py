@@ -126,6 +126,29 @@ def test_game_6_4_cut_both_unsafe_bodies_offline(runners):
         interlock.authorize_cut(a.session, "lat-civic-ledger", zid, oid)
 
 
+def test_game_6_4_cut_ejects_a_retained_disconnected_runner(runners):
+    game, a, b, c = runners
+    presence = enter(game, b, "lat-civic-ledger")
+    control_room(game, presence)
+    zid, oid = cut_fixture(game, a)
+    interlock = game.core.lattice.interlock
+    body = actor(game, b)
+    interlock.start_cut(a.session, "lat-civic-ledger", zid, oid)
+    game.step(4*TICK_HZ)
+    # Disconnect just before the cut completes, while bounded escape still
+    # retains this exact physical body and closed Session object.
+    game.core.sessions.disconnect(b.session)
+    assert b.session.closed and presence.player_id in game.core.lattice.orphans
+    assert game.core.lattice.orphans[presence.player_id][1].actor is body
+    game.step(TICK_HZ)
+    receipt = game.commit_commerce()[0]
+    assert presence.player_id not in game.core.lattice.presences
+    assert presence.player_id not in game.core.lattice.orphans
+    assert body.shock == 100
+    assert receipt["players"][0]["shock"] == 100
+    assert interlock.offline("lat-civic-ledger") == 600
+
+
 def test_game_6_4_mixed_safe_body_refuses_whole_cut(runners):
     game, a, b, c = runners
     one = enter(game, b, "lat-civic-ledger")
