@@ -207,9 +207,9 @@ Hard limit 10 s, then exit anyway; persistence is crash-safe.
   directory.
 - Identity is `bbs_user_id` from door_info; the handle is display. A
   player record is keyed on `(origin, bbs_user_id)`.
-- S31's registration excludes guests with `min_play_level` above the
-  node's actual guest account level (1 on the default level-0 guest
-  setup). Third-party guests share one ID; do not create persistent
+- S31 sets the door registration's `min_play_level` above the actual
+  guest account level (normally 1 for a level-0 guest), excluding guests.
+  Third-party guests share one ID; do not create persistent
   characters for them, guess from a handle, or read NetBBS's database.
   This is a registration gate, not a `DoorProfile` field (§8.3).
 - The admin CLI presents `secrets/admin.secret` the same way and is

@@ -27,8 +27,9 @@ together. Nothing here changes a rule; it explains them.
   (sitrep visibility trade), §15 (accessibility, no plain mode, refuse
   below 80×24).
 - `docs/design/02-architecture.md` §2.2 (reconnect backoff up to 60 s),
-  §8.2 (`BLACKSITE_SESSION_LIMIT`, reconnect within 60 s is the same
-  session), §5.4 (`hint` in views; `TextView`).
+  §8.2 (`DOOR_BLACKSITE_SESSION_LIMIT`, standalone alias
+  `BLACKSITE_SESSION_LIMIT`, optional deadline and reconnect),
+  §5.4 (`hint` in views; `TextView`).
 - `docs/design/01-entities.md` §2.1 (`settings`).
 - `docs/world/08-found-texts.md` (title tagline block, the 16-line
   first-run screen), `docs/world/07-glossary.md` (in-game glossary
@@ -125,6 +126,12 @@ together. Nothing here changes a rule; it explains them.
 
 ## Acceptance script
 
+Use the supported NetBBS integration and registered callers. Register
+the door at minimum play level 255, run Check setup and Test as SysOp,
+then lower only above the actual guest account level (normally 1).
+A guest must not reach character selection. Keep the host wall limit
+unbounded or at least 420 seconds for the seven-minute override test.
+
 1. Register a new BBS user, enter the door at 80×24: the first-run
    screen appears once; after the Wake, the hint line says "↑↓←→ move"
    until you move, then "Tab target" and so on.
@@ -133,7 +140,7 @@ together. Nothing here changes a rule; it explains them.
 3. Open settings, choose the deutan palette: hostile and crew colours
    change and the `!`/`+` tags remain; switch to 16 colours: the screen
    redraws fully and stays readable.
-4. Register the door with `BLACKSITE_SESSION_LIMIT=420` in the profile
+4. Register the door with `DOOR_BLACKSITE_SESSION_LIMIT=420` in the profile
    environment: at 2 minutes and at 6 minutes the toasts appear; at 7
    minutes the client leaves cleanly to the door picker; re-enter within
    a minute and you are exactly where you were.
