@@ -75,7 +75,11 @@ async def training(probe: NativeProbe, width: int, height: int) -> dict[str, Any
     await probe.walk(connection, (21, 14))
     await connection.caller.write(b'b')
     await wait(lambda: player.progress.get('wake_combat') == 'skipped')
-    await probe.walk(connection, (35, 16))
+    terminal = next(obj for obj in probe.service.world.zones[connection.avatar.zone].objects.values()
+                    if obj.spec.params.get('training_core') == 'lat-wake-hall')
+    # Adjacent floor belongs to the outfitter's spawn region. The actual
+    # terminal is reserved by Spawners and stays available for the caller.
+    await probe.walk(connection, terminal.spec.tile)
     body = connection.avatar.actor
     original = body.position
     health = body.health
