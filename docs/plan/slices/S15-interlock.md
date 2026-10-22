@@ -1,6 +1,6 @@
 # S15 — Interlock: controls, hardware, cut-power, private cores, core ownership
 
-**Status:** in progress
+**Status:** done (PR #54)
 **Primary model:** Opus · **Reviewer:** none
 **Depends on:** S14, S11 · **Milestone:** M2
 **Issue:** https://github.com/Thiesi/blacksite/issues/15
@@ -207,3 +207,11 @@ storage and Passkey-loan fixtures; it does not grant money, grade, skill
 or body placement. The control fixture is tier three and isolates the
 interlock from S14's separate ICE acceptance. Actual Gate Nine geography
 remains S25; no future vendor or city map is moved into the hub.
+
+
+Validation before PR: Windows full suite, 853 passed and one Unix-socket
+skip; final focused S15 gate, 33 passed. Real Windows NetBBS Telnet to
+native stdio passed both stages at 80x24 and 132x50, with 16-colour and
+wide-name callers. The final control fixture is tier three. The new
+interlock CI job repeats both stages from the installed wheel; required
+CI and delivered Claude review remain merge gates on the PR.
