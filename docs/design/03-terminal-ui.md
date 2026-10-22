@@ -337,3 +337,20 @@ a solo finale at 80x24 using the compact labels without opening a lore
 page; then read the records and check that they deepen the same events.
 Repeat with a wide handle and all colour tiers. These remain required
 playtests, not a claim that the design has already been played.
+
+
+### S20 faction presentation
+
+Recruitment shows all eight standings and titles before actions. Join
+and leave require a final chosen confirmation; Esc/B cancels. At 80x24
+membership requirements, card distinction and cooldown remain visible.
+Attending's visited vat choices use their own list with one select action.
+
+Faction colour roles style member glyphs, target/nearby names and faction
+chat. Marked overrides member colour with the existing red
+`player_hostile` role; the `!` relation tag preserves meaning without
+colour. Sitrep retains the existing Name/Handle/Faction/Zone/Link cells,
+then adds Rank and a server-authored Marked/Heat countdown. Selected-row
+detail keeps status and rank readable at 80 columns. Inspector telemetry
+reveals only an actively Marked body's current zone, never coordinates;
+existing scoped Hound reports retain their separate exact-location rule.

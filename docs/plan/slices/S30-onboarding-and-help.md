@@ -208,3 +208,15 @@ permissions, slots, tolerance, durations and pack sizes never scale.
 
 This carries the accepted [PR #38](https://github.com/Thiesi/Blacksite/pull/38)
 findings 12/14 forward; see [S17](S17-salvage-and-fabrication.md).
+
+
+### S20 faction integration handoff
+
+Reference: [PR #38](https://github.com/Thiesi/Blacksite/pull/38) and S20.
+
+Explain card +10 versus membership +30/legal discharge, once-only red-sable
+standing migration, seven-day leave cooldown, four title thresholds and
+current +90 perk eligibility. Describe public-default/hall decant choice,
+visited Attending vats, identity daily receipts, optional-only reservations
+and bound loan loss on jack-out. Kin free forecasts require +90; learned
+programs/installed hardware survive membership loss.

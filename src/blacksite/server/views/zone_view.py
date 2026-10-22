@@ -94,7 +94,7 @@ def build(actor: Actor, zone: ZoneInstance, perception: Perception, content: Con
             continue
         entry = {"id": other.id, "x": other.x, "y": other.y,
                  "glyph": glyphs.get("actor-jacked" if other.stance == "jacked" else "actor-self" if other is actor else "actor-drone" if other.kind == "drone" else "actor-npc" if other.kind == "npc" else "actor-player", "@"),
-                 "role": "player_self" if other is actor else "npc_"+(other.faction or "neutral") if other.kind != "player" else "player_hostile" if other.marked else "player_neutral", "stance": other.stance}
+                 "role": "player_self" if other is actor else "npc_"+(other.faction or "neutral") if other.kind != "player" else "player_hostile" if other.marked else content.factions[other.faction].colour if other.faction in content.factions else "player_neutral", "stance": other.stance}
         if other is actor:
             entry["name"] = other.name
         actors.append(entry)

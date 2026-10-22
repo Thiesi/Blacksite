@@ -754,6 +754,15 @@ Other repeatable Silt loot uses 30-minute uptime availability periods.
   the complete perk schedule is §7.6 and implemented by S20. A
   perk must never be a flat combat multiplier.
 
+The existing Wake Hall recruiter-card desk keeps an admission contact
+open for all eight factions. A discharged caller with +30 standing can
+join there or through a placed recruiter talker. Taking a card during
+the Wake still grants only the starting +10 standing, never membership.
+Cards name their faction explicitly; the old Red Sable card key is
+migrated to Sable standing once, preserving the intended reputation.
+Physical faction halls, vats and vendors activate only with their actual
+maps; their staged bindings never make an unfinished district playable.
+
 Ordinary reputation: killing a faction NPC gives -5 with that faction
 and explicit +2 with each of its hostiles; killing a nonhostile player
 gives -10 with their faction; an eligible Marked kill gives +5 Wardens
@@ -892,8 +901,26 @@ fallbacks preserve necessary information and story access.
 | Unmoored | shares access; exposes people and records | bound residual-fragment loan once per UTC day, consumed on jack-out | ordinary programs; public Ninety-Nine advice |
 | Ferrymen | brings parts home; chooses who gets guided | read committed Ring-fall forecast free | buy chart or use public warnings |
 
+Normal members can select their commissioned hall vat or nearest public
+vat at a recruitment contact; public is the default. An Attending may
+instead select one visited, commissioned faction vat for the next decant.
+A vat unlock is a recorded visit to its zone, not standing with its owner.
+The choice expires after that decant and ceases to apply without the perk.
+An unfinished hall supplies no remote spawn or private map access.
+
+The Hand reserves only the optional rotating weapon/armour/gear entry at
+a Sable counter. Fixed stock and its ammunition stay public. The first
+committed reservation wins; purchase, ten minutes, leaving or falling
+below +90 releases it. The UTC-day receipt remains spent. Residual loans
+are not learned programs: a single bound cast grants +25 effective
+Programs, capped 100, until jack-out. Leaving, falling below +90 or a
+server restart also removes the temporary loan without refunding its
+identity receipt. Other learned programs and installed hardware remain.
+
 The charge service fee is 150 chits per use, separate from the
-1 500-chit consumable. The perk cannot change range, time, or safety.
+1 500-chit consumable. The perk cannot change range, time, or safety. A charge uses the ordinary
+interruptible five-second cut channel, from at most three tiles through
+a wall. Fee, charge, cut deadline and any standing/Mark share one receipt.
 Nobody can bar another player from the Tin Halo, remove a recruiter, or
 reserve essential stock. The Choir's historical nine seats do not cap
 players earning the Ninth title. Kestrel reservations do not close the
@@ -1810,7 +1837,7 @@ valid; zone/core instance IDs retain their own documented convention.
 | `key_row_pass` | Row Pass | pass | Red Sable vendor, standing +30 | 0.1 | 250 | Opens a nonessential Sable back-room shortcut. Public bars and boards remain available. |
 | `key_visitor_pass` | Spire Visitor's Pass | pass | Halvard vendor, or lifted from the Gatehouse pass registry | 0.1 | 600 | Admits one non-Halvard character to the Spire Mezzanine for 30 minutes. |
 | `key_silt_beacon` | Silt Beacon | consumable | Choir vendor, standing +30 | 0.5 | 900 | Marks a descent cell for the crew for one hour; crew members see it on the sector view from any cell. |
-| `key_ringfall_chart` | Ring-fall Chart | data | Ferrymen Charter rank (+70) reads it at the Landing | 0.2 | 1 200 | Names the next Ring-fall ring one hour early. Sells to anyone who did not earn it. |
+| `key_ringfall_chart` | Ring-fall Chart | data | Ferrymen Kin rank (+90) reads it free at the Landing | 0.2 | 1 200 | Names the next Ring-fall ring one hour early. Sells to anyone who did not earn it. |
 | `story_vesper_card` | Vesper's Card | misc | starter kit | 0.1 | — | A contract card. *Vesper, Tin Halo, Sodium Row.* |
 | `story_telemetry_unit_warm` | Warm Telemetry Unit | data | Halvard Season 1 | 0.5 | — | Site Zero salvage that is still warm. |
 | `story_halvard_seal_beacon` | Seal Beacon | misc | Halvard Season 1 | 0.5 | — | A monitor beacon Halvard wants planted at the seal. |

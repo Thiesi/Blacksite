@@ -111,3 +111,15 @@ a bulk spawn; Crash grade bonuses cannot manufacture intact salvage.
 
 This carries the accepted [PR #38](https://github.com/Thiesi/Blacksite/pull/38)
 findings 12/14 forward; see [S17](S17-salvage-and-fabrication.md).
+
+
+### S20 faction integration handoff
+
+Reference: [PR #38](https://github.com/Thiesi/Blacksite/pull/38) and S20.
+
+Bind S20 Factions.preview(player, perk_faction) to immutable
+EventOffer(plan_id, text) from already committed Convoy/Surge/Ring-fall
+plans. Consume, expire and notify saved convoy_reservation plan IDs without
+closing the public escort contract. Bind Factions.curfew(zone) for new x2
+heat. Kin requires +90; paid charts/public warnings remain. Fixtures without
+an announced plan cannot claim these benefits live.

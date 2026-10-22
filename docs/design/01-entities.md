@@ -325,6 +325,44 @@ tile), recruiter (npc id), relations {faction id → H/N/A}, ranks[]
 `factions.json` also holds `asymmetries`, the unordered pairs whose
 relation differs by direction; it must equal the set the matrix has.
 
+S20 uses separately commissionable `faction_sites.json` records:
+`id, faction, hall, vat (optional zone/tile), vendor (optional),
+recruiter_zone (optional), schema`. This separates an active faction's
+identity, ranks and relations from a hall that S25 has not built yet.
+Shipped physical bindings use these sites; existing direct Faction
+hall/vat/vendor fields remain compatible for fixtures, with duplicate
+bindings rejected. Authoring sites may name future maps. Active sites
+must resolve every reference and a protected vat object. Runtime service
+lookup considers only active sites. A site does not grant membership.
+
+The Wake Hall card desk's `params.recruiters` lists faction IDs available
+for admission contact; a named talker resolves through `recruiter`.
+
+S20 uses `progress.faction_cooldown_until` (absolute UTC seconds),
+`faction_respawn` (`public`/`hall`), `faction_vat` (next-decant faction),
+`faction_loan` and `lattice_charges.prg_residual_fragment`. Temporary loans
+never enter `known_programs`. A Sable `faction_reservation` holds
+`counter, item, until`; eligibility is rechecked at purchase. Daily use
+lives on BBS identity at `receipts.faction_perks`, not on a character.
+`receipts.marked_kills` maps victim BBS identity to the rolling 24-hour
+reward deadline. These identity changes share the owning commerce write.
+
+Private-core `hack_log` entries retain server-only `actor`, opaque
+`receipt`, and `reported` fields with the existing time/item/unit fields.
+Resident views never expose the actor. Reporting writes the once-only
+flag and the attributed Wardens standing in the same transaction.
+Historical entries without an attribution receipt remain readable.
+
+`Factions.standing_patch(player, changes, mode)` prepares a source-owned
+standing proposal. NPC/player outcomes and cut/report vectors are
+explicit; S19 ordinary rewards propagate once. `Factions.preview`
+accepts a player and perk faction, returning an immutable
+`EventOffer(plan_id, text)` or no announced plan. S24 owns this provider
+and consumes the saved `convoy_reservation` plan ID, expiry and notice;
+reads do not roll, move or commit an event. `Factions.curfew(zone)` is
+false until S24 binds its committed event state. S21 freezes due rent
+through `before_membership_change` before changing eligibility.
+
 ### 1.10 Contract template (`contracts.json`)
 
 `id, faction or "vesper", type (fetch, hack, escort, clear, plant,
@@ -436,7 +474,10 @@ and an active bundle depends only on active bundles.
 the start does not grant. These records carry no equipment or combat
 execution; the consuming slices supply those systems.
 
-`wake_cards.json`: `id` (future faction ID), `name`, `pitch` (text asset).
+`wake_cards.json`: `id` (card ID), `name`, `pitch` (text asset), optional
+`faction` (the actual faction ID; old fixtures default to the card ID).
+The `red-sable` card maps to `sable`. Existing standing under a card-only
+alias moves once to its faction key, combining and clamping at -100/100.
 The eight introductions set standing, not membership. They do not
 activate incomplete faction content or handlers.
 

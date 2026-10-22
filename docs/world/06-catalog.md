@@ -479,7 +479,7 @@ secured by default, and cannot be sold.
 | `key_row_pass` | Row Pass | pass | Red Sable vendor, standing +30 | 0.1 | 250 | Opens a nonessential Sable back-room shortcut. Public bars and boards remain available. |
 | `key_visitor_pass` | Spire Visitor's Pass | pass | Halvard vendor, or lifted from the Gatehouse pass registry | 0.1 | 600 | Admits one non-Halvard character to the Spire Mezzanine for 30 minutes. |
 | `key_silt_beacon` | Silt Beacon | consumable | Choir vendor, standing +30 | 0.5 | 900 | Marks a descent cell for the crew for one hour; crew members see it on the sector view from any cell. |
-| `key_ringfall_chart` | Ring-fall Chart | data | Ferrymen Charter rank (+70) reads it at the Landing | 0.2 | 1 200 | Names the next Ring-fall ring one hour early. Sells to anyone who did not earn it. |
+| `key_ringfall_chart` | Ring-fall Chart | data | Ferrymen Kin rank (+90) reads it free at the Landing | 0.2 | 1 200 | Names the next Ring-fall ring one hour early. Sells to anyone who did not earn it. |
 | `story_vesper_card` | Vesper's Card | misc | starter kit | 0.1 | — | A contract card. *Vesper, Tin Halo, Sodium Row.* |
 | `story_telemetry_unit_warm` | Warm Telemetry Unit | data | Halvard Season 1 | 0.5 | — | Site Zero salvage that is still warm. |
 | `story_halvard_seal_beacon` | Seal Beacon | misc | Halvard Season 1 | 0.5 | — | A monitor beacon Halvard wants planted at the seal. |

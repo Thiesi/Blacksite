@@ -175,3 +175,13 @@ label alone are insufficient. Slots, permissions and durations stay fixed.
 
 This carries the accepted [PR #38](https://github.com/Thiesi/Blacksite/pull/38)
 findings 12/14 forward; see [S17](S17-salvage-and-fabrication.md).
+
+
+### S20 faction integration handoff
+
+Reference: [PR #38](https://github.com/Thiesi/Blacksite/pull/38) and S20.
+
+Use S20 actual membership and active Marked deadlines when validating
+bounties. Permission to post a bounty never grants a combat exemption. Sable
+reservations apply only to optional NPC rotating stock; player market
+delivery keeps S18 protected personal impound.

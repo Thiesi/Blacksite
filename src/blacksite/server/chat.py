@@ -55,6 +55,8 @@ class Chat:
         self.settings_fallback: dict[str, dict[str, Any]] = {}
         self.crew_of: Callable[[Session], str | None] = lambda s: None  # S22 installs membership.
         self.lattice_at: Callable[[Session], tuple[str, str] | None] = lambda s: None
+        self.status_of: Callable[[Session], str] = lambda session: ""
+        self.rank_of: Callable[[Session], str] = lambda session: ""
         self.reported_location: Callable[[Session, Session], str | None] = lambda viewer, target: None
 
     def ready(self, session: Session) -> bool:
@@ -104,8 +106,9 @@ class Chat:
     def emit(self, recipient: Session, channel: str, text: str, source: Session | None = None) -> None:
         if source and source.user_id in self.settings(recipient).get("ignored", []):
             return
+        faction = self.characters.content.factions.get(self.faction(recipient)) if self.characters and channel == "faction" else None
         recipient.send(Frame("log", {"lines": [{"channel": channel, "text": sanitize(text),
-            "role": "chan_" + ({"system":"sys", "shout":"say"}.get(channel, channel)), "at": self.clock.now_utc().isoformat()}]}))
+            "role": faction.colour if faction else "chan_" + ({"system":"sys", "shout":"say"}.get(channel, channel)), "at": self.clock.now_utc().isoformat()}]}))
 
     def faction(self, session: Session) -> str | None:
         return self.characters.players[session.player_id].faction if self.characters else self.sim.avatars[session.user_id].actor.faction
@@ -332,12 +335,12 @@ class Chat:
                 oa = self.sim.avatars[other.user_id]
                 location = "hidden" if hidden or self.settings(other).get("sitrep_hidden", False) else (self.sim.world.zones[oa.actor.zone].template.meta.name if oa.actor.zone else "in transit")
                 location = self.reported_location(session, other) or location
-                rows.append({"id": other.player_id, "cells": [self.name(other), sanitize(str(other.door_info.get("handle", ""))), self.faction(other) or "Freelance", location, "jacked" if oa.actor.stance == "jacked" else "body"]})
+                rows.append({"id": other.player_id, "cells": [self.name(other), sanitize(str(other.door_info.get("handle", ""))), self.faction(other) or "Freelance", location, "jacked" if oa.actor.stance == "jacked" else "body", self.rank_of(other), self.status_of(other)]})
             body = menu("SITREP", rows, min(screen.cursor, max(0,len(rows)-1)),
                         "Your zone is hidden; others' zones are hidden from you." if hidden else "Online characters. H hides your zone.", "H hide/show zone  Esc/B returns")
-            body["columns"] = ["Name", "Handle", "Faction", "Zone", "Link"]
+            body["columns"] = ["Name", "Handle", "Faction", "Zone", "Link", "Rank", "Status"]
             if rows:
                 selected = rows[body["cursor"]]["cells"]
-                body["detail"] = f"Zone: {selected[3]}  Link: {selected[4]}\nName: {selected[0]}\nHandle: {selected[1]}\nFaction: {selected[2]}"
+                body["detail"] = f"{selected[6] or selected[4]} | Zone: {selected[3]}\nName: {selected[0]}\nHandle: {selected[1]}\nFaction: {selected[2]}  Rank: {selected[5] or 'none'}"
             body["actions"] = [{"key":"h", "label":"hide/show zone"}]
             self.sim.external_views[sid] = "menu", body

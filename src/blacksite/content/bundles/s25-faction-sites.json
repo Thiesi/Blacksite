@@ -1,0 +1,16 @@
+{
+  "schema": 1,
+  "id": "s25-faction-sites",
+  "status": "authoring",
+  "members": {
+    "faction_sites": [
+      "site-halvard",
+      "site-kestrel",
+      "site-choir",
+      "site-sable",
+      "site-unmoored",
+      "site-ferrymen"
+    ]
+  },
+  "depends": []
+}

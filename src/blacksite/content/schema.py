@@ -591,6 +591,7 @@ class WakeCard:
     id: str
     name: str
     pitch: str
+    faction: str | None = None
     schema: int = CONTENT_SCHEMA
 
 
@@ -919,6 +920,19 @@ class Faction:
     ranks: tuple[Rank, ...] = ()
     vendor: str | None = None
     contracts: tuple[str, ...] = ()
+    schema: int = CONTENT_SCHEMA
+
+
+@dataclass(frozen=True)
+class FactionSite:
+    """A physical binding can remain authoring while its faction is live."""
+
+    id: str
+    faction: str
+    hall: str
+    vat: VatLocation | None = None
+    vendor: str | None = None
+    recruiter_zone: str | None = None
     schema: int = CONTENT_SCHEMA
 
 
@@ -1291,7 +1305,7 @@ class ArtAsset:
 
 BUNDLE_KINDS = (
     "zones", "sectors", "cores", "items", "programs", "ice", "npcs",
-    "factions", "contracts", "events", "routes", "seasons", "dialogue",
+    "factions", "faction_sites", "contracts", "events", "routes", "seasons", "dialogue",
     "text", "art", "evidence", "services", "vendors", "hymns", "starts", "wake_cards", "emotes",
 )
 

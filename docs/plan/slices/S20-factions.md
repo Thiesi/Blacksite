@@ -1,6 +1,6 @@
 # S20 — Factions: membership, standing, relations, Marked, Warden heat, ranks and perks, faction chat
 
-**Status:** planned
+**Status:** done (PR #60)
 **Primary model:** Opus · **Reviewer:** none
 **Depends on:** S11, S12, S16 · **Milestone:** M4
 **Issue:** https://github.com/Thiesi/blacksite/issues/20
@@ -47,8 +47,12 @@ bible says it does.
   asymmetries explicitly: the file may declare none), colours per tier
   and palette variant, halls mapped to gazetteer IDs (`spire-atrium`,
   `vatside-clinics`, `tramyard-depots`, `core-precinct`,
-  `chapel-nave`, `sink-terraces`, `oldworks-main`, `scour-landing`;
+  `chapel-nave`, `sink-terraces`, `oldworks-drop`, `scour-landing`;
   reconcile against the factions doc's slugs), vats, recruiters, ranks.
+  Unmoored public board/recruiter stays on `oldworks-main`. Active
+  faction identities use separately commissionable `faction_sites.json`
+  bindings so unfinished halls stay in authoring until S25; do not
+  weaken active-reference validation or create alias zones.
 - `server/factions.py`: `standing(player, faction)`, `apply_delta
   (player, faction, delta, reason)` propagating +delta / 2 to allies
   and −delta / 2 to hostiles of that faction; sources wired: contract
@@ -61,6 +65,11 @@ bible says it does.
 - Join: recruiter `talker` action when standing >= 30 and legal_at set;
   sets `faction`, grants member benefits; leave: −50 standing,
   `faction_cooldown_until` +7 days, loses benefits at once.
+  The existing Wake Hall recruiter-card desk also provides admission
+  contact for all eight factions, without duplicating named NPCs or
+  opening future districts. Initial card choice is still not membership.
+  Cards name their faction explicitly, preserving/migrating the old
+  `red-sable` standing key to `sable` once.
 - Relations: `relation(a, b)` returns H/N/A for faction pairs with
   Freelance treated as N to all; used by S10's attack legality, S11's
   aggro, S13's presence colour, and the Marked check.
@@ -110,8 +119,8 @@ bible says it does.
 
 ## Protocol and view models
 
-- `ZoneView.actors[].role` uses `player_hostile`, `player_neutral`,
-  `player_crew`, `player_marked`; `nearby[].relation` tag; `me.faction`,
+- `ZoneView.actors[].role` uses the faction colour for members, with
+  the existing red `player_hostile` palette role overriding it for Marked; `nearby[].relation` tag; `me.faction`,
   `me.rank`, `me.marked_until`, `me.heat_until`.
 - `MenuView` kind `faction` (standing list with bars, rank, join/leave
   actions with confirmation keystroke, cooldown).
@@ -147,13 +156,16 @@ bible says it does.
 
 ## Acceptance script
 
-1. Two callers at grade ≥ 5 in `sink-terraces`, one Sable, one Freelance.
-2. The Sable caller shoots the Freelance caller: the Sable name turns
+1. Two callers at grade 5 or above, one nonhostile member and one
+   Freelance, in a contested lane. S20 uses shipped Clinic Row; S25
+   repeats on actual `sink-terraces`. Use Sablier for Warden response:
+   Sable is already hostile to Wardens under the matrix.
+2. The member shoots the Freelance caller: the member name turns
    red on the other screen with the `!` tag; a Warden NPC in the zone
-   turns on the Sable caller; the sitrep shows "Marked 14:52".
+   turns on the Marked caller; the sitrep shows "Marked 14:52".
 3. A third caller (any faction) kills the Marked player: log shows
    +5 Wardens and no Mark.
-4. A Halvard member at +30 talks to the recruiter, joins, sees the
+4. A Halvard applicant at +30 talks to the recruiter, joins, sees the
    faction channel appear; types in it; the Freelance caller does not
    see it. The member leaves: −50, cooldown 7 days in the faction menu.
 
@@ -174,3 +186,58 @@ alias zones. Relations use one function and the canonical matrix.
 Add tests for missed shots, indirect attacks, grade-4 legal residents,
 safe-body effects, daily perk races and every perk's loss-of-standing
 path. A Freelance can finish every main-season objective.
+
+### S20 integration decisions and handoff
+
+The Wake desk is the live admission path; existing pitch assets remain
+verbatim. S25 commissions the six remaining `faction_sites` with actual
+protected vat objects and hall counters, and repeats Sink combat. S27
+binds each named recruiter template and places Unmoored's public contact
+at Old Works Main while its hall/vat remain Old Works Drop.
+
+Normal decant defaults to nearest public vat; membership offers the hall
+as a choice, avoiding an involuntary long recovery walk. Attending choice
+uses visited commissioned vats and a single next-decant receipt. S24
+binds `Factions.preview -> EventOffer(plan_id, text)` for Kestrel, Choir
+and Ferrymen, consumes/clears committed Convoy reservations, and binds
+`Factions.curfew(zone)` for new heat. No event preview is advertised as
+announced before that integration. Kin's free forecast requires +90;
+paid charts and public warnings stay available.
+
+The Halvard fee waiver uses the real range-three containment-cut path;
+item, service fee, Mark, standing and offline deadline commit together.
+Turret attempts (including misses), controlled hazards and remote cuts
+attribute Marked to the initiating body; lethal controlled machinery
+retains that controller for ordinary defeat settlement. Safe/pocket and
+under-grade checks still run before harm. Private theft reports remain
+redacted and pay no second penalty after a repeated input/restart.
+
+
+### Acceptance record (PR #60)
+
+Reviewed runtime `fd06e8b`: root pytest passed 1145 tests on Linux and
+1144 plus one platform skip on Windows. The local Windows root run also
+passed 1144 plus one skip (474.62 s). No runtime dependency or numeric
+combat/XP balance changed; package 0.0.15, schemas 1/1/3.
+
+`scripts/accept_s20_netbbs.py` passed both `factions` and `hardware`
+stages through an actual Windows TTY NetBBS Telnet node and its
+registered native stdio door at 80x24/132x50, with wide names and the
+16-colour path. The installed-wheel CI repeated both stages. Faction
+fixtures are grade/+30 admission standing, delayed Warden attacks and
+1 HP after marking. Hardware fixtures are the labelled S15 open Civic
+zone, a charge/zero chits, +90 Halvard membership after the refusal and
+a between-size core cooldown reset. Real Sink geography remains S25.
+
+[CI artifact](https://github.com/Thiesi/Blacksite/actions/runs/39864555607/artifacts/12464036114):
+99 files, 437659 bytes; independently downloaded and checked against
+SHA256 `ecb47ace76f110a48d4ca06ecbb7a96fc55c9b807c47c40c251664d3b5aef553`.
+Both result JSON files contain passing runs at both terminal sizes.
+
+Claude Sonnet 5.5 supplied a written review and re-review. Two practical
+hardware UX findings were fixed; unreachable/dormant concerns and the
+incorrect offline-player premise have source-backed triage in PR #60.
+The future rent-freeze notice is explicitly owned by S21. The repeated
+legacy NPC profile passed at p99 4.016 ms (80x24) and 4.578 ms (132x50);
+the earlier 137 ms result did not recur and was never counted green.
+Final PR checks still govern merge; this marker is published with it.

@@ -363,7 +363,7 @@
           "item": "drug_sable_chrome"
         }
       ],
-      "faction": "red-sable",
+      "faction": "sable",
       "zone": "sink-rim"
     },
     {
@@ -402,7 +402,7 @@
           "standing": 50
         }
       ],
-      "faction": "red-sable",
+      "faction": "sable",
       "zone": "sink-terraces"
     },
     {
@@ -472,7 +472,7 @@
           "item": "imp_halvard_heavy_mount"
         }
       ],
-      "faction": "red-sable",
+      "faction": "sable",
       "zone": "sink-floor",
       "price_multiplier": 0.6
     },
@@ -781,7 +781,7 @@
           "item": "con_sable_stim"
         }
       ],
-      "faction": "red-sable",
+      "faction": "sable",
       "zone": "sodium-tin-halo",
       "object_id": "vesper",
       "daily_rotation": true

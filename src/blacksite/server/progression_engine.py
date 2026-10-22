@@ -54,7 +54,8 @@ class ProgressionEngine:
     def modifiers(self, player: Player) -> Modifiers:
         return collect(player, self.commerce.items, self.content.items,
                        self.clock.now_utc().timestamp(), [*self.event_modifiers(player),
-                           *(self.drones.modifier_layers(player) if hasattr(self,"drones") else [])])
+                           *(self.drones.modifier_layers(player) if hasattr(self,"drones") else []),
+                           *(self.game.factions.modifier_layers(player) if hasattr(self.game, "factions") else [])])
 
     def controller(self, actor: Actor) -> Player | None:
         if actor.id in self.game.players:

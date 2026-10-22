@@ -93,17 +93,20 @@ class Commerce:
         entries = list(vendor.stock)
         # The catalog requires ammunition alongside every weapon sold.
         seen = {s.item for s in entries}
-        for entry in vendor.stock:
+        if vendor.daily_rotation:
+            candidates = sorted(i.id for i in self.content.items.values()
+                                if i.tier == 2 and i.base_price > 0 and not i.id.startswith("story_")
+                                and i.class_ in ("weapon", "armour", "gear") and not i.no_vendor_sale
+                                and i.id not in seen and self.content.active("items", i.id))
+            if candidates:
+                entries.append(VendorStock(candidates[self.clock.now_utc().date().toordinal() % len(candidates)], price_multiplier=1.4))
+        # Rotation is optional stock too: its weapon must bring ammunition.
+        for entry in tuple(entries):
             template = self.content.items.get(entry.item)
             ammo = template.weapon.ammo if template and template.weapon else None
             if ammo and ammo not in seen:
                 entries.append(VendorStock(ammo))
                 seen.add(ammo)
-        if vendor.daily_rotation:
-            candidates = sorted(i.id for i in self.content.items.values()
-                                if i.tier == 2 and i.base_price > 0 and not i.id.startswith("story_"))
-            if candidates:
-                entries.append(VendorStock(candidates[self.clock.now_utc().date().toordinal() % len(candidates)], price_multiplier=1.4))
         return entries
 
     def quote(self, player: Player, vendor: Vendor, entry: VendorStock, count: int, quality: float = 1) -> int:
@@ -119,6 +122,9 @@ class Commerce:
             if len(self.waiting) >= QUEUE_LIMIT:
                 raise ValueError("The counter is busy. Try again.")
             self.waiting.append((session.id,name,deepcopy(args),from_channel))
+            return
+        if name == "vendor.reserve":
+            self.game.factions.reserve_stock(session, args.get("target", ""), args.get("item", ""))
             return
         player = self.game.players[session.player_id]
         av = self.sim.avatars[session.user_id]
@@ -150,6 +156,10 @@ class Commerce:
                 entry = next((entry for entry in self.stock(vendor) if entry.item == iid), None)
                 if entry is None or not permitted(player, vendor, entry):
                     raise ValueError("That stock is not available to you.")
+                if hasattr(self.game, "factions") and not self.game.factions.stock_available(player, vendor, budget_key, iid):
+                    raise ValueError("This optional item is reserved for up to ten minutes. Fixed stock remains open.")
+                if draft.progress.get("faction_reservation", {}).get("counter") == budget_key and draft.progress["faction_reservation"].get("item") == iid:
+                    draft.progress.pop("faction_reservation")
                 template = self.content.items.get(iid)
                 count = args.get("qty", template.stack_max if template and template.class_ == "ammo" else 1)
                 if type(count) is not int or not 1 <= count <= (template.stack_max if template else 1):
@@ -513,7 +523,7 @@ class Commerce:
     def select(self, session: Session, screen: CommerceMenu, action: str, row: str) -> None:
         if screen.kind == "vendor":
             if action == "t": screen.sell, screen.cursor = not screen.sell, 0; return
-            self.propose(session, "vendor.sell" if screen.sell else "vendor.buy", {"target": screen.target, "item": row})
+            self.propose(session, "vendor.reserve" if action == "r" and not screen.sell else "vendor.sell" if screen.sell else "vendor.buy", {"target": screen.target, "item": row})
         elif screen.kind == "bank":
             self.prompt(session, "bank.withdraw" if row == "withdraw" else "bank.deposit", {"target": screen.target})
         elif screen.kind == "cache": self.propose(session, "inv.pickup", {"target": screen.target, "item": row})
@@ -566,9 +576,15 @@ class Commerce:
                     count = template.stack_max if template and template.class_ == "ammo" else 1
                     label = template.name if template else self.content.programs.get(entry.item).name if entry.item in self.content.programs else entry.item
                     allowed = permitted(player, vendor, entry) and self.content.active("items", entry.item)
+                    if hasattr(self.game, "factions") and not self.game.factions.stock_available(player, vendor, budget_key, entry.item):
+                        allowed = False
                     cost = self.quote(player, vendor, entry, count) if template or entry.item in self.content.programs else 0
                     rows.append({"id": entry.item, "cells": [label, str(count), str(cost) if cost else "not for sale", "" if allowed else "locked"]})
             actions = [{"key":"enter", "label":"sell" if screen.sell else "buy"}, {"key":"t","label":"buy/sell"}]
+            if not screen.sell and hasattr(self.game, "factions"):
+                from blacksite.server.factions import perk
+                if perk(player, "sable") and vendor.faction == "sable":
+                    actions.append({"key": "r", "label": "reserve optional stock 10 min"})
             if vendor.clinic:
                 actions.append({"key":"c","label":"clinic"})
         elif screen.kind == "bank":

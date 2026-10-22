@@ -74,6 +74,10 @@ class Encounters:
         self.commerce.after_settle = self.flush_hits
         self.mission_of: Callable[[str, str], str | None] = lambda pid, source: None  # S19.
 
+    def known_programs(self, player: Player) -> set[str]:
+        loans = self.game.factions.loan_programs(player) if hasattr(self.game, "factions") else set()
+        return set(self.content.starts[player.archetype].programs) | set(player.progress.get("known_programs", [])) | loans
+
     def move_multiplier(self, player: Player) -> float:
         return self.game.progression.modifiers(player).multiplier("cell_move_multiplier")
 
@@ -90,9 +94,6 @@ class Encounters:
             if recipient and recipient.faction == owner and not session.closed:
                 session.send(Frame("log", {"lines": [{"channel": "faction", "text": text,
                     "role": "warning", "at": self.clock.now_utc().isoformat()}]}))
-        faction = self.content.factions.get(owner)
-        if faction and faction.hall in self.game.world.zones:
-            self.lat.interlock.zone_log(faction.hall, text)
 
     def reported_location(self, viewer: Session, target: Session) -> str | None:
         observer = self.game.players.get(viewer.player_id)
@@ -501,6 +502,8 @@ class Encounters:
         now, tick = self.clock.now_utc().timestamp(), self.clock.now_tick()
         if player.progress.get("lattice_cooldowns", {}).get(pid, 0) > now:
             raise ValueError("That program is cooling down.")
+        if program.id == "prg_residual_fragment" and program.id not in self.game.factions.loan_programs(player):
+            raise ValueError("The bound faction loan is no longer eligible.")
         if not can_cast(program, player.archetype, player.progress.get("lattice_charges", {})):
             raise ValueError("That program needs its bound charge or archetype.")
         if "bound_charge" in program.cast_requires and self.commerce.pending:
@@ -557,6 +560,8 @@ class Encounters:
         player = self.game.players[presence.player_id]
         tick, now = self.clock.now_tick(), self.clock.now_utc().timestamp()
         kind, params = program.effect.kind, program.effect.params
+        if program.id == "prg_residual_fragment" and program.id not in self.game.factions.loan_programs(player):
+            raise ValueError("The bound faction loan is no longer eligible.")
         if program.target_class == "runner" and self.commerce.pending:
             presence.cast = cast
             return  # Nothing is charged or Marked before a hit can resolve.
@@ -1069,7 +1074,7 @@ class Encounters:
             return [{"id": str(index), "cells": [str(index+1), self.content.programs[pid].name if pid else
                     "Reserved" if index in occupied else "Empty"]} for index, pid in enumerate(presence.rig)]
         if screen.kind == "binding":
-            known = set(self.content.starts[player.archetype].programs) | set(player.progress.get("known_programs", []))
+            known = self.known_programs(player)
             return [{"id": "", "cells": ["Unload"]}] + [{"id": pid, "cells": [self.content.programs[pid].name,
                     str(self.content.programs[pid].slots)+" slots"]} for pid in sorted(known)]
         instance = self.core(presence)
@@ -1121,7 +1126,7 @@ class Encounters:
             if not self.idle(presence) or presence.instance or not self.lat.public(presence):
                 raise ValueError("Load programs only while idle in a public district cell.")
             player = self.game.players[presence.player_id]
-            known = set(player.progress.get("known_programs", [])) | set(self.content.starts[player.archetype].programs)
+            known = self.known_programs(player)
             presence.rig = bind(presence.rig, screen.slot, row or None, known, self.content.programs)
             player.rig["slots"] = list(presence.rig)
             self.game.queue("save", player.bbs_user_id, player, immediate=True)

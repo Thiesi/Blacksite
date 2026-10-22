@@ -4,42 +4,50 @@
     {
       "id": "halvard",
       "name": "Halvard-Ostrom",
-      "pitch": "faction-halvard-pitch"
+      "pitch": "faction-halvard-pitch",
+      "faction": "halvard"
     },
     {
       "id": "sablier",
       "name": "Sablier",
-      "pitch": "faction-sablier-pitch"
+      "pitch": "faction-sablier-pitch",
+      "faction": "sablier"
     },
     {
       "id": "kestrel",
       "name": "Kestrel",
-      "pitch": "faction-kestrel-pitch"
+      "pitch": "faction-kestrel-pitch",
+      "faction": "kestrel"
     },
     {
       "id": "wardens",
       "name": "Wardens",
-      "pitch": "faction-wardens-pitch"
+      "pitch": "faction-wardens-pitch",
+      "faction": "wardens"
     },
     {
       "id": "choir",
       "name": "Ninefold Choir",
-      "pitch": "faction-choir-pitch"
+      "pitch": "faction-choir-pitch",
+      "faction": "choir"
     },
     {
       "id": "red-sable",
       "name": "Red Sable",
-      "pitch": "faction-red-sable-pitch"
+      "pitch": "faction-red-sable-pitch",
+      "faction": "sable"
     },
     {
       "id": "unmoored",
       "name": "Unmoored",
-      "pitch": "faction-unmoored-pitch"
+      "pitch": "faction-unmoored-pitch",
+      "faction": "unmoored"
     },
     {
       "id": "ferrymen",
       "name": "Ferrymen",
-      "pitch": "faction-ferrymen-pitch"
+      "pitch": "faction-ferrymen-pitch",
+      "faction": "ferrymen"
     }
   ]
 }

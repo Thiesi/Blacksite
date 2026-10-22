@@ -162,7 +162,8 @@ class PrivateCores:
         if record.get("unit"):
             proposal.setdefault("unit_hacks", {})[record["unit"]] = record["last_hacked_at"]
         at = self.interlock.clock.now_utc().isoformat()
-        record["hack_log"] = (record["hack_log"]+[{"at": at, "item": item.template, "unit": 1}])[-HACK_LOG_LIMIT:]
+        record["hack_log"] = (record["hack_log"]+[{"at": at, "item": item.template, "unit": 1,
+            "actor": player.id, "receipt": stolen.id, "reported": False}])[-HACK_LOG_LIMIT:]
         identity = deepcopy(self.game.identity(player.bbs_user_id))
         reward = award(draft, identity, Grant("run", stolen.id, True,
             scope=presence.core, core=presence.core, tier=apartment["tier"]),
@@ -178,6 +179,33 @@ class PrivateCores:
         if not commerce.settle(player, patch, items, commerce.caches, serial, finished, identity):
             raise ValueError("Let the current transfer settle first.")
         commerce.outbox[-1]["interlock_state"] = proposal
+
+    def report_theft(self, session: "Session", aid: str, receipt: str) -> None:
+        commerce = self.interlock.commerce
+        if commerce.pending:
+            commerce.enqueue_system(lambda: self.report_theft(session, aid, receipt)
+                if self.game.sessions.active.get(session.id) is session and not session.closed else None)
+            return
+        apartment = self.interlock.state["apartments"].get(aid)
+        if not apartment or apartment["resident"] != session.player_id:
+            raise ValueError("Only the current resident may report this intrusion.")
+        row = next((row for row in apartment["hack_log"] if row.get("receipt") == receipt), None)
+        if not row or row.get("reported") or not row.get("actor"):
+            raise ValueError("That intrusion has already been reported or has no reportable receipt.")
+        proposal = deepcopy(self.interlock.state)
+        next(row for row in proposal["apartments"][aid]["hack_log"] if row.get("receipt") == receipt)["reported"] = True
+        thief = self.game.players.get(row["actor"])
+        patch = self.game.factions.standing_patch(thief, {"wardens": -10}, "explicit") if thief else {}
+        before = deepcopy(thief.standing) if thief else {}
+        def committed() -> None:
+            self.lat.log(session, "Intrusion reported to the Wardens. The core log does not identify the runner.")
+            if thief:
+                self.game.factions.notify_standing(thief, before, "resident reported private-core theft")
+            if session.id in self.interlock.log_menus:
+                self.open_log(session, aid)
+        self.interlock.commit(proposal, committed)
+        if thief:
+            commerce.outbox[-1]["player_patches"] = {thief.id: patch}
 
     def log_lines(self, apartment: dict[str, Any]) -> list[str]:
         return [f"Someone was in your core at {datetime.fromisoformat(row['at']).astimezone(timezone.utc):%Y-%m-%d %H:%M} UTC. They took a {self.content.items[row['item']].name}."
@@ -211,7 +239,11 @@ class PrivateCores:
         detail = ("\n".join(wrapped(lines[cursor], 52 if session.caps["width"] >= 100 else 66))
                   if lines else "No intrusion recorded.")
         self.lat.sim.external_views[session.id] = "menu", menu("APARTMENT / CORE LOG",
-            [{"id": str(i), "cells": [line]} for i, line in enumerate(lines)], cursor,
-            detail, "Esc/B returns")
+            [{"id": apartment["hack_log"][i].get("receipt", str(i)), "cells": [line,
+                "reported" if apartment["hack_log"][i].get("reported") else ""]} for i, line in enumerate(lines)], cursor,
+            detail, "R report intrusion  Esc/B returns")
+        row = apartment["hack_log"][cursor] if lines else {}
+        self.lat.sim.external_views[session.id][1]["actions"] = ([{"key": "r", "label": "report intrusion"}]
+            if row.get("receipt") and not row.get("reported") else [])
         self.interlock.log_menus.add(session.id)
         self.log_apartments[session.id] = aid

@@ -4,6 +4,7 @@ from blacksite.content.loader import ContentTree
 from blacksite.content.schema import NpcTemplate, WeaponBlock
 from blacksite.server.world.actors import Actor
 from blacksite.server.rules.character import health_max
+from blacksite.server.factions import relation as faction_relation
 
 EVALUATION_TICKS = 5
 LOST_SIGHT_SECONDS = 20
@@ -20,10 +21,7 @@ SUBDUE_SHOCK = 80
 
 
 def relation(content: ContentTree, source: str | None, target: str | None) -> str:
-    if source and source == target:
-        return "A"
-    faction = content.factions.get(source)
-    return faction.relations.get(target, "N") if faction else "N"
+    return faction_relation(content.factions, source, target)
 
 
 def weapon(content: ContentTree, template: NpcTemplate) -> WeaponBlock | None:
