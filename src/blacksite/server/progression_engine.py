@@ -30,6 +30,30 @@ class ProgressionEngine:
         return collect(player, self.commerce.items, self.content.items,
                        self.clock.now_utc().timestamp())
 
+    def sync_actor(self, player: Player) -> None:
+        from blacksite.server.inventory import Inventory
+        from blacksite.server.rules import character
+        actor = self.game.combat.actor(player)
+        if actor is None:
+            return
+        mods = self.modifiers(player)
+        before = (actor.modifiers, actor.health_max, actor.stamina_max, actor.overweight)
+        pools = actor.health, actor.stamina, actor.shock
+        actor.modifiers = dict(mods.values)
+        actor.modifiers["shock_floor"] = (100 if player.progress.get("surgery_shock_until", 0)
+            > self.clock.now_utc().timestamp() else mods.bonus("shock"))
+        actor.health_max = mods.health_max(player)
+        actor.stamina_max = character.stamina_max(mods.attribute(player, "nerve"), mods.attribute(player, "frame"))
+        actor.health, actor.stamina = min(actor.health, actor.health_max), min(actor.stamina, actor.stamina_max)
+        actor.shock = max(actor.shock, actor.modifiers["shock_floor"])
+        actor.overweight = Inventory(self.commerce.items, self.content.items).weight(player) > (
+            character.carry_kg(mods.attribute(player, "frame"))+mods.bonus("carry_kg"))
+        if pools != (actor.health, actor.stamina, actor.shock):
+            player.health, player.stamina, player.shock = actor.health, actor.stamina, actor.shock
+            self.game.queue("save", player.bbs_user_id, player, immediate=False)
+        if actor.zone and before != (actor.modifiers, actor.health_max, actor.stamina_max, actor.overweight):
+            self.game.world.zones[actor.zone].revision += 1
+
     def sheet(self, player: Player, cursor: int) -> dict[str, Any]:
         from datetime import datetime
         identity = self.game.identities[player.bbs_user_id]
@@ -119,6 +143,9 @@ class ProgressionEngine:
             self.commerce.caches, self.commerce.serial, committed)
 
     def input(self, session: Session, frame: Frame, tick: int) -> bool:
+        player = self.game.players.get(session.player_id)
+        if player:
+            self.sync_actor(player)
         if session.id not in self.menus:
             return False
         if session.closed or session.player_id not in self.game.players:
@@ -149,6 +176,8 @@ class ProgressionEngine:
         return True
 
     def tick(self, ctx: TickContext) -> None:
+        for player in self.game.players.values():
+            self.sync_actor(player)
         for sid in tuple(self.menus):
             session = self.game.sessions.active.get(sid)
             if session is None or session.closed or session.player_id not in self.game.players:

@@ -18,10 +18,11 @@ class Actor:
     # game design 3.1/3.2: 50 + 2*40 HP; 30 + 20 + 40/2 STA.
     health: int = 130
     health_max: int = 130
-    stamina: int = 70
+    stamina: float = 70
     stamina_max: int = 70
     shock: float = 0
-    cooldowns: dict[str, int] = field(default_factory=dict)
+    cooldowns: dict[str, int | float] = field(default_factory=dict)
+    modifiers: dict[str, float] = field(default_factory=dict)
     effects: list[dict[str, object]] = field(default_factory=list)
     target: str | None = None
     stance: str = "normal"

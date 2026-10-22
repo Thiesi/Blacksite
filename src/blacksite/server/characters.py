@@ -503,7 +503,8 @@ class Characters:
         for avatar in self.sim.avatars.values():
             actor = avatar.actor
             if actor.zone and actor.shock > 0 and ctx.tick - actor.cooldowns.get("last_hit", -3 * TICK_HZ) >= 3 * TICK_HZ:
-                actor.shock = max(0, actor.shock - rules.SHOCK_DECAY_PER_SECOND / TICK_HZ)
+                actor.shock = max(actor.modifiers.get("shock_floor", 0), actor.shock
+                    - rules.SHOCK_DECAY_PER_SECOND / TICK_HZ*actor.modifiers.get("shock_decay_multiplier", 1))
                 self.world.zones[actor.zone].revision += 1
 
     def publish(self, ctx: TickContext) -> None:

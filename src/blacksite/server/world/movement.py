@@ -1,4 +1,4 @@
-"""Game design 5.2 movement and 3.1 stamina; integer ticks only."""
+"""Game 5.2 movement and 3.1 stamina on the authoritative tick budget."""
 
 from blacksite.server.world.actors import Actor
 from blacksite.server.world.zone import ZoneInstance
@@ -33,16 +33,26 @@ def move(actor: Actor, zone: ZoneInstance, name: str, tick: int, sprint: bool = 
         for side in ((actor.x + vector[0], actor.y), (actor.x, actor.y + vector[1])):
             if not zone.passable(side) or any(a.id != actor.id and a.position == side and not (a.behaviour.get("training") and a.owner != actor.id) for a in zone.actors.values()):
                 return False
-    sprint = sprint and actor.stamina >= SPRINT_COST
+    stamina_multiplier = min((float(e.get("stamina_multiplier",1)) for e in actor.effects),default=1)
+    cost = SPRINT_COST*stamina_multiplier*actor.modifiers.get("stamina_cost_multiplier", 1)
+    sprint = sprint and actor.stamina >= cost
     actor.x, actor.y = target
     actor.facing = name
     # Game design 3.1 / S12: excess carry weight doubles tile time.
-    duration = (SPRINT_TICKS if sprint else WALK_TICKS) * (2 if actor.overweight else 1)
+    duration = ((actor.modifiers.get("sprint_ms", SPRINT_TICKS*100)/100) if sprint else WALK_TICKS)
+    duration = max(duration, actor.modifiers.get("move_ms", 0)/100)
+    duration *= 2 if actor.overweight else 1
     duration = max(duration,max((int(e.get("move_ticks",0)) for e in actor.effects),default=0))
-    actor.cooldowns["move"] = tick + ceil(action_seconds(duration,actor.shock))
+    duration = action_seconds(duration,actor.shock)
+    previous = actor.cooldowns.get("move", 0)
+    # Keep a bounded fractional budget for Sprint Legs' 80 ms. Inputs
+    # still resolve on ticks, sometimes two in one tick; idle time cannot
+    # accumulate a burst of free movement.
+    actor.cooldowns["move"] = round(previous+duration if duration < 1 and tick-1 < previous <= tick
+                                    else tick+(duration if duration < 1 else ceil(duration)), 8)
     if sprint:
-        multiplier = min((float(e.get("stamina_multiplier",1)) for e in actor.effects),default=1)
-        actor.stamina -= ceil(SPRINT_COST*multiplier)
+        value = round(max(0, actor.stamina-cost), 6)
+        actor.stamina = int(value) if value % 1 == 0 else value
         actor.last_sprint_tick = tick
     zone.revision += 1
     return True
@@ -51,5 +61,7 @@ def move(actor: Actor, zone: ZoneInstance, name: str, tick: int, sprint: bool = 
 def regenerate(actor: Actor, elapsed: int, tick: int) -> bool:
     before = actor.stamina
     skipped = int(tick - elapsed < actor.last_sprint_tick <= tick)
-    actor.stamina = min(actor.stamina_max, actor.stamina + max(0, elapsed - skipped) * STAMINA_REGEN)
+    value = round(min(actor.stamina_max, actor.stamina + max(0, elapsed - skipped)
+                     * STAMINA_REGEN*actor.modifiers.get("stamina_regen_multiplier", 1)), 6)
+    actor.stamina = int(value) if value % 1 == 0 else value
     return actor.stamina != before

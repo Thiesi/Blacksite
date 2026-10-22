@@ -251,6 +251,10 @@ only, never PvP. Tutorial simulation is the bounded exception in §4.
 
 - One tile per 200 ms walking, 100 ms sprinting (stamina). Diagonals cost
   the same. Movement is server-authoritative; the client predicts nothing.
+  Sprint Legs' 80 ms retains a fractional movement budget: actions resolve
+  on ticks, with at most one tick of carried credit. Idle time never
+  accumulates a burst. Fractional stamina costs and regeneration retain
+  their fractions rather than erasing small bonuses.
 - Sight is line of sight with a radius per zone lighting (Core: 12 tiles;
   Undercity: 5 unless you carry a light). Stealth stance halves the range
   at which others see you.

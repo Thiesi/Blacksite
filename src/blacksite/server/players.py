@@ -53,7 +53,7 @@ class Player:
     grade: int = 1
     xp: int = 0
     health: int = 0
-    stamina: int = 0
+    stamina: float = 0
     shock: float = 0
     chits_hand: int = rules.START_CHITS
     chits_bank: int = 0
