@@ -115,7 +115,8 @@
       "requirement": "program:key:2",
       "access": "gated",
       "core_placeholder": true,
-      "planned_core": "lat-halvard-citadel"
+      "planned_core": "lat-halvard-citadel",
+      "gate_owner": "halvard"
     },
     {
       "id": "lat-spire-c08",
@@ -132,7 +133,8 @@
       "requirement": "program:key:2",
       "access": "gated",
       "core_placeholder": true,
-      "planned_core": "lat-gatehouse"
+      "planned_core": "lat-gatehouse",
+      "gate_owner": "halvard"
     },
     {
       "id": "lat-spire-c09",
@@ -150,7 +152,8 @@
       "requirement": "program:key:2",
       "access": "gated",
       "core_placeholder": true,
-      "planned_core": "lat-skywatch"
+      "planned_core": "lat-skywatch",
+      "gate_owner": "halvard"
     },
     {
       "id": "lat-spire-c10",
@@ -169,7 +172,8 @@
       "requirement": "program:key:2",
       "access": "gated",
       "core_placeholder": true,
-      "planned_core": "lat-shaft"
+      "planned_core": "lat-shaft",
+      "gate_owner": "halvard"
     },
     {
       "id": "lat-spire-c11",
@@ -188,7 +192,8 @@
       "requirement": "program:key:2",
       "access": "gated",
       "core_placeholder": true,
-      "planned_core": "lat-relay-shaft"
+      "planned_core": "lat-relay-shaft",
+      "gate_owner": "halvard"
     },
     {
       "id": "lat-spire-c12",
@@ -204,7 +209,8 @@
         "lat-spire-c20"
       ],
       "label": "Signal rack 12",
-      "requirement": "program:key:2"
+      "requirement": "program:key:2",
+      "gate_owner": "halvard"
     },
     {
       "id": "lat-spire-c13",
@@ -220,7 +226,8 @@
         "lat-spire-c21"
       ],
       "label": "Signal rack 13",
-      "requirement": "program:key:2"
+      "requirement": "program:key:2",
+      "gate_owner": "halvard"
     },
     {
       "id": "lat-spire-c14",
@@ -236,7 +243,8 @@
         "lat-spire-c22"
       ],
       "label": "Signal rack 14",
-      "requirement": "program:key:2"
+      "requirement": "program:key:2",
+      "gate_owner": "halvard"
     },
     {
       "id": "lat-spire-c15",
@@ -252,7 +260,8 @@
         "lat-spire-c23"
       ],
       "label": "Signal rack 15",
-      "requirement": "program:key:2"
+      "requirement": "program:key:2",
+      "gate_owner": "halvard"
     },
     {
       "id": "lat-spire-c16",
@@ -267,7 +276,8 @@
         "lat-spire-c24"
       ],
       "label": "Signal rack 16",
-      "requirement": "program:key:2"
+      "requirement": "program:key:2",
+      "gate_owner": "halvard"
     },
     {
       "id": "lat-spire-c17",
@@ -281,7 +291,8 @@
         "lat-spire-c09"
       ],
       "label": "Signal rack 17",
-      "requirement": "program:key:2"
+      "requirement": "program:key:2",
+      "gate_owner": "halvard"
     },
     {
       "id": "lat-spire-c18",
@@ -296,7 +307,8 @@
         "lat-spire-c10"
       ],
       "label": "Signal rack 18",
-      "requirement": "program:key:2"
+      "requirement": "program:key:2",
+      "gate_owner": "halvard"
     },
     {
       "id": "lat-spire-c19",
@@ -311,7 +323,8 @@
         "lat-spire-c11"
       ],
       "label": "Signal rack 19",
-      "requirement": "program:key:2"
+      "requirement": "program:key:2",
+      "gate_owner": "halvard"
     },
     {
       "id": "lat-spire-c20",
@@ -326,7 +339,8 @@
         "lat-spire-c12"
       ],
       "label": "Signal rack 20",
-      "requirement": "program:key:2"
+      "requirement": "program:key:2",
+      "gate_owner": "halvard"
     },
     {
       "id": "lat-spire-c21",
@@ -384,5 +398,7 @@
       "label": "Sump",
       "access": "hidden"
     }
-  ]
+  ],
+  "trace_policy": "corporate",
+  "trace_owner": "halvard"
 }

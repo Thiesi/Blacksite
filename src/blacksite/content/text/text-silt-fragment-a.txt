@@ -1,0 +1,13 @@
+  objective: restore long-haul connectivity.
+  precondition: orbital relay capacity >= 1 platform.
+  platforms available: 0.
+  platforms recoverable from debris field: est. 0.0031 per year at
+    current salvage delivery rate.
+  projected completion: not within design lifetime.
+  design lifetime: exceeded.
+  action: continue.
+  action: continue.
+  action: continue.
+  note: delivery rate increased this cycle. source: unmodelled.
+  note: unmodelled sources will be modelled.
+  action: continue.

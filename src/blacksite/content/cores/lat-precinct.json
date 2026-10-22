@@ -1,0 +1,262 @@
+{
+  "schema": 1,
+  "id": "lat-precinct",
+  "name": "Precinct",
+  "owner": "wardens",
+  "owner_kind": "faction",
+  "tier": 3,
+  "trace_policy": "civic",
+  "hardware": [
+    {
+      "zone": "core-precinct",
+      "tile": [
+        44,
+        3
+      ],
+      "object_id": "precinct-vault-hardware",
+      "label": "core precinct cabinet"
+    }
+  ],
+  "entry": "entry",
+  "rooms": [
+    {
+      "id": "entry",
+      "label": "Entry",
+      "pos": [
+        0,
+        0
+      ],
+      "neighbours": [
+        "room-1",
+        "room-4"
+      ],
+      "ice": [],
+      "data": [],
+      "controls": []
+    },
+    {
+      "id": "room-1",
+      "label": "Index",
+      "pos": [
+        1,
+        0
+      ],
+      "neighbours": [
+        "entry",
+        "room-2",
+        "room-5"
+      ],
+      "ice": [],
+      "data": [],
+      "controls": []
+    },
+    {
+      "id": "room-2",
+      "label": "Service room 2",
+      "pos": [
+        2,
+        0
+      ],
+      "neighbours": [
+        "room-1",
+        "room-3",
+        "room-6"
+      ],
+      "ice": [],
+      "data": [],
+      "controls": []
+    },
+    {
+      "id": "room-3",
+      "label": "Service room 3",
+      "pos": [
+        3,
+        0
+      ],
+      "neighbours": [
+        "room-2",
+        "room-7"
+      ],
+      "ice": [
+        "ice_bluecoat"
+      ],
+      "data": [
+        {
+          "id": "brann-private-ledger",
+          "label": "Brann's private ledger",
+          "kind": "evidence",
+          "asset": "brann-private-ledger",
+          "amount": 1,
+          "scope": "identity",
+          "respawn_seconds": 0
+        }
+      ],
+      "controls": []
+    },
+    {
+      "id": "room-4",
+      "label": "Service room 4",
+      "pos": [
+        0,
+        1
+      ],
+      "neighbours": [
+        "entry",
+        "room-5"
+      ],
+      "ice": [
+        "ice_bluecoat"
+      ],
+      "data": [
+        {
+          "id": "curfew-orders-y22",
+          "label": "Year 22 curfew orders",
+          "kind": "evidence",
+          "asset": "curfew-orders-y22",
+          "amount": 1,
+          "scope": "identity",
+          "respawn_seconds": 0
+        }
+      ],
+      "controls": []
+    },
+    {
+      "id": "room-5",
+      "label": "Service room 5",
+      "pos": [
+        1,
+        1
+      ],
+      "neighbours": [
+        "room-1",
+        "room-4",
+        "room-6"
+      ],
+      "ice": [
+        "ice_ticker"
+      ],
+      "data": [
+        {
+          "id": "warden-heat-records",
+          "label": "Warden heat records",
+          "kind": "text",
+          "asset": "lattice-warden-heat-records",
+          "scope": "identity",
+          "respawn_seconds": 0
+        }
+      ],
+      "controls": []
+    },
+    {
+      "id": "room-6",
+      "label": "Service room 6",
+      "pos": [
+        2,
+        1
+      ],
+      "neighbours": [
+        "room-2",
+        "room-5",
+        "room-7"
+      ],
+      "ice": [
+        "ice_tripwire",
+        "ice_mastiff"
+      ],
+      "data": [
+        {
+          "id": "bounty-ledger",
+          "label": "Bounty ledger",
+          "kind": "text",
+          "asset": "lattice-bounty-ledger",
+          "scope": "identity",
+          "respawn_seconds": 0
+        }
+      ],
+      "controls": [
+        {
+          "id": "curfew-shutters",
+          "label": "curfew shutters",
+          "target": {
+            "zone": "core-plaza",
+            "object": "precinct-curfew-shutters"
+          },
+          "action": "open",
+          "reset_seconds": 300,
+          "scope": "public",
+          "permission": "public",
+          "safety_policy": "none"
+        }
+      ]
+    },
+    {
+      "id": "room-7",
+      "label": "Archive",
+      "pos": [
+        3,
+        1
+      ],
+      "neighbours": [
+        "room-3",
+        "room-6"
+      ],
+      "ice": [
+        "ice_tripwire"
+      ],
+      "data": [
+        {
+          "id": "marked-registry",
+          "label": "Marked registry",
+          "kind": "text",
+          "asset": "lattice-marked-registry",
+          "scope": "identity",
+          "respawn_seconds": 0
+        },
+        {
+          "id": "core-credit",
+          "label": "Core-owned service credit",
+          "kind": "chits",
+          "amount": 120,
+          "respawn_seconds": 1800
+        },
+        {
+          "id": "text-warden-curfew-report",
+          "label": "Warden incident report",
+          "kind": "text",
+          "asset": "text-warden-curfew-report",
+          "scope": "identity",
+          "respawn_seconds": 0
+        }
+      ],
+      "controls": [
+        {
+          "id": "camera-net",
+          "label": "camera net",
+          "target": {
+            "zone": "core-plaza",
+            "object": "precinct-camera-net"
+          },
+          "action": "call",
+          "reset_seconds": 120,
+          "scope": "mission",
+          "permission": "contract",
+          "safety_policy": "none"
+        },
+        {
+          "id": "holding-cell-doors",
+          "label": "holding cell doors",
+          "target": {
+            "zone": "core-precinct",
+            "object": "holding-cell-west"
+          },
+          "action": "open",
+          "reset_seconds": 300,
+          "scope": "public",
+          "permission": "public",
+          "safety_policy": "none"
+        }
+      ]
+    }
+  ],
+  "affiliation": "wardens"
+}

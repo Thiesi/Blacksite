@@ -1,0 +1,170 @@
+{
+  "schema": 1,
+  "id": "lat-block-super",
+  "name": "Block Super",
+  "owner": "kestrel",
+  "owner_kind": "faction",
+  "tier": 2,
+  "trace_policy": "civic",
+  "hardware": [
+    {
+      "zone": "terraces-blocks",
+      "tile": [
+        104,
+        10
+      ],
+      "object_id": "super-office-hardware",
+      "label": "terraces blocks cabinet"
+    }
+  ],
+  "entry": "entry",
+  "rooms": [
+    {
+      "id": "entry",
+      "label": "Entry",
+      "pos": [
+        0,
+        0
+      ],
+      "neighbours": [
+        "room-1",
+        "room-3"
+      ],
+      "ice": [],
+      "data": [],
+      "controls": []
+    },
+    {
+      "id": "room-1",
+      "label": "Index",
+      "pos": [
+        1,
+        0
+      ],
+      "neighbours": [
+        "entry",
+        "room-2",
+        "room-4"
+      ],
+      "ice": [],
+      "data": [],
+      "controls": []
+    },
+    {
+      "id": "room-2",
+      "label": "Service room 2",
+      "pos": [
+        2,
+        0
+      ],
+      "neighbours": [
+        "room-1"
+      ],
+      "ice": [],
+      "data": [],
+      "controls": []
+    },
+    {
+      "id": "room-3",
+      "label": "Service room 3",
+      "pos": [
+        0,
+        1
+      ],
+      "neighbours": [
+        "entry",
+        "room-4"
+      ],
+      "ice": [],
+      "data": [
+        {
+          "id": "impound-manifest",
+          "label": "Impound manifest",
+          "kind": "contract_key",
+          "asset": "impound-manifest",
+          "amount": 1,
+          "scope": "mission",
+          "respawn_seconds": 0
+        }
+      ],
+      "controls": [
+        {
+          "id": "block-doors-b",
+          "label": "block doors B",
+          "target": {
+            "zone": "terraces-blocks",
+            "object": "block-door-2"
+          },
+          "action": "open",
+          "reset_seconds": 300,
+          "scope": "public",
+          "permission": "public",
+          "safety_policy": "none"
+        }
+      ]
+    },
+    {
+      "id": "room-4",
+      "label": "Archive",
+      "pos": [
+        1,
+        1
+      ],
+      "neighbours": [
+        "room-1",
+        "room-3"
+      ],
+      "ice": [
+        "ice_tripwire",
+        "ice_turnstile",
+        "ice_ticker"
+      ],
+      "data": [
+        {
+          "id": "rent-ledger",
+          "label": "Rent ledger",
+          "kind": "text",
+          "asset": "lattice-rent-ledger",
+          "scope": "identity",
+          "respawn_seconds": 0
+        },
+        {
+          "id": "core-credit",
+          "label": "Core-owned service credit",
+          "kind": "chits",
+          "amount": 80,
+          "respawn_seconds": 1800
+        }
+      ],
+      "controls": [
+        {
+          "id": "block-doors-a",
+          "label": "block doors A",
+          "target": {
+            "zone": "terraces-blocks",
+            "object": "block-door-1"
+          },
+          "action": "open",
+          "reset_seconds": 300,
+          "scope": "public",
+          "permission": "public",
+          "safety_policy": "none"
+        },
+        {
+          "id": "lift-lock",
+          "label": "lift lock",
+          "target": {
+            "zone": "terraces-blocks",
+            "object": "block-super-lift-lock"
+          },
+          "action": "open",
+          "reset_seconds": 300,
+          "scope": "public",
+          "permission": "public",
+          "safety_policy": "none"
+        }
+      ]
+    }
+  ],
+  "affiliation": "kestrel"
+}

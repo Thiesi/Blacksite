@@ -1,0 +1,21 @@
+{
+  "schema": 1,
+  "id": "lat-wake-hall",
+  "name": "Wake Hall",
+  "owner": "sablier",
+  "owner_kind": "faction",
+  "affiliation": "sablier",
+  "tier": 0,
+  "training": true,
+  "trace_policy": "none",
+  "hardware": [],
+  "entry": "training-terminal",
+  "rooms": [{
+    "id": "training-terminal",
+    "label": "Training terminal",
+    "pos": [0, 0],
+    "neighbours": [],
+    "ice": ["ice_tripwire_training"],
+    "data": [{"id": "decant-record", "label": "Your decant record", "kind": "text", "asset": "lattice-training-record", "scope": "identity", "respawn_seconds": 0}]
+  }]
+}

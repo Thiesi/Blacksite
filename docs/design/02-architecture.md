@@ -565,7 +565,10 @@ preview; confirmation is the last action only where irreversible.
 `ZoneView` and `LatticeView` add `objective` (next action, target, cost,
 progress, retry rule), `hazards[]` (scope, warning, active duration,
 escape), `service` (state, allocation, expiry) and `escape` (available
-route/action). `LatticeView` includes body safety and black-ICE risk.
+route/action). `LatticeView` includes body safety and black-ICE risk. Its optional
+`runner_target` names only a selected co-located, same-instance runner,
+with server-derived integrity percent and `burn_allowed`; remote crew
+markers never become local combat targets.
 `MenuView` detail can show a record's observation, source, claim,
 publication choices, expiry and expected revision. Required information
 has a compact summary; paginated source prose is optional.

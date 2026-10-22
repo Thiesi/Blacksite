@@ -194,6 +194,30 @@
         "unavailable_target": "oldworks-main",
         "name": "Construction boundary"
       }
+    },
+    {
+      "id": "sign-grid-hardware",
+      "tile": [
+        52,
+        7
+      ],
+      "kind": "hardware",
+      "params": {
+        "name": "House Lights hardware",
+        "core": "lat-house-lights"
+      }
+    },
+    {
+      "id": "house-lights-sign-grid",
+      "tile": [
+        51,
+        7
+      ],
+      "kind": "terminal",
+      "params": {
+        "name": "sign grid",
+        "control": "sign-grid"
+      }
     }
   ],
   "pockets": [],

@@ -41,7 +41,7 @@
     },
     {
       "id": "lat-vatside-c03",
-      "kind": "public",
+      "kind": "core_entrance",
       "pos": [
         2,
         0
@@ -51,11 +51,13 @@
         "lat-vatside-c04",
         "lat-vatside-c11"
       ],
-      "label": "Vatline Queue"
+      "label": "Vatline entrance",
+      "access": "public",
+      "core_id": "lat-vatline"
     },
     {
       "id": "lat-vatside-c04",
-      "kind": "public",
+      "kind": "core_entrance",
       "pos": [
         3,
         0
@@ -65,7 +67,9 @@
         "lat-vatside-c05",
         "lat-vatside-c12"
       ],
-      "label": "Clinic Scheduler"
+      "label": "Sablier Clinical entrance",
+      "access": "public",
+      "core_id": "lat-sablier-clinical"
     },
     {
       "id": "lat-vatside-c05",
@@ -95,12 +99,11 @@
       ],
       "label": "Wake Hall entrance",
       "access": "public",
-      "core_placeholder": true,
-      "planned_core": "lat-wake-hall"
+      "core_id": "lat-wake-hall"
     },
     {
       "id": "lat-vatside-c07",
-      "kind": "public",
+      "kind": "core_entrance",
       "pos": [
         6,
         0
@@ -110,7 +113,9 @@
         "lat-vatside-c08",
         "lat-vatside-c15"
       ],
-      "label": "Signal rack 07"
+      "label": "Cold Chain Relay entrance",
+      "access": "public",
+      "core_id": "lat-relay-cold-chain"
     },
     {
       "id": "lat-vatside-c08",
@@ -216,7 +221,7 @@
     },
     {
       "id": "lat-vatside-c15",
-      "kind": "core_entrance",
+      "kind": "gated",
       "pos": [
         6,
         1
@@ -227,15 +232,13 @@
         "lat-vatside-c07",
         "lat-vatside-c23"
       ],
-      "label": "Vatline entrance",
+      "label": "Vatline security link",
       "requirement": "program:key:2",
-      "access": "gated",
-      "core_placeholder": true,
-      "planned_core": "lat-vatline"
+      "access": "gated"
     },
     {
       "id": "lat-vatside-c16",
-      "kind": "core_entrance",
+      "kind": "gated",
       "pos": [
         7,
         1
@@ -245,15 +248,13 @@
         "lat-vatside-c08",
         "lat-vatside-c24"
       ],
-      "label": "Sablier Clinical entrance",
+      "label": "Sablier Clinical security link",
       "requirement": "program:key:2",
-      "access": "gated",
-      "core_placeholder": true,
-      "planned_core": "lat-sablier-clinical"
+      "access": "gated"
     },
     {
       "id": "lat-vatside-c17",
-      "kind": "core_entrance",
+      "kind": "gated",
       "pos": [
         0,
         2
@@ -263,11 +264,9 @@
         "lat-vatside-c09",
         "lat-vatside-c25"
       ],
-      "label": "Cold Chain Relay entrance",
+      "label": "Cold Chain Relay security link",
       "requirement": "program:key:2",
-      "access": "gated",
-      "core_placeholder": true,
-      "planned_core": "lat-relay-cold-chain"
+      "access": "gated"
     },
     {
       "id": "lat-vatside-c18",
@@ -431,5 +430,6 @@
       "label": "Drain",
       "access": "hidden"
     }
-  ]
+  ],
+  "trace_policy": "civic"
 }

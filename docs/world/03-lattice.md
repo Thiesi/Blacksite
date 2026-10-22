@@ -106,6 +106,14 @@ core by that ID. **Data** is what a successful run lifts. ICE listed is what
 the core runs at its base tier; owned relays and season state can add one
 class.
 
+An ordinary core may additionally hold the optional core-owned chit
+cache in game design 6.7: 40 * tier, 30 minutes of server uptime.
+Explicit no-resale cores retain that restriction; no player bank is
+loot. Shared units and mission/personal records have separate receipts.
+Starter-accessible hub approaches keep key shops in future districts
+from gating every encounter. District gate counts and public routes
+remain as scheduled.
+
 ### 3.1 Spire
 
 **Halvard Citadel** (`lat-halvard-citadel`) — Halvard, tier 5, 12 rooms. Hardware: server hall
@@ -159,9 +167,12 @@ holds). ICE: Tripwire, Glasshouse ×2, Lockstep, Mastiff.
 
 ### 3.3 Vatside
 
-**Wake Hall** (`lat-wake-hall`) — Sablier, tier 1, 3 rooms. Hardware: none (the tutorial
-core cannot be cut). Data: your own decant record. Controls: `exit door @
-vatside-wake-hall`. ICE: Tripwire (one, integrity 10, deals 5).
+**Wake Hall** (`lat-wake-hall`) — Sablier, tier 0, one private training
+room. Hardware: none; it cannot be cut. Data: your own decant record,
+without loot, debt, trace or progression rewards. ICE: one training
+Tripwire, integrity 10, damage 5, incapable of killing. Every caller
+may leave and return. The Wake exit remains open; training does not
+affect another caller.
 
 **Vatline** (`lat-vatline`) — Sablier, tier 4, 9 rooms. Hardware: vat
 control @ `vatside-vat-row`. Data: decant queue, template archive index
@@ -320,6 +331,9 @@ lock`. ICE: at tier 2, Tripwire and Turnstile; at tier 3, plus Mastiff;
 at tier 4, plus Hornets and one class chosen by the holding faction from
 its own roster (Halvard adds Kiln, Ferrymen add Drift, Sable adds Shiv,
 the Choir adds Cantillation, others add Glasshouse).
+The tier-5 Shaft Relay uses that tier-4 base roster, tier-5 trace, and
+the existing corporate hunter at trace 100. It is separate from the
+Shaft service core. No extra Mirror or Blackglass is implied.
 
 **Patrol Beacon** (`lat-patrol-beacon`) — Halvard, tier 3, 5 rooms. Hardware: beacon mast @
 `scour-ring-2`. Data: patrol logs. Controls: `patrol recall @
@@ -360,6 +374,12 @@ defined by the story arcs). Hardware: the patch frame in the level itself.
 Data: the Year 0 severance procedure. Controls: none outside the level.
 ICE: Blackglass ×2, Sweeper, Hound.
 
+Its ten-room linear record is an inactive expedition template until the
+future season bundle authors the level and its local sweep/escape space.
+The template has no cuttable hardware or static district entrance; the
+expedition supplies its real patch frame. Loading its name is not opening
+the level or completing its scripted encounter.
+
 **Story data IDs** referenced by the story arcs, by core:
 `lat-depot-control` — `routing-audit-y0`, `dispatch-channel-log`;
 `lat-vatline` — `template-lineage`, `template-cantor-origin`,
@@ -392,22 +412,22 @@ data or flipping a control), *trace N* (runner's trace reaches N),
 | Mastiff | 2–3 | 60 | 14 / 1.2 s | always | Patrols the core's rooms on a loop; attacks whatever it walks into. | no | stealth avoids; Tar-immune |
 | Glasshouse | 2–4 | 50 / 80 / 110 | none | touch | Shields the room's data. Must be broken before anything can be lifted. | no | heavy attack programs; Mirror often sits behind one |
 | Sandman | 2–3 | 40 | 6 / 1.0 s | entry | Strips stealth, doubles loader cast times while alive. | no | kill early; Nobody resists 5 s |
-| Hornets | 3 | 35 | 4 ×5 / 2.0 s | entry | A swarm: five small hits per cast. Shields waste against it. | no | area attack (Mallet); Umbrella is useless |
+| Hornets | 3 | 35 | 4 ×5 / 2.0 s | entry | A swarm: five small hits per cast. Shields deplete across the hits normally. | no | area attack (Mallet); Umbrella absorbs 15 of the volley |
 | Liar | 3 | 30 | none | entry | Adds fake data rooms; a runner who takes the bait loses 10 s and +15 trace. | no | Compass shows the real map |
 | Tar | 3–4 | 55 | 8 / 2.0 s | always | Every program's cast time ×2 while it lives. | no | Overclock cancels; kill first |
 | Lockstep | 2–3 | 40 | none | passage | Kestrel gate ICE. Opens for 10 s every 60 s on a schedule visible in the room. | no | wait, or Locksmith |
-| Shiv | 3 | 25 | 12 / 0.6 s | entry | Sable ICE. Fast, cheap, dies quick, and tells the core's owner where the runner's body is. | no | kill in one cast (Drill) before it reports |
+| Shiv | 3 | 25 | 12 / 0.6 s | entry | Sable ICE. A visible 4 s report channel tells the owner where the body is, once while alive. | no | kill in one cast (Drill) before it reports |
 | Suture | 3–4 | 50 | 3 / 0.5 s | always | Sablier ICE. Drains slowly and heals other ICE in the room 5 per second. | no | kill it first, always |
 | Cantillation | 3–4 | 60 | 10–25 / 1.5 s | entry | Choir ICE. Damage scales down with the runner's Resonance; Cantors take none and hear a hymn instead. | no | Resonance; Wetsuit |
 | Mirror | 4 | 70 | reflects | touch | Reflects the next attack program's damage back at the caster, then rests 5 s. | no | shield up before attacking; utility programs pass |
 | Kiln | 4 | 90 | 25 +10 meat / 1.5 s | touch | Halvard black ICE. Burns the runner who touches the data. | yes | break Glasshouse from range first; Bunker |
 | Hound | 3–5 | 80 / 120 / 150 | 20 / 25 / 30 (+15 meat at tier 5) / 1.0 s | trace 100 | Hunter. Spawns in corporate cores at trace 100 and follows the runner across cells until killed, jacked out, or 3 min pass. | tier 5 | Cutout breaks the follow once; jack out |
 | Blackglass | 5 | 200 | 35 +20 meat / 1.5 s | touch | Halvard flagship. Sits on the best data in the city. | yes | a crew: one runner shields, one attacks; Blackout |
-| Drift | Silt, 2 | 40 | 10 / 1.0 s | always | Unowned. Random-walks cells; some drift up into district sectors. | no | avoid; Anchor holds position against it |
-| Undertow | Silt, 3 | 70 | none | entry | Pulls the runner one band deeper on a failed cast. | no | Anchor; Redline to out-cast it |
+| Drift | Silt, 2 | 40 | 10 / 1.0 s | always | Unowned. Random-walks cells; a hit can displace one known legal adjacent cell. Some drift into districts. | no | avoid; Anchor holds position against it |
+| Undertow | Silt, 3 | 70 | none | entry | A visible 3 s pull channels one band deeper; a hit on it or leaving interrupts. Never past band five. | no | Anchor; Redline to leave before the pull |
 | Chorister | Silt, 3–4 | 60 | 15 / 2.0 s | entry | Responsive process. Shows a repeating signal. Use the labelled sampling procedure in design §6.6; no answer quiz. | no | survey its pattern; hold or withdraw |
 | Shade | Silt, 4 | 80 | 20 / 1.2 s | entry | A hostile residual: a dead runner's habits with none of the runner. Copies the last program you cast. | no | do not cast attacks first; Umbrella |
-| Sweeper | Silt, 4-5 | 250 | 40 +25 meat / 2.0 s | always | Attributed by some to the Custodian. Systematic, slow, cleans a band cell by cell. It is not interested in you until you are in its way. | yes | leave the band; nothing kills it in one run |
+| Sweeper | Silt, 4-5 | 250 | 40 +25 meat / 2.0 s | always | Attributed by some to the Custodian. Systematic, slow, cleans a band cell by cell. It is not interested in you until you are in its way. | yes | leave the warned cell; a prepared crew may commit to killing it, without repeatable generated kill rewards |
 
 Twenty-three classes.
 
@@ -437,7 +457,7 @@ its stated target class; Burn handles player presences under §6.1 safety.
 | `prg_cutout` | Cutout | decoy | 4 | 2 | 1.2 s | 60 s | breaks a Hound's follow once; trace −20 | 1600 |
 | `prg_caffeine` | Caffeine | loader | 1 | 1 | 0.3 s | 15 s | next cast time −30 % | 400 |
 | `prg_overclock` | Overclock | loader | 2 | 1 | 0.5 s | 20 s | all cast times −25 % for 10 s; cancels Tar for that time | 800 |
-| `prg_redline` | Redline | loader | 3 | 1 | 0.5 s | 30 s | cell-to-cell moves 0.4 s for 10 s; costs 5 integrity per move | 1200 |
+| `prg_redline` | Redline | loader | 3 | 1 | 0.5 s | 30 s | cell-to-cell moves no slower than normal, capped at 0.4 s for 10 s; costs 5 integrity per completed move | 1200 |
 | `prg_skeleton` | Skeleton | key | 1 | 1 | 1.5 s | 5 s | opens a tier-1 gated cell or Turnstile | 200 |
 | `prg_locksmith` | Locksmith | key | 2 | 1 | 1.5 s | 5 s | opens tier ≤ 2 gates and Lockstep off-schedule | 800 |
 | `prg_passkey` | Passkey | key | 3 | 1 | 2.0 s | 8 s | opens tier ≤ 3 gates; opens a private core's door control without a fight | 1200 |
@@ -458,10 +478,25 @@ its stated target class; Burn handles player presences under §6.1 safety.
 | `prg_residual_fragment` | Residual Fragment | utility | 3 | 1 | 1 s | single use | +25 effective Programs until jack-out, capped 100; bound faction loan | 0 |
 
 Attack casts add +5 trace; Blackout adds +25 instead, Burn +15
-instead in civic/corporate space. Effects otherwise use the trace table.
+instead wherever trace applies. Public district cells, the Silt and
+Nobody suppress trace. Effects otherwise use the trace table.
+Game design 6.7 owns loading, persistent per-program cooldowns, bounded
+disconnect escape and the precise encounter procedures.
 Cooldown begins when casting completes. Shield absorbs successive hits
 until its budget is exhausted, expires on jack-out, and does not stack
-with another shield. Blackout's acquisition cap does not limit casting.
+with another shield. A replacement must add budget or a new protection;
+otherwise the cast is refused without spending its cooldown. Blackout's
+acquisition cap does not limit casting.
+
+Shade preserves the copied effect kind after a two-second warning:
+damage targets the observed runner; shields, decoys and restoration
+apply to Shade. Utilities without a legal NPC target visibly do nothing.
+Following Liar's explicitly suspect route starts a 10 s dead-end channel
+and spends 15 trace where trace applies. Esc/B withdraws early; it does
+not refund spent trace. Compass identifies the decoy without that cost.
+Pulse marks the casting district cell or core entrance for the crew for
+20 s. The entry marker stays fixed; it exposes no interior room or Silt
+position. Pulse cannot be cast in the Silt.
 
 Old catalog IDs are pre-implementation renames, not saved-game aliases.
 In particular Shroud is stealth; Umbrella is the starter shield. There
@@ -488,9 +523,19 @@ emergency jack-out.
 | 4 | The Floor | 3 | Shades, one Sweeper on a loop, Blacksite conduit cells that show the sealed levels' telemetry, rare contribution data |
 | 5 | The Conduit | 4 | the Sweeper's origin cell, the Tenant's voice, one choice-bearing dialogue per season; emergency jack-out remains available without a buff |
 
-A descent cannot skip a band. Sinks in band 4 are hidden; band 5 has no
-deeper sink. Hidden routes need Listening or Lantern, with a visible
-surveyed bypass for required routes. A Choir Surge maps the current band for
+Initial encounter population, before scheduled variants: Shallows has
+1-2 Drift; band 2 has 2-3 Drift, one Undertow, one Tripwire and one
+Turnstile; the Reach has one Chorister and one Shade; the Floor has two
+Shades and one Sweeper. The Conduit marks the Sweeper's origin rather
+than duplicating it. Its season choice arrives with S26/S27. The optional
+dead rig is an Old Works Brick containing Skeleton; its one-in-three
+roll is fixed for a 30-minute uptime source period. Every band graph
+remains connected without hidden branches; population never removes a
+riser, the visible continuation or emergency escape.
+
+A descent cannot skip a band. Bands 1-4 each have at least one visible
+surveyed riser-to-sink route; optional sinks and shortcuts may be hidden.
+Band 5 has no deeper sink. Hidden routes need Listening or Lantern. A Choir Surge maps the current band for
 its duration.
 
 ### 6.2 Residuals
@@ -523,7 +568,11 @@ next season's band 1.
 Trace runs from 0 to 100. It rises while the runner is inside a core, by
 tier, and per hostile action; it never rises in public cells, in the Silt,
 or while *Nobody* is active. It resets to 0 on jack-out. Decoys reduce it
-as listed above.
+as listed above. Nonpublic district actions use the sector's trace
+schedule with no passive gain outside cores; untiered corporate cells
+use the baseline tier-3 Hound. Local thresholds also inspect carried
+trace on entry, once per location per jack-in run. A street district's
+identity lockout preserves public routes.
 
 | Source | Trace |
 |---|---|
@@ -531,11 +580,15 @@ as listed above.
 | attack program cast | +5 |
 | data lift started | +10 |
 | control flipped | +10 |
-| burning another runner | +15 (civic and corporate sectors only) |
+| burning another runner | +15 wherever trace applies, replacing +5 |
 | Tripwire surviving, per second | +10 |
 | Ticker alive, per second | +1 |
 | Liar bait taken | +15 |
 | Blackout cast | +25 |
+
+A lift pays its applicable trace when the attempt starts. Cancellation,
+interruption or losing a shared-source race does not refund it; no goods
+or receipt transfer unless the source transaction commits.
 
 Consequences by sector type. Sector types: **civic** (Core, Terraces,
 Vatside outside Sablier cores), **corporate** (Spire, Tramyard, Sablier
@@ -545,7 +598,7 @@ cores, Halvard cores anywhere), **black** (Sink, Sodium Row), **street**
 | Trace | Civic | Corporate | Black | Street |
 |---|---|---|---|---|
 | 50 | Bluecoat activates where present; the runner's name enters the Precinct's registry for 10 min | the core's ICE all wake regardless of trigger | the core owner is told a runner is inside (not who) | the core's owning faction gets a zone log line |
-| 100 | Wardens dispatched to the body's zone and tile; Warden heat 10 min | a Hound spawns and follows | the owner faction is told exactly where the body is, by name; every member's sitrep shows it for 5 min | forced jack-out with shock 60; the core locks for 5 min |
+| 100 | Wardens dispatched to the body's zone and tile; Warden heat 10 min | a Hound spawns and follows | the owner faction is told exactly where the body is, by name; every member's sitrep shows it for 5 min | forced jack-out with shock 60; that BBS identity is locked out of the core for 5 min |
 
 Meatspace consequences of a forced jack-out: shock as stated, and any
 black-ICE meat damage already taken stays taken.

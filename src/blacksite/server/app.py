@@ -50,6 +50,7 @@ class Server:
         self.world: World | None = None
         self.failure: BaseException | None = None
         self.npc_revision = -1
+        self.lattice_stamp: tuple[int, int] | None = None
 
     def _content(self) -> ContentTree:
         assert self.storage is not None
@@ -165,6 +166,13 @@ class Server:
         if self.core is None or self.core.characters is None or self.storage is None:
             return
         game = self.core.characters
+        if self.core.lattice:
+            sources = self.core.lattice.sources
+            tick = self.clock.now_tick()
+            stamp = sources.revision, tick // (30 * TICK_HZ)
+            if stamp != self.lattice_stamp:
+                self.storage.mark_dirty("meta", "lattice_state", sources.record(tick))
+                self.lattice_stamp = stamp
         if self.core.npcs and self.npc_revision != self.core.npcs.spawners.revision:
             self.storage.mark_dirty("meta", "npc_state", self.core.npcs.spawners.record())
             self.npc_revision = self.core.npcs.spawners.revision

@@ -62,17 +62,22 @@ class Core:
         self.npcs = Npcs(self.combat, character_state.get("npcs", {})) if self.combat else None
         if self.npcs:
             self.loop.subsystems.append(self.npcs)
-        self.lattice = Lattice(self.combat) if self.combat else None
+        self.lattice = Lattice(self.combat, character_state) if self.combat else None
         if self.lattice:
+            if self.npcs:
+                self.lattice.encounters.dispatch = lambda player: self.npcs.dispatch(self.combat.actor(player))
             self.loop.subsystems.append(self.lattice)
             self.sessions.on_disconnect = self._disconnect_character
             if self.chat:
                 self.chat.lattice_at = self.lattice.location
                 self.lattice.social_overlay = lambda session: session.id in self.chat.sitreps
+                self.chat.reported_location = self.lattice.encounters.reported_location
+                self.lattice.encounters.report = self.lattice.encounters.publish_report
 
     def _disconnect_character(self, session: Session) -> None:
         if self.lattice:
-            self.lattice.disconnect(session)
+            if self.lattice.disconnect(session):
+                return  # The bounded escape still owns this physical body.
         if self.characters:
             self.characters.disconnect(session)
 
@@ -167,6 +172,8 @@ class Core:
         self.stop_requested = True
 
     def shutdown(self) -> None:
+        if self.lattice:
+            self.lattice.shutdown()
         for session in tuple(self.sessions.active.values()):
             final = Frame("bye", {"reason": "maintenance", "text": "The city closes for maintenance."})
             if session.role == "operator":

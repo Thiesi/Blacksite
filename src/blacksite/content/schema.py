@@ -302,6 +302,7 @@ class Cell:
     core_placeholder: bool = False
     planned_core: str | None = None
     uplink: Uplink | None = None
+    gate_owner: str | None = None
 
     @property
     def access_kind(self) -> str:
@@ -316,10 +317,13 @@ class Sector:
     schema: int = CONTENT_SCHEMA
     entry: str | None = None
     layout_size: Tile = (8, 6)  # Game design 6.1: readable at 80x24.
+    trace_policy: Literal["civic", "corporate", "black", "street", "none"] = "none"
+    trace_owner: str | None = None
 
 
 DataKind = Literal[
     "chits", "salvage_data", "contribution", "contract_key", "schematic", "text",
+    "item", "program", "evidence",
 ]
 
 
@@ -330,6 +334,10 @@ class DataSpec:
     respawn_seconds: int
     amount: int | None = None
     asset: str | None = None
+    label: str = ""
+    scope: Literal["shared", "identity", "mission"] = "shared"
+    chance: Number = 1
+    programs: tuple[str, ...] = ()
 
 
 ControlAction = Literal["open", "close", "disable", "enable", "toggle", "call"]
@@ -372,12 +380,19 @@ class Room:
     controls: tuple[ControlSpec, ...] = ()
     ice: tuple[str, ...] = ()
     lore: tuple[str, ...] = ()
+    label: str = ""
+    pos: Tile = (0, 0)
+    descent: bool = False
+    ice_events: dict[str, str] = field(default_factory=dict)
+    ice_patrols: dict[str, tuple[str, ...]] = field(default_factory=dict)
 
 
 @dataclass(frozen=True)
 class HardwareLocation:
     zone: str
-    tile: Tile
+    tile: Tile | None = None
+    object_id: str | None = None
+    label: str = ""
 
 
 @dataclass(frozen=True)
@@ -392,6 +407,11 @@ class Core:
     training: bool = False
     """The Wake training core: the only core allowed tier 0."""
     schema: int = CONTENT_SCHEMA
+    template: bool = False
+    owner_kind: Literal["faction", "institution", "neutral", "npc", "private", "relay", "abandoned"] = "faction"
+    affiliation: str | None = None
+    trace_policy: Literal["civic", "corporate", "black", "street", "none"] | None = None
+    entry: str | None = None
 
 
 IceTrigger = Literal["entry", "data", "trace", "timer", "touch", "passage", "always"]
@@ -399,6 +419,14 @@ IceBehaviour = Literal["static", "roaming", "hunter"]
 IceRole = Literal["gate", "alarm", "patrol", "deception", "displacement", "feedback"]
 """The readable role Inspect shows (00-game-design.md section 6.6)."""
 ProgramClass = Literal["attack", "shield", "decoy", "loader", "key", "stealth", "utility"]
+
+
+@dataclass(frozen=True)
+class IceStats:
+    tier: int
+    integrity: int
+    attack: Number
+    meat_damage: int = 0
 
 
 @dataclass(frozen=True)
@@ -425,6 +453,9 @@ class IceTemplate:
     (00-game-design.md section 12)."""
     lore: tuple[str, ...] = ()
     schema: int = CONTENT_SCHEMA
+    params: dict[str, Number | str | bool] = field(default_factory=dict)
+    tier_stats: tuple[IceStats, ...] = ()
+    counter_label: str = ""
 
 
 ProgramEffectKind = Literal[
@@ -462,6 +493,35 @@ class ProgramTemplate:
     target_class: ProgramTarget = "self"
     duration: Number = 0
     stacking_group: str | None = None
+    schema: int = CONTENT_SCHEMA
+    description: str = ""
+
+
+@dataclass(frozen=True)
+class SiltSpawn:
+    template: str
+    minimum: int = 1
+    maximum: int = 1
+    route: Literal["optional", "patrol", "signal"] = "optional"
+
+
+@dataclass(frozen=True)
+class SiltBand:
+    id: str
+    name: str
+    depth: int
+    ice: tuple[SiltSpawn, ...] = ()
+    data: tuple[DataSpec, ...] = ()
+
+
+@dataclass(frozen=True)
+class SiltRules:
+    minimum_cells: int = 8
+    maximum_cells: int = 20
+    minimum_sinks: int = 1
+    maximum_sinks: int = 3
+    hidden_fraction: Number = .2
+    bands: tuple[SiltBand, ...] = ()
     schema: int = CONTENT_SCHEMA
 
 

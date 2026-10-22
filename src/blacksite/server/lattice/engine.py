@@ -21,27 +21,65 @@ from blacksite.server.protocol import Frame
 from blacksite.server.sessions import Session
 from blacksite.server.world.actors import Actor
 from blacksite.server.world.movement import direction
+from blacksite.server.world.simulation import Avatar
+from blacksite.server.lattice.cores import Sources
+from blacksite.server.lattice.encounters import Encounters
 
 PUBLIC_LOAN_SLOTS = 3  # Game design 6.1: public terminal loan rig.
 TRANSITION_FRAMES = 3  # Terminal UI 3: bounded jack transition.
 
 
 class Lattice:
-    def __init__(self, combat: Combat) -> None:
+    def __init__(self, combat: Combat, state: dict[str, Any] | None = None) -> None:
         self.combat, self.game, self.sim = combat, combat.game, combat.sim
         self.content, self.clock = combat.content, combat.clock
         self.sectors = Sectors(self.content.sectors.values())
+        state = state or {}
+        self.season = state.get("season", 0)
+        self.sources = Sources(self.game.sessions.origin, state.get("lattice", {}), self.clock.now_tick())
         self.presences: dict[str, Presence] = {}
         self.transitions: dict[str, tuple[str, int]] = {}
         self.events: set[str] = set()  # S24 installs active event credentials.
         self.crew_of: Callable[[str], str | None] = lambda pid: None  # S22.
         self.social_overlay: Callable[[Session], bool] = lambda session: False
+        self.orphans: dict[str, tuple[Session, Avatar]] = {}
+        self.game.retained_avatar = self.retained_avatar
+        self.game.attached = self.attached
+        self.encounters = Encounters(self)
+
+    def retained_avatar(self, player: Player) -> Avatar | None:
+        held = self.orphans.pop(player.id, None)
+        if held is None:
+            return None
+        old, avatar = held
+        if avatar.actor.zone:
+            self.game.world.zones[avatar.actor.zone].deactivate(old.id, self.clock.now_tick())
+        self.sim.views.pop(old.id, None)
+        self.sim.published.pop(old.id, None)
+        self.sim.external_views.pop(old.id, None)
+        self.transitions.pop(old.id, None)
+        return avatar
+
+    def attached(self, session: Session, player: Player) -> None:
+        presence = self.presences.get(player.id)
+        if presence:
+            session.subscribed = presence.sector
+
+    def avatar(self, session: Session) -> Avatar | None:
+        held = self.orphans.get(session.player_id)
+        avatar = held[1] if held else self.sim.avatars.get(session.user_id)
+        return avatar if avatar and avatar.actor.id == session.player_id else None
+
+    def public(self, presence: Presence) -> bool:
+        return presence.instance is None and access(self.sectors.cells[presence.sector][presence.cell]) == "public"
 
     def session(self, pid: str) -> Session | None:
         return self.combat.session(pid)
 
     def location(self, session: Session) -> tuple[str, str] | None:
         presence = self.presences.get(session.player_id)
+        if presence and presence.instance:
+            return presence.descent or presence.sector, presence.instance+":"+presence.room
         return (presence.sector, presence.cell) if presence else None
 
     def log(self, session: Session, text: str, warning: bool = False) -> None:
@@ -73,12 +111,13 @@ class Lattice:
         return True
 
     def credentials(self, player: Player, presence: Presence) -> Credentials:
-        programs = frozenset(pid for pid in presence.rig if pid)
-        tiers: dict[str, int] = {}
+        programs = frozenset(pid for pid in presence.rig if pid and self.content.programs[pid].class_ != "key") | presence.key_programs
+        tiers: dict[str, int] = {"key": presence.key_tier}
         for pid in programs:
             program = self.content.programs.get(pid)
             if program:
-                tiers[program.class_] = max(tiers.get(program.class_, 0), program.tier)
+                tiers[program.class_] = (presence.key_tier if program.class_ == "key" else
+                                        max(tiers.get(program.class_, 0), program.tier))
         return Credentials(frozenset(self.game.item_templates.get(iid, iid) for iid in player.inventory),
             programs, tuple(tiers.items()), player.faction, tuple(player.standing.items()), frozenset(self.events))
 
@@ -93,6 +132,12 @@ class Lattice:
             faction = self.content.factions.get(parts[1])
             return f"{faction.name if faction else parts[1]} standing {parts[2]}"
         return requirement_label(requirement)
+
+    def accepts(self, player: Player, presence: Presence, cell: Any, requirement: str | None) -> bool:
+        if (requirement and requirement.startswith("program:key:") and cell.gate_owner == "halvard"
+                and "prg_signet" in presence.key_programs):
+            return True
+        return permitted(requirement, self.credentials(player, presence))
 
     def terminal(self, actor: Actor, target: str | None = None) -> Any:
         zone = self.game.world.zones[actor.zone]
@@ -129,7 +174,7 @@ class Lattice:
         if target is not None and terminal is None:
             self.log(session, "Move next to that terminal.", True)
             return
-        slots = max(len(player.rig.get("slots", [])) if player.archetype == "ghost" else 0,
+        slots = max(self.content.starts[player.archetype].rig_slots or 0,
                     self.carried_slots(player))
         if not terminal and not slots:
             self.log(session, "Move next to a public terminal, or carry a rig.", True)
@@ -145,7 +190,15 @@ class Lattice:
         configured = player.rig.get("slots", [])
         if not configured:
             configured = list(self.content.starts[player.archetype].programs)
-        rig = tuple((list(configured)+[None]*slots)[:slots])
+        # Shrinking capacity never retains half of a multi-slot program.
+        occupied: set[int] = set()
+        clean: list[str | None] = [None]*slots
+        for index, pid in enumerate(configured[:slots]):
+            program = self.content.programs.get(pid)
+            if program and index+program.slots <= slots and not occupied.intersection(range(index, index+program.slots)) and pid not in clean:
+                clean[index] = pid
+                occupied.update(range(index, index+program.slots))
+        rig = tuple(clean)
         presence = Presence(player.id+":presence", player.id, sector, self.sectors.entrance(sector), rig,
                             integrity=self.integrity(player))
         self.presences[player.id] = presence
@@ -170,7 +223,7 @@ class Lattice:
 
     def notify(self, presence: Presence, text: str, exclude: str | None = None) -> None:
         for other in self.presences.values():
-            if other.player_id != exclude and (other.sector, other.cell) == (presence.sector, presence.cell):
+            if other.player_id != exclude and self.encounters.location(other) == self.encounters.location(presence):
                 session = self.session(other.player_id)
                 if session:
                     self.log(session, text)
@@ -180,10 +233,11 @@ class Lattice:
         if presence is None:
             return
         player = self.game.players[presence.player_id]
+        self.encounters.leave(presence)
         self.notify(presence, player.name+" leaves.")
         state = self.saved(player)
         state.update(integrity=presence.integrity, out_at=self.clock.now_utc().timestamp())
-        avatar = self.sim.avatars.get(session.user_id)
+        avatar = self.avatar(session)
         if avatar:
             if avatar.actor.stance == "jacked":
                 avatar.actor.stance = "normal"
@@ -192,42 +246,58 @@ class Lattice:
             session.subscribed = avatar.zone
             self.sim.reset_view(session, avatar)
         overlay = self.sim.external_views.get(session.id)
-        if overlay and overlay[0] == "lattice":
+        if overlay and overlay[0] in ("lattice", "menu"):
             self.sim.external_views.pop(session.id, None)
         self.transitions.pop(session.id, None)
         if transition and avatar and avatar.actor.stance == "normal":
             self.transitions[session.id] = "out", self.clock.now_tick()
         self.log(session, "You jack out. Your body is here.")
         self.game.queue("save", session.user_id, player, immediate=True)
+        held = self.orphans.pop(player.id, None)
+        if held:
+            self.game.disconnect(held[0], held[1])
 
     def jack_out(self, session: Session) -> None:
         presence = self.presences.get(session.player_id)
         if not presence:
             return
-        cell = self.sectors.cells[presence.sector][presence.cell]
-        if access(cell) == "public":
+        if self.public(presence):
             self.leave(session)
         elif presence.escape is None:
-            actor = self.sim.avatars[session.user_id].actor
+            actor = self.avatar(session).actor
             presence.destination = None
+            presence.room_destination = None
+            presence.cast = presence.procedure = None
             presence.escape = EscapeChannel(self.clock.now_tick()+ceil(ESCAPE_SECONDS*TICK_HZ),
-                                            int(actor.behaviour.get("hit_serial", 0)))
+                                            self.encounters.hit_serial(presence))
             self.log(session, "You start a two-second escape. Hits can interrupt it three times.")
 
     def move(self, session: Session, sector: str, cell: str) -> None:
         presence = self.presences[session.player_id]
+        if not self.encounters.idle(presence):
+            raise ValueError("Finish or cancel the current action first.")
+        if presence.instance:
+            raise ValueError("Use a linked room or retreat through the core entrance.")
+        if self.clock.now_tick() < presence.pinned_until:
+            raise ValueError("You are pinned. J still starts escape.")
         player = self.game.players[presence.player_id]
         if not self.sectors.adjacent(presence.sector, presence.cell, sector, cell):
             raise ValueError("Choose a linked cell.")
         target = self.sectors.cells[sector][cell]
+        if access(target) != "public" and self.sources.locked(player.bbs_user_id, sector, self.clock.now_utc().timestamp()):
+            raise ValueError("This identity's five-minute district lockout is still active.")
         if access(target) == "hidden" and cell not in self.found(player, sector):
             raise ValueError("No known link leads there.")
         source = self.sectors.cells[presence.sector][presence.cell]
-        credentials = self.credentials(player, presence)
-        for requirement in (target.requirement, source.uplink.requirement if sector != presence.sector and source.uplink else None):
-            if not permitted(requirement, credentials):
+        for owner, requirement in ((target, target.requirement), (source, source.uplink.requirement if sector != presence.sector and source.uplink else None)):
+            if not self.accepts(player, presence, owner, requirement):
                 raise ValueError("This link requires "+self.label(requirement)+".")
-        presence.begin_move(sector, cell, self.clock.now_tick(), player.attributes["cortex"])
+        if presence.begin_move(sector, cell, self.clock.now_tick(), player.attributes["cortex"],
+                               self.encounters.move_multiplier(player)):
+            presence.redline_move = presence.effects.has("prg_redline", self.clock.now_tick())
+            if presence.redline_move:
+                presence.move_until = min(presence.move_until, self.clock.now_tick()+
+                    ceil(float(self.content.programs["prg_redline"].effect.amount)*TICK_HZ))
 
     def input(self, session: Session, frame: Frame, tick: int) -> bool:
         name = frame.data.get("name", "") if frame.type == "intent" else ""
@@ -251,7 +321,11 @@ class Lattice:
                 return False
             try:
                 if action == "jack" or name == "lat.jack_out":
+                    self.encounters.menus.pop(session.id, None)
                     self.jack_out(session)
+                elif self.encounters.input(session, presence, name, action, key, args,
+                                           frame.data.get("expected_revision")):
+                    pass
                 elif name == "lat.move":
                     sector, cell = args.get("sector", presence.sector), args.get("cell")
                     if not isinstance(sector, str) or not isinstance(cell, str):
@@ -322,10 +396,11 @@ class Lattice:
         actor = self.sim.avatars[session.user_id].actor
         peers = []
         for other in self.presences.values():
-            if other.player_id == player.id or other.sector != presence.sector:
+            if (other.player_id == player.id or other.sector != presence.sector
+                    or other.instance != presence.instance):
                 continue
             crew = self.crew_of(player.id)
-            if other.cell != presence.cell and not (crew and self.crew_of(other.player_id) == crew):
+            if self.encounters.location(other) != self.encounters.location(presence) and not (crew and self.crew_of(other.player_id) == crew):
                 continue
             peer = self.game.players[other.player_id]
             other_actor = self.combat.actor(peer)
@@ -346,20 +421,25 @@ class Lattice:
                 "hit_serial": actor.behaviour.get("hit_serial", 0)},
             "room": None, "label": cell.label,
             "body_safety": self.game.world.zones[actor.zone].safety_at(actor.position),
-            "hint": "Arrows follow links  E uplink / enter  "+self.jack_key(session)+" jack out  1-7 programs"}
+            "hint": "Arrows links  E uplink / enter  "+self.jack_key(session)+" jack out  Tab target  1-7 cast  R rig"}
 
     def tick(self, ctx: TickContext) -> None:
+        self.encounters.advance(ctx.tick)
         for pid, presence in tuple(self.presences.items()):
-            session = self.session(pid)
+            held = self.orphans.get(pid)
+            session = held[0] if held else self.session(pid)
             if not session:
-                continue  # Disconnect hook clears before the body is retired.
-            actor = self.sim.avatars[session.user_id].actor
+                continue
+            actor = self.avatar(session).actor
             if actor.stance != "jacked" or not actor.zone:
                 self.leave(session, transition=False)
                 continue
-            if presence.escape and presence.escape.advance(ctx.tick, int(actor.behaviour.get("hit_serial", 0))):
+            waiting_hit = self.combat.commerce.pending and self.encounters.pending_hit(pid)
+            if presence.escape and not waiting_hit and presence.escape.advance(ctx.tick, self.encounters.hit_serial(presence)):
                 self.leave(session)
                 continue
+            if held:
+                continue  # Hazards/escape continue; no output to a dead transport.
             if presence.destination and ctx.tick >= presence.move_until:
                 # Membership/event credentials may change during a traversal.
                 target_sector, target_cell = presence.destination
@@ -368,13 +448,23 @@ class Lattice:
                 requirements = [cell.requirement]
                 if target_sector != presence.sector and source.uplink:
                     requirements.append(source.uplink.requirement)
-                credentials = self.credentials(self.game.players[pid], presence)
-                if not all(permitted(r, credentials) for r in requirements):
+                locked = access(cell) != "public" and self.sources.locked(self.game.players[pid].bbs_user_id, target_sector, self.clock.now_utc().timestamp())
+                if locked or not (self.accepts(self.game.players[pid], presence, cell, requirements[0]) and
+                        all(self.accepts(self.game.players[pid], presence, source, r) for r in requirements[1:])):
                     presence.destination = None
                     self.log(session, "The link no longer accepts your credentials.", True)
                 else:
                     self.notify(presence, self.game.players[pid].name+" leaves.", exclude=pid)
                     presence.arrive(ctx.tick)
+                    self.encounters.trace(presence, 0, entered=True)
+                    if pid not in self.presences:
+                        continue
+                    if presence.redline_move:
+                        presence.integrity = max(0, presence.integrity-float(self.content.programs["prg_redline"].effect.params["integrity_per_move"]))
+                        if presence.integrity <= 0:
+                            self.encounters.force_out(presence)
+                            continue
+                    self.encounters.follow(presence)
                     session.subscribed = presence.sector
                     self.log(session, "You enter "+cell.label+".")
                     self.notify(presence, self.game.players[pid].name+" arrives.", exclude=pid)
@@ -387,7 +477,7 @@ class Lattice:
                 else:
                     self.transitions.pop(session.id)
             if not self.social_overlay(session):
-                self.sim.external_views[session.id] = "lattice", body
+                self.sim.external_views[session.id] = self.encounters.view(session, presence, body)
         for sid, (kind, start) in tuple(self.transitions.items()):
             if kind != "out":
                 continue
@@ -406,9 +496,24 @@ class Lattice:
                 "me": {}, "presences": [], "transition": {"direction": "out", "frame": ctx.tick-start+1},
                 "hint": "Your body is already back. The street continues."}
 
-    def disconnect(self, session: Session) -> None:
+    def disconnect(self, session: Session) -> bool:
+        presence = self.presences.get(session.player_id)
+        avatar = self.avatar(session)
+        if (presence and avatar and avatar.actor.stance == "jacked"
+                and not self.public(presence)):
+            self.orphans[presence.player_id] = session, avatar
+            self.jack_out(session)
+            return True
         self.leave(session, transition=False)
         self.transitions.pop(session.id, None)
+        return False
+
+    def shutdown(self) -> None:
+        for pid in tuple(self.presences):
+            held = self.orphans.get(pid)
+            session = held[0] if held else self.session(pid)
+            if session:
+                self.leave(session, transition=False)
 
     def who(self) -> list[dict[str, str]]:
         return [{"player": self.game.players[p.player_id].name, "id": p.player_id,

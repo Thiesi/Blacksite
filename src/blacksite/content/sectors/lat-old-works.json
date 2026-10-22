@@ -522,5 +522,7 @@
       "label": "Cut Cable",
       "access": "hidden"
     }
-  ]
+  ],
+  "trace_policy": "street",
+  "trace_owner": "unmoored"
 }

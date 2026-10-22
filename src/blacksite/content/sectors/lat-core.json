@@ -204,7 +204,7 @@
     },
     {
       "id": "lat-core-c12",
-      "kind": "public",
+      "kind": "core_entrance",
       "pos": [
         3,
         1
@@ -215,11 +215,13 @@
         "lat-core-c04",
         "lat-core-c20"
       ],
-      "label": "Precinct Frontage"
+      "label": "Precinct entrance",
+      "access": "public",
+      "core_id": "lat-precinct"
     },
     {
       "id": "lat-core-c13",
-      "kind": "public",
+      "kind": "core_entrance",
       "pos": [
         4,
         1
@@ -230,11 +232,13 @@
         "lat-core-c05",
         "lat-core-c21"
       ],
-      "label": "Tram Signal Bus"
+      "label": "Tram Signal entrance",
+      "access": "public",
+      "core_id": "lat-tram-signal"
     },
     {
       "id": "lat-core-c14",
-      "kind": "public",
+      "kind": "core_entrance",
       "pos": [
         5,
         1
@@ -245,11 +249,13 @@
         "lat-core-c06",
         "lat-core-c22"
       ],
-      "label": "Civic Hall Annex"
+      "label": "Civic Ledger entrance",
+      "core_id": "lat-civic-ledger",
+      "access": "public"
     },
     {
       "id": "lat-core-c15",
-      "kind": "public",
+      "kind": "core_entrance",
       "pos": [
         6,
         1
@@ -260,7 +266,9 @@
         "lat-core-c07",
         "lat-core-c23"
       ],
-      "label": "Bank Vestibule"
+      "label": "Kestrel Branch entrance",
+      "access": "public",
+      "core_id": "lat-kestrel-branch"
     },
     {
       "id": "lat-core-c16",
@@ -455,7 +463,7 @@
     },
     {
       "id": "lat-core-c29",
-      "kind": "core_entrance",
+      "kind": "gated",
       "pos": [
         4,
         3
@@ -466,15 +474,13 @@
         "lat-core-c21",
         "lat-core-c37"
       ],
-      "label": "Precinct entrance",
+      "label": "Precinct security link",
       "requirement": "program:key:2",
-      "access": "gated",
-      "core_placeholder": true,
-      "planned_core": "lat-precinct"
+      "access": "gated"
     },
     {
       "id": "lat-core-c30",
-      "kind": "core_entrance",
+      "kind": "gated",
       "pos": [
         5,
         3
@@ -485,15 +491,13 @@
         "lat-core-c22",
         "lat-core-c38"
       ],
-      "label": "Civic Ledger entrance",
+      "label": "Annex security link",
       "requirement": "program:key:2",
-      "access": "gated",
-      "core_placeholder": true,
-      "planned_core": "lat-civic-ledger"
+      "access": "gated"
     },
     {
       "id": "lat-core-c31",
-      "kind": "core_entrance",
+      "kind": "gated",
       "pos": [
         6,
         3
@@ -504,15 +508,13 @@
         "lat-core-c23",
         "lat-core-c39"
       ],
-      "label": "Tram Signal entrance",
+      "label": "Tram Signal security link",
       "requirement": "program:key:2",
-      "access": "gated",
-      "core_placeholder": true,
-      "planned_core": "lat-tram-signal"
+      "access": "gated"
     },
     {
       "id": "lat-core-c32",
-      "kind": "core_entrance",
+      "kind": "gated",
       "pos": [
         7,
         3
@@ -522,11 +524,9 @@
         "lat-core-c24",
         "lat-core-c40"
       ],
-      "label": "Kestrel Branch entrance",
+      "label": "Kestrel Branch security link",
       "requirement": "program:key:2",
-      "access": "gated",
-      "core_placeholder": true,
-      "planned_core": "lat-kestrel-branch"
+      "access": "gated"
     },
     {
       "id": "lat-core-c33",
@@ -643,5 +643,6 @@
       ],
       "label": "Signal rack 40"
     }
-  ]
+  ],
+  "trace_policy": "civic"
 }

@@ -1,0 +1,53 @@
+HALVARD-OSTROM DYNAMICS   KARST UPLINK CONTROL   SHIFT LOG (RAW)
+Operator of record: T. MAALOUF, uplink engineer, night shift
+Local time.  Year 0, day 0.  Entries are terse. That was the rule.
+
+04:12:07  ORB-LINK-1 carrier loss. Re-acquiring.
+04:12:19  ORB-LINK-1 re-acquired. Signal -3 dB from baseline.
+04:13:40  ORB-LINK-1 carrier loss. ORB-LINK-2 nominal.
+04:14:02  Anomaly ticket opened. Assume weather.
+04:16:55  ORB-LINK-2 carrier loss. ORB-LINK-3 nominal.
+04:17:10  Not weather.
+04:18:30  Call placed to day supervisor (Renner). No answer.
+04:20:14  ORB-LINK-3 reports collision-avoidance manoeuvre on host
+          platform. Host platform does not have collision avoidance.
+04:21:00  Feed from external tracking: three objects, then nine, then
+          the tracking feed drops.
+04:24:47  ORB-LINK-3 carrier loss. ALL ORBITAL LINKS DOWN.
+04:25:00  Long-haul terrestrial LH-A nominal. LH-B nominal.
+04:25:31  Site Zero liaison line rings. I did not answer it. Logging
+          that honestly.
+04:31:12  LH-A traffic pattern abnormal. Inbound volume 40x baseline.
+          Payload not parseable. Not attack signatures we have.
+04:33:00  Renner on site. Renner says "quiet it". Nobody knows what
+          that means yet.
+04:35:19  LH-A ingress filtered at the border router. Filter holds
+          eleven seconds.
+04:35:30  Border router unresponsive. LH-A now unfiltered into the
+          city Lattice backbone.
+04:36:02  Civic sector nodes reporting cascading resets. Vatside
+          sector reporting cascading resets.
+04:37:44  Decision (Renner, Maalouf concur): physically sever LH-A.
+          Not a soft cut. Renner has bolt cutters. Logging that too.
+04:39:10  LH-A severed at the patch frame. Ingress stops. Resets stop
+          within four seconds.
+04:40:00  LH-B traffic pattern abnormal. Same shape.
+04:40:38  LH-B severed at the patch frame. No discussion this time.
+04:42:00  Karst Lattice is an island. Confirming. Confirmed.
+04:45:15  Site Zero liaison line rings again. Renner answers. Renner
+          listens. Renner says "understood" and hangs up.
+04:45:40  Renner instructs: log the following verbatim. "Lower
+          levels report seal complete. Seal was initiated from
+          below." Logged verbatim.
+04:46:00  Asked Renner what that means. Renner says he doesn't know
+          and he'd like that logged too.
+05:02:19  Radio room reports outside-band traffic ceased. All
+          frequencies. Not jammed. Ceased.
+05:30:00  First light. There's a line across the sky. Everyone on
+          the roof. Nobody says anything for a while.
+05:41:00  Renner orders the patch frame padlocked. Key to the
+          director's office. Ticket closed: "resolved".
+06:00:00  End of shift. Staying anyway. Where would I go.
+
+[ARCHIVIST NOTE, YEAR 3: Maalouf left Halvard in Year 1. Renner
+did not. This log is retained under seal. Copies are not.]

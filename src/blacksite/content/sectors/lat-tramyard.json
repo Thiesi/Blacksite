@@ -500,5 +500,7 @@
       ],
       "label": "Signal rack 32"
     }
-  ]
+  ],
+  "trace_policy": "corporate",
+  "trace_owner": "kestrel"
 }

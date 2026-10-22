@@ -1,0 +1,183 @@
+{
+  "schema": 1,
+  "id": "lat-depot-control",
+  "name": "Depot Control",
+  "owner": "kestrel",
+  "owner_kind": "faction",
+  "tier": 2,
+  "trace_policy": "corporate",
+  "hardware": [
+    {
+      "zone": "tramyard-depots",
+      "tile": null,
+      "label": "Depot Control hardware"
+    }
+  ],
+  "entry": "entry",
+  "rooms": [
+    {
+      "id": "entry",
+      "label": "Entry",
+      "pos": [
+        0,
+        0
+      ],
+      "neighbours": [
+        "room-1",
+        "room-3"
+      ],
+      "ice": [],
+      "data": [],
+      "controls": []
+    },
+    {
+      "id": "room-1",
+      "label": "Index",
+      "pos": [
+        1,
+        0
+      ],
+      "neighbours": [
+        "entry",
+        "room-2",
+        "room-4"
+      ],
+      "ice": [],
+      "data": [
+        {
+          "id": "dispatch-channel-log",
+          "label": "Dispatch channel log",
+          "kind": "contract_key",
+          "asset": "dispatch-channel-log",
+          "amount": 1,
+          "scope": "identity",
+          "respawn_seconds": 0
+        }
+      ],
+      "controls": []
+    },
+    {
+      "id": "room-2",
+      "label": "Service room 2",
+      "pos": [
+        2,
+        0
+      ],
+      "neighbours": [
+        "room-1"
+      ],
+      "ice": [
+        "ice_ticker"
+      ],
+      "data": [
+        {
+          "id": "routing-audit-y0",
+          "label": "Year 0 routing audit",
+          "kind": "evidence",
+          "asset": "routing-audit-y0",
+          "amount": 1,
+          "scope": "identity",
+          "respawn_seconds": 0
+        }
+      ],
+      "controls": []
+    },
+    {
+      "id": "room-3",
+      "label": "Service room 3",
+      "pos": [
+        0,
+        1
+      ],
+      "neighbours": [
+        "entry",
+        "room-4"
+      ],
+      "ice": [],
+      "data": [
+        {
+          "id": "warehouse-inventory",
+          "label": "Warehouse inventory",
+          "kind": "contract_key",
+          "asset": "warehouse-inventory",
+          "amount": 1,
+          "scope": "mission",
+          "respawn_seconds": 0
+        }
+      ],
+      "controls": [
+        {
+          "id": "forklift-drones",
+          "label": "forklift drones",
+          "target": {
+            "zone": "tramyard-depots",
+            "object": "depot-control-forklift-drones"
+          },
+          "action": "open",
+          "reset_seconds": 300,
+          "scope": "public",
+          "permission": "public",
+          "safety_policy": "none"
+        }
+      ]
+    },
+    {
+      "id": "room-4",
+      "label": "Archive",
+      "pos": [
+        1,
+        1
+      ],
+      "neighbours": [
+        "room-1",
+        "room-3"
+      ],
+      "ice": [
+        "ice_tripwire",
+        "ice_turnstile"
+      ],
+      "data": [
+        {
+          "id": "ration-allocations",
+          "label": "Ration allocations",
+          "kind": "contract_key",
+          "asset": "ration-allocations",
+          "amount": 1,
+          "scope": "mission",
+          "respawn_seconds": 0
+        },
+        {
+          "id": "core-credit",
+          "label": "Core-owned service credit",
+          "kind": "chits",
+          "amount": 80,
+          "respawn_seconds": 1800
+        },
+        {
+          "id": "text-kestrel-ration-ledger",
+          "label": "Ration issue ledger",
+          "kind": "text",
+          "asset": "text-kestrel-ration-ledger",
+          "scope": "identity",
+          "respawn_seconds": 0
+        }
+      ],
+      "controls": [
+        {
+          "id": "warehouse-doors-a-c",
+          "label": "warehouse doors A–C",
+          "target": {
+            "zone": "tramyard-depots",
+            "object": "depot-control-warehouse-doors-a-c"
+          },
+          "action": "open",
+          "reset_seconds": 300,
+          "scope": "public",
+          "permission": "public",
+          "safety_policy": "none"
+        }
+      ]
+    }
+  ],
+  "affiliation": "kestrel"
+}

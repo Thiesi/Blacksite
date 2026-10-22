@@ -88,6 +88,8 @@ value) and `keymaps.json` (`actions`: action id to context and label;
 core_entrance, descent), pos (grid position on the sector view),
 neighbours[], requirement, label, core_id (optional), lore`. A sector also
 names its public `entry` cell and `layout_size` (at most 8 by 6).
+Its `trace_policy` names the district schedule; optional `trace_owner`
+is the faction receiving named trace reports, not territorial ownership.
 
 `access` optionally separates public/gated/hidden access from a functional
 `core_entrance` or `descent` kind. An `uplink` names a sector, its cell and
@@ -95,6 +97,9 @@ an optional requirement; links are reciprocal and never name a file path.
 Requirements are item/program IDs, or `item:<id>`, `program:<id>`, `program:<class>:<tier>`,
 `faction:<id>`, `standing:<id>:<minimum>` and `event:<id>` credentials.
 The server names the missing credential before changing a presence.
+`gate_owner` is an optional faction ID for a gate. A completed Signet
+may satisfy a Halvard gate's key-program requirement; it never replaces
+an item, event, discovery or story requirement.
 
 `core_placeholder: true` explicitly marks an unavailable entrance, with a
 `planned_core` slug instead of a live `core_id`. This is declared staged
@@ -107,15 +112,44 @@ and jack-out remain usable by every archetype.
 
 ### 1.4 Core (`cores/<id>.json`)
 
-`id, name, owner (faction id or "private"), tier 1–5 (0 only for the Wake
-training core, which sets `training`), hardware (list of one or two (zone id, tile) locations; two
+`id, name, owner, owner_kind (faction, institution, neutral, npc, private,
+relay, abandoned), affiliation (optional faction), trace_policy (civic,
+corporate, black, street, none), tier 1–5 (0 only for the Wake
+training core, which sets `training`), template, entry, hardware
+(list of one or two (zone id, tile, object id, label) locations; two
 only for the Shaft core that spans Shaft Head and Shaft Foot, and the
 validator rejects any other multi-location core), rooms[]` where a room is
-`id, neighbours[], data[] (DataSpec), controls[] (ControlSpec), ice[] (ice
-template ids), lore`.
+`id, label, pos [x,y], neighbours[], data[] (DataSpec), controls[]
+(ControlSpec), ice[] (ICE template ids), ice_events (optional template ID
+to event ID conditions), ice_patrols, descent, lore`.
+`ice_patrols` optionally maps a room's defender template to a linked
+closed room route including its origin. Default core patrols traverse
+the linked graph without jumping an edge. Positions are
+authored, unique in an 8x4 room layout; every room reaches the entry.
+Listening Post alone has an authored internal descent.
 
-- DataSpec: `id, kind (chits, salvage_data, contribution, contract_key,
-  schematic, text asset), amount or asset id, respawn seconds`.
+Ownership is provenance, not extra faction membership. Civic Authority,
+neutral enforcement and Vesper do not add joinable factions. Live relay
+ownership remains separate. The private Wake has one room, no hardware
+or live controls, and one nonblack Tripwire (10 integrity, damage 5).
+Templates are inactive records with no cuttable hardware; instantiated
+ordinary cores obey the ordinary limits. Future hardware may have an
+unresolved tile only in inactive authoring records. An active hardware
+reference resolves its actual object and tile; no stub map is implied.
+
+- DataSpec: `id, label, kind (chits, salvage_data, contribution,
+  contract_key, schematic, text, item, program, evidence), amount, asset,
+  respawn_seconds, scope (shared, identity, mission), chance, programs[]`.
+  Asset resolves the kind's item/program/text/evidence table. Shared
+  reward sources use remaining server uptime and a source generation;
+  mission keys and personal records have separate receipt scopes.
+  Core source IDs survive room rearrangement. Mission receipts include
+  the active mission ID supplied by the contracts system; a lift binds
+  that ID at start and refuses a changed mission at completion.
+  A contribution needs at least 3600 s uptime. The Wake record is
+  nonrewarding personal text. A stale revision cannot consume a new unit.
+  An item source may contain a validated program payload, learned in the
+  same transfer transaction (the dead rig's Skeleton, for example).
 - ControlSpec: `id, label, target (zone id, object id), action (open,
   close, disable, enable, toggle, call), reset seconds, scope (public,
 mission, private_vestibule, expedition), permission, safety_policy,
@@ -136,16 +170,31 @@ route and hazard controls, which always expire.
 feedback), tier, integrity, attack, cast_seconds, cooldown_seconds,
 trigger (entry, data, trace with `trigger_trace` n, timer, touch,
 passage, always), behaviour (static, roaming, hunter), black (bool),
-meat_damage, counters[] (program classes), variants[] (ICE a Surge may
-swap in: non-black, equal or lower tier), lore`.
+meat_damage, counters[] (program classes), counter_label, params,
+tier_stats[] (tier, integrity, attack, meat_damage), variants[] (ICE a
+Surge may swap in: non-black, equal or lower tier), lore`.
+Parameters are bounded scalar inputs to the named bestiary behaviour;
+they cannot execute arbitrary actions. Tier stats select the applicable
+Glasshouse/Hound row, not an additional bestiary class. Training uses
+the private weak Tripwire variant; ordinary counts remain 23 classes.
 
 ### 1.6 Program template (`programs.json`)
 
 `id, name, class, tier, slots, cast_seconds, cooldown_seconds, effect
 (typed record), source, price, acquisition_requires, cast_requires,
-trace_cost, target_class, duration, stacking_group`. The 35 records are
+trace_cost, target_class, duration, stacking_group, description`. The 35 records are
 game design section 17.2; no parallel catalog aliases. Acquisition and
 continued use are distinct requirements.
+Requirements are `archetype:<id>`, `standing:<faction>:<amount>`,
+`once_per_season`, `bound_loan` or `bound_charge`. Cooldowns use program
+IDs and persistent UTC deadlines; effects and active casts use ticks.
+Residual Fragment consumes one bound charge, not a permanent free cast.
+
+`silt.json` contains typed generation rules: cell/sink min/max,
+hidden_fraction (at most one fifth), and five ordered bands. Each band
+has `id, name, depth, ice[] (template, minimum, maximum, route)` and
+DataSpec sources. A visible continuation and riser are mandatory;
+randomness changes optional routes and encounters, never exit permission.
 
 ### 1.7 Item template (`items.json`)
 
@@ -443,7 +492,11 @@ attributed reports; only settlement changes public routes and balance.
 ### 2.9 Core state
 
 `core id, offline_until, controls {control id → state, reset_at},
-data {data id → taken_at}, owner_faction (from relay)`.
+data {data id → generation, remaining uptime, receipt, availability},
+owner_faction (from relay)`. Street locks are identity/core UTC deadlines,
+distinct from global offline state. Shared source availability, reward
+and receipt commit in one storage transaction. Persist Silt descent
+nonces before publication and contribution source uptime across restart.
 
 ### 2.10 Admin
 
@@ -509,7 +562,7 @@ The common base for players, NPCs, and drones in a zone.
 
 `id, kind (player, npc, drone), zone, x, y, facing, health, stamina,
 shock, cooldowns {key → until tick}, effects[] (buff/debuff with expiry),
-target id, stance (normal, stealth, down, dead, sleeper), faction,
+target id, stance (normal, stealth, jacked, down, dead, sleeper), faction,
 marked, visible_to (computed), behaviour state (NPCs), owner (drones)`.
 
 ### 3.2 Zone instance
@@ -520,8 +573,12 @@ salvage nodes {}, event effects[], rng, tick, listeners (session ids)`.
 
 ### 3.3 Presence (a jacked-in runner)
 
-`player id, sector, cell, core (nullable), room (nullable), integrity,
-trace, rig slots with cooldowns, effects[], visible_to`.
+`player id, sector, cell, core (nullable), room (nullable), instance,
+integrity, trace, rig slots with cooldowns, effects[], visible_to,
+cast, escape, hit serial, NPC-risk consent`. Disconnected nonpublic
+presences retain their exact physical actor through bounded escape;
+reconnect must not create or move a second body. Maintenance shutdown
+preserves durable player/source state without inventing feedback hits.
 
 ### 3.4 Core instance
 

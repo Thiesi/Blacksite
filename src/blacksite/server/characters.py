@@ -1,6 +1,7 @@
 """Pure character/Wake lifecycle. The I/O layer executes the write outbox."""
 
 from copy import deepcopy
+from collections.abc import Callable
 from dataclasses import asdict, replace
 from datetime import datetime, timezone
 from typing import Any
@@ -46,6 +47,9 @@ class Characters:
         self.sleepers: dict[str, tuple[Any, int]] = {}
         self.saved_stamps: dict[str, tuple[Any, ...]] = {}
         self.deleting: set[str] = set()
+        # A disconnected Lattice escape keeps its original, targetable body.
+        self.retained_avatar: Callable[[Player], Avatar | None] = lambda player: None
+        self.attached: Callable[[Session, Player], None] = lambda session, player: None
         # Reconcile elapsed offline time before any caller can attach.
         for player in self.players.values():
             if player.progress.get("combat",{}).get("stage") in ("down","dead"):
@@ -135,22 +139,26 @@ class Characters:
                 self.wakes[session.id].stage = "card"
 
     def attach(self, session: Session, player: Player) -> None:
+        retained = self.retained_avatar(player)
         sleeper = self.sleepers.pop(player.id, None)
-        actor = sleeper[0] if sleeper else player.actor()
+        actor = retained.actor if retained else sleeper[0] if sleeper else player.actor()
         actor.overweight = Inventory(self.items,self.content.items).weight(player) > player.attributes["frame"] / 2
         if sleeper:
             self.world.zones[player.zone].deactivate("sleeper:" + player.id, self.clock.now_tick())
             self.world.leave(actor)
-        actor.stance, actor.handle = "normal", session.door_info["handle"]
-        if hasattr(self,"combat"): self.combat.restore(player,actor)
+        actor.handle = session.door_info["handle"]
+        if retained is None:
+            actor.stance = "normal"
+            if hasattr(self,"combat"): self.combat.restore(player,actor)
         player.bbs_handle = actor.handle
-        avatar = Avatar(actor, player.zone)
-        for zone_id, blob in player.progress.get("memory", {}).items():
-            if zone_id in self.world.zones:
-                zone = self.world.zones[zone_id].template
-                avatar.perception.remembered[zone_id] = unpack_memory(blob, zone.width, zone.height)
-        avatar.seen_zones = set(player.progress.get("seen_zones", []))
-        self.world.enter(actor, player.zone, self.world.free_tile(player.zone, player.tile))
+        avatar = retained or Avatar(actor, player.zone)
+        if retained is None:
+            for zone_id, blob in player.progress.get("memory", {}).items():
+                if zone_id in self.world.zones:
+                    zone = self.world.zones[zone_id].template
+                    avatar.perception.remembered[zone_id] = unpack_memory(blob, zone.width, zone.height)
+            avatar.seen_zones = set(player.progress.get("seen_zones", []))
+            self.world.enter(actor, player.zone, self.world.free_tile(player.zone, player.tile))
         session.player_id, session.subscribed, session.player_name = player.id, player.zone, player.name
         session.keymap_id = player.settings.get("keymap", "arrows")
         self.world.zones[player.zone].activate(session.id, self.clock.now_tick())
@@ -174,6 +182,7 @@ class Characters:
         player.progress.pop("offline_at", None)
         player.update_personhood(self.identity(session.user_id), self.clock.now_utc())
         self.queue("save", session.user_id, player, immediate=True)
+        self.attached(session, player)
 
     def snapshot(self, player: Player, avatar: Avatar) -> None:
         actor = avatar.actor
@@ -193,7 +202,7 @@ class Characters:
         else:
             player.progress.pop("travel", None)
 
-    def disconnect(self, session: Session) -> None:
+    def disconnect(self, session: Session, avatar_override: Avatar | None = None) -> None:
         wake = self.wakes.pop(session.id, None)
         self.screens.pop(session.id, None)
         self.dirty_screens.discard(session.id)
@@ -203,7 +212,7 @@ class Characters:
             self.identities[session.user_id]["wake"] = wake.saved()
             self.queue("identity", session.user_id)
         player = self.players.get(session.player_id)
-        avatar = self.sim.avatars.get(session.user_id)
+        avatar = avatar_override or self.sim.avatars.get(session.user_id)
         if player is None or avatar is None or avatar.actor.id != player.id:
             return
         self.snapshot(player, avatar)

@@ -99,7 +99,8 @@
       "kind": "terminal",
       "essential": true,
       "params": {
-        "name": "Tutorial terminal"
+        "name": "Tutorial terminal",
+        "training_core": "lat-wake-hall"
       }
     },
     {

@@ -1,11 +1,12 @@
 """Pure presence state and tick rules, game design 6.1."""
 
 from collections.abc import Mapping
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 from math import ceil, hypot
 
 from blacksite.content.schema import Tile
 from blacksite.server.clock import TICK_HZ
+from blacksite.server.lattice.programs import Cast, Effects
 
 INTEGRITY_MAX = 100
 INTEGRITY_PER_SECOND = 5
@@ -56,6 +57,17 @@ class EscapeChannel:
 
 
 @dataclass
+class Procedure:
+    kind: str
+    target: str
+    until: int
+    scope: str
+    last_hit: int
+    generation: int = 0
+    source: str = ""
+
+
+@dataclass
 class Presence:
     id: str
     player_id: str
@@ -67,6 +79,32 @@ class Presence:
     destination: tuple[str,str] | None = None
     move_until: int = 0
     escape: EscapeChannel | None = None
+    core: str | None = None
+    instance: str | None = None
+    room: str | None = None
+    room_destination: str | None = None
+    effects: Effects = field(default_factory=Effects)
+    cast: Cast | None = None
+    procedure: Procedure | None = None
+    target: str = ""
+    hit_serial: int = 0
+    pinned_until: int = 0
+    opened: set[str] = field(default_factory=set)
+    key_tier: int = 0
+    risk_consent: set[str] = field(default_factory=set)
+    trace_seen: dict[str, set[int]] = field(default_factory=dict)
+    redline_move: bool = False
+    key_programs: set[str] = field(default_factory=set)
+    last_program: str = ""
+    descent: str | None = None
+    depth: int = 0
+    silt_return: tuple[str | None, str | None, str | None] | None = None
+    return_cells: dict[int, str] = field(default_factory=dict)
+    found_silt: dict[str, set[str]] = field(default_factory=dict)
+    survey_records: set[str] = field(default_factory=set)
+    sampled: set[str] = field(default_factory=set)
+    mapping_until: int = 0
+    verified_maps: set[str] = field(default_factory=set)
 
     def begin_move(self, sector: str, cell: str, tick: int, cortex: int,
                    multiplier: float = 1) -> bool:

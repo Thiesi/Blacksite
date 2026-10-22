@@ -206,7 +206,8 @@
       ],
       "kind": "hardware",
       "params": {
-        "name": "cold chain hardware"
+        "name": "cold chain hardware",
+        "core": "lat-relay-cold-chain"
       }
     },
     {
@@ -252,6 +253,18 @@
       "essential": true,
       "params": {
         "name": "Kestrel bank"
+      }
+    },
+    {
+      "id": "clinical-scheduler-hardware",
+      "tile": [
+        69,
+        8
+      ],
+      "kind": "hardware",
+      "params": {
+        "name": "Sablier Clinical hardware",
+        "core": "lat-sablier-clinical"
       }
     }
   ],

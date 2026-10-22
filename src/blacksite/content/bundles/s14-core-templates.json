@@ -1,0 +1,12 @@
+{
+  "schema": 1,
+  "id": "s14-core-templates",
+  "status": "authoring",
+  "depends": [],
+  "members": {
+    "cores": [
+      "lat-private-core",
+      "lat-relay-uplink"
+    ]
+  }
+}

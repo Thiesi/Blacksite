@@ -1,0 +1,196 @@
+{
+  "schema": 1,
+  "id": "lat-nave",
+  "name": "Nave",
+  "owner": "choir",
+  "owner_kind": "faction",
+  "tier": 3,
+  "trace_policy": "street",
+  "hardware": [
+    {
+      "zone": "chapel-nave",
+      "tile": null,
+      "label": "Nave hardware"
+    }
+  ],
+  "entry": "entry",
+  "rooms": [
+    {
+      "id": "entry",
+      "label": "Entry",
+      "pos": [
+        0,
+        0
+      ],
+      "neighbours": [
+        "room-1",
+        "room-4"
+      ],
+      "ice": [],
+      "data": [],
+      "controls": []
+    },
+    {
+      "id": "room-1",
+      "label": "Index",
+      "pos": [
+        1,
+        0
+      ],
+      "neighbours": [
+        "entry",
+        "room-2",
+        "room-5"
+      ],
+      "ice": [],
+      "data": [],
+      "controls": []
+    },
+    {
+      "id": "room-2",
+      "label": "Service room 2",
+      "pos": [
+        2,
+        0
+      ],
+      "neighbours": [
+        "room-1",
+        "room-3",
+        "room-6"
+      ],
+      "ice": [],
+      "data": [],
+      "controls": []
+    },
+    {
+      "id": "room-3",
+      "label": "Service room 3",
+      "pos": [
+        3,
+        0
+      ],
+      "neighbours": [
+        "room-2"
+      ],
+      "ice": [],
+      "data": [],
+      "controls": []
+    },
+    {
+      "id": "room-4",
+      "label": "Service room 4",
+      "pos": [
+        0,
+        1
+      ],
+      "neighbours": [
+        "entry",
+        "room-5"
+      ],
+      "ice": [],
+      "data": [],
+      "controls": []
+    },
+    {
+      "id": "room-5",
+      "label": "Service room 5",
+      "pos": [
+        1,
+        1
+      ],
+      "neighbours": [
+        "room-1",
+        "room-4",
+        "room-6"
+      ],
+      "ice": [
+        "ice_sandman",
+        "ice_cantillation"
+      ],
+      "data": [
+        {
+          "id": "hymnal",
+          "label": "Hymnal study record",
+          "kind": "contract_key",
+          "asset": "hymnal",
+          "amount": 1,
+          "scope": "identity",
+          "respawn_seconds": 0
+        }
+      ],
+      "controls": [
+        {
+          "id": "bell-gallery",
+          "label": "bell gallery",
+          "target": {
+            "zone": "chapel-towers",
+            "object": "nave-bell-gallery"
+          },
+          "action": "open",
+          "reset_seconds": 60,
+          "scope": "public",
+          "permission": "public",
+          "safety_policy": "none"
+        }
+      ]
+    },
+    {
+      "id": "room-6",
+      "label": "Archive",
+      "pos": [
+        2,
+        1
+      ],
+      "neighbours": [
+        "room-2",
+        "room-5"
+      ],
+      "ice": [
+        "ice_glasshouse",
+        "ice_cantillation"
+      ],
+      "data": [
+        {
+          "id": "tenant-recordings",
+          "label": "Tenant recording",
+          "kind": "contribution",
+          "asset": "tenant-recordings",
+          "amount": 1,
+          "scope": "shared",
+          "respawn_seconds": 3600
+        },
+        {
+          "id": "core-credit",
+          "label": "Core-owned service credit",
+          "kind": "chits",
+          "amount": 120,
+          "respawn_seconds": 1800
+        },
+        {
+          "id": "text-choir-liturgy",
+          "label": "Choir liturgy",
+          "kind": "text",
+          "asset": "text-choir-liturgy",
+          "scope": "identity",
+          "respawn_seconds": 0
+        }
+      ],
+      "controls": [
+        {
+          "id": "hall-doors",
+          "label": "hall doors",
+          "target": {
+            "zone": "chapel-nave",
+            "object": "nave-hall-doors"
+          },
+          "action": "open",
+          "reset_seconds": 300,
+          "scope": "public",
+          "permission": "public",
+          "safety_policy": "none"
+        }
+      ]
+    }
+  ],
+  "affiliation": "choir"
+}

@@ -69,6 +69,7 @@ class ContentTree:
     glyphs: s.GlyphTable | None = None
     palette: s.Palette | None = None
     keymaps: s.KeymapTable | None = None
+    silt: s.SiltRules | None = None
     tiles: dict[str, s.TileType] = field(default_factory=dict)
     zones: dict[str, s.Zone] = field(default_factory=dict)
     sectors: dict[str, s.Sector] = field(default_factory=dict)
@@ -254,6 +255,8 @@ def _load_singletons(tree: ContentTree, layer: _Layer) -> None:
                 maps = {k.id: k for k in tree.keymaps.keymaps}
                 maps.update({k.id: k for k in record.keymaps})
                 tree.keymaps = s.KeymapTable(actions=actions, keymaps=tuple(maps.values()))
+        elif isinstance(record, s.SiltRules):
+            tree.silt = record
 
 
 def _check_id(tree: ContentTree, kind: str, record_id: str, rel: str, text: str) -> bool:

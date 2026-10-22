@@ -192,8 +192,10 @@ human earning-curve checks in section 18, not measured progression speed.
 ## 4. The Wake (onboarding)
 
 The Wake is the tutorial and takes place in the Wake Hall, a safe pocket
-in Vatside. It must be completable in five minutes and skippable by a
-returning player who deletes a character.
+in Vatside. It must be completable in five minutes. Every caller may
+leave a lesson and use the open exit; lessons remain available afterward.
+Returning identities do not have to repeat them after deletion. Training
+teaches actions without becoming a compulsory gate before the street.
 
 1. Open your eyes. Choose archetype (four cards with one paragraph each).
 2. Choose a name (the BBS handle is the default and always shown).
@@ -206,7 +208,8 @@ returning player who deletes a character.
    not membership.
 4. Walk to the door: movement keys, look, interact.
 5. The corridor: one hostile drone. Targeting, fire, cooldown, the log.
-6. The terminal: jack in, one cell, one weak ICE, jack out. The door opens.
+6. The terminal: jack in, one private room, one weak ICE, lift your decant
+   record and jack out. The exit remains open if you leave early.
 7. Out into Vatside with 200 chits, a starter weapon, a med patch, and a
    contract card for Vesper at the Tin Halo.
 
@@ -214,7 +217,9 @@ The full starter kit is in §17. All archetypes receive Pick and
 Umbrella. Public terminals supply a three-slot loan rig while connected;
 a carried portable rig upgrades its slots. Ghosts keep a rig anywhere.
 The tutorial drone and ICE are private training actors: cannot kill,
-create debt, drop loot, or affect another caller. Briefing progress is
+create debt, drop loot, award progression, or affect another caller.
+The training core is tier 0, one room, no cuttable hardware or trace.
+Its Tripwire has integrity 10 and damage 5. Briefing progress is
 resumable; reading every screen is not required. The first job teaches
 the route choice in §9.4 and explicitly labels the Terraces contested.
 
@@ -438,9 +443,9 @@ the ride. After offline arrival, ordinary destination logout rules apply.
 - A runner in the Lattice is a **presence** with its own health analog,
   **integrity** (100), and a **trace** meter (0 to 100). Integrity 0 means
   forced jack-out with shock 100 and, if black ICE did it, real damage.
-- Runners see each other in the same cell or core room and can attack
-  each other with programs (**burning**). Burning a runner in a civic
-  sector raises your trace.
+- Runners see each other in the same cell or core room and instance and
+  can attack each other with programs (**burning**). Burn adds 15 trace
+  instead of the ordinary attack increment wherever trace applies.
 
 Public cells are safe from burning. Elsewhere burning requires both
 bodies outside safe/pocket areas, neither participant protected by the
@@ -448,6 +453,10 @@ contested grade rule, and faction/Marked checks (§7.3). Jack-out is
 instant in public cells and a 2 s, damage-interruptible channel elsewhere.
 After three interruptions on one attempt, it completes on its next
 scheduled end. ICE cannot hold a caller forever; Silt uses the same rule.
+Disconnecting or replacing a transport starts the same bounded escape
+outside public cells. The server retains and simulates the single body
+and presence until it finishes; reconnect resumes them. A connection
+failure is neither a free instant escape nor an arbitrary damage fine.
 
 ### 6.2 Cores
 
@@ -456,6 +465,10 @@ Rooms hold **data** (loot: chits, salvage data, contract objectives, season
 contributions), **controls** (mapped to meatspace objects), and **ICE**.
 Cores have a **tier** 1 to 5. Every core has a physical **hardware
 location** in a zone.
+The private tier-zero Wake lesson is the single-room, hardware-free
+exception in section 4. Intended live hub approaches are reachable with
+starter programs; paid key shops in future districts cannot gate every
+real encounter. District gate counts and public uplinks remain intact.
 
 ### 6.3 ICE and programs
 
@@ -483,6 +496,12 @@ location** in a zone.
 - Ordinary controls reset on their declared timer (5 to 30 minutes).
   Only controls tagged `owner_policy` persist for a relay owner. Travel
   denial, hazards, cuts, and service jobs always expire.
+
+Named short effects are exceptions to that ordinary reset range: a
+mission latch lasts 120 s, a private delivery vestibule 30 s, Row lighting
+blackout 30 s, Row sign message 60 s, and the bell-gallery hymn 60 s.
+Foundry gantry debris lasts 30 s after its hazard warning.
+Transit holds retain their separate 30 s limit and 120 s immunity.
 - A crew member who reaches a core's hardware in meatspace can **cut
   power**: every runner inside is jacked out with shock 100 and the core
   is offline for 10 minutes. This is the main defence against hostile
@@ -548,6 +567,116 @@ objective instructions; Compass distinguishes decoys. It cannot falsify
 cost, exit, safe-zone, or transaction UI. Mission-critical signals are
 text-and-glyph state, never colour, sound, or remembered prose alone.
 
+### 6.7 Encounter operating rules
+
+Load or unload programs only while idle at a physical terminal or a
+public district cell, with no cast, move or escape in progress. Inspect
+anywhere. Sum actual slot costs; bindings do not create extra capacity.
+A loaded key does not open a gate until its cast completes. Opening is
+per runner/run; item, faction, discovery and event conditions remain
+independent. Signet opens Halvard gates, never an unrelated story lock.
+Cooldowns start at completion and use program IDs. They survive unloading,
+rebinding, leaving a core, jack-out, disconnect and restart. Active effects
+end as specified, including shields and Residual Fragment on jack-out.
+Cast-speed multipliers combine multiplicatively after counters cancel
+their named penalties. Caffeine is spent by the next accepted cast, even
+if that cast is later interrupted; refusing an invalid action spends
+nothing. Understudy is a separate target: a killing hit does not spill
+over to the runner. Ticker's live-decoy halving applies before Smoke's
+ordinary gain multiplier, giving 0.375 trace/s together before other
+modifiers. Shields replace rather than stack. Refuse a replacement that
+adds neither budget nor a new protection; a lower budget may still trade
+for Slicker's pin protection or Wetsuit's Cantillation protection.
+
+The view shows a defender's role, trigger, phase, target and counter.
+Every new hostile threat gives at least 2 s warning before damage;
+continued attacks use the bestiary cadence. Mastiff patrols advance one
+room every 3 s; hunter pursuit one linked room/cell per 1 s; Drift takes
+one legal adjacent step every 4 s. A Sweeper warns for 5 s, occupies its
+next cell for 2 s, then warns its next step. Its loop leaves a reachable
+side route. Ordinary core defenders reset after 30 s with nobody inside;
+data availability and receipts do not reset with them.
+
+Shade repeats one valid effect from the last observed program after its
+two-second warning. Copied damage targets the observed runner; shields,
+decoys and restoration apply to Shade. A utility without a legal NPC
+target visibly does nothing. A shield is never turned into extra damage.
+
+Liar's unverified route is explicitly suspect. Following it starts a
+10 s dead-end channel and adds 15 trace where trace applies. Esc/B may
+withdraw early; already spent trace remains. Compass identifies the
+decoy without that cost. The false route never becomes an objective,
+control, source receipt or escape instruction.
+
+Pulse marks its casting district cell or core entrance for 20 s for the
+runner's crew. It does not publish an interior room or a remote Silt
+position. The marked entry stays fixed while the runner moves. The Silt
+rejects a Pulse cast before spending its cast or cooldown.
+
+Shiv reports once after a visible 4 s channel while alive. Sneakers
+delays entry activation, Nobody suppresses it, and killing Shiv prevents
+the unfinished report. Reported locations are game-body locations; hiding
+an ordinary sitrep row does not conceal an explicitly warned trace or
+Shiv report. Cantillation damage is max(10, 25 - Resonance / 4), zero for
+a Cantor, then modified by Wetsuit. Use fractional integrity consistently.
+Drift's hit may displace one known, legally accessible adjacent cell;
+Anchor prevents it. No displacement bypasses access or erases a return
+route. Undertow shows a 3 s pull: hitting it, leaving or Anchor cancels;
+completion pulls one band deeper, never past band five. Redline helps
+leave, rather than changing program cast time.
+
+Public district cells protect against burning and permit immediate
+jack-out; an announced nonblack NPC may still threaten integrity. A
+public access tag inside a core or the Silt is not district immunity.
+Safe-body risk consent is explicit, run-scoped and persistently labelled.
+It covers server-owned NPC black feedback only, including warned Silt
+feedback, never player-controlled ICE, private ICE or indirect PvP.
+Attribution and body permission are checked again at delivery.
+
+Trace uses world Lattice section 7's numeric schedule. Thresholds fire
+once on crossing during a run. Street trace 100 gives shock 60 and a
+5-minute identity/core lockout, persisting across reconnection; other
+callers retain access. This is separate from a global hardware cut.
+Corporate hunters last at most 3 minutes; Cutout breaks one follow
+without immediately reattaching that hunter on the same threshold.
+Hostile actions in a nonpublic district cell use that sector's trace
+schedule, without passive gain outside a core. An untiered corporate
+district uses the baseline tier-3 Hound. A local core or gated district
+also reacts when an already traced runner enters; each local threshold
+fires once per jack-in run. Street district lockout blocks only that
+identity's nonpublic links; its public routes remain available.
+
+An authored ordinary core may hold at most one optional core-owned chit
+cache: 40 * tier, respawning after 30 minutes of server uptime. This is
+never a player's bank or storage; cores explicitly offering no resale
+data retain that rule. These optional shared spoils reward competing
+runs; mission progress and personal records never depend on winning
+that race. Section 3.5's separate first-lift XP receipt is per identity
+and core per UTC day, not this shared chit respawn. Inspect shows the
+exact yield and availability.
+Shared loot, source generation, player reward and receipt commit together.
+Mission keys use an identity/mission scope; personal evidence and learned
+records are not someone else's shared cash prize. Data lifts take 3 s,
+or 2.25 s with Ledger, rounded up to ticks. A lift pays its applicable
+trace on start; cancellation, interruption or losing a shared-source race
+does not refund that trace. Cancellation transfers nothing.
+A request binds its displayed source revision so replay cannot consume
+a later respawn. Section 3.5 owns XP and meaningful-use limits; training
+and generated discovery do not create an infinite reward source.
+
+Every Silt band has 8-20 cells and one riser. Bands one to four have 1-3
+sinks, at least one on a visible connected route from the riser; optional
+hidden branches never gate continuation; at most one fifth of cells are
+hidden. Band five has no sink. Persist
+the season/sector/descent nonce before publishing a seed; crew sharing
+requires the same entry and authorized instance. Contribution sources use
+stable season/sector/band/site IDs and section 13.1's uptime limit;
+a fresh seed is not a fresh reward pool. Store remaining uptime across
+restart, with no offline catch-up. Optional dead-rig salvage uses the same
+source reservation as other loot, with its published one-in-three roll
+fixed for that source availability period rather than rerolled by exits.
+Other repeatable Silt loot uses 30-minute uptime availability periods.
+
 ## 7. Factions
 
 ### 7.1 Membership and standing
@@ -608,7 +737,9 @@ to yours (or any Freelance) makes you
 **Marked** for 15 minutes: any player may attack you anywhere outside a
 safe zone without becoming Marked themselves, Wardens engage you on sight
 in contested zones, and your name shows red. Killing a Marked player gives
-standing with the Wardens. In open zones nothing marks anyone.
+standing with the Wardens. In open zones nothing marks anyone. For remote
+burning, both bodies must be in open areas for that exception; a contested
+participant keeps the normal grade protection and aggression consequence.
 
 Check legality at hostile action commitment, including misses, controls,
 drones, and burning; attribute it once to the responsible player.
@@ -1545,7 +1676,7 @@ valid; zone/core instance IDs retain their own documented convention.
 | `prg_cutout` | Cutout | decoy | 4 | 2 | 1.2 s | 60 s | breaks a Hound's follow once; trace −20 | 1600 |
 | `prg_caffeine` | Caffeine | loader | 1 | 1 | 0.3 s | 15 s | next cast time −30 % | 400 |
 | `prg_overclock` | Overclock | loader | 2 | 1 | 0.5 s | 20 s | all cast times −25 % for 10 s; cancels Tar for that time | 800 |
-| `prg_redline` | Redline | loader | 3 | 1 | 0.5 s | 30 s | cell-to-cell moves 0.4 s for 10 s; costs 5 integrity per move | 1200 |
+| `prg_redline` | Redline | loader | 3 | 1 | 0.5 s | 30 s | cell-to-cell moves no slower than normal, capped at 0.4 s for 10 s; costs 5 integrity per completed move | 1200 |
 | `prg_skeleton` | Skeleton | key | 1 | 1 | 1.5 s | 5 s | opens a tier-1 gated cell or Turnstile | 200 |
 | `prg_locksmith` | Locksmith | key | 2 | 1 | 1.5 s | 5 s | opens tier ≤ 2 gates and Lockstep off-schedule | 800 |
 | `prg_passkey` | Passkey | key | 3 | 1 | 2.0 s | 8 s | opens tier ≤ 3 gates; opens a private core's door control without a fight | 1200 |
@@ -1576,22 +1707,22 @@ valid; zone/core instance IDs retain their own documented convention.
 | Mastiff | 2–3 | 60 | 14 / 1.2 s | always | Patrols the core's rooms on a loop; attacks whatever it walks into. | no | stealth avoids; Tar-immune |
 | Glasshouse | 2–4 | 50 / 80 / 110 | none | touch | Shields the room's data. Must be broken before anything can be lifted. | no | heavy attack programs; Mirror often sits behind one |
 | Sandman | 2–3 | 40 | 6 / 1.0 s | entry | Strips stealth, doubles loader cast times while alive. | no | kill early; Nobody resists 5 s |
-| Hornets | 3 | 35 | 4 ×5 / 2.0 s | entry | A swarm: five small hits per cast. Shields waste against it. | no | area attack (Mallet); Umbrella is useless |
+| Hornets | 3 | 35 | 4 ×5 / 2.0 s | entry | A swarm: five small hits per cast. Shields deplete across the hits normally. | no | area attack (Mallet); Umbrella absorbs 15 of the volley |
 | Liar | 3 | 30 | none | entry | Adds fake data rooms; a runner who takes the bait loses 10 s and +15 trace. | no | Compass shows the real map |
 | Tar | 3–4 | 55 | 8 / 2.0 s | always | Every program's cast time ×2 while it lives. | no | Overclock cancels; kill first |
 | Lockstep | 2–3 | 40 | none | passage | Kestrel gate ICE. Opens for 10 s every 60 s on a schedule visible in the room. | no | wait, or Locksmith |
-| Shiv | 3 | 25 | 12 / 0.6 s | entry | Sable ICE. Fast, cheap, dies quick, and tells the core's owner where the runner's body is. | no | kill in one cast (Drill) before it reports |
+| Shiv | 3 | 25 | 12 / 0.6 s | entry | Sable ICE. A visible 4 s report channel tells the owner where the body is, once while alive. | no | kill in one cast (Drill) before it reports |
 | Suture | 3–4 | 50 | 3 / 0.5 s | always | Sablier ICE. Drains slowly and heals other ICE in the room 5 per second. | no | kill it first, always |
 | Cantillation | 3–4 | 60 | 10–25 / 1.5 s | entry | Choir ICE. Damage scales down with the runner's Resonance; Cantors take none and hear a hymn instead. | no | Resonance; Wetsuit |
 | Mirror | 4 | 70 | reflects | touch | Reflects the next attack program's damage back at the caster, then rests 5 s. | no | shield up before attacking; utility programs pass |
 | Kiln | 4 | 90 | 25 +10 meat / 1.5 s | touch | Halvard black ICE. Burns the runner who touches the data. | yes | break Glasshouse from range first; Bunker |
 | Hound | 3–5 | 80 / 120 / 150 | 20 / 25 / 30 (+15 meat at tier 5) / 1.0 s | trace 100 | Hunter. Spawns in corporate cores at trace 100 and follows the runner across cells until killed, jacked out, or 3 min pass. | tier 5 | Cutout breaks the follow once; jack out |
 | Blackglass | 5 | 200 | 35 +20 meat / 1.5 s | touch | Halvard flagship. Sits on the best data in the city. | yes | a crew: one runner shields, one attacks; Blackout |
-| Drift | Silt, 2 | 40 | 10 / 1.0 s | always | Unowned. Random-walks cells; some drift up into district sectors. | no | avoid; Anchor holds position against it |
-| Undertow | Silt, 3 | 70 | none | entry | Pulls the runner one band deeper on a failed cast. | no | Anchor; Redline to out-cast it |
+| Drift | Silt, 2 | 40 | 10 / 1.0 s | always | Unowned. Random-walks cells; a hit can displace one known legal adjacent cell. Some drift into districts. | no | avoid; Anchor holds position against it |
+| Undertow | Silt, 3 | 70 | none | entry | A visible 3 s pull channels one band deeper; a hit on it or leaving interrupts. Never past band five. | no | Anchor; Redline to leave before the pull |
 | Chorister | Silt, 3–4 | 60 | 15 / 2.0 s | entry | Responsive process. Shows a repeating signal. Use the labelled sampling procedure in design §6.6; no answer quiz. | no | survey its pattern; hold or withdraw |
 | Shade | Silt, 4 | 80 | 20 / 1.2 s | entry | A hostile residual: a dead runner's habits with none of the runner. Copies the last program you cast. | no | do not cast attacks first; Umbrella |
-| Sweeper | Silt, 4-5 | 250 | 40 +25 meat / 2.0 s | always | Attributed by some to the Custodian. Systematic, slow, cleans a band cell by cell. It is not interested in you until you are in its way. | yes | leave the band; nothing kills it in one run |
+| Sweeper | Silt, 4-5 | 250 | 40 +25 meat / 2.0 s | always | Attributed by some to the Custodian. Systematic, slow, cleans a band cell by cell. It is not interested in you until you are in its way. | yes | leave the warned cell; a prepared crew may commit to killing it, without repeatable generated kill rewards |
 
 ## 18. Design acceptance before calling it compelling
 

@@ -1,0 +1,121 @@
+{
+  "schema": 1,
+  "id": "lat-relay-cable",
+  "name": "Cable Relay",
+  "owner": "neutral",
+  "owner_kind": "relay",
+  "tier": 3,
+  "trace_policy": "black",
+  "hardware": [
+    {
+      "zone": "sink-rim",
+      "tile": null,
+      "label": "Cable Relay hardware"
+    }
+  ],
+  "entry": "entry",
+  "rooms": [
+    {
+      "id": "entry",
+      "label": "Entry",
+      "pos": [
+        0,
+        0
+      ],
+      "neighbours": [
+        "room-1",
+        "room-2"
+      ],
+      "ice": [],
+      "data": [],
+      "controls": []
+    },
+    {
+      "id": "room-1",
+      "label": "Index",
+      "pos": [
+        1,
+        0
+      ],
+      "neighbours": [
+        "entry",
+        "room-3"
+      ],
+      "ice": [],
+      "data": [],
+      "controls": []
+    },
+    {
+      "id": "room-2",
+      "label": "Service room 2",
+      "pos": [
+        0,
+        1
+      ],
+      "neighbours": [
+        "entry",
+        "room-3"
+      ],
+      "ice": [],
+      "data": [],
+      "controls": [
+        {
+          "id": "relay_vendor_lock",
+          "label": "relay_vendor_lock",
+          "target": {
+            "zone": "sink-rim",
+            "object": "relay-cable"
+          },
+          "action": "toggle",
+          "reset_seconds": 300,
+          "scope": "public",
+          "permission": "public",
+          "safety_policy": "none"
+        }
+      ]
+    },
+    {
+      "id": "room-3",
+      "label": "Archive",
+      "pos": [
+        1,
+        1
+      ],
+      "neighbours": [
+        "room-1",
+        "room-2"
+      ],
+      "ice": [
+        "ice_tripwire",
+        "ice_turnstile",
+        "ice_mastiff"
+      ],
+      "data": [
+        {
+          "id": "relay-telemetry",
+          "label": "Relay telemetry",
+          "kind": "contract_key",
+          "asset": "relay-telemetry",
+          "amount": 1,
+          "scope": "identity",
+          "respawn_seconds": 0
+        }
+      ],
+      "controls": [
+        {
+          "id": "relay_open",
+          "label": "relay_open",
+          "target": {
+            "zone": "sink-rim",
+            "object": "relay-cable"
+          },
+          "action": "open",
+          "reset_seconds": 300,
+          "scope": "public",
+          "permission": "public",
+          "safety_policy": "none"
+        }
+      ]
+    }
+  ]
+}

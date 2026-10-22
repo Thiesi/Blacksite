@@ -222,6 +222,78 @@
         "unavailable_target": "spire-atrium",
         "name": "Construction boundary"
       }
+    },
+    {
+      "id": "civic-records-hardware",
+      "kind": "hardware",
+      "tile": [
+        66,
+        29
+      ],
+      "params": {
+        "name": "Records annex cabinet",
+        "core": "lat-civic-ledger"
+      }
+    },
+    {
+      "id": "branch-vault-hardware",
+      "tile": [
+        11,
+        5
+      ],
+      "kind": "hardware",
+      "params": {
+        "name": "Kestrel Branch hardware",
+        "core": "lat-kestrel-branch"
+      }
+    },
+    {
+      "id": "precinct-camera-net",
+      "tile": [
+        3,
+        3
+      ],
+      "kind": "terminal",
+      "params": {
+        "name": "camera net",
+        "control": "camera-net"
+      }
+    },
+    {
+      "id": "precinct-curfew-shutters",
+      "tile": [
+        2,
+        3
+      ],
+      "kind": "door",
+      "params": {
+        "name": "curfew shutters",
+        "control": "curfew-shutters"
+      }
+    },
+    {
+      "id": "civic-ledger-hall-doors",
+      "tile": [
+        65,
+        29
+      ],
+      "kind": "door",
+      "params": {
+        "name": "hall doors",
+        "control": "hall-doors"
+      }
+    },
+    {
+      "id": "kestrel-branch-branch-shutters",
+      "tile": [
+        10,
+        5
+      ],
+      "kind": "door",
+      "params": {
+        "name": "branch shutters",
+        "control": "branch-shutters"
+      }
     }
   ],
   "pockets": [],
