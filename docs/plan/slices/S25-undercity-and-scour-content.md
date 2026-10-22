@@ -162,6 +162,14 @@ the real remaining maps land here, this slice must:
 
 ## Implementer notes
 
+S16 deferred field acceptance is also mandatory at both terminal sizes
+through NetBBS: buy `imp_halvard_reflex_arm` at the real Spire concourse,
+then install it at a Sablier clinic and verify the 10 percent weapon
+cooldown reduction. S16's owned-item loan verifies surgery, not that
+purchase or its district route. Exercise the real Sink black clinic's
+60 percent price and 15 percent failure disclosure once its map exists.
+Keep the canonical prices and disclose any scenario funding.
+
 S13/S14 hardware handoff: give each new zone its canonical `sector` ID,
 anchor and activate every ordinary core whose hardware now exists, and
 replace the district entrance's `planned_core` placeholder with its live

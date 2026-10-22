@@ -1,7 +1,8 @@
 """S10 real NetBBS native stdio: training, PvP, clones, loot and safety.
 
-Uses explicit grade-five/funding/shock fixtures because S16 earning is
-not implemented. Movement, targeting, firing and menus use real keys.
+Uses explicit grade-five/funding/shock fixtures to isolate combat.
+S16 adds a disclosed Chapel Throat loan for the tier-one Jam scenario.
+Movement, targeting, firing and menus use real keys.
 No teleports. Run the NetBBS interpreter with --show in a real terminal.
 """
 
@@ -226,6 +227,18 @@ async def accept(root: Path, door_python: Path, show: bool) -> None:
                 probe.report(f"PASS private training {width}x{height}: {time.monotonic()-started:.1f}s, nonlethal, real Tab/F")
                 await probe.walk(connection,parking)
             # Bind Steady and Jam through the real server-driven menu.
+            # S16's real implant gate applies. This combat-only probe lends
+            # the prerequisite; surgery and acquisition belong to S16/S25.
+            cantor = probe.game.players[a.session.player_id]
+            throat_serial = probe.combat.next_serial()+1
+            probe.commerce.serial = throat_serial
+            throat = make_item(f"{cantor.origin}:item:{throat_serial}",
+                probe.game.content.items["imp_res_throat"],cantor.id,
+                probe.service.clock.now_utc().isoformat())
+            probe.commerce.items[throat.id] = throat
+            cantor.implants["spine"] = throat.id
+            probe.service.core.progression.sync_actor(cantor)
+            probe.report(f"FIXTURE S10 {width}x{height}: installed Chapel Throat loan for Jam; no surgery claim")
             actor=a.avatar.actor
             await a.caller.write(b"v");await wait(lambda:a.session.id in probe.combat.menus)
             await wait(lambda:"ABILITIES" in a.caller.screen.screen_text())
