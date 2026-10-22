@@ -52,6 +52,7 @@ class ZoneSimulation:
         self.external_views: dict[str, tuple[str, dict[str, Any]]] = {}
         self.departures = DepartureHolds()
         self.locked_exits: set[tuple[str, str]] = set()  # S15-owned control state.
+        self.arrival_hook: Callable[[Session, Avatar], None] = lambda session, avatar: None
 
     def discover(self, session: Session, avatar: Avatar) -> None:
         if avatar.zone in avatar.seen_zones:
@@ -100,6 +101,7 @@ class ZoneSimulation:
             avatar.travel = None
             self.reset_view(session, avatar)
             self.discover(session, avatar)
+            self.arrival_hook(session, avatar)
             self.log(session, "You arrive at " + self.world.zones[target].template.meta.name + ".")
 
     def interact(self, session: Session, avatar: Avatar, tick: int, *, street: bool = False) -> None:

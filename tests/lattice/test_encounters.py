@@ -222,6 +222,7 @@ def test_game_6_7_contended_lift_charges_attempts_but_pays_one_generation(runner
     source = game.core.lattice.sources.refresh(key, data, game.clock.now_tick())
     players = [game.core.characters.players[p.player_id] for p in presences]
     before = sum(p.chits_hand for p in players)
+    before_xp = sum(p.xp for p in players)
     for client, presence in zip((a,b), presences):
         trace = presence.trace
         intent(game, client, 'lat.lift', target=data.id, generation=source.generation)
@@ -232,6 +233,6 @@ def test_game_6_7_contended_lift_charges_attempts_but_pays_one_generation(runner
     assert all(p.procedure is None for p in presences)
     assert not game.core.commerce.pending
     assert sum(p.chits_hand for p in players) == before+80
-    assert sum(p.xp for p in players) == 40*encounters.core(presences[0]).graph.spec.tier
+    assert sum(p.xp for p in players) == before_xp+40*encounters.core(presences[0]).graph.spec.tier
     assert game.core.lattice.sources.sources[key].generation == 1
     assert sum(key in p.progress.get('lattice_receipts', {}) for p in players) == 1

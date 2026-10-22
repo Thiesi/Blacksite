@@ -107,11 +107,16 @@ class Lattice:
     def found(self, player: Player, sector: str) -> set[str]:
         return set(self.saved(player).get("found_cells", {}).get(sector, []))
 
-    def reveal(self, player: Player, sector: str, cell: str) -> bool:
-        """Operator/debug hook; S14/S16/S24 supply real discovery actions."""
+    def reveal(self, player: Player, sector: str, cell: str, *, learn: bool = False) -> bool:
+        """Debug reveals do not pay skill; real survey/program actions do."""
         if sector not in self.sectors.cells or cell not in self.sectors.cells[sector]:
             return False
         found = self.found(player, sector)
+        if learn:
+            if cell in found:
+                return False
+            self.game.progression.record_discovery(player.id, "hidden", sector+"/"+cell)
+            return True
         found.add(cell)
         self.saved(player).setdefault("found_cells", {})[sector] = sorted(found)
         self.game.queue("save", player.bbs_user_id, player, immediate=True)
@@ -247,6 +252,8 @@ class Lattice:
         self.notify(presence, player.name+" arrives.", exclude=player.id)
         self.game.snapshot(player, avatar)
         self.game.queue("save", session.user_id, player, immediate=True)
+        if not (terminal and terminal.spec.params.get("training_core")):
+            self.game.progression.record_discovery(player.id, "cell", sector+"/"+presence.cell)
 
     def notify(self, presence: Presence, text: str, exclude: str | None = None) -> None:
         for other in self.presences.values():
@@ -500,6 +507,7 @@ class Lattice:
                     self.encounters.follow(presence)
                     session.subscribed = presence.sector
                     self.log(session, "You enter "+cell.label+".")
+                    self.game.progression.record_discovery(pid, "cell", presence.sector+"/"+presence.cell)
                     self.notify(presence, self.game.players[pid].name+" arrives.", exclude=pid)
             body = self.view(session, presence)
             transition = self.transitions.get(session.id)

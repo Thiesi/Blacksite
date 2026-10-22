@@ -29,6 +29,7 @@ class ProgressionEngine:
         self.requests: dict[str, list[str]] = {}
         self.crew_of: Callable[[str], str | None] = lambda pid: None  # S22.
         self.permit_combat: Callable[[str, str], bool] = lambda source, target: True  # S19.
+        self.sim.arrival_hook = lambda session, avatar: self.record_discovery(session.player_id, "zone", avatar.zone)
 
     def modifiers(self, player: Player) -> Modifiers:
         return collect(player, self.commerce.items, self.content.items,
@@ -132,6 +133,45 @@ class ProgressionEngine:
             self.commerce.settle(player, {"skills": draft.skills, "attributes": draft.attributes,
                 "progress": draft.progress}, self.commerce.items, self.commerce.caches,
                 self.commerce.serial, committed)
+        self.commerce.enqueue_system(propose)
+
+    def record_discovery(self, pid: str, kind: str, key: str) -> None:
+        """Authored visits/reveals join their permanent receipt and skill gain."""
+        def propose() -> None:
+            player = self.game.players.get(pid)
+            if player is None or pid in self.game.deleting:
+                return
+            draft = deepcopy(player)
+            identity = deepcopy(self.game.identities[player.bbs_user_id])
+            result = None
+            if kind == "hidden":
+                sector, cell = key.split("/", 1)
+                known = draft.progress.setdefault("lattice", {}).setdefault("found_cells", {}).setdefault(sector, [])
+                if cell in known:
+                    return
+                known.append(cell)
+                self.gain(draft, Use("hidden_authored", "listening", "hidden:"+key,
+                    True, changed=True, authored=True))
+            else:
+                grant = Grant("zone_discovery" if kind == "zone" else "cell_discovery",
+                              key, True, scope=key, authored=True)
+                patch, identity, result = self.reward_patch(player, grant)
+                if result is None:
+                    return
+                for field, value in patch.items():
+                    setattr(draft, field, value)
+                if kind == "cell":
+                    self.gain(draft, Use("authored_cell", "lattice", "cell:"+key,
+                        True, changed=True, authored=True))
+            patch = {field: deepcopy(getattr(draft, field)) for field in
+                     ("xp", "grade", "attributes", "skills", "health", "legal_at", "progress")
+                     if getattr(draft, field) != getattr(player, field)}
+            def committed(success: bool) -> None:
+                if success:
+                    self.sync_actor(player)
+                    self.notify_reward(player, result)
+            self.commerce.settle(player, patch, self.commerce.items, self.commerce.caches,
+                                 self.commerce.serial, committed, identity)
         self.commerce.enqueue_system(propose)
 
     def notify_reward(self, player: Player, result: Award | None) -> None:

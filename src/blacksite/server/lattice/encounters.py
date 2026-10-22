@@ -349,8 +349,8 @@ class Encounters:
         self.log(presence, "NPC BLACK FEEDBACK / BODY RISK below remains active.", True)
 
     def survey(self, presence: Presence, sample: bool = False) -> None:
-        if not presence.descent or not self.idle(presence):
-            raise ValueError("Survey or sample while idle in the Silt.")
+        if not self.idle(presence) or sample and not presence.descent or presence.instance and not presence.descent:
+            raise ValueError("Survey while idle in a district or the Silt; sample only in the Silt.")
         tick, player = self.clock.now_tick(), self.game.players[presence.player_id]
         signal = next((i for i in self.defenders(presence) if i.template.class_ == "chorister" and not i.provoked), None)
         if sample:
@@ -366,8 +366,21 @@ class Encounters:
 
     def complete_survey(self, presence: Presence, procedure: Procedure) -> None:
         tick = self.clock.now_tick()
-        graph = self.core(presence).graph
         player = self.game.players[presence.player_id]
+        if not presence.descent:
+            player.progress.setdefault("lattice_cooldowns", {})["survey"] = self.clock.now_utc().timestamp()+10
+            self.game.queue("save", player.bbs_user_id, player, immediate=True)
+            cells = self.lat.sectors.cells[presence.sector]
+            hidden = [cells[cid] for cid in cells[presence.cell].neighbours
+                      if cells[cid].access_kind == "hidden" and cid not in self.lat.found(player, presence.sector)]
+            if self.game.progression.modifiers(player).skill(player, "listening") >= 20:
+                for cell in hidden:
+                    self.lat.reveal(player, presence.sector, cell.id, learn=True)
+                self.log(presence, "Survey reveals adjacent hidden cells." if hidden else "No hidden signal is adjacent.")
+            else:
+                self.log(presence, "A hidden signal is adjacent. Listening 20 resolves it." if hidden else "No hidden signal is adjacent.")
+            return
+        graph = self.core(presence).graph
         known = presence.found_silt.setdefault(presence.instance, set())
         signal = self.target(presence, procedure.target)
         if procedure.kind == "sample":
@@ -385,7 +398,7 @@ class Encounters:
             if signal and not signal.provoked and signal.signal_phase(tick)[0] == "listening":
                 presence.survey_records.add(signal.id)
                 self.log(presence, "Signal recorded. Start a three-second hold in sampling.")
-            if player.skills.get("listening", 0) >= 20 or presence.mapping_until > tick:
+            if self.game.progression.modifiers(player).skill(player, "listening") >= 20 or presence.mapping_until > tick:
                 known.update(c.id for c in adjacent_hidden(graph.band, presence.room, known))
                 self.log(presence, "Survey reveals adjacent hidden branches.")
             else:
@@ -636,7 +649,7 @@ class Encounters:
             cell = self.lat.sectors.cells[presence.sector][presence.cell]
             for cid in cell.neighbours:
                 if self.lat.sectors.cells[presence.sector][cid].access_kind == "hidden":
-                    self.lat.reveal(player, presence.sector, cid)
+                    self.lat.reveal(player, presence.sector, cid, learn=True)
 
     def source(self, presence: Presence, data: DataSpec) -> str:
         player = self.game.players[presence.player_id]
@@ -1025,10 +1038,11 @@ class Encounters:
             if not core_id and self.can_enter(presence, "lat-wake-hall"):
                 core_id = "lat-wake-hall"
             if cell.kind == "descent":
-                return [{"id": "descend", "cells": ["Descend with NPC risk", "BLACK ICE can injure body"]}]
+                return [{"id": "descend", "cells": ["Descend with NPC risk", "BLACK ICE can injure body"]},
+                        {"id": "survey", "cells": ["Survey", "3s / 10s cooldown"]}]
             return ([{"id": "enter:"+core_id, "cells": ["Enter "+self.content.cores[core_id].name]},
                      {"id": "risk:"+core_id, "cells": ["Enter with NPC risk", "BLACK ICE may injure body"]}]
-                    if core_id else [])
+                    if core_id else []) + [{"id": "survey", "cells": ["Survey", "3s / 10s cooldown"]}]
         room = instance.graph.room(presence.room)
         rows = [{"id": "ice:"+i.id, "cells": [i.template.name, f"{i.integrity:g} integrity", i.phase]}
                 for i in self.defenders(presence)]

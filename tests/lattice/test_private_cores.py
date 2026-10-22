@@ -64,6 +64,7 @@ def test_game_6_4_private_manifest_daily_race_and_atomic_unit(runners):
     game, a, b, c = runners
     interlock, record = apartment_fixture(game, a)
     one, two = private_entry(game, b, record), private_entry(game, c, record)
+    before_xp = {p.player_id: game.core.characters.players[p.player_id].xp for p in (one, two)}
     assert [i.id for i in interlock.private.manifest(one)] == ["fixture:stack"]
     template = interlock.commerce.items["fixture:stack"].template
     initial = sum(i.stack for i in interlock.commerce.items.values() if i.template == template and i.owner in (one.player_id, two.player_id))
@@ -75,8 +76,8 @@ def test_game_6_4_private_manifest_daily_race_and_atomic_unit(runners):
     game.step()
     game.commit_commerce()
     assert len(receipts) == 1
-    assert receipts[0]["player"]["xp"] == 40*record["tier"]
-    assert sum(game.core.characters.players[p.player_id].xp for p in (one,two)) == 40*record["tier"]
+    assert receipts[0]["player"]["xp"] == before_xp[receipts[0]["player"]["id"]]+40*record["tier"]
+    assert sum(game.core.characters.players[p.player_id].xp for p in (one,two)) == sum(before_xp.values())+40*record["tier"]
     assert game.core.commerce.items["fixture:stack"].stack == 2
     apt = interlock.state["apartments"]["fixture"]
     assert len(apt["hack_log"]) == 1
@@ -98,10 +99,11 @@ def test_game_6_4_private_failed_receipt_leaves_stack_and_log(runners):
     game, a, b, c = runners
     interlock, record = apartment_fixture(game, a)
     presence = private_entry(game, b, record)
+    before_xp = game.core.characters.players[presence.player_id].xp
     intent(game, b, "lat.theft", item="fixture:stack")
     game.step(3*TICK_HZ)
     game.commit_commerce(error=True)
-    assert game.core.characters.players[presence.player_id].xp == 0
+    assert game.core.characters.players[presence.player_id].xp == before_xp
     apt = interlock.state["apartments"]["fixture"]
     assert not apt["hack_log"] and apt["last_hacked_at"] is None
     assert interlock.commerce.items["fixture:stack"].stack == 3
@@ -114,7 +116,7 @@ def test_game_6_4_private_failed_receipt_leaves_stack_and_log(runners):
     other = restored.core.lattice.interlock
     assert len(other.state["apartments"]["fixture"]["hack_log"]) == 1
     assert other.commerce.items["fixture:stack"].stack == 2
-    assert restored.core.characters.players[presence.player_id].xp == 40*record["tier"]
+    assert restored.core.characters.players[presence.player_id].xp == before_xp+40*record["tier"]
     assert other.lat.sectors.cells["lat-terraces"][record["cell"]].core_id == "lat-apartment-fixture"
 
 
