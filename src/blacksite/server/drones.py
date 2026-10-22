@@ -15,6 +15,10 @@ from blacksite.server.npcs.templates import LOST_SIGHT_SECONDS
 from blacksite.server.sessions import Session
 from blacksite.server.wake import menu, wrapped
 from blacksite.server.world.actors import Actor
+from blacksite.server.world.sight import sees_actor, visible_tiles, sight_radius
+from blacksite.server.skills import Use
+from blacksite.content.schema import ObjectSpec
+from blacksite.server.world.zone import ObjectState
 
 if TYPE_CHECKING:
     from blacksite.server.progression_engine import ProgressionEngine
@@ -29,6 +33,38 @@ class Drones:
         self.requests: dict[str, list[str]] = {}
         self.pending: set[str] = set()
         self.pending_attacks: set[str] = set()
+        self.pending_tools: set[str] = set()
+        self.sim.scout_provider = self.scout
+        self.lattice = progression.lattice
+        if self.lattice:
+            self.lattice.mobile_terminal = self.mobile_terminal
+            self.lattice.mobile_link_status = self.mobile_link_status
+
+    def connected(self, actor: Actor) -> bool:
+        return bool(self.lattice and any(p.jack_source == actor.id for p in self.lattice.presences.values()))
+
+    def relay_available(self, relay: Actor, runner: Actor) -> bool:
+        crew = self.progression.crew_of(relay.owner)
+        return bool(self.controller_body(relay,acting=True) and relay.zone == runner.zone
+                    and max(abs(relay.x-runner.x),abs(relay.y-runner.y)) <= 1
+                    and (runner.id == relay.owner or crew and crew == self.progression.crew_of(runner.id)))
+
+    def mobile_terminal(self, runner: Actor, target: str | None) -> ObjectState | None:
+        for iid,actor in sorted(self.actors.items()):
+            item = self.commerce.items.get(iid)
+            block = self.game.content.items[item.template].drone if item else None
+            if (block and block.effects.get("jack_terminal") and target in (None,actor.id)
+                    and self.relay_available(actor,runner)):
+                return ObjectState(ObjectSpec(actor.id,actor.position,"terminal",
+                    {"sector":self.world.zones[actor.zone].template.meta.sector,"player_drone":actor.id}))
+        return None
+
+    def mobile_link_status(self, presence: Any) -> str:
+        relay = self.world.actors.get(presence.jack_source)
+        runner = self.game.combat.actor(self.game.players[presence.player_id])
+        if relay is None or relay.health <= 0:
+            return "destroyed"
+        return "ready" if runner and self.relay_available(relay,runner) else "lost"
 
     def records(self, player: Player) -> dict[str, dict[str, Any]]:
         return player.progress.get("drones", {})
@@ -81,7 +117,8 @@ class Drones:
             return None
         body = self.body(player)
         if acting:
-            if (body is None or body.zone is None or body.health <= 0 or body.stance in ("down","dead","sleeper")
+            if (actor.health <= 0 or actor.stance in ("down","dead","sleeper")
+                    or body is None or body.zone is None or body.health <= 0 or body.stance in ("down","dead","sleeper")
                     or self.game.combat.session(player.id) is None or not self.in_range(player,actor)
                     or list(self.records(player)).index(iid) >= self.slots(player)
                     or detox_until(player) > self.game.clock.now_utc().timestamp()):
@@ -106,6 +143,26 @@ class Drones:
             if block and block.effects.get("carry_kg"):
                 layers.append({"carry_kg":float(block.effects["carry_kg"])})
         return layers
+
+    def scout(self, session: Session) -> tuple[set[tuple[int,int]],set[str]]:
+        player = self.game.players.get(session.player_id)
+        visible: set[tuple[int,int]] = set()
+        actors: set[str] = set()
+        if player is None:
+            return visible,actors
+        for iid in self.records(player):
+            actor = self.actors.get(iid)
+            item = self.commerce.items.get(iid)
+            if not actor or not item or self.controller_body(actor,acting=True) is None:
+                continue
+            radius = int(self.game.content.items[item.template].drone.effects.get("scout_radius",0))
+            if not radius:
+                continue
+            tiles = visible_tiles(actor,self.world.zones[actor.zone],radius)
+            visible.update(tiles)
+            actors.update(other.id for other in self.world.zones[actor.zone].actors.values()
+                          if sees_actor(actor,other,tiles,radius))
+        return visible,actors
 
     def command(self, player: Player, iid: str, action: str, target: str = "", *, system: bool = False) -> bool:
         if self.commerce.pending:
@@ -151,6 +208,10 @@ class Drones:
             if not system and not self.in_range(player,actor):
                 raise ValueError("Your drone is outside its control range.")
             if action == "recall":
+                if self.connected(actor):
+                    if system:
+                        return False  # Dependent runners finish their bounded escape first.
+                    raise ValueError("Someone is connected. Jack out before recalling this Relay.")
                 if not system and self.game.clock.now_tick() < actor.cooldowns.get("combat",0):
                     raise ValueError("Recall after ten quiet seconds; the drone is still in combat.")
                 items[iid].health = actor.health
@@ -166,13 +227,28 @@ class Drones:
             else:
                 if action == "target":
                     other = self.world.actors.get(target)
-                    if not block.attack or not other or not self.game.combat.legal(actor,other) or not self.game.combat.visible(actor,other):
-                        raise ValueError("Choose a visible, unprotected threat for a combat drone.")
+                    if block.attack:
+                        if not other or not self.game.combat.legal(actor,other) or not self.game.combat.visible(actor,other):
+                            raise ValueError("Choose a visible, unprotected threat for a combat drone.")
+                        target_tile = other.position
+                    else:
+                        obj = self.world.zones[actor.zone].objects.get(target)
+                        if other and self.game.combat.visible(actor,other):
+                            target_tile = other.position
+                        elif obj and obj.spec.tile in visible_tiles(actor,self.world.zones[actor.zone],
+                                sight_radius(actor,self.world.zones[actor.zone],False)):
+                            target_tile = obj.spec.tile
+                        else:
+                            raise ValueError("Choose a visible person or object for this support drone.")
+                        if distance(body.position,target_tile) > block.control_range:
+                            raise ValueError("That objective is outside your drone's control range.")
+                        if distance(actor.position,target_tile) <= 1.5:
+                            return False  # Already in position, no new objective work.
                 else:
                     target = ""
                 desired = {"zone":actor.zone,"tile":list(actor.position),"mode":action,"target":target}
                 if action == "target":
-                    desired["target_tile"] = list(other.position)
+                    desired["target_tile"] = list(target_tile)
                 if records[iid].get("mode") == action and records[iid].get("target","") == target:
                     return False
                 records[iid] = desired
@@ -314,6 +390,87 @@ class Drones:
         for _ in range(block.attack.hits):
             combat.shot(actor,target,block.attack,item.quality,skill)
 
+    def tool(self, player: Player, iid: str, actor: Actor, tick: int) -> None:
+        body = self.controller_body(actor,acting=True)
+        item = self.commerce.items.get(iid)
+        block = self.game.content.items[item.template].drone if item else None
+        if (not body or not block or not block.effects.get("heal_per_second")
+                or tick < max(actor.cooldowns.get("tool",0),actor.cooldowns.get("knockdown",0))):
+            return
+        if self.commerce.pending:
+            if iid not in self.pending_tools:
+                self.pending_tools.add(iid)
+                def resume() -> None:
+                    self.pending_tools.discard(iid)
+                    self.tool(player,iid,actor,self.game.clock.now_tick())
+                try:
+                    self.commerce.enqueue_system(resume)
+                except ValueError:
+                    self.pending_tools.discard(iid)
+            return
+        healed = False
+        for other in self.game.combat.allies_provider(body):
+            if (other.kind != "player" or other.zone != actor.zone or other.stance in ("down","dead")
+                    or distance(actor.position,other.position) > block.effects.get("heal_radius",0)
+                    or other.health >= other.health_max):
+                continue
+            before = other.health
+            self.game.combat.heal(other,int(block.effects["heal_per_second"]))
+            if other.health > before:
+                healed = True
+                self.game.combat.remember(self.game.players[other.id],other,immediate=False)
+        if healed:
+            actor.cooldowns["tool"] = tick+TICK_HZ
+            self.progression.record_use(player.id,Use("drone_command","drones",f"medic:{iid}:{self.game.clock.now_utc().isoformat()}",
+                True,changed=True))
+
+    def relocate_follow(self, player: Player, iid: str, actor: Actor, body: Actor) -> None:
+        if self.commerce.pending or iid in self.pending or body.zone is None:
+            return
+        try:
+            tile = self.world.free_tile(body.zone,body.position)
+        except ValueError:
+            return
+        zone = body.zone
+        progress,items = deepcopy(player.progress),deepcopy(self.commerce.items)
+        progress["drones"][iid].update(zone=zone,tile=list(tile),target="")
+        items[iid].health = actor.health
+        self.pending.add(iid)
+        def committed(success: bool) -> None:
+            self.pending.discard(iid)
+            if success:
+                try:
+                    self.world.enter(actor,zone,self.world.free_tile(zone,tile))
+                except ValueError:
+                    return  # Retry next tick; never duplicate an occupied body.
+                actor.target = None
+                self.progression.sync_actor(player)
+        self.commerce.settle(player,{"progress":progress},items,self.commerce.caches,self.commerce.serial,committed)
+
+    def objective(self, player: Player, iid: str, actor: Actor, tick: int) -> None:
+        record = self.records(player)[iid]
+        block = self.game.content.items[self.commerce.items[iid].template].drone
+        if block.attack or actor.behaviour.get("mode") != "target" or not self.controller_body(actor,acting=True):
+            return
+        tile = tuple(record["target_tile"])
+        if distance(actor.position,tile) > 1.5:
+            self.hunt(player,actor,tile,tick)
+            return
+        if self.commerce.pending or iid in self.pending:
+            return
+        draft = deepcopy(player)
+        draft.progress["drones"][iid].update(mode="hold",target="")
+        receipt = f"drone-objective:{iid}:{actor.zone}:{tile[0]}:{tile[1]}"
+        self.progression.gain(draft,Use("drone_command","drones",receipt,True,changed=True))
+        self.pending.add(iid)
+        def committed(success: bool) -> None:
+            self.pending.discard(iid)
+            if success:
+                actor.behaviour["mode"],actor.target = "hold",None
+                self.progression.sync_actor(player)
+        self.commerce.settle(player,{key:deepcopy(getattr(draft,key)) for key in
+            ("progress","skills","attributes")},self.commerce.items,self.commerce.caches,self.commerce.serial,committed)
+
     def view(self, session: Session) -> dict[str, Any]:
         player = self.game.players[session.player_id]
         ids = [iid for iid in player.inventory if self.game.content.items[self.commerce.items[iid].template].drone]
@@ -436,9 +593,18 @@ class Drones:
                 if actor.shock and tick-actor.cooldowns.get("last_hit",tick) >= rules.ticks(rules.SHOCK_DELAY):
                     actor.shock = max(0,actor.shock-rules.SHOCK_DECAY/TICK_HZ)
                 actor.marked = bool(body and body.marked)
+                if self.connected(actor):
+                    if tick % (5*TICK_HZ) == 0:
+                        self.checkpoint(player,iid,actor)
+                    continue  # Never drag a runner's active cable across the street.
+                if body and body.zone and body.zone != actor.zone and actor.behaviour.get("mode") == "follow":
+                    self.relocate_follow(player,iid,actor,body)
+                    continue
                 if body and body.zone == actor.zone and actor.behaviour.get("mode") == "follow" and distance(body.position,actor.position) > 1.5:
                     step_toward(actor,self.world.zones[actor.zone],body.position,tick)
                 self.attack(player,iid,actor,tick)
+                self.objective(player,iid,actor,tick)
+                self.tool(player,iid,actor,tick)
                 if actor.zone:
                     self.records(player)[iid].update(zone=actor.zone,tile=list(actor.position))
                     if tick % (5*TICK_HZ) == 0:

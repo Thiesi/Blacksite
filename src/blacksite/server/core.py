@@ -75,7 +75,7 @@ class Core:
                 self.lattice.social_overlay = lambda session: session.id in self.chat.sitreps
                 self.chat.reported_location = self.lattice.encounters.reported_location
                 self.lattice.encounters.report = self.lattice.encounters.publish_report
-        self.progression = ProgressionEngine(self.commerce) if self.commerce else None
+        self.progression = ProgressionEngine(self.commerce,self.lattice) if self.commerce else None
         if self.progression:
             self.loop.subsystems.append(self.progression)
 

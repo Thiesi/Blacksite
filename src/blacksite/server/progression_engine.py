@@ -6,7 +6,7 @@ This facade owns UI and manual spending; it never pays post-commit XP.
 
 from copy import deepcopy
 from collections.abc import Callable
-from typing import Any
+from typing import Any, TYPE_CHECKING
 
 from blacksite.server.commerce import Commerce
 from blacksite.server.clock import TICK_HZ
@@ -20,10 +20,14 @@ from blacksite.server.sessions import QUEUE_LIMIT, Session
 from blacksite.server.skills import ENCOUNTER_IDLE_SECONDS, LINE_GROUP, Use, gain, spend
 from blacksite.server.world.actors import Actor
 
+if TYPE_CHECKING:
+    from blacksite.server.lattice.engine import Lattice
+
 
 class ProgressionEngine:
-    def __init__(self, commerce: Commerce) -> None:
+    def __init__(self, commerce: Commerce, lattice: "Lattice | None" = None) -> None:
         self.commerce, self.game, self.sim = commerce, commerce.game, commerce.sim
+        self.lattice = lattice
         self.clock, self.content = self.game.clock, self.game.content
         self.game.progression = self
         self.menus: dict[str, int] = {}
@@ -257,7 +261,8 @@ class ProgressionEngine:
             text = f"You gain {result.xp} XP."
             if result.grade > result.old_grade:
                 grade = next((g for g in self.content.grades.values() if g.grade == result.grade), None)
-                text += " "+(grade.promotion if grade else f"You reach grade {result.grade}.")
+                text += (f" Grade {result.grade}: {grade.title}. "+grade.promotion
+                         if grade else f" You reach grade {result.grade}.")
                 self.commerce.toast(session, text)
             session.send(Frame("log", {"lines": [{"channel": "system", "text": text,
                 "role": "chan_sys", "at": self.clock.now_utc().isoformat()}]}))

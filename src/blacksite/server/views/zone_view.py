@@ -52,9 +52,11 @@ def camera(actor: Actor, zone: ZoneInstance, width: int, height: int,
 
 
 def build(actor: Actor, zone: ZoneInstance, perception: Perception, content: ContentTree,
-          width: int, height: int, clock: str, night: bool, tick: int) -> dict[str, Any]:
+          width: int, height: int, clock: str, night: bool, tick: int,
+          scouted: set[tuple[int,int]] | None = None, scouted_actors: set[str] | None = None) -> dict[str, Any]:
     radius = sight_radius(actor, zone, night)
-    visible = visible_tiles(actor, zone, radius)
+    body_visible = visible_tiles(actor, zone, radius)
+    visible = body_visible | (scouted or set())
     remembered = perception.remembered.setdefault(zone.id, {})
     viewport = camera(actor, zone, width, height, perception.viewport)
     perception.viewport = viewport
@@ -64,7 +66,7 @@ def build(actor: Actor, zone: ZoneInstance, perception: Perception, content: Con
         perception.indices = {key: index for index, key in enumerate(ids)}
         perception.legend = [{"id": key, "glyph": glyphs.get(content.tiles[key].glyph, "."), "role": content.tiles[key].colour}
                              for key in ids]
-    grid_key = (actor.sight_key, tuple(viewport.values()))
+    grid_key = (actor.sight_key, tuple(viewport.values()),frozenset(scouted or ()))
     if perception.grid_key != grid_key:
         for tile in visible:
             remembered[tile] = zone.tile_id(tile)
@@ -84,7 +86,9 @@ def build(actor: Actor, zone: ZoneInstance, perception: Perception, content: Con
         perception.tiles, perception.memory, perception.grid_key = tiles, memory, grid_key
     actors = []
     for other in sorted(zone.actors.values(), key=lambda a: a.id):
-        if other is not actor and not sees_actor(actor, other, visible, radius):
+        if other.behaviour.get("training") and other.owner != actor.id:
+            continue
+        if other is not actor and other.id not in (scouted_actors or ()) and not sees_actor(actor, other, body_visible, radius):
             continue
         entry = {"id": other.id, "x": other.x, "y": other.y,
                  "glyph": glyphs.get("actor-jacked" if other.stance == "jacked" else "actor-self" if other is actor else "actor-drone" if other.kind == "drone" else "actor-npc" if other.kind == "npc" else "actor-player", "@"),

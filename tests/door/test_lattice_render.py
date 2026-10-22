@@ -24,6 +24,7 @@ def sector_views():
         create(game, caller, archetype=0, name=name, card="none")
         place(game, caller, "core-plaza", tile)
         act(game, caller, Frame("key", {"k": "j", "t": 0}))
+        game.commit_commerce()  # Commit the authored entrance-cell discovery.
         callers.append(caller)
     lattice = game.core.lattice
     views = {}

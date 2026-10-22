@@ -42,6 +42,8 @@ class Lattice:
         self.events: set[str] = set()  # S24 installs active event credentials.
         self.crew_of: Callable[[str], str | None] = lambda pid: None  # S22.
         self.social_overlay: Callable[[Session], bool] = lambda session: False
+        self.mobile_terminal: Callable[[Actor, str | None], Any] = lambda actor, target: None
+        self.mobile_link_status: Callable[[Presence], str] = lambda presence: "ready"
         self.orphans: dict[str, tuple[Session, Avatar]] = {}
         self.game.retained_avatar = self.retained_avatar
         self.game.attached = self.attached
@@ -153,9 +155,10 @@ class Lattice:
 
     def terminal(self, actor: Actor, target: str | None = None) -> Any:
         zone = self.game.world.zones[actor.zone]
-        return next((obj for obj in sorted(zone.objects.values(), key=lambda o: o.spec.id)
+        fixed = next((obj for obj in sorted(zone.objects.values(), key=lambda o: o.spec.id)
             if obj.spec.kind == "terminal" and (target is None or obj.spec.id == target)
             and max(abs(actor.x-obj.spec.tile[0]), abs(actor.y-obj.spec.tile[1])) <= 1), None)
+        return fixed or self.mobile_terminal(actor,target)
 
     def carried_slots(self, player: Player) -> int:
         result = int(self.game.progression.modifiers(player).bonus("rig_slots"))
@@ -264,6 +267,8 @@ class Lattice:
         rig = self.fit_rig(configured, slots)
         presence = Presence(player.id+":presence", player.id, sector, self.sectors.entrance(sector), rig,
                             integrity=self.integrity(player), integrity_max=self.integrity_limit(player), loaned_rig=loaned)
+        if terminal and (loaned or target is not None):
+            presence.jack_source = str(terminal.spec.params.get("player_drone",""))
         self.presences[player.id] = presence
         actor.stance = "jacked"
         actor.target = None
@@ -280,6 +285,8 @@ class Lattice:
                         self.log(session, line)
             state["initiated"] = True
         self.log(session, "You enter "+self.sectors.records[sector].district+". "+self.sectors.cells[sector][presence.cell].label+" resolves.")
+        if presence.jack_source:
+            self.log(session,"Your Relay holds still. Its destruction forces you out with shock.",True)
         self.notify(presence, player.name+" arrives.", exclude=player.id)
         self.game.snapshot(player, avatar)
         self.game.queue("save", session.user_id, player, immediate=True)
@@ -338,6 +345,19 @@ class Lattice:
                                             self.encounters.hit_serial(presence))
             self.log(session, "You start a two-second escape. Hits can interrupt it three times.")
 
+    def check_mobile_link(self, session: Session, presence: Presence) -> bool:
+        if not presence.jack_source:
+            return True
+        status = self.mobile_link_status(presence)
+        if status == "destroyed":
+            self.encounters.force_out(presence)
+            return False
+        if status != "ready" and not presence.link_failed:
+            presence.link_failed = True
+            self.log(session,"The Relay loses its link. You start escape.",True)
+            self.jack_out(session)
+        return not presence.link_failed
+
     def move(self, session: Session, sector: str, cell: str) -> None:
         presence = self.presences[session.player_id]
         if not self.encounters.idle(presence):
@@ -375,6 +395,9 @@ class Lattice:
         table = next((m for m in self.sim.keymap.get("keymaps", []) if m["id"] == session.keymap_id), {})
         action = next((a for a, keys in table.get("bindings", {}).items() if key in keys), name)
         presence = self.presences.get(session.player_id)
+        if presence and not self.check_mobile_link(session,presence):
+            return not (frame.type == "line" or name.startswith("chat") or action.startswith("chat_")
+                        or name in ("resync","ignore","report","settings"))
         if session.pending_prompts.get("chat"):
             return False
         if presence:
@@ -494,6 +517,11 @@ class Lattice:
             "hint": "Arrows links  E uplink / enter  "+self.jack_key(session)+" jack out  Tab target  1-7 cast  R rig"}
 
     def tick(self, ctx: TickContext) -> None:
+        for pid,presence in tuple(self.presences.items()):
+            held = self.orphans.get(pid)
+            session = held[0] if held else self.session(pid)
+            if session:
+                self.check_mobile_link(session,presence)
         for pid in tuple(self.presences):
             self.sync_player_modifiers(self.game.players[pid])
         self.encounters.advance(ctx.tick)

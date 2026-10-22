@@ -319,6 +319,22 @@ Real time, cooldown-based, server-resolved.
   control range. A Hound may follow a last-seen position for the ordinary
   20 s NPC search window; other combat units need current sight. Direct
   firing by the player still requires the second fire press below.
+  A Relay lends the public three-slot rig to an adjacent controller or
+  crew member without a rig. It holds still while connected, and cannot
+  be recalled until those runners leave. Destruction forces jack-out
+  with the ordinary shock 100. Loss of control range, crew access or the
+  controller starts the ordinary bounded escape and blocks further
+  network actions; it does not bypass dangerous-room escape. A caller
+  using their own rig depends on the Relay only when selecting it.
+  Scouts share their own six-tile sight with the controller, preserving
+  stealth and private-training visibility. Medics restore actual health
+  deficits in nearby crew, including the controller, once per second;
+  one effective pulse grants Drones use, never Hymns use.
+  A support target order moves toward a currently visible person or
+  object inside control range, then holds at that observed position.
+  Arrival grants one objective use receipt per destination per UTC day;
+  reissuing an order already in position earns nothing. Following a
+  controller or idling at a destination never earns passive use.
 
 The first hostile attack against a new visible threat raises a weapon
 for 2 s. The player presses fire again to commit; moving to safety or
