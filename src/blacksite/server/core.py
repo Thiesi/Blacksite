@@ -21,6 +21,8 @@ from blacksite.server.lattice.engine import Lattice
 from blacksite.server.progression_engine import ProgressionEngine
 from blacksite.server.fabrication import Fabrication
 from blacksite.server.salvage import Salvage
+from blacksite.server.housing_geometry import HousingGeometry
+from blacksite.server.apartments import Apartments
 from blacksite.version import PACKAGE_VERSION, PROTOCOL_MAJOR
 
 
@@ -42,6 +44,7 @@ class Core:
         self.audit: Callable[[dict[str, Any]], None] = lambda row: None
         self.bus.subscribe("input", self._echo)
         self.world = world
+        self.housing_geometry = HousingGeometry(world, clock, character_state.get("interlock", {})) if world and character_state is not None else None
         self.characters = Characters(world, self.sessions, clock, content, self.keymap, character_state) if character_state is not None else None
         self.simulation = ZoneSimulation(world, self.sessions, clock, spawn_zone, self.keymap) if world is not None and spawn_zone else None
         if self.simulation is not None:
@@ -84,6 +87,9 @@ class Core:
         self.fabrication = Fabrication(self.progression, self.salvage) if self.progression else None
         if self.fabrication:
             self.loop.subsystems.append(self.fabrication)
+        self.apartments = Apartments(self.progression, self.housing_geometry) if self.progression else None
+        if self.apartments:
+            self.loop.subsystems.append(self.apartments)
 
     def _disconnect_character(self, session: Session) -> None:
         if self.lattice:
@@ -149,6 +155,8 @@ class Core:
             return
         if frame.type == "intent" and frame.data["name"] == "resync":
             session.replay_log()
+        if self.apartments and self.apartments.input(session, frame, event.data["tick"]):
+            return
         if self.progression and self.progression.input(session, frame, event.data["tick"]):
             return
         if self.lattice and self.lattice.input(session, frame, event.data["tick"]):

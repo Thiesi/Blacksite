@@ -15,7 +15,7 @@ SLUG_RE: Final[re.Pattern[str]] = re.compile(r"^[a-z0-9]+(-[a-z0-9]+)*$")
 CATALOG_RE: Final[re.Pattern[str]] = re.compile(r"^[a-z]+_[a-z0-9_]+$")
 
 # Kinds whose IDs may use the catalog's underscore form.
-CATALOG_KINDS: Final[frozenset[str]] = frozenset({"item", "program", "ice", "hymn"})
+CATALOG_KINDS: Final[frozenset[str]] = frozenset({"item", "program", "ice", "hymn", "apartment"})
 
 
 def is_slug(value: str) -> bool:

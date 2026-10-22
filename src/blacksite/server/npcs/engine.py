@@ -171,7 +171,7 @@ class Npcs:
                 for y in range(max(0, source.y-RESPONSE_RADIUS), min(zone.template.height, source.y+RESPONSE_RADIUS+1))),
                 key=lambda tile: (distance(source.position, tile), tile))
             occupied = {a.position for a in zone.actors.values()} | self.spawners.reserved(zone)
-            tile = next((p for p in candidates if p not in occupied and zone.passable(p) and not zone.tiles[zone.tile_id(p)].hazard), None)
+            tile = next((p for p in candidates if p not in occupied and zone.can_enter(None, p) and not zone.tiles[zone.tile_id(p)].hazard), None)
             if tile:
                 actor = make_actor(template, aid, {"home": tile, "response": source.id, "expires": until, "phase": index})
                 self.world.enter(actor, zone.id, tile)

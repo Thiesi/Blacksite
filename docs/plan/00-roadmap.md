@@ -91,7 +91,7 @@ not a numeric execution order. Cross-milestone dependencies are explicit.
 | S20 | Factions: membership, standing, relations, Marked, Warden heat, ranks and perks, faction chat | Opus | S11, S12, S16 |
 | S21 | Relays and territory: capture rules, influence, buffs, relay vendors, season tally | Opus | S20, S15, S17, S18, S22 |
 | S22 | Crews: invite/leave/kick, crew chat and panel, beacon, loot modes, shared XP | Sonnet | S09, S10, S13, S16 |
-| S23 | Market and bounties: listings, bids, fees, bounty rules | Sonnet | S12, S20 |
+| S23 | Market and bounties: listings, bids, fees, bounty rules | Sonnet | S12, S18, S20 |
 | S24 | World events engine and the five events | Opus | S11, S14, S17, S19, S21 |
 | S25 | Undercity and Scour content: all remaining zone maps, spawners, salvage rings | Gemini or Sonnet, Sonnet review | S08, S11, S14, S17, S21, S24 |
 | S26 | Seasons: Depth meter, descent consoles, leaderboards, the Chronicle, Blacksite level 1 (instanced zone and sector) | Opus, Fable for the level design review | S21, S19, S24, S25, S27, S22 |

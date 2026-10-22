@@ -5,6 +5,18 @@
 **Depends on:** S05, S16, S23, S26 · **Milestone:** M6
 **Issue:** https://github.com/Thiesi/blacksite/issues/28
 
+S18 hands off lazy rent reconciliation via
+`Apartments.ensure_rent(player_id)`. After an authorized operator clock
+advance, reconcile and drain the bounded commerce queue before reporting
+success. Preserve frozen invoice amounts, the original unpaid deadline,
+instance quality and the physical apartment's rolling theft watermark.
+One paid week plus two weeks lapsed requires 21 days; acceptance uses 22
+days with no remaining rent funds. S18's native jump is explicitly an
+injected housing-clock fixture, not production admin tooling. Backups
+include `interlock_state` tenancy, key, safe and impound records in the
+same SQLite snapshot as items and players. See game design 8.7, entity
+2.3 and accepted [PR #38](https://github.com/Thiesi/Blacksite/pull/38).
+
 ## Goal
 
 Give the SysOp everything they need to run a world without reading

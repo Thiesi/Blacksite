@@ -171,6 +171,7 @@ class _Validator:
         self.check_keymaps()
         self.check_tiles()
         self.check_zones()
+        self.check_housing()
         self.check_sectors()
         self.check_cores()
         self.check_ice()
@@ -493,6 +494,80 @@ class _Validator:
                 self.report(*owner, f"object {obj.id}: tile {list(obj.tile)} is not a passable tile", obj.id)
         if fields > 1:
             self.report(*owner, "a zone can commission only one salvage field")
+
+    def check_housing(self) -> None:
+        for aid, definition in self.each("apartments"):
+            if self.ref("items", definition.key_item, ("apartments", aid), "door key"):
+                key = self.t.items[definition.key_item]
+                if not key.door_key or key.stack_max != 1 or key.class_ != "key" or key.quality.kind != "none":
+                    self.report("apartments", aid, "apartment key must be a single fixed key item")
+            if (definition.storage_slots < 2 or definition.storage_slots % 2 or definition.rent <= 0
+                    or not 1 <= definition.core_tier <= 3 or not 1 <= definition.lock_tier <= 3
+                    or definition.core_upgrade_to not in (None, 3) or definition.core_upgrade_price < 0
+                    or definition.lock_upgrade_to != 3 or definition.lock_upgrade_price <= 0):
+                self.report("apartments", aid, "invalid apartment capacity, rent or upgrade")
+        for rid, room in self.each("rooms"):
+            if len(room.grid) != 4 or any(len(row) != 6 for row in room.grid):
+                self.report("rooms", rid, "game 8.7 apartment rooms must be 6x4")
+            positions = {obj.id: obj for obj in room.meta.objects}
+            required = {"storage": "storage", "safe": "apartment_safe", "bed": "bed",
+                        "terminal": "terminal", "hardware": "hardware", "light": "light"}
+            if not required.keys() <= positions.keys():
+                self.report("rooms", rid, "room needs storage, safe, bed, terminal, hardware and light")
+            for oid, kind in required.items():
+                if oid in positions and positions[oid].kind != kind:
+                    self.report("rooms", rid, f"room {oid} must have kind {kind}")
+            if len(positions) != len(room.meta.objects) or len({o.tile for o in room.meta.objects}) != len(positions):
+                self.report("rooms", rid, "room object IDs and tiles must be unique")
+            for tile in [room.meta.spawn, *(obj.tile for obj in room.meta.objects)]:
+                x, y = tile
+                if not (0 <= y < len(room.grid) and 0 <= x < len(room.grid[y])
+                        and self.t.tiles[room.grid[y][x]].passable and not self.t.tiles[room.grid[y][x]].hazard):
+                    self.report("rooms", rid, "room spawn and objects must be on a safe floor")
+        used: set[tuple[str, str]] = set()
+        for zid, zone in self.each("zones"):
+            regions: list[s.Region] = []
+            for obj in zone.meta.objects:
+                anchor = obj.housing
+                if anchor is None:
+                    continue
+                owner = ("zones", zid)
+                if obj.kind != "apartment_door":
+                    self.report(*owner, "only an apartment door can anchor housing", obj.id)
+                self.ref("apartments", anchor.class_id, owner, "housing class", obj.id)
+                self.ref("rooms", anchor.room, owner, "housing room", obj.id)
+                if self.ref("sectors", anchor.sector, owner, "housing sector", obj.id):
+                    cell = next((cell for cell in self.t.sectors[anchor.sector].cells if cell.id == anchor.cell), None)
+                    if cell is None or cell.core_id or cell.core_placeholder or cell.access_kind != "public":
+                        self.report(*owner, "housing needs an unallocated public sector cell", obj.id)
+                key = anchor.sector, anchor.cell
+                if key in used:
+                    self.report(*owner, "housing sector cell is already allocated", obj.id)
+                used.add(key)
+                region = s.Region(*anchor.origin, 6, 4)
+                if (not self._region_in_bounds(zone, region) or any(region.overlaps(other) for other in regions)
+                        or not all(self.passable(zone, tile) and not self.t.tiles[zone.tile_at(tile)].hazard for tile in region.tiles())):
+                    self.report(*owner, "housing rooms must have distinct safe 6x4 floors", obj.id)
+                regions.append(region)
+                public_tiles = {other.tile for other in zone.meta.objects if other is not obj}
+                public_tiles.update(ex.tile for ex in zone.meta.exits)
+                if zone.meta.spawn is not None:
+                    public_tiles.add(zone.meta.spawn)
+                if any(region.contains(tile) for tile in public_tiles):
+                    self.report(*owner, "housing cannot occupy public objects, exits or spawn", obj.id)
+                room = self.t.rooms.get(anchor.room)
+                if room and self._region_in_bounds(zone, region):
+                    if any(zone.tile_at((anchor.origin[0]+x, anchor.origin[1]+y)) != tile
+                           for y, row in enumerate(room.grid) for x, tile in enumerate(row)):
+                        self.report(*owner, "housing floor must match its room blueprint", obj.id)
+                if region.contains(anchor.doorstep) or not self.passable(zone, anchor.doorstep):
+                    self.report(*owner, "housing doorstep must be a public passable tile", obj.id)
+                vestibule = anchor.origin[0]+anchor.vestibule[0], anchor.origin[1]+anchor.vestibule[1]
+                if (max(abs(a-b) for a, b in zip(obj.tile, anchor.doorstep)) > 1
+                        or max(abs(a-b) for a, b in zip(obj.tile, vestibule)) > 1):
+                    self.report(*owner, "doorstep and vestibule must be adjacent to the housing door", obj.id)
+                if not (0 <= anchor.vestibule[0] < 6 and 0 <= anchor.vestibule[1] < 4):
+                    self.report(*owner, "housing vestibule must be a local room tile", obj.id)
 
     def _region_in_bounds(self, zone: s.Zone, region: s.Region) -> bool:
         return (region.w > 0 and region.h > 0 and region.x >= 0 and region.y >= 0

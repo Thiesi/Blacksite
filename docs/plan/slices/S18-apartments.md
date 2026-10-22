@@ -1,6 +1,6 @@
 # S18 — Apartments: rent, storage, safe, private core tier, eviction, impound
 
-**Status:** planned
+**Status:** done (PR #59)
 **Primary model:** Sonnet · **Reviewer:** none
 **Depends on:** S12, S15, S16 · **Milestone:** M3
 **Issue:** https://github.com/Thiesi/blacksite/issues/18
@@ -10,16 +10,17 @@
 Give characters a home. Three apartment classes in the Terraces rented
 per real-time week from the bank, with storage, a safe, a terminal, a
 door lock, and a private core that S15 already knows how to hack; rent
-lapse, eviction, and the Kestrel impound. After this slice a grade-5
-character can rent a Terrace Cell and log out knowing where their
-things are.
+lapse, eviction, and the Kestrel impound. This slice supplies the engine
+and labelled native fixtures; S25 commissions the actual Terraces pool.
+A legally discharged resident can then rent a Terrace Cell and log out
+knowing where their things are.
 
 ## Spec references
 
 - `docs/design/00-game-design.md` §8.7 (rent per week from bank,
-  storage 40, safe, terminal, private core tier 1 upgradeable to 3,
-  eviction after two weeks lapsed, impound with fee), §3.4 (grade 5
-  required to rent), §6.4 (private core theft rule: S15).
+  class storage/protected capacity, safe, terminal and class core tier,
+  eviction after two weeks lapsed, impound with fee), §3.4 (legal
+  discharge by grade or calendar), §6.4 (private core theft rule: S15).
 - `docs/design/01-entities.md` §2.3 (apartment row), §1.1
   (`apartment_door` object kind).
 - `docs/design/02-architecture.md` §6.1 (lazy clocks for rent).
@@ -37,7 +38,9 @@ things are.
 
 - `server/apartments.py`: `content/apartments.json` (three classes);
   a pool of apartment door objects in `terraces-blocks` (at least 24
-  doors across the three classes; S25/S08 place them; fixture has 3);
+  doors across the three classes; S25 owns actual anchors; fixture has
+  3). Keep future geography inactive or explicitly labelled as a native
+  acceptance fixture, following accepted PR #38 findings 9/14;
   letting via the lobby terminal `MenuView` kind `letting` (legal_at set,
   one apartment per character, first week paid on signing from bank or
   hand).
@@ -62,7 +65,8 @@ things are.
   signing, register its entrance cell in the Terraces sector, upgrade
   tier 2 → 3 for 2 000 chits (Terrace Flat only), remove on eviction or
   surrender; the storage manifest exposed to hackers is the unsecured
-  half of `storage[]`.
+  contents of `storage[]`. Half the listed capacity can be secured in
+  place, separately from carried secured slots (game design 8.7).
 - Surrender: `MenuView` action in the apartment menu with a
   confirmation keystroke; contents go to the impound with no fee.
 - Block Relay hook: `rent_modifier` (−10 %) and `private_core_ice_slots
@@ -94,21 +98,20 @@ things are.
 
 ## Tests
 
-- `tests/test_apartments.py::test_legal_discharge_required_grade_or_calendar`
-- `tests/test_apartments.py::test_one_apartment_per_character`
-- `tests/test_apartments.py::test_rent_charged_lazily_bank_then_hand`
-- `tests/test_apartments.py::test_two_weeks_lapsed_evicts_to_impound`
-- `tests/test_apartments.py::test_impound_reclaim_10pct_of_list_value_chits_free`
-- `tests/test_apartments.py::test_storage_capacity_per_class`
-- `tests/test_apartments.py::test_safe_chits_survive_death`
-- `tests/test_apartments.py::test_private_core_created_and_removed_with_tenancy`
-- `tests/test_apartments.py::test_flat_core_upgrade_2000_chits_tier_3`
-- `tests/test_apartments.py::test_lock_upgrade_800_blocks_tier1_passkey`
-- `tests/test_apartments.py::test_bed_logout_is_safe`
-- `tests/test_apartments.py::test_block_relay_rent_minus_10pct_hook`
-- `tests/test_sim_multi.py::test_non_owner_cannot_enter_without_key_owner_can`
-- `tests/test_sim_multi.py::test_hacked_item_missing_from_storage_and_log_shown`
-- `tests/test_door_menus.py::test_apartment_menu_golden_80x24`
+- `tests/test_apartments.py`: grade/calendar discharge, one tenancy,
+  failed-save rollback, queued rental races, bank-then-hand invoices,
+  frozen discounts, all three capacities and protected halves,
+  destination secured limits, safe/clone protection, eviction/reclaim,
+  core/lock tariffs, visitor privacy, 30-second key/Passkey access,
+  bed logout/reconnect, physical-unit theft cap, deletion cleanup,
+  restored controls, active anchor validation and SQLite round-trip.
+- `tests/lattice/test_private_cores.py`: existing real theft race,
+  shared rolling allowance, quality-preserving ownership and hack logs.
+- `tests/door/test_apartment_menus.py`: letting, apartment, storage,
+  safe and impound rendered at 80x24/132x50 with wide caller names.
+- `scripts/accept_s18_netbbs.py`: real native stdio through NetBBS,
+  labelled placement/funding fixtures and a 22-day injected housing
+  clock; S25 repeats these interactions on actual Terraces geography.
 
 ## Acceptance script
 
@@ -117,7 +120,8 @@ things are.
    inside a small room; opens storage and moves a rifle in.
 2. A second caller tries the door: "Locked. Tier 1." and nothing else.
 3. The first caller logs out on the bed; on return they are in the
-   apartment; the SysOp advances the clock 15 days with the admin CLI;
+   apartment; a disclosed injected-clock fixture advances 22 days with
+   no remaining rent funds (the first seven days were paid on signing);
    on the next login the eviction toast shows and the impound at the
    tram-hub bank lists the rifle with a 10 % fee.
 
@@ -134,8 +138,45 @@ without duplication or loss in a persistence test.
 - The interior room is a pocket inside `terraces-blocks`, not a
   separate zone; do not add 24 zones.
 - The impound is per player; multiple evictions append.
+- S28 owns production clock/admin tooling. The native multi-week jump
+  is a labelled fixture, not an interim production time-warp command.
+- Storage can secure half its listed capacity in place, independently
+  of carried secured capacity. Withdrawals still respect S16's current
+  carried limit. This clarifies the planned unsecured half and avoids
+  repetitive secure-and-deposit trips; class totals and fees do not change.
 - Keep the private core's storage manifest as a view over `storage[]`
   filtered by `secured == False`; do not copy items.
+- Signing issues a server-owned physical key with tenancy ID and lock
+  tier. Residents enter without it. Upgrading the lock invalidates old
+  keys and visitor grants; Passkey uses its actual tier (3). A fresh
+  tenancy gets a new core and keys but keeps the physical home's daily
+  theft watermark. Game design 8.7 defines these permissions.
+
+## S18 consumer handoff
+
+- S21 wires `rent_modifier(player, invoice_due_utc)` from historical
+  Block Relay ownership. Issued invoices stay frozen. Its extra ICE
+  slot adds one Tripwire; refresh commissioned cores when that benefit
+  changes without undoing theft receipts.
+- S23 depends on S18 and appends market items to the protected impound
+  proposal with zero reclaim fee; keep original instance IDs and quality.
+- S25 provides at least 24 resolved `housing` door anchors across the
+  three classes, distinct safe 6x4 room floors and unallocated public
+  Terraces sector cells, plus the real lobby letting terminal. Repeat
+  the native rental/storage/visitor/bed/eviction/reclaim flow there at
+  both sizes. The three Wake fixture anchors never ship as live content.
+- S28 reconciles rent through `ensure_rent(player_id)` after authorized
+  operator clock changes, draining transactions before success. The
+  acceptance jump is 22 days with no rent funds, not 15 days after a
+  paid first week. There is no production time-warp command in S18.
+- S22/S30 keep crews and visitors outside resident permissions. Teach
+  the separate safe account, storage protection and bank impound menu.
+- S32 audits origin-scoped tenancy/key/impound authority and preserves
+  the physical-unit theft receipt across tenancy changes.
+
+These implement the accepted [PR #38](https://github.com/Thiesi/Blacksite/pull/38)
+quality, geography and permission follow-ups without changing class
+capacities, rents, upgrade tariffs or reclaim percentages.
 
 ## Lore review integration
 

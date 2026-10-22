@@ -1,0 +1,13 @@
+{
+  "schema": 1,
+  "id": "apartment",
+  "spawn": [2, 1],
+  "objects": [
+    {"id": "storage", "tile": [0, 2], "kind": "storage"},
+    {"id": "safe", "tile": [1, 2], "kind": "apartment_safe"},
+    {"id": "bed", "tile": [3, 2], "kind": "bed"},
+    {"id": "terminal", "tile": [4, 2], "kind": "terminal"},
+    {"id": "hardware", "tile": [2, 2], "kind": "hardware"},
+    {"id": "light", "tile": [4, 1], "kind": "light"}
+  ]
+}

@@ -7,7 +7,7 @@ from typing import Any
 from blacksite.content.loader import ContentTree
 from blacksite.content.schema import Tile
 from blacksite.server.world.actors import Actor
-from blacksite.server.world.sight import sees_actor, visible_tiles, sight_radius
+from blacksite.server.world.sight import sees_actor, visible_tiles, sight_radius, private_visible
 from blacksite.server.world.zone import ZoneInstance
 from blacksite.server.world.safety import safety_at
 from blacksite.server.clock import TICK_HZ
@@ -86,6 +86,8 @@ def build(actor: Actor, zone: ZoneInstance, perception: Perception, content: Con
         perception.tiles, perception.memory, perception.grid_key = tiles, memory, grid_key
     actors = []
     for other in sorted(zone.actors.values(), key=lambda a: a.id):
+        if not private_visible(actor, other):
+            continue
         if other.behaviour.get("training") and other.owner != actor.id:
             continue
         if other is not actor and other.id not in (scouted_actors or ()) and not sees_actor(actor, other, body_visible, radius):

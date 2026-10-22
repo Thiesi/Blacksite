@@ -27,7 +27,7 @@ class Spawners:
         candidates = spawner.region.tiles() if spawner.region else [spawner.tile]
         occupied = {a.position for a in zone.actors.values() if not a.behaviour.get("training")}
         reserved = self.reserved(zone)
-        candidates = [t for t in candidates if t is not None and zone.passable(t)
+        candidates = [t for t in candidates if t is not None and zone.can_enter(None, t)
                       and not zone.tiles[zone.tile_id(t)].hazard and t not in occupied | reserved]
         return zone.rng.choice(candidates) if candidates else None
 

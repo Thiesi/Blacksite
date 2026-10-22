@@ -91,7 +91,7 @@ class Drones:
             modifiers={"move_ms":block.move_ms},behaviour={"player_drone":True,"item":iid,
                 "evasion":block.evasion,"mode":record.get("mode","follow")})
         try:
-            tile = self.world.free_tile(record["zone"],tuple(record["tile"]))
+            tile = self.world.free_tile(record["zone"],tuple(record["tile"]),actor)
             self.world.enter(actor,record["zone"],tile)
         except ValueError:
             return None  # A crowded deployment resumes when a tile clears.
@@ -196,7 +196,7 @@ class Drones:
                 raise ValueError("That drone has no working health.")
             if not body or body.zone is None:
                 raise ValueError("Deploy from a physical zone.")
-            tile = self.world.free_tile(body.zone,body.position)
+            tile = self.world.free_tile(body.zone,body.position,body)
             if distance(tile,body.position) > 1.5:
                 raise ValueError("No adjacent tile is free for deployment.")
             draft.inventory.remove(iid)
@@ -431,7 +431,7 @@ class Drones:
         if self.commerce.pending or iid in self.pending or body.zone is None:
             return
         try:
-            tile = self.world.free_tile(body.zone,body.position)
+            tile = self.world.free_tile(body.zone,body.position,actor)
         except ValueError:
             return
         zone = body.zone
@@ -443,7 +443,7 @@ class Drones:
             self.pending.discard(iid)
             if success:
                 try:
-                    self.world.enter(actor,zone,self.world.free_tile(zone,tile))
+                    self.world.enter(actor,zone,self.world.free_tile(zone,tile,actor))
                 except ValueError:
                     return  # Retry next tick; never duplicate an occupied body.
                 actor.target = None

@@ -39,6 +39,12 @@ Commerce objects use the registered `$` for counters/banks and `*` for
 dropped-item caches. These are object overlays, so an anchor remains
 visible even when its underlying terrain is ordinary floor.
 
+Apartment storage uses `*`, the protected safe uses `$`, and the bed
+uses `b`. Interact on the bed to inspect rent, locks and core status,
+read the intrusion log, surrender, leave or log out. Visitor views never
+include the resident's body or drone in the private room. An apartment
+key's inventory detail shows its lock tier and labels expired keys.
+
 Every colour in the game is a **role** (`palette.json`): `wall`, `floor`,
 `cover`, `water`, `hazard`, `player_self`, `player_crew`, `player_neutral`,
 `player_hostile`, `player_marked`, `npc_*`, per-faction, `ice_*`, per

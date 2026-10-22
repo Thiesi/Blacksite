@@ -222,3 +222,24 @@ quality and seeded state when placing the content.
 
 This carries the accepted [PR #38](https://github.com/Thiesi/Blacksite/pull/38)
 findings 12/14 forward; see [S17](S17-salvage-and-fabrication.md).
+
+## S18 housing handoff
+
+Commission the actual Terraces lobby letting terminal (`params.letting:
+true`) and at least 24 `apartment_door` anchors across all three housing
+classes. Each `housing` block resolves a class, `apartment` room blueprint,
+origin, sector/cell, public doorstep and local vestibule. Allocate a
+distinct safe 6x4 floor and an unallocated public Terraces cell per home;
+do not block public services or exits. S18 adds no live placeholder map.
+
+Repeat native 80x24/132x50 acceptance with wide names on these actual
+locations: first-week signing, quality-preserving rifle storage, visitor
+rejection, bed logout/reconnect, eviction and fee-paying bank reclaim.
+The disclosed clock jump is 22 days without remaining rent funds; 15
+days is only eight days lapsed after the paid week. Half the listed
+storage slots are protectable in place (20/40/60), independently of
+carried secured capacity. Physical keys and Passkey grant only the
+30-second vestibule. Preserve each unit's theft watermark across leases.
+See game design 8.7, [S18](S18-apartments.md) and accepted
+[PR #38](https://github.com/Thiesi/Blacksite/pull/38). All earlier commerce,
+clinic, Scour, core, Gate Nine and Sweeper acceptance gates remain.

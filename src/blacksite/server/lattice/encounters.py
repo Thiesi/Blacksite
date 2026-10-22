@@ -176,6 +176,9 @@ class Encounters:
                     presence.cell == self.lat.sectors.entrance(presence.sector))
 
     def enter(self, session: Session, core_id: str, risk: bool = False) -> None:
+        apartment = self.lat.interlock.private.apartment(core_id)
+        if apartment and not self.lat.interlock.private.before_access(apartment["resident"]):
+            raise ValueError("The lease is being reconciled. Inspect the current entrance again.")
         presence = self.lat.presences[session.player_id]
         if not self.idle(presence) or presence.instance:
             raise ValueError("Finish your current action before entering a core.")
@@ -618,7 +621,7 @@ class Encounters:
         elif kind == "open_gate" and params.get("private_vestibule"):
             deferred_learning = True
             self.lat.interlock.open_vestibule(presence,
-                lambda: self.game.progression.record_use(player.id, use))
+                lambda: self.game.progression.record_use(player.id, use), key_tier=program.tier)
         elif kind == "open_gate":
             gates = [i for i in self.defenders(presence) if i.blocks(now)]
             for ice in gates:

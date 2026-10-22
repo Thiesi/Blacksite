@@ -427,6 +427,18 @@ All apartments include a safe (banked chits), a terminal, and a door with
 a tier-1 lock (upgrade to tier 3, 800 chits). Eviction after two weeks
 lapsed; impound reclaim fee 10 % of stored value.
 
+Half of each class's storage capacity can be secured in place: 20, 40
+or 60 item slots. This is separate from carried secured slots (game
+design 8.7). Transfers retain instance quality and protection, and refuse
+when protected capacity at the destination is full.
+
+Signing includes `key_apartment`, an Apartment key: a fixed-stat,
+zero-weight key with no resale value. It names the current tenancy and
+lock tier. Residents enter without it; a matching visitor gets only the
+30-second delivery vestibule. A replacement is free if the resident no
+longer carries a current key. Lock upgrades issue a new tier-3 key;
+obsolete tier-1 keys and keys from earlier tenancies stop working.
+
 ## 14. Balance notes
 
 All numbers are design hypotheses, not measured combat results. The

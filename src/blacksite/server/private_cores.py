@@ -6,6 +6,7 @@ receipt use the same Commerce transaction.
 """
 
 from copy import deepcopy
+from collections.abc import Callable
 from dataclasses import replace
 from datetime import datetime, timezone
 from typing import Any, TYPE_CHECKING
@@ -27,6 +28,8 @@ class PrivateCores:
         self.interlock = interlock
         self.lat, self.game = interlock.lat, interlock.game
         self.content = interlock.content
+        self.before_access: Callable[[str], bool] = lambda pid: True
+        self.extra_ice: Callable[[dict[str, Any]], int] = lambda record: 0
         self.log_apartments: dict[str, str] = {}
         for apartment in interlock.state["apartments"].values():
             self.install(apartment)
@@ -60,6 +63,7 @@ class PrivateCores:
         # tier 3 adds Mastiff. No NPC feedback consent for this owner kind.
         roster = {1: ("ice_tripwire",), 2: ("ice_tripwire", "ice_turnstile"),
                   3: ("ice_tripwire", "ice_glasshouse", "ice_mastiff")}[apartment["tier"]]
+        roster += ("ice_tripwire",)*max(0, self.extra_ice(apartment))
         rooms = tuple(replace(room, ice=roster) if room.id == "index" else room for room in rooms)
         spec = replace(template, id=core_id, template=False, tier=apartment["tier"], rooms=rooms,
                        hardware=(HardwareLocation(zone.id, hardware.spec.tile, hardware.spec.id),))
@@ -93,6 +97,8 @@ class PrivateCores:
     def manifest(self, presence: Presence) -> list[Any]:
         apartment = self.apartment(presence.core)
         if not apartment or presence.room != "index":
+            return []
+        if not self.before_access(apartment["resident"]):
             return []
         return [item for iid in apartment["storage"] if (item := self.interlock.commerce.items.get(iid))
                 and item.owner == "apartment:"+apartment["id"] and not item.secured and not item.bound
@@ -153,6 +159,8 @@ class PrivateCores:
         if item.stack == 1:
             record["storage"].remove(item.id)
         record["last_hacked_at"] = self.interlock.now()
+        if record.get("unit"):
+            proposal.setdefault("unit_hacks", {})[record["unit"]] = record["last_hacked_at"]
         at = self.interlock.clock.now_utc().isoformat()
         record["hack_log"] = (record["hack_log"]+[{"at": at, "item": item.template, "unit": 1}])[-HACK_LOG_LIMIT:]
         identity = deepcopy(self.game.identity(player.bbs_user_id))

@@ -2,8 +2,18 @@
 
 **Status:** planned
 **Primary model:** Sonnet · **Reviewer:** Opus
-**Depends on:** S12, S20 · **Milestone:** M4
+**Depends on:** S12, S18, S20 · **Milestone:** M4
 **Issue:** https://github.com/Thiesi/blacksite/issues/23
+
+S18 is an explicit dependency because this slice delivers to personal
+impound. Append market goods to `interlock_state.impounds[player]` in
+the same commerce transaction, with zero reclaim fee. Reuse
+`Apartments.impound` on proposal copies; retain instance IDs, quality,
+charges, drone condition and secured status. The housing eviction fee
+must not tax a paid market delivery. Collection at terminals rechecks
+normal terminal access; visitors and crew members do not acquire an
+apartment resident's permissions. See game design 8.7, entity 2.3 and
+accepted [PR #38](https://github.com/Thiesi/Blacksite/pull/38).
 
 ## Goal
 
@@ -77,7 +87,8 @@ persistent rows, resolved by the server, with no new real-time mechanics.
 ## Data and content
 
 - New tables per entities §2.6: `market_listings`, `market_bids`,
-  `bounties`, plus `impound` rows (player id, item instance id, source).
+  `bounties`. Reuse S18's protected impound records in
+  `meta.interlock_state`; do not create a second collection authority.
 - Constants in `src/blacksite/server/rules.py`: `MARKET_FEE = 0.05`,
   `BOUNTY_MIN_CHITS = 100`, `BOUNTY_MIN_TARGET_GRADE = 5`,
   `LISTING_EXPIRIES = (24h, 72h, 7d)`, each with a comment citing design

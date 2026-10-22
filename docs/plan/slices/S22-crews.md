@@ -5,6 +5,15 @@
 **Depends on:** S09, S10, S13, S16 · **Milestone:** M4
 **Issue:** https://github.com/Thiesi/blacksite/issues/22
 
+S18 housing permissions remain personal: crew membership, shared loot,
+scouting and beacons do not grant entry or storage/safe/terminal/bed
+access. Private room bodies and resident drones remain hidden from
+outside scouting and target views. A key or Passkey opens only a
+30-second delivery vestibule. Keep the existing victim-cache recovery
+regression separate from protected apartment impound. See game design
+8.7, [S18](S18-apartments.md) and accepted
+[PR #38](https://github.com/Thiesi/Blacksite/pull/38).
+
 ## Goal
 
 Make the crew the unit. Crews of two to five with a leader, invites,

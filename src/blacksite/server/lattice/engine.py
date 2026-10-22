@@ -157,6 +157,7 @@ class Lattice:
         zone = self.game.world.zones[actor.zone]
         fixed = next((obj for obj in sorted(zone.objects.values(), key=lambda o: o.spec.id)
             if obj.spec.kind == "terminal" and (target is None or obj.spec.id == target)
+            and self.game.world.object_access(actor, obj.spec)
             and max(abs(actor.x-obj.spec.tile[0]), abs(actor.y-obj.spec.tile[1])) <= 1), None)
         return fixed or self.mobile_terminal(actor,target)
 

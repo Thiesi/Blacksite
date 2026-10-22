@@ -25,17 +25,18 @@ def move(actor: Actor, zone: ZoneInstance, name: str, tick: int, sprint: bool = 
     if forced and (not zone.allows_hostile(actor.position) or not zone.allows_hostile(target)):
         return False
     blocks = lambda a: a.id != actor.id and a.position == target and not (a.behaviour.get("training") and a.owner != actor.id)
-    if not zone.passable(target) or any(blocks(a) for a in zone.actors.values()):
+    if not zone.can_enter(actor, target) or any(blocks(a) for a in zone.actors.values()):
         return False
     # A diagonal cannot bypass a closed corner or another player's body.
     if vector[0] and vector[1]:
         for side in ((actor.x + vector[0], actor.y), (actor.x, actor.y + vector[1])):
-            if not zone.passable(side) or any(a.id != actor.id and a.position == side and not (a.behaviour.get("training") and a.owner != actor.id) for a in zone.actors.values()):
+            if not zone.can_enter(actor, side) or any(a.id != actor.id and a.position == side and not (a.behaviour.get("training") and a.owner != actor.id) for a in zone.actors.values()):
                 return False
     stamina_multiplier = min((float(e.get("stamina_multiplier",1)) for e in actor.effects),default=1)
     cost = SPRINT_COST*stamina_multiplier*actor.modifiers.get("stamina_cost_multiplier", 1)
     sprint = sprint and actor.stamina >= cost
     actor.x, actor.y = target
+    zone.position_update(actor)
     actor.facing = name
     # Game design 3.1 / S12: excess carry weight doubles tile time.
     duration = ((actor.modifiers.get("sprint_ms", SPRINT_TICKS*100)/100) if sprint else WALK_TICKS)

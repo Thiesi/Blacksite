@@ -96,6 +96,7 @@ ObjectKind = Literal[
     "apartment_door", "light", "hardware", "descent_console", "workshop",
     "bank", "turret", "camera", "shutter", "cable_car", "pump", "lift",
     "patrol_beacon", "gate", "gantry", "salvage_node", "salvage_field",
+    "storage", "apartment_safe", "bed",
 ]
 
 
@@ -201,6 +202,17 @@ class Spawner:
 
 
 @dataclass(frozen=True)
+class HousingAnchor:
+    class_id: str
+    room: str
+    origin: Tile
+    sector: str
+    cell: str
+    doorstep: Tile
+    vestibule: Tile
+
+
+@dataclass(frozen=True)
 class ObjectSpec:
     id: str
     tile: Tile
@@ -209,6 +221,41 @@ class ObjectSpec:
     essential: bool = False
     """Clinics, public vats, public uplinks: no control or event may
     deny them (01-entities.md section 5)."""
+    housing: HousingAnchor | None = None
+
+
+@dataclass(frozen=True)
+class RoomMeta:
+    id: str
+    spawn: Tile
+    objects: tuple[ObjectSpec, ...]
+    schema: int = CONTENT_SCHEMA
+
+
+@dataclass(frozen=True)
+class RoomBlueprint:
+    meta: RoomMeta
+    grid: tuple[tuple[str, ...], ...]
+
+    @property
+    def id(self) -> str:
+        return self.meta.id
+
+
+@dataclass(frozen=True)
+class ApartmentClass:
+    id: str
+    name: str
+    storage_slots: int
+    core_tier: int
+    rent: int
+    key_item: str = "key_apartment"
+    core_upgrade_to: int | None = None
+    core_upgrade_price: int = 0
+    lock_tier: int = 1
+    lock_upgrade_to: int = 3
+    lock_upgrade_price: int = 800
+    schema: int = CONTENT_SCHEMA
 
 
 @dataclass(frozen=True)
@@ -733,6 +780,7 @@ class ItemTemplate:
     schematic: SchematicBlock | None = None
     quality: QualitySpec = field(default_factory=QualitySpec)
     no_vendor_sale: bool = False
+    door_key: bool = False
     schema: int = CONTENT_SCHEMA
 
 

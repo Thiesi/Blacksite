@@ -1,0 +1,8 @@
+{
+  "schema": 1,
+  "apartments": [
+    {"id": "apt_terrace_cell", "name": "Terrace Cell", "storage_slots": 40, "core_tier": 1, "rent": 300},
+    {"id": "apt_terrace_flat", "name": "Terrace Flat", "storage_slots": 80, "core_tier": 2, "rent": 900, "core_upgrade_to": 3, "core_upgrade_price": 2000},
+    {"id": "apt_terrace_corner", "name": "Corner Flat", "storage_slots": 120, "core_tier": 3, "rent": 2200}
+  ]
+}
