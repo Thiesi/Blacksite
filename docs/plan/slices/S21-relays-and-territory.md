@@ -160,3 +160,14 @@ passers-by, death, competing active claims, daily payout races, recapture
 farming, fractional accrual and settlement cutoff. All sixteen benefits
 must resolve to their named consumer; a pending consumer is not a
 working feature and must be closed by S24/S26 before release.
+
+## S17 integration handoff
+
+Wire Yard Relay ownership into `Fabrication.quality_bonus(player, zone)`
+with +0.05 before the final 1.15 cap; fixed-stat outputs use no roll.
+Wire Crash Relay into `Salvage.crash_relay_bonus(zone)`: Ring Three only,
+one grade step, capped at compute. Preserve per-template quality and
+persisted RNG; relay changes cannot reroll already spawned nodes.
+
+This carries the accepted [PR #38](https://github.com/Thiesi/Blacksite/pull/38)
+findings 12/14 forward; see [S17](S17-salvage-and-fabrication.md).

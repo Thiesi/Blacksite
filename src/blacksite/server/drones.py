@@ -17,6 +17,7 @@ from blacksite.server.wake import menu, wrapped
 from blacksite.server.world.actors import Actor
 from blacksite.server.world.sight import sees_actor, visible_tiles, sight_radius
 from blacksite.server.skills import Use
+from blacksite.server.quality import value as quality_value, damage_multiplier, detail as quality_detail
 from blacksite.content.schema import ObjectSpec
 from blacksite.server.world.zone import ObjectState
 
@@ -141,7 +142,8 @@ class Drones:
                 continue
             block = self.game.content.items[item.template].drone
             if block and block.effects.get("carry_kg"):
-                layers.append({"carry_kg":float(block.effects["carry_kg"])})
+                template = self.game.content.items[item.template]
+                layers.append({"carry_kg":quality_value(template,item.quality,"drone_effect","carry_kg",block.effects["carry_kg"])})
         return layers
 
     def scout(self, session: Session) -> tuple[set[tuple[int,int]],set[str]]:
@@ -388,7 +390,7 @@ class Drones:
         actor.cooldowns["weapon"] = rules.cooldown_deadline(tick,seconds,actor.cooldowns.get("weapon",0))
         skill = self.progression.modifiers(player).skill(player,"drones")
         for _ in range(block.attack.hits):
-            combat.shot(actor,target,block.attack,item.quality,skill)
+            combat.shot(actor,target,block.attack,damage_multiplier(self.game.content.items[item.template],item.quality),skill)
 
     def tool(self, player: Player, iid: str, actor: Actor, tick: int) -> None:
         body = self.controller_body(actor,acting=True)
@@ -415,7 +417,8 @@ class Drones:
                     or other.health >= other.health_max):
                 continue
             before = other.health
-            self.game.combat.heal(other,int(block.effects["heal_per_second"]))
+            self.game.combat.heal(other,int(quality_value(self.game.content.items[item.template],
+                item.quality,"drone_effect","heal_per_second",block.effects["heal_per_second"])))
             if other.health > before:
                 healed = True
                 self.game.combat.remember(self.game.players[other.id],other,immediate=False)
@@ -488,8 +491,12 @@ class Drones:
         cursor = min(self.menus[session.id],max(0,len(rows)-1))
         detail = f"Drone slots {len(self.records(player))}/{self.slots(player)}. Select a unit. Idle mode toggles earn no skill."
         if rows:
-            template = self.game.content.items[self.commerce.items[rows[cursor]["id"]].template]
-            detail += f" {template.drone.tool}. Control range {template.drone.control_range}. Recall keeps health."
+            item = self.commerce.items[rows[cursor]["id"]]
+            template = self.game.content.items[item.template]
+            if item.quality == 1:
+                detail += f" {template.drone.tool}."
+            detail += f" Control range {template.drone.control_range}. Recall keeps health."
+            detail += "\n"+quality_detail(template, item.quality)
             actor = self.actors.get(rows[cursor]["id"])
             body = self.body(player)
             target = self.world.actors.get(body.target) if body else None

@@ -186,3 +186,14 @@ finale choice. Finish Vesper's job with optional prose closed at 80x24;
 repeat at 132x50 and all palette tiers with a wide handle. Each confusion
 observed in the human run becomes a concrete UI/content fix, not a claim
 that automated tests establish fun or balance.
+
+## S17 integration handoff
+
+Teach physical schematic purchase/find, inventory U to learn, workshop
+F to craft, repeated 2-second harvest and Esc/B interruption. Explain
+carried/required inputs, skill minimum and quality range. Use the same
+`server.quality` selector for effective stats and help examples: fixed
+permissions, slots, tolerance, durations and pack sizes never scale.
+
+This carries the accepted [PR #38](https://github.com/Thiesi/Blacksite/pull/38)
+findings 12/14 forward; see [S17](S17-salvage-and-fabrication.md).

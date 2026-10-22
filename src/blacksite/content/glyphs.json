@@ -17,6 +17,8 @@
     "map-cache": "*",
     "map-bank": "$",
     "cache": "*",
+    "salvage_node": "*",
+    "workshop": "W",
     "bank": "$",
     "map-vat": "V",
     "map-light": "L",

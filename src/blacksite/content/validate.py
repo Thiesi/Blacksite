@@ -177,6 +177,7 @@ class _Validator:
         self.check_programs()
         self.check_silt()
         self.check_items()
+        self.check_salvage()
         self.check_progression()
         self.check_starts()
         self.check_hymns()
@@ -468,7 +469,16 @@ class _Validator:
     def _check_objects(self, zone: s.Zone) -> None:
         owner = ("zones", zone.id)
         seen: set[str] = set()
+        fields = 0
         for obj in zone.meta.objects:
+            if obj.kind == "salvage_field":
+                fields += 1
+                if type(obj.params.get("ring")) is not int or obj.params["ring"] not in (1, 2, 3, 4):
+                    self.report(*owner, "salvage field needs a numbered ring 1-4", obj.id)
+                if self.t.salvage is None:
+                    self.report(*owner, "salvage field needs salvage.json", obj.id)
+            if obj.kind == "workshop" and obj.params.get("makes", "any") not in ("any", "rigs_programs", "chemical_melee"):
+                self.report(*owner, "workshop makes must name a supported filter", obj.id)
             if obj.kind == "terminal" and obj.params.get("sector") is not None:
                 self.ref("sectors", obj.params["sector"], owner, obj.id)
             if obj.params.get("training_npc"):
@@ -481,6 +491,8 @@ class _Validator:
             seen.add(obj.id)
             if not self.passable(zone, obj.tile):
                 self.report(*owner, f"object {obj.id}: tile {list(obj.tile)} is not a passable tile", obj.id)
+        if fields > 1:
+            self.report(*owner, "a zone can commission only one salvage field")
 
     def _region_in_bounds(self, zone: s.Zone, region: s.Region) -> bool:
         return (region.w > 0 and region.h > 0 and region.x >= 0 and region.y >= 0
@@ -912,9 +924,12 @@ class _Validator:
     # --- items --------------------------------------------------------------
 
     def check_items(self) -> None:
+        from blacksite.server.quality import validate_policy
         for iid, item in self.each("items"):
             assert isinstance(item, s.ItemTemplate)
             owner = ("items", iid)
+            if problem := validate_policy(item):
+                self.report(*owner, problem)
             if not ITEM_TIER[0] <= item.tier <= ITEM_TIER[1]:
                 self.report(*owner, f"tier {item.tier} is outside {ITEM_TIER[0]}-{ITEM_TIER[1]}")
             if item.stack_max < 1:
@@ -933,6 +948,10 @@ class _Validator:
             if item.schematic is not None:
                 kind = "programs" if item.schematic.output.startswith("prg_") else "items"
                 self.ref(kind, item.schematic.output, owner, "schematic output")
+                if (not item.schematic.inputs or any(grade not in ("hull", "optics", "power", "compute", "intact")
+                        or amount < 1 for grade, amount in item.schematic.inputs.items())
+                        or not 0 <= item.schematic.skill_min <= 100):
+                    self.report(*owner, "schematic needs positive salvage inputs and skill 0-100")
             if item.drone is not None:
                 self.ref("items", item.drone.weapon, owner, "drone weapon")
                 drone = item.drone
@@ -951,6 +970,24 @@ class _Validator:
                 drug = item.drug
                 if drug.duration <= 0 or drug.addiction_window <= 0 or drug.addiction_doses < 1:
                     self.report(*owner, "drug duration, addiction window and dose threshold must be positive")
+
+    def check_salvage(self) -> None:
+        rules = self.t.salvage
+        if rules is None:
+            return  # Older/local fixture worlds need not commission salvage.
+        grades = {"hull", "optics", "power", "compute", "intact"}
+        valid = (set(rules.weights) == {"1", "2", "3", "4"}
+            and 1 <= rules.minimum_nodes <= rules.maximum_nodes <= 100
+            and 1 <= rules.minimum_units <= rules.maximum_units <= 100
+            and min(rules.respawn_seconds, rules.harvest_seconds, rules.craft_seconds) > 0)
+        for ring, weights in rules.weights.items():
+            valid = valid and bool(weights) and set(weights) <= grades and sum(weights.values()) == 100
+            valid = valid and all(weight > 0 for weight in weights.values())
+            valid = valid and (ring == "4" or not weights.get("intact"))
+            valid = valid and all(any(item.salvage and item.salvage.grade == grade
+                for item in self.t.items.values()) for grade in weights)
+        if not valid:
+            self.report("salvage", "salvage", "invalid salvage bounds, ring weights or grade templates")
 
     def check_progression(self) -> None:
         grades = list(self.each("grades"))

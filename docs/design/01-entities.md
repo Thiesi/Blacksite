@@ -211,7 +211,8 @@ randomness changes optional routes and encounters, never exit permission.
 Shared header: `id, name, class (weapon, armour, ammo, implant,
 resonance, rig, drug, consumable, drone, salvage, schematic, key, pass,
 data, misc), tier, weight, base_price, secured_default (bool),
-description (the catalog line, inline), stack_max, maker`. The item
+description (the catalog line, inline), stack_max, maker,
+quality {kind, key}, no_vendor_sale (default false)`. The item
 carries exactly the block its class names (resonance and rig use the
 implant block; key, pass, data and misc carry none). Class-specific
 blocks:
@@ -243,7 +244,25 @@ catalog's multi-hit/arc/cone annotations for S10.
 - consumable: `effects, cooldown_class`
 - drone: `health, weapon or tool, speed, sight`
 - salvage: `grade`
-- schematic: `output item id, inputs (salvage grade → count), skill_min`
+- schematic: `output item/program id, inputs (salvage grade → count),
+  skill_min, single_use (default false)`
+
+Quality is a per-template selector, default `{kind: none, key: ""}` for
+older local content. Kinds are `none`, `weapon_damage`, `armour`,
+`implant_effect`, `drone_damage`, and `drone_effect`. `armour` names one
+nonzero resistance in `key`; effect kinds name one permitted numeric
+effect. Other kinds have an empty key. Validation rejects incompatible
+blocks and protected effects (permissions, slots and durations). Shipped
+templates explicitly declare their policy. Game design 8.4 defines the
+shared calculation; trade and storage retain the instance's quality.
+
+`salvage.json` declares grade weights for each numbered ring, the node
+and unit bounds, harvest/craft seconds and respawn uptime seconds.
+Commissioned Scour zones identify their ring with a `salvage_field`
+object's `ring` parameter. Live `salvage_node` objects expose grade and
+remaining units. Workshop objects declare `makes`: `any`, `rigs_programs`
+or `chemical_melee`. Future placements remain inactive until S25; S17
+acceptance geography is explicitly a fixture.
 
 S16 adds `grades.json` records `{id, grade, title, promotion}` for all
 30 grades; thresholds remain the main design 3.4 formula. Its

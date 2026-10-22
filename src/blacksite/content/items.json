@@ -19,6 +19,10 @@
         "heavy": false,
         "range": 6,
         "ammo": "ammo_9x"
+      },
+      "quality": {
+        "kind": "weapon_damage",
+        "key": ""
       }
     },
     {
@@ -39,6 +43,10 @@
         "heavy": false,
         "range": 9,
         "ammo": "ammo_5x"
+      },
+      "quality": {
+        "kind": "weapon_damage",
+        "key": ""
       }
     },
     {
@@ -59,6 +67,10 @@
         "heavy": false,
         "range": 3,
         "ammo": "ammo_shell"
+      },
+      "quality": {
+        "kind": "weapon_damage",
+        "key": ""
       }
     },
     {
@@ -79,6 +91,10 @@
         "heavy": false,
         "range": 7,
         "ammo": "ammo_cell"
+      },
+      "quality": {
+        "kind": "weapon_damage",
+        "key": ""
       }
     },
     {
@@ -103,6 +119,10 @@
           "per_second": 4,
           "seconds": 3
         }
+      },
+      "quality": {
+        "kind": "weapon_damage",
+        "key": ""
       }
     },
     {
@@ -123,6 +143,10 @@
         "heavy": false,
         "range": 5,
         "ammo": "ammo_scrap"
+      },
+      "quality": {
+        "kind": "weapon_damage",
+        "key": ""
       }
     },
     {
@@ -147,6 +171,10 @@
           "per_second": 6,
           "seconds": 4
         }
+      },
+      "quality": {
+        "kind": "weapon_damage",
+        "key": ""
       }
     },
     {
@@ -167,6 +195,10 @@
         "heavy": false,
         "range": 5,
         "ammo": "ammo_cell"
+      },
+      "quality": {
+        "kind": "weapon_damage",
+        "key": ""
       }
     },
     {
@@ -187,6 +219,10 @@
         "heavy": false,
         "range": 11,
         "ammo": "ammo_5x"
+      },
+      "quality": {
+        "kind": "weapon_damage",
+        "key": ""
       }
     },
     {
@@ -207,6 +243,10 @@
         "heavy": false,
         "range": 16,
         "ammo": "ammo_7x"
+      },
+      "quality": {
+        "kind": "weapon_damage",
+        "key": ""
       }
     },
     {
@@ -227,6 +267,10 @@
         "heavy": false,
         "range": 10,
         "ammo": "ammo_cell"
+      },
+      "quality": {
+        "kind": "weapon_damage",
+        "key": ""
       }
     },
     {
@@ -247,6 +291,10 @@
         "heavy": false,
         "range": 9,
         "ammo": "ammo_flechette"
+      },
+      "quality": {
+        "kind": "weapon_damage",
+        "key": ""
       }
     },
     {
@@ -271,6 +319,10 @@
           "per_second": 5,
           "seconds": 4
         }
+      },
+      "quality": {
+        "kind": "weapon_damage",
+        "key": ""
       }
     },
     {
@@ -291,6 +343,10 @@
         "heavy": false,
         "range": 4,
         "ammo": "ammo_shell"
+      },
+      "quality": {
+        "kind": "weapon_damage",
+        "key": ""
       }
     },
     {
@@ -311,6 +367,10 @@
         "heavy": false,
         "range": 7,
         "ammo": "ammo_9x"
+      },
+      "quality": {
+        "kind": "weapon_damage",
+        "key": ""
       }
     },
     {
@@ -331,6 +391,10 @@
         "heavy": true,
         "range": 6,
         "ammo": "ammo_scrap"
+      },
+      "quality": {
+        "kind": "weapon_damage",
+        "key": ""
       }
     },
     {
@@ -352,6 +416,10 @@
         "range": 5,
         "ammo": "ammo_cell",
         "targets": 2
+      },
+      "quality": {
+        "kind": "weapon_damage",
+        "key": ""
       }
     },
     {
@@ -376,6 +444,10 @@
           "per_second": 8,
           "seconds": 3
         }
+      },
+      "quality": {
+        "kind": "weapon_damage",
+        "key": ""
       }
     },
     {
@@ -397,7 +469,11 @@
         "range": 6,
         "ammo": null
       },
-      "requires_archetype": "cantor"
+      "requires_archetype": "cantor",
+      "quality": {
+        "kind": "weapon_damage",
+        "key": ""
+      }
     },
     {
       "id": "wpn_halvard_hv12",
@@ -417,6 +493,10 @@
         "heavy": false,
         "range": 12,
         "ammo": "ammo_5x"
+      },
+      "quality": {
+        "kind": "weapon_damage",
+        "key": ""
       }
     },
     {
@@ -437,6 +517,10 @@
         "heavy": true,
         "range": 10,
         "ammo": "ammo_7x"
+      },
+      "quality": {
+        "kind": "weapon_damage",
+        "key": ""
       }
     },
     {
@@ -457,6 +541,10 @@
         "heavy": false,
         "range": 14,
         "ammo": "ammo_cell"
+      },
+      "quality": {
+        "kind": "weapon_damage",
+        "key": ""
       }
     },
     {
@@ -477,6 +565,10 @@
         "heavy": true,
         "range": 8,
         "ammo": "ammo_cell"
+      },
+      "quality": {
+        "kind": "weapon_damage",
+        "key": ""
       }
     },
     {
@@ -501,6 +593,10 @@
           "per_second": 9,
           "seconds": 5
         }
+      },
+      "quality": {
+        "kind": "weapon_damage",
+        "key": ""
       }
     },
     {
@@ -521,6 +617,10 @@
         "heavy": false,
         "range": 8,
         "ammo": "ammo_flechette"
+      },
+      "quality": {
+        "kind": "weapon_damage",
+        "key": ""
       }
     },
     {
@@ -541,6 +641,10 @@
         "heavy": false,
         "range": 15,
         "ammo": "ammo_scrap"
+      },
+      "quality": {
+        "kind": "weapon_damage",
+        "key": ""
       }
     },
     {
@@ -561,6 +665,10 @@
         "heavy": false,
         "range": 9,
         "ammo": "ammo_5x"
+      },
+      "quality": {
+        "kind": "weapon_damage",
+        "key": ""
       }
     },
     {
@@ -583,7 +691,11 @@
         "ammo": null,
         "cone": 3
       },
-      "requires_archetype": "cantor"
+      "requires_archetype": "cantor",
+      "quality": {
+        "kind": "weapon_damage",
+        "key": ""
+      }
     },
     {
       "id": "wpn_ostrom_pulse_carbine",
@@ -603,6 +715,10 @@
         "heavy": false,
         "range": 10,
         "ammo": "ammo_cell"
+      },
+      "quality": {
+        "kind": "weapon_damage",
+        "key": ""
       }
     },
     {
@@ -622,6 +738,10 @@
         "melee": true,
         "heavy": false,
         "stamina": 6
+      },
+      "quality": {
+        "kind": "weapon_damage",
+        "key": ""
       }
     },
     {
@@ -641,6 +761,10 @@
         "melee": true,
         "heavy": false,
         "stamina": 5
+      },
+      "quality": {
+        "kind": "weapon_damage",
+        "key": ""
       }
     },
     {
@@ -660,6 +784,10 @@
         "melee": true,
         "heavy": false,
         "stamina": 10
+      },
+      "quality": {
+        "kind": "weapon_damage",
+        "key": ""
       }
     },
     {
@@ -680,6 +808,10 @@
         "heavy": false,
         "stamina": 8,
         "shock": 10
+      },
+      "quality": {
+        "kind": "weapon_damage",
+        "key": ""
       }
     },
     {
@@ -699,6 +831,10 @@
         "melee": true,
         "heavy": false,
         "stamina": 9
+      },
+      "quality": {
+        "kind": "weapon_damage",
+        "key": ""
       }
     },
     {
@@ -719,6 +855,10 @@
         "heavy": false,
         "stamina": 7,
         "hits": 2
+      },
+      "quality": {
+        "kind": "weapon_damage",
+        "key": ""
       }
     },
     {
@@ -742,6 +882,10 @@
           "per_second": 6,
           "seconds": 3
         }
+      },
+      "quality": {
+        "kind": "weapon_damage",
+        "key": ""
       }
     },
     {
@@ -762,6 +906,10 @@
         "heavy": true,
         "stamina": 20,
         "shock": 30
+      },
+      "quality": {
+        "kind": "weapon_damage",
+        "key": ""
       }
     },
     {
@@ -782,7 +930,11 @@
         "heavy": false,
         "stamina": 6
       },
-      "requires_archetype": "cantor"
+      "requires_archetype": "cantor",
+      "quality": {
+        "kind": "weapon_damage",
+        "key": ""
+      }
     },
     {
       "id": "ammo_9x",
@@ -793,7 +945,11 @@
       "base_price": 25,
       "description": "Kestrel Issue, everywhere",
       "stack_max": 50,
-      "ammo": {}
+      "ammo": {},
+      "quality": {
+        "kind": "none",
+        "key": ""
+      }
     },
     {
       "id": "ammo_5x",
@@ -804,7 +960,11 @@
       "base_price": 60,
       "description": "Halvard pattern",
       "stack_max": 60,
-      "ammo": {}
+      "ammo": {},
+      "quality": {
+        "kind": "none",
+        "key": ""
+      }
     },
     {
       "id": "ammo_7x",
@@ -815,7 +975,11 @@
       "base_price": 110,
       "description": "Halvard pattern; DMR and LMG",
       "stack_max": 40,
-      "ammo": {}
+      "ammo": {},
+      "quality": {
+        "kind": "none",
+        "key": ""
+      }
     },
     {
       "id": "ammo_shell",
@@ -826,7 +990,11 @@
       "base_price": 45,
       "description": "Sable Works and Kestrel",
       "stack_max": 24,
-      "ammo": {}
+      "ammo": {},
+      "quality": {
+        "kind": "none",
+        "key": ""
+      }
     },
     {
       "id": "ammo_cell",
@@ -839,6 +1007,10 @@
       "stack_max": 30,
       "ammo": {
         "recharge_price": 10
+      },
+      "quality": {
+        "kind": "none",
+        "key": ""
       }
     },
     {
@@ -850,7 +1022,11 @@
       "base_price": 55,
       "description": "Sable Works",
       "stack_max": 20,
-      "ammo": {}
+      "ammo": {},
+      "quality": {
+        "kind": "none",
+        "key": ""
+      }
     },
     {
       "id": "ammo_needle",
@@ -861,7 +1037,11 @@
       "base_price": 90,
       "description": "Sable Works; loaded with the weapon's fixed agent (no custom mixing in v1)",
       "stack_max": 30,
-      "ammo": {}
+      "ammo": {},
+      "quality": {
+        "kind": "none",
+        "key": ""
+      }
     },
     {
       "id": "ammo_flechette",
@@ -872,7 +1052,11 @@
       "base_price": 80,
       "description": "Old Works",
       "stack_max": 30,
-      "ammo": {}
+      "ammo": {},
+      "quality": {
+        "kind": "none",
+        "key": ""
+      }
     },
     {
       "id": "ammo_scrap",
@@ -883,7 +1067,11 @@
       "base_price": 15,
       "description": "Ferry-make; fabricated from hull salvage 1:20",
       "stack_max": 20,
-      "ammo": {}
+      "ammo": {},
+      "quality": {
+        "kind": "none",
+        "key": ""
+      }
     },
     {
       "id": "ammo_flare",
@@ -894,7 +1082,11 @@
       "base_price": 30,
       "description": "Kestrel Issue",
       "stack_max": 6,
-      "ammo": {}
+      "ammo": {},
+      "quality": {
+        "kind": "none",
+        "key": ""
+      }
     },
     {
       "id": "arm_wake_coverall",
@@ -916,7 +1108,11 @@
         "evasion": 0,
         "heavy": false
       },
-      "secured_default": true
+      "secured_default": true,
+      "quality": {
+        "kind": "armour",
+        "key": "chemical"
+      }
     },
     {
       "id": "arm_kestrel_vest",
@@ -937,6 +1133,10 @@
         },
         "evasion": 0,
         "heavy": false
+      },
+      "quality": {
+        "kind": "armour",
+        "key": "kinetic"
       }
     },
     {
@@ -958,6 +1158,10 @@
         },
         "evasion": 0,
         "heavy": false
+      },
+      "quality": {
+        "kind": "armour",
+        "key": "chemical"
       }
     },
     {
@@ -979,6 +1183,10 @@
         },
         "evasion": -4,
         "heavy": false
+      },
+      "quality": {
+        "kind": "armour",
+        "key": "kinetic"
       }
     },
     {
@@ -1000,6 +1208,10 @@
         },
         "evasion": 0,
         "heavy": false
+      },
+      "quality": {
+        "kind": "armour",
+        "key": "kinetic"
       }
     },
     {
@@ -1021,6 +1233,10 @@
         },
         "evasion": -2,
         "heavy": false
+      },
+      "quality": {
+        "kind": "armour",
+        "key": "kinetic"
       }
     },
     {
@@ -1042,6 +1258,10 @@
         },
         "evasion": 0,
         "heavy": false
+      },
+      "quality": {
+        "kind": "armour",
+        "key": "energy"
       }
     },
     {
@@ -1063,6 +1283,10 @@
         },
         "evasion": 0,
         "heavy": false
+      },
+      "quality": {
+        "kind": "armour",
+        "key": "chemical"
       }
     },
     {
@@ -1084,6 +1308,10 @@
         },
         "evasion": 0,
         "heavy": false
+      },
+      "quality": {
+        "kind": "armour",
+        "key": "kinetic"
       }
     },
     {
@@ -1105,6 +1333,10 @@
         },
         "evasion": -1,
         "heavy": false
+      },
+      "quality": {
+        "kind": "armour",
+        "key": "kinetic"
       }
     },
     {
@@ -1126,6 +1358,10 @@
         },
         "evasion": 0,
         "heavy": false
+      },
+      "quality": {
+        "kind": "armour",
+        "key": "dissonance"
       }
     },
     {
@@ -1147,6 +1383,10 @@
         },
         "evasion": -10,
         "heavy": false
+      },
+      "quality": {
+        "kind": "armour",
+        "key": "kinetic"
       }
     },
     {
@@ -1168,6 +1408,10 @@
         },
         "evasion": -3,
         "heavy": false
+      },
+      "quality": {
+        "kind": "armour",
+        "key": "energy"
       }
     },
     {
@@ -1189,6 +1433,10 @@
         },
         "evasion": -2,
         "heavy": false
+      },
+      "quality": {
+        "kind": "armour",
+        "key": "chemical"
       }
     },
     {
@@ -1210,6 +1458,10 @@
         },
         "evasion": -2,
         "heavy": false
+      },
+      "quality": {
+        "kind": "armour",
+        "key": "kinetic"
       }
     },
     {
@@ -1227,6 +1479,10 @@
         "effects": {
           "dark_sight": 3
         }
+      },
+      "quality": {
+        "kind": "implant_effect",
+        "key": "dark_sight"
       }
     },
     {
@@ -1244,6 +1500,10 @@
         "effects": {
           "arm_k": 3
         }
+      },
+      "quality": {
+        "kind": "implant_effect",
+        "key": "arm_k"
       }
     },
     {
@@ -1261,6 +1521,10 @@
         "effects": {
           "stamina_regen_multiplier": 1.5
         }
+      },
+      "quality": {
+        "kind": "implant_effect",
+        "key": "stamina_regen_multiplier"
       }
     },
     {
@@ -1278,6 +1542,10 @@
         "effects": {
           "carry_kg": 15
         }
+      },
+      "quality": {
+        "kind": "implant_effect",
+        "key": "carry_kg"
       }
     },
     {
@@ -1295,6 +1563,10 @@
         "effects": {
           "secured_slots": 1
         }
+      },
+      "quality": {
+        "kind": "none",
+        "key": ""
       }
     },
     {
@@ -1312,6 +1584,10 @@
         "effects": {
           "range_penalty_multiplier": 0.5
         }
+      },
+      "quality": {
+        "kind": "implant_effect",
+        "key": "range_penalty_multiplier"
       }
     },
     {
@@ -1329,6 +1605,10 @@
         "effects": {
           "weapon_cooldown_multiplier": 0.9
         }
+      },
+      "quality": {
+        "kind": "implant_effect",
+        "key": "weapon_cooldown_multiplier"
       }
     },
     {
@@ -1346,6 +1626,10 @@
         "effects": {
           "kinetic_accuracy": 8
         }
+      },
+      "quality": {
+        "kind": "implant_effect",
+        "key": "kinetic_accuracy"
       }
     },
     {
@@ -1363,6 +1647,10 @@
         "effects": {
           "shock_decay_multiplier": 2
         }
+      },
+      "quality": {
+        "kind": "implant_effect",
+        "key": "shock_decay_multiplier"
       }
     },
     {
@@ -1380,6 +1668,10 @@
         "effects": {
           "chemical_dot_multiplier": 0.5
         }
+      },
+      "quality": {
+        "kind": "implant_effect",
+        "key": "chemical_dot_multiplier"
       }
     },
     {
@@ -1398,6 +1690,10 @@
           "sprint_ms": 80,
           "stamina_cost_multiplier": 0.8
         }
+      },
+      "quality": {
+        "kind": "none",
+        "key": ""
       }
     },
     {
@@ -1415,6 +1711,10 @@
         "effects": {
           "stealth_sight_reduction": 0.6
         }
+      },
+      "quality": {
+        "kind": "implant_effect",
+        "key": "stealth_sight_reduction"
       }
     },
     {
@@ -1432,6 +1732,10 @@
         "effects": {
           "target_through_cover": 1
         }
+      },
+      "quality": {
+        "kind": "none",
+        "key": ""
       }
     },
     {
@@ -1449,6 +1753,10 @@
         "effects": {
           "health": 40
         }
+      },
+      "quality": {
+        "kind": "implant_effect",
+        "key": "health"
       }
     },
     {
@@ -1468,6 +1776,10 @@
           "arm_e": 4,
           "evasion": -3
         }
+      },
+      "quality": {
+        "kind": "implant_effect",
+        "key": "arm_k"
       }
     },
     {
@@ -1485,6 +1797,10 @@
         "effects": {
           "secured_slots": 2
         }
+      },
+      "quality": {
+        "kind": "none",
+        "key": ""
       }
     },
     {
@@ -1503,6 +1819,10 @@
           "crash_duration_multiplier": 0.5,
           "addiction_window_multiplier": 0.5
         }
+      },
+      "quality": {
+        "kind": "none",
+        "key": ""
       }
     },
     {
@@ -1520,6 +1840,10 @@
         "effects": {
           "drone_slots": 1
         }
+      },
+      "quality": {
+        "kind": "none",
+        "key": ""
       }
     },
     {
@@ -1537,6 +1861,10 @@
         "effects": {
           "heavy_cooldown_multiplier": 0.85
         }
+      },
+      "quality": {
+        "kind": "implant_effect",
+        "key": "heavy_cooldown_multiplier"
       }
     },
     {
@@ -1558,6 +1886,10 @@
         "requires": {
           "archetype": "ghost"
         }
+      },
+      "quality": {
+        "kind": "none",
+        "key": ""
       }
     },
     {
@@ -1577,6 +1909,10 @@
           "trace_multiplier": 1.1
         },
         "rig_slots": 3
+      },
+      "quality": {
+        "kind": "none",
+        "key": ""
       }
     },
     {
@@ -1596,6 +1932,10 @@
           "integrity": 10
         },
         "rig_slots": 4
+      },
+      "quality": {
+        "kind": "implant_effect",
+        "key": "integrity"
       }
     },
     {
@@ -1615,6 +1955,10 @@
           "cell_move_multiplier": 0.8
         },
         "rig_slots": 6
+      },
+      "quality": {
+        "kind": "implant_effect",
+        "key": "cell_move_multiplier"
       }
     },
     {
@@ -1636,6 +1980,10 @@
         "requires": {
           "archetype": "cantor"
         }
+      },
+      "quality": {
+        "kind": "implant_effect",
+        "key": "listening"
       }
     },
     {
@@ -1656,6 +2004,10 @@
         "requires": {
           "archetype": "cantor"
         }
+      },
+      "quality": {
+        "kind": "none",
+        "key": ""
       }
     },
     {
@@ -1677,6 +2029,10 @@
         "requires": {
           "archetype": "cantor"
         }
+      },
+      "quality": {
+        "kind": "implant_effect",
+        "key": "listening"
       }
     },
     {
@@ -1699,6 +2055,10 @@
         "requires": {
           "archetype": "cantor"
         }
+      },
+      "quality": {
+        "kind": "none",
+        "key": ""
       }
     },
     {
@@ -1719,6 +2079,10 @@
         "requires": {
           "archetype": "cantor"
         }
+      },
+      "quality": {
+        "kind": "implant_effect",
+        "key": "dissonance_damage_multiplier"
       }
     },
     {
@@ -1740,6 +2104,10 @@
         "requires": {
           "archetype": "cantor"
         }
+      },
+      "quality": {
+        "kind": "none",
+        "key": ""
       }
     },
     {
@@ -1760,6 +2128,10 @@
         "requires": {
           "archetype": "cantor"
         }
+      },
+      "quality": {
+        "kind": "none",
+        "key": ""
       }
     },
     {
@@ -1781,6 +2153,10 @@
         "requires": {
           "archetype": "cantor"
         }
+      },
+      "quality": {
+        "kind": "implant_effect",
+        "key": "arm_d"
       }
     },
     {
@@ -1796,7 +2172,11 @@
         "tolerance": 0,
         "effects": {},
         "rig_slots": 3,
-          "portable": true
+        "portable": true
+      },
+      "quality": {
+        "kind": "none",
+        "key": ""
       }
     },
     {
@@ -1812,7 +2192,11 @@
         "tolerance": 0,
         "effects": {},
         "rig_slots": 5,
-          "portable": true
+        "portable": true
+      },
+      "quality": {
+        "kind": "none",
+        "key": ""
       }
     },
     {
@@ -1828,7 +2212,11 @@
         "tolerance": 0,
         "effects": {},
         "rig_slots": 6,
-          "portable": true
+        "portable": true
+      },
+      "quality": {
+        "kind": "none",
+        "key": ""
       }
     },
     {
@@ -1849,6 +2237,10 @@
           "accuracy": -10
         },
         "addiction_window": 1800.0
+      },
+      "quality": {
+        "kind": "none",
+        "key": ""
       }
     },
     {
@@ -1869,6 +2261,10 @@
           "shock_decay_multiplier": 0.5
         },
         "addiction_window": 1800.0
+      },
+      "quality": {
+        "kind": "none",
+        "key": ""
       }
     },
     {
@@ -1889,6 +2285,10 @@
           "weapon_cooldown_multiplier": 1.2
         },
         "addiction_window": 1200.0
+      },
+      "quality": {
+        "kind": "none",
+        "key": ""
       }
     },
     {
@@ -1910,6 +2310,10 @@
           "evasion": -10
         },
         "addiction_window": 1200.0
+      },
+      "quality": {
+        "kind": "none",
+        "key": ""
       }
     },
     {
@@ -1931,6 +2335,10 @@
           "arm_k": -8
         },
         "addiction_window": 1800.0
+      },
+      "quality": {
+        "kind": "none",
+        "key": ""
       }
     },
     {
@@ -1952,6 +2360,10 @@
           "cell_move_multiplier": 1.3
         },
         "addiction_window": 1800.0
+      },
+      "quality": {
+        "kind": "none",
+        "key": ""
       }
     },
     {
@@ -1972,6 +2384,10 @@
           "integrity": -20
         },
         "addiction_window": 2400.0
+      },
+      "quality": {
+        "kind": "none",
+        "key": ""
       }
     },
     {
@@ -1993,6 +2409,10 @@
           "listening": -20
         },
         "addiction_window": 3600.0
+      },
+      "quality": {
+        "kind": "none",
+        "key": ""
       }
     },
     {
@@ -2014,6 +2434,10 @@
           "stamina_regen_multiplier": 0.3
         },
         "addiction_window": 900.0
+      },
+      "quality": {
+        "kind": "none",
+        "key": ""
       }
     },
     {
@@ -2036,6 +2460,10 @@
           "health": -10
         },
         "addiction_window": 1200.0
+      },
+      "quality": {
+        "kind": "none",
+        "key": ""
       }
     },
     {
@@ -2056,6 +2484,10 @@
           "shock": 40
         },
         "addiction_window": 86400.0
+      },
+      "quality": {
+        "kind": "none",
+        "key": ""
       }
     },
     {
@@ -2072,6 +2504,10 @@
           "health": 25
         },
         "cooldown_class": "heal"
+      },
+      "quality": {
+        "kind": "none",
+        "key": ""
       }
     },
     {
@@ -2089,6 +2525,10 @@
         },
         "cooldown_class": "heal",
         "use_seconds": 2
+      },
+      "quality": {
+        "kind": "none",
+        "key": ""
       }
     },
     {
@@ -2106,6 +2546,10 @@
           "remove_ring_dust_crash": 1
         },
         "cooldown_class": "food"
+      },
+      "quality": {
+        "kind": "none",
+        "key": ""
       }
     },
     {
@@ -2123,6 +2567,10 @@
           "shock": 10
         },
         "cooldown_class": "stim"
+      },
+      "quality": {
+        "kind": "none",
+        "key": ""
       }
     },
     {
@@ -2139,6 +2587,10 @@
           "end_chemical_dot": 1
         },
         "cooldown_class": "antidote"
+      },
+      "quality": {
+        "kind": "none",
+        "key": ""
       }
     },
     {
@@ -2156,6 +2608,10 @@
         },
         "cooldown_class": "tool",
         "uses": 3
+      },
+      "quality": {
+        "kind": "none",
+        "key": ""
       }
     },
     {
@@ -2173,6 +2629,10 @@
           "seconds": 180
         },
         "cooldown_class": "light"
+      },
+      "quality": {
+        "kind": "none",
+        "key": ""
       }
     },
     {
@@ -2190,6 +2650,10 @@
           "fuse_seconds": 5
         },
         "cooldown_class": "tool"
+      },
+      "quality": {
+        "kind": "none",
+        "key": ""
       }
     },
     {
@@ -2206,6 +2670,10 @@
           "revive_seconds": 2
         },
         "cooldown_class": "revive"
+      },
+      "quality": {
+        "kind": "none",
+        "key": ""
       }
     },
     {
@@ -2222,6 +2690,10 @@
           "convoy_mark": 1
         },
         "cooldown_class": "tool"
+      },
+      "quality": {
+        "kind": "none",
+        "key": ""
       }
     },
     {
@@ -2234,16 +2706,20 @@
       "description": "carrier: +20 kg carry",
       "maker": "Kestrel Issue",
       "drone": {
-          "health": 60,
-          "evasion": 5,
-          "control_range": 8,
-          "sight": null,
-          "speed": null,
-          "tool": "carrier: +20 kg carry",
-          "effects": {
-            "carry_kg": 20
-          }
+        "health": 60,
+        "evasion": 5,
+        "control_range": 8,
+        "sight": null,
+        "speed": null,
+        "tool": "carrier: +20 kg carry",
+        "effects": {
+          "carry_kg": 20
         }
+      },
+      "quality": {
+        "kind": "drone_effect",
+        "key": "carry_kg"
+      }
     },
     {
       "id": "drn_ostrom_eye",
@@ -2255,16 +2731,20 @@
       "description": "scout: reveals sight radius 6 around itself; silent",
       "maker": "Ostrom Optical",
       "drone": {
-          "health": 20,
-          "evasion": 25,
-          "control_range": 14,
-          "sight": 6,
-          "speed": null,
-          "tool": "scout: reveals sight radius 6 around itself; silent",
-          "effects": {
-            "scout_radius": 6
-          }
+        "health": 20,
+        "evasion": 25,
+        "control_range": 14,
+        "sight": 6,
+        "speed": null,
+        "tool": "scout: reveals sight radius 6 around itself; silent",
+        "effects": {
+          "scout_radius": 6
         }
+      },
+      "quality": {
+        "kind": "none",
+        "key": ""
+      }
     },
     {
       "id": "drn_halvard_sentry",
@@ -2290,6 +2770,10 @@
           "accuracy": 75,
           "cooldown": 1.0
         }
+      },
+      "quality": {
+        "kind": "drone_damage",
+        "key": ""
       }
     },
     {
@@ -2320,6 +2804,10 @@
             "seconds": 3
           }
         }
+      },
+      "quality": {
+        "kind": "drone_damage",
+        "key": ""
       }
     },
     {
@@ -2332,17 +2820,21 @@
       "description": "heals crew +8/s within 2 tiles",
       "maker": "Sablier",
       "drone": {
-          "health": 40,
-          "evasion": 15,
-          "control_range": 6,
-          "sight": null,
-          "speed": null,
-          "tool": "heals crew +8/s within 2 tiles",
-          "effects": {
-            "heal_per_second": 8,
-            "heal_radius": 2
-          }
+        "health": 40,
+        "evasion": 15,
+        "control_range": 6,
+        "sight": null,
+        "speed": null,
+        "tool": "heals crew +8/s within 2 tiles",
+        "effects": {
+          "heal_per_second": 8,
+          "heal_radius": 2
         }
+      },
+      "quality": {
+        "kind": "drone_effect",
+        "key": "heal_per_second"
+      }
     },
     {
       "id": "drn_ow_relay",
@@ -2354,16 +2846,20 @@
       "description": "terminal on legs: jack in from the drone's tile; drone destroyed = forced jack-out",
       "maker": "Old Works Collective",
       "drone": {
-          "health": 30,
-          "evasion": 15,
-          "control_range": 10,
-          "sight": null,
-          "speed": null,
-          "tool": "terminal on legs: jack in from the drone's tile; drone destroyed = forced jack-out",
-          "effects": {
-            "jack_terminal": 1
-          }
+        "health": 30,
+        "evasion": 15,
+        "control_range": 10,
+        "sight": null,
+        "speed": null,
+        "tool": "terminal on legs: jack in from the drone's tile; drone destroyed = forced jack-out",
+        "effects": {
+          "jack_terminal": 1
         }
+      },
+      "quality": {
+        "kind": "none",
+        "key": ""
+      }
     },
     {
       "id": "drn_halvard_hound",
@@ -2375,22 +2871,26 @@
       "description": "melee 30 kinetic, CD 1.0; hunts a target you mark",
       "maker": "Halvard Ordnance",
       "drone": {
-          "health": 120,
-          "evasion": 10,
-          "control_range": 8,
-          "sight": null,
-          "speed": null,
-          "tool": "melee 30 kinetic, CD 1.0; hunts a target you mark",
-          "hunt": true,
-          "attack": {
-            "accuracy": 75,
-            "damage_type": "kinetic",
-            "damage": 30,
-            "melee": true,
-            "stamina": 0,
-            "cooldown": 1.0
-          }
+        "health": 120,
+        "evasion": 10,
+        "control_range": 8,
+        "sight": null,
+        "speed": null,
+        "tool": "melee 30 kinetic, CD 1.0; hunts a target you mark",
+        "hunt": true,
+        "attack": {
+          "accuracy": 75,
+          "damage_type": "kinetic",
+          "damage": 30,
+          "melee": true,
+          "stamina": 0,
+          "cooldown": 1.0
         }
+      },
+      "quality": {
+        "kind": "drone_damage",
+        "key": ""
+      }
     },
     {
       "id": "drn_ferry_lifter",
@@ -2402,16 +2902,20 @@
       "description": "carrier: +60 kg; can carry salvage grade intact",
       "maker": "Ferry-make",
       "drone": {
-          "health": 90,
-          "evasion": 5,
-          "control_range": 6,
-          "sight": null,
-          "speed": null,
-          "tool": "carrier: +60 kg; can carry salvage grade intact",
-          "effects": {
-            "carry_kg": 60
-          }
+        "health": 90,
+        "evasion": 5,
+        "control_range": 6,
+        "sight": null,
+        "speed": null,
+        "tool": "carrier: +60 kg; can carry salvage grade intact",
+        "effects": {
+          "carry_kg": 60
         }
+      },
+      "quality": {
+        "kind": "drone_effect",
+        "key": "carry_kg"
+      }
     },
     {
       "id": "slv_hull",
@@ -2423,6 +2927,10 @@
       "description": "panels, booms, shielding; frames, plate, scrap bolts",
       "salvage": {
         "grade": "hull"
+      },
+      "quality": {
+        "kind": "none",
+        "key": ""
       }
     },
     {
@@ -2435,6 +2943,10 @@
       "description": "lenses, sensors, mirrors; sights, eyes, energy emitters",
       "salvage": {
         "grade": "optics"
+      },
+      "quality": {
+        "kind": "none",
+        "key": ""
       }
     },
     {
@@ -2447,6 +2959,10 @@
       "description": "cells, capacitors, radioisotope units; energy weapons, cells, drones",
       "salvage": {
         "grade": "power"
+      },
+      "quality": {
+        "kind": "none",
+        "key": ""
       }
     },
     {
@@ -2459,6 +2975,10 @@
       "description": "boards, memory, radiation-hardened cores; rigs, programs, drone brains",
       "salvage": {
         "grade": "compute"
+      },
+      "quality": {
+        "kind": "none",
+        "key": ""
       }
     },
     {
@@ -2471,7 +2991,12 @@
       "description": "a component that still works; season contribution; tier-3 schematics",
       "salvage": {
         "grade": "intact"
-      }
+      },
+      "quality": {
+        "kind": "none",
+        "key": ""
+      },
+      "no_vendor_sale": true
     },
     {
       "id": "sch_scrap_bolts",
@@ -2487,6 +3012,10 @@
           "hull": 1
         },
         "skill_min": 0
+      },
+      "quality": {
+        "kind": "none",
+        "key": ""
       }
     },
     {
@@ -2503,6 +3032,10 @@
           "hull": 6
         },
         "skill_min": 10
+      },
+      "quality": {
+        "kind": "none",
+        "key": ""
       }
     },
     {
@@ -2520,6 +3053,10 @@
           "power": 1
         },
         "skill_min": 10
+      },
+      "quality": {
+        "kind": "none",
+        "key": ""
       }
     },
     {
@@ -2536,6 +3073,10 @@
           "hull": 2
         },
         "skill_min": 0
+      },
+      "quality": {
+        "kind": "none",
+        "key": ""
       }
     },
     {
@@ -2552,6 +3093,10 @@
           "power": 1
         },
         "skill_min": 0
+      },
+      "quality": {
+        "kind": "none",
+        "key": ""
       }
     },
     {
@@ -2568,6 +3113,10 @@
           "power": 1
         },
         "skill_min": 15
+      },
+      "quality": {
+        "kind": "none",
+        "key": ""
       }
     },
     {
@@ -2585,6 +3134,10 @@
           "optics": 1
         },
         "skill_min": 20
+      },
+      "quality": {
+        "kind": "none",
+        "key": ""
       }
     },
     {
@@ -2603,6 +3156,10 @@
           "compute": 1
         },
         "skill_min": 35
+      },
+      "quality": {
+        "kind": "none",
+        "key": ""
       }
     },
     {
@@ -2620,6 +3177,10 @@
           "power": 1
         },
         "skill_min": 30
+      },
+      "quality": {
+        "kind": "none",
+        "key": ""
       }
     },
     {
@@ -2637,6 +3198,10 @@
           "power": 2
         },
         "skill_min": 40
+      },
+      "quality": {
+        "kind": "none",
+        "key": ""
       }
     },
     {
@@ -2655,6 +3220,10 @@
           "intact": 1
         },
         "skill_min": 60
+      },
+      "quality": {
+        "kind": "none",
+        "key": ""
       }
     },
     {
@@ -2673,6 +3242,10 @@
           "intact": 1
         },
         "skill_min": 60
+      },
+      "quality": {
+        "kind": "none",
+        "key": ""
       }
     },
     {
@@ -2691,6 +3264,10 @@
           "intact": 2
         },
         "skill_min": 70
+      },
+      "quality": {
+        "kind": "none",
+        "key": ""
       }
     },
     {
@@ -2709,6 +3286,10 @@
           "compute": 1
         },
         "skill_min": 45
+      },
+      "quality": {
+        "kind": "none",
+        "key": ""
       }
     },
     {
@@ -2727,6 +3308,10 @@
           "compute": 1
         },
         "skill_min": 30
+      },
+      "quality": {
+        "kind": "none",
+        "key": ""
       }
     },
     {
@@ -2744,6 +3329,10 @@
           "intact": 1
         },
         "skill_min": 50
+      },
+      "quality": {
+        "kind": "none",
+        "key": ""
       }
     },
     {
@@ -2762,6 +3351,10 @@
           "intact": 1
         },
         "skill_min": 65
+      },
+      "quality": {
+        "kind": "none",
+        "key": ""
       }
     },
     {
@@ -2779,6 +3372,10 @@
           "intact": 1
         },
         "skill_min": 60
+      },
+      "quality": {
+        "kind": "none",
+        "key": ""
       }
     },
     {
@@ -2794,6 +3391,10 @@
           "cut_power_radius": 3
         },
         "cooldown_class": "tool"
+      },
+      "quality": {
+        "kind": "none",
+        "key": ""
       }
     },
     {
@@ -2803,7 +3404,11 @@
       "tier": 1,
       "weight": 0.1,
       "base_price": 400,
-      "description": "Admits the holder to the Core during a Curfew. Expires after 7 days. Marked holders are refused at the line."
+      "description": "Admits the holder to the Core during a Curfew. Expires after 7 days. Marked holders are refused at the line.",
+      "quality": {
+        "kind": "none",
+        "key": ""
+      }
     },
     {
       "id": "key_row_pass",
@@ -2812,7 +3417,11 @@
       "tier": 1,
       "weight": 0.1,
       "base_price": 250,
-      "description": "Opens a nonessential Sable back-room shortcut. Public bars and boards remain available."
+      "description": "Opens a nonessential Sable back-room shortcut. Public bars and boards remain available.",
+      "quality": {
+        "kind": "none",
+        "key": ""
+      }
     },
     {
       "id": "key_visitor_pass",
@@ -2821,7 +3430,11 @@
       "tier": 1,
       "weight": 0.1,
       "base_price": 600,
-      "description": "Admits one non-Halvard character to the Spire Mezzanine for 30 minutes."
+      "description": "Admits one non-Halvard character to the Spire Mezzanine for 30 minutes.",
+      "quality": {
+        "kind": "none",
+        "key": ""
+      }
     },
     {
       "id": "key_silt_beacon",
@@ -2836,6 +3449,10 @@
           "beacon_seconds": 3600
         },
         "cooldown_class": "tool"
+      },
+      "quality": {
+        "kind": "none",
+        "key": ""
       }
     },
     {
@@ -2845,7 +3462,11 @@
       "tier": 1,
       "weight": 0.2,
       "base_price": 1200,
-      "description": "Names the next Ring-fall ring one hour early. Sells to anyone who did not earn it."
+      "description": "Names the next Ring-fall ring one hour early. Sells to anyone who did not earn it.",
+      "quality": {
+        "kind": "none",
+        "key": ""
+      }
     },
     {
       "id": "story_vesper_card",
@@ -2855,7 +3476,11 @@
       "weight": 0.1,
       "base_price": 0,
       "description": "A contract card. *Vesper, Tin Halo, Sodium Row.*",
-      "secured_default": true
+      "secured_default": true,
+      "quality": {
+        "kind": "none",
+        "key": ""
+      }
     },
     {
       "id": "story_telemetry_unit_warm",
@@ -2865,7 +3490,11 @@
       "weight": 0.5,
       "base_price": 0,
       "description": "Site Zero salvage that is still warm.",
-      "secured_default": true
+      "secured_default": true,
+      "quality": {
+        "kind": "none",
+        "key": ""
+      }
     },
     {
       "id": "story_halvard_seal_beacon",
@@ -2875,7 +3504,11 @@
       "weight": 0.5,
       "base_price": 0,
       "description": "A monitor beacon Halvard wants planted at the seal.",
-      "secured_default": true
+      "secured_default": true,
+      "quality": {
+        "kind": "none",
+        "key": ""
+      }
     },
     {
       "id": "story_sealed_template_canister",
@@ -2885,7 +3518,11 @@
       "weight": 0.5,
       "base_price": 0,
       "description": "A canister from below the outworks. Sablier does not say what is in it.",
-      "secured_default": true
+      "secured_default": true,
+      "quality": {
+        "kind": "none",
+        "key": ""
+      }
     },
     {
       "id": "story_template_shield_rig",
@@ -2895,7 +3532,11 @@
       "weight": 0.5,
       "base_price": 0,
       "description": "Shields walked templates from Sablier's recall signal.",
-      "secured_default": true
+      "secured_default": true,
+      "quality": {
+        "kind": "none",
+        "key": ""
+      }
     },
     {
       "id": "story_resonance_beacon",
@@ -2905,7 +3546,11 @@
       "weight": 0.5,
       "base_price": 0,
       "description": "Quell's beacon for a cell that should not exist.",
-      "secured_default": true
+      "secured_default": true,
+      "quality": {
+        "kind": "none",
+        "key": ""
+      }
     },
     {
       "id": "story_listening_stake",
@@ -2915,7 +3560,11 @@
       "weight": 0.5,
       "base_price": 0,
       "description": "A stake the Ferrymen drive at a conduit head to hear it hum.",
-      "secured_default": true
+      "secured_default": true,
+      "quality": {
+        "kind": "none",
+        "key": ""
+      }
     },
     {
       "id": "story_residual_fragment_99b",
@@ -2925,7 +3574,11 @@
       "weight": 0.5,
       "base_price": 0,
       "description": "A second copy of Ninety-Nine that says one thing.",
-      "secured_default": true
+      "secured_default": true,
+      "quality": {
+        "kind": "none",
+        "key": ""
+      }
     },
     {
       "id": "story_unmoored_drop_cache",
@@ -2935,7 +3588,11 @@
       "weight": 0.5,
       "base_price": 0,
       "description": "The cache under Terrace Nine.",
-      "secured_default": true
+      "secured_default": true,
+      "quality": {
+        "kind": "none",
+        "key": ""
+      }
     },
     {
       "id": "story_authority_image_copy",
@@ -2945,7 +3602,11 @@
       "weight": 0.5,
       "base_price": 0,
       "description": "A copy of the Dispatcher's process image.",
-      "secured_default": true
+      "secured_default": true,
+      "quality": {
+        "kind": "none",
+        "key": ""
+      }
     },
     {
       "id": "story_holt_manual_schedule",
@@ -2955,7 +3616,11 @@
       "weight": 0.5,
       "base_price": 0,
       "description": "A convoy schedule written by hand. Late, unreliable, human.",
-      "secured_default": true
+      "secured_default": true,
+      "quality": {
+        "kind": "none",
+        "key": ""
+      }
     },
     {
       "id": "story_choir_beacon_2",
@@ -2965,7 +3630,11 @@
       "weight": 0.5,
       "base_price": 0,
       "description": "A beacon for the shaft head.",
-      "secured_default": true
+      "secured_default": true,
+      "quality": {
+        "kind": "none",
+        "key": ""
+      }
     },
     {
       "id": "story_ferrymen_repeater",
@@ -2975,7 +3644,11 @@
       "weight": 0.5,
       "base_price": 0,
       "description": "A repeater for the Far Relay.",
-      "secured_default": true
+      "secured_default": true,
+      "quality": {
+        "kind": "none",
+        "key": ""
+      }
     },
     {
       "id": "story_stuck_door_package",
@@ -2985,7 +3658,11 @@
       "weight": 0.5,
       "base_price": 0,
       "description": "A package behind a door that sticks.",
-      "secured_default": true
+      "secured_default": true,
+      "quality": {
+        "kind": "none",
+        "key": ""
+      }
     },
     {
       "id": "arm_civic_guard_suit",
@@ -3006,6 +3683,10 @@
         },
         "evasion": -2,
         "heavy": false
+      },
+      "quality": {
+        "kind": "armour",
+        "key": "kinetic"
       }
     },
     {
@@ -3026,6 +3707,10 @@
         "heavy": false,
         "range": 11,
         "ammo": "ammo_5x"
+      },
+      "quality": {
+        "kind": "weapon_damage",
+        "key": ""
       }
     },
     {
@@ -3046,6 +3731,10 @@
         "heavy": false,
         "stamina": 8,
         "shock": 10
+      },
+      "quality": {
+        "kind": "weapon_damage",
+        "key": ""
       }
     }
   ]

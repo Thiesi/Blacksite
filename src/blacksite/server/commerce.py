@@ -21,6 +21,7 @@ from blacksite.server.wake import menu
 from blacksite.server.world.simulation import MENU_TIMEOUT_SECONDS
 from blacksite.server.world.zone import ObjectState
 from blacksite.server.clock import TICK_HZ
+from blacksite.server.quality import detail as quality_detail
 
 
 @dataclass
@@ -155,8 +156,10 @@ class Commerce:
                     raise ValueError("That item is not for sale.")
                 if draft.chits_hand < cost:
                     raise ValueError("You do not have enough chits on hand.")
-                if iid.startswith("prg_") or template.class_ == "schematic":
-                    key = "known_programs" if iid.startswith("prg_") else "known_schematics"
+                if template and template.no_vendor_sale:
+                    raise ValueError("That item cannot be bought from a counter.")
+                if iid.startswith("prg_"):
+                    key = "known_programs"
                     learned = draft.progress.setdefault(key, [])
                     if iid in learned:
                         raise ValueError("You already know that.")
@@ -168,7 +171,7 @@ class Commerce:
             elif name == "vendor.sell":
                 item = inventory.owned(draft, iid)
                 template = self.content.items[item.template]
-                if item.bound or item.template.startswith("story_") or item.template == "slv_intact" or item.secured:
+                if item.bound or item.template.startswith("story_") or template.no_vendor_sale or item.template == "slv_intact" or item.secured:
                     raise ValueError("That item cannot be sold. Unsecure ordinary goods first.")
                 count = args.get("qty", item.stack)
                 if type(count) is not int or not 1 <= count <= item.stack:
@@ -222,6 +225,19 @@ class Commerce:
             inventory.add(draft, item)
             if not cache["items"]: del caches[target]
             message = "You pick up the item."
+        elif name == "inv.use" and self.content.items[inventory.owned(draft, iid).template].schematic:
+            item = inventory.owned(draft, iid)
+            template = self.content.items[item.template]
+            if template.schematic.single_use:
+                charges = draft.progress.setdefault("schematic_charges", {})
+                charges[template.id] = charges.get(template.id, 0)+1
+            else:
+                learned = draft.progress.setdefault("known_schematics", [])
+                if template.id in learned:
+                    raise ValueError("You already know that schematic. The item remains.")
+                learned.append(template.id)
+            inventory.remove(draft, iid, 1, next_id)
+            message = f"Learned {template.name}."
         elif name == "inv.use" and self.content.items[inventory.owned(draft, iid).template].drug:
             if any(effect.get("hush") for effect in av.actor.effects):
                 raise ValueError("You cannot use consumables yet.")
@@ -300,6 +316,7 @@ class Commerce:
             "budgets": {key: asdict(value) for key, value in effect["budgets"].items()}, "serial": effect["serial"],
             **({"identities": deepcopy(effect["identities"])} if "identities" in effect else {}),
             **({"interlock_state": deepcopy(effect["interlock_state"])} if "interlock_state" in effect else {}),
+            **({"salvage_state": deepcopy(effect["salvage_state"])} if "salvage_state" in effect else {}),
             **({"npc_state": effect["npc_state"]} if "npc_state" in effect else {}),
             **({"lattice_state": effect["lattice_state"]()} if "lattice_state" in effect else {}),
             **({"identity":effect["identity"], "user":player.bbs_user_id} if "identity" in effect else {})}
@@ -516,6 +533,8 @@ class Commerce:
         template = self.content.items[item.template]
         pack = template.stack_max if template.class_ == "ammo" else 1
         multiplier = vendor.salvage_multiplier if template.class_ == "salvage" else 1
+        if template.class_ == "salvage":
+            return price(Fraction(template.base_price*count, pack), item.quality, freelance=True, multiplier=multiplier)
         return price(Fraction(template.base_price * count, pack), item.quality, multiplier=multiplier, resale=True)
 
     def body(self, session: Session, screen: CommerceMenu) -> dict[str, Any]:
@@ -577,11 +596,9 @@ class Commerce:
             selected = rows[screen.cursor]["id"]
             template = self.content.items.get(selected) if screen.kind == "vendor" and not screen.sell else self.content.items.get(self.items[selected].template) if selected in self.items else None
             if template:
-                detail += "\n" + availability(template) + "\n" + template.description
-                if template.weapon: detail += f"\nDamage {template.weapon.damage}, range {template.weapon.range or 'melee'}."
-                if template.armour:
-                    values=template.armour.armour
-                    detail += f"\nArmour K{values.kinetic} E{values.energy} C{values.chemical} D{values.dissonance}"
+                selected_item = self.items.get(selected)
+                detail += "\n" + quality_detail(template, selected_item.quality if selected_item else 1)
+                detail += "\n" + "\n".join(line for line in (availability(template), template.description) if line)
                 if template.implant and not template.implant.portable:
                     detail += "\nInstall or remove at a clinic. Open its counter and press C."
                     if template.implant.effects.get("surge_inspect") and self.game.progression.surge_preview(player) is None:

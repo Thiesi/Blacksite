@@ -13,6 +13,7 @@ from blacksite.content.schema import ItemTemplate
 from blacksite.server.items import ItemInstance, SECURED_SLOTS
 from blacksite.server.players import Player
 from blacksite.server.rules import character
+from blacksite.server.quality import effects as quality_effects
 
 # These values denote unlocks/capacities, rather than additive bonuses.
 MAXIMUM_KEYS = frozenset({"hymn_tier", "dissonance_tier", "hymn_radius",
@@ -85,7 +86,7 @@ def collect(player: Player, items: Mapping[str, ItemInstance],
         if not block or block.portable:
             continue
         installed.add(template.id)
-        effects = dict(block.effects)
+        effects = quality_effects(template, item.quality, "implant_effect", block.effects)
         # Catalog low-light optics adds three dark tiles; a flare supplies
         # an absolute minimum via the separate dark_sight key.
         if "dark_sight" in effects:

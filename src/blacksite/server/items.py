@@ -55,6 +55,8 @@ def make_item(iid: str, template: ItemTemplate, owner: str, at: str,
 
 def availability(template: ItemTemplate) -> str:
     """State future behaviour openly when selling physical items now."""
+    if template.salvage:
+        return "Take salvage to a workshop."
     owner = {"drone": "drone operation",
              "rig": "rig operation", "pass": "restricted access", "key": "controls",
              "data": "objectives", "misc": "objectives", "salvage": "fabrication"}

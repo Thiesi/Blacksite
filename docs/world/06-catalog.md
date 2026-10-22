@@ -20,6 +20,15 @@ Conventions:
 - **Ammo** is a type slug; a magazine is a stack of that ammo item.
 - **Weight** in kilograms; carry weight is Frame / 2 kg (design §3.1).
 - Prices in **chits** at neutral standing (design §8.2 modifies by standing).
+- Catalog values are quality 1. Each item row in content explicitly
+  selects the single scalable magnitude from game design 8.4. Armour
+  selects its strongest listed resistance (ties use the first listed),
+  leaving other resistances and evasion fixed. Multi-effect implants
+  select their named benefit, never permissions, slots or schedules;
+  equipment with only fixed effects selects `none`. Carrier/healer
+  drones scale carry/healing; armed drones scale direct damage. S17
+  reconciles the accepted [PR #38](https://github.com/Thiesi/Blacksite/pull/38)
+  findings 12/14 without changing any quality-1 catalog value.
 
 Manufacturers, so the brand language stays consistent:
 

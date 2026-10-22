@@ -10,6 +10,7 @@ from blacksite.content.loader import ContentTree
 from blacksite.server.implants import SLOTS, tolerance_used
 from blacksite.server.inventory import Inventory
 from blacksite.server.items import ItemInstance
+from blacksite.server.quality import detail as quality_detail
 from blacksite.server.modifiers import Modifiers, collect
 from blacksite.server.players import Player
 from blacksite.server.rules import character
@@ -104,6 +105,8 @@ def character_sheet(player: Player, content: ContentTree,
         name = template.name if template else "Native rig" if slot == "rig" and player.archetype == "ghost" else "Empty"
         detail = (f"{slot.title()}: {name}.\nTolerance {template.implant.tolerance}; quality {item.quality:g}."
                   if template and template.implant else f"{slot.title()}: {name}.")
+        if template and template.implant:
+            detail += "\n" + quality_detail(template, item.quality)
         if template and template.implant and template.implant.effects.get("surge_inspect"):
             detail += "\n"+(surge_preview or "No effect yet: Surge forecasts are not available.")
         rows.append(Row("implant:"+slot, slot.title(), name, detail))

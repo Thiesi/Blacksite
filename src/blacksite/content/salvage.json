@@ -1,0 +1,16 @@
+{
+  "schema": 1,
+  "weights": {
+    "1": {"hull": 90, "optics": 10},
+    "2": {"hull": 55, "optics": 25, "power": 20},
+    "3": {"hull": 35, "optics": 25, "power": 25, "compute": 15},
+    "4": {"hull": 20, "optics": 20, "power": 25, "compute": 30, "intact": 5}
+  },
+  "minimum_nodes": 2,
+  "maximum_nodes": 6,
+  "minimum_units": 1,
+  "maximum_units": 6,
+  "respawn_seconds": 600,
+  "harvest_seconds": 2,
+  "craft_seconds": 3
+}

@@ -48,6 +48,11 @@ commands. See `docs/plan/00-roadmap.md` for the plan and the
 The [door client guide](docs/ops/door-client.md) covers registration and
 transport acceptance.
 
+S16 supplies progression, installed hardware, substances and owned drones.
+S17 adds the [salvage and fabrication engine](docs/ops/fabrication.md),
+permanent schematics and consistent item quality. Its native acceptance
+uses labelled fixtures; S25 still owns actual Scour nodes and workshops.
+
 Blacksite is developed as a third-party native door: it has no commit
 access to NetBBS. What it needs from the platform is written up in
 `docs/upstream/` and filed in the NetBBS repository.

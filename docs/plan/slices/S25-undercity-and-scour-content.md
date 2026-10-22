@@ -203,3 +203,22 @@ food, water, cloning, public jobs or outward travel. Check gated routes
 under Curfew, neutral relay ownership and expired controls. The world is
 closed: the Far Road is a local ridge, never an exit from Karst. S26,
 not this slice, activates season story flags after complete validation.
+
+## S17 integration handoff
+
+S17 deliberately ships no placeholder Scour map or live hub workshop.
+Its real NetBBS proof uses explicitly labelled Wake-map fixtures. For
+each real Scour ring, author one `salvage_field` object with integer
+`ring` 1-4; event impact regions are separate authoring. Anchor workshops
+at Tramyard/Kestrel and Landing/Ferrymen (`makes: any`), Old Works
+(`rigs_programs`) and the Sink (`chemical_melee`). Activate their real
+vendors and routes. Through native NetBBS at 80x24 and 132x50 with wide
+names, repeat three-unit harvest, actual Landing schematic purchase and
+learning, craft with visible effective stats, 18-chit hull sale and
+Old Works refusal. Existing Tramyard rifle, Spire Reflex Arm purchase,
+Sink clinic, Gate Nine, all ordinary cores/vendors/banks and crowded
+Sweeper acceptance obligations remain mandatory. Preserve game 8.4
+quality and seeded state when placing the content.
+
+This carries the accepted [PR #38](https://github.com/Thiesi/Blacksite/pull/38)
+findings 12/14 forward; see [S17](S17-salvage-and-fabrication.md).
