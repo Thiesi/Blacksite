@@ -1,6 +1,6 @@
 # S20 — Factions: membership, standing, relations, Marked, Warden heat, ranks and perks, faction chat
 
-**Status:** in progress
+**Status:** done (PR #60)
 **Primary model:** Opus · **Reviewer:** none
 **Depends on:** S11, S12, S16 · **Milestone:** M4
 **Issue:** https://github.com/Thiesi/blacksite/issues/20
@@ -211,3 +211,33 @@ attribute Marked to the initiating body; lethal controlled machinery
 retains that controller for ordinary defeat settlement. Safe/pocket and
 under-grade checks still run before harm. Private theft reports remain
 redacted and pay no second penalty after a repeated input/restart.
+
+
+### Acceptance record (PR #60)
+
+Reviewed runtime `fd06e8b`: root pytest passed 1145 tests on Linux and
+1144 plus one platform skip on Windows. The local Windows root run also
+passed 1144 plus one skip (474.62 s). No runtime dependency or numeric
+combat/XP balance changed; package 0.0.15, schemas 1/1/3.
+
+`scripts/accept_s20_netbbs.py` passed both `factions` and `hardware`
+stages through an actual Windows TTY NetBBS Telnet node and its
+registered native stdio door at 80x24/132x50, with wide names and the
+16-colour path. The installed-wheel CI repeated both stages. Faction
+fixtures are grade/+30 admission standing, delayed Warden attacks and
+1 HP after marking. Hardware fixtures are the labelled S15 open Civic
+zone, a charge/zero chits, +90 Halvard membership after the refusal and
+a between-size core cooldown reset. Real Sink geography remains S25.
+
+[CI artifact](https://github.com/Thiesi/Blacksite/actions/runs/39864555607/artifacts/12464036114):
+99 files, 437659 bytes; independently downloaded and checked against
+SHA256 `ecb47ace76f110a48d4ca06ecbb7a96fc55c9b807c47c40c251664d3b5aef553`.
+Both result JSON files contain passing runs at both terminal sizes.
+
+Claude Sonnet 5.5 supplied a written review and re-review. Two practical
+hardware UX findings were fixed; unreachable/dormant concerns and the
+incorrect offline-player premise have source-backed triage in PR #60.
+The future rent-freeze notice is explicitly owned by S21. The repeated
+legacy NPC profile passed at p99 4.016 ms (80x24) and 4.578 ms (132x50);
+the earlier 137 ms result did not recur and was never counted green.
+Final PR checks still govern merge; this marker is published with it.
