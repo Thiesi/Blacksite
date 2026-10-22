@@ -64,10 +64,14 @@ def render_zone(buffer: CellBuffer, body: dict[str, Any], area: Rect, palette: P
     rows += [f"{entry.get('relation', '~')} {entry.get('name', 'Another Wake')}" for entry in body.get("nearby", [])[:3]]
     rows += ["CREW", "None"]
     extra = 4 if me.get("grade") is not None else 0
+    name_roles = {f"{entry.get('relation', '~')} {entry.get('name', 'Another Wake')}": entry.get("role", "text")
+                  for entry in body.get("nearby", [])}
+    if target:
+        name_roles[target["name"]] = target.get("name_role", "text")
     for index, text in enumerate(rows[:max(0, area.height - 6 - extra)]):
-        buffer.put(side_x, area.y + index, truncate(text, side_w), palette.style())
+        buffer.put(side_x, area.y + index, truncate(text, side_w), palette.style(name_roles.get(text, "text")))
     bottom = area.y + area.height - 5 - extra
-    buffer.put(side_x, bottom, truncate(me.get("name", me.get("handle", "")), side_w), palette.style("title"))
+    buffer.put(side_x, bottom, truncate(me.get("name", me.get("handle", "")), side_w), palette.style(me.get("name_role", "title")))
     handle_row = int(bool(extra))
     if extra:
         buffer.put(side_x, bottom + 1, truncate("BBS: " + me["handle"], side_w), palette.style())

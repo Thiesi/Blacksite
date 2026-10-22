@@ -185,3 +185,13 @@ Apartment storage protects half its class capacity in place, separately
 from carried secured slots. A relay benefit never grants room-service
 permission to crew, faction members or visitors. See game design 8.7,
 [S18](S18-apartments.md) and accepted [PR #38](https://github.com/Thiesi/Blacksite/pull/38).
+
+
+### S20 faction integration handoff
+
+Reference: [PR #38](https://github.com/Thiesi/Blacksite/pull/38) and S20.
+
+Use S20 explicit capture vectors once and bind
+Factions.before_membership_change to reconcile/freeze due apartment rent
+before join/leave. Preserve the historical due-time benefit in S18; a later
+membership change cannot reprice an outstanding invoice.

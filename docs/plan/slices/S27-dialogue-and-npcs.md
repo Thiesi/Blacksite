@@ -169,3 +169,14 @@ Test Brann in the safe precinct separately: a shot is refused, no damage.
 Author all Season 1 NPC/record assets now; S26 activates and tests their
 full map/chain bundle. Future-season barks require the relevant settled
 condition and remain inactive until their complete content exists.
+
+
+### S20 faction integration handoff
+
+Reference: [PR #38](https://github.com/Thiesi/Blacksite/pull/38) and S20.
+
+Bind Faction.recruiter to each actual named NPC template and place it at the
+faction site recruiter_zone. The Wake desk remains a valid all-eight
+admission contact. Unmoored public recruiter/board stay Old Works Main;
+hall/vat stay Old Works Drop. Keep the existing verbatim recruiter pitches
+and do not duplicate named people to fill unfinished geography.

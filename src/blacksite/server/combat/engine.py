@@ -190,6 +190,7 @@ class Combat:
             if not actor.modifiers.get("target_through_cover") or rules.distance(actor.position, target.position) > radius:
                 return None
         return {"id":target.id, "name":target.name, "handle":target.handle, "faction":target.faction or "Freelance",
+            "name_role": "player_hostile" if target.marked else self.content.factions[target.faction].colour if target.faction in self.content.factions else "text",
             "hp_percent":max(0,ceil(100 * target.health / target.health_max)),
             **({"hp": target.health, "hp_max": target.health_max} if actor.modifiers.get("target_through_cover") else {}),
             "range":round(rules.distance(actor.position,target.position),1), "cover":self.cover(actor,target),
@@ -209,6 +210,12 @@ class Combat:
             return False
         return tick >= self.warnings[key] + rules.ticks(rules.WARNING_SECONDS)
 
+    def would_mark(self, source: Actor, target: Actor, indirect: bool = False) -> bool:
+        if source.kind != "player" or target.kind != "player" or self.relation(source, target) == "hostile":
+            return False
+        bodies = (source, target) if indirect else (source,)
+        return not all(self.world.zones[actor.zone].safety_at(actor.position) == "open" for actor in bodies)
+
     def mark(self, source: Actor, target: Actor) -> None:
         if source.behaviour.get("player_drone") or target.behaviour.get("player_drone"):
             source_body = self.game.progression.drones.controller_body(source,acting=True) if source.behaviour.get("player_drone") else source
@@ -216,26 +223,24 @@ class Combat:
             if source_body and target_body:
                 self.mark_indirect(source_body,target_body)
             return
-        if source.kind != "player" or target.kind != "player": return
-        if self.world.zones[source.zone].safety_at(source.position) == "open": return
-        if self.relation(source,target) == "hostile": return
+        if not self.would_mark(source, target): return
         player = self.game.players[source.id]
         player.marked_until = datetime.fromtimestamp(self.now()+rules.MARKED_SECONDS,timezone.utc).isoformat()
         already_marked = source.marked
         source.marked = True
         if not already_marked: self.log(source,"You are Marked for fifteen minutes.",True)
+        self.game.queue("save", player.bbs_user_id, player, immediate=True)
 
     def mark_indirect(self, source: Actor, target: Actor) -> None:
         """Game 7.3: the remote open exception requires both bodies open."""
-        if source.kind != "player" or target.kind != "player" or self.relation(source, target) == "hostile":
-            return
-        if all(self.world.zones[a.zone].safety_at(a.position) == "open" for a in (source, target)):
+        if not self.would_mark(source, target, indirect=True):
             return
         player = self.game.players[source.id]
         player.marked_until = datetime.fromtimestamp(self.now()+rules.MARKED_SECONDS, timezone.utc).isoformat()
         if not source.marked:
             self.log(source, "You are Marked for fifteen minutes.", True)
         source.marked = True
+        self.game.queue("save", player.bbs_user_id, player, immediate=True)
 
     def weapon(self, player: Player) -> tuple[Any, WeaponBlock] | None:
         slots = [player.progress.get("weapon_slot",""), "weapon_main", "weapon_side", "melee"]
@@ -329,6 +334,9 @@ class Combat:
         if (not self.legal(source,target) or target.stance in ("down","dead") or not self.visible(source,target)
                 or rules.distance(source.position,target.position) > (weapon.range or 1.5)):
             return
+        if source.behaviour.get("interlock_initiator"):
+            initiator = self.world.actors[source.behaviour["interlock_initiator"]]
+            self.mark_indirect(initiator, target)  # A committed remote miss still marks.
         zone = self.world.zones[source.zone]
         accuracy = (weapon.accuracy if weapon.accuracy is not None else rules.MELEE_ACCURACY)+source.modifiers.get("accuracy", 0)
         if weapon.damage_type == "kinetic": accuracy += source.modifiers.get("kinetic_accuracy", 0)
@@ -416,6 +424,7 @@ class Combat:
 
     def _apply_damage(self, source: Actor | None, target: Actor, amount: int, shock: float,
                       source_id: str, source_name: str, training: bool, damage_type: str = "") -> None:
+        responsible = self.world.actors.get(source.behaviour.get("interlock_initiator"), source) if source else None
         target.health = max(1 if training else 0,target.health-amount)
         target.shock = min(100,target.shock+amount/2+shock)
         target.cooldowns["last_hit"] = self.clock.now_tick()
@@ -439,13 +448,13 @@ class Combat:
             elif target.id in self.game.players:
                 target.stance = "down"
                 target.effects.clear()
-                controller = self.game.progression.controller(source) if source is not None else None
+                controller = self.game.progression.controller(responsible) if responsible is not None else None
                 self.game.players[target.id].progress["combat"] = {"stage":"down", "until":self.now()+rules.DOWN_SECONDS,
                     "killer":controller.id if controller else source_id}
                 self.log(target,"You are down. A nearby ally can press E to pick you up.",True)
             else:
                 if source is not None:
-                    self.npc_death_hook(source, target)
+                    self.npc_death_hook(responsible, target)
         if target.id in self.game.players:
             self.remember(self.game.players[target.id],target,immediate=target.health <= 0)
         if target.zone: self.world.zones[target.zone].revision += 1
@@ -490,6 +499,7 @@ class Combat:
         progression = self.game.progression
         killer = self.game.players.get(state.get("killer"))
         reward, killer_patch, killer_identity = None, {}, None
+        before_standing = deepcopy(killer.standing) if killer else {}
         if (killer and killer.id not in self.game.deleting and killer.id != player.id
                 and killer.bbs_user_id != player.bbs_user_id
                 and progression.permit_combat(killer.id, player.id)):
@@ -499,12 +509,16 @@ class Combat:
                 True, scope="pvp:"+player.bbs_user_id, opponent_grade=player.grade,
                 opponent_identity=player.bbs_user_id,
                 self_or_crew=bool(crew and crew == progression.crew_of(player.id))))
+            from blacksite.server.factions import player_kill
+            changes = player_kill(killer, player, self.content.factions, killer_identity, self.clock.now_utc())
+            killer_patch.update(self.game.factions.standing_patch(killer, changes, "explicit"))
         self.pending_deaths.add(player.id)
         def committed(success: bool) -> None:
             self.pending_deaths.discard(player.id)
             if not success: return
             if killer:
                 progression.notify_reward(killer, reward)
+                self.game.factions.notify_standing(killer, before_standing, "player kill")
             actor.stance = "dead"; actor.target = None
             if actor.zone:
                 self.world.zones[actor.zone].deactivate("sleeper:"+actor.id,self.clock.now_tick())
@@ -520,14 +534,19 @@ class Combat:
                 self.menus.pop(session.id,None)
         self.commerce.settle(player,{"inventory":inventory,"equipment":equipment,"progress":progress,
             "health":0,"chits_hand":hand,"clone_debt":debt,"xp":xp},items,caches,serial,committed,identity)
-        if reward is not None:
+        if killer_patch or (killer_identity is not None and killer_identity != self.game.identities[killer.bbs_user_id]):
             if "progress" in killer_patch:
                 killer_patch["progress"] = {key: value for key, value in killer_patch["progress"].items()
                     if key not in killer.progress or value != killer.progress[key]}
             self.commerce.outbox[-1]["player_patches"] = {killer.id: killer_patch}
             self.commerce.outbox[-1]["identities"] = {killer.bbs_user_id: killer_identity}
 
+    faction_vat: Callable[[Player], tuple[str, tuple[int, int]] | None] = staticmethod(lambda player: None)
+
     def vat(self, player: Player) -> tuple[str, tuple[int,int]]:
+        faction = self.faction_vat(player)
+        if faction:
+            return faction
         pending,seen = deque([player.zone]),set()
         while pending:
             zid = pending.popleft()
@@ -577,6 +596,7 @@ class Combat:
         zid,tile = self.vat(player)
         draft,items,serial = self.recovery_items(player)
         progress = deepcopy(draft.progress)
+        progress.pop("faction_vat", None)
         progress.pop("combat",None); progress.pop("offline_at",None)
         progress.pop("combat_effects",None); progress.pop("combat_cooldowns",None)
         self.pending_deaths.add(player.id)
@@ -809,7 +829,20 @@ class Combat:
                 if actor.stance == "down": self.world.enter(actor,player.zone,self.world.free_tile(player.zone,player.tile))
             if actor is None: continue
             self.restore(player,actor)
+            was_marked = actor.marked
             actor.marked = bool(player.marked_until and datetime.fromisoformat(player.marked_until).timestamp()>now)
+            expired = False
+            if player.marked_until and not actor.marked:
+                player.marked_until = None
+                expired = True
+                if was_marked:
+                    self.log(actor, "Your Mark ends.")
+            if player.warden_heat_until and datetime.fromisoformat(player.warden_heat_until).timestamp() <= now:
+                player.warden_heat_until = None
+                expired = True
+                self.log(actor, "Warden heat ends.")
+            if expired:
+                self.game.queue("save", player.bbs_user_id, player, immediate=True)
             if state:
                 actor.stance = state["stage"]
                 if actor.stance == "down" and state["until"] <= now: self.die(player,actor)

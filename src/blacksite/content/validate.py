@@ -185,6 +185,7 @@ class _Validator:
         self.check_vendors()
         self.check_npcs()
         self.check_factions()
+        self.check_faction_sites()
         self.check_evidence()
         self.check_contracts()
         self.check_routes()
@@ -1121,6 +1122,8 @@ class _Validator:
                 self.report("starts", sid, "rig slots cannot be negative")
         for cid, card in self.each("wake_cards"):
             self.ref("text", card.pitch, ("wake_cards", cid), "recruiter pitch")
+            if card.faction:
+                self.ref("factions", card.faction, ("wake_cards", cid), "recruiter faction")
 
     def check_hymns(self) -> None:
         for hid, hymn in self.each("hymns"):
@@ -1135,10 +1138,7 @@ class _Validator:
         for vid, vendor in self.each("vendors"):
             assert isinstance(vendor, s.Vendor)
             owner = ("vendors", vid)
-            # S07 recruiter identities supply pricing affiliations until S20
-            # installs the complete faction records; this grants no membership.
-            if vendor.faction not in self.t.wake_cards:
-                self.ref("factions", vendor.faction, owner, "faction")
+            self.ref("factions", vendor.faction, owner, "faction")
             self.ref("zones", vendor.zone, owner, "zone")
             for entry in vendor.stock:
                 kind = "programs" if entry.item.startswith("prg_") else "items"
@@ -1248,6 +1248,35 @@ class _Validator:
             for name in ("observation", "source", "claim"):
                 if not getattr(ev, name).strip():
                     self.report(*owner, f"{name} must not be empty")
+
+    def check_faction_sites(self) -> None:
+        seen: set[str] = set()
+        for sid, site in self.each("faction_sites"):
+            owner = ("faction_sites", sid)
+            self.ref("factions", site.faction, owner, "faction")
+            hall_exists = self.ref("zones", site.hall, owner, "hall")
+            self.ref("zones", site.recruiter_zone, owner, "public recruiter")
+            self.ref("vendors", site.vendor, owner, "hall vendor")
+            if site.faction in seen:
+                self.report(*owner, "a faction may have only one physical site")
+            seen.add(site.faction)
+            faction = self.t.factions.get(site.faction)
+            if faction and any((faction.hall, faction.vat, faction.vendor)):
+                self.report(*owner, "physical site duplicates direct faction bindings")
+            if not self.current_active:
+                continue  # S25 supplies real anchors before commissioning.
+            if site.vat is None:
+                self.report(*owner, "an active faction site needs its actual protected vat")
+            elif self.ref("zones", site.vat.zone, owner, "vat"):
+                zone = self.t.zones[site.vat.zone]
+                obj = next((o for o in zone.meta.objects if o.kind == "vat" and o.tile == site.vat.tile), None)
+                if obj is None or not self.protected(zone, site.vat.tile):
+                    self.report(*owner, "faction vat must be an actual protected vat object")
+            if not site.vendor:
+                self.report(*owner, "an active faction site needs its actual counter")
+            elif hall_exists and not any(o.kind == "vendor" and o.params.get("vendor") == site.vendor
+                                        for o in self.t.zones[site.hall].meta.objects):
+                self.report(*owner, "faction vendor must have an actual hall counter")
 
     def check_contracts(self) -> None:
         receipt_owner: dict[str, str] = {}

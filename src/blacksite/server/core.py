@@ -23,6 +23,7 @@ from blacksite.server.fabrication import Fabrication
 from blacksite.server.salvage import Salvage
 from blacksite.server.housing_geometry import HousingGeometry
 from blacksite.server.apartments import Apartments
+from blacksite.server.faction_engine import Factions
 from blacksite.version import PACKAGE_VERSION, PROTOCOL_MAJOR
 
 
@@ -90,6 +91,15 @@ class Core:
         self.apartments = Apartments(self.progression, self.housing_geometry) if self.progression else None
         if self.apartments:
             self.loop.subsystems.append(self.apartments)
+        self.factions = Factions(self.progression) if self.progression else None
+        if self.factions:
+            self.loop.subsystems.append(self.factions)
+            self.npcs.curfew = lambda zone: self.factions.curfew(zone)
+            self.chat.rank_of = lambda session: self.factions.rank_of(session)
+            self.chat.status_of = self.factions.status_of
+            reported = self.chat.reported_location
+            self.chat.reported_location = lambda viewer, target: reported(viewer, target) or self.factions.inspector_location(viewer, target)
+            self.combat.faction_vat = self.factions.vat
 
     def _disconnect_character(self, session: Session) -> None:
         if self.lattice:
@@ -155,6 +165,8 @@ class Core:
             return
         if frame.type == "intent" and frame.data["name"] == "resync":
             session.replay_log()
+        if self.factions and self.factions.input(session, frame, event.data["tick"]):
+            return
         if self.apartments and self.apartments.input(session, frame, event.data["tick"]):
             return
         if self.progression and self.progression.input(session, frame, event.data["tick"]):

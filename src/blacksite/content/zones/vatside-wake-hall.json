@@ -87,7 +87,17 @@
       "kind": "vendor",
       "essential": false,
       "params": {
-        "name": "Recruiter cards"
+        "name": "Recruiter cards",
+        "recruiters": [
+          "halvard",
+          "sablier",
+          "kestrel",
+          "wardens",
+          "choir",
+          "sable",
+          "unmoored",
+          "ferrymen"
+        ]
       }
     },
     {

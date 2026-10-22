@@ -153,3 +153,13 @@ deterministic ticks and the panel golden holds at 80×24 and 132×50.
   S10's legality function; add a test there too.
 - The beacon across zones needs a "direction" from zone exits: use the
   city graph's exit toward B's zone (S08), or "elsewhere" if no path.
+
+
+### S20 faction integration handoff
+
+Reference: [PR #38](https://github.com/Thiesi/Blacksite/pull/38) and S20.
+
+Preserve S20 faction outcomes and Marked body attribution when adding crew
+affiliation. Crew relation overrides compose with the shared matrix rather
+than editing faction membership. Keep the PR #38 actual-victim cache
+regression and individual consent gates.

@@ -15,7 +15,25 @@
         "sable": "H",
         "unmoored": "H",
         "ferrymen": "H"
-      }
+      },
+      "ranks": [
+        {
+          "standing": 30,
+          "title": "Contractor"
+        },
+        {
+          "standing": 50,
+          "title": "Retainer"
+        },
+        {
+          "standing": 70,
+          "title": "Warrant"
+        },
+        {
+          "standing": 90,
+          "title": "Custodial Officer"
+        }
+      ]
     },
     {
       "id": "sablier",
@@ -30,7 +48,25 @@
         "sable": "N",
         "unmoored": "H",
         "ferrymen": "N"
-      }
+      },
+      "ranks": [
+        {
+          "standing": 30,
+          "title": "Orderly"
+        },
+        {
+          "standing": 50,
+          "title": "Technician"
+        },
+        {
+          "standing": 70,
+          "title": "Clinician"
+        },
+        {
+          "standing": 90,
+          "title": "Attending"
+        }
+      ]
     },
     {
       "id": "kestrel",
@@ -45,7 +81,25 @@
         "sable": "H",
         "unmoored": "N",
         "ferrymen": "H"
-      }
+      },
+      "ranks": [
+        {
+          "standing": 30,
+          "title": "Loader"
+        },
+        {
+          "standing": 50,
+          "title": "Driver"
+        },
+        {
+          "standing": 70,
+          "title": "Yard Chief"
+        },
+        {
+          "standing": 90,
+          "title": "Route Master"
+        }
+      ]
     },
     {
       "id": "wardens",
@@ -60,7 +114,25 @@
         "sable": "H",
         "unmoored": "H",
         "ferrymen": "N"
-      }
+      },
+      "ranks": [
+        {
+          "standing": 30,
+          "title": "Auxiliary"
+        },
+        {
+          "standing": 50,
+          "title": "Constable"
+        },
+        {
+          "standing": 70,
+          "title": "Sergeant"
+        },
+        {
+          "standing": 90,
+          "title": "Inspector"
+        }
+      ]
     },
     {
       "id": "choir",
@@ -75,7 +147,25 @@
         "sable": "N",
         "unmoored": "A",
         "ferrymen": "A"
-      }
+      },
+      "ranks": [
+        {
+          "standing": 30,
+          "title": "Novice"
+        },
+        {
+          "standing": 50,
+          "title": "Cantor of the Ward"
+        },
+        {
+          "standing": 70,
+          "title": "Precentor"
+        },
+        {
+          "standing": 90,
+          "title": "Ninth"
+        }
+      ]
     },
     {
       "id": "sable",
@@ -90,7 +180,25 @@
         "choir": "N",
         "unmoored": "H",
         "ferrymen": "N"
-      }
+      },
+      "ranks": [
+        {
+          "standing": 30,
+          "title": "Runner"
+        },
+        {
+          "standing": 50,
+          "title": "Made"
+        },
+        {
+          "standing": 70,
+          "title": "Lieutenant"
+        },
+        {
+          "standing": 90,
+          "title": "Sable's Hand"
+        }
+      ]
     },
     {
       "id": "unmoored",
@@ -105,7 +213,25 @@
         "choir": "A",
         "sable": "H",
         "ferrymen": "N"
-      }
+      },
+      "ranks": [
+        {
+          "standing": 30,
+          "title": "Unmoored"
+        },
+        {
+          "standing": 50,
+          "title": "Publisher"
+        },
+        {
+          "standing": 70,
+          "title": "Quorum"
+        },
+        {
+          "standing": 90,
+          "title": "Deep"
+        }
+      ]
     },
     {
       "id": "ferrymen",
@@ -120,7 +246,25 @@
         "choir": "A",
         "sable": "N",
         "unmoored": "N"
-      }
+      },
+      "ranks": [
+        {
+          "standing": 30,
+          "title": "Walker"
+        },
+        {
+          "standing": 50,
+          "title": "Roadwise"
+        },
+        {
+          "standing": 70,
+          "title": "Charter"
+        },
+        {
+          "standing": 90,
+          "title": "Kin"
+        }
+      ]
     }
   ]
 }

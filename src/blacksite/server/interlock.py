@@ -45,11 +45,12 @@ class Interlock:
         self.controls: dict[tuple[str, str], ControlSpec] = {}
         self.hardware: dict[tuple[str, str], str] = {}
         self.cuts: dict[str, CutChannel] = {}
-        self.menus: dict[str, tuple[str, str, bool]] = {}
+        self.menus: dict[str, tuple[str, str, bool | str]] = {}
         self.log_menus: set[str] = set()
         self.permit: Callable[[str, str, str], bool] = lambda pid, core, action: False
         self.layout_for: Callable[[str, str, str], str | None] = lambda pid, core, control: None
         self.on_cut_power: Callable[["Player", str], None] = lambda actor, core: None
+        self.cut_patch: Callable[["Player", str], dict[str, Any]] = lambda player, core: {}
         for core in self.content.cores.values():
             if core.template or not self.content.active("cores", core.id):
                 continue
@@ -302,14 +303,14 @@ class Interlock:
     def affected(self, core: str) -> list[Presence]:
         return [p for p in self.lat.presences.values() if p.core == core and not p.descent]
 
-    def authorize_cut(self, session: Session, core: str, zid: str, oid: str) -> Any:
+    def authorize_cut(self, session: Session, core: str, zid: str, oid: str, charge: bool = False) -> Any:
         player = self.game.players.get(session.player_id)
         actor = self.combat.actor(player) if player else None
         zone = self.game.world.zones.get(zid)
         obj = zone.objects.get(oid) if zone else None
         if (not actor or actor.zone != zid or actor.stance != "normal" or not obj
                 or not self.game.world.object_access(actor, obj.spec)
-                or max(abs(actor.x-obj.spec.tile[0]), abs(actor.y-obj.spec.tile[1])) > 1
+                or max(abs(actor.x-obj.spec.tile[0]), abs(actor.y-obj.spec.tile[1])) > (3 if charge else 1)
                 or self.hardware.get((zid, oid)) != core):
             raise ValueError("Stand beside the hardware with your body free to work.")
         if self.offline(core):
@@ -322,30 +323,80 @@ class Interlock:
                 raise ValueError("Cut refused: an affected runner's body is protected.")
         return actor
 
-    def start_cut(self, session: Session, core: str, zid: str, oid: str) -> None:
-        actor = self.authorize_cut(session, core, zid, oid)
+    def start_cut(self, session: Session, core: str, zid: str, oid: str, charge: bool = False) -> None:
+        actor = self.authorize_cut(session, core, zid, oid, charge)
+        if charge and not self.charge_item(self.game.players[session.player_id]):
+            raise ValueError("Carry a containment charge first.")
         if session.player_id in self.cuts or actor.behaviour.get("channel") or session.id in self.commerce.using:
             raise ValueError("Finish or cancel your current action first.")
         self.cuts[session.player_id] = CutChannel(core, zid, oid, actor.position,
-            self.clock.now_tick()+CUT_SECONDS*TICK_HZ, int(actor.behaviour.get("hit_serial", 0)))
+            self.clock.now_tick()+CUT_SECONDS*TICK_HZ, int(actor.behaviour.get("hit_serial", 0)), kind="charge_cut" if charge else "cut")
         self.sim.log(session, "You cut power. Hold still for 5s. Any damage interrupts; Esc cancels.")
 
+    def charge_item(self, player: "Player") -> Any:
+        return next((self.commerce.items[iid] for iid in player.inventory
+                     if iid in self.commerce.items and self.commerce.items[iid].owner == player.id
+                     and self.commerce.items[iid].template == "key_containment_charge"), None)
+
     def finish_cut(self, session: Session, channel: CutChannel) -> None:
-        self.authorize_cut(session, channel.core, channel.zone, channel.object)
+        charged = channel.kind == "charge_cut"
+        self.authorize_cut(session, channel.core, channel.zone, channel.object, charged)
         proposal = deepcopy(self.state)
         proposal["cores"].setdefault(channel.core, {})["offline_until"] = self.now()+OFFLINE_SECONDS
+        player = self.game.players[session.player_id]
+        standing_patch = self.cut_patch(player, channel.core)
+        before_standing = deepcopy(player.standing)
+        source = self.combat.actor(player)
+        marks = any(self.combat.would_mark(source, self.lat.encounters.actor(presence), indirect=True)
+                    for presence in self.affected(channel.core))
+        if marks:
+            from datetime import timedelta
+            from blacksite.server.rules.combat import MARKED_SECONDS
+            standing_patch["marked_until"] = (self.clock.now_utc()+timedelta(seconds=MARKED_SECONDS)).isoformat()
+        charge_patch, identity = {}, None
+        items = deepcopy(self.commerce.items)
+        if charged:
+            item = self.charge_item(player)
+            if not item:
+                raise ValueError("The containment charge is no longer carried.")
+            identity = deepcopy(self.game.identities[player.bbs_user_id])
+            fee = self.game.factions.containment_fee(player, identity)
+            if player.chits_hand < fee:
+                raise ValueError("The containment-charge service fee is 150 chits.")
+            inventory = list(player.inventory)
+            if item.stack > 1:
+                items[item.id].stack -= 1
+            else:
+                items.pop(item.id)
+                inventory.remove(item.id)
+            charge_patch = {"inventory": inventory, "chits_hand": player.chits_hand-fee,
+                            "equipment": {slot: iid for slot, iid in player.equipment.items() if iid in inventory}}
         def applied() -> None:
+            if marks:
+                if not source.marked:
+                    self.combat.log(source, "You are Marked for fifteen minutes.", True)
+                source.marked = True
             for presence in self.affected(channel.core):
                 self.lat.encounters.log(presence, "The floor goes dark. Hardware power fails.", True)
                 self.lat.encounters.actor(presence).cooldowns["last_hit"] = self.clock.now_tick()
                 self.lat.encounters.force_out(presence)
             self.zone_log(channel.zone, "The hardware goes dark. The core is offline for ten minutes.")
             self.on_cut_power(self.game.players[session.player_id], channel.core)
+            if hasattr(self.game, "factions"):
+                self.game.factions.notify_standing(player, before_standing, "cut power")
         self.commit(proposal, applied)
         self.commerce.outbox[-1]["player_patches"] = {
             presence.player_id: {"shock": max(CUT_SHOCK, self.lat.encounters.actor(presence).shock),
                                  "progress": {"last_hit_at": self.now()}}
             for presence in self.affected(channel.core)}
+        patches = self.commerce.outbox[-1]["player_patches"]
+        if standing_patch or charge_patch:
+            patches.setdefault(player.id, {}).update({**standing_patch, **charge_patch})
+        if charged:
+            effect = self.commerce.outbox[-1]
+            effect["items"].update({iid: item for iid, item in items.items() if item != self.commerce.items.get(iid)})
+            effect["delete_items"] = sorted(set(self.commerce.items)-set(items))
+            effect["identities"] = {player.bbs_user_id: identity}
 
     def close(self, session: Session) -> None:
         self.menus.pop(session.id, None)
@@ -364,6 +415,14 @@ class Interlock:
         if session.id in self.log_menus:
             if name == "menu_close" or key in ("escape", "b", "B"):
                 self.close(session)
+            elif name == "menu_select" and frame.data.get("expected_revision") == session.view_revision:
+                body = self.sim.external_views[session.id][1]
+                args = frame.data.get("args", {})
+                if args.get("key") == "r" and body["rows"] and args.get("row") == body["rows"][body["cursor"]]["id"]:
+                    try:
+                        self.private.report_theft(session, self.private.log_apartments[session.id], args["row"])
+                    except ValueError as exc:
+                        self.sim.log(session, str(exc))
             elif name == "menu_cursor" and type(frame.data.get("args", {}).get("delta")) is int:
                 body = self.sim.external_views[session.id][1]
                 self.private.open_log(session, self.private.log_apartments[session.id],
@@ -381,11 +440,13 @@ class Interlock:
             elif confirming and (key in ("y", "Y") or name == "menu_select" and frame.data.get("args", {}).get("key") == "y"):
                 self.close(session)
                 try:
-                    self.start_cut(session, self.hardware[zid, oid], zid, oid)
+                    self.start_cut(session, self.hardware[zid, oid], zid, oid, confirming == "charge")
                 except ValueError as exc:
                     self.sim.log(session, str(exc))
-            elif not confirming and (key in ("c", "C") or name == "menu_select"):
-                self.menus[session.id] = zid, oid, True
+            elif not confirming and (key in ("c", "C", "x", "X") or name == "menu_select"):
+                chosen = frame.data.get("args", {}).get("key", "c") if name == "menu_select" else key.lower()
+                if chosen in ("c", "x"):
+                    self.menus[session.id] = zid, oid, "charge" if chosen == "x" else True
             return True
         if name != "interact" and key not in ("e", "E"):
             return False
@@ -408,7 +469,7 @@ class Interlock:
             return True
         candidates = [(zid, oid) for zid, oid in self.hardware if zid == actor.zone
             and max(abs(actor.x-self.game.world.zones[zid].objects[oid].spec.tile[0]),
-                    abs(actor.y-self.game.world.zones[zid].objects[oid].spec.tile[1])) <= 1]
+                    abs(actor.y-self.game.world.zones[zid].objects[oid].spec.tile[1])) <= 3]
         if not candidates:
             return False
         zid, oid = min(candidates, key=lambda key: (
@@ -452,7 +513,7 @@ class Interlock:
             avatar = self.lat.avatar(session) if session else None
             obj = self.game.world.zones[zid].objects[oid]
             if (not session or session.closed or not avatar or avatar.actor.stance != "normal"
-                    or avatar.actor.zone != zid or max(abs(avatar.actor.x-obj.spec.tile[0]), abs(avatar.actor.y-obj.spec.tile[1])) > 1):
+                    or avatar.actor.zone != zid or max(abs(avatar.actor.x-obj.spec.tile[0]), abs(avatar.actor.y-obj.spec.tile[1])) > 3):
                 self.menus.pop(sid)
                 if session:
                     self.close(session)
@@ -465,4 +526,9 @@ class Interlock:
                         "Y confirms cut / Esc/B returns" if confirming else "C cut power / Esc/B returns")
             body["kind"] = "hardware"
             body["actions"] = [{"key": "y" if confirming else "c", "label": "confirm cut" if confirming else "cut power"}]
+            if not confirming:
+                body["actions"].append({"key": "x", "label": "containment charge (range 3)"})
+            if confirming == "charge":
+                body["detail"] += "\nConsumes one charge. Service fee 150; eligible Halvard +90 daily waiver."
+
             self.sim.external_views[sid] = "menu", body

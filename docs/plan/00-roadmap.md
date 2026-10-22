@@ -163,8 +163,8 @@ retains them alongside the earlier vendor/core activation gates.
 
 ## 8. Lore/design integration gates
 
-The current lore review changes specifications only. Every slice remains
-planned. S19 owns evidence, action receipts and four service work orders;
+The lore review governs each owning implementation. Completed slices
+retain their recorded PR status; outstanding gates remain below. S19 owns evidence, action receipts and four service work orders;
 S24 owns committed forecasts and composed event effects; S26 owns
 persistent expeditions, individual ballots and one public settlement.
 Entity and UI schemas are specified before these consumers start.

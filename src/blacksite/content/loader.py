@@ -88,6 +88,7 @@ class ContentTree:
     ice: dict[str, s.IceTemplate] = field(default_factory=dict)
     npcs: dict[str, s.NpcTemplate] = field(default_factory=dict)
     factions: dict[str, s.Faction] = field(default_factory=dict)
+    faction_sites: dict[str, s.FactionSite] = field(default_factory=dict)
     asymmetries: tuple[tuple[str, str], ...] = ()
     contracts: dict[str, s.ContractTemplate] = field(default_factory=dict)
     events: dict[str, s.EventTemplate] = field(default_factory=dict)

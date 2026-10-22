@@ -50,6 +50,8 @@ class PhysicalEffects:
             allowed = (world.permits_harm(source, actor) if source is actor
                        else self.interlock.combat.permits_indirect(source, actor))
             if allowed:
+                if source is not actor:
+                    self.interlock.combat.mark_indirect(source, actor)
                 self.interlock.combat._apply_damage(source, actor, amount, 0,
                     source.id, "Controlled machinery", False)
 

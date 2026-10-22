@@ -284,7 +284,8 @@ class Characters:
         player.health = rules.health_max(player.attributes["vitals"])
         player.stamina = rules.stamina_max(player.attributes["nerve"], player.attributes["frame"])
         if card != "none":
-            player.standing[card] = rules.CARD_STANDING
+            selected = self.content.wake_cards[card]
+            player.standing[selected.faction or card] = rules.CARD_STANDING
         start = self.content.starts[player.archetype]
         items = grant_starter_kit(player, start, self.content.items, self.serial)
         player.progress = {"points": 0, "known_programs": list(start.programs), "known_hymns": list(start.hymns), "memory": {}}
@@ -452,7 +453,9 @@ class Characters:
         identity = self.identities[session.user_id]
         days = max(0, (self.clock.now_utc() - datetime.fromisoformat(identity["first_decanted_at"])).days)
         equipped = self.combat.weapon(player) if hasattr(self,"combat") else None
-        return {"name": player.name, "handle": player.bbs_handle, "grade": player.grade,
+        return {"name_role": "player_hostile" if player.marked_until and datetime.fromisoformat(player.marked_until) > self.clock.now_utc() else self.content.factions[player.faction].colour if player.faction in self.content.factions else "title",
+                "faction": player.faction, "rank": self.factions.rank_of(session) if hasattr(self, "factions") else "",
+                "name": player.name, "handle": player.bbs_handle, "grade": player.grade,
                 "chits": player.chits_hand, "weapon": self.content.items[equipped[0].template].name if equipped else "None",
                 "in_combat": self.clock.now_utc().timestamp()-player.progress.get("last_exchange",0)<combat_rules.COMBAT_SECONDS,
                 "hit_serial": self.sim.avatars[session.user_id].actor.behaviour.get("hit_serial",0),

@@ -59,6 +59,8 @@ def make_item(iid: str, template: ItemTemplate, owner: str, at: str,
 
 def availability(template: ItemTemplate) -> str:
     """State future behaviour openly when selling physical items now."""
+    if template.id == "key_containment_charge":
+        return "At hardware: X selects a range-3 containment cut; Y confirms. Service fee 150 chits."
     if template.salvage:
         return "Take salvage to a workshop."
     if template.door_key:

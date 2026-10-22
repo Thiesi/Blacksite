@@ -57,6 +57,9 @@ def test_game_6_7_single_use_charge_applies_only_after_successful_commit(runners
     presence = jack(game, a)
     player = game.core.characters.players[presence.player_id]
     presence.rig = ("prg_residual_fragment", None, None)
+    # S20 commissions the bound-loan owner; this test isolates cast settlement.
+    player.faction, player.standing["unmoored"] = "unmoored", 90
+    player.progress["faction_loan"] = True
     player.progress["lattice_charges"] = {"prg_residual_fragment": 1}
     cast(game, a, "prg_residual_fragment", settle=False)
     assert not presence.effects.has("prg_residual_fragment", game.clock.now_tick())

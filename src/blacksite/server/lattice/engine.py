@@ -308,6 +308,8 @@ class Lattice:
             return
         player = self.game.players[presence.player_id]
         self.encounters.leave(presence)
+        if hasattr(self.game, "factions"):
+            self.game.factions.clear_loan(player)
         self.notify(presence, player.name+" leaves.")
         state = self.saved(player)
         state.update(integrity=presence.integrity, out_at=self.clock.now_utc().timestamp())

@@ -145,3 +145,14 @@ Roadmap section 7, Fable level/finale review, full Season 1 bundle and
 all chains validated, solo plus multiplayer terminal acceptance at both
 sizes, and recorded human pacing/challenge feedback. No claim that later
 season bundles or the game balance are already complete.
+
+
+### S20 faction integration handoff
+
+Reference: [PR #38](https://github.com/Thiesi/Blacksite/pull/38) and S20.
+
+Keep immutable event plan IDs and current rank eligibility when settling
+event/season state. Expire Convoy reservations explicitly. Free Kin
+information remains +90, with paid/public fallbacks. Seasonal relation
+overrides compose at the shared relation source, without another
+faction-membership authority.

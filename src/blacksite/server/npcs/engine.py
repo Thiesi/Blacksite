@@ -44,7 +44,8 @@ class Npcs:
         self.pending_deaths: set[str] = set()
         self.restraints: dict[str, dict[str, Any]] = {}
         self.heat_saved_at: dict[str, float] = {}
-        self.heat_multiplier: float = 1  # S24 composes Curfew's x2.
+        self.heat_multiplier: float = 1
+        self.curfew: Callable[[str], bool] = lambda zone: False  # S24 committed event.
         self.reward_permit: Callable[[Actor, Actor], bool] = lambda source, target: not any(
             target.behaviour.get(key) for key in ("nonlethal", "willing", "escort"))
         combat.refused_hook = self.refused
@@ -148,7 +149,7 @@ class Npcs:
         player = self.game.players.get(source.id)
         if player is None or zone is None:
             return
-        until = self.combat.now() + HEAT_SECONDS * self.heat_multiplier
+        until = self.combat.now() + HEAT_SECONDS * max(self.heat_multiplier, 2 if self.curfew(zone.id) else 1)
         previous = datetime.fromisoformat(player.warden_heat_until).timestamp() if player.warden_heat_until else 0
         player.warden_heat_until = datetime.fromtimestamp(max(previous, until), timezone.utc).isoformat()
         if self.combat.now()-self.heat_saved_at.get(player.id, -HEAT_SAVE_SECONDS) < HEAT_SAVE_SECONDS:
@@ -191,6 +192,9 @@ class Npcs:
             if player and player.id in self.game.deleting:
                 player = None
             patch, identity, reward = {}, None, None
+            before_standing = deepcopy(player.standing) if player else {}
+            eligible = (player and template.xp > 0 and not template.training and self.reward_permit(source, actor)
+                        and progression.permit_combat(player.id, actor.id))
             if (player and template.xp > 0
                     and not template.training and self.reward_permit(source, actor)
                     and progression.permit_combat(player.id, actor.id)):
@@ -199,6 +203,10 @@ class Npcs:
                 scope = str(actor.behaviour.get("slot") or "mission-npc:"+template.id)
                 patch, identity, reward = progression.reward_patch(player, Grant("combat",
                     actor.id, True, scope=scope, opponent_grade=template.grade))
+            if eligible:
+                from blacksite.server.factions import npc_kill
+                patch.update(self.game.factions.standing_patch(player,
+                    npc_kill(self.content.factions, actor.faction), "explicit"))
             items, caches = deepcopy(self.commerce.items), deepcopy(self.commerce.caches)
             serial = max(self.commerce.serial, max((int(i.rsplit(":", 1)[-1]) for i in items), default=0))
             cache_id = "npc-cache:" + actor.id
@@ -229,6 +237,7 @@ class Npcs:
                 self.world.leave(actor)
                 if player:
                     progression.notify_reward(player, reward)
+                    self.game.factions.notify_standing(player, before_standing, "NPC kill")
             self.commerce.settle(player, patch, items, caches, serial, committed, identity)
             receipt = deepcopy(self.spawners.record())
             slot = receipt["slots"].get(str(actor.behaviour.get("slot")))

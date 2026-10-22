@@ -243,3 +243,15 @@ carried secured capacity. Physical keys and Passkey grant only the
 See game design 8.7, [S18](S18-apartments.md) and accepted
 [PR #38](https://github.com/Thiesi/Blacksite/pull/38). All earlier commerce,
 clinic, Scour, core, Gate Nine and Sweeper acceptance gates remain.
+
+
+### S20 faction integration handoff
+
+Reference: [PR #38](https://github.com/Thiesi/Blacksite/pull/38) and S20.
+
+Commission all eight S20 faction_sites with real hall/counter/protected-vat
+anchors; six bindings remain in the s25-faction-sites authoring bundle.
+Unmoored hall/vat are Old Works Drop, public board/recruiter Old Works Main.
+Do not activate a vat-less site or create aliases. Repeat S20 contested
+combat on real Sink Terraces; its native proof uses shipped Clinic Row.
+Preserve all existing S16-S18 commerce, housing and core gates.

@@ -1,0 +1,81 @@
+{
+  "schema": 1,
+  "faction_sites": [
+    {
+      "id": "site-halvard",
+      "faction": "halvard",
+      "hall": "spire-atrium",
+      "vat": null,
+      "vendor": "halvard-security",
+      "recruiter_zone": "spire-atrium"
+    },
+    {
+      "id": "site-sablier",
+      "faction": "sablier",
+      "hall": "vatside-clinics",
+      "vat": {
+        "zone": "vatside-wake-hall",
+        "tile": [
+          3,
+          3
+        ]
+      },
+      "vendor": "sablier-clinic",
+      "recruiter_zone": "vatside-clinics"
+    },
+    {
+      "id": "site-kestrel",
+      "faction": "kestrel",
+      "hall": "tramyard-depots",
+      "vat": null,
+      "vendor": "kestrel-armoury",
+      "recruiter_zone": "tramyard-depots"
+    },
+    {
+      "id": "site-wardens",
+      "faction": "wardens",
+      "hall": "core-precinct",
+      "vat": {
+        "zone": "core-precinct",
+        "tile": [
+          34,
+          19
+        ]
+      },
+      "vendor": "warden-quartermaster",
+      "recruiter_zone": "core-precinct"
+    },
+    {
+      "id": "site-choir",
+      "faction": "choir",
+      "hall": "chapel-nave",
+      "vat": null,
+      "vendor": "chapel-foundry",
+      "recruiter_zone": "chapel-nave"
+    },
+    {
+      "id": "site-sable",
+      "faction": "sable",
+      "hall": "sink-terraces",
+      "vat": null,
+      "vendor": "sable-back-room",
+      "recruiter_zone": "sink-terraces"
+    },
+    {
+      "id": "site-unmoored",
+      "faction": "unmoored",
+      "hall": "oldworks-drop",
+      "vat": null,
+      "vendor": "oldworks-deep",
+      "recruiter_zone": "oldworks-main"
+    },
+    {
+      "id": "site-ferrymen",
+      "faction": "ferrymen",
+      "hall": "scour-landing",
+      "vat": null,
+      "vendor": "ferrys-own",
+      "recruiter_zone": "scour-landing"
+    }
+  ]
+}

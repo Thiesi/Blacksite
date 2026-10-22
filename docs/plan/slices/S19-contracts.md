@@ -121,3 +121,14 @@ remain required after S25/S26 integrate the remaining sources.
 Roadmap section 7; all verbs, four service nodes and branch invariants
 pass in fixtures, Vesper's job works in the shipped hub, and every
 inactive Season 1 dependency is declared for S26 integration.
+
+
+### S20 faction integration handoff
+
+Reference: [PR #38](https://github.com/Thiesi/Blacksite/pull/38) and S20.
+
+Use S20 Factions.standing_patch with Reward.standing_mode in the owning
+reward transaction. Do not pay reputation from an after-commit notification.
+Keep the program-source contract, acquisition guards and actual income
+report from PR #38; membership never revokes already learned programs or
+installed hardware.
