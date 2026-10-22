@@ -144,6 +144,8 @@ class Storage:
         """Architecture 6.2: transfer, money, ownership and receipt are atomic."""
         player = effect["player"]
         with self.db:
+            for user, identity_record in effect.get("identities", {}).items():
+                self.db.execute("INSERT OR REPLACE INTO identities VALUES(?,?)", (user,self._json(identity_record)))
             if "identity" in effect:
                 self.db.execute("INSERT OR REPLACE INTO identities VALUES(?,?)", (effect["user"],self._json(effect["identity"])))
             for player_record in ([player] if player else [])+effect.get("players", []):
@@ -179,6 +181,7 @@ class Storage:
         if "npc_state" in effect: settled.add(("meta", "npc_state"))
         if "lattice_state" in effect: settled.add(("meta", "lattice_state"))
         if "identity" in effect: settled.add(("identities",effect["user"]))
+        settled |= {("identities", user) for user in effect.get("identities", {})}
         for key in settled:
             self.dirty.pop(key,None); self.dirty_since.pop(key,None)
 

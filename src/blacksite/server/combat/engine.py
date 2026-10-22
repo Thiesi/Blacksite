@@ -16,6 +16,7 @@ from blacksite.server.inventory import Inventory
 from blacksite.server.items import ItemInstance, make_item
 from blacksite.server.loop import TickContext
 from blacksite.server.players import Player
+from blacksite.server.progression import Grant
 from blacksite.server.protocol import Frame
 from blacksite.server.rules import character, combat as rules
 from blacksite.server.sessions import Session
@@ -424,10 +425,24 @@ class Combat:
         hand,debt,xp,charge = rules.clone_settlement(player.chits_hand,player.grade,player.xp,character.grade_threshold(player.grade),player.clone_debt)
         state["charge"] = charge
         identity = deepcopy(self.game.identities[player.bbs_user_id]); identity["clone_debt"] = debt
+        progression = self.game.progression
+        killer = self.game.players.get(state.get("killer"))
+        reward, killer_patch, killer_identity = None, {}, None
+        if (killer and killer.id not in self.game.deleting and killer.id != player.id
+                and killer.bbs_user_id != player.bbs_user_id
+                and progression.permit_combat(killer.id, player.id)):
+            crew = progression.crew_of(killer.id)
+            receipt = f"pvp:{player.id}:{state['until']}"
+            killer_patch, killer_identity, reward = progression.reward_patch(killer, Grant("combat", receipt,
+                True, scope="pvp:"+player.bbs_user_id, opponent_grade=player.grade,
+                opponent_identity=player.bbs_user_id,
+                self_or_crew=bool(crew and crew == progression.crew_of(player.id))))
         self.pending_deaths.add(player.id)
         def committed(success: bool) -> None:
             self.pending_deaths.discard(player.id)
             if not success: return
+            if killer:
+                progression.notify_reward(killer, reward)
             actor.stance = "dead"; actor.target = None
             if actor.zone:
                 self.world.zones[actor.zone].deactivate("sleeper:"+actor.id,self.clock.now_tick())
@@ -443,6 +458,12 @@ class Combat:
                 self.menus.pop(session.id,None)
         self.commerce.settle(player,{"inventory":inventory,"equipment":equipment,"progress":progress,
             "health":0,"chits_hand":hand,"clone_debt":debt,"xp":xp},items,caches,serial,committed,identity)
+        if reward is not None:
+            if "progress" in killer_patch:
+                killer_patch["progress"] = {key: value for key, value in killer_patch["progress"].items()
+                    if key not in killer.progress or value != killer.progress[key]}
+            self.commerce.outbox[-1]["player_patches"] = {killer.id: killer_patch}
+            self.commerce.outbox[-1]["identities"] = {killer.bbs_user_id: killer_identity}
 
     def vat(self, player: Player) -> tuple[str, tuple[int,int]]:
         pending,seen = deque([player.zone]),set()

@@ -5,6 +5,7 @@ This facade owns UI and manual spending; it never pays post-commit XP.
 """
 
 from copy import deepcopy
+from collections.abc import Callable
 from typing import Any
 
 from blacksite.server.commerce import Commerce
@@ -26,6 +27,8 @@ class ProgressionEngine:
         self.game.progression = self
         self.menus: dict[str, int] = {}
         self.requests: dict[str, list[str]] = {}
+        self.crew_of: Callable[[str], str | None] = lambda pid: None  # S22.
+        self.permit_combat: Callable[[str, str], bool] = lambda source, target: True  # S19.
 
     def modifiers(self, player: Player) -> Modifiers:
         return collect(player, self.commerce.items, self.content.items,
@@ -78,7 +81,12 @@ class ProgressionEngine:
             draft.health, draft.stamina, draft.shock = actor.health, actor.stamina, actor.shock
         result = award(draft, identity, grant, self.clock.now_utc(), self.modifiers(player))
         patch = {key: deepcopy(getattr(draft, key)) for key in
-                 ("xp", "grade", "attributes", "skills", "progress", "health", "legal_at")}
+                 ("xp", "grade", "attributes", "health", "legal_at")
+                 if getattr(draft, key) != getattr(player, key)}
+        progress = {key: deepcopy(value) for key, value in draft.progress.items()
+                    if key not in player.progress or player.progress[key] != value}
+        if progress:
+            patch["progress"] = {**deepcopy(player.progress), **progress}
         return patch, identity, result
 
     def gain(self, draft: Player, use: Use) -> float:

@@ -603,6 +603,9 @@ XP joins the source decrement and item transfer. A post-commit callback
 may announce a reward but never decides or pays it. Per-identity core
 days, PvP windows and relay hold caps commit with the player. Generated
 Silt visits and training cannot create discovery or use rewards.
+PvP death includes both players and both identity records in that one
+receipt: the victim's clone/debt settlement and the winner's reward/cap.
+Clear stale write-behind identity records for every committed recipient.
 
 One pure `Modifiers` collector composes installed items, substance phases
 and optional ability/event layers from the supplied UTC time. Consumers

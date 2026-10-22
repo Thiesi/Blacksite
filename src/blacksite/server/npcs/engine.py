@@ -183,7 +183,8 @@ class Npcs:
                 player = None
             patch, identity, reward = {}, None, None
             if (player and template.xp > 0
-                    and not template.training and self.reward_permit(source, actor)):
+                    and not template.training and self.reward_permit(source, actor)
+                    and progression.permit_combat(player.id, actor.id)):
                 # xp is an eligibility flag inherited from S11. Game 3.5
                 # pays the opponent-grade formula, not that old hook value.
                 scope = str(actor.behaviour.get("slot") or "mission-npc:"+template.id)

@@ -284,6 +284,7 @@ class Commerce:
             "items": [item.record() for item in effect["items"].values()],
             "delete_items": effect["delete_items"], "caches": effect["caches"],
             "budgets": {key: asdict(value) for key, value in effect["budgets"].items()}, "serial": effect["serial"],
+            **({"identities": deepcopy(effect["identities"])} if "identities" in effect else {}),
             **({"interlock_state": deepcopy(effect["interlock_state"])} if "interlock_state" in effect else {}),
             **({"npc_state": effect["npc_state"]} if "npc_state" in effect else {}),
             **({"lattice_state": effect["lattice_state"]()} if "lattice_state" in effect else {}),
@@ -337,6 +338,7 @@ class Commerce:
         self.pending = False
         session = self.game.sessions.active.get(effect["session"])
         if success:
+            self.game.identities.update(deepcopy(effect.get("identities", {})))
             for pid, patch in effect.get("player_patches", {}).items():
                 for key, value in self.secondary_patch(pid, patch).items():
                     setattr(self.game.players[pid], key, deepcopy(value))
