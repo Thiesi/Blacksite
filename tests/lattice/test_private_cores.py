@@ -126,7 +126,7 @@ def test_game_6_4_passkey_only_opens_30s_delivery_vestibule(runners):
     presence = private_entry(game, b, record)
     presence.room = "vestibule"
     presence.rig = ("prg_passkey", None, None)
-    cast(game, b, "prg_passkey")
+    cast(game, b, "prg_passkey", settle=False)
     assert not presence.opened and presence.key_tier == 0
     game.commit_commerce()
     obj = game.core.world.zones[record["zone"]].objects[record["door"]]

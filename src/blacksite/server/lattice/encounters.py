@@ -19,13 +19,14 @@ from blacksite.server.items import make_item
 from blacksite.server.lattice.cores import CORE_IDLE_RESET_SECONDS, TRACE_PER_SECOND, CoreGraph, trace_thresholds
 from blacksite.server.lattice.ice import Ice, IceEvent, Location, Runner
 from blacksite.server.lattice.presence import INTEGRITY_MAX, Presence, Procedure, directional_neighbour, movement_ticks
-from blacksite.server.lattice.programs import Cast, attack_damage, bind, can_cast, cast_ticks, occupied_slots, ticks, trace_gain
+from blacksite.server.lattice.programs import Cast, Effects, attack_damage, bind, can_cast, cast_ticks, occupied_slots, ticks, trace_gain
 from blacksite.server.lattice.silt import Descent, adjacent_hidden, generate, survey_directions
 from blacksite.server.lattice.silt_scene import BandGraph
 from blacksite.server.players import Player
 from blacksite.server.progression import Grant, award
 from blacksite.server.sessions import Session
 from blacksite.server.protocol import Frame
+from blacksite.server.skills import Use
 from blacksite.server.wake import menu, wrapped
 
 if TYPE_CHECKING:
@@ -532,6 +533,18 @@ class Encounters:
         base_trace = float(program.trace_cost) if self.policy(presence) != "none" and not self.lat.public(presence) else 0
         self.log(presence, f"{program.name}: {duration/TICK_HZ:g}s cast, {base_trace:g} base trace.")
 
+    def program_state(self, presence: Presence, cast: Cast) -> object:
+        """Game 3.5: timer refreshes and bookkeeping are not a new effect."""
+        def effects(value: Effects) -> dict[str, Any]:
+            return {"active": {key: (effect.kind, effect.amount, effect.params)
+                               for key, effect in value.active.items()},
+                    "shield": value.shield, "decoy": value.decoy}
+        other = self.lat.presences.get(cast.target)
+        return deepcopy((presence.integrity, presence.trace, presence.opened, presence.key_tier,
+            presence.key_programs, effects(presence.effects), presence.verified_maps, presence.found_silt,
+            [(ice.id, ice.integrity, ice.provoked, effects(ice.effects)) for ice in self.defenders(presence)],
+            (other.integrity, effects(other.effects)) if other else None))
+
     def complete_cast(self, presence: Presence, cast: Cast, *, charge_committed: bool = False) -> None:
         program = self.content.programs[cast.program]
         player = self.game.players[presence.player_id]
@@ -558,6 +571,19 @@ class Encounters:
             self.commerce.settle(player, {"progress": progress}, self.commerce.items,
                                  self.commerce.caches, self.commerce.serial, finished)
             return
+        before = self.program_state(presence, cast)
+        revealed = deferred_learning = False
+        instance = self.core(presence)
+        learn = not (instance and instance.graph.spec.training)
+        if program.target_class == "runner":
+            other_player = self.game.players.get(cast.target)
+            crew = self.game.progression.crew_of(player.id)
+            learn = bool(learn and other_player and other_player.bbs_user_id != player.bbs_user_id
+                and (crew is None or crew != self.game.progression.crew_of(other_player.id))
+                and self.game.progression.permit_combat(player.id, other_player.id))
+        use = Use("program_change", "programs",
+                  f"program:{player.id}:{program.id}:{cast.scope}:{cast.until}:{now}",
+                  bool(learn), changed=True)
         if kind == "damage" and program.target_class == "runner":
             other = self.lat.presences.get(cast.target)
             if (other is None or self.location(other) != self.location(presence)
@@ -586,7 +612,9 @@ class Encounters:
                 self.activate(ice, presence, "attack")
                 self.log(presence, f"{program.name} hits {ice.template.name}: {amount:g}. Integrity {ice.integrity:g}.")
         elif kind == "open_gate" and params.get("private_vestibule"):
-            self.lat.interlock.open_vestibule(presence)
+            deferred_learning = True
+            self.lat.interlock.open_vestibule(presence,
+                lambda: self.game.progression.record_use(player.id, use))
         elif kind == "open_gate":
             gates = [i for i in self.defenders(presence) if i.blocks(now)]
             for ice in gates:
@@ -608,9 +636,10 @@ class Encounters:
                     hunter.integrity = 0
                     self.log(presence, "Cutout breaks the Hound's follow.")
         elif kind == "reveal":
-            self.reveal(presence, program)
+            revealed = self.reveal(presence, program)
         else:
             presence.effects.install(program, tick)
+        changed = revealed or before != self.program_state(presence, cast)
         if program.cooldown_seconds is not None:
             player.progress.setdefault("lattice_cooldowns", {})[program.id] = now+float(program.cooldown_seconds)
         presence.last_program = program.id
@@ -620,8 +649,11 @@ class Encounters:
                 self.log(presence, "Shade copies "+program.name+". Two-second warning.", True)
         self.trace(presence, float(program.trace_cost), fixed=program.id in ("prg_burn", "prg_blackout"))
         self.game.queue("save", player.bbs_user_id, player, immediate=True)
+        if learn and changed and not deferred_learning:
+            self.game.progression.record_use(player.id, use)
 
-    def reveal(self, presence: Presence, program: ProgramTemplate) -> None:
+    def reveal(self, presence: Presence, program: ProgramTemplate) -> bool:
+        revealed = False
         if presence.descent:
             if program.effect.params.get("crew_beacon"):
                 raise ValueError("The Silt carries no remote crew beacon. Share the entrance in person.")
@@ -633,7 +665,7 @@ class Encounters:
             elif program.effect.params.get("true_core_map"):
                 presence.verified_maps.add(presence.instance)
                 self.log(presence, "Compass verifies the visible map and identifies decoys.")
-            return
+            return False
         if program.effect.params.get("true_core_map"):
             presence.verified_maps.add(presence.instance or presence.sector)
             self.log(presence, "Compass verifies the authored room map. Suspect labels remain marked.")
@@ -649,7 +681,8 @@ class Encounters:
             cell = self.lat.sectors.cells[presence.sector][presence.cell]
             for cid in cell.neighbours:
                 if self.lat.sectors.cells[presence.sector][cid].access_kind == "hidden":
-                    self.lat.reveal(player, presence.sector, cid, learn=True)
+                    revealed |= self.lat.reveal(player, presence.sector, cid, learn=True)
+        return revealed
 
     def source(self, presence: Presence, data: DataSpec) -> str:
         player = self.game.players[presence.player_id]

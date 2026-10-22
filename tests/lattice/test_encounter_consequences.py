@@ -58,11 +58,11 @@ def test_game_6_7_single_use_charge_applies_only_after_successful_commit(runners
     player = game.core.characters.players[presence.player_id]
     presence.rig = ("prg_residual_fragment", None, None)
     player.progress["lattice_charges"] = {"prg_residual_fragment": 1}
-    cast(game, a, "prg_residual_fragment")
+    cast(game, a, "prg_residual_fragment", settle=False)
     assert not presence.effects.has("prg_residual_fragment", game.clock.now_tick())
     game.commit_commerce(error=True)
     assert player.progress["lattice_charges"]["prg_residual_fragment"] == 1
-    cast(game, a, "prg_residual_fragment")
+    cast(game, a, "prg_residual_fragment", settle=False)
     game.commit_commerce()
     assert presence.effects.has("prg_residual_fragment", game.clock.now_tick())
     assert player.progress["lattice_charges"]["prg_residual_fragment"] == 0

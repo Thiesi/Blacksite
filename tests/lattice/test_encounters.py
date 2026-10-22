@@ -18,11 +18,13 @@ def enter(game, client, core_id):
     return presence
 
 
-def cast(game, client, program, target=""):
+def cast(game, client, program, target="", *, settle=True):
     intent(game, client, "lat.cast", program=program, target=target)
     presence = game.core.lattice.presences[client.session.player_id]
     assert presence.cast
     game.step(presence.cast.until-game.clock.now_tick())
+    if settle:
+        game.commit_commerce()  # Includes S16's completed meaningful-use receipt.
 
 
 def room(game, client, target):
