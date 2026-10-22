@@ -231,12 +231,14 @@ def test_design_5_3_hymn_cast_cooldown_jam_hush_and_safe_delivery(cantor_duel):
     game.step(4)
     assert actor.shock<=30
     assert actor.cooldowns["ability:hymn_steady"]>=game.clock.now_tick()+119
+    game.commit_commerce()  # S16's completed restorative-use receipt.
     actor.target=body(game,b).id
     act(game,a,Frame("intent",{"name":"ability","args":{"id":"dis_jam"}}))
     game.step(20)
     act(game,a,Frame("intent",{"name":"ability","args":{"id":"dis_jam"}}))
     game.step(5)
     assert any(e.get("weapon_multiplier")==1.5 for e in body(game,b).effects)
+    game.commit_commerce()
     hp=body(game,b).health
     place(game,b,"core-plaza",(25,3))
     game.core.combat.hurt(actor,body(game,b),999)

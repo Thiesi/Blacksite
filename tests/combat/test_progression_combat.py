@@ -7,7 +7,7 @@ from blacksite.server.items import make_item
 from blacksite.server.protocol import Frame
 from blacksite.server.rules import combat as rules
 from tests.character_helpers import place
-from tests.combat.test_engine import body, build_duel
+from tests.combat.test_engine import body, build_duel, count as item_count
 
 
 def implant(game, client, tid, slot=""):
@@ -51,15 +51,19 @@ def test_game_8_5_reflex_arm_improves_sustained_fire_without_idle_burst(repo_roo
         a.send(fire);game.step();game.step(20)
         count = 0
         for _ in range(70):
+            rounds = item_count(game,a,"ammo_9x")
             a.send(fire);game.step()
-            count += len(game.commit_commerce())
+            game.commit_commerce()
+            count += rounds-item_count(game,a,"ammo_9x")
         counts.append(count)
         game.step(100)
         a.send(fire);game.step()
         assert not game.commit_commerce()  # A new exchange warns again.
         game.step(20)
+        rounds = item_count(game,a,"ammo_9x")
         a.send(fire);game.step()
-        assert len(game.commit_commerce()) == 1
+        game.commit_commerce()
+        assert item_count(game,a,"ammo_9x") == rounds-1
         a.send(fire);game.step()
         assert not game.commit_commerce()
     assert counts[1] > counts[0]

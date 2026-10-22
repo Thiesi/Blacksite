@@ -92,6 +92,27 @@ class ProgressionEngine:
     def gain(self, draft: Player, use: Use) -> float:
         return gain(draft, use, self.clock.now_utc(), self.content.skills.get(use.line))
 
+    def combat_eligible(self, learner: Actor, opponent: Actor) -> bool:
+        """Game 3.5: an armed live opponent, excluding harmless crew drills."""
+        player = self.controller(learner)
+        other = self.controller(opponent)
+        if (player is None or opponent.health <= 0 or opponent.stance in ("down", "dead")
+                or learner.behaviour.get("training") or opponent.behaviour.get("training")
+                or not self.permit_combat(player.id, opponent.id)):
+            return False
+        if other:
+            crew = self.crew_of(player.id)
+            if (other.bbs_user_id == player.bbs_user_id
+                    or crew is not None and crew == self.crew_of(other.id)):
+                return False
+            return any(self.commerce.items.get(iid) and self.content.items[
+                self.commerce.items[iid].template].weapon for iid in other.equipment.values())
+        if any(opponent.behaviour.get(key) for key in ("nonlethal", "willing", "escort")):
+            return False
+        from blacksite.server.npcs.templates import weapon
+        template = self.content.npcs.get(opponent.behaviour.get("template"))
+        return bool(template and not template.training and weapon(self.content, template))
+
     def record_use(self, pid: str, use: Use) -> None:
         """A completed server action supplies facts; the queue serializes caps."""
         occurred = self.clock.now_utc()

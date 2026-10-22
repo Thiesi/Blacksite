@@ -20,6 +20,7 @@ from blacksite.server.progression import Grant
 from blacksite.server.protocol import Frame
 from blacksite.server.rules import character, combat as rules
 from blacksite.server.sessions import Session
+from blacksite.server.skills import Use
 from blacksite.server.wake import menu
 from blacksite.server.world.actors import Actor
 from blacksite.server.world.sight import line, sees_actor, visible_tiles, line_of_sight, sight_radius, detection_limit
@@ -295,6 +296,9 @@ class Combat:
         return [target,*candidates] if weapon.cone else [target,*candidates[:weapon.targets-1]]
 
     def shot(self, source: Actor, target: Actor, weapon: WeaponBlock, quality: float = 1, skill: float = 0) -> None:
+        if self.commerce.pending:
+            self.commerce.enqueue_system(lambda: self.shot(source, target, weapon, quality, skill))
+            return
         if not self.legal(source,target) or target.stance in ("down","dead"): return
         zone = self.world.zones[source.zone]
         accuracy = (weapon.accuracy if weapon.accuracy is not None else rules.MELEE_ACCURACY)+source.modifiers.get("accuracy", 0)
@@ -308,7 +312,21 @@ class Combat:
         self.log(source,f"{'Hit' if hit else 'Miss'}: {target.name}." + (f" Roll {roll:.1f}, hit {chance:.1f}%, cover {self.cover(source,target)}." if source.id in self.verbose else ""))
         if not hit: return
         amount = rules.damage(weapon.damage*quality,skill,self.armour(target,weapon.damage_type),weapon.melee)
+        progression = self.game.progression
+        attack_use = progression.combat_eligible(source, target)
+        armour_use = progression.combat_eligible(target, source) and amount < rules.damage(weapon.damage*quality,skill,0,weapon.melee)
+        before = target.health
         self.hurt(source,target,amount,weapon.shock,damage_type=weapon.damage_type)
+        if target.health < before:
+            receipt = f"hit:{source.id}:{target.id}:{self.clock.now_utc().isoformat()}:{target.behaviour['hit_serial']}"
+            if attack_use:
+                player = progression.controller(source)
+                line = "melee" if weapon.melee else "energy" if weapon.damage_type == "energy" else "kinetic"
+                progression.record_use(player.id, Use("melee_hit" if weapon.melee else "weapon_hit",
+                    line, receipt, True, threat=True))
+            if armour_use:
+                progression.record_use(progression.controller(target).id,
+                    Use("armour_absorb", "armour", "armour:"+receipt, True, threat=True))
         if weapon.dot and target.stance not in ("down","dead"):
             # Reapplying the same agent refreshes, rather than stacking an unbounded DoT.
             target.effects[:] = [e for e in target.effects if not (e.get("kind")=="dot" and e.get("source")==source.id and e.get("damage_type")==weapon.damage_type)]
@@ -601,6 +619,8 @@ class Combat:
         if ability.kind == "dissonance" and (not self.legal(actor,target) or not self.visible(actor,target) or rules.distance(actor.position,target.position)>rules.ABILITY_RANGE): return
         player = self.game.players[actor.id]
         factor = 1+player.skills.get("hymns" if ability.kind == "hymn" else "dissonance",0)/200
+        receipt = f"ability:{actor.id}:{ability.id}:{cast.get('until', self.clock.now_tick())}:{self.clock.now_utc().isoformat()}"
+        restored = threatened = False
         effect = ability.effect
         recipients = [target]
         if ability.kind == "hymn":
@@ -614,6 +634,9 @@ class Combat:
             recipients = [a for a in self.world.zones[actor.zone].actors.values() if a is not actor
                 and rules.distance(actor.position,a.position)<=effect["area"] and self.visible(actor,a) and self.legal(actor,a)]
         for other in recipients:
+            before_health, before_shock = other.health, other.shock
+            if ability.kind == "dissonance":
+                threatened |= self.game.progression.combat_eligible(actor, other)
             if effect.get("revive"):
                 other.health=max(1,ceil(other.health_max*rules.REVIVE_FRACTION));other.stance="normal"
                 self.game.players[other.id].progress.pop("combat",None)
@@ -626,12 +649,17 @@ class Combat:
             ongoing = {key:value for key,value in effect.items() if key not in ("damage","shock","area","seconds","revive")}
             if ongoing:
                 other.effects.append({"kind":ability.id,"source":actor.id,"until_tick":self.clock.now_tick()+rules.ticks(float(effect.get("seconds",0))),
-                    "next_tick":self.clock.now_tick()+10,**ongoing,"scale":factor})
+                    "next_tick":self.clock.now_tick()+10,**ongoing,"scale":factor,"use_receipt":receipt})
+            restored |= other.health > before_health or other.shock < before_shock
             if other.id in self.game.players: self.remember(self.game.players[other.id],other)
         actor.cooldowns["ability:"+ability.id] = self.clock.now_tick()+rules.ticks(ability.cooldown_seconds)
         self.log(actor,ability.name+" settles.")
         self.remember(player,actor)
         self.world.zones[actor.zone].revision += 1
+        if ability.kind == "hymn" and restored:
+            self.game.progression.record_use(player.id, Use("hymn_restore", "hymns", receipt, True, changed=True))
+        elif ability.kind == "dissonance" and threatened:
+            self.game.progression.record_use(player.id, Use("dissonance_threat", "dissonance", receipt, True, threat=True))
 
     def input(self, session: Session, frame: Frame, tick: int) -> bool:
         player = self.game.players.get(session.player_id)
@@ -771,7 +799,8 @@ class Combat:
                                   damage_type=str(effect["damage_type"]))
                     if effect.get("heal") and actor.stance not in ("down","dead"):
                         amount = ceil(effect["heal"]*effect.get("scale",1))
-                        try: self.commerce.enqueue_system(lambda actor=actor,amount=amount:self.heal(actor,amount))
+                        receipt, healer = str(effect.get("use_receipt", "")), str(effect.get("source", ""))
+                        try: self.commerce.enqueue_system(lambda actor=actor,amount=amount,receipt=receipt,healer=healer:self.heal(actor,amount,healer,receipt))
                         except ValueError: pass
                 if tick>=effect["until_tick"] and effect in actor.effects: actor.effects.remove(effect)
             if actor.zone is None: continue
@@ -787,9 +816,12 @@ class Combat:
                 ability = self.content.hymns[rows[cursor]["id"]]
                 self.sim.external_views[sid] = "menu",{**menu("ABILITIES",rows,cursor,ability.description,"Enter uses  1-5 binds  Esc/B returns"),"actions":[{"key":k,"label":"bind "+k} for k in "12345"]}
 
-    def heal(self, actor: Actor, amount: int) -> None:
+    def heal(self, actor: Actor, amount: int, healer: str = "", receipt: str = "") -> None:
         if actor.stance not in ("down","dead"):
+            before = actor.health
             actor.health = min(actor.health_max,actor.health+amount)
+            if actor.health > before and receipt and healer in self.game.players:
+                self.game.progression.record_use(healer, Use("hymn_restore", "hymns", receipt, True, changed=True))
 
     def restore(self, player: Player, actor: Actor) -> None:
         stage = player.progress.get("combat",{}).get("stage")
