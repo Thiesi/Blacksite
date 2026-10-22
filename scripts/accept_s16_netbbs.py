@@ -13,6 +13,7 @@ from pathlib import Path
 import time
 import traceback
 from typing import Any
+from collections.abc import Callable
 
 from accept_s10_netbbs import Connection, NativeProbe, wait
 from blacksite.server.drugs import detox_until
@@ -38,6 +39,20 @@ async def key(connection: Connection, value: bytes) -> None:
     await connection.caller.write(value)
 
 
+async def commit_key(probe: NativeProbe, connection: Connection, value: bytes,
+                     completed: Callable[[], bool]) -> None:
+    # Timed HUD updates may overtake an acknowledged menu revision. Reissue
+    # only an unchanged choice, after any outstanding storage work settles.
+    async with asyncio.timeout(20):
+        while not completed():
+            await wait(lambda:not probe.commerce.pending)
+            await key(connection,value)
+            try:
+                await wait(completed,.5)
+            except TimeoutError:
+                pass
+
+
 async def select(connection: Connection, rows: Any, screen: Any, row: str) -> None:
     wanted = next(i for i,r in enumerate(rows()) if r['id'] == row)
     while screen.cursor != wanted:
@@ -50,12 +65,10 @@ async def clinic(probe: NativeProbe, connection: Connection, row: str) -> None:
     clinics = probe.service.core.progression.clinics
     await key(connection,b'e')
     await wait(lambda:connection.session.id in probe.commerce.menus)
-    await key(connection,b'c')
-    await wait(lambda:connection.session.id in clinics.menus)
+    await commit_key(probe,connection,b'c',lambda:connection.session.id in clinics.menus)
     screen = clinics.menus[connection.session.id]
     await select(connection,lambda:clinics.view(connection.session,screen)['rows'],screen,row)
-    await key(connection,b'\r')
-    await wait(lambda:bool(screen.confirm))
+    await commit_key(probe,connection,b'\r',lambda:bool(screen.confirm))
     await wait(lambda:'TOTAL' in connection.caller.screen.screen_text())
 
 
@@ -64,8 +77,7 @@ async def use(probe: NativeProbe, connection: Connection, iid: str) -> None:
     await wait(lambda:connection.session.id in probe.commerce.menus)
     screen = probe.commerce.menus[connection.session.id]
     await select(connection,lambda:probe.commerce.body(connection.session,screen)['rows'],screen,iid)
-    await key(connection,b'u')
-    await wait(lambda:iid not in probe.commerce.items)
+    await commit_key(probe,connection,b'u',lambda:iid not in probe.commerce.items)
     if connection.session.id in probe.commerce.menus:
         await key(connection,b'\x1b')
         await wait(lambda:connection.session.id not in probe.commerce.menus)
@@ -74,7 +86,10 @@ async def use(probe: NativeProbe, connection: Connection, iid: str) -> None:
 async def prepare(probe: NativeProbe, width: int, height: int) -> tuple[Connection,dict[str,Any]]:
     connection = await probe.open(width,height,'S16Ghost',1)
     await probe.walk(connection,(22,14))
+    await wait(lambda:any(a.owner == connection.session.player_id and a.behaviour.get('training')
+                          for a in probe.service.world.actors.values()))
     await key(connection,b'b')  # Ordinary skip of private training.
+    await wait(lambda:probe.game.players[connection.session.player_id].progress.get('wake_combat') == 'skipped')
     await probe.travel(connection,'vatside-clinics')
     await probe.travel(connection,'core-plaza')
     await probe.travel(connection,'sodium-row')
@@ -106,8 +121,8 @@ async def prepare(probe: NativeProbe, width: int, height: int) -> tuple[Connecti
     starting = player.skills['kinetic'],player.attributes['frame']
     for index in range(10):
         value = player.skills['kinetic']
-        await key(connection,b'+')
-        await wait(lambda:player.skills['kinetic'] > value)
+        await commit_key(probe,connection,b'+',lambda:player.skills['kinetic'] > value)
+        assert player.skills['kinetic'] == value+1
         if index == 2:
             assert player.skills['kinetic'] == starting[0]+3
             probe.save(connection,f's16-three-points-{width}')
@@ -125,9 +140,7 @@ async def prepare(probe: NativeProbe, width: int, height: int) -> tuple[Connecti
     text = connection.caller.screen.screen_text()
     assert 'Failure 2%' in text and '2/4' in text
     probe.save(connection,f's16-surgery-bill-{width}')
-    await key(connection,b'y')
-    await wait(lambda:not probe.commerce.pending)
-    await wait(lambda:not progression.clinics.menus[connection.session.id].confirm)
+    await commit_key(probe,connection,b'y',lambda:not progression.clinics.menus[connection.session.id].confirm)
     assert player.implants.get('arms1') == arm, 'Natural 2% surgery failure; repeat with a fresh disclosed loan.'
     assert progression.modifiers(player).multiplier('weapon_cooldown_multiplier') == .9
     await key(connection,b'\x1b'); await wait(lambda:connection.session.id not in progression.clinics.menus)
@@ -136,8 +149,7 @@ async def prepare(probe: NativeProbe, width: int, height: int) -> tuple[Connecti
     assert any(d['template'] == 'drug_sable_redline' for d in player.dependencies)
     await clinic(probe,connection,'detox')
     assert 'TOTAL 400' in connection.caller.screen.screen_text()
-    await key(connection,b'y')
-    await wait(lambda:detox_until(player) > probe.service.clock.now_utc().timestamp())
+    await commit_key(probe,connection,b'y',lambda:detox_until(player) > probe.service.clock.now_utc().timestamp())
     start,position,chits = time.monotonic(),connection.avatar.actor.position,player.chits_hand
     await key(connection,b'\x1b'); await key(connection,b'\x1b[A')
     await asyncio.sleep(.3)
