@@ -93,12 +93,6 @@ class Commerce:
         entries = list(vendor.stock)
         # The catalog requires ammunition alongside every weapon sold.
         seen = {s.item for s in entries}
-        for entry in vendor.stock:
-            template = self.content.items.get(entry.item)
-            ammo = template.weapon.ammo if template and template.weapon else None
-            if ammo and ammo not in seen:
-                entries.append(VendorStock(ammo))
-                seen.add(ammo)
         if vendor.daily_rotation:
             candidates = sorted(i.id for i in self.content.items.values()
                                 if i.tier == 2 and i.base_price > 0 and not i.id.startswith("story_")
@@ -106,6 +100,13 @@ class Commerce:
                                 and i.id not in seen and self.content.active("items", i.id))
             if candidates:
                 entries.append(VendorStock(candidates[self.clock.now_utc().date().toordinal() % len(candidates)], price_multiplier=1.4))
+        # Rotation is optional stock too: its weapon must bring ammunition.
+        for entry in tuple(entries):
+            template = self.content.items.get(entry.item)
+            ammo = template.weapon.ammo if template and template.weapon else None
+            if ammo and ammo not in seen:
+                entries.append(VendorStock(ammo))
+                seen.add(ammo)
         return entries
 
     def quote(self, player: Player, vendor: Vendor, entry: VendorStock, count: int, quality: float = 1) -> int:

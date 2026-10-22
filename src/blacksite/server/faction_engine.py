@@ -381,6 +381,27 @@ class Factions:
             actions.append({"key": "v", "label": "decant: "+("hall" if player.progress.get("faction_respawn") == "hall" else "public")+" (toggle)"})
         elif player.faction is None:
             actions.append({"key": "j", "label": "join"})
+        if rules.perk(player, fid):
+            descriptions = {
+                "halvard": ["One free 150-chit charge service fee per UTC day.",
+                            "The consumable still costs its normal price."],
+                "sablier": ["R chooses a visited faction vat for next decant.",
+                            "V changes ordinary public/hall preference."],
+                "kestrel": ["R reserves an escort slot on a committed Convoy.",
+                            "The public escort contract stays open."],
+                "wardens": ["Sitrep reveals active Marked players' zones.",
+                            "No coordinates. Other privacy stays unchanged."],
+                "choir": ["R reads the next announced Surge's ICE variants.",
+                          "Ordinary encounter labels remain public."],
+                "sable": ["At a Sable counter: R reserves optional stock.",
+                          "10 min, once per UTC day. Fixed stock stays open."],
+                "unmoored": ["R claims a bound Residual Fragment once per day.",
+                             "Jack-out consumes it. No permanent program."],
+                "ferrymen": ["R reads a committed Ring-fall forecast free.",
+                             "Paid charts and public warnings remain open."],
+            }
+            detail = "\n".join([f"+90 {rules.rank(player, self.content.factions, fid)}.",
+                                *descriptions[fid], "Stops below +90 or on leaving."])
         body = menu("FACTIONS / RECRUITMENT", rows, screen.cursor, detail, "Esc/B returns")
         body.update(kind="faction", actions=actions)
         return "menu", body

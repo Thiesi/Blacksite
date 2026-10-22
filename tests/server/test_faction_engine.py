@@ -290,3 +290,21 @@ def test_game_5_5_new_heat_doubles_under_zone_curfew_only(contacts):
     f.curfew = lambda zone: zone == p.zone
     game.core.npcs.dispatch(game.core.combat.actor(p))
     assert (datetime.fromisoformat(p.warden_heat_until)-game.clock.now_utc()).total_seconds() == 1200
+
+
+def test_game_8_1_rotating_weapon_brings_its_public_ammunition(contacts, monkeypatch):
+    from dataclasses import replace
+    game, caller, _, _ = contacts
+    commerce = game.core.commerce
+    tree = game.core.loop.content
+    # Isolate one optional candidate with actual rifle/ammo catalog blocks.
+    vendor = tree.vendors["vesper"]
+    content = commerce.content
+    monkeypatch.setattr(content, "items", {key: replace(item, tier=1) if item.tier == 2 else item
+                     for key, item in content.items.items()})
+    rifle = "wpn_halvard_hv7"
+    content.items[rifle] = replace(content.items[rifle], tier=2)
+    stock = commerce.stock(vendor)
+    ids = [row.item for row in stock]
+    assert rifle in ids and content.items[rifle].weapon.ammo in ids
+    assert not game.core.factions.rotating(vendor, content.items[rifle].weapon.ammo)
