@@ -376,6 +376,10 @@ S12 vendor records also name `object_id`, optional acquisition faction
 and archetype gates, price/salvage multipliers, and daily rotation. Stock
 rows can narrow faction/archetype access and set a price multiplier.
 Program stock refers to `programs.json`; physical stock refers to items.
+S16 adds optional `clinic: sablier | black`. This declares surgery at the
+vendor's actual local counter; only Sablier offers detox. Clinic purchase
+and installation use the clinic's disclosed 8.5 tariff, while ordinary
+counter purchases remain carried, uninstalled items.
 Before S20, existing S07 recruiter IDs identify pricing affiliations and
 grant no faction membership. An authoring-bundle vendor never opens a
 counter. S25 owns activation of the staged `s25-commerce` members.

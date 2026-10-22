@@ -1039,6 +1039,14 @@ class _Validator:
                 zone = self.t.zones.get(vendor.zone)
                 if zone and not any(o.id == vendor.object_id and o.kind == "vendor" for o in zone.meta.objects):
                     self.report(*owner, "vendor object anchor is missing")
+            if self.current_active and vendor.clinic == "sablier":
+                for zid, zone in self.t.zones.items():
+                    if not self.t.active("zones",zid):
+                        continue
+                    for obj in zone.meta.objects:
+                        if obj.params.get("vendor") == vid and zone.meta.safety != "safe" and not any(
+                                pocket.contains(obj.tile) for pocket in zone.meta.pockets):
+                            self.report(*owner,"Sablier clinic requires an existing safe pocket",obj.id)
 
     # --- NPCs and factions --------------------------------------------------
 

@@ -771,6 +771,7 @@ class Vendor:
     price_multiplier: Number = 1
     salvage_multiplier: Number = 1
     daily_rotation: bool = False
+    clinic: Literal["sablier", "black"] | None = None
     schema: int = CONTENT_SCHEMA
 
 

@@ -542,6 +542,8 @@ class Commerce:
                     cost = self.quote(player, vendor, entry, count) if template or entry.item in self.content.programs else 0
                     rows.append({"id": entry.item, "cells": [label, str(count), str(cost) if cost else "not for sale", "" if allowed else "locked"]})
             actions = [{"key":"enter", "label":"sell" if screen.sell else "buy"}, {"key":"t","label":"buy/sell"}]
+            if vendor.clinic:
+                actions.append({"key":"c","label":"clinic"})
         elif screen.kind == "bank":
             self.nearby(session, screen.target)
             title = "KESTREL BANK"
@@ -575,6 +577,8 @@ class Commerce:
                 if template.armour:
                     values=template.armour.armour
                     detail += f"\nArmour K{values.kinetic} E{values.energy} C{values.chemical} D{values.dissonance}"
+                if template.implant and not template.implant.portable:
+                    detail += "\nInstall or remove at a clinic. Open its counter and press C."
         return {**menu(title, rows, screen.cursor, detail, "Esc/B returns"), "actions": actions,
                 "page": 2 if screen.sell else 1}
 

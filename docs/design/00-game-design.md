@@ -993,8 +993,9 @@ quality, and applies shock 100 for 30 s. If Vitals has grown enough,
 nothing is unseated. Failed surgery holds shock 100 for the same 30 s.
 
 Installed secured-slot bonuses apply to securing, splitting, and incoming
-items. Voluntary surgery that would leave more secured items than the new
-capacity is refused before charging; unsecure the excess first. Forced
+items. Voluntary surgery whose removal or failure could leave more secured
+items than the remaining capacity is refused before charging; unsecure
+the excess first. Forced
 Chrome unseating keeps story items secured and keeps the oldest remaining
 secured items up to capacity. Excess non-story entries, starting at the
 end of inventory order, become unsecured in the same transaction. The log

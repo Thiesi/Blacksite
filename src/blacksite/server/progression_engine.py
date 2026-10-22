@@ -34,6 +34,8 @@ class ProgressionEngine:
         self.sim.arrival_hook = lambda session, avatar: self.record_discovery(session.player_id, "zone", avatar.zone)
         from blacksite.server.substances import Substances
         self.substances = Substances(self)
+        from blacksite.server.clinics import Clinics
+        self.clinics = Clinics(self)
 
     def modifiers(self, player: Player) -> Modifiers:
         return collect(player, self.commerce.items, self.content.items,
@@ -283,6 +285,8 @@ class ProgressionEngine:
         player = self.game.players.get(session.player_id)
         if player:
             self.sync_actor(player)
+        if self.clinics.input(session, frame, tick):
+            return True
         if session.id not in self.menus:
             return False
         if session.closed or session.player_id not in self.game.players:
@@ -314,6 +318,7 @@ class ProgressionEngine:
 
     def tick(self, ctx: TickContext) -> None:
         self.substances.tick(ctx.tick)
+        self.clinics.tick()
         for player in self.game.players.values():
             self.sync_actor(player)
             self.stealth(player)
