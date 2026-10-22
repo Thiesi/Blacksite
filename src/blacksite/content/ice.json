@@ -596,7 +596,7 @@
         "warning_seconds": 5
       },
       "tier_stats": [],
-      "counter_label": "leave the band; nothing kills it in one run"
+      "counter_label": "leave the warned cell; a prepared crew may commit to killing it, without repeatable generated kill rewards"
     },
     {
       "id": "ice_tripwire_training",

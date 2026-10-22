@@ -421,7 +421,7 @@ data or flipping a control), *trace N* (runner's trace reaches N),
 | Undertow | Silt, 3 | 70 | none | entry | A visible 3 s pull channels one band deeper; a hit on it or leaving interrupts. Never past band five. | no | Anchor; Redline to leave before the pull |
 | Chorister | Silt, 3–4 | 60 | 15 / 2.0 s | entry | Responsive process. Shows a repeating signal. Use the labelled sampling procedure in design §6.6; no answer quiz. | no | survey its pattern; hold or withdraw |
 | Shade | Silt, 4 | 80 | 20 / 1.2 s | entry | A hostile residual: a dead runner's habits with none of the runner. Copies the last program you cast. | no | do not cast attacks first; Umbrella |
-| Sweeper | Silt, 4-5 | 250 | 40 +25 meat / 2.0 s | always | Attributed by some to the Custodian. Systematic, slow, cleans a band cell by cell. It is not interested in you until you are in its way. | yes | leave the band; nothing kills it in one run |
+| Sweeper | Silt, 4-5 | 250 | 40 +25 meat / 2.0 s | always | Attributed by some to the Custodian. Systematic, slow, cleans a band cell by cell. It is not interested in you until you are in its way. | yes | leave the warned cell; a prepared crew may commit to killing it, without repeatable generated kill rewards |
 
 Twenty-three classes.
 
@@ -478,7 +478,13 @@ Game design 6.7 owns loading, persistent per-program cooldowns, bounded
 disconnect escape and the precise encounter procedures.
 Cooldown begins when casting completes. Shield absorbs successive hits
 until its budget is exhausted, expires on jack-out, and does not stack
-with another shield. Blackout's acquisition cap does not limit casting.
+with another shield. A replacement must add budget or a new protection;
+otherwise the cast is refused without spending its cooldown. Blackout's
+acquisition cap does not limit casting.
+
+Shade preserves the copied effect kind after a two-second warning:
+damage targets the observed runner; shields, decoys and restoration
+apply to Shade. Utilities without a legal NPC target visibly do nothing.
 
 Old catalog IDs are pre-implementation renames, not saved-game aliases.
 In particular Shroud is stealth; Umbrella is the starter shield. There

@@ -862,6 +862,8 @@ class _Validator:
         if len(rules.bands) != 5 or [b.depth for b in rules.bands] != list(range(5)) or len({b.id for b in rules.bands}) != 5:
             self.report(*owner, "Silt needs five distinct ordered bands")
         for band in rules.bands:
+            if len({d.id for d in band.data}) != len(band.data):
+                self.report(*owner, f"{band.id}: duplicate data ids")
             for spawn in band.ice:
                 self.ref("ice", spawn.template, owner, band.id)
                 if not 0 <= spawn.minimum <= spawn.maximum <= rules.minimum_cells:

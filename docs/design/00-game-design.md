@@ -577,6 +577,15 @@ independent. Signet opens Halvard gates, never an unrelated story lock.
 Cooldowns start at completion and use program IDs. They survive unloading,
 rebinding, leaving a core, jack-out, disconnect and restart. Active effects
 end as specified, including shields and Residual Fragment on jack-out.
+Cast-speed multipliers combine multiplicatively after counters cancel
+their named penalties. Caffeine is spent by the next accepted cast, even
+if that cast is later interrupted; refusing an invalid action spends
+nothing. Understudy is a separate target: a killing hit does not spill
+over to the runner. Ticker's live-decoy halving applies before Smoke's
+ordinary gain multiplier, giving 0.375 trace/s together before other
+modifiers. Shields replace rather than stack. Refuse a replacement that
+adds neither budget nor a new protection; a lower budget may still trade
+for Slicker's pin protection or Wetsuit's Cantillation protection.
 
 The view shows a defender's role, trigger, phase, target and counter.
 Every new hostile threat gives at least 2 s warning before damage;
@@ -586,6 +595,11 @@ one legal adjacent step every 4 s. A Sweeper warns for 5 s, occupies its
 next cell for 2 s, then warns its next step. Its loop leaves a reachable
 side route. Ordinary core defenders reset after 30 s with nobody inside;
 data availability and receipts do not reset with them.
+
+Shade repeats one valid effect from the last observed program after its
+two-second warning. Copied damage targets the observed runner; shields,
+decoys and restoration apply to Shade. A utility without a legal NPC
+target visibly does nothing. A shield is never turned into extra damage.
 
 Shiv reports once after a visible 4 s channel while alive. Sneakers
 delays entry activation, Nobody suppresses it, and killing Shiv prevents
@@ -1684,7 +1698,7 @@ valid; zone/core instance IDs retain their own documented convention.
 | Undertow | Silt, 3 | 70 | none | entry | A visible 3 s pull channels one band deeper; a hit on it or leaving interrupts. Never past band five. | no | Anchor; Redline to leave before the pull |
 | Chorister | Silt, 3–4 | 60 | 15 / 2.0 s | entry | Responsive process. Shows a repeating signal. Use the labelled sampling procedure in design §6.6; no answer quiz. | no | survey its pattern; hold or withdraw |
 | Shade | Silt, 4 | 80 | 20 / 1.2 s | entry | A hostile residual: a dead runner's habits with none of the runner. Copies the last program you cast. | no | do not cast attacks first; Umbrella |
-| Sweeper | Silt, 4-5 | 250 | 40 +25 meat / 2.0 s | always | Attributed by some to the Custodian. Systematic, slow, cleans a band cell by cell. It is not interested in you until you are in its way. | yes | leave the band; nothing kills it in one run |
+| Sweeper | Silt, 4-5 | 250 | 40 +25 meat / 2.0 s | always | Attributed by some to the Custodian. Systematic, slow, cleans a band cell by cell. It is not interested in you until you are in its way. | yes | leave the warned cell; a prepared crew may commit to killing it, without repeatable generated kill rewards |
 
 ## 18. Design acceptance before calling it compelling
 

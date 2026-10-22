@@ -75,6 +75,20 @@ def test_design_17_2_wetsuit_halves_before_absorbing_and_decoy_takes_a_hit(progr
     assert effects.shield.budget == 27.5
 
 
+def test_design_6_7_shield_replacement_adds_budget_or_a_tactical_protection(programs):
+    effects = Effects()
+    effects.install(programs["prg_bunker"], 0)
+    effects.receive(5)
+    with pytest.raises(ValueError, match="already gives more"):
+        effects.install(programs["prg_umbrella"], 1)
+    assert effects.shield.budget == 55 and effects.shield.black_meat_once
+    effects.install(programs["prg_wetsuit"], 1)
+    assert effects.shield.budget == 40
+    assert effects.shield.cantillation_multiplier == .5
+    effects.install(programs["prg_slicker"], 2)
+    assert effects.shield.budget == 25 and effects.shield.pin_once
+
+
 def test_design_17_2_loaders_stack_after_tar_cancellation_and_round_up(programs):
     effects = Effects()
     effects.install(programs["prg_overclock"], 0)
@@ -103,6 +117,16 @@ def test_design_17_2_acquisition_is_not_a_recurring_cast_requirement(programs):
     assert can_cast(fragment, "ghost", {fragment.id: 1})
     assert not can_acquire(fragment, "ghost", {}, set())
     assert can_acquire(fragment, "ghost", {}, set(), bound_loan=True)
+
+
+def test_design_17_2_caffeine_is_consumed_by_one_accepted_cast(programs):
+    effects = Effects()
+    effects.install(programs["prg_overclock"], 0)
+    effects.install(programs["prg_caffeine"], 0)
+    assert cast_ticks(programs["prg_pick"], effects, 1) == 5
+    effects.consume_next_cast(1)
+    assert cast_ticks(programs["prg_pick"], effects, 1) == 6
+    assert effects.has("prg_overclock", 1)
 
 
 def test_design_17_2_attack_trace_replaces_default_and_has_explicit_suppression(programs):

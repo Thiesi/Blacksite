@@ -75,6 +75,7 @@ async def accept(root: Path, door_python: Path, show: bool) -> None:
         av=manager.sim.avatars[session.user_id]
         service.world.zones[av.zone].deactivate(session.id,service.clock.now_tick())
         tile=(10,5) if name.startswith('Alpha') else (15,5)
+        tile=service.world.free_tile('core-plaza',tile)
         service.world.enter(av.actor,'core-plaza',tile)
         av.zone=session.subscribed='core-plaza'
         service.world.zones[av.zone].activate(session.id,service.clock.now_tick())

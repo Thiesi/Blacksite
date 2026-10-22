@@ -6,6 +6,9 @@ from random import Random
 
 from blacksite.content.schema import SiltRules, Tile
 
+LAYOUT_WIDTH = 5  # Terminal UI 3: compact Silt graph.
+LAYOUT_HEIGHT = 4
+
 
 def descent_seed(season: int, sector: str, nonce: int) -> int:
     """Stable across platforms/processes; never Python's randomized hash."""
@@ -76,8 +79,9 @@ def generate(origin: str, season: int, sector: str, nonce: int, rules: SiltRules
         # A visible grid includes a four-cell patrol bypass even at the
         # minimum size. Edges stay orthogonal instead of crossing labels
         # in a randomly scattered graph at 80x24.
-        positions = [(i % 4, i // 4) for i in range(visible)]
-        available = {(x, y) for x in range(5) for y in range(4)} - set(positions)
+        width = LAYOUT_WIDTH - 1 if visible <= (LAYOUT_WIDTH - 1) * LAYOUT_HEIGHT else LAYOUT_WIDTH
+        positions = [(i % width, i // width) for i in range(visible)]
+        available = {(x, y) for x in range(LAYOUT_WIDTH) for y in range(LAYOUT_HEIGHT)} - set(positions)
         while len(positions) < size:
             candidates = sorted(p for p in available if any(abs(p[0]-q[0])+abs(p[1]-q[1]) == 1 for q in positions))
             chosen = rng.choice(candidates)
@@ -92,7 +96,7 @@ def generate(origin: str, season: int, sector: str, nonce: int, rules: SiltRules
         candidates = [i for i in range(1, size) if i not in sinks]
         sinks.extend(rng.sample(candidates, max(0, count - 1)))
         mirror_x, mirror_y = rng.choice((False, True)), rng.choice((False, True))
-        positions = [(4-x if mirror_x else x, 3-y if mirror_y else y) for x, y in positions]
+        positions = [(LAYOUT_WIDTH-1-x if mirror_x else x, LAYOUT_HEIGHT-1-y if mirror_y else y) for x, y in positions]
         cells = tuple(SiltCell(ids[i], positions[i], tuple(ids[n] for n in sorted(neighbours[i])),
                                i >= visible, "riser" if i == 0 else "sink" if i in sinks else "cell")
                       for i in range(size))

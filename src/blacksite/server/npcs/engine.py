@@ -130,6 +130,16 @@ class Npcs:
         player = self.game.players.get(source.id)
         if not player or not zone or zone.allows_hostile(source.position):
             return
+        self.dispatch(source, "Wardens: lower your weapon.")
+
+    def dispatch(self, source: Actor | None, warning: str = "Wardens: your body location is reported.") -> None:
+        """Game 5.5/6.7: trace dispatch uses the same nonrewarding response."""
+        if source is None:
+            return
+        zone = self.world.zones.get(source.zone)
+        player = self.game.players.get(source.id)
+        if player is None or zone is None:
+            return
         until = self.combat.now() + HEAT_SECONDS * self.heat_multiplier
         previous = datetime.fromisoformat(player.warden_heat_until).timestamp() if player.warden_heat_until else 0
         player.warden_heat_until = datetime.fromtimestamp(max(previous, until), timezone.utc).isoformat()
@@ -137,7 +147,7 @@ class Npcs:
             return
         self.heat_saved_at[player.id] = self.combat.now()
         self.game.queue("save", player.bbs_user_id, player, immediate=True)
-        self.combat.log(source, f"Wardens: lower your weapon. Heat for {ceil((max(previous, until)-self.combat.now())/60)} minutes; patrols pursue outside safety.", True)
+        self.combat.log(source, f"{warning} Heat for {ceil((max(previous, until)-self.combat.now())/60)} minutes; patrols pursue outside safety.", True)
         # Responders enter on nearby legal floor, never on a player or exit.
         for index in range(RESPONSE_COUNT):
             aid = f"response:{source.id}:{index}"

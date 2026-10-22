@@ -1,0 +1,18 @@
+{
+  "schema": 1,
+  "id": "lat-civic-ledger",
+  "name": "Civic Ledger",
+  "owner": "civic",
+  "owner_kind": "institution",
+  "tier": 2,
+  "trace_policy": "civic",
+  "hardware": [{"zone": "core-plaza", "tile": [66, 29], "object_id": "civic-records-hardware", "label": "Records annex cabinet"}],
+  "entry": "r-entry",
+  "rooms": [
+    {"id": "r-entry", "label": "Public index", "pos": [0, 0], "neighbours": ["r-foyer", "r-hall-panel"]},
+    {"id": "r-foyer", "label": "Registry foyer", "pos": [1, 0], "neighbours": ["r-entry", "r-records"], "ice": ["ice_tripwire"]},
+    {"id": "r-records", "label": "Ration records", "pos": [2, 0], "neighbours": ["r-foyer", "r-cache"], "ice": ["ice_turnstile"], "data": [{"id": "ration-registry", "label": "Ration registry", "kind": "text", "asset": "lattice-civic-records", "scope": "identity", "respawn_seconds": 0}]},
+    {"id": "r-cache", "label": "Service credit", "pos": [3, 0], "neighbours": ["r-records"], "data": [{"id": "core-credit", "label": "Core-owned service credit", "kind": "chits", "amount": 80, "respawn_seconds": 1800}]},
+    {"id": "r-hall-panel", "label": "Hall panel", "pos": [0, 1], "neighbours": ["r-entry"], "ice": ["ice_ticker"]}
+  ]
+}

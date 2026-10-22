@@ -95,8 +95,7 @@
       ],
       "label": "Wake Hall entrance",
       "access": "public",
-      "core_placeholder": true,
-      "planned_core": "lat-wake-hall"
+      "core_id": "lat-wake-hall"
     },
     {
       "id": "lat-vatside-c07",

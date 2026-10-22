@@ -234,7 +234,7 @@
     },
     {
       "id": "lat-core-c14",
-      "kind": "public",
+      "kind": "core_entrance",
       "pos": [
         5,
         1
@@ -245,7 +245,9 @@
         "lat-core-c06",
         "lat-core-c22"
       ],
-      "label": "Civic Hall Annex"
+      "label": "Civic Ledger entrance",
+      "core_id": "lat-civic-ledger",
+      "access": "public"
     },
     {
       "id": "lat-core-c15",
@@ -474,7 +476,7 @@
     },
     {
       "id": "lat-core-c30",
-      "kind": "core_entrance",
+      "kind": "gated",
       "pos": [
         5,
         3
@@ -485,11 +487,9 @@
         "lat-core-c22",
         "lat-core-c38"
       ],
-      "label": "Civic Ledger entrance",
+      "label": "Annex security link",
       "requirement": "program:key:2",
-      "access": "gated",
-      "core_placeholder": true,
-      "planned_core": "lat-civic-ledger"
+      "access": "gated"
     },
     {
       "id": "lat-core-c31",

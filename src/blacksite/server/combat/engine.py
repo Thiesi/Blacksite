@@ -83,9 +83,19 @@ class Combat:
         training = source if source.behaviour.get("training") else target if target.behaviour.get("training") else None
         if training:
             return training.owner == (target.id if source is training else source.id)
+        return self.permits_indirect(source, target)
+
+    def permits_indirect(self, source: Actor, target: Actor) -> bool:
+        """Physical body permission; Lattice separately checks its own range.
+
+        A jacked source can burn a presence, never fire a physical weapon.
+        Neither body may use its different zone to bypass safety or grade.
+        """
+        if source.id == target.id or source.stance in ("down", "dead", "sleeper") or target.stance in ("down", "dead"):
+            return False
         if not self.world.permits_harm(source, target): return False
         if source.kind == target.kind == "player":
-            if self.world.zones[source.zone].safety_at(source.position) != "open" or self.world.zones[target.zone].safety_at(target.position) != "open":
+            if any(self.world.zones[a.zone].safety_at(a.position) != "open" for a in (source, target)):
                 if min(self.game.players[source.id].grade, self.game.players[target.id].grade) < 5: return False
         return True
 
@@ -172,6 +182,18 @@ class Combat:
         already_marked = source.marked
         source.marked = True
         if not already_marked: self.log(source,"You are Marked for fifteen minutes.",True)
+
+    def mark_indirect(self, source: Actor, target: Actor) -> None:
+        """Game 7.3: the remote open exception requires both bodies open."""
+        if source.kind != "player" or target.kind != "player" or self.relation(source, target) == "hostile":
+            return
+        if all(self.world.zones[a.zone].safety_at(a.position) == "open" for a in (source, target)):
+            return
+        player = self.game.players[source.id]
+        player.marked_until = datetime.fromtimestamp(self.now()+rules.MARKED_SECONDS, timezone.utc).isoformat()
+        if not source.marked:
+            self.log(source, "You are Marked for fifteen minutes.", True)
+        source.marked = True
 
     def weapon(self, player: Player) -> tuple[Any, WeaponBlock] | None:
         slots = [player.progress.get("weapon_slot",""), "weapon_main", "weapon_side", "melee"]
@@ -289,11 +311,32 @@ class Combat:
             return
         if not self.legal(source,target) or target.stance in ("down","dead"): return
         training = source.behaviour.get("training")
+        self._apply_damage(source, target, amount, shock, source.id, source.name, bool(training))
+
+    def feedback_hurt(self, target: Actor, amount: int, source_id: str, source_name: str,
+                      permit: Callable[[], bool]) -> bool:
+        """Server-owned NPC feedback, using the ordinary hit/down pipeline.
+
+        The encounter supplies a run-scoped authority check, including
+        current body safety. The caller defers the complete integrity/body
+        hit while a transfer is pending. No frame supplies this callback.
+        """
+        if target.id not in self.game.players or target.stance in ("down", "dead"):
+            return False
+        if self.commerce.pending:
+            return False
+        if not permit():
+            return False
+        self._apply_damage(None, target, amount, 0, source_id, source_name, False)
+        return True
+
+    def _apply_damage(self, source: Actor | None, target: Actor, amount: int, shock: float,
+                      source_id: str, source_name: str, training: bool) -> None:
         target.health = max(1 if training else 0,target.health-amount)
         target.shock = min(100,target.shock+amount/2+shock)
         target.cooldowns["last_hit"] = self.clock.now_tick()
         target.behaviour["hit_serial"] = int(target.behaviour.get("hit_serial",0))+1
-        self.log(target,f"{source.name} hits you for {amount}.",True)
+        self.log(target,f"{source_name} hits you for {amount}.",True)
         self.casts.pop(target.id,None)
         if target.shock >= rules.SHOCK_KNOCK:
             target.shock = rules.SHOCK_RESET
@@ -302,17 +345,18 @@ class Combat:
             if target.behaviour.get("training"):
                 self.world.leave(target)
                 player = self.game.players.get(target.owner)
-                if player:
+                if player and source is not None:
                     player.progress["wake_combat"] = "done"
                     self.log(source,"The training drone falls silent. The tutorial terminal is ahead.")
                     self.remember(player,source)
             elif target.id in self.game.players:
                 target.stance = "down"
                 target.effects.clear()
-                self.game.players[target.id].progress["combat"] = {"stage":"down", "until":self.now()+rules.DOWN_SECONDS, "killer":source.id}
+                self.game.players[target.id].progress["combat"] = {"stage":"down", "until":self.now()+rules.DOWN_SECONDS, "killer":source_id}
                 self.log(target,"You are down. A nearby ally can press E to pick you up.",True)
             else:
-                self.npc_death_hook(source, target)
+                if source is not None:
+                    self.npc_death_hook(source, target)
         if target.id in self.game.players:
             self.remember(self.game.players[target.id],target,immediate=target.health <= 0)
         if target.zone: self.world.zones[target.zone].revision += 1

@@ -1,6 +1,6 @@
 """Game 6.5-6.7: generation cannot turn escape into an equipment check."""
 
-from dataclasses import asdict
+from dataclasses import asdict, replace
 import os
 from pathlib import Path
 import subprocess
@@ -81,3 +81,20 @@ def test_design_6_5_low_listening_shows_directions_without_hidden_ids(rules):
     assert all(word in ("north", "south", "east", "west") for word in survey_directions(band, source, set()))
     assert hidden.id not in survey_directions(band, source, set())
     assert hidden not in adjacent_hidden(band, source, {hidden.id})
+
+
+@pytest.mark.parametrize("fraction", [0, .05, .1, .2])
+def test_valid_silt_override_without_hidden_cells_stays_inside_the_terminal(rules, fraction):
+    override = replace(rules, minimum_cells=20, maximum_cells=20, hidden_fraction=fraction)
+    for nonce in range(10):
+        for band in generate("node", 1, "lat-core", nonce, override).bands:
+            assert all(0 <= c.pos[0] < 5 and 0 <= c.pos[1] < 4 for c in band.cells)
+            assert all(band.route(c.id, band.riser) for c in band.cells if not c.hidden)
+
+
+def test_silt_band_cannot_alias_two_rewards_to_one_source(repo_root):
+    from blacksite.content.validate import validate
+    tree = load_content(repo_root / "src/blacksite/content")
+    band = tree.silt.bands[0]
+    tree.silt = replace(tree.silt, bands=(replace(band, data=(*band.data, band.data[0])), *tree.silt.bands[1:]))
+    assert any("duplicate data ids" in p.message for p in validate(tree))

@@ -49,7 +49,8 @@ class ViewStore:
         delta = None
         if (self.previous is not None and self.previous["kind"] == kind
                 and self.previous["body"].get("viewport") == body.get("viewport")
-                and self.previous["body"].get("sector") == body.get("sector")):
+                and self.previous["body"].get("sector") == body.get("sector")
+                and self.previous["body"].get("scope") == body.get("scope")):
             ops = changes(self.previous, document)
             candidate = Frame("delta", {"rev": revision, "base": session.view_revision, "ops": ops})
             if len(ops) <= 256 and len(encode(candidate)) < len(encode(full)):

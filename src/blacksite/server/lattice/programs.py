@@ -44,6 +44,8 @@ def bind(rig: Sequence[str | None], slot: int, program: str | None,
         raise ValueError("That cell belongs to a larger program. Unload its first slot.")
     if program is not None and program not in known:
         raise ValueError("You have not learned that program.")
+    if program is not None and program in rig and rig[slot] != program:
+        raise ValueError(f"That program is already in slot {rig.index(program)+1}. Unload it there first.")
     result = list(rig)
     result[slot] = program
     occupied_slots(result, programs)
@@ -94,6 +96,8 @@ class Effects:
     def install(self, program: ProgramTemplate, tick: int) -> None:
         params = program.effect.params
         if program.effect.kind == "absorb":
+            if not self.can_replace_shield(program):
+                raise ValueError("Your current shield already gives more protection.")
             self.shield = Shield(program.id, float(program.effect.amount),
                 bool(params.get("pin_once")), bool(params.get("black_meat_once")),
                 float(params.get("cantillation_multiplier", 1)))
@@ -103,6 +107,19 @@ class Effects:
                                          program.effect.kind, dict(program.effect.params))
         if program.effect.kind == "decoy":
             self.decoy = float(program.effect.amount)
+
+    def can_replace_shield(self, program: ProgramTemplate) -> bool:
+        current = self.shield
+        params = program.effect.params
+        return (current is None or float(program.effect.amount) > current.budget
+                or bool(params.get("pin_once")) and not current.pin_once
+                or bool(params.get("black_meat_once")) and not current.black_meat_once
+                or float(params.get("cantillation_multiplier", 1)) < current.cantillation_multiplier)
+
+    def consume_next_cast(self, tick: int) -> None:
+        for key, effect in tuple(self.active.items()):
+            if self.has(key, tick) and effect.params.get("next_cast"):
+                self.active.pop(key)
 
     def receive(self, amount: float, meat: int = 0, *, cantillation: bool = False,
                 pin_seconds: float = 0, decoy: bool = True) -> IncomingHit:

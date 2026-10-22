@@ -31,7 +31,11 @@ def test_world_2_sector_counts_layout_access_and_baseline_routes() -> None:
             for neighbour in cell.neighbours:
                 assert cell.id in sectors.cells[sector.id][neighbour].neighbours
             if cell.kind == "core_entrance":
-                assert cell.core_placeholder and cell.planned_core and cell.core_id is None
+                if cell.core_placeholder:
+                    assert cell.planned_core and cell.core_id is None
+                else:
+                    assert cell.core_id in tree.cores and tree.active("cores", cell.core_id)
+                    assert cell.planned_core is None
     visited = set()
     todo = [("lat-core", sectors.entrance("lat-core"))]
     while todo:

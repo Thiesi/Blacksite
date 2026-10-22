@@ -222,6 +222,18 @@
         "unavailable_target": "spire-atrium",
         "name": "Construction boundary"
       }
+    },
+    {
+      "id": "civic-records-hardware",
+      "kind": "hardware",
+      "tile": [
+        66,
+        29
+      ],
+      "params": {
+        "name": "Records annex cabinet",
+        "core": "lat-civic-ledger"
+      }
     }
   ],
   "pockets": [],

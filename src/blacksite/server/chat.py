@@ -55,6 +55,7 @@ class Chat:
         self.settings_fallback: dict[str, dict[str, Any]] = {}
         self.crew_of: Callable[[Session], str | None] = lambda s: None  # S22 installs membership.
         self.lattice_at: Callable[[Session], tuple[str, str] | None] = lambda s: None
+        self.reported_location: Callable[[Session, Session], str | None] = lambda viewer, target: None
 
     def ready(self, session: Session) -> bool:
         av = self.sim.avatars.get(session.user_id)
@@ -330,6 +331,7 @@ class Chat:
             for other in sorted(self.online(), key=lambda s:self.name(s).casefold()):
                 oa = self.sim.avatars[other.user_id]
                 location = "hidden" if hidden or self.settings(other).get("sitrep_hidden", False) else (self.sim.world.zones[oa.actor.zone].template.meta.name if oa.actor.zone else "in transit")
+                location = self.reported_location(session, other) or location
                 rows.append({"id": other.player_id, "cells": [self.name(other), sanitize(str(other.door_info.get("handle", ""))), self.faction(other) or "Freelance", location, "jacked" if oa.actor.stance == "jacked" else "body"]})
             body = menu("SITREP", rows, min(screen.cursor, max(0,len(rows)-1)),
                         "Your zone is hidden; others' zones are hidden from you." if hidden else "Online characters. H hides your zone.", "H hide/show zone  Esc/B returns")

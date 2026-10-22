@@ -149,3 +149,15 @@ hardware/commerce acceptance, including the HV7/ammo purchase.
 The old S09 social probe's fixed scenario tile can be occupied by a live
 NPC. Use a free scenario tile while retaining its explicit placement
 label; do not weaken production collision checks or claim real travel.
+
+The runtime checkpoint adds private Wake lessons, shared core rooms,
+typed casts and transaction-backed data receipts. Disconnects retain
+the original body through bounded escape, including raised-cap character
+switching. Silt graphs commit their nonce before publication, use stable
+reward sites across seeds and show survey/sample phases and sweep cells.
+Shade preserves copied effect kinds; utility copies with no legal NPC
+target do not turn into invented damage (game 6.7).
+
+This remains in progress. The full named core/hardware/control catalog,
+complete caller acceptance and the final balance review are outstanding.
+The S25 hardware/commerce and actual Gate Nine obligations remain open.
