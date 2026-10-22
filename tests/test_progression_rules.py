@@ -9,6 +9,7 @@ from blacksite.server.players import Player
 from blacksite.server.progression import Grant, award, combat_xp
 from blacksite.server.rules import character
 from blacksite.server.skills import Use, gain, spend
+from blacksite.server.modifiers import compose
 
 
 NOW = datetime(2026, 1, 1, 23, 59, tzinfo=timezone.utc)
@@ -35,6 +36,17 @@ def test_game_3_4_grade1_zero_grade5_1500_and_retained_benefits():
     player.update_progression(0)
     player.update_personhood(identity, NOW+timedelta(days=1))
     assert player.grade == 5 and player.legal_at == legal
+
+
+def test_game_3_4_grade_up_keeps_ratio_of_effective_implant_health_pool():
+    player, identity = resident()
+    player.update_progression(1490)
+    mods = compose(({"health": 40},))
+    old_max = mods.health_max(player)
+    player.health = old_max//2
+    result = award(player, identity, Grant("combat", "spawn:two", True, opponent_grade=1), NOW, mods)
+    assert result.grade == 5 and result.health_max == old_max+2
+    assert player.health == (old_max+2)//2
 
 
 def test_game_3_5_combat_scale_minimum_and_duplicate_spawn_receipt():

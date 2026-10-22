@@ -11,6 +11,7 @@ from math import ceil
 from typing import Any, Literal
 
 from blacksite.server.players import Player
+from blacksite.server.modifiers import Modifiers
 from blacksite.server.rules import character
 
 COMBAT_BASE_XP = 20  # Game 3.5.
@@ -89,7 +90,8 @@ def amount(grant: Grant, player: Player) -> int:
     raise ValueError("Unknown progression reward source.")
 
 
-def award(player: Player, identity: dict[str, Any], grant: Grant, now: datetime) -> Award | None:
+def award(player: Player, identity: dict[str, Any], grant: Grant, now: datetime,
+          modifiers: Modifiers | None = None) -> Award | None:
     """Apply a verified source to player/identity drafts; return UI facts.
 
     Stable source scopes (for example an NPC spawner slot) keep a receipt
@@ -128,10 +130,10 @@ def award(player: Player, identity: dict[str, Any], grant: Grant, now: datetime)
     if grant.kind == "combat" and grant.opponent_identity:
         identity.setdefault("combat_xp_until", {})[grant.opponent_identity] = stamp+PVP_REWARD_SECONDS
     old_grade, old_vitals, old_health = player.grade, player.attributes["vitals"], player.health
-    old_max = character.health_max(old_vitals)
+    old_max = modifiers.health_max(player) if modifiers else character.health_max(old_vitals)
     old_points = player.progress.get("points", 0)
     player.update_progression(player.xp+xp)
-    new_max = character.health_max(player.attributes["vitals"])
+    new_max = modifiers.health_max(player) if modifiers else character.health_max(player.attributes["vitals"])
     if player.grade != old_grade:
         player.health = min(new_max, max(0, ceil(old_health*new_max/old_max)))
     player.progress.setdefault("reward_receipts", {})[key] = grant.receipt
