@@ -198,6 +198,9 @@ async def silt(probe: NativeProbe, width: int, height: int) -> dict[str, Any]:
     await lat_walk(probe, connection, entry.id)
     await choose(probe, connection, 'descend')
     await wait(lambda: presence.descent is not None)
+    await wait(lambda:not probe.commerce.pending and not probe.commerce.waiting)
+    authored_xp = player.xp  # S16 pays the actual authored journey here.
+    assert authored_xp > 0
     descent = encounters.descents[presence.descent]
     descent_started = time.monotonic()
     replay = generate('different-origin', lattice.season, presence.sector, descent.nonce, lattice.content.silt)
@@ -234,7 +237,7 @@ async def silt(probe: NativeProbe, width: int, height: int) -> dict[str, Any]:
         and signal.signal_phase(probe.service.clock.now_tick())[1] >= 38, 25)
     await choose(probe, connection, 'sample')
     await wait(lambda: signal.id in presence.sampled)
-    assert presence.mapping_until > probe.service.clock.now_tick() and player.xp == 0
+    assert presence.mapping_until > probe.service.clock.now_tick() and player.xp == authored_xp
     probe.save(connection, f's14-silt-sample-{width}x{height}')
     probe.report(f'PASS S14 Chorister {width}x{height}: visible listening -> survey -> sampling -> hold, no answer, no XP payout')
     sink = next(cid for cid in graph.band.sinks if graph.band.route(presence.room, cid))
@@ -264,7 +267,7 @@ async def silt(probe: NativeProbe, width: int, height: int) -> dict[str, Any]:
                     return next_cell
                 await asyncio.sleep(.03)
     swept = await evade()
-    assert presence.trace == 0 and player.chits_hand == 200 and player.xp == 0
+    assert presence.trace == 0 and player.chits_hand == 200 and player.xp == authored_xp
     await connection.caller.write(b'j')
     await wait(lambda: player.id not in lattice.presences, 12)
     probe.report(f'PASS S14 Sweeper {width}x{height}: real move into warned cell then linked bypass before occupation; bounded jack-out')

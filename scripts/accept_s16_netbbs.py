@@ -133,7 +133,9 @@ async def prepare(probe: NativeProbe, width: int, height: int) -> tuple[Connecti
     await probe.travel(connection,'vatside-clinics')
     zone = probe.service.world.zones[connection.avatar.zone]
     counter = next(o for o in zone.objects.values() if o.spec.params.get('vendor') == 'sablier-clinic')
-    await probe.walk(connection,counter.spec.tile)
+    approach = probe.service.world.free_tile(zone.id,counter.spec.tile)
+    assert max(abs(a-b) for a,b in zip(approach,counter.spec.tile)) <= 1
+    await probe.walk(connection,approach)
     arm = loan(probe,connection,'imp_halvard_reflex_arm')
     probe.report(f'FIXTURE S16 {width}x{height}: owned Reflex Arm loan; Spire purchase deferred to S25')
     await clinic(probe,connection,'install:'+arm+':arms1')
