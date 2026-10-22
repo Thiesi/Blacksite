@@ -147,6 +147,10 @@ jobs:
   npcs-netbbs:
     runs-on: ubuntu-latest
     timeout-minutes: 40
+    strategy:
+      fail-fast: false
+      matrix:
+        size: [80x24, 132x50]
     permissions:
       contents: read
     steps:
@@ -169,11 +173,11 @@ jobs:
       - name: Accept NPCs and actual heat deadlines through NetBBS
         shell: bash
         run: |
-          python scripts/accept_s11_netbbs.py --root "$RUNNER_TEMP/s11-proof" --door-python "$RUNNER_TEMP/s11-venv/bin/python"
+          python scripts/accept_s11_netbbs.py --root "$RUNNER_TEMP/s11-proof" --door-python "$RUNNER_TEMP/s11-venv/bin/python" --size "${{ matrix.size }}"
       - uses: actions/upload-artifact@v4
         if: always()
         with:
-          name: s11-npcs-proof
+          name: s11-npcs-proof-${{ matrix.size }}
           path: ${{ runner.temp }}/s11-proof
   combat-netbbs:
     runs-on: ubuntu-latest

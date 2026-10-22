@@ -17,7 +17,8 @@ from blacksite.server.world.actors import Actor
 from blacksite.server.world.sight import line_of_sight
 
 
-async def approach(probe: NativeProbe, caller: Connection, target: Actor) -> None:
+async def approach(probe: NativeProbe, caller: Connection, target: Actor,
+                   *, hostile_tile: bool = True) -> None:
     actor=caller.avatar.actor
     zone=probe.service.world.zones[actor.zone]
     async with asyncio.timeout(20):
@@ -33,7 +34,7 @@ async def approach(probe: NativeProbe, caller: Connection, target: Actor) -> Non
                 for tile in ((x+1,y),(x,y+1),(x-1,y),(x,y-1)):
                     if tile not in previous and tile not in occupied and tile not in exits and zone.passable(tile):
                         previous[tile]=(x,y);pending.append(tile)
-            candidates=[tile for tile in previous if zone.allows_hostile(tile)
+            candidates=[tile for tile in previous if (not hostile_tile or zone.allows_hostile(tile))
                 and (tile[0]-target.x)**2+(tile[1]-target.y)**2<=16
                 and line_of_sight(zone,tile,target.position)]
             if not candidates:
@@ -96,12 +97,13 @@ async def sodium_response(probe: NativeProbe, caller: Connection, width: int, he
     probe.report(f"PASS local response {width}x{height}: Sable enforcers answer provocation, no Wardens")
 
 
-async def accept(root: Path, door_python: Path, show: bool) -> None:
+async def accept(root: Path, door_python: Path, show: bool,
+                 sizes: tuple[tuple[int, int], ...] = ((80,24),(132,50))) -> None:
     probe=NativeProbe(root,door_python,show)
     await probe.start()
     results=[]
     try:
-        for width,height in ((80,24),(132,50)):
+        for width,height in sizes:
             caller=await probe.open(width,height,"NpcRunner",0,True)
             actor=caller.avatar.actor
             await probe.walk(caller,(21,14))
@@ -120,7 +122,12 @@ async def accept(root: Path, door_python: Path, show: bool) -> None:
             assert {"npc-civilian","npc-warden-patrol","npc-courier"} <= moved,moved
             await wait(lambda:"~" in caller.caller.screen.screen_text())
             await profile(probe,width,height)
-            target=next(a for a in plaza.actors.values() if a.behaviour.get("template")=="npc-civilian" and probe.combat.visible(actor,a))
+            # Profiling leaves the simulation running: civilians can walk
+            # out of sight. Approach a real civilian instead of assuming
+            # one is still visible from the earlier observation point.
+            target=min((a for a in plaza.actors.values() if a.behaviour.get("template")=="npc-civilian"),
+                       key=lambda a:(a.x-actor.x)**2+(a.y-actor.y)**2)
+            await approach(probe,caller,target,hostile_tile=False)
             await probe.target(caller,target.id)
             hp=actor.health;target_hp=target.health
             started=time.monotonic()
@@ -177,5 +184,8 @@ if __name__=="__main__":
     parser.add_argument("--root",type=Path,required=True)
     parser.add_argument("--door-python",type=Path,required=True)
     parser.add_argument("--show",action="store_true")
+    parser.add_argument("--size", choices=("80x24", "132x50"),
+                        help="Run one profile; the default runs both sizes.")
     args=parser.parse_args()
-    asyncio.run(accept(args.root,args.door_python,args.show))
+    sizes = (tuple(map(int,args.size.split("x"))),) if args.size else ((80,24),(132,50))
+    asyncio.run(accept(args.root,args.door_python,args.show,sizes))
