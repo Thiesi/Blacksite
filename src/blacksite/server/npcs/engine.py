@@ -21,6 +21,7 @@ from blacksite.server.npcs.templates import (
     HEAT_SAVE_SECONDS,
 )
 from blacksite.server.players import Player
+from blacksite.server.progression import Grant
 from blacksite.server.protocol import Frame
 from blacksite.server.rules.combat import (
     CACHE_SECONDS, LOOT_PRIVATE_SECONDS, WARNING_SECONDS, SHOCK_DELAY,
@@ -44,7 +45,8 @@ class Npcs:
         self.restraints: dict[str, dict[str, Any]] = {}
         self.heat_saved_at: dict[str, float] = {}
         self.heat_multiplier: float = 1  # S24 composes Curfew's x2.
-        self.xp_hook: Callable[[Actor, Actor, int], None] = lambda source, target, xp: None
+        self.reward_permit: Callable[[Actor, Actor], bool] = lambda source, target: not any(
+            target.behaviour.get(key) for key in ("nonlethal", "willing", "escort"))
         combat.refused_hook = self.refused
         combat.hostile_hook = self.provoked
         combat.npc_death_hook = self.died
@@ -175,6 +177,18 @@ class Npcs:
         self.pending_deaths.add(actor.id)
         def propose() -> None:
             template = self.content.npcs[actor.behaviour["template"]]
+            progression = self.game.progression
+            player = progression.controller(source)
+            if player and player.id in self.game.deleting:
+                player = None
+            patch, identity, reward = {}, None, None
+            if (player and template.xp > 0
+                    and not template.training and self.reward_permit(source, actor)):
+                # xp is an eligibility flag inherited from S11. Game 3.5
+                # pays the opponent-grade formula, not that old hook value.
+                scope = str(actor.behaviour.get("slot") or "mission-npc:"+template.id)
+                patch, identity, reward = progression.reward_patch(player, Grant("combat",
+                    actor.id, True, scope=scope, opponent_grade=template.grade))
             items, caches = deepcopy(self.commerce.items), deepcopy(self.commerce.caches)
             serial = max(self.commerce.serial, max((int(i.rsplit(":", 1)[-1]) for i in items), default=0))
             cache_id = "npc-cache:" + actor.id
@@ -203,9 +217,9 @@ class Npcs:
                     return
                 self.spawners.removed(actor, self.combat.now())
                 self.world.leave(actor)
-                if template.xp > 0:
-                    self.xp_hook(source, actor, template.xp)
-            self.commerce.settle(None, {}, items, caches, serial, committed)
+                if player:
+                    progression.notify_reward(player, reward)
+            self.commerce.settle(player, patch, items, caches, serial, committed, identity)
             receipt = deepcopy(self.spawners.record())
             slot = receipt["slots"].get(str(actor.behaviour.get("slot")))
             if slot is not None:

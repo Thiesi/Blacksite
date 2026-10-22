@@ -16,6 +16,7 @@ from blacksite.server.progression_views import character_sheet, skill_menu
 from blacksite.server.protocol import Frame
 from blacksite.server.sessions import Session
 from blacksite.server.skills import LINE_GROUP, Use, gain, spend
+from blacksite.server.world.actors import Actor
 
 
 class ProgressionEngine:
@@ -29,6 +30,13 @@ class ProgressionEngine:
     def modifiers(self, player: Player) -> Modifiers:
         return collect(player, self.commerce.items, self.content.items,
                        self.clock.now_utc().timestamp())
+
+    def controller(self, actor: Actor) -> Player | None:
+        if actor.id in self.game.players:
+            return self.game.players[actor.id]
+        if actor.kind == "drone" and actor.behaviour.get("player_drone"):
+            return self.game.players.get(actor.owner)
+        return None
 
     def sync_actor(self, player: Player) -> None:
         from blacksite.server.inventory import Inventory

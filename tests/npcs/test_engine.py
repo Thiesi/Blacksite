@@ -265,11 +265,11 @@ def test_design_5_5_refused_input_coalesces_saves_and_logs(city):
 def test_design_5_5_summoned_responders_never_reward_kills(city):
     game,caller=city
     responder=spawn(game,"npc-warden-response")[0]
-    rewards=[]
-    game.core.npcs.xp_hook=lambda source,target,xp:rewards.append(xp)
+    player=game.core.characters.players[caller.session.player_id]
+    before=player.xp
     game.core.combat.hurt(body(game,caller),responder,1000)
     game.commit_commerce()
-    assert not game.core.commerce.caches and not rewards
+    assert not game.core.commerce.caches and player.xp == before
 
 
 def test_architecture_6_2_nonfatal_npc_damage_checkpoints_but_down_is_immediate(city):
