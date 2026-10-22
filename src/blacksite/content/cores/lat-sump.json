@@ -116,10 +116,11 @@
             "object": "sump-pump-regions"
           },
           "action": "toggle",
-          "reset_seconds": 300,
-          "scope": "public",
-          "permission": "public",
-          "safety_policy": "none"
+          "reset_seconds": 1200,
+          "scope": "mission",
+          "permission": "contract",
+          "safety_policy": "none",
+          "warning_seconds": 5
         }
       ]
     }

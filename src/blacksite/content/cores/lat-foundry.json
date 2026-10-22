@@ -117,7 +117,7 @@
           "scope": "public",
           "permission": "public",
           "safety_policy": "hazard",
-          "warning_seconds": 3
+          "warning_seconds": 5
         }
       ]
     },

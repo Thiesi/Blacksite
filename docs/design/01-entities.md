@@ -50,7 +50,7 @@ after their id.
 | layouts | list of ZoneLayout, optional | named service/event geometry variants |
 | exits | list of Exit | id, tile, target zone, target tile, kind (street, door, tram, ladder, lift, gate, cable), requirement (pass, key, faction), hidden |
 | spawners | list of Spawner | id, tile or region, npc template, count, respawn seconds, condition |
-| objects | list of ObjectSpec | id, tile, kind (door, terminal, vendor, vat, relay, cache, tram_stop, apartment_door, light, hardware, descent_console, workshop, bank), params, essential (clinic, public vat, public uplink) |
+| objects | list of ObjectSpec | id, tile, kind (door, terminal, vendor, vat, relay, cache, tram_stop, apartment_door, light, hardware, descent_console, workshop, bank, turret, camera, shutter, cable_car, pump, lift, patrol_beacon, gate, gantry), params, essential (clinic, public vat, public uplink) |
 | pockets | list of Region | rectangles that are `pocket` safety inside a contested zone |
 | lore | list of asset ids | ambient log lines, found texts |
 | instanced | bool | Blacksite levels only |
@@ -163,6 +163,16 @@ Permission is `public`, `contract`, `member`, `owner` or `resident`.
 `alternate_route` exit in the target zone) or `hazard` (never in a safe
 zone or pocket; at least 5 s warning). `owner_policy` is refused on
 route and hazard controls, which always expire.
+
+S15 typed object parameters bind a turret or patrol beacon to local
+`spawners` IDs. Route machines bind `exits` and preserve an independent
+alternate. Pumps and gantries name an authored `layout`, or a closed
+`work_order_layouts` list whose choice comes from S19's frozen order.
+Machines never evaluate code from content. A `locked` physical door
+refuses ordinary opening; its core or an authored egress operates it.
+Private delivery doors share the width-safe live door state, but never
+expose resident storage through a physical interaction.
+
 
 ### 1.5 ICE template (`ice.json`)
 
@@ -497,6 +507,18 @@ owner_faction (from relay)`. Street locks are identity/core UTC deadlines,
 distinct from global offline state. Shared source availability, reward
 and receipt commit in one storage transaction. Persist Silt descent
 nonces before publication and contribution source uptime across restart.
+
+S15 persists interlock records in world meta: independent control effects
+with source core/control/revision, initiating player, start and UTC reset
+deadlines; live owner assignments; per-core offline deadlines; per-platform
+hold/immunity deadlines; and apartment storage IDs, the shared rolling
+24-hour theft receipt, and at most 20 dated intrusion records. A flip,
+power cut or theft commits before publication. Cuts save all affected
+players' shock with the offline deadline; theft saves the transferred unit
+with its apartment receipt. Rebuild composes surviving layers against
+current content rather than restoring an old zone snapshot. An expired
+layer cannot erase an event or another controller's newer layer.
+
 
 ### 2.10 Admin
 

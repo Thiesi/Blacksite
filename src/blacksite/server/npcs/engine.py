@@ -262,6 +262,11 @@ class Npcs:
         actor.behaviour["evaluated"] = tick
 
     def act(self, actor: Actor, zone: ZoneInstance, tick: int, avoid: set[tuple[int,int]]) -> None:
+        if actor.behaviour.get("powered") is False:
+            return
+        if destination := actor.behaviour.get("interlock_diversion"):
+            step_toward(actor, zone, destination, tick, avoid=avoid)
+            return
         if tick < actor.cooldowns.get("knockdown", 0):
             return
         template = self.content.npcs[actor.behaviour["template"]]

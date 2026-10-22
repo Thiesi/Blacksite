@@ -4,7 +4,7 @@ Training and Silt use fresh characters, ordinary travel and real keys,
 without money, item, skill, grade or placement fixtures. Danger and Gate
 Nine explicitly label content, trace-boundary, program-loan and mission
 hook fixtures. Burn adds an explicit grade/XP fixture for S16. S14
-inspects control contracts; S15 owns physical effects.
+now verifies S15 physical effects on the labelled control fixture.
 """
 
 import argparse
@@ -449,7 +449,7 @@ async def gate(probe: NativeProbe, width: int, height: int, duo: bool = False) -
         await program(probe,connection,3,lambda: turnstile.id in presence.opened)
         await room_walk(probe,connection,'service-latch')
         await choose(probe,connection,'control:gate-nine-service-latch')
-        await wait(lambda: any('three-second action' in row['text'] for row in connection.session.log_ring))
+        await wait(lambda: presence.procedure is None and 'lat-gatehouse-east:gate-nine-service-latch' in lattice.interlock.state['effects'])
         source = encounters.core(presence).graph.room(presence.room).data[0]
         generation = lattice.sources.refresh(encounters.source(presence,source),source,probe.service.clock.now_tick()).generation
         await choose(probe,connection,f'lift:{source.id}:{generation}')
@@ -491,7 +491,7 @@ async def gate(probe: NativeProbe, width: int, height: int, duo: bool = False) -
         await connection.caller.write(b'j')
         await wait(lambda: connection.session.player_id not in lattice.presences,12)
         await probe.leave(connection,f's14-gate-return-{connection.session.user_id}-{width}x{height}')
-    probe.report(f'PASS S14 Gate Nine {width}x{height} {len(connections)} caller(s): labelled content/loan/contract fixtures, real Skeleton and Hornets, mission receipts, one shared 120-chit generation; inspect-only three-second latch, no fabricated physical effect')
+    probe.report(f'PASS S14 Gate Nine {width}x{height} {len(connections)} caller(s): labelled content/loan/contract fixtures, real Skeleton and Hornets, mission receipts, one shared 120-chit generation; committed three-second latch on the labelled physical fixture')
     return {'stage':'gate-duo' if duo else 'gate-solo','size':[width,height],
         'content_fixture':True,'loan_program_fixture':'Skeleton','contract_hook_fixture':True,
         'funding_fixture':False,'placement_fixture':False,'shared_reward':after-before,

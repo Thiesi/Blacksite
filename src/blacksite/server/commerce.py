@@ -280,12 +280,20 @@ class Commerce:
     def prepare(self, effect: dict[str, Any]) -> dict[str, Any]:
         player = self.game.players.get(effect["player_id"])
         return {"player": {**player.record(), **self.settled_patch(effect)} if player else None,
+            "players": [{**self.game.players[pid].record(), **self.secondary_patch(pid, patch)} for pid, patch in effect.get("player_patches", {}).items()],
             "items": [item.record() for item in effect["items"].values()],
             "delete_items": effect["delete_items"], "caches": effect["caches"],
             "budgets": {key: asdict(value) for key, value in effect["budgets"].items()}, "serial": effect["serial"],
+            **({"interlock_state": deepcopy(effect["interlock_state"])} if "interlock_state" in effect else {}),
             **({"npc_state": effect["npc_state"]} if "npc_state" in effect else {}),
             **({"lattice_state": effect["lattice_state"]()} if "lattice_state" in effect else {}),
             **({"identity":effect["identity"], "user":player.bbs_user_id} if "identity" in effect else {})}
+
+    def secondary_patch(self, pid: str, patch: dict[str, Any]) -> dict[str, Any]:
+        patch = deepcopy(patch)
+        if "progress" in patch:
+            patch["progress"] = {**deepcopy(self.game.players[pid].progress), **patch["progress"]}
+        return patch
 
     def settled_patch(self, effect: dict[str, Any]) -> dict[str, Any]:
         patch = deepcopy(effect["patch"])
@@ -329,6 +337,12 @@ class Commerce:
         self.pending = False
         session = self.game.sessions.active.get(effect["session"])
         if success:
+            for pid, patch in effect.get("player_patches", {}).items():
+                for key, value in self.secondary_patch(pid, patch).items():
+                    setattr(self.game.players[pid], key, deepcopy(value))
+                    actor = self.sim.world.actors.get(pid)
+                    if actor and key in ("health", "shock", "stamina"):
+                        setattr(actor, key, value)
             player = self.game.players.get(effect["player_id"])
             if player:
                 for key, value in self.settled_patch(effect).items(): setattr(player, key, value)

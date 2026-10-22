@@ -502,6 +502,12 @@ mission latch lasts 120 s, a private delivery vestibule 30 s, Row lighting
 blackout 30 s, Row sign message 60 s, and the bell-gallery hymn 60 s.
 Foundry gantry debris lasts 30 s after its hazard warning.
 Transit holds retain their separate 30 s limit and 120 s immunity.
+A switched-off lamp reduces sight to 5 tiles within the zone's normal
+light radius around that lamp. Dark-sight equipment still applies.
+Camera controls expose or hide scoped mission records; they never
+blind combat detection or grant immunity for violence. A patrol-beacon
+call diverts its linked patrol crew for 15 minutes; it grants no combat
+immunity.
 - A crew member who reaches a core's hardware in meatspace can **cut
   power**: every runner inside is jacked out with shock 100 and the core
   is offline for 10 minutes. This is the main defence against hostile

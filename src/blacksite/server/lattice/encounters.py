@@ -96,6 +96,9 @@ class Encounters:
             if recipient and recipient.faction == owner and not session.closed:
                 session.send(Frame("log", {"lines": [{"channel": "faction", "text": text,
                     "role": "warning", "at": self.clock.now_utc().isoformat()}]}))
+        faction = self.content.factions.get(owner)
+        if faction and faction.hall in self.game.world.zones:
+            self.lat.interlock.zone_log(faction.hall, text)
 
     def reported_location(self, viewer: Session, target: Session) -> str | None:
         observer = self.game.players.get(viewer.player_id)
@@ -189,6 +192,8 @@ class Encounters:
         player = self.game.players[presence.player_id]
         if self.lat.sources.locked(player.bbs_user_id, core_id, self.clock.now_utc().timestamp()):
             raise ValueError("This identity's five-minute core lockout is still active.")
+        if self.lat.interlock.offline(core_id):
+            raise ValueError("The core is offline. Its hardware is dark.")
         threats = [self.content.ice[i] for room in spec.rooms for i in room.ice]
         if spec.trace_policy == "corporate":
             threats.append(self.content.ice["ice_hound"])
@@ -227,7 +232,9 @@ class Encounters:
             if presence.depth:
                 self.enter_band(presence, presence.depth-1, presence.return_cells.get(presence.depth-1))
             else:
-                presence.instance, presence.core, presence.room = presence.silt_return or (None, None, None)
+                origin = presence.silt_return or (None, None, None)
+                presence.instance, presence.core, presence.room = (
+                    (None, None, None) if origin[1] and self.lat.interlock.offline(origin[1]) else origin)
                 presence.descent = None
                 presence.silt_return = None
                 presence.cast = presence.procedure = None
@@ -471,6 +478,8 @@ class Encounters:
         if not self.idle(presence):
             raise ValueError("Finish or cancel the current action first.")
         program = self.content.programs[pid]
+        if program.effect.params.get("private_vestibule") and not self.lat.interlock.private.apartment(presence.core):
+            raise ValueError("Passkey opens only a private delivery vestibule.")
         if program.cast_seconds is None:
             raise ValueError("Ledger works while loaded.")
         player = self.game.players[presence.player_id]
@@ -567,6 +576,8 @@ class Encounters:
                 ice.hit(amount, player.id, tick)
                 self.activate(ice, presence, "attack")
                 self.log(presence, f"{program.name} hits {ice.template.name}: {amount:g}. Integrity {ice.integrity:g}.")
+        elif kind == "open_gate" and params.get("private_vestibule"):
+            self.lat.interlock.open_vestibule(presence)
         elif kind == "open_gate":
             gates = [i for i in self.defenders(presence) if i.blocks(now)]
             for ice in gates:
@@ -971,7 +982,11 @@ class Encounters:
             elif procedure and tick >= procedure.until and not self.commerce.pending:
                 presence.procedure = None
                 try:
-                    if procedure.kind in ("survey", "sample"):
+                    if procedure.kind == "flip":
+                        self.lat.interlock.complete_flip(presence, procedure)
+                    elif procedure.kind == "theft":
+                        self.lat.interlock.private.complete_theft(presence, procedure)
+                    elif procedure.kind in ("survey", "sample"):
                         self.complete_survey(presence, procedure)
                     elif procedure.kind == "decoy":
                         self.log(presence, "The suspect route ends without data. Compass distinguishes this decoy.", True)
@@ -1015,8 +1030,8 @@ class Encounters:
         for ice in self.defenders(presence):
             if ice.template.class_ == "liar" and instance.id not in presence.verified_maps:
                 rows.append({"id": "bait:"+ice.id, "cells": ["UNVERIFIED data room", "suspect", "10s dead end / 15 trace"]})
-        rows += [{"id": "control:"+control.id, "cells": ["Inspect "+control.label,
-                  "3s action", f"{control.reset_seconds}s reset"]} for control in room.controls]
+        rows += [self.lat.interlock.control_row(presence.core, control) for control in room.controls]
+        rows += self.lat.interlock.private.rows(presence)
         if presence.descent:
             rows += [{"id": "survey", "cells": ["Survey", "3s / 10s cooldown"]},
                      {"id": "sample", "cells": ["Hold sample", "3s during sampling"]}]
@@ -1060,6 +1075,8 @@ class Encounters:
                     f"{ice.template.attack:g} integrity / {ice.template.meat_damage} body damage; {ice.template.counter_label}.")
         elif row.startswith(("enter:", "risk:")):
             self.enter(session, row.split(":", 1)[1], row.startswith("risk:"))
+        elif row.startswith("theft:"):
+            self.lat.interlock.private.start_theft(presence, row[6:])
         elif row.startswith("lift:"):
             _, target, generation = row.split(":")
             self.start_lift(presence, target, int(generation))
@@ -1085,10 +1102,7 @@ class Encounters:
             self.trace(presence, 15)
             self.log(presence, "You follow an unverified route. Esc withdraws; spent trace remains.", True)
         elif row.startswith("control:"):
-            control = next(c for c in self.core(presence).graph.room(presence.room).controls if c.id == row[8:])
-            zone = self.content.zones.get(control.target.zone)
-            self.log(presence, f"{control.label}: {control.action}, three-second action, "
-                f"{control.reset_seconds}s reset. Target: {zone.meta.name if zone else control.target.zone}.")
+            self.lat.interlock.start_flip(presence, row[8:])
         self.menus.pop(session.id, None)
 
     def input(self, session: Session, presence: Presence, name: str, action: str,
@@ -1116,6 +1130,10 @@ class Encounters:
             self.move(presence, args.get("room", ""))
         elif name == "lat.leave" or (name == "menu_close" or key in ("b", "B")) and presence.instance:
             self.leave_core(session)
+        elif name == "lat.theft":
+            self.lat.interlock.private.start_theft(presence, args.get("item", ""))
+        elif name == "lat.flip":
+            self.lat.interlock.start_flip(presence, args.get("control", ""))
         elif name == "lat.lift":
             if type(args.get("generation")) is not int:
                 raise ValueError("Inspect a source and use its displayed generation.")
@@ -1261,7 +1279,8 @@ class Encounters:
                 "controls": [{"id": c.id, "label": c.label, "action": c.action,
                     "target": {"zone": c.target.zone, "object": c.target.object},
                     "reset_seconds": c.reset_seconds, "scope": c.scope,
-                    "permission": c.permission, "cast_seconds": LIFT_SECONDS} for c in room.controls]}
+                    "permission": c.permission, "cast_seconds": LIFT_SECONDS,
+                    **self.lat.interlock.control_view(presence.core, c)} for c in room.controls]}
         screen = self.menus.get(session.id)
         if screen:
             rows = self.rows(presence, screen)

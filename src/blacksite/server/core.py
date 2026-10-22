@@ -67,6 +67,7 @@ class Core:
             if self.npcs:
                 self.lattice.encounters.dispatch = lambda player: self.npcs.dispatch(self.combat.actor(player))
             self.loop.subsystems.append(self.lattice)
+            self.loop.subsystems.append(self.lattice.interlock)
             self.sessions.on_disconnect = self._disconnect_character
             if self.chat:
                 self.chat.lattice_at = self.lattice.location
@@ -139,6 +140,8 @@ class Core:
         if frame.type == "intent" and frame.data["name"] == "resync":
             session.replay_log()
         if self.lattice and self.lattice.input(session, frame, event.data["tick"]):
+            return
+        if self.lattice and self.lattice.interlock.input(session, frame, event.data["tick"]):
             return
         if self.combat and self.combat.input(session, frame, event.data["tick"]):
             return

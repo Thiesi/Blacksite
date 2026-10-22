@@ -163,7 +163,7 @@
             "object": "skywatch-patrol-beacon-dispatch"
           },
           "action": "call",
-          "reset_seconds": 300,
+          "reset_seconds": 900,
           "scope": "public",
           "permission": "public",
           "safety_policy": "none"

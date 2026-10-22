@@ -86,6 +86,31 @@
         4
       ],
       "kind": "vendor"
+    },
+    {
+      "id": "fx-street-turret",
+      "tile": [
+        32,
+        3
+      ],
+      "kind": "turret",
+      "params": {
+        "spawners": [
+          "fx-street-thugs"
+        ],
+        "name": "Fixture powered actors"
+      }
+    },
+    {
+      "id": "fx-street-light",
+      "tile": [
+        33,
+        3
+      ],
+      "kind": "light",
+      "params": {
+        "name": "Fixture lamp"
+      }
     }
   ],
   "spawners": [

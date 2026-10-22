@@ -284,8 +284,8 @@ office @ `terraces-blocks`. Data: rent ledger, impound manifest. Controls:
 
 **Terrace Outpost** (`lat-terrace-outpost`) — Wardens, tier 2, 4 rooms. Hardware: outpost desk @
 `terraces-blocks`. Data: outpost log. Controls: `outpost cameras @
-terraces-blocks` (delays Warden response in the Terraces by 20 s for 5
-min). ICE: Tripwire, Bluecoat.
+terraces-blocks` (scoped mission records; never a delay or immunity for
+violence). ICE: Tripwire, Bluecoat.
 
 ### 3.9 Sodium Row
 

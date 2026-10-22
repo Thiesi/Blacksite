@@ -327,6 +327,16 @@ submission accepts that default on the server.
 `me` (integrity, trace, rig slots with cooldowns), `room` (data, controls,
 ice with integrity), `hint`.
 
+S15 control rows include `state` and `reset_in`; entrance cells include
+`offline`. `lat.flip {control}` starts a three-second interruptible
+procedure. Its completion rechecks room, content revision, permission
+and the selected work-order layout. Hardware uses a content-first menu
+and a chosen Cut power action followed by the final Y keystroke. Closing
+that menu changes no power state. The door renders the dimmed `[C?]`
+marker from server state. Private manifests expose only unsecured stored
+units; resident core logs paginate through authoritative menu cursors.
+
+
 S13 adds `sector`, `layout_size`, explicit `edges`, cell access/labels and
 uplink markers. Hidden cells and their edges are omitted until found.
 `me` includes body HP, hit serial, movement ticks and bounded escape

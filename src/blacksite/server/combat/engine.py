@@ -20,6 +20,7 @@ from blacksite.server.protocol import Frame
 from blacksite.server.rules import character, combat as rules
 from blacksite.server.sessions import Session
 from blacksite.server.wake import menu
+from blacksite.server.interlock_effects import lighting_radius
 from blacksite.server.world.actors import Actor
 from blacksite.server.world.sight import line, sees_actor, visible_tiles, line_of_sight
 
@@ -70,6 +71,12 @@ class Combat:
         return {"H":"hostile","N":"neutral","A":"allied"}[value]
 
     def legal(self, source: Actor, target: Actor) -> bool:
+        if source.behaviour.get("powered") is False:
+            return False
+        if initiator_id := source.behaviour.get("interlock_initiator"):
+            initiator = self.world.actors.get(initiator_id)
+            if not initiator or not self.permits_indirect(initiator, target):
+                return False
         if source.stance in ("down","dead","sleeper","jacked") or target.stance in ("down","dead"):
             return False
         if source.id == target.id or source.zone != target.zone or source.zone not in self.world.zones:
@@ -105,6 +112,7 @@ class Combat:
         zone = self.world.zones[actor.zone]
         hour = self.clock.now_local().hour
         radius = (zone.template.meta.sight_radius_night if hour >= 20 or hour < 6 else None) or zone.template.meta.sight_radius
+        radius = lighting_radius(actor, zone, radius)
         radius = max(radius, max((int(e.get("dark_sight", 0)) for e in actor.effects), default=0))
         limit = radius / 2 if target.stance == "stealth" else radius
         if (actor.x-target.x)**2 + (actor.y-target.y)**2 > limit**2:
