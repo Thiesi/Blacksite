@@ -368,6 +368,18 @@ class Commerce:
             self.toast(session, "The transfer could not be saved. Your goods remain.")
         self.after_settle()
         if effect.get("callback"): effect["callback"](success)
+        if success:
+            # Callbacks can queue ordinary player snapshots while this
+            # outbox is draining. A later reward receipt must not be
+            # overwritten by one of those older snapshots next tick.
+            changed = {effect["player_id"], *effect.get("player_patches", {})}
+            for queued in self.game.outbox:
+                record = queued.get("player")
+                if queued["action"] == "save" and record and record["id"] in changed:
+                    current = self.game.players.get(record["id"])
+                    if current:
+                        queued["player"] = current.record()
+                        queued["identity"] = deepcopy(self.game.identities[current.bbs_user_id])
         while self.waiting and not self.pending:
             job = self.waiting.popleft()
             if callable(job):

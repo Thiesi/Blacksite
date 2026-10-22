@@ -92,6 +92,27 @@ class ProgressionEngine:
     def gain(self, draft: Player, use: Use) -> float:
         return gain(draft, use, self.clock.now_utc(), self.content.skills.get(use.line))
 
+    def record_use(self, pid: str, use: Use) -> None:
+        """A completed server action supplies facts; the queue serializes caps."""
+        occurred = self.clock.now_utc()
+        def propose() -> None:
+            player = self.game.players.get(pid)
+            if player is None or pid in self.game.deleting:
+                return
+            draft = deepcopy(player)
+            amount = gain(draft, use, occurred, self.content.skills.get(use.line))
+            if not amount:
+                return
+            def committed(success: bool) -> None:
+                if success:
+                    self.sync_actor(player)
+                    self.game.dirty_screens.update(s.id for s in self.game.sessions.active.values()
+                                                   if s.player_id == pid)
+            self.commerce.settle(player, {"skills": draft.skills, "attributes": draft.attributes,
+                "progress": draft.progress}, self.commerce.items, self.commerce.caches,
+                self.commerce.serial, committed)
+        self.commerce.enqueue_system(propose)
+
     def notify_reward(self, player: Player, result: Award | None) -> None:
         """Publication only; the owning receipt has already committed XP."""
         if result is None:

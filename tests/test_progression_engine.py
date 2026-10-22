@@ -7,6 +7,7 @@ import pytest
 from blacksite.content.loader import load_content
 from blacksite.server.progression_engine import ProgressionEngine
 from blacksite.server.progression import Grant
+from blacksite.server.skills import Use
 from blacksite.server.protocol import Frame
 from tests.character_helpers import act, create
 from tests.harness import HeadlessServer
@@ -113,3 +114,25 @@ def test_ui_4_downed_caller_keeps_combat_screen_when_skills_menu_closes(skills_g
     assert client.session.id not in engine.menus
     assert client.session.id not in game.core.characters.screens
     assert game.core.characters.sim.external_views[client.session.id][0] == "dead"
+
+
+def test_game_3_5_use_gain_serializes_caps_and_refreshes_older_queued_save(skills_game):
+    game, client, player, engine = skills_game
+    game.core.characters.outbox.clear()
+    use = Use("weapon_hit", "kinetic", "actual-hit:one", True, threat=True)
+    engine.record_use(player.id, use)
+    # Combat callbacks can checkpoint before the later skill write commits.
+    game.core.characters.queue("save", player.bbs_user_id, player, immediate=True)
+    assert player.skills["kinetic"] == 0
+    engine.record_use(player.id, use)
+    game.commit_commerce()
+    assert player.skills["kinetic"] == .2
+    assert game.core.characters.outbox[-1]["player"]["skills"]["kinetic"] == .2
+    assert len(game.core.commerce.outbox) == 0
+
+
+def test_game_3_5_failed_use_receipt_does_not_spend_daily_budget(skills_game):
+    game, client, player, engine = skills_game
+    engine.record_use(player.id, Use("weapon_hit", "kinetic", "failed-hit", True, threat=True))
+    game.commit_commerce(error=True)
+    assert player.skills["kinetic"] == 0 and "skill_use" not in player.progress
