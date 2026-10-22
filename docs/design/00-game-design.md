@@ -286,8 +286,22 @@ Real time, cooldown-based, server-resolved.
   per class, except the trauma kit's 2 s interruptible use in §17.1.
 - **Hymns and dissonance** are Cantor abilities with the same cooldown
   model; hymns affect crew members within 6 tiles.
-- **Drones** are Operator-controlled actors with their own position,
-  health, and one weapon or tool; they follow or hold.
+- **Drones** are actors controlled by a player with a drone slot. They
+  have their own position, health, and one weapon or tool; they follow
+  or hold.
+  S16 owns player tools; S11 owns city NPCs. The catalog's control range
+  bounds commands, tool effects and harm. Follow crosses a street exit
+  only with its controller; hold stays in its zone. Recalling returns
+  the same instance and health, never a repaired duplicate. All attacks
+  use the controller's body permissions and warning, including secondary
+  hits and chemical damage. Logging out, entering safety or losing range
+  stops player-attributed harm. A drone is never anonymous offline PvP.
+  Drones use the ordinary 200 ms walk interval, with no sprint. Catalog
+  attacks with no listed accuracy use base 75, matching unlisted melee
+  accuracy; Drones skill supplies their ordinary skill terms. Catalog
+  tool effects are typed data: carrier capacity, scout sight, nearby
+  crew healing or a jack-in terminal. An idle follow/hold toggle gives no
+  skill; only an objective change or actual threat damage gives use gain.
 
 The first hostile attack against a new visible threat raises a weapon
 for 2 s. The player presses fire again to commit; moving to safety or
@@ -960,12 +974,36 @@ No random roll is needed where an item has no quality-scaled stat.
   except the starter First Ear. Installed abilities keep working after
   leaving the Choir; tier unlocks come from the installed equipment.
 
+Portable rigs explicitly declare `portable: true`; carrying an implanted
+rig grants no installed effect or slots. A Ghost replacing the native
+rig cannot turn the built-in part into a saleable item. Removing the
+replacement restores the native capability. Chrome expiry unseats the
+newest installed hardware until tolerance fits, preserves the items and
+quality, and applies shock 100 for 30 s. If Vitals has grown enough,
+nothing is unseated. Failed surgery holds shock 100 for the same 30 s.
+
+All temporary effects compose through one modifier calculation. Flat
+bonuses add, multipliers multiply, and ability unlocks take the highest
+tier. They never raise permanent skill groups. Lowlight Eyes adds three
+dark sight tiles; a Flare Stick sets a minimum radius of eight.
+
 ### 8.6 Drugs
 
 Each substance has an effect, a duration, a **crash** (opposite effect
 for half the duration), and an addiction clock: three doses inside its
 window creates a dependency that imposes the crash until detox.
 Sablier detox costs 400 chits and takes 10 minutes, offline-safe.
+
+Redosing refreshes one timed effect; it never stacks that substance's
+bonus or clears a dependency. Dependency withdrawal also applies during
+the positive effect. Crash `health` changes the maximum by its listed
+amount; crash `shock` supplies a minimum while withdrawal lasts. A Ration
+Bar ends the timed Ring-dust crash; it does not cure dependency. Detox
+charges once, stops active substances and blocks actions in the clinic's
+existing safe pocket until its persisted UTC deadline. Logging out does
+not restart or extend treatment. Completion clears dependencies and dose
+history. Detox Gland halves the crash duration and addiction window at
+dose time, never the positive duration.
 
 ### 8.7 Apartments
 

@@ -28,6 +28,7 @@ The record shapes are `docs/design/01-entities.md` §1 and
 | `cores/<id>.json` | Cores, rooms, data, controls | S13, S15 |
 | `ice.json`, `programs.json` | ICE and program templates | S14 |
 | `items.json` | Item templates with per-class blocks | S12, S16, S17 |
+| `grades.json`, `skills.json` | Grade titles and meaningful-use schedules | S16 |
 | `vendors.json` | Vendor inventories | S12 |
 | `hymns.json` | Cantor abilities | S10 |
 | `npcs.json` | NPC templates | S11 |

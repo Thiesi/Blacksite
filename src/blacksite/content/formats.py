@@ -360,6 +360,8 @@ def read_text_asset(asset_id: str, text: str, suffix: str) -> s.TextAsset:
 
 # File layout: table files at the root, one-record files in directories.
 TABLE_FILES: dict[str, tuple[str, type]] = {
+    "grades.json": ("grades", s.GradeDefinition),
+    "skills.json": ("skills", s.SkillDefinition),
     "text/emotes.json": ("emotes", s.Emote),
     "starts.json": ("starts", s.CharacterStart),
     "wake_cards.json": ("wake_cards", s.WakeCard),

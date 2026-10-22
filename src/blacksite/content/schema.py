@@ -620,6 +620,28 @@ class ImplantBlock:
     effects: dict[str, Number] = field(default_factory=dict)
     requires: ImplantRequires | None = None
     rig_slots: int | None = None
+    portable: bool = False
+    """A carried terminal rig; implanted rigs require surgery (game 8.5)."""
+
+
+@dataclass(frozen=True)
+class GradeDefinition:
+    id: str
+    grade: int
+    title: str
+    promotion: str
+    schema: int = CONTENT_SCHEMA
+
+
+@dataclass(frozen=True)
+class SkillDefinition:
+    id: str
+    name: str
+    attribute: Literal["frame", "nerve", "cortex", "resonance"]
+    uses: dict[str, Number]
+    maximum: int = 100
+    daily_cap: Number = 2
+    schema: int = CONTENT_SCHEMA
 
 
 @dataclass(frozen=True)
@@ -649,6 +671,9 @@ class DroneBlock:
     evasion: int = 0
     attack: WeaponBlock | None = None
     control_range: int | None = None
+    effects: dict[str, Number] = field(default_factory=dict)
+    move_ms: int = 200
+    hunt: bool = False
 
 
 @dataclass(frozen=True)

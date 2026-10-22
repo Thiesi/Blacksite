@@ -1,0 +1,185 @@
+{
+  "schema": 1,
+  "grades": [
+    {
+      "id": "grade-1",
+      "grade": 1,
+      "title": "Wake",
+      "promotion": "Your record grows. You reach grade 1."
+    },
+    {
+      "id": "grade-2",
+      "grade": 2,
+      "title": "Unsettled",
+      "promotion": "Your record grows. You reach grade 2."
+    },
+    {
+      "id": "grade-3",
+      "grade": 3,
+      "title": "Neighbour",
+      "promotion": "Your record grows. You reach grade 3."
+    },
+    {
+      "id": "grade-4",
+      "grade": 4,
+      "title": "Leaseholder",
+      "promotion": "Your record grows. You reach grade 4."
+    },
+    {
+      "id": "grade-5",
+      "grade": 5,
+      "title": "Ninety-Day",
+      "promotion": "Your lease ends. Your name stays on the register."
+    },
+    {
+      "id": "grade-6",
+      "grade": 6,
+      "title": "Resident",
+      "promotion": "Your record grows. You reach grade 6."
+    },
+    {
+      "id": "grade-7",
+      "grade": 7,
+      "title": "Familiar",
+      "promotion": "Your record grows. You reach grade 7."
+    },
+    {
+      "id": "grade-8",
+      "grade": 8,
+      "title": "Regular",
+      "promotion": "Your record grows. You reach grade 8."
+    },
+    {
+      "id": "grade-9",
+      "grade": 9,
+      "title": "Local",
+      "promotion": "Your record grows. You reach grade 9."
+    },
+    {
+      "id": "grade-10",
+      "grade": 10,
+      "title": "Citizen",
+      "promotion": "Your record grows. You reach grade 10."
+    },
+    {
+      "id": "grade-11",
+      "grade": 11,
+      "title": "Known",
+      "promotion": "Your record grows. You reach grade 11."
+    },
+    {
+      "id": "grade-12",
+      "grade": 12,
+      "title": "Trusted",
+      "promotion": "Your record grows. You reach grade 12."
+    },
+    {
+      "id": "grade-13",
+      "grade": 13,
+      "title": "Established",
+      "promotion": "Your record grows. You reach grade 13."
+    },
+    {
+      "id": "grade-14",
+      "grade": 14,
+      "title": "Recognised",
+      "promotion": "Your record grows. You reach grade 14."
+    },
+    {
+      "id": "grade-15",
+      "grade": 15,
+      "title": "Notable",
+      "promotion": "Your record grows. You reach grade 15."
+    },
+    {
+      "id": "grade-16",
+      "grade": 16,
+      "title": "Connected",
+      "promotion": "Your record grows. You reach grade 16."
+    },
+    {
+      "id": "grade-17",
+      "grade": 17,
+      "title": "Respected",
+      "promotion": "Your record grows. You reach grade 17."
+    },
+    {
+      "id": "grade-18",
+      "grade": 18,
+      "title": "Prominent",
+      "promotion": "Your record grows. You reach grade 18."
+    },
+    {
+      "id": "grade-19",
+      "grade": 19,
+      "title": "Distinguished",
+      "promotion": "Your record grows. You reach grade 19."
+    },
+    {
+      "id": "grade-20",
+      "grade": 20,
+      "title": "Name",
+      "promotion": "Your record grows. You reach grade 20."
+    },
+    {
+      "id": "grade-21",
+      "grade": 21,
+      "title": "Old Hand",
+      "promotion": "Your record grows. You reach grade 21."
+    },
+    {
+      "id": "grade-22",
+      "grade": 22,
+      "title": "Fixture",
+      "promotion": "Your record grows. You reach grade 22."
+    },
+    {
+      "id": "grade-23",
+      "grade": 23,
+      "title": "Mainstay",
+      "promotion": "Your record grows. You reach grade 23."
+    },
+    {
+      "id": "grade-24",
+      "grade": 24,
+      "title": "Cornerstone",
+      "promotion": "Your record grows. You reach grade 24."
+    },
+    {
+      "id": "grade-25",
+      "grade": 25,
+      "title": "Institution",
+      "promotion": "Your record grows. You reach grade 25."
+    },
+    {
+      "id": "grade-26",
+      "grade": 26,
+      "title": "Landmark",
+      "promotion": "Your record grows. You reach grade 26."
+    },
+    {
+      "id": "grade-27",
+      "grade": 27,
+      "title": "Byword",
+      "promotion": "Your record grows. You reach grade 27."
+    },
+    {
+      "id": "grade-28",
+      "grade": 28,
+      "title": "Touchstone",
+      "promotion": "Your record grows. You reach grade 28."
+    },
+    {
+      "id": "grade-29",
+      "grade": 29,
+      "title": "Measure",
+      "promotion": "Your record grows. You reach grade 29."
+    },
+    {
+      "id": "grade-30",
+      "grade": 30,
+      "title": "Record",
+      "promotion": "Your record grows. You reach grade 30."
+    }
+  ]
+}

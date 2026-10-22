@@ -67,6 +67,10 @@ the catalog's implant and drug tables do what they say.
   `Modifiers` aggregator (attribute deltas, derived deltas, flags such
   as `secured_slots +1`, `sight +3 dark`, `cooldown −10 %`) that S10,
   S12, S13 read instead of reaching into implant lists.
+- Player drone tools belong to S16: S11 explicitly deferred them here.
+  Resolve the circular ownership gap with the catalog's follow/hold/
+  target tools and controller-attributed safety checks. Operator has two
+  slots; Drone Uplink adds one. City NPC drones remain S11-owned.
 - Surgery: `vendor` objects with `clinic: sablier` (list price + 20 %,
   2 % failure) or `clinic: black` (60 % list, 15 % failure); failure
   destroys the item and applies 30 s of shock 100; removal at any clinic
@@ -94,8 +98,6 @@ the catalog's implant and drug tables do what they say.
 
 - Hymn and dissonance ability execution: S10 (they exist there; this
   slice gates tiers by implant).
-- Drone slots and drone behaviour: S11 (this slice exposes
-  `drone_slots` as a modifier: Operator 2, Drone Uplink +1 or 1).
 - Fabrication rolls: S17 (reads Fabrication skill from here).
 - Relay and contribution XP amounts are defined here and paid by S21
   and S26.
@@ -169,11 +171,11 @@ balance reviewer has signed off on the XP curve in the PR.
 
 ## Implementer notes
 
-- The XP-per-grade formula and the per-use skill rates are **new
-  numbers not in the design doc**; add them to `00-game-design.md`
-  §3.3–§3.4 in this PR (roadmap §1 rule).
-- The catalog's implant table says tolerance minimum 3; the design doc
-  says 4 and wins. Fix the catalog line in this PR.
+- The grade formula and use rates are already normative in main design
+  3.4–3.5. Implement those values; the older slice note calling them new
+  numbers was stale.
+- The catalog already agrees with the design's minimum tolerance 4;
+  retain it. The older instruction to correct a minimum of 3 was stale.
 - All implant and drug effects go through the `Modifiers` aggregator;
   no other slice may query the implant map directly, or S24's event
   modifiers will have nowhere to compose.

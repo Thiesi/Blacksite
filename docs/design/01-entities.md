@@ -224,22 +224,32 @@ S10 gives melee the design's fixed 1.0 s cooldown and base accuracy 75.
 The authoring schema can retain unknown timing as null; consumers must
 never execute that as a zero cooldown. Ranged weapons require accuracy.
 Implant slots include `head`, matching First Ear in the starter schedule.
-Drone speed remains unimplemented until S11 supplies its movement rule.
-Drone `control_range` preserves the catalog range; nullable sight/speed
-mark values the catalog does not give. Embedded attack blocks retain
-drone weapon stats. Weapon `hits`, `targets` and `cone` retain the
+S16 owns player drone movement and tools; S11 owns city NPCs.
+Drone `control_range` preserves the catalog range. The legacy nullable
+`speed` is descriptive only; `move_ms` defaults to ordinary walking
+(200 ms), `effects` carries typed tool values and `hunt` allows the
+marked-target pursuit command. Embedded attack blocks retain drone
+weapon stats. Weapon `hits`, `targets` and `cone` retain the
 catalog's multi-hit/arc/cone annotations for S10.
 `requires_archetype` carries the catalog's Cantor-only weapon restriction.
 - armour: `slot, armour {kinetic, energy, chemical, dissonance}, evasion,
   heavy`
 - ammo: `recharge_price` (energy cells only)
 - implant / resonance / rig: `slot, tolerance, effects (dict of attribute
-  or derived deltas), requires (archetype, standing)`
+  or derived deltas), requires (archetype, standing), rig_slots,
+  portable (default false)`. Only explicit portable rigs work while
+  carried; implanted rigs require surgery.
 - drug: `effects, duration, crash, addiction_window, addiction_doses`
 - consumable: `effects, cooldown_class`
 - drone: `health, weapon or tool, speed, sight`
 - salvage: `grade`
 - schematic: `output item id, inputs (salvage grade → count), skill_min`
+
+S16 adds `grades.json` records `{id, grade, title, promotion}` for all
+30 grades; thresholds remain the main design 3.4 formula. Its
+`skills.json` records carry `{id, name, attribute, uses {action: gain},
+maximum, daily_cap}` for the twelve game 3.3 lines. Their schedules are
+validated against game 3.5; temporary modifiers never alter these rows.
 
 ### 1.8 NPC template (`npcs.json`)
 
