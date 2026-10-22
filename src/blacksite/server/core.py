@@ -19,6 +19,8 @@ from blacksite.server.combat.engine import Combat
 from blacksite.server.npcs.engine import Npcs
 from blacksite.server.lattice.engine import Lattice
 from blacksite.server.progression_engine import ProgressionEngine
+from blacksite.server.fabrication import Fabrication
+from blacksite.server.salvage import Salvage
 from blacksite.version import PACKAGE_VERSION, PROTOCOL_MAJOR
 
 
@@ -78,6 +80,10 @@ class Core:
         self.progression = ProgressionEngine(self.commerce,self.lattice) if self.commerce else None
         if self.progression:
             self.loop.subsystems.append(self.progression)
+        self.salvage = Salvage(self.commerce, character_state.get("salvage", {})) if self.progression else None
+        self.fabrication = Fabrication(self.progression, self.salvage) if self.progression else None
+        if self.fabrication:
+            self.loop.subsystems.append(self.fabrication)
 
     def _disconnect_character(self, session: Session) -> None:
         if self.lattice:
@@ -150,6 +156,8 @@ class Core:
         if self.lattice and self.lattice.interlock.input(session, frame, event.data["tick"]):
             return
         if self.combat and self.combat.input(session, frame, event.data["tick"]):
+            return
+        if self.fabrication and self.fabrication.input(session, frame, event.data["tick"]):
             return
         if self.commerce and self.commerce.input(session, frame, event.data["tick"]):
             return

@@ -313,7 +313,7 @@ class ZoneSimulation:
             zone = self.world.zones[avatar.zone]
             local = self.clock.now_local(session.door_info.get("timezone")).strftime("%H:%M")
             stamp = (zone.id, zone.revision, local, night, session.caps["width"], session.caps["height"],
-                     ctx.tick if zone.layers else None)
+                     ctx.tick if zone.layers or avatar.actor.behaviour.get("channel") else None)
             if stamp == self.published.get(session.id) and not session.needs_full_view:
                 continue
             scouted,scouted_actors = self.scout_provider(session)
@@ -326,6 +326,9 @@ class ZoneSimulation:
                 body["hint"] = "Tab target  F fire  X weapon  1-5 quick  V abilities  E interact  I inventory  ? help"
                 remaining = max(0,avatar.actor.cooldowns.get("weapon",0)-ctx.tick)/TICK_HZ
                 if remaining: body["hint"] = f"Weapon {remaining:.1f}s  " + body["hint"]
+            if channel := avatar.actor.behaviour.get("channel"):
+                body["me"]["channel"] = dict(channel)
+                body["hint"] = f"{channel['label']} {channel['remaining']:.1f}s  Stay still; Esc/B cancels."
             if self.views[session.id].publish(session, body, ctx.tick):
                 self.published[session.id] = stamp
             elif body == (self.views[session.id].previous or {}).get("body"):

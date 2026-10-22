@@ -64,7 +64,8 @@ def test_game_8_5_owned_install_confirms_full_bill_and_commits_once(clinic):
     game.commit_commerce()
     assert player.implants["arms1"] == iid and player.chits_hand == 10000-bill.total
     assert game.core.commerce.items[iid].quality == 1.08
-    assert game.core.progression.modifiers(player).multiplier("weapon_cooldown_multiplier") == .9
+    # Game 8.4: quality scales the 10% benefit; tolerance stays 2.
+    assert game.core.progression.modifiers(player).multiplier("weapon_cooldown_multiplier") == .892
     act(game,client,frame)
     assert not game.core.commerce.outbox
 

@@ -144,3 +144,14 @@ work or calendar, protected impound, at most one unsecured unit per
 apartment per rolling 24 h, and a resident receipt. Interior permissions
 are server-side on every action, including stale menus. Rent discounts
 apply to the next invoice once; expiry cannot rewrite a paid invoice.
+
+## S17 integration handoff
+
+Preserve `ItemInstance.quality` through storage, safe access, eviction and
+impound. S17 defines typed per-template quality in game design 8.4 and
+entity 1.7; use `server.quality` for effective details. Rig permissions,
+slots and tolerance stay fixed. Never reconstruct a stored item at
+quality 1 or derive private-core tier from quality.
+
+This carries the accepted [PR #38](https://github.com/Thiesi/Blacksite/pull/38)
+findings 12/14 forward; see [S17](S17-salvage-and-fabrication.md).

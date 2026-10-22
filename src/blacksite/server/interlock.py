@@ -7,7 +7,6 @@ and S21 supplies live relay ownership.
 
 from collections.abc import Callable
 from copy import deepcopy
-from dataclasses import dataclass
 from math import ceil
 from typing import Any, TYPE_CHECKING
 
@@ -17,6 +16,7 @@ from blacksite.server.lattice.presence import Procedure, Presence
 from blacksite.server.loop import TickContext
 from blacksite.server.protocol import Frame
 from blacksite.server.sessions import Session
+from blacksite.server.channels import PhysicalChannel as CutChannel
 from blacksite.server.wake import menu
 
 if TYPE_CHECKING:
@@ -30,16 +30,6 @@ OFFLINE_SECONDS = 600  # Game 6.4.
 CUT_SHOCK = 100  # Game 6.4; ordinary 3s shock-recovery delay still applies.
 THEFT_SECONDS = 86400  # Game 6.4: rolling 24 h, per apartment.
 HACK_LOG_LIMIT = 20  # Entity 2.9.
-
-
-@dataclass
-class CutChannel:
-    core: str
-    zone: str
-    object: str
-    tile: tuple[int, int]
-    until: int
-    last_hit: int
 
 
 class Interlock:
@@ -319,8 +309,8 @@ class Interlock:
 
     def start_cut(self, session: Session, core: str, zid: str, oid: str) -> None:
         actor = self.authorize_cut(session, core, zid, oid)
-        if session.player_id in self.cuts:
-            raise ValueError("You are already cutting power.")
+        if session.player_id in self.cuts or actor.behaviour.get("channel") or session.id in self.commerce.using:
+            raise ValueError("Finish or cancel your current action first.")
         self.cuts[session.player_id] = CutChannel(core, zid, oid, actor.position,
             self.clock.now_tick()+CUT_SECONDS*TICK_HZ, int(actor.behaviour.get("hit_serial", 0)))
         self.sim.log(session, "You cut power. Hold still for 5s. Any damage interrupts; Esc cancels.")
@@ -389,7 +379,7 @@ class Interlock:
             return False
         actor = avatar.actor
         zone = self.game.world.zones[actor.zone]
-        if any(obj.spec.tile == actor.position and (obj.spec.kind in ("bank", "vendor", "cache", "terminal")
+        if any(obj.spec.tile == actor.position and (obj.spec.kind in ("bank", "vendor", "cache", "terminal", "workshop", "salvage_node")
                 or obj.spec.params.get("vendor")) for obj in zone.objects.values()):
             return False  # An adjacent cabinet cannot steal the counter key.
         apartment_door = next((obj for obj in zone.objects.values() if obj.spec.kind == "apartment_door"
@@ -432,9 +422,7 @@ class Interlock:
         for pid, channel in tuple(self.cuts.items()):
             session = self.lat.session(pid)
             actor = self.combat.actor(self.game.players[pid])
-            if (not session or session.closed or not actor or actor.zone != channel.zone
-                    or actor.position != channel.tile or actor.stance != "normal"
-                    or int(actor.behaviour.get("hit_serial", 0)) != channel.last_hit):
+            if not session or session.closed or not channel.valid(actor):
                 self.cuts.pop(pid)
                 if session:
                     self.sim.log(session, "Your power cut is interrupted.")

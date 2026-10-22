@@ -100,7 +100,7 @@ def build(actor: Actor, zone: ZoneInstance, perception: Perception, content: Con
                 "state": {**{key: value for key, value in obj.state.items() if key not in ("actor", "serial")}, "open": obj.open, "in_use": obj.in_use, "progress": obj.progress, **obj.spec.params.get("cache_state",{})},
                 "role": "muted" if obj.state.get("enabled") is False else "text",
                 "glyph": glyphs.get("cache" if obj.spec.params.get("dropped_item") else "bank" if obj.spec.kind == "bank" else "vendor" if obj.spec.params.get("vendor") else "locked-door" if obj.open is False else obj.spec.kind if obj.spec.kind in glyphs else content.tiles[zone.tile_id(obj.spec.tile)].glyph, ".")}
-               for obj in zone.objects.values() if obj.spec.tile in visible]
+               for obj in zone.objects.values() if obj.spec.tile in visible and obj.spec.kind != "salvage_field"]
     hazards = [{"scope": "geometry", "warning": max(0, layer.starts - tick) / TICK_HZ,
                 "remaining": max(0, layer.expires - tick) / TICK_HZ,
                 "tiles": [list(tile) for tile in layer.layout.warning_tiles if tile in visible],

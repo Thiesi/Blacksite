@@ -95,7 +95,7 @@ ObjectKind = Literal[
     "door", "terminal", "vendor", "vat", "relay", "cache", "tram_stop",
     "apartment_door", "light", "hardware", "descent_console", "workshop",
     "bank", "turret", "camera", "shutter", "cable_car", "pump", "lift",
-    "patrol_beacon", "gate", "gantry",
+    "patrol_beacon", "gate", "gantry", "salvage_node", "salvage_field",
 ]
 
 
@@ -686,6 +686,26 @@ class SchematicBlock:
     output: str
     inputs: dict[str, int]
     skill_min: int = 0
+    single_use: bool = False
+
+
+@dataclass(frozen=True)
+class QualitySpec:
+    kind: Literal["none", "weapon_damage", "armour", "implant_effect", "drone_damage", "drone_effect"] = "none"
+    key: str = ""
+
+
+@dataclass(frozen=True)
+class SalvageRules:
+    weights: dict[str, dict[str, int]]
+    minimum_nodes: int = 2
+    maximum_nodes: int = 6
+    minimum_units: int = 1
+    maximum_units: int = 6
+    respawn_seconds: int = 600
+    harvest_seconds: int = 2
+    craft_seconds: int = 3
+    schema: int = CONTENT_SCHEMA
 
 
 @dataclass(frozen=True)
@@ -711,6 +731,8 @@ class ItemTemplate:
     drone: DroneBlock | None = None
     salvage: SalvageBlock | None = None
     schematic: SchematicBlock | None = None
+    quality: QualitySpec = field(default_factory=QualitySpec)
+    no_vendor_sale: bool = False
     schema: int = CONTENT_SCHEMA
 
 

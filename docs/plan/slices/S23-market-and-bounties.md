@@ -154,3 +154,13 @@ persistent rows, resolved by the server, with no new real-time mechanics.
   market module registers; keep the hook synchronous and cheap.
 - Handles may be wide or long; the menu column widths must truncate by
   display width (client rule, `03-terminal-ui.md` §6).
+
+## S17 integration handoff
+
+Retain the exact instance quality, ammo, charges and drone condition
+through listings, bids, delivery and return. Display actual selected
+stats with `server.quality.detail`; template base stats plus a quality
+label alone are insufficient. Slots, permissions and durations stay fixed.
+
+This carries the accepted [PR #38](https://github.com/Thiesi/Blacksite/pull/38)
+findings 12/14 forward; see [S17](S17-salvage-and-fabrication.md).

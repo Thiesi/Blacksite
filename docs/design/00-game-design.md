@@ -991,10 +991,35 @@ bought from or sold to NPC vendors; player trading is allowed.
 
 Learned schematics persist. Fabrication consumes inputs on successful
 completion of a 3 s channel. Quality = 0.85 + 0.15 * skill/100 + U(0,
-0.15), capped 1.15 after relay modifiers. Higher skill improves the floor,
-not the size of negative rolls. Scale only the declared primary stat;
-never control durations, permissions, implant tolerance, or stack counts.
-No random roll is needed where an item has no quality-scaled stat.
+0.15), capped 1.15 after relay modifiers. Yard Relay adds 0.05 before
+that cap. Higher skill improves the floor,
+not the size of negative rolls. Each item template declares a typed
+`quality` selector: `none`, weapon damage, one named armour resistance,
+one implant effect, drone damage, or one drone tool effect. It never
+scales all effects of a class. Additive effects multiply by quality;
+an implant multiplier scales its benefit relative to 1:
+`1 + (base - 1) * quality`. Quality 1 preserves every catalog value.
+Never scale control durations, permissions, implant tolerance, slots,
+stack counts, drug schedules or timed effect durations. Templates with
+only such effects explicitly select `none`, receive quality 1, and use
+no random roll. Equipment resolution and item details use this same
+selector. Armour keeps its other resistances and evasion unchanged.
+
+Baseline nodes start at a seeded count of 2-6 per commissioned ring;
+each elapsed 10-minute uptime interval replaces one node, up to six.
+Downtime earns no replacements. Positions, remaining units, elapsed
+uptime and each ring's salvage RNG survive restart. Crash Relay may
+raise Ring Three grades by one step, capped at compute, never intact.
+Harvesting repeats 2 s channels until the node empties or is interrupted.
+Fabrication grants 15 XP times output tier and one eligible Fabrication
+use per completed input-consuming craft (subject to the daily use cap).
+Ammo recipes create one full pack without scaling its count. Program
+recipes teach the program permanently and have no quality roll.
+
+Workshop filters describe the output: `rigs_programs` accepts rigs and
+programs; `chemical_melee` accepts drugs, melee weapons and equipment
+with a chemical attack, including the Sable Stinger drone. A faction's
+chemical workshop must be able to build its own catalog chemical drone.
 
 ### 8.5 Implants and surgery
 

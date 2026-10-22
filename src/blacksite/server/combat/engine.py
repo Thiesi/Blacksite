@@ -21,6 +21,7 @@ from blacksite.server.protocol import Frame
 from blacksite.server.rules import character, combat as rules
 from blacksite.server.sessions import Session
 from blacksite.server.skills import Use
+from blacksite.server.quality import value as quality_value, damage_multiplier
 from blacksite.server.wake import menu
 from blacksite.server.world.actors import Actor
 from blacksite.server.world.sight import line, sees_actor, visible_tiles, line_of_sight, sight_radius, detection_limit
@@ -159,7 +160,9 @@ class Combat:
             for iid in set(player.equipment.values()):
                 item = self.commerce.items.get(iid)
                 template = self.content.items[item.template] if item else None
-                if template and template.armour: total += int(getattr(template.armour.armour, damage_type) * item.quality)
+                if template and template.armour:
+                    total += int(quality_value(template, item.quality, "armour", damage_type,
+                                               getattr(template.armour.armour, damage_type)))
         return total
 
     def evasion(self, actor: Actor) -> float:
@@ -293,7 +296,7 @@ class Combat:
             for other in targets:
                 if not self.legal(actor,other) or not self.visible(actor,other): continue
                 self.mark(actor,other)
-                for _ in range(weapon.hits): self.shot(actor,other,weapon,item.quality,player.skills.get("melee" if weapon.melee else "energy" if weapon.damage_type == "energy" else "kinetic",0))
+                for _ in range(weapon.hits): self.shot(actor,other,weapon,damage_multiplier(self.content.items[item.template],item.quality),player.skills.get("melee" if weapon.melee else "energy" if weapon.damage_type == "energy" else "kinetic",0))
             self.remember(player,actor)
         self.commerce.settle(player,{"inventory":inventory,
             "equipment":{s:i for s,i in player.equipment.items() if i in inventory}},items,self.commerce.caches,self.commerce.serial,resolved)

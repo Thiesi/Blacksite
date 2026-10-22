@@ -151,6 +151,14 @@ sitrep, settings (keymap, palette, log verbosity, sitrep visibility),
 dialogue (the talker's line above, responses as rows), apartment, bank,
 workshop, descent console, chronicle, help.
 
+  A workshop lists learned schematics with carried/required salvage,
+  Fabrication minimum and quality range (game design 8.4). F starts a
+  craft; Esc/B returns without side effects. Physical harvesting and
+  crafting expose `me.channel {label, remaining}` on the hint line,
+  preserving the existing cell-buffer width rules. Inventory and
+  installed-item details show quality-adjusted values from the same
+  per-template selector as equipment resolution.
+
 Overlays never stop the world. Movement keys are swallowed while a menu
 is open, but the log keeps scrolling and the viewport underneath keeps
 updating; a menu that has been open for 60 s in a contested or open zone

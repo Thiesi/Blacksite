@@ -30,7 +30,8 @@ def test_game_5_3_deploy_save_failure_keeps_exact_instance_then_use_deploys(oper
     assert iid not in player.inventory and engine.actors[iid].health == 60
     assert game.core.commerce.items[iid].owner == player.id
     assert game.core.commerce.items[iid].quality == 1.08
-    assert game.core.progression.modifiers(player).bonus("carry_kg") == 20
+    # Game 8.4: Mule's declared carry magnitude is 20 * quality 1.08.
+    assert game.core.progression.modifiers(player).bonus("carry_kg") == 21.6
     with pytest.raises(ValueError,match="already deployed"):
         engine.command(player,iid,"deploy")
 

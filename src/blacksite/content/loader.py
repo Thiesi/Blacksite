@@ -70,6 +70,7 @@ class ContentTree:
     palette: s.Palette | None = None
     keymaps: s.KeymapTable | None = None
     silt: s.SiltRules | None = None
+    salvage: s.SalvageRules | None = None
     tiles: dict[str, s.TileType] = field(default_factory=dict)
     zones: dict[str, s.Zone] = field(default_factory=dict)
     sectors: dict[str, s.Sector] = field(default_factory=dict)
@@ -259,6 +260,8 @@ def _load_singletons(tree: ContentTree, layer: _Layer) -> None:
                 tree.keymaps = s.KeymapTable(actions=actions, keymaps=tuple(maps.values()))
         elif isinstance(record, s.SiltRules):
             tree.silt = record
+        elif isinstance(record, s.SalvageRules):
+            tree.salvage = record
 
 
 def _check_id(tree: ContentTree, kind: str, record_id: str, rel: str, text: str) -> bool:

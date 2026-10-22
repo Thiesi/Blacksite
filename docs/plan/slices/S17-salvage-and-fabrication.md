@@ -1,6 +1,6 @@
 # S17 — Salvage and fabrication, Ring-fall salvage nodes, schematics, workshops
 
-**Status:** planned
+**Status:** done (PR #58)
 **Primary model:** Sonnet · **Reviewer:** none
 **Depends on:** S12, S15, S16 · **Milestone:** M3
 **Issue:** https://github.com/Thiesi/blacksite/issues/17
@@ -17,7 +17,7 @@ node objects, a baseline trickle spawner, and the whole crafting path.
 ## Spec references
 
 - `docs/design/00-game-design.md` §8.4 (salvage grades and weight,
-  fabrication at workshops with schematic, ±15 % quality roll by skill,
+  fabrication at workshops with schematic, skill-raised quality floor,
   intact = contribution), §3.3 (Fabrication line), §12 (Ring-fall
   effect: nodes spawn).
 - `docs/design/01-entities.md` §1.7 (salvage, schematic blocks), §1.1
@@ -69,8 +69,9 @@ node objects, a baseline trickle spawner, and the whole crafting path.
 - Contribution delivery of intact salvage: S26.
 - Relay ownership effects: S21 (hook only).
 - Yard Relay +5 % quality: S21 reads this slice's roll function.
-- Scour zone maps themselves: S25 (this slice uses the fixture zone
-  and a placeholder `scour-ring-1` stub if S25 has not landed).
+- Scour zone maps themselves: S25. This slice uses explicitly labelled
+  fixture geography and inactive future placement definitions, without
+  shipping a placeholder `scour-ring-1` map.
 
 ## Data and content
 
@@ -109,7 +110,7 @@ node objects, a baseline trickle spawner, and the whole crafting path.
 
 ## Acceptance script
 
-1. Caller A walks into the fixture Scour zone (or `scour-ring-1`), finds
+1. Caller A walks into the explicitly labelled fixture Scour zone, finds
    a salvage node, presses `E`, harvests three units of hull with a
    channel bar on the hint line; the inventory shows `slv_hull` ×3 and
    the weight total.
@@ -130,9 +131,14 @@ with its listed inputs.
 
 - Baseline spawner numbers (2–6 nodes, 10 min, per-ring weights) are
   new; put them in `00-game-design.md` §8.4 in this PR.
-- Quality applies to the item's main stat only (weapon damage, armour
-  main value, implant primary effect); define `main_stat` per class in
-  the loader rather than per item.
+- Quality uses game design 8.4's typed per-template selector, shared by
+  fabrication, equipment resolution and displayed stats. Explicit `none`
+  preserves permissions, slots, durations, tolerance and stack counts.
+- Workshop filters follow output capabilities: the chemical/melee
+  workshop also accepts the catalog Stinger chemical drone (game 8.4).
+- Reconcile accepted [PR #38](https://github.com/Thiesi/Blacksite/pull/38)
+  findings 12/14. S18/S21/S23/S25/S30 preserve this quality policy.
+  S25 owns real Scour and workshop placement and native acceptance.
 - Keep harvest and craft channels on the same `channel` mechanism S15
   introduces; if S15 has not merged, introduce it here and S15 reuses.
 

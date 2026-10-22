@@ -100,3 +100,14 @@ hooks and tests composed effects in fixtures plus currently shipped maps.
 Roadmap section 7; durable forecasts, all five event templates, composed
 safety/escape checks and restart acceptance. Numeric schedules stay in
 main design; measured usability remains a real-terminal review.
+
+## S17 integration handoff
+
+Ring-fall bulk nodes extend the S17 salvage state/proposal path. Use
+`Salvage.spawn` with the event owning the supplied count/grade policy;
+commit event receipt and spawned nodes together. Preserve baseline nodes,
+partial units, RNG and uptime deadlines. Event downtime must not replay
+a bulk spawn; Crash grade bonuses cannot manufacture intact salvage.
+
+This carries the accepted [PR #38](https://github.com/Thiesi/Blacksite/pull/38)
+findings 12/14 forward; see [S17](S17-salvage-and-fabrication.md).

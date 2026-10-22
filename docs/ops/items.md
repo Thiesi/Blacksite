@@ -3,7 +3,9 @@
 Press I in a zone to see inventory. Q/Enter equips in the default slot;
 F lets you choose a compatible slot. E lists equipped slots; Enter there
 unequips. S toggles a secured slot, D drops the selected stack, X splits
-a stack, and U uses a consumable. Esc/B closes a menu without a transfer.
+a stack, and U uses a consumable or learns a physical schematic. Esc/B
+closes a menu without a transfer. See [fabrication](fabrication.md) for
+learned recipes, workshops and per-template item quality.
 Installed implants remain installed; surgery belongs to S16.
 
 Walk next to a counter and press E. Enter buys one listed pack or sells
