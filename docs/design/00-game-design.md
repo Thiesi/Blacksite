@@ -1001,6 +1001,13 @@ secured items up to capacity. Excess non-story entries, starting at the
 end of inventory order, become unsecured in the same transaction. The log
 names them; no item is removed or loses quality.
 
+Second Ear's hidden-cell radius counts linked graph edges in the current
+authored sector or Silt band. Revealing a cell does not count as a visit;
+generated cells still grant no discovery XP or Listening use gain.
+Tenant's Ear inspects announced Surge variants once the event service is
+available; until then its detail pane explicitly labels that effect as
+not available yet.
+
 All temporary effects compose through one modifier calculation. Flat
 bonuses add, multipliers multiply, and ability unlocks take the highest
 tier. They never raise permanent skill groups. Lowlight Eyes adds three

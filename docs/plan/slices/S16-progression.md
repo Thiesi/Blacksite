@@ -106,6 +106,9 @@ the catalog's implant and drug tables do what they say.
 - Relay and contribution XP amounts are defined here and paid by S21
   and S26.
 - Leaderboard by grade: S26.
+- Tenant's Ear Surge forecasts: S24 supplies the event producer through
+  the S16 preview hook. Until it exists the detail pane labels the effect
+  as unavailable, as permitted by this slice's definition of done.
 
 ## Data and content
 

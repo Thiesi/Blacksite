@@ -65,7 +65,8 @@ def skill_menu(player: Player, content: ContentTree, cursor: int, now: float) ->
 def character_sheet(player: Player, content: ContentTree,
                     items: Mapping[str, ItemInstance], now: float,
                     lease_days: int, cursor: int = 0,
-                    modifiers: Modifiers | None = None) -> dict[str, Any]:
+                    modifiers: Modifiers | None = None,
+                    surge_preview: str | None = None) -> dict[str, Any]:
     mods = modifiers or collect(player, items, content.items, now)
     grade = next((g for g in content.grades.values() if g.grade == player.grade), None)
     title = grade.title if grade else character.grade_name(player.grade)
@@ -103,6 +104,8 @@ def character_sheet(player: Player, content: ContentTree,
         name = template.name if template else "Native rig" if slot == "rig" and player.archetype == "ghost" else "Empty"
         detail = (f"{slot.title()}: {name}.\nTolerance {template.implant.tolerance}; quality {item.quality:g}."
                   if template and template.implant else f"{slot.title()}: {name}.")
+        if template and template.implant and template.implant.effects.get("surge_inspect"):
+            detail += "\n"+(surge_preview or "No effect yet: Surge forecasts are not available.")
         rows.append(Row("implant:"+slot, slot.title(), name, detail))
     dependent = {d["template"] for d in player.dependencies}
     for state in player.drugs_active:

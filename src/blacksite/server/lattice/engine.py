@@ -193,6 +193,37 @@ class Lattice:
             presence.rig = self.fit_rig(presence.rig, slots)
             if presence.cast and presence.cast.program not in presence.rig:
                 presence.cast = None
+        self.sense_hidden(presence)
+
+    def sense_hidden(self, presence: Presence) -> None:
+        """Second Ear reveals the catalog's graph radius, never visited XP."""
+        player = self.game.players[presence.player_id]
+        radius = int(self.game.progression.modifiers(player).bonus("hidden_cell_radius"))
+        if not radius or presence.instance and not presence.descent:
+            return
+        if presence.descent:
+            instance = self.encounters.core(presence)
+            if instance is None:
+                return
+            cells = {cell.id: cell for cell in instance.graph.band.cells}
+            root = presence.room
+            known = presence.found_silt.setdefault(presence.instance,set())
+        else:
+            cells = self.sectors.cells[presence.sector]
+            root = presence.cell
+            known = self.found(player,presence.sector)
+        seen,frontier = {root},{root}
+        for _ in range(radius):
+            frontier = {other for cid in frontier for other in cells[cid].neighbours}-seen
+            seen.update(frontier)
+            for cid in sorted(frontier):
+                hidden = cells[cid].hidden if presence.descent else cells[cid].access_kind == "hidden"
+                if not hidden or cid in known:
+                    continue
+                if presence.descent:
+                    known.add(cid)
+                else:
+                    self.reveal(player,presence.sector,cid,learn=True)
 
     def jack_in(self, session: Session, target: str | None = None) -> None:
         player = self.game.players.get(session.player_id)
@@ -254,6 +285,7 @@ class Lattice:
         self.game.queue("save", session.user_id, player, immediate=True)
         if not (terminal and terminal.spec.params.get("training_core")):
             self.game.progression.record_discovery(player.id, "cell", sector+"/"+presence.cell)
+            self.sense_hidden(presence)
 
     def notify(self, presence: Presence, text: str, exclude: str | None = None) -> None:
         for other in self.presences.values():
@@ -508,6 +540,7 @@ class Lattice:
                     session.subscribed = presence.sector
                     self.log(session, "You enter "+cell.label+".")
                     self.game.progression.record_discovery(pid, "cell", presence.sector+"/"+presence.cell)
+                    self.sense_hidden(presence)
                     self.notify(presence, self.game.players[pid].name+" arrives.", exclude=pid)
             body = self.view(session, presence)
             transition = self.transitions.get(session.id)

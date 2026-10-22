@@ -614,6 +614,12 @@ groups remain separate. Surgery, doses, Chrome ejection and detox state
 are committed before effects appear. Detox uses an existing clinic
 pocket and persisted UTC deadline, including after logout/restart.
 
+S24 binds `core.progression.surge_preview(player) -> str | None` to the
+committed public event forecast. An enabled producer returns useful text,
+including when no Surge is announced. Before that producer exists, S16
+returns `None` and the Tenant's Ear detail pane says its forecast has no
+effect yet. The hook grants no event, answer, stat bonus, or authority.
+
 One settlement transaction consumes the season's eligible ballots,
 freezes rankings, writes the winning choice or tie, applies one bounded
 balance delta, records the Chronicle and installs next-season modifiers.

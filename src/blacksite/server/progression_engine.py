@@ -16,7 +16,7 @@ from blacksite.server.players import Player
 from blacksite.server.progression import Award, Grant, award
 from blacksite.server.progression_views import character_sheet, skill_menu
 from blacksite.server.protocol import Frame
-from blacksite.server.sessions import Session
+from blacksite.server.sessions import QUEUE_LIMIT, Session
 from blacksite.server.skills import ENCOUNTER_IDLE_SECONDS, LINE_GROUP, Use, gain, spend
 from blacksite.server.world.actors import Actor
 
@@ -29,6 +29,9 @@ class ProgressionEngine:
         self.menus: dict[str, int] = {}
         self.requests: dict[str, list[str]] = {}
         self.stealth_ticks: dict[str, int] = {}
+        self.pending_discoveries: set[tuple[str, str, str]] = set()
+        self.retry_discoveries: set[tuple[str, str, str]] = set()
+        self.surge_preview: Callable[[Player], str | None] = lambda player: None  # S24.
         self.crew_of: Callable[[str], str | None] = lambda pid: None  # S22.
         self.permit_combat: Callable[[str, str], bool] = lambda source, target: True  # S19.
         self.sim.arrival_hook = lambda session, avatar: self.record_discovery(session.player_id, "zone", avatar.zone)
@@ -77,7 +80,8 @@ class ProgressionEngine:
         identity = self.game.identities[player.bbs_user_id]
         days = max(0, (self.clock.now_utc()-datetime.fromisoformat(identity["first_decanted_at"])).days)
         return character_sheet(player, self.content, self.commerce.items,
-                               self.clock.now_utc().timestamp(), days, cursor, self.modifiers(player))
+                               self.clock.now_utc().timestamp(), days, cursor, self.modifiers(player),
+                               self.surge_preview(player))
 
     def reward_patch(self, player: Player, grant: Grant) -> tuple[dict[str, Any], dict[str, Any], Award | None]:
         """The source owner joins this patch to its item/spawn transaction."""
@@ -178,9 +182,14 @@ class ProgressionEngine:
 
     def record_discovery(self, pid: str, kind: str, key: str) -> None:
         """Authored visits/reveals join their permanent receipt and skill gain."""
+        request = pid,kind,key
+        if request in self.pending_discoveries:
+            return
+        self.pending_discoveries.add(request)
         def propose() -> None:
             player = self.game.players.get(pid)
             if player is None or pid in self.game.deleting:
+                self.pending_discoveries.discard(request)
                 return
             draft = deepcopy(player)
             identity = deepcopy(self.game.identities[player.bbs_user_id])
@@ -189,6 +198,7 @@ class ProgressionEngine:
                 sector, cell = key.split("/", 1)
                 known = draft.progress.setdefault("lattice", {}).setdefault("found_cells", {}).setdefault(sector, [])
                 if cell in known:
+                    self.pending_discoveries.discard(request)
                     return
                 known.append(cell)
                 self.gain(draft, Use("hidden_authored", "listening", "hidden:"+key,
@@ -198,6 +208,7 @@ class ProgressionEngine:
                               key, True, scope=key, authored=True)
                 patch, identity, result = self.reward_patch(player, grant)
                 if result is None:
+                    self.pending_discoveries.discard(request)
                     return
                 for field, value in patch.items():
                     setattr(draft, field, value)
@@ -208,12 +219,17 @@ class ProgressionEngine:
                      ("xp", "grade", "attributes", "skills", "health", "legal_at", "progress")
                      if getattr(draft, field) != getattr(player, field)}
             def committed(success: bool) -> None:
+                self.pending_discoveries.discard(request)
                 if success:
                     self.sync_actor(player)
                     self.notify_reward(player, result)
             self.commerce.settle(player, patch, self.commerce.items, self.commerce.caches,
                                  self.commerce.serial, committed, identity)
-        self.commerce.enqueue_system(propose)
+        try:
+            self.commerce.enqueue_system(propose)
+        except ValueError:
+            self.pending_discoveries.discard(request)
+            self.retry_discoveries.add(request)
 
     def notify_reward(self, player: Player, result: Award | None) -> None:
         """Publication only; the owning receipt has already committed XP."""
@@ -317,6 +333,11 @@ class ProgressionEngine:
         return True
 
     def tick(self, ctx: TickContext) -> None:
+        for request in sorted(self.retry_discoveries):
+            if self.commerce.pending and len(self.commerce.waiting) >= QUEUE_LIMIT:
+                break
+            self.retry_discoveries.discard(request)
+            self.record_discovery(*request)
         self.substances.tick(ctx.tick)
         self.clinics.tick()
         for player in self.game.players.values():

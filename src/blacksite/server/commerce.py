@@ -579,6 +579,8 @@ class Commerce:
                     detail += f"\nArmour K{values.kinetic} E{values.energy} C{values.chemical} D{values.dissonance}"
                 if template.implant and not template.implant.portable:
                     detail += "\nInstall or remove at a clinic. Open its counter and press C."
+                    if template.implant.effects.get("surge_inspect") and self.game.progression.surge_preview(player) is None:
+                        detail += "\nNo effect yet: Surge forecasts are not available."
         return {**menu(title, rows, screen.cursor, detail, "Esc/B returns"), "actions": actions,
                 "page": 2 if screen.sell else 1}
 

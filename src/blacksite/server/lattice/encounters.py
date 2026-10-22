@@ -345,6 +345,7 @@ class Encounters:
         presence.trace = 0
         presence.cast = presence.procedure = None
         presence.found_silt.setdefault(iid, set()).add(presence.room)
+        self.lat.sense_hidden(presence)
         self.follow(presence)
         self.log(presence, f"SILT / {band.name}. No trace. B follows the riser; J starts escape.")
         self.log(presence, "NPC BLACK FEEDBACK / BODY RISK below remains active.", True)
@@ -379,7 +380,10 @@ class Encounters:
                     self.lat.reveal(player, presence.sector, cell.id, learn=True)
                 self.log(presence, "Survey reveals adjacent hidden cells." if hidden else "No hidden signal is adjacent.")
             else:
-                self.log(presence, "A hidden signal is adjacent. Listening 20 resolves it." if hidden else "No hidden signal is adjacent.")
+                origin = cells[presence.cell].pos
+                directions = sorted({("north" if cell.pos[1] < origin[1] else "south" if cell.pos[1] > origin[1] else "")+
+                    ("west" if cell.pos[0] < origin[0] else "east" if cell.pos[0] > origin[0] else "") for cell in hidden})
+                self.log(presence,"Hidden signal directions: "+(", ".join(directions) if directions else "none adjacent")+". Listening 20 resolves them.")
             return
         graph = self.core(presence).graph
         known = presence.found_silt.setdefault(presence.instance, set())
@@ -975,6 +979,7 @@ class Encounters:
                     if presence.mapping_until > tick:
                         known.update(c.id for c in adjacent_hidden(self.core(presence).graph.band, presence.room, known))
                 presence.target = ""
+                self.lat.sense_hidden(presence)
                 if presence.redline_move:
                     presence.integrity = max(0, presence.integrity-5)
                 self.follow(presence)
