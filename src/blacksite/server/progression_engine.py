@@ -9,6 +9,7 @@ from collections.abc import Callable
 from typing import Any
 
 from blacksite.server.commerce import Commerce
+from blacksite.server.clock import TICK_HZ
 from blacksite.server.modifiers import Modifiers, collect
 from blacksite.server.loop import TickContext
 from blacksite.server.players import Player
@@ -16,7 +17,7 @@ from blacksite.server.progression import Award, Grant, award
 from blacksite.server.progression_views import character_sheet, skill_menu
 from blacksite.server.protocol import Frame
 from blacksite.server.sessions import Session
-from blacksite.server.skills import LINE_GROUP, Use, gain, spend
+from blacksite.server.skills import ENCOUNTER_IDLE_SECONDS, LINE_GROUP, Use, gain, spend
 from blacksite.server.world.actors import Actor
 
 
@@ -27,6 +28,7 @@ class ProgressionEngine:
         self.game.progression = self
         self.menus: dict[str, int] = {}
         self.requests: dict[str, list[str]] = {}
+        self.stealth_ticks: dict[str, int] = {}
         self.crew_of: Callable[[str], str | None] = lambda pid: None  # S22.
         self.permit_combat: Callable[[str, str], bool] = lambda source, target: True  # S19.
         self.sim.arrival_hook = lambda session, avatar: self.record_discovery(session.player_id, "zone", avatar.zone)
@@ -134,6 +136,41 @@ class ProgressionEngine:
                 "progress": draft.progress}, self.commerce.items, self.commerce.caches,
                 self.commerce.serial, committed)
         self.commerce.enqueue_system(propose)
+
+    def hostile_contact(self, actor: Actor, opponent: Actor) -> str:
+        """Keep the encounter alive even after its one-point budget is full."""
+        if not self.combat_eligible(actor, opponent):
+            return ""
+        player = self.controller(actor)
+        now = self.clock.now_utc().timestamp()
+        contact = player.progress.get("stealth_contact", {})
+        encounter = contact.get("id", "")
+        if not encounter or now-float(contact.get("at", 0)) >= ENCOUNTER_IDLE_SECONDS:
+            encounter = player.id+":"+self.clock.now_utc().isoformat()
+        player.progress["stealth_contact"] = {"id": encounter, "at": now}
+        self.game.queue("save", player.bbs_user_id, player, immediate=False)
+        return encounter
+
+    def stealth(self, player: Player) -> None:
+        actor = self.game.combat.actor(player)
+        if not actor or actor.zone is None or actor.stance != "stealth":
+            self.stealth_ticks.pop(player.id, None)
+            return
+        elapsed = self.stealth_ticks.get(player.id, 0)+1
+        self.stealth_ticks[player.id] = elapsed
+        if elapsed < TICK_HZ:
+            return
+        self.stealth_ticks[player.id] = 0
+        combat = self.game.combat
+        opponent = next((other for other in self.game.world.zones[actor.zone].actors.values()
+            if other is not actor and self.combat_eligible(actor, other)
+            and combat.relation(actor, other) == "hostile" and combat.legal(actor, other)
+            and combat.visible(actor, other)), None)
+        if opponent is not None:
+            encounter = self.hostile_contact(actor, opponent)
+            self.record_use(player.id, Use("stealth_second", "stealth",
+                f"stealth:{encounter}:{self.clock.now_utc().isoformat()}", True, threat=True,
+                seconds=1, encounter=encounter))
 
     def record_discovery(self, pid: str, kind: str, key: str) -> None:
         """Authored visits/reveals join their permanent receipt and skill gain."""
@@ -276,6 +313,9 @@ class ProgressionEngine:
     def tick(self, ctx: TickContext) -> None:
         for player in self.game.players.values():
             self.sync_actor(player)
+            self.stealth(player)
+        for pid in self.stealth_ticks.keys()-self.game.players.keys():
+            self.stealth_ticks.pop(pid, None)
         for sid in tuple(self.menus):
             session = self.game.sessions.active.get(sid)
             if session is None or session.closed or session.player_id not in self.game.players:
