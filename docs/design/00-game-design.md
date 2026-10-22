@@ -1016,6 +1016,11 @@ use per completed input-consuming craft (subject to the daily use cap).
 Ammo recipes create one full pack without scaling its count. Program
 recipes teach the program permanently and have no quality roll.
 
+Workshop filters describe the output: `rigs_programs` accepts rigs and
+programs; `chemical_melee` accepts drugs, melee weapons and equipment
+with a chemical attack, including the Sable Stinger drone. A faction's
+chemical workshop must be able to build its own catalog chemical drone.
+
 ### 8.5 Implants and surgery
 
 - Implants occupy **tolerance** points and a slot (head, eyes, spine,

@@ -160,6 +160,19 @@ def test_game_8_4_learn_consumes_physical_schematic_and_duplicate_stays(game):
     assert item.id in player.inventory
 
 
+def test_game_8_4_chemical_workshop_fabricates_its_catalog_stinger(game):
+    client, player = caller(game)
+    target = setup_recipe(game, client, player, "sch_stinger")
+    shop(game, client, "chemical_melee")
+    fab = game.core.fabrication
+    fab.start(client.session, target, "sch_stinger")
+    game.step(3*TICK_HZ)
+    game.commit_commerce()
+    made = next(item for item in fab.commerce.items.values() if item.owner == player.id and item.template == "drn_sable_stinger")
+    assert made.health == 35 and 1 <= made.quality <= 1.15
+    assert not fab.amounts(player)
+
+
 def test_game_8_4_quality_floor_cap_and_no_roll(content):
     from random import Random
     wrench = content.items["wpn_ferry_wrench"]

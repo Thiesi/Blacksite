@@ -134,6 +134,8 @@ with its listed inputs.
 - Quality uses game design 8.4's typed per-template selector, shared by
   fabrication, equipment resolution and displayed stats. Explicit `none`
   preserves permissions, slots, durations, tolerance and stack counts.
+- Workshop filters follow output capabilities: the chemical/melee
+  workshop also accepts the catalog Stinger chemical drone (game 8.4).
 - Reconcile accepted [PR #38](https://github.com/Thiesi/Blacksite/pull/38)
   findings 12/14. S18/S21/S23/S25/S30 preserve this quality policy.
   S25 owns real Scour and workshop placement and native acceptance.

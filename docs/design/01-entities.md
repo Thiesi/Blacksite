@@ -261,7 +261,8 @@ and unit bounds, harvest/craft seconds and respawn uptime seconds.
 Commissioned Scour zones identify their ring with a `salvage_field`
 object's `ring` parameter. Live `salvage_node` objects expose grade and
 remaining units. Workshop objects declare `makes`: `any`, `rigs_programs`
-or `chemical_melee`. Future placements remain inactive until S25; S17
+or `chemical_melee` (including chemical-attack drones). Future
+placements remain inactive until S25; S17
 acceptance geography is explicitly a fixture.
 
 S16 adds `grades.json` records `{id, grade, title, promotion}` for all

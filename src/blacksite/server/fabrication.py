@@ -59,7 +59,8 @@ class Fabrication:
             recipe.schematic.output in self.content.programs or output and output.class_ == "rig")
             or makes == "chemical_melee" and output and (
                 output.class_ == "drug" or output.weapon and (
-                    output.weapon.melee or output.weapon.damage_type == "chemical")))
+                    output.weapon.melee or output.weapon.damage_type == "chemical")
+                or output.drone and output.drone.attack and output.drone.attack.damage_type == "chemical"))
         if not allowed:
             raise ValueError("This workshop makes "+makes.replace("_", " and ")+" only.")
         if not self.content.active("items" if output else "programs", recipe.schematic.output):
