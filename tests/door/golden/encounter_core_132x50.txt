@@ -4,13 +4,13 @@
 │   │                                                                                                       │BODY SAFE             │
 │   │                                                                                                       │HP 130/130            │
 │   │                                                                                                       │Pick 0.7s             │
+│   │                                                                                                       │♦ Guest界             │
 │   │                                                                                                       │RIG                   │
 │   │                                                                                                       │1 Pick                │
 │   │                                                                                                       │2 Umbrella            │
 │   │                                                                                                       │3 Empty               │
 │   │                                                                                                       │ROOM                  │
-│   │                                                                                                       │Registry foyer        │
-│ (09)                                                                                                      │♦ Guest界             │
+│ (09)                                                                                                      │Registry foyer        │
 │                                                                                                           │                      │
 │                                                                                                           │                      │
 │                                                                                                           │                      │

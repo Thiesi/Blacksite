@@ -113,6 +113,9 @@ Same frame; the viewport renders the sector instead of a zone.
   found).
 - Cores are `[Cn]` with a colour by owner faction. The runner is a
   reverse-video marker; other presences are `♦` with a relation colour.
+- Tab/Shift-Tab cycle defenders and runners in the same cell or room and
+  instance. A selected runner shows integrity percent or PROTECTED; body
+  permissions and Burn legality come from the server, never the client.
 - The side panel becomes: INTEGRITY, TRACE (with the threshold marked),
   RIG (slots with cooldown ticks), ROOM (data, controls, ICE bars).
 - Inside a core, the viewport shows the core's room graph the same way,

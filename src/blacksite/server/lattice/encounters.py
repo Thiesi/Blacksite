@@ -8,6 +8,7 @@ from collections.abc import Callable
 from copy import deepcopy
 from dataclasses import dataclass
 from hashlib import blake2b
+from math import ceil
 from random import Random
 from typing import TYPE_CHECKING, Any
 
@@ -138,6 +139,12 @@ class Encounters:
         return [ice for ice in candidates if ice.alive and
                 (ice.location == self.location(presence) if room_only else
                  ice.location[0] == self.location(presence)[0])]
+
+    def runner_targets(self, presence: Presence) -> list[Presence]:
+        return [other for other in self.lat.presences.values()
+                if other.player_id != presence.player_id
+                and self.location(other) == self.location(presence)
+                and (actor := self.actor(other)) is not None and actor.stance == "jacked"]
 
     def spawn(self, core_id: str, iid: str) -> Instance:
         graph = CoreGraph(self.content.cores[core_id])
@@ -1121,10 +1128,13 @@ class Encounters:
             slot = int(key)-1 if key in tuple("1234567") else int(action[8:])-1 if action.startswith("program_") else None
             pid = presence.rig[slot] if slot is not None and 0 <= slot < len(presence.rig) else args.get("program", "")
             self.start_cast(presence, pid, args.get("target", ""))
-        elif name == "lat.target" or key == "tab":
+        elif name == "lat.target" or key in ("tab", "shift-tab") or action in ("target_next", "target_prev"):
             ids = [i.id for i in self.defenders(presence)]
-            if key == "tab":
-                presence.target = ids[(ids.index(presence.target)+1) % len(ids)] if presence.target in ids else next(iter(ids), "")
+            ids += [other.player_id for other in self.runner_targets(presence)]
+            if key in ("tab", "shift-tab") or action in ("target_next", "target_prev"):
+                step = -1 if key == "shift-tab" or action == "target_prev" else 1
+                presence.target = (ids[(ids.index(presence.target)+step) % len(ids)]
+                    if presence.target in ids else next(iter(ids if step > 0 else ids[::-1]), ""))
             elif args.get("target") in ids:
                 presence.target = args["target"]
         elif name == "lat.rig" or action == "rig" or key in ("r", "R"):
@@ -1166,6 +1176,13 @@ class Encounters:
                     body["beacons"].append({"player": other.player_id,
                         "name": self.game.players[other.player_id].name, "cell": effect.params["cell"]})
         body["me"]["target"] = presence.target
+        runner = next((other for other in self.runner_targets(presence)
+                       if other.player_id == presence.target), None)
+        body["runner_target"] = ({"id": runner.player_id,
+            "name": self.game.players[runner.player_id].name,
+            "integrity_percent": ceil(runner.integrity),
+            "burn_allowed": bool(not self.lat.public(presence) and not self.lat.public(runner)
+                and self.combat.permits_indirect(self.actor(presence), self.actor(runner)))} if runner else None)
         shield = presence.effects.shield
         body["me"]["shield"] = ({"name": self.content.programs[shield.program].name,
             "budget": shield.budget, "pin_once": shield.pin_once, "black_meat_once": shield.black_meat_once}

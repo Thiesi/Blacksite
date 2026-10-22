@@ -1,6 +1,9 @@
 """Game 5/6.7: body authority, trace dispatch and durable one-use goods."""
 
 from dataclasses import replace
+
+from blacksite.server.protocol import Frame
+from tests.character_helpers import act
 import sqlite3
 
 import pytest
@@ -195,3 +198,44 @@ def test_game_6_7_earned_hit_settles_before_escape_and_further_transfers(runners
     assert presence.escape.interruptions == 1
     assert presence.player_id in game.core.lattice.presences
     assert not encounters.pending_hit(presence.player_id)
+
+
+def test_game_6_7_real_target_keys_select_local_runner_and_cast_burn(runners):
+    game, a, b, c = runners
+    first, second = enter(game, a, 'lat-civic-ledger'), enter(game, b, 'lat-civic-ledger')
+    first.room = second.room = 'r-foyer'
+    encounters = game.core.lattice.encounters
+    zone = game.core.world.zones[actor(game, a).zone]
+    zone.template = replace(zone.template, meta=replace(zone.template.meta, safety='contested'))
+    for client in (a,b):
+        game.core.characters.players[client.session.player_id].grade = 5
+    first.rig = ('prg_pick','prg_umbrella','prg_burn')
+    act(game,a,Frame('key',{'k':'tab','t':0}))
+    assert first.target == encounters.defenders(first)[0].id
+    act(game,a,Frame('key',{'k':'shift-tab','t':0}))
+    assert first.target == second.player_id
+    _,view = encounters.view(a.session,first,game.core.lattice.view(a.session,first))
+    assert view['runner_target']['id'] == second.player_id
+    assert view['runner_target']['burn_allowed'] is True
+    act(game,a,Frame('key',{'k':'3','t':0}))
+    assert first.cast and first.cast.target == second.player_id
+    game.step(first.cast.until-game.clock.now_tick())
+    assert second.integrity == 82
+    second.room = 'r-entry'
+    _,view = encounters.view(a.session,first,game.core.lattice.view(a.session,first))
+    assert view['runner_target'] is None
+
+
+def test_game_6_7_targeted_safe_runner_shows_protection_without_burn_cost(runners):
+    game, a, b, c = runners
+    first, second = enter(game,a,'lat-civic-ledger'),enter(game,b,'lat-civic-ledger')
+    encounters = game.core.lattice.encounters
+    first.rig = ('prg_burn',None,None)
+    act(game,a,Frame('key',{'k':'tab','t':0}))
+    assert first.target == second.player_id
+    _,view = encounters.view(a.session,first,game.core.lattice.view(a.session,first))
+    assert view['runner_target']['burn_allowed'] is False
+    before = first.trace
+    act(game,a,Frame('key',{'k':'1','t':0}))
+    assert first.cast is None and first.trace < before+1 and second.integrity == 100
+    assert 'prg_burn' not in game.core.characters.players[first.player_id].progress.get('lattice_cooldowns',{})

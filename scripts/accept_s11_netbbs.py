@@ -6,6 +6,7 @@ extra money, faction membership or progression fixtures are needed.
 
 import argparse
 import asyncio
+from collections import deque
 import json
 from pathlib import Path
 import time
@@ -13,6 +14,7 @@ import time
 from accept_s10_netbbs import Connection, NativeProbe, wait
 from blacksite.admin.client import request
 from blacksite.server.world.actors import Actor
+from blacksite.server.world.sight import line_of_sight
 
 
 async def approach(probe: NativeProbe, caller: Connection, target: Actor) -> None:
@@ -20,11 +22,37 @@ async def approach(probe: NativeProbe, caller: Connection, target: Actor) -> Non
     zone=probe.service.world.zones[actor.zone]
     async with asyncio.timeout(20):
         while not probe.combat.visible(target,actor) or (actor.x-target.x)**2+(actor.y-target.y)**2>16:
-            occupied={a.position for a in zone.actors.values()}
-            candidates=[(x,y) for x in range(target.x-3,target.x+4) for y in range(target.y-3,target.y+4)
-                if zone.passable((x,y)) and zone.allows_hostile((x,y)) and (x,y) not in occupied]
+            # A moving patrol may leave a geometrically close tile behind
+            # a wall or another body. Choose a reachable visible approach,
+            # then take only one real-key step before planning again.
+            occupied={a.position for a in zone.actors.values() if a is not actor}
+            exits={e.tile for e in zone.template.meta.exits if e.kind=='street'}
+            pending,previous=deque([actor.position]),{actor.position:None}
+            while pending:
+                x,y=pending.popleft()
+                for tile in ((x+1,y),(x,y+1),(x-1,y),(x,y-1)):
+                    if tile not in previous and tile not in occupied and tile not in exits and zone.passable(tile):
+                        previous[tile]=(x,y);pending.append(tile)
+            candidates=[tile for tile in previous if zone.allows_hostile(tile)
+                and (tile[0]-target.x)**2+(tile[1]-target.y)**2<=16
+                and line_of_sight(zone,tile,target.position)]
+            if not candidates:
+                await asyncio.sleep(.1)
+                continue
             tile=min(candidates,key=lambda p:(p[0]-actor.x)**2+(p[1]-actor.y)**2)
-            await probe.walk(caller,tile)
+            if tile == actor.position:
+                await asyncio.sleep(.1)
+                continue
+            step=tile
+            while previous[step]!=actor.position:
+                step=previous[step]
+            # A new actor can occupy even that first step after the search.
+            try:
+                async with asyncio.timeout(1):
+                    await probe.walk(caller,step)
+            except TimeoutError:
+                pass
+
 
 
 async def profile(probe: NativeProbe, width: int, height: int) -> float:

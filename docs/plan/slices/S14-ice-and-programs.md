@@ -1,6 +1,6 @@
 # S14 — ICE and programs: cores, rooms, encounters, trace, black ICE, the Silt generator
 
-**Status:** in progress (`slice/S14-ice-and-programs`)
+**Status:** done (PR #53)
 **Primary model:** Opus · **Reviewer:** Astra (hacking-model critique before start; balance read after)
 **Depends on:** S13, S10 · **Milestone:** M2
 **Issue:** https://github.com/Thiesi/blacksite/issues/14
@@ -98,7 +98,8 @@ intent framing. Include target, cost, stage, warning and escape in views.
   damage and forced jack-out through the deterministic harness.
 - Burn across all body-safety/grade combinations; safe targets cannot
   be injured by remote presence combat or third-party hardware actions.
-- Replay the Gate Nine operational route and assert its branch effects.
+- Replay the Gate Nine core route and assert receipts and control target
+  contracts. S15 adds real branch effects; S25 adds the physical geography.
 - Recreate identical Silt graphs from seeds; all bands have a reachable
   escape, any rig can enter and no correct prose answer gates progress.
 - Survey/sample a Chorister with and without optional prose; compare
@@ -161,8 +162,15 @@ reward sites across seeds and show survey/sample phases and sweep cells.
 Shade preserves copied effect kinds; utility copies with no legal NPC
 target do not turn into invented damage (game 6.7).
 
-This remains in progress. The full named core/hardware/control catalog,
-complete caller acceptance and the final balance review are outstanding.
+The full named core/hardware/control catalog is authored. Fresh Ghost
+training and fresh Cantor/public-loan Silt acceptance have passed through
+real NetBBS native stdio at 80x24 and 132x50. Labelled unsafe/safe-body
+feedback, Hound retreat and solo/duo Gate Nine fixtures pass at both
+sizes. A final input audit also found and fixed missing caller selection
+for Burn: Tab/Shift-Tab now cycle co-located runners as well as ICE.
+Real R/Tab/3 acceptance proves public refusal without cost and a permitted
+18-integrity hit at both sizes. Full local Windows tests: 820 passed,
+one Unix-only skip. Final installed-wheel CI and review are merge gates.
 The S25 hardware/commerce and actual Gate Nine obligations remain open.
 
 The Gate Nine acceptance is phased because its physical control effects
@@ -172,3 +180,29 @@ it does not pretend those later effects or geography already exist.
 The named future Uplink Hall is an inactive ten-room expedition template,
 not an opened Season 2 level. Its local sweep/escape space, real patch
 frame and scripted encounter belong to the future season bundle.
+
+## Acceptance evidence
+
+Run `scripts/accept_s14_netbbs.py` with `--stage training`, `silt`,
+`danger`, `gate-solo`, `gate-duo` and `burn`, `--show`, and an isolated
+`--root` through the local NetBBS interpreter. Each defaults to 80x24 and
+132x50, using 16 colours and a wide character name over real Telnet to
+the native stdio door. Training/Silt use ordinary travel and no grants.
+Danger/Gate fixtures are content.local overrides validated at load;
+trace 99, loan Skeleton, active mission hook and Burn grade/XP/learning
+fixtures are recorded explicitly. No funding or placement is invented.
+CI repeats all stages against an installed wheel and retains proof files.
+
+Measured boundary check: trace 99 to the real tier-three Hound takes
+0.7 s in each Windows danger profile; this is a threshold fixture, not
+a claimed hundred-second wait. Scripts record stage/entry-to-receipt
+elapsed timings for the installed-wheel runs. Three-second lifts,
+1.5-second Skeleton, five-second Chorister phases, warnings and bounded
+escape use the live server clock and their published counters.
+
+The review fixes keep peers and hazards visible with seven rig slots and
+replace ambiguous safe-body text when NPC risk is accepted. Optional
+shared cash remains a competing bonus, separate from identity/mission
+receipts and daily XP. These automated timings and routes establish
+readability and reachable mechanics, not human enjoyment; the S30
+onboarding and complete Season 1 pacing acceptance remain necessary.

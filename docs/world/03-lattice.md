@@ -586,6 +586,10 @@ identity lockout preserves public routes.
 | Liar bait taken | +15 |
 | Blackout cast | +25 |
 
+A lift pays its applicable trace when the attempt starts. Cancellation,
+interruption or losing a shared-source race does not refund it; no goods
+or receipt transfer unless the source transaction commits.
+
 Consequences by sector type. Sector types: **civic** (Core, Terraces,
 Vatside outside Sablier cores), **corporate** (Spire, Tramyard, Sablier
 cores, Halvard cores anywhere), **black** (Sink, Sodium Row), **street**

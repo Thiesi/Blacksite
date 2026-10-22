@@ -649,11 +649,17 @@ identity's nonpublic links; its public routes remain available.
 An authored ordinary core may hold at most one optional core-owned chit
 cache: 40 * tier, respawning after 30 minutes of server uptime. This is
 never a player's bank or storage; cores explicitly offering no resale
-data retain that rule. Inspect shows the exact yield and availability.
+data retain that rule. These optional shared spoils reward competing
+runs; mission progress and personal records never depend on winning
+that race. Section 3.5's separate first-lift XP receipt is per identity
+and core per UTC day, not this shared chit respawn. Inspect shows the
+exact yield and availability.
 Shared loot, source generation, player reward and receipt commit together.
 Mission keys use an identity/mission scope; personal evidence and learned
 records are not someone else's shared cash prize. Data lifts take 3 s,
-or 2.25 s with Ledger, rounded up to ticks. Cancellation transfers nothing.
+or 2.25 s with Ledger, rounded up to ticks. A lift pays its applicable
+trace on start; cancellation, interruption or losing a shared-source race
+does not refund that trace. Cancellation transfers nothing.
 A request binds its displayed source revision so replay cannot consume
 a later respawn. Section 3.5 owns XP and meaningful-use limits; training
 and generated discovery do not create an infinite reward source.

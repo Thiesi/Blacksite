@@ -53,7 +53,10 @@ def render_lattice(buffer: CellBuffer, body: dict[str, Any], area: Rect, palette
     status: list[tuple[str, str]] = [
         (f"INTEGRITY {me.get('integrity', 100):g}", "hp_ok"),
         (f"TRACE {me.get('trace', 0):g}", "ui_highlight"),
-        ("BODY "+str(body.get("body_safety", "")).upper(), "safety_"+str(body.get("body_safety", "safe"))),
+        ("BODY NPC RISK" if body.get("black_risk") and body.get("body_safety") == "safe"
+         else "BODY "+str(body.get("body_safety", "")).upper(),
+         "warning" if body.get("black_risk") and body.get("body_safety") == "safe"
+         else "safety_"+str(body.get("body_safety", "safe"))),
     ]
     if "body_hp" in me:
         status.append((f"HP {me['body_hp']}/{me['body_hp_max']}", "text"))
@@ -76,23 +79,38 @@ def render_lattice(buffer: CellBuffer, body: dict[str, Any], area: Rect, palette
         status.append((f"SHIELD {shield['budget']:g} {shield['name']}", "hp_ok"))
     if me.get("decoy", 0) > 0:
         status.append((f"DECOY {me['decoy']:g}", "ui_highlight"))
-    status.append(("RIG", "title"))
+    if target := body.get("runner_target"):
+        suffix = f" {target['integrity_percent']}%" if target['burn_allowed'] else " PROTECTED"
+        label = "> "+truncate(target['name'], side_w-2-display_width(suffix))+suffix
+        status.append((label, "warning" if target['burn_allowed'] else "muted"))
+    # Nearby runners remain visible before optional room labels and rig
+    # detail. The graph still marks every authorized peer and beacon.
+    ordered = sorted(peers, key=lambda peer: peer.get("cell") != me.get("cell"))
+    for peer in ordered[:2 if len(ordered) > 3 else 3]:
+        status.append(("\u2666 "+str(peer.get("name", "Another runner")), peer.get("role", "text")))
+    if len(ordered) > 3:
+        status.append((f"+{len(ordered)-2} runners", "text"))
+    beacons = body.get("beacons", [])
+    if beacons:
+        label = "BEACON "+beacons[0]["name"]
+        if len(beacons) > 1:
+            label = truncate(label, 16)+f" +{len(beacons)-1}"
+        status.append((label, "player_crew"))
     rig = [f"{r['slot']} {r.get('name', 'Empty')}"+
            (f" {r['cd']:.1f}s" if r.get("cd") else "") for r in me.get("rig", [])]
-    if len(status)+len(rig)+2 > area.height:
+    available = max(1, area.height-len(status)-1)
+    if len(rig) > available:
+        per_row = 2 if (len(rig)+1)//2 <= available else 3
+        width = (side_w-(per_row-1))//per_row
         packed = []
-        for index in range(0, len(rig), 2):
-            line = truncate(rig[index], 10)
-            if index+1 < len(rig):
-                line += ' '*(11-display_width(line))+truncate(rig[index+1], 10)
-            packed.append(line)
+        for index in range(0, len(rig), per_row):
+            parts = [truncate(line, width) for line in rig[index:index+per_row]]
+            packed.append(' '.join(line+' '*(width-display_width(line)) for line in parts).rstrip())
         rig = packed
+    status.append(("RIG", "title"))
     status.extend((line, "text") for line in rig)
-    status += [("ROOM", "title"), (str(body.get("label", "")), "text")]
-    for peer in peers:
-        status += [("♦ "+str(peer.get("name", "Another runner")), peer.get("role", "text"))]
-    for beacon in body.get("beacons", []):
-        status.append(("BEACON "+beacon["name"], "player_crew"))
+    if len(status)+2 <= area.height:
+        status += [("ROOM", "title"), (str(body.get("label", "")), "text")]
     for index, (text, role) in enumerate(status[:area.height]):
         buffer.put(side_x, area.y+index, truncate(text, side_w), palette.style(role))
     if room is not None:

@@ -181,3 +181,49 @@ def test_ui_3_back_after_menu_close_retreats_even_before_client_context_refresh(
     assert a.session.id not in game.core.lattice.encounters.menus
     intent(game, a, 'menu_close')
     assert presence.instance is None and actor(game, a).stance == 'jacked'
+
+
+def test_game_6_7_cancelled_lift_keeps_start_trace_and_transfers_nothing(runners):
+    game, a, b, c = runners
+    presence = enter(game, a, 'lat-civic-ledger')
+    presence.room = 'r-cache'
+    encounters = game.core.lattice.encounters
+    data = encounters.core(presence).graph.room(presence.room).data[0]
+    key = encounters.source(presence, data)
+    source = game.core.lattice.sources.refresh(key, data, game.clock.now_tick())
+    player = game.core.characters.players[presence.player_id]
+    before_chits, before_trace = player.chits_hand, presence.trace
+    intent(game, a, 'lat.lift', target=data.id, generation=source.generation)
+    assert presence.procedure and presence.trace >= before_trace+10
+    spent_trace = presence.trace
+    intent(game, a, 'lat.cancel')
+    game.step(40)
+    assert presence.procedure is None and presence.trace >= spent_trace
+    assert player.chits_hand == before_chits and source.generation == 0
+    assert key not in player.progress.get('lattice_receipts', {})
+    assert not game.core.commerce.pending
+
+
+def test_game_6_7_contended_lift_charges_attempts_but_pays_one_generation(runners):
+    game, a, b, c = runners
+    presences = [enter(game, client, 'lat-civic-ledger') for client in (a,b)]
+    encounters = game.core.lattice.encounters
+    for presence in presences:
+        presence.room = 'r-cache'
+    data = encounters.core(presences[0]).graph.room('r-cache').data[0]
+    key = encounters.source(presences[0], data)
+    source = game.core.lattice.sources.refresh(key, data, game.clock.now_tick())
+    players = [game.core.characters.players[p.player_id] for p in presences]
+    before = sum(p.chits_hand for p in players)
+    for client, presence in zip((a,b), presences):
+        trace = presence.trace
+        intent(game, client, 'lat.lift', target=data.id, generation=source.generation)
+        assert presence.procedure and presence.trace >= trace+10
+    game.step(40)
+    game.commit_commerce()
+    game.step()
+    assert all(p.procedure is None for p in presences)
+    assert not game.core.commerce.pending
+    assert sum(p.chits_hand for p in players) == before+80
+    assert game.core.lattice.sources.sources[key].generation == 1
+    assert sum(key in p.progress.get('lattice_receipts', {}) for p in players) == 1

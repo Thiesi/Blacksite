@@ -3,13 +3,13 @@
 │ (♦1)───(02)───[C1]───[C2]───(05)───(06)───(07)───(08) │TRACE 0               │
 │   │      │      │      │      │      │      ║      ║  │BODY SAFE             │
 │ (09)───(10)───(11)───(12)───(13)───(14)═══(15)═══(16) │HP 130/130            │
+│   ║      ║      ┆      ┆                              │♦ Runner界            │
 │   ║      ║      ┆      ┆                              │RIG                   │
-│   ║      ║      ┆      ┆                              │1 Pick                │
-│ (17)═══(18)···(19)···(20)                             │2 Umbrella            │
+│ (17)═══(18)···(19)···(20)                             │1 Pick                │
+│                                                       │2 Umbrella            │
 │                                                       │3 Empty               │
 │                                                       │ROOM                  │
 │                                                       │House Lights          │
-│                                                       │♦ Runner界            │
 │                                                       │                      │
 │                                                       │                      │
 │                                                       │                      │
@@ -20,5 +20,5 @@
 │                                                                              │
 │                                                                              │
 │                                                                              │
-│Arrows follow links  E uplink / enter  J jack out  1-7 programs               │
+│Arrows links  E uplink / enter  J jack out  Tab target  1-7 cast  R rig       │
 └────────────────────────────────────────────────────────────────────────────── 

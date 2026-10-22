@@ -123,3 +123,34 @@ def test_ui_3_seven_slot_rig_keeps_budgets_and_escape_visible_at_80_columns(info
     _, terminal = draw(info, content, body, 80, 24, '16')
     text = terminal.screen_text()
     assert all(s in text for s in ('SHIELD 14', 'DECOY 10', 'ESCAPE 1.9s', '7 Signet', 'ROOM /'))
+
+
+def test_ui_3_two_sweeps_and_peer_survive_full_rig_at_80_columns(info, views):
+    content, bodies = views
+    body = deepcopy(bodies['silt'])
+    body['presences'] = [{'id':'guest', 'name':'Guest\u754c', 'cell':body['me']['cell']}]
+    warnings = body['sweep_warnings']
+    other = next(cell for cell in body['cells'] if cell['id'] != warnings[0]['cell'])
+    body['sweep_warnings'] = [*warnings, {'cell':other['id'], 'ticks':49}]
+    body['me']['rig'] = [{'slot':i+1,'name':name,'cd':0} for i,name in enumerate(
+        ('Pick','Umbrella','Understudy','Smoke','Anchor','Tourniquet','Signet'))]
+    body['me']['shield'] = {'name':'Bunker','budget':14}
+    body['me']['decoy'] = 10
+    _, terminal = draw(info,content,body,80,24,'16')
+    text = terminal.screen_text()
+    assert text.count('SWEEP (') == 2
+    assert all(value in text for value in ('Guest\u754c','BODY NPC RISK','BLACK ICE / BODY RISK',
+        'SHIELD 14','DECOY 10','ESCAPE 1.9s','7 Signet','ROOM /'))
+    assert 'BODY SAFE' not in text
+
+
+@pytest.mark.parametrize('allowed',[True,False])
+@pytest.mark.parametrize('size',[(80,24),(132,50)])
+def test_ui_3_runner_target_is_visible_and_protection_is_explicit(info,views,allowed,size):
+    content,bodies=views
+    body=deepcopy(bodies['core'])
+    body['runner_target']={'id':'guest','name':'Guest\u754c','integrity_percent':82,'burn_allowed':allowed}
+    _,terminal=draw(info,content,body,*size,'16')
+    text=terminal.screen_text()
+    assert '> Guest\u754c' in text
+    assert ('82%' if allowed else 'PROTECTED') in text
