@@ -229,6 +229,10 @@ class Factions:
             progress.pop("faction_vat", None)
             text = "Ordinary decant destination: "+("faction vat when commissioned; public fallback" if progress["faction_respawn"] == "hall" else "nearest public vat")+"."
         elif action == "loan" and faction == "unmoored":
+            from blacksite.server.lattice.programs import can_acquire
+            program = self.content.programs["prg_residual_fragment"]
+            if not can_acquire(program, player.archetype, player.standing, set(), bound_loan=True):
+                raise ValueError("You do not meet this bound program's acquisition requirements.")
             if not rules.claim_daily(identity, "unmoored-loan", self.clock.now_utc()):
                 raise ValueError("Today's bound loan is already claimed.")
             progress["faction_loan"] = True

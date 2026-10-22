@@ -156,7 +156,10 @@ bible says it does.
 
 ## Acceptance script
 
-1. Two callers at grade ≥ 5 in `sink-terraces`, one Sable, one Freelance.
+1. Two callers at grade 5 or above, one nonhostile member and one
+   Freelance, in a contested lane. S20 uses shipped Clinic Row; S25
+   repeats on actual `sink-terraces`. Use Sablier for Warden response:
+   Sable is already hostile to Wardens under the matrix.
 2. The member shoots the Freelance caller: the member name turns
    red on the other screen with the `!` tag; a Warden NPC in the zone
    turns on the Marked caller; the sitrep shows "Marked 14:52".

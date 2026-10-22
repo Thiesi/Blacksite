@@ -308,3 +308,32 @@ def test_game_8_1_rotating_weapon_brings_its_public_ammunition(contacts, monkeyp
     ids = [row.item for row in stock]
     assert rifle in ids and content.items[rifle].weapon.ammo in ids
     assert not game.core.factions.rotating(vendor, content.items[rifle].weapon.ammo)
+
+
+def test_game_7_6_rank_perks_never_change_physical_combat_numbers(contacts):
+    game, caller, _, _ = contacts
+    p = player(game, caller)
+    progression, combat = game.core.progression, game.core.combat
+    actor = combat.actor(p)
+    before = (dict(progression.modifiers(p).values), combat.armour(actor, "kinetic"),
+              combat.evasion(actor), combat.weapon(p)[1])
+    for fid in game.core.loop.content.factions:
+        member(game, caller, fid)
+        progression.sync_actor(p)
+        actual = (dict(progression.modifiers(p).values), combat.armour(actor, "kinetic"),
+                  combat.evasion(actor), combat.weapon(p)[1])
+        assert actual == before, fid
+
+
+def test_game_17_2_bound_loan_enforces_content_acquisition_requirements(contacts, monkeypatch):
+    from dataclasses import replace
+    game, caller, _, _ = contacts
+    p = member(game, caller, "unmoored")
+    f = game.core.factions
+    program = f.content.programs["prg_residual_fragment"]
+    monkeypatch.setitem(f.content.programs, program.id,
+                        replace(program, acquisition_requires=("bound_loan", "archetype:mettle")))
+    assert p.archetype != "mettle"
+    with pytest.raises(ValueError, match="acquisition"):
+        f.service(caller.session, "recruiter-cards", "unmoored", "loan")
+    assert not game.core.commerce.pending and "faction_loan" not in p.progress
