@@ -111,10 +111,14 @@ class Npcs:
         return int(getattr(item.armour.armour, kind)) if item and item.armour else 0
 
     def provoked(self, source: Actor, target: Actor) -> None:
-        if source.kind != "player" or target.kind == "player" or target.behaviour.get("training"):
+        if (source.kind != "player" and not source.behaviour.get("player_drone")
+                or target.kind == "player" or target.behaviour.get("player_drone") or target.behaviour.get("training")):
             return
         group = str(target.behaviour.get("spawner"))
         self.provocations[target.zone, group, source.id] = self.combat.now() + PROVOCATION_SECONDS
+        controller = self.game.progression.controller(source)
+        if controller:
+            self.provocations[target.zone,group,controller.id] = self.combat.now()+PROVOCATION_SECONDS
         target.target = source.id
         target.behaviour.update(last_seen=self.clock.now_tick(), last_position=source.position, state="hunt")
         # Local faction guards protect their residents, without summoning
@@ -124,6 +128,8 @@ class Npcs:
                 template = self.content.npcs.get(actor.behaviour.get("template"))
                 if template and any(b.kind in ("guard", "warden") for b in template.behaviours):
                     self.provocations[actor.zone, str(actor.behaviour.get("spawner")), source.id] = self.combat.now() + PROVOCATION_SECONDS
+                    if controller:
+                        self.provocations[actor.zone,str(actor.behaviour.get("spawner")),controller.id] = self.combat.now()+PROVOCATION_SECONDS
                     actor.target = source.id
                     actor.behaviour.update(last_seen=self.clock.now_tick(), last_position=source.position, state="hunt")
 

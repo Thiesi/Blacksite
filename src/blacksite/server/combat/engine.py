@@ -57,7 +57,7 @@ class Combat:
         return av.actor if av and av.actor.id == player.id else self.world.actors.get(player.id)
 
     def log(self, actor: Actor, text: str, warning: bool = False) -> None:
-        session = self.session(actor.id)
+        session = self.session(actor.owner if actor.behaviour.get("player_drone") else actor.id)
         if session:
             session.send(Frame("log", {"lines":[{"channel":"combat", "text":text,
                 "role":"warning" if warning else "chan_sys", "at":self.clock.now_utc().isoformat()}]}))
@@ -102,6 +102,20 @@ class Combat:
         if source.id == target.id or source.stance in ("down", "dead", "sleeper") or target.stance in ("down", "dead"):
             return False
         if not self.world.permits_harm(source, target): return False
+        if source.behaviour.get("player_drone"):
+            source = self.game.progression.drones.controller_body(source,acting=True)
+            if source is None:
+                return False
+        if target.behaviour.get("player_drone"):
+            target = self.game.progression.drones.controller_body(target,acting=False)
+            if target is None:
+                return False
+        if source.id == target.id or not self.world.permits_harm(source,target):
+            return False
+        if target.behaviour.get("mission") and source.kind == "player" and target.owner != source.id:
+            return False
+        if source.behaviour.get("mission") and target.kind == "player" and source.owner != target.id:
+            return False
         if source.kind == target.kind == "player":
             if any(self.world.zones[a.zone].safety_at(a.position) != "open" for a in (source, target)):
                 if min(self.game.players[source.id].grade, self.game.players[target.id].grade) < 5: return False
@@ -178,7 +192,7 @@ class Combat:
             "relation":self.relation(actor,target), "stance":target.stance,
             "protected":not self.legal(actor,target),
             "warning":"Protected" if not self.legal(actor,target) else "Obscured; no clear shot" if obscured
-                else "Firing marks you" if target.kind == "player" and self.relation(actor,target) != "hostile" else ""}
+                else "Firing marks you" if (target.kind == "player" or target.behaviour.get("player_drone")) and self.relation(actor,target) != "hostile" else ""}
 
     def warn(self, source: Actor, target: Actor, tick: int) -> bool:
         key = source.id, target.id
@@ -192,6 +206,12 @@ class Combat:
         return tick >= self.warnings[key] + rules.ticks(rules.WARNING_SECONDS)
 
     def mark(self, source: Actor, target: Actor) -> None:
+        if source.behaviour.get("player_drone") or target.behaviour.get("player_drone"):
+            source_body = self.game.progression.drones.controller_body(source,acting=True) if source.behaviour.get("player_drone") else source
+            target_body = self.game.progression.drones.controller_body(target,acting=False) if target.behaviour.get("player_drone") else target
+            if source_body and target_body:
+                self.mark_indirect(source_body,target_body)
+            return
         if source.kind != "player" or target.kind != "player": return
         if self.world.zones[source.zone].safety_at(source.position) == "open": return
         if self.relation(source,target) == "hostile": return
@@ -299,7 +319,9 @@ class Combat:
         if self.commerce.pending:
             self.commerce.enqueue_system(lambda: self.shot(source, target, weapon, quality, skill))
             return
-        if not self.legal(source,target) or target.stance in ("down","dead"): return
+        if (not self.legal(source,target) or target.stance in ("down","dead") or not self.visible(source,target)
+                or rules.distance(source.position,target.position) > (weapon.range or 1.5)):
+            return
         zone = self.world.zones[source.zone]
         accuracy = (weapon.accuracy if weapon.accuracy is not None else rules.MELEE_ACCURACY)+source.modifiers.get("accuracy", 0)
         if weapon.damage_type == "kinetic": accuracy += source.modifiers.get("kinetic_accuracy", 0)
@@ -321,9 +343,12 @@ class Combat:
             receipt = f"hit:{source.id}:{target.id}:{self.clock.now_utc().isoformat()}:{target.behaviour['hit_serial']}"
             if attack_use:
                 player = progression.controller(source)
-                line = "melee" if weapon.melee else "energy" if weapon.damage_type == "energy" else "kinetic"
-                progression.record_use(player.id, Use("melee_hit" if weapon.melee else "weapon_hit",
-                    line, receipt, True, threat=True))
+                if source.behaviour.get("player_drone"):
+                    progression.record_use(player.id, Use("drone_command","drones",receipt,True,changed=True,threat=True))
+                else:
+                    line = "melee" if weapon.melee else "energy" if weapon.damage_type == "energy" else "kinetic"
+                    progression.record_use(player.id, Use("melee_hit" if weapon.melee else "weapon_hit",
+                        line, receipt, True, threat=True))
             if armour_use:
                 progression.record_use(progression.controller(target).id,
                     Use("armour_absorb", "armour", "armour:"+receipt, True, threat=True))
@@ -342,9 +367,15 @@ class Combat:
         tick = self.clock.now_tick()
         for actor in (source,target):
             actor.cooldowns["combat"] = tick + rules.ticks(rules.COMBAT_SECONDS)
-            if actor.id in self.game.players:
-                self.game.players[actor.id].progress["last_exchange"] = self.now()
-                if actor.stance == "sleeper": self.game.players[actor.id].progress["sleeper_combat"] = True
+            player = self.game.progression.controller(actor)
+            if player:
+                body = self.actor(player)
+                player.progress["last_exchange"] = self.now()
+                if body:
+                    body.cooldowns["combat"] = actor.cooldowns["combat"]
+                    if body.stance == "sleeper": player.progress["sleeper_combat"] = True
+                    if body is not actor:
+                        self.remember(player,body,immediate=False)
 
     def hurt(self, source: Actor, target: Actor, amount: int, shock: float = 0, *, damage_type: str = "") -> None:
         if target.stance in ("down", "dead"):
@@ -399,7 +430,9 @@ class Combat:
             elif target.id in self.game.players:
                 target.stance = "down"
                 target.effects.clear()
-                self.game.players[target.id].progress["combat"] = {"stage":"down", "until":self.now()+rules.DOWN_SECONDS, "killer":source_id}
+                controller = self.game.progression.controller(source) if source is not None else None
+                self.game.players[target.id].progress["combat"] = {"stage":"down", "until":self.now()+rules.DOWN_SECONDS,
+                    "killer":controller.id if controller else source_id}
                 self.log(target,"You are down. A nearby ally can press E to pick you up.",True)
             else:
                 if source is not None:

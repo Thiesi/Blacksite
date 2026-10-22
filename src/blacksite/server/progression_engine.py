@@ -124,6 +124,9 @@ class ProgressionEngine:
             if (other.bbs_user_id == player.bbs_user_id
                     or crew is not None and crew == self.crew_of(other.id)):
                 return False
+            if opponent.behaviour.get("player_drone"):
+                item = self.commerce.items.get(str(opponent.behaviour.get("item","")))
+                return bool(item and self.content.items[item.template].drone.attack)
             return any(self.commerce.items.get(iid) and self.content.items[
                 self.commerce.items[iid].template].weapon for iid in other.equipment.values())
         if any(opponent.behaviour.get(key) for key in ("nonlethal", "willing", "escort")):

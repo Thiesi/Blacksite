@@ -7,6 +7,7 @@ from blacksite.server.clock import TICK_HZ
 from blacksite.server.inventory import Inventory
 from blacksite.server.npcs.behaviours import step_toward
 from blacksite.server.players import Player
+from blacksite.server.drugs import detox_until
 from blacksite.server.protocol import Frame
 from blacksite.server.rules.combat import distance
 from blacksite.server.sessions import Session
@@ -66,6 +67,28 @@ class Drones:
         block = self.game.content.items[item.template].drone if item else None
         return bool(body and block and body.zone == actor.zone and body.zone is not None
                     and distance(body.position,actor.position) <= block.control_range)
+
+    def controller_body(self, actor: Actor, *, acting: bool) -> Actor | None:
+        """Only a live online controller authorizes harm; gear keeps identity."""
+        iid = str(actor.behaviour.get("item",""))
+        player = self.game.players.get(actor.owner)
+        item = self.commerce.items.get(iid)
+        if (player is None or player.id in self.game.deleting or item is None or item.owner != player.id
+                or self.actors.get(iid) is not actor or iid not in self.records(player)):
+            return None
+        body = self.body(player)
+        if acting:
+            if (body is None or body.zone is None or body.health <= 0 or body.stance in ("down","dead","sleeper")
+                    or self.game.combat.session(player.id) is None or not self.in_range(player,actor)
+                    or list(self.records(player)).index(iid) >= self.slots(player)
+                    or detox_until(player) > self.game.clock.now_utc().timestamp()):
+                return None
+        elif body is None or body.zone is None:
+            # A defender's owned gear retains its grade and last body-safety
+            # protection while offline. This record never authorizes attacks.
+            body = player.actor()
+            body.zone,body.x,body.y = player.zone,*player.tile
+        return body
 
     def modifier_layers(self, player: Player) -> list[dict[str, float]]:
         if not self.records(player) or not self.game.combat.session(player.id):
