@@ -313,6 +313,12 @@ Real time, cooldown-based, server-resolved.
   tool effects are typed data: carrier capacity, scout sight, nearby
   crew healing or a jack-in terminal. An idle follow/hold toggle gives no
   skill; only an objective change or actual threat damage gives use gain.
+  An explicit target order starts automated fire after the controller's
+  normal 2 s warning. Follow/hold units defend an actual hostile exchange,
+  never somebody merely selecting their controller. Pursuit stays inside
+  control range. A Hound may follow a last-seen position for the ordinary
+  20 s NPC search window; other combat units need current sight. Direct
+  firing by the player still requires the second fire press below.
 
 The first hostile attack against a new visible threat raises a weapon
 for 2 s. The player presses fire again to commit; moving to safety or

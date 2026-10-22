@@ -10,6 +10,8 @@ from blacksite.server.players import Player
 from blacksite.server.drugs import detox_until
 from blacksite.server.protocol import Frame
 from blacksite.server.rules.combat import distance
+from blacksite.server.rules import combat as rules
+from blacksite.server.npcs.templates import LOST_SIGHT_SECONDS
 from blacksite.server.sessions import Session
 from blacksite.server.wake import menu, wrapped
 from blacksite.server.world.actors import Actor
@@ -26,6 +28,7 @@ class Drones:
         self.menus: dict[str, int] = {}
         self.requests: dict[str, list[str]] = {}
         self.pending: set[str] = set()
+        self.pending_attacks: set[str] = set()
 
     def records(self, player: Player) -> dict[str, dict[str, Any]]:
         return player.progress.get("drones", {})
@@ -168,6 +171,8 @@ class Drones:
                 else:
                     target = ""
                 desired = {"zone":actor.zone,"tile":list(actor.position),"mode":action,"target":target}
+                if action == "target":
+                    desired["target_tile"] = list(other.position)
                 if records[iid].get("mode") == action and records[iid].get("target","") == target:
                     return False
                 records[iid] = desired
@@ -190,6 +195,8 @@ class Drones:
                 else:
                     actor.behaviour["mode"] = action
                     actor.target = target or None
+                    if action == "target":
+                        actor.behaviour["last_target"] = (tuple(records[iid]["target_tile"]),self.game.clock.now_tick())
                 self.progression.sync_actor(player)
                 if body:
                     self.game.combat.log(body,message)
@@ -242,6 +249,71 @@ class Drones:
         self.commerce.settle(player,{},items,self.commerce.caches,self.commerce.serial,
                              lambda success:self.pending.discard(iid))
 
+    def hunt(self, player: Player, actor: Actor, tile: tuple[int, int], tick: int) -> None:
+        body = self.body(player)
+        block = self.game.content.items[self.commerce.items[actor.behaviour["item"]].template].drone
+        if not body or body.zone != actor.zone:
+            return
+        avoid = {(actor.x+dx,actor.y+dy) for dx,dy in ((1,0),(-1,0),(0,1),(0,-1))
+                 if distance(body.position,(actor.x+dx,actor.y+dy)) > block.control_range}
+        step_toward(actor,self.world.zones[actor.zone],tile,tick,avoid=avoid)
+
+    def attack(self, player: Player, iid: str, actor: Actor, tick: int) -> None:
+        body = self.controller_body(actor,acting=True)
+        item = self.commerce.items.get(iid)
+        block = self.game.content.items[item.template].drone if item else None
+        if not body or not block or not block.attack or actor.stance in ("down","dead"):
+            return
+        combat = self.game.combat
+        target = self.world.actors.get(actor.target) if actor.behaviour.get("mode") == "target" else None
+        if target is None:
+            # Actual hostile exchanges identify an attacker; merely
+            # selecting the controller is never a licence to retaliate.
+            for protected in (body,actor):
+                if tick < protected.cooldowns.get("attacked",0):
+                    candidate = self.world.actors.get(protected.behaviour.get("last_attacker"))
+                    if candidate and combat.legal(actor,candidate) and combat.visible(actor,candidate):
+                        target = candidate
+                        break
+        if target is None or not combat.legal(actor,target):
+            return
+        visible = combat.visible(actor,target)
+        if visible:
+            actor.behaviour["last_target"] = target.position,tick
+        elif block.hunt and actor.behaviour.get("last_target"):
+            tile,seen = actor.behaviour["last_target"]
+            if tick-seen < rules.ticks(LOST_SIGHT_SECONDS):
+                self.hunt(player,actor,tile,tick)
+            return
+        else:
+            return
+        if distance(actor.position,target.position) > (block.attack.range or 1.5):
+            if block.hunt or actor.behaviour.get("mode") == "target":
+                self.hunt(player,actor,target.position,tick)
+            return
+        if tick < max(actor.cooldowns.get("weapon",0),actor.cooldowns.get("knockdown",0)):
+            return
+        if not combat.warn(body,target,tick):
+            return
+        if self.commerce.pending:
+            if iid not in self.pending_attacks:
+                self.pending_attacks.add(iid)
+                def resume() -> None:
+                    self.pending_attacks.discard(iid)
+                    self.attack(player,iid,actor,self.game.clock.now_tick())
+                try:
+                    self.commerce.enqueue_system(resume)
+                except ValueError:
+                    self.pending_attacks.discard(iid)  # Recheck next tick under backpressure.
+            return
+        combat.mark(actor,target)
+        jam = max((float(effect.get("weapon_multiplier",1)) for effect in actor.effects),default=1)
+        seconds = rules.action_seconds(block.attack.cooldown,actor.shock,jam)
+        actor.cooldowns["weapon"] = rules.cooldown_deadline(tick,seconds,actor.cooldowns.get("weapon",0))
+        skill = self.progression.modifiers(player).skill(player,"drones")
+        for _ in range(block.attack.hits):
+            combat.shot(actor,target,block.attack,item.quality,skill)
+
     def view(self, session: Session) -> dict[str, Any]:
         player = self.game.players[session.player_id]
         ids = [iid for iid in player.inventory if self.game.content.items[self.commerce.items[iid].template].drone]
@@ -261,9 +333,23 @@ class Drones:
         if rows:
             template = self.game.content.items[self.commerce.items[rows[cursor]["id"]].template]
             detail += f" {template.drone.tool}. Control range {template.drone.control_range}. Recall keeps health."
+            actor = self.actors.get(rows[cursor]["id"])
+            body = self.body(player)
+            target = self.world.actors.get(body.target) if body else None
+            if actor and template.drone.attack and target:
+                if not self.game.combat.legal(actor,target):
+                    status = "protected; no attack"
+                else:
+                    other = self.progression.controller(target)
+                    other_body = self.controller_body(target,acting=False) if target.behaviour.get("player_drone") else target
+                    marked = bool(other and self.game.combat.relation(body,target) != "hostile" and any(
+                        self.world.zones[person.zone].safety_at(person.position) != "open" for person in (body,other_body)))
+                    status = "order marks you for 15 minutes" if marked else "order gives a two-second warning"
+                detail = f"Target {target.name}: {status}.\n"+detail
         else:
             rows = [{"id":"none","cells":["You carry no drone."]}]
-        return {**menu("DRONES",rows,cursor,"\n".join(wrapped(detail,52)),"U deploy  R recall  F follow  H hold  T current target  Esc/B returns"),
+        details = "\n".join(line for paragraph in detail.split("\n") for line in wrapped(paragraph,52))
+        return {**menu("DRONES",rows,cursor,details,"U deploy  R recall  F follow  H hold  T current target  Esc/B returns"),
                 "actions":[{"key":key,"label":label} for key,label in
                     (("u","deploy"),("r","recall"),("f","follow"),("h","hold"),("t","target"))]}
 
@@ -343,11 +429,16 @@ class Drones:
                 body = self.body(player)
                 online = self.game.combat.session(player.id)
                 over_limit = list(self.records(player)).index(iid) >= self.slots(player)
-                if (online is None or over_limit) and tick >= actor.cooldowns.get("combat",0):
+                inactive = body is not None and (body.health <= 0 or body.stance in ("down","dead","sleeper"))
+                if (online is None or over_limit or inactive) and tick >= actor.cooldowns.get("combat",0):
                     self.command(player,iid,"recall",system=True)
                     continue
+                if actor.shock and tick-actor.cooldowns.get("last_hit",tick) >= rules.ticks(rules.SHOCK_DELAY):
+                    actor.shock = max(0,actor.shock-rules.SHOCK_DECAY/TICK_HZ)
+                actor.marked = bool(body and body.marked)
                 if body and body.zone == actor.zone and actor.behaviour.get("mode") == "follow" and distance(body.position,actor.position) > 1.5:
                     step_toward(actor,self.world.zones[actor.zone],body.position,tick)
+                self.attack(player,iid,actor,tick)
                 if actor.zone:
                     self.records(player)[iid].update(zone=actor.zone,tile=list(actor.position))
                     if tick % (5*TICK_HZ) == 0:

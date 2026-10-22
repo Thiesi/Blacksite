@@ -362,6 +362,8 @@ class Combat:
     def exchange(self, source: Actor, target: Actor) -> None:
         if source.behaviour.get("training") or target.behaviour.get("training"): return
         self.hostile_hook(source, target)
+        target.behaviour["last_attacker"] = source.id
+        target.cooldowns["attacked"] = self.clock.now_tick()+rules.ticks(rules.COMBAT_SECONDS)
         for actor, opponent in ((source, target), (target, source)):
             self.game.progression.hostile_contact(actor, opponent)
         tick = self.clock.now_tick()
