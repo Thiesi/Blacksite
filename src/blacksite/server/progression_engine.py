@@ -11,10 +11,11 @@ from blacksite.server.commerce import Commerce
 from blacksite.server.modifiers import Modifiers, collect
 from blacksite.server.loop import TickContext
 from blacksite.server.players import Player
+from blacksite.server.progression import Award, Grant, award
 from blacksite.server.progression_views import character_sheet, skill_menu
 from blacksite.server.protocol import Frame
 from blacksite.server.sessions import Session
-from blacksite.server.skills import LINE_GROUP, spend
+from blacksite.server.skills import LINE_GROUP, Use, gain, spend
 
 
 class ProgressionEngine:
@@ -34,6 +35,41 @@ class ProgressionEngine:
         days = max(0, (self.clock.now_utc()-datetime.fromisoformat(identity["first_decanted_at"])).days)
         return character_sheet(player, self.content, self.commerce.items,
                                self.clock.now_utc().timestamp(), days, cursor, self.modifiers(player))
+
+    def reward_patch(self, player: Player, grant: Grant) -> tuple[dict[str, Any], dict[str, Any], Award | None]:
+        """The source owner joins this patch to its item/spawn transaction."""
+        draft = deepcopy(player)
+        identity = deepcopy(self.game.identities[player.bbs_user_id])
+        actor = self.game.combat.actor(player)
+        if actor:
+            draft.health, draft.stamina, draft.shock = actor.health, actor.stamina, actor.shock
+        result = award(draft, identity, grant, self.clock.now_utc(), self.modifiers(player))
+        patch = {key: deepcopy(getattr(draft, key)) for key in
+                 ("xp", "grade", "attributes", "skills", "progress", "health", "legal_at")}
+        return patch, identity, result
+
+    def gain(self, draft: Player, use: Use) -> float:
+        return gain(draft, use, self.clock.now_utc(), self.content.skills.get(use.line))
+
+    def notify_reward(self, player: Player, result: Award | None) -> None:
+        """Publication only; the owning receipt has already committed XP."""
+        if result is None:
+            return
+        actor = self.game.combat.actor(player)
+        if actor:
+            mods = self.modifiers(player)
+            actor.health_max = mods.health_max(player)
+            actor.health = min(actor.health_max, player.health)
+        session = self.game.combat.session(player.id)
+        if session and not session.closed:
+            self.game.dirty_screens.add(session.id)
+            text = f"You gain {result.xp} XP."
+            if result.grade > result.old_grade:
+                grade = next((g for g in self.content.grades.values() if g.grade == result.grade), None)
+                text += " "+(grade.promotion if grade else f"You reach grade {result.grade}.")
+                self.commerce.toast(session, text)
+            session.send(Frame("log", {"lines": [{"channel": "system", "text": text,
+                "role": "chan_sys", "at": self.clock.now_utc().isoformat()}]}))
 
     def open_skills(self, session: Session) -> None:
         self.game.screens.pop(session.id, None)

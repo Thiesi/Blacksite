@@ -6,6 +6,7 @@ import pytest
 
 from blacksite.content.loader import load_content
 from blacksite.server.progression_engine import ProgressionEngine
+from blacksite.server.progression import Grant
 from blacksite.server.protocol import Frame
 from tests.character_helpers import create
 from tests.harness import HeadlessServer
@@ -72,3 +73,18 @@ def test_game_3_3_group_attribute_and_actor_pool_update_on_spend_commit(skills_g
     actor = game.core.combat.actor(player)
     assert actor.health_max == engine.modifiers(player).health_max(player)
     assert player.skills["kinetic"] == 10
+
+
+def test_game_3_5_source_owner_can_join_reward_without_any_live_payment(skills_game):
+    game, client, player, engine = skills_game
+    old = player.xp
+    patch, identity, result = engine.reward_patch(player,
+        Grant("run", "core-unit:1", True, tier=3, core="lat-core"))
+    assert patch["xp"] == old+120 and player.xp == old
+    assert "run_xp_days" not in game.core.characters.identities[player.bbs_user_id]
+    assert identity["run_xp_days"]["lat-core"] == game.clock.now_utc().date().isoformat()
+    assert game.core.commerce.settle(player, patch, game.core.commerce.items,
+        game.core.commerce.caches, game.core.commerce.serial,
+        lambda success: engine.notify_reward(player, result) if success else None, identity)
+    game.commit_commerce(error=True)
+    assert player.xp == old and "run_xp_days" not in game.core.characters.identities[player.bbs_user_id]
