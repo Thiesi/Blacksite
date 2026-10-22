@@ -214,6 +214,12 @@ async def accept(root: Path, door_python: Path, show: bool) -> None:
             await a[0].write(b"\x1b"); await wait(lambda:a[3].id not in commerce.prompts)
             assert player.chits_bank==100; await close_menu(a)
             await a[0].write(b"p"); await wait(lambda:"CHARACTER" in a[0].screen.screen_text())
+            rows=game.progression.sheet(player)["rows"]
+            bank_row=next(i for i,row in enumerate(rows) if row["id"]=="bank")
+            while game.screens[a[3].id][1]!=bank_row:
+                old=game.screens[a[3].id][1]
+                await a[0].write(b"\x1b[B" if old<bank_row else b"\x1b[A")
+                await wait(lambda:game.screens[a[3].id][1]!=old)
             await wait(lambda:"Bank chits" in a[0].screen.screen_text())
             await a[0].write(b"\x1b"); await wait(lambda:a[3].id not in game.screens)
             persisted=next(p for p in service.storage.character_state()["players"] if p["id"]==player.id)
