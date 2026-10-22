@@ -7,6 +7,8 @@ from blacksite.content.schema import ItemTemplate
 from blacksite.server import drugs, implants
 from blacksite.server.clock import TICK_HZ
 from blacksite.server.modifiers import collect
+from blacksite.server.inventory import Inventory
+from blacksite.server.items import ItemInstance
 from blacksite.server.players import Player
 from blacksite.server.protocol import Frame
 from blacksite.server.rules.combat import DOWN_SECONDS
@@ -33,13 +35,18 @@ class Substances:
                 draft.progress["combat"] = {"stage": "down", "until": now+DOWN_SECONDS, "killer": ""}
         return result, ejected
 
-    def consume(self, draft: Player, template: ItemTemplate, now: float) -> str:
+    def consume(self, draft: Player, template: ItemTemplate, now: float, items: dict[str, ItemInstance]) -> str:
         step, ejected = self.advance(draft, now)
         result = drugs.dose(draft, template, self.progression.modifiers(draft), now)
         notes = [" Dependency takes hold. Detox at a Sablier clinic clears it."] if result.dependency_started else []
         notes += [" "+self.game.content.items[tid].name+" fades. The crash begins." for tid in step.crashes_started]
         if ejected:
             notes.append(" Chrome fades. Excess hardware unseats; you keep the items.")
+            slots = self.progression.modifiers(draft).secured_slots
+            released = Inventory(items, self.game.content.items, slots).enforce_secured_capacity(draft)
+            if released:
+                notes.append(" Secured capacity falls; the last secured items become unsecured: "+
+                             ", ".join(self.game.content.items[items[iid].template].name for iid in released)+".")
         return "".join(notes)
 
     def effects(self, player: Player) -> list[dict[str, object]]:
@@ -72,10 +79,16 @@ class Substances:
             if actor:
                 draft.health, draft.stamina, draft.shock = actor.health, actor.stamina, actor.shock
             result, ejected = self.advance(draft, self.game.clock.now_utc().timestamp())
+            items = self.commerce.items
+            released: tuple[str, ...] = ()
+            if ejected:
+                items = deepcopy(items)
+                slots = self.progression.modifiers(draft).secured_slots
+                released = Inventory(items, self.game.content.items, slots).enforce_secured_capacity(draft)
             patch = {key: deepcopy(getattr(draft, key)) for key in
                      ("health", "stamina", "shock", "implants", "drugs_active", "dependencies", "progress")
                      if getattr(draft, key) != getattr(player, key)}
-            if not patch:
+            if not patch and not released:
                 self.pending.discard(pid)
                 return
             def committed(success: bool) -> None:
@@ -96,6 +109,9 @@ class Substances:
                 if ejected:
                     names = ", ".join(self.game.content.items[self.commerce.items[iid].template].name for iid in ejected)
                     lines.append(names+" unseats. You keep the hardware; shock holds for thirty seconds.")
+                if released:
+                    names = ", ".join(self.game.content.items[self.commerce.items[iid].template].name for iid in released)
+                    lines.append("Secured capacity falls. These items become unsecured: "+names+".")
                 if result.detox_completed:
                     lines.append("Detox ends. Your dependencies clear. You can leave the clinic.")
                 session = self.game.combat.session(pid)
@@ -103,7 +119,7 @@ class Substances:
                     session.send(Frame("log", {"lines": [{"channel": "system", "text": line,
                         "role": "chan_sys", "at": self.game.clock.now_utc().isoformat()} for line in lines]}))
                 self.game.dirty_screens.update(s.id for s in self.game.sessions.active.values() if s.player_id == pid)
-            self.commerce.settle(player, patch, self.commerce.items, self.commerce.caches,
+            self.commerce.settle(player, patch, items, self.commerce.caches,
                                  self.commerce.serial, committed)
         try:
             self.commerce.enqueue_system(propose)

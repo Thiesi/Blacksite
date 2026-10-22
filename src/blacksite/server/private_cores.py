@@ -147,7 +147,7 @@ class PrivateCores:
             items[item.id].stack -= 1
         else:
             items.pop(item.id)
-        Inventory(items, self.content.items).add(draft, stolen)
+        Inventory(items, self.content.items, self.game.progression.modifiers(draft).secured_slots).add(draft, stolen)
         proposal = deepcopy(self.interlock.state)
         record = proposal["apartments"][apartment["id"]]
         if item.stack == 1:

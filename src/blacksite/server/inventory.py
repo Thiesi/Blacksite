@@ -9,8 +9,10 @@ from blacksite.server.players import Player
 
 
 class Inventory:
-    def __init__(self, items: dict[str, ItemInstance], templates: dict[str, ItemTemplate]) -> None:
+    def __init__(self, items: dict[str, ItemInstance], templates: dict[str, ItemTemplate],
+                 secured_slots: int = SECURED_SLOTS) -> None:
         self.items, self.templates = items, templates
+        self.secured_slots = secured_slots
 
     def owned(self, player: Player, iid: str) -> ItemInstance:
         item = self.items.get(iid)
@@ -39,7 +41,7 @@ class Inventory:
                 if not item.stack:
                     self.items.pop(item.id, None)
                     return
-        if item.secured and sum(self.items[i].secured for i in player.inventory) >= SECURED_SLOTS:
+        if item.secured and sum(self.items[i].secured for i in player.inventory) >= self.secured_slots:
             raise ValueError("Your secured slots are full.")
         self.items[item.id] = item
         player.inventory.append(item.id)
@@ -62,7 +64,7 @@ class Inventory:
         item = self.owned(player, iid)
         if type(count) is not int or not 0 < count < item.stack:
             raise ValueError("Split fewer than the whole stack.")
-        if item.secured and sum(self.items[i].secured for i in player.inventory) >= SECURED_SLOTS:
+        if item.secured and sum(self.items[i].secured for i in player.inventory) >= self.secured_slots:
             raise ValueError("Your secured slots are full.")
         part = replace(item, id=next_id(), stack=count)
         item.stack -= count
@@ -71,11 +73,26 @@ class Inventory:
 
     def secure(self, player: Player, iid: str) -> None:
         item = self.owned(player, iid)
-        if not item.secured and sum(self.items[i].secured for i in player.inventory) >= SECURED_SLOTS:
-            raise ValueError("You have three secured slots.")
+        if not item.secured and sum(self.items[i].secured for i in player.inventory) >= self.secured_slots:
+            raise ValueError(f"You have {self.secured_slots} secured slots.")
         if item.secured and item.template.startswith("story_"):
             raise ValueError("Story items remain secured.")
         item.secured = not item.secured
+
+    def enforce_secured_capacity(self, player: Player) -> tuple[str, ...]:
+        """Forced unseating keeps story protection, then the oldest items."""
+        secured = [iid for iid in player.inventory if self.items[iid].secured]
+        excess = max(0, len(secured)-self.secured_slots)
+        released = []
+        for iid in reversed(secured):
+            if not excess:
+                break
+            if self.items[iid].template.startswith("story_"):
+                continue
+            self.items[iid].secured = False
+            released.append(iid)
+            excess -= 1
+        return tuple(released)
 
     def slots(self, player: Player, iid: str) -> tuple[str, ...]:
         item = self.owned(player, iid)
@@ -90,7 +107,7 @@ class Inventory:
             allowed = (template.armour.slot,)
         elif template.class_ == "rig" and template.implant and template.implant.tolerance == 0:
             allowed = ("rig",)
-        elif template.class_ == "consumable":
+        elif template.class_ == "consumable" or template.drug:
             allowed = tuple(f"quick{i}" for i in range(1, 6))
         else:
             raise ValueError("That item has no equipment slot.")

@@ -121,7 +121,7 @@ class Commerce:
         self.game.snapshot(player, av)
         draft = deepcopy(player)
         items, caches, budgets = deepcopy(self.items), deepcopy(self.caches), deepcopy(self.budgets)
-        inventory = Inventory(items, self.content.items)
+        inventory = Inventory(items, self.content.items, self.game.progression.modifiers(draft).secured_slots)
         serial = max(self.serial, max((int(i.rsplit(":", 1)[-1]) for i in items), default=0))
         def next_id() -> str:
             nonlocal serial
@@ -227,7 +227,7 @@ class Commerce:
                 raise ValueError("You cannot use consumables yet.")
             item = inventory.owned(draft, iid)
             template = self.content.items[item.template]
-            note = self.game.progression.substances.consume(draft, template, now)
+            note = self.game.progression.substances.consume(draft, template, now, items)
             inventory.remove(draft, iid, 1, next_id)
             message = f"Used {template.name}."+note
         elif name == "inv.use":
@@ -517,7 +517,7 @@ class Commerce:
         player = self.game.players[session.player_id]
         rows: list[dict[str, Any]] = []
         detail, title, actions = "", screen.kind.upper(), []
-        inventory = Inventory(self.items, self.content.items)
+        inventory = Inventory(self.items, self.content.items, self.game.progression.modifiers(player).secured_slots)
         if screen.kind == "vendor":
             vendor, budget_key = self.vendor(session, screen.target)
             budget = deepcopy(self.budgets.get(budget_key, VendorBudget(int(self.clock.now_utc().timestamp())//3600)))
@@ -561,7 +561,8 @@ class Commerce:
                 item = self.items[iid]
                 slot = next((key for key,value in player.equipment.items() if value == iid), "")
                 rows.append({"id": iid, "cells": [self.content.items[item.template].name, str(item.stack), f"{self.content.items[item.template].weight*item.stack:g}kg", "S" if item.secured else "", slot]})
-            detail = f"Carry {inventory.weight(player):g}/{player.attributes['frame']/2:g} kg. Three secured slots."
+            mods = self.game.progression.modifiers(player)
+            detail = f"Carry {inventory.weight(player):g}/{mods.attribute(player,'frame')/2+mods.bonus('carry_kg'):g} kg. {inventory.secured_slots} secured slots."
             if screen.kind == "inventory":
                 actions = [{"key":k,"label":v} for k,v in (("q","equip"),("f","slot"),("e","equipment"),("s","secure"),("d","drop"),("x","split"),("u","use"))]
         screen.cursor = max(0, min(screen.cursor, len(rows)-1))

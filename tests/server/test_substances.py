@@ -114,3 +114,44 @@ def test_game_8_6_ration_removes_real_timed_ringdust_crash(game):
     assert game.core.progression.modifiers(player).multiplier("stamina_regen_multiplier") == .3
     execute(game,client,"inv.use",item=give(game,client,"con_kestrel_ration"))
     assert game.core.progression.modifiers(player).multiplier("stamina_regen_multiplier") == 1
+
+
+def test_game_8_5_secure_pocket_increases_actual_inventory_limit(game):
+    client = caller(game)
+    player = game.core.characters.players[client.session.player_id]
+    for iid in player.inventory:
+        game.core.commerce.items[iid].secured = False
+    player.implants["torso"] = give(game,client,"imp_sablier_secure_pocket")
+    patches = [give(game,client,"con_sablier_patch") for _ in range(5)]
+    for iid in patches[:4]:
+        assert execute(game,client,"inv.secure",item=iid)
+    assert not execute(game,client,"inv.secure",item=patches[4])
+    assert sum(game.core.commerce.items[iid].secured for iid in player.inventory) == 4
+
+
+def test_game_8_5_forced_capacity_loss_saves_flags_with_unseating_and_logs_names(game):
+    client = caller(game)
+    player = game.core.characters.players[client.session.player_id]
+    execute(game,client,"inv.use",item=give(game,client,"drug_sable_chrome"))
+    for tid,slot in (("imp_sablier_shock_sink","spine"), ("imp_halvard_reflex_arm","arms1"), ("imp_sablier_secure_pocket","torso")):
+        iid = give(game,client,tid)
+        player.implants[slot] = iid
+        player.progress.setdefault("implant_order",[]).append(iid)
+    for iid in player.inventory:
+        game.core.commerce.items[iid].secured = False
+    secured = [give(game,client,"con_sablier_patch") for _ in range(4)]
+    for iid in secured:
+        game.core.commerce.items[iid].secured = True
+    game.clock.advance(12000)
+    engine = game.core.progression.substances
+    engine.refresh(player.id)
+    game.commit_commerce(error=True)
+    assert "torso" in player.implants and all(game.core.commerce.items[iid].secured for iid in secured)
+    engine.refresh(player.id)
+    receipts = game.commit_commerce()
+    assert "torso" not in player.implants
+    assert all(game.core.commerce.items[iid].secured for iid in secured[:3])
+    assert not game.core.commerce.items[secured[-1]].secured
+    assert any(item["id"] == secured[-1] and not item["secured"] for item in receipts[0]["items"])
+    lines = [line["text"] for frame in game.frames_for(client) if frame.type == "log" for line in frame.data["lines"]]
+    assert any("become unsecured" in line and "Patch" in line for line in lines)

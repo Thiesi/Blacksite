@@ -750,7 +750,7 @@ class Encounters:
                     known.append(data.asset)
             else:
                 template = self.content.items[data.asset]
-                inventory = Inventory(items, self.content.items)
+                inventory = Inventory(items, self.content.items, self.game.progression.modifiers(draft).secured_slots)
                 remaining = data.amount or 1
                 while remaining:
                     serial += 1

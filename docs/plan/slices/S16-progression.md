@@ -79,6 +79,10 @@ the catalog's implant and drug tables do what they say.
 - Chrome: temporary +1 tolerance for 20 min; an implant installed under
   it is ejected (item kept, 30 s shock) when it wears off unless Vitals
   has since risen.
+- Secured-slot limits use the same modifier calculation. Main 8.5 defines
+  the capacity-loss policy: refuse voluntary surgery with excess secured
+  items; forced Chrome unseating keeps all items, protects story items,
+  and names any excess inventory entries that become unsecured.
 - `server/drugs.py`: `use` intent for drug items applies effect for
   `duration`, then crash for `duration / 2`; dose log per substance;
   three doses inside `window` → dependency (crash permanent) until detox

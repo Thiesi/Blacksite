@@ -500,7 +500,7 @@ class Combat:
     def recovery_items(self, player: Player) -> tuple[Player,dict[str,ItemInstance],int]:
         draft,items = deepcopy(player),deepcopy(self.commerce.items)
         serial = self.next_serial()
-        inv = Inventory(items,self.content.items)
+        inv = Inventory(items,self.content.items,self.game.progression.modifiers(draft).secured_slots)
         usable = False
         body_gear = False
         for iid in player.inventory:
