@@ -1,4 +1,4 @@
-# S31 — NetBBS integration and release: door profile preset, install guide, packaging, first tagged release; door-service profile once upstream 01 lands
+# S31 — NetBBS integration and release: supervised preset, safe admission, packaging and first release
 
 **Status:** planned
 **Primary model:** Sonnet · **Reviewer:** Human (install on the ReLink test node)
@@ -11,22 +11,24 @@ Turn the repository into something a SysOp installs: a wheel with the
 content inside it, a door profile preset they import on NetBBS's
 Compatibility screen, an install guide that goes from a bare service
 account to a playing caller, a release checklist, and the first tagged
-release. Also prepare, behind a version gate, the door-service profile
-that NetBBS will accept once upstream request 01 ships.
+release. Require NetBBS >= 7.31.0 and integrate its already released
+companion service. Keep the external runner as an explicit alternative,
+not a second speculative future-version preset.
 
 ## Spec references
 
 - `docs/design/02-architecture.md` §2 (components, install directory
   layout, content copied out on first start), §3 (target and interim
-  lifecycle), §8 (registration: native stdio, `max_sessions` 16,
-  `multinode_certified` true, `time_limit` at platform maximum,
-  `memory_mb` 128, `BLACKSITE_INSTALL_DIR`; wall-time cap; presence), §14
+  lifecycle), §8 (native stdio, 16 sessions, `DOOR_*` environment,
+  explicit limits, registered-only admission, API 5 and presence), §14
   (packaging: single package, entry points, content as package data,
   Python 3.12+, no runtime deps, semantic versioning, independent
   protocol major).
 - `docs/upstream/01-door-services.md` (the `service` profile block),
   `02-session-limits.md`, `04-door-info-enrichment.md` (`door_api`),
-  `06-third-party-door-install.md` (the preset shape NetBBS may adopt).
+  `06-third-party-door-install.md` (released outcomes in their headers).
+- `docs/plan/01-netbbs-platform.md`: issue #56 decisions, verified
+  upstream references and required acceptance matrix.
 - `docs/design/04-assets.md` §5 (operator-facing assets), §6 (player-
   facing README section).
 - NetBBS `docs/NetBBS-door-guide.md`: "Register and test inside NetBBS"
@@ -50,14 +52,18 @@ that NetBBS will accept once upstream request 01 ships.
   `executable_path` placeholder `/path/to/blacksite-venv/bin/python`,
   `args` `["-m", "blacksite.door"]`, `profile` `{version: 1, adapter:
   native, endpoint: stdio, encoding: utf-8, width: 0, height: 0,
-  time_limit: 3600, memory_mb: 128, max_sessions: 16,
-  multinode_certified: true, environment: {BLACKSITE_INSTALL_DIR:
-  "/var/games/netbbs/blacksite", BLACKSITE_SESSION_LIMIT: "3600"}}`,
-  plus a `description` string for the door registration.
-- `deploy/netbbs-door-profile.service.json`: the same plus the
-  `service` block from upstream 01, shipped with a header comment file
-  (`deploy/README.md`) stating it requires NetBBS ≥ the release that
-  ships door services, and is otherwise rejected by **Check setup**.
+  install_dir: "/var/games/netbbs/blacksite", time_limit: 0,
+  cpu_seconds: 0, memory_mb: 128, stop_grace_seconds: 5,
+  max_sessions: 16, multinode_certified: true, resize_signal: true,
+  environment: {DOOR_BLACKSITE_INSTALL_DIR:
+  "/var/games/netbbs/blacksite"}}`, plus description and architecture
+  3.1's exact five-key `service` block. No implicit finite CPU cutoff
+  on an unlimited session; S29 validates efficiency and operator sizing.
+- Service uses the door interpreter and argv `-m blacksite.server
+  --install-dir {install_dir}`, with_node start, 10 s service grace,
+  512 MiB service memory and socket health. Validate only the released
+  service keys/substitution. The external alternative removes this
+  block and uses S05's rc.d/systemd unit; never run both owners.
 - Content bootstrap: first server start copies `content/` out of the
   package into `DIR/content/` and records the package version; a
   version change re-syncs and never touches `content.local/`
@@ -68,8 +74,10 @@ that NetBBS will accept once upstream request 01 ships.
   first `blacksite serve --install-dir DIR` to create secrets and
   content; register the door (SysOp → Doors, minimum play level 255
   first), import the preset, set the interpreter path, **Check setup**,
-  **Test as SysOp**, then lower the level; the interim service under
-  rc.d/systemd; the door-service variant; upgrade procedure (stop,
+  **Test as SysOp**, then lower only to above the actual guest level
+  (normally 1). Minimum play level is registration, not a profile key.
+  Third-party guests share an ID: no persistent guest pool or handle
+  heuristic. Cover the supervised and external paths, upgrade (stop,
   pip install, `blacksite admin migrate --dry-run`, start); backups.
 - Release checklist `docs/ops/release.md`: version bump, changelog
   entry (`CHANGELOG.md`, new), protocol major unchanged or bumped with
@@ -81,9 +89,18 @@ that NetBBS will accept once upstream request 01 ships.
   and a player section (what to expect, minimum terminal).
 - The first release: `v0.1.0` after M4 is merged, or whatever the
   roadmap says at the time; this slice performs the first one.
-- `door_api` handling: the client reads `door_api` from
-  `door_info.json` if present and refuses a major it does not know with
-  a clear line (upstream 04).
+- Platform API handling: accept integer API 5 for the certified release;
+  missing means legacy 2 for a useful upgrade refusal. Reject unsupported
+  older/newer, malformed and boolean values before world entry. This is
+  independent of Blacksite's protocol major; additive optional fields
+  within a supported API remain optional. Do not probe unknown versions.
+- Preserve S30's optional deadline, no implicit 3600-second cutoff,
+  ASCII-preference refusal, CP437-compatible graphics and resize support.
+- Verify host presence already names Blacksite. Optional outbound is
+  disabled with the positive registered-only play gate: test that result,
+  not a fabricated successful announcement. Do not lower the gate to
+  zero. The future opt-in adapter is conditional on a guest-safe,
+  audience-compatible host contract; see the platform catch-up plan.
 
 ## Out of scope
 
@@ -94,7 +111,7 @@ that NetBBS will accept once upstream request 01 ships.
 
 ## Data and content
 
-- `CHANGELOG.md`, `deploy/README.md`, the two preset JSONs, version
+- `CHANGELOG.md`, `deploy/README.md`, one supervised preset JSON, version
   constant, `docs/ops/install.md`, `docs/ops/release.md`.
 
 ## Protocol and view models
@@ -113,10 +130,14 @@ that NetBBS will accept once upstream request 01 ships.
   set in `netbbs.doors.profiles.DoorProfile` as documented in
   architecture §1; keep a copy of the field list in the test with the
   NetBBS version it was taken from)
-- `test_service_preset_differs_only_by_service_block`
+- `test_service_schema_argv_health_and_distinct_stop_budgets`
+- `test_registered_only_gate_blocks_shared_guest_identity`
+- `test_external_alternative_has_no_companion_service`
 - `test_content_bootstrap_copies_once_and_resyncs_on_version_change`
 - `test_content_local_never_touched_by_resync`
-- `test_client_refuses_unknown_door_api_major`
+- `test_client_refuses_unsupported_integer_door_api_before_world_entry`
+- `test_unlimited_and_shorter_effective_session_deadlines`
+- `test_ascii_preference_refusal_and_outbound_disabled_policy`
 - `test_version_constant_matches_pyproject`
 
 ## Acceptance script
@@ -127,12 +148,17 @@ that NetBBS will accept once upstream request 01 ships.
 2. In NetBBS as SysOp: register "Blacksite", import
    `deploy/netbbs-door-profile.json`, set the interpreter path, **Check
    setup** reports no problems, **Test as SysOp** shows the title screen
-   at your terminal size; leave; lower the play level.
+   at your terminal size; leave; lower only to the registered-only gate.
+   A guest cannot reach character selection or another guest's records.
 3. Two callers over SSH and one over the web transport enter the door
    at once; all three see each other in `core-plaza`; `max_sessions`
    permits it.
-4. Stop the game service; a caller entering the door sees "The city is
-   dark right now." and returns to the picker within a minute.
+4. Supervised: stop/unhealth the service; NetBBS refuses new admission
+   before launching the game client. Verify backoff, breaker and SysOp
+   recovery. External: remove the service block, use the external unit,
+   stop it; the client shows city-unavailable and returns within its
+   bounded policy. Verify passive socket health creates no player.
+   Test node shutdown with connected callers and distinct stop budgets.
 5. Upgrade path: install a rebuilt wheel with a bumped version, restart;
    `DIR/content/` is re-synced and a file placed in `content.local/`
    survives.
@@ -140,6 +166,17 @@ that NetBBS will accept once upstream request 01 ships.
    release into a clean venv on the Windows dev box; `python -m
    blacksite.door` prints the minimum-terminal message when run without
    `NETBBS_DOOR_INFO`.
+7. At 80x24 and 132x50 with a wide name, test real UTF-8 and CP437
+   callers, 16 colours and SIGUSR1 resize. ASCII preference gets an
+   explanatory return, not damaged output or an unrequested new tier.
+8. With profile time/CPU limits zero, no synthetic one-hour deadline
+   appears. A shorter positive host/game limit still wins. Record S29's
+   actual CPU evidence and inherited host limits, not invented headroom.
+9. Outbound: under both rehearsal level 255 and the normal positive
+   gate, no announcement escapes. Disabling publication does not affect
+   relay/season rewards or in-game standings. A successful public hook
+   is not a release gate while the documented guest/audience conflict
+   persists; any later adapter must meet the catch-up plan's contracts.
 
 ## Definition of done
 
@@ -152,11 +189,14 @@ that NetBBS will accept once upstream request 01 ships.
 - NetBBS launches doors with a minimal environment (never the full
   parent environment): everything the client needs must come from the
   profile's `environment` map or `door_info.json`.
-- `time_limit` above 3600 is capped by NetBBS until upstream 02; the
-  preset says 3600 and the guide explains.
+- The supported minimum is NetBBS >= 7.31.0, verified against v7.33.0.
+  Limits accept zero or 1-86400; zero cannot bypass a host hard limit.
+  CPU exhaustion is not graceful logout and supplies no warning signal.
 - NetBBS is built and run on NetBSD; test the wheel there, not only on
   Linux or Windows. A NetBSD `pkgsrc` Python 3.12 is the reference.
 - Do not put the interpreter path in the preset as anything but a
   placeholder: the SysOp edits it on the Compatibility screen.
-- Keep the `service` preset separate so **Check setup** on an older
-  NetBBS never sees an unknown field.
+- NetBBS installation-directory backups are opt-in, unquiesced copies
+  with manual restoration. S28's SQLite snapshot remains the recovery
+  source; do not describe a successful raw node copy as a consistent
+  live-game backup. No BBS database or Link-secret access is introduced.

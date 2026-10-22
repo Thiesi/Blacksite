@@ -29,6 +29,12 @@ suits (`♦♣♥♠`), and a few symbols (`§°±≡`). No emoji, no combining 
 and a test asserts every glyph in `glyphs.json` round-trips through
 CP437.
 
+S30/S31 platform admission follows architecture 8.4: respect NetBBS's
+boolean `unicode_style`, returning a clear graphic-terminal requirement
+when false instead of silently overriding an ASCII preference. CP437
+callers keep the same glyphs through NetBBS's UTF-8-to-CP437 transcoding;
+the subprocess still emits UTF-8. This adds no plain-text display tier.
+
 Commerce objects use the registered `$` for counters/banks and `*` for
 dropped-item caches. These are object overlays, so an anchor remains
 visible even when its underlying terrain is ordinary floor.

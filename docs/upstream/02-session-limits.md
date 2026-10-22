@@ -1,6 +1,10 @@
 # 02 — Per-door CPU and wall-time limits for service-backed doors
 
 **NetBBS issue:** https://github.com/Thiesi/NetBBS/issues/467
+**Outcome:** closed; shipped in NetBBS v7.3.0 (PRs #499/#506).
+time_limit and cpu_seconds accept 0-86400; zero removes the node ceiling,
+not host hard limits. Finite CPU exhaustion has no graceful signal.
+See [issue #56 catch-up](../plan/01-netbbs-platform.md). Proposal below archived.
 **Blocks:** nothing hard. Blacksite S30 (session-limit UX) and S29 (client CPU budget) work around it.
 **Recommended model for the NetBBS side:** Sonnet (small, well-bounded change in `runtime.py`, `profiles.py`, the profile editor, and the door guide).
 

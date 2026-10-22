@@ -7,6 +7,11 @@
 
 ## Goal
 
+Historical S05 scope below is complete. NetBBS services have since
+shipped; S31 now integrates the released supervisor with NetBBS >= 7.31.0.
+This runner remains the explicit external/development alternative. See
+`docs/plan/01-netbbs-platform.md` (issue #56); S05 is not reopened.
+
 Give a SysOp a way to run the game service today, before NetBBS gains
 door services (upstream 01): a foreground `blacksite serve` command,
 NetBSD `rc.d` and `systemd` unit examples, and the admin CLI skeleton

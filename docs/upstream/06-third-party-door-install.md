@@ -1,6 +1,10 @@
 # 06 — Third-party door install path: interpreter-module preset and guide section
 
 **NetBBS issue:** https://github.com/Thiesi/NetBBS/issues/471
+**Outcome:** closed; native Python-module preset and third-party install
+guide shipped in NetBBS v7.3.0 (PRs #499/#506). S31 targets the released
+contract, with one supervised preset and explicit version requirement.
+See [issue #56 catch-up](../plan/01-netbbs-platform.md). Proposal below archived.
 **Blocks:** nothing. Blacksite S31 documents the manual path either way.
 **Recommended model for the NetBBS side:** Sonnet (a preset JSON, a door-guide section, and a Gallery-adjacent hint).
 

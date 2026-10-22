@@ -3,58 +3,57 @@
 How the game runs as a native NetBBS door: one long-lived, authoritative
 game service per node and one thin door client per caller, joined by a
 versioned local protocol. This document is the contract every slice in
-`docs/plan/slices/` builds against. `docs/upstream/` lists what Blacksite
-needs from NetBBS itself; nothing here depends on those requests landing
-first, because §8 defines an interim path.
+`docs/plan/slices/` builds against. `docs/upstream/` records the platform
+requests and their released outcomes. Section 8 defines the supported
+integration; the external runner remains an operator-managed alternative.
 
 ---
 
 ## 1. Constraints from the platform
 
-Facts about NetBBS's door subsystem as of NetBBS v6.0.x
-(`docs/NetBBS-door-guide.md`, `src/netbbs/doors/runtime.py` in the NetBBS
-repository):
+Verified on 2026-10-22 against released NetBBS v7.33.0, source commit
+`f354e898dc2664b13c35a4e2cbbbbfa80d84776d`: its door guide, Developer
+Handbook and `src/netbbs/doors/{runtime,profiles,services,outbound,events}.py`.
+[Platform catch-up](../plan/01-netbbs-platform.md) links the exact sources,
+release history and Blacksite implementation gaps reported in issue #56.
+The S31 supported installation floor is **NetBBS >= 7.31.0**.
 
-- A door is a **subprocess per caller**, launched with an argv list (never
-  a shell) under the NetBBS service account, with `RLIMIT_CPU` 300 s,
-  `RLIMIT_AS` 256 MiB (profile-configurable), `RLIMIT_NPROC` 16 (shared
-  by the UID), a wall-time cap of 3600 s (profile `time_limit`, capped at
-  3600), and unconditional reap of the process group on every exit path.
-- The caller's terminal is relayed as raw bytes over stdio (or a PTY, or
-  an inherited DOOR32 socket). NetBBS does not touch door output. Input
-  arrives byte by byte as the caller types.
-- `NETBBS_DOOR_INFO` names a JSON file with `handle`, `user_id`,
-  `terminal_width`, `terminal_height`, `color_depth` (`truecolor` or
-  `256`), and `node_name`. Nothing else about the caller is passed.
-- Terminals speak UTF-8. Resize events are not forwarded to running
-  doors. Telnet, SSH, and the web (xterm.js) transports all reach the door
-  the same way.
-- A profile may set `max_sessions` (default 1) and `multinode_certified`.
-- Persistent door data lives in the door's **installation directory**,
-  operator-owned, outside NetBBS's own state.
-- There is no supervised long-lived door process, no inter-session
-  channel, and no door-to-BBS callback. §16 of the NetBBS design document
-  (issue #200) records that shared state is the door's own responsibility.
+- A door is a **subprocess per caller**, launched with argv, never a shell,
+  under the service account. Profile `time_limit` and `cpu_seconds` each
+  accept 0-86400; zero removes NetBBS's corresponding ceiling. Defaults
+  remain 3600 wall seconds and 300 accumulated CPU seconds. Host hard
+  limits still apply. A finite CPU ceiling has equal soft/hard limits:
+  exhaustion can kill the client without a cleanup signal or warning.
+- Caller memory defaults to 256 MiB and is configurable; `RLIMIT_NPROC`
+  remains shared by the UID. Caller `stop_grace_seconds` is 1-60, default
+  5, distinct from the companion service grace. Reaping is bounded even
+  if a descendant holds output open: grace plus about four seconds.
+- Blacksite uses native **stdio**, `encoding: utf-8`. Since v7.14.0 NetBBS
+  transcodes output for CP437 callers; UTF-8 inside the subprocess does
+  not mean every terminal uses UTF-8. PTY `OPOST|ONLCR` is irrelevant to
+  this profile. ANSI colour/cursor addressing remains the game floor.
+- `NETBBS_DOOR_INFO` supplies identity/geometry, `color_depth` (including
+  `16`), integer `door_api`, boolean `unicode_style`, `transport`, node
+  display `timezone`, `node_name`, stable opaque `node_id`, and an optional
+  positive `session_limit_seconds`. Absence of the latter means no host
+  deadline. There is no published `node_fingerprint`, guest flag or user
+  level. A third-party door receives the shared guest account's identity.
+- Native stdio resize uses rewritten door info plus opt-in `SIGUSR1`
+  (`resize_signal: true`). Custom profile environment uses `DOOR_*`,
+  including `DOOR_BLACKSITE_INSTALL_DIR` and an optional
+  `DOOR_BLACKSITE_SESSION_LIMIT`; old `BLACKSITE_*` aliases are standalone
+  conveniences, not valid custom profile keys.
+- A profile permits one supervised companion service (§3.1), with its
+  own memory limit and no NetBBS CPU-seconds limit. Persistent data stays
+  in the operator-owned installation directory. Node backup copies of
+  that directory are opt-in, unquiesced and never automatically restored.
+- Door presence already names the door, visible only to callers allowed
+  to enter it. Optional outbound board/chat/event/standings file drops
+  exist, but require the door's minimum play level to be zero (§8.3).
 
-Blacksite therefore consists of two programs and a directory.
-
-S04 integration verification against the local NetBBS v7.31.0 checkout
-(`doors/runtime.py`, door API 5; `doors/profiles.py`) adds these facts:
-
-- Door info also supplies optional `door_api`, `unicode_style`,
-  `transport`, `timezone`, `node_id` and `session_limit_seconds`. The
-  latter is the effective per-launch ceiling. Respect the lower of it
-  and an explicit Blacksite limit.
-- Native stdio profiles can opt into resize drop-file updates and
-  `SIGUSR1` with `resize_signal`. Older hosts still use the initial size.
-- Custom profile environment keys must use `DOOR_*`. Blacksite accepts
-  `DOOR_BLACKSITE_INSTALL_DIR` and `DOOR_BLACKSITE_SESSION_LIMIT` as
-  profile aliases for its original standalone environment names.
-- A drop-file can include outbound BBS capabilities. The client forwards
-  only the metadata fields named above plus the original identity and
-  terminal fields. It never forwards outbound credentials to the game.
-- NetBBS now supports companion services. The interim runner remains
-  until S31 integrates the released supervisor and version requirement.
+Blacksite still consists of two programs and a directory. These are
+verified platform facts and planned S28-S31 integration contracts, not
+claims that the remaining Blacksite work is already implemented.
 
 ## 2. Components
 
@@ -62,7 +61,7 @@ S04 integration verification against the local NetBBS v7.31.0 checkout
 NetBBS node process
  ├─ caller session A ── stdio ── blacksite.door (client A) ─┐
  ├─ caller session B ── stdio ── blacksite.door (client B) ─┤  local socket
- └─ (upstream: door service supervisor) ───────────────────┼─► blacksite.server
+ └─ NetBBS door service supervisor ───────────────────────┼─► blacksite.server
                                                            │     ├─ simulation (10 Hz)
    SysOp shell ── blacksite admin ──────────────────────────┘     ├─ SQLite world.db (WAL)
                                                                   └─ content (read-only)
@@ -130,22 +129,46 @@ path, so it exists before the first zone loads.
 
 ## 3. Process lifecycle
 
-### 3.1 Target: NetBBS door service supervision
+### 3.1 Primary: released NetBBS door service supervision
 
-`docs/upstream/01-door-services.md` asks NetBBS for a **door service**:
-a companion process declared in the door's profile that NetBBS starts
-with the node, restarts on failure with backoff, stops at shutdown, and
-shows on a SysOp screen. Blacksite's profile would declare
-`service: {"argv": ["-m", "blacksite.server", "--install-dir", "{install_dir}"]}`.
+S31 ships one primary preset requiring NetBBS >= 7.31.0. Companion
+services shipped in v7.3.0; the block is no longer speculative:
 
-### 3.2 Interim: self-hosted service
+```json
+{
+  "argv": ["-m", "blacksite.server", "--install-dir", "{install_dir}"],
+  "start": "with_node",
+  "stop_grace_seconds": 10,
+  "service_memory_mb": 512,
+  "health": {"kind": "socket", "path": "{install_dir}/run/blacksite.sock"}
+}
+```
 
-Until that lands, `blacksite serve` is a foreground command and the repo
-ships example `rc.d` (NetBSD) and `systemd` units in `deploy/`. The door
+Those five keys are the complete service field set. The program is the
+door's `executable_path`, with `argv` after it; `{install_dir}` is the
+only substitution. `install_dir` is required and is the working directory.
+The narrow environment includes `NETBBS_DOOR_SERVICE=1`. `start` can also
+be `on_first_caller`; the primary preset uses `with_node`. Grace is 1-60
+seconds; memory is 64-4096 MiB, default 512. There is no service CPU cap.
+
+NetBBS restarts with 1/2/4/.../60-second backoff. Five failures in five
+minutes trip the breaker; SysOp Start/Restart clears it. Socket health
+probes connect without a game hello; S31 verifies they do not create a
+player or hold a session. Admission refuses down/unhealthy services before
+launching a caller client. Shutdown stops services concurrently, first,
+with SIGTERM then the configured grace and SIGKILL.
+
+### 3.2 Alternative: externally managed service
+
+`blacksite serve` remains a foreground command and the repo ships example
+`rc.d` (NetBSD) and `systemd` units in `deploy/`. Remove the `service`
+block when choosing this alternative; never run both owners. The door
 client, when it cannot connect, tells the caller "The city is dark right
 now" and asks the SysOp (in the log) to start the service. The client
 **never** spawns the server: doing so from inside NetBBS's reaped process
-group is exactly the failure mode the upstream request exists to avoid.
+group would let a caller's exit kill the world. Historical older-node
+setups are not a second supported release preset or an excuse to omit the
+minimum-version line. This external path also supports local development.
 
 ### 3.3 Server start sequence
 
@@ -184,6 +207,11 @@ Hard limit 10 s, then exit anyway; persistence is crash-safe.
   directory.
 - Identity is `bbs_user_id` from door_info; the handle is display. A
   player record is keyed on `(origin, bbs_user_id)`.
+- S31's registration excludes guests with `min_play_level` above the
+  node's actual guest account level (1 on the default level-0 guest
+  setup). Third-party guests share one ID; do not create persistent
+  characters for them, guess from a handle, or read NetBBS's database.
+  This is a registration gate, not a `DoorProfile` field (§8.3).
 - The admin CLI presents `secrets/admin.secret` the same way and is
   marked `operator` on its session.
 - Rate limits from `00-game-design.md` §14 are enforced per session on
@@ -405,6 +433,11 @@ supplies combat flags and clone-debt consequences; S07 has no combat.
 - Backups: `blacksite admin backup` uses SQLite's online backup API into
   `backups/<timestamp>/world.db` plus a manifest with content hash and
   schema version, the pattern War Dialer established.
+  NetBBS's optional directory copy neither quiesces the service nor
+  guarantees matching database/WAL generations. S28 must keep a completed
+  consistent snapshot and verify restore with the service stopped and
+  the exclusive lease held. A node backup reporting success is not proof
+  that its copied live game directory is recoverable.
 - Migrations: numbered Python modules under `blacksite/server/storage/migrations`,
   applied in a transaction at start; refuse to open a newer schema.
 
@@ -441,29 +474,78 @@ Detailed in `03-terminal-ui.md`. Architectural points:
 ### 8.1 Registration
 
 Native stdio door, `max_sessions` raised to the node's player cap (16
-by default), `multinode_certified` true, `time_limit` at the platform
-maximum, `memory_mb` 128 (the client is small), environment
-`DOOR_BLACKSITE_INSTALL_DIR=<DIR>`. A preset JSON is shipped in `deploy/` for
-the SysOp to import on the door's Compatibility screen. Installation
-lives in the SysOp guide.
+by default), `multinode_certified: true`, `encoding: utf-8`,
+`resize_signal: true`, `install_dir: <DIR>`, `memory_mb: 128`, caller
+`stop_grace_seconds: 5`, and the service block in §3.1. The long-session
+primary policy explicitly sets `time_limit: 0` and `cpu_seconds: 0`:
+no unannounced finite accumulated-CPU cutoff on an unbounded session.
+Host hard limits remain, and S29 measures the unchanged 120 CPU-seconds
+per hour efficiency target before S31 certifies the preset. An operator
+choosing a finite wall cap must size any finite CPU cap from measured
+whole-session CPU plus headroom, not mistake it for a per-hour budget.
+
+Custom environment uses `DOOR_BLACKSITE_INSTALL_DIR=<DIR>`; a separate
+game session cap is optional. A preset JSON is shipped in `deploy/` for
+import on the Compatibility screen. S31 records the registered-only
+play level separately, tests Check setup and both service ownership paths,
+and publishes the minimum NetBBS version in the install guide.
 
 ### 8.2 Wall-time cap
 
-The client watches its own runtime against the profile's limit (passed
-as `BLACKSITE_SESSION_LIMIT` in the profile environment, defaulting to
-3600) and toasts at five minutes and one minute. Re-entering the door
-resumes the session; the server treats a reconnect within 60 s as the
-same session (no sleeper penalty).
-Current profiles use the alias `DOOR_BLACKSITE_SESSION_LIMIT`; an
-upstream `session_limit_seconds` value can reduce that ceiling.
+S30 represents the deadline as optional. A positive host
+`session_limit_seconds` always bounds the launch. A positive explicit
+`DOOR_BLACKSITE_SESSION_LIMIT` (standalone `BLACKSITE_SESSION_LIMIT`)
+can shorten it; zero/unset means no additional game cap. Use the minimum
+positive bound. If neither exists, omit countdowns and timeout exit;
+do not silently insert the current client's 3600-second fallback.
+Zero is a profile/override opt-out, not a valid positive host deadline.
+With a deadline, toast at five minutes/one minute and leave five seconds
+early. A reconnect never resets the host launch clock. The established
+body/sleeper and reconnect rules remain authoritative.
 
 ### 8.3 Presence
 
-NetBBS shows callers "in a door"; the game's own `sitrep` shows who is
-in the world. `docs/upstream/04-door-presence-and-outbound.md` asks for
-the door's name to be shown in NetBBS's who-is-online and for a narrow
-outbound hook (posting a season result to a board). Neither is required
-for v1.
+NetBBS already names the door in Who's online, respecting its access
+gate. The game's own `sitrep` remains authoritative for world presence.
+See [upstream 05](../upstream/05-door-presence-and-outbound.md), not 04.
+
+API 3 supplies board file drops, API 4 adds live chat, and API 5 adds
+events/standings. Requests are picked up during a live caller session,
+roughly every two seconds. Match receipts by their `request` field,
+never a constructed result filename. Optional publication uses committed
+semantic facts only; paths, credentials and receipt-file I/O stay in the
+client I/O adapter, outside simulation and the game protocol.
+
+**Default policy: no BBS publication.** NetBBS accepts posts, chat and
+events only while `min_play_level == 0`; nonzero rejects even previously
+allowlisted destinations. That conflicts with safe registered-only play
+on the current third-party guest contract. Do not lower the gate, invent
+guest identities or bypass NetBBS's audience policy to enable publicity.
+S21/S26 expose in-game committed facts/standings independently; S31 may
+add an opt-in adapter only after a guest-safe, audience-compatible host
+contract exists. That enhancement does not block the release or S17.
+The [catch-up plan](../plan/01-netbbs-platform.md) preserves the exact
+event/standings/receipt requirements for that future optional work.
+
+### 8.4 Platform API and terminal admission
+
+`door_api` is a single integer, independent of Blacksite's protocol
+major. Historical missing fields mean legacy API 2; API 3 shipped with
+v7.3.0, 4 with v7.12.0, 5 with v7.31.0. S31 supports API 5 for the
+certified release, clearly refusing older/missing, malformed (including
+boolean) and newer unknown versions before world entry. Ignore unknown
+additive fields within a supported version and permit optional fields
+to be absent; do not guess unknown-version semantics. A future API bump
+requires a bounded compatibility review, not silent acceptance.
+
+S30 honors the boolean `unicode_style`. False means the caller requested
+ASCII styling; explain the ANSI graphic requirement and return cleanly
+before world entry, inviting selection of Unicode or CP437 in NetBBS.
+Do not force a preference change or add an ASCII tier. True permits the
+existing CP437-compatible glyph set; absence is unknown and uses the
+existing graphic default. S31 tests actual CP437 transcoding as well as
+UTF-8, resize and 16-colour output. `node_id` is not a credential or a
+Link fingerprint; S32 may not assume the absent `node_fingerprint`.
 
 ## 9. Federation readiness (designed, not built)
 
@@ -503,8 +585,10 @@ Decisions that cost nothing now and prevent a rewrite later:
   wide-character handle; key decoder tables.
 - **Protocol**: golden frames; version rejection; delta/ack coalescing.
 - **Load**: a bot client (`blacksite.bot`) that plays a scripted loop;
-  16 bots for an hour must keep tick time under 40 ms and client CPU
-  under the platform's 300 s budget per hour of session.
+  16 bots for an hour keep tick time under 40 ms. Measure actual client
+  CPU at both terminal sizes against §11; record configured/inherited
+  ceilings and whole-session headroom separately. A CPU limit is not a
+  per-hour allowance, and SIGKILL is not graceful logout.
 - **Ops**: backup/restore round trip; migration from every shipped
   schema; server restart with players connected.
 
@@ -518,7 +602,7 @@ machine.
 | Tick (16 players, 6 active zones) | ≤ 40 ms p99 |
 | View delta per session per tick | ≤ 2 KiB typical, ≤ 16 KiB worst |
 | Client render per frame | ≤ 5 ms at 80×24 |
-| Client CPU per hour of play | ≤ 120 s (40 % of the platform's cap, leaving headroom) |
+| Client CPU per hour of play | ≤ 120 s; efficiency target, independent of configurable accumulated CPU ceiling |
 | Server RSS (16 players, full content) | ≤ 200 MiB |
 | Server start (full content) | ≤ 3 s |
 

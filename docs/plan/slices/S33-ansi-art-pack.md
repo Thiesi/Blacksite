@@ -140,6 +140,12 @@ and the NetBBS web transport:
 
 ## Implementer notes
 
+Issue #56: S30 refuses an explicit ASCII preference instead of adding a
+plain-text tier. Native output remains UTF-8; S31 tests NetBBS's real
+CP437 transcoding and 16-colour path at both terminal sizes. Retain
+CP437-compatible glyph validation and measured target bounds; do not
+pre-encode output bytes or add PTY newline transformations to stdio.
+
 - Compose in the block and shade glyphs (`█▓▒░▀▄`) with box-drawing for
   frames; avoid half-block colour tricks that need truecolor for the
   256 and 16 variants, or produce the lower variants separately.

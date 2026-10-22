@@ -63,12 +63,14 @@ because a menu was reopened.
   seconds, then is moved to the nearest safe zone with a clone-debt
   penalty if they were in combat).
 - New players go through the Wake (section 4) in under five minutes.
-- The NetBBS door session has a wall-time cap (currently one hour). The
-  client warns at five minutes and one minute, exits cleanly about 5 s
-  before the cap so the platform watchdog never kills it mid-frame, and
-  re-entering the door resumes instantly because all state is on the
-  server. See
-  `docs/upstream/` for the request to lift the cap.
+- A session may have an operator-selected wall-time cap. With a positive
+  host/game deadline the client warns at five minutes and one minute and
+  exits about 5 s before it. With neither deadline, play is unbounded;
+  the primary deployment deliberately permits long sessions. Re-entering
+  resumes authoritative state under the ordinary body/sleeper rules.
+  NetBBS already supports configurable limits; architecture 8.1-8.2
+  defines the policy and S30/S31 implement the remaining client/preset
+  work. No client limit changes progression or offline simulation.
 - Logging out from a safe zone is instant. From elsewhere it is the
   sleeper rule above.
 

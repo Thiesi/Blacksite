@@ -53,9 +53,12 @@ together. Nothing here changes a rule; it explains them.
 - First-run screen: shown once per BBS user before the Wake, from the
   found-texts asset, any key continues; stored as a flag on the player
   row.
-- Session-limit UX (`blacksite.door`): read `BLACKSITE_SESSION_LIMIT`
-  (default 3600) or `session_limit_seconds` from `door_info.json` if
-  present; `toast` at T−300 s and T−60 s ("The line drops in five
+- Session-limit UX (`blacksite.door`): take the minimum positive host
+  `session_limit_seconds` and explicit `DOOR_BLACKSITE_SESSION_LIMIT`
+  (standalone `BLACKSITE_SESSION_LIMIT`). Zero/unset game override
+  adds no limit; absent host deadline plus no positive override is
+  unlimited, not an implicit 3600 seconds. With a deadline, `toast`
+  at T−300 s and T−60 s ("The line drops in five
   minutes. Karst keeps your place."); at T−5 s the client sends `bye
   {reason: session_limit}` and exits cleanly so NetBBS's watchdog never
   fires. Server marks the session `resumable` for 60 s.
@@ -72,6 +75,11 @@ together. Nothing here changes a rule; it explains them.
   palette or tier change; a full `view` follows).
 - Minimum-size refusal text and the "leave door" confirmation key
   (`Ctrl-X` then `Y`).
+- Respect NetBBS's boolean `unicode_style`: false gets a clear ANSI
+  graphic requirement and clean return before world entry, inviting
+  Unicode/CP437 selection in NetBBS. Do not silently override preference
+  or add an ASCII tier. Missing is unknown; retain the graphic default.
+  S31 owns platform API/version enforcement and real transport proof.
 - Title screen composition with the tagline block (art itself is S33;
   the text fallback is here).
 
@@ -79,7 +87,7 @@ together. Nothing here changes a rule; it explains them.
 
 - The Wake's own steps and briefing (S07). Chat channels (S09). Art
   (S33). Colour role assignment for new subsystems (each owning slice).
-- Platform forwarding of the real limit (upstream 02/04).
+- Platform forwarding of the real limit (released in NetBBS v7.3.0).
 
 ## Data and content
 
@@ -147,15 +155,22 @@ together. Nothing here changes a rule; it explains them.
 - NetBBS's wall-time watchdog terminates the door at the cap; leaving
   five seconds early avoids the caller seeing a killed process and keeps
   the session record's exit code 0.
-- The `session_limit_seconds` field does not exist until upstream 04
-  lands; the environment variable is the source of truth meanwhile and
-  the SysOp guide must say the two must agree.
+- The host already forwards `session_limit_seconds` when bounded.
+  A game override can only shorten it; zero cannot disable a host cap.
+  Reconnect does not restart the launch timer. Test finite/unlimited,
+  absent/zero override, shorter host/override and invalid values with
+  a fake clock, plus ASCII-preference refusal before character entry.
 - Palette changes must re-render through the cell buffer, not by
   re-emitting the last frame with new colours.
 - Keep help text under 76 columns in the source; the client wraps by
   display width anyway but golden screens are easier to read.
 
 ## Lore review integration
+
+Issue #56's platform follow-up is specified in
+`docs/plan/01-netbbs-platform.md` and architecture 8.2/8.4. Explain the
+registered-only installation policy and keep BBS publicity out of the
+core onboarding promise while the guest/audience conflict persists.
 
 Use the revised first-run text and terminal UI 11. Teach the lease/grade
 distinction, secured recovery and debt, physical-body risk while jacked,

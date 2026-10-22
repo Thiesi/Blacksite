@@ -23,8 +23,8 @@ slice produces documents and tests only; it changes no game behaviour.
   origin), §5 (disjoint ID spaces invariant), §2.11 (world meta origin).
 - `docs/design/00-game-design.md` §13 (seasons per authority), §7.4
   (relays), §16 (cross-node explicitly out of v1).
-- `docs/upstream/04-door-info-enrichment.md` (`node_id`,
-  `node_fingerprint`).
+- `docs/upstream/04-door-info-enrichment.md` (released `node_id`;
+  `node_fingerprint` was not shipped) and the issue #56 catch-up plan.
 - NetBBS: issue #168's closed design (real-time Link relay: bounded
   resource limits, concurrent-pair cap, byte-rate limits, protocol-
   agnostic idle timeout, bounded pending-rendezvous table, rendezvous
@@ -75,8 +75,10 @@ slice produces documents and tests only; it changes no game behaviour.
     intents; combat between players of different origins is resolved
     by the region's authority; item transfer across origins is by
     escrow with both authorities confirming.
-  - Identity and trust: node fingerprints from `door_info.json`
-    (upstream 04) or the game's own key pair; a per-pair allowlist the
+  - Identity and trust: the game's own key pair or an explicitly verified
+    future host facility. Door info has no `node_fingerprint`; opaque
+    `node_id` and mutable `node_name` are not cryptographic identity.
+    Use a per-pair allowlist the
     SysOp edits; abuse cases (a hostile peer spoofing kills or chits)
     and the rule that nothing a peer says changes local persistent
     state except through escrow.

@@ -1,6 +1,10 @@
 # 03 — Forward terminal resize to running native doors
 
 **NetBBS issue:** https://github.com/Thiesi/NetBBS/issues/468
+**Outcome:** closed; shipped in NetBBS v7.3.0 (PRs #499/#506).
+Native stdio opts into rewritten door info and SIGUSR1 with resize_signal;
+S04 already consumes this. S31 retains real resize acceptance. See
+[issue #56 catch-up](../plan/01-netbbs-platform.md). Proposal below archived.
 **Blocks:** nothing. Blacksite S04 lays out for the size at launch.
 **Recommended model for the NetBBS side:** Opus 5 (touches the session resize path for Telnet NAWS, SSH window-change, and the web transport, plus PTY window-size ioctls and a side channel for stdio doors).
 

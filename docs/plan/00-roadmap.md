@@ -23,8 +23,10 @@ source of truth. Platform work Blacksite needs from NetBBS is in
   engine.
 - **Numbers live in the design doc.** A slice that needs to change a
   number changes `docs/design/00-game-design.md` in the same PR.
-- **No slice depends on an upstream NetBBS change.** Where a request is
-  open, the slice builds the interim path.
+- **No slice waits for speculative upstream work.** The six original
+  platform requests shipped in NetBBS v7.3.0. S31 targets released
+  NetBBS >= 7.31.0 and keeps the external runner as an alternative.
+  Optional BBS publication cannot weaken registered-only admission.
 
 ## 2. Milestones
 
@@ -97,7 +99,7 @@ not a numeric execution order. Cross-milestone dependencies are explicit.
 | S28 | Operator tooling: full admin CLI, moderation, backup/restore, migrations, audit, SysOp guide | Sonnet | S05, S16, S23, S26 |
 | S29 | Load and latency: bot client, 16-bot hour, profiling, delta compaction if needed | Opus | S15, S22, S24, S26 |
 | S30 | Onboarding and help: hint system, help pages, first-run screen, session-limit UX, colour-blind palettes, settings | Sonnet | S07, S09, S13, S19 |
-| S31 | NetBBS integration and release: door profile preset, install guide, packaging, first tagged release; door-service profile once upstream 01 lands | Sonnet | S26, S28, S29, S30, S32, S33 |
+| S31 | NetBBS >= 7.31 integration: supervised preset, guest-safe admission, install guide, packaging, first release | Sonnet | S26, S28, S29, S30, S32, S33 |
 | S32 | Federation readiness audit (design only): origin/authority invariants, protocol reservations, a written bridge design against NetBBS #168 | Fable, Astra review | S21, S26 |
 | S33 | ANSI art pack: title, sigils, vignettes, the Ring, Wake Hall, dead screen, transitions | Opus composition, Human pass | S04 |
 
@@ -113,6 +115,13 @@ S11 -> S13 -> S14 -> S15 -> S16 -> S17 -> S18 -> S20 -> S22 -> S19 -> S21 ->
 S23 -> S24 -> S25 -> S27 -> S26 -> S28 -> S30 -> S29 -> S33 -> S32 -> S31
 
 ## 6. Parallel planning
+
+[Issue #56 platform catch-up](01-netbbs-platform.md) owns the verified
+NetBBS v7.33 facts and S21/S26/S28-S33 follow-ups. It changes no slice
+dependencies and does not delay S17. S30/S31 still need runtime work for
+unlimited sessions, API/character-preference admission and the primary
+service preset. BBS announcements are optional and disabled under the
+registered-only default; no guest identity workaround is assumed.
 
 The dependency table is authoritative for scheduling. The client can
 advance after S04 while simulation work proceeds; content can be drafted

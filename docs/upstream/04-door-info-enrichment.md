@@ -1,6 +1,11 @@
 # 04 — Enrich `door_info.json`
 
 **NetBBS issue:** https://github.com/Thiesi/NetBBS/issues/469
+**Outcome:** closed; shipped in NetBBS v7.3.0 (PRs #499/#506) with
+integer door_api 3, not requested 2; node_id exists, node_fingerprint
+does not. API 4 adds chat and 5 events; an absent session_limit_seconds
+means unlimited. See [issue #56 catch-up](../plan/01-netbbs-platform.md).
+Proposal below archived; S30/S31/S32 consume the actual contract.
 **Blocks:** nothing hard. Blacksite S04 reads what exists; S32 (federation readiness) wants the node identity field.
 **Recommended model for the NetBBS side:** Sonnet (a few fields in `_write_door_info`, the door guide's metadata table, and tests).
 
