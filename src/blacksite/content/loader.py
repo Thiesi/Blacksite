@@ -47,6 +47,7 @@ _IGNORED_SUFFIXES = frozenset({".py", ".pyc"})
 
 # Record kinds whose ids follow the catalog rule (ids.CATALOG_KINDS).
 _ID_KIND = {
+    "apartments": "apartment",
     "items": "item",
     "programs": "program",
     "ice": "ice",
@@ -73,6 +74,8 @@ class ContentTree:
     salvage: s.SalvageRules | None = None
     tiles: dict[str, s.TileType] = field(default_factory=dict)
     zones: dict[str, s.Zone] = field(default_factory=dict)
+    rooms: dict[str, s.RoomBlueprint] = field(default_factory=dict)
+    apartments: dict[str, s.ApartmentClass] = field(default_factory=dict)
     sectors: dict[str, s.Sector] = field(default_factory=dict)
     cores: dict[str, s.Core] = field(default_factory=dict)
     items: dict[str, s.ItemTemplate] = field(default_factory=dict)
@@ -194,6 +197,7 @@ def load_content(root: Path, local: Path | None = None) -> ContentTree:
         _load_record_dirs(tree, layer)
         _load_assets(tree, layer)
     _load_zones(tree, layers)
+    _load_rooms(tree, layers)
     tree.hash = content_hash(root, local)
     return tree
 
@@ -211,7 +215,7 @@ def _claimed(rel: Path) -> bool:
     if folder in RECORD_DIRS:
         return suffix == ".json"
     return (folder, suffix) in {
-        ("zones", ".json"), ("zones", ".map"), ("text", ".md"), ("text", ".txt"),
+        ("zones", ".json"), ("zones", ".map"), ("rooms", ".json"), ("rooms", ".map"), ("text", ".md"), ("text", ".txt"),
         ("art", ".ans"), ("art", ".json"),
     }
 
@@ -402,3 +406,32 @@ def _load_zones(tree: ContentTree, layers: list[_Layer]) -> None:
         tree.zones[zone_id] = s.Zone(meta=meta, grid=grid)
         tree.sources[("zones", zone_id)] = meta_rel
         tree.sources[("maps", zone_id)] = map_rel
+
+
+def _load_rooms(tree: ContentTree, layers: list[_Layer]) -> None:
+    """Local room overrides replace the map/sidecar pair, like zones."""
+    chosen: dict[str, _Layer] = {}
+    for layer in layers:
+        for path in layer.dir("rooms", (".json", ".map")):
+            chosen[path.stem] = layer
+    legend = {tile.char: tile.id for tile in tree.tiles.values()}
+    for rid, layer in sorted(chosen.items()):
+        side = layer.base/"rooms"/(rid+".json")
+        plan = side.with_suffix(".map")
+        if not side.is_file() or not plan.is_file():
+            tree.load_problems.append(Problem(layer.rel(side), None, "room needs both .json and .map"))
+            continue
+        text, grid_text = _read(side), _read(plan)
+        rel, grid_rel = layer.rel(side), layer.rel(plan)
+        _remember(tree, rel, text)
+        _remember(tree, grid_rel, grid_text)
+        meta, problems = read_record(text, rel, s.RoomMeta)
+        grid, grid_problems = parse_map(grid_text, grid_rel, legend)
+        tree.load_problems.extend((*problems, *grid_problems))
+        if meta is None or grid is None:
+            continue
+        if meta.id != rid or not _check_id(tree, "rooms", rid, rel, text):
+            tree.load_problems.append(Problem(rel, None, "room file name must match its id"))
+            continue
+        tree.rooms[rid] = s.RoomBlueprint(meta, grid)
+        tree.sources[("rooms", rid)] = rel

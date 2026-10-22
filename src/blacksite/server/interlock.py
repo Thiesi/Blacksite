@@ -86,6 +86,9 @@ class Interlock:
         return self.state["cores"].get(core, {}).get("owner_faction")
 
     def control(self, presence: Presence, cid: str) -> ControlSpec:
+        apartment = self.private.apartment(presence.core)
+        if apartment and not self.private.before_access(apartment["resident"]):
+            raise ValueError("The lease is being reconciled. Inspect the current core again.")
         instance = self.lat.encounters.core(presence)
         control = next((c for c in instance.graph.room(presence.room).controls if c.id == cid), None) if instance else None
         if control is None or (presence.core, cid) not in self.controls:
@@ -161,6 +164,9 @@ class Interlock:
             "enabled": not enabled if control.action == "toggle" else control.action not in ("close", "disable"),
             "expires": None if persistent else self.now()+control.warning_seconds+control.reset_seconds,
             "serial": proposal["serial"], "actor": player.id, "starts": self.now()+control.warning_seconds}
+        apartment = self.private.apartment(presence.core)
+        if apartment and apartment.get("unit") and control.id == "apartment-door":
+            proposal["apartments"][apartment["id"]].setdefault("vestibule_access_until", {})[player.id] = self.now()+control.reset_seconds
         if layout:
             proposal["effects"][key]["layout"] = layout
         if obj.spec.kind == "tram_stop" and control.action == "call":
@@ -254,14 +260,22 @@ class Interlock:
         return {"id": "control:"+control.id, "cells": ["Flip "+control.label,
                 view["state"]+" / "+reset, "3s / +10 base trace"]}
 
-    def open_vestibule(self, presence: Presence, on_changed: Callable[[], None] | None = None) -> None:
+    def open_vestibule(self, presence: Presence, on_changed: Callable[[], None] | None = None,
+                       key_tier: int = 1) -> None:
         """Passkey's typed effect: no storage, bed, bank or ICE unlock."""
         if not self.private.apartment(presence.core) or self.offline(presence.core):
             raise ValueError("No powered private vestibule is connected.")
+        apartment = self.private.apartment(presence.core)
+        if not self.private.before_access(apartment["resident"]):
+            raise ValueError("The lease is being reconciled. Try again.")
+        if key_tier < apartment.get("lock_tier", 1):
+            raise ValueError(f"Locked. Tier {apartment['lock_tier']}.")
         control = self.controls[presence.core, "apartment-door"]
         current = self.state["effects"].get(presence.core+":"+control.id)
         changed = not current or not current["enabled"] or current["expires"] <= self.now()
         proposal = deepcopy(self.state)
+        if apartment.get("unit"):
+            proposal["apartments"][apartment["id"]].setdefault("vestibule_access_until", {})[presence.player_id] = self.now()+control.reset_seconds
         proposal["serial"] += 1
         proposal["effects"][presence.core+":"+control.id] = {
             "core": presence.core, "control": control.id, "revision": control.revision, "enabled": True,
@@ -294,6 +308,7 @@ class Interlock:
         zone = self.game.world.zones.get(zid)
         obj = zone.objects.get(oid) if zone else None
         if (not actor or actor.zone != zid or actor.stance != "normal" or not obj
+                or not self.game.world.object_access(actor, obj.spec)
                 or max(abs(actor.x-obj.spec.tile[0]), abs(actor.y-obj.spec.tile[1])) > 1
                 or self.hardware.get((zid, oid)) != core):
             raise ValueError("Stand beside the hardware with your body free to work.")

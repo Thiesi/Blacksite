@@ -69,6 +69,21 @@ S06 preview actors use Hardline's starting attributes and derived pools
 (game design 3.1–3.2: HP 130, STA 70). They are temporary bodies, not saved
 characters. S07 supplies character creation and persistent state.
 
+S18 adds `housing` on an `apartment_door`: `{class_id, room, origin,
+sector, cell, doorstep, vestibule}`. The room ID resolves to a paired
+`rooms/<id>.map` and `.json` blueprint. It defines a 6x4 floor grid,
+local spawn and local objects (storage, apartment_safe, bed, terminal,
+hardware, light). `origin` translates those positions into the containing
+zone. `vestibule` is one local tile; `doorstep` is a public tile outside.
+Every active anchor must resolve its class, room and sector cell and
+match the commissioned zone floor. Visitors never acquire resident
+permissions merely because the physical door is open.
+
+`apartments.json` contains three class records: `{id, name,
+storage_slots, core_tier, rent, key_item, core_upgrade_to, core_upgrade_price,
+lock_tier, lock_upgrade_to, lock_upgrade_price, schema}`. Class IDs use
+the catalog underscore form. Room blueprints are content, not new zones.
+
 ### 1.2 Tile type (`tiles.json`)
 
 `id, char, glyph, colour, passable, cover (0–3), opaque, hazard
@@ -212,7 +227,8 @@ Shared header: `id, name, class (weapon, armour, ammo, implant,
 resonance, rig, drug, consumable, drone, salvage, schematic, key, pass,
 data, misc), tier, weight, base_price, secured_default (bool),
 description (the catalog line, inline), stack_max, maker,
-quality {kind, key}, no_vendor_sale (default false)`. The item
+quality {kind, key}, no_vendor_sale (default false), door_key (default
+false)`. The item
 carries exactly the block its class names (resonance and rig use the
 implant block; key, pass, data and misc carry none). Class-specific
 blocks:
@@ -486,6 +502,12 @@ a SQLite column migration. Destruction removes the item and deployment
 record together; destroying equipment does not defeat its controller
 for PvP XP.
 
+S18 adds `key_for` (nullable tenancy ID) and `key_tier` (0 for non-keys,
+1-3 for an issued apartment key). Only the server issues these fields;
+the generic `key_apartment` template has fixed quality and no resale.
+They persist in item JSON without a column migration. A key grants no
+resident identity, storage, safe, bed, terminal or bank permission.
+
 `bound` defaults false. Recovery and service-job producers set it for
 goods that cannot be sold, dropped, transferred or fabricated. S12
 enforces the transfer boundary; S10/S19 own those grants. SQLite world
@@ -505,6 +527,25 @@ ammo container; the container remains carried until refilled or removed.
 `id, owner player id, zone, door object id, rent_paid_until, storage[] (item
 instance ids), safe_chits, core_tier, last_hacked_at, hack_log[],
 theft_receipts[], vestibule_access_until`.
+
+S18 joins these fields to S15's existing `meta.interlock_state.apartments`
+record (`resident`, `tier`, `door`, `hardware`, `light`, `sector`, `cell`).
+It adds `class_id, unit, lapsed_since, lock_tier, safe_chits` and a unique
+tenancy ID; a later resident never inherits an earlier private core.
+`housing_serial` never reuses tenancy IDs. `unit_hacks[unit]` retains the
+physical apartment's rolling theft watermark across surrender and
+signing. `vestibule_access_until` maps visitor player IDs to UTC
+deadlines. Invoices contain `{due, amount}`; `invoice` freezes the next
+unpaid quote, and `last_invoice` records the most recent paid quote.
+`impounds` are protected per-player item receipts with a per-item fee and
+free chits. Rental payment, item ownership, safe, core and eviction state
+commit in the same commerce transaction. Game design 8.7 defines stored
+protection and carried protection as separate destination capacities.
+Ownership strings are `apartment:<tenancy>` and `impound:<player>`;
+`impounds[player]` holds `{items: {item_id: {fee}}, chits}`. S23 appends
+fee-free market deliveries using the same proposal and item instances.
+Character deletion releases its lease, core and impounded goods through
+resumable cleanup after the deletion is durable.
 
 ### 2.4 Relay state
 

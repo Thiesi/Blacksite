@@ -60,7 +60,15 @@ def visible_tiles(actor: Actor, zone: ZoneInstance, radius: int) -> set[Tile]:
     return actor.visible
 
 
+def private_visible(observer: Actor, target: Actor) -> bool:
+    owner = target.behaviour.get("private_owner")
+    return not owner or observer.id in (owner, target.id) or bool(
+        observer.kind == "drone" and observer.behaviour.get("player_drone") and observer.owner == owner)
+
+
 def sees_actor(observer: Actor, target: Actor, visible: set[Tile], radius: int) -> bool:
+    if not private_visible(observer, target):
+        return False
     if target.behaviour.get("training") and target.owner != observer.id:
         return False
     if target.position not in visible:

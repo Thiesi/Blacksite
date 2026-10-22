@@ -5,6 +5,17 @@
 **Depends on:** S07, S09, S13, S19 · **Milestone:** M6
 **Issue:** https://github.com/Thiesi/blacksite/issues/30
 
+S18 housing help must teach the `*` storage, `$` safe and `b` bed, bed
+management/logout, and Personal impound at banks. Half the class storage
+can be secured in place, independently of carried secured slots; quality
+and secured status survive transfers. A full protected destination
+refuses without unsecuring goods. The safe is separate from bank/hand
+rent funds. Keys and Passkey open only a 30-second visitor vestibule;
+crew membership grants no resident permissions. Explain the first paid
+week and two-week unpaid lapse, and distinguish S25's actual locations
+from S18's native fixtures. See game design 8.7, [S18](S18-apartments.md)
+and accepted [PR #38](https://github.com/Thiesi/Blacksite/pull/38).
+
 ## Goal
 
 Make the first hour self-explanatory and the hundredth hour

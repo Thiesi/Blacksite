@@ -50,6 +50,7 @@ class Commerce:
         self.waiting: deque[tuple[str,str,dict[str,Any],bool] | Callable[[], None]] = deque()
         self.prompt_serial = 0
         self.after_settle: Callable[[], None] = lambda: None
+        self.item_label: Callable[[ItemInstance], str] = lambda item: self.content.items[item.template].name
         self.sync_caches()
 
     def ready(self, session: Session) -> bool:
@@ -74,6 +75,8 @@ class Commerce:
         obj = self.sim.world.zones[av.zone].objects.get(target)
         if obj is None or max(abs(obj.spec.tile[0]-av.actor.x), abs(obj.spec.tile[1]-av.actor.y)) > 1:
             raise ValueError("Move next to the counter or cache.")
+        if not self.game.world.object_access(av.actor, obj.spec):
+            raise ValueError("Only the resident may use this room's services.")
         return obj
 
     def vendor(self, session: Session, target: str) -> tuple[Vendor, str]:
@@ -572,6 +575,7 @@ class Commerce:
             self.nearby(session, screen.target)
             title = "KESTREL BANK"
             rows = [{"id": "deposit", "cells": ["Deposit", str(player.chits_hand)]}, {"id":"withdraw", "cells":["Withdraw",str(player.chits_bank)]}]
+            rows.append({"id": "impound", "cells": ["Personal impound", "Protected goods and chits"]})
             detail = f"Hand {player.chits_hand}\nBank {player.chits_bank}\nChoose an action, then enter chits."
         elif screen.kind == "equipment":
             rows = [{"id": slot, "cells": [slot.replace("_"," ").title(), self.content.items[self.items[iid].template].name]} for slot,iid in player.equipment.items() if iid in self.items]
@@ -586,7 +590,7 @@ class Commerce:
             for iid in ids:
                 item = self.items[iid]
                 slot = next((key for key,value in player.equipment.items() if value == iid), "")
-                rows.append({"id": iid, "cells": [self.content.items[item.template].name, str(item.stack), f"{self.content.items[item.template].weight*item.stack:g}kg", "S" if item.secured else "", slot]})
+                rows.append({"id": iid, "cells": [self.item_label(item), str(item.stack), f"{self.content.items[item.template].weight*item.stack:g}kg", "S" if item.secured else "", slot]})
             mods = self.game.progression.modifiers(player)
             detail = f"Carry {inventory.weight(player):g}/{mods.attribute(player,'frame')/2+mods.bonus('carry_kg'):g} kg. {inventory.secured_slots} secured slots."
             if screen.kind == "inventory":
@@ -598,6 +602,8 @@ class Commerce:
             if template:
                 selected_item = self.items.get(selected)
                 detail += "\n" + quality_detail(template, selected_item.quality if selected_item else 1)
+                if selected_item and selected_item.key_for:
+                    detail += f"\nDoor key tier {selected_item.key_tier}."
                 detail += "\n" + "\n".join(line for line in (availability(template), template.description) if line)
                 if template.implant and not template.implant.portable:
                     detail += "\nInstall or remove at a clinic. Open its counter and press C."

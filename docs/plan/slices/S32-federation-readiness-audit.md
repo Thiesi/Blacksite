@@ -5,6 +5,15 @@
 **Depends on:** S21, S26 · **Milestone:** M6
 **Issue:** https://github.com/Thiesi/blacksite/issues/32
 
+S18 adds origin-prefixed tenancy IDs, server-issued item `key_for` and
+`key_tier`, and protected apartment/impound ownership records. Audit
+these together with `unit_hacks`: the physical unit's rolling 24-hour
+theft allowance survives re-letting, while old keys and private cores
+expire. Local `zone:door` unit IDs have authority only inside their
+origin's world. Visitors and crews never inherit resident permissions;
+safe/bank chits are outside the theft manifest. See entity 2.3, game
+design 8.7 and accepted [PR #38](https://github.com/Thiesi/Blacksite/pull/38).
+
 ## Goal
 
 Before 1.0, verify that the "per node now, federation designed in"

@@ -25,6 +25,7 @@ from blacksite.server.quality import value as quality_value, damage_multiplier
 from blacksite.server.wake import menu
 from blacksite.server.world.actors import Actor
 from blacksite.server.world.sight import line, sees_actor, visible_tiles, line_of_sight, sight_radius, detection_limit
+from blacksite.server.world.sight import private_visible
 
 
 class Combat:
@@ -180,7 +181,7 @@ class Combat:
 
     def target_view(self, actor: Actor) -> dict[str, Any] | None:
         target = self.world.actors.get(actor.target)
-        if not target or target.zone != actor.zone: return None
+        if not target or target.zone != actor.zone or not private_visible(actor, target): return None
         obscured = not self.visible(actor,target)
         if obscured:
             zone = self.world.zones[actor.zone]

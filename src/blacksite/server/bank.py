@@ -3,11 +3,13 @@
 from blacksite.server.players import Player
 
 
-def transfer(player: Player, amount: int, deposit: bool) -> None:
+def exchange(hand: int, account: int, amount: int, deposit: bool) -> tuple[int, int]:
     if type(amount) is not int or amount <= 0:
         raise ValueError("Enter a positive whole number of chits.")
-    source, target = ("chits_hand", "chits_bank") if deposit else ("chits_bank", "chits_hand")
-    if getattr(player, source) < amount:
+    if (hand if deposit else account) < amount:
         raise ValueError("You do not have that many chits.")
-    setattr(player, source, getattr(player, source) - amount)
-    setattr(player, target, getattr(player, target) + amount)
+    return (hand-amount, account+amount) if deposit else (hand+amount, account-amount)
+
+
+def transfer(player: Player, amount: int, deposit: bool) -> None:
+    player.chits_hand, player.chits_bank = exchange(player.chits_hand, player.chits_bank, amount, deposit)

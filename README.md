@@ -21,7 +21,7 @@ they go down into the Blacksite together.
 
 ## Status
 
-**S01-S17 implemented; M3 is in progress.** The M0 foundation,
+**S01-S18 implemented; M3 is in progress.** The M0 foundation,
 shared movement, sight, fog memory, ten maps and persistent characters are
 available. The service now starts the Wake for new callers. See the
 [character guide](docs/ops/characters.md) for persistence, sleeper recovery
@@ -52,6 +52,11 @@ S16 supplies progression, installed hardware, substances and owned drones.
 S17 adds the [salvage and fabrication engine](docs/ops/fabrication.md),
 permanent schematics and consistent item quality. Its native acceptance
 uses labelled fixtures; S25 still owns actual Scour nodes and workshops.
+
+S18 adds the [apartment engine](docs/ops/apartments.md): weekly leases,
+storage, protected safes, private cores and impound. Its native proof uses
+three labelled room anchors and an injected housing clock; S25 still
+owns the real Terraces letting terminal and 24-door pool.
 
 Blacksite is developed as a third-party native door: it has no commit
 access to NetBBS. What it needs from the platform is written up in

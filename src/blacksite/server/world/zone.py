@@ -2,6 +2,7 @@
 
 from collections import deque
 from dataclasses import dataclass, field
+from collections.abc import Callable
 import random
 
 from blacksite.content.schema import ObjectSpec, Tile, TileType, Zone, ZoneLayout
@@ -44,6 +45,8 @@ class ZoneInstance:
     layers: dict[str, GeometryLayer] = field(default_factory=dict)
     geometry: dict[Tile, str] = field(default_factory=dict)
     revision: int = 0
+    entry_policy: Callable[[Actor | None, Tile], bool] = field(default=lambda actor, tile: True, repr=False)
+    position_update: Callable[[Actor], None] = field(default=lambda actor: None, repr=False)
     geometry_revision: int = 0
     rng: random.Random = field(init=False, repr=False)
     doors: dict[Tile, ObjectState] = field(init=False, repr=False)
@@ -91,6 +94,9 @@ class ZoneInstance:
 
     def tile_id(self, tile: Tile) -> str | None:
         return self.geometry.get(tile, self.template.tile_at(tile))
+
+    def can_enter(self, actor: Actor | None, tile: Tile) -> bool:
+        return self.passable(tile) and self.entry_policy(actor, tile)
 
     def passable(self, tile: Tile, grid: dict[Tile, str] | None = None) -> bool:
         effective = grid if grid is not None else self.geometry

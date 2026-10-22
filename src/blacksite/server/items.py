@@ -26,6 +26,8 @@ class ItemInstance:
     created_at: str = ""
     bound: bool = False
     health: int | None = None  # Deployed/packed drone condition, entity 2.2.
+    key_for: str | None = None  # S18 tenancy generation, never a file path.
+    key_tier: int = 0
 
     def __post_init__(self) -> None:
         # Exhausted rechargeable ammunition retains its container at zero.
@@ -34,6 +36,8 @@ class ItemInstance:
             raise ValueError("invalid item quality or stack")
         if self.health is not None and (type(self.health) is not int or self.health < 0):
             raise ValueError("invalid drone health")
+        if type(self.key_tier) is not int or (self.key_for is not None and not 1 <= self.key_tier <= 3):
+            raise ValueError("invalid apartment key tier")
 
     @classmethod
     def from_record(cls, row: dict[str, Any]) -> "ItemInstance":
@@ -57,6 +61,8 @@ def availability(template: ItemTemplate) -> str:
     """State future behaviour openly when selling physical items now."""
     if template.salvage:
         return "Take salvage to a workshop."
+    if template.door_key:
+        return "Use at the matching apartment door. Only the vestibule opens."
     owner = {"drone": "drone operation",
              "rig": "rig operation", "pass": "restricted access", "key": "controls",
              "data": "objectives", "misc": "objectives", "salvage": "fabrication"}

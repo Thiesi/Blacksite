@@ -17,6 +17,8 @@ on:
       - 'scripts/accept_s14_netbbs.py'
       - 'scripts/accept_s15_netbbs.py'
       - 'scripts/accept_s17_netbbs.py'
+      - 'scripts/accept_s18_netbbs.py'
+      - 'scripts/housing_fixture.py'
       - '.github/workflows/service-acceptance.yml'
       - 'pyproject.toml'
       - 'MANIFEST.in'
@@ -26,6 +28,42 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
+  apartments-netbbs:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    permissions:
+      contents: read
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - uses: actions/checkout@v4
+        with:
+          repository: Thiesi/NetBBS
+          ref: v7.31.0
+          path: .test-tmp/netbbs
+      - name: Build and install the wheel for apartment acceptance
+        shell: bash
+        run: |
+          python -m pip install './.test-tmp/netbbs[ssh,web]'
+          python -m pip wheel --no-deps . -w "$RUNNER_TEMP/s18-wheels"
+          python -m venv "$RUNNER_TEMP/s18-venv"
+          "$RUNNER_TEMP/s18-venv/bin/python" -m pip install "$RUNNER_TEMP"/s18-wheels/*.whl
+      - name: Accept labelled rentals and the eviction clock fixture
+        shell: bash
+        run: |
+          python scripts/accept_s18_netbbs.py --root "$RUNNER_TEMP/s18-proof" --door-python "$RUNNER_TEMP/s18-venv/bin/python"
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: s18-apartment-proof
+          path: |
+            ${{ runner.temp }}/s18-proof/**/*.ans
+            ${{ runner.temp }}/s18-proof/**/*.txt
+            ${{ runner.temp }}/s18-proof/*.json
+            ${{ runner.temp }}/s18-proof/progress.log
+
   fabrication-netbbs:
     runs-on: ubuntu-latest
     timeout-minutes: 15

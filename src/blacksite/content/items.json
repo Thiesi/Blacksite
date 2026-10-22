@@ -3736,6 +3736,23 @@
         "kind": "weapon_damage",
         "key": ""
       }
+    },
+    {
+      "id": "key_apartment",
+      "name": "Apartment key",
+      "class": "key",
+      "tier": 1,
+      "weight": 0,
+      "base_price": 0,
+      "secured_default": false,
+      "description": "You hold one door open. The room beyond keeps its permissions.",
+      "stack_max": 1,
+      "no_vendor_sale": true,
+      "door_key": true,
+      "quality": {
+        "kind": "none",
+        "key": ""
+      }
     }
   ]
 }

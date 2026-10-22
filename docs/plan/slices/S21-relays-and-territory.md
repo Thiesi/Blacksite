@@ -171,3 +171,17 @@ persisted RNG; relay changes cannot reroll already spawned nodes.
 
 This carries the accepted [PR #38](https://github.com/Thiesi/Blacksite/pull/38)
 findings 12/14 forward; see [S17](S17-salvage-and-fabrication.md).
+
+## S18 housing handoff
+
+Wire `Apartments.rent_modifier(player, invoice_due_utc)` to historical
+Block Relay benefit at the invoice's due time. Freeze its amount when
+first issued; an ownership change never rewrites an issued or paid
+invoice. Default rent multiplier is 1. The extra private-core ICE slot
+adds one Tripwire without changing the class tier. Wire
+`private_core_ice_slots(player)` and refresh affected committed cores and
+active defenders when ownership changes, retaining theft receipts.
+Apartment storage protects half its class capacity in place, separately
+from carried secured slots. A relay benefit never grants room-service
+permission to crew, faction members or visitors. See game design 8.7,
+[S18](S18-apartments.md) and accepted [PR #38](https://github.com/Thiesi/Blacksite/pull/38).

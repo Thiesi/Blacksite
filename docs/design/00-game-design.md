@@ -1093,6 +1093,52 @@ a safe with banked chits and a terminal. Rent lapse of
 two weeks evicts and moves everything to a Kestrel impound (fee to
 reclaim).
 
+Legal discharge, by grade 5 or the 90-day calendar, permits one tenancy
+per character. Signing pays one week. Due invoices use the bank first,
+then hand chits, without splitting a paid invoice across later visits.
+The first unpaid deadline starts a 14-day lapse; checking again never
+restarts that grace period. The next successful payment advances the
+original weekly schedule. Block Relay discounts only the next unpaid
+invoice; a paid invoice is final.
+
+Storage capacity is the class's listed item-slot count. Half its slots
+may be secured in place, independent of the character's three carried
+secured slots and implant bonuses. Stored goods retain their instance
+quality, charges, ammunition, condition and secured flag. A transfer
+refuses if the destination's protected capacity is full; it never
+silently removes protection. This makes the planned unsecured half an
+explicit capacity, rather than rewarding repeated secure-and-deposit
+trips. Only unsecured, unbound contents enter the private-core manifest.
+The existing one-unit-per-apartment-per-rolling-24-hour theft cap holds.
+
+The safe is a separate banked account. Rent uses bank and hand, not the
+safe. Eviction moves all stored goods and safe chits to protected
+personal impound. Reclaim charges 10% of each item's catalog list value,
+with stack counts and ammunition pack sizes respected; chits are free
+and return to the bank. Chit fees round halves up. Surrender uses the
+same protected delivery with no fee. A rented room is a 6x4 pocket;
+only its resident can use storage, safe, terminal and bed. A successful
+door key opens a 30-second vestibule only. All actions, including stale
+menus, recheck tenancy and interior permission on the server.
+
+Signing issues one physical apartment key. It records this tenancy and
+the current lock tier, weighs nothing, has no resale value and changes
+no quality-scaled stat. A resident never needs the key to enter. A
+visitor carrying a matching key gets only the vestibule; the resident
+may replace a lost key from the apartment menu. The 800-chit tier-3 lock
+upgrade issues a new tier-3 key and invalidates old tier-1 keys and
+visitor grants. Passkey uses its actual program tier (3), so it still
+opens a tier-3 vestibule. Neither method grants storage or terminal
+permission. A later tenancy invalidates all earlier keys and private
+core access, while the physical apartment keeps its rolling theft cap.
+Room residents and their drones are hidden from outside sight, scouting
+and targeting; the delivery vestibule itself remains visible.
+
+Block Relay's extra private-core ICE slot adds one Tripwire, without
+changing the housing class tier. Its rent reduction applies when the
+next invoice is first issued, using ownership at that invoice's due
+time. S21 owns the historical benefit lookup and guard refresh.
+
 ## 9. Contracts
 
 ### 9.1 Objectives and approaches

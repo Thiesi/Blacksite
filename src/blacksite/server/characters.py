@@ -66,7 +66,7 @@ class Characters:
                 else:
                     actor = player.actor()
                     actor.stance = "sleeper"
-                    world.enter(actor, player.zone, world.free_tile(player.zone, player.tile))
+                    world.enter(actor, player.zone, world.free_tile(player.zone, player.tile, actor))
                     self.sleepers[player.id] = (actor, clock.now_tick() + int(remaining * TICK_HZ))
                     world.zones[player.zone].activate("sleeper:" + player.id, clock.now_tick())
 
@@ -89,7 +89,7 @@ class Characters:
                 return
             actor = player.actor()
             actor.stance = "sleeper"
-            self.world.enter(actor, player.zone, self.world.free_tile(player.zone, player.tile))
+            self.world.enter(actor, player.zone, self.world.free_tile(player.zone, player.tile, actor))
             player.tile = actor.position
             self.sleepers[player.id] = actor, self.clock.now_tick() + int(remaining * TICK_HZ)
             self.world.zones[player.zone].activate("sleeper:" + player.id, self.clock.now_tick())
@@ -160,7 +160,7 @@ class Characters:
                     zone = self.world.zones[zone_id].template
                     avatar.perception.remembered[zone_id] = unpack_memory(blob, zone.width, zone.height)
             avatar.seen_zones = set(player.progress.get("seen_zones", []))
-            self.world.enter(actor, player.zone, self.world.free_tile(player.zone, player.tile))
+            self.world.enter(actor, player.zone, self.world.free_tile(player.zone, player.tile, actor))
         session.player_id, session.subscribed, session.player_name = player.id, player.zone, player.name
         session.keymap_id = player.settings.get("keymap", "arrows")
         self.world.zones[player.zone].activate(session.id, self.clock.now_tick())
