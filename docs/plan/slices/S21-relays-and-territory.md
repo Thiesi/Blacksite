@@ -195,3 +195,8 @@ Use S20 explicit capture vectors once and bind
 Factions.before_membership_change to reconcile/freeze due apartment rent
 before join/leave. Preserve the historical due-time benefit in S18; a later
 membership change cannot reprice an outstanding invoice.
+
+A false before_membership_change result must have a visible waiting or
+failure notice, with a retry after a pending rent receipt. Unpaid rent is
+not a new faction-admission requirement: freeze the due-time quote, then
+preserve game 7.1 joining/leaving rules.

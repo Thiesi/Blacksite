@@ -101,3 +101,56 @@ def test_game_7_3_remote_cut_mark_is_in_the_same_receipt_and_refused_cut_never_m
     effect = game.commit_commerce()[0]
     assert p.marked_until and game.core.combat.actor(p).marked
     assert next(row for row in effect["players"] if row["id"] == p.id)["marked_until"] == p.marked_until
+
+
+def test_game_7_6_unaffordable_charge_is_refused_before_channel_and_quote_never_spends(runners):
+    game, a, _, _ = runners
+    p = game.core.characters.players[a.session.player_id]
+    p.chits_hand = 0
+    zid, oid = cut_fixture(game, a)
+    interlock = game.core.lattice.interlock
+    iid = "test-origin:item:989000"
+    game.core.commerce.items[iid] = make_item(iid, interlock.content.items["key_containment_charge"], p.id, game.clock.now_utc().isoformat())
+    p.inventory.append(iid)
+    with pytest.raises(ValueError, match="fee is 150"):
+        interlock.start_cut(a.session, "lat-civic-ledger", zid, oid, charge=True)
+    assert not interlock.cuts and iid in p.inventory and not game.core.commerce.pending
+    p.faction, p.standing["halvard"] = "halvard", 90
+    interlock.start_cut(a.session, "lat-civic-ledger", zid, oid, charge=True)
+    assert p.id in interlock.cuts and iid in p.inventory
+    assert "halvard-service" not in game.core.characters.identities[p.bbs_user_id].get("receipts", {}).get("faction_perks", {})
+
+
+def test_ui_5_manual_cut_is_only_offered_adjacent_and_charge_quote_is_visible(runners):
+    from tests.character_helpers import place
+    game, a, _, _ = runners
+    zid, oid = cut_fixture(game, a)
+    interlock = game.core.lattice.interlock
+    zone = game.core.world.zones[zid]
+    ox, oy = zone.objects[oid].spec.tile
+    tile = next((ox+dx, oy+dy) for dx, dy in ((2, 0), (-2, 0), (0, 2), (0, -2))
+                if zone.passable((ox+dx, oy+dy)))
+    place(game, a, zid, tile)
+    interlock.menus[a.session.id] = zid, oid, False
+    game.step()
+    body = game.core.characters.sim.external_views[a.session.id][1]
+    assert {row["key"] for row in body["actions"]} == {"x"}
+    interlock.menus[a.session.id] = zid, oid, "charge"
+    game.step()
+    assert "service fee 150 chits" in game.core.characters.sim.external_views[a.session.id][1]["detail"]
+    place(game, a, zid, zone.objects[oid].spec.tile)
+    interlock.menus[a.session.id] = zid, oid, False
+    game.step()
+    assert {row["key"] for row in game.core.characters.sim.external_views[a.session.id][1]["actions"]} == {"c", "x"}
+
+
+def test_ui_5_stale_hardware_confirmation_does_not_start_a_paid_cut(runners):
+    from blacksite.server.protocol import Frame
+    game, a, _, _ = runners
+    zid, oid = cut_fixture(game, a)
+    interlock = game.core.lattice.interlock
+    interlock.menus[a.session.id] = zid, oid, "charge"
+    frame = Frame("intent", {"name": "menu_select", "args": {"key": "y", "row": "cut"},
+                            "expected_revision": a.session.view_revision+1})
+    assert interlock.input(a.session, frame, game.clock.now_tick())
+    assert not interlock.cuts and interlock.menus[a.session.id][2] == "charge"

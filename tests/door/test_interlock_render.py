@@ -33,7 +33,7 @@ def test_ui_5_hardware_discloses_channel_shock_offline_and_safety(info, runners,
     text = render(info, game, body, size)
     assert "5s channel" in text and "damage interrupts" in text
     assert "100 shock" in text and "offline 10 minutes" in text
-    assert "Protected bodies" in text and "cut power" in text
+    assert "Protected bodies" in text and "manual cut" in text
 
 
 @pytest.mark.parametrize("size", [(80, 24), (132, 50)])

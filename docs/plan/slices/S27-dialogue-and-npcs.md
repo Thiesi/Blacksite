@@ -180,3 +180,7 @@ faction site recruiter_zone. The Wake desk remains a valid all-eight
 admission contact. Unmoored public recruiter/board stay Old Works Main;
 hall/vat stay Old Works Drop. Keep the existing verbatim recruiter pitches
 and do not duplicate named people to fill unfinished geography.
+
+Preserve recruiter story/contract dialogue by offering the validated
+faction.open intent as a chosen talker action. Input dispatch must not let
+the pre-S27 E-to-recruitment fallback swallow the named NPC dialogue.

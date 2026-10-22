@@ -132,3 +132,6 @@ reward transaction. Do not pay reputation from an after-commit notification.
 Keep the program-source contract, acquisition guards and actual income
 report from PR #38; membership never revokes already learned programs or
 installed hardware.
+
+Unmoored public board/recruiter use oldworks-main; hall/vat use oldworks-
+drop. A board must not be derived from FactionSite.hall for this faction.

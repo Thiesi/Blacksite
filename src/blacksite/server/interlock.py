@@ -325,8 +325,14 @@ class Interlock:
 
     def start_cut(self, session: Session, core: str, zid: str, oid: str, charge: bool = False) -> None:
         actor = self.authorize_cut(session, core, zid, oid, charge)
-        if charge and not self.charge_item(self.game.players[session.player_id]):
-            raise ValueError("Carry a containment charge first.")
+        if charge:
+            player = self.game.players[session.player_id]
+            if not self.charge_item(player):
+                raise ValueError("Carry a containment charge first.")
+            quote = self.game.factions.containment_fee(player,
+                deepcopy(self.game.identities[player.bbs_user_id]))
+            if player.chits_hand < quote:
+                raise ValueError("The containment-charge service fee is 150 chits.")
         if session.player_id in self.cuts or actor.behaviour.get("channel") or session.id in self.commerce.using:
             raise ValueError("Finish or cancel your current action first.")
         self.cuts[session.player_id] = CutChannel(core, zid, oid, actor.position,
@@ -434,6 +440,8 @@ class Interlock:
             return True
         screen = self.menus.get(session.id)
         if screen:
+            if name == "menu_select" and frame.data.get("expected_revision") != session.view_revision:
+                return True
             zid, oid, confirming = screen
             if name == "menu_close" or key in ("escape", "b", "B"):
                 self.close(session)
@@ -446,7 +454,12 @@ class Interlock:
             elif not confirming and (key in ("c", "C", "x", "X") or name == "menu_select"):
                 chosen = frame.data.get("args", {}).get("key", "c") if name == "menu_select" else key.lower()
                 if chosen in ("c", "x"):
-                    self.menus[session.id] = zid, oid, "charge" if chosen == "x" else True
+                    actor = self.lat.avatar(session).actor
+                    tile = self.game.world.zones[zid].objects[oid].spec.tile
+                    if chosen == "c" and max(abs(actor.x-tile[0]), abs(actor.y-tile[1])) > 1:
+                        self.sim.log(session, "Move adjacent for a manual cut. A charge reaches three tiles.")
+                    else:
+                        self.menus[session.id] = zid, oid, "charge" if chosen == "x" else True
             return True
         if name != "interact" and key not in ("e", "E"):
             return False
@@ -525,10 +538,18 @@ class Interlock:
             body = menu("HARDWARE", [{"id": "cut", "cells": ["Cut power"]}], 0, detail,
                         "Y confirms cut / Esc/B returns" if confirming else "C cut power / Esc/B returns")
             body["kind"] = "hardware"
-            body["actions"] = [{"key": "y" if confirming else "c", "label": "confirm cut" if confirming else "cut power"}]
+            adjacent = max(abs(avatar.actor.x-obj.spec.tile[0]), abs(avatar.actor.y-obj.spec.tile[1])) <= 1
+            body["actions"] = ([{"key": "y", "label": "confirm cut"}] if confirming else
+                               [{"key": "c", "label": "manual cut (adjacent)"}] if adjacent else [])
+            body["hint"] = "Y confirms cut / Esc/B returns" if confirming else "C manual (adjacent) / X charge (range 3) / Esc/B returns" if adjacent else "X charge (range 3) / Esc/B returns"
             if not confirming:
                 body["actions"].append({"key": "x", "label": "containment charge (range 3)"})
             if confirming == "charge":
-                body["detail"] += "\nConsumes one charge. Service fee 150; eligible Halvard +90 daily waiver."
+                player = self.game.players[session.player_id]
+                fee = self.game.factions.containment_fee(player,
+                    deepcopy(self.game.identities[player.bbs_user_id]))
+                body["detail"] = (f"Core: {self.content.cores[core].name}\n5s; 100 shock; core offline 10 min."
+                    f"\nConsumes one charge; service fee {fee} chits."
+                    "\nDamage interrupts. Protected bodies stay safe.")
 
             self.sim.external_views[sid] = "menu", body

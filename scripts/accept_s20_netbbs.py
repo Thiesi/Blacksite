@@ -153,17 +153,87 @@ async def run_size(probe: NativeProbe, width: int, height: int) -> dict:
     return result
 
 
-async def accept(root: Path, python: Path, show: bool) -> None:
+async def hardware_size(probe: NativeProbe, width: int, height: int) -> dict:
+    from accept_s16_netbbs import loan
+    connection = await probe.open(width, height, "S20HW", 0, True)
+    grade(probe, connection)
+    p = probe.game.players[connection.session.player_id]
+    p.chits_hand = 0
+    iid = loan(probe, connection, "key_containment_charge")
+    interlock = probe.service.core.lattice.interlock
+    core = "lat-civic-ledger"
+    (zid, oid), _ = next((key, value) for key, value in interlock.hardware.items() if value == core)
+    await probe.travel(connection, "vatside-clinics")
+    await probe.travel(connection, zid)
+    zone = probe.service.world.zones[zid]
+    ox, oy = zone.objects[oid].spec.tile
+    occupied = {obj.spec.tile for obj in zone.objects.values()}
+    tile = next((ox+dx, oy+dy) for dx, dy in ((2, 0), (-2, 0), (0, 2), (0, -2))
+                if zone.passable((ox+dx, oy+dy)) and (ox+dx, oy+dy) not in occupied)
+    await probe.walk(connection, tile)
+    await key(connection, b"e")
+    await wait(lambda: connection.session.id in interlock.menus)
+    await wait(lambda: probe.game.sim.external_views.get(connection.session.id, (None,))[0] == "menu")
+    body = probe.game.sim.external_views[connection.session.id][1]
+    assert {action["key"] for action in body["actions"]} == {"x"}
+    assert "C manual" not in body["hint"]
+    probe.save(connection, f"s20-range-two-hardware-{width}")
+    await commit_key(probe, connection, b"x", lambda: interlock.menus[connection.session.id][2] == "charge")
+    await wait(lambda: "service fee 150 chits" in connection.caller.screen.screen_text())
+    probe.save(connection, f"s20-paid-quote-{width}")
+    await key(connection, b"y")
+    await wait(lambda: connection.session.id not in interlock.menus)
+    await wait(lambda: "service fee is 150 chits" in connection.caller.screen.screen_text())
+    assert p.id not in interlock.cuts and iid in p.inventory
+    probe.save(connection, f"s20-unaffordable-no-channel-{width}")
+    # Disclosed +90 membership fixture isolates the read-only waiver quote.
+    # Admission itself is exercised with actual keys in the ordinary stage.
+    p.faction, p.standing["halvard"] = "halvard", 90
+    probe.service.core.factions.refresh(p)
+    await key(connection, b"e")
+    await wait(lambda: connection.session.id in interlock.menus)
+    await commit_key(probe, connection, b"x", lambda: interlock.menus[connection.session.id][2] == "charge")
+    await wait(lambda: "service fee 0 chits" in connection.caller.screen.screen_text())
+    identity = probe.game.identities[p.bbs_user_id]
+    assert "halvard-service" not in identity.get("receipts", {}).get("faction_perks", {})
+    probe.save(connection, f"s20-free-quote-unspent-{width}")
+    await commit_key(probe, connection, b"y", lambda: p.id in interlock.cuts)
+    assert iid in p.inventory and not interlock.offline(core)
+    await wait(lambda: iid not in p.inventory, 10)
+    assert p.chits_hand == 0 and interlock.offline(core) > 590
+    assert probe.game.identities[p.bbs_user_id]["receipts"]["faction_perks"]["halvard-service"] == probe.service.clock.now_utc().date().isoformat()
+    probe.save(connection, f"s20-free-cut-committed-{width}")
+    await probe.leave(connection, f"s20-hardware-return-{width}")
+    # The next size reuses the fixture core without waiting ten real minutes.
+    # This removes only the prior fixture's cooldown, never rewinds a clock.
+    interlock.state["cores"].pop(core, None)
+    probe.report(f"S20 HARDWARE PASS {width}x{height}: range actions, upfront fee, read-only quote and atomic free cut")
+    return {"size": [width, height], "range_two_charge_only": True,
+            "unaffordable_no_channel": True, "quote_does_not_spend_daily_use": True,
+            "charge_and_waiver_committed": True}
+
+
+async def accept(root: Path, python: Path, show: bool, stage: str = "factions") -> None:
     probe = NativeProbe(root, python, show)
+    if stage == "hardware":
+        from accept_s15_netbbs import fixture
+        fixture(probe, "controls")
     await probe.start()
     try:
         probe.report('S20 fixtures: grade5/+30, delayed Warden, 1HP after Mark. Shipped Clinic Row; Sink geography remains S25.')
-        results = [await run_size(probe, *size) for size in ((80, 24), (132, 50))]
+        if stage == "hardware":
+            probe.report("HARDWARE FIXTURE: S15 labelled open Civic control zone; charge/zero chits; +90 Halvard membership after refusal; between-size core cooldown reset")
+        run = hardware_size if stage == "hardware" else run_size
+        results = [await run(probe, *size) for size in ((80, 24), (132, 50))]
         assert not probe.errors and probe.service.failure is None
-        (root/'s20-results.json').write_text(json.dumps({'passed': True, 'runs': results,
+        (root/('s20-hardware-results.json' if stage == 'hardware' else 's20-results.json')).write_text(json.dumps({'passed': True, 'stage': stage, 'runs': results,
             'transport': 'NetBBS Telnet -> registered native stdio',
-            'fixtures': ['grade5', '+30 admission standing', 'attack-delayed Wardens for kill attribution', '1HP after Mark'],
-            'contested_zone': 'vatside-clinics', 'production_sink_slice': 'S25'}, indent=2)+'\n', encoding='utf-8')
+            'fixtures': (['S15 labelled open Civic control zone', 'grade5', 'one charge and zero chits',
+                          '+90 Halvard membership after refusal', 'between-size core cooldown reset']
+                         if stage == 'hardware' else ['grade5', '+30 admission standing',
+                         'attack-delayed Wardens for kill attribution', '1HP after Mark']),
+            'contested_zone': 'S15 labelled open core-plaza' if stage == 'hardware' else 'vatside-clinics',
+            'production_sink_slice': 'S25'}, indent=2)+'\n', encoding='utf-8')
     except BaseException:
         (root/'failure-trace.txt').write_text(traceback.format_exc(), encoding='utf-8')
         raise
@@ -176,5 +246,6 @@ if __name__ == '__main__':
     parser.add_argument('--root', type=Path, required=True)
     parser.add_argument('--door-python', type=Path, required=True)
     parser.add_argument('--show', action='store_true')
+    parser.add_argument('--stage', choices=('factions', 'hardware'), default='factions')
     args = parser.parse_args()
-    asyncio.run(accept(args.root, args.door_python, args.show))
+    asyncio.run(accept(args.root, args.door_python, args.show, args.stage))
