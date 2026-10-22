@@ -85,7 +85,8 @@ async def accept(root: Path, door_python: Path, show: bool) -> None:
         while av.actor.position!=target:
             assert time.monotonic()<deadline, ("walk timeout", zone.id, av.actor.position, target)
             start=av.actor.position
-            blocked={a.position for a in zone.actors.values() if a is not av.actor}
+            blocked={a.position for a in zone.actors.values() if a is not av.actor
+                and not (a.behaviour.get("training") and a.owner!=av.actor.id)}
             pending,previous=deque([start]),{start:None}
             exits={e.tile for e in zone.template.meta.exits if e.kind=="street"}
             while pending and target not in previous:
@@ -186,11 +187,13 @@ async def accept(root: Path, door_python: Path, show: bool) -> None:
             budget=commerce.budgets["vatside-wake-hall:wake-outfitter"].remaining
             assert budget==(before_remaining if before_hour==commerce.budgets["vatside-wake-hall:wake-outfitter"].hour else 2000)-16
             await close_menu(a)
-            await walk(b,(33,16))
+            # The outfitter can anchor anywhere in x33..35/y14..16.
+            # Park both callers outside that live NPC spawn region.
+            await walk(b,(32,16))
             await open_menu(a,b"i","inventory")
             patch=carried(a,"con_sablier_patch")
             await choose(a,patch,b"d"); await wait(lambda:patch not in player.inventory)
-            await close_menu(a); await walk(a,(33,15)); await walk(b,(34,15))
+            await close_menu(a); await walk(a,(32,15)); await walk(b,(34,15))
             await open_menu(b,b"e","cache"); await choose(b,patch)
             await wait(lambda:patch in game.players[b[3].player_id].inventory)
             await close_menu(b)
