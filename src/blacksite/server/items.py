@@ -25,12 +25,15 @@ class ItemInstance:
     stack: int = 1
     created_at: str = ""
     bound: bool = False
+    health: int | None = None  # Deployed/packed drone condition, entity 2.2.
 
     def __post_init__(self) -> None:
         # Exhausted rechargeable ammunition retains its container at zero.
         # Inventory enforces that template-specific exception.
         if not QUALITY_MIN <= self.quality <= QUALITY_MAX or self.stack < 0:
             raise ValueError("invalid item quality or stack")
+        if self.health is not None and (type(self.health) is not int or self.health < 0):
+            raise ValueError("invalid drone health")
 
     @classmethod
     def from_record(cls, row: dict[str, Any]) -> "ItemInstance":
@@ -46,7 +49,8 @@ def make_item(iid: str, template: ItemTemplate, owner: str, at: str,
         raise ValueError("stack exceeds template limit")
     return ItemInstance(iid, template.id, owner, quality, secured=template.secured_default,
                         stack=stack, created_at=at,
-                        charges=template.consumable.uses if template.consumable else 0)
+                        charges=template.consumable.uses if template.consumable else 0,
+                        health=template.drone.health if template.drone else None)
 
 
 def availability(template: ItemTemplate) -> str:

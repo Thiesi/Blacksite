@@ -298,7 +298,12 @@ Real time, cooldown-based, server-resolved.
   S16 owns player tools; S11 owns city NPCs. The catalog's control range
   bounds commands, tool effects and harm. Follow crosses a street exit
   only with its controller; hold stays in its zone. Recalling returns
-  the same instance and health, never a repaired duplicate. All attacks
+  the same instance and health, never a repaired duplicate. Recall waits
+  for 10 quiet seconds after combat. Logout recalls units after that
+  quiet period; losing slot capacity also recalls excess units. If an
+  automatic return finds all secured slots occupied, that returning unit
+  becomes unsecured and a notice is retained for the controller.
+  All attacks
   use the controller's body permissions and warning, including secondary
   hits and chemical damage. Logging out, entering safety or losing range
   stops player-attributed harm. A drone is never anonymous offline PvP.

@@ -32,6 +32,7 @@ class ProgressionEngine:
         self.pending_discoveries: set[tuple[str, str, str]] = set()
         self.retry_discoveries: set[tuple[str, str, str]] = set()
         self.surge_preview: Callable[[Player], str | None] = lambda player: None  # S24.
+        self.event_modifiers: Callable[[Player], list[dict[str, int | float]]] = lambda player: []  # S24.
         self.crew_of: Callable[[str], str | None] = lambda pid: None  # S22.
         self.permit_combat: Callable[[str, str], bool] = lambda source, target: True  # S19.
         self.sim.arrival_hook = lambda session, avatar: self.record_discovery(session.player_id, "zone", avatar.zone)
@@ -39,10 +40,17 @@ class ProgressionEngine:
         self.substances = Substances(self)
         from blacksite.server.clinics import Clinics
         self.clinics = Clinics(self)
+        from blacksite.server.drones import Drones
+        self.drones = Drones(self)
+
+    def base_modifiers(self, player: Player) -> Modifiers:
+        return collect(player, self.commerce.items, self.content.items,
+                       self.clock.now_utc().timestamp(), self.event_modifiers(player))
 
     def modifiers(self, player: Player) -> Modifiers:
         return collect(player, self.commerce.items, self.content.items,
-                       self.clock.now_utc().timestamp())
+                       self.clock.now_utc().timestamp(), [*self.event_modifiers(player),
+                           *(self.drones.modifier_layers(player) if hasattr(self,"drones") else [])])
 
     def controller(self, actor: Actor) -> Player | None:
         if actor.id in self.game.players:
@@ -303,6 +311,8 @@ class ProgressionEngine:
             self.sync_actor(player)
         if self.clinics.input(session, frame, tick):
             return True
+        if self.drones.input(session, frame, tick):
+            return True
         if session.id not in self.menus:
             return False
         if session.closed or session.player_id not in self.game.players:
@@ -340,6 +350,7 @@ class ProgressionEngine:
             self.record_discovery(*request)
         self.substances.tick(ctx.tick)
         self.clinics.tick()
+        self.drones.tick(ctx.tick)
         for player in self.game.players.values():
             self.sync_actor(player)
             self.stealth(player)

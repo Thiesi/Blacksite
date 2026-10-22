@@ -33,8 +33,8 @@ class Inventory:
         for iid in player.inventory:
             target = self.items[iid]
             if (iid not in (*player.equipment.values(), *player.implants.values())
-                    and (target.template, target.quality, target.secured, target.bound, target.charges, target.ammo)
-                    == (item.template, item.quality, item.secured, item.bound, item.charges, item.ammo)):
+                    and (target.template, target.quality, target.secured, target.bound, target.charges, target.ammo, target.health)
+                    == (item.template, item.quality, item.secured, item.bound, item.charges, item.ammo, item.health)):
                 moved = min(item.stack, template.stack_max - target.stack)
                 target.stack += moved
                 item.stack -= moved

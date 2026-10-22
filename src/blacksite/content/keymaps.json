@@ -197,6 +197,10 @@
       "context": "zone",
       "label": "abilities"
     },
+    "drone_menu": {
+      "context": "zone",
+      "label": "drone commands"
+    },
     "weapon_cycle": {
       "context": "zone",
       "label": "switch equipped weapon"
@@ -373,6 +377,10 @@
           "v",
           "V"
         ],
+        "drone_menu": [
+          "o",
+          "O"
+        ],
         "weapon_cycle": [
           "x",
           "X"
@@ -535,6 +543,10 @@
         "abilities": [
           "v",
           "V"
+        ],
+        "drone_menu": [
+          "o",
+          "O"
         ],
         "weapon_cycle": [
           "x",

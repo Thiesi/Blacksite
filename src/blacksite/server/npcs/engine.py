@@ -171,6 +171,9 @@ class Npcs:
                 self.world.enter(actor, zone.id, tile)
 
     def died(self, source: Actor, actor: Actor) -> None:
+        if actor.behaviour.get("player_drone"):
+            self.game.progression.drones.destroy(actor)
+            return
         if actor.id in self.pending_deaths or actor.zone is None:
             return
         actor.stance = "dead"
@@ -396,7 +399,7 @@ class Npcs:
             self.spawners.process(zone, now)
             avoid = self.spawners.reserved(zone)
             for actor in tuple(zone.actors.values()):
-                if actor.kind == "player" or actor.behaviour.get("training") or actor.stance in ("down", "dead"):
+                if actor.kind == "player" or actor.behaviour.get("training") or actor.behaviour.get("player_drone") or actor.stance in ("down", "dead"):
                     continue
                 if actor.behaviour.get("expires", now+1) <= now:
                     self.world.leave(actor)

@@ -456,6 +456,16 @@ current hidden geometry. A changed map extent invalidates its old bitmap.
 null for world drop), quality (0.85–1.15), ammo, charges, secured, stack,
 created_at`.
 
+S16 adds optional integer `health` for a drone's current condition. New
+drone instances start at their template maximum; old records without the
+field represent unused hardware. Deployment removes the same owned item
+from carried inventory and records its actor in `progress.drones` with
+zone, tile, mode and target. Recall restores that instance with its
+current health and quality. Item JSON stores the additive field without
+a SQLite column migration. Destruction removes the item and deployment
+record together; destroying equipment does not defeat its controller
+for PvP XP.
+
 `bound` defaults false. Recovery and service-job producers set it for
 goods that cannot be sold, dropped, transferred or fabricated. S12
 enforces the transfer boundary; S10/S19 own those grants. SQLite world
