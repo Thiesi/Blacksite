@@ -1294,9 +1294,19 @@ class _Validator:
     def check_contracts(self) -> None:
         receipt_owner: dict[str, str] = {}
         branch_owner: dict[tuple[str, str], str] = {}
+        mission_owner: dict[str, str] = {}
         for cid, con in self.each("contracts"):
             assert isinstance(con, s.ContractTemplate)
             owner = ("contracts", cid)
+            for data in con.mission_data:
+                self._check_data(owner, data, 'mission data')
+                if data.scope != 'mission':
+                    self.report(*owner, 'contract mission_data must be mission scoped', data.id)
+                if data.id in mission_owner:
+                    self.report(*owner, f'mission data id is also used by {mission_owner[data.id]}', data.id)
+                mission_owner[data.id] = cid
+                if self.t.silt and any(d.id == data.id for b in self.t.silt.bands for d in b.data):
+                    self.report(*owner, 'contract mission data cannot replace an ordinary Silt source', data.id)
             if con.service and (con.story or con.crew_scaling):
                 self.report(*owner, "a service contract is repeatable and never crew-scaled")
             if con.service and (con.reward.chits != (200, 200) or con.reward.xp != 100
@@ -1419,6 +1429,17 @@ class _Validator:
                 self.report(*owner, f"{what}: data {t.data!r} does not exist in {t.core}/{t.room}", needle)
             if t.kind == "core_control" and not any(c.id == t.control for r in core.rooms for c in r.controls):
                 self.report(*owner, f"{what}: control {t.control!r} does not exist in {t.core}", needle)
+        elif t.kind == 'silt_data':
+            if t.sector is None or not self.ref('sectors', t.sector, owner, what, needle):
+                if t.sector is None:
+                    self.report(*owner, f'{what} needs a sector', needle)
+            if not self.t.silt or t.band not in {b.id for b in self.t.silt.bands}:
+                self.report(*owner, f'{what} needs an authored Silt band', needle)
+            con = self.t.contracts.get(owner[1]) if owner[0] == 'contracts' else None
+            if con is None or t.data not in {d.id for d in con.mission_data}:
+                self.report(*owner, f'{what} needs this contract\'s exact mission data', needle)
+            if t.core is not None or t.room is not None or t.cell is not None or t.tile is not None:
+                self.report(*owner, f'{what}: Silt data uses a band, never coordinates from a different seed', needle)
         elif t.kind == "npc":
             if t.npc is None:
                 self.report(*owner, f"{what} needs an npc", needle)

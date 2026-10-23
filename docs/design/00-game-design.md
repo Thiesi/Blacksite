@@ -1289,6 +1289,13 @@ participant record unless explicitly declared as a public service order
 (§7.5) or settled season outcome (§13). All public consequences have one
 owning subsystem, a duration, and a restart rule.
 
+A required Silt record names a sector, band and mission data source,
+never room coordinates from another generated seed. The active chain
+supplies a guaranteed copy on a visible cell of that band. Existing ICE
+and the trip there remain the challenge; repeatedly rerolling a rare
+drop is not a story objective. Its source receipt is stable across
+descent layouts and bound to the accepted mission stage and attempt.
+
 Standing has two reward modes: `propagate` applies one base faction
 delta and one non-recursive half-delta to its allies/opponents;
 `explicit` applies the authored vector once, without propagation. Round

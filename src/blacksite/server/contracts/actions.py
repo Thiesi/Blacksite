@@ -178,7 +178,7 @@ class Actions:
                     if self.interact_npc(session, iid):
                         return True
                     continue
-                if stage.target.kind in ('core_room', 'core_control', 'cell'):
+                if stage.target.kind in ('core_room', 'core_control', 'cell', 'silt_data'):
                     continue
                 for target in instance.stages[instance.index].targets:
                     if self.near(actor, target):

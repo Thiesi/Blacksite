@@ -399,6 +399,14 @@ targets are selected without replacement. The completion tags are
 `carried, delivered, lifted, flipped, entered, arrived, defeated, subdued, planted,
 observed, compared, recorded`, matched only against verified server facts.
 
+Contracts may carry `mission_data[]` of mission-scoped `DataSpec` records.
+A `silt_data` target names `sector`, `band` and one exact record from
+that contract. It never names a generated cell, room or coordinate.
+Only active contract content adds these sources to a matching band;
+each copy occupies a visible non-riser cell. Source sites stay stable
+across layouts, while receipt custody includes the mission stage and
+attempt. Cash, programs and schematic unlocks remain contract rewards.
+
 Rewards add `programs[]` of catalog program IDs. Learning, items, chits,
 standing, XP and the contract receipt share one owning transaction.
 Publication options can carry their own scoped `permit`, whose optional

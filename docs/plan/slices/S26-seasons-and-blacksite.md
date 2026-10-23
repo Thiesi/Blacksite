@@ -185,3 +185,11 @@ routes, never players. A completed helper sees zero additional reward and
 retains the earlier personal choice. Ordinary source XP and work-order XP
 compose in one transaction; callbacks cannot pay again.
 <!-- s19-services:end -->
+
+S19 Silt source handoff: activate authored `mission_data` with its chain
+bundle. Typed `silt_data` targets bind sector/band/data, and the actual
+generated graph places a guaranteed visible copy. Keep mission custody,
+stable source sites and journal evidence separate. Never replace these
+with copied room coordinates or a rare-drop prerequisite. Permanent
+story items required by a later contract belong to the explicit reward;
+temporary lifted payloads retire with their owning job.

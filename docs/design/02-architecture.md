@@ -727,6 +727,12 @@ Acquired journal evidence remains available. Permanent cash, programs
 and schematics belong to an explicit contract reward rather than a
 temporary mission source. Cleanup runs after the source's own callback,
 so it cannot recreate a retired source after the cleanup commits.
+Silt contract sources are authored as `mission_data` on the contract.
+The generated band resolves their sector/band/data binding into its
+own visible cells. The source site stays stable across layout seeds;
+the verified lift adds the exact mission custody. No client supplies
+a generated room address as authority. An inactive chain adds neither
+an offer nor a Silt source.
 Actual nearby guards from S22's participation window may contribute to
 a source action; the contract ledger still filters its frozen roster.
 One final action may award ordinary run XP and fixed work-order XP;

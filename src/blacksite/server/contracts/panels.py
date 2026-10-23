@@ -194,7 +194,8 @@ class Panels:
                 progress = instance.stages[instance.index]
                 target = progress.stage.target
                 detail.insert(0, 'Next: '+(progress.stage.label or progress.stage.verb)+'; '+
-                    ', '.join(str(v) for v in (target.zone, target.object, target.core, target.room, target.data, target.npc, target.item) if v))
+                    ', '.join(str(v) for v in (target.zone, target.object, target.core, target.room,
+                                              target.sector, target.band, target.data, target.npc, target.item) if v))
                 detail.insert(1, f'Progress: {sum(progress.counts.values())}/{len(progress.targets)}; '
                     +('retry allowed' if progress.stage.retry else 'no retry'))
                 restraint = progress.stage.verb == 'clear' and progress.stage.resolution == 'subdue'

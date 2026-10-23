@@ -105,8 +105,10 @@ class Contracts:
         actor = self.world.actors.get(session.player_id)
         if jobs:
             presence = self.lat.presences.get(session.player_id)
-            relevant = next(((job, progress) for job, progress in jobs if presence and presence.core
-                and any(target.core == presence.core for target in progress.targets)), None)
+            relevant = next(((job, progress) for job, progress in jobs if presence
+                and any(presence.core and target.core == presence.core
+                    or presence.descent and target.kind == 'silt_data' and target.sector == presence.sector
+                    for target in progress.targets)), None)
             instance, progress = relevant or (next(((job, stage) for job, stage in jobs
                 if any(target.zone == actor.zone for target in stage.targets)), jobs[0]) if actor else jobs[0])
             stage = progress.stage
@@ -146,7 +148,7 @@ class Contracts:
         if stage.input == 'flip' and stage.target.kind == 'core_control':
             from blacksite.server.interlock import FLIP_SECONDS
             return FLIP_SECONDS
-        if stage.input == 'lift' and stage.target.kind == 'core_room':
+        if stage.input == 'lift' and stage.target.kind in ('core_room', 'silt_data'):
             from blacksite.server.lattice.encounters import LIFT_SECONDS
             ledger = self.content.programs['prg_ledger']
             multiplier = float(ledger.effect.params['lift_multiplier']) if presence and 'prg_ledger' in presence.rig else 1
@@ -353,8 +355,13 @@ class Contracts:
         if not presence:
             return None
         for instance, progress in self.current_jobs(player):
-            if any(target.kind == 'core_room' and target.core == presence.core
-                    and target.room == presence.room and target.data == data for target in progress.targets):
+            if any(target.data == data and (
+                    target.kind == 'core_room' and not presence.descent
+                    and target.core == presence.core and target.room == presence.room
+                    or target.kind == 'silt_data' and presence.descent
+                    and target.sector == presence.sector
+                    and target.band == self.content.silt.bands[presence.depth].id)
+                    for target in progress.targets):
                 return f'{instance.id}:{progress.stage.id}:{progress.attempt}'
         return None
 
@@ -379,7 +386,9 @@ class Contracts:
         return ()
 
     def lifted(self, effect: dict[str, Any], presence: Any, data: Any, unit: str) -> None:
-        target = StageTarget('core_room', core=presence.core, room=presence.room, data=data.id)
+        target = (StageTarget('silt_data', sector=presence.sector,
+            band=self.content.silt.bands[presence.depth].id, data=data.id) if presence.descent else
+            StageTarget('core_room', core=presence.core, room=presence.room, data=data.id))
         self.network_fact(effect, presence.player_id, target, 'lifted', unit)
         if data.kind == 'evidence' and data.asset in self.content.evidence:
             draft = Ledger(self.origin, self.content, effect.get('contracts_state') or self.record())

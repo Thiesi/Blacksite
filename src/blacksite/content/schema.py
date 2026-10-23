@@ -954,7 +954,7 @@ class FactionTable:
 
 ContractVerb = Literal["fetch", "hack", "escort", "clear", "plant", "survey"]
 InputAction = Literal["inspect", "carry", "interact", "wait", "channel", "lift", "flip", "enter"]
-TargetKind = Literal["zone_object", "zone_tile", "core_room", "core_control", "npc", "item", "cell"]
+TargetKind = Literal["zone_object", "zone_tile", "core_room", "core_control", "npc", "item", "cell", "silt_data"]
 StandingMode = Literal["propagate", "explicit"]
 PermitKind = Literal["patrol_window", "maintenance_credential", "route", "recipient"]
 
@@ -973,6 +973,7 @@ class StageTarget:
     sector: str | None = None
     cell: str | None = None
     data: str | None = None
+    band: str | None = None
 
 
 @dataclass(frozen=True)
@@ -1058,6 +1059,7 @@ class ContractTemplate:
     service: bool = False
     """A repeatable, fixed-reward public work order, not a board job."""
     consequence: str = ""
+    mission_data: tuple[DataSpec, ...] = ()
 
 
 @dataclass(frozen=True)
