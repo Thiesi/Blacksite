@@ -12,6 +12,7 @@ from collections import deque
 from dataclasses import asdict
 import json
 from pathlib import Path
+import time
 import traceback
 from typing import Any
 
@@ -135,6 +136,7 @@ async def escort_stage(probe: ContractProbe, caller: Connection, iid: str, progr
     await wait(lambda:len([a for a in owner.world.actors.values()
         if a.behaviour.get('mission')==iid and a.behaviour.get('contract_stage')==progress.stage.id])
         ==len(progress.targets)-len(progress.subjects))
+    recruit_deadline=time.monotonic()+120
     while True:
         actors=[a for a in owner.world.actors.values() if a.behaviour.get('mission')==iid
                 and a.behaviour.get('contract_target') and a.behaviour.get('escort')!=pid]
@@ -145,7 +147,16 @@ async def escort_stage(probe: ContractProbe, caller: Connection, iid: str, progr
         occupied={a.position for a in zone.actors.values() if a.id!=pid}
         choices=[(actor.x+dx,actor.y+dy) for dx in (-1,0,1) for dy in (-1,0,1)
                  if (actor.x+dx,actor.y+dy) not in occupied and zone.can_enter(caller.avatar.actor,(actor.x+dx,actor.y+dy))]
-        await probe.walk(caller,min(choices,key=lambda t:abs(t[0]-caller.avatar.actor.x)+abs(t[1]-caller.avatar.actor.y)))
+        assert time.monotonic()<recruit_deadline,('escort recruitment timeout',iid)
+        if not choices:
+            await asyncio.sleep(.2)
+            continue
+        # A recruited follower can occupy this approach while we walk.
+        # Re-read the moving group instead of waiting on that fixed tile.
+        try:
+            await asyncio.wait_for(probe.walk(caller,min(choices,key=lambda t:abs(t[0]-caller.avatar.actor.x)+abs(t[1]-caller.avatar.actor.y))),5)
+        except TimeoutError:
+            continue
         await objective_key(probe,caller,lambda:actor.behaviour.get('escort')==pid)
     destination=progress.stage.destination
     await probe.route(caller,destination.zone)

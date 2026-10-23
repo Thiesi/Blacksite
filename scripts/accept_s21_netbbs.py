@@ -16,6 +16,7 @@ import traceback
 from accept_s10_netbbs import NativeProbe, Connection, wait
 from accept_s13_netbbs import lat_walk
 from accept_s14_netbbs import choose, room_walk
+from accept_s19_netbbs import encounter_row
 from accept_s16_netbbs import key, commit_key, select
 from blacksite import content as content_package
 from blacksite.admin.client import request
@@ -83,11 +84,10 @@ async def run_size(probe: NativeProbe, width: int, height: int) -> dict:
     room=next(room.id for room in lattice.encounters.core(presence).graph.rooms.values()
               if any(control.id=='relay_open' for control in room.controls))
     await room_walk(probe,b,room)
-    if b.session.id in lattice.encounters.menus:
-        await key(b,b'\x1b')
-        await wait(lambda:b.session.id not in lattice.encounters.menus)
     assert not claim.hacked
-    await choose(probe,b,'control:relay_open')
+    # A room card may already be visible after the preceding acknowledged
+    # action. Select its actual control instead of waiting for no menu.
+    await encounter_row(probe,b,'control:relay_open')
     await wait(lambda:b.session.player_id in claim.hacked and not probe.commerce.pending)
     probe.save(b,f's21-named-control-{width}')
     await wait(lambda:lattice.encounters.idle(presence))
