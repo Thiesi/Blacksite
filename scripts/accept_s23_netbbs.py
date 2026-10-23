@@ -24,12 +24,17 @@ async def close_market(probe: ContractProbe, caller: Connection) -> None:
 
 
 async def choose(probe: ContractProbe, caller: Connection, value: bytes,
-                 row: str | None = None) -> None:
+                 row: str | None = None, completed: Any = None) -> None:
     owner = probe.service.core.market
     panel = owner.views.menus[caller.session.id]
     if row is not None:
         await select(caller, lambda: owner.views.rows(caller.session, panel), panel, row)
-    await key(caller, value)
+    def state() -> tuple[Any, ...]:
+        return (panel.kind, panel.mine, dict(panel.form), panel.confirmation,
+                owner.views.prompts.get(caller.session.id))
+    before = state()
+    # Reissue only an unchanged choice when a timed view overtakes its ack.
+    await commit_key(probe, caller, value, completed or (lambda: state() != before))
 
 
 async def services(probe: ContractProbe, caller: Connection, terminal: str) -> None:
@@ -116,8 +121,9 @@ async def run_case(probe: ContractProbe, width: int, height: int) -> dict[str, A
         fixture(probe, caller, grade, bank)
         callers.append(caller)
         # Leave the gurney free for the next actual caller.
-        await probe.walk(caller, probe.service.world.free_tile(caller.avatar.zone, (12+2*len(callers), 10)))
+        await probe.walk(caller, probe.service.world.free_tile(caller.avatar.zone, (10+2*len(callers), 10)))
     seller, buyer, hunter, wake = callers
+    probe.report(f'S23 {width}x{height}: four actual callers ready')
     pa, pb, pc, pd = [probe.game.players[c.session.player_id] for c in callers]
     owner = probe.service.core.market
     iid = await prepare_weapon(probe, seller)
@@ -125,6 +131,7 @@ async def run_case(probe: ContractProbe, width: int, height: int) -> dict[str, A
     await probe.route(seller, 'core-plaza')
     terminal = 'plaza-public-1'
     await market(probe, seller, terminal)
+    probe.report(f'S23 {width}x{height}: seller reaches actual public services')
     lid = await list_item(probe, seller, iid)
     await choose(probe, seller, b'm')
     await wait(lambda: owner.views.menus[seller.session.id].mine)
@@ -212,7 +219,8 @@ async def run_case(probe: ContractProbe, width: int, height: int) -> dict[str, A
     assert not owner.views.rows(seller.session, owner.views.menus[seller.session.id])
     await choose(probe, seller, b'p')
     await wait(lambda: owner.views.menus[seller.session.id].kind == 'targets')
-    await choose(probe, seller, b'\r', pd.id)
+    await choose(probe, seller, b'\r', pd.id,
+                 lambda: 'Nobody pays for a Wake.' in seller.caller.screen.screen_text())
     await wait(lambda: 'Nobody pays for a Wake.' in seller.caller.screen.screen_text())
     assert pa.chits_bank == 895 and len(owner.bounties.rows) == 1
     probe.save(seller, f's23-wake-refused-{width}')
