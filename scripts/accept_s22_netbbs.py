@@ -108,7 +108,13 @@ async def run_size(probe: NativeProbe, width: int, height: int) -> dict:
                        {'home': (28, 3), 'phase': 0})
     drone.health = drone.health_max = 1
     drone.cooldowns['weapon'] = probe.service.clock.now_tick()+6000
-    probe.service.world.enter(drone, 'vatside-clinics', (28, 3))
+    # A real wandering NPC may occupy the preferred fixture tile by the
+    # second terminal size. Keep the fixture local without moving live NPCs.
+    tile = probe.service.world.free_tile('vatside-clinics', (28, 3), drone)
+    assert max(abs(tile[0]-a.avatar.actor.x), abs(tile[1]-a.avatar.actor.y)) <= 6
+    assert probe.service.world.zones['vatside-clinics'].allows_hostile(tile)
+    drone.behaviour['home'] = tile
+    probe.service.world.enter(drone, 'vatside-clinics', tile)
     await wait(lambda: not probe.commerce.pending)
     probe.combat.hurt(drone, a.avatar.actor, 10000)
     await wait(lambda: a.avatar.actor.stance == 'down')
