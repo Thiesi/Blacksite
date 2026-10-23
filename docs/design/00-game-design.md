@@ -845,6 +845,22 @@ An eligible member can hold alone for the slower route. Opposing active
 claims freeze clocks; passers-by do not contest. A 5 s absence aborts a
 claim. Curfew pauses existing claims, without completing or deleting them.
 
+The physical holder starts the channel explicitly. A supporting runner
+chooses that named claim beside the relay before entering its core.
+Completing the core's `relay_open` control counts only after its ordinary
+three-second channel commits. The channel retains its original claim;
+an old completion cannot support a replacement claim. A successful opening
+remains a fact for that window if the runner disconnects or withdraws.
+Disconnect retains the runner's credit; explicit withdrawal forgoes it.
+The original holder and successful, explicitly enrolled runners receive
+capture XP. Crew membership and presence alone add no recipients.
+The physical holder's death or disconnect ends that claim.
+
+After capture, the holder may continue channelling to defend, or withdraw
+with B. Owning members may also explicitly start a defence channel. These
+channels use the same opposition and Curfew pauses, earn section 3.5's
+active hold XP, and cannot recapture their own relay for another reward.
+
 Influence rates are 10/hour, 30/hour in the Scour, and 20/hour at Shaft
 Relay. Carry fractional remainders; settle whole points once, stopping
 at season end. Treasury receives the same whole amount. The daily member
@@ -853,6 +869,10 @@ atomically once per BBS identity per UTC day. Capture gives 100 XP and
 +15 standing to participating members, −15 with the old owner to the
 capturer. Recapturing that relay gives the same identity no capture XP
 or standing for 24 h; influence still accrues.
+
+A zero-chit login share does not consume that day's receipt. The member
+may receive a positive share on a later login; a positive payment spends
+the receipt across factions and characters on that identity.
 
 ### 7.5 Public services and work orders
 

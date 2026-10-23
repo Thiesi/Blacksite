@@ -677,8 +677,21 @@ resumable cleanup after the deletion is durable.
 
 ### 2.4 Relay state
 
-`relay id, zone, faction (or null), captured_at, captured_by (player id),
-influence_paid_until`.
+`relays_state` is atomic meta beside the interlock and player records.
+It contains ownership rows (`relay id, faction or null, captured_at,
+captured_by, paid_until, ownership history`), faction influence/treasury
+with integer fractional remainders, rolling identity/relay capture
+receipts, positive daily-share identity receipts, and committed capture
+facts. A capture fact records its season, actual holder, verified
+participants, paid participants, old/new faction and UTC completion.
+An administrative ownership edit creates no individual capture fact.
+
+Live claims contain an original holder, faction, explicit supporting
+runners, elapsed unpaused ticks and completed core-opening facts. Claims
+are physical channels, aborted by restart; offline time cannot complete
+them. A `relay_open` procedure carries its original claim ID through the
+durable interlock write. Successful runner facts survive disconnect for
+that claim. Live crew membership never substitutes for this roster.
 
 ### 2.5 Faction state
 

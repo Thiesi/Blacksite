@@ -2,7 +2,7 @@
 
 from copy import deepcopy
 from collections import deque
-from dataclasses import asdict, dataclass
+from dataclasses import asdict, dataclass, replace
 from fractions import Fraction
 from typing import Any
 from collections.abc import Callable
@@ -87,8 +87,16 @@ class Commerce:
         obj = self.nearby(session, target)
         vid = obj.spec.params.get("vendor")
         vendor = self.content.vendors.get(vid)
-        if not vendor or not self.content.active("vendors", vid) or obj.spec.kind != "vendor":
+        if not vendor or not self.content.active("vendors", vid) or not (
+                obj.spec.kind == "vendor" or vendor.relay and obj.spec.kind == "relay"):
             raise ValueError("That counter is not open.")
+        if vendor.relay:
+            relays = getattr(self.game, 'relays', None)
+            player = self.game.players[session.player_id]
+            faction = relays.owner(vendor.relay) if relays and relays.active(vendor.relay) else None
+            if not faction or player.faction != faction or obj.spec.params.get('relay') != vendor.relay:
+                raise ValueError('This relay counter serves members of its current holder only.')
+            vendor = replace(vendor, tier='member', faction=faction)
         if not self.vendor_available(vendor, self.sim.avatars[session.user_id].zone+':'+target):
             raise ValueError('This surplus counter is closed until its public work order is repaired.')
         # The local, server-owned object is the authority. A clinic template
@@ -334,6 +342,7 @@ class Commerce:
             **({"interlock_state": deepcopy(effect["interlock_state"])} if "interlock_state" in effect else {}),
             **({"salvage_state": deepcopy(effect["salvage_state"])} if "salvage_state" in effect else {}),
             **({"contracts_state": deepcopy(effect["contracts_state"])} if "contracts_state" in effect else {}),
+            **({"relays_state": deepcopy(effect["relays_state"])} if "relays_state" in effect else {}),
             **({"npc_state": effect["npc_state"]} if "npc_state" in effect else {}),
             **({"lattice_state": effect["lattice_state"]()} if "lattice_state" in effect else {}),
             **({"identity":effect["identity"], "user":player.bbs_user_id} if "identity" in effect else {})}

@@ -192,7 +192,6 @@ class Claims:
             if claim.holder.player == player:
                 self.active.pop(cid)
             claim.supporters.pop(player, None)
-            claim.hacked.discard(player)
 
     def step(self, tick: int, conscious: set[str], present: set[str], paused: set[str]) -> tuple[Claim, ...]:
         delta = max(0, tick-self.last_tick) if self.last_tick is not None else 0

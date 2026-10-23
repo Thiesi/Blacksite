@@ -112,8 +112,17 @@ class Core:
             self.loop.subsystems.append(self.contracts)
             social = self.lattice.social_overlay
             self.lattice.social_overlay = lambda session, previous=social: previous(session) or session.id in self.contracts.panels.menus
+        from blacksite.server.relay_engine import Relays
+        self.relays = Relays(self, character_state.get('relays', {})) if self.progression else None
+        if self.relays:
+            self.loop.subsystems.append(self.relays)
+            social = self.lattice.social_overlay
+            self.lattice.social_overlay = lambda session, previous=social: previous(session) or session.id in self.relays.views.menus
 
     def _disconnect_character(self, session: Session) -> None:
+        if self.relays:
+            self.relays.disconnect(session.player_id)
+            self.relays.views.close(session)
         if self.contracts:
             self.contracts.disconnect(session)
         if self.crews:
@@ -186,6 +195,8 @@ class Core:
         if self.factions and self.factions.input(session, frame, event.data["tick"]):
             return
         if self.crews and self.crews.input(session, frame, event.data["tick"]):
+            return
+        if self.relays and self.relays.input(session, frame, event.data["tick"]):
             return
         if self.apartments and self.apartments.input(session, frame, event.data["tick"]):
             return
