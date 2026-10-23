@@ -377,7 +377,9 @@ receipt_key, retry, resolution`. Receipt keys are unique across all
 contracts, as is each `(branch_group, branch)`.
 
 Each stage uses one of the six verbs, a resolved target and a completion
-condition. Escort includes willing mission NPCs; clear declares lethal
+condition. Escort includes willing mission NPCs who wait at their assigned
+source positions until recruited by an accepted worker; ordinary template
+wandering does not scatter them. Clear declares lethal
 or subdue resolution. Inspect, carry, interact and wait are explicit
 input actions; no text parser or answer matching. A stage declares its
 failure/retry state and receipt key. Story bundles declare all required

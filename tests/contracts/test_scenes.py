@@ -55,6 +55,24 @@ def test_game_9_3_repeated_escort_action_assigns_all_four_willing_group_members(
     assert not owner.commerce.pending
 
 
+def test_game_9_3_willing_group_waits_for_consent_then_follows_worker(city) -> None:
+    game, caller = city
+    owner, _, actors = mission(city, verb='escort', quantity=4)
+    positions = {actor.id: actor.position for actor in actors}
+    zone = owner.world.zones[actors[0].zone]
+    start = game.clock.now_tick()
+    for tick in range(start, start+600):
+        for actor in actors:
+            game.core.npcs.act(actor, zone, tick, set())
+    assert {actor.id: actor.position for actor in actors} == positions
+    follower = actors[0]
+    source = body(game, caller)
+    assert game.core.npcs.escort(source, follower)
+    game.core.npcs.act(follower, zone, start+600, set())
+    assert follower.position != positions[follower.id]
+    assert {a.id: a.position for a in actors[1:]} == {a.id: positions[a.id] for a in actors[1:]}
+
+
 def mission(city, *, verb='clear', resolution='lethal', quantity=1, roster=None):
     game, caller = city
     owner = game.core.contracts

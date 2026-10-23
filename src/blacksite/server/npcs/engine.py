@@ -322,6 +322,11 @@ class Npcs:
             if distance(actor.position, escort.position) > 1.5:
                 step_toward(actor, zone, escort.position, tick, avoid=avoid)
             return
+        if actor.behaviour.get('contract_target') and actor.behaviour.get('willing'):
+            # Game 9.3: meet the willing group at its labelled source.
+            # A civilian template's ambient wandering must not scatter
+            # unassigned escorts or move them while their worker is away.
+            return
         if target and state in ("hunt", "flee"):
             if not self.combat.legal(actor, target):
                 actor.target = None

@@ -62,8 +62,10 @@ async def run_size(probe: ContractProbe, width: int, height: int) -> dict[str,An
     await close_jobs(probe,b)
     panel=await jobs(probe,a,proposal.id)
     await commit_key(probe,a,b's',lambda:panel.confirmation is not None)
-    await commit_key(probe,a,b'y',lambda:any(j.offer==offer.id for j in owner.state.engine.instances.values()))
-    iid=next(j.id for j in owner.state.engine.instances.values() if j.offer==offer.id)
+    await commit_key(probe,a,b'y',lambda:any(j.offer==offer.id and j.roster[0].player==players[0].id
+        for j in owner.state.engine.instances.values()))
+    iid=next(j.id for j in owner.state.engine.instances.values()
+             if j.offer==offer.id and j.roster[0].player==players[0].id)
     assert len(owner.state.engine.instances[iid].stages[0].targets)==6
     probe.save(a,f's19-six-target-terms-{width}')
     await close_jobs(probe,a)

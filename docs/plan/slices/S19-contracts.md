@@ -1,6 +1,6 @@
 # S19 — Contracts: template engine, six types, boards, crew scaling, story chains, Vesper
 
-**Status:** in progress
+**Status:** in progress (PR #62)
 **Primary model:** Opus (engine) · **Reviewer:** Gemini or Sonnet writes the content half from the world docs; Opus reviews it
 **Depends on:** S11, S14, S15, S16, S22 · **Milestone:** M3
 **Issue:** https://github.com/Thiesi/blacksite/issues/19
@@ -25,7 +25,8 @@ arcs for Vesper, all eight Season 1 chains and their attributed evidence.
   turned-in states, retries, limits, expiry and atomic reward receipts.
   Implement the board/reward schedules exactly from game design 9.
 - Compose fetch, hack, escort, clear, plant and survey stages. Clear
-  declares lethal/subdue resolution; escort uses willing mission actors;
+  declares lethal/subdue resolution; escort uses willing mission actors
+  who wait at their source positions until recruited;
   survey can inspect a labelled object, compare recorded IDs or observe
   telemetry. No natural-language input or moral-answer scoring.
 - Keyed mission data is scoped to its instance and roster, persisted
