@@ -159,6 +159,8 @@ faction-membership authority.
 
 ### S22 crew integration handoff
 
+Reference: [PR #61](https://github.com/Thiesi/Blacksite/pull/61).
+
 Live crew IDs and five-minute Silt sharing do not identify a persistent
 expedition. Freeze consenting player/identity IDs under the expedition's
 own durable ID; retain individual ending/ballot choices. Leave, kick,

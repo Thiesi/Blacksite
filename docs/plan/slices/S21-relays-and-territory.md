@@ -203,6 +203,8 @@ preserve game 7.1 joining/leaving rules.
 
 ### S22 crew integration handoff
 
+Reference: [PR #61](https://github.com/Thiesi/Blacksite/pull/61).
+
 Use the installed live crew authority for collaboration, while relay
 capture/hold owns its fixed participation roster and reward transaction.
 Joining at payout grants no credit. Do not send relay XP through the

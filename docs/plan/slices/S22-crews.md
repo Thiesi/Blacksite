@@ -1,6 +1,6 @@
 # S22 — Crews: invite/leave/kick, crew chat and panel, beacon, loot modes, shared XP
 
-**Status:** in progress
+**Status:** done (PR #61)
 **Primary model:** Sonnet · **Reviewer:** none
 **Depends on:** S09, S10, S13, S16 · **Milestone:** M4
 **Issue:** https://github.com/Thiesi/blacksite/issues/22
@@ -197,6 +197,21 @@ Windows subprocess startup check allows sixty seconds for cold content
 bootstrap, reproduced with unchanged S20; Linux and gameplay latency
 targets remain unchanged.
 
+Acceptance at runtime `982e135`: root Linux CI passes 1,190 tests.
+The final local Windows root gate passes 1,189 tests, one skip (518s).
+Actual Windows TTY acceptance passes all five steps at 80x24 and 132x50,
+with wide names and 16 colours, through read-only NetBBS `d04170a`:
+Telnet to registered native stdio. Both sizes report equal 12-XP kill
+rewards and clean logout dissolution; the service stays healthy and the
+probe exits zero. `.test-tmp/native-s22-7` retains result JSON, ANSI and
+screen captures. Fixtures are grades 5/7, an attack-delayed one-HP drone
+and one direct legal hit to isolate the down window. Travel, menus,
+chat, jacking, pickup and firing use real keys. The installed 0.0.16
+client's Python-tree SHA256 is
+`a5f107aa068b4b41cbc9399e50722df68e0aa02b7ab613d26c5e6c7ee0288994`.
+Final Windows gates, installed-wheel CI and written review are tracked
+in [PR #61](https://github.com/Thiesi/Blacksite/pull/61) before merge.
+
 Actual native input exposed a pre-existing 50ms framing failure: a split
 Right arrow became Esc, left bracket and C, opening Say during movement.
 UI 5.3 now gives sequences 200ms to complete; the decoder and input pump
@@ -218,3 +233,11 @@ Preserve S20 faction outcomes and Marked body attribution when adding crew
 affiliation. Crew relation overrides compose with the shared matrix rather
 than editing faction membership. Keep the PR #38 actual-victim cache
 regression and individual consent gates.
+
+Current-client regression repeats also pass all retained S17 fabrication,
+S18 housing, S20 faction and S20 hardware scenarios at both sizes, using
+matching installed 0.0.16 client/server and the original explicit
+fixtures. The combined process exits zero. These current-build results
+correct the older mixed-client local provenance; the earlier separate
+installed-wheel Linux CI artifacts remain valid for their release heads.
+PRs #58, #59 and #60 carry the correction and replacement evidence.

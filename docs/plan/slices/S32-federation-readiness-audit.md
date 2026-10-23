@@ -155,3 +155,10 @@ This slice is a document review:
 - The reliable-nodes roster at `www.netbbs.org/reliable-nodes.json` is
   the discovery mechanism NetBBS already has; the design should reuse
   it rather than invent a game-specific directory.
+
+### S22 crew integration handoff
+
+S22 [PR #61](https://github.com/Thiesi/Blacksite/pull/61)'s live crew IDs
+include a per-service-boot nonce. They are not durable federation or
+expedition identities. Keep node_id opaque and preserve source-owned
+loot/reward entitlements separately from social membership.

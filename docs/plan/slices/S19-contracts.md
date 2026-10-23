@@ -138,6 +138,8 @@ drop. A board must not be derived from FactionSite.hall for this faction.
 
 ### S22 crew integration handoff
 
+Reference: [PR #61](https://github.com/Thiesi/Blacksite/pull/61).
+
 Use the live registry through `game.crews` / `progression.crew_of` as the
 membership authority, then freeze the accepted objective roster in the
 contract receipt. Later joins, kicks and leadership changes do not create

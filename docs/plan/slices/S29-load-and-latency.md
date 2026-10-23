@@ -5,7 +5,8 @@
 **Depends on:** S15, S22, S24, S26 · **Milestone:** M6
 **Issue:** https://github.com/Thiesi/blacksite/issues/29
 
-S22 installs actual crew membership and remote HP/integrity/zone/beacon
+S22 [PR #61](https://github.com/Thiesi/Blacksite/pull/61) installs actual
+crew membership and remote HP/integrity/zone/beacon
 views. Include split-layer crews in the sixteen-caller profile and
 measure crew view composition before proposing optimizations. Preserve
 the source-verified installed-client receipt in native evidence. UI 5.3's

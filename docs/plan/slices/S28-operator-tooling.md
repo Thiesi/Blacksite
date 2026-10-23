@@ -185,3 +185,10 @@ cannot be advertised as working under the registered-only default gate.
   audit log or a player's toast.
 - `stop` must honour architecture §3.4's 10-second hard limit; do not
   wait for a slow persistence flush forever.
+
+### S22 crew integration handoff
+
+S22 [PR #61](https://github.com/Thiesi/Blacksite/pull/61) crews dissolve
+on restart and remove deleted/disconnected members immediately; there
+is no crew table to back up. Existing frozen loot entitlements persist
+with their owning source. Preserve consistent SQLite backup semantics.

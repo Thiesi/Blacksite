@@ -144,6 +144,15 @@ with its listed inputs.
 
 ## Lore review integration
 
+Native provenance correction: the original local run used an older
+installed client after NetBBS removed PYTHONPATH. The original separate
+installed-wheel CI remains valid. S22 [PR #61](https://github.com/Thiesi/Blacksite/pull/61)
+repeats all four steps on version/source-verified 0.0.16 at 80x24 and
+132x50, with wide names and 16 colours, through actual Windows TTY
+NetBBS native stdio. `.test-tmp/native-s17-current16` retains the passing
+results. This is a current-build regression check, with the same explicit
+placement/funding/input fixtures, not a rerun of release 0.0.13.
+
 Baseline node weights, 2 s harvest, 3 s fabrication, quality formula and
 cap are game design 8.4. The four service-order caches use bound supplied
 units, separate from baseline resource nodes. Intact salvage has no NPC

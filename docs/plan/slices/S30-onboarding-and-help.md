@@ -220,3 +220,11 @@ current +90 perk eligibility. Describe public-default/hall decant choice,
 visited Attending vats, identity daily receipts, optional-only reservations
 and bound loan loss on jack-out. Kin free forecasts require +90; learned
 programs/installed hardware survive membership loss.
+
+### S22 crew integration handoff
+
+Teach S22 [PR #61](https://github.com/Thiesi/Blacksite/pull/61)'s actual
+two-to-five-person crews: sixty-second invites, leadership on logout,
+ten-second loot offers, useful-action/guard participation and private
+interior limits. Show names, not opaque IDs. Escape decoding follows
+UI 5.3, including ready-input priority before its framing grace expires.
