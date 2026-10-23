@@ -74,4 +74,3 @@ def complete_paid_pass(progress: dict[str, Any], destination: str) -> bool:
         progress['paid_passes'].pop(trip['key'])
     progress.pop('paid_trip')
     return True
-

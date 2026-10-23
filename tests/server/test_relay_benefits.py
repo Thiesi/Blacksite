@@ -67,7 +67,7 @@ def test_game_7_7_future_eligibility_fixture_wires_quality_salvage_and_range(rel
     assert game.core.progression.modifiers(p).bonus('hymn_radius_bonus')==0
 
 
-def test_game_7_7_zero_discounts_actual_network_gain_not_fixed_costs_or_other_districts(runners,monkeypatch):
+def test_game_7_7_zero_discounts_lattice_wide_gain_but_not_fixed_costs(runners,monkeypatch):
     game,caller,_,_=runners
     p=player(game,caller)
     p.faction='halvard'
@@ -84,9 +84,12 @@ def test_game_7_7_zero_discounts_actual_network_gain_not_fixed_costs_or_other_di
     assert presence.trace==9
     owner.lat.encounters.trace(presence,10,fixed=True)
     assert presence.trace==19
+    presence.sector=next(sid for sid,s in owner.lat.sectors.records.items() if s.district=='Core')
+    owner.lat.encounters.trace(presence,10)
+    assert presence.trace==28
     owned(game,'zero',None)
     owner.lat.encounters.trace(presence,10)
-    assert presence.trace==29
+    assert presence.trace==38
 
 
 def test_game_7_7_patrol_overlay_is_owned_local_and_does_not_reveal_unseen_tiles(relay_game,monkeypatch):

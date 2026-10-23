@@ -22,7 +22,7 @@ Never cache permission in an event proposal or a menu quote.
 | Gate Nine / Cable | S08 opt-in `Exit.relay` fare card and prepaid journey | S25 actual outbound gate and free stair/ladder routes |
 | Sump | S19 committed service allocation telemetry | S25 actual pump layout |
 | Bell | S10 hymn range, additive tile after installed radius | S25 Chapel Ward field exercise |
-| Zero | S14 eligible Old Works trace gain, fixed costs excluded | S25 real Old Works route |
+| Zero | S14 eligible Lattice-wide trace gain, fixed costs excluded | S25 real Relay Zero and cross-district route |
 | Yard / Crash | S17 quality cap / newly generated public salvage | S25 actual workshop and Ring Three nodes |
 | Block | S18 historical due-time rent and extra Tripwire | S25 full housing routes |
 | Cavern | S11 authored local patrol waypoints on known cells | S25 actual cavern patrols; no hidden actor reveal |
@@ -63,3 +63,10 @@ S28 retains authenticated, audited `relay list|set`; neutralization and
 operator ownership changes invent no captures or XP. S31 may consume
 committed attributed capture facts under the existing optional host
 publication policy. Login, forecasts and operator changes publish none.
+
+S23 now explicitly depends on S21's single faction treasury authority.
+Its Kestrel fee joins the same source receipt as bank settlement and
+personal impound delivery. Fees increase treasury only, never season
+influence. A separate faction balance would lose fees at the next relay
+checkpoint or pay a daily share from the wrong balance. S28's operator
+audit and S29/S30/S31 integration acceptance must retain this invariant.

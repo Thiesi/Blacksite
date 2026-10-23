@@ -222,8 +222,18 @@ class Relays:
         draft.state['captures'][-1]['rewarded'] = list(patches)
         def finished(success: bool) -> None:
             if success:
-                for person in capture.participants:
-                    self.log(person.player, f'{self.content.relays[claim.relay].name} belongs to {self.content.factions[claim.faction].short}.')
+                audience = {person.player for person in capture.participants}
+                audience.update(player.id for player in self.game.players.values()
+                    if player.faction == capture.faction
+                    or capture.former is not None and player.faction == capture.former)
+                relay_name = self.content.relays[claim.relay].name
+                faction_name = self.content.factions[claim.faction].short
+                for pid in audience:
+                    player = self.game.players.get(pid)
+                    message = (f'Your faction loses {relay_name} to {faction_name}.'
+                        if player and capture.former and player.faction == capture.former
+                        else f'{relay_name} belongs to {faction_name}.')
+                    self.log(pid, message)
                 claim.supporters.clear()
             else:
                 self.log(claim.holder.player, 'Capture could not be saved. Your active claim may retry.')

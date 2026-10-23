@@ -86,6 +86,25 @@ def test_game_7_4_old_claim_channel_cannot_credit_replacement(relay_game):
     assert not second.hacked and second.required==4800
 
 
+def test_game_7_4_committed_loss_reaches_online_faction_members_in_another_zone(relay_game):
+    game,holder,_,former_member=relay_game
+    owner=game.core.relays
+    draft=owner.ledger.fork()
+    draft.set_owner('cold-chain','choir',None,owner.now(),owner.rates())
+    owner.write(draft,interlock=owner.ownership_patch('cold-chain','choir'))
+    game.commit_commerce()
+    place(game,former_member,'core-plaza',(30,5))
+    owner.start(holder.session,'cold-chain')
+    claim=next(iter(owner.claims.active.values()))
+    claim.elapsed=claim.required
+    owner.capture(claim.id)
+    game.commit_commerce(error=True)
+    assert not any('Your faction loses' in line['text'] for line in former_member.session.log_ring)
+    owner.capture(claim.id)
+    game.commit_commerce()
+    assert any('Your faction loses Cold Chain Relay' in line['text'] for line in former_member.session.log_ring)
+
+
 def test_game_7_4_counter_rechecks_membership_and_committed_ownership(relay_game):
     game,holder,runner,opponent=relay_game
     owner=game.core.relays

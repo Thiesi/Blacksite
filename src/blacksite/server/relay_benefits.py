@@ -57,10 +57,12 @@ class Benefits:
             district = owner.lat.sectors.records[presence.sector].district
             if amount > 0 and not fixed and any(owner.active(rid) and player.faction
                     and owner.owner(rid) == player.faction and relay.benefit.kind == 'trace_gain'
-                    and relay.benefit.district == district for rid, relay in owner.content.relays.items()):
+                    and (not relay.benefit.district or relay.benefit.district == district)
+                    for rid, relay in owner.content.relays.items()):
                 amount *= next(float(relay.benefit.amount) for rid, relay in owner.content.relays.items()
                     if owner.active(rid) and owner.owner(rid) == player.faction
-                    and relay.benefit.kind == 'trace_gain' and relay.benefit.district == district)
+                    and relay.benefit.kind == 'trace_gain'
+                    and (not relay.benefit.district or relay.benefit.district == district))
             trace(presence, amount, fixed=fixed, entered=entered)
         owner.lat.encounters.trace = gain
 

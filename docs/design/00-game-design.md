@@ -1011,7 +1011,7 @@ without resetting that spending.
 
 Relay Zero multiplies eligible trace gain by 0.90 after other trace
 modifiers. It never discounts costs explicitly classified as fixed by
-their action rule. The benefit applies in Old Works, ends with
+their action rule. The benefit applies Lattice-wide, ends with
 ownership or membership, and cannot stack with itself.
 
 Cable fare is 5 chits; a free stair/ladder route remains. Gate Nine's

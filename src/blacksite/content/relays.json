@@ -118,8 +118,7 @@
       "vendor": "relay-zero-counter",
       "benefit": {
         "kind": "trace_gain",
-        "amount": 0.9,
-        "district": "Old Works"
+        "amount": 0.9
       },
       "requires_level": false
     },
