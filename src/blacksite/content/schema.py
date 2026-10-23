@@ -163,6 +163,7 @@ class Exit:
     requirement: Requirement | None = None
     hidden: bool = False
     """Revealed by Listening, a program or dialogue (01-gazetteer.md)."""
+    relay: str | None = None  # Game 7.7 optional gate/cable passage.
 
 
 @dataclass(frozen=True)

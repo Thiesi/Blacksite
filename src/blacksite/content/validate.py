@@ -18,6 +18,7 @@ active may reference only content that exists and is itself active.
 """
 
 import argparse
+from math import isfinite
 import re
 import sys
 from collections import deque
@@ -470,6 +471,20 @@ class _Validator:
             if ex.requirement is not None:
                 kind = "factions" if ex.requirement.kind == "faction" else "items"
                 self.ref(kind, ex.requirement.ref, owner, f"{label}: requirement", ex.id)
+            if ex.relay and self.ref('relays', ex.relay, owner, f'{label}: relay', ex.id):
+                relay = self.t.relays[ex.relay]
+                expected = {'fast_gate': 'gate', 'cable_ride': 'cable'}.get(relay.benefit.kind)
+                if ex.kind != expected or ex.hidden or ex.requirement is not None:
+                    self.report(*owner, f'{label}: relay passage must be the declared public gate or cable route', ex.id)
+                if ex.kind == 'gate' and zone.id != relay.zone:
+                    self.report(*owner, f'{label}: fast gate is outbound from its relay zone only', ex.id)
+                if ex.kind == 'cable':
+                    if relay.zone not in (zone.id, ex.target_zone):
+                        self.report(*owner, f'{label}: cable must join its relay zone', ex.id)
+                    if not any(not alt.relay and not alt.hidden and alt.requirement is None
+                            and alt.target_zone == ex.target_zone and alt.kind in ('ladder', 'street', 'door')
+                            for alt in zone.meta.exits):
+                        self.report(*owner, f'{label}: cable needs a free public alternative to the same zone', ex.id)
 
     def _check_objects(self, zone: s.Zone) -> None:
         owner = ("zones", zone.id)
@@ -1180,6 +1195,16 @@ class _Validator:
             self.ref("vendors", relay.vendor, owner, "vendor")
             if relay.tier not in range(1, 6) or relay.rate <= 0:
                 self.report(*owner, "relay needs tier 1-5 and positive influence rate")
+            amount, kind = relay.benefit.amount, relay.benefit.kind
+            if not isfinite(amount):
+                self.report(*owner, 'relay benefit amount must be finite')
+            elif kind in ('vendor_refresh', 'hymn_radius', 'salvage_grade', 'impact_forecast'):
+                if type(amount) is not int or amount <= 0:
+                    self.report(*owner, 'relay benefit period, range or step must be a positive integer')
+            elif kind in ('surgery_fee', 'rent_and_ice', 'trace_gain') and not 0 < amount <= 1:
+                self.report(*owner, 'relay discount multiplier must be above zero and at most one')
+            elif kind == 'depth_contribution' and amount < 1 or kind == 'fabrication_quality' and amount < 0:
+                self.report(*owner, 'relay benefit amount is below its allowed minimum')
             core = self.t.cores.get(relay.core)
             if core and (core.owner_kind != "relay" or core.template or core.tier != relay.tier):
                 self.report(*owner, "relay core must be a matching-tier relay instance")

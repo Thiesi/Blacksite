@@ -186,7 +186,8 @@ class Core:
             admin_endpoint.dispatch(session, frame, self.sessions, self.status_provider,
                                     self.request_stop, self.audit,
                                     self.lattice.who if self.lattice else lambda: [],
-                                    self.lattice.debug_reveal if self.lattice else lambda p, s, c: {"ok": False})
+                                    self.lattice.debug_reveal if self.lattice else lambda p, s, c: {"ok": False},
+                                    self.relays.admin if self.relays else None)
             return
         if frame.type == "intent" and frame.data["name"] == "resync":
             session.replay_log()

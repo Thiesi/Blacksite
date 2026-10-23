@@ -48,7 +48,7 @@ after their id.
 | spawn | Tile, optional | passable preview/initial entry tile |
 | sector | sector id, optional | native/portable rig's district entry; terminals may override with `params.sector` |
 | layouts | list of ZoneLayout, optional | named service/event geometry variants |
-| exits | list of Exit | id, tile, target zone, target tile, kind (street, door, tram, ladder, lift, gate, cable), requirement (pass, key, faction), hidden |
+| exits | list of Exit | id, tile, target zone, target tile, kind (street, door, tram, ladder, lift, gate, cable), requirement (pass, key, faction), hidden, optional relay |
 | spawners | list of Spawner | id, tile or region, npc template, count, respawn seconds, condition |
 | objects | list of ObjectSpec | id, tile, kind (door, terminal, vendor, vat, relay, cache, tram_stop, apartment_door, light, hardware, descent_console, workshop, bank, turret, camera, shutter, cable_car, pump, lift, patrol_beacon, gate, gantry), params, essential (clinic, public vat, public uplink) |
 | pockets | list of Region | rectangles that are `pocket` safety inside a contested zone |
@@ -806,11 +806,15 @@ NPC/ICE route, never player locations or an independent simulation roll.
 Ordinary service geometry is the authored base map; fault/allocation
 layers own only their bounded changes.
 
-`VendorBudget` retains hourly `spent` independently of its current
+`VendorBudget` retains `spent` independently of its current
 `limit` and nonnegative `remaining`. Storage joins `vendor_budget_state`
 meta to the existing budget rows in the owning commerce transaction.
 Legacy rows derive ordinary spending from their remaining balance;
 there is no SQL column or schema-version change.
+`refilled_at` records the last consumed UTC boundary: ordinarily an hour,
+or a half-hour while Depot's holder supplies the counter's faction. Losing
+that benefit cannot refill an already consumed boundary. Service cap
+changes retain spending independently of this schedule.
 
 ### 2.14 Expedition
 

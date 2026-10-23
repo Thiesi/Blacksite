@@ -135,11 +135,22 @@ def test_game_7_4_claim_card_uses_wide_holder_name_and_actual_progress(relay_gam
     owner=game.core.relays
     owner.start(holder.session,'cold-chain')
     act(game,runner,Frame('key',{'k':'e','t':0}))
+    game.step(10)
     panel=owner.views.menus[runner.session.id]
     body=owner.views.body(runner.session,panel)
     assert body['rows'][1]['cells'][0]==player(game,holder).name
     assert body['rows'][1]['cells'][2].endswith('/480s')
     assert float(body['rows'][1]['cells'][2].split('/')[0])>0
+
+
+def test_game_11_relay_card_timeout_does_not_pause_the_street(relay_game):
+    game,holder,_,_=relay_game
+    owner=game.core.relays
+    act(game,holder,Frame('key',{'k':'e','t':0}))
+    owner.views.menus[holder.session.id].opened=game.clock.now_tick()-600
+    game.step()
+    assert holder.session.id not in owner.views.menus
+    assert not owner.claims.active and owner.owner('cold-chain') is None
 
 
 def test_game_3_5_hold_xp_is_paid_once_with_live_health_not_stale_player_snapshot(relay_game):

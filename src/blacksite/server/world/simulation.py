@@ -55,6 +55,7 @@ class ZoneSimulation:
         self.arrival_hook: Callable[[Session, Avatar], None] = lambda session, avatar: None
         self.scout_provider: Callable[[Session], tuple[set[tuple[int,int]],set[str]]] = lambda session:(set(),set())
         self.crew_view: Callable[[Session, dict[str, Any]], None] = lambda session, body: None
+        self.fare_menu: Callable[[Session, Any], bool] = lambda session, exit: False
 
     def discover(self, session: Session, avatar: Avatar) -> None:
         if avatar.zone in avatar.seen_zones:
@@ -120,6 +121,8 @@ class ZoneSimulation:
                 self.log(session, "Construction blocks this route.")
             elif (zone.id, ex.id) in self.locked_exits or not permitted(ex, self.access_provider(session)):
                 self.log(session, "You do not meet this exit's requirement.")
+            elif self.fare_menu(session, ex):
+                pass
             else:
                 avatar.travel = schedule(ex, self.clock.now_utc().timestamp())
                 self.reset_view(session, avatar)

@@ -187,8 +187,10 @@ class Claims:
         current.hacked.add(player)
         return True
 
-    def withdraw(self, player: str) -> None:
+    def withdraw(self, player: str, relay: str | None = None) -> None:
         for cid, claim in tuple(self.active.items()):
+            if relay is not None and claim.relay != relay:
+                continue
             if claim.holder.player == player:
                 self.active.pop(cid)
             claim.supporters.pop(player, None)

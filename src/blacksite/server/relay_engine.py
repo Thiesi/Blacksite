@@ -26,7 +26,7 @@ class Relays:
         self.claims = Claims()
         self.paid_holds: dict[str, int] = {}
         self.last_settle = self.clock.now_tick()
-        self.curfew: Callable[[str], bool] = lambda zone: False  # S24.
+        self.curfew: Callable[[str], bool] = lambda zone: core.factions.curfew(zone)  # S24's shared provider.
         self.level_open: Callable[[], bool] = lambda: False  # S26.
         self.game.relays = self
         self.lat.interlock.claim_of = self.claim_of
@@ -38,6 +38,11 @@ class Relays:
         self.game.attached = on_attach
         from blacksite.server.relay_views import Views
         self.views = Views(self)
+        from blacksite.server.relay_benefits import Benefits
+        self.benefits = Benefits(self)
+        self.benefits.refresh()
+        from blacksite.server.relay_passages import Passages
+        self.passages = Passages(self)
 
     def now(self) -> float:
         return self.clock.now_utc().timestamp()
@@ -89,9 +94,11 @@ class Relays:
         return None
 
     def start(self, session: Session, rid: str) -> None:
+        actor = self.world.actors.get(session.player_id)
         if (not self.active(rid) or not self.near(session.player_id, rid)
-                or not self.commerce.ready(session)):
-            raise ValueError('Stand beside the commissioned relay with your body free to hold it.')
+                or not self.commerce.ready(session) or not actor or actor.stance != 'normal'
+                or actor.behaviour.get('channel')):
+            raise ValueError('Stand beside the relay, out of stealth and free of other channels, to hold it.')
         relay = self.content.relays[rid]
         if self.curfew(relay.zone):
             raise ValueError('Curfew pauses relay claims. Return when it ends.')
@@ -109,10 +116,12 @@ class Relays:
         self.claims.support(cid, self.participant(self.game.players[session.player_id]))
         self.log(session.player_id, 'Runner support accepted. Complete relay_open in this core for this claim.')
 
-    def withdraw(self, pid: str) -> None:
-        self.claims.withdraw(pid)
+    def withdraw(self, pid: str, rid: str | None = None) -> None:
+        holder = next((c for c in self.claims.active.values() if c.holder.player == pid), None)
+        clears_channel = rid is None or holder is not None and holder.relay == rid
+        self.claims.withdraw(pid, rid)
         actor = self.world.actors.get(pid)
-        if actor and actor.behaviour.get('channel', {}).get('owner') == 'relay':
+        if clears_channel and actor and actor.behaviour.get('channel', {}).get('owner') == 'relay':
             actor.behaviour.pop('channel')
             if actor.zone:
                 self.world.zones[actor.zone].revision += 1
@@ -120,8 +129,17 @@ class Relays:
     def disconnect(self, pid: str) -> None:
         # A completed runner action stays attributed through disconnect.
         # The physical holder cannot keep a channel alive while absent.
-        if any(c.holder.player == pid for c in self.claims.active.values()):
-            self.withdraw(pid)
+        self.cancel_hold(pid)
+
+    def cancel_hold(self, pid: str) -> None:
+        for cid, claim in tuple(self.claims.active.items()):
+            if claim.holder.player == pid:
+                self.claims.active.pop(cid)
+        actor = self.world.actors.get(pid)
+        if actor and actor.behaviour.get('channel', {}).get('owner') == 'relay':
+            actor.behaviour.pop('channel')
+            if actor.zone:
+                self.world.zones[actor.zone].revision += 1
 
     def claim_of(self, pid: str, core: str, control: str) -> str:
         if control != 'relay_open':
@@ -146,6 +164,7 @@ class Relays:
                 if interlock is not None:
                     self.lat.interlock.state = interlock
                     self.lat.interlock.compose()
+                    self.benefits.refresh()
                 for pid in patches or {}:
                     self.progression.sync_actor(self.game.players[pid])
                 for relay in self.content.relays.values():
@@ -205,6 +224,7 @@ class Relays:
             if success:
                 for person in capture.participants:
                     self.log(person.player, f'{self.content.relays[claim.relay].name} belongs to {self.content.factions[claim.faction].short}.')
+                claim.supporters.clear()
             else:
                 self.log(claim.holder.player, 'Capture could not be saved. Your active claim may retry.')
         self.write(draft, patches, identities, self.ownership_patch(claim.relay, claim.faction), finished)
@@ -263,10 +283,10 @@ class Relays:
                 present.add(player.id)
         before = {c.holder.player for c in self.claims.active.values()}
         ready = self.claims.step(context.tick, conscious, present,
-            {rid for rid, relay in self.content.relays.items() if self.curfew(relay.zone)})
+            {rid for rid, relay in self.content.relays.items() if self.active(rid) and self.curfew(relay.zone)})
         after = {c.holder.player for c in self.claims.active.values()}
         for pid in before-after:
-            self.withdraw(pid)
+            self.cancel_hold(pid)
             self.log(pid, 'Your relay claim ends.')
         for claim in self.claims.active.values():
             actor = self.world.actors.get(claim.holder.player)
@@ -288,6 +308,39 @@ class Relays:
 
     def input(self, session: Session, frame: Any, tick: int) -> bool:
         return self.views.input(session, frame, tick)
+
+    def admin(self, command: str, data: dict[str, Any], reply: Callable[[Any], None]) -> None:
+        if command == 'relay.list':
+            reply({'ok': True, 'relays': [{'id': rid, 'zone': relay.zone, 'active': self.active(rid),
+                'faction': self.owner(rid), 'rate': relay.rate,
+                'held_seconds': max(0, self.now()-self.ledger.state['relays'].get(rid, {}).get('captured_at', self.now()))}
+                for rid, relay in self.content.relays.items()], 'factions': deepcopy(self.ledger.state['factions'])})
+            return
+        if self.commerce.pending:
+            self.commerce.enqueue_system(lambda: self.admin(command, data, reply))
+            return
+        try:
+            rid, faction = data.get('relay', ''), data.get('faction')
+            if command != 'relay.set' or not self.active(rid):
+                raise ValueError('Choose a commissioned relay; future authoring entries cannot be owned.')
+            faction = None if faction == 'neutral' else faction
+            if faction is not None and faction not in self.content.factions:
+                raise ValueError('Choose a faction ID or neutral.')
+            if self.owner(rid) == faction:
+                reply({'ok': True, 'relay': rid, 'faction': faction, 'changed': False})
+                return
+            draft = self.ledger.fork()
+            draft.set_owner(rid, faction, None, self.now(), self.rates())
+            def finished(success: bool) -> None:
+                if success:
+                    for claim in tuple(self.claims.active.values()):
+                        if claim.relay == rid:
+                            self.cancel_hold(claim.holder.player)
+                reply({'ok': success, 'relay': rid, 'faction': faction if success else self.owner(rid),
+                       'changed': success})
+            self.write(draft, interlock=self.ownership_patch(rid, faction), callback=finished)
+        except ValueError as exc:
+            reply({'ok': False, 'error': str(exc)})
 
     def reset_season(self, season: int, cutoff: float) -> bool:
         draft = self.ledger.fork()

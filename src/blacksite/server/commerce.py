@@ -53,6 +53,7 @@ class Commerce:
         self.after_settle: Callable[[], None] = lambda: None
         self.program_season: Callable[[], int] = lambda: 0  # The Lattice binds its current season.
         self.budget_multiplier: Callable[[Vendor, str], float] = lambda vendor, counter: 1
+        self.budget_period: Callable[[Vendor, str], int] = lambda vendor, counter: 3600  # Game 8.2 / 7.7.
         self.vendor_available: Callable[[Vendor, str], bool] = lambda vendor, counter: True
         self.item_label: Callable[[ItemInstance], str] = lambda item: self.content.items[item.template].name
         self.sync_caches()
@@ -204,9 +205,10 @@ class Commerce:
                 if not proceeds:
                     raise ValueError("That quantity has no resale value.")
                 budget = budgets.setdefault(budget_key, VendorBudget(int(now) // 3600))
-                budget.refill(now, int(BUYBACK_BUDGET*self.budget_multiplier(vendor, budget_key)))
+                budget.refill(now, int(BUYBACK_BUDGET*self.budget_multiplier(vendor, budget_key)),
+                              self.budget_period(vendor, budget_key))
                 if budget.remaining < proceeds:
-                    raise ValueError("This counter's hourly buy-back budget is spent.")
+                    raise ValueError("This counter's buy-back budget is spent.")
                 inventory.remove(draft, iid, count, next_id)
                 budget.spend(proceeds)
                 draft.chits_hand += proceeds
@@ -573,7 +575,8 @@ class Commerce:
         if screen.kind == "vendor":
             vendor, budget_key = self.vendor(session, screen.target)
             budget = deepcopy(self.budgets.get(budget_key, VendorBudget(int(self.clock.now_utc().timestamp())//3600)))
-            budget.refill(self.clock.now_utc().timestamp(), int(BUYBACK_BUDGET*self.budget_multiplier(vendor, budget_key)))
+            budget.refill(self.clock.now_utc().timestamp(), int(BUYBACK_BUDGET*self.budget_multiplier(vendor, budget_key)),
+                          self.budget_period(vendor, budget_key))
             title = vendor.name
             title += " - " + ("SELL" if screen.sell else "BUY")
             detail = f"Hand {player.chits_hand}  Buy-back budget {budget.remaining}/{budget.limit}"

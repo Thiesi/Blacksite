@@ -707,7 +707,8 @@ class Combat:
         recipients = [target]
         if ability.kind == "hymn":
             recipients = [a for a in self.allies_provider(actor) if a.zone==actor.zone
-                and rules.distance(actor.position,a.position)<=max(rules.ABILITY_RANGE, actor.modifiers.get("hymn_radius", 0))]
+                and rules.distance(actor.position,a.position)<=max(rules.ABILITY_RANGE, actor.modifiers.get("hymn_radius", 0))
+                    +actor.modifiers.get('hymn_radius_bonus', 0)]
         if effect.get("revive"):
             recipients = [a for a in recipients if a.stance=="down"][:1]
             if not recipients:

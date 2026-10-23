@@ -135,7 +135,7 @@ class Storage:
             row = {'hour': hour, 'remaining': remaining}
             saved = details.get(key, {})
             if saved.get('hour') == hour and saved.get('remaining') == remaining:
-                row.update({field: saved[field] for field in ('limit', 'spent') if field in saved})
+                row.update({field: saved[field] for field in ('limit', 'spent', 'refilled_at') if field in saved})
             budgets[key] = row
         return {"players": players, "identities": {row[0]: json.loads(row[1]) for row in self.db.execute("SELECT * FROM identities")},
                 "serial": self.meta("player_serial") or 0, "cap": self.meta("character_cap"),

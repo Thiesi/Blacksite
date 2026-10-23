@@ -20,7 +20,7 @@ from blacksite.server.views.delta import ViewStore
 from blacksite.server.wake import Wake, menu, wrapped
 from blacksite.server.world.registry import World
 from blacksite.server.world.simulation import Avatar, ZoneSimulation
-from blacksite.server.world.exits import Travel
+from blacksite.server.world.exits import Travel, complete_paid_pass
 from blacksite.server.world.safety import safety_at
 from blacksite.content.schema import Exit, Requirement
 
@@ -81,6 +81,7 @@ class Characters:
         player.zone = travel["exit"]["target_zone"]
         player.tile = tuple(travel["exit"]["target_tile"])
         player.progress.pop("travel")
+        complete_paid_pass(player.progress, player.zone)
         player.progress["offline_at"] = datetime.fromtimestamp(travel["arrival"], timezone.utc).isoformat()
         if not self.protected(player):
             remaining = rules.SLEEPER_SECONDS - (now - travel["arrival"])

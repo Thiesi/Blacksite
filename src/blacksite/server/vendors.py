@@ -47,15 +47,22 @@ class VendorBudget:
     remaining: int = BUYBACK_BUDGET
     limit: int = BUYBACK_BUDGET
     spent: int = 0
+    refilled_at: int | None = None
 
-    def refill(self, timestamp: float, limit: int = BUYBACK_BUDGET) -> None:
+    def refill(self, timestamp: float, limit: int = BUYBACK_BUDGET, period: int = BUDGET_SECONDS) -> None:
         # Game 7.5 / 8.2: a temporary larger cap is not another refill.
         # Retain spending above the ordinary cap when an allocation ends.
         if self.remaining != max(0, self.limit-self.spent):
             self.spent = self.limit-self.remaining
-        hour = int(timestamp) // BUDGET_SECONDS
-        if hour > self.hour:
-            self.hour, self.spent = hour, 0
+        # Game 7.7: Depot uses UTC half-hours. Changing eligibility cannot
+        # refill the same boundary twice or erase spending when it expires.
+        previous = self.hour*BUDGET_SECONDS if self.refilled_at is None else self.refilled_at
+        boundary = int(timestamp)//period*period
+        if boundary > previous:
+            self.hour, self.spent = int(timestamp)//BUDGET_SECONDS, 0
+            self.refilled_at = boundary
+        elif self.refilled_at is None:
+            self.refilled_at = previous
         self.limit = limit
         self.remaining = max(0, limit-self.spent)
 

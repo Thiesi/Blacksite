@@ -152,3 +152,8 @@ Keep uptime schedules separate from UTC effect deadlines.
 Bind `Contracts.event_active` to committed active event IDs when S24
 lands. Contract prerequisites are checked again at accepted start;
 proposals and forecasts must not stand in for an active event receipt.
+
+Follow the [S21 relay handoff](../s21-relay-handoff.md): bind the shared
+Curfew provider, Mile's current Convoy route, Beacon's committed-site
+forecast and Far's local telemetry/carrier record. Check zero-valued
+flags against `None`, and preserve independent source-owned overlays.

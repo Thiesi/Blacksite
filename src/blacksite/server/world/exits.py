@@ -62,3 +62,16 @@ def permitted(exit: Exit, access: dict[str, Any]) -> bool:
     if requirement.kind == "faction":
         return access.get("standing", {}).get(requirement.ref, 0) >= (requirement.standing or 0)
     return requirement.ref in access.get("items", ())
+
+
+def complete_paid_pass(progress: dict[str, Any], destination: str) -> bool:
+    """Consume only the bound ticket for a journey that actually arrived."""
+    trip = progress.get('paid_trip')
+    if not trip or trip['target'] != destination:
+        return False
+    ticket = progress.get('paid_passes', {}).get(trip['key'])
+    if ticket and ticket['id'] == trip['token']:
+        progress['paid_passes'].pop(trip['key'])
+    progress.pop('paid_trip')
+    return True
+

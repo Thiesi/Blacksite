@@ -64,8 +64,10 @@ architecture's test list is a real evening.
   immunity nor exclusive basic geometry. Travel holds keep design 6.4's
   bounds; ownership cannot lock a public service or safe zone. Optional
   event/season consumers are completed by S24/S26 and tested there.
-- Relay vendor: `vendor` object with `relay: <id>` visible and usable
-  only by members of the holder; inventory ids in `relays.json`.
+- Relay vendor: a curated counter bound to the relay terminal through
+  its vendor parameter, usable only by members of the current holder.
+  Inventory IDs live in `relays.json`; captured permission is checked
+  again at purchase, rather than stored on the character.
 - Sodium Row has no relay (content assertion). Sable's war rule is
   narrative; no mechanics.
 - Season tally: `faction_state.influence` resets at season end (S26
@@ -79,7 +81,7 @@ architecture's test list is a real evening.
 - Season end, leaderboard display, the Chronicle: S26.
 - Curfew, Exhale, Ring-fall, Convoy events: S24 (this slice reads the
   flags).
-- Crew mechanics (a crew holding is just members present): S22.
+- Crew formation and loot mechanics: S22. Relay participation is explicit.
 - Zone maps with relay objects placed: S08/S25 (fixture has two).
 
 ## Data and content
@@ -129,7 +131,8 @@ architecture's test list is a real evening.
 
 1. Two callers of the same faction in the fixture contested zone (or
    `tramyard-wall-gate`): A stands at the relay terminal and presses
-   `E`; the object shows a progress bar; B jacks in, enters the uplink
+   `E`, then `H` to hold. B inspects the named claim and presses `S`,
+   then jacks in, enters the uplink
    core and completes its `relay_open` control for that named claim;
    at 3 minutes the relay flips, both get
    the log lines and standing.
@@ -173,6 +176,9 @@ passers-by, death, competing active claims, daily payout races, recapture
 farming, fractional accrual and settlement cutoff. All sixteen benefits
 must resolve to their named consumer; a pending consumer is not a
 working feature and must be closed by S24/S26 before release.
+
+The [consumer handoff](../s21-relay-handoff.md) names all sixteen effect
+consumers, the real-map gates and the retained S25/S26 human pacing gate.
 
 ## S17 integration handoff
 

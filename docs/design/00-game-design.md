@@ -996,6 +996,19 @@ are not additional perks. Scour cores remain reachable when neutral.
 | `crash` / Crash Relay | `scour-ring-3` | 4 | harvest grade +1 step, capped compute; cannot create intact |
 | `far` / Far Relay | `scour-ring-4` | 4 | current local telemetry and carrier record |
 
+Crash changes the grade of newly generated public Ring Three salvage
+nodes while a faction holds it. The physical nodes remain shared and keep
+their committed grade and RNG state after ownership changes; ownership
+cannot reroll an existing node or create intact salvage. This is a public
+resource effect, rather than a different hidden grade for each harvester.
+
+Depot changes the shared buy-back budget of counters affiliated with its
+holding faction. Every permitted customer uses the same physical counter
+pool. Refills use UTC half-hour boundaries; changing ownership is not a
+refill. Loss of the benefit preserves the last refill and current spending
+until the next ordinary hour. Public work-order cap increases compose
+without resetting that spending.
+
 Relay Zero multiplies eligible trace gain by 0.90 after other trace
 modifiers. It never discounts costs explicitly classified as fixed by
 their action rule. The benefit applies in Old Works, ends with
@@ -1006,6 +1019,15 @@ ordinary outbound opening is 60 s every 5 minutes. Trams depart every
 90 s with a 10 s journey and no fare in v1. These are schedules anchored
 to the injected clock, never reset on entering a dormant zone. Private
 ICE cannot inflict black feedback or bypass the theft cap.
+
+Paid optional passage requires an explicit price choice. Leaving the card
+does not buy a ticket. A committed fare buys one route-bound pass, saved
+until that journey arrives; a failed save charges nothing. Restarting
+before departure retains the pass, and restarting in transit resumes the
+same journey and consumes that pass on arrival. Ownership changes never
+turn a displayed free choice into a charge. Free stairs and ordinary gate
+entry remain separate actions. Patrol overlays show local authored
+waypoints on known tiles; they reveal no hidden actors or new base map.
 
 ## 8. Economy
 
