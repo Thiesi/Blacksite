@@ -1050,6 +1050,8 @@ class ContractTemplate:
     name: str = ""
     approach_label: str = "Listed route"
     approaches: tuple[ContractApproach, ...] = ()
+    service: bool = False
+    """A repeatable, fixed-reward public work order, not a board job."""
 
 
 @dataclass(frozen=True)
@@ -1089,6 +1091,7 @@ class Effect:
     """For `entry_restriction` and `route_hold`: exit ids, as
     `zone/exit`, that the effect closes."""
     params: dict[str, Number | str | bool] = field(default_factory=dict)
+    audience: Literal["public", "workers"] = "public"
 
 
 @dataclass(frozen=True)
@@ -1110,6 +1113,9 @@ class ServiceNodeTemplate:
     target_objects: tuple[str, ...]
     allocations: tuple[Allocation, ...]
     schema: int = CONTENT_SCHEMA
+    contract: str | None = None
+    normal_effects: tuple[Effect, ...] = ()
+    fault_effects: tuple[Effect, ...] = ()
 
 
 # --- dialogue (section 1.11, 04-dramatis-personae.md Part III) -------------

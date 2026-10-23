@@ -706,8 +706,18 @@ order_id, allocation, allocation_expires, authored_route_variants[]`.
 supplied_bound_items[], completed_actions[], allocation_vote,
 reward_receipts[]`. The reserving player chooses the disclosed
 allocation; the frozen roster sees it before accepting and shares the
-reward. Departure of the whole roster releases the reservation. No
+reward. Explicit withdrawal of the whole roster releases the reservation.
+A disconnect preserves progress until the original UTC deadline. No
 inventory supplies or money may be consumed twice on an interrupted step.
+
+`ServiceNodeTemplate.contract` names a repeatable `service` contract:
+neither story nor crew-scaled, outside the three generated-job slots.
+Its accepted offer carries the reservation deadline. `normal_effects`
+and `fault_effects` are separate from the two allocation effect sets.
+Effects declare `audience: public|workers`; changed public geometry is
+visible to everyone, while reserved cache access, credentials and worker
+discounts remain scoped to the frozen roster. Each layer retains its
+owner, so service expiry cannot undo an event or independent control.
 
 ### 2.14 Expedition
 

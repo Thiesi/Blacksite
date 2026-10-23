@@ -197,6 +197,7 @@ class Instance:
     paid: set[str] = field(default_factory=set)
     failure: str = ''
     runtime: dict[str, Any] = field(default_factory=dict)
+    service: bool = False
 
     def record(self) -> dict[str, Any]:
         return {**asdict(self), 'stages': [stage.record() for stage in self.stages],
@@ -258,7 +259,8 @@ class Engine:
         saved = self.boards.get(handler)
         if saved and saved['epoch'] == epoch:
             return tuple(Offer.read(row) for row in saved['offers'])
-        pool = sorted((t for t in self.templates.values() if t.giver == handler and not t.story),
+        pool = sorted((t for t in self.templates.values()
+                       if t.giver == handler and not t.story and not t.service),
                       key=lambda template: (template.min_grade, template.id))
         rng = Random(f'{self.origin}:board:{handler}:{epoch}')
         offers = []
@@ -288,7 +290,7 @@ class Engine:
         return json.dumps((player, group), separators=(',', ':'))
 
     def active_count(self, player: str) -> int:
-        return sum(instance.state in ('active', 'complete') and not instance.story
+        return sum(instance.state in ('active', 'complete') and not instance.story and not instance.service
                    and player in {p.player for p in instance.roster} - instance.withdrawn
                    for instance in self.instances.values())
 
@@ -299,6 +301,8 @@ class Engine:
         if len({p.identity for p in roster}) != len(roster):
             raise ValueError('One reward recipient per BBS identity.')
         template = self.templates[offer.template]
+        if template.service and offer.until is None:
+            raise ValueError('A work order needs its original reservation deadline.')
         if offer.until is not None and now >= offer.until:
             raise ValueError('That offer refreshed. Read the current board.')
         if any(p.grade < template.min_grade for p in roster):
@@ -314,7 +318,7 @@ class Engine:
         if not any(p.rewardable for p in roster):
             raise ValueError('Every participant already completed this story.')
         for participant in roster:
-            if not template.story and self.active_count(participant.player) >= ACTIVE_GENERATED:
+            if not template.story and not template.service and self.active_count(participant.player) >= ACTIVE_GENERATED:
                 raise ValueError('A participant already has three active generated jobs.')
             if participant.rewardable and self.claim_key(participant.identity, offer.id) in self.claims:
                 raise ValueError('That identity already received this offer.')
@@ -330,7 +334,7 @@ class Engine:
             stages = chosen.stages
         if not stages:
             raise ValueError('This job has no commissioned stages.')
-        scaling = template.crew_scaling and not template.story
+        scaling = template.crew_scaling and not template.story and not template.service
         rng = Random(f'{offer.id}:{approach}:targets:{len(roster)}')
         resolved = []
         for stage in stages:
@@ -346,9 +350,11 @@ class Engine:
         self.serial += 1
         instance = Instance(f'{self.origin}:contract:{self.serial}', offer.id, template.id,
             template.giver, roster, tuple(resolved), offer.reward, now,
-            None if template.story else now + GENERATED_SECONDS, template.story, scaling,
+            None if template.story else offer.until if template.service else now + GENERATED_SECONDS,
+            template.story, scaling,
             approach, deepcopy(template.params), deepcopy(offer.options), template.branch_group,
             template.branch, template.permit_scope)
+        instance.service = template.service
         for participant in roster:
             if template.branch_group and template.branch and participant.rewardable:
                 self.branches[self.branch_key(participant.player, template.branch_group)] = template.branch
@@ -414,7 +420,7 @@ class Engine:
         progress = instance.stages[instance.index]
         if not progress.stage.retry:
             raise ValueError('That stage does not permit a retry.')
-        if not instance.story and any(self.active_count(p.player) >= ACTIVE_GENERATED
+        if not instance.story and not instance.service and any(self.active_count(p.player) >= ACTIVE_GENERATED
                 for p in instance.roster if p.player not in instance.withdrawn or p.player == player):
             raise ValueError('A participant already has three active generated jobs.')
         progress.counts.clear()
@@ -467,7 +473,8 @@ class Engine:
         for payout in payouts:
             self.claims[self.claim_key(payout.identity, instance.offer)] = instance.expires_at or 0
             instance.paid.add(payout.player)
-            self.completed.setdefault(payout.player, set()).add(instance.template)
+            if not instance.service:
+                self.completed.setdefault(payout.player, set()).add(instance.template)
             if option is not None and instance.branch_group:
                 self.branches[self.branch_key(payout.player, instance.branch_group)] = option
         if eligible <= instance.paid:

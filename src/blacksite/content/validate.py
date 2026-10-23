@@ -1285,6 +1285,8 @@ class _Validator:
         for cid, con in self.each("contracts"):
             assert isinstance(con, s.ContractTemplate)
             owner = ("contracts", cid)
+            if con.service and (con.story or con.crew_scaling):
+                self.report(*owner, "a service contract is repeatable and never crew-scaled")
             if con.giver != "vesper":
                 self.ref("factions", con.giver, owner, "faction")
             if not con.stages:
@@ -1534,6 +1536,13 @@ class _Validator:
                     if self.object_at(svc.zone, obj) is None:
                         self.report(*owner, f"target object {obj!r} does not exist in {svc.zone}", obj)
             self.ref("cores", svc.core, owner, "core")
+            if svc.contract is not None and self.ref("contracts", svc.contract, owner, "contract"):
+                job = self.t.contracts[svc.contract]
+                if not job.service or job.story or job.crew_scaling:
+                    self.report(*owner, "a work order must be a fixed, repeatable service contract")
+            for label, effects in (("normal", svc.normal_effects), ("fault", svc.fault_effects)):
+                for i, effect in enumerate(effects):
+                    self._check_effect(owner, f"{label} effect {i}", effect)
             if sorted(a.id for a in svc.allocations) != ["common", "reserve"]:
                 self.report(*owner, "a service has exactly one common and one reserve allocation")
             for alloc in svc.allocations:
@@ -1687,6 +1696,9 @@ class _Validator:
         for sid, svc in sorted(self.t.services.items()):
             if not self.is_active("services", sid):
                 continue
+            for label, effects in (("normal", svc.normal_effects), ("fault", svc.fault_effects)):
+                yield f"service {sid} {label}", ("services", sid), frozenset(
+                    x for e in effects for x in e.exits_closed)
             for alloc in svc.allocations:
                 yield f"service {sid} {alloc.id}", ("services", sid), frozenset(x for e in alloc.effects for x in e.exits_closed)
 

@@ -861,7 +861,9 @@ while the server is stopped. Neutral relay ownership is normal operation.
 
 Any resident may repair. First acceptance reserves the work order for that
 player or its frozen accepted job roster for 10 minutes. Abandonment,
-deadline, or all participants leaving releases it. The reserver selects one
+deadline, or the whole roster explicitly withdrawing releases it. A
+disconnect keeps completed steps until the original UTC deadline;
+reconnecting never extends that deadline. The reserver selects one
 allocation below before the roster joins; on repair completion it lasts 20
 minutes and cannot be overwritten or extended. Another order waits for the
 original 60-minute cooldown. A relay owner cannot veto public repair.
