@@ -107,8 +107,8 @@ async def run_size(probe: ContractProbe, width: int, height: int) -> dict[str,An
     probe.save(a,f's19-frozen-roster-paid-{width}')
     await close_jobs(probe,a)
     probe.report(f'S19 PASS {width}x{height}: four scaled to six, consent, useful actions, 250/275 chits; late join zero')
-    for caller in (late,b,a):
-        await probe.leave(caller,f's19-crew-left-{caller.session.player_id[-8:]}-{width}')
+    for index,caller in enumerate((late,b,a)):
+        await probe.leave(caller,f's19-crew-left-{index}-{width}')
     return dict(size=[width,height],required_targets=6,payouts=payouts,
                 fixtures=['mission drones one HP with delayed attacks/movement; combat pacing not measured'])
 
