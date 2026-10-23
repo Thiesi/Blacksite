@@ -1,5 +1,6 @@
 """UI 4 and game 8.3: real server menus and cell-buffer display."""
 
+import json
 from typing import Any
 
 import pytest
@@ -56,7 +57,8 @@ def test_ui_4_long_lived_market_history_pages_without_oversized_frames(trade_gam
     assert result['page'] == 2 and result['pages'] == 30 and result['total'] == 3000
     assert len(result['listings']) == 100 and result['bids'] == []
     assert result['listings'][0]['id'] == list(owner.market.listings)[100]
-    assert len(encode(Frame('view', {'rev': 1, 'kind': 'admin', 'body': result}))) < 256*1024
+    response = {'title': 'admin.market.list', 'lines': [json.dumps(result)]}
+    assert len(encode(Frame('view', {'rev': 1, 'kind': 'text', 'body': response}))) < 256*1024
 
 
 def test_ui_4_price_prompts_survive_views_and_commit_only_after_y(trade_game: tuple[Any, ...]) -> None:
