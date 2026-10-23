@@ -127,6 +127,13 @@ async def network_stage(probe: ContractProbe, caller: Connection, target: Any, d
 async def escort_stage(probe: ContractProbe, caller: Connection, iid: str, progress: Any) -> None:
     owner=probe.service.core.contracts
     pid=caller.session.player_id
+    await probe.route(caller,progress.targets[0].zone)
+    # A preceding supply write advances the ledger before the next
+    # scene reconciliation creates its NPCs. Do not mistake that frame
+    # boundary for an already-recruited/empty group.
+    await wait(lambda:len([a for a in owner.world.actors.values()
+        if a.behaviour.get('mission')==iid and a.behaviour.get('contract_stage')==progress.stage.id])
+        ==len(progress.targets)-len(progress.subjects))
     while True:
         actors=[a for a in owner.world.actors.values() if a.behaviour.get('mission')==iid
                 and a.behaviour.get('contract_target') and a.behaviour.get('escort')!=pid]
