@@ -127,7 +127,7 @@ async def run_size(probe: NativeProbe, width: int, height: int) -> dict:
     # ordinary injected real clock for the full three-minute hold above.
     previous_utc=probe.service.clock.now_utc
     probe.service.clock.now_utc=lambda:previous_utc()+timedelta(hours=2)
-    previous=owner.ledger.state['factions']['halvard']['influence']
+    previous=owner.ledger.state['factions'].get('halvard',{}).get('influence',0)
     draft=owner.ledger.fork()
     draft.settle(owner.rates(),owner.now())
     assert owner.write(draft)
