@@ -85,5 +85,8 @@ job; temporary lifted payloads retire at settlement. Public core records
 and their ordinary loot remain separate from each mission's copies.
 
 The full-city human pacing gate remains mandatory after S25/S26. Re-run
-actual contract, shop, surgery and detox earning routes with complete city
-travel and population; deterministic fixture income is not a fun verdict.
+escort arrival with all four followers and a clearly marked, walkable
+destination. A worker stopping beside the marker can leave followers
+outside its arrival radius; placement and hints must make delivery clear.
+Measure actual contract, shop, surgery and detox earning routes with
+complete city travel and population; fixture income is not a fun verdict.

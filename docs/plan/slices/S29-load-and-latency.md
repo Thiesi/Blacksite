@@ -154,15 +154,15 @@ tool every later slice runs.
 <!-- s19-services:start -->
 ### S19 source and service handoff
 
-Reference: [S19](https://github.com/Thiesi/Blacksite/issues/19),
-[source checkpoint 9097b50](https://github.com/Thiesi/Blacksite/commit/9097b50)
-and [PR #38](https://github.com/Thiesi/Blacksite/pull/38).
+Reference: [S19 PR #62](https://github.com/Thiesi/Blacksite/pull/62),
+[acceptance record](../../ops/s19-acceptance.md) and
+[PR #38](https://github.com/Thiesi/Blacksite/pull/38).
 
-S19 remains in progress. Its source interfaces, 68 contracts and four
-service nodes are authored. Full root pytest passed 1342 tests with one
-skip; receipt-based earnings are reported in docs/ops/s19-earnings.md.
-Complete native acceptance and delivered PR review remain pending.
-Consume them after S19 merges.
+S19 supplies the implemented source interfaces, 68 authored contracts
+and four service nodes. Full root pytest passed 1344 tests with one
+skip. Installed native acceptance covers both sizes and allocations,
+forks, repair reconnect and paid restart. Consume the merged PR;
+S25/S27/S26 still own real geography, referrals and activation.
 
 Profile populated contract/journal/budget meta and active mission bodies.
 Source callbacks must finalize before after_settle flushes deferred impacts;

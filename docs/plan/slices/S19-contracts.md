@@ -1,6 +1,6 @@
 # S19 — Contracts: template engine, six types, boards, crew scaling, story chains, Vesper
 
-**Status:** in progress (PR #62)
+**Status:** done (PR #62)
 **Primary model:** Opus (engine) · **Reviewer:** Gemini or Sonnet writes the content half from the world docs; Opus reviews it
 **Depends on:** S11, S14, S15, S16, S22 · **Milestone:** M3
 **Issue:** https://github.com/Thiesi/blacksite/issues/19
@@ -142,6 +142,11 @@ Use typed contract, evidence and work-order intents from architecture
    reconnect to the recorded progress/reward without loss or duplication.
 
 ## Definition of done
+
+The [acceptance record](../../ops/s19-acceptance.md) separates the full
+test suite, installed native terminal runs, disclosed fixtures and future
+geography/human pacing. PR #62 carries final-head CI artifacts and the
+delivered Claude reviews with product-impact triage.
 
 The [earning receipt report](../../ops/s19-earnings.md) extends S16 with
 actual job, loot-sale, core-cash and clinic-quote paths. Its session
