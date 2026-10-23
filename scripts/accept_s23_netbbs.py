@@ -118,6 +118,11 @@ async def run_case(probe: ContractProbe, width: int, height: int) -> dict[str, A
     for label, grade, bank in (('S23Seller', 5, 1000), ('S23Buyer', 5, 100),
                                 ('S23Hunter', 5, 1000), ('S23Wake', 2, 0)):
         caller = await probe.open(width, height, label, 0, True)
+        send, sid = caller.caller.write, caller.session.id
+        async def traced_write(data: bytes, send: Any = send, sid: str = sid) -> None:
+            probe.sent_keys.append({'session': sid, 'hex': data.hex()})
+            await send(data)
+        caller.caller.write = traced_write
         fixture(probe, caller, grade, bank)
         callers.append(caller)
         # Leave the gurney free for the next actual caller.
@@ -240,6 +245,15 @@ async def run_case(probe: ContractProbe, width: int, height: int) -> dict[str, A
 async def accept(root: Path, python: Path, show: bool, size: tuple[int, int]) -> None:
     probe = ContractProbe(root, python, show)
     await probe.start()
+    probe.sent_keys = []
+    received: list[dict[str, Any]] = []
+    receive = probe.service.core.receive
+    def traced_receive(session: Any, frame: Any) -> None:
+        if frame.type in ('key', 'intent', 'line'):
+            received.append({'session': session.id, 'player': session.player_id,
+                             'type': frame.type, 'data': frame.data})
+        receive(session, frame)
+    probe.service.core.receive = traced_receive
     try:
         probe.report('S23 fixtures: grade 5/full pools/banked funds for three callers; grade 2 for one. No item, placement, reward or future-map fixture.')
         result = await run_case(probe, *size)
@@ -252,6 +266,8 @@ async def accept(root: Path, python: Path, show: bool, size: tuple[int, int]) ->
         (root/'failure-trace.txt').write_text(traceback.format_exc(), encoding='utf-8')
         raise
     finally:
+        (root/'input-trace.json').write_text(json.dumps({'sent': probe.sent_keys,
+            'received': received}, indent=2)+'\n', encoding='utf-8')
         await probe.close()
 
 
