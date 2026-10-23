@@ -1,0 +1,133 @@
+"""Game 9.3: actual scoped bodies, source-owned defeats and escort receipts."""
+
+from dataclasses import replace
+
+from blacksite.content.schema import StageTarget
+from blacksite.server.contracts.engine import Engine
+from blacksite.server.world.actors import Actor, mission_pair
+from blacksite.server.world.movement import move
+from blacksite.server.world.sight import private_visible
+from tests.character_helpers import create, place
+from tests.contracts.test_engine import template
+from tests.npcs.test_engine import city, body
+
+
+def mission(city, *, verb='clear', resolution='lethal', quantity=1, roster=None):
+    game, caller = city
+    owner = game.core.contracts
+    job = template('scene', story=True)
+    target = StageTarget('npc', zone='vatside-clinics', tile=(24, 3),
+                         npc='npc-sablier-orderly' if verb == 'escort' else 'npc-maintenance-drone')
+    stage = replace(job.stages[0], verb=verb, target=target, quantity=quantity,
+                    resolution=resolution if verb == 'clear' else None,
+                    completion='arrived' if verb == 'escort' else 'subdued' if resolution == 'subdue' else 'defeated',
+                    destination=StageTarget('zone_tile', zone='vatside-clinics', tile=(20, 3)) if verb == 'escort' else None)
+    job = replace(job, stages=(stage,))
+    owner.content.contracts[job.id] = job
+    owner.state.engine.templates[job.id] = job
+    draft = owner.state.fork()
+    instance = draft.engine.accept(draft.engine.story_offer(job.id, caller.session.player_id),
+        tuple(owner.participant(pid) for pid in (roster or (caller.session.player_id,))), owner.now())
+    owner.write(draft)
+    game.commit_commerce()
+    owner.scenes.reconcile()
+    actors = [a for a in owner.world.actors.values() if a.behaviour.get('mission') == instance.id]
+    return owner, instance.id, actors
+
+
+def test_game_9_3_frozen_roster_permissions_survive_leaving_crew_and_reject_late_join(city) -> None:
+    game, caller = city
+    second = game.connect({'user_id': 2, 'handle': 'Second', 'node_name': 'test'})
+    third = game.connect({'user_id': 3, 'handle': 'Third', 'node_name': 'test'})
+    create(game, second, name='Second', card='none')
+    create(game, third, name='Third', card='none')
+    place(game, second, 'vatside-clinics', (21, 3))
+    place(game, third, 'vatside-clinics', (22, 3))
+    owner, iid, actors = mission(city, roster=(caller.session.player_id, second.session.player_id))
+    target = actors[0]
+    assert game.core.combat.legal(body(game, second), target)
+    assert game.core.npcs.escort(body(game, third), target) is False
+    assert not game.core.combat.legal(body(game, third), target)
+    assert not game.core.combat.legal(target, body(game, third))
+    assert private_visible(body(game, second), target)
+    assert not private_visible(body(game, third), target)
+    # Even joining the current social crew grants no accepted mission access.
+    crews = game.core.crews
+    crews.perform(caller.session, 'invite', third.session.player_id)
+    invitation = next(iter(crews.registry.invites.values()))
+    crews.perform(third.session, 'accept', invitation.id)
+    assert not game.core.combat.legal(body(game, third), target)
+    outsider = body(game, third)
+    game.core.world.enter(outsider, target.zone, (target.x-1, target.y))
+    assert move(outsider, game.core.world.zones[target.zone], 'right', game.clock.now_tick()+100)
+    assert outsider.position == target.position  # Invisible bodies cannot block the street.
+    assert not mission_pair(Actor('street-npc', 'Street', kind='npc'), target)
+
+
+def test_game_9_3_npc_defeat_progress_and_loot_share_the_actual_source_write(city) -> None:
+    game, caller = city
+    owner, iid, actors = mission(city)
+    target, source = actors[0], body(game, caller)
+    target.health = 0
+    game.core.npcs.died(source, target)
+    effect = game.core.commerce.outbox[0]
+    assert effect['contracts_state']['engine']['instances'][iid]['state'] == 'complete'
+    assert owner.state.engine.instances[iid].state == 'active'
+    game.commit_commerce(error=True)
+    assert target.id in owner.world.actors and target.health == 1
+    assert owner.state.engine.instances[iid].state == 'active'
+    target.health = 0
+    game.core.npcs.died(source, target)
+    game.commit_commerce()
+    assert owner.state.engine.instances[iid].state == 'complete'
+    assert target.id not in owner.world.actors
+    owner.scenes.reconcile()
+    assert not any(a.behaviour.get('mission') == iid for a in owner.world.actors.values())
+
+
+def test_game_9_3_scene_checkpoint_reconstructs_same_units_without_replaying_completed_targets(city) -> None:
+    game, caller = city
+    owner, iid, actors = mission(city, quantity=2)
+    survivor, defeated = actors
+    survivor.health, survivor.shock = 13, 31
+    defeated.health = 0
+    game.core.npcs.died(body(game, caller), defeated)
+    game.commit_commerce()
+    saved = owner.record()
+    before = survivor.id, survivor.position, survivor.health, survivor.shock
+    owner.world.leave(survivor)
+    owner.install(saved)
+    owner.scenes.reconcile()
+    rebuilt = [a for a in owner.world.actors.values() if a.behaviour.get('mission') == iid]
+    assert [(a.id, a.position, a.health, a.shock) for a in rebuilt] == [before]
+    assert owner.state.engine.instances[iid].stages[0].subjects == {defeated.id}
+
+
+def test_game_9_3_subdue_uses_commit_receipt_and_cannot_be_replaced_by_lethal(city) -> None:
+    game, caller = city
+    owner, iid, actors = mission(city, resolution='subdue')
+    target, source = actors[0], body(game, caller)
+    owner.subdued(source, target)
+    game.commit_commerce(error=True)
+    assert target.id in owner.world.actors and owner.state.engine.instances[iid].state == 'active'
+    owner.subdued(source, target)
+    game.commit_commerce()
+    assert target.stance == 'restrained' and target.id not in owner.world.actors
+    assert owner.state.engine.instances[iid].state == 'complete'
+
+
+def test_game_9_3_willing_escort_arrives_only_after_following_and_a_saved_source_receipt(city) -> None:
+    game, caller = city
+    owner, iid, actors = mission(city, verb='escort')
+    target, source = actors[0], body(game, caller)
+    assert target.behaviour['willing']
+    assert game.core.npcs.escort(source, target)
+    game.core.world.enter(target, source.zone, (21, 3))
+    owner.scenes.escorts(game.clock.now_tick())
+    assert owner.state.engine.instances[iid].state == 'active'
+    game.commit_commerce(error=True)
+    assert target.id in owner.world.actors
+    owner.scenes.escorts(game.clock.now_tick())
+    game.commit_commerce()
+    assert owner.state.engine.instances[iid].state == 'complete'
+    assert target.id not in owner.world.actors

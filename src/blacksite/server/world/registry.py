@@ -4,7 +4,7 @@ from collections import deque
 
 from blacksite.content.loader import ContentTree
 from blacksite.content.schema import Tile
-from blacksite.server.world.actors import Actor
+from blacksite.server.world.actors import Actor, mission_pair
 from blacksite.server.world.zone import ZoneInstance
 from collections.abc import Callable
 from blacksite.content.schema import ObjectSpec
@@ -21,7 +21,8 @@ class World:
         zone = self.zones[zone_id]
         pending = deque([start])
         seen = {start}
-        occupied = {actor.position for actor in zone.actors.values() if not actor.behaviour.get("training")}
+        occupied = {other.position for other in zone.actors.values() if not other.behaviour.get('training')
+                    and (actor is None or mission_pair(actor, other))}
         while pending:
             tile = pending.popleft()
             key = zone.tile_id(tile)
@@ -39,7 +40,8 @@ class World:
         if actor.id in self.actors and self.actors[actor.id] is not actor:
             raise ValueError("actor id is already owned by another body")
         zone = self.zones[zone_id]
-        if not zone.can_enter(actor, tile) or any(a.id != actor.id and a.position == tile and not a.behaviour.get("training") for a in zone.actors.values()):
+        if not zone.can_enter(actor, tile) or any(a.id != actor.id and a.position == tile
+                and not a.behaviour.get('training') and mission_pair(actor, a) for a in zone.actors.values()):
             raise ValueError("entry tile is blocked")
         self.leave(actor)
         actor.zone, (actor.x, actor.y) = zone_id, tile
@@ -64,5 +66,5 @@ class World:
         Attribution stays with the initiator for indirect/delayed effects.
         Combat and Lattice consumers implement their actions in later slices.
         """
-        return all(actor.zone in self.zones and self.zones[actor.zone].allows_hostile(actor.position)
+        return mission_pair(initiator, body) and all(actor.zone in self.zones and self.zones[actor.zone].allows_hostile(actor.position)
                    for actor in (initiator, body))

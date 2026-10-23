@@ -91,9 +91,9 @@ class Combat:
             return False
         # Mission bodies are scoped copies, never somebody else's permanent
         # handler or escort. S22 may supply crew permissions explicitly.
-        if target.behaviour.get("mission") and source.kind == "player" and target.owner != source.id and not self.crew_together(source.id, target.owner):
+        if target.behaviour.get("mission") and target.behaviour.get('mission_roster') is None and source.kind == "player" and target.owner != source.id and not self.crew_together(source.id, target.owner):
             return False
-        if source.behaviour.get("mission") and target.kind == "player" and source.owner != target.id and not self.crew_together(source.owner, target.id):
+        if source.behaviour.get("mission") and source.behaviour.get('mission_roster') is None and target.kind == "player" and source.owner != target.id and not self.crew_together(source.owner, target.id):
             return False
         training = source if source.behaviour.get("training") else target if target.behaviour.get("training") else None
         if training:
@@ -121,9 +121,9 @@ class Combat:
             return False
         if self.crew_together(source.id, target.id):
             return False
-        if target.behaviour.get("mission") and source.kind == "player" and target.owner != source.id and not self.crew_together(source.id, target.owner):
+        if target.behaviour.get("mission") and target.behaviour.get('mission_roster') is None and source.kind == "player" and target.owner != source.id and not self.crew_together(source.id, target.owner):
             return False
-        if source.behaviour.get("mission") and target.kind == "player" and source.owner != target.id and not self.crew_together(source.owner, target.id):
+        if source.behaviour.get("mission") and source.behaviour.get('mission_roster') is None and target.kind == "player" and source.owner != target.id and not self.crew_together(source.owner, target.id):
             return False
         if source.kind == target.kind == "player":
             if any(self.world.zones[a.zone].safety_at(a.position) != "open" for a in (source, target)):

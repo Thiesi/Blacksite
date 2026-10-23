@@ -388,7 +388,8 @@ S19 adds `name`, `approach_label` and optional `approaches[]` of
 alternative has its own unique stage/receipt keys and the same frozen
 reward. Stages add `label`, positive `quantity` (default one) and
 `seconds` (authored interruptible channel duration, default zero),
-`cost` (the visible action cost), and
+`cost` (the visible action cost), optional typed `destination` for escort,
+`requires_item` (a supplied bound item consumed by plant/delivery), and
 `target_pool[]` of additional typed targets. Core-room targets can name
 their exact `data` record. Scaled NPC/item counts may
 reuse a template with distinct mission-owned subjects; finite spatial
@@ -407,6 +408,16 @@ branches commit at the choosing participant's final action.
 Evidence records add `question` and `next_action`; acquisition stores the
 verified location and UTC observation time separately from the source's
 claim. Optional source prose grants no additional progress.
+`related_objective` names the contract, while optional `related_stage`
+narrows acquisition to one of its stages. Claimed author/date and the
+accepted job's season stay separate from the verified acquisition time.
+
+S19 mission NPCs use stable per-instance/stage/attempt/unit IDs. Their
+frozen mission roster controls sight, collision and harm independently
+of later live crew changes. Ordinary outsiders cannot consume or block
+these private bodies. Defeat and restraint retire the unit in the same
+source write that advances the objective; escort arrival does likewise.
+Saved scene checkpoints retain surviving units' positions and condition.
 
 ### 1.11 Dialogue (`dialogue/<npc>.json`)
 
@@ -577,6 +588,13 @@ resident identity, storage, safe, bed, terminal or bank permission.
 `bound` defaults false. Recovery and service-job producers set it for
 goods that cannot be sold, dropped, transferred or fabricated. S12
 enforces the transfer boundary; S10/S19 own those grants. SQLite world
+items also carry optional `mission` (instance ID) and `mission_stage`
+(stage/attempt). These supplies never merge across jobs. Only their
+own objective can consume them; withdrawal, expiry and a completed
+turn-in remove obsolete supplies and inventory references together.
+The fields stay in the existing item JSON; there is no schema migration.
+
+SQLite world
 schema 3 adds `vendor_budgets` (counter ID, UTC hour, remaining chits)
 and `caches` (zone, tile, item IDs, expiry); item ownership and player
 balances commit with these records in one transaction.

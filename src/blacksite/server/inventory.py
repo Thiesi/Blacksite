@@ -33,8 +33,8 @@ class Inventory:
         for iid in player.inventory:
             target = self.items[iid]
             if (iid not in (*player.equipment.values(), *player.implants.values())
-                    and (target.template, target.quality, target.secured, target.bound, target.charges, target.ammo, target.health)
-                    == (item.template, item.quality, item.secured, item.bound, item.charges, item.ammo, item.health)):
+                    and (target.template, target.quality, target.secured, target.bound, target.charges, target.ammo, target.health, target.mission, target.mission_stage)
+                    == (item.template, item.quality, item.secured, item.bound, item.charges, item.ammo, item.health, item.mission, item.mission_stage)):
                 moved = min(item.stack, template.stack_max - target.stack)
                 target.stack += moved
                 item.stack -= moved
@@ -46,8 +46,11 @@ class Inventory:
         self.items[item.id] = item
         player.inventory.append(item.id)
 
-    def remove(self, player: Player, iid: str, count: int, next_id: Callable[[], str]) -> ItemInstance:
+    def remove(self, player: Player, iid: str, count: int, next_id: Callable[[], str],
+               mission: str | None = None) -> ItemInstance:
         item = self.owned(player, iid)
+        if item.mission is not None and item.mission != mission:
+            raise ValueError('This supplied item belongs to its contract objective.')
         empty_cell = item.stack == count == 0 and self.templates[item.template].ammo and self.templates[item.template].ammo.recharge_price is not None
         if type(count) is not int or not (1 <= count <= item.stack or empty_cell):
             raise ValueError("Choose a quantity you carry.")
@@ -62,6 +65,8 @@ class Inventory:
 
     def split(self, player: Player, iid: str, count: int, next_id: Callable[[], str]) -> None:
         item = self.owned(player, iid)
+        if item.mission is not None:
+            raise ValueError('Contract supplies cannot be split outside their objective.')
         if type(count) is not int or not 0 < count < item.stack:
             raise ValueError("Split fewer than the whole stack.")
         if item.secured and sum(self.items[i].secured for i in player.inventory) >= self.secured_slots:
@@ -96,6 +101,8 @@ class Inventory:
 
     def slots(self, player: Player, iid: str) -> tuple[str, ...]:
         item = self.owned(player, iid)
+        if item.mission is not None:
+            raise ValueError('Contract supplies are used at their labelled objective.')
         template = self.templates[item.template]
         if template.requires_archetype and template.requires_archetype != player.archetype:
             raise ValueError("Your archetype cannot equip that item.")

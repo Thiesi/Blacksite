@@ -1,6 +1,6 @@
 """Game 5.2 movement and 3.1 stamina on the authoritative tick budget."""
 
-from blacksite.server.world.actors import Actor
+from blacksite.server.world.actors import Actor, mission_pair
 from blacksite.server.world.zone import ZoneInstance
 from blacksite.server.rules.combat import action_seconds, cooldown_deadline, TICK_SECONDS
 
@@ -24,13 +24,15 @@ def move(actor: Actor, zone: ZoneInstance, name: str, tick: int, sprint: bool = 
     target = actor.x + vector[0], actor.y + vector[1]
     if forced and (not zone.allows_hostile(actor.position) or not zone.allows_hostile(target)):
         return False
-    blocks = lambda a: a.id != actor.id and a.position == target and not (a.behaviour.get("training") and a.owner != actor.id)
+    blocks = lambda a: a.id != actor.id and a.position == target and mission_pair(actor, a) and not (a.behaviour.get("training") and a.owner != actor.id)
     if not zone.can_enter(actor, target) or any(blocks(a) for a in zone.actors.values()):
         return False
     # A diagonal cannot bypass a closed corner or another player's body.
     if vector[0] and vector[1]:
         for side in ((actor.x + vector[0], actor.y), (actor.x, actor.y + vector[1])):
-            if not zone.can_enter(actor, side) or any(a.id != actor.id and a.position == side and not (a.behaviour.get("training") and a.owner != actor.id) for a in zone.actors.values()):
+            if not zone.can_enter(actor, side) or any(a.id != actor.id and a.position == side
+                    and mission_pair(actor, a) and not (a.behaviour.get('training') and a.owner != actor.id)
+                    for a in zone.actors.values()):
                 return False
     stamina_multiplier = min((float(e.get("stamina_multiplier",1)) for e in actor.effects),default=1)
     cost = SPRINT_COST*stamina_multiplier*actor.modifiers.get("stamina_cost_multiplier", 1)

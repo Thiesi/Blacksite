@@ -11,6 +11,7 @@ from blacksite.server.sessions import Session
 from blacksite.server.wake import menu
 from blacksite.server.world.simulation import MENU_TIMEOUT_SECONDS
 from blacksite.server.clock import TICK_HZ
+from blacksite.server.npcs.templates import SUBDUE_SECONDS, SUBDUE_SHOCK
 
 
 @dataclass
@@ -108,14 +109,20 @@ class Panels:
             proposal = owner.proposals[selected]
             job = owner.state.engine.templates[proposal.offer.template]
             participant = owner.participant(pid)
-            quoted = proposal.offer.reward.scaled(len(proposal.roster), job.crew_scaling and not job.story and not job.service,
-                                                  participant.archetype == 'operator')
+            helper = job.story and job.id in owner.state.engine.completed.get(pid, set())
+            quoted = (Payment(0, 0, {}, 'explicit') if helper else
+                proposal.offer.reward.scaled(len(proposal.roster), job.crew_scaling and not job.story and not job.service,
+                                                  participant.archetype == 'operator'))
             detail = ['Terms: '+(job.name or job.id), 'Your reward: '+payment(quoted),
                 'Approach: '+(job.approach_label if proposal.approach == 'default' else
                               next(a.label for a in job.approaches if a.id == proposal.approach)),
                 'Roster: '+', '.join(owner.game.players[p].name for p in proposal.roster),
                 f'Consent: {len(proposal.consent)}/{len(proposal.roster)}. No slots or supplies spent yet.']
-            detail += consequences(job)
+            if helper:
+                detail.append('Helper: no new payout; your earlier personal choice stays.')
+            else:
+                detail += consequences(job)
+            detail.append('A verified objective contribution is required for a reward.')
             if pid not in proposal.consent:
                 actions += [{'key': 'a', 'label': 'accept terms'}]
             if proposal.creator == pid and set(proposal.roster) == proposal.consent:
@@ -138,7 +145,13 @@ class Panels:
                     ', '.join(str(v) for v in (target.zone, target.object, target.core, target.room, target.data, target.npc, target.item) if v))
                 detail.insert(1, f'Progress: {sum(progress.counts.values())}/{len(progress.targets)}; '
                     +('retry allowed' if progress.stage.retry else 'no retry'))
-                detail.insert(2, f'Action: {progress.stage.seconds:g} s; {progress.stage.cost}')
+                restraint = progress.stage.verb == 'clear' and progress.stage.resolution == 'subdue'
+                seconds = SUBDUE_SECONDS if restraint else progress.stage.seconds
+                cost = f'{SUBDUE_SHOCK} shock required; no fee.' if restraint else progress.stage.cost
+                detail.insert(2, f'Action: {seconds:g} s; {cost}')
+                if progress.stage.destination:
+                    dest = progress.stage.destination
+                    detail.insert(1, 'Destination: '+', '.join(str(v) for v in (dest.zone, dest.object, dest.tile) if v is not None))
             elif instance.state == 'complete':
                 detail.insert(0, 'Next: return to '+instance.giver+"'s contract board.")
                 if panel.handler == instance.giver:

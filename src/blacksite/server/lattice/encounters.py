@@ -214,6 +214,8 @@ class Encounters:
         if black:
             self.log(presence, "BLACK ICE / NPC BODY RISK remains active for this run.", True)
         self.trace(presence, 0, entered=True)
+        if hasattr(self.game, 'contracts'):
+            self.game.contracts.entered(presence)
 
     def leave_core(self, session: Session) -> None:
         presence = self.lat.presences[session.player_id]
@@ -825,6 +827,8 @@ class Encounters:
         self.commerce.outbox[-1]["lattice_state"] = lambda: self.lat.sources.record(self.clock.now_tick(), claim)
         if grant and hasattr(self.game, 'crews'):
             self.game.crews.add_rewards(self.commerce.outbox[-1], player, grant)
+        if hasattr(self.game, 'contracts'):
+            self.game.contracts.lifted(self.commerce.outbox[-1], presence, data, unit_id)
 
     def receive(self, presence: Presence, event: IceEvent, *, name: str,
                 player_source: str = "", reflection: bool = False) -> bool:
@@ -999,6 +1003,8 @@ class Encounters:
             presence.effects.expire(tick)
             if presence.room_destination and tick >= presence.move_until:
                 presence.room, presence.room_destination = presence.room_destination, None
+                if hasattr(self.game, 'contracts'):
+                    self.game.contracts.entered(presence)
                 if presence.descent:
                     known = presence.found_silt.setdefault(presence.instance, set())
                     known.add(presence.room)

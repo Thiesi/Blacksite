@@ -1,12 +1,13 @@
 """Game 9 adapter: consenting rosters and atomic contract transactions."""
 
-from collections.abc import Callable
+from collections.abc import Callable, Iterator
 from copy import deepcopy
 from dataclasses import dataclass, field
 from typing import Any
 
+from blacksite.content.schema import StageTarget
 from blacksite.server.clock import TICK_HZ
-from blacksite.server.contracts.engine import Fact, Offer, Participant, Payout
+from blacksite.server.contracts.engine import Fact, Instance, Offer, Participant, Payout, Progress, matches, target_record
 from blacksite.server.contracts.ledger import Ledger
 from blacksite.server.contracts.transactions import join_state
 from blacksite.server.inventory import Inventory
@@ -45,14 +46,24 @@ class Contracts:
         self.game.contracts = self
         from blacksite.server.contracts.panels import Panels
         self.panels = Panels(self)
+        from blacksite.server.contracts.scenes import Scenes
+        self.scenes = Scenes(self)
+        from blacksite.server.contracts.actions import Actions
+        self.actions = Actions(self)
+        self.lat.encounters.mission_of = self.mission_of
+        permission = self.lat.interlock.permit
+        self.lat.interlock.permit = lambda player, core, action: (
+            permission(player, core, action) or self.control_permit(player, core, action))
 
     def input(self, session: Session, frame: Frame, tick: int) -> bool:
-        return self.panels.input(session, frame, tick)
+        return self.actions.input(session, frame, tick) or self.panels.input(session, frame, tick)
 
     def now(self) -> float:
         return self.clock.now_utc().timestamp()
 
     def record(self) -> dict[str, Any]:
+        if not self.commerce.pending:
+            self.scenes.checkpoint()
         return self.state.record()
 
     def install(self, state: dict[str, Any]) -> None:
@@ -70,10 +81,33 @@ class Contracts:
             raise ValueError('That character is leaving the city.')
         return Participant(pid, player.bbs_user_id, player.grade, player.archetype)
 
+    @staticmethod
+    def obsolete(item: ItemInstance, draft: Ledger) -> bool:
+        if item.mission is None:
+            return False
+        instance = draft.engine.instances.get(item.mission)
+        if instance is None:
+            return True
+        return (instance.failure in ('expired', 'abandoned') or instance.state == 'turned_in'
+            or item.owner in instance.withdrawn or bool(item.mission_stage and item.mission_stage not in {
+                f'{p.stage.id}:{p.attempt}' for p in instance.stages[:instance.index+1]}))
+
     def write(self, draft: Ledger, patches: dict[str, dict[str, Any]] | None = None,
               identities: dict[str, dict[str, Any]] | None = None,
               items: dict[str, ItemInstance] | None = None, serial: int | None = None,
               callback: Callable[[bool], None] | None = None) -> None:
+        patches = deepcopy(patches or {})
+        items = deepcopy(self.commerce.items if items is None else items)
+        for key, item in tuple(items.items()):
+            if item.mission is None:
+                continue
+            if not self.obsolete(item, draft):
+                continue
+            items.pop(key)
+            if item.owner in self.game.players:
+                patch = patches.setdefault(item.owner, {})
+                carried = patch.get('inventory', self.game.players[item.owner].inventory)
+                patch['inventory'] = [iid for iid in carried if iid != key]
         if not self.commerce.settle(None, {}, self.commerce.items if items is None else items,
                 self.commerce.caches, self.commerce.serial if serial is None else serial,
                 callback or (lambda success: None)):
@@ -85,11 +119,99 @@ class Contracts:
 
     def source_fact(self, effect: dict[str, Any], fact: Fact) -> tuple[str, ...]:
         """Source owners call this before their own write, never on commit."""
-        draft = Ledger(self.origin, self.content, effect.get('contracts_state', self.record()))
+        draft = Ledger(self.origin, self.content, effect.get('contracts_state') or self.record())
         changed = draft.observe(fact, self.now())
         if changed:
             join_state(effect, draft.record(), self.install)
         return changed
+
+    def current_jobs(self, player: str) -> Iterator[tuple[Instance, Progress]]:
+        for instance in self.state.engine.instances.values():
+            if (instance.state == 'active' and player in {p.player for p in instance.roster} - instance.withdrawn
+                    and (instance.expires_at is None or self.now() < instance.expires_at)):
+                yield instance, instance.stages[instance.index]
+
+    def mission_of(self, player: str, data: str) -> str | None:
+        presence = self.lat.presences.get(player)
+        if not presence:
+            return None
+        for instance, progress in self.current_jobs(player):
+            if any(target.kind == 'core_room' and target.core == presence.core
+                    and target.room == presence.room and target.data == data for target in progress.targets):
+                return f'{instance.id}:{progress.stage.id}:{progress.attempt}'
+        return None
+
+    def control_permit(self, player: str, core: str, control: str) -> bool:
+        if self.state.permits_target(player, 'maintenance_credential',
+                StageTarget('core_control', core=core, control=control), self.now()):
+            return True
+        return any(target.kind == 'core_control' and target.core == core and target.control == control
+            for _, progress in self.current_jobs(player) for target in progress.targets)
+
+    def network_fact(self, effect: dict[str, Any], player: str, target: StageTarget,
+                     completion: str, receipt: str) -> tuple[str, ...]:
+        for instance, progress in self.current_jobs(player):
+            if progress.stage.completion == completion and any(matches(t, target) for t in progress.targets):
+                return self.source_fact(effect, Fact(player, progress.stage.verb, completion, target,
+                    receipt, receipt, instance=instance.id, stage=progress.stage.id, attempt=progress.attempt))
+        return ()
+
+    def lifted(self, effect: dict[str, Any], presence: Any, data: Any, unit: str) -> None:
+        target = StageTarget('core_room', core=presence.core, room=presence.room, data=data.id)
+        self.network_fact(effect, presence.player_id, target, 'lifted', unit)
+        if data.kind == 'evidence' and data.asset in self.content.evidence:
+            draft = Ledger(self.origin, self.content, effect.get('contracts_state') or self.record())
+            if draft.acquire(presence.player_id, self.content.evidence[data.asset], target, self.now()):
+                join_state(effect, draft.record(), self.install)
+
+    def entered(self, presence: Any) -> None:
+        if not presence.core or not presence.room:
+            return
+        target = StageTarget('core_room', core=presence.core, room=presence.room)
+        if not any(progress.stage.completion == 'entered' and any(matches(t, target) for t in progress.targets)
+                   for _, progress in self.current_jobs(presence.player_id)):
+            return
+        def propose() -> None:
+            # No write for ordinary exploration without a matching objective.
+            draft = self.state.fork()
+            for instance, progress in self.current_jobs(presence.player_id):
+                if progress.stage.completion != 'entered' or not any(matches(t, target) for t in progress.targets):
+                    continue
+                if draft.observe(Fact(presence.player_id, progress.stage.verb, 'entered', target,
+                    f'{target.core}:{target.room}', f'{instance.id}:{progress.stage.id}:entered',
+                    instance=instance.id, stage=progress.stage.id, attempt=progress.attempt), self.now()):
+                    self.write(draft)
+                break
+        self.commerce.enqueue_system(propose)
+
+    def npc_fact(self, effect: dict[str, Any], source: Any, actor: Any, resolution: str) -> tuple[str, ...]:
+        iid = actor.behaviour.get('mission')
+        if iid not in self.state.engine.instances or not actor.behaviour.get('contract_target'):
+            return ()
+        player = self.progression.controller(source)
+        target = target_record(actor.behaviour['contract_target'])
+        escort = bool(actor.behaviour.get('willing'))
+        fact = Fact(player.id if player else source.id, 'escort' if escort else 'clear',
+            'arrived' if escort else 'subdued' if resolution == 'subdue' else 'defeated',
+            target, actor.id, actor.id+':'+resolution, instance=iid,
+            stage=str(actor.behaviour.get('contract_stage', '')),
+            attempt=int(actor.behaviour.get('contract_attempt', 0)), resolution=resolution,
+            failure='The willing escort was lost.' if escort else '')
+        return self.source_fact(effect, fact)
+
+    def subdued(self, source: Any, actor: Any) -> None:
+        def propose() -> None:
+            if actor.zone is None or source.zone != actor.zone or not self.game.combat.legal(source, actor):
+                return
+            def committed(success: bool) -> None:
+                if success:
+                    actor.behaviour['resolution'] = 'subdued'
+                    actor.stance = 'restrained'
+                    self.world.leave(actor)
+            self.commerce.settle(None, {}, self.commerce.items, self.commerce.caches,
+                                 self.commerce.serial, committed)
+            self.npc_fact(self.commerce.outbox[-1], source, actor, 'subdue')
+        self.commerce.enqueue_system(propose)
 
     def offer(self, oid: str, player: str, handler: str) -> Offer:
         for offered in self.state.engine.board(handler, self.now()):
@@ -207,11 +329,13 @@ class Contracts:
         self.write(draft, patches, identities, items, serial, committed)
 
     def disconnect(self, session: Session) -> None:
+        self.actions.cancel(session)
         self.panels.close(session)
         self.proposals = {key: p for key, p in self.proposals.items() if session.player_id not in p.roster}
 
     def tick(self, ctx: TickContext) -> None:
         self.panels.tick(ctx.tick)
+        self.actions.tick(ctx.tick)
         # Checkpointed uptime is independent of live social crew membership.
         # Receipt-bearing changes wait for the current source write to finish.
         if self.commerce.pending:
@@ -219,3 +343,7 @@ class Contracts:
         elapsed = (ctx.tick - self.last_tick) / TICK_HZ
         self.last_tick = ctx.tick
         self.state.expire(self.now(), elapsed)
+        self.scenes.reconcile()
+        self.scenes.escorts(ctx.tick)
+        if not self.commerce.pending and any(self.obsolete(item, self.state) for item in self.commerce.items.values()):
+            self.write(self.state.fork())

@@ -37,6 +37,7 @@ class Npcs:
         self.combat, self.commerce = combat, combat.commerce
         self.game, self.world, self.clock = combat.game, combat.world, combat.clock
         self.content, self.sim = combat.content, combat.sim
+        self.game.npcs = self
         self.spawners = Spawners(self.world, deepcopy(state), self.game.sessions.origin)
         self.dormant: dict[str, float] = {}
         self.provocations: dict[tuple[str, str, str], float] = {}
@@ -67,18 +68,22 @@ class Npcs:
         return actor
 
     def escort(self, source: Actor, target: Actor) -> bool:
-        if not target.behaviour.get("mission") or target.owner != source.id or not target.behaviour.get("willing"):
+        if (not target.behaviour.get('mission') or not target.behaviour.get('willing')
+                or source.id not in target.behaviour.get('mission_roster', (target.owner,))):
             return False
         target.behaviour["escort"] = source.id
         return True
 
     def subdue(self, source: Actor, target: Actor) -> bool:
-        if (not target.behaviour.get("mission") or target.owner != source.id
+        if (not target.behaviour.get("mission") or source.id not in target.behaviour.get('mission_roster', (target.owner,))
                 or target.shock < SUBDUE_SHOCK or distance(source.position, target.position) > 1.5
                 or not self.combat.legal(source, target)):
             return False
         self.restraints[source.id] = {"target": target.id, "until": self.clock.now_tick()+ticks(SUBDUE_SECONDS),
             "position": source.position, "last_hit": source.cooldowns.get("last_hit")}
+        source.behaviour['channel'] = {'owner': 'restraint', 'label': 'Restrain '+target.name,
+                                       'remaining': SUBDUE_SECONDS}
+        self.world.zones[source.zone].revision += 1
         return True
 
     def actor_relation(self, source: Actor, target: Actor) -> str:
@@ -250,6 +255,8 @@ class Npcs:
                 self.game.crews.stage_cache(self.commerce.outbox[-1], cache_id, player.id)
             if grant and hasattr(self.game, 'crews'):
                 self.game.crews.add_rewards(self.commerce.outbox[-1], player, grant)
+            if hasattr(self.game, 'contracts'):
+                self.game.contracts.npc_fact(self.commerce.outbox[-1], source, actor, 'lethal')
         self.commerce.enqueue_system(propose)
 
     def training(self, player: Player, actor: Actor, tick: int) -> None:
@@ -391,11 +398,22 @@ class Npcs:
         for source_id, channel in tuple(self.restraints.items()):
             source = self.world.actors.get(source_id)
             target = self.world.actors.get(channel["target"])
+            if source and source.behaviour.get('channel', {}).get('owner') == 'restraint':
+                source.behaviour['channel']['remaining'] = max(0, (channel['until']-ctx.tick)/TICK_HZ)
             if (not source or not target or source.position != channel["position"]
                     or source.cooldowns.get("last_hit") != channel["last_hit"]
                     or not self.combat.legal(source, target) or distance(source.position, target.position) > 1.5):
                 self.restraints.pop(source_id, None)
+                if source and source.behaviour.get('channel', {}).get('owner') == 'restraint':
+                    source.behaviour.pop('channel')
             elif ctx.tick >= channel["until"]:
+                if source.behaviour.get('channel', {}).get('owner') == 'restraint':
+                    source.behaviour.pop('channel')
+                if (hasattr(self.game, 'contracts') and target.behaviour.get('mission')
+                        in self.game.contracts.state.engine.instances):
+                    self.restraints.pop(source_id, None)
+                    self.game.contracts.subdued(source, target)
+                    continue
                 target.behaviour["resolution"] = "subdued"
                 target.stance = "restrained"
                 self.world.leave(target)

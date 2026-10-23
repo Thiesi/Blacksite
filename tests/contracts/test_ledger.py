@@ -22,7 +22,7 @@ def ledger() -> Ledger:
     job = template(story=True, branch_group='ration', publication_options=options,
                    evidence_assets=('record',))
     evidence = EvidenceRecord('record', 'optional-prose', 'The consignment IDs match.',
-        'A signed manifest', 'The loads go to reserve.', related_objective='resolve',
+        'A signed manifest', 'The loads go to reserve.', related_objective='clear', related_stage='resolve',
         question='Who changed the destination?', next_action='Bring the record to the handler.')
     content = ContentTree(Path('.'), None, contracts={job.id: job}, evidence={evidence.id: evidence})
     return Ledger('origin', content)

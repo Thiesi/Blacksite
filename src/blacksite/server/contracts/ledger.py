@@ -35,7 +35,8 @@ class Ledger:
         if evidence.id in journal:
             return False
         journal[evidence.id] = {**asdict(evidence), 'location': asdict(location),
-                                'observed_at': now, 'instance': instance, 'publication': ''}
+            'observed_at': now, 'instance': instance, 'publication': '',
+            'season': self.engine.instances[instance].season if instance in self.engine.instances else None}
         return True
 
     def observe(self, fact: Fact, now: float) -> tuple[str, ...]:
@@ -53,7 +54,9 @@ class Ledger:
             recipients &= {fact.actor, *fact.contributors}
             for eid in template.evidence_assets:
                 evidence = self.content.evidence[eid]
-                if evidence.related_objective and evidence.related_objective != before[iid]:
+                if evidence.related_objective and evidence.related_objective != instance.template:
+                    continue
+                if evidence.related_stage and evidence.related_stage != before[iid]:
                     continue
                 for pid in recipients:
                     self.acquire(pid, evidence, fact.target, now, iid)

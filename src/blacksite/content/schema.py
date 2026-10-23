@@ -991,6 +991,8 @@ class Stage:
     target_pool: tuple[StageTarget, ...] = ()
     seconds: float = 0
     cost: str = "No fee."
+    destination: StageTarget | None = None
+    requires_item: str | None = None
 
 
 @dataclass(frozen=True)
@@ -1074,6 +1076,9 @@ class EvidenceRecord:
     schema: int = CONTENT_SCHEMA
     question: str = ""
     next_action: str = ""
+    related_stage: str | None = None
+    claimed_author: str = ""
+    claimed_date: str = ""
 
 
 EffectType = Literal[

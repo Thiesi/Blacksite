@@ -1246,6 +1246,11 @@ class _Validator:
             owner = ("evidence", eid)
             self.ref("text", ev.asset, owner, "asset")
             self.ref("contracts", ev.related_objective, owner, "related_objective")
+            if ev.related_stage:
+                job = self.t.contracts.get(ev.related_objective)
+                if job is None or ev.related_stage not in {
+                        stage.id for stage in (*job.stages, *(st for a in job.approaches for st in a.stages))}:
+                    self.report(*owner, "related_stage must name a stage of related_objective")
             for name in ("observation", "source", "claim"):
                 if not getattr(ev, name).strip():
                     self.report(*owner, f"{name} must not be empty")
@@ -1312,6 +1317,12 @@ class _Validator:
                 if stage.verb == "clear" and stage.resolution is None:
                     self.report(*owner, f"{label}: a clear stage declares lethal or subdue", stage.id)
                 self._check_target(owner, label, stage.target, stage.id)
+                if stage.requires_item:
+                    self.ref('items', stage.requires_item, owner, label+' supplied item', stage.id)
+                if stage.destination:
+                    self._check_target(owner, label+' destination', stage.destination, stage.id)
+                elif stage.verb == 'escort':
+                    self.report(*owner, f"{label}: escort needs a typed destination", stage.id)
                 if stage.quantity < 1:
                     self.report(*owner, f"{label}: quantity must be positive", stage.id)
                 for target in stage.target_pool:
@@ -1362,6 +1373,9 @@ class _Validator:
 
     def _check_target(self, owner: tuple[str, str], label: str, t: s.StageTarget, needle: str) -> None:
         what = f"{label}: target"
+        if t.kind in ('item', 'npc') and t.zone is not None and self.ref('zones', t.zone, owner, what, needle):
+            if t.object is not None and self.object_at(t.zone, t.object) is None and self.current_active:
+                self.report(*owner, f"{what}: object {t.object!r} does not exist in {t.zone}", needle)
         if t.kind in ("zone_object", "zone_tile"):
             if t.zone is None or not self.ref("zones", t.zone, owner, what, needle):
                 if t.zone is None:
@@ -1388,6 +1402,9 @@ class _Validator:
             if t.npc is None:
                 self.report(*owner, f"{what} needs an npc", needle)
             self.ref("npcs", t.npc, owner, what, needle)
+            if t.zone is not None and self.ref('zones', t.zone, owner, what, needle) and t.tile is not None:
+                if not self.passable(self.t.zones[t.zone], t.tile):
+                    self.report(*owner, f"{what}: NPC spawn tile is not passable", needle)
         elif t.kind == "item":
             if t.item is None:
                 self.report(*owner, f"{what} needs an item", needle)

@@ -43,6 +43,7 @@ def target_record(raw: dict[str, Any]) -> StageTarget:
 
 def stage_record(raw: dict[str, Any]) -> Stage:
     return Stage(**{**raw, 'target': target_record(raw['target']),
+                    'destination': target_record(raw['destination']) if raw.get('destination') else None,
                     'target_pool': tuple(target_record(t) for t in raw.get('target_pool', ()))})
 
 
@@ -434,6 +435,8 @@ class Engine:
         self.revision += 1
 
     def quote(self, instance: Instance, participant: Participant, option: str | None = None) -> Payment:
+        if not participant.rewardable:
+            return Payment(0, 0, {}, 'explicit')
         payment = instance.reward
         if option is not None:
             payment = Payment.read(instance.options[option]['reward'])

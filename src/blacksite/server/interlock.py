@@ -185,6 +185,11 @@ class Interlock:
             self.zone_log(control.target.zone, self.effect_line(control))
             self.lat.encounters.log(presence, f"{control.label} changes. {max(0, presence.trace-before):g} trace.")
         self.commit(proposal, applied)
+        if hasattr(self.game, 'contracts'):
+            from blacksite.content.schema import StageTarget
+            self.game.contracts.network_fact(self.commerce.outbox[-1], player.id,
+                StageTarget('core_control', core=presence.core, control=control.id), 'flipped',
+                f'{presence.core}:{control.id}:{proposal["serial"]}')
 
     def commit(self, proposal: dict[str, Any], applied: Callable[[], None]) -> None:
         def finished(success: bool) -> None:
