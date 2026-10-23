@@ -330,6 +330,7 @@ class Commerce:
             **({"identities": deepcopy(effect["identities"])} if "identities" in effect else {}),
             **({"interlock_state": deepcopy(effect["interlock_state"])} if "interlock_state" in effect else {}),
             **({"salvage_state": deepcopy(effect["salvage_state"])} if "salvage_state" in effect else {}),
+            **({"contracts_state": deepcopy(effect["contracts_state"])} if "contracts_state" in effect else {}),
             **({"npc_state": effect["npc_state"]} if "npc_state" in effect else {}),
             **({"lattice_state": effect["lattice_state"]()} if "lattice_state" in effect else {}),
             **({"identity":effect["identity"], "user":player.bbs_user_id} if "identity" in effect else {})}

@@ -135,6 +135,7 @@ class Storage:
                 "lattice": self.meta("lattice_state") or {},
                 "interlock": self.meta("interlock_state") or {},
                 "salvage": self.meta("salvage_state") or {},
+                "contracts": self.meta("contracts_state") or {},
                 "season": self.meta("season") or 0,
                 "items": [json.loads(row[0]) for row in self.db.execute("SELECT data FROM items")],
                 "commerce": {"item_serial": self.meta("item_serial") or 0,
@@ -171,6 +172,8 @@ class Storage:
                 self.db.execute("INSERT OR REPLACE INTO meta(key,value) VALUES('interlock_state',?)", (self._json(effect["interlock_state"]),))
             if "salvage_state" in effect:
                 self.db.execute("INSERT OR REPLACE INTO meta(key,value) VALUES('salvage_state',?)", (self._json(effect["salvage_state"]),))
+            if "contracts_state" in effect:
+                self.db.execute("INSERT OR REPLACE INTO meta(key,value) VALUES('contracts_state',?)", (self._json(effect["contracts_state"]),))
             if "npc_state" in effect:
                 self.db.execute("INSERT OR REPLACE INTO meta(key,value) VALUES('npc_state',?)", (self._json(effect["npc_state"]),))
             if "lattice_state" in effect:
@@ -182,6 +185,7 @@ class Storage:
         settled |= {("players", row["id"]) for row in effect.get("players", [])}
         if "interlock_state" in effect: settled.add(("meta", "interlock_state"))
         if "salvage_state" in effect: settled.add(("meta", "salvage_state"))
+        if "contracts_state" in effect: settled.add(("meta", "contracts_state"))
         if "npc_state" in effect: settled.add(("meta", "npc_state"))
         if "lattice_state" in effect: settled.add(("meta", "lattice_state"))
         if "identity" in effect: settled.add(("identities",effect["user"]))
