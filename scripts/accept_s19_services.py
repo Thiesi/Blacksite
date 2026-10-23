@@ -44,7 +44,7 @@ async def reconnect(probe: ContractProbe, previous: Connection, width: int, heig
             caller.replay()
     task=asyncio.create_task(pump())
     session=next(s for s in probe.game.sessions.active.values()
-                 if s.player_id==previous.session.player_id and s.id!=previous.session.id)
+                 if s.player_id==previous.session.player_id and s is not previous.session)
     result=Connection(caller,writer,task,session,probe.game.sim.avatars[session.user_id])
     probe.connections.append(result)
     assert session.caps['tier']=='16'
@@ -139,7 +139,13 @@ async def escort_stage(probe: ContractProbe, caller: Connection, iid: str, progr
                  if (actor.x+dx,actor.y+dy) not in occupied and zone.can_enter(caller.avatar.actor,(actor.x+dx,actor.y+dy))]
         await probe.walk(caller,min(choices,key=lambda t:abs(t[0]-caller.avatar.actor.x)+abs(t[1]-caller.avatar.actor.y)))
         await commit_key(probe,caller,b'e',lambda:actor.behaviour.get('escort')==pid)
-    await probe.near(caller,progress.stage.destination.object)
+    destination=progress.stage.destination
+    await probe.route(caller,destination.zone)
+    # Put the worker on the arrival marker so the group's ordinary
+    # following distance lies inside the destination's arrival radius.
+    # Merely standing beside it can leave followers one tile too far away.
+    tile=owner.world.zones[destination.zone].objects[destination.object].spec.tile
+    await probe.walk(caller,tile)
 
 
 async def drive_job(probe: ContractProbe, caller: Connection, iid: str, descriptor: dict[str,Any]) -> None:
@@ -194,7 +200,7 @@ async def settle_story(probe: ContractProbe, caller: Connection, tid: str, board
     return iid
 
 
-async def run_case(root: Path, python: Path, show: bool, width: int, height: int, allocation: str) -> dict[str,Any]:
+async def run_case(root: Path, python: Path, show: bool, width: int, height: int, allocation: str, stage: str) -> dict[str,Any]:
     shipped=Path(__file__).parents[1]/'src/blacksite/content'
     descriptor=build_fixture(shipped,root/'world/content.local')
     probe=ContractProbe(root,python,show)
@@ -209,7 +215,7 @@ async def run_case(root: Path, python: Path, show: bool, width: int, height: int
         owner.write(draft)
         await wait(lambda:not probe.commerce.pending)
         service_results=[]
-        for sid in ('sump','depot','relay-zero','cold-chain'):
+        for sid in (() if stage=='forks' else ('sump','depot','relay-zero','cold-chain')):
             destination='vatside-clinics' if sid=='cold-chain' else descriptor['zone']
             await probe.route(caller,destination)
             iid=await reserve(probe,caller,sid,allocation)
@@ -284,10 +290,10 @@ async def run_case(root: Path, python: Path, show: bool, width: int, height: int
         await probe.close()
 
 
-async def accept(root: Path, python: Path, show: bool, size: str, allocation: str) -> None:
+async def accept(root: Path, python: Path, show: bool, size: str, allocation: str, stage: str) -> None:
     sizes=((80,24),(132,50)) if size=='both' else (tuple(map(int,size.split('x'))),)
     allocations=('common','reserve') if allocation=='both' else (allocation,)
-    results=[await run_case(root/f'{width}-{mode}',python,show,width,height,mode)
+    results=[await run_case(root/f'{width}-{mode}',python,show,width,height,mode,stage)
              for width,height in sizes for mode in allocations]
     (root/'s19-service-summary.json').write_text(json.dumps(dict(passed=True,runs=results),indent=2)+'\n',encoding='utf-8')
 
@@ -299,5 +305,6 @@ if __name__=='__main__':
     parser.add_argument('--show',action='store_true')
     parser.add_argument('--size',choices=('both','80x24','132x50'),default='both')
     parser.add_argument('--allocation',choices=('both','common','reserve'),default='both')
+    parser.add_argument('--stage',choices=('all','forks'),default='all')
     args=parser.parse_args()
-    asyncio.run(accept(args.root,args.door_python,args.show,args.size,args.allocation))
+    asyncio.run(accept(args.root,args.door_python,args.show,args.size,args.allocation,args.stage))

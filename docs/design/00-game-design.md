@@ -1254,8 +1254,9 @@ labelled field windows. A failed or abandoned stage is retryable; a
 committed branch choice is not. Required loan items can be reissued,
 bound and without a sale value. Willing mission escorts wait at their
 assigned source positions until an accepted worker asks them to follow;
-they wait again if that worker is absent. Ambient wandering cannot scatter
-the group before consent. NPC escorts reset without removing the
+they wait again if that worker is absent. Withdrawal clears the worker's
+escort assignment so another accepted worker can take over. Wandering
+cannot scatter the group before consent. NPC escorts reset without removing the
 public handler. No seasonal chain requires logging in at 04:12 or waiting
 through multiple real Curfews; stored cycle logs satisfy those surveys.
 Boards use distinct templates before repeating a small pool. Vesper's

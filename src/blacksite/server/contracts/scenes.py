@@ -50,6 +50,8 @@ class Scenes:
                 instance = self.owner.state.engine.instances[actor.behaviour['mission']]
                 actor.behaviour['mission_roster'] = tuple(p.player for p in instance.roster
                                                          if p.player not in instance.withdrawn)
+                if actor.behaviour.get('escort') not in actor.behaviour['mission_roster']:
+                    actor.behaviour.pop('escort', None)
         for instance in self.owner.state.engine.instances.values():
             if instance.state != 'active':
                 continue

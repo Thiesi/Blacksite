@@ -57,7 +57,7 @@ def test_game_9_3_repeated_escort_action_assigns_all_four_willing_group_members(
 
 def test_game_9_3_willing_group_waits_for_consent_then_follows_worker(city) -> None:
     game, caller = city
-    owner, _, actors = mission(city, verb='escort', quantity=4)
+    owner, _, actors = mission(city, verb='escort', quantity=4, npc='npc-walked-template')
     positions = {actor.id: actor.position for actor in actors}
     zone = owner.world.zones[actors[0].zone]
     start = game.clock.now_tick()
@@ -73,12 +73,35 @@ def test_game_9_3_willing_group_waits_for_consent_then_follows_worker(city) -> N
     assert {a.id: a.position for a in actors[1:]} == {a.id: positions[a.id] for a in actors[1:]}
 
 
-def mission(city, *, verb='clear', resolution='lethal', quantity=1, roster=None):
+def test_game_9_3_withdrawn_worker_cannot_keep_leading_the_groups_escort(city) -> None:
+    game, caller = city
+    second = game.connect({'user_id': 2, 'handle': 'Second', 'node_name': 'test'})
+    create(game, second, name='Second', card='none')
+    place(game, second, 'vatside-clinics', (21, 4))
+    owner, iid, actors = mission(city, verb='escort', npc='npc-walked-template',
+        roster=(caller.session.player_id, second.session.player_id))
+    target = actors[0]
+    place(game, caller, target.zone, (target.x-1, target.y))
+    assert owner.actions.interact_npc(caller.session, iid)
+    game.commit_commerce()
+    draft = owner.state.fork()
+    owner.withdraw(draft, iid, caller.session.player_id)
+    owner.write(draft)
+    game.commit_commerce()
+    owner.scenes.reconcile()
+    before = target.position
+    place(game, caller, target.zone, (20, 3))
+    game.core.npcs.act(target, owner.world.zones[target.zone], game.clock.now_tick()+100, set())
+    assert target.position == before
+    assert game.core.npcs.escort(body(game, second), target)
+
+
+def mission(city, *, verb='clear', resolution='lethal', quantity=1, roster=None, npc=None):
     game, caller = city
     owner = game.core.contracts
     job = template('scene', story=True)
     target = StageTarget('npc', zone='vatside-clinics', tile=(24, 3),
-                         npc='npc-sablier-orderly' if verb == 'escort' else 'npc-maintenance-drone')
+                         npc=npc or ('npc-sablier-orderly' if verb == 'escort' else 'npc-maintenance-drone'))
     stage = replace(job.stages[0], verb=verb, target=target, quantity=quantity,
                     resolution=resolution if verb == 'clear' else None,
                     completion='arrived' if verb == 'escort' else 'subdued' if resolution == 'subdue' else 'defeated',
