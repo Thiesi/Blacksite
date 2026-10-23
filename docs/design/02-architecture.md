@@ -695,6 +695,15 @@ Failure releases it with a retryable result. Ordinary movement remains
 on the dirty-state schedule. Tests inject commit failure before and
 after durable write, then resend the same request.
 
+S19 forks its pure contract state before an action. The source joins
+`contracts_state` to the same Commerce write as items, participant
+patches, identity caps and other source state; its success callback
+installs that draft before another queued proposal runs. Storage owns
+the meta record and clears an older dirty snapshot after commit. Live
+enrollment proposals create no mission actors or rewards; only the
+confirmed accepted roster becomes durable. Journals, branch choices,
+service effects and their owning reward receipts follow this boundary.
+
 S16 reward and skill-use functions operate on player/identity drafts.
 NPC defeat joins XP to the spawn retirement and loot receipt; data-lift
 XP joins the source decrement and item transfer. A post-commit callback

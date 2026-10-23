@@ -35,6 +35,7 @@ __all__ = ["Problem", "validate", "exit_warnings", "main"]
 # 00-game-design.md section 5.1: zone width 40-200, height 20-100.
 ZONE_WIDTH = (40, 200)
 ZONE_HEIGHT = (20, 100)
+MAX_CONTRACT_OBJECTIVE_FACTOR = 3  # Game 9.1: a five-person roster.
 # 00-game-design.md section 6.2: a core has 3 to 12 rooms, tier 1 to 5;
 # 01-entities.md section 1.4: tier 0 only for the Wake training core.
 CORE_ROOMS = (3, 12)
@@ -1288,8 +1289,14 @@ class _Validator:
                 self.ref("factions", con.giver, owner, "faction")
             if not con.stages:
                 self.report(*owner, "a contract needs at least one stage")
+            if len({a.id for a in con.approaches}) != len(con.approaches) or any(a.id == 'default' for a in con.approaches):
+                self.report(*owner, "approach ids must be unique and cannot be default")
             stage_ids: set[str] = set()
-            for stage in con.stages:
+            stages = (*con.stages, *(stage for a in con.approaches for stage in a.stages))
+            for approach in con.approaches:
+                if not approach.stages or not approach.label:
+                    self.report(*owner, "an approach needs a label and stages", approach.id)
+            for stage in stages:
                 label = f"stage {stage.id}"
                 if stage.id in stage_ids:
                     self.report(*owner, f"{label}: duplicate stage id", stage.id)
@@ -1301,21 +1308,49 @@ class _Validator:
                 if stage.verb == "clear" and stage.resolution is None:
                     self.report(*owner, f"{label}: a clear stage declares lethal or subdue", stage.id)
                 self._check_target(owner, label, stage.target, stage.id)
+                if stage.quantity < 1:
+                    self.report(*owner, f"{label}: quantity must be positive", stage.id)
+                for target in stage.target_pool:
+                    self._check_target(owner, label, target, stage.id)
+                    if target.kind != stage.target.kind:
+                        self.report(*owner, f"{label}: pool target kinds must match", stage.id)
+                maximum = stage.quantity * (MAX_CONTRACT_OBJECTIVE_FACTOR
+                                           if con.crew_scaling and not con.story else 1)
+                if stage.target.kind not in ('npc', 'item') and len(stage.target_pool) + 1 < maximum:
+                    self.report(*owner, f"{label}: target pool is too small for the accepted roster", stage.id)
+                tags = dict((
+                    ('fetch', ('carried', 'delivered')), ('hack', ('lifted', 'flipped', 'entered')),
+                    ('escort', ('arrived',)), ('clear', ('defeated', 'subdued')),
+                    ('plant', ('planted',)), ('survey', ('observed', 'compared', 'recorded')),
+                ))
+                if stage.completion not in tags[stage.verb]:
+                    self.report(*owner, f"{label}: completion is not a {stage.verb} server fact", stage.id)
             self._check_reward(owner, con.reward, "reward")
+            self._check_permit(owner, con.permit_scope, "permit")
             for opt in con.publication_options:
                 self._check_reward(owner, opt.reward, f"publication {opt.id}")
+                self._check_permit(owner, opt.permit, f"publication {opt.id}")
             if len({o.id for o in con.publication_options}) != len(con.publication_options):
                 self.report(*owner, "publication option ids are not unique")
+            if con.publication_options and (con.branch_group is None or con.branch is not None):
+                self.report(*owner, "publication choices need a branch group without a fixed branch")
             for ev in con.evidence_assets:
                 self.ref("evidence", ev, owner, "evidence", ev)
             self.ref("contracts", con.chain, owner, "chain")
-            if (con.branch_group is None) != (con.branch is None):
+            if (con.branch_group is None and con.branch is not None
+                    or con.branch_group is not None and con.branch is None and not con.publication_options):
                 self.report(*owner, "branch_group and branch are set together")
             elif con.branch_group is not None and con.branch is not None:
                 key = (con.branch_group, con.branch)
                 if key in branch_owner:
                     self.report(*owner, f"branch {con.branch_group}/{con.branch} is also {branch_owner[key]!r}")
                 branch_owner[key] = cid
+            elif con.branch_group is not None:
+                for option in con.publication_options:
+                    key = (con.branch_group, option.id)
+                    if key in branch_owner:
+                        self.report(*owner, f"branch {key[0]}/{key[1]} is also {branch_owner[key]!r}")
+                    branch_owner[key] = cid
             if con.season is not None and str(con.season) not in self.t.seasons and self.current_active and con.story:
                 self.report(*owner, f"season {con.season} is not defined")
             for cond in con.unlock_conditions:
@@ -1365,6 +1400,21 @@ class _Validator:
             self.ref("factions", fid, owner, f"{label}: standing", fid)
         for item in r.items:
             self.ref("items", item, owner, f"{label}: item", item)
+        for program in r.programs:
+            self.ref("programs", program, owner, f"{label}: program", program)
+        if r.xp < 0:
+            self.report(*owner, f"{label}: XP must not be negative")
+
+    def _check_permit(self, owner: tuple[str, str], permit: s.Permit | None, label: str) -> None:
+        if permit is None:
+            return
+        if permit.expiry_seconds <= 0:
+            self.report(*owner, f"{label}: expiry must be positive")
+        if permit.binding:
+            self._check_target(owner, label, permit.binding, permit.target)
+        elif self.current_active and not any(permit.target in getattr(self.t, kind)
+                for kind in ('zones', 'cores', 'npcs', 'routes')):
+            self.report(*owner, f"{label}: target needs a resolved binding", permit.target)
 
     def condition(self, text: str, owner: tuple[str, str], what: str) -> None:
         """Check one condition string from the closed set (04-dramatis-

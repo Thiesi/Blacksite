@@ -382,7 +382,7 @@ def test_stage_target_must_resolve(world: World) -> None:
 
 def test_clear_stage_declares_resolution(world: World) -> None:
     world.edit("contracts.json", lambda d: d["contracts"][0]["stages"][0].update(
-        verb="clear", target={"kind": "npc", "npc": "fx-thug"}))
+        verb="clear", completion="defeated", target={"kind": "npc", "npc": "fx-thug"}))
     only(world, "a clear stage declares lethal or subdue")
 
 

@@ -985,6 +985,9 @@ class Stage:
     retry: bool = True
     resolution: Literal["lethal", "subdue"] | None = None
     """Required for `clear` stages."""
+    label: str = ""
+    quantity: int = 1
+    target_pool: tuple[StageTarget, ...] = ()
 
 
 @dataclass(frozen=True)
@@ -994,6 +997,7 @@ class Reward:
     standing_mode: StandingMode = "propagate"
     xp: int = 0
     items: tuple[str, ...] = ()
+    programs: tuple[str, ...] = ()
 
 
 @dataclass(frozen=True)
@@ -1001,6 +1005,7 @@ class Permit:
     kind: PermitKind
     target: str
     expiry_seconds: int
+    binding: StageTarget | None = None
 
 
 @dataclass(frozen=True)
@@ -1009,6 +1014,14 @@ class PublicationOption:
     label: str
     audience: Literal["handler", "faction", "public"]
     reward: Reward = field(default_factory=Reward)
+    permit: Permit | None = None
+
+
+@dataclass(frozen=True)
+class ContractApproach:
+    id: str
+    label: str
+    stages: tuple[Stage, ...]
 
 
 @dataclass(frozen=True)
@@ -1033,6 +1046,9 @@ class ContractTemplate:
     evidence_assets: tuple[str, ...] = ()
     unlock_conditions: tuple[str, ...] = ()
     schema: int = CONTENT_SCHEMA
+    name: str = ""
+    approach_label: str = "Listed route"
+    approaches: tuple[ContractApproach, ...] = ()
 
 
 @dataclass(frozen=True)

@@ -118,6 +118,11 @@ one thing each archetype can do that others cannot:
 | Cantor | 10 / 20 / 25 / 45 / 25 | Resonance implants; hymns (crew buffs), dissonance (nerve-jam attacks) |
 | Operator | 20 / 30 / 30 / 5 / 30 | Two drone slots; contract and vendor price bonuses; crew beacon |
 
+The Operator receives +10% contract chits, including story jobs and
+service work orders. Apply this personal bonus after the disclosed crew
+scale, round down, and show the final amount before acceptance. It does
+not multiply XP, standing, items or program learning.
+
 ### 3.3 Skill lines
 
 Skills are 0 to 100 and raise through use (Neocron-style: doing the thing
@@ -1192,6 +1197,32 @@ scales by 1 + 0.25 * (size - 1), rounded down. Story jobs and work orders
 use fixed rewards and their declared participant scaling instead.
 Freeze the roster on acceptance; joining at turn-in grants nothing.
 
+A crew offer shows its selected approach, proposed roster and exact
+consequences. Each participant opts in; the proposer starts with the
+accepted participants and freezes that roster, count and reward. Crew
+leadership does not supply another player's consent. Withdrawing stops
+that player's eligibility without cancelling another participant's job;
+the frozen count and rewards do not reroll. Retry keeps the accepted
+terms and prior completed stages, reissuing bound supplies as needed.
+Completed generated jobs awaiting turn-in still occupy an active slot.
+Previously rewarded story participants may assist a new participant
+without receiving another reward or rewriting their own branch.
+
+The initial generated-job baseline is 200 chits, 200 XP and +5 standing
+with its handler faction (Vesper has no ordinary faction delta). Scale
+the numeric reward once for the accepted roster, then apply the
+recipient's Operator chit bonus. Declared item/program rewards remain
+one grant per participant. Story jobs, publication forks and service
+orders use their fixed authored schedules instead. The S19 earning
+report measures these sources against the catalog; their human pacing
+and the complete city's balance remain section 18 acceptance work.
+
+A job may offer named alternative stage sequences. Selecting a route
+never changes its reward unless the card explicitly declares a different
+outcome. Generated counts select from authored target pools; repeated
+survey/plant targets cannot satisfy several objectives by being touched
+again. NPC/item quantities use distinct mission-owned subjects or units.
+
 Generated contracts expire after 60 real minutes, at most three active
 per player. Boards show five offers per handler and refresh every
 30 minutes. Story stages have no real-time expiry except explicitly
@@ -1224,6 +1255,13 @@ commits once per character; an immutable receipt prevents returning the
 same evidence to collect both exclusive outcomes. Reading and copying a
 record are free; reward claims are not. Faction memberships and permits
 cannot prevent a Freelance player from reaching the central chain.
+
+A fixed branch on a job card commits when that participant confirms its
+disclosed terms. Retrying the same branch is allowed. Publication choices
+commit at the participant's own final publication action; a crew leader
+cannot choose them for someone else. Failed writes commit neither the
+choice nor its reward. Shared generated turn-in may pay its eligible
+frozen roster together; personal publication claims remain individual.
 
 ### 9.3 Story and shared-world scope
 

@@ -383,6 +383,24 @@ input actions; no text parser or answer matching. A stage declares its
 failure/retry state and receipt key. Story bundles declare all required
 maps, NPCs, dialogue, cores, items and season IDs before activation.
 
+S19 adds `name`, `approach_label` and optional `approaches[]` of
+`id, label, stages[]`; `stages` remains the default approach. Each
+alternative has its own unique stage/receipt keys and the same frozen
+reward. Stages add `label`, positive `quantity` (default one) and
+`target_pool[]` of additional typed targets. Scaled NPC/item counts may
+reuse a template with distinct mission-owned subjects; finite spatial
+targets are selected without replacement. The completion tags are
+`carried, delivered, lifted, flipped, entered, arrived, defeated, subdued, planted,
+observed, compared, recorded`, matched only against verified server facts.
+
+Rewards add `programs[]` of catalog program IDs. Learning, items, chits,
+standing, XP and the contract receipt share one owning transaction.
+Publication options can carry their own scoped `permit`, whose optional
+typed `binding` identifies its actual target; a publication
+branch group may omit the fixed `branch` and uses the chosen option ID.
+Fixed branches commit on confirmed acceptance; personal publication
+branches commit at the choosing participant's final action.
+
 ### 1.11 Dialogue (`dialogue/<npc>.json`)
 
 Talkers with ordered conditional lines, first match wins: `lines[]` of
@@ -609,6 +627,14 @@ progress, state (offered, active, complete, failed, turned_in),
 expires_at, frozen_roster[], branch_group, stage_receipts[], permits[],
 publication, reward_receipt`. One claim per eligible identity, atomically.
 Story jobs have no overall expiry; bounded field steps may be retried.
+
+S19 records each accepted participant's character/BBS identity, grade,
+archetype and reward/helper role. Each resolved stage retains its target
+quotas, attempt number and distinct subject/action receipts. Retries keep
+the accepted terms and completed earlier stages; stale attempt facts
+cannot advance a replacement actor. Withdrawal is personal. Claim,
+branch and completed-template receipts survive restart; a previously
+rewarded helper cannot earn another story payout through a new crew.
 
 ### 2.8 Season and chronicle
 

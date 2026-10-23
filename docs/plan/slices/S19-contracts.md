@@ -1,6 +1,6 @@
 # S19 — Contracts: template engine, six types, boards, crew scaling, story chains, Vesper
 
-**Status:** planned
+**Status:** in progress
 **Primary model:** Opus (engine) · **Reviewer:** Gemini or Sonnet writes the content half from the world docs; Opus reviews it
 **Depends on:** S11, S14, S15, S16, S22 · **Milestone:** M3
 **Issue:** https://github.com/Thiesi/blacksite/issues/19
