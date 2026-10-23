@@ -6,7 +6,7 @@ import pytest
 
 from blacksite.server.commerce import CommerceMenu
 from blacksite.server.market_views import Panel
-from blacksite.server.protocol import Frame
+from blacksite.server.protocol import Frame, ProtocolError, encode
 from tests.character_helpers import act, place
 from tests.door.test_relay_menus import render
 from tests.server.test_market_engine import content, listed, trade_game
@@ -26,6 +26,37 @@ def choose(game: Any, caller: Any, key: str, row: str | None = None) -> None:
 
 def open_market(game: Any, caller: Any) -> None:
     act(game, caller, Frame('intent', {'name': 'market.open', 'args': {}}))
+
+
+def test_ui_4_long_lived_market_history_pages_without_oversized_frames(trade_game: tuple[Any, ...]) -> None:
+    game, clients, players, iid, terminal = trade_game
+    owner, caller = game.core.market, clients[0]
+    for index in range(3000):
+        listing = owner.market.list_item(players[0].id, iid, 50, 100, 86400, index*2)
+        listing.item_snapshot = owner.commerce.items[iid].record()
+        owner.market.cancel(listing.id, players[0].id, index*2+1)
+    panel = Panel('market', terminal, 0, mine=True)
+    owner.views.menus[caller.session.id] = panel
+    rows = owner.views.rows(caller.session, panel)
+    # This was a real caller disconnect after sufficient accumulated history.
+    with pytest.raises(ProtocolError):
+        encode(Frame('view', {'rev': 1, 'kind': 'menu', 'body': {'rows': rows}}))
+    body = owner.views.body(caller.session, panel)
+    assert len(body['rows']) == 12 and body['pages'] == 250
+    assert len(encode(Frame('view', {'rev': 1, 'kind': 'menu', 'body': body}))) < 10000
+    act(game, caller, Frame('intent', {'name': 'menu_cursor', 'args': {'delta': 12}}))
+    body = owner.views.body(caller.session, panel)
+    assert body['page'] == 2 and body['cursor'] == 0
+    assert body['rows'][0]['id'] == rows[12]['id']
+    choose(game, caller, 'u')
+    assert panel.confirmation[1]['listing'] == rows[12]['id']
+    replies = []
+    owner.admin('market.list', {'page': 2}, replies.append)
+    result = replies[0]
+    assert result['page'] == 2 and result['pages'] == 30 and result['total'] == 3000
+    assert len(result['listings']) == 100 and result['bids'] == []
+    assert result['listings'][0]['id'] == list(owner.market.listings)[100]
+    assert len(encode(Frame('view', {'rev': 1, 'kind': 'admin', 'body': result}))) < 256*1024
 
 
 def test_ui_4_price_prompts_survive_views_and_commit_only_after_y(trade_game: tuple[Any, ...]) -> None:
@@ -59,6 +90,21 @@ def test_ui_4_escape_from_price_prompt_keeps_item(trade_game: tuple[Any, ...]) -
     act(game, caller, Frame('intent', {'name': 'prompt_cancel', 'args': {}}))
     assert caller.session.id not in owner.views.menus and caller.session.id not in owner.views.prompts
     assert iid in players[0].inventory and not game.core.commerce.pending
+
+
+def test_ui_4_f9_services_reach_board_terminal_without_replacing_map(trade_game: tuple[Any, ...]) -> None:
+    game, clients, _, _, _ = trade_game
+    caller, owner = clients[0], game.core.market
+    zone = game.core.world.zones['core-plaza']
+    board = zone.objects['civic-notice-board'].spec
+    place(game, caller, zone.id, game.core.world.free_tile(zone.id, board.tile))
+    act(game, caller, Frame('key', {'k': 'f9', 't': 0}))
+    assert owner.views.menus[caller.session.id].kind == 'terminal'
+    choose(game, caller, 'm')
+    assert owner.views.menus[caller.session.id].kind == 'market'
+    act(game, caller, Frame('intent', {'name': 'menu_close', 'args': {}}))
+    act(game, caller, Frame('key', {'k': 'm', 't': 0}))
+    assert caller.session.id in owner.sim.maps and caller.session.id not in owner.views.menus
 
 
 @pytest.mark.parametrize('size', [(80, 24), (132, 50)])

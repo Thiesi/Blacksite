@@ -5,13 +5,17 @@ from typing import Any
 
 from blacksite.server.clock import TICK_HZ
 from blacksite.server.loop import TickContext
-from blacksite.server.items import ItemInstance, availability
+from blacksite.server.items import ItemInstance
 from blacksite.server.protocol import Frame
 from blacksite.server.quality import detail
 from blacksite.server.rules.market import BOUNTY_MIN_TARGET_GRADE, LISTING_EXPIRIES, MARKET_ACTION_SECONDS
 from blacksite.server.sessions import MARKET_PER_SECOND, Session
 from blacksite.server.wake import menu
 from blacksite.server.world.simulation import MENU_TIMEOUT_SECONDS
+
+
+# Terminal UI 4: bound each view while retaining the full market history.
+MENU_PAGE_ROWS = 12
 
 
 @dataclass
@@ -35,6 +39,15 @@ class Views:
         self.prompts: dict[str, tuple[str, str]] = {}
         self.requests: dict[str, list[str]] = {}
         self.serial = 0
+        previous = owner.sim.crew_view
+        def decorate(session: Session, body: dict[str, Any]) -> None:
+            previous(session, body)
+            try:
+                owner.terminal(session)
+            except ValueError:
+                return
+            body['hint'] = body.get('hint', '')+'  F9 services'
+        owner.sim.crew_view = decorate
 
     def close(self, session: Session) -> None:
         self.menus.pop(session.id, None)
@@ -58,8 +71,7 @@ class Views:
             condition += f'  Charges {item.charges}'
         if item.health is not None:
             condition += f'  Drone health {item.health}'
-        status = availability(template)
-        return f'{template.name}\n{detail(template,item.quality)}\n{condition}'+('\n'+status if status else '')
+        return f'{template.name}\n{detail(template,item.quality)}\n{condition}'
 
     def listing_item(self, listing: Any) -> ItemInstance:
         return (ItemInstance.from_record(listing.item_snapshot) if listing.item_snapshot
@@ -135,7 +147,11 @@ class Views:
         if panel.confirmation:
             text = panel.confirmation[2]+'\nY confirms. Esc/B returns without a transfer.'
             actions = 'Y confirm  Esc/B returns'
-        body = menu('MY LISTINGS' if panel.mine and panel.kind == 'market' else panel.kind.upper(), rows, cursor, text, actions)
+        start = cursor//MENU_PAGE_ROWS*MENU_PAGE_ROWS
+        body = menu('MY LISTINGS' if panel.mine and panel.kind == 'market' else panel.kind.upper(),
+                    rows[start:start+MENU_PAGE_ROWS], cursor-start, text, actions)
+        body['page'] = start//MENU_PAGE_ROWS+1
+        body['pages'] = max(1, (len(rows)+MENU_PAGE_ROWS-1)//MENU_PAGE_ROWS)
         body['columns'] = {'market': ['Item', 'Bid/ask', 'Time', 'Seller'],
             'bounties': ['Name / handle', 'Chits', 'Posters'], 'targets': ['Name', 'Handle', 'Grade'],
             'items': ['Item', 'Quality'], 'collect': ['Item', 'Collection'],
@@ -234,6 +250,16 @@ class Views:
         bank_collect = bool(name == 'menu_select' and bank_menu and bank_menu.kind == 'bank'
             and (selection_key == 'c' or selection_key == 'enter' and args.get('row') == 'market_delivery'))
         try:
+            if key == 'f9' and not panel:
+                if (not self.owner.commerce.ready(session) or session.pending_prompts
+                        or session.id in self.owner.sim.external_views or session.id in self.owner.sim.maps):
+                    return False
+                try:
+                    terminal = self.owner.terminal(session)
+                except ValueError:
+                    return False
+                self.menus[session.id] = Panel('terminal', terminal.spec.id, tick)
+                return True
             if name in ('market.open', 'bounty.open'):
                 terminal = self.owner.terminal(session, args.get('terminal', ''))
                 self.menus[session.id] = Panel('market' if name == 'market.open' else 'bounties', terminal.spec.id, tick)

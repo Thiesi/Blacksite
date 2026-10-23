@@ -299,12 +299,22 @@ class Trading:
         return self.views.input(session, frame, tick)
 
     def admin(self, name: str, args: dict[str, Any], reply: Callable[[Any], None]) -> None:
-        if name == 'market.list':
-            reply({'listings': [asdict(row) for row in self.market.listings.values()],
-                   'bids': [asdict(row) for row in self.market.bids.values()]})
-            return
-        if name == 'bounty.list':
-            reply({'bounties': [asdict(row) for row in self.bounties.rows.values()]})
+        if name in ('market.list', 'bounty.list'):
+            # Architecture 15.2: bounded operator pages, full history retained.
+            rows = list(self.market.listings.values() if name == 'market.list' else self.bounties.rows.values())
+            pages = max(1, (len(rows)+99)//100)
+            page = args.get('page', 1)
+            if type(page) is not int or page < 1:
+                reply({'ok': False, 'error': 'Page must be a positive integer.'})
+                return
+            selected = rows[(page-1)*100:page*100]
+            result = {'page': page, 'pages': pages, 'total': len(rows),
+                      'listings' if name == 'market.list' else 'bounties': [asdict(row) for row in selected]}
+            if name == 'market.list':
+                ids = {row.id for row in selected}
+                result['bids'] = [asdict(row) for row in self.market.bids.values()
+                                  if row.listing in ids and row.status == 'held']
+            reply(result)
             return
         def propose() -> None:
             try:

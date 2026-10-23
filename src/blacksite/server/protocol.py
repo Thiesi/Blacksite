@@ -163,7 +163,10 @@ def validate(kind: str, data: dict[str, Any], direction: str | None = None) -> N
     allowed = client if direction == "client" else server if direction == "server" else client | server
     if kind not in allowed:
         raise ProtocolError("unknown or wrong-direction frame type")
-    if kind in ('admin.market.cancel', 'admin.bounty.refund'):
+    if kind in ('admin.market.list', 'admin.bounty.list'):
+        if 'page' in data:
+            _need(data, 'page', _integer(data.get('page'), 1))
+    elif kind in ('admin.market.cancel', 'admin.bounty.refund'):
         key = 'listing' if kind == 'admin.market.cancel' else 'bounty'
         _need(data, key, _text(data.get(key), 256) and bool(data.get(key)))
     elif kind == 'admin.relay.set':

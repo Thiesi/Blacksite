@@ -858,7 +858,11 @@ Market and bounty mutations require `request_id` and
 one-action-per-second budget. Optional `terminal` identifies the service
 object; `bounty.post.target` is the local character ID. Operator frames
 are `admin.market.list`, `admin.market.cancel {listing}`,
-`admin.bounty.list` and `admin.bounty.refund {bounty}`. They share the
+`admin.bounty.list` and `admin.bounty.refund {bounty}`. List requests accept
+an optional positive `page` (default 1), return at most 100 records and
+include `page`, `pages` and `total`. Market list pages include only current
+held bids for their selected listings; historical records remain stored.
+This bounds protocol frames in long-running worlds. These commands share the
 existing operator admission and completion audit. S28 wires the CLI.
 
 ### 15.3 Delivery boundaries
