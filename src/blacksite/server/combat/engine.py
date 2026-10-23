@@ -556,6 +556,9 @@ class Combat:
         if killer and hasattr(self.game, 'crews'):
             for cid in set(caches)-set(self.commerce.caches):
                 self.game.crews.stage_cache(self.commerce.outbox[-1], cid, killer.id)
+        market = getattr(self.game, 'market', None)
+        if market:
+            market.stage_death(self.commerce.outbox[-1], player, killer)
 
     faction_vat: Callable[[Player], tuple[str, tuple[int, int]] | None] = staticmethod(lambda player: None)
 

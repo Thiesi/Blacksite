@@ -1,0 +1,106 @@
+"""UI 4 and game 8.3: real server menus and cell-buffer display."""
+
+from typing import Any
+
+import pytest
+
+from blacksite.server.commerce import CommerceMenu
+from blacksite.server.market_views import Panel
+from blacksite.server.protocol import Frame
+from tests.character_helpers import act, place
+from tests.door.test_relay_menus import render
+from tests.server.test_market_engine import content, listed, trade_game
+
+
+def choose(game: Any, caller: Any, key: str, row: str | None = None) -> None:
+    owner = game.core.market
+    panel = owner.views.menus[caller.session.id]
+    rows = owner.views.rows(caller.session, panel)
+    if row is not None:
+        wanted = next(i for i, value in enumerate(rows) if value['id'] == row)
+        act(game, caller, Frame('intent', {'name': 'menu_cursor', 'args': {'delta': wanted-panel.cursor}}))
+        rows = owner.views.rows(caller.session, panel)
+    selected = rows[min(panel.cursor, len(rows)-1)]['id'] if rows else ''
+    act(game, caller, Frame('intent', {'name': 'menu_select', 'args': {'row': selected, 'key': key}}))
+
+
+def open_market(game: Any, caller: Any) -> None:
+    act(game, caller, Frame('intent', {'name': 'market.open', 'args': {}}))
+
+
+def test_ui_4_price_prompts_survive_views_and_commit_only_after_y(trade_game: tuple[Any, ...]) -> None:
+    game, clients, players, iid, _ = trade_game
+    caller, owner = clients[0], game.core.market
+    open_market(game, caller)
+    choose(game, caller, 'l')
+    choose(game, caller, 'enter', iid)
+    token, field = owner.views.prompts[caller.session.id]
+    assert field == 'price'
+    assert owner.views.body(caller.session, owner.views.menus[caller.session.id])['clear_prompt'] is False
+    act(game, caller, Frame('line', {'id': token, 'text': '50'}))
+    token, field = owner.views.prompts[caller.session.id]
+    assert field == 'buyout'
+    assert owner.views.body(caller.session, owner.views.menus[caller.session.id])['clear_prompt'] is False
+    act(game, caller, Frame('line', {'id': token, 'text': '100'}))
+    choose(game, caller, 'enter', '86400')
+    assert not game.core.commerce.pending and not owner.market.listings
+    choose(game, caller, 'y')
+    assert game.core.commerce.pending and iid in players[0].inventory
+    game.commit_commerce()
+    assert iid not in players[0].inventory and len(owner.market.listings) == 1
+
+
+def test_ui_4_escape_from_price_prompt_keeps_item(trade_game: tuple[Any, ...]) -> None:
+    game, clients, players, iid, _ = trade_game
+    caller, owner = clients[0], game.core.market
+    open_market(game, caller)
+    choose(game, caller, 'l')
+    choose(game, caller, 'enter', iid)
+    act(game, caller, Frame('intent', {'name': 'prompt_cancel', 'args': {}}))
+    assert caller.session.id not in owner.views.menus and caller.session.id not in owner.views.prompts
+    assert iid in players[0].inventory and not game.core.commerce.pending
+
+
+@pytest.mark.parametrize('size', [(80, 24), (132, 50)])
+def test_ui_4_effective_stats_seller_and_bid_are_width_safe(info: Any, trade_game: tuple[Any, ...], size: tuple[int, int]) -> None:
+    game, clients, _, _, terminal = trade_game
+    lid = listed(trade_game)
+    owner = game.core.market
+    owner.execute(clients[1].session, 'bid', {'listing': lid, 'chits': 60})
+    game.commit_commerce()
+    body = owner.views.body(clients[1].session, Panel('market', terminal, 0))
+    text = render(info, size, owner.commerce.content, body)
+    assert 'Trader界1' in text and 'Market界1' in text
+    assert '112%' in text and 'Damage' in text and '60' in text
+    assert 'D bid' in text and 'Esc/B' in text
+
+
+@pytest.mark.parametrize('size', [(80, 24), (132, 50)])
+def test_ui_4_bounty_totals_show_target_without_posters(info: Any, trade_game: tuple[Any, ...], size: tuple[int, int]) -> None:
+    game, clients, players, _, terminal = trade_game
+    owner = game.core.market
+    for caller, amount in ((clients[0], 100), (clients[2], 200)):
+        owner.execute(caller.session, 'post', {'target': players[1].id, 'chits': amount})
+        game.commit_commerce()
+    body = owner.views.body(clients[1].session, Panel('bounties', terminal, 0))
+    text = render(info, size, owner.commerce.content, body)
+    assert 'Trader界2' in text and '300' in text and '2 posters' in text
+    assert 'Trader界1' not in text and 'Trader界3' not in text
+    assert players[0].id not in str(body) and players[2].id not in str(body)
+
+
+def test_ui_4_bank_c_opens_collection_and_street_c_keeps_chat(trade_game: tuple[Any, ...]) -> None:
+    game, clients, _, _, _ = trade_game
+    caller, owner = clients[0], game.core.market
+    zone = game.core.world.zones['vatside-clinics']
+    bank = next(o.spec for o in zone.objects.values() if o.spec.kind == 'bank')
+    place(game, caller, zone.id, game.core.world.free_tile(zone.id, bank.tile))
+    game.core.commerce.menus[caller.session.id] = CommerceMenu('bank', bank.id, opened=game.clock.now_tick())
+    game.step()
+    row = game.core.commerce.body(caller.session, game.core.commerce.menus[caller.session.id])['rows'][0]['id']
+    act(game, caller, Frame('intent', {'name': 'menu_select', 'args': {'row': row, 'key': 'c'}}))
+    assert owner.views.menus[caller.session.id].kind == 'collect'
+    assert caller.session.id not in game.core.commerce.menus
+    act(game, caller, Frame('intent', {'name': 'menu_close', 'args': {}}))
+    act(game, caller, Frame('key', {'k': 'c', 't': 0}))
+    assert 'chat' in caller.session.pending_prompts

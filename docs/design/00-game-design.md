@@ -1070,9 +1070,32 @@ A player-to-player asynchronous market (listing, bid, buyout) with a 5 %
 Kestrel fee, browsable from any terminal. Listings run 24 hours, 72
 hours, or 7 days; bids are escrowed from the bidder's bank; a bought
 item is delivered to the buyer's Kestrel impound (free to collect at any
-Kestrel branch). Also hosts **bounties**: a player posts at least 100
-chits on a name; whoever kills the target in a contested or open zone
-collects. Bounties on players below grade 5 are refused.
+Kestrel branch or an accessible terminal). Prices and bids are positive
+whole chits. Round the fee up to a whole chit; the seller receives the
+remainder. Only the highest bid stays in escrow. Raising your own bid
+or buying out your bid charges only the difference; another bidder's
+escrow is refunded in the sale transaction. Unsold cancellations and
+expiries return the exact item to the seller's inventory. A return may
+make the seller overweight; it cannot discard an already-owned item or
+become a free permanent impound deposit. Purchased market deliveries
+use the existing impound authority and retain their source;
+terminal collection rechecks normal terminal access. Other impound
+goods keep their existing collection rules and fees. Equipped, secured,
+bound and mission items cannot be listed. Also hosts **bounties**: a
+player posts at least 100 chits on a name; whoever kills the target in a
+contested or open zone
+collects. Bounties on players below grade 5 are refused. Bounties expire
+after seven days and refund their poster. A poster killing their own
+target receives their own escrow back; other posters' bounties still pay
+the killer. Bounties do not change combat legality, Marked consequences
+or victim recovery rights. Posters remain anonymous to callers; the
+operator audit retains their identity.
+
+Listings retain sale-time item details after the buyer uses the item;
+they do not expose its later condition. Confirmed character retirement
+cancels that seller's open listings and releases their held bids and
+bounties, including bounties targeting the retiring character, before
+deletion. Refunded bid history never becomes live escrow again.
 
 ### 8.4 Salvage and fabrication
 

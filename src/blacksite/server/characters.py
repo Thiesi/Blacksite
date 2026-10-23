@@ -47,6 +47,7 @@ class Characters:
         self.sleepers: dict[str, tuple[Any, int]] = {}
         self.saved_stamps: dict[str, tuple[Any, ...]] = {}
         self.deleting: set[str] = set()
+        self.before_delete: Callable[[Session, Player, Callable[[], None]], None] = lambda session, player, proceed: proceed()
         # A disconnected Lattice escape keeps its original, targetable body.
         self.retained_avatar: Callable[[Player], Avatar | None] = lambda player: None
         self.attached: Callable[[Session, Player], None] = lambda session, player: None
@@ -419,11 +420,17 @@ class Characters:
                 self.screens[session.id] = ("sheet", 0)
             elif frame.type == "line" and frame.data["id"] == "delete:" + player.id:
                 if frame.data["text"] == player.name:
-                    identity = deepcopy(self.identities[session.user_id])
-                    identity["clone_debt"], identity["wake"] = player.clone_debt, {}
-                    self.deleting.add(player.id)
-                    self.queue("delete", session.user_id, player, identity=identity, token=session.id)
                     self.screens[session.id] = ("saving", 0)
+                    def proceed() -> None:
+                        identity = deepcopy(self.identities[session.user_id])
+                        identity["clone_debt"], identity["wake"] = player.clone_debt, {}
+                        self.deleting.add(player.id)
+                        self.queue("delete", session.user_id, player, identity=identity, token=session.id)
+                    try:
+                        self.before_delete(session, player, proceed)
+                    except ValueError as exc:
+                        self.screens[session.id] = ('sheet', 0)
+                        session.send(Frame('toast', {'text': str(exc), 'role': 'ui_text', 'seconds': 4}))
                 else:
                     self.screens[session.id] = ("sheet", 0)
             self.dirty_screens.add(session.id)

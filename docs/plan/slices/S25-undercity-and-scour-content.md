@@ -303,3 +303,11 @@ real relay/core/counter anchors, bind the actual Gate Nine and cable
 exits and preserve their public free routes. Exercise all named benefits
 on their real maps. Human pacing must measure unopposed relay idle time
 and meaningful choices alongside the retained earning/clinic obligations.
+
+S23 proves bounty settlement in a commissioned contested hub location;
+S25 still owns the original real `sink-rim` travel and bounty-location
+acceptance, at both native terminal sizes. Disclosed grade/funding setup
+does not prove full-city earnings or acquisition pacing. Keep public
+terminal and Kestrel bank access usable for protected market delivery;
+`C` collects inside those menus and remains chat on the street. See
+[S23](S23-market-and-bounties.md) and issue #23.

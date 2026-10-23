@@ -1,0 +1,5 @@
+You trade from your bank. Your highest bid stays in escrow. A higher bid
+returns your old escrow. Your existing bid counts toward a buyout. The
+five-percent fee rounds up to a whole chit. Your purchase waits in
+personal impound. C collects inside a terminal, market or Kestrel bank
+menu. D bids. B leaves.

@@ -138,6 +138,11 @@ class Storage:
                 row.update({field: saved[field] for field in ('limit', 'spent', 'refilled_at') if field in saved})
             budgets[key] = row
         return {"players": players, "identities": {row[0]: json.loads(row[1]) for row in self.db.execute("SELECT * FROM identities")},
+                "market": {"serial": (self.meta('market_serials') or {}).get('market', 0),
+                    "listings": [json.loads(row[0]) for row in self.db.execute('SELECT data FROM market_listings')],
+                    "bids": [json.loads(row[0]) for row in self.db.execute('SELECT data FROM market_bids')]},
+                "bounties": {"serial": (self.meta('market_serials') or {}).get('bounty', 0),
+                    "rows": [json.loads(row[0]) for row in self.db.execute('SELECT data FROM bounties')]},
                 "serial": self.meta("player_serial") or 0, "cap": self.meta("character_cap"),
                 "npcs": self.meta("npc_state") or {},
                 "lattice": self.meta("lattice_state") or {},
@@ -187,6 +192,14 @@ class Storage:
                 self.db.execute("INSERT OR REPLACE INTO meta(key,value) VALUES('contracts_state',?)", (self._json(effect["contracts_state"]),))
             if "relays_state" in effect:
                 self.db.execute("INSERT OR REPLACE INTO meta(key,value) VALUES('relays_state',?)", (self._json(effect["relays_state"]),))
+            if 'market_changes' in effect:
+                changes = effect['market_changes']
+                for key, table in (('listings', 'market_listings'), ('bids', 'market_bids'), ('bounties', 'bounties')):
+                    for row in changes.get(key, []):
+                        self.db.execute(f'INSERT OR REPLACE INTO {table}(id,data) VALUES(?,?)', (row['id'], self._json(row)))
+                self.db.execute("INSERT OR REPLACE INTO meta(key,value) VALUES('market_serials',?)", (self._json(changes['serials']),))
+            for record in effect.get('market_audit', []):
+                self.db.execute('INSERT INTO audit(at,data) VALUES(?,?)', (self.clock.now_utc().isoformat(), self._json(record)))
             if "npc_state" in effect:
                 self.db.execute("INSERT OR REPLACE INTO meta(key,value) VALUES('npc_state',?)", (self._json(effect["npc_state"]),))
             if "lattice_state" in effect:
@@ -201,6 +214,7 @@ class Storage:
         if "salvage_state" in effect: settled.add(("meta", "salvage_state"))
         if "contracts_state" in effect: settled.add(("meta", "contracts_state"))
         if "relays_state" in effect: settled.add(("meta", "relays_state"))
+        if 'market_changes' in effect: settled.add(('meta', 'market_serials'))
         if "npc_state" in effect: settled.add(("meta", "npc_state"))
         if "lattice_state" in effect: settled.add(("meta", "lattice_state"))
         if "identity" in effect: settled.add(("identities",effect["user"]))
