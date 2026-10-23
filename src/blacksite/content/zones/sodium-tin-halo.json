@@ -35,7 +35,9 @@
       "essential": false,
       "params": {
         "name": "The Tin Halo (Vesper)",
-        "vendor": "vesper"
+        "vendor": "vesper",
+        "contract_handler": "vesper",
+        "trade_counter": "vesper"
       }
     },
     {
@@ -84,7 +86,8 @@
       "kind": "terminal",
       "essential": false,
       "params": {
-        "name": "Halo contract board"
+        "name": "Halo contract board",
+        "contract_handler": "vesper"
       }
     },
     {

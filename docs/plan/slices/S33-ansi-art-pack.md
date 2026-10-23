@@ -164,3 +164,22 @@ Preserve S22 [PR #61](https://github.com/Thiesi/Blacksite/pull/61)'s crew
 and beacon glyphs through the cell buffer, including compact warnings,
 wide names and the existing CP437 transport. No ASCII-only display tier.
 Native proof uses the version/source-verified installed client.
+
+<!-- s19-services:start -->
+### S19 source and service handoff
+
+Reference: [S19 PR #62](https://github.com/Thiesi/Blacksite/pull/62),
+[acceptance record](../../ops/s19-acceptance.md) and
+[PR #38](https://github.com/Thiesi/Blacksite/pull/38).
+
+S19 supplies the implemented source interfaces, 68 authored contracts
+and four service nodes. Full root pytest passed 1344 tests with one
+skip. Installed native acceptance covers both sizes and allocations,
+forks, repair reconnect and paid restart. Consume the merged PR;
+S25/S27/S26 still own real geography, referrals and activation.
+
+Keep both-size width safety with wide names and all colour tiers. Contract
+objective/cost hints and header service state must stay readable alongside
+danger and escape. Public route intel, worker-only benefits and source
+claims need distinct labels; art cannot cover the operational card.
+<!-- s19-services:end -->

@@ -150,3 +150,23 @@ tool every later slice runs.
   before an hour run.
 - Do not optimise the fixture world; profile the shipped content, which
   has 200 × 100 zones.
+
+<!-- s19-services:start -->
+### S19 source and service handoff
+
+Reference: [S19 PR #62](https://github.com/Thiesi/Blacksite/pull/62),
+[acceptance record](../../ops/s19-acceptance.md) and
+[PR #38](https://github.com/Thiesi/Blacksite/pull/38).
+
+S19 supplies the implemented source interfaces, 68 authored contracts
+and four service nodes. Full root pytest passed 1344 tests with one
+skip. Installed native acceptance covers both sizes and allocations,
+forks, repair reconnect and paid restart. Consume the merged PR;
+S25/S27/S26 still own real geography, referrals and activation.
+
+Profile populated contract/journal/budget meta and active mission bodies.
+Source callbacks must finalize before after_settle flushes deferred impacts;
+a two-NPC regression proves that reversing this loses objective progress.
+Preserve owning receipts while optimizing. Timer/view invalidation must
+still work for a stationary caller.
+<!-- s19-services:end -->

@@ -779,6 +779,18 @@
         },
         {
           "item": "con_sable_stim"
+        },
+        {
+          "item": "prg_lance"
+        },
+        {
+          "item": "prg_bunker"
+        },
+        {
+          "item": "prg_signet"
+        },
+        {
+          "item": "prg_anchor"
         }
       ],
       "faction": "sable",

@@ -105,9 +105,17 @@ class Core:
         if self.crews:
             self.loop.subsystems.append(self.crews)
             social = self.lattice.social_overlay
-            self.lattice.social_overlay = lambda session: social(session) or session.id in self.crews.menus
+            self.lattice.social_overlay = lambda session, previous=social: previous(session) or session.id in self.crews.menus
+        from blacksite.server.contract_engine import Contracts
+        self.contracts = Contracts(self.progression, character_state.get('contracts', {})) if self.progression else None
+        if self.contracts:
+            self.loop.subsystems.append(self.contracts)
+            social = self.lattice.social_overlay
+            self.lattice.social_overlay = lambda session, previous=social: previous(session) or session.id in self.contracts.panels.menus
 
     def _disconnect_character(self, session: Session) -> None:
+        if self.contracts:
+            self.contracts.disconnect(session)
         if self.crews:
             self.crews.disconnect(session)
         if self.lattice:
@@ -173,6 +181,8 @@ class Core:
             return
         if frame.type == "intent" and frame.data["name"] == "resync":
             session.replay_log()
+        if self.contracts and self.contracts.input(session, frame, event.data['tick']):
+            return
         if self.factions and self.factions.input(session, frame, event.data["tick"]):
             return
         if self.crews and self.crews.input(session, frame, event.data["tick"]):

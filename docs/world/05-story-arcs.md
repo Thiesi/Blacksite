@@ -76,10 +76,11 @@ Format: *slug — type — where — beat*.
 
 **Sablier — "Templates" (handler: Kasimir Vane, `vatside-clinics` (the lobby))**
 
-1. `sab-s1-1-retrieval` — clear — `oldworks-main` (the Vat Nine squat), 4 "walked
-   templates" (degraded clone NPCs, non-hostile until approached) — Sablier
-   wants its property back. The templates ask the player, by name, whether
-   they are day ninety yet.
+1. `sab-s1-1-retrieval` - escort - `oldworks-main` (the Vat Nine squat),
+   four willing walked templates to the clinic. They consent to care and
+   Sablier records their recall tags. They ask whether they are day ninety
+   yet. The exclusive shelter-in-place branch and explicit rewards are
+   game design section 9.4; killing or a morality quiz is not the job.
 2. `sab-s1-2-provenance` — hack — core `lat-vatline`
    (tier 4, *Sablier's own*; Vane gives a key), lift `template-lineage` —
    Sablier's own core says the Cantor template has no recorded origin.
@@ -118,10 +119,10 @@ Format: *slug — type — where — beat*.
 1. `war-s1-1-stairwell` — clear — `terraces-blocks` (Block 4), 5 nesting drones —
    Brann's triage, made concrete: the Terraces get a Wake because the
    Core gets the Wardens.
-2. `war-s1-2-curfew` — survey — during Curfew, visit `core-plaza` (Gate E),
+2. `war-s1-2-curfew` — survey — inspect stored Curfew cycles at `core-plaza` (Gate E),
    `-w`, `-s` — Amsel wants the gates checked during a drill. One gate's
    core has been cycled open from inside the Lattice, once, at 04:12.
-3. `war-s1-3-book` — fetch — `core-precinct` (the archive), item
+3. `war-s1-3-book` — hack — `core-precinct` (the archive), item
    `brann-private-ledger` (Brann gives the key herself; standing +30) —
    Brann's book for her successor. She asks the player to read one page.
    The page is a list of the things she chose not to protect. The
@@ -135,7 +136,7 @@ Format: *slug — type — where — beat*.
 1. `cho-s1-1-listen` — survey — visit 3 cells in
    the Vatside sector below the public layer — listen to the cell
    that hums wrong. It hums at the vats' decant frequency.
-2. `cho-s1-2-nine` — fetch — `chapel-towers` (the crypt), item `third-listener-
+2. `cho-s1-2-nine` — survey — `chapel-towers` (the crypt), item `third-listener-
    log` — the log of the third of the Nine, who went into the Silt. It
    ends: "it asked me my name. I told it. It said it back wrong."
 3. `cho-s1-3-descent` — hack — the Silt below the Old Works sector,
@@ -193,9 +194,13 @@ Format: *slug — type — where — beat*.
 
 **Ferrymen — "The Road Below" (handler: Bram, `scour-landing` (the council fire))**
 
-1. `fer-s1-1-race` — fetch — during Ring-fall, `scour-ring-3` (north spoke),
-   item `slv_intact` before Halvard's NPC recovery crew
-   reaches it (timed) — the sport of it.
+1. `fer-s1-1-race` - fetch - launch from the `scour-landing` council
+   fire, then recover bound `slv_intact` on the north spoke of
+   `scour-ring-3` within 180 seconds. The recorded Ring-fall recovery
+   window preserves the race without waiting for a live event. A missed
+   window restarts at the launch checkpoint without a fee. Returning
+   recovered salvage has no deadline. The recovery log attributes the
+   deadline to the approaching Directorate crew.
 2. `fer-s1-2-far-side` — survey — `scour-ring-4` (the plateau's edge), 3 tiles at the
    plateau's drop — Anouk will not say what is past the edge. Old Ferry
    Ute says go and look. Past the edge is fog, and in the fog, a light

@@ -12,11 +12,12 @@ from blacksite.server import bank, drugs
 from blacksite.server.characters import Characters
 from blacksite.server.inventory import Inventory
 from blacksite.server.items import CACHE_SECONDS, CONSUMABLE_SECONDS, ItemInstance, availability, make_item
+from blacksite.server.lattice.programs import can_acquire, learn as learn_program
 from blacksite.server.loop import TickContext
 from blacksite.server.players import Player
 from blacksite.server.protocol import Frame
 from blacksite.server.sessions import QUEUE_LIMIT, Session
-from blacksite.server.vendors import VendorBudget, permitted, price
+from blacksite.server.vendors import BUYBACK_BUDGET, VendorBudget, permitted, price
 from blacksite.server.wake import menu
 from blacksite.server.world.simulation import MENU_TIMEOUT_SECONDS
 from blacksite.server.world.zone import ObjectState
@@ -50,6 +51,9 @@ class Commerce:
         self.waiting: deque[tuple[str,str,dict[str,Any],bool] | Callable[[], None]] = deque()
         self.prompt_serial = 0
         self.after_settle: Callable[[], None] = lambda: None
+        self.program_season: Callable[[], int] = lambda: 0  # The Lattice binds its current season.
+        self.budget_multiplier: Callable[[Vendor, str], float] = lambda vendor, counter: 1
+        self.vendor_available: Callable[[Vendor, str], bool] = lambda vendor, counter: True
         self.item_label: Callable[[ItemInstance], str] = lambda item: self.content.items[item.template].name
         self.sync_caches()
 
@@ -85,6 +89,8 @@ class Commerce:
         vendor = self.content.vendors.get(vid)
         if not vendor or not self.content.active("vendors", vid) or obj.spec.kind != "vendor":
             raise ValueError("That counter is not open.")
+        if not self.vendor_available(vendor, self.sim.avatars[session.user_id].zone+':'+target):
+            raise ValueError('This surplus counter is closed until its public work order is repaired.')
         # The local, server-owned object is the authority. A clinic template
         # serves several halls, with a distinct budget for each object.
         return vendor, self.sim.avatars[session.user_id].zone + ":" + target
@@ -172,11 +178,8 @@ class Commerce:
                 if template and template.no_vendor_sale:
                     raise ValueError("That item cannot be bought from a counter.")
                 if iid.startswith("prg_"):
-                    key = "known_programs"
-                    learned = draft.progress.setdefault(key, [])
-                    if iid in learned:
-                        raise ValueError("You already know that.")
-                    learned.append(iid)
+                    learn_program(self.content.programs[iid], draft.progress, draft.archetype,
+                                  draft.standing, self.program_season())
                 else:
                     inventory.add(draft, make_item(next_id(), template, draft.id, self.clock.now_utc().isoformat(), count))
                 draft.chits_hand -= cost
@@ -193,11 +196,11 @@ class Commerce:
                 if not proceeds:
                     raise ValueError("That quantity has no resale value.")
                 budget = budgets.setdefault(budget_key, VendorBudget(int(now) // 3600))
-                budget.refill(now)
+                budget.refill(now, int(BUYBACK_BUDGET*self.budget_multiplier(vendor, budget_key)))
                 if budget.remaining < proceeds:
                     raise ValueError("This counter's hourly buy-back budget is spent.")
                 inventory.remove(draft, iid, count, next_id)
-                budget.remaining -= proceeds
+                budget.spend(proceeds)
                 draft.chits_hand += proceeds
                 message = f"Sold {template.name} for {proceeds} chits."
             else:
@@ -330,6 +333,7 @@ class Commerce:
             **({"identities": deepcopy(effect["identities"])} if "identities" in effect else {}),
             **({"interlock_state": deepcopy(effect["interlock_state"])} if "interlock_state" in effect else {}),
             **({"salvage_state": deepcopy(effect["salvage_state"])} if "salvage_state" in effect else {}),
+            **({"contracts_state": deepcopy(effect["contracts_state"])} if "contracts_state" in effect else {}),
             **({"npc_state": effect["npc_state"]} if "npc_state" in effect else {}),
             **({"lattice_state": effect["lattice_state"]()} if "lattice_state" in effect else {}),
             **({"identity":effect["identity"], "user":player.bbs_user_id} if "identity" in effect else {})}
@@ -410,8 +414,10 @@ class Commerce:
                 self.toast(session, effect["message"])
         elif session:
             self.toast(session, "The transfer could not be saved. Your goods remain.")
-        self.after_settle()
         if effect.get("callback"): effect["callback"](success)
+        # Deferred impacts can immediately propose another durable source.
+        # Retire this source and install its contract draft first.
+        self.after_settle()
         if success:
             # Callbacks can queue ordinary player snapshots while this
             # outbox is draining. A later reward receipt must not be
@@ -558,10 +564,10 @@ class Commerce:
         if screen.kind == "vendor":
             vendor, budget_key = self.vendor(session, screen.target)
             budget = deepcopy(self.budgets.get(budget_key, VendorBudget(int(self.clock.now_utc().timestamp())//3600)))
-            budget.refill(self.clock.now_utc().timestamp())
+            budget.refill(self.clock.now_utc().timestamp(), int(BUYBACK_BUDGET*self.budget_multiplier(vendor, budget_key)))
             title = vendor.name
             title += " - " + ("SELL" if screen.sell else "BUY")
-            detail = f"Hand {player.chits_hand}  Buy-back budget {budget.remaining}/2000"
+            detail = f"Hand {player.chits_hand}  Buy-back budget {budget.remaining}/{budget.limit}"
             if screen.sell:
                 for iid in player.inventory:
                     item = self.items[iid]
@@ -576,6 +582,10 @@ class Commerce:
                     count = template.stack_max if template and template.class_ == "ammo" else 1
                     label = template.name if template else self.content.programs.get(entry.item).name if entry.item in self.content.programs else entry.item
                     allowed = permitted(player, vendor, entry) and self.content.active("items", entry.item)
+                    if not template and entry.item in self.content.programs:
+                        acquired = set(player.progress.get('program_acquisitions', {}).get(str(self.program_season()), ()))
+                        allowed = allowed and entry.item not in player.progress.get('known_programs', ()) and can_acquire(
+                            self.content.programs[entry.item], player.archetype, player.standing, acquired)
                     if hasattr(self.game, "factions") and not self.game.factions.stock_available(player, vendor, budget_key, entry.item):
                         allowed = False
                     cost = self.quote(player, vendor, entry, count) if template or entry.item in self.content.programs else 0

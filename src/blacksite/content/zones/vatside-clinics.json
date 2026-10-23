@@ -87,7 +87,8 @@
       "kind": "terminal",
       "essential": true,
       "params": {
-        "name": "Public terminal"
+        "name": "Public terminal",
+        "contract_handler": "sablier"
       }
     },
     {

@@ -1,0 +1,22 @@
+{
+  "schema": 1,
+  "id": "s19-future-services",
+  "status": "authoring",
+  "depends": [
+    "s25-cores",
+    "s25-faction-sites",
+    "s25-commerce"
+  ],
+  "members": {
+    "services": [
+      "sump",
+      "depot",
+      "relay-zero"
+    ],
+    "contracts": [
+      "sump-work-order",
+      "depot-work-order",
+      "relay-zero-work-order"
+    ]
+  }
+}

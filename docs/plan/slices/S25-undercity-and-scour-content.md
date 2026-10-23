@@ -262,3 +262,38 @@ S22 [PR #61](https://github.com/Thiesi/Blacksite/pull/61) adds remote crew
 rosters and beacons. Exercise them in crowded actual maps without
 revealing private interiors. All real city, relay, vendor, housing,
 workshop and clinic acceptance obligations below remain required.
+
+<!-- s19-services:start -->
+### S19 source and service handoff
+
+Reference: [S19 PR #62](https://github.com/Thiesi/Blacksite/pull/62),
+[acceptance record](../../ops/s19-acceptance.md) and
+[PR #38](https://github.com/Thiesi/Blacksite/pull/38).
+
+S19 supplies the implemented source interfaces, 68 authored contracts
+and four service nodes. Full root pytest passed 1344 tests with one
+skip. Installed native acceptance covers both sizes and allocations,
+forks, repair reconnect and paid restart. Consume the merged PR;
+S25/S27/S26 still own real geography, referrals and activation.
+
+Commission the four real service targets, allocation layers, safe return
+routes, clinic counter, surplus vendor/cache and actual patrol/gate
+bindings. Cold Chain changes installation service fees only. Depot cap
+changes retain hourly spending. Keep all five program-source routes and the
+actual affordability/native geography obligations from PR #38.
+<!-- s19-services:end -->
+
+S19 commissions fixed Tin Halo listings for Lance, Bunker, Signet and
+Anchor and an identity-scoped Blackout image in the Reach. Keep these
+usable without faction membership when expanding the city's shops;
+additional faction sources supplement them. Permanent source guards and
+current-season acquisition custody are shared by counters, lifts and
+contract rewards. The full-city income/playtesting handoff still applies.
+
+The [S19 content handoff](../s19-content-handoff.md) lists every named
+story anchor, mission NPC, service layout and public patrol source to
+bind. Preserve the hidden black-core entrance and both willing-template
+destinations. Field-window acceptance must use the real landing-to-spoke
+route; check the disclosed 180-second recovery against its actual travel
+and hazards. Adjust canon and its tests together if measured play requires
+a different window. Do not activate unresolved bundles to supply offers.

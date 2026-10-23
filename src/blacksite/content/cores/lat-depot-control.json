@@ -52,6 +52,15 @@
           "amount": 1,
           "scope": "identity",
           "respawn_seconds": 0
+        },
+        {
+          "id": "kes-s1-3-frequency-record",
+          "label": "Copy the mission record",
+          "kind": "contract_key",
+          "asset": "dispatch-channel-log",
+          "amount": 1,
+          "scope": "mission",
+          "respawn_seconds": 0
         }
       ],
       "controls": []
@@ -77,6 +86,15 @@
           "asset": "routing-audit-y0",
           "amount": 1,
           "scope": "identity",
+          "respawn_seconds": 0
+        },
+        {
+          "id": "hal-s1-2-audit-record",
+          "label": "Copy the mission record",
+          "kind": "contract_key",
+          "asset": "routing-audit-y0",
+          "amount": 1,
+          "scope": "mission",
           "respawn_seconds": 0
         }
       ],
@@ -159,6 +177,15 @@
           "kind": "text",
           "asset": "text-kestrel-ration-ledger",
           "scope": "identity",
+          "respawn_seconds": 0
+        },
+        {
+          "id": "kes-s1-2-diversion-record",
+          "label": "Copy the mission record",
+          "kind": "contract_key",
+          "asset": "ration-allocations",
+          "amount": 1,
+          "scope": "mission",
           "respawn_seconds": 0
         }
       ],

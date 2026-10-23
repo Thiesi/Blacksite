@@ -45,8 +45,22 @@ def permitted(player: Player, vendor: Vendor, stock: VendorStock | None = None) 
 class VendorBudget:
     hour: int
     remaining: int = BUYBACK_BUDGET
+    limit: int = BUYBACK_BUDGET
+    spent: int = 0
 
-    def refill(self, timestamp: float) -> None:
+    def refill(self, timestamp: float, limit: int = BUYBACK_BUDGET) -> None:
+        # Game 7.5 / 8.2: a temporary larger cap is not another refill.
+        # Retain spending above the ordinary cap when an allocation ends.
+        if self.remaining != max(0, self.limit-self.spent):
+            self.spent = self.limit-self.remaining
         hour = int(timestamp) // BUDGET_SECONDS
         if hour > self.hour:
-            self.hour, self.remaining = hour, BUYBACK_BUDGET
+            self.hour, self.spent = hour, 0
+        self.limit = limit
+        self.remaining = max(0, limit-self.spent)
+
+    def spend(self, amount: int) -> None:
+        if amount < 0 or amount > self.remaining:
+            raise ValueError('The counter cannot fund that purchase.')
+        self.spent += amount
+        self.remaining = max(0, self.limit-self.spent)

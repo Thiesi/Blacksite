@@ -157,6 +157,15 @@
           "amount": 1,
           "scope": "identity",
           "respawn_seconds": 0
+        },
+        {
+          "id": "sab-s1-2-provenance-record",
+          "label": "Copy the mission record",
+          "kind": "contract_key",
+          "asset": "template-lineage",
+          "amount": 1,
+          "scope": "mission",
+          "respawn_seconds": 0
         }
       ],
       "controls": []

@@ -602,6 +602,150 @@
       ],
       "xp": 0,
       "vendor": "vesper"
+    },
+    {
+      "id": "npc-walked-template",
+      "name": "Walked template",
+      "faction": null,
+      "grade": 1,
+      "attributes": {
+        "frame": 20,
+        "nerve": 20,
+        "cortex": 10,
+        "resonance": 5,
+        "vitals": 20
+      },
+      "behaviours": [
+        {
+          "kind": "wander",
+          "params": {}
+        }
+      ],
+      "xp": 0,
+      "loot": []
+    },
+    {
+      "id": "npc-lapsed-subscriber",
+      "name": "Lapsed subscriber",
+      "faction": null,
+      "grade": 1,
+      "attributes": {
+        "frame": 20,
+        "nerve": 20,
+        "cortex": 10,
+        "resonance": 5,
+        "vitals": 20
+      },
+      "behaviours": [
+        {
+          "kind": "wander",
+          "params": {}
+        }
+      ],
+      "xp": 0,
+      "loot": []
+    },
+    {
+      "id": "npc-nurse-okafor-mission",
+      "name": "Nurse Okafor",
+      "faction": "sablier",
+      "grade": 1,
+      "attributes": {
+        "frame": 20,
+        "nerve": 20,
+        "cortex": 10,
+        "resonance": 5,
+        "vitals": 20
+      },
+      "behaviours": [
+        {
+          "kind": "talker",
+          "params": {
+            "anchor": true
+          }
+        }
+      ],
+      "xp": 0,
+      "loot": []
+    },
+    {
+      "id": "npc-bram-sled-mission",
+      "name": "The Long Sled",
+      "faction": "ferrymen",
+      "grade": 1,
+      "attributes": {
+        "frame": 20,
+        "nerve": 20,
+        "cortex": 10,
+        "resonance": 5,
+        "vitals": 20
+      },
+      "behaviours": [
+        {
+          "kind": "patrol",
+          "params": {
+            "waypoints": [
+              [
+                8,
+                4
+              ],
+              [
+                22,
+                4
+              ]
+            ],
+            "bounce": true
+          }
+        }
+      ],
+      "xp": 0,
+      "loot": []
+    },
+    {
+      "id": "npc-oldworks-patrol",
+      "name": "Maintenance drone",
+      "faction": null,
+      "grade": 1,
+      "attributes": {
+        "frame": 20,
+        "nerve": 20,
+        "cortex": 10,
+        "resonance": 5,
+        "vitals": 20
+      },
+      "behaviours": [
+        {
+          "kind": "patrol",
+          "params": {
+            "waypoints": [
+              [
+                8,
+                4
+              ],
+              [
+                22,
+                4
+              ]
+            ],
+            "bounce": true
+          }
+        },
+        {
+          "kind": "guard",
+          "params": {
+            "hostile_all": true
+          }
+        }
+      ],
+      "xp": 20,
+      "health": 40,
+      "attack": {
+        "damage": 6,
+        "cooldown": 2,
+        "range": 5,
+        "accuracy": 60,
+        "damage_type": "kinetic"
+      }
     }
   ]
 }

@@ -1,0 +1,229 @@
+{
+  "schema": 1,
+  "services": [
+    {
+      "id": "cold-chain",
+      "name": "Cold Chain",
+      "zone": "vatside-clinics",
+      "core": "lat-relay-cold-chain",
+      "target_objects": [
+        "cold-chain-hardware"
+      ],
+      "contract": "cold-chain-work-order",
+      "allocations": [
+        {
+          "id": "common",
+          "label": "Visitor service fee -10%",
+          "effects": [
+            {
+              "type": "price_modifier",
+              "audience": "public",
+              "params": {
+                "service": "surgery",
+                "multiplier": 0.9,
+                "vendor": "sablier-clinic"
+              },
+              "zone": "vatside-clinics"
+            }
+          ],
+          "detail": "Visitors save 10% on installation service fees. Implant prices, detox and risk stay unchanged."
+        },
+        {
+          "id": "reserve",
+          "label": "Worker service fee -20%",
+          "effects": [
+            {
+              "type": "price_modifier",
+              "audience": "workers",
+              "params": {
+                "service": "surgery",
+                "multiplier": 0.8,
+                "vendor": "sablier-clinic"
+              },
+              "zone": "vatside-clinics"
+            }
+          ],
+          "detail": "Workers save 20% on installation service fees; other visitors pay ordinary fees."
+        }
+      ],
+      "safe_return": "Use the signed public return passage. Essential care and outward travel stay open.",
+      "fault_label": "The elective service discount is unavailable. Care remains open."
+    },
+    {
+      "id": "sump",
+      "name": "Sump",
+      "zone": "sink-floor",
+      "core": "lat-sump",
+      "target_objects": [
+        "sump-pump-regions"
+      ],
+      "contract": "sump-work-order",
+      "allocations": [
+        {
+          "id": "common",
+          "label": "Drain the public shortcut",
+          "effects": [
+            {
+              "type": "route_hold",
+              "audience": "public",
+              "params": {
+                "layout": "sump-common"
+              },
+              "zone": "sink-floor",
+              "warning_seconds": 5
+            }
+          ],
+          "detail": "The salvage niche stays flooded. Use the long public return when this expires."
+        },
+        {
+          "id": "reserve",
+          "label": "Drain the workers' salvage niche",
+          "effects": [
+            {
+              "type": "route_hold",
+              "audience": "public",
+              "params": {
+                "layout": "sump-reserve"
+              },
+              "zone": "sink-floor",
+              "warning_seconds": 5
+            },
+            {
+              "type": "cache",
+              "audience": "workers",
+              "params": {
+                "object": "sump-reserve-cache"
+              },
+              "zone": "sink-floor"
+            }
+          ],
+          "detail": "Two power salvage units shared by workers. The public route stays long. Follow the signed return before expiry."
+        }
+      ],
+      "safe_return": "Use the signed public return passage. Essential care and outward travel stay open.",
+      "fault_effects": [
+        {
+          "type": "route_hold",
+          "audience": "public",
+          "params": {
+            "layout": "sump-fault"
+          },
+          "zone": "sink-floor",
+          "warning_seconds": 5
+        }
+      ],
+      "fault_label": "The marked shortcut and salvage niche are flooded. The long public route remains open."
+    },
+    {
+      "id": "depot",
+      "name": "Depot",
+      "zone": "tramyard-depots",
+      "core": "lat-depot-control",
+      "target_objects": [
+        "depot-surplus-latch"
+      ],
+      "contract": "depot-work-order",
+      "allocations": [
+        {
+          "id": "common",
+          "label": "Public surplus buy-back budget x2",
+          "effects": [
+            {
+              "type": "price_modifier",
+              "audience": "public",
+              "params": {
+                "service": "buyback_budget",
+                "multiplier": 2,
+                "vendor": "kestrel-surplus",
+                "object": "depot-surplus-counter"
+              },
+              "zone": "tramyard-depots"
+            }
+          ],
+          "detail": "The surplus counter buys more salvage. Earlier spending still counts; expiry restores the ordinary hourly cap."
+        },
+        {
+          "id": "reserve",
+          "label": "Workers' surplus cache",
+          "effects": [
+            {
+              "type": "cache",
+              "audience": "workers",
+              "params": {
+                "object": "depot-reserve-cache"
+              },
+              "zone": "tramyard-depots"
+            }
+          ],
+          "detail": "Two power salvage units shared by workers. The ordinary public counter keeps its normal budget."
+        }
+      ],
+      "safe_return": "Use the signed public return passage. Essential care and outward travel stay open.",
+      "fault_effects": [
+        {
+          "type": "entry_restriction",
+          "audience": "public",
+          "params": {
+            "service": "vendor",
+            "vendor": "kestrel-surplus",
+            "object": "depot-surplus-counter"
+          },
+          "zone": "tramyard-depots"
+        }
+      ],
+      "fault_label": "The surplus counter is shut. Essential stock stays available elsewhere in the depot."
+    },
+    {
+      "id": "relay-zero",
+      "name": "Relay Zero",
+      "zone": "oldworks-main",
+      "core": "lat-relay-zero",
+      "target_objects": [
+        "relay-zero-hardware"
+      ],
+      "contract": "relay-zero-work-order",
+      "allocations": [
+        {
+          "id": "common",
+          "label": "Publish current local core patrols",
+          "effects": [
+            {
+              "type": "reveal",
+              "audience": "public",
+              "params": {
+                "what": "patrol_route"
+              },
+              "binding": {
+                "kind": "core_room",
+                "core": "lat-relay-zero",
+                "room": "entry"
+              }
+            }
+          ],
+          "detail": "Everyone in this core can see current NPC patrol routes for 20 minutes. Caller locations stay private."
+        },
+        {
+          "id": "reserve",
+          "label": "Workers' local gate credential",
+          "effects": [
+            {
+              "type": "reveal",
+              "audience": "workers",
+              "params": {
+                "what": "credential"
+              },
+              "binding": {
+                "kind": "core_control",
+                "core": "lat-relay-zero",
+                "control": "relay_open"
+              }
+            }
+          ],
+          "detail": "Workers may operate the declared local gate for 20 minutes. ICE remains active."
+        }
+      ],
+      "safe_return": "Use the signed public return passage. Essential care and outward travel stay open.",
+      "fault_label": "The patrol survey feed is stale. Public uplinks and outward travel remain open."
+    }
+  ]
+}

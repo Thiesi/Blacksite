@@ -3753,6 +3753,48 @@
         "kind": "none",
         "key": ""
       }
+    },
+    {
+      "id": "job_sealed_parcel",
+      "name": "Sealed commission parcel",
+      "class": "misc",
+      "tier": 1,
+      "weight": 0.5,
+      "base_price": 0,
+      "description": "A labelled parcel supplied for an accepted local commission.",
+      "secured_default": false,
+      "quality": {
+        "kind": "none",
+        "key": ""
+      }
+    },
+    {
+      "id": "job_route_marker",
+      "name": "Route marker",
+      "class": "misc",
+      "tier": 1,
+      "weight": 0.5,
+      "base_price": 0,
+      "description": "A labelled marker supplied for one accepted route survey.",
+      "secured_default": false,
+      "quality": {
+        "kind": "none",
+        "key": ""
+      }
+    },
+    {
+      "id": "job_depot_manifest",
+      "name": "Depot surplus manifest",
+      "class": "misc",
+      "tier": 1,
+      "weight": 0.5,
+      "base_price": 0,
+      "description": "A sealed work-order manifest naming the surplus warehouse latch.",
+      "secured_default": false,
+      "quality": {
+        "kind": "none",
+        "key": ""
+      }
     }
   ]
 }

@@ -118,6 +118,11 @@ one thing each archetype can do that others cannot:
 | Cantor | 10 / 20 / 25 / 45 / 25 | Resonance implants; hymns (crew buffs), dissonance (nerve-jam attacks) |
 | Operator | 20 / 30 / 30 / 5 / 30 | Two drone slots; contract and vendor price bonuses; crew beacon |
 
+The Operator receives +10% contract chits, including story jobs and
+service work orders. Apply this personal bonus after the disclosed crew
+scale, round down, and show the final amount before acceptance. It does
+not multiply XP, standing, items or program learning.
+
 ### 3.3 Skill lines
 
 Skills are 0 to 100 and raise through use (Neocron-style: doing the thing
@@ -485,6 +490,10 @@ the ride. After offline arrival, ordinary destination logout rules apply.
   District layouts use at most eight columns and six rows, preserving
   four-column cell markers at 80x24. Public baseline uplinks connect all
   eleven districts; gated shortcuts never replace those public routes.
+  A physical terminal may link to a named public cell in its district.
+  It never admits directly to a gated or hidden cell. The stairwell C
+  loan terminal links to its local cabinet entrance so the first job's
+  3 s flip does not require an unrelated trip across the district.
 - Moving between adjacent cells takes max(0.2, 1.0 - Cortex / 100) s,
   rounded up to ticks after modifiers, with the same 0.2 s floor.
   Lifting data or flipping a control takes 3 s. Integrity recovers 5 per
@@ -856,11 +865,17 @@ while the server is stopped. Neutral relay ownership is normal operation.
 
 Any resident may repair. First acceptance reserves the work order for that
 player or its frozen accepted job roster for 10 minutes. Abandonment,
-deadline, or all participants leaving releases it. The reserver selects one
+deadline, or the whole roster explicitly withdrawing releases it. A
+disconnect keeps completed steps until the original UTC deadline;
+reconnecting never extends that deadline. The reserver selects one
 allocation below before the roster joins; on repair completion it lasts 20
 minutes and cannot be overwritten or extended. Another order waits for the
 original 60-minute cooldown. A relay owner cannot veto public repair.
 Duplicate commands cannot claim another reward.
+
+A pending crew proposal does not hold the public order. The consenting
+roster and reservation freeze together on the first committed start;
+stale proposals refresh without consuming supplies or rewards.
 
 The work-order reserver selects its allocation; the frozen roster sees
 that selection before joining and receives the same disclosed result.
@@ -882,8 +897,15 @@ authored regions only, with 5 s warning. Cold Chain never refuses care.
 Sump and Depot reserve caches each contain two `slv_power` units per
 order, shared by its workers. Common and reserve cannot both be claimed.
 Relay Zero's credential opens one declared gate, not ICE immunity.
+Cold Chain changes the installation service fee only, after ordinary fee
+rounding; it changes neither implant price, removal fee, detox nor risk.
+The strongest eligible service discount applies once. Depot changes the
+current hourly cap without resetting spending; expiry and restart retain
+spending even when it exceeds the restored ordinary cap.
 Standard reward: 200 chits, 100 XP, +5 with the handler's faction per
 participating worker, without crew scaling. Allocation adds no XP.
+The final verified repair action commits that allocation and the eligible
+workers' rewards together; no additional handler visit is required.
 
 ### 7.6 Faction identity in play
 
@@ -1192,14 +1214,57 @@ scales by 1 + 0.25 * (size - 1), rounded down. Story jobs and work orders
 use fixed rewards and their declared participant scaling instead.
 Freeze the roster on acceptance; joining at turn-in grants nothing.
 
+A crew offer shows its selected approach, proposed roster and exact
+consequences. Each participant opts in; the proposer starts with the
+accepted participants and freezes that roster, count and reward. Crew
+leadership does not supply another player's consent. Withdrawing stops
+that player's eligibility without cancelling another participant's job;
+the frozen count and rewards do not reroll. Retry keeps the accepted
+terms and prior completed stages, reissuing bound supplies as needed.
+Original participants can resume a withdrawn generated/story job under
+those frozen terms. They must contribute again; resumption adds no new
+participant and cannot bypass the three-job limit. Retrying an abandoned
+stage retains earlier completed stages. Work-order withdrawal is final
+for that reservation; disconnect instead retains its original deadline.
+Completed generated jobs awaiting turn-in still occupy an active slot.
+Previously rewarded story participants may assist a new participant
+without receiving another reward or rewriting their own branch.
+This check also applies at settlement when several crew members started
+parallel copies before anyone received the first payout.
+
+The initial generated-job baseline is 200 chits, 200 XP and +5 standing
+with its handler faction (Vesper has no ordinary faction delta). Scale
+the numeric reward once for the accepted roster, then apply the
+recipient's Operator chit bonus. Declared item/program rewards remain
+one grant per participant. Story jobs, publication forks and service
+orders use their fixed authored schedules instead. The S19 earning
+report measures these sources against the catalog; their human pacing
+and the complete city's balance remain section 18 acceptance work.
+
+A job may offer named alternative stage sequences. Selecting a route
+never changes its reward unless the card explicitly declares a different
+outcome. Generated counts select from authored target pools; repeated
+survey/plant targets cannot satisfy several objectives by being touched
+again. NPC/item quantities use distinct mission-owned subjects or units.
+
 Generated contracts expire after 60 real minutes, at most three active
 per player. Boards show five offers per handler and refresh every
 30 minutes. Story stages have no real-time expiry except explicitly
 labelled field windows. A failed or abandoned stage is retryable; a
 committed branch choice is not. Required loan items can be reissued,
-bound and without a sale value. NPC escorts reset without removing the
+bound and without a sale value. Willing mission escorts wait at their
+assigned source positions until an accepted worker asks them to follow;
+they wait again if that worker is absent. Withdrawal clears the worker's
+escort assignment so another accepted worker can take over. Wandering
+cannot scatter the group before consent. NPC escorts reset without removing the
 public handler. No seasonal chain requires logging in at 04:12 or waiting
 through multiple real Curfews; stored cycle logs satisfy those surveys.
+Boards use distinct templates before repeating a small pool. Vesper's
+board keeps one of its own commissions and brokers the non-member
+faction pool in its other slots. Generated jobs may be returned at the
+Tin Halo or their commissioning faction's board; their standing reward
+still belongs to the commissioning faction. Story referrals retain their
+separate dialogue and prerequisite checks.
 
 ### 9.2 Evidence, custody, and intrigue
 
@@ -1225,6 +1290,13 @@ same evidence to collect both exclusive outcomes. Reading and copying a
 record are free; reward claims are not. Faction memberships and permits
 cannot prevent a Freelance player from reaching the central chain.
 
+A fixed branch on a job card commits when that participant confirms its
+disclosed terms. Retrying the same branch is allowed. Publication choices
+commit at the participant's own final publication action; a crew leader
+cannot choose them for someone else. Failed writes commit neither the
+choice nor its reward. Shared generated turn-in may pay its eligible
+frozen roster together; personal publication claims remain individual.
+
 ### 9.3 Story and shared-world scope
 
 Story encounters use mission-scoped NPCs, caches, permissions, and
@@ -1233,6 +1305,13 @@ NPC or consume somebody else's critical item. Stage forks affect the
 participant record unless explicitly declared as a public service order
 (§7.5) or settled season outcome (§13). All public consequences have one
 owning subsystem, a duration, and a restart rule.
+
+A required Silt record names a sector, band and mission data source,
+never room coordinates from another generated seed. The active chain
+supplies a guaranteed copy on a visible cell of that band. Existing ICE
+and the trip there remain the challenge; repeatedly rerolling a rare
+drop is not a story objective. Its source receipt is stable across
+descent layouts and bound to the accepted mission stage and attempt.
 
 Standing has two reward modes: `propagate` applies one base faction
 delta and one non-recursive half-delta to its allies/opponents;
@@ -1255,6 +1334,17 @@ universal morality scores. The clinic preserves people but logs them;
 the shield preserves their location but forgoes medical evaluation.
 Their records describe those consequences without asserting what a
 person ought to choose. The ration fork is `kes-s1-2` in the season arc.
+The shield's public route record shows the local Old Works NPC patrol
+for 20 minutes from settlement, using the same bounded window as the
+ration publication. It reveals no caller location. Willing templates
+enter shelter within their squat before the supplied field rig is
+planted; this does not relocate them to the clinic.
+The Ferrymen's north-spoke recovery launches at the landing council
+fire and allows 180 seconds to collect the bound salvage. It uses a
+recorded Ring-fall recovery window, without waiting for a live event.
+A missed window restarts at that launch checkpoint without a fee;
+returning recovered salvage has no deadline. This retains a timed field
+challenge while keeping the story available during ordinary sessions.
 
 ### 9.5 Content readiness
 
@@ -1926,6 +2016,16 @@ valid; zone/core instance IDs retain their own documented convention.
 | `prg_choir_cantillation_1` | Cantillation I | attack | 2 | 1 | 0.8 s | 4 s | Cantor: 20 damage + Resonance / 5; normal attack trace | 1000 |
 | `prg_choir_cantillation_2` | Cantillation II | attack | 3 | 1 | 1.2 s | 6 s | Cantor, Choir +50 to acquire: 40 damage + Resonance / 3; normal attack trace | 3600 |
 | `prg_residual_fragment` | Residual Fragment | utility | 3 | 1 | 1 s | single use | +25 effective Programs until jack-out, capped 100; bound faction loan | 0 |
+
+S19 supplies fixed Tin Halo counter listings for Lance, Bunker, Signet
+and Anchor at their catalog base prices, with the ordinary trade
+modifiers and no membership requirement. A Blackout program image is
+an identity-scoped source in the Silt's Reach. Finding and lifting it
+uses the existing encounter rules; another caller cannot consume that
+caller's copy. Its once-per-season acquisition cap applies at the
+source and does not limit casting. Required story progress never needs
+this optional program. Other catalog sources may supplement these
+routes as the remaining city content lands.
 
 ### 17.3 ICE
 

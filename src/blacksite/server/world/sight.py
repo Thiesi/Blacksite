@@ -1,7 +1,7 @@
 """Symmetric integer Bresenham visibility (game design 5.2)."""
 
 from blacksite.content.schema import Tile
-from blacksite.server.world.actors import Actor
+from blacksite.server.world.actors import Actor, mission_pair
 from blacksite.server.world.zone import ZoneInstance
 from blacksite.server.interlock_effects import lighting_radius
 
@@ -61,6 +61,8 @@ def visible_tiles(actor: Actor, zone: ZoneInstance, radius: int) -> set[Tile]:
 
 
 def private_visible(observer: Actor, target: Actor) -> bool:
+    if not mission_pair(observer, target):
+        return False
     owner = target.behaviour.get("private_owner")
     return not owner or observer.id in (owner, target.id) or bool(
         observer.kind == "drone" and observer.behaviour.get("player_drone") and observer.owner == owner)

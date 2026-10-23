@@ -954,7 +954,7 @@ class FactionTable:
 
 ContractVerb = Literal["fetch", "hack", "escort", "clear", "plant", "survey"]
 InputAction = Literal["inspect", "carry", "interact", "wait", "channel", "lift", "flip", "enter"]
-TargetKind = Literal["zone_object", "zone_tile", "core_room", "core_control", "npc", "item", "cell"]
+TargetKind = Literal["zone_object", "zone_tile", "core_room", "core_control", "npc", "item", "cell", "silt_data"]
 StandingMode = Literal["propagate", "explicit"]
 PermitKind = Literal["patrol_window", "maintenance_credential", "route", "recipient"]
 
@@ -972,6 +972,8 @@ class StageTarget:
     item: str | None = None
     sector: str | None = None
     cell: str | None = None
+    data: str | None = None
+    band: str | None = None
 
 
 @dataclass(frozen=True)
@@ -985,6 +987,16 @@ class Stage:
     retry: bool = True
     resolution: Literal["lethal", "subdue"] | None = None
     """Required for `clear` stages."""
+    label: str = ""
+    quantity: int = 1
+    target_pool: tuple[StageTarget, ...] = ()
+    seconds: float = 0
+    cost: str = "No fee."
+    destination: StageTarget | None = None
+    requires_item: str | None = None
+    linked_control: StageTarget | None = None
+    window_seconds: int = 0
+    retry_from: str | None = None
 
 
 @dataclass(frozen=True)
@@ -994,6 +1006,7 @@ class Reward:
     standing_mode: StandingMode = "propagate"
     xp: int = 0
     items: tuple[str, ...] = ()
+    programs: tuple[str, ...] = ()
 
 
 @dataclass(frozen=True)
@@ -1001,6 +1014,8 @@ class Permit:
     kind: PermitKind
     target: str
     expiry_seconds: int
+    binding: StageTarget | None = None
+    audience: Literal['personal', 'public'] = 'personal'
 
 
 @dataclass(frozen=True)
@@ -1009,6 +1024,14 @@ class PublicationOption:
     label: str
     audience: Literal["handler", "faction", "public"]
     reward: Reward = field(default_factory=Reward)
+    permit: Permit | None = None
+
+
+@dataclass(frozen=True)
+class ContractApproach:
+    id: str
+    label: str
+    stages: tuple[Stage, ...]
 
 
 @dataclass(frozen=True)
@@ -1033,6 +1056,13 @@ class ContractTemplate:
     evidence_assets: tuple[str, ...] = ()
     unlock_conditions: tuple[str, ...] = ()
     schema: int = CONTENT_SCHEMA
+    name: str = ""
+    approach_label: str = "Listed route"
+    approaches: tuple[ContractApproach, ...] = ()
+    service: bool = False
+    """A repeatable, fixed-reward public work order, not a board job."""
+    consequence: str = ""
+    mission_data: tuple[DataSpec, ...] = ()
 
 
 @dataclass(frozen=True)
@@ -1050,6 +1080,11 @@ class EvidenceRecord:
     claim: str
     related_objective: str | None = None
     schema: int = CONTENT_SCHEMA
+    question: str = ""
+    next_action: str = ""
+    related_stage: str | None = None
+    claimed_author: str = ""
+    claimed_date: str = ""
 
 
 EffectType = Literal[
@@ -1072,6 +1107,8 @@ class Effect:
     """For `entry_restriction` and `route_hold`: exit ids, as
     `zone/exit`, that the effect closes."""
     params: dict[str, Number | str | bool] = field(default_factory=dict)
+    audience: Literal["public", "workers"] = "public"
+    binding: StageTarget | None = None
 
 
 @dataclass(frozen=True)
@@ -1079,6 +1116,7 @@ class Allocation:
     id: Literal["common", "reserve"]
     label: str
     effects: tuple[Effect, ...] = ()
+    detail: str = ""
 
 
 @dataclass(frozen=True)
@@ -1093,6 +1131,11 @@ class ServiceNodeTemplate:
     target_objects: tuple[str, ...]
     allocations: tuple[Allocation, ...]
     schema: int = CONTENT_SCHEMA
+    contract: str | None = None
+    normal_effects: tuple[Effect, ...] = ()
+    fault_effects: tuple[Effect, ...] = ()
+    safe_return: str = ""
+    fault_label: str = ""
 
 
 # --- dialogue (section 1.11, 04-dramatis-personae.md Part III) -------------

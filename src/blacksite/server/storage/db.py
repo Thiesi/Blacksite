@@ -129,16 +129,25 @@ class Storage:
         for row in self.db.execute("SELECT * FROM players WHERE archetype IS NOT NULL"):
             players.append({key: json.loads(value) if key in json_columns and value is not None else value
                             for key, value in dict(row).items()})
+        details = self.meta('vendor_budget_state') or {}
+        budgets = {}
+        for key, hour, remaining in self.db.execute('SELECT * FROM vendor_budgets'):
+            row = {'hour': hour, 'remaining': remaining}
+            saved = details.get(key, {})
+            if saved.get('hour') == hour and saved.get('remaining') == remaining:
+                row.update({field: saved[field] for field in ('limit', 'spent') if field in saved})
+            budgets[key] = row
         return {"players": players, "identities": {row[0]: json.loads(row[1]) for row in self.db.execute("SELECT * FROM identities")},
                 "serial": self.meta("player_serial") or 0, "cap": self.meta("character_cap"),
                 "npcs": self.meta("npc_state") or {},
                 "lattice": self.meta("lattice_state") or {},
                 "interlock": self.meta("interlock_state") or {},
                 "salvage": self.meta("salvage_state") or {},
+                "contracts": self.meta("contracts_state") or {},
                 "season": self.meta("season") or 0,
                 "items": [json.loads(row[0]) for row in self.db.execute("SELECT data FROM items")],
                 "commerce": {"item_serial": self.meta("item_serial") or 0,
-                    "budgets": {row[0]: {"hour":row[1], "remaining":row[2]} for row in self.db.execute("SELECT * FROM vendor_budgets")},
+                    "budgets": budgets,
                     "caches": {row[0]: json.loads(row[1]) for row in self.db.execute("SELECT * FROM caches")}}}
 
     def commerce_write(self, effect: dict[str, Any]) -> None:
@@ -163,6 +172,8 @@ class Storage:
                 self.db.execute("DELETE FROM items WHERE id=?", (iid,))
             for key, budget in effect["budgets"].items():
                 self.db.execute("INSERT OR REPLACE INTO vendor_budgets VALUES(?,?,?)", (key,budget["hour"],budget["remaining"]))
+            self.db.execute("INSERT OR REPLACE INTO meta(key,value) VALUES('vendor_budget_state',?)",
+                            (self._json(effect['budgets']),))
             self.db.execute("DELETE FROM caches")
             for key, cache in effect["caches"].items():
                 self.db.execute("INSERT INTO caches VALUES(?,?)", (key,self._json(cache)))
@@ -171,6 +182,8 @@ class Storage:
                 self.db.execute("INSERT OR REPLACE INTO meta(key,value) VALUES('interlock_state',?)", (self._json(effect["interlock_state"]),))
             if "salvage_state" in effect:
                 self.db.execute("INSERT OR REPLACE INTO meta(key,value) VALUES('salvage_state',?)", (self._json(effect["salvage_state"]),))
+            if "contracts_state" in effect:
+                self.db.execute("INSERT OR REPLACE INTO meta(key,value) VALUES('contracts_state',?)", (self._json(effect["contracts_state"]),))
             if "npc_state" in effect:
                 self.db.execute("INSERT OR REPLACE INTO meta(key,value) VALUES('npc_state',?)", (self._json(effect["npc_state"]),))
             if "lattice_state" in effect:
@@ -178,10 +191,12 @@ class Storage:
             self.db.execute("INSERT INTO audit(at,data) VALUES(?,?)", (self.clock.now_utc().isoformat(), self._json({"action":"item_transfer", "player":effect["player"]["id"] if effect["player"] else None})))
         # Never let an older write-behind snapshot overwrite this receipt.
         settled = {("items", item["id"]) for item in effect["items"]} | {("items", iid) for iid in effect["delete_items"]}
+        settled.add(('meta', 'vendor_budget_state'))
         if effect["player"]: settled.add(("players",effect["player"]["id"]))
         settled |= {("players", row["id"]) for row in effect.get("players", [])}
         if "interlock_state" in effect: settled.add(("meta", "interlock_state"))
         if "salvage_state" in effect: settled.add(("meta", "salvage_state"))
+        if "contracts_state" in effect: settled.add(("meta", "contracts_state"))
         if "npc_state" in effect: settled.add(("meta", "npc_state"))
         if "lattice_state" in effect: settled.add(("meta", "lattice_state"))
         if "identity" in effect: settled.add(("identities",effect["user"]))

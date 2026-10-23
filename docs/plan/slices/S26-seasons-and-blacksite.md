@@ -167,3 +167,40 @@ own durable ID; retain individual ending/ballot choices. Leave, kick,
 promotion, dissolution and service restart must not reassign ballots or
 erase checkpoints. Preserve the accepted PR #38 personal/public outcome
 and inactive later-season authoring requirements.
+
+<!-- s19-services:start -->
+### S19 source and service handoff
+
+Reference: [S19 PR #62](https://github.com/Thiesi/Blacksite/pull/62),
+[acceptance record](../../ops/s19-acceptance.md) and
+[PR #38](https://github.com/Thiesi/Blacksite/pull/38).
+
+S19 supplies the implemented source interfaces, 68 authored contracts
+and four service nodes. Full root pytest passed 1344 tests with one
+skip. Installed native acceptance covers both sizes and allocations,
+forks, repair reconnect and paid restart. Consume the merged PR;
+S25/S27/S26 still own real geography, referrals and activation.
+
+Reuse the frozen consenting roster, personal branch receipts, source-
+attributed journal and scoped permits. Public telemetry reveals NPC/ICE
+routes, never players. A completed helper sees zero additional reward and
+retains the earlier personal choice. Ordinary source XP and work-order XP
+compose in one transaction; callbacks cannot pay again.
+<!-- s19-services:end -->
+
+S19 Silt source handoff: activate authored `mission_data` with its chain
+bundle. Typed `silt_data` targets bind sector/band/data, and the actual
+generated graph places a guaranteed visible copy. Keep mission custody,
+stable source sites and journal evidence separate. Never replace these
+with copied room coordinates or a rare-drop prerequisite. Permanent
+story items required by a later contract belong to the explicit reward;
+temporary lifted payloads retire with their owning job.
+
+Activate the authored 33-contract Season 1 bundle only after the
+[S19 content handoff](../s19-content-handoff.md), S25 map bindings and S27
+neutral referrals pass integrated acceptance. Replay both paid forks
+into their shared continuations. Verify the shield's public NPC route
+expires without being extended by another worker. The Ferrymen recovery
+has a checkpointed 180-second field window; disconnect/restart preserves
+its deadline, failure returns to launch and recovered-item delivery is
+untimed. Pure S19 receipt replays do not replace full-city human pacing.

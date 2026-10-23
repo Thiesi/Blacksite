@@ -129,3 +129,26 @@ an announced plan cannot claim these benefits live.
 S22 [PR #61](https://github.com/Thiesi/Blacksite/pull/61) supplies live
 crew hooks. Publish committed event facts; never use an ephemeral crew
 ID as durable event participation or reward authority.
+
+<!-- s19-services:start -->
+### S19 source and service handoff
+
+Reference: [S19 PR #62](https://github.com/Thiesi/Blacksite/pull/62),
+[acceptance record](../../ops/s19-acceptance.md) and
+[PR #38](https://github.com/Thiesi/Blacksite/pull/38).
+
+S19 supplies the implemented source interfaces, 68 authored contracts
+and four service nodes. Full root pytest passed 1344 tests with one
+skip. Installed native acceptance covers both sizes and allocations,
+forks, repair reconnect and paid restart. Consume the merged PR;
+S25/S27/S26 still own real geography, referrals and activation.
+
+Compose event geometry under its own source key. Service expiry removes only
+service-owned layers and preserves independent event/control state. Changing
+a price before final confirmation must refresh the quote without spending.
+Keep uptime schedules separate from UTC effect deadlines.
+<!-- s19-services:end -->
+
+Bind `Contracts.event_active` to committed active event IDs when S24
+lands. Contract prerequisites are checked again at accepted start;
+proposals and forecasts must not stand in for an active event receipt.

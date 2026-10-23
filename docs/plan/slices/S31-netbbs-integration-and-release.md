@@ -206,3 +206,23 @@ not a second speculative future-version preset.
   with manual restoration. S28's SQLite snapshot remains the recovery
   source; do not describe a successful raw node copy as a consistent
   live-game backup. No BBS database or Link-secret access is introduced.
+
+<!-- s19-services:start -->
+### S19 source and service handoff
+
+Reference: [S19 PR #62](https://github.com/Thiesi/Blacksite/pull/62),
+[acceptance record](../../ops/s19-acceptance.md) and
+[PR #38](https://github.com/Thiesi/Blacksite/pull/38).
+
+S19 supplies the implemented source interfaces, 68 authored contracts
+and four service nodes. Full root pytest passed 1344 tests with one
+skip. Installed native acceptance covers both sizes and allocations,
+forks, repair reconnect and paid restart. Consume the merged PR;
+S25/S27/S26 still own real geography, referrals and activation.
+
+Retain current installed-client version/source-tree proof, full pytest and
+actual native acceptance at both sizes. Verify
+contracts_state/vendor_budget_state restore and allocation expiry through
+the packaged service. The S19 source checkpoint is not merged or native-
+accepted yet; keep the existing NetBBS #56 baseline/preset obligations.
+<!-- s19-services:end -->

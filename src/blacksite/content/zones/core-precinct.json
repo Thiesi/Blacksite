@@ -47,7 +47,8 @@
       "kind": "vendor",
       "essential": false,
       "params": {
-        "name": "Warden contract handler"
+        "name": "Warden contract handler",
+        "contract_handler": "wardens"
       }
     },
     {

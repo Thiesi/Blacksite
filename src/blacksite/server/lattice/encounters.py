@@ -19,7 +19,7 @@ from blacksite.server.items import make_item
 from blacksite.server.lattice.cores import CORE_IDLE_RESET_SECONDS, TRACE_PER_SECOND, CoreGraph, trace_thresholds
 from blacksite.server.lattice.ice import Ice, IceEvent, Location, Runner
 from blacksite.server.lattice.presence import INTEGRITY_MAX, Presence, Procedure, directional_neighbour, movement_ticks
-from blacksite.server.lattice.programs import Cast, Effects, attack_damage, bind, can_cast, cast_ticks, occupied_slots, ticks, trace_gain
+from blacksite.server.lattice.programs import Cast, Effects, attack_damage, bind, can_cast, cast_ticks, occupied_slots, ticks, trace_gain, learn as learn_program
 from blacksite.server.lattice.silt import Descent, adjacent_hidden, generate, survey_directions
 from blacksite.server.lattice.silt_scene import BandGraph
 from blacksite.server.players import Player
@@ -73,6 +73,10 @@ class Encounters:
         self.empty_descents: dict[str, int] = {}
         self.commerce.after_settle = self.flush_hits
         self.mission_of: Callable[[str, str], str | None] = lambda pid, source: None  # S19.
+        self.contract_rows: Callable[[Presence], list[dict[str, Any]]] = lambda presence: []
+        self.start_contract_plant: Callable[[Presence, str], None] = lambda presence, job: None
+        self.finish_contract_plant: Callable[[Presence, Procedure], None] = lambda presence, procedure: None
+        self.inspect_contract: Callable[[Presence], None] = lambda presence: None
 
     def known_programs(self, player: Player) -> set[str]:
         loans = self.game.factions.loan_programs(player) if hasattr(self.game, "factions") else set()
@@ -214,6 +218,8 @@ class Encounters:
         if black:
             self.log(presence, "BLACK ICE / NPC BODY RISK remains active for this run.", True)
         self.trace(presence, 0, entered=True)
+        if hasattr(self.game, 'contracts'):
+            self.game.contracts.entered(presence)
 
     def leave_core(self, session: Session) -> None:
         presence = self.lat.presences[session.player_id]
@@ -725,6 +731,10 @@ class Encounters:
             raise ValueError("This source requires an active contract objective.")
         player = self.game.players[presence.player_id]
         key = self.source(presence, data)
+        acquisition = deepcopy(player.progress)
+        for pid in data.programs or ((data.asset,) if data.kind == 'program' else ()):
+            learn_program(self.content.programs[pid], acquisition, player.archetype, player.standing,
+                          self.lat.season, allow_known=data.kind != 'program')
         if data.scope != "shared" and key in self.game.identity(player.bbs_user_id).get("lattice_receipts", {}):
             raise ValueError("This identity already holds that record.")
         source = self.lat.sources.refresh(key, data, self.clock.now_tick())
@@ -757,6 +767,9 @@ class Encounters:
         key, player = self.source(presence, data), self.game.players[presence.player_id]
         if key != procedure.source:
             raise ValueError("The contract or source changed before the lift completed.")
+        mission = self.mission_of(player.id, data.id) if data.scope == 'mission' else None
+        if data.scope == 'mission' and mission is None:
+            raise ValueError('That mission is no longer active.')
         unit_id = self.lat.sources.unit_id(key, procedure.generation)
         offer = self.game.crews.check_data(player.id, unit_id) if data.scope == 'shared' else None
         draft, items = deepcopy(player), deepcopy(self.commerce.items)
@@ -765,6 +778,11 @@ class Encounters:
             identity.setdefault("lattice_receipts", {})[key] = unit_id
         serial = self.commerce.serial
         draft.progress.setdefault("lattice_receipts", {})[key] = unit_id
+        if mission:
+            mission_id, mission_stage, attempt = mission.rsplit(':', 2)
+            binding = {'mission': mission_id, 'mission_stage': mission_stage+':'+attempt}
+            draft.progress.setdefault('mission_sources', {})[key] = {
+                **binding, 'unit': unit_id, 'asset': data.asset}
         if data.kind == "chits":
             draft.chits_hand += data.amount
         elif data.kind in ("salvage_data", "item", "schematic"):
@@ -779,24 +797,24 @@ class Encounters:
                 while remaining:
                     serial += 1
                     count = min(remaining, template.stack_max)
-                    inventory.add(draft, make_item(f"{self.game.sessions.origin}:item:{serial}", template,
-                                  player.id, self.clock.now_utc().isoformat(), count))
+                    supplied = make_item(f"{self.game.sessions.origin}:item:{serial}", template,
+                                         player.id, self.clock.now_utc().isoformat(), count)
+                    if mission:
+                        supplied.bound, supplied.secured = True, False
+                        supplied.mission, supplied.mission_stage = binding['mission'], binding['mission_stage']
+                    inventory.add(draft, supplied)
                     remaining -= count
         elif data.kind in ("contribution", "contract_key", "evidence"):
             draft.progress.setdefault("lattice_units", {})[unit_id] = {
                 "kind": data.kind, "asset": data.asset, "amount": data.amount,
                 "source": key, "season": self.lat.season, "owner": player.bbs_user_id}
+            if mission:
+                draft.progress['lattice_units'][unit_id].update(binding)
         elif data.kind == "text":
             draft.progress.setdefault("lattice_records", {})[data.asset or data.id] = unit_id
-        elif data.kind == "program":
-            learned = draft.progress.setdefault("known_programs", [])
-            for pid in data.programs or (data.asset,):
-                if pid not in learned:
-                    learned.append(pid)
-        for pid in data.programs:
-            known = draft.progress.setdefault("known_programs", [])
-            if pid not in known:
-                known.append(pid)
+        for pid in data.programs or ((data.asset,) if data.kind == 'program' else ()):
+            learn_program(self.content.programs[pid], draft.progress, draft.archetype, draft.standing,
+                          self.lat.season, allow_known=data.kind != 'program')
         reward = None
         grant = None
         if presence.core:
@@ -825,6 +843,8 @@ class Encounters:
         self.commerce.outbox[-1]["lattice_state"] = lambda: self.lat.sources.record(self.clock.now_tick(), claim)
         if grant and hasattr(self.game, 'crews'):
             self.game.crews.add_rewards(self.commerce.outbox[-1], player, grant)
+        if hasattr(self.game, 'contracts'):
+            self.game.contracts.lifted(self.commerce.outbox[-1], presence, data, unit_id)
 
     def receive(self, presence: Presence, event: IceEvent, *, name: str,
                 player_source: str = "", reflection: bool = False) -> bool:
@@ -999,6 +1019,8 @@ class Encounters:
             presence.effects.expire(tick)
             if presence.room_destination and tick >= presence.move_until:
                 presence.room, presence.room_destination = presence.room_destination, None
+                if hasattr(self.game, 'contracts'):
+                    self.game.contracts.entered(presence)
                 if presence.descent:
                     known = presence.found_silt.setdefault(presence.instance, set())
                     known.add(presence.room)
@@ -1066,6 +1088,8 @@ class Encounters:
                 try:
                     if procedure.kind == "flip":
                         self.lat.interlock.complete_flip(presence, procedure)
+                    elif procedure.kind == 'plant':
+                        self.finish_contract_plant(presence, procedure)
                     elif procedure.kind == "theft":
                         self.lat.interlock.private.complete_theft(presence, procedure)
                     elif procedure.kind in ("survey", "sample"):
@@ -1108,7 +1132,7 @@ class Encounters:
                      {"id": "risk:"+core_id, "cells": ["Enter with NPC risk", "BLACK ICE may injure body"]}]
                     if core_id else []) + [{"id": "survey", "cells": ["Survey", "3s / 10s cooldown"]}]
         room = instance.graph.room(presence.room)
-        rows = [{"id": "ice:"+i.id, "cells": [i.template.name, f"{i.integrity:g} integrity", i.phase]}
+        rows = self.contract_rows(presence)+[{"id": "ice:"+i.id, "cells": [i.template.name, f"{i.integrity:g} integrity", i.phase]}
                 for i in self.defenders(presence)]
         for ice in self.defenders(presence):
             if ice.template.class_ == "liar" and instance.id not in presence.verified_maps:
@@ -1167,6 +1191,8 @@ class Encounters:
         elif row.startswith("lift:"):
             _, target, generation = row.split(":")
             self.start_lift(presence, target, int(generation))
+        elif row.startswith('plant:'):
+            self.start_contract_plant(presence, row[6:])
         elif row == "descend":
             self.descend(session, risk=True)
         elif row in ("survey", "sample"):
@@ -1248,6 +1274,7 @@ class Encounters:
             presence.cast = presence.procedure = None
             presence.destination = presence.room_destination = None
         elif action == "interact" or key in ("e", "E"):
+            self.inspect_contract(presence)
             cell = self.lat.sectors.cells[presence.sector][presence.cell]
             if presence.instance or cell.core_id or cell.kind == "descent" or self.can_enter(presence, "lat-wake-hall"):
                 self.menus[session.id] = EncounterMenu("room")

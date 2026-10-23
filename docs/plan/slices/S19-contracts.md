@@ -1,6 +1,6 @@
 # S19 — Contracts: template engine, six types, boards, crew scaling, story chains, Vesper
 
-**Status:** planned
+**Status:** done (PR #62)
 **Primary model:** Opus (engine) · **Reviewer:** Gemini or Sonnet writes the content half from the world docs; Opus reviews it
 **Depends on:** S11, S14, S15, S16, S22 · **Milestone:** M3
 **Issue:** https://github.com/Thiesi/blacksite/issues/19
@@ -25,7 +25,8 @@ arcs for Vesper, all eight Season 1 chains and their attributed evidence.
   turned-in states, retries, limits, expiry and atomic reward receipts.
   Implement the board/reward schedules exactly from game design 9.
 - Compose fetch, hack, escort, clear, plant and survey stages. Clear
-  declares lethal/subdue resolution; escort uses willing mission actors;
+  declares lethal/subdue resolution; escort uses willing mission actors
+  who wait at their source positions until recruited;
   survey can inspect a labelled object, compare recorded IDs or observe
   telemetry. No natural-language input or moral-answer scoring.
 - Keyed mission data is scoped to its instance and roster, persisted
@@ -65,7 +66,39 @@ S25 authors remaining city maps; S27 supplies named dialogue; S26 owns
 season settlement and integrated story-chain acceptance. This slice
 implements all contract/work-order logic and fixture scenarios now.
 
+Implementation decisions (game design 7.5/9 and architecture 15.2):
+crew proposals hold no public order; reservation and accepted roster freeze
+on the first committed start. Disconnect preserves progress to the original
+deadline. The final repair action commits allocation and fixed worker
+rewards together, composing over any ordinary source reward. Clinic fee
+changes require a fresh confirmation; Depot cap changes retain hourly
+spending across allocation expiry and restart. Budget details use meta in
+the existing transaction without a SQL schema change. Source callbacks
+finalize before deferred impacts can propose another write.
+
+Plant procedures consume bound supplies only in the source write after
+the canonical channel. Physical pickups and mission item lifts support
+replacement by original workers; benign linked releases remain available
+only for missing-supply recovery. Resumable generated/story jobs stay in
+the journal after withdrawal, preserving frozen terms and earlier stages.
+Story settlement checks completed-template receipts again across parallel
+crew copies. Historical publication quotes retain the paid option.
+
 ## Data and protocol
+
+The authored pool contains six Vesper commissions, three per faction,
+all 33 Season 1 contracts and four service work orders. The first job,
+generated hub commissions and Cold Chain use shipped maps. Story chains
+and the three other services remain in authoring bundles. Their precise
+map, source, dialogue and activation work is recorded in the
+[content handoff](../s19-content-handoff.md).
+
+Boards prefer distinct templates and Vesper brokers non-member generated
+commissions at the Tin Halo, including their turn-in. This does not waive
+story prerequisites. Network surveys use E at the actual cell/core room.
+The Ferrymen race starts a disclosed 180-second recovery window at its
+launch checkpoint; a retry requires launching again, without a live-event
+wait. The shield branch publishes a bounded 20-minute local NPC patrol.
 
 `contracts.json`, service-node records, evidence/text assets and bundle
 manifests follow the entity schema. Menus expose offered/active/done,
@@ -109,6 +142,17 @@ Use typed contract, evidence and work-order intents from architecture
    reconnect to the recorded progress/reward without loss or duplication.
 
 ## Definition of done
+
+The [acceptance record](../../ops/s19-acceptance.md) separates the full
+test suite, installed native terminal runs, disclosed fixtures and future
+geography/human pacing. PR #62 carries final-head CI artifacts and the
+delivered Claude reviews with product-impact triage.
+
+The [earning receipt report](../../ops/s19-earnings.md) extends S16 with
+actual job, loot-sale, core-cash and clinic-quote paths. Its session
+cadence and gross affordability remain explicit assumptions, including
+the difference between a crew lifter's personal cash and support income.
+It preserves the complete-city human pacing gate after S25/S26.
 
 S16 balance handoff: extend its assumed XP schedules with actual contract,
 loot and vendor-sale chit income. Report time to afford canonical weapons,

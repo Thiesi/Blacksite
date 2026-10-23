@@ -377,11 +377,91 @@ receipt_key, retry, resolution`. Receipt keys are unique across all
 contracts, as is each `(branch_group, branch)`.
 
 Each stage uses one of the six verbs, a resolved target and a completion
-condition. Escort includes willing mission NPCs; clear declares lethal
+condition. Escort includes willing mission NPCs who wait at their assigned
+source positions until recruited by an accepted worker; ordinary template
+wandering does not scatter them. A withdrawn worker's follow assignment
+is cleared when the live roster reconciles. Clear declares lethal
 or subdue resolution. Inspect, carry, interact and wait are explicit
 input actions; no text parser or answer matching. A stage declares its
 failure/retry state and receipt key. Story bundles declare all required
 maps, NPCs, dialogue, cores, items and season IDs before activation.
+
+Planting consumes a mission-bound supplied item after a 3 s physical or
+core procedure; a core plant adds 10 trace on start wherever trace
+applies. Cancellation and failed writes retain the item. A missing
+physical supply can be reissued at its earlier pickup, one carried
+replacement per worker. An earlier mission item lift can supply another
+original worker without replaying completed objectives. Benign linked
+manual releases may reopen that supply route while the active worker
+lacks the required item; this grants no future or hazardous control.
+Mission NPCs may use a named zone object as their spawn origin, so a
+future map resolves the authored location without provisional coordinates.
+
+S19 adds `name`, `approach_label` and optional `approaches[]` of
+`id, label, stages[]`; `stages` remains the default approach. Each
+alternative has its own unique stage/receipt keys and the same frozen
+reward. Stages add `label`, positive `quantity` (default one) and
+`seconds` (authored interruptible channel duration, default zero),
+`cost` (the visible action cost), optional typed `destination` for escort,
+`requires_item` (a supplied bound item consumed by plant/delivery), and
+`target_pool[]` of additional typed targets. Core-room targets can name
+their exact `data` record. Optional `linked_control` binds a physical
+release stage to a typed core control targeting the same object; either
+verified route completes that stage. Scaled NPC/item counts may
+reuse a template with distinct mission-owned subjects; finite spatial
+targets are selected without replacement. The completion tags are
+`carried, delivered, lifted, flipped, entered, arrived, defeated, subdued, planted,
+observed, compared, recorded`, matched only against verified server facts.
+
+Contracts may carry `mission_data[]` of mission-scoped `DataSpec` records.
+A `silt_data` target names `sector`, `band` and one exact record from
+that contract. It never names a generated cell, room or coordinate.
+Only active contract content adds these sources to a matching band;
+each copy occupies a visible non-riser cell. Source sites stay stable
+across layouts, while receipt custody includes the mission stage and
+attempt. Cash, programs and schematic unlocks remain contract rewards.
+
+Rewards add `programs[]` of catalog program IDs. Learning, items, chits,
+standing, XP and the contract receipt share one owning transaction.
+All permanent acquisition sources use the same guard and record learned
+IDs in `progress.program_acquisitions[season]` with `known_programs`.
+Counter purchases and data lifts include that record in their payment
+or source transaction. A rejected or failed write spends no payment or
+source. Contract rewards evaluate their own committed standing vector
+before acquisition; a previously known program does not block the rest
+of a legitimate story reward. Membership changes do not revoke learning.
+Publication options can carry their own scoped `permit`, whose optional
+typed `binding` identifies its actual target; a publication
+branch group may omit the fixed `branch` and uses the chosen option ID.
+Permits default to `audience: personal`; an authored `public` audience
+publishes a fixed branch's bounded route for the node. Its accepted
+instance owns one expiry shared by all its worker payouts.
+Fixed branches commit on confirmed acceptance; personal publication
+branches commit at the choosing participant's final action.
+Contract unlock condition `receipt GROUP` requires a paid story outcome
+in that branch group; merely accepting a side is not settlement. Shared
+continuations can therefore require either outcome without forcing the
+opposite exclusive job. An opposite-branch veteran may help another
+worker with zero new payout and no changed personal choice.
+Stages may declare `window_seconds` and an earlier `retry_from` stage
+ID. Progress stores its committed `started_at` UTC. Only the current
+stage's window runs; failure restarts the declared checkpoint and clears
+its later attempt receipts, preserving earlier completed stages. The
+card discloses the window before the field leg begins.
+`consequence` supplies the contract card's compact operational summary.
+Evidence records add `question` and `next_action`; acquisition stores the
+verified location and UTC observation time separately from the source's
+claim. Optional source prose grants no additional progress.
+`related_objective` names the contract, while optional `related_stage`
+narrows acquisition to one of its stages. Claimed author/date and the
+accepted job's season stay separate from the verified acquisition time.
+
+S19 mission NPCs use stable per-instance/stage/attempt/unit IDs. Their
+frozen mission roster controls sight, collision and harm independently
+of later live crew changes. Ordinary outsiders cannot consume or block
+these private bodies. Defeat and restraint retire the unit in the same
+source write that advances the objective; escort arrival does likewise.
+Saved scene checkpoints retain surviving units' positions and condition.
 
 ### 1.11 Dialogue (`dialogue/<npc>.json`)
 
@@ -552,6 +632,13 @@ resident identity, storage, safe, bed, terminal or bank permission.
 `bound` defaults false. Recovery and service-job producers set it for
 goods that cannot be sold, dropped, transferred or fabricated. S12
 enforces the transfer boundary; S10/S19 own those grants. SQLite world
+items also carry optional `mission` (instance ID) and `mission_stage`
+(stage/attempt). These supplies never merge across jobs. Only their
+own objective can consume them; withdrawal, expiry and a completed
+turn-in remove obsolete supplies and inventory references together.
+The fields stay in the existing item JSON; there is no schema migration.
+
+SQLite world
 schema 3 adds `vendor_budgets` (counter ID, UTC hour, remaining chits)
 and `caches` (zone, tile, item IDs, expiry); item ownership and player
 balances commit with these records in one transaction.
@@ -609,6 +696,14 @@ progress, state (offered, active, complete, failed, turned_in),
 expires_at, frozen_roster[], branch_group, stage_receipts[], permits[],
 publication, reward_receipt`. One claim per eligible identity, atomically.
 Story jobs have no overall expiry; bounded field steps may be retried.
+
+S19 records each accepted participant's character/BBS identity, grade,
+archetype and reward/helper role. Each resolved stage retains its target
+quotas, attempt number and distinct subject/action receipts. Retries keep
+the accepted terms and completed earlier stages; stale attempt facts
+cannot advance a replacement actor. Withdrawal is personal. Claim,
+branch and completed-template receipts survive restart; a previously
+rewarded helper cannot earn another story payout through a new crew.
 
 ### 2.8 Season and chronicle
 
@@ -679,8 +774,30 @@ order_id, allocation, allocation_expires, authored_route_variants[]`.
 supplied_bound_items[], completed_actions[], allocation_vote,
 reward_receipts[]`. The reserving player chooses the disclosed
 allocation; the frozen roster sees it before accepting and shares the
-reward. Departure of the whole roster releases the reservation. No
+reward. Explicit withdrawal of the whole roster releases the reservation.
+A disconnect preserves progress until the original UTC deadline. No
 inventory supplies or money may be consumed twice on an interrupted step.
+
+`ServiceNodeTemplate.contract` names a repeatable `service` contract:
+neither story nor crew-scaled, outside the three generated-job slots.
+Its accepted offer carries the reservation deadline. `normal_effects`
+and `fault_effects` are separate from the two allocation effect sets.
+Effects declare `audience: public|workers`; changed public geometry is
+visible to everyone, while reserved cache access, credentials and worker
+discounts remain scoped to the frozen roster. Each layer retains its
+owner, so service expiry cannot undo an event or independent control.
+Allocations add `detail`; services add `safe_return` and `fault_label`
+for the consent card. A reveal/credential effect uses its typed `binding`
+for the actual core control. Published patrols read the current local
+NPC/ICE route, never player locations or an independent simulation roll.
+Ordinary service geometry is the authored base map; fault/allocation
+layers own only their bounded changes.
+
+`VendorBudget` retains hourly `spent` independently of its current
+`limit` and nonnegative `remaining`. Storage joins `vendor_budget_state`
+meta to the existing budget rows in the owning commerce transaction.
+Legacy rows derive ordinary spending from their remaining balance;
+there is no SQL column or schema-version change.
 
 ### 2.14 Expedition
 

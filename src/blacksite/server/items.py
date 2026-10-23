@@ -28,6 +28,8 @@ class ItemInstance:
     health: int | None = None  # Deployed/packed drone condition, entity 2.2.
     key_for: str | None = None  # S18 tenancy generation, never a file path.
     key_tier: int = 0
+    mission: str | None = None  # S19 instance, independent of live crews.
+    mission_stage: str = ''
 
     def __post_init__(self) -> None:
         # Exhausted rechargeable ammunition retains its container at zero.

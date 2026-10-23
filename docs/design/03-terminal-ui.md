@@ -247,6 +247,8 @@ are ordinary text. Arrow navigation cannot move the character.
 - Drain ready input before expiring a lone `Esc`. Rendering or pipe
   backpressure can delay the timer and reader together; queued arrow
   bytes must take precedence over the elapsed framing grace.
+  Preserve a successful read that finishes in the timeout's loop turn;
+  consuming bytes and then losing that result cannot type a chat hotkey.
 - Mouse sequences (`CSI M`, SGR) are recognised and discarded; the client
   never enables mouse reporting. Bracketed paste is recognised and its
   contents discarded.
@@ -324,6 +326,18 @@ A record is acquired by inspection, not by reading every prose page.
 Inspection shows operational controls before optional source text; a
 player can execute the whole job using labels, target markers and
 progress bars. No parser, quiz or correct conversation answer exists.
+
+At 80 columns the contract menu shows one selected list row and expands
+the operational card below it. Up/down selects another record;
+`[`/`]` pages long detail. At 132 columns the list and detail sit beside
+each other. A confirmation remains bound to its chosen card even if new
+proposals arrive. A private/public turn-in shows its actual reward,
+publication audience, scoped effect and duration before the final `Y`.
+At 80 columns the objective and its current action cost use the bottom
+hint line; service state uses the header. Vitals, current danger and
+escape keep their normal positions. The Q panel separates active jobs,
+completed jobs and acquired records. A published patrol adds a visible
+journal entry only while its local telemetry permission is active.
 
 Work-order panels show reservation owner, stage, supplied item, target,
 public/worker allocation, recipients and expiry. The reserving player's

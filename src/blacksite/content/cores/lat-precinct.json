@@ -89,6 +89,15 @@
           "amount": 1,
           "scope": "identity",
           "respawn_seconds": 0
+        },
+        {
+          "id": "war-s1-3-book-record",
+          "label": "Read one page of the mission copy",
+          "kind": "contract_key",
+          "asset": "brann-private-ledger",
+          "amount": 1,
+          "scope": "mission",
+          "respawn_seconds": 0
         }
       ],
       "controls": []

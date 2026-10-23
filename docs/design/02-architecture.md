@@ -656,6 +656,34 @@ machine.
 
 ### 15.1 Actions and readable state
 
+A physical terminal's optional `params.cell` names a public cell of
+`params.sector`; omission uses that sector's ordinary entry. Content
+validation and admission both reject gated, hidden or absent cells.
+This permits a local loan terminal beside a mission cabinet without
+granting a key, discovering a hidden route or altering district uplinks.
+Vesper's parcel latch has one physical objective and a typed linked
+control. Its manual release joins `interlock_state` and
+`contracts_state` in one write; a committed Lattice flip advances the
+same objective. Switching methods before completion consumes no branch
+receipt. A combined contract/vendor counter keeps a Trade hotkey so
+commissioning a board does not remove its shop.
+
+Contract prerequisites are checked against current authoritative facts
+both when proposing and when starting. The card and refusal message
+describe unmet requirements in ordinary language. A paid story helper
+can assist without re-earning entry standing, while retaining zero
+additional reward and no rewritten branch. Future event predicates use
+`Contracts.event_active`, bound by S24 to committed event state.
+Unavailable dialogue/season context fails closed until its owner binds
+it; authoring content does not publish offers.
+
+Permanent program learning uses one pure acquisition rule for contract
+rewards, counters and data. It writes `known_programs` and current-season
+`program_acquisitions` with the owning reward/payment/source receipt.
+The Lattice binds Commerce's current-season provider; it does not infer
+a season from the story's age. Acquisition restrictions do not revoke
+previously learned programs or turn faction loans into permanent copies.
+
 Add typed intents to the existing protocol, not a command parser:
 `journal.open`, `evidence.inspect`, `evidence.publish`,
 `work_order.reserve`, `work_order.perform`, `work_order.allocate`,
@@ -694,6 +722,45 @@ commit. While commit is pending, the affected action key is reserved.
 Failure releases it with a retryable result. Ordinary movement remains
 on the dirty-state schedule. Tests inject commit failure before and
 after durable write, then resend the same request.
+
+S19 forks its pure contract state before an action. The source joins
+`contracts_state` to the same Commerce write as items, participant
+patches, identity caps and other source state; its success callback
+installs that draft before another queued proposal runs. Storage owns
+the meta record and clears an older dirty snapshot after commit. Live
+enrollment proposals create no mission actors or rewards; only the
+confirmed accepted roster becomes durable. Journals, branch choices,
+service effects and their owning reward receipts follow this boundary.
+Finalize the source callback before flushing deferred impacts: those
+impacts can immediately propose another source write. The next proposal
+must see both the retired source and the installed contract draft.
+Mission lifts bind their supplied items before inventory stacking and
+record the exact instance, stage, attempt and source in
+`progress.mission_sources`. Expiry, withdrawal, retry and turn-in retire
+obsolete payloads, player/identity source receipts and the source's
+availability record together; failed cleanup writes retain all of them.
+Acquired journal evidence remains available. Permanent cash, programs
+and schematics belong to an explicit contract reward rather than a
+temporary mission source. Cleanup runs after the source's own callback,
+so it cannot recreate a retired source after the cleanup commits.
+Silt contract sources are authored as `mission_data` on the contract.
+The generated band resolves their sector/band/data binding into its
+own visible cells. The source site stays stable across layout seeds;
+the verified lift adds the exact mission custody. No client supplies
+a generated room address as authority. An inactive chain adds neither
+an offer nor a Silt source.
+In the Lattice, E inspects the server's current public
+cell or normal core room for accepted survey objectives, without an
+extra channel or cooldown. Capture the objective attempt and location
+before queuing its atomic receipt; later acceptance cannot count an
+earlier inspection. Movement discovery remains a separate S16 receipt.
+Actual nearby guards from S22's participation window may contribute to
+a source action; the contract ledger still filters its frozen roster.
+One final action may award ordinary run XP and fixed work-order XP;
+compose the latter over the source's player/identity draft in that same
+transaction. Work-order allocation and payment never run as a later
+notification. An expiring clinic discount invalidates an older confirmed
+quote without charging or drawing a surgery roll.
 
 S16 reward and skill-use functions operate on player/identity drafts.
 NPC defeat joins XP to the spawn retirement and loot receipt; data-lift
@@ -735,6 +802,19 @@ safe checkpoint. Service reservation, allocation, public control expiry,
 relay ownership and season/event overlays remain separate fields so
 removing one layer cannot undo another. Their composed map must preserve
 essential services, outward travel and safe-zone immunity.
+
+Story settlement rechecks the character's completed-template receipt,
+including parallel crew copies accepted before the first payout. A
+second completed copy closes with zero reward in a durable transaction;
+failed closure retains the old state. Historical paid publication cards
+quote their recorded option. Original workers may explicitly resume
+generated/story participation without resetting another worker's progress
+or changing frozen terms; withdrawals discard prior participation credit.
+Work orders retain their separate reservation/withdrawal rules.
+Typed permits default to personal custody. An explicit public audience
+also supports a fixed story branch's bounded public route record. All
+workers in that accepted instance share one expiry; another payout
+cannot extend it. Fixed branch consent remains personal at acceptance.
 
 ### 15.3 Delivery boundaries
 

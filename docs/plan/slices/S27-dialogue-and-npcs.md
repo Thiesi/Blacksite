@@ -190,3 +190,40 @@ the pre-S27 E-to-recruitment fallback swallow the named NPC dialogue.
 S22 [PR #61](https://github.com/Thiesi/Blacksite/pull/61) owns live crew
 consent. Chosen NPC dialogue/admission must preserve individual choices;
 talking or joining a faction cannot silently add a crew participant.
+
+<!-- s19-services:start -->
+### S19 source and service handoff
+
+Reference: [S19 PR #62](https://github.com/Thiesi/Blacksite/pull/62),
+[acceptance record](../../ops/s19-acceptance.md) and
+[PR #38](https://github.com/Thiesi/Blacksite/pull/38).
+
+S19 supplies the implemented source interfaces, 68 authored contracts
+and four service nodes. Full root pytest passed 1344 tests with one
+skip. Installed native acceptance covers both sizes and allocations,
+forks, repair reconnect and paid restart. Consume the merged PR;
+S25/S27/S26 still own real geography, referrals and activation.
+
+Show the chosen and foregone service allocation before consent. Pending
+proposals reserve no public order; roster and reservation freeze on
+committed start. A disconnect preserves progress only until the original
+deadline. Use the server-owned card and personal publication action without
+introducing a group ballot or mandatory lore read.
+<!-- s19-services:end -->
+
+Before S26 activates Season 1, implement Vesper's neutral referral when
+hostile standing blocks a faction's handler. Route actual deliveries
+and turn-in through that broker, waive only the blocked handler standing
+gate, and retain prior-job/settled-branch, grade, item and event checks.
+Use S19's `receipt GROUP` for a continuation after either paid fork;
+an acceptance-only branch flag is insufficient. Keep already-paid
+opposite-branch helpers at zero reward without changing their choice.
+Native hostile-referral acceptance is part of this dialogue integration,
+not proof claimed by S19's inactive authoring bundle.
+
+Use the [S19 content handoff](../s19-content-handoff.md) for its 33
+attributed evidence records and named sources. Default cards distinguish
+observation from the source's claim, question and next action. Optional
+prose cannot become an answer quiz. Vesper's generated-job brokerage is
+already live; the hostile-standing story referral above is still required
+before S26 activation. Keep the two permissions distinct.

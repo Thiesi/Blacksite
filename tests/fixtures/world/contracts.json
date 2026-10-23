@@ -10,7 +10,7 @@
           "id": "s1",
           "verb": "survey",
           "input": "inspect",
-          "completion": "inspected",
+          "completion": "observed",
           "receipt_key": "fx-first-job/s1",
           "target": {
             "kind": "zone_object",
@@ -22,7 +22,7 @@
           "id": "s2",
           "verb": "hack",
           "input": "flip",
-          "completion": "control_flipped",
+          "completion": "flipped",
           "receipt_key": "fx-first-job/s2",
           "target": {
             "kind": "core_control",

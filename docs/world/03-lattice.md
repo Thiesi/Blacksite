@@ -73,7 +73,7 @@ district.
 | The Sink | 30 | 12 / 8 / 10 | Cable Car Bus, Terrace Wards, Floor Market, Sable's Back Room | *The Drop* (hidden, deepest descent in a district) |
 | Chapel Ward | 22 | 10 / 6 / 6 | Nave Node, Bell Gallery, Listening Post Approach | *The Well* (public; the Choir wants you to find it) |
 | Old Works | 34 | 12 / 6 / 16 | Foundry Floor, Annex Records, Ninety-Nine's Drop, the Tape Room | *Cut Cable* (hidden) |
-| Terraces | 36 | 20 / 12 / 4 | Block A Super, Block B Super, Outpost Feed, and one private-core entrance per rented apartment | *Basement Riser* (gated, resident key) |
+| Terraces | 36 | 20 / 12 / 4 | Block A Super, Block B Super, Outpost Feed, Stairwell C cabinet, and one private-core entrance per rented apartment | *Basement Riser* (gated, resident key) |
 | Sodium Row | 20 | 14 / 4 / 2 | House Lights, Tin Halo Back Bar, Sign Grid | *Stage Door* (hidden) |
 | Undercity | 26 | 4 / 8 / 14 | Pumphouse Panel, Cavern Relay, Outworks Seal Approach | *The Seam* (public and unmarked; it does not need to hide) |
 | Scour | 18 | 6 / 12 / 0 | one uplink cell per relay: Landing Uplink, Mile Relay, Beacon Relay, Crash Relay, Far Relay, Patrol Beacon | *Static* (gated, only during Ring-fall) |
@@ -266,6 +266,19 @@ oldworks-yards`. ICE: Tripwire ×2, Glasshouse, Mirror, Kiln, Blackglass
 (dormant until a Glasshouse breaks).
 
 ### 3.8 Terraces
+
+**Stairwell C cabinet** (`lat-stairwell-c`): Kestrel housing maintenance,
+tier 1, three rooms, no ICE and no trace monitor. Hardware: cabinet
+beside the parcel hatch at Block 4, stairwell C in `terraces-blocks`.
+Its sole control opens that hatch for 120 seconds with a current
+mission permission. The adjacent public loan terminal reaches the
+local entrance directly. The same latch has a 5 s manual release.
+Neither controls the public housing entrance. The other rooms hold
+optional wiring and service labels, with no liftable loot or repeatable
+run reward. Both release points sit in the small sheltered stairwell
+pocket; the route through the district remains contested. This
+implements Vesper's first job without borrowing a tier 2 core or
+changing Wake training.
 
 **Private core (template)** (`lat-private-core`) — resident, tier 1 to 3, 3
 to 5 rooms. Hardware: the apartment's wall panel @ the apartment's zone slug
@@ -497,6 +510,13 @@ not refund spent trace. Compass identifies the decoy without that cost.
 Pulse marks the casting district cell or core entrance for the crew for
 20 s. The entry marker stays fixed; it exposes no interior room or Silt
 position. Pulse cannot be cast in the Silt.
+
+Lance, Bunker, Signet and Anchor have fixed counter listings at the Tin
+Halo, without a faction-membership gate. Their base prices remain the
+catalog values; normal trade modifiers apply. A Blackout image can be
+found in the Reach. Its receipt belongs to the finder's identity and
+season, so a crew cannot consume another caller's copy. Blackout is an
+optional encounter reward, never a prerequisite for the story.
 
 Old catalog IDs are pre-implementation renames, not saved-game aliases.
 In particular Shroud is stealth; Umbrella is the starter shield. There

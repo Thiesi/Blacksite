@@ -46,7 +46,13 @@ async def commit_key(probe: NativeProbe, connection: Connection, value: bytes,
     async with asyncio.timeout(20):
         while not completed():
             await wait(lambda:not probe.commerce.pending)
-            await key(connection,value)
+            await wait(lambda:connection.session.ack_revision == connection.session.view_revision)
+            # A channel or queued write may finish while its new view is
+            # being acknowledged. Never send an obsolete action into the
+            # next objective or the ordinary nearby interaction.
+            if completed():
+                break
+            await connection.caller.write(value)
             try:
                 await wait(completed,.5)
             except TimeoutError:

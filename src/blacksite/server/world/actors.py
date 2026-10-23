@@ -39,3 +39,22 @@ class Actor:
     @property
     def position(self) -> tuple[int, int]:
         return self.x, self.y
+
+
+def mission_pair(one: Actor, other: Actor) -> bool:
+    """Game 9.3: frozen mission copies cannot collide with or harm outsiders.
+
+    Unscoped S11 actors retain their existing ownership rules. A player
+    drone acts for its controller; a mission NPC is not that controller.
+    """
+    for scoped, observer in ((one, other), (other, one)):
+        roster = scoped.behaviour.get('mission_roster')
+        if roster is None:
+            continue
+        if (observer.behaviour.get('mission_roster') is not None
+                and observer.behaviour.get('mission') == scoped.behaviour.get('mission')):
+            continue
+        identity = observer.owner if observer.behaviour.get('player_drone') else observer.id
+        if identity not in roster:
+            return False
+    return True

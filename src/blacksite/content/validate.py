@@ -35,6 +35,8 @@ __all__ = ["Problem", "validate", "exit_warnings", "main"]
 # 00-game-design.md section 5.1: zone width 40-200, height 20-100.
 ZONE_WIDTH = (40, 200)
 ZONE_HEIGHT = (20, 100)
+MAX_CONTRACT_OBJECTIVE_FACTOR = 3  # Game 9.1: a five-person roster.
+CONTRACT_PLANT_SECONDS = 3  # Game 9.1: physical and core planting.
 # 00-game-design.md section 6.2: a core has 3 to 12 rooms, tier 1 to 5;
 # 01-entities.md section 1.4: tier 0 only for the Wake training core.
 CORE_ROOMS = (3, 12)
@@ -483,6 +485,11 @@ class _Validator:
                 self.report(*owner, "workshop makes must name a supported filter", obj.id)
             if obj.kind == "terminal" and obj.params.get("sector") is not None:
                 self.ref("sectors", obj.params["sector"], owner, obj.id)
+                if obj.params.get("cell") is not None:
+                    sector = self.t.sectors.get(obj.params["sector"])
+                    cell = next((c for c in sector.cells if c.id == obj.params["cell"]), None) if sector else None
+                    if cell is None or cell.access_kind != "public":
+                        self.report(*owner, "terminal cell must name an existing public district entry", obj.id)
             if obj.params.get("training_npc"):
                 self.ref("npcs",str(obj.params["training_npc"]),owner,"training NPC")
                 tile = obj.params.get("training_tile")
@@ -824,6 +831,8 @@ class _Validator:
                 self._check_control(core, control)
 
     def _check_data(self, owner: tuple[str, str], data: s.DataSpec, label: str) -> None:
+        if data.scope == 'mission' and (data.kind in ('chits', 'program', 'schematic') or data.programs):
+            self.report(*owner, 'mission data cannot grant unbound cash or permanent unlocks; use the contract reward', data.id)
         if data.respawn_seconds < 0 or not 0 < data.chance <= 1:
             self.report(*owner, f"{label}: data respawn/chance is invalid", data.id)
         refs = {"text": "text", "item": "items", "salvage_data": "items", "schematic": "items",
@@ -1245,6 +1254,11 @@ class _Validator:
             owner = ("evidence", eid)
             self.ref("text", ev.asset, owner, "asset")
             self.ref("contracts", ev.related_objective, owner, "related_objective")
+            if ev.related_stage:
+                job = self.t.contracts.get(ev.related_objective)
+                if job is None or ev.related_stage not in {
+                        stage.id for stage in (*job.stages, *(st for a in job.approaches for st in a.stages))}:
+                    self.report(*owner, "related_stage must name a stage of related_objective")
             for name in ("observation", "source", "claim"):
                 if not getattr(ev, name).strip():
                     self.report(*owner, f"{name} must not be empty")
@@ -1281,16 +1295,51 @@ class _Validator:
     def check_contracts(self) -> None:
         receipt_owner: dict[str, str] = {}
         branch_owner: dict[tuple[str, str], str] = {}
+        mission_owner: dict[str, str] = {}
         for cid, con in self.each("contracts"):
             assert isinstance(con, s.ContractTemplate)
             owner = ("contracts", cid)
+            for data in con.mission_data:
+                self._check_data(owner, data, 'mission data')
+                if data.scope != 'mission':
+                    self.report(*owner, 'contract mission_data must be mission scoped', data.id)
+                if data.id in mission_owner:
+                    self.report(*owner, f'mission data id is also used by {mission_owner[data.id]}', data.id)
+                mission_owner[data.id] = cid
+                if self.t.silt and any(d.id == data.id for b in self.t.silt.bands for d in b.data):
+                    self.report(*owner, 'contract mission data cannot replace an ordinary Silt source', data.id)
+            if con.service and (con.story or con.crew_scaling):
+                self.report(*owner, "a service contract is repeatable and never crew-scaled")
+            if con.service and (con.reward.chits != (200, 200) or con.reward.xp != 100
+                    or con.reward.standing != {con.giver: 5} or con.reward.items or con.reward.programs):
+                self.report(*owner, "a service contract uses the standard Game 7.5 worker reward")
             if con.giver != "vesper":
                 self.ref("factions", con.giver, owner, "faction")
             if not con.stages:
                 self.report(*owner, "a contract needs at least one stage")
+            if len({a.id for a in con.approaches}) != len(con.approaches) or any(a.id == 'default' for a in con.approaches):
+                self.report(*owner, "approach ids must be unique and cannot be default")
             stage_ids: set[str] = set()
-            for stage in con.stages:
+            stages = (*con.stages, *(stage for a in con.approaches for stage in a.stages))
+            for approach in con.approaches:
+                if not approach.stages or not approach.label:
+                    self.report(*owner, "an approach needs a label and stages", approach.id)
+            for stage in stages:
                 label = f"stage {stage.id}"
+                if stage.seconds < 0:
+                    self.report(*owner, f"{label}: action seconds cannot be negative", stage.id)
+                if stage.window_seconds < 0:
+                    self.report(*owner, f'{label}: field window cannot be negative', stage.id)
+                sequence = next((a.stages for a in con.approaches if stage in a.stages), con.stages)
+                if stage.retry_from and stage.retry_from not in [s.id for s in sequence[:sequence.index(stage)+1]]:
+                    self.report(*owner, f'{label}: retry checkpoint must be this or an earlier stage', stage.id)
+                if stage.verb == 'plant':
+                    if not stage.requires_item and not stage.target.item:
+                        self.report(*owner, f'{label}: a plant declares its supplied item', stage.id)
+                    if stage.seconds not in (0, CONTRACT_PLANT_SECONDS):
+                        self.report(*owner, f'{label}: planting takes {CONTRACT_PLANT_SECONDS} seconds', stage.id)
+                if stage.verb == 'fetch' and stage.completion == 'carried' and not stage.target.item:
+                    self.report(*owner, f'{label}: a pickup declares its supplied item', stage.id)
                 if stage.id in stage_ids:
                     self.report(*owner, f"{label}: duplicate stage id", stage.id)
                 stage_ids.add(stage.id)
@@ -1301,21 +1350,69 @@ class _Validator:
                 if stage.verb == "clear" and stage.resolution is None:
                     self.report(*owner, f"{label}: a clear stage declares lethal or subdue", stage.id)
                 self._check_target(owner, label, stage.target, stage.id)
+                if stage.linked_control:
+                    self._check_target(owner, label+' linked control', stage.linked_control, stage.id)
+                    if stage.linked_control.kind != 'core_control' or stage.target.kind != 'zone_object':
+                        self.report(*owner, f"{label}: a linked control pairs a physical object with a core control", stage.id)
+                    core = self.t.cores.get(stage.linked_control.core)
+                    control = next((c for r in core.rooms for c in r.controls
+                        if c.id == stage.linked_control.control), None) if core else None
+                    if control and (control.target.zone, control.target.object) != (stage.target.zone, stage.target.object):
+                        self.report(*owner, f"{label}: linked control targets another physical object", stage.id)
+                    if control and (control.scope != 'mission' or control.permission != 'contract'
+                            or control.action != 'open' or control.safety_policy != 'none'):
+                        self.report(*owner, f'{label}: a linked manual release is a benign mission-scoped open', stage.id)
+                if stage.completion == 'lifted' and stage.target.kind == 'core_room' and stage.target.data is None:
+                    self.report(*owner, f"{label}: a lift names its exact room data", stage.id)
+                if stage.requires_item:
+                    self.ref('items', stage.requires_item, owner, label+' supplied item', stage.id)
+                if stage.destination:
+                    self._check_target(owner, label+' destination', stage.destination, stage.id)
+                elif stage.verb == 'escort':
+                    self.report(*owner, f"{label}: escort needs a typed destination", stage.id)
+                if stage.quantity < 1:
+                    self.report(*owner, f"{label}: quantity must be positive", stage.id)
+                for target in stage.target_pool:
+                    self._check_target(owner, label, target, stage.id)
+                    if target.kind != stage.target.kind:
+                        self.report(*owner, f"{label}: pool target kinds must match", stage.id)
+                maximum = stage.quantity * (MAX_CONTRACT_OBJECTIVE_FACTOR
+                                           if con.crew_scaling and not con.story else 1)
+                if stage.target.kind not in ('npc', 'item') and len(stage.target_pool) + 1 < maximum:
+                    self.report(*owner, f"{label}: target pool is too small for the accepted roster", stage.id)
+                tags = dict((
+                    ('fetch', ('carried', 'delivered')), ('hack', ('lifted', 'flipped', 'entered')),
+                    ('escort', ('arrived',)), ('clear', ('defeated', 'subdued')),
+                    ('plant', ('planted',)), ('survey', ('observed', 'compared', 'recorded')),
+                ))
+                if stage.completion not in tags[stage.verb]:
+                    self.report(*owner, f"{label}: completion is not a {stage.verb} server fact", stage.id)
             self._check_reward(owner, con.reward, "reward")
+            self._check_permit(owner, con.permit_scope, "permit")
             for opt in con.publication_options:
                 self._check_reward(owner, opt.reward, f"publication {opt.id}")
+                self._check_permit(owner, opt.permit, f"publication {opt.id}")
             if len({o.id for o in con.publication_options}) != len(con.publication_options):
                 self.report(*owner, "publication option ids are not unique")
+            if con.publication_options and (con.branch_group is None or con.branch is not None):
+                self.report(*owner, "publication choices need a branch group without a fixed branch")
             for ev in con.evidence_assets:
                 self.ref("evidence", ev, owner, "evidence", ev)
             self.ref("contracts", con.chain, owner, "chain")
-            if (con.branch_group is None) != (con.branch is None):
+            if (con.branch_group is None and con.branch is not None
+                    or con.branch_group is not None and con.branch is None and not con.publication_options):
                 self.report(*owner, "branch_group and branch are set together")
             elif con.branch_group is not None and con.branch is not None:
                 key = (con.branch_group, con.branch)
                 if key in branch_owner:
                     self.report(*owner, f"branch {con.branch_group}/{con.branch} is also {branch_owner[key]!r}")
                 branch_owner[key] = cid
+            elif con.branch_group is not None:
+                for option in con.publication_options:
+                    key = (con.branch_group, option.id)
+                    if key in branch_owner:
+                        self.report(*owner, f"branch {key[0]}/{key[1]} is also {branch_owner[key]!r}")
+                    branch_owner[key] = cid
             if con.season is not None and str(con.season) not in self.t.seasons and self.current_active and con.story:
                 self.report(*owner, f"season {con.season} is not defined")
             for cond in con.unlock_conditions:
@@ -1323,6 +1420,11 @@ class _Validator:
 
     def _check_target(self, owner: tuple[str, str], label: str, t: s.StageTarget, needle: str) -> None:
         what = f"{label}: target"
+        if t.item is not None and t.kind != 'item':
+            self.ref('items', t.item, owner, what+' supplied item', needle)
+        if t.kind in ('item', 'npc') and t.zone is not None and self.ref('zones', t.zone, owner, what, needle):
+            if t.object is not None and self.object_at(t.zone, t.object) is None and self.current_active:
+                self.report(*owner, f"{what}: object {t.object!r} does not exist in {t.zone}", needle)
         if t.kind in ("zone_object", "zone_tile"):
             if t.zone is None or not self.ref("zones", t.zone, owner, what, needle):
                 if t.zone is None:
@@ -1340,12 +1442,29 @@ class _Validator:
             core = self.t.cores[t.core]
             if t.kind == "core_room" and not any(r.id == t.room for r in core.rooms):
                 self.report(*owner, f"{what}: room {t.room!r} does not exist in {t.core}", needle)
+            if t.kind == 'core_room' and t.data is not None and not any(
+                    r.id == t.room and any(d.id == t.data for d in r.data) for r in core.rooms):
+                self.report(*owner, f"{what}: data {t.data!r} does not exist in {t.core}/{t.room}", needle)
             if t.kind == "core_control" and not any(c.id == t.control for r in core.rooms for c in r.controls):
                 self.report(*owner, f"{what}: control {t.control!r} does not exist in {t.core}", needle)
+        elif t.kind == 'silt_data':
+            if t.sector is None or not self.ref('sectors', t.sector, owner, what, needle):
+                if t.sector is None:
+                    self.report(*owner, f'{what} needs a sector', needle)
+            if not self.t.silt or t.band not in {b.id for b in self.t.silt.bands}:
+                self.report(*owner, f'{what} needs an authored Silt band', needle)
+            con = self.t.contracts.get(owner[1]) if owner[0] == 'contracts' else None
+            if con is None or t.data not in {d.id for d in con.mission_data}:
+                self.report(*owner, f'{what} needs this contract\'s exact mission data', needle)
+            if t.core is not None or t.room is not None or t.cell is not None or t.tile is not None:
+                self.report(*owner, f'{what}: Silt data uses a band, never coordinates from a different seed', needle)
         elif t.kind == "npc":
             if t.npc is None:
                 self.report(*owner, f"{what} needs an npc", needle)
             self.ref("npcs", t.npc, owner, what, needle)
+            if t.zone is not None and self.ref('zones', t.zone, owner, what, needle) and t.tile is not None:
+                if not self.passable(self.t.zones[t.zone], t.tile):
+                    self.report(*owner, f"{what}: NPC spawn tile is not passable", needle)
         elif t.kind == "item":
             if t.item is None:
                 self.report(*owner, f"{what} needs an item", needle)
@@ -1365,6 +1484,21 @@ class _Validator:
             self.ref("factions", fid, owner, f"{label}: standing", fid)
         for item in r.items:
             self.ref("items", item, owner, f"{label}: item", item)
+        for program in r.programs:
+            self.ref("programs", program, owner, f"{label}: program", program)
+        if r.xp < 0:
+            self.report(*owner, f"{label}: XP must not be negative")
+
+    def _check_permit(self, owner: tuple[str, str], permit: s.Permit | None, label: str) -> None:
+        if permit is None:
+            return
+        if permit.expiry_seconds <= 0:
+            self.report(*owner, f"{label}: expiry must be positive")
+        if permit.binding:
+            self._check_target(owner, label, permit.binding, permit.target)
+        elif self.current_active and not any(permit.target in getattr(self.t, kind)
+                for kind in ('zones', 'cores', 'npcs', 'routes')):
+            self.report(*owner, f"{label}: target needs a resolved binding", permit.target)
 
     def condition(self, text: str, owner: tuple[str, str], what: str) -> None:
         """Check one condition string from the closed set (04-dramatis-
@@ -1395,6 +1529,9 @@ class _Validator:
                 self.ref("evidence", arg, owner, label, name)
             elif kind == "SERVICE":
                 self.ref("services", arg, owner, label, name)
+            elif kind == 'RECEIPT' and owner[0] == 'contracts' and self.current_active:
+                if not any(job.branch_group == arg for job in self.t.contracts.values()):
+                    self.report(*owner, f'{label}: no branch group {arg!r} can supply this receipt', name)
             elif kind == "STAGE" and arg not in s.SEASON_STAGES:
                 self.report(*owner, f"{label}: {arg!r} is not one of {', '.join(s.SEASON_STAGES)}", name)
             elif kind == "BALANCE" and arg not in s.BALANCES:
@@ -1420,9 +1557,35 @@ class _Validator:
 
     def _check_effect(self, owner: tuple[str, str], label: str, e: s.Effect) -> None:
         zone = None
+        if e.binding:
+            self._check_target(owner, label+' binding', e.binding, e.binding.control or e.binding.object or e.binding.npc or '')
         if e.zone is not None and self.ref("zones", e.zone, owner, label):
             zone = self.t.zones[e.zone]
         self.ref("sectors", e.sector, owner, label)
+        layout = e.params.get('layout')
+        if layout is not None and zone is not None and self.current_active:
+            if not any(item.id == layout for item in zone.meta.layouts):
+                self.report(*owner, f"{label}: layout {layout!r} does not exist in {zone.id}")
+        service = e.params.get('service')
+        vendor = e.params.get('vendor')
+        if vendor is not None:
+            if isinstance(vendor, str):
+                self.ref('vendors', vendor, owner, label+' vendor')
+            else:
+                self.report(*owner, f'{label}: vendor must be an id')
+        object_id = e.params.get('object')
+        if object_id is not None and self.current_active and (
+                not isinstance(object_id, str) or zone is None or self.object_at(zone.id, object_id) is None):
+            self.report(*owner, f'{label}: effect object needs a resolved zone/object binding', str(object_id))
+        if service in ('surgery', 'buyback_budget'):
+            multiplier = e.params.get('multiplier')
+            valid = isinstance(multiplier, (int, float)) and not isinstance(multiplier, bool)
+            valid = valid and (.8 <= multiplier <= 1 if service == 'surgery' else multiplier == 2)
+            if e.type != 'price_modifier' or e.zone is None or not valid:
+                self.report(*owner, f"{label}: invalid scoped {service} multiplier")
+        if e.params.get('what') == 'credential' and (
+                e.binding is None or e.binding.kind != 'core_control'):
+            self.report(*owner, f"{label}: a service credential needs an exact core-control binding")
         region_ok = True
         if zone is not None and e.region is not None and not self._region_in_bounds(zone, e.region):
             self.report(*owner, f"{label}: region is outside {zone.id}")
@@ -1481,6 +1644,13 @@ class _Validator:
                     if self.object_at(svc.zone, obj) is None:
                         self.report(*owner, f"target object {obj!r} does not exist in {svc.zone}", obj)
             self.ref("cores", svc.core, owner, "core")
+            if svc.contract is not None and self.ref("contracts", svc.contract, owner, "contract"):
+                job = self.t.contracts[svc.contract]
+                if not job.service or job.story or job.crew_scaling:
+                    self.report(*owner, "a work order must be a fixed, repeatable service contract")
+            for label, effects in (("normal", svc.normal_effects), ("fault", svc.fault_effects)):
+                for i, effect in enumerate(effects):
+                    self._check_effect(owner, f"{label} effect {i}", effect)
             if sorted(a.id for a in svc.allocations) != ["common", "reserve"]:
                 self.report(*owner, "a service has exactly one common and one reserve allocation")
             for alloc in svc.allocations:
@@ -1634,6 +1804,9 @@ class _Validator:
         for sid, svc in sorted(self.t.services.items()):
             if not self.is_active("services", sid):
                 continue
+            for label, effects in (("normal", svc.normal_effects), ("fault", svc.fault_effects)):
+                yield f"service {sid} {label}", ("services", sid), frozenset(
+                    x for e in effects for x in e.exits_closed)
             for alloc in svc.allocations:
                 yield f"service {sid} {alloc.id}", ("services", sid), frozenset(x for e in alloc.effects for x in e.exits_closed)
 

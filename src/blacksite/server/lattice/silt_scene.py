@@ -54,8 +54,15 @@ class BandGraph:
         data: dict[str, list[DataSpec]] = {cell.id: [] for cell in band.cells}
         # Each authored data row is one stable site, even if its cell moves.
         self.sites: dict[str, str] = {}
-        for record in rules.data:
-            cid = rng.choice(optional)
+        mission_data = {record.id: record for job in content.contracts.values()
+            if content.active('contracts', job.id)
+            for stage in (*job.stages, *(s for a in job.approaches for s in a.stages))
+            for target in (stage.target, *stage.target_pool)
+            if target.kind == 'silt_data' and target.sector == descent.sector and target.band == band.id
+            for record in job.mission_data if record.id == target.data}
+        for record in (*rules.data, *(mission_data[key] for key in sorted(mission_data))):
+            candidates = [cid for cid in optional if cid in visible] if record.id in mission_data else optional
+            cid = rng.choice(candidates)
             data[cid].append(record)
             self.sites[record.id] = f"{descent.sector}:{band.id}:{record.id}"
         self.rooms = {cell.id: Room(cell.id, cell.neighbours, tuple(data[cell.id]),

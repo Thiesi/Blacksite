@@ -36,6 +36,7 @@ class Lattice:
         self.sectors = Sectors(self.content.sectors.values())
         state = state or {}
         self.season = state.get("season", 0)
+        self.combat.commerce.program_season = lambda: self.season
         self.sources = Sources(self.game.sessions.origin, state.get("lattice", {}), self.clock.now_tick())
         self.presences: dict[str, Presence] = {}
         self.transitions: dict[str, tuple[str, int]] = {}
@@ -266,7 +267,12 @@ class Lattice:
         if not configured:
             configured = list(self.content.starts[player.archetype].programs)
         rig = self.fit_rig(configured, slots)
-        presence = Presence(player.id+":presence", player.id, sector, self.sectors.entrance(sector), rig,
+        cell = str(terminal.spec.params.get("cell", self.sectors.entrance(sector))) if terminal else self.sectors.entrance(sector)
+        entry = self.sectors.cells[sector].get(cell)
+        if entry is None or entry.access_kind != "public":
+            self.log(session, "This terminal has no public district entry.", True)
+            return
+        presence = Presence(player.id+":presence", player.id, sector, cell, rig,
                             integrity=self.integrity(player), integrity_max=self.integrity_limit(player), loaned_rig=loaned)
         if terminal and (loaned or target is not None):
             presence.jack_source = str(terminal.spec.params.get("player_drone",""))

@@ -352,9 +352,64 @@
         "name": "outpost cameras",
         "control": "outpost-cameras"
       }
+    },
+    {
+      "id": "stairwell-c-parcel-hatch",
+      "tile": [
+        72,
+        24
+      ],
+      "kind": "door",
+      "params": {
+        "name": "stairwell C parcel hatch",
+        "open": false
+      }
+    },
+    {
+      "id": "stairwell-c-parcel",
+      "tile": [
+        72,
+        23
+      ],
+      "kind": "cache",
+      "params": {
+        "name": "Vesper parcel shelf"
+      }
+    },
+    {
+      "id": "stairwell-c-loan",
+      "tile": [
+        71,
+        25
+      ],
+      "kind": "terminal",
+      "params": {
+        "name": "stairwell C loan terminal",
+        "sector": "lat-terraces",
+        "cell": "lat-terraces-c11"
+      }
+    },
+    {
+      "id": "stairwell-c-hardware",
+      "tile": [
+        72,
+        25
+      ],
+      "kind": "hardware",
+      "params": {
+        "name": "stairwell C cabinet",
+        "core": "lat-stairwell-c"
+      }
     }
   ],
-  "pockets": [],
+  "pockets": [
+    {
+      "x": 69,
+      "y": 22,
+      "w": 7,
+      "h": 5
+    }
+  ],
   "lore": [
     "zone-terraces-blocks"
   ],
