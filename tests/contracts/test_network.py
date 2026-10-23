@@ -4,7 +4,7 @@ from dataclasses import replace
 
 import pytest
 
-from blacksite.content.schema import DataSpec, EvidenceRecord, Stage, StageTarget
+from blacksite.content.schema import Allocation, DataSpec, Effect, EvidenceRecord, Stage, StageTarget
 from tests.contracts.test_engine import template
 from tests.lattice.test_engine import runners, intent
 from tests.lattice.test_encounters import enter
@@ -90,3 +90,33 @@ def test_game_9_3_enter_objective_uses_real_admission_and_ordinary_exploration_a
     assert owner.state.engine.instances[iid].state == 'complete'
     assert presence.core == core.id
     assert not game.core.commerce.pending
+
+
+def test_game_7_5_public_telemetry_reveals_actual_patrols_to_other_runners_until_expiry(runners) -> None:
+    game, caller, other, outsider = runners
+    owner = game.core.contracts
+    players = [game.core.characters.players[c.session.player_id] for c in (caller, other, outsider)]
+    for player, client in zip(players, (caller, other, outsider)):
+        game.core.characters.snapshot(player, game.core.characters.sim.avatars[client.session.user_id])
+    from tests.contracts.test_service_adapter import service, start
+    from tests.contracts.test_service_effects import change
+    fixture = game, owner, [caller, other, outsider], players
+    sid, target = service(fixture)
+    core = owner.content.cores['lat-civic-ledger']
+    change(owner, sid, allocations=(Allocation('common', 'Publish patrols',
+        (Effect('reveal', binding=StageTarget('core_room', core=core.id, room=core.entry),
+                params={'what': 'patrol_route'}),)), Allocation('reserve', 'Workers')))
+    instance = start(fixture, sid, (players[0].id,))
+    owner.actions.perform(caller.session, instance.id, target)
+    game.commit_commerce()
+    one = enter(game, caller, core.id)
+    two = enter(game, other, core.id)
+    routes = owner.effects.patrols(players[1].id)
+    assert routes and all('Runner' not in route for route in routes)
+    actual = {ice.template.name for ice in owner.lat.encounters.core(two).ice.values() if ice.alive}
+    assert all(route.split(':')[0] in actual for route in routes)
+    body = owner.lat.view(other.session, two)
+    _, body = owner.lat.encounters.view(other.session, two, body)
+    assert body['published_patrol']
+    game.clock.advance(12000)
+    assert not owner.effects.patrols(players[0].id) and not owner.effects.patrols(players[1].id)

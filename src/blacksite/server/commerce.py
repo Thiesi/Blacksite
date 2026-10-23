@@ -16,7 +16,7 @@ from blacksite.server.loop import TickContext
 from blacksite.server.players import Player
 from blacksite.server.protocol import Frame
 from blacksite.server.sessions import QUEUE_LIMIT, Session
-from blacksite.server.vendors import VendorBudget, permitted, price
+from blacksite.server.vendors import BUYBACK_BUDGET, VendorBudget, permitted, price
 from blacksite.server.wake import menu
 from blacksite.server.world.simulation import MENU_TIMEOUT_SECONDS
 from blacksite.server.world.zone import ObjectState
@@ -50,6 +50,8 @@ class Commerce:
         self.waiting: deque[tuple[str,str,dict[str,Any],bool] | Callable[[], None]] = deque()
         self.prompt_serial = 0
         self.after_settle: Callable[[], None] = lambda: None
+        self.budget_multiplier: Callable[[Vendor, str], float] = lambda vendor, counter: 1
+        self.vendor_available: Callable[[Vendor, str], bool] = lambda vendor, counter: True
         self.item_label: Callable[[ItemInstance], str] = lambda item: self.content.items[item.template].name
         self.sync_caches()
 
@@ -85,6 +87,8 @@ class Commerce:
         vendor = self.content.vendors.get(vid)
         if not vendor or not self.content.active("vendors", vid) or obj.spec.kind != "vendor":
             raise ValueError("That counter is not open.")
+        if not self.vendor_available(vendor, self.sim.avatars[session.user_id].zone+':'+target):
+            raise ValueError('This surplus counter is closed until its public work order is repaired.')
         # The local, server-owned object is the authority. A clinic template
         # serves several halls, with a distinct budget for each object.
         return vendor, self.sim.avatars[session.user_id].zone + ":" + target
@@ -193,11 +197,11 @@ class Commerce:
                 if not proceeds:
                     raise ValueError("That quantity has no resale value.")
                 budget = budgets.setdefault(budget_key, VendorBudget(int(now) // 3600))
-                budget.refill(now)
+                budget.refill(now, int(BUYBACK_BUDGET*self.budget_multiplier(vendor, budget_key)))
                 if budget.remaining < proceeds:
                     raise ValueError("This counter's hourly buy-back budget is spent.")
                 inventory.remove(draft, iid, count, next_id)
-                budget.remaining -= proceeds
+                budget.spend(proceeds)
                 draft.chits_hand += proceeds
                 message = f"Sold {template.name} for {proceeds} chits."
             else:
@@ -411,8 +415,10 @@ class Commerce:
                 self.toast(session, effect["message"])
         elif session:
             self.toast(session, "The transfer could not be saved. Your goods remain.")
-        self.after_settle()
         if effect.get("callback"): effect["callback"](success)
+        # Deferred impacts can immediately propose another durable source.
+        # Retire this source and install its contract draft first.
+        self.after_settle()
         if success:
             # Callbacks can queue ordinary player snapshots while this
             # outbox is draining. A later reward receipt must not be
@@ -559,10 +565,10 @@ class Commerce:
         if screen.kind == "vendor":
             vendor, budget_key = self.vendor(session, screen.target)
             budget = deepcopy(self.budgets.get(budget_key, VendorBudget(int(self.clock.now_utc().timestamp())//3600)))
-            budget.refill(self.clock.now_utc().timestamp())
+            budget.refill(self.clock.now_utc().timestamp(), int(BUYBACK_BUDGET*self.budget_multiplier(vendor, budget_key)))
             title = vendor.name
             title += " - " + ("SELL" if screen.sell else "BUY")
-            detail = f"Hand {player.chits_hand}  Buy-back budget {budget.remaining}/2000"
+            detail = f"Hand {player.chits_hand}  Buy-back budget {budget.remaining}/{budget.limit}"
             if screen.sell:
                 for iid in player.inventory:
                     item = self.items[iid]

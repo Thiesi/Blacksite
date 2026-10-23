@@ -3,9 +3,10 @@
 from collections.abc import Callable, Iterator
 from copy import deepcopy
 from dataclasses import dataclass, field
+from math import ceil
 from typing import Any
 
-from blacksite.content.schema import StageTarget
+from blacksite.content.schema import Stage, StageTarget
 from blacksite.server.clock import TICK_HZ
 from blacksite.server.contracts.engine import Fact, Instance, Offer, Participant, Payout, Progress, matches, target_record
 from blacksite.server.contracts.ledger import Ledger
@@ -14,7 +15,8 @@ from blacksite.server.inventory import Inventory
 from blacksite.server.items import ItemInstance, make_item
 from blacksite.server.lattice.programs import can_acquire
 from blacksite.server.loop import TickContext
-from blacksite.server.progression import Grant
+from blacksite.server.progression import Grant, award
+from blacksite.server.factions import apply_vector
 from blacksite.server.protocol import Frame
 from blacksite.server.sessions import Session
 
@@ -50,6 +52,28 @@ class Contracts:
         self.scenes = Scenes(self)
         from blacksite.server.contracts.actions import Actions
         self.actions = Actions(self)
+        from blacksite.server.contracts.effects import ServiceEffects
+        self.effects = ServiceEffects(self)
+        clinic_fee = self.progression.clinics.service_multiplier
+        self.progression.clinics.service_multiplier = lambda player, vendor: min(
+            clinic_fee(player, vendor), self.effects.fee(player, vendor))
+        budget_factor = self.commerce.budget_multiplier
+        self.commerce.budget_multiplier = lambda vendor, counter: budget_factor(vendor, counter)*self.effects.budget(vendor, counter)
+        vendor_open = self.commerce.vendor_available
+        self.commerce.vendor_available = lambda vendor, counter: vendor_open(vendor, counter) and self.effects.vendor_open(
+            counter.partition(':')[0], vendor.id, counter.partition(':')[2])
+        decorate = self.sim.crew_view
+        def decorated(session: Session, body: dict[str, Any]) -> None:
+            decorate(session, body)
+            self.decorate(session, body)
+        self.sim.crew_view = decorated
+        lattice_view = self.lat.encounters.view
+        def network_view(session: Session, presence: Any, body: dict[str, Any]) -> tuple[str, dict[str, Any]]:
+            kind, document = lattice_view(session, presence, body)
+            if kind == 'lattice':
+                self.decorate(session, document)
+            return kind, document
+        self.lat.encounters.view = network_view
         self.lat.encounters.mission_of = self.mission_of
         permission = self.lat.interlock.permit
         self.lat.interlock.permit = lambda player, core, action: (
@@ -67,7 +91,63 @@ class Contracts:
         return self.state.record()
 
     def install(self, state: dict[str, Any]) -> None:
+        participants = {p.player for instance in self.state.engine.instances.values() for p in instance.roster}
         self.state = Ledger(self.origin, self.content, state)
+        participants |= {p.player for instance in self.state.engine.instances.values() for p in instance.roster}
+        for zone in {actor.zone for pid in participants if (actor := self.world.actors.get(pid)) and actor.zone}:
+            self.world.zones[zone].revision += 1
+
+    def decorate(self, session: Session, body: dict[str, Any]) -> None:
+        if self.effects.patrols(session.player_id):
+            body['published_patrol'] = True
+        jobs = list(self.current_jobs(session.player_id))
+        actor = self.world.actors.get(session.player_id)
+        if jobs:
+            presence = self.lat.presences.get(session.player_id)
+            relevant = next(((job, progress) for job, progress in jobs if presence and presence.core
+                and any(target.core == presence.core for target in progress.targets)), None)
+            instance, progress = relevant or (next(((job, stage) for job, stage in jobs
+                if any(target.zone == actor.zone for target in stage.targets)), jobs[0]) if actor else jobs[0])
+            stage = progress.stage
+            from blacksite.server.npcs.templates import SUBDUE_SECONDS, SUBDUE_SHOCK
+            restraint = stage.verb == 'clear' and stage.resolution == 'subdue'
+            seconds = self.duration(session.player_id, stage)
+            cost = f'{SUBDUE_SHOCK} shock' if restraint else stage.cost
+            body['objective'] = {'next_action': stage.label or stage.verb,
+                'cost': f'{seconds:g}s {cost}', 'progress': f'{sum(progress.counts.values())}/{len(progress.targets)}',
+                'target': stage.target.object or stage.target.npc or stage.target.data or stage.target.core or stage.target.zone,
+                'retry': stage.retry}
+            if 'viewport' in body:
+                body['objective']['compact_hint'] = True
+                if not body.get('me', {}).get('channel'):
+                    body['hint'] = f"Next: {stage.label or stage.verb} {body['objective']['progress']} | {seconds:g}s {cost} | E act Q jobs"
+        if actor:
+            for sid, node in self.state.services.nodes.items():
+                template = self.content.services[sid]
+                if template.zone == actor.zone:
+                    deadline = node.allocation_expires if node.state == 'allocated' else node.fault_expires
+                    left = max(0, ceil(deadline-self.now()))
+                    status = node.allocation if node.state == 'allocated' else node.state
+                    body['service'] = {'id': sid, 'name': template.name, 'state': node.state,
+                        'allocation': node.allocation, 'expiry': left,
+                        'summary': f'{template.name} {status}'+(f' {left}s' if node.state != 'normal' else ''),
+                        'escape': template.safe_return}
+                    break
+
+    def duration(self, player: str, stage: Stage) -> float:
+        if stage.verb == 'clear' and stage.resolution == 'subdue':
+            from blacksite.server.npcs.templates import SUBDUE_SECONDS
+            return SUBDUE_SECONDS
+        if stage.input == 'flip' and stage.target.kind == 'core_control':
+            from blacksite.server.interlock import FLIP_SECONDS
+            return FLIP_SECONDS
+        if stage.input == 'lift' and stage.target.kind == 'core_room':
+            from blacksite.server.lattice.encounters import LIFT_SECONDS
+            presence = self.lat.presences.get(player)
+            ledger = self.content.programs['prg_ledger']
+            multiplier = float(ledger.effect.params['lift_multiplier']) if presence and 'prg_ledger' in presence.rig else 1
+            return LIFT_SECONDS*multiplier
+        return stage.seconds
 
     def log(self, pid: str, text: str) -> None:
         session = self.game.combat.session(pid)
@@ -96,7 +176,10 @@ class Contracts:
               identities: dict[str, dict[str, Any]] | None = None,
               items: dict[str, ItemInstance] | None = None, serial: int | None = None,
               callback: Callable[[bool], None] | None = None) -> None:
-        patches = deepcopy(patches or {})
+        staged = {'player_id': None, 'patch': {}, 'player_patches': deepcopy(patches or {}),
+                  'identities': deepcopy(identities or {}), 'callback': callback or (lambda success: None)}
+        self.finish_services(staged, draft)
+        patches, identities, callback = staged['player_patches'], staged['identities'], staged['callback']
         items = deepcopy(self.commerce.items if items is None else items)
         for key, item in tuple(items.items()):
             if item.mission is None:
@@ -122,8 +205,70 @@ class Contracts:
         draft = Ledger(self.origin, self.content, effect.get('contracts_state') or self.record())
         changed = draft.observe(fact, self.now())
         if changed:
+            self.finish_services(effect, draft)
             join_state(effect, draft.record(), self.install)
         return changed
+
+    def finish_services(self, effect: dict[str, Any], draft: Ledger) -> None:
+        """Join allocation, fixed worker rewards and source patches once.
+
+        A final data lift may already award run XP. Apply the work-order
+        award to that source's player/identity drafts, preserving both.
+        """
+        notifications = []
+        for instance in draft.engine.instances.values():
+            sid = instance.runtime.get('service')
+            if not instance.service or instance.state != 'complete' or sid not in draft.services.nodes:
+                continue
+            node = draft.services.nodes[sid]
+            if node.state != 'repairing':
+                continue
+            draft.services.complete(sid, instance, self.now())
+            caller = next(p.player for p in instance.roster if p.player in instance.contributions
+                          and p.player not in instance.withdrawn)
+            payouts = draft.claim(instance.id, caller, self.now(), excluded=tuple(self.game.deleting))
+            for payout in payouts:
+                player = self.game.players[payout.player]
+                primary = effect.get('player_id') == player.id
+                patch = deepcopy(effect['patch'] if primary else effect.get('player_patches', {}).get(player.id, {}))
+                recipient = deepcopy(player)
+                actor = self.game.combat.actor(player)
+                if actor:
+                    recipient.health, recipient.stamina, recipient.shock = actor.health, actor.stamina, actor.shock
+                for key, value in patch.items():
+                    setattr(recipient, key, {**recipient.progress, **deepcopy(value)} if key == 'progress' else deepcopy(value))
+                identity = deepcopy(effect.get('identity') if primary and effect.get('identity') is not None else
+                    effect.get('identities', {}).get(player.bbs_user_id, self.game.identities[player.bbs_user_id]))
+                result = award(recipient, identity, Grant('contract', payout.receipt, True,
+                    scope='contract:'+instance.template, amount=payout.payment.xp), self.clock.now_utc(),
+                    self.progression.modifiers(recipient))
+                recipient.chits_hand += payout.payment.chits
+                apply_vector(recipient, self.content.factions, payout.payment.standing, payout.payment.standing_mode)
+                for key in ('xp', 'grade', 'attributes', 'health', 'legal_at', 'chits_hand', 'standing'):
+                    if getattr(recipient, key) != getattr(player, key):
+                        patch[key] = deepcopy(getattr(recipient, key))
+                patch['progress'] = {key: value for key, value in recipient.progress.items()
+                                     if key not in player.progress or player.progress[key] != value}
+                if primary:
+                    # settled_patch compares this primary progress against
+                    # its original base; retain unchanged source keys too.
+                    patch['progress'] = deepcopy(recipient.progress)
+                    effect['patch'], effect['identity'] = patch, identity
+                else:
+                    effect.setdefault('player_patches', {})[player.id] = patch
+                    effect.setdefault('identities', {})[player.bbs_user_id] = identity
+                notifications.append((player, payout, result))
+        if notifications:
+            previous = effect.get('callback')
+            def committed(success: bool) -> None:
+                if previous:
+                    previous(success)
+                if success:
+                    for player, payout, result in notifications:
+                        self.game.factions.refresh(player)
+                        self.progression.notify_reward(player, result)
+                        self.log(player.id, f'Work order settled: {payout.payment.chits} chits, {payout.payment.xp} XP.')
+            effect['callback'] = committed
 
     def current_jobs(self, player: str) -> Iterator[tuple[Instance, Progress]]:
         for instance in self.state.engine.instances.values():
@@ -142,6 +287,8 @@ class Contracts:
         return None
 
     def control_permit(self, player: str, core: str, control: str) -> bool:
+        if self.effects.permits(player, core, control):
+            return True
         if self.state.permits_target(player, 'maintenance_credential',
                 StageTarget('core_control', core=core, control=control), self.now()):
             return True
@@ -240,6 +387,44 @@ class Contracts:
         self.proposals[proposal.id] = proposal
         return proposal
 
+    def propose_service(self, player: str, sid: str, allocation: str,
+                        roster: tuple[str, ...]) -> Proposal:
+        node = self.state.services.nodes[sid]
+        if node.state != 'fault' or self.now() >= node.fault_expires:
+            raise ValueError('That service has no open fault. Read its current state.')
+        template = self.content.services[sid]
+        if allocation not in {a.id for a in template.allocations}:
+            raise ValueError('Choose a listed service allocation.')
+        offer = self.state.engine.offer(self.content.contracts[template.contract],
+            f'{self.origin}:service-preview:{sid}:{node.generation}:{node.revision}', node.fault_expires)
+        proposal = self.propose(player, offer, roster)
+        proposal.service, proposal.allocation, proposal.service_revision = sid, allocation, node.revision
+        return proposal
+
+    def queue_user(self, player: str, action: Callable[[], None]) -> None:
+        def execute() -> None:
+            if player not in self.game.players or player in self.game.deleting:
+                return
+            try:
+                action()
+            except (ValueError, KeyError) as exc:
+                self.log(player, str(exc) if isinstance(exc, ValueError) else 'That contract changed. Read its current card.')
+        self.commerce.enqueue_system(execute)
+
+    def withdraw(self, draft: Ledger, iid: str, player: str) -> None:
+        instance = draft.engine.instances[iid]
+        draft.engine.withdraw(iid, player)
+        if instance.service:
+            draft.services.withdraw(instance.runtime['service'], instance.offer, player)
+
+    def retry(self, draft: Ledger, iid: str, player: str) -> None:
+        instance = draft.engine.instances[iid]
+        if instance.service:
+            node = draft.services.nodes[instance.runtime['service']]
+            if node.state != 'repairing' or node.order != instance.offer:
+                raise ValueError('That reservation ended. Read the current work order.')
+        draft.engine.retry(iid, player, self.now())
+
     def consent(self, proposal: str, player: str) -> None:
         offered = self.proposals[proposal]
         if player not in offered.roster or not self.game.combat.session(player):
@@ -250,7 +435,7 @@ class Contracts:
 
     def start(self, proposal: str, player: str) -> None:
         if self.commerce.pending:
-            self.commerce.enqueue_system(lambda: self.start(proposal, player)
+            self.queue_user(player, lambda: self.start(proposal, player)
                 if proposal in self.proposals else None)
             return
         offered = self.proposals[proposal]
@@ -262,8 +447,15 @@ class Contracts:
         if len(offered.roster) > 1 and (not crew or not set(offered.roster) <= set(crew.members)):
             raise ValueError('The proposed crew changed. Offer the job again.')
         draft = self.state.fork()
-        draft.engine.accept(offered.offer, tuple(self.participant(pid) for pid in offered.roster),
-                            self.now(), offered.approach)
+        offer = offered.offer
+        if offered.service:
+            node = draft.services.reserve(offered.service, offered.allocation, offered.roster,
+                                          self.now(), offered.service_revision)
+            offer = draft.engine.offer(self.content.contracts[offer.template], node.order, node.reserved_until)
+        instance = draft.engine.accept(offer, tuple(self.participant(pid) for pid in offered.roster),
+                                       self.now(), offered.approach)
+        if offered.service:
+            instance.runtime['service'] = offered.service
         def committed(success: bool) -> None:
             if success:
                 self.proposals.pop(proposal, None)
@@ -310,8 +502,7 @@ class Contracts:
 
     def claim(self, iid: str, player: str, option: str | None = None) -> None:
         if self.commerce.pending:
-            self.commerce.enqueue_system(lambda: self.claim(iid, player, option)
-                if player in self.game.players and player not in self.game.deleting else None)
+            self.queue_user(player, lambda: self.claim(iid, player, option))
             return
         draft = self.state.fork()
         payouts = draft.claim(iid, player, self.now(), option, tuple(self.game.deleting))
@@ -343,6 +534,7 @@ class Contracts:
         elapsed = (ctx.tick - self.last_tick) / TICK_HZ
         self.last_tick = ctx.tick
         self.state.expire(self.now(), elapsed)
+        self.effects.compose(ctx.tick)
         self.scenes.reconcile()
         self.scenes.escorts(ctx.tick)
         if not self.commerce.pending and any(self.obsolete(item, self.state) for item in self.commerce.items.values()):

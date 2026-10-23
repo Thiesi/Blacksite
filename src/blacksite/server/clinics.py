@@ -1,6 +1,7 @@
 """Game 8.5/8.6: local clinic menus and confirmed, atomic operations."""
 
 from copy import deepcopy
+from collections.abc import Callable
 from dataclasses import dataclass
 from math import ceil
 from typing import Any, TYPE_CHECKING
@@ -32,6 +33,7 @@ class ClinicMenu:
     target: str
     cursor: int = 0
     confirm: str = ""
+    quoted: implants.Quote | None = None
 
 
 class Clinics:
@@ -41,6 +43,8 @@ class Clinics:
         self.menus: dict[str, ClinicMenu] = {}
         self.detox_views: set[str] = set()
         self.requests: dict[str, list[str]] = {}
+        # S19/S21 compose the strongest eligible fee discount here.
+        self.service_multiplier: Callable[[Player, Vendor], float] = lambda player, vendor: 1
 
     def counter(self, session: Session, target: str) -> Vendor:
         vendor, _ = self.commerce.vendor(session, target)
@@ -82,7 +86,8 @@ class Clinics:
             return implants.Quote(0,implants.removal_price(template),0,0,op.slot,
                 implants.tolerance_used(player,self.commerce.items,self.game.content.items,replacing=op.slot),mods.tolerance(player))
         return implants.quote(player,template,vendor.clinic,mods,self.commerce.items,
-                              self.game.content.items,owned=op.owned,slot=op.slot,replace=True)
+                              self.game.content.items,owned=op.owned,slot=op.slot,replace=True,
+                              service_multiplier=self.service_multiplier(player, vendor))
 
     def label(self, op: Operation) -> str:
         if op.action == "detox":
@@ -166,6 +171,9 @@ class Clinics:
             raise ValueError("That operation is no longer available.")
         player = self.game.players[session.player_id]
         actor = self.game.combat.actor(player)
+        if screen.confirm and screen.quoted is not None and self.quote(player, vendor, op) != screen.quoted:
+            screen.confirm, screen.quoted = '', None
+            raise ValueError('The clinic quote changed. Review the new total before confirming.')
         self.game.snapshot(player,self.sim.avatars[session.user_id])
         draft,items = deepcopy(player),deepcopy(self.commerce.items)
         now = self.game.clock.now_utc().timestamp()
@@ -196,7 +204,8 @@ class Clinics:
                                      draft.id,self.game.clock.now_utc().isoformat())
                 result = implants.install(draft,item,vendor.clinic,self.progression.modifiers(draft),items,
                     self.game.content.items,now,self.game.world.zones[actor.zone].rng.random(),
-                    owned=op.owned,slot=op.slot,replace=True)
+                    owned=op.owned,slot=op.slot,replace=True,
+                    service_multiplier=self.service_multiplier(player, vendor))
                 message = ("The hardware settles into place." if result.installed else
                            "The operation fails. The chosen item is destroyed. Shock holds for thirty seconds.")
         patch = {key: deepcopy(getattr(draft,key)) for key in
@@ -273,7 +282,7 @@ class Clinics:
                 key = args.get("key","enter")
                 if screen.confirm:
                     if key == "n":
-                        screen.confirm = ""; screen.cursor = 0
+                        screen.confirm = ""; screen.quoted = None; screen.cursor = 0
                     elif key == "y":
                         op = next(op for op in self.options(session,screen) if op.id == screen.confirm)
                         if self.operate(session,screen,op) and request:
@@ -281,7 +290,7 @@ class Clinics:
                             self.requests[session.id] = self.requests[session.id][-128:]
                 elif key == "enter":
                     op = self.options(session,screen)[view["cursor"]]
-                    self.quote(player,self.counter(session,screen.target),op)
+                    screen.quoted = self.quote(player,self.counter(session,screen.target),op)
                     screen.confirm = op.id; screen.cursor = 0
                 if session.id in self.menus:
                     self.publish(session)

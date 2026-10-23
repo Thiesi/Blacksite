@@ -65,6 +65,16 @@ S25 authors remaining city maps; S27 supplies named dialogue; S26 owns
 season settlement and integrated story-chain acceptance. This slice
 implements all contract/work-order logic and fixture scenarios now.
 
+Implementation decisions (game design 7.5/9 and architecture 15.2):
+crew proposals hold no public order; reservation and accepted roster freeze
+on the first committed start. Disconnect preserves progress to the original
+deadline. The final repair action commits allocation and fixed worker
+rewards together, composing over any ordinary source reward. Clinic fee
+changes require a fresh confirmation; Depot cap changes retain hourly
+spending across allocation expiry and restart. Budget details use meta in
+the existing transaction without a SQL schema change. Source callbacks
+finalize before deferred impacts can propose another write.
+
 ## Data and protocol
 
 `contracts.json`, service-node records, evidence/text assets and bundle

@@ -6,7 +6,8 @@ from tests.content.support import World
 def test_game_7_5_service_links_repeatable_fixed_contract_and_effect_audiences(world: World) -> None:
     contracts = world.read('contracts.json')
     job = contracts['contracts'][0]
-    job.update(service=True, story=False, crew_scaling=False)
+    job.update(service=True, story=False, crew_scaling=False, faction='fx-alpha',
+               reward={'chits': [200, 200], 'xp': 100, 'standing': {'fx-alpha': 5}})
     world.write('contracts.json', contracts)
     services = world.read('services.json')
     service = services['services'][0]

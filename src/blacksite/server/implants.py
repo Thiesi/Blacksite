@@ -49,7 +49,7 @@ def removal_price(template: ItemTemplate) -> int:
 def quote(player: Player, template: ItemTemplate, clinic: Clinic,
           modifiers: Modifiers, items: Mapping[str, ItemInstance],
           templates: Mapping[str, ItemTemplate], *, owned: bool,
-          slot: str = "", replace: bool = False) -> Quote:
+          slot: str = "", replace: bool = False, service_multiplier: float = 1) -> Quote:
     block = template.implant
     if clinic not in ("sablier", "black"):
         raise ValueError("This is not a surgery clinic.")
@@ -88,6 +88,7 @@ def quote(player: Player, template: ItemTemplate, clinic: Clinic,
     else:
         item_price, service, failure = (0 if owned else ceil(price*.6)), (ceil(price*.12) if owned else 0), BLACK_FAILURE
     old_fee = removal_price(templates[previous.template]) if previous and not native else 0
+    service = ceil(service * service_multiplier)  # Game 7.5: service only, never item/removal.
     return Quote(item_price, service, old_fee, failure, slot, used, capacity)
 
 
@@ -102,7 +103,8 @@ class Surgery:
 def install(player: Player, item: ItemInstance, clinic: Clinic,
             modifiers: Modifiers, items: dict[str, ItemInstance],
             templates: Mapping[str, ItemTemplate], now: float,
-            roll: float, *, owned: bool, slot: str = "", replace: bool = False) -> Surgery:
+            roll: float, *, owned: bool, slot: str = "", replace: bool = False,
+            service_multiplier: float = 1) -> Surgery:
     """The owning transaction supplies a seeded roll and purchase instance.
 
     On failure both the charge and destroyed item persist. A replaced
@@ -113,7 +115,7 @@ def install(player: Player, item: ItemInstance, clinic: Clinic,
         raise ValueError("Surgery needs a seeded probability roll.")
     template = templates[item.template]
     bill = quote(player, template, clinic, modifiers, items, templates,
-                 owned=owned, slot=slot, replace=replace)
+                 owned=owned, slot=slot, replace=replace, service_multiplier=service_multiplier)
     if owned and (item.id not in player.inventory or item.owner != player.id
                   or item.id in player.implants.values() or item.stack != 1):
         raise ValueError("Choose an uninstalled implant you carry.")

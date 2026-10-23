@@ -11,7 +11,7 @@ from blacksite.server.sessions import Session
 from blacksite.server.wake import menu
 from blacksite.server.world.simulation import MENU_TIMEOUT_SECONDS
 from blacksite.server.clock import TICK_HZ
-from blacksite.server.npcs.templates import SUBDUE_SECONDS, SUBDUE_SHOCK
+from blacksite.server.npcs.templates import SUBDUE_SHOCK
 
 
 @dataclass
@@ -69,17 +69,27 @@ class Panels:
     def rows(self, session: Session, panel: Panel) -> list[dict[str, Any]]:
         owner, pid = self.owner, session.player_id
         if panel.tab == 'journal':
-            return [{'id': eid, 'cells': [record['observation']]}
+            rows = [{'id': eid, 'cells': [record['observation']]}
                     for eid, record in owner.state.journal.get(pid, {}).items()]
+            if owner.effects.patrols(pid):
+                rows.append({'id': 'intel:patrol', 'cells': ['Published patrol telemetry']})
+            return rows
         result = [{'id': p.id, 'cells': ['Proposal', owner.content.contracts[p.offer.template].name or p.offer.template]}
-                  for p in owner.proposals.values() if pid in p.roster]
+                  for p in owner.proposals.values() if pid in p.roster and panel.tab == 'jobs']
         for iid, job in owner.state.engine.instances.items():
             if pid not in {p.player for p in job.roster} or pid in job.withdrawn:
                 continue
+            if (job.state == 'turned_in') != (panel.tab == 'done'):
+                continue
             name = owner.content.contracts[job.template].name or job.template
             result.append({'id': iid, 'cells': [job.state, name]})
-        if panel.handler:
+        if panel.handler and panel.tab == 'jobs':
             self.station(session, panel.target)
+            actor = owner.game.combat.actor(owner.game.players[pid])
+            for sid, node in owner.state.services.nodes.items():
+                service = owner.content.services[sid]
+                if service.zone == actor.zone and owner.content.contracts[service.contract].giver == panel.handler:
+                    result.append({'id': 'service:'+sid, 'cells': [node.state, service.name]})
             for offer in owner.state.engine.board(panel.handler, owner.now()):
                 job = owner.state.engine.templates[offer.template]
                 result.append({'id': offer.id, 'cells': ['Offer', job.name or job.id]})
@@ -91,7 +101,14 @@ class Panels:
     def card(self, session: Session, panel: Panel, selected: str) -> tuple[list[str], list[dict[str, str]]]:
         owner, pid = self.owner, session.player_id
         actions = [{'key': 'j', 'label': 'journal' if panel.tab != 'journal' else 'jobs'}]
+        if panel.tab != 'journal':
+            actions.append({'key': 'd', 'label': 'jobs' if panel.tab == 'done' else 'done'})
         if panel.tab == 'journal':
+            if selected == 'intel:patrol':
+                return ['Observed: current published NPC patrol routes.',
+                        'Source says: committed local telemetry.',
+                        'Next action: use the route; E still handles ordinary defenses.',
+                        *owner.effects.patrols(pid)], actions
             row = owner.state.journal.get(pid, {}).get(selected)
             if not row:
                 return ['Inspect a labelled objective to acquire a record.'], actions
@@ -105,6 +122,28 @@ class Panels:
                     f"Open question: {row['question'] or 'No further question recorded.'}",
                     f"Next action: {row['next_action'] or 'Check the current contract objective.'}",
                     'Where: '+place, 'Publication: '+(row['publication'] or 'not published')], actions
+        if selected.startswith('service:') and selected[8:] in owner.state.services.nodes:
+            sid = selected[8:]
+            node, service = owner.state.services.nodes[sid], owner.content.services[selected[8:]]
+            job = owner.content.contracts[service.contract]
+            quoted = owner.state.engine.offer(job, 'service-preview', node.fault_expires).reward.scaled(
+                1, False, owner.game.players[pid].archetype == 'operator')
+            detail = [service.name+': '+node.state, service.fault_label,
+                'Your reward: '+payment(quoted), 'Reserve for 10 min; completed allocation lasts 20 min.',
+                'Return: '+service.safe_return]
+            for allocation in service.allocations:
+                detail.append(allocation.label+': '+allocation.detail)
+            if node.state == 'fault':
+                detail.append(f'NPC restoration in {max(0, ceil(node.fault_expires-owner.now()))} s.')
+                actions += [{'key': '1', 'label': 'common'}, {'key': '2', 'label': 'reserve'},
+                            {'key': '3', 'label': 'common crew'}, {'key': '4', 'label': 'reserve crew'}]
+            elif node.state == 'repairing':
+                detail += ['Reserved allocation: '+node.allocation,
+                    'Workers: '+', '.join(owner.game.players[p].name if p in owner.game.players else 'Departed worker' for p in node.roster),
+                    f'Reservation: {max(0, ceil(node.reserved_until-owner.now()))} s']
+            elif node.state == 'allocated':
+                detail += ['Allocation: '+node.allocation, f'Expiry: {max(0, ceil(node.allocation_expires-owner.now()))} s']
+            return detail, actions
         if selected in owner.proposals:
             proposal = owner.proposals[selected]
             job = owner.state.engine.templates[proposal.offer.template]
@@ -122,6 +161,14 @@ class Panels:
                 detail.append('Helper: no new payout; your earlier personal choice stays.')
             else:
                 detail += consequences(job)
+            if proposal.service:
+                service = owner.content.services[proposal.service]
+                chosen = next(a for a in service.allocations if a.id == proposal.allocation)
+                other = next(a for a in service.allocations if a.id != proposal.allocation)
+                detail += ['Allocation: '+chosen.label+': '+chosen.detail,
+                    'Foregone: '+other.label+': '+other.detail,
+                    'Reservation starts with the committed roster; 10 min, never extended.',
+                    'Return: '+service.safe_return]
             detail.append('A verified objective contribution is required for a reward.')
             if pid not in proposal.consent:
                 actions += [{'key': 'a', 'label': 'accept terms'}]
@@ -146,7 +193,7 @@ class Panels:
                 detail.insert(1, f'Progress: {sum(progress.counts.values())}/{len(progress.targets)}; '
                     +('retry allowed' if progress.stage.retry else 'no retry'))
                 restraint = progress.stage.verb == 'clear' and progress.stage.resolution == 'subdue'
-                seconds = SUBDUE_SECONDS if restraint else progress.stage.seconds
+                seconds = owner.duration(pid, progress.stage)
                 cost = f'{SUBDUE_SHOCK} shock required; no fee.' if restraint else progress.stage.cost
                 detail.insert(2, f'Action: {seconds:g} s; {cost}')
                 if progress.stage.destination:
@@ -243,17 +290,32 @@ class Panels:
                     raise ValueError('The city is busy. Try again.')
                 draft = owner.state.fork()
                 if verb == 'withdraw':
-                    draft.engine.withdraw(target, pid)
+                    owner.withdraw(draft, target, pid)
                 else:
-                    draft.engine.retry(target, pid, owner.now())
+                    owner.retry(draft, target, pid)
                 owner.write(draft)
             panel.confirmation = None
             return
         if key == 'j':
             panel.tab = 'jobs' if panel.tab == 'journal' else 'journal'
             panel.cursor, panel.page, panel.prose = 0, 0, False
+        elif key == 'd' and panel.tab != 'journal':
+            panel.tab = 'jobs' if panel.tab == 'done' else 'done'
+            panel.cursor, panel.page = 0, 0
         elif key == 'p' and panel.tab == 'journal':
             panel.prose, panel.page = not panel.prose, 0
+        elif selected.startswith('service:') and selected[8:] in owner.state.services.nodes:
+            sid = selected[8:]
+            crew = owner.game.crews.registry.crew_of(pid)
+            roster = (pid,) if key in ('1', '2') or not crew else (pid, *(p for p in crew.members if p != pid))
+            proposal = owner.propose_service(pid, sid, 'common' if key in ('1', '3') else 'reserve', roster)
+            owner.consent(proposal.id, pid)
+            if len(roster) == 1:
+                panel.confirmation = ('start', proposal.id, '')
+            else:
+                for member in roster:
+                    owner.log(member, 'Work-order proposal ready. Q shows the allocation; A accepts.')
+            panel.cursor, panel.page = 0, 0
         elif selected in owner.proposals:
             if key == 'a':
                 owner.consent(selected, pid)

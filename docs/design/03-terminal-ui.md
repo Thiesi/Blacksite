@@ -331,6 +331,11 @@ the operational card below it. Up/down selects another record;
 each other. A confirmation remains bound to its chosen card even if new
 proposals arrive. A private/public turn-in shows its actual reward,
 publication audience, scoped effect and duration before the final `Y`.
+At 80 columns the objective and its current action cost use the bottom
+hint line; service state uses the header. Vitals, current danger and
+escape keep their normal positions. The Q panel separates active jobs,
+completed jobs and acquired records. A published patrol adds a visible
+journal entry only while its local telemetry permission is active.
 
 Work-order panels show reservation owner, stage, supplied item, target,
 public/worker allocation, recipients and expiry. The reserving player's

@@ -742,6 +742,18 @@ Effects declare `audience: public|workers`; changed public geometry is
 visible to everyone, while reserved cache access, credentials and worker
 discounts remain scoped to the frozen roster. Each layer retains its
 owner, so service expiry cannot undo an event or independent control.
+Allocations add `detail`; services add `safe_return` and `fault_label`
+for the consent card. A reveal/credential effect uses its typed `binding`
+for the actual core control. Published patrols read the current local
+NPC/ICE route, never player locations or an independent simulation roll.
+Ordinary service geometry is the authored base map; fault/allocation
+layers own only their bounded changes.
+
+`VendorBudget` retains hourly `spent` independently of its current
+`limit` and nonnegative `remaining`. Storage joins `vendor_budget_state`
+meta to the existing budget rows in the owning commerce transaction.
+Legacy rows derive ordinary spending from their remaining balance;
+there is no SQL column or schema-version change.
 
 ### 2.14 Expedition
 

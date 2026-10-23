@@ -166,6 +166,8 @@ class Actions:
                 self.requests[session.id] = self.requests[session.id][-128:]
             wanted = frame.data.get('args', {}).get('instance', '')
             actor = self.game.combat.actor(self.game.players[session.player_id])
+            if not typed and owner.effects.cache(session):
+                return True
             for iid, instance in owner.state.engine.instances.items():
                 if (instance.state != 'active' or wanted and wanted != iid
                         or session.player_id not in {p.player for p in instance.roster} - instance.withdrawn):

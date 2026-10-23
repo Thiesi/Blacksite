@@ -703,6 +703,14 @@ the meta record and clears an older dirty snapshot after commit. Live
 enrollment proposals create no mission actors or rewards; only the
 confirmed accepted roster becomes durable. Journals, branch choices,
 service effects and their owning reward receipts follow this boundary.
+Finalize the source callback before flushing deferred impacts: those
+impacts can immediately propose another source write. The next proposal
+must see both the retired source and the installed contract draft.
+One final action may award ordinary run XP and fixed work-order XP;
+compose the latter over the source's player/identity draft in that same
+transaction. Work-order allocation and payment never run as a later
+notification. An expiring clinic discount invalidates an older confirmed
+quote without charging or drawing a surgery roll.
 
 S16 reward and skill-use functions operate on player/identity drafts.
 NPC defeat joins XP to the spawn retirement and loot receipt; data-lift

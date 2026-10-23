@@ -79,6 +79,11 @@ def render_lattice(buffer: CellBuffer, body: dict[str, Any], area: Rect, palette
         status.append((f"SHIELD {shield['budget']:g} {shield['name']}", "hp_ok"))
     if me.get("decoy", 0) > 0:
         status.append((f"DECOY {me['decoy']:g}", "ui_highlight"))
+    if objective := body.get('objective'):
+        status += [(str(objective.get('next_action', '')), 'ui_highlight'),
+                   (str(objective.get('cost', '')), 'text')]
+    if body.get('published_patrol'):
+        status.append(('PATROL Q / journal', 'ui_highlight'))
     if target := body.get("runner_target"):
         suffix = f" {target['integrity_percent']}%" if target['burn_allowed'] else " PROTECTED"
         label = "> "+truncate(target['name'], side_w-2-display_width(suffix))+suffix

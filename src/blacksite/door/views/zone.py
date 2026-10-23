@@ -38,19 +38,19 @@ def render_zone(buffer: CellBuffer, body: dict[str, Any], area: Rect, palette: P
     safety = me["safety"].upper()
     sx = min(buffer.width - len(safety) - (16 if me.get("heat_until") else 10), 2 + display_width(header))
     buffer.put(sx, 0, safety, palette.style("safety_" + me["safety"]))
+    if service := body.get('service'):
+        start = sx+len(safety)+2
+        buffer.put(start, 0, truncate(service.get('summary', ''), max(0, buffer.width-16-start)), palette.style('ui_highlight'))
     buffer.put(buffer.width - 8, 0, me.get("clock", ""), palette.style("title"))
     if me.get("heat_until"):
         buffer.put(buffer.width - 14, 0, "HEAT", palette.style("warning"))
     side_x, side_w = buffer.width - 23, 22
     rows: list[str] = []
     objective = body.get("objective")
-    if objective:
+    if objective and not (buffer.width < 100 and objective.get('compact_hint')):
         rows += [str(objective.get("next_action", "")), str(objective.get("cost", ""))]
     for hazard in body.get("hazards", [])[:1]:
         rows += [f"WARNING {hazard.get('warning', 0):g}s", "Escape: " + ", ".join(hazard.get("escape", []))]
-    service = body.get("service")
-    if service:
-        rows += [f"SERVICE {service.get('state', '')}", f"Expires {service.get('expiry', '')}"]
     target = body.get("target")
     if target:
         filled=max(0,min(8,target["hp_percent"]*8//100))

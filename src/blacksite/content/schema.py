@@ -1102,6 +1102,7 @@ class Effect:
     `zone/exit`, that the effect closes."""
     params: dict[str, Number | str | bool] = field(default_factory=dict)
     audience: Literal["public", "workers"] = "public"
+    binding: StageTarget | None = None
 
 
 @dataclass(frozen=True)
@@ -1109,6 +1110,7 @@ class Allocation:
     id: Literal["common", "reserve"]
     label: str
     effects: tuple[Effect, ...] = ()
+    detail: str = ""
 
 
 @dataclass(frozen=True)
@@ -1126,6 +1128,8 @@ class ServiceNodeTemplate:
     contract: str | None = None
     normal_effects: tuple[Effect, ...] = ()
     fault_effects: tuple[Effect, ...] = ()
+    safe_return: str = ""
+    fault_label: str = ""
 
 
 # --- dialogue (section 1.11, 04-dramatis-personae.md Part III) -------------

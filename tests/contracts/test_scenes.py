@@ -85,6 +85,29 @@ def test_game_9_3_npc_defeat_progress_and_loot_share_the_actual_source_write(cit
     assert not any(a.behaviour.get('mission') == iid for a in owner.world.actors.values())
 
 
+def test_architecture_15_2_deferred_impact_observes_prior_source_and_contract_commit(city) -> None:
+    game, caller = city
+    owner, iid, actors = mission(city, quantity=2)
+    one, two = actors
+    source = body(game, caller)
+    commerce = owner.commerce
+    flush = commerce.after_settle
+    delivered = []
+    def deferred_impact() -> None:
+        flush()
+        if not delivered:
+            delivered.append(True)
+            two.health = 0
+            game.core.npcs.died(source, two)
+    commerce.after_settle = deferred_impact
+    one.health = 0
+    game.core.npcs.died(source, one)
+    effects = game.commit_commerce()
+    assert len(effects) == 2
+    assert owner.state.engine.instances[iid].state == 'complete'
+    assert owner.state.engine.instances[iid].stages[0].subjects == {one.id, two.id}
+
+
 def test_game_9_3_scene_checkpoint_reconstructs_same_units_without_replaying_completed_targets(city) -> None:
     game, caller = city
     owner, iid, actors = mission(city, quantity=2)

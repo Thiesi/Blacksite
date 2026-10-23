@@ -869,6 +869,10 @@ minutes and cannot be overwritten or extended. Another order waits for the
 original 60-minute cooldown. A relay owner cannot veto public repair.
 Duplicate commands cannot claim another reward.
 
+A pending crew proposal does not hold the public order. The consenting
+roster and reservation freeze together on the first committed start;
+stale proposals refresh without consuming supplies or rewards.
+
 The work-order reserver selects its allocation; the frozen roster sees
 that selection before joining and receives the same disclosed result.
 Changing it requires releasing and reserving again before repairs start;
@@ -889,8 +893,15 @@ authored regions only, with 5 s warning. Cold Chain never refuses care.
 Sump and Depot reserve caches each contain two `slv_power` units per
 order, shared by its workers. Common and reserve cannot both be claimed.
 Relay Zero's credential opens one declared gate, not ICE immunity.
+Cold Chain changes the installation service fee only, after ordinary fee
+rounding; it changes neither implant price, removal fee, detox nor risk.
+The strongest eligible service discount applies once. Depot changes the
+current hourly cap without resetting spending; expiry and restart retain
+spending even when it exceeds the restored ordinary cap.
 Standard reward: 200 chits, 100 XP, +5 with the handler's faction per
 participating worker, without crew scaling. Allocation adds no XP.
+The final verified repair action commits that allocation and the eligible
+workers' rewards together; no additional handler visit is required.
 
 ### 7.6 Faction identity in play
 

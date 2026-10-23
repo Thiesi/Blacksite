@@ -1292,6 +1292,9 @@ class _Validator:
             owner = ("contracts", cid)
             if con.service and (con.story or con.crew_scaling):
                 self.report(*owner, "a service contract is repeatable and never crew-scaled")
+            if con.service and (con.reward.chits != (200, 200) or con.reward.xp != 100
+                    or con.reward.standing != {con.giver: 5} or con.reward.items or con.reward.programs):
+                self.report(*owner, "a service contract uses the standard Game 7.5 worker reward")
             if con.giver != "vesper":
                 self.ref("factions", con.giver, owner, "faction")
             if not con.stages:
@@ -1317,6 +1320,8 @@ class _Validator:
                 if stage.verb == "clear" and stage.resolution is None:
                     self.report(*owner, f"{label}: a clear stage declares lethal or subdue", stage.id)
                 self._check_target(owner, label, stage.target, stage.id)
+                if stage.completion == 'lifted' and stage.target.kind == 'core_room' and stage.target.data is None:
+                    self.report(*owner, f"{label}: a lift names its exact room data", stage.id)
                 if stage.requires_item:
                     self.ref('items', stage.requires_item, owner, label+' supplied item', stage.id)
                 if stage.destination:
@@ -1494,9 +1499,25 @@ class _Validator:
 
     def _check_effect(self, owner: tuple[str, str], label: str, e: s.Effect) -> None:
         zone = None
+        if e.binding:
+            self._check_target(owner, label+' binding', e.binding)
         if e.zone is not None and self.ref("zones", e.zone, owner, label):
             zone = self.t.zones[e.zone]
         self.ref("sectors", e.sector, owner, label)
+        layout = e.params.get('layout')
+        if layout is not None and zone is not None and self.current_active:
+            if not any(item.id == layout for item in zone.meta.layouts):
+                self.report(*owner, f"{label}: layout {layout!r} does not exist in {zone.id}")
+        service = e.params.get('service')
+        if service in ('surgery', 'buyback_budget'):
+            multiplier = e.params.get('multiplier')
+            valid = isinstance(multiplier, (int, float)) and not isinstance(multiplier, bool)
+            valid = valid and (.8 <= multiplier <= 1 if service == 'surgery' else multiplier == 2)
+            if e.type != 'price_modifier' or e.zone is None or not valid:
+                self.report(*owner, f"{label}: invalid scoped {service} multiplier")
+        if e.params.get('what') == 'credential' and (
+                e.binding is None or e.binding.kind != 'core_control'):
+            self.report(*owner, f"{label}: a service credential needs an exact core-control binding")
         region_ok = True
         if zone is not None and e.region is not None and not self._region_in_bounds(zone, e.region):
             self.report(*owner, f"{label}: region is outside {zone.id}")
