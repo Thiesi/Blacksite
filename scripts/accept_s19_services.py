@@ -56,6 +56,7 @@ async def leave_network(probe: ContractProbe, caller: Connection) -> None:
     if caller.session.player_id in lat.presences:
         await key(caller,b'j')
         await wait(lambda:caller.session.player_id not in lat.presences)
+        await wait(lambda:caller.session.id not in lat.transitions)
 
 
 async def enter_core(probe: ContractProbe, caller: Connection, core: str, descriptor: dict[str,Any]) -> Any:

@@ -69,7 +69,12 @@ async def objective_key(probe: ContractProbe, caller: Connection, completed: Cal
     next objective or an adjacent terminal. Wait for the committed action
     instead of trying to make a timed world interaction a retryable menu.
     """
-    await wait(lambda:not probe.commerce.pending and not probe.commerce.waiting)
+    owner=probe.service.core.contracts
+    # A RETURNING overlay can outlive its network presence. The contract
+    # input rejects external views, so wait for the same world readiness.
+    await wait(lambda:probe.commerce.ready(caller.session)
+        and caller.session.id not in owner.sim.external_views
+        and not probe.commerce.pending and not probe.commerce.waiting)
     await wait(lambda:caller.session.ack_revision==caller.session.view_revision)
     if completed():
         return
