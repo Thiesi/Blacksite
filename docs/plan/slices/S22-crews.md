@@ -159,8 +159,10 @@ deterministic ticks and the panel golden holds at 80×24 and 132×50.
 The deterministic live registry is `server/crews.py`; `crew_engine.py`
 binds sessions, consent, views and source receipts. Invitations create no
 one-person crew, do not refresh on repeated input, and cannot flood the
-recipient's log. Member order survives promotion and determines the next
-leader. Removing either beacon endpoint clears it. Missing/deleted
+recipient's log. Invites from an ignored BBS identity are refused before
+creating consent state or sending a recipient notice; unignore restores
+ordinary invites. Member order survives promotion and determines the
+next leader. Removing either beacon endpoint clears it. Missing/deleted
 characters leave the live registry before a roster is published.
 
 Marked red names compose with the crew plus tag. Friendly fire, indirect

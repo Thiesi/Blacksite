@@ -1280,8 +1280,9 @@ specifications until separately authored and accepted.
   1 - (gap - 5) / 20). Apply once per receipt and identity, not once
   per layer. Unrelated or absent crew get none.
 
-Invitations expire after 60 seconds. Only the leader invites by default;
-the leader may allow members to invite. Acceptance rechecks membership,
+Invitations expire after 60 seconds and respect identity-based ignores.
+Only the leader invites by default; the leader may allow members to
+invite. Acceptance rechecks membership,
 authority and the five-player limit. The first accepted invitation creates
 a two-person crew; an unanswered invitation creates no one-person crew.
 Leaving or disconnecting removes that member. On leader logout the
@@ -1297,6 +1298,9 @@ requires its authorized entrance and retained roster. The first committed
 descent freezes that roster and shares its seed for five minutes from
 the same entrance. Every entrant chooses the NPC body-risk warning.
 Joining a crew later never adds a member to that descent roster.
+Leaving or being kicked does not revoke that already frozen entrance
+right before its five-minute expiry; social leadership does not own the
+descent instance.
 
 Round-robin offers a new cache/data unit to the next member for ten
 seconds, then ordinary loot eligibility applies. A change of loot mode

@@ -49,6 +49,20 @@ def test_game_10_invite_accept_chat_and_leave_remove_audience(callers):
     assert not crews.registry.crews
 
 
+def test_game_11_ignored_identity_cannot_send_crew_invitation(callers):
+    game, source, target, _ = callers
+    chat, crews = game.core.chat, game.core.crews
+    name = game.core.characters.players[source.session.player_id].name
+    chat.ignore(target.session, name)
+    game.frames_for(target)
+    with pytest.raises(ValueError, match='not accepting'):
+        crews.perform(source.session, 'invite', target.session.player_id)
+    assert not crews.registry.invites and not game.frames_for(target)
+    chat.ignore(target.session, name, enabled=False)
+    crew = invite(game, source, target)
+    assert crew.members == (source.session.player_id, target.session.player_id)
+
+
 def test_game_10_leader_logout_transfers_to_oldest_and_dissolves_at_one(callers):
     game, one, two, three = callers
     crew = invite(game, one, two)
@@ -157,6 +171,35 @@ def test_game_10_late_join_needs_contribution_and_recipient_run_cap(callers):
     assert player.xp-before == 80
     reward(game, one, Grant('run', 'data-2', True, scope='core-a', core='core-a', tier=2))
     assert player.xp-before == 80
+
+
+def test_game_10_same_tick_npc_drops_rotate_through_source_queue(callers):
+    from dataclasses import replace
+    from blacksite.content.schema import LootEntry
+    from blacksite.server.npcs.templates import make_actor
+
+    game, one, two, _ = callers
+    crew = invite(game, one, two)
+    crews, commerce = game.core.crews, game.core.commerce
+    crews.registry.loot_mode(one.session.player_id, 'round_robin')
+    content = game.core.loop.content
+    original = content.npcs['npc-maintenance-drone']
+    template = replace(original, loot=(LootEntry('ammo_9x', 1),))
+    content.npcs[template.id] = template
+    source = game.core.world.actors[one.session.player_id]
+    try:
+        for index in range(2):
+            target = make_actor(template, f'fixture-double-drop:{index}',
+                                {'home': (12+index, 10), 'phase': 0})
+            game.core.world.enter(target, source.zone, (12+index, 10))
+            game.core.npcs.died(source, target)
+        assert len(commerce.outbox) == 1 and len(commerce.waiting) == 1
+        game.commit_commerce()
+        recipients = [cache['crew_offer']['recipient'] for cache in commerce.caches.values()]
+        assert recipients == [one.session.player_id, two.session.player_id]
+        assert crew.loot_version == 2 and crew.next_loot == 0
+    finally:
+        content.npcs[original.id] = original
 
 
 def test_game_10_frozen_cache_offer_victim_exemption_and_failed_rotation(callers):

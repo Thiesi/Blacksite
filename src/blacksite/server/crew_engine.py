@@ -135,8 +135,11 @@ class Crews:
                 raise ValueError('Choose a unique online character name.')
             target = match.player_id
         if verb == 'invite':
-            if not self.session(target) or target not in self.game.players:
+            recipient = self.session(target)
+            if not recipient or target not in self.game.players:
                 raise ValueError('Choose an online character.')
+            if session.user_id in self.chat.settings(recipient).get('ignored', []):
+                raise ValueError('That caller is not accepting crew invitations.')
             pending = any(i.inviter == pid and i.target == target and i.until_tick > tick
                           for i in self.registry.invites.values())
             self.registry.invite(pid, target, tick)
