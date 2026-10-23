@@ -128,6 +128,7 @@ async def run_size(probe: NativeProbe, width: int, height: int) -> dict:
     await wait(lambda: '(crew)' in b.caller.screen.screen_text())
     probe.save(b, f's22-shared-kill-xp-{width}')
     await probe.target(a, pb.id)
+    await wait(lambda: probe.service.clock.now_tick() >= a.avatar.actor.cooldowns.get('weapon', 0))
     before_health = b.avatar.actor.health
     await key(a, b'f')
     await wait(lambda: "You don't shoot crew." in a.caller.screen.screen_text())

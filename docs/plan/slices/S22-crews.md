@@ -201,7 +201,11 @@ Actual native input exposed a pre-existing 50ms framing failure: a split
 Right arrow became Esc, left bracket and C, opening Say during movement.
 UI 5.3 now gives sequences 200ms to complete; the decoder and input pump
 share that constant. A lone Escape still leaves without effects, after
-the framing grace. Byte-split regressions exercise the observed delay.
+the framing grace. An expired reader drains ready stdin before flushing
+Escape, so an event-loop delay cannot split an already queued arrow.
+Regressions cover delayed fragments, queued continuations, lone Escape
+and EOF. Native proof console output uses an ordered writer thread;
+slow physical output must not block the inline NetBBS input relay.
 This is a transport usability fix, not a combat or simulation timing
 change. S04's reference and the common UI contract are reconciled here.
 

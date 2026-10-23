@@ -11,6 +11,7 @@ import json
 import os
 from pathlib import Path
 import time
+from collections.abc import Callable
 
 import asyncssh
 
@@ -26,12 +27,13 @@ class ZoneCaller(Caller):
         self.screen = FakeTerminal(width, height)
         self.show = show
         self.shown = 0
+        self.display_write: Callable[[bytes], object] = lambda data: os.write(1, data)
 
     def replay(self) -> None:
         super().replay()
         if self.show and self.offset is not None:
             start = max(self.shown, self.output.find(b"\x1b[?1049h"))
-            os.write(1, self.output[start:self.offset])
+            self.display_write(bytes(self.output[start:self.offset]))
             self.shown = self.offset
 
     async def until(self, condition: object, timeout: float = 5) -> None:

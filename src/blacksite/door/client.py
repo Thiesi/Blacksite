@@ -15,6 +15,19 @@ from blacksite.door.terminal import Terminal
 from blacksite.server.protocol import Frame, ProtocolError, read_frame
 
 
+async def read_input(terminal: Terminal, decoder: KeyDecoder) -> bytes | None:
+    """Give queued continuation bytes priority over an expired timer."""
+    if decoder.buffer != b"\x1b" or decoder.escape_at is None:
+        return await terminal.read()
+    try:
+        return await asyncio.wait_for(terminal.read(), max(
+            0.001, decoder.escape_at + ESCAPE_TIMEOUT_SECONDS - time.monotonic()))
+    except asyncio.TimeoutError:
+        # Rendering or pipe backpressure can delay both the read coroutine
+        # and its timer. Cancellation must not split bytes already in stdin.
+        return terminal.read_pending()
+
+
 async def run(info: DoorInfo, terminal: Terminal) -> None:
     model = Display(info, uuid.uuid4().hex)
     connection = Connection()
@@ -45,15 +58,7 @@ async def run(info: DoorInfo, terminal: Terminal) -> None:
 
     async def input_pump() -> None:
         while not model.leaving:
-            try:
-                # Only an incomplete escape sequence needs a deadline. Idle
-                # input must not repeatedly cancel and recreate the reader.
-                if decoder.buffer != b"\x1b" or decoder.escape_at is None:
-                    data = await terminal.read()
-                else:
-                    data = await asyncio.wait_for(terminal.read(), max(0.001, decoder.escape_at + ESCAPE_TIMEOUT_SECONDS - time.monotonic()))
-            except asyncio.TimeoutError:
-                data = None
+            data = await read_input(terminal, decoder)
             if data == b"":
                 model.leaving = True
                 changed.set()

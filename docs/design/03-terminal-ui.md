@@ -244,6 +244,9 @@ are ordinary text. Arrow navigation cannot move the character.
   CSI-tilde and SS3 forms, F-keys, Shift-modified arrows (`CSI 1;2 A`),
   `Esc` alone with a 200 ms timeout, `Ctrl` letters, `Enter` as CR or LF or
   CRLF, `Backspace` as DEL or BS, `Tab`, and UTF-8 text.
+- Drain ready input before expiring a lone `Esc`. Rendering or pipe
+  backpressure can delay the timer and reader together; queued arrow
+  bytes must take precedence over the elapsed framing grace.
 - Mouse sequences (`CSI M`, SGR) are recognised and discarded; the client
   never enables mouse reporting. Bracketed paste is recognised and its
   contents discarded.
