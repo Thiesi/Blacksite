@@ -144,3 +144,56 @@ def test_game_8_3_retiring_target_or_poster_releases_escrow_once() -> None:
     second = bounties.post('target', 'another', 5, 200, 0)
     assert bounties.retire('target') == [first, second]
     assert not bounties.retire('target')
+
+
+def test_game_8_3_held_bid_lookup_survives_restore_fork_and_release() -> None:
+    market = Market('origin')
+    lid = listing(market)
+    market.bid(lid, 'first', 60, 1)
+    market.bid(lid, 'second', 70, 2)
+    restored = Market('origin', market.record())
+    assert restored.highest(lid).bidder == 'second'
+    fork = restored.fork()
+    fork.retire('second', 3)
+    assert fork.highest(lid) is None and restored.highest(lid).bidder == 'second'
+    fork.bid(lid, 'third', 80, 4)
+    assert fork.highest(lid).bidder == 'third'
+    restored.buyout(lid, 'buyer', 5)
+    assert restored.highest(lid) is None
+    assert Market('origin', restored.record()).highest(lid) is None
+    market.cancel(lid, None, 6)
+    assert market.highest(lid) is None
+    another = Market('origin')
+    lid = listing(another)
+    another.bid(lid, 'winner', 60, 1)
+    another.expire(86400)
+    assert another.highest(lid) is None
+
+
+def test_arch_15_2_forks_isolate_live_changes_and_preserve_closed_history() -> None:
+    market = Market('origin')
+    closed = listing(market)
+    market.bid(closed, 'old', 60, 1)
+    market.cancel(closed, None, 2)
+    active = listing(market)
+    market.bid(active, 'bidder', 60, 3)
+    before = market.record()
+    fork = market.fork()
+    fork.bid(active, 'other', 70, 4)
+    with pytest.raises(ValueError):
+        fork.buyout(closed, 'buyer', 5)
+    fork.expire(86400)
+    assert market.record() == before
+    assert fork.listings[closed].status == 'cancelled'
+    assert fork.listings[active].winner == 'other'
+    bounties = Bounties('origin')
+    old = bounties.post('poster', 'old-target', 5, 100, 0)
+    bounties.claim('old-target', 'killer', 1, True)
+    live = bounties.post('poster', 'live-target', 5, 200, 2)
+    before_bounties = bounties.record()
+    proposed = bounties.fork()
+    proposed.refund(live.id)
+    proposed.retire('poster')
+    assert bounties.record() == before_bounties
+    assert proposed.rows[old.id].status == 'claimed'
+    assert proposed.rows[live.id].status == 'refunded'

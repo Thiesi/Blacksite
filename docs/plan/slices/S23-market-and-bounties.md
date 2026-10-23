@@ -142,9 +142,10 @@ persistent rows, resolved by the server, with no new real-time mechanics.
 ## Acceptance script
 
 1. On a NetBBS node with two callers (A and B) at 80×24, A opens a
-   public terminal in `core-plaza`, presses `M`, lists a starter pistol
+   public terminal in `core-plaza`, presses `F9` then `M`, lists a starter pistol
    at 50 chits with a 100-chit buyout, 24 h expiry. The Market menu shows
-   it under "My listings".
+   it under "My listings". Before `Y`, confirmation shows 47 net at ask
+   and 95 at buyout, with the whole-chit fee explained.
 2. B opens the market from the Tin Halo terminal, sees the listing with
    A's handle, bids 60. A's log shows "bid received". B then presses `U`
    for buyout; B's bank drops by 100, A's bank rises by 95, and
@@ -192,6 +193,11 @@ persistent rows, resolved by the server, with no new real-time mechanics.
 - Retain held/refunded/won bid history, sale-time item snapshots and
   retirement cleanup. A failed source announces no success, and a
   restart never repeats a sale, refund or death payout.
+- Keep a derived held-bid lookup, format the visible page and clone live
+  financial records while sharing immutable closed history. S29 retains
+  the full populated-world latency gate; a small local probe is not that
+  acceptance. Listing confirmation shows actual net proceeds, including
+  zero for a one-chit sale. No extra bounty tax or minimum price is added.
 - Record grade/funding fixtures separately from actual native walking,
   terminal access, trading, firing and death. Retain S19/S25 actual
   earning and clinic pacing obligations.

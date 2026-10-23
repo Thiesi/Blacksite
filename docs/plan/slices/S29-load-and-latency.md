@@ -180,3 +180,13 @@ bounds menu frames to 12 rows and operator list pages to 100 records;
 the full financial history remains stored. Include escrow expiry and
 bounty death payouts under load, without weakening atomic settlement,
 exact item identity or acknowledgement ordering.
+
+PR #64 review adds a mandatory populated-world gate: use at least 10,000
+closed listings and 40,000 historical bids, plus live auctions and bounty
+posts queued behind death settlement. Measure public and own-history
+menus, source fork/diff/commit costs, expiry and normal combat under the
+same tick/input budgets as fresh worlds. S23 maintains a held-bid lookup,
+formats only the visible page and copies live financial records while
+sharing immutable closed history. Linear selection/delta scans and
+active-state copy costs remain. Measure and optimize or bound remaining
+costs before S29 is done. S31 cannot release without this gate.

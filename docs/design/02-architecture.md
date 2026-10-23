@@ -865,6 +865,13 @@ held bids for their selected listings; historical records remain stored.
 This bounds protocol frames in long-running worlds. These commands share the
 existing operator admission and completion audit. S28 wires the CLI.
 
+Closed listing, bid and bounty records are immutable financial history.
+Proposals clone open listings, held bids and active bounties, sharing
+terminal history without modifying it. The held-bid lookup is derived
+from stored rows, never a second escrow authority. Delta generation skips
+identical shared history and persists only changed rows. Any future state
+that remains mutable must be copied as live data before mutation.
+
 ### 15.3 Delivery boundaries
 
 S02 defines the full closed data schema and validates explicit bundle

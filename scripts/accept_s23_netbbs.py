@@ -1,7 +1,7 @@
 """S23: installed native trading and a real contested-zone bounty kill.
 
 Fixtures: grades/full pools and banked funds only. Routes, inventory,
-market forms, collection, targeting, firing, reload and death use keys.
+market forms, collection, targeting, firing and death use keys.
 No item, placement, reward, capture-clock or future-map fixture.
 """
 
@@ -74,6 +74,10 @@ async def list_item(probe: ContractProbe, caller: Connection, iid: str,
     await amount(probe, caller, 'buyout', 'Buyout chits', buyout)
     await wait(lambda: owner.views.menus[caller.session.id].kind == 'expiry')
     await choose(probe, caller, b'\r', '86400')
+    await wait(lambda: 'Net at ask:' in caller.caller.screen.screen_text())
+    if (price, buyout) == ('50', '100'):
+        assert 'Net at ask: 47.' in caller.caller.screen.screen_text()
+        assert 'Buyout net: 95.' in caller.caller.screen.screen_text()
     await confirm(probe, caller, lambda: bool(set(owner.market.listings)-before))
     return (set(owner.market.listings)-before).pop()
 
@@ -205,11 +209,10 @@ async def run_case(probe: ContractProbe, width: int, height: int) -> dict[str, A
     zone = probe.service.world.zones[buyer.avatar.zone]
     assert zone.template.meta.safety == 'contested' and zone.allows_hostile(buyer.avatar.actor.position)
     await probe.target(hunter, pb.id)
-    gun = next(probe.commerce.items[i] for i in pc.equipment.values()
-               if probe.game.content.items[probe.commerce.items[i].template].weapon)
     async with asyncio.timeout(100):
         while owner.bounties.rows[bounty.id].status == 'active':
-            await key(hunter, b'r' if probe.commerce.items[gun.id].ammo == 0 else b'f')
+            # F attacks using the normal carried-ammo rules. R opens rigs.
+            await key(hunter, b'f')
             await asyncio.sleep(.2)
     await wait(lambda: not probe.commerce.pending)
     bounty = owner.bounties.rows[bounty.id]
@@ -218,7 +221,7 @@ async def run_case(probe: ContractProbe, width: int, height: int) -> dict[str, A
     cache = next(c for c in probe.commerce.caches.values() if iid in c['items'])
     assert cache['victim'] == pb.id and cache['killer'] == pc.id
     probe.save(hunter, f's23-claimed-{width}')
-    probe.report(f'S23 PASS {width}x{height}: actual targeted fire/reload/death pays 200; victim cache rights retained')
+    probe.report(f'S23 PASS {width}x{height}: actual targeted fire/death pays 200; victim cache rights retained')
 
     await services(probe, seller, terminal)
     await choose(probe, seller, b'o')

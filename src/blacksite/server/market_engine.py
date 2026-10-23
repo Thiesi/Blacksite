@@ -108,7 +108,8 @@ class Trading:
 
     def changes(self, market: Market, bounties: Bounties) -> dict[str, Any]:
         def changed(old: dict[str, Any], new: dict[str, Any]) -> list[dict[str, Any]]:
-            return [asdict(v) for key, v in new.items() if key not in old or v != old[key]]
+            return [asdict(v) for key, v in new.items()
+                    if key not in old or v is not old[key] and v != old[key]]
         return {'listings': changed(self.market.listings, market.listings),
                 'bids': changed(self.market.bids, market.bids),
                 'bounties': changed(self.bounties.rows, bounties.rows),

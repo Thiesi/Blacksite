@@ -151,6 +151,23 @@ def test_ui_4_escape_from_price_prompt_keeps_item(trade_game: tuple[Any, ...]) -
     assert iid in players[0].inventory and not game.core.commerce.pending
 
 
+@pytest.mark.parametrize('size', [(80, 24), (132, 50)])
+def test_ui_4_listing_confirmation_explains_tiny_sale_net(info: Any, trade_game: tuple[Any, ...], size: tuple[int, int]) -> None:
+    game, clients, _, iid, _ = trade_game
+    caller, owner = clients[0], game.core.market
+    open_market(game, caller)
+    choose(game, caller, 'l')
+    choose(game, caller, 'enter', iid)
+    token, _ = owner.views.prompts[caller.session.id]
+    act(game, caller, Frame('line', {'id': token, 'text': '1'}))
+    token, _ = owner.views.prompts[caller.session.id]
+    act(game, caller, Frame('line', {'id': token, 'text': '20'}))
+    choose(game, caller, 'enter', '86400')
+    text = render(info, size, owner.commerce.content, owner.views.body(caller.session, owner.views.menus[caller.session.id]))
+    assert 'Net at ask: 0.' in text and 'Buyout net: 19.' in text
+    assert '5% fee' in text and not owner.market.listings
+
+
 def test_ui_4_f9_services_reach_board_terminal_without_replacing_map(trade_game: tuple[Any, ...]) -> None:
     game, clients, _, _, _ = trade_game
     caller, owner = clients[0], game.core.market
@@ -184,6 +201,7 @@ def test_ui_4_effective_stats_seller_and_bid_are_width_safe(info: Any, trade_gam
     owner.execute(clients[1].session, 'bid', {'listing': lid, 'chits': 60})
     game.commit_commerce()
     body = owner.views.body(clients[1].session, Panel('market', terminal, 0))
+    assert 'Uses carried' in body['detail'] and 'Loaded' not in body['detail']
     text = render(info, size, owner.commerce.content, body)
     assert 'Trader界1' in text and 'Market界1' in text
     assert '112%' in text and 'Damage' in text and '60' in text

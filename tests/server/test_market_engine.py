@@ -233,3 +233,22 @@ def test_game_8_3_retirement_releases_others_escrow_before_delete(trade_game: tu
     assert players[1].chits_bank == 1000 and players[2].chits_bank == 1000
     assert owner.market.listings[lid].status == 'cancelled'
     assert iid in players[0].inventory and game.core.commerce.items[iid].owner == players[0].id
+
+
+def test_arch_15_2_bounty_post_queued_behind_death_keeps_both_sources(trade_game: tuple[Any, ...]) -> None:
+    game, clients, players, _, _ = trade_game
+    owner = game.core.market
+    owner.execute(clients[0].session, 'post', {'target': players[1].id, 'chits': 200})
+    game.commit_commerce()
+    original = next(iter(owner.bounties.rows))
+    place(game, clients[1], 'vatside-clinics', (32, 18))
+    players[1].progress['combat'] = {'stage': 'down', 'killer': players[2].id, 'until': 0}
+    game.core.combat.die(players[1], game.core.combat.actor(players[1]))
+    assert game.core.commerce.pending and owner.bounties.rows[original].status == 'active'
+    owner.request(clients[0].session, 'post', {'target': players[2].id, 'chits': 100})
+    assert game.core.commerce.waiting and len(owner.bounties.rows) == 1
+    game.commit_commerce()
+    assert owner.bounties.rows[original].status == 'claimed'
+    active = [row for row in owner.bounties.rows.values() if row.status == 'active']
+    assert len(active) == 1 and active[0].target == players[2].id and active[0].chits == 100
+    assert players[0].chits_bank == 700 and players[2].chits_bank == 1200

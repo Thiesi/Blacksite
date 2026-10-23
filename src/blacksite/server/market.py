@@ -4,7 +4,7 @@ The world adapter operates on forks. Only its commerce commit installs a
 fork alongside bank, item, impound and treasury changes.
 """
 
-from copy import deepcopy
+from copy import copy, deepcopy
 from dataclasses import asdict, dataclass, field
 from typing import Any
 
@@ -60,9 +60,24 @@ class Market:
         self.serial = state.get('serial', 0)
         self.listings = {row['id']: Listing(**row) for row in state.get('listings', [])}
         self.bids = {row['id']: Bid(**row) for row in state.get('bids', [])}
+        # Derived lookup: closed history never adds a scan per listing.
+        self._held: dict[str, str] = {}
+        for bid in self.bids.values():
+            if bid.status == 'held':
+                previous = self.highest(bid.listing)
+                if previous is None or (bid.amount, bid.at, bid.id) > (previous.amount, previous.at, previous.id):
+                    self._held[bid.listing] = bid.id
 
     def fork(self) -> 'Market':
-        return deepcopy(self)
+        # Terminal financial records are immutable history (architecture
+        # 15.2). Copy live records before any proposal can mutate them.
+        result = copy(self)
+        result.listings = {key: deepcopy(row) if row.status == 'open' else row
+                           for key, row in self.listings.items()}
+        result.bids = {key: deepcopy(row) if row.status == 'held' else row
+                       for key, row in self.bids.items()}
+        result._held = dict(self._held)
+        return result
 
     def record(self) -> dict[str, Any]:
         return {'serial': self.serial, 'listings': [asdict(v) for v in self.listings.values()],
@@ -94,8 +109,7 @@ class Market:
         return listing
 
     def highest(self, lid: str) -> Bid | None:
-        return max((b for b in self.bids.values() if b.listing == lid and b.status == 'held'),
-                   key=lambda b: (b.amount, b.at, b.id), default=None)
+        return self.bids.get(self._held.get(lid, ''))
 
     def bid(self, lid: str, bidder: str, chits: int, now: float) -> tuple[Bid, Bid | None]:
         listing = self.active(lid, now)
@@ -111,6 +125,7 @@ class Market:
         if previous:
             previous.status = 'outbid'
         self.bids[bid.id] = bid
+        self._held[lid] = bid.id
         return bid, previous
 
     def buyout(self, lid: str, buyer: str, now: float) -> tuple[Listing, Bid | None]:
@@ -122,6 +137,7 @@ class Market:
         previous = self.highest(lid)
         if previous:
             previous.status = 'refunded'
+        self._held.pop(lid, None)
         listing.status, listing.winner, listing.price = 'sold', buyer, listing.buyout
         listing.closed_at = now
         return listing, previous
@@ -135,6 +151,7 @@ class Market:
             raise ValueError('A listing with an active bid cannot be cancelled.')
         if previous:
             previous.status = 'refunded'
+        self._held.pop(lid, None)
         listing.status, listing.closed_at = 'cancelled', now
         return listing, previous
 
@@ -146,6 +163,7 @@ class Market:
             bid = self.highest(listing.id)
             if bid:
                 bid.status = 'won'
+            self._held.pop(listing.id, None)
             listing.status = 'sold' if bid else 'expired'
             listing.winner, listing.price = (bid.bidder, bid.amount) if bid else (None, 0)
             listing.closed_at = now
@@ -161,6 +179,7 @@ class Market:
             bid = self.highest(listing.id)
             if bid and (listing.seller == pid or bid.bidder == pid):
                 bid.status = 'refunded'
+                self._held.pop(listing.id, None)
                 refunds.append(bid)
             if listing.seller == pid:
                 listing.status, listing.closed_at = 'cancelled', now
@@ -176,7 +195,10 @@ class Bounties:
         self.rows = {row['id']: Bounty(**row) for row in state.get('rows', [])}
 
     def fork(self) -> 'Bounties':
-        return deepcopy(self)
+        result = copy(self)
+        result.rows = {key: deepcopy(row) if row.status == 'active' else row
+                       for key, row in self.rows.items()}
+        return result
 
     def record(self) -> dict[str, Any]:
         return {'serial': self.serial, 'rows': [asdict(v) for v in self.rows.values()]}

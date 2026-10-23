@@ -6,9 +6,10 @@ from typing import Any
 from blacksite.server.clock import TICK_HZ
 from blacksite.server.loop import TickContext
 from blacksite.server.items import ItemInstance
+from blacksite.server.market import Listing
 from blacksite.server.protocol import Frame
 from blacksite.server.quality import detail
-from blacksite.server.rules.market import BOUNTY_MIN_TARGET_GRADE, LISTING_EXPIRIES, MARKET_ACTION_SECONDS
+from blacksite.server.rules.market import BOUNTY_MIN_TARGET_GRADE, LISTING_EXPIRIES, MARKET_ACTION_SECONDS, fee
 from blacksite.server.sessions import MARKET_PER_SECOND, Session
 from blacksite.server.wake import menu
 from blacksite.server.world.simulation import MENU_TIMEOUT_SECONDS
@@ -66,7 +67,8 @@ class Views:
         template = self.owner.commerce.content.items[item.template]
         condition = f'Qty {item.stack}'
         if template.weapon and template.weapon.ammo:
-            condition += f'  Loaded {item.ammo}'
+            ammo = self.owner.commerce.content.items[template.weapon.ammo]
+            condition += f'  Uses carried {ammo.name}'
         if template.consumable:
             condition += f'  Charges {item.charges}'
         if item.health is not None:
@@ -76,6 +78,28 @@ class Views:
     def listing_item(self, listing: Any) -> ItemInstance:
         return (ItemInstance.from_record(listing.item_snapshot) if listing.item_snapshot
                 else self.owner.commerce.items[listing.item])
+
+    def listings(self, session: Session, panel: Panel) -> list[Listing]:
+        owner, now = self.owner, self.owner.now()
+        rows = [v for v in owner.market.listings.values()
+                if (v.seller == session.player_id if panel.mine else v.status == 'open' and v.expires_at > now)]
+        if panel.class_ != 'all':
+            rows = [v for v in rows if self.listing_template(v).class_ == panel.class_]
+        rows.sort(key=lambda v: ((v.expires_at if panel.sort == 'expiry' else
+            owner.market.highest(v.id).amount if owner.market.highest(v.id) else v.ask), v.id))
+        return rows
+
+    def listing_template(self, listing: Listing) -> Any:
+        template = (listing.item_snapshot['template'] if listing.item_snapshot
+                    else self.owner.commerce.items[listing.item].template)
+        return self.owner.commerce.content.items[template]
+
+    def listing_rows(self, listings: list[Listing]) -> list[dict[str, Any]]:
+        owner, now = self.owner, self.owner.now()
+        return [{'id': v.id, 'cells': [self.listing_template(v).name,
+                str(owner.market.highest(v.id).amount if owner.market.highest(v.id) else v.price or v.ask),
+                f'{max(0,int(v.expires_at-now))}s' if v.status == 'open' else v.status,
+                self.label(v.seller)]} for v in listings]
 
     def rows(self, session: Session, panel: Panel) -> list[dict[str, Any]]:
         owner, pid = self.owner, session.player_id
@@ -107,21 +131,23 @@ class Views:
                     targets.setdefault(row.target, []).append(row)
             return [{'id': target, 'cells': [self.label(target), str(sum(r.chits for r in rows)),
                     f'{len({r.poster for r in rows})} posters']} for target, rows in sorted(targets.items())]
-        listings = [v for v in owner.market.listings.values()
-                    if (v.seller == pid if panel.mine else v.status == 'open' and v.expires_at > owner.now())]
-        if panel.class_ != 'all':
-            listings = [v for v in listings if owner.commerce.content.items[self.listing_item(v).template].class_ == panel.class_]
-        listings.sort(key=lambda v: ((v.expires_at if panel.sort == 'expiry' else
-            owner.market.highest(v.id).amount if owner.market.highest(v.id) else v.ask), v.id))
-        return [{'id': v.id, 'cells': [owner.commerce.content.items[self.listing_item(v).template].name,
-                str(owner.market.highest(v.id).amount if owner.market.highest(v.id) else v.price or v.ask),
-                f'{max(0,int(v.expires_at-owner.now()))}s' if v.status == 'open' else v.status,
-                self.label(v.seller)]} for v in listings]
+        return self.listing_rows(self.listings(session, panel))
 
     def body(self, session: Session, panel: Panel) -> dict[str, Any]:
-        rows = self.rows(session, panel)
-        cursor = min(panel.cursor, max(0, len(rows)-1))
-        row = rows[cursor]['id'] if rows else ''
+        if panel.kind == 'market':
+            listings = self.listings(session, panel)
+            total = len(listings)
+            cursor = min(panel.cursor, max(0, total-1))
+            start = cursor//MENU_PAGE_ROWS*MENU_PAGE_ROWS
+            row = listings[cursor].id if listings else ''
+            rows = self.listing_rows(listings[start:start+MENU_PAGE_ROWS])
+        else:
+            all_rows = self.rows(session, panel)
+            total = len(all_rows)
+            cursor = min(panel.cursor, max(0, total-1))
+            start = cursor//MENU_PAGE_ROWS*MENU_PAGE_ROWS
+            row = all_rows[cursor]['id'] if all_rows else ''
+            rows = all_rows[start:start+MENU_PAGE_ROWS]
         text = 'Market money uses your bank. Esc/B returns. The street stays active.'
         help_asset = self.owner.commerce.content.text.get('text-market-help')
         if help_asset:
@@ -147,12 +173,11 @@ class Views:
         if panel.confirmation:
             text = panel.confirmation[2]+'\nY confirms. Esc/B returns without a transfer.'
             actions = 'Y confirm  Esc/B returns'
-        start = cursor//MENU_PAGE_ROWS*MENU_PAGE_ROWS
         body = menu('MY LISTINGS' if panel.mine and panel.kind == 'market' else panel.kind.upper(),
-                    rows[start:start+MENU_PAGE_ROWS] or [{'id': '', 'cells': ['No entries.']}],
+                    rows or [{'id': '', 'cells': ['No entries.']}],
                     cursor-start, text, actions)
         body['page'] = start//MENU_PAGE_ROWS+1
-        body['pages'] = max(1, (len(rows)+MENU_PAGE_ROWS-1)//MENU_PAGE_ROWS)
+        body['pages'] = max(1, (total+MENU_PAGE_ROWS-1)//MENU_PAGE_ROWS)
         keys = {'terminal': [('m', 'market'), ('o', 'bounties'), ('j', 'jack'), ('c', 'collect')],
             'market': [('d', 'bid'), ('u', 'buyout'), ('l', 'list'), ('m', 'my listings'),
                        ('c', 'collect'), ('k', 'cancel'), ('f', 'class'), ('s', 'sort')],
@@ -212,7 +237,13 @@ class Views:
             return
         if panel.kind == 'expiry' and key == 'enter' and row:
             panel.form['expiry'] = int(row)
-            panel.confirmation = 'list', dict(panel.form), f'List this exact item for {panel.form["price"]} chits; buyout {panel.form["buyout"] or "none"}?'
+            price, buyout = panel.form['price'], panel.form['buyout']
+            net = f'Net at ask: {price-fee(price)}.'
+            if buyout is not None:
+                net += f' Buyout net: {buyout-fee(buyout)}.'
+            panel.confirmation = 'list', dict(panel.form), (
+                f'List for {price}; buyout {buyout or "none"} chits?\n{net}\n'
+                '5% fee, rounded up. Final bid may rise.')
         elif panel.kind == 'items' and key == 'enter' and row:
             panel.form = {'item': row}
             self.prompt(session, 'price', 'Asking chits')
