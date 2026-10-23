@@ -13,6 +13,7 @@ from pathlib import Path
 import traceback
 import time
 from typing import Any
+from collections.abc import Callable
 
 from accept_s10_netbbs import Connection, wait
 from accept_s16_netbbs import commit_key, key, select
@@ -61,6 +62,21 @@ async def close_jobs(probe: ContractProbe, caller: Connection) -> None:
     await commit_key(probe,caller,b'\x1b',lambda:caller.session.id not in probe.service.core.contracts.panels.menus)
 
 
+async def objective_key(probe: ContractProbe, caller: Connection, completed: Callable[[], bool]) -> None:
+    """A world action has no stale-menu revision and must be sent once.
+
+    Repeating E while a channel finishes can deliver a late key to the
+    next objective or an adjacent terminal. Wait for the committed action
+    instead of trying to make a timed world interaction a retryable menu.
+    """
+    await wait(lambda:not probe.commerce.pending and not probe.commerce.waiting)
+    await wait(lambda:caller.session.ack_revision==caller.session.view_revision)
+    if completed():
+        return
+    await caller.caller.write(b'e')
+    await wait(completed,20)
+
+
 async def board_row(probe: ContractProbe, caller: Connection, row: str) -> Any:
     owner = probe.service.core.contracts
     await commit_key(probe,caller,b'e',lambda:caller.session.id in owner.panels.menus)
@@ -96,7 +112,7 @@ async def first_job(probe: ContractProbe, width: int, height: int, network: bool
     await close_jobs(probe,caller)
     await probe.route(caller,'terraces-blocks')
     await probe.near(caller,'stairwell-c-parcel-hatch')
-    await commit_key(probe,caller,b'e',lambda:owner.state.engine.instances[iid].index == 1)
+    await objective_key(probe,caller,lambda:owner.state.engine.instances[iid].index == 1)
     await wait(lambda:'Next:' in caller.caller.screen.screen_text())
     probe.save(caller,f's19-first-objective-{route}-{width}')
     if network:
@@ -116,17 +132,17 @@ async def first_job(probe: ContractProbe, width: int, height: int, network: bool
         await wait(lambda:player.id not in owner.lat.presences)
     else:
         start = probe.service.clock.now_tick()
-        await commit_key(probe,caller,b'e',lambda:owner.state.engine.instances[iid].index == 2)
+        await objective_key(probe,caller,lambda:owner.state.engine.instances[iid].index == 2)
         assert probe.service.clock.now_tick()-start >= 50
         probe.save(caller,f's19-manual-release-{width}')
     await probe.near(caller,'stairwell-c-parcel')
-    await commit_key(probe,caller,b'e',lambda:owner.state.engine.instances[iid].index == 3)
+    await objective_key(probe,caller,lambda:owner.state.engine.instances[iid].index == 3)
     parcel = next(probe.commerce.items[i] for i in player.inventory
                   if probe.commerce.items[i].mission == iid)
     assert parcel.bound and not parcel.secured
     await probe.route(caller,'sodium-tin-halo')
     await probe.near(caller,'vesper')
-    await commit_key(probe,caller,b'e',lambda:owner.state.engine.instances[iid].state == 'complete')
+    await objective_key(probe,caller,lambda:owner.state.engine.instances[iid].state == 'complete')
     panel = await board_row(probe,caller,iid)
     before = player.chits_hand,player.xp,dict(player.standing)
     await commit_key(probe,caller,b't',lambda:panel.confirmation is not None)

@@ -18,7 +18,7 @@ from typing import Any
 from accept_s10_netbbs import CombatCaller, Connection, wait
 from accept_s16_netbbs import commit_key, key, select
 from accept_s18_netbbs import get_user_by_id
-from accept_s19_netbbs import ContractProbe, board_row, close_jobs, encounter_row
+from accept_s19_netbbs import ContractProbe, board_row, close_jobs, encounter_row, objective_key
 from contracts_fixture import build_fixture
 from blacksite.server.app import Server
 
@@ -145,7 +145,7 @@ async def escort_stage(probe: ContractProbe, caller: Connection, iid: str, progr
         choices=[(actor.x+dx,actor.y+dy) for dx in (-1,0,1) for dy in (-1,0,1)
                  if (actor.x+dx,actor.y+dy) not in occupied and zone.can_enter(caller.avatar.actor,(actor.x+dx,actor.y+dy))]
         await probe.walk(caller,min(choices,key=lambda t:abs(t[0]-caller.avatar.actor.x)+abs(t[1]-caller.avatar.actor.y)))
-        await commit_key(probe,caller,b'e',lambda:actor.behaviour.get('escort')==pid)
+        await objective_key(probe,caller,lambda:actor.behaviour.get('escort')==pid)
     destination=progress.stage.destination
     await probe.route(caller,destination.zone)
     # Put the worker on the arrival marker so the group's ordinary
@@ -168,7 +168,7 @@ async def drive_job(probe: ContractProbe, caller: Connection, iid: str, descript
             await network_stage(probe,caller,target,descriptor)
         else:
             await probe.near(caller,target.object)
-            await commit_key(probe,caller,b'e',lambda:owner.state.engine.instances[iid].index!=index)
+            await objective_key(probe,caller,lambda:owner.state.engine.instances[iid].index!=index)
         await wait(lambda:owner.state.engine.instances[iid].index!=index)
         await leave_network(probe,caller)
 
