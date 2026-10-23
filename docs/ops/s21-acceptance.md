@@ -51,8 +51,9 @@ from S24's future event scheduler.
 
 The exact gameplay head passed the full repository-root `pytest -q` on
 Ubuntu: **1400 passed in 170.47 seconds** (Actions job `120537411164`).
-Windows CI and the final local full-root run are in progress; their final
-results and the final-head review/check record belong in the PR.
+Windows: **1399 passed, 1 skipped in 367.31 seconds** (job `120537410859`).
+The supplemental local full-root run and final-head review/check record
+are tracked in [PR #63](https://github.com/Thiesi/Blacksite/pull/63).
 
 Current focused local checks include eight width-safe relay/passage/
 defence menu cases, seven relay benefit/content cases, and the committed

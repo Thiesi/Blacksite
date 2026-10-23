@@ -1,7 +1,7 @@
 # S21 — Relays and territory: capture rules, influence, buffs, relay vendors, season tally
 
-**Status:** planned
-**Primary model:** Opus · **Reviewer:** none
+**Status:** done (PR #63)
+**Primary model:** Opus · **Reviewer:** automated Claude; actual model in PR
 **Depends on:** S20, S15, S17, S18, S22 · **Milestone:** M4
 **Issue:** https://github.com/Thiesi/blacksite/issues/21
 
