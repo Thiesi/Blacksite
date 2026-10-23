@@ -10,6 +10,7 @@ from blacksite.server.relay_views import Panel
 from tests.fake_terminal import FakeTerminal
 from tests.server.test_relay_engine import content, relay_game
 from tests.server.test_relay_passages import passage, passage_content
+from tests.server.test_relay_benefits import owned
 
 
 def render(info, size, content, body):
@@ -45,3 +46,20 @@ def test_ui_4_passage_quote_keeps_price_and_free_alternative_visible(info,passag
     owner=game.core.relays
     text=render(info,size,owner.content,owner.passages.body(caller.session,cable.id))
     assert '5 chits' in text and 'free stairs' in text and 'Esc/B' in text
+
+
+@pytest.mark.parametrize('size',[(80,24),(132,50)])
+def test_ui_4_owned_relay_defence_does_not_show_another_capture_countdown(info,relay_game,size):
+    game,caller,_,_=relay_game
+    owner=game.core.relays
+    owned(game,'cold-chain')
+    owner.start(caller.session,'cold-chain')
+    claim=next(iter(owner.claims.active.values()))
+    claim.elapsed=7000
+    body=owner.views.body(caller.session,Panel('cold-chain'))
+    text=render(info,size,owner.content,body)
+    assert 'Defending' in text and '700s active' in text
+    assert 'Core opening needed' not in text
+    zone={'objects':[]}
+    owner.views.decorate(caller.session,zone)
+    assert zone['hint'].startswith('Defending') and '/480' not in zone['hint']

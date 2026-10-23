@@ -81,12 +81,16 @@ class Views:
             if claim.relay != relay.id:
                 continue
             holder = owner.game.players.get(claim.holder.player)
+            defending = faction == claim.faction
             rows.append({'id': 'claim:'+claim.id, 'cells': [holder.name if holder else 'Absent holder',
                 owner.content.factions[claim.faction].short,
-                f'{claim.elapsed//TICK_HZ}/{claim.required//TICK_HZ}s',
-                'Core open' if claim.hacked else 'Core opening needed for 3 min']})
+                f'{claim.elapsed//TICK_HZ}s active' if defending else f'{claim.elapsed//TICK_HZ}/{claim.required//TICK_HZ}s',
+                'Defending' if defending else 'Core open' if claim.hacked else 'Core opening needed for 3 min']})
+        holding = ('H starts active physical defence. You keep earning active hold XP.\n'
+            if player.faction and player.faction == faction else
+            'H starts an explicit physical hold. 3 min with a named runner; 8 min alone.\n')
         detail = (f'{relay.name} | {name} | {relay.rate} influence/hour\n'
-            'H starts an explicit physical hold. 3 min with a named runner; 8 min alone.\n'
+            +holding+
             'S supports the selected named claim. Open relay_open in its core.\n'
             'Only verified participants receive capture credit; joining a crew gives none.\n'
             'Opposing active claims and Curfew pause clocks. More than 5s away ends a hold.')
@@ -204,7 +208,9 @@ class Views:
                                  for c in owner.claims.active.values() if c.relay == rid]}
         claim = next((c for c in owner.claims.active.values() if c.holder.player == session.player_id), None)
         if claim:
-            body['hint'] = f'{self.status(claim.relay)} | Hold {claim.elapsed/TICK_HZ:.1f}/{claim.required/TICK_HZ:g}s | B withdraws'
+            body['hint'] = (f'Defending | Active hold {claim.elapsed//TICK_HZ}s | B withdraws'
+                if owner.owner(claim.relay) == claim.faction else
+                f'{self.status(claim.relay)} | Hold {claim.elapsed/TICK_HZ:.1f}/{claim.required/TICK_HZ:g}s | B withdraws')
         elif self.terminal(session):
             body['hint'] = body.get('hint', '')+'  F8 relays'
 
