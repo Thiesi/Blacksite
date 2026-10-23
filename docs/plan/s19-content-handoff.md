@@ -56,7 +56,9 @@ two shared slv_power units. Depot needs kestrel-surplus at the actual
 depot-surplus-counter, not an essential food/medical vendor. Common
 allocation doubles its hourly buy-back cap without refilling spending.
 Relay Zero's reserve binds only relay_open; common publishes its actual
-core patrols. Align this gate with a useful optional local shortcut.
+core patrols. Bind the credential to a useful optional local shortcut
+with an actual permission check. Keep S21's ordinary public relay capture
+separate; a credential for an already-public control is no reward.
 These effects must retain ordinary care, uplinks and outward travel.
 
 ## S27 dialogue and S26 activation

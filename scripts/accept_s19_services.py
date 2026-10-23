@@ -8,6 +8,7 @@ from __future__ import annotations
 
 import argparse
 import asyncio
+from collections import deque
 from dataclasses import asdict
 import json
 from pathlib import Path
@@ -62,10 +63,30 @@ async def enter_core(probe: ContractProbe, caller: Connection, core: str, descri
     if caller.session.player_id not in lat.presences:
         terminal='cold-chain-loan-terminal' if core=='lat-relay-cold-chain' else 'fx-loan'
         await probe.near(caller,terminal)
+        if core=='lat-relay-cold-chain':
+            # Use the authored shelter, not the contested approach that
+            # happens to be within interaction range of its terminal.
+            await probe.walk(caller,(36,20))
+            assert not probe.service.world.zones[caller.avatar.zone].allows_hostile(caller.avatar.actor.position)
         await key(caller,b'j')
         await wait(lambda:caller.session.player_id in lat.presences)
     presence=lat.presences[caller.session.player_id]
     if presence.core != core:
+        cells=lat.sectors.cells[presence.sector]
+        entrance=next(c.id for c in cells.values() if c.core_id==core)
+        pending,paths=deque([presence.cell]),{presence.cell:[]}
+        while pending and entrance not in paths:
+            cell=pending.popleft()
+            for adjacent in cells[cell].neighbours:
+                if adjacent not in paths:
+                    paths[adjacent]=[*paths[cell],adjacent]
+                    pending.append(adjacent)
+        for hop in paths[entrance]:
+            a,b=cells[presence.cell].pos,cells[hop].pos
+            dx,dy=b[0]-a[0],b[1]-a[1]
+            value=(b'\x1b[C' if dx>0 else b'\x1b[D') if abs(dx)>=abs(dy) else (b'\x1b[B' if dy>0 else b'\x1b[A')
+            await key(caller,value)
+            await wait(lambda:presence.cell==hop)
         await encounter_row(probe,caller,'enter:'+core)
         await wait(lambda:presence.core==core)
     return presence
@@ -93,6 +114,7 @@ async def network_stage(probe: ContractProbe, caller: Connection, target: Any, d
         await key(caller,value)
         await wait(lambda:presence.room==hop)
     await neutralize(probe,caller,presence)
+    await wait(lambda:enc.idle(presence))
     if target.kind=='core_control':
         row='control:'+target.control
     else:
@@ -143,8 +165,7 @@ async def reserve(probe: ContractProbe, caller: Connection, sid: str, allocation
     board='clinic-public-west' if sid=='cold-chain' else 'fx-'+sid+'-board'
     await probe.near(caller,board)
     panel=await board_row(probe,caller,'service:'+sid)
-    await key(caller,b'1' if allocation=='common' else b'2')
-    await wait(lambda:panel.confirmation is not None)
+    await commit_key(probe,caller,b'1' if allocation=='common' else b'2',lambda:panel.confirmation is not None)
     await commit_key(probe,caller,b'y',lambda:owner.state.services.nodes[sid].state=='repairing')
     order=owner.state.services.nodes[sid].order
     iid=next(j.id for j in owner.state.engine.instances.values() if j.offer==order)
@@ -157,8 +178,7 @@ async def settle_story(probe: ContractProbe, caller: Connection, tid: str, board
     owner=probe.service.core.contracts
     await probe.near(caller,board)
     panel=await board_row(probe,caller,tid)
-    await key(caller,b'a')
-    await wait(lambda:panel.confirmation is not None)
+    await commit_key(probe,caller,b'a',lambda:panel.confirmation is not None)
     await commit_key(probe,caller,b'y',lambda:any(j.template==tid and any(p.player==caller.session.player_id for p in j.roster)
         for j in owner.state.engine.instances.values()))
     iid=next(j.id for j in owner.state.engine.instances.values() if j.template==tid
@@ -168,8 +188,7 @@ async def settle_story(probe: ContractProbe, caller: Connection, tid: str, board
     assert owner.state.engine.instances[iid].state=='complete'
     await probe.near(caller,board)
     panel=await board_row(probe,caller,iid)
-    await key(caller,str(option).encode() if option else b't')
-    await wait(lambda:panel.confirmation is not None)
+    await commit_key(probe,caller,str(option).encode() if option else b't',lambda:panel.confirmation is not None)
     await commit_key(probe,caller,b'y',lambda:owner.state.engine.instances[iid].state=='turned_in')
     await close_jobs(probe,caller)
     return iid

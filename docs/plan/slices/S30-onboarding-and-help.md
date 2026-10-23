@@ -20,8 +20,8 @@ and accepted [PR #38](https://github.com/Thiesi/Blacksite/pull/38).
 
 S19 native input handoff: preserve the door's successful read result when
 an Escape deadline and reader completion race. The input pump retains
-that task and drains pending bytes before its ordinary 200 ms framing
-grace expires. Extend the regression coverage with S30's API-5, zero-time
+that task and drains pending bytes before treating its ordinary 200 ms
+framing grace as a lone Escape. Extend coverage with S30's API-5, zero-time
 and Unicode checks; do not restore a cancelling timeout that can discard
 consumed arrow bytes and type a chat hotkey. S19 records its real native
 rerun separately from deterministic key-decoder fixtures.
@@ -242,11 +242,13 @@ as a lone Escape.
 ### S19 source and service handoff
 
 Reference: [S19](https://github.com/Thiesi/Blacksite/issues/19),
-[source checkpoint 55da5bf](https://github.com/Thiesi/Blacksite/commit/55da5bf)
+[source checkpoint 9097b50](https://github.com/Thiesi/Blacksite/commit/9097b50)
 and [PR #38](https://github.com/Thiesi/Blacksite/pull/38).
 
-S19 remains in progress. Its source/service interfaces are implemented;
-authored content, full-root/native acceptance and PR review remain pending.
+S19 remains in progress. Its source interfaces, 68 contracts and four
+service nodes are authored. Full root pytest passed 1342 tests with one
+skip; receipt-based earnings are reported in docs/ops/s19-earnings.md.
+Complete native acceptance and delivered PR review remain pending.
 Consume them after S19 merges.
 
 Preserve Q active/done/journal tabs, compact objective/cost hints and header

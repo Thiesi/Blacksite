@@ -58,14 +58,12 @@ class ContractProbe(CrewProbe):
 
 
 async def close_jobs(probe: ContractProbe, caller: Connection) -> None:
-    await key(caller,b'\x1b')
-    await wait(lambda:caller.session.id not in probe.service.core.contracts.panels.menus)
+    await commit_key(probe,caller,b'\x1b',lambda:caller.session.id not in probe.service.core.contracts.panels.menus)
 
 
 async def board_row(probe: ContractProbe, caller: Connection, row: str) -> Any:
     owner = probe.service.core.contracts
-    await key(caller,b'e')
-    await wait(lambda:caller.session.id in owner.panels.menus)
+    await commit_key(probe,caller,b'e',lambda:caller.session.id in owner.panels.menus)
     panel = owner.panels.menus[caller.session.id]
     await select(caller,lambda:owner.panels.rows(caller.session,panel),panel,row)
     return panel
@@ -74,11 +72,10 @@ async def board_row(probe: ContractProbe, caller: Connection, row: str) -> Any:
 async def encounter_row(probe: ContractProbe, caller: Connection, row: str) -> None:
     encounters = probe.service.core.lattice.encounters
     presence = probe.service.core.lattice.presences[caller.session.player_id]
-    await key(caller,b'e')
-    await wait(lambda:caller.session.id in encounters.menus)
+    await commit_key(probe,caller,b'e',lambda:caller.session.id in encounters.menus)
     screen = encounters.menus[caller.session.id]
     await select(caller,lambda:encounters.rows(presence,screen),screen,row)
-    await key(caller,b'\r')
+    await commit_key(probe,caller,b'\r',lambda:encounters.menus.get(caller.session.id) is not screen)
 
 
 async def first_job(probe: ContractProbe, width: int, height: int, network: bool) -> dict[str,Any]:
@@ -90,8 +87,7 @@ async def first_job(probe: ContractProbe, width: int, height: int, network: bool
     await probe.route(caller,'sodium-tin-halo')
     await probe.near(caller,'vesper')
     panel = await board_row(probe,caller,'vesper-first-thing')
-    await key(caller,b'a')
-    await wait(lambda:panel.confirmation is not None)
+    await commit_key(probe,caller,b'a',lambda:panel.confirmation is not None)
     probe.save(caller,f's19-first-terms-{route}-{width}')
     await commit_key(probe,caller,b'y',lambda:any(j.template == 'vesper-first-thing'
         and any(p.player == player.id for p in j.roster) for j in owner.state.engine.instances.values()))
@@ -133,8 +129,7 @@ async def first_job(probe: ContractProbe, width: int, height: int, network: bool
     await commit_key(probe,caller,b'e',lambda:owner.state.engine.instances[iid].state == 'complete')
     panel = await board_row(probe,caller,iid)
     before = player.chits_hand,player.xp,dict(player.standing)
-    await key(caller,b't')
-    await wait(lambda:panel.confirmation is not None)
+    await commit_key(probe,caller,b't',lambda:panel.confirmation is not None)
     await commit_key(probe,caller,b'y',lambda:owner.state.engine.instances[iid].state == 'turned_in')
     assert player.chits_hand-before[0] == 200 and player.xp-before[1] == 100
     assert all(player.standing[f]-before[2].get(f,0) == 5 for f in owner.content.factions)
