@@ -2,8 +2,8 @@
 
 Training and Silt use fresh characters, ordinary travel and real keys,
 without money, item, skill, grade or placement fixtures. Danger and Gate
-Nine explicitly label content, trace-boundary, program-loan and mission
-hook fixtures. Burn adds an explicit grade/XP fixture for S16. S14
+Nine explicitly label content, trace-boundary, program-loan and committed
+active-contract fixtures. Burn adds an explicit grade/XP fixture for S16. S14
 now verifies S15 physical effects on the labelled control fixture.
 """
 
@@ -308,6 +308,14 @@ def scenario_content(probe: NativeProbe, stage: str) -> None:
         core['name'] = 'S14 LABELLED GATE NINE FIXTURE'
         core['hardware'] = [{'zone': 'vatside-clinics', 'tile': [35,20],
             'object_id': 'cold-chain-replacement-socket', 'label': 'S14 fixture socket'}]
+        payload=next(room for room in core['rooms'] if room['id']=='service-latch')['data'][0]
+        write('contracts.json',{'schema':1,'contracts':[{
+            'id':'fixture-s14-gate-record','name':'S14 fixture mission receipt',
+            'faction':'halvard','type':'hack','story':True,'crew_scaling':False,
+            'reward':{'chits':[0,0],'xp':0,'standing':{}},
+            'stages':[{'id':'copy','verb':'hack','input':'lift','completion':'lifted',
+                'receipt_key':'fixture-s14-gate-record:copy',
+                'target':{'kind':'core_room','core':core['id'],'room':'service-latch','data':payload['id']}}]}]})
         for room in core['rooms']:
             for control in room.get('controls', []):
                 control['target'] = {'zone': 'core-plaza', 'object': 'civic-ledger-hall-doors'}
@@ -443,9 +451,21 @@ async def gate(probe: NativeProbe, width: int, height: int, duo: bool = False) -
         await wait(lambda: '/ LATTICE' in connection.caller.screen.screen_text().splitlines()[0])
         await lat_walk(probe,connection,'lat-core-c16')
         await program(probe,connection,2,lambda: presence.effects.shield is not None)
-    participants = {c.session.player_id for c in connections}
     entered_times = {}
-    encounters.mission_of = lambda pid, source: 's14-gate-acceptance' if pid in participants else None
+    # S19 now owns mission custody. Use committed fixture instances instead
+    # of the pre-S19 placeholder callback; consent UI is covered by S19.
+    owner=probe.service.core.contracts
+    await wait(lambda:not probe.commerce.pending and not probe.commerce.waiting)
+    draft=owner.state.fork()
+    missions={}
+    for connection in connections:
+        pid=connection.session.player_id
+        instance=draft.engine.accept(draft.engine.story_offer('fixture-s14-gate-record',pid),
+                                     (owner.participant(pid),),owner.now())
+        missions[pid]=instance.id
+    owner.write(draft)
+    await wait(lambda:all(iid in owner.state.engine.instances for iid in missions.values())
+               and not probe.commerce.pending)
     for connection in connections:
         await choose(probe,connection,'enter:lat-gatehouse-east')
         presence = lattice.presences[connection.session.player_id]
@@ -460,7 +480,8 @@ async def gate(probe: NativeProbe, width: int, height: int, duo: bool = False) -
         source = encounters.core(presence).graph.room(presence.room).data[0]
         generation = lattice.sources.refresh(encounters.source(presence,source),source,probe.service.clock.now_tick()).generation
         await choose(probe,connection,f'lift:{source.id}:{generation}')
-        await wait(lambda: bool(probe.game.players[presence.player_id].progress.get('lattice_units')))
+        await wait(lambda:any(unit.get('mission')==missions[presence.player_id]
+            for unit in probe.game.players[presence.player_id].progress.get('lattice_units',{}).values()))
         probe.save(connection,f's14-gate-latch-{connection.session.user_id}-{width}x{height}')
     # Stage the crew at the quiet latch before entering the Hornets room.
     for connection in connections:
@@ -500,7 +521,7 @@ async def gate(probe: NativeProbe, width: int, height: int, duo: bool = False) -
         await probe.leave(connection,f's14-gate-return-{connection.session.user_id}-{width}x{height}')
     probe.report(f'PASS S14 Gate Nine {width}x{height} {len(connections)} caller(s): labelled content/loan/contract fixtures, real Skeleton and Hornets, mission receipts, one shared 120-chit generation; committed three-second latch on the labelled physical fixture')
     return {'stage':'gate-duo' if duo else 'gate-solo','size':[width,height],
-        'content_fixture':True,'loan_program_fixture':'Skeleton','contract_hook_fixture':True,
+        'content_fixture':True,'loan_program_fixture':'Skeleton','active_contract_fixture':True,
         'funding_fixture':False,'placement_fixture':False,'shared_reward':after-before,
         'source_generations_consumed':1,'entry_to_credit_seconds':receipt_seconds,'latch_effect_claimed':False,'passed':True}
 
