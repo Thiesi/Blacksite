@@ -1,11 +1,13 @@
 """UI 4 and game 8.3: real server menus and cell-buffer display."""
 
 import json
+from dataclasses import asdict
 from typing import Any
 
 import pytest
 
 from blacksite.server.commerce import CommerceMenu
+from blacksite.door.model import Display
 from blacksite.server.market_views import Panel
 from blacksite.server.protocol import Frame, ProtocolError, encode
 from tests.character_helpers import act, place
@@ -27,6 +29,61 @@ def choose(game: Any, caller: Any, key: str, row: str | None = None) -> None:
 
 def open_market(game: Any, caller: Any) -> None:
     act(game, caller, Frame('intent', {'name': 'market.open', 'args': {}}))
+
+
+def test_ui_4_real_client_hotkeys_open_empty_market_list_and_confirm(info: Any, trade_game: tuple[Any, ...]) -> None:
+    game, clients, _, iid, terminal = trade_game
+    caller, owner = clients[0], game.core.market
+    panel = Panel('terminal', terminal, 0)
+    owner.views.menus[caller.session.id] = panel
+    display = Display(info)
+    display.receive(Frame('welcome', {'keymap': asdict(owner.commerce.content.keymaps),
+                                     'palette': asdict(owner.commerce.content.palette)}), 0)
+    def press(key: str) -> None:
+        display.receive(Frame('view', {'rev': caller.session.view_revision, 'kind': 'menu',
+            'body': owner.views.body(caller.session, panel)}), 1)
+        frames = display.key(key, 1)
+        assert len(frames) == 1, (panel.kind, key)
+        act(game, caller, frames[0])
+    press('m')
+    assert panel.kind == 'market' and not owner.views.rows(caller.session, panel)
+    press('l')
+    assert panel.kind == 'items'
+    wanted = next(i for i, row in enumerate(owner.views.rows(caller.session, panel)) if row['id'] == iid)
+    while panel.cursor < wanted:
+        press('down')
+    press('enter')
+    token, _ = owner.views.prompts[caller.session.id]
+    act(game, caller, Frame('line', {'id': token, 'text': '50'}))
+    token, _ = owner.views.prompts[caller.session.id]
+    act(game, caller, Frame('line', {'id': token, 'text': '100'}))
+    press('enter')
+    assert panel.confirmation and not owner.market.listings
+    press('y')
+    game.commit_commerce()
+    assert len(owner.market.listings) == 1
+
+
+def test_ui_4_real_client_bank_c_and_empty_bounty_post_are_advertised(info: Any, trade_game: tuple[Any, ...]) -> None:
+    game, clients, _, _, terminal = trade_game
+    caller, owner = clients[0], game.core.market
+    display = Display(info)
+    display.receive(Frame('welcome', {'keymap': asdict(owner.commerce.content.keymaps),
+                                     'palette': asdict(owner.commerce.content.palette)}), 0)
+    body = owner.views.body(caller.session, Panel('bounties', terminal, 0))
+    display.receive(Frame('view', {'rev': 1, 'kind': 'menu', 'body': body}), 1)
+    assert display.key('p', 1)[0].data['args'] == {'row': '', 'key': 'p'}
+    zone = game.core.world.zones['vatside-clinics']
+    bank = next(o.spec for o in zone.objects.values() if o.spec.kind == 'bank')
+    place(game, caller, zone.id, game.core.world.free_tile(zone.id, bank.tile))
+    screen = CommerceMenu('bank', bank.id, opened=game.clock.now_tick())
+    game.core.commerce.menus[caller.session.id] = screen
+    display.receive(Frame('view', {'rev': caller.session.view_revision, 'kind': 'menu',
+        'body': game.core.commerce.body(caller.session, screen)}), 1)
+    frames = display.key('c', 1)
+    assert len(frames) == 1
+    act(game, caller, frames[0])
+    assert owner.views.menus[caller.session.id].kind == 'collect'
 
 
 def test_ui_4_long_lived_market_history_pages_without_oversized_frames(trade_game: tuple[Any, ...]) -> None:

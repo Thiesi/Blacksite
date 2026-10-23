@@ -618,6 +618,7 @@ class Commerce:
             rows.append({"id": "impound", "cells": ["Personal impound", "Protected goods and chits"]})
             if hasattr(self.game, 'market'):
                 rows.append({'id': 'market_delivery', 'cells': ['Market deliveries [C]', 'Fee-free exact items']})
+                actions.append({'key': 'c', 'label': 'market deliveries'})
             detail = f"Hand {player.chits_hand}\nBank {player.chits_bank}\nChoose an action, then enter chits."
         elif screen.kind == "equipment":
             rows = [{"id": slot, "cells": [slot.replace("_"," ").title(), self.content.items[self.items[iid].template].name]} for slot,iid in player.equipment.items() if iid in self.items]

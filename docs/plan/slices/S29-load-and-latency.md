@@ -170,3 +170,13 @@ a two-NPC regression proves that reversing this loses objective progress.
 Preserve owning receipts while optimizing. Timer/view invalidation must
 still work for a stationary caller.
 <!-- s19-services:end -->
+
+### S23 market handoff
+
+Retain [PR #38](https://github.com/Thiesi/Blacksite/pull/38)'s realistic
+product-impact standard. Profile market/menu tick and source costs with
+thousands of retained listings and bids as well as a fresh world. S23
+bounds menu frames to 12 rows and operator list pages to 100 records;
+the full financial history remains stored. Include escrow expiry and
+bounty death payouts under load, without weakening atomic settlement,
+exact item identity or acknowledgement ordering.

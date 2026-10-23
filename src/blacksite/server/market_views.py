@@ -149,9 +149,18 @@ class Views:
             actions = 'Y confirm  Esc/B returns'
         start = cursor//MENU_PAGE_ROWS*MENU_PAGE_ROWS
         body = menu('MY LISTINGS' if panel.mine and panel.kind == 'market' else panel.kind.upper(),
-                    rows[start:start+MENU_PAGE_ROWS], cursor-start, text, actions)
+                    rows[start:start+MENU_PAGE_ROWS] or [{'id': '', 'cells': ['No entries.']}],
+                    cursor-start, text, actions)
         body['page'] = start//MENU_PAGE_ROWS+1
         body['pages'] = max(1, (len(rows)+MENU_PAGE_ROWS-1)//MENU_PAGE_ROWS)
+        keys = {'terminal': [('m', 'market'), ('o', 'bounties'), ('j', 'jack'), ('c', 'collect')],
+            'market': [('d', 'bid'), ('u', 'buyout'), ('l', 'list'), ('m', 'my listings'),
+                       ('c', 'collect'), ('k', 'cancel'), ('f', 'class'), ('s', 'sort')],
+            'bounties': [('p', 'post')], 'items': [('enter', 'choose')],
+            'collect': [('enter', 'collect')], 'targets': [('enter', 'choose')],
+            'expiry': [('enter', 'choose')]}[panel.kind]
+        body['actions'] = [{'key': k, 'label': label} for k, label in
+                           ([('y', 'confirm')] if panel.confirmation else keys)]
         body['columns'] = {'market': ['Item', 'Bid/ask', 'Time', 'Seller'],
             'bounties': ['Name / handle', 'Chits', 'Posters'], 'targets': ['Name', 'Handle', 'Grade'],
             'items': ['Item', 'Quality'], 'collect': ['Item', 'Collection'],
