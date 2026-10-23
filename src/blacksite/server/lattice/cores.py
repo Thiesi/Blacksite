@@ -81,6 +81,7 @@ class Sources:
         self.sources = {key: Source(**value) for key, value in saved.get("sources", {}).items()}
         self.locks: dict[str, dict[str, float]] = {key: dict(value) for key, value in saved.get("locks", {}).items()}
         self.reserved: set[str] = set()
+        self.crew_offers: dict[str, dict[str, Any]] = {key: dict(value) for key, value in saved.get('crew_offers', {}).items()}
         self.revision = 0
 
     def uptime(self, tick: int) -> float:
@@ -120,6 +121,7 @@ class Sources:
     def finish(self, claim: Claim, success: bool) -> None:
         if success:
             self.sources[claim.key] = claim.next_source
+            self.crew_offers.pop(claim.unit_id, None)
             self.revision += 1
         self.reserved.discard(claim.key)
 
@@ -135,7 +137,9 @@ class Sources:
         if claim:
             sources[claim.key] = asdict(claim.next_source)
         return {"uptime": self.uptime(tick), "nonce": self.nonce if nonce is None else nonce,
-                "sources": sources, "locks": {key: dict(value) for key, value in self.locks.items()}}
+                "sources": sources, "locks": {key: dict(value) for key, value in self.locks.items()},
+                "crew_offers": {key: dict(value) for key, value in self.crew_offers.items()
+                                if not claim or key != claim.unit_id}}
 
 
 def trace_thresholds(before: float, after: float, seen: set[int]) -> tuple[int, ...]:

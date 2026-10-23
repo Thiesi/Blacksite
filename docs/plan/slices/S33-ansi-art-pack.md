@@ -157,3 +157,10 @@ pre-encode output bytes or add PTY newline transformations to stdio.
   set for art, which `glyphs.json` already respects.
 - Never emit a piece with raw writes; every row goes through the cell
   buffer so the last-column rule holds automatically.
+
+### S22 crew integration handoff
+
+Preserve S22 [PR #61](https://github.com/Thiesi/Blacksite/pull/61)'s crew
+and beacon glyphs through the cell buffer, including compact warnings,
+wide names and the existing CP437 transport. No ASCII-only display tier.
+Native proof uses the version/source-verified installed client.

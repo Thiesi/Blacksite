@@ -156,3 +156,14 @@ event/season state. Expire Convoy reservations explicitly. Free Kin
 information remains +90, with paid/public fallbacks. Seasonal relation
 overrides compose at the shared relation source, without another
 faction-membership authority.
+
+### S22 crew integration handoff
+
+Reference: [PR #61](https://github.com/Thiesi/Blacksite/pull/61).
+
+Live crew IDs and five-minute Silt sharing do not identify a persistent
+expedition. Freeze consenting player/identity IDs under the expedition's
+own durable ID; retain individual ending/ballot choices. Leave, kick,
+promotion, dissolution and service restart must not reassign ballots or
+erase checkpoints. Preserve the accepted PR #38 personal/public outcome
+and inactive later-season authoring requirements.

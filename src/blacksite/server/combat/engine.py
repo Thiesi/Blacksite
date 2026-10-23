@@ -45,6 +45,7 @@ class Combat:
         self.relation_provider: Callable[[Actor, Actor], str] | None = None
         self.training_provider: Callable[[Player, Actor, int], None] = lambda player, actor, tick: None
         self.allies_provider: Callable[[Actor], list[Actor]] = lambda actor:[actor]  # S22 supplies local crew.
+        self.crew_together: Callable[[str, str], bool] = lambda one, other: False
         self.sim.target_provider = self.target_view
         self.game.combat = self
 
@@ -65,6 +66,8 @@ class Combat:
                 "role":"warning" if warning else "chan_sys", "at":self.clock.now_utc().isoformat()}]}))
 
     def relation(self, source: Actor, target: Actor) -> str:
+        if self.crew_together(source.id, target.id):
+            return "allied"
         if self.relation_provider:
             return self.relation_provider(source, target)
         if target.owner == source.id and target.behaviour.get("training"): return "hostile"
@@ -84,11 +87,13 @@ class Combat:
             return False
         if source.id == target.id or source.zone != target.zone or source.zone not in self.world.zones:
             return False
+        if self.crew_together(source.id, target.id):
+            return False
         # Mission bodies are scoped copies, never somebody else's permanent
         # handler or escort. S22 may supply crew permissions explicitly.
-        if target.behaviour.get("mission") and source.kind == "player" and target.owner != source.id:
+        if target.behaviour.get("mission") and source.kind == "player" and target.owner != source.id and not self.crew_together(source.id, target.owner):
             return False
-        if source.behaviour.get("mission") and target.kind == "player" and source.owner != target.id:
+        if source.behaviour.get("mission") and target.kind == "player" and source.owner != target.id and not self.crew_together(source.owner, target.id):
             return False
         training = source if source.behaviour.get("training") else target if target.behaviour.get("training") else None
         if training:
@@ -114,9 +119,11 @@ class Combat:
                 return False
         if source.id == target.id or not self.world.permits_harm(source,target):
             return False
-        if target.behaviour.get("mission") and source.kind == "player" and target.owner != source.id:
+        if self.crew_together(source.id, target.id):
             return False
-        if source.behaviour.get("mission") and target.kind == "player" and source.owner != target.id:
+        if target.behaviour.get("mission") and source.kind == "player" and target.owner != source.id and not self.crew_together(source.id, target.owner):
+            return False
+        if source.behaviour.get("mission") and target.kind == "player" and source.owner != target.id and not self.crew_together(source.owner, target.id):
             return False
         if source.kind == target.kind == "player":
             if any(self.world.zones[a.zone].safety_at(a.position) != "open" for a in (source, target)):
@@ -211,6 +218,8 @@ class Combat:
         return tick >= self.warnings[key] + rules.ticks(rules.WARNING_SECONDS)
 
     def would_mark(self, source: Actor, target: Actor, indirect: bool = False) -> bool:
+        if self.crew_together(source.id, target.id):
+            return False
         if source.kind != "player" or target.kind != "player" or self.relation(source, target) == "hostile":
             return False
         bodies = (source, target) if indirect else (source,)
@@ -261,7 +270,7 @@ class Combat:
         if not target or target.stance in ("down","dead") or not self.visible(actor,target):
             self.log(actor,"Select a visible target with Tab."); return
         if not self.legal(actor,target):
-            self.log(actor,"Protected: you cannot harm that body.",True)
+            self.log(actor,self.game.crews.text("friendly_fire") if self.crew_together(actor.id, target.id) else "Protected: you cannot harm that body.",True)
             self.refused_hook(actor, target)
             return
         equipped = self.weapon(player)
@@ -499,16 +508,18 @@ class Combat:
         progression = self.game.progression
         killer = self.game.players.get(state.get("killer"))
         reward, killer_patch, killer_identity = None, {}, None
+        grant = None
         before_standing = deepcopy(killer.standing) if killer else {}
         if (killer and killer.id not in self.game.deleting and killer.id != player.id
                 and killer.bbs_user_id != player.bbs_user_id
                 and progression.permit_combat(killer.id, player.id)):
             crew = progression.crew_of(killer.id)
             receipt = f"pvp:{player.id}:{state['until']}"
-            killer_patch, killer_identity, reward = progression.reward_patch(killer, Grant("combat", receipt,
+            grant = Grant("combat", receipt,
                 True, scope="pvp:"+player.bbs_user_id, opponent_grade=player.grade,
                 opponent_identity=player.bbs_user_id,
-                self_or_crew=bool(crew and crew == progression.crew_of(player.id))))
+                self_or_crew=bool(crew and crew == progression.crew_of(player.id)))
+            killer_patch, killer_identity, reward = progression.reward_patch(killer, grant)
             from blacksite.server.factions import player_kill
             changes = player_kill(killer, player, self.content.factions, killer_identity, self.clock.now_utc())
             killer_patch.update(self.game.factions.standing_patch(killer, changes, "explicit"))
@@ -540,6 +551,11 @@ class Combat:
                     if key not in killer.progress or value != killer.progress[key]}
             self.commerce.outbox[-1]["player_patches"] = {killer.id: killer_patch}
             self.commerce.outbox[-1]["identities"] = {killer.bbs_user_id: killer_identity}
+        if grant and hasattr(self.game, 'crews'):
+            self.game.crews.add_rewards(self.commerce.outbox[-1], killer, grant)
+        if killer and hasattr(self.game, 'crews'):
+            for cid in set(caches)-set(self.commerce.caches):
+                self.game.crews.stage_cache(self.commerce.outbox[-1], cid, killer.id)
 
     faction_vat: Callable[[Player], tuple[str, tuple[int, int]] | None] = staticmethod(lambda player: None)
 
@@ -639,6 +655,8 @@ class Combat:
         player = self.game.players.get(target.id)
         if not player or target.stance != "down" or source.stance in ("down","dead","sleeper"): return False
         if source.zone != target.zone or rules.distance(source.position,target.position)>1.5: return False
+        if not self.crew_together(source.id, target.id): return False
+        if player.progress.get('combat', {}).get('until', float('inf')) <= self.now(): return False
         if self.relation(source,target)=="hostile" or self.relation(target,source)=="hostile" or player.progress["combat"].get("killer")==source.id: return False
         target.health = max(1,ceil(target.health_max*rules.REVIVE_FRACTION)); target.stance = "normal"
         player.progress.pop("combat",None)

@@ -184,3 +184,9 @@ and do not duplicate named people to fill unfinished geography.
 Preserve recruiter story/contract dialogue by offering the validated
 faction.open intent as a chosen talker action. Input dispatch must not let
 the pre-S27 E-to-recruitment fallback swallow the named NPC dialogue.
+
+### S22 crew integration handoff
+
+S22 [PR #61](https://github.com/Thiesi/Blacksite/pull/61) owns live crew
+consent. Chosen NPC dialogue/admission must preserve individual choices;
+talking or joining a faction cannot silently add a crew participant.

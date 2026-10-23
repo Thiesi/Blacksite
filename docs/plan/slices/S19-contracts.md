@@ -135,3 +135,14 @@ installed hardware.
 
 Unmoored public board/recruiter use oldworks-main; hall/vat use oldworks-
 drop. A board must not be derived from FactionSite.hall for this faction.
+
+### S22 crew integration handoff
+
+Reference: [PR #61](https://github.com/Thiesi/Blacksite/pull/61).
+
+Use the live registry through `game.crews` / `progression.crew_of` as the
+membership authority, then freeze the accepted objective roster in the
+contract receipt. Later joins, kicks and leadership changes do not create
+turn-in credit. Contract rewards own their roster/scaling transaction;
+`Crews.add_rewards` intentionally handles kill/run XP only. Preserve the
+PR #38 source/acquisition and actual-income obligations above.

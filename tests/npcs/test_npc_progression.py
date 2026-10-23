@@ -5,7 +5,24 @@ from dataclasses import replace
 from blacksite.content.schema import LootEntry
 from blacksite.server.progression import combat_xp
 from blacksite.server.storage.db import Storage
+from blacksite.server.world.actors import Actor
 from tests.npcs.test_engine import body, city, spawn
+
+
+def test_game_10_owned_drone_loot_names_controller_for_immediate_recovery(city):
+    game, caller = city
+    player = game.core.characters.players[caller.session.player_id]
+    content = game.core.loop.content
+    template = content.npcs['npc-sable-enforcer']
+    content.npcs[template.id] = replace(template, loot=(LootEntry('ammo_9x', 1),))
+    target = spawn(game)[0]
+    tool = Actor('fixture-owned-drone', 'Owned tool', kind='drone', owner=player.id,
+                 behaviour={'player_drone': True})
+    game.core.npcs.died(tool, target)
+    game.commit_commerce()
+    cache = next(iter(game.core.commerce.caches.values()))
+    assert cache['killer'] == player.id
+    assert game.core.crews.cache_permits(player.id, cache, game.clock.now_utc().timestamp())
 
 
 def test_game_3_5_npc_xp_and_retirement_are_one_durable_receipt(city, tmp_path):

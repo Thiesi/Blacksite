@@ -19,6 +19,7 @@ on:
       - 'scripts/accept_s17_netbbs.py'
       - 'scripts/accept_s18_netbbs.py'
       - 'scripts/accept_s20_netbbs.py'
+      - 'scripts/accept_s22_netbbs.py'
       - 'scripts/housing_fixture.py'
       - '.github/workflows/service-acceptance.yml'
       - 'pyproject.toml'
@@ -29,6 +30,42 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
+  crews-netbbs:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    permissions:
+      contents: read
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - uses: actions/checkout@v4
+        with:
+          repository: Thiesi/NetBBS
+          ref: v7.31.0
+          path: .test-tmp/netbbs
+      - name: Build and install the crew acceptance wheel
+        shell: bash
+        run: |
+          python -m pip install './.test-tmp/netbbs[ssh,web]'
+          python -m pip wheel --no-deps . -w "$RUNNER_TEMP/s22-wheels"
+          python -m venv "$RUNNER_TEMP/s22-venv"
+          "$RUNNER_TEMP/s22-venv/bin/python" -m pip install "$RUNNER_TEMP"/s22-wheels/*.whl
+      - name: Accept crews through registered native stdio at both sizes
+        shell: bash
+        run: |
+          python scripts/accept_s22_netbbs.py --root "$RUNNER_TEMP/s22-proof" --door-python "$RUNNER_TEMP/s22-venv/bin/python"
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: s22-crew-proof
+          path: |
+            ${{ runner.temp }}/s22-proof/**/*.ans
+            ${{ runner.temp }}/s22-proof/**/*.txt
+            ${{ runner.temp }}/s22-proof/*.json
+            ${{ runner.temp }}/s22-proof/progress.log
+
   factions-netbbs:
     runs-on: ubuntu-latest
     timeout-minutes: 15

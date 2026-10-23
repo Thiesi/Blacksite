@@ -93,6 +93,13 @@ Rules:
   132x50. The sketch above is schematic; geometry follows this formula.
 - **Side panel** (22 columns): target, nearby, crew, vitals. Sections
   shrink from the bottom up if the height is short; vitals always show.
+  With a live crew, the small layout keeps one other member's health and
+  location visible; `G` opens the full leader-first roster. Hazard,
+  objective and service warnings take priority over optional crew rows.
+  Jacked members show integrity against their actual maximum. Private
+  interiors and remote Silt rooms are redacted. A crew beacon is drawn
+  above the marked member's body glyph; Marked names remain red with a
+  crew plus tag.
 - **Log**: 3 rows at height 24, growing to 8 at height 40 and beyond.
   `Ctrl-P` opens the full scrollback as a `TextView`.
 - **Hint line**: contextual keys, or the active line prompt.
@@ -235,8 +242,11 @@ are ordinary text. Arrow navigation cannot move the character.
 
 - ANSI/VT arrows (`CSI A`…), SS3 variants, Home/End/PgUp/PgDn in both
   CSI-tilde and SS3 forms, F-keys, Shift-modified arrows (`CSI 1;2 A`),
-  `Esc` alone with a 50 ms timeout, `Ctrl` letters, `Enter` as CR or LF or
+  `Esc` alone with a 200 ms timeout, `Ctrl` letters, `Enter` as CR or LF or
   CRLF, `Backspace` as DEL or BS, `Tab`, and UTF-8 text.
+- Drain ready input before expiring a lone `Esc`. Rendering or pipe
+  backpressure can delay the timer and reader together; queued arrow
+  bytes must take precedence over the elapsed framing grace.
 - Mouse sequences (`CSI M`, SGR) are recognised and discarded; the client
   never enables mouse reporting. Bracketed paste is recognised and its
   contents discarded.

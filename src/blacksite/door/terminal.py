@@ -41,17 +41,28 @@ class Terminal:
         self.entered = True
         self.write(ENTER)
 
-    async def read(self) -> bytes:
+    def read_pending(self) -> bytes | None:
+        """Drain ready input before declaring an Escape deadline expired."""
         if os.name == "nt" and self.local:
             import msvcrt
-            while not msvcrt.kbhit():
-                await asyncio.sleep(0.025)
+            if not msvcrt.kbhit():
+                return None
             char = msvcrt.getwch()
             if char in ("\x00", "\xe0"):
                 code = msvcrt.getwch()
                 return {"H": b"\x1b[A", "P": b"\x1b[B", "K": b"\x1b[D", "M": b"\x1b[C",
                         "G": b"\x1b[H", "O": b"\x1b[F", "I": b"\x1b[5~", "Q": b"\x1b[6~"}.get(code, b"\x00")
             return char.encode("utf-8", errors="replace")
+        try:
+            return os.read(self.input, 4096)
+        except BlockingIOError:
+            return None
+
+    async def read(self) -> bytes:
+        if os.name == "nt" and self.local:
+            while (data := self.read_pending()) is None:
+                await asyncio.sleep(0.025)
+            return data
         if os.name == "nt":
             while True:
                 try:

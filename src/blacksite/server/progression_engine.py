@@ -142,6 +142,8 @@ class ProgressionEngine:
 
     def record_use(self, pid: str, use: Use) -> None:
         """A completed server action supplies facts; the queue serializes caps."""
+        if hasattr(self.game, "crews"):
+            self.game.crews.contribution(pid, use)
         occurred = self.clock.now_utc()
         def propose() -> None:
             player = self.game.players.get(pid)
@@ -249,7 +251,7 @@ class ProgressionEngine:
             self.pending_discoveries.discard(request)
             self.retry_discoveries.add(request)
 
-    def notify_reward(self, player: Player, result: Award | None) -> None:
+    def notify_reward(self, player: Player, result: Award | None, *, crew: bool = False) -> None:
         """Publication only; the owning receipt has already committed XP."""
         if result is None:
             return
@@ -261,7 +263,7 @@ class ProgressionEngine:
         session = self.game.combat.session(player.id)
         if session and not session.closed:
             self.game.dirty_screens.add(session.id)
-            text = f"You gain {result.xp} XP."
+            text = f"You gain {result.xp} XP"+(' (crew).' if crew else '.')
             if result.grade > result.old_grade:
                 grade = next((g for g in self.content.grades.values() if g.grade == result.grade), None)
                 text += (f" Grade {result.grade}: {grade.title}. "+grade.promotion

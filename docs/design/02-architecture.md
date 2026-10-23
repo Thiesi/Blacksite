@@ -43,6 +43,11 @@ The S31 supported installation floor is **NetBBS >= 7.31.0**.
   including `DOOR_BLACKSITE_INSTALL_DIR` and an optional
   `DOOR_BLACKSITE_SESSION_LIMIT`; old `BLACKSITE_*` aliases are standalone
   conveniences, not valid custom profile keys.
+- The native subprocess receives a minimal environment, not its parent's
+  `PYTHONPATH`. Install Blacksite in the exact interpreter named by the
+  profile; changing a development server's import path never updates a
+  separately installed client. S22's native harness verifies the isolated
+  interpreter's version and Python source digest before accepting proof.
 - A profile permits one supervised companion service (§3.1), with its
   own memory limit and no NetBBS CPU-seconds limit. Persistent data stays
   in the operator-owned installation directory. Node backup copies of
@@ -470,6 +475,15 @@ Detailed in `03-terminal-ui.md`. Architectural points:
   is testable headless with a fake terminal that records the cell buffer.
 
 ## 8. NetBBS integration
+
+Local acceptance must use an installed current client, as deployment does.
+Run the profile interpreter with `-I` to check its installed Blacksite
+version before launching a node. The native harness writes
+`native-client.json` and refuses a version or source mismatch. Retain that
+receipt with the terminal transcripts; a source server paired with an old
+protocol-compatible client is a compatibility test, not current-client
+rendering acceptance. This enforces S31's existing minimal-environment
+contract without weakening the NetBBS profile.
 
 ### 8.1 Registration
 

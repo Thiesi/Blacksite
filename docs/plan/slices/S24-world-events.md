@@ -123,3 +123,9 @@ plans. Consume, expire and notify saved convoy_reservation plan IDs without
 closing the public escort contract. Bind Factions.curfew(zone) for new x2
 heat. Kin requires +90; paid charts/public warnings remain. Fixtures without
 an announced plan cannot claim these benefits live.
+
+### S22 crew integration handoff
+
+S22 [PR #61](https://github.com/Thiesi/Blacksite/pull/61) supplies live
+crew hooks. Publish committed event facts; never use an ephemeral crew
+ID as durable event participation or reward authority.

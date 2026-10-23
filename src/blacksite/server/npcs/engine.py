@@ -192,6 +192,7 @@ class Npcs:
             if player and player.id in self.game.deleting:
                 player = None
             patch, identity, reward = {}, None, None
+            grant = None
             before_standing = deepcopy(player.standing) if player else {}
             eligible = (player and template.xp > 0 and not template.training and self.reward_permit(source, actor)
                         and progression.permit_combat(player.id, actor.id))
@@ -201,8 +202,8 @@ class Npcs:
                 # xp is an eligibility flag inherited from S11. Game 3.5
                 # pays the opponent-grade formula, not that old hook value.
                 scope = str(actor.behaviour.get("slot") or "mission-npc:"+template.id)
-                patch, identity, reward = progression.reward_patch(player, Grant("combat",
-                    actor.id, True, scope=scope, opponent_grade=template.grade))
+                grant = Grant("combat", actor.id, True, scope=scope, opponent_grade=template.grade)
+                patch, identity, reward = progression.reward_patch(player, grant)
             if eligible:
                 from blacksite.server.factions import npc_kill
                 patch.update(self.game.factions.standing_patch(player,
@@ -225,7 +226,7 @@ class Npcs:
                     remaining -= count
             if loot:
                 caches[cache_id] = {"zone": actor.zone, "tile": list(actor.position), "items": loot,
-                    "killer": source.id, "victim": actor.id, "private_until": self.combat.now()+LOOT_PRIVATE_SECONDS,
+                    "killer": player.id if player else source.id, "victim": actor.id, "private_until": self.combat.now()+LOOT_PRIVATE_SECONDS,
                     "expires": self.combat.now()+CACHE_SECONDS}
             def committed(success: bool) -> None:
                 self.pending_deaths.discard(actor.id)
@@ -245,6 +246,10 @@ class Npcs:
                 slot.update(until=self.combat.now()+int(actor.behaviour.get("respawn", 0)))
                 slot.pop("actor", None)
             self.commerce.outbox[-1]["npc_state"] = receipt
+            if player and hasattr(self.game, 'crews'):
+                self.game.crews.stage_cache(self.commerce.outbox[-1], cache_id, player.id)
+            if grant and hasattr(self.game, 'crews'):
+                self.game.crews.add_rewards(self.commerce.outbox[-1], player, grant)
         self.commerce.enqueue_system(propose)
 
     def training(self, player: Player, actor: Actor, tick: int) -> None:

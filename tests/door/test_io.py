@@ -17,6 +17,34 @@ from blacksite.server.protocol import Frame
 from tests.fake_terminal import FakeTerminal
 
 
+@pytest.mark.parametrize("pending,expected", [(b"[C", ["right"]), (None, ["escape"]), (b"", [])])
+def test_escape_timeout_drains_queued_native_input_first(
+    monkeypatch: pytest.MonkeyPatch, pending: bytes | None, expected: list[str],
+) -> None:
+    """UI 5.3: a late timer must not turn a queued arrow into Say."""
+    from blacksite.door.client import read_input
+    from blacksite.door.keys import KeyDecoder
+
+    class PausedPipe:
+        async def read(self) -> bytes:
+            raise asyncio.TimeoutError
+
+        def read_pending(self) -> bytes | None:
+            return pending
+
+    decoder = KeyDecoder()
+    assert decoder.feed(b"\x1b", 100) == []
+    monkeypatch.setattr("blacksite.door.client.time.monotonic", lambda: 100.3)
+    data = asyncio.run(read_input(PausedPipe(), decoder))
+    if data == b"":
+        # EOF closes the client; it must not synthesize a hotkey.
+        keys = []
+    else:
+        keys = decoder.feed(data, 100.3) if data else []
+        keys += decoder.flush(100.3)
+    assert keys == expected
+
+
 def test_reconnect_backoff_then_dark() -> None:
     retry = Reconnect(started=0)
     now = 0

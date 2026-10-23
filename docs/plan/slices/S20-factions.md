@@ -241,3 +241,17 @@ The future rent-freeze notice is explicitly owned by S21. The repeated
 legacy NPC profile passed at p99 4.016 ms (80x24) and 4.578 ms (132x50);
 the earlier 137 ms result did not recur and was never counted green.
 Final PR checks still govern merge; this marker is published with it.
+
+### Native acceptance provenance correction
+
+The original local TTY runs used an older installed client after NetBBS
+removed PYTHONPATH. The original installed-wheel Linux CI remains valid.
+S22 [PR #61](https://github.com/Thiesi/Blacksite/pull/61) repeats faction
+and hardware acceptance on version/source-verified 0.0.16 at 80x24 and
+132x50, with wide names and 16 colours, through actual Windows TTY
+NetBBS native stdio. Both stages pass; the combined process exits zero.
+Evidence is `.test-tmp/native-s20-current16` and
+`.test-tmp/native-s20-hardware-current16`. These are current-build
+regressions with the same explicit standing/grade/hardware fixtures,
+not proof that release 0.0.15 passed local input framing. The corrected
+input and installed-client contract are documented in S22 and UI 5.3.

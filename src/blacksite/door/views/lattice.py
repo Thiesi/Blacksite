@@ -96,6 +96,13 @@ def render_lattice(buffer: CellBuffer, body: dict[str, Any], area: Rect, palette
         if len(beacons) > 1:
             label = truncate(label, 16)+f" +{len(beacons)-1}"
         status.append((label, "player_crew"))
+    crew = body.get('crew', [])
+    if crew:
+        status.append(('CREW / G', 'player_crew'))
+        for member in crew[:2]:
+            suffix = f" {member['hp_pct']}%"
+            status.append((truncate(member['name'], side_w-len(suffix))+suffix, 'player_crew'))
+            status.append((str(member['zone']), 'muted'))
     rig = [f"{r['slot']} {r.get('name', 'Empty')}"+
            (f" {r['cd']:.1f}s" if r.get("cd") else "") for r in me.get("rig", [])]
     available = max(1, area.height-len(status)-1)

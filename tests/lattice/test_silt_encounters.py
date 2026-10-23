@@ -36,6 +36,32 @@ def test_game_6_5_any_public_loan_rig_descends_only_after_nonce_commit(runners):
     assert presence.trace == 0
 
 
+def test_game_10_silt_shared_entrance_frozen_roster_and_individual_risk(runners):
+    game, a, b, c = runners
+    crews = game.core.crews
+    crews.perform(a.session, 'invite', b.session.player_id)
+    crews.perform(b.session, 'accept', next(iter(crews.registry.invites)))
+    first = descend(game, a)
+    second = jack(game, b)
+    second.sector = first.sector
+    second.cell = first.cell
+    intent(game, b, 'lat.descend', risk=False)
+    assert second.descent is None
+    intent(game, b, 'lat.descend', risk=True)
+    assert second.descent == first.descent
+    assert second.instance == first.instance
+    assert game.core.lattice.sources.nonce == 1
+    # Joining the social crew later never assigns an old seed/roster.
+    crews.perform(a.session, 'invite', c.session.player_id)
+    crews.perform(c.session, 'accept', next(iter(crews.registry.invites)))
+    third = jack(game, c)
+    third.sector, third.cell = first.sector, first.cell
+    intent(game, c, 'lat.descend', risk=True)
+    assert third.descent is None and game.core.commerce.pending
+    game.commit_commerce()
+    assert third.descent != first.descent
+
+
 def test_game_6_5_bands_have_visible_continuation_and_risers_after_undertow(runners):
     game, a, b, c = runners
     presence = descend(game, a)

@@ -48,6 +48,7 @@ class Grant:
     self_or_crew: bool = False
     authored: bool = False
     consumed_inputs: bool = False
+    shared_base: int | None = None  # Game 10, trusted source XP after crew scaling.
 
 
 @dataclass(frozen=True)
@@ -70,9 +71,9 @@ def amount(grant: Grant, player: Player) -> int:
     if grant.kind == "combat":
         if grant.self_or_crew or grant.opponent_identity == player.bbs_user_id or grant.opponent_grade < 1:
             return 0
-        return combat_xp(player.grade, grant.opponent_grade)
+        return max(0, grant.shared_base) if grant.shared_base is not None else combat_xp(player.grade, grant.opponent_grade)
     if grant.kind == "run":
-        return CORE_TIER_XP*grant.tier if grant.core and 1 <= grant.tier <= 5 else 0
+        return (max(0, grant.shared_base) if grant.shared_base is not None else CORE_TIER_XP*grant.tier) if grant.core and 1 <= grant.tier <= 5 else 0
     if grant.kind == "contract":
         return max(0, grant.amount)
     if grant.kind == "relay_capture":

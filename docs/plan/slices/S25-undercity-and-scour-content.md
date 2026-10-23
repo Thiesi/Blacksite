@@ -255,3 +255,10 @@ Unmoored hall/vat are Old Works Drop, public board/recruiter Old Works Main.
 Do not activate a vat-less site or create aliases. Repeat S20 contested
 combat on real Sink Terraces; its native proof uses shipped Clinic Row.
 Preserve all existing S16-S18 commerce, housing and core gates.
+
+### S22 crew integration handoff
+
+S22 [PR #61](https://github.com/Thiesi/Blacksite/pull/61) adds remote crew
+rosters and beacons. Exercise them in crowded actual maps without
+revealing private interiors. All real city, relay, vendor, housing,
+workshop and clinic acceptance obligations below remain required.

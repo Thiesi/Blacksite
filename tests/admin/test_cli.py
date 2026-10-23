@@ -96,7 +96,10 @@ def test_real_console_alias_serve_status_stop(scratch_dir: Path) -> None:
         process = await asyncio.create_subprocess_exec(sys.executable, "-m", "blacksite", "serve", "--tcp",
             env=env, stdout=asyncio.subprocess.PIPE, stderr=asyncio.subprocess.PIPE)
         try:
-            async with asyncio.timeout(10):
+            # Windows cold content/bootstrap takes about 27s on the local
+            # supported checkout, including unchanged S20. This is readiness,
+            # not a tick-latency target; keep the Linux deadline unchanged.
+            async with asyncio.timeout(60 if sys.platform == 'win32' else 10):
                 while not (scratch_dir / "run/blacksite.pid").exists():
                     if process.returncode is not None:
                         raise AssertionError((await process.stderr.read()).decode())

@@ -200,3 +200,13 @@ A false before_membership_change result must have a visible waiting or
 failure notice, with a retry after a pending rent receipt. Unpaid rent is
 not a new faction-admission requirement: freeze the due-time quote, then
 preserve game 7.1 joining/leaving rules.
+
+### S22 crew integration handoff
+
+Reference: [PR #61](https://github.com/Thiesi/Blacksite/pull/61).
+
+Use the installed live crew authority for collaboration, while relay
+capture/hold owns its fixed participation roster and reward transaction.
+Joining at payout grants no credit. Do not send relay XP through the
+generic kill/run sharing hook or pay it from a later notification.
+Membership never grants private apartment access or bypasses safety.

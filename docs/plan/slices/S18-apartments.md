@@ -180,6 +180,16 @@ capacities, rents, upgrade tariffs or reclaim percentages.
 
 ## Lore review integration
 
+Native provenance correction: the original local run used an older
+installed client after NetBBS removed PYTHONPATH. The original separate
+installed-wheel CI remains valid. S22 [PR #61](https://github.com/Thiesi/Blacksite/pull/61)
+repeats signing, quality-preserving storage, visitor refusal, bed
+reconnect, eviction and reclaim on version/source-verified 0.0.16 at
+80x24 and 132x50, with wide names and 16 colours, through actual Windows
+TTY NetBBS native stdio. `.test-tmp/native-s18-current16` retains passing
+results. These are current-build regressions with the same explicit
+housing/funding/clock fixtures, not a rerun of release 0.0.14.
+
 Use game design 8.2 and 6.4 for rental and theft: legal discharge by
 work or calendar, protected impound, at most one unsecured unit per
 apartment per rolling 24 h, and a resident receipt. Interior permissions

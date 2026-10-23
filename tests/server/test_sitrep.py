@@ -18,7 +18,7 @@ def test_lists_online_with_zone(social):
     act(game,a,Frame('key',{'k':'W','t':0}))
     rows=body(game,a)['rows']
     assert {r['cells'][0] for r in rows}=={'Alpha','Beta'}
-    assert rows[1]['cells']==['Beta','Second界','Freelance','Meridian Plaza','body','','']
+    assert rows[1]['cells']==['Beta','Second界','Freelance','Meridian Plaza','body','','','none']
 
 
 def test_hidden_symmetric(social):

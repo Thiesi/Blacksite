@@ -100,8 +100,16 @@ class Core:
             reported = self.chat.reported_location
             self.chat.reported_location = lambda viewer, target: reported(viewer, target) or self.factions.inspector_location(viewer, target)
             self.combat.faction_vat = self.factions.vat
+        from blacksite.server.crew_engine import Crews
+        self.crews = Crews(self.progression, self.chat) if self.progression else None
+        if self.crews:
+            self.loop.subsystems.append(self.crews)
+            social = self.lattice.social_overlay
+            self.lattice.social_overlay = lambda session: social(session) or session.id in self.crews.menus
 
     def _disconnect_character(self, session: Session) -> None:
+        if self.crews:
+            self.crews.disconnect(session)
         if self.lattice:
             if self.lattice.disconnect(session):
                 return  # The bounded escape still owns this physical body.
@@ -166,6 +174,8 @@ class Core:
         if frame.type == "intent" and frame.data["name"] == "resync":
             session.replay_log()
         if self.factions and self.factions.input(session, frame, event.data["tick"]):
+            return
+        if self.crews and self.crews.input(session, frame, event.data["tick"]):
             return
         if self.apartments and self.apartments.input(session, frame, event.data["tick"]):
             return

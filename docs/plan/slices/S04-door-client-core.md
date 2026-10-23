@@ -46,7 +46,7 @@ and can leave with `Ctrl-X`.
   never emits the bell, refuses below 80×24 with the requirement text.
 - `src/blacksite/door/keys.py`: decoder for everything in
   `03-terminal-ui.md` §5.3 (CSI/SS3 arrows, Home/End/PgUp/PgDn in both
-  forms, F1–F12, `CSI 1;2 A` shift-arrows, lone `Esc` with 50 ms
+  forms, F1–F12, `CSI 1;2 A` shift-arrows, lone `Esc` with 200 ms
   timeout, Ctrl letters, CR/LF/CRLF as Enter, DEL/BS as Backspace, Tab,
   UTF-8 text, mouse and bracketed paste recognised and discarded,
   unknown CSI dropped whole). Output: normalised key names as the

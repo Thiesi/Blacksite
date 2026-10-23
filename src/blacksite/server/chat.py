@@ -54,6 +54,7 @@ class Chat:
         self.outbox: list[dict[str, Any]] = []
         self.settings_fallback: dict[str, dict[str, Any]] = {}
         self.crew_of: Callable[[Session], str | None] = lambda s: None  # S22 installs membership.
+        self.crew_label: Callable[[Session], str] = lambda session: 'none'
         self.lattice_at: Callable[[Session], tuple[str, str] | None] = lambda s: None
         self.status_of: Callable[[Session], str] = lambda session: ""
         self.rank_of: Callable[[Session], str] = lambda session: ""
@@ -335,12 +336,12 @@ class Chat:
                 oa = self.sim.avatars[other.user_id]
                 location = "hidden" if hidden or self.settings(other).get("sitrep_hidden", False) else (self.sim.world.zones[oa.actor.zone].template.meta.name if oa.actor.zone else "in transit")
                 location = self.reported_location(session, other) or location
-                rows.append({"id": other.player_id, "cells": [self.name(other), sanitize(str(other.door_info.get("handle", ""))), self.faction(other) or "Freelance", location, "jacked" if oa.actor.stance == "jacked" else "body", self.rank_of(other), self.status_of(other)]})
+                rows.append({"id": other.player_id, "cells": [self.name(other), sanitize(str(other.door_info.get("handle", ""))), self.faction(other) or "Freelance", location, "jacked" if oa.actor.stance == "jacked" else "body", self.rank_of(other), self.status_of(other), self.crew_label(other)]})
             body = menu("SITREP", rows, min(screen.cursor, max(0,len(rows)-1)),
                         "Your zone is hidden; others' zones are hidden from you." if hidden else "Online characters. H hides your zone.", "H hide/show zone  Esc/B returns")
-            body["columns"] = ["Name", "Handle", "Faction", "Zone", "Link", "Rank", "Status"]
+            body["columns"] = ["Name", "Handle", "Faction", "Zone", "Link", "Rank", "Status", "Crew"]
             if rows:
                 selected = rows[body["cursor"]]["cells"]
-                body["detail"] = f"{selected[6] or selected[4]} | Zone: {selected[3]}\nName: {selected[0]}\nHandle: {selected[1]}\nFaction: {selected[2]}  Rank: {selected[5] or 'none'}"
+                body["detail"] = f"{selected[6] or selected[4]} | Zone: {selected[3]}\nName: {selected[0]}\nHandle: {selected[1]}\nFaction: {selected[2]}  Rank: {selected[5] or 'none'}\nCrew: {selected[7]}"
             body["actions"] = [{"key":"h", "label":"hide/show zone"}]
             self.sim.external_views[sid] = "menu", body

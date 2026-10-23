@@ -185,3 +185,9 @@ Use S20 actual membership and active Marked deadlines when validating
 bounties. Permission to post a bounty never grants a combat exemption. Sable
 reservations apply only to optional NPC rotating stock; player market
 delivery keeps S18 protected personal impound.
+
+### S22 crew integration handoff
+
+S22 [PR #61](https://github.com/Thiesi/Blacksite/pull/61) supplies the live
+crew authority. Crew affiliation never bypasses combat legality,
+actual-victim cache recovery, personal impound or market ownership.
