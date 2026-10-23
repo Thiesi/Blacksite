@@ -7,6 +7,7 @@ from typing import Any
 
 from blacksite.server.contracts.engine import Payment
 from blacksite.server.protocol import Frame
+from blacksite.server.commerce import CommerceMenu
 from blacksite.server.sessions import Session
 from blacksite.server.wake import menu
 from blacksite.server.world.simulation import MENU_TIMEOUT_SECONDS
@@ -103,6 +104,10 @@ class Panels:
         actions = [{'key': 'j', 'label': 'journal' if panel.tab != 'journal' else 'jobs'}]
         if panel.tab != 'journal':
             actions.append({'key': 'd', 'label': 'jobs' if panel.tab == 'done' else 'done'})
+        if panel.handler and panel.target:
+            obj = owner.commerce.nearby(session, panel.target)
+            if obj.spec.params.get('trade_counter') and not panel.confirmation:
+                actions.append({'key': 'v', 'label': 'trade'})
         if panel.tab == 'journal':
             if selected == 'intel:patrol':
                 return ['Observed: current published NPC patrol routes.',
@@ -296,7 +301,14 @@ class Panels:
                 owner.write(draft)
             panel.confirmation = None
             return
-        if key == 'j':
+        if key == 'v' and panel.handler:
+            self.station(session, panel.target)
+            obj = owner.commerce.nearby(session, panel.target)
+            if not obj.spec.params.get('trade_counter') or not obj.spec.params.get('vendor'):
+                raise ValueError('That board has no trade counter.')
+            self.close(session)
+            owner.commerce.menus[session.id] = CommerceMenu('vendor', obj.spec.id, opened=owner.clock.now_tick())
+        elif key == 'j':
             panel.tab = 'jobs' if panel.tab == 'journal' else 'journal'
             panel.cursor, panel.page, panel.prose = 0, 0, False
         elif key == 'd' and panel.tab != 'journal':

@@ -2,7 +2,7 @@
 
 from collections.abc import Callable, Iterator
 from copy import deepcopy
-from dataclasses import dataclass, field
+from dataclasses import dataclass, field, replace
 from math import ceil
 from typing import Any
 
@@ -11,6 +11,7 @@ from blacksite.server.clock import TICK_HZ
 from blacksite.server.contracts.engine import Fact, Instance, Offer, Participant, Payout, Progress, matches, target_record
 from blacksite.server.contracts.ledger import Ledger
 from blacksite.server.contracts.transactions import join_state
+from blacksite.server.crews import PARTICIPATION_SECONDS
 from blacksite.server.inventory import Inventory
 from blacksite.server.items import ItemInstance, make_item
 from blacksite.server.lattice.programs import can_acquire
@@ -135,6 +136,10 @@ class Contracts:
                     break
 
     def duration(self, player: str, stage: Stage) -> float:
+        presence = self.lat.presences.get(player)
+        if stage.linked_control and presence and presence.core == stage.linked_control.core:
+            from blacksite.server.interlock import FLIP_SECONDS
+            return FLIP_SECONDS
         if stage.verb == 'clear' and stage.resolution == 'subdue':
             from blacksite.server.npcs.templates import SUBDUE_SECONDS
             return SUBDUE_SECONDS
@@ -143,7 +148,6 @@ class Contracts:
             return FLIP_SECONDS
         if stage.input == 'lift' and stage.target.kind == 'core_room':
             from blacksite.server.lattice.encounters import LIFT_SECONDS
-            presence = self.lat.presences.get(player)
             ledger = self.content.programs['prg_ledger']
             multiplier = float(ledger.effect.params['lift_multiplier']) if presence and 'prg_ledger' in presence.rig else 1
             return LIFT_SECONDS*multiplier
@@ -165,20 +169,59 @@ class Contracts:
     def obsolete(item: ItemInstance, draft: Ledger) -> bool:
         if item.mission is None:
             return False
-        instance = draft.engine.instances.get(item.mission)
+        return Contracts.obsolete_mission(draft, item.owner, item.mission, item.mission_stage)
+
+    @staticmethod
+    def obsolete_mission(draft: Ledger, owner: str, mission: str, stage: str | None) -> bool:
+        instance = draft.engine.instances.get(mission)
         if instance is None:
             return True
         return (instance.failure in ('expired', 'abandoned') or instance.state == 'turned_in'
-            or item.owner in instance.withdrawn or bool(item.mission_stage and item.mission_stage not in {
+            or owner in instance.withdrawn or bool(stage and stage not in {
                 f'{p.stage.id}:{p.attempt}' for p in instance.stages[:instance.index+1]}))
+
+    def clean_mission_data(self, draft: Ledger, patches: dict[str, Any],
+                           identities: dict[str, Any]) -> set[str]:
+        """Remove expired payloads and their source metadata in the same write."""
+        removed: set[str] = set()
+        for player in self.game.players.values():
+            progress = deepcopy(player.progress)
+            progress.update(deepcopy(patches.get(player.id, {}).get('progress', {})))
+            records = progress.get('mission_sources', {})
+            dead = {key: row for key, row in records.items()
+                    if self.obsolete_mission(draft, player.id, row['mission'], row['mission_stage'])}
+            if not dead:
+                continue
+            identity = deepcopy(identities.get(player.bbs_user_id, self.game.identity(player.bbs_user_id)))
+            for key, row in dead.items():
+                unit = row['unit']
+                records.pop(key)
+                progress.get('lattice_units', {}).pop(unit, None)
+                if progress.get('lattice_receipts', {}).get(key) == unit:
+                    progress['lattice_receipts'].pop(key)
+                if identity.get('lattice_receipts', {}).get(key) == unit:
+                    identity['lattice_receipts'].pop(key)
+                for asset, recorded in tuple(progress.get('lattice_records', {}).items()):
+                    if recorded == unit:
+                        progress['lattice_records'].pop(asset)
+                removed.add(key)
+            patch = patches.setdefault(player.id, {}).setdefault('progress', {})
+            for key in ('mission_sources', 'lattice_units', 'lattice_receipts', 'lattice_records'):
+                if key in progress:
+                    patch[key] = progress[key]
+            identities[player.bbs_user_id] = identity
+        return removed
 
     def write(self, draft: Ledger, patches: dict[str, dict[str, Any]] | None = None,
               identities: dict[str, dict[str, Any]] | None = None,
               items: dict[str, ItemInstance] | None = None, serial: int | None = None,
-              callback: Callable[[bool], None] | None = None) -> None:
+              callback: Callable[[bool], None] | None = None,
+              linked_control: tuple[str, StageTarget] | None = None) -> None:
         staged = {'player_id': None, 'patch': {}, 'player_patches': deepcopy(patches or {}),
                   'identities': deepcopy(identities or {}), 'callback': callback or (lambda success: None)}
         self.finish_services(staged, draft)
+        if linked_control:
+            self.lat.interlock.join_manual_release(staged, *linked_control)
         patches, identities, callback = staged['player_patches'], staged['identities'], staged['callback']
         items = deepcopy(self.commerce.items if items is None else items)
         for key, item in tuple(items.items()):
@@ -191,6 +234,17 @@ class Contracts:
                 patch = patches.setdefault(item.owner, {})
                 carried = patch.get('inventory', self.game.players[item.owner].inventory)
                 patch['inventory'] = [iid for iid in carried if iid != key]
+        removed = self.clean_mission_data(draft, patches, identities)
+        if removed:
+            previous = callback
+            def cleaned(success: bool) -> None:
+                if success:
+                    for key in removed:
+                        self.lat.sources.sources.pop(key, None)
+                    self.lat.sources.revision += 1
+                if previous:
+                    previous(success)
+            callback = cleaned
         if not self.commerce.settle(None, {}, self.commerce.items if items is None else items,
                 self.commerce.caches, self.commerce.serial if serial is None else serial,
                 callback or (lambda success: None)):
@@ -198,16 +252,34 @@ class Contracts:
         effect = self.commerce.outbox[-1]
         effect['player_patches'] = deepcopy(patches or {})
         effect['identities'] = deepcopy(identities or {})
+        if 'interlock_state' in staged:
+            effect['interlock_state'] = staged['interlock_state']
+        if removed:
+            def source_record() -> dict[str, Any]:
+                lattice = self.lat.sources.record(self.clock.now_tick())
+                for key in removed:
+                    lattice['sources'].pop(key, None)
+                return lattice
+            effect['lattice_state'] = source_record
         join_state(effect, draft.record(), self.install)
 
     def source_fact(self, effect: dict[str, Any], fact: Fact) -> tuple[str, ...]:
         """Source owners call this before their own write, never on commit."""
         draft = Ledger(self.origin, self.content, effect.get('contracts_state') or self.record())
-        changed = draft.observe(fact, self.now())
+        changed = self.observe(draft, fact)
         if changed:
             self.finish_services(effect, draft)
             join_state(effect, draft.record(), self.install)
         return changed
+
+    def observe(self, draft: Ledger, fact: Fact) -> tuple[str, ...]:
+        """Count actual nearby guards; the ledger filters the frozen roster."""
+        now, crews = self.clock.now_tick(), self.game.crews
+        guarded = {pid for (source, pid), tick in crews.guarded_at.items()
+                   if source == fact.actor and now-tick <= PARTICIPATION_SECONDS*TICK_HZ
+                   and crews.nearby(source, pid)}
+        verified = replace(fact, contributors=tuple(sorted({*fact.contributors, *guarded})))
+        return draft.observe(verified, self.now())
 
     def finish_services(self, effect: dict[str, Any], draft: Ledger) -> None:
         """Join allocation, fixed worker rewards and source patches once.
@@ -293,13 +365,16 @@ class Contracts:
                 StageTarget('core_control', core=core, control=control), self.now()):
             return True
         return any(target.kind == 'core_control' and target.core == core and target.control == control
-            for _, progress in self.current_jobs(player) for target in progress.targets)
+            for _, progress in self.current_jobs(player)
+            for target in (*progress.targets, *((progress.stage.linked_control,) if progress.stage.linked_control else ())))
 
     def network_fact(self, effect: dict[str, Any], player: str, target: StageTarget,
                      completion: str, receipt: str) -> tuple[str, ...]:
         for instance, progress in self.current_jobs(player):
-            if progress.stage.completion == completion and any(matches(t, target) for t in progress.targets):
-                return self.source_fact(effect, Fact(player, progress.stage.verb, completion, target,
+            linked = progress.stage.linked_control
+            actual = progress.stage.target if linked and matches(linked, target) else target
+            if progress.stage.completion == completion and any(matches(t, actual) for t in progress.targets):
+                return self.source_fact(effect, Fact(player, progress.stage.verb, completion, actual,
                     receipt, receipt, instance=instance.id, stage=progress.stage.id, attempt=progress.attempt))
         return ()
 
@@ -308,7 +383,7 @@ class Contracts:
         self.network_fact(effect, presence.player_id, target, 'lifted', unit)
         if data.kind == 'evidence' and data.asset in self.content.evidence:
             draft = Ledger(self.origin, self.content, effect.get('contracts_state') or self.record())
-            if draft.acquire(presence.player_id, self.content.evidence[data.asset], target, self.now()):
+            if draft.acquire(presence.player_id, self.content.evidence[data.asset], target, self.now(), season=self.lat.season):
                 join_state(effect, draft.record(), self.install)
 
     def entered(self, presence: Any) -> None:
@@ -454,6 +529,8 @@ class Contracts:
             offer = draft.engine.offer(self.content.contracts[offer.template], node.order, node.reserved_until)
         instance = draft.engine.accept(offer, tuple(self.participant(pid) for pid in offered.roster),
                                        self.now(), offered.approach)
+        if instance.season is None:
+            instance.season = self.lat.season
         if offered.service:
             instance.runtime['service'] = offered.service
         def committed(success: bool) -> None:
@@ -485,7 +562,7 @@ class Contracts:
                 program = self.content.programs[pid]
                 if pid in known:
                     continue
-                if not can_acquire(program, player.archetype, player.standing, set(acquired.get(season, ()))):
+                if not can_acquire(program, recipient.archetype, recipient.standing, set(acquired.get(season, ()))):
                     raise ValueError('You do not meet this program reward\'s acquisition requirements.')
                 known.append(pid)
                 acquired.setdefault(season, []).append(pid)
@@ -537,5 +614,7 @@ class Contracts:
         self.effects.compose(ctx.tick)
         self.scenes.reconcile()
         self.scenes.escorts(ctx.tick)
-        if not self.commerce.pending and any(self.obsolete(item, self.state) for item in self.commerce.items.values()):
+        expired_data = any(self.obsolete_mission(self.state, player.id, row['mission'], row['mission_stage'])
+            for player in self.game.players.values() for row in player.progress.get('mission_sources', {}).values())
+        if not self.commerce.pending and (expired_data or any(self.obsolete(item, self.state) for item in self.commerce.items.values())):
             self.write(self.state.fork())

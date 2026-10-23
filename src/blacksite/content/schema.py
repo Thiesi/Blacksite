@@ -993,6 +993,7 @@ class Stage:
     cost: str = "No fee."
     destination: StageTarget | None = None
     requires_item: str | None = None
+    linked_control: StageTarget | None = None
 
 
 @dataclass(frozen=True)

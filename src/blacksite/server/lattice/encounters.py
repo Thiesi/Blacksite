@@ -759,6 +759,9 @@ class Encounters:
         key, player = self.source(presence, data), self.game.players[presence.player_id]
         if key != procedure.source:
             raise ValueError("The contract or source changed before the lift completed.")
+        mission = self.mission_of(player.id, data.id) if data.scope == 'mission' else None
+        if data.scope == 'mission' and mission is None:
+            raise ValueError('That mission is no longer active.')
         unit_id = self.lat.sources.unit_id(key, procedure.generation)
         offer = self.game.crews.check_data(player.id, unit_id) if data.scope == 'shared' else None
         draft, items = deepcopy(player), deepcopy(self.commerce.items)
@@ -767,6 +770,11 @@ class Encounters:
             identity.setdefault("lattice_receipts", {})[key] = unit_id
         serial = self.commerce.serial
         draft.progress.setdefault("lattice_receipts", {})[key] = unit_id
+        if mission:
+            mission_id, mission_stage, attempt = mission.rsplit(':', 2)
+            binding = {'mission': mission_id, 'mission_stage': mission_stage+':'+attempt}
+            draft.progress.setdefault('mission_sources', {})[key] = {
+                **binding, 'unit': unit_id, 'asset': data.asset}
         if data.kind == "chits":
             draft.chits_hand += data.amount
         elif data.kind in ("salvage_data", "item", "schematic"):
@@ -781,13 +789,19 @@ class Encounters:
                 while remaining:
                     serial += 1
                     count = min(remaining, template.stack_max)
-                    inventory.add(draft, make_item(f"{self.game.sessions.origin}:item:{serial}", template,
-                                  player.id, self.clock.now_utc().isoformat(), count))
+                    supplied = make_item(f"{self.game.sessions.origin}:item:{serial}", template,
+                                         player.id, self.clock.now_utc().isoformat(), count)
+                    if mission:
+                        supplied.bound, supplied.secured = True, False
+                        supplied.mission, supplied.mission_stage = binding['mission'], binding['mission_stage']
+                    inventory.add(draft, supplied)
                     remaining -= count
         elif data.kind in ("contribution", "contract_key", "evidence"):
             draft.progress.setdefault("lattice_units", {})[unit_id] = {
                 "kind": data.kind, "asset": data.asset, "amount": data.amount,
                 "source": key, "season": self.lat.season, "owner": player.bbs_user_id}
+            if mission:
+                draft.progress['lattice_units'][unit_id].update(binding)
         elif data.kind == "text":
             draft.progress.setdefault("lattice_records", {})[data.asset or data.id] = unit_id
         elif data.kind == "program":

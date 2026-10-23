@@ -10,7 +10,8 @@ from copy import deepcopy
 from math import ceil
 from typing import Any, TYPE_CHECKING
 
-from blacksite.content.schema import ControlSpec
+from blacksite.content.schema import ControlSpec, StageTarget
+from blacksite.server.rules.combat import distance
 from blacksite.server.clock import TICK_HZ
 from blacksite.server.lattice.presence import Procedure, Presence
 from blacksite.server.loop import TickContext
@@ -201,6 +202,32 @@ class Interlock:
                                     self.commerce.serial, finished):
             raise ValueError("Let the current transfer settle first.")
         self.commerce.outbox[-1]["interlock_state"] = proposal
+
+    def join_manual_release(self, effect: dict[str, Any], player_id: str, target: StageTarget) -> None:
+        """Game 9.4: the physical and loan routes operate the same latch."""
+        control = self.controls[target.core, target.control]
+        player = self.game.players[player_id]
+        actor = self.combat.actor(player)
+        obj = self.game.world.zones[control.target.zone].objects[control.target.object]
+        if (control.scope != 'mission' or control.action != 'open' or control.safety_policy != 'none'
+                or not self.permit(player_id, target.core, target.control) or not actor
+                or actor.zone != control.target.zone or distance(actor.position, obj.spec.tile) > 1.5
+                or not self.game.world.object_access(actor, obj.spec)):
+            raise ValueError('Use the active contract\'s nearby manual latch.')
+        proposal = deepcopy(self.state)
+        proposal['serial'] += 1
+        proposal['effects'][target.core+':'+target.control] = {'core': target.core, 'control': target.control,
+            'revision': control.revision, 'enabled': True, 'expires': self.now()+control.reset_seconds,
+            'serial': proposal['serial'], 'actor': player_id, 'starts': self.now()}
+        effect['interlock_state'] = proposal
+        previous = effect.get('callback')
+        def committed(success: bool) -> None:
+            if success:
+                self.state = proposal
+                self.compose()
+            if previous:
+                previous(success)
+        effect['callback'] = committed
 
     def effect_line(self, control: ControlSpec) -> str:
         obj = self.game.world.zones[control.target.zone].objects[control.target.object]

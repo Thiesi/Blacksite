@@ -163,7 +163,7 @@
     },
     {
       "id": "lat-terraces-c11",
-      "kind": "public",
+      "kind": "core_entrance",
       "pos": [
         2,
         1
@@ -174,7 +174,9 @@
         "lat-terraces-c03",
         "lat-terraces-c19"
       ],
-      "label": "Signal rack 11"
+      "label": "Stairwell C cabinet",
+      "access": "public",
+      "core_id": "lat-stairwell-c"
     },
     {
       "id": "lat-terraces-c12",

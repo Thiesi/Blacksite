@@ -8,9 +8,12 @@ import pytest
 
 from blacksite.content.loader import ContentTree, load_content
 from blacksite.server.contracts.engine import Fact
+from blacksite.server.crews import GUARD_SECONDS
+from blacksite.server.clock import TICK_HZ
 from tests.character_helpers import create
 from tests.contracts.test_engine import template
 from tests.harness import HeadlessServer
+from tests.character_helpers import place
 
 
 @pytest.fixture(scope='module')
@@ -61,6 +64,29 @@ def complete(live: tuple[Any, ...], iid: str) -> None:
     assert contracts.state.engine.instances[iid].state == 'active'
     game.commit_commerce()
     assert contracts.state.engine.instances[iid].state == 'complete'
+
+
+def test_game_9_1_actual_guards_participate_but_late_crew_members_do_not(live) -> None:
+    game, contracts, callers, players = live
+    iid = accept(live)
+    for index, caller in enumerate(callers):
+        place(game, caller, 'core-plaza', (20+index, 4))
+    crews = game.core.crews
+    crews.perform(callers[0].session, 'invite', players[2].id)
+    invitation = next(i for i in crews.registry.invites.values() if i.target == players[2].id)
+    crews.perform(callers[2].session, 'accept', invitation.id)
+    game.step((GUARD_SECONDS+1)*TICK_HZ)
+    assert (players[0].id, players[1].id) in crews.guarded_at
+    assert (players[0].id, players[2].id) in crews.guarded_at
+    instance = contracts.state.engine.instances[iid]
+    assert game.core.commerce.settle(None, {}, game.core.commerce.items, {},
+                                    game.core.commerce.serial, lambda success: None)
+    effect = game.core.commerce.outbox[-1]
+    for index, target in enumerate(instance.stages[0].targets):
+        contracts.source_fact(effect, Fact(players[0].id, 'clear', 'defeated', target,
+            f'unit{index}', f'guarded-defeat{index}', instance=iid, resolution='lethal'))
+    game.commit_commerce()
+    assert contracts.state.engine.instances[iid].contributions == {p.id for p in players[:2]}
 
 
 def test_game_9_1_proposal_requires_each_consent_and_failed_freeze_consumes_nothing(live) -> None:

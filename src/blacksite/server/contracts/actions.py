@@ -98,11 +98,12 @@ class Actions:
         fact = Fact(player.id, stage.verb, stage.completion, target, subject,
             f'{instance.id}:{stage.receipt_key}:{progress.attempt}:{subject}', instance=iid,
             stage=stage.id, attempt=progress.attempt)
-        if not draft.observe(fact, owner.now()):
+        if not owner.observe(draft, fact):
             raise ValueError('That objective action was already recorded.')
         owner.write(draft, {player.id: {'inventory': recipient.inventory}}, items=items, serial=serial,
                     callback=lambda success: owner.log(player.id, 'Objective recorded.' if success else
-                                                       'The action could not be saved. Your supplies remain.'))
+                                                       'The action could not be saved. Your supplies remain.'),
+                    linked_control=(player.id, stage.linked_control) if stage.linked_control else None)
 
     def interact_npc(self, session: Session, iid: str) -> bool:
         owner, pid = self.owner, session.player_id

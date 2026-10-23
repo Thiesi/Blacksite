@@ -1,0 +1,101 @@
+{
+  "schema": 1,
+  "contracts": [
+    {
+      "id": "vesper-first-thing",
+      "name": "A thing in the Terraces",
+      "faction": "vesper",
+      "type": "fetch",
+      "story": true,
+      "crew_scaling": false,
+      "chain": "vesper-first-thing",
+      "approach_label": "E: manual latch, 5 s. J: loan flip, 3 s.",
+      "consequence": "The street is contested. Both release points are sheltered. The ordinary housing door stays open.",
+      "reward": {
+        "chits": [
+          200,
+          200
+        ],
+        "xp": 100,
+        "standing_mode": "explicit",
+        "standing": {
+          "halvard": 5,
+          "sablier": 5,
+          "kestrel": 5,
+          "wardens": 5,
+          "choir": 5,
+          "sable": 5,
+          "unmoored": 5,
+          "ferrymen": 5
+        }
+      },
+      "evidence_assets": [
+        "stairwell-c-latch-record"
+      ],
+      "stages": [
+        {
+          "id": "check-latch",
+          "verb": "survey",
+          "target": {
+            "kind": "zone_object",
+            "zone": "terraces-blocks",
+            "object": "stairwell-c-parcel-hatch"
+          },
+          "input": "inspect",
+          "completion": "observed",
+          "receipt_key": "vesper-first-thing:check-latch",
+          "label": "Check the parcel hatch",
+          "cost": "No fee. Inspect the latch; the journal shows both routes."
+        },
+        {
+          "id": "release-latch",
+          "verb": "hack",
+          "target": {
+            "kind": "zone_object",
+            "zone": "terraces-blocks",
+            "object": "stairwell-c-parcel-hatch"
+          },
+          "input": "channel",
+          "completion": "flipped",
+          "receipt_key": "vesper-first-thing:release-latch",
+          "label": "Release the parcel hatch",
+          "seconds": 5,
+          "cost": "E: manual 5 s, no fee. J: adjacent loan terminal, flip 3 s, trace 0. Both sheltered.",
+          "linked_control": {
+            "kind": "core_control",
+            "core": "lat-stairwell-c",
+            "control": "parcel-release"
+          }
+        },
+        {
+          "id": "collect-parcel",
+          "verb": "fetch",
+          "target": {
+            "kind": "zone_object",
+            "zone": "terraces-blocks",
+            "object": "stairwell-c-parcel",
+            "item": "story_stuck_door_package"
+          },
+          "input": "carry",
+          "completion": "carried",
+          "receipt_key": "vesper-first-thing:collect-parcel",
+          "label": "Collect Vesper's parcel"
+        },
+        {
+          "id": "deliver-parcel",
+          "verb": "fetch",
+          "target": {
+            "kind": "zone_object",
+            "zone": "sodium-tin-halo",
+            "object": "vesper"
+          },
+          "input": "carry",
+          "completion": "delivered",
+          "receipt_key": "vesper-first-thing:deliver-parcel",
+          "label": "Carry the parcel back to Vesper",
+          "requires_item": "story_stuck_door_package"
+        }
+      ]
+    }
+  ]
+}

@@ -484,6 +484,11 @@ class _Validator:
                 self.report(*owner, "workshop makes must name a supported filter", obj.id)
             if obj.kind == "terminal" and obj.params.get("sector") is not None:
                 self.ref("sectors", obj.params["sector"], owner, obj.id)
+                if obj.params.get("cell") is not None:
+                    sector = self.t.sectors.get(obj.params["sector"])
+                    cell = next((c for c in sector.cells if c.id == obj.params["cell"]), None) if sector else None
+                    if cell is None or cell.access_kind != "public":
+                        self.report(*owner, "terminal cell must name an existing public district entry", obj.id)
             if obj.params.get("training_npc"):
                 self.ref("npcs",str(obj.params["training_npc"]),owner,"training NPC")
                 tile = obj.params.get("training_tile")
@@ -825,6 +830,8 @@ class _Validator:
                 self._check_control(core, control)
 
     def _check_data(self, owner: tuple[str, str], data: s.DataSpec, label: str) -> None:
+        if data.scope == 'mission' and (data.kind in ('chits', 'program', 'schematic') or data.programs):
+            self.report(*owner, 'mission data cannot grant unbound cash or permanent unlocks; use the contract reward', data.id)
         if data.respawn_seconds < 0 or not 0 < data.chance <= 1:
             self.report(*owner, f"{label}: data respawn/chance is invalid", data.id)
         refs = {"text": "text", "item": "items", "salvage_data": "items", "schematic": "items",
@@ -1320,6 +1327,15 @@ class _Validator:
                 if stage.verb == "clear" and stage.resolution is None:
                     self.report(*owner, f"{label}: a clear stage declares lethal or subdue", stage.id)
                 self._check_target(owner, label, stage.target, stage.id)
+                if stage.linked_control:
+                    self._check_target(owner, label+' linked control', stage.linked_control, stage.id)
+                    if stage.linked_control.kind != 'core_control' or stage.target.kind != 'zone_object':
+                        self.report(*owner, f"{label}: a linked control pairs a physical object with a core control", stage.id)
+                    core = self.t.cores.get(stage.linked_control.core)
+                    control = next((c for r in core.rooms for c in r.controls
+                        if c.id == stage.linked_control.control), None) if core else None
+                    if control and (control.target.zone, control.target.object) != (stage.target.zone, stage.target.object):
+                        self.report(*owner, f"{label}: linked control targets another physical object", stage.id)
                 if stage.completion == 'lifted' and stage.target.kind == 'core_room' and stage.target.data is None:
                     self.report(*owner, f"{label}: a lift names its exact room data", stage.id)
                 if stage.requires_item:
@@ -1500,7 +1516,7 @@ class _Validator:
     def _check_effect(self, owner: tuple[str, str], label: str, e: s.Effect) -> None:
         zone = None
         if e.binding:
-            self._check_target(owner, label+' binding', e.binding)
+            self._check_target(owner, label+' binding', e.binding, e.binding.control or e.binding.object or e.binding.npc or '')
         if e.zone is not None and self.ref("zones", e.zone, owner, label):
             zone = self.t.zones[e.zone]
         self.ref("sectors", e.sector, owner, label)

@@ -29,14 +29,14 @@ class Ledger:
         return Ledger(self.origin, self.content, self.record())
 
     def acquire(self, player: str, evidence: EvidenceRecord, location: StageTarget,
-                now: float, instance: str = '') -> bool:
+                now: float, instance: str = '', season: int | None = None) -> bool:
         """The verified action supplies location; opening prose grants nothing."""
         journal = self.journal.setdefault(player, {})
         if evidence.id in journal:
             return False
         journal[evidence.id] = {**asdict(evidence), 'location': asdict(location),
             'observed_at': now, 'instance': instance, 'publication': '',
-            'season': self.engine.instances[instance].season if instance in self.engine.instances else None}
+            'season': self.engine.instances[instance].season if instance in self.engine.instances else season}
         return True
 
     def observe(self, fact: Fact, now: float) -> tuple[str, ...]:

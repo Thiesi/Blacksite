@@ -656,6 +656,18 @@ machine.
 
 ### 15.1 Actions and readable state
 
+A physical terminal's optional `params.cell` names a public cell of
+`params.sector`; omission uses that sector's ordinary entry. Content
+validation and admission both reject gated, hidden or absent cells.
+This permits a local loan terminal beside a mission cabinet without
+granting a key, discovering a hidden route or altering district uplinks.
+Vesper's parcel latch has one physical objective and a typed linked
+control. Its manual release joins `interlock_state` and
+`contracts_state` in one write; a committed Lattice flip advances the
+same objective. Switching methods before completion consumes no branch
+receipt. A combined contract/vendor counter keeps a Trade hotkey so
+commissioning a board does not remove its shop.
+
 Add typed intents to the existing protocol, not a command parser:
 `journal.open`, `evidence.inspect`, `evidence.publish`,
 `work_order.reserve`, `work_order.perform`, `work_order.allocate`,
@@ -706,6 +718,17 @@ service effects and their owning reward receipts follow this boundary.
 Finalize the source callback before flushing deferred impacts: those
 impacts can immediately propose another source write. The next proposal
 must see both the retired source and the installed contract draft.
+Mission lifts bind their supplied items before inventory stacking and
+record the exact instance, stage, attempt and source in
+`progress.mission_sources`. Expiry, withdrawal, retry and turn-in retire
+obsolete payloads, player/identity source receipts and the source's
+availability record together; failed cleanup writes retain all of them.
+Acquired journal evidence remains available. Permanent cash, programs
+and schematics belong to an explicit contract reward rather than a
+temporary mission source. Cleanup runs after the source's own callback,
+so it cannot recreate a retired source after the cleanup commits.
+Actual nearby guards from S22's participation window may contribute to
+a source action; the contract ledger still filters its frozen roster.
 One final action may award ordinary run XP and fixed work-order XP;
 compose the latter over the source's player/identity draft in that same
 transaction. Work-order allocation and payment never run as a later

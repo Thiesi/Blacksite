@@ -162,3 +162,20 @@ S22 [PR #61](https://github.com/Thiesi/Blacksite/pull/61)'s live crew IDs
 include a per-service-boot nonce. They are not durable federation or
 expedition identities. Keep node_id opaque and preserve source-owned
 loot/reward entitlements separately from social membership.
+
+<!-- s19-services:start -->
+### S19 source and service handoff
+
+Reference: [S19](https://github.com/Thiesi/Blacksite/issues/19),
+[source checkpoint 55da5bf](https://github.com/Thiesi/Blacksite/commit/55da5bf)
+and [PR #38](https://github.com/Thiesi/Blacksite/pull/38).
+
+S19 remains in progress. Its source/service interfaces are implemented;
+authored content, full-root/native acceptance and PR review remain pending.
+Consume them after S19 merges.
+
+Treat mission IDs, accepted roster, branch choices, service allocations and
+source receipts as authority-owned state. Public route publication exposes
+authored NPC/ICE telemetry only. Keep Origin/Source identity and ownership
+boundaries; a native door NodeID remains an opaque session identifier.
+<!-- s19-services:end -->

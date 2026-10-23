@@ -191,3 +191,20 @@ delivery keeps S18 protected personal impound.
 S22 [PR #61](https://github.com/Thiesi/Blacksite/pull/61) supplies the live
 crew authority. Crew affiliation never bypasses combat legality,
 actual-victim cache recovery, personal impound or market ownership.
+
+<!-- s19-services:start -->
+### S19 source and service handoff
+
+Reference: [S19](https://github.com/Thiesi/Blacksite/issues/19),
+[source checkpoint 55da5bf](https://github.com/Thiesi/Blacksite/commit/55da5bf)
+and [PR #38](https://github.com/Thiesi/Blacksite/pull/38).
+
+S19 remains in progress. Its source/service interfaces are implemented;
+authored content, full-root/native acceptance and PR review remain pending.
+Consume them after S19 merges.
+
+Mission supplies have instance/stage bindings and cannot enter listings,
+storage transfers or fabrication. Reserve caches grant two ordinary power
+units total, shared across workers. Consume the existing inventory boundary;
+do not turn mission units or repeat reward receipts into market stock.
+<!-- s19-services:end -->

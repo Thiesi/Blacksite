@@ -1,0 +1,1 @@
+You read the service label. Hold the manual release for five seconds, or use the loan terminal and flip the local latch control. The cabinet carries no trace monitor. The hatch resets after two minutes.

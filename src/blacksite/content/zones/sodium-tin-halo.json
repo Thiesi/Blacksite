@@ -35,7 +35,9 @@
       "essential": false,
       "params": {
         "name": "The Tin Halo (Vesper)",
-        "vendor": "vesper"
+        "vendor": "vesper",
+        "contract_handler": "vesper",
+        "trade_counter": "vesper"
       }
     },
     {

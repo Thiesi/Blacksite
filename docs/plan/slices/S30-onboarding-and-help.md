@@ -228,3 +228,21 @@ two-to-five-person crews: sixty-second invites, leadership on logout,
 ten-second loot offers, useful-action/guard participation and private
 interior limits. Show names, not opaque IDs. Escape decoding follows
 UI 5.3, including ready-input priority before its framing grace expires.
+
+<!-- s19-services:start -->
+### S19 source and service handoff
+
+Reference: [S19](https://github.com/Thiesi/Blacksite/issues/19),
+[source checkpoint 55da5bf](https://github.com/Thiesi/Blacksite/commit/55da5bf)
+and [PR #38](https://github.com/Thiesi/Blacksite/pull/38).
+
+S19 remains in progress. Its source/service interfaces are implemented;
+authored content, full-root/native acceptance and PR review remain pending.
+Consume them after S19 merges.
+
+Preserve Q active/done/journal tabs, compact objective/cost hints and header
+service state without displacing danger, vitals or escape. Explain helpers,
+contribution/guard requirements, original reservation deadlines and explicit
+withdrawal. A stale clinic discount requires a fresh quote; it cannot
+silently increase the bill.
+<!-- s19-services:end -->

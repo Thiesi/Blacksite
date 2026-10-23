@@ -41,6 +41,39 @@ def test_game_9_3_actual_control_and_contract_progress_commit_or_rollback_togeth
     assert owner.state.engine.instances[iid].state == 'complete'
 
 
+def test_game_9_3_mission_lift_binds_before_stacking_and_never_consumes_public_stock(runners) -> None:
+    game, caller, _, _ = runners
+    content = game.core.loop.content
+    core = content.cores['lat-civic-ledger']
+    data = DataSpec('fixture-rations', 'item', 0, asset='con_kestrel_ration', amount=2, scope='mission')
+    rooms = tuple(replace(room, data=(*room.data, data)) if room.id == core.entry else room for room in core.rooms)
+    content.cores[core.id] = replace(core, rooms=rooms)
+    presence = enter(game, caller, core.id)
+    stage = Stage('lift', 'hack', StageTarget('core_room', core=core.id, room=core.entry, data=data.id),
+                  'lift', 'lifted', 'fixture:rations')
+    owner, iid = accept(game, caller, (stage,))
+    player = owner.game.players[presence.player_id]
+    public = {key: item.stack for key, item in owner.commerce.items.items()
+              if item.owner == player.id and item.template == data.asset and not item.bound}
+    assert public
+    encounters = game.core.lattice.encounters
+    key = encounters.source(presence, data)
+    source = game.core.lattice.sources.refresh(key, data, game.clock.now_tick())
+    intent(game, caller, 'lat.lift', target=data.id, generation=source.generation)
+    game.step(presence.procedure.until-game.clock.now_tick())
+    game.commit_commerce()
+    supplied = [item for item in owner.commerce.items.values() if item.mission == iid]
+    assert sum(item.stack for item in supplied) == 2
+    assert all(item.bound and item.owner == player.id for item in supplied)
+    assert {key: owner.commerce.items[key].stack for key in public} == public
+    draft = owner.state.fork()
+    owner.withdraw(draft, iid, player.id)
+    owner.write(draft)
+    game.commit_commerce()
+    assert not any(item.mission == iid for item in owner.commerce.items.values())
+    assert {key: owner.commerce.items[key].stack for key in public} == public
+
+
 def test_game_9_3_mission_lift_is_scoped_to_exact_room_data_and_joins_evidence_atomically(runners) -> None:
     game, caller, other, outsider = runners
     core = game.core.loop.content.cores['lat-civic-ledger']
@@ -76,6 +109,29 @@ def test_game_9_3_mission_lift_is_scoped_to_exact_room_data_and_joins_evidence_a
     assert effects[0]['contracts_state']['engine']['instances'][iid]['state'] == 'complete'
     assert owner.state.journal[presence.player_id]['fixture-record']['instance'] == iid
     assert owner.mission_of(presence.player_id, data.id) is None
+    player = owner.game.players[presence.player_id]
+    unit = player.progress['mission_sources'][key]['unit']
+    assert player.progress['lattice_units'][unit]['mission'] == iid
+    assert key in game.core.lattice.sources.sources
+    # Withdrawing after the recorded objective retires the temporary
+    # payload, source and identity metadata, but preserves the evidence.
+    draft = owner.state.fork()
+    owner.withdraw(draft, iid, player.id)
+    owner.write(draft)
+    game.commit_commerce(error=True)
+    assert unit in player.progress['lattice_units']
+    assert key in game.core.lattice.sources.sources
+    draft = owner.state.fork()
+    owner.withdraw(draft, iid, player.id)
+    owner.write(draft)
+    effects = game.commit_commerce()
+    assert unit not in player.progress['lattice_units']
+    assert key not in player.progress['mission_sources']
+    assert key not in player.progress['lattice_receipts']
+    assert key not in owner.game.identity(player.bbs_user_id)['lattice_receipts']
+    assert key not in game.core.lattice.sources.sources
+    assert key not in effects[0]['lattice_state']['sources']
+    assert owner.state.journal[player.id]['fixture-record']['observation'] == 'You hold the signed record.'
 
 
 def test_game_9_3_enter_objective_uses_real_admission_and_ordinary_exploration_adds_no_receipt(runners) -> None:

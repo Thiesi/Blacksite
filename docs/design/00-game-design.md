@@ -490,6 +490,10 @@ the ride. After offline arrival, ordinary destination logout rules apply.
   District layouts use at most eight columns and six rows, preserving
   four-column cell markers at 80x24. Public baseline uplinks connect all
   eleven districts; gated shortcuts never replace those public routes.
+  A physical terminal may link to a named public cell in its district.
+  It never admits directly to a gated or hidden cell. The stairwell C
+  loan terminal links to its local cabinet entrance so the first job's
+  3 s flip does not require an unrelated trip across the district.
 - Moving between adjacent cells takes max(0.2, 1.0 - Cortex / 100) s,
   rounded up to ticks after modifiers, with the same 0.2 s floor.
   Lifting data or flipping a control takes 3 s. Integrity recovers 5 per

@@ -150,3 +150,21 @@ tool every later slice runs.
   before an hour run.
 - Do not optimise the fixture world; profile the shipped content, which
   has 200 × 100 zones.
+
+<!-- s19-services:start -->
+### S19 source and service handoff
+
+Reference: [S19](https://github.com/Thiesi/Blacksite/issues/19),
+[source checkpoint 55da5bf](https://github.com/Thiesi/Blacksite/commit/55da5bf)
+and [PR #38](https://github.com/Thiesi/Blacksite/pull/38).
+
+S19 remains in progress. Its source/service interfaces are implemented;
+authored content, full-root/native acceptance and PR review remain pending.
+Consume them after S19 merges.
+
+Profile populated contract/journal/budget meta and active mission bodies.
+Source callbacks must finalize before after_settle flushes deferred impacts;
+a two-NPC regression proves that reversing this loses objective progress.
+Preserve owning receipts while optimizing. Timer/view invalidation must
+still work for a stationary caller.
+<!-- s19-services:end -->

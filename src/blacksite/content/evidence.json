@@ -28,6 +28,19 @@
       "observation": "A Year 0 audit names a routing authority before the Year 6 routing-office announcement.",
       "source": "lat-depot-control",
       "claim": "Conflicting dates do not establish foreknowledge."
+    },
+    {
+      "id": "stairwell-c-latch-record",
+      "asset": "stairwell-c-label",
+      "observation": "You find a jammed parcel hatch and a working loan terminal beside it.",
+      "source": "The cabinet service label",
+      "claim": "The label lists a manual release and a local latch control.",
+      "claimed_author": "Terraces housing maintenance",
+      "claimed_date": "Undated service label",
+      "related_objective": "vesper-first-thing",
+      "related_stage": "check-latch",
+      "question": "Which release do you want to use?",
+      "next_action": "E at the hatch: 5 s, no fee. Or J at the loan terminal, enter the cabinet and flip: 3 s, trace 0."
     }
   ]
 }

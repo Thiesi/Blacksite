@@ -44,6 +44,7 @@ def target_record(raw: dict[str, Any]) -> StageTarget:
 def stage_record(raw: dict[str, Any]) -> Stage:
     return Stage(**{**raw, 'target': target_record(raw['target']),
                     'destination': target_record(raw['destination']) if raw.get('destination') else None,
+                    'linked_control': target_record(raw['linked_control']) if raw.get('linked_control') else None,
                     'target_pool': tuple(target_record(t) for t in raw.get('target_pool', ()))})
 
 

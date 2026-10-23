@@ -262,3 +262,21 @@ S22 [PR #61](https://github.com/Thiesi/Blacksite/pull/61) adds remote crew
 rosters and beacons. Exercise them in crowded actual maps without
 revealing private interiors. All real city, relay, vendor, housing,
 workshop and clinic acceptance obligations below remain required.
+
+<!-- s19-services:start -->
+### S19 source and service handoff
+
+Reference: [S19](https://github.com/Thiesi/Blacksite/issues/19),
+[source checkpoint 55da5bf](https://github.com/Thiesi/Blacksite/commit/55da5bf)
+and [PR #38](https://github.com/Thiesi/Blacksite/pull/38).
+
+S19 remains in progress. Its source/service interfaces are implemented;
+authored content, full-root/native acceptance and PR review remain pending.
+Consume them after S19 merges.
+
+Commission the four real service targets, allocation layers, safe return
+routes, clinic counter, surplus vendor/cache and actual patrol/gate
+bindings. Cold Chain changes installation service fees only. Depot cap
+changes retain hourly spending. Keep all five program-source routes and the
+actual affordability/native geography obligations from PR #38.
+<!-- s19-services:end -->

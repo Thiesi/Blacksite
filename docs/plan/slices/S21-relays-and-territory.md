@@ -210,3 +210,21 @@ capture/hold owns its fixed participation roster and reward transaction.
 Joining at payout grants no credit. Do not send relay XP through the
 generic kill/run sharing hook or pay it from a later notification.
 Membership never grants private apartment access or bypasses safety.
+
+<!-- s19-services:start -->
+### S19 source and service handoff
+
+Reference: [S19](https://github.com/Thiesi/Blacksite/issues/19),
+[source checkpoint 55da5bf](https://github.com/Thiesi/Blacksite/commit/55da5bf)
+and [PR #38](https://github.com/Thiesi/Blacksite/pull/38).
+
+S19 remains in progress. Its source/service interfaces are implemented;
+authored content, full-root/native acceptance and PR review remain pending.
+Consume them after S19 merges.
+
+Compose relay clinic discounts through Clinics.service_multiplier using the
+strongest eligible factor, not multiplication. Preserve VendorBudget.spent
+when changing its limit; vendor_budget_state is atomic meta beside the
+existing budget rows. Work-order permissions and allocations belong to their
+frozen roster, independently of relay ownership.
+<!-- s19-services:end -->

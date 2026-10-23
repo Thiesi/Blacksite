@@ -267,6 +267,19 @@ oldworks-yards`. ICE: Tripwire ×2, Glasshouse, Mirror, Kiln, Blackglass
 
 ### 3.8 Terraces
 
+**Stairwell C cabinet** (`lat-stairwell-c`): Kestrel housing maintenance,
+tier 1, three rooms, no ICE and no trace monitor. Hardware: cabinet
+beside the parcel hatch at Block 4, stairwell C in `terraces-blocks`.
+Its sole control opens that hatch for 120 seconds with a current
+mission permission. The adjacent public loan terminal reaches the
+local entrance directly. The same latch has a 5 s manual release.
+Neither controls the public housing entrance. The other rooms hold
+optional wiring and service labels, with no liftable loot or repeatable
+run reward. Both release points sit in the small sheltered stairwell
+pocket; the route through the district remains contested. This
+implements Vesper's first job without borrowing a tier 2 core or
+changing Wake training.
+
 **Private core (template)** (`lat-private-core`) — resident, tier 1 to 3, 3
 to 5 rooms. Hardware: the apartment's wall panel @ the apartment's zone slug
 (`terraces-blocks` (Block A or Block B)). Data: storage manifest; one

@@ -167,3 +167,21 @@ own durable ID; retain individual ending/ballot choices. Leave, kick,
 promotion, dissolution and service restart must not reassign ballots or
 erase checkpoints. Preserve the accepted PR #38 personal/public outcome
 and inactive later-season authoring requirements.
+
+<!-- s19-services:start -->
+### S19 source and service handoff
+
+Reference: [S19](https://github.com/Thiesi/Blacksite/issues/19),
+[source checkpoint 55da5bf](https://github.com/Thiesi/Blacksite/commit/55da5bf)
+and [PR #38](https://github.com/Thiesi/Blacksite/pull/38).
+
+S19 remains in progress. Its source/service interfaces are implemented;
+authored content, full-root/native acceptance and PR review remain pending.
+Consume them after S19 merges.
+
+Reuse the frozen consenting roster, personal branch receipts, source-
+attributed journal and scoped permits. Public telemetry reveals NPC/ICE
+routes, never players. A completed helper sees zero additional reward and
+retains the earlier personal choice. Ordinary source XP and work-order XP
+compose in one transaction; callbacks cannot pay again.
+<!-- s19-services:end -->

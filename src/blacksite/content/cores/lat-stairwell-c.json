@@ -1,0 +1,78 @@
+{
+  "schema": 1,
+  "id": "lat-stairwell-c",
+  "name": "Stairwell C cabinet",
+  "owner": "kestrel",
+  "owner_kind": "faction",
+  "tier": 1,
+  "trace_policy": "none",
+  "entry": "release",
+  "hardware": [
+    {
+      "zone": "terraces-blocks",
+      "tile": [
+        72,
+        25
+      ],
+      "object_id": "stairwell-c-hardware",
+      "label": "stairwell C cabinet"
+    }
+  ],
+  "rooms": [
+    {
+      "id": "release",
+      "label": "Parcel latch",
+      "pos": [
+        0,
+        0
+      ],
+      "neighbours": [
+        "wiring"
+      ],
+      "controls": [
+        {
+          "id": "parcel-release",
+          "label": "Release parcel hatch",
+          "target": {
+            "zone": "terraces-blocks",
+            "object": "stairwell-c-parcel-hatch"
+          },
+          "action": "open",
+          "reset_seconds": 120,
+          "scope": "mission",
+          "permission": "contract",
+          "safety_policy": "none"
+        }
+      ]
+    },
+    {
+      "id": "wiring",
+      "label": "Housing wiring",
+      "pos": [
+        1,
+        0
+      ],
+      "neighbours": [
+        "release",
+        "service"
+      ],
+      "lore": [
+        "stairwell-c-wiring"
+      ]
+    },
+    {
+      "id": "service",
+      "label": "Service label",
+      "pos": [
+        2,
+        0
+      ],
+      "neighbours": [
+        "wiring"
+      ],
+      "lore": [
+        "stairwell-c-label"
+      ]
+    }
+  ]
+}

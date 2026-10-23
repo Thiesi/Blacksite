@@ -192,3 +192,21 @@ S22 [PR #61](https://github.com/Thiesi/Blacksite/pull/61) crews dissolve
 on restart and remove deleted/disconnected members immediately; there
 is no crew table to back up. Existing frozen loot entitlements persist
 with their owning source. Preserve consistent SQLite backup semantics.
+
+<!-- s19-services:start -->
+### S19 source and service handoff
+
+Reference: [S19](https://github.com/Thiesi/Blacksite/issues/19),
+[source checkpoint 55da5bf](https://github.com/Thiesi/Blacksite/commit/55da5bf)
+and [PR #38](https://github.com/Thiesi/Blacksite/pull/38).
+
+S19 remains in progress. Its source/service interfaces are implemented;
+authored content, full-root/native acceptance and PR review remain pending.
+Consume them after S19 merges.
+
+Include contracts_state and vendor_budget_state meta in consistent
+backups/restores and audit inspection. Budget spent/limit details join the
+existing SQL rows atomically; no S19 schema-version migration is required.
+Test restore after allocation expiry and a durable reward write before
+acknowledgement.
+<!-- s19-services:end -->

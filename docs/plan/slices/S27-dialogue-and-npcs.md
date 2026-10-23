@@ -190,3 +190,21 @@ the pre-S27 E-to-recruitment fallback swallow the named NPC dialogue.
 S22 [PR #61](https://github.com/Thiesi/Blacksite/pull/61) owns live crew
 consent. Chosen NPC dialogue/admission must preserve individual choices;
 talking or joining a faction cannot silently add a crew participant.
+
+<!-- s19-services:start -->
+### S19 source and service handoff
+
+Reference: [S19](https://github.com/Thiesi/Blacksite/issues/19),
+[source checkpoint 55da5bf](https://github.com/Thiesi/Blacksite/commit/55da5bf)
+and [PR #38](https://github.com/Thiesi/Blacksite/pull/38).
+
+S19 remains in progress. Its source/service interfaces are implemented;
+authored content, full-root/native acceptance and PR review remain pending.
+Consume them after S19 merges.
+
+Show the chosen and foregone service allocation before consent. Pending
+proposals reserve no public order; roster and reservation freeze on
+committed start. A disconnect preserves progress only until the original
+deadline. Use the server-owned card and personal publication action without
+introducing a group ballot or mandatory lore read.
+<!-- s19-services:end -->

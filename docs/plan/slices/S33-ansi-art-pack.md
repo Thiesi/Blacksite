@@ -164,3 +164,20 @@ Preserve S22 [PR #61](https://github.com/Thiesi/Blacksite/pull/61)'s crew
 and beacon glyphs through the cell buffer, including compact warnings,
 wide names and the existing CP437 transport. No ASCII-only display tier.
 Native proof uses the version/source-verified installed client.
+
+<!-- s19-services:start -->
+### S19 source and service handoff
+
+Reference: [S19](https://github.com/Thiesi/Blacksite/issues/19),
+[source checkpoint 55da5bf](https://github.com/Thiesi/Blacksite/commit/55da5bf)
+and [PR #38](https://github.com/Thiesi/Blacksite/pull/38).
+
+S19 remains in progress. Its source/service interfaces are implemented;
+authored content, full-root/native acceptance and PR review remain pending.
+Consume them after S19 merges.
+
+Keep both-size width safety with wide names and all colour tiers. Contract
+objective/cost hints and header service state must stay readable alongside
+danger and escape. Public route intel, worker-only benefits and source
+claims need distinct labels; art cannot cover the operational card.
+<!-- s19-services:end -->

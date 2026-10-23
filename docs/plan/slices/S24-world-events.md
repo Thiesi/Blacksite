@@ -129,3 +129,20 @@ an announced plan cannot claim these benefits live.
 S22 [PR #61](https://github.com/Thiesi/Blacksite/pull/61) supplies live
 crew hooks. Publish committed event facts; never use an ephemeral crew
 ID as durable event participation or reward authority.
+
+<!-- s19-services:start -->
+### S19 source and service handoff
+
+Reference: [S19](https://github.com/Thiesi/Blacksite/issues/19),
+[source checkpoint 55da5bf](https://github.com/Thiesi/Blacksite/commit/55da5bf)
+and [PR #38](https://github.com/Thiesi/Blacksite/pull/38).
+
+S19 remains in progress. Its source/service interfaces are implemented;
+authored content, full-root/native acceptance and PR review remain pending.
+Consume them after S19 merges.
+
+Compose event geometry under its own source key. Service expiry removes only
+service-owned layers and preserves independent event/control state. Changing
+a price before final confirmation must refresh the quote without spending.
+Keep uptime schedules separate from UTC effect deadlines.
+<!-- s19-services:end -->

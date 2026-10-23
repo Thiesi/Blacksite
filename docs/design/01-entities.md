@@ -391,7 +391,9 @@ reward. Stages add `label`, positive `quantity` (default one) and
 `cost` (the visible action cost), optional typed `destination` for escort,
 `requires_item` (a supplied bound item consumed by plant/delivery), and
 `target_pool[]` of additional typed targets. Core-room targets can name
-their exact `data` record. Scaled NPC/item counts may
+their exact `data` record. Optional `linked_control` binds a physical
+release stage to a typed core control targeting the same object; either
+verified route completes that stage. Scaled NPC/item counts may
 reuse a template with distinct mission-owned subjects; finite spatial
 targets are selected without replacement. The completion tags are
 `carried, delivered, lifted, flipped, entered, arrived, defeated, subdued, planted,

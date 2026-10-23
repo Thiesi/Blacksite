@@ -206,3 +206,21 @@ not a second speculative future-version preset.
   with manual restoration. S28's SQLite snapshot remains the recovery
   source; do not describe a successful raw node copy as a consistent
   live-game backup. No BBS database or Link-secret access is introduced.
+
+<!-- s19-services:start -->
+### S19 source and service handoff
+
+Reference: [S19](https://github.com/Thiesi/Blacksite/issues/19),
+[source checkpoint 55da5bf](https://github.com/Thiesi/Blacksite/commit/55da5bf)
+and [PR #38](https://github.com/Thiesi/Blacksite/pull/38).
+
+S19 remains in progress. Its source/service interfaces are implemented;
+authored content, full-root/native acceptance and PR review remain pending.
+Consume them after S19 merges.
+
+Retain current installed-client version/source-tree proof, full pytest and
+actual native acceptance at both sizes. Verify
+contracts_state/vendor_budget_state restore and allocation expiry through
+the packaged service. The S19 source checkpoint is not merged or native-
+accepted yet; keep the existing NetBBS #56 baseline/preset obligations.
+<!-- s19-services:end -->
