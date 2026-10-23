@@ -861,6 +861,11 @@ with B. Owning members may also explicitly start a defence channel. These
 channels use the same opposition and Curfew pauses, earn section 3.5's
 active hold XP, and cannot recapture their own relay for another reward.
 
+A failed capture save grants no ownership or rewards. Its live claim
+retries no faster than once per second, with one failure notice until
+saving succeeds or that claim ends. Retries still require ordinary
+presence, opposition and Curfew checks; the claim clock continues normally.
+
 Influence rates are 10/hour, 30/hour in the Scour, and 20/hour at Shaft
 Relay. Carry fractional remainders; settle whole points once, stopping
 at season end. Treasury receives the same whole amount. The daily member

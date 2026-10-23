@@ -1,6 +1,6 @@
 # S21 acceptance record
 
-## Installed native proof
+## Installed native baseline
 
 The local native run uses gameplay source `0b3ffaef`, package 0.0.18,
 and NetBBS 7.31.0 checkout `d04170a`. Both callers' negotiated terminal
@@ -9,6 +9,10 @@ installed wheel. The Windows game-service connection uses loopback TCP.
 The probe checks the isolated interpreter's package version and whole
 normalized Python tree before starting; it cannot import the source
 server through `PYTHONPATH` and claim that as the installed client.
+
+This is the baseline before the review's capture-retry fix. Current
+review-fix wheel/tree hashes, repeated native proof and final checks are
+recorded in [PR #63](https://github.com/Thiesi/Blacksite/pull/63).
 
 | Evidence | Result |
 |---|---|
@@ -68,6 +72,14 @@ fix, and its cold OneDrive startup exceeded the existing 60-second Windows
 readiness deadline. The isolated CLI rerun passed in 6.49 seconds. The
 final local run uses a fresh private temporary directory; no production
 timeout was relaxed to accommodate that development-machine result.
+
+The old reused test interpreter also contained a 0.0.8 client, so final
+local subprocess checks use S21's installed 0.0.18 environment with its
+declared pytest dependency. A diagnostic confirmed slow local Windows
+client startup: no output within five seconds, then successful title,
+help and exit under a 30-second readiness deadline. The Windows pipe
+startup check and native harness use that startup allowance; subsequent
+interaction deadlines, capture time and production limits are unchanged.
 
 ## Remaining consumers and field acceptance
 

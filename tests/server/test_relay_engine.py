@@ -7,6 +7,8 @@ import pytest
 from blacksite.content.loader import load_content
 from blacksite.server.protocol import Frame
 from blacksite.server.storage.db import Storage
+from blacksite.server.clock import TICK_HZ
+from blacksite.server.relay_engine import CAPTURE_RETRY_SECONDS
 from tests.character_helpers import act, create, place
 from tests.harness import HeadlessServer
 from tests.lattice.test_engine import runners, intent, jack
@@ -51,6 +53,7 @@ def test_game_7_4_capture_durable_ownership_reward_and_failure_retry(relay_game,
     assert owner.owner('cold-chain') is None and player(game,holder).xp==before[0]
     game.commit_commerce(error=True)
     assert owner.owner('cold-chain') is None and player(game,holder).xp==before[0]
+    game.clock.advance(CAPTURE_RETRY_SECONDS*TICK_HZ)
     owner.capture(claim.id)
     effects=game.commit_commerce()
     assert owner.owner('cold-chain')=='halvard'
@@ -100,9 +103,54 @@ def test_game_7_4_committed_loss_reaches_online_faction_members_in_another_zone(
     owner.capture(claim.id)
     game.commit_commerce(error=True)
     assert not any('Your faction loses' in line['text'] for line in former_member.session.log_ring)
+    game.clock.advance(CAPTURE_RETRY_SECONDS*TICK_HZ)
     owner.capture(claim.id)
     game.commit_commerce()
     assert any('Your faction loses Cold Chain Relay' in line['text'] for line in former_member.session.log_ring)
+
+
+def test_game_7_4_repeated_save_fault_backs_off_and_notifies_once_until_success(relay_game):
+    game,holder,_,_=relay_game
+    owner=game.core.relays
+    assert CAPTURE_RETRY_SECONDS==1
+    owner.start(holder.session,'cold-chain')
+    claim=next(iter(owner.claims.active.values()))
+    claim.elapsed=claim.required
+    before=player(game,holder).xp
+    assert owner.capture(claim.id)
+    game.commit_commerce(error=True)
+    assert not owner.capture(claim.id) and not game.core.commerce.pending
+    game.step(CAPTURE_RETRY_SECONDS*TICK_HZ-1)
+    assert not game.core.commerce.pending and owner.owner('cold-chain') is None
+    game.step()
+    assert game.core.commerce.pending
+    game.commit_commerce(error=True)
+    assert sum('Capture cannot be saved' in row['text'] for row in holder.session.log_ring)==1
+    game.step(CAPTURE_RETRY_SECONDS*TICK_HZ)
+    assert game.core.commerce.pending
+    game.commit_commerce()
+    assert owner.owner('cold-chain')=='halvard' and player(game,holder).xp==before+100
+    assert not owner.capture_retry_at
+
+
+def test_game_7_4_cooled_claim_does_not_starve_another_ready_capture(relay_game):
+    game,holder,other,_=relay_game
+    owner=game.core.relays
+    owner.start(holder.session,'cold-chain')
+    first=next(iter(owner.claims.active.values()))
+    place(game,other,'terraces-blocks',(57,29))
+    owner.start(other.session,'block')
+    second=next(c for c in owner.claims.active.values() if c.relay=='block')
+    first.elapsed,second.elapsed=first.required,second.required
+    assert owner.capture(first.id)
+    game.commit_commerce(error=True)
+    game.step()
+    assert game.core.commerce.pending
+    game.commit_commerce()
+    assert owner.owner('block')=='halvard' and owner.owner('cold-chain') is None
+    owner.withdraw(holder.session.player_id)
+    game.step()
+    assert not owner.capture_retry_at
 
 
 def test_game_7_4_counter_rechecks_membership_and_committed_ownership(relay_game):

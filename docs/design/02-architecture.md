@@ -751,6 +751,9 @@ time. Successful runner control receipts bind the original named claim.
 The ledger retains exact fractional influence, ownership history for
 rent, rolling capture reward limits and daily identity payout receipts.
 Only committed, attributed captures enter its capture-fact log.
+Failed capture proposals retry after one injected-clock second, with one
+holder notice per failed claim episode. Ended claims drop the retry marker;
+another ready claim can use the writer while the first is cooling down.
 Authenticated `admin.relay.list {}` and
 `admin.relay.set {relay, faction}` use typed IDs, with `neutral` clearing
 ownership. Set acknowledges its committed source write and awards no

@@ -252,15 +252,18 @@ def test_real_module_uses_native_stdio_pipes(info: DoorInfo, minimal_environment
             stdin=asyncio.subprocess.PIPE, stdout=asyncio.subprocess.PIPE, stderr=asyncio.subprocess.PIPE)
         terminal = FakeTerminal()
 
-        async def expect(text: str) -> None:
-            async with asyncio.timeout(5):
+        async def expect(text: str, timeout: float = 5) -> None:
+            async with asyncio.timeout(timeout):
                 while text not in terminal.screen_text():
                     data = await process.stdout.read(65536)
                     if not data:
                         raise AssertionError((await process.stderr.read()).decode())
                     terminal.write(data)
         try:
-            await expect("BLACKSITE")
+            # Cold Windows venv startup exceeds five seconds on the local
+            # OneDrive checkout. A 30s diagnostic reached the title and
+            # completed help/exit; keep their latency gates at five seconds.
+            await expect("BLACKSITE", 30 if os.name == "nt" else 5)
             process.stdin.write(b"?")
             await process.stdin.drain()
             await expect("HELP")

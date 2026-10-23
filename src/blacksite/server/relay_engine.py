@@ -13,6 +13,7 @@ from blacksite.server.sessions import Session
 
 HOLD_PERIOD_SECONDS = 600  # Game 3.5: 10 XP per active ten minutes.
 INFLUENCE_CHECK_SECONDS = 60  # Checkpoint cadence; exact points use UTC.
+CAPTURE_RETRY_SECONDS = 1  # Game 7.4: one save retry per second after failure.
 
 
 class Relays:
@@ -25,6 +26,7 @@ class Relays:
         self.ledger = Ledger(state)
         self.claims = Claims()
         self.paid_holds: dict[str, int] = {}
+        self.capture_retry_at: dict[str, int] = {}
         self.last_settle = self.clock.now_tick()
         self.curfew: Callable[[str], bool] = lambda zone: core.factions.curfew(zone)  # S24's shared provider.
         self.level_open: Callable[[], bool] = lambda: False  # S26.
@@ -191,11 +193,12 @@ class Relays:
                 if effect['core'] != core or effect['expires'] is not None}
         return proposal
 
-    def capture(self, cid: str) -> None:
+    def capture(self, cid: str) -> bool:
         claim = self.claims.active.get(cid)
         if (not claim or claim.elapsed < claim.required
-                or self.owner(claim.relay) == claim.faction or self.commerce.pending):
-            return
+                or self.owner(claim.relay) == claim.faction or self.commerce.pending
+                or self.clock.now_tick() < self.capture_retry_at.get(cid, 0)):
+            return False
         draft = self.ledger.fork()
         capture = draft.capture(claim, self.now(), self.rates())
         patches, identities = {}, {}
@@ -222,6 +225,7 @@ class Relays:
         draft.state['captures'][-1]['rewarded'] = list(patches)
         def finished(success: bool) -> None:
             if success:
+                self.capture_retry_at.pop(cid, None)
                 audience = {person.player for person in capture.participants}
                 audience.update(player.id for player in self.game.players.values()
                     if player.faction == capture.faction
@@ -236,8 +240,11 @@ class Relays:
                     self.log(pid, message)
                 claim.supporters.clear()
             else:
-                self.log(claim.holder.player, 'Capture could not be saved. Your active claim may retry.')
-        self.write(draft, patches, identities, self.ownership_patch(claim.relay, claim.faction), finished)
+                first_failure = cid not in self.capture_retry_at
+                self.capture_retry_at[cid] = self.clock.now_tick()+CAPTURE_RETRY_SECONDS*TICK_HZ
+                if first_failure:
+                    self.log(claim.holder.player, 'Capture cannot be saved. Keep holding; retries follow once a second.')
+        return self.write(draft, patches, identities, self.ownership_patch(claim.relay, claim.faction), finished)
 
     def hold_xp(self) -> bool:
         for claim in self.claims.active.values():
@@ -294,6 +301,8 @@ class Relays:
         before = {c.holder.player for c in self.claims.active.values()}
         ready = self.claims.step(context.tick, conscious, present,
             {rid for rid, relay in self.content.relays.items() if self.active(rid) and self.curfew(relay.zone)})
+        self.capture_retry_at = {cid: deadline for cid, deadline in self.capture_retry_at.items()
+                                 if cid in self.claims.active}
         after = {c.holder.player for c in self.claims.active.values()}
         for pid in before-after:
             self.cancel_hold(pid)
@@ -305,8 +314,7 @@ class Relays:
         self.views.tick(context.tick)
         if not self.commerce.pending:
             for claim in ready:
-                if self.owner(claim.relay) != claim.faction:
-                    self.capture(claim.id)
+                if self.owner(claim.relay) != claim.faction and self.capture(claim.id):
                     return
             if self.hold_xp():
                 return
