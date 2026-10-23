@@ -175,7 +175,8 @@ states visibly pause the timer. The ordinary hostile-zone menu timeout
 still applies, and closing a card never pauses the world.
 
 F9 beside a public terminal opens services, including terminals that also
-host a contract board. E retains the board interaction. In services, M
+host a contract board. E retains the existing board or jack interaction.
+In services, M
 opens the market, O bounties, J the jack and C delivery collection.
 Outside menus, M remains the map, O drone commands and C chat. The market
 uses D to bid, U to buy out, L to list, M for own listings, C to collect,

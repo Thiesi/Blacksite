@@ -229,8 +229,6 @@ class Core:
             return
         if self.chat and self.chat.input(session, frame, event.data["tick"]):
             return
-        if self.market and self.market.views.terminal_input(session, frame, event.data['tick']):
-            return
         if self.lattice and self.lattice.terminal_input(session, frame, event.data["tick"]):
             return
         # Echo only the verb, never args, arbitrary chat, or private data.

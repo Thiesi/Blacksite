@@ -316,23 +316,6 @@ class Views:
             self.owner.commerce.toast(session, str(exc) if isinstance(exc,ValueError) else 'Read the current market screen.')
             return True
 
-    def terminal_input(self, session: Session, frame: Frame, tick: int) -> bool:
-        if (session.pending_prompts or session.id in self.owner.sim.external_views
-                or session.id in self.owner.game.screens or session.id in self.owner.sim.maps):
-            return False
-        name = frame.data.get('name', '') if frame.type == 'intent' else ''
-        key = frame.data.get('k', '').lower() if frame.type == 'key' else ''
-        table = next((m for m in self.owner.sim.keymap.get('keymaps', []) if m['id'] == session.keymap_id), {})
-        action = next((a for a, keys in table.get('bindings', {}).items() if frame.data.get('k') in keys), name)
-        if key != 'e' and action != 'interact':
-            return False
-        try:
-            terminal = self.owner.terminal(session)
-        except ValueError:
-            return False
-        self.menus[session.id] = Panel('terminal', terminal.spec.id, tick)
-        return True
-
     def tick(self, ctx: TickContext) -> None:
         for sid, panel in tuple(self.menus.items()):
             session = self.owner.game.sessions.active.get(sid)

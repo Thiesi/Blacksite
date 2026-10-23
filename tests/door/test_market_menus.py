@@ -166,6 +166,16 @@ def test_ui_4_f9_services_reach_board_terminal_without_replacing_map(trade_game:
     assert caller.session.id in owner.sim.maps and caller.session.id not in owner.views.menus
 
 
+def test_ui_4_existing_terminal_e_still_jacks_in(trade_game: tuple[Any, ...]) -> None:
+    game, clients, players, _, _ = trade_game
+    caller, owner = clients[0], game.core.market
+    terminal = game.core.world.zones['core-plaza'].objects['plaza-public-1'].spec
+    place(game, caller, 'core-plaza', terminal.tile)
+    act(game, caller, Frame('key', {'k': 'e', 't': 0}))
+    assert players[0].id in game.core.lattice.presences
+    assert caller.session.id not in owner.views.menus
+
+
 @pytest.mark.parametrize('size', [(80, 24), (132, 50)])
 def test_ui_4_effective_stats_seller_and_bid_are_width_safe(info: Any, trade_game: tuple[Any, ...], size: tuple[int, int]) -> None:
     game, clients, _, _, terminal = trade_game

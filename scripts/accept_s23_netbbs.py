@@ -171,7 +171,9 @@ async def run_case(probe: ContractProbe, width: int, height: int) -> dict[str, A
 
     await probe.route(buyer, 'vatside-clinics')
     bank = next(o.spec.id for o in probe.service.world.zones[buyer.avatar.zone].objects.values() if o.spec.kind == 'bank')
-    await probe.near(buyer, bank)
+    # Adjacent hardware has its own E card. Stand on the public till so
+    # the actual nearest-object interaction selects banking unambiguously.
+    await probe.walk(buyer, probe.service.world.zones[buyer.avatar.zone].objects[bank].spec.tile)
     await commit_key(probe, buyer, b'e', lambda: buyer.session.id in probe.commerce.menus)
     assert probe.commerce.menus[buyer.session.id].kind == 'bank'
     await commit_key(probe, buyer, b'c', lambda: buyer.session.id in owner.views.menus)

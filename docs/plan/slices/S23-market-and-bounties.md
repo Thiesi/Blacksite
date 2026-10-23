@@ -180,7 +180,8 @@ persistent rows, resolved by the server, with no new real-time mechanics.
 - `B` and `Esc` leave/back throughout; use `D` for bid. The old `B`
   bid hotkey conflicted with AGENTS and the client's back binding.
 - F9 opens public services beside a terminal, including a shared contract
-  board. Preserve E for the board and street M/O/C for map/drone/chat.
+  board. Preserve E for existing board/jack interaction and street M/O/C
+  for map/drone/chat.
 - Menu views contain at most 12 rows with cursor-driven paging. Operator
   list commands accept a positive `page`, default 1, with 100 records per
   page and `page/pages/total` metadata. Market operator pages include
