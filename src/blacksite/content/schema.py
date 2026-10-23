@@ -972,6 +972,7 @@ class StageTarget:
     item: str | None = None
     sector: str | None = None
     cell: str | None = None
+    data: str | None = None
 
 
 @dataclass(frozen=True)

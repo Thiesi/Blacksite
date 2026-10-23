@@ -1375,6 +1375,9 @@ class _Validator:
             core = self.t.cores[t.core]
             if t.kind == "core_room" and not any(r.id == t.room for r in core.rooms):
                 self.report(*owner, f"{what}: room {t.room!r} does not exist in {t.core}", needle)
+            if t.kind == 'core_room' and t.data is not None and not any(
+                    r.id == t.room and any(d.id == t.data for d in r.data) for r in core.rooms):
+                self.report(*owner, f"{what}: data {t.data!r} does not exist in {t.core}/{t.room}", needle)
             if t.kind == "core_control" and not any(c.id == t.control for r in core.rooms for c in r.controls):
                 self.report(*owner, f"{what}: control {t.control!r} does not exist in {t.core}", needle)
         elif t.kind == "npc":

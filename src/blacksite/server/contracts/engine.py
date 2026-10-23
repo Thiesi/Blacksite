@@ -53,7 +53,8 @@ def permit_record(raw: dict[str, Any] | None) -> Permit | None:
 
 
 def target_key(target: StageTarget) -> str:
-    return json.dumps(asdict(target), sort_keys=True, separators=(',', ':'))
+    return json.dumps({key: value for key, value in asdict(target).items() if value is not None},
+                      sort_keys=True, separators=(',', ':'))
 
 
 def matches(expected: StageTarget, actual: StageTarget) -> bool:

@@ -387,7 +387,8 @@ S19 adds `name`, `approach_label` and optional `approaches[]` of
 `id, label, stages[]`; `stages` remains the default approach. Each
 alternative has its own unique stage/receipt keys and the same frozen
 reward. Stages add `label`, positive `quantity` (default one) and
-`target_pool[]` of additional typed targets. Scaled NPC/item counts may
+`target_pool[]` of additional typed targets. Core-room targets can name
+their exact `data` record. Scaled NPC/item counts may
 reuse a template with distinct mission-owned subjects; finite spatial
 targets are selected without replacement. The completion tags are
 `carried, delivered, lifted, flipped, entered, arrived, defeated, subdued, planted,

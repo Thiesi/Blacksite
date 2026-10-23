@@ -1,6 +1,7 @@
 """Architecture 15.2: real SQLite rollback, acknowledgement loss and replay."""
 
 import json
+from copy import deepcopy
 from pathlib import Path
 import sqlite3
 from collections.abc import Iterator
@@ -112,3 +113,16 @@ def test_architecture_15_2_queued_source_uses_frozen_contract_snapshot(source) -
     store.commerce_write(prepared)
     game.core.commerce.committed(effect, True)
     assert 'later_uncommitted_change' not in installed[0]['engine']['instances'][instance.id]['runtime']
+
+
+def test_architecture_15_2_multiple_source_facts_install_only_the_final_joined_record(source) -> None:
+    game, player, store, engine, draft, instance, effect, installed, prior, queued = source
+    later = deepcopy(effect['contracts_state'])
+    later['journal'] = {player.id: {'record': {'observation': 'You inspect the gate.'}}}
+    join_state(effect, later, installed.append)
+    store.commerce_write(game.core.commerce.prepare(effect))
+    game.core.commerce.committed(effect, True)
+    assert len(installed) == 1
+    assert installed[0]['journal'] == later['journal']
+    assert store.meta('contracts_state')['journal'] == later['journal']
+    assert prior == [(True, True)] and queued == [True]
