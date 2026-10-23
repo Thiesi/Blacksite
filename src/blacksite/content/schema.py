@@ -989,6 +989,8 @@ class Stage:
     label: str = ""
     quantity: int = 1
     target_pool: tuple[StageTarget, ...] = ()
+    seconds: float = 0
+    cost: str = "No fee."
 
 
 @dataclass(frozen=True)
@@ -1052,6 +1054,7 @@ class ContractTemplate:
     approaches: tuple[ContractApproach, ...] = ()
     service: bool = False
     """A repeatable, fixed-reward public work order, not a board job."""
+    consequence: str = ""
 
 
 @dataclass(frozen=True)
@@ -1069,6 +1072,8 @@ class EvidenceRecord:
     claim: str
     related_objective: str | None = None
     schema: int = CONTENT_SCHEMA
+    question: str = ""
+    next_action: str = ""
 
 
 EffectType = Literal[

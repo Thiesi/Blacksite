@@ -49,6 +49,9 @@ def render_menu(buffer: CellBuffer, body: dict[str, Any], area: Rect, palette: P
     list_width = (area.width - 5) // 2 if right else area.width - 4
     rows = body.get("rows", [])
     available = area.height - (5 if right else 9)
+    compact_card = body.get('kind') == 'contracts' and not right
+    if compact_card:
+        available = 1
     columns = body.get("columns", [])
     label = "  ".join(str(c.get("label", c)) if isinstance(c, dict) else str(c) for c in columns)
     buffer.put(area.x + 2, area.y + 1, truncate(label, list_width), palette.style("muted"))
@@ -64,6 +67,8 @@ def render_menu(buffer: CellBuffer, body: dict[str, Any], area: Rect, palette: P
     detail = str(body.get("detail", ""))
     dx = area.x + list_width + 3 if right else area.x + 2
     dy = area.y + 1 if right else area.y + max(3, area.height - 6)
+    if compact_card:
+        dy = area.y + 4
     dw = area.width - list_width - 5 if right else area.width - 4
     for index, line in enumerate(detail.splitlines()[:max(0, area.y + area.height - 2 - dy)]):
         buffer.put(dx, dy + index, truncate(line, dw), palette.style())

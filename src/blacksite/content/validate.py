@@ -1300,6 +1300,8 @@ class _Validator:
                     self.report(*owner, "an approach needs a label and stages", approach.id)
             for stage in stages:
                 label = f"stage {stage.id}"
+                if stage.seconds < 0:
+                    self.report(*owner, f"{label}: action seconds cannot be negative", stage.id)
                 if stage.id in stage_ids:
                     self.report(*owner, f"{label}: duplicate stage id", stage.id)
                 stage_ids.add(stage.id)

@@ -166,6 +166,8 @@ class Server:
         if self.core is None or self.core.characters is None or self.storage is None:
             return
         game = self.core.characters
+        if self.core.contracts:
+            self.storage.mark_dirty('meta', 'contracts_state', self.core.contracts.record())
         if self.core.salvage:
             self.storage.mark_dirty("meta", "salvage_state", self.core.salvage.record())
         if self.core.lattice:

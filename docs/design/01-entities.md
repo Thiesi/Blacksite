@@ -387,6 +387,8 @@ S19 adds `name`, `approach_label` and optional `approaches[]` of
 `id, label, stages[]`; `stages` remains the default approach. Each
 alternative has its own unique stage/receipt keys and the same frozen
 reward. Stages add `label`, positive `quantity` (default one) and
+`seconds` (authored interruptible channel duration, default zero),
+`cost` (the visible action cost), and
 `target_pool[]` of additional typed targets. Core-room targets can name
 their exact `data` record. Scaled NPC/item counts may
 reuse a template with distinct mission-owned subjects; finite spatial
@@ -401,6 +403,10 @@ typed `binding` identifies its actual target; a publication
 branch group may omit the fixed `branch` and uses the chosen option ID.
 Fixed branches commit on confirmed acceptance; personal publication
 branches commit at the choosing participant's final action.
+`consequence` supplies the contract card's compact operational summary.
+Evidence records add `question` and `next_action`; acquisition stores the
+verified location and UTC observation time separately from the source's
+claim. Optional source prose grants no additional progress.
 
 ### 1.11 Dialogue (`dialogue/<npc>.json`)
 

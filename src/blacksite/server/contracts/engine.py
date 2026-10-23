@@ -198,6 +198,7 @@ class Instance:
     failure: str = ''
     runtime: dict[str, Any] = field(default_factory=dict)
     service: bool = False
+    season: int | None = None
 
     def record(self) -> dict[str, Any]:
         return {**asdict(self), 'stages': [stage.record() for stage in self.stages],
@@ -355,6 +356,7 @@ class Engine:
             approach, deepcopy(template.params), deepcopy(offer.options), template.branch_group,
             template.branch, template.permit_scope)
         instance.service = template.service
+        instance.season = template.season
         for participant in roster:
             if template.branch_group and template.branch and participant.rewardable:
                 self.branches[self.branch_key(participant.player, template.branch_group)] = template.branch

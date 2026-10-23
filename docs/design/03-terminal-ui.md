@@ -325,6 +325,13 @@ Inspection shows operational controls before optional source text; a
 player can execute the whole job using labels, target markers and
 progress bars. No parser, quiz or correct conversation answer exists.
 
+At 80 columns the contract menu shows one selected list row and expands
+the operational card below it. Up/down selects another record;
+`[`/`]` pages long detail. At 132 columns the list and detail sit beside
+each other. A confirmation remains bound to its chosen card even if new
+proposals arrive. A private/public turn-in shows its actual reward,
+publication audience, scoped effect and duration before the final `Y`.
+
 Work-order panels show reservation owner, stage, supplied item, target,
 public/worker allocation, recipients and expiry. The reserving player's
 choice is visible before others join. Expired or stale choices refresh
