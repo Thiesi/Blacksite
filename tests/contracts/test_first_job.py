@@ -9,7 +9,8 @@ import pytest
 from blacksite.content.loader import load_content
 from blacksite.content.validate import validate
 from blacksite.server.contracts.panels import Panel
-from tests.character_helpers import create, place
+from tests.character_helpers import act, create, place
+from blacksite.server.protocol import Frame
 from tests.harness import HeadlessServer
 from tests.lattice.test_engine import intent
 from tests.lattice.test_interlock import flip
@@ -78,10 +79,12 @@ def test_game_9_4_fresh_wake_shared_latch_delivery_and_once_only_reward(repo_roo
     game.commit_commerce()
     parcel = next(item for item in owner.commerce.items.values() if item.mission == iid)
     assert parcel.bound and parcel.owner == pid
+    assert not owner.control_permit(pid, 'lat-stairwell-c', 'parcel-release')
     place(game, caller, 'sodium-tin-halo', (8,14))
-    owner.actions.perform(caller.session, iid, owner.state.engine.instances[iid].stages[3].targets[0])
+    act(game, caller, Frame('key', {'k':'e', 't':0}))
     game.commit_commerce()
     assert owner.state.engine.instances[iid].state == 'complete'
+    assert not owner.control_permit(pid, 'lat-stairwell-c', 'parcel-release')
     chits, xp, standing = player.chits_hand, player.xp, dict(player.standing)
     owner.claim(iid, pid)
     game.commit_commerce()

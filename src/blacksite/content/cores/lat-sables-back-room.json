@@ -100,6 +100,15 @@
           "amount": 1,
           "scope": "identity",
           "respawn_seconds": 0
+        },
+        {
+          "id": "sab-red-s1-3-dark-record",
+          "label": "Copy the mission record",
+          "kind": "contract_key",
+          "asset": "sink-power-schedule",
+          "amount": 1,
+          "scope": "mission",
+          "respawn_seconds": 0
         }
       ],
       "controls": []

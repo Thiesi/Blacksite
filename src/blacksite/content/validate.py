@@ -36,6 +36,7 @@ __all__ = ["Problem", "validate", "exit_warnings", "main"]
 ZONE_WIDTH = (40, 200)
 ZONE_HEIGHT = (20, 100)
 MAX_CONTRACT_OBJECTIVE_FACTOR = 3  # Game 9.1: a five-person roster.
+CONTRACT_PLANT_SECONDS = 3  # Game 9.1: physical and core planting.
 # 00-game-design.md section 6.2: a core has 3 to 12 rooms, tier 1 to 5;
 # 01-entities.md section 1.4: tier 0 only for the Wake training core.
 CORE_ROOMS = (3, 12)
@@ -1327,6 +1328,18 @@ class _Validator:
                 label = f"stage {stage.id}"
                 if stage.seconds < 0:
                     self.report(*owner, f"{label}: action seconds cannot be negative", stage.id)
+                if stage.window_seconds < 0:
+                    self.report(*owner, f'{label}: field window cannot be negative', stage.id)
+                sequence = next((a.stages for a in con.approaches if stage in a.stages), con.stages)
+                if stage.retry_from and stage.retry_from not in [s.id for s in sequence[:sequence.index(stage)+1]]:
+                    self.report(*owner, f'{label}: retry checkpoint must be this or an earlier stage', stage.id)
+                if stage.verb == 'plant':
+                    if not stage.requires_item and not stage.target.item:
+                        self.report(*owner, f'{label}: a plant declares its supplied item', stage.id)
+                    if stage.seconds not in (0, CONTRACT_PLANT_SECONDS):
+                        self.report(*owner, f'{label}: planting takes {CONTRACT_PLANT_SECONDS} seconds', stage.id)
+                if stage.verb == 'fetch' and stage.completion == 'carried' and not stage.target.item:
+                    self.report(*owner, f'{label}: a pickup declares its supplied item', stage.id)
                 if stage.id in stage_ids:
                     self.report(*owner, f"{label}: duplicate stage id", stage.id)
                 stage_ids.add(stage.id)
@@ -1346,6 +1359,9 @@ class _Validator:
                         if c.id == stage.linked_control.control), None) if core else None
                     if control and (control.target.zone, control.target.object) != (stage.target.zone, stage.target.object):
                         self.report(*owner, f"{label}: linked control targets another physical object", stage.id)
+                    if control and (control.scope != 'mission' or control.permission != 'contract'
+                            or control.action != 'open' or control.safety_policy != 'none'):
+                        self.report(*owner, f'{label}: a linked manual release is a benign mission-scoped open', stage.id)
                 if stage.completion == 'lifted' and stage.target.kind == 'core_room' and stage.target.data is None:
                     self.report(*owner, f"{label}: a lift names its exact room data", stage.id)
                 if stage.requires_item:
@@ -1404,6 +1420,8 @@ class _Validator:
 
     def _check_target(self, owner: tuple[str, str], label: str, t: s.StageTarget, needle: str) -> None:
         what = f"{label}: target"
+        if t.item is not None and t.kind != 'item':
+            self.ref('items', t.item, owner, what+' supplied item', needle)
         if t.kind in ('item', 'npc') and t.zone is not None and self.ref('zones', t.zone, owner, what, needle):
             if t.object is not None and self.object_at(t.zone, t.object) is None and self.current_active:
                 self.report(*owner, f"{what}: object {t.object!r} does not exist in {t.zone}", needle)
@@ -1511,6 +1529,9 @@ class _Validator:
                 self.ref("evidence", arg, owner, label, name)
             elif kind == "SERVICE":
                 self.ref("services", arg, owner, label, name)
+            elif kind == 'RECEIPT' and owner[0] == 'contracts' and self.current_active:
+                if not any(job.branch_group == arg for job in self.t.contracts.values()):
+                    self.report(*owner, f'{label}: no branch group {arg!r} can supply this receipt', name)
             elif kind == "STAGE" and arg not in s.SEASON_STAGES:
                 self.report(*owner, f"{label}: {arg!r} is not one of {', '.join(s.SEASON_STAGES)}", name)
             elif kind == "BALANCE" and arg not in s.BALANCES:

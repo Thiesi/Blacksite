@@ -383,6 +383,17 @@ input actions; no text parser or answer matching. A stage declares its
 failure/retry state and receipt key. Story bundles declare all required
 maps, NPCs, dialogue, cores, items and season IDs before activation.
 
+Planting consumes a mission-bound supplied item after a 3 s physical or
+core procedure; a core plant adds 10 trace on start wherever trace
+applies. Cancellation and failed writes retain the item. A missing
+physical supply can be reissued at its earlier pickup, one carried
+replacement per worker. An earlier mission item lift can supply another
+original worker without replaying completed objectives. Benign linked
+manual releases may reopen that supply route while the active worker
+lacks the required item; this grants no future or hazardous control.
+Mission NPCs may use a named zone object as their spawn origin, so a
+future map resolves the authored location without provisional coordinates.
+
 S19 adds `name`, `approach_label` and optional `approaches[]` of
 `id, label, stages[]`; `stages` remains the default approach. Each
 alternative has its own unique stage/receipt keys and the same frozen
@@ -419,8 +430,21 @@ of a legitimate story reward. Membership changes do not revoke learning.
 Publication options can carry their own scoped `permit`, whose optional
 typed `binding` identifies its actual target; a publication
 branch group may omit the fixed `branch` and uses the chosen option ID.
+Permits default to `audience: personal`; an authored `public` audience
+publishes a fixed branch's bounded route for the node. Its accepted
+instance owns one expiry shared by all its worker payouts.
 Fixed branches commit on confirmed acceptance; personal publication
 branches commit at the choosing participant's final action.
+Contract unlock condition `receipt GROUP` requires a paid story outcome
+in that branch group; merely accepting a side is not settlement. Shared
+continuations can therefore require either outcome without forcing the
+opposite exclusive job. An opposite-branch veteran may help another
+worker with zero new payout and no changed personal choice.
+Stages may declare `window_seconds` and an earlier `retry_from` stage
+ID. Progress stores its committed `started_at` UTC. Only the current
+stage's window runs; failure restarts the declared checkpoint and clears
+its later attempt receipts, preserving earlier completed stages. The
+card discloses the window before the field leg begins.
 `consequence` supplies the contract card's compact operational summary.
 Evidence records add `question` and `next_action`; acquisition stores the
 verified location and UTC observation time separately from the source's

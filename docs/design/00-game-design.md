@@ -1221,9 +1221,16 @@ leadership does not supply another player's consent. Withdrawing stops
 that player's eligibility without cancelling another participant's job;
 the frozen count and rewards do not reroll. Retry keeps the accepted
 terms and prior completed stages, reissuing bound supplies as needed.
+Original participants can resume a withdrawn generated/story job under
+those frozen terms. They must contribute again; resumption adds no new
+participant and cannot bypass the three-job limit. Retrying an abandoned
+stage retains earlier completed stages. Work-order withdrawal is final
+for that reservation; disconnect instead retains its original deadline.
 Completed generated jobs awaiting turn-in still occupy an active slot.
 Previously rewarded story participants may assist a new participant
 without receiving another reward or rewriting their own branch.
+This check also applies at settlement when several crew members started
+parallel copies before anyone received the first payout.
 
 The initial generated-job baseline is 200 chits, 200 XP and +5 standing
 with its handler faction (Vesper has no ordinary faction delta). Scale
@@ -1248,6 +1255,12 @@ committed branch choice is not. Required loan items can be reissued,
 bound and without a sale value. NPC escorts reset without removing the
 public handler. No seasonal chain requires logging in at 04:12 or waiting
 through multiple real Curfews; stored cycle logs satisfy those surveys.
+Boards use distinct templates before repeating a small pool. Vesper's
+board keeps one of its own commissions and brokers the non-member
+faction pool in its other slots. Generated jobs may be returned at the
+Tin Halo or their commissioning faction's board; their standing reward
+still belongs to the commissioning faction. Story referrals retain their
+separate dialogue and prerequisite checks.
 
 ### 9.2 Evidence, custody, and intrigue
 
@@ -1317,6 +1330,17 @@ universal morality scores. The clinic preserves people but logs them;
 the shield preserves their location but forgoes medical evaluation.
 Their records describe those consequences without asserting what a
 person ought to choose. The ration fork is `kes-s1-2` in the season arc.
+The shield's public route record shows the local Old Works NPC patrol
+for 20 minutes from settlement, using the same bounded window as the
+ration publication. It reveals no caller location. Willing templates
+enter shelter within their squat before the supplied field rig is
+planted; this does not relocate them to the clinic.
+The Ferrymen's north-spoke recovery launches at the landing council
+fire and allows 180 seconds to collect the bound salvage. It uses a
+recorded Ring-fall recovery window, without waiting for a live event.
+A missed window restarts at that launch checkpoint without a fee;
+returning recovered salvage has no deadline. This retains a timed field
+challenge while keeping the story available during ordinary sessions.
 
 ### 9.5 Content readiness
 

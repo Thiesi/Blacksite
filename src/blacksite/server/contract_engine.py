@@ -6,7 +6,7 @@ from dataclasses import dataclass, field, replace
 from math import ceil
 from typing import Any
 
-from blacksite.content.schema import ContractTemplate, Stage, StageTarget
+from blacksite.content.schema import ContractTemplate, DataSpec, Stage, StageTarget
 from blacksite.server.clock import TICK_HZ
 from blacksite.server.contracts.engine import Fact, Instance, Offer, Participant, Payout, Progress, matches, target_record
 from blacksite.server.contracts.ledger import Ledger
@@ -55,6 +55,10 @@ class Contracts:
         self.scenes = Scenes(self)
         from blacksite.server.contracts.actions import Actions
         self.actions = Actions(self)
+        self.lat.encounters.contract_rows = self.actions.core_rows
+        self.lat.encounters.start_contract_plant = self.actions.start_plant
+        self.lat.encounters.finish_contract_plant = self.actions.finish_plant
+        self.lat.encounters.inspect_contract = self.actions.inspect_presence
         from blacksite.server.contracts.effects import ServiceEffects
         self.effects = ServiceEffects(self)
         clinic_fee = self.progression.clinics.service_multiplier
@@ -117,15 +121,19 @@ class Contracts:
             from blacksite.server.npcs.templates import SUBDUE_SECONDS, SUBDUE_SHOCK
             restraint = stage.verb == 'clear' and stage.resolution == 'subdue'
             seconds = self.duration(session.player_id, stage)
-            cost = f'{SUBDUE_SHOCK} shock' if restraint else stage.cost
+            cost = f'{SUBDUE_SHOCK} shock' if restraint else self.action_cost(stage)
             body['objective'] = {'next_action': stage.label or stage.verb,
                 'cost': f'{seconds:g}s {cost}', 'progress': f'{sum(progress.counts.values())}/{len(progress.targets)}',
                 'target': stage.target.object or stage.target.npc or stage.target.data or stage.target.core or stage.target.zone,
                 'retry': stage.retry}
+            window = ''
+            if stage.window_seconds and progress.started_at is not None:
+                window = f'{max(0, ceil(progress.started_at+stage.window_seconds-self.now()))}s left | '
+                body['objective']['cost'] = window+body['objective']['cost']
             if 'viewport' in body:
                 body['objective']['compact_hint'] = True
                 if not body.get('me', {}).get('channel'):
-                    body['hint'] = f"Next: {stage.label or stage.verb} {body['objective']['progress']} | {seconds:g}s {cost} | E act Q jobs"
+                    body['hint'] = f"{window}Next: {stage.label or stage.verb} {body['objective']['progress']} | {seconds:g}s {cost} | E act Q jobs"
         if actor:
             for sid, node in self.state.services.nodes.items():
                 template = self.content.services[sid]
@@ -141,6 +149,9 @@ class Contracts:
 
     def duration(self, player: str, stage: Stage) -> float:
         presence = self.lat.presences.get(player)
+        if stage.verb == 'plant':
+            from blacksite.server.contracts.actions import PLANT_SECONDS
+            return PLANT_SECONDS
         if stage.linked_control and presence and presence.core == stage.linked_control.core:
             from blacksite.server.interlock import FLIP_SECONDS
             return FLIP_SECONDS
@@ -156,6 +167,13 @@ class Contracts:
             multiplier = float(ledger.effect.params['lift_multiplier']) if presence and 'prg_ledger' in presence.rig else 1
             return LIFT_SECONDS*multiplier
         return stage.seconds
+
+    @staticmethod
+    def action_cost(stage: Stage) -> str:
+        if stage.verb == 'plant' and stage.target.kind == 'core_room':
+            from blacksite.server.contracts.actions import PLANT_TRACE
+            return f'{PLANT_TRACE} trace where applicable; '+stage.cost
+        return stage.cost
 
     def log(self, pid: str, text: str) -> None:
         session = self.game.combat.session(pid)
@@ -352,19 +370,37 @@ class Contracts:
                     and (instance.expires_at is None or self.now() < instance.expires_at)):
                 yield instance, instance.stages[instance.index]
 
+    def mission_data(self, instance: Instance, target: StageTarget) -> DataSpec | None:
+        if target.kind == 'core_room':
+            core = self.content.cores.get(target.core)
+            return next((data for room in core.rooms if room.id == target.room
+                         for data in room.data if data.id == target.data), None) if core else None
+        if target.kind == 'silt_data':
+            return next((data for data in self.content.contracts[instance.template].mission_data
+                         if data.id == target.data), None)
+        return None
+
     def mission_of(self, player: str, data: str) -> str | None:
         presence = self.lat.presences.get(player)
         if not presence:
             return None
-        for instance, progress in self.current_jobs(player):
-            if any(target.data == data and (
-                    target.kind == 'core_room' and not presence.descent
-                    and target.core == presence.core and target.room == presence.room
-                    or target.kind == 'silt_data' and presence.descent
-                    and target.sector == presence.sector
-                    and target.band == self.content.silt.bands[presence.depth].id)
-                    for target in progress.targets):
-                return f'{instance.id}:{progress.stage.id}:{progress.attempt}'
+        for instance, current in self.current_jobs(player):
+            candidates = [current]
+            need = self.actions.required(current.stage)
+            if need:
+                candidates += [old for old in instance.stages[:instance.index]
+                    if old.stage.input == 'lift' and any(
+                        (record := self.mission_data(instance, target)) and record.scope == 'mission'
+                        and record.kind == 'item' and record.asset == need for target in old.targets)]
+            for progress in candidates:
+                if any(target.data == data and (
+                        target.kind == 'core_room' and not presence.descent
+                        and target.core == presence.core and target.room == presence.room
+                        or target.kind == 'silt_data' and presence.descent
+                        and target.sector == presence.sector
+                        and target.band == self.content.silt.bands[presence.depth].id)
+                        for target in progress.targets):
+                    return f'{instance.id}:{progress.stage.id}:{progress.attempt}'
         return None
 
     def control_permit(self, player: str, core: str, control: str) -> bool:
@@ -373,9 +409,19 @@ class Contracts:
         if self.state.permits_target(player, 'maintenance_credential',
                 StageTarget('core_control', core=core, control=control), self.now()):
             return True
-        return any(target.kind == 'core_control' and target.core == core and target.control == control
-            for _, progress in self.current_jobs(player)
-            for target in (*progress.targets, *((progress.stage.linked_control,) if progress.stage.linked_control else ())))
+        for instance, progress in self.current_jobs(player):
+            targets = [*progress.targets]
+            if progress.stage.linked_control:
+                targets.append(progress.stage.linked_control)
+            need = self.actions.required(progress.stage)
+            if need and not self.actions.carried(self.game.players[player], instance.id, need):
+                # Earlier benign manual-release controls may reopen the
+                # supply route. Other completed controls grant no lease.
+                targets += [old.stage.linked_control for old in instance.stages[:instance.index]
+                            if old.stage.linked_control]
+            if any(t.kind == 'core_control' and (t.core, t.control) == (core, control) for t in targets):
+                return True
+        return False
 
     def network_fact(self, effect: dict[str, Any], player: str, target: StageTarget,
                      completion: str, receipt: str) -> tuple[str, ...]:
@@ -401,20 +447,21 @@ class Contracts:
         if not presence.core or not presence.room:
             return
         target = StageTarget('core_room', core=presence.core, room=presence.room)
-        if not any(progress.stage.completion == 'entered' and any(matches(t, target) for t in progress.targets)
-                   for _, progress in self.current_jobs(presence.player_id)):
+        facts = [Fact(presence.player_id, progress.stage.verb, 'entered', target,
+            f'{target.core}:{target.room}', f'{instance.id}:{progress.stage.id}:{progress.attempt}:entered:{target.room}',
+            instance=instance.id, stage=progress.stage.id, attempt=progress.attempt)
+            for instance, progress in self.current_jobs(presence.player_id)
+            if progress.stage.completion == 'entered' and any(matches(t, target) for t in progress.targets)]
+        if not facts:
             return
         def propose() -> None:
             # No write for ordinary exploration without a matching objective.
             draft = self.state.fork()
-            for instance, progress in self.current_jobs(presence.player_id):
-                if progress.stage.completion != 'entered' or not any(matches(t, target) for t in progress.targets):
-                    continue
-                if draft.observe(Fact(presence.player_id, progress.stage.verb, 'entered', target,
-                    f'{target.core}:{target.room}', f'{instance.id}:{progress.stage.id}:entered',
-                    instance=instance.id, stage=progress.stage.id, attempt=progress.attempt), self.now()):
-                    self.write(draft)
-                break
+            changed = False
+            for fact in facts:
+                changed = bool(self.observe(draft, fact)) or changed
+            if changed:
+                self.write(draft)
         self.commerce.enqueue_system(propose)
 
     def npc_fact(self, effect: dict[str, Any], source: Any, actor: Any, resolution: str) -> tuple[str, ...]:
@@ -459,7 +506,7 @@ class Contracts:
     def requirements(self, pid: str, template: ContractTemplate) -> tuple[str, ...]:
         """Read current authoritative facts before a proposal and its start."""
         player = self.game.players[pid]
-        if template.story and template.id in self.state.engine.completed.get(pid, set()):
+        if self.state.engine.helper_for(template, pid):
             return ()  # A previously paid helper need not grind entry standing again.
         missing = []
         if player.grade < template.min_grade:
@@ -483,6 +530,9 @@ class Contracts:
             elif name == 'has_item': ready = args[0] in carried
             elif name == 'has_evidence': ready = args[0] in self.state.journal.get(pid, {})
             elif name == 'completed_contract': ready = args[0] in self.state.engine.completed.get(pid, set())
+            elif name == 'receipt':
+                ready = any((done := self.content.contracts.get(tid)) and done.branch_group == args[0]
+                            for tid in self.state.engine.completed.get(pid, set()))
             elif name == 'has_contract': ready = args[0] in assigned
             elif name == 'service_state':
                 node = self.state.services.nodes.get(args[0])
@@ -553,6 +603,8 @@ class Contracts:
     def retry(self, draft: Ledger, iid: str, player: str) -> None:
         instance = draft.engine.instances[iid]
         if instance.service:
+            if player in instance.withdrawn:
+                raise ValueError('Work-order withdrawal is final for this reservation. Read the current board.')
             node = draft.services.nodes[instance.runtime['service']]
             if node.state != 'repairing' or node.order != instance.offer:
                 raise ValueError('That reservation ended. Read the current work order.')
@@ -635,6 +687,9 @@ class Contracts:
         draft = self.state.fork()
         payouts = draft.claim(iid, player, self.now(), option, tuple(self.game.deleting))
         if not payouts:
+            if draft.engine.revision != self.state.engine.revision:
+                self.write(draft, callback=lambda success: self.log(player,
+                    'This copy closes without another payout.' if success else 'The close could not be saved. Try again.'))
             return
         patches, identities, items, serial = self.reward(draft, iid, payouts)
         def committed(success: bool) -> None:

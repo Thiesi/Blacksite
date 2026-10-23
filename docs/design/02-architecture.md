@@ -749,6 +749,11 @@ own visible cells. The source site stays stable across layout seeds;
 the verified lift adds the exact mission custody. No client supplies
 a generated room address as authority. An inactive chain adds neither
 an offer nor a Silt source.
+In the Lattice, E inspects the server's current public
+cell or normal core room for accepted survey objectives, without an
+extra channel or cooldown. Capture the objective attempt and location
+before queuing its atomic receipt; later acceptance cannot count an
+earlier inspection. Movement discovery remains a separate S16 receipt.
 Actual nearby guards from S22's participation window may contribute to
 a source action; the contract ledger still filters its frozen roster.
 One final action may award ordinary run XP and fixed work-order XP;
@@ -797,6 +802,19 @@ safe checkpoint. Service reservation, allocation, public control expiry,
 relay ownership and season/event overlays remain separate fields so
 removing one layer cannot undo another. Their composed map must preserve
 essential services, outward travel and safe-zone immunity.
+
+Story settlement rechecks the character's completed-template receipt,
+including parallel crew copies accepted before the first payout. A
+second completed copy closes with zero reward in a durable transaction;
+failed closure retains the old state. Historical paid publication cards
+quote their recorded option. Original workers may explicitly resume
+generated/story participation without resetting another worker's progress
+or changing frozen terms; withdrawals discard prior participation credit.
+Work orders retain their separate reservation/withdrawal rules.
+Typed permits default to personal custody. An explicit public audience
+also supports a fixed story branch's bounded public route record. All
+workers in that accepted instance share one expiry; another payout
+cannot extend it. Fixed branch consent remains personal at acceptance.
 
 ### 15.3 Delivery boundaries
 

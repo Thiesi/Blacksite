@@ -1,6 +1,7 @@
 """Game 9.3: actual scoped bodies, source-owned defeats and escort receipts."""
 
 from dataclasses import replace
+from typing import Any
 
 from blacksite.content.schema import StageTarget
 from blacksite.server.contracts.engine import Engine
@@ -10,6 +11,48 @@ from blacksite.server.world.sight import private_visible
 from tests.character_helpers import create, place
 from tests.contracts.test_engine import template
 from tests.npcs.test_engine import city, body
+
+
+def test_game_9_3_mission_bodies_spawn_at_named_anchor_instead_of_zone_entry(city: tuple[Any, ...]) -> None:
+    game, caller = city
+    owner = game.core.contracts
+    zone = owner.world.zones['vatside-clinics']
+    anchor = next(obj for obj in zone.objects.values() if obj.spec.kind == 'vendor')
+    base = template('anchored-scene', story=True)
+    target = StageTarget('npc', zone=zone.id, object=anchor.spec.id, npc='npc-maintenance-drone')
+    job = replace(base, stages=(replace(base.stages[0], target=target, quantity=1),))
+    owner.content.contracts[job.id] = job
+    owner.state.engine.templates[job.id] = job
+    draft = owner.state.fork()
+    instance = draft.engine.accept(draft.engine.story_offer(job.id, caller.session.player_id),
+                                  (owner.participant(caller.session.player_id),), owner.now())
+    owner.write(draft)
+    game.commit_commerce()
+    owner.scenes.reconcile()
+    actor = next(a for a in owner.world.actors.values() if a.behaviour.get('mission') == instance.id)
+    assert actor.behaviour['home'] == anchor.spec.tile
+    assert actor.behaviour['home'] != zone.template.meta.spawn
+
+
+def test_game_9_3_repeated_escort_action_assigns_all_four_willing_group_members(city: tuple[Any, ...]) -> None:
+    game, caller = city
+    owner, iid, actors = mission(city, verb='escort', quantity=4)
+    # Isolate assigning the group; walking/arrival is covered separately.
+    source = body(game, caller)
+    zone = owner.world.zones[source.zone]
+    for actor in actors:
+        owner.world.leave(actor)
+    nearby = [(source.x+dx, source.y+dy) for dx in (-1,0,1) for dy in (-1,0,1)
+              if (dx,dy) != (0,0) and zone.passable((source.x+dx,source.y+dy))
+              and not any(a.position == (source.x+dx,source.y+dy) for a in zone.actors.values())]
+    assert len(nearby) >= len(actors)
+    for actor, tile in zip(actors, nearby):
+        owner.world.enter(actor, source.zone, tile)
+    for _ in range(4):
+        assert owner.actions.interact_npc(caller.session, iid)
+        game.commit_commerce()
+    assert all(actor.behaviour.get('escort') == caller.session.player_id for actor in actors)
+    assert not owner.commerce.pending
 
 
 def mission(city, *, verb='clear', resolution='lethal', quantity=1, roster=None):

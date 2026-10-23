@@ -58,3 +58,16 @@ def test_game_9_3_paid_story_helper_can_assist_without_repeating_standing_grind(
     game.commit_commerce()
     instance = next(iter(owner.state.engine.instances.values()))
     assert instance.roster[0].rewardable and not instance.roster[1].rewardable
+
+
+def test_game_9_3_settled_branch_receipt_unlocks_continuation_but_acceptance_alone_does_not(live: tuple[Any, ...]) -> None:
+    game, owner, callers, players = live
+    first = template('first-branch', story=True, branch_group='walked-example', branch='clinic')
+    next_job = template('after-either-branch', story=True, unlock_conditions=('receipt walked-example',))
+    for spec in (first,next_job):
+        owner.content.contracts[spec.id] = spec
+        owner.state.engine.templates[spec.id] = spec
+    owner.state.engine.branches[owner.state.engine.branch_key(players[0].id, first.branch_group)] = 'clinic'
+    assert owner.requirements(players[0].id, next_job) == ('receipt walked-example',)
+    owner.state.engine.completed[players[0].id] = {first.id}
+    assert owner.requirements(players[0].id, next_job) == ()

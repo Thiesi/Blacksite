@@ -99,6 +99,3486 @@
       "unlock_conditions": [
         "has_item story_vesper_card"
       ]
+    },
+    {
+      "id": "vesper-local-fetch",
+      "name": "Sealed local delivery",
+      "faction": "vesper",
+      "type": "fetch",
+      "stages": [
+        {
+          "id": "collect",
+          "verb": "fetch",
+          "target": {
+            "kind": "item",
+            "zone": "core-plaza",
+            "object": "civic-notice-board",
+            "item": "job_sealed_parcel"
+          },
+          "input": "carry",
+          "completion": "carried",
+          "receipt_key": "vesper-local-fetch:collect",
+          "label": "Collect the bound supply"
+        },
+        {
+          "id": "deliver",
+          "verb": "fetch",
+          "target": {
+            "kind": "item",
+            "zone": "core-precinct",
+            "object": "bounty-desk",
+            "item": "job_sealed_parcel"
+          },
+          "input": "carry",
+          "completion": "delivered",
+          "receipt_key": "vesper-local-fetch:deliver",
+          "label": "Carry the bound parcel to the labelled counter",
+          "requires_item": "job_sealed_parcel"
+        }
+      ],
+      "reward": {
+        "chits": [
+          200,
+          200
+        ],
+        "xp": 200,
+        "standing": {},
+        "standing_mode": "propagate"
+      },
+      "consequence": "Bound mission supplies have no sale value. Other callers cannot take your mission targets."
+    },
+    {
+      "id": "vesper-local-hack",
+      "name": "Audit the local cabinet",
+      "faction": "vesper",
+      "type": "hack",
+      "stages": [
+        {
+          "id": "audit",
+          "verb": "hack",
+          "target": {
+            "kind": "core_room",
+            "core": "lat-civic-ledger",
+            "room": "r-entry"
+          },
+          "input": "enter",
+          "completion": "entered",
+          "receipt_key": "vesper-local-hack:audit",
+          "label": "Enter the selected cabinet rooms",
+          "target_pool": [
+            {
+              "kind": "core_room",
+              "core": "lat-civic-ledger",
+              "room": "r-foyer"
+            },
+            {
+              "kind": "core_room",
+              "core": "lat-civic-ledger",
+              "room": "r-records"
+            }
+          ]
+        }
+      ],
+      "reward": {
+        "chits": [
+          200,
+          200
+        ],
+        "xp": 200,
+        "standing": {},
+        "standing_mode": "propagate"
+      },
+      "consequence": "Bound mission supplies have no sale value. Other callers cannot take your mission targets."
+    },
+    {
+      "id": "vesper-local-escort",
+      "name": "Walk the local courier",
+      "faction": "vesper",
+      "type": "escort",
+      "stages": [
+        {
+          "id": "walk",
+          "verb": "escort",
+          "target": {
+            "kind": "npc",
+            "zone": "vatside-clinics",
+            "object": "clinic-public-west",
+            "npc": "npc-courier"
+          },
+          "input": "interact",
+          "completion": "arrived",
+          "receipt_key": "vesper-local-escort:walk",
+          "label": "E beside each willing courier; walk to the labelled counter",
+          "destination": {
+            "kind": "zone_object",
+            "zone": "vatside-wake-hall",
+            "object": "vantongeren-desk"
+          }
+        }
+      ],
+      "reward": {
+        "chits": [
+          200,
+          200
+        ],
+        "xp": 200,
+        "standing": {},
+        "standing_mode": "propagate"
+      },
+      "consequence": "Bound mission supplies have no sale value. Other callers cannot take your mission targets."
+    },
+    {
+      "id": "vesper-local-clear",
+      "name": "Clear the service approach",
+      "faction": "vesper",
+      "type": "clear",
+      "stages": [
+        {
+          "id": "clear",
+          "verb": "clear",
+          "target": {
+            "kind": "npc",
+            "zone": "terraces-blocks",
+            "object": "letting-office",
+            "npc": "npc-maintenance-drone"
+          },
+          "input": "interact",
+          "completion": "defeated",
+          "receipt_key": "vesper-local-clear:clear",
+          "label": "Clear the mission drones on the contested service approach",
+          "quantity": 3,
+          "resolution": "lethal"
+        }
+      ],
+      "reward": {
+        "chits": [
+          200,
+          200
+        ],
+        "xp": 200,
+        "standing": {},
+        "standing_mode": "propagate"
+      },
+      "consequence": "Bound mission supplies have no sale value. Other callers cannot take your mission targets."
+    },
+    {
+      "id": "vesper-local-plant",
+      "name": "Mark the service approaches",
+      "faction": "vesper",
+      "type": "plant",
+      "stages": [
+        {
+          "id": "collect",
+          "verb": "fetch",
+          "target": {
+            "kind": "item",
+            "zone": "terraces-blocks",
+            "object": "letting-office",
+            "item": "job_route_marker"
+          },
+          "input": "carry",
+          "completion": "carried",
+          "receipt_key": "vesper-local-plant:collect",
+          "label": "Collect the bound supply"
+        },
+        {
+          "id": "plant",
+          "verb": "plant",
+          "target": {
+            "kind": "zone_object",
+            "zone": "terraces-lobby",
+            "object": "lobby-concierge"
+          },
+          "input": "channel",
+          "completion": "planted",
+          "receipt_key": "vesper-local-plant:plant",
+          "label": "Plant the supplied unit",
+          "seconds": 3,
+          "requires_item": "job_route_marker",
+          "target_pool": [
+            {
+              "kind": "zone_object",
+              "zone": "terraces-blocks",
+              "object": "letting-office"
+            },
+            {
+              "kind": "zone_object",
+              "zone": "sodium-tin-halo",
+              "object": "halo-contract-board"
+            }
+          ]
+        }
+      ],
+      "reward": {
+        "chits": [
+          200,
+          200
+        ],
+        "xp": 200,
+        "standing": {},
+        "standing_mode": "propagate"
+      },
+      "consequence": "Bound mission supplies have no sale value. Other callers cannot take your mission targets."
+    },
+    {
+      "id": "vesper-local-survey",
+      "name": "Read the three notice seals",
+      "faction": "vesper",
+      "type": "survey",
+      "stages": [
+        {
+          "id": "read",
+          "verb": "survey",
+          "target": {
+            "kind": "zone_object",
+            "zone": "vatside-clinics",
+            "object": "clinic-public-west"
+          },
+          "input": "inspect",
+          "completion": "recorded",
+          "receipt_key": "vesper-local-survey:read",
+          "label": "Inspect the selected notice seals",
+          "target_pool": [
+            {
+              "kind": "zone_object",
+              "zone": "vatside-wake-hall",
+              "object": "vantongeren-desk"
+            },
+            {
+              "kind": "zone_object",
+              "zone": "sodium-tin-halo",
+              "object": "halo-contract-board"
+            }
+          ]
+        }
+      ],
+      "reward": {
+        "chits": [
+          200,
+          200
+        ],
+        "xp": 200,
+        "standing": {},
+        "standing_mode": "propagate"
+      },
+      "consequence": "Bound mission supplies have no sale value. Other callers cannot take your mission targets."
+    },
+    {
+      "id": "hal-s1-1-recovery",
+      "name": "Warm telemetry",
+      "faction": "halvard",
+      "type": "fetch",
+      "story": true,
+      "season": 1,
+      "crew_scaling": false,
+      "chain": "hal-s1-1-recovery",
+      "reward": {
+        "chits": [
+          200,
+          200
+        ],
+        "xp": 200,
+        "standing": {},
+        "standing_mode": "explicit"
+      },
+      "stages": [
+        {
+          "id": "collect",
+          "verb": "fetch",
+          "target": {
+            "kind": "item",
+            "zone": "scour-ring-2",
+            "object": "north-telemetry",
+            "item": "story_telemetry_unit_warm"
+          },
+          "input": "carry",
+          "completion": "carried",
+          "receipt_key": "hal-s1-1-recovery:collect",
+          "label": "Collect the bound supply"
+        },
+        {
+          "id": "deliver",
+          "verb": "fetch",
+          "target": {
+            "kind": "item",
+            "zone": "spire-atrium",
+            "object": "maartens-desk",
+            "item": "story_telemetry_unit_warm"
+          },
+          "input": "carry",
+          "completion": "delivered",
+          "receipt_key": "hal-s1-1-recovery:deliver",
+          "label": "Carry the bound parcel to the labelled counter",
+          "requires_item": "story_telemetry_unit_warm"
+        }
+      ],
+      "unlock_conditions": [
+        "standing_at_least halvard 0"
+      ],
+      "consequence": "Your accepted mission and evidence stay personal. Public effects, if listed, expire visibly.",
+      "evidence_assets": [
+        "s19-hal-s1-1-recovery"
+      ]
+    },
+    {
+      "id": "hal-s1-2-audit",
+      "name": "The routing dates",
+      "faction": "halvard",
+      "type": "hack",
+      "story": true,
+      "season": 1,
+      "crew_scaling": false,
+      "chain": "hal-s1-1-recovery",
+      "reward": {
+        "chits": [
+          200,
+          200
+        ],
+        "xp": 200,
+        "standing": {},
+        "standing_mode": "explicit"
+      },
+      "stages": [
+        {
+          "id": "copy",
+          "verb": "hack",
+          "target": {
+            "kind": "core_room",
+            "core": "lat-depot-control",
+            "room": "room-2",
+            "data": "hal-s1-2-audit-record"
+          },
+          "input": "lift",
+          "completion": "lifted",
+          "receipt_key": "hal-s1-2-audit:copy",
+          "label": "Copy the mission record"
+        }
+      ],
+      "unlock_conditions": [
+        "standing_at_least halvard 10",
+        "completed_contract hal-s1-1-recovery"
+      ],
+      "consequence": "Your accepted mission and evidence stay personal. Public effects, if listed, expire visibly.",
+      "evidence_assets": [
+        "routing-audit-y0",
+        "s19-hal-s1-2-audit"
+      ]
+    },
+    {
+      "id": "hal-s1-3-plug",
+      "name": "A warm seal",
+      "faction": "halvard",
+      "type": "plant",
+      "story": true,
+      "season": 1,
+      "crew_scaling": false,
+      "chain": "hal-s1-1-recovery",
+      "reward": {
+        "chits": [
+          200,
+          200
+        ],
+        "xp": 200,
+        "standing": {},
+        "standing_mode": "explicit"
+      },
+      "stages": [
+        {
+          "id": "collect",
+          "verb": "fetch",
+          "target": {
+            "kind": "item",
+            "zone": "spire-atrium",
+            "object": "maartens-desk",
+            "item": "story_halvard_seal_beacon"
+          },
+          "input": "carry",
+          "completion": "carried",
+          "receipt_key": "hal-s1-3-plug:collect",
+          "label": "Collect the bound supply"
+        },
+        {
+          "id": "plant",
+          "verb": "plant",
+          "target": {
+            "kind": "core_room",
+            "core": "lat-outworks-seal",
+            "room": "shaft-monitor"
+          },
+          "input": "channel",
+          "completion": "planted",
+          "receipt_key": "hal-s1-3-plug:plant",
+          "label": "Plant the supplied unit",
+          "seconds": 3,
+          "requires_item": "story_halvard_seal_beacon"
+        }
+      ],
+      "unlock_conditions": [
+        "standing_at_least halvard 10",
+        "completed_contract hal-s1-2-audit"
+      ],
+      "consequence": "Your accepted mission and evidence stay personal. Public effects, if listed, expire visibly.",
+      "evidence_assets": [
+        "s19-hal-s1-3-plug"
+      ]
+    },
+    {
+      "id": "hal-s1-4-descend",
+      "name": "The unlisted door",
+      "faction": "halvard",
+      "type": "survey",
+      "story": true,
+      "season": 1,
+      "crew_scaling": false,
+      "chain": "hal-s1-1-recovery",
+      "reward": {
+        "chits": [
+          200,
+          200
+        ],
+        "xp": 200,
+        "standing": {
+          "halvard": 10
+        },
+        "standing_mode": "explicit"
+      },
+      "stages": [
+        {
+          "id": "inspect",
+          "verb": "survey",
+          "target": {
+            "kind": "zone_object",
+            "zone": "under-outworks",
+            "object": "east-door-frame"
+          },
+          "input": "inspect",
+          "completion": "observed",
+          "receipt_key": "hal-s1-4-descend:inspect",
+          "label": "Inspect the east door and its pour marks",
+          "quantity": 3,
+          "target_pool": [
+            {
+              "kind": "zone_object",
+              "zone": "under-outworks",
+              "object": "east-door-pour-plan"
+            },
+            {
+              "kind": "zone_object",
+              "zone": "under-outworks",
+              "object": "east-door-hinge"
+            }
+          ]
+        }
+      ],
+      "unlock_conditions": [
+        "standing_at_least halvard 10",
+        "completed_contract hal-s1-3-plug"
+      ],
+      "consequence": "Your accepted mission and evidence stay personal. Public effects, if listed, expire visibly.",
+      "evidence_assets": [
+        "s19-hal-s1-4-descend"
+      ]
+    },
+    {
+      "id": "sab-s1-1-retrieval",
+      "name": "The clinic records",
+      "faction": "sablier",
+      "type": "escort",
+      "story": true,
+      "season": 1,
+      "crew_scaling": false,
+      "chain": "sab-s1-1-retrieval",
+      "reward": {
+        "chits": [
+          400,
+          400
+        ],
+        "xp": 200,
+        "standing": {
+          "sablier": 15,
+          "unmoored": -10
+        },
+        "standing_mode": "explicit"
+      },
+      "stages": [
+        {
+          "id": "walk",
+          "verb": "escort",
+          "target": {
+            "kind": "npc",
+            "zone": "oldworks-main",
+            "object": "vat-nine-squat",
+            "npc": "npc-walked-template"
+          },
+          "input": "interact",
+          "completion": "arrived",
+          "receipt_key": "sab-s1-1-retrieval:walk",
+          "label": "E beside each willing template; walk to the clinic",
+          "quantity": 4,
+          "destination": {
+            "kind": "zone_object",
+            "zone": "vatside-clinics",
+            "object": "sablier-main-clinic"
+          }
+        }
+      ],
+      "unlock_conditions": [
+        "standing_at_least sablier 0"
+      ],
+      "consequence": "Four willing templates receive care. Sablier logs their recall tags. 400 chits; Sablier +15, Unmoored -10. Shielding is your other branch.",
+      "branch_group": "walked-templates-s1",
+      "branch": "clinic",
+      "evidence_assets": [
+        "s19-sab-s1-1-retrieval"
+      ]
+    },
+    {
+      "id": "sab-s1-2-provenance",
+      "name": "The missing origin",
+      "faction": "sablier",
+      "type": "hack",
+      "story": true,
+      "season": 1,
+      "crew_scaling": false,
+      "chain": "sab-s1-1-retrieval",
+      "reward": {
+        "chits": [
+          200,
+          200
+        ],
+        "xp": 200,
+        "standing": {},
+        "standing_mode": "explicit"
+      },
+      "stages": [
+        {
+          "id": "copy",
+          "verb": "hack",
+          "target": {
+            "kind": "core_room",
+            "core": "lat-vatline",
+            "room": "room-6",
+            "data": "sab-s1-2-provenance-record"
+          },
+          "input": "lift",
+          "completion": "lifted",
+          "receipt_key": "sab-s1-2-provenance:copy",
+          "label": "Copy the mission record"
+        }
+      ],
+      "unlock_conditions": [
+        "standing_at_least sablier 10",
+        "receipt walked-templates-s1"
+      ],
+      "consequence": "Your accepted mission and evidence stay personal. Public effects, if listed, expire visibly.",
+      "evidence_assets": [
+        "template-lineage",
+        "s19-sab-s1-2-provenance"
+      ]
+    },
+    {
+      "id": "sab-s1-3-dreaming",
+      "name": "Okafor walks",
+      "faction": "sablier",
+      "type": "escort",
+      "story": true,
+      "season": 1,
+      "crew_scaling": false,
+      "chain": "sab-s1-1-retrieval",
+      "reward": {
+        "chits": [
+          200,
+          200
+        ],
+        "xp": 200,
+        "standing": {},
+        "standing_mode": "explicit"
+      },
+      "stages": [
+        {
+          "id": "walk",
+          "verb": "escort",
+          "target": {
+            "kind": "npc",
+            "zone": "vatside-wake-hall",
+            "object": "vantongeren-desk",
+            "npc": "npc-nurse-okafor-mission"
+          },
+          "input": "interact",
+          "completion": "arrived",
+          "receipt_key": "sab-s1-3-dreaming:walk",
+          "label": "Walk with Nurse Okafor to the nave",
+          "destination": {
+            "kind": "zone_object",
+            "zone": "chapel-nave",
+            "object": "quell-desk"
+          }
+        }
+      ],
+      "unlock_conditions": [
+        "standing_at_least sablier 10",
+        "completed_contract sab-s1-2-provenance"
+      ],
+      "consequence": "Your accepted mission and evidence stay personal. Public effects, if listed, expire visibly.",
+      "evidence_assets": [
+        "s19-sab-s1-3-dreaming"
+      ]
+    },
+    {
+      "id": "sab-s1-4-batch",
+      "name": "The sealed canister",
+      "faction": "sablier",
+      "type": "fetch",
+      "story": true,
+      "season": 1,
+      "crew_scaling": false,
+      "chain": "sab-s1-1-retrieval",
+      "reward": {
+        "chits": [
+          200,
+          200
+        ],
+        "xp": 200,
+        "standing": {
+          "sablier": 10
+        },
+        "standing_mode": "explicit"
+      },
+      "stages": [
+        {
+          "id": "collect",
+          "verb": "fetch",
+          "target": {
+            "kind": "item",
+            "zone": "under-drowned",
+            "object": "template-canister",
+            "item": "story_sealed_template_canister"
+          },
+          "input": "carry",
+          "completion": "carried",
+          "receipt_key": "sab-s1-4-batch:collect",
+          "label": "Collect the bound supply"
+        },
+        {
+          "id": "deliver",
+          "verb": "fetch",
+          "target": {
+            "kind": "item",
+            "zone": "vatside-clinics",
+            "object": "sablier-main-clinic",
+            "item": "story_sealed_template_canister"
+          },
+          "input": "carry",
+          "completion": "delivered",
+          "receipt_key": "sab-s1-4-batch:deliver",
+          "label": "Carry the bound parcel to the labelled counter",
+          "requires_item": "story_sealed_template_canister"
+        }
+      ],
+      "unlock_conditions": [
+        "standing_at_least sablier 10",
+        "completed_contract sab-s1-3-dreaming"
+      ],
+      "consequence": "Your accepted mission and evidence stay personal. Public effects, if listed, expire visibly.",
+      "evidence_assets": [
+        "s19-sab-s1-4-batch"
+      ]
+    },
+    {
+      "id": "kes-s1-1-escort",
+      "name": "An amber run",
+      "faction": "kestrel",
+      "type": "escort",
+      "story": true,
+      "season": 1,
+      "crew_scaling": false,
+      "chain": "kes-s1-1-escort",
+      "reward": {
+        "chits": [
+          200,
+          200
+        ],
+        "xp": 200,
+        "standing": {},
+        "standing_mode": "explicit"
+      },
+      "stages": [
+        {
+          "id": "walk",
+          "verb": "escort",
+          "target": {
+            "kind": "npc",
+            "zone": "tramyard-wall-gate",
+            "object": "convoy-muster",
+            "npc": "npc-courier"
+          },
+          "input": "interact",
+          "completion": "arrived",
+          "receipt_key": "kes-s1-1-escort:walk",
+          "label": "Walk with the convoy to the ring-two depot",
+          "destination": {
+            "kind": "zone_object",
+            "zone": "scour-ring-2",
+            "object": "convoy-depot"
+          }
+        }
+      ],
+      "unlock_conditions": [
+        "standing_at_least kestrel 0"
+      ],
+      "consequence": "Your accepted mission and evidence stay personal. Public effects, if listed, expire visibly.",
+      "evidence_assets": [
+        "s19-kes-s1-1-escort"
+      ]
+    },
+    {
+      "id": "kes-s1-2-diversion",
+      "name": "Ration discrepancy",
+      "faction": "kestrel",
+      "type": "survey",
+      "story": true,
+      "season": 1,
+      "crew_scaling": false,
+      "chain": "kes-s1-1-escort",
+      "reward": {
+        "chits": [
+          200,
+          200
+        ],
+        "xp": 200,
+        "standing": {},
+        "standing_mode": "explicit"
+      },
+      "stages": [
+        {
+          "id": "copy",
+          "verb": "hack",
+          "target": {
+            "kind": "core_room",
+            "core": "lat-depot-control",
+            "room": "room-4",
+            "data": "kes-s1-2-diversion-record"
+          },
+          "input": "lift",
+          "completion": "lifted",
+          "receipt_key": "kes-s1-2-diversion:copy",
+          "label": "Copy the mission record"
+        },
+        {
+          "id": "compare",
+          "verb": "survey",
+          "target": {
+            "kind": "zone_object",
+            "zone": "tramyard-gate-nine",
+            "object": "ration-consignment"
+          },
+          "input": "inspect",
+          "completion": "compared",
+          "receipt_key": "kes-s1-2-diversion:compare",
+          "label": "Compare the consignment ID with the copied allocation"
+        }
+      ],
+      "unlock_conditions": [
+        "standing_at_least kestrel 10",
+        "completed_contract kes-s1-1-escort"
+      ],
+      "consequence": "Your accepted mission and evidence stay personal. Public effects, if listed, expire visibly.",
+      "branch_group": "ration-discrepancy-s1",
+      "publication_options": [
+        {
+          "id": "private",
+          "label": "Holt only: 400 chits, Kestrel +10; warehouse credential 20 min",
+          "audience": "handler",
+          "reward": {
+            "chits": [
+              400,
+              400
+            ],
+            "xp": 200,
+            "standing": {
+              "kestrel": 10
+            },
+            "standing_mode": "explicit"
+          },
+          "permit": {
+            "kind": "maintenance_credential",
+            "target": "depot-warehouse",
+            "expiry_seconds": 1200,
+            "binding": {
+              "kind": "core_control",
+              "core": "lat-depot-control",
+              "control": "warehouse-doors-a-c"
+            }
+          }
+        },
+        {
+          "id": "public",
+          "label": "Public: 200 chits, Unmoored +10, Kestrel -10; NPC patrol 20 min",
+          "audience": "public",
+          "reward": {
+            "chits": [
+              200,
+              200
+            ],
+            "xp": 200,
+            "standing": {
+              "unmoored": 10,
+              "kestrel": -10
+            },
+            "standing_mode": "explicit"
+          },
+          "permit": {
+            "kind": "route",
+            "target": "depot-patrol",
+            "expiry_seconds": 1200,
+            "binding": {
+              "kind": "core_room",
+              "core": "lat-depot-control",
+              "room": "entry"
+            }
+          }
+        }
+      ],
+      "evidence_assets": [
+        "s19-kes-s1-2-diversion"
+      ]
+    },
+    {
+      "id": "kes-s1-3-frequency",
+      "name": "The unassigned channel",
+      "faction": "kestrel",
+      "type": "hack",
+      "story": true,
+      "season": 1,
+      "crew_scaling": false,
+      "chain": "kes-s1-1-escort",
+      "reward": {
+        "chits": [
+          200,
+          200
+        ],
+        "xp": 200,
+        "standing": {},
+        "standing_mode": "explicit"
+      },
+      "stages": [
+        {
+          "id": "copy",
+          "verb": "hack",
+          "target": {
+            "kind": "core_room",
+            "core": "lat-depot-control",
+            "room": "room-1",
+            "data": "kes-s1-3-frequency-record"
+          },
+          "input": "lift",
+          "completion": "lifted",
+          "receipt_key": "kes-s1-3-frequency:copy",
+          "label": "Copy the mission record"
+        }
+      ],
+      "unlock_conditions": [
+        "standing_at_least kestrel 10",
+        "completed_contract kes-s1-2-diversion"
+      ],
+      "consequence": "Your accepted mission and evidence stay personal. Public effects, if listed, expire visibly.",
+      "evidence_assets": [
+        "s19-kes-s1-3-frequency"
+      ]
+    },
+    {
+      "id": "kes-s1-4-quiet",
+      "name": "The recorded interruption",
+      "faction": "kestrel",
+      "type": "clear",
+      "story": true,
+      "season": 1,
+      "crew_scaling": false,
+      "chain": "kes-s1-1-escort",
+      "reward": {
+        "chits": [
+          200,
+          200
+        ],
+        "xp": 200,
+        "standing": {
+          "kestrel": 10
+        },
+        "standing_mode": "explicit"
+      },
+      "stages": [
+        {
+          "id": "inspect",
+          "verb": "survey",
+          "target": {
+            "kind": "zone_object",
+            "zone": "scour-ring-3",
+            "object": "convoy-interruption-log"
+          },
+          "input": "inspect",
+          "completion": "recorded",
+          "receipt_key": "kes-s1-4-quiet:inspect",
+          "label": "Inspect the convoy interruption record; no event wait"
+        },
+        {
+          "id": "clear",
+          "verb": "clear",
+          "target": {
+            "kind": "npc",
+            "zone": "scour-ring-3",
+            "object": "convoy-route",
+            "npc": "npc-maintenance-drone"
+          },
+          "input": "interact",
+          "completion": "defeated",
+          "receipt_key": "kes-s1-4-quiet:clear",
+          "label": "Clear the six rogue convoy drones",
+          "quantity": 6,
+          "resolution": "lethal"
+        }
+      ],
+      "unlock_conditions": [
+        "standing_at_least kestrel 10",
+        "completed_contract kes-s1-3-frequency"
+      ],
+      "consequence": "Your accepted mission and evidence stay personal. Public effects, if listed, expire visibly.",
+      "evidence_assets": [
+        "s19-kes-s1-4-quiet"
+      ]
+    },
+    {
+      "id": "war-s1-1-stairwell",
+      "name": "Block Four",
+      "faction": "wardens",
+      "type": "clear",
+      "story": true,
+      "season": 1,
+      "crew_scaling": false,
+      "chain": "war-s1-1-stairwell",
+      "reward": {
+        "chits": [
+          200,
+          200
+        ],
+        "xp": 200,
+        "standing": {},
+        "standing_mode": "explicit"
+      },
+      "stages": [
+        {
+          "id": "clear",
+          "verb": "clear",
+          "target": {
+            "kind": "npc",
+            "zone": "terraces-blocks",
+            "object": "block-four-nest",
+            "npc": "npc-maintenance-drone"
+          },
+          "input": "interact",
+          "completion": "defeated",
+          "receipt_key": "war-s1-1-stairwell:clear",
+          "label": "Clear five nesting drones at Block Four",
+          "quantity": 5,
+          "resolution": "lethal"
+        }
+      ],
+      "unlock_conditions": [
+        "standing_at_least wardens 0"
+      ],
+      "consequence": "Your accepted mission and evidence stay personal. Public effects, if listed, expire visibly.",
+      "evidence_assets": [
+        "s19-war-s1-1-stairwell"
+      ]
+    },
+    {
+      "id": "war-s1-2-curfew",
+      "name": "The gate-cycle records",
+      "faction": "wardens",
+      "type": "survey",
+      "story": true,
+      "season": 1,
+      "crew_scaling": false,
+      "chain": "war-s1-1-stairwell",
+      "reward": {
+        "chits": [
+          200,
+          200
+        ],
+        "xp": 200,
+        "standing": {},
+        "standing_mode": "explicit"
+      },
+      "stages": [
+        {
+          "id": "inspect",
+          "verb": "survey",
+          "target": {
+            "kind": "zone_object",
+            "zone": "core-plaza",
+            "object": "gate-east-cycle-log"
+          },
+          "input": "inspect",
+          "completion": "observed",
+          "receipt_key": "war-s1-2-curfew:inspect",
+          "label": "Inspect the three stored gate-cycle logs; no Curfew wait",
+          "quantity": 3,
+          "target_pool": [
+            {
+              "kind": "zone_object",
+              "zone": "core-plaza",
+              "object": "gate-west-cycle-log"
+            },
+            {
+              "kind": "zone_object",
+              "zone": "core-plaza",
+              "object": "gate-south-cycle-log"
+            }
+          ]
+        }
+      ],
+      "unlock_conditions": [
+        "standing_at_least wardens 10",
+        "completed_contract war-s1-1-stairwell"
+      ],
+      "consequence": "Your accepted mission and evidence stay personal. Public effects, if listed, expire visibly.",
+      "evidence_assets": [
+        "s19-war-s1-2-curfew"
+      ]
+    },
+    {
+      "id": "war-s1-3-book",
+      "name": "One page",
+      "faction": "wardens",
+      "type": "hack",
+      "story": true,
+      "season": 1,
+      "crew_scaling": false,
+      "chain": "war-s1-1-stairwell",
+      "reward": {
+        "chits": [
+          200,
+          200
+        ],
+        "xp": 200,
+        "standing": {},
+        "standing_mode": "explicit"
+      },
+      "stages": [
+        {
+          "id": "copy",
+          "verb": "hack",
+          "target": {
+            "kind": "core_room",
+            "core": "lat-precinct",
+            "room": "room-3",
+            "data": "war-s1-3-book-record"
+          },
+          "input": "lift",
+          "completion": "lifted",
+          "receipt_key": "war-s1-3-book:copy",
+          "label": "Read one page of the mission copy"
+        }
+      ],
+      "unlock_conditions": [
+        "standing_at_least wardens 10",
+        "completed_contract war-s1-2-curfew",
+        "standing_at_least wardens 30"
+      ],
+      "consequence": "Your accepted mission and evidence stay personal. Public effects, if listed, expire visibly.",
+      "evidence_assets": [
+        "brann-private-ledger",
+        "s19-war-s1-3-book"
+      ]
+    },
+    {
+      "id": "war-s1-4-line",
+      "name": "The west line",
+      "faction": "wardens",
+      "type": "clear",
+      "story": true,
+      "season": 1,
+      "crew_scaling": false,
+      "chain": "war-s1-1-stairwell",
+      "reward": {
+        "chits": [
+          200,
+          200
+        ],
+        "xp": 200,
+        "standing": {
+          "wardens": 10
+        },
+        "standing_mode": "explicit"
+      },
+      "stages": [
+        {
+          "id": "clear",
+          "verb": "clear",
+          "target": {
+            "kind": "npc",
+            "zone": "under-outworks",
+            "object": "west-line",
+            "npc": "npc-exhale-spawn"
+          },
+          "input": "interact",
+          "completion": "defeated",
+          "receipt_key": "war-s1-4-line:clear",
+          "label": "Clear eight Exhale spawns on the west line",
+          "quantity": 8,
+          "resolution": "lethal"
+        }
+      ],
+      "unlock_conditions": [
+        "standing_at_least wardens 10",
+        "completed_contract war-s1-3-book"
+      ],
+      "consequence": "Your accepted mission and evidence stay personal. Public effects, if listed, expire visibly.",
+      "evidence_assets": [
+        "s19-war-s1-4-line"
+      ]
+    },
+    {
+      "id": "cho-s1-1-listen",
+      "name": "Three cells",
+      "faction": "choir",
+      "type": "survey",
+      "story": true,
+      "season": 1,
+      "crew_scaling": false,
+      "chain": "cho-s1-1-listen",
+      "reward": {
+        "chits": [
+          200,
+          200
+        ],
+        "xp": 200,
+        "standing": {},
+        "standing_mode": "explicit"
+      },
+      "stages": [
+        {
+          "id": "inspect",
+          "verb": "survey",
+          "target": {
+            "kind": "cell",
+            "sector": "lat-vatside",
+            "cell": "lat-vatside-c09"
+          },
+          "input": "inspect",
+          "completion": "observed",
+          "receipt_key": "cho-s1-1-listen:inspect",
+          "label": "E to inspect the three marked cells below the public entry",
+          "quantity": 3,
+          "target_pool": [
+            {
+              "kind": "cell",
+              "sector": "lat-vatside",
+              "cell": "lat-vatside-c10"
+            },
+            {
+              "kind": "cell",
+              "sector": "lat-vatside",
+              "cell": "lat-vatside-c11"
+            }
+          ]
+        }
+      ],
+      "unlock_conditions": [
+        "standing_at_least choir 0"
+      ],
+      "consequence": "Your accepted mission and evidence stay personal. Public effects, if listed, expire visibly.",
+      "evidence_assets": [
+        "s19-cho-s1-1-listen"
+      ]
+    },
+    {
+      "id": "cho-s1-2-nine",
+      "name": "The third listener",
+      "faction": "choir",
+      "type": "survey",
+      "story": true,
+      "season": 1,
+      "crew_scaling": false,
+      "chain": "cho-s1-1-listen",
+      "reward": {
+        "chits": [
+          200,
+          200
+        ],
+        "xp": 200,
+        "standing": {},
+        "standing_mode": "explicit"
+      },
+      "stages": [
+        {
+          "id": "inspect",
+          "verb": "survey",
+          "target": {
+            "kind": "zone_object",
+            "zone": "chapel-towers",
+            "object": "third-listener-log"
+          },
+          "input": "inspect",
+          "completion": "observed",
+          "receipt_key": "cho-s1-2-nine:inspect",
+          "label": "Inspect the third listener's log in the crypt",
+          "quantity": 1,
+          "target_pool": []
+        }
+      ],
+      "unlock_conditions": [
+        "standing_at_least choir 10",
+        "completed_contract cho-s1-1-listen"
+      ],
+      "consequence": "Your accepted mission and evidence stay personal. Public effects, if listed, expire visibly.",
+      "evidence_assets": [
+        "s19-cho-s1-2-nine"
+      ]
+    },
+    {
+      "id": "cho-s1-3-descent",
+      "name": "A voice under the hum",
+      "faction": "choir",
+      "type": "hack",
+      "story": true,
+      "season": 1,
+      "crew_scaling": false,
+      "chain": "cho-s1-1-listen",
+      "reward": {
+        "chits": [
+          200,
+          200
+        ],
+        "xp": 200,
+        "standing": {},
+        "standing_mode": "explicit"
+      },
+      "stages": [
+        {
+          "id": "copy",
+          "verb": "hack",
+          "target": {
+            "kind": "silt_data",
+            "sector": "lat-old-works",
+            "band": "shallows",
+            "data": "choir-mission-silt-echo"
+          },
+          "input": "lift",
+          "completion": "lifted",
+          "receipt_key": "cho-s1-3-descent:copy",
+          "label": "Copy the guaranteed mission echo in Old Works Shallows"
+        }
+      ],
+      "unlock_conditions": [
+        "standing_at_least choir 10",
+        "completed_contract cho-s1-2-nine"
+      ],
+      "consequence": "Your accepted mission and evidence stay personal. Public effects, if listed, expire visibly.",
+      "mission_data": [
+        {
+          "id": "choir-mission-silt-echo",
+          "label": "Copy the guaranteed mission echo in Old Works Shallows",
+          "kind": "contract_key",
+          "asset": "silt-echo",
+          "amount": 1,
+          "scope": "mission",
+          "respawn_seconds": 0
+        }
+      ],
+      "evidence_assets": [
+        "s19-cho-s1-3-descent"
+      ]
+    },
+    {
+      "id": "cho-s1-4-answer",
+      "name": "A different tune",
+      "faction": "choir",
+      "type": "plant",
+      "story": true,
+      "season": 1,
+      "crew_scaling": false,
+      "chain": "cho-s1-1-listen",
+      "reward": {
+        "chits": [
+          200,
+          200
+        ],
+        "xp": 200,
+        "standing": {
+          "choir": 10
+        },
+        "standing_mode": "explicit"
+      },
+      "stages": [
+        {
+          "id": "collect",
+          "verb": "fetch",
+          "target": {
+            "kind": "item",
+            "zone": "chapel-nave",
+            "object": "ansgar-desk",
+            "item": "story_resonance_beacon"
+          },
+          "input": "carry",
+          "completion": "carried",
+          "receipt_key": "cho-s1-4-answer:collect",
+          "label": "Collect the bound supply"
+        },
+        {
+          "id": "plant",
+          "verb": "plant",
+          "target": {
+            "kind": "zone_object",
+            "zone": "under-outworks",
+            "object": "east-door-frame"
+          },
+          "input": "channel",
+          "completion": "planted",
+          "receipt_key": "cho-s1-4-answer:plant",
+          "label": "Plant the supplied unit",
+          "seconds": 3,
+          "requires_item": "story_resonance_beacon"
+        }
+      ],
+      "unlock_conditions": [
+        "standing_at_least choir 10",
+        "completed_contract cho-s1-3-descent"
+      ],
+      "consequence": "Your accepted mission and evidence stay personal. Public effects, if listed, expire visibly.",
+      "evidence_assets": [
+        "s19-cho-s1-4-answer"
+      ]
+    },
+    {
+      "id": "sab-red-s1-1-remind",
+      "name": "Lapsed accounts",
+      "faction": "sable",
+      "type": "clear",
+      "story": true,
+      "season": 1,
+      "crew_scaling": false,
+      "chain": "sab-red-s1-1-remind",
+      "reward": {
+        "chits": [
+          200,
+          200
+        ],
+        "xp": 200,
+        "standing": {},
+        "standing_mode": "explicit"
+      },
+      "stages": [
+        {
+          "id": "restrain",
+          "verb": "clear",
+          "target": {
+            "kind": "npc",
+            "zone": "sink-terraces",
+            "object": "terrace-seven-accounts",
+            "npc": "npc-lapsed-subscriber"
+          },
+          "input": "interact",
+          "completion": "subdued",
+          "receipt_key": "sab-red-s1-1-remind:restrain",
+          "label": "Restrain three subscribers; killing fails this stage",
+          "quantity": 3,
+          "resolution": "subdue"
+        }
+      ],
+      "unlock_conditions": [
+        "standing_at_least sable 0"
+      ],
+      "consequence": "Restraint is required. Killing fails the stage. These mission copies yield no loot or defeat XP.",
+      "evidence_assets": [
+        "s19-sab-red-s1-1-remind"
+      ]
+    },
+    {
+      "id": "sab-red-s1-2-drop",
+      "name": "The addressed cache",
+      "faction": "sable",
+      "type": "fetch",
+      "story": true,
+      "season": 1,
+      "crew_scaling": false,
+      "chain": "sab-red-s1-1-remind",
+      "reward": {
+        "chits": [
+          200,
+          200
+        ],
+        "xp": 200,
+        "standing": {},
+        "standing_mode": "explicit"
+      },
+      "stages": [
+        {
+          "id": "collect",
+          "verb": "fetch",
+          "target": {
+            "kind": "item",
+            "zone": "oldworks-drop",
+            "object": "unmoored-cache",
+            "item": "story_unmoored_drop_cache"
+          },
+          "input": "carry",
+          "completion": "carried",
+          "receipt_key": "sab-red-s1-2-drop:collect",
+          "label": "Collect the bound supply"
+        },
+        {
+          "id": "deliver",
+          "verb": "fetch",
+          "target": {
+            "kind": "item",
+            "zone": "sink-terraces",
+            "object": "pale-desk",
+            "item": "story_unmoored_drop_cache"
+          },
+          "input": "carry",
+          "completion": "delivered",
+          "receipt_key": "sab-red-s1-2-drop:deliver",
+          "label": "Carry the bound parcel to the labelled counter",
+          "requires_item": "story_unmoored_drop_cache"
+        }
+      ],
+      "unlock_conditions": [
+        "standing_at_least sable 10",
+        "completed_contract sab-red-s1-1-remind"
+      ],
+      "consequence": "Your accepted mission and evidence stay personal. Public effects, if listed, expire visibly.",
+      "evidence_assets": [
+        "s19-sab-red-s1-2-drop"
+      ]
+    },
+    {
+      "id": "sab-red-s1-3-dark",
+      "name": "The power draw",
+      "faction": "sable",
+      "type": "hack",
+      "story": true,
+      "season": 1,
+      "crew_scaling": false,
+      "chain": "sab-red-s1-1-remind",
+      "reward": {
+        "chits": [
+          200,
+          200
+        ],
+        "xp": 200,
+        "standing": {},
+        "standing_mode": "explicit"
+      },
+      "stages": [
+        {
+          "id": "copy",
+          "verb": "hack",
+          "target": {
+            "kind": "core_room",
+            "core": "lat-sables-back-room",
+            "room": "room-4",
+            "data": "sab-red-s1-3-dark-record"
+          },
+          "input": "lift",
+          "completion": "lifted",
+          "receipt_key": "sab-red-s1-3-dark:copy",
+          "label": "Copy the mission record"
+        }
+      ],
+      "unlock_conditions": [
+        "standing_at_least sable 10",
+        "completed_contract sab-red-s1-2-drop"
+      ],
+      "consequence": "Your accepted mission and evidence stay personal. Public effects, if listed, expire visibly.",
+      "evidence_assets": [
+        "s19-sab-red-s1-3-dark"
+      ]
+    },
+    {
+      "id": "sab-red-s1-4-candles",
+      "name": "Candles below",
+      "faction": "sable",
+      "type": "survey",
+      "story": true,
+      "season": 1,
+      "crew_scaling": false,
+      "chain": "sab-red-s1-1-remind",
+      "reward": {
+        "chits": [
+          200,
+          200
+        ],
+        "xp": 200,
+        "standing": {
+          "sable": 10
+        },
+        "standing_mode": "explicit"
+      },
+      "stages": [
+        {
+          "id": "inspect",
+          "verb": "survey",
+          "target": {
+            "kind": "zone_object",
+            "zone": "sink-floor",
+            "object": "warm-stack-1"
+          },
+          "input": "inspect",
+          "completion": "observed",
+          "receipt_key": "sab-red-s1-4-candles:inspect",
+          "label": "Inspect the five marked points around the warm stack",
+          "quantity": 5,
+          "target_pool": [
+            {
+              "kind": "zone_object",
+              "zone": "sink-floor",
+              "object": "warm-stack-2"
+            },
+            {
+              "kind": "zone_object",
+              "zone": "sink-floor",
+              "object": "warm-stack-3"
+            },
+            {
+              "kind": "zone_object",
+              "zone": "sink-floor",
+              "object": "warm-stack-4"
+            },
+            {
+              "kind": "zone_object",
+              "zone": "sink-floor",
+              "object": "warm-stack-5"
+            }
+          ]
+        }
+      ],
+      "unlock_conditions": [
+        "standing_at_least sable 10",
+        "completed_contract sab-red-s1-3-dark"
+      ],
+      "consequence": "Your accepted mission and evidence stay personal. Public effects, if listed, expire visibly.",
+      "evidence_assets": [
+        "s19-sab-red-s1-4-candles"
+      ]
+    },
+    {
+      "id": "unm-s1-1-map",
+      "name": "An unlisted map",
+      "faction": "unmoored",
+      "type": "survey",
+      "story": true,
+      "season": 1,
+      "crew_scaling": false,
+      "chain": "unm-s1-1-map",
+      "reward": {
+        "chits": [
+          200,
+          200
+        ],
+        "xp": 200,
+        "standing": {},
+        "standing_mode": "explicit"
+      },
+      "stages": [
+        {
+          "id": "inspect",
+          "verb": "survey",
+          "target": {
+            "kind": "cell",
+            "sector": "lat-sink",
+            "cell": "lat-sink-c09"
+          },
+          "input": "inspect",
+          "completion": "observed",
+          "receipt_key": "unm-s1-1-map:inspect",
+          "label": "Discover and inspect five marked cells, including the black-core entrance",
+          "quantity": 5,
+          "target_pool": [
+            {
+              "kind": "cell",
+              "sector": "lat-sink",
+              "cell": "lat-sink-c10"
+            },
+            {
+              "kind": "cell",
+              "sector": "lat-sink",
+              "cell": "lat-sink-c11"
+            },
+            {
+              "kind": "cell",
+              "sector": "lat-sink",
+              "cell": "lat-sink-c12"
+            },
+            {
+              "kind": "cell",
+              "sector": "lat-sink",
+              "cell": "lat-sink-c13"
+            }
+          ]
+        }
+      ],
+      "unlock_conditions": [
+        "standing_at_least unmoored 0"
+      ],
+      "consequence": "Your accepted mission and evidence stay personal. Public effects, if listed, expire visibly.",
+      "evidence_assets": [
+        "s19-unm-s1-1-map"
+      ]
+    },
+    {
+      "id": "unm-s1-2-vat-nine",
+      "name": "Shelter in place",
+      "faction": "unmoored",
+      "type": "plant",
+      "story": true,
+      "season": 1,
+      "crew_scaling": false,
+      "chain": "unm-s1-1-map",
+      "reward": {
+        "chits": [
+          200,
+          200
+        ],
+        "xp": 200,
+        "standing": {
+          "unmoored": 15,
+          "sablier": -10
+        },
+        "standing_mode": "explicit"
+      },
+      "stages": [
+        {
+          "id": "collect",
+          "verb": "fetch",
+          "target": {
+            "kind": "item",
+            "zone": "oldworks-drop",
+            "object": "strand-terminal",
+            "item": "story_template_shield_rig"
+          },
+          "input": "carry",
+          "completion": "carried",
+          "receipt_key": "unm-s1-2-vat-nine:collect",
+          "label": "Collect the bound supply"
+        },
+        {
+          "id": "shelter",
+          "verb": "escort",
+          "target": {
+            "kind": "npc",
+            "zone": "oldworks-main",
+            "object": "vat-nine-squat",
+            "npc": "npc-walked-template"
+          },
+          "input": "interact",
+          "completion": "arrived",
+          "receipt_key": "unm-s1-2-vat-nine:shelter",
+          "label": "E beside each willing template; walk them into their squat shelter",
+          "quantity": 4,
+          "destination": {
+            "kind": "zone_object",
+            "zone": "oldworks-main",
+            "object": "vat-nine-shelter"
+          }
+        },
+        {
+          "id": "plant",
+          "verb": "plant",
+          "target": {
+            "kind": "zone_object",
+            "zone": "oldworks-main",
+            "object": "vat-nine-shield-socket"
+          },
+          "input": "channel",
+          "completion": "planted",
+          "receipt_key": "unm-s1-2-vat-nine:plant",
+          "label": "Plant the supplied unit",
+          "seconds": 3,
+          "requires_item": "story_template_shield_rig"
+        }
+      ],
+      "unlock_conditions": [
+        "standing_at_least unmoored 10",
+        "completed_contract unm-s1-1-map"
+      ],
+      "consequence": "The willing templates stay sheltered in their squat; no clinic evaluation. Public local NPC patrol for 20 min. 200 chits; Unmoored +15, Sablier -10. Clinic retrieval is your other branch.",
+      "branch_group": "walked-templates-s1",
+      "branch": "shield",
+      "permit_scope": {
+        "kind": "route",
+        "target": "oldworks-local-patrol",
+        "expiry_seconds": 1200,
+        "audience": "public",
+        "binding": {
+          "kind": "npc",
+          "zone": "oldworks-main",
+          "npc": "npc-oldworks-patrol"
+        }
+      },
+      "evidence_assets": [
+        "s19-unm-s1-2-vat-nine"
+      ]
+    },
+    {
+      "id": "unm-s1-3-fresher",
+      "name": "A fresher copy",
+      "faction": "unmoored",
+      "type": "hack",
+      "story": true,
+      "season": 1,
+      "crew_scaling": false,
+      "chain": "unm-s1-1-map",
+      "reward": {
+        "chits": [
+          200,
+          200
+        ],
+        "xp": 200,
+        "standing": {},
+        "standing_mode": "explicit",
+        "items": [
+          "story_residual_fragment_99b"
+        ]
+      },
+      "stages": [
+        {
+          "id": "copy",
+          "verb": "hack",
+          "target": {
+            "kind": "silt_data",
+            "sector": "lat-old-works",
+            "band": "shallows",
+            "data": "unmoored-mission-fragment-99b"
+          },
+          "input": "lift",
+          "completion": "lifted",
+          "receipt_key": "unm-s1-3-fresher:copy",
+          "label": "Copy the guaranteed mission fragment in Old Works Shallows"
+        }
+      ],
+      "unlock_conditions": [
+        "standing_at_least unmoored 10",
+        "completed_contract unm-s1-1-map",
+        "receipt walked-templates-s1"
+      ],
+      "consequence": "Your accepted mission and evidence stay personal. Public effects, if listed, expire visibly.",
+      "mission_data": [
+        {
+          "id": "unmoored-mission-fragment-99b",
+          "label": "Copy the guaranteed mission fragment in Old Works Shallows",
+          "kind": "contract_key",
+          "asset": "residual-fragment-99b",
+          "amount": 1,
+          "scope": "mission",
+          "respawn_seconds": 0
+        }
+      ],
+      "evidence_assets": [
+        "s19-unm-s1-3-fresher"
+      ]
+    },
+    {
+      "id": "unm-s1-4-ask",
+      "name": "One word later",
+      "faction": "unmoored",
+      "type": "survey",
+      "story": true,
+      "season": 1,
+      "crew_scaling": false,
+      "chain": "unm-s1-1-map",
+      "reward": {
+        "chits": [
+          200,
+          200
+        ],
+        "xp": 200,
+        "standing": {},
+        "standing_mode": "explicit"
+      },
+      "stages": [
+        {
+          "id": "inspect",
+          "verb": "survey",
+          "target": {
+            "kind": "core_room",
+            "core": "lat-ninety-nines-drop",
+            "room": "room-3"
+          },
+          "input": "inspect",
+          "completion": "observed",
+          "receipt_key": "unm-s1-4-ask:inspect",
+          "label": "Inspect the Drop with your preserved fragment",
+          "quantity": 1,
+          "target_pool": []
+        }
+      ],
+      "unlock_conditions": [
+        "standing_at_least unmoored 10",
+        "completed_contract unm-s1-3-fresher",
+        "has_item story_residual_fragment_99b"
+      ],
+      "consequence": "Your accepted mission and evidence stay personal. Public effects, if listed, expire visibly.",
+      "evidence_assets": [
+        "s19-unm-s1-4-ask"
+      ]
+    },
+    {
+      "id": "unm-s1-5-open",
+      "name": "The east door",
+      "faction": "unmoored",
+      "type": "hack",
+      "story": true,
+      "season": 1,
+      "crew_scaling": false,
+      "chain": "unm-s1-1-map",
+      "reward": {
+        "chits": [
+          200,
+          200
+        ],
+        "xp": 200,
+        "standing": {
+          "unmoored": 10
+        },
+        "standing_mode": "explicit"
+      },
+      "stages": [
+        {
+          "id": "open",
+          "verb": "hack",
+          "target": {
+            "kind": "core_control",
+            "core": "lat-outworks-seal",
+            "control": "shaft-door-east"
+          },
+          "input": "flip",
+          "completion": "flipped",
+          "receipt_key": "unm-s1-5-open:open",
+          "label": "Flip the east shaft door control"
+        }
+      ],
+      "unlock_conditions": [
+        "standing_at_least unmoored 10",
+        "completed_contract unm-s1-4-ask"
+      ],
+      "consequence": "Your accepted mission and evidence stay personal. Public effects, if listed, expire visibly.",
+      "evidence_assets": [
+        "s19-unm-s1-5-open"
+      ]
+    },
+    {
+      "id": "fer-s1-1-race",
+      "name": "The north-spoke recovery",
+      "faction": "ferrymen",
+      "type": "fetch",
+      "story": true,
+      "season": 1,
+      "crew_scaling": false,
+      "chain": "fer-s1-1-race",
+      "reward": {
+        "chits": [
+          200,
+          200
+        ],
+        "xp": 200,
+        "standing": {},
+        "standing_mode": "explicit"
+      },
+      "stages": [
+        {
+          "id": "read",
+          "verb": "survey",
+          "target": {
+            "kind": "zone_object",
+            "zone": "scour-landing",
+            "object": "council-fire"
+          },
+          "input": "inspect",
+          "completion": "recorded",
+          "receipt_key": "fer-s1-1-race:read",
+          "label": "Launch the north-spoke recovery; the next leg has 180 seconds"
+        },
+        {
+          "id": "collect",
+          "verb": "fetch",
+          "target": {
+            "kind": "item",
+            "zone": "scour-ring-3",
+            "object": "north-recovery-cache",
+            "item": "slv_intact"
+          },
+          "input": "carry",
+          "completion": "carried",
+          "receipt_key": "fer-s1-1-race:collect",
+          "label": "Recover the salvage before the recovery window closes",
+          "window_seconds": 180,
+          "retry_from": "read"
+        },
+        {
+          "id": "deliver",
+          "verb": "fetch",
+          "target": {
+            "kind": "item",
+            "zone": "scour-landing",
+            "object": "council-fire",
+            "item": "slv_intact"
+          },
+          "input": "carry",
+          "completion": "delivered",
+          "receipt_key": "fer-s1-1-race:deliver",
+          "label": "Carry the bound parcel to the labelled counter",
+          "requires_item": "slv_intact"
+        }
+      ],
+      "unlock_conditions": [
+        "standing_at_least ferrymen 0"
+      ],
+      "consequence": "Launch at the landing, then recover the bound salvage within 180 seconds. No live Ring-fall wait. A missed window is retryable from the launch point without a fee. Returning the recovered salvage has no deadline.",
+      "evidence_assets": [
+        "s19-fer-s1-1-race"
+      ]
+    },
+    {
+      "id": "fer-s1-2-far-side",
+      "name": "Past the edge",
+      "faction": "ferrymen",
+      "type": "survey",
+      "story": true,
+      "season": 1,
+      "crew_scaling": false,
+      "chain": "fer-s1-1-race",
+      "reward": {
+        "chits": [
+          200,
+          200
+        ],
+        "xp": 200,
+        "standing": {},
+        "standing_mode": "explicit"
+      },
+      "stages": [
+        {
+          "id": "inspect",
+          "verb": "survey",
+          "target": {
+            "kind": "zone_object",
+            "zone": "scour-ring-4",
+            "object": "plateau-edge-1"
+          },
+          "input": "inspect",
+          "completion": "observed",
+          "receipt_key": "fer-s1-2-far-side:inspect",
+          "label": "Inspect the three marked viewpoints at the plateau edge",
+          "quantity": 3,
+          "target_pool": [
+            {
+              "kind": "zone_object",
+              "zone": "scour-ring-4",
+              "object": "plateau-edge-2"
+            },
+            {
+              "kind": "zone_object",
+              "zone": "scour-ring-4",
+              "object": "plateau-edge-3"
+            }
+          ]
+        }
+      ],
+      "unlock_conditions": [
+        "standing_at_least ferrymen 10",
+        "completed_contract fer-s1-1-race"
+      ],
+      "consequence": "Your accepted mission and evidence stay personal. Public effects, if listed, expire visibly.",
+      "evidence_assets": [
+        "s19-fer-s1-2-far-side"
+      ]
+    },
+    {
+      "id": "fer-s1-3-conduit",
+      "name": "The upward hum",
+      "faction": "ferrymen",
+      "type": "plant",
+      "story": true,
+      "season": 1,
+      "crew_scaling": false,
+      "chain": "fer-s1-1-race",
+      "reward": {
+        "chits": [
+          200,
+          200
+        ],
+        "xp": 200,
+        "standing": {},
+        "standing_mode": "explicit"
+      },
+      "stages": [
+        {
+          "id": "collect",
+          "verb": "fetch",
+          "target": {
+            "kind": "item",
+            "zone": "scour-landing",
+            "object": "council-fire",
+            "item": "story_listening_stake"
+          },
+          "input": "carry",
+          "completion": "carried",
+          "receipt_key": "fer-s1-3-conduit:collect",
+          "label": "Collect the bound supply"
+        },
+        {
+          "id": "plant",
+          "verb": "plant",
+          "target": {
+            "kind": "zone_object",
+            "zone": "scour-ring-3",
+            "object": "conduit-head"
+          },
+          "input": "channel",
+          "completion": "planted",
+          "receipt_key": "fer-s1-3-conduit:plant",
+          "label": "Plant the supplied unit",
+          "seconds": 3,
+          "requires_item": "story_listening_stake"
+        }
+      ],
+      "unlock_conditions": [
+        "standing_at_least ferrymen 10",
+        "completed_contract fer-s1-2-far-side"
+      ],
+      "consequence": "Your accepted mission and evidence stay personal. Public effects, if listed, expire visibly.",
+      "evidence_assets": [
+        "s19-fer-s1-3-conduit"
+      ]
+    },
+    {
+      "id": "fer-s1-4-sled",
+      "name": "The road below",
+      "faction": "ferrymen",
+      "type": "escort",
+      "story": true,
+      "season": 1,
+      "crew_scaling": false,
+      "chain": "fer-s1-1-race",
+      "reward": {
+        "chits": [
+          200,
+          200
+        ],
+        "xp": 200,
+        "standing": {
+          "ferrymen": 10
+        },
+        "standing_mode": "explicit"
+      },
+      "stages": [
+        {
+          "id": "walk",
+          "verb": "escort",
+          "target": {
+            "kind": "npc",
+            "zone": "scour-landing",
+            "object": "council-fire",
+            "npc": "npc-bram-sled-mission"
+          },
+          "input": "interact",
+          "completion": "arrived",
+          "receipt_key": "fer-s1-4-sled:walk",
+          "label": "Walk with Bram's long sled to the caverns",
+          "destination": {
+            "kind": "zone_object",
+            "zone": "under-caverns",
+            "object": "sled-arrival"
+          }
+        }
+      ],
+      "unlock_conditions": [
+        "standing_at_least ferrymen 10",
+        "completed_contract fer-s1-3-conduit"
+      ],
+      "consequence": "Your accepted mission and evidence stay personal. Public effects, if listed, expire visibly.",
+      "evidence_assets": [
+        "s19-fer-s1-4-sled"
+      ]
+    },
+    {
+      "id": "cold-chain-work-order",
+      "name": "Cold Chain work order",
+      "faction": "sablier",
+      "type": "hack",
+      "service": true,
+      "crew_scaling": false,
+      "reward": {
+        "chits": [
+          200,
+          200
+        ],
+        "xp": 100,
+        "standing": {
+          "sablier": 5
+        }
+      },
+      "consequence": "The chosen allocation lasts 20 minutes. Each participating worker receives 200 chits, 100 XP and +5 standing. The other allocation stays unavailable for this order.",
+      "stages": [
+        {
+          "id": "inspect",
+          "verb": "survey",
+          "target": {
+            "kind": "zone_object",
+            "zone": "vatside-clinics",
+            "object": "cold-chain-hardware"
+          },
+          "input": "inspect",
+          "completion": "observed",
+          "receipt_key": "cold-chain-work-order:inspect",
+          "label": "Inspect the fault and both allocations"
+        },
+        {
+          "id": "collect",
+          "verb": "fetch",
+          "target": {
+            "kind": "item",
+            "zone": "vatside-clinics",
+            "object": "sablier-main-clinic",
+            "item": "slv_power"
+          },
+          "input": "carry",
+          "completion": "carried",
+          "receipt_key": "cold-chain-work-order:collect",
+          "label": "Collect the bound replacement feed"
+        },
+        {
+          "id": "replace",
+          "verb": "plant",
+          "target": {
+            "kind": "zone_object",
+            "zone": "vatside-clinics",
+            "object": "cold-chain-hardware"
+          },
+          "input": "channel",
+          "completion": "planted",
+          "receipt_key": "cold-chain-work-order:replace",
+          "label": "Fit the bound feed",
+          "requires_item": "slv_power",
+          "seconds": 3
+        },
+        {
+          "id": "verify",
+          "verb": "hack",
+          "target": {
+            "kind": "core_room",
+            "core": "lat-relay-cold-chain",
+            "room": "room-2",
+            "data": "cold-chain-work-order-record"
+          },
+          "input": "lift",
+          "completion": "lifted",
+          "receipt_key": "cold-chain-work-order:verify",
+          "label": "Lift the labelled work-order verification record"
+        }
+      ]
+    },
+    {
+      "id": "sump-work-order",
+      "name": "Sump work order",
+      "faction": "sable",
+      "type": "hack",
+      "service": true,
+      "crew_scaling": false,
+      "reward": {
+        "chits": [
+          200,
+          200
+        ],
+        "xp": 100,
+        "standing": {
+          "sable": 5
+        }
+      },
+      "consequence": "The chosen allocation lasts 20 minutes. Each participating worker receives 200 chits, 100 XP and +5 standing. The other allocation stays unavailable for this order.",
+      "stages": [
+        {
+          "id": "inspect",
+          "verb": "survey",
+          "target": {
+            "kind": "zone_object",
+            "zone": "sink-floor",
+            "object": "sump-pump-regions"
+          },
+          "input": "inspect",
+          "completion": "observed",
+          "receipt_key": "sump-work-order:inspect",
+          "label": "Inspect the fault and both allocations"
+        },
+        {
+          "id": "collect",
+          "verb": "fetch",
+          "target": {
+            "kind": "item",
+            "zone": "sink-floor",
+            "object": "sump-feed-locker",
+            "item": "slv_power"
+          },
+          "input": "carry",
+          "completion": "carried",
+          "receipt_key": "sump-work-order:collect",
+          "label": "Collect the bound replacement feed"
+        },
+        {
+          "id": "replace",
+          "verb": "plant",
+          "target": {
+            "kind": "zone_object",
+            "zone": "sink-floor",
+            "object": "sump-pump-regions"
+          },
+          "input": "channel",
+          "completion": "planted",
+          "receipt_key": "sump-work-order:replace",
+          "label": "Fit the bound feed",
+          "requires_item": "slv_power",
+          "seconds": 3
+        },
+        {
+          "id": "release",
+          "verb": "hack",
+          "target": {
+            "kind": "core_control",
+            "core": "lat-sump",
+            "control": "pump-regions"
+          },
+          "input": "flip",
+          "completion": "flipped",
+          "receipt_key": "sump-work-order:release",
+          "label": "Flip the labelled work-order controller"
+        }
+      ]
+    },
+    {
+      "id": "depot-work-order",
+      "name": "Depot work order",
+      "faction": "kestrel",
+      "type": "hack",
+      "service": true,
+      "crew_scaling": false,
+      "reward": {
+        "chits": [
+          200,
+          200
+        ],
+        "xp": 100,
+        "standing": {
+          "kestrel": 5
+        }
+      },
+      "consequence": "The chosen allocation lasts 20 minutes. Each participating worker receives 200 chits, 100 XP and +5 standing. The other allocation stays unavailable for this order.",
+      "stages": [
+        {
+          "id": "inspect",
+          "verb": "survey",
+          "target": {
+            "kind": "zone_object",
+            "zone": "tramyard-depots",
+            "object": "depot-surplus-latch"
+          },
+          "input": "inspect",
+          "completion": "observed",
+          "receipt_key": "depot-work-order:inspect",
+          "label": "Inspect the fault and both allocations"
+        },
+        {
+          "id": "collect",
+          "verb": "fetch",
+          "target": {
+            "kind": "item",
+            "zone": "tramyard-depots",
+            "object": "depot-manifest-locker",
+            "item": "job_depot_manifest"
+          },
+          "input": "carry",
+          "completion": "carried",
+          "receipt_key": "depot-work-order:collect",
+          "label": "Collect the bound surplus manifest"
+        },
+        {
+          "id": "replace",
+          "verb": "fetch",
+          "target": {
+            "kind": "zone_object",
+            "zone": "tramyard-depots",
+            "object": "depot-surplus-latch"
+          },
+          "input": "carry",
+          "completion": "delivered",
+          "receipt_key": "depot-work-order:replace",
+          "label": "Carry the manifest to the surplus latch",
+          "requires_item": "job_depot_manifest",
+          "seconds": 0
+        },
+        {
+          "id": "release",
+          "verb": "hack",
+          "target": {
+            "kind": "core_control",
+            "core": "lat-depot-control",
+            "control": "warehouse-doors-a-c"
+          },
+          "input": "flip",
+          "completion": "flipped",
+          "receipt_key": "depot-work-order:release",
+          "label": "Flip the labelled work-order controller"
+        }
+      ]
+    },
+    {
+      "id": "relay-zero-work-order",
+      "name": "Relay Zero work order",
+      "faction": "unmoored",
+      "type": "hack",
+      "service": true,
+      "crew_scaling": false,
+      "reward": {
+        "chits": [
+          200,
+          200
+        ],
+        "xp": 100,
+        "standing": {
+          "unmoored": 5
+        }
+      },
+      "consequence": "The chosen allocation lasts 20 minutes. Each participating worker receives 200 chits, 100 XP and +5 standing. The other allocation stays unavailable for this order.",
+      "stages": [
+        {
+          "id": "inspect",
+          "verb": "survey",
+          "target": {
+            "kind": "zone_object",
+            "zone": "oldworks-main",
+            "object": "relay-zero-hardware"
+          },
+          "input": "inspect",
+          "completion": "observed",
+          "receipt_key": "relay-zero-work-order:inspect",
+          "label": "Inspect the fault and both allocations"
+        },
+        {
+          "id": "reset",
+          "verb": "hack",
+          "target": {
+            "kind": "zone_object",
+            "zone": "oldworks-main",
+            "object": "relay-zero-hardware"
+          },
+          "input": "channel",
+          "completion": "flipped",
+          "receipt_key": "relay-zero-work-order:reset",
+          "label": "Reset the survey hardware; 3 s, no fee",
+          "seconds": 3
+        },
+        {
+          "id": "verify",
+          "verb": "hack",
+          "target": {
+            "kind": "core_room",
+            "core": "lat-relay-zero",
+            "room": "room-3",
+            "data": "relay-zero-work-order-record"
+          },
+          "input": "lift",
+          "completion": "lifted",
+          "receipt_key": "relay-zero-work-order:verify",
+          "label": "Lift the labelled work-order verification record"
+        }
+      ]
+    },
+    {
+      "id": "halvard-commission-hack",
+      "name": "Halvard: audit the local cabinet",
+      "faction": "halvard",
+      "type": "hack",
+      "stages": [
+        {
+          "id": "audit",
+          "verb": "hack",
+          "target": {
+            "kind": "core_room",
+            "core": "lat-civic-ledger",
+            "room": "r-entry"
+          },
+          "input": "enter",
+          "completion": "entered",
+          "receipt_key": "halvard-commission-hack:audit",
+          "label": "Enter the selected cabinet rooms",
+          "target_pool": [
+            {
+              "kind": "core_room",
+              "core": "lat-civic-ledger",
+              "room": "r-foyer"
+            },
+            {
+              "kind": "core_room",
+              "core": "lat-civic-ledger",
+              "room": "r-records"
+            }
+          ]
+        }
+      ],
+      "reward": {
+        "chits": [
+          200,
+          200
+        ],
+        "xp": 200,
+        "standing": {
+          "halvard": 5
+        },
+        "standing_mode": "propagate"
+      },
+      "consequence": "Bound mission supplies have no sale value. Other callers cannot take your mission targets."
+    },
+    {
+      "id": "halvard-commission-plant",
+      "name": "Halvard: mark the service approaches",
+      "faction": "halvard",
+      "type": "plant",
+      "stages": [
+        {
+          "id": "collect",
+          "verb": "fetch",
+          "target": {
+            "kind": "item",
+            "zone": "terraces-blocks",
+            "object": "letting-office",
+            "item": "job_route_marker"
+          },
+          "input": "carry",
+          "completion": "carried",
+          "receipt_key": "halvard-commission-plant:collect",
+          "label": "Collect the bound supply"
+        },
+        {
+          "id": "plant",
+          "verb": "plant",
+          "target": {
+            "kind": "zone_object",
+            "zone": "terraces-lobby",
+            "object": "lobby-concierge"
+          },
+          "input": "channel",
+          "completion": "planted",
+          "receipt_key": "halvard-commission-plant:plant",
+          "label": "Plant the supplied unit",
+          "seconds": 3,
+          "requires_item": "job_route_marker",
+          "target_pool": [
+            {
+              "kind": "zone_object",
+              "zone": "terraces-blocks",
+              "object": "letting-office"
+            },
+            {
+              "kind": "zone_object",
+              "zone": "sodium-tin-halo",
+              "object": "halo-contract-board"
+            }
+          ]
+        }
+      ],
+      "reward": {
+        "chits": [
+          200,
+          200
+        ],
+        "xp": 200,
+        "standing": {
+          "halvard": 5
+        },
+        "standing_mode": "propagate"
+      },
+      "consequence": "Bound mission supplies have no sale value. Other callers cannot take your mission targets."
+    },
+    {
+      "id": "halvard-commission-clear",
+      "name": "Halvard: clear the service approach",
+      "faction": "halvard",
+      "type": "clear",
+      "stages": [
+        {
+          "id": "clear",
+          "verb": "clear",
+          "target": {
+            "kind": "npc",
+            "zone": "terraces-blocks",
+            "object": "letting-office",
+            "npc": "npc-maintenance-drone"
+          },
+          "input": "interact",
+          "completion": "defeated",
+          "receipt_key": "halvard-commission-clear:clear",
+          "label": "Clear the mission drones on the contested service approach",
+          "quantity": 3,
+          "resolution": "lethal"
+        }
+      ],
+      "reward": {
+        "chits": [
+          200,
+          200
+        ],
+        "xp": 200,
+        "standing": {
+          "halvard": 5
+        },
+        "standing_mode": "propagate"
+      },
+      "consequence": "Bound mission supplies have no sale value. Other callers cannot take your mission targets."
+    },
+    {
+      "id": "sablier-commission-fetch",
+      "name": "Sablier: sealed local delivery",
+      "faction": "sablier",
+      "type": "fetch",
+      "stages": [
+        {
+          "id": "collect",
+          "verb": "fetch",
+          "target": {
+            "kind": "item",
+            "zone": "core-plaza",
+            "object": "civic-notice-board",
+            "item": "job_sealed_parcel"
+          },
+          "input": "carry",
+          "completion": "carried",
+          "receipt_key": "sablier-commission-fetch:collect",
+          "label": "Collect the bound supply"
+        },
+        {
+          "id": "deliver",
+          "verb": "fetch",
+          "target": {
+            "kind": "item",
+            "zone": "core-precinct",
+            "object": "bounty-desk",
+            "item": "job_sealed_parcel"
+          },
+          "input": "carry",
+          "completion": "delivered",
+          "receipt_key": "sablier-commission-fetch:deliver",
+          "label": "Carry the bound parcel to the labelled counter",
+          "requires_item": "job_sealed_parcel"
+        }
+      ],
+      "reward": {
+        "chits": [
+          200,
+          200
+        ],
+        "xp": 200,
+        "standing": {
+          "sablier": 5
+        },
+        "standing_mode": "propagate"
+      },
+      "consequence": "Bound mission supplies have no sale value. Other callers cannot take your mission targets."
+    },
+    {
+      "id": "sablier-commission-escort",
+      "name": "Sablier: walk the local courier",
+      "faction": "sablier",
+      "type": "escort",
+      "stages": [
+        {
+          "id": "walk",
+          "verb": "escort",
+          "target": {
+            "kind": "npc",
+            "zone": "vatside-clinics",
+            "object": "clinic-public-west",
+            "npc": "npc-courier"
+          },
+          "input": "interact",
+          "completion": "arrived",
+          "receipt_key": "sablier-commission-escort:walk",
+          "label": "E beside each willing courier; walk to the labelled counter",
+          "destination": {
+            "kind": "zone_object",
+            "zone": "vatside-wake-hall",
+            "object": "vantongeren-desk"
+          }
+        }
+      ],
+      "reward": {
+        "chits": [
+          200,
+          200
+        ],
+        "xp": 200,
+        "standing": {
+          "sablier": 5
+        },
+        "standing_mode": "propagate"
+      },
+      "consequence": "Bound mission supplies have no sale value. Other callers cannot take your mission targets."
+    },
+    {
+      "id": "sablier-commission-survey",
+      "name": "Sablier: read the three notice seals",
+      "faction": "sablier",
+      "type": "survey",
+      "stages": [
+        {
+          "id": "read",
+          "verb": "survey",
+          "target": {
+            "kind": "zone_object",
+            "zone": "vatside-clinics",
+            "object": "clinic-public-west"
+          },
+          "input": "inspect",
+          "completion": "recorded",
+          "receipt_key": "sablier-commission-survey:read",
+          "label": "Inspect the selected notice seals",
+          "target_pool": [
+            {
+              "kind": "zone_object",
+              "zone": "vatside-wake-hall",
+              "object": "vantongeren-desk"
+            },
+            {
+              "kind": "zone_object",
+              "zone": "sodium-tin-halo",
+              "object": "halo-contract-board"
+            }
+          ]
+        }
+      ],
+      "reward": {
+        "chits": [
+          200,
+          200
+        ],
+        "xp": 200,
+        "standing": {
+          "sablier": 5
+        },
+        "standing_mode": "propagate"
+      },
+      "consequence": "Bound mission supplies have no sale value. Other callers cannot take your mission targets."
+    },
+    {
+      "id": "kestrel-commission-fetch",
+      "name": "Kestrel: sealed local delivery",
+      "faction": "kestrel",
+      "type": "fetch",
+      "stages": [
+        {
+          "id": "collect",
+          "verb": "fetch",
+          "target": {
+            "kind": "item",
+            "zone": "core-plaza",
+            "object": "civic-notice-board",
+            "item": "job_sealed_parcel"
+          },
+          "input": "carry",
+          "completion": "carried",
+          "receipt_key": "kestrel-commission-fetch:collect",
+          "label": "Collect the bound supply"
+        },
+        {
+          "id": "deliver",
+          "verb": "fetch",
+          "target": {
+            "kind": "item",
+            "zone": "core-precinct",
+            "object": "bounty-desk",
+            "item": "job_sealed_parcel"
+          },
+          "input": "carry",
+          "completion": "delivered",
+          "receipt_key": "kestrel-commission-fetch:deliver",
+          "label": "Carry the bound parcel to the labelled counter",
+          "requires_item": "job_sealed_parcel"
+        }
+      ],
+      "reward": {
+        "chits": [
+          200,
+          200
+        ],
+        "xp": 200,
+        "standing": {
+          "kestrel": 5
+        },
+        "standing_mode": "propagate"
+      },
+      "consequence": "Bound mission supplies have no sale value. Other callers cannot take your mission targets."
+    },
+    {
+      "id": "kestrel-commission-escort",
+      "name": "Kestrel: walk the local courier",
+      "faction": "kestrel",
+      "type": "escort",
+      "stages": [
+        {
+          "id": "walk",
+          "verb": "escort",
+          "target": {
+            "kind": "npc",
+            "zone": "vatside-clinics",
+            "object": "clinic-public-west",
+            "npc": "npc-courier"
+          },
+          "input": "interact",
+          "completion": "arrived",
+          "receipt_key": "kestrel-commission-escort:walk",
+          "label": "E beside each willing courier; walk to the labelled counter",
+          "destination": {
+            "kind": "zone_object",
+            "zone": "vatside-wake-hall",
+            "object": "vantongeren-desk"
+          }
+        }
+      ],
+      "reward": {
+        "chits": [
+          200,
+          200
+        ],
+        "xp": 200,
+        "standing": {
+          "kestrel": 5
+        },
+        "standing_mode": "propagate"
+      },
+      "consequence": "Bound mission supplies have no sale value. Other callers cannot take your mission targets."
+    },
+    {
+      "id": "kestrel-commission-hack",
+      "name": "Kestrel: audit the local cabinet",
+      "faction": "kestrel",
+      "type": "hack",
+      "stages": [
+        {
+          "id": "audit",
+          "verb": "hack",
+          "target": {
+            "kind": "core_room",
+            "core": "lat-civic-ledger",
+            "room": "r-entry"
+          },
+          "input": "enter",
+          "completion": "entered",
+          "receipt_key": "kestrel-commission-hack:audit",
+          "label": "Enter the selected cabinet rooms",
+          "target_pool": [
+            {
+              "kind": "core_room",
+              "core": "lat-civic-ledger",
+              "room": "r-foyer"
+            },
+            {
+              "kind": "core_room",
+              "core": "lat-civic-ledger",
+              "room": "r-records"
+            }
+          ]
+        }
+      ],
+      "reward": {
+        "chits": [
+          200,
+          200
+        ],
+        "xp": 200,
+        "standing": {
+          "kestrel": 5
+        },
+        "standing_mode": "propagate"
+      },
+      "consequence": "Bound mission supplies have no sale value. Other callers cannot take your mission targets."
+    },
+    {
+      "id": "wardens-commission-clear",
+      "name": "Warden: clear the service approach",
+      "faction": "wardens",
+      "type": "clear",
+      "stages": [
+        {
+          "id": "clear",
+          "verb": "clear",
+          "target": {
+            "kind": "npc",
+            "zone": "terraces-blocks",
+            "object": "letting-office",
+            "npc": "npc-maintenance-drone"
+          },
+          "input": "interact",
+          "completion": "defeated",
+          "receipt_key": "wardens-commission-clear:clear",
+          "label": "Clear the mission drones on the contested service approach",
+          "quantity": 3,
+          "resolution": "lethal"
+        }
+      ],
+      "reward": {
+        "chits": [
+          200,
+          200
+        ],
+        "xp": 200,
+        "standing": {
+          "wardens": 5
+        },
+        "standing_mode": "propagate"
+      },
+      "consequence": "Bound mission supplies have no sale value. Other callers cannot take your mission targets."
+    },
+    {
+      "id": "wardens-commission-survey",
+      "name": "Warden: read the three notice seals",
+      "faction": "wardens",
+      "type": "survey",
+      "stages": [
+        {
+          "id": "read",
+          "verb": "survey",
+          "target": {
+            "kind": "zone_object",
+            "zone": "vatside-clinics",
+            "object": "clinic-public-west"
+          },
+          "input": "inspect",
+          "completion": "recorded",
+          "receipt_key": "wardens-commission-survey:read",
+          "label": "Inspect the selected notice seals",
+          "target_pool": [
+            {
+              "kind": "zone_object",
+              "zone": "vatside-wake-hall",
+              "object": "vantongeren-desk"
+            },
+            {
+              "kind": "zone_object",
+              "zone": "sodium-tin-halo",
+              "object": "halo-contract-board"
+            }
+          ]
+        }
+      ],
+      "reward": {
+        "chits": [
+          200,
+          200
+        ],
+        "xp": 200,
+        "standing": {
+          "wardens": 5
+        },
+        "standing_mode": "propagate"
+      },
+      "consequence": "Bound mission supplies have no sale value. Other callers cannot take your mission targets."
+    },
+    {
+      "id": "wardens-commission-escort",
+      "name": "Warden: walk the local courier",
+      "faction": "wardens",
+      "type": "escort",
+      "stages": [
+        {
+          "id": "walk",
+          "verb": "escort",
+          "target": {
+            "kind": "npc",
+            "zone": "vatside-clinics",
+            "object": "clinic-public-west",
+            "npc": "npc-courier"
+          },
+          "input": "interact",
+          "completion": "arrived",
+          "receipt_key": "wardens-commission-escort:walk",
+          "label": "E beside each willing courier; walk to the labelled counter",
+          "destination": {
+            "kind": "zone_object",
+            "zone": "vatside-wake-hall",
+            "object": "vantongeren-desk"
+          }
+        }
+      ],
+      "reward": {
+        "chits": [
+          200,
+          200
+        ],
+        "xp": 200,
+        "standing": {
+          "wardens": 5
+        },
+        "standing_mode": "propagate"
+      },
+      "consequence": "Bound mission supplies have no sale value. Other callers cannot take your mission targets."
+    },
+    {
+      "id": "choir-commission-survey",
+      "name": "Choir: read the three notice seals",
+      "faction": "choir",
+      "type": "survey",
+      "stages": [
+        {
+          "id": "read",
+          "verb": "survey",
+          "target": {
+            "kind": "zone_object",
+            "zone": "vatside-clinics",
+            "object": "clinic-public-west"
+          },
+          "input": "inspect",
+          "completion": "recorded",
+          "receipt_key": "choir-commission-survey:read",
+          "label": "Inspect the selected notice seals",
+          "target_pool": [
+            {
+              "kind": "zone_object",
+              "zone": "vatside-wake-hall",
+              "object": "vantongeren-desk"
+            },
+            {
+              "kind": "zone_object",
+              "zone": "sodium-tin-halo",
+              "object": "halo-contract-board"
+            }
+          ]
+        }
+      ],
+      "reward": {
+        "chits": [
+          200,
+          200
+        ],
+        "xp": 200,
+        "standing": {
+          "choir": 5
+        },
+        "standing_mode": "propagate"
+      },
+      "consequence": "Bound mission supplies have no sale value. Other callers cannot take your mission targets."
+    },
+    {
+      "id": "choir-commission-plant",
+      "name": "Choir: mark the service approaches",
+      "faction": "choir",
+      "type": "plant",
+      "stages": [
+        {
+          "id": "collect",
+          "verb": "fetch",
+          "target": {
+            "kind": "item",
+            "zone": "terraces-blocks",
+            "object": "letting-office",
+            "item": "job_route_marker"
+          },
+          "input": "carry",
+          "completion": "carried",
+          "receipt_key": "choir-commission-plant:collect",
+          "label": "Collect the bound supply"
+        },
+        {
+          "id": "plant",
+          "verb": "plant",
+          "target": {
+            "kind": "zone_object",
+            "zone": "terraces-lobby",
+            "object": "lobby-concierge"
+          },
+          "input": "channel",
+          "completion": "planted",
+          "receipt_key": "choir-commission-plant:plant",
+          "label": "Plant the supplied unit",
+          "seconds": 3,
+          "requires_item": "job_route_marker",
+          "target_pool": [
+            {
+              "kind": "zone_object",
+              "zone": "terraces-blocks",
+              "object": "letting-office"
+            },
+            {
+              "kind": "zone_object",
+              "zone": "sodium-tin-halo",
+              "object": "halo-contract-board"
+            }
+          ]
+        }
+      ],
+      "reward": {
+        "chits": [
+          200,
+          200
+        ],
+        "xp": 200,
+        "standing": {
+          "choir": 5
+        },
+        "standing_mode": "propagate"
+      },
+      "consequence": "Bound mission supplies have no sale value. Other callers cannot take your mission targets."
+    },
+    {
+      "id": "choir-commission-hack",
+      "name": "Choir: audit the local cabinet",
+      "faction": "choir",
+      "type": "hack",
+      "stages": [
+        {
+          "id": "audit",
+          "verb": "hack",
+          "target": {
+            "kind": "core_room",
+            "core": "lat-civic-ledger",
+            "room": "r-entry"
+          },
+          "input": "enter",
+          "completion": "entered",
+          "receipt_key": "choir-commission-hack:audit",
+          "label": "Enter the selected cabinet rooms",
+          "target_pool": [
+            {
+              "kind": "core_room",
+              "core": "lat-civic-ledger",
+              "room": "r-foyer"
+            },
+            {
+              "kind": "core_room",
+              "core": "lat-civic-ledger",
+              "room": "r-records"
+            }
+          ]
+        }
+      ],
+      "reward": {
+        "chits": [
+          200,
+          200
+        ],
+        "xp": 200,
+        "standing": {
+          "choir": 5
+        },
+        "standing_mode": "propagate"
+      },
+      "consequence": "Bound mission supplies have no sale value. Other callers cannot take your mission targets."
+    },
+    {
+      "id": "sable-commission-clear",
+      "name": "Sable: clear the service approach",
+      "faction": "sable",
+      "type": "clear",
+      "stages": [
+        {
+          "id": "clear",
+          "verb": "clear",
+          "target": {
+            "kind": "npc",
+            "zone": "terraces-blocks",
+            "object": "letting-office",
+            "npc": "npc-maintenance-drone"
+          },
+          "input": "interact",
+          "completion": "defeated",
+          "receipt_key": "sable-commission-clear:clear",
+          "label": "Clear the mission drones on the contested service approach",
+          "quantity": 3,
+          "resolution": "lethal"
+        }
+      ],
+      "reward": {
+        "chits": [
+          200,
+          200
+        ],
+        "xp": 200,
+        "standing": {
+          "sable": 5
+        },
+        "standing_mode": "propagate"
+      },
+      "consequence": "Bound mission supplies have no sale value. Other callers cannot take your mission targets."
+    },
+    {
+      "id": "sable-commission-fetch",
+      "name": "Sable: sealed local delivery",
+      "faction": "sable",
+      "type": "fetch",
+      "stages": [
+        {
+          "id": "collect",
+          "verb": "fetch",
+          "target": {
+            "kind": "item",
+            "zone": "core-plaza",
+            "object": "civic-notice-board",
+            "item": "job_sealed_parcel"
+          },
+          "input": "carry",
+          "completion": "carried",
+          "receipt_key": "sable-commission-fetch:collect",
+          "label": "Collect the bound supply"
+        },
+        {
+          "id": "deliver",
+          "verb": "fetch",
+          "target": {
+            "kind": "item",
+            "zone": "core-precinct",
+            "object": "bounty-desk",
+            "item": "job_sealed_parcel"
+          },
+          "input": "carry",
+          "completion": "delivered",
+          "receipt_key": "sable-commission-fetch:deliver",
+          "label": "Carry the bound parcel to the labelled counter",
+          "requires_item": "job_sealed_parcel"
+        }
+      ],
+      "reward": {
+        "chits": [
+          200,
+          200
+        ],
+        "xp": 200,
+        "standing": {
+          "sable": 5
+        },
+        "standing_mode": "propagate"
+      },
+      "consequence": "Bound mission supplies have no sale value. Other callers cannot take your mission targets."
+    },
+    {
+      "id": "sable-commission-hack",
+      "name": "Sable: audit the local cabinet",
+      "faction": "sable",
+      "type": "hack",
+      "stages": [
+        {
+          "id": "audit",
+          "verb": "hack",
+          "target": {
+            "kind": "core_room",
+            "core": "lat-civic-ledger",
+            "room": "r-entry"
+          },
+          "input": "enter",
+          "completion": "entered",
+          "receipt_key": "sable-commission-hack:audit",
+          "label": "Enter the selected cabinet rooms",
+          "target_pool": [
+            {
+              "kind": "core_room",
+              "core": "lat-civic-ledger",
+              "room": "r-foyer"
+            },
+            {
+              "kind": "core_room",
+              "core": "lat-civic-ledger",
+              "room": "r-records"
+            }
+          ]
+        }
+      ],
+      "reward": {
+        "chits": [
+          200,
+          200
+        ],
+        "xp": 200,
+        "standing": {
+          "sable": 5
+        },
+        "standing_mode": "propagate"
+      },
+      "consequence": "Bound mission supplies have no sale value. Other callers cannot take your mission targets."
+    },
+    {
+      "id": "unmoored-commission-survey",
+      "name": "Unmoored: read the three notice seals",
+      "faction": "unmoored",
+      "type": "survey",
+      "stages": [
+        {
+          "id": "read",
+          "verb": "survey",
+          "target": {
+            "kind": "zone_object",
+            "zone": "vatside-clinics",
+            "object": "clinic-public-west"
+          },
+          "input": "inspect",
+          "completion": "recorded",
+          "receipt_key": "unmoored-commission-survey:read",
+          "label": "Inspect the selected notice seals",
+          "target_pool": [
+            {
+              "kind": "zone_object",
+              "zone": "vatside-wake-hall",
+              "object": "vantongeren-desk"
+            },
+            {
+              "kind": "zone_object",
+              "zone": "sodium-tin-halo",
+              "object": "halo-contract-board"
+            }
+          ]
+        }
+      ],
+      "reward": {
+        "chits": [
+          200,
+          200
+        ],
+        "xp": 200,
+        "standing": {
+          "unmoored": 5
+        },
+        "standing_mode": "propagate"
+      },
+      "consequence": "Bound mission supplies have no sale value. Other callers cannot take your mission targets."
+    },
+    {
+      "id": "unmoored-commission-plant",
+      "name": "Unmoored: mark the service approaches",
+      "faction": "unmoored",
+      "type": "plant",
+      "stages": [
+        {
+          "id": "collect",
+          "verb": "fetch",
+          "target": {
+            "kind": "item",
+            "zone": "terraces-blocks",
+            "object": "letting-office",
+            "item": "job_route_marker"
+          },
+          "input": "carry",
+          "completion": "carried",
+          "receipt_key": "unmoored-commission-plant:collect",
+          "label": "Collect the bound supply"
+        },
+        {
+          "id": "plant",
+          "verb": "plant",
+          "target": {
+            "kind": "zone_object",
+            "zone": "terraces-lobby",
+            "object": "lobby-concierge"
+          },
+          "input": "channel",
+          "completion": "planted",
+          "receipt_key": "unmoored-commission-plant:plant",
+          "label": "Plant the supplied unit",
+          "seconds": 3,
+          "requires_item": "job_route_marker",
+          "target_pool": [
+            {
+              "kind": "zone_object",
+              "zone": "terraces-blocks",
+              "object": "letting-office"
+            },
+            {
+              "kind": "zone_object",
+              "zone": "sodium-tin-halo",
+              "object": "halo-contract-board"
+            }
+          ]
+        }
+      ],
+      "reward": {
+        "chits": [
+          200,
+          200
+        ],
+        "xp": 200,
+        "standing": {
+          "unmoored": 5
+        },
+        "standing_mode": "propagate"
+      },
+      "consequence": "Bound mission supplies have no sale value. Other callers cannot take your mission targets."
+    },
+    {
+      "id": "unmoored-commission-fetch",
+      "name": "Unmoored: sealed local delivery",
+      "faction": "unmoored",
+      "type": "fetch",
+      "stages": [
+        {
+          "id": "collect",
+          "verb": "fetch",
+          "target": {
+            "kind": "item",
+            "zone": "core-plaza",
+            "object": "civic-notice-board",
+            "item": "job_sealed_parcel"
+          },
+          "input": "carry",
+          "completion": "carried",
+          "receipt_key": "unmoored-commission-fetch:collect",
+          "label": "Collect the bound supply"
+        },
+        {
+          "id": "deliver",
+          "verb": "fetch",
+          "target": {
+            "kind": "item",
+            "zone": "core-precinct",
+            "object": "bounty-desk",
+            "item": "job_sealed_parcel"
+          },
+          "input": "carry",
+          "completion": "delivered",
+          "receipt_key": "unmoored-commission-fetch:deliver",
+          "label": "Carry the bound parcel to the labelled counter",
+          "requires_item": "job_sealed_parcel"
+        }
+      ],
+      "reward": {
+        "chits": [
+          200,
+          200
+        ],
+        "xp": 200,
+        "standing": {
+          "unmoored": 5
+        },
+        "standing_mode": "propagate"
+      },
+      "consequence": "Bound mission supplies have no sale value. Other callers cannot take your mission targets."
+    },
+    {
+      "id": "ferrymen-commission-escort",
+      "name": "Ferrymen: walk the local courier",
+      "faction": "ferrymen",
+      "type": "escort",
+      "stages": [
+        {
+          "id": "walk",
+          "verb": "escort",
+          "target": {
+            "kind": "npc",
+            "zone": "vatside-clinics",
+            "object": "clinic-public-west",
+            "npc": "npc-courier"
+          },
+          "input": "interact",
+          "completion": "arrived",
+          "receipt_key": "ferrymen-commission-escort:walk",
+          "label": "E beside each willing courier; walk to the labelled counter",
+          "destination": {
+            "kind": "zone_object",
+            "zone": "vatside-wake-hall",
+            "object": "vantongeren-desk"
+          }
+        }
+      ],
+      "reward": {
+        "chits": [
+          200,
+          200
+        ],
+        "xp": 200,
+        "standing": {
+          "ferrymen": 5
+        },
+        "standing_mode": "propagate"
+      },
+      "consequence": "Bound mission supplies have no sale value. Other callers cannot take your mission targets."
+    },
+    {
+      "id": "ferrymen-commission-fetch",
+      "name": "Ferrymen: sealed local delivery",
+      "faction": "ferrymen",
+      "type": "fetch",
+      "stages": [
+        {
+          "id": "collect",
+          "verb": "fetch",
+          "target": {
+            "kind": "item",
+            "zone": "core-plaza",
+            "object": "civic-notice-board",
+            "item": "job_sealed_parcel"
+          },
+          "input": "carry",
+          "completion": "carried",
+          "receipt_key": "ferrymen-commission-fetch:collect",
+          "label": "Collect the bound supply"
+        },
+        {
+          "id": "deliver",
+          "verb": "fetch",
+          "target": {
+            "kind": "item",
+            "zone": "core-precinct",
+            "object": "bounty-desk",
+            "item": "job_sealed_parcel"
+          },
+          "input": "carry",
+          "completion": "delivered",
+          "receipt_key": "ferrymen-commission-fetch:deliver",
+          "label": "Carry the bound parcel to the labelled counter",
+          "requires_item": "job_sealed_parcel"
+        }
+      ],
+      "reward": {
+        "chits": [
+          200,
+          200
+        ],
+        "xp": 200,
+        "standing": {
+          "ferrymen": 5
+        },
+        "standing_mode": "propagate"
+      },
+      "consequence": "Bound mission supplies have no sale value. Other callers cannot take your mission targets."
+    },
+    {
+      "id": "ferrymen-commission-clear",
+      "name": "Ferrymen: clear the service approach",
+      "faction": "ferrymen",
+      "type": "clear",
+      "stages": [
+        {
+          "id": "clear",
+          "verb": "clear",
+          "target": {
+            "kind": "npc",
+            "zone": "terraces-blocks",
+            "object": "letting-office",
+            "npc": "npc-maintenance-drone"
+          },
+          "input": "interact",
+          "completion": "defeated",
+          "receipt_key": "ferrymen-commission-clear:clear",
+          "label": "Clear the mission drones on the contested service approach",
+          "quantity": 3,
+          "resolution": "lethal"
+        }
+      ],
+      "reward": {
+        "chits": [
+          200,
+          200
+        ],
+        "xp": 200,
+        "standing": {
+          "ferrymen": 5
+        },
+        "standing_mode": "propagate"
+      },
+      "consequence": "Bound mission supplies have no sale value. Other callers cannot take your mission targets."
     }
   ]
 }

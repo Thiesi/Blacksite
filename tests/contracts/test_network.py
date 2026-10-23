@@ -6,7 +6,9 @@ import pytest
 
 from blacksite.content.schema import Allocation, DataSpec, Effect, EvidenceRecord, Stage, StageTarget
 from tests.contracts.test_engine import template
-from tests.lattice.test_engine import runners, intent
+from blacksite.server.protocol import Frame
+from tests.character_helpers import act
+from tests.lattice.test_engine import runners, intent, jack
 from tests.lattice.test_encounters import enter
 from tests.lattice.test_interlock import flip, control_room
 
@@ -22,6 +24,48 @@ def accept(game, caller, stages, evidence=()):
     owner.write(draft)
     game.commit_commerce()
     return owner, instance.id
+
+
+def inspect(game, caller):
+    game.core.lattice.encounters.menus.pop(caller.session.id, None)
+    act(game, caller, Frame('key', {'k': 'e', 't': 0}))
+
+
+def test_game_9_1_network_survey_inspects_three_actual_distinct_cells_atomically(runners):
+    game, caller, _, _ = runners
+    presence = jack(game, caller)
+    cells = list(game.core.lattice.sectors.cells[presence.sector])[:3]
+    targets = tuple(StageTarget('cell', sector=presence.sector, cell=cell) for cell in cells)
+    stage = Stage('inspect', 'survey', targets[0], 'inspect', 'observed', 'fixture:cells',
+                  quantity=3, target_pool=targets[1:])
+    owner, iid = accept(game, caller, (stage,))
+    assert not owner.state.engine.instances[iid].stages[0].counts
+    # Fixture positioning isolates inspection; ordinary navigation has S13 coverage.
+    presence.cell = cells[0]
+    inspect(game, caller)
+    game.commit_commerce(error=True)
+    assert not owner.state.engine.instances[iid].stages[0].counts
+    for index, cell in enumerate(cells):
+        presence.cell = cell
+        inspect(game, caller)
+        game.commit_commerce()
+        inspect(game, caller)
+        game.commit_commerce()
+        assert sum(owner.state.engine.instances[iid].stages[0].counts.values()) == index+1
+    assert owner.state.engine.instances[iid].state == 'complete'
+    assert presence.procedure is None
+
+
+def test_game_9_1_core_inspection_uses_actual_room_and_not_a_caller_supplied_target(runners):
+    game, caller, _, _ = runners
+    presence = enter(game, caller, 'lat-civic-ledger')
+    stage = Stage('inspect', 'survey', StageTarget('core_room', core=presence.core, room=presence.room),
+                  'inspect', 'recorded', 'fixture:room')
+    owner, iid = accept(game, caller, (stage,))
+    inspect(game, caller)
+    assert owner.state.engine.instances[iid].state == 'active'
+    game.commit_commerce()
+    assert owner.state.engine.instances[iid].state == 'complete'
 
 
 def test_game_9_3_actual_control_and_contract_progress_commit_or_rollback_together(runners) -> None:

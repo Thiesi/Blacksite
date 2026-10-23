@@ -193,3 +193,12 @@ stable source sites and journal evidence separate. Never replace these
 with copied room coordinates or a rare-drop prerequisite. Permanent
 story items required by a later contract belong to the explicit reward;
 temporary lifted payloads retire with their owning job.
+
+Activate the authored 33-contract Season 1 bundle only after the
+[S19 content handoff](../s19-content-handoff.md), S25 map bindings and S27
+neutral referrals pass integrated acceptance. Replay both paid forks
+into their shared continuations. Verify the shield's public NPC route
+expires without being extended by another worker. The Ferrymen recovery
+has a checkpointed 180-second field window; disconnect/restart preserves
+its deadline, failure returns to launch and recovered-item delivery is
+untimed. Pure S19 receipt replays do not replace full-city human pacing.

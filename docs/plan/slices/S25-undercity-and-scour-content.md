@@ -287,3 +287,11 @@ usable without faction membership when expanding the city's shops;
 additional faction sources supplement them. Permanent source guards and
 current-season acquisition custody are shared by counters, lifts and
 contract rewards. The full-city income/playtesting handoff still applies.
+
+The [S19 content handoff](../s19-content-handoff.md) lists every named
+story anchor, mission NPC, service layout and public patrol source to
+bind. Preserve the hidden black-core entrance and both willing-template
+destinations. Field-window acceptance must use the real landing-to-spoke
+route; check the disclosed 180-second recovery against its actual travel
+and hazards. Adjust canon and its tests together if measured play requires
+a different window. Do not activate unresolved bundles to supply offers.

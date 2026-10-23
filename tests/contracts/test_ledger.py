@@ -64,6 +64,22 @@ def test_game_9_2_public_permit_is_global_and_one_job_cannot_extend_it_per_worke
     assert not restored.permits
 
 
+def test_game_9_4_fixed_shield_branch_publishes_one_bounded_route_for_all_workers() -> None:
+    state = ledger()
+    base = state.content.contracts['clear']
+    target = StageTarget('npc', zone='squat', npc='patrol')
+    job = replace(base, publication_options=(), branch='shield',
+                  permit_scope=Permit('route', 'squat-patrol', 1200, target, 'public'))
+    state.content.contracts[job.id] = state.engine.templates[job.id] = job
+    instance = state.engine.accept(state.engine.story_offer(job.id, 'a'), party(), 0)
+    finish(state.engine, instance.id, ('a','b'))
+    state.claim(instance.id, 'a', 30)
+    assert state.permits_target('outside', 'route', target, 1229)
+    assert not state.permits_target('outside', 'route', target, 1230)
+    assert state.engine.branches[state.engine.branch_key('a', 'ration')] == 'shield'
+    assert len(state.permits['*']) == 1
+
+
 def test_game_9_3_private_credential_and_publication_live_only_in_committed_draft() -> None:
     state = ledger()
     instance = state.engine.accept(state.engine.story_offer('clear', 'a'), party(), 0)

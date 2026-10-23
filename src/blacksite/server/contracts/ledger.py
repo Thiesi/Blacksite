@@ -68,7 +68,8 @@ class Ledger:
         instance = self.engine.instances[iid]
         for payout in payouts:
             if payout.permit:
-                public = option is not None and instance.options[option]['audience'] == 'public'
+                public = payout.permit.audience == 'public' or (
+                    option is not None and instance.options[option]['audience'] == 'public')
                 holder, key = ('*', f'{iid}:{option}') if public else (payout.player, payout.receipt)
                 self.permits.setdefault(holder, {}).setdefault(key, {
                     'permit': asdict(payout.permit), 'until': now + payout.permit.expiry_seconds,

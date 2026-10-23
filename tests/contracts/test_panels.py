@@ -1,6 +1,7 @@
 """UI 11: truthful cards, stale actions and compact journal rendering."""
 
 from dataclasses import asdict
+from typing import Any
 
 import pytest
 
@@ -12,6 +13,7 @@ from blacksite.server.protocol import Frame
 from blacksite.server.world.zone import ObjectState
 from tests.contracts.test_adapter import live, shipped
 from tests.fake_terminal import FakeTerminal
+from tests.contracts.test_adapter import accept, complete
 
 
 def board(live):
@@ -23,6 +25,55 @@ def board(live):
     panel = Panel(game.clock.now_tick(), spec.id, 'wardens')
     owner.panels.menus[session.id] = panel
     return session, panel
+
+
+def test_game_9_1_vesper_turns_in_generated_faction_commission_without_changing_standing_giver(live):
+    game,owner,callers,players=live
+    iid=accept(live)
+    complete(live,iid)
+    session,panel=board(live)
+    obj=owner.world.zones[game.core.combat.actor(players[0]).zone].objects[panel.target]
+    obj.spec.params['contract_handler']='vesper'
+    panel.handler='vesper'
+    assert any(a['key']=='t' for a in owner.panels.card(session,panel,iid)[1])
+    owner.panels.act(session,panel,'t',iid)
+    assert panel.confirmation == ('turn-in',iid,'')
+    owner.panels.act(session,panel,'y',iid)
+    game.commit_commerce()
+    assert owner.state.engine.instances[iid].giver == 'wardens'
+    assert owner.state.engine.instances[iid].state == 'turned_in'
+
+
+def test_ui_11_abandoned_job_remains_visible_and_original_workers_resume_with_frozen_terms(live: tuple[Any, ...]) -> None:
+    game, owner, callers, players = live
+    iid = accept(live)
+    draft = owner.state.fork()
+    for player in players[:2]:
+        owner.withdraw(draft, iid, player.id)
+    owner.write(draft)
+    game.commit_commerce()
+    original = owner.state.engine.instances[iid]
+    roster, reward = original.roster, original.reward
+    panel = Panel(game.clock.now_tick())
+    assert any(row['id'] == iid and row['cells'][0] == 'withdrawn'
+               for row in owner.panels.rows(callers[0].session, panel))
+    assert any(a['key'] == 'r' for a in owner.panels.card(callers[0].session, panel, iid)[1])
+    owner.panels.act(callers[0].session, panel, 'r', iid)
+    owner.panels.act(callers[0].session, panel, 'y', iid)
+    game.commit_commerce(error=True)
+    assert owner.state.engine.instances[iid].withdrawn == {p.id for p in players[:2]}
+    owner.panels.act(callers[0].session, panel, 'r', iid)
+    owner.panels.act(callers[0].session, panel, 'y', iid)
+    game.commit_commerce()
+    attempt = owner.state.engine.instances[iid].stages[0].attempt
+    other = Panel(game.clock.now_tick())
+    owner.panels.act(callers[1].session, other, 'r', iid)
+    owner.panels.act(callers[1].session, other, 'y', iid)
+    game.commit_commerce()
+    resumed = owner.state.engine.instances[iid]
+    assert not resumed.withdrawn and resumed.state == 'active'
+    assert resumed.stages[0].attempt == attempt
+    assert resumed.roster == roster and resumed.reward == reward
 
 
 def test_ui_11_board_cancel_and_stale_selection_cannot_accept_a_different_job(live) -> None:

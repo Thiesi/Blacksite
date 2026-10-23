@@ -75,7 +75,29 @@ spending across allocation expiry and restart. Budget details use meta in
 the existing transaction without a SQL schema change. Source callbacks
 finalize before deferred impacts can propose another write.
 
+Plant procedures consume bound supplies only in the source write after
+the canonical channel. Physical pickups and mission item lifts support
+replacement by original workers; benign linked releases remain available
+only for missing-supply recovery. Resumable generated/story jobs stay in
+the journal after withdrawal, preserving frozen terms and earlier stages.
+Story settlement checks completed-template receipts again across parallel
+crew copies. Historical publication quotes retain the paid option.
+
 ## Data and protocol
+
+The authored pool contains six Vesper commissions, three per faction,
+all 33 Season 1 contracts and four service work orders. The first job,
+generated hub commissions and Cold Chain use shipped maps. Story chains
+and the three other services remain in authoring bundles. Their precise
+map, source, dialogue and activation work is recorded in the
+[content handoff](../s19-content-handoff.md).
+
+Boards prefer distinct templates and Vesper brokers non-member generated
+commissions at the Tin Halo, including their turn-in. This does not waive
+story prerequisites. Network surveys use E at the actual cell/core room.
+The Ferrymen race starts a disclosed 180-second recovery window at its
+launch checkpoint; a retry requires launching again, without a live-event
+wait. The shield branch publishes a bounded 20-minute local NPC patrol.
 
 `contracts.json`, service-node records, evidence/text assets and bundle
 manifests follow the entity schema. Menus expose offered/active/done,

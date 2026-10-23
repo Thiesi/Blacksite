@@ -36,6 +36,8 @@ def test_entity_1_10_loads_alternative_program_and_typed_permit(world: World) ->
     ('completion', 'completion is not a hack server fact'),
     ('quantity', 'quantity must be positive'),
     ('pool', 'target pool is too small'),
+    ('window', 'field window cannot be negative'),
+    ('checkpoint', 'retry checkpoint'),
 ])
 def test_entity_1_10_rejects_unplayable_active_job_fields(world: World, field: str, expected: str) -> None:
     extend(world)
@@ -54,5 +56,9 @@ def test_entity_1_10_rejects_unplayable_active_job_fields(world: World, field: s
         stage['quantity'] = 0
     elif field == 'pool':
         job['stages'][0]['quantity'] = 2
+    elif field == 'window':
+        stage['window_seconds'] = -1
+    elif field == 'checkpoint':
+        stage['retry_from'] = 'missing-stage'
     world.write('contracts.json', data)
     assert any(expected in message for message in world.messages())

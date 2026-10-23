@@ -22,6 +22,8 @@ def describe(condition: str, content: ContentTree) -> str:
     if name in ('completed_contract', 'has_contract'):
         job = content.contracts.get(args[0])
         return ('complete ' if name == 'completed_contract' else 'accept ')+(job.name if job and job.name else args[0])
+    if name == 'receipt':
+        return 'settle a choice in '+args[0].replace('-', ' ')
     if name == 'season_available':
         return 'Season '+args[0]+' available'
     if name == 'event_active':

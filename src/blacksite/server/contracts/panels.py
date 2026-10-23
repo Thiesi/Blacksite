@@ -5,7 +5,7 @@ from math import ceil
 import textwrap
 from typing import Any
 
-from blacksite.server.contracts.engine import Payment
+from blacksite.server.contracts.engine import Instance, Payment
 from blacksite.server.contracts.requirements import describe as describe_requirement
 from blacksite.server.protocol import Frame
 from blacksite.server.commerce import CommerceMenu
@@ -13,6 +13,7 @@ from blacksite.server.sessions import Session
 from blacksite.server.wake import menu
 from blacksite.server.world.simulation import MENU_TIMEOUT_SECONDS
 from blacksite.server.clock import TICK_HZ
+from blacksite.server.crews import GUARD_SECONDS
 from blacksite.server.npcs.templates import SUBDUE_SHOCK
 
 
@@ -26,6 +27,10 @@ class Panel:
     page: int = 0
     confirmation: tuple[str, str, str] | None = None
     prose: bool = False
+
+
+def takes_turnin(handler: str, instance: Instance) -> bool:
+    return handler == instance.giver or (handler == 'vesper' and not instance.story and not instance.service)
 
 
 def payment(payment: Payment) -> str:
@@ -79,12 +84,13 @@ class Panels:
         result = [{'id': p.id, 'cells': ['Proposal', owner.content.contracts[p.offer.template].name or p.offer.template]}
                   for p in owner.proposals.values() if pid in p.roster and panel.tab == 'jobs']
         for iid, job in owner.state.engine.instances.items():
-            if pid not in {p.player for p in job.roster} or pid in job.withdrawn:
+            if pid not in {p.player for p in job.roster}:
                 continue
-            if (job.state == 'turned_in') != (panel.tab == 'done'):
+            retired = job.state == 'turned_in' or (pid in job.withdrawn and (job.service or job.state == 'complete' or job.failure == 'expired'))
+            if retired != (panel.tab == 'done'):
                 continue
             name = owner.content.contracts[job.template].name or job.template
-            result.append({'id': iid, 'cells': [job.state, name]})
+            result.append({'id': iid, 'cells': ['withdrawn' if pid in job.withdrawn else job.state, name]})
         if panel.handler and panel.tab == 'jobs':
             self.station(session, panel.target)
             actor = owner.game.combat.actor(owner.game.players[pid])
@@ -94,7 +100,9 @@ class Panels:
                     result.append({'id': 'service:'+sid, 'cells': [node.state, service.name]})
             for tid, job in owner.state.engine.templates.items():
                 if (job.story and job.giver == panel.handler and tid not in owner.state.engine.completed.get(pid, set())
-                        and not owner.requirements(pid, job)):
+                        and not owner.requirements(pid, job)
+                        and not any(j.template == tid and j.state != 'turned_in' and pid in {p.player for p in j.roster}
+                                    for j in owner.state.engine.instances.values())):
                     result.append({'id': tid, 'cells': ['Story', job.name or job.id]})
             for offer in owner.state.engine.board(panel.handler, owner.now()):
                 job = owner.state.engine.templates[offer.template]
@@ -155,7 +163,7 @@ class Panels:
             proposal = owner.proposals[selected]
             job = owner.state.engine.templates[proposal.offer.template]
             participant = owner.participant(pid)
-            helper = job.story and job.id in owner.state.engine.completed.get(pid, set())
+            helper = owner.state.engine.helper_for(job, pid)
             quoted = (Payment(0, 0, {}, 'explicit') if helper else
                 proposal.offer.reward.scaled(len(proposal.roster), job.crew_scaling and not job.story and not job.service,
                                                   participant.archetype == 'operator'))
@@ -164,6 +172,7 @@ class Panels:
                               next(a.label for a in job.approaches if a.id == proposal.approach)),
                 'Roster: '+', '.join(owner.game.players[p].name for p in proposal.roster),
                 f'Consent: {len(proposal.consent)}/{len(proposal.roster)}. No slots or supplies spent yet.']
+            detail.append(f'Contribute an objective action or guard nearby for {GUARD_SECONDS} s to earn the reward. Late joins earn nothing.')
             if helper:
                 detail.append('Helper: no new payout; your earlier personal choice stays.')
             else:
@@ -185,6 +194,7 @@ class Panels:
         if selected in owner.state.engine.instances:
             instance = owner.state.engine.instances[selected]
             participant = next(p for p in instance.roster if p.player == pid)
+            helper = owner.state.engine.helper(instance, participant)
             detail = ['Your reward: '+payment(owner.state.engine.quote(instance, participant)),
                       'Roster: '+', '.join(owner.game.players[p.player].name
                           if p.player in owner.game.players else 'Departed worker' for p in instance.roster)]
@@ -202,25 +212,45 @@ class Panels:
                     +('retry allowed' if progress.stage.retry else 'no retry'))
                 restraint = progress.stage.verb == 'clear' and progress.stage.resolution == 'subdue'
                 seconds = owner.duration(pid, progress.stage)
-                cost = f'{SUBDUE_SHOCK} shock required; no fee.' if restraint else progress.stage.cost
+                cost = f'{SUBDUE_SHOCK} shock required; no fee.' if restraint else owner.action_cost(progress.stage)
                 detail.insert(2, f'Action: {seconds:g} s; {cost}')
+                if progress.stage.window_seconds and progress.started_at is not None:
+                    left = max(0, ceil(progress.started_at+progress.stage.window_seconds-owner.now()))
+                    detail.insert(2, f'Field window: {left} s remaining. Failure returns to the listed launch checkpoint.')
                 if progress.stage.destination:
                     dest = progress.stage.destination
                     detail.insert(1, 'Destination: '+', '.join(str(v) for v in (dest.zone, dest.object, dest.tile) if v is not None))
+                supplies = owner.actions.supplies(instance)
+                if supplies:
+                    source = supplies[0]
+                    verb = 'E reissues at ' if source.zone else 'lift a mission copy at '
+                    detail.insert(3, 'Missing supply? '+verb+', '.join(str(v)
+                        for v in (source.zone, source.object, source.tile, source.core, source.room,
+                                  source.sector, source.band, source.data) if v is not None)+'. Bound copies cannot be sold.')
             elif instance.state == 'complete':
-                detail.insert(0, 'Next: return to '+instance.giver+"'s contract board.")
-                if panel.handler == instance.giver:
+                destination = instance.giver+"'s board" if instance.story or instance.service else "the Tin Halo or "+instance.giver+"'s board"
+                detail.insert(0, 'Next: return to '+destination+'.')
+                if takes_turnin(panel.handler, instance) and pid not in instance.withdrawn:
                     if instance.options:
-                        for index, (option, terms) in enumerate(instance.options.items(), 1):
-                            actions.append({'key': str(index), 'label': terms['label']})
-                            detail.append(terms['label']+': '+payment(owner.state.engine.quote(instance, participant, option)))
+                        if not helper and pid not in instance.paid:
+                            for index, (option, terms) in enumerate(instance.options.items(), 1):
+                                actions.append({'key': str(index), 'label': terms['label']})
+                                detail.append(terms['label']+': '+payment(owner.state.engine.quote(instance, participant, option)))
+                        else:
+                            detail.append('Eligible participants record their own publication choice.')
                     else:
                         actions.append({'key': 't', 'label': 'turn in'})
             elif instance.state == 'failed':
                 detail.insert(0, 'Stopped: '+instance.failure)
-                if instance.index < len(instance.stages) and instance.stages[instance.index].stage.retry:
+                if pid not in instance.withdrawn and instance.index < len(instance.stages) and instance.stages[instance.index].stage.retry:
                     actions.append({'key': 'r', 'label': 'retry stage'})
-            if instance.state in ('active', 'complete', 'failed'):
+            if helper:
+                detail.append('Helper: this story reward was already received. No new payout or changed personal choice.')
+            if (pid in instance.withdrawn and not instance.service and instance.state in ('active', 'failed')
+                    and instance.failure != 'expired'):
+                actions.append({'key':'r', 'label':'resume original job'})
+                detail.insert(0, 'Withdrawn. R resumes your original roster and terms; completed stages stay.')
+            if instance.state in ('active', 'complete', 'failed') and pid not in instance.withdrawn:
                 actions.append({'key': 'w', 'label': 'withdraw'})
             return detail, actions
         if selected and panel.handler:
@@ -254,6 +284,10 @@ class Panels:
         if panel.confirmation:
             verb, target, option = panel.confirmation
             detail = ['Commit '+verb+'? Your chosen terms:'] + detail
+            if verb == 'withdraw':
+                instance = self.owner.state.engine.instances[target]
+                detail.insert(1, 'Withdrawal is final for this reservation; disconnect keeps its deadline.' if instance.service
+                    else 'You can resume original terms with R. Withdrawal clears your participation credit.')
             if verb == 'turn-in' and option:
                 instance = self.owner.state.engine.instances[target]
                 terms = instance.options[option]
@@ -291,7 +325,7 @@ class Panels:
             if key != 'y':
                 return
             if verb == 'turn-in':
-                if self.station(session, panel.target) != owner.state.engine.instances[target].giver:
+                if not takes_turnin(self.station(session, panel.target), owner.state.engine.instances[target]):
                     raise ValueError('Return to the listed handler first.')
                 owner.claim(target, pid, option or None)
             elif verb == 'start':

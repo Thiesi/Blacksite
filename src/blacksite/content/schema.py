@@ -995,6 +995,8 @@ class Stage:
     destination: StageTarget | None = None
     requires_item: str | None = None
     linked_control: StageTarget | None = None
+    window_seconds: int = 0
+    retry_from: str | None = None
 
 
 @dataclass(frozen=True)
@@ -1013,6 +1015,7 @@ class Permit:
     target: str
     expiry_seconds: int
     binding: StageTarget | None = None
+    audience: Literal['personal', 'public'] = 'personal'
 
 
 @dataclass(frozen=True)

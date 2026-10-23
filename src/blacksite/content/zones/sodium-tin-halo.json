@@ -86,7 +86,8 @@
       "kind": "terminal",
       "essential": false,
       "params": {
-        "name": "Halo contract board"
+        "name": "Halo contract board",
+        "contract_handler": "vesper"
       }
     },
     {

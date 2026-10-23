@@ -208,3 +208,20 @@ committed start. A disconnect preserves progress only until the original
 deadline. Use the server-owned card and personal publication action without
 introducing a group ballot or mandatory lore read.
 <!-- s19-services:end -->
+
+Before S26 activates Season 1, implement Vesper's neutral referral when
+hostile standing blocks a faction's handler. Route actual deliveries
+and turn-in through that broker, waive only the blocked handler standing
+gate, and retain prior-job/settled-branch, grade, item and event checks.
+Use S19's `receipt GROUP` for a continuation after either paid fork;
+an acceptance-only branch flag is insufficient. Keep already-paid
+opposite-branch helpers at zero reward without changing their choice.
+Native hostile-referral acceptance is part of this dialogue integration,
+not proof claimed by S19's inactive authoring bundle.
+
+Use the [S19 content handoff](../s19-content-handoff.md) for its 33
+attributed evidence records and named sources. Default cards distinguish
+observation from the source's claim, question and next action. Optional
+prose cannot become an answer quiz. Vesper's generated-job brokerage is
+already live; the hostile-standing story referral above is still required
+before S26 activation. Keep the two permissions distinct.

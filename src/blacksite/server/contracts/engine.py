@@ -141,6 +141,11 @@ class Progress:
     counts: dict[str, int] = field(default_factory=dict)
     receipts: set[str] = field(default_factory=set)
     subjects: set[str] = field(default_factory=set)
+    started_at: float | None = None
+
+    def window_closed(self, now: float) -> bool:
+        return bool(self.stage.window_seconds and self.started_at is not None
+                    and now >= self.started_at+self.stage.window_seconds)
 
     @property
     def complete(self) -> bool:
@@ -263,15 +268,24 @@ class Engine:
         if saved and saved['epoch'] == epoch:
             return tuple(Offer.read(row) for row in saved['offers'])
         pool = sorted((t for t in self.templates.values()
-                       if t.giver == handler and not t.story and not t.service),
+                       if (t.giver == handler or handler == 'vesper') and not t.story and not t.service),
                       key=lambda template: (template.min_grade, template.id))
         rng = Random(f'{self.origin}:board:{handler}:{epoch}')
         offers = []
         if pool:
             # Keep at least one entry from the handler's earliest grade.
-            first = rng.choice([t for t in pool if t.min_grade == pool[0].min_grade])
+            own = [t for t in pool if t.giver == handler] or pool
+            first = rng.choice([t for t in own if t.min_grade == min(t.min_grade for t in own)])
+            bag = [t for t in pool if t.id != first.id]
+            rng.shuffle(bag)
             for index in range(BOARD_OFFERS):
-                template = first if index == 0 else rng.choice(pool)
+                if index == 0:
+                    template = first
+                else:
+                    if not bag:
+                        bag = list(pool)
+                        rng.shuffle(bag)
+                    template = bag.pop()
                 offers.append(self.offer(template, f'{self.origin}:board:{handler}:{epoch}:{index}',
                                          (epoch + 1) * BOARD_SECONDS))
         self.boards[handler] = {'epoch': epoch, 'offers': [asdict(offer) for offer in offers]}
@@ -297,6 +311,14 @@ class Engine:
                    and player in {p.player for p in instance.roster} - instance.withdrawn
                    for instance in self.instances.values())
 
+    def helper_for(self, template: ContractTemplate, player: str) -> bool:
+        if not template.story:
+            return False
+        if template.id in self.completed.get(player, set()):
+            return True
+        chosen = self.branches.get(self.branch_key(player, template.branch_group)) if template.branch_group else None
+        return bool(template.branch and chosen is not None and chosen != template.branch)
+
     def accept(self, offer: Offer, roster: tuple[Participant, ...], now: float,
                approach: str = 'default') -> Instance:
         if not roster or len(roster) > CREW_MAX or len({p.player for p in roster}) != len(roster):
@@ -316,9 +338,11 @@ class Engine:
                     return instance  # Duplicate accept cannot reroll targets or a reward.
                 if {p.identity for p in roster} & {p.identity for p in instance.roster}:
                     raise ValueError('That identity already accepted this offer.')
-        roster = tuple(replace(p, rewardable=p.rewardable and not (
-            template.story and template.id in self.completed.get(p.player, set()))) for p in roster)
+        roster = tuple(replace(p, rewardable=p.rewardable and not self.helper_for(template, p.player)) for p in roster)
         if not any(p.rewardable for p in roster):
+            if template.branch_group and template.branch and any(self.branches.get(
+                    self.branch_key(p.player, template.branch_group)) not in (None, template.branch) for p in roster):
+                raise ValueError('A participant already chose the other branch.')
             raise ValueError('Every participant already completed this story.')
         for participant in roster:
             if not template.story and not template.service and self.active_count(participant.player) >= ACTIVE_GENERATED:
@@ -359,6 +383,7 @@ class Engine:
             template.branch, template.permit_scope)
         instance.service = template.service
         instance.season = template.season
+        instance.stages[0].started_at = now
         for participant in roster:
             if template.branch_group and template.branch and participant.rewardable:
                 self.branches[self.branch_key(participant.player, template.branch_group)] = template.branch
@@ -375,6 +400,8 @@ class Engine:
             progress = instance.stages[instance.index]
             stage = progress.stage
             if fact.attempt != progress.attempt or fact.stage and fact.stage != stage.id:
+                continue
+            if progress.window_closed(now):
                 continue
             if fact.failure and fact.instance == instance.id:
                 instance.state, instance.failure = 'failed', fact.failure
@@ -399,6 +426,8 @@ class Engine:
                 instance.index += 1
                 if instance.index == len(instance.stages):
                     instance.state = 'complete'
+                else:
+                    instance.stages[instance.index].started_at = now
             changed.append(instance.id)
         if changed:
             self.revision += 1
@@ -419,6 +448,13 @@ class Engine:
         instance = self.instances[iid]
         if player not in {p.player for p in instance.roster}:
             raise ValueError('That contract is not yours.')
+        if (player in instance.withdrawn and instance.state == 'active' and not instance.service
+                and (instance.expires_at is None or now < instance.expires_at)):
+            if not instance.story and self.active_count(player) >= ACTIVE_GENERATED:
+                raise ValueError('A participant already has three active generated jobs.')
+            instance.withdrawn.remove(player)
+            self.revision += 1
+            return  # Rejoin the original roster without resetting anyone's progress.
         if instance.state != 'failed' or instance.expires_at is not None and now >= instance.expires_at:
             raise ValueError('That stage cannot be retried now.')
         progress = instance.stages[instance.index]
@@ -427,17 +463,30 @@ class Engine:
         if not instance.story and not instance.service and any(self.active_count(p.player) >= ACTIVE_GENERATED
                 for p in instance.roster if p.player not in instance.withdrawn or p.player == player):
             raise ValueError('A participant already has three active generated jobs.')
-        progress.counts.clear()
-        progress.receipts.clear()
-        progress.subjects.clear()
-        progress.attempt += 1
+        if progress.stage.retry_from:
+            instance.index = next(i for i,p in enumerate(instance.stages) if p.stage.id == progress.stage.retry_from)
+        for reset in instance.stages[instance.index:]:
+            reset.counts.clear()
+            reset.receipts.clear()
+            reset.subjects.clear()
+            reset.attempt += 1
+            reset.started_at = None
+        instance.stages[instance.index].started_at = now
         instance.withdrawn.discard(player)
         instance.state, instance.failure = 'active', ''
         self.revision += 1
 
+    def helper(self, instance: Instance, participant: Participant) -> bool:
+        return not participant.rewardable or (instance.story and participant.player not in instance.paid
+            and instance.template in self.completed.get(participant.player, set()))
+
     def quote(self, instance: Instance, participant: Participant, option: str | None = None) -> Payment:
-        if not participant.rewardable:
+        if self.helper(instance, participant):
             return Payment(0, 0, {}, 'explicit')
+        if option is None and participant.player in instance.paid and instance.branch_group:
+            recorded = self.branches.get(self.branch_key(participant.player, instance.branch_group))
+            if recorded in instance.options:
+                option = recorded
         payment = instance.reward
         if option is not None:
             payment = Payment.read(instance.options[option]['reward'])
@@ -452,16 +501,22 @@ class Engine:
             return ()
         if instance.state != 'complete' or instance.expires_at is not None and now >= instance.expires_at:
             raise ValueError('Finish the current objective before its deadline.')
+        blocked = instance.withdrawn | instance.paid | set(excluded)
+        eligible = {p.player for p in instance.roster if not self.helper(instance, p)} & instance.contributions - blocked
+        if not eligible:
+            instance.state = 'turned_in'
+            self.revision += 1
+            return ()
         if bool(instance.options) != (option is not None) or option is not None and option not in instance.options:
             raise ValueError('Choose a disclosed publication option.')
-        blocked = instance.withdrawn | instance.paid | set(excluded)
-        eligible = {p.player for p in instance.roster if p.rewardable} & instance.contributions - blocked
         recipients = [p for p in instance.roster if p.player in eligible and (option is None or p.player == caller)]
         if option is not None and instance.branch_group:
             key = self.branch_key(caller, instance.branch_group)
             old = self.branches.get(key)
             if old is not None and old != option:
                 raise ValueError('That branch already has a committed choice.')
+        if option is not None and caller not in eligible:
+            return ()
         payouts = []
         for participant in recipients:
             key = self.claim_key(participant.identity, instance.offer)
@@ -492,6 +547,9 @@ class Engine:
         expired = []
         pruned = False
         for iid, instance in tuple(self.instances.items()):
+            if instance.state == 'active' and instance.stages[instance.index].window_closed(now):
+                instance.state, instance.failure = 'failed', 'The field window closed. Resume at the listed checkpoint.'
+                expired.append(iid)
             if instance.expires_at is None or now < instance.expires_at:
                 continue
             if instance.state == 'turned_in' or instance.failure == 'expired':

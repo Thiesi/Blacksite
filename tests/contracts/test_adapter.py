@@ -25,6 +25,9 @@ def shipped() -> ContentTree:
 def live(shipped: ContentTree) -> tuple[Any, ...]:
     content = deepcopy(shipped)
     job = template()
+    # This fixture exercises a four-target commission, independent of the
+    # production board's growing generated pool.
+    content.contracts = {cid: c for cid,c in content.contracts.items() if c.story or c.service}
     content.contracts[job.id] = job
     game = HeadlessServer(content, character_state={})
     callers, players = [], []
@@ -64,6 +67,34 @@ def complete(live: tuple[Any, ...], iid: str) -> None:
     assert contracts.state.engine.instances[iid].state == 'active'
     game.commit_commerce()
     assert contracts.state.engine.instances[iid].state == 'complete'
+
+
+def test_game_9_3_parallel_story_turnin_pays_once_and_zero_reward_close_is_durable(live: tuple[Any, ...]) -> None:
+    game, owner, callers, players = live
+    job = template('parallel-adapter', story=True)
+    owner.content.contracts[job.id] = job
+    owner.state.engine.templates[job.id] = job
+    ids = []
+    for creator, roster in ((players[0],players[:2]), (players[1],list(reversed(players[:2])))):
+        proposal = owner.propose(creator.id, owner.state.engine.story_offer(job.id, creator.id), tuple(p.id for p in roster))
+        for participant in roster:
+            owner.consent(proposal.id, participant.id)
+        owner.start(proposal.id, creator.id)
+        game.commit_commerce()
+        ids.append(next(i for i,j in owner.state.engine.instances.items() if j.template == job.id and i not in ids))
+    for iid in ids:
+        complete(live, iid)
+    owner.claim(ids[0], players[0].id)
+    game.commit_commerce()
+    balances = [(p.chits_hand,p.xp,deepcopy(p.standing)) for p in players]
+    owner.claim(ids[1], players[1].id)
+    game.commit_commerce(error=True)
+    assert owner.state.engine.instances[ids[1]].state == 'complete'
+    owner.claim(ids[1], players[1].id)
+    effects = game.commit_commerce()
+    assert owner.state.engine.instances[ids[1]].state == 'turned_in'
+    assert effects[0]['contracts_state']['engine']['instances'][ids[1]]['state'] == 'turned_in'
+    assert [(p.chits_hand,p.xp,p.standing) for p in players] == balances
 
 
 def test_game_9_1_actual_guards_participate_but_late_crew_members_do_not(live) -> None:

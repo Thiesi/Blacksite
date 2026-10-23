@@ -69,7 +69,10 @@ class Scenes:
                 # committed checkpoint; another crew never wakes this scene.
                 if not any(pid in self.world.actors and self.world.actors[pid].zone == zone for pid in roster):
                     continue
-                tile = tuple(saved.get('tile', target.tile or self.world.zones[zone].template.meta.spawn or (1, 1)))
+                origin = target.tile
+                if origin is None and target.object in self.world.zones[zone].objects:
+                    origin = self.world.zones[zone].objects[target.object].spec.tile
+                tile = tuple(saved.get('tile', origin or self.world.zones[zone].template.meta.spawn or (1, 1)))
                 actor = make_actor(self.owner.content.npcs[target.npc], aid, {
                     'mission': instance.id, 'mission_roster': roster,
                     'contract_stage': progress.stage.id, 'contract_attempt': progress.attempt,

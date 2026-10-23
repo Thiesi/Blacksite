@@ -85,6 +85,15 @@
           "amount": 1,
           "scope": "identity",
           "respawn_seconds": 0
+        },
+        {
+          "id": "cold-chain-work-order-record",
+          "label": "Work-order verification",
+          "kind": "contract_key",
+          "asset": "thermal-record",
+          "amount": 1,
+          "scope": "mission",
+          "respawn_seconds": 0
         }
       ],
       "controls": [

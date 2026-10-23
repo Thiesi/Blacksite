@@ -73,6 +73,10 @@ class Encounters:
         self.empty_descents: dict[str, int] = {}
         self.commerce.after_settle = self.flush_hits
         self.mission_of: Callable[[str, str], str | None] = lambda pid, source: None  # S19.
+        self.contract_rows: Callable[[Presence], list[dict[str, Any]]] = lambda presence: []
+        self.start_contract_plant: Callable[[Presence, str], None] = lambda presence, job: None
+        self.finish_contract_plant: Callable[[Presence, Procedure], None] = lambda presence, procedure: None
+        self.inspect_contract: Callable[[Presence], None] = lambda presence: None
 
     def known_programs(self, player: Player) -> set[str]:
         loans = self.game.factions.loan_programs(player) if hasattr(self.game, "factions") else set()
@@ -1084,6 +1088,8 @@ class Encounters:
                 try:
                     if procedure.kind == "flip":
                         self.lat.interlock.complete_flip(presence, procedure)
+                    elif procedure.kind == 'plant':
+                        self.finish_contract_plant(presence, procedure)
                     elif procedure.kind == "theft":
                         self.lat.interlock.private.complete_theft(presence, procedure)
                     elif procedure.kind in ("survey", "sample"):
@@ -1126,7 +1132,7 @@ class Encounters:
                      {"id": "risk:"+core_id, "cells": ["Enter with NPC risk", "BLACK ICE may injure body"]}]
                     if core_id else []) + [{"id": "survey", "cells": ["Survey", "3s / 10s cooldown"]}]
         room = instance.graph.room(presence.room)
-        rows = [{"id": "ice:"+i.id, "cells": [i.template.name, f"{i.integrity:g} integrity", i.phase]}
+        rows = self.contract_rows(presence)+[{"id": "ice:"+i.id, "cells": [i.template.name, f"{i.integrity:g} integrity", i.phase]}
                 for i in self.defenders(presence)]
         for ice in self.defenders(presence):
             if ice.template.class_ == "liar" and instance.id not in presence.verified_maps:
@@ -1185,6 +1191,8 @@ class Encounters:
         elif row.startswith("lift:"):
             _, target, generation = row.split(":")
             self.start_lift(presence, target, int(generation))
+        elif row.startswith('plant:'):
+            self.start_contract_plant(presence, row[6:])
         elif row == "descend":
             self.descend(session, risk=True)
         elif row in ("survey", "sample"):
@@ -1266,6 +1274,7 @@ class Encounters:
             presence.cast = presence.procedure = None
             presence.destination = presence.room_destination = None
         elif action == "interact" or key in ("e", "E"):
+            self.inspect_contract(presence)
             cell = self.lat.sectors.cells[presence.sector][presence.cell]
             if presence.instance or cell.core_id or cell.kind == "descent" or self.can_enter(presence, "lat-wake-hall"):
                 self.menus[session.id] = EncounterMenu("room")

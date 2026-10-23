@@ -24,6 +24,90 @@ def party() -> tuple[Participant, ...]:
     return (Participant('a', 'bbs-a', 5, 'operator'), Participant('b', 'bbs-b', 7))
 
 
+def test_game_9_3_parallel_crew_story_copies_cannot_pay_a_character_twice() -> None:
+    job = template('parallel-story', story=True)
+    engine = Engine('origin', {job.id: job})
+    first = engine.accept(engine.story_offer(job.id, 'a'), party(), 0)
+    second = engine.accept(engine.story_offer(job.id, 'b'), tuple(reversed(party())), 0)
+    finish(engine, first.id, ('a','b'))
+    finish(engine, second.id, ('a','b'))
+    assert len(engine.claim(first.id, 'a', 30)) == 2
+    assert engine.claim(second.id, 'b', 31) == ()
+    assert second.state == 'turned_in'
+    assert engine.quote(second, party()[0]).chits == 0
+    assert engine.quote(first, party()[0]).chits == 220
+
+
+def test_game_9_3_parallel_publications_keep_one_personal_payout_and_historical_quote_after_restart() -> None:
+    options = (PublicationOption('private', 'Private', 'handler', Reward((400,400), xp=200)),
+               PublicationOption('public', 'Publish', 'public', Reward((200,200), xp=200)))
+    job = template('parallel-publication', story=True, branch_group='parallel-choice', publication_options=options)
+    engine = Engine('origin', {job.id: job})
+    one = engine.accept(engine.story_offer(job.id, 'a'), party(), 0)
+    two = engine.accept(engine.story_offer(job.id, 'b'), tuple(reversed(party())), 0)
+    finish(engine, one.id, ('a','b'))
+    finish(engine, two.id, ('a','b'))
+    assert [p.payment.chits for p in engine.claim(one.id, 'a', 30, 'private')] == [440]
+    restored = Engine('origin', {job.id: job}, json.loads(json.dumps(engine.record())))
+    assert restored.claim(two.id, 'a', 31, 'private') == ()
+    assert restored.quote(restored.instances[two.id], party()[0], 'private').chits == 0
+    assert restored.quote(restored.instances[one.id], party()[0]).chits == 440
+    assert [p.player for p in restored.claim(two.id, 'b', 32, 'public')] == ['b']
+    assert restored.claim(one.id, 'b', 33, 'public') == ()
+    assert restored.branches[restored.branch_key('a','parallel-choice')] == 'private'
+    assert restored.branches[restored.branch_key('b','parallel-choice')] == 'public'
+
+
+def test_game_9_1_original_workers_resume_without_resetting_another_workers_progress_or_terms() -> None:
+    job = template('resume')
+    engine = Engine('origin', {job.id: job})
+    instance = engine.accept(engine.board('wardens', 0)[0], party(), 0)
+    roster, reward = instance.roster, instance.reward
+    for person in party():
+        engine.withdraw(instance.id, person.player)
+    assert instance.failure == 'abandoned'
+    engine.retry(instance.id, 'a', 10)
+    progress = instance.stages[0]
+    engine.observe(Fact('a', 'clear', 'defeated', progress.targets[0], 'new-unit', 'new-receipt',
+        instance=instance.id, stage=progress.stage.id, attempt=progress.attempt, resolution='lethal'), 11)
+    recorded = progress.record()
+    engine.retry(instance.id, 'b', 12)
+    assert not instance.withdrawn and progress.record() == recorded
+    assert instance.roster == roster and instance.reward == reward and len(progress.targets) == 6
+    with pytest.raises(ValueError, match='not yours'):
+        engine.retry(instance.id, 'late', 13)
+
+
+def test_game_9_1_resume_cannot_add_a_fourth_active_generated_job() -> None:
+    job = template('resume-cap')
+    engine = Engine('origin', {job.id: job})
+    offers = engine.board('wardens', 0)
+    original = engine.accept(offers[0], party(), 0)
+    engine.withdraw(original.id, 'b')
+    for offer in offers[1:4]:
+        engine.accept(offer, party()[1:], 1)
+    with pytest.raises(ValueError, match='three active'):
+        engine.retry(original.id, 'b', 2)
+    assert 'b' in original.withdrawn
+
+
+def test_game_9_3_opposite_branch_veteran_can_help_a_new_worker_without_another_payout_or_choice() -> None:
+    clinic = template('clinic-help', story=True, branch_group='walked-help', branch='clinic')
+    shield = template('shield-help', story=True, branch_group='walked-help', branch='shield')
+    engine = Engine('origin', {j.id:j for j in (clinic,shield)})
+    first = engine.accept(engine.story_offer(clinic.id, 'a'), party()[:1], 0)
+    finish(engine, first.id)
+    engine.claim(first.id, 'a', 30)
+    with pytest.raises(ValueError, match='other branch'):
+        engine.accept(engine.story_offer(shield.id, 'a'), party()[:1], 31)
+    assisted = engine.accept(engine.story_offer(shield.id, 'b'), tuple(reversed(party())), 32)
+    assert not next(p for p in assisted.roster if p.player == 'a').rewardable
+    finish(engine, assisted.id, ('a','b'))
+    assert [p.player for p in engine.claim(assisted.id, 'b', 60)] == ['b']
+    assert engine.branches[engine.branch_key('a','walked-help')] == 'clinic'
+    assert engine.branches[engine.branch_key('b','walked-help')] == 'shield'
+
+
 def finish(engine: Engine, iid: str, actors: tuple[str, ...] = ('a',)) -> None:
     instance = engine.instances[iid]
     while instance.state == 'active':

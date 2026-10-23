@@ -99,6 +99,15 @@
           "amount": 1,
           "scope": "identity",
           "respawn_seconds": 0
+        },
+        {
+          "id": "relay-zero-work-order-record",
+          "label": "Work-order verification",
+          "kind": "contract_key",
+          "asset": "relay-calibration",
+          "amount": 1,
+          "scope": "mission",
+          "respawn_seconds": 0
         }
       ],
       "controls": [
