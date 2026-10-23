@@ -368,8 +368,8 @@ damage fails the objective. This never permits player imprisonment.
 
 - Health 0 is **down**: five seconds during which a crew member can pick
   you up. Then **dead**.
-  Pickup restores 25 % of maximum health, rounded up. Before crews land,
-  an adjacent non-hostile caller can pick you up; the attacker cannot.
+  Pickup restores 25 % of maximum health, rounded up. Only a current
+  crew member can pick you up; friendly fire stays refused.
 - Dead characters wake in the nearest Sablier vat (Vatside, or a faction
   vat if a member) after a 20 s decant timer.
 - **Clone debt**: 5 % of chits on hand (not banked) plus a fixed fee of
@@ -803,7 +803,8 @@ in both directions. Grade 5 is not a calendar-based loss of protection.
 For eligible characters, attacking a player whose faction is not **hostile**
 to yours (or any Freelance) makes you
 **Marked** for 15 minutes: any player may attack you anywhere outside a
-safe zone without becoming Marked themselves, Wardens engage you on sight
+safe zone without becoming Marked themselves (crew friendly fire remains
+refused), Wardens engage you on sight
 in contested zones, and your name shows red. Killing a Marked player gives
 standing with the Wardens. In open zones nothing marks anyone. For remote
 burning, both bodies must be in open areas for that exception; a contested
@@ -1292,13 +1293,18 @@ Crew friendly fire is refused before faction/Marked attack checks.
 Refusal never marks or trains a skill. Marked names remain red, while a
 crew's plus tag still identifies the ally. Beacons never disclose private
 housing interiors or remote Silt rooms; entering a shared Silt instance
-requires its authorized entrance and retained roster.
+requires its authorized entrance and retained roster. The first committed
+descent freezes that roster and shares its seed for five minutes from
+the same entrance. Every entrant chooses the NPC body-risk warning.
+Joining a crew later never adds a member to that descent roster.
 
 Round-robin offers a new cache/data unit to the next member for ten
 seconds, then ordinary loot eligibility applies. A change of loot mode
 applies to the next drop, not an existing offer. The offer and roster are
-frozen with that drop; rotation advances only when its owning receipt
-commits. The actual victim may recover their own corpse cache under 5.4,
+frozen with that drop. A shared data unit freezes its offer at the first
+valid lift, after blocking ICE permits access; identity/mission records
+stay personal. Rotation advances only when its owning receipt commits.
+The actual victim may recover their own corpse cache under 5.4,
 without being blocked by crew mode or the killer's private window.
 Shared XP is a whole-number award, rounded down after the section 10
 grade multiplier; it retains the recipient's own identity caps.

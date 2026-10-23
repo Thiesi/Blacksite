@@ -155,16 +155,43 @@ def test_design_5_4_down_pickup_dead_debt_cache_and_decant(duel):
     assert victim.legal_at  # Death never removes early discharge.
 
 
-def test_design_5_4_pickup_neutral_ally_before_timer(duel):
+def test_design_5_4_pickup_crew_ally_before_timer(duel):
     game,a,b=duel
     engine=game.core.combat
-    engine.hurt(body(game,a),body(game,b),1000)
     c=game.connect({"user_id":3,"handle":"Ally界","node_name":"test"})
     create(game,c,name="Ally",card="none")
+    crews = game.core.crews
+    crews.perform(b.session, 'invite', c.session.player_id)
+    invitation = next(iter(crews.registry.invites))
+    crews.perform(c.session, 'accept', invitation)
     place(game,c,"vatside-clinics",(27,4))
+    engine.hurt(body(game,a),body(game,b),1000)
     act(game,c,Frame("key",{"k":"e","t":0}))
     assert body(game,b).stance=="normal" and body(game,b).health==35
     assert not game.core.characters.players[b.session.player_id].progress.get("combat")
+
+
+def test_game_10_actual_victim_recovers_cache_before_killer_crew_window_ends(duel):
+    game, killer, victim = duel
+    peer = game.connect({'user_id': 3, 'handle': 'RecoveryCrew', 'node_name': 'test'})
+    create(game, peer, name='RecoveryCrew', card='none')
+    crews = game.core.crews
+    crews.perform(killer.session, 'invite', peer.session.player_id)
+    crews.perform(peer.session, 'accept', next(iter(crews.registry.invites)))
+    crews.registry.loot_mode(killer.session.player_id, 'round_robin')
+    game.core.combat.hurt(body(game, killer), body(game, victim), 1000)
+    game.step(50)
+    game.commit_commerce()
+    cid, cache = next(iter(game.core.commerce.caches.items()))
+    assert cache['crew_offer']['recipient'] == killer.session.player_id
+    game.step(200)
+    game.commit_commerce()
+    place(game, victim, 'vatside-clinics', (27, 4))
+    assert game.clock.now_utc().timestamp() < cache['private_until']
+    iid = cache['items'][0]
+    game.core.commerce.propose(victim.session, 'inv.pickup', {'target': cid, 'item': iid})
+    game.commit_commerce()
+    assert iid in game.core.characters.players[victim.session.player_id].inventory
 
 
 def test_design_5_4_cache_victim_killer_and_third_party_after_sixty_seconds(duel):

@@ -6,6 +6,8 @@ ctrl-a..ctrl-z. Printable keys retain their case and UTF-8 spelling.
 Mouse reports, pasted content and unknown escape sequences never type.
 """
 
+ESCAPE_TIMEOUT_SECONDS = .2  # Terminal UI 5.3: fragmented native input.
+
 
 class KeyDecoder:
     def __init__(self) -> None:
@@ -145,7 +147,7 @@ class KeyDecoder:
                 "18~": "f7", "19~": "f8", "20~": "f9", "21~": "f10", "23~": "f11", "24~": "f12"}.get(sequence)
 
     def flush(self, now: float) -> list[str]:
-        if self.buffer == b"\x1b" and self.escape_at is not None and now - self.escape_at >= 0.05:
+        if self.buffer == b"\x1b" and self.escape_at is not None and now - self.escape_at >= ESCAPE_TIMEOUT_SECONDS:
             self.buffer.clear()
             self.escape_at = None
             return ["escape"]

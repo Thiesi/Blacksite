@@ -2,7 +2,7 @@
 
 import pytest
 
-from blacksite.door.keys import KeyDecoder
+from blacksite.door.keys import KeyDecoder, ESCAPE_TIMEOUT_SECONDS
 
 
 @pytest.mark.parametrize("sequence,key", [
@@ -35,8 +35,18 @@ def test_enter_variants(data: bytes) -> None:
 def test_lone_escape_timeout() -> None:
     decoder = KeyDecoder()
     assert decoder.feed(b"\x1b", 0) == []
-    assert decoder.flush(.049) == []
-    assert decoder.flush(.05) == ["escape"]
+    assert ESCAPE_TIMEOUT_SECONDS == .2
+    assert decoder.flush(.199) == []
+    assert decoder.flush(.2) == ["escape"]
+
+
+@pytest.mark.parametrize('tail,key', [(b'[C', 'right'), (b'[B', 'down'), (b'OD', 'left')])
+def test_ui_5_3_native_fragment_after_fifty_ms_never_types_chat_hotkey(tail, key):
+    decoder = KeyDecoder()
+    assert decoder.feed(b'\x1b', 0) == []
+    assert decoder.flush(.075) == []
+    assert decoder.feed(tail, .09) == [key]
+    assert decoder.flush(.3) == []
 
 
 def test_utf8_text() -> None:

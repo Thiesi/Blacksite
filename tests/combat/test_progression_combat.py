@@ -123,6 +123,8 @@ def test_game_8_5_chord_extends_hymn_to_eight_tiles_and_unlocks_both_tiers(repo_
     assert all(combat.unlocked(player,h) for h in content.hymns.values() if h.tier <= 2)
     place(game,b,"vatside-clinics",(32,3))
     body(game,b).shock = 50
-    combat.allies_provider = lambda actor:[body(game,a),body(game,b)]
+    crews = game.core.crews
+    crews.perform(a.session, 'invite', b.session.player_id)
+    crews.perform(b.session, 'accept', next(iter(crews.registry.invites)))
     combat.complete_cast(body(game,a),{"ability":"hymn_steady","target":body(game,a).id})
     assert body(game,b).shock == 30

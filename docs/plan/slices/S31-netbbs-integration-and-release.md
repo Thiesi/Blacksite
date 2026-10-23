@@ -189,6 +189,11 @@ not a second speculative future-version preset.
 - NetBBS launches doors with a minimal environment (never the full
   parent environment): everything the client needs must come from the
   profile's `environment` map or `door_info.json`.
+  S22's native harness checks the profile interpreter with `-I`, including
+  version and Python source digest, and saves `native-client.json`.
+  Preserve that check: a development PYTHONPATH does not install or update
+  the separately launched client. The one game venv must contain the
+  released wheel for both service and caller entry points.
 - The supported minimum is NetBBS >= 7.31.0, verified against v7.33.0.
   Limits accept zero or 1-86400; zero cannot bypass a host hard limit.
   CPU exhaustion is not graceful logout and supplies no warning signal.

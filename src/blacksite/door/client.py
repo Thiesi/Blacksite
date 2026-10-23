@@ -9,7 +9,7 @@ from blacksite.door import doorinfo
 from blacksite.door.cells import CellBuffer
 from blacksite.door.connection import Connection, Reconnect
 from blacksite.door.doorinfo import DoorInfo
-from blacksite.door.keys import KeyDecoder
+from blacksite.door.keys import KeyDecoder, ESCAPE_TIMEOUT_SECONDS
 from blacksite.door.model import Display
 from blacksite.door.terminal import Terminal
 from blacksite.server.protocol import Frame, ProtocolError, read_frame
@@ -51,7 +51,7 @@ async def run(info: DoorInfo, terminal: Terminal) -> None:
                 if decoder.buffer != b"\x1b" or decoder.escape_at is None:
                     data = await terminal.read()
                 else:
-                    data = await asyncio.wait_for(terminal.read(), max(0.001, decoder.escape_at + 0.05 - time.monotonic()))
+                    data = await asyncio.wait_for(terminal.read(), max(0.001, decoder.escape_at + ESCAPE_TIMEOUT_SECONDS - time.monotonic()))
             except asyncio.TimeoutError:
                 data = None
             if data == b"":

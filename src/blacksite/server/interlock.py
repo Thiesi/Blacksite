@@ -178,6 +178,8 @@ class Interlock:
                 proposal["holds"][zone.id+":"+ex.id] = [until, until+HOLD_IMMUNITY_SECONDS]
         def applied() -> None:
             before = presence.trace
+            if hasattr(self.game, 'crews'):
+                self.game.crews.control_committed(player.id, presence.core)
             if self.lat.presences.get(presence.player_id) is presence:
                 self.lat.encounters.trace(presence, FLIP_TRACE)
             self.zone_log(control.target.zone, self.effect_line(control))
@@ -388,6 +390,8 @@ class Interlock:
                 self.lat.encounters.force_out(presence)
             self.zone_log(channel.zone, "The hardware goes dark. The core is offline for ten minutes.")
             self.on_cut_power(self.game.players[session.player_id], channel.core)
+            if hasattr(self.game, 'crews'):
+                self.game.crews.control_committed(player.id, channel.core)
             if hasattr(self.game, "factions"):
                 self.game.factions.notify_standing(player, before_standing, "cut power")
         self.commit(proposal, applied)

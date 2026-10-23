@@ -229,8 +229,8 @@ class Commerce:
             cache = caches.get(target)
             if not cache or cache["expires"] <= now or iid not in cache["items"]:
                 raise ValueError("That cache is empty.")
-            if cache.get("private_until",0)>now and draft.id not in (cache.get("killer"),cache.get("victim")):
-                raise ValueError("The victim and killer have first recovery rights for sixty seconds.")
+            if not self.game.crews.cache_permits(draft.id, cache, now):
+                raise ValueError("Recovery rights or a ten-second crew offer protect that item.")
             item = items[iid]
             if item.owner != target:
                 raise ValueError("That item is no longer in the cache.")
@@ -609,6 +609,13 @@ class Commerce:
                 rows.append({"id": iid, "cells": [self.item_label(item), str(item.stack), f"{self.content.items[item.template].weight*item.stack:g}kg", "S" if item.secured else "", slot]})
             mods = self.game.progression.modifiers(player)
             detail = f"Carry {inventory.weight(player):g}/{mods.attribute(player,'frame')/2+mods.bonus('carry_kg'):g} kg. {inventory.secured_slots} secured slots."
+            if screen.kind == 'cache':
+                cache = self.caches.get(screen.target, {})
+                turn = self.game.crews.offer_label(cache.get('crew_offer', {}))
+                if turn:
+                    detail += '\n'+turn
+                if player.id == cache.get('victim'):
+                    detail += '\nYou can recover your own goods during that turn.'
             if screen.kind == "inventory":
                 actions = [{"key":k,"label":v} for k,v in (("q","equip"),("f","slot"),("e","equipment"),("s","secure"),("d","drop"),("x","split"),("u","use"))]
         screen.cursor = max(0, min(screen.cursor, len(rows)-1))

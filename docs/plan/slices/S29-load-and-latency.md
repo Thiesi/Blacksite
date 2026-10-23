@@ -5,6 +5,13 @@
 **Depends on:** S15, S22, S24, S26 · **Milestone:** M6
 **Issue:** https://github.com/Thiesi/blacksite/issues/29
 
+S22 installs actual crew membership and remote HP/integrity/zone/beacon
+views. Include split-layer crews in the sixteen-caller profile and
+measure crew view composition before proposing optimizations. Preserve
+the source-verified installed-client receipt in native evidence. UI 5.3's
+200ms lone-Escape framing grace handles observed fragmented native input;
+it does not relax the server tick/latency or CPU targets below.
+
 ## Goal
 
 Prove the architecture's performance budget with real numbers: sixteen

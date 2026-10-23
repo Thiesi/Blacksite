@@ -11,10 +11,12 @@ import asyncio
 from collections import deque
 from dataclasses import dataclass
 import json
+from hashlib import sha256
 from pathlib import Path
 import re
 import time
 from typing import Any
+import blacksite
 
 from accept_s04_netbbs import Database, DatabaseLane, DoorProfile, REPO, TelnetServer, browse_doors, create_door, create_user
 from accept_s06_netbbs import ZoneCaller
@@ -22,6 +24,7 @@ from blacksite.server.app import Server
 from blacksite.server.inventory import Inventory
 from blacksite.server.items import make_item
 from blacksite.server.rules import character
+from blacksite.version import PACKAGE_VERSION
 
 
 async def wait(condition: Any, timeout: float = 10) -> None:
@@ -59,6 +62,27 @@ class NativeProbe:
 
     async def start(self) -> None:
         self.root.mkdir(parents=True,exist_ok=True)
+        # NetBBS sanitizes PYTHONPATH. Verify the interpreter in isolation,
+        # so a source-server/old-installed-client run cannot count as proof.
+        check = await asyncio.create_subprocess_exec(str(self.python), '-I', '-c',
+            'import json,blacksite; from pathlib import Path; from hashlib import sha256\n'
+            'root=Path(blacksite.__file__).parent; digest=sha256()\n'
+            'for path in sorted(root.rglob("*.py")):\n'
+            ' digest.update(path.relative_to(root).as_posix().encode()+b"\\0"+path.read_bytes().replace(b"\\r\\n",b"\\n")+b"\\0")\n'
+            'print(json.dumps({"version":blacksite.__version__,"file":blacksite.__file__,"python_tree_sha256":digest.hexdigest()}))',
+            stdout=asyncio.subprocess.PIPE, stderr=asyncio.subprocess.PIPE)
+        output, errors = await asyncio.wait_for(check.communicate(), 30)
+        if check.returncode:
+            raise RuntimeError('Native client version check failed: '+errors.decode(errors='replace'))
+        client = json.loads(output)
+        if client['version'] != PACKAGE_VERSION:
+            raise RuntimeError(f"Native client {client['version']} differs from server {PACKAGE_VERSION}; install the current wheel in --door-python.")
+        root, digest = Path(blacksite.__file__).parent, sha256()
+        for path in sorted(root.rglob('*.py')):
+            digest.update(path.relative_to(root).as_posix().encode()+b'\0'+path.read_bytes().replace(b'\r\n', b'\n')+b'\0')
+        if client['python_tree_sha256'] != digest.hexdigest():
+            raise RuntimeError('Native client source differs from the server; rebuild and install the current wheel.')
+        (self.root/'native-client.json').write_text(json.dumps(client, indent=2)+'\n', encoding='utf-8')
         await self.service.start()
         self.game,self.commerce,self.combat = self.service.core.characters,self.service.core.commerce,self.service.core.combat
         self.db = Database(self.root/"node.db"); self.lane = DatabaseLane(self.db.path)

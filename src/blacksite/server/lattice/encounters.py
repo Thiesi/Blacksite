@@ -298,6 +298,11 @@ class Encounters:
             raise ValueError("SILT: warned NPC black feedback below can injure your body. Choose Descend with NPC risk.")
         if self.commerce.pending:
             raise ValueError("Let the current transfer settle before the descent.")
+        context = self.location(presence)
+        shared = self.game.crews.shared_silt(presence.player_id, context)
+        if shared and shared in self.descents:
+            self.enter_descent(presence, shared)
+            return
         nonce = self.lat.sources.nonce+1
         context = self.location(presence)
         def finished(success: bool) -> None:
@@ -314,16 +319,20 @@ class Encounters:
             descent = generate(self.game.sessions.origin, self.lat.season, presence.sector,
                                nonce, self.content.silt)
             self.descents[descent.id] = descent
-            presence.silt_return = presence.instance, presence.core, presence.room
-            presence.descent = descent.id
-            presence.mapping_until = 0
-            presence.survey_records.clear()
-            presence.sampled.clear()
-            presence.found_silt.clear()
-            self.enter_band(presence, 0)
+            self.game.crews.remember_silt(presence.player_id, context, descent.id)
+            self.enter_descent(presence, descent.id)
         self.commerce.settle(None, {}, self.commerce.items, self.commerce.caches,
                              self.commerce.serial, finished)
         self.commerce.outbox[-1]["lattice_state"] = lambda: self.lat.sources.record(self.clock.now_tick(), nonce=nonce)
+
+    def enter_descent(self, presence: Presence, descent: str) -> None:
+        presence.silt_return = presence.instance, presence.core, presence.room
+        presence.descent = descent
+        presence.mapping_until = 0
+        presence.survey_records.clear()
+        presence.sampled.clear()
+        presence.found_silt.clear()
+        self.enter_band(presence, 0)
 
     def enter_band(self, presence: Presence, depth: int, room: str | None = None) -> None:
         descent = self.descents[presence.descent]
@@ -730,6 +739,8 @@ class Encounters:
                 raise ValueError(ice.template.name+" blocks the source. Open or destroy it first.")
             if ice.template.trigger in ("data", "touch"):
                 self.activate(ice, presence, "data")
+        if data.scope == 'shared':
+            self.game.crews.check_data(player.id, self.lat.sources.unit_id(key, generation))
         multiplier = float(self.content.programs["prg_ledger"].effect.params["lift_multiplier"]) if "prg_ledger" in presence.rig else 1
         presence.procedure = Procedure("lift", target, self.clock.now_tick()+ticks(LIFT_SECONDS*multiplier),
                                       self.location(presence)[0], self.hit_serial(presence), generation, key)
@@ -747,6 +758,7 @@ class Encounters:
         if key != procedure.source:
             raise ValueError("The contract or source changed before the lift completed.")
         unit_id = self.lat.sources.unit_id(key, procedure.generation)
+        offer = self.game.crews.check_data(player.id, unit_id) if data.scope == 'shared' else None
         draft, items = deepcopy(player), deepcopy(self.commerce.items)
         identity = deepcopy(self.game.identity(player.bbs_user_id))
         if data.scope != "shared":
@@ -786,16 +798,20 @@ class Encounters:
             if pid not in known:
                 known.append(pid)
         reward = None
+        grant = None
         if presence.core:
-            reward = award(draft, identity, Grant("run", unit_id, True,
+            grant = Grant("run", unit_id, True,
                 scope=presence.core, core=presence.core, tier=instance.graph.spec.tier,
-                training=instance.graph.spec.training), self.clock.now_utc(),
+                training=instance.graph.spec.training)
+            reward = award(draft, identity, grant, self.clock.now_utc(),
                 self.game.progression.modifiers(draft))
         # Reserve only after inventory and reward validation succeeds.
         claim = self.lat.sources.propose(key, data, procedure.generation, self.clock.now_tick())
         def finished(success: bool) -> None:
             self.lat.sources.finish(claim, success)
             if success:
+                if offer:
+                    self.game.crews.registry.commit_offer(offer)
                 self.log(presence, "Transfer committed: "+(data.label or data.id)+".")
                 self.game.progression.notify_reward(player, reward)
             else:
@@ -807,6 +823,8 @@ class Encounters:
             self.lat.sources.finish(claim, False)
             raise ValueError("The city is settling another transfer. Try again.")
         self.commerce.outbox[-1]["lattice_state"] = lambda: self.lat.sources.record(self.clock.now_tick(), claim)
+        if grant and hasattr(self.game, 'crews'):
+            self.game.crews.add_rewards(self.commerce.outbox[-1], player, grant)
 
     def receive(self, presence: Presence, event: IceEvent, *, name: str,
                 player_source: str = "", reflection: bool = False) -> bool:
@@ -959,7 +977,7 @@ class Encounters:
         utc = self.clock.now_utc().timestamp()
         used_descents = {p.descent for p in self.lat.presences.values() if p.descent}
         for did in tuple(self.descents):
-            if did in used_descents:
+            if did in used_descents or self.game.crews.retains_silt(did, tick):
                 self.empty_descents.pop(did, None)
             else:
                 since = self.empty_descents.setdefault(did, tick)
@@ -1113,6 +1131,10 @@ class Encounters:
             rows.append({"id": "read:"+data.asset if read else "evidence:"+data.asset if evidence else f"lift:{data.id}:{source.generation}", "cells": [data.label or data.id,
                 f"{data.amount} chits" if data.kind == "chits" else data.kind,
                 "needs contract" if locked else "recorded" if done else "ready" if source.available else "replenishing"]})
+            offer = self.lat.sources.crew_offers.get(self.lat.sources.unit_id(self.source(presence, data), source.generation), {})
+            turn = self.game.crews.offer_label(offer)
+            if turn:
+                rows[-1]['cells'].append(turn)
         return rows
 
     def select(self, session: Session, presence: Presence, row: str) -> None:
@@ -1361,6 +1383,8 @@ class Encounters:
                         f"cooldown {program.cooldown_seconds if program.cooldown_seconds is not None else 'single use'}s.")
             if screen.kind == "room":
                 detail = "Select ICE to inspect and target. Select data to start a three-second lift."
+                if rows and rows[screen.cursor]['cells'][-1].startswith('Crew turn:'):
+                    detail = rows[screen.cursor]['cells'][-1]+'\n'+detail
             title = "ROOM" if screen.kind == "room" else "RIG"
             if screen.kind in ("record", "evidence"):
                 title = (screen.label or screen.target.replace("-", " ")).upper()

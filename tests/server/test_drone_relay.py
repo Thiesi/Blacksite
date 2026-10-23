@@ -45,7 +45,9 @@ def test_catalog_5_crew_relay_owner_disconnect_starts_bounded_escape_not_instant
     game,a,b,player,engine = operator
     relay = deploy(game,a,player,engine,"drn_ow_relay")
     place(game,b,relay.zone,game.core.world.free_tile(relay.zone,relay.position))
-    game.core.progression.crew_of = lambda pid:"fixture-crew"
+    crews = game.core.crews
+    crews.perform(a.session, 'invite', b.session.player_id)
+    crews.perform(b.session, 'accept', next(iter(crews.registry.invites)))
     presence = connect(game,b,relay)
     presence.cell = next(c.id for c in game.core.lattice.sectors.records[presence.sector].cells
                          if c.access_kind == "gated")

@@ -752,7 +752,8 @@ input tick, rate counters, pending prompts, view revision`.
 
 S22 IDs carry a per-service-boot namespace, supplied by the owning
 adapter, so a later crew cannot inherit a prior live ID. S22 stores the
-live member tuple in joining order; promotion changes only the leader. Invitations hold `id, inviter, target, crew_id, until_tick`.
+live member tuple in joining order; promotion changes only the leader.
+Invitations hold `id, inviter, target, crew_id, until_tick`.
 An uncrewed inviter has no crew record until one invite is accepted.
 A beacon records both its Operator and its target, so either leaving
 clears it. A frozen per-drop offer holds its roster, assigned character,
@@ -760,6 +761,13 @@ mode, ten-second deadline and rotation version. Only a committed drop
 advances that version; a rejected storage write cannot consume a turn.
 These drop entitlements do not persist live social crew membership or
 replace an expedition's independent, durable consenting roster.
+
+Cache offers retain the victim's independent recovery right and use an
+absolute UTC deadline when persisted. Shared core-data offers key on the
+stable source unit and generation, not the current menu or crew mode.
+Identity/mission data stays personal. Recipient XP and identity caps join
+the source transaction through secondary player/identity patches; only
+after a successful commit may a crew XP line be published.
 
 ### 3.8 Event instance
 

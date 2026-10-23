@@ -1,6 +1,6 @@
 # S22 — Crews: invite/leave/kick, crew chat and panel, beacon, loot modes, shared XP
 
-**Status:** planned
+**Status:** in progress
 **Primary model:** Sonnet · **Reviewer:** none
 **Depends on:** S09, S10, S13, S16 · **Milestone:** M4
 **Issue:** https://github.com/Thiesi/blacksite/issues/22
@@ -90,7 +90,7 @@ state.
 
 ## Data and content
 
-- No content files. Text: invite, accept, leave, kick, promote, beacon
+- No structured content files. Text: invite, accept, leave, kick, promote, beacon
   set, loot mode lines in voice (≈ 15 lines in `content/text/crew.md`).
 
 ## Protocol and view models
@@ -153,6 +153,57 @@ deterministic ticks and the panel golden holds at 80×24 and 132×50.
   S10's legality function; add a test there too.
 - The beacon across zones needs a "direction" from zone exits: use the
   city graph's exit toward B's zone (S08), or "elsewhere" if no path.
+
+### Implementation decisions
+
+The deterministic live registry is `server/crews.py`; `crew_engine.py`
+binds sessions, consent, views and source receipts. Invitations create no
+one-person crew, do not refresh on repeated input, and cannot flood the
+recipient's log. Member order survives promotion and determines the next
+leader. Removing either beacon endpoint clears it. Missing/deleted
+characters leave the live registry before a roster is published.
+
+Marked red names compose with the crew plus tag. Friendly fire, indirect
+controls and owned drones use controller identity before faction checks.
+Pickup now requires current crew membership and the actual five-second
+window; the pre-S22 neutral-caller fallback is removed. Medic drones,
+Relay terminals and hymn range use the same membership authority.
+
+Source owners join eligible crew XP and identity caps to their existing
+transaction. A failed save pays nobody. Guarding uses elapsed injected
+ticks, including a delayed service tick; walking out of range resets the
+continuous guard interval. Completed useful actions remain eligible for
+sixty seconds, including a control of the linked core. Contract/relay
+owners still freeze and settle their own rosters in S19/S21.
+
+Cache offers freeze at drop creation and retain actual-victim recovery.
+Drone kills name the controller as killer. Shared core data freezes its
+offer at a valid lift, after blocking ICE permits access; the ten seconds
+must not run out while the data is still blocked. Rotation advances on
+the owning commit. Identity/mission data stays personal. Absolute UTC
+deadlines preserve existing offers across a restart without persisting
+the live social crew.
+
+An authorized, consenting entrant can reuse the first descent's frozen
+roster/seed at its same entrance for five minutes. That scene remains
+available for the window; later crew joins do not gain it. This live Silt
+sharing is independent of S26's durable expedition/checkpoint/ballot IDs.
+
+Native acceptance uses a version- and source-verified installed client.
+The original development interpreter loaded an old client once NetBBS
+removed PYTHONPATH; those runs are compatibility evidence only. The
+harness now rejects mismatches and retains `native-client.json`. The
+Windows subprocess startup check allows sixty seconds for cold content
+bootstrap, reproduced with unchanged S20; Linux and gameplay latency
+targets remain unchanged.
+
+Actual native input exposed a pre-existing 50ms framing failure: a split
+Right arrow became Esc, left bracket and C, opening Say during movement.
+UI 5.3 now gives sequences 200ms to complete; the decoder and input pump
+share that constant. A lone Escape still leaves without effects, after
+the framing grace. Byte-split regressions exercise the observed delay.
+This is a transport usability fix, not a combat or simulation timing
+change. S04's reference and the common UI contract are reconciled here.
 
 
 ### S20 faction integration handoff

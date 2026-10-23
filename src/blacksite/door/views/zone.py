@@ -26,7 +26,9 @@ def render_zone(buffer: CellBuffer, body: dict[str, Any], area: Rect, palette: P
             if remembered:
                 style = replace(style, attrs=(*style.attrs, 2))
             buffer.put(area.x + x, area.y + y, entry["glyph"], style)
-    for entry in [*body.get("objects", []), *body.get("actors", [])]:
+    objects = body.get('objects', [])
+    for entry in [*(o for o in objects if o.get('kind') != 'beacon'), *body.get("actors", []),
+                  *(o for o in objects if o.get('kind') == 'beacon')]:
         x, y = entry["x"] - viewport["x"], entry["y"] - viewport["y"]
         if 0 <= x < min(area.width, viewport["w"]) and 0 <= y < min(area.height, viewport["h"]):
             buffer.put(area.x + x, area.y + y, entry["glyph"], palette.style(entry.get("role", "text")))
@@ -62,8 +64,27 @@ def render_zone(buffer: CellBuffer, body: dict[str, Any], area: Rect, palette: P
         rows += ["WEAPON", me["weapon"]]
     rows += ["NEARBY"]
     rows += [f"{entry.get('relation', '~')} {entry.get('name', 'Another Wake')}" for entry in body.get("nearby", [])[:3]]
-    rows += ["CREW", "None"]
+    crew = body.get('crew', [])
+    crew_rows = ['CREW']
+    for member in crew:
+        suffix = f" {member['hp_pct']}%"
+        crew_rows += [('>' if member.get('beacon') else '+' if member.get('leader') else ' ')+
+                      truncate(member['name'], side_w-len(suffix)-1)+suffix,
+                      str(member['zone'])+(' / '+member['direction'] if member.get('beacon') and member.get('direction') else '')]
+    rows += crew_rows if crew else ["CREW", "None"]
     extra = 4 if me.get("grade") is not None else 0
+    if crew and len(rows) > max(0, area.height-6-extra):
+        # Keep one ally visible on the small terminal; G holds the full roster.
+        compact = rows[:rows.index('TARGET')]
+        if target:
+            compact += [target['name'], f"HP {target['hp_percent']}% / {target['relation']}",
+                       f"Range {target['range']:g} Cover {target['cover']}"]
+        peers = [m for m in crew if m['name'] != me.get('name')]
+        first = peers[0] if peers else crew[0]
+        suffix = f" {first['hp_pct']}%"
+        compact += ['CREW / G', truncate(first['name'], side_w-len(suffix))+suffix,
+                    str(first['zone'])+(' / '+first['direction'] if first.get('beacon') and first.get('direction') else '')]
+        rows = compact+([me['weapon']] if me.get('weapon') else [])
     name_roles = {f"{entry.get('relation', '~')} {entry.get('name', 'Another Wake')}": entry.get("role", "text")
                   for entry in body.get("nearby", [])}
     if target:

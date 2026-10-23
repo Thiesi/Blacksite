@@ -80,7 +80,9 @@ def test_catalog_5_medic_restores_real_crew_deficits_once_per_second_without_hym
     game,a,b,player,engine = operator
     medic = deploy(game,a,player,engine,"drn_sablier_medic")
     owner,ally = body(game,a),body(game,b)
-    game.core.combat.allies_provider = lambda actor:[owner,ally]
+    crews = game.core.crews
+    crews.perform(a.session, 'invite', b.session.player_id)
+    crews.perform(b.session, 'accept', next(iter(crews.registry.invites)))
     owner.health -= 20; ally.health -= 20
     before = owner.health,ally.health,player.skills["drones"],player.skills["hymns"]
     game.step(); game.commit_commerce()

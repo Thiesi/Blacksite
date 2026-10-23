@@ -54,6 +54,7 @@ class ZoneSimulation:
         self.locked_exits: set[tuple[str, str]] = set()  # S15-owned control state.
         self.arrival_hook: Callable[[Session, Avatar], None] = lambda session, avatar: None
         self.scout_provider: Callable[[Session], tuple[set[tuple[int,int]],set[str]]] = lambda session:(set(),set())
+        self.crew_view: Callable[[Session, dict[str, Any]], None] = lambda session, body: None
 
     def discover(self, session: Session, avatar: Avatar) -> None:
         if avatar.zone in avatar.seen_zones:
@@ -329,6 +330,7 @@ class ZoneSimulation:
             if channel := avatar.actor.behaviour.get("channel"):
                 body["me"]["channel"] = dict(channel)
                 body["hint"] = f"{channel['label']} {channel['remaining']:.1f}s  Stay still; Esc/B cancels."
+            self.crew_view(session, body)
             if self.views[session.id].publish(session, body, ctx.tick):
                 self.published[session.id] = stamp
             elif body == (self.views[session.id].previous or {}).get("body"):

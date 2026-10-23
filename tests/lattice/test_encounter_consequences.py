@@ -16,6 +16,40 @@ from tests.lattice.test_encounters import cast, enter
 from tests.lattice.test_silt_encounters import descend
 
 
+def test_game_10_round_robin_data_turn_starts_after_defenders_and_rotates_on_commit(runners):
+    game, a, b, _ = runners
+    crews = game.core.crews
+    crews.perform(a.session, 'invite', b.session.player_id)
+    crews.perform(b.session, 'accept', next(iter(crews.registry.invites)))
+    crew = crews.registry.crew_of(a.session.player_id)
+    crews.registry.loot_mode(a.session.player_id, 'round_robin')
+    content = game.core.loop.content
+    spec = content.cores['lat-civic-ledger']
+    pane = next(i.id for i in content.ice.values() if i.params.get('shields_data'))
+    content.cores[spec.id] = replace(spec, rooms=tuple(
+        replace(r, ice=(pane,), data=(replace(r.data[0], scope='shared'),)) if r.id == 'r-cache' else r
+        for r in spec.rooms))
+    presence = enter(game, a, spec.id)
+    presence.room = 'r-cache'
+    encounters, sources = game.core.lattice.encounters, game.core.lattice.sources
+    data = encounters.core(presence).graph.room(presence.room).data[0]
+    key = encounters.source(presence, data)
+    sources.refresh(key, data, game.clock.now_tick())
+    with pytest.raises(ValueError, match='shields this data'):
+        encounters.start_lift(presence, data.id, 0)
+    assert not sources.crew_offers and crew.next_loot == 0
+    # Defeat fixture isolates the loot receipt; ICE combat has its own gate.
+    for defender in encounters.defenders(presence):
+        defender.integrity = 0
+    for fail in (True, False):
+        encounters.start_lift(presence, data.id, 0)
+        game.step(presence.procedure.until-game.clock.now_tick())
+        assert crew.next_loot == 0
+        game.commit_commerce(error=fail)
+        assert crew.next_loot == (0 if fail else 1)
+    assert not sources.crew_offers
+
+
 @pytest.mark.parametrize("owner_kind,damage", [("institution", True), ("private", False)])
 def test_game_5_only_explicit_npc_risk_permits_safe_body_feedback(runners, owner_kind, damage):
     game, a, b, c = runners
