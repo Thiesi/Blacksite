@@ -287,8 +287,8 @@ async def run_case(root: Path, python: Path, show: bool, width: int, height: int
         assert owner.state.engine.instances[iid].state=='turned_in'
         probe.save(caller,f's19-paid-restart-{allocation}-{width}')
         await probe.leave(caller,f's19-service-left-{allocation}-{width}')
-        result=dict(passed=True,size=[width,height],allocation=allocation,services=service_results,
-                    forks=True,repair_reconnect=True,paid_server_restart=True,**descriptor)
+        result=dict(passed=True,size=[width,height],allocation=allocation,stage=stage,services=service_results,
+                    forks=True,repair_reconnect=bool(service_results),paid_server_restart=True,**descriptor)
         (root/'s19-service-results.json').write_text(json.dumps(result,indent=2)+'\n',encoding='utf-8')
         return result
     except BaseException:
