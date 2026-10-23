@@ -36,6 +36,7 @@ class Lattice:
         self.sectors = Sectors(self.content.sectors.values())
         state = state or {}
         self.season = state.get("season", 0)
+        self.combat.commerce.program_season = lambda: self.season
         self.sources = Sources(self.game.sessions.origin, state.get("lattice", {}), self.clock.now_tick())
         self.presences: dict[str, Presence] = {}
         self.transitions: dict[str, tuple[str, int]] = {}

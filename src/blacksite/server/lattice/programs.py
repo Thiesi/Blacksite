@@ -3,6 +3,7 @@
 from collections.abc import Mapping, Sequence
 from dataclasses import dataclass, field
 from math import ceil
+from typing import Any
 
 from blacksite.content.schema import Number, ProgramTemplate
 from blacksite.server.clock import TICK_HZ
@@ -211,3 +212,18 @@ def can_cast(program: ProgramTemplate, archetype: str, charges: Mapping[str, int
     return all((archetype == value.split(":")[1] if value.startswith("archetype:") else
                 charges.get(program.id, 0) > 0 if value == "bound_charge" else True)
                for value in program.cast_requires)
+
+
+def learn(program: ProgramTemplate, progress: dict[str, Any], archetype: str,
+          standing: Mapping[str, int], season: int, *, allow_known: bool = False) -> bool:
+    """Game 17.2: all permanent sources share acquisition custody."""
+    if program.id in progress.get('known_programs', ()):
+        if allow_known:
+            return False
+        raise ValueError('You already know '+program.name+'.')
+    acquired = set(progress.get('program_acquisitions', {}).get(str(season), ()))
+    if not can_acquire(program, archetype, standing, acquired):
+        raise ValueError('You do not meet '+program.name+'\'s acquisition requirements.')
+    progress.setdefault('known_programs', []).append(program.id)
+    progress.setdefault('program_acquisitions', {}).setdefault(str(season), []).append(program.id)
+    return True

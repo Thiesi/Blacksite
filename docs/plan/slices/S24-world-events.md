@@ -146,3 +146,7 @@ service-owned layers and preserves independent event/control state. Changing
 a price before final confirmation must refresh the quote without spending.
 Keep uptime schedules separate from UTC effect deadlines.
 <!-- s19-services:end -->
+
+Bind `Contracts.event_active` to committed active event IDs when S24
+lands. Contract prerequisites are checked again at accepted start;
+proposals and forecasts must not stand in for an active event receipt.

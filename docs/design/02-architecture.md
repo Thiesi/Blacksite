@@ -668,6 +668,22 @@ same objective. Switching methods before completion consumes no branch
 receipt. A combined contract/vendor counter keeps a Trade hotkey so
 commissioning a board does not remove its shop.
 
+Contract prerequisites are checked against current authoritative facts
+both when proposing and when starting. The card and refusal message
+describe unmet requirements in ordinary language. A paid story helper
+can assist without re-earning entry standing, while retaining zero
+additional reward and no rewritten branch. Future event predicates use
+`Contracts.event_active`, bound by S24 to committed event state.
+Unavailable dialogue/season context fails closed until its owner binds
+it; authoring content does not publish offers.
+
+Permanent program learning uses one pure acquisition rule for contract
+rewards, counters and data. It writes `known_programs` and current-season
+`program_acquisitions` with the owning reward/payment/source receipt.
+The Lattice binds Commerce's current-season provider; it does not infer
+a season from the story's age. Acquisition restrictions do not revoke
+previously learned programs or turn faction loans into permanent copies.
+
 Add typed intents to the existing protocol, not a command parser:
 `journal.open`, `evidence.inspect`, `evidence.publish`,
 `work_order.reserve`, `work_order.perform`, `work_order.allocate`,

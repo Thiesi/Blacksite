@@ -1989,6 +1989,16 @@ valid; zone/core instance IDs retain their own documented convention.
 | `prg_choir_cantillation_2` | Cantillation II | attack | 3 | 1 | 1.2 s | 6 s | Cantor, Choir +50 to acquire: 40 damage + Resonance / 3; normal attack trace | 3600 |
 | `prg_residual_fragment` | Residual Fragment | utility | 3 | 1 | 1 s | single use | +25 effective Programs until jack-out, capped 100; bound faction loan | 0 |
 
+S19 supplies fixed Tin Halo counter listings for Lance, Bunker, Signet
+and Anchor at their catalog base prices, with the ordinary trade
+modifiers and no membership requirement. A Blackout program image is
+an identity-scoped source in the Silt's Reach. Finding and lifting it
+uses the existing encounter rules; another caller cannot consume that
+caller's copy. Its once-per-season acquisition cap applies at the
+source and does not limit casting. Required story progress never needs
+this optional program. Other catalog sources may supplement these
+routes as the remaining city content lands.
+
 ### 17.3 ICE
 
 | Name | Tier | Integrity | Attack | Trigger | Behaviour | Black | Counters |

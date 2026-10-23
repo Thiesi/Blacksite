@@ -12,6 +12,7 @@ from blacksite.server import bank, drugs
 from blacksite.server.characters import Characters
 from blacksite.server.inventory import Inventory
 from blacksite.server.items import CACHE_SECONDS, CONSUMABLE_SECONDS, ItemInstance, availability, make_item
+from blacksite.server.lattice.programs import can_acquire, learn as learn_program
 from blacksite.server.loop import TickContext
 from blacksite.server.players import Player
 from blacksite.server.protocol import Frame
@@ -50,6 +51,7 @@ class Commerce:
         self.waiting: deque[tuple[str,str,dict[str,Any],bool] | Callable[[], None]] = deque()
         self.prompt_serial = 0
         self.after_settle: Callable[[], None] = lambda: None
+        self.program_season: Callable[[], int] = lambda: 0  # The Lattice binds its current season.
         self.budget_multiplier: Callable[[Vendor, str], float] = lambda vendor, counter: 1
         self.vendor_available: Callable[[Vendor, str], bool] = lambda vendor, counter: True
         self.item_label: Callable[[ItemInstance], str] = lambda item: self.content.items[item.template].name
@@ -176,11 +178,8 @@ class Commerce:
                 if template and template.no_vendor_sale:
                     raise ValueError("That item cannot be bought from a counter.")
                 if iid.startswith("prg_"):
-                    key = "known_programs"
-                    learned = draft.progress.setdefault(key, [])
-                    if iid in learned:
-                        raise ValueError("You already know that.")
-                    learned.append(iid)
+                    learn_program(self.content.programs[iid], draft.progress, draft.archetype,
+                                  draft.standing, self.program_season())
                 else:
                     inventory.add(draft, make_item(next_id(), template, draft.id, self.clock.now_utc().isoformat(), count))
                 draft.chits_hand -= cost
@@ -583,6 +582,10 @@ class Commerce:
                     count = template.stack_max if template and template.class_ == "ammo" else 1
                     label = template.name if template else self.content.programs.get(entry.item).name if entry.item in self.content.programs else entry.item
                     allowed = permitted(player, vendor, entry) and self.content.active("items", entry.item)
+                    if not template and entry.item in self.content.programs:
+                        acquired = set(player.progress.get('program_acquisitions', {}).get(str(self.program_season()), ()))
+                        allowed = allowed and entry.item not in player.progress.get('known_programs', ()) and can_acquire(
+                            self.content.programs[entry.item], player.archetype, player.standing, acquired)
                     if hasattr(self.game, "factions") and not self.game.factions.stock_available(player, vendor, budget_key, entry.item):
                         allowed = False
                     cost = self.quote(player, vendor, entry, count) if template or entry.item in self.content.programs else 0

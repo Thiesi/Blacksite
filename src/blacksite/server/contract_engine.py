@@ -6,15 +6,16 @@ from dataclasses import dataclass, field, replace
 from math import ceil
 from typing import Any
 
-from blacksite.content.schema import Stage, StageTarget
+from blacksite.content.schema import ContractTemplate, Stage, StageTarget
 from blacksite.server.clock import TICK_HZ
 from blacksite.server.contracts.engine import Fact, Instance, Offer, Participant, Payout, Progress, matches, target_record
 from blacksite.server.contracts.ledger import Ledger
+from blacksite.server.contracts.requirements import describe as describe_requirement
 from blacksite.server.contracts.transactions import join_state
 from blacksite.server.crews import PARTICIPATION_SECONDS
 from blacksite.server.inventory import Inventory
 from blacksite.server.items import ItemInstance, make_item
-from blacksite.server.lattice.programs import can_acquire
+from blacksite.server.lattice.programs import learn as learn_program
 from blacksite.server.loop import TickContext
 from blacksite.server.progression import Grant, award
 from blacksite.server.factions import apply_vector
@@ -46,6 +47,7 @@ class Contracts:
         self.last_tick = self.clock.now_tick()
         self.proposals: dict[str, Proposal] = {}
         self.proposal_serial = 0
+        self.event_active: Callable[[str], bool] = lambda event: False  # S24 binds committed events.
         self.game.contracts = self
         from blacksite.server.contracts.panels import Panels
         self.panels = Panels(self)
@@ -454,6 +456,52 @@ class Contracts:
                 return self.state.engine.story_offer(oid, player)
         raise ValueError('That offer changed. Read the current board.')
 
+    def requirements(self, pid: str, template: ContractTemplate) -> tuple[str, ...]:
+        """Read current authoritative facts before a proposal and its start."""
+        player = self.game.players[pid]
+        if template.story and template.id in self.state.engine.completed.get(pid, set()):
+            return ()  # A previously paid helper need not grind entry standing again.
+        missing = []
+        if player.grade < template.min_grade:
+            missing.append('grade_at_least '+str(template.min_grade))
+        if template.season is not None and self.lat.season < template.season:
+            missing.append('season_available '+str(template.season))
+        carried = {self.commerce.items[iid].template for iid in player.inventory
+                   if iid in self.commerce.items and self.commerce.items[iid].owner == pid}
+        assigned = {job.template for job in self.state.engine.instances.values()
+                    if job.state in ('active', 'complete', 'failed') and job.failure != 'expired'
+                    and pid in {p.player for p in job.roster}-job.withdrawn}
+        for condition in template.unlock_conditions:
+            name, *args = condition.split()
+            if name == 'grade_at_least': ready = player.grade >= int(args[0])
+            elif name == 'grade_below': ready = player.grade < int(args[0])
+            elif name == 'standing_at_least': ready = player.standing.get(args[0], 0) >= int(args[1])
+            elif name == 'standing_below': ready = player.standing.get(args[0], 0) < int(args[1])
+            elif name == 'member_of': ready = player.faction == args[0]
+            elif name == 'not_member_of': ready = player.faction != args[0]
+            elif name == 'archetype': ready = player.archetype == args[0]
+            elif name == 'has_item': ready = args[0] in carried
+            elif name == 'has_evidence': ready = args[0] in self.state.journal.get(pid, {})
+            elif name == 'completed_contract': ready = args[0] in self.state.engine.completed.get(pid, set())
+            elif name == 'has_contract': ready = args[0] in assigned
+            elif name == 'service_state':
+                node = self.state.services.nodes.get(args[0])
+                ready = bool(node and node.state == args[1])
+            elif name == 'event_active': ready = self.event_active(args[0])
+            elif name == 'legal': ready = player.legal_at is not None
+            elif name == 'not_legal': ready = player.legal_at is None
+            else: ready = False  # Dialogue/season facts arrive with their owning slices.
+            if not ready:
+                missing.append(condition)
+        return tuple(missing)
+
+    def check_requirements(self, roster: tuple[str, ...], template: ContractTemplate) -> None:
+        for pid in roster:
+            missing = self.requirements(pid, template)
+            if missing:
+                raise ValueError(self.game.players[pid].name+' requires: '+
+                    ', '.join(describe_requirement(condition, self.content) for condition in missing)+'.')
+
     def propose(self, player: str, offer: Offer, roster: tuple[str, ...],
                 approach: str = 'default') -> Proposal:
         if not roster or roster[0] != player:
@@ -465,6 +513,7 @@ class Contracts:
             if not self.game.combat.session(pid):
                 raise ValueError('Every proposed participant must be online.')
         # Validate terms without consuming slots, branches, supplies or receipts.
+        self.check_requirements(roster, self.state.engine.templates[offer.template])
         self.state.engine.fork().accept(offer, tuple(self.participant(pid) for pid in roster), self.now(), approach)
         self.proposal_serial += 1
         proposal = Proposal(f'{self.origin}:proposal:{self.proposal_serial}', player, offer, roster, approach)
@@ -532,6 +581,7 @@ class Contracts:
             raise ValueError('The proposed crew changed. Offer the job again.')
         draft = self.state.fork()
         offer = offered.offer
+        self.check_requirements(offered.roster, self.state.engine.templates[offer.template])
         if offered.service:
             node = draft.services.reserve(offered.service, offered.allocation, offered.roster,
                                           self.now(), offered.service_revision)
@@ -564,17 +614,9 @@ class Contracts:
             recipient = deepcopy(player)
             for key, value in patch.items():
                 setattr(recipient, key, deepcopy(value))
-            acquired = recipient.progress.setdefault('contract_programs', {})
-            season = str(instance.season or 1)
-            known = recipient.progress.setdefault('known_programs', [])
             for pid in payout.payment.programs:
-                program = self.content.programs[pid]
-                if pid in known:
-                    continue
-                if not can_acquire(program, recipient.archetype, recipient.standing, set(acquired.get(season, ()))):
-                    raise ValueError('You do not meet this program reward\'s acquisition requirements.')
-                known.append(pid)
-                acquired.setdefault(season, []).append(pid)
+                learn_program(self.content.programs[pid], recipient.progress, recipient.archetype,
+                              recipient.standing, self.lat.season, allow_known=True)
             inventory = Inventory(items, self.content.items, self.progression.modifiers(recipient).secured_slots)
             for tid in payout.payment.items:
                 serial += 1

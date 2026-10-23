@@ -511,6 +511,13 @@ Pulse marks the casting district cell or core entrance for the crew for
 20 s. The entry marker stays fixed; it exposes no interior room or Silt
 position. Pulse cannot be cast in the Silt.
 
+Lance, Bunker, Signet and Anchor have fixed counter listings at the Tin
+Halo, without a faction-membership gate. Their base prices remain the
+catalog values; normal trade modifiers apply. A Blackout image can be
+found in the Reach. Its receipt belongs to the finder's identity and
+season, so a crew cannot consume another caller's copy. Blackout is an
+optional encounter reward, never a prerequisite for the story.
+
 Old catalog IDs are pre-implementation renames, not saved-game aliases.
 In particular Shroud is stealth; Umbrella is the starter shield. There
 is no Masterkey that bypasses every gate or gates the whole Silt.

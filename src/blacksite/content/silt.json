@@ -124,6 +124,15 @@
           "asset": "text-ninety-nine-3",
           "scope": "identity",
           "respawn_seconds": 0
+        },
+        {
+          "id": "blackout-image",
+          "label": "Blackout program image",
+          "kind": "program",
+          "asset": "prg_blackout",
+          "amount": 1,
+          "scope": "identity",
+          "respawn_seconds": 0
         }
       ]
     },

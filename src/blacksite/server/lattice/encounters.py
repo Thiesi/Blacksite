@@ -19,7 +19,7 @@ from blacksite.server.items import make_item
 from blacksite.server.lattice.cores import CORE_IDLE_RESET_SECONDS, TRACE_PER_SECOND, CoreGraph, trace_thresholds
 from blacksite.server.lattice.ice import Ice, IceEvent, Location, Runner
 from blacksite.server.lattice.presence import INTEGRITY_MAX, Presence, Procedure, directional_neighbour, movement_ticks
-from blacksite.server.lattice.programs import Cast, Effects, attack_damage, bind, can_cast, cast_ticks, occupied_slots, ticks, trace_gain
+from blacksite.server.lattice.programs import Cast, Effects, attack_damage, bind, can_cast, cast_ticks, occupied_slots, ticks, trace_gain, learn as learn_program
 from blacksite.server.lattice.silt import Descent, adjacent_hidden, generate, survey_directions
 from blacksite.server.lattice.silt_scene import BandGraph
 from blacksite.server.players import Player
@@ -727,6 +727,10 @@ class Encounters:
             raise ValueError("This source requires an active contract objective.")
         player = self.game.players[presence.player_id]
         key = self.source(presence, data)
+        acquisition = deepcopy(player.progress)
+        for pid in data.programs or ((data.asset,) if data.kind == 'program' else ()):
+            learn_program(self.content.programs[pid], acquisition, player.archetype, player.standing,
+                          self.lat.season, allow_known=data.kind != 'program')
         if data.scope != "shared" and key in self.game.identity(player.bbs_user_id).get("lattice_receipts", {}):
             raise ValueError("This identity already holds that record.")
         source = self.lat.sources.refresh(key, data, self.clock.now_tick())
@@ -804,15 +808,9 @@ class Encounters:
                 draft.progress['lattice_units'][unit_id].update(binding)
         elif data.kind == "text":
             draft.progress.setdefault("lattice_records", {})[data.asset or data.id] = unit_id
-        elif data.kind == "program":
-            learned = draft.progress.setdefault("known_programs", [])
-            for pid in data.programs or (data.asset,):
-                if pid not in learned:
-                    learned.append(pid)
-        for pid in data.programs:
-            known = draft.progress.setdefault("known_programs", [])
-            if pid not in known:
-                known.append(pid)
+        for pid in data.programs or ((data.asset,) if data.kind == 'program' else ()):
+            learn_program(self.content.programs[pid], draft.progress, draft.archetype, draft.standing,
+                          self.lat.season, allow_known=data.kind != 'program')
         reward = None
         grant = None
         if presence.core:

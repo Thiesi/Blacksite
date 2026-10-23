@@ -1,6 +1,7 @@
 """Game 9.3: mission Silt records belong to this graph and this roster."""
 
 import pytest
+from typing import Any
 
 from blacksite.content.schema import Bundle, DataSpec, Stage, StageTarget
 from blacksite.server.contracts.ledger import Ledger
@@ -11,7 +12,7 @@ from tests.lattice.test_engine import intent, runners
 from tests.lattice.test_silt_encounters import descend
 
 
-def commission(game, caller):
+def commission(game: Any, caller: Any) -> tuple[Any, str, DataSpec]:
     owner = game.core.contracts
     data = DataSpec('fixture-silt-record', 'text', 0, asset='lattice-training-record', scope='mission')
     target = StageTarget('silt_data', sector='lat-chapel-ward', band='shallows', data=data.id)
@@ -27,7 +28,7 @@ def commission(game, caller):
     return owner, instance.id, data
 
 
-def test_game_9_3_required_silt_copy_is_visible_and_keeps_its_site_across_seeds(runners):
+def test_game_9_3_required_silt_copy_is_visible_and_keeps_its_site_across_seeds(runners: tuple[Any, ...]) -> None:
     game, caller, _, _ = runners
     owner, iid, data = commission(game, caller)
     rooms, sites = set(), set()
@@ -45,7 +46,7 @@ def test_game_9_3_required_silt_copy_is_visible_and_keeps_its_site_across_seeds(
     assert all(d.id != data.id for r in BandGraph(other, other.bands[0], owner.content).rooms.values() for d in r.data)
 
 
-def test_game_9_3_actual_generated_silt_lift_uses_mission_receipt_and_atomic_progress(runners):
+def test_game_9_3_actual_generated_silt_lift_uses_mission_receipt_and_atomic_progress(runners: tuple[Any, ...]) -> None:
     game, caller, outsider, _ = runners
     owner, iid, data = commission(game, caller)
     presence = descend(game, caller)
@@ -81,7 +82,7 @@ def test_game_9_3_actual_generated_silt_lift_uses_mission_receipt_and_atomic_pro
         encounters.start_lift(outsider_presence, data.id, source.generation)
 
 
-def test_game_9_3_inactive_story_bundle_adds_no_live_silt_record_or_offer(runners):
+def test_game_9_3_inactive_story_bundle_adds_no_live_silt_record_or_offer(runners: tuple[Any, ...]) -> None:
     game, caller, _, _ = runners
     owner, iid, data = commission(game, caller)
     job = owner.state.engine.instances[iid].template

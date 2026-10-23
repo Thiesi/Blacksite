@@ -409,6 +409,13 @@ attempt. Cash, programs and schematic unlocks remain contract rewards.
 
 Rewards add `programs[]` of catalog program IDs. Learning, items, chits,
 standing, XP and the contract receipt share one owning transaction.
+All permanent acquisition sources use the same guard and record learned
+IDs in `progress.program_acquisitions[season]` with `known_programs`.
+Counter purchases and data lifts include that record in their payment
+or source transaction. A rejected or failed write spends no payment or
+source. Contract rewards evaluate their own committed standing vector
+before acquisition; a previously known program does not block the rest
+of a legitimate story reward. Membership changes do not revoke learning.
 Publication options can carry their own scoped `permit`, whose optional
 typed `binding` identifies its actual target; a publication
 branch group may omit the fixed `branch` and uses the chosen option ID.

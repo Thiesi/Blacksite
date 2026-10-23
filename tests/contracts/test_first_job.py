@@ -1,6 +1,8 @@
 """Game 9.4: fresh Wakes can finish both shipped first-job routes."""
 
 from dataclasses import replace
+from pathlib import Path
+from typing import Any
 
 import pytest
 
@@ -13,7 +15,7 @@ from tests.lattice.test_engine import intent
 from tests.lattice.test_interlock import flip
 
 
-def first_job(repo_root, archetype=0):
+def first_job(repo_root: Path, archetype: int = 0) -> tuple[Any, ...]:
     content = load_content(repo_root/'src/blacksite/content')
     assert not validate(content)
     # Route mechanics are isolated from NPC scheduling. Native acceptance
@@ -41,7 +43,7 @@ def first_job(repo_root, archetype=0):
 
 @pytest.mark.parametrize('archetype', range(4))
 @pytest.mark.parametrize('route', ('manual', 'loan'))
-def test_game_9_4_fresh_wake_shared_latch_delivery_and_once_only_reward(repo_root, archetype, route):
+def test_game_9_4_fresh_wake_shared_latch_delivery_and_once_only_reward(repo_root: Path, archetype: int, route: str) -> None:
     game, caller, owner, iid = first_job(repo_root, archetype)
     pid = caller.session.player_id
     player = owner.game.players[pid]
@@ -94,7 +96,7 @@ def test_game_9_4_fresh_wake_shared_latch_delivery_and_once_only_reward(repo_roo
     assert (player.chits_hand, player.xp, player.standing) == settled
 
 
-def test_game_9_4_failed_manual_write_preserves_latch_and_retry(repo_root):
+def test_game_9_4_failed_manual_write_preserves_latch_and_retry(repo_root: Path) -> None:
     game, caller, owner, iid = first_job(repo_root)
     target = owner.state.engine.instances[iid].stages[1].targets[0]
     owner.actions.perform(caller.session, iid, target)
@@ -108,7 +110,7 @@ def test_game_9_4_failed_manual_write_preserves_latch_and_retry(repo_root):
     assert hatch.open and owner.state.engine.instances[iid].index == 2
 
 
-def test_game_9_4_vesper_job_counter_keeps_trade_available(repo_root):
+def test_game_9_4_vesper_job_counter_keeps_trade_available(repo_root: Path) -> None:
     game, caller, owner, iid = first_job(repo_root)
     place(game, caller, 'sodium-tin-halo', (8,14))
     panel = Panel(game.clock.now_tick(), target='vesper', handler='vesper')

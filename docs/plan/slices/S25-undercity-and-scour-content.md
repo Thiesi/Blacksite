@@ -280,3 +280,10 @@ bindings. Cold Chain changes installation service fees only. Depot cap
 changes retain hourly spending. Keep all five program-source routes and the
 actual affordability/native geography obligations from PR #38.
 <!-- s19-services:end -->
+
+S19 commissions fixed Tin Halo listings for Lance, Bunker, Signet and
+Anchor and an identity-scoped Blackout image in the Reach. Keep these
+usable without faction membership when expanding the city's shops;
+additional faction sources supplement them. Permanent source guards and
+current-season acquisition custody are shared by counters, lifts and
+contract rewards. The full-city income/playtesting handoff still applies.

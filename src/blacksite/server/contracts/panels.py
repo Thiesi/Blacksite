@@ -6,6 +6,7 @@ import textwrap
 from typing import Any
 
 from blacksite.server.contracts.engine import Payment
+from blacksite.server.contracts.requirements import describe as describe_requirement
 from blacksite.server.protocol import Frame
 from blacksite.server.commerce import CommerceMenu
 from blacksite.server.sessions import Session
@@ -91,12 +92,13 @@ class Panels:
                 service = owner.content.services[sid]
                 if service.zone == actor.zone and owner.content.contracts[service.contract].giver == panel.handler:
                     result.append({'id': 'service:'+sid, 'cells': [node.state, service.name]})
+            for tid, job in owner.state.engine.templates.items():
+                if (job.story and job.giver == panel.handler and tid not in owner.state.engine.completed.get(pid, set())
+                        and not owner.requirements(pid, job)):
+                    result.append({'id': tid, 'cells': ['Story', job.name or job.id]})
             for offer in owner.state.engine.board(panel.handler, owner.now()):
                 job = owner.state.engine.templates[offer.template]
                 result.append({'id': offer.id, 'cells': ['Offer', job.name or job.id]})
-            for tid, job in owner.state.engine.templates.items():
-                if job.story and job.giver == panel.handler and tid not in owner.state.engine.completed.get(pid, set()):
-                    result.append({'id': tid, 'cells': ['Story', job.name or job.id]})
         return result
 
     def card(self, session: Session, panel: Panel, selected: str) -> tuple[list[str], list[dict[str, str]]]:
@@ -230,8 +232,12 @@ class Panels:
                 'Grade: '+str(job.min_grade)+'. '+('Story; no overall deadline.' if job.story else 'Generated; 60 min after acceptance.'),
                 'Cost: no acceptance fee. Actions and hazards appear on the objective card.']
             detail += consequences(job)
-            actions += [{'key': 'a', 'label': 'solo'}, {'key': 'c', 'label': 'crew'}]
-            if job.approaches:
+            missing = owner.requirements(pid, job)
+            if missing:
+                detail += ['Requires: '+', '.join(describe_requirement(condition, owner.content) for condition in missing)]
+            else:
+                actions += [{'key': 'a', 'label': 'solo'}, {'key': 'c', 'label': 'crew'}]
+            if job.approaches and not missing:
                 actions += [{'key': str(i), 'label': approach.label} for i, approach in enumerate(job.approaches, 1)]
             return detail, actions
         return ['Visit a hall or the Tin Halo contract board for offers.',

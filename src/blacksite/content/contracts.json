@@ -95,6 +95,9 @@
           "label": "Carry the parcel back to Vesper",
           "requires_item": "story_stuck_door_package"
         }
+      ],
+      "unlock_conditions": [
+        "has_item story_vesper_card"
       ]
     }
   ]
