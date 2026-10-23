@@ -65,6 +65,7 @@ class Procedure:
     last_hit: int
     generation: int = 0
     source: str = ""
+    relay_claim: str = ""
 
 
 @dataclass

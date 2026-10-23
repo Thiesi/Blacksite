@@ -743,6 +743,29 @@ Acquired journal evidence remains available. Permanent cash, programs
 and schematics belong to an explicit contract reward rather than a
 temporary mission source. Cleanup runs after the source's own callback,
 so it cannot recreate a retired source after the cleanup commits.
+
+S21 commits `relays_state` with affected player/identity rewards and
+`interlock_state` through the same source boundary. Explicit claims are
+live channels; restart aborts them rather than counting offline capture
+time. Successful runner control receipts bind the original named claim.
+The ledger retains exact fractional influence, ownership history for
+rent, rolling capture reward limits and daily identity payout receipts.
+Only committed, attributed captures enter its capture-fact log.
+Failed capture proposals retry after one injected-clock second, with one
+holder notice per failed claim episode. Ended claims drop the retry marker;
+another ready claim can use the writer while the first is cooling down.
+Authenticated `admin.relay.list {}` and
+`admin.relay.set {relay, faction}` use typed IDs, with `neutral` clearing
+ownership. Set acknowledges its committed source write and awards no
+capture credit. Callers cannot use either operator frame.
+
+Optional fare choices commit a wallet debit and route-bound
+`progress.paid_passes` receipt together. `paid_trip` binds the exact pass
+to persisted S08 transit. Both live and offline arrival consume that
+pass in the arrival checkpoint; a stop before departure retains it.
+An untagged exit retains ordinary S08 travel. `Exit.relay` explicitly
+opts a cable or outbound gate into its price/free-route card; content
+validation requires the corresponding relay and a public cable fallback.
 Silt contract sources are authored as `mission_data` on the contract.
 The generated band resolves their sector/band/data binding into its
 own visible cells. The source site stays stable across layout seeds;

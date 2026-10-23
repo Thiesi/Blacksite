@@ -1,0 +1,246 @@
+{
+  "schema": 1,
+  "relays": [
+    {
+      "id": "shaft",
+      "name": "Shaft Relay",
+      "zone": "spire-shaft-head",
+      "terminal": "relay-shaft",
+      "core": "lat-relay-shaft",
+      "tier": 5,
+      "rate": 20,
+      "vendor": "relay-shaft-counter",
+      "benefit": {
+        "kind": "shaft_telemetry",
+        "amount": 0
+      },
+      "requires_level": true
+    },
+    {
+      "id": "cold-chain",
+      "name": "Cold Chain Relay",
+      "zone": "vatside-clinics",
+      "terminal": "cold-chain-relay",
+      "core": "lat-relay-cold-chain",
+      "tier": 2,
+      "rate": 10,
+      "vendor": "relay-cold-chain-counter",
+      "benefit": {
+        "kind": "surgery_fee",
+        "amount": 0.9
+      },
+      "requires_level": false
+    },
+    {
+      "id": "depot",
+      "name": "Depot Relay",
+      "zone": "tramyard-depots",
+      "terminal": "relay-depot",
+      "core": "lat-relay-depot",
+      "tier": 2,
+      "rate": 10,
+      "vendor": "relay-depot-counter",
+      "benefit": {
+        "kind": "vendor_refresh",
+        "amount": 1800
+      },
+      "requires_level": false
+    },
+    {
+      "id": "gate-nine",
+      "name": "Gate Relay Nine",
+      "zone": "tramyard-wall-gate",
+      "terminal": "relay-gate-nine",
+      "core": "lat-relay-gate-nine",
+      "tier": 3,
+      "rate": 10,
+      "vendor": "relay-gate-nine-counter",
+      "benefit": {
+        "kind": "fast_gate",
+        "amount": 0
+      },
+      "requires_level": false
+    },
+    {
+      "id": "cable",
+      "name": "Cable Relay",
+      "zone": "sink-rim",
+      "terminal": "relay-cable",
+      "core": "lat-relay-cable",
+      "tier": 3,
+      "rate": 10,
+      "vendor": "relay-cable-counter",
+      "benefit": {
+        "kind": "cable_ride",
+        "amount": 0
+      },
+      "requires_level": false
+    },
+    {
+      "id": "sump",
+      "name": "Sump Relay",
+      "zone": "sink-floor",
+      "terminal": "relay-sump",
+      "core": "lat-relay-sump",
+      "tier": 2,
+      "rate": 10,
+      "vendor": "relay-sump-counter",
+      "benefit": {
+        "kind": "pump_telemetry",
+        "amount": 0
+      },
+      "requires_level": false
+    },
+    {
+      "id": "bell",
+      "name": "Bell Relay",
+      "zone": "chapel-towers",
+      "terminal": "relay-bell",
+      "core": "lat-relay-bell",
+      "tier": 3,
+      "rate": 10,
+      "vendor": "relay-bell-counter",
+      "benefit": {
+        "kind": "hymn_radius",
+        "amount": 1,
+        "district": "Chapel Ward"
+      },
+      "requires_level": false
+    },
+    {
+      "id": "zero",
+      "name": "Relay Zero",
+      "zone": "oldworks-main",
+      "terminal": "relay-zero",
+      "core": "lat-relay-zero",
+      "tier": 3,
+      "rate": 10,
+      "vendor": "relay-zero-counter",
+      "benefit": {
+        "kind": "trace_gain",
+        "amount": 0.9
+      },
+      "requires_level": false
+    },
+    {
+      "id": "yard",
+      "name": "Yard Relay",
+      "zone": "oldworks-yards",
+      "terminal": "relay-yard",
+      "core": "lat-relay-yard",
+      "tier": 3,
+      "rate": 10,
+      "vendor": "relay-yard-counter",
+      "benefit": {
+        "kind": "fabrication_quality",
+        "amount": 0.05
+      },
+      "requires_level": false
+    },
+    {
+      "id": "block",
+      "name": "Block Relay",
+      "zone": "terraces-blocks",
+      "terminal": "block-relay",
+      "core": "lat-relay-block",
+      "tier": 2,
+      "rate": 10,
+      "vendor": "relay-block-counter",
+      "benefit": {
+        "kind": "rent_and_ice",
+        "amount": 0.9
+      },
+      "requires_level": false
+    },
+    {
+      "id": "cavern",
+      "name": "Cavern Relay",
+      "zone": "under-caverns",
+      "terminal": "relay-cavern",
+      "core": "lat-relay-cavern",
+      "tier": 3,
+      "rate": 10,
+      "vendor": "relay-cavern-counter",
+      "benefit": {
+        "kind": "patrol_overlay",
+        "amount": 0
+      },
+      "requires_level": false
+    },
+    {
+      "id": "outworks",
+      "name": "Outworks Relay",
+      "zone": "under-outworks",
+      "terminal": "relay-outworks",
+      "core": "lat-relay-outworks",
+      "tier": 4,
+      "rate": 10,
+      "vendor": "relay-outworks-counter",
+      "benefit": {
+        "kind": "depth_contribution",
+        "amount": 1.1
+      },
+      "requires_level": false
+    },
+    {
+      "id": "mile",
+      "name": "Mile Relay",
+      "zone": "scour-ring-1",
+      "terminal": "relay-mile",
+      "core": "lat-relay-mile",
+      "tier": 2,
+      "rate": 30,
+      "vendor": "relay-mile-counter",
+      "benefit": {
+        "kind": "convoy_patrol",
+        "amount": 0
+      },
+      "requires_level": false
+    },
+    {
+      "id": "beacon",
+      "name": "Beacon Relay",
+      "zone": "scour-ring-2",
+      "terminal": "relay-beacon",
+      "core": "lat-relay-beacon",
+      "tier": 3,
+      "rate": 30,
+      "vendor": "relay-beacon-counter",
+      "benefit": {
+        "kind": "impact_forecast",
+        "amount": 300
+      },
+      "requires_level": false
+    },
+    {
+      "id": "crash",
+      "name": "Crash Relay",
+      "zone": "scour-ring-3",
+      "terminal": "relay-crash",
+      "core": "lat-relay-crash",
+      "tier": 4,
+      "rate": 30,
+      "vendor": "relay-crash-counter",
+      "benefit": {
+        "kind": "salvage_grade",
+        "amount": 1
+      },
+      "requires_level": false
+    },
+    {
+      "id": "far",
+      "name": "Far Relay",
+      "zone": "scour-ring-4",
+      "terminal": "relay-far",
+      "core": "lat-relay-far",
+      "tier": 4,
+      "rate": 30,
+      "vendor": "relay-far-counter",
+      "benefit": {
+        "kind": "long_range_telemetry",
+        "amount": 0
+      },
+      "requires_level": false
+    }
+  ]
+}

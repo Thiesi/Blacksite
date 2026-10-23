@@ -379,7 +379,7 @@ ladder behind that goes down to where the vats drain.
 - **Exits:** `tramyard-market` (street); `tramyard-wall-gate` (street);
   `oldworks-main` (freight siding).
 - **Relays:** **Depot Relay** (controls the ration distribution
-  schedule; holders' faction vendors restock twice as fast).
+  schedule; holders' faction vendor buy-back pools refill every 30 min).
 - **Terminals:** one hardware terminal (Depot Control core, tier 2; controls the
   warehouse doors and the freight cranes).
 - **Vendors / anchors:** Kestrel quartermaster (tools, drones, carrier
@@ -1215,8 +1215,9 @@ that the crews do not look up when it does. They look at where it went.
 - **Exits:** `scour-ring-2` (beacon line); `scour-ring-4` (no road; a
   bearing).
 - **Relays:** **Crash Relay** (built into the largest intact wreck;
-  holders' Ring Three nodes yield +1 grade step, capped at compute; the most
-  contested relay in the game).
+  holding it improves newly generated public Ring Three nodes by one
+  grade step, capped at compute; existing nodes keep their grade; the
+  most contested relay in the game).
 - **Terminals:** none.
 - **Vendors / anchors:** the wreck field (landmarks; several large
   wrecks with interiors, fabricated as sub-areas of the map), no camp.

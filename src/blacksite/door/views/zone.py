@@ -26,6 +26,11 @@ def render_zone(buffer: CellBuffer, body: dict[str, Any], area: Rect, palette: P
             if remembered:
                 style = replace(style, attrs=(*style.attrs, 2))
             buffer.put(area.x + x, area.y + y, entry["glyph"], style)
+    for route in body.get('patrol_routes', []):
+        for point in route['waypoints']:
+            x, y = point['x']-viewport['x'], point['y']-viewport['y']
+            if 0 <= x < min(area.width, viewport['w']) and 0 <= y < min(area.height, viewport['h']):
+                buffer.put(area.x+x, area.y+y, '+', palette.style('ui_highlight'))
     objects = body.get('objects', [])
     for entry in [*(o for o in objects if o.get('kind') != 'beacon'), *body.get("actors", []),
                   *(o for o in objects if o.get('kind') == 'beacon')]:

@@ -52,6 +52,8 @@ class Interlock:
         self.layout_for: Callable[[str, str, str], str | None] = lambda pid, core, control: None
         self.on_cut_power: Callable[["Player", str], None] = lambda actor, core: None
         self.cut_patch: Callable[["Player", str], dict[str, Any]] = lambda player, core: {}
+        self.claim_of: Callable[[str, str, str], str] = lambda player, core, control: ""
+        self.control_committed: Callable[[str, str, str, str], None] = lambda player, core, control, claim: None
         for core in self.content.cores.values():
             if core.template or not self.content.active("cores", core.id):
                 continue
@@ -107,7 +109,8 @@ class Interlock:
             raise ValueError("Finish or cancel your current action first.")
         layout = self.check_effect(control, presence.player_id, presence.core)
         presence.procedure = Procedure("flip", cid, self.clock.now_tick()+FLIP_SECONDS*TICK_HZ,
-            presence.instance, self.lat.encounters.hit_serial(presence), control.revision, layout or "")
+            presence.instance, self.lat.encounters.hit_serial(presence), control.revision, layout or "",
+            self.claim_of(presence.player_id, presence.core, cid))
         self.lat.encounters.log(presence, f"{control.label}: {control.action}, 3s channel, +10 trace on completion. Esc cancels.")
 
     def check_effect(self, control: ControlSpec, player_id: str = "", core: str = "") -> str | None:
@@ -179,6 +182,7 @@ class Interlock:
                 proposal["holds"][zone.id+":"+ex.id] = [until, until+HOLD_IMMUNITY_SECONDS]
         def applied() -> None:
             before = presence.trace
+            self.control_committed(player.id, presence.core, control.id, procedure.relay_claim)
             if hasattr(self.game, 'crews'):
                 self.game.crews.control_committed(player.id, presence.core)
             if self.lat.presences.get(presence.player_id) is presence:

@@ -377,6 +377,7 @@ TABLE_FILES: dict[str, tuple[str, type]] = {
     "events.json": ("events", s.EventTemplate),
     "routes.json": ("routes", s.Route),
     "vendors.json": ("vendors", s.Vendor),
+    "relays.json": ("relays", s.Relay),
     "hymns.json": ("hymns", s.HymnTemplate),
     "evidence.json": ("evidence", s.EvidenceRecord),
     "services.json": ("services", s.ServiceNodeTemplate),

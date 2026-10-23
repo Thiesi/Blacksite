@@ -204,3 +204,9 @@ expires without being extended by another worker. The Ferrymen recovery
 has a checkpointed 180-second field window; disconnect/restart preserves
 its deadline, failure returns to launch and recovered-item delivery is
 untimed. Pure S19 receipt replays do not replace full-city human pacing.
+
+Follow the [S21 relay handoff](../s21-relay-handoff.md): bind Shaft's
+level-opening/telemetry provider and Outworks' floored Depth contribution
+without extra XP or ballot. Join the relay cutoff/reset to the committed
+season settlement, retaining earned treasury and rolling reward limits.
+Close the S25/S26 human relay/earning/clinic pacing gate with actual play.

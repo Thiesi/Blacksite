@@ -87,6 +87,16 @@ def parser() -> argparse.ArgumentParser:
     reveal = actions.add_parser("reveal", parents=[common], help="debug: reveal one cell to one character")
     for field in ("player", "sector", "cell"):
         reveal.add_argument(field)
+    def relay_commands(parent: Any) -> None:
+        relay = parent.add_parser('relay', parents=[common], help='inspect or set committed relay ownership')
+        actions = relay.add_subparsers(dest='relay_command', required=True)
+        actions.add_parser('list', parents=[common])
+        setting = actions.add_parser('set', parents=[common])
+        setting.add_argument('relay')
+        setting.add_argument('faction', help='faction ID or neutral')
+    relay_commands(commands)
+    admin = commands.add_parser('admin', parents=[common], help='relay operator tools')
+    relay_commands(admin.add_subparsers(dest='admin_command', required=True))
     return root
 
 
@@ -105,6 +115,8 @@ def emit(result: Any, machine: bool) -> None:
 def main(argv: list[str] | None = None) -> int:
     cli = parser()
     args = cli.parse_args(argv)
+    if args.command == 'admin':
+        args.command = args.admin_command
     args.install_dir = getattr(args, "install_dir", os.environ.get("BLACKSITE_INSTALL_DIR"))
     args.json = getattr(args, "json", False)
     if args.install_dir is None:
@@ -127,13 +139,16 @@ def main(argv: list[str] | None = None) -> int:
             emit({"ok": not problems, "content_hash": tree.hash,
                   "problems": [str(problem) for problem in problems]}, args.json)
             return int(bool(problems))
-        command = "lattice."+args.lattice_command if args.command == "lattice" else args.command
+        command = ('relay.'+args.relay_command if args.command == 'relay' else
+                   "lattice."+args.lattice_command if args.command == "lattice" else args.command)
         if command == "lattice.reveal":
             result = asyncio.run(request(install, command, {key: getattr(args, key) for key in ("player", "sector", "cell")}))
+        elif command == 'relay.set':
+            result = asyncio.run(request(install, command, {'relay': args.relay, 'faction': args.faction}))
         else:
             result = character_cap(install, args.value) if args.command == "character-cap" else rotate(install) if args.command == "secrets" else asyncio.run(request(install, command))
         emit(result, args.json)
-        return 0
+        return int(command.startswith('relay.') and isinstance(result, dict) and result.get('ok') is False)
     except (OSError, ValueError, RuntimeError, asyncio.TimeoutError, asyncio.IncompleteReadError) as exc:
         print("blacksite admin: " + (str(exc) or type(exc).__name__), file=sys.stderr)
         return 1

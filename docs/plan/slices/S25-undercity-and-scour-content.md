@@ -297,3 +297,9 @@ destinations. Field-window acceptance must use the real landing-to-spoke
 route; check the disclosed 180-second recovery against its actual travel
 and hazards. Adjust canon and its tests together if measured play requires
 a different window. Do not activate unresolved bundles to supply offers.
+
+Follow the [S21 relay handoff](../s21-relay-handoff.md): activate fourteen
+real relay/core/counter anchors, bind the actual Gate Nine and cable
+exits and preserve their public free routes. Exercise all named benefits
+on their real maps. Human pacing must measure unopposed relay idle time
+and meaningful choices alongside the retained earning/clinic obligations.

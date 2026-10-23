@@ -845,6 +845,27 @@ An eligible member can hold alone for the slower route. Opposing active
 claims freeze clocks; passers-by do not contest. A 5 s absence aborts a
 claim. Curfew pauses existing claims, without completing or deleting them.
 
+The physical holder starts the channel explicitly. A supporting runner
+chooses that named claim beside the relay before entering its core.
+Completing the core's `relay_open` control counts only after its ordinary
+three-second channel commits. The channel retains its original claim;
+an old completion cannot support a replacement claim. A successful opening
+remains a fact for that window if the runner disconnects or withdraws.
+Disconnect retains the runner's credit; explicit withdrawal forgoes it.
+The original holder and successful, explicitly enrolled runners receive
+capture XP. Crew membership and presence alone add no recipients.
+The physical holder's death or disconnect ends that claim.
+
+After capture, the holder may continue channelling to defend, or withdraw
+with B. Owning members may also explicitly start a defence channel. These
+channels use the same opposition and Curfew pauses, earn section 3.5's
+active hold XP, and cannot recapture their own relay for another reward.
+
+A failed capture save grants no ownership or rewards. Its live claim
+retries no faster than once per second, with one failure notice until
+saving succeeds or that claim ends. Retries still require ordinary
+presence, opposition and Curfew checks; the claim clock continues normally.
+
 Influence rates are 10/hour, 30/hour in the Scour, and 20/hour at Shaft
 Relay. Carry fractional remainders; settle whole points once, stopping
 at season end. Treasury receives the same whole amount. The daily member
@@ -853,6 +874,10 @@ atomically once per BBS identity per UTC day. Capture gives 100 XP and
 +15 standing to participating members, −15 with the old owner to the
 capturer. Recapturing that relay gives the same identity no capture XP
 or standing for 24 h; influence still accrues.
+
+A zero-chit login share does not consume that day's receipt. The member
+may receive a positive share on a later login; a positive payment spends
+the receipt across factions and characters on that identity.
 
 ### 7.5 Public services and work orders
 
@@ -966,7 +991,7 @@ are not additional perks. Scour cores remain reachable when neutral.
 | `cable` / Cable Relay | `sink-rim` | 3 | optional cable ride free; route holds bounded by §6.4 |
 | `sump` / Sump Relay | `sink-floor` | 2 | pump telemetry reveals active work-order allocations |
 | `bell` / Bell Relay | `chapel-towers` | 3 | hymn radius +1 tile within Chapel Ward |
-| `zero` / Relay Zero | `oldworks-main` | 3 | trace gain §10 %, excluding fixed action costs |
+| `zero` / Relay Zero | `oldworks-main` | 3 | trace gain -10 %, excluding fixed action costs |
 | `yard` / Yard Relay | `oldworks-yards` | 3 | fabrication quality +0.05, final cap 1.15 |
 | `block` / Block Relay | `terraces-blocks` | 2 | next rent invoice -10 %; one extra Tripwire in private core |
 | `cavern` / Cavern Relay | `under-caverns` | 3 | current local patrol overlay, not exclusive base map |
@@ -976,11 +1001,38 @@ are not additional perks. Scour cores remain reachable when neutral.
 | `crash` / Crash Relay | `scour-ring-3` | 4 | harvest grade +1 step, capped compute; cannot create intact |
 | `far` / Far Relay | `scour-ring-4` | 4 | current local telemetry and carrier record |
 
+Crash changes the grade of newly generated public Ring Three salvage
+nodes while a faction holds it. The physical nodes remain shared and keep
+their committed grade and RNG state after ownership changes; ownership
+cannot reroll an existing node or create intact salvage. This is a public
+resource effect, rather than a different hidden grade for each harvester.
+
+Depot changes the shared buy-back budget of counters affiliated with its
+holding faction. Every permitted customer uses the same physical counter
+pool. Refills use UTC half-hour boundaries; changing ownership is not a
+refill. Loss of the benefit preserves the last refill and current spending
+until the next ordinary hour. Public work-order cap increases compose
+without resetting that spending.
+
+Relay Zero multiplies eligible trace gain by 0.90 after other trace
+modifiers. It never discounts costs explicitly classified as fixed by
+their action rule. The benefit applies Lattice-wide, ends with
+ownership or membership, and cannot stack with itself.
+
 Cable fare is 5 chits; a free stair/ladder route remains. Gate Nine's
 ordinary outbound opening is 60 s every 5 minutes. Trams depart every
 90 s with a 10 s journey and no fare in v1. These are schedules anchored
 to the injected clock, never reset on entering a dormant zone. Private
 ICE cannot inflict black feedback or bypass the theft cap.
+
+Paid optional passage requires an explicit price choice. Leaving the card
+does not buy a ticket. A committed fare buys one route-bound pass, saved
+until that journey arrives; a failed save charges nothing. Restarting
+before departure retains the pass, and restarting in transit resumes the
+same journey and consumes that pass on arrival. Ownership changes never
+turn a displayed free choice into a charge. Free stairs and ordinary gate
+entry remain separate actions. Patrol overlays show local authored
+waypoints on known tiles; they reveal no hidden actors or new base map.
 
 ## 8. Economy
 

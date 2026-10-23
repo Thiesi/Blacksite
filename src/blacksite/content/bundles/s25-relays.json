@@ -1,0 +1,40 @@
+{
+  "schema": 1,
+  "id": "s25-relays",
+  "status": "authoring",
+  "depends": [],
+  "members": {
+    "relays": [
+      "shaft",
+      "depot",
+      "gate-nine",
+      "cable",
+      "sump",
+      "bell",
+      "zero",
+      "yard",
+      "cavern",
+      "outworks",
+      "mile",
+      "beacon",
+      "crash",
+      "far"
+    ],
+    "vendors": [
+      "relay-shaft-counter",
+      "relay-depot-counter",
+      "relay-gate-nine-counter",
+      "relay-cable-counter",
+      "relay-sump-counter",
+      "relay-bell-counter",
+      "relay-zero-counter",
+      "relay-yard-counter",
+      "relay-cavern-counter",
+      "relay-outworks-counter",
+      "relay-mile-counter",
+      "relay-beacon-counter",
+      "relay-crash-counter",
+      "relay-far-counter"
+    ]
+  }
+}

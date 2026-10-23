@@ -208,6 +208,10 @@
     "stealth": {
       "context": "zone",
       "label": "toggle stealth"
+    },
+    "relays": {
+      "context": "zone",
+      "label": "territory at terminal"
     }
   },
   "keymaps": [
@@ -388,6 +392,9 @@
         "stealth": [
           "z",
           "Z"
+        ],
+        "relays": [
+          "f8"
         ]
       }
     },
@@ -555,6 +562,9 @@
         "stealth": [
           "z",
           "Z"
+        ],
+        "relays": [
+          "f8"
         ]
       }
     }

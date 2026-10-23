@@ -16,7 +16,8 @@ def test_every_catalog_item_loads_and_canonical_numbers_match(repo_root: Path) -
     ids=set(re.findall(r"^\| `(\w+)`",schedule,re.MULTILINE))
     ids={i for i in ids if not i.startswith(("hymn_","dis_","apt_"))}
     assert ids <= tree.items.keys()
-    assert len(tree.vendors)==19  # The canonical table has 19, including Vesper.
+    assert len([v for v in tree.vendors.values() if not v.relay])==19
+    assert {v.relay for v in tree.vendors.values() if v.relay}==set(tree.relays)
     assert tree.items["wpn_halvard_hv7"].base_price==340
     assert tree.items["wpn_halvard_hv7"].weapon.ammo=="ammo_5x"
     assert tree.items["wpn_kestrel_baton"].weight==.9

@@ -94,6 +94,7 @@ class ContentTree:
     events: dict[str, s.EventTemplate] = field(default_factory=dict)
     routes: dict[str, s.Route] = field(default_factory=dict)
     vendors: dict[str, s.Vendor] = field(default_factory=dict)
+    relays: dict[str, s.Relay] = field(default_factory=dict)
     hymns: dict[str, s.HymnTemplate] = field(default_factory=dict)
     evidence: dict[str, s.EvidenceRecord] = field(default_factory=dict)
     services: dict[str, s.ServiceNodeTemplate] = field(default_factory=dict)

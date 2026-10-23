@@ -38,6 +38,8 @@ async def menu(probe: NativeProbe, connection: Connection, row_id: str, *, chang
     state = screen.kind, screen.slot, screen.target
     for _ in range(6):
         await wait(lambda: connection.session.ack_revision == connection.session.view_revision)
+        if encounters.menus.get(connection.session.id) is not screen or (screen.kind, screen.slot, screen.target) != state:
+            return  # A queued choice completed while its new view was acknowledged.
         await connection.caller.write(b'\r')
         if not changes:
             return

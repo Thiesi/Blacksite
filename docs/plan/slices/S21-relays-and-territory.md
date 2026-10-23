@@ -1,7 +1,7 @@
 # S21 — Relays and territory: capture rules, influence, buffs, relay vendors, season tally
 
-**Status:** planned
-**Primary model:** Opus · **Reviewer:** none
+**Status:** done (PR #63)
+**Primary model:** Opus · **Reviewer:** automated Claude; actual model in PR
 **Depends on:** S20, S15, S17, S18, S22 · **Milestone:** M4
 **Issue:** https://github.com/Thiesi/blacksite/issues/21
 
@@ -36,8 +36,9 @@ architecture's test list is a real evening.
 ## Scope
 
 - `content/relays.json`: the sixteen exact IDs, zones, tiers, rates
-  and typed benefits in game design 7.7. Core IDs are `lat-relay-<id>`;
-  they are distinct from a nearby named service core. Use the central
+  and typed benefits in game design 7.7. Core IDs are `lat-relay-<id>`.
+  Relay capture and public service controls are distinct scoped actions;
+  a shared relay core may contain both. Use the central
   table, not a universal tier-2/3 template. Shaft opens with S26's door.
 - `server/relays.py`: explicit active claims. The holder is a conscious
   faction member adjacent to the terminal, in physical space and
@@ -63,8 +64,10 @@ architecture's test list is a real evening.
   immunity nor exclusive basic geometry. Travel holds keep design 6.4's
   bounds; ownership cannot lock a public service or safe zone. Optional
   event/season consumers are completed by S24/S26 and tested there.
-- Relay vendor: `vendor` object with `relay: <id>` visible and usable
-  only by members of the holder; inventory ids in `relays.json`.
+- Relay vendor: a curated counter bound to the relay terminal through
+  its vendor parameter, usable only by members of the current holder.
+  Inventory IDs live in `relays.json`; captured permission is checked
+  again at purchase, rather than stored on the character.
 - Sodium Row has no relay (content assertion). Sable's war rule is
   narrative; no mechanics.
 - Season tally: `faction_state.influence` resets at season end (S26
@@ -78,7 +81,7 @@ architecture's test list is a real evening.
 - Season end, leaderboard display, the Chronicle: S26.
 - Curfew, Exhale, Ring-fall, Convoy events: S24 (this slice reads the
   flags).
-- Crew mechanics (a crew holding is just members present): S22.
+- Crew formation and loot mechanics: S22. Relay participation is explicit.
 - Zone maps with relay objects placed: S08/S25 (fixture has two).
 
 ## Data and content
@@ -100,7 +103,10 @@ architecture's test list is a real evening.
 
 ## Tests
 
-- `tests/test_relays_content.py::test_sixteen_relays_zones_and_cores_resolve`
+- Assert all sixteen canonical definitions and active/authoring state.
+- Every active relay resolves to real zone, terminal, hardware and core.
+- Future entries stay inactive; labelled fixtures exercise their effects.
+- All sixteen real anchors and activation remain mandatory in S25.
 - `tests/test_relays_content.py::test_sodium_row_has_no_relay`
 - `tests/test_relays.py::test_hold_3min_with_hack_flips`
 - `tests/test_relays.py::test_hold_8min_without_hack_flips`
@@ -125,8 +131,10 @@ architecture's test list is a real evening.
 
 1. Two callers of the same faction in the fixture contested zone (or
    `tramyard-wall-gate`): A stands at the relay terminal and presses
-   `E`; the object shows a progress bar; B jacks in, enters the uplink
-   core, lifts `relay_open`; at 3 minutes the relay flips, both get
+   `E`, then `H` to hold. B inspects the named claim and presses `S`,
+   then jacks in, enters the uplink
+   core and completes its `relay_open` control for that named claim;
+   at 3 minutes the relay flips, both get
    the log lines and standing.
 2. A third caller starts an opposing claim at the terminal: the
    relay shows "contested" and A's clock stops until one leaves.
@@ -144,6 +152,14 @@ present, consumer pending" with the consuming slice ID.
 
 ## Implementer notes
 
+PR #38's phase-aware activation applies: the initial live relays are
+Cold Chain and Block; fourteen definitions await S25's real maps. Existing
+relay cores expose `relay_open` as a control, not a data payload. Bind the
+runner's explicit claim when that channel starts and count it only after
+its durable completion. A channel started for an old claim cannot support
+a replacement. This follows game 7.4's core-open rule and preserves
+the authored cores rather than introducing a second capture mechanism.
+
 Issue #56: expose only committed, actually attributed capture facts for
 a possible future API-5 `capture` adapter. BBS publication is optional
 and disabled under the registered-only installation gate; no capture,
@@ -160,6 +176,9 @@ passers-by, death, competing active claims, daily payout races, recapture
 farming, fractional accrual and settlement cutoff. All sixteen benefits
 must resolve to their named consumer; a pending consumer is not a
 working feature and must be closed by S24/S26 before release.
+
+The [consumer handoff](../s21-relay-handoff.md) names all sixteen effect
+consumers, the real-map gates and the retained S25/S26 human pacing gate.
 
 ## S17 integration handoff
 

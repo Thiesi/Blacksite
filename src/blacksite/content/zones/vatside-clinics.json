@@ -160,7 +160,9 @@
       "kind": "relay",
       "essential": false,
       "params": {
-        "name": "Cold Chain Relay"
+        "name": "Cold Chain Relay",
+        "relay": "cold-chain",
+        "vendor": "relay-cold-chain-counter"
       }
     },
     {

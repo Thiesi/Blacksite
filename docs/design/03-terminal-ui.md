@@ -162,7 +162,17 @@ Menus: inventory, equipment, rig, character sheet, skills and grade
 points, contract board, active contracts, vendor, market, bounties, crew,
 sitrep, settings (keymap, palette, log verbosity, sitrep visibility),
 dialogue (the talker's line above, responses as rows), apartment, bank,
-workshop, descent console, chronicle, help.
+workshop, descent console, chronicle, territory, help.
+
+F8 at a physical terminal or relay opens the public territory list. E at
+a relay opens its current claims, owner and influence rate. H explicitly
+starts a hold; S supports the selected named claim; V opens the current
+owner's member counter; X withdraws. Esc/B closes a card without starting
+or withdrawing a claim. Outside the card, B leaves an active hold.
+Claim cards show whole seconds so their choices do not churn at tick
+frequency; the server's hold clock remains precise. Contested and Curfew
+states visibly pause the timer. The ordinary hostile-zone menu timeout
+still applies, and closing a card never pauses the world.
 
   A workshop lists learned schematics with carried/required salvage,
   Fabrication minimum and quality range (game design 8.4). F starts a

@@ -138,7 +138,9 @@ class NativeProbe:
         caller.display_write = self.display_write
         await caller.expect("Available doors");await caller.write(b"\x1b[B\r")
         try:
-            await caller.until(lambda:"THE WAKE" in caller.screen.screen_text(),timeout=10)
+            # Local Windows venv startup can exceed ten seconds; this is
+            # readiness, not the game's input or simulation latency gate.
+            await caller.until(lambda:"THE WAKE" in caller.screen.screen_text(),timeout=30 if os.name == 'nt' else 10)
         except BaseException:
             (self.root/f"failed-launch-{label}-{width}.ans").write_bytes(caller.output)
             (self.root/f"failed-launch-{label}-{width}.txt").write_text(caller.screen.screen_text(),encoding="utf-8")

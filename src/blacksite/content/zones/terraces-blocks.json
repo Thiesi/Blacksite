@@ -162,7 +162,9 @@
       "kind": "relay",
       "essential": false,
       "params": {
-        "name": "Block relay"
+        "name": "Block relay",
+        "relay": "block",
+        "vendor": "relay-block-counter"
       }
     },
     {

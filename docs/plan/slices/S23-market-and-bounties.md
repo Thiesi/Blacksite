@@ -2,7 +2,7 @@
 
 **Status:** planned
 **Primary model:** Sonnet · **Reviewer:** Opus
-**Depends on:** S12, S18, S20 · **Milestone:** M4
+**Depends on:** S12, S18, S20, S21 · **Milestone:** M4
 **Issue:** https://github.com/Thiesi/blacksite/issues/23
 
 S18 is an explicit dependency because this slice delivers to personal
@@ -14,6 +14,13 @@ must not tax a paid market delivery. Collection at terminals rechecks
 normal terminal access; visitors and crew members do not acquire an
 apartment resident's permissions. See game design 8.7, entity 2.3 and
 accepted [PR #38](https://github.com/Thiesi/Blacksite/pull/38).
+
+S21 is an explicit dependency for the single faction treasury authority.
+Join the Kestrel fee to its committed relay ledger in the same source
+transaction as seller/buyer bank changes and impound delivery. Market
+fees add treasury, not influence; do not create a second faction balance
+or let a later relay checkpoint overwrite the fee. Season reset retains
+earned treasury. See the [S21 handoff](../s21-relay-handoff.md).
 
 ## Goal
 
