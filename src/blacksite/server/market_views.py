@@ -126,7 +126,7 @@ class Views:
         help_asset = self.owner.commerce.content.text.get('text-market-help')
         if help_asset:
             text = help_asset.body.strip()
-        actions = 'D bid  U buyout  L list  M my listings  C collect  K cancel  F class  S sort  Esc/B'
+        actions = 'Esc/B  D bid  U buy  L list  M mine  C collect  K cancel  F class  S sort'
         if panel.kind == 'market' and row:
             listing = self.owner.market.listings[row]
             item = self.listing_item(listing)
