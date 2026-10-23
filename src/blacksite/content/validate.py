@@ -185,6 +185,7 @@ class _Validator:
         self.check_starts()
         self.check_hymns()
         self.check_vendors()
+        self.check_relays()
         self.check_npcs()
         self.check_factions()
         self.check_faction_sites()
@@ -1149,6 +1150,7 @@ class _Validator:
             owner = ("vendors", vid)
             self.ref("factions", vendor.faction, owner, "faction")
             self.ref("zones", vendor.zone, owner, "zone")
+            self.ref("relays", vendor.relay, owner, "relay")
             for entry in vendor.stock:
                 kind = "programs" if entry.item.startswith("prg_") else "items"
                 self.ref(kind, entry.item, owner, "stock", entry.item)
@@ -1158,7 +1160,8 @@ class _Validator:
                 self.report(*owner, "vendor price multipliers must be positive")
             if self.current_active and vendor.object_id:
                 zone = self.t.zones.get(vendor.zone)
-                if zone and not any(o.id == vendor.object_id and o.kind == "vendor" for o in zone.meta.objects):
+                if zone and not any(o.id == vendor.object_id and
+                        (o.kind == "vendor" or vendor.relay and o.kind == "relay") for o in zone.meta.objects):
                     self.report(*owner, "vendor object anchor is missing")
             if self.current_active and vendor.clinic == "sablier":
                 for zid, zone in self.t.zones.items():
@@ -1168,6 +1171,34 @@ class _Validator:
                         if obj.params.get("vendor") == vid and zone.meta.safety != "safe" and not any(
                                 pocket.contains(obj.tile) for pocket in zone.meta.pockets):
                             self.report(*owner,"Sablier clinic requires an existing safe pocket",obj.id)
+
+    def check_relays(self) -> None:
+        for rid, relay in self.each("relays"):
+            owner = ("relays", rid)
+            self.ref("zones", relay.zone, owner, "zone")
+            self.ref("cores", relay.core, owner, "core")
+            self.ref("vendors", relay.vendor, owner, "vendor")
+            if relay.tier not in range(1, 6) or relay.rate <= 0:
+                self.report(*owner, "relay needs tier 1-5 and positive influence rate")
+            core = self.t.cores.get(relay.core)
+            if core and (core.owner_kind != "relay" or core.template or core.tier != relay.tier):
+                self.report(*owner, "relay core must be a matching-tier relay instance")
+            vendor = self.t.vendors.get(relay.vendor)
+            if vendor and (vendor.relay != rid or vendor.zone != relay.zone or vendor.object_id != relay.terminal):
+                self.report(*owner, "relay counter must bind this relay and its terminal")
+            if not self.current_active:
+                continue
+            zone = self.t.zones.get(relay.zone)
+            terminal = self.object_at(relay.zone, relay.terminal)
+            if not terminal or terminal.kind != "relay" or terminal.params.get("relay") != rid:
+                self.report(*owner, "active relay requires its real relay terminal")
+            elif zone and (zone.meta.safety in ("safe", "pocket") or
+                    any(pocket.contains(terminal.tile) for pocket in zone.meta.pockets)):
+                self.report(*owner, "relay terminal must stand outside protected service pockets")
+            if core and (len(core.hardware) != 1 or core.hardware[0].zone != relay.zone):
+                self.report(*owner, "relay hardware must be in its terminal's actual zone")
+            if core and not any(control.id == 'relay_open' for room in core.rooms for control in room.controls):
+                self.report(*owner, "relay core requires its relay_open control")
 
     # --- NPCs and factions --------------------------------------------------
 

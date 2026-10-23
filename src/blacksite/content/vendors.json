@@ -797,6 +797,298 @@
       "zone": "sodium-tin-halo",
       "object_id": "vesper",
       "daily_rotation": true
+    },
+    {
+      "id": "relay-shaft-counter",
+      "name": "Shaft Relay counter",
+      "tier": "list",
+      "stock": [
+        {
+          "item": "wpn_halvard_hv7"
+        },
+        {
+          "item": "arm_halvard_visor"
+        },
+        {
+          "item": "wpn_halvard_shock_baton"
+        }
+      ],
+      "relay": "shaft",
+      "zone": "spire-shaft-head",
+      "object_id": "relay-shaft"
+    },
+    {
+      "id": "relay-cold-chain-counter",
+      "name": "Cold Chain Relay counter",
+      "tier": "list",
+      "stock": [
+        {
+          "item": "con_sablier_patch"
+        },
+        {
+          "item": "con_sablier_trauma_kit"
+        },
+        {
+          "item": "con_sablier_neutraliser"
+        }
+      ],
+      "relay": "cold-chain",
+      "zone": "vatside-clinics",
+      "object_id": "cold-chain-relay"
+    },
+    {
+      "id": "relay-depot-counter",
+      "name": "Depot Relay counter",
+      "tier": "list",
+      "stock": [
+        {
+          "item": "wpn_kestrel_sidearm"
+        },
+        {
+          "item": "wpn_halvard_hv7"
+        },
+        {
+          "item": "wpn_kestrel_flare_pistol"
+        }
+      ],
+      "relay": "depot",
+      "zone": "tramyard-depots",
+      "object_id": "relay-depot"
+    },
+    {
+      "id": "relay-gate-nine-counter",
+      "name": "Gate Relay Nine counter",
+      "tier": "list",
+      "stock": [
+        {
+          "item": "wpn_halvard_hv7"
+        },
+        {
+          "item": "arm_halvard_visor"
+        },
+        {
+          "item": "wpn_halvard_shock_baton"
+        }
+      ],
+      "relay": "gate-nine",
+      "zone": "tramyard-wall-gate",
+      "object_id": "relay-gate-nine"
+    },
+    {
+      "id": "relay-cable-counter",
+      "name": "Cable Relay counter",
+      "tier": "list",
+      "stock": [
+        {
+          "item": "wpn_ferry_slugthrower"
+        },
+        {
+          "item": "wpn_ferry_wrench"
+        },
+        {
+          "item": "arm_ferry_scrap_plate"
+        }
+      ],
+      "relay": "cable",
+      "zone": "sink-rim",
+      "object_id": "relay-cable"
+    },
+    {
+      "id": "relay-sump-counter",
+      "name": "Sump Relay counter",
+      "tier": "list",
+      "stock": [
+        {
+          "item": "wpn_sable_streetsweeper"
+        },
+        {
+          "item": "wpn_sable_spitter"
+        },
+        {
+          "item": "wpn_sable_shiv"
+        }
+      ],
+      "relay": "sump",
+      "zone": "sink-floor",
+      "object_id": "relay-sump"
+    },
+    {
+      "id": "relay-bell-counter",
+      "name": "Bell Relay counter",
+      "tier": "list",
+      "stock": [
+        {
+          "item": "con_kestrel_ration"
+        }
+      ],
+      "relay": "bell",
+      "zone": "chapel-towers",
+      "object_id": "relay-bell"
+    },
+    {
+      "id": "relay-zero-counter",
+      "name": "Relay Zero counter",
+      "tier": "list",
+      "stock": [
+        {
+          "item": "wpn_ow_arcpen"
+        },
+        {
+          "item": "item_rig_portable_ow_brick"
+        },
+        {
+          "item": "con_ow_cell_charger"
+        }
+      ],
+      "relay": "zero",
+      "zone": "oldworks-main",
+      "object_id": "relay-zero"
+    },
+    {
+      "id": "relay-yard-counter",
+      "name": "Yard Relay counter",
+      "tier": "list",
+      "stock": [
+        {
+          "item": "wpn_ferry_slugthrower"
+        },
+        {
+          "item": "wpn_ferry_wrench"
+        },
+        {
+          "item": "arm_ferry_scrap_plate"
+        }
+      ],
+      "relay": "yard",
+      "zone": "oldworks-yards",
+      "object_id": "relay-yard"
+    },
+    {
+      "id": "relay-block-counter",
+      "name": "Block Relay counter",
+      "tier": "list",
+      "stock": [
+        {
+          "item": "con_kestrel_ration"
+        }
+      ],
+      "relay": "block",
+      "zone": "terraces-blocks",
+      "object_id": "block-relay"
+    },
+    {
+      "id": "relay-cavern-counter",
+      "name": "Cavern Relay counter",
+      "tier": "list",
+      "stock": [
+        {
+          "item": "wpn_ow_arcpen"
+        },
+        {
+          "item": "item_rig_portable_ow_brick"
+        },
+        {
+          "item": "con_ow_cell_charger"
+        }
+      ],
+      "relay": "cavern",
+      "zone": "under-caverns",
+      "object_id": "relay-cavern"
+    },
+    {
+      "id": "relay-outworks-counter",
+      "name": "Outworks Relay counter",
+      "tier": "list",
+      "stock": [
+        {
+          "item": "wpn_halvard_hv7"
+        },
+        {
+          "item": "arm_halvard_visor"
+        },
+        {
+          "item": "wpn_halvard_shock_baton"
+        }
+      ],
+      "relay": "outworks",
+      "zone": "under-outworks",
+      "object_id": "relay-outworks"
+    },
+    {
+      "id": "relay-mile-counter",
+      "name": "Mile Relay counter",
+      "tier": "list",
+      "stock": [
+        {
+          "item": "wpn_ferry_slugthrower"
+        },
+        {
+          "item": "wpn_ferry_wrench"
+        },
+        {
+          "item": "arm_ferry_scrap_plate"
+        }
+      ],
+      "relay": "mile",
+      "zone": "scour-ring-1",
+      "object_id": "relay-mile"
+    },
+    {
+      "id": "relay-beacon-counter",
+      "name": "Beacon Relay counter",
+      "tier": "list",
+      "stock": [
+        {
+          "item": "wpn_ferry_slugthrower"
+        },
+        {
+          "item": "wpn_ferry_wrench"
+        },
+        {
+          "item": "arm_ferry_scrap_plate"
+        }
+      ],
+      "relay": "beacon",
+      "zone": "scour-ring-2",
+      "object_id": "relay-beacon"
+    },
+    {
+      "id": "relay-crash-counter",
+      "name": "Crash Relay counter",
+      "tier": "list",
+      "stock": [
+        {
+          "item": "wpn_ferry_slugthrower"
+        },
+        {
+          "item": "wpn_ferry_wrench"
+        },
+        {
+          "item": "arm_ferry_scrap_plate"
+        }
+      ],
+      "relay": "crash",
+      "zone": "scour-ring-3",
+      "object_id": "relay-crash"
+    },
+    {
+      "id": "relay-far-counter",
+      "name": "Far Relay counter",
+      "tier": "list",
+      "stock": [
+        {
+          "item": "wpn_ferry_slugthrower"
+        },
+        {
+          "item": "wpn_ferry_wrench"
+        },
+        {
+          "item": "arm_ferry_scrap_plate"
+        }
+      ],
+      "relay": "far",
+      "zone": "scour-ring-4",
+      "object_id": "relay-far"
     }
   ]
 }

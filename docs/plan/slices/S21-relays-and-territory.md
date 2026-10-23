@@ -36,8 +36,9 @@ architecture's test list is a real evening.
 ## Scope
 
 - `content/relays.json`: the sixteen exact IDs, zones, tiers, rates
-  and typed benefits in game design 7.7. Core IDs are `lat-relay-<id>`;
-  they are distinct from a nearby named service core. Use the central
+  and typed benefits in game design 7.7. Core IDs are `lat-relay-<id>`.
+  Relay capture and public service controls are distinct scoped actions;
+  a shared relay core may contain both. Use the central
   table, not a universal tier-2/3 template. Shaft opens with S26's door.
 - `server/relays.py`: explicit active claims. The holder is a conscious
   faction member adjacent to the terminal, in physical space and
@@ -100,7 +101,10 @@ architecture's test list is a real evening.
 
 ## Tests
 
-- `tests/test_relays_content.py::test_sixteen_relays_zones_and_cores_resolve`
+- Assert all sixteen canonical definitions and active/authoring state.
+- Every active relay resolves to real zone, terminal, hardware and core.
+- Future entries stay inactive; labelled fixtures exercise their effects.
+- All sixteen real anchors and activation remain mandatory in S25.
 - `tests/test_relays_content.py::test_sodium_row_has_no_relay`
 - `tests/test_relays.py::test_hold_3min_with_hack_flips`
 - `tests/test_relays.py::test_hold_8min_without_hack_flips`
@@ -126,7 +130,8 @@ architecture's test list is a real evening.
 1. Two callers of the same faction in the fixture contested zone (or
    `tramyard-wall-gate`): A stands at the relay terminal and presses
    `E`; the object shows a progress bar; B jacks in, enters the uplink
-   core, lifts `relay_open`; at 3 minutes the relay flips, both get
+   core and completes its `relay_open` control for that named claim;
+   at 3 minutes the relay flips, both get
    the log lines and standing.
 2. A third caller starts an opposing claim at the terminal: the
    relay shows "contested" and A's clock stops until one leaves.
@@ -143,6 +148,14 @@ as a flag consumed by a landed slice or listed in the PR as "flag
 present, consumer pending" with the consuming slice ID.
 
 ## Implementer notes
+
+PR #38's phase-aware activation applies: the initial live relays are
+Cold Chain and Block; fourteen definitions await S25's real maps. Existing
+relay cores expose `relay_open` as a control, not a data payload. Bind the
+runner's explicit claim when that channel starts and count it only after
+its durable completion. A channel started for an old claim cannot support
+a replacement. This follows game 7.4's core-open rule and preserves
+the authored cores rather than introducing a second capture mechanism.
 
 Issue #56: expose only committed, actually attributed capture facts for
 a possible future API-5 `capture` adapter. BBS publication is optional

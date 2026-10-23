@@ -966,7 +966,7 @@ are not additional perks. Scour cores remain reachable when neutral.
 | `cable` / Cable Relay | `sink-rim` | 3 | optional cable ride free; route holds bounded by §6.4 |
 | `sump` / Sump Relay | `sink-floor` | 2 | pump telemetry reveals active work-order allocations |
 | `bell` / Bell Relay | `chapel-towers` | 3 | hymn radius +1 tile within Chapel Ward |
-| `zero` / Relay Zero | `oldworks-main` | 3 | trace gain §10 %, excluding fixed action costs |
+| `zero` / Relay Zero | `oldworks-main` | 3 | trace gain -10 %, excluding fixed action costs |
 | `yard` / Yard Relay | `oldworks-yards` | 3 | fabrication quality +0.05, final cap 1.15 |
 | `block` / Block Relay | `terraces-blocks` | 2 | next rent invoice -10 %; one extra Tripwire in private core |
 | `cavern` / Cavern Relay | `under-caverns` | 3 | current local patrol overlay, not exclusive base map |
@@ -975,6 +975,11 @@ are not additional perks. Scour cores remain reachable when neutral.
 | `beacon` / Beacon Relay | `scour-ring-2` | 3 | committed impact sites 5 min early |
 | `crash` / Crash Relay | `scour-ring-3` | 4 | harvest grade +1 step, capped compute; cannot create intact |
 | `far` / Far Relay | `scour-ring-4` | 4 | current local telemetry and carrier record |
+
+Relay Zero multiplies eligible trace gain by 0.90 after other trace
+modifiers. It never discounts costs explicitly classified as fixed by
+their action rule. The benefit applies in Old Works, ends with
+ownership or membership, and cannot stack with itself.
 
 Cable fare is 5 chits; a free stair/ladder route remains. Gate Nine's
 ordinary outbound opening is 60 s every 5 minutes. Trams depart every

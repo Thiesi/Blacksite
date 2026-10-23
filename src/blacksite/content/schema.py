@@ -843,6 +843,45 @@ class Vendor:
     salvage_multiplier: Number = 1
     daily_rotation: bool = False
     clinic: Literal["sablier", "black"] | None = None
+    relay: str | None = None
+    schema: int = CONTENT_SCHEMA
+
+
+# --- relays (game design 7.4/7.7) -----------------------------------------
+
+RelayBenefitKind = Literal[
+    "shaft_telemetry", "surgery_fee", "vendor_refresh", "fast_gate",
+    "cable_ride", "pump_telemetry", "hymn_radius", "trace_gain",
+    "fabrication_quality", "rent_and_ice", "patrol_overlay",
+    "depth_contribution", "convoy_patrol", "impact_forecast",
+    "salvage_grade", "long_range_telemetry",
+]
+
+
+@dataclass(frozen=True)
+class RelayBenefit:
+    kind: RelayBenefitKind
+    amount: Number = 0
+    district: str | None = None
+
+
+@dataclass(frozen=True)
+class Relay:
+    id: str
+    name: str
+    zone: str
+    terminal: str
+    core: str
+    tier: int
+    rate: int
+    vendor: str
+    benefit: RelayBenefit
+    requires_level: bool = False
+
+
+@dataclass(frozen=True)
+class RelayTable:
+    relays: tuple[Relay, ...]
     schema: int = CONTENT_SCHEMA
 
 
@@ -1349,7 +1388,7 @@ class ArtAsset:
 BUNDLE_KINDS = (
     "zones", "sectors", "cores", "items", "programs", "ice", "npcs",
     "factions", "faction_sites", "contracts", "events", "routes", "seasons", "dialogue",
-    "text", "art", "evidence", "services", "vendors", "hymns", "starts", "wake_cards", "emotes",
+    "text", "art", "evidence", "services", "vendors", "hymns", "starts", "wake_cards", "emotes", "relays",
 )
 
 
