@@ -190,3 +190,6 @@ formats only the visible page and copies live financial records while
 sharing immutable closed history. Linear selection/delta scans and
 active-state copy costs remain. Measure and optimize or bound remaining
 costs before S29 is done. S31 cannot release without this gate.
+Populate a large item table with carried, stored, impounded and cached
+items, plus realistic interlock/service state. Empty inventories do not
+exercise the remaining item and state copy costs.

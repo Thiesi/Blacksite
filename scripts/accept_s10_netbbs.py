@@ -123,8 +123,11 @@ class NativeProbe:
         await self.node.start()
 
     def report(self, message: str) -> None:
-        print(message,flush=True)
         with (self.root/"progress.log").open("a",encoding="utf-8") as stream: stream.write(message+"\n")
+        if self.console:
+            self.display_write((message+'\n').encode('utf-8'))
+        else:
+            print(message,flush=True)
 
     async def open(self, width: int, height: int, label: str, archetype: int = 0, sixteen: bool = False) -> Connection:
         user=create_user(self.db,f"S10{label}{width}",password="LocalProbe-S10",user_level=10)

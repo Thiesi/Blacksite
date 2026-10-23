@@ -153,7 +153,8 @@ persistent rows, resolved by the server, with no new real-time mechanics.
 3. B opens a bank menu and presses `C`, then confirms collection: the
    pistol arrives in B's inventory. Outside menus, `C` remains chat.
 4. A (grade ≥ 5) posts a 200-chit bounty on B (grade ≥ 5). Both logs show
-   the notice. A third caller kills B on a commissioned contested hub
+   the notice. A third caller buys ammunition at the real outfitter, then
+   kills B on a commissioned contested hub
    tile: the killer's bank rises by 200 and the board no longer lists B.
    S25 retains the real `sink-rim` travel/location acceptance; the hub
    run does not prove that future geography.

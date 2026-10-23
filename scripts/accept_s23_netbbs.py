@@ -102,6 +102,28 @@ async def prepare_weapon(probe: ContractProbe, caller: Connection) -> str:
     return iid
 
 
+async def buy_ammunition(probe: ContractProbe, caller: Connection) -> int:
+    """Prepare the hunter through the real counter, with carried chits."""
+    player = probe.game.players[caller.session.player_id]
+    await probe.walk(caller, (34, 15))
+    await commit_key(probe, caller, b'e', lambda: caller.session.id in probe.commerce.menus)
+    screen = probe.commerce.menus[caller.session.id]
+    assert screen.kind == 'vendor' and screen.target == 'wake-outfitter'
+    await select(caller, lambda: probe.commerce.body(caller.session, screen)['rows'], screen, 'ammo_9x')
+    def rounds() -> int:
+        return sum(probe.commerce.items[i].stack for i in player.inventory
+                   if probe.commerce.items[i].template == 'ammo_9x')
+    hand, bank = player.chits_hand, player.chits_bank
+    for _ in range(4):
+        before = rounds()
+        await commit_key(probe, caller, b'\r', lambda: rounds() > before)
+    await wait(lambda: not probe.commerce.pending)
+    assert player.chits_hand < hand and player.chits_bank == bank
+    await commit_key(probe, caller, b'\x1b', lambda: caller.session.id not in probe.commerce.menus)
+    probe.save(caller, f's23-ammunition-{caller.session.caps["width"]}')
+    return hand-player.chits_hand
+
+
 def fixture(probe: ContractProbe, caller: Connection, grade: int, bank: int) -> None:
     player = probe.game.players[caller.session.player_id]
     player.update_progression(grade_threshold(grade))
@@ -135,6 +157,7 @@ async def run_case(probe: ContractProbe, width: int, height: int) -> dict[str, A
     probe.report(f'S23 {width}x{height}: four actual callers ready')
     pa, pb, pc, pd = [probe.game.players[c.session.player_id] for c in callers]
     owner = probe.service.core.market
+    ammunition_spent = await buy_ammunition(probe, hunter)
     iid = await prepare_weapon(probe, seller)
     original = probe.commerce.items[iid].record()
     await probe.route(seller, 'core-plaza')
@@ -239,6 +262,7 @@ async def run_case(probe: ContractProbe, width: int, height: int) -> dict[str, A
         'seller': pa.id, 'buyer': pb.id, 'hunter': pc.id, 'bounty': bounty.id,
         'escrow': 60, 'extra_buyout': 40, 'seller_sale': 95, 'treasury': 5,
         'buyer_bank': 0, 'seller_bank': 895, 'hunter_bank': 1200,
+        'hunter_ammunition_paid': ammunition_spent, 'ammunition_fixture': False,
         'exact_instance': True, 'free_collection': True, 'active_bid_cancel_refused': True,
         'wake_bounty_refused': True, 'victim_cache_rights': True,
         'actual_combat_zone': 'vatside-clinics', 'future_sink_geography': 'S25 pending'}
