@@ -2,12 +2,12 @@
 
 from copy import deepcopy
 from pathlib import Path
-from types import SimpleNamespace
 from typing import Any
 
 import pytest
 
 from blacksite.server.clock import TICK_HZ
+from blacksite.server.modifiers import compose
 from blacksite.server.protocol import Frame
 from blacksite.server.storage import migrations
 from blacksite.server.storage.db import Storage
@@ -108,11 +108,13 @@ def test_game_3_1_collection_uses_effective_carry_capacity(trade_game: tuple[Any
     owner.execute(clients[1].session, 'buyout', {'listing': lid})
     game.commit_commerce()
     players[1].attributes['frame'] = 0
-    mods = SimpleNamespace(attribute=lambda player, attr: 0, bonus=lambda kind: 100 if kind == 'carry_kg' else 0)
+    mods = compose([{'carry_kg': 100}])
     with monkeypatch.context() as patch:
         patch.setattr(game.core.progression, 'modifiers', lambda player: mods)
         owner.execute(clients[1].session, 'collect', {'item': iid})
-    game.commit_commerce()
+        game.commit_commerce()
+        game.step()
+        assert not game.core.combat.actor(players[1]).overweight
     assert iid in players[1].inventory
 
 
