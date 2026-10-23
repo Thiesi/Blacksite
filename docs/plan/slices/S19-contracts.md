@@ -142,6 +142,12 @@ Use typed contract, evidence and work-order intents from architecture
 
 ## Definition of done
 
+The [earning receipt report](../../ops/s19-earnings.md) extends S16 with
+actual job, loot-sale, core-cash and clinic-quote paths. Its session
+cadence and gross affordability remain explicit assumptions, including
+the difference between a crew lifter's personal cash and support income.
+It preserves the complete-city human pacing gate after S25/S26.
+
 S16 balance handoff: extend its assumed XP schedules with actual contract,
 loot and vendor-sale chit income. Report time to afford canonical weapons,
 implants, surgery and detox, distinguishing solo and crew earnings. Compare

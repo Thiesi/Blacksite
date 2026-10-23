@@ -13,11 +13,11 @@ def test_world_3_complete_district_registry_and_inactive_templates(repo_root: Pa
     assert not validate(tree)
     entries = {c.core_id or c.planned_core for s in tree.sectors.values()
                for c in s.cells if c.kind == 'core_entrance'}
-    assert len(entries) == 48
+    assert len(entries) == 49  # World 3.8 adds the first-job Stairwell C cabinet.
     templates = {'lat-private-core', 'lat-relay-uplink', 'lat-uplink-hall'}
     assert set(tree.cores) == entries | templates
     assert all(tree.cores[cid].template and not tree.active('cores', cid) for cid in templates)
-    assert sum(tree.active('cores', cid) for cid in tree.cores) == 13
+    assert sum(tree.active('cores', cid) for cid in tree.cores) == 14
     for sector in tree.sectors.values():
         for cell in sector.cells:
             if cell.core_id:

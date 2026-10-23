@@ -605,7 +605,7 @@
     },
     {
       "id": "npc-walked-template",
-      "name": "Block resident",
+      "name": "Walked template",
       "faction": null,
       "grade": 1,
       "attributes": {
@@ -626,7 +626,7 @@
     },
     {
       "id": "npc-lapsed-subscriber",
-      "name": "Block resident",
+      "name": "Lapsed subscriber",
       "faction": null,
       "grade": 1,
       "attributes": {
@@ -647,7 +647,7 @@
     },
     {
       "id": "npc-nurse-okafor-mission",
-      "name": "Sablier orderly",
+      "name": "Nurse Okafor",
       "faction": "sablier",
       "grade": 1,
       "attributes": {
@@ -670,8 +670,8 @@
     },
     {
       "id": "npc-bram-sled-mission",
-      "name": "Courier drone",
-      "faction": "kestrel",
+      "name": "The Long Sled",
+      "faction": "ferrymen",
       "grade": 1,
       "attributes": {
         "frame": 20,

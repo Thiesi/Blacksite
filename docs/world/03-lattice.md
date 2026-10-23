@@ -73,7 +73,7 @@ district.
 | The Sink | 30 | 12 / 8 / 10 | Cable Car Bus, Terrace Wards, Floor Market, Sable's Back Room | *The Drop* (hidden, deepest descent in a district) |
 | Chapel Ward | 22 | 10 / 6 / 6 | Nave Node, Bell Gallery, Listening Post Approach | *The Well* (public; the Choir wants you to find it) |
 | Old Works | 34 | 12 / 6 / 16 | Foundry Floor, Annex Records, Ninety-Nine's Drop, the Tape Room | *Cut Cable* (hidden) |
-| Terraces | 36 | 20 / 12 / 4 | Block A Super, Block B Super, Outpost Feed, and one private-core entrance per rented apartment | *Basement Riser* (gated, resident key) |
+| Terraces | 36 | 20 / 12 / 4 | Block A Super, Block B Super, Outpost Feed, Stairwell C cabinet, and one private-core entrance per rented apartment | *Basement Riser* (gated, resident key) |
 | Sodium Row | 20 | 14 / 4 / 2 | House Lights, Tin Halo Back Bar, Sign Grid | *Stage Door* (hidden) |
 | Undercity | 26 | 4 / 8 / 14 | Pumphouse Panel, Cavern Relay, Outworks Seal Approach | *The Seam* (public and unmarked; it does not need to hide) |
 | Scour | 18 | 6 / 12 / 0 | one uplink cell per relay: Landing Uplink, Mile Relay, Beacon Relay, Crash Relay, Far Relay, Patrol Beacon | *Static* (gated, only during Ring-fall) |

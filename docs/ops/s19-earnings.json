@@ -1,0 +1,376 @@
+{
+  "kind": "observed receipt amounts; assumed cadence; gross affordability forecast",
+  "fixtures": [
+    "suppressed public NPC spawners",
+    "direct legal position setup",
+    "completed-defeat injection",
+    "cleared ICE and direct core room placement"
+  ],
+  "unmeasured": [
+    "travel and combat difficulty",
+    "ammo, healing, rent, failures and other expenses",
+    "S25 source availability",
+    "human enjoyment and full-city pacing"
+  ],
+  "distribution": "Core cash and corpse loot go to their recipient, not every crew member. Support has contract income only. No equal-split cash transfer is assumed.",
+  "prices_note": "Catalog/clinic quotes do not create missing S25 shop or clinic placements. Each forecast is a separate purchase from the original 200 chits.",
+  "forecast_horizon_minutes": 14400,
+  "xp_note": "S16 assumed discovery/run schedules plus four observed-contract-XP grants per hour and grade-one street opponents. Mission-defeat XP is omitted; activity cadence is not measured.",
+  "cadence": {
+    "jobs_per_hour": 4,
+    "lifts_per_hour": 6,
+    "street_defeats_per_hour": 20,
+    "mixed_defeats_per_hour": 8
+  },
+  "receipts": {
+    "solo": {
+      "template": "wardens-commission-clear",
+      "roster": 1,
+      "required_defeats": 4,
+      "paid": [
+        {
+          "archetype": "ghost",
+          "chits": 200,
+          "xp": 200
+        }
+      ],
+      "duplicate_credit": 0
+    },
+    "crew": {
+      "template": "wardens-commission-clear",
+      "roster": 2,
+      "required_defeats": 6,
+      "paid": [
+        {
+          "archetype": "ghost",
+          "chits": 250,
+          "xp": 250
+        },
+        {
+          "archetype": "operator",
+          "chits": 275,
+          "xp": 250
+        }
+      ],
+      "duplicate_credit": 0
+    },
+    "street": {
+      "npc": "npc-sable-enforcer",
+      "defeats": 20,
+      "loot": {
+        "ammo_9x": 80
+      },
+      "sold_chits": 16,
+      "vendor_budget_spent": 16,
+      "starting_principal_sold": 0
+    },
+    "core": {
+      "core": "lat-civic-ledger",
+      "data": "core-credit",
+      "chits": 80,
+      "tier": 2
+    }
+  },
+  "prices": {
+    "catalog": {
+      "wpn_kestrel_sidearm": {
+        "name": "Kestrel Issue Sidearm",
+        "list_price": 120
+      },
+      "wpn_halvard_hv7": {
+        "name": "Halvard HV-7 Carbine",
+        "list_price": 340
+      },
+      "imp_halvard_reflex_arm": {
+        "name": "Halvard Reflex Arm",
+        "list_price": 2200,
+        "sablier": {
+          "item_price": 2200,
+          "service_price": 440,
+          "removal_price": 0,
+          "failure": 0.02,
+          "slot": "arms1",
+          "used": 2,
+          "capacity": 4,
+          "total": 2640
+        },
+        "black": {
+          "item_price": 1320,
+          "service_price": 0,
+          "removal_price": 0,
+          "failure": 0.15,
+          "slot": "arms1",
+          "used": 2,
+          "capacity": 4,
+          "total": 1320
+        }
+      },
+      "imp_rig_ow_jury": {
+        "name": "Old Works Jury Rig",
+        "list_price": 1200,
+        "sablier": {
+          "item_price": 1200,
+          "service_price": 240,
+          "removal_price": 0,
+          "failure": 0.02,
+          "slot": "rig",
+          "used": 1,
+          "capacity": 4,
+          "total": 1440
+        },
+        "black": {
+          "item_price": 720,
+          "service_price": 0,
+          "removal_price": 0,
+          "failure": 0.15,
+          "slot": "rig",
+          "used": 1,
+          "capacity": 4,
+          "total": 720
+        }
+      },
+      "imp_rig_sablier_clinical": {
+        "name": "Sablier Clinical Rig",
+        "list_price": 3600,
+        "sablier": {
+          "item_price": 3600,
+          "service_price": 720,
+          "removal_price": 0,
+          "failure": 0.02,
+          "slot": "rig",
+          "used": 2,
+          "capacity": 4,
+          "total": 4320
+        },
+        "black": {
+          "item_price": 2160,
+          "service_price": 0,
+          "removal_price": 0,
+          "failure": 0.15,
+          "slot": "rig",
+          "used": 2,
+          "capacity": 4,
+          "total": 2160
+        }
+      },
+      "detox": {
+        "name": "Detox",
+        "total": 400
+      }
+    },
+    "programs": {
+      "prg_lance": 1600,
+      "prg_bunker": 1600,
+      "prg_signet": 1600,
+      "prg_anchor": 1600
+    },
+    "initial_cash": 200,
+    "content_hash": "f5c08aa2fa16fa183246f11a6bafd6362ae09a930fdf236475da43a4edf5b72c"
+  },
+  "gross_chits_per_hour": {
+    "street": 16.0,
+    "solo_jobs": 800.0,
+    "crew_jobs_ghost": 1000.0,
+    "crew_jobs_operator": 1100.0,
+    "mixed_solo": 1286.4,
+    "mixed_crew_lifter": 1486.4,
+    "mixed_crew_support": 1100.0
+  },
+  "gross_minutes_to_afford_from_starting_cash": {
+    "wpn_kestrel_sidearm": {
+      "street": 0,
+      "solo_jobs": 0,
+      "crew_jobs_ghost": 0,
+      "crew_jobs_operator": 0,
+      "mixed_solo": 0,
+      "mixed_crew_lifter": 0,
+      "mixed_crew_support": 0
+    },
+    "wpn_halvard_hv7": {
+      "street": 526,
+      "solo_jobs": 15,
+      "crew_jobs_ghost": 15,
+      "crew_jobs_operator": 15,
+      "mixed_solo": 15,
+      "mixed_crew_lifter": 15,
+      "mixed_crew_support": 15
+    },
+    "imp_halvard_reflex_arm": {
+      "street": 9150,
+      "solo_jobs": 195,
+      "crew_jobs_ghost": 150,
+      "crew_jobs_operator": 135,
+      "mixed_solo": 120,
+      "mixed_crew_lifter": 105,
+      "mixed_crew_support": 135
+    },
+    "imp_rig_ow_jury": {
+      "street": 4651,
+      "solo_jobs": 105,
+      "crew_jobs_ghost": 75,
+      "crew_jobs_operator": 75,
+      "mixed_solo": 60,
+      "mixed_crew_lifter": 60,
+      "mixed_crew_support": 75
+    },
+    "imp_rig_sablier_clinical": {
+      "street": null,
+      "solo_jobs": 315,
+      "crew_jobs_ghost": 255,
+      "crew_jobs_operator": 225,
+      "mixed_solo": 195,
+      "mixed_crew_lifter": 170,
+      "mixed_crew_support": 225
+    },
+    "detox": {
+      "street": 751,
+      "solo_jobs": 15,
+      "crew_jobs_ghost": 15,
+      "crew_jobs_operator": 15,
+      "mixed_solo": 15,
+      "mixed_crew_lifter": 15,
+      "mixed_crew_support": 15
+    },
+    "prg_lance": {
+      "street": 5251,
+      "solo_jobs": 105,
+      "crew_jobs_ghost": 90,
+      "crew_jobs_operator": 90,
+      "mixed_solo": 75,
+      "mixed_crew_lifter": 60,
+      "mixed_crew_support": 90
+    },
+    "prg_bunker": {
+      "street": 5251,
+      "solo_jobs": 105,
+      "crew_jobs_ghost": 90,
+      "crew_jobs_operator": 90,
+      "mixed_solo": 75,
+      "mixed_crew_lifter": 60,
+      "mixed_crew_support": 90
+    },
+    "prg_signet": {
+      "street": 5251,
+      "solo_jobs": 105,
+      "crew_jobs_ghost": 90,
+      "crew_jobs_operator": 90,
+      "mixed_solo": 75,
+      "mixed_crew_lifter": 60,
+      "mixed_crew_support": 90
+    },
+    "prg_anchor": {
+      "street": 5251,
+      "solo_jobs": 105,
+      "crew_jobs_ghost": 90,
+      "crew_jobs_operator": 90,
+      "mixed_solo": 75,
+      "mixed_crew_lifter": 60,
+      "mixed_crew_support": 90
+    },
+    "owned_reflex_arm_installation_only": {
+      "street": 901,
+      "solo_jobs": 30,
+      "crew_jobs_ghost": 15,
+      "crew_jobs_operator": 15,
+      "mixed_solo": 15,
+      "mixed_crew_lifter": 15,
+      "mixed_crew_support": 15
+    }
+  },
+  "progression_schedules": {
+    "street": {
+      "profile": "street",
+      "minutes": 360,
+      "xp": 1834,
+      "grade": 5,
+      "xp_by_source": {
+        "combat": 1834
+      },
+      "accepted": {
+        "combat": 120
+      },
+      "rejected": {},
+      "milestones": {
+        "at_240_minutes": {
+          "xp": 1328,
+          "grade": 4
+        },
+        "grade5_minute": 276,
+        "at_360_minutes": {
+          "xp": 1834,
+          "grade": 5
+        }
+      }
+    },
+    "mixed_solo": {
+      "profile": "mixed",
+      "minutes": 360,
+      "xp": 6119,
+      "grade": 10,
+      "xp_by_source": {
+        "combat": 389,
+        "zone_discovery": 250,
+        "cell_discovery": 200,
+        "run": 480,
+        "contract": 4800
+      },
+      "accepted": {
+        "combat": 45,
+        "zone_discovery": 10,
+        "cell_discovery": 40,
+        "run": 6,
+        "contract": 24
+      },
+      "rejected": {
+        "run": 30
+      },
+      "milestones": {
+        "grade5_minute": 50,
+        "at_240_minutes": {
+          "xp": 4442,
+          "grade": 8
+        },
+        "grade10_minute": 328,
+        "at_360_minutes": {
+          "xp": 6119,
+          "grade": 10
+        }
+      }
+    },
+    "mixed_crew": {
+      "profile": "mixed",
+      "minutes": 360,
+      "xp": 7294,
+      "grade": 11,
+      "xp_by_source": {
+        "combat": 364,
+        "zone_discovery": 250,
+        "cell_discovery": 200,
+        "run": 480,
+        "contract": 6000
+      },
+      "accepted": {
+        "combat": 45,
+        "zone_discovery": 10,
+        "cell_discovery": 40,
+        "run": 6,
+        "contract": 24
+      },
+      "rejected": {
+        "run": 30
+      },
+      "milestones": {
+        "grade5_minute": 44,
+        "at_240_minutes": {
+          "xp": 5219,
+          "grade": 9
+        },
+        "grade10_minute": 269,
+        "at_360_minutes": {
+          "xp": 7294,
+          "grade": 11
+        }
+      }
+    }
+  }
+}

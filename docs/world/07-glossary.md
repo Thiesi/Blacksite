@@ -6,6 +6,9 @@ Add a term here whenever you introduce one anywhere else (bible §13).
 
 ---
 
+**Okafor, Nurse** - Sablier nurse who walks from the Wake Hall to the
+Chapel Ward to ask about the degraded decants' dreams. (story arcs)
+
 **Stairwell C cabinet** — the small housing latch core beside Vesper's
 first parcel in Terraces Block 4. Both manual and loan-terminal routes
 operate its parcel hatch. (Lattice; story arcs)

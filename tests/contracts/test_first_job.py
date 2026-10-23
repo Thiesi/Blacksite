@@ -1,6 +1,7 @@
 """Game 9.4: fresh Wakes can finish both shipped first-job routes."""
 
 from dataclasses import replace
+from collections import deque
 from pathlib import Path
 from typing import Any
 
@@ -40,6 +41,46 @@ def first_job(repo_root: Path, archetype: int = 0) -> tuple[Any, ...]:
     owner.actions.perform(caller.session, iid, stage.targets[0])
     game.commit_commerce()
     return game, caller, owner, iid
+
+
+def test_game_9_4_public_arrivals_reach_the_latch_without_renting_an_apartment(repo_root: Path) -> None:
+    game,caller,owner,iid = first_job(repo_root)
+    zone = owner.world.zones['terraces-blocks']
+    actor = game.core.combat.actor(owner.game.players[caller.session.player_id])
+    hatch = zone.objects['stairwell-c-parcel-hatch'].spec.tile
+    arrivals = [exit.target_tile for other in owner.world.zones.values()
+                for exit in other.template.meta.exits if exit.target_zone == zone.id and not exit.requirement]
+    assert arrivals
+    exits = {e.tile for e in zone.template.meta.exits if e.kind == 'street'}
+    for arrival in arrivals:
+        pending,seen = deque([arrival]),{arrival}
+        while pending:
+            x,y = pending.popleft()
+            for tile in ((x+1,y),(x-1,y),(x,y+1),(x,y-1)):
+                if tile not in seen and tile not in exits and zone.can_enter(actor,tile):
+                    seen.add(tile)
+                    pending.append(tile)
+        assert any(max(abs(x-hatch[0]),abs(y-hatch[1])) <= 1 for x,y in seen)
+
+
+def test_game_9_1_clinic_board_preserves_recruitment_and_uses_a_separate_terminal(repo_root: Path) -> None:
+    game,caller,owner,iid = first_job(repo_root)
+    zone = owner.world.zones['vatside-clinics']
+    actor = game.core.combat.actor(owner.game.players[caller.session.player_id])
+    recruiter = zone.objects['sablier-recruiter']
+    assert 'contract_handler' not in recruiter.spec.params
+    # Commission the existing contact API; named recruiter bodies arrive
+    # in S27. S19's separate board must not intercept that interaction.
+    recruiter.spec.params['recruiters'] = ['sablier']
+    place(game,caller,zone.id,owner.world.free_tile(zone.id,recruiter.spec.tile,actor))
+    act(game,caller,Frame('key',{'k':'e','t':0}))
+    assert caller.session.id in game.core.factions.menus
+    assert caller.session.id not in owner.panels.menus
+    act(game,caller,Frame('key',{'k':'escape','t':0}))
+    board = zone.objects['clinic-public-west']
+    place(game,caller,zone.id,owner.world.free_tile(zone.id,board.spec.tile,actor))
+    act(game,caller,Frame('key',{'k':'e','t':0}))
+    assert owner.panels.menus[caller.session.id].handler == 'sablier'
 
 
 @pytest.mark.parametrize('archetype', range(4))

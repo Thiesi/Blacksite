@@ -18,6 +18,14 @@ and accepted [PR #38](https://github.com/Thiesi/Blacksite/pull/38).
 
 ## Goal
 
+S19 native input handoff: preserve the door's successful read result when
+an Escape deadline and reader completion race. The input pump retains
+that task and drains pending bytes before its ordinary 200 ms framing
+grace expires. Extend the regression coverage with S30's API-5, zero-time
+and Unicode checks; do not restore a cancelling timeout that can discard
+consumed arrow bytes and type a chat hotkey. S19 records its real native
+rerun separately from deterministic key-decoder fixtures.
+
 Make the first hour self-explanatory and the hundredth hour
 comfortable. Ship the server-driven hint line, the contextual help
 pages, the first-run "what is this" screen, the wall-time warnings and
@@ -227,7 +235,8 @@ Teach S22 [PR #61](https://github.com/Thiesi/Blacksite/pull/61)'s actual
 two-to-five-person crews: sixty-second invites, leadership on logout,
 ten-second loot offers, useful-action/guard participation and private
 interior limits. Show names, not opaque IDs. Escape decoding follows
-UI 5.3, including ready-input priority before its framing grace expires.
+UI 5.3, including ready-input priority before treating an elapsed grace
+as a lone Escape.
 
 <!-- s19-services:start -->
 ### S19 source and service handoff

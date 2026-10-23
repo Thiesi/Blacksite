@@ -1,7 +1,8 @@
 """Deterministic earning schedules, not a measurement of human pacing.
 
-Only implemented S16 sources are scheduled. Contracts, crafting, relays
-and contributions need their owning slices before a complete playtest.
+The default retains the S16-only baseline. S19 may supply observed
+contract XP and the sampled NPC grade through the explicit parameters.
+Crafting, relays and contributions remain outside these schedules.
 Combat schedules use NPC defeats, not PvP identities. Chit income and
 equipment affordability are deferred to S19's integrated earning report.
 """
@@ -15,7 +16,8 @@ from blacksite.server.players import Player
 from blacksite.server.progression import Grant, award
 
 
-def report(profile: str, minutes: int = 360) -> dict[str, Any]:
+def report(profile: str, minutes: int = 360, *, contract_xp: int = 0,
+           opponent_grade: int = 3) -> dict[str, Any]:
     start = datetime(2026,1,1,12,tzinfo=timezone.utc)
     player = Player('report','node','report-identity','Report','Report','operator',start.isoformat())
     identity: dict[str, Any] = {'first_decanted_at':start.isoformat(),'legal_at':None}
@@ -28,7 +30,9 @@ def report(profile: str, minutes: int = 360) -> dict[str, Any]:
         # Twenty defeats/hour for street; eight/hour for mixed/runner.
         interval = 3 if profile == 'street' else 8
         if minute % interval == 0:
-            grants.append(Grant('combat',f'spawn:{minute}',True,scope='street-spawner',opponent_grade=3))
+            grants.append(Grant('combat',f'spawn:{minute}',True,scope='street-spawner',opponent_grade=opponent_grade))
+        if contract_xp and profile != 'street' and (minute+1) % 15 == 0:
+            grants.append(Grant('contract',f'job:{minute}',True,scope=f'job:{minute}',amount=contract_xp))
         if profile != 'street':
             # The authored ten-zone hub and forty distinct cells, not loops.
             if minute < 10:
@@ -45,6 +49,8 @@ def report(profile: str, minutes: int = 360) -> dict[str, Any]:
                 accepted[grant.kind] += 1
                 if result.old_grade < 5 <= result.grade:
                     milestones['grade5_minute'] = minute
+                if result.old_grade < 10 <= result.grade:
+                    milestones['grade10_minute'] = minute
             else:
                 rejected[grant.kind] += 1
         if minute+1 in (240,360):

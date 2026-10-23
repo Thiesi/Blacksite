@@ -247,6 +247,8 @@ are ordinary text. Arrow navigation cannot move the character.
 - Drain ready input before expiring a lone `Esc`. Rendering or pipe
   backpressure can delay the timer and reader together; queued arrow
   bytes must take precedence over the elapsed framing grace.
+  Preserve a successful read that finishes in the timeout's loop turn;
+  consuming bytes and then losing that result cannot type a chat hotkey.
 - Mouse sequences (`CSI M`, SGR) are recognised and discarded; the client
   never enables mouse reporting. Bracketed paste is recognised and its
   contents discarded.

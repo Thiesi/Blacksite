@@ -27,3 +27,14 @@ def test_game_7_5_missing_work_order_reference_is_rejected(world: World) -> None
     services['services'][0]['contract'] = 'missing'
     world.write('services.json', services)
     assert any("contract 'missing'" in message for message in world.messages())
+
+
+def test_game_7_5_active_price_effect_cannot_silently_bind_a_missing_counter(world: World) -> None:
+    services = world.read('services.json')
+    service = services['services'][0]
+    service['allocations'][0]['effects'] = [{'type':'price_modifier','zone':'fx-street',
+        'params':{'service':'buyback_budget','multiplier':2,'vendor':'missing-vendor','object':'missing-counter'}}]
+    world.write('services.json',services)
+    messages = world.messages()
+    assert any("vendor 'missing-vendor'" in message for message in messages)
+    assert any('resolved zone/object' in message for message in messages)

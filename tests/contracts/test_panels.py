@@ -1,6 +1,6 @@
 """UI 11: truthful cards, stale actions and compact journal rendering."""
 
-from dataclasses import asdict
+from dataclasses import asdict, replace
 from typing import Any
 
 import pytest
@@ -14,6 +14,7 @@ from blacksite.server.world.zone import ObjectState
 from tests.contracts.test_adapter import live, shipped
 from tests.fake_terminal import FakeTerminal
 from tests.contracts.test_adapter import accept, complete
+from tests.contracts.test_engine import template
 
 
 def board(live):
@@ -42,6 +43,22 @@ def test_game_9_1_vesper_turns_in_generated_faction_commission_without_changing_
     game.commit_commerce()
     assert owner.state.engine.instances[iid].giver == 'wardens'
     assert owner.state.engine.instances[iid].state == 'turned_in'
+
+
+def test_ui_11_fixed_branch_consent_hides_other_solo_offer_but_keeps_accepted_job(live):
+    game,owner,callers,players=live
+    for branch in ('clinic','shield'):
+        job=replace(template('fixture-'+branch),story=True,branch_group='fixture-walked',branch=branch)
+        owner.content.contracts[job.id]=owner.state.engine.templates[job.id]=job
+    draft=owner.state.fork()
+    accepted=draft.engine.accept(draft.engine.story_offer('fixture-clinic',players[0].id),
+                                 (owner.participant(players[0].id),),owner.now())
+    owner.write(draft)
+    game.commit_commerce()
+    session,panel=board(live)
+    rows=owner.panels.rows(session,panel)
+    assert accepted.id in {row['id'] for row in rows}
+    assert 'fixture-shield' not in {row['id'] for row in rows}
 
 
 def test_ui_11_abandoned_job_remains_visible_and_original_workers_resume_with_frozen_terms(live: tuple[Any, ...]) -> None:

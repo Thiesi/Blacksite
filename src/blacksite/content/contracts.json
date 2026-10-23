@@ -2918,8 +2918,8 @@
           "input": "interact",
           "completion": "defeated",
           "receipt_key": "wardens-commission-clear:clear",
-          "label": "Clear the mission drones on the contested service approach",
-          "quantity": 3,
+          "label": "Clear four mission drones on the contested service approach",
+          "quantity": 4,
           "resolution": "lethal"
         }
       ],

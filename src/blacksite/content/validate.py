@@ -1567,6 +1567,16 @@ class _Validator:
             if not any(item.id == layout for item in zone.meta.layouts):
                 self.report(*owner, f"{label}: layout {layout!r} does not exist in {zone.id}")
         service = e.params.get('service')
+        vendor = e.params.get('vendor')
+        if vendor is not None:
+            if isinstance(vendor, str):
+                self.ref('vendors', vendor, owner, label+' vendor')
+            else:
+                self.report(*owner, f'{label}: vendor must be an id')
+        object_id = e.params.get('object')
+        if object_id is not None and self.current_active and (
+                not isinstance(object_id, str) or zone is None or self.object_at(zone.id, object_id) is None):
+            self.report(*owner, f'{label}: effect object needs a resolved zone/object binding', str(object_id))
         if service in ('surgery', 'buyback_budget'):
             multiplier = e.params.get('multiplier')
             valid = isinstance(multiplier, (int, float)) and not isinstance(multiplier, bool)

@@ -100,6 +100,7 @@ class Panels:
                     result.append({'id': 'service:'+sid, 'cells': [node.state, service.name]})
             for tid, job in owner.state.engine.templates.items():
                 if (job.story and job.giver == panel.handler and tid not in owner.state.engine.completed.get(pid, set())
+                        and not owner.state.engine.helper_for(job, pid)
                         and not owner.requirements(pid, job)
                         and not any(j.template == tid and j.state != 'turned_in' and pid in {p.player for p in j.roster}
                                     for j in owner.state.engine.instances.values())):

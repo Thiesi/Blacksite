@@ -2,6 +2,8 @@
 
 from dataclasses import replace
 
+from blacksite.content.schema import ContractTemplate, Stage, StageTarget
+
 from tests.lattice.test_engine import intent, jack, runners
 from tests.lattice.test_encounters import cast, enter
 
@@ -58,12 +60,29 @@ def test_game_6_7_mission_lift_never_crosses_into_another_contract(runners):
     instance.ice.clear()  # Isolate receipts; guarded-source tests cover ICE.
     intent(game, a, 'lat.lift', target='transaction-logs', generation=0)
     assert presence.procedure is None
-    mission = {'id': 'mission-a'}
-    encounters.mission_of = lambda pid, source: mission['id']
+    owner = game.core.contracts
+    draft = owner.state.fork()
+    ids = []
+    for name in ('mission-a', 'mission-b'):
+        target = StageTarget('core_room', core=presence.core, room=room.id, data='transaction-logs')
+        stage = Stage('copy', 'hack', target, 'lift', 'lifted', name+':copy')
+        job = ContractTemplate(name, 'kestrel', story=True, stages=(stage,))
+        owner.content.contracts[name] = draft.engine.templates[name] = job
+        accepted = draft.engine.accept(draft.engine.story_offer(name, presence.player_id),
+                                       (owner.participant(presence.player_id),), owner.now())
+        ids.append(accepted.id)
+    owner.write(draft)
+    game.commit_commerce()
+    assert encounters.mission_of(presence.player_id, 'transaction-logs') == ids[0]+':copy:0'
     intent(game, a, 'lat.lift', target='transaction-logs', generation=0)
     assert presence.procedure
-    mission['id'] = 'mission-b'
-    game.step(presence.procedure.until-game.clock.now_tick())
+    deadline = presence.procedure.until
+    draft = owner.state.fork()
+    owner.withdraw(draft, ids[0], presence.player_id)
+    owner.write(draft)
+    game.commit_commerce()
+    assert encounters.mission_of(presence.player_id, 'transaction-logs') == ids[1]+':copy:0'
+    game.step(deadline-game.clock.now_tick())
     assert not game.core.commerce.pending
     player = game.core.characters.players[presence.player_id]
     assert not player.progress.get('lattice_units')
@@ -71,5 +90,6 @@ def test_game_6_7_mission_lift_never_crosses_into_another_contract(runners):
     game.step(presence.procedure.until-game.clock.now_tick())
     game.commit_commerce()
     unit = next(iter(player.progress['lattice_units'].values()))
-    assert unit['kind'] == 'contract_key' and unit['source'].endswith(':mission:mission-b')
+    assert unit['kind'] == 'contract_key' and unit['mission'] == ids[1]
+    assert unit['source'].endswith(':mission:'+ids[1]+':copy:0')
     assert player.chits_hand == 200 and player.chits_bank == 0

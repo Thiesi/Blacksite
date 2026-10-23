@@ -45,6 +45,33 @@ def test_escape_timeout_drains_queued_native_input_first(
     assert keys == expected
 
 
+def test_ui_5_3_successful_native_read_survives_deadline_observation_race(monkeypatch: pytest.MonkeyPatch) -> None:
+    from blacksite.door.client import read_input
+    from blacksite.door.keys import KeyDecoder
+
+    class ConsumedPipe:
+        async def read(self) -> bytes:
+            return b'[C'
+
+        def read_pending(self) -> bytes | None:
+            return None  # The successful read has already consumed it.
+
+    async def deadline_race(tasks, *, timeout):
+        reading = next(iter(tasks))
+        await reading
+        # The wait's timeout observation predates the reader completion;
+        # the caller resumes after both, so the task now owns the bytes.
+        return set(), set(tasks)
+
+    monkeypatch.setattr(asyncio, 'wait', deadline_race)
+    decoder = KeyDecoder()
+    assert decoder.feed(b'\x1b', 0) == []
+    data = asyncio.run(read_input(ConsumedPipe(), decoder))
+    assert data == b'[C'
+    assert decoder.feed(data, 1) == ['right']
+    assert decoder.flush(1) == []
+
+
 def test_reconnect_backoff_then_dark() -> None:
     retry = Reconnect(started=0)
     now = 0

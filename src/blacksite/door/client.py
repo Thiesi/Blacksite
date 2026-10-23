@@ -19,13 +19,26 @@ async def read_input(terminal: Terminal, decoder: KeyDecoder) -> bytes | None:
     """Give queued continuation bytes priority over an expired timer."""
     if decoder.buffer != b"\x1b" or decoder.escape_at is None:
         return await terminal.read()
+    reading = asyncio.create_task(terminal.read())
     try:
-        return await asyncio.wait_for(terminal.read(), max(
+        # A cancelling timeout can discard a successful read whose result
+        # became ready in the same loop turn. Keep the task so consumed
+        # bytes remain available even if the timeout observation wins.
+        await asyncio.wait({reading}, timeout=max(
             0.001, decoder.escape_at + ESCAPE_TIMEOUT_SECONDS - time.monotonic()))
-    except asyncio.TimeoutError:
-        # Rendering or pipe backpressure can delay both the read coroutine
-        # and its timer. Cancellation must not split bytes already in stdin.
+        if not reading.done():
+            reading.cancel()
+            await asyncio.gather(reading, return_exceptions=True)
+        if not reading.cancelled():
+            try:
+                return reading.result()
+            except asyncio.TimeoutError:
+                pass
         return terminal.read_pending()
+    finally:
+        if not reading.done():
+            reading.cancel()
+            await asyncio.gather(reading, return_exceptions=True)
 
 
 async def run(info: DoorInfo, terminal: Terminal) -> None:
