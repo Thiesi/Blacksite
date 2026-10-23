@@ -1,8 +1,8 @@
 # S21 acceptance record
 
-## Installed native baseline
+## Installed native validation
 
-The local native run uses gameplay source `0b3ffaef`, package 0.0.18,
+The local native run uses gameplay source `9034ff7`, package 0.0.18,
 and NetBBS 7.31.0 checkout `d04170a`. Both callers' negotiated terminal
 sizes run through real Telnet, a registered native stdio door and the
 installed wheel. The Windows game-service connection uses loopback TCP.
@@ -10,29 +10,30 @@ The probe checks the isolated interpreter's package version and whole
 normalized Python tree before starting; it cannot import the source
 server through `PYTHONPATH` and claim that as the installed client.
 
-This is the baseline before the review's capture-retry fix. Current
-review-fix wheel/tree hashes, repeated native proof and final checks are
-recorded in [PR #63](https://github.com/Thiesi/Blacksite/pull/63).
+This includes the review's capture-retry fix. Script-only navigation
+fixes at `21a6a12` retain the same installed production package. Final
+checks and written review triage are recorded in
+[PR #63](https://github.com/Thiesi/Blacksite/pull/63).
 
 | Evidence | Result |
 |---|---|
-| Wheel | `blacksite-0.0.18-py3-none-any.whl`, 579534 bytes |
-| Wheel SHA-256 | `5ddd7c090980d99eb7302de92e251d30b9201e8a12c861581b5fb3429782b0b2` |
-| Whole Python tree SHA-256 | `8344f8cd6975c01444d2da9b9e0ea0719b37e9cc82862f9a9413201aa3f64db3` |
-| 80x24 | Passed; real capture hold 182.3 seconds |
-| 132x50 | Passed; real capture hold 182.4 seconds |
+| Wheel | `blacksite-0.0.18-py3-none-any.whl`, 579693 bytes |
+| Wheel SHA-256 | `d0a78a42be4aae345daa33dbc2d77904053a9437ec7452d1e3f7d6b6e0a2554c` |
+| Whole Python tree SHA-256 | `e4931dd51553604e2bb0d4221461022864d22d66d7854319ef980987077d7fb4` |
+| 80x24 | Passed; real capture hold 182.52 seconds |
+| 132x50 | Passed; real capture hold 182.67 seconds |
 
 Command, from the isolated slice worktree, once for each size:
 
 ```powershell
 $env:PYTHONPATH="$pwd/src;$pwd/scripts"
 C:/Users/Thiesi/OneDrive/Dev/NetBBS/.venv/Scripts/python.exe `
-  scripts/accept_s21_netbbs.py --root .test-tmp/s21-native-4/80x24 `
+  scripts/accept_s21_netbbs.py --root .test-tmp/s21-native-6/80x24 `
   --door-python .venv/Scripts/python.exe --size 80x24 --show
 ```
 
-The second run substitutes `132x50` in both arguments. Preserved local
-evidence is under `.test-tmp/s21-native-4/<size>/`: `s21-results.json`,
+The second run uses `.test-tmp/s21-native-7/132x50` and size `132x50`.
+Preserved local evidence in those roots includes `s21-results.json`,
 `native-client.json`, terminal `.ans`/`.txt` captures, `progress.log` and
 `console-output.json`. CI adds downloadable per-size relay proof archives.
 
@@ -42,6 +43,9 @@ pauses, a real committed `relay_open` control, a full three-minute hold,
 exactly two 100-XP rewards, no reward for the rival, persisted ownership
 and core ownership, a usable member counter, outsider refusal, and a
 visible increase of 20 influence after the settlement-time fixture.
+Independent offline reads through Storage and its lease confirm each
+capture fact, two +15 standings, one capture statistic per participant,
+20 influence, 20 treasury and committed core ownership.
 
 The disclosed fixtures are faction membership, an ICE-free copy of the
 real tier-two Cold Chain core, a brief Curfew provider, and an injected
@@ -53,11 +57,16 @@ from S24's future event scheduler.
 
 ## Automated gates
 
-The exact gameplay head passed the full repository-root `pytest -q` on
-Ubuntu: **1400 passed in 170.47 seconds** (Actions job `120537411164`).
-Windows: **1399 passed, 1 skipped in 367.31 seconds** (job `120537410859`).
+The driver-fix head `21a6a12` passed full repository-root `pytest -q` on
+Ubuntu: **1402 passed in 161.40 seconds** (Actions job `120590680137`).
+Windows: **1401 passed, 1 skipped in 169.13 seconds** (job `120590679723`).
 The supplemental local full-root run and final-head review/check record
 are tracked in [PR #63](https://github.com/Thiesi/Blacksite/pull/63).
+The three delivered Claude Sonnet 5.5 reviews cover production, content
+and driver changes; their written reports do not claim independent test
+execution. Worthwhile findings and rejected speculative observations are
+explicitly triaged there. An automatic workflow validation skip is not
+treated as a clean review.
 
 Current focused local checks include eight width-safe relay/passage/
 defence menu cases, seven relay benefit/content cases, and the committed
