@@ -1,0 +1,217 @@
+{
+  "schema": 1,
+  "id": "under-drowned",
+  "name": "The Drowned Level",
+  "district": "Undercity",
+  "safety": "open",
+  "lean": null,
+  "sight_radius": 5,
+  "sector": "lat-undercity",
+  "spawn": [
+    3,
+    30
+  ],
+  "exits": [
+    {
+      "id": "to-under-caverns",
+      "tile": [
+        50,
+        57
+      ],
+      "target_zone": "under-caverns",
+      "target_tile": [
+        100,
+        2
+      ],
+      "kind": "ladder"
+    },
+    {
+      "id": "to-under-outworks",
+      "tile": [
+        97,
+        30
+      ],
+      "target_zone": "under-outworks",
+      "target_tile": [
+        2,
+        20
+      ],
+      "kind": "door",
+      "requirement": {
+        "kind": "key",
+        "ref": "key_undercity"
+      },
+      "alternatives": [
+        {
+          "kind": "open",
+          "ref": "under-drowned",
+          "object": "drowned-bulkhead"
+        }
+      ],
+      "locked_text": "The bulkhead needs an Undercity key or its core latch opened."
+    },
+    {
+      "id": "to-under-service",
+      "tile": [
+        2,
+        30
+      ],
+      "target_zone": "under-service",
+      "target_tile": [
+        117,
+        30
+      ],
+      "kind": "ladder"
+    }
+  ],
+  "objects": [
+    {
+      "id": "drowned-hardware",
+      "tile": [
+        31,
+        29
+      ],
+      "kind": "hardware",
+      "params": {
+        "name": "Drowned hardware",
+        "core": "lat-drowned"
+      }
+    },
+    {
+      "id": "drowned-local-pumps",
+      "tile": [
+        75,
+        20
+      ],
+      "kind": "pump",
+      "params": {
+        "name": "local pumps",
+        "layout": "drowned-local-pumps-active"
+      }
+    },
+    {
+      "id": "drowned-bulkhead",
+      "tile": [
+        97,
+        30
+      ],
+      "kind": "door",
+      "params": {
+        "name": "bulkhead",
+        "open": false,
+        "locked": true
+      }
+    },
+    {
+      "id": "ferrymen-corpse",
+      "tile": [
+        74,
+        20
+      ],
+      "kind": "cache",
+      "params": {
+        "name": "Ferrymen corpse and damaged map"
+      }
+    },
+    {
+      "id": "area-light-1",
+      "tile": [
+        75,
+        19
+      ],
+      "kind": "light",
+      "params": {
+        "name": "Maintenance lamp"
+      }
+    },
+    {
+      "id": "template-canister",
+      "tile": [
+        24,
+        40
+      ],
+      "kind": "cache",
+      "params": {
+        "name": "Template canister"
+      }
+    }
+  ],
+  "spawners": [
+    {
+      "id": "water-hunter-crew",
+      "npc": "npc-water-hunter",
+      "count": 2,
+      "respawn_seconds": 60,
+      "condition": "always",
+      "region": {
+        "x": 65,
+        "y": 42,
+        "w": 2,
+        "h": 2
+      }
+    },
+    {
+      "id": "maintenance-drone-crew",
+      "npc": "npc-maintenance-drone",
+      "count": 1,
+      "respawn_seconds": 60,
+      "condition": "always",
+      "region": {
+        "x": 22,
+        "y": 39,
+        "w": 2,
+        "h": 3
+      }
+    }
+  ],
+  "lore": [
+    "zone-under-drowned"
+  ],
+  "layouts": [
+    {
+      "id": "drowned-local-pumps-active",
+      "changes": [
+        {
+          "tile": [
+            73,
+            22
+          ],
+          "tile_id": "floor"
+        },
+        {
+          "tile": [
+            74,
+            22
+          ],
+          "tile_id": "floor"
+        },
+        {
+          "tile": [
+            75,
+            22
+          ],
+          "tile_id": "floor"
+        },
+        {
+          "tile": [
+            76,
+            22
+          ],
+          "tile_id": "floor"
+        },
+        {
+          "tile": [
+            77,
+            22
+          ],
+          "tile_id": "floor"
+        }
+      ],
+      "warning_tiles": [],
+      "alternate_routes": [
+        "to-under-caverns",
+        "to-under-service"
+      ]
+    }
+  ]
+}

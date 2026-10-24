@@ -248,6 +248,8 @@ only, never PvP. Tutorial simulation is the bounded exception in §4.
   relays, terminals, lights.
 - Tiles have a glyph, colours per capability tier, passability, cover
   value (0 to 3), and an optional interaction.
+  The marked Convoy road uses map character `·` and the existing light
+  stipple glyph; it permits ordinary movement and grants no cover.
 - **Safety class**: `safe` (hostile harm blocked by the server), `pocket`
   (safe area inside a contested zone), `contested` (faction rules and
   Marked), `open` (anything).
@@ -267,6 +269,10 @@ only, never PvP. Tutorial simulation is the bounded exception in §4.
   at which others see you.
 - Players in the same zone see each other's glyph, name (on target or
   hover), and faction colour.
+- If a saved position becomes blocked when an optional passage closes,
+  reconnect uses the nearest available non-hazardous floor connected to
+  the public spawn. Recovery respects private entry permissions; it
+  cannot place a returning outsider inside someone else's apartment.
 
 ### 5.3 Combat
 
@@ -451,6 +457,36 @@ deadline together. Catch-up fills only vacant slots, never every missed
 respawn. Named service anchors stay during dormancy; their counters remain
 available even while their physical attendant is absent.
 
+The commissioned city adds the following initial profiles. They keep
+the hub attributes above. A dash in health uses the normal attribute
+formula; weapon and armour IDs use their existing catalog stats.
+These grades and wildlife attacks are initial balance hypotheses to
+check on the real city routes, including the human pacing pass.
+
+| Profile | Grade | Health | Weapon / attack | Armour |
+|---|---:|---:|---|---|
+| Halvard security | 3 | - | `wpn_halvard_hv7` | `arm_kestrel_vest` |
+| Halvard heavy security / recovery guard | 8 | 140 | `wpn_halvard_hv9` | `arm_halvard_guard_suit` |
+| Kestrel security | 2 | - | `wpn_kestrel_sidearm` | `arm_kestrel_vest` |
+| Choir warden | 3 | - | `wpn_chapel_tuning_fork` | `arm_chapel_vestment` |
+| Unmoored runner | 3 | - | `wpn_ow_arcpen` | `arm_sable_leathers` |
+| Ferrymen guard | 4 | - | `wpn_ferry_slugthrower` | `arm_ferry_scrap_plate` |
+| Scavenger raider | 6 | 100 | `wpn_kestrel_sidearm` | `arm_sable_leathers` |
+| Feral dog | 1 | 30 | 6 kinetic, 1.5 s, 60%, range 1 | none |
+| Feral hunter | 5 | 75 | 10 kinetic, 1.5 s, 60%, range 1 | none |
+| Water hunter | 7 | 90 | 12 kinetic, 1.5 s, 65%, range 1 | none |
+| Blind swarm | 6 | 55 | 8 chemical, 1 s, 60%, range 1 | none |
+| Scour apex hunter | 16 | 180 | 20 kinetic, 1.5 s, 70%, range 1 | none |
+| Blacksite maintenance drone | 10 | 100 | 12 energy, 1.5 s, 65%, range 6 | none |
+| Custodian recovery drone | 20 | 200 | 20 energy, 1.5 s, 70%, range 8 | none |
+
+These armed profiles expose base XP 20 to the existing eligibility and
+grade-scaling rule. They grant no new equipment loot. Their ordinary
+respawn is 60 s; event-owned recovery guards expire with their source
+and do not become ordinary respawners. Existing faction relationships
+govern faction guards; wild creatures and old autonomous machines are
+hostile. Recovery guards contest the advertised Ring-fall impact site.
+
 Mission actors are owned copies. Another caller cannot harm or command
 them. Escort requires explicit willingness; subdue requires adjacent
 shock 80 and an uninterrupted three-second channel. Subdue creates no
@@ -475,6 +511,10 @@ standing alone is not membership. The Shaft cage requires the active
 finale authorization in either direction. The server checks those
 sources at boarding. Story access stays closed until its owning system
 supplies a committed permission; saved client flags grant nothing.
+A local latch opened by its core may be an alternative to a carried
+key, as at the Drowned bulkhead. Hidden physical exits are unmarked,
+not an extra credential: a caller who finds the actual tile can use
+Interact there. Walking over it never triggers hidden travel.
 Blocked exits state their missing credential. Every destination retains
 its ordinary outward route; an authorized ride already in flight still
 completes if a permission later expires.
@@ -573,7 +613,9 @@ real encounter. District gate counts and public uplinks remain intact.
 Named short effects are exceptions to that ordinary reset range: a
 mission latch lasts 120 s, a private delivery vestibule 30 s, Row lighting
 blackout 30 s, Row sign message 60 s, and the bell-gallery hymn 60 s.
-Foundry gantry debris lasts 30 s after its hazard warning.
+Foundry gantry debris lasts 30 s after its hazard warning and deals
+5 kinetic damage per second before armour. Its map character is `x`,
+rendered with the existing hazard glyph.
 Transit holds retain their separate 30 s limit and 120 s immunity.
 A switched-off lamp reduces sight to 5 tiles within the zone's normal
 light radius around that lamp. Dark-sight equipment still applies.
@@ -1125,6 +1167,10 @@ power/compute/intact = 90/10/0/0/0, 55/25/20/0/0, 35/25/25/15/0,
 20/20/25/30/5. Restart preserves node units and RNG. Intact cannot be
 bought from or sold to NPC vendors; player trading is allowed.
 
+Nodes spawn on passable, unoccupied ground outside live hazards.
+Damage interrupts harvesting; a permanent hazard must not hold a node
+that cannot finish its channel and permanently consume the field's cap.
+
 Learned schematics persist. Fabrication consumes inputs on successful
 completion of a 3 s channel. Quality = 0.85 + 0.15 * skill/100 + U(0,
 0.15), capped 1.15 after relay modifiers. Yard Relay adds 0.05 before
@@ -1228,6 +1274,14 @@ automatically. Contains storage and a private core by housing class (section 17.
 a safe with banked chits and a terminal. Rent lapse of
 two weeks evicts and moves everything to a Kestrel impound (fee to
 reclaim).
+
+The commissioned Terraces pool has 24 distinct units: eight of each
+class. Letting terminals in the Lobby and Blocks offer the same pool.
+Each unit reserves its own public register cell, never the sector entry,
+an inter-district uplink or another unit's cell. The residence register
+adds twelve public cells to the existing 36-cell sector: one connects
+reciprocally to the public entry, and eleven complete the 24 unit slots.
+Existing hidden/gated cells and public inter-district links stay intact.
 
 Legal discharge, by grade 5 or the 90-day calendar, permits one tenancy
 per character. Signing pays one week. Due invoices use the bank first,
@@ -2086,6 +2140,16 @@ valid; zone/core instance IDs retain their own documented convention.
 | The Landing Trade Post | The Landing | `wpn_ferry_slugthrower`, `wpn_ferry_wrench`, `arm_ferry_scrap_plate`, `con_ferry_flare_stick`, `drug_ferry_ringdust`, `ammo_scrap`, tier-1 schematics; buys salvage at +20 % | list |
 | Ferry's Own | The Landing | `wpn_ferry_meteor_cannon`, `drn_ferry_lifter`, tier-2 and tier-3 Ferry-make schematics (standing gates as listed) | member |
 | The Tin Halo (Vesper) | Sodium Row | contracts, rumours, `drug_sable_glass`, `con_sable_stim`, one rotating tier-2 item per day from any maker at +40 % | list |
+| Kestrel surplus counter | Tramyard Depots | `con_kestrel_ration`, `con_ferry_flare_stick`; ordinary salvage buy-back, Depot work-order budget allocation | list |
+| Ferrymen way-station | Undercity Caverns | `con_kestrel_ration`, `con_ferry_flare_stick`; ordinary salvage buy-back | list |
+| Ferrymen salvage scales | Tramyard Market | `con_kestrel_ration`, `con_ferry_flare_stick`; ordinary salvage buy-back | list |
+
+These three secondary counters bring the ordinary vendor catalog to
+22 records. Their goods retain catalog prices, and their salvage rate
+is ordinary. The Landing Trade Post alone retains its listed +20%
+salvage premium. Halvard's member hall, vat and security counter are
+in the Mezzanine. Public recruitment, care, banking and the public
+equipment counter remain available in the Atrium.
 
 #### 13. Apartments
 

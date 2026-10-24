@@ -1,0 +1,247 @@
+{
+  "schema": 1,
+  "id": "oldworks-main",
+  "name": "Contractor Street",
+  "district": "Old Works",
+  "safety": "contested",
+  "lean": "unmoored",
+  "sight_radius": 8,
+  "sector": "lat-old-works",
+  "spawn": [
+    3,
+    17
+  ],
+  "exits": [
+    {
+      "id": "to-oldworks-drop",
+      "tile": [
+        55,
+        2
+      ],
+      "target_zone": "oldworks-drop",
+      "target_tile": [
+        20,
+        17
+      ],
+      "kind": "door",
+      "hidden": true
+    },
+    {
+      "id": "to-oldworks-yards",
+      "tile": [
+        107,
+        17
+      ],
+      "target_zone": "oldworks-yards",
+      "target_tile": [
+        50,
+        2
+      ],
+      "kind": "street"
+    },
+    {
+      "id": "to-sodium-row",
+      "tile": [
+        55,
+        31
+      ],
+      "target_zone": "sodium-row",
+      "target_tile": [
+        96,
+        2
+      ],
+      "kind": "street"
+    },
+    {
+      "id": "to-tramyard-depots",
+      "tile": [
+        2,
+        17
+      ],
+      "target_zone": "tramyard-depots",
+      "target_tile": [
+        117,
+        30
+      ],
+      "kind": "street"
+    }
+  ],
+  "objects": [
+    {
+      "id": "relay-zero-hardware",
+      "tile": [
+        25,
+        3
+      ],
+      "kind": "hardware",
+      "params": {
+        "name": "Relay Zero hardware",
+        "core": "lat-relay-zero"
+      }
+    },
+    {
+      "id": "relay-zero",
+      "tile": [
+        17,
+        18
+      ],
+      "kind": "relay",
+      "params": {
+        "name": "Relay Zero",
+        "relay": "zero",
+        "vendor": "relay-zero-counter"
+      }
+    },
+    {
+      "id": "oldworks-bench-counter",
+      "tile": [
+        22,
+        11
+      ],
+      "kind": "vendor",
+      "params": {
+        "name": "Old Works Bench",
+        "vendor": "oldworks-bench"
+      }
+    },
+    {
+      "id": "unmoored-public-board",
+      "tile": [
+        82,
+        11
+      ],
+      "kind": "terminal",
+      "params": {
+        "name": "Public jobs and faction counter",
+        "faction": "unmoored",
+        "contract_handler": "unmoored",
+        "sector": "lat-old-works",
+        "cell": "lat-old-works-c01"
+      },
+      "essential": true
+    },
+    {
+      "id": "public-uplink-1",
+      "tile": [
+        27,
+        22
+      ],
+      "kind": "terminal",
+      "params": {
+        "name": "Public Lattice terminal",
+        "sector": "lat-old-works",
+        "cell": "lat-old-works-c01"
+      },
+      "essential": true
+    },
+    {
+      "id": "public-uplink-2",
+      "tile": [
+        82,
+        22
+      ],
+      "kind": "terminal",
+      "params": {
+        "name": "Public Lattice terminal",
+        "sector": "lat-old-works",
+        "cell": "lat-old-works-c01"
+      },
+      "essential": true
+    },
+    {
+      "id": "area-light-1",
+      "tile": [
+        81,
+        11
+      ],
+      "kind": "light",
+      "params": {
+        "name": "Maintenance lamp"
+      }
+    },
+    {
+      "id": "vat-nine-squat",
+      "tile": [
+        27,
+        11
+      ],
+      "kind": "terminal",
+      "params": {
+        "name": "Vat nine squat"
+      }
+    },
+    {
+      "id": "vat-nine-shelter",
+      "tile": [
+        55,
+        17
+      ],
+      "kind": "terminal",
+      "params": {
+        "name": "Vat nine shelter"
+      }
+    },
+    {
+      "id": "vat-nine-shield-socket",
+      "tile": [
+        82,
+        10
+      ],
+      "kind": "terminal",
+      "params": {
+        "name": "Vat nine shield socket"
+      }
+    }
+  ],
+  "spawners": [
+    {
+      "id": "unmoored-guard-crew",
+      "npc": "npc-unmoored-guard",
+      "count": 2,
+      "respawn_seconds": 60,
+      "condition": "always",
+      "region": {
+        "x": 24,
+        "y": 17,
+        "w": 3,
+        "h": 3
+      }
+    },
+    {
+      "id": "squatter-crew",
+      "npc": "npc-squatter",
+      "count": 3,
+      "respawn_seconds": 60,
+      "condition": "always",
+      "region": {
+        "x": 73,
+        "y": 25,
+        "w": 2,
+        "h": 2
+      }
+    }
+  ],
+  "lore": [
+    "zone-oldworks-main"
+  ],
+  "pockets": [
+    {
+      "x": 81,
+      "y": 10,
+      "w": 3,
+      "h": 3
+    },
+    {
+      "x": 26,
+      "y": 21,
+      "w": 3,
+      "h": 3
+    },
+    {
+      "x": 81,
+      "y": 21,
+      "w": 3,
+      "h": 3
+    }
+  ]
+}

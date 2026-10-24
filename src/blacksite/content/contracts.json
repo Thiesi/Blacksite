@@ -869,7 +869,7 @@
           "verb": "survey",
           "target": {
             "kind": "zone_object",
-            "zone": "tramyard-gate-nine",
+            "zone": "tramyard-wall-gate",
             "object": "ration-consignment"
           },
           "input": "inspect",

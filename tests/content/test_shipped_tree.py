@@ -22,7 +22,7 @@ def test_shipped_content_validates() -> None:
 
 def test_shipped_starter_tables() -> None:
     tree = load_content(SHIPPED)
-    assert set(tree.tiles) == STARTER_TILES
+    assert set(tree.tiles) == STARTER_TILES | {'gantry-hazard', 'convoy-road'}
     for char, tile in GAZETTEER_LEGEND.items():
         assert tree.tiles[tile].char == char
     assert [tree.tiles[f"cover-{n}"].cover for n in (1, 2, 3)] == [1, 2, 3]

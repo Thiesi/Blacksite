@@ -16,7 +16,7 @@ def test_every_catalog_item_loads_and_canonical_numbers_match(repo_root: Path) -
     ids=set(re.findall(r"^\| `(\w+)`",schedule,re.MULTILINE))
     ids={i for i in ids if not i.startswith(("hymn_","dis_","apt_"))}
     assert ids <= tree.items.keys()
-    assert len([v for v in tree.vendors.values() if not v.relay])==19
+    assert len([v for v in tree.vendors.values() if not v.relay])==22
     assert {v.relay for v in tree.vendors.values() if v.relay}==set(tree.relays)
     assert tree.items["wpn_halvard_hv7"].base_price==340
     assert tree.items["wpn_halvard_hv7"].weapon.ammo=="ammo_5x"
@@ -42,9 +42,9 @@ def test_s25_cannot_ship_a_zone_without_activating_its_deferred_commerce(repo_ro
             assert vendor.object_id, f"S25 must anchor {vendor.id}"
             assert any(o.id==vendor.object_id and o.params.get("vendor")==vendor.id
                        for o in tree.zones[vendor.zone].meta.objects)
-    halls=("spire-atrium","vatside-clinics","tramyard-depots","core-precinct",
+    halls=("spire-mezzanine","vatside-clinics","tramyard-depots","core-precinct",
            "sink-terraces","oldworks-drop","chapel-nave","scour-landing")
-    for zone in (*halls,"tramyard-market","core-tram-hub"):
+    for zone in (*halls,"spire-atrium","tramyard-market","core-tram-hub"):
         if zone in tree.zones:
             assert any(o.kind=="bank" for o in tree.zones[zone].meta.objects), f"S25 must place the bank in {zone}"
             if zone in halls:

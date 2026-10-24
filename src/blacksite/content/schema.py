@@ -142,7 +142,7 @@ class Emote:
 
 
 ExitKind = Literal["street", "door", "tram", "ladder", "lift", "gate", "cable"]
-RequirementKind = Literal["pass", "key", "faction", "member", "story"]
+RequirementKind = Literal["pass", "key", "faction", "member", "story", "open"]
 
 
 @dataclass(frozen=True)
@@ -151,6 +151,7 @@ class Requirement:
     ref: str
     """Item id, faction id, or server-owned story route permission."""
     standing: int | None = None
+    object: str | None = None  # Local latch for an open-state credential.
 
 
 @dataclass(frozen=True)

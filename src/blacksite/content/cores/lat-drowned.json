@@ -9,8 +9,12 @@
   "hardware": [
     {
       "zone": "under-drowned",
-      "tile": null,
-      "label": "Drowned hardware"
+      "tile": [
+        31,
+        29
+      ],
+      "label": "Drowned hardware",
+      "object_id": "drowned-hardware"
     }
   ],
   "entry": "entry",
@@ -104,7 +108,8 @@
           "reset_seconds": 300,
           "scope": "public",
           "permission": "public",
-          "safety_policy": "none"
+          "safety_policy": "none",
+          "warning_seconds": 5
         }
       ]
     },

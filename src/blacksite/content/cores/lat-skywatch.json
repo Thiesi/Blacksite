@@ -9,8 +9,12 @@
   "hardware": [
     {
       "zone": "spire-shaft-head",
-      "tile": null,
-      "label": "Skywatch hardware"
+      "tile": [
+        52,
+        25
+      ],
+      "label": "Skywatch hardware",
+      "object_id": "skywatch-hardware"
     }
   ],
   "entry": "entry",

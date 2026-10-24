@@ -746,6 +746,887 @@
         "accuracy": 60,
         "damage_type": "kinetic"
       }
+    },
+    {
+      "id": "npc-halvard-staff",
+      "name": "Halvard staff",
+      "faction": "halvard",
+      "grade": 1,
+      "attributes": {
+        "frame": 20,
+        "nerve": 20,
+        "cortex": 10,
+        "resonance": 5,
+        "vitals": 20
+      },
+      "behaviours": [
+        {
+          "kind": "talker",
+          "params": {
+            "anchor": true
+          }
+        }
+      ],
+      "xp": 0
+    },
+    {
+      "id": "npc-freight-crew",
+      "name": "Freight crew",
+      "faction": "kestrel",
+      "grade": 1,
+      "attributes": {
+        "frame": 20,
+        "nerve": 20,
+        "cortex": 10,
+        "resonance": 5,
+        "vitals": 20
+      },
+      "behaviours": [
+        {
+          "kind": "wander",
+          "params": {}
+        }
+      ],
+      "xp": 0,
+      "loot": [
+        {
+          "item": "con_kestrel_ration",
+          "chance": 1,
+          "count": 1
+        }
+      ]
+    },
+    {
+      "id": "npc-market-crowd",
+      "name": "Market visitor",
+      "faction": null,
+      "grade": 1,
+      "attributes": {
+        "frame": 20,
+        "nerve": 20,
+        "cortex": 10,
+        "resonance": 5,
+        "vitals": 20
+      },
+      "behaviours": [
+        {
+          "kind": "wander",
+          "params": {}
+        }
+      ],
+      "xp": 0,
+      "loot": [
+        {
+          "item": "con_kestrel_ration",
+          "chance": 1,
+          "count": 1
+        }
+      ]
+    },
+    {
+      "id": "npc-rim-resident",
+      "name": "Rim resident",
+      "faction": null,
+      "grade": 1,
+      "attributes": {
+        "frame": 20,
+        "nerve": 20,
+        "cortex": 10,
+        "resonance": 5,
+        "vitals": 20
+      },
+      "behaviours": [
+        {
+          "kind": "wander",
+          "params": {}
+        }
+      ],
+      "xp": 0,
+      "loot": [
+        {
+          "item": "con_kestrel_ration",
+          "chance": 1,
+          "count": 1
+        }
+      ]
+    },
+    {
+      "id": "npc-choir-pilgrim",
+      "name": "Choir pilgrim",
+      "faction": "choir",
+      "grade": 1,
+      "attributes": {
+        "frame": 20,
+        "nerve": 20,
+        "cortex": 10,
+        "resonance": 5,
+        "vitals": 20
+      },
+      "behaviours": [
+        {
+          "kind": "wander",
+          "params": {}
+        }
+      ],
+      "xp": 0,
+      "loot": [
+        {
+          "item": "con_kestrel_ration",
+          "chance": 1,
+          "count": 1
+        }
+      ]
+    },
+    {
+      "id": "npc-chorister",
+      "name": "Chorister",
+      "faction": "choir",
+      "grade": 1,
+      "attributes": {
+        "frame": 20,
+        "nerve": 20,
+        "cortex": 10,
+        "resonance": 5,
+        "vitals": 20
+      },
+      "behaviours": [
+        {
+          "kind": "talker",
+          "params": {
+            "anchor": true
+          }
+        }
+      ],
+      "xp": 0
+    },
+    {
+      "id": "npc-squatter",
+      "name": "Old Works squatter",
+      "faction": "unmoored",
+      "grade": 1,
+      "attributes": {
+        "frame": 20,
+        "nerve": 20,
+        "cortex": 10,
+        "resonance": 5,
+        "vitals": 20
+      },
+      "behaviours": [
+        {
+          "kind": "wander",
+          "params": {}
+        }
+      ],
+      "xp": 0,
+      "loot": [
+        {
+          "item": "con_kestrel_ration",
+          "chance": 1,
+          "count": 1
+        }
+      ]
+    },
+    {
+      "id": "npc-road-crew",
+      "name": "Kestrel road crew",
+      "faction": "kestrel",
+      "grade": 1,
+      "attributes": {
+        "frame": 20,
+        "nerve": 20,
+        "cortex": 10,
+        "resonance": 5,
+        "vitals": 20
+      },
+      "behaviours": [
+        {
+          "kind": "wander",
+          "params": {}
+        }
+      ],
+      "xp": 0,
+      "loot": [
+        {
+          "item": "con_kestrel_ration",
+          "chance": 1,
+          "count": 1
+        }
+      ]
+    },
+    {
+      "id": "npc-halvard-guard",
+      "attributes": {
+        "frame": 20,
+        "nerve": 20,
+        "cortex": 10,
+        "resonance": 5,
+        "vitals": 20
+      },
+      "xp": 20,
+      "behaviours": [
+        {
+          "kind": "guard",
+          "params": {}
+        }
+      ],
+      "loot": [],
+      "name": "Halvard security",
+      "faction": "halvard",
+      "grade": 3,
+      "weapon": "wpn_halvard_hv7",
+      "armour": "arm_kestrel_vest"
+    },
+    {
+      "id": "npc-halvard-heavy",
+      "attributes": {
+        "frame": 20,
+        "nerve": 20,
+        "cortex": 10,
+        "resonance": 5,
+        "vitals": 20
+      },
+      "xp": 20,
+      "behaviours": [
+        {
+          "kind": "guard",
+          "params": {}
+        }
+      ],
+      "loot": [],
+      "name": "Halvard heavy security",
+      "faction": "halvard",
+      "grade": 8,
+      "health": 140,
+      "weapon": "wpn_halvard_hv9",
+      "armour": "arm_halvard_guard_suit"
+    },
+    {
+      "id": "npc-kestrel-guard",
+      "attributes": {
+        "frame": 20,
+        "nerve": 20,
+        "cortex": 10,
+        "resonance": 5,
+        "vitals": 20
+      },
+      "xp": 20,
+      "behaviours": [
+        {
+          "kind": "guard",
+          "params": {}
+        }
+      ],
+      "loot": [],
+      "name": "Kestrel security",
+      "faction": "kestrel",
+      "grade": 2,
+      "weapon": "wpn_kestrel_sidearm",
+      "armour": "arm_kestrel_vest"
+    },
+    {
+      "id": "npc-choir-guard",
+      "attributes": {
+        "frame": 20,
+        "nerve": 20,
+        "cortex": 10,
+        "resonance": 5,
+        "vitals": 20
+      },
+      "xp": 20,
+      "behaviours": [
+        {
+          "kind": "guard",
+          "params": {}
+        }
+      ],
+      "loot": [],
+      "name": "Choir warden",
+      "faction": "choir",
+      "grade": 3,
+      "weapon": "wpn_chapel_tuning_fork",
+      "armour": "arm_chapel_vestment"
+    },
+    {
+      "id": "npc-unmoored-guard",
+      "attributes": {
+        "frame": 20,
+        "nerve": 20,
+        "cortex": 10,
+        "resonance": 5,
+        "vitals": 20
+      },
+      "xp": 20,
+      "behaviours": [
+        {
+          "kind": "guard",
+          "params": {}
+        }
+      ],
+      "loot": [],
+      "name": "Unmoored runner",
+      "faction": "unmoored",
+      "grade": 3,
+      "weapon": "wpn_ow_arcpen",
+      "armour": "arm_sable_leathers"
+    },
+    {
+      "id": "npc-ferrymen-guard",
+      "attributes": {
+        "frame": 20,
+        "nerve": 20,
+        "cortex": 10,
+        "resonance": 5,
+        "vitals": 20
+      },
+      "xp": 20,
+      "behaviours": [
+        {
+          "kind": "guard",
+          "params": {}
+        }
+      ],
+      "loot": [],
+      "name": "Ferrymen guard",
+      "faction": "ferrymen",
+      "grade": 4,
+      "weapon": "wpn_ferry_slugthrower",
+      "armour": "arm_ferry_scrap_plate"
+    },
+    {
+      "id": "npc-scavenger-raider",
+      "attributes": {
+        "frame": 20,
+        "nerve": 20,
+        "cortex": 10,
+        "resonance": 5,
+        "vitals": 20
+      },
+      "xp": 20,
+      "behaviours": [
+        {
+          "kind": "hunt",
+          "params": {
+            "hostile_all": true
+          }
+        }
+      ],
+      "loot": [],
+      "name": "Scavenger raider",
+      "grade": 6,
+      "health": 100,
+      "weapon": "wpn_kestrel_sidearm",
+      "armour": "arm_sable_leathers"
+    },
+    {
+      "id": "npc-dog",
+      "attributes": {
+        "frame": 20,
+        "nerve": 20,
+        "cortex": 10,
+        "resonance": 5,
+        "vitals": 20
+      },
+      "xp": 20,
+      "behaviours": [
+        {
+          "kind": "hunt",
+          "params": {
+            "hostile_all": true
+          }
+        }
+      ],
+      "loot": [],
+      "name": "Feral dog",
+      "grade": 1,
+      "health": 30,
+      "attack": {
+        "damage": 6,
+        "cooldown": 1.5,
+        "accuracy": 60,
+        "range": 1,
+        "damage_type": "kinetic"
+      }
+    },
+    {
+      "id": "npc-feral",
+      "attributes": {
+        "frame": 20,
+        "nerve": 20,
+        "cortex": 10,
+        "resonance": 5,
+        "vitals": 20
+      },
+      "xp": 20,
+      "behaviours": [
+        {
+          "kind": "hunt",
+          "params": {
+            "hostile_all": true
+          }
+        }
+      ],
+      "loot": [],
+      "name": "Feral hunter",
+      "grade": 5,
+      "health": 75,
+      "attack": {
+        "damage": 10,
+        "cooldown": 1.5,
+        "accuracy": 60,
+        "range": 1,
+        "damage_type": "kinetic"
+      }
+    },
+    {
+      "id": "npc-water-hunter",
+      "attributes": {
+        "frame": 20,
+        "nerve": 20,
+        "cortex": 10,
+        "resonance": 5,
+        "vitals": 20
+      },
+      "xp": 20,
+      "behaviours": [
+        {
+          "kind": "hunt",
+          "params": {
+            "hostile_all": true
+          }
+        }
+      ],
+      "loot": [],
+      "name": "Water hunter",
+      "grade": 7,
+      "health": 90,
+      "attack": {
+        "damage": 12,
+        "cooldown": 1.5,
+        "accuracy": 65,
+        "range": 1,
+        "damage_type": "kinetic"
+      }
+    },
+    {
+      "id": "npc-blind-swarm",
+      "attributes": {
+        "frame": 20,
+        "nerve": 20,
+        "cortex": 10,
+        "resonance": 5,
+        "vitals": 20
+      },
+      "xp": 20,
+      "behaviours": [
+        {
+          "kind": "hunt",
+          "params": {
+            "hostile_all": true
+          }
+        }
+      ],
+      "loot": [],
+      "name": "Blind swarm",
+      "grade": 6,
+      "health": 55,
+      "attack": {
+        "damage": 8,
+        "cooldown": 1,
+        "accuracy": 60,
+        "range": 1,
+        "damage_type": "chemical"
+      }
+    },
+    {
+      "id": "npc-apex",
+      "attributes": {
+        "frame": 20,
+        "nerve": 20,
+        "cortex": 10,
+        "resonance": 5,
+        "vitals": 20
+      },
+      "xp": 20,
+      "behaviours": [
+        {
+          "kind": "hunt",
+          "params": {
+            "hostile_all": true
+          }
+        }
+      ],
+      "loot": [],
+      "name": "Scour apex hunter",
+      "grade": 16,
+      "health": 180,
+      "attack": {
+        "damage": 20,
+        "cooldown": 1.5,
+        "accuracy": 70,
+        "range": 1,
+        "damage_type": "kinetic"
+      }
+    },
+    {
+      "id": "npc-old-maintenance",
+      "attributes": {
+        "frame": 20,
+        "nerve": 20,
+        "cortex": 10,
+        "resonance": 5,
+        "vitals": 20
+      },
+      "xp": 20,
+      "behaviours": [
+        {
+          "kind": "guard",
+          "params": {
+            "hostile_all": true
+          }
+        }
+      ],
+      "loot": [],
+      "name": "Blacksite maintenance drone",
+      "grade": 10,
+      "health": 100,
+      "attack": {
+        "damage": 12,
+        "cooldown": 1.5,
+        "accuracy": 65,
+        "range": 6,
+        "damage_type": "energy"
+      }
+    },
+    {
+      "id": "npc-custodian-recovery",
+      "attributes": {
+        "frame": 20,
+        "nerve": 20,
+        "cortex": 10,
+        "resonance": 5,
+        "vitals": 20
+      },
+      "xp": 20,
+      "behaviours": [
+        {
+          "kind": "guard",
+          "params": {
+            "hostile_all": true
+          }
+        }
+      ],
+      "loot": [],
+      "name": "Custodian recovery drone",
+      "grade": 20,
+      "health": 200,
+      "attack": {
+        "damage": 20,
+        "cooldown": 1.5,
+        "accuracy": 70,
+        "range": 8,
+        "damage_type": "energy"
+      }
+    },
+    {
+      "id": "npc-halvard-recovery",
+      "attributes": {
+        "frame": 20,
+        "nerve": 20,
+        "cortex": 10,
+        "resonance": 5,
+        "vitals": 20
+      },
+      "xp": 20,
+      "behaviours": [
+        {
+          "kind": "guard",
+          "params": {
+            "hostile_all": true
+          }
+        }
+      ],
+      "loot": [],
+      "name": "Halvard recovery guard",
+      "faction": "halvard",
+      "grade": 8,
+      "health": 140,
+      "weapon": "wpn_halvard_hv9",
+      "armour": "arm_halvard_guard_suit"
+    },
+    {
+      "id": "npc-halvard-guard-spire-atrium",
+      "attributes": {
+        "frame": 20,
+        "nerve": 20,
+        "cortex": 10,
+        "resonance": 5,
+        "vitals": 20
+      },
+      "xp": 20,
+      "behaviours": [
+        {
+          "kind": "patrol",
+          "params": {
+            "waypoints": [
+              [
+                15,
+                8
+              ],
+              [
+                23,
+                8
+              ]
+            ],
+            "bounce": true
+          }
+        },
+        {
+          "kind": "guard",
+          "params": {}
+        }
+      ],
+      "loot": [],
+      "name": "Halvard security",
+      "faction": "halvard",
+      "grade": 3,
+      "weapon": "wpn_halvard_hv7",
+      "armour": "arm_kestrel_vest"
+    },
+    {
+      "id": "npc-halvard-guard-spire-mezzanine",
+      "attributes": {
+        "frame": 20,
+        "nerve": 20,
+        "cortex": 10,
+        "resonance": 5,
+        "vitals": 20
+      },
+      "xp": 20,
+      "behaviours": [
+        {
+          "kind": "patrol",
+          "params": {
+            "waypoints": [
+              [
+                13,
+                8
+              ],
+              [
+                21,
+                9
+              ]
+            ],
+            "bounce": true
+          }
+        },
+        {
+          "kind": "guard",
+          "params": {}
+        }
+      ],
+      "loot": [],
+      "name": "Halvard security",
+      "faction": "halvard",
+      "grade": 3,
+      "weapon": "wpn_halvard_hv7",
+      "armour": "arm_kestrel_vest"
+    },
+    {
+      "id": "npc-halvard-heavy-spire-shaft-head",
+      "attributes": {
+        "frame": 20,
+        "nerve": 20,
+        "cortex": 10,
+        "resonance": 5,
+        "vitals": 20
+      },
+      "xp": 20,
+      "behaviours": [
+        {
+          "kind": "patrol",
+          "params": {
+            "waypoints": [
+              [
+                15,
+                25
+              ],
+              [
+                23,
+                25
+              ]
+            ],
+            "bounce": true
+          }
+        },
+        {
+          "kind": "guard",
+          "params": {}
+        }
+      ],
+      "loot": [],
+      "name": "Halvard heavy security",
+      "faction": "halvard",
+      "grade": 8,
+      "health": 140,
+      "weapon": "wpn_halvard_hv9",
+      "armour": "arm_halvard_guard_suit"
+    },
+    {
+      "id": "npc-halvard-guard-tramyard-wall-gate",
+      "attributes": {
+        "frame": 20,
+        "nerve": 20,
+        "cortex": 10,
+        "resonance": 5,
+        "vitals": 20
+      },
+      "xp": 20,
+      "behaviours": [
+        {
+          "kind": "patrol",
+          "params": {
+            "waypoints": [
+              [
+                50,
+                30
+              ],
+              [
+                58,
+                30
+              ]
+            ],
+            "bounce": true
+          }
+        },
+        {
+          "kind": "guard",
+          "params": {}
+        }
+      ],
+      "loot": [],
+      "name": "Halvard security",
+      "faction": "halvard",
+      "grade": 3,
+      "weapon": "wpn_halvard_hv7",
+      "armour": "arm_kestrel_vest"
+    },
+    {
+      "id": "npc-halvard-guard-scour-ring-1",
+      "attributes": {
+        "frame": 20,
+        "nerve": 20,
+        "cortex": 10,
+        "resonance": 5,
+        "vitals": 20
+      },
+      "xp": 20,
+      "behaviours": [
+        {
+          "kind": "patrol",
+          "params": {
+            "waypoints": [
+              [
+                100,
+                25
+              ],
+              [
+                108,
+                25
+              ]
+            ],
+            "bounce": true
+          }
+        },
+        {
+          "kind": "guard",
+          "params": {}
+        }
+      ],
+      "loot": [],
+      "name": "Halvard security",
+      "faction": "halvard",
+      "grade": 3,
+      "weapon": "wpn_halvard_hv7",
+      "armour": "arm_kestrel_vest"
+    },
+    {
+      "id": "npc-halvard-heavy-scour-ring-3",
+      "attributes": {
+        "frame": 20,
+        "nerve": 20,
+        "cortex": 10,
+        "resonance": 5,
+        "vitals": 20
+      },
+      "xp": 20,
+      "behaviours": [
+        {
+          "kind": "patrol",
+          "params": {
+            "waypoints": [
+              [
+                140,
+                30
+              ],
+              [
+                148,
+                30
+              ]
+            ],
+            "bounce": true
+          }
+        },
+        {
+          "kind": "guard",
+          "params": {}
+        }
+      ],
+      "loot": [],
+      "name": "Halvard heavy security",
+      "faction": "halvard",
+      "grade": 8,
+      "health": 140,
+      "weapon": "wpn_halvard_hv9",
+      "armour": "arm_halvard_guard_suit"
+    },
+    {
+      "id": "npc-halvard-guard-scour-ring-2",
+      "attributes": {
+        "frame": 20,
+        "nerve": 20,
+        "cortex": 10,
+        "resonance": 5,
+        "vitals": 20
+      },
+      "xp": 20,
+      "behaviours": [
+        {
+          "kind": "patrol",
+          "params": {
+            "waypoints": [
+              [
+                129,
+                30
+              ],
+              [
+                137,
+                30
+              ]
+            ],
+            "bounce": true
+          }
+        },
+        {
+          "kind": "guard",
+          "params": {}
+        }
+      ],
+      "loot": [],
+      "name": "Halvard security",
+      "faction": "halvard",
+      "grade": 3,
+      "weapon": "wpn_halvard_hv7",
+      "armour": "arm_kestrel_vest"
     }
   ]
 }

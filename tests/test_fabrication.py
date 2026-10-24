@@ -20,7 +20,13 @@ from tests.harness import HeadlessServer
 
 @pytest.fixture(scope="module")
 def content():
-    return load_content(Path(__file__).parents[1]/"src/blacksite/content")
+    tree = load_content(Path(__file__).parents[1]/"src/blacksite/content")
+    # S17 transaction fixtures own their fields and deadlines. The real
+    # four-ring startup/respawn is tested on the commissioned city.
+    tree.zones = {zid: replace(zone, meta=replace(zone.meta,
+        objects=tuple(obj for obj in zone.meta.objects if obj.kind != 'salvage_field')))
+        for zid, zone in tree.zones.items()}
+    return tree
 
 
 @pytest.fixture

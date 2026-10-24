@@ -129,6 +129,24 @@
       "colour": "hardware",
       "passable": true,
       "interaction": "hardware"
+    },
+    {
+      "id": "gantry-hazard",
+      "char": "x",
+      "glyph": "hazard",
+      "colour": "hazard",
+      "passable": true,
+      "hazard": {
+        "damage_per_second": 5,
+        "type": "kinetic"
+      }
+    },
+    {
+      "id": "convoy-road",
+      "char": "·",
+      "glyph": "cover-1",
+      "colour": "floor",
+      "passable": true
     }
   ]
 }

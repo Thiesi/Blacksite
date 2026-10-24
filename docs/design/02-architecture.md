@@ -407,6 +407,20 @@ Chronicle, help.
 - Determinism: each zone instance has its own seeded RNG; tests can run
   a zone forward with scripted inputs and assert outcomes.
 
+Geometry admission checks retain actor entry permissions, including
+private-room boundaries. Housing supplies each occupant's public
+doorstep as the escape origin, because the existing apartment action
+lets that occupant leave without opening the physical private door.
+The actual occupied tile must still be passable, and no layout may
+introduce a hazard into its safe room. A tenant at home must not freeze
+unrelated public controls, nor make a private floor a public bypass.
+
+Admission/reconnect preserves a valid saved position. If an expired
+opening makes it invalid, `World.free_tile` searches the public spawn's
+reachable component and chooses the nearest free, non-hazardous tile.
+Every candidate respects actor entry permissions. The fallback cannot
+select an isolated room or an unauthorized apartment behind a wall.
+
 ### 6.2 Persistence
 
 The character subsystem loads pure snapshots at boot and returns a write

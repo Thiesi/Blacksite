@@ -9,8 +9,12 @@
   "hardware": [
     {
       "zone": "under-outworks",
-      "tile": null,
-      "label": "Outworks Relay hardware"
+      "tile": [
+        89,
+        23
+      ],
+      "label": "Outworks Relay hardware",
+      "object_id": "relay-outworks-hardware"
     }
   ],
   "entry": "entry",

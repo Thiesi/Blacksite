@@ -42,9 +42,9 @@ Deliver, for each zone, `content/zones/<id>.map` and
 | `under-service` | 120 × 50 | open | exits to `vatside-vat-row` (ladder), `chapel-towers` (drain stair), `under-drowned`, `under-caverns` (breach); two orphan terminals; Unmoored dead drop object; spawners: rogue maintenance drones (hunt), feral dogs (hunt) |
 | `under-drowned` | 100 × 60 | open | water tiles over ≥ 30 % of the map; exits `under-service`, `under-outworks` (sealed bulkhead, requirement: Undercity key); hardware terminal for the Drowned core (tier 3); Ferrymen corpse object (one-time map); spawners: water hunters from water tiles |
 | `under-caverns` | 150 × 80 | open | exits `under-service`, `sink-floor` (Sump grate), `under-outworks` (fissure); **Cavern Relay** with orphan terminal; Ferrymen way-station vendor; spawners: feral things (several templates), blind swarms |
-| `under-outworks` | 120 × 70 | open | exits `under-drowned`, `under-caverns`, `under-shaft-foot` (inner door); **Outworks Relay**; hardware terminal for the Outworks core (tier 4); Halvard survey markers (lore objects); spawners: Blacksite maintenance drones (guard) |
+| `under-outworks` | 120 × 70 | open | exits `under-drowned`, `under-caverns`, `under-shaft-foot` (inner door); **Outworks Relay**; hardware terminal for the Outworks core (tier 5); Halvard survey markers (lore objects); spawners: Blacksite maintenance drones (guard) |
 | `under-shaft-foot` | 60 × 60 | open | exit `under-outworks`, `spire-shaft-head` (shaft, requirement: story); hardware terminal for the Shaft core (tier 5, shared with Shaft Head, the one two-location core); the **season door** object (`descent_console` kind with a `season_door` param); spawners: maintenance drones (guard, many) plus an Exhale-conditioned spawner |
-| `scour-landing` | 60 × 30 | pocket | exits `scour-ring-1` (causeway), `scour-ring-2` (Ferrymen track), `tramyard-wall-gate` per gazetteer; Ferrymen terminal (Landing core, tier 2); anchors: Anouk, quartermaster, contract handler, salvage buyer; spawners: Ferrymen guards (warn only within the safe pocket; perimeter aggro outside) |
+| `scour-landing` | 60 × 30 | pocket | exits `scour-ring-1` (causeway), `scour-ring-2` (Ferrymen track); Ferrymen terminal (Landing core, tier 2); anchors: Anouk, quartermaster, contract handler, salvage buyer; spawners: Ferrymen guards (warn only within the safe pocket; perimeter aggro outside) |
 | `scour-ring-1` | 160 × 80 | open | exits `tramyard-wall-gate`, `scour-landing`, `scour-ring-2`; **Mile Relay**; the convoy road as a marked tile line with waypoint objects; spawners: Halvard patrols, Kestrel road crews, scavengers; Ring-fall region |
 | `scour-ring-2` | 180 × 90 | open | exits `scour-ring-1`, `scour-landing`, `scour-ring-3`; **Beacon Relay**; Ferrymen way-camp with light objects; spawners: Ferrymen salvage crews (neutral), wildlife; Ring-fall region |
 | `scour-ring-3` | 200 × 100 | open | exits `scour-ring-2`, `scour-ring-4` (bearing, no road); **Crash Relay** inside the largest wreck; wreck-field landmarks as cover clusters; spawners: wildlife packs, scavenger gangs, Halvard recovery; Ring-fall region |
@@ -74,8 +74,10 @@ Also:
 
 - Engine behaviour of relays (S21), salvage nodes (S17), spawners and
   behaviours (S11), the season door (S26), Blacksite Level 1 (S26).
-- The ten initial Core, Vatside, Sodium Row and Terraces hub maps (S08).
-  Sector and core files (S13/S14).
+- Redesigning the ten initial hub maps. Add their real district exits,
+  Terraces' 24 apartments, and the necessary service bindings while
+  preserving existing public anchors. Commission sector/core bindings
+  and the residence register; do not redesign their existing graphs.
 - ANSI vignettes for districts (S33).
 
 ## Data and content
@@ -101,7 +103,29 @@ inventing credentials or admitting every friendly nonmember. The Shaft
 cage stays closed until S26 supplies committed finale authorization.
 No new protocol frame or client-side permission calculation is added.
 Other mechanics remain the existing engines; this does not implement a
-season or change balance numbers.
+season. Missing NPC profiles use the initial game 5.5 balance table and
+must be assessed on real routes, rather than claimed as tuned already.
+
+The optional Drowned bulkhead accepts a carried key or its local
+core-opened latch state. Ordinary Outworks-to-Shaft-Foot access stays
+free of event/key prerequisites, following the higher-level game 12/13
+rules. The lower Gazetteer consumption rule is corrected accordingly.
+All Undercity base sight uses game 5.2's five tiles before carried-light
+benefits. Explicit Interact can use a physically found hidden exit;
+hidden travel never triggers merely by walking across its tile.
+
+Commissioning also exposed three practical engine gaps: real walled
+apartments must not freeze public geometry controls; salvage must not
+spawn on a permanent hazard that interrupts every harvest; and a saved
+position inside an expired passage must recover to reachable public
+ground without entering a private room. The bounded fixes implement
+game 5.2/8.4/8.7, with actual-map regressions. They add no new gameplay
+system. The Shaft Relay's `requires_level` gate remains owned by S26;
+16 sites exist physically, with 15 available before that level opens.
+
+The Mezzanine's loan terminal and Far mast keep the normal network
+gates in Lattice 2. Physical admission does not grant Citadel access,
+and the Far mast does not bypass Static's Ring-fall requirement.
 
 ## Tests
 
@@ -110,7 +134,7 @@ season or change balance numbers.
 - `test_every_exit_resolves_both_ways` (each exit has a return exit in
   the target zone unless the gazetteer says one-way)
 - `test_every_relay_has_control_terminal_and_core_hardware`
-- `test_scour_rings_have_salvage_regions_with_rising_grades`
+- `test_scour_fields_use_canonical_outward_rising_grade_weights`
 - `test_undercity_sight_radius_is_5_without_light_objects_nearby`
 - `test_walkability_from_each_entry_exit_to_each_other_exit` (BFS over
   passable tiles)
@@ -132,8 +156,9 @@ season or change balance numbers.
 3. From `tramyard-wall-gate` walk `scour-ring-1` → `-2` → `-3` → `-4`,
    touching each relay's terminal (interaction shows its name) and the
    Far Relay's orphan terminal.
-4. `blacksite admin event force ringfall scour-ring-3`: salvage nodes
-   appear inside the ring's regions only.
+4. `blacksite admin event force ring-fall scour-ring-3`: extra salvage
+   appears in that ring's field only. Its saved impact footprint
+   confines the impact warning and recovery encounter.
 5. Open the zone map overview (`M`) in `under-caverns` at 132×50: the
    overview scales to its rectangle and the detailed map pans without
    clipping; a 150x80 map is not shown tile-for-tile on that terminal.
@@ -365,3 +390,58 @@ reachable hostile-allowed detour on a contested public objective is not
 an escort-only permission boundary. Change the bounded rule only if
 measured play warrants it; preserve this concern in S26 human pacing.
 <!-- s24-review-policy:end -->
+
+<!-- s25-city-decisions:start -->
+### S25 commissioning decisions (in progress)
+
+Reference: [S25 #25](https://github.com/Thiesi/Blacksite/issues/25),
+[PR #38](https://github.com/Thiesi/Blacksite/pull/38) and
+[platform #56](https://github.com/Thiesi/Blacksite/issues/56).
+
+The draft uses game 5.6's carried key OR exact local open-latch state for
+the optional Drowned bulkhead. Ordinary Outworks/Shaft Foot travel is
+free; a key is retained, not consumed. Hidden physical exits allow
+explicit Interact on their tile and never auto-travel on a walk. All
+Undercity base sight is five before carried light. Whole-zone `pocket`
+safety protects clinics, just as an authored pocket does.
+
+The existing Terraces sector expands from 36 to 48 cells: a public
+register wing supplies 24 distinct apartment addresses without reusing
+entry/uplink cells or changing existing hidden/gated routes. Halvard's
+member hall, vat and counter are in the Mezzanine; public recruitment,
+care and banking remain in the Atrium. Three secondary ration/flare and
+salvage counters bring ordinary vendors to 22; only Landing retains its
+20% salvage premium. New NPC profiles and gantry damage are documented
+initial values in game 5.5/6.4 and must pass actual-city pacing.
+
+S25 must verify the actual 24-unit rental pool, 22 ordinary vendors, all
+16 relays, clinic safety, real earnings and every service allocation in
+the populated city. Draft validation is not native or human acceptance.
+
+These are in-progress decisions, not a claim of merge, native acceptance
+or completion of the Shaft Foot/Far Ring and broader human pacing gates.
+The real walled apartments also exposed a geometry-admission bug:
+a closed private door must not freeze unrelated public controls.
+Housing supplies the occupant's explicit Interact-to-leave doorstep as
+the escape origin; occupied tiles remain passable and private entry
+permissions still apply. Retain that proof under tenants, visitors,
+restart and overlapping effects. The Lobby's five inert private-door
+props are replaced by the real 24-unit Block Street pool.
+
+S25 places `ferrymen-corpse`, `choir-shrine`, `unmoored-dead-drop` and the
+empty Far Ring artifact sites as physical source hooks. S27 owns the
+corpse's one-time personal map and the shrine's daily claim receipt;
+S26 owns season artifact activation. A prop label alone grants no reward.
+Permanent hazards are excluded from salvage-node placement because
+incoming damage interrupts the harvest channel. If an optional opening
+closes over a saved position, reconnect recovers to the nearest free,
+non-hazardous tile in the public spawn component, respecting housing
+entry permissions. Include both in actual-city restart and event tests.
+
+Mezzanine physical admission does not grant a Citadel network credential;
+its loan terminal keeps the normal network gate. The Far mast uses the
+Scour sector and cannot bypass Static's Ring-fall gate. All 16 relay
+sites are mapped, but Shaft Relay retains `requires_level`; S26 must bind
+its availability to the committed level phase, alongside the story-route
+providers. Mapping never pretends that this seasonal gate is open.
+<!-- s25-city-decisions:end -->

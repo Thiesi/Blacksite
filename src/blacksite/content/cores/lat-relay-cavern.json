@@ -9,8 +9,12 @@
   "hardware": [
     {
       "zone": "under-caverns",
-      "tile": null,
-      "label": "Cavern Relay hardware"
+      "tile": [
+        139,
+        35
+      ],
+      "label": "Cavern Relay hardware",
+      "object_id": "relay-cavern-hardware"
     }
   ],
   "entry": "entry",

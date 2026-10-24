@@ -35,10 +35,10 @@ def test_game_7_7_exact_sixteen_relay_schedule_and_sources():
     assert {rid for rid,r in tree.relays.items() if r.requires_level}=={'shaft'}
 
 
-def test_game_7_7_active_relays_resolve_and_future_entries_stay_unavailable():
+def test_game_7_7_all_commissioned_relays_resolve_to_actual_sources():
     tree=load_content(Path(__file__).parents[1]/'src/blacksite/content')
     assert not validate(tree)
-    assert {rid for rid in tree.relays if tree.active('relays',rid)}=={'cold-chain','block'}
+    assert {rid for rid in tree.relays if tree.active('relays',rid)} == set(tree.relays)
     for rid,relay in tree.relays.items():
         if tree.active('relays',rid):
             assert relay.zone in tree.zones and tree.active('cores',relay.core)

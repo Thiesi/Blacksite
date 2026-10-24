@@ -1,7 +1,7 @@
 {
   "schema": 1,
   "id": "s25-commerce",
-  "status": "authoring",
+  "status": "active",
   "depends": [],
   "members": {
     "vendors": [
@@ -18,7 +18,10 @@
       "chapel-almoner",
       "chapel-foundry",
       "landing-trade",
-      "ferrys-own"
+      "ferrys-own",
+      "kestrel-surplus",
+      "ferrymen-waystation",
+      "ferrymen-market-buyer"
     ]
   }
 }

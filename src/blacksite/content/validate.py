@@ -474,6 +474,10 @@ class _Validator:
                 if requirement.kind == 'story':
                     if not re.fullmatch(r'[a-z0-9]+(-[a-z0-9]+)*', requirement.ref):
                         self.report(*owner, f'{label}: story permission must be a slug', ex.id)
+                elif requirement.kind == 'open':
+                    latch = self.object_at(requirement.ref, requirement.object or '')
+                    if requirement.ref != zone.id or latch is None or latch.kind not in ('door', 'gate', 'shutter'):
+                        self.report(*owner, f'{label}: open credential needs a local physical latch', ex.id)
                 else:
                     kind = 'factions' if requirement.kind in ('faction', 'member') else 'items'
                     self.ref(kind, requirement.ref, owner, f'{label}: requirement', ex.id)
@@ -1189,7 +1193,7 @@ class _Validator:
                     if not self.t.active("zones",zid):
                         continue
                     for obj in zone.meta.objects:
-                        if obj.params.get("vendor") == vid and zone.meta.safety != "safe" and not any(
+                        if obj.params.get("vendor") == vid and zone.meta.safety not in ("safe", "pocket") and not any(
                                 pocket.contains(obj.tile) for pocket in zone.meta.pockets):
                             self.report(*owner,"Sablier clinic requires an existing safe pocket",obj.id)
 

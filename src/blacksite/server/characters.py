@@ -112,6 +112,8 @@ class Characters:
         player = self.players[session.player_id]
         return {"standing": player.standing, "faction": player.faction,
                 "story": self.route_permissions(player),
+                "zone": player.zone,
+                "open_objects": frozenset(key for key, obj in self.world.zones[player.zone].objects.items() if obj.open),
                 "items": [self.item_templates.get(iid, iid) for iid in player.inventory]}
 
     def identity(self, user: str) -> dict[str, Any]:

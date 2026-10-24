@@ -129,7 +129,8 @@ class NativeProbe:
         else:
             print(message,flush=True)
 
-    async def open(self, width: int, height: int, label: str, archetype: int = 0, sixteen: bool = False) -> Connection:
+    async def open(self, width: int, height: int, label: str, archetype: int = 0,
+                   sixteen: bool = False, card: str | None = None) -> Connection:
         user=create_user(self.db,f"S10{label}{width}",password="LocalProbe-S10",user_level=10)
         self.accounts.append((user,sixteen))
         reader,writer=await asyncio.open_connection("127.0.0.1",self.node.port)
@@ -162,7 +163,18 @@ class NativeProbe:
         await caller.write(b"\r");await wait(lambda:"Name (Enter keeps default):" in caller.screen.screen_text())
         await caller.write(f"{label}界{width}".encode()+b"\r")
         await wait(lambda:"Briefing" in caller.screen.screen_text());await caller.write(b"s")
-        await wait(lambda:"Recruiter cards" in caller.screen.screen_text());await caller.write(b"\x1b")
+        await wait(lambda:"Recruiter cards" in caller.screen.screen_text())
+        if card is None:
+            await caller.write(b"\x1b")
+        else:
+            selected = list(self.game.content.wake_cards).index(card)
+            while self.game.wakes[session.id].cursor != selected:
+                current = self.game.wakes[session.id].cursor
+                delta = 1 if current < selected else -1
+                await caller.write(b"\x1b[B" if delta > 0 else b"\x1b[A")
+                await wait(lambda:self.game.wakes[session.id].cursor == current+delta)
+            await wait(lambda:session.ack_revision == session.view_revision)
+            await caller.write(b"\r")
         await wait(lambda:session.player_id in self.game.players)
         await wait(lambda:"Wake Hall" in caller.screen.screen_text().splitlines()[0])
         connection.avatar=self.game.sim.avatars[session.user_id]

@@ -19,7 +19,11 @@
         "lat-terraces-c02",
         "lat-terraces-c09"
       ],
-      "label": "Block A Super"
+      "label": "Block A Super",
+      "uplink": {
+        "sector": "lat-terraces",
+        "cell": "lat-terraces-c37"
+      }
     },
     {
       "id": "lat-terraces-c02",
@@ -101,7 +105,7 @@
         "lat-terraces-c07",
         "lat-terraces-c14"
       ],
-      "label": "Private-core register"
+      "label": "Residence 01 private-core register"
     },
     {
       "id": "lat-terraces-c07",
@@ -130,7 +134,7 @@
         "lat-terraces-c07",
         "lat-terraces-c16"
       ],
-      "label": "Signal rack 08"
+      "label": "Residence 02 private-core register"
     },
     {
       "id": "lat-terraces-c09",
@@ -144,7 +148,7 @@
         "lat-terraces-c01",
         "lat-terraces-c17"
       ],
-      "label": "Signal rack 09"
+      "label": "Residence 03 private-core register"
     },
     {
       "id": "lat-terraces-c10",
@@ -159,7 +163,7 @@
         "lat-terraces-c02",
         "lat-terraces-c18"
       ],
-      "label": "Signal rack 10"
+      "label": "Residence 04 private-core register"
     },
     {
       "id": "lat-terraces-c11",
@@ -191,7 +195,7 @@
         "lat-terraces-c04",
         "lat-terraces-c20"
       ],
-      "label": "Signal rack 12"
+      "label": "Residence 05 private-core register"
     },
     {
       "id": "lat-terraces-c13",
@@ -206,7 +210,7 @@
         "lat-terraces-c05",
         "lat-terraces-c21"
       ],
-      "label": "Signal rack 13"
+      "label": "Residence 06 private-core register"
     },
     {
       "id": "lat-terraces-c14",
@@ -221,7 +225,7 @@
         "lat-terraces-c06",
         "lat-terraces-c22"
       ],
-      "label": "Signal rack 14"
+      "label": "Residence 07 private-core register"
     },
     {
       "id": "lat-terraces-c15",
@@ -236,7 +240,7 @@
         "lat-terraces-c07",
         "lat-terraces-c23"
       ],
-      "label": "Signal rack 15"
+      "label": "Residence 08 private-core register"
     },
     {
       "id": "lat-terraces-c16",
@@ -250,7 +254,7 @@
         "lat-terraces-c08",
         "lat-terraces-c24"
       ],
-      "label": "Signal rack 16"
+      "label": "Residence 09 private-core register"
     },
     {
       "id": "lat-terraces-c17",
@@ -264,7 +268,7 @@
         "lat-terraces-c09",
         "lat-terraces-c25"
       ],
-      "label": "Signal rack 17"
+      "label": "Residence 10 private-core register"
     },
     {
       "id": "lat-terraces-c18",
@@ -279,7 +283,7 @@
         "lat-terraces-c10",
         "lat-terraces-c26"
       ],
-      "label": "Signal rack 18"
+      "label": "Residence 11 private-core register"
     },
     {
       "id": "lat-terraces-c19",
@@ -294,7 +298,7 @@
         "lat-terraces-c11",
         "lat-terraces-c27"
       ],
-      "label": "Signal rack 19"
+      "label": "Residence 12 private-core register"
     },
     {
       "id": "lat-terraces-c20",
@@ -309,7 +313,7 @@
         "lat-terraces-c12",
         "lat-terraces-c28"
       ],
-      "label": "Signal rack 20"
+      "label": "Residence 13 private-core register"
     },
     {
       "id": "lat-terraces-c21",
@@ -553,6 +557,164 @@
         "lat-terraces-c28"
       ],
       "label": "Signal rack 36"
+    },
+    {
+      "id": "lat-terraces-c37",
+      "kind": "public",
+      "pos": [
+        4,
+        4
+      ],
+      "neighbours": [
+        "lat-terraces-c38"
+      ],
+      "label": "Residence register",
+      "uplink": {
+        "sector": "lat-terraces",
+        "cell": "lat-terraces-c01"
+      }
+    },
+    {
+      "id": "lat-terraces-c38",
+      "kind": "public",
+      "pos": [
+        5,
+        4
+      ],
+      "neighbours": [
+        "lat-terraces-c37",
+        "lat-terraces-c39"
+      ],
+      "label": "Residence 14 private-core register"
+    },
+    {
+      "id": "lat-terraces-c39",
+      "kind": "public",
+      "pos": [
+        6,
+        4
+      ],
+      "neighbours": [
+        "lat-terraces-c38",
+        "lat-terraces-c40"
+      ],
+      "label": "Residence 15 private-core register"
+    },
+    {
+      "id": "lat-terraces-c40",
+      "kind": "public",
+      "pos": [
+        7,
+        4
+      ],
+      "neighbours": [
+        "lat-terraces-c39",
+        "lat-terraces-c41"
+      ],
+      "label": "Residence 16 private-core register"
+    },
+    {
+      "id": "lat-terraces-c41",
+      "kind": "public",
+      "pos": [
+        7,
+        5
+      ],
+      "neighbours": [
+        "lat-terraces-c40",
+        "lat-terraces-c42"
+      ],
+      "label": "Residence 17 private-core register"
+    },
+    {
+      "id": "lat-terraces-c42",
+      "kind": "public",
+      "pos": [
+        6,
+        5
+      ],
+      "neighbours": [
+        "lat-terraces-c41",
+        "lat-terraces-c43"
+      ],
+      "label": "Residence 18 private-core register"
+    },
+    {
+      "id": "lat-terraces-c43",
+      "kind": "public",
+      "pos": [
+        5,
+        5
+      ],
+      "neighbours": [
+        "lat-terraces-c42",
+        "lat-terraces-c44"
+      ],
+      "label": "Residence 19 private-core register"
+    },
+    {
+      "id": "lat-terraces-c44",
+      "kind": "public",
+      "pos": [
+        4,
+        5
+      ],
+      "neighbours": [
+        "lat-terraces-c43",
+        "lat-terraces-c45"
+      ],
+      "label": "Residence 20 private-core register"
+    },
+    {
+      "id": "lat-terraces-c45",
+      "kind": "public",
+      "pos": [
+        3,
+        5
+      ],
+      "neighbours": [
+        "lat-terraces-c44",
+        "lat-terraces-c46"
+      ],
+      "label": "Residence 21 private-core register"
+    },
+    {
+      "id": "lat-terraces-c46",
+      "kind": "public",
+      "pos": [
+        2,
+        5
+      ],
+      "neighbours": [
+        "lat-terraces-c45",
+        "lat-terraces-c47"
+      ],
+      "label": "Residence 22 private-core register"
+    },
+    {
+      "id": "lat-terraces-c47",
+      "kind": "public",
+      "pos": [
+        1,
+        5
+      ],
+      "neighbours": [
+        "lat-terraces-c46",
+        "lat-terraces-c48"
+      ],
+      "label": "Residence 23 private-core register"
+    },
+    {
+      "id": "lat-terraces-c48",
+      "kind": "public",
+      "pos": [
+        0,
+        5
+      ],
+      "neighbours": [
+        "lat-terraces-c47"
+      ],
+      "label": "Residence 24 private-core register"
     }
   ],
   "trace_policy": "civic"

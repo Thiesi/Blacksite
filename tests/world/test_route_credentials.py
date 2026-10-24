@@ -8,9 +8,11 @@ import pytest
 
 from blacksite.content.loader import ContentTree
 from blacksite.content.schema import Exit, Requirement
+from blacksite.content.schema import ObjectSpec
 from blacksite.content.validate import validate
 from blacksite.server.protocol import Frame
 from blacksite.server.world.exits import permitted
+from blacksite.server.world.zone import ObjectState
 from tests.character_helpers import act, create, place, state
 from tests.harness import HeadlessServer
 
@@ -30,7 +32,7 @@ def test_game_5_6_atrium_accepts_standing_or_carried_pass(access: dict[str, Any]
     assert access == original  # A permission check never spends a pass.
 
 
-def gated_game(content_tree: ContentTree, requirement: Requirement,
+def gated_game(content_tree: ContentTree, requirement: Requirement | None,
                alternatives: tuple[Requirement, ...] = ()) -> tuple[Any, Any, Exit]:
     game = HeadlessServer(content_tree, character_state={})
     caller = game.connect()
@@ -109,3 +111,58 @@ def test_entities_1_1_rejects_unbound_or_malformed_route_credentials(content_tre
     gate = replace(zone.meta.exits[0], requirement=primary, alternatives=alternatives)
     tree.zones[zone.id] = replace(zone, meta=replace(zone.meta, exits=(gate,)))
     assert any(reason in str(problem) for problem in validate(tree))
+
+
+def test_game_5_6_bulkhead_accepts_local_open_latch_without_an_item(content_tree: ContentTree) -> None:
+    game, caller, gate = gated_game(content_tree, Requirement('key', 'key_undercity'),
+        (Requirement('open', 'vatside-wake-hall', object='fixture-bulkhead'),))
+    zone = game.core.world.zones['vatside-wake-hall']
+    latch = ObjectState(ObjectSpec('fixture-bulkhead', (2, 2), 'door'), open=False)
+    zone.objects[latch.spec.id] = latch
+    avatar = game.core.characters.sim.avatars[caller.session.user_id]
+    act(game, caller, Frame('intent', {'name': 'interact', 'args': {}}))
+    assert avatar.travel is None
+    latch.open = True  # Committed interlock state is the alternative authority.
+    act(game, caller, Frame('intent', {'name': 'interact', 'args': {}}))
+    assert avatar.travel and avatar.travel.departed
+    game.step(10)
+    assert avatar.zone == gate.target_zone
+
+
+def test_game_5_6_same_named_latch_in_another_zone_grants_nothing() -> None:
+    gate = Exit('bulkhead', (1, 1), 'under-outworks', (1, 1), 'door',
+                Requirement('open', 'under-drowned', object='bulkhead'))
+    assert not permitted(gate, {'zone': 'under-service', 'open_objects': {'bulkhead'}})
+
+
+def test_game_5_6_hidden_door_is_usable_after_physically_finding_its_tile(content_tree: ContentTree) -> None:
+    game, caller, original = gated_game(content_tree, None)
+    zone = game.core.world.zones['vatside-wake-hall']
+    gate = replace(original, hidden=True, kind='door')
+    zone.template = replace(zone.template, meta=replace(zone.template.meta, exits=(gate,)))
+    place(game, caller, zone.id, (gate.tile[0]-1, gate.tile[1]))
+    act(game, caller, Frame('intent', {'name': 'interact', 'args': {}}))
+    avatar = game.core.characters.sim.avatars[caller.session.user_id]
+    assert avatar.zone == zone.id
+    # The first adjacent interaction may close the ordinary physical
+    # door. Open it before walking onto the unmarked transition tile.
+    if gate.tile in zone.doors and not zone.doors[gate.tile].open:
+        act(game, caller, Frame('intent', {'name': 'interact', 'args': {}}))
+    act(game, caller, Frame('intent', {'name': 'move', 'args': {'dir': 'right'}}))
+    assert avatar.actor.position == gate.tile
+    act(game, caller, Frame('intent', {'name': 'interact', 'args': {}}))
+    assert avatar.zone == gate.target_zone
+
+
+def test_game_5_6_walking_over_a_hidden_street_does_not_change_zone(content_tree: ContentTree) -> None:
+    game, caller, original = gated_game(content_tree, None)
+    zone = game.core.world.zones['vatside-wake-hall']
+    gate = replace(original, hidden=True, kind='street')
+    zone.template = replace(zone.template, meta=replace(zone.template.meta, exits=(gate,)))
+    place(game, caller, zone.id, gate.tile)
+    sim = game.core.characters.sim
+    avatar = sim.avatars[caller.session.user_id]
+    sim.interact(caller.session, avatar, game.clock.now_tick(), street=True)
+    assert avatar.zone == zone.id and avatar.travel is None
+    act(game, caller, Frame('intent', {'name': 'interact', 'args': {}}))
+    assert avatar.zone == gate.target_zone

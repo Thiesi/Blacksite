@@ -9,8 +9,12 @@
   "hardware": [
     {
       "zone": "oldworks-main",
-      "tile": null,
-      "label": "Relay Zero hardware"
+      "tile": [
+        25,
+        3
+      ],
+      "label": "Relay Zero hardware",
+      "object_id": "relay-zero-hardware"
     }
   ],
   "entry": "entry",

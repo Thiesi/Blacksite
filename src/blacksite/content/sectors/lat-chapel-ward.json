@@ -168,8 +168,7 @@
       "label": "Nave entrance",
       "requirement": "program:key:2",
       "access": "gated",
-      "core_placeholder": true,
-      "planned_core": "lat-nave"
+      "core_id": "lat-nave"
     },
     {
       "id": "lat-chapel-ward-c12",
@@ -187,8 +186,7 @@
       "label": "Listening Post entrance",
       "requirement": "program:key:2",
       "access": "gated",
-      "core_placeholder": true,
-      "planned_core": "lat-listening-post"
+      "core_id": "lat-listening-post"
     },
     {
       "id": "lat-chapel-ward-c13",
@@ -206,8 +204,7 @@
       "label": "Bell Relay entrance",
       "requirement": "program:key:2",
       "access": "gated",
-      "core_placeholder": true,
-      "planned_core": "lat-relay-bell"
+      "core_id": "lat-relay-bell"
     },
     {
       "id": "lat-chapel-ward-c14",

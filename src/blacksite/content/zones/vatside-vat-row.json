@@ -35,6 +35,19 @@
         3
       ],
       "kind": "street"
+    },
+    {
+      "id": "to-under-service",
+      "tile": [
+        82,
+        32
+      ],
+      "target_zone": "under-service",
+      "target_tile": [
+        20,
+        2
+      ],
+      "kind": "ladder"
     }
   ],
   "objects": [
@@ -83,21 +96,8 @@
       "kind": "hardware",
       "essential": false,
       "params": {
-        "name": "Vatline hardware",
+        "name": "vatside vat row cabinet",
         "core": "lat-vatline"
-      }
-    },
-    {
-      "id": "boundary-under-service",
-      "tile": [
-        82,
-        32
-      ],
-      "kind": "door",
-      "params": {
-        "open": true,
-        "unavailable_target": "under-service",
-        "name": "Construction boundary"
       }
     },
     {

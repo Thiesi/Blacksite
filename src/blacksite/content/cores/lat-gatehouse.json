@@ -9,8 +9,12 @@
   "hardware": [
     {
       "zone": "spire-atrium",
-      "tile": null,
-      "label": "Gatehouse hardware"
+      "tile": [
+        33,
+        9
+      ],
+      "label": "Gatehouse hardware",
+      "object_id": "gatehouse-hardware"
     }
   ],
   "entry": "entry",

@@ -9,8 +9,12 @@
   "hardware": [
     {
       "zone": "chapel-towers",
-      "tile": null,
-      "label": "Bell Relay hardware"
+      "tile": [
+        28,
+        26
+      ],
+      "label": "Bell Relay hardware",
+      "object_id": "relay-bell-hardware"
     }
   ],
   "entry": "entry",

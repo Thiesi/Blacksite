@@ -59,7 +59,13 @@ class HousingGeometry:
             if any(unit.zone == zid for unit in self.units.values()):
                 zone.entry_policy = lambda actor, tile, zid=zid: self.can_enter(actor, zid, tile)
                 zone.position_update = self.mark
+                zone.escape_origin = self.escape_origin
         world.object_access = self.can_use
+
+    def escape_origin(self, actor: Actor) -> Tile:
+        """Game 8.7: an occupant may explicitly leave through a closed door."""
+        unit = self.containing(actor.zone, actor.position) if actor.zone else None
+        return unit.anchor.doorstep if unit else actor.position
 
     def mark(self, actor: Actor) -> None:
         unit = self.containing(actor.zone, actor.position) if actor.zone else None

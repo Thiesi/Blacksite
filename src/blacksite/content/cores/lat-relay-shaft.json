@@ -9,8 +9,12 @@
   "hardware": [
     {
       "zone": "spire-shaft-head",
-      "tile": null,
-      "label": "Shaft Relay hardware"
+      "tile": [
+        52,
+        14
+      ],
+      "label": "Shaft Relay hardware",
+      "object_id": "relay-shaft-hardware"
     }
   ],
   "entry": "entry",

@@ -197,8 +197,7 @@
       "label": "Sable's Back Room entrance",
       "requirement": "program:key:2",
       "access": "gated",
-      "core_placeholder": true,
-      "planned_core": "lat-sables-back-room"
+      "core_id": "lat-sables-back-room"
     },
     {
       "id": "lat-sink-c14",
@@ -216,8 +215,7 @@
       "label": "Terrace Wards entrance",
       "requirement": "program:key:2",
       "access": "gated",
-      "core_placeholder": true,
-      "planned_core": "lat-terrace-wards"
+      "core_id": "lat-terrace-wards"
     },
     {
       "id": "lat-sink-c15",
@@ -235,8 +233,7 @@
       "label": "Cable Car entrance",
       "requirement": "program:key:2",
       "access": "gated",
-      "core_placeholder": true,
-      "planned_core": "lat-cable-car"
+      "core_id": "lat-cable-car"
     },
     {
       "id": "lat-sink-c16",
@@ -253,8 +250,7 @@
       "label": "Sump entrance",
       "requirement": "program:key:2",
       "access": "gated",
-      "core_placeholder": true,
-      "planned_core": "lat-sump"
+      "core_id": "lat-sump"
     },
     {
       "id": "lat-sink-c17",
@@ -271,8 +267,7 @@
       "label": "Cable Relay entrance",
       "requirement": "program:key:2",
       "access": "gated",
-      "core_placeholder": true,
-      "planned_core": "lat-relay-cable"
+      "core_id": "lat-relay-cable"
     },
     {
       "id": "lat-sink-c18",
@@ -290,8 +285,7 @@
       "label": "Sump Relay entrance",
       "requirement": "program:key:2",
       "access": "gated",
-      "core_placeholder": true,
-      "planned_core": "lat-relay-sump"
+      "core_id": "lat-relay-sump"
     },
     {
       "id": "lat-sink-c19",

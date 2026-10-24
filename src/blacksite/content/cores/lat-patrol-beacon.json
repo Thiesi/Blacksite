@@ -9,8 +9,12 @@
   "hardware": [
     {
       "zone": "scour-ring-2",
-      "tile": null,
-      "label": "Patrol Beacon hardware"
+      "tile": [
+        135,
+        30
+      ],
+      "label": "Patrol Beacon hardware",
+      "object_id": "patrol-beacon-hardware"
     }
   ],
   "entry": "entry",

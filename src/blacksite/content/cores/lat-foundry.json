@@ -9,8 +9,12 @@
   "hardware": [
     {
       "zone": "oldworks-yards",
-      "tile": null,
-      "label": "Foundry hardware"
+      "tile": [
+        36,
+        27
+      ],
+      "label": "Foundry hardware",
+      "object_id": "foundry-hardware"
     }
   ],
   "entry": "entry",

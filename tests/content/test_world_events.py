@@ -15,7 +15,7 @@ def test_game_12_all_five_authored_events_match_canon_and_activation_boundaries(
     for eid, expected in SCHEDULES.items():
         event = tree.events[eid]
         assert (event.duration_seconds,event.cooldown_seconds,event.weight) == expected
-        assert tree.active('events',eid) == (eid in ('curfew','choir-surge'))
+        assert tree.active('events',eid)
         for asset in (event.announce.start,event.announce.mid,event.announce.end):
             text = tree.text[asset].body.format(name=event.name,where='the site',plan='p',remaining=10,route='the road',time='now')
             assert '{' not in text and '}' not in text

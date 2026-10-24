@@ -9,8 +9,12 @@
   "hardware": [
     {
       "zone": "spire-shaft-head",
-      "tile": null,
-      "label": "Halvard Citadel hardware"
+      "tile": [
+        60,
+        16
+      ],
+      "label": "Halvard Citadel hardware",
+      "object_id": "halvard-citadel-hardware"
     }
   ],
   "entry": "entry",

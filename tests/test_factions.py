@@ -146,14 +146,14 @@ def test_game_7_1_actual_sable_wake_card_grants_ten_to_real_faction():
     assert resident.standing == {"sable": 10} and resident.faction is None
 
 
-def test_entities_1_9_sites_preserve_hall_contract_without_activating_future_maps():
+def test_entities_1_9_all_eight_sites_resolve_to_commissioned_halls():
     from blacksite.content.validate import validate
     content = load_content(Path(__file__).parents[1]/"src/blacksite/content")
     assert not validate(content)
     assert len(content.factions) == len(content.faction_sites) == 8
     assert all(content.active("factions", fid) for fid in content.factions)
-    assert {s.faction for sid, s in content.faction_sites.items() if content.active("faction_sites", sid)} == {"wardens", "sablier"}
+    assert {s.faction for sid, s in content.faction_sites.items() if content.active("faction_sites", sid)} == set(content.factions)
     site = content.faction_sites["site-unmoored"]
     assert site.hall == "oldworks-drop" and site.recruiter_zone == "oldworks-main"
-    assert not content.active("faction_sites", site.id) and site.hall not in content.zones
+    assert content.active("faction_sites", site.id) and site.hall in content.zones
     assert all(tuple(r.standing for r in f.ranks) == (30,50,70,90) for f in content.factions.values())

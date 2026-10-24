@@ -113,7 +113,8 @@ class ZoneSimulation:
         zone = self.world.zones[avatar.zone]
         actor = avatar.actor
         adjacent = lambda tile: max(abs(tile[0] - actor.x), abs(tile[1] - actor.y)) <= 1
-        candidates = [ex for ex in zone.template.meta.exits if not ex.hidden
+        candidates = [ex for ex in zone.template.meta.exits
+                      if (not ex.hidden or not street and ex.tile == actor.position)
                       and (ex.tile == actor.position if street else adjacent(ex.tile))
                       and (not street or ex.kind == "street")]
         candidates.sort(key=lambda ex: (ex.tile != actor.position, ex.id))

@@ -272,7 +272,8 @@ Reference: [S25 #25](https://github.com/Thiesi/Blacksite/issues/25),
 Game 5.6 and entities 1.1 now specify typed member/story credentials,
 alternative requirements and a missing-credential message. This bounded
 runtime support is necessary to commission the canonical physical city;
-S25 otherwise remains content work. No balance number changes.
+S25 otherwise remains content work. Missing NPC profiles use the
+initial values documented in game 5.5 and require pacing acceptance.
 
 Document the member/story/alternative exit credentials and default-closed
 story provider. Recovery and restart restore committed story/season
@@ -280,3 +281,59 @@ authority; saved player flags do not unlock a route. An already-departed
 journey keeps its arrival. No operator command should silently grant a
 permanent cage bypass.
 <!-- s25-access:end -->
+
+<!-- s25-city-decisions:start -->
+### S25 commissioning decisions (in progress)
+
+Reference: [S25 #25](https://github.com/Thiesi/Blacksite/issues/25),
+[PR #38](https://github.com/Thiesi/Blacksite/pull/38) and
+[platform #56](https://github.com/Thiesi/Blacksite/issues/56).
+
+The draft uses game 5.6's carried key OR exact local open-latch state for
+the optional Drowned bulkhead. Ordinary Outworks/Shaft Foot travel is
+free; a key is retained, not consumed. Hidden physical exits allow
+explicit Interact on their tile and never auto-travel on a walk. All
+Undercity base sight is five before carried light. Whole-zone `pocket`
+safety protects clinics, just as an authored pocket does.
+
+The existing Terraces sector expands from 36 to 48 cells: a public
+register wing supplies 24 distinct apartment addresses without reusing
+entry/uplink cells or changing existing hidden/gated routes. Halvard's
+member hall, vat and counter are in the Mezzanine; public recruitment,
+care and banking remain in the Atrium. Three secondary ration/flare and
+salvage counters bring ordinary vendors to 22; only Landing retains its
+20% salvage premium. New NPC profiles and gantry damage are documented
+initial values in game 5.5/6.4 and must pass actual-city pacing.
+
+Document the 24-unit pool and 48-cell Terraces register, protected
+whole-zone pocket clinics, 22 ordinary vendor records and Halvard hall
+locations. Backups and restore must preserve assigned cells, owned
+permissions and local latch state without granting public access.
+
+These are in-progress decisions, not a claim of merge, native acceptance
+or completion of the Shaft Foot/Far Ring and broader human pacing gates.
+The real walled apartments also exposed a geometry-admission bug:
+a closed private door must not freeze unrelated public controls.
+Housing supplies the occupant's explicit Interact-to-leave doorstep as
+the escape origin; occupied tiles remain passable and private entry
+permissions still apply. Retain that proof under tenants, visitors,
+restart and overlapping effects. The Lobby's five inert private-door
+props are replaced by the real 24-unit Block Street pool.
+
+S25 places `ferrymen-corpse`, `choir-shrine`, `unmoored-dead-drop` and the
+empty Far Ring artifact sites as physical source hooks. S27 owns the
+corpse's one-time personal map and the shrine's daily claim receipt;
+S26 owns season artifact activation. A prop label alone grants no reward.
+Permanent hazards are excluded from salvage-node placement because
+incoming damage interrupts the harvest channel. If an optional opening
+closes over a saved position, reconnect recovers to the nearest free,
+non-hazardous tile in the public spawn component, respecting housing
+entry permissions. Include both in actual-city restart and event tests.
+
+Mezzanine physical admission does not grant a Citadel network credential;
+its loan terminal keeps the normal network gate. The Far mast uses the
+Scour sector and cannot bypass Static's Ring-fall gate. All 16 relay
+sites are mapped, but Shaft Relay retains `requires_level`; S26 must bind
+its availability to the committed level phase, alongside the story-route
+providers. Mapping never pretends that this seasonal gate is open.
+<!-- s25-city-decisions:end -->

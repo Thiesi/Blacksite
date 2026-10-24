@@ -70,7 +70,8 @@ class Salvage:
         occupied.update(actor.position for actor in zone.actors.values())
         occupied.update(ex.tile for ex in zone.template.meta.exits)
         tiles = [(x, y) for y, row in enumerate(zone.template.grid) for x in range(len(row))
-                 if zone.passable((x, y)) and (x, y) not in occupied]
+                 if zone.passable((x, y)) and not zone.tiles[zone.tile_id((x, y))].hazard
+                 and (x, y) not in occupied]
         if not tiles:
             return False
         weights = self.rules.weights[str(field["ring"])]

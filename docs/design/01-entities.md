@@ -66,9 +66,11 @@ A door's optional `params.open` overrides its base tile's passability and
 opacity; without it, the tile type supplies the initial state.
 
 An exit requirement has `kind` (`pass`, `key`, `faction`, `member`,
-`story`), `ref` and optional `standing`. Pass/key refs resolve carried
+`story`, `open`), `ref` and optional `standing`/`object`. Pass/key refs resolve carried
 items; faction means a minimum standing; member means that exact
-membership. Story refs name committed route permissions provided by the
+membership. An `open` requirement names the local zone and an actual
+door/gate/shutter object; its committed open state grants that
+alternative, independently of the key. Story refs name route permissions provided by the
 owning story/season system, closed by default. An exit's `alternatives`
 lists other complete requirements accepted instead of its primary one;
 it cannot appear without a primary requirement. `locked_text` optionally
@@ -76,6 +78,8 @@ explains a refusal. These checks never consume a credential or replace
 Curfew/control restrictions. Character route-permission providers are
 server-owned callbacks, not client or saved-progress assertions. S26
 owns `halvard-service-lift` and `shaft-cage` authorization lifetimes.
+Hidden physical exits stay absent from the exit marker list. Explicit
+Interact on the discovered tile can use them; auto-walking never does.
 
 S06 preview actors use Hardline's starting attributes and derived pools
 (game design 3.1–3.2: HP 130, STA 70). They are temporary bodies, not saved

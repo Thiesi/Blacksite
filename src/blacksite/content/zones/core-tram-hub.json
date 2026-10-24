@@ -48,6 +48,45 @@
         3
       ],
       "kind": "tram"
+    },
+    {
+      "id": "to-chapel-towers",
+      "tile": [
+        54,
+        14
+      ],
+      "target_zone": "chapel-towers",
+      "target_tile": [
+        40,
+        2
+      ],
+      "kind": "tram"
+    },
+    {
+      "id": "to-sink-rim",
+      "tile": [
+        69,
+        14
+      ],
+      "target_zone": "sink-rim",
+      "target_tile": [
+        50,
+        2
+      ],
+      "kind": "tram"
+    },
+    {
+      "id": "to-tramyard-market",
+      "tile": [
+        9,
+        14
+      ],
+      "target_zone": "tramyard-market",
+      "target_tile": [
+        40,
+        2
+      ],
+      "kind": "tram"
     }
   ],
   "objects": [
@@ -112,45 +151,6 @@
       }
     },
     {
-      "id": "boundary-tramyard-market",
-      "tile": [
-        9,
-        14
-      ],
-      "kind": "door",
-      "params": {
-        "open": true,
-        "unavailable_target": "tramyard-market",
-        "name": "Construction boundary"
-      }
-    },
-    {
-      "id": "boundary-chapel-towers",
-      "tile": [
-        54,
-        14
-      ],
-      "kind": "door",
-      "params": {
-        "open": true,
-        "unavailable_target": "chapel-towers",
-        "name": "Construction boundary"
-      }
-    },
-    {
-      "id": "boundary-sink-rim",
-      "tile": [
-        69,
-        14
-      ],
-      "kind": "door",
-      "params": {
-        "open": true,
-        "unavailable_target": "sink-rim",
-        "name": "Construction boundary"
-      }
-    },
-    {
       "id": "platform-vatside-clinics",
       "tile": [
         24,
@@ -192,7 +192,7 @@
       ],
       "kind": "hardware",
       "params": {
-        "name": "Tram Signal hardware",
+        "name": "core tram hub cabinet",
         "core": "lat-tram-signal"
       }
     }

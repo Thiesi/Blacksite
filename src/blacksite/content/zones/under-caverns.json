@@ -1,0 +1,262 @@
+{
+  "schema": 1,
+  "id": "under-caverns",
+  "name": "Karst Caverns",
+  "district": "Undercity",
+  "safety": "open",
+  "lean": null,
+  "sight_radius": 5,
+  "sector": "lat-undercity",
+  "spawn": [
+    3,
+    40
+  ],
+  "exits": [
+    {
+      "id": "to-scour-ring-2",
+      "tile": [
+        75,
+        77
+      ],
+      "target_zone": "scour-ring-2",
+      "target_tile": [
+        100,
+        87
+      ],
+      "kind": "ladder",
+      "hidden": true
+    },
+    {
+      "id": "to-sink-floor",
+      "tile": [
+        2,
+        40
+      ],
+      "target_zone": "sink-floor",
+      "target_tile": [
+        35,
+        37
+      ],
+      "kind": "ladder"
+    },
+    {
+      "id": "to-under-drowned",
+      "tile": [
+        100,
+        2
+      ],
+      "target_zone": "under-drowned",
+      "target_tile": [
+        50,
+        57
+      ],
+      "kind": "ladder"
+    },
+    {
+      "id": "to-under-outworks",
+      "tile": [
+        147,
+        40
+      ],
+      "target_zone": "under-outworks",
+      "target_tile": [
+        2,
+        55
+      ],
+      "kind": "ladder"
+    },
+    {
+      "id": "to-under-service",
+      "tile": [
+        40,
+        2
+      ],
+      "target_zone": "under-service",
+      "target_tile": [
+        60,
+        47
+      ],
+      "kind": "ladder"
+    }
+  ],
+  "objects": [
+    {
+      "id": "pumphouse-drain-cistern",
+      "tile": [
+        112,
+        26
+      ],
+      "kind": "pump",
+      "params": {
+        "name": "drain cistern",
+        "layout": "pumphouse-drain-cistern-active"
+      }
+    },
+    {
+      "id": "relay-cavern-hardware",
+      "tile": [
+        139,
+        35
+      ],
+      "kind": "hardware",
+      "params": {
+        "name": "Cavern Relay hardware",
+        "core": "lat-relay-cavern"
+      }
+    },
+    {
+      "id": "relay-cavern",
+      "tile": [
+        133,
+        35
+      ],
+      "kind": "relay",
+      "params": {
+        "name": "Cavern Relay",
+        "relay": "cavern",
+        "vendor": "relay-cavern-counter"
+      }
+    },
+    {
+      "id": "ferrymen-waystation",
+      "tile": [
+        127,
+        52
+      ],
+      "kind": "vendor",
+      "params": {
+        "name": "Ferrymen way-station",
+        "vendor": "ferrymen-waystation"
+      }
+    },
+    {
+      "id": "public-uplink-1",
+      "tile": [
+        111,
+        26
+      ],
+      "kind": "terminal",
+      "params": {
+        "name": "Public Lattice terminal",
+        "sector": "lat-undercity",
+        "cell": "lat-undercity-c01"
+      },
+      "essential": true
+    },
+    {
+      "id": "area-light-1",
+      "tile": [
+        112,
+        25
+      ],
+      "kind": "light",
+      "params": {
+        "name": "Maintenance lamp"
+      }
+    },
+    {
+      "id": "sled-arrival",
+      "tile": [
+        37,
+        53
+      ],
+      "kind": "terminal",
+      "params": {
+        "name": "Sled arrival"
+      }
+    }
+  ],
+  "spawners": [
+    {
+      "id": "feral-crew",
+      "npc": "npc-feral",
+      "count": 2,
+      "respawn_seconds": 60,
+      "condition": "always",
+      "region": {
+        "x": 74,
+        "y": 44,
+        "w": 3,
+        "h": 3
+      }
+    },
+    {
+      "id": "blind-swarm-crew",
+      "npc": "npc-blind-swarm",
+      "count": 1,
+      "respawn_seconds": 60,
+      "condition": "always",
+      "region": {
+        "x": 99,
+        "y": 24,
+        "w": 3,
+        "h": 3
+      }
+    },
+    {
+      "id": "ferrymen-guard-crew",
+      "npc": "npc-ferrymen-guard",
+      "count": 2,
+      "respawn_seconds": 60,
+      "condition": "always",
+      "region": {
+        "x": 24,
+        "y": 20,
+        "w": 3,
+        "h": 2
+      }
+    }
+  ],
+  "lore": [
+    "zone-under-caverns"
+  ],
+  "layouts": [
+    {
+      "id": "pumphouse-drain-cistern-active",
+      "changes": [
+        {
+          "tile": [
+            110,
+            28
+          ],
+          "tile_id": "floor"
+        },
+        {
+          "tile": [
+            111,
+            28
+          ],
+          "tile_id": "floor"
+        },
+        {
+          "tile": [
+            112,
+            28
+          ],
+          "tile_id": "floor"
+        },
+        {
+          "tile": [
+            113,
+            28
+          ],
+          "tile_id": "floor"
+        },
+        {
+          "tile": [
+            114,
+            28
+          ],
+          "tile_id": "floor"
+        }
+      ],
+      "warning_tiles": [],
+      "alternate_routes": [
+        "to-sink-floor",
+        "to-under-drowned",
+        "to-under-outworks",
+        "to-under-service"
+      ]
+    }
+  ]
+}

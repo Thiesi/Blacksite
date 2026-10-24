@@ -113,6 +113,19 @@
         15
       ],
       "kind": "tram"
+    },
+    {
+      "id": "to-chapel-towers",
+      "tile": [
+        116,
+        2
+      ],
+      "target_zone": "chapel-towers",
+      "target_tile": [
+        2,
+        20
+      ],
+      "kind": "street"
     }
   ],
   "objects": [
@@ -122,10 +135,11 @@
         103,
         10
       ],
-      "kind": "vendor",
-      "essential": false,
+      "kind": "terminal",
+      "essential": true,
       "params": {
-        "name": "Letting office"
+        "name": "Residence letting office",
+        "letting": true
       }
     },
     {
@@ -162,7 +176,7 @@
       "kind": "relay",
       "essential": false,
       "params": {
-        "name": "Block relay",
+        "name": "Block Relay",
         "relay": "block",
         "vendor": "relay-block-counter"
       }
@@ -176,7 +190,7 @@
       "kind": "hardware",
       "essential": false,
       "params": {
-        "name": "Block relay hardware",
+        "name": "terraces blocks cabinet",
         "core": "lat-relay-block"
       }
     },
@@ -272,19 +286,6 @@
       }
     },
     {
-      "id": "boundary-chapel-towers",
-      "tile": [
-        116,
-        2
-      ],
-      "kind": "door",
-      "params": {
-        "open": true,
-        "unavailable_target": "chapel-towers",
-        "name": "Construction boundary"
-      }
-    },
-    {
       "id": "platform-core-tram-hub",
       "tile": [
         8,
@@ -303,7 +304,7 @@
       ],
       "kind": "hardware",
       "params": {
-        "name": "Block Super hardware",
+        "name": "terraces blocks cabinet",
         "core": "lat-block-super"
       }
     },
@@ -315,7 +316,7 @@
       ],
       "kind": "hardware",
       "params": {
-        "name": "Terrace Outpost hardware",
+        "name": "terraces blocks cabinet",
         "core": "lat-terrace-outpost"
       }
     },
@@ -401,6 +402,737 @@
       "params": {
         "name": "stairwell C cabinet",
         "core": "lat-stairwell-c"
+      }
+    },
+    {
+      "id": "block-four-nest",
+      "tile": [
+        90,
+        13
+      ],
+      "kind": "terminal",
+      "params": {
+        "name": "Block four nest"
+      }
+    },
+    {
+      "id": "residence-01",
+      "tile": [
+        36,
+        7
+      ],
+      "kind": "apartment_door",
+      "params": {
+        "name": "Residence 01",
+        "open": false
+      },
+      "housing": {
+        "class_id": "apt_terrace_cell",
+        "room": "apartment",
+        "origin": [
+          34,
+          3
+        ],
+        "sector": "lat-terraces",
+        "cell": "lat-terraces-c06",
+        "doorstep": [
+          36,
+          8
+        ],
+        "vestibule": [
+          2,
+          3
+        ]
+      }
+    },
+    {
+      "id": "residence-02",
+      "tile": [
+        58,
+        7
+      ],
+      "kind": "apartment_door",
+      "params": {
+        "name": "Residence 02",
+        "open": false
+      },
+      "housing": {
+        "class_id": "apt_terrace_cell",
+        "room": "apartment",
+        "origin": [
+          56,
+          3
+        ],
+        "sector": "lat-terraces",
+        "cell": "lat-terraces-c08",
+        "doorstep": [
+          58,
+          8
+        ],
+        "vestibule": [
+          2,
+          3
+        ]
+      }
+    },
+    {
+      "id": "residence-03",
+      "tile": [
+        69,
+        7
+      ],
+      "kind": "apartment_door",
+      "params": {
+        "name": "Residence 03",
+        "open": false
+      },
+      "housing": {
+        "class_id": "apt_terrace_cell",
+        "room": "apartment",
+        "origin": [
+          67,
+          3
+        ],
+        "sector": "lat-terraces",
+        "cell": "lat-terraces-c09",
+        "doorstep": [
+          69,
+          8
+        ],
+        "vestibule": [
+          2,
+          3
+        ]
+      }
+    },
+    {
+      "id": "residence-04",
+      "tile": [
+        91,
+        7
+      ],
+      "kind": "apartment_door",
+      "params": {
+        "name": "Residence 04",
+        "open": false
+      },
+      "housing": {
+        "class_id": "apt_terrace_cell",
+        "room": "apartment",
+        "origin": [
+          89,
+          3
+        ],
+        "sector": "lat-terraces",
+        "cell": "lat-terraces-c10",
+        "doorstep": [
+          91,
+          8
+        ],
+        "vestibule": [
+          2,
+          3
+        ]
+      }
+    },
+    {
+      "id": "residence-05",
+      "tile": [
+        102,
+        7
+      ],
+      "kind": "apartment_door",
+      "params": {
+        "name": "Residence 05",
+        "open": false
+      },
+      "housing": {
+        "class_id": "apt_terrace_cell",
+        "room": "apartment",
+        "origin": [
+          100,
+          3
+        ],
+        "sector": "lat-terraces",
+        "cell": "lat-terraces-c12",
+        "doorstep": [
+          102,
+          8
+        ],
+        "vestibule": [
+          2,
+          3
+        ]
+      }
+    },
+    {
+      "id": "residence-06",
+      "tile": [
+        14,
+        17
+      ],
+      "kind": "apartment_door",
+      "params": {
+        "name": "Residence 06",
+        "open": false
+      },
+      "housing": {
+        "class_id": "apt_terrace_cell",
+        "room": "apartment",
+        "origin": [
+          12,
+          13
+        ],
+        "sector": "lat-terraces",
+        "cell": "lat-terraces-c13",
+        "doorstep": [
+          14,
+          18
+        ],
+        "vestibule": [
+          2,
+          3
+        ]
+      }
+    },
+    {
+      "id": "residence-07",
+      "tile": [
+        25,
+        17
+      ],
+      "kind": "apartment_door",
+      "params": {
+        "name": "Residence 07",
+        "open": false
+      },
+      "housing": {
+        "class_id": "apt_terrace_cell",
+        "room": "apartment",
+        "origin": [
+          23,
+          13
+        ],
+        "sector": "lat-terraces",
+        "cell": "lat-terraces-c14",
+        "doorstep": [
+          25,
+          18
+        ],
+        "vestibule": [
+          2,
+          3
+        ]
+      }
+    },
+    {
+      "id": "residence-08",
+      "tile": [
+        36,
+        17
+      ],
+      "kind": "apartment_door",
+      "params": {
+        "name": "Residence 08",
+        "open": false
+      },
+      "housing": {
+        "class_id": "apt_terrace_cell",
+        "room": "apartment",
+        "origin": [
+          34,
+          13
+        ],
+        "sector": "lat-terraces",
+        "cell": "lat-terraces-c15",
+        "doorstep": [
+          36,
+          18
+        ],
+        "vestibule": [
+          2,
+          3
+        ]
+      }
+    },
+    {
+      "id": "residence-09",
+      "tile": [
+        47,
+        17
+      ],
+      "kind": "apartment_door",
+      "params": {
+        "name": "Residence 09",
+        "open": false
+      },
+      "housing": {
+        "class_id": "apt_terrace_flat",
+        "room": "apartment",
+        "origin": [
+          45,
+          13
+        ],
+        "sector": "lat-terraces",
+        "cell": "lat-terraces-c16",
+        "doorstep": [
+          47,
+          18
+        ],
+        "vestibule": [
+          2,
+          3
+        ]
+      }
+    },
+    {
+      "id": "residence-10",
+      "tile": [
+        58,
+        17
+      ],
+      "kind": "apartment_door",
+      "params": {
+        "name": "Residence 10",
+        "open": false
+      },
+      "housing": {
+        "class_id": "apt_terrace_flat",
+        "room": "apartment",
+        "origin": [
+          56,
+          13
+        ],
+        "sector": "lat-terraces",
+        "cell": "lat-terraces-c17",
+        "doorstep": [
+          58,
+          18
+        ],
+        "vestibule": [
+          2,
+          3
+        ]
+      }
+    },
+    {
+      "id": "residence-11",
+      "tile": [
+        69,
+        17
+      ],
+      "kind": "apartment_door",
+      "params": {
+        "name": "Residence 11",
+        "open": false
+      },
+      "housing": {
+        "class_id": "apt_terrace_flat",
+        "room": "apartment",
+        "origin": [
+          67,
+          13
+        ],
+        "sector": "lat-terraces",
+        "cell": "lat-terraces-c18",
+        "doorstep": [
+          69,
+          18
+        ],
+        "vestibule": [
+          2,
+          3
+        ]
+      }
+    },
+    {
+      "id": "residence-12",
+      "tile": [
+        80,
+        17
+      ],
+      "kind": "apartment_door",
+      "params": {
+        "name": "Residence 12",
+        "open": false
+      },
+      "housing": {
+        "class_id": "apt_terrace_flat",
+        "room": "apartment",
+        "origin": [
+          78,
+          13
+        ],
+        "sector": "lat-terraces",
+        "cell": "lat-terraces-c19",
+        "doorstep": [
+          80,
+          18
+        ],
+        "vestibule": [
+          2,
+          3
+        ]
+      }
+    },
+    {
+      "id": "residence-13",
+      "tile": [
+        102,
+        17
+      ],
+      "kind": "apartment_door",
+      "params": {
+        "name": "Residence 13",
+        "open": false
+      },
+      "housing": {
+        "class_id": "apt_terrace_flat",
+        "room": "apartment",
+        "origin": [
+          100,
+          13
+        ],
+        "sector": "lat-terraces",
+        "cell": "lat-terraces-c20",
+        "doorstep": [
+          102,
+          18
+        ],
+        "vestibule": [
+          2,
+          3
+        ]
+      }
+    },
+    {
+      "id": "residence-14",
+      "tile": [
+        25,
+        27
+      ],
+      "kind": "apartment_door",
+      "params": {
+        "name": "Residence 14",
+        "open": false
+      },
+      "housing": {
+        "class_id": "apt_terrace_flat",
+        "room": "apartment",
+        "origin": [
+          23,
+          23
+        ],
+        "sector": "lat-terraces",
+        "cell": "lat-terraces-c38",
+        "doorstep": [
+          25,
+          28
+        ],
+        "vestibule": [
+          2,
+          3
+        ]
+      }
+    },
+    {
+      "id": "residence-15",
+      "tile": [
+        47,
+        27
+      ],
+      "kind": "apartment_door",
+      "params": {
+        "name": "Residence 15",
+        "open": false
+      },
+      "housing": {
+        "class_id": "apt_terrace_flat",
+        "room": "apartment",
+        "origin": [
+          45,
+          23
+        ],
+        "sector": "lat-terraces",
+        "cell": "lat-terraces-c39",
+        "doorstep": [
+          47,
+          28
+        ],
+        "vestibule": [
+          2,
+          3
+        ]
+      }
+    },
+    {
+      "id": "residence-16",
+      "tile": [
+        80,
+        27
+      ],
+      "kind": "apartment_door",
+      "params": {
+        "name": "Residence 16",
+        "open": false
+      },
+      "housing": {
+        "class_id": "apt_terrace_flat",
+        "room": "apartment",
+        "origin": [
+          78,
+          23
+        ],
+        "sector": "lat-terraces",
+        "cell": "lat-terraces-c40",
+        "doorstep": [
+          80,
+          28
+        ],
+        "vestibule": [
+          2,
+          3
+        ]
+      }
+    },
+    {
+      "id": "residence-17",
+      "tile": [
+        102,
+        27
+      ],
+      "kind": "apartment_door",
+      "params": {
+        "name": "Residence 17",
+        "open": false
+      },
+      "housing": {
+        "class_id": "apt_terrace_corner",
+        "room": "apartment",
+        "origin": [
+          100,
+          23
+        ],
+        "sector": "lat-terraces",
+        "cell": "lat-terraces-c41",
+        "doorstep": [
+          102,
+          28
+        ],
+        "vestibule": [
+          2,
+          3
+        ]
+      }
+    },
+    {
+      "id": "residence-18",
+      "tile": [
+        14,
+        37
+      ],
+      "kind": "apartment_door",
+      "params": {
+        "name": "Residence 18",
+        "open": false
+      },
+      "housing": {
+        "class_id": "apt_terrace_corner",
+        "room": "apartment",
+        "origin": [
+          12,
+          33
+        ],
+        "sector": "lat-terraces",
+        "cell": "lat-terraces-c42",
+        "doorstep": [
+          14,
+          38
+        ],
+        "vestibule": [
+          2,
+          3
+        ]
+      }
+    },
+    {
+      "id": "residence-19",
+      "tile": [
+        25,
+        37
+      ],
+      "kind": "apartment_door",
+      "params": {
+        "name": "Residence 19",
+        "open": false
+      },
+      "housing": {
+        "class_id": "apt_terrace_corner",
+        "room": "apartment",
+        "origin": [
+          23,
+          33
+        ],
+        "sector": "lat-terraces",
+        "cell": "lat-terraces-c43",
+        "doorstep": [
+          25,
+          38
+        ],
+        "vestibule": [
+          2,
+          3
+        ]
+      }
+    },
+    {
+      "id": "residence-20",
+      "tile": [
+        36,
+        37
+      ],
+      "kind": "apartment_door",
+      "params": {
+        "name": "Residence 20",
+        "open": false
+      },
+      "housing": {
+        "class_id": "apt_terrace_corner",
+        "room": "apartment",
+        "origin": [
+          34,
+          33
+        ],
+        "sector": "lat-terraces",
+        "cell": "lat-terraces-c44",
+        "doorstep": [
+          36,
+          38
+        ],
+        "vestibule": [
+          2,
+          3
+        ]
+      }
+    },
+    {
+      "id": "residence-21",
+      "tile": [
+        47,
+        37
+      ],
+      "kind": "apartment_door",
+      "params": {
+        "name": "Residence 21",
+        "open": false
+      },
+      "housing": {
+        "class_id": "apt_terrace_corner",
+        "room": "apartment",
+        "origin": [
+          45,
+          33
+        ],
+        "sector": "lat-terraces",
+        "cell": "lat-terraces-c45",
+        "doorstep": [
+          47,
+          38
+        ],
+        "vestibule": [
+          2,
+          3
+        ]
+      }
+    },
+    {
+      "id": "residence-22",
+      "tile": [
+        58,
+        37
+      ],
+      "kind": "apartment_door",
+      "params": {
+        "name": "Residence 22",
+        "open": false
+      },
+      "housing": {
+        "class_id": "apt_terrace_corner",
+        "room": "apartment",
+        "origin": [
+          56,
+          33
+        ],
+        "sector": "lat-terraces",
+        "cell": "lat-terraces-c46",
+        "doorstep": [
+          58,
+          38
+        ],
+        "vestibule": [
+          2,
+          3
+        ]
+      }
+    },
+    {
+      "id": "residence-23",
+      "tile": [
+        69,
+        37
+      ],
+      "kind": "apartment_door",
+      "params": {
+        "name": "Residence 23",
+        "open": false
+      },
+      "housing": {
+        "class_id": "apt_terrace_corner",
+        "room": "apartment",
+        "origin": [
+          67,
+          33
+        ],
+        "sector": "lat-terraces",
+        "cell": "lat-terraces-c47",
+        "doorstep": [
+          69,
+          38
+        ],
+        "vestibule": [
+          2,
+          3
+        ]
+      }
+    },
+    {
+      "id": "residence-24",
+      "tile": [
+        80,
+        37
+      ],
+      "kind": "apartment_door",
+      "params": {
+        "name": "Residence 24",
+        "open": false
+      },
+      "housing": {
+        "class_id": "apt_terrace_corner",
+        "room": "apartment",
+        "origin": [
+          78,
+          33
+        ],
+        "sector": "lat-terraces",
+        "cell": "lat-terraces-c48",
+        "doorstep": [
+          80,
+          38
+        ],
+        "vestibule": [
+          2,
+          3
+        ]
       }
     }
   ],

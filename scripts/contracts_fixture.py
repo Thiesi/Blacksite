@@ -122,7 +122,8 @@ def build_fixture(shipped: Path, local: Path) -> dict[str,Any]:
     write('bundles/s19-future-services.json',manifest)
     vendors=read('vendors.json')['vendors']
     surplus=deepcopy(next(v for v in vendors if v['id']=='wake-outfitter'))
-    surplus.update(id='kestrel-surplus',name='FIXTURE surplus',faction='kestrel',stock=[])
+    surplus.update(id='kestrel-surplus',name='FIXTURE surplus',faction='kestrel',stock=[],
+                   zone=zone_id,object_id='fx-depot-surplus')
     write('vendors.json',dict(schema=1,vendors=[surplus]))
     # Story copies retain their real rewards/branch groups; only geography,
     # evidence IDs, season availability and prerequisite fixtures change.

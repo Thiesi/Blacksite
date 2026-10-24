@@ -209,7 +209,7 @@
       ],
       "kind": "hardware",
       "params": {
-        "name": "cold chain hardware",
+        "name": "vatside clinics cabinet",
         "core": "lat-relay-cold-chain"
       }
     },
@@ -266,9 +266,25 @@
       ],
       "kind": "hardware",
       "params": {
-        "name": "Sablier Clinical hardware",
+        "name": "vatside clinics cabinet",
         "core": "lat-sablier-clinical"
       }
+    },
+    {
+      "id": "sablier-public-board",
+      "tile": [
+        60,
+        11
+      ],
+      "kind": "terminal",
+      "params": {
+        "name": "Public jobs and faction counter",
+        "faction": "sablier",
+        "contract_handler": "sablier",
+        "sector": "lat-vatside",
+        "cell": "lat-vatside-c01"
+      },
+      "essential": true
     }
   ],
   "pockets": [
@@ -295,6 +311,24 @@
       "y": 20,
       "w": 3,
       "h": 2
+    },
+    {
+      "x": 9,
+      "y": 7,
+      "w": 3,
+      "h": 3
+    },
+    {
+      "x": 11,
+      "y": 9,
+      "w": 3,
+      "h": 3
+    },
+    {
+      "x": 59,
+      "y": 10,
+      "w": 3,
+      "h": 3
     }
   ],
   "layouts": [

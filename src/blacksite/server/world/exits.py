@@ -66,6 +66,9 @@ def permitted(exit: Exit, access: dict[str, Any]) -> bool:
             allowed = access.get('faction') == credential.ref
         elif credential.kind == 'story':
             allowed = credential.ref in access.get('story', ())
+        elif credential.kind == 'open':
+            allowed = (access.get('zone') == credential.ref
+                       and credential.object in access.get('open_objects', ()))
         else:
             allowed = credential.ref in access.get('items', ())
         if allowed:
