@@ -63,7 +63,8 @@ async def leave_network(probe: ContractProbe, caller: Connection) -> None:
 async def enter_core(probe: ContractProbe, caller: Connection, core: str, descriptor: dict[str,Any]) -> Any:
     lat=probe.service.core.lattice
     if caller.session.player_id not in lat.presences:
-        terminal='cold-chain-loan-terminal' if core=='lat-relay-cold-chain' else 'fx-loan'
+        terminal = descriptor.get('terminal') or (
+            'cold-chain-loan-terminal' if core == 'lat-relay-cold-chain' else 'fx-loan')
         await probe.near(caller,terminal)
         if core=='lat-relay-cold-chain':
             # Use the authored shelter, not the contested approach that
@@ -180,6 +181,9 @@ async def drive_job(probe: ContractProbe, caller: Connection, iid: str, descript
             await network_stage(probe,caller,target,descriptor)
         else:
             await probe.near(caller,target.object)
+            before_objective = descriptor.get('before_objective')
+            if before_objective:
+                await before_objective(probe, caller)
             await objective_key(probe,caller,lambda:owner.state.engine.instances[iid].index!=index)
         await wait(lambda:owner.state.engine.instances[iid].index!=index)
         await leave_network(probe,caller)

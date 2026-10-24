@@ -52,19 +52,23 @@ class ServiceProbe(CityProbe):
                     and self.commerce.items[i].stack > old.get(i, 0))
 
 
-async def prepare(probe: ServiceProbe, size: tuple[int, int], label: str) -> Connection:
-    caller = await probe.open(*size, label, 0, True, card='halvard')
+async def prepare(probe: ServiceProbe, size: tuple[int, int], label: str, *,
+                  archetype: int = 0, membership: bool = True) -> Connection:
+    caller = await probe.open(*size, label, archetype, True, card='halvard' if membership else None)
     grade(probe, caller)
     p = probe.game.players[caller.session.player_id]
     p.chits_hand = 12000
-    p.standing['halvard'] = 30
+    if membership:
+        p.standing['halvard'] = 30
     probe.game.queue('save', p.bbs_user_id, p, immediate=True)
     probe.service._character_writes()
-    probe.report('FIXTURE S25 services: grade five, Halvard +30, 12000 hand chits; no item, placement, combat or game-clock fixtures.')
+    standing = 'Halvard +30, ' if membership else ''
+    probe.report(f'FIXTURE S25 services: grade five, {standing}12000 hand chits; no item, placement, combat or game-clock fixtures.')
     await probe.walk(caller, (21, 14))
     await key(caller, b'b')
     await wait(lambda: p.progress.get('wake_combat') == 'skipped')
-    await admission(probe, caller, 'halvard')
+    if membership:
+        await admission(probe, caller, 'halvard')
     return caller
 
 

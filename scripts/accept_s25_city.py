@@ -86,6 +86,9 @@ class CityProbe(ContractProbe):
                 await asyncio.sleep(.2)
                 waited += .2
 
+    async def before_walk_step(self, connection: Connection) -> None:
+        """Prepared acceptance callers may fight/heal before their next step."""
+
     async def walk(self, connection: Connection, target: tuple[int, int], within: int = 0) -> None:
         avatar = connection.avatar
         zone = self.service.world.zones[avatar.zone]
@@ -96,6 +99,7 @@ class CityProbe(ContractProbe):
         while avatar.actor.position not in goals:
             assert time.monotonic()-began < 120, ('walk timeout', zone.id, avatar.actor.position, target)
             assert avatar.actor.health > 0, ('survey caller defeated', zone.id, avatar.actor.position)
+            await self.before_walk_step(connection)
             position = avatar.actor.position
             occupied = {actor.position for actor in zone.actors.values()
                         if actor is not avatar.actor and not (actor.behaviour.get('training') and actor.owner != avatar.actor.id)}

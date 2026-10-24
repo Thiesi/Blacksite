@@ -213,6 +213,39 @@ def test_game_7_5_real_services_and_event_sources_are_commissioned(city: Content
     assert {layout.id for layout in outworks.meta.layouts} >= {'exhale-shortcut'}
 
 
+def test_game_7_5_and_9_4_warm_stack_board_preserves_the_five_story_inspections(city: ContentTree) -> None:
+    game = HeadlessServer(deepcopy(city), character_state={})
+    caller = game.connect()
+    create(game, caller)
+    owner = game.core.contracts
+    pid = caller.session.player_id
+    # Isolate an already accepted canonical story. Travel, unlock pacing
+    # and its earlier chapters are separate acceptance obligations.
+    draft = owner.state.fork()
+    tid = 'sab-red-s1-4-candles'
+    # The current pre-season build does not offer this later chapter.
+    draft.engine.templates[tid] = owner.content.contracts[tid]
+    job = draft.engine.accept(draft.engine.story_offer(tid, pid),
+                              (owner.participant(pid),), owner.now())
+    owner.write(draft)
+    game.commit_commerce()
+    zone = game.core.world.zones['sink-floor']
+    for index in range(1, 6):
+        tile = zone.objects[f'warm-stack-{index}'].spec.tile
+        place(game, caller, zone.id, game.core.world.free_tile(zone.id, tile))
+        act(game, caller, Frame('key', {'k': 'e', 't': 0}))
+        game.commit_commerce()
+        current = owner.state.engine.instances[job.id]
+        assert sum(current.stages[0].counts.values()) == index
+        assert caller.session.id not in owner.panels.menus
+    assert current.state == 'complete'
+    place(game, caller, zone.id, zone.objects['warm-stack-1'].spec.tile)
+    act(game, caller, Frame('key', {'k': 'e', 't': 0}))
+    panel = owner.panels.menus[caller.session.id]
+    assert panel.handler == 'sable'
+    assert any(row['id'] == 'service:sump' for row in owner.panels.rows(caller.session, panel))
+
+
 def test_game_5_6_three_cable_stations_keep_an_independent_free_route(city: ContentTree) -> None:
     for zid in ('sink-rim', 'sink-terraces'):
         cables = [ex for ex in city.zones[zid].meta.exits if ex.kind == 'cable']
