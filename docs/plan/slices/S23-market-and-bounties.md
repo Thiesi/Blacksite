@@ -1,6 +1,6 @@
 # S23 — Market and bounties: listings, bids, fees, bounty rules
 
-**Status:** planned
+**Status:** done (PR #64)
 **Primary model:** Sonnet · **Reviewer:** Opus
 **Depends on:** S12, S18, S20, S21 · **Milestone:** M4
 **Issue:** https://github.com/Thiesi/blacksite/issues/23
@@ -23,6 +23,11 @@ or let a later relay checkpoint overwrite the fee. Season reset retains
 earned treasury. See the [S21 handoff](../s21-relay-handoff.md).
 
 ## Goal
+
+Implementation and evidence: [PR #64](https://github.com/Thiesi/Blacksite/pull/64)
+and the [S23 acceptance record](../../ops/s23-acceptance.md). Future Sink
+geography and ordinary earning/clinic/human pacing remain S25/S26 gates;
+the disclosed transaction fixtures do not satisfy them.
 
 Give players an asynchronous, Kestrel-taxed market for items and a bounty
 board for names, reachable from any terminal. The market is the only
