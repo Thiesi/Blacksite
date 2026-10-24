@@ -64,7 +64,12 @@ class CityProbe(ContractProbe):
             'installed_content_sha256': installed, 'server_content_sha256': self.game.content.hash,
             'source_content_sha256': content_hash(Path(__file__).parents[1]/'src/blacksite/content'),
             'server_start_seconds': self.server_start_seconds,
+            'server_start_budget_passed': self.server_start_seconds <= 3,
             'zones': len(self.game.content.zones), 'local_overlay': False}, indent=2)+'\n', encoding='utf-8')
+
+    def assert_start_budget(self) -> None:
+        # Retain the same performance gate, after the functional scenario.
+        # A slow shared workstation must not prevent collecting play proof.
         assert self.server_start_seconds <= 3, ('architecture 11 server start budget', self.server_start_seconds)
 
     async def near(self, connection: Connection, object_id: str) -> None:
@@ -256,13 +261,15 @@ async def accept(root: Path, python: Path, show: bool, size: tuple[int, int], ca
         await probe.leave(caller, 's25-'+case+'-'+str(size[0])+'-left')
         assert not probe.errors and probe.service.failure is None
         (root/'s25-survey.json').write_text(json.dumps({
-            'passed': True, 'scope': 'actual-city walking, terminal cards and map rendering',
+            'passed': probe.server_start_seconds <= 3, 'functional_passed': True,
+            'scope': 'actual-city walking, terminal cards and map rendering',
             'full_slice_acceptance': False, 'case': case, 'size': list(size), 'visited': visited,
             'journeys': probe.journeys, 'walks': probe.walks,
             'transport': 'NetBBS Telnet -> registered native stdio', 'fixtures': [],
             'pending': ['earned membership and Shaft Head', 'commerce/clinics/housing',
                         'hardware operations', 'event/service play', 'earnings and human pacing']},
             indent=2)+'\n', encoding='utf-8')
+        probe.assert_start_budget()
     except BaseException:
         (root/'failure-trace.txt').write_text(traceback.format_exc(), encoding='utf-8')
         (root/'s25-partial.json').write_text(json.dumps({

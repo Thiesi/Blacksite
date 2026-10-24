@@ -2,6 +2,7 @@
 
 from collections import Counter, deque
 from copy import deepcopy
+from itertools import combinations
 from pathlib import Path
 from random import Random
 from typing import Any
@@ -97,6 +98,19 @@ def test_game_7_7_all_16_relays_and_ordinary_cores_use_live_hardware(city: Conte
         for hardware in core.hardware:
             obj = next(obj for obj in city.zones[hardware.zone].meta.objects if obj.id == hardware.object_id)
             assert obj.tile == hardware.tile and obj.params['core'] == cid, cid
+
+
+def test_game_5_5_shaft_patrols_cannot_seal_the_public_hardware_alcove(city: ContentTree) -> None:
+    zone = city.zones['spire-shaft-head']
+    hardware = next(obj for obj in zone.meta.objects if obj.id == 'shaft-hardware')
+    # Both shipped heavies patrol the same narrow approach. They can meet
+    # nose to nose, so an admitted caller needs room to walk past them.
+    patrol = city.npcs['npc-halvard-heavy-spire-shaft-head'].behaviours[0]
+    assert patrol.params['waypoints'] == [[15, 25], [23, 25]]
+    for occupied in combinations(((x, 25) for x in range(15, 24)), 2):
+        seen = reachable(city, zone, set(occupied))
+        assert any((hardware.tile[0]+dx, hardware.tile[1]+dy) in seen
+                   for dx, dy in ((0, 0), (0, 1), (0, -1), (1, 0), (-1, 0))), occupied
 
 
 def test_game_8_7_24_homes_do_not_reuse_public_entry_uplinks_or_population(city: ContentTree) -> None:

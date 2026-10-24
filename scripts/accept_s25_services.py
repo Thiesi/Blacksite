@@ -210,11 +210,13 @@ async def accept(root: Path, python: Path, show: bool, size: tuple[int, int], ca
         await probe.leave(caller, 's25-'+case+'-left')
         assert not probe.errors and probe.service.failure is None
         (root/'s25-services.json').write_text(json.dumps({
-            'passed': True, 'full_slice_acceptance': False, 'case': case, 'size': list(size),
+            'passed': probe.server_start_seconds <= 3, 'functional_passed': True,
+            'full_slice_acceptance': False, 'case': case, 'size': list(size),
             'transport': 'NetBBS Telnet -> registered native stdio', 'result': result,
             'fixtures': ['grade five', 'Halvard +30 admission standing', '12000 hand chits'],
             'journeys': probe.journeys, 'walks': probe.walks}, indent=2)+'\n', encoding='utf-8')
-        probe.report(f'S25 PASS {case} {size}: actual city services; disclosed eligibility/funds; earning pace remains pending')
+        probe.report(f'S25 FUNCTIONAL PASS {case} {size}: actual city services; disclosed eligibility/funds; earning pace remains pending')
+        probe.assert_start_budget()
     except BaseException:
         (root/'failure-trace.txt').write_text(traceback.format_exc(), encoding='utf-8')
         raise

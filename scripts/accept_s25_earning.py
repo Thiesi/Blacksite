@@ -49,7 +49,8 @@ async def accept(root: Path, python: Path, show: bool, size: tuple[int, int]) ->
         await probe.leave(caller, 's25-earned-upgrade-left')
         assert not probe.errors and probe.service.failure is None
         (root/'s25-earning.json').write_text(json.dumps({
-            'passed': True, 'full_slice_acceptance': False, 'size': list(size), 'fixtures': [],
+            'passed': probe.server_start_seconds <= 3, 'functional_passed': True,
+            'full_slice_acceptance': False, 'size': list(size), 'fixtures': [],
             'transport': 'NetBBS Telnet -> registered native stdio', 'job': job,
             'one_time_job_seconds': job_seconds, 'job_and_upgrade_seconds': elapsed,
             'earned_chits': 200, 'starter_chits': 200, 'remaining_chits': remaining,
@@ -58,8 +59,9 @@ async def accept(root: Path, python: Path, show: bool, size: tuple[int, int]) ->
             'pending': ['repeatable full-city earnings', 'high-tier program and implant acquisition',
                         'human gameplay pacing'],
             'journeys': probe.journeys, 'walks': probe.walks}, indent=2)+'\n', encoding='utf-8')
-        probe.report(f'S25 PASS earned upgrade {size}: actual first job {job_seconds:.1f}s, '
+        probe.report(f'S25 FUNCTIONAL PASS earned upgrade {size}: actual first job {job_seconds:.1f}s, '
                      f'rifle/ammo equipped at {elapsed:.1f}s, {remaining} chits remain; no fixtures or income extrapolation')
+        probe.assert_start_budget()
     except BaseException:
         (root/'failure-trace.txt').write_text(traceback.format_exc(), encoding='utf-8')
         raise

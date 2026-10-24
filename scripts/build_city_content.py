@@ -992,6 +992,14 @@ class City:
                     tile=list(local), target_zone=target, target_tile=list(remote), kind='cable', relay='cable'))
 
     def base_paths(self) -> None:
+        # The two Shaft Head heavies share a patrol through this alcove.
+        # A single-file doorway lets them seal the public hardware by
+        # meeting nose to nose. Leave a maintenance aisle to pass them.
+        head = self.grids['spire-shaft-head']
+        for y in range(24, 27):
+            for x in range(16, 24):
+                if head.rows[y][x] == '#':
+                    head.mark((x, y))
         for zid, meta in self.meta.items():
             grid = self.grids[zid]
             for point in [*(ex['tile'] for ex in meta['exits']), *(obj['tile'] for obj in meta['objects'])]:
