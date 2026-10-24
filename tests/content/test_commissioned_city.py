@@ -192,6 +192,73 @@ def test_game_5_2_and_8_4_undercity_water_sight_and_scour_grade_fields(city: Con
         assert len(fields) == 1 and fields[0].params['ring'] == ring
 
 
+def test_game_7_5_relay_zero_reserve_opens_a_useful_separate_workers_passage(city: ContentTree) -> None:
+    service = city.services['relay-zero']
+    reserve = next(choice for choice in service.allocations if choice.id == 'reserve')
+    binding = next(effect.binding for effect in reserve.effects
+                   if effect.params.get('what') == 'credential')
+    assert binding is not None and binding.control != 'relay_open'
+    controls = {control.id: control for room in city.cores[binding.core].rooms
+                for control in room.controls}
+    control = controls[binding.control]
+    assert control.permission == 'contract' and control.scope == 'mission'
+    assert control.action == 'open' and control.reset_seconds == 1200
+    ordinary = controls['relay_open']
+    assert ordinary.permission == 'public' and ordinary.target.object == 'relay-zero'
+    zone = city.zones[service.zone]
+    gate = next(obj for obj in zone.meta.objects if obj.id == control.target.object)
+    assert gate.kind == 'door' and gate.params['locked'] and not gate.params['open']
+
+    # Compare actual cardinal routes between the two street mouths. The
+    # closed passage must retain an ordinary route and save real walking
+    # when opened, rather than merely grant an already-public permission.
+    def distance(blocked: set[Tile]) -> int:
+        start, end = (34, 4), (34, 17)
+        pending, seen = deque([(start, 0)]), {start}
+        while pending:
+            (x, y), steps = pending.popleft()
+            if (x, y) == end:
+                return steps
+            for tile in ((x-1, y), (x+1, y), (x, y-1), (x, y+1)):
+                tid = zone.tile_at(tile)
+                if tid is not None and tile not in seen | blocked:
+                    definition = city.tiles[tid]
+                    if definition.passable and not definition.hazard:
+                        seen.add(tile)
+                        pending.append((tile, steps+1))
+        raise AssertionError('The workers passage must retain a public return')
+
+    assert distance({gate.tile}) - distance(set()) >= 8
+
+    game = HeadlessServer(deepcopy(city), character_state={})
+    caller = game.connect()
+    create(game, caller)
+    player = game.core.characters.players[caller.session.player_id]
+    owner = game.core.contracts
+    assert not owner.control_permit(player.id, binding.core, binding.control)
+    node = owner.state.services.nodes[service.id]
+    node.state, node.allocation = 'allocated', 'reserve'
+    node.roster, node.allocation_expires = (player.id,), owner.now()+1200
+    assert owner.control_permit(player.id, binding.core, binding.control)
+    assert not owner.control_permit('another-caller', binding.core, binding.control)
+    assert not owner.control_permit(player.id, binding.core, 'relay_open')
+    # Replay a committed opening receipt, isolating the authored target
+    # from channel timing, which is covered by the S15 controller tests.
+    interlock = game.core.lattice.interlock
+    live_gate = game.core.world.zones[service.zone].objects[gate.id]
+    assert live_gate.open is False
+    interlock.state['effects'][binding.core+':'+binding.control] = {
+        'core': binding.core, 'control': binding.control, 'revision': control.revision,
+        'enabled': True, 'starts': owner.now(), 'expires': owner.now()+1200,
+        'serial': 1, 'actor': player.id}
+    interlock.compose()
+    assert live_gate.open is True
+    game.clock.advance(12001)
+    interlock.compose()
+    assert live_gate.open is False
+    assert not owner.control_permit(player.id, binding.core, binding.control)
+
+
 def test_game_7_5_real_services_and_event_sources_are_commissioned(city: ContentTree) -> None:
     for service in city.services.values():
         assert city.active('services', service.id) and city.active('contracts', service.contract)

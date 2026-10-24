@@ -107,9 +107,42 @@ async def enter_core(probe: ContractProbe, caller: Connection, core: str, descri
 
 async def neutralize(probe: ContractProbe, caller: Connection, presence: Any) -> None:
     enc=probe.service.core.lattice.encounters
-    for ice in list(enc.defenders(presence)):
-        await encounter_row(probe,caller,'ice:'+ice.id)
-        await commit_key(probe,caller,b'1',lambda:not ice.alive)
+    began = time.monotonic()
+    while defenders := list(enc.defenders(presence)):
+        assert time.monotonic()-began < 120, 'Core approach remains under attack'
+        def present() -> None:
+            assert probe.service.core.lattice.presences.get(caller.session.player_id) is presence, (
+                'Network run ended before the defender was cleared', presence.integrity, presence.trace)
+        present()
+        if len(presence.rig) > 1 and presence.rig[1]:
+            shield = probe.game.content.programs[presence.rig[1]]
+            player = probe.game.players[caller.session.player_id]
+            now = probe.service.clock.now_utc().timestamp()
+            if (shield.effect.kind == 'absorb' and presence.effects.shield is None
+                    and player.progress.get('lattice_cooldowns', {}).get(shield.id, 0) <= now):
+                def protected() -> bool:
+                    present()
+                    return presence.effects.shield is not None
+                await commit_key(probe, caller, b'2', protected)
+        ice = defenders[0]
+        await commit_key(probe,caller,b'e',lambda:caller.session.id in enc.menus)
+        screen = enc.menus[caller.session.id]
+        row = 'ice:'+ice.id
+        if not any(candidate['id'] == row for candidate in enc.rows(presence, screen)):
+            # Patrols keep moving while the real menu opens. A stale
+            # defender is not a selectable row in the next room.
+            await commit_key(probe,caller,b'\x1b',lambda:caller.session.id not in enc.menus)
+            continue
+        await select(caller,lambda:enc.rows(presence,screen),screen,row)
+        await commit_key(probe,caller,b'\r',lambda:enc.menus.get(caller.session.id) is not screen
+                         or ice not in enc.defenders(presence))
+        if enc.menus.get(caller.session.id) is screen:
+            await commit_key(probe,caller,b'\x1b',lambda:caller.session.id not in enc.menus)
+        if ice in enc.defenders(presence):
+            def cleared() -> bool:
+                present()
+                return not ice.alive or ice not in enc.defenders(presence)
+            await commit_key(probe,caller,b'1',cleared)
 
 
 async def network_stage(probe: ContractProbe, caller: Connection, target: Any, descriptor: dict[str,Any]) -> None:
@@ -196,7 +229,9 @@ async def drive_job(probe: ContractProbe, caller: Connection, iid: str, descript
                 await before_objective(probe, caller)
             await objective_key(probe,caller,lambda:owner.state.engine.instances[iid].index!=index)
         await wait(lambda:owner.state.engine.instances[iid].index!=index)
-        await leave_network(probe,caller)
+        if not (descriptor.get('keep_final_network')
+                and owner.state.engine.instances[iid].state != 'active'):
+            await leave_network(probe,caller)
 
 
 async def reserve(probe: ContractProbe, caller: Connection, sid: str, allocation: str) -> str:

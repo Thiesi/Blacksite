@@ -1368,7 +1368,12 @@ Cold Chain places its replacement socket beside a sheltered loan
 terminal. Depot places its manifest inspection point before the surplus
 warehouse fork. Relay Zero places a physical reset cabinet whose cover
 protects a solo player's body from routine NPC patrols. A crew can guard
-it in contested PvP. Every map shows these costs through geometry.
+it in contested PvP. Its reserve credential opens the workshop's
+north-to-south workers passage through `worker_return`, saving at least
+eight steps while the public street remains available. The gate stands
+at (34, 7), between street mouths (34, 4) and (34, 17). Ordinary
+`relay_open` remains a separate public capture control. Every map shows
+these costs through geometry (game 7.5).
 
 The existing `under-shaft-foot` is permanent geography, never an Open
 ending reward. That ending changes only an optional east maintenance

@@ -18,11 +18,26 @@ from typing import Any
 from accept_s10_netbbs import Connection, wait
 from accept_s16_netbbs import commit_key, key, select
 from accept_s19_netbbs import board_row, close_jobs
-from accept_s19_services import drive_job, leave_network
+from accept_s19_services import drive_job, enter_core, leave_network, network_stage
 from accept_s25_services import ServiceProbe, prepare
 
 
 class WorkOrderProbe(ServiceProbe):
+    async def target(self, caller: Connection, actor_id: str) -> None:
+        actor = caller.avatar.actor
+        zone = self.service.world.zones[actor.zone]
+        enemy = zone.actors.get(actor_id)
+        began = time.monotonic()
+        while (enemy and enemy.health > 0 and enemy.stance not in ('down', 'dead')
+               and enemy.zone == actor.zone and self.combat.visible(actor, enemy)
+               and actor.target != actor_id):
+            assert time.monotonic()-began < 10, ('visible target selection stalled', actor_id)
+            await key(caller, b'\t')
+            # A moving patrol may leave sight before the acknowledgement.
+            # Re-evaluate the live candidates instead of waiting for an
+            # impossible selection of the old snapshot.
+            await asyncio.sleep(.1)
+
     async def before_walk_step(self, caller: Connection) -> None:
         if getattr(self, 'combat_prepared', False):
             await clear_for_repair(self, caller)
@@ -136,15 +151,16 @@ async def equipment(probe: WorkOrderProbe, caller: Connection) -> None:
 
 async def network_equipment(probe: WorkOrderProbe, caller: Connection) -> None:
     """Acquire the real public Key route and load the free native slot."""
-    program = 'prg_locksmith'
+    programs = ((0, 'prg_chisel'), (2, 'prg_locksmith'))
     vendor = probe.game.content.vendors['oldworks-bench']
     await probe.route(caller, vendor.zone)
     player = probe.game.players[caller.session.player_id]
     panel = await probe.counter(caller, vendor.object_id)
-    await probe.row(caller, panel, program)
-    before = player.chits_hand
-    await commit_key(probe, caller, b'\r', lambda: program in player.progress.get('known_programs', ()))
-    assert player.chits_hand < before
+    for _, program in programs:
+        await probe.row(caller, panel, program)
+        before = player.chits_hand
+        await commit_key(probe, caller, b'\r', lambda: program in player.progress.get('known_programs', ()))
+        assert player.chits_hand < before
     await probe.close_menu(caller)
     zone = probe.service.world.zones[caller.avatar.zone]
     terminal = next(obj.spec.id for obj in zone.objects.values()
@@ -156,14 +172,15 @@ async def network_equipment(probe: WorkOrderProbe, caller: Connection) -> None:
     presence = lattice.presences[player.id]
     assert lattice.public(presence) and not presence.instance
     encounter = lattice.encounters
-    await commit_key(probe, caller, b'r', lambda: caller.session.id in encounter.menus)
-    screen = encounter.menus[caller.session.id]
-    await select(caller, lambda: encounter.rows(presence, screen), screen, '2')
-    await commit_key(probe, caller, b'\r', lambda: screen.kind == 'binding')
-    await select(caller, lambda: encounter.rows(presence, screen), screen, program)
-    await commit_key(probe, caller, b'\r', lambda: presence.rig[2] == program)
-    assert player.rig['slots'][2] == program
-    await commit_key(probe, caller, b'\x1b', lambda: caller.session.id not in encounter.menus)
+    for slot, program in programs:
+        await commit_key(probe, caller, b'r', lambda: caller.session.id in encounter.menus)
+        screen = encounter.menus[caller.session.id]
+        await select(caller, lambda: encounter.rows(presence, screen), screen, str(slot))
+        await commit_key(probe, caller, b'\r', lambda: screen.kind == 'binding')
+        await select(caller, lambda: encounter.rows(presence, screen), screen, program)
+        await commit_key(probe, caller, b'\r', lambda: presence.rig[slot] == program)
+        assert player.rig['slots'][slot] == program
+        await commit_key(probe, caller, b'\x1b', lambda: caller.session.id not in encounter.menus)
     await commit_key(probe, caller, b'3', lambda: presence.key_tier >= 2)
     probe.save(caller, 's25-real-public-locksmith-purchased-loaded-and-activated')
     await leave_network(probe, caller)
@@ -217,11 +234,13 @@ async def accept(root: Path, python: Path, show: bool, size: tuple[int, int],
                      and obj.spec.params.get('contract_handler') == giver]
         terminal = 'cold-chain-loan-terminal' if sid == 'cold-chain' else min(terminals)
         await drive_job(probe, caller, iid, {'terminal': terminal, 'before_objective': clear_for_repair,
-                                          'key_slot': 2, 'respect_gates': True})
+                                          'key_slot': 2, 'respect_gates': True,
+                                          'keep_final_network': sid == 'relay-zero' and allocation == 'reserve'})
         node = owner.state.services.nodes[sid]
         assert node.state == 'allocated' and node.allocation == allocation
         assert player.chits_hand-before[0] == 200 and player.xp-before[1] >= 100
         layouts: list[dict[str, Any]] = []
+        benefits: list[dict[str, Any]] = []
         choice = next(choice for choice in service.allocations if choice.id == allocation)
         for effect in choice.effects:
             if effect.type == 'route_hold':
@@ -233,6 +252,56 @@ async def accept(root: Path, python: Path, show: bool, size: tuple[int, int],
                     {'tile': list(change.tile), 'type': zone.tile_id(change.tile),
                      'movement_cost': zone.tiles[zone.tile_id(change.tile)].movement_cost}
                     for change in layout.changes]})
+            elif effect.type == 'cache':
+                await probe.route(caller, effect.zone)
+                await probe.near(caller, effect.params['object'])
+                def units() -> int:
+                    return sum(probe.commerce.items[i].stack for i in player.inventory
+                               if probe.commerce.items[i].template == 'slv_power'
+                               and not probe.commerce.items[i].mission)
+                original = units()
+                await commit_key(probe, caller, b'e', lambda: units() == original+2)
+                benefits.append({'cache': effect.params['object'], 'collected_power_units': 2})
+            elif effect.type == 'reveal' and effect.params.get('what') == 'credential':
+                assert effect.binding is not None
+                control = probe.service.core.lattice.interlock.controls[
+                    effect.binding.core, effect.binding.control]
+                gate = zone.objects[control.target.object]
+                assert not gate.open
+                assert owner.effects.permits(player.id, effect.binding.core, effect.binding.control)
+                await network_stage(probe, caller, effect.binding, {
+                    'terminal': terminal, 'key_slot': 2, 'respect_gates': True})
+                await wait(lambda: gate.open is True)
+                await leave_network(probe, caller)
+                await probe.route(caller, zone.id)
+                await probe.walk(caller, (34, 4))
+                await probe.walk(caller, (34, 17))
+                benefits.append({'control': control.id, 'opened_and_walked': gate.spec.id})
+            elif effect.type == 'reveal' and effect.params.get('what') == 'patrol_route':
+                assert effect.binding is not None
+                await enter_core(probe, caller, effect.binding.core, {
+                    'terminal': terminal, 'key_slot': 2, 'respect_gates': True})
+                patrols = owner.effects.patrols(player.id)
+                assert patrols
+                probe.save(caller, 's25-relay-zero-common-published-patrols')
+                benefits.append({'published_patrols': patrols})
+                await leave_network(probe, caller)
+            elif effect.type == 'price_modifier' and effect.params.get('service') == 'buyback_budget':
+                vendor = probe.game.content.vendors[effect.params['vendor']]
+                await probe.route(caller, vendor.zone)
+                await probe.counter(caller, vendor.object_id)
+                factor = owner.effects.budget(vendor, vendor.zone+':'+vendor.object_id)
+                assert factor == 2
+                probe.save(caller, 's25-depot-common-real-surplus-counter')
+                benefits.append({'vendor': vendor.id, 'buyback_budget_multiplier': factor})
+                await probe.close_menu(caller)
+            elif effect.type == 'price_modifier' and effect.params.get('service') == 'surgery':
+                vendor = probe.game.content.vendors[effect.params['vendor']]
+                await probe.route(caller, vendor.zone)
+                await probe.near(caller, vendor.object_id)
+                factor = owner.effects.fee(player, vendor)
+                assert factor == (.9 if allocation == 'common' else .8)
+                benefits.append({'vendor': vendor.id, 'surgery_fee_multiplier': factor})
         probe.save(caller, f's25-{sid}-{allocation}-real-repair-paid')
         await probe.route(caller, 'vatside-clinics')
         await probe.leave(caller, f's25-{sid}-{allocation}-public-return')
@@ -242,7 +311,8 @@ async def accept(root: Path, python: Path, show: bool, size: tuple[int, int],
             'full_slice_acceptance': False, 'size': list(size), 'service': sid,
             'allocation': allocation, 'board': board.id, 'network_terminal': terminal,
             'purchased_network_program': 'prg_locksmith',
-            'job': iid, 'reservation_deadline': deadline, 'layouts': layouts,
+            'purchased_attack_program': 'prg_chisel',
+            'job': iid, 'reservation_deadline': deadline, 'layouts': layouts, 'benefits': benefits,
             'reward_chits': player.chits_hand-before[0], 'reward_xp': player.xp-before[1],
             'service_uptime_fixture_seconds': 3600, 'game_utc_fixture': False,
             'item_fixture': False, 'placement_fixture': False, 'ice_fixture': False,

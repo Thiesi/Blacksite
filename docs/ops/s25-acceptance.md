@@ -37,12 +37,21 @@ cause or justify changing gameplay or a performance threshold.
 | `246ac33` | Root CI: 1570 Linux; 1569 Windows plus one skip. NPC p99: 80x24 6.697/8.603 ms; 132x50 6.354/8.382 ms. Both NPC archives independently verified, including all 324 content files. | Old Exhale helper failed; final-head and human gates open. |
 | `d5988e6` | Root CI green on both platforms; native 46/49. Real Sump board bound without moving its terminal. | Unequipped wide surveys died in Caverns/Ring Three. Extended 80x24 p99 failed at 20.247 ms. |
 | `b7d30fc` | Canonical Warm Stack regression and root CI green. Native 51/65, including both allocations of real Cold Chain at both sizes. | Two deep surveys used a shared hardware id in the wrong zone; remaining repair failures include Key preparation and a healing-channel retry. Final proof remains pending. |
+| `c1736a5` | Root CI green on both platforms; native 59/65, including all six city surveys. Independently verified NPC p99: 80x24 5.407/7.560 ms; 132x50 5.229/6.590 ms. Local prepared 132x50 deep survey passed, including 2.830-second startup. | Sump/common target selection and Relay Zero ICE encounters failed. Final-head/human gates remained open. |
 
 The failed `d5988e6` performance archive independently matches its source,
 version, digest, CRC and all 324 content files. Late diagnostic peaks
 were 51.468/7.585 ms and 22.093/6.777 ms wall/thread CPU. The wall-time
 gate failed. GC and storage-flush probes now accompany tick diagnostics
 to distinguish their contribution; their overhead stays inside the gate.
+
+The two `c1736a5` NPC archives independently match the version, complete
+Python tree and all 324 content files. Their archive SHA256 values are
+`1221f814457a1b784bf10a19410b8466e5eb77cfae9315481005705ca56a881c`
+(80x24) and
+`5f5005e225061f7ccb5b2f3d6a35b70f662df8069fd460a23a75c105e102c6b4`
+(132x50). The earlier failed wall-time samples remain failures. The new
+Relay Zero content binding needs its own final-head reference run.
 
 ## Actual-city preparation and pacing
 
@@ -71,6 +80,26 @@ It used the installed wheel 0.0.21 with content hash
 `53fcc8012799ef04a03531aff939733aa6a5c317de0c47e15e745218351bd9f9`.
 Functional success is retained separately from its 3.281-second startup
 failure. This prototype still needs final-head two-size validation.
+
+Benefit inspection found that Relay Zero reserve granted the already
+public `relay_open` control. That was no meaningful reward. Game 7.5 now
+binds `worker_return` to a real optional workers passage with a scoped
+permission check, a timed opening and the longer public street retained.
+The geometry regression failed against the old binding; all 34 focused
+city/service tests passed after the correction. Native repair probes now
+also collect actual reserve caches, inspect the real surplus counter,
+check the surgery fee factor, reveal current patrols, or operate and walk
+the actual workers gate. These added benefit cases are pending, not
+claimed passed by the earlier repair-only receipts.
+
+The first local workers-gate attempt completed and paid the real repair,
+then lost its Lattice presence on the second core visit. Its starter
+Pick and unused Umbrella did not establish prepared network combat.
+The next probe purchases Chisel from the public Old Works counter and
+uses the loaded shield when eligible. Forced jack-out now terminates
+the network helper before a stale attack key can use a body quick slot.
+No ICE, integrity, trace, channel, price or reward rule was relaxed.
+The first attempt also failed its 3.234-second startup; retain it.
 
 Still required: complete actual service/core/relay benefits and paid
 routes, repeatable earnings/acquisition and event-route pacing, final

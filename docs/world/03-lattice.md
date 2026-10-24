@@ -386,6 +386,12 @@ Its hardware is the mast beside the physical capture terminal. Its
 `relay_open` control targets that relay, not unrelated service hardware.
 All relay instance IDs and tiers are game design §7.7.
 
+Relay Zero also exposes `worker_return` in its Archive. This separate
+work-order control opens the optional north-to-south workshop passage
+in Old Works Main for 20 minutes. It requires the active reserve
+allocation's worker credential. The longer street stays public; ordinary
+`relay_open` remains public and retains its capture meaning (game §7.5).
+
 ### 3.13 Season cores
 
 Defined by `05-story-arcs.md` and built with their Blacksite level; listed

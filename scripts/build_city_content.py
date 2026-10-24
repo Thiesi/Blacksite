@@ -332,6 +332,8 @@ class City:
                 hardware.update(tile=obj['tile'], object_id=oid)
             for room in core['rooms']:
                 for control in room.get('controls', []):
+                    if core['id'] == 'lat-relay-zero' and control['id'] == 'worker_return':
+                        continue  # services() authors its fixed corridor and door.
                     target = control['target']
                     if core['id'] == 'lat-halvard-citadel' and control['id'] == 'executive-lift-lockdown':
                         # Lattice 3.1: lockdown closes the inbound public
@@ -529,6 +531,37 @@ class City:
         write(self.output/'vendors.json', vendors)
 
     def services(self) -> None:
+        # Game 7.5: reserve rewards a real optional shortcut. S21's public
+        # relay_open remains bound to capture and grants no worker access.
+        zid = 'oldworks-main'
+        grid = self.grids[zid]
+        corridor = {(34, y) for y in range(5, 17)}
+        assert not corridor & grid.reserved
+        for tile in corridor:
+            grid.mark(tile)
+        gate = self.obj(zid, 'relay-zero-workers-gate', 'door',
+                        'Workers passage', tile=(34, 7),
+                        params={'open': False, 'locked': True})
+        path = self.output/'cores/lat-relay-zero.json'
+        core = read(path)
+        for room in core['rooms']:
+            room['controls'] = [c for c in room.get('controls', []) if c['id'] != 'worker_return']
+        room = next(room for room in core['rooms']
+                    if any(c['id'] == 'relay_open' for c in room.get('controls', [])))
+        room['controls'].append(dict(id='worker_return', label='Workers passage',
+            target=dict(zone=zid, object=gate['id']), action='open',
+            reset_seconds=1200, scope='mission', permission='contract', safety_policy='none'))
+        write(path, core)
+        path = self.output/'services.json'
+        services = read(path)
+        service = next(node for node in services['services'] if node['id'] == 'relay-zero')
+        reserve = next(choice for choice in service['allocations'] if choice['id'] == 'reserve')
+        for effect in reserve['effects']:
+            if effect.get('params', {}).get('what') == 'credential':
+                effect['binding']['control'] = 'worker_return'
+        reserve['detail'] = ('Workers may open the north-to-south workshop passage for 20 minutes. '
+                             'The public street stays open. ICE remains active.')
+        write(path, services)
         self.obj('tramyard-depots', 'depot-surplus-latch', 'door', 'Surplus counter service latch',
                  params={'open': True})
         self.obj('tramyard-depots', 'depot-reserve-cache', 'cache', 'Workers surplus allocation')

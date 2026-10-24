@@ -552,6 +552,11 @@ The service's zone contains a public terminal whose `contract_handler`
 matches the work-order contract's faction (game 7.5). A handler in a
 different zone does not expose this local order.
 
+Relay Zero's reserve credential binds the contract-permission
+`lat-relay-zero/worker_return` control to the real optional
+`oldworks-main/relay-zero-workers-gate` door. The ordinary public
+`relay_open` control keeps its relay-capture binding (game 7.5/7.7).
+
 ### 1.18 Vendor and hymn tables (`vendors.json`, `hymns.json`)
 
 Vendor: `id, name, tier (list, member, restricted), stock[] (item,

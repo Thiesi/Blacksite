@@ -160,6 +160,19 @@
       }
     },
     {
+      "id": "relay-zero-workers-gate",
+      "tile": [
+        34,
+        7
+      ],
+      "kind": "door",
+      "params": {
+        "name": "Workers passage",
+        "open": false,
+        "locked": true
+      }
+    },
+    {
       "id": "vat-nine-squat",
       "tile": [
         27,

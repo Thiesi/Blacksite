@@ -398,3 +398,18 @@ human earnings or challenge measurement. See
 [platform #56](https://github.com/Thiesi/Blacksite/issues/56).
 <!-- s25-water:end -->
 <!-- s25-city-decisions:end -->
+
+<!-- s25-worker-passage:start -->
+
+Relay Zero reserve now grants only `lat-relay-zero/worker_return`, opening
+the optional Old Works Main workshop passage for 20 minutes. The closed
+passage retains the public street; opening it saves at least eight steps.
+Opening requires a current worker credential; walking the opened door
+is public. Preserve the separate, ordinary public `relay_open` capture
+control. The former reserve binding to that public control supplied no
+meaningful reward. Retain this distinction in seasonal activation,
+dialogue/help, operator views, load and federation checks. Reference:
+[PR #66](https://github.com/Thiesi/Blacksite/pull/66), retaining
+[PR #38](https://github.com/Thiesi/Blacksite/pull/38) and
+[platform #56](https://github.com/Thiesi/Blacksite/issues/56).
+<!-- s25-worker-passage:end -->

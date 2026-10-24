@@ -127,6 +127,19 @@
           "scope": "public",
           "permission": "public",
           "safety_policy": "none"
+        },
+        {
+          "id": "worker_return",
+          "label": "Workers passage",
+          "target": {
+            "zone": "oldworks-main",
+            "object": "relay-zero-workers-gate"
+          },
+          "action": "open",
+          "reset_seconds": 1200,
+          "scope": "mission",
+          "permission": "contract",
+          "safety_policy": "none"
         }
       ]
     }
