@@ -73,6 +73,19 @@ together. Nothing here changes a rule; it explains them.
 - First-run screen: shown once per BBS user before the Wake, from the
   found-texts asset, any key continues; stored as a flag on the player
   row.
+- S25 actual-map repair follow-up: explain attack versus Key programs,
+  target-core gate requirements, public software sources, current
+  prices, loading through the rig menu in a public district cell and
+  activating the appropriate Key. A faction-specific exception does not
+  become a generic link credential just because its program tier is high.
+  A Ghost's starter Pick/Umbrella does not satisfy the Sump's Key gate.
+  Give a protected public uplink route and distinguish one-time gear
+  preparation from the order's action fee. Do not imply membership is
+  required for a public repair or its guaranteed public program route.
+  See terminal UI section 11 and
+  [PR #66](https://github.com/Thiesi/Blacksite/pull/66), retaining
+  [PR #38](https://github.com/Thiesi/Blacksite/pull/38) and
+  [platform #56](https://github.com/Thiesi/Blacksite/issues/56).
 - Session-limit UX (`blacksite.door`): take the minimum positive host
   `session_limit_seconds` and explicit `DOOR_BLACKSITE_SESSION_LIMIT`
   (standalone `BLACKSITE_SESSION_LIMIT`). Zero/unset game override

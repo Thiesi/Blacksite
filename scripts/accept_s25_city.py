@@ -22,6 +22,7 @@ from accept_s16_netbbs import commit_key, key
 from accept_s19_netbbs import ContractProbe
 from blacksite.content.loader import content_hash
 from blacksite.server.world.exits import permitted
+from blacksite.server import app as server_app
 
 
 CASES = {
@@ -50,7 +51,43 @@ class CityProbe(ContractProbe):
 
     async def start(self) -> None:
         assert not (self.root/'world/content.local').exists(), 'S25 requires the shipped city without overlays'
-        await super().start()
+        phases: dict[str, dict[str, float | int]] = {}
+        def record(name: str, began: float, cpu: float) -> None:
+            phase = phases.setdefault(name, {'calls': 0, 'wall_seconds': 0.0, 'thread_cpu_seconds': 0.0})
+            phase['calls'] += 1
+            phase['wall_seconds'] += time.perf_counter()-began
+            phase['thread_cpu_seconds'] += time.thread_time()-cpu
+        def measured(name: str, method: Any) -> Any:
+            def call(*args: Any, **kwargs: Any) -> Any:
+                began, cpu = time.perf_counter(), time.thread_time()
+                try:
+                    return method(*args, **kwargs)
+                finally:
+                    record(name, began, cpu)
+            return call
+        original_start = self.service.start
+        load, validate, copy = server_app.load_content, server_app.validate, server_app.shutil.copyfile
+        async def measured_start() -> None:
+            began, cpu = time.perf_counter(), time.thread_time()
+            try:
+                await original_start()
+            finally:
+                record('server_start', began, cpu)
+        # Each acceptance process owns one startup. Restore every wrapper,
+        # even on failure; no production function or performance gate changes.
+        self.service.start = measured_start
+        server_app.load_content = measured('content_load', load)
+        server_app.validate = measured('content_validate', validate)
+        server_app.shutil.copyfile = measured('content_copy', copy)
+        try:
+            await super().start()
+        finally:
+            self.service.start = original_start
+            server_app.load_content, server_app.validate, server_app.shutil.copyfile = load, validate, copy
+            if self.root.exists():
+                (self.root/'native-startup.json').write_text(json.dumps({
+                    'phases': phases, 'probe_overhead_included': True,
+                    'performance_budget_seconds': 3}, indent=2)+'\n', encoding='utf-8')
         check = await asyncio.create_subprocess_exec(str(self.python), '-I', '-c',
             'from pathlib import Path; import blacksite.content; '
             'from blacksite.content.loader import content_hash; '

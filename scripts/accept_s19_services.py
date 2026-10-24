@@ -74,6 +74,11 @@ async def enter_core(probe: ContractProbe, caller: Connection, core: str, descri
         await key(caller,b'j')
         await wait(lambda:caller.session.player_id in lat.presences)
     presence=lat.presences[caller.session.player_id]
+    key_slot = descriptor.get('key_slot')
+    if key_slot is not None:
+        program = lat.content.programs[presence.rig[key_slot]]
+        level = int(program.effect.amount)
+        await commit_key(probe, caller, str(key_slot+1).encode(), lambda: presence.key_tier >= level)
     if presence.core != core:
         cells=lat.sectors.cells[presence.sector]
         entrance=next(c.id for c in cells.values() if c.core_id==core)
@@ -81,9 +86,14 @@ async def enter_core(probe: ContractProbe, caller: Connection, core: str, descri
         while pending and entrance not in paths:
             cell=pending.popleft()
             for adjacent in cells[cell].neighbours:
+                if descriptor.get('respect_gates') and not lat.accepts(
+                        probe.game.players[caller.session.player_id], presence,
+                        cells[adjacent], cells[adjacent].requirement):
+                    continue
                 if adjacent not in paths:
                     paths[adjacent]=[*paths[cell],adjacent]
                     pending.append(adjacent)
+        assert entrance in paths, (presence.sector, entrance, 'No permitted route with the current credentials')
         for hop in paths[entrance]:
             a,b=cells[presence.cell].pos,cells[hop].pos
             dx,dy=b[0]-a[0],b[1]-a[1]

@@ -16,9 +16,9 @@ import traceback
 from typing import Any
 
 from accept_s10_netbbs import Connection, wait
-from accept_s16_netbbs import commit_key, key
+from accept_s16_netbbs import commit_key, key, select
 from accept_s19_netbbs import board_row, close_jobs
-from accept_s19_services import drive_job
+from accept_s19_services import drive_job, leave_network
 from accept_s25_services import ServiceProbe, prepare
 
 
@@ -28,7 +28,9 @@ class WorkOrderProbe(ServiceProbe):
             await clear_for_repair(self, caller)
 
     async def near(self, caller: Connection, object_id: str) -> None:
-        zid = next(zid for zid, zone in self.service.world.zones.items() if object_id in zone.objects)
+        zid = caller.avatar.zone
+        if object_id not in self.service.world.zones[zid].objects:
+            zid = next(zid for zid, zone in self.service.world.zones.items() if object_id in zone.objects)
         if caller.avatar.zone != zid:
             await self.route(caller, zid)
         await super().near(caller, object_id)
@@ -57,11 +59,23 @@ async def heal(probe: WorkOrderProbe, caller: Connection) -> None:
     patch = next((iid for iid in player.inventory
                   if probe.commerce.items[iid].template == 'con_sablier_patch'), None)
     if patch:
+        block = probe.game.content.items['con_sablier_patch'].consumable
+        if player.progress.get('item_cooldowns', {}).get(block.cooldown_class, 0) > probe.service.clock.now_utc().timestamp():
+            return
         before = probe.commerce.items[patch].stack
         await commit_key(probe, caller, b'i', lambda: caller.session.id in probe.commerce.menus)
         await probe.row(caller, probe.commerce.menus[caller.session.id], patch)
+        last_hit = actor.cooldowns.get('last_hit')
         await commit_key(probe, caller, b'u', lambda: patch not in probe.commerce.items
-                         or probe.commerce.items[patch].stack < before)
+                         or probe.commerce.items[patch].stack < before
+                         or caller.session.id in probe.commerce.using
+                         or actor.cooldowns.get('last_hit') != last_hit or actor.health <= 0)
+        # Receipt of a use channel ends retries. Repeated U would restart
+        # its timer; incoming damage cancels it under the ordinary rules.
+        if caller.session.id in probe.commerce.using:
+            await wait(lambda: caller.session.id not in probe.commerce.using or actor.health <= 0,
+                       float(block.use_seconds)+3)
+        assert actor.health > 0, 'Repair worker defeated while using medicine'
         await probe.close_menu(caller)
 
 
@@ -120,6 +134,41 @@ async def equipment(probe: WorkOrderProbe, caller: Connection) -> None:
     await probe.close_menu(caller)
 
 
+async def network_equipment(probe: WorkOrderProbe, caller: Connection) -> None:
+    """Acquire the real public Key route and load the free native slot."""
+    program = 'prg_locksmith'
+    vendor = probe.game.content.vendors['oldworks-bench']
+    await probe.route(caller, vendor.zone)
+    player = probe.game.players[caller.session.player_id]
+    panel = await probe.counter(caller, vendor.object_id)
+    await probe.row(caller, panel, program)
+    before = player.chits_hand
+    await commit_key(probe, caller, b'\r', lambda: program in player.progress.get('known_programs', ()))
+    assert player.chits_hand < before
+    await probe.close_menu(caller)
+    zone = probe.service.world.zones[caller.avatar.zone]
+    terminal = next(obj.spec.id for obj in zone.objects.values()
+                    if obj.spec.kind == 'terminal' and not zone.allows_hostile(obj.spec.tile))
+    await probe.near(caller, terminal)
+    await key(caller, b'j')
+    lattice = probe.service.core.lattice
+    await wait(lambda: player.id in lattice.presences)
+    presence = lattice.presences[player.id]
+    assert lattice.public(presence) and not presence.instance
+    encounter = lattice.encounters
+    await commit_key(probe, caller, b'r', lambda: caller.session.id in encounter.menus)
+    screen = encounter.menus[caller.session.id]
+    await select(caller, lambda: encounter.rows(presence, screen), screen, '2')
+    await commit_key(probe, caller, b'\r', lambda: screen.kind == 'binding')
+    await select(caller, lambda: encounter.rows(presence, screen), screen, program)
+    await commit_key(probe, caller, b'\r', lambda: presence.rig[2] == program)
+    assert player.rig['slots'][2] == program
+    await commit_key(probe, caller, b'\x1b', lambda: caller.session.id not in encounter.menus)
+    await commit_key(probe, caller, b'3', lambda: presence.key_tier >= 2)
+    probe.save(caller, 's25-real-public-locksmith-purchased-loaded-and-activated')
+    await leave_network(probe, caller)
+
+
 async def accept(root: Path, python: Path, show: bool, size: tuple[int, int],
                  sid: str, allocation: str) -> None:
     assert not (root/'world').exists(), 'Use a fresh private acceptance world'
@@ -131,6 +180,7 @@ async def accept(root: Path, python: Path, show: bool, size: tuple[int, int],
         caller = await prepare(probe, size, 'S25repair', archetype=1, membership=False)
         await equipment(probe, caller)
         probe.combat_prepared = True
+        await network_equipment(probe, caller)
         owner = probe.service.core.contracts
         player = probe.game.players[caller.session.player_id]
         service = probe.game.content.services[sid]
@@ -166,7 +216,8 @@ async def accept(root: Path, python: Path, show: bool, size: tuple[int, int],
                      and not candidate.allows_hostile(obj.spec.tile)
                      and obj.spec.params.get('contract_handler') == giver]
         terminal = 'cold-chain-loan-terminal' if sid == 'cold-chain' else min(terminals)
-        await drive_job(probe, caller, iid, {'terminal': terminal, 'before_objective': clear_for_repair})
+        await drive_job(probe, caller, iid, {'terminal': terminal, 'before_objective': clear_for_repair,
+                                          'key_slot': 2, 'respect_gates': True})
         node = owner.state.services.nodes[sid]
         assert node.state == 'allocated' and node.allocation == allocation
         assert player.chits_hand-before[0] == 200 and player.xp-before[1] >= 100
@@ -190,6 +241,7 @@ async def accept(root: Path, python: Path, show: bool, size: tuple[int, int],
             'passed': probe.server_start_seconds <= 3, 'functional_passed': True,
             'full_slice_acceptance': False, 'size': list(size), 'service': sid,
             'allocation': allocation, 'board': board.id, 'network_terminal': terminal,
+            'purchased_network_program': 'prg_locksmith',
             'job': iid, 'reservation_deadline': deadline, 'layouts': layouts,
             'reward_chits': player.chits_hand-before[0], 'reward_xp': player.xp-before[1],
             'service_uptime_fixture_seconds': 3600, 'game_utc_fixture': False,
@@ -206,10 +258,13 @@ async def accept(root: Path, python: Path, show: bool, size: tuple[int, int],
         if hasattr(probe, 'game') and 'caller' in locals():
             actor = caller.avatar.actor
             player = probe.game.players[caller.session.player_id]
+            presence = probe.service.core.lattice.presences.get(player.id)
             (root/'failure-state.json').write_text(json.dumps({
                 'zone': caller.avatar.zone, 'tile': list(actor.position),
                 'health': actor.health, 'maximum_health': actor.health_max,
                 'stance': actor.stance, 'rig': player.rig,
+                'lattice': {'sector': presence.sector, 'cell': presence.cell,
+                            'core': presence.core, 'room': presence.room} if presence else None,
                 'inventory': [(probe.commerce.items[iid].template, probe.commerce.items[iid].stack)
                               for iid in player.inventory],
                 'jobs': [{'template': job.template, 'state': job.state, 'index': job.index}

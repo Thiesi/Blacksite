@@ -5,6 +5,15 @@
 **Depends on:** S26, S28, S29, S30, S32, S33 · **Milestone:** M6
 **Issue:** https://github.com/Thiesi/blacksite/issues/31
 
+S30's S25 repair-preparation help is a release handoff: verify the
+published public Key source, loading/activation and protected uplink
+against the shipped city. The local work-order board grants no network
+credential; action fees and permanent equipment preparation remain
+distinct. See terminal UI section 11 and
+[PR #66](https://github.com/Thiesi/Blacksite/pull/66), retaining
+[PR #38](https://github.com/Thiesi/Blacksite/pull/38) and
+[platform #56](https://github.com/Thiesi/Blacksite/issues/56).
+
 ## Goal
 
 Turn the repository into something a SysOp installs: a wheel with the
