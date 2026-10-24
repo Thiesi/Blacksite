@@ -39,6 +39,10 @@ Both exit zero with `s24-results.json`, `native-client.json` and fully
 drained `console-output.json`. Neither has a failure trace. Hosted
 acceptance artifacts and independent archive checks are linked in the
 PR's final merge-gate comment.
+These local paths record the reviewed runtime before the subsequent
+fixture UTC-phase correction. The PR's final gate also records both
+corrected-harness local runs and exact-head hosted artifacts; an earlier
+failed CI archive cannot satisfy that gate.
 
 `scripts/accept_s24_netbbs.py` exercises:
 
