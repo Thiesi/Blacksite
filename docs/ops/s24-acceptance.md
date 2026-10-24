@@ -2,6 +2,9 @@
 
 S24 is under review in [PR #65](https://github.com/Thiesi/Blacksite/pull/65).
 Final review-fix, exact-head CI and both-size native gates remain open.
+The exact-worktree code-graph refresh was attempted but its transport
+was closed. Structural checks used direct source reads; no ready index
+is claimed.
 
 ## Runtime and evidence boundaries
 
@@ -74,6 +77,21 @@ cancellation/correction without retaining a proposed reward claim.
 Structured diagnostics are drained by the server's I/O logging layer.
 Force-command hint suggestions are deferred; existing scope/cooldown
 enforcement already preserves intended behaviour and caller state.
+
+The broader re-review also identified a reachable Beacon target that
+could stall the greedy walker, and unbounded whole-history rewrites.
+Both are accepted. Convoys now follow cached paths around obstacles;
+detours expire after 60 seconds. The hot receipt retains 128 closed
+plans plus live/current transitions. Each caller keeps 128 recent
+forecast reads and compact final outcomes, including unread corrections
+after shared history retirement and restart. Tests cover a long wall,
+blocked-detour expiry/save failure, 1,000 events/reads and both-size held
+menus after retirement/restart. Final updated native/CI gates remain open.
+
+Minor diagnostic repetition is deferred: retries are bounded, memory is
+drained by I/O, and repeated warnings during a persistent failed save
+expose an ongoing operator problem. Such a failure may log once per
+second until saving recovers.
 
 An incompatible authored event definition cancels its published plan on
 restart. Unfinished Convoy jobs then close; completed objectives retain

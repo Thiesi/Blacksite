@@ -288,3 +288,17 @@ window after completion. Keep body risk, escape, selected runner, ally
 health and full rig usable with overlapping event summaries at 80x24.
 S25 must verify discoverability and pacing on actual full-city routes.
 <!-- s24-handoff:end -->
+
+
+<!-- s24-review-policy:start -->
+### S24 practical review follow-up
+
+Reference: [PR #65](https://github.com/Thiesi/Blacksite/pull/65), retaining
+[PR #38](https://github.com/Thiesi/Blacksite/pull/38) and #56.
+
+H shows the caller's 128 recent forecast reads, including compact final
+outcomes after global history retirement and restart. Explain unread
+corrections and deliberate R acknowledgement. A Convoy Beacon diversion ends
+on arrival or after 60 seconds, and actual arrival/loss revises its forecast
+so callers do not walk to a closed job.
+<!-- s24-review-policy:end -->

@@ -245,3 +245,17 @@ recorded-cycle/story fallbacks so required progression never waits for
 a live Curfew, Ring-fall or Surge. Name actual sources and consequences
 without presenting fixture geography or caller telemetry as lore.
 <!-- s24-handoff:end -->
+
+
+<!-- s24-review-policy:start -->
+### S24 practical review follow-up
+
+Reference: [PR #65](https://github.com/Thiesi/Blacksite/pull/65), retaining
+[PR #38](https://github.com/Thiesi/Blacksite/pull/38) and #56.
+
+Read current Convoy arrival/loss revisions rather than announcing an
+available escort after its NPC has finished or died. Personal held records
+survive global history retirement with compact final outcomes; dialogue and
+required story fallbacks must not depend on an old plan remaining in the hot
+receipt.
+<!-- s24-review-policy:end -->

@@ -1,6 +1,7 @@
 """UI 4/game 12: real Display keys, chart receipts and bounded wide text."""
 
 from dataclasses import asdict, replace
+from copy import deepcopy
 from typing import Any
 
 import pytest
@@ -15,6 +16,7 @@ from blacksite.server.rules.events import SCHEDULES
 from tests.character_helpers import act, place
 from tests.fake_terminal import FakeTerminal
 from tests.server.test_event_engine import base_content, events_game, force
+from tests.server.test_event_retention import archived_game
 
 
 def display_for(info: Any, game: Any, size: tuple[int, int]) -> Any:
@@ -130,3 +132,28 @@ def test_ui_2_two_events_keep_target_and_ally_health_visible(info: Any, events_g
     display = display_for(info, game, size)
     text = render(display, body, 'zone', size)
     assert all(value in text for value in ('Curfew', 'Choir Surge', 'Target', '73%', 'Ally', '64%', '5s'))
+
+
+@pytest.mark.parametrize('size', [(80,24),(132,50)])
+def test_game_12_held_cancellation_survives_hot_history_retirement_and_restart(info: Any, archived_game: tuple[Any, ...], size: tuple[int,int]) -> None:
+    game,caller,player,pid = archived_game
+    owner = game.core.events
+    owner.views.open(caller.session)
+    panel = owner.views.menus[caller.session.id]
+    display = display_for(info,game,size)
+    render(display,owner.views.body(caller.session,panel),'menu',size,caller.session.view_revision)
+    act(game,caller,display.key('h',2)[0])
+    body = owner.views.body(caller.session,panel)
+    assert body['rows'][0]['id'] == pid
+    assert 'cancelled' in body['detail'] and 'Your forecast changes' in body['detail']
+    text = render(display,body,'menu',size,caller.session.view_revision)
+    assert 'cancelled' in text and 'RECENT FORECASTS' in text
+    before = deepcopy(player.progress['event_forecasts'][pid])
+    act(game,caller,display.key('r',3)[0])
+    game.commit_commerce(error=True)
+    assert player.progress['event_forecasts'][pid] == before
+    render(display,owner.views.body(caller.session,panel),'menu',size,caller.session.view_revision)
+    act(game,caller,display.key('r',4)[0])
+    game.commit_commerce()
+    assert player.progress['event_forecasts'][pid]['revision'] == before['final']['revision']
+    assert 'Your forecast changes' not in owner.views.body(caller.session,panel)['detail']

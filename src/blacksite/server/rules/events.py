@@ -11,6 +11,9 @@ SURGE_MAGNITUDE = 1.3
 CURFEW_HEAT = 2
 EXHALE_RATE = 3
 ESCORT_RADIUS = 6  # Game 12: same proximity as guarding in game 10.
+DETOUR_SECONDS = 60  # Game 12: maximum paid Beacon diversion.
+HISTORY_PLANS = 128  # Architecture 15.2: bounded hot event history.
+HELD_FORECASTS = 128  # Game 12: recent personal forecast records.
 
 # Duration, cooldown and default weight, exactly game design section 12.
 SCHEDULES = MappingProxyType({

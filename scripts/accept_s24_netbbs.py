@@ -53,20 +53,22 @@ async def jump(probe: Any, seconds: float) -> None:
     await mutation(probe, staged)
 
 
-async def forecast(probe: Any, caller: Any, pid: str) -> dict[str, Any]:
+async def forecast(probe: Any, caller: Any, pid: str, *, held: bool = False, label: str = 'forecast') -> dict[str, Any]:
     owner = probe.service.core.events
     terminal = next(obj.spec.id for obj in probe.service.world.zones[caller.avatar.zone].objects.values()
         if obj.spec.kind == 'terminal')
     await services(probe, caller, terminal)
     await commit_key(probe, caller, b'v', lambda: caller.session.id in owner.views.menus)
     panel = owner.views.menus[caller.session.id]
-    plans = owner.views.plans(caller.session, panel)
-    assert plans[panel.cursor].id == pid
+    if held:
+        await commit_key(probe, caller, b'h', lambda: panel.held)
+    ids = owner.views.ids(caller.session, panel)
+    assert ids[panel.cursor] == pid
     await commit_key(probe, caller, b'r', lambda: panel.selected == pid and not probe.commerce.pending)
     player = probe.game.players[caller.session.player_id]
     saved = dict(player.progress['event_forecasts'][pid])
     await wait(lambda: 'FORECASTS' in caller.caller.screen.screen_text())
-    probe.save(caller, 's24-forecast-'+str(caller.session.caps['width']))
+    probe.save(caller, 's24-'+label+'-'+str(caller.session.caps['width']))
     for _ in range(2):
         before = panel.selected, caller.session.id in owner.views.menus
         await commit_key(probe, caller, b'\x1b', lambda: (panel.selected, caller.session.id in owner.views.menus) != before)
@@ -108,14 +110,14 @@ async def run(probe: Any, descriptor: dict[str, Any], size: tuple[int, int]) -> 
     plan = next(plan for plan in owner.scheduler.reserved() if plan.template == 'ring-fall')
     pid, signature = plan.id, (plan.seed, plan.where, plan.starts_at, plan.allocations)
     assert plan.starts_at-plan.announced_at >= 3600
-    saved = await forecast(probe, cantor, pid)
+    saved = await forecast(probe, cantor, pid, label='forecast-before-restart')
     assert owner.place(plan.where[0]) in saved['text']
     cantor, worker = await restart(probe, [cantor, worker], size)
     owner = probe.service.core.events
     resumed = owner.scheduler.plans[pid]
     assert (resumed.seed, resumed.where, resumed.starts_at, resumed.allocations) == signature
     assert probe.game.players[cantor.session.player_id].progress['event_forecasts'][pid] == saved
-    await forecast(probe, cantor, pid)
+    await forecast(probe, cantor, pid, label='forecast-after-restart')
     await jump(probe, max(0, resumed.starts_at-owner.now()+.1))
     await wait(lambda: any(plan.id == pid for plan in owner.active()), 12)
     nodes = probe.service.core.salvage.state['zones'][plan.where[0]]['nodes']
@@ -124,6 +126,8 @@ async def run(probe: Any, descriptor: dict[str, Any], size: tuple[int, int]) -> 
     probe.save(cantor, 's24-ring-source-'+str(width))
     probe.report(f'S24 PASS {width}x{height}: committed forecast survives restart; exact fixture ring adds ten nodes once')
     assert (await request(probe.service.install_dir, 'event.cancel', {'plan': pid}))['ok']
+    held = await forecast(probe, cantor, pid, held=True, label='held-cancellation')
+    assert held['final']['state'] == 'cancelled'
 
     await probe.route(cantor, 'core-plaza')
     result = await request(probe.service.install_dir, 'event.force', {'event': 'curfew'})

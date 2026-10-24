@@ -173,6 +173,11 @@ consumption. Revision/cancellation is visible after reconnect. An
 incompatible content update cancels its old plan before effects install.
 Local defender warnings follow concise city notices so an 80-column
 scope list cannot displace the five-second counterplay warning.
+Convoys follow derived paths around obstacles. A paid Beacon detour
+expires after 60 seconds and resumes the original leg. The hot event
+receipt retains 128 closed plans; personal forecast reads retain 128
+compact records with final outcomes. H remains useful after global
+retirement and restart, without rewriting months of event history.
 
 The `s24-future-events` authoring bundle holds Ring-fall, Exhale, Convoy
 and public job/route records. Curfew and Surge use currently shipped

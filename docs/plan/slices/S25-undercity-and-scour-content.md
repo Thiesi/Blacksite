@@ -336,3 +336,17 @@ shows a dull or unaffordable loop. Keep the required human review of
 Shaft Foot/Far Ring and the broader S25/S26 human pacing gate open.
 Native event fixtures on hubs do not satisfy either gate.
 <!-- s24-handoff:end -->
+
+
+<!-- s24-review-policy:start -->
+### S24 practical review follow-up
+
+Reference: [PR #65](https://github.com/Thiesi/Blacksite/pull/65), retaining
+[PR #38](https://github.com/Thiesi/Blacksite/pull/38) and #56.
+
+Verify Convoy paths around actual walls and body traffic. A paid Beacon
+diversion ends on arrival or after 60 seconds of wall time, then resumes the
+committed leg. Include this limit and actual arrival/loss forecast updates
+in travel/earning playtests; no stalled greedy walker may consume the whole
+public escort window.
+<!-- s24-review-policy:end -->

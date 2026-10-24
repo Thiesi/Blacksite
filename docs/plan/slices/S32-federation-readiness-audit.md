@@ -208,3 +208,17 @@ another node's service/control/relay/season state. Preserve identity
 deduplication and atomic item/receipt settlement when designing transfer;
 do not turn a preview, telemetry flag or host announcement into authority.
 <!-- s24-handoff:end -->
+
+
+<!-- s24-review-policy:start -->
+### S24 practical review follow-up
+
+Reference: [PR #65](https://github.com/Thiesi/Blacksite/pull/65), retaining
+[PR #38](https://github.com/Thiesi/Blacksite/pull/38) and #56.
+
+The hot event receipt is a bounded working set, not a permanent global
+archive: 128 closed plans plus live/current transitions. Personal forecasts
+hold compact outcomes and cannot authorize another payout. A federation
+bridge that needs older provenance must retain the required committed
+facts/receipts in its own ledger.
+<!-- s24-review-policy:end -->

@@ -837,6 +837,13 @@ failed roll boundary; discard an unpublished candidate. Rebuild a failed
 published start from committed state, then atomically cancel it without
 retaining a proposed reward claim. The I/O layer drains structured
 diagnostics, including failures encountered before the listener opens.
+The hot receipt retains live plans, monotonic serials and cooldowns plus
+128 recent closed plans. Current transition records remain through their
+commit/notification before retirement. Closing a held plan atomically
+saves a compact personal outcome; personal reads are separately bounded
+at 128. The held menu can display that outcome without loading old
+global plans. Long-term Chronicle/publication consumers must retain the
+facts they need in their own ledgers, not scan this bounded hot history.
 At restart, reconcile wall-time expiry before input; resume uptime timers
 without catching up an offline backlog. Rebuild expeditions from their
 safe checkpoint. Service reservation, allocation, public control expiry,

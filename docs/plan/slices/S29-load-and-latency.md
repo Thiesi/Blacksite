@@ -210,3 +210,17 @@ Retain the actual native 80x24/132x50 wide-name gates separately from
 headless load and focused tests. No accelerated fixture closes human
 travel or earning acceptance.
 <!-- s24-handoff:end -->
+
+
+<!-- s24-review-policy:start -->
+### S24 practical review follow-up
+
+Reference: [PR #65](https://github.com/Thiesi/Blacksite/pull/65), retaining
+[PR #38](https://github.com/Thiesi/Blacksite/pull/38) and #56.
+
+The hot event receipt is now bounded at 128 closed plans plus live/current
+transitions; personal reads are bounded at 128. Exercise 1,000-event/read
+histories and held outcomes after retirement/restart. Include long obstacle
+routes, cached replanning and a blocked Beacon that expires at 60 seconds;
+normal traffic must not force a full BFS every tick.
+<!-- s24-review-policy:end -->

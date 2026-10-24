@@ -244,3 +244,16 @@ composition after S25/S26 activate their actual content. Preserve paid
 source receipts, forecast corrections and the one-hour completed-job
 return window across upgrade/restart. Record the supported NetBBS floor.
 <!-- s24-handoff:end -->
+
+
+<!-- s24-review-policy:start -->
+### S24 practical review follow-up
+
+Reference: [PR #65](https://github.com/Thiesi/Blacksite/pull/65), retaining
+[PR #38](https://github.com/Thiesi/Blacksite/pull/38) and #56.
+
+Repeat matching-wheel native acceptance at both sizes after event path or
+retention changes. Event hot history is bounded to 128 closed plans;
+retain required durable host-publication receipts independently under the
+#56 policy. Essential warnings and held outcomes stay in game.
+<!-- s24-review-policy:end -->

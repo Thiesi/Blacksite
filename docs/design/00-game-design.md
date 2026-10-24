@@ -1545,6 +1545,10 @@ consumption and published route revision share a receipt. A second
 signal in that leg, an unreachable signal, hush, concealment or a closed
 convoy consumes nothing. This bounds repeated diversions while keeping
 the sold tool useful to escorts and ambushers alike.
+A diversion lasts at most 60 seconds of wall time and ends on arrival
+or expiry. The convoy follows a real path around obstacles, then resumes
+the committed route; a blocked signal cannot hold every escort until
+the event closes.
 
 Convoy jobs share the actual public convoy. Distinct BBS identities may
 accept the same offer. Escort credit requires being within the existing
@@ -1594,6 +1598,11 @@ candidate consumes that roll without publishing a forecast. An already
 announced event that cannot start is cancelled with an explicit update;
 no reward claim survives its failed proposal. Operators receive a
 structured diagnostic while other city systems continue.
+Each caller keeps their 128 most recently read forecast records. A
+closed plan saves its final outcome into any held record before shared
+history retires it. H shows those recent personal records after restart,
+including an unread cancellation; reading it acknowledges the update.
+New reads replace the oldest personal records, not current game rules.
 
 ## 13. Seasons and the Descent
 

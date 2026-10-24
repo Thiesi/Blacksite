@@ -249,3 +249,17 @@ Expected unavailable-source failures log structured diagnostics and
 consume only their roll or committed cancellation, without stopping
 the service. Include those records in operator troubleshooting.
 <!-- s24-handoff:end -->
+
+
+<!-- s24-review-policy:start -->
+### S24 practical review follow-up
+
+Reference: [PR #65](https://github.com/Thiesi/Blacksite/pull/65), retaining
+[PR #38](https://github.com/Thiesi/Blacksite/pull/38) and #56.
+
+Event list shows recent bounded history: 128 closed plans plus live/current
+transitions. Personal held outcomes remain separate. Content changes can
+cancel unfinished work; deploy between active windows. Unavailable-source
+diagnostics may repeat while saving is failing. This is an operator fault
+signal, not an unbounded in-memory queue.
+<!-- s24-review-policy:end -->

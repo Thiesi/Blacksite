@@ -249,8 +249,8 @@ class Factions:
             if not offer:
                 raise ValueError("No committed event is announced. Ordinary public services remain open.")
             text = offer.text
-            progress.setdefault('event_forecasts', {})[offer.plan_id] = {
-                'revision': offer.revision, 'text': offer.text}
+            from blacksite.server.event_forecasts import remember
+            remember(progress, offer.plan_id, {'revision': offer.revision, 'text': offer.text}, self.clock.now_utc().timestamp())
             if faction == "kestrel":
                 progress["convoy_reservation"] = offer.plan_id
         else:

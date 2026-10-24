@@ -13,7 +13,7 @@ from typing import Any, Literal
 
 from blacksite.content.schema import Effect, EventTemplate, Route
 from blacksite.server.rules.events import (
-    ADVANCE_SECONDS, MAX_RESERVED, ROLL_SECONDS, WARNING_SECONDS,
+    ADVANCE_SECONDS, HISTORY_PLANS, MAX_RESERVED, ROLL_SECONDS, WARNING_SECONDS,
 )
 
 PlanState = Literal['planned', 'active', 'complete', 'cancelled']
@@ -37,6 +37,7 @@ class Plan:
     milestones: list[str] = field(default_factory=list)
     allocations: dict[str, Any] = field(default_factory=dict)
     forced: bool = False
+    closed_at: float | None = None
 
     @property
     def live(self) -> bool:
@@ -72,6 +73,15 @@ class Scheduler:
             plan = Plan(**record)
             self.plans[plan.id] = plan
         self._live = {pid: plan for pid, plan in self.plans.items() if plan.live}
+        self.prune()
+
+    def prune(self, keep: tuple[str, ...] = ()) -> None:
+        """Bound the hot receipt; callers retain compact personal outcomes."""
+        closed = sorted((plan for plan in self.plans.values() if not plan.live),
+            key=lambda plan: (plan.closed_at if plan.closed_at is not None else plan.ends_at, plan.id))
+        for plan in closed[:-HISTORY_PLANS]:
+            if plan.id not in keep:
+                del self.plans[plan.id]
 
     def fork(self) -> 'Scheduler':
         draft = Scheduler(self.origin, self.templates, self.routes)
@@ -174,6 +184,7 @@ class Scheduler:
         if plan.state == 'active':
             self.cooldowns[plan.template] = now+self.templates[plan.template].cooldown_seconds
         plan.state, plan.cancel_reason = 'cancelled', reason
+        plan.closed_at = now
         self._live.pop(pid)
         plan.revision += 1
         return Transition(pid, 'cancel')
@@ -189,6 +200,7 @@ class Scheduler:
                 # Removed content cannot silently move a published plan.
                 if template is None:
                     plan.state, plan.cancel_reason = 'cancelled', 'Event content is unavailable.'
+                    plan.closed_at = now
                     self._live.pop(plan.id)
                     plan.revision += 1
                     transitions.append(Transition(plan.id, 'cancel'))
@@ -197,6 +209,7 @@ class Scheduler:
                 continue
             if now >= plan.ends_at:
                 plan.state = 'complete'
+                plan.closed_at = plan.ends_at
                 self._live.pop(plan.id)
                 plan.revision += 1
                 self.cooldowns[plan.template] = plan.ends_at+template.cooldown_seconds
@@ -213,6 +226,7 @@ class Scheduler:
             if now >= (plan.starts_at+plan.ends_at)/2 and 'mid' not in plan.milestones:
                 plan.milestones.append('mid')
                 transitions.append(Transition(plan.id, 'mid'))
+        self.prune(tuple(transition.plan for transition in transitions))
         return transitions
 
     def active(self, now: float) -> tuple[Plan, ...]:

@@ -232,3 +232,18 @@ Convoy rewards and return-time measurements remain a prerequisite for
 honest pacing assessment. Publicity remains behind #56's registered-only,
 positive opt-in gate; gameplay warnings stay in game.
 <!-- s24-handoff:end -->
+
+
+<!-- s24-review-policy:start -->
+### S24 practical review follow-up
+
+Reference: [PR #65](https://github.com/Thiesi/Blacksite/pull/65), retaining
+[PR #38](https://github.com/Thiesi/Blacksite/pull/38) and #56.
+
+The hot event receipt retains 128 closed plans plus live/current
+transitions. Personal forecasts retain 128 recent reads and compact final
+outcomes. Retain any required long-term Chronicle facts in the season ledger
+when they commit; do not reconstruct a season by scanning bounded recent
+plans. A saved forecast is information, never another reward or contribution
+source.
+<!-- s24-review-policy:end -->

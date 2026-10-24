@@ -16,10 +16,11 @@ from blacksite.content.loader import load_content
 from blacksite.content.schema import (
     ContractTemplate, Effect, EventTemplate, Reward, Route, Stage, StageTarget, Waypoint,
     ObjectSpec,
+    TileChange, ZoneLayout,
 )
 from blacksite.server.clock import ManualClock, TICK_HZ
 from blacksite.server.rules.events import ROLL_SECONDS, SCHEDULES
-from blacksite.server.world.zone import ObjectState
+from blacksite.server.world.zone import ObjectState, GeometryLayer
 from blacksite.server.items import make_item
 from tests.character_helpers import create, place
 from tests.harness import HeadlessServer
@@ -121,9 +122,73 @@ def test_game_12_beacon_consumption_and_route_change_share_one_receipt(convoy_ga
     assert iid not in player.inventory and iid not in owner.commerce.items
     plan = owner.scheduler.plans[pid]
     assert plan.revision > before and plan.allocations['detour']['zone'] == actor.zone
+    assert plan.allocations['detour']['ends_at']-owner.now() == 60  # Game 12.
     assert 'Detour:' in owner.text(plan, detailed=True)
     with pytest.raises(ValueError, match='already has a signal'):
         owner.convoys.use(clients[0].session, item)
+
+
+def beacon(game: Any, caller: Any, player: Any) -> Any:
+    owner = game.core.events
+    item = make_item('fixture:detour-beacon', owner.content.items['con_kestrel_beacon'],
+        player.id, game.clock.now_utc().isoformat())
+    owner.commerce.items[item.id] = item
+    player.inventory.append(item.id)
+    assert owner.convoys.use(caller.session, item)
+    game.commit_commerce()
+    return item
+
+
+def test_game_12_convoy_follows_a_reachable_detour_around_a_long_wall(convoy_game: tuple[Any, ...]) -> None:
+    game, callers, players, actor, pid, points = convoy_game
+    zone = game.core.world.zones[actor.zone]
+    x, y = points[0]
+    changes = tuple(TileChange((cx,cy), 'wall' if cx == x+4 and cy <= y+8 else 'floor')
+        for cy in range(y-1,y+12) for cx in range(x,x+14))
+    layout = ZoneLayout('fixture-maze', changes)
+    zone.layers['fixture-maze'] = GeometryLayer('fixture-maze',layout,0,10000)
+    zone.compose(game.clock.now_tick())
+    assert zone.tile_id((x+4,y+8)) == 'wall'
+    target = x+10, y
+    place(game, callers[0], zone.id, target)
+    beacon(game, callers[0], players[0])
+    owner = game.core.events
+    deadline = owner.scheduler.plans[pid].allocations['detour']['ends_at']
+    visited = set()
+    for _ in range(350):
+        game.step()
+        game.commit_commerce()
+        visited.add(actor.position)
+        if not owner.scheduler.plans[pid].allocations.get('detour'):
+            break
+    assert owner.now() < deadline
+    assert not owner.scheduler.plans[pid].allocations.get('detour')
+    assert max(abs(actor.x-target[0]), abs(actor.y-target[1])) <= 1
+    assert any(tile[1] >= y+9 for tile in visited)  # Walk away, around the actual wall, then return.
+
+
+def test_game_12_blocked_beacon_expires_and_failed_clear_save_keeps_the_old_route_receipt(convoy_game: tuple[Any, ...], monkeypatch: pytest.MonkeyPatch) -> None:
+    game, callers, players, actor, pid, points = convoy_game
+    place(game, callers[0], actor.zone, points[-1])
+    beacon(game, callers[0], players[0])
+    owner = game.core.events
+    follow = owner.convoys.follow
+    monkeypatch.setattr(owner.convoys, 'follow', lambda *args, **kwargs: None)  # A temporary body blockage.
+    game.clock.advance(61*TICK_HZ)
+    game.step()
+    assert owner.scheduler.plans[pid].allocations.get('detour')
+    game.commit_commerce(error=True)
+    assert owner.scheduler.plans[pid].allocations.get('detour')
+    game.step()
+    game.commit_commerce()
+    assert not owner.scheduler.plans[pid].allocations.get('detour')
+    assert any(receipt.startswith('beacon:') for receipt in owner.scheduler.plans[pid].reward_receipts)
+    monkeypatch.setattr(owner.convoys, 'follow', follow)
+    before = owner.scheduler.plans[pid].allocations['waypoint']
+    for _ in range(20):
+        game.step()
+        game.commit_commerce()
+    assert owner.scheduler.plans[pid].allocations['waypoint'] > before
 
 
 def follow(game: Any, clients: list[Any], actor: Any) -> None:
@@ -147,6 +212,7 @@ def test_game_12_same_public_offer_two_identities_and_one_convoy(convoy_game: tu
 
 def test_game_12_actual_legs_pay_each_worker_once_and_no_afk_credit(convoy_game: tuple[Any, ...]) -> None:
     game, clients, players, actor, pid, points = convoy_game
+    forecast_revision = game.core.events.scheduler.plans[pid].revision
     instances = [accept(game, player, 'escort') for player in players]
     for _ in range(160):
         follow(game, clients, actor)
@@ -168,6 +234,8 @@ def test_game_12_actual_legs_pay_each_worker_once_and_no_afk_credit(convoy_game:
     game.commit_commerce()
     assert players[0].chits_hand == before[0]+200
     assert not game.core.events.jobs.offers('vesper')
+    plan = game.core.events.scheduler.plans[pid]
+    assert plan.revision > forecast_revision and 'convoy arrives' in game.core.events.text(plan, detailed=True)
 
 
 def test_arch_15_2_failed_waypoint_retries_without_private_copy(convoy_game: tuple[Any, ...]) -> None:
@@ -202,6 +270,7 @@ def test_game_12_cancel_between_proposal_and_acceptance_consumes_no_job_slot(con
 
 def test_game_12_convoy_death_closes_escort_and_credits_actual_raider(convoy_game: tuple[Any, ...]) -> None:
     game, clients, players, actor, pid, points = convoy_game
+    forecast_revision = game.core.events.scheduler.plans[pid].revision
     escort = accept(game, players[1], 'escort')
     raid = accept(game, players[0], 'clear')
     source = game.core.world.actors[players[0].id]
@@ -210,6 +279,7 @@ def test_game_12_convoy_death_closes_escort_and_credits_actual_raider(convoy_gam
     game.commit_commerce()
     plan = game.core.events.scheduler.plans[pid]
     assert plan.allocations['convoy_lost'] and 'convoy-lost' in plan.reward_receipts
+    assert plan.revision > forecast_revision and 'convoy is lost' in game.core.events.text(plan, detailed=True)
     assert game.core.contracts.state.engine.instances[escort].state == 'failed'
     assert game.core.contracts.state.engine.instances[raid].state == 'complete'
     assert not game.core.events.jobs.offers('vesper')

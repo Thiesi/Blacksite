@@ -1,18 +1,31 @@
 """Committed Convoy routes use ordinary NPC movement and source receipts."""
 
 from typing import Any
+from collections import deque
+from dataclasses import dataclass
 
 from blacksite.content.schema import Region, Spawner
-from blacksite.server.npcs.behaviours import step_toward
+from blacksite.server.world.movement import move as move_actor
+from blacksite.server.clock import TICK_HZ
+from blacksite.server.rules.events import DETOUR_SECONDS
 from blacksite.server.world.actors import Actor
 from blacksite.server.world.zone import ZoneInstance
 from blacksite.server.items import ItemInstance
 from blacksite.server.sessions import Session
 
 
+@dataclass
+class Walk:
+    key: tuple[Any, ...]
+    origin: tuple[int, int]
+    tiles: deque[tuple[int, int]]
+    retry: int = 0
+
+
 class Convoys:
     def __init__(self, owner: Any) -> None:
         self.owner = owner
+        self.walk: Walk | None = None  # One public Convoy; derived, never authority.
 
     def use(self, session: Session, item: ItemInstance) -> bool:
         if item.template != 'con_kestrel_beacon':
@@ -32,7 +45,6 @@ class Convoys:
         if plan.allocations.get('detour') or receipt in plan.reward_receipts:
             raise ValueError('This convoy leg already has a signal. Your beacon remains.')
         # The existing local route finder proves a passable connection first.
-        from collections import deque
         zone = owner.world.zones[body.zone]
         pending, seen = deque([actor.position]), {actor.position}
         while pending and body.position not in seen:
@@ -46,12 +58,52 @@ class Convoys:
         draft = owner.scheduler.fork()
         target = draft.plans[plan.id]
         target.claim(receipt)
-        target.allocations['detour'] = {'zone': body.zone, 'tile': list(body.position)}
+        target.allocations['detour'] = {'zone': body.zone, 'tile': list(body.position),
+            'ends_at': owner.now()+DETOUR_SECONDS}
         target.revision += 1
         if not owner.write(draft, [], lambda success: owner.notify(
                 'The public convoy accepts a local detour. Read the updated route.') if success else None, consume=item):
             raise ValueError('The city is busy. Your beacon remains.')
         return True
+
+    def follow(self, actor: Actor, zone: ZoneInstance, target: tuple[int, int],
+               tick: int, avoid: set[tuple[int, int]], *, exact: bool = False) -> None:
+        if tick < actor.cooldowns.get('move', 0):
+            return
+        blocked = avoid | {other.position for other in zone.actors.values() if other is not actor}
+        key = actor.id, zone.id, target, exact, zone.geometry_revision
+        path = self.walk
+        valid = bool(path and path.key == key and path.origin == actor.position)
+        if valid and not path.tiles and tick < path.retry:
+            return
+        if (not valid or not path.tiles or path.tiles[0] in blocked
+                or not zone.can_enter(actor, path.tiles[0])):
+            def arrived(tile: tuple[int, int]) -> bool:
+                return tile == target if exact else max(abs(tile[0]-target[0]), abs(tile[1]-target[1])) <= 1
+            pending, previous = deque([actor.position]), {actor.position: None}
+            destination = None
+            while pending:
+                tile = pending.popleft()
+                if arrived(tile):
+                    destination = tile
+                    break
+                x, y = tile
+                for adjacent in ((x+1,y),(x,y+1),(x-1,y),(x,y-1)):
+                    if adjacent not in previous and adjacent not in blocked and zone.can_enter(actor, adjacent):
+                        previous[adjacent] = tile
+                        pending.append(adjacent)
+            tiles: deque[tuple[int, int]] = deque()
+            while destination is not None and destination != actor.position:
+                tiles.appendleft(destination)
+                destination = previous[destination]
+            path = self.walk = Walk(key, actor.position, tiles, tick+TICK_HZ)
+        if not path.tiles:
+            return
+        x, y = path.tiles[0]
+        direction = {(1,0):'right',(-1,0):'left',(0,1):'down',(0,-1):'up'}[x-actor.x,y-actor.y]
+        if move_actor(actor, zone, direction, tick):
+            path.tiles.popleft()
+            path.origin = actor.position
 
     def bind(self) -> None:
         owner = self.owner
@@ -122,17 +174,20 @@ class Convoys:
         if index >= len(route.waypoints):
             return True
         target = route.waypoints[index]
+        actor.modifiers['move_ms'] = max(actor.modifiers.get('move_ms', 0), 1000/route.speed)
         detour = plan.allocations.get('detour')
-        if detour and detour['zone'] == actor.zone:
+        if detour and (detour['zone'] == actor.zone or owner.now() >= detour.get('ends_at', 0)):
             tile = tuple(detour['tile'])
-            if max(abs(actor.x-tile[0]), abs(actor.y-tile[1])) > 1:
-                step_toward(actor, zone, tile, tick, avoid=avoid-{tile})
+            expired = owner.now() >= detour.get('ends_at', 0)
+            if not expired and max(abs(actor.x-tile[0]), abs(actor.y-tile[1])) > 1:
+                self.follow(actor, zone, tile, tick, avoid-{tile})
             elif not owner.commerce.pending:
                 draft = owner.scheduler.fork()
                 draft.plans[pid].allocations.pop('detour')
-                owner.write(draft, [])
+                draft.plans[pid].revision += 1
+                owner.write(draft, [], lambda success: owner.notify(
+                    'The public convoy returns to its committed route.') if success else None)
             return True
-        actor.modifiers['move_ms'] = max(actor.modifiers.get('move_ms', 0), 1000/route.speed)
         if target.zone != actor.zone:
             exit = owner.core.contracts.scenes.route(actor.zone, target.zone)
             if exit:
@@ -143,10 +198,10 @@ class Convoys:
                         return True
                     owner.world.enter(actor, exit.target_zone, tile)
                 else:
-                    step_toward(actor, zone, exit.tile, tick, avoid=avoid-{exit.tile})
+                    self.follow(actor, zone, exit.tile, tick, avoid-{exit.tile}, exact=True)
             return True
         if max(abs(actor.x-target.tile[0]), abs(actor.y-target.tile[1])) > 1:
-            step_toward(actor, zone, target.tile, tick, avoid=avoid-{target.tile})
+            self.follow(actor, zone, target.tile, tick, avoid-{target.tile})
             return True
         if owner.commerce.pending:
             return True
@@ -158,5 +213,6 @@ class Convoys:
         facts = owner.jobs.checkpoint(current, actor, final=final)
         if final:
             current.claim('convoy-arrived')
+            current.revision += 1
         owner.write(draft, [], facts=facts)
         return True

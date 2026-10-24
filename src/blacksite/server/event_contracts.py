@@ -122,6 +122,7 @@ class EventContracts:
         if not target.claim('convoy-lost'):
             return
         target.allocations['convoy_lost'] = True
+        target.revision += 1
         facts = []
         attacker = owner.core.progression.controller(source)
         attacker_id = attacker.id if attacker else source.id

@@ -181,10 +181,19 @@ class Events:
         correction = ' '+plan.cancel_reason if plan.cancel_reason else ''
         if detailed and (detour := plan.allocations.get('detour')):
             correction += f" Detour: {self.place(detour['zone'])} {tuple(detour['tile'])}."
+        if plan.allocations.get('convoy_lost'):
+            correction += ' The convoy is lost. Its public offers close.'
+        elif 'convoy-arrived' in plan.reward_receipts:
+            correction += ' The convoy arrives. Completed work keeps its turn-in time.'
         return f'{name}: {plan.state}, {when}, {scope}.{variants}{correction}'
 
     def time(self, utc: float) -> str:
         return datetime.fromtimestamp(utc, timezone.utc).strftime('%d %b %H:%M UTC')
+
+    def forecast_outcome(self, plan: Plan) -> dict[str, Any]:
+        template = self.content.events.get(plan.template)
+        return {'name': template.name if template else plan.template, 'state': plan.state,
+                'revision': plan.revision, 'starts_at': plan.starts_at, 'text': self.text(plan, detailed=True)}
 
     def place(self, place: str) -> str:
         if place in self.content.zones:
@@ -268,6 +277,7 @@ class Events:
         accepted = self.commerce.settle(None, {}, proposal.items, proposal.caches, proposal.serial, finished)
         if accepted:
             effect = self.commerce.outbox[-1]
+            draft.prune(tuple(transition.plan for transition in transitions))
             effect['events_state'] = draft.record()
             if proposal.salvage is not None:
                 effect['salvage_state'] = proposal.salvage
@@ -278,7 +288,15 @@ class Events:
                     iid for iid in player.inventory if iid != consume.id]
             changed = {transition.plan: transition for transition in transitions
                        if transition.kind in ('start', 'end', 'cancel')}
+            closing = {transition.plan for transition in transitions if transition.kind in ('end', 'cancel')}
             for player in self.game.players.values():
+                known = player.progress.get('event_forecasts', {})
+                if closing.intersection(known):
+                    forecasts = deepcopy(known)
+                    for pid in closing.intersection(known):
+                        forecasts[pid]['final'] = self.forecast_outcome(draft.plans[pid])
+                    effect.setdefault('player_patches', {}).setdefault(player.id, {}).setdefault('progress', {})[
+                        'event_forecasts'] = forecasts
                 reservation = player.progress.get('convoy_reservation')
                 if reservation in changed:
                     plan = draft.plans[reservation]

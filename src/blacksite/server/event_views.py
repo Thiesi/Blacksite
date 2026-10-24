@@ -7,6 +7,7 @@ from typing import Any
 
 from blacksite.server.clock import TICK_HZ
 from blacksite.server.events import Plan
+from blacksite.server.event_forecasts import remember
 from blacksite.server.factions import perk
 from blacksite.server.items import ItemInstance
 from blacksite.server.loop import TickContext
@@ -86,18 +87,25 @@ class Views:
 
     def read(self, session: Session, panel: Panel, plan: Plan) -> None:
         self.access(session, panel)
-        owner, player = self.owner, self.owner.game.players[session.player_id]
+        owner = self.owner
         text = owner.text(plan, detailed=self.detailed(session, plan))
         record = {'revision': plan.revision, 'text': text}
+        if not plan.live:
+            record['final'] = owner.forecast_outcome(plan)
+        self.save(session, panel, plan.id, record)
+
+    def save(self, session: Session, panel: Panel, pid: str, record: dict[str, Any]) -> None:
+        owner, player = self.owner, self.owner.game.players[session.player_id]
         progress = deepcopy(player.progress)
         known = progress.setdefault('event_forecasts', {})
-        if known.get(plan.id) == record:
-            panel.selected = plan.id
+        previous = {key: value for key, value in known.get(pid, {}).items() if key != 'read_at'}
+        if previous == record:
+            panel.selected = pid
             return
-        known[plan.id] = record
+        remember(progress, pid, record, owner.now())
         def committed(success: bool) -> None:
             if success and self.menus.get(session.id) is panel:
-                panel.selected = plan.id
+                panel.selected = pid
             elif not success:
                 owner.commerce.toast(session, 'The forecast could not be saved. Read it again.')
         if not owner.commerce.settle(player, {'progress': progress}, owner.commerce.items,
@@ -112,6 +120,8 @@ class Views:
         return True
 
     def body(self, session: Session, panel: Panel) -> dict[str, Any]:
+        if panel.held:
+            return self.held_body(session, panel)
         owner = self.owner
         plans = self.plans(session, panel)
         panel.cursor = min(panel.cursor, max(0, len(plans)-1))
@@ -148,6 +158,49 @@ class Views:
         body['page'], body['pages'] = start//PAGE_ROWS+1, max(1, (len(plans)+PAGE_ROWS-1)//PAGE_ROWS)
         return body
 
+    def held_ids(self, session: Session) -> list[str]:
+        known = self.owner.game.players[session.player_id].progress.get('event_forecasts', {})
+        return sorted(known, key=lambda pid: (known[pid].get('read_at', 0), pid), reverse=True)
+
+    def ids(self, session: Session, panel: Panel) -> list[str]:
+        return self.held_ids(session) if panel.held else [plan.id for plan in self.plans(session, panel)]
+
+    def held_body(self, session: Session, panel: Panel) -> dict[str, Any]:
+        owner = self.owner
+        known = owner.game.players[session.player_id].progress.get('event_forecasts', {})
+        ids = self.held_ids(session)
+        panel.cursor = min(panel.cursor, max(0, len(ids)-1))
+        start = panel.cursor//PAGE_ROWS*PAGE_ROWS
+        pid = panel.selected if panel.selected in known else (ids[panel.cursor] if ids else '')
+        def fields(pid: str) -> tuple[str, str, float | None]:
+            current = owner.scheduler.plans.get(pid)
+            final = known[pid].get('final', {})
+            name = owner.content.events[current.template].name if current and current.template in owner.content.events else (
+                final.get('name') or known[pid]['text'].partition(':')[0])
+            return name, current.state if current else final.get('state', 'closed'), (
+                current.starts_at if current else final.get('starts_at'))
+        detail = 'No forecast is saved. Read an announced plan first.'
+        if pid:
+            saved = known[pid]
+            current = owner.scheduler.plans.get(pid)
+            final = saved.get('final', {})
+            detail = owner.text(current, detailed=self.detailed(session, current)) if current else (
+                final.get('text') or saved['text']+'\nThis older outcome is no longer in city history.')
+            revision = current.revision if current else final.get('revision', saved['revision'])
+            if revision != saved['revision']:
+                detail = 'Your forecast changes.\n'+detail
+        shown = [pid] if panel.selected and pid else ids[start:start+PAGE_ROWS]
+        rows = []
+        for entry in shown:
+            name, state, starts = fields(entry)
+            rows.append({'id': entry, 'cells': [name, state, owner.time(starts) if starts is not None else '']})
+        body = menu('YOUR RECENT FORECASTS', rows or [{'id': '', 'cells': ['No saved plans.']}],
+            0 if panel.selected else panel.cursor-start, detail, 'R read  H city forecasts  Esc/B returns')
+        body['actions'] = [{'key': 'r', 'label': 'read'}, {'key': 'h', 'label': 'city forecasts'}]
+        body['columns'] = ['Event', 'State', 'Starts UTC']
+        body['page'], body['pages'] = start//PAGE_ROWS+1, max(1, (len(ids)+PAGE_ROWS-1)//PAGE_ROWS)
+        return body
+
     def input(self, session: Session, frame: Frame, tick: int) -> bool:
         name = frame.data.get('name') if frame.type == 'intent' else ''
         key = str(frame.data.get('k', '')).lower() if frame.type == 'key' else ''
@@ -172,7 +225,7 @@ class Views:
             if name == 'menu_cursor' and not panel.selected:
                 delta = args.get('delta', 0)
                 if type(delta) is int:
-                    panel.cursor = max(0, min(panel.cursor+delta, len(self.plans(session, panel))-1))
+                    panel.cursor = max(0, min(panel.cursor+delta, len(self.ids(session, panel))-1))
             elif name == 'menu_select' or key:
                 if name == 'menu_select' and frame.data.get('expected_revision') != session.view_revision:
                     return True
@@ -180,11 +233,17 @@ class Views:
                 if action == 'h':
                     panel.held, panel.cursor, panel.selected = not panel.held, 0, ''
                 elif action in ('r', 'enter'):
-                    plans = self.plans(session, panel)
-                    plan = self.owner.scheduler.plans.get(panel.selected) if panel.selected else (
-                        plans[min(panel.cursor, len(plans)-1)] if plans else None)
-                    if plan and (name != 'menu_select' or args.get('row') == plan.id):
-                        self.read(session, panel, plan)
+                    ids = self.ids(session, panel)
+                    pid = panel.selected or (ids[min(panel.cursor, len(ids)-1)] if ids else '')
+                    if pid and (name != 'menu_select' or args.get('row') == pid):
+                        if plan := self.owner.scheduler.plans.get(pid):
+                            self.read(session, panel, plan)
+                        elif panel.held:
+                            saved = self.owner.game.players[session.player_id].progress['event_forecasts'][pid]
+                            record = {key: value for key, value in saved.items() if key != 'read_at'}
+                            if final := record.get('final'):
+                                record.update(revision=final['revision'], text=final['text'])
+                            self.save(session, panel, pid, record)
         except (ValueError, KeyError) as exc:
             self.owner.commerce.toast(session, str(exc))
         return True
