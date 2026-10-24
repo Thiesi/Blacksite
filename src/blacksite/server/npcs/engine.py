@@ -233,13 +233,14 @@ class Npcs:
                 caches[cache_id] = {"zone": actor.zone, "tile": list(actor.position), "items": loot,
                     "killer": player.id if player else source.id, "victim": actor.id, "private_until": self.combat.now()+LOOT_PRIVATE_SECONDS,
                     "expires": self.combat.now()+CACHE_SECONDS}
+            respawn_at = self.spawners.deadline(actor, self.combat.now())
             def committed(success: bool) -> None:
                 self.pending_deaths.discard(actor.id)
                 if not success:
                     # A failed receipt retains one retryable body and no loot.
                     actor.health, actor.stance = 1, "normal"
                     return
-                self.spawners.removed(actor, self.combat.now())
+                self.spawners.removed(actor, self.combat.now(), deadline=respawn_at)
                 self.world.leave(actor)
                 if player:
                     progression.notify_reward(player, reward)
@@ -248,7 +249,7 @@ class Npcs:
             receipt = deepcopy(self.spawners.record())
             slot = receipt["slots"].get(str(actor.behaviour.get("slot")))
             if slot is not None:
-                slot.update(until=self.combat.now()+int(actor.behaviour.get("respawn", 0)))
+                slot.update(until=respawn_at)
                 slot.pop("actor", None)
             self.commerce.outbox[-1]["npc_state"] = receipt
             if player and hasattr(self.game, 'crews'):

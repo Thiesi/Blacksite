@@ -124,6 +124,10 @@ class Core:
             self.loop.subsystems.append(self.market)
             social = self.lattice.social_overlay
             self.lattice.social_overlay = lambda session, previous=social: previous(session) or session.id in self.market.views.menus
+        from blacksite.server.event_engine import Events
+        self.events = Events(self, character_state.get('events', {})) if self.market else None
+        if self.events:
+            self.loop.subsystems.append(self.events)
 
     def _disconnect_character(self, session: Session) -> None:
         if self.market:
@@ -197,7 +201,8 @@ class Core:
                                     self.lattice.who if self.lattice else lambda: [],
                                     self.lattice.debug_reveal if self.lattice else lambda p, s, c: {"ok": False},
                                     self.relays.admin if self.relays else None,
-                                    self.market.admin if self.market else None)
+                                    self.market.admin if self.market else None,
+                                    self.events.admin if self.events else None)
             return
         if frame.type == "intent" and frame.data["name"] == "resync":
             session.replay_log()
@@ -247,7 +252,10 @@ class Core:
             s.role == "caller" and not s.closed for s in self.sessions.active.values()),
             "active_zones": sum(not zone.dormant for zone in self.world.zones.values()) if self.world else 0,
             "tick": self.loop.timing(), "persistence_lag": 0,
-            "event_state": None, "season_depth": 0,
+            "event_state": [{'id': plan.id, 'event': plan.template, 'state': plan.state,
+                             'starts_at': plan.starts_at, 'ends_at': plan.ends_at,
+                             'where': list(plan.where)} for plan in self.events.scheduler.plans.values()
+                             if plan.live] if self.events else None, "season_depth": 0,
             "market": {"open_listings": sum(v.status == 'open' for v in self.market.market.listings.values()),
                        "active_bounties": sum(v.status == 'active' for v in self.market.bounties.rows.values())} if self.market else {},
             "treasury": {faction: values.get('treasury', 0) for faction, values in self.relays.ledger.state['factions'].items()} if self.relays else {}}

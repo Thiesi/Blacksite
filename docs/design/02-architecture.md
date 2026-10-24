@@ -819,6 +819,12 @@ Personal finale receipts change only that identity's standing/benefits.
 A second caller, repeated run or recovery cannot repeat either effect.
 
 Persist committed event plans and seeds before selling their forecasts.
+The `meta.events_state` receipt stores scheduler position, cooldowns,
+plans, allocations and claimed sources. Plan activation, surplus salvage
+and event key caches join one commerce transaction. Publish warnings,
+forecasts and active effects only after it commits. End/cancel removes
+only event-owned surplus, uncollected caches and geometry layers; it
+never removes items already collected or restores an old service map.
 At restart, reconcile wall-time expiry before input; resume uptime timers
 without catching up an offline backlog. Rebuild expeditions from their
 safe checkpoint. Service reservation, allocation, public control expiry,

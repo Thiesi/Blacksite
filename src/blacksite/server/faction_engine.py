@@ -249,6 +249,8 @@ class Factions:
             if not offer:
                 raise ValueError("No committed event is announced. Ordinary public services remain open.")
             text = offer.text
+            progress.setdefault('event_forecasts', {})[offer.plan_id] = {
+                'revision': offer.revision, 'text': offer.text}
             if faction == "kestrel":
                 progress["convoy_reservation"] = offer.plan_id
         else:

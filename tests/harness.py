@@ -44,6 +44,8 @@ class HeadlessServer:
                          asdict(content.keymaps) if content and content.keymaps else {},
                          asdict(content.palette) if content and content.palette else {},
                          content=content, world=world, spawn_zone=spawn_zone, character_state=character_state)
+        # Match Server.start: commit startup reconciliation before callers.
+        self.commit_commerce()
 
     def commit_characters(self, error: bool = False) -> list[dict[str, Any]]:
         game = self.core.characters

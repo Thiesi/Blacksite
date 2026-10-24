@@ -345,6 +345,7 @@ class Commerce:
             **({"salvage_state": deepcopy(effect["salvage_state"])} if "salvage_state" in effect else {}),
             **({"contracts_state": deepcopy(effect["contracts_state"])} if "contracts_state" in effect else {}),
             **({"relays_state": deepcopy(effect["relays_state"])} if "relays_state" in effect else {}),
+            **({'events_state': deepcopy(effect['events_state'])} if 'events_state' in effect else {}),
             **({"market_changes": deepcopy(effect["market_changes"])} if "market_changes" in effect else {}),
             **({"market_audit": deepcopy(effect["market_audit"])} if "market_audit" in effect else {}),
             **({"npc_state": effect["npc_state"]} if "npc_state" in effect else {}),

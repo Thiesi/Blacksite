@@ -75,6 +75,8 @@ class Passages:
             raise ValueError('Stand beside this open route before choosing passage.')
         if exit.relay and not owner.active(exit.relay):
             raise ValueError('This passage has not been commissioned.')
+        if reason := owner.sim.travel_refusal(session, exit):
+            raise ValueError(reason)
         return exit
 
     def near(self, session: Session, eid: str) -> bool:

@@ -16,6 +16,7 @@ from blacksite.server.world.registry import World
 from blacksite.server.world.exits import DepartureHolds, Travel, permitted, schedule
 from blacksite.server.world.city import overview
 from blacksite.server.wake import wrapped
+from blacksite.content.schema import Exit
 
 NIGHT_START_HOUR = 20  # Entity model 1.1: night lighting 20:00-06:00.
 NIGHT_END_HOUR = 6
@@ -56,6 +57,7 @@ class ZoneSimulation:
         self.scout_provider: Callable[[Session], tuple[set[tuple[int,int]],set[str]]] = lambda session:(set(),set())
         self.crew_view: Callable[[Session, dict[str, Any]], None] = lambda session, body: None
         self.fare_menu: Callable[[Session, Any], bool] = lambda session, exit: False
+        self.travel_refusal: Callable[[Session, Exit], str | None] = lambda session, exit: None
 
     def discover(self, session: Session, avatar: Avatar) -> None:
         if avatar.zone in avatar.seen_zones:
@@ -121,6 +123,8 @@ class ZoneSimulation:
                 self.log(session, "Construction blocks this route.")
             elif (zone.id, ex.id) in self.locked_exits or not permitted(ex, self.access_provider(session)):
                 self.log(session, "You do not meet this exit's requirement.")
+            elif reason := self.travel_refusal(session, ex):
+                self.log(session, reason)
             elif self.fare_menu(session, ex):
                 pass
             else:

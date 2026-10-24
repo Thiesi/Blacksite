@@ -15,7 +15,8 @@ def dispatch(session: Session, frame: Frame, sessions: Sessions,
              lattice_who: Callable[[], list[dict[str, str]]] = lambda: [],
              lattice_reveal: Callable[[str, str, str], dict[str, bool]] = lambda p, s, c: {"ok": False},
              relay_command: Callable[[str, dict[str, Any], Callable[[Any], None]], None] | None = None,
-             market_command: Callable[[str, dict[str, Any], Callable[[Any], None]], None] | None = None) -> None:
+             market_command: Callable[[str, dict[str, Any], Callable[[Any], None]], None] | None = None,
+             event_command: Callable[[str, dict[str, Any], Callable[[Any], None]], None] | None = None) -> None:
     if session.role != "operator":
         session.send(Frame("bye", {"reason": "forbidden", "text": "Operator credential required."}))
         return
@@ -24,7 +25,9 @@ def dispatch(session: Session, frame: Frame, sessions: Sessions,
                   if frame.type == 'admin.lattice.reveal' else
                   {key: frame.data[key] for key in ('relay', 'faction')} if frame.type == 'admin.relay.set' else
                   {key: frame.data[key] for key in ('listing', 'bounty') if key in frame.data}
-                  if frame.type in ('admin.market.cancel', 'admin.bounty.refund') else None)
+                  if frame.type in ('admin.market.cancel', 'admin.bounty.refund') else
+                  {key: frame.data[key] for key in ('event', 'where', 'plan') if key in frame.data}
+                  if frame.type.startswith('admin.event.') else None)
         audit({"operator": session.user_id, "command": frame.type, "target": target,
                "outcome": "unavailable" if isinstance(result, dict) and result.get("ok") is False else "ok"})
         if session.closed:
@@ -40,6 +43,12 @@ def dispatch(session: Session, frame: Frame, sessions: Sessions,
             relay_command(frame.type.removeprefix('admin.'), frame.data, reply)
         else:
             reply({'ok': False, 'error': 'Relay service is unavailable.'})
+        return
+    if frame.type.startswith('admin.event.'):
+        if event_command:
+            event_command(frame.type.removeprefix('admin.'), frame.data, reply)
+        else:
+            reply({'ok': False, 'error': 'Event service is unavailable.'})
         return
     if frame.type.startswith(('admin.market.', 'admin.bounty.')):
         if market_command:
