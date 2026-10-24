@@ -26,6 +26,8 @@ on:
       - 'scripts/accept_s21_netbbs.py'
       - 'scripts/accept_s22_netbbs.py'
       - 'scripts/accept_s23_netbbs.py'
+      - 'scripts/accept_s24_netbbs.py'
+      - 'scripts/events_fixture.py'
       - 'scripts/housing_fixture.py'
       - '.github/workflows/service-acceptance.yml'
       - 'pyproject.toml'
@@ -36,6 +38,50 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
+  events-netbbs:
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    permissions:
+      contents: read
+    strategy:
+      fail-fast: false
+      matrix:
+        size: ['80x24', '132x50']
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - uses: actions/checkout@v4
+        with:
+          repository: Thiesi/NetBBS
+          ref: v7.31.0
+          path: .test-tmp/netbbs
+      - name: Build and install the event acceptance wheel
+        shell: bash
+        run: |
+          python -m pip install './.test-tmp/netbbs[ssh,web]'
+          python -m pip wheel --no-deps . -w "$RUNNER_TEMP/s24-wheels"
+          python -m venv "$RUNNER_TEMP/s24-venv"
+          "$RUNNER_TEMP/s24-venv/bin/python" -m pip install "$RUNNER_TEMP"/s24-wheels/*.whl
+      - name: Accept committed events and restart through native stdio
+        shell: bash
+        env:
+          S24_SIZE: ${{ matrix.size }}
+        run: |
+          python scripts/accept_s24_netbbs.py --root "$RUNNER_TEMP/s24-proof/$S24_SIZE" --door-python "$RUNNER_TEMP/s24-venv/bin/python" --size "$S24_SIZE"
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: s24-events-proof-${{ matrix.size }}
+          path: |
+            ${{ runner.temp }}/s24-proof/**/*.ans
+            ${{ runner.temp }}/s24-proof/**/*.txt
+            ${{ runner.temp }}/s24-proof/**/s24-results.json
+            ${{ runner.temp }}/s24-proof/**/native-client.json
+            ${{ runner.temp }}/s24-proof/**/input-trace.json
+            ${{ runner.temp }}/s24-proof/**/progress.log
+
   market-netbbs:
     runs-on: ubuntu-latest
     timeout-minutes: 25

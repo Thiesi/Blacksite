@@ -37,7 +37,7 @@ def events_game(base_content: Any) -> tuple[Any, ...]:
     game = HeadlessServer(content, character_state={
         'events': {'last_roll': int(clock.now_utc().timestamp()//ROLL_SECONDS)}}, clock=clock)
     client = game.connect({'user_id': 1, 'handle': 'Events界', 'node_name': 'test'})
-    create(game, client, name='Events界', archetype=3)
+    create(game, client, name='Events界', archetype=2)
     game.commit_commerce()
     player = game.core.characters.players[client.session.player_id]
     return game, client, player
