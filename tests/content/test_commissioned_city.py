@@ -4,6 +4,7 @@ from collections import Counter, deque
 from copy import deepcopy
 from pathlib import Path
 from random import Random
+from typing import Any
 
 import pytest
 
@@ -370,6 +371,59 @@ def test_game_5_2_closed_exhale_crossing_recovers_to_reachable_public_ground(cit
     private_floor = unit.tile(unit.room.meta.spawn)
     tile = world.free_tile(blocks.id, private_floor, actor)
     assert not game.core.apartments.geometry.containing(blocks.id, tile)
+
+
+def test_game_5_6_real_citadel_lockdown_and_gatehouse_restore_share_one_lift(city: ContentTree) -> None:
+    game = HeadlessServer(deepcopy(city), character_state={})
+    caller = game.connect()
+    create(game, caller)
+    manager = game.core.characters
+    player = manager.players[caller.session.player_id]
+    player.faction, player.standing['halvard'] = 'halvard', 10
+    interlock = game.core.lattice.interlock
+    close = interlock.controls['lat-halvard-citadel', 'executive-lift-lockdown']
+    opened = interlock.controls['lat-gatehouse', 'public-lifts']
+    assert close.target == opened.target and close.action == 'close' and opened.action == 'open'
+    assert close.reset_seconds == 300 and close.safety_policy == 'route'
+    assert close.alternate_route == 'to-core-plaza'
+    zone = game.core.world.zones[close.target.zone]
+    panel = zone.objects[close.target.object]
+    assert panel.spec.params['exits'] == ['to-spire-mezzanine']
+    interlock.check_effect(close, player.id, 'lat-halvard-citadel')
+    gate = next(ex for ex in zone.template.meta.exits if ex.id == 'to-spire-mezzanine')
+    place(game, caller, zone.id, gate.tile)
+    game.commit_commerce()
+    avatar = manager.sim.avatars[caller.session.user_id]
+    now = interlock.now()
+
+    # Replay actual persisted control receipts on the commissioned panel.
+    # Channel/receipt atomicity is covered by the S15 controller tests.
+    def receipt(core: str, control: Any, serial: int, enabled: bool) -> None:
+        interlock.state['serial'] = serial
+        interlock.state['effects'][core+':'+control.id] = {
+            'core': core, 'control': control.id, 'revision': control.revision,
+            'enabled': enabled, 'starts': now, 'expires': now+control.reset_seconds,
+            'serial': serial, 'actor': player.id}
+        interlock.compose()
+
+    receipt('lat-halvard-citadel', close, 1, False)
+    assert (zone.id, gate.id) in manager.sim.locked_exits
+    assert (zone.id, 'to-core-plaza') not in manager.sim.locked_exits
+    assert ('spire-mezzanine', 'to-spire-atrium') not in manager.sim.locked_exits
+    manager.sim.interact(caller.session, avatar, game.clock.now_tick())
+    assert avatar.travel is None
+    assert any(frame.type == 'log' and any('controls keep' in line['text'] for line in frame.data['lines'])
+               for frame in game.frames_for(caller))
+    receipt('lat-gatehouse', opened, 2, True)
+    assert (zone.id, gate.id) not in manager.sim.locked_exits
+    player.standing['halvard'] = 0
+    manager.sim.interact(caller.session, avatar, game.clock.now_tick())
+    assert avatar.travel is None  # Restoring machinery grants no admission credential.
+    player.standing['halvard'] = 10
+    manager.sim.interact(caller.session, avatar, game.clock.now_tick())
+    assert avatar.travel is not None
+    game.step(10)
+    assert avatar.zone == 'spire-mezzanine'
 
 
 def test_game_5_6_exact_relay_tile_opens_its_card_despite_nearby_hardware(city: ContentTree) -> None:

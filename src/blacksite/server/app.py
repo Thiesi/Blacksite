@@ -89,6 +89,11 @@ class Server:
                 shutil.rmtree(previous)
             self.storage.mark_dirty("meta", "content_package_version", PACKAGE_VERSION)
             self.storage.flush_now()
+            # The atomic rename publishes the exact tree already parsed
+            # and validated above. Reuse its data with the final root;
+            # loading and validating the full city twice delays startup.
+            tree.root = target
+            return tree
         tree = load_content(target, self.install_dir / "content.local")
         problems = validate(tree)
         if problems:

@@ -333,6 +333,11 @@ class City:
             for room in core['rooms']:
                 for control in room.get('controls', []):
                     target = control['target']
+                    if core['id'] == 'lat-halvard-citadel' and control['id'] == 'executive-lift-lockdown':
+                        # Lattice 3.1: lockdown closes the inbound public
+                        # lift; Gatehouse can restore the same physical panel.
+                        target['object'] = 'gatehouse-public-lifts'
+                        control.update(action='close', safety_policy='route', alternate_route='to-core-plaza')
                     zid, oid = target.get('zone'), target.get('object')
                     if zid not in self.meta or not oid:
                         continue

@@ -283,13 +283,14 @@
           "label": "executive lift lockdown",
           "target": {
             "zone": "spire-atrium",
-            "object": "halvard-citadel-executive-lift-lockdown"
+            "object": "gatehouse-public-lifts"
           },
-          "action": "open",
+          "action": "close",
           "reset_seconds": 300,
           "scope": "public",
           "permission": "public",
-          "safety_policy": "none"
+          "safety_policy": "route",
+          "alternate_route": "to-core-plaza"
         },
         {
           "id": "sealed-shaft-camera",

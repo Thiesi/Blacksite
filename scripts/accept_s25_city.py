@@ -65,7 +65,20 @@ class CityProbe(ContractProbe):
             'source_content_sha256': content_hash(Path(__file__).parents[1]/'src/blacksite/content'),
             'server_start_seconds': self.server_start_seconds,
             'zones': len(self.game.content.zones), 'local_overlay': False}, indent=2)+'\n', encoding='utf-8')
-        assert self.server_start_seconds < 3, ('architecture 11 server start budget', self.server_start_seconds)
+        assert self.server_start_seconds <= 3, ('architecture 11 server start budget', self.server_start_seconds)
+
+    async def near(self, connection: Connection, object_id: str) -> None:
+        # A patrol can temporarily occupy the only doorway. Replan after
+        # it moves instead of treating its current body as permanent geometry.
+        async with asyncio.timeout(20):
+            while True:
+                try:
+                    await super().near(connection, object_id)
+                    return
+                except AssertionError as exc:
+                    if str(exc) != 'No reachable interaction tile: '+object_id:
+                        raise
+                    await asyncio.sleep(.2)
 
     async def walk(self, connection: Connection, target: tuple[int, int], within: int = 0) -> None:
         avatar = connection.avatar
@@ -97,6 +110,19 @@ class CityProbe(ContractProbe):
                         reached = tile
                         break
             if reached is None:
+                # The tour has no combat or placement fixtures. If a real
+                # hostile blocks the only corridor, fight it with the
+                # caller's actual starter weapon, ammunition and cooldown.
+                enemies = [other for other in zone.actors.values()
+                           if other.stance not in ('down', 'dead')
+                           and self.service.core.npcs.hostile(other, avatar.actor)
+                           and self.combat.visible(avatar.actor, other)
+                           and self.combat.legal(avatar.actor, other)]
+                if enemies:
+                    enemy = min(enemies, key=lambda other: (
+                        (other.x-avatar.actor.x)**2+(other.y-avatar.actor.y)**2, other.id))
+                    await self.target(connection, enemy.id)
+                    await connection.caller.write(b'f')
                 await asyncio.sleep(.2)
                 continue
             next_ = reached

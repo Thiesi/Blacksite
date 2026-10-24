@@ -63,6 +63,20 @@ def test_game_5_6_friendly_nonmember_is_refused_but_actual_member_boards(content
     assert avatar.zone == gate.target_zone
 
 
+def test_game_5_6_disabled_route_does_not_claim_a_member_lacks_credentials(content_tree: ContentTree) -> None:
+    game, caller, gate = gated_game(content_tree, Requirement('member', 'halvard'))
+    manager = game.core.characters
+    manager.players[caller.session.player_id].faction = 'halvard'
+    manager.sim.locked_exits.add(('vatside-wake-hall', gate.id))
+    act(game, caller, Frame('intent', {'name': 'interact', 'args': {}}))
+    avatar = manager.sim.avatars[caller.session.user_id]
+    assert avatar.travel is None
+    messages = [line['text'] for frame in game.frames_for(caller) if frame.type == 'log'
+                for line in frame.data['lines']]
+    assert any('controls' in message for message in messages)
+    assert not any('cage stays sealed' in message for message in messages)
+
+
 def test_game_5_6_story_uses_source_provider_and_expiry_cannot_drop_inflight_body(content_tree: ContentTree) -> None:
     game, caller, gate = gated_game(content_tree, Requirement('story', 'shaft-cage'))
     manager = game.core.characters

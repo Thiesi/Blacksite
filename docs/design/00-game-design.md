@@ -517,7 +517,8 @@ not an extra credential: a caller who finds the actual tile can use
 Interact there. Walking over it never triggers hidden travel.
 A physical prop underfoot takes precedence over a nearby public terminal
 for fallback Interact. `J` remains the explicit network action.
-Blocked exits state their missing credential. Every destination retains
+Credential refusals name the missing credential; a disabled control
+reports that the machinery is locked. Every destination retains
 its ordinary outward route; an authorized ride already in flight still
 completes if a permission later expires.
 
@@ -642,6 +643,11 @@ The theft limit is one unit, not a stack, per apartment per rolling 24 h,
 shared by all attackers. Impounded goods remain protected.
 
 Every closed route has manual egress or an alternate return route.
+The Citadel's executive lift lockdown closes only the Atrium inbound
+lift for 300 seconds. Gatehouse's public-lift control restores the same
+panel; the latest committed operation wins. The Plaza exit and the
+Mezzanine return remain available. Restored machinery grants no standing,
+membership or story authorization.
 In-flight transitions complete; a tram hold cannot strand an absent
 actor. Transit holds last at most 30 s, followed by 120 s immunity.
 Gate Nine's inward pedestrian egress remains available; its 25-chit toll

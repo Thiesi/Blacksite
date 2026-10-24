@@ -92,20 +92,6 @@
       }
     },
     {
-      "id": "halvard-citadel-executive-lift-lockdown",
-      "tile": [
-        15,
-        20
-      ],
-      "kind": "lift",
-      "params": {
-        "name": "executive lift lockdown",
-        "exits": [
-          "to-spire-mezzanine"
-        ]
-      }
-    },
-    {
       "id": "halvard-public-counter",
       "tile": [
         16,
@@ -161,7 +147,7 @@
     {
       "id": "public-uplink-1",
       "tile": [
-        14,
+        15,
         20
       ],
       "kind": "terminal",

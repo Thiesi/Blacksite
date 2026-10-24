@@ -29,6 +29,7 @@ from blacksite.server.rules.combat import (
 )
 from blacksite.server.sessions import Session
 from blacksite.server.world.actors import Actor
+from blacksite.server.world.sight import detection_limit, sight_radius
 from blacksite.server.world.zone import ZoneInstance
 
 
@@ -295,10 +296,14 @@ class Npcs:
         template = self.content.npcs[actor.behaviour["template"]]
         if template.training:
             return
-        # Large city zones contain many hostiles outside sight. Reject
-        # those before the broader physical-body permission checks.
+        # Compute the observer's radius once. Most full-city candidates
+        # are too far away even before hostility, occlusion and body rules.
+        hour = self.clock.now_local().hour
+        radius = sight_radius(actor, zone, hour >= 20 or hour < 6)
         candidates = [other for other in zone.actors.values() if other is not actor
-            and other.stance not in ("down", "dead") and self.hostile(actor, other)
+            and other.stance not in ("down", "dead")
+            and (actor.x-other.x)**2+(actor.y-other.y)**2 <= detection_limit(radius, other)**2
+            and self.hostile(actor, other)
             and self.combat.visible(actor, other) and self.combat.legal(actor, other)]
         candidates.sort(key=lambda a: (distance(actor.position, a.position), a.id))
         target = self.world.actors.get(actor.target)

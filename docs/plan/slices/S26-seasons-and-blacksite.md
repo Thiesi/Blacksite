@@ -339,4 +339,14 @@ testing exposed the previous accidental core-log action. Preserve this
 public/private interaction through future handlers. Full-city salvage
 checks allocate a proposal only when a field deadline is due; seeded
 respawns and the tick p99 below 10 ms requirement stay in force.
+
+The Citadel's executive lift lockdown closes only the Atrium inbound
+lift for 300 seconds. Gatehouse restores the same physical panel, with
+the latest committed operation winning. The Plaza exit and Mezzanine
+return remain available; machinery restoration grants no credentials.
+Disabled controls report a control lock instead of a missing credential.
+Retain this binding, return path and refusal distinction through seasonal
+activation, help, operator diagnostics, load tests and federation replay.
+See [PR #66](https://github.com/Thiesi/Blacksite/pull/66), alongside the
+[PR #38](https://github.com/Thiesi/Blacksite/pull/38) product review.
 <!-- s25-city-decisions:end -->

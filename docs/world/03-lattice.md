@@ -134,6 +134,12 @@ non-corporate crew to the public levels for 30 minutes), visitor logs.
 Controls: `turnstiles @ spire-atrium`, `public lifts @ spire-atrium`.
 ICE: Tripwire, Turnstile, Mastiff, Glasshouse.
 
+The Citadel lockdown closes the Atrium-to-Mezzanine lift for its
+300-second reset window. Gatehouse's public-lift control opens the same
+physical panel, so the latest committed operation wins. The Plaza exit
+and the Mezzanine's return remain available. Credential refusals describe
+missing admission; a disabled panel reports its control lock instead.
+
 **Skywatch** (`lat-skywatch`) — Halvard, tier 4, 7 rooms. Hardware: array control @
 `spire-shaft-head`. Data: Ring-fall forecast (names the next Ring-fall ring and
 its start within a 10-minute window; sells to Ferrymen for a lot),
