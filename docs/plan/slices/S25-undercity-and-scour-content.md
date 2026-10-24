@@ -114,12 +114,13 @@ All Undercity base sight uses game 5.2's five tiles before carried-light
 benefits. Explicit Interact can use a physically found hidden exit;
 hidden travel never triggers merely by walking across its tile.
 
-Commissioning also exposed three practical engine gaps: real walled
+Commissioning also exposed four practical engine gaps: real walled
 apartments must not freeze public geometry controls; salvage must not
 spawn on a permanent hazard that interrupts every harvest; and a saved
 position inside an expired passage must recover to reachable public
-ground without entering a private room. The bounded fixes implement
-game 5.2/8.4/8.7, with actual-map regressions. They add no new gameplay
+ground without entering a private room; and fallback Interact must not
+let adjacent telemetry steal the physical prop underfoot. The bounded
+fixes implement game 5.2/5.6/8.4/8.7, with actual-map regressions. They add no new gameplay
 system. The Shaft Relay's `requires_level` gate remains owned by S26;
 16 sites exist physically, with 15 available before that level opens.
 
@@ -444,4 +445,10 @@ Scour sector and cannot bypass Static's Ring-fall gate. All 16 relay
 sites are mapped, but Shaft Relay retains `requires_level`; S26 must bind
 its availability to the committed level phase, alongside the story-route
 providers. Mapping never pretends that this seasonal gate is open.
+
+Native city commissioning also preserves fallback Interact on a physical
+prop underfoot before any adjacent public network terminal. Shaft Foot
+therefore reports its sealed season-console status; explicit J still
+jacks in. Retain this actual-map regression through S26 activation and
+later interaction handlers. See PR #66, alongside PR #38 and issue #56.
 <!-- s25-city-decisions:end -->

@@ -419,6 +419,9 @@ enter; actor-specific permission may additionally admit private floors.
 A geometry proposal floods that public component once, then checks only
 actors whose escape origin is outside it. Housing indexes its static
 room tiles directly; lease and visitor permissions remain live checks.
+Fallback Interact preserves a physical prop underfoot before considering
+an adjacent public network terminal. Explicit `J` still jacks in. This
+keeps Shaft Foot's season-console status usable beside its telemetry.
 
 Admission/reconnect preserves a valid saved position. If an expired
 opening makes it invalid, `World.free_tile` searches the public spawn's

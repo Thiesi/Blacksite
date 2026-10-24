@@ -477,7 +477,16 @@ class Lattice:
         action = next((a for a, keys in table.get("bindings", {}).items() if key in keys), name)
         if action == "interact" or key in ("e", "E"):
             avatar = self.sim.avatars.get(session.user_id)
-            if avatar and avatar.actor.zone and self.terminal(avatar.actor):
+            if avatar and avatar.actor.zone:
+                actor = avatar.actor
+                # This is fallback Interact. An authored physical prop
+                # underfoot must reach the ordinary world handler, rather
+                # than being stolen by an adjacent network terminal.
+                if any(obj.spec.tile == actor.position and obj.spec.kind != 'terminal'
+                       for obj in self.game.world.zones[actor.zone].objects.values()):
+                    return False
+                if not self.terminal(actor):
+                    return False
                 self.jack_in(session)
                 return True
         return False

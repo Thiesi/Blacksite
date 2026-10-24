@@ -29,8 +29,8 @@ class ServiceProbe(CityProbe):
         assert (panel.kind, panel.target) == (kind, object_id), (panel.kind, panel.target, object_id)
         return panel
 
-    async def close_menu(self, caller: Connection) -> None:
-        await commit_key(self, caller, b'\x1b', lambda: caller.session.id not in self.commerce.menus)
+    async def close_menu(self, caller: Connection, leave_key: bytes = b'\x1b') -> None:
+        await commit_key(self, caller, leave_key, lambda: caller.session.id not in self.commerce.menus)
         name = self.service.world.zones[caller.avatar.zone].template.meta.name
         await wait(lambda: name in caller.caller.screen.screen_text().splitlines()[0])
 
@@ -109,10 +109,42 @@ async def rifle(probe: ServiceProbe, caller: Connection, size: tuple[int, int]) 
     await wait(lambda: caller.session.id not in probe.commerce.prompts)
     assert (p.chits_hand, p.chits_bank) == (before[0]-100, before[1]+100)
     probe.save(caller, 's25-market-bank-cancel')
+    await probe.close_menu(caller, b'b')
+    assert (p.chits_hand, p.chits_bank) == (before[0]-100, before[1]+100)
+    # A separate actual caller walks from the Wake; no peer placement or
+    # inventory fixture can stand in for a street drop and pickup.
+    peer = await probe.open(*size, 'S25peer', 1, True)
+    peer_player = probe.game.players[peer.session.player_id]
+    await probe.walk(peer, (21, 14))
+    await key(peer, b'b')
+    await wait(lambda: peer_player.progress.get('wake_combat') == 'skipped')
+    for zid in ('vatside-clinics', 'core-plaza', 'core-tram-hub', 'tramyard-market'):
+        await probe.travel(peer, zid)
+    zone = probe.service.world.zones[caller.avatar.zone]
+    drop = probe.service.world.free_tile(zone.id, (64, 15), caller.avatar.actor)
+    await probe.walk(caller, drop)
+    beside = probe.service.world.free_tile(zone.id, drop, peer.avatar.actor)
+    assert max(abs(a-b) for a, b in zip(drop, beside)) == 1
+    await probe.walk(peer, beside)
+    patch = next(i for i in p.inventory if probe.commerce.items[i].template == 'con_sablier_patch')
+    await commit_key(probe, caller, b'i', lambda: caller.session.id in probe.commerce.menus)
+    panel = probe.commerce.menus[caller.session.id]
+    await probe.row(caller, panel, patch)
+    await commit_key(probe, caller, b'd', lambda: patch not in p.inventory)
+    cache = next(cid for cid, state in probe.commerce.caches.items() if patch in state['items'])
     await probe.close_menu(caller)
+    away = probe.service.world.free_tile(zone.id, drop, caller.avatar.actor)
+    await probe.walk(caller, away)
+    panel = await probe.counter(peer, cache, 'cache')
+    await probe.row(peer, panel, patch)
+    await commit_key(probe, peer, b'\r', lambda: patch in peer_player.inventory)
+    assert patch not in p.inventory and probe.commerce.items[patch].owner == peer_player.id
+    probe.save(peer, 's25-market-peer-picked-up-drop')
+    await probe.close_menu(peer)
+    await probe.leave(peer, 's25-market-peer-left')
     return {'rifle_price_paid': gun_cost, 'rifle_equipped': True, 'ammunition': 'ammo_5x',
             'actual_starter_item_sold': True, 'market_bank_deposit': 100, 'withdrawal_cancelled': True,
-            'pending': ['two-caller dropped-item exchange on actual Market', 'actual earning pace']}
+            'two_caller_market_drop_pickup': True, 'pending': ['actual earning pace']}
 
 
 async def surgery(probe: ServiceProbe, caller: Connection, size: tuple[int, int]) -> dict[str, Any]:

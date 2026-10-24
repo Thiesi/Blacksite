@@ -336,4 +336,10 @@ Scour sector and cannot bypass Static's Ring-fall gate. All 16 relay
 sites are mapped, but Shaft Relay retains `requires_level`; S26 must bind
 its availability to the committed level phase, alongside the story-route
 providers. Mapping never pretends that this seasonal gate is open.
+
+Native city commissioning also preserves fallback Interact on a physical
+prop underfoot before any adjacent public network terminal. Shaft Foot
+therefore reports its sealed season-console status; explicit J still
+jacks in. Retain this actual-map regression through S26 activation and
+later interaction handlers. See PR #66, alongside PR #38 and issue #56.
 <!-- s25-city-decisions:end -->

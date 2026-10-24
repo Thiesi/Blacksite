@@ -132,7 +132,8 @@ class CityProbe(ContractProbe):
                        or connection.session.id in panels)
         if connection.session.id in panels and panels[connection.session.id].route:
             assert exit_.kind == 'gate'
-            await commit_key(self, connection, b'e', lambda: avatar.travel is not None)
+            await commit_key(self, connection, b'e', lambda: avatar.travel is not None
+                             or avatar.zone == destination)
         # A tram can wait a complete timetable interval before its ride;
         # a normal lift's timeout must not abort a valid platform wait.
         timeout = {'gate': 310, 'tram': 150}.get(exit_.kind, 15)
@@ -165,6 +166,7 @@ class CityProbe(ContractProbe):
                 await commit_key(self, caller, b'\x1b', lambda: caller.session.id not in self.service.core.relays.views.menus)
                 await wait(lambda: zone.template.meta.name in caller.caller.screen.screen_text().splitlines()[0])
             elif obj.spec.kind == 'descent_console' and obj.spec.params.get('season_door'):
+                await self.walk(caller, obj.spec.tile)
                 await key(caller, b'e')
                 await wait(lambda: 'season' in caller.caller.screen.screen_text().lower())
         self.save(caller, label+'-'+zid)

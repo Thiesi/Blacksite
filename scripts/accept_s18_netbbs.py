@@ -37,7 +37,8 @@ async def finish_bed_logout(probe: NativeProbe, connection: Connection, label: s
     probe.connections.remove(connection)
 
 
-async def reconnect(probe: NativeProbe, previous: Connection, width: int, height: int) -> Connection:
+async def reconnect(probe: NativeProbe, previous: Connection, width: int, height: int,
+                    expected_zone: str = 'Wake Hall') -> Connection:
     user = get_user_by_id(probe.db, int(previous.session.door_info["user_id"]))
     probe.accounts.append((user, True))
     reader, writer = await asyncio.open_connection("127.0.0.1", probe.node.port)
@@ -50,7 +51,7 @@ async def reconnect(probe: NativeProbe, previous: Connection, width: int, height
     caller = CombatCaller(lambda: reader.read(65536), send, width, height, probe.show)
     await caller.expect("Available doors")
     await caller.write(b"\x1b[B\r")
-    await caller.until(lambda: "Wake Hall" in caller.screen.screen_text().splitlines()[0], timeout=15)
+    await caller.until(lambda: expected_zone in caller.screen.screen_text().splitlines()[0], timeout=15)
     async def pump() -> None:
         while chunk := await reader.read(65536):
             caller.output.extend(chunk)

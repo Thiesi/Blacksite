@@ -272,6 +272,22 @@ def test_game_8_7_real_resident_can_leave_a_closed_room_without_blocking_city_co
     assert actor.position == unit.anchor.doorstep
 
 
+def test_game_5_6_season_console_underfoot_is_not_stolen_by_adjacent_telemetry(city: ContentTree) -> None:
+    game = HeadlessServer(deepcopy(city), character_state={})
+    caller = game.connect()
+    create(game, caller, archetype=0)
+    console = next(obj for obj in city.zones['under-shaft-foot'].meta.objects if obj.params.get('season_door'))
+    place(game, caller, 'under-shaft-foot', console.tile)
+    assert game.core.lattice.terminal(game.core.combat.actor(game.core.characters.players[caller.session.player_id]))
+    act(game, caller, Frame('key', {'k': 'e', 't': 0}))
+    assert caller.session.player_id not in game.core.lattice.presences
+    assert any(frame.type == 'log' and any('season door is sealed' in line['text'].lower()
+               for line in frame.data['lines']) for frame in game.frames_for(caller))
+    # J remains the explicit alternative even while standing on the prop.
+    act(game, caller, Frame('key', {'k': 'j', 't': 0}))
+    assert caller.session.player_id in game.core.lattice.presences
+
+
 def test_architecture_6_1_crowded_real_blocks_share_the_public_escape_search(city: ContentTree) -> None:
     from blacksite.server.clock import ManualClock
     from blacksite.server.housing_geometry import HousingGeometry

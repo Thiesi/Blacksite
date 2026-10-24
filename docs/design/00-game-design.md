@@ -515,6 +515,8 @@ A local latch opened by its core may be an alternative to a carried
 key, as at the Drowned bulkhead. Hidden physical exits are unmarked,
 not an extra credential: a caller who finds the actual tile can use
 Interact there. Walking over it never triggers hidden travel.
+A physical prop underfoot takes precedence over a nearby public terminal
+for fallback Interact. `J` remains the explicit network action.
 Blocked exits state their missing credential. Every destination retains
 its ordinary outward route; an authorized ride already in flight still
 completes if a permission later expires.

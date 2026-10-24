@@ -30,7 +30,9 @@ class ContractProbe(CrewProbe):
         choices = [tile for tile in choices if tile not in occupied and zone.can_enter(actor,tile)]
         assert choices, object_id
         pending,seen = deque([actor.position]),{actor.position}
-        exits = {exit.tile for exit in zone.template.meta.exits}
+        # Only street exits auto-travel on a step. A lift/cage tile can
+        # be part of the public walk without initiating its gated ride.
+        exits = {exit.tile for exit in zone.template.meta.exits if exit.kind == 'street'}
         while pending:
             tile = pending.popleft()
             if tile in choices:
