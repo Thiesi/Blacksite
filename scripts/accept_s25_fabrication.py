@@ -40,7 +40,7 @@ async def clear_hostiles(probe: ServiceProbe, caller: Connection) -> None:
 
 
 async def run(probe: ServiceProbe, size: tuple[int, int]) -> dict[str, Any]:
-    caller = await probe.open(*size, 'S25salvage', 0, True, card='none')
+    caller = await probe.open(*size, 'S25salvage', 0, True)
     player = probe.game.players[caller.session.player_id]
     assert player.chits_hand == 200 and player.chits_bank == 0 and player.grade == 1
     began = time.monotonic()
