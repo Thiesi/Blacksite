@@ -174,6 +174,25 @@ frequency; the server's hold clock remains precise. Contested and Curfew
 states visibly pause the timer. The ordinary hostile-zone menu timeout
 still applies, and closing a card never pauses the world.
 
+F9 beside a public terminal opens services, including terminals that also
+host a contract board. E retains the existing board or jack interaction.
+In services, M opens the market, O bounties, J the jack and C delivery
+collection.
+Outside menus, M remains the map, O drone commands and C chat. The market
+uses D to bid, U to buy out, L to list, M for own listings, C to collect,
+K to cancel, F to filter class and S to sort. Esc/B leaves every screen
+without a transfer; Y is the last step of a chosen financial action.
+Listing confirmation shows the seller's net proceeds at the asking price
+and optional buyout, including zero net for a one-chit sale. The 5% fee
+rounds up to whole chits; it does not introduce a minimum listing price.
+Bank menus also expose C for market delivery collection.
+
+Market menus send at most 12 rows per page. Up/down and PgUp/PgDn move
+the authoritative cursor across pages; the selected row and detail pane
+stay together. Listing history remains stored without growing each view
+frame beyond the protocol limit. The page count includes retained own
+listings, so sellers can inspect earlier outcomes.
+
   A workshop lists learned schematics with carried/required salvage,
   Fabrication minimum and quality range (game design 8.4). F starts a
   craft; Esc/B returns without side effects. Physical harvesting and

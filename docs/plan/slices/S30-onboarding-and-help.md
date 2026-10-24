@@ -257,3 +257,16 @@ contribution/guard requirements, original reservation deadlines and explicit
 withdrawal. A stale clinic discount requires a fresh quote; it cannot
 silently increase the bill.
 <!-- s19-services:end -->
+
+### S23 market handoff
+
+Consume terminal UI 4 and S23, retaining the accepted
+[PR #38](https://github.com/Thiesi/Blacksite/pull/38) product boundaries.
+F9 beside a public terminal opens services even where E opens a contract
+board. Services use M market, O bounties, J jack and C collection. Street
+M/O/C remain map/drone/chat. Market D bids, U buys out, L lists, M shows
+own history, C collects, K cancels, F filters and S sorts. Esc/B leaves;
+Y is the last step of a selected financial action. Bank C also opens
+market collection. Explain cursor/PgUp/PgDn paging, banked escrow, own-bid
+credit toward buyout, the whole-chit fee, free purchased delivery and
+the return of unsold inventory weight. Bounties grant no combat exemption.

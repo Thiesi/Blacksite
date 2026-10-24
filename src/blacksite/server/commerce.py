@@ -345,6 +345,8 @@ class Commerce:
             **({"salvage_state": deepcopy(effect["salvage_state"])} if "salvage_state" in effect else {}),
             **({"contracts_state": deepcopy(effect["contracts_state"])} if "contracts_state" in effect else {}),
             **({"relays_state": deepcopy(effect["relays_state"])} if "relays_state" in effect else {}),
+            **({"market_changes": deepcopy(effect["market_changes"])} if "market_changes" in effect else {}),
+            **({"market_audit": deepcopy(effect["market_audit"])} if "market_audit" in effect else {}),
             **({"npc_state": effect["npc_state"]} if "npc_state" in effect else {}),
             **({"lattice_state": effect["lattice_state"]()} if "lattice_state" in effect else {}),
             **({"identity":effect["identity"], "user":player.bbs_user_id} if "identity" in effect else {})}
@@ -614,6 +616,9 @@ class Commerce:
             title = "KESTREL BANK"
             rows = [{"id": "deposit", "cells": ["Deposit", str(player.chits_hand)]}, {"id":"withdraw", "cells":["Withdraw",str(player.chits_bank)]}]
             rows.append({"id": "impound", "cells": ["Personal impound", "Protected goods and chits"]})
+            if hasattr(self.game, 'market'):
+                rows.append({'id': 'market_delivery', 'cells': ['Market deliveries [C]', 'Fee-free exact items']})
+                actions.append({'key': 'c', 'label': 'market deliveries'})
             detail = f"Hand {player.chits_hand}\nBank {player.chits_bank}\nChoose an action, then enter chits."
         elif screen.kind == "equipment":
             rows = [{"id": slot, "cells": [slot.replace("_"," ").title(), self.content.items[self.items[iid].template].name]} for slot,iid in player.equipment.items() if iid in self.items]

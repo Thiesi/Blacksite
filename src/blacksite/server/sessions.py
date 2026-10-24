@@ -44,6 +44,7 @@ class Session:
     closed: bool = False
     disconnected_tick: int | None = None
     chat_managed: bool = False
+    market_managed: bool = False
     log_ring: deque[dict[str, Any]] = field(default_factory=lambda: deque(maxlen=LOG_RING_LINES))
     log_token: str = ""
     log_serial: int = 0
@@ -117,7 +118,7 @@ class Session:
             if not self.allow("chat", tick, CHAT_PER_WINDOW, CHAT_WINDOW_SECONDS):
                 self.send(Frame("toast", {"text": "You can send four lines every five seconds.", "role": "warning", "seconds": 3}))
                 return False
-        if name.startswith("market") and not self.allow("market", tick, MARKET_PER_SECOND, 1):
+        if not self.market_managed and name.startswith("market") and not self.allow("market", tick, MARKET_PER_SECOND, 1):
             return False
         self.last_input_tick = tick
         self.input_queue.append(frame)

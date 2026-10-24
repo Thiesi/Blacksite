@@ -118,8 +118,16 @@ class Core:
             self.loop.subsystems.append(self.relays)
             social = self.lattice.social_overlay
             self.lattice.social_overlay = lambda session, previous=social: previous(session) or session.id in self.relays.views.menus
+        from blacksite.server.market_engine import Trading
+        self.market = Trading(self, character_state) if self.relays else None
+        if self.market:
+            self.loop.subsystems.append(self.market)
+            social = self.lattice.social_overlay
+            self.lattice.social_overlay = lambda session, previous=social: previous(session) or session.id in self.market.views.menus
 
     def _disconnect_character(self, session: Session) -> None:
+        if self.market:
+            self.market.views.close(session)
         if self.relays:
             self.relays.disconnect(session.player_id)
             self.relays.views.close(session)
@@ -140,6 +148,7 @@ class Core:
         role = self.auth.authenticate(frame.data["door_info"], frame.data["hmac"])
         session = self.sessions.connect(role, frame.data["door_info"], frame.data["caps"])
         session.chat_managed = self.chat is not None
+        session.market_managed = self.market is not None
         session.send(Frame("welcome", {"proto": PROTOCOL_MAJOR, "server_version": PACKAGE_VERSION,
             "player": self.characters.summary(session.user_id) if self.characters and role == "caller" else None,
             "keymap": self.keymap, "palette": self.palette, "motd": self.motd}))
@@ -187,10 +196,13 @@ class Core:
                                     self.request_stop, self.audit,
                                     self.lattice.who if self.lattice else lambda: [],
                                     self.lattice.debug_reveal if self.lattice else lambda p, s, c: {"ok": False},
-                                    self.relays.admin if self.relays else None)
+                                    self.relays.admin if self.relays else None,
+                                    self.market.admin if self.market else None)
             return
         if frame.type == "intent" and frame.data["name"] == "resync":
             session.replay_log()
+        if self.market and self.market.input(session, frame, event.data['tick']):
+            return
         if self.contracts and self.contracts.input(session, frame, event.data['tick']):
             return
         if self.factions and self.factions.input(session, frame, event.data["tick"]):
@@ -235,7 +247,10 @@ class Core:
             s.role == "caller" and not s.closed for s in self.sessions.active.values()),
             "active_zones": sum(not zone.dormant for zone in self.world.zones.values()) if self.world else 0,
             "tick": self.loop.timing(), "persistence_lag": 0,
-            "event_state": None, "season_depth": 0}
+            "event_state": None, "season_depth": 0,
+            "market": {"open_listings": sum(v.status == 'open' for v in self.market.market.listings.values()),
+                       "active_bounties": sum(v.status == 'active' for v in self.market.bounties.rows.values())} if self.market else {},
+            "treasury": {faction: values.get('treasury', 0) for faction, values in self.relays.ledger.state['factions'].items()} if self.relays else {}}
 
     def request_stop(self) -> None:
         self.stop_requested = True

@@ -212,3 +212,15 @@ existing SQL rows atomically; no S19 schema-version migration is required.
 Test restore after allocation expiry and a durable reward write before
 acknowledgement.
 <!-- s19-services:end -->
+
+### S23 market handoff
+
+Consume architecture 15.2 and S23, retaining the accepted
+[PR #38](https://github.com/Thiesi/Blacksite/pull/38) product boundaries.
+Schema 4 adds market listings, bid history and bounties, with market
+serials in meta and private financial audit. Include all in backups.
+`admin.market.list` and `admin.bounty.list` take optional positive `page`
+(default 1), return at most 100 records and expose `page/pages/total`.
+Market pages include current held bids for their selected listings.
+Expose pagination in the CLI; do not assume one response is the world.
+Cancellation/refund replies follow the durable atomic source commit.

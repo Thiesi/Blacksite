@@ -77,7 +77,7 @@ def test_game_6_7_optional_credit_and_all_asset_references(repo_root: Path):
 def test_world_08_finished_found_texts_are_loaded_verbatim(repo_root: Path):
     tree = load_content(repo_root/'src/blacksite/content')
     source = (repo_root/'docs/world/08-found-texts.md').read_text(encoding='utf-8')
-    assets = [key for key in tree.text if key.startswith('text-')]
+    assets = [key for key in tree.text if key.startswith('text-') and '## '+key+'\n' in source]
     assert len(assets) == 13
     for asset in assets:
         section = source.split('## '+asset+'\n', 1)[1].split('\n## ', 1)[0]

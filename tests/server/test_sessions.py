@@ -6,7 +6,8 @@ from tests.harness import HeadlessServer
 
 
 def intent(name: str = "move") -> Frame:
-    return Frame("intent", {"name": name, "args": {}})
+    return Frame("intent", {"name": name, "args": {},
+        **({"request_id": "session-limit", "expected_revision": 0} if name.startswith('market') else {})})
 
 
 def test_rate_limit_inputs_20_per_s() -> None:

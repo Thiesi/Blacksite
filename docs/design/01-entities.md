@@ -702,6 +702,29 @@ that claim. Live crew membership never substitutes for this roster.
 `listing id, seller, item instance, price, buyout, expires_at, bids[]`;
 `bounty id, poster, target player id, chits, expires_at, claimed_by`.
 
+Listings retain status, creation/closure times, the winning player and
+sale price, plus an immutable item snapshot for historical details.
+Bids retain their listing, bidder, amount, time and held/outbid/refunded/
+won status; only the current held bid is escrowed. Serial allocation,
+changed market rows, bank patches, item ownership, personal impound and Kestrel
+treasury commit in one commerce source transaction. A failed source
+publishes none of them. Closed rows make expiry and death claims
+idempotent across restart. Market fees increase treasury, not influence.
+
+Purchased market deliveries carry `source: market` on the
+existing fee-zero impound entry. An accessible terminal can collect
+those entries; the Kestrel bank retains its existing full impound access.
+No second collection store is introduced. Item instance IDs, quality,
+ammo, charges and drone condition survive every transition.
+Unsold returns restore the seller's inventory, accepting any resulting
+overweight state instead of creating free permanent storage.
+
+Confirmed retirement first commits auction cancellation, bid releases,
+and refunds of bounties posted by or targeting that character. Its own
+market items return to its inventory before deletion, so a crash between
+the release and deletion keeps them recoverable. Other participants'
+escrow is refunded once. The existing character deletion then proceeds.
+
 ### 2.7 Contracts
 
 `contract instance id, template, player or crew, params (resolved),

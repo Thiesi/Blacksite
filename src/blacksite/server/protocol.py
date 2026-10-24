@@ -20,6 +20,7 @@ FrameType = Literal[
     "welcome", "view", "delta", "log", "prompt", "toast", "pong",
     "admin.status", "admin.who", "admin.stop", "admin.lattice.who", "admin.lattice.reveal",
     "admin.relay.list", "admin.relay.set",
+    "admin.market.list", "admin.market.cancel", "admin.bounty.list", "admin.bounty.refund",
 ]
 
 
@@ -156,12 +157,19 @@ def _need(data: dict[str, Any], key: str, valid: bool) -> None:
 def validate(kind: str, data: dict[str, Any], direction: str | None = None) -> None:
     client = {"hello", "resize", "key", "intent", "line", "ack", "ping", "bye",
               "admin.status", "admin.who", "admin.stop", "admin.lattice.who", "admin.lattice.reveal",
-              "admin.relay.list", "admin.relay.set"}
+              "admin.relay.list", "admin.relay.set", "admin.market.list", "admin.market.cancel",
+              "admin.bounty.list", "admin.bounty.refund"}
     server = {"welcome", "view", "delta", "log", "prompt", "toast", "pong", "bye"}
     allowed = client if direction == "client" else server if direction == "server" else client | server
     if kind not in allowed:
         raise ProtocolError("unknown or wrong-direction frame type")
-    if kind == 'admin.relay.set':
+    if kind in ('admin.market.list', 'admin.bounty.list'):
+        if 'page' in data:
+            _need(data, 'page', _integer(data.get('page'), 1))
+    elif kind in ('admin.market.cancel', 'admin.bounty.refund'):
+        key = 'listing' if kind == 'admin.market.cancel' else 'bounty'
+        _need(data, key, _text(data.get(key), 256) and bool(data.get(key)))
+    elif kind == 'admin.relay.set':
         for key in ('relay', 'faction'):
             _need(data, key, _text(data.get(key), 128) and bool(data.get(key)))
     elif kind == "admin.lattice.reveal":
@@ -199,7 +207,8 @@ def validate(kind: str, data: dict[str, Any], direction: str | None = None) -> N
         for key in ("request_id", "expected_revision"):
             if key in data:
                 _need(data, key, _text(data[key], 128) if key == "request_id" else _integer(data[key]))
-        if data.get("name") in {"menu_select", "market.action", "contract.accept", "finale.choose", "work_order.allocate"}:
+        if data.get("name") in {"menu_select", "market.action", "market.list", "market.bid", "market.buyout",
+                               "market.cancel", "market.collect", "bounty.post", "contract.accept", "finale.choose", "work_order.allocate"}:
             _need(data, "request_id", _text(data.get("request_id"), 128) and bool(data.get("request_id")))
             _need(data, "expected_revision", _integer(data.get("expected_revision")))
     elif kind == "line":

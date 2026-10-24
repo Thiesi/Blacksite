@@ -1,6 +1,6 @@
 # S23 — Market and bounties: listings, bids, fees, bounty rules
 
-**Status:** planned
+**Status:** done (PR #64)
 **Primary model:** Sonnet · **Reviewer:** Opus
 **Depends on:** S12, S18, S20, S21 · **Milestone:** M4
 **Issue:** https://github.com/Thiesi/blacksite/issues/23
@@ -23,6 +23,11 @@ or let a later relay checkpoint overwrite the fee. Season reset retains
 earned treasury. See the [S21 handoff](../s21-relay-handoff.md).
 
 ## Goal
+
+Implementation and evidence: [PR #64](https://github.com/Thiesi/Blacksite/pull/64)
+and the [S23 acceptance record](../../ops/s23-acceptance.md). Future Sink
+geography and ordinary earning/clinic/human pacing remain S25/S26 gates;
+the disclosed transaction fixtures do not satisfy them.
 
 Give players an asynchronous, Kestrel-taxed market for items and a bounty
 board for names, reachable from any terminal. The market is the only
@@ -57,8 +62,10 @@ persistent rows, resolved by the server, with no new real-time mechanics.
   slot list (collect at any bank or terminal), pays the seller
   `price × 0.95` to the bank, and pays `price × 0.05` to the Kestrel
   faction treasury (`FactionState.treasury`).
-- Cancel returns the item; cancel with an active bid is refused with a
-  toast. Expiry with no bid returns the item; with a bid, sells to it.
+- Cancel returns the item to seller inventory; cancel with an active
+  bid is refused with a toast. Expiry with no bid restores inventory;
+  with a bid, sells to it. Return may make the seller overweight, never
+  discard the item or turn cancellation into a free impound deposit.
 - Bounties: poster pays chits from the bank into escrow; target must be
   a grade ≥ 5 player on this origin; minimum 100 chits; expiry 7 d;
   refunded on expiry. A kill of the target by any player other than the
@@ -70,7 +77,7 @@ persistent rows, resolved by the server, with no new real-time mechanics.
   and number of posters; posters are anonymous to everyone but the admin
   audit log.
 - Menus (`MenuView`): **Market** (browse by class, sort by price/expiry,
-  detail pane shows stats and quality, actions `[B]id`, `[U]y buyout`,
+  detail pane shows stats and quality, actions `[D] bid`, `[U]y buyout`,
   `[L]ist item`, `[M]y listings`, `[C]ollect`), **Bounties** (`[P]ost`,
   detail pane, `[B]ack`). Listing an item opens the inventory menu
   filtered to unsecured, non-equipped items, then a price line prompt.
@@ -96,7 +103,8 @@ persistent rows, resolved by the server, with no new real-time mechanics.
 - New tables per entities §2.6: `market_listings`, `market_bids`,
   `bounties`. Reuse S18's protected impound records in
   `meta.interlock_state`; do not create a second collection authority.
-- Constants in `src/blacksite/server/rules.py`: `MARKET_FEE = 0.05`,
+- Constants in `src/blacksite/server/rules/market.py`: exact
+  `MARKET_FEE = 5/100`,
   `BOUNTY_MIN_CHITS = 100`, `BOUNTY_MIN_TARGET_GRADE = 5`,
   `LISTING_EXPIRIES = (24h, 72h, 7d)`, each with a comment citing design
   §8.3 and asserted by a test.
@@ -139,17 +147,22 @@ persistent rows, resolved by the server, with no new real-time mechanics.
 ## Acceptance script
 
 1. On a NetBBS node with two callers (A and B) at 80×24, A opens a
-   public terminal in `core-plaza`, presses `M`, lists a starter pistol
+   public terminal in `core-plaza`, presses `F9` then `M`, lists a starter pistol
    at 50 chits with a 100-chit buyout, 24 h expiry. The Market menu shows
-   it under "My listings".
+   it under "My listings". Before `Y`, confirmation shows 47 net at ask
+   and 95 at buyout, with the whole-chit fee explained.
 2. B opens the market from the Tin Halo terminal, sees the listing with
    A's handle, bids 60. A's log shows "bid received". B then presses `U`
    for buyout; B's bank drops by 100, A's bank rises by 95, and
    `blacksite admin status` shows the Kestrel treasury up by 5.
-3. B presses `C` at a bank: the pistol arrives in B's inventory.
+3. B opens a bank menu and presses `C`, then confirms collection: the
+   pistol arrives in B's inventory. Outside menus, `C` remains chat.
 4. A (grade ≥ 5) posts a 200-chit bounty on B (grade ≥ 5). Both logs show
-   the notice. A third caller kills B in `sink-rim`: the killer's bank
-   rises by 200 and the board no longer lists B.
+   the notice. A third caller buys ammunition at the real outfitter, then
+   kills B on a commissioned contested hub
+   tile: the killer's bank rises by 200 and the board no longer lists B.
+   S25 retains the real `sink-rim` travel/location acceptance; the hub
+   run does not prove that future geography.
 5. Attempt to post a bounty on a grade-2 character: toast "Nobody pays
    for a Wake." and no chits move.
 
@@ -161,6 +174,39 @@ persistent rows, resolved by the server, with no new real-time mechanics.
 - Design doc §8.3 unchanged, or changed with reason in the PR.
 
 ## Implementer notes
+
+- Game 8.3 now specifies whole-chit ceiling for the existing 5% fee;
+  the seller gets the remainder. Own bid increases and buyout reuse
+  escrow instead of requiring the full price twice.
+- Market impound entries carry `source: market`, with no collection
+  fee. Accessible terminals collect those entries; ordinary impound
+  access and fees remain unchanged. Preserve exact instance identity
+  on collection, including stacks, charges and drone condition.
+- Only purchases use protected delivery. Unsold returns restore seller
+  inventory, so cancellation cannot bypass apartment storage tariffs.
+- `B` and `Esc` leave/back throughout; use `D` for bid. The old `B`
+  bid hotkey conflicted with AGENTS and the client's back binding.
+- F9 opens public services beside a terminal, including a shared contract
+  board. Preserve E for existing board/jack interaction and street M/O/C
+  for map/drone/chat.
+- Menu views contain at most 12 rows with cursor-driven paging. Operator
+  list commands accept a positive `page`, default 1, with 100 records per
+  page and `page/pages/total` metadata. Market operator pages include
+  current held bids for their listings. Historical records remain stored.
+- The pure state machines live in `market.py`, world proposals in
+  `market_engine.py` and server menus in `market_views.py`. Schema 4
+  adds the three tables; only the storage layer writes them.
+- Retain held/refunded/won bid history, sale-time item snapshots and
+  retirement cleanup. A failed source announces no success, and a
+  restart never repeats a sale, refund or death payout.
+- Keep a derived held-bid lookup, format the visible page and clone live
+  financial records while sharing immutable closed history. S29 retains
+  the full populated-world latency gate; a small local probe is not that
+  acceptance. Listing confirmation shows actual net proceeds, including
+  zero for a one-chit sale. No extra bounty tax or minimum price is added.
+- Record grade/funding fixtures separately from actual native walking,
+  terminal access, trading, firing and death. Retain S19/S25 actual
+  earning and clinic pacing obligations.
 
 - Escrow always moves **banked** chits, never chits on hand, so death
   cannot interact with an open bid (design §8.1).

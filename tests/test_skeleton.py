@@ -34,7 +34,7 @@ def test_version_constants(repo_root: Path) -> None:
     assert blacksite.__version__ == version.PACKAGE_VERSION
     assert version.PROTOCOL_MAJOR == 1
     assert version.CONTENT_SCHEMA == 1
-    assert version.WORLD_SCHEMA == 3
+    assert version.WORLD_SCHEMA == 4
 
 
 def test_no_runtime_dependencies(repo_root: Path) -> None:

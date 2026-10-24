@@ -181,3 +181,14 @@ source receipts as authority-owned state. Public route publication exposes
 authored NPC/ICE telemetry only. Keep Origin/Source identity and ownership
 boundaries; a native door NodeID remains an opaque session identifier.
 <!-- s19-services:end -->
+
+### S23 financial history handoff
+
+[S23 PR #64](https://github.com/Thiesi/Blacksite/pull/64) retains the
+accepted [PR #38](https://github.com/Thiesi/Blacksite/pull/38) source and
+ownership boundaries. Closed listings, bids and bounties are immutable
+history. Proposals copy open listings, held bids and active bounties;
+terminal history may be shared read-only. A new mutable federation state
+must be copied as live data before mutation. The held-bid lookup is
+derived from stored records, never a remote monetary authority. Preserve
+sale-time item snapshots, private audit and exact-instance delivery.

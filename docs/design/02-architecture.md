@@ -839,6 +839,39 @@ also supports a fixed story branch's bounded public route record. All
 workers in that accepted instance share one expiry; another payout
 cannot extend it. Fixed branch consent remains personal at acceptance.
 
+S23 market sources add changed `market_listings`, `market_bids` and
+`bounties` rows and their serial allocation to the same commerce receipt
+as bank escrow, item ownership, S18 impound and S21 treasury. A sale adds
+Kestrel treasury, never influence. Row deltas avoid rewriting all auction
+history on each bid. Closed/claimed rows make expiry and death payouts
+idempotent after restart. Bounty poster IDs remain in operator audit,
+not caller views.
+
+The death hook stages bounty payouts in the existing death receipt and
+preserves combat, Marked and victim-cache rules. Retirement releases its
+market obligations before the existing character deletion. Failure keeps
+the character and escrow; an intermediate crash leaves returned items
+in the character inventory for retry.
+
+Market and bounty mutations require `request_id` and
+`expected_revision`, current terminal access and the shared per-session
+one-action-per-second budget. Optional `terminal` identifies the service
+object; `bounty.post.target` is the local character ID. Operator frames
+are `admin.market.list`, `admin.market.cancel {listing}`,
+`admin.bounty.list` and `admin.bounty.refund {bounty}`. List requests accept
+an optional positive `page` (default 1), return at most 100 records and
+include `page`, `pages` and `total`. Market list pages include only current
+held bids for their selected listings; historical records remain stored.
+This bounds protocol frames in long-running worlds. These commands share the
+existing operator admission and completion audit. S28 wires the CLI.
+
+Closed listing, bid and bounty records are immutable financial history.
+Proposals clone open listings, held bids and active bounties, sharing
+terminal history without modifying it. The held-bid lookup is derived
+from stored rows, never a second escrow authority. Delta generation skips
+identical shared history and persists only changed rows. Any future state
+that remains mutable must be copied as live data before mutation.
+
 ### 15.3 Delivery boundaries
 
 S02 defines the full closed data schema and validates explicit bundle
