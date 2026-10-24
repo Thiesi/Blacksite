@@ -1081,7 +1081,8 @@ their action rule. The benefit applies Lattice-wide, ends with
 ownership or membership, and cannot stack with itself.
 
 Cable fare is 5 chits; a free stair/ladder route remains. Gate Nine's
-ordinary outbound opening is 60 s every 5 minutes. Trams depart every
+ordinary outbound opening is 60 s every 2 minutes, so the ordinary free
+wait never exceeds 60 s. Trams depart every
 90 s with a 10 s journey and no fare in v1. These are schedules anchored
 to the injected clock, never reset on entering a dormant zone. Private
 ICE cannot inflict black feedback or bypass the theft cap.

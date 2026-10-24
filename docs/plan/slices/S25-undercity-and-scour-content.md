@@ -160,7 +160,7 @@ and the Far mast does not bypass Static's Ring-fall requirement.
 3. From `tramyard-wall-gate` walk `scour-ring-1` → `-2` → `-3` → `-4`,
    touching each relay's terminal (interaction shows its name) and the
    Far Relay's orphan terminal.
-4. `blacksite admin event force ring-fall scour-ring-3`: extra salvage
+4. `blacksite admin event force ring-fall --where scour-ring-3`: extra salvage
    appears in that ring's field only. Its saved impact footprint
    confines the impact warning and recovery encounter.
 5. Open the zone map overview (`M`) in `under-caverns` at 132×50: the
@@ -471,4 +471,17 @@ Retain this binding, return path and refusal distinction through seasonal
 activation, help, operator diagnostics, load tests and federation replay.
 See [PR #66](https://github.com/Thiesi/Blacksite/pull/66), alongside the
 [PR #38](https://github.com/Thiesi/Blacksite/pull/38) product review.
+
+Full-city pacing changes Gate Nine's ordinary opening to 60 seconds
+per 120-second UTC cycle (game 7.7). The former 300-second cycle allowed
+a 240-second idle wait; an actual native free-gate journey took 265
+seconds including its approach. The fixture-free first rifle/ammunition
+upgrade also left zero chits. Ordinary free waiting is now at most 60
+seconds; the 25-chit fast option, owner benefits and free inward route
+remain. Keep this schedule in seasonal controls, dialogue/help, operator
+views, load and federation checks. This is a product pacing correction,
+not a shortened capture clock or an accelerated acceptance fixture.
+Reference: [PR #66](https://github.com/Thiesi/Blacksite/pull/66), retaining
+[PR #38](https://github.com/Thiesi/Blacksite/pull/38) and
+[platform #56](https://github.com/Thiesi/Blacksite/issues/56).
 <!-- s25-city-decisions:end -->

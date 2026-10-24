@@ -318,4 +318,17 @@ Retain this binding, return path and refusal distinction through seasonal
 activation, help, operator diagnostics, load tests and federation replay.
 See [PR #66](https://github.com/Thiesi/Blacksite/pull/66), alongside the
 [PR #38](https://github.com/Thiesi/Blacksite/pull/38) product review.
+
+Full-city pacing changes Gate Nine's ordinary opening to 60 seconds
+per 120-second UTC cycle (game 7.7). The former 300-second cycle allowed
+a 240-second idle wait; an actual native free-gate journey took 265
+seconds including its approach. The fixture-free first rifle/ammunition
+upgrade also left zero chits. Ordinary free waiting is now at most 60
+seconds; the 25-chit fast option, owner benefits and free inward route
+remain. Keep this schedule in seasonal controls, dialogue/help, operator
+views, load and federation checks. This is a product pacing correction,
+not a shortened capture clock or an accelerated acceptance fixture.
+Reference: [PR #66](https://github.com/Thiesi/Blacksite/pull/66), retaining
+[PR #38](https://github.com/Thiesi/Blacksite/pull/38) and
+[platform #56](https://github.com/Thiesi/Blacksite/issues/56).
 <!-- s25-city-decisions:end -->

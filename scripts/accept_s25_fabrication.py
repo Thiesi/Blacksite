@@ -18,6 +18,11 @@ from accept_s10_netbbs import Connection, wait
 from accept_s16_netbbs import commit_key, key, use
 from accept_s25_services import ServiceProbe
 
+OUTWARD = ('vatside-clinics', 'core-tram-hub', 'tramyard-market',
+           'tramyard-depots', 'tramyard-wall-gate', 'scour-ring-1')
+RETURN = ('scour-ring-1', 'tramyard-wall-gate', 'tramyard-depots',
+          'oldworks-main', 'oldworks-yards')
+
 
 async def clear_hostiles(probe: ServiceProbe, caller: Connection) -> None:
     actor = caller.avatar.actor
@@ -40,6 +45,11 @@ async def clear_hostiles(probe: ServiceProbe, caller: Connection) -> None:
 
 
 async def run(probe: ServiceProbe, size: tuple[int, int]) -> dict[str, Any]:
+    origin = 'vatside-wake-hall'
+    for destination in (*OUTWARD, 'scour-landing', *RETURN):
+        assert any(ex.target_zone == destination for ex in
+                   probe.service.world.zones[origin].template.meta.exits), (origin, destination)
+        origin = destination
     caller = await probe.open(*size, 'S25salvage', 0, True)
     player = probe.game.players[caller.session.player_id]
     assert player.chits_hand == 200 and player.chits_bank == 0 and player.grade == 1
@@ -47,8 +57,7 @@ async def run(probe: ServiceProbe, size: tuple[int, int]) -> dict[str, Any]:
     await probe.walk(caller, (21, 14))
     await key(caller, b'b')
     await wait(lambda: player.progress.get('wake_combat') == 'skipped')
-    for zid in ('vatside-clinics', 'core-tram-hub', 'tramyard-market',
-                'tramyard-depots', 'tramyard-wall-gate', 'scour-ring-1'):
+    for zid in OUTWARD:
         await probe.travel(caller, zid)
     fab = probe.service.core.fabrication
     field = probe.service.core.salvage.state['zones']['scour-ring-1']
@@ -113,8 +122,7 @@ async def run(probe: ServiceProbe, size: tuple[int, int]) -> dict[str, Any]:
     await commit_key(probe, caller, b'\r', lambda: player.chits_hand == before_chits+18)
     await probe.close_menu(caller)
     probe.save(caller, 's25-real-landing-eighteen-chit-hull-sale')
-    for zid in ('scour-ring-1', 'tramyard-wall-gate', 'tramyard-depots',
-                'tramyard-market', 'core-tram-hub', 'oldworks-main', 'oldworks-yards'):
+    for zid in RETURN:
         await probe.travel(caller, zid)
     zone = probe.service.world.zones[caller.avatar.zone]
     shop = next(obj.spec for obj in zone.objects.values() if obj.spec.kind == 'workshop')

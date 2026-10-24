@@ -444,7 +444,7 @@ and Sable can stand at adjacent stalls and both pretend not to notice.
 - **Class:** contested. **Lean:** Kestrel. **Size:** 70 × 50.
   **Sight:** 11.
 - **Exits:** `tramyard-depots` (street); `scour-ring-1` (the gate:
-  opens on a Kestrel schedule every 5 minutes for 60 seconds, or on a
+  opens on a Kestrel schedule every 2 minutes for 60 seconds, or on a
   Gate core control, or for a convoy).
 - **Relays:** **Gate Relay Nine** (controls the gate schedule; holders
   open the gate on demand and tax non-members a toll in chits).
