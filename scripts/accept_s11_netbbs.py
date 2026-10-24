@@ -64,8 +64,9 @@ async def profile(probe: NativeProbe, width: int, height: int) -> float:
         probe.service.core.loop.timings.clear()
         await asyncio.sleep(10)
         status=await request(probe.service.install_dir,"status")
-        assert status["active_zones"]==10 and status["tick_p99_ms"]<10,status
-        probe.report(f"PASS admin status {width}x{height}: all 10 zones active, p99 {status['tick_p99_ms']:.3f} ms")
+        count = len(probe.service.world.zones)
+        assert status["active_zones"]==count and status["tick_p99_ms"]<10,status
+        probe.report(f"PASS admin status {width}x{height}: all {count} zones active, p99 {status['tick_p99_ms']:.3f} ms")
         return status["tick_p99_ms"]
     finally:
         for zone in probe.service.world.zones.values():

@@ -27,6 +27,8 @@ on:
       - 'scripts/accept_s22_netbbs.py'
       - 'scripts/accept_s23_netbbs.py'
       - 'scripts/accept_s24_netbbs.py'
+      - 'scripts/accept_s25_city.py'
+      - 'scripts/accept_s25_services.py'
       - 'scripts/events_fixture.py'
       - 'scripts/housing_fixture.py'
       - '.github/workflows/service-acceptance.yml'
@@ -38,6 +40,94 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
+  city-netbbs:
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    permissions:
+      contents: read
+    strategy:
+      fail-fast: false
+      matrix:
+        size: ['80x24', '132x50']
+        case: ['districts', 'southern', 'deep']
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - uses: actions/checkout@v4
+        with:
+          repository: Thiesi/NetBBS
+          ref: v7.31.0
+          path: .test-tmp/netbbs
+      - name: Build and install the full-city acceptance wheel
+        shell: bash
+        run: |
+          python -m pip install './.test-tmp/netbbs[ssh,web]'
+          python -m pip wheel --no-deps . -w "$RUNNER_TEMP/s25-wheels"
+          python -m venv "$RUNNER_TEMP/s25-venv"
+          "$RUNNER_TEMP/s25-venv/bin/python" -m pip install "$RUNNER_TEMP"/s25-wheels/*.whl
+      - name: Walk the shipped city through native stdio without overlays
+        shell: bash
+        env:
+          S25_SIZE: ${{ matrix.size }}
+          S25_CASE: ${{ matrix.case }}
+        run: |
+          python scripts/accept_s25_city.py --root "$RUNNER_TEMP/s25-proof/$S25_CASE/$S25_SIZE" --door-python "$RUNNER_TEMP/s25-venv/bin/python" --size "$S25_SIZE" --case "$S25_CASE"
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: s25-city-proof-${{ matrix.case }}-${{ matrix.size }}
+          path: |
+            ${{ runner.temp }}/s25-proof/**/*.ans
+            ${{ runner.temp }}/s25-proof/**/*.txt
+            ${{ runner.temp }}/s25-proof/**/*.json
+            ${{ runner.temp }}/s25-proof/**/progress.log
+
+  city-services-netbbs:
+    runs-on: ubuntu-latest
+    timeout-minutes: 40
+    permissions:
+      contents: read
+    strategy:
+      fail-fast: false
+      matrix:
+        size: ['80x24', '132x50']
+        case: ['rifle', 'surgery']
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - uses: actions/checkout@v4
+        with:
+          repository: Thiesi/NetBBS
+          ref: v7.31.0
+          path: .test-tmp/netbbs
+      - name: Build and install the city-service acceptance wheel
+        shell: bash
+        run: |
+          python -m pip install './.test-tmp/netbbs[ssh,web]'
+          python -m pip wheel --no-deps . -w "$RUNNER_TEMP/s25-wheels"
+          python -m venv "$RUNNER_TEMP/s25-venv"
+          "$RUNNER_TEMP/s25-venv/bin/python" -m pip install "$RUNNER_TEMP"/s25-wheels/*.whl
+      - name: Purchase and use actual city services through native stdio
+        shell: bash
+        env:
+          S25_SIZE: ${{ matrix.size }}
+          S25_CASE: ${{ matrix.case }}
+        run: |
+          python scripts/accept_s25_services.py --root "$RUNNER_TEMP/s25-services/$S25_CASE/$S25_SIZE" --door-python "$RUNNER_TEMP/s25-venv/bin/python" --size "$S25_SIZE" --case "$S25_CASE"
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: s25-services-proof-${{ matrix.case }}-${{ matrix.size }}
+          path: |
+            ${{ runner.temp }}/s25-services/**/*.ans
+            ${{ runner.temp }}/s25-services/**/*.txt
+            ${{ runner.temp }}/s25-services/**/*.json
+            ${{ runner.temp }}/s25-services/**/progress.log
+
   events-netbbs:
     runs-on: ubuntu-latest
     timeout-minutes: 25

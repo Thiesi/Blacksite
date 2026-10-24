@@ -1321,8 +1321,9 @@ asset manifest can reference it.
   with owner-only object permissions and a separate vestibule. The
   Blacksite uses a separate persistent expedition instance.
 - **Hidden exits** (`under-caverns` cave mouth, the Drop's door) are
-  exits with a `hidden` flag revealed by a Listening check, a program, or
-  an NPC's dialogue flag on the character.
+  unmarked physical passages. Listening, programs and dialogue may point
+  out their location; they are not an additional character credential.
+  Explicit Interact on the actual tile works. Walking never auto-travels.
 - **Shared core** (`lat-shaft` at `spire-shaft-head` and `under-shaft-foot`) are one
   core with two hardware locations; cutting power at either affects
   both. This is the only such core and the content loader should assert

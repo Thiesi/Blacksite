@@ -414,6 +414,11 @@ lets that occupant leave without opening the physical private door.
 The actual occupied tile must still be passable, and no layout may
 introduce a hazard into its safe room. A tenant at home must not freeze
 unrelated public controls, nor make a private floor a public bypass.
+`entry_policy(None, tile)` identifies public ground every actor may
+enter; actor-specific permission may additionally admit private floors.
+A geometry proposal floods that public component once, then checks only
+actors whose escape origin is outside it. Housing indexes its static
+room tiles directly; lease and visitor permissions remain live checks.
 
 Admission/reconnect preserves a valid saved position. If an expired
 opening makes it invalid, `World.free_tile` searches the public spawn's

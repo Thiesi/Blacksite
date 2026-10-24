@@ -32,7 +32,7 @@ CASES = {
         'sink-floor', 'under-caverns', 'under-service', 'chapel-towers', 'chapel-nave',
         'chapel-towers', 'terraces-blocks', 'terraces-lobby', 'terraces-blocks',
         'chapel-towers', 'under-service', 'oldworks-yards', 'oldworks-main', 'oldworks-drop'),
-    'deep': ('vatside-vat-row', 'under-service', 'under-drowned', 'under-caverns',
+    'deep': ('vatside-clinics', 'vatside-vat-row', 'under-service', 'under-drowned', 'under-caverns',
         'under-outworks', 'under-shaft-foot', 'under-outworks', 'under-caverns',
         'scour-ring-2', 'scour-landing', 'scour-ring-1', 'scour-ring-2',
         'scour-ring-3', 'scour-ring-4'),
@@ -123,9 +123,13 @@ class CityProbe(ContractProbe):
             x, y = tile
             tile = next(p for p in ((x-1, y), (x+1, y), (x, y-1), (x, y+1)) if zone.can_enter(avatar.actor, p))
         await self.walk(connection, tile)
-        if avatar.zone == origin:
-            await key(connection, b'e')
         panels = self.service.core.relays.views.menus
+        if avatar.zone == origin and avatar.travel is None:
+            await key(connection, b'e')
+            # Key delivery and the next server tick are asynchronous. Wait
+            # for the route card before deciding whether it needs a choice.
+            await wait(lambda: avatar.zone != origin or avatar.travel is not None
+                       or connection.session.id in panels)
         if connection.session.id in panels and panels[connection.session.id].route:
             assert exit_.kind == 'gate'
             await commit_key(self, connection, b'e', lambda: avatar.travel is not None)
@@ -187,6 +191,12 @@ async def accept(root: Path, python: Path, show: bool, size: tuple[int, int], ca
     visited = []
     try:
         await probe.start()
+        # Fail a malformed survey itinerary before opening a caller.
+        origin = 'vatside-wake-hall'
+        for destination in CASES[case]:
+            assert any(ex.target_zone == destination for ex in
+                       probe.service.world.zones[origin].template.meta.exits), (origin, destination)
+            origin = destination
         caller = await probe.open(*size, 'S25'+case, 0, True, card='halvard')
         player = probe.game.players[caller.session.player_id]
         assert player.standing.get('halvard') == 10 and player.chits_hand == 200 and player.faction is None

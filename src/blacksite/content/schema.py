@@ -163,7 +163,11 @@ class Exit:
     kind: ExitKind
     requirement: Requirement | None = None
     hidden: bool = False
-    """Revealed by Listening, a program or dialogue (01-gazetteer.md)."""
+    """Unmarked; explicit Interact on its tile works (game 5.6).
+
+    Listening, programs and dialogue may point out its location. There
+    is no additional per-player entitlement to a physical passage.
+    """
     relay: str | None = None  # Game 7.7 optional gate/cable passage.
     alternatives: tuple[Requirement, ...] = ()  # Game 5.6: complete OR credentials.
     locked_text: str | None = None

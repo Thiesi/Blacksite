@@ -272,6 +272,38 @@ def test_game_8_7_real_resident_can_leave_a_closed_room_without_blocking_city_co
     assert actor.position == unit.anchor.doorstep
 
 
+def test_architecture_6_1_crowded_real_blocks_share_the_public_escape_search(city: ContentTree) -> None:
+    from blacksite.server.clock import ManualClock
+    from blacksite.server.housing_geometry import HousingGeometry
+    from blacksite.server.world.actors import Actor
+    from blacksite.server.world.registry import World
+
+    world = World(deepcopy(city), {zid: 0 for zid in city.zones})
+    homes = HousingGeometry(world, ManualClock(), {})
+    zone = world.zones['terraces-blocks']
+    assert len(homes.units) == 24
+    for n in range(30):
+        actor = Actor(f'crowd:{n}', 'Public caller', zone=zone.id)
+        actor.x, actor.y = world.free_tile(zone.id, zone.template.meta.spawn, actor)
+        zone.actors[actor.id] = actor
+    calls = 0
+    original = zone.entry_policy
+
+    def counted(actor: Actor | None, tile: Tile) -> bool:
+        nonlocal calls
+        calls += 1
+        return original(actor, tile)
+
+    zone.entry_policy = counted
+    assert zone.safe_geometry({})
+    # Bound work rather than wall time: thirty public callers must not
+    # trigger thirty full-map privacy/escape searches on one door toggle.
+    assert calls < 4*zone.template.width*zone.template.height
+    private = next(iter(homes.units.values()))
+    assert not zone.entry_policy(None, private.tile((2, 2)))
+    assert not zone.entry_policy(next(iter(zone.actors.values())), private.tile((2, 2)))
+
+
 def test_game_8_4_real_ring_nodes_never_require_an_interrupted_harvest_on_a_hazard(city: ContentTree) -> None:
     game = HeadlessServer(deepcopy(city), character_state={})
     salvage = game.core.salvage

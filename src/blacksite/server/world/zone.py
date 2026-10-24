@@ -46,6 +46,8 @@ class ZoneInstance:
     geometry: dict[Tile, str] = field(default_factory=dict)
     revision: int = 0
     entry_policy: Callable[[Actor | None, Tile], bool] = field(default=lambda actor, tile: True, repr=False)
+    # None identifies public ground allowed to every actor. Actor policies
+    # may additionally admit private floors; they cannot deny public ground.
     position_update: Callable[[Actor], None] = field(default=lambda actor: None, repr=False)
     escape_origin: Callable[[Actor], Tile] = field(default=lambda actor: actor.position, repr=False)
     geometry_revision: int = 0
@@ -147,7 +149,14 @@ class ZoneInstance:
         starts += [(actor, self.escape_origin(actor)) for actor in self.actors.values()]
         required = {obj.spec.tile for obj in self.objects.values() if obj.spec.essential}
         required.update(ex.tile for ex in self.template.meta.exits if not ex.hidden and ex.requirement is None)
+        public: set[Tile] = set()
         for actor, start in starts:
+            if not self.passable(start, grid):
+                return False
+            # Once public services share a component, every actor starting
+            # there has the same escape. Do not flood the city per caller.
+            if actor is not None and start in public:
+                continue
             seen = {start}
             pending = deque([start])
             while pending:
@@ -158,8 +167,10 @@ class ZoneInstance:
                             and self.entry_policy(actor, tile) and not self.tiles[key].hazard):
                         seen.add(tile)
                         pending.append(tile)
-            if not required <= seen or not self.passable(start, grid):
+            if not required <= seen:
                 return False
+            if actor is None:
+                public = seen
         return True
 
     def schedule_layout(self, source: str, layout_id: str, tick: int, duration: int, warning: int = 0) -> None:
