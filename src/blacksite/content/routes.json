@@ -1,0 +1,32 @@
+{
+  "schema": 1,
+  "routes": [
+    {
+      "id": "scour-convoy-road",
+      "speed": 2,
+      "waypoints": [
+        {
+          "zone": "scour-ring-1",
+          "tile": [
+            20,
+            40
+          ]
+        },
+        {
+          "zone": "scour-ring-2",
+          "tile": [
+            40,
+            45
+          ]
+        },
+        {
+          "zone": "scour-ring-3",
+          "tile": [
+            40,
+            50
+          ]
+        }
+      ]
+    }
+  ]
+}

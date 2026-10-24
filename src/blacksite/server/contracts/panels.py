@@ -105,7 +105,7 @@ class Panels:
                         and not any(j.template == tid and j.state != 'turned_in' and pid in {p.player for p in j.roster}
                                     for j in owner.state.engine.instances.values())):
                     result.append({'id': tid, 'cells': ['Story', job.name or job.id]})
-            for offer in owner.state.engine.board(panel.handler, owner.now()):
+            for offer in owner.offers(panel.handler):
                 job = owner.state.engine.templates[offer.template]
                 result.append({'id': offer.id, 'cells': ['Offer', job.name or job.id]})
         return result

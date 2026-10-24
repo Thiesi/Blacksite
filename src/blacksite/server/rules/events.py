@@ -10,6 +10,7 @@ BEACON_SECONDS = 5 * 60
 SURGE_MAGNITUDE = 1.3
 CURFEW_HEAT = 2
 EXHALE_RATE = 3
+ESCORT_RADIUS = 6  # Game 12: same proximity as guarding in game 10.
 
 # Duration, cooldown and default weight, exactly game design section 12.
 SCHEDULES = MappingProxyType({

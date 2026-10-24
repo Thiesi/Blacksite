@@ -55,6 +55,8 @@ class Scenes:
         for instance in self.owner.state.engine.instances.values():
             if instance.state != 'active':
                 continue
+            if instance.runtime.get('event_plan'):
+                continue  # S24 owns the public body and its shared source facts.
             progress = instance.stages[instance.index]
             if progress.stage.verb not in ('clear', 'escort'):
                 continue

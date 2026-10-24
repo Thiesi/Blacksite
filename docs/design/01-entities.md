@@ -861,6 +861,12 @@ variant_ids[], state (planned, active, complete, cancelled), revision,
 cancel_reason, reward_receipts[], milestones[], allocations, forced`.
 `allocations` retains seeded sites and source bindings; `milestones`
 records warning/midpoint delivery separately from reward receipts.
+Event-only contract templates have `event_only: true`. Their committed
+offers carry `event_plan`; acceptance freezes that source and the event
+objective deadline into the instance. Completion starts the ordinary
+one-hour turn-in window. Ordinary board rolls exclude these templates.
+Distinct BBS identities can accept the same public event offer; a saved
+Route Master reservation never removes it from another caller's board.
 Forecasts read this record, never an
 independent random roll. Persist both planned and active schedules.
 Timers declare wall-time or uptime basis per game design section 12;

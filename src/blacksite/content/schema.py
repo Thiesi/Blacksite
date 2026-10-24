@@ -1103,6 +1103,8 @@ class ContractTemplate:
     """A repeatable, fixed-reward public work order, not a board job."""
     consequence: str = ""
     mission_data: tuple[DataSpec, ...] = ()
+    event_only: bool = False
+    """Offered only by the committed event source, never a board reroll."""
 
 
 @dataclass(frozen=True)

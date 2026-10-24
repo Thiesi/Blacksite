@@ -47,6 +47,9 @@ class Npcs:
         self.heat_saved_at: dict[str, float] = {}
         self.heat_multiplier: float = 1
         self.curfew: Callable[[str], bool] = lambda zone: False  # S24 committed event.
+        self.event_fact: Callable[[dict[str, Any], Actor, Actor], None] = lambda effect, source, actor: None
+        self.keep_awake: Callable[[str], bool] = lambda zone: False
+        self.event_motion: Callable[[Actor, ZoneInstance, int, set[tuple[int, int]]], bool] = lambda actor, zone, tick, avoid: False
         self.reward_permit: Callable[[Actor, Actor], bool] = lambda source, target: not any(
             target.behaviour.get(key) for key in ("nonlethal", "willing", "escort"))
         combat.refused_hook = self.refused
@@ -258,6 +261,7 @@ class Npcs:
                 self.game.crews.add_rewards(self.commerce.outbox[-1], player, grant)
             if hasattr(self.game, 'contracts'):
                 self.game.contracts.npc_fact(self.commerce.outbox[-1], source, actor, 'lethal')
+            self.event_fact(self.commerce.outbox[-1], source, actor)
         self.commerce.enqueue_system(propose)
 
     def training(self, player: Player, actor: Actor, tick: int) -> None:
@@ -347,6 +351,8 @@ class Npcs:
             else:
                 step_toward(actor, zone, tuple(actor.behaviour.get("last_position", actor.position)), tick, avoid=avoid)
             return
+        if self.event_motion(actor, zone, tick, avoid):
+            return
         for behaviour in template.behaviours:
             params = behaviour.params
             if behaviour.kind == "wander":
@@ -426,7 +432,7 @@ class Npcs:
                 self.restraints.pop(source_id, None)
         self.provocations = {key: until for key, until in self.provocations.items() if until > now}
         for zone in self.world.zones.values():
-            if zone.dormant:
+            if zone.dormant and not self.keep_awake(zone.id):
                 self.dormant.setdefault(zone.id, now)
                 if now-self.dormant[zone.id] >= DORMANT_SECONDS:
                     for actor in tuple(zone.actors.values()):

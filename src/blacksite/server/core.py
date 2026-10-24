@@ -128,8 +128,12 @@ class Core:
         self.events = Events(self, character_state.get('events', {})) if self.market else None
         if self.events:
             self.loop.subsystems.append(self.events)
+            social = self.lattice.social_overlay
+            self.lattice.social_overlay = lambda session, previous=social: previous(session) or session.id in self.events.views.menus
 
     def _disconnect_character(self, session: Session) -> None:
+        if self.events:
+            self.events.views.close(session)
         if self.market:
             self.market.views.close(session)
         if self.relays:
@@ -206,6 +210,8 @@ class Core:
             return
         if frame.type == "intent" and frame.data["name"] == "resync":
             session.replay_log()
+        if self.events and self.events.input(session, frame, event.data['tick']):
+            return
         if self.market and self.market.input(session, frame, event.data['tick']):
             return
         if self.contracts and self.contracts.input(session, frame, event.data['tick']):

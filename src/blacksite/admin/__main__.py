@@ -95,8 +95,21 @@ def parser() -> argparse.ArgumentParser:
         setting.add_argument('relay')
         setting.add_argument('faction', help='faction ID or neutral')
     relay_commands(commands)
+    def event_commands(parent: Any) -> None:
+        events = parent.add_parser('event', parents=[common], help='inspect, force or cancel committed events')
+        actions = events.add_subparsers(dest='event_command', required=True)
+        listing = actions.add_parser('list', parents=[common])
+        listing.add_argument('--page', type=int, default=1)
+        force = actions.add_parser('force', parents=[common])
+        force.add_argument('event')
+        force.add_argument('--where')
+        cancel = actions.add_parser('cancel', parents=[common])
+        cancel.add_argument('plan')
+    event_commands(commands)
     admin = commands.add_parser('admin', parents=[common], help='relay operator tools')
-    relay_commands(admin.add_subparsers(dest='admin_command', required=True))
+    admin_actions = admin.add_subparsers(dest='admin_command', required=True)
+    relay_commands(admin_actions)
+    event_commands(admin_actions)
     return root
 
 
@@ -139,16 +152,21 @@ def main(argv: list[str] | None = None) -> int:
             emit({"ok": not problems, "content_hash": tree.hash,
                   "problems": [str(problem) for problem in problems]}, args.json)
             return int(bool(problems))
-        command = ('relay.'+args.relay_command if args.command == 'relay' else
+        command = ('event.'+args.event_command if args.command == 'event' else
+                   'relay.'+args.relay_command if args.command == 'relay' else
                    "lattice."+args.lattice_command if args.command == "lattice" else args.command)
         if command == "lattice.reveal":
             result = asyncio.run(request(install, command, {key: getattr(args, key) for key in ("player", "sector", "cell")}))
         elif command == 'relay.set':
             result = asyncio.run(request(install, command, {'relay': args.relay, 'faction': args.faction}))
+        elif command.startswith('event.'):
+            fields = {'list': ('page',), 'force': ('event', 'where'), 'cancel': ('plan',)}[args.event_command]
+            result = asyncio.run(request(install, command, {field: getattr(args, field) for field in fields
+                if getattr(args, field) is not None}))
         else:
             result = character_cap(install, args.value) if args.command == "character-cap" else rotate(install) if args.command == "secrets" else asyncio.run(request(install, command))
         emit(result, args.json)
-        return int(command.startswith('relay.') and isinstance(result, dict) and result.get('ok') is False)
+        return int(command.startswith(('relay.', 'event.')) and isinstance(result, dict) and result.get('ok') is False)
     except (OSError, ValueError, RuntimeError, asyncio.TimeoutError, asyncio.IncompleteReadError) as exc:
         print("blacksite admin: " + (str(exc) or type(exc).__name__), file=sys.stderr)
         return 1

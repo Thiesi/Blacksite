@@ -52,8 +52,14 @@ class WorldEffects:
             if not candidates:
                 raise ValueError('That event has no safe, authored source site.')
             tile = Random(plan.seed+index).choice(sorted(candidates))
-            sites[str(index)] = {'zone': effect.zone, 'tile': list(tile)}
+            site = {'zone': effect.zone, 'tile': list(tile), 'kind': effect.type}
+            if effect.type == 'hazard':
+                radius = int(effect.params.get('radius', 0))
+                site['tiles'] = [list(cell) for cell in sorted(candidates)
+                    if sum((a-b)**2 for a, b in zip(cell, tile)) <= radius**2]
+            sites[str(index)] = site
         plan.allocations['sites'] = sites
+        plan.allocations['definition'] = owner.definition(plan)
         template = owner.content.events[plan.template]
         if template.route:
             plan.allocations['route'] = template.route
@@ -169,7 +175,7 @@ class WorldEffects:
         owner = self.owner
         now, tick = owner.now(), owner.clock.now_tick()
         wanted = set()
-        for plan in owner.scheduler.plans.values():
+        for plan in owner.scheduler.reserved():
             if (not plan.live or now >= plan.ends_at or 'warning' not in plan.milestones
                     or plan.template not in owner.content.events
                     or not owner.eligible(owner.content.events[plan.template], plan.where)):
@@ -185,8 +191,9 @@ class WorldEffects:
                 key = zone.id, source
                 if key not in self.layers:
                     if effect.type == 'hazard':
-                        changes = tuple(TileChange(tile, 'hazard') for tile in effect.region.tiles())
-                        layout = ZoneLayout(source, changes, tuple(effect.region.tiles()),
+                        tiles = tuple(tuple(tile) for tile in plan.allocations['sites'][str(index)]['tiles'])
+                        changes = tuple(TileChange(tile, 'hazard') for tile in tiles)
+                        layout = ZoneLayout(source, changes, tiles,
                             tuple(exit.id for exit in zone.template.meta.exits if not exit.hidden))
                     else:
                         if 'layout' not in effect.params:
@@ -217,13 +224,13 @@ class WorldEffects:
         owner = self.owner
         tick = owner.clock.now_tick()
         active = {plan.id for plan in owner.active()}
-        swaps = [(plan, effect) for plan in owner.scheduler.plans.values()
+        swaps = [(plan, effect) for plan in owner.scheduler.reserved()
                  if plan.live and plan.ends_at > owner.now() and 'warning' in plan.milestones
                  and plan.template in owner.content.events
                  for effect in owner.scheduler.effects(plan) if effect.type == 'ice_variant']
         live_ids = set()
         for instance in owner.lat.encounters.instances.values():
-            if instance.graph.spec.training or getattr(instance.graph.spec, 'owner_kind', '') == 'player':
+            if instance.graph.spec.training or instance.graph.spec.owner_kind == 'private':
                 continue
             presences = [p for p in owner.lat.presences.values() if p.instance == instance.id]
             sectors = {p.sector for p in presences}
@@ -252,7 +259,7 @@ class WorldEffects:
                     self.originals.setdefault(ice.id, base.id)
                     swap(ice, target, instance.graph.spec.tier, tick)
         self.originals = {iid: base for iid, base in self.originals.items() if iid in live_ids}
-        live = {plan.id for plan in owner.scheduler.plans.values() if plan.live}
+        live = {plan.id for plan in owner.scheduler.reserved()}
         self.warnings = {key: until for key, until in self.warnings.items()
                          if key[0] in live_ids and key[1] in live}
 
@@ -262,7 +269,8 @@ class WorldEffects:
         self.reveal()
         live = {plan.id for plan in self.owner.active()}
         for actor in tuple(self.owner.world.actors.values()):
-            if actor.behaviour.get('event') and actor.behaviour['event'] not in live:
+            if (actor.behaviour.get('event') and actor.behaviour['event'] not in live
+                    and actor.id not in self.owner.core.npcs.pending_deaths):
                 self.owner.world.leave(actor)
 
     def reveal(self) -> None:

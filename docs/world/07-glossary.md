@@ -736,3 +736,6 @@ world unchanged. Personal votes and dissent remain recorded. (design 13.2)
 
 **Sump work order** - restore a pump bypass and allocate its spare
 power to a dry shortcut or a salvage niche. (design section 7.5)
+
+**Undercity Key** - a physical Exhale key cut for the Drowned bulkhead;
+also a season contribution when surrendered. (design sections 12-13)

@@ -48,6 +48,9 @@ class Contracts:
         self.proposals: dict[str, Proposal] = {}
         self.proposal_serial = 0
         self.event_active: Callable[[str], bool] = lambda event: False  # S24 binds committed events.
+        self.additional_offers: Callable[[str], tuple[Offer, ...]] = lambda handler: ()
+        self.validate_offer: Callable[[Offer], None] = lambda offer: None
+        self.prepare_accept: Callable[[Offer, Instance], None] = lambda offer, instance: None
         self.game.contracts = self
         from blacksite.server.contracts.panels import Panels
         self.panels = Panels(self)
@@ -494,7 +497,7 @@ class Contracts:
         self.commerce.enqueue_system(propose)
 
     def offer(self, oid: str, player: str, handler: str) -> Offer:
-        for offered in self.state.engine.board(handler, self.now()):
+        for offered in self.offers(handler):
             if offered.id == oid:
                 return offered
         if oid in self.state.engine.templates and self.state.engine.templates[oid].story:
@@ -502,6 +505,9 @@ class Contracts:
             if job.giver == handler:
                 return self.state.engine.story_offer(oid, player)
         raise ValueError('That offer changed. Read the current board.')
+
+    def offers(self, handler: str) -> tuple[Offer, ...]:
+        return (*self.state.engine.board(handler, self.now()), *self.additional_offers(handler))
 
     def requirements(self, pid: str, template: ContractTemplate) -> tuple[str, ...]:
         """Read current authoritative facts before a proposal and its start."""
@@ -564,6 +570,7 @@ class Contracts:
                 raise ValueError('Every proposed participant must be online.')
         # Validate terms without consuming slots, branches, supplies or receipts.
         self.check_requirements(roster, self.state.engine.templates[offer.template])
+        self.validate_offer(offer)
         self.state.engine.fork().accept(offer, tuple(self.participant(pid) for pid in roster), self.now(), approach)
         self.proposal_serial += 1
         proposal = Proposal(f'{self.origin}:proposal:{self.proposal_serial}', player, offer, roster, approach)
@@ -634,12 +641,14 @@ class Contracts:
         draft = self.state.fork()
         offer = offered.offer
         self.check_requirements(offered.roster, self.state.engine.templates[offer.template])
+        self.validate_offer(offer)
         if offered.service:
             node = draft.services.reserve(offered.service, offered.allocation, offered.roster,
                                           self.now(), offered.service_revision)
             offer = draft.engine.offer(self.content.contracts[offer.template], node.order, node.reserved_until)
         instance = draft.engine.accept(offer, tuple(self.participant(pid) for pid in offered.roster),
                                        self.now(), offered.approach)
+        self.prepare_accept(offer, instance)
         if instance.season is None:
             instance.season = self.lat.season
         if offered.service:

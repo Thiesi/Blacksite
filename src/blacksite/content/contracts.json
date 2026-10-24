@@ -3579,6 +3579,93 @@
         "standing_mode": "propagate"
       },
       "consequence": "Bound mission supplies have no sale value. Other callers cannot take your mission targets."
+    },
+    {
+      "id": "event-convoy-escort",
+      "name": "Convoy escort",
+      "faction": "kestrel",
+      "type": "escort",
+      "event_only": true,
+      "crew_scaling": false,
+      "reward": {
+        "chits": [
+          200,
+          200
+        ],
+        "xp": 100
+      },
+      "stages": [
+        {
+          "id": "shared-source",
+          "verb": "escort",
+          "target": {
+            "kind": "npc",
+            "zone": "scour-ring-1",
+            "tile": [
+              20,
+              40
+            ],
+            "npc": "npc-courier"
+          },
+          "input": "wait",
+          "completion": "arrived",
+          "receipt_key": "event-convoy-escort",
+          "label": "Guard the public route",
+          "destination": {
+            "tile": [
+              40,
+              50
+            ],
+            "zone": "scour-ring-3",
+            "kind": "zone_tile"
+          }
+        }
+      ],
+      "unlock_conditions": [
+        "event_active convoy"
+      ],
+      "approach_label": "One public convoy. Travel its legs.",
+      "consequence": "The shared convoy and event window decide the outcome. Completed work has one hour to turn in."
+    },
+    {
+      "id": "event-convoy-raid",
+      "name": "Convoy raid",
+      "faction": "sable",
+      "type": "clear",
+      "event_only": true,
+      "crew_scaling": false,
+      "reward": {
+        "chits": [
+          200,
+          200
+        ],
+        "xp": 100
+      },
+      "stages": [
+        {
+          "id": "shared-source",
+          "verb": "clear",
+          "target": {
+            "kind": "npc",
+            "zone": "scour-ring-1",
+            "tile": [
+              20,
+              40
+            ],
+            "npc": "npc-courier"
+          },
+          "input": "wait",
+          "completion": "defeated",
+          "receipt_key": "event-convoy-raid",
+          "label": "Stop the public convoy",
+          "resolution": "lethal"
+        }
+      ],
+      "unlock_conditions": [
+        "event_active convoy"
+      ],
+      "approach_label": "One public convoy. Other crews can defend it.",
+      "consequence": "The shared convoy and event window decide the outcome. Completed work has one hour to turn in."
     }
   ]
 }

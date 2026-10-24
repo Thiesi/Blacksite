@@ -22,6 +22,7 @@ def base_content() -> Any:
 @pytest.fixture
 def events_game(base_content: Any) -> tuple[Any, ...]:
     content = deepcopy(base_content)
+    content.bundles.pop('s24-future-events', None)  # Explicit event-source fixture.
     sector = next(iter(content.sectors))
     content.events = {
         'curfew': EventTemplate('curfew', 'Curfew',

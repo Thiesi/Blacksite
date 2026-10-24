@@ -1,0 +1,383 @@
+{
+  "schema": 1,
+  "events": [
+    {
+      "id": "ring-fall",
+      "name": "Ring-fall",
+      "where": [
+        "scour-ring-1",
+        "scour-ring-2",
+        "scour-ring-3",
+        "scour-ring-4"
+      ],
+      "duration_seconds": 1200,
+      "cooldown_seconds": 5400,
+      "weight": 5,
+      "effects": [
+        {
+          "type": "salvage",
+          "zone": "scour-ring-1",
+          "params": {
+            "count": 10,
+            "cap": 40
+          }
+        },
+        {
+          "type": "hazard",
+          "zone": "scour-ring-1",
+          "region": {
+            "x": 10,
+            "y": 10,
+            "w": 20,
+            "h": 10
+          },
+          "warning_seconds": 5,
+          "params": {
+            "radius": 1,
+            "seconds": 5
+          }
+        },
+        {
+          "type": "npc_spawn",
+          "zone": "scour-ring-1",
+          "region": {
+            "x": 10,
+            "y": 10,
+            "w": 20,
+            "h": 10
+          },
+          "params": {
+            "npc": "npc-courier",
+            "count": 1,
+            "respawn_seconds": 1200
+          }
+        },
+        {
+          "type": "salvage",
+          "zone": "scour-ring-2",
+          "params": {
+            "count": 10,
+            "cap": 40
+          }
+        },
+        {
+          "type": "hazard",
+          "zone": "scour-ring-2",
+          "region": {
+            "x": 10,
+            "y": 10,
+            "w": 20,
+            "h": 10
+          },
+          "warning_seconds": 5,
+          "params": {
+            "radius": 1,
+            "seconds": 5
+          }
+        },
+        {
+          "type": "npc_spawn",
+          "zone": "scour-ring-2",
+          "region": {
+            "x": 10,
+            "y": 10,
+            "w": 20,
+            "h": 10
+          },
+          "params": {
+            "npc": "npc-courier",
+            "count": 1,
+            "respawn_seconds": 1200
+          }
+        },
+        {
+          "type": "salvage",
+          "zone": "scour-ring-3",
+          "params": {
+            "count": 10,
+            "cap": 40
+          }
+        },
+        {
+          "type": "hazard",
+          "zone": "scour-ring-3",
+          "region": {
+            "x": 10,
+            "y": 10,
+            "w": 20,
+            "h": 10
+          },
+          "warning_seconds": 5,
+          "params": {
+            "radius": 1,
+            "seconds": 5
+          }
+        },
+        {
+          "type": "npc_spawn",
+          "zone": "scour-ring-3",
+          "region": {
+            "x": 10,
+            "y": 10,
+            "w": 20,
+            "h": 10
+          },
+          "params": {
+            "npc": "npc-courier",
+            "count": 1,
+            "respawn_seconds": 1200
+          }
+        },
+        {
+          "type": "salvage",
+          "zone": "scour-ring-4",
+          "params": {
+            "count": 10,
+            "cap": 40
+          }
+        },
+        {
+          "type": "hazard",
+          "zone": "scour-ring-4",
+          "region": {
+            "x": 10,
+            "y": 10,
+            "w": 20,
+            "h": 10
+          },
+          "warning_seconds": 5,
+          "params": {
+            "radius": 1,
+            "seconds": 5
+          }
+        },
+        {
+          "type": "npc_spawn",
+          "zone": "scour-ring-4",
+          "region": {
+            "x": 10,
+            "y": 10,
+            "w": 20,
+            "h": 10
+          },
+          "params": {
+            "npc": "npc-courier",
+            "count": 1,
+            "respawn_seconds": 1200
+          }
+        }
+      ],
+      "announce": {
+        "start": "event-ring-fall-start",
+        "mid": "event-ring-fall-mid",
+        "end": "event-ring-fall-end"
+      },
+      "selection": "one"
+    },
+    {
+      "id": "curfew",
+      "name": "Curfew",
+      "where": [
+        "core-plaza",
+        "core-precinct",
+        "core-tram-hub"
+      ],
+      "duration_seconds": 3600,
+      "cooldown_seconds": 14400,
+      "weight": 2,
+      "effects": [
+        {
+          "type": "entry_restriction"
+        },
+        {
+          "type": "relay_pause"
+        },
+        {
+          "type": "heat_multiplier",
+          "params": {
+            "multiplier": 2
+          }
+        }
+      ],
+      "announce": {
+        "start": "event-curfew-start",
+        "mid": "event-curfew-mid",
+        "end": "event-curfew-end"
+      }
+    },
+    {
+      "id": "choir-surge",
+      "name": "Choir Surge",
+      "where": [
+        "lat-chapel-ward",
+        "lat-core",
+        "lat-old-works",
+        "lat-scour",
+        "lat-sink",
+        "lat-sodium-row",
+        "lat-spire",
+        "lat-terraces",
+        "lat-tramyard",
+        "lat-undercity",
+        "lat-vatside"
+      ],
+      "duration_seconds": 900,
+      "cooldown_seconds": 10800,
+      "weight": 2,
+      "effects": [
+        {
+          "type": "ability_magnitude",
+          "params": {
+            "multiplier": 1.3
+          }
+        },
+        {
+          "type": "reveal",
+          "params": {
+            "what": "silt_band"
+          }
+        }
+      ],
+      "announce": {
+        "start": "event-choir-surge-start",
+        "mid": "event-choir-surge-mid",
+        "end": "event-choir-surge-end"
+      },
+      "variants": [
+        {
+          "id": "ticker-soft",
+          "effects": [
+            {
+              "type": "ice_variant",
+              "warning_seconds": 5,
+              "params": {
+                "from": "ice_ticker",
+                "to": "ice_ticker_surge"
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "exhale",
+      "name": "Exhale",
+      "where": [
+        "under-service",
+        "under-drowned",
+        "under-caverns",
+        "under-outworks",
+        "under-shaft-foot"
+      ],
+      "duration_seconds": 1800,
+      "cooldown_seconds": 7200,
+      "weight": 3,
+      "effects": [
+        {
+          "type": "spawn_multiplier",
+          "zone": "under-service",
+          "params": {
+            "multiplier": 3,
+            "cap": 6
+          }
+        },
+        {
+          "type": "spawn_multiplier",
+          "zone": "under-drowned",
+          "params": {
+            "multiplier": 3,
+            "cap": 6
+          }
+        },
+        {
+          "type": "spawn_multiplier",
+          "zone": "under-caverns",
+          "params": {
+            "multiplier": 3,
+            "cap": 6
+          }
+        },
+        {
+          "type": "spawn_multiplier",
+          "zone": "under-outworks",
+          "params": {
+            "multiplier": 3,
+            "cap": 6
+          }
+        },
+        {
+          "type": "spawn_multiplier",
+          "zone": "under-shaft-foot",
+          "params": {
+            "multiplier": 3,
+            "cap": 6
+          }
+        },
+        {
+          "type": "key_drop",
+          "zone": "under-service",
+          "region": {
+            "x": 10,
+            "y": 10,
+            "w": 10,
+            "h": 5
+          },
+          "params": {
+            "item": "key_undercity",
+            "count": 1
+          }
+        },
+        {
+          "type": "route_hold",
+          "zone": "under-outworks",
+          "params": {
+            "layout": "exhale-shortcut"
+          }
+        }
+      ],
+      "announce": {
+        "start": "event-exhale-start",
+        "mid": "event-exhale-mid",
+        "end": "event-exhale-end"
+      }
+    },
+    {
+      "id": "convoy",
+      "name": "Convoy",
+      "where": [
+        "scour-ring-1",
+        "scour-ring-2",
+        "scour-ring-3"
+      ],
+      "duration_seconds": 1500,
+      "cooldown_seconds": 3600,
+      "weight": 4,
+      "effects": [
+        {
+          "type": "convoy_route",
+          "params": {
+            "npc": "npc-courier"
+          }
+        },
+        {
+          "type": "event_contract",
+          "params": {
+            "contract": "event-convoy-escort"
+          }
+        },
+        {
+          "type": "event_contract",
+          "params": {
+            "contract": "event-convoy-raid"
+          }
+        }
+      ],
+      "announce": {
+        "start": "event-convoy-start",
+        "mid": "event-convoy-mid",
+        "end": "event-convoy-end"
+      },
+      "route": "scour-convoy-road"
+    }
+  ]
+}

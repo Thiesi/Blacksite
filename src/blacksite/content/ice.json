@@ -66,7 +66,9 @@
       "black": false,
       "meat_damage": 0,
       "counters": [],
-      "variants": [],
+      "variants": [
+        "ice_ticker_surge"
+      ],
       "lore": [],
       "params": {
         "trace_per_second": 1,
@@ -622,6 +624,31 @@
       },
       "tier_stats": [],
       "counter_label": "Pick; J leaves the lesson"
+    },
+    {
+      "id": "ice_ticker_surge",
+      "name": "Ticker",
+      "class": "ticker",
+      "role": "alarm",
+      "tier": 1,
+      "integrity": 12,
+      "attack": 0,
+      "cast_seconds": 0,
+      "cooldown_seconds": 0,
+      "trigger": "touch",
+      "trigger_trace": null,
+      "behaviour": "static",
+      "black": false,
+      "meat_damage": 0,
+      "counters": [],
+      "variants": [],
+      "lore": [],
+      "params": {
+        "trace_per_second": 0.75,
+        "decoy_trace_multiplier": 0.5
+      },
+      "tier_stats": [],
+      "counter_label": "kill it first; decoys halve it"
     }
   ]
 }

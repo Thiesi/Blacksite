@@ -71,13 +71,19 @@ class Scheduler:
             record['variant_ids'] = tuple(record.get('variant_ids', ()))
             plan = Plan(**record)
             self.plans[plan.id] = plan
+        self._live = {pid: plan for pid, plan in self.plans.items() if plan.live}
 
     def fork(self) -> 'Scheduler':
         draft = Scheduler(self.origin, self.templates, self.routes)
         draft.serial, draft.last_roll = self.serial, self.last_roll
         draft.cooldowns = dict(self.cooldowns)
         draft.plans = {pid: deepcopy(plan) if plan.live else plan for pid, plan in self.plans.items()}
+        draft._live = {pid: draft.plans[pid] for pid in self._live}
         return draft
+
+    def reserved(self) -> tuple[Plan, ...]:
+        """Derived bounded index; persisted plans remain the only authority."""
+        return tuple(self._live.values())
 
     def record(self) -> dict[str, Any]:
         return {'serial': self.serial, 'last_roll': self.last_roll,
@@ -105,7 +111,7 @@ class Scheduler:
 
     def available(self, template: EventTemplate, now: float,
                   eligible: Callable[[EventTemplate, tuple[str, ...]], bool]) -> list[tuple[str, ...]]:
-        reserved = [plan for plan in self.plans.values() if plan.live]
+        reserved = self.reserved()
         if (len(reserved) >= MAX_RESERVED or self.cooldowns.get(template.id, 0) > now
                 or any(plan.template == template.id for plan in reserved)):
             return []
@@ -135,6 +141,7 @@ class Scheduler:
         plan = Plan(f'{self.origin}:event:{self.serial}', template.id, scope, now,
                     starts, starts+template.duration_seconds, seed, chosen, forced=forced)
         self.plans[plan.id] = plan
+        self._live[plan.id] = plan
         return plan
 
     def roll(self, now: float, eligible: Callable[[EventTemplate, tuple[str, ...]], bool],
@@ -160,15 +167,14 @@ class Scheduler:
         if plan.state == 'active':
             self.cooldowns[plan.template] = now+self.templates[plan.template].cooldown_seconds
         plan.state, plan.cancel_reason = 'cancelled', reason
+        self._live.pop(pid)
         plan.revision += 1
         return Transition(pid, 'cancel')
 
     def advance(self, now: float,
                 eligible: Callable[[EventTemplate, tuple[str, ...]], bool]) -> list[Transition]:
         transitions: list[Transition] = []
-        for plan in self.plans.values():
-            if not plan.live:
-                continue
+        for plan in self.reserved():
             template = self.templates.get(plan.template)
             if (template is None or not eligible(template, plan.where)
                     or plan.where not in self.choices(template)
@@ -176,6 +182,7 @@ class Scheduler:
                 # Removed content cannot silently move a published plan.
                 if template is None:
                     plan.state, plan.cancel_reason = 'cancelled', 'Event content is unavailable.'
+                    self._live.pop(plan.id)
                     plan.revision += 1
                     transitions.append(Transition(plan.id, 'cancel'))
                 else:
@@ -183,6 +190,7 @@ class Scheduler:
                 continue
             if now >= plan.ends_at:
                 plan.state = 'complete'
+                self._live.pop(plan.id)
                 plan.revision += 1
                 self.cooldowns[plan.template] = plan.ends_at+template.cooldown_seconds
                 transitions.append(Transition(plan.id, 'end'))
@@ -201,5 +209,5 @@ class Scheduler:
         return transitions
 
     def active(self, now: float) -> tuple[Plan, ...]:
-        return tuple(plan for plan in self.plans.values()
+        return tuple(plan for plan in self._live.values()
                      if plan.state == 'active' and plan.starts_at <= now < plan.ends_at)

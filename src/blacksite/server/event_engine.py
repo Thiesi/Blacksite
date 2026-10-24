@@ -3,17 +3,21 @@
 from collections.abc import Callable, Iterator
 from copy import deepcopy
 from dataclasses import asdict
+from hashlib import sha256
+import json
 from datetime import datetime, timezone
 from random import Random
 from typing import Any, Literal
 
 from blacksite.content.schema import Effect, EventTemplate, Exit, HymnTemplate
 from blacksite.server.clock import TICK_HZ
+from blacksite.server.contracts.engine import Fact
 from blacksite.server.event_effects import beneficial
 from blacksite.server.events import Plan, Scheduler, Transition
 from blacksite.server.factions import EventOffer, perk
 from blacksite.server.loop import TickContext
 from blacksite.server.players import Player
+from blacksite.server.items import ItemInstance
 from blacksite.server.protocol import Frame
 from blacksite.server.rules.events import (
     ADVANCE_SECONDS, CURFEW_HEAT, ROLL_SECONDS, SURGE_MAGNITUDE, WARNING_SECONDS,
@@ -35,15 +39,37 @@ class Events:
         self.tuning: Callable[[str, TuningKind], float | bool | None] = lambda event, kind: None
         from blacksite.server.event_world import WorldEffects
         self.effects = WorldEffects(self)
+        from blacksite.server.event_contracts import EventContracts
+        self.jobs = EventContracts(self)
+        from blacksite.server.event_convoy import Convoys
+        self.convoys = Convoys(self)
+        from blacksite.server.event_views import Views
+        self.views = Views(self)
         self.game.events = self
         self.bind()
         # Reconcile before the listener opens. Server._character_writes commits
         # this source during startup; expired effects are never installed.
         self.process(reconcile=True)
-        self.refresh()
+        if not self.commerce.pending:
+            self.refresh()
 
     def now(self) -> float:
         return self.clock.now_utc().timestamp()
+
+    def definition(self, plan: Plan) -> str:
+        """A deploy cannot silently redirect an already sold forecast."""
+        template = self.content.events.get(plan.template)
+        route = self.content.routes.get(template.route or '') if template else None
+        effects = self.scheduler.effects(plan) if template else ()
+        ice = {str(effect.params[key]): asdict(self.content.ice[str(effect.params[key])])
+            for effect in effects if effect.type == 'ice_variant' for key in ('from', 'to')
+            if str(effect.params.get(key)) in self.content.ice}
+        jobs = {str(effect.params['contract']): asdict(self.content.contracts[str(effect.params['contract'])])
+            for effect in effects if effect.type == 'event_contract'
+            and str(effect.params.get('contract')) in self.content.contracts}
+        value = {'template': asdict(template) if template else None,
+                 'route': asdict(route) if route else None, 'ice': ice, 'jobs': jobs}
+        return sha256(json.dumps(value, sort_keys=True, separators=(',', ':')).encode()).hexdigest()
 
     def number(self, event: str, kind: TuningKind, default: float,
                minimum: float, maximum: float) -> float:
@@ -96,6 +122,24 @@ class Events:
             return base
         self.core.combat.ability_effect = effect
         self.effects.bind()
+        self.jobs.bind()
+        self.convoys.bind()
+        from blacksite.server.event_relays import Readers
+        Readers(self).bind()
+        use = self.commerce.special_use
+        self.commerce.special_use = lambda session, item: use(session, item) or self.views.use(session, item) or self.convoys.use(session, item)
+        decorate = self.sim.crew_view
+        def world_view(session: Session, body: dict[str, Any]) -> None:
+            decorate(session, body)
+            self.views.decorate(session, body)
+        self.sim.crew_view = world_view
+        previous_view = self.lat.encounters.view
+        def network_view(session: Session, presence: Any, body: dict[str, Any]) -> tuple[str, dict[str, Any]]:
+            kind, document = previous_view(session, presence, body)
+            if kind == 'lattice':
+                self.views.decorate(session, document)
+            return kind, document
+        self.lat.encounters.view = network_view
 
     def travel_refusal(self, session: Session, exit: Exit) -> str | None:
         avatar = self.sim.avatars.get(session.user_id)
@@ -123,15 +167,33 @@ class Events:
     def text(self, plan: Plan, *, detailed: bool = False) -> str:
         template = self.content.events.get(plan.template)
         name = template.name if template else plan.template
-        when = datetime.fromtimestamp(plan.starts_at, timezone.utc).strftime('%H:%M UTC')
-        scope = ', '.join(plan.where)
+        when = self.time(plan.starts_at)
+        scope = ', '.join(self.place(place) for place in plan.where)
         if plan.template == 'ring-fall' and not detailed and self.now() < plan.starts_at-WARNING_SECONDS:
             scope = 'ring named by chart; impact warnings remain public'
         variants = ''
-        if detailed and plan.variant_ids:
-            variants = ' Variants: '+', '.join(plan.variant_ids)+'.'
+        if detailed and plan.variant_ids and template:
+            variants = ' Defenders: '+'; '.join(
+                self.content.ice[str(effect.params['to'])].name+': '+
+                self.content.ice[str(effect.params['to'])].counter_label
+                for effect in self.scheduler.effects(plan) if effect.type == 'ice_variant')+'.'
         correction = ' '+plan.cancel_reason if plan.cancel_reason else ''
-        return f'{name}: {plan.state}, {when}, {scope}. Plan {plan.id} r{plan.revision}.{variants}{correction}'
+        if detailed and (detour := plan.allocations.get('detour')):
+            correction += f" Detour: {self.place(detour['zone'])} {tuple(detour['tile'])}."
+        return f'{name}: {plan.state}, {when}, {scope}.{variants}{correction}'
+
+    def time(self, utc: float) -> str:
+        return datetime.fromtimestamp(utc, timezone.utc).strftime('%d %b %H:%M UTC')
+
+    def place(self, place: str) -> str:
+        if place in self.content.zones:
+            return self.content.zones[place].meta.name
+        if place in self.content.sectors:
+            return self.content.sectors[place].district.replace('-', ' ').title()+' sector'
+        return place
+
+    def input(self, session: Session, frame: Frame, tick: int) -> bool:
+        return session.player_id in self.game.players and self.views.input(session, frame, tick)
 
     def preview(self, player: Player, faction: str) -> EventOffer | None:
         if faction not in ('kestrel', 'choir', 'ferrymen') or not perk(player, faction):
@@ -158,7 +220,7 @@ class Events:
             session.send(Frame('log', {'lines': [{'channel': 'system', 'text': text,
                 'role': 'chan_sys', 'at': self.clock.now_utc().isoformat()}]}))
             if warning:
-                session.send(Frame('toast', {'text': text, 'role': 'ui_warn', 'seconds': 5}))
+                session.send(Frame('toast', {'text': text, 'role': 'warning', 'seconds': 5}))
 
     def announce(self, transition: Transition) -> None:
         plan = self.scheduler.plans[transition.plan]
@@ -173,8 +235,14 @@ class Events:
                 route=template.route or '', time=datetime.fromtimestamp(plan.starts_at, timezone.utc).isoformat()))
 
     def write(self, draft: Scheduler, transitions: list[Transition],
-              after: Callable[[bool], None] = lambda success: None) -> bool:
+              after: Callable[[bool], None] = lambda success: None, *,
+              facts: tuple[Fact, ...] = (), consume: ItemInstance | None = None) -> bool:
         proposal = self.effects.stage(draft, transitions)
+        if consume:
+            if consume.stack > 1:
+                proposal.items[consume.id].stack -= 1
+            else:
+                proposal.items.pop(consume.id)
         def finished(success: bool) -> None:
             if success:
                 self.scheduler = draft
@@ -195,13 +263,27 @@ class Events:
             effect['events_state'] = draft.record()
             if proposal.salvage is not None:
                 effect['salvage_state'] = proposal.salvage
+            self.jobs.stage(effect, draft, transitions, facts)
+            if consume and consume.id not in proposal.items:
+                player = self.game.players[consume.owner]
+                effect.setdefault('player_patches', {}).setdefault(player.id, {})['inventory'] = [
+                    iid for iid in player.inventory if iid != consume.id]
+            changed = {transition.plan: transition for transition in transitions
+                       if transition.kind in ('start', 'end', 'cancel')}
+            for player in self.game.players.values():
+                reservation = player.progress.get('convoy_reservation')
+                if reservation in changed:
+                    plan = draft.plans[reservation]
+                    effect.setdefault('player_patches', {}).setdefault(player.id, {}).setdefault('progress', {}).update({
+                        'convoy_reservation': None,
+                        'convoy_notice': self.text(plan, detailed=True)})
         return accepted
 
     def process(self, *, reconcile: bool = False) -> None:
         if self.commerce.pending:
             return
         now = self.now()
-        live = [plan for plan in self.scheduler.plans.values() if plan.live]
+        live = self.scheduler.reserved()
         deadlines = [value for plan in live for value in (
             plan.starts_at-max([WARNING_SECONDS, *(effect.warning_seconds for effect in
                 self.scheduler.effects(plan))]) if 'warning' not in plan.milestones
@@ -213,12 +295,20 @@ class Events:
                 and (not deadlines or min(deadlines) > now)):
             return
         draft = self.scheduler.fork()
-        transitions = draft.advance(now, self.eligible)
+        transitions = []
+        if reconcile:
+            for current in tuple(draft.reserved()):
+                signature = current.allocations.get('definition')
+                if current.template in self.content.events and signature and signature != self.definition(current):
+                    transitions.append(draft.cancel(current.id, now,
+                        'The authored event changes. Your earlier forecast is cancelled.'))
+        transitions.extend(draft.advance(now, self.eligible))
         weights = {template.id: int(self.number(template.id, 'weight', template.weight, 1, 10))
                    for template in self.content.events.values()}
         plan = draft.roll(now, self.eligible, weights)
         if plan:
             self.effects.allocate(draft, plan)
+            self.jobs.allocate(draft, plan)
         if draft.record() != self.scheduler.record():
             self.write(draft, transitions)
 
@@ -252,6 +342,7 @@ class Events:
                     plan = draft.reserve(template, now, seed, self.eligible, forced=True,
                         where=(args['where'],) if args.get('where') else None)
                     self.effects.allocate(draft, plan)
+                    self.jobs.allocate(draft, plan)
                     transitions.extend(draft.advance(now, self.eligible))
                 elif command == 'event.cancel':
                     pid = args.get('plan')
@@ -270,8 +361,8 @@ class Events:
         self.commerce.enqueue_system(execute)
 
     def tick(self, ctx: TickContext) -> None:
-        if ctx.tick-self.last_tick < TICK_HZ:
-            return
-        self.last_tick = ctx.tick
-        self.process()
-        self.refresh()
+        if ctx.tick-self.last_tick >= TICK_HZ:
+            self.last_tick = ctx.tick
+            self.process()
+            self.refresh()
+        self.views.tick(ctx)

@@ -1524,6 +1524,39 @@ at cancellation; cancelling a future reservation does not consume a run.
 | Exhale | Undercity | 30 min | 2 h / 3 | spawn rate x3 within authored caps; keys and temporary shortcut controls |
 | Convoy | declared Scour route | 25 min | 60 min / 4 | public escort/raid jobs; NPC convoy follows `routes.json` |
 
+The first authored Ring-fall adds ten nodes, bounded by forty total
+nodes in that field, and one recovery crew. Its committed impact has a
+one-tile radius and a five-second hazardous pulse after the public
+five-second warning. The remaining event window is salvage time.
+Beacon reports this same saved footprint. Exhale caps each affected
+spawner at six bodies and drops one physical Undercity key per event.
+Its shortcut is optional; ordinary routes stay open. S25 validates
+these authored sites against actual maps before activating the bundle.
+
+The first Convoy moves at two tiles per second and offers fixed
+200-chit, 100-XP escort and raid jobs. These use ordinary personal reward
+and identity rules. They add no reward for a larger crew. S25 must
+measure travel, combat, return time and earning rate on the real route
+before treating this initial payment as field-tested balance.
+
+A Convoy Beacon requests one reachable detour per committed route leg,
+inside the convoy's current public zone and outside safe pockets. Its
+consumption and published route revision share a receipt. A second
+signal in that leg, an unreachable signal, hush, concealment or a closed
+convoy consumes nothing. This bounds repeated diversions while keeping
+the sold tool useful to escorts and ambushers alike.
+
+Convoy jobs share the actual public convoy. Distinct BBS identities may
+accept the same offer. Escort credit requires being within the existing
+6-tile guarding radius at successive committed waypoints; arriving only
+at the final stop gives no credit. The fixed shared target does not
+multiply with crew size. Ordinary roster consent, reward terms and
+once-per-identity offer claims still apply. Event jobs expire with their
+plan while incomplete. A completed objective retains the ordinary
+one-hour turn-in window from completion, so a convoy arriving near the
+event's end does not erase a worker's return trip. Event jobs never spawn
+a private replacement convoy after restart.
+
 Curfew preserves outward travel, internal Core movement, existing safe
 pockets, public vat use, banking, and at least one reachable shelter
 from every district. Pass holders may enter; Marked pass holders use
@@ -1532,6 +1565,10 @@ journey already underway. NPC transit permits in historical reports are
 not necessarily Curfew Passes.
 
 Surge swaps only compatible non-black variants of equal or lower tier.
+
+The first compatible Ticker variant keeps its existing counterplay,
+trigger and role, with integrity 12 and trace gain 0.75 per second.
+It introduces no new defender class or black ICE.
 Show the new behaviour 5 s before activation; preserve damage already
 received and do not restart a cast to get an instant hit. Never add
 black ICE to a non-black room or change the tutorial/private core rules.

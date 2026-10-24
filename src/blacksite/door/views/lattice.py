@@ -79,6 +79,9 @@ def render_lattice(buffer: CellBuffer, body: dict[str, Any], area: Rect, palette
         status.append((f"SHIELD {shield['budget']:g} {shield['name']}", "hp_ok"))
     if me.get("decoy", 0) > 0:
         status.append((f"DECOY {me['decoy']:g}", "ui_highlight"))
+    event_rows = [(str(plan['summary']), 'warning' if plan.get('warning') else 'ui_highlight')
+                  for plan in (body.get('event') or {}).get('plans', [])]
+    status += event_rows
     if objective := body.get('objective'):
         status += [(str(objective.get('next_action', '')), 'ui_highlight'),
                    (str(objective.get('cost', '')), 'text')]
@@ -110,6 +113,43 @@ def render_lattice(buffer: CellBuffer, body: dict[str, Any], area: Rect, palette
             status.append((str(member['zone']), 'muted'))
     rig = [f"{r['slot']} {r.get('name', 'Empty')}"+
            (f" {r['cd']:.1f}s" if r.get("cd") else "") for r in me.get("rig", [])]
+    status_budget = max(1, area.height-1-(len(rig)+2)//3)
+    if buffer.width < 100 and (event_rows or crew) and len(status) > status_budget:
+        # Leave room for the rig while retaining body risk, escape, events,
+        # the selected runner and one ally. Full peer/crew lists use G.
+        compact = status[:3]
+        if 'body_hp' in me:
+            compact.append((f"HP {me['body_hp']}/{me['body_hp_max']}", 'warning'))
+        if body.get('black_risk'):
+            compact.append(('BLACK ICE / BODY RISK', 'warning'))
+        if me.get('escape_ticks') is not None:
+            compact.append((f"ESCAPE {me['escape_ticks']/10:.1f}s {me.get('interruptions', 0)}/3", 'warning'))
+        elif me.get('move_ticks'):
+            compact.append((f"LINK {me['move_ticks']/10:.1f}s", 'muted'))
+        sweeps = [entry for entry in status if entry[0].startswith('SWEEP ')]
+        if sweeps:
+            text, role = sweeps[0]
+            compact.append((text+(f' +{len(sweeps)-1}' if len(sweeps)>1 else ''), role))
+        if target := body.get('runner_target'):
+            suffix = f" {target['integrity_percent']}%" if target['burn_allowed'] else ' PROTECTED'
+            compact.append(('> '+truncate(target['name'], side_w-2-display_width(suffix))+suffix, 'warning'))
+        compact += event_rows
+        if crew:
+            peer = next((member for member in crew if member['name'] != me.get('name')), crew[0])
+            suffix = f" {peer['hp_pct']}%"
+            compact.append(('G '+truncate(peer['name'], side_w-2-len(suffix))+suffix, 'player_crew'))
+        if objective := body.get('objective'):
+            compact.append((str(objective.get('next_action', '')), 'ui_highlight'))
+        if me.get('cast'):
+            compact.append((f"{me['cast']['name']} {me['cast']['ticks']/10:.1f}s", 'ui_highlight'))
+        guards = []
+        if me.get('shield'):
+            guards.append(f"SHIELD {me['shield']['budget']:g}")
+        if me.get('decoy', 0) > 0:
+            guards.append(f"DECOY {me['decoy']:g}")
+        if guards:
+            compact.append((' '.join(guards), 'hp_ok'))
+        status = compact[:status_budget]
     available = max(1, area.height-len(status)-1)
     if len(rig) > available:
         per_row = 2 if (len(rig)+1)//2 <= available else 3
