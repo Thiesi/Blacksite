@@ -63,8 +63,11 @@ own wheel and uploads results/screens/input traces at both sizes.
 ## Disclosed fixtures and remaining play gates
 
 The native script uses S19's explicit service bay and temporary Ring-fall
-and Exhale sites on Vatside Clinics. It supplies a scheduler trigger/UTC
-advance, grade/pools and Ferrymen +90 Kin. Walking, forecast/menu choices,
+and Exhale sites on Vatside Clinics. It supplies a scheduler trigger,
+deterministic UTC-slot phase/advance, grade/pools and Ferrymen +90 Kin.
+The slot starts five minutes past a boundary so an unrelated random
+reservation cannot take the forced Exhale scope during this short run.
+Real tick/combat/warning/cast waits are unchanged. Walking, menu choices,
 assignment, casting, repair and restart use real inputs. No teleport,
 reward, progress, defeat or combat-clock fixture is used.
 

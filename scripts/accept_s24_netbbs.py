@@ -8,7 +8,7 @@ real. This does not close S25 geography or S25/S26 human pacing gates.
 import argparse
 import asyncio
 from dataclasses import asdict
-from datetime import timedelta
+from datetime import datetime, timedelta, timezone
 import json
 from pathlib import Path
 import traceback
@@ -32,8 +32,13 @@ class FixtureClock(RealClock):
         super().__init__()
         self.offset = 0.0
 
-    def now_utc(self) -> Any:
-        return super().now_utc()+timedelta(seconds=self.offset)
+    def now_utc(self) -> datetime:
+        # Start five minutes into a deterministic scheduler slot. Real UTC
+        # phase could cross a roll boundary during the short scenario and
+        # reserve Exhale's scope before its explicit force command. Ticks,
+        # combat and warning/cast waits still advance in real elapsed time.
+        epoch = datetime(2026, 1, 1, tzinfo=timezone.utc)
+        return epoch+timedelta(seconds=ROLL_SECONDS//4+self.now_tick()/TICK_HZ+self.offset)
 
 
 async def mutation(probe: Any, action: Any) -> None:
@@ -264,12 +269,12 @@ async def accept(root: Path, python: Path, show: bool, size: tuple[int, int]) ->
     await probe.start()
     probe.sent_keys = []
     try:
-        probe.report('S24 fixtures: event sites/S19 bay, explicit roll and UTC advance, grade/pools and +90 Ferrymen Kin. No placement, progress, reward, defeat or combat-clock fixture.')
+        probe.report('S24 fixtures: event sites/S19 bay, deterministic UTC slot/advance, explicit roll, grade/pools and +90 Ferrymen Kin. No placement, progress, reward, defeat or combat-clock fixture.')
         result = await run(probe, descriptor, size)
         assert not probe.errors and probe.service.failure is None
         (root/'s24-results.json').write_text(json.dumps({'passed':True,'run':result,
             'transport':'NetBBS Telnet -> registered native stdio',
-            'fixtures':descriptor['event_fixtures']+['S19 service bay','roll trigger/UTC advance','grade/pools','Ferrymen +90'],
+            'fixtures':descriptor['event_fixtures']+['S19 service bay','deterministic UTC slot/advance','roll trigger','grade/pools','Ferrymen +90'],
             'placement_fixture':False,'human_pacing':'S25/S26 pending'},indent=2)+'\n',encoding='utf-8')
     except BaseException:
         (root/'failure-trace.txt').write_text(traceback.format_exc(),encoding='utf-8')
