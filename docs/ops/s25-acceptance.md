@@ -1,9 +1,15 @@
 # S25 acceptance record
 
-Status: in progress. PR [#66](https://github.com/Thiesi/Blacksite/pull/66)
-tracks commissioning. Shaft Foot and Far Ring still require the user's
-review, as specified in the [slice](../plan/slices/S25-undercity-and-scour-content.md).
-Broader S25/S26 human pacing and the S33 art gate remain open.
+Status: human layout approval **not granted**, following the user's
+2026-10-24 review. The presentation does not support a meaningful design
+judgment or recognizable correspondence to the written locations.
+[Issue #68](https://github.com/Thiesi/Blacksite/issues/68) and the
+[review brief](../plan/02-presentation-review.md) record the project-wide
+problem, comprehensive review scope and independent acceptance work.
+PR [#66](https://github.com/Thiesi/Blacksite/pull/66) remains a draft;
+S25 completion/merge and presentation-dependent judgments are on hold.
+Technical passes below do not constitute visual approval. Broader
+S25/S26 human pacing and the S33 art gate remain open.
 
 ## Evidence and performance reference
 
@@ -38,6 +44,7 @@ cause or justify changing gameplay or a performance threshold.
 | `d5988e6` | Root CI green on both platforms; native 46/49. Real Sump board bound without moving its terminal. | Unequipped wide surveys died in Caverns/Ring Three. Extended 80x24 p99 failed at 20.247 ms. |
 | `b7d30fc` | Canonical Warm Stack regression and root CI green. Native 51/65, including both allocations of real Cold Chain at both sizes. | Two deep surveys used a shared hardware id in the wrong zone; remaining repair failures include Key preparation and a healing-channel retry. Final proof remains pending. |
 | `c1736a5` | Root CI green on both platforms; native 59/65, including all six city surveys. Independently verified NPC p99: 80x24 5.407/7.560 ms; 132x50 5.229/6.590 ms. Local prepared 132x50 deep survey passed, including 2.830-second startup. | Sump/common target selection and Relay Zero ICE encounters failed. Final-head/human gates remained open. |
+| `1224c30` | Root CI: 1573 Linux; 1572 Windows plus one skip. Native 65/65. Local Relay Zero reserve at 132x50 passed with its real gate opened/walked, startup 2.485 s; local Sump common at 80x24 passed, startup 2.547 s. Both NPC archives independently match source and all 324 content files: p99 80x24 5.734/8.976 ms, 132x50 5.078/6.132 ms. | Human layout approval is **not granted** (#68). Broader benefit/acquisition, earnings/event pacing and reference-repeat scopes remain open. No visual acceptance is implied. |
 
 The failed `d5988e6` performance archive independently matches its source,
 version, digest, CRC and all 324 content files. Late diagnostic peaks

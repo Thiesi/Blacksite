@@ -1,11 +1,25 @@
 # S25 — Undercity and Scour content: all remaining zone maps, spawners, salvage rings
 
-**Status:** in progress
+**Status:** in progress; human layout approval **not granted** (#68)
 **Primary model:** Gemini or Sonnet · **Reviewer:** Sonnet (validator plus a read of each zone), Human for `under-shaft-foot` and `scour-ring-4`
 **Depends on:** S08, S11, S14, S17, S21, S24 · **Milestone:** M5
 **Issue:** https://github.com/Thiesi/blacksite/issues/25
 
 ## Goal
+
+<!-- presentation-review-hold:start -->
+
+S25 human layout approval is **not granted** (user review, 2026-10-24).
+[Issue #68](https://github.com/Thiesi/Blacksite/issues/68) requires a
+separate comprehensive presentation review against the world bible and
+terminal UI specification. Preserve the verified simulation/mechanics;
+do not perform an ad hoc visual overhaul or treat technical validation,
+navigation or mechanical receipts as visual acceptance. The
+[review brief](../02-presentation-review.md) identifies independent
+engineering acceptance and presentation-dependent work on hold.
+This slice's completion cannot silently bypass the S25 human gate.
+
+<!-- presentation-review-hold:end -->
 
 Author every zone map the game still lacks after S08: the fourteen remaining
 Spire, Tramyard, Sink, Chapel and Old Works zones, five Undercity zones and

@@ -16,6 +16,20 @@ design 8.7 and accepted [PR #38](https://github.com/Thiesi/Blacksite/pull/38).
 
 ## Goal
 
+<!-- presentation-review-hold:start -->
+
+S25 human layout approval is **not granted** (user review, 2026-10-24).
+[Issue #68](https://github.com/Thiesi/Blacksite/issues/68) requires a
+separate comprehensive presentation review against the world bible and
+terminal UI specification. Preserve the verified simulation/mechanics;
+do not perform an ad hoc visual overhaul or treat technical validation,
+navigation or mechanical receipts as visual acceptance. The
+[review brief](../02-presentation-review.md) identifies independent
+engineering acceptance and presentation-dependent work on hold.
+This slice's completion cannot silently bypass the S25 human gate.
+
+<!-- presentation-review-hold:end -->
+
 Before 1.0, verify that the "per node now, federation designed in"
 decision actually held through implementation, and write the design
 for a cross-node bridge over NetBBS's real-time Link relay so that a
