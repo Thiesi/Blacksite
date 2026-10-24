@@ -57,7 +57,10 @@ async def reconnect(probe: NativeProbe, previous: Connection, width: int, height
             caller.output.extend(chunk)
             caller.replay()
     task = asyncio.create_task(pump())
-    session = next(s for s in probe.game.sessions.active.values() if s.player_id == previous.session.player_id and s.id != previous.session.id)
+    # A server restart can reuse a process-local session id. Match the
+    # newly attached live body; the previous transport has already left.
+    session = next(s for s in probe.game.sessions.active.values()
+                   if s.player_id == previous.session.player_id and not s.closed)
     result = Connection(caller, writer, task, session, probe.game.sim.avatars[session.user_id])
     probe.connections.append(result)
     return result
