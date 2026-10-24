@@ -59,6 +59,7 @@ def test_game_8_5_tenant_ear_discloses_deferred_forecast_and_accepts_event_hook(
             game.core.loop.content.items,game.clock.now_utc().timestamp(),.5,owned=True,replace=True)
     slot = game.core.loop.content.items[item.template].implant.slot
     engine = game.core.progression
+    engine.surge_preview = lambda resident: None  # Explicit no-announcement fixture.
     rows = engine.sheet(player,0)["rows"]
     cursor = next(i for i,row in enumerate(rows) if row["id"] == "implant:"+slot)
     assert "No effect yet" in engine.sheet(player,cursor)["detail"]

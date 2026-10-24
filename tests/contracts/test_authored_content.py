@@ -42,7 +42,7 @@ def test_game_9_5_complete_authored_bundle_stays_dormant_and_has_all_faction_poo
 @pytest.mark.parametrize('size',(1,2,5))
 def test_game_9_1_every_generated_template_resolves_and_settles_each_supported_roster(authored,size):
     for job in authored.contracts.values():
-        if job.story or job.service:
+        if job.story or job.service or job.event_only:
             continue
         engine = Engine('authored',{job.id:job})
         party = tuple(Participant(str(i),'bbs-'+str(i),10) for i in range(size))
@@ -61,6 +61,14 @@ def test_game_9_1_every_generated_template_resolves_and_settles_each_supported_r
         payouts = engine.claim(instance.id,'0',30)
         assert len(payouts) == size
         assert all(p.payment.chits == int(200*(1+.25*(size-1))) for p in payouts)
+
+
+def test_game_12_event_jobs_cannot_appear_in_an_ordinary_board_roll(authored):
+    jobs = {job.id: job for job in authored.contracts.values() if job.event_only}
+    assert len(jobs) == 2
+    engine = Engine('event-board', jobs)
+    for giver in ('vesper', 'kestrel', 'sable'):
+        assert engine.board(giver, 0) == ()
 
 
 def test_game_9_4_all_33_authored_story_sequences_replay_to_one_fixed_reward(authored):
