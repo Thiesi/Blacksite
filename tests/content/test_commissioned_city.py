@@ -235,7 +235,8 @@ def test_authoring_can_regenerate_from_its_own_published_tree(city_path: Path,
 
 
 def test_game_8_7_real_resident_can_leave_a_closed_room_without_blocking_city_controls(city: ContentTree) -> None:
-    game = HeadlessServer(deepcopy(city), character_state={})
+    # Production's hex world origin sorts before the residence door ID.
+    game = HeadlessServer(deepcopy(city), character_state={}, origin='0-city-test')
     owner = game.connect()
     create(game, owner)
     manager = game.core.characters
@@ -270,6 +271,17 @@ def test_game_8_7_real_resident_can_leave_a_closed_room_without_blocking_city_co
     assert actor.position == unit.tile(unit.anchor.vestibule)
     act(game, owner, Frame('intent', {'name': 'interact', 'args': {}}))
     assert actor.position == unit.anchor.doorstep
+    # A delivery key dropped beside the dedicated doorstep must not make
+    # E open the apartment core log instead of entering the resident's home.
+    issued = next(i for i in player.inventory if game.core.commerce.items[i].key_for == player.apartment_id)
+    place(game, owner, unit.zone, (unit.anchor.doorstep[0]-1, unit.anchor.doorstep[1]))
+    game.core.commerce.propose(owner.session, 'inv.drop', {'item': issued})
+    game.commit_commerce()
+    assert issued not in player.inventory
+    place(game, owner, unit.zone, unit.anchor.doorstep)
+    act(game, owner, Frame('intent', {'name': 'interact', 'args': {}}))
+    assert unit.region.contains(actor.position)
+    assert owner.session.id not in game.core.lattice.interlock.log_menus
 
 
 def test_game_5_6_season_console_underfoot_is_not_stolen_by_adjacent_telemetry(city: ContentTree) -> None:

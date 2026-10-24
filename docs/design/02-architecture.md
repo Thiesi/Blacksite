@@ -422,6 +422,9 @@ room tiles directly; lease and visitor permissions remain live checks.
 Fallback Interact preserves a physical prop underfoot before considering
 an adjacent public network terminal. Explicit `J` still jacks in. This
 keeps Shaft Foot's season-console status usable beside its telemetry.
+Housing resolves a dedicated public doorstep to its door before adjacent
+props, while respecting a prop underfoot. Dropping a delivery key beside
+the doorstep must not divert entry into the private core-log menu.
 
 Admission/reconnect preserves a valid saved position. If an expired
 opening makes it invalid, `World.free_tile` searches the public spawn's

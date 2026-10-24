@@ -65,12 +65,14 @@ class CityProbe(ContractProbe):
             'source_content_sha256': content_hash(Path(__file__).parents[1]/'src/blacksite/content'),
             'zones': len(self.game.content.zones), 'local_overlay': False}, indent=2)+'\n', encoding='utf-8')
 
-    async def walk(self, connection: Connection, target: tuple[int, int]) -> None:
+    async def walk(self, connection: Connection, target: tuple[int, int], within: int = 0) -> None:
         avatar = connection.avatar
         zone = self.service.world.zones[avatar.zone]
         began, start = time.monotonic(), avatar.actor.position
         steps = 0
-        while avatar.actor.position != target:
+        goals = {(target[0]+dx, target[1]+dy) for dx in range(-within, within+1)
+                 for dy in range(-within, within+1)}
+        while avatar.actor.position not in goals:
             assert time.monotonic()-began < 120, ('walk timeout', zone.id, avatar.actor.position, target)
             assert avatar.actor.health > 0, ('survey caller defeated', zone.id, avatar.actor.position)
             position = avatar.actor.position
@@ -78,7 +80,8 @@ class CityProbe(ContractProbe):
                         if actor is not avatar.actor and not (actor.behaviour.get('training') and actor.owner != avatar.actor.id)}
             pending, previous = deque([position]), {position: None}
             streets = {ex.tile for ex in zone.template.meta.exits if ex.kind == 'street'}
-            while pending and target not in previous:
+            reached = None
+            while pending and reached is None:
                 x, y = pending.popleft()
                 for tile in ((x+1, y), (x, y+1), (x-1, y), (x, y-1)):
                     if (tile in previous or tile in occupied or not zone.can_enter(avatar.actor, tile)
@@ -88,10 +91,13 @@ class CityProbe(ContractProbe):
                         continue
                     previous[tile] = (x, y)
                     pending.append(tile)
-            if target not in previous:
+                    if tile in goals:
+                        reached = tile
+                        break
+            if reached is None:
                 await asyncio.sleep(.2)
                 continue
-            next_ = target
+            next_ = reached
             while previous[next_] != position:
                 next_ = previous[next_]
             await wait(lambda: self.service.clock.now_tick() >= max(
@@ -107,7 +113,7 @@ class CityProbe(ContractProbe):
             if avatar.zone != zone.id:
                 break
         self.walks.append(dict(zone=zone.id, start=list(start), target=list(target), steps=steps,
-                               seconds=time.monotonic()-began, health=avatar.actor.health))
+                               within=within, seconds=time.monotonic()-began, health=avatar.actor.health))
 
     async def travel(self, connection: Connection, destination: str) -> None:
         avatar = connection.avatar
@@ -118,11 +124,9 @@ class CityProbe(ContractProbe):
         exit_ = min(choices, key=lambda ex: (ex.kind == 'cable', ex.hidden, ex.id))
         zone = self.service.world.zones[origin]
         assert permitted(exit_, self.game.access(connection.session)), (origin, exit_.id)
-        tile = exit_.tile
-        if not zone.can_enter(avatar.actor, tile):
-            x, y = tile
-            tile = next(p for p in ((x-1, y), (x+1, y), (x, y-1), (x, y+1)) if zone.can_enter(avatar.actor, p))
-        await self.walk(connection, tile)
+        # E accepts a body beside the passage. Do not require an NPC to
+        # vacate the exact exit tile when a normal adjacent approach works.
+        await self.walk(connection, exit_.tile, within=1)
         panels = self.service.core.relays.views.menus
         if avatar.zone == origin and avatar.travel is None:
             await key(connection, b'e')
@@ -148,6 +152,8 @@ class CityProbe(ContractProbe):
         zid = caller.avatar.zone
         zone = self.service.world.zones[zid]
         for obj in list(zone.objects.values()):
+            if obj.spec.params.get('apartment_unit'):
+                continue  # Private room services are covered by housing acceptance.
             if obj.spec.kind not in ('hardware', 'relay', 'descent_console'):
                 continue
             await self.near(caller, obj.spec.id)

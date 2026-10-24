@@ -87,13 +87,20 @@ class Salvage:
     def tick(self) -> None:
         if not self.rules or self.commerce.pending:
             return
-        proposal = deepcopy(self.state)
+        proposal: dict[str, Any] | None = None
         changed = False
         for zid, zone in self.world.zones.items():
             marker = next((obj for obj in zone.objects.values() if obj.spec.kind == "salvage_field"), None)
             if not marker:
                 continue
             ring = marker.spec.params["ring"]
+            field = self.state["zones"].get(zid)
+            if field is not None and self.uptime < field["respawn_at"]:
+                continue
+            # Four commissioned fields carry large saved RNG states.
+            # Clone only for a due transition, not on every idle tick.
+            if proposal is None:
+                proposal = deepcopy(self.state)
             field = proposal["zones"].get(zid)
             if field is None:
                 field = {"ring": ring, "nodes": {}, "respawn_at": self.uptime+self.rules.respawn_seconds}
@@ -112,7 +119,7 @@ class Salvage:
             else:
                 continue
             field["rng"] = rng.getstate()
-        if changed:
+        if changed and proposal is not None:
             self.commit(proposal)
 
     def sync(self) -> None:

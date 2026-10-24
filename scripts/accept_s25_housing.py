@@ -30,6 +30,7 @@ async def deposit(probe: ServiceProbe, caller: Connection, amount: int) -> None:
     await commit_key(probe, caller, b'\r', lambda: caller.session.id in probe.commerce.prompts)
     p = probe.game.players[caller.session.player_id]
     before = p.chits_bank
+    await wait(lambda: 'Chits:' in caller.caller.screen.screen_text())
     await caller.caller.write(str(amount).encode()+b'\r')
     await wait(lambda: p.chits_bank == before+amount)
     await probe.close_menu(caller)

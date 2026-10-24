@@ -342,4 +342,11 @@ prop underfoot before any adjacent public network terminal. Shaft Foot
 therefore reports its sealed season-console status; explicit J still
 jacks in. Retain this actual-map regression through S26 activation and
 later interaction handlers. See PR #66, alongside PR #38 and issue #56.
+
+A dedicated apartment doorstep chooses its door ahead of adjacent
+dropped goods; a prop underfoot still owns Interact. Native delivery-key
+testing exposed the previous accidental core-log action. Preserve this
+public/private interaction through future handlers. Full-city salvage
+checks allocate a proposal only when a field deadline is due; seeded
+respawns and the tick p99 below 10 ms requirement stay in force.
 <!-- s25-city-decisions:end -->

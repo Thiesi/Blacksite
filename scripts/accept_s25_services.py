@@ -100,11 +100,13 @@ async def rifle(probe: ServiceProbe, caller: Connection, size: tuple[int, int]) 
     await probe.row(caller, panel, 'deposit')
     await commit_key(probe, caller, b'\r', lambda: caller.session.id in probe.commerce.prompts)
     before = p.chits_hand, p.chits_bank
+    await wait(lambda: 'Chits:' in caller.caller.screen.screen_text())
     await caller.caller.write(b'100\r')
     await wait(lambda: p.chits_bank == before[1]+100)
     assert p.chits_hand == before[0]-100
     await probe.row(caller, panel, 'withdraw')
     await commit_key(probe, caller, b'\r', lambda: caller.session.id in probe.commerce.prompts)
+    await wait(lambda: 'Chits:' in caller.caller.screen.screen_text())
     await key(caller, b'\x1b')
     await wait(lambda: caller.session.id not in probe.commerce.prompts)
     assert (p.chits_hand, p.chits_bank) == (before[0]-100, before[1]+100)

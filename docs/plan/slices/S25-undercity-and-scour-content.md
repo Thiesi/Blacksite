@@ -114,15 +114,18 @@ All Undercity base sight uses game 5.2's five tiles before carried-light
 benefits. Explicit Interact can use a physically found hidden exit;
 hidden travel never triggers merely by walking across its tile.
 
-Commissioning also exposed four practical engine gaps: real walled
-apartments must not freeze public geometry controls; salvage must not
-spawn on a permanent hazard that interrupts every harvest; and a saved
-position inside an expired passage must recover to reachable public
-ground without entering a private room; and fallback Interact must not
-let adjacent telemetry steal the physical prop underfoot. The bounded
-fixes implement game 5.2/5.6/8.4/8.7, with actual-map regressions. They add no new gameplay
-system. The Shaft Relay's `requires_level` gate remains owned by S26;
-16 sites exist physically, with 15 available before that level opens.
+Commissioning also exposed five practical engine gaps:
+
+- Real walled homes must not freeze unrelated public geometry controls.
+- A permanent hazard must not interrupt every attempt to harvest a node.
+- A saved position in an expired passage must recover to public ground.
+- Adjacent telemetry must not steal a physical prop underfoot.
+- A dedicated doorstep must open its door despite nearby dropped goods.
+
+These bounded fixes implement game 5.2/5.6/8.4/8.7, with actual-map
+regressions. They add no new gameplay system. The Shaft Relay retains
+its S26-owned `requires_level` gate: 16 sites are mapped and 15 are
+available before that level opens.
 
 The Mezzanine's loan terminal and Far mast keep the normal network
 gates in Lattice 2. Physical admission does not grant Citadel access,
@@ -451,4 +454,11 @@ prop underfoot before any adjacent public network terminal. Shaft Foot
 therefore reports its sealed season-console status; explicit J still
 jacks in. Retain this actual-map regression through S26 activation and
 later interaction handlers. See PR #66, alongside PR #38 and issue #56.
+
+A dedicated apartment doorstep chooses its door ahead of adjacent
+dropped goods; a prop underfoot still owns Interact. Native delivery-key
+testing exposed the previous accidental core-log action. Preserve this
+public/private interaction through future handlers. Full-city salvage
+checks allocate a proposal only when a field deadline is due; seeded
+respawns and the tick p99 below 10 ms requirement stay in force.
 <!-- s25-city-decisions:end -->

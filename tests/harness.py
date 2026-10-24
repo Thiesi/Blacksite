@@ -38,7 +38,8 @@ class FakeClient:
 
 class HeadlessServer:
     def __init__(self, content: ContentTree | None = None, spawn_zone: str | None = None,
-                 character_state: dict[str, Any] | None = None, clock: ManualClock | None = None) -> None:
+                 character_state: dict[str, Any] | None = None, clock: ManualClock | None = None,
+                 origin: str = 'test-origin') -> None:
         self.clock = clock or ManualClock()
         if character_state is not None and 'events' not in character_state:
             # Unrelated unit fixtures often replace the contract catalog.
@@ -49,7 +50,7 @@ class HeadlessServer:
             character_state = {**character_state, 'events': {
                 'last_roll': int(self.clock.now_utc().timestamp()//ROLL_SECONDS)}}
         world = World(content, {zone: index for index, zone in enumerate(sorted(content.zones))}) if content and (spawn_zone or character_state is not None) else None
-        self.core = Core(self.clock, "test-origin", Authenticator(DOOR_SECRET, ADMIN_SECRET),
+        self.core = Core(self.clock, origin, Authenticator(DOOR_SECRET, ADMIN_SECRET),
                          asdict(content.keymaps) if content and content.keymaps else {},
                          asdict(content.palette) if content and content.palette else {},
                          content=content, world=world, spawn_zone=spawn_zone, character_state=character_state)

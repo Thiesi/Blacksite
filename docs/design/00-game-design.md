@@ -1312,6 +1312,8 @@ same protected delivery with no fee. A rented room is a 6x4 pocket;
 only its resident can use storage, safe, terminal and bed. A successful
 door key opens a 30-second vestibule only. All actions, including stale
 menus, recheck tenancy and interior permission on the server.
+A dedicated public doorstep selects its apartment door ahead of adjacent
+dropped goods. A prop directly underfoot still receives Interact first.
 
 Signing issues one physical apartment key. It records this tenancy and
 the current lock tier, weighs nothing, has no resale value and changes
