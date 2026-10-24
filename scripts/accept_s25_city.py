@@ -70,15 +70,16 @@ class CityProbe(ContractProbe):
     async def near(self, connection: Connection, object_id: str) -> None:
         # A patrol can temporarily occupy the only doorway. Replan after
         # it moves instead of treating its current body as permanent geometry.
-        async with asyncio.timeout(20):
-            while True:
-                try:
-                    await super().near(connection, object_id)
-                    return
-                except AssertionError as exc:
-                    if str(exc) != 'No reachable interaction tile: '+object_id:
-                        raise
-                    await asyncio.sleep(.2)
+        waited = 0.0
+        while True:
+            try:
+                await super().near(connection, object_id)
+                return
+            except AssertionError as exc:
+                if str(exc) != 'No reachable interaction tile: '+object_id or waited >= 20:
+                    raise
+                await asyncio.sleep(.2)
+                waited += .2
 
     async def walk(self, connection: Connection, target: tuple[int, int], within: int = 0) -> None:
         avatar = connection.avatar
