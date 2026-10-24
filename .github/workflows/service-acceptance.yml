@@ -30,6 +30,7 @@ on:
       - 'scripts/accept_s25_city.py'
       - 'scripts/accept_s25_services.py'
       - 'scripts/accept_s25_housing.py'
+      - 'scripts/accept_s25_earning.py'
       - 'scripts/events_fixture.py'
       - 'scripts/housing_fixture.py'
       - '.github/workflows/service-acceptance.yml'
@@ -94,7 +95,7 @@ jobs:
       fail-fast: false
       matrix:
         size: ['80x24', '132x50']
-        case: ['rifle', 'surgery', 'housing']
+        case: ['rifle', 'surgery', 'housing', 'earning']
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-python@v5
@@ -120,6 +121,8 @@ jobs:
         run: |
           if [ "$S25_CASE" = housing ]; then
             python scripts/accept_s25_housing.py --root "$RUNNER_TEMP/s25-services/$S25_CASE/$S25_SIZE" --door-python "$RUNNER_TEMP/s25-venv/bin/python" --size "$S25_SIZE"
+          elif [ "$S25_CASE" = earning ]; then
+            python scripts/accept_s25_earning.py --root "$RUNNER_TEMP/s25-services/$S25_CASE/$S25_SIZE" --door-python "$RUNNER_TEMP/s25-venv/bin/python" --size "$S25_SIZE"
           else
             python scripts/accept_s25_services.py --root "$RUNNER_TEMP/s25-services/$S25_CASE/$S25_SIZE" --door-python "$RUNNER_TEMP/s25-venv/bin/python" --size "$S25_SIZE" --case "$S25_CASE"
           fi

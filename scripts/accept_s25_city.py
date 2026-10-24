@@ -63,7 +63,9 @@ class CityProbe(ContractProbe):
         (self.root/'native-content.json').write_text(json.dumps({
             'installed_content_sha256': installed, 'server_content_sha256': self.game.content.hash,
             'source_content_sha256': content_hash(Path(__file__).parents[1]/'src/blacksite/content'),
+            'server_start_seconds': self.server_start_seconds,
             'zones': len(self.game.content.zones), 'local_overlay': False}, indent=2)+'\n', encoding='utf-8')
+        assert self.server_start_seconds < 3, ('architecture 11 server start budget', self.server_start_seconds)
 
     async def walk(self, connection: Connection, target: tuple[int, int], within: int = 0) -> None:
         avatar = connection.avatar
@@ -127,6 +129,13 @@ class CityProbe(ContractProbe):
         # E accepts a body beside the passage. Do not require an NPC to
         # vacate the exact exit tile when a normal adjacent approach works.
         await self.walk(connection, exit_.tile, within=1)
+        if (avatar.zone == origin and zone.can_enter(avatar.actor, exit_.tile)
+                and not any(other is not avatar.actor and other.position == exit_.tile
+                            for other in zone.actors.values())):
+            # Prefer the marked passage when it is free. In particular,
+            # a street step auto-travels without interacting with an
+            # unrelated terminal beside the approach.
+            await self.walk(connection, exit_.tile)
         panels = self.service.core.relays.views.menus
         if avatar.zone == origin and avatar.travel is None:
             await key(connection, b'e')
@@ -185,7 +194,7 @@ class CityProbe(ContractProbe):
         if zid in ('spire-mezzanine', 'under-shaft-foot'):
             destination = 'spire-shaft-head'
             exit_ = next(ex for ex in zone.template.meta.exits if ex.target_zone == destination)
-            await self.walk(caller, exit_.tile)
+            await self.walk(caller, exit_.tile, within=1)
             await key(caller, b'e')
             word = 'membership' if zid == 'spire-mezzanine' else 'finale'
             await wait(lambda: word in caller.caller.screen.screen_text().lower())

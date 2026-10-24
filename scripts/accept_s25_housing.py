@@ -117,6 +117,20 @@ async def house(probe: ServiceProbe, size: tuple[int, int]) -> dict:
     await wait(lambda: not unit.region.contains(peer.avatar.actor.position), 35)
     probe.save(peer, 's25-real-visitor-thirty-second-expiry')
     await probe.leave(peer, 's25-real-guest-left')
+    # Rent draws from both bank and hand. Use the actual safe, which rent
+    # does not draw from, to make the later lapse genuine.
+    saved_chits = p.chits_hand
+    await probe.walk(caller, unit.tile((1, 2)))
+    await commit_key(probe, caller, b'e', lambda: caller.session.id in housing.menus)
+    await choose(probe, caller, 'safe_deposit')
+    await commit_key(probe, caller, b'\r', lambda: caller.session.id in housing.prompts)
+    await wait(lambda: 'Chits:' in caller.caller.screen.screen_text())
+    await caller.caller.write(str(saved_chits).encode()+b'\r')
+    await wait(lambda: p.chits_hand == 0 and housing.lease(p)['safe_chits'] == saved_chits)
+    assert p.chits_bank == 0
+    probe.save(caller, 's25-real-safe-chits-before-lapse')
+    await key(caller, b'\x1b')
+    await wait(lambda: caller.session.id not in housing.menus)
     await bed(probe, caller, unit, 's25-real-bed')
     caller = await reconnect(probe, caller, *size, expected_zone=zone.template.meta.name)
     assert unit.region.contains(caller.avatar.actor.position) and housing.lease(p)['unit'] == unit.id
@@ -130,18 +144,20 @@ async def house(probe: ServiceProbe, size: tuple[int, int]) -> dict:
     await wait(lambda: p.apartment_id is None)
     assert not unit.region.contains(caller.avatar.actor.position)
     assert housing.state['impounds'][p.id]['items'][baton]['fee'] == 4
+    assert housing.state['impounds'][p.id]['chits'] == saved_chits
     probe.save(caller, 's25-real-eviction')
     await probe.travel(caller, 'core-tram-hub')
-    await deposit(probe, caller, 4)
     bank = next(o.spec.id for o in probe.service.world.zones[caller.avatar.zone].objects.values()
                 if o.spec.kind == 'bank')
     panel = await probe.counter(caller, bank, 'bank')
     await probe.row(caller, panel, 'impound')
     await commit_key(probe, caller, b'\r', lambda: caller.session.id in housing.menus)
+    await choose(probe, caller, 'chits')
+    await commit_key(probe, caller, b'\r', lambda: p.chits_bank == saved_chits)
     await choose(probe, caller, baton)
     probe.save(caller, 's25-real-bank-impound-fee')
     await commit_key(probe, caller, b'\r', lambda: baton in p.inventory)
-    assert p.chits_bank == 0 and probe.commerce.items[baton].quality == quality
+    assert p.chits_bank == saved_chits-4 and probe.commerce.items[baton].quality == quality
     assert probe.commerce.items[baton].secured == secured and probe.commerce.items[baton].owner == p.id
     await key(caller, b'\x1b')
     await wait(lambda: caller.session.id not in housing.menus)
@@ -149,7 +165,8 @@ async def house(probe: ServiceProbe, size: tuple[int, int]) -> dict:
     await probe.leave(caller, 's25-real-housing-left')
     return {'units': 24, 'classes': [8, 8, 8], 'signing': 300, 'keyed_vestibule_seconds': 30,
             'resident_storage_private': True, 'bed_reconnect': True, 'eviction': True,
-            'bank_reclaim_fee': 4, 'item_quality_and_security_preserved': True}
+            'safe_and_impound_chits': saved_chits, 'bank_reclaim_fee': 4,
+            'item_quality_and_security_preserved': True}
 
 
 async def accept(root: Path, python: Path, show: bool, size: tuple[int, int]) -> None:

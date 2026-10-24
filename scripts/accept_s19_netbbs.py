@@ -101,7 +101,8 @@ async def encounter_row(probe: ContractProbe, caller: Connection, row: str) -> N
     await commit_key(probe,caller,b'\r',lambda:encounters.menus.get(caller.session.id) is not screen)
 
 
-async def first_job(probe: ContractProbe, width: int, height: int, network: bool) -> dict[str,Any]:
+async def first_job(probe: ContractProbe, width: int, height: int, network: bool,
+                    leave: bool = True) -> dict[str,Any]:
     route = 'network' if network else 'manual'
     caller = await probe.open(width,height,'S19'+route,0 if network else 1,True)
     owner = probe.service.core.contracts
@@ -165,7 +166,8 @@ async def first_job(probe: ContractProbe, width: int, height: int, network: bool
     probe.report(f'S19 PASS {width}x{height}: unmodified hub {route} first job, 200 chits / 100 XP / explicit eight-faction +5')
     result = dict(size=[width,height],route=route,chits=200,xp=100,loan_trace=0 if network else None,
                   wide_name=player.name,fixtures=[])
-    await probe.leave(caller,f's19-first-left-{route}-{width}')
+    if leave:
+        await probe.leave(caller,f's19-first-left-{route}-{width}')
     return result
 
 

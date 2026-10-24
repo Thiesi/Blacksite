@@ -295,9 +295,11 @@ class Npcs:
         template = self.content.npcs[actor.behaviour["template"]]
         if template.training:
             return
+        # Large city zones contain many hostiles outside sight. Reject
+        # those before the broader physical-body permission checks.
         candidates = [other for other in zone.actors.values() if other is not actor
             and other.stance not in ("down", "dead") and self.hostile(actor, other)
-            and self.combat.legal(actor, other) and self.combat.visible(actor, other)]
+            and self.combat.visible(actor, other) and self.combat.legal(actor, other)]
         candidates.sort(key=lambda a: (distance(actor.position, a.position), a.id))
         target = self.world.actors.get(actor.target)
         if candidates:
