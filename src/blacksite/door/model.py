@@ -235,9 +235,10 @@ class Display:
                 rows = effective_body.get("rows", [])
                 cursor = effective_body.get("cursor", 0)
                 selected = rows[cursor] if type(cursor) is int and 0 <= cursor < len(rows) else next((r for r in rows if r.get("id") == cursor), None)
-                if selected is not None:
+                if (selected is not None or effective_body.get('kind') == 'talker'
+                        and (key in actions or key.lower() in actions)):
                     self.counter += 1
-                    return [Frame("intent", {"name": "menu_select", "args": {"row": selected["id"], "key": key.lower()},
+                    return [Frame("intent", {"name": "menu_select", "args": {"row": selected["id"] if selected else '', "key": key.lower()},
                         "request_id": f"{self.request_prefix}-{self.counter}", "expected_revision": self.revision})]
             return []
         return [Frame("key", {"k": key, "t": max(0, int(now * 1000))})]

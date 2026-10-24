@@ -1722,6 +1722,12 @@ weights never suppress instructions, costs, warnings, or a required clue.
 Future NPC positions and dialogue condition on settled outcomes or the
 viewing player's receipt, never the most recent crew's completion.
 
+Ordinary talkers select the first eligible conditional line and show
+actions without requiring a reply. An idle bark requires a player
+within six tiles, defaults to a 90-second per-talker interval, and stays
+silent while anyone is interacting. Authored bark intervals may differ.
+Talking never pauses the world or changes the location's safety rules.
+
 ## 14. Anti-abuse and fairness
 
 - Everything is server-authoritative; the client sends keys and commands,

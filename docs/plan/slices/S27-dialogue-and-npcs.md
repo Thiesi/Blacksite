@@ -1,6 +1,6 @@
 # S27 — Dialogue and named NPCs: dialogue engine, all major and minor NPC files, ambient logs
 
-**Status:** planned
+**Status:** in progress
 **Primary model:** Sonnet (engine) · Gemini or Sonnet (content) · **Reviewer:** Sonnet reads every talker file; Opus reads the ten fixed-cast files
 **Depends on:** S19, S20, S24 · **Milestone:** M5
 **Issue:** https://github.com/Thiesi/blacksite/issues/27

@@ -130,8 +130,16 @@ class Core:
             self.loop.subsystems.append(self.events)
             social = self.lattice.social_overlay
             self.lattice.social_overlay = lambda session, previous=social: previous(session) or session.id in self.events.views.menus
+        from blacksite.server.dialogue_runtime import Dialogue
+        self.dialogue = Dialogue(self) if self.contracts else None
+        if self.dialogue:
+            self.loop.subsystems.append(self.dialogue)
+            social = self.lattice.social_overlay
+            self.lattice.social_overlay = lambda session, previous=social: previous(session) or session.id in self.dialogue.menus
 
     def _disconnect_character(self, session: Session) -> None:
+        if self.dialogue:
+            self.dialogue.close(session)
         if self.events:
             self.events.views.close(session)
         if self.market:
@@ -214,7 +222,13 @@ class Core:
             return
         if self.market and self.market.input(session, frame, event.data['tick']):
             return
-        if self.contracts and self.contracts.input(session, frame, event.data['tick']):
+        # A committed mission objective keeps its existing interaction.
+        # Ordinary named dialogue precedes the old board/recruit fallbacks.
+        if self.contracts and self.contracts.actions.input(session, frame, event.data['tick']):
+            return
+        if self.dialogue and self.dialogue.input(session, frame, event.data['tick']):
+            return
+        if self.contracts and self.contracts.panels.input(session, frame, event.data['tick']):
             return
         if self.factions and self.factions.input(session, frame, event.data["tick"]):
             return
