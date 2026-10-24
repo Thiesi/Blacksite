@@ -190,6 +190,7 @@ async def run(probe: Any, descriptor: dict[str, Any], size: tuple[int, int]) -> 
     await wait(lambda: bool(cast_records))
     record = next(record for record in cast_records if record[0] == cantor.session.player_id and record[1] == hymn.id)
     assert record[3]['shock'] == hymn.effect['shock']*1.3
+    assert body.shock <= 60+hymn.effect['shock']*1.3
     assert body.cooldowns['ability:'+hymn.id]-record[2] in (
         round(hymn.cooldown_seconds*TICK_HZ), round(hymn.cooldown_seconds*TICK_HZ)+1)
     probe.report(f'S24 PASS {width}x{height}: actual jack-in, five-second compatible swap and actual Cantor cast retain cooldown and +30% relief')
@@ -199,7 +200,8 @@ async def run(probe: Any, descriptor: dict[str, Any], size: tuple[int, int]) -> 
     def fault() -> None:
         draft = contracts.state.fork()
         draft.services.advance(contracts.now(), 3600)
-        assert contracts.write(draft)
+        contracts.write(draft)
+        assert probe.commerce.pending
     await mutation(probe, fault)
     iid = await reserve(probe, worker, 'sump', 'common')
     await drive_job(probe, worker, iid, descriptor)
@@ -234,7 +236,8 @@ async def run(probe: Any, descriptor: dict[str, Any], size: tuple[int, int]) -> 
         await probe.leave(caller, 's24-left-'+str(index))
     return dict(passed=True,size=list(size),forecast=pid,forecast_restart=True,forecast_source_ring=signature[1],
         ring_nodes=10,curfew_inbound_refused=True,curfew_outbound_completed=True,curfew_safety=True,
-        surge_warning_seconds=5,surge_compatible=True,cantor_actual_cast=True,cantor_cooldown_unchanged=True,
+        surge_warning_seconds=5,surge_compatible=True,cantor_actual_cast=True,cantor_actual_shock_relief=True,
+        cantor_cooldown_unchanged=True,
         sump_actual_allocation=True,relay_owner_retained=True,exhale_restart_keys=1,
         event_cancel_preserves_other_sources=True,placement_fixture=False,
         future_geography='S25 pending',human_pacing='S25/S26 pending')

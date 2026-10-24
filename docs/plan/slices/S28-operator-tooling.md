@@ -241,4 +241,11 @@ Document `meta.events_state` as additive world-schema-4 state, backed up
 with the world. An incompatible event definition is cancelled with a
 correction at restart, never silently redirected. Do not spawn a server
 from the door or edit a running database.
+
+Inspect active plans before a content deploy. Incompatible definitions
+cancel unfinished event work, including Convoy jobs; completed jobs keep
+their one-hour turn-in window. Prefer deployment between active windows.
+Expected unavailable-source failures log structured diagnostics and
+consume only their roll or committed cancellation, without stopping
+the service. Include those records in operator troubleshooting.
 <!-- s24-handoff:end -->

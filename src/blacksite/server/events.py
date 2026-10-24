@@ -90,6 +90,13 @@ class Scheduler:
                 'cooldowns': dict(self.cooldowns),
                 'plans': [asdict(plan) for plan in self.plans.values()]}
 
+    def discard_unpublished(self, pid: str) -> None:
+        """An unusable candidate consumes its roll, never a paid forecast."""
+        if self.plans[pid].state != 'planned':
+            raise ValueError('Only an unpublished candidate can be discarded.')
+        self._live.pop(pid)
+        del self.plans[pid]
+
     def effects(self, plan: Plan) -> tuple[Effect, ...]:
         template = self.templates[plan.template]
         selected = [effect for variant in template.variants if variant.id in plan.variant_ids

@@ -20,7 +20,7 @@ from blacksite.server.players import Player
 from blacksite.server.items import ItemInstance
 from blacksite.server.protocol import Frame
 from blacksite.server.rules.events import (
-    ADVANCE_SECONDS, CURFEW_HEAT, ROLL_SECONDS, SURGE_MAGNITUDE, WARNING_SECONDS,
+    ADVANCE_SECONDS, CURFEW_HEAT, MAX_RESERVED, ROLL_SECONDS, SURGE_MAGNITUDE, WARNING_SECONDS,
 )
 from blacksite.server.sessions import Session
 
@@ -35,6 +35,7 @@ class Events:
         self.scheduler = Scheduler(core.sessions.origin, self.content.events, self.content.routes, saved)
         self.last_tick = -TICK_HZ
         self.warning_until: dict[str, int] = {}
+        self.diagnostics: list[dict[str, str]] = []
         # S26 supplies typed, bounded values from its committed season state.
         self.tuning: Callable[[str, TuningKind], float | bool | None] = lambda event, kind: None
         from blacksite.server.event_world import WorldEffects
@@ -301,23 +302,40 @@ class Events:
         if (not reconcile and self.scheduler.last_roll == int(now//ROLL_SECONDS)
                 and (not deadlines or min(deadlines) > now)):
             return
-        draft = self.scheduler.fork()
-        transitions = []
-        if reconcile:
-            for current in tuple(draft.reserved()):
-                signature = current.allocations.get('definition')
-                if current.template in self.content.events and signature and signature != self.definition(current):
-                    transitions.append(draft.cancel(current.id, now,
-                        'The authored event changes. Your earlier forecast is cancelled.'))
-        transitions.extend(draft.advance(now, self.eligible))
-        weights = {template.id: int(self.number(template.id, 'weight', template.weight, 1, 10))
-                   for template in self.content.events.values()}
-        plan = draft.roll(now, self.eligible, weights)
-        if plan:
-            self.effects.allocate(draft, plan)
-            self.jobs.allocate(draft, plan)
-        if draft.record() != self.scheduler.record():
-            self.write(draft, transitions)
+        from blacksite.server.event_world import SourceUnavailable
+        failed: dict[str, str] = {}
+        # At most two published starts can fail. Rebuild from the committed
+        # source each time so a failed proposal cannot keep a reward claim.
+        for _ in range(MAX_RESERVED+1):
+            draft = self.scheduler.fork()
+            transitions = [draft.cancel(pid, now, reason) for pid, reason in failed.items()]
+            if reconcile:
+                for current in tuple(draft.reserved()):
+                    signature = current.allocations.get('definition')
+                    if current.template in self.content.events and signature and signature != self.definition(current):
+                        transitions.append(draft.cancel(current.id, now,
+                            'The authored event changes. Your earlier forecast is cancelled.'))
+            transitions.extend(draft.advance(now, self.eligible))
+            weights = {template.id: int(self.number(template.id, 'weight', template.weight, 1, 10))
+                       for template in self.content.events.values()}
+            plan = draft.roll(now, self.eligible, weights)
+            if plan:
+                try:
+                    self.effects.allocate(draft, plan)
+                    self.jobs.allocate(draft, plan)
+                except ValueError as exc:
+                    draft.discard_unpublished(plan.id)
+                    self.diagnostics.append({'phase': 'reserve', 'event_id': plan.template,
+                        'plan_id': plan.id, 'error': str(exc)})
+            try:
+                if draft.record() != self.scheduler.record():
+                    self.write(draft, transitions)
+            except SourceUnavailable as exc:
+                failed[exc.plan] = 'The event site becomes unavailable. Your forecast is cancelled.'
+                self.diagnostics.append({'phase': 'start', 'event_id': draft.plans[exc.plan].template,
+                    'plan_id': exc.plan, 'error': str(exc)})
+                continue
+            return
 
     def refresh(self) -> None:
         active = {plan.template for plan in self.active()}

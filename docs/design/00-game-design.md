@@ -1589,6 +1589,11 @@ or spawning duplicate salvage. Expired events restore their baseline;
 no offline meteor strikes or offline contract deaths are replayed.
 Removal of an effect reveals the next active layer (base, owner policy,
 service order, event, season); it must not restore an obsolete snapshot.
+An unavailable source never stops the city. An unusable unpublished
+candidate consumes that roll without publishing a forecast. An already
+announced event that cannot start is cancelled with an explicit update;
+no reward claim survives its failed proposal. Operators receive a
+structured diagnostic while other city systems continue.
 
 ## 13. Seasons and the Descent
 

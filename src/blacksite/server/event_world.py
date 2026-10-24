@@ -24,6 +24,12 @@ class Proposal:
     salvage: dict[str, Any] | None = None
 
 
+class SourceUnavailable(ValueError):
+    def __init__(self, plan: str, reason: str) -> None:
+        super().__init__(reason)
+        self.plan = plan
+
+
 class WorldEffects:
     def __init__(self, owner: Any) -> None:
         self.owner = owner
@@ -41,6 +47,9 @@ class WorldEffects:
         owner = self.owner
         sites = {}
         for index, effect in enumerate(scheduler.effects(plan)):
+            if effect.type == 'salvage' and not any(obj.spec.kind == 'salvage_field'
+                    for obj in owner.world.zones[effect.zone].objects.values()):
+                raise ValueError('Ring-fall needs a commissioned salvage field.')
             if effect.type not in ('hazard', 'key_drop', 'npc_spawn') or not effect.zone:
                 continue
             zone = owner.world.zones[effect.zone]
@@ -71,22 +80,7 @@ class WorldEffects:
         for transition in transitions:
             plan = scheduler.plans[transition.plan]
             if transition.kind == 'start':
-                for index, effect in enumerate(scheduler.effects(plan)):
-                    source = f'{effect.type}:{index}'
-                    if effect.type == 'salvage' and plan.claim(source):
-                        self.salvage(proposal, plan, effect)
-                    elif effect.type == 'key_drop' and plan.claim(source):
-                        site = plan.allocations['sites'][str(index)]
-                        template = owner.content.items[str(effect.params['item'])]
-                        cache = f'{plan.id}:key:{index}'
-                        ids = []
-                        for _ in range(int(effect.params.get('count', 1))):
-                            proposal.serial += 1
-                            iid = f'{owner.core.sessions.origin}:item:{proposal.serial}'
-                            proposal.items[iid] = make_item(iid, template, cache, owner.clock.now_utc().isoformat())
-                            ids.append(iid)
-                        proposal.caches[cache] = {'zone': site['zone'], 'tile': site['tile'],
-                            'items': ids, 'expires': plan.ends_at, 'event': plan.id}
+                self.start(proposal, scheduler, plan)
             elif transition.kind in ('end', 'cancel'):
                 if proposal.salvage is None and any(
                         node.get('event') == plan.id for field in owner.core.salvage.state['zones'].values()
@@ -100,6 +94,28 @@ class WorldEffects:
                 proposal.caches = {key: cache for key, cache in proposal.caches.items() if key not in expired}
                 proposal.items = {key: item for key, item in proposal.items.items() if item.owner not in expired}
         return proposal
+
+    def start(self, proposal: Proposal, scheduler: Scheduler, plan: Plan) -> None:
+        owner = self.owner
+        try:
+            for index, effect in enumerate(scheduler.effects(plan)):
+                source = f'{effect.type}:{index}'
+                if effect.type == 'salvage' and plan.claim(source):
+                    self.salvage(proposal, plan, effect)
+                elif effect.type == 'key_drop' and plan.claim(source):
+                    site = plan.allocations['sites'][str(index)]
+                    template = owner.content.items[str(effect.params['item'])]
+                    cache = f'{plan.id}:key:{index}'
+                    ids = []
+                    for _ in range(int(effect.params.get('count', 1))):
+                        proposal.serial += 1
+                        iid = f'{owner.core.sessions.origin}:item:{proposal.serial}'
+                        proposal.items[iid] = make_item(iid, template, cache, owner.clock.now_utc().isoformat())
+                        ids.append(iid)
+                    proposal.caches[cache] = {'zone': site['zone'], 'tile': site['tile'],
+                        'items': ids, 'expires': plan.ends_at, 'event': plan.id}
+        except ValueError as exc:
+            raise SourceUnavailable(plan.id, str(exc)) from exc
 
     def salvage(self, proposal: Proposal, plan: Plan, effect: Effect) -> None:
         owner = self.owner

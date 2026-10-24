@@ -832,6 +832,11 @@ applying geometry. No table migration is required for this additive
 world-schema-4 metadata. Public Convoy death/checkpoints join contract
 facts to the same event receipt. Beacon consumption and its detour
 revision also commit together. A failed save publishes neither side.
+Expected source failures stay inside the event subsystem. Persist the
+failed roll boundary; discard an unpublished candidate. Rebuild a failed
+published start from committed state, then atomically cancel it without
+retaining a proposed reward claim. The I/O layer drains structured
+diagnostics, including failures encountered before the listener opens.
 At restart, reconcile wall-time expiry before input; resume uptime timers
 without catching up an offline backlog. Rebuild expeditions from their
 safe checkpoint. Service reservation, allocation, public control expiry,
