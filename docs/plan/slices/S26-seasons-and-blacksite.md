@@ -251,3 +251,22 @@ instance is retired/reset. Preserve pending death receipts and monotonic
 spawn serials; do not retain one permanent slot set per historical
 instance. S24's event cleanup does not own expedition lifecycle state.
 <!-- s24-review-policy:end -->
+
+<!-- s25-access:start -->
+### S25 physical route access handoff
+
+Reference: [S25 #25](https://github.com/Thiesi/Blacksite/issues/25),
+[PR #38](https://github.com/Thiesi/Blacksite/pull/38) and platform #56.
+Game 5.6 and entities 1.1 now specify typed member/story credentials,
+alternative requirements and a missing-credential message. This bounded
+runtime support is necessary to commission the canonical physical city;
+S25 otherwise remains content work. No balance number changes.
+
+Bind `Characters.route_permissions(player)` to committed story/season
+sources. The Shaft cage (`shaft-cage`) remains closed in both directions
+until the owning finale phase authorizes it; `halvard-service-lift` permits
+the declared mission route. Define scope/lifetime from committed phase,
+roster and mission receipts, never arbitrary progress flags. Preserve
+already-departed journeys on expiry/restart. The season-door object must
+show live Depth/Chronicle status when this slice lands.
+<!-- s25-access:end -->

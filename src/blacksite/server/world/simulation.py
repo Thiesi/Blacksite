@@ -122,7 +122,7 @@ class ZoneSimulation:
             if ex.target_zone not in self.world.zones:
                 self.log(session, "Construction blocks this route.")
             elif (zone.id, ex.id) in self.locked_exits or not permitted(ex, self.access_provider(session)):
-                self.log(session, "You do not meet this exit's requirement.")
+                self.log(session, ex.locked_text or "You do not meet this exit's requirement.")
             elif reason := self.travel_refusal(session, ex):
                 self.log(session, reason)
             elif self.fare_menu(session, ex):

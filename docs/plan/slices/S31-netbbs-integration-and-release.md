@@ -257,3 +257,20 @@ retention changes. Event hot history is bounded to 128 closed plans;
 retain required durable host-publication receipts independently under the
 #56 policy. Essential warnings and held outcomes stay in game.
 <!-- s24-review-policy:end -->
+
+<!-- s25-access:start -->
+### S25 physical route access handoff
+
+Reference: [S25 #25](https://github.com/Thiesi/Blacksite/issues/25),
+[PR #38](https://github.com/Thiesi/Blacksite/pull/38) and platform #56.
+Game 5.6 and entities 1.1 now specify typed member/story credentials,
+alternative requirements and a missing-credential message. This bounded
+runtime support is necessary to commission the canonical physical city;
+S25 otherwise remains content work. No balance number changes.
+
+Repeat physical credential acceptance on the actual city at both terminal
+sizes: standing/pass alternatives, friendly nonmember refusal, member
+access, default-closed cage, committed S26 opening and expiry/restart of an
+in-flight journey. Preserve actual purchases and fixture disclosure; no
+invented physical story key or BBS-context permission is authority.
+<!-- s25-access:end -->

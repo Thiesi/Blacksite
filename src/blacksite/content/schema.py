@@ -142,14 +142,14 @@ class Emote:
 
 
 ExitKind = Literal["street", "door", "tram", "ladder", "lift", "gate", "cable"]
-RequirementKind = Literal["pass", "key", "faction"]
+RequirementKind = Literal["pass", "key", "faction", "member", "story"]
 
 
 @dataclass(frozen=True)
 class Requirement:
     kind: RequirementKind
     ref: str
-    """Item id for pass and key, faction id for faction."""
+    """Item id, faction id, or server-owned story route permission."""
     standing: int | None = None
 
 
@@ -164,6 +164,8 @@ class Exit:
     hidden: bool = False
     """Revealed by Listening, a program or dialogue (01-gazetteer.md)."""
     relay: str | None = None  # Game 7.7 optional gate/cable passage.
+    alternatives: tuple[Requirement, ...] = ()  # Game 5.6: complete OR credentials.
+    locked_text: str | None = None
 
 
 @dataclass(frozen=True)

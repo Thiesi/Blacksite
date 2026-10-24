@@ -263,3 +263,20 @@ cancel unfinished work; deploy between active windows. Unavailable-source
 diagnostics may repeat while saving is failing. This is an operator fault
 signal, not an unbounded in-memory queue.
 <!-- s24-review-policy:end -->
+
+<!-- s25-access:start -->
+### S25 physical route access handoff
+
+Reference: [S25 #25](https://github.com/Thiesi/Blacksite/issues/25),
+[PR #38](https://github.com/Thiesi/Blacksite/pull/38) and platform #56.
+Game 5.6 and entities 1.1 now specify typed member/story credentials,
+alternative requirements and a missing-credential message. This bounded
+runtime support is necessary to commission the canonical physical city;
+S25 otherwise remains content work. No balance number changes.
+
+Document the member/story/alternative exit credentials and default-closed
+story provider. Recovery and restart restore committed story/season
+authority; saved player flags do not unlock a route. An already-departed
+journey keeps its arrival. No operator command should silently grant a
+permanent cage bypass.
+<!-- s25-access:end -->

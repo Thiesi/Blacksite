@@ -222,3 +222,20 @@ hold compact outcomes and cannot authorize another payout. A federation
 bridge that needs older provenance must retain the required committed
 facts/receipts in its own ledger.
 <!-- s24-review-policy:end -->
+
+<!-- s25-access:start -->
+### S25 physical route access handoff
+
+Reference: [S25 #25](https://github.com/Thiesi/Blacksite/issues/25),
+[PR #38](https://github.com/Thiesi/Blacksite/pull/38) and platform #56.
+Game 5.6 and entities 1.1 now specify typed member/story credentials,
+alternative requirements and a missing-credential message. This bounded
+runtime support is necessary to commission the canonical physical city;
+S25 otherwise remains content work. No balance number changes.
+
+Physical story permissions are derived from the local committed
+mission/season source through `Characters.route_permissions`; membership has
+its own character authority. Do not accept route flags from client frames,
+arbitrary progress or an untrusted remote peer. Audit source identity,
+scope/lifetime, alternatives and already-departed journey preservation.
+<!-- s25-access:end -->

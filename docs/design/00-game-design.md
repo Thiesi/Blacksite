@@ -468,6 +468,17 @@ time during which the actor is absent from both zones: street exits are
 instant, ladders and lifts 1 s, cable cars 3 s, trams 10 s (hub and
 spoke: every district platform goes to the Core tram hub only).
 
+Physical exits may accept alternative credentials. The Atrium lift
+accepts Halvard standing +10 or a carried Spire Visitor's Pass. The
+service lift accepts Halvard membership or its story authorization;
+standing alone is not membership. The Shaft cage requires the active
+finale authorization in either direction. The server checks those
+sources at boarding. Story access stays closed until its owning system
+supplies a committed permission; saved client flags grant nothing.
+Blocked exits state their missing credential. Every destination retains
+its ordinary outward route; an authorized ride already in flight still
+completes if a permission later expires.
+
 Trams depart every 90 seconds on a stable UTC schedule. Waking a zone or
 restarting the service does not restart that schedule. S15 may hold a
 departure for at most 30 seconds, followed by 120 seconds of immunity.

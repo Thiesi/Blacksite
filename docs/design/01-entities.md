@@ -48,7 +48,7 @@ after their id.
 | spawn | Tile, optional | passable preview/initial entry tile |
 | sector | sector id, optional | native/portable rig's district entry; terminals may override with `params.sector` |
 | layouts | list of ZoneLayout, optional | named service/event geometry variants |
-| exits | list of Exit | id, tile, target zone, target tile, kind (street, door, tram, ladder, lift, gate, cable), requirement (pass, key, faction), hidden, optional relay |
+| exits | list of Exit | id, tile, target zone, target tile, kind (street, door, tram, ladder, lift, gate, cable), requirement, optional alternatives and locked_text, hidden, optional relay |
 | spawners | list of Spawner | id, tile or region, npc template, count, respawn seconds, condition |
 | objects | list of ObjectSpec | id, tile, kind (door, terminal, vendor, vat, relay, cache, tram_stop, apartment_door, light, hardware, descent_console, workshop, bank, turret, camera, shutter, cable_car, pump, lift, patrol_beacon, gate, gantry), params, essential (clinic, public vat, public uplink) |
 | pockets | list of Region | rectangles that are `pocket` safety inside a contested zone |
@@ -64,6 +64,18 @@ composition rechecks reachability from every physical body; an unsafe
 closure waits. Layers expire independently and compose in source-ID order.
 A door's optional `params.open` overrides its base tile's passability and
 opacity; without it, the tile type supplies the initial state.
+
+An exit requirement has `kind` (`pass`, `key`, `faction`, `member`,
+`story`), `ref` and optional `standing`. Pass/key refs resolve carried
+items; faction means a minimum standing; member means that exact
+membership. Story refs name committed route permissions provided by the
+owning story/season system, closed by default. An exit's `alternatives`
+lists other complete requirements accepted instead of its primary one;
+it cannot appear without a primary requirement. `locked_text` optionally
+explains a refusal. These checks never consume a credential or replace
+Curfew/control restrictions. Character route-permission providers are
+server-owned callbacks, not client or saved-progress assertions. S26
+owns `halvard-service-lift` and `shaft-cage` authorization lifetimes.
 
 S06 preview actors use Hardline's starting attributes and derived pools
 (game design 3.1–3.2: HP 130, STA 70). They are temporary bodies, not saved

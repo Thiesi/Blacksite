@@ -302,3 +302,20 @@ corrections and deliberate R acknowledgement. A Convoy Beacon diversion ends
 on arrival or after 60 seconds, and actual arrival/loss revises its forecast
 so callers do not walk to a closed job.
 <!-- s24-review-policy:end -->
+
+<!-- s25-access:start -->
+### S25 physical route access handoff
+
+Reference: [S25 #25](https://github.com/Thiesi/Blacksite/issues/25),
+[PR #38](https://github.com/Thiesi/Blacksite/pull/38) and platform #56.
+Game 5.6 and entities 1.1 now specify typed member/story credentials,
+alternative requirements and a missing-credential message. This bounded
+runtime support is necessary to commission the canonical physical city;
+S25 otherwise remains content work. No balance number changes.
+
+Explain missing physical credentials with each exit's `locked_text`:
+standing or visitor pass for the Atrium, actual membership or story
+authorization for the service lift, and the active finale for the Shaft
+cage. Friendly standing alone is not membership. Show a usable outward
+alternative; no question may gate the screen.
+<!-- s25-access:end -->

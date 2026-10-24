@@ -259,3 +259,20 @@ survive global history retirement with compact final outcomes; dialogue and
 required story fallbacks must not depend on an old plan remaining in the hot
 receipt.
 <!-- s24-review-policy:end -->
+
+<!-- s25-access:start -->
+### S25 physical route access handoff
+
+Reference: [S25 #25](https://github.com/Thiesi/Blacksite/issues/25),
+[PR #38](https://github.com/Thiesi/Blacksite/pull/38) and platform #56.
+Game 5.6 and entities 1.1 now specify typed member/story credentials,
+alternative requirements and a missing-credential message. This bounded
+runtime support is necessary to commission the canonical physical city;
+S25 otherwise remains content work. No balance number changes.
+
+A referral or mission dialogue must not manufacture physical access by
+writing a client/saved-progress flag. Consume the typed route permission
+source with S26 and existing committed mission permits. Keep Halvard
+membership separate from friendly standing, and retain an explicit public
+return route.
+<!-- s25-access:end -->

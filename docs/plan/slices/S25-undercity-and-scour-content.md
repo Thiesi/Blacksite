@@ -1,6 +1,6 @@
 # S25 — Undercity and Scour content: all remaining zone maps, spawners, salvage rings
 
-**Status:** planned
+**Status:** in progress
 **Primary model:** Gemini or Sonnet · **Reviewer:** Sonnet (validator plus a read of each zone), Human for `under-shaft-foot` and `scour-ring-4`
 **Depends on:** S08, S11, S14, S17, S21, S24 · **Milestone:** M5
 **Issue:** https://github.com/Thiesi/blacksite/issues/25
@@ -11,7 +11,8 @@ Author every zone map the game still lacks after S08: the fourteen remaining
 Spire, Tramyard, Sink, Chapel and Old Works zones, five Undercity zones and
 five Scour zones, with their spawners, relays, terminals, hardware objects,
 exits, and lore hooks, exactly as the gazetteer describes them. This is a
-bulk content slice: no engine code, every file must pass the validator, and
+bulk content slice with the bounded physical-access support below.
+Every file must pass the validator, and
 every zone must be walkable end to end through its listed exits.
 
 ## Spec references
@@ -60,9 +61,10 @@ Also:
 - Validate the complete 34-zone ordinary city as one connected bundle,
   including all eight halls, 16 relays, public uplinks, mission permits
   and every S19/S27 target. S26 supplies the separate finale instance.
-- Ring-fall regions: each Scour ring `.json` has a `salvage_regions[]`
-  list with grade weights rising outward (ring 1: hull/optics; ring 4:
-  power/compute/intact) per design §8.4 and the gazetteer.
+- Each Scour ring has one `salvage_field` object with integer `ring`
+  1-4. `salvage.json` owns the canonical outward-rising grade weights.
+  Ring-fall impact regions are separate typed event regions; do not add
+  the obsolete `salvage_regions` sidecar field (entities section 1.7).
 - Every zone lists its `lore` assets: the zone atmosphere text
   (`zone-<id>`) plus any found text the gazetteer places there.
 - A `docs/world/01-gazetteer.md` cross-check table appended to the PR
@@ -91,7 +93,15 @@ Also:
 
 ## Protocol and view models
 
-None. Content only.
+The existing server travel path gains typed member/story credentials,
+alternative requirements and a content refusal message, as specified in
+game 5.6 and entities 1.1. This is required to commission the gazetteer's
+standing-or-pass Atrium lift and membership/story service lift without
+inventing credentials or admitting every friendly nonmember. The Shaft
+cage stays closed until S26 supplies committed finale authorization.
+No new protocol frame or client-side permission calculation is added.
+Other mechanics remain the existing engines; this does not implement a
+season or change balance numbers.
 
 ## Tests
 

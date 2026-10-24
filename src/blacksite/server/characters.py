@@ -37,6 +37,8 @@ class Characters:
         self.sim = ZoneSimulation(world, sessions, clock, "vatside-wake-hall", keymap)
         self.sim.me_provider = self.me
         self.sim.access_provider = self.access
+        # Game 5.6: S26 supplies committed story/season route permissions.
+        self.route_permissions: Callable[[Player], frozenset[str]] = lambda player: frozenset()
         self.item_templates = {row["id"]: row["template"] for row in state.get("items", [])}
         self.items = {row["id"]: ItemInstance.from_record(row) for row in state.get("items", [])}
         self.wakes: dict[str, Wake] = {}
@@ -108,7 +110,9 @@ class Characters:
 
     def access(self, session: Session) -> dict[str, Any]:
         player = self.players[session.player_id]
-        return {"standing": player.standing, "items": [self.item_templates.get(iid, iid) for iid in player.inventory]}
+        return {"standing": player.standing, "faction": player.faction,
+                "story": self.route_permissions(player),
+                "items": [self.item_templates.get(iid, iid) for iid in player.inventory]}
 
     def identity(self, user: str) -> dict[str, Any]:
         if user not in self.identities:
@@ -175,6 +179,7 @@ class Characters:
             data["tile"], data["target_tile"] = tuple(data["tile"]), tuple(data["target_tile"])
             if data.get("requirement"):
                 data["requirement"] = Requirement(**data["requirement"])
+            data['alternatives'] = tuple(Requirement(**row) for row in data.get('alternatives', ()))
             avatar.travel = Travel(Exit(**data), travel["departure"], travel["arrival"], True)
             self.world.zones[player.zone].deactivate(session.id, self.clock.now_tick())
             self.world.leave(actor)

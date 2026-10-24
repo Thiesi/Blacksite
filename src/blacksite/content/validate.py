@@ -468,9 +468,15 @@ class _Validator:
                 if not self.passable(target, ex.target_tile):
                     self.report(*owner, f"{label}: target tile {list(ex.target_tile)} "
                                 f"is not a passable tile in {ex.target_zone}", ex.id)
-            if ex.requirement is not None:
-                kind = "factions" if ex.requirement.kind == "faction" else "items"
-                self.ref(kind, ex.requirement.ref, owner, f"{label}: requirement", ex.id)
+            if ex.alternatives and ex.requirement is None:
+                self.report(*owner, f'{label}: alternatives need a primary requirement', ex.id)
+            for requirement in (() if ex.requirement is None else (ex.requirement, *ex.alternatives)):
+                if requirement.kind == 'story':
+                    if not re.fullmatch(r'[a-z0-9]+(-[a-z0-9]+)*', requirement.ref):
+                        self.report(*owner, f'{label}: story permission must be a slug', ex.id)
+                else:
+                    kind = 'factions' if requirement.kind in ('faction', 'member') else 'items'
+                    self.ref(kind, requirement.ref, owner, f'{label}: requirement', ex.id)
             if ex.relay and self.ref('relays', ex.relay, owner, f'{label}: relay', ex.id):
                 relay = self.t.relays[ex.relay]
                 expected = {'fast_gate': 'gate', 'cable_ride': 'cable'}.get(relay.benefit.kind)

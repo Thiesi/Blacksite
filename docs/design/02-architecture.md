@@ -857,6 +857,15 @@ relay ownership and season/event overlays remain separate fields so
 removing one layer cannot undo another. Their composed map must preserve
 essential services, outward travel and safe-zone immunity.
 
+Physical route permissions are another committed-source consumer.
+`Characters.route_permissions(player)` defaults to an empty immutable
+set; S26 binds it to committed story/season state before caller input.
+It does not trust client flags or arbitrary saved progress. Physical
+membership checks use the character's current faction, independently of
+standing. Alternative credentials share the ordinary travel path and
+cannot bypass Curfew or control locks. Persisted in-flight journeys
+retain their original arrival even if access later closes.
+
 Story settlement rechecks the character's completed-template receipt,
 including parallel crew copies accepted before the first payout. A
 second completed copy closes with zero reward in a durable transaction;

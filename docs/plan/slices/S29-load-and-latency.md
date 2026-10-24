@@ -227,3 +227,20 @@ Include repeated event spawn/end/death cycles and historical expedition
 instances. Ended-event slots must retire without erasing static/active
 slots or pending death receipts; measure remaining slot scan/copy costs.
 <!-- s24-review-policy:end -->
+
+<!-- s25-access:start -->
+### S25 physical route access handoff
+
+Reference: [S25 #25](https://github.com/Thiesi/Blacksite/issues/25),
+[PR #38](https://github.com/Thiesi/Blacksite/pull/38) and platform #56.
+Game 5.6 and entities 1.1 now specify typed member/story credentials,
+alternative requirements and a missing-credential message. This bounded
+runtime support is necessary to commission the canonical physical city;
+S25 otherwise remains content work. No balance number changes.
+
+Exercise the complete 34-map city, member/standing/pass alternatives and
+source-owned story routes under reconnect and concurrent expiry. Include
+route-permission provider cost in the populated season workload; permission
+checks remain on the ordinary travel path and preserve Curfew/control
+restrictions.
+<!-- s25-access:end -->
