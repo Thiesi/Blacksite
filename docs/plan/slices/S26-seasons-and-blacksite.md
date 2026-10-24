@@ -246,4 +246,8 @@ outcomes. Retain any required long-term Chronicle facts in the season ledger
 when they commit; do not reconstruct a season by scanning bounded recent
 plans. A saved forecast is information, never another reward or contribution
 source.
+Retire instance-owned NPC spawn slots when the corresponding expedition
+instance is retired/reset. Preserve pending death receipts and monotonic
+spawn serials; do not retain one permanent slot set per historical
+instance. S24's event cleanup does not own expedition lifecycle state.
 <!-- s24-review-policy:end -->

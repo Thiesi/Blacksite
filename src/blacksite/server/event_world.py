@@ -1,7 +1,7 @@
 """Game 12 physical sources and layers, proposed through commerce."""
 
 from copy import deepcopy
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 from datetime import datetime
 from random import Random
 from typing import Any
@@ -22,6 +22,7 @@ class Proposal:
     caches: dict[str, dict[str, Any]]
     serial: int
     salvage: dict[str, Any] | None = None
+    retired_slots: set[str] = field(default_factory=set)
 
 
 class SourceUnavailable(ValueError):
@@ -77,6 +78,7 @@ class WorldEffects:
     def stage(self, scheduler: Scheduler, transitions: list[Transition]) -> Proposal:
         owner = self.owner
         proposal = Proposal(deepcopy(owner.commerce.items), deepcopy(owner.commerce.caches), owner.commerce.serial)
+        proposal.retired_slots = self.retired_slots(scheduler)
         for transition in transitions:
             plan = scheduler.plans[transition.plan]
             if transition.kind == 'start':
@@ -94,6 +96,26 @@ class WorldEffects:
                 proposal.caches = {key: cache for key, cache in proposal.caches.items() if key not in expired}
                 proposal.items = {key: item for key, item in proposal.items.items() if item.owner not in expired}
         return proposal
+
+    def retired_slots(self, scheduler: Scheduler) -> set[str]:
+        owner = self.owner
+        active = tuple(plan.id+':' for plan in scheduler.reserved())
+        static = {f'{zone.id}:{spec.id}' for zone in owner.world.zones.values()
+                  for spec in zone.template.meta.spawners}
+        pending = owner.core.npcs.pending_deaths
+        return {key for key, slot in owner.core.npcs.spawners.slots.items()
+            if ':event:' in key and key.rsplit(':',1)[0] not in static
+            and not key.partition(':event:')[2].startswith(active)
+            and slot.get('actor') not in pending}
+
+    def npc_record(self, proposal: Proposal, scheduler: Scheduler) -> dict[str, Any]:
+        # Prepare immediately before storage: ordinary spawns may have
+        # advanced the serial or added slots while this source was pending.
+        proposal.retired_slots = self.retired_slots(scheduler)
+        record = deepcopy(self.owner.core.npcs.spawners.record())
+        for key in proposal.retired_slots:
+            record['slots'].pop(key, None)
+        return record
 
     def start(self, proposal: Proposal, scheduler: Scheduler, plan: Plan) -> None:
         owner = self.owner
@@ -145,6 +167,11 @@ class WorldEffects:
                     field['nodes'][key]['event'] = plan.id
 
     def install(self, proposal: Proposal) -> None:
+        spawners = self.owner.core.npcs.spawners
+        if any(key in spawners.slots for key in proposal.retired_slots):
+            for key in proposal.retired_slots:
+                spawners.slots.pop(key, None)
+            spawners.revision += 1
         if proposal.salvage is not None:
             self.owner.core.salvage.state = proposal.salvage
             self.owner.core.salvage.sync()

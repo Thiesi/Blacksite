@@ -249,12 +249,14 @@ class Npcs:
                     progression.notify_reward(player, reward)
                     self.game.factions.notify_standing(player, before_standing, "NPC kill")
             self.commerce.settle(player, patch, items, caches, serial, committed, identity)
-            receipt = deepcopy(self.spawners.record())
-            slot = receipt["slots"].get(str(actor.behaviour.get("slot")))
-            if slot is not None:
-                slot.update(until=respawn_at)
-                slot.pop("actor", None)
-            self.commerce.outbox[-1]["npc_state"] = receipt
+            def npc_snapshot() -> dict[str, Any]:
+                receipt = deepcopy(self.spawners.record())
+                slot = receipt['slots'].get(str(actor.behaviour.get('slot')))
+                if slot is not None:
+                    slot.update(until=respawn_at)
+                    slot.pop('actor', None)
+                return receipt
+            self.commerce.outbox[-1]['npc_state'] = npc_snapshot
             if player and hasattr(self.game, 'crews'):
                 self.game.crews.stage_cache(self.commerce.outbox[-1], cache_id, player.id)
             if grant and hasattr(self.game, 'crews'):

@@ -88,6 +88,16 @@ after shared history retirement and restart. Tests cover a long wall,
 blocked-detour expiry/save failure, 1,000 events/reads and both-size held
 menus after retirement/restart. Final updated native/CI gates remain open.
 
+The next broader pass identified accumulated ended-event NPC spawn
+slots. This is accepted: event cleanup now commits slot retirement with
+its event source, retaining static/active slots and pending death slots.
+Both cleanup and death receipts snapshot NPC state at storage prepare,
+preserving ordinary spawns and serial increments while a save waits.
+Six regression cases cover rollback, late spawns, pending deaths,
+1,000-slot restart cleanup and a real SQLite transaction failure.
+The combined event/NPC focused gate passes 66 tests. Final root and
+installed-wheel native results remain pending.
+
 Minor diagnostic repetition is deferred: retries are bounded, memory is
 drained by I/O, and repeated warnings during a persistent failed save
 expose an ongoing operator problem. Such a failure may log once per

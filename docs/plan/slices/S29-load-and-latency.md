@@ -223,4 +223,7 @@ transitions; personal reads are bounded at 128. Exercise 1,000-event/read
 histories and held outcomes after retirement/restart. Include long obstacle
 routes, cached replanning and a blocked Beacon that expires at 60 seconds;
 normal traffic must not force a full BFS every tick.
+Include repeated event spawn/end/death cycles and historical expedition
+instances. Ended-event slots must retire without erasing static/active
+slots or pending death receipts; measure remaining slot scan/copy costs.
 <!-- s24-review-policy:end -->

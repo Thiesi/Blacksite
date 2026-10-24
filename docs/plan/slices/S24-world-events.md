@@ -178,6 +178,9 @@ expires after 60 seconds and resumes the original leg. The hot event
 receipt retains 128 closed plans; personal forecast reads retain 128
 compact records with final outcomes. H remains useful after global
 retirement and restart, without rewriting months of event history.
+Ended-event NPC slots retire through the atomic source receipt. Pending
+death receipts retain their slots until completion; ordinary spawn slots
+and the monotonic NPC serial survive cleanup and restart.
 
 The `s24-future-events` authoring bundle holds Ring-fall, Exhale, Convoy
 and public job/route records. Curfew and Surge use currently shipped

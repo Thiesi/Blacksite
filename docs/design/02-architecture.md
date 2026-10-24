@@ -844,6 +844,12 @@ saves a compact personal outcome; personal reads are separately bounded
 at 128. The held menu can display that outcome without loading old
 global plans. Long-term Chronicle/publication consumers must retain the
 facts they need in their own ledgers, not scan this bounded hot history.
+Retire ended-event NPC spawn slots in the same committed source path.
+Keep static/active slots and any slot awaiting its death receipt. Retry
+retirement after that receipt, including after restart. Snapshot NPC
+state immediately before storage so intervening ordinary spawns and
+their monotonic serial survive; successful cleanup removes only its
+retired keys from live state. Failed saves remove nothing.
 At restart, reconcile wall-time expiry before input; resume uptime timers
 without catching up an offline backlog. Rebuild expeditions from their
 safe checkpoint. Service reservation, allocation, public control expiry,

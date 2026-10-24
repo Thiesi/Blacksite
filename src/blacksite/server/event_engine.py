@@ -277,6 +277,8 @@ class Events:
         accepted = self.commerce.settle(None, {}, proposal.items, proposal.caches, proposal.serial, finished)
         if accepted:
             effect = self.commerce.outbox[-1]
+            if proposal.retired_slots or any(t.kind in ('end', 'cancel') for t in transitions):
+                effect['npc_state'] = lambda: self.effects.npc_record(proposal, draft)
             draft.prune(tuple(transition.plan for transition in transitions))
             effect['events_state'] = draft.record()
             if proposal.salvage is not None:
@@ -309,6 +311,7 @@ class Events:
         if self.commerce.pending:
             return
         now = self.now()
+        cleanup = bool(self.effects.retired_slots(self.scheduler))
         live = self.scheduler.reserved()
         deadlines = [value for plan in live for value in (
             plan.starts_at-max([WARNING_SECONDS, *(effect.warning_seconds for effect in
@@ -317,7 +320,7 @@ class Events:
             plan.starts_at if plan.state == 'planned' else plan.ends_at,
             (plan.starts_at+plan.ends_at)/2 if 'mid' not in plan.milestones else plan.ends_at,
             plan.ends_at)]
-        if (not reconcile and self.scheduler.last_roll == int(now//ROLL_SECONDS)
+        if (not reconcile and not cleanup and self.scheduler.last_roll == int(now//ROLL_SECONDS)
                 and (not deadlines or min(deadlines) > now)):
             return
         from blacksite.server.event_world import SourceUnavailable
@@ -346,7 +349,7 @@ class Events:
                     self.diagnostics.append({'phase': 'reserve', 'event_id': plan.template,
                         'plan_id': plan.id, 'error': str(exc)})
             try:
-                if draft.record() != self.scheduler.record():
+                if cleanup or draft.record() != self.scheduler.record():
                     self.write(draft, transitions)
             except SourceUnavailable as exc:
                 failed[exc.plan] = 'The event site becomes unavailable. Your forecast is cancelled.'
