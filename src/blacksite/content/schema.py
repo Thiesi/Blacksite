@@ -1130,6 +1130,8 @@ class EvidenceRecord:
 EffectType = Literal[
     "hazard", "spawn_multiplier", "entry_restriction", "ice_variant",
     "salvage", "route_hold", "price_modifier", "reveal", "cache",
+    "npc_spawn", "relay_pause", "heat_multiplier", "ability_magnitude",
+    "key_drop", "event_contract", "convoy_route",
 ]
 
 
@@ -1290,6 +1292,8 @@ class EventTemplate:
     variants: tuple[EventVariant, ...] = ()
     announce: Announce = field(default_factory=Announce)
     route: str | None = None
+    selection: Literal['all', 'one'] = 'all'
+    """Reserve all listed places, or choose one place before publication."""
     schema: int = CONTENT_SCHEMA
 
 

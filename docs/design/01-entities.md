@@ -482,9 +482,15 @@ lines; flavour cannot remove a warning, objective or offered action.
 
 `id, name, where (zone ids or sector ids), duration, cooldown, weight,
 basis (wall or uptime), effects[] (typed), variants[] (id, effects[]),
-announce (asset ids: start, mid, end), route (optional route id)`.
+announce (asset ids: start, mid, end), route (optional route id),
+selection (all or one; default all)`.
+`one` selects the actual place before commitment, as for a Ring-fall
+ring; it never changes the scope when a forecast is read. Route waypoints
+also reserve their physical zones.
 An effect is `type (hazard, spawn_multiplier, entry_restriction,
-ice_variant, salvage, route_hold, price_modifier, reveal, cache), zone,
+ice_variant, salvage, route_hold, price_modifier, reveal, cache,
+npc_spawn, relay_pause, heat_multiplier, ability_magnitude, key_drop,
+event_contract, convoy_route), zone,
 region, sector, warning_seconds, exits_closed[] ("zone/exit"), params`. Routes (`routes.json`): `id, waypoints[] (zone id,
 tile), speed`, used by the Convoy event's NPC crew.
 
@@ -852,7 +858,10 @@ while admitted expeditions and personal decisions are persistent.
 
 `id, template, where, announced_at, starts_at, ends_at, seed,
 variant_ids[], state (planned, active, complete, cancelled), revision,
-cancel_reason, reward_receipts[]`. Forecasts read this record, never an
+cancel_reason, reward_receipts[], milestones[], allocations, forced`.
+`allocations` retains seeded sites and source bindings; `milestones`
+records warning/midpoint delivery separately from reward receipts.
+Forecasts read this record, never an
 independent random roll. Persist both planned and active schedules.
 Timers declare wall-time or uptime basis per game design section 12;
 restart reconciles expired effects before sessions receive a view.

@@ -1510,6 +1510,12 @@ physical zones and sectors cannot overlap. Event-specific cooldowns
 start at completion. A plan made ineligible is cancelled with a public
 forecast correction; it is never silently moved to another ring.
 
+An operator force reserves the same eligible scope and respects the
+two-plan cap, conflicts and cooldown. It shortens advance notice to at
+least 5 seconds, or the longer authored warning. It never starts a
+harmful effect immediately. A cancelled active event starts its cooldown
+at cancellation; cancelling a future reservation does not consume a run.
+
 | Event | Where | Duration | Cooldown / weight | Effect |
 |---|---|---|---|---|
 | Ring-fall | one Scour ring | 20 min | 90 min / 5 | salvage and NPC recovery crews; impact sites show 5 s hazard warning |
