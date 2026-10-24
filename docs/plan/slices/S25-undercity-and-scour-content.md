@@ -349,4 +349,9 @@ diversion ends on arrival or after 60 seconds of wall time, then resumes the
 committed leg. Include this limit and actual arrival/loss forecast updates
 in travel/earning playtests; no stalled greedy walker may consume the whole
 public escort window.
+Assess public Beacon ambush/diversion counterplay on the actual route:
+warning visibility, escort viability and repeated paid diversions. A
+reachable hostile-allowed detour on a contested public objective is not
+an escort-only permission boundary. Change the bounded rule only if
+measured play warrants it; preserve this concern in S26 human pacing.
 <!-- s24-review-policy:end -->

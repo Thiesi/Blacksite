@@ -1,6 +1,6 @@
 # S24 — World events engine and the five events
 
-**Status:** in progress (PR #65)
+**Status:** done (PR #65)
 **Primary model:** Opus · **Reviewer:** Claude Sonnet 5.5 (automated)
 **Depends on:** S11, S14, S17, S19, S21 · **Milestone:** M5
 **Issue:** https://github.com/Thiesi/blacksite/issues/24

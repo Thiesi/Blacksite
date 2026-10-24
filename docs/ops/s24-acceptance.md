@@ -1,7 +1,7 @@
 # S24 event acceptance
 
-S24 is under review in [PR #65](https://github.com/Thiesi/Blacksite/pull/65).
-Final review-fix, exact-head CI and both-size native gates remain open.
+S24 is delivered in [PR #65](https://github.com/Thiesi/Blacksite/pull/65).
+The PR discussion records the final-head CI/artifact merge gate.
 The exact-worktree code-graph refresh was attempted but its transport
 was closed. Structural checks used direct source reads; no ready index
 is claimed.
@@ -13,20 +13,32 @@ Committed plans own forecasts, chosen sites/variants, public event offers,
 source receipts and revisions. A failed transfer publishes neither its
 items nor its event state. Simulation uses an injected clock.
 
-The pre-review runtime passed root pytest on Ubuntu (1508 tests) and
-Windows (1507 tests, one skipped), run 40058204491. Focused source-failure,
-receipt, Convoy, Curfew and relay tests pass after the first review fix
-(28 tests). These are different gates; final counts will be recorded
-after the updated head runs.
+Runtime `7dc7ed9` passes full root pytest locally: 1,524 tests, one
+skipped, in 407.68 seconds. CI on that runtime passes 1,525 tests on
+Ubuntu and 1,524 plus one skip on Windows (run 40064707085). The focused
+event/NPC receipt gate passes 66 tests. Final-head checks are linked in
+the PR before merge; these results do not replace human pacing review.
 
-The local pre-review native run at 80x24 completed all event scenarios
-with wide names through NetBBS Telnet -> registered native stdio. It used
-NetBBS source 7.31.0, commit `d04170a`, and the installed 0.0.20 wheel
-with normalized Python-tree SHA-256
-`64326202d0e52867eb7dabe94ad5ebcde289670ee53de1c7f249a532680f74fa`.
-The result and fully drained PTY output are retained under
-`.test-tmp/s24-native-6/80x24` in the S24 worktree. This is preliminary
-evidence, not proof of the subsequent review-fix runtime.
+Both local native runs pass with wide names through NetBBS Telnet ->
+registered native stdio, using `--show` PTYs. Host source is NetBBS
+7.31.0, commit `d04170aa998b459b9f5ca6b9bca9ea63a17f7ab9` (not an
+exact-tag claim; its stale installed distribution metadata says 3.0.0).
+The installed 0.0.20 wheel matches the complete runtime Python tree:
+`c433d37aebf8401ae8cb3db766608337018752fd325eff8adcf112cf556bbd1e`.
+Wheel SHA-256:
+`620c66f63294e69615ba69c36543a636bf288a7cf2e0777465e8eed6ff5002d8`.
+ZIP CRC, all five events, 15 announcement assets and isolated installed
+content validation pass. Local evidence in the S24 worktree:
+
+| Size | Evidence directory | PTY writes | Maximum write |
+|---|---|---|---|
+| 80x24 | `.test-tmp/s24-native-8/80x24` | 2,244 | 0.016 s |
+| 132x50 | `.test-tmp/s24-native-9/132x50` | 2,254 | 0.016 s |
+
+Both exit zero with `s24-results.json`, `native-client.json` and fully
+drained `console-output.json`. Neither has a failure trace. Hosted
+acceptance artifacts and independent archive checks are linked in the
+PR's final merge-gate comment.
 
 `scripts/accept_s24_netbbs.py` exercises:
 
@@ -86,7 +98,7 @@ plans plus live/current transitions. Each caller keeps 128 recent
 forecast reads and compact final outcomes, including unread corrections
 after shared history retirement and restart. Tests cover a long wall,
 blocked-detour expiry/save failure, 1,000 events/reads and both-size held
-menus after retirement/restart. Final updated native/CI gates remain open.
+menus after retirement/restart. Both updated native sizes pass.
 
 The next broader pass identified accumulated ended-event NPC spawn
 slots. This is accepted: event cleanup now commits slot retirement with
@@ -95,8 +107,14 @@ Both cleanup and death receipts snapshot NPC state at storage prepare,
 preserving ordinary spawns and serial increments while a save waits.
 Six regression cases cover rollback, late spawns, pending deaths,
 1,000-slot restart cleanup and a real SQLite transaction failure.
-The combined event/NPC focused gate passes 66 tests. Final root and
-installed-wheel native results remain pending.
+The combined event/NPC focused gate passes 66 tests. Root and both
+installed-wheel native results above include this fix.
+
+The targeted and broader reviews of `7dc7ed9` report no actionable
+findings. Actual reviewer model is Sonnet 5.5, confirmed in job
+initialization. The bounded public Beacon ambush concern is retained
+for S25/S26 real-route counterplay assessment, without inventing an
+escort-only permission rule from a speculative scenario.
 
 Minor diagnostic repetition is deferred: retries are bounded, memory is
 drained by I/O, and repeated warnings during a persistent failed save
