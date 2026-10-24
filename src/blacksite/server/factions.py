@@ -17,6 +17,7 @@ class EventOffer:
     """S24 supplies information about a plan already committed."""
     plan_id: str
     text: str
+    revision: int = 1
 
 
 STANDING_MIN = -100  # Game 7.1.

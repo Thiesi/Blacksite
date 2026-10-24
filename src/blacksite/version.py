@@ -9,7 +9,7 @@ database (02-architecture.md section 6.2, 01-entities.md conventions).
 from typing import Final
 
 # Semantic package version; must match `version` in pyproject.toml.
-PACKAGE_VERSION: Final[str] = "0.0.19"
+PACKAGE_VERSION: Final[str] = "0.0.20"
 
 # 02-architecture.md section 5.1: the server rejects a `hello` whose
 # major it does not speak. Removal or meaning change of a field bumps it.

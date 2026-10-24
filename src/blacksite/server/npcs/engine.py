@@ -47,6 +47,9 @@ class Npcs:
         self.heat_saved_at: dict[str, float] = {}
         self.heat_multiplier: float = 1
         self.curfew: Callable[[str], bool] = lambda zone: False  # S24 committed event.
+        self.event_fact: Callable[[dict[str, Any], Actor, Actor], None] = lambda effect, source, actor: None
+        self.keep_awake: Callable[[str], bool] = lambda zone: False
+        self.event_motion: Callable[[Actor, ZoneInstance, int, set[tuple[int, int]]], bool] = lambda actor, zone, tick, avoid: False
         self.reward_permit: Callable[[Actor, Actor], bool] = lambda source, target: not any(
             target.behaviour.get(key) for key in ("nonlethal", "willing", "escort"))
         combat.refused_hook = self.refused
@@ -233,30 +236,34 @@ class Npcs:
                 caches[cache_id] = {"zone": actor.zone, "tile": list(actor.position), "items": loot,
                     "killer": player.id if player else source.id, "victim": actor.id, "private_until": self.combat.now()+LOOT_PRIVATE_SECONDS,
                     "expires": self.combat.now()+CACHE_SECONDS}
+            respawn_at = self.spawners.deadline(actor, self.combat.now())
             def committed(success: bool) -> None:
                 self.pending_deaths.discard(actor.id)
                 if not success:
                     # A failed receipt retains one retryable body and no loot.
                     actor.health, actor.stance = 1, "normal"
                     return
-                self.spawners.removed(actor, self.combat.now())
+                self.spawners.removed(actor, self.combat.now(), deadline=respawn_at)
                 self.world.leave(actor)
                 if player:
                     progression.notify_reward(player, reward)
                     self.game.factions.notify_standing(player, before_standing, "NPC kill")
             self.commerce.settle(player, patch, items, caches, serial, committed, identity)
-            receipt = deepcopy(self.spawners.record())
-            slot = receipt["slots"].get(str(actor.behaviour.get("slot")))
-            if slot is not None:
-                slot.update(until=self.combat.now()+int(actor.behaviour.get("respawn", 0)))
-                slot.pop("actor", None)
-            self.commerce.outbox[-1]["npc_state"] = receipt
+            def npc_snapshot() -> dict[str, Any]:
+                receipt = deepcopy(self.spawners.record())
+                slot = receipt['slots'].get(str(actor.behaviour.get('slot')))
+                if slot is not None:
+                    slot.update(until=respawn_at)
+                    slot.pop('actor', None)
+                return receipt
+            self.commerce.outbox[-1]['npc_state'] = npc_snapshot
             if player and hasattr(self.game, 'crews'):
                 self.game.crews.stage_cache(self.commerce.outbox[-1], cache_id, player.id)
             if grant and hasattr(self.game, 'crews'):
                 self.game.crews.add_rewards(self.commerce.outbox[-1], player, grant)
             if hasattr(self.game, 'contracts'):
                 self.game.contracts.npc_fact(self.commerce.outbox[-1], source, actor, 'lethal')
+            self.event_fact(self.commerce.outbox[-1], source, actor)
         self.commerce.enqueue_system(propose)
 
     def training(self, player: Player, actor: Actor, tick: int) -> None:
@@ -346,6 +353,8 @@ class Npcs:
             else:
                 step_toward(actor, zone, tuple(actor.behaviour.get("last_position", actor.position)), tick, avoid=avoid)
             return
+        if self.event_motion(actor, zone, tick, avoid):
+            return
         for behaviour in template.behaviours:
             params = behaviour.params
             if behaviour.kind == "wander":
@@ -425,7 +434,7 @@ class Npcs:
                 self.restraints.pop(source_id, None)
         self.provocations = {key: until for key, until in self.provocations.items() if until > now}
         for zone in self.world.zones.values():
-            if zone.dormant:
+            if zone.dormant and not self.keep_awake(zone.id):
                 self.dormant.setdefault(zone.id, now)
                 if now-self.dormant[zone.id] >= DORMANT_SECONDS:
                     for actor in tuple(zone.actors.values()):

@@ -192,3 +192,33 @@ terminal history may be shared read-only. A new mutable federation state
 must be copied as live data before mutation. The held-bid lookup is
 derived from stored records, never a remote monetary authority. Preserve
 sale-time item snapshots, private audit and exact-instance delivery.
+
+<!-- s24-handoff:start -->
+### S24 event integration and acceptance handoff
+
+Reference: [S24 #24](https://github.com/Thiesi/Blacksite/issues/24),
+[PR #38](https://github.com/Thiesi/Blacksite/pull/38) and
+[platform #56](https://github.com/Thiesi/Blacksite/issues/56).
+
+Audit event authority by committed plan/source ID, not process-local
+crew IDs or wall-clock reads inside simulation. The injected clock,
+seeded variants/sites, explicit revisions, reward receipts and event-only
+contracts are authoritative. Independent source layers must not undo
+another node's service/control/relay/season state. Preserve identity
+deduplication and atomic item/receipt settlement when designing transfer;
+do not turn a preview, telemetry flag or host announcement into authority.
+<!-- s24-handoff:end -->
+
+
+<!-- s24-review-policy:start -->
+### S24 practical review follow-up
+
+Reference: [PR #65](https://github.com/Thiesi/Blacksite/pull/65), retaining
+[PR #38](https://github.com/Thiesi/Blacksite/pull/38) and #56.
+
+The hot event receipt is a bounded working set, not a permanent global
+archive: 128 closed plans plus live/current transitions. Personal forecasts
+hold compact outcomes and cannot authorize another payout. A federation
+bridge that needs older provenance must retain the required committed
+facts/receipts in its own ledger.
+<!-- s24-review-policy:end -->

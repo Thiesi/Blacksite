@@ -1668,6 +1668,42 @@ class _Validator:
             elif self.ref("ice", base, owner, label) and self.ref("ice", new, owner, label):
                 if new not in self.t.ice[base].variants:
                     self.report(*owner, f"{label}: {new!r} is not a declared variant of {base!r}")
+                old, target = self.t.ice[base], self.t.ice[new]
+                if (old.black or target.black or target.tier > old.tier or any(
+                        getattr(old, key) != getattr(target, key) for key in
+                        ('class_', 'role', 'trigger', 'behaviour', 'counters'))):
+                    self.report(*owner, f'{label}: ICE variants must preserve role and counters at equal/lower tier without black ICE')
+                if e.warning_seconds < HAZARD_WARNING_SECONDS:
+                    self.report(*owner, f'{label}: ICE variants need a five second warning')
+        if owner[0] == 'events':
+            if e.type in ('hazard', 'npc_spawn', 'key_drop', 'salvage', 'spawn_multiplier') and not e.zone:
+                self.report(*owner, f'{label}: physical event sources need a zone')
+            if e.type == 'hazard' and e.region is None:
+                self.report(*owner, f'{label}: event impact needs a bounded region')
+            for key in ('count', 'cap', 'respawn_seconds', 'seconds'):
+                if key in e.params and (type(e.params[key]) not in (int, float) or e.params[key] <= 0):
+                    self.report(*owner, f'{label}: {key} must be positive')
+            if 'radius' in e.params and (type(e.params['radius']) is not int or not 0 <= e.params['radius'] <= 3):
+                self.report(*owner, f'{label}: impact radius must be an integer from zero to three')
+            required = {'spawn_multiplier': ('multiplier', 'cap'), 'npc_spawn': ('npc', 'count', 'respawn_seconds'),
+                'key_drop': ('item',), 'salvage': ('count', 'cap'), 'event_contract': ('contract',),
+                'convoy_route': ('npc',), 'heat_multiplier': ('multiplier',), 'ability_magnitude': ('multiplier',)}
+            if any(key not in e.params for key in required.get(e.type, ())):
+                self.report(*owner, f'{label}: missing parameters for {e.type}')
+            for key, kind in (('npc', 'npcs'), ('item', 'items'), ('contract', 'contracts')):
+                if key in e.params:
+                    self.ref(kind, e.params[key], owner, label+' '+key)
+            if e.type == 'spawn_multiplier' and e.params.get('multiplier') not in (2, 3):
+                self.report(*owner, f'{label}: Exhale spawn multiplier is two or three')
+            if e.type == 'heat_multiplier' and e.params.get('multiplier') != 2:
+                self.report(*owner, f'{label}: Curfew doubles new heat')
+            if e.type == 'ability_magnitude' and e.params.get('multiplier') != 1.3:
+                self.report(*owner, f'{label}: Surge beneficial magnitude is 1.3')
+            if e.type == 'event_contract' and e.params.get('contract') in self.t.contracts:
+                job = self.t.contracts[e.params['contract']]
+                if (not job.event_only or job.story or job.service or job.crew_scaling or
+                        len(job.stages) != 1 or job.stages[0].verb not in ('escort', 'clear')):
+                    self.report(*owner, f'{label}: shared event job needs one fixed escort/clear source stage')
 
     def check_events(self) -> None:
         for eid, ev in self.each("events"):
@@ -1689,7 +1725,19 @@ class _Validator:
                     self._check_effect(owner, f"variant {var.id} effect {i}", e)
             for asset in (ev.announce.start, ev.announce.mid, ev.announce.end):
                 self.ref("text", asset, owner, "announce", asset)
+                if asset in self.t.text:
+                    from string import Formatter
+                    try:
+                        fields = [(name, spec, conversion) for _, name, spec, conversion in Formatter().parse(self.t.text[asset].body)
+                                  if name is not None]
+                        if any(name not in ('name', 'where', 'plan', 'remaining', 'route', 'time')
+                               or spec or conversion for name, spec, conversion in fields):
+                            self.report(*owner, 'announce contains an unsupported placeholder')
+                    except ValueError:
+                        self.report(*owner, 'announce contains invalid placeholder braces')
             self.ref("routes", ev.route, owner, "route")
+            if any(e.type == 'convoy_route' for e in ev.effects) and not ev.route:
+                self.report(*owner, 'convoy_route needs a committed route')
 
     def check_services(self) -> None:
         for sid, svc in self.each("services"):

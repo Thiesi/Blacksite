@@ -51,6 +51,8 @@ def render_zone(buffer: CellBuffer, body: dict[str, Any], area: Rect, palette: P
         buffer.put(buffer.width - 14, 0, "HEAT", palette.style("warning"))
     side_x, side_w = buffer.width - 23, 22
     rows: list[str] = []
+    event_rows = [str(plan['summary']) for plan in (body.get('event') or {}).get('plans', [])]
+    rows += event_rows
     objective = body.get("objective")
     if objective and not (buffer.width < 100 and objective.get('compact_hint')):
         rows += [str(objective.get("next_action", "")), str(objective.get("cost", ""))]
@@ -78,20 +80,33 @@ def render_zone(buffer: CellBuffer, body: dict[str, Any], area: Rect, palette: P
                       str(member['zone'])+(' / '+member['direction'] if member.get('beacon') and member.get('direction') else '')]
     rows += crew_rows if crew else ["CREW", "None"]
     extra = 4 if me.get("grade") is not None else 0
-    if crew and len(rows) > max(0, area.height-6-extra):
+    if (crew or event_rows) and len(rows) > max(0, area.height-6-extra):
         # Keep one ally visible on the small terminal; G holds the full roster.
-        compact = rows[:rows.index('TARGET')]
+        compact = list(event_rows)
+        if body.get('hazards'):
+            hazard = body['hazards'][0]
+            exits = ','.join(hazard.get('escape', []))
+            if event_rows:
+                compact.append(f"WARNING {hazard.get('warning', 0):g}s Exit {exits}")
+            else:
+                compact += [f"WARNING {hazard.get('warning', 0):g}s", 'Escape: '+exits]
         if target:
-            compact += [target['name'], f"HP {target['hp_percent']}% / {target['relation']}",
-                       f"Range {target['range']:g} Cover {target['cover']}"]
-        peers = [m for m in crew if m['name'] != me.get('name')]
-        first = peers[0] if peers else crew[0]
-        suffix = f" {first['hp_pct']}%"
-        compact += ['CREW / G', truncate(first['name'], side_w-len(suffix))+suffix,
-                    str(first['zone'])+(' / '+first['direction'] if first.get('beacon') and first.get('direction') else '')]
-        rows = compact+([me['weapon']] if me.get('weapon') else [])
+            compact += [target['name'], f"HP {target['hp_percent']}% {target['relation']} R{target['range']:g}"]
+        optional = []
+        if crew:
+            peers = [m for m in crew if m['name'] != me.get('name')]
+            first = peers[0] if peers else crew[0]
+            suffix = f" {first['hp_pct']}%"
+            compact += ['CREW / G', truncate(first['name'], side_w-len(suffix))+suffix]
+            optional.append(str(first['zone']))
+        budget = max(0, area.height-6-extra)
+        optional += [me['weapon']] if me.get('weapon') else []
+        if objective:
+            optional.append(str(objective.get('next_action', '')))
+        rows = compact+optional[:max(0, budget-len(compact))]
     name_roles = {f"{entry.get('relation', '~')} {entry.get('name', 'Another Wake')}": entry.get("role", "text")
                   for entry in body.get("nearby", [])}
+    name_roles.update({text: 'ui_highlight' for text in event_rows})
     if target:
         name_roles[target["name"]] = target.get("name_role", "text")
     for index, text in enumerate(rows[:max(0, area.height - 6 - extra)]):

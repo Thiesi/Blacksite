@@ -46,6 +46,7 @@ class Combat:
         self.training_provider: Callable[[Player, Actor, int], None] = lambda player, actor, tick: None
         self.allies_provider: Callable[[Actor], list[Actor]] = lambda actor:[actor]  # S22 supplies local crew.
         self.crew_together: Callable[[str, str], bool] = lambda one, other: False
+        self.ability_effect: Callable[[Player, HymnTemplate], dict[str, Any]] = lambda player, ability: dict(ability.effect)
         self.sim.target_provider = self.target_view
         self.game.combat = self
 
@@ -706,7 +707,7 @@ class Combat:
         factor = 1+player.skills.get("hymns" if ability.kind == "hymn" else "dissonance",0)/200
         receipt = f"ability:{actor.id}:{ability.id}:{cast.get('until', self.clock.now_tick())}:{self.clock.now_utc().isoformat()}"
         restored = threatened = False
-        effect = ability.effect
+        effect = self.ability_effect(player, ability)
         recipients = [target]
         if ability.kind == "hymn":
             recipients = [a for a in self.allies_provider(actor) if a.zone==actor.zone

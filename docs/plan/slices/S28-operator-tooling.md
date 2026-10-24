@@ -224,3 +224,42 @@ serials in meta and private financial audit. Include all in backups.
 Market pages include current held bids for their selected listings.
 Expose pagination in the CLI; do not assume one response is the world.
 Cancellation/refund replies follow the durable atomic source commit.
+
+<!-- s24-handoff:start -->
+### S24 event integration and acceptance handoff
+
+Reference: [S24 #24](https://github.com/Thiesi/Blacksite/issues/24),
+[PR #38](https://github.com/Thiesi/Blacksite/pull/38) and
+[platform #56](https://github.com/Thiesi/Blacksite/issues/56).
+
+Retain authenticated, audited `event list [--page N]`, `event force ID
+[--where SCOPE]`, and `event cancel PLAN` (also under `admin event`).
+List pages hold at most 100 plans. Force obeys capacity, cooldown,
+scope conflicts and at least five seconds of public warning. Inspect
+committed revisions/source receipts; a failed save publishes nothing.
+Document `meta.events_state` as additive world-schema-4 state, backed up
+with the world. An incompatible event definition is cancelled with a
+correction at restart, never silently redirected. Do not spawn a server
+from the door or edit a running database.
+
+Inspect active plans before a content deploy. Incompatible definitions
+cancel unfinished event work, including Convoy jobs; completed jobs keep
+their one-hour turn-in window. Prefer deployment between active windows.
+Expected unavailable-source failures log structured diagnostics and
+consume only their roll or committed cancellation, without stopping
+the service. Include those records in operator troubleshooting.
+<!-- s24-handoff:end -->
+
+
+<!-- s24-review-policy:start -->
+### S24 practical review follow-up
+
+Reference: [PR #65](https://github.com/Thiesi/Blacksite/pull/65), retaining
+[PR #38](https://github.com/Thiesi/Blacksite/pull/38) and #56.
+
+Event list shows recent bounded history: 128 closed plans plus live/current
+transitions. Personal held outcomes remain separate. Content changes can
+cancel unfinished work; deploy between active windows. Unavailable-source
+diagnostics may repeat while saving is failing. This is an operator fault
+signal, not an unbounded in-memory queue.
+<!-- s24-review-policy:end -->

@@ -56,6 +56,7 @@ class Commerce:
         self.budget_period: Callable[[Vendor, str], int] = lambda vendor, counter: 3600  # Game 8.2 / 7.7.
         self.vendor_available: Callable[[Vendor, str], bool] = lambda vendor, counter: True
         self.item_label: Callable[[ItemInstance], str] = lambda item: self.content.items[item.template].name
+        self.special_use: Callable[[Session, ItemInstance], bool] = lambda session, item: False
         self.sync_caches()
 
     def ready(self, session: Session) -> bool:
@@ -273,6 +274,9 @@ class Commerce:
             inventory.remove(draft, iid, 1, next_id)
             message = f"Used {template.name}."+note
         elif name == "inv.use":
+            item = inventory.owned(draft, iid)
+            if self.special_use(session, item):
+                return
             if any(effect.get("hush") for effect in av.actor.effects):
                 raise ValueError("You cannot use consumables yet.")
             item = inventory.owned(draft, iid)
@@ -345,9 +349,11 @@ class Commerce:
             **({"salvage_state": deepcopy(effect["salvage_state"])} if "salvage_state" in effect else {}),
             **({"contracts_state": deepcopy(effect["contracts_state"])} if "contracts_state" in effect else {}),
             **({"relays_state": deepcopy(effect["relays_state"])} if "relays_state" in effect else {}),
+            **({'events_state': deepcopy(effect['events_state'])} if 'events_state' in effect else {}),
             **({"market_changes": deepcopy(effect["market_changes"])} if "market_changes" in effect else {}),
             **({"market_audit": deepcopy(effect["market_audit"])} if "market_audit" in effect else {}),
-            **({"npc_state": effect["npc_state"]} if "npc_state" in effect else {}),
+            **({"npc_state": effect['npc_state']() if callable(effect['npc_state']) else effect['npc_state']}
+               if 'npc_state' in effect else {}),
             **({"lattice_state": effect["lattice_state"]()} if "lattice_state" in effect else {}),
             **({"identity":effect["identity"], "user":player.bbs_user_id} if "identity" in effect else {})}
 

@@ -1510,6 +1510,12 @@ physical zones and sectors cannot overlap. Event-specific cooldowns
 start at completion. A plan made ineligible is cancelled with a public
 forecast correction; it is never silently moved to another ring.
 
+An operator force reserves the same eligible scope and respects the
+two-plan cap, conflicts and cooldown. It shortens advance notice to at
+least 5 seconds, or the longer authored warning. It never starts a
+harmful effect immediately. A cancelled active event starts its cooldown
+at cancellation; cancelling a future reservation does not consume a run.
+
 | Event | Where | Duration | Cooldown / weight | Effect |
 |---|---|---|---|---|
 | Ring-fall | one Scour ring | 20 min | 90 min / 5 | salvage and NPC recovery crews; impact sites show 5 s hazard warning |
@@ -1517,6 +1523,43 @@ forecast correction; it is never silently moved to another ring.
 | Choir Surge | sectors | 15 min | 3 h / 2 | announced ICE variants; Cantor beneficial effect magnitudes +30 %; maps current Silt band |
 | Exhale | Undercity | 30 min | 2 h / 3 | spawn rate x3 within authored caps; keys and temporary shortcut controls |
 | Convoy | declared Scour route | 25 min | 60 min / 4 | public escort/raid jobs; NPC convoy follows `routes.json` |
+
+The first authored Ring-fall adds ten nodes, bounded by forty total
+nodes in that field, and one recovery crew. Its committed impact has a
+one-tile radius and a five-second hazardous pulse after the public
+five-second warning. The remaining event window is salvage time.
+Beacon reports this same saved footprint. Exhale caps each affected
+spawner at six bodies and drops one physical Undercity key per event.
+Its shortcut is optional; ordinary routes stay open. S25 validates
+these authored sites against actual maps before activating the bundle.
+
+The first Convoy moves at two tiles per second and offers fixed
+200-chit, 100-XP escort and raid jobs. These use ordinary personal reward
+and identity rules. They add no reward for a larger crew. S25 must
+measure travel, combat, return time and earning rate on the real route
+before treating this initial payment as field-tested balance.
+
+A Convoy Beacon requests one reachable detour per committed route leg,
+inside the convoy's current public zone and outside safe pockets. Its
+consumption and published route revision share a receipt. A second
+signal in that leg, an unreachable signal, hush, concealment or a closed
+convoy consumes nothing. This bounds repeated diversions while keeping
+the sold tool useful to escorts and ambushers alike.
+A diversion lasts at most 60 seconds of wall time and ends on arrival
+or expiry. The convoy follows a real path around obstacles, then resumes
+the committed route; a blocked signal cannot hold every escort until
+the event closes.
+
+Convoy jobs share the actual public convoy. Distinct BBS identities may
+accept the same offer. Escort credit requires being within the existing
+6-tile guarding radius at successive committed waypoints; arriving only
+at the final stop gives no credit. The fixed shared target does not
+multiply with crew size. Ordinary roster consent, reward terms and
+once-per-identity offer claims still apply. Event jobs expire with their
+plan while incomplete. A completed objective retains the ordinary
+one-hour turn-in window from completion, so a convoy arriving near the
+event's end does not erase a worker's return trip. Event jobs never spawn
+a private replacement convoy after restart.
 
 Curfew preserves outward travel, internal Core movement, existing safe
 pockets, public vat use, banking, and at least one reachable shelter
@@ -1526,6 +1569,10 @@ journey already underway. NPC transit permits in historical reports are
 not necessarily Curfew Passes.
 
 Surge swaps only compatible non-black variants of equal or lower tier.
+
+The first compatible Ticker variant keeps its existing counterplay,
+trigger and role, with integrity 12 and trace gain 0.75 per second.
+It introduces no new defender class or black ICE.
 Show the new behaviour 5 s before activation; preserve damage already
 received and do not restart a cast to get an instant hit. Never add
 black ICE to a non-black room or change the tutorial/private core rules.
@@ -1546,6 +1593,16 @@ or spawning duplicate salvage. Expired events restore their baseline;
 no offline meteor strikes or offline contract deaths are replayed.
 Removal of an effect reveals the next active layer (base, owner policy,
 service order, event, season); it must not restore an obsolete snapshot.
+An unavailable source never stops the city. An unusable unpublished
+candidate consumes that roll without publishing a forecast. An already
+announced event that cannot start is cancelled with an explicit update;
+no reward claim survives its failed proposal. Operators receive a
+structured diagnostic while other city systems continue.
+Each caller keeps their 128 most recently read forecast records. A
+closed plan saves its final outcome into any held record before shared
+history retires it. H shows those recent personal records after restart,
+including an unread cancellation; reading it acknowledges the update.
+New reads replace the oldest personal records, not current game rules.
 
 ## 13. Seasons and the Descent
 

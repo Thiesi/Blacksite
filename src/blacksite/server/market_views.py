@@ -108,7 +108,8 @@ class Views:
             return [{'id': 'market', 'cells': ['Market', 'Listings, bids and delivery']},
                     {'id': 'bounties', 'cells': ['Bounties', 'Prices on local names']},
                     {'id': 'jack', 'cells': ['Jack in', 'Your body stays here']},
-                    {'id': 'collect', 'cells': ['Collect', 'Your protected market deliveries']}]
+                    {'id': 'collect', 'cells': ['Collect', 'Your protected market deliveries']},
+                    {'id': 'forecast', 'cells': ['Forecasts', 'City events and held information']}]
         if panel.kind == 'expiry':
             return [{'id': str(seconds), 'cells': [label]} for seconds, label in zip(
                 LISTING_EXPIRIES, ('24 hours', '72 hours', 'Seven days'))]
@@ -169,7 +170,7 @@ class Views:
         elif panel.kind == 'expiry':
             text, actions = 'Choose the listing duration.', 'Enter choose  Esc/B returns'
         elif panel.kind == 'terminal':
-            text, actions = 'Public services. Jacking leaves your body here.', 'M market  O bounties  J jack  C collect  Enter choose  Esc/B'
+            text, actions = 'Public services. Jacking leaves your body here.', 'M market  O bounty  J jack  C collect  V forecast  Esc/B'
         if panel.confirmation:
             text = panel.confirmation[2]+'\nY confirms. Esc/B returns without a transfer.'
             actions = 'Y confirm  Esc/B returns'
@@ -178,7 +179,7 @@ class Views:
                     cursor-start, text, actions)
         body['page'] = start//MENU_PAGE_ROWS+1
         body['pages'] = max(1, (total+MENU_PAGE_ROWS-1)//MENU_PAGE_ROWS)
-        keys = {'terminal': [('m', 'market'), ('o', 'bounties'), ('j', 'jack'), ('c', 'collect')],
+        keys = {'terminal': [('m', 'market'), ('o', 'bounties'), ('j', 'jack'), ('c', 'collect'), ('v', 'forecast')],
             'market': [('d', 'bid'), ('u', 'buyout'), ('l', 'list'), ('m', 'my listings'),
                        ('c', 'collect'), ('k', 'cancel'), ('f', 'class'), ('s', 'sort')],
             'bounties': [('p', 'post')], 'items': [('enter', 'choose')],
@@ -228,10 +229,13 @@ class Views:
                 panel.kind = 'bounties' if action == 'post' else 'collect' if action == 'collect' else 'market'
             return
         if panel.kind == 'terminal':
-            choice = {'m': 'market', 'o': 'bounties', 'j': 'jack', 'c': 'collect'}.get(key, row if key == 'enter' else '')
+            choice = {'m': 'market', 'o': 'bounties', 'j': 'jack', 'c': 'collect', 'v': 'forecast'}.get(key, row if key == 'enter' else '')
             if choice == 'jack':
                 self.close(session)
                 owner.lat.jack_in(session, panel.terminal)
+            elif choice == 'forecast':
+                self.close(session)
+                owner.core.events.views.open(session)
             elif choice in ('market', 'bounties', 'collect'):
                 panel.kind, panel.cursor = choice, 0
             return

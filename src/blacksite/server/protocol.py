@@ -21,6 +21,7 @@ FrameType = Literal[
     "admin.status", "admin.who", "admin.stop", "admin.lattice.who", "admin.lattice.reveal",
     "admin.relay.list", "admin.relay.set",
     "admin.market.list", "admin.market.cancel", "admin.bounty.list", "admin.bounty.refund",
+    'admin.event.list', 'admin.event.force', 'admin.event.cancel',
 ]
 
 
@@ -158,17 +159,24 @@ def validate(kind: str, data: dict[str, Any], direction: str | None = None) -> N
     client = {"hello", "resize", "key", "intent", "line", "ack", "ping", "bye",
               "admin.status", "admin.who", "admin.stop", "admin.lattice.who", "admin.lattice.reveal",
               "admin.relay.list", "admin.relay.set", "admin.market.list", "admin.market.cancel",
-              "admin.bounty.list", "admin.bounty.refund"}
+              "admin.bounty.list", "admin.bounty.refund",
+              'admin.event.list', 'admin.event.force', 'admin.event.cancel'}
     server = {"welcome", "view", "delta", "log", "prompt", "toast", "pong", "bye"}
     allowed = client if direction == "client" else server if direction == "server" else client | server
     if kind not in allowed:
         raise ProtocolError("unknown or wrong-direction frame type")
-    if kind in ('admin.market.list', 'admin.bounty.list'):
+    if kind in ('admin.market.list', 'admin.bounty.list', 'admin.event.list'):
         if 'page' in data:
             _need(data, 'page', _integer(data.get('page'), 1))
     elif kind in ('admin.market.cancel', 'admin.bounty.refund'):
         key = 'listing' if kind == 'admin.market.cancel' else 'bounty'
         _need(data, key, _text(data.get(key), 256) and bool(data.get(key)))
+    elif kind == 'admin.event.force':
+        _need(data, 'event', _text(data.get('event'), 128) and bool(data.get('event')))
+        if 'where' in data:
+            _need(data, 'where', _text(data.get('where'), 128) and bool(data.get('where')))
+    elif kind == 'admin.event.cancel':
+        _need(data, 'plan', _text(data.get('plan'), 256) and bool(data.get('plan')))
     elif kind == 'admin.relay.set':
         for key in ('relay', 'faction'):
             _need(data, key, _text(data.get(key), 128) and bool(data.get(key)))

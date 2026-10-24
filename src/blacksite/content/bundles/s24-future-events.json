@@ -1,0 +1,19 @@
+{
+  "schema": 1,
+  "id": "s24-future-events",
+  "status": "authoring",
+  "members": {
+    "events": [
+      "ring-fall",
+      "exhale",
+      "convoy"
+    ],
+    "routes": [
+      "scour-convoy-road"
+    ],
+    "contracts": [
+      "event-convoy-escort",
+      "event-convoy-raid"
+    ]
+  }
+}

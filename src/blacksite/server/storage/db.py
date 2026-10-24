@@ -150,6 +150,7 @@ class Storage:
                 "salvage": self.meta("salvage_state") or {},
                 "contracts": self.meta("contracts_state") or {},
                 "relays": self.meta("relays_state") or {},
+                "events": self.meta('events_state') or {},
                 "season": self.meta("season") or 0,
                 "items": [json.loads(row[0]) for row in self.db.execute("SELECT data FROM items")],
                 "commerce": {"item_serial": self.meta("item_serial") or 0,
@@ -192,6 +193,8 @@ class Storage:
                 self.db.execute("INSERT OR REPLACE INTO meta(key,value) VALUES('contracts_state',?)", (self._json(effect["contracts_state"]),))
             if "relays_state" in effect:
                 self.db.execute("INSERT OR REPLACE INTO meta(key,value) VALUES('relays_state',?)", (self._json(effect["relays_state"]),))
+            if 'events_state' in effect:
+                self.db.execute("INSERT OR REPLACE INTO meta(key,value) VALUES('events_state',?)", (self._json(effect['events_state']),))
             if 'market_changes' in effect:
                 changes = effect['market_changes']
                 for key, table in (('listings', 'market_listings'), ('bids', 'market_bids'), ('bounties', 'bounties')):
@@ -214,6 +217,7 @@ class Storage:
         if "salvage_state" in effect: settled.add(("meta", "salvage_state"))
         if "contracts_state" in effect: settled.add(("meta", "contracts_state"))
         if "relays_state" in effect: settled.add(("meta", "relays_state"))
+        if 'events_state' in effect: settled.add(('meta', 'events_state'))
         if 'market_changes' in effect: settled.add(('meta', 'market_serials'))
         if "npc_state" in effect: settled.add(("meta", "npc_state"))
         if "lattice_state" in effect: settled.add(("meta", "lattice_state"))

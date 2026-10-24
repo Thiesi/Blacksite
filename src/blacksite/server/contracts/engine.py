@@ -110,6 +110,7 @@ class Offer:
     until: float | None
     reward: Payment
     options: dict[str, dict[str, Any]] = field(default_factory=dict)
+    event_plan: str | None = None
 
     @classmethod
     def read(cls, row: dict[str, Any]) -> 'Offer':
@@ -268,7 +269,8 @@ class Engine:
         if saved and saved['epoch'] == epoch:
             return tuple(Offer.read(row) for row in saved['offers'])
         pool = sorted((t for t in self.templates.values()
-                       if (t.giver == handler or handler == 'vesper') and not t.story and not t.service),
+                       if (t.giver == handler or handler == 'vesper') and not t.story and not t.service
+                       and not t.event_only),
                       key=lambda template: (template.min_grade, template.id))
         rng = Random(f'{self.origin}:board:{handler}:{epoch}')
         offers = []
@@ -382,6 +384,10 @@ class Engine:
             approach, deepcopy(template.params), deepcopy(offer.options), template.branch_group,
             template.branch, template.permit_scope)
         instance.service = template.service
+        if offer.event_plan:
+            instance.runtime['event_plan'] = offer.event_plan
+            if offer.until is not None:
+                instance.expires_at = min(instance.expires_at, offer.until)
         instance.season = template.season
         instance.stages[0].started_at = now
         for participant in roster:
@@ -426,6 +432,10 @@ class Engine:
                 instance.index += 1
                 if instance.index == len(instance.stages):
                     instance.state = 'complete'
+                    if instance.runtime.get('event_plan'):
+                        # Game 12: completing near departure must leave time
+                        # to walk back to the board and receive the reward.
+                        instance.expires_at = now+GENERATED_SECONDS
                 else:
                     instance.stages[instance.index].started_at = now
             changed.append(instance.id)

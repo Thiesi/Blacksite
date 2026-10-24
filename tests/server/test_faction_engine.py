@@ -215,6 +215,7 @@ def test_game_7_6_sablier_choice_requires_visited_live_vat_and_ends_below_90(con
 
 def test_game_7_6_unannounced_events_never_spend_or_invent_forecasts(contacts):
     game, caller, _, _ = contacts
+    game.core.factions.preview = lambda player, faction: None  # Explicit unannounced-source fixture.
     for fid in ("kestrel", "choir", "ferrymen"):
         p = member(game, caller, fid)
         before = deepcopy(p.progress)

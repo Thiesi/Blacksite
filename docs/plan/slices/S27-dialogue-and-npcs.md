@@ -227,3 +227,35 @@ observation from the source's claim, question and next action. Optional
 prose cannot become an answer quiz. Vesper's generated-job brokerage is
 already live; the hostile-standing story referral above is still required
 before S26 activation. Keep the two permissions distinct.
+
+<!-- s24-handoff:start -->
+### S24 event integration and acceptance handoff
+
+Reference: [S24 #24](https://github.com/Thiesi/Blacksite/issues/24),
+[PR #38](https://github.com/Thiesi/Blacksite/pull/38) and
+[platform #56](https://github.com/Thiesi/Blacksite/issues/56).
+
+Dialogue event conditions must read `Contracts.event_active` and
+committed event IDs; an announced proposal is not an active event.
+Route Master/Ferrymen/Choir offers read S24's immutable EventOffer and
+revision. Keep +90 Kin, paid charts and public warnings consistent.
+Convoy reservations clear at start/expiry/cancel with a saved offline
+notice; they never close another caller's public escort job. Preserve
+recorded-cycle/story fallbacks so required progression never waits for
+a live Curfew, Ring-fall or Surge. Name actual sources and consequences
+without presenting fixture geography or caller telemetry as lore.
+<!-- s24-handoff:end -->
+
+
+<!-- s24-review-policy:start -->
+### S24 practical review follow-up
+
+Reference: [PR #65](https://github.com/Thiesi/Blacksite/pull/65), retaining
+[PR #38](https://github.com/Thiesi/Blacksite/pull/38) and #56.
+
+Read current Convoy arrival/loss revisions rather than announcing an
+available escort after its NPC has finished or died. Personal held records
+survive global history retirement with compact final outcomes; dialogue and
+required story fallbacks must not depend on an old plan remaining in the hot
+receipt.
+<!-- s24-review-policy:end -->

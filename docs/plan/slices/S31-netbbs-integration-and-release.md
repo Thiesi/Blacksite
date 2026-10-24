@@ -226,3 +226,34 @@ contracts_state/vendor_budget_state restore and allocation expiry through
 the packaged service. The S19 source checkpoint is not merged or native-
 accepted yet; keep the existing NetBBS #56 baseline/preset obligations.
 <!-- s19-services:end -->
+
+<!-- s24-handoff:start -->
+### S24 event integration and acceptance handoff
+
+Reference: [S24 #24](https://github.com/Thiesi/Blacksite/issues/24),
+[PR #38](https://github.com/Thiesi/Blacksite/pull/38) and
+[platform #56](https://github.com/Thiesi/Blacksite/issues/56).
+
+Consume committed event facts only through the optional host
+publication policy from #56. There is no NetBBS callback in the event
+simulation, and essential warnings never depend on BBS chat delivery.
+Retain full-suite and installed-wheel native evidence separately from
+fixture geography, production transport and human pacing. Release
+acceptance must repeat full-city Curfew/Surge/Ring-fall/Exhale/Convoy
+composition after S25/S26 activate their actual content. Preserve paid
+source receipts, forecast corrections and the one-hour completed-job
+return window across upgrade/restart. Record the supported NetBBS floor.
+<!-- s24-handoff:end -->
+
+
+<!-- s24-review-policy:start -->
+### S24 practical review follow-up
+
+Reference: [PR #65](https://github.com/Thiesi/Blacksite/pull/65), retaining
+[PR #38](https://github.com/Thiesi/Blacksite/pull/38) and #56.
+
+Repeat matching-wheel native acceptance at both sizes after event path or
+retention changes. Event hot history is bounded to 128 closed plans;
+retain required durable host-publication receipts independently under the
+#56 policy. Essential warnings and held outcomes stay in game.
+<!-- s24-review-policy:end -->

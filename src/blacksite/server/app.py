@@ -165,6 +165,10 @@ class Server:
                     chat.committed(effect, True)
         if self.core is None or self.core.characters is None or self.storage is None:
             return
+        if self.core.events and self.logs:
+            while self.core.events.diagnostics:
+                self.logs.event('event source unavailable', level='WARNING',
+                    **self.core.events.diagnostics.pop(0))
         game = self.core.characters
         if self.core.contracts:
             self.storage.mark_dirty('meta', 'contracts_state', self.core.contracts.record())

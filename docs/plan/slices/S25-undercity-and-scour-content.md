@@ -311,3 +311,47 @@ does not prove full-city earnings or acquisition pacing. Keep public
 terminal and Kestrel bank access usable for protected market delivery;
 `C` collects inside those menus and remains chat on the street. See
 [S23](S23-market-and-bounties.md) and issue #23.
+
+<!-- s24-handoff:start -->
+### S24 event integration and acceptance handoff
+
+Reference: [S24 #24](https://github.com/Thiesi/Blacksite/issues/24),
+[PR #38](https://github.com/Thiesi/Blacksite/pull/38) and
+[platform #56](https://github.com/Thiesi/Blacksite/issues/56).
+
+Activate `s24-future-events` only after its actual Ring-fall regions,
+salvage-field markers, recovery-crew sites, Exhale key site and optional
+`exhale-shortcut` layout, and every Convoy waypoint resolve on real maps.
+Validate paths and shelters under both ordinary and event geometry.
+`key_undercity` is the physical key for the Drowned bulkhead and S26's
+contribution; do not substitute a journal flag or duplicate its source.
+Mile, Beacon and Far consume the same committed plan, not another roll.
+
+Measure the two-tile/s Convoy, six-tile escort attendance, fixed 200-chit
+and 100-XP jobs, one-hour completed-job return window, and actual travel,
+combat, earning and return time. Beacon permits one reachable local
+detour per leg, paid only by its committed consumption. It grants no
+exclusive escort slot. Change canon and consumers if measured play
+shows a dull or unaffordable loop. Keep the required human review of
+Shaft Foot/Far Ring and the broader S25/S26 human pacing gate open.
+Native event fixtures on hubs do not satisfy either gate.
+<!-- s24-handoff:end -->
+
+
+<!-- s24-review-policy:start -->
+### S24 practical review follow-up
+
+Reference: [PR #65](https://github.com/Thiesi/Blacksite/pull/65), retaining
+[PR #38](https://github.com/Thiesi/Blacksite/pull/38) and #56.
+
+Verify Convoy paths around actual walls and body traffic. A paid Beacon
+diversion ends on arrival or after 60 seconds of wall time, then resumes the
+committed leg. Include this limit and actual arrival/loss forecast updates
+in travel/earning playtests; no stalled greedy walker may consume the whole
+public escort window.
+Assess public Beacon ambush/diversion counterplay on the actual route:
+warning visibility, escort viability and repeated paid diversions. A
+reachable hostile-allowed detour on a contested public objective is not
+an escort-only permission boundary. Change the bounded rule only if
+measured play warrants it; preserve this concern in S26 human pacing.
+<!-- s24-review-policy:end -->

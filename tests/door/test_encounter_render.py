@@ -154,3 +154,21 @@ def test_ui_3_runner_target_is_visible_and_protection_is_explicit(info,views,all
     text=terminal.screen_text()
     assert '> Guest\u754c' in text
     assert ('82%' if allowed else 'PROTECTED') in text
+
+
+@pytest.mark.parametrize('size', [(80, 24), (132, 50)])
+def test_ui_3_event_overlap_keeps_body_escape_runner_ally_and_rig(info, views, size):
+    content, bodies = views
+    body = deepcopy(bodies['silt'])
+    body['event'] = {'plans': [{'summary': 'Choir Surge 10m'}, {'summary': 'Curfew 20m'}]}
+    body['runner_target'] = {'id': 'runner', 'name': 'Runner\u754c', 'integrity_percent': 82, 'burn_allowed': True}
+    body['crew'] = [{'name': 'Ally\u754c', 'hp_pct': 64, 'zone': 'here'}]
+    body['me']['rig'] = [{'slot': index+1, 'name': name, 'cd': 0} for index, name in enumerate(
+        ('Pick', 'Umbrella', 'Understudy', 'Smoke', 'Anchor', 'Tourniquet', 'Signet'))]
+    body['me']['shield'] = {'name': 'Bunker', 'budget': 14}
+    body['me']['decoy'] = 10
+    _, terminal = draw(info, content, body, *size, '16')
+    text = terminal.screen_text()
+    assert all(value in text for value in ('Choir Surge', 'Curfew', 'BLACK ICE / BODY RISK',
+        'HP 130/130', 'ESCAPE', 'Runner', '82%', 'Ally', '64%', '7 Signet', 'J escape'))
+    assert terminal.cell(size[0]-1, size[1]-1) == ' '
