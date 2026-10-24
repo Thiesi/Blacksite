@@ -69,19 +69,23 @@ async def accept(root: Path, python: Path, show: bool, size: tuple[int, int]) ->
         assert caller.avatar.actor.position == passage and caller.avatar.actor.health > 0
         probe.save(caller, 's25-exhale-open-wall-before-logout')
         await probe.leave(caller, 's25-exhale-unsafe-logout')
-        # Let the real sleeper expire before closing the temporary floor.
-        await wait(lambda: pid not in probe.game.sleepers and pid not in probe.service.world.actors, 45)
+        # Keep the real sleeper interval: expiry would recover the body to
+        # shelter and no longer exercise an unsafe saved position. A live
+        # geometry guard may defer closure around the sleeper; restarting
+        # restores the cancelled source's base wall from persisted state.
+        await wait(lambda: pid in probe.game.sleepers)
         saved = probe.game.players[pid].tile
         assert tuple(saved) == passage, (saved, passage)
         cancelled = await request(probe.service.install_dir, 'event.cancel', {'plan': event_id})
         assert cancelled['ok'], cancelled
-        await wait(lambda: not zone.passable(passage), 15)
+        assert probe.service.core.events.scheduler.plans[event_id].state == 'cancelled'
         await probe.service.stop()
         probe.service = Server(root/'world', tcp=True)
         await probe.service.start()
         probe.game = probe.service.core.characters
         probe.commerce = probe.service.core.commerce
         probe.combat = probe.service.core.combat
+        assert not probe.service.world.zones['under-outworks'].passable(passage)
         caller = await reconnect(probe, caller, *size, expected_zone='Blacksite Outworks')
         actor = caller.avatar.actor
         zone = probe.service.world.zones['under-outworks']
