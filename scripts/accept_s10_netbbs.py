@@ -64,6 +64,7 @@ class NativeProbe:
         self.console = ThreadPoolExecutor(max_workers=1, thread_name_prefix='native-proof-console') if show else None
         self.console_jobs: list[Future[None]] = []
         self.console_max_seconds = 0.0
+        self.native_time_limit = 900
 
     def display_write(self, data: bytes) -> None:
         # A slow physical console must never stall NetBBS's key relay or the
@@ -109,7 +110,7 @@ class NativeProbe:
         owner = create_user(self.db,"S10SysOp",password="LocalProbe-S10",user_level=10)
         create_door(self.db,"Blacksite",str(self.python),args=("-m","blacksite.door"),creator=owner,
             profile=DoorProfile(install_dir=str(REPO),encoding="utf-8",max_sessions=16,multinode_certified=True,
-                time_limit=900,environment={"DOOR_BLACKSITE_INSTALL_DIR":str(self.service.install_dir)}).validate())
+                time_limit=self.native_time_limit,environment={"DOOR_BLACKSITE_INSTALL_DIR":str(self.service.install_dir)}).validate())
         async def handler(session: Any) -> None:
             user,sixteen = self.accounts.popleft()
             # Exercise NetBBS's real native-door 16-colour capability path.

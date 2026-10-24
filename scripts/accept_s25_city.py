@@ -44,6 +44,9 @@ class CityProbe(ContractProbe):
         super().__init__(root, python, show)
         self.walks: list[dict[str, Any]] = []
         self.journeys: list[dict[str, Any]] = []
+        # A complete large-map tour includes normal tram/Gate Nine waits.
+        # This changes only the private acceptance node's door allowance.
+        self.native_time_limit = 3600
 
     async def start(self) -> None:
         assert not (self.root/'world/content.local').exists(), 'S25 requires the shipped city without overlays'
@@ -109,6 +112,7 @@ class CityProbe(ContractProbe):
     async def travel(self, connection: Connection, destination: str) -> None:
         avatar = connection.avatar
         origin, began = avatar.zone, time.monotonic()
+        self.report(f'S25 journey: {origin} -> {destination}')
         choices = [ex for ex in self.service.world.zones[origin].template.meta.exits if ex.target_zone == destination]
         # Prefer the real free ladder; cable payment is tested separately.
         exit_ = min(choices, key=lambda ex: (ex.kind == 'cable', ex.hidden, ex.id))
@@ -125,7 +129,10 @@ class CityProbe(ContractProbe):
         if connection.session.id in panels and panels[connection.session.id].route:
             assert exit_.kind == 'gate'
             await commit_key(self, connection, b'e', lambda: avatar.travel is not None)
-        await wait(lambda: avatar.zone == destination, 310 if exit_.kind == 'gate' else 15)
+        # A tram can wait a complete timetable interval before its ride;
+        # a normal lift's timeout must not abort a valid platform wait.
+        timeout = {'gate': 310, 'tram': 150}.get(exit_.kind, 15)
+        await wait(lambda: avatar.zone == destination, timeout)
         await wait(lambda: self.service.world.zones[destination].template.meta.name in
                    connection.caller.screen.screen_text().splitlines()[0])
         assert avatar.actor.zone == destination
@@ -204,6 +211,9 @@ async def accept(root: Path, python: Path, show: bool, size: tuple[int, int], ca
             indent=2)+'\n', encoding='utf-8')
     except BaseException:
         (root/'failure-trace.txt').write_text(traceback.format_exc(), encoding='utf-8')
+        (root/'s25-partial.json').write_text(json.dumps({
+            'passed': False, 'case': case, 'size': list(size), 'visited': visited,
+            'journeys': probe.journeys, 'walks': probe.walks}, indent=2)+'\n', encoding='utf-8')
         raise
     finally:
         if hasattr(probe, 'node'):
