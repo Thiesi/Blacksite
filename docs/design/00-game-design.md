@@ -264,6 +264,12 @@ only, never PvP. Tutorial simulation is the bounded exception in §4.
   on ticks, with at most one tick of carried credit. Idle time never
   accumulates a burst. Fractional stamina costs and regeneration retain
   their fractions rather than erasing small bonuses.
+- Terrain multiplies the destination step's movement time. Ordinary
+  ground costs 1; water costs 2 (400 ms walking, 200 ms sprinting before
+  other modifiers). Authored costs are positive integers. Apply terrain
+  after equipment timing, before excess carry weight, effect minimums
+  and shock. Use the current tile layout: draining water restores dry
+  timing and reflooding restores the penalty. Diagonals use the same cost.
 - Sight is line of sight with a radius per zone lighting (Core: 12 tiles;
   Undercity: 5 unless you carry a light). Stealth stance halves the range
   at which others see you.
@@ -431,6 +437,9 @@ movement and weapon cooldowns still run at ten ticks per second. Patrols
 loop or bounce through authored passable waypoints. Hunt follows the last
 seen position and stops immediately when its reason to attack expires.
 Provoking an NPC makes its spawner group hostile for five minutes.
+Members of one spawning crew do not hunt one another. This also applies
+to wildlife packs and maintenance cohorts that attack all outsiders;
+they remain hostile to players, player drones and other hostile crews.
 Unarmed residents retreat from an active threat rather than chase it;
 armed actors flee below the 20 % threshold. Local guards of that NPC's
 faction answer too; Sable residents summon Sable

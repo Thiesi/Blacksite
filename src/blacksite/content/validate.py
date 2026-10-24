@@ -36,6 +36,7 @@ __all__ = ["Problem", "validate", "exit_warnings", "main"]
 # 00-game-design.md section 5.1: zone width 40-200, height 20-100.
 ZONE_WIDTH = (40, 200)
 ZONE_HEIGHT = (20, 100)
+MIN_MOVEMENT_COST = 1  # Game design 5.2: positive integer terrain cost.
 MAX_CONTRACT_OBJECTIVE_FACTOR = 3  # Game 9.1: a five-person roster.
 CONTRACT_PLANT_SECONDS = 3  # Game 9.1: physical and core planting.
 # 00-game-design.md section 6.2: a core has 3 to 12 rooms, tier 1 to 5;
@@ -349,6 +350,8 @@ class _Validator:
             self.role(tile.colour, owner, f"tile {tid!r}")
             if not 0 <= tile.cover <= 3:
                 self.report(*owner, f"tile {tid!r}: cover {tile.cover} is outside 0-3")
+            if tile.movement_cost < MIN_MOVEMENT_COST:
+                self.report(*owner, f"tile {tid!r}: movement_cost must be positive")
             if tile.hazard is not None and tile.hazard.damage_per_second <= 0:
                 self.report(*owner, f"tile {tid!r}: hazard damage must be positive")
 

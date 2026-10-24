@@ -102,6 +102,9 @@ class Npcs:
             return False
         if actor.behaviour.get("training"):
             return actor.owner == other.id
+        group = actor.behaviour.get("spawner")
+        if group and group == other.behaviour.get("spawner"):
+            return False  # Game 5.5: packs and cohorts do not hunt siblings.
         template = self.content.npcs.get(actor.behaviour.get("template"))
         if template is None:
             return False

@@ -107,6 +107,9 @@ the catalog underscore form. Room blueprints are content, not new zones.
 (optional ambient log)`. `char` is the single character that stands for
 the tile in `.map` files; `glyph` is a `glyphs.json` id used to draw it;
 `colour` is a palette role whose per-tier values live in `palette.json`.
+`movement_cost` is an optional positive integer, default 1, multiplying
+the destination step's time (game 5.2). Water uses 2. Runtime layouts
+select the current tile type, including its cost.
 
 The terminal tables beside it: `glyphs.json` (`glyphs`: glyph id to one
 CP437 character), `palette.json` (`roles`: role to tier to variant to
@@ -311,17 +314,21 @@ loot[] (item, chance, count), xp, lore`.
 
 An optional explicit `health` pool and embedded `attack` weapon block
 support private training actors. `training` requires both and scopes
-the actor to its server-assigned owner. Ordinary NPCs derive health
-from attributes and use their authored equipment. Recovery quantities
-live in each character start's `recovery_items` mapping. Hymn records
+the actor to its server-assigned owner. Ordinary NPCs default to health
+from attributes and authored equipment. Game 5.5's documented creature
+and machine profiles may supply explicit health and embedded attacks.
+Recovery quantities live in each character start's `recovery_items`
+mapping. Hymn records
 list `requires_one_of` implant IDs for tiers above one.
 
 S11 behaviours include `wander` and `hunt` as well as the original kinds.
 Patrol params hold `waypoints: [[x,y], ...]` and optional `bounce`; every
 spawner validates these against its own map. `anchor: true` preserves a
 named service attendant during dormancy; `hostile_all: true` is an explicit
-unsafe threat rather than an inference from open ground. Embedded health
-and attack also support the generic maintenance drone from design 18.
+unsafe threat rather than an inference from open ground. It targets
+outsiders, not NPCs bound to the same local spawner crew (game 5.5).
+Embedded health and attack also support the generic maintenance drone
+from design 18.
 `per_player` spawners require private training templates. Canonical NPC
 template IDs are hyphenated slugs (`npc-wake-drone`); item IDs retain their
 existing underscore format.

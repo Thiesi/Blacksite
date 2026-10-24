@@ -122,6 +122,7 @@ class TileType:
     interaction: ObjectKind | None = None
     sound_line: str | None = None
     schema: int = CONTENT_SCHEMA
+    movement_cost: int = 1  # Game design 5.2: ordinary ground.
 
 
 @dataclass(frozen=True)

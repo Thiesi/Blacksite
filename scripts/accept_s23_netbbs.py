@@ -7,6 +7,7 @@ No item, placement, reward, capture-clock or future-map fixture.
 
 import argparse
 import asyncio
+from collections import deque
 import json
 from pathlib import Path
 import traceback
@@ -139,7 +140,9 @@ def fixture(probe: ContractProbe, caller: Connection, grade: int, bank: int) -> 
     probe.service._character_writes()
 
 
-async def run_case(probe: ContractProbe, width: int, height: int) -> dict[str, Any]:
+async def run_case(probe: ContractProbe, width: int, height: int, *,
+                   bounty_zone: str = 'vatside-clinics') -> dict[str, Any]:
+    assert bounty_zone in ('vatside-clinics', 'sink-rim')
     callers = []
     for label, grade, bank in (('S23Seller', 5, 1000), ('S23Buyer', 5, 100),
                                 ('S23Hunter', 5, 1000), ('S23Wake', 2, 0)):
@@ -226,9 +229,39 @@ async def run_case(probe: ContractProbe, width: int, height: int) -> dict[str, A
     probe.save(seller, f's23-bounty-{width}')
     await close_market(probe, seller)
 
-    await probe.route(hunter, 'vatside-clinics')
-    await probe.walk(buyer, (32, 18))
-    await probe.walk(hunter, (33, 18))
+    if bounty_zone == 'sink-rim':
+        for caller in (buyer, hunter):
+            await probe.route(caller, 'vatside-clinics')
+            await probe.travel(caller, 'core-tram-hub')
+            await probe.travel(caller, 'sink-rim')
+        zone = probe.service.world.zones[bounty_zone]
+        blocked = {actor.position for actor in zone.actors.values()
+                   if actor not in (buyer.avatar.actor, hunter.avatar.actor)}
+        seen, pending = {buyer.avatar.actor.position}, deque([buyer.avatar.actor.position])
+        while pending:
+            x, y = pending.popleft()
+            for tile in ((x-1, y), (x+1, y), (x, y-1), (x, y+1)):
+                if (tile not in seen and tile not in blocked
+                        and zone.can_enter(buyer.avatar.actor, tile)
+                        and not zone.tiles[zone.tile_id(tile)].hazard):
+                    seen.add(tile)
+                    pending.append(tile)
+        occupied = {actor.position for actor in zone.actors.values()}
+        exits = {exit.tile for exit in zone.template.meta.exits}
+        objects = {obj.spec.tile for obj in zone.objects.values()}
+        public = {tile for tile in seen if tile not in occupied | exits | objects
+                  and zone.allows_hostile(tile)}
+        pairs = [(tile, (tile[0]+1, tile[1])) for tile in public
+                 if (tile[0]+1, tile[1]) in public]
+        assert pairs, 'No free contested public approach in the actual Sink Rim'
+        first, second = min(pairs, key=lambda pair: (
+            abs(pair[0][0]-buyer.avatar.actor.x)+abs(pair[0][1]-buyer.avatar.actor.y), pair))
+        await probe.walk(buyer, first)
+        await probe.walk(hunter, second)
+    else:
+        await probe.route(hunter, 'vatside-clinics')
+        await probe.walk(buyer, (32, 18))
+        await probe.walk(hunter, (33, 18))
     zone = probe.service.world.zones[buyer.avatar.zone]
     assert zone.template.meta.safety == 'contested' and zone.allows_hostile(buyer.avatar.actor.position)
     await probe.target(hunter, pb.id)
@@ -265,7 +298,8 @@ async def run_case(probe: ContractProbe, width: int, height: int) -> dict[str, A
         'hunter_ammunition_paid': ammunition_spent, 'ammunition_fixture': False,
         'exact_instance': True, 'free_collection': True, 'active_bid_cancel_refused': True,
         'wake_bounty_refused': True, 'victim_cache_rights': True,
-        'actual_combat_zone': 'vatside-clinics', 'future_sink_geography': 'S25 pending'}
+        'actual_combat_zone': bounty_zone,
+        'future_sink_geography': 'actual Sink Rim completed' if bounty_zone == 'sink-rim' else 'S25 pending'}
     for index, caller in enumerate(callers):
         await probe.leave(caller, f's23-left-{index}-{width}')
     return result

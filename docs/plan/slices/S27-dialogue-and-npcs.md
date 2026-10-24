@@ -369,4 +369,32 @@ not a shortened capture clock or an accelerated acceptance fixture.
 Reference: [PR #66](https://github.com/Thiesi/Blacksite/pull/66), retaining
 [PR #38](https://github.com/Thiesi/Blacksite/pull/38) and
 [platform #56](https://github.com/Thiesi/Blacksite/issues/56).
+
+A deterministic quiet-zone replay found all four Shaft Foot maintenance
+units targeting their own crew and taking damage before caller contact.
+Game 5.5 now excludes the same server-bound local spawner crew from NPC
+hostility, including explicit hostile wildlife and machines. Outsiders
+still face the ordinary hostility rules. Use full-strength packs/cohorts
+in seasonal waves, dialogue, field pacing and load checks; never rely on
+self-inflicted damage to make those encounters affordable. This is a
+deliberate gameplay correction, not a claim that the new AI replay is
+byte-identical to the old one. See
+[PR #66](https://github.com/Thiesi/Blacksite/pull/66), retaining
+[PR #38](https://github.com/Thiesi/Blacksite/pull/38) and
+[platform #56](https://github.com/Thiesi/Blacksite/issues/56).
+<!-- s25-water:start -->
+
+Game 5.2 now gives destination terrain a data-driven movement cost:
+ordinary ground is 1 and water is 2 (400 ms walking / 200 ms sprinting
+before other modifiers). Pump layouts use the live tile, so draining
+restores dry timing and reflooding restores the penalty. The original
+S25 requirement promised slower water but the engine only checked
+passability. Seasonal layouts, NPC/dialogue guidance, operator views,
+load scenarios and help must preserve this meaningful route choice.
+Use exact cooldown tests for the rule; scripted route time is not a
+human earnings or challenge measurement. See
+[PR #66](https://github.com/Thiesi/Blacksite/pull/66), retaining
+[PR #38](https://github.com/Thiesi/Blacksite/pull/38) and
+[platform #56](https://github.com/Thiesi/Blacksite/issues/56).
+<!-- s25-water:end -->
 <!-- s25-city-decisions:end -->

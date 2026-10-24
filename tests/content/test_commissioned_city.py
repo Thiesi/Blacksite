@@ -113,6 +113,28 @@ def test_game_5_5_shaft_patrols_cannot_seal_the_public_hardware_alcove(city: Con
                    for dx, dy in ((0, 0), (0, 1), (0, -1), (1, 0), (-1, 0))), occupied
 
 
+def test_game_5_5_hostile_shaft_crew_does_not_injure_itself_before_callers_arrive(city: ContentTree) -> None:
+    game = HeadlessServer(deepcopy(city), character_state={})
+    caller = game.connect()
+    create(game, caller)
+    zone = game.core.world.zones['under-shaft-foot']
+    zone.activate('cohort-acceptance', game.clock.now_tick())
+    game.step(30)
+    crew = [actor for actor in zone.actors.values()
+            if actor.behaviour.get('spawner') == 'old-maintenance-crew']
+    assert len(crew) == 4
+    siblings = {actor.id for actor in crew}
+    assert all(actor.target not in siblings and actor.health == actor.health_max for actor in crew)
+    # They remain a live threat to a nearby intruder. Move through the
+    # headless world's normal admission helper, without altering NPCs.
+    origin = crew[0].position
+    approach = game.core.world.free_tile(zone.id, (origin[0], origin[1]-2))
+    place(game, caller, zone.id, approach)
+    game.commit_commerce()
+    game.step(6)
+    assert any(actor.target == caller.session.player_id for actor in crew)
+
+
 def test_game_8_7_24_homes_do_not_reuse_public_entry_uplinks_or_population(city: ContentTree) -> None:
     zone = city.zones['terraces-blocks']
     homes = [obj for obj in zone.meta.objects if obj.housing]
@@ -156,6 +178,8 @@ def test_game_8_2_halls_have_public_care_bank_vat_and_actual_member_counter(city
 
 
 def test_game_5_2_and_8_4_undercity_water_sight_and_scour_grade_fields(city: ContentTree) -> None:
+    assert city.tiles['water'].movement_cost == 2
+    assert city.tiles['floor'].movement_cost == 1
     for zid, zone in city.zones.items():
         if zid.startswith('under-'):
             assert zone.meta.sight_radius == 5

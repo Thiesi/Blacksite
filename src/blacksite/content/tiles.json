@@ -85,7 +85,8 @@
       "char": "~",
       "glyph": "water",
       "colour": "water",
-      "passable": true
+      "passable": true,
+      "movement_cost": 2
     },
     {
       "id": "hazard",
