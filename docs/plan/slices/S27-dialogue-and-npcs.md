@@ -1,11 +1,20 @@
 # S27 — Dialogue and named NPCs: dialogue engine, all major and minor NPC files, ambient logs
 
-**Status:** in progress
+**Status:** in progress; presentation-dependent completion on hold (#68)
 **Primary model:** Sonnet (engine) · Gemini or Sonnet (content) · **Reviewer:** Sonnet reads every talker file; Opus reads the ten fixed-cast files
 **Depends on:** S19, S20, S24 · **Milestone:** M5
 **Issue:** https://github.com/Thiesi/blacksite/issues/27
 
 ## Goal
+
+**Presentation review hold (2026-10-24):** S25 human layout approval is
+**not granted**. [Issue #68](https://github.com/Thiesi/Blacksite/issues/68)
+requires a separate comprehensive review against the world bible and
+terminal UI. Preserve the unfinished dialogue/referral work. Backend
+facts, prerequisites, consent, transaction and reward-routing checks can
+continue independently; hold further presentation, cast placement and
+visual/usability acceptance. Technical passes do not grant human layout
+approval. No ad hoc visual overhaul or silent canon revision is adopted.
 
 Give every named NPC a voice. Implement the talker engine exactly as
 the dramatis personae document specifies (one right line for the

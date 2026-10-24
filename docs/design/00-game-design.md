@@ -1341,6 +1341,14 @@ Tin Halo or their commissioning faction's board; their standing reward
 still belongs to the commissioning faction. Story referrals retain their
 separate dialogue and prerequisite checks.
 
+At the Tin Halo, Vesper can refer a story without its giver's minimum
+standing. Only that giver-standing check is waived. Grade, items,
+predecessors, personal branches, membership and event conditions remain.
+The broker verifies the referral again when the consenting roster starts.
+Completed story work may return through Vesper or its original handler;
+the commissioning faction retains its standing rewards. Public work
+orders still require their own local board and frozen service allocation.
+
 ### 9.2 Evidence, custody, and intrigue
 
 The journal stores discovered records with asset ID, source object,

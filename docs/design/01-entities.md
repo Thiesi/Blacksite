@@ -502,6 +502,14 @@ the engine's zero-based index. Historical choices read settled Chronicle
 records; actor placement or another crew's recent outcome grants none.
 Tags and internal facts never enter a client menu or journal.
 
+Neutral story proposals record the server-validated `broker: vesper`.
+Accepted instances retain it in their durable `runtime.broker` field.
+The live Tin Halo contact is checked at proposal and start; no client
+flag waives prerequisites. Completed stories can use that neutral
+turn-in counter without changing the commissioning faction (game 7.5).
+S26 supplies `Core.dialogue.season_facts(player)` with committed stage,
+balance and Chronicle choices; the default exposes no settled outcome.
+
 ### 1.12 Event template (`events.json`)
 
 `id, name, where (zone ids or sector ids), duration, cooldown, weight,
