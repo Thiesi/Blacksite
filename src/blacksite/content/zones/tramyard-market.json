@@ -1,0 +1,195 @@
+{
+  "schema": 1,
+  "id": "tramyard-market",
+  "name": "Tramyard Market",
+  "district": "Tramyard",
+  "safety": "contested",
+  "lean": "kestrel",
+  "sight_radius": 12,
+  "sector": "lat-tramyard",
+  "spawn": [
+    3,
+    18
+  ],
+  "exits": [
+    {
+      "id": "to-core-tram-hub",
+      "tile": [
+        40,
+        2
+      ],
+      "target_zone": "core-tram-hub",
+      "target_tile": [
+        9,
+        14
+      ],
+      "kind": "tram"
+    },
+    {
+      "id": "to-sink-rim",
+      "tile": [
+        40,
+        33
+      ],
+      "target_zone": "sink-rim",
+      "target_tile": [
+        2,
+        15
+      ],
+      "kind": "street"
+    },
+    {
+      "id": "to-tramyard-depots",
+      "tile": [
+        2,
+        25
+      ],
+      "target_zone": "tramyard-depots",
+      "target_tile": [
+        2,
+        10
+      ],
+      "kind": "street"
+    }
+  ],
+  "objects": [
+    {
+      "id": "kestrel-depot-counter",
+      "tile": [
+        4,
+        10
+      ],
+      "kind": "vendor",
+      "params": {
+        "name": "Kestrel Depot Counter",
+        "vendor": "kestrel-depot"
+      }
+    },
+    {
+      "id": "ferrymen-market-buyer",
+      "tile": [
+        9,
+        10
+      ],
+      "kind": "vendor",
+      "params": {
+        "name": "Ferrymen salvage scales",
+        "vendor": "ferrymen-market-buyer"
+      }
+    },
+    {
+      "id": "market-bank",
+      "tile": [
+        60,
+        12
+      ],
+      "kind": "bank",
+      "params": {
+        "name": "Kestrel bank branch"
+      },
+      "essential": true
+    },
+    {
+      "id": "public-uplink-1",
+      "tile": [
+        59,
+        12
+      ],
+      "kind": "terminal",
+      "params": {
+        "name": "Public Lattice terminal",
+        "sector": "lat-tramyard",
+        "cell": "lat-tramyard-c01"
+      },
+      "essential": true
+    },
+    {
+      "id": "public-uplink-2",
+      "tile": [
+        20,
+        24
+      ],
+      "kind": "terminal",
+      "params": {
+        "name": "Public Lattice terminal",
+        "sector": "lat-tramyard",
+        "cell": "lat-tramyard-c01"
+      },
+      "essential": true
+    },
+    {
+      "id": "public-workshop",
+      "tile": [
+        60,
+        11
+      ],
+      "kind": "workshop",
+      "params": {
+        "name": "Public workshop",
+        "makes": "any"
+      }
+    },
+    {
+      "id": "area-light-1",
+      "tile": [
+        60,
+        13
+      ],
+      "kind": "light",
+      "params": {
+        "name": "Maintenance lamp"
+      }
+    }
+  ],
+  "spawners": [
+    {
+      "id": "kestrel-guard-crew",
+      "npc": "npc-kestrel-guard",
+      "count": 2,
+      "respawn_seconds": 60,
+      "condition": "always",
+      "region": {
+        "x": 19,
+        "y": 17,
+        "w": 3,
+        "h": 3
+      }
+    },
+    {
+      "id": "market-crowd-crew",
+      "npc": "npc-market-crowd",
+      "count": 4,
+      "respawn_seconds": 60,
+      "condition": "always",
+      "region": {
+        "x": 59,
+        "y": 24,
+        "w": 3,
+        "h": 3
+      }
+    }
+  ],
+  "lore": [
+    "zone-tramyard-market"
+  ],
+  "pockets": [
+    {
+      "x": 59,
+      "y": 11,
+      "w": 3,
+      "h": 3
+    },
+    {
+      "x": 58,
+      "y": 11,
+      "w": 3,
+      "h": 3
+    },
+    {
+      "x": 19,
+      "y": 23,
+      "w": 3,
+      "h": 3
+    }
+  ]
+}

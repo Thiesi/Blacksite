@@ -1,0 +1,174 @@
+{
+  "schema": 1,
+  "id": "scour-ring-1",
+  "name": "Wall Ring",
+  "district": "Scour",
+  "safety": "open",
+  "lean": null,
+  "sight_radius": 12,
+  "sector": "lat-scour",
+  "spawn": [
+    3,
+    40
+  ],
+  "exits": [
+    {
+      "id": "to-scour-landing",
+      "tile": [
+        70,
+        2
+      ],
+      "target_zone": "scour-landing",
+      "target_tile": [
+        2,
+        15
+      ],
+      "kind": "street"
+    },
+    {
+      "id": "to-scour-ring-2",
+      "tile": [
+        157,
+        40
+      ],
+      "target_zone": "scour-ring-2",
+      "target_tile": [
+        2,
+        45
+      ],
+      "kind": "street"
+    },
+    {
+      "id": "to-tramyard-wall-gate",
+      "tile": [
+        2,
+        40
+      ],
+      "target_zone": "tramyard-wall-gate",
+      "target_tile": [
+        35,
+        47
+      ],
+      "kind": "street"
+    }
+  ],
+  "objects": [
+    {
+      "id": "dispatch-convoy-route",
+      "tile": [
+        120,
+        26
+      ],
+      "kind": "terminal",
+      "params": {
+        "name": "convoy route",
+        "sector": "lat-scour"
+      }
+    },
+    {
+      "id": "relay-mile-hardware",
+      "tile": [
+        119,
+        26
+      ],
+      "kind": "hardware",
+      "params": {
+        "name": "Mile Relay hardware",
+        "core": "lat-relay-mile"
+      }
+    },
+    {
+      "id": "relay-mile",
+      "tile": [
+        144,
+        22
+      ],
+      "kind": "relay",
+      "params": {
+        "name": "Mile Relay",
+        "relay": "mile",
+        "vendor": "relay-mile-counter"
+      }
+    },
+    {
+      "id": "area-light-1",
+      "tile": [
+        120,
+        25
+      ],
+      "kind": "light",
+      "params": {
+        "name": "Maintenance lamp"
+      }
+    },
+    {
+      "id": "salvage-field",
+      "tile": [
+        120,
+        27
+      ],
+      "kind": "salvage_field",
+      "params": {
+        "name": "Ring salvage field",
+        "ring": 1
+      }
+    },
+    {
+      "id": "convoy-road-marker",
+      "tile": [
+        20,
+        38
+      ],
+      "kind": "cache",
+      "params": {
+        "name": "Convoy road waypoint",
+        "route": "scour-convoy-road"
+      }
+    }
+  ],
+  "spawners": [
+    {
+      "id": "halvard-guard-crew",
+      "npc": "npc-halvard-guard-scour-ring-1",
+      "count": 2,
+      "respawn_seconds": 60,
+      "condition": "always",
+      "region": {
+        "x": 99,
+        "y": 24,
+        "w": 3,
+        "h": 3
+      }
+    },
+    {
+      "id": "dog-crew",
+      "npc": "npc-dog",
+      "count": 3,
+      "respawn_seconds": 60,
+      "condition": "always",
+      "region": {
+        "x": 74,
+        "y": 54,
+        "w": 3,
+        "h": 3
+      }
+    },
+    {
+      "id": "road-crew-crew",
+      "npc": "npc-road-crew",
+      "count": 2,
+      "respawn_seconds": 60,
+      "condition": "always",
+      "region": {
+        "x": 34,
+        "y": 39,
+        "w": 3,
+        "h": 3
+      }
+    }
+  ],
+  "lore": [
+    "zone-scour-ring-1"
+  ],
+  "sight_radius_night": 7
+}

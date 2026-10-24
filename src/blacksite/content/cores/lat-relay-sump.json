@@ -9,8 +9,12 @@
   "hardware": [
     {
       "zone": "sink-floor",
-      "tile": null,
-      "label": "Sump Relay hardware"
+      "tile": [
+        36,
+        22
+      ],
+      "label": "Sump Relay hardware",
+      "object_id": "relay-sump-hardware"
     }
   ],
   "entry": "entry",

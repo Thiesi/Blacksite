@@ -4,8 +4,14 @@
     {
       "id": "site-halvard",
       "faction": "halvard",
-      "hall": "spire-atrium",
-      "vat": null,
+      "hall": "spire-mezzanine",
+      "vat": {
+        "zone": "spire-mezzanine",
+        "tile": [
+          37,
+          8
+        ]
+      },
       "vendor": "halvard-security",
       "recruiter_zone": "spire-atrium"
     },
@@ -27,7 +33,13 @@
       "id": "site-kestrel",
       "faction": "kestrel",
       "hall": "tramyard-depots",
-      "vat": null,
+      "vat": {
+        "zone": "tramyard-depots",
+        "tile": [
+          87,
+          13
+        ]
+      },
       "vendor": "kestrel-armoury",
       "recruiter_zone": "tramyard-depots"
     },
@@ -49,7 +61,13 @@
       "id": "site-choir",
       "faction": "choir",
       "hall": "chapel-nave",
-      "vat": null,
+      "vat": {
+        "zone": "chapel-nave",
+        "tile": [
+          25,
+          25
+        ]
+      },
       "vendor": "chapel-foundry",
       "recruiter_zone": "chapel-nave"
     },
@@ -57,7 +75,13 @@
       "id": "site-sable",
       "faction": "sable",
       "hall": "sink-terraces",
-      "vat": null,
+      "vat": {
+        "zone": "sink-terraces",
+        "tile": [
+          68,
+          20
+        ]
+      },
       "vendor": "sable-back-room",
       "recruiter_zone": "sink-terraces"
     },
@@ -65,7 +89,13 @@
       "id": "site-unmoored",
       "faction": "unmoored",
       "hall": "oldworks-drop",
-      "vat": null,
+      "vat": {
+        "zone": "oldworks-drop",
+        "tile": [
+          6,
+          15
+        ]
+      },
       "vendor": "oldworks-deep",
       "recruiter_zone": "oldworks-main"
     },
@@ -73,7 +103,13 @@
       "id": "site-ferrymen",
       "faction": "ferrymen",
       "hall": "scour-landing",
-      "vat": null,
+      "vat": {
+        "zone": "scour-landing",
+        "tile": [
+          36,
+          19
+        ]
+      },
       "vendor": "ferrys-own",
       "recruiter_zone": "scour-landing"
     }

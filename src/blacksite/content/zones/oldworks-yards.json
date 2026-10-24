@@ -1,0 +1,265 @@
+{
+  "schema": 1,
+  "id": "oldworks-yards",
+  "name": "Fabrication Yards",
+  "district": "Old Works",
+  "safety": "contested",
+  "lean": "unmoored",
+  "sight_radius": 7,
+  "sector": "lat-old-works",
+  "spawn": [
+    3,
+    25
+  ],
+  "exits": [
+    {
+      "id": "to-oldworks-main",
+      "tile": [
+        50,
+        2
+      ],
+      "target_zone": "oldworks-main",
+      "target_tile": [
+        107,
+        17
+      ],
+      "kind": "street"
+    },
+    {
+      "id": "to-sink-terraces",
+      "tile": [
+        97,
+        25
+      ],
+      "target_zone": "sink-terraces",
+      "target_tile": [
+        87,
+        30
+      ],
+      "kind": "street"
+    },
+    {
+      "id": "to-under-service",
+      "tile": [
+        50,
+        47
+      ],
+      "target_zone": "under-service",
+      "target_tile": [
+        2,
+        20
+      ],
+      "kind": "ladder"
+    }
+  ],
+  "objects": [
+    {
+      "id": "foundry-hardware",
+      "tile": [
+        36,
+        27
+      ],
+      "kind": "hardware",
+      "params": {
+        "name": "Foundry hardware",
+        "core": "lat-foundry"
+      }
+    },
+    {
+      "id": "foundry-gantry",
+      "tile": [
+        75,
+        16
+      ],
+      "kind": "gantry",
+      "params": {
+        "name": "gantry",
+        "layout": "foundry-gantry-active"
+      }
+    },
+    {
+      "id": "foundry-yard-lights",
+      "tile": [
+        74,
+        16
+      ],
+      "kind": "light",
+      "params": {
+        "name": "yard lights"
+      }
+    },
+    {
+      "id": "relay-yard-hardware",
+      "tile": [
+        75,
+        15
+      ],
+      "kind": "hardware",
+      "params": {
+        "name": "Yard Relay hardware",
+        "core": "lat-relay-yard"
+      }
+    },
+    {
+      "id": "relay-yard",
+      "tile": [
+        86,
+        16
+      ],
+      "kind": "relay",
+      "params": {
+        "name": "Yard Relay",
+        "relay": "yard",
+        "vendor": "relay-yard-counter"
+      }
+    },
+    {
+      "id": "site-zero-annex-hardware",
+      "tile": [
+        25,
+        33
+      ],
+      "kind": "hardware",
+      "params": {
+        "name": "Site Zero Annex hardware",
+        "core": "lat-site-zero-annex"
+      }
+    },
+    {
+      "id": "site-zero-annex-annex-blast-doors",
+      "tile": [
+        75,
+        17
+      ],
+      "kind": "door",
+      "params": {
+        "name": "annex blast doors",
+        "open": false,
+        "locked": true
+      }
+    },
+    {
+      "id": "public-workshop",
+      "tile": [
+        73,
+        16
+      ],
+      "kind": "workshop",
+      "params": {
+        "name": "Public workshop",
+        "makes": "rigs_programs"
+      }
+    },
+    {
+      "id": "area-light-1",
+      "tile": [
+        24,
+        33
+      ],
+      "kind": "light",
+      "params": {
+        "name": "Maintenance lamp"
+      }
+    }
+  ],
+  "spawners": [
+    {
+      "id": "unmoored-guard-crew",
+      "npc": "npc-unmoored-guard",
+      "count": 2,
+      "respawn_seconds": 60,
+      "condition": "always",
+      "region": {
+        "x": 19,
+        "y": 23,
+        "w": 3,
+        "h": 2
+      }
+    },
+    {
+      "id": "maintenance-drone-crew",
+      "npc": "npc-maintenance-drone",
+      "count": 2,
+      "respawn_seconds": 60,
+      "condition": "always",
+      "region": {
+        "x": 74,
+        "y": 31,
+        "w": 3,
+        "h": 2
+      }
+    }
+  ],
+  "lore": [
+    "zone-oldworks-yards"
+  ],
+  "layouts": [
+    {
+      "id": "foundry-gantry-active",
+      "changes": [
+        {
+          "tile": [
+            73,
+            18
+          ],
+          "tile_id": "gantry-hazard"
+        },
+        {
+          "tile": [
+            74,
+            18
+          ],
+          "tile_id": "gantry-hazard"
+        },
+        {
+          "tile": [
+            75,
+            18
+          ],
+          "tile_id": "gantry-hazard"
+        },
+        {
+          "tile": [
+            76,
+            18
+          ],
+          "tile_id": "gantry-hazard"
+        },
+        {
+          "tile": [
+            77,
+            18
+          ],
+          "tile_id": "gantry-hazard"
+        }
+      ],
+      "warning_tiles": [
+        [
+          73,
+          18
+        ],
+        [
+          74,
+          18
+        ],
+        [
+          75,
+          18
+        ],
+        [
+          76,
+          18
+        ],
+        [
+          77,
+          18
+        ]
+      ],
+      "alternate_routes": [
+        "to-oldworks-main",
+        "to-sink-terraces",
+        "to-under-service"
+      ]
+    }
+  ]
+}

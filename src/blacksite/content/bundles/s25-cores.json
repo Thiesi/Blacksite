@@ -1,8 +1,10 @@
 {
   "schema": 1,
   "id": "s25-cores",
-  "status": "authoring",
-  "depends": [],
+  "status": "active",
+  "depends": [
+    "s24-future-events"
+  ],
   "members": {
     "cores": [
       "lat-nave",

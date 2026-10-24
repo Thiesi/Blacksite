@@ -35,7 +35,8 @@
         }
       ],
       "faction": "kestrel",
-      "zone": "tramyard-market"
+      "zone": "tramyard-market",
+      "object_id": "kestrel-depot-counter"
     },
     {
       "id": "kestrel-armoury",
@@ -54,7 +55,8 @@
         }
       ],
       "faction": "kestrel",
-      "zone": "tramyard-depots"
+      "zone": "tramyard-depots",
+      "object_id": "kestrel-armoury-counter"
     },
     {
       "id": "halvard-public",
@@ -75,7 +77,8 @@
         }
       ],
       "faction": "halvard",
-      "zone": "spire-atrium"
+      "zone": "spire-atrium",
+      "object_id": "halvard-public-counter"
     },
     {
       "id": "halvard-security",
@@ -131,7 +134,8 @@
         }
       ],
       "faction": "halvard",
-      "zone": "spire-mezzanine"
+      "zone": "spire-mezzanine",
+      "object_id": "halvard-security-counter"
     },
     {
       "id": "ostrom-showroom",
@@ -201,7 +205,8 @@
         }
       ],
       "faction": "halvard",
-      "zone": "spire-mezzanine"
+      "zone": "spire-mezzanine",
+      "object_id": "ostrom-contract-counter"
     },
     {
       "id": "sablier-clinic",
@@ -364,7 +369,8 @@
         }
       ],
       "faction": "sable",
-      "zone": "sink-rim"
+      "zone": "sink-rim",
+      "object_id": "sink-market-counter"
     },
     {
       "id": "sable-back-room",
@@ -403,7 +409,8 @@
         }
       ],
       "faction": "sable",
-      "zone": "sink-terraces"
+      "zone": "sink-terraces",
+      "object_id": "sable-back-room-counter"
     },
     {
       "id": "black-clinic",
@@ -474,7 +481,8 @@
       ],
       "faction": "sable",
       "zone": "sink-floor",
-      "price_multiplier": 0.6
+      "price_multiplier": 0.6,
+      "object_id": "black-clinic-counter"
     },
     {
       "id": "oldworks-bench",
@@ -558,7 +566,8 @@
         }
       ],
       "faction": "unmoored",
-      "zone": "oldworks-main"
+      "zone": "oldworks-main",
+      "object_id": "oldworks-bench-counter"
     },
     {
       "id": "oldworks-deep",
@@ -627,7 +636,8 @@
         }
       ],
       "faction": "unmoored",
-      "zone": "oldworks-drop"
+      "zone": "oldworks-drop",
+      "object_id": "oldworks-deep-counter"
     },
     {
       "id": "chapel-almoner",
@@ -656,7 +666,8 @@
         }
       ],
       "faction": "choir",
-      "zone": "chapel-nave"
+      "zone": "chapel-nave",
+      "object_id": "chapel-almoner-counter"
     },
     {
       "id": "chapel-foundry",
@@ -697,7 +708,8 @@
         }
       ],
       "faction": "choir",
-      "zone": "chapel-nave"
+      "zone": "chapel-nave",
+      "object_id": "chapel-foundry-counter"
     },
     {
       "id": "landing-trade",
@@ -740,7 +752,8 @@
       ],
       "faction": "ferrymen",
       "zone": "scour-landing",
-      "salvage_multiplier": 1.2
+      "salvage_multiplier": 1.2,
+      "object_id": "landing-trade-counter"
     },
     {
       "id": "ferrys-own",
@@ -767,7 +780,8 @@
         }
       ],
       "faction": "ferrymen",
-      "zone": "scour-landing"
+      "zone": "scour-landing",
+      "object_id": "ferrys-own-counter"
     },
     {
       "id": "vesper",
@@ -1089,6 +1103,57 @@
       "relay": "far",
       "zone": "scour-ring-4",
       "object_id": "relay-far"
+    },
+    {
+      "id": "kestrel-surplus",
+      "name": "Kestrel surplus counter",
+      "faction": "kestrel",
+      "zone": "tramyard-depots",
+      "object_id": "depot-surplus-counter",
+      "tier": "list",
+      "stock": [
+        {
+          "item": "con_kestrel_ration"
+        },
+        {
+          "item": "con_ferry_flare_stick"
+        }
+      ],
+      "salvage_multiplier": 1
+    },
+    {
+      "id": "ferrymen-waystation",
+      "name": "Ferrymen way-station",
+      "faction": "ferrymen",
+      "zone": "under-caverns",
+      "object_id": "ferrymen-waystation",
+      "tier": "list",
+      "stock": [
+        {
+          "item": "con_kestrel_ration"
+        },
+        {
+          "item": "con_ferry_flare_stick"
+        }
+      ],
+      "salvage_multiplier": 1
+    },
+    {
+      "id": "ferrymen-market-buyer",
+      "name": "Ferrymen salvage scales",
+      "faction": "ferrymen",
+      "zone": "tramyard-market",
+      "object_id": "ferrymen-market-buyer",
+      "tier": "list",
+      "stock": [
+        {
+          "item": "con_kestrel_ration"
+        },
+        {
+          "item": "con_ferry_flare_stick"
+        }
+      ],
+      "salvage_multiplier": 1
     }
   ]
 }

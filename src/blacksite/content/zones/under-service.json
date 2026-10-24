@@ -1,0 +1,249 @@
+{
+  "schema": 1,
+  "id": "under-service",
+  "name": "Service Level",
+  "district": "Undercity",
+  "safety": "open",
+  "lean": null,
+  "sight_radius": 5,
+  "sector": "lat-undercity",
+  "spawn": [
+    3,
+    25
+  ],
+  "exits": [
+    {
+      "id": "to-chapel-towers",
+      "tile": [
+        80,
+        2
+      ],
+      "target_zone": "chapel-towers",
+      "target_tile": [
+        40,
+        37
+      ],
+      "kind": "ladder"
+    },
+    {
+      "id": "to-oldworks-yards",
+      "tile": [
+        2,
+        20
+      ],
+      "target_zone": "oldworks-yards",
+      "target_tile": [
+        50,
+        47
+      ],
+      "kind": "ladder"
+    },
+    {
+      "id": "to-under-caverns",
+      "tile": [
+        60,
+        47
+      ],
+      "target_zone": "under-caverns",
+      "target_tile": [
+        40,
+        2
+      ],
+      "kind": "ladder"
+    },
+    {
+      "id": "to-under-drowned",
+      "tile": [
+        117,
+        30
+      ],
+      "target_zone": "under-drowned",
+      "target_tile": [
+        2,
+        30
+      ],
+      "kind": "ladder"
+    },
+    {
+      "id": "to-vatside-vat-row",
+      "tile": [
+        20,
+        2
+      ],
+      "target_zone": "vatside-vat-row",
+      "target_tile": [
+        82,
+        32
+      ],
+      "kind": "ladder"
+    }
+  ],
+  "objects": [
+    {
+      "id": "pumphouse-hardware",
+      "tile": [
+        47,
+        21
+      ],
+      "kind": "hardware",
+      "params": {
+        "name": "Pumphouse hardware",
+        "core": "lat-pumphouse"
+      }
+    },
+    {
+      "id": "pumphouse-flood-tunnel-2",
+      "tile": [
+        90,
+        16
+      ],
+      "kind": "pump",
+      "params": {
+        "name": "flood tunnel 2",
+        "layout": "pumphouse-flood-tunnel-2-active"
+      }
+    },
+    {
+      "id": "public-uplink-1",
+      "tile": [
+        89,
+        16
+      ],
+      "kind": "terminal",
+      "params": {
+        "name": "Public Lattice terminal",
+        "sector": "lat-undercity",
+        "cell": "lat-undercity-c01"
+      },
+      "essential": true
+    },
+    {
+      "id": "public-uplink-2",
+      "tile": [
+        28,
+        33
+      ],
+      "kind": "terminal",
+      "params": {
+        "name": "Public Lattice terminal",
+        "sector": "lat-undercity",
+        "cell": "lat-undercity-c01"
+      },
+      "essential": true
+    },
+    {
+      "id": "unmoored-dead-drop",
+      "tile": [
+        90,
+        15
+      ],
+      "kind": "cache",
+      "params": {
+        "name": "Unmoored dead drop"
+      }
+    },
+    {
+      "id": "choir-shrine",
+      "tile": [
+        31,
+        32
+      ],
+      "kind": "cache",
+      "params": {
+        "name": "Choir shrine"
+      }
+    },
+    {
+      "id": "area-light-1",
+      "tile": [
+        90,
+        17
+      ],
+      "kind": "light",
+      "params": {
+        "name": "Maintenance lamp"
+      }
+    }
+  ],
+  "spawners": [
+    {
+      "id": "maintenance-drone-crew",
+      "npc": "npc-maintenance-drone",
+      "count": 2,
+      "respawn_seconds": 60,
+      "condition": "always",
+      "region": {
+        "x": 24,
+        "y": 34,
+        "w": 3,
+        "h": 3
+      }
+    },
+    {
+      "id": "dog-crew",
+      "npc": "npc-dog",
+      "count": 2,
+      "respawn_seconds": 60,
+      "condition": "always",
+      "region": {
+        "x": 74,
+        "y": 34,
+        "w": 3,
+        "h": 3
+      }
+    }
+  ],
+  "lore": [
+    "zone-under-service"
+  ],
+  "layouts": [
+    {
+      "id": "pumphouse-flood-tunnel-2-active",
+      "changes": [
+        {
+          "tile": [
+            88,
+            18
+          ],
+          "tile_id": "floor"
+        },
+        {
+          "tile": [
+            89,
+            18
+          ],
+          "tile_id": "floor"
+        },
+        {
+          "tile": [
+            90,
+            18
+          ],
+          "tile_id": "floor"
+        },
+        {
+          "tile": [
+            91,
+            18
+          ],
+          "tile_id": "floor"
+        },
+        {
+          "tile": [
+            92,
+            18
+          ],
+          "tile_id": "floor"
+        }
+      ],
+      "warning_tiles": [],
+      "alternate_routes": [
+        "to-chapel-towers",
+        "to-oldworks-yards",
+        "to-under-caverns",
+        "to-under-drowned",
+        "to-vatside-vat-row"
+      ]
+    }
+  ]
+}

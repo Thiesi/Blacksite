@@ -9,8 +9,12 @@
   "hardware": [
     {
       "zone": "tramyard-wall-gate",
-      "tile": null,
-      "label": "Gate Relay Nine hardware"
+      "tile": [
+        52,
+        15
+      ],
+      "label": "Gate Relay Nine hardware",
+      "object_id": "relay-gate-nine-hardware"
     }
   ],
   "entry": "entry",

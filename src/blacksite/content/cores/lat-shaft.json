@@ -9,13 +9,21 @@
   "hardware": [
     {
       "zone": "spire-shaft-head",
-      "tile": null,
-      "label": "Shaft hardware"
+      "tile": [
+        17,
+        25
+      ],
+      "label": "Shaft hardware",
+      "object_id": "shaft-hardware"
     },
     {
       "zone": "under-shaft-foot",
-      "tile": null,
-      "label": "Shaft hardware"
+      "tile": [
+        46,
+        36
+      ],
+      "label": "Shaft hardware",
+      "object_id": "shaft-hardware"
     }
   ],
   "entry": "entry",

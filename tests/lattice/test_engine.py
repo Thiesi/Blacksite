@@ -17,7 +17,9 @@ from tests.harness import ADMIN_SECRET, HeadlessServer, hello
 def runners(repo_root: Path):
     content = load_content(repo_root/"src/blacksite/content")
     # Isolated rule scenarios; live acceptance keeps all city traffic.
-    content.zones = {k: replace(z, meta=replace(z.meta, spawners=())) for k, z in content.zones.items()}
+    content.zones = {k: replace(z, meta=replace(z.meta, spawners=(),
+        objects=tuple(obj for obj in z.meta.objects if obj.kind != 'salvage_field')))
+        for k, z in content.zones.items()}
     game = HeadlessServer(content, character_state={})
     clients = []
     for uid, pos in ((1, (30, 5)), (2, (31, 6)), (3, (32, 5))):

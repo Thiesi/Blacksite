@@ -9,8 +9,12 @@
   "hardware": [
     {
       "zone": "scour-ring-3",
-      "tile": null,
-      "label": "Crash Relay hardware"
+      "tile": [
+        150,
+        33
+      ],
+      "label": "Crash Relay hardware",
+      "object_id": "relay-crash-hardware"
     }
   ],
   "entry": "entry",

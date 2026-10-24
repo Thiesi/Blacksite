@@ -9,8 +9,12 @@
   "hardware": [
     {
       "zone": "sink-rim",
-      "tile": null,
-      "label": "Cable Relay hardware"
+      "tile": [
+        57,
+        14
+      ],
+      "label": "Cable Relay hardware",
+      "object_id": "relay-cable-hardware"
     }
   ],
   "entry": "entry",

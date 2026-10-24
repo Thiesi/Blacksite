@@ -9,8 +9,12 @@
   "hardware": [
     {
       "zone": "scour-ring-1",
-      "tile": null,
-      "label": "Mile Relay hardware"
+      "tile": [
+        119,
+        26
+      ],
+      "label": "Mile Relay hardware",
+      "object_id": "relay-mile-hardware"
     }
   ],
   "entry": "entry",

@@ -1,7 +1,7 @@
 {
   "schema": 1,
   "id": "s24-future-events",
-  "status": "authoring",
+  "status": "active",
   "members": {
     "events": [
       "ring-fall",
@@ -15,5 +15,6 @@
       "event-convoy-escort",
       "event-convoy-raid"
     ]
-  }
+  },
+  "depends": []
 }

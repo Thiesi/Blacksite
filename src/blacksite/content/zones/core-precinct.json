@@ -97,7 +97,7 @@
       "kind": "hardware",
       "essential": false,
       "params": {
-        "name": "Precinct vault hardware",
+        "name": "core precinct cabinet",
         "core": "lat-precinct"
       }
     },
@@ -163,6 +163,22 @@
         "vendor": "sablier-clinic",
         "name": "Sablier Clinic"
       }
+    },
+    {
+      "id": "wardens-public-board",
+      "tile": [
+        37,
+        8
+      ],
+      "kind": "terminal",
+      "params": {
+        "name": "Public jobs and faction counter",
+        "faction": "wardens",
+        "contract_handler": "wardens",
+        "sector": "lat-core",
+        "cell": "lat-core-c01"
+      },
+      "essential": true
     }
   ],
   "pockets": [],

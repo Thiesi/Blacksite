@@ -35,6 +35,19 @@
         3
       ],
       "kind": "door"
+    },
+    {
+      "id": "to-oldworks-main",
+      "tile": [
+        96,
+        2
+      ],
+      "target_zone": "oldworks-main",
+      "target_tile": [
+        55,
+        31
+      ],
+      "kind": "street"
     }
   ],
   "objects": [
@@ -183,19 +196,6 @@
       }
     },
     {
-      "id": "boundary-oldworks-main",
-      "tile": [
-        96,
-        2
-      ],
-      "kind": "door",
-      "params": {
-        "open": true,
-        "unavailable_target": "oldworks-main",
-        "name": "Construction boundary"
-      }
-    },
-    {
       "id": "sign-grid-hardware",
       "tile": [
         52,
@@ -203,7 +203,7 @@
       ],
       "kind": "hardware",
       "params": {
-        "name": "House Lights hardware",
+        "name": "sodium row cabinet",
         "core": "lat-house-lights"
       }
     },

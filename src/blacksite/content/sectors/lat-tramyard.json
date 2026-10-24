@@ -259,8 +259,7 @@
       "label": "Gatehouse East entrance",
       "requirement": "program:key:2",
       "access": "gated",
-      "core_placeholder": true,
-      "planned_core": "lat-gatehouse-east"
+      "core_id": "lat-gatehouse-east"
     },
     {
       "id": "lat-tramyard-c18",
@@ -278,8 +277,7 @@
       "label": "Depot Control entrance",
       "requirement": "program:key:2",
       "access": "gated",
-      "core_placeholder": true,
-      "planned_core": "lat-depot-control"
+      "core_id": "lat-depot-control"
     },
     {
       "id": "lat-tramyard-c19",
@@ -297,8 +295,7 @@
       "label": "Dispatch entrance",
       "requirement": "program:key:2",
       "access": "gated",
-      "core_placeholder": true,
-      "planned_core": "lat-dispatch"
+      "core_id": "lat-dispatch"
     },
     {
       "id": "lat-tramyard-c20",
@@ -316,8 +313,7 @@
       "label": "Depot Relay entrance",
       "requirement": "program:key:2",
       "access": "gated",
-      "core_placeholder": true,
-      "planned_core": "lat-relay-depot"
+      "core_id": "lat-relay-depot"
     },
     {
       "id": "lat-tramyard-c21",
@@ -335,8 +331,7 @@
       "label": "Gate Relay Nine entrance",
       "requirement": "program:key:2",
       "access": "gated",
-      "core_placeholder": true,
-      "planned_core": "lat-relay-gate-nine"
+      "core_id": "lat-relay-gate-nine"
     },
     {
       "id": "lat-tramyard-c22",

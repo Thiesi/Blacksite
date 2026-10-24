@@ -9,8 +9,12 @@
   "hardware": [
     {
       "zone": "oldworks-yards",
-      "tile": null,
-      "label": "Yard Relay hardware"
+      "tile": [
+        75,
+        15
+      ],
+      "label": "Yard Relay hardware",
+      "object_id": "relay-yard-hardware"
     }
   ],
   "entry": "entry",

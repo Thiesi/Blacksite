@@ -1,0 +1,370 @@
+{
+  "schema": 1,
+  "id": "under-outworks",
+  "name": "Blacksite Outworks",
+  "district": "Undercity",
+  "safety": "open",
+  "lean": null,
+  "sight_radius": 5,
+  "sector": "lat-undercity",
+  "spawn": [
+    3,
+    35
+  ],
+  "exits": [
+    {
+      "id": "to-under-caverns",
+      "tile": [
+        2,
+        55
+      ],
+      "target_zone": "under-caverns",
+      "target_tile": [
+        147,
+        40
+      ],
+      "kind": "ladder"
+    },
+    {
+      "id": "to-under-drowned",
+      "tile": [
+        2,
+        20
+      ],
+      "target_zone": "under-drowned",
+      "target_tile": [
+        96,
+        30
+      ],
+      "kind": "door"
+    },
+    {
+      "id": "to-under-shaft-foot",
+      "tile": [
+        117,
+        35
+      ],
+      "target_zone": "under-shaft-foot",
+      "target_tile": [
+        2,
+        30
+      ],
+      "kind": "door"
+    }
+  ],
+  "objects": [
+    {
+      "id": "outworks-seal-hardware",
+      "tile": [
+        55,
+        23
+      ],
+      "kind": "hardware",
+      "params": {
+        "name": "Outworks Seal hardware",
+        "core": "lat-outworks-seal"
+      }
+    },
+    {
+      "id": "outworks-seal-shaft-door-east",
+      "tile": [
+        90,
+        23
+      ],
+      "kind": "door",
+      "params": {
+        "name": "shaft-door-east",
+        "open": false,
+        "locked": true
+      }
+    },
+    {
+      "id": "outworks-seal-seal-blast-door",
+      "tile": [
+        30,
+        46
+      ],
+      "kind": "door",
+      "params": {
+        "name": "seal blast door",
+        "open": false,
+        "locked": true
+      }
+    },
+    {
+      "id": "relay-outworks-hardware",
+      "tile": [
+        89,
+        23
+      ],
+      "kind": "hardware",
+      "params": {
+        "name": "Outworks Relay hardware",
+        "core": "lat-relay-outworks"
+      }
+    },
+    {
+      "id": "relay-outworks",
+      "tile": [
+        110,
+        23
+      ],
+      "kind": "relay",
+      "params": {
+        "name": "Outworks Relay",
+        "relay": "outworks",
+        "vendor": "relay-outworks-counter"
+      }
+    },
+    {
+      "id": "halvard-survey-markers",
+      "tile": [
+        90,
+        22
+      ],
+      "kind": "cache",
+      "params": {
+        "name": "Halvard survey markers"
+      }
+    },
+    {
+      "id": "area-light-1",
+      "tile": [
+        90,
+        24
+      ],
+      "kind": "light",
+      "params": {
+        "name": "Maintenance lamp"
+      }
+    },
+    {
+      "id": "east-door-frame",
+      "tile": [
+        91,
+        23
+      ],
+      "kind": "terminal",
+      "params": {
+        "name": "East door frame"
+      }
+    },
+    {
+      "id": "east-door-pour-plan",
+      "tile": [
+        29,
+        46
+      ],
+      "kind": "terminal",
+      "params": {
+        "name": "East door pour plan"
+      }
+    },
+    {
+      "id": "east-door-hinge",
+      "tile": [
+        90,
+        46
+      ],
+      "kind": "terminal",
+      "params": {
+        "name": "East door hinge"
+      }
+    },
+    {
+      "id": "west-line",
+      "tile": [
+        30,
+        23
+      ],
+      "kind": "terminal",
+      "params": {
+        "name": "West line"
+      }
+    }
+  ],
+  "spawners": [
+    {
+      "id": "old-maintenance-crew",
+      "npc": "npc-old-maintenance",
+      "count": 2,
+      "respawn_seconds": 60,
+      "condition": "always",
+      "region": {
+        "x": 59,
+        "y": 43,
+        "w": 3,
+        "h": 2
+      }
+    },
+    {
+      "id": "unmoored-guard-crew",
+      "npc": "npc-unmoored-guard",
+      "count": 2,
+      "respawn_seconds": 60,
+      "condition": "always",
+      "region": {
+        "x": 24,
+        "y": 29,
+        "w": 3,
+        "h": 3
+      }
+    }
+  ],
+  "lore": [
+    "zone-under-outworks"
+  ],
+  "layouts": [
+    {
+      "id": "exhale-shortcut",
+      "changes": [
+        {
+          "tile": [
+            45,
+            17
+          ],
+          "tile_id": "floor"
+        },
+        {
+          "tile": [
+            46,
+            17
+          ],
+          "tile_id": "floor"
+        },
+        {
+          "tile": [
+            47,
+            17
+          ],
+          "tile_id": "floor"
+        },
+        {
+          "tile": [
+            48,
+            17
+          ],
+          "tile_id": "floor"
+        },
+        {
+          "tile": [
+            49,
+            17
+          ],
+          "tile_id": "floor"
+        },
+        {
+          "tile": [
+            50,
+            17
+          ],
+          "tile_id": "floor"
+        },
+        {
+          "tile": [
+            51,
+            17
+          ],
+          "tile_id": "floor"
+        },
+        {
+          "tile": [
+            52,
+            17
+          ],
+          "tile_id": "floor"
+        },
+        {
+          "tile": [
+            53,
+            17
+          ],
+          "tile_id": "floor"
+        },
+        {
+          "tile": [
+            54,
+            17
+          ],
+          "tile_id": "floor"
+        },
+        {
+          "tile": [
+            55,
+            17
+          ],
+          "tile_id": "floor"
+        },
+        {
+          "tile": [
+            56,
+            17
+          ],
+          "tile_id": "floor"
+        },
+        {
+          "tile": [
+            57,
+            17
+          ],
+          "tile_id": "floor"
+        },
+        {
+          "tile": [
+            58,
+            17
+          ],
+          "tile_id": "floor"
+        },
+        {
+          "tile": [
+            59,
+            17
+          ],
+          "tile_id": "floor"
+        },
+        {
+          "tile": [
+            60,
+            17
+          ],
+          "tile_id": "floor"
+        },
+        {
+          "tile": [
+            61,
+            17
+          ],
+          "tile_id": "floor"
+        },
+        {
+          "tile": [
+            62,
+            17
+          ],
+          "tile_id": "floor"
+        },
+        {
+          "tile": [
+            63,
+            17
+          ],
+          "tile_id": "floor"
+        },
+        {
+          "tile": [
+            64,
+            17
+          ],
+          "tile_id": "floor"
+        }
+      ],
+      "warning_tiles": [],
+      "alternate_routes": [
+        "to-under-caverns",
+        "to-under-drowned",
+        "to-under-shaft-foot"
+      ]
+    }
+  ]
+}

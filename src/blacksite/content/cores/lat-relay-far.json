@@ -9,8 +9,12 @@
   "hardware": [
     {
       "zone": "scour-ring-4",
-      "tile": null,
-      "label": "Far Relay hardware"
+      "tile": [
+        150,
+        49
+      ],
+      "label": "Far Relay hardware",
+      "object_id": "relay-far-hardware"
     }
   ],
   "entry": "entry",

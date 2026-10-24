@@ -9,8 +9,12 @@
   "hardware": [
     {
       "zone": "oldworks-yards",
-      "tile": null,
-      "label": "Site Zero Annex hardware"
+      "tile": [
+        25,
+        33
+      ],
+      "label": "Site Zero Annex hardware",
+      "object_id": "site-zero-annex-hardware"
     }
   ],
   "entry": "entry",

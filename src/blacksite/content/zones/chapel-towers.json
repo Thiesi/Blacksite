@@ -1,0 +1,195 @@
+{
+  "schema": 1,
+  "id": "chapel-towers",
+  "name": "Cooling Towers",
+  "district": "Chapel Ward",
+  "safety": "contested",
+  "lean": "choir",
+  "sight_radius": 10,
+  "sector": "lat-chapel-ward",
+  "spawn": [
+    3,
+    20
+  ],
+  "exits": [
+    {
+      "id": "to-chapel-nave",
+      "tile": [
+        77,
+        20
+      ],
+      "target_zone": "chapel-nave",
+      "target_tile": [
+        25,
+        27
+      ],
+      "kind": "door"
+    },
+    {
+      "id": "to-core-tram-hub",
+      "tile": [
+        40,
+        2
+      ],
+      "target_zone": "core-tram-hub",
+      "target_tile": [
+        54,
+        14
+      ],
+      "kind": "tram"
+    },
+    {
+      "id": "to-terraces-blocks",
+      "tile": [
+        2,
+        20
+      ],
+      "target_zone": "terraces-blocks",
+      "target_tile": [
+        116,
+        2
+      ],
+      "kind": "street"
+    },
+    {
+      "id": "to-under-service",
+      "tile": [
+        40,
+        37
+      ],
+      "target_zone": "under-service",
+      "target_tile": [
+        80,
+        2
+      ],
+      "kind": "ladder"
+    }
+  ],
+  "objects": [
+    {
+      "id": "listening-post-hardware",
+      "tile": [
+        66,
+        13
+      ],
+      "kind": "hardware",
+      "params": {
+        "name": "Listening Post hardware",
+        "core": "lat-listening-post"
+      }
+    },
+    {
+      "id": "nave-bell-gallery",
+      "tile": [
+        60,
+        13
+      ],
+      "kind": "door",
+      "params": {
+        "name": "bell gallery",
+        "open": false,
+        "locked": true
+      }
+    },
+    {
+      "id": "relay-bell-hardware",
+      "tile": [
+        28,
+        26
+      ],
+      "kind": "hardware",
+      "params": {
+        "name": "Bell Relay hardware",
+        "core": "lat-relay-bell"
+      }
+    },
+    {
+      "id": "relay-bell",
+      "tile": [
+        20,
+        21
+      ],
+      "kind": "relay",
+      "params": {
+        "name": "Bell Relay",
+        "relay": "bell",
+        "vendor": "relay-bell-counter"
+      }
+    },
+    {
+      "id": "public-uplink-1",
+      "tile": [
+        59,
+        13
+      ],
+      "kind": "terminal",
+      "params": {
+        "name": "Public Lattice terminal",
+        "sector": "lat-chapel-ward",
+        "cell": "lat-chapel-ward-c01"
+      },
+      "essential": true
+    },
+    {
+      "id": "area-light-1",
+      "tile": [
+        66,
+        21
+      ],
+      "kind": "light",
+      "params": {
+        "name": "Maintenance lamp"
+      }
+    },
+    {
+      "id": "third-listener-log",
+      "tile": [
+        20,
+        26
+      ],
+      "kind": "terminal",
+      "params": {
+        "name": "Third listener log"
+      }
+    }
+  ],
+  "spawners": [
+    {
+      "id": "choir-guard-crew",
+      "npc": "npc-choir-guard",
+      "count": 2,
+      "respawn_seconds": 60,
+      "condition": "always",
+      "region": {
+        "x": 19,
+        "y": 19,
+        "w": 3,
+        "h": 2
+      }
+    },
+    {
+      "id": "choir-pilgrim-crew",
+      "npc": "npc-choir-pilgrim",
+      "count": 3,
+      "respawn_seconds": 60,
+      "condition": "always",
+      "region": {
+        "x": 54,
+        "y": 19,
+        "w": 3,
+        "h": 3
+      }
+    }
+  ],
+  "lore": [
+    "zone-chapel-towers"
+  ],
+  "pockets": [
+    {
+      "x": 58,
+      "y": 12,
+      "w": 3,
+      "h": 3
+    }
+  ]
+}

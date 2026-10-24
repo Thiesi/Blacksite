@@ -1,0 +1,414 @@
+{
+  "schema": 1,
+  "id": "sink-terraces",
+  "name": "Sink Terraces",
+  "district": "Sink",
+  "safety": "contested",
+  "lean": "sable",
+  "sight_radius": 7,
+  "sector": "lat-sink",
+  "spawn": [
+    3,
+    30
+  ],
+  "exits": [
+    {
+      "id": "to-oldworks-yards",
+      "tile": [
+        87,
+        30
+      ],
+      "target_zone": "oldworks-yards",
+      "target_tile": [
+        97,
+        25
+      ],
+      "kind": "street"
+    },
+    {
+      "id": "to-sink-floor",
+      "tile": [
+        45,
+        57
+      ],
+      "target_zone": "sink-floor",
+      "target_tile": [
+        35,
+        2
+      ],
+      "kind": "street"
+    },
+    {
+      "id": "to-sink-rim",
+      "tile": [
+        45,
+        2
+      ],
+      "target_zone": "sink-rim",
+      "target_tile": [
+        50,
+        27
+      ],
+      "kind": "cable",
+      "relay": "cable"
+    },
+    {
+      "id": "free-ladder-to-sink-rim",
+      "tile": [
+        48,
+        2
+      ],
+      "target_zone": "sink-rim",
+      "target_tile": [
+        53,
+        27
+      ],
+      "kind": "ladder"
+    },
+    {
+      "id": "cable-west-to-sink-rim",
+      "tile": [
+        22,
+        2
+      ],
+      "target_zone": "sink-rim",
+      "target_tile": [
+        25,
+        27
+      ],
+      "kind": "cable",
+      "relay": "cable"
+    },
+    {
+      "id": "cable-east-to-sink-rim",
+      "tile": [
+        67,
+        2
+      ],
+      "target_zone": "sink-rim",
+      "target_tile": [
+        75,
+        27
+      ],
+      "kind": "cable",
+      "relay": "cable"
+    }
+  ],
+  "objects": [
+    {
+      "id": "cable-car-hardware",
+      "tile": [
+        51,
+        22
+      ],
+      "kind": "hardware",
+      "params": {
+        "name": "Cable Car hardware",
+        "core": "lat-cable-car"
+      }
+    },
+    {
+      "id": "cable-car-cable-car-routing",
+      "tile": [
+        67,
+        20
+      ],
+      "kind": "cable_car",
+      "params": {
+        "name": "cable car routing",
+        "exits": [
+          "to-sink-rim",
+          "cable-west-to-sink-rim",
+          "cable-east-to-sink-rim"
+        ]
+      }
+    },
+    {
+      "id": "sables-back-room-hardware",
+      "tile": [
+        60,
+        36
+      ],
+      "kind": "hardware",
+      "params": {
+        "name": "Sable's Back Room hardware",
+        "core": "lat-sables-back-room"
+      }
+    },
+    {
+      "id": "sables-back-room-cable-car-brakes",
+      "tile": [
+        22,
+        40
+      ],
+      "kind": "cable_car",
+      "params": {
+        "name": "cable car brakes",
+        "exits": [
+          "to-sink-rim",
+          "cable-west-to-sink-rim",
+          "cable-east-to-sink-rim"
+        ]
+      }
+    },
+    {
+      "id": "sables-back-room-turret-bank",
+      "tile": [
+        66,
+        20
+      ],
+      "kind": "turret",
+      "params": {
+        "name": "turret bank",
+        "spawners": [
+          "sable-enforcer-crew"
+        ]
+      }
+    },
+    {
+      "id": "terrace-wards-hardware",
+      "tile": [
+        67,
+        19
+      ],
+      "kind": "hardware",
+      "params": {
+        "name": "Terrace Wards hardware",
+        "core": "lat-terrace-wards"
+      }
+    },
+    {
+      "id": "terrace-wards-ward-doors",
+      "tile": [
+        67,
+        21
+      ],
+      "kind": "door",
+      "params": {
+        "name": "ward doors",
+        "open": false,
+        "locked": true
+      }
+    },
+    {
+      "id": "sable-back-room-counter",
+      "tile": [
+        17,
+        7
+      ],
+      "kind": "vendor",
+      "params": {
+        "name": "Sable Works Back Room",
+        "vendor": "sable-back-room"
+      }
+    },
+    {
+      "id": "sable-hall-vat",
+      "tile": [
+        68,
+        20
+      ],
+      "kind": "vat",
+      "params": {
+        "name": "Protected faction vat"
+      },
+      "essential": true
+    },
+    {
+      "id": "sable-hall-bank",
+      "tile": [
+        65,
+        20
+      ],
+      "kind": "bank",
+      "params": {
+        "name": "Kestrel bank branch"
+      },
+      "essential": true
+    },
+    {
+      "id": "sable-public-clinic",
+      "tile": [
+        54,
+        7
+      ],
+      "kind": "vendor",
+      "params": {
+        "name": "Public Sablier clinic",
+        "vendor": "sablier-clinic"
+      },
+      "essential": true
+    },
+    {
+      "id": "sable-public-board",
+      "tile": [
+        66,
+        19
+      ],
+      "kind": "terminal",
+      "params": {
+        "name": "Public jobs and faction counter",
+        "faction": "sable",
+        "contract_handler": "sable",
+        "sector": "lat-sink",
+        "cell": "lat-sink-c01"
+      },
+      "essential": true
+    },
+    {
+      "id": "public-uplink-1",
+      "tile": [
+        21,
+        40
+      ],
+      "kind": "terminal",
+      "params": {
+        "name": "Public Lattice terminal",
+        "sector": "lat-sink",
+        "cell": "lat-sink-c01"
+      },
+      "essential": true
+    },
+    {
+      "id": "public-uplink-2",
+      "tile": [
+        67,
+        40
+      ],
+      "kind": "terminal",
+      "params": {
+        "name": "Public Lattice terminal",
+        "sector": "lat-sink",
+        "cell": "lat-sink-c01"
+      },
+      "essential": true
+    },
+    {
+      "id": "public-workshop",
+      "tile": [
+        66,
+        21
+      ],
+      "kind": "workshop",
+      "params": {
+        "name": "Public workshop",
+        "makes": "chemical_melee"
+      }
+    },
+    {
+      "id": "area-light-1",
+      "tile": [
+        67,
+        18
+      ],
+      "kind": "light",
+      "params": {
+        "name": "Maintenance lamp"
+      }
+    },
+    {
+      "id": "terrace-seven-accounts",
+      "tile": [
+        22,
+        20
+      ],
+      "kind": "terminal",
+      "params": {
+        "name": "Terrace seven accounts"
+      }
+    },
+    {
+      "id": "pale-desk",
+      "tile": [
+        47,
+        30
+      ],
+      "kind": "terminal",
+      "params": {
+        "name": "Pale desk"
+      }
+    }
+  ],
+  "spawners": [
+    {
+      "id": "sable-enforcer-crew",
+      "npc": "npc-sable-enforcer",
+      "count": 2,
+      "respawn_seconds": 60,
+      "condition": "always",
+      "region": {
+        "x": 54,
+        "y": 29,
+        "w": 3,
+        "h": 3
+      }
+    },
+    {
+      "id": "resident-crew",
+      "npc": "npc-resident",
+      "count": 3,
+      "respawn_seconds": 60,
+      "condition": "always",
+      "region": {
+        "x": 24,
+        "y": 34,
+        "w": 3,
+        "h": 3
+      }
+    },
+    {
+      "id": "scavenger-raider-crew",
+      "npc": "npc-scavenger-raider",
+      "count": 2,
+      "respawn_seconds": 60,
+      "condition": "always",
+      "region": {
+        "x": 59,
+        "y": 44,
+        "w": 3,
+        "h": 3
+      }
+    }
+  ],
+  "lore": [
+    "zone-sink-terraces"
+  ],
+  "pockets": [
+    {
+      "x": 67,
+      "y": 19,
+      "w": 3,
+      "h": 3
+    },
+    {
+      "x": 64,
+      "y": 19,
+      "w": 3,
+      "h": 3
+    },
+    {
+      "x": 53,
+      "y": 6,
+      "w": 3,
+      "h": 3
+    },
+    {
+      "x": 65,
+      "y": 18,
+      "w": 3,
+      "h": 3
+    },
+    {
+      "x": 20,
+      "y": 39,
+      "w": 3,
+      "h": 3
+    },
+    {
+      "x": 66,
+      "y": 39,
+      "w": 3,
+      "h": 3
+    }
+  ]
+}

@@ -1,7 +1,7 @@
 {
   "schema": 1,
   "id": "s25-faction-sites",
-  "status": "authoring",
+  "status": "active",
   "members": {
     "faction_sites": [
       "site-halvard",
@@ -12,5 +12,7 @@
       "site-ferrymen"
     ]
   },
-  "depends": []
+  "depends": [
+    "s25-commerce"
+  ]
 }

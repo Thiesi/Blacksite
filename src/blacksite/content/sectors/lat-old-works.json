@@ -201,8 +201,7 @@
       "label": "Foundry entrance",
       "requirement": "program:key:2",
       "access": "gated",
-      "core_placeholder": true,
-      "planned_core": "lat-foundry"
+      "core_id": "lat-foundry"
     },
     {
       "id": "lat-old-works-c14",
@@ -220,8 +219,7 @@
       "label": "Relay Zero entrance",
       "requirement": "program:key:2",
       "access": "gated",
-      "core_placeholder": true,
-      "planned_core": "lat-relay-zero"
+      "core_id": "lat-relay-zero"
     },
     {
       "id": "lat-old-works-c15",
@@ -239,8 +237,7 @@
       "label": "Yard Relay entrance",
       "requirement": "program:key:2",
       "access": "gated",
-      "core_placeholder": true,
-      "planned_core": "lat-relay-yard"
+      "core_id": "lat-relay-yard"
     },
     {
       "id": "lat-old-works-c16",
@@ -303,8 +300,7 @@
       ],
       "label": "Ninety-Nine's Drop entrance",
       "access": "hidden",
-      "core_placeholder": true,
-      "planned_core": "lat-ninety-nines-drop"
+      "core_id": "lat-ninety-nines-drop"
     },
     {
       "id": "lat-old-works-c20",
@@ -321,8 +317,7 @@
       ],
       "label": "Site Zero Annex entrance",
       "access": "hidden",
-      "core_placeholder": true,
-      "planned_core": "lat-site-zero-annex"
+      "core_id": "lat-site-zero-annex"
     },
     {
       "id": "lat-old-works-c21",

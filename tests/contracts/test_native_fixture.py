@@ -20,6 +20,8 @@ def test_game_7_5_9_4_native_fixture_activates_only_its_resolved_services_and_st
         assert fixture.active('contracts',tid) and not original.active('contracts',tid)
         assert fixture.contracts[tid].reward == original.contracts[tid].reward
         assert fixture.contracts[tid].branch_group == original.contracts[tid].branch_group
-    assert not original.active('services','sump')
+    assert original.active('services','sump')
+    assert original.services['sump'].zone == 'sink-floor'
+    assert fixture.services['sump'].zone == descriptor['zone']
     assert fixture.cores[descriptor['core']].hardware[0].tile == (9,10)
     assert fixture.zones[descriptor['zone']].meta.layouts

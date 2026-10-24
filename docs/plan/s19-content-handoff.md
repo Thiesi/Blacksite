@@ -55,10 +55,13 @@ The sump-reserve-cache and depot-reserve-cache each expose the order's
 two shared slv_power units. Depot needs kestrel-surplus at the actual
 depot-surplus-counter, not an essential food/medical vendor. Common
 allocation doubles its hourly buy-back cap without refilling spending.
-Relay Zero's reserve binds only relay_open; common publishes its actual
-core patrols. Bind the credential to a useful optional local shortcut
-with an actual permission check. Keep S21's ordinary public relay capture
-separate; a credential for an already-public control is no reward.
+Relay Zero's reserve binds only `worker_return`; common publishes its
+actual core patrols. S25 binds the credential to the optional Old Works
+Main workshop passage with an actual contract permission check. Its
+20-minute opening saves at least eight steps and retains the long public
+street. S21's ordinary public `relay_open` capture stays separate; a
+credential for an already-public control is no reward. This corrects the
+original reserve binding (PR #66, alongside the PR #38 product review).
 These effects must retain ordinary care, uplinks and outward travel.
 
 ## S27 dialogue and S26 activation

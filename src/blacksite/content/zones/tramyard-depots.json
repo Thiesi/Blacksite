@@ -1,0 +1,349 @@
+{
+  "schema": 1,
+  "id": "tramyard-depots",
+  "name": "Ration Depots",
+  "district": "Tramyard",
+  "safety": "contested",
+  "lean": "kestrel",
+  "sight_radius": 10,
+  "sector": "lat-tramyard",
+  "spawn": [
+    3,
+    20
+  ],
+  "exits": [
+    {
+      "id": "to-oldworks-main",
+      "tile": [
+        117,
+        30
+      ],
+      "target_zone": "oldworks-main",
+      "target_tile": [
+        2,
+        17
+      ],
+      "kind": "street"
+    },
+    {
+      "id": "to-tramyard-market",
+      "tile": [
+        2,
+        10
+      ],
+      "target_zone": "tramyard-market",
+      "target_tile": [
+        2,
+        25
+      ],
+      "kind": "street"
+    },
+    {
+      "id": "to-tramyard-wall-gate",
+      "tile": [
+        2,
+        30
+      ],
+      "target_zone": "tramyard-wall-gate",
+      "target_tile": [
+        2,
+        10
+      ],
+      "kind": "street"
+    }
+  ],
+  "objects": [
+    {
+      "id": "depot-control-hardware",
+      "tile": [
+        107,
+        16
+      ],
+      "kind": "hardware",
+      "params": {
+        "name": "Depot Control hardware",
+        "core": "lat-depot-control"
+      }
+    },
+    {
+      "id": "depot-control-forklift-drones",
+      "tile": [
+        89,
+        13
+      ],
+      "kind": "turret",
+      "params": {
+        "name": "forklift drones",
+        "spawners": [
+          "maintenance-drone-crew"
+        ]
+      }
+    },
+    {
+      "id": "depot-control-warehouse-doors-a-c",
+      "tile": [
+        88,
+        13
+      ],
+      "kind": "door",
+      "params": {
+        "name": "warehouse doors A–C",
+        "open": false,
+        "locked": true
+      }
+    },
+    {
+      "id": "dispatch-hardware",
+      "tile": [
+        89,
+        12
+      ],
+      "kind": "hardware",
+      "params": {
+        "name": "Dispatch hardware",
+        "core": "lat-dispatch"
+      }
+    },
+    {
+      "id": "dispatch-dispatch-mute-1s",
+      "tile": [
+        89,
+        14
+      ],
+      "kind": "terminal",
+      "params": {
+        "name": "dispatch-mute-1s",
+        "sector": "lat-tramyard"
+      }
+    },
+    {
+      "id": "dispatch-unmoored-mirror",
+      "tile": [
+        30,
+        26
+      ],
+      "kind": "terminal",
+      "params": {
+        "name": "unmoored-mirror",
+        "sector": "lat-tramyard"
+      }
+    },
+    {
+      "id": "relay-depot-hardware",
+      "tile": [
+        29,
+        26
+      ],
+      "kind": "hardware",
+      "params": {
+        "name": "Depot Relay hardware",
+        "core": "lat-relay-depot"
+      }
+    },
+    {
+      "id": "relay-depot",
+      "tile": [
+        107,
+        5
+      ],
+      "kind": "relay",
+      "params": {
+        "name": "Depot Relay",
+        "relay": "depot",
+        "vendor": "relay-depot-counter"
+      }
+    },
+    {
+      "id": "kestrel-armoury-counter",
+      "tile": [
+        102,
+        27
+      ],
+      "kind": "vendor",
+      "params": {
+        "name": "Kestrel Convoy Armoury",
+        "vendor": "kestrel-armoury"
+      }
+    },
+    {
+      "id": "depot-surplus-counter",
+      "tile": [
+        105,
+        33
+      ],
+      "kind": "vendor",
+      "params": {
+        "name": "Kestrel surplus counter",
+        "vendor": "kestrel-surplus"
+      }
+    },
+    {
+      "id": "kestrel-hall-vat",
+      "tile": [
+        87,
+        13
+      ],
+      "kind": "vat",
+      "params": {
+        "name": "Protected faction vat"
+      },
+      "essential": true
+    },
+    {
+      "id": "kestrel-hall-bank",
+      "tile": [
+        88,
+        12
+      ],
+      "kind": "bank",
+      "params": {
+        "name": "Kestrel bank branch"
+      },
+      "essential": true
+    },
+    {
+      "id": "kestrel-public-clinic",
+      "tile": [
+        88,
+        14
+      ],
+      "kind": "vendor",
+      "params": {
+        "name": "Public Sablier clinic",
+        "vendor": "sablier-clinic"
+      },
+      "essential": true
+    },
+    {
+      "id": "kestrel-public-board",
+      "tile": [
+        90,
+        26
+      ],
+      "kind": "terminal",
+      "params": {
+        "name": "Public jobs and faction counter",
+        "faction": "kestrel",
+        "contract_handler": "kestrel",
+        "sector": "lat-tramyard",
+        "cell": "lat-tramyard-c01"
+      },
+      "essential": true
+    },
+    {
+      "id": "area-light-1",
+      "tile": [
+        89,
+        11
+      ],
+      "kind": "light",
+      "params": {
+        "name": "Maintenance lamp"
+      }
+    },
+    {
+      "id": "depot-surplus-latch",
+      "tile": [
+        30,
+        27
+      ],
+      "kind": "door",
+      "params": {
+        "name": "Surplus counter service latch",
+        "open": true
+      }
+    },
+    {
+      "id": "depot-reserve-cache",
+      "tile": [
+        89,
+        15
+      ],
+      "kind": "cache",
+      "params": {
+        "name": "Workers surplus allocation"
+      }
+    },
+    {
+      "id": "depot-manifest-locker",
+      "tile": [
+        31,
+        26
+      ],
+      "kind": "cache",
+      "params": {
+        "name": "Depot manifest locker"
+      }
+    }
+  ],
+  "spawners": [
+    {
+      "id": "kestrel-guard-crew",
+      "npc": "npc-kestrel-guard",
+      "count": 2,
+      "respawn_seconds": 60,
+      "condition": "always",
+      "region": {
+        "x": 26,
+        "y": 14,
+        "w": 2,
+        "h": 3
+      }
+    },
+    {
+      "id": "freight-crew-crew",
+      "npc": "npc-freight-crew",
+      "count": 3,
+      "respawn_seconds": 60,
+      "condition": "always",
+      "region": {
+        "x": 74,
+        "y": 27,
+        "w": 3,
+        "h": 3
+      }
+    },
+    {
+      "id": "maintenance-drone-crew",
+      "npc": "npc-maintenance-drone",
+      "count": 2,
+      "respawn_seconds": 60,
+      "condition": "always",
+      "region": {
+        "x": 85,
+        "y": 12,
+        "w": 2,
+        "h": 3
+      }
+    }
+  ],
+  "lore": [
+    "zone-tramyard-depots"
+  ],
+  "pockets": [
+    {
+      "x": 86,
+      "y": 12,
+      "w": 3,
+      "h": 3
+    },
+    {
+      "x": 87,
+      "y": 11,
+      "w": 3,
+      "h": 3
+    },
+    {
+      "x": 87,
+      "y": 13,
+      "w": 3,
+      "h": 3
+    },
+    {
+      "x": 89,
+      "y": 25,
+      "w": 3,
+      "h": 3
+    }
+  ]
+}

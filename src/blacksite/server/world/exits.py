@@ -59,9 +59,21 @@ def permitted(exit: Exit, access: dict[str, Any]) -> bool:
     requirement = exit.requirement
     if requirement is None:
         return True
-    if requirement.kind == "faction":
-        return access.get("standing", {}).get(requirement.ref, 0) >= (requirement.standing or 0)
-    return requirement.ref in access.get("items", ())
+    for credential in (requirement, *exit.alternatives):
+        if credential.kind == 'faction':
+            allowed = access.get('standing', {}).get(credential.ref, 0) >= (credential.standing or 0)
+        elif credential.kind == 'member':
+            allowed = access.get('faction') == credential.ref
+        elif credential.kind == 'story':
+            allowed = credential.ref in access.get('story', ())
+        elif credential.kind == 'open':
+            allowed = (access.get('zone') == credential.ref
+                       and credential.object in access.get('open_objects', ()))
+        else:
+            allowed = credential.ref in access.get('items', ())
+        if allowed:
+            return True
+    return False
 
 
 def complete_paid_pass(progress: dict[str, Any], destination: str) -> bool:

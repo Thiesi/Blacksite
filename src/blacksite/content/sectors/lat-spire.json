@@ -114,9 +114,8 @@
       "label": "Halvard Citadel entrance",
       "requirement": "program:key:2",
       "access": "gated",
-      "core_placeholder": true,
-      "planned_core": "lat-halvard-citadel",
-      "gate_owner": "halvard"
+      "gate_owner": "halvard",
+      "core_id": "lat-halvard-citadel"
     },
     {
       "id": "lat-spire-c08",
@@ -132,9 +131,8 @@
       "label": "Gatehouse entrance",
       "requirement": "program:key:2",
       "access": "gated",
-      "core_placeholder": true,
-      "planned_core": "lat-gatehouse",
-      "gate_owner": "halvard"
+      "gate_owner": "halvard",
+      "core_id": "lat-gatehouse"
     },
     {
       "id": "lat-spire-c09",
@@ -151,9 +149,8 @@
       "label": "Skywatch entrance",
       "requirement": "program:key:2",
       "access": "gated",
-      "core_placeholder": true,
-      "planned_core": "lat-skywatch",
-      "gate_owner": "halvard"
+      "gate_owner": "halvard",
+      "core_id": "lat-skywatch"
     },
     {
       "id": "lat-spire-c10",
@@ -171,9 +168,8 @@
       "label": "Shaft entrance",
       "requirement": "program:key:2",
       "access": "gated",
-      "core_placeholder": true,
-      "planned_core": "lat-shaft",
-      "gate_owner": "halvard"
+      "gate_owner": "halvard",
+      "core_id": "lat-shaft"
     },
     {
       "id": "lat-spire-c11",
@@ -191,9 +187,8 @@
       "label": "Shaft Relay entrance",
       "requirement": "program:key:2",
       "access": "gated",
-      "core_placeholder": true,
-      "planned_core": "lat-relay-shaft",
-      "gate_owner": "halvard"
+      "gate_owner": "halvard",
+      "core_id": "lat-relay-shaft"
     },
     {
       "id": "lat-spire-c12",

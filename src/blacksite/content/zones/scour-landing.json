@@ -1,0 +1,224 @@
+{
+  "schema": 1,
+  "id": "scour-landing",
+  "name": "The Landing",
+  "district": "Scour",
+  "safety": "pocket",
+  "lean": "ferrymen",
+  "sight_radius": 12,
+  "sector": "lat-scour",
+  "spawn": [
+    3,
+    15
+  ],
+  "exits": [
+    {
+      "id": "to-scour-ring-1",
+      "tile": [
+        2,
+        15
+      ],
+      "target_zone": "scour-ring-1",
+      "target_tile": [
+        70,
+        2
+      ],
+      "kind": "street"
+    },
+    {
+      "id": "to-scour-ring-2",
+      "tile": [
+        57,
+        15
+      ],
+      "target_zone": "scour-ring-2",
+      "target_tile": [
+        60,
+        2
+      ],
+      "kind": "street"
+    }
+  ],
+  "objects": [
+    {
+      "id": "landing-hardware",
+      "tile": [
+        32,
+        14
+      ],
+      "kind": "hardware",
+      "params": {
+        "name": "Landing hardware",
+        "core": "lat-landing"
+      }
+    },
+    {
+      "id": "landing-local-survey-display",
+      "tile": [
+        45,
+        10
+      ],
+      "kind": "terminal",
+      "params": {
+        "name": "local survey display",
+        "sector": "lat-scour"
+      }
+    },
+    {
+      "id": "landing-trade-counter",
+      "tile": [
+        6,
+        14
+      ],
+      "kind": "vendor",
+      "params": {
+        "name": "The Landing Trade Post",
+        "vendor": "landing-trade"
+      }
+    },
+    {
+      "id": "ferrys-own-counter",
+      "tile": [
+        16,
+        14
+      ],
+      "kind": "vendor",
+      "params": {
+        "name": "Ferry's Own",
+        "vendor": "ferrys-own"
+      }
+    },
+    {
+      "id": "ferrymen-hall-vat",
+      "tile": [
+        36,
+        19
+      ],
+      "kind": "vat",
+      "params": {
+        "name": "Protected faction vat"
+      },
+      "essential": true
+    },
+    {
+      "id": "ferrymen-hall-bank",
+      "tile": [
+        44,
+        10
+      ],
+      "kind": "bank",
+      "params": {
+        "name": "Kestrel bank branch"
+      },
+      "essential": true
+    },
+    {
+      "id": "ferrymen-public-clinic",
+      "tile": [
+        48,
+        14
+      ],
+      "kind": "vendor",
+      "params": {
+        "name": "Public Sablier clinic",
+        "vendor": "sablier-clinic"
+      },
+      "essential": true
+    },
+    {
+      "id": "ferrymen-public-board",
+      "tile": [
+        15,
+        20
+      ],
+      "kind": "terminal",
+      "params": {
+        "name": "Public jobs and faction counter",
+        "faction": "ferrymen",
+        "contract_handler": "ferrymen",
+        "sector": "lat-scour",
+        "cell": "lat-scour-c01"
+      },
+      "essential": true
+    },
+    {
+      "id": "public-uplink-1",
+      "tile": [
+        45,
+        20
+      ],
+      "kind": "terminal",
+      "params": {
+        "name": "Public Lattice terminal",
+        "sector": "lat-scour",
+        "cell": "lat-scour-c01"
+      },
+      "essential": true
+    },
+    {
+      "id": "public-workshop",
+      "tile": [
+        45,
+        9
+      ],
+      "kind": "workshop",
+      "params": {
+        "name": "Public workshop",
+        "makes": "any"
+      }
+    },
+    {
+      "id": "area-light-1",
+      "tile": [
+        45,
+        11
+      ],
+      "kind": "light",
+      "params": {
+        "name": "Maintenance lamp"
+      }
+    },
+    {
+      "id": "council-fire",
+      "tile": [
+        15,
+        10
+      ],
+      "kind": "terminal",
+      "params": {
+        "name": "Council fire"
+      }
+    }
+  ],
+  "spawners": [
+    {
+      "id": "ferrymen-guard-crew",
+      "npc": "npc-ferrymen-guard",
+      "count": 2,
+      "respawn_seconds": 60,
+      "condition": "always",
+      "region": {
+        "x": 13,
+        "y": 19,
+        "w": 2,
+        "h": 3
+      }
+    },
+    {
+      "id": "dog-crew",
+      "npc": "npc-dog",
+      "count": 2,
+      "respawn_seconds": 60,
+      "condition": "always",
+      "region": {
+        "x": 39,
+        "y": 24,
+        "w": 3,
+        "h": 3
+      }
+    }
+  ],
+  "lore": [
+    "zone-scour-landing"
+  ]
+}

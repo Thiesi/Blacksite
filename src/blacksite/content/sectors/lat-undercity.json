@@ -117,8 +117,7 @@
       "label": "Pumphouse entrance",
       "requirement": "program:key:2",
       "access": "gated",
-      "core_placeholder": true,
-      "planned_core": "lat-pumphouse"
+      "core_id": "lat-pumphouse"
     },
     {
       "id": "lat-undercity-c08",
@@ -134,9 +133,8 @@
       "label": "Outworks Seal entrance",
       "requirement": "program:key:2",
       "access": "gated",
-      "core_placeholder": true,
-      "planned_core": "lat-outworks-seal",
-      "gate_owner": "halvard"
+      "gate_owner": "halvard",
+      "core_id": "lat-outworks-seal"
     },
     {
       "id": "lat-undercity-c09",
@@ -153,8 +151,7 @@
       "label": "Drowned entrance",
       "requirement": "program:key:2",
       "access": "gated",
-      "core_placeholder": true,
-      "planned_core": "lat-drowned"
+      "core_id": "lat-drowned"
     },
     {
       "id": "lat-undercity-c10",
@@ -172,8 +169,7 @@
       "label": "Cavern Relay entrance",
       "requirement": "program:key:2",
       "access": "gated",
-      "core_placeholder": true,
-      "planned_core": "lat-relay-cavern"
+      "core_id": "lat-relay-cavern"
     },
     {
       "id": "lat-undercity-c11",
@@ -191,8 +187,7 @@
       "label": "Outworks Relay entrance",
       "requirement": "program:key:2",
       "access": "gated",
-      "core_placeholder": true,
-      "planned_core": "lat-relay-outworks"
+      "core_id": "lat-relay-outworks"
     },
     {
       "id": "lat-undercity-c12",

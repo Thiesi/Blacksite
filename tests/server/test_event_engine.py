@@ -1,6 +1,7 @@
 """Game 12: production adapter receipts, Curfew boundaries and forecasts."""
 
 from copy import deepcopy
+from dataclasses import replace
 from pathlib import Path
 from typing import Any
 
@@ -16,7 +17,13 @@ from tests.harness import HeadlessServer
 
 @pytest.fixture(scope='module')
 def base_content() -> Any:
-    return load_content(Path(__file__).parents[2]/'src/blacksite/content')
+    content = load_content(Path(__file__).parents[2]/'src/blacksite/content')
+    # S24 source fixtures install their own sites/fields and clock jumps.
+    # Keep real four-ring respawns from taking their deliberate commit slot.
+    content.zones = {zid: replace(zone, meta=replace(zone.meta,
+        objects=tuple(obj for obj in zone.meta.objects if obj.kind != 'salvage_field')))
+        for zid, zone in content.zones.items()}
+    return content
 
 
 @pytest.fixture

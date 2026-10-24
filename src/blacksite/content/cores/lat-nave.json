@@ -9,8 +9,12 @@
   "hardware": [
     {
       "zone": "chapel-nave",
-      "tile": null,
-      "label": "Nave hardware"
+      "tile": [
+        37,
+        14
+      ],
+      "label": "Nave hardware",
+      "object_id": "nave-hardware"
     }
   ],
   "entry": "entry",

@@ -9,8 +9,12 @@
   "hardware": [
     {
       "zone": "chapel-towers",
-      "tile": null,
-      "label": "Listening Post hardware"
+      "tile": [
+        66,
+        13
+      ],
+      "label": "Listening Post hardware",
+      "object_id": "listening-post-hardware"
     }
   ],
   "entry": "entry",
