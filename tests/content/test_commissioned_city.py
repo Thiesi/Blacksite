@@ -197,6 +197,9 @@ def test_game_7_5_real_services_and_event_sources_are_commissioned(city: Content
         assert city.active('services', service.id) and city.active('contracts', service.contract)
         zone = city.zones[service.zone]
         assert set(service.target_objects) <= {obj.id for obj in zone.meta.objects}
+        giver = city.contracts[service.contract].giver
+        assert any(obj.essential and obj.params.get('contract_handler') == giver
+                   for obj in zone.meta.objects), (service.id, 'missing local public work-order board')
     for event in ('ring-fall', 'exhale', 'convoy'):
         assert city.active('events', event)
     event = city.events['ring-fall']

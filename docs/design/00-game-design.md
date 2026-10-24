@@ -958,7 +958,9 @@ server uptime per service, at most one fault on the node. It lasts
 20 minutes; NPC repair then restores normal service. No faults accumulate
 while the server is stopped. Neutral relay ownership is normal operation.
 
-Any resident may repair. First acceptance reserves the work order for that
+Any resident may repair. Each service has a public work-order terminal
+in its own zone, using the order's ordinary faction handler. First
+acceptance reserves the work order for that
 player or its frozen accepted job roster for 10 minutes. Abandonment,
 deadline, or the whole roster explicitly withdrawing releases it. A
 disconnect keeps completed steps until the original UTC deadline;

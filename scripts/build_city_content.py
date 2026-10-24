@@ -638,6 +638,12 @@ class City:
                     visit(child)
         visit(contracts)
         write(self.output/'contracts.json', contracts)
+        # Service orders are local to their zone. Bind this after the
+        # story anchors have created the Warm Stack, preserving its site.
+        # The Sable hall upstairs cannot expose a Sump order down here.
+        board = next(obj for obj in self.meta['sink-floor']['objects'] if obj['id'] == 'warm-stack-1')
+        board['params']['contract_handler'] = 'sable'
+        board['essential'] = True
 
     def population(self) -> None:
         table = read(self.output/'npcs.json')

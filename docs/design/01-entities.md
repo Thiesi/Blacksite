@@ -548,6 +548,9 @@ claim is a separate field, never the finding (`04-assets.md` §9).
 allocations[]` with exactly one `common` and one `reserve` allocation,
 each `id, label, effects[]` (event effect records). Live state is the
 `ServiceNode` of §2.13.
+The service's zone contains a public terminal whose `contract_handler`
+matches the work-order contract's faction (game 7.5). A handler in a
+different zone does not expose this local order.
 
 ### 1.18 Vendor and hymn tables (`vendors.json`, `hymns.json`)
 

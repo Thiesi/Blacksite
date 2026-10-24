@@ -88,6 +88,7 @@ jobs:
             ${{ runner.temp }}/s25-proof/**/*.ans
             ${{ runner.temp }}/s25-proof/**/*.txt
             ${{ runner.temp }}/s25-proof/**/*.json
+            ${{ runner.temp }}/s25-proof/**/world/content/**
             ${{ runner.temp }}/s25-proof/**/progress.log
 
   city-services-netbbs:
@@ -146,6 +147,7 @@ jobs:
             ${{ runner.temp }}/s25-services/**/*.ans
             ${{ runner.temp }}/s25-services/**/*.txt
             ${{ runner.temp }}/s25-services/**/*.json
+            ${{ runner.temp }}/s25-services/**/world/content/**
             ${{ runner.temp }}/s25-services/**/progress.log
 
   events-netbbs:

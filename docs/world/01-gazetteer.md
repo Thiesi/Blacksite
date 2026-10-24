@@ -562,7 +562,8 @@ owns a hillside.
   regions; normal operation remains when neutral. Bounded work orders
   determine public or salvage drainage).
 - **Terminals:** one hardware terminal (Sump core, tier 2; controls the
-  pumps and the drain gallery grate).
+  pumps and the drain gallery grate). The first Warm Stack also carries
+  the public Sable work-order board for the local Sump repair.
 - **Vendors / anchors:** none regular. A Ferrymen smuggler who sometimes
   camps here (buys salvage, sells ring maps).
 - **Spawners:** rival gang NPCs, feral things that come up the Sump,

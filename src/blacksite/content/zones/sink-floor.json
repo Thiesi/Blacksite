@@ -160,8 +160,10 @@
       ],
       "kind": "terminal",
       "params": {
-        "name": "Warm stack 1"
-      }
+        "name": "Warm stack 1",
+        "contract_handler": "sable"
+      },
+      "essential": true
     },
     {
       "id": "warm-stack-2",
