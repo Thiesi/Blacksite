@@ -270,3 +270,21 @@ Y is the last step of a selected financial action. Bank C also opens
 market collection. Explain cursor/PgUp/PgDn paging, banked escrow, own-bid
 credit toward buyout, the whole-chit fee, free purchased delivery and
 the return of unsold inventory weight. Bounties grant no combat exemption.
+
+<!-- s24-handoff:start -->
+### S24 event integration and acceptance handoff
+
+Reference: [S24 #24](https://github.com/Thiesi/Blacksite/issues/24),
+[PR #38](https://github.com/Thiesi/Blacksite/pull/38) and
+[platform #56](https://github.com/Thiesi/Blacksite/issues/56).
+
+Explain F9 public services -> V forecasts, R to save/read, H held
+forecasts and Esc/B back. A carried Ring-fall Chart uses the same reader
+without consumption; Ferrymen +90 Kin reads the ring free. Public impact
+warnings remain available to everyone. Cancellation/revision is explicit.
+Explain Curfew inbound-only restrictions, preserved public shelters,
+shared Convoy work, actual route-leg attendance and the one-hour turn-in
+window after completion. Keep body risk, escape, selected runner, ally
+health and full rig usable with overlapping event summaries at 80x24.
+S25 must verify discoverability and pacing on actual full-city routes.
+<!-- s24-handoff:end -->

@@ -157,3 +157,28 @@ Follow the [S21 relay handoff](../s21-relay-handoff.md): bind the shared
 Curfew provider, Mile's current Convoy route, Beacon's committed-site
 forecast and Far's local telemetry/carrier record. Check zero-valued
 flags against `None`, and preserve independent source-owned overlays.
+
+### Implementation and remaining geography gates
+
+Game section 12 now fixes the initial Ring-fall footprint/pulse, bulk
+salvage cap, Exhale cap/key source, Convoy payment/speed, paid Beacon
+detour bound and one-hour completed-job return window. Public escort
+credit requires actual nearby workers at successive route checkpoints;
+acceptance alone and incidental arrival grant no credit. Frozen offers
+remain open to other identities; no private replacement convoy spawns.
+
+F9 services -> V opens forecasts; R saves a committed plan and H shows
+held records. A carried chart uses that same portable reader without
+consumption. Revision/cancellation is visible after reconnect. An
+incompatible content update cancels its old plan before effects install.
+Local defender warnings follow concise city notices so an 80-column
+scope list cannot displace the five-second counterplay warning.
+
+The `s24-future-events` authoring bundle holds Ring-fall, Exhale, Convoy
+and public job/route records. Curfew and Surge use currently shipped
+maps. S25 must place and validate actual source regions, shortcut layout,
+salvage markers, waypoints and public/free approaches before activation.
+Source/receipt fixtures and native hub/service-bay acceptance do not
+prove full-city navigation, affordability or S25/S26 human pacing.
+The dependent slice files and GitHub issues carry those obligations,
+retaining [PR #38](https://github.com/Thiesi/Blacksite/pull/38) and #56.

@@ -225,14 +225,19 @@ class Events:
     def announce(self, transition: Transition) -> None:
         plan = self.scheduler.plans[transition.plan]
         template = self.content.events.get(plan.template)
-        if transition.kind in ('warning', 'cancel') or template is None:
-            self.notify(self.text(plan, detailed=True), warning=True)
+        name = template.name if template else plan.template
+        if transition.kind == 'warning':
+            seconds = max([WARNING_SECONDS, *(effect.warning_seconds for effect in self.scheduler.effects(plan))])
+            self.notify(f'{name}: changes in {seconds}s. Check your local warnings and forecasts.', warning=True)
+            return
+        if transition.kind == 'cancel' or template is None:
+            self.notify(f'{name}: cancelled. {plan.cancel_reason}', warning=True)
             return
         asset = self.content.text.get(getattr(template.announce, transition.kind, '') or '')
         if asset:
-            self.notify(asset.body.format(name=template.name, where=', '.join(plan.where),
+            self.notify(asset.body.format(name=template.name, where=', '.join(self.place(place) for place in plan.where),
                 plan=plan.id, remaining=max(0, int(plan.ends_at-self.now())),
-                route=template.route or '', time=datetime.fromtimestamp(plan.starts_at, timezone.utc).isoformat()))
+                route=(template.route or '').replace('-', ' '), time=self.time(plan.starts_at)))
 
     def write(self, draft: Scheduler, transitions: list[Transition],
               after: Callable[[bool], None] = lambda success: None, *,
@@ -253,9 +258,11 @@ class Events:
                             for effect in draft.effects(plan))])
                         self.warning_until[plan.id] = self.clock.now_tick()+seconds*TICK_HZ
                 self.effects.install(proposal)
-                self.refresh()
                 for transition in transitions:
                     self.announce(transition)
+                # Local defender warnings must follow the city notice so its
+                # scope summary cannot overwrite their five-second toast.
+                self.refresh()
             after(success)
         accepted = self.commerce.settle(None, {}, proposal.items, proposal.caches, proposal.serial, finished)
         if accepted:

@@ -251,7 +251,7 @@ class WorldEffects:
                         self.warnings[key] = tick+WARNING_SECONDS*TICK_HZ
                         for presence in presences:
                             owner.lat.encounters.log(presence,
-                                f'{variant.name}: {variant.counter_label}. Surge changes this defender in 5s.', True)
+                                f'{variant.name}: {variant.counter_label}. Surge in 5s.', True)
                     if tick >= self.warnings[key] and plan.id in active:
                         chosen = variant
                 target = chosen or base

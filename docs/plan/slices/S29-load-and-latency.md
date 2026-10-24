@@ -193,3 +193,20 @@ costs before S29 is done. S31 cannot release without this gate.
 Populate a large item table with carried, stored, impounded and cached
 items, plus realistic interlock/service state. Empty inventories do not
 exercise the remaining item and state copy costs.
+
+<!-- s24-handoff:start -->
+### S24 event integration and acceptance handoff
+
+Reference: [S24 #24](https://github.com/Thiesi/Blacksite/issues/24),
+[PR #38](https://github.com/Thiesi/Blacksite/pull/38) and
+[platform #56](https://github.com/Thiesi/Blacksite/issues/56).
+
+Include two active/planned events, public Convoy attendance/death/jobs,
+salvage/key receipts, composed service/relay/season layers, and long
+scheduler history in the workload. The derived live-plan index remains
+bounded by two; durable records are authoritative. Exercise failed
+storage acknowledgement without duplicate effects or payouts.
+Retain the actual native 80x24/132x50 wide-name gates separately from
+headless load and focused tests. No accelerated fixture closes human
+travel or earning acceptance.
+<!-- s24-handoff:end -->

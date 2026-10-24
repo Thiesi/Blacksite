@@ -825,6 +825,13 @@ and event key caches join one commerce transaction. Publish warnings,
 forecasts and active effects only after it commits. End/cancel removes
 only event-owned surplus, uncollected caches and geometry layers; it
 never removes items already collected or restores an old service map.
+Allocations freeze impact footprints, route waypoints and event-only
+offer terms before previews. A definition signature detects incompatible
+deployment changes; restart commits cancellation and a revision before
+applying geometry. No table migration is required for this additive
+world-schema-4 metadata. Public Convoy death/checkpoints join contract
+facts to the same event receipt. Beacon consumption and its detour
+revision also commit together. A failed save publishes neither side.
 At restart, reconcile wall-time expiry before input; resume uptime timers
 without catching up an offline backlog. Rebuild expeditions from their
 safe checkpoint. Service reservation, allocation, public control expiry,

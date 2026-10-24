@@ -224,3 +224,21 @@ serials in meta and private financial audit. Include all in backups.
 Market pages include current held bids for their selected listings.
 Expose pagination in the CLI; do not assume one response is the world.
 Cancellation/refund replies follow the durable atomic source commit.
+
+<!-- s24-handoff:start -->
+### S24 event integration and acceptance handoff
+
+Reference: [S24 #24](https://github.com/Thiesi/Blacksite/issues/24),
+[PR #38](https://github.com/Thiesi/Blacksite/pull/38) and
+[platform #56](https://github.com/Thiesi/Blacksite/issues/56).
+
+Retain authenticated, audited `event list [--page N]`, `event force ID
+[--where SCOPE]`, and `event cancel PLAN` (also under `admin event`).
+List pages hold at most 100 plans. Force obeys capacity, cooldown,
+scope conflicts and at least five seconds of public warning. Inspect
+committed revisions/source receipts; a failed save publishes nothing.
+Document `meta.events_state` as additive world-schema-4 state, backed up
+with the world. An incompatible event definition is cancelled with a
+correction at restart, never silently redirected. Do not spawn a server
+from the door or edit a running database.
+<!-- s24-handoff:end -->

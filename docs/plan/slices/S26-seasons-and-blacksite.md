@@ -210,3 +210,25 @@ level-opening/telemetry provider and Outworks' floored Depth contribution
 without extra XP or ballot. Join the relay cutoff/reset to the committed
 season settlement, retaining earned treasury and rolling reward limits.
 Close the S25/S26 human relay/earning/clinic pacing gate with actual play.
+
+<!-- s24-handoff:start -->
+### S24 event integration and acceptance handoff
+
+Reference: [S24 #24](https://github.com/Thiesi/Blacksite/issues/24),
+[PR #38](https://github.com/Thiesi/Blacksite/pull/38) and
+[platform #56](https://github.com/Thiesi/Blacksite/issues/56).
+
+Bind `Events.tuning(event_id, kind)` to committed season modifiers:
+`weight` (1..10), `spawn_rate` (1..3), `wave_cap_bonus` (0..2), and
+`surge_variants` (false disables swaps while other Surge effects remain).
+The adapter owns bounds; season content owns option-to-effect mapping.
+Use independent named geometry layers for optional seasonal routes;
+event cancellation must preserve them. No finale-choice names belong
+in S24's engine. Settlement joins the existing commerce receipt.
+
+Consume the physical `key_undercity` once for its canonical contribution,
+never its saved forecast or a fixture cache. S25's real Exhale route,
+Convoy rewards and return-time measurements remain a prerequisite for
+honest pacing assessment. Publicity remains behind #56's registered-only,
+positive opt-in gate; gameplay warnings stay in game.
+<!-- s24-handoff:end -->
