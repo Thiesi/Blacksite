@@ -20,6 +20,7 @@ from blacksite.admin.client import request
 
 
 async def accept(root: Path, python: Path, show: bool, size: tuple[int, int]) -> None:
+    assert not (root/'world').exists(), 'Use a fresh private acceptance world'
     probe = ServiceProbe(root, python, show)
     try:
         await probe.start()
@@ -51,6 +52,17 @@ async def accept(root: Path, python: Path, show: bool, size: tuple[int, int]) ->
                     for point in route.waypoints if point.zone == zid)
         await probe.walk(caller, road)
         owner = probe.service.core.events
+        # A fresh world's ordinary roll can already reserve this kind or
+        # route. Use real operator cancellation of those unpaid forecasts;
+        # forcing an event must not bypass the production reservation rules.
+        listed = await request(probe.service.install_dir, 'event.list')
+        assert listed['ok'], listed
+        cleared = []
+        for forecast in listed['plans']:
+            if forecast['state'] == 'planned':
+                cancelled = await request(probe.service.install_dir, 'event.cancel', {'plan': forecast['id']})
+                assert cancelled['ok'], cancelled
+                cleared.append(forecast['id'])
         result = await request(probe.service.install_dir, 'event.force', {'event': 'ring-fall', 'where': zid})
         assert result['ok'], result
         plan = result['plan']
@@ -104,6 +116,7 @@ async def accept(root: Path, python: Path, show: bool, size: tuple[int, int]) ->
             'public_return': list(returning), 'clock_fixture': False, 'placement_fixture': False,
             'fixtures': ['grade five', 'Halvard +30 admission standing', '12000 hand chits'],
             'operator_actions': ['force ring-fall --where scour-ring-3', 'cancel exact committed plan'],
+            'cancelled_unpaid_startup_forecasts': cleared,
             'income_rate_claimed': False, 'transport': 'NetBBS Telnet -> registered native stdio',
             'journeys': probe.journeys, 'walks': probe.walks}, indent=2)+'\n', encoding='utf-8')
         probe.report(f'S25 FUNCTIONAL PASS Ring-fall {size}: actual Ring Three impact, recovery, ten scoped nodes and public return')

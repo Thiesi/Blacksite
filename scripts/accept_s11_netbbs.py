@@ -10,9 +10,11 @@ from collections import deque
 import json
 from pathlib import Path
 import time
+from typing import Any
 
 from accept_s10_netbbs import Connection, NativeProbe, wait
 from blacksite.admin.client import request
+from blacksite.server.loop import TickContext
 from blacksite.server.world.actors import Actor
 from blacksite.server.world.sight import line_of_sight
 
@@ -57,11 +59,62 @@ async def approach(probe: NativeProbe, caller: Connection, target: Actor,
 
 
 async def profile(probe: NativeProbe, width: int, height: int) -> float:
+    loop = probe.service.core.loop
+    original_subsystems, original_step = loop.subsystems, loop.step
+    original_writes = probe.service._character_writes
+    rows: list[dict[str, Any]] = []
+    current: dict[str, Any] | None = None
+    sampling_tick, status = -1, {}
+
+    class TimedSubsystem:
+        def __init__(self, subsystem: Any, label: str) -> None:
+            self.subsystem, self.label = subsystem, label
+
+        def tick(self, ctx: TickContext) -> None:
+            wall, cpu = time.perf_counter(), time.thread_time()
+            try:
+                self.subsystem.tick(ctx)
+            finally:
+                if current is not None:
+                    current['segments'][self.label] = {
+                        'wall_ms': (time.perf_counter()-wall)*1000,
+                        'cpu_ms': (time.thread_time()-cpu)*1000}
+
+    def step() -> None:
+        nonlocal current
+        current = {'tick': probe.service.clock.now_tick(), 'segments': {},
+                   '_wall': time.perf_counter(), '_cpu': time.thread_time()}
+        wall, cpu = time.perf_counter(), time.thread_time()
+        try:
+            original_step()
+        finally:
+            current['loop_wall_ms'] = (time.perf_counter()-wall)*1000
+            current['loop_cpu_ms'] = (time.thread_time()-cpu)*1000
+
+    def writes() -> None:
+        nonlocal current
+        wall, cpu = time.perf_counter(), time.thread_time()
+        try:
+            original_writes()
+        finally:
+            if current is not None:
+                current['writes_wall_ms'] = (time.perf_counter()-wall)*1000
+                current['writes_cpu_ms'] = (time.thread_time()-cpu)*1000
+                current['total_wall_ms'] = (time.perf_counter()-current.pop('_wall'))*1000
+                current['total_cpu_ms'] = (time.thread_time()-current.pop('_cpu'))*1000
+                rows.append(current)
+                current = None
+
+    loop.subsystems = [TimedSubsystem(system, f'{index}:{type(system).__name__}')
+                       for index, system in enumerate(original_subsystems)]
+    loop.step = step
+    probe.service._character_writes = writes
     for zone in probe.service.world.zones.values():
         zone.activate("s11-profiling",probe.service.clock.now_tick())
     try:
         await asyncio.sleep(2)
-        probe.service.core.loop.timings.clear()
+        sampling_tick = probe.service.clock.now_tick()
+        loop.timings.clear()
         await asyncio.sleep(10)
         status=await request(probe.service.install_dir,"status")
         count = len(probe.service.world.zones)
@@ -69,8 +122,15 @@ async def profile(probe: NativeProbe, width: int, height: int) -> float:
         probe.report(f"PASS admin status {width}x{height}: all {count} zones active, p99 {status['tick_p99_ms']:.3f} ms")
         return status["tick_p99_ms"]
     finally:
+        loop.subsystems, loop.step = original_subsystems, original_step
+        probe.service._character_writes = original_writes
         for zone in probe.service.world.zones.values():
             zone.deactivate("s11-profiling",probe.service.clock.now_tick())
+        number = len(list(probe.root.glob(f'npc-profile-{width}x{height}-*.json')))+1
+        (probe.root/f'npc-profile-{width}x{height}-{number}.json').write_text(json.dumps({
+            'status': status, 'sampling_started_tick': sampling_tick,
+            'instrumentation': 'per-subsystem wall and thread CPU counters; same 10 ms gate',
+            'ticks': rows}, indent=2)+'\n', encoding='utf-8')
 
 
 async def sodium_response(probe: NativeProbe, caller: Connection, width: int, height: int) -> None:
