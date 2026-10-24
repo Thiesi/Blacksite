@@ -150,13 +150,26 @@ async def equipment(probe: WorkOrderProbe, caller: Connection) -> None:
 
 
 async def network_equipment(probe: WorkOrderProbe, caller: Connection) -> None:
-    """Acquire the real public Key route and load the free native slot."""
-    programs = ((0, 'prg_chisel'), (2, 'prg_locksmith'))
+    """Buy a public five-slot loadout suitable for an interrupting patrol."""
+    programs = ((0, 'prg_lance'), (2, 'prg_locksmith'), (3, 'prg_bunker'))
+    await probe.route(caller, 'sodium-tin-halo')
+    await probe.near(caller, 'vesper')
+    owner = probe.service.core.contracts
+    await commit_key(probe, caller, b'e', lambda: caller.session.id in owner.panels.menus)
+    await commit_key(probe, caller, b'v', lambda: caller.session.id in probe.commerce.menus)
+    panel = probe.commerce.menus[caller.session.id]
+    player = probe.game.players[caller.session.player_id]
+    for program in ('prg_lance', 'prg_bunker'):
+        await probe.row(caller, panel, program)
+        before = player.chits_hand
+        await commit_key(probe, caller, b'\r', lambda: program in player.progress.get('known_programs', ()))
+        assert player.chits_hand < before
+    await probe.close_menu(caller)
     vendor = probe.game.content.vendors['oldworks-bench']
     await probe.route(caller, vendor.zone)
-    player = probe.game.players[caller.session.player_id]
     panel = await probe.counter(caller, vendor.object_id)
-    for _, program in programs:
+    await probe.buy(caller, panel, 'item_rig_portable_ow_slab')
+    for program in ('prg_locksmith',):
         await probe.row(caller, panel, program)
         before = player.chits_hand
         await commit_key(probe, caller, b'\r', lambda: program in player.progress.get('known_programs', ()))
@@ -172,12 +185,15 @@ async def network_equipment(probe: WorkOrderProbe, caller: Connection) -> None:
     presence = lattice.presences[player.id]
     assert lattice.public(presence) and not presence.instance
     encounter = lattice.encounters
-    for slot, program in programs:
+    assert len(presence.rig) == 5
+    # Unload the two starters before binding the two-slot attack. The
+    # purchased deck holds attack, shield and Key without a fixture.
+    for slot, program in ((0, None), (1, None), *programs):
         await commit_key(probe, caller, b'r', lambda: caller.session.id in encounter.menus)
         screen = encounter.menus[caller.session.id]
         await select(caller, lambda: encounter.rows(presence, screen), screen, str(slot))
         await commit_key(probe, caller, b'\r', lambda: screen.kind == 'binding')
-        await select(caller, lambda: encounter.rows(presence, screen), screen, program)
+        await select(caller, lambda: encounter.rows(presence, screen), screen, program or '')
         await commit_key(probe, caller, b'\r', lambda: presence.rig[slot] == program)
         assert player.rig['slots'][slot] == program
         await commit_key(probe, caller, b'\x1b', lambda: caller.session.id not in encounter.menus)
@@ -274,8 +290,10 @@ async def accept(root: Path, python: Path, show: bool, size: tuple[int, int],
                 await wait(lambda: gate.open is True)
                 await leave_network(probe, caller)
                 await probe.route(caller, zone.id)
-                await probe.walk(caller, (34, 4))
-                await probe.walk(caller, (34, 17))
+                await probe.walk(caller, zone.objects['relay-zero-hardware'].spec.tile)
+                await probe.walk(caller, gate.spec.tile)
+                await probe.counter(caller, probe.game.content.vendors['oldworks-bench'].object_id)
+                await probe.close_menu(caller)
                 benefits.append({'control': control.id, 'opened_and_walked': gate.spec.id})
             elif effect.type == 'reveal' and effect.params.get('what') == 'patrol_route':
                 assert effect.binding is not None
@@ -311,7 +329,9 @@ async def accept(root: Path, python: Path, show: bool, size: tuple[int, int],
             'full_slice_acceptance': False, 'size': list(size), 'service': sid,
             'allocation': allocation, 'board': board.id, 'network_terminal': terminal,
             'purchased_network_program': 'prg_locksmith',
-            'purchased_attack_program': 'prg_chisel',
+            'purchased_attack_program': 'prg_lance',
+            'purchased_shield_program': 'prg_bunker',
+            'purchased_portable_rig': 'item_rig_portable_ow_slab',
             'job': iid, 'reservation_deadline': deadline, 'layouts': layouts, 'benefits': benefits,
             'reward_chits': player.chits_hand-before[0], 'reward_xp': player.xp-before[1],
             'service_uptime_fixture_seconds': 3600, 'game_utc_fixture': False,

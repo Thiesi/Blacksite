@@ -83,6 +83,22 @@ def test_game_5_1_every_public_anchor_has_a_route_outside_private_rooms_and_haza
                 for dx, dy in ((0, 1), (0, -1), (1, 0), (-1, 0))), (zid, obj.id)
 
 
+def test_game_5_5_spawner_pads_and_patrols_have_an_ordinary_public_escape(city: ContentTree) -> None:
+    for zid, zone in city.zones.items():
+        blocked = {obj.tile for obj in zone.meta.objects if obj.params.get('locked')}
+        seen = reachable(city, zone, blocked)
+        for spawner in zone.meta.spawners:
+            candidates = spawner.region.tiles() if spawner.region else [spawner.tile]
+            for tile in candidates:
+                if tile is not None and tile not in blocked:
+                    definition = city.tiles[zone.tile_at(tile)]
+                    if definition.passable and not definition.hazard:
+                        assert tile in seen, (zid, spawner.id, tile, 'sealed spawn room')
+            for behaviour in city.npcs[spawner.npc].behaviours:
+                for point in behaviour.params.get('waypoints', ()):
+                    assert tuple(point) in seen, (zid, spawner.id, point, 'sealed patrol route')
+
+
 def test_game_7_7_all_16_relays_and_ordinary_cores_use_live_hardware(city: ContentTree) -> None:
     assert len(city.relays) == 16
     for rid, relay in city.relays.items():
@@ -209,11 +225,14 @@ def test_game_7_5_relay_zero_reserve_opens_a_useful_separate_workers_passage(cit
     gate = next(obj for obj in zone.meta.objects if obj.id == control.target.object)
     assert gate.kind == 'door' and gate.params['locked'] and not gate.params['open']
 
-    # Compare actual cardinal routes between the two street mouths. The
+    # Compare actual cardinal routes from the repair mast to the public
+    # workshop counter, which sells the worker's software and rig. The
     # closed passage must retain an ordinary route and save real walking
     # when opened, rather than merely grant an already-public permission.
     def distance(blocked: set[Tile]) -> int:
-        start, end = (34, 4), (34, 17)
+        start = city.cores[binding.core].hardware[0].tile
+        vendor = city.vendors['oldworks-bench']
+        end = next(obj.tile for obj in zone.meta.objects if obj.id == vendor.object_id)
         pending, seen = deque([(start, 0)]), {start}
         while pending:
             (x, y), steps = pending.popleft()
@@ -246,6 +265,7 @@ def test_game_7_5_relay_zero_reserve_opens_a_useful_separate_workers_passage(cit
     # from channel timing, which is covered by the S15 controller tests.
     interlock = game.core.lattice.interlock
     live_gate = game.core.world.zones[service.zone].objects[gate.id]
+    game.core.npcs.spawners.process(game.core.world.zones[service.zone], owner.now())
     assert live_gate.open is False
     interlock.state['effects'][binding.core+':'+binding.control] = {
         'core': binding.core, 'control': binding.control, 'revision': control.revision,

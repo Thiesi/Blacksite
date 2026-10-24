@@ -114,8 +114,10 @@ async def neutralize(probe: ContractProbe, caller: Connection, presence: Any) ->
             assert probe.service.core.lattice.presences.get(caller.session.player_id) is presence, (
                 'Network run ended before the defender was cleared', presence.integrity, presence.trace)
         present()
-        if len(presence.rig) > 1 and presence.rig[1]:
-            shield = probe.game.content.programs[presence.rig[1]]
+        shield_slot = next((slot for slot, pid in enumerate(presence.rig)
+                            if pid and probe.game.content.programs[pid].effect.kind == 'absorb'), None)
+        if shield_slot is not None:
+            shield = probe.game.content.programs[presence.rig[shield_slot]]
             player = probe.game.players[caller.session.player_id]
             now = probe.service.clock.now_utc().timestamp()
             if (shield.effect.kind == 'absorb' and presence.effects.shield is None
@@ -123,7 +125,7 @@ async def neutralize(probe: ContractProbe, caller: Connection, presence: Any) ->
                 def protected() -> bool:
                     present()
                     return presence.effects.shield is not None
-                await commit_key(probe, caller, b'2', protected)
+                await commit_key(probe, caller, str(shield_slot+1).encode(), protected)
         ice = defenders[0]
         await commit_key(probe,caller,b'e',lambda:caller.session.id in enc.menus)
         screen = enc.menus[caller.session.id]
@@ -139,10 +141,19 @@ async def neutralize(probe: ContractProbe, caller: Connection, presence: Any) ->
         if enc.menus.get(caller.session.id) is screen:
             await commit_key(probe,caller,b'\x1b',lambda:caller.session.id not in enc.menus)
         if ice in enc.defenders(presence):
-            def cleared() -> bool:
+            def cast_received() -> bool:
                 present()
-                return not ice.alive or ice not in enc.defenders(presence)
-            await commit_key(probe,caller,b'1',cleared)
+                return (presence.cast is not None or not ice.alive
+                        or ice not in enc.defenders(presence))
+            await commit_key(probe,caller,b'1',cast_received)
+            if presence.cast is not None:
+                program = probe.game.content.programs[presence.cast.program]
+                await wait(lambda: presence.cast is None,
+                           max(10, float(program.cast_seconds)*4+2))
+                present()
+            # Recheck shield eligibility between casts, including an
+            # interrupted cast. Waiting only for death can starve shields
+            # while a roaming defender interrupts every long attack.
 
 
 async def network_stage(probe: ContractProbe, caller: Connection, target: Any, descriptor: dict[str,Any]) -> None:

@@ -416,3 +416,9 @@ dialogue/help, operator views, load and federation checks. Reference:
 [PR #38](https://github.com/Thiesi/Blacksite/pull/38) and
 [platform #56](https://github.com/Thiesi/Blacksite/issues/56).
 <!-- s25-worker-passage:end -->
+The shortcut saving is checked from the actual relay repair mast to the
+public Old Works counter, rather than arbitrary street mouths. Every
+ordinary spawn candidate and patrol point must retain a public escape
+without a locked shortcut. Sealed spawn rooms otherwise leave unrelated
+core latches permanently pending; S25 repairs the map paths while
+retaining the safety checks. Preserve this through future placements.

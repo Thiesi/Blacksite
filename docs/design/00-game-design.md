@@ -995,7 +995,8 @@ Sump and Depot reserve caches each contain two `slv_power` units per
 order, shared by its workers. Common and reserve cannot both be claimed.
 Relay Zero's credential permits `worker_return` in `lat-relay-zero`,
 opening `relay-zero-workers-gate` in `oldworks-main` for 20 minutes.
-The north-to-south workshop passage saves at least eight walking steps;
+The passage saves at least eight walking steps between the relay's
+hardware and the public Old Works workshop counter;
 the longer public street remains open. This is a scoped control permit,
 not ICE immunity or ownership of the passage. Once opened, anyone can
 walk through it until reset. Ordinary public `relay_open` remains the

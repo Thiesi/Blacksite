@@ -387,7 +387,8 @@ Its hardware is the mast beside the physical capture terminal. Its
 All relay instance IDs and tiers are game design §7.7.
 
 Relay Zero also exposes `worker_return` in its Archive. This separate
-work-order control opens the optional north-to-south workshop passage
+work-order control opens the optional north workshop passage between
+the relay mast and the public Old Works counter
 in Old Works Main for 20 minutes. It requires the active reserve
 allocation's worker credential. The longer street stays public; ordinary
 `relay_open` remains public and retains its capture meaning (game §7.5).

@@ -95,11 +95,29 @@ claimed passed by the earlier repair-only receipts.
 The first local workers-gate attempt completed and paid the real repair,
 then lost its Lattice presence on the second core visit. Its starter
 Pick and unused Umbrella did not establish prepared network combat.
-The next probe purchases Chisel from the public Old Works counter and
-uses the loaded shield when eligible. Forced jack-out now terminates
+The next probe purchased Chisel from the public Old Works counter and
+used the loaded shield. Damage still interrupted its transfer and trace
+reached 100. The subsequent probe bought a five-slot portable Old Works
+Slab, public Lance/Bunker from Vesper and Locksmith at Old Works. It
+completed and paid the repair, retained its final core presence, and
+actually activated `worker_return`. Its 2.860-second startup passed.
+Its overall result failed because the physical door stayed pending.
+Forced jack-out now terminates
 the network helper before a stale attack key can use a body quick slot.
 No ICE, integrity, trace, channel, price or reward rule was relaxed.
 The first attempt also failed its 3.234-second startup; retain it.
+
+The pending-door investigation reproduced a practical map defect:
+`oldworks-main/squatter-crew` could spawn at (73, 25), inside a sealed
+room. A real actor without public escape prevents unrelated interlocks
+from committing geometry. Two regressions failed before the fix: every
+ordinary spawn candidate/patrol must reach the public component, and the
+worker gate must actually open with the normal population present.
+The author now minimally connects these paths without crossing a locked
+optional shortcut. The safety check remains unchanged. The new passage
+also measures its saving between real anchors, the repair mast and the
+public Old Works counter, rather than two arbitrary street mouths.
+Shaft Foot and Far Ring maps are unchanged by this correction.
 
 Still required: complete actual service/core/relay benefits and paid
 routes, repeatable earnings/acquisition and event-route pacing, final

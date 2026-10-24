@@ -535,12 +535,12 @@ class City:
         # relay_open remains bound to capture and grants no worker access.
         zid = 'oldworks-main'
         grid = self.grids[zid]
-        corridor = {(34, y) for y in range(5, 17)}
+        corridor = {(22, y) for y in range(5, 9)}
         assert not corridor & grid.reserved
         for tile in corridor:
             grid.mark(tile)
         gate = self.obj(zid, 'relay-zero-workers-gate', 'door',
-                        'Workers passage', tile=(34, 7),
+                        'Workers passage', tile=(22, 7),
                         params={'open': False, 'locked': True})
         path = self.output/'cores/lat-relay-zero.json'
         core = read(path)
@@ -559,7 +559,7 @@ class City:
         for effect in reserve['effects']:
             if effect.get('params', {}).get('what') == 'credential':
                 effect['binding']['control'] = 'worker_return'
-        reserve['detail'] = ('Workers may open the north-to-south workshop passage for 20 minutes. '
+        reserve['detail'] = ('Workers may open the shortcut from the relay mast to the public Old Works counter for 20 minutes. '
                              'The public street stays open. ICE remains active.')
         write(path, services)
         self.obj('tramyard-depots', 'depot-surplus-latch', 'door', 'Surplus counter service latch',
@@ -1031,6 +1031,7 @@ class City:
                     tile=list(local), target_zone=target, target_tile=list(remote), kind='cable', relay='cable'))
 
     def base_paths(self) -> None:
+        npcs = {npc['id']: npc for npc in read(self.output/'npcs.json')['npcs']}
         # The two Shaft Head heavies share a patrol through this alcove.
         # A single-file doorway lets them seal the public hardware by
         # meeting nose to nose. Leave a maintenance aisle to pass them.
@@ -1043,6 +1044,25 @@ class City:
             grid = self.grids[zid]
             for point in [*(ex['tile'] for ex in meta['exits']), *(obj['tile'] for obj in meta['objects'])]:
                 grid.connect(tuple(meta['spawn']), tuple(point))
+            # A passable spawn pad can still lie inside a sealed factory
+            # room. Its occupants then make every unrelated core latch
+            # wait forever for a public escape. Join all spawn candidates
+            # and patrol points to the existing public component without
+            # relying on a locked optional shortcut.
+            blocked = {tuple(obj['tile']) for obj in meta['objects']
+                       if obj.get('params', {}).get('locked')}
+            targets: set[tuple[int, int]] = set()
+            for spawner in meta['spawners']:
+                if region := spawner.get('region'):
+                    candidates = [(x, y) for y in range(region['y'], region['y']+region['h'])
+                                  for x in range(region['x'], region['x']+region['w'])]
+                else:
+                    candidates = [tuple(spawner['tile'])] if spawner.get('tile') else []
+                targets.update(tile for tile in candidates if grid.safe(tile) and tile not in blocked)
+                for behaviour in npcs[spawner['npc']].get('behaviours', []):
+                    targets.update(tuple(point) for point in behaviour.get('params', {}).get('waypoints', []))
+            for point in sorted(targets):
+                grid.connect(tuple(meta['spawn']), point, avoid=blocked)
 
     def save(self) -> None:
         tiles = {tile['id']: tile for tile in read(self.output/'tiles.json')['tiles']}

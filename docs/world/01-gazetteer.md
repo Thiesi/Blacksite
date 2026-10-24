@@ -1369,9 +1369,10 @@ terminal. Depot places its manifest inspection point before the surplus
 warehouse fork. Relay Zero places a physical reset cabinet whose cover
 protects a solo player's body from routine NPC patrols. A crew can guard
 it in contested PvP. Its reserve credential opens the workshop's
-north-to-south workers passage through `worker_return`, saving at least
-eight steps while the public street remains available. The gate stands
-at (34, 7), between street mouths (34, 4) and (34, 17). Ordinary
+north workshop passage through `worker_return`, saving at least eight
+steps between the repair mast and the public Old Works counter while
+the public street remains available. The gate stands at (22, 7),
+between the north street and the counter's workshop. Ordinary
 `relay_open` remains a separate public capture control. Every map shows
 these costs through geometry (game 7.5).
 

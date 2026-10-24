@@ -162,7 +162,7 @@
     {
       "id": "relay-zero-workers-gate",
       "tile": [
-        34,
+        22,
         7
       ],
       "kind": "door",
