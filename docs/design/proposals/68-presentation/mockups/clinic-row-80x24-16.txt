@@ -1,0 +1,24 @@
+┌─ VATSIDE · Clinic Row  CONTESTED  PvP G5+ ────────────┬────── 00:02 Ring up ─┐
+│██████████ CLONE INSURANCE - RENEW TODAY ████████ MERID│─ TARGET ─────────────│
+│ ·  ··  · · ·  ··  ·  ························    ··   │ none   Tab picks     │
+│   ·     ··  ···   ·· ···☻····················· ·· ··  │─ NEARBY ─────────────│
+│   ·   ·     ·   ·   ··☻··········@···☻·☻······  ··    │ ☻ Sablier security   │
+│··· ·      ·  ····  · ························ · ·· ···│ ☻ Sablier security   │
+│R CLINIC █·        ·· ··· ██ SABLIER  PHARMACY █ · ·   │ ☻ Warden patrol      │
+│·  · ·  ·█·   · ··    · · █·  ·      ··       ·█     █ │ ☻ Clinic patient     │
+│ ·     ··█      ·    ·   ·█    · · ·    ·   ···█ ·   █ │                      │
+│· · ·§···█  · · ·   ·    ·█·    $    · ·§  ·   █· ·  █ │                      │
+│· · §    █·· · ·    ·     █··         $        █   ··█ │                      │
+│$·       █· ··   ·        █  ··  ·   ·  ·    ··█ ·   █ │                      │
+│··    · ·█ · ·     · ·· ··█  ···   · · ·   · ··█···· █ │──────────────────────│
+│+ SURGERY    · ·       ·· █████████+ RECRUITING      █ │ Ash · Wide界     G1  │
+│      ·   ·      · ·     ··    ·    ·· ·  · ··         │ HP  ██████████ 90    │
+│    · ······ ·    · ·         ·    · ·      ·· · ·     │ STA ██████████ 77    │
+│ ···  ···     ───────────────────·· ··  · · ·   ··    ·│ SHK ░░░░░░░░░░ 0     │
+│·  ··  ··   ··│·COLD CHAIN···   │         ··         · │ 200 ch   lease 0/90  │
+├───────────────────────────────────────────────────────┴──────────────────────┤
+│∙ Clinic Row. The street is so clean that dirt looks like an accident.        │
+│∙ A polite overhead voice: your clone insurance premium is due.               │
+│‼ Contested street. Callers of grade 5 and up can fight here.                 │
+│Tab target  F fire  I inventory  M map  Q jobs  ? help                        │
+└────────────────────────────────────────────────────────────────────────────── 

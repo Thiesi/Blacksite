@@ -1,0 +1,24 @@
+╔═ DOWN · VATSIDE SECTOR  civic trace ════════════════ BODY Clinic Row POCKET ═╗
+║  ·   ·   ·   ·╔═╗·   ╔═╗ ·   ·   · ╔═╗   ·╔═╗·   ·    │─ RUNNER ─────────────║
+║  ■ ──── ∩ ────║V║────║S║──── ■ ────║W║────║C║──── ■   │ INT ██████████ 100   ║
+║  │   ·  │·   ·╚4╝·   ╚3╝ ·   │   · ╚0╝   ·╚2╝·   ·║   │ TRC ░░░░░│░░░░ 0     ║
+║  │      │      │      │      │      │      ║      ║   │ no trace until inside║
+║  │   ·  │·   · │ ·   ·│  ·   │   ·  │·   · ║ ·   ·║   │─ BODY ───────────────║
+║  ■ ──── ■ ──── ■ ──── ■ ──── ■ ──── ■ ════ ╪ ════ ╪   │ Clinic Row    POCKET ║
+║  ║   ·  ║·   · ║ ·   ·║  ·   ║   ·  ║·   · ║ ·   ·║   │ HP  ██████████ 90    ║
+║  ║      ║      ║      ║      ║      ║      ║      ║   │ alone: no crew guard ║
+║  ║   ·  ║·   · ║ ·   ·║  ·   ║   ·  ║·   · ║ ·   ·║   │─ RIG ────────────────║
+║  ╪ ════ ╪ ════ ╪ ════ ╪ ════ ╪ ════ ╪ ════ ╪ ════ ╪   │ 1 Pick         ready ║
+║  ·   ·   ·   ·   ·   ·   ·   ·   ·   ·   ·   ·   ·    │ 2 Umbrella     ready ║
+║                                                       │ 3 -                  ║
+║  ·   ·   ·   ·   ·   ·   ·   ·   ·   ·   ·   ·   ·    │─ CORE ───────────────║
+║                                                       │ Sablier Clinical     ║
+║ @ Sablier Clinical entrance core entrance             │ Sablier · tier 3     ║
+║ < Vatline entrance   > Template Vault Approach        │ trace: corporate     ║
+║ v Signal rack 12                                      │ ICE unknown: survey  ║
+╟───────────────────────────────────────────────────────┴──────────────────────╢
+║∙ The city goes quiet. Cells resolve under your feet.                         ║
+║∙ Your body stays upstairs, in a clinic booth. Its shelter still matters.     ║
+║+ +15 XP  three new cells                                                     ║
+║Arrows links  E enter  J jack out  Tab target  1-7 cast  R rig                ║
+╚══════════════════════════════════════════════════════════════════════════════ 
