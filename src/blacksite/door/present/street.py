@@ -231,6 +231,8 @@ def render(buffer: CellBuffer, body: dict[str, Any], area: Rect, paint: Paint, h
         row_distance = height / (2.0 * y - height)
         for x in range(width):
             if row_distance > floor_limit[x]:
+                if floor_limit[x] == depth[x] and depth[x] < MAX_DEPTH:
+                    continue  # a wall stands here; keep its lower storeys
                 pixels[y][x] = (3, 3, 5)
                 continue
             camera = 2 * x / width - 1
@@ -318,6 +320,29 @@ def render(buffer: CellBuffer, body: dict[str, Any], area: Rect, paint: Paint, h
         buffer.put(area.x + start, area.y + row, text, paint(role, bold=True))
     if hud:
         hud_line(buffer, body, area, paint, heading, world, me)
+
+
+def widest(body: dict[str, Any], prefer: str) -> str:
+    """Where an establishing look should face: across the most open known
+    ground to a facade still in view (a horizon with nothing on it is not
+    a place). Ties keep the preferred heading."""
+    world = World(body)
+    me = next((a for a in body.get("actors", []) if a.get("role") == "player_self"), None)
+    if me is None:
+        return prefer
+
+    def reach(heading: str) -> tuple[bool, int]:
+        dx, dy = HEADINGS[heading]
+        for step in range(1, MAX_DEPTH + 1):
+            tile, _, _ = world.at(me["x"] + dx * step, me["y"] + dy * step)
+            if tile in OPAQUE:
+                return step >= 6, step  # a facade worth looking at, not a wall in your face
+            if tile is None:
+                return False, step
+        return False, MAX_DEPTH
+
+    order = [prefer, *(h for h in HEADINGS if h != prefer)]
+    return max(order, key=reach)
 
 
 def hud_line(buffer: CellBuffer, body: dict[str, Any], area: Rect, paint: Paint, heading: str, world: World,

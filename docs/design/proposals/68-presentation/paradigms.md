@@ -1,14 +1,15 @@
-# Beyond the roguelike map: two playable paradigms (proposal)
+# Beyond the roguelike map: three playable paradigms (proposal)
 
 **Status: exploration for the owner, issue #68.** Not canon and not a
-recommendation to replace anything yet. Both prototypes run in the trial
-build beside the shipped map and the proposal map (`spec.md`), on the
-same server, the same simulation and the same combat. F7 cycles all four
-views on one game state.
+recommendation to replace anything yet. All three prototypes run in the
+trial build beside the shipped map and the proposal map (`spec.md`), on
+the same server, the same simulation and the same combat. F7 cycles all
+five views on one game state.
 
 ```
 python scripts/playtest_68.py --geometry candidate --view street   # A: eye level
 python scripts/playtest_68.py --geometry candidate --view scene    # B: places
+python scripts/playtest_68.py --geometry candidate --view auto     # C: chosen by context
 ```
 
 ## 1. The question
@@ -47,7 +48,7 @@ spatial simulation and tactical combat stay exactly as they are?"
 
 ## 2. What stays fixed
 
-Both prototypes are views over the unchanged server:
+All three prototypes are views over the unchanged server:
 
 - the same zone grid, sight, memory, movement rules, cooldowns, combat,
   hazards, NPCs and Lattice;
@@ -171,21 +172,83 @@ because it is mostly words.
   fine at a bar and wrong in a fight, which is again why threat hands
   over to the map.
 
-## 5. Side by side
+## 5. Prototype C: auto (the view follows the moment)
 
-| | Proposal map (`spec.md`) | A: street view | B: scenes |
-|---|---|---|---|
-| Feels like | a lit tactical map | being in the street | being somewhere, choosing where next |
-| Best at | tactics, honesty, speed | presence, scale, atmosphere | RPG framing, hubs, social play, writing |
-| Worst at | presence, places | awareness behind you, 16 colours | moment-to-moment movement, contested space |
-| Content needed | looks per zone | looks per zone (same) | looks plus places with text per zone |
-| Server change | additive fields | deep camera | deep camera, `walk_to` |
-| Door CPU, 132x50 | 13-15 ms/frame | 30-39 ms/frame | 15-17 ms/frame |
-| Bandwidth per step | small diff | most of the screen | small diff while walking |
-| 16 colours | good | crude | good |
-| Danger | native | hands over to the map | hands over to the map |
+**What it is.** The door picks the view from context instead of a key.
+The rules, in order (`door/present/context.py`):
 
-## 6. What I think it means
+1. **Danger:** anything threatening (a hazard, a target, a hostile,
+   combat, heat) shows the tactical map, and keeps it for 5 seconds after
+   the last threat so a fight does not flicker in and out of view.
+2. **Arrival:** entering a zone, reaching the end of a walk, or F5 shows a
+   short **look**: street view for 3 to 4 seconds. It faces across the most
+   open known ground to a facade at least 6 m away, so it frames the place
+   rather than the wall behind you. It is only a look: any key closes it
+   and acts in the view underneath.
+3. **Calm ground:** safe and pocket ground that has named places is a
+   **scene**: you move by choosing where to go.
+4. **Everywhere else:** contested and open ground is the **map**:
+   positioning matters there, so you move tile by tile.
+
+A tag in the header always names the current view (LOOK, SCENE, MAP,
+TACTICAL), and TACTICAL is drawn in the danger colour. The server is
+unchanged from A and B: ordinary moves, trial walks, the deep camera.
+
+![One journey under auto, 80x24](paradigms/auto-journey-80x24-256.png)
+
+The journey above is one continuous run of the real door, with no keys
+pressed to change views:
+
+1. arriving in the Plaza: a look;
+2. settling into the Plaza's scene;
+3. walking to the south promenade;
+4. arriving there: a look;
+5. arriving in Sodium Row: a look;
+6. the map on contested ground;
+7. Tab targets an enforcer: TACTICAL.
+
+At 132x50 and in truecolor: `paradigms/auto-*-132x50-truecolor.png`.
+
+**What it gives.** Each prototype where it is strongest, without asking
+the player to manage views. Arrivals get an establishing shot for free,
+the way a film cuts to the street before the scene. Hubs read as places,
+and the street is tactical when it should be. It is the closest any of
+these come to an RPG that moves between exploration, social space and
+danger.
+
+**What it costs.**
+
+- **Keys change meaning with context.** In a scene, Up and Down move a
+  cursor; on contested ground they move your body. Crossing a pocket
+  boundary mid-thought flips them. The header tag says so, but muscle
+  memory may not listen. An alternative worth testing: arrows always move
+  you, and scenes take PgUp, PgDn and Enter.
+- **Boundaries can feel jumpy.** Walking out of a clinic interior onto
+  Clinic Row switches scene to map at the door. Only threats have a hold;
+  boundaries do not, by design, because hiding the map on contested
+  ground is the dangerous mistake.
+- **Durations are guesses.** The 5-second hold and the 3 to 4 second look
+  need play to tune.
+- **Big open spaces look empty.** The Plaza is wider than eye level can
+  see at this depth, so its look is mostly sky and paving. Looks are at
+  their best in streets, alleys and interiors.
+- **Bandwidth spikes.** Every look is a full street-view frame.
+
+## 6. Side by side
+
+| | Proposal map (`spec.md`) | A: street view | B: scenes | C: auto |
+|---|---|---|---|---|
+| Feels like | a lit tactical map | being in the street | being somewhere, choosing where next | a game that frames each moment |
+| Best at | tactics, honesty, speed | presence, scale, atmosphere | RPG framing, hubs, social play, writing | arrivals, hubs and danger each in their best view |
+| Worst at | presence, places | awareness behind you, 16 colours | moment-to-moment movement, contested space | keys that change meaning at boundaries |
+| Content needed | looks per zone | looks per zone (same) | looks plus places with text per zone | as B |
+| Server change | additive fields | deep camera | deep camera, `walk_to` | as B |
+| Door CPU, 132x50 | 13-15 ms/frame | 30-39 ms/frame | 15-17 ms/frame | as the view it shows; looks cost as A |
+| Bandwidth per step | small diff | most of the screen | small diff while walking | small, with a spike per look |
+| 16 colours | good | crude | good | good, except looks |
+| Danger | native | hands over to the map | hands over to the map | the map, held 5 s past the threat |
+
+## 7. What I think it means
 
 Neither prototype should replace the map. They answer different
 moments, and the most promising direction is to stop treating "the
@@ -196,15 +259,17 @@ view" as one thing:
   stand, the thing S33's vignettes were meant to be, but live.
 - **Being in a hub** belongs to scenes: the Plaza, the Tin Halo, Clinic
   Row's interiors, Vesper's bar, the Lattice terminals' surroundings.
-- **Danger and contested ground** belong to the tactical map, which both
-  prototypes already fall back to.
+- **Danger and contested ground** belong to the tactical map, which every
+  prototype already falls back to.
 
-A third prototype would test that: the door choosing the view from
-context (safety class, threat, whether you are walking or standing)
-rather than a key. I have not built it; it is a small step from here, and
-whether it feels natural or jumpy is exactly what play has to show.
+Prototype C is that idea, built. In captures it does what it should: one
+journey moves through a look, a scene, a walk, a look, the map and
+TACTICAL without a key pressed to change views. Whether that reads as a
+game framing its moments or as a screen that will not sit still is
+exactly what play has to show. The key-meaning switch at boundaries is
+the part I trust least.
 
-## 7. Decisions these raise
+## 8. Decisions these raise
 
 | ID | Decision | Why it needs you |
 |---|---|---|
@@ -213,8 +278,9 @@ whether it feels natural or jumpy is exactly what play has to show.
 | S3 | Which paradigm, if any, becomes a supported view, and for which contexts? | product direction; affects S25, S27, S30, S33 scopes |
 | S4 | Should facing become server state the view can set (smooth turning, facing-aware rules later)? | today facing is persisted but unused; making it meaningful is a rule change |
 | S5 | Places as content: who writes them, and are they canon (gazetteer) or presentation (looks)? | names of places become world text |
+| S6 | If the view follows context, may the arrow keys change meaning with it, or must movement keys always move the body? | it changes the control contract in UI 5 |
 
-## 8. Honest limits
+## 9. Honest limits
 
 - Built and captured from the harness; not yet played by a person. The
   user's own play is the test.
@@ -226,6 +292,6 @@ whether it feels natural or jumpy is exactly what play has to show.
 - The street view has no animation (no flicker, no rain, no moving
   crowds between server updates). It could; each would cost CPU and
   bandwidth and would need its own rule about never imitating a threat.
-- The Lattice keeps its own linework view in both prototypes; going down
+- The Lattice keeps its own linework view in every prototype; going down
   is already a change of medium.
 - Menus, text views and dialogue are unchanged.

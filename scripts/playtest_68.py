@@ -5,6 +5,7 @@
     python scripts/playtest_68.py --colour 16          # try another tier
     python scripts/playtest_68.py --view street        # paradigm A: eye level
     python scripts/playtest_68.py --view scene         # paradigm B: places
+    python scripts/playtest_68.py --view auto          # paradigm C: chosen by context
 
 Starts a private foreground service under `.test-tmp/playtest-68-*` with
 the trial switches on (charted public geography, ambient lines), then
@@ -13,7 +14,7 @@ The world persists between runs, so your Wake is still there next time;
 `--fresh` starts over.
 
 In play: F7 cycles the views on the same game state: shipped map,
-proposal map, street view, scenes. F5 shows the place card, F6 cycles
+proposal map, street view, scenes, auto. F5 shows the place card, F6 cycles
 when cards appear. Danger always hands the screen to the tactical map.
 Ctrl-X then Y leaves and stops the service.
 
@@ -81,7 +82,7 @@ def main() -> int:
     parser.add_argument("--height", type=int, default=max(24, size.lines))
     parser.add_argument("--handle", default="Playtester")
     parser.add_argument("--fresh", action="store_true", help="delete this playtest world first")
-    parser.add_argument("--view", choices=("shipped", "map", "street", "scene"), default="map",
+    parser.add_argument("--view", choices=("shipped", "map", "street", "scene", "auto"), default="map",
                         help="the view to start in (F7 cycles)")
     args = parser.parse_args()
 

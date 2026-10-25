@@ -7,8 +7,9 @@ canon lines listed in section 12.2 change first, top-down, in the same
 PR (`AGENTS.md` section 2). Until then it binds nothing, and the playable
 build in this branch is a trial behind switches.
 
-**See also** [`paradigms.md`](paradigms.md): two playable alternatives to
-the top-down map (street view, scenes) and their trade-offs.
+**See also** [`paradigms.md`](paradigms.md): three playable alternatives
+to the top-down map (street view, scenes, a context-driven auto view) and
+their trade-offs.
 
 **What this document is.** The contract for how Karst and the Lattice
 reach a caller's eyes: the vision, the visual vocabulary, the layout and

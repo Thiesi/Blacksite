@@ -46,11 +46,11 @@ def connected(info, content, zone, tile, width=80, height=24, tier="256", mode="
     return game, client, display, pump
 
 
-def draw(display, width, height):
+def draw(display, width, height, now=50.0):
     display.force_full = display.dirty = True
     display.last_render = -1
     terminal = FakeTerminal(width, height)
-    terminal.write(display.render(50)[0])
+    terminal.write(display.render(now)[0])
     return terminal.screen_text()
 
 
@@ -136,3 +136,50 @@ def test_deep_camera_looks_as_far_as_it_is_wide(info, content, trial) -> None:
     client.send(display.shape_frame())
     pump(2)
     assert display.body["viewport"]["h"] == 40  # the whole plaza, north to south
+
+
+# --- Prototype C: the auto view ---------------------------------------------
+
+
+def auto(info, content, zone, tile):
+    game, client, display, pump = connected(info, content, zone, tile, mode="auto")
+    display.card_zone = None  # arrive again, now in auto
+    client.send(display.shape_frame())
+    pump(2)
+    return game, client, display, pump
+
+
+def test_auto_looks_on_arrival_then_settles_into_a_scene_on_safe_ground(info, content, trial) -> None:
+    _, _, display, _ = auto(info, content, "core-plaza", (45, 26))
+    assert display.context.choose(display.body, 1) == ("scene", "LOOK", True)
+    looking = draw(display, 80, 24, now=1.5)
+    assert "LOOK" in looking and "facing" in looking
+    assert display.key("down", 2) == []  # the look closes; the scene's cursor moves
+    assert display.context.choose(display.body, 2) == ("scene", "SCENE", False)
+    assert "WAYS" in draw(display, 80, 24, now=2.5) and "SCENE" in draw(display, 80, 24, now=2.5)
+
+
+def test_auto_uses_the_map_on_contested_ground(info, content, trial) -> None:
+    _, _, display, _ = auto(info, content, "sodium-row", (34, 12))
+    display.context.look_until = 0
+    assert display.context.choose(display.body, 2)[:2] == ("map", "MAP")
+    assert display.key("up", 2)[0].data["k"] == "up"  # tile by tile, absolute
+
+
+def test_auto_holds_the_tactical_map_after_a_threat(info, content, trial) -> None:
+    _, _, display, _ = auto(info, content, "core-plaza", (45, 26))
+    calm = dict(display.body)
+    threat = dict(calm, nearby=[{"id": "x", "name": "Hostile", "relation": "!", "role": "npc_hostile"}])
+    assert display.context.choose(threat, 10)[:2] == ("map", "TACTICAL")
+    assert display.context.choose(calm, 13)[:2] == ("map", "TACTICAL")  # no flicker out of a fight
+    assert display.context.choose(calm, 16)[:2] == ("scene", "SCENE")
+
+
+def test_auto_looks_where_a_walk_arrives(info, content, trial) -> None:
+    game, client, display, pump = auto(info, content, "core-plaza", (45, 26))
+    display.context.look_until = 0
+    client.send(Frame("intent", {"name": "walk_to", "args": {"at": [45, 30]}}))
+    pump(3)
+    assert display.context.walk_goal == [45, 30]
+    pump(80)
+    assert display.context.look_until > 0 and display.context.walk_goal is None

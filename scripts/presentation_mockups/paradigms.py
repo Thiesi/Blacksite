@@ -1,4 +1,4 @@
-"""Capture the two paradigm prototypes (street view, scenes) from live state.
+"""Capture the paradigm prototypes (street view, scenes, auto) from live state.
 
 Run from the repository root:
 
@@ -7,6 +7,7 @@ Run from the repository root:
 The same headless walk as capture.py, drawn by the real `Display` in each
 view mode. In the scene captures the caller chooses a way and the server
 walks the body there; frames show the walk in progress and on arrival.
+The auto tour lets the door choose every view itself (`auto-*`).
 """
 
 import os
@@ -78,11 +79,59 @@ def tour(out: Path, width: int, height: int, tier: str) -> None:
     shot(caller, out, "clinic-door", "scene")
 
 
+def frame_now(caller: Caller, out: Path, name: str) -> None:
+    """Render exactly what the auto view chooses at this moment."""
+    display = caller.display
+    display.toast, display.hit_flash = None, False
+    display.force_full = display.dirty = True
+    display.last_render = -1.0
+    data, ack = display.render(caller.t)
+    if ack:
+        caller.client.send(ack)
+    w, h, tier = caller.info.width, caller.info.height, caller.info.color_depth
+    emit(out, f"auto-{name}-{w}x{h}-{tier}", data, w, h)
+
+
+def auto_tour(out: Path, width: int, height: int, tier: str) -> None:
+    """One journey under the auto view: the door picks every frame's view."""
+    from blacksite.door.present import scene
+    caller = Caller(width, height, tier, local=CANDIDATE)
+    display = caller.display
+    display.present, display.view_mode = True, "auto"
+    display.card_zone = None
+    place(caller.game, caller.client, "core-plaza", (45, 27))
+    caller.client.send(display.shape_frame())
+    caller.pump(3)
+    frame_now(caller, out, "1-plaza-arrival")          # a look on arrival
+    caller.pump(45)
+    frame_now(caller, out, "2-plaza-scene")            # safe ground: a scene
+    options = scene.ways(display.body)
+    display.scene_cursor = next(i for i, w in enumerate(options) if w["name"] == "The south promenade")
+    caller.key("enter", 2)
+    caller.pump(10)
+    frame_now(caller, out, "3-walking")
+    for _ in range(400):  # until the walk ends and the door looks
+        caller.pump(1)
+        if display.context.look_until > caller.t:
+            break
+    frame_now(caller, out, "4-arrived")                # a look where the walk ends
+    display.context.look_until = 0.0
+    place(caller.game, caller.client, "sodium-row", (31, 12))
+    caller.pump(3)
+    frame_now(caller, out, "5-sodium-arrival")         # a look into Sodium Row
+    caller.pump(45)
+    frame_now(caller, out, "6-sodium-map")             # contested: the map
+    caller.key("tab", 4)
+    caller.pump(2)
+    frame_now(caller, out, "7-tactical")               # a target: tactical
+
+
 def main() -> None:
     out = Path(sys.argv[1]) if len(sys.argv) > 1 else ROOT / "docs/design/proposals/68-presentation/paradigms"
     out.mkdir(parents=True, exist_ok=True)
     for width, height, tier in ((80, 24, "256"), (132, 50, "256"), (80, 24, "16"), (132, 50, "truecolor")):
         tour(out, width, height, tier)
+        auto_tour(out, width, height, tier)
     print(f"wrote {out}")
 
 
