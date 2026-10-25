@@ -6,6 +6,7 @@ remembered), so dressing reveals nothing that sight has not.
 """
 
 import os
+from collections.abc import Callable, Iterator
 from dataclasses import dataclass
 from typing import Any
 
@@ -128,3 +129,24 @@ def for_zone(content: ContentTree, zone: s.Zone) -> ZoneLooks | None:
 def charted(content: ContentTree, zone: s.Zone) -> bool:
     look = content.looks.get(zone.id)
     return TRIAL and look is not None and look.charted
+
+
+def scene(look: s.Look, known: Callable[[tuple[int, int]], bool]) -> dict[str, Any] | None:
+    """Eye-level lights and dressing (V0 spike, trial only). Like a look,
+    a piece or light goes out only where the caller knows the ground it
+    stands on, so a scene reveals nothing the map does not."""
+    if not TRIAL or look.scene is None:
+        return None
+    sc = look.scene
+
+    def footprint(rect: tuple[float, float, float, float]) -> Iterator[tuple[int, int]]:
+        x, y, w, h = rect
+        return ((tx, ty) for tx in range(int(x), int(x + w - 1e-6) + 1) for ty in range(int(y), int(y + h - 1e-6) + 1))
+
+    return {"interior": sc.interior, "ceiling": sc.ceiling, "walls": sc.walls, "floor": sc.floor, "wet": sc.wet,
+            "ambient": sc.ambient, "haze": sc.haze, "haze_reach": sc.haze_reach,
+            "lights": [{"at": list(li.at), "z": li.z, "colour": li.colour, "reach": li.reach, "power": li.power}
+                       for li in sc.lights if known((int(li.at[0]), int(li.at[1])))],
+            "pieces": [{"kind": p.kind, "rect": list(p.rect), "z": list(p.z), "colour": p.colour, "glow": p.glow,
+                        "text": p.text, "role": p.role}
+                       for p in sc.pieces if any(known(t) for t in footprint(p.rect))]}

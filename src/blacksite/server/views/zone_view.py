@@ -173,6 +173,9 @@ def build(actor: Actor, zone: ZoneInstance, perception: Perception, content: Con
     view["place"]["exits"] = [{"name": content.zones[ex.target_zone].meta.name if ex.target_zone in content.zones else "Construction",
                                "at": list(ex.tile), "kind": ex.kind}
                               for ex in zone.template.meta.exits if not ex.hidden and known(ex.tile)]
+    lit = dressing.scene(look, known) if look else None
+    if lit is not None:
+        view["scene"] = lit
     if perception.looks:
         resolved = dressing.for_zone(content, zone.template)
         assert resolved is not None

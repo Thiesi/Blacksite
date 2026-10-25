@@ -69,6 +69,9 @@ class Display:
         self.context = self.new_context()
         self.auto_shown: Decision | None = None
         self.inspect = os.environ.get("BLACKSITE_AUTO_INSPECT") == "1"
+        # V0 spike: the glyph tier (UI 1 amendment D-T9 pending). "modern"
+        # draws eye-level art in sextants; anything else stays CP437.
+        self.glyphs = "modern" if os.environ.get("BLACKSITE_GLYPH_TIER") == "modern" else "cp437"
         self.card_mode = "entry"
         self.card_until = 0.0
         self.card_zone: str | None = None
@@ -468,7 +471,7 @@ class Display:
             if self.heading is None and shown_kind == "zone":
                 self.heading = present_street.cardinal(next(
                     (a.get("facing") for a in shown.get("actors", []) if a.get("role") == "player_self"), None))
-            present_screen.render(buffer, self.layout, Paint(self.palette), shown_kind, shown, list(self.logs), hint,
+            present_screen.render(buffer, self.layout, Paint(self.palette, self.glyphs), shown_kind, shown, list(self.logs), hint,
                                   show_card=card, flash=self.hit_flash, mode=mode,
                                   heading=self.heading or "up", cursor=self.scene_cursor, tag=tag)
             if self.inspect and self.auto_shown:

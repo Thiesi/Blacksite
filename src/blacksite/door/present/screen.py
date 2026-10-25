@@ -14,7 +14,7 @@ from blacksite.door.layout import Layout
 from dataclasses import replace
 
 from blacksite.door.layout import Rect
-from blacksite.door.present import chrome, lattice, scene, street, zone
+from blacksite.door.present import chrome, lattice, lit, scene, street, zone
 from blacksite.door.present.paint import Paint
 
 CARD_SECONDS = 8.0
@@ -121,7 +121,8 @@ def render(buffer: CellBuffer, layout: Layout, paint: Paint, kind: str, body: di
         zone.panel(buffer, body, replace(layout, side=Rect(side.x, side.y + rows, side.width, side.height - rows)), paint)
         zone.head(buffer, body, layout, paint)
         if mode == "street":
-            street.render(buffer, body, layout.viewport, paint, heading)
+            if not lit.render(buffer, body, layout.viewport, paint, heading):
+                street.render(buffer, body, layout.viewport, paint, heading)
         else:
             scene.render(buffer, body, layout.viewport, paint, heading, cursor)
     if label.strip():
