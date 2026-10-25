@@ -380,6 +380,15 @@ into, not a description of one. The owner's words: a game that conveys
 what matters through scenery and scenes, not only through text, so the
 atmosphere is set before anything is explained.
 
+**Design paradigm (owner, 2026-10-25): don't require a modern terminal,
+but build for one.** The reference experience is a modern terminal:
+truecolor, the modern glyph tier, 132x50 or larger. Scenes are designed
+and judged there. A caller on a classic CP437 client with 16 colours at
+80x25 plays the same game in a plainer frame. One rule keeps that fair:
+nothing you need to play exists only in the scenery. Whatever the art
+shows that you can act on is also on the map, the panel or in text (spec
+R4, R6), so a classic caller loses atmosphere, never information.
+
 It is a target, not a capture. It was composed by hand
 (`scripts/presentation_mockups/target_tin_halo.py`) on the door's real
 132x50 layout and palette roles, and nothing in the game draws it yet.
@@ -413,14 +422,32 @@ street view:
 **What it takes to reach it** (each a proposal for the plan, not a
 commitment):
 
-1. **A glyph tier beyond CP437, by opt-in only.** Canon (UI 1) limits
-   every glyph to characters that exist in CP437, because NetBBS
-   transcodes UTF-8 to CP437 for SyncTERM-class callers. Sextants do not
-   survive that, and the door cannot detect support: NetBBS sends only
-   the boolean `unicode_style`. The workable shape (technical lead,
-   plan section 13): a per-player setting, chosen against a test
-   pattern, half-blocks by default, for eye-level art only. Maps, chrome
-   and text stay CP437. This needs a UI 1 amendment (D-T9).
+1. **A modern glyph tier for callers who can show it (D-T9).** Canon
+   (UI 1) limits every glyph to characters that exist in CP437, because
+   NetBBS transcodes UTF-8 to CP437 for SyncTERM-class callers. Sextants
+   do not survive that, and the door cannot detect support: NetBBS sends
+   only the boolean `unicode_style`. Half-blocks are CP437 and work for
+   everyone already. The proposed UI 1 amendment:
+   - **Detection.** The one-time first-play check UI 1 already describes
+     gains a test row for every glyph family the modern tier uses. The
+     modern tier is on by default when `color_depth` is truecolor and
+     the caller confirms the row looks right; everyone else gets the
+     CP437 tier. Either can be changed in settings.
+   - **Eye level.** Modern tier: sextants. CP437 tier: half-blocks.
+   - **Chrome and map.** A substitution table, not a second renderer:
+     `glyphs.json` gains a modern column beside each CP437 glyph (the
+     fallback). Layout, widths and the meaning of every cell are the
+     same in both tiers; only the character drawn changes. In chrome
+     that means eighth-block bars, diagonal arrows, rounded corners,
+     `◆` and `×`.
+   - **Map rules.** One glyph per tile in both tiers: the map is the
+     grid you move and fight on, so no sub-tile detail. A map glyph means
+     the same in both tiers; a modern glyph may be a better drawing of
+     the same symbol, never a symbol only modern callers see. Help,
+     legends and advice between players depend on that.
+   - **Tests.** Every modern glyph has a CP437 fallback and appears in
+     the first-play check; width safety holds for both columns; replay
+     captures run in both tiers.
 2. **Lighting data in looks.** Per place: light sources (position,
    height, colour, reach), ambient level, haze colour. Decoration only:
    no rule reads it (spec R4, R6).
@@ -448,22 +475,28 @@ commitment):
    class (rate-limited full redraws, falling back to half-blocks or the
    map on slow links) and a CPU budget, measured over real NetBBS SSH
    and web paths.
-**First step (proposed, D-T10):** a live spike, V0, that renders the
-Tin Halo from look data (lights, set pieces, places) in the real door
-behind the trial flag. The owner compares a live capture with this
-target before any authoring at scale; the spike's look schema becomes
-the draft content format.
-
 7. **Authoring at scale.** The real cost. Every place worth standing in
    needs its light, dressing and figures authored to this standard. That
    is world-building work as much as engineering, and it should follow
-   the gazetteer, place by place.
+   the gazetteer, place by place. First release (D-T11, agreed by the
+   owner 2026-10-25): full scenes for hub interiors and pockets first,
+   simpler looks elsewhere.
 
-**Outside canon in the mockup.** Besides the sextants, the chrome uses
-glyphs CP437 lacks: diagonal arrows in the ways list, eighth-blocks in
-the vitals bars, `◆` and `×`. The CP437 build uses `↑↓←→` with the
-compass letters, whole-cell bars, `♦` and `x`. Those are small losses;
-the glimpse is the one that matters.
+**First step (D-T10, agreed by the owner 2026-10-25; starts when the
+technical lead clears it):** a live spike, V0, that renders the Tin Halo
+from look data (lights, set pieces, places) in the real door behind the
+trial flag. The owner compares live captures with this target before any
+authoring at scale; the spike's look schema becomes the draft content
+format. V0 captures three tiers side by side, so the D-T9 amendment is
+judged from real frames: modern tier and truecolor at 132x50 (glimpse
+and chrome), CP437 tier with 256 colours at 132x50, and CP437 tier with
+16 colours at 80x25.
+
+**Outside today's canon in the mockup.** Besides the sextants, the
+chrome uses glyphs CP437 lacks: diagonal arrows in the ways list,
+eighth-blocks in the vitals bars, `◆` and `×`. Under the D-T9 amendment
+these become the modern tier's chrome; the CP437 tier uses `↑↓←→` with
+the compass letters, whole-cell bars, `♦` and `x`.
 
 **Invented for the mockup.** The place "Under the halo", the selected
 way's text about Vesper, the detail box, and several log lines are
