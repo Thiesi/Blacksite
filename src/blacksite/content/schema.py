@@ -63,6 +63,81 @@ class Palette:
     schema: int = CONTENT_SCHEMA
 
 
+# --- presentation (proposal 68: docs/design/proposals/68-presentation) ----
+
+
+@dataclass(frozen=True)
+class Theme:
+    """How a district or region is lit. Colour roles and ground grain only;
+    a theme never changes what a tile does."""
+
+    ground_bg: str | None = None
+    ground_fg: str | None = None
+    texture: str = "·"
+    """Ground grain, picked per tile by a stable hash; a space is bare ground."""
+    wall_bg: str | None = None
+    wall_fg: str | None = None
+    luma: Literal["dark", "light"] = "dark"
+    pattern: Literal["grain", "rings"] = "grain"
+
+
+@dataclass(frozen=True)
+class ThemeTable:
+    """`themes.json`: theme id to theme."""
+
+    themes: dict[str, Theme]
+    schema: int = CONTENT_SCHEMA
+
+
+@dataclass(frozen=True)
+class LookRegion:
+    theme: str
+    rect: tuple[int, int, int, int] | None = None
+    """`[x, y, w, h]`."""
+    circle: tuple[int, int, int] | None = None
+    """`[x, y, r]`, r in rows; columns count half."""
+
+
+@dataclass(frozen=True)
+class LookSign:
+    """Lettering on wall tiles, left to right from `at`."""
+
+    at: Tile
+    text: str
+    role: str
+
+
+@dataclass(frozen=True)
+class LookMark:
+    """Paint on plain floor: a run of text from `at`, or a straight `line`."""
+
+    role: str
+    at: Tile | None = None
+    text: str = ""
+    line: tuple[Tile, Tile] | None = None
+    glyph: str = ""
+
+
+@dataclass(frozen=True)
+class Look:
+    """`looks/<zone-id>.json`: what a zone looks like. Dressing never
+    changes passability, opacity, cover or any other rule of the grid."""
+
+    id: str
+    theme: str
+    regions: tuple[LookRegion, ...] = ()
+    signs: tuple[LookSign, ...] = ()
+    marks: tuple[LookMark, ...] = ()
+    glints: tuple[Tile, ...] = ()
+    glint_role: str | None = None
+    names: dict[str, str] = field(default_factory=dict)
+    """Tile id to what it is here (`cover-2`: `barrels`)."""
+    ambient: tuple[str, ...] = ()
+    charted: bool = False
+    """Public geography known on arrival (decision D1; trial only)."""
+    schema: int = CONTENT_SCHEMA
+
+
 KeyContext = Literal["any", "zone", "lattice"]
 
 

@@ -1,7 +1,9 @@
 """Pure display/input state. Game state and menu decisions stay on the server."""
 
+import os
 from collections import deque
 from copy import deepcopy
+from datetime import datetime, timezone
 from typing import Any
 
 from blacksite.door.cells import CellBuffer, display_width, truncate
@@ -13,6 +15,9 @@ from blacksite.door.views import LinePrompt, Renderer, menu_rect, render_frame, 
 from blacksite.door.views.zone import render_zone
 from blacksite.door.views.lattice import render_lattice
 from blacksite.door.log import rows as log_rows
+from blacksite.door import present
+from blacksite.door.present import screen as present_screen
+from blacksite.door.present.paint import Paint
 from blacksite.server.protocol import Frame
 
 
@@ -46,6 +51,11 @@ class Display:
         self.selected_keymap = "arrows"
         self.warnings = SessionWarnings(info.session_limit)
         self.renderers: dict[str, Renderer] = {"text": render_text, "dead": render_text, "menu": render_menu, "zone": render_zone, "lattice": render_lattice}
+        # Proposal 68 trial: F9 switches renderer, F6 cycles place cards, F5 looks.
+        self.present = present.enabled(os.environ)
+        self.card_mode = "entry"
+        self.card_until = 0.0
+        self.card_zone: str | None = None
 
     def resize(self, info: DoorInfo) -> None:
         self.info = info
@@ -107,7 +117,12 @@ class Display:
             self.prompt = LinePrompt(data["id"], data["label"], min(200, data["max_len"])) if data["kind"] == "line" else None
             self.key_prompt = data if data["kind"] == "key" else None
         elif frame.type == "toast":
-            self.toast = (data["text"], data["role"], now + data["seconds"])
+            if data.get("kind") == "place" and self.present:
+                self.logs.append({"channel": "zone", "kind": "place", "role": "ui_text",
+                                  "text": str(data.get("full") or data["text"]),
+                                  "at": datetime.now(timezone.utc).isoformat()})
+            else:
+                self.toast = (data["text"], data["role"], now + data["seconds"])
         elif frame.type == "bye":
             self.connected = False
         elif frame.type == "pong":
@@ -115,6 +130,12 @@ class Display:
         new_hit = self.body.get("me",{}).get("hit_serial")
         if old_hit is not None and new_hit is not None and new_hit != old_hit:
             self.hit_flash = True
+            self.card_until = 0.0
+        if frame.type in ("view", "delta") and self.kind == "zone":
+            zone_id = self.body.get("me", {}).get("zone")
+            if zone_id != self.card_zone:
+                self.card_zone = zone_id
+                self.card_until = now + present_screen.CARD_SECONDS if self.card_mode == "entry" else 0.0
         self.dirty = True
         return result
 
@@ -184,6 +205,10 @@ class Display:
         if key == "ctrl-x":
             self.confirm_exit = True
             return []
+        if key in ("f9", "f6", "f5"):
+            return self.trial_key(key, now)
+        if self.card_until:
+            self.card_until = 0.0  # Any key closes a place card, and still acts.
         if self.prompt is not None:
             done, text = self.prompt.key(key)
             if done:
@@ -242,7 +267,24 @@ class Display:
             return []
         return [Frame("key", {"k": key, "t": max(0, int(now * 1000))})]
 
+    def trial_key(self, key: str, now: float) -> list[Frame]:
+        if key == "f9":
+            self.present = not self.present
+            self.toast = ("Proposal 68 presentation." if self.present else "Shipped presentation.", "ui_text", now + 3)
+        elif key == "f6":
+            modes = present_screen.CARD_MODES
+            self.card_mode = modes[(modes.index(self.card_mode) + 1) % len(modes)]
+            self.toast = (present_screen.CARD_LABELS[self.card_mode], "ui_text", now + 3)
+        elif key == "f5" and self.card_mode != "off" and self.kind == "zone":
+            self.card_until = 0.0 if self.card_until else now + 3600
+        self.previous = None
+        self.force_full = True
+        return []
+
     def update(self, elapsed: float, now: float) -> None:
+        if self.card_until and now >= self.card_until:
+            self.card_until = 0.0
+            self.dirty = True
         if self.toast is not None and now >= self.toast[2]:
             self.toast = None
             self.dirty = True
@@ -266,8 +308,22 @@ class Display:
         elif "hint" in self.body:
             hint = str(self.body["hint"])
         header = "" if self.kind == "zone" and self.local is None else "Karst · " + truncate(self.info.handle, self.layout.width - 20)
-        render_frame(buffer, self.layout, self.palette, header, list(self.logs), hint)
         area = self.layout.viewport
+        shown_kind = self.body.get("kind") if self.kind == "wake" else self.kind
+        shown = self.body.get("body", {}) if self.kind == "wake" else self.body
+        if self.present and self.local is None and shown_kind in ("zone", "lattice"):
+            card = bool(self.card_until) and shown_kind == "zone" and not present_screen.threatened(shown)
+            if not card:
+                self.card_until = 0.0
+            present_screen.render(buffer, self.layout, Paint(self.palette), shown_kind, shown, list(self.logs), hint,
+                                  show_card=card, flash=self.hit_flash)
+            if self.toast:
+                buffer.put(1, self.layout.separator, truncate(self.toast[0], self.layout.width - 2), self.palette.style("ui_text"))
+            if self.prompt or self.confirm_exit or self.key_prompt:
+                buffer.put(1, self.layout.hint, truncate(hint, self.layout.width - 2).ljust(self.layout.width - 2), self.palette.style("hint"))
+            self.hit_flash = False
+            return self.finish(buffer, hint, now, False)
+        render_frame(buffer, self.layout, self.palette, header, list(self.logs), hint)
         if self.local is not None:
             count = max(1, area.height - 2)
             body = {**self.local, "lines": self.local_lines[self.local_page * count:(self.local_page + 1) * count],
@@ -288,6 +344,9 @@ class Display:
                 buffer.put(0,y,"|",self.palette.style("warning"))
                 buffer.put(buffer.width-1,y,"|",self.palette.style("warning"))
             self.hit_flash = False
+        return self.finish(buffer, hint, now, flashed)
+
+    def finish(self, buffer: CellBuffer, hint: str, now: float, flashed: bool) -> tuple[bytes, Frame | None]:
         output = buffer.diff(None if self.force_full else self.previous)
         if self.prompt and not self.confirm_exit:
             output += f"\x1b[{self.layout.hint + 1};{min(self.layout.width - 1, 2 + display_width(hint))}H\x1b[?25h".encode("ascii")

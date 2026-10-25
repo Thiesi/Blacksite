@@ -106,6 +106,7 @@ class LogLine(TypedDict):
     text: str
     role: str
     at: str
+    kind: NotRequired[str]  # Proposal 68: place, ambient, speech, combat, danger, system, lattice.
 
 
 class Log(TypedDict):
@@ -123,6 +124,7 @@ class Prompt(TypedDict):
 class Toast(TypedDict):
     text: str
     role: str
+    kind: NotRequired[str]  # Proposal 68: "place" marks a zone's first-entry line.
     seconds: float
 
 

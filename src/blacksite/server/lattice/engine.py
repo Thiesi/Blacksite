@@ -523,6 +523,7 @@ class Lattice:
                 "hit_serial": actor.behaviour.get("hit_serial", 0)},
             "room": None, "label": cell.label,
             "body_safety": self.game.world.zones[actor.zone].safety_at(actor.position),
+            "body_zone": self.game.world.zones[actor.zone].template.meta.name,  # Proposal 68, additive.
             "hint": "Arrows links  E uplink / enter  "+self.jack_key(session)+" jack out  Tab target  1-7 cast  R rig"}
 
     def tick(self, ctx: TickContext) -> None:

@@ -65,6 +65,12 @@ REQUIRED_ROLES = frozenset({
     "hp_ok", "hp_low", "hp_critical",
 })
 
+# Proposal 68: dressing may only use these shapes. Every glyph that means
+# a rule (tiles, objects, people) stays reserved for that rule.
+DRESSING_TEXT = frozenset("ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789 -'&.,«»")
+DRESSING_LINES = frozenset("─│")
+DRESSING_GRAIN = frozenset("·∙,'` ")
+
 _CLOSING_ACTIONS = frozenset({"close", "disable", "toggle"})
 _INTEGER = re.compile(r"-?[0-9]+")
 
@@ -198,6 +204,8 @@ class _Validator:
         self.check_dialogue()
         self.check_seasons()
         self.check_art()
+        self.check_themes()
+        self.check_looks()
         self.check_route_variants()
 
     def check_emotes(self) -> None:
@@ -1836,6 +1844,85 @@ class _Validator:
                 self.report(*owner, "width and height must be positive")
             for var in art.meta.variants:
                 self.ref("art", var, owner, "variant", var)
+
+    # --- presentation (proposal 68) ----------------------------------------
+
+    def background(self, role: str | None, owner: tuple[str, str], what: str) -> None:
+        if role is None:
+            return
+        self.role(role, owner, what)
+        values = self.t.palette.roles.get(role, {}).get("16", {}) if self.t.palette else {}
+        if any(type(v) is int and not 0 <= v <= 7 for v in values.values()):
+            # Bright 16-colour backgrounds need blink or iCE colour; use reverse instead.
+            self.report(*owner, f"{what}: background role {role!r} needs 16-colour values 0-7", role)
+
+    def check_themes(self) -> None:
+        if self.t.themes is None:
+            return
+        for tid, theme in sorted(self.t.themes.themes.items()):
+            owner = ("themes", "themes")
+            self.background(theme.ground_bg, owner, f"theme {tid} ground_bg")
+            self.background(theme.wall_bg, owner, f"theme {tid} wall_bg")
+            for role in (theme.ground_fg, theme.wall_fg):
+                if role is not None:
+                    self.role(role, owner, f"theme {tid}")
+            if not theme.texture or set(theme.texture) - DRESSING_GRAIN:
+                self.report(*owner, f"theme {tid}: texture may use only {''.join(sorted(DRESSING_GRAIN))!r}", tid)
+
+    def check_looks(self) -> None:
+        themes = self.t.themes.themes if self.t.themes else {}
+        for lid, look in self.each("looks"):
+            assert isinstance(look, s.Look)
+            owner = ("looks", lid)
+            zone = self.t.zones.get(lid)
+            if zone is None:
+                self.report(*owner, f"no zone {lid!r} to dress")
+                continue
+            tile = lambda x, y: zone.tile_at((x, y))
+            for theme in (look.theme, *(r.theme for r in look.regions)):
+                if theme not in themes:
+                    self.report(*owner, f"theme {theme!r} does not exist", theme)
+            for region in look.regions:
+                if (region.rect is None) == (region.circle is None):
+                    self.report(*owner, f"region {region.theme}: give exactly one of rect or circle", region.theme)
+            for sign in look.signs:
+                self.role(sign.role, owner, "sign")
+                for i, char in enumerate(sign.text):
+                    if char not in DRESSING_TEXT:
+                        self.report(*owner, f"sign {sign.text.strip()!r}: {char!r} is not a dressing letter", sign.text)
+                    elif tile(sign.at[0] + i, sign.at[1]) != "wall":
+                        self.report(*owner, f"sign {sign.text.strip()!r} leaves the wall at {[sign.at[0] + i, sign.at[1]]}", sign.text)
+                        break
+            for mark in look.marks:
+                self.role(mark.role, owner, "mark")
+                if mark.line is not None:
+                    (ax, ay), (bx, by) = mark.line
+                    if (ax != bx and ay != by) or mark.glyph not in DRESSING_LINES:
+                        self.report(*owner, f"mark line {list(mark.line)}: straight runs of ─ or │ only", mark.glyph)
+                        continue
+                    cells = [(x, ay) for x in range(min(ax, bx), max(ax, bx) + 1)] if ay == by else                             [(ax, y) for y in range(min(ay, by), max(ay, by) + 1)]
+                elif mark.at is not None and mark.text:
+                    if set(mark.text) - DRESSING_TEXT:
+                        self.report(*owner, f"mark {mark.text!r}: dressing letters only", mark.text)
+                    cells = [(mark.at[0] + i, mark.at[1]) for i in range(len(mark.text))]
+                else:
+                    self.report(*owner, "mark needs `at` and `text`, or `line` and `glyph`")
+                    continue
+                # Paint that covers a door, a terminal or cover would hide a rule.
+                if any(tile(*cell) not in ("floor", "wall") for cell in cells):
+                    self.report(*owner, f"mark {mark.text or mark.glyph!r} covers a tile that is not plain floor",
+                                mark.text or None)
+            if look.glint_role:
+                self.role(look.glint_role, owner, "glint")
+            for glint in look.glints:
+                if tile(*glint) != "water":
+                    self.report(*owner, f"glint {list(glint)} is not on water")
+            for tid in look.names:
+                if tid not in self.t.tiles:
+                    self.report(*owner, f"name for unknown tile {tid!r}", tid)
+            for line in look.ambient:
+                if "—" in line or len(line) > DIALOGUE_LINE_MAX:
+                    self.report(*owner, f"ambient line {line[:30]!r}: no em-dash, at most {DIALOGUE_LINE_MAX} characters")
 
     # --- routes under every control, service and event state ----------------
 

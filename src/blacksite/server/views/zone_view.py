@@ -12,9 +12,11 @@ from blacksite.server.world.zone import ZoneInstance
 from blacksite.server.world.safety import safety_at
 from blacksite.server.clock import TICK_HZ
 from blacksite.server.npcs.templates import relation
+from blacksite.server.views import looks as dressing
 
 SCROLL_MARGIN = 4  # Terminal UI section 2.
 MAX_VIEW_CELLS = 4096  # Architecture 5.4: bound large-terminal snapshots.
+PARAGRAPH = "\n\n"
 
 
 @dataclass
@@ -26,6 +28,7 @@ class Perception:
     memory: list[list[int]] = field(default_factory=list)
     legend: list[dict[str, str]] = field(default_factory=list)
     indices: dict[str, int] = field(default_factory=dict)
+    looks: list[list[int]] = field(default_factory=list)
 
 
 def camera(actor: Actor, zone: ZoneInstance, width: int, height: int,
@@ -72,18 +75,30 @@ def build(actor: Actor, zone: ZoneInstance, perception: Perception, content: Con
             remembered[tile] = zone.tile_id(tile)
         tiles: list[list[int]] = []
         memory: list[list[int]] = []
+        looked: list[list[int]] = []
         indices = perception.indices
+        resolved = dressing.for_zone(content, zone.template)
+        # Trial D1: public geography is known on arrival. It is computed per
+        # view and never written into the character's sight memory.
+        chart = dressing.charted(content, zone.template)
+        secret = {ex.tile for ex in zone.template.meta.exits if ex.hidden}
         for y in range(viewport["y"], viewport["y"] + viewport["h"]):
-            row, recalled = [], []
+            row, recalled, seen = [], [], []
             for x in range(viewport["x"], viewport["x"] + viewport["w"]):
                 tile = x, y
-                row.append(indices[zone.tile_id(tile)] if tile in visible else -2 if tile in remembered else -1)
-                recalled.append(indices[remembered[tile]] if tile in remembered else -1)
+                known = tile in remembered or (chart and tile not in secret)
+                row.append(indices[zone.tile_id(tile)] if tile in visible else -2 if known else -1)
+                recalled.append(indices[remembered[tile]] if tile in remembered
+                                else indices[zone.template.grid[y][x]] if known else -1)
+                if resolved is not None:
+                    seen.append(resolved.grid[y][x] if row[-1] != -1 else -1)
             tiles.append(row)
             memory.append(recalled)
+            looked.append(seen)
         # Replace arrays rather than mutate them: published revisions own the
         # previous arrays, including while their network writer is pending.
         perception.tiles, perception.memory, perception.grid_key = tiles, memory, grid_key
+        perception.looks = looked if resolved is not None else []
     actors = []
     for other in sorted(zone.actors.values(), key=lambda a: a.id):
         if not private_visible(actor, other):
@@ -94,13 +109,14 @@ def build(actor: Actor, zone: ZoneInstance, perception: Perception, content: Con
             continue
         entry = {"id": other.id, "x": other.x, "y": other.y,
                  "glyph": glyphs.get("actor-jacked" if other.stance == "jacked" else "actor-self" if other is actor else "actor-drone" if other.kind == "drone" else "actor-npc" if other.kind == "npc" else "actor-player", "@"),
-                 "role": "player_self" if other is actor else "npc_"+(other.faction or "neutral") if other.kind != "player" else "player_hostile" if other.marked else content.factions[other.faction].colour if other.faction in content.factions else "player_neutral", "stance": other.stance}
+                 "role": "player_self" if other is actor else "npc_"+(other.faction or "neutral") if other.kind != "player" else "player_hostile" if other.marked else content.factions[other.faction].colour if other.faction in content.factions else "player_neutral", "stance": other.stance, "kind": other.kind}
         if other is actor:
             entry["name"] = other.name
         actors.append(entry)
     objects = [{"id": obj.spec.id, "x": obj.spec.tile[0], "y": obj.spec.tile[1], "kind": obj.spec.kind,
                 "state": {**{key: value for key, value in obj.state.items() if key not in ("actor", "serial")}, "open": obj.open, "in_use": obj.in_use, "progress": obj.progress, **obj.spec.params.get("cache_state",{})},
                 "role": "muted" if obj.state.get("enabled") is False else "text",
+                "name": str(obj.spec.params.get("name", "")),
                 "glyph": glyphs.get("cache" if obj.spec.params.get("dropped_item") else "bank" if obj.spec.kind == "bank" else "vendor" if obj.spec.params.get("vendor") else "locked-door" if obj.open is False else obj.spec.kind if obj.spec.kind in glyphs else content.tiles[zone.tile_id(obj.spec.tile)].glyph, ".")}
                for obj in zone.objects.values() if obj.spec.tile in visible and obj.spec.kind != "salvage_field"]
     hazards = [{"scope": "geometry", "warning": max(0, layer.starts - tick) / TICK_HZ,
@@ -114,7 +130,7 @@ def build(actor: Actor, zone: ZoneInstance, perception: Perception, content: Con
               for entry in actors if entry["id"] != actor.id]
     nearby.sort(key=lambda entry: (entry["relation"] != "!", zone.actors[entry["id"]].kind != "player",
         (zone.actors[entry["id"]].x-actor.x)**2+(zone.actors[entry["id"]].y-actor.y)**2, entry["id"]))
-    return {"viewport": viewport, "tiles": perception.tiles, "remembered": perception.memory, "legend": perception.legend,
+    view = {"viewport": viewport, "tiles": perception.tiles, "remembered": perception.memory, "legend": perception.legend,
             "actors": actors, "objects": objects,
             "me": {"name": actor.name, "handle": actor.handle, "faction": actor.faction, "grade": None,
                    "hp": actor.health, "hp_max": actor.health_max, "sta": actor.stamina, "sta_max": actor.stamina_max,
@@ -125,3 +141,15 @@ def build(actor: Actor, zone: ZoneInstance, perception: Perception, content: Con
             "crew": [], "event": None, "objective": None, "hazards": hazards,
             "service": None, "escape": {"routes": escapes, "action": "Ctrl-X leaves"},
             "hint": "Move: arrows  Shift: sprint  E interact  M map  ? help  Ctrl-X leave"}
+    # Proposal 68: additive presentation fields. Clients that ignore them
+    # render exactly as before.
+    look = content.looks.get(zone.template.id)
+    view["place"] = {"district": zone.template.meta.district,
+                     "names": dict(look.names) if look else {},
+                     "lore": [" ".join(part.split()) for asset in zone.template.meta.lore[:1] if asset in content.text
+                              for part in content.text[asset].body.split(PARAGRAPH)[:2]]}
+    if perception.looks:
+        resolved = dressing.for_zone(content, zone.template)
+        assert resolved is not None
+        view["looks"], view["looks_legend"] = perception.looks, list(resolved.legend)
+    return view

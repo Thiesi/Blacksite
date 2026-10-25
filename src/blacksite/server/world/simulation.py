@@ -1,5 +1,6 @@
 """Session-to-world adapter for the deterministic S03 tick loop."""
 
+import zlib
 from dataclasses import dataclass, field
 from typing import Any
 from collections.abc import Callable
@@ -9,6 +10,7 @@ from blacksite.server.loop import TickContext
 from blacksite.server.protocol import Frame
 from blacksite.server.sessions import Session, Sessions
 from blacksite.server.views.delta import ViewStore
+from blacksite.server.views import looks as dressing
 from blacksite.server.views.zone_view import Perception, build
 from blacksite.server.world.actors import Actor
 from blacksite.server.world.movement import move, regenerate
@@ -21,6 +23,7 @@ from blacksite.content.schema import Exit
 NIGHT_START_HOUR = 20  # Entity model 1.1: night lighting 20:00-06:00.
 NIGHT_END_HOUR = 6
 MENU_TIMEOUT_SECONDS = 60  # Terminal UI §4: contested/open menu timeout.
+PARAGRAPH = "\n\n"
 
 
 @dataclass
@@ -58,6 +61,27 @@ class ZoneSimulation:
         self.crew_view: Callable[[Session, dict[str, Any]], None] = lambda session, body: None
         self.fare_menu: Callable[[Session, Any], bool] = lambda session, exit: False
         self.travel_refusal: Callable[[Session, Exit], str | None] = lambda session, exit: None
+        self.ambient_due: dict[str, tuple[str, int, int]] = {}
+
+    def ambient(self, session: Session, avatar: Avatar, tick: int) -> None:
+        """Trial D5: one quiet line from the place every 60-120 s, never in combat."""
+        look = self.world.content.looks.get(avatar.zone)
+        if not dressing.TRIAL or look is None or not look.ambient:
+            return
+        due = self.ambient_due.get(session.id)
+        if due is None or due[0] != avatar.zone:
+            seed = zlib.crc32(f"{session.id}:{avatar.zone}".encode())
+            self.ambient_due[session.id] = (avatar.zone, tick + (60 + seed % 61) * TICK_HZ, seed)
+            return
+        if tick < due[1]:
+            return
+        seed = zlib.crc32(f"{due[2]}:{due[1]}".encode())
+        self.ambient_due[session.id] = (avatar.zone, tick + (60 + seed % 61) * TICK_HZ, seed)
+        if avatar.actor.cooldowns.get("combat", 0) > tick or avatar.travel:
+            return
+        session.send(Frame("log", {"lines": [{"channel": "zone", "kind": "ambient", "role": "ui_dim",
+                                              "text": look.ambient[seed % len(look.ambient)],
+                                              "at": self.clock.now_utc().isoformat()}]}))
 
     def discover(self, session: Session, avatar: Avatar) -> None:
         if avatar.zone in avatar.seen_zones:
@@ -66,7 +90,8 @@ class ZoneSimulation:
         for asset_id in self.world.zones[avatar.zone].template.meta.lore[:1]:
             asset = self.world.content.text.get(asset_id)
             if asset:
-                session.send(Frame("toast", {"text": asset.body.splitlines()[0], "role": "ui_text", "seconds": 8}))
+                session.send(Frame("toast", {"text": asset.body.splitlines()[0], "role": "ui_text", "seconds": 8,
+                                             "kind": "place", "full": " ".join(asset.body.split(PARAGRAPH)[0].split())}))
 
     def reset_view(self, session: Session, avatar: Avatar) -> None:
         avatar.perception.viewport = avatar.perception.grid_key = None
@@ -318,6 +343,7 @@ class ZoneSimulation:
                         # overlay, rather than patching stale zone/sector data.
                         self.views[session.id] = ViewStore()
                 continue
+            self.ambient(session, avatar, ctx.tick)
             zone = self.world.zones[avatar.zone]
             local = self.clock.now_local(session.door_info.get("timezone")).strftime("%H:%M")
             stamp = (zone.id, zone.revision, local, night, session.caps["width"], session.caps["height"],
