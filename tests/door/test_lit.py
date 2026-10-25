@@ -92,7 +92,9 @@ def test_scene_sends_only_dressing_on_known_ground(content, trial) -> None:
     assert sent is not None and sent["pieces"] and len(sent["pieces"]) < len(look.scene.pieces)
     for piece in sent["pieces"]:
         x, y, w, h = piece["rect"]
-        assert int(x) < 10, piece  # some of its footprint is known
+        assert x + w <= 10, piece  # clipped to the known tiles
+    kinds = {p["kind"] for p in sent["pieces"]}
+    assert "counter" in kinds and "sign" not in kinds  # a counter is clipped; a sign goes whole or not at all
     assert all(light["at"][0] < 10 for light in sent["lights"])
     assert looks.scene(look, lambda tile: False) == {**looks.scene(look, lambda tile: False), "lights": [], "pieces": []}
 
