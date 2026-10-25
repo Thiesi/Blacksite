@@ -1,0 +1,214 @@
+{
+  "schema": 1,
+  "id": "sodium-row",
+  "theme": "sodium-street",
+  "charted": true,
+  "regions": [
+    {
+      "theme": "sodium-door-pink",
+      "rect": [
+        7,
+        3,
+        8,
+        6
+      ]
+    },
+    {
+      "theme": "sodium-door-teal",
+      "rect": [
+        16,
+        3,
+        8,
+        6
+      ]
+    },
+    {
+      "theme": "sodium-stage",
+      "rect": [
+        25,
+        4,
+        13,
+        6
+      ]
+    },
+    {
+      "theme": "sodium-door-pink",
+      "rect": [
+        44,
+        3,
+        13,
+        6
+      ]
+    },
+    {
+      "theme": "sodium-door-teal",
+      "rect": [
+        58,
+        3,
+        9,
+        6
+      ]
+    },
+    {
+      "theme": "sodium-door-pink",
+      "rect": [
+        69,
+        3,
+        10,
+        6
+      ]
+    },
+    {
+      "theme": "sodium-lamp",
+      "circle": [
+        12,
+        13,
+        3
+      ]
+    },
+    {
+      "theme": "sodium-lamp",
+      "circle": [
+        40,
+        13,
+        3
+      ]
+    },
+    {
+      "theme": "sodium-lamp",
+      "circle": [
+        58,
+        12,
+        3
+      ]
+    },
+    {
+      "theme": "sodium-lamp",
+      "circle": [
+        78,
+        14,
+        3
+      ]
+    },
+    {
+      "theme": "sodium-alley",
+      "rect": [
+        6,
+        18,
+        83,
+        9
+      ]
+    },
+    {
+      "theme": "sodium-felt",
+      "rect": [
+        34,
+        19,
+        5,
+        3
+      ]
+    },
+    {
+      "theme": "sodium-halo",
+      "rect": [
+        86,
+        10,
+        7,
+        12
+      ]
+    }
+  ],
+  "signs": [
+    {
+      "at": [
+        12,
+        9
+      ],
+      "text": " LIVE ",
+      "role": "sign_cyan"
+    },
+    {
+      "at": [
+        28,
+        3
+      ],
+      "text": " STAGE ",
+      "role": "sign_amber"
+    },
+    {
+      "at": [
+        38,
+        9
+      ],
+      "text": " DRINKS ",
+      "role": "sign_pink"
+    },
+    {
+      "at": [
+        50,
+        9
+      ],
+      "text": " OPEN LATE ",
+      "role": "sign_orange"
+    },
+    {
+      "at": [
+        63,
+        9
+      ],
+      "text": " TICKETS ",
+      "role": "sign_cyan"
+    },
+    {
+      "at": [
+        76,
+        9
+      ],
+      "text": " BAR ",
+      "role": "sign_pink"
+    },
+    {
+      "at": [
+        86,
+        22
+      ],
+      "text": " TIN HAL",
+      "role": "sign_orange"
+    },
+    {
+      "at": [
+        94,
+        22
+      ],
+      "text": "O ",
+      "role": "sign_dead"
+    }
+  ],
+  "marks": [
+    {
+      "at": [
+        2,
+        10
+      ],
+      "text": "« NEON STAIR",
+      "role": "paint"
+    },
+    {
+      "at": [
+        78,
+        16
+      ],
+      "text": "TIN HALO »",
+      "role": "paint"
+    }
+  ],
+  "names": {
+    "cover-2": "barrels"
+  },
+  "ambient": [
+    "Music from six doorways at once, none of it the same song.",
+    "A sodium lamp buzzes, dims and steadies.",
+    "Somebody laughs too loud in a doorway behind you.",
+    "A bottle rolls down the alley and stops against a barrel."
+  ]
+}

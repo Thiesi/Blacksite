@@ -51,7 +51,7 @@ class Display:
         self.selected_keymap = "arrows"
         self.warnings = SessionWarnings(info.session_limit)
         self.renderers: dict[str, Renderer] = {"text": render_text, "dead": render_text, "menu": render_menu, "zone": render_zone, "lattice": render_lattice}
-        # Proposal 68 trial: F9 switches renderer, F6 cycles place cards, F5 looks.
+        # Proposal 68 trial: F7 switches renderer, F6 cycles place cards, F5 looks.
         self.present = present.enabled(os.environ)
         self.card_mode = "entry"
         self.card_until = 0.0
@@ -205,7 +205,7 @@ class Display:
         if key == "ctrl-x":
             self.confirm_exit = True
             return []
-        if key in ("f9", "f6", "f5"):
+        if key in ("f7", "f6", "f5"):
             return self.trial_key(key, now)
         if self.card_until:
             self.card_until = 0.0  # Any key closes a place card, and still acts.
@@ -268,7 +268,7 @@ class Display:
         return [Frame("key", {"k": key, "t": max(0, int(now * 1000))})]
 
     def trial_key(self, key: str, now: float) -> list[Frame]:
-        if key == "f9":
+        if key == "f7":
             self.present = not self.present
             self.toast = ("Proposal 68 presentation." if self.present else "Shipped presentation.", "ui_text", now + 3)
         elif key == "f6":

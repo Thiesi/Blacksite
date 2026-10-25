@@ -249,6 +249,8 @@
     "cover-3": "bollard"
   },
   "ambient": [
-    "A polite overhead voice: your clone insurance premium is due."
+    "A polite overhead voice reminds you that your clone insurance premium is due.",
+    "An orderly mops a floor that was already clean.",
+    "A clinic door sighs open and shut."
   ]
 }

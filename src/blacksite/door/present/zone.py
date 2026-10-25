@@ -53,7 +53,7 @@ def terrain(buffer: CellBuffer, body: dict[str, Any], layout: Layout, paint: Pai
                 style = paint("thing_hazard", "hazard_warn", bold=True)
             elif not now:
                 style = paint.known(style)
-                if tier == "16" and entry["id"] == "floor" and (x + y * 3) % 3:
+                if tier == "16" and glyph == "·" and (x + y * 3) % 3:
                     glyph = " "  # known ground, sparse, so seen ground stands out
             buffer.put(area.x + x, area.y + y, glyph, style)
 
@@ -63,6 +63,8 @@ def cell(paint: Paint, entry: dict[str, Any], look: dict[str, Any], tier: str) -
     tile, bg = entry["id"], look.get("bg")
     light = bool(look.get("light"))
     if tile == "wall":
+        if bg == "ground_black" and not look.get("g"):
+            return " ", paint("wall", bg)  # roof, in every tier
         if look.get("g"):
             return look["g"], paint(look.get("fg", "panel_text"), bg, bold=True)
         if bg and tier != "16":

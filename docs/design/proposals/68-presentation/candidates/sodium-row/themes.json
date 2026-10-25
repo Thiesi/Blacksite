@@ -1,0 +1,17 @@
+{
+  "schema": 1,
+  "themes": {
+    "sodium-alley": {
+      "ground_bg": "ground_sodium_alley",
+      "ground_fg": "grain_sodium_alley",
+      "texture": "· ,  `  ",
+      "luma": "dark"
+    },
+    "sodium-halo": {
+      "ground_bg": "ground_sodium_halo",
+      "ground_fg": "grain_sodium_halo",
+      "texture": "·∙ · ",
+      "luma": "dark"
+    }
+  }
+}

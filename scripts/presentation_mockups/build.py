@@ -41,8 +41,9 @@ DATA = json.loads((Path(__file__).parent / "presentation.json").read_text(encodi
 class Caller:
     """One caller driven through the real door Display, keys in, frames out."""
 
-    def __init__(self, width: int, height: int, tier: str = "256") -> None:
-        self.game = HeadlessServer(load_content(CONTENT), character_state={})
+    def __init__(self, width: int, height: int, tier: str = "256", local: Path | None = None) -> None:
+        self.game = HeadlessServer(load_content(CONTENT, local), character_state={})
+        self.local = local
         scratch = Path(tempfile.mkdtemp())
         self.info = DoorInfo(scratch / "door_info.json", scratch, {"user_id": 1, "handle": "Kale_9", "node_name": "mock"},
                              width, height, tier, 3600)
@@ -79,7 +80,8 @@ class Caller:
             stuck = 0
             while (self.avatar.actor.x, self.avatar.actor.y) != target:
                 zone = self.game.core.world.zones[self.avatar.actor.zone]
-                grid = (CONTENT / "zones" / f"{zone.id}.map").read_text(encoding="utf-8").splitlines()
+                grid = ["".join(".#"[not self.game.core.world.content.tiles[t].passable] for t in row)
+                        for row in zone.template.grid]
                 people = {(a.x, a.y) for a in zone.actors.values() if a is not self.avatar.actor}
                 start = (self.avatar.actor.x, self.avatar.actor.y)
                 step = first_step(grid, start, target, people - {target})

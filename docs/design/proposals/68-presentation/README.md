@@ -1,5 +1,11 @@
 # Presentation direction for Karst (issue #68)
 
+> **Superseded as the contract by [`spec.md`](spec.md)** (2026-10-25),
+> which consolidates this investigation, the approved direction and the
+> playable trial. This file stays as the record of what play showed and
+> why. Real-renderer frames are in [`frames/`](frames/); `mockups/` holds
+> the earlier prototype captures.
+
 **Status: proposal.** Nothing here is canon until the decisions in
 section 7 are accepted and the listed spec sections change, top-down,
 per `AGENTS.md` section 2. The game's rules, numbers, sight, movement,

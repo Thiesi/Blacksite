@@ -26,9 +26,9 @@ def _positions(body: dict[str, Any], area_x: int, area_y: int, width: int, heigh
     span_x = max(1, max(used_x) - min(used_x)) if len(used_x) > 1 else 1
     span_y = max(1, max(used_y) - min(used_y)) if len(used_y) > 1 else 1
     sx = (width - 6) / span_x if len(used_x) > 1 else 0
-    sy = min(4.0, (height - 3) / span_y) if len(used_y) > 1 else 0
+    sy = min(8.0, (height - 3) / span_y) if len(used_y) > 1 else 0
     ox = area_x + 3 + (0 if len(used_x) > 1 else (width - 6) // 2)
-    oy = area_y + 1 + (0 if len(used_y) > 1 else (height - 3) // 2)
+    oy = area_y + 1 + ((height - 3 - round(sy * span_y)) // 2 if len(used_y) > 1 else (height - 3) // 2)
     return {c["id"]: (ox + round((int(c["x"]) - min(used_x)) * sx), oy + round((int(c["y"]) - min(used_y)) * sy))
             for c in cells}
 

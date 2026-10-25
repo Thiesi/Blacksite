@@ -2,7 +2,7 @@
 
 `docs/design/proposals/68-presentation/spec.md` is the contract. These
 renderers draw the same authorized view bodies as `door.views`; they add
-no sight, movement or game rules. A caller switches with F9, and
+no sight, movement or game rules. A caller switches with F7, and
 `BLACKSITE_PRESENTATION` (or `DOOR_BLACKSITE_PRESENTATION`) picks the
 starting renderer.
 """

@@ -1628,9 +1628,9 @@
         "protan": 53
       },
       "16": {
-        "default": 5,
-        "deutan": 5,
-        "protan": 5
+        "default": 0,
+        "deutan": 0,
+        "protan": 0
       }
     },
     "ground_sodium_door_teal": {
@@ -1645,9 +1645,9 @@
         "protan": 23
       },
       "16": {
-        "default": 6,
-        "deutan": 6,
-        "protan": 6
+        "default": 0,
+        "deutan": 0,
+        "protan": 0
       }
     },
     "ground_sodium_felt": {
@@ -1662,9 +1662,9 @@
         "protan": 22
       },
       "16": {
-        "default": 2,
-        "deutan": 2,
-        "protan": 2
+        "default": 0,
+        "deutan": 0,
+        "protan": 0
       }
     },
     "ground_sodium_lamp": {
@@ -1679,9 +1679,9 @@
         "protan": 94
       },
       "16": {
-        "default": 3,
-        "deutan": 3,
-        "protan": 3
+        "default": 0,
+        "deutan": 0,
+        "protan": 0
       }
     },
     "ground_sodium_stage": {
@@ -1696,9 +1696,9 @@
         "protan": 54
       },
       "16": {
-        "default": 5,
-        "deutan": 5,
-        "protan": 5
+        "default": 0,
+        "deutan": 0,
+        "protan": 0
       }
     },
     "ground_sodium_street": {

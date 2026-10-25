@@ -77,6 +77,11 @@ def resolve(zone: s.Zone, look: s.Look, themes: dict[str, s.Theme]) -> ZoneLooks
     glints = set(look.glints)
     rings = [r.rect for r in look.regions if r.rect and themes.get(r.theme, s.Theme()).pattern == "rings"]
     centre = ((rings[0][0] + rings[0][2] / 2 - 0.5), (rings[0][1] + rings[0][3] / 2 - 0.5)) if rings else (0.0, 0.0)
+    def faces(x: int, y: int) -> bool:
+        """A wall cell that borders open ground is a facade; the rest is roof."""
+        return any(zone.tile_at((x + dx, y + dy)) not in (None, "wall")
+                   for dx in (-1, 0, 1) for dy in (-1, 0, 1))
+
     legend: dict[tuple[Any, ...], int] = {}
     grid = []
     for y, row in enumerate(zone.grid):
@@ -84,7 +89,9 @@ def resolve(zone: s.Zone, look: s.Look, themes: dict[str, s.Theme]) -> ZoneLooks
         for x, tile in enumerate(row):
             theme = _theme_at(look, themes, x, y)
             glyph, fg, bg = "", None, theme.ground_bg
-            if tile == "wall":
+            if tile == "wall" and (x, y) not in signs and not faces(x, y):
+                glyph, fg, bg = "", None, "ground_black"  # roof: a building's mass stays dark
+            elif tile == "wall":
                 bg = theme.wall_bg
                 glyph, fg = signs.get((x, y), ("", theme.wall_fg))
             elif tile == "floor":
