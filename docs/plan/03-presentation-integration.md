@@ -723,6 +723,10 @@ discussion; none overrides a design decision.
 7. **Charted disclosure.** Charted terrain must exclude the corridors
    behind S25's three hidden exits and housing interiors; the trial
    already excludes hidden-exit tiles but not the space behind them.
+   *Recorded as a D1 precondition in `spec.md` §5.4 (#69 `06ba5ba`):
+   charting covers only a declared public-ground region in the look,
+   read by the view, walks and the places list alike. P4's disclosure
+   test checks that single set.*
 8. **Tile classes.** The trial validator names `wall`, `floor` and
    `water`; S25 adds `convoy-road` and `gantry-hazard`. Validating by
    class (opaque, passable, water, hazard) keeps the place layer correct
