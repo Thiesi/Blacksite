@@ -69,8 +69,10 @@ contradiction by editing only the lower document.
   Request it with the label `needs-technical-review` and a comment
   naming the head SHA and the evidence supplied. The procedure, the
   evidence required and the order before merge are in
-  `docs/plan/04-technical-review.md`. Neither review grants a human
-  acceptance gate, and only the owner merges.
+  `docs/plan/04-technical-review.md`. The `technical-review` status
+  check reads those records. Only the technical lead writes a record,
+  and only the owner applies the `no-technical-review` label. Neither
+  review grants a human acceptance gate, and only the owner merges.
 
 ## 4. Coding rules
 

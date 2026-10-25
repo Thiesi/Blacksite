@@ -23,8 +23,8 @@ engineering consequences instead.
 
 ## 2. Requesting a review
 
-There is no automatic trigger yet (see §8). A review happens when it is
-requested:
+Nothing starts a review automatically (see §8). A review happens when
+it is requested:
 
 1. The PR author, usually Codex, pushes the head to be reviewed, waits
    for the automated review and triages it as `AGENTS.md` §3 says.
@@ -127,7 +127,10 @@ same change as the canon they follow.
 
 ## 6. Decision record
 
-One record per reviewed head, posted as a PR comment:
+One record per reviewed head, posted as a PR comment. The first line
+must be the heading below with the **full 40-character head SHA**, and
+the recommendation line must keep its exact form: the merge gate (§8)
+reads both.
 
 ```markdown
 ## Technical review: <slice ID> at <head SHA>
@@ -196,31 +199,59 @@ Rules for the reviewer:
 
 A push after step 3 that changes code, content or canon needs a new
 record. A push that only marks the slice file done or fixes a typo in a
-PR-local document does not, and the record says so when it is updated.
+PR-local document does not need a new review: the technical lead edits
+the record's heading to the new SHA and notes why, which re-runs the
+gate.
 
 ## 8. Automation
 
-Three options, none built yet:
+### 8.1 Merge gate (built)
 
-1. **A merge-gate check (recommended first).** A small workflow sets a
-   commit status `technical-review` on each PR head: pending until a
-   comment from the technical lead's account contains a decision record
-   for that exact SHA with "ready to merge", success after it. With
-   branch protection requiring it, a PR cannot merge without a current
-   record. It enforces this procedure; it does not perform a review.
-   Branch protection is the owner's setting.
-2. **Label-triggered review in CI.** A second `claude-code-action` job,
+`.github/workflows/technical-review-gate.yml` runs
+`scripts/technical_review_gate.py` whenever a PR is opened, pushed,
+labelled or commented on. It sets the commit status `technical-review`
+on the PR head:
+
+| State | When |
+|---|---|
+| pending | No record names the current head SHA, or the latest one says "awaiting evidence or approval". |
+| success | The latest record for the current head says "ready to merge", or the PR carries the label `no-technical-review`. |
+| failure | The latest record for the current head says "changes required", or has no recognised recommendation. |
+
+Only comments from accounts with write access count, and bots never do,
+so the automated Claude review cannot satisfy the gate. The gate always
+runs the script from `main`, so a PR cannot change the rule that judges
+it.
+
+Limits:
+
+- **It enforces the procedure, not the review.** It reads a comment; it
+  does not check that a review took place.
+- **Authorship.** The technical lead and the coding agents post through
+  the owner's account, so the gate cannot tell who wrote a record. Only
+  the technical lead writes records, and only the owner applies
+  `no-technical-review`, used for PRs outside §1's scope such as design
+  proposals and process changes. That rule is in `AGENTS.md`.
+- **Blocking needs branch protection.** The status only blocks a merge
+  if branch protection on `main` requires `technical-review`. That is the
+  owner's setting.
+- PRs opened before the gate existed get a status on their next push,
+  label change or comment.
+
+### 8.2 Not built
+
+1. **Label-triggered review in CI.** A second `claude-code-action` job,
    started by the `needs-technical-review` label, given this document
    as its prompt. It could read canon and the diff and run headless door
    captures. It could not run NetBBS transports, play a scenario or know
    decisions that are not committed, so its record would have to say
    so, and it would add cost per review. Worth trying only after the
    manual procedure has run on a few PRs.
-3. **A scheduled check by a local session.** A technical lead session
+2. **A scheduled check by a local session.** A technical lead session
    that lists labelled PRs on a schedule. It works only while that
    machine and session run, so it must not be described as continuous
    coverage.
 
-Until one of these exists and has been seen working, coverage is exactly
-§2: a review happens when it is requested and a technical lead session
-runs.
+Until one of these exists and has been seen working, review coverage is
+exactly §2: a review happens when it is requested and a technical lead
+session runs. The gate in 8.1 only makes a missing review visible.
