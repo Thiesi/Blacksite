@@ -14,6 +14,10 @@ In play: F7 switches between the shipped and the proposal renderer on the
 same game state. F5 shows the place card, F6 cycles when cards appear.
 Ctrl-X then Y leaves and stops the service.
 
+On Windows the script switches the console to UTF-8 (code page 65001)
+with ANSI processing for the session and restores your settings when the
+door exits; no `chcp` is needed.
+
 The candidate geometry is a content.local overlay of Sodium Row and the
 Tin Halo's return door; shipped content is never modified.
 """
@@ -25,10 +29,44 @@ import shutil
 import subprocess
 import sys
 import time
+from collections.abc import Iterator
+from contextlib import contextmanager
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
 CANDIDATE = ROOT / "docs/design/proposals/68-presentation/candidates/sodium-row"
+UTF8 = 65001
+ENABLE_VIRTUAL_TERMINAL_PROCESSING = 0x0004
+
+
+@contextmanager
+def utf8_console() -> Iterator[None]:
+    """On Windows, give the door a UTF-8 console that understands ANSI,
+    and put the caller's code pages and console mode back afterwards."""
+    if os.name != "nt":
+        yield
+        return
+    import ctypes
+    from ctypes import wintypes
+    kernel = ctypes.WinDLL("kernel32", use_last_error=True)
+    kernel.GetStdHandle.restype = wintypes.HANDLE
+    output_cp, input_cp = kernel.GetConsoleOutputCP(), kernel.GetConsoleCP()
+    handle = kernel.GetStdHandle(-11)  # STD_OUTPUT_HANDLE
+    mode = wintypes.DWORD()
+    has_mode = bool(kernel.GetConsoleMode(handle, ctypes.byref(mode)))
+    kernel.SetConsoleOutputCP(UTF8)
+    kernel.SetConsoleCP(UTF8)
+    if has_mode:
+        kernel.SetConsoleMode(handle, mode.value | ENABLE_VIRTUAL_TERMINAL_PROCESSING)
+    try:
+        yield
+    finally:
+        if has_mode:
+            kernel.SetConsoleMode(handle, mode.value)
+        if output_cp:
+            kernel.SetConsoleOutputCP(output_cp)
+        if input_cp:
+            kernel.SetConsoleCP(input_cp)
 
 
 def main() -> int:
@@ -78,7 +116,8 @@ def main() -> int:
         door_env = dict(env, NETBBS_DOOR_INFO=str(info), BLACKSITE_INSTALL_DIR=str(install),
                         BLACKSITE_PRESENTATION="0" if args.shipped_renderer else "1")
         command = [sys.executable, "-m", "blacksite.door"] + (["--local"] if os.name == "nt" else [])
-        return subprocess.call(command, env=door_env, cwd=ROOT)
+        with utf8_console():
+            return subprocess.call(command, env=door_env, cwd=ROOT)
     finally:
         server.terminate()
         try:
