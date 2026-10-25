@@ -927,3 +927,28 @@ Slice placement:
   shapes exist.
 - **V3:** look schema for lights and set pieces, plus the offline
   authoring renderer, drafted from V0.
+
+### 13.5 V0 results (#73)
+
+The V0 spike (#73, head `9102655`) renders the Tin Halo from look data in
+three tiers. It meets the disclosure checks: figures come only from
+view actors, and body-height dressing only stands on tiles the map
+marks. Whether it reaches the target is the owner's judgement.
+
+Measured cost at 132x50 in the modern tier: 110 to 270 ms to repaint the
+picture per step (up to 0.6 s under load), and 46 to 52 KB per step.
+Walking is 200 ms per step. V1 therefore carries these budgets, added to
+P1:
+
+- a step's picture renders within one walk step: 100 ms p95 on the
+  reference host;
+- frames coalesce, so a slow paint never queues behind newer views or
+  delays input;
+- looks have their own byte class with a rate limit on full redraws,
+  measured over the real NetBBS SSH and web paths;
+- scene dressing is limited to the declared public-ground region (the D1
+  precondition), which also closes V0's straddling-piece edge.
+
+V0-3 (pocket sight covering the whole room) is a sight rule change, and
+V0-5 (furniture as tiles) belongs to the geometry rework under S25's
+gate. Neither is a presentation setting.
