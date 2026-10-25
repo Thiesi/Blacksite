@@ -11,6 +11,10 @@ direction to plan around, not acceptance: final acceptance and the
 detailed interaction rules in section 5 remain open and are tuned by
 play.
 
+**Visual target (owner, 2026-10-25):** the Tin Halo mockup in section 10
+is the bar for how the game should look: scenes that say where you are,
+what kind of place it is and who holds it, without a line of text.
+
 ```
 python scripts/playtest_68.py --geometry candidate --view street   # A: eye level
 python scripts/playtest_68.py --geometry candidate --view scene    # B: places
@@ -363,3 +367,81 @@ the part I trust least.
 - The Lattice keeps its own linework view in every prototype; going down
   is already a change of medium.
 - Menus, text views and dialogue are unchanged.
+
+## 10. Visual target: the Tin Halo
+
+![The Tin Halo as an auto scene, 132x50 truecolor](target/tin-halo-scene-132x50-truecolor.png)
+
+**Status: adopted by the owner as the visual target, 2026-10-25.** This is
+the level of detail Blacksite's scenes should reach. Under ideal
+conditions (truecolor, 132x50, a terminal that draws the full Unicode
+block set), every place should read like this: a room you could walk
+into, not a description of one. The owner's words: a game that conveys
+what matters through scenery and scenes, not only through text, so the
+atmosphere is set before anything is explained.
+
+It is a target, not a capture. It was composed by hand
+(`scripts/presentation_mockups/target_tin_halo.py`) on the door's real
+132x50 layout and palette roles, and nothing in the game draws it yet.
+Full-size glimpse: [`target/tin-halo-glimpse.png`](target/tin-halo-glimpse.png).
+
+**What the frame does without words.** The cans overhead say where you
+are before the title does. The bouncer at your shoulder, with Sable's red
+at his arm, says whose pocket this is. The booths and lamps say people
+stay here; the lit back-bar says this is a bar that is looked after.
+Three cyan screens at the counter say Vesper is working. The red door at
+the back says there is a back room and it is not for everyone. The sign
+inside reads TIN HALO in full while the one outside reads TIN HAL: the
+place is kept, the street is not.
+
+**How it is built.** Three choices make the difference to today's
+street view:
+
+- **Sextants, not half-blocks.** The glimpse is 214x57 sub-pixels in
+  107x19 cells (Unicode 13 block sextants, 2x3 per cell) against 107x38
+  with half-blocks. The cost is two colours per cell; with lighting that
+  changes smoothly that is rarely visible.
+- **Light as content.** Lamps, screens, the back room's spill and the
+  halo itself are light sources with colour, reach and strength; walls,
+  floor and people take their colour from them, with haze in depth and
+  reflections on the floor. Today's renderer shades by distance only.
+- **Dressing as content.** Booths, shelves of bottles, the counter,
+  stools, boards and the hanging cans are set pieces placed in the room,
+  not tiles. People are silhouettes with rim light from the nearest
+  source, standing or seated.
+
+**What it takes to reach it** (each a proposal for the plan, not a
+commitment):
+
+1. **A Unicode capability tier.** Sextants where the terminal draws them
+   (Windows Terminal, recent kitty, WezTerm, foot), half-blocks
+   everywhere else, and the 256- and 16-colour tiers degrade as they do
+   now. The door must detect or be told; never guess wrong into tofu.
+2. **Lighting data in looks.** Per place: light sources (position,
+   height, colour, reach), ambient level, haze colour. Decoration only:
+   no rule reads it (spec R4, R6).
+3. **Set pieces in looks.** A small library of dressing (counter, booth,
+   shelf, stool, lamp, board, hanging cans, pipes) placed by zone,
+   rendered at eye level and as plain glyphs on the map.
+4. **A lit renderer.** The street raycaster gains lights, set pieces,
+   seated and standing figures, fog and reflections. Static parts of a
+   place can be painted once per position and heading and cached; only
+   people and lights that change are redrawn.
+5. **Figures from the server's actors only.** Everyone drawn is someone
+   the server disclosed, where it put them. Silhouettes carry behaviour
+   colour (D10), never a hidden allegiance. A threat is never hidden by
+   dark, haze or a set piece: danger still hands the screen to the
+   tactical map (A1).
+6. **Budgets.** A full sextant glimpse in truecolor is about 2,000 cells,
+   roughly 60 to 80 KiB when every cell changes. A still room sends
+   almost nothing, but a turn of the head is a full redraw. This needs a
+   frame budget and a degraded mode on slow links (technical lead's V1).
+7. **Authoring at scale.** The real cost. Every place worth standing in
+   needs its light, dressing and figures authored to this standard. That
+   is world-building work as much as engineering, and it should follow
+   the gazetteer, place by place.
+
+**Invented for the mockup.** The place "Under the halo", the selected
+way's text about Vesper, the detail box, and several log lines are
+illustrative and not canon. The Tin Halo's lore line, its NPCs, objects,
+Sable and the Ferrymen are real content.
