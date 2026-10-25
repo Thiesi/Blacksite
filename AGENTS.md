@@ -52,8 +52,9 @@ contradiction by editing only the lower document.
 - A slice is done when everything in the roadmap's "definition of done"
   holds. Mark the slice file `Status: done (PR #n)` in the same PR.
 - Opening a PR triggers the automated Claude review. Use that delivered
-  review for the merge gate and record the actual reviewer model; model
-  labels remain preferred assignments, not additional manual gates.
+  review for the code-correctness gate and record the actual reviewer
+  model; model labels remain preferred assignments, not additional
+  manual gates.
   Triage findings by realistic caller, operator or product impact. Fix
   credible breakage, data loss and security exposure; reject theoretical
   correctness changes with no practical scenario and explain why in the
@@ -61,6 +62,15 @@ contradiction by editing only the lower document.
   containing `@claude review`, wait for the result, and apply the same
   triage. Validate fixes and resolve all worthwhile findings before
   merging.
+- After the automated review, every implementation PR also needs a
+  **technical review**: a project-level check against the slice spec,
+  canon, the approved presentation design, shared abstractions, player
+  experience and integration, recorded as a decision record on the PR.
+  Request it with the label `needs-technical-review` and a comment
+  naming the head SHA and the evidence supplied. The procedure, the
+  evidence required and the order before merge are in
+  `docs/plan/04-technical-review.md`. Neither review grants a human
+  acceptance gate, and only the owner merges.
 
 ## 4. Coding rules
 
