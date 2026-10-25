@@ -733,21 +733,24 @@ discussion; none overrides a design decision.
    hidden exit. A walk also steps through `interact(street=True)` on
    every tile, so a path crossing an exit tile could start travel. Route
    over the same disclosed set the view sends, and refuse exit tiles
-   other than the goal.
+   other than the goal. *Fixed in #70 `136051c`* for hidden-exit tiles
+   and exit tiles. Corridors behind hidden exits remain charted until
+   note 7 is resolved.
 10. **Session state.** `walks` and `deep_views` are never cleared when a
     session leaves (the same issue as the ambient state in note 4), and
     `view_shape` is handled before the caller-role check, so a watcher
-    can change it.
+    can change it. *Fixed in #70 `136051c`.*
 11. **Deep camera.** It passes `old=None`, which turns off camera
     hysteresis, so the viewport recentres on every step and deltas grow.
     It also adds a third branch to the camera formula that the door must
     mirror (obstacle 3.4); under P2 it becomes a named layout shape.
+    *Deferred to P2 by agreement.*
 12. **The decider is an information channel.** Auto switches to
     TACTICAL on `nearby.relation == "!"`, hazards and targets. If the
     server ever marks a disguised NPC as hostile before the player could
     know, the view switch discloses it. The threat signal should be one
     server-declared field covered by a disclosure test (P4), not a
-    door-side inference.
+    door-side inference. *Agreed; deferred to P4.*
 
 ## 12. Planning for the Auto direction
 
@@ -757,6 +760,10 @@ for planning, not acceptance. The interaction rules and their timings
 remain open, so this plan prepares for Auto without freezing it.
 
 ### 12.1 Principles the presentation lead is building into #70
+
+`paradigms.md` §5 now states them as A1 to A6 (#70 `136051c`). The main
+refinement: the movement mode decides the view (arrow steps → map,
+choosing a way → scene), and ground only sets where a zone starts.
 
 1. Danger switches to the tactical map immediately.
 2. No oscillation: escalate fast, calm down slowly.
@@ -775,9 +782,9 @@ E prompt, so P1 to P5 stay in place and in order.
 
 | Slice | Change |
 |---|---|
-| P1 | Adds a decider trace format and a replay test: a recorded view sequence must produce the same view choices. Principle 6 becomes verifiable rather than a debug aid. |
+| P1 | Adds a decider trace format and a replay test: a recorded view sequence must produce the same view choices. Principle 6 becomes verifiable rather than a debug aid. Starting point: #70's JSONL trace (`BLACKSITE_AUTO_TRACE`, one record per change: `at, t, from, to, view, looking, rule, why, zone, pos, inputs`). |
 | P2 | The layout module gains named view shapes (map, scene, look). The deep camera becomes one of them, and the server and door read the same definition. |
-| P3 | Extends from the E focus resolver to the key contract. Principle 5 is tested: across every view, each movement key maps to the same intent. |
+| P3 | Extends from the E focus resolver to the key contract. Principle 5 is tested: across every view, each movement key maps to the same intent. #70's current proposal: arrows step, Enter talks, and `,` `.` Space choose ways. |
 | P4 | Adds a server-declared `threat` state and reason, with a disclosure test. The decider reads only that field, never door-side inference (§11 note 12). It also adds `places`, `here` and known exits, routed over the disclosed set (§11 note 9). |
 | P5 | Adds the context decider as a pure door module (`door/present/context.py` today), driven by view bodies and a clock, behind the single client switch. |
 | new W1 | Server travel over known ground (`walk_to`), only if the owner accepts S1. It covers the routing set, exit tiles, cooldown parity, cancel on any input, and session cleanup. Owner: Codex; review: technical lead. |
