@@ -157,7 +157,9 @@ def build(actor: Actor, zone: ZoneInstance, perception: Perception, content: Con
     # Scene navigation: named places and exits, only where the caller knows
     # the ground they stand on, so a list of ways never maps unseen space.
     chart = dressing.charted(content, zone.template)
-    known = lambda tile: tile in remembered or tile in visible or (chart and 0 <= tile[1] < zone.template.height
+    secret = {ex.tile for ex in zone.template.meta.exits if ex.hidden}
+    known = lambda tile: tile in remembered or tile in visible or (chart and tile not in secret
+                                                                 and 0 <= tile[1] < zone.template.height
                                                                  and 0 <= tile[0] < zone.template.width)
     places = []
     for spot in (look.places if look else ()):

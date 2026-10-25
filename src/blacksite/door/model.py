@@ -1,5 +1,6 @@
 """Pure display/input state. Game state and menu decisions stay on the server."""
 
+import json
 import os
 from collections import deque
 from copy import deepcopy
@@ -17,11 +18,16 @@ from blacksite.door.views.lattice import render_lattice
 from blacksite.door.log import rows as log_rows
 from blacksite.door import present
 from blacksite.door.present import scene as present_scene
-from blacksite.door.present.context import Context
+from blacksite.door.present.context import Context, Decision
+from blacksite.door.present import inspect as present_inspect
 from blacksite.door.present import screen as present_screen
 from blacksite.door.present import street as present_street
 from blacksite.door.present.paint import Paint
 from blacksite.server.protocol import Frame
+
+
+# Proposal 68 trial: the way keys of scenes and the auto view.
+WAY_KEYS = (",", ".", " ")
 
 
 class Display:
@@ -60,8 +66,9 @@ class Display:
         self.view_mode = start if self.present else "map"
         self.heading: str | None = None
         self.scene_cursor = 0
-        self.context = Context()
-        self.auto_shown: tuple[str, str, bool] | None = None
+        self.context = self.new_context()
+        self.auto_shown: Decision | None = None
+        self.inspect = os.environ.get("BLACKSITE_AUTO_INSPECT") == "1"
         self.card_mode = "entry"
         self.card_until = 0.0
         self.card_zone: str | None = None
@@ -150,7 +157,7 @@ class Display:
                     result.append(self.shape_frame())
                 self.card_until = now + present_screen.CARD_SECONDS if self.card_mode == "entry" and not auto else 0.0
                 if auto:
-                    self.context.look(now)  # arriving: look at where you are
+                    self.context.arrive(now, str(self.body.get("me", {}).get("zone_name", "")))
             if auto:
                 had_goal = self.context.walk_goal
                 self.context.observe(self.body, now)
@@ -225,7 +232,7 @@ class Display:
         if key == "ctrl-x":
             self.confirm_exit = True
             return []
-        if key in ("f7", "f6", "f5"):
+        if key in ("f10", "f7", "f6", "f5"):
             return self.trial_key(key, now)
         if self.card_until:
             self.card_until = 0.0  # Any key closes a place card, and still acts.
@@ -287,31 +294,32 @@ class Display:
                     return [Frame("intent", {"name": "menu_select", "args": {"row": selected["id"], "key": key.lower()},
                         "request_id": f"{self.request_prefix}-{self.counter}", "expected_revision": self.revision})]
             return []
-        view = self.key_view(effective_body, now) if self.present and effective_kind == "zone" else "map"
-        if view in ("street", "scene"):
-            frames = self.paradigm_key(key, effective_body, now, view)
+        if self.present and effective_kind == "zone":
+            frames = self.paradigm_key(key, effective_body, now)
             if frames is not None:
                 return frames
         return [Frame("key", {"k": key, "t": max(0, int(now * 1000))})]
 
-    def key_view(self, body: dict[str, Any], now: float) -> str:
-        """The view whose key meanings apply: never a look, never in danger."""
-        if self.view_mode == "auto":
-            return self.context.choose(body, now)[0]
-        return "map" if present_screen.threatened(body) else self.view_mode
-
-    def paradigm_key(self, key: str, body: dict[str, Any], now: float, view: str) -> list[Frame] | None:
-        """Street and scene views give the movement keys new meanings. The
-        server still receives only ordinary moves and the trial walk."""
+    def paradigm_key(self, key: str, body: dict[str, Any], now: float) -> list[Frame] | None:
+        """Keys in the trial views. In scenes and auto every key keeps its
+        meaning (arrows step, Enter talks); ways have keys of their own. Only
+        the manual street view turns with the arrows. The server still
+        receives only ordinary moves and the trial walk."""
         table = next((k for k in self.keymap.get("keymaps", []) if k.get("id") == self.selected_keymap), None)
         if table is None:
             return None
         bindings = table.get("bindings", {})
         action = next((name for name, keys in bindings.items() if key in keys), "")
+        danger = present_screen.threatened(body)
+        if key in WAY_KEYS:
+            return self.way_key(key, body, danger)
+        if self.view_mode == "auto" and action.startswith(("move_", "sprint_")):
+            self.context.intend("steps")
+            return None
         heading = self.heading or present_street.cardinal(next(
             (a.get("facing") for a in body.get("actors", []) if a.get("role") == "player_self"), None))
         self.heading = heading
-        if view == "street":
+        if self.view_mode == "street" and not danger:
             kind, _, way = action.partition("_")
             if kind not in ("move", "sprint"):
                 return None
@@ -326,14 +334,48 @@ class Display:
             target = heading if way == "up" else present_street.BEHIND[heading]
             keys = bindings.get(f"{kind}_{target}") or []
             return [Frame("key", {"k": keys[0], "t": max(0, int(now * 1000))})] if keys else []
-        options = present_scene.ways(body)
-        if action in ("move_up", "move_down"):
-            self.scene_cursor = max(0, min(len(options) - 1, self.scene_cursor + (-1 if action == "move_up" else 1)))
+        return None
+
+    def way_key(self, key: str, body: dict[str, Any], danger: bool) -> list[Frame]:
+        """Comma and full stop choose a way, Space goes there. In auto the
+        first press away from the scene asks for it instead. Never in danger."""
+        if danger or self.view_mode not in ("scene", "auto"):
             return []
-        if key == "enter" and options:
+        if self.view_mode == "auto":
+            showing = self.context.last.view if self.context.last else "map"
+            self.context.intend("ways")
+            if showing != "scene":
+                return []
+        options = present_scene.ways(body)
+        if not options:
+            return []
+        if key == " ":
             way = options[max(0, min(self.scene_cursor, len(options) - 1))]
             return [Frame("intent", {"name": "walk_to", "args": {"at": list(way["at"])}})]
-        return None
+        step = -1 if key == "," else 1
+        self.scene_cursor = max(0, min(len(options) - 1, self.scene_cursor + step))
+        return []
+
+    def new_context(self) -> Context:
+        """With BLACKSITE_AUTO_TRACE set, every change of decision is
+        appended to that file as one JSON line."""
+        path = os.environ.get("BLACKSITE_AUTO_TRACE")
+        if not path:
+            return Context()
+
+        def sink(now: float, decision: Decision, before: Decision | None) -> None:
+            me = self.body.get("me", {})
+            actor = next((a for a in self.body.get("actors", []) if a.get("role") == "player_self"), {})
+            record = {"at": datetime.now(timezone.utc).isoformat(), "t": round(now, 2),
+                      "from": before.tag if before else None, "to": decision.tag, "view": decision.view,
+                      "looking": decision.looking, "rule": decision.rule, "why": decision.why,
+                      "zone": me.get("zone"), "pos": [actor.get("x"), actor.get("y")], "inputs": decision.inputs}
+            try:
+                with open(path, "a", encoding="utf-8") as trace:
+                    trace.write(json.dumps(record) + "\n")
+            except OSError:
+                pass  # a development aid never stops play
+        return Context(sink=sink)
 
     def trial_key(self, key: str, now: float) -> list[Frame]:
         if key == "f7":
@@ -345,9 +387,11 @@ class Display:
             frames = [self.shape_frame()] if self.connected else []
             self.toast = ({"shipped": "Shipped map.", "map": "Proposal map.",
                            "street": "Street view. Up walks, Left and Right turn.",
-                           "scene": "Scenes. Up and Down choose a way, Enter goes there.",
-                           "auto": "Auto: scenes where it is safe, the map where it is not."}[nxt], "ui_text", now + 4)
-            self.context = Context()
+                           "scene": "Scenes. Comma and full stop choose a way, Space goes there.",
+                           "auto": "Auto: the view follows the moment. F10 shows why."}[nxt], "ui_text", now + 4)
+            self.context = self.new_context()
+        elif key == "f10":
+            self.inspect = not self.inspect
         elif key == "f6":
             modes = present_screen.CARD_MODES
             self.card_mode = modes[(modes.index(self.card_mode) + 1) % len(modes)]
@@ -357,7 +401,7 @@ class Display:
                 self.context.look_until = 0.0
             else:
                 self.heading = None
-                self.context.look(now, 3600)
+                self.context.look(now, 3600, "F5")
         elif key == "f5" and self.card_mode != "off" and self.kind == "zone":
             self.card_until = 0.0 if self.card_until else now + 3600
         self.previous = None
@@ -371,8 +415,12 @@ class Display:
     def update(self, elapsed: float, now: float) -> None:
         if self.present and self.view_mode == "auto" and self.kind in ("zone", "wake"):
             shown = self.body.get("body", {}) if self.kind == "wake" else self.body
-            if "me" in shown and "actors" in shown and self.context.choose(shown, now) != self.auto_shown:
-                self.dirty = True  # a look ended, or the danger hold ran out
+            if "me" in shown and "actors" in shown:
+                decision = self.context.choose(shown, now)
+                if self.auto_shown is None or decision.shown != self.auto_shown.shown:
+                    self.dirty = True  # a look ended, or the danger hold ran out
+                elif self.inspect and now - self.last_render >= 0.5:
+                    self.dirty = True  # keep the inspector's clocks moving
         if self.card_until and now >= self.card_until:
             self.card_until = 0.0
             self.dirty = True
@@ -410,7 +458,7 @@ class Display:
             if mode == "auto":
                 self.auto_shown = self.context.choose(shown, now) if shown_kind == "zone" else None
                 if self.auto_shown:
-                    base, tag, looking = self.auto_shown
+                    base, tag, looking = self.auto_shown.shown
                     mode = "street" if looking else base
                     if looking and self.heading is None:
                         self.heading = present_street.widest(shown, present_street.cardinal(next(
@@ -423,6 +471,9 @@ class Display:
             present_screen.render(buffer, self.layout, Paint(self.palette), shown_kind, shown, list(self.logs), hint,
                                   show_card=card, flash=self.hit_flash, mode=mode,
                                   heading=self.heading or "up", cursor=self.scene_cursor, tag=tag)
+            if self.inspect and self.auto_shown:
+                present_inspect.render(buffer, self.layout.viewport, Paint(self.palette), self.auto_shown,
+                                       self.context.changes, now)
             if self.toast:
                 buffer.put(1, self.layout.separator, truncate(self.toast[0], self.layout.width - 2), self.palette.style("ui_text"))
             if self.prompt or self.confirm_exit or self.key_prompt:

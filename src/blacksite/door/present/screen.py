@@ -23,10 +23,23 @@ CARD_LABELS = {"entry": "Place cards on entering a zone and on F5.", "look": "Pl
                "off": "Place cards off."}
 
 
+def threats(body: dict[str, Any]) -> list[str]:
+    """What makes this moment dangerous, in plain words; empty when calm."""
+    me, target = body.get("me", {}), body.get("target")
+    found = [f"hostile {n.get('name', '?')}" for n in body.get("nearby", []) if n.get("relation") == "!"]
+    if body.get("hazards"):
+        found.append("hazard")
+    if target:
+        found.append(f"target {target.get('name', '?')}" if isinstance(target, dict) else "target")
+    if me.get("in_combat"):
+        found.append("combat")
+    if me.get("heat_until"):
+        found.append("heat")
+    return found
+
+
 def threatened(body: dict[str, Any]) -> bool:
-    me = body.get("me", {})
-    return bool(body.get("hazards") or body.get("target") or me.get("in_combat") or me.get("heat_until")
-                or any(n.get("relation") == "!" for n in body.get("nearby", [])))
+    return bool(threats(body))
 
 
 def safety(kind: str, body: dict[str, Any]) -> str:
@@ -79,7 +92,7 @@ def card(buffer: CellBuffer, body: dict[str, Any], layout: Layout, paint: Paint)
 
 MODES = ("map", "street", "scene", "auto")
 HINTS = {"street": "Up forward  Down back  Left/Right turn  E use  Tab target  F7 view",
-         "scene": "Up/Down choose  Enter go  any key stops  E use  Tab target  F7 view",
+         "scene": "Arrows step  , . choose a way  Space go  E use  Tab target  F7 view",
          "look": "Any key returns  F5 look again  F7 view"}
 
 

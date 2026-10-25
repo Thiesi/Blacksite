@@ -104,18 +104,22 @@ class ZoneSimulation:
                 walk.misses += 1
 
     def next_step(self, avatar: Avatar, goal: tuple[int, int]) -> tuple[int, int] | None:
-        """Breadth-first over ground the caller knows (seen, remembered or
-        charted), so a walk never routes through space it has not shown."""
+        """Breadth-first over the ground the view discloses (seen, remembered
+        or charted, never a hidden exit), so a walk never routes through space
+        it has not shown. Exits are only ever the goal: a walk passes no door."""
         from collections import deque
         zone = self.world.zones[avatar.zone]
         remembered = avatar.perception.remembered.get(avatar.zone, {})
         chart = dressing.charted(self.world.content, zone.template)
         tiles = self.world.content.tiles
         people = {a.position for a in zone.actors.values() if a is not avatar.actor}
+        secret = {ex.tile for ex in zone.template.meta.exits if ex.hidden}
+        doors = {ex.tile for ex in zone.template.meta.exits}
 
         def open_(tile: tuple[int, int]) -> bool:
-            known = remembered.get(tile) or (zone.template.tile_at(tile) if chart else None)
-            return bool(known) and known in tiles and tiles[known].passable and (tile == goal or tile not in people)
+            known = remembered.get(tile) or (zone.template.tile_at(tile) if chart and tile not in secret else None)
+            return (bool(known) and known in tiles and tiles[known].passable
+                    and (tile == goal or (tile not in people and tile not in doors)))
 
         start = avatar.actor.position
         came: dict[tuple[int, int], tuple[int, int] | None] = {start: None}
@@ -272,6 +276,8 @@ class ZoneSimulation:
 
     def disconnect(self, session: Session) -> None:
         self.views.pop(session.id, None)
+        self.walks.pop(session.id, None)
+        self.deep_views.discard(session.id)
         self.published.pop(session.id, None)
         self.maps.pop(session.id, None)
         self.map_opened.pop(session.id, None)
@@ -285,14 +291,14 @@ class ZoneSimulation:
             self.world.leave(avatar.actor)
 
     def input(self, session: Session, frame: Frame, tick: int) -> None:
+        avatar = self.avatars.get(session.user_id)
+        if session.role != "caller" or avatar is None:
+            return
         if frame.type == "intent" and frame.data.get("name") == "view_shape":
             # Trial: eye-level views ask for a camera as deep as it is wide.
             deep = bool(frame.data.get("args", {}).get("deep")) and dressing.TRIAL
             (self.deep_views.add if deep else self.deep_views.discard)(session.id)
             session.needs_full_view = True
-            return
-        avatar = self.avatars.get(session.user_id)
-        if session.role != "caller" or avatar is None:
             return
         action = frame.data.get("name", "") if frame.type == "intent" else ""
         if frame.type == "key":

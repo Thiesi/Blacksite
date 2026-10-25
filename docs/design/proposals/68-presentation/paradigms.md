@@ -1,15 +1,21 @@
 # Beyond the roguelike map: three playable paradigms (proposal)
 
-**Status: exploration for the owner, issue #68.** Not canon and not a
-recommendation to replace anything yet. All three prototypes run in the
-trial build beside the shipped map and the proposal map (`spec.md`), on
-the same server, the same simulation and the same combat. F7 cycles all
-five views on one game state.
+**Status: exploration for the owner, issue #68.** Not canon. All three
+prototypes run in the trial build beside the shipped map and the proposal
+map (`spec.md`), on the same server, the same simulation and the same
+combat. F7 cycles all five views on one game state.
+
+**Direction (owner, 2026-10-25):** after first hands-on play, **auto
+(prototype C) is the preferred player-experience direction**. It is a
+direction to plan around, not acceptance: final acceptance and the
+detailed interaction rules in section 5 remain open and are tuned by
+play.
 
 ```
 python scripts/playtest_68.py --geometry candidate --view street   # A: eye level
 python scripts/playtest_68.py --geometry candidate --view scene    # B: places
 python scripts/playtest_68.py --geometry candidate --view auto     # C: chosen by context
+python scripts/playtest_68.py --geometry candidate --view auto --inspect  # C, showing why
 ```
 
 ## 1. The question
@@ -128,10 +134,12 @@ with that place: a glimpse at eye level (prototype A's renderer, a
 strip), the place's name, a line or two of its own text, who is here,
 what is in reach (`E`), and a list of **ways**: other named places,
 exits and things you know of, with distance and compass direction.
-Choosing a way and pressing Enter asks the server to walk you there in
-real time, through the simulation, step by step; the screen updates as
+Choosing a way (comma and full stop) and pressing Space asks the server
+to walk you there in real time, through the simulation, step by step; the screen updates as
 you go ("Walking to The alley behind. Any key stops."). The place
-changes under you as you cross into it.
+changes under you as you cross into it. The arrows still step you tile
+by tile and Enter still talks (A5 in section 5); the first version used
+Up, Down and Enter for ways and was changed after play.
 
 Places are content: `places` in the looks file, each a named rectangle
 with a sentence and an anchor tile. The Plaza, Clinic Row and Sodium Row
@@ -175,20 +183,75 @@ because it is mostly words.
 ## 5. Prototype C: auto (the view follows the moment)
 
 **What it is.** The door picks the view from context instead of a key.
-The rules, in order (`door/present/context.py`):
 
-1. **Danger:** anything threatening (a hazard, a target, a hostile,
-   combat, heat) shows the tactical map, and keeps it for 5 seconds after
-   the last threat so a fight does not flicker in and out of view.
-2. **Arrival:** entering a zone, reaching the end of a walk, or F5 shows a
-   short **look**: street view for 3 to 4 seconds. It faces across the most
-   open known ground to a facade at least 6 m away, so it frames the place
-   rather than the wall behind you. It is only a look: any key closes it
-   and acts in the view underneath.
-3. **Calm ground:** safe and pocket ground that has named places is a
-   **scene**: you move by choosing where to go.
-4. **Everywhere else:** contested and open ground is the **map**:
-   positioning matters there, so you move tile by tile.
+**Principles** (owner and presentation lead, 2026-10-25). These are the
+proposed contract for the decider; the rules below implement them.
+
+- **A1 Danger first.** A threat shows the tactical map on the same frame.
+  Nothing delays it: no look, no animation, no preference, no pin.
+- **A2 No oscillation.** Escalation is immediate; calming is slow. A view
+  only becomes calmer automatically when the danger hold ends.
+- **A3 Intent, not geography.** How you move says what you are doing.
+  Ground only sets where a zone starts.
+- **A4 An escape hatch that never fights you.** Your own keys choose the
+  view, and the choice holds until you leave the zone. F7 leaves auto.
+- **A5 Keys keep one meaning.** Every key does the same in every view, so
+  a view change never changes what your fingers do. Arrows always step,
+  Enter always talks, and ways have keys of their own.
+- **A6 Inspectable.** During development every decision carries its rule
+  and a reason, shown live and written to a trace, so tuning can tell a
+  wrong decider from wrong surroundings (geometry, content, safety data).
+
+**Rules**, in order; the first that applies decides
+(`door/present/context.py`):
+
+1. **danger:** anything threatening (a hazard, a target, a hostile,
+   combat, heat) shows the tactical map at once.
+2. **hold:** the tactical map stays 5 seconds after the last threat, so a
+   fight does not flicker in and out of view.
+3. **look:** entering a zone, reaching the end of a walk, or F5 shows a
+   short look at eye level: street view for 3 to 4 seconds. It faces
+   across the most open known ground to a facade at least 6 m away, so it
+   frames the place rather than the wall behind you. It is only a look:
+   any key closes it and acts in the view underneath.
+4. **intent:** how you last moved in this zone decides. Stepping with the
+   arrows means the **map**; choosing a way (comma, full stop, Space) or
+   being walked means the **scene**. On the map, the first way key brings
+   the scene up rather than acting blind.
+5. **ground:** until you move, safe and pocket ground with named places
+   is a scene, and everywhere else is the map. Ground with no places is
+   always the map.
+
+Because ground only decides where a zone starts, walking along a
+safe/contested boundary cannot flip the view; there is nothing to damp.
+Way keys do nothing during danger: a walk never starts in a fight.
+
+**Keys under auto and scenes.**
+
+| Key | Map | Scene | Look | Tactical |
+|---|---|---|---|---|
+| Arrows | step | step (and choose the map) | close the look, step | step |
+| Enter | talk | talk | close the look, talk | talk |
+| `,` `.` | bring up the scene | previous / next way | close, then as underneath | nothing |
+| Space | bring up the scene | walk to the way | close, then as underneath | nothing |
+| F5 | look | look | end the look | nothing |
+| F10 | inspector | inspector | inspector | inspector |
+
+The manual street view (prototype A) keeps its own turning arrows; it is
+a separate prototype, not part of auto.
+
+**The inspector.** F10 (or `--inspect`) draws the current decision over
+the bottom of the viewport: its tag, the rule that fired, the reason in
+plain words ("you are moving tile by tile", "held 3.0 s more after
+hostile Rook", "safe ground with 6 named places"), the inputs it read
+(safety, places, how you moved, threat age, look time left), and the last
+changes with how long ago each happened. It never covers the side panel,
+so DANGER and vitals stay readable. With `BLACKSITE_AUTO_TRACE` set (the
+playtest sets it to `.test-tmp/playtest-68-*/auto-trace.jsonl`), each
+change is one JSON line: time, from, to, rule, reason, zone, position and
+inputs. Reading it after a session shows whether a surprising switch was
+the decider (a rule to change) or its surroundings (a safety boundary,
+missing places, a threat the server reported).
 
 A tag in the header always names the current view (LOOK, SCENE, MAP,
 TACTICAL), and TACTICAL is drawn in the danger colour. The server is
@@ -218,17 +281,22 @@ danger.
 
 **What it costs.**
 
-- **Keys change meaning with context.** In a scene, Up and Down move a
-  cursor; on contested ground they move your body. Crossing a pocket
-  boundary mid-thought flips them. The header tag says so, but muscle
-  memory may not listen. An alternative worth testing: arrows always move
-  you, and scenes take PgUp, PgDn and Enter.
-- **Boundaries can feel jumpy.** Walking out of a clinic interior onto
-  Clinic Row switches scene to map at the door. Only threats have a hold;
-  boundaries do not, by design, because hiding the map on contested
-  ground is the dangerous mistake.
+- **Scenes lose their arrow cursor.** Ways moved to comma, full stop and
+  Space so the arrows can always step (A5). It is less discoverable; the
+  hint line names the keys.
+- **A step in a scene leaves it.** Under A3 one arrow step means you are
+  moving tile by tile, so the map comes up; a way key brings the scene
+  back. Whether that reads as responsive or fussy needs play.
+- **Contested ground can stay a scene.** If you chose a way, crossing
+  onto contested ground keeps the scene until something threatens you
+  (A1 still applies at once). That is A3 by design; the danger rule is
+  the safety net.
 - **Durations are guesses.** The 5-second hold and the 3 to 4 second look
-  need play to tune.
+  need play to tune; the trace is there to tune them from.
+- **The decider reads threats the door infers.** It treats a nearby
+  hostile relation as danger, so a view switch would disclose any NPC the
+  server marks hostile. A server-declared threat field is the honest
+  input (planned as P4 in the technical lead's integration plan).
 - **Big open spaces look empty.** The Plaza is wider than eye level can
   see at this depth, so its look is mostly sky and paving. Looks are at
   their best in streets, alleys and interiors.
@@ -278,12 +346,12 @@ the part I trust least.
 | S3 | Which paradigm, if any, becomes a supported view, and for which contexts? | product direction; affects S25, S27, S30, S33 scopes |
 | S4 | Should facing become server state the view can set (smooth turning, facing-aware rules later)? | today facing is persisted but unused; making it meaningful is a rule change |
 | S5 | Places as content: who writes them, and are they canon (gazetteer) or presentation (looks)? | names of places become world text |
-| S6 | If the view follows context, may the arrow keys change meaning with it, or must movement keys always move the body? | it changes the control contract in UI 5 |
+| S6 | If the view follows context, may the arrow keys change meaning with it, or must movement keys always move the body? | answered for auto by A5 (one meaning per key); the manual street view still turns with them |
 
 ## 9. Honest limits
 
-- Built and captured from the harness; not yet played by a person. The
-  user's own play is the test.
+- First played by the owner on 2026-10-25 (auto preferred). The A1-A6
+  rules above came out of that session and have not been played yet.
 - Only three zones have places, and only the Sodium Row candidate has
   enough architecture for street view to show what it can do. On the
   shipped Sodium Row (an open rectangle) street view shows mostly open
