@@ -818,3 +818,59 @@ None of these slices is filed or started before D-T1.
   and §5 (keys). That canon edit belongs in P0 once the owner accepts the
   direction, top-down and in the same PR as the first slice that depends
   on it.
+
+## 13. The visual target: the Tin Halo
+
+On 2026-10-25 the owner adopted the Tin Halo mockup (#70 `c351cac`,
+`paradigms.md` §10, `target/`) as the visual target for scenes: a game
+that conveys what matters through scenery, not only text. The owner is
+less worried about simulation engineering than about reaching this
+visual level. This plan therefore treats the visual pipeline as a
+primary track, not finish work.
+
+The mockup is hand-composed (`target_tin_halo.py`), not rendered from
+game data. The largest risk is therefore not any single engineering
+item. It is whether a renderer driven by authored data reaches this
+quality at all, and what each place then costs to author.
+
+### 13.1 Engineering assessment of §10's seven items
+
+| # | Item | Assessment |
+|---|---|---|
+| 1 | Sextant capability tier | **Conflicts with canon.** `03-terminal-ui.md` §1 restricts all glyphs to characters that exist in CP437, because NetBBS transcodes UTF-8 to CP437 for SyncTERM-class callers. Sextants (U+1FB00 block) do not survive that path. The door cannot detect support: NetBBS sends only the boolean `unicode_style`, and no terminal query reliably reports sextant rendering. A safe tier is therefore an explicit per-player setting, offered with a test pattern and defaulting to half-blocks (`▀▄█▌▐`, all CP437). It applies only to eye-level art; maps, chrome and text stay inside the CP437 set. This needs a canon amendment to UI §1 (D-T9). A capability field in NetBBS's door info would be an upstream request, not a dependency. |
+| 2 | Lighting in looks | Sound. A content extension validated like the place layer. Decoration only (spec R4, R6), covered by the mechanics fingerprint. |
+| 3 | Set pieces in looks | Sound at eye level. **On the map** a set piece must not contradict the tile: a booth drawn on a passable tile reads as an obstacle that is not there. Rule: set pieces appear on the map only on tiles whose class matches (opaque or impassable), or only at eye level. The validator checks this. |
+| 4 | Lit renderer with caching | Feasible. Street view already costs 30 to 39 ms per frame at 132x50 in the door process; lights, fog and reflections add to that. Static layers cached per position and heading make it affordable. The cache lives in the door process, per caller, so memory is bounded by places visited. Needs a CPU budget in P1 alongside the byte budget. |
+| 5 | Figures from disclosed actors only | Required, and testable: a property test that every drawn figure corresponds to an actor in the view body. Note that the mockup's bouncer wears Sable's red. Allegiance marks on figures must come from a disclosed field, so D-T8's presented class applies to silhouettes too. |
+| 6 | Budgets | A full glimpse at 60 to 80 KiB is four to five times the current per-delta maximum (16 KiB at 80x24, `tests/world/test_views_and_sessions.py:144`). Looks need their own budget class: a rate limit on full redraws (turning, arriving), a degraded mode that drops to half-blocks or the map on slow links, and a measurement over the real NetBBS SSH and web transports before acceptance. |
+| 7 | Authoring at scale | The dominant cost, and the reason for 13.2. It needs tooling as much as writers: an offline renderer that draws a look from content to PNG at every tier (the mockup scripts are a start), validator rules for lights and set pieces, and a review gate per place. |
+
+### 13.2 Recommended sequence
+
+1. **V0, a live Tin Halo spike** (new). Render the Tin Halo from authored
+   look data (lights, set pieces, places) through a data-driven lit
+   renderer, behind the trial flag. The owner compares a live capture
+   against the target. Owner: presentation lead, since the renderer
+   grows from `door/present/street.py`; engineering review by the
+   technical lead. It is a throwaway-capable spike, but its content
+   schema is the draft for item 2 and item 3. It needs no P-slice first.
+2. If V0 reaches the target, **V1 grows into the scene track**: lit
+   renderer (V1), capability setting and canon amendment (V2), look
+   schema for lights and set pieces plus the authoring renderer (V3).
+   These land after P2 (layout shapes) and P5 (client foundations),
+   under P1's byte and CPU budgets.
+3. **Authoring follows the gazetteer in priority order**: hub interiors
+   and pockets first (the Tin Halo, Vesper's bar, the clinics, the
+   Plaza), streets as looks later. Each district is a content batch with
+   its own human gate, folded into H1 to H3.
+4. If V0 falls short, the gap is a decision for the owner, between more
+   renderer work, hand-authored stills per place, or a lower target,
+   before any authoring at scale.
+
+### 13.3 Decisions this adds
+
+| ID | Decision | Recommendation | Why it matters |
+|---|---|---|---|
+| D-T9 | May eye-level art use characters outside CP437 (sextants) as an opt-in per-player setting, amending UI §1? | Yes: opt-in with a test pattern, half-blocks by default, maps and text unchanged | Without it the target's detail is unreachable. Without opt-in, CP437 and transcoding callers see broken cells. |
+| D-T10 | Prove the target with a live Tin Halo spike (V0) before authoring at scale | Yes | The target is hand-composed. Committing to authoring dozens of places before a data-driven renderer reaches it risks the largest cost in the plan. |
+| D-T11 | Authoring scope for the first release: full scenes for hub interiors and pockets, simpler looks elsewhere | Yes, extending by district after each gate | Item 7 is the real cost. Scoping it keeps S25 to S33 shippable. |
