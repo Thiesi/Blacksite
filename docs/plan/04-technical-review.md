@@ -218,10 +218,10 @@ on the PR head:
 | success | The latest record for the current head says "ready to merge", or the PR carries the label `no-technical-review`. |
 | failure | The latest record for the current head says "changes required", or has no recognised recommendation. |
 
-Only comments whose author association is owner, member or collaborator
-count, and bots never do, so the automated Claude review cannot satisfy
-the gate. The repository is single-owner; adding collaborators with
-read or triage access would widen who can post a record. The gate always
+Only comments from the repository owner's account count, and bots never
+do, so the automated Claude review cannot satisfy the gate. Every agent
+posts through the owner's account, so collaborators added later cannot
+post a record that counts. The gate always
 runs the script from `main`, so a PR cannot change the rule that judges
 it.
 

@@ -41,7 +41,8 @@ def test_record_without_recommendation_fails() -> None:
 
 def test_bots_and_outsiders_cannot_pass_the_gate() -> None:
     assert evaluate(HEAD, [], [record(HEAD, "Ready to merge.", bot=True)])[0] == "pending"
-    assert evaluate(HEAD, [], [record(HEAD, "Ready to merge.", association="NONE")])[0] == "pending"
+    for association in ("NONE", "COLLABORATOR", "MEMBER"):
+        assert evaluate(HEAD, [], [record(HEAD, "Ready to merge.", association=association)])[0] == "pending"
 
 
 def test_exempt_label_passes() -> None:

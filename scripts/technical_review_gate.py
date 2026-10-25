@@ -18,7 +18,7 @@ from typing import Any
 
 CONTEXT = "technical-review"
 EXEMPT_LABEL = "no-technical-review"
-TRUSTED = {"OWNER", "MEMBER", "COLLABORATOR"}
+TRUSTED = {"OWNER"}  # every agent posts through the owner's account
 HEADING = re.compile(r"^## Technical review: .+ at ([0-9a-f]{40})\b")
 RECOMMENDATION = re.compile(r"^\*\*Recommendation\.\*\*\s*(.+)$", re.MULTILINE)
 
