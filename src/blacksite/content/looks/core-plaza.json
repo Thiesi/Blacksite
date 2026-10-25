@@ -225,5 +225,119 @@
     "The fountain hisses. It has run on the same water for forty years.",
     "A Warden checks a pass and hands it back.",
     "A courier drone ticks past at head height."
+  ],
+  "places": [
+    {
+      "name": "Kestrel Bank steps",
+      "rect": [
+        3,
+        4,
+        12,
+        4
+      ],
+      "at": [
+        8,
+        6
+      ],
+      "text": "Kestrel's branch keeps its shutters half down, even at noon."
+    },
+    {
+      "name": "The north arcade",
+      "rect": [
+        20,
+        4,
+        46,
+        4
+      ],
+      "at": [
+        44,
+        6
+      ],
+      "text": "Noodle steam drifts under the signs. Two public terminals stand in the arcade."
+    },
+    {
+      "name": "The fountain",
+      "rect": [
+        36,
+        12,
+        18,
+        13
+      ],
+      "at": [
+        45,
+        13
+      ],
+      "text": "The fountain has run on the same water for forty years. The Ring shakes in it."
+    },
+    {
+      "name": "The vendor's window",
+      "rect": [
+        68,
+        4,
+        14,
+        4
+      ],
+      "at": [
+        75,
+        6
+      ],
+      "text": "A vendor sells ammunition and rations from the same window."
+    },
+    {
+      "name": "Civic Authority hall",
+      "rect": [
+        60,
+        28,
+        22,
+        4
+      ],
+      "at": [
+        68,
+        31
+      ],
+      "text": "The notice board lists the city's work. The Descent console waits beside it."
+    },
+    {
+      "name": "The recruiting desk",
+      "rect": [
+        5,
+        28,
+        16,
+        4
+      ],
+      "at": [
+        16,
+        31
+      ],
+      "text": "A Warden recruiter watches the plaza more than the queue."
+    },
+    {
+      "name": "The south promenade",
+      "rect": [
+        1,
+        34,
+        88,
+        5
+      ],
+      "at": [
+        45,
+        36
+      ],
+      "text": "Four streets leave the plaza here, each with its name painted on the paving."
+    },
+    {
+      "name": "The plaza",
+      "rect": [
+        1,
+        1,
+        88,
+        38
+      ],
+      "at": [
+        45,
+        27
+      ],
+      "text": "Wardens stand under the lamps. Nobody has died here in nineteen years."
+    }
   ]
 }

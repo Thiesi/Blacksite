@@ -119,6 +119,17 @@ class LookMark:
 
 
 @dataclass(frozen=True)
+class LookPlace:
+    """A named part of a zone: the stage, the alley behind the bars. Scene
+    navigation walks to `at` (or the rectangle's centre)."""
+
+    name: str
+    rect: tuple[int, int, int, int]
+    text: str = ""
+    at: Tile | None = None
+
+
+@dataclass(frozen=True)
 class Look:
     """`looks/<zone-id>.json`: what a zone looks like. Dressing never
     changes passability, opacity, cover or any other rule of the grid."""
@@ -133,6 +144,7 @@ class Look:
     names: dict[str, str] = field(default_factory=dict)
     """Tile id to what it is here (`cover-2`: `barrels`)."""
     ambient: tuple[str, ...] = ()
+    places: tuple[LookPlace, ...] = ()
     charted: bool = False
     """Public geography known on arrival (decision D1; trial only)."""
     schema: int = CONTENT_SCHEMA

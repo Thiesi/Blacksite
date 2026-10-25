@@ -210,5 +210,161 @@
     "A sodium lamp buzzes, dims and steadies.",
     "Somebody laughs too loud in a doorway behind you.",
     "A bottle rolls down the alley and stops against a barrel."
+  ],
+  "places": [
+    {
+      "name": "The Neon Stair",
+      "rect": [
+        1,
+        1,
+        5,
+        9
+      ],
+      "at": [
+        3,
+        6
+      ],
+      "text": "Steps down from the plaza, slick with what the lamps leave."
+    },
+    {
+      "name": "The Live Room",
+      "rect": [
+        7,
+        3,
+        8,
+        6
+      ],
+      "at": [
+        11,
+        6
+      ],
+      "text": "A trio plays to the bar. Somebody has been crying into the same drink for an hour."
+    },
+    {
+      "name": "The narrow bar",
+      "rect": [
+        16,
+        3,
+        8,
+        6
+      ],
+      "at": [
+        19,
+        6
+      ],
+      "text": "One counter, six stools, nobody's real name."
+    },
+    {
+      "name": "The stage",
+      "rect": [
+        25,
+        4,
+        13,
+        6
+      ],
+      "at": [
+        31,
+        7
+      ],
+      "text": "A band plays to whoever stops. The lights never quite settle."
+    },
+    {
+      "name": "Open Late",
+      "rect": [
+        44,
+        3,
+        13,
+        6
+      ],
+      "at": [
+        47,
+        5
+      ],
+      "text": "The sign grid's cabinet hums behind the bar. Sable keeps the lights on here."
+    },
+    {
+      "name": "The ticket bar",
+      "rect": [
+        58,
+        3,
+        9,
+        6
+      ],
+      "at": [
+        61,
+        5
+      ],
+      "text": "Convoy passage and Scour rides, sold between drinks."
+    },
+    {
+      "name": "The last bar",
+      "rect": [
+        69,
+        3,
+        10,
+        6
+      ],
+      "at": [
+        73,
+        6
+      ],
+      "text": "The last bar before the Halo. It closes when the Halo does."
+    },
+    {
+      "name": "The card court",
+      "rect": [
+        30,
+        18,
+        12,
+        5
+      ],
+      "at": [
+        35,
+        19
+      ],
+      "text": "Card players under a single lamp. Nobody looks up."
+    },
+    {
+      "name": "The alley behind",
+      "rect": [
+        6,
+        24,
+        83,
+        3
+      ],
+      "at": [
+        45,
+        25
+      ],
+      "text": "Deals get made in the doorways and unmade back here."
+    },
+    {
+      "name": "Tin Halo square",
+      "rect": [
+        86,
+        10,
+        7,
+        12
+      ],
+      "at": [
+        89,
+        14
+      ],
+      "text": "The Tin Halo's sign has said TIN HAL for as long as anyone remembers."
+    },
+    {
+      "name": "Sodium Row",
+      "rect": [
+        1,
+        10,
+        92,
+        8
+      ],
+      "at": [
+        40,
+        12
+      ],
+      "text": "Orange lamps, wet pavement, music from six doorways at once."
+    }
   ]
 }

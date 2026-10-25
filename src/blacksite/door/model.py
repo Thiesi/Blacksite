@@ -16,7 +16,9 @@ from blacksite.door.views.zone import render_zone
 from blacksite.door.views.lattice import render_lattice
 from blacksite.door.log import rows as log_rows
 from blacksite.door import present
+from blacksite.door.present import scene as present_scene
 from blacksite.door.present import screen as present_screen
+from blacksite.door.present import street as present_street
 from blacksite.door.present.paint import Paint
 from blacksite.server.protocol import Frame
 
@@ -52,7 +54,11 @@ class Display:
         self.warnings = SessionWarnings(info.session_limit)
         self.renderers: dict[str, Renderer] = {"text": render_text, "dead": render_text, "menu": render_menu, "zone": render_zone, "lattice": render_lattice}
         # Proposal 68 trial: F7 switches renderer, F6 cycles place cards, F5 looks.
-        self.present = present.enabled(os.environ)
+        start = present.mode(os.environ)
+        self.present = start != "shipped"
+        self.view_mode = start if self.present else "map"
+        self.heading: str | None = None
+        self.scene_cursor = 0
         self.card_mode = "entry"
         self.card_until = 0.0
         self.card_zone: str | None = None
@@ -135,6 +141,9 @@ class Display:
             zone_id = self.body.get("me", {}).get("zone")
             if zone_id != self.card_zone:
                 self.card_zone = zone_id
+                self.heading, self.scene_cursor = None, 0
+                if self.present and self.view_mode in ("street", "scene"):
+                    result.append(self.shape_frame())
                 self.card_until = now + present_screen.CARD_SECONDS if self.card_mode == "entry" else 0.0
         self.dirty = True
         return result
@@ -265,12 +274,59 @@ class Display:
                     return [Frame("intent", {"name": "menu_select", "args": {"row": selected["id"], "key": key.lower()},
                         "request_id": f"{self.request_prefix}-{self.counter}", "expected_revision": self.revision})]
             return []
+        if self.present and effective_kind == "zone" and self.view_mode in ("street", "scene") \
+                and not present_screen.threatened(effective_body):
+            frames = self.paradigm_key(key, effective_body, now)
+            if frames is not None:
+                return frames
         return [Frame("key", {"k": key, "t": max(0, int(now * 1000))})]
+
+    def paradigm_key(self, key: str, body: dict[str, Any], now: float) -> list[Frame] | None:
+        """Street and scene views give the movement keys new meanings. The
+        server still receives only ordinary moves and the trial walk."""
+        table = next((k for k in self.keymap.get("keymaps", []) if k.get("id") == self.selected_keymap), None)
+        if table is None:
+            return None
+        bindings = table.get("bindings", {})
+        action = next((name for name, keys in bindings.items() if key in keys), "")
+        heading = self.heading or present_street.cardinal(next(
+            (a.get("facing") for a in body.get("actors", []) if a.get("role") == "player_self"), None))
+        self.heading = heading
+        if self.view_mode == "street":
+            kind, _, way = action.partition("_")
+            if kind not in ("move", "sprint"):
+                return None
+            if way == "left":
+                self.heading = present_street.TURN_LEFT[heading]
+                return []
+            if way == "right":
+                self.heading = present_street.TURN_RIGHT[heading]
+                return []
+            if way not in ("up", "down"):
+                return []  # diagonals have no meaning at eye level
+            target = heading if way == "up" else present_street.BEHIND[heading]
+            keys = bindings.get(f"{kind}_{target}") or []
+            return [Frame("key", {"k": keys[0], "t": max(0, int(now * 1000))})] if keys else []
+        options = present_scene.ways(body)
+        if action in ("move_up", "move_down"):
+            self.scene_cursor = max(0, min(len(options) - 1, self.scene_cursor + (-1 if action == "move_up" else 1)))
+            return []
+        if key == "enter" and options:
+            way = options[max(0, min(self.scene_cursor, len(options) - 1))]
+            return [Frame("intent", {"name": "walk_to", "args": {"at": list(way["at"])}})]
+        return None
 
     def trial_key(self, key: str, now: float) -> list[Frame]:
         if key == "f7":
-            self.present = not self.present
-            self.toast = ("Proposal 68 presentation." if self.present else "Shipped presentation.", "ui_text", now + 3)
+            order = ["shipped", *present_screen.MODES]
+            current = self.view_mode if self.present else "shipped"
+            nxt = order[(order.index(current) + 1) % len(order)]
+            self.present, self.heading = nxt != "shipped", None
+            self.view_mode = nxt if self.present else "map"
+            frames = [self.shape_frame()] if self.connected else []
+            self.toast = ({"shipped": "Shipped map.", "map": "Proposal map.",
+                           "street": "Street view. Up walks, Left and Right turn.",
+                           "scene": "Scenes. Up and Down choose a way, Enter goes there."}[nxt], "ui_text", now + 4)
         elif key == "f6":
             modes = present_screen.CARD_MODES
             self.card_mode = modes[(modes.index(self.card_mode) + 1) % len(modes)]
@@ -279,7 +335,11 @@ class Display:
             self.card_until = 0.0 if self.card_until else now + 3600
         self.previous = None
         self.force_full = True
-        return []
+        return frames if key == "f7" else []
+
+    def shape_frame(self) -> Frame:
+        deep = self.present and self.view_mode in ("street", "scene")
+        return Frame("intent", {"name": "view_shape", "args": {"deep": deep}})
 
     def update(self, elapsed: float, now: float) -> None:
         if self.card_until and now >= self.card_until:
@@ -315,8 +375,12 @@ class Display:
             card = bool(self.card_until) and shown_kind == "zone" and not present_screen.threatened(shown)
             if not card:
                 self.card_until = 0.0
+            if self.heading is None and shown_kind == "zone":
+                self.heading = present_street.cardinal(next(
+                    (a.get("facing") for a in shown.get("actors", []) if a.get("role") == "player_self"), None))
             present_screen.render(buffer, self.layout, Paint(self.palette), shown_kind, shown, list(self.logs), hint,
-                                  show_card=card, flash=self.hit_flash)
+                                  show_card=card, flash=self.hit_flash, mode=self.view_mode,
+                                  heading=self.heading or "up", cursor=self.scene_cursor)
             if self.toast:
                 buffer.put(1, self.layout.separator, truncate(self.toast[0], self.layout.width - 2), self.palette.style("ui_text"))
             if self.prompt or self.confirm_exit or self.key_prompt:

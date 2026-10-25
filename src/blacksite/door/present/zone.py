@@ -31,14 +31,29 @@ def _light(paint: Paint, role: str, light: bool) -> str:
     return role + "_light" if light and paint.has(role + "_light") else role
 
 
+def crop(body: dict[str, Any], layout: Layout) -> tuple[int, int]:
+    """Offset into a viewport larger than the map area (the deep camera of
+    the eye-level views), centred on you."""
+    vp, area = body["viewport"], layout.viewport
+    me = next((a for a in body.get("actors", []) if a.get("role") == "player_self"), None)
+    if me is None:
+        return 0, 0
+    ox = max(0, min(vp["w"] - area.width, me["x"] - vp["x"] - area.width // 2)) if vp["w"] > area.width else 0
+    oy = max(0, min(vp["h"] - area.height, me["y"] - vp["y"] - area.height // 2)) if vp["h"] > area.height else 0
+    return ox, oy
+
+
 def terrain(buffer: CellBuffer, body: dict[str, Any], layout: Layout, paint: Paint) -> None:
     area, tier = layout.viewport, paint.tier
     legend, memory = body["legend"], body.get("remembered", [])
     looks, looks_legend = body.get("looks", []), body.get("looks_legend", [])
     hazard = {tuple(t) for h in body.get("hazards", []) for t in h.get("tiles", [])}
     vp = body["viewport"]
-    for y, row in enumerate(body["tiles"][:area.height]):
-        for x, state in enumerate(row[:area.width]):
+    ox, oy = crop(body, layout)
+    for row_index, row in enumerate(body["tiles"][oy:oy + area.height]):
+        y = row_index + oy
+        for col, state in enumerate(row[ox:ox + area.width]):
+            x = col + ox
             if state == -1:
                 continue
             now = state >= 0
@@ -55,7 +70,7 @@ def terrain(buffer: CellBuffer, body: dict[str, Any], layout: Layout, paint: Pai
                 style = paint.known(style)
                 if tier == "16" and glyph == "·" and (x + y * 3) % 3:
                     glyph = " "  # known ground, sparse, so seen ground stands out
-            buffer.put(area.x + x, area.y + y, glyph, style)
+            buffer.put(area.x + x - ox, area.y + y - oy, glyph, style)
 
 
 def cell(paint: Paint, entry: dict[str, Any], look: dict[str, Any], tier: str) -> tuple[str, Style]:
@@ -89,13 +104,16 @@ def people(buffer: CellBuffer, body: dict[str, Any], layout: Layout, paint: Pain
     relation = {n["id"]: n.get("relation", "~") for n in body.get("nearby", [])}
     target = (body.get("target") or {}).get("id")
 
+    ox, oy = crop(body, layout)
+
     def inside(entry: dict[str, Any]) -> tuple[int, int] | None:
-        x, y = entry["x"] - vp["x"], entry["y"] - vp["y"]
+        x, y = entry["x"] - vp["x"] - ox, entry["y"] - vp["y"] - oy
         if 0 <= x < min(area.width, vp["w"]) and 0 <= y < min(area.height, vp["h"]):
             return x, y
         return None
 
     def ground(x: int, y: int) -> tuple[str | None, bool]:
+        x, y = x + ox, y + oy
         index = looks[y][x] if y < len(looks) and x < len(looks[y]) else -1
         look = looks_legend[index] if 0 <= index < len(looks_legend) else {}
         return look.get("bg"), bool(look.get("light"))

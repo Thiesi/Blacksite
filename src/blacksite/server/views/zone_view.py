@@ -32,10 +32,14 @@ class Perception:
 
 
 def camera(actor: Actor, zone: ZoneInstance, width: int, height: int,
-           old: dict[str, int] | None) -> dict[str, int]:
+           old: dict[str, int] | None, deep: bool = False) -> dict[str, int]:
     # UI section 2: borders, divider and 22-column side panel.
     logs = min(8, 3 + max(0, height - 24) * 5 // 16)
     w, h = min(width - 25, zone.template.width), min(height - logs - 4, zone.template.height)
+    if deep:
+        # Proposal 68 trial: an eye-level view looks as far north and south
+        # as east and west. Sight still decides what is in it.
+        h, old = min(zone.template.height, max(h, 2 * 24 + 1), MAX_VIEW_CELLS // w), None
     # Bound unusually large negotiated terminals to the protocol's local
     # snapshot budget; usual 80x24/132x50 rectangles remain unchanged.
     h = min(h, max(1, MAX_VIEW_CELLS // w))
@@ -56,12 +60,13 @@ def camera(actor: Actor, zone: ZoneInstance, width: int, height: int,
 
 def build(actor: Actor, zone: ZoneInstance, perception: Perception, content: ContentTree,
           width: int, height: int, clock: str, night: bool, tick: int,
-          scouted: set[tuple[int,int]] | None = None, scouted_actors: set[str] | None = None) -> dict[str, Any]:
+          scouted: set[tuple[int,int]] | None = None, scouted_actors: set[str] | None = None,
+          deep: bool = False) -> dict[str, Any]:
     radius = sight_radius(actor, zone, night)
     body_visible = visible_tiles(actor, zone, radius)
     visible = body_visible | (scouted or set())
     remembered = perception.remembered.setdefault(zone.id, {})
-    viewport = camera(actor, zone, width, height, perception.viewport)
+    viewport = camera(actor, zone, width, height, perception.viewport, deep)
     perception.viewport = viewport
     glyphs = content.glyphs.glyphs if content.glyphs else {}
     if not perception.legend:
@@ -112,6 +117,7 @@ def build(actor: Actor, zone: ZoneInstance, perception: Perception, content: Con
                  "role": "player_self" if other is actor else "npc_"+(other.faction or "neutral") if other.kind != "player" else "player_hostile" if other.marked else content.factions[other.faction].colour if other.faction in content.factions else "player_neutral", "stance": other.stance, "kind": other.kind}
         if other is actor:
             entry["name"] = other.name
+            entry["facing"] = other.facing  # Proposal 68 street view, additive.
         actors.append(entry)
     objects = [{"id": obj.spec.id, "x": obj.spec.tile[0], "y": obj.spec.tile[1], "kind": obj.spec.kind,
                 "state": {**{key: value for key, value in obj.state.items() if key not in ("actor", "serial")}, "open": obj.open, "in_use": obj.in_use, "progress": obj.progress, **obj.spec.params.get("cache_state",{})},
@@ -148,6 +154,23 @@ def build(actor: Actor, zone: ZoneInstance, perception: Perception, content: Con
                      "names": dict(look.names) if look else {},
                      "lore": [" ".join(part.split()) for asset in zone.template.meta.lore[:1] if asset in content.text
                               for part in content.text[asset].body.split(PARAGRAPH)[:2]]}
+    # Scene navigation: named places and exits, only where the caller knows
+    # the ground they stand on, so a list of ways never maps unseen space.
+    chart = dressing.charted(content, zone.template)
+    known = lambda tile: tile in remembered or tile in visible or (chart and 0 <= tile[1] < zone.template.height
+                                                                 and 0 <= tile[0] < zone.template.width)
+    places = []
+    for spot in (look.places if look else ()):
+        x, y, w, h = spot.rect
+        anchor = tuple(spot.at) if spot.at else (x + w // 2, y + h // 2)
+        if known(anchor):
+            places.append({"name": spot.name, "rect": [x, y, w, h], "at": list(anchor), "text": spot.text})
+    view["place"]["places"] = places
+    view["place"]["here"] = next((p["name"] for p in places if p["rect"][0] <= actor.x < p["rect"][0] + p["rect"][2]
+                                  and p["rect"][1] <= actor.y < p["rect"][1] + p["rect"][3]), None)
+    view["place"]["exits"] = [{"name": content.zones[ex.target_zone].meta.name if ex.target_zone in content.zones else "Construction",
+                               "at": list(ex.tile), "kind": ex.kind}
+                              for ex in zone.template.meta.exits if not ex.hidden and known(ex.tile)]
     if perception.looks:
         resolved = dressing.for_zone(content, zone.template)
         assert resolved is not None

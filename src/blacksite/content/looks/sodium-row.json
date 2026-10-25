@@ -211,5 +211,63 @@
     "Music from six doorways at once, none of it the same song.",
     "A sodium lamp buzzes, dims and steadies.",
     "Somebody laughs too loud in a doorway behind you."
+  ],
+  "places": [
+    {
+      "name": "The stage",
+      "rect": [
+        25,
+        4,
+        12,
+        6
+      ],
+      "at": [
+        30,
+        9
+      ],
+      "text": "A band plays to whoever stops. The lights never quite settle."
+    },
+    {
+      "name": "The card table",
+      "rect": [
+        34,
+        18,
+        8,
+        4
+      ],
+      "at": [
+        38,
+        19
+      ],
+      "text": "Card players under a single lamp. Nobody looks up."
+    },
+    {
+      "name": "The Tin Halo door",
+      "rect": [
+        88,
+        22,
+        10,
+        6
+      ],
+      "at": [
+        93,
+        25
+      ],
+      "text": "The sign has said TIN HAL for as long as anyone remembers."
+    },
+    {
+      "name": "Sodium Row",
+      "rect": [
+        1,
+        1,
+        98,
+        28
+      ],
+      "at": [
+        40,
+        14
+      ],
+      "text": "Orange lamps, wet pavement, music from six doorways at once."
+    }
   ]
 }
