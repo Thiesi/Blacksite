@@ -160,6 +160,9 @@ retains them alongside the earlier vendor/core activation gates.
   an operator-facing behaviour changed, the slice file marked done with
   the PR number.
 - No new runtime dependency.
+- A technical review decision record at the final head recommends
+  merge (`docs/plan/04-technical-review.md`), and every human gate the
+  slice names has been granted by the owner.
 
 ## 8. Lore/design integration gates
 
