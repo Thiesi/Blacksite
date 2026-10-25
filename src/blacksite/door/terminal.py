@@ -51,7 +51,9 @@ class Terminal:
             if char in ("\x00", "\xe0"):
                 code = msvcrt.getwch()
                 return {"H": b"\x1b[A", "P": b"\x1b[B", "K": b"\x1b[D", "M": b"\x1b[C",
-                        "G": b"\x1b[H", "O": b"\x1b[F", "I": b"\x1b[5~", "Q": b"\x1b[6~"}.get(code, b"\x00")
+                        "G": b"\x1b[H", "O": b"\x1b[F", "I": b"\x1b[5~", "Q": b"\x1b[6~",
+                        "?": b"\x1b[15~", "@": b"\x1b[17~", "A": b"\x1b[18~",
+                        "B": b"\x1b[19~", "C": b"\x1b[20~"}.get(code, b"\x00")
             return char.encode("utf-8", errors="replace")
         try:
             return os.read(self.input, 4096)

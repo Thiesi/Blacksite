@@ -1,0 +1,73 @@
+{
+  "schema": 1,
+  "roles": {
+    "ground_sodium_alley": {
+      "truecolor": {
+        "default": "#1A1614",
+        "deutan": "#1A1614",
+        "protan": "#1A1614"
+      },
+      "256": {
+        "default": 234,
+        "deutan": 234,
+        "protan": 234
+      },
+      "16": {
+        "default": 0,
+        "deutan": 0,
+        "protan": 0
+      }
+    },
+    "grain_sodium_alley": {
+      "truecolor": {
+        "default": "#4A3A2A",
+        "deutan": "#4A3A2A",
+        "protan": "#4A3A2A"
+      },
+      "256": {
+        "default": 238,
+        "deutan": 238,
+        "protan": 238
+      },
+      "16": {
+        "default": 8,
+        "deutan": 8,
+        "protan": 8
+      }
+    },
+    "ground_sodium_halo": {
+      "truecolor": {
+        "default": "#3A2410",
+        "deutan": "#3A2410",
+        "protan": "#3A2410"
+      },
+      "256": {
+        "default": 94,
+        "deutan": 94,
+        "protan": 94
+      },
+      "16": {
+        "default": 0,
+        "deutan": 0,
+        "protan": 0
+      }
+    },
+    "grain_sodium_halo": {
+      "truecolor": {
+        "default": "#FF8A2A",
+        "deutan": "#FF8A2A",
+        "protan": "#FF8A2A"
+      },
+      "256": {
+        "default": 208,
+        "deutan": 208,
+        "protan": 208
+      },
+      "16": {
+        "default": 11,
+        "deutan": 11,
+        "protan": 11
+      }
+    }
+  }
+}

@@ -13,7 +13,8 @@ Override rules:
 - One-record files (`sectors/<id>.json`, `cores/<id>.json`, ...) and
   assets replace by file name. A zone is its `.map` and `.json` as a
   pair; a local zone must supply both.
-- `glyphs.json` and `palette.json` merge by glyph id and role;
+- `glyphs.json`, `palette.json` and `themes.json` merge by glyph id,
+  role and theme id;
   `keymaps.json` merges actions by id and keymaps by id.
 - A local `factions.json` that has an `asymmetries` list replaces the
   shipped list, since the declared set describes the merged matrix.
@@ -72,6 +73,7 @@ class ContentTree:
     keymaps: s.KeymapTable | None = None
     silt: s.SiltRules | None = None
     salvage: s.SalvageRules | None = None
+    themes: s.ThemeTable | None = None
     tiles: dict[str, s.TileType] = field(default_factory=dict)
     zones: dict[str, s.Zone] = field(default_factory=dict)
     rooms: dict[str, s.RoomBlueprint] = field(default_factory=dict)
@@ -102,6 +104,7 @@ class ContentTree:
     seasons: dict[str, s.SeasonDefinition] = field(default_factory=dict)
     """Keyed by the season number as a string, the file name."""
     bundles: dict[str, s.Bundle] = field(default_factory=dict)
+    looks: dict[str, s.Look] = field(default_factory=dict)
     text: dict[str, s.TextAsset] = field(default_factory=dict)
     art: dict[str, s.ArtAsset] = field(default_factory=dict)
     sources: dict[tuple[str, str], str] = field(default_factory=dict)
@@ -268,6 +271,10 @@ def _load_singletons(tree: ContentTree, layer: _Layer) -> None:
             tree.silt = record
         elif isinstance(record, s.SalvageRules):
             tree.salvage = record
+        elif isinstance(record, s.ThemeTable):
+            themes = dict(tree.themes.themes) if tree.themes else {}
+            themes.update(record.themes)
+            tree.themes = s.ThemeTable(themes=themes)
 
 
 def _check_id(tree: ContentTree, kind: str, record_id: str, rel: str, text: str) -> bool:

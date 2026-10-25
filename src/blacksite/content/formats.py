@@ -390,6 +390,7 @@ RECORD_DIRS: dict[str, type] = {
     "dialogue": s.DialogueNode,
     "seasons": s.SeasonDefinition,
     "bundles": s.Bundle,
+    "looks": s.Look,
 }
 """Directories of one-record JSON files, named `<id>.json`."""
 
@@ -399,4 +400,5 @@ SINGLETON_FILES: dict[str, type] = {
     "keymaps.json": s.KeymapTable,
     "silt.json": s.SiltRules,
     "salvage.json": s.SalvageRules,
+    "themes.json": s.ThemeTable,
 }

@@ -1,0 +1,1563 @@
+{
+ "_note": "Proposal data for issue #68. Not loaded by the game. Shows the shape of the proposed presentation content: colour roles per tier, district themes, and per-zone dressing. 16-colour backgrounds are restricted to 0-7.",
+ "roles": {
+  "frame_safe": {
+   "256": 25,
+   "16": 4,
+   "truecolor": "#1f5f9f"
+  },
+  "frame_pocket": {
+   "256": 30,
+   "16": 6,
+   "truecolor": "#2a8a8a"
+  },
+  "frame_contested": {
+   "256": 136,
+   "16": 3,
+   "truecolor": "#a07a20"
+  },
+  "frame_open": {
+   "256": 124,
+   "16": 1,
+   "truecolor": "#a02020"
+  },
+  "word_safe": {
+   "256": 75,
+   "16": 12,
+   "truecolor": "#5fafff"
+  },
+  "word_pocket": {
+   "256": 80,
+   "16": 14,
+   "truecolor": "#5fd7d7"
+  },
+  "word_contested": {
+   "256": 214,
+   "16": 11,
+   "truecolor": "#ffaf00"
+  },
+  "word_open": {
+   "256": 203,
+   "16": 9,
+   "truecolor": "#ff5f5f"
+  },
+  "head_district": {
+   "256": 245,
+   "16": 7,
+   "truecolor": "#8a8a8a"
+  },
+  "head_zone": {
+   "256": 231,
+   "16": 15,
+   "truecolor": "#ffffff"
+  },
+  "head_info": {
+   "256": 250,
+   "16": 7,
+   "truecolor": "#bcbcbc"
+  },
+  "head_night": {
+   "256": 223,
+   "16": 11,
+   "truecolor": "#ffd7af"
+  },
+  "rule": {
+   "256": 239,
+   "16": 8,
+   "truecolor": "#4e4e4e"
+  },
+  "label": {
+   "256": 244,
+   "16": 8,
+   "truecolor": "#808080"
+  },
+  "text": {
+   "256": 252,
+   "16": 7,
+   "truecolor": "#d0d0d0"
+  },
+  "strong": {
+   "256": 231,
+   "16": 15,
+   "truecolor": "#ffffff"
+  },
+  "dim": {
+   "256": 242,
+   "16": 8,
+   "truecolor": "#6c6c6c"
+  },
+  "bar_hp": {
+   "256": 71,
+   "16": 2,
+   "truecolor": "#5faf5f"
+  },
+  "bar_sta": {
+   "256": 74,
+   "16": 6,
+   "truecolor": "#5fafd7"
+  },
+  "bar_shock": {
+   "256": 179,
+   "16": 3,
+   "truecolor": "#d7af5f"
+  },
+  "bar_int": {
+   "256": 116,
+   "16": 14,
+   "truecolor": "#87d7d7"
+  },
+  "bar_trace": {
+   "256": 209,
+   "16": 11,
+   "truecolor": "#ff875f"
+  },
+  "bar_empty": {
+   "256": 237,
+   "16": 8,
+   "truecolor": "#3a3a3a"
+  },
+  "hint_key": {
+   "256": 231,
+   "16": 15,
+   "truecolor": "#ffffff"
+  },
+  "hint_text": {
+   "256": 244,
+   "16": 8,
+   "truecolor": "#808080"
+  },
+  "log_place": {
+   "256": 180,
+   "16": 7,
+   "truecolor": "#d7af87"
+  },
+  "log_ambient": {
+   "256": 245,
+   "16": 8,
+   "truecolor": "#8a8a8a"
+  },
+  "log_speech": {
+   "256": 253,
+   "16": 15,
+   "truecolor": "#dadada"
+  },
+  "log_speaker": {
+   "256": 117,
+   "16": 14,
+   "truecolor": "#87d7ff"
+  },
+  "log_combat": {
+   "256": 252,
+   "16": 7,
+   "truecolor": "#d0d0d0"
+  },
+  "log_danger": {
+   "256": 214,
+   "16": 11,
+   "truecolor": "#ffaf00"
+  },
+  "log_system": {
+   "256": 240,
+   "16": 8,
+   "truecolor": "#585858"
+  },
+  "log_lattice": {
+   "256": 152,
+   "16": 14,
+   "truecolor": "#afd7d7"
+  },
+  "mem_floor": {
+   "256": 237,
+   "16": 0,
+   "truecolor": "#3a3a3a"
+  },
+  "mem_wall_bg": {
+   "256": 235,
+   "16": 0,
+   "truecolor": "#262626"
+  },
+  "mem_wall": {
+   "256": 238,
+   "16": 8,
+   "truecolor": "#444444"
+  },
+  "mem_sign": {
+   "256": 241,
+   "16": 8,
+   "truecolor": "#626262"
+  },
+  "mem_thing": {
+   "256": 243,
+   "16": 8,
+   "truecolor": "#767676"
+  },
+  "self_bg": {
+   "256": 231,
+   "16": 7,
+   "truecolor": "#ffffff"
+  },
+  "self_fg": {
+   "256": 16,
+   "16": 0,
+   "truecolor": "#000000"
+  },
+  "npc_neutral": {
+   "256": 250,
+   "16": 7,
+   "truecolor": "#bcbcbc"
+  },
+  "npc_neutral@light": {
+   "256": 240,
+   "16": 0,
+   "truecolor": "#585858"
+  },
+  "npc_wardens": {
+   "256": 75,
+   "16": 12,
+   "truecolor": "#5fafff"
+  },
+  "npc_wardens@light": {
+   "256": 25,
+   "16": 4,
+   "truecolor": "#005faf"
+  },
+  "npc_sablier": {
+   "256": 87,
+   "16": 14,
+   "truecolor": "#5fffff"
+  },
+  "npc_sablier@light": {
+   "256": 30,
+   "16": 6,
+   "truecolor": "#008787"
+  },
+  "npc_hostile": {
+   "256": 203,
+   "16": 9,
+   "truecolor": "#ff5f5f"
+  },
+  "npc_hostile@light": {
+   "256": 160,
+   "16": 1,
+   "truecolor": "#d70000"
+  },
+  "player_other": {
+   "256": 229,
+   "16": 11,
+   "truecolor": "#ffffaf"
+  },
+  "thing_terminal": {
+   "256": 45,
+   "16": 14,
+   "truecolor": "#00d7ff"
+  },
+  "thing_terminal@light": {
+   "256": 24,
+   "16": 4,
+   "truecolor": "#005f87"
+  },
+  "thing_vendor": {
+   "256": 220,
+   "16": 11,
+   "truecolor": "#ffd700"
+  },
+  "thing_vendor@light": {
+   "256": 130,
+   "16": 3,
+   "truecolor": "#af5f00"
+  },
+  "thing_hardware": {
+   "256": 141,
+   "16": 13,
+   "truecolor": "#af87ff"
+  },
+  "thing_hardware@light": {
+   "256": 91,
+   "16": 5,
+   "truecolor": "#8700af"
+  },
+  "thing_door": {
+   "256": 179,
+   "16": 3,
+   "truecolor": "#d7af5f"
+  },
+  "thing_door@light": {
+   "256": 94,
+   "16": 3,
+   "truecolor": "#875f00"
+  },
+  "thing_exit": {
+   "256": 231,
+   "16": 15,
+   "truecolor": "#ffffff"
+  },
+  "thing_light": {
+   "256": 229,
+   "16": 11,
+   "truecolor": "#ffffaf"
+  },
+  "thing_vat": {
+   "256": 79,
+   "16": 10,
+   "truecolor": "#5fd7af"
+  },
+  "thing_cover": {
+   "256": 101,
+   "16": 2,
+   "truecolor": "#87875f"
+  },
+  "thing_hazard": {
+   "256": 214,
+   "16": 11,
+   "truecolor": "#ffaf00"
+  },
+  "relay_sablier": {
+   "256": 87,
+   "16": 14,
+   "truecolor": "#5fffff"
+  },
+  "sign_cyan": {
+   "256": 51,
+   "16": 14,
+   "truecolor": "#00ffff"
+  },
+  "sign_pink": {
+   "256": 213,
+   "16": 13,
+   "truecolor": "#ff87ff"
+  },
+  "sign_amber": {
+   "256": 214,
+   "16": 11,
+   "truecolor": "#ffaf00"
+  },
+  "sign_blue": {
+   "256": 75,
+   "16": 12,
+   "truecolor": "#5fafff"
+  },
+  "sign_green": {
+   "256": 120,
+   "16": 10,
+   "truecolor": "#87ff87"
+  },
+  "sign_sablier": {
+   "256": 30,
+   "16": 6,
+   "truecolor": "#008787"
+  },
+  "sign_street": {
+   "256": 250,
+   "16": 7,
+   "truecolor": "#bcbcbc"
+  },
+  "paint": {
+   "256": 243,
+   "16": 8,
+   "truecolor": "#767676"
+  },
+  "paint_bay": {
+   "256": 24,
+   "16": 4,
+   "truecolor": "#005f87"
+  },
+  "paint_bay_text": {
+   "256": 31,
+   "16": 6,
+   "truecolor": "#0087af"
+  },
+  "ring_glint": {
+   "256": 229,
+   "16": 11,
+   "truecolor": "#ffffaf"
+  },
+  "lat_lit": {
+   "256": 195,
+   "16": 15,
+   "truecolor": "#d7ffff"
+  },
+  "lat_link": {
+   "256": 66,
+   "16": 6,
+   "truecolor": "#5f8787"
+  },
+  "lat_gated": {
+   "256": 60,
+   "16": 8,
+   "truecolor": "#5f5f87"
+  },
+  "lat_core": {
+   "256": 87,
+   "16": 14,
+   "truecolor": "#5fffff"
+  },
+  "lat_core_tier": {
+   "256": 159,
+   "16": 11,
+   "truecolor": "#afffff"
+  },
+  "lat_descent": {
+   "256": 140,
+   "16": 13,
+   "truecolor": "#af87d7"
+  },
+  "lat_here_bg": {
+   "256": 195,
+   "16": 7,
+   "truecolor": "#d7ffff"
+  },
+  "lat_here_fg": {
+   "256": 16,
+   "16": 0,
+   "truecolor": "#000000"
+  },
+  "lat_caption": {
+   "256": 152,
+   "16": 14,
+   "truecolor": "#afd7d7"
+  },
+  "black": {
+   "256": 16,
+   "16": 0,
+   "truecolor": "#000000"
+  },
+  "lat_field": {
+   "256": 236,
+   "16": 8,
+   "truecolor": "#2a3436"
+  },
+  "npc_sable": {
+   "256": 160,
+   "16": 1,
+   "truecolor": "#c81e2a"
+  },
+  "sign_orange": {
+   "256": 208,
+   "16": 11,
+   "truecolor": "#ff8700"
+  },
+  "sign_dead": {
+   "256": 238,
+   "16": 8,
+   "truecolor": "#444444"
+  },
+  "panel_title": {
+   "256": 80,
+   "16": 14,
+   "truecolor": "#5fd7d7"
+  },
+  "feed_time": {
+   "256": 240,
+   "16": 8,
+   "truecolor": "#585858"
+  },
+  "feed_loc": {
+   "256": 180,
+   "16": 3,
+   "truecolor": "#d7af87"
+  },
+  "standing_pos": {
+   "256": 79,
+   "16": 10,
+   "truecolor": "#5fd7af"
+  },
+  "standing_neg": {
+   "256": 167,
+   "16": 9,
+   "truecolor": "#d75f5f"
+  },
+  "map_box": {
+   "256": 242,
+   "16": 8,
+   "truecolor": "#6c6c6c"
+  },
+  "map_street": {
+   "256": 236,
+   "16": 0,
+   "truecolor": "#303030"
+  },
+  "art_label": {
+   "256": 239,
+   "16": 8,
+   "truecolor": "#4e4e4e"
+  }
+ },
+ "themes": {
+  "_doc": "bg/fg are role names or raw values per tier; texture is a list of glyphs picked by a stable hash of (x, y); ' ' means bare ground. 16-colour floors always keep '·' so walkable ground stays readable on a black background.",
+  "core-street": {
+   "bg": {
+    "256": 238,
+    "16": 0,
+    "truecolor": "#363944"
+   },
+   "fg": {
+    "256": 61,
+    "16": 4,
+    "truecolor": "#5f6595"
+   },
+   "texture": [
+    "·",
+    " ",
+    " ",
+    " ",
+    "∙",
+    " ",
+    " ",
+    " ",
+    " "
+   ],
+   "luma": "dark",
+   "wall_bg": {
+    "256": 240,
+    "16": 0,
+    "truecolor": "#4a4e58"
+   },
+   "wall_fg": {
+    "256": 242,
+    "16": 7,
+    "truecolor": "#5c606a"
+   }
+  },
+  "core-paving": {
+   "bg": {
+    "256": 238,
+    "16": 0,
+    "truecolor": "#363944"
+   },
+   "fg": {
+    "256": 103,
+    "16": 4,
+    "truecolor": "#8a8db0"
+   },
+   "pattern": "rings",
+   "centre": [
+    44.5,
+    18
+   ],
+   "glyphs": [
+    "∙",
+    "·"
+   ],
+   "luma": "dark"
+  },
+  "core-rim": {
+   "bg": {
+    "256": 243,
+    "16": 0,
+    "truecolor": "#6a6d78"
+   },
+   "fg": {
+    "256": 249,
+    "16": 7,
+    "truecolor": "#a8abb5"
+   },
+   "texture": [
+    "·"
+   ],
+   "luma": "dark"
+  },
+  "core-lamp": {
+   "bg": {
+    "256": 53,
+    "16": 0,
+    "truecolor": "#4a2a52"
+   },
+   "fg": {
+    "256": 218,
+    "16": 13,
+    "truecolor": "#ffafd7"
+   },
+   "texture": [
+    "·",
+    "∙",
+    " "
+   ],
+   "luma": "dark"
+  },
+  "core-water": {
+   "bg": {
+    "256": 17,
+    "16": 4,
+    "truecolor": "#0a1a4a"
+   },
+   "fg": {
+    "256": 33,
+    "16": 12,
+    "truecolor": "#2a7fff"
+   },
+   "luma": "dark"
+  },
+  "vat-street": {
+   "bg": {
+    "256": 236,
+    "16": 0,
+    "truecolor": "#2a3133"
+   },
+   "fg": {
+    "256": 30,
+    "16": 6,
+    "truecolor": "#2a8a8a"
+   },
+   "texture": [
+    "·",
+    " ",
+    " ",
+    " ",
+    " "
+   ],
+   "luma": "dark",
+   "wall_bg": {
+    "256": 240,
+    "16": 0,
+    "truecolor": "#474d50"
+   },
+   "wall_fg": {
+    "256": 240,
+    "16": 7,
+    "truecolor": "#55595c"
+   }
+  },
+  "vat-boulevard": {
+   "bg": {
+    "256": 238,
+    "16": 0,
+    "truecolor": "#2f3d40"
+   },
+   "fg": {
+    "256": 37,
+    "16": 6,
+    "truecolor": "#2aa7a7"
+   },
+   "texture": [
+    "·",
+    " ",
+    " ",
+    "∙",
+    " ",
+    " "
+   ],
+   "luma": "dark"
+  },
+  "vat-facade": {
+   "wall_bg": {
+    "256": 253,
+    "16": 7,
+    "truecolor": "#dfe6e8"
+   },
+   "wall_fg": {
+    "256": 250,
+    "16": 7,
+    "truecolor": "#c4cbcd"
+   },
+   "luma": "light"
+  },
+  "vat-interior": {
+   "bg": {
+    "256": 255,
+    "16": 7,
+    "truecolor": "#f2f7f8"
+   },
+   "fg": {
+    "256": 252,
+    "16": 15,
+    "truecolor": "#d8e0e2"
+   },
+   "texture": [
+    " ",
+    " ",
+    " ",
+    "·"
+   ],
+   "luma": "light",
+   "wall_bg": {
+    "256": 253,
+    "16": 7,
+    "truecolor": "#dfe6e8"
+   },
+   "wall_fg": {
+    "256": 250,
+    "16": 7,
+    "truecolor": "#c4cbcd"
+   }
+  },
+  "vat-alley": {
+   "bg": {
+    "256": 234,
+    "16": 0,
+    "truecolor": "#1b1f20"
+   },
+   "fg": {
+    "256": 239,
+    "16": 8,
+    "truecolor": "#4a4d4e"
+   },
+   "texture": [
+    "·",
+    " ",
+    ",",
+    " ",
+    "`",
+    " ",
+    " "
+   ],
+   "luma": "dark"
+  },
+  "vat-yard": {
+   "bg": {
+    "256": 235,
+    "16": 0,
+    "truecolor": "#222829"
+   },
+   "fg": {
+    "256": 240,
+    "16": 8,
+    "truecolor": "#4a5254"
+   },
+   "texture": [
+    "·",
+    " ",
+    " ",
+    " "
+   ],
+   "luma": "dark"
+  },
+  "core-lane": {
+   "bg": {
+    "256": 236,
+    "16": 0,
+    "truecolor": "#2a2d35"
+   },
+   "fg": {
+    "256": 59,
+    "16": 8,
+    "truecolor": "#55586a"
+   },
+   "texture": [
+    "·",
+    " ",
+    " ",
+    " "
+   ],
+   "luma": "dark"
+  },
+  "sodium-street": {
+   "bg": {
+    "256": 236,
+    "16": 0,
+    "truecolor": "#2a2622"
+   },
+   "fg": {
+    "256": 94,
+    "16": 3,
+    "truecolor": "#8a5a20"
+   },
+   "texture": [
+    "·",
+    " ",
+    " ",
+    ",",
+    " ",
+    "·",
+    " ",
+    " "
+   ],
+   "luma": "dark",
+   "wall_bg": {
+    "256": 237,
+    "16": 0,
+    "truecolor": "#36302a"
+   },
+   "wall_fg": {
+    "256": 240,
+    "16": 7,
+    "truecolor": "#55504a"
+   }
+  },
+  "sodium-lamp": {
+   "bg": {
+    "256": 94,
+    "16": 3,
+    "truecolor": "#5c3a10"
+   },
+   "fg": {
+    "256": 214,
+    "16": 11,
+    "truecolor": "#ffaf3a"
+   },
+   "texture": [
+    "·",
+    "∙",
+    " ",
+    "·",
+    " "
+   ],
+   "luma": "dark"
+  },
+  "sodium-door-pink": {
+   "bg": {
+    "256": 53,
+    "16": 5,
+    "truecolor": "#4a1640"
+   },
+   "fg": {
+    "256": 213,
+    "16": 13,
+    "truecolor": "#ff7ae0"
+   },
+   "texture": [
+    "·",
+    " ",
+    "∙"
+   ],
+   "luma": "dark"
+  },
+  "sodium-door-teal": {
+   "bg": {
+    "256": 23,
+    "16": 6,
+    "truecolor": "#0f3a40"
+   },
+   "fg": {
+    "256": 51,
+    "16": 14,
+    "truecolor": "#3ae8ff"
+   },
+   "texture": [
+    "·",
+    " ",
+    "∙"
+   ],
+   "luma": "dark"
+  },
+  "sodium-stage": {
+   "bg": {
+    "256": 54,
+    "16": 5,
+    "truecolor": "#3c1a5a"
+   },
+   "fg": {
+    "256": 177,
+    "16": 13,
+    "truecolor": "#d787ff"
+   },
+   "texture": [
+    "·",
+    "∙",
+    " "
+   ],
+   "luma": "dark"
+  },
+  "sodium-felt": {
+   "bg": {
+    "256": 22,
+    "16": 2,
+    "truecolor": "#0f3a1a"
+   },
+   "fg": {
+    "256": 28,
+    "16": 2,
+    "truecolor": "#2a8a3a"
+   },
+   "texture": [
+    " "
+   ],
+   "luma": "dark"
+  }
+ },
+ "zones": {
+  "core-plaza": {
+   "district": "THE CORE",
+   "theme": "core-street",
+   "charted": true,
+   "night_line": "Ring up",
+   "regions": [
+    {
+     "theme": "core-lane",
+     "rect": [
+      1,
+      1,
+      88,
+      3
+     ]
+    },
+    {
+     "theme": "core-lane",
+     "rect": [
+      1,
+      35,
+      88,
+      4
+     ]
+    },
+    {
+     "theme": "core-paving",
+     "rect": [
+      30,
+      9,
+      30,
+      19
+     ]
+    },
+    {
+     "theme": "core-lamp",
+     "circle": [
+      36,
+      13,
+      3
+     ]
+    },
+    {
+     "theme": "core-lamp",
+     "circle": [
+      54,
+      13,
+      3
+     ]
+    },
+    {
+     "theme": "core-rim",
+     "rect": [
+      39,
+      13,
+      12,
+      11
+     ]
+    },
+    {
+     "theme": "core-water",
+     "rect": [
+      40,
+      14,
+      10,
+      9
+     ]
+    }
+   ],
+   "signs": [
+    {
+     "at": [
+      4,
+      0
+     ],
+     "text": " KESTREL BANK ",
+     "role": "sign_amber"
+    },
+    {
+     "at": [
+      24,
+      0
+     ],
+     "text": " CIVIC AUTHORITY ",
+     "role": "sign_blue"
+    },
+    {
+     "at": [
+      44,
+      0
+     ],
+     "text": " NOODLES ",
+     "role": "sign_pink"
+    },
+    {
+     "at": [
+      55,
+      0
+     ],
+     "text": " TICKETS ",
+     "role": "sign_green"
+    },
+    {
+     "at": [
+      67,
+      0
+     ],
+     "text": " OSTROM SHOWROOM ",
+     "role": "sign_cyan"
+    },
+    {
+     "at": [
+      24,
+      39
+     ],
+     "text": " PRECINCT ",
+     "role": "sign_blue"
+    },
+    {
+     "at": [
+      55,
+      39
+     ],
+     "text": " NEON STAIR ",
+     "role": "sign_pink"
+    }
+   ],
+   "marks": [
+    {
+     "line": [
+      [
+       1,
+       4
+      ],
+      [
+       88,
+       4
+      ]
+     ],
+     "glyph": "─",
+     "role": "paint"
+    },
+    {
+     "at": [
+      75,
+      1
+     ],
+     "text": "CLINIC ROW »",
+     "role": "paint"
+    },
+    {
+     "at": [
+      4,
+      36
+     ],
+     "text": "« TRAMS",
+     "role": "paint"
+    },
+    {
+     "at": [
+      30,
+      36
+     ],
+     "text": "PRECINCT",
+     "role": "paint"
+    },
+    {
+     "at": [
+      58,
+      36
+     ],
+     "text": "SODIUM ROW",
+     "role": "paint"
+    },
+    {
+     "at": [
+      80,
+      36
+     ],
+     "text": "TERRACES",
+     "role": "paint"
+    }
+   ],
+   "water_glints": [
+    [
+     41,
+     18
+    ],
+    [
+     42,
+     18
+    ],
+    [
+     43,
+     17
+    ],
+    [
+     44,
+     17
+    ],
+    [
+     45,
+     17
+    ],
+    [
+     46,
+     17
+    ],
+    [
+     47,
+     18
+    ],
+    [
+     48,
+     18
+    ]
+   ],
+   "cover_name": "planter",
+   "ambient": [
+    "Tram bells from the hub.",
+    "The fountain hisses. It has run on the same water for forty years.",
+    "A Warden checks a pass and hands it back."
+   ]
+  },
+  "vatside-clinics": {
+   "district": "VATSIDE",
+   "theme": "vat-street",
+   "charted": false,
+   "night_line": "Ring up",
+   "regions": [
+    {
+     "theme": "vat-boulevard",
+     "rect": [
+      1,
+      1,
+      78,
+      4
+     ]
+    },
+    {
+     "theme": "vat-alley",
+     "rect": [
+      22,
+      5,
+      16,
+      8
+     ]
+    },
+    {
+     "theme": "vat-alley",
+     "rect": [
+      60,
+      5,
+      5,
+      8
+     ]
+    },
+    {
+     "theme": "vat-yard",
+     "rect": [
+      1,
+      13,
+      78,
+      20
+     ]
+    },
+    {
+     "theme": "vat-facade",
+     "rect": [
+      4,
+      5,
+      18,
+      8
+     ]
+    },
+    {
+     "theme": "vat-facade",
+     "rect": [
+      38,
+      5,
+      22,
+      8
+     ]
+    },
+    {
+     "theme": "vat-facade",
+     "rect": [
+      65,
+      5,
+      12,
+      8
+     ]
+    },
+    {
+     "theme": "vat-interior",
+     "rect": [
+      5,
+      6,
+      16,
+      6
+     ]
+    },
+    {
+     "theme": "vat-interior",
+     "rect": [
+      39,
+      6,
+      20,
+      6
+     ]
+    },
+    {
+     "theme": "vat-interior",
+     "rect": [
+      66,
+      6,
+      10,
+      6
+     ]
+    }
+   ],
+   "signs": [
+    {
+     "at": [
+      1,
+      0
+     ],
+     "text": " WAKE HALL ",
+     "role": "sign_cyan"
+    },
+    {
+     "at": [
+      22,
+      0
+     ],
+     "text": " CLONE INSURANCE - RENEW TODAY ",
+     "role": "sign_cyan"
+    },
+    {
+     "at": [
+      61,
+      0
+     ],
+     "text": " MERIDIAN PLAZA » ",
+     "role": "sign_street"
+    },
+    {
+     "at": [
+      5,
+      5
+     ],
+     "text": " SABLIER CLINIC ",
+     "role": "sign_sablier"
+    },
+    {
+     "at": [
+      40,
+      5
+     ],
+     "text": " SABLIER  PHARMACY ",
+     "role": "sign_sablier"
+    },
+    {
+     "at": [
+      65,
+      5
+     ],
+     "text": " MEMBERS ",
+     "role": "sign_sablier"
+    },
+    {
+     "at": [
+      13,
+      12
+     ],
+     "text": " SURGERY ",
+     "role": "sign_sablier"
+    },
+    {
+     "at": [
+      48,
+      12
+     ],
+     "text": " RECRUITING ",
+     "role": "sign_sablier"
+    }
+   ],
+   "marks": [
+    {
+     "line": [
+      [
+       26,
+       15
+      ],
+      [
+       44,
+       15
+      ]
+     ],
+     "glyph": "─",
+     "role": "paint_bay"
+    },
+    {
+     "line": [
+      [
+       26,
+       23
+      ],
+      [
+       44,
+       23
+      ]
+     ],
+     "glyph": "─",
+     "role": "paint_bay"
+    },
+    {
+     "line": [
+      [
+       26,
+       16
+      ],
+      [
+       26,
+       22
+      ]
+     ],
+     "glyph": "│",
+     "role": "paint_bay"
+    },
+    {
+     "line": [
+      [
+       44,
+       16
+      ],
+      [
+       44,
+       22
+      ]
+     ],
+     "glyph": "│",
+     "role": "paint_bay"
+    },
+    {
+     "at": [
+      28,
+      16
+     ],
+     "text": "COLD CHAIN",
+     "role": "paint_bay_text"
+    },
+    {
+     "at": [
+      2,
+      30
+     ],
+     "text": "« TRAMS",
+     "role": "paint"
+    },
+    {
+     "at": [
+      68,
+      29
+     ],
+     "text": "VAT ROW »",
+     "role": "paint"
+    }
+   ],
+   "cover_name": "bollard",
+   "ambient": [
+    "A polite overhead voice: your clone insurance premium is due."
+   ]
+  },
+  "sodium-row": {
+   "district": "SODIUM ROW",
+   "theme": "sodium-street",
+   "charted": true,
+   "night_line": "Ring up",
+   "regions": [
+    {
+     "theme": "sodium-lamp",
+     "circle": [
+      13,
+      11,
+      3
+     ]
+    },
+    {
+     "theme": "sodium-lamp",
+     "circle": [
+      37,
+      11,
+      3
+     ]
+    },
+    {
+     "theme": "sodium-lamp",
+     "circle": [
+      61,
+      11,
+      3
+     ]
+    },
+    {
+     "theme": "sodium-lamp",
+     "circle": [
+      85,
+      11,
+      3
+     ]
+    },
+    {
+     "theme": "sodium-lamp",
+     "circle": [
+      25,
+      24,
+      3
+     ]
+    },
+    {
+     "theme": "sodium-lamp",
+     "circle": [
+      49,
+      24,
+      3
+     ]
+    },
+    {
+     "theme": "sodium-lamp",
+     "circle": [
+      73,
+      24,
+      3
+     ]
+    },
+    {
+     "theme": "sodium-door-pink",
+     "circle": [
+      8,
+      7,
+      2
+     ]
+    },
+    {
+     "theme": "sodium-door-teal",
+     "circle": [
+      18,
+      7,
+      2
+     ]
+    },
+    {
+     "theme": "sodium-door-pink",
+     "circle": [
+      50,
+      7,
+      2
+     ]
+    },
+    {
+     "theme": "sodium-door-teal",
+     "circle": [
+      63,
+      7,
+      2
+     ]
+    },
+    {
+     "theme": "sodium-door-pink",
+     "circle": [
+      75,
+      7,
+      2
+     ]
+    },
+    {
+     "theme": "sodium-stage",
+     "circle": [
+      30,
+      7,
+      2
+     ]
+    },
+    {
+     "theme": "sodium-felt",
+     "rect": [
+      36,
+      19,
+      5,
+      3
+     ]
+    }
+   ],
+   "signs": [
+    {
+     "at": [
+      3,
+      0
+     ],
+     "text": " DRINKS ",
+     "role": "sign_pink"
+    },
+    {
+     "at": [
+      14,
+      0
+     ],
+     "text": " LIVE MUSIC ",
+     "role": "sign_cyan"
+    },
+    {
+     "at": [
+      26,
+      0
+     ],
+     "text": " STAGE ",
+     "role": "sign_amber"
+    },
+    {
+     "at": [
+      45,
+      0
+     ],
+     "text": " DRINKS ",
+     "role": "sign_pink"
+    },
+    {
+     "at": [
+      58,
+      0
+     ],
+     "text": " TICKETS ",
+     "role": "sign_cyan"
+    },
+    {
+     "at": [
+      71,
+      0
+     ],
+     "text": " OPEN LATE ",
+     "role": "sign_orange"
+    },
+    {
+     "at": [
+      86,
+      29
+     ],
+     "text": " TIN HAL",
+     "role": "sign_orange"
+    },
+    {
+     "at": [
+      94,
+      29
+     ],
+     "text": "O ",
+     "role": "sign_dead"
+    }
+   ],
+   "marks": [
+    {
+     "at": [
+      4,
+      1
+     ],
+     "text": "« NEON STAIR",
+     "role": "paint"
+    },
+    {
+     "at": [
+      82,
+      27
+     ],
+     "text": "TIN HALO »",
+     "role": "paint"
+    }
+   ],
+   "cover_name": "barrels",
+   "ambient": [
+    "Music from six doorways at once."
+   ]
+  }
+ },
+ "sectors": {
+  "lat-vatside": {
+   "district": "VATSIDE",
+   "trace_policy": "civic",
+   "core_initials": {
+    "lat-vatline": "V",
+    "lat-sablier-clinical": "S",
+    "lat-wake-hall": "W",
+    "lat-relay-cold-chain": "C"
+   }
+  }
+ }
+}

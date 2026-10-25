@@ -1,0 +1,229 @@
+{
+  "schema": 1,
+  "id": "core-plaza",
+  "theme": "core-street",
+  "charted": true,
+  "regions": [
+    {
+      "theme": "core-lane",
+      "rect": [
+        1,
+        1,
+        88,
+        3
+      ]
+    },
+    {
+      "theme": "core-lane",
+      "rect": [
+        1,
+        35,
+        88,
+        4
+      ]
+    },
+    {
+      "theme": "core-paving",
+      "rect": [
+        30,
+        9,
+        30,
+        19
+      ]
+    },
+    {
+      "theme": "core-lamp",
+      "circle": [
+        36,
+        13,
+        3
+      ]
+    },
+    {
+      "theme": "core-lamp",
+      "circle": [
+        54,
+        13,
+        3
+      ]
+    },
+    {
+      "theme": "core-rim",
+      "rect": [
+        39,
+        13,
+        12,
+        11
+      ]
+    },
+    {
+      "theme": "core-water",
+      "rect": [
+        40,
+        14,
+        10,
+        9
+      ]
+    }
+  ],
+  "signs": [
+    {
+      "at": [
+        4,
+        0
+      ],
+      "text": " KESTREL BANK ",
+      "role": "sign_amber"
+    },
+    {
+      "at": [
+        24,
+        0
+      ],
+      "text": " CIVIC AUTHORITY ",
+      "role": "sign_blue"
+    },
+    {
+      "at": [
+        44,
+        0
+      ],
+      "text": " NOODLES ",
+      "role": "sign_pink"
+    },
+    {
+      "at": [
+        55,
+        0
+      ],
+      "text": " TICKETS ",
+      "role": "sign_green"
+    },
+    {
+      "at": [
+        67,
+        0
+      ],
+      "text": " OSTROM SHOWROOM ",
+      "role": "sign_cyan"
+    },
+    {
+      "at": [
+        24,
+        39
+      ],
+      "text": " PRECINCT ",
+      "role": "sign_blue"
+    },
+    {
+      "at": [
+        55,
+        39
+      ],
+      "text": " NEON STAIR ",
+      "role": "sign_pink"
+    }
+  ],
+  "marks": [
+    {
+      "line": [
+        [
+          1,
+          4
+        ],
+        [
+          88,
+          4
+        ]
+      ],
+      "glyph": "─",
+      "role": "paint"
+    },
+    {
+      "at": [
+        75,
+        1
+      ],
+      "text": "CLINIC ROW »",
+      "role": "paint"
+    },
+    {
+      "at": [
+        4,
+        36
+      ],
+      "text": "« TRAMS",
+      "role": "paint"
+    },
+    {
+      "at": [
+        30,
+        36
+      ],
+      "text": "PRECINCT",
+      "role": "paint"
+    },
+    {
+      "at": [
+        58,
+        36
+      ],
+      "text": "SODIUM ROW",
+      "role": "paint"
+    },
+    {
+      "at": [
+        80,
+        36
+      ],
+      "text": "TERRACES",
+      "role": "paint"
+    }
+  ],
+  "glints": [
+    [
+      41,
+      18
+    ],
+    [
+      42,
+      18
+    ],
+    [
+      43,
+      17
+    ],
+    [
+      44,
+      17
+    ],
+    [
+      45,
+      17
+    ],
+    [
+      46,
+      17
+    ],
+    [
+      47,
+      18
+    ],
+    [
+      48,
+      18
+    ]
+  ],
+  "glint_role": "ring_glint",
+  "names": {
+    "cover-1": "planter",
+    "cover-2": "planter",
+    "cover-3": "planter"
+  },
+  "ambient": [
+    "Tram bells from the hub.",
+    "The fountain hisses. It has run on the same water for forty years.",
+    "A Warden checks a pass and hands it back.",
+    "A courier drone ticks past at head height."
+  ]
+}

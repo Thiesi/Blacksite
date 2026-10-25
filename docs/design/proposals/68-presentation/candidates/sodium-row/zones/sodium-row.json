@@ -1,0 +1,269 @@
+{
+  "schema": 1,
+  "id": "sodium-row",
+  "name": "Sodium Row",
+  "district": "Sodium Row",
+  "safety": "contested",
+  "sight_radius": 13,
+  "spawn": [
+    3,
+    3
+  ],
+  "exits": [
+    {
+      "id": "to-core-plaza",
+      "tile": [
+        2,
+        2
+      ],
+      "target_zone": "core-plaza",
+      "target_tile": [
+        62,
+        38
+      ],
+      "kind": "street"
+    },
+    {
+      "id": "to-sodium-tin-halo",
+      "tile": [
+        93,
+        14
+      ],
+      "target_zone": "sodium-tin-halo",
+      "target_tile": [
+        2,
+        3
+      ],
+      "kind": "door"
+    }
+  ],
+  "objects": [
+    {
+      "id": "row-drug-dealer",
+      "tile": [
+        45,
+        18
+      ],
+      "kind": "vendor",
+      "essential": false,
+      "params": {
+        "name": "Row drug dealer"
+      }
+    },
+    {
+      "id": "row-ticket-tout",
+      "tile": [
+        64,
+        18
+      ],
+      "kind": "vendor",
+      "essential": false,
+      "params": {
+        "name": "Row ticket tout"
+      }
+    },
+    {
+      "id": "row-stage",
+      "tile": [
+        31,
+        5
+      ],
+      "kind": "light",
+      "essential": false,
+      "params": {
+        "name": "Row stage"
+      }
+    },
+    {
+      "id": "row-card-table",
+      "tile": [
+        36,
+        20
+      ],
+      "kind": "light",
+      "essential": false,
+      "params": {
+        "name": "Row card table"
+      }
+    },
+    {
+      "id": "row-bar-1",
+      "tile": [
+        9,
+        4
+      ],
+      "kind": "vendor",
+      "essential": false,
+      "params": {
+        "name": "Row bar 1"
+      }
+    },
+    {
+      "id": "row-bar-2",
+      "tile": [
+        18,
+        4
+      ],
+      "kind": "vendor",
+      "essential": false,
+      "params": {
+        "name": "Row bar 2"
+      }
+    },
+    {
+      "id": "row-bar-3",
+      "tile": [
+        49,
+        4
+      ],
+      "kind": "vendor",
+      "essential": false,
+      "params": {
+        "name": "Row bar 3"
+      }
+    },
+    {
+      "id": "row-bar-4",
+      "tile": [
+        63,
+        4
+      ],
+      "kind": "vendor",
+      "essential": false,
+      "params": {
+        "name": "Row bar 4"
+      }
+    },
+    {
+      "id": "row-bar-5",
+      "tile": [
+        75,
+        4
+      ],
+      "kind": "vendor",
+      "essential": false,
+      "params": {
+        "name": "Row bar 5"
+      }
+    },
+    {
+      "id": "row-public-1",
+      "tile": [
+        14,
+        11
+      ],
+      "kind": "terminal",
+      "essential": true,
+      "params": {
+        "name": "Row public 1"
+      }
+    },
+    {
+      "id": "row-public-2",
+      "tile": [
+        50,
+        16
+      ],
+      "kind": "terminal",
+      "essential": true,
+      "params": {
+        "name": "Row public 2"
+      }
+    },
+    {
+      "id": "row-public-3",
+      "tile": [
+        80,
+        11
+      ],
+      "kind": "terminal",
+      "essential": true,
+      "params": {
+        "name": "Row public 3"
+      }
+    },
+    {
+      "id": "boundary-oldworks-main",
+      "tile": [
+        96,
+        2
+      ],
+      "kind": "door",
+      "params": {
+        "open": true,
+        "unavailable_target": "oldworks-main",
+        "name": "Construction boundary"
+      }
+    },
+    {
+      "id": "sign-grid-hardware",
+      "tile": [
+        52,
+        7
+      ],
+      "kind": "hardware",
+      "params": {
+        "name": "House Lights hardware",
+        "core": "lat-house-lights"
+      }
+    },
+    {
+      "id": "house-lights-sign-grid",
+      "tile": [
+        51,
+        7
+      ],
+      "kind": "terminal",
+      "params": {
+        "name": "sign grid",
+        "control": "sign-grid"
+      }
+    }
+  ],
+  "pockets": [],
+  "lore": [
+    "zone-sodium-row"
+  ],
+  "spawners": [
+    {
+      "id": "sable-enforcer",
+      "npc": "npc-sable-enforcer",
+      "count": 2,
+      "respawn_seconds": 60,
+      "condition": "always",
+      "region": {
+        "x": 24,
+        "y": 10,
+        "w": 14,
+        "h": 1
+      }
+    },
+    {
+      "id": "sodium-regular",
+      "npc": "npc-sodium-regular",
+      "count": 5,
+      "respawn_seconds": 60,
+      "condition": "always",
+      "region": {
+        "x": 10,
+        "y": 15,
+        "w": 70,
+        "h": 2
+      }
+    },
+    {
+      "id": "plainclothes-warden",
+      "npc": "npc-plainclothes-warden",
+      "count": 1,
+      "respawn_seconds": 60,
+      "condition": "always",
+      "region": {
+        "x": 40,
+        "y": 11,
+        "w": 20,
+        "h": 1
+      }
+    }
+  ],
+  "sector": "lat-sodium-row"
+}

@@ -1,0 +1,164 @@
+{
+  "schema": 1,
+  "id": "sodium-tin-halo",
+  "name": "The Tin Halo",
+  "district": "Sodium Row",
+  "safety": "pocket",
+  "sight_radius": 8,
+  "spawn": [
+    3,
+    3
+  ],
+  "exits": [
+    {
+      "id": "to-sodium-row",
+      "tile": [
+        2,
+        2
+      ],
+      "target_zone": "sodium-row",
+      "target_tile": [
+        92,
+        14
+      ],
+      "kind": "door"
+    }
+  ],
+  "objects": [
+    {
+      "id": "vesper",
+      "tile": [
+        8,
+        15
+      ],
+      "kind": "vendor",
+      "essential": false,
+      "params": {
+        "name": "The Tin Halo (Vesper)",
+        "vendor": "vesper",
+        "contract_handler": "vesper",
+        "trade_counter": "vesper"
+      }
+    },
+    {
+      "id": "halo-bar",
+      "tile": [
+        16,
+        15
+      ],
+      "kind": "vendor",
+      "essential": false,
+      "params": {
+        "name": "Halo bar"
+      }
+    },
+    {
+      "id": "halo-back-room",
+      "tile": [
+        31,
+        18
+      ],
+      "kind": "door",
+      "essential": false,
+      "params": {
+        "name": "Halo back room",
+        "open": true
+      }
+    },
+    {
+      "id": "ferrymen-liaison",
+      "tile": [
+        34,
+        15
+      ],
+      "kind": "vendor",
+      "essential": false,
+      "params": {
+        "name": "Ferrymen liaison"
+      }
+    },
+    {
+      "id": "halo-contract-board",
+      "tile": [
+        38,
+        3
+      ],
+      "kind": "terminal",
+      "essential": false,
+      "params": {
+        "name": "Halo contract board",
+        "contract_handler": "vesper"
+      }
+    },
+    {
+      "id": "halo-market-board",
+      "tile": [
+        37,
+        16
+      ],
+      "kind": "terminal",
+      "essential": false,
+      "params": {
+        "name": "Halo market board"
+      }
+    },
+    {
+      "id": "halo-cabinet-hardware",
+      "tile": [
+        18,
+        15
+      ],
+      "kind": "hardware",
+      "params": {
+        "name": "Tin Halo hardware",
+        "core": "lat-tin-halo"
+      }
+    }
+  ],
+  "pockets": [],
+  "lore": [
+    "zone-sodium-tin-halo"
+  ],
+  "spawners": [
+    {
+      "id": "halo-bouncer",
+      "npc": "npc-halo-bouncer",
+      "count": 1,
+      "respawn_seconds": 60,
+      "condition": "always",
+      "region": {
+        "x": 4,
+        "y": 3,
+        "w": 1,
+        "h": 1
+      }
+    },
+    {
+      "id": "halo-regular",
+      "npc": "npc-halo-regular",
+      "count": 4,
+      "respawn_seconds": 60,
+      "condition": "always",
+      "region": {
+        "x": 8,
+        "y": 3,
+        "w": 12,
+        "h": 2
+      }
+    },
+    {
+      "id": "vendor-sodium-tin-halo-vesper",
+      "npc": "npc-vendor-sodium-tin-halo-vesper",
+      "count": 1,
+      "respawn_seconds": 60,
+      "condition": "always",
+      "region": {
+        "x": 7,
+        "y": 14,
+        "w": 3,
+        "h": 3
+      }
+    }
+  ],
+  "sector": "lat-sodium-row"
+}
