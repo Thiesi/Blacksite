@@ -1920,7 +1920,12 @@ class _Validator:
             for tid in look.names:
                 if tid not in self.t.tiles:
                     self.report(*owner, f"name for unknown tile {tid!r}", tid)
-            for line in look.ambient:
+            for place in look.places:
+                x, y, w, h = place.rect
+                anchor = place.at or (x + w // 2, y + h // 2)
+                if zone.tile_at(anchor) in (None, "wall", "locked-door"):
+                    self.report(*owner, f"place {place.name!r}: anchor {list(anchor)} is not open ground", place.name)
+            for line in [*look.ambient, *(p.text for p in look.places)]:
                 if "—" in line or len(line) > DIALOGUE_LINE_MAX:
                     self.report(*owner, f"ambient line {line[:30]!r}: no em-dash, at most {DIALOGUE_LINE_MAX} characters")
 

@@ -11,7 +11,10 @@ from typing import Any
 
 from blacksite.door.cells import CellBuffer, display_width, truncate
 from blacksite.door.layout import Layout
-from blacksite.door.present import chrome, lattice, zone
+from dataclasses import replace
+
+from blacksite.door.layout import Rect
+from blacksite.door.present import chrome, lattice, scene, street, zone
 from blacksite.door.present.paint import Paint
 
 CARD_SECONDS = 8.0
@@ -20,10 +23,23 @@ CARD_LABELS = {"entry": "Place cards on entering a zone and on F5.", "look": "Pl
                "off": "Place cards off."}
 
 
+def threats(body: dict[str, Any]) -> list[str]:
+    """What makes this moment dangerous, in plain words; empty when calm."""
+    me, target = body.get("me", {}), body.get("target")
+    found = [f"hostile {n.get('name', '?')}" for n in body.get("nearby", []) if n.get("relation") == "!"]
+    if body.get("hazards"):
+        found.append("hazard")
+    if target:
+        found.append(f"target {target.get('name', '?')}" if isinstance(target, dict) else "target")
+    if me.get("in_combat"):
+        found.append("combat")
+    if me.get("heat_until"):
+        found.append("heat")
+    return found
+
+
 def threatened(body: dict[str, Any]) -> bool:
-    me = body.get("me", {})
-    return bool(body.get("hazards") or body.get("target") or me.get("in_combat") or me.get("heat_until")
-                or any(n.get("relation") == "!" for n in body.get("nearby", [])))
+    return bool(threats(body))
 
 
 def safety(kind: str, body: dict[str, Any]) -> str:
@@ -74,14 +90,41 @@ def card(buffer: CellBuffer, body: dict[str, Any], layout: Layout, paint: Paint)
     buffer.put(x0 + 3, y0 + height - 2, truncate("Any key: the street.  F5 shows this again.", width - 6), paint("key_text", ground))
 
 
+MODES = ("map", "street", "scene", "auto")
+HINTS = {"street": "Up forward  Down back  Left/Right turn  E use  Tab target  F7 view",
+         "scene": "Arrows step  , . choose a way  Space go  E use  Tab target  F7 view",
+         "look": "Any key returns  F5 look again  F7 view"}
+
+
 def render(buffer: CellBuffer, layout: Layout, paint: Paint, kind: str, body: dict[str, Any],
-           logs: list[dict[str, Any]], hint: str, *, show_card: bool, flash: bool) -> None:
+           logs: list[dict[str, Any]], hint: str, *, show_card: bool, flash: bool, mode: str = "map",
+           heading: str = "up", cursor: int = 0, tag: str | None = None) -> None:
+    """`tag` is set by the auto view, which has already chosen `mode`."""
+    tactical = tag == "TACTICAL" if tag else mode != "map" and kind == "zone" and threatened(body)
+    immersive = mode in ("street", "scene") and kind == "zone" and not tactical
     chrome.frame(buffer, layout, paint, safety(kind, body), flash=flash)
     chrome.log(buffer, layout, paint, logs)
-    chrome.hints(buffer, layout, paint, hint)
-    if kind == "zone":
+    shown_hint = HINTS["look" if tag == "LOOK" else mode] if immersive else hint
+    chrome.hints(buffer, layout, paint, hint if hint.startswith(("Leave", "Weapon")) else shown_hint)
+    if kind != "zone":
+        lattice.render(buffer, body, layout, paint)
+        return
+    label = f" {tag or ('TACTICAL' if tactical else '')} ".replace("  ", "")
+    if not immersive:
         zone.render(buffer, body, layout, paint)
-        if show_card and body.get("place"):
+        if show_card and body.get("place") and not tactical:
             card(buffer, body, layout, paint)
     else:
-        lattice.render(buffer, body, layout, paint)
+        side = layout.side
+        rows = 7 if layout.height < 30 else 13
+        street.radar(buffer, body, Rect(side.x, side.y, side.width, rows), paint, heading if mode == "street" else None)
+        zone.panel(buffer, body, replace(layout, side=Rect(side.x, side.y + rows, side.width, side.height - rows)), paint)
+        zone.head(buffer, body, layout, paint)
+        if mode == "street":
+            street.render(buffer, body, layout.viewport, paint, heading)
+        else:
+            scene.render(buffer, body, layout.viewport, paint, heading, cursor)
+    if label.strip():
+        # The view names itself; danger says so loudest.
+        buffer.put(layout.side.x - 2 - len(label), 0, label,
+                   paint("log_danger", bold=True, reverse=True) if tactical else paint("panel_label", reverse=True))

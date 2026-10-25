@@ -252,5 +252,119 @@
     "A polite overhead voice reminds you that your clone insurance premium is due.",
     "An orderly mops a floor that was already clean.",
     "A clinic door sighs open and shut."
+  ],
+  "places": [
+    {
+      "name": "Sablier Clinic",
+      "rect": [
+        5,
+        6,
+        16,
+        6
+      ],
+      "at": [
+        13,
+        10
+      ],
+      "text": "White floors, cyan logo, a nurse who does not look up. Surgery is through the back."
+    },
+    {
+      "name": "Sablier Pharmacy",
+      "rect": [
+        39,
+        6,
+        20,
+        6
+      ],
+      "at": [
+        47,
+        10
+      ],
+      "text": "Shelves of licensed calm. A recruiter waits by the counter."
+    },
+    {
+      "name": "Members' clinic",
+      "rect": [
+        66,
+        6,
+        10,
+        6
+      ],
+      "at": [
+        70,
+        11
+      ],
+      "text": "A quieter room for people whose premiums are paid."
+    },
+    {
+      "name": "Sablier Boulevard",
+      "rect": [
+        1,
+        1,
+        78,
+        4
+      ],
+      "at": [
+        40,
+        3
+      ],
+      "text": "A street so clean that dirt looks like an accident."
+    },
+    {
+      "name": "The alley between the clinics",
+      "rect": [
+        22,
+        5,
+        16,
+        8
+      ],
+      "at": [
+        29,
+        9
+      ],
+      "text": "Out of sight of the boulevard. People fight here, sometimes."
+    },
+    {
+      "name": "The Cold Chain yard",
+      "rect": [
+        24,
+        14,
+        22,
+        10
+      ],
+      "at": [
+        33,
+        17
+      ],
+      "text": "Refrigeration hums behind the relay. Sablier security watches the bay."
+    },
+    {
+      "name": "The tram platform",
+      "rect": [
+        1,
+        29,
+        10,
+        4
+      ],
+      "at": [
+        4,
+        31
+      ],
+      "text": "The platform's bell rings for the hub."
+    },
+    {
+      "name": "Clinic Row",
+      "rect": [
+        1,
+        1,
+        78,
+        32
+      ],
+      "at": [
+        40,
+        24
+      ],
+      "text": "A polite overhead voice reminds you that your premium is due."
+    }
   ]
 }

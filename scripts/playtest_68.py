@@ -3,6 +3,10 @@
     python scripts/playtest_68.py                      # shipped maps
     python scripts/playtest_68.py --geometry candidate # Sodium Row candidate map
     python scripts/playtest_68.py --colour 16          # try another tier
+    python scripts/playtest_68.py --view street        # paradigm A: eye level
+    python scripts/playtest_68.py --view scene         # paradigm B: places
+    python scripts/playtest_68.py --view auto          # paradigm C: chosen by context
+    python scripts/playtest_68.py --view auto --inspect  # and show why (F10)
 
 Starts a private foreground service under `.test-tmp/playtest-68-*` with
 the trial switches on (charted public geography, ambient lines), then
@@ -10,8 +14,13 @@ runs the real door in this console with the proposal renderer selected.
 The world persists between runs, so your Wake is still there next time;
 `--fresh` starts over.
 
-In play: F7 switches between the shipped and the proposal renderer on the
-same game state. F5 shows the place card, F6 cycles when cards appear.
+In play: F7 cycles the views on the same game state: shipped map,
+proposal map, street view, scenes, auto. F5 shows the place card, F6 cycles
+when cards appear. Danger always hands the screen to the tactical map.
+In scenes and auto, comma and full stop choose a way and Space goes there;
+the arrows always step. F10 shows the auto view's decision and reasons,
+and every change of decision is written to `auto-trace.jsonl` beside the
+world, one JSON line each, for reading after a session.
 Ctrl-X then Y leaves and stops the service.
 
 On Windows the script switches the console to UTF-8 (code page 65001)
@@ -78,7 +87,9 @@ def main() -> int:
     parser.add_argument("--height", type=int, default=max(24, size.lines))
     parser.add_argument("--handle", default="Playtester")
     parser.add_argument("--fresh", action="store_true", help="delete this playtest world first")
-    parser.add_argument("--shipped-renderer", action="store_true", help="start on the shipped renderer (F7 switches)")
+    parser.add_argument("--view", choices=("shipped", "map", "street", "scene", "auto"), default="map",
+                        help="the view to start in (F7 cycles)")
+    parser.add_argument("--inspect", action="store_true", help="start with the auto inspector shown (F10)")
     args = parser.parse_args()
 
     root = ROOT / ".test-tmp" / f"playtest-68-{args.geometry}"
@@ -113,11 +124,16 @@ def main() -> int:
         info.write_text(json.dumps({"handle": args.handle, "user_id": 1, "terminal_width": args.width,
                                     "terminal_height": args.height, "color_depth": args.colour,
                                     "node_name": "playtest", "transport": "local"}), encoding="utf-8")
+        trace = root / "auto-trace.jsonl"
         door_env = dict(env, NETBBS_DOOR_INFO=str(info), BLACKSITE_INSTALL_DIR=str(install),
-                        BLACKSITE_PRESENTATION="0" if args.shipped_renderer else "1")
+                        BLACKSITE_PRESENTATION="0" if args.view == "shipped" else args.view,
+                        BLACKSITE_AUTO_TRACE=str(trace), BLACKSITE_AUTO_INSPECT="1" if args.inspect else "0")
         command = [sys.executable, "-m", "blacksite.door"] + (["--local"] if os.name == "nt" else [])
         with utf8_console():
-            return subprocess.call(command, env=door_env, cwd=ROOT)
+            code = subprocess.call(command, env=door_env, cwd=ROOT)
+        if trace.exists():
+            print(f"Auto decisions: {trace}")
+        return code
     finally:
         server.terminate()
         try:

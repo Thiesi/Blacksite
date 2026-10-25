@@ -13,7 +13,7 @@ from blacksite.server.views.delta import ViewStore
 from blacksite.server.views import looks as dressing
 from blacksite.server.views.zone_view import Perception, build
 from blacksite.server.world.actors import Actor
-from blacksite.server.world.movement import move, regenerate
+from blacksite.server.world.movement import direction, move, regenerate
 from blacksite.server.world.registry import World
 from blacksite.server.world.exits import DepartureHolds, Travel, permitted, schedule
 from blacksite.server.world.city import overview
@@ -24,6 +24,18 @@ NIGHT_START_HOUR = 20  # Entity model 1.1: night lighting 20:00-06:00.
 NIGHT_END_HOUR = 6
 MENU_TIMEOUT_SECONDS = 60  # Terminal UI §4: contested/open menu timeout.
 PARAGRAPH = "\n\n"
+
+
+@dataclass
+class Walk:
+    """Trial scene navigation: the server walks a body to a known tile one
+    ordinary step at a time. Nothing about movement changes; the steps are
+    the same `move` a key press makes, at the same cooldowns."""
+
+    zone: str
+    goal: tuple[int, int]
+    hit_serial: int
+    misses: int = 0
 
 
 @dataclass
@@ -62,6 +74,71 @@ class ZoneSimulation:
         self.fare_menu: Callable[[Session, Any], bool] = lambda session, exit: False
         self.travel_refusal: Callable[[Session, Exit], str | None] = lambda session, exit: None
         self.ambient_due: dict[str, tuple[str, int, int]] = {}
+        self.walks: dict[str, Walk] = {}
+        self.deep_views: set[str] = set()
+
+    def walk(self, tick: int) -> None:
+        for session in tuple(self.sessions.active.values()):
+            walk = self.walks.get(session.id)
+            avatar = self.avatars.get(session.user_id)
+            if walk is None or avatar is None:
+                continue
+            actor = avatar.actor
+            reason = ("" if actor.position != walk.goal else "arrived") or                      ("travel" if avatar.travel or actor.zone != walk.zone else "") or                      ("hit" if actor.behaviour.get("hit_serial", 0) != walk.hit_serial else "") or                      ("combat" if actor.cooldowns.get("combat", 0) > tick else "") or                      ("blocked" if walk.misses > 12 else "")
+            if reason:
+                self.walks.pop(session.id)
+                if reason in ("hit", "combat", "blocked"):
+                    self.log(session, {"hit": "You stop. Something hit you.", "combat": "You stop. There is a fight.",
+                                       "blocked": "You stop. The way is blocked."}[reason])
+                session.needs_full_view = True
+                continue
+            if tick < max(actor.cooldowns.get("move", 0), actor.cooldowns.get("knockdown", 0)):
+                continue
+            step = self.next_step(avatar, walk.goal)
+            name = next((n for n in ("up", "down", "left", "right", "up_left", "up_right", "down_left", "down_right")
+                         if step and direction(n) == (step[0] - actor.x, step[1] - actor.y)), None)
+            if name and move(actor, self.world.zones[actor.zone], name, tick):
+                walk.misses = 0
+                self.interact(session, avatar, tick, street=True)
+            else:
+                walk.misses += 1
+
+    def next_step(self, avatar: Avatar, goal: tuple[int, int]) -> tuple[int, int] | None:
+        """Breadth-first over the ground the view discloses (seen, remembered
+        or charted, never a hidden exit), so a walk never routes through space
+        it has not shown. Exits are only ever the goal: a walk passes no door."""
+        from collections import deque
+        zone = self.world.zones[avatar.zone]
+        remembered = avatar.perception.remembered.get(avatar.zone, {})
+        chart = dressing.charted(self.world.content, zone.template)
+        tiles = self.world.content.tiles
+        people = {a.position for a in zone.actors.values() if a is not avatar.actor}
+        secret = {ex.tile for ex in zone.template.meta.exits if ex.hidden}
+        doors = {ex.tile for ex in zone.template.meta.exits}
+
+        def open_(tile: tuple[int, int]) -> bool:
+            known = remembered.get(tile) or (zone.template.tile_at(tile) if chart and tile not in secret else None)
+            return (bool(known) and known in tiles and tiles[known].passable
+                    and (tile == goal or (tile not in people and tile not in doors)))
+
+        start = avatar.actor.position
+        came: dict[tuple[int, int], tuple[int, int] | None] = {start: None}
+        queue = deque([start])
+        while queue:
+            cell = queue.popleft()
+            if cell == goal:
+                while came[cell] not in (start, None):
+                    cell = came[cell]  # type: ignore[assignment]
+                return cell
+            for dx, dy in ((1, 0), (-1, 0), (0, 1), (0, -1), (1, 1), (1, -1), (-1, 1), (-1, -1)):
+                nxt = (cell[0] + dx, cell[1] + dy)
+                if nxt in came or not open_(nxt):
+                    continue
+                if dx and dy and not (open_((cell[0] + dx, cell[1])) and open_((cell[0], cell[1] + dy))):
+                    continue
+                came[nxt] = cell
+                queue.append(nxt)
+        return None
 
     def ambient(self, session: Session, avatar: Avatar, tick: int) -> None:
         """Trial D5: one quiet line from the place every 60-120 s, never in combat."""
@@ -199,6 +276,8 @@ class ZoneSimulation:
 
     def disconnect(self, session: Session) -> None:
         self.views.pop(session.id, None)
+        self.walks.pop(session.id, None)
+        self.deep_views.discard(session.id)
         self.published.pop(session.id, None)
         self.maps.pop(session.id, None)
         self.map_opened.pop(session.id, None)
@@ -215,6 +294,12 @@ class ZoneSimulation:
         avatar = self.avatars.get(session.user_id)
         if session.role != "caller" or avatar is None:
             return
+        if frame.type == "intent" and frame.data.get("name") == "view_shape":
+            # Trial: eye-level views ask for a camera as deep as it is wide.
+            deep = bool(frame.data.get("args", {}).get("deep")) and dressing.TRIAL
+            (self.deep_views.add if deep else self.deep_views.discard)(session.id)
+            session.needs_full_view = True
+            return
         action = frame.data.get("name", "") if frame.type == "intent" else ""
         if frame.type == "key":
             selected = session.keymap_id
@@ -222,6 +307,17 @@ class ZoneSimulation:
             if table is not None:
                 action = next((name for name, keys in table["bindings"].items() if frame.data["k"] in keys), "")
         key = frame.data.get("k", "") if frame.type == "key" else ""
+        if frame.type == "intent" and action in ("walk_to", "walk_stop"):
+            self.walks.pop(session.id, None)
+            goal = frame.data.get("args", {}).get("at")
+            if (action == "walk_to" and dressing.TRIAL and isinstance(goal, list) and len(goal) == 2
+                    and all(type(v) is int for v in goal) and not avatar.travel):
+                self.walks[session.id] = Walk(avatar.zone, (goal[0], goal[1]),
+                                              avatar.actor.behaviour.get("hit_serial", 0))
+            session.needs_full_view = True
+            return
+        if frame.type in ("key", "intent", "line"):
+            self.walks.pop(session.id, None)  # any deliberate input takes back control
         if avatar.travel:
             leaving_platform = key in ("escape", "b", "B") or action in ("move", "sprint") or action.startswith(("move_", "sprint_"))
             if not avatar.travel.departed and leaving_platform:
@@ -287,6 +383,7 @@ class ZoneSimulation:
                     self.reset_view(session, avatar)
                     session.send(Frame("toast", {"text": "Your map closes. The street is not protected.",
                                                   "role": "ui_text", "seconds": 8}))
+        self.walk(ctx.tick)
         for user_id in set(self.avatars) - live - self.sessions.retired.keys():
             del self.avatars[user_id]
         for zone in self.world.zones.values():
@@ -347,19 +444,22 @@ class ZoneSimulation:
             zone = self.world.zones[avatar.zone]
             local = self.clock.now_local(session.door_info.get("timezone")).strftime("%H:%M")
             stamp = (zone.id, zone.revision, local, night, session.caps["width"], session.caps["height"],
+                     session.id in self.deep_views,
                      ctx.tick if zone.layers or avatar.actor.behaviour.get("channel") else None)
             if stamp == self.published.get(session.id) and not session.needs_full_view:
                 continue
             scouted,scouted_actors = self.scout_provider(session)
             body = build(avatar.actor, zone, avatar.perception, self.world.content,
                          session.caps["width"], session.caps["height"], local, night, ctx.tick,
-                         scouted,scouted_actors)
+                         scouted,scouted_actors, deep=session.id in self.deep_views)
             body["me"].update(self.me_provider(session))
             if self.target_provider:
                 body["target"] = self.target_provider(avatar.actor)
                 body["hint"] = "Tab target  F fire  X weapon  1-5 quick  V abilities  E interact  I inventory  ? help"
                 remaining = max(0,avatar.actor.cooldowns.get("weapon",0)-ctx.tick)/TICK_HZ
                 if remaining: body["hint"] = f"Weapon {remaining:.1f}s  " + body["hint"]
+            if walk := self.walks.get(session.id):
+                body["me"]["walking"] = list(walk.goal)
             if channel := avatar.actor.behaviour.get("channel"):
                 body["me"]["channel"] = dict(channel)
                 body["hint"] = f"{channel['label']} {channel['remaining']:.1f}s  Stay still; Esc/B cancels."
