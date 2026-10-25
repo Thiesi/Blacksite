@@ -97,20 +97,22 @@ unless they start with `docs/`, `tests/` or `scripts/`.
 
 ### 2.2 Presentation work in progress
 
-The proposal (`docs/design/proposals/68-presentation/README.md`), the
-mockup builders (`scripts/presentation_mockups/`) and a trial
-implementation exist only as **uncommitted** changes in the
-`design/presentation-review` worktree, whose branch is still at `main`.
-The trial touches content (`schema`, `validate`, `loader`, `formats`,
-`palette.json`, new `themes.json`, `looks/*.json`), server
-(`views/zone_view.py`, `views/looks.py`, `world/simulation.py`,
-`lattice/engine.py`, `protocol.py`) and door (`model.py`, `palette.py`,
-`terminal.py`, new `door/present/`). It is gated by environment
-variables and is additive except for charted terrain.
+The presentation lead's work is now committed as two draft PRs:
 
-Until it is committed and pushed, no other agent can build on it, and
-under the owner's rule it is not yet a coordination input. §11 asks for
-that.
+- **#69** (`design/presentation-review`, head `01ae457`): the proposal
+  (`README.md`, `spec.md`), mockups, a Sodium Row geometry candidate and
+  the trial implementation. The trial touches content (`schema`,
+  `validate`, `loader`, `formats`, `palette.json`, new `themes.json`,
+  `looks/*.json`), server (`views/zone_view.py`, `views/looks.py`,
+  `world/simulation.py`, `lattice/engine.py`, `protocol.py`) and door
+  (`model.py`, `palette.py`, `terminal.py`, new `door/present/`).
+- **#70** (`design/presentation-paradigms`, stacked on #69, head
+  `7550c68`): three playable view paradigms (street view, scenes, Auto),
+  `paradigms.md` with decisions S1 to S6, and two trial server
+  affordances, `view_shape` and `walk_to`.
+
+Both are gated by environment variables and are proposals, not adopted
+inputs. Section 12 covers the owner's preference for Auto.
 
 ## 3. The path from authored place to terminal cell
 
@@ -697,10 +699,9 @@ Coordination through committed documents, not conversation. These are
 engineering observations on the proposal and the trial code, for
 discussion; none overrides a design decision.
 
-1. **Please commit and push** the proposal, mockup scripts and trial
-   code to `design/presentation-review` (or a design PR), so slices can
-   cite them. The trial code would then land through P4 to P6 in
-   reviewed pieces rather than as one change.
+1. **Committed.** Resolved by #69 and #70. The trial code should still
+   land through P2 to P6 in reviewed pieces rather than by merging the
+   design PRs.
 2. **Walls as blank background cells** (256 and truecolor tiers) express
    opacity by colour alone. That conflicts with "shape is the rule" and
    with `03-terminal-ui.md` §8. A shaped wall with signage letters
@@ -726,3 +727,83 @@ discussion; none overrides a design decision.
    `water`; S25 adds `convoy-road` and `gantry-hazard`. Validating by
    class (opaque, passable, water, hazard) keeps the place layer correct
    as tiles are added.
+9. **`walk_to` and charted ground.** `next_step` treats every in-bounds
+   template tile of a charted zone as known, so a walk can route through
+   space the player has never seen, including any passable tile behind a
+   hidden exit. A walk also steps through `interact(street=True)` on
+   every tile, so a path crossing an exit tile could start travel. Route
+   over the same disclosed set the view sends, and refuse exit tiles
+   other than the goal.
+10. **Session state.** `walks` and `deep_views` are never cleared when a
+    session leaves (the same issue as the ambient state in note 4), and
+    `view_shape` is handled before the caller-role check, so a watcher
+    can change it.
+11. **Deep camera.** It passes `old=None`, which turns off camera
+    hysteresis, so the viewport recentres on every step and deltas grow.
+    It also adds a third branch to the camera formula that the door must
+    mirror (obstacle 3.4); under P2 it becomes a named layout shape.
+12. **The decider is an information channel.** Auto switches to
+    TACTICAL on `nearby.relation == "!"`, hazards and targets. If the
+    server ever marks a disguised NPC as hostile before the player could
+    know, the view switch discloses it. The threat signal should be one
+    server-declared field covered by a disclosure test (P4), not a
+    door-side inference.
+
+## 12. Planning for the Auto direction
+
+After playing the prototypes on 2026-10-25, the owner prefers Auto
+(#70, prototype C) as the player-experience direction. It is a direction
+for planning, not acceptance. The interaction rules and their timings
+remain open, so this plan prepares for Auto without freezing it.
+
+### 12.1 Principles the presentation lead is building into #70
+
+1. Danger switches to the tactical map immediately.
+2. No oscillation: escalate fast, calm down slowly.
+3. Intent is read from what the player does, not from geography alone.
+4. An escape hatch that never fights the player.
+5. Keys keep one meaning in every view: arrows always step, and choosing
+   a destination uses only keys the scene owns.
+6. In development, the decider's reasoning is inspectable (overlay and
+   trace file).
+
+### 12.2 What changes in this plan
+
+Auto strengthens the foundations rather than replacing them. Every Auto
+view still draws inside one layout, through shared chrome, with a truthful
+E prompt, so P1 to P5 stay in place and in order.
+
+| Slice | Change |
+|---|---|
+| P1 | Adds a decider trace format and a replay test: a recorded view sequence must produce the same view choices. Principle 6 becomes verifiable rather than a debug aid. |
+| P2 | The layout module gains named view shapes (map, scene, look). The deep camera becomes one of them, and the server and door read the same definition. |
+| P3 | Extends from the E focus resolver to the key contract. Principle 5 is tested: across every view, each movement key maps to the same intent. |
+| P4 | Adds a server-declared `threat` state and reason, with a disclosure test. The decider reads only that field, never door-side inference (§11 note 12). It also adds `places`, `here` and known exits, routed over the disclosed set (§11 note 9). |
+| P5 | Adds the context decider as a pure door module (`door/present/context.py` today), driven by view bodies and a clock, behind the single client switch. |
+| new W1 | Server travel over known ground (`walk_to`), only if the owner accepts S1. It covers the routing set, exit tiles, cooldown parity, cancel on any input, and session cleanup. Owner: Codex; review: technical lead. |
+| new V1 | Street-view looks as an optional view. They must meet P1's frame budgets at 132x50 and degrade at 16 colours under S2. |
+| C1, S25c, S27, S33 | Places become content per zone (S5). Whether place names are gazetteer canon or presentation decides which slice writes them and which review applies. |
+| PT1 | The D8 playtest also tunes Auto: hold time, look duration and boundary behaviour. |
+
+None of these slices is filed or started before D-T1.
+
+### 12.3 What stays open
+
+- S1 to S6 in `paradigms.md` are the presentation lead's to put to the
+  owner. Engineering consequences:
+  - **S1 `walk_to`:** a new server-driven mechanic and a scripting
+    surface, so it needs its own slice (W1) and a rule in game design.
+  - **S2 deep camera:** within `MAX_VIEW_CELLS`, but it moves the budget
+    test baseline and the UI §2 camera rule.
+  - **S4 server facing:** a rule change, and a fingerprint rebaseline if
+    adopted.
+  - **S6 key meaning:** principle 5 already answers it; the canon update
+    is UI §5.
+- Collision with S25: #69 and #70 touch `zone_view.py`, `schema.py`,
+  `validate.py`, `loader.py` and `palette.json`, which S25 also changes.
+  Neither design PR should merge. Their code lands through P-slices,
+  rebased after S25a (D-T2).
+- Canon: Auto changes `03-terminal-ui.md` §2 (camera), §4 (view kinds)
+  and §5 (keys). That canon edit belongs in P0 once the owner accepts the
+  direction, top-down and in the same PR as the first slice that depends
+  on it.
