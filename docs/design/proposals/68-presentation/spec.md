@@ -438,6 +438,12 @@ with persistent art) remain open under D8.
   flagged `charted` show their layout on arrival as known space. Sight
   still decides people and live state. Charted cells are computed per
   view and never written into a character's sight memory.
+  **Before D1 leaves the trial**, charting must cover only declared public
+  ground. Today it is the whole template minus hidden exit tiles, so it
+  still includes the space behind hidden exits (hidden corridors) and
+  housing interiors, and walks and the places list can reach them. The
+  fix is a public-ground region in the look, which the view, walks and
+  places all read, plus a disclosure test (technical lead's note 7, P4).
 
 ### 5.5 Atmospheric effects: allowed and not
 
