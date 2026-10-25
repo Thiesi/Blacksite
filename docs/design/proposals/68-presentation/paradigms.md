@@ -413,33 +413,57 @@ street view:
 **What it takes to reach it** (each a proposal for the plan, not a
 commitment):
 
-1. **A Unicode capability tier.** Sextants where the terminal draws them
-   (Windows Terminal, recent kitty, WezTerm, foot), half-blocks
-   everywhere else, and the 256- and 16-colour tiers degrade as they do
-   now. The door must detect or be told; never guess wrong into tofu.
+1. **A glyph tier beyond CP437, by opt-in only.** Canon (UI 1) limits
+   every glyph to characters that exist in CP437, because NetBBS
+   transcodes UTF-8 to CP437 for SyncTERM-class callers. Sextants do not
+   survive that, and the door cannot detect support: NetBBS sends only
+   the boolean `unicode_style`. The workable shape (technical lead,
+   plan section 13): a per-player setting, chosen against a test
+   pattern, half-blocks by default, for eye-level art only. Maps, chrome
+   and text stay CP437. This needs a UI 1 amendment (D-T9).
 2. **Lighting data in looks.** Per place: light sources (position,
    height, colour, reach), ambient level, haze colour. Decoration only:
    no rule reads it (spec R4, R6).
 3. **Set pieces in looks.** A small library of dressing (counter, booth,
    shelf, stool, lamp, board, hanging cans, pipes) placed by zone,
-   rendered at eye level and as plain glyphs on the map.
+   rendered at eye level. On the map a set piece shows only where its
+   tile already says the same thing (a counter on a blocking tile), so
+   the map never draws an obstacle that is not there; the validator
+   checks it.
 4. **A lit renderer.** The street raycaster gains lights, set pieces,
    seated and standing figures, fog and reflections. Static parts of a
    place can be painted once per position and heading and cached; only
    people and lights that change are redrawn.
 5. **Figures from the server's actors only.** Everyone drawn is someone
-   the server disclosed, where it put them. Silhouettes carry behaviour
-   colour (D10), never a hidden allegiance. A threat is never hidden by
+   the server disclosed, where it put them, and a property test checks
+   every figure against the view body. Silhouettes carry behaviour
+   colour (D10); a faction mark like the bouncer's Sable red must come
+   from a disclosed field, never a hidden allegiance. A threat is never hidden by
    dark, haze or a set piece: danger still hands the screen to the
    tactical map (A1).
 6. **Budgets.** A full sextant glimpse in truecolor is about 2,000 cells,
-   roughly 60 to 80 KiB when every cell changes. A still room sends
-   almost nothing, but a turn of the head is a full redraw. This needs a
-   frame budget and a degraded mode on slow links (technical lead's V1).
+   roughly 60 to 80 KiB when every cell changes: four to five times
+   today's 16 KiB per-delta ceiling. A still room sends almost nothing,
+   but a turn of the head is a full redraw. Looks need their own budget
+   class (rate-limited full redraws, falling back to half-blocks or the
+   map on slow links) and a CPU budget, measured over real NetBBS SSH
+   and web paths.
+**First step (proposed, D-T10):** a live spike, V0, that renders the
+Tin Halo from look data (lights, set pieces, places) in the real door
+behind the trial flag. The owner compares a live capture with this
+target before any authoring at scale; the spike's look schema becomes
+the draft content format.
+
 7. **Authoring at scale.** The real cost. Every place worth standing in
    needs its light, dressing and figures authored to this standard. That
    is world-building work as much as engineering, and it should follow
    the gazetteer, place by place.
+
+**Outside canon in the mockup.** Besides the sextants, the chrome uses
+glyphs CP437 lacks: diagonal arrows in the ways list, eighth-blocks in
+the vitals bars, `◆` and `×`. The CP437 build uses `↑↓←→` with the
+compass letters, whole-cell bars, `♦` and `x`. Those are small losses;
+the glimpse is the one that matters.
 
 **Invented for the mockup.** The place "Under the halo", the selected
 way's text about Vesper, the detail box, and several log lines are
