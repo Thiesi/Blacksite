@@ -77,7 +77,8 @@ def test_f7_switches_renderer_on_the_same_view(info, content) -> None:
     _, _, frames = zone_frames(content, "core-plaza", (57, 6), 80, 24)
     display, terminal = shown(info, content, frames, 80, 24, "256", present=False)
     assert "THE CORE" not in terminal.screen_text()
-    assert display.key("f7", 10) == []
+    sent = display.key("f7", 10)
+    assert [(f.type, f.data["name"]) for f in sent] == [("intent", "view_shape")]  # never a game key
     terminal.write(display.render(10)[0])
     assert "THE CORE" in terminal.screen_text() and display.present
 
