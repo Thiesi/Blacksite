@@ -872,5 +872,58 @@ quality at all, and what each place then costs to author.
 | ID | Decision | Recommendation | Why it matters |
 |---|---|---|---|
 | D-T9 | May eye-level art use characters outside CP437 (sextants) as an opt-in per-player setting, amending UI §1? | Yes: opt-in with a test pattern, half-blocks by default, maps and text unchanged | Without it the target's detail is unreachable. Without opt-in, CP437 and transcoding callers see broken cells. |
-| D-T10 | Prove the target with a live Tin Halo spike (V0) before authoring at scale | Yes | The target is hand-composed. Committing to authoring dozens of places before a data-driven renderer reaches it risks the largest cost in the plan. |
-| D-T11 | Authoring scope for the first release: full scenes for hub interiors and pockets, simpler looks elsewhere | Yes, extending by district after each gate | Item 7 is the real cost. Scoping it keeps S25 to S33 shippable. |
+| D-T10 | Prove the target with a live Tin Halo spike (V0) before authoring at scale | Yes (**agreed 2026-10-25**) | The target is hand-composed. Committing to authoring dozens of places before a data-driven renderer reaches it risks the largest cost in the plan. |
+| D-T11 | Authoring scope for the first release: full scenes for hub interiors and pockets, simpler looks elsewhere | Yes, extending by district after each gate (**agreed 2026-10-25**) | Item 7 is the real cost. Scoping it keeps S25 to S33 shippable. |
+
+### 13.4 Owner decisions and the modern tier
+
+Recorded in `paradigms.md` §10 (#70 `6467264`), relayed by the
+presentation lead on 2026-10-25:
+
+- **D-T10 agreed.** V0 is cleared to start. It captures three tiers side
+  by side: modern glyphs in truecolor at 132x50, CP437 in 256 colours at
+  132x50, and CP437 in 16 colours at 80x25.
+- **D-T11 agreed.**
+- **Design paradigm:** "Don't require a modern terminal, but build for
+  one." Scenes are designed and judged in truecolor with the modern
+  glyph tier at 132x50 or larger. CP437 callers play the same game in a
+  plainer frame. Nothing needed to play exists only in the scenery
+  (spec R4, R6), so CP437 callers lose atmosphere, never information.
+- **D-T9 widened, still open.** It is no longer limited to eye-level art.
+  The modern tier also substitutes glyphs in chrome and on the map
+  through a second column in `glyphs.json`, with the CP437 glyph as the
+  fallback. The tier is on by default in truecolor once the caller
+  confirms a test row in the first-play check, and can be changed in
+  settings. The owner signs the UI §1 amendment after V0 shows real
+  frames.
+
+Engineering terms for the widened D-T9:
+
+1. **The server stays tier-agnostic.** Today the server sends glyph
+   characters in the zone view's `legend` (`zone_view.py:117`). The
+   legend should carry both columns per entry, and the door picks one.
+   The legend is sent once per zone, so the cost is small and no rule or
+   view depends on the tier.
+2. **Same meaning, same cell.** One glyph per tile in both tiers, with
+   identical widths and layout. A test asserts that every modern glyph
+   has a CP437 fallback, is single-width under `cells.py`, and appears in
+   the first-play check row. East Asian ambiguous-width characters (`◆`,
+   `×`, diagonal arrows, rounded corners) carry the same risk the
+   box-drawing set already accepts. The check row is where a caller sees
+   it.
+3. **Goldens and replays run in both tiers.** P1's style goldens gain a
+   tier axis.
+4. **The setting persists** through S30a's settings path.
+
+Slice placement:
+
+- **V0:** the spike as described, owned by the presentation lead, with
+  engineering review by the technical lead. No canon change.
+- **V2:** the modern tier as its own small slice after P1 and before P5.
+  It covers the `glyphs.json` column, the legend's second column, the
+  first-play check row, the setting, the tests, and the UI §1 amendment
+  in the same PR once the owner signs. It does not depend on V1.
+- **V1:** lit renderer with sextants, after V0 succeeds and P2's view
+  shapes exist.
+- **V3:** look schema for lights and set pieces, plus the offline
+  authoring renderer, drafted from V0.
