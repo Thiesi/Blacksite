@@ -218,8 +218,10 @@ on the PR head:
 | success | The latest record for the current head says "ready to merge", or the PR carries the label `no-technical-review`. |
 | failure | The latest record for the current head says "changes required", or has no recognised recommendation. |
 
-Only comments from accounts with write access count, and bots never do,
-so the automated Claude review cannot satisfy the gate. The gate always
+Only comments whose author association is owner, member or collaborator
+count, and bots never do, so the automated Claude review cannot satisfy
+the gate. The repository is single-owner; adding collaborators with
+read or triage access would widen who can post a record. The gate always
 runs the script from `main`, so a PR cannot change the rule that judges
 it.
 
@@ -231,7 +233,9 @@ Limits:
   the owner's account, so the gate cannot tell who wrote a record. Only
   the technical lead writes records, and only the owner applies
   `no-technical-review`, used for PRs outside §1's scope such as design
-  proposals and process changes. That rule is in `AGENTS.md`.
+  proposals and process changes. That rule is in `AGENTS.md`; the gate
+  does not check who applied the label, and the label exempts every
+  later head of that PR until it is removed.
 - **Blocking needs branch protection.** The status only blocks a merge
   if branch protection on `main` requires `technical-review`. That is the
   owner's setting.
