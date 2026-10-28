@@ -485,7 +485,12 @@ only from what this caller may know. For presentation that means:
   Warden presents `civilian`); without it, the class is derived from
   faction and behaviour. The view sends a name, colour and figure
   consistent with the presented class, never the true faction of a
-  disguised NPC (D-T8).
+  disguised NPC (D-T8), with one exception: once a disguised NPC acts
+  against a caller (attacks, arrests or targets them), that caller's
+  views show its true class for as long as that NPC instance exists.
+  The reveal is per caller: other callers keep seeing the cover until
+  it acts against them. The server keeps the reveal with the NPC
+  instance, not in content.
 - **The fixed camera.** A place's authored viewpoint stands inside the
   public-ground region (5.5.5), never on a hidden exit, in a private
   interior or in an instanced zone. The validator checks this. The
@@ -503,18 +508,20 @@ A zone flagged `charted` in its zone data (entities 1.1) shows its
 public layout on arrival, without sight. `charted` and `public` are zone
 data, not look data, because they change what callers are shown and
 what walks may use. The public-ground region is the zone's `public`
-rectangles, plus the rectangle of every pocket flagged `charted`, minus
-hidden-exit tiles; all of it is under the checks below. The server synthesises the
-`charted` grid per view from that region; it never writes the caller's
-memory, so nothing charted becomes remembered.
+rectangles plus the rectangle of every pocket flagged `charted`. The
+validator rejects a region that breaks the rules below; it is never
+trimmed to fit. The server synthesises the `charted` grid per view from
+that region; it never writes the caller's memory, so nothing charted
+becomes remembered.
 
 The validator rejects a `public` region that:
 
 - contains a hidden exit or a passable tile next to one;
 - contains a passable tile that cannot be reached from the zone's
-  non-hidden exits and spawn points without crossing a hidden exit, so
-  neither a corridor behind a hidden exit nor a room reached only
-  through one is ever charted;
+  unrestricted exits and spawn points without crossing a hidden exit,
+  an exit with a requirement (pass, key, faction) or a lockable door,
+  so no corridor behind a hidden exit and no room behind a gate is
+  ever charted;
 - overlaps a private interior (apartments, owner-door rooms);
 - belongs to an instanced zone.
 
@@ -529,7 +536,9 @@ Simulation, sight, movement, combat and NPC code never read looks,
 scenes, themes, places or the presented class. Where a rule or a
 disclosure depends on something a look also shows, it reads a field in
 the zone data, and the validator checks that the look agrees: lit
-pockets (game design 5.2) are flagged `lit`, and charted ground
+pockets (game design 5.2) are flagged `lit`, which the validator
+accepts only on a zone whose safety is `pocket` or on a pocket region,
+and charted ground
 `charted` with its `public` region (5.5.5), on the zone or pocket,
 never inferred from a look. The mechanics fingerprint (P1) covers zone
 data, including those fields, and never looks: a look-only change
