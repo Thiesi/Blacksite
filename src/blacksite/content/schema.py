@@ -119,6 +119,15 @@ class LookMark:
 
 
 @dataclass(frozen=True)
+class LookView:
+    """Where the scene view's fixed camera stands for a place (V1 draft):
+    a tile of public open ground and the way it faces."""
+
+    at: Tile
+    facing: Literal["up", "right", "down", "left"]
+
+
+@dataclass(frozen=True)
 class LookPlace:
     """A named part of a zone: the stage, the alley behind the bars. Scene
     navigation walks to `at` (or the rectangle's centre)."""
@@ -127,6 +136,7 @@ class LookPlace:
     rect: tuple[int, int, int, int]
     text: str = ""
     at: Tile | None = None
+    view: LookView | None = None
 
 
 PieceKind = Literal["counter", "bench", "table", "shelf", "screens", "lamp", "cans", "sign", "board",

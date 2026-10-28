@@ -96,7 +96,7 @@ def capture(shot: str, glyphs: str, width: int, height: int, tier: str, out: Pat
     display.present, display.view_mode, display.glyphs = True, "scene", glyphs
     display.heading = heading
     caller.pump(2)
-    lit._FRAMES.clear()
+    lit.PAINTER.clear()
     lit._SCENES.clear()
     name = f"tin-halo-v0-{shot}-{glyphs}-{width}x{height}-{tier}"
     first, cold, cold_lit = render(caller, True)
@@ -111,7 +111,7 @@ def capture(shot: str, glyphs: str, width: int, height: int, tier: str, out: Pat
              "step_ms": round(step_ms), "step_picture_ms": round(step_lit)}
     if glyphs == "modern":
         display.view_mode = "street"
-        lit._FRAMES.clear()
+        lit.PAINTER.clear()
         look, look_ms, _ = render(caller, True)
         big(out, f"tin-halo-v0-{shot}-look-{width}x{height}-{tier}", look, width, height)
         costs.update(look_first_ms=round(look_ms), look_bytes=len(look))

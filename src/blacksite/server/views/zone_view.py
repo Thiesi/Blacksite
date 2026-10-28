@@ -167,6 +167,10 @@ def build(actor: Actor, zone: ZoneInstance, perception: Perception, content: Con
         anchor = tuple(spot.at) if spot.at else (x + w // 2, y + h // 2)
         if known(anchor):
             places.append({"name": spot.name, "rect": [x, y, w, h], "at": list(anchor), "text": spot.text})
+            # The fixed camera only where its tile is known; otherwise the
+            # door picks one from what the view already shows.
+            if dressing.TRIAL and spot.view is not None and known(tuple(spot.view.at)):
+                places[-1]["view"] = {"at": list(spot.view.at), "facing": spot.view.facing}
     view["place"]["places"] = places
     view["place"]["here"] = next((p["name"] for p in places if p["rect"][0] <= actor.x < p["rect"][0] + p["rect"][2]
                                   and p["rect"][1] <= actor.y < p["rect"][1] + p["rect"][3]), None)

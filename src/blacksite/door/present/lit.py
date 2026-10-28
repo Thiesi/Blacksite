@@ -1,4 +1,4 @@
-"""Lit scenes: a place at eye level, drawn from its look (V0 spike, #68).
+"""Lit scenes: a place at eye level, drawn from its look (#68, V0 and V1).
 
 The street raycaster shades by distance. Here a place's look carries
 lights and dressing (`scene` in the view body, trial only), and the
@@ -12,25 +12,38 @@ from tiles the server sent; unknown ground is dark. People are the
 view's actors, where the server put them, and a faction mark comes from
 the role the view already discloses. Nothing here is read by a rule.
 
-Static parts are painted once per position, heading and size and kept;
-a frame only adds people. Three outputs: sextants (2x3 pixels a cell,
-the modern glyph tier), half-blocks (1x2) and, in 16 colours, whole
-cells.
+V1 makes it affordable. The static picture (everything but people) is
+painted once per eye and known ground, and kept with its cells already
+encoded; a frame then re-encodes only the cells people stand in. In the
+door a worker thread paints, so input never waits for a picture: while a
+new one is painted the last one stays up, only the latest position is
+painted, and pictures of the tiles around you are prepared while you
+stand still. While you walk, the picture goes out in a cheaper class
+(half-blocks, paired columns, 256 colours) and is sharp again when you
+stop. The scene view's fixed camera per place (V0-2) paints once on
+entry, so a step there costs only the people.
+
+Three outputs: sextants (2x3 pixels a cell, the modern glyph tier),
+half-blocks (1x2) and, in 16 colours, whole cells.
 """
 
 import json
 import math
+import time
+from array import array
 from collections import OrderedDict
+from collections.abc import Callable, Generator
 from dataclasses import dataclass, field
 from typing import Any
 
-from blacksite.door.cells import CellBuffer, display_width
+from blacksite.door.cells import Cell, CellBuffer, display_width
 from blacksite.door.layout import Rect
 from blacksite.door.palette import Style
 from blacksite.door.present import street
 from blacksite.door.present.paint import XTERM, Paint
 
 RGB = tuple[float, float, float]
+RGB8 = tuple[int, int, int]
 EYE = 1.6
 """Eye height in tile units."""
 FOV = 0.8
@@ -41,9 +54,33 @@ MAX_DEPTH = 48
 GAIN = 4.0
 BODY_HEIGHT = 1.75
 REMEMBERED = 0.72
-"""Known but not seen now: the same place, a little dimmer."""
+"""Known but out of sight: the same place, a little dimmer."""
 DECAL_KINDS = frozenset({"shelf", "sign", "board", "doorway", "screens"})
 SHAPED = frozenset({"cans", "ring"})
+INF = float("inf")
+SETTLE = 0.35
+"""Seconds after the last step or turn before the picture is sharp again."""
+CACHE_BYTES = 24 * 1024 * 1024
+"""The most static pictures a caller's door keeps, in bytes (LRU)."""
+PREFETCH = 6
+"""Pictures waiting to be prepared; older ones give way to newer."""
+CLOCK = time.monotonic
+WALK_RATE = 64 * 1024
+"""Bytes a second the picture may take while you walk; it goes out less
+often to fit (plan 13.5, provisional until measured over real transports)."""
+BURST = WALK_RATE // 2
+"""The most the walk may spend at once: half a second of its budget."""
+FULL_EVERY = 1.0
+"""Seconds between whole new pictures that are not the walk: the sharp one
+when you stop, a cut to another place's camera."""
+PREPARE_WHILE_WALKING = True
+"""While you walk, prepare the cheap picture of the next step (True), or
+prepare nothing until you stand still (False)."""
+FLAT_CELLS = 3000
+"""Above this many cells, the walk's picture is one colour a cell pair
+(half the rows of pixels), so it can go out about 2.5 times a second
+within WALK_RATE at 132x50; below, it keeps its half-blocks."""
+"""When you last moved is measured on this clock (the door's own)."""
 
 
 def rgb(value: str, fallback: RGB = (0.2, 0.2, 0.2)) -> RGB:
@@ -107,6 +144,7 @@ class Scene:
     pieces: list[Piece]
     by_tile: dict[tuple[int, int], list[int]] = field(default_factory=dict)
     memo: dict[tuple[int, int, int, int], RGB] = field(default_factory=dict)
+    key: str = ""
 
     @classmethod
     def parse(cls, data: dict[str, Any], world: street.World) -> "Scene":
@@ -168,6 +206,7 @@ def scene_of(body: dict[str, Any], world: street.World) -> Scene | None:
     cached = _SCENES.get(key)
     if cached is None:
         cached = Scene.parse(data, world)
+        cached.key = key
         _SCENES[key] = cached
         while len(_SCENES) > 4:
             _SCENES.popitem(last=False)
@@ -175,16 +214,146 @@ def scene_of(body: dict[str, Any], world: street.World) -> Scene | None:
 
 
 _SCENES: "OrderedDict[str, Scene]" = OrderedDict()
-_FRAMES: "OrderedDict[tuple[Any, ...], Frame]" = OrderedDict()
+
+
+class Known:
+    """The tile at a zone position, memoised for one paint: what the view
+    sent, or None where it sent nothing."""
+
+    def __init__(self, world: "street.World | Ground") -> None:
+        self.world = world
+        self.memo: dict[tuple[int, int], str | None] = {}
+
+    def __call__(self, x: int, y: int) -> str | None:
+        key = (x, y)
+        if key in self.memo:
+            return self.memo[key]
+        tile = self.memo[key] = self.world.at(x, y)[0]
+        return tile
+
+
+class Ground:
+    """What views of one zone have sent this caller, by zone position: the
+    latest tile at each, seen now or remembered. Pictures are painted from
+    it, not from the current view alone, so a viewport that scrolls as you
+    walk neither changes a kept picture nor cuts it off at its edge. It
+    holds nothing the server did not send to this caller. `version`
+    changes only when something new is learned."""
+
+    def __init__(self, zone: str) -> None:
+        self.zone = zone
+        self.tiles: dict[tuple[int, int], str] = {}
+        self.version = 0
+        self.seen_arrays: Any = None
+
+    def learn(self, world: street.World) -> None:
+        if self.seen_arrays is not None and self.seen_arrays[0] is world.tiles and self.seen_arrays[1] is world.memory:
+            return
+        vx, vy = world.vp["x"], world.vp["y"]
+        legend, memory, tiles = world.legend, world.memory, self.tiles
+        changed = False
+        for row_index, row in enumerate(world.tiles):
+            for col, state in enumerate(row):
+                if state == -1:
+                    continue
+                index = state if state >= 0 else memory[row_index][col]
+                if 0 <= index < len(legend):
+                    key, tile = (col + vx, row_index + vy), legend[index]["id"]
+                    if tiles.get(key) != tile:
+                        tiles[key] = tile
+                        changed = True
+        if changed:
+            self.version += 1
+        self.seen_arrays = (world.tiles, world.memory)  # keeps them alive, so `is` stays honest
+
+    def at(self, x: int, y: int) -> tuple[str | None, int, dict[str, Any]]:
+        """Like `World.at`: (tile or None, 1, no look)."""
+        return self.tiles.get((x, y)), 1, {}
+
+
+_GROUND: list[Ground] = []
+
+
+def ground(body: dict[str, Any], world: street.World) -> Ground:
+    """This caller's known ground in the zone the view is of."""
+    zone = str((body.get("me") or {}).get("zone", ""))
+    if not _GROUND or _GROUND[0].zone != zone:
+        _GROUND[:] = [Ground(zone)]
+    _GROUND[0].learn(world)
+    return _GROUND[0]
+
+
+_SIGNATURE: list[Any] = [None, None, 0]
+
+
+def signature(world: street.World) -> int:
+    """The known ground of one view, by zone position."""
+    tiles, memory = world.tiles, world.memory
+    if _SIGNATURE[0] is tiles and _SIGNATURE[1] is memory:
+        return _SIGNATURE[2]
+    vx, vy = world.vp["x"], world.vp["y"]
+    legend = world.legend
+    out = []
+    for row_index, row in enumerate(tiles):
+        for col, state in enumerate(row):
+            if state == -1:
+                continue
+            index = state if state >= 0 else memory[row_index][col]
+            if 0 <= index < len(legend):
+                out.append(((col + vx) << 16 | (row_index + vy), legend[index]["id"]))
+    value = hash(frozenset(out))
+    _SIGNATURE[:] = [tiles, memory, value]  # keeps the arrays alive, so `is` stays honest
+    return value
+
+
+_SIGHT: list[Any] = [None, None, None]
+
+
+def sight(world: street.World, me: dict[str, Any]) -> int:
+    """How far you see now, read off the tiles the view marks as seen. The
+    picture dims ground beyond it from your eyes: the seen set changes with
+    every step, its reach does not, so the picture can still be kept."""
+    if _SIGHT[0] is world.tiles and _SIGHT[1] == (me["x"], me["y"]):
+        return _SIGHT[2]
+    vx, vy = world.vp["x"] - me["x"], world.vp["y"] - me["y"]
+    reach = 0
+    for row_index, row in enumerate(world.tiles):
+        dy = (row_index + vy) ** 2
+        for col, state in enumerate(row):
+            if state >= 0:
+                reach = max(reach, (col + vx) ** 2 + dy)
+    value = int(math.sqrt(reach) + 0.5)
+    _SIGHT[:] = [world.tiles, (me["x"], me["y"]), value]
+    return value
 
 
 @dataclass
 class Frame:
-    """The static picture: pixels, depth, what each pixel is, sign text."""
+    """The static picture: pixels (8-bit RGB), depth, sign text, and its
+    cells once encoded, per output class."""
 
-    pixels: list[list[RGB]]
-    depth: list[list[float]]
+    width: int
+    height: int
+    rgb: bytearray
+    depth: array
     labels: list[tuple[int, int, str, str, float]]
+    grid: str = "half"
+    encoded: dict[tuple[Any, ...], tuple[list[list[Cell]], list[list[RGB8]]]] = field(default_factory=dict)
+
+    @property
+    def nbytes(self) -> int:
+        cells = sum(len(rows) * len(rows[0]) * 16 for rows, _ in self.encoded.values() if rows)
+        return len(self.rgb) + len(self.depth) * self.depth.itemsize + cells + 256
+
+    def pixel(self, p: int) -> RGB8:
+        i = p * 3
+        return self.rgb[i], self.rgb[i + 1], self.rgb[i + 2]
+
+
+GRIDS = {"sextant": (2.0, 3), "half": (1.0, 2), "low": (0.5, 2)}
+"""Pixels per cell, across and down. `sextant` is the modern tier, `half`
+half-blocks, and `low` the cheap class while you walk: half-blocks whose
+pixels are two cells wide, painted at that resolution."""
 
 
 @dataclass
@@ -198,6 +367,7 @@ class Camera:
     focal_x: float
     focal_y: float
     horizon: float
+    grid: str = "half"
 
     @property
     def plane(self) -> tuple[float, float]:
@@ -216,16 +386,41 @@ class Camera:
 # --- the static picture -------------------------------------------------------
 
 
-def paint_static(world: street.World, sc: Scene, cam: Camera) -> Frame:
+def paint_static(world: "street.World | Ground", sc: Scene, cam: Camera, reach: float | None = None) -> Frame:
+    """Everything but people, painted now."""
+    return finish(paint_columns(world, sc, cam, reach))
+
+
+def finish(columns: Generator[None, None, Frame]) -> Frame:
+    try:
+        while True:
+            next(columns)
+    except StopIteration as done:
+        return done.value
+
+
+def paint_columns(world: "street.World | Ground", sc: Scene, cam: Camera, reach: float | None = None
+                  ) -> Generator[None, None, Frame]:
+    """Everything but people, a column at a time (the painter can stop
+    between any two). With `reach`, ground further than that from the eye
+    is drawn as remembered."""
     width, height = cam.width, cam.height
-    pixels: list[list[RGB]] = [[(0.0, 0.0, 0.0)] * width for _ in range(height)]
-    depth = [[float(MAX_DEPTH)] * width for _ in range(height)]
+    far = (reach + 0.5) ** 2 if reach else INF
+    at = Known(world)
+    pixels = bytearray(width * height * 3)
+    depth = array("f", [MAX_DEPTH]) * (width * height)
     plane_x, plane_y = cam.plane
     top = sc.ceiling if sc.interior else 6.0
+    slopes = [(cam.horizon - (row + 0.5)) / cam.focal_y for row in range(height)]
+    flats = [(-EYE / s, "floor") if s < 0 else ((sc.ceiling - EYE) / s, "ceiling") if s > 0 and sc.interior else (INF, "")
+             for s in slopes]
+    haze_r, haze_g, haze_b = sc.haze
+    haze_reach = sc.haze_reach
     for col in range(width):
+        yield
         camera = 2 * (col + 0.5) / width - 1
         rx, ry = cam.dx + plane_x * camera, cam.dy + plane_y * camera
-        wall_t, wall_side, wall_tile, wall_seen, edge = march(world, sc, cam.px, cam.py, rx, ry)
+        wall_t, wall_side, wall_tile, edge = march(at, cam.px, cam.py, rx, ry)
         boxes = column_pieces(sc, cam.px, cam.py, rx, ry, wall_t)
         # Each piece covers a band of rows in this column: from its top
         # edge (near or far, whichever is higher) to its bottom edge.
@@ -235,7 +430,7 @@ def paint_static(world: street.World, sc: Scene, cam: Camera) -> Frame:
             rows_at = [cam.horizon - (z - EYE) * cam.focal_y / t for z in (piece.z0, piece.z1) for t in (t0, t1)]
             spans.append((int(min(rows_at)) - 1, int(max(rows_at)) + 1, t0, t1, normal, index))
         for row in range(height):
-            slope = (cam.horizon - (row + 0.5)) / cam.focal_y
+            slope = slopes[row]
             best_t, kind, data = wall_t if edge is None else float(MAX_DEPTH), "", None
             if edge is None:
                 z = EYE + slope * wall_t
@@ -243,14 +438,9 @@ def paint_static(world: street.World, sc: Scene, cam: Camera) -> Frame:
                     kind, data = "wall", (wall_tile, wall_side, z)
                 else:
                     best_t = float(MAX_DEPTH)
-            if slope < 0:
-                t = -EYE / slope
-                if t < best_t:
-                    best_t, kind, data = t, "floor", None
-            elif slope > 0 and sc.interior:
-                t = (sc.ceiling - EYE) / slope
-                if t < best_t:
-                    best_t, kind, data = t, "ceiling", None
+            flat_t, flat = flats[row]
+            if flat_t < best_t:
+                best_t, kind, data = flat_t, flat, None
             for low, high, t0, t1, normal, index in spans:
                 if not low <= row <= high or t0 >= best_t:
                     continue
@@ -275,25 +465,26 @@ def paint_static(world: street.World, sc: Scene, cam: Camera) -> Frame:
             if not kind:
                 continue  # darkness: beyond what you know
             x, y = cam.px + rx * best_t, cam.py + ry * best_t
-            tile, seen, _ = world.at(int(math.floor(x)), int(math.floor(y)))
-            if kind == "floor" and (tile is None or (edge is not None and best_t > edge)):
+            if kind == "floor" and (at(math.floor(x), math.floor(y)) is None or (edge is not None and best_t > edge)):
                 continue
-            colour = shade(sc, kind, data, x, y, best_t, row, col)
-            if kind != "wall" and not seen:
-                colour = tuple(c * REMEMBERED for c in colour)
-            elif kind == "wall" and not wall_seen:
-                colour = tuple(c * REMEMBERED for c in colour)
-            fog = 1 - math.exp(-best_t / sc.haze_reach)
-            pixels[row][col] = tuple(c + (h - c) * fog for c, h in zip(colour, sc.haze))  # type: ignore[assignment]
-            depth[row][col] = best_t
-    glow(sc, cam, pixels, depth)
-    return Frame(pixels, depth, sign_labels(world, sc, cam, depth))
+            r, g, b = shade(sc, kind, data, x, y, row)
+            if (x - cam.px) ** 2 + (y - cam.py) ** 2 > far:
+                r, g, b = r * REMEMBERED, g * REMEMBERED, b * REMEMBERED
+            fog = 1 - math.exp(-best_t / haze_reach)
+            r, g, b = r + (haze_r - r) * fog, g + (haze_g - g) * fog, b + (haze_b - b) * fog
+            p = row * width + col
+            i = p * 3
+            pixels[i] = 255 if r >= 1 else int(r * 255) if r > 0 else 0
+            pixels[i + 1] = 255 if g >= 1 else int(g * 255) if g > 0 else 0
+            pixels[i + 2] = 255 if b >= 1 else int(b * 255) if b > 0 else 0
+            depth[p] = best_t
+    yield from glow(sc, cam, pixels, depth)
+    return Frame(width, height, pixels, depth, sign_labels(at, sc, cam, depth), cam.grid)
 
 
-def march(world: street.World, sc: Scene, px: float, py: float, rx: float, ry: float
-          ) -> tuple[float, int, tuple[int, int], bool, float | None]:
-    """DDA to the first opaque tile: (distance, side, tile, seen, edge).
-    `edge` is the distance at which known ground ends, when it does."""
+def march(at: Known, px: float, py: float, rx: float, ry: float) -> tuple[float, int, tuple[int, int], float | None]:
+    """DDA to the first opaque tile: (distance, side, tile, edge). `edge` is
+    the distance at which known ground ends, when it does."""
     mx, my = int(px), int(py)
     delta_x = abs(1 / rx) if rx else 1e30
     delta_y = abs(1 / ry) if ry else 1e30
@@ -306,14 +497,14 @@ def march(world: street.World, sc: Scene, px: float, py: float, rx: float, ry: f
         else:
             side_y, my, side = side_y + delta_y, my + step_y, 1
             distance = side_y - delta_y
-        tile, seen, _ = world.at(mx, my)
+        tile = at(mx, my)
         if tile is None:
-            return float(MAX_DEPTH), side, (mx, my), False, distance
+            return float(MAX_DEPTH), side, (mx, my), distance
         if tile in street.OPAQUE:
-            return max(0.05, distance), side, (mx, my), bool(seen), None
+            return max(0.05, distance), side, (mx, my), None
         if distance > MAX_DEPTH:
             break
-    return float(MAX_DEPTH), 0, (mx, my), False, float(MAX_DEPTH)
+    return float(MAX_DEPTH), 0, (mx, my), float(MAX_DEPTH)
 
 
 def column_pieces(sc: Scene, px: float, py: float, rx: float, ry: float, limit: float
@@ -351,12 +542,12 @@ def shaped(piece: Piece, x: float, y: float) -> bool:
     return inner <= r <= outer
 
 
-def shade(sc: Scene, kind: str, data: Any, x: float, y: float, t: float, row: int, col: int) -> RGB:
+def shade(sc: Scene, kind: str, data: Any, x: float, y: float, row: int) -> RGB:
     grain = (noise(int(x * 16), int(y * 16), row) - 0.5) * 0.04
     if kind == "floor":
         lit = sc.light(x, y, 0.0, 5)
-        base = tuple(c * (0.85 + grain * 4) for c in sc.floor)
-        return mul(base, lit, GAIN)
+        k = 0.85 + grain * 4
+        return sc.floor[0] * k * lit[0] * GAIN, sc.floor[1] * k * lit[1] * GAIN, sc.floor[2] * k * lit[2] * GAIN
     if kind == "ceiling":
         lit = sc.light(x, y, sc.ceiling, 6)
         return mul(tuple(c * 0.55 for c in sc.walls), lit, GAIN)
@@ -463,46 +654,52 @@ def material(sc: Scene, piece: Piece, u: float, v: float, x: float, y: float, z:
     return out
 
 
-def glow(sc: Scene, cam: Camera, pixels: list[list[RGB]], depth: list[list[float]]) -> None:
+def glow(sc: Scene, cam: Camera, pixels: bytearray, depth: array) -> Generator[None, None, None]:
     """Light seen directly: a soft halo around each light the eye can see,
-    and its smear on a wet floor."""
-    height, width = len(pixels), len(pixels[0])
+    and its smear on a wet floor. Yields between lights."""
+    width, height = cam.width, cam.height
     for li in sc.lights:
+        yield
         spot = cam.project(li.x, li.y, li.z)
         if spot is None:
             continue
         sx, sy, ahead = spot
         sigma = max(1.2, 2.2 * cam.focal_x / 60 / ahead)
         power = 0.55
-        if 0 <= int(sy) < height and 0 <= int(sx) < width and depth[int(sy)][int(sx)] < ahead - 0.4:
+        if 0 <= int(sy) < height and 0 <= int(sx) < width and depth[int(sy) * width + int(sx)] < ahead - 0.4:
             power = 0.0  # behind something
         reflect = cam.project(li.x, li.y, -li.z)
+        lr, lg, lb = li.colour[0] * 255, li.colour[1] * 255, li.colour[2] * 255
         for cx, cy, sig_x, sig_y, k, floor_only in ((sx, sy, sigma, sigma, power, False),
                                                    (reflect[0] if reflect else -99, reflect[1] if reflect else -99,
                                                     sigma * 0.8, sigma * 2.6, sc.wet * 0.5, True)):
             if k <= 0:
                 continue
             for row in range(max(0, int(cy - 3 * sig_y)), min(height, int(cy + 3 * sig_y) + 1)):
+                if floor_only and row < cam.horizon:
+                    continue
                 for col in range(max(0, int(cx - 3 * sig_x)), min(width, int(cx + 3 * sig_x) + 1)):
-                    if floor_only and row < cam.horizon:
-                        continue
-                    if depth[row][col] < ahead - 0.5 and not floor_only:
+                    p = row * width + col
+                    if depth[p] < ahead - 0.5 and not floor_only:
                         continue
                     f = k * math.exp(-((col - cx) ** 2 / (2 * sig_x ** 2) + (row - cy) ** 2 / (2 * sig_y ** 2)))
                     if f > 0.004:
-                        pixels[row][col] = add(pixels[row][col], li.colour, f)
+                        i = p * 3
+                        pixels[i] = min(255, pixels[i] + int(lr * f))
+                        pixels[i + 1] = min(255, pixels[i + 1] + int(lg * f))
+                        pixels[i + 2] = min(255, pixels[i + 2] + int(lb * f))
 
 
-def sign_labels(world: street.World, sc: Scene, cam: Camera, depth: list[list[float]]
-                ) -> list[tuple[int, int, str, str, float]]:
+def sign_labels(at: Known, sc: Scene, cam: Camera, depth: array) -> list[tuple[int, int, str, str, float]]:
     """Signs with letters: where the middle of their open face shows, in
     pixels, how wide it shows, and the text."""
     out = []
+    width, height = cam.width, cam.height
+    open_ground = lambda x, y: at(math.floor(x), math.floor(y)) not in (None, *street.OPAQUE)
     for piece in sc.pieces:
         if not piece.text:
             continue
         cx, cy = piece.centre
-        open_ground = lambda x, y: world.at(int(math.floor(x)), int(math.floor(y)))[0] not in (None, *street.OPAQUE)
         faces = [((cx, piece.y0), (piece.x0, piece.y0), (piece.x1, piece.y0), (0, -1)),
                  ((cx, piece.y1), (piece.x0, piece.y1), (piece.x1, piece.y1), (0, 1)),
                  ((piece.x0, cy), (piece.x0, piece.y0), (piece.x0, piece.y1), (-1, 0)),
@@ -515,7 +712,7 @@ def sign_labels(world: street.World, sc: Scene, cam: Camera, depth: list[list[fl
             if spot is None or None in ends:
                 continue
             sx, sy, ahead = spot
-            if not (0 <= int(sy) < len(depth) and 0 <= int(sx) < len(depth[0])) or depth[int(sy)][int(sx)] < ahead - 0.6:
+            if not (0 <= int(sy) < height and 0 <= int(sx) < width) or depth[int(sy) * width + int(sx)] < ahead - 0.6:
                 continue
             span = abs(ends[0][0] - ends[1][0])  # type: ignore[index]
             out.append((int(sx), int(sy), piece.text, piece.role or "sign_amber", span))
@@ -526,20 +723,25 @@ def sign_labels(world: street.World, sc: Scene, cam: Camera, depth: list[list[fl
 # --- people -------------------------------------------------------------------
 
 
-def figures(body: dict[str, Any]) -> list[dict[str, Any]]:
-    """Who may be drawn: the view's actors, not you. Nobody else, ever."""
-    return [a for a in body.get("actors", []) if a.get("role") != "player_self"]
+def figures(body: dict[str, Any], me_too: bool = False) -> list[dict[str, Any]]:
+    """Who may be drawn: the view's actors (you only when the camera is
+    not your eyes). Nobody else, ever."""
+    return [a for a in body.get("actors", []) if me_too or a.get("role") != "player_self"]
 
 
-def draw_people(body: dict[str, Any], sc: Scene, cam: Camera, colours: street.Colours,
-                pixels: list[list[RGB]], depth: list[list[float]]) -> None:
-    height, width = len(pixels), len(pixels[0])
+def draw_people(body: dict[str, Any], sc: Scene, cam: Camera, colours: street.Colours, frame: Frame,
+                me_too: bool = False) -> dict[int, RGB8]:
+    """The people over the static picture, as pixels by index; the static
+    picture itself is left alone (it is shared)."""
+    width, height = frame.width, frame.height
+    depth = frame.depth
+    over: dict[int, RGB8] = {}
     people = []
-    for actor in figures(body):
+    for actor in figures(body, me_too):
         spot = cam.project(actor["x"] + 0.5, actor["y"] + 0.5, 0.0)
         if spot is not None:
             people.append((spot[2], actor))
-    for ahead, actor in sorted(people, key=lambda item: -item[0]):
+    for ahead, actor in sorted(people, key=lambda item: -item[0]):  # far first: the near cover them
         drone = actor.get("kind") == "drone"
         tall, lift = (0.5, 1.1) if drone else (BODY_HEIGHT, 0.0)
         x, y = actor["x"] + 0.5, actor["y"] + 0.5
@@ -565,16 +767,17 @@ def draw_people(body: dict[str, Any], sc: Scene, cam: Camera, colours: street.Co
         fog = 1 - math.exp(-ahead / sc.haze_reach)
         # The rim keeps the light's colour but never burns out to white.
         rim = tuple(c * 1.8 * min(1.0, 0.75 / max(1e-3, max(lit) * 1.8)) for c in lit)
+        body_c = (0.05 + 0.08 * accent_f[0], 0.045 + 0.08 * accent_f[1], 0.055 + 0.08 * accent_f[2])
         for row in range(max(0, int(top)), min(height, int(bottom) + 1)):
             v = (row - top) / span
             for col in range(max(0, int(cx - half * 1.1)), min(width, int(cx + half * 1.1) + 1)):
-                if depth[row][col] < ahead:
+                p = row * width + col
+                if depth[p] < ahead:
                     continue
                 u = (col - cx) / half
                 if not silhouette(u, v, drone):
                     continue
                 edge = not silhouette(u + 0.22 * rim_side, v, drone) or not silhouette(u, v - 0.04, drone)
-                body_c = (0.05 + 0.08 * accent_f[0], 0.045 + 0.08 * accent_f[1], 0.055 + 0.08 * accent_f[2])
                 colour = mul(body_c, lit, GAIN * 0.8)
                 if edge:
                     colour = add(colour, rim, 1.0)  # rim light from the nearest lamp
@@ -582,8 +785,8 @@ def draw_people(body: dict[str, Any], sc: Scene, cam: Camera, colours: street.Co
                     colour = add(colour, accent_f, 0.55)  # an armband in the colours the view shows
                 if not drone and v < 0.12 and abs(u) < 0.18 and 0.05 < v < 0.09:
                     colour = add(colour, lit, 0.2)
-                pixels[row][col] = tuple(c + (h - c) * fog for c, h in zip(colour, sc.haze))  # type: ignore[assignment]
-                depth[row][col] = ahead
+                over[p] = to8(tuple(c + (h - c) * fog for c, h in zip(colour, sc.haze)))  # type: ignore[arg-type]
+    return over
 
 
 def silhouette(u: float, v: float, drone: bool) -> bool:
@@ -620,7 +823,7 @@ def sextant(pattern: int) -> str:
     return chr(0x1FB00 + pattern - 1 - (pattern > 21) - (pattern > 42))
 
 
-def to8(colour: RGB) -> tuple[int, int, int]:
+def to8(colour: RGB) -> RGB8:
     return (max(0, min(255, int(colour[0] * 255))), max(0, min(255, int(colour[1] * 255))),
             max(0, min(255, int(colour[2] * 255))))
 
@@ -690,102 +893,462 @@ def quantiser(tier: str):  # type: ignore[no-untyped-def]
 _QUANT: dict[str, Any] = {}
 
 
-def encode(buffer: CellBuffer, area: Rect, rows: int, pixels: list[list[RGB]], paint: Paint, modern: bool
-           ) -> list[list[tuple[int, int, int]]]:
-    """Write the picture into cells; returns each cell's background (for text over it)."""
-    quant = quantiser(paint.tier)
-    styles: dict[tuple[Any, Any], Style] = {}
+class Steps:
+    """Truecolor in 16 steps a channel, even to the eye (gamma 2.2): fine in
+    the dark, where a lit room lives, coarse in the light. Neighbouring
+    cells then share colours often enough that the terminal diff skips
+    most colour changes. The walk's cheap class; 256 colours would turn
+    the room grey and olive, and even steps would erase the dark."""
 
-    def style(fg: tuple[int, int, int], bg: tuple[int, int, int]) -> Style:
-        key = (quant(fg, False), quant(bg, True))
-        found = styles.get(key)
+    LEVELS = 16
+
+    def __init__(self) -> None:
+        n = self.LEVELS
+        self.table = [int(round((round((v / 255) ** (1 / 2.2) * n) / n) ** 2.2 * 255)) for v in range(256)]
+
+    def __call__(self, colour: RGB8, background: bool) -> RGB8:
+        t = self.table
+        return t[colour[0]], t[colour[1]], t[colour[2]]
+
+
+_STEPS = Steps()
+
+
+class Encoder:
+    """Pixels to cells for one frame and tier. `sextant` frames have 2x3
+    pixels a cell, `half` frames 1x2, and `low` frames (the walk) 1x2 over
+    two cells, in truecolor steps: the cheap class. `flat`: a low frame
+    with one colour a cell pair, for large pictures."""
+
+    def __init__(self, frame: Frame, tier: str, flat: bool = False) -> None:
+        self.frame, self.tier, self.flat = frame, tier, flat and frame.grid == "low"
+        self.quant = _STEPS if frame.grid == "low" and tier == "truecolor" else quantiser(tier)
+        self.styles: dict[tuple[Any, Any], Style] = {}
+        self.cells: dict[tuple[str, Any, Any], Cell] = {}
+
+    def cell(self, glyph: str, fg: RGB8, bg: RGB8) -> Cell:
+        key = (glyph, self.quant(fg, False), self.quant(bg, True))
+        found = self.cells.get(key)
         if found is None:
-            found = styles[key] = Style(key[0], key[1], (), paint.tier)
+            style = self.styles.get(key[1:])
+            if style is None:
+                style = self.styles[key[1:]] = Style(key[1], key[2], (), self.tier)
+            found = self.cells[key] = Cell(glyph, style)
         return found
 
-    ints = [[(min(255, max(0, int(p[0] * 255))), min(255, max(0, int(p[1] * 255))), min(255, max(0, int(p[2] * 255))))
-             for p in line] for line in pixels]
-    backs = [[(0, 0, 0)] * area.width for _ in range(rows)]
-    for row in range(rows):
-        for col in range(area.width):
-            if modern:
-                upper, middle, lower = ints[row * 3], ints[row * 3 + 1], ints[row * 3 + 2]
-                x = col * 2
-                cells = [upper[x], upper[x + 1], middle[x], middle[x + 1], lower[x], lower[x + 1]]
-                lum = [p[0] * 2 + p[1] * 5 + p[2] for p in cells]
-                mean = sum(lum) / 6
-                bright = [i for i in range(6) if lum[i] > mean]
-                if not bright or (max(lum) - min(lum)) < 48:  # flat: one colour
-                    avg = (sum(p[0] for p in cells) // 6, sum(p[1] for p in cells) // 6, sum(p[2] for p in cells) // 6)
-                    glyph, fg, bg = " ", avg, avg
+    def encode(self, row: int, col: int, over: dict[int, RGB8] | None = None) -> tuple[Cell, RGB8]:
+        """One cell and its background colour."""
+        frame = self.frame
+        width = frame.width
+        px = frame.pixel if not over else (lambda p: over.get(p) or frame.pixel(p))
+        if frame.grid == "sextant":
+            p = row * 3 * width + col * 2
+            cells = [px(p), px(p + 1), px(p + width), px(p + width + 1), px(p + 2 * width), px(p + 2 * width + 1)]
+            lum = [c[0] * 2 + c[1] * 5 + c[2] for c in cells]
+            average = sum(lum) / 6
+            bright = [i for i in range(6) if lum[i] > average]
+            if not bright or (max(lum) - min(lum)) < 48:  # flat: one colour
+                flat = mean(cells)
+                return self.cell(" ", flat, flat), flat
+            dark = [i for i in range(6) if lum[i] <= average]
+            fg, bg = mean([cells[i] for i in bright]), mean([cells[i] for i in dark])
+            return self.cell(sextant(sum(1 << i for i in bright)), fg, bg), bg
+        if frame.grid == "low":
+            col //= 2
+        top, bottom = px(row * 2 * width + col), px((row * 2 + 1) * width + col)
+        if self.flat:
+            both = mean([top, bottom])
+            return self.cell(" ", both, both), both
+        return self.cell("▀", top, bottom), bottom
+
+
+def mean(colours: list[RGB8]) -> RGB8:
+    n = len(colours)
+    return sum(c[0] for c in colours) // n, sum(c[1] for c in colours) // n, sum(c[2] for c in colours) // n
+
+
+def encoded(frame: Frame, tier: str, columns: int, rows: int) -> tuple[list[list[Cell]], list[list[RGB8]], Encoder]:
+    """The static picture's cells, encoded once per tier."""
+    encoder = Encoder(frame, tier, columns * rows > FLAT_CELLS)
+    found = frame.encoded.get((tier,))
+    if found is None:
+        grid, backs = [], []
+        for row in range(rows):
+            line, back = [], []
+            for col in range(columns):
+                if frame.grid == "low" and col % 2:
+                    cell, bg = line[-1], back[-1]  # one pixel spans the pair
                 else:
-                    dark = [i for i in range(6) if lum[i] <= mean]
-                    fg = tuple(sum(cells[i][c] for i in bright) // len(bright) for c in range(3))  # type: ignore[assignment]
-                    bg = tuple(sum(cells[i][c] for i in dark) // len(dark) for c in range(3))  # type: ignore[assignment]
-                    glyph = sextant(sum(1 << i for i in bright))
-                backs[row][col] = bg
-                buffer.put(area.x + col, area.y + row, glyph, style(fg, bg))
-                continue
-            top, bottom = ints[row * 2][col], ints[row * 2 + 1][col]
-            backs[row][col] = bottom
-            buffer.put(area.x + col, area.y + row, "▀", style(top, bottom))
-    return backs
+                    cell, bg = encoder.encode(row, col)
+                line.append(cell)
+                back.append(bg)
+            grid.append(line)
+            backs.append(back)
+        found = frame.encoded[(tier,)] = (grid, backs)
+    return found[0], found[1], encoder
+
+
+def blit(buffer: CellBuffer, x: int, y: int, cells: list[Cell]) -> None:
+    """Cells in one go, width-safe like `put` (every picture glyph is one
+    cell wide) and never into the bottom-right cell."""
+    if not 0 <= y < buffer.height:
+        return
+    limit = buffer.width - (y == buffer.height - 1)
+    left, right = max(0, x), min(limit, x + len(cells))
+    if left >= right:
+        return
+    row = buffer.cells[y]
+    if row[left].glyph == "":
+        buffer._clear_glyph(left, y)
+    if right < buffer.width and row[right].glyph == "":
+        buffer._clear_glyph(right, y)
+    row[left:right] = cells[left - x:right - x]
+
+
+# --- painting now, or in the background --------------------------------------
+
+
+class Painter:
+    """Static pictures, cached by eye and known ground (LRU, bounded in
+    bytes).
+
+    In the door it paints in the background, on the door's own loop: `work`
+    paints a few columns at a time and returns, so keys and frames are
+    handled between slices and input never waits for a picture. `frame`
+    returns None while the wanted picture is painted; the latest request
+    replaces an older one (coalescing), and a prepared picture gives way
+    to a wanted one, parked half-painted until there is time again.
+    Elsewhere (tests, captures) pictures are painted on the spot."""
+
+    def __init__(self, background: bool = False, wake: Callable[[], None] | None = None,
+                 kick: Callable[[], None] | None = None, limit: int = CACHE_BYTES) -> None:
+        self.background, self.wake, self.kick, self.limit = background, wake, kick, limit
+        self.cache: OrderedDict[Any, Frame] = OrderedDict()
+        self.size = self.peak = 0
+        self.wanted: tuple[Any, Callable[[], Generator[None, None, Frame]]] | None = None
+        self.queue: OrderedDict[Any, Any] = OrderedDict()
+        """Pictures to prepare: a job, or a parked paint."""
+        self.current: list[Any] | None = None
+        """[key, columns, 'wanted' or 'prepared', seconds spent]."""
+        self.fresh = False
+        self.shown: dict[tuple[Any, ...], tuple[Frame, Camera]] = {}
+        self.eye: Any = None
+        self.moved_at = -INF
+        self.unsettled = False
+        self.log: list[tuple[str, float]] = []
+        """(what, seconds) per finished paint, for measurement."""
+        self.tokens, self.tokens_at = float(BURST), None
+        self.charging = False
+        self.last_full = -INF
+        self.held_until: float | None = None
+
+    def clear(self) -> None:
+        self.cache.clear()
+        self.queue.clear()
+        self.shown.clear()
+        self.wanted = self.current = None
+        self.size = 0
+
+    def frame(self, key: Any, job: Callable[[], Generator[None, None, Frame]]) -> Frame | None:
+        hit = self.cache.get(key)
+        if hit is not None:
+            self.cache.move_to_end(key)
+            return hit
+        if not self.background:
+            started = time.perf_counter()
+            frame = finish(job())
+            self._done(key, frame, "wanted", time.perf_counter() - started)
+            return frame
+        if self.current is not None and self.current[0] == key:
+            self.current[2] = "wanted"  # already being painted: it is wanted now
+            self.wanted = None
+            return None
+        self.wanted = (key, job)
+        self._kick()
+        return None
+
+    def prepare(self, key: Any, job: Callable[[], Generator[None, None, Frame]]) -> None:
+        """Paint ahead, when nothing is wanted (background only)."""
+        if not self.background or key in self.cache or key in self.queue:
+            return
+        if self.current is not None and self.current[0] == key:
+            return
+        self.queue[key] = job
+        while len(self.queue) > PREFETCH:
+            self.queue.popitem(last=False)
+        self._kick()
+
+    def busy(self) -> bool:
+        return bool(self.wanted or self.current or self.queue)
+
+    def work(self, budget: float = 0.004) -> None:
+        """Paint for about `budget` seconds, a column at a time."""
+        end = time.perf_counter() + budget
+        while True:
+            if self.wanted is not None and (self.current is None or self.current[2] == "prepared"):
+                if self.current is not None:  # park the prepared one where it got to
+                    self.queue[self.current[0]] = self.current
+                    self.queue.move_to_end(self.current[0], last=False)
+                key, job = self.wanted
+                self.wanted = None
+                self.current = [key, job(), "wanted", 0.0]
+            elif self.current is None:
+                if not self.queue:
+                    return
+                key, item = self.queue.popitem(last=False)
+                if key in self.cache:
+                    continue
+                self.current = item if isinstance(item, list) else [key, item(), "prepared", 0.0]
+            now = time.perf_counter()
+            try:
+                next(self.current[1])
+            except StopIteration as done:
+                key, _, what, spent = self.current
+                self.current = None
+                self._done(key, done.value, what, spent + time.perf_counter() - now)
+                if what == "wanted":
+                    self.fresh = True
+                    if self.wake is not None:
+                        self.wake()
+            else:
+                self.current[3] += time.perf_counter() - now
+            if time.perf_counter() >= end:
+                return
+
+    def take_fresh(self) -> bool:
+        """True once after a wanted picture lands."""
+        fresh, self.fresh = self.fresh, False
+        return fresh
+
+    def motion(self, eye: Any, now: float) -> bool:
+        """Note where the eye is; True while it is moving."""
+        if eye != self.eye:
+            if self.eye is not None:
+                self.moved_at, self.unsettled = now, True
+            self.eye = eye
+        return now - self.moved_at < SETTLE
+
+    def wake_in(self, now: float) -> float | None:
+        """Seconds until the picture should be drawn again on its own: sharp
+        after you stop, or a picture held back by the budget."""
+        times = [t for t in (self.moved_at + SETTLE if self.unsettled else None, self.held_until) if t is not None]
+        return max(0.0, min(times) - now) if times else None
+
+    def due(self, now: float) -> bool:
+        """True once when the picture should be drawn again on its own."""
+        held = self.held_until is not None and now >= self.held_until
+        if held:
+            self.held_until = None
+        return self.settled(now) or held
+
+    def allow(self, moving: bool, now: float) -> bool:
+        """May a new picture go out now? While you walk, from a budget that
+        refills at WALK_RATE (charged with what the frame cost); otherwise
+        (sharp on stop, a cut) at most one every FULL_EVERY seconds. When
+        not, the last picture stays up and `held_until` says when to try."""
+        if moving:
+            self._refill(now)
+            if self.tokens > 0:
+                self.charging = True
+                return True
+            self.held_until = now + -self.tokens / WALK_RATE + 0.001
+            return False
+        if now - self.last_full >= FULL_EVERY:
+            self.last_full = now
+            return True
+        self.held_until = self.last_full + FULL_EVERY
+        return False
+
+    def charge(self, sent: int, now: float) -> None:
+        """What a frame cost, while you walk (every frame then, so the budget
+        covers the walk, not only its pictures)."""
+        if self.charging or now - self.moved_at < SETTLE:
+            self._refill(now)
+            self.tokens -= sent
+            self.charging = False
+
+    def _refill(self, now: float) -> None:
+        if self.tokens_at is not None:
+            self.tokens = min(float(BURST), self.tokens + (now - self.tokens_at) * WALK_RATE)
+        self.tokens_at = now
+
+    def settled(self, now: float) -> bool:
+        """True once when the eye has stopped long enough."""
+        if self.unsettled and now - self.moved_at >= SETTLE:
+            self.unsettled = False
+            return True
+        return False
+
+    def _kick(self) -> None:
+        if self.kick is not None:
+            self.kick()
+
+    def _done(self, key: Any, frame: Frame, what: str, spent: float) -> None:
+        self.log.append((what, spent))
+        del self.log[:-256]
+        if key in self.cache:
+            return
+        self.cache[key] = frame
+        self.size += frame.nbytes
+        while self.size > self.limit and len(self.cache) > 1:
+            _, old = self.cache.popitem(last=False)
+            self.size -= old.nbytes
+        self.peak = max(self.peak, self.size)
+
+    def grew(self, frame: Frame, before: int) -> None:
+        """A cached frame gained encoded cells: count them."""
+        self.size += frame.nbytes - before
+        self.peak = max(self.peak, self.size)
+
+
+PAINTER = Painter()
+"""Paints on the spot. The door installs a background painter at start."""
 
 
 # --- the frame ----------------------------------------------------------------
 
 
-def camera(me: dict[str, Any], columns: int, rows: int, modern: bool, heading: str) -> Camera:
-    """The eye for a view of `columns` x `rows` cells, in that tier's pixels."""
-    sub_x, sub_y = (2, 3) if modern else (1, 2)
-    width, height = columns * sub_x, rows * sub_y
+def camera_at(x: float, y: float, heading: str, columns: int, rows: int, grid: str) -> Camera:
+    """The eye on tile (x, y) for a view of `columns` x `rows` cells, in
+    the pixels of `grid`."""
+    sub_x, sub_y = GRIDS[grid]
+    width, height = math.ceil(columns * sub_x), rows * sub_y
     focal_x = width / 2 / FOV
-    # Pixel shape: a sextant pixel is half a cell wide and a third tall.
-    focal_y = focal_x * ((0.5 / (2 / 3)) if modern else 1.0)
+    # Pixel shape: a cell is about twice as tall as it is wide.
+    focal_y = focal_x * sub_y / (2 * sub_x)
     dx, dy = street.HEADINGS[heading]
-    return Camera(me["x"] + 0.5, me["y"] + 0.5, dx, dy, width, height, focal_x, focal_y, height * HORIZON)
+    return Camera(x + 0.5, y + 0.5, dx, dy, width, height, focal_x, focal_y, height * HORIZON, grid)
+
+
+def camera(me: dict[str, Any], columns: int, rows: int, modern: bool, heading: str) -> Camera:
+    """Your eyes, at full resolution."""
+    return camera_at(me["x"], me["y"], heading, columns, rows, "sextant" if modern else "half")
+
+
+def viewpoint(body: dict[str, Any], world: street.World) -> tuple[int, int, str] | None:
+    """The scene view's fixed camera for the place you are in: the one its
+    look gives, when the server sent it, or else one picked from ground
+    the view already shows. None outside any place."""
+    place = body.get("place") or {}
+    spot = next((p for p in place.get("places", []) if p.get("name") == place.get("here")), None)
+    if spot is None:
+        return None
+    view = spot.get("view")
+    if view and view.get("facing") in street.HEADINGS:
+        return int(view["at"][0]), int(view["at"][1]), view["facing"]
+    key = (tuple(spot["rect"]), str((body.get("me") or {}).get("zone", "")), signature(world))
+    if key not in _VIEWS:
+        _VIEWS[key] = choose_view(world, tuple(spot["rect"]))
+        while len(_VIEWS) > 32:
+            _VIEWS.pop(next(iter(_VIEWS)))
+    return _VIEWS[key]
+
+
+_VIEWS: dict[Any, tuple[int, int, str] | None] = {}
+
+
+def choose_view(world: street.World, rect: tuple[int, int, int, int]) -> tuple[int, int, str] | None:
+    """A camera for a place from known ground only: on an open tile of the
+    place with its back to the place's edge, facing the way that frames
+    the most of it, near the middle of that edge."""
+    x, y, w, h = rect
+    passable = lambda tile: tile is not None and tile not in street.OPAQUE
+    inside = [(tx, ty) for ty in range(y, y + h) for tx in range(x, x + w) if passable(world.at(tx, ty)[0])]
+    if not inside:
+        return None
+    members = set(inside)
+    sample = inside[::max(1, len(inside) // 160)]
+    best: tuple[Any, ...] | None = None
+    for tx, ty in inside:
+        for heading, (dx, dy) in street.HEADINGS.items():
+            if (tx - dx, ty - dy) in members:
+                continue  # stand at the edge, facing in
+            seen = 0
+            for ox, oy in sample:
+                ahead = (ox - tx) * dx + (oy - ty) * dy
+                if ahead >= 2 and abs((ox - tx) * -dy + (oy - ty) * dx) <= ahead * FOV:
+                    seen += 1
+            middle = abs((tx - (x + w / 2)) * -dy + (ty - (y + h / 2)) * dx)
+            choice = (seen, -middle, -ty, -tx, heading)
+            if best is None or choice > best:
+                best = choice
+    if best is None or best[0] == 0:
+        return None
+    return int(-best[3]), int(-best[2]), str(best[4])
 
 
 def render(buffer: CellBuffer, body: dict[str, Any], area: Rect, paint: Paint, heading: str,
-           hud: bool = True) -> bool:
+           hud: bool = True, fixed: bool = False) -> bool:
     """Draw the place lit, if its look has a scene; False if it has none
-    (the caller then uses the street view)."""
+    (the caller then uses the street view). `fixed`: the scene view's
+    fixed camera for the place you are in, when there is one."""
     world = street.World(body)
     sc = scene_of(body, world)
     me = next((a for a in body.get("actors", []) if a.get("role") == "player_self"), None)
     if sc is None or me is None:
         return False
+    known = ground(body, world)
     rows = area.height - (1 if hud else 0)
     if rows < 2 or area.width < 4:
         return True
     modern = paint.glyphs == "modern" and paint.tier != "16"
-    sub_x, sub_y = (2, 3) if modern else (1, 2)
-    cam = camera(me, area.width, rows, modern, heading)
-    width, height = cam.width, cam.height
-    key = (me["x"], me["y"], heading, width, height, modern, id(sc),
-           hash(tuple(tuple(r) for r in body.get("tiles", []))), body.get("viewport", {}).get("x"),
-           body.get("viewport", {}).get("y"))
-    frame = _FRAMES.get(key)
-    if frame is None:
-        frame = paint_static(world, sc, cam)
-        _FRAMES[key] = frame
-        while len(_FRAMES) > 6:
-            _FRAMES.popitem(last=False)
+    view = viewpoint(body, world) if fixed else None
+    eye = view or (me["x"], me["y"], heading)
+    reach = None if view else sight(world, me)  # a fixed camera is not your eyes
+    now = CLOCK()
+    # Walking moves your eyes, not a fixed camera: only then the cheap class.
+    moving = PAINTER.motion((me["x"], me["y"], heading), now) and view is None and paint.tier != "16"
+    sharp = "sextant" if modern else "half"
+
+    def key_of(x: int, y: int, facing: str, grid: str) -> tuple[Any, ...]:
+        return (x, y, facing, grid, area.width, rows, sc.key, known.zone, known.version, reach)
+
+    def job_of(x: int, y: int, facing: str, grid: str) -> Callable[[], Generator[None, None, Frame]]:
+        eye_cam = camera_at(x, y, facing, area.width, rows, grid)
+        return lambda: paint_columns(known, sc, eye_cam, reach)
+
+    grid = "low" if moving else sharp
+    frame = PAINTER.frame(key_of(*eye, grid), job_of(*eye, grid))
+    slot = (area.width, rows, view is not None)
+    if frame is None:  # being painted: the last picture stays up meanwhile
+        shown = PAINTER.shown.get(slot)
+        if shown is None:
+            buffer.fill(area.x, area.y, area.width, rows, Style(0, 0, (), paint.tier))
+            if hud:
+                street.hud_line(buffer, body, area, paint, heading, world, me)
+            return True
+        frame, cam = shown
     else:
-        _FRAMES.move_to_end(key)
-    pixels = [row[:] for row in frame.pixels]
-    depth = [row[:] for row in frame.depth]
-    draw_people(body, sc, cam, street.Colours(paint), pixels, depth)
-    backs = encode(buffer, area, rows, pixels, paint, modern)
+        cam = camera_at(eye[0], eye[1], eye[2], area.width, rows, grid)
+        shown = PAINTER.shown.get(slot)
+        if shown is not None and shown[0] is not frame and not PAINTER.allow(moving, now):
+            frame, cam = shown  # over budget: the last picture stays up a moment longer
+        else:
+            PAINTER.shown[slot] = (frame, cam)
+        if view is not None:
+            prepare_places(body, view, sharp, key_of, job_of)
+        else:
+            prepare_around(eye, moving, sharp, world, key_of, job_of)
+    sub_x, sub_y = GRIDS[frame.grid]
+    before = frame.nbytes
+    cells, backs, encoder = encoded(frame, paint.tier, area.width, rows)
+    if frame.nbytes != before:
+        PAINTER.grew(frame, before)
+    lines = [line[:] for line in cells]
+    over = draw_people(body, sc, cam, street.Colours(paint), frame, me_too=view is not None)
+    for row, col in touched(over, frame, area.width, rows):
+        lines[row][col], _ = encoder.encode(row, col, over)
+    for row, line in enumerate(lines):
+        blit(buffer, area.x, area.y + row, line)
     for sx, sy, text, role, span in frame.labels:
-        cells = span / sub_x
-        shown = " ".join(text) if cells >= len(text) * 2 else text if cells >= len(text) * 0.8 else ""
-        if not shown:
+        width = span / sub_x
+        shown_text = " ".join(text) if width >= len(text) * 2 else text if width >= len(text) * 0.8 else ""
+        if not shown_text:
             continue
-        col, row = int(sx / sub_x) - display_width(shown) // 2, int(sy / sub_y)
-        if not (0 <= row < rows and 0 <= col and col + display_width(shown) <= area.width):
+        col, row = int(sx / sub_x) - display_width(shown_text) // 2, int(sy / sub_y)
+        if not (0 <= row < rows and 0 <= col and col + display_width(shown_text) <= area.width):
             continue
-        for i, ch in enumerate(shown):
+        for i, ch in enumerate(shown_text):
             style = paint(role, bold=True)
             if paint.tier != "16" and ch != " ":
                 back = backs[row][col + i]
@@ -796,3 +1359,53 @@ def render(buffer: CellBuffer, body: dict[str, Any], area: Rect, paint: Paint, h
     if hud:
         street.hud_line(buffer, body, area, paint, heading, world, me)
     return True
+
+
+def touched(over: dict[int, RGB8], frame: Frame, columns: int, rows: int) -> list[tuple[int, int]]:
+    """The cells people cover."""
+    sub_x, sub_y = GRIDS[frame.grid]
+    cells = set()
+    for p in over:
+        row, col = p // frame.width // sub_y, p % frame.width
+        for cell in ((col * 2, col * 2 + 1) if frame.grid == "low" else (int(col // sub_x),)):
+            if row < rows and cell < columns:
+                cells.add((row, cell))
+    return sorted(cells)
+
+
+def prepare_places(body: dict[str, Any], view: tuple[int, int, str], sharp: str,
+                   key_of: Callable[..., Any], job_of: Callable[..., Any]) -> None:
+    """The fixed cameras of the other places whose viewpoints the view sent
+    (only over known ground), so a cut to the next place is already
+    painted. The camera here does not move while you do."""
+    if not PAINTER.background:
+        return
+    for spot in (body.get("place") or {}).get("places", []):
+        other = spot.get("view")
+        if other and other.get("facing") in street.HEADINGS:
+            at = (int(other["at"][0]), int(other["at"][1]), other["facing"])
+            if at != view:
+                PAINTER.prepare(key_of(*at, sharp), job_of(*at, sharp))
+
+
+def prepare_around(eye: tuple[int, int, str], moving: bool, sharp: str, world: street.World,
+                   key_of: Callable[..., Any], job_of: Callable[..., Any]) -> None:
+    """Pictures you are likely to want next, from ground the view already
+    shows. While you walk: only the cheap picture a step on (client CPU
+    is budgeted by the hour, architecture 11). Standing: the turns, sharp,
+    a step on and behind."""
+    if not PAINTER.background:
+        return
+    x, y, heading = eye
+    dx, dy = street.HEADINGS[heading]
+    turns = [(x, y, street.TURN_LEFT[heading]), (x, y, street.TURN_RIGHT[heading])]
+    if moving:
+        # only the likely next step, if anything: CPU is budgeted too
+        around = [(x + dx, y + dy, heading, "low")] if PREPARE_WHILE_WALKING else []
+    else:
+        around = [*((tx, ty, f, sharp) for tx, ty, f in turns), (x + dx, y + dy, heading, "low"),
+                  (x, y, street.BEHIND[heading], sharp)]
+    for nx, ny, facing, grid in around:
+        tile = world.at(nx, ny)[0]
+        if tile is not None and tile not in street.OPAQUE:
+            PAINTER.prepare(key_of(nx, ny, facing, grid), job_of(nx, ny, facing, grid))

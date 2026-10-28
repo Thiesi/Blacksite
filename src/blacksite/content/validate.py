@@ -1883,6 +1883,7 @@ class _Validator:
                 self.report(*owner, f"no zone {lid!r} to dress")
                 continue
             tile = lambda x, y: zone.tile_at((x, y))
+            hidden = {tuple(ex.tile) for ex in zone.meta.exits if ex.hidden}
             for theme in (look.theme, *(r.theme for r in look.regions)):
                 if theme not in themes:
                     self.report(*owner, f"theme {theme!r} does not exist", theme)
@@ -1929,6 +1930,14 @@ class _Validator:
                 anchor = place.at or (x + w // 2, y + h // 2)
                 if zone.tile_at(anchor) in (None, "wall", "locked-door"):
                     self.report(*owner, f"place {place.name!r}: anchor {list(anchor)} is not open ground", place.name)
+                # The fixed camera stands where anyone may stand (D1): open
+                # ground, never a hidden exit, never a private instance.
+                # (Rooms behind an owner's door wait for D1's public-ground
+                # region; zone data cannot tell them yet.)
+                if place.view is not None and (zone.tile_at(place.view.at) not in OPEN_GROUND
+                                               or place.view.at in hidden or zone.meta.instanced):
+                    self.report(*owner, f"place {place.name!r}: view {list(place.view.at)} is not public open ground",
+                                place.name)
             if look.scene is not None:
                 self.check_scene(look.scene, zone, owner)
             for line in [*look.ambient, *(p.text for p in look.places)]:

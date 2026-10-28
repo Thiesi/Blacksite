@@ -72,7 +72,7 @@ def render(buffer: CellBuffer, body: dict[str, Any], area: Rect, paint: Paint, h
     # A lit place (V0) earns a larger glimpse: the picture carries the place.
     glimpse_rows = max(5, min(19, area.height * 2 // 5)) if body.get("scene") else max(5, min(12, area.height // 3))
     glimpse = Rect(area.x, area.y, area.width, glimpse_rows)
-    if not lit.render(buffer, body, glimpse, paint, heading, hud=False):
+    if not lit.render(buffer, body, glimpse, paint, heading, hud=False, fixed=True):
         street.render(buffer, body, glimpse, paint, heading, hud=False)
     y = area.y + glimpse_rows
     buffer.put(area.x, y, " " * area.width, paint("panel_text"))
