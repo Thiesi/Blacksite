@@ -1,7 +1,7 @@
 # S25a — S25 engine fixes and accepted canon corrections
 
 **Status:** planned
-**Primary model:** Astra · **Reviewer:** automated review, technical lead
+**Primary model:** Opus · **Reviewer:** automated review, technical lead
 **Depends on:** S24 · **Milestone:** M5
 **Issue:** https://github.com/Thiesi/Blacksite/issues/77
 

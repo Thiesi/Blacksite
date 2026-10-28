@@ -1,14 +1,20 @@
 # S25b — S25 content bindings and generator fixes
 
 **Status:** planned
-**Primary model:** Astra · **Reviewer:** automated review, technical lead
+**Primary model:** Sonnet · **Reviewer:** automated review, technical lead, owner (layout)
 **Depends on:** S25a · **Milestone:** M5
 **Issue:** https://github.com/Thiesi/Blacksite/issues/78
 
 Split from S25 ([PR #66](https://github.com/Thiesi/Blacksite/pull/66)) by
 D-T2 (`docs/plan/03-presentation-integration.md` §14). S25's human layout
-approval stays **not granted**. This slice may ship maps that work, but
-it does not claim their layout is approved; that is S25c's gate.
+approval stays **not granted**.
+
+**Merge gate.** Work on this slice starts now, but its maps do not merge
+around the layout hold (2026-10-24). A district's maps merge only with
+the owner's layout approval for that district: H2 for the pilots, H3
+for the rest. In practice S25b merges district by district together
+with S25c. Content bindings inside the existing S08 hubs may merge
+earlier, in their own PR.
 
 ## Goal
 
@@ -55,5 +61,5 @@ S25c redoes geometry on a sound generator.
 ## Acceptance
 
 Technical review per `docs/plan/04-technical-review.md`, plus the
-acceptance steps of S25 that do not judge layout. The human layout
-approval is not requested here.
+acceptance steps of S25 that do not judge layout, and the owner's layout
+approval for each district before its maps merge.

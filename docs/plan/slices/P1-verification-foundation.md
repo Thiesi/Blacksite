@@ -1,7 +1,7 @@
 # P1 — Verification foundation for presentation work
 
 **Status:** planned
-**Primary model:** Astra · **Reviewer:** automated review, technical lead
+**Primary model:** Sonnet · **Reviewer:** automated review, technical lead
 **Depends on:** none · **Milestone:** presentation track
 **Issue:** https://github.com/Thiesi/Blacksite/issues/76
 

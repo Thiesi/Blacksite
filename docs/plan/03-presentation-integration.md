@@ -618,7 +618,7 @@ Codex builds, owner plays. Feeds S33b and S30b.
 |---|---|
 | **Presentation lead** | Experience and interaction design: D1 to D8 drafts; themes, palette values, glyph choices; place records for representative zones; geometry vocabulary per district; Lattice label voice; City Map geography proposal; the perceptual acceptance scenarios; the D8 playtest design; creative sign-off on every player-visible PR. |
 | **Technical lead (this role)** | Architecture and integration: this plan and the slice files; engineering contract sections of P0; P3 interface (and implementation, unless the owner prefers Codex); dependency graph and status; review of every PR for cross-subsystem effect, disclosure and canon consistency; rebaseline approvals; keeping docs, roadmap and decisions consistent; surfacing decisions to the owner. |
-| **Codex** | Implementation: P1, P2, P4 to P8, P10, P9 view, S25a/b, S26a, S27 backend, S28, S29a, S30a, S33a, #67; S25c generator work under the human gate. |
+| **Codex** (the implementing agent; slice files carry the roadmap §3 model label, and an implementer that differs says so in its PR) | Implementation: P1, P2, P4 to P8, P10, P9 view, S25a/b, S26a, S27 backend, S28, S29a, S30a, S33a, #67; S25c generator work under the human gate. |
 | **Sonnet or Gemini** | Content batches: Lattice labels, C1 records, S27 cast files, through the validator and a review. |
 | **Automated Claude review** | Independent code review on every PR, unchanged. |
 | **Owner** | Product decisions (§9), human gates H1 to H4 and PT1, S25 layout approval, merges. |
@@ -1122,6 +1122,12 @@ P0 (#75), P1 (#76), S25a (#77) and S25b (#78). The other slices in §7.3 and §1
 their dependencies are close, so their files describe the code as it
 then stands. V1 continues as the trial-path spike (§13.7) on #73's
 stack.
+
+S25b's work starts now, but **its 24 maps merge only with the owner's
+layout approval** for their district (H2 for the pilots, H3 per
+district), under the 2026-10-24 hold that S25 cannot merge around its
+gate. In practice S25b merges district by district together with S25c.
+Content bindings inside the existing S08 hubs may merge earlier.
 
 S25's original file is marked as split. S25c (geometry) is filed after
 H1, as §7.2 orders it.
