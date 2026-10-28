@@ -156,7 +156,8 @@ S25 supplies the ordinary city, S27 its voices, S26 the Season 1 bundle.
 
 Faction sigils in prose describe emblems. Tactical markers use the fixed
 CP437-compatible glyph registry, not arbitrary Unicode emblems copied
-from a heading. Always pair faction colour/glyph with a name or short
+from a heading; a modern-tier glyph only redraws the same marker
+(terminal UI §1). Always pair faction colour/glyph with a name or short
 label. Full-screen art is optional and never delays an escape action or
 covers a timed hazard. A piece too large for its rectangle uses its
 smaller variant or text fallback, never clipping game state.
