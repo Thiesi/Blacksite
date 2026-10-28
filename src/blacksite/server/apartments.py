@@ -643,7 +643,8 @@ class Apartments:
             actor = self.game.combat.actor(self.game.players[session.player_id])
             objects = sorted((obj for obj in self.game.world.zones[actor.zone].objects.values()
                 if max(abs(obj.spec.tile[0]-actor.x), abs(obj.spec.tile[1]-actor.y)) <= 1),
-                key=lambda obj: (obj.spec.tile != actor.position, obj.spec.id))
+                key=lambda obj: (obj.spec.tile != actor.position,
+                    not (obj.spec.housing and obj.spec.housing.doorstep == actor.position), obj.spec.id))
             if not objects:
                 return False
             obj = objects[0]

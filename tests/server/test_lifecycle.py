@@ -8,6 +8,7 @@ from pathlib import Path
 import pytest
 
 from blacksite.server.app import Server
+from blacksite.content.loader import content_hash
 from blacksite.server.auth import load_secret
 from blacksite.server.protocol import Frame, encode, read_frame
 from blacksite.server.transport import connect
@@ -65,6 +66,10 @@ def test_content_copied_on_first_start(scratch_dir: Path) -> None:
             assert (scratch_dir / "content" / "tiles.json").is_file()
             assert not list((scratch_dir / "content").rglob("*.py"))
             assert server.storage.meta("content_package_version") == PACKAGE_VERSION
+            content = server.core.loop.content
+            assert content.root == scratch_dir / 'content' and content.root.is_dir()
+            assert content.hash == content_hash(content.root)
+            assert content.source('zones', 'vatside-wake-hall').startswith('content/')
             rows = [json.loads(row) for row in (scratch_dir / "logs" / "server.log").read_text(encoding="utf-8").splitlines()]
             assert rows[0]["message"] == "world open"
             assert len(rows[0]["content_hash"]) == 64

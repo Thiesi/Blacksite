@@ -103,7 +103,9 @@ class NativeProbe:
         if client['python_tree_sha256'] != digest.hexdigest():
             raise RuntimeError('Native client source differs from the server; rebuild and install the current wheel.')
         (self.root/'native-client.json').write_text(json.dumps(client, indent=2)+'\n', encoding='utf-8')
+        started = time.monotonic()
         await self.service.start()
+        self.server_start_seconds = time.monotonic()-started
         self.game,self.commerce,self.combat = self.service.core.characters,self.service.core.commerce,self.service.core.combat
         self.db = Database(self.root/"node.db"); self.lane = DatabaseLane(self.db.path)
         owner = create_user(self.db,"S10SysOp",password="LocalProbe-S10",user_level=10)

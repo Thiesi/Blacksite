@@ -122,6 +122,7 @@ class TileType:
     interaction: ObjectKind | None = None
     sound_line: str | None = None
     schema: int = CONTENT_SCHEMA
+    movement_cost: int = 1  # Game design 5.2: ordinary ground.
 
 
 @dataclass(frozen=True)
@@ -142,15 +143,16 @@ class Emote:
 
 
 ExitKind = Literal["street", "door", "tram", "ladder", "lift", "gate", "cable"]
-RequirementKind = Literal["pass", "key", "faction"]
+RequirementKind = Literal["pass", "key", "faction", "member", "story", "open"]
 
 
 @dataclass(frozen=True)
 class Requirement:
     kind: RequirementKind
     ref: str
-    """Item id for pass and key, faction id for faction."""
+    """Item id, faction id, or server-owned story route permission."""
     standing: int | None = None
+    object: str | None = None  # Local latch for an open-state credential.
 
 
 @dataclass(frozen=True)
@@ -162,8 +164,14 @@ class Exit:
     kind: ExitKind
     requirement: Requirement | None = None
     hidden: bool = False
-    """Revealed by Listening, a program or dialogue (01-gazetteer.md)."""
+    """Unmarked; explicit Interact on its tile works (game 5.6).
+
+    Listening, programs and dialogue may point out its location. There
+    is no additional per-player entitlement to a physical passage.
+    """
     relay: str | None = None  # Game 7.7 optional gate/cable passage.
+    alternatives: tuple[Requirement, ...] = ()  # Game 5.6: complete OR credentials.
+    locked_text: str | None = None
 
 
 @dataclass(frozen=True)

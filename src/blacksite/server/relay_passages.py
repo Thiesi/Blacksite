@@ -13,7 +13,7 @@ from blacksite.server.world.exits import complete_paid_pass, permitted, schedule
 
 GATE_FARE = 25  # Game 7.7: optional fast outbound passage.
 CABLE_FARE = 5
-GATE_INTERVAL_SECONDS = 300
+GATE_INTERVAL_SECONDS = 120  # Game 7.7: maximum ordinary free wait 60 s.
 GATE_OPEN_SECONDS = 60
 
 

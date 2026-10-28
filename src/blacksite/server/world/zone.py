@@ -46,7 +46,10 @@ class ZoneInstance:
     geometry: dict[Tile, str] = field(default_factory=dict)
     revision: int = 0
     entry_policy: Callable[[Actor | None, Tile], bool] = field(default=lambda actor, tile: True, repr=False)
+    # None identifies public ground allowed to every actor. Actor policies
+    # may additionally admit private floors; they cannot deny public ground.
     position_update: Callable[[Actor], None] = field(default=lambda actor: None, repr=False)
+    escape_origin: Callable[[Actor], Tile] = field(default=lambda actor: actor.position, repr=False)
     geometry_revision: int = 0
     rng: random.Random = field(init=False, repr=False)
     doors: dict[Tile, ObjectState] = field(init=False, repr=False)
@@ -139,22 +142,35 @@ class ZoneInstance:
                 return False
             if self.tiles[key].hazard and not self.allows_hostile(tile):
                 return False
-        starts = [self.template.meta.spawn] if self.template.meta.spawn is not None else []
-        starts += [actor.position for actor in self.actors.values()]
+        if any(not self.passable(actor.position, grid) for actor in self.actors.values()):
+            return False
+        starts: list[tuple[Actor | None, Tile]] = (
+            [(None, self.template.meta.spawn)] if self.template.meta.spawn is not None else [])
+        starts += [(actor, self.escape_origin(actor)) for actor in self.actors.values()]
         required = {obj.spec.tile for obj in self.objects.values() if obj.spec.essential}
         required.update(ex.tile for ex in self.template.meta.exits if not ex.hidden and ex.requirement is None)
-        for start in starts:
+        public: set[Tile] = set()
+        for actor, start in starts:
+            if not self.passable(start, grid):
+                return False
+            # Once public services share a component, every actor starting
+            # there has the same escape. Do not flood the city per caller.
+            if actor is not None and start in public:
+                continue
             seen = {start}
             pending = deque([start])
             while pending:
                 x, y = pending.popleft()
                 for tile in ((x + 1, y), (x, y + 1), (x - 1, y), (x, y - 1)):
                     key = grid.get(tile, self.template.tile_at(tile))
-                    if tile not in seen and self.passable(tile, grid) and not self.tiles[key].hazard:
+                    if (tile not in seen and self.passable(tile, grid)
+                            and self.entry_policy(actor, tile) and not self.tiles[key].hazard):
                         seen.add(tile)
                         pending.append(tile)
-            if not required <= seen or not self.passable(start, grid):
+            if not required <= seen:
                 return False
+            if actor is None:
+                public = seen
         return True
 
     def schedule_layout(self, source: str, layout_id: str, tick: int, duration: int, warning: int = 0) -> None:

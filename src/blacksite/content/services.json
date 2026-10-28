@@ -215,11 +215,11 @@
               "binding": {
                 "kind": "core_control",
                 "core": "lat-relay-zero",
-                "control": "relay_open"
+                "control": "worker_return"
               }
             }
           ],
-          "detail": "Workers may operate the declared local gate for 20 minutes. ICE remains active."
+          "detail": "Workers may open the shortcut from the relay mast to the public Old Works counter for 20 minutes. The public street stays open. ICE remains active."
         }
       ],
       "safe_return": "Use the signed public return passage. Essential care and outward travel stay open.",

@@ -1,5 +1,7 @@
 """Game design 3.1, 5.1 and 5.2 movement contracts."""
 
+import pytest
+
 from blacksite.server.world.actors import Actor
 from blacksite.server.world.movement import SPRINT_COST, SPRINT_TICKS, STAMINA_REGEN, WALK_TICKS, move, regenerate
 from blacksite.server.world.registry import World
@@ -14,6 +16,24 @@ def test_walk_200ms_per_tile(world: World) -> None:
     assert not move(actor, zone, "right", 2)
     assert move(actor, zone, "right", 3)
     assert actor.position == (8, 5)
+
+
+@pytest.mark.parametrize('sprint,water_ticks,dry_ticks', [(False, 4, 2), (True, 2, 1)])
+def test_game_5_2_water_slows_steps_and_draining_restores_dry_speed(
+        world: World, sprint: bool, water_ticks: int, dry_ticks: int) -> None:
+    actor = Actor('test:water:1', 'Wader')
+    world.enter(actor, 'vatside-wake-hall', (6, 5))
+    zone = world.zones[actor.zone]
+    zone.geometry[(7, 5)] = 'water'
+    assert move(actor, zone, 'right', 1, sprint=sprint)
+    assert actor.cooldowns['move'] == 1+water_ticks
+    # A live pump layout can dry the next tile, then reflood another.
+    zone.geometry[(8, 5)] = 'floor'
+    assert move(actor, zone, 'right', 1+water_ticks, sprint=sprint)
+    assert actor.cooldowns['move'] == 1+water_ticks+dry_ticks
+    zone.geometry[(9, 5)] = 'water'
+    assert move(actor, zone, 'right', 1+water_ticks+dry_ticks, sprint=sprint)
+    assert actor.cooldowns['move'] == 1+2*water_ticks+dry_ticks
 
 
 def test_sprint_100ms_and_stamina_drain(world: World) -> None:

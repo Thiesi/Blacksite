@@ -1017,9 +1017,6 @@ Defined precisely in `02-architecture.md` §5. Summary of shapes:
   resends, death, reconnect and a different crew cannot duplicate it.
 - Essential clinic, public uplink and outward escape remain reachable in
   every control, service and event state, including stacked modifiers.
-- Every ordinary spawn candidate and authored patrol point has a public
-  escape without opening an optional locked shortcut. A sealed NPC room
-  must not leave unrelated physical controls permanently pending.
 - Expiry, ownership and season layers do not overwrite each other's
   baseline. No apartment control exposes storage or impounded items.
 - A season settlement runs once; a tie applies no world or balance delta.

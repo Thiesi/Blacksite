@@ -9,7 +9,7 @@ from tests.content.support import SHIPPED
 STARTER_TILES = {
     "wall", "floor", "cover-1", "cover-2", "cover-3", "door", "locked-door",
     "terminal", "relay", "exit", "water", "hazard", "vendor", "vat", "light",
-    "hardware",
+    "hardware", "gantry-hazard",
 }
 GAZETTEER_LEGEND = {"#": "wall", ".": "floor", "+": "door", "T": "terminal", "R": "relay",
                     ">": "exit", "~": "water", "!": "hazard", "$": "vendor", "V": "vat", "L": "light"}
@@ -29,6 +29,15 @@ def test_shipped_starter_tables() -> None:
     assert tree.palette is not None and REQUIRED_ROLES <= tree.palette.roles.keys()
     assert tree.keymaps is not None
     assert sorted(k.id for k in tree.keymaps.keymaps) == ["arrows", "vi"]
+
+
+def test_game_5_2_and_6_4_water_cost_and_provisional_gantry_damage() -> None:
+    tree = load_content(SHIPPED)
+    assert tree.tiles['water'].movement_cost == 2
+    assert tree.tiles['floor'].movement_cost == 1
+    gantry = tree.tiles['gantry-hazard']
+    assert gantry.char == 'x' and gantry.hazard is not None
+    assert (gantry.hazard.type, gantry.hazard.damage_per_second) == ('kinetic', 5)
 
 
 def test_every_glyph_round_trips_cp437() -> None:

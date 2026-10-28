@@ -36,6 +36,7 @@ __all__ = ["Problem", "validate", "exit_warnings", "main"]
 # 00-game-design.md section 5.1: zone width 40-200, height 20-100.
 ZONE_WIDTH = (40, 200)
 ZONE_HEIGHT = (20, 100)
+MIN_MOVEMENT_COST = 1  # Game design 5.2: positive integer terrain cost.
 MAX_CONTRACT_OBJECTIVE_FACTOR = 3  # Game 9.1: a five-person roster.
 CONTRACT_PLANT_SECONDS = 3  # Game 9.1: physical and core planting.
 # 00-game-design.md section 6.2: a core has 3 to 12 rooms, tier 1 to 5;
@@ -349,6 +350,8 @@ class _Validator:
             self.role(tile.colour, owner, f"tile {tid!r}")
             if not 0 <= tile.cover <= 3:
                 self.report(*owner, f"tile {tid!r}: cover {tile.cover} is outside 0-3")
+            if tile.movement_cost < MIN_MOVEMENT_COST:
+                self.report(*owner, f"tile {tid!r}: movement_cost must be positive")
             if tile.hazard is not None and tile.hazard.damage_per_second <= 0:
                 self.report(*owner, f"tile {tid!r}: hazard damage must be positive")
 
@@ -468,9 +471,19 @@ class _Validator:
                 if not self.passable(target, ex.target_tile):
                     self.report(*owner, f"{label}: target tile {list(ex.target_tile)} "
                                 f"is not a passable tile in {ex.target_zone}", ex.id)
-            if ex.requirement is not None:
-                kind = "factions" if ex.requirement.kind == "faction" else "items"
-                self.ref(kind, ex.requirement.ref, owner, f"{label}: requirement", ex.id)
+            if ex.alternatives and ex.requirement is None:
+                self.report(*owner, f'{label}: alternatives need a primary requirement', ex.id)
+            for requirement in (() if ex.requirement is None else (ex.requirement, *ex.alternatives)):
+                if requirement.kind == 'story':
+                    if not re.fullmatch(r'[a-z0-9]+(-[a-z0-9]+)*', requirement.ref):
+                        self.report(*owner, f'{label}: story permission must be a slug', ex.id)
+                elif requirement.kind == 'open':
+                    latch = self.object_at(requirement.ref, requirement.object or '')
+                    if requirement.ref != zone.id or latch is None or latch.kind not in ('door', 'gate', 'shutter'):
+                        self.report(*owner, f'{label}: open credential needs a local physical latch', ex.id)
+                else:
+                    kind = 'factions' if requirement.kind in ('faction', 'member') else 'items'
+                    self.ref(kind, requirement.ref, owner, f'{label}: requirement', ex.id)
             if ex.relay and self.ref('relays', ex.relay, owner, f'{label}: relay', ex.id):
                 relay = self.t.relays[ex.relay]
                 expected = {'fast_gate': 'gate', 'cable_ride': 'cable'}.get(relay.benefit.kind)

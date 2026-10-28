@@ -8,7 +8,7 @@ import pytest
 
 from blacksite.content.loader import load_content
 from blacksite.content.validate import validate
-from blacksite.server.relay_passages import gate_departure
+from blacksite.server.relay_passages import GATE_INTERVAL_SECONDS, GATE_OPEN_SECONDS, gate_departure
 from scripts.relay_fixture import build_passage_fixture
 from tests.character_helpers import create, place, state
 from tests.harness import HeadlessServer
@@ -38,8 +38,13 @@ def passage(passage_content):
 
 
 def test_game_7_7_gate_schedule_is_global_and_free():
+    assert (GATE_INTERVAL_SECONDS, GATE_OPEN_SECONDS) == (120, 60)
     assert gate_departure(0)==0 and gate_departure(59.9)==59.9
-    assert gate_departure(60)==300 and gate_departure(3720)==3900
+    assert gate_departure(60)==120 and gate_departure(119.9)==120
+    assert gate_departure(120)==120 and gate_departure(3720)==3720
+    assert gate_departure(3780)==3840
+    assert all(0 <= gate_departure(second/10)-second/10 <= 60
+               for second in range(2*120*10))
 
 
 def test_game_7_7_failed_fare_pays_nothing_then_one_receipt_covers_three_second_ride(passage):
@@ -135,7 +140,7 @@ def test_game_7_7_ordinary_gate_and_stairs_do_not_require_a_paid_pass(passage):
     gate=next(e for e in zone.template.meta.exits if e.id==gate_id)
     place(game,caller,zone.id,gate.tile)
     game.commit_commerce()
-    game.clock.epoch+=timedelta(seconds=(61-owner.now()%300)%300)
+    game.clock.epoch+=timedelta(seconds=(61-owner.now()%120)%120)
     travel.choose(caller.session,gate.id,travel.quote(caller.session,gate).row,'e')
     avatar=game.core.characters.sim.avatars[caller.session.user_id]
     assert avatar.travel.departure==gate_departure(owner.now()) and not avatar.travel.departed

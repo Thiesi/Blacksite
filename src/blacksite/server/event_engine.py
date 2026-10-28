@@ -87,6 +87,11 @@ class Events:
             and all(point.zone in self.world.zones for point in route.waypoints))
 
     def active(self) -> tuple[Plan, ...]:
+        # Most combat/spawn policy queries run between live events. A
+        # forecast cannot apply effects before its committed start, so
+        # avoid repeated clock/window work when no plan has started.
+        if not any(plan.state == 'active' for plan in self.scheduler.reserved()):
+            return ()
         return tuple(plan for plan in self.scheduler.active(self.now())
                      if plan.template in self.content.events
                      and self.eligible(self.content.events[plan.template], plan.where)
