@@ -30,6 +30,10 @@ def fixture(root: Path) -> None:
     zones = local/'zones'
     zones.mkdir(parents=True, exist_ok=True)
     zone = json.loads((source/'zones/vatside-wake-hall.json').read_text(encoding='utf-8'))
+    # Keep this fallback-input reproducer clear of wandering service NPCs,
+    # whose intentionally higher-priority E handler would change the case.
+    # The other nine shipped zones retain their full ordinary population.
+    zone['spawners'] = []
     zone['objects'].append({'id': 's25a-fixture-terminal', 'tile': [8, 4],
         'kind': 'terminal', 'params': {'name': 'FIXTURE telemetry', 'training_core': 'lat-wake-hall'}})
     (zones/'vatside-wake-hall.json').write_text(json.dumps(zone, indent=2)+'\n', encoding='utf-8')
@@ -84,18 +88,21 @@ async def accept(root: Path, door_python: Path, show: bool,
                 probe.save(caller, f's25a-{kind}-jack-{width}x{height}')
                 await caller.caller.write(b'j')
                 await wait(lambda: actor.id not in probe.service.core.lattice.presences)
+                await wait(lambda: 'Wake Hall' in caller.caller.screen.screen_text().splitlines()[0])
                 del zone.objects[marker.id]
             zone.objects['s25a-fixture-prop'] = ObjectState(ObjectSpec('s25a-fixture-prop',
                 actor.position, 'descent_console', params={'season_door': True,
                     'name': 'The season door is sealed.'}))
             await caller.caller.write(b'e')
             await wait(lambda: 'season door is sealed' in caller.caller.screen.screen_text().lower())
+            await wait(lambda: 'Wake Hall' in caller.caller.screen.screen_text().splitlines()[0])
             assert actor.id not in probe.service.core.lattice.presences
             probe.save(caller, f's25a-console-interact-{width}x{height}')
             await caller.caller.write(b'j')
             await wait(lambda: actor.id in probe.service.core.lattice.presences)
             await caller.caller.write(b'j')
             await wait(lambda: actor.id not in probe.service.core.lattice.presences)
+            await wait(lambda: 'Wake Hall' in caller.caller.screen.screen_text().splitlines()[0])
             del zone.objects['s25a-fixture-prop']
             try:
                 p99 = await profile(probe, width, height)
