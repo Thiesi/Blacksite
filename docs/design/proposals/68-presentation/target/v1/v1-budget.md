@@ -4,18 +4,18 @@ Picture time per step (the lit renderer's share; p95 / max). Cold: first visit. 
 
 | Case | Steps | Step cold | Step warm | Stop cold | Stop warm | Full cold | Full warm |
 |---|---|---|---|---|---|---|---|
-| street, modern, truecolor, 132x50 | 25 | 31.1 ms / 31.6 ms | 1.5 ms / 6.2 ms | 147.0 ms / 147.0 ms | 0.4 ms / 0.4 ms | - / - | - / - |
-| scene, modern, truecolor, 132x50 | 72 | 2.7 ms / 13.3 ms | 2.6 ms / 16.5 ms | 3.6 ms / 3.6 ms | 3.6 ms / 3.6 ms | 67.5 ms / 67.5 ms | 4.4 ms / 4.4 ms |
-| street, cp437, 256, 132x50 | 25 | 66.7 ms / 69.4 ms | 1.4 ms / 1.7 ms | 73.9 ms / 73.9 ms | 0.4 ms / 0.4 ms | - / - | - / - |
-| scene, cp437, 256, 132x50 | 72 | 2.0 ms / 15.3 ms | 1.2 ms / 2.5 ms | 1.3 ms / 1.3 ms | 1.4 ms / 1.4 ms | 62.6 ms / 62.6 ms | 1.6 ms / 1.6 ms |
-| street, cp437, 16, 132x50 | 25 | 47.9 ms / 57.0 ms | 8.2 ms / 9.4 ms | 0.5 ms / 0.5 ms | 7.7 ms / 7.7 ms | - / - | - / - |
-| scene, cp437, 16, 132x50 | 72 | 1.3 ms / 4.1 ms | 1.2 ms / 2.9 ms | 1.4 ms / 1.4 ms | 1.4 ms / 1.4 ms | 37.5 ms / 37.5 ms | 1.6 ms / 1.6 ms |
-| street, modern, truecolor, 80x24 | 25 | 9.1 ms / 25.3 ms | 0.7 ms / 0.8 ms | 36.2 ms / 36.2 ms | 0.4 ms / 0.4 ms | - / - | - / - |
-| scene, modern, truecolor, 80x24 | 66 | 1.1 ms / 3.5 ms | 1.2 ms / 1.7 ms | 1.1 ms / 1.1 ms | 1.1 ms / 1.1 ms | 17.2 ms / 18.0 ms | 1.0 ms / 1.3 ms |
-| street, cp437, 256, 80x24 | 25 | 18.0 ms / 21.7 ms | 0.7 ms / 0.8 ms | 18.4 ms / 18.4 ms | 0.6 ms / 0.6 ms | - / - | - / - |
-| scene, cp437, 256, 80x24 | 66 | 0.7 ms / 2.8 ms | 0.7 ms / 0.8 ms | 0.6 ms / 0.6 ms | 0.7 ms / 0.7 ms | 11.7 ms / 17.0 ms | 0.7 ms / 0.7 ms |
-| street, cp437, 16, 80x24 | 25 | 14.4 ms / 15.3 ms | 2.3 ms / 2.7 ms | 0.4 ms / 0.4 ms | 2.1 ms / 2.1 ms | - / - | - / - |
-| scene, cp437, 16, 80x24 | 66 | 0.7 ms / 1.2 ms | 0.6 ms / 0.9 ms | 0.6 ms / 0.6 ms | 0.6 ms / 0.6 ms | 7.0 ms / 7.5 ms | 0.6 ms / 0.7 ms |
+| street, modern, truecolor, 132x50 | 25 | 31.2 ms / 36.1 ms | 1.5 ms / 6.2 ms | 144.1 ms / 144.1 ms | 0.4 ms / 0.4 ms | - / - | - / - |
+| scene, modern, truecolor, 132x50 | 72 | 2.7 ms / 13.4 ms | 2.7 ms / 16.1 ms | 3.6 ms / 3.6 ms | 3.6 ms / 3.6 ms | 67.0 ms / 67.0 ms | 7.4 ms / 7.4 ms |
+| street, cp437, 256, 132x50 | 25 | 67.1 ms / 70.3 ms | 1.4 ms / 1.7 ms | 75.1 ms / 75.1 ms | 0.4 ms / 0.4 ms | - / - | - / - |
+| scene, cp437, 256, 132x50 | 72 | 1.9 ms / 15.3 ms | 1.1 ms / 2.6 ms | 1.4 ms / 1.4 ms | 1.4 ms / 1.4 ms | 64.1 ms / 64.1 ms | 1.7 ms / 1.7 ms |
+| street, cp437, 16, 132x50 | 25 | 55.7 ms / 58.3 ms | 8.1 ms / 9.6 ms | 0.5 ms / 0.5 ms | 7.8 ms / 7.8 ms | - / - | - / - |
+| scene, cp437, 16, 132x50 | 72 | 1.3 ms / 3.9 ms | 1.2 ms / 2.8 ms | 1.4 ms / 1.4 ms | 1.4 ms / 1.4 ms | 34.4 ms / 34.4 ms | 1.6 ms / 1.6 ms |
+| street, modern, truecolor, 80x24 | 25 | 8.9 ms / 27.0 ms | 0.7 ms / 0.8 ms | 36.3 ms / 36.3 ms | 0.4 ms / 0.4 ms | - / - | - / - |
+| scene, modern, truecolor, 80x24 | 66 | 1.2 ms / 3.4 ms | 0.9 ms / 1.7 ms | 1.1 ms / 1.1 ms | 1.1 ms / 1.1 ms | 17.3 ms / 17.6 ms | 0.9 ms / 1.2 ms |
+| street, cp437, 256, 80x24 | 25 | 17.7 ms / 21.5 ms | 0.7 ms / 0.7 ms | 17.9 ms / 17.9 ms | 0.6 ms / 0.6 ms | - / - | - / - |
+| scene, cp437, 256, 80x24 | 66 | 0.7 ms / 2.8 ms | 0.6 ms / 0.9 ms | 0.6 ms / 0.6 ms | 0.7 ms / 0.7 ms | 11.5 ms / 16.8 ms | 0.6 ms / 0.7 ms |
+| street, cp437, 16, 80x24 | 25 | 15.9 ms / 19.6 ms | 2.4 ms / 2.7 ms | 0.4 ms / 0.4 ms | 2.1 ms / 2.1 ms | - / - | - / - |
+| scene, cp437, 16, 80x24 | 66 | 0.7 ms / 1.2 ms | 0.6 ms / 0.9 ms | 0.6 ms / 0.6 ms | 0.6 ms / 0.6 ms | 6.9 ms / 7.4 ms | 0.6 ms / 0.7 ms |
 
 Bytes (p95 / max) against 16 KiB per delta, and the cache:
 
@@ -38,24 +38,33 @@ How long a key can wait for the door while four sharp pictures are painted (the 
 
 | Case | Painting | Key wait p95 | Key wait max | Busy | Turns |
 |---|---|---|---|---|---|
-| modern, truecolor, 132x50 | idle | 0.0 ms | 0.0 ms | 300 ms | 119361 |
-| modern, truecolor, 132x50 | in slices (V1) | 9.1 ms | 9.5 ms | 61 ms | 13 |
-| modern, truecolor, 132x50 | on the spot (V0) | 143.5 ms | 143.5 ms | 229 ms | 5 |
-| cp437, 256, 132x50 | idle | 0.0 ms | 0.0 ms | 300 ms | 120070 |
-| cp437, 256, 132x50 | in slices (V1) | 8.5 ms | 8.7 ms | 53 ms | 12 |
-| cp437, 256, 132x50 | on the spot (V0) | 55.3 ms | 55.3 ms | 144 ms | 5 |
-| modern, truecolor, 80x24 | idle | 0.0 ms | 0.0 ms | 300 ms | 120075 |
-| modern, truecolor, 80x24 | in slices (V1) | 6.4 ms | 6.4 ms | 20 ms | 6 |
-| modern, truecolor, 80x24 | on the spot (V0) | 40.7 ms | 40.7 ms | 69 ms | 5 |
-| cp437, 256, 80x24 | idle | 0.0 ms | 0.0 ms | 300 ms | 121564 |
-| cp437, 256, 80x24 | in slices (V1) | 6.5 ms | 6.5 ms | 20 ms | 6 |
-| cp437, 256, 80x24 | on the spot (V0) | 17.7 ms | 17.7 ms | 51 ms | 5 |
+| modern, truecolor, 132x50 | idle | 0.0 ms | 0.1 ms | 300 ms | 119273 |
+| modern, truecolor, 132x50 | in slices (V1) | 8.8 ms | 9.4 ms | 61 ms | 13 |
+| modern, truecolor, 132x50 | on the spot (V0) | 145.7 ms | 145.7 ms | 233 ms | 5 |
+| cp437, 256, 132x50 | idle | 0.0 ms | 0.0 ms | 300 ms | 118348 |
+| cp437, 256, 132x50 | in slices (V1) | 8.7 ms | 8.7 ms | 52 ms | 11 |
+| cp437, 256, 132x50 | on the spot (V0) | 54.2 ms | 54.2 ms | 143 ms | 5 |
+| modern, truecolor, 80x24 | idle | 0.0 ms | 0.1 ms | 300 ms | 117724 |
+| modern, truecolor, 80x24 | in slices (V1) | 6.5 ms | 6.5 ms | 20 ms | 6 |
+| modern, truecolor, 80x24 | on the spot (V0) | 40.5 ms | 40.5 ms | 69 ms | 5 |
+| cp437, 256, 80x24 | idle | 0.0 ms | 0.1 ms | 300 ms | 121047 |
+| cp437, 256, 80x24 | in slices (V1) | 6.4 ms | 6.4 ms | 20 ms | 6 |
+| cp437, 256, 80x24 | on the spot (V0) | 18.2 ms | 18.2 ms | 51 ms | 5 |
 
 Walking in real time (a step every 200 ms, painting in slices, the walk's budget 64 KiB/s). Lag: from a step until a picture of it, or of a later step, is up.
 
 | Case | Steps | Shown within the step | Lag p95 | Lag max | Bytes/s walking | Pictures/s | Picture CPU s per walking minute | Painted (prepared) |
 |---|---|---|---|---|---|---|---|---|
-| modern, truecolor, 132x50 | 25 | 14 | 341 ms | 468 ms | 70.1 KiB/s | 2.7 | 7.8 | 34 (28) |
-| cp437, 256, 132x50 | 25 | 25 | 120 ms | 121 ms | 54.8 KiB/s | 4.6 | 8.4 | 34 (28) |
-| modern, truecolor, 80x24 | 25 | 25 | 109 ms | 111 ms | 57.8 KiB/s | 4.8 | 2.7 | 34 (28) |
-| cp437, 256, 80x24 | 25 | 25 | 108 ms | 109 ms | 34.2 KiB/s | 4.8 | 2.7 | 34 (28) |
+| modern, truecolor, 132x50 | 25 | 14 | 339 ms | 451 ms | 70.8 KiB/s | 2.7 | 7.7 | 34 (28) |
+| cp437, 256, 132x50 | 25 | 25 | 120 ms | 121 ms | 54.7 KiB/s | 4.6 | 8.2 | 34 (28) |
+| modern, truecolor, 80x24 | 25 | 25 | 110 ms | 110 ms | 57.8 KiB/s | 4.8 | 2.7 | 34 (28) |
+| cp437, 256, 80x24 | 25 | 25 | 109 ms | 109 ms | 34.2 KiB/s | 4.8 | 2.7 | 34 (28) |
+
+Door CPU an hour on the `v1-provisional` session mix (set by the technical lead, not measured play): 10 min walking in a scene place, 20 min walking where there is no scene, 15 min standing, a few stops a minute, 15 min menus, text and help. Door CPU: renders, frames in, keys and painter slices; not the server. Target: 120 s an hour.
+
+| Case | walking in a scene place (s/min) | walking where there is no scene (s/min) | standing, a few stops a minute (s/min) | menus, text and help (s/min) | Seconds an hour |
+|---|---|---|---|---|---|
+| modern, truecolor, 132x50, next step prepared while walking | 7.78 | 7.55 | 2.27 | 0.02 | 263.1 |
+| modern, truecolor, 132x50, prepared only standing | 7.57 | 7.75 | 2.28 | 0.02 | 265.2 |
+| modern, truecolor, 80x24, next step prepared while walking | 3.33 | 3.14 | 0.62 | 0.02 | 105.7 |
+| modern, truecolor, 80x24, prepared only standing | 3.22 | 3.03 | 0.62 | 0.01 | 102.2 |
