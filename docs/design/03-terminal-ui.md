@@ -73,8 +73,20 @@ door), `°` (a published patrol waypoint; `+` stays the door), the
 Lattice shapes `∩ ∞ ╪` and the box joins `╤ ╧ ╟ ╢`, `▌` for half bars,
 and the ground grain `∙ , ' \``. Letters on the map belong to signage
 and paint only: no tile, thing or person is drawn as a letter. A
-jacked-in body keeps its own shape, drawn dim, never a cover shade. Glyphs whose CP437 code is a control byte (`☺ ☻ ‼ § ☼ •`) are
-kept, and S31 verifies them on every transport that may send raw CP437.
+jacked-in body keeps its own shape, drawn dim, never a cover shade. Glyphs whose CP437 code is a control byte are kept, and S31 verifies
+them on every transport that may send raw CP437. Each has a named
+fallback from the safe range, used in the CP437 tier wherever S31 finds
+the original unsafe:
+
+| Glyph | Use | Fallback |
+|---|---|---|
+| `☺` | other callers | `ö` |
+| `☻` | NPCs | `Ö` |
+| `‼` | danger | `!` |
+| `§` | Lattice terminal, descent console | `Σ` |
+| `☼` | a rule light | `Φ` |
+| `•` | bullets in text | `·` |
+| `♦` | crew beacon, other runners | `σ` |
 
 **Colour roles may set backgrounds** (decision D4). A theme gives the
 ground and wall faces their background, and a few roles (hazard, the
@@ -184,8 +196,10 @@ and a word in the header.
 | contested | single `─ │` | amber | CONTESTED, and `PvP G5+` |
 | open | single | red | OPEN |
 
-Safe ground is Warden blue, not green (D4). In the Lattice the frame
-shows the body's safety, never the sector's (section 3). A hit recolours
+Safe ground is Warden blue, not green (D4). Safe and pocket ground both
+use double lines; the header word tells them apart, so colour is never
+the only difference. In the Lattice the frame shows the body's safety,
+never the sector's (section 3). A hit recolours
 the frame for one frame; it never draws over cells.
 
 ### 2.2 Map vocabulary
@@ -333,8 +347,10 @@ kind is told apart by colour alone.
 - **Notices** (kind `notice`: restarts, maintenance, news from the node)
   are not world-log lines. A notice takes the hint line over key help
   and stays there until a key is pressed and at least 8 seconds have
-  passed; an open prompt does not hold it back (the notice shows in the
-  header's right end until the prompt closes). Each notice also keeps
+  passed. It never hides a prompt or escape keys: while a prompt is open,
+  or while you are threatened (a DANGER state, combat, a hazard), it
+  shows in the header's right end instead, and returns to the hint line
+  afterwards. Each notice also keeps
   one line in scrollback (`Ctrl-P`) and stays in help (section 10). A
   new Wake sees none in its world log in the first five minutes.
 

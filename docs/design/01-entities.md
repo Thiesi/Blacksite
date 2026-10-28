@@ -59,7 +59,9 @@ after their id.
 | instanced | bool | Blacksite levels only |
 
 `lit` is a rule (game design 5.2), read from the zone data only, never
-from a look (architecture 5.5.6). Once looks carry lights at eye level
+from a look (architecture 5.5.6). It is valid only on a zone whose
+safety is `pocket` and on pocket regions; the validator rejects it
+anywhere else. Once looks carry lights at eye level
 (the scene track, V3), a look that lights a pocket must agree with its
 `lit` flag, and the validator checks both ways. `charted` and `public`
 change what callers are shown and what walks may use, so they are zone
@@ -309,6 +311,9 @@ loot[] (item, chance, count), xp, lore, presents`.
 colour, figure and NEARBY class, never its rules. A disguised NPC sets
 its cover: the plainclothes Warden presents `civilian`. Without it, the
 class is derived from faction and behaviour (architecture 5.5.4).
+`presents` is static content; the moment a disguised NPC acts against a
+caller, the reveal to that caller is runtime state of the NPC instance
+(architecture 5.5.4), never written back to the template.
 
 An optional explicit `health` pool and embedded `attack` weapon block
 support private training actors. `training` requires both and scopes
