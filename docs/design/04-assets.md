@@ -51,12 +51,36 @@ Model and tool recommendations use the labels in
 | Sector layouts `sectors/<id>.json` with cell positions | 11 | agent-authored from `03-lattice.md` | S13 |
 | Core room graphs `cores/<id>.json` | 30 | agent-authored from `03-lattice.md` | S13, S15 |
 | Silt generator parameters | 1 | S14 | S14 |
+| Themes `themes.json` and looks `looks/<id>.json` (entities 1.21) | one theme family per district; one look per zone | presentation lead with agents, from the bible's geography and the gazetteer; human look pass per hub | P6 (three representative zones), C1 (hub places), S25c (per district) |
 
 Map authoring rules: a zone `.map` is a UTF-8 text grid using the legend
 in `tiles.json`; a `.json` sidecar holds everything else. A map must load
 under the validator; the validator checks size limits, that every exit
 and object sits on a passable tile, and that every spawner region is
 non-empty.
+
+Look authoring rules (decision D3):
+
+- **Dressing lights a place; it never gives it architecture.** A street
+  that is an open rectangle stays one however it is lit. Features that
+  change movement or sight (alcoves, alleys, kiosks, interiors) are
+  geometry and go through the zone's layout gate; a district's looks are
+  authored after its geometry is approved, never to disguise its
+  absence.
+- Each district has a theme family (street, interiors, alleys, light
+  pools) rooted in the bible's geography and the gazetteer, with its own
+  ground, light and lettering: the Core's wet slate and lamp pools,
+  Vatside's white interiors and teal street, the Sink's red-black with
+  half the lamps out, and so on.
+- Every hub zone has a look, a theme family and at least one sign naming
+  its purpose. Every exit in a dressed zone has a painted or signed
+  destination within three tiles. Object names shown in HERE are
+  authored labels, never ids.
+- Signs and marks use the world's names only: no real or other-fiction
+  names (checked against the glossary's banned list). Ambient lines
+  follow the voice rules.
+- Charted zones (D1) declare their `public` region by hand in the zone
+  data, around public ground only (architecture 5.5.5).
 
 ## 4. ANSI art (to build)
 
@@ -75,6 +99,11 @@ art file is missing or too wide.
 | Dead screen | 56×10 | 3 | decant timer |
 | Lattice jack-in transition | 3 frames, 55×17 | 3 | jack in/out |
 | Blacksite level 1 establishing shot | 80×20 | 3 | level entry |
+| Place cards, 16 colours | one per place that has one; sizes for 80x24 and larger, to be fixed with the format | 16 | the place card for 16-colour callers (UI 2.6, decision V0-1) |
+
+The 16-colour place card's format (sizes, fallback to the text card,
+validation) is fixed before any card is authored, with the scene track
+(V3).
 
 Recommended process: an agent produces the layout and palette
 assignments as `.ans` with a JSON sidecar; the user (or a human artist)
@@ -153,6 +182,13 @@ Every active season bundle references complete maps, legal exits,
 encounter records, dialogue, finale choices, Chronicle templates and
 journal entries. No Season 2 or 3 placeholder is activated by a flag.
 S25 supplies the ordinary city, S27 its voices, S26 the Season 1 bundle.
+
+Presentation content expresses places, never rules (decisions D1 to D7).
+A colour always has a shape or a word beside it; a sign or a pool of
+light never stands in for a rule light, an exit or cover; and nothing
+needed to play exists only in a look, a scene or a card. Where a rule
+depends on something a look also shows (a lit pocket), the rule reads a
+zone-data field and the look must agree with it (entities 1.1).
 
 Faction sigils in prose describe emblems. Tactical markers use the fixed
 CP437-compatible glyph registry, not arbitrary Unicode emblems copied

@@ -6,6 +6,11 @@ record covers the engine split from S25 at `1224c30`, based on current
 layout approval remains **not granted**. S25a remains in progress until
 the required reviews and acceptance pass; only the owner merges.
 
+P0 merged during validation at `7203314`. S25a integrates that approved
+canon, keeping both the new lit-pocket contract and the owner's per-zone
+Undercity sight decision. P0's presentation implementation is not added
+by this engine split.
+
 ## Scope and canon
 
 The owner's decisions in plan §14.2 are the authority. Game design
