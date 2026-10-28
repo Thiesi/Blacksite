@@ -13,6 +13,7 @@ from random import Random
 from typing import TYPE_CHECKING, Any
 
 from blacksite.content.schema import DataSpec, ProgramTemplate
+from blacksite.formatting import display_number
 from blacksite.server.clock import TICK_HZ
 from blacksite.server.inventory import Inventory
 from blacksite.server.items import make_item
@@ -637,7 +638,7 @@ class Encounters:
                 amount = ice.effects.receive(amount).integrity
                 ice.hit(amount, player.id, tick)
                 self.activate(ice, presence, "attack")
-                self.log(presence, f"{program.name} hits {ice.template.name}: {amount:g}. Integrity {ice.integrity:g}.")
+                self.log(presence, f"{program.name} hits {ice.template.name}: {display_number(amount)}. Integrity {display_number(ice.integrity)}.")
         elif kind == "open_gate" and params.get("private_vestibule"):
             deferred_learning = True
             self.lat.interlock.open_vestibule(presence,
@@ -884,7 +885,7 @@ class Encounters:
         if (source_ice and source_ice.template.class_ == "drift" and not redirected
                 and not presence.effects.has("prg_anchor", self.clock.now_tick())):
             self.displace(presence)
-        self.log(presence, f"{name}: {hit.integrity:g} integrity, {hit.meat} body damage"+
+        self.log(presence, f"{name}: {display_number(hit.integrity)} integrity, {hit.meat} body damage"+
                  ("; decoy absorbs the hit." if redirected else "."), bool(hit.meat))
         if presence.integrity <= 0:
             self.force_out(presence)
@@ -1132,7 +1133,7 @@ class Encounters:
                      {"id": "risk:"+core_id, "cells": ["Enter with NPC risk", "BLACK ICE may injure body"]}]
                     if core_id else []) + [{"id": "survey", "cells": ["Survey", "3s / 10s cooldown"]}]
         room = instance.graph.room(presence.room)
-        rows = self.contract_rows(presence)+[{"id": "ice:"+i.id, "cells": [i.template.name, f"{i.integrity:g} integrity", i.phase]}
+        rows = self.contract_rows(presence)+[{"id": "ice:"+i.id, "cells": [i.template.name, f"{display_number(i.integrity)} integrity", i.phase]}
                 for i in self.defenders(presence)]
         for ice in self.defenders(presence):
             if ice.template.class_ == "liar" and instance.id not in presence.verified_maps:
@@ -1183,7 +1184,7 @@ class Encounters:
             ice = self.target(presence, presence.target)
             if ice:
                 self.log(presence, f"{ice.template.name}: {ice.template.role}, trigger {ice.template.trigger}, "
-                    f"{ice.template.attack:g} integrity / {ice.template.meat_damage} body damage; {ice.template.counter_label}.")
+                    f"{display_number(ice.template.attack)} integrity / {ice.template.meat_damage} body damage; {ice.template.counter_label}.")
         elif row.startswith(("enter:", "risk:")):
             self.enter(session, row.split(":", 1)[1], row.startswith("risk:"))
         elif row.startswith("theft:"):
@@ -1416,7 +1417,7 @@ class Encounters:
             if screen.kind in ("record", "evidence"):
                 title = (screen.label or screen.target.replace("-", " ")).upper()
                 detail = rows[screen.cursor]["cells"][0] if rows else "No text."
-            stats = f"HP {body['me']['body_hp']}/{body['me']['body_hp_max']}  INT {presence.integrity:g}  TRACE {presence.trace:g}"
+            stats = f"HP {body['me']['body_hp']}/{body['me']['body_hp_max']}  INT {display_number(presence.integrity)}  TRACE {presence.trace:g}"
             if shield:
                 stats += f"  SHIELD {shield.budget:g}"
             if presence.effects.decoy:

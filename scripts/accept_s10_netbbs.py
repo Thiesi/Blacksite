@@ -129,14 +129,20 @@ class NativeProbe:
         else:
             print(message,flush=True)
 
-    async def open(self, width: int, height: int, label: str, archetype: int = 0, sixteen: bool = False) -> Connection:
+    async def open(self, width: int, height: int, label: str, archetype: int = 0,
+                   sixteen: bool = False, capture_cards: bool = False,
+                   truecolor: bool = False) -> Connection:
         user=create_user(self.db,f"S10{label}{width}",password="LocalProbe-S10",user_level=10)
         self.accounts.append((user,sixteen))
         reader,writer=await asyncio.open_connection("127.0.0.1",self.node.port)
         async def send(data: bytes) -> None:
             writer.write(data); await writer.drain()
         writer.write(b"\xff\xfb\x1f\xff\xfa\x1f"+width.to_bytes(2,"big")+height.to_bytes(2,"big")+b"\xff\xf0")
-        writer.write(b"\xff\xfb\x18\xff\xfa\x18\x00xterm-256color\xff\xf0");await writer.drain()
+        term = b'xterm-direct' if truecolor else b'xterm-256color'
+        writer.write(b"\xff\xfb\x18\xff\xfa\x18\x00"+term+b"\xff\xf0")
+        if truecolor:
+            writer.write(b'\xff\xfb\x27\xff\xfa\x27\x00\x00COLORTERM\x01truecolor\xff\xf0')
+        await writer.drain()
         caller=CombatCaller(lambda:reader.read(65536),send,width,height,self.show and sixteen)
         caller.display_write = self.display_write
         await caller.expect("Available doors");await caller.write(b"\x1b[B\r")
@@ -162,7 +168,12 @@ class NativeProbe:
         await caller.write(b"\r");await wait(lambda:"Name (Enter keeps default):" in caller.screen.screen_text())
         await caller.write(f"{label}界{width}".encode()+b"\r")
         await wait(lambda:"Briefing" in caller.screen.screen_text());await caller.write(b"s")
-        await wait(lambda:"Recruiter cards" in caller.screen.screen_text());await caller.write(b"\x1b")
+        await wait(lambda:"Recruiter cards" in caller.screen.screen_text())
+        if capture_cards:
+            await wait(lambda: 'Halvard-Ostrom' in caller.screen.screen_text()
+                and 'Take no card' in caller.screen.screen_text())
+            self.save(connection, f'issue67-recruiters-{width}x{height}')
+        await caller.write(b"\x1b")
         await wait(lambda:session.player_id in self.game.players)
         await wait(lambda:"Wake Hall" in caller.screen.screen_text().splitlines()[0])
         connection.avatar=self.game.sim.avatars[session.user_id]

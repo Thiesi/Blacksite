@@ -21,7 +21,10 @@ they go down into the Blacksite together.
 
 ## Status
 
-**S01-S18 implemented; M3 is in progress.** The M0 foundation,
+**S01-S24 implemented; M0-M4 are closed.** S25 is split under the
+[presentation integration plan](docs/plan/03-presentation-integration.md);
+city commissioning and its human layout gates remain in progress.
+The M0 foundation,
 shared movement, sight, fog memory, ten maps and persistent characters are
 available. The service now starts the Wake for new callers. See the
 [character guide](docs/ops/characters.md) for persistence, sleeper recovery

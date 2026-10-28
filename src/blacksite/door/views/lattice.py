@@ -5,6 +5,7 @@ from typing import Any
 from blacksite.door.cells import CellBuffer, display_width, truncate
 from blacksite.door.layout import Rect
 from blacksite.door.palette import Palette
+from blacksite.formatting import display_number
 
 
 def render_lattice(buffer: CellBuffer, body: dict[str, Any], area: Rect, palette: Palette) -> None:
@@ -51,7 +52,7 @@ def render_lattice(buffer: CellBuffer, body: dict[str, Any], area: Rect, palette
             buffer.put(x+1, y, "♦", palette.style("player_crew", reverse=reverse))
     side_x, side_w = buffer.width-23, 22
     status: list[tuple[str, str]] = [
-        (f"INTEGRITY {me.get('integrity', 100):g}/{me.get('integrity_max', 100):g}", "hp_ok"),
+        (f"INTEGRITY {display_number(me.get('integrity', 100))}/{display_number(me.get('integrity_max', 100))}", "hp_ok"),
         (f"TRACE {me.get('trace', 0):g}", "ui_highlight"),
         ("BODY NPC RISK" if body.get("black_risk") and body.get("body_safety") == "safe"
          else "BODY "+str(body.get("body_safety", "")).upper(),
@@ -173,8 +174,8 @@ def render_lattice(buffer: CellBuffer, body: dict[str, Any], area: Rect, palette
             if selected.get('warning_ticks'):
                 phase += f" {selected['warning_ticks']/10:.1f}s"
             details += [(f"{'>' if selected['id'] == me.get('target') else 'Tab'} {selected['name']} "
-                         f"{selected['integrity']:g}/{selected['maximum']:g} [{phase}]", "warning"),
-                        (f"{selected['role']} / {selected['trigger']} / {selected['damage']:g} integrity, "
+                         f"{display_number(selected['integrity'])}/{display_number(selected['maximum'])} [{phase}]", "warning"),
+                        (f"{selected['role']} / {selected['trigger']} / {display_number(selected['damage'])} integrity, "
                          f"{selected['meat']} body damage", "text"),
                         (str(selected['counter']), "muted")]
         else:

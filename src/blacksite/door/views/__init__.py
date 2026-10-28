@@ -48,7 +48,9 @@ def render_menu(buffer: CellBuffer, body: dict[str, Any], area: Rect, palette: P
     right = buffer.width >= 100
     list_width = (area.width - 5) // 2 if right else area.width - 4
     rows = body.get("rows", [])
-    available = area.height - (5 if right else 9)
+    # Use the spare row before narrow-screen detail. At 80x24 all eight
+    # recruiter cards plus "none" then fit even with the last row selected.
+    available = area.height - (5 if right else 8)
     compact_card = body.get('kind') == 'contracts' and not right
     if compact_card:
         available = 1
