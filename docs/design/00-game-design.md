@@ -268,7 +268,10 @@ only, never PvP. Tutorial simulation is the bounded exception in §4.
 - In a **lit pocket** (a pocket or pocket-class zone flagged `lit` in its
   zone data), sight reaches the whole pocket while you stand in it;
   walls and opaque tiles still block line of sight. You see everyone in
-  the room the light shows, and they see you.
+  the room the light shows. The light reveals: stealth stance does not
+  shorten the range at which people inside the pocket see you. It
+  extends only the sight of those standing in the pocket; callers
+  outside use their normal sight.
 - Players in the same zone see each other's glyph, name (on target or
   hover), and faction colour.
 

@@ -358,8 +358,8 @@ focus: {id, label, verb} | null      what E does now, see 5.5.2 (P3)
 
 `looks.names` labels tile ids for HERE. A look's `ambient` lines are
 not sent in the view; they reach the caller as `ambient` log lines
-(5.5.3). `charted` and `public` are content only; the view carries the
-synthesised `charted` grid.
+(5.5.3). The view carries the synthesised `charted` grid; the zone's
+`charted` flag and `public` region stay on the server.
 
 `LogLine` gains `kind`, and for speech `speaker` and `speaker_role`
 (5.5.3). `LatticeView` cells gain `owner` and `tier` for cores (a private
@@ -499,27 +499,40 @@ only from what this caller may know. For presentation that means:
 
 #### 5.5.5 Charted public ground (D1)
 
-A zone whose look sets `charted` shows its public layout on arrival,
-without sight. The public-ground region is the look's `public`
-rectangles (entities 1.21) minus hidden-exit tiles. The server
-synthesises the `charted` grid per view from that region; it never
-writes the caller's memory, so nothing charted becomes remembered. The
-validator rejects a `public` rectangle that contains a hidden exit or
-a passable tile next to one, overlaps a private interior (apartments,
-owner-door rooms), or belongs to an instanced zone. The fixed camera
-and Auto's walks read the same region. Only flagged zones move the
-mechanics fingerprint, and each such move is approved in the PR that
-flags the zone.
+A zone flagged `charted` in its zone data (entities 1.1) shows its
+public layout on arrival, without sight. `charted` and `public` are zone
+data, not look data, because they change what callers are shown and
+what walks may use. The public-ground region is the zone's `public`
+rectangles minus hidden-exit tiles. The server synthesises the
+`charted` grid per view from that region; it never writes the caller's
+memory, so nothing charted becomes remembered.
+
+The validator rejects a `public` region that:
+
+- contains a hidden exit or a passable tile next to one;
+- contains a passable tile that cannot be reached from the zone's
+  non-hidden exits and spawn points without crossing a hidden exit, so
+  neither a corridor behind a hidden exit nor a room reached only
+  through one is ever charted;
+- overlaps a private interior (apartments, owner-door rooms);
+- belongs to an instanced zone.
+
+The fixed camera and Auto's walks read the same region. Flagging a zone
+`charted` or changing its `public` region moves the mechanics
+fingerprint for that zone only, and each such move is approved in the
+PR that makes it.
 
 #### 5.5.6 Rules never read presentation
 
 Simulation, sight, movement, combat and NPC code never read looks,
-scenes, themes, places or the presented class. Where a rule depends on
-something a look also shows, the rule reads a field in the zone data
-and the validator checks that the look agrees: lit pockets (game design
-5.2) are flagged `lit` on the pocket or zone, never inferred from look
-lights. The mechanics fingerprint (P1) enforces the separation: a
-presentation-only change leaves it unchanged.
+scenes, themes, places or the presented class. Where a rule or a
+disclosure depends on something a look also shows, it reads a field in
+the zone data, and the validator checks that the look agrees: lit
+pockets (game design 5.2) are flagged `lit`, and charted ground
+`charted` with its `public` region (5.5.5), on the zone or pocket,
+never inferred from a look. The mechanics fingerprint (P1) covers zone
+data, including those fields, and never looks: a look-only change
+leaves it unchanged.
 
 ## 6. Simulation and persistence
 
