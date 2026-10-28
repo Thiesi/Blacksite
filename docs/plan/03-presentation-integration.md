@@ -980,8 +980,28 @@ lead:
   architecture §8.4), reviewed with two wording findings. It lands ahead
   of V2, so V2 implements a contract already in canon instead of
   carrying the amendment itself.
-- **Still open:** V0-2 (authored viewpoint), V0-3 (pocket sight), V0-4
-  (repaint on stop, or live redraw while walking).
+- **V0-2 decided: yes, a fixed authored camera per place** (`v0.md`
+  `2383b7d`). In the scene view each place has a fixed camera. It cuts
+  when you enter another place, and inside a place only figures repaint.
+  Where a place has no viewpoint, the door picks one. Engineering terms:
+  - the viewpoint is look data in V3's schema, and the validator checks
+    that it stands on public known ground (the D1 precondition);
+  - the door's fallback viewpoint is chosen only from tiles in the view
+    it was sent, so a default can never frame ground the caller has not
+    seen;
+  - the static picture per place is painted once on entry and cached, so
+    the scene view's step cost is the figure layer alone.
+- **V0-4 decided: the picture follows the walk** (`2383b7d`). The street
+  view keeps its first-person camera and repaints while walking at a
+  lower picture rate, using the three measures below (coalescing, a
+  cached lit layer per tile and heading, a cheaper byte class while
+  moving), and is sharp again on stop. Input never waits for the picture.
+  These are V1 requirements; the §13.5 budgets are its acceptance terms.
+- **V2 note from the #74 review:** the stored glyph-tier setting keeps
+  the `transport` and `color_depth` it was confirmed on, so the door can
+  tell when the first-play check must run again (UI §1).
+- **Still open:** V0-3 (pocket sight covering the whole room), a sight
+  rule for the owner.
 
 Engineering position on live redraw while walking (V0-4), from V0's
 measurements, not from profiling:
@@ -989,7 +1009,8 @@ measurements, not from profiling:
 - Full-fidelity repaint on every step is not within budget today: 110 to
   270 ms of CPU against a 200 ms step, and about 50 KB against the
   16 KiB ceiling. Walking would send about 250 KB/s.
-- Live redraw is feasible with three measures, all inside V1:
+- Live redraw is feasible with three measures, all inside V1 (adopted
+  for the street view by V0-4):
   1. **Coalescing:** paint only the latest position. Input never waits
      on a paint; intermediate steps are skipped while the walk outruns
      the renderer.
