@@ -66,14 +66,14 @@ Every modern glyph is single width, has a CP437 fallback and appears in
 the check; replay tests run in both tiers.
 
 **Registry rules** (decision D6, 2026-10-28). A new glyph comes from
-CP437's 0x80-0xFE range, so it never collides with a control byte. The
+CP437's 0x80-0xFE range or from printable ASCII, so it never collides
+with a control byte. The
 map vocabulary (section 2.2) adds `τ` (drone), `≡` (closed or locked
 door), `°` (a published patrol waypoint; `+` stays the door), the
 Lattice shapes `∩ ∞ ╪` and the box joins `╤ ╧ ╟ ╢`, `▌` for half bars,
 and the ground grain `∙ , ' \``. Letters on the map belong to signage
 and paint only: no tile, thing or person is drawn as a letter. A
-jacked-in body keeps its own shape in reverse video, never a cover
-shade. Glyphs whose CP437 code is a control byte (`☺ ☻ ‼ § ☼ •`) are
+jacked-in body keeps its own shape, drawn dim, never a cover shade. Glyphs whose CP437 code is a control byte (`☺ ☻ ‼ § ☼ •`) are
 kept, and S31 verifies them on every transport that may send raw CP437.
 
 **Colour roles may set backgrounds** (decision D4). A theme gives the
@@ -254,8 +254,12 @@ People:
 | NPCs | `☻` | by presented class (D-T8): what you can know of them, never a hidden allegiance |
 | Drones | `τ` | by relation |
 | Anyone hostile to you | their shape | reverse video in their colour, never colour alone |
-| A jacked-in body | its shape | reverse video |
+| A jacked-in body | its shape | dim (in 16 colours, dark grey), never reverse video; NEARBY and CREW say `jacked` |
 | Your target | its shape | underlined, and named in TARGET |
+
+Reverse video means two things only: you, and hostility. A disguised
+NPC presents its cover (D-T8) until it acts against you: then you see
+its true class, because it has just shown it.
 
 On light grounds (clinic interiors) roles use their `_light` variant, so
 people stay readable on white. Nothing decorative is drawn over a
@@ -270,11 +274,11 @@ person, a thing, a warned tile or your target.
   grey with every third floor dot. Known ground never shows people,
   objects' live state or warned tiles.
 - **Unknown:** blank.
-- **Charted ground** (D1): a zone whose look is `charted` shows its
-  public ground as known on arrival: the layout of safe hubs and small
+- **Charted ground** (D1): a zone (or pocket) flagged `charted` in its
+  zone data shows its public ground as known on arrival: the layout of safe hubs and small
   public interiors, so you know where you are before you have walked it.
   Sight still decides people and live state. Charted ground covers only
-  the look's declared public region; it never shows a hidden passage or
+  the zone's declared public region; it never shows a hidden passage or
   a private interior, and it never becomes part of what your character
   remembers. Its disclosure terms are architecture 5.5.5.
 
@@ -327,9 +331,12 @@ kind is told apart by colour alone.
 - Danger lines never coalesce with other kinds, and no other line pushes
   a danger or combat line out of the visible log within 10 seconds.
 - **Notices** (kind `notice`: restarts, maintenance, news from the node)
-  are not world-log lines: they show once on the hint line and stay in
-  help (section 10). A new Wake sees none in its log in the first five
-  minutes.
+  are not world-log lines. A notice takes the hint line over key help
+  and stays there until a key is pressed and at least 8 seconds have
+  passed; an open prompt does not hold it back (the notice shows in the
+  header's right end until the prompt closes). Each notice also keeps
+  one line in scrollback (`Ctrl-P`) and stays in help (section 10). A
+  new Wake sees none in its world log in the first five minutes.
 
 ### 2.6 The place card
 
@@ -614,8 +621,8 @@ one-line hint on the hint line for the next useful key until the player
 uses it; the hint system is server-driven (`hint` in the view).
 
 Help also keeps the node's operator notices (restarts, maintenance,
-news), newest first. They are shown once on the hint line when they
-arrive and never enter the world log (2.5).
+news), newest first. They are shown on the hint line when they arrive
+(2.5) and never enter the world log.
 
 ## 11. Playable information, journals and decisions
 

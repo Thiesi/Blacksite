@@ -79,8 +79,8 @@ Look authoring rules (decision D3):
 - Signs and marks use the world's names only: no real or other-fiction
   names (checked against the glossary's banned list). Ambient lines
   follow the voice rules.
-- Charted zones (D1) declare their `public` region by hand, around
-  public ground only.
+- Charted zones (D1) declare their `public` region by hand in the zone
+  data, around public ground only (architecture 5.5.5).
 
 ## 4. ANSI art (to build)
 
