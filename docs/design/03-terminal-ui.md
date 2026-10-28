@@ -240,9 +240,10 @@ blank cell is never walkable where a wall is near. In 16 colours wall
 faces are `█`. A render test checks that no bare floor cell borders a
 wall face.
 
-**A hidden exit is drawn as the ground around it:** no `»`, no paint, no
-sign naming a destination, until the caller has found it (the focus
-contract, architecture 5.5.2, says when HERE may name it).
+**A hidden exit is always drawn as the ground around it:** no `»`, no
+paint, no sign naming a destination. HERE names it only while you stand
+on it (architecture 5.5.2). A later rule may show exits a caller has
+found; none does yet.
 
 People:
 
