@@ -442,7 +442,7 @@ and Sable can stand at adjacent stalls and both pretend not to notice.
 - **Class:** contested. **Lean:** Kestrel. **Size:** 70 × 50.
   **Sight:** 11.
 - **Exits:** `tramyard-depots` (street); `scour-ring-1` (the gate:
-  opens on a Kestrel schedule every 5 minutes for 60 seconds, or on a
+  opens on a Kestrel schedule every 2 minutes for 60 seconds, or on a
   Gate core control, or for a convoy).
 - **Relays:** **Gate Relay Nine** (controls the gate schedule; holders
   open the gate on demand and tax non-members a toll in chits).
@@ -1315,8 +1315,9 @@ asset manifest can reference it.
   with owner-only object permissions and a separate vestibule. The
   Blacksite uses a separate persistent expedition instance.
 - **Hidden exits** (`under-caverns` cave mouth, the Drop's door) are
-  exits with a `hidden` flag revealed by a Listening check, a program, or
-  an NPC's dialogue flag on the character.
+  unmarked physical passages. Listening, programs and dialogue may point
+  out their location; they are not an additional character credential.
+  Explicit Interact on the actual tile works. Walking never auto-travels.
 - **Shared core** (`lat-shaft` at `spire-shaft-head` and `under-shaft-foot`) are one
   core with two hardware locations; cutting power at either affects
   both. This is the only such core and the content loader should assert
@@ -1360,7 +1361,12 @@ Cold Chain places its replacement socket beside a sheltered loan
 terminal. Depot places its manifest inspection point before the surplus
 warehouse fork. Relay Zero places a physical reset cabinet whose cover
 protects a solo player's body from routine NPC patrols. A crew can guard
-it in contested PvP. Every map shows these costs through geometry.
+it in contested PvP. Its reserve credential opens the workshop's
+north workshop passage through `worker_return`, saving at least eight
+steps between the repair mast and the public Old Works counter while
+the public street remains available. S25b supplies the physical binding and proves the shortcut. Ordinary
+`relay_open` remains a separate public capture control. Every map shows
+these costs through geometry (game 7.5).
 
 The existing `under-shaft-foot` is permanent geography, never an Open
 ending reward. That ending changes only an optional east maintenance
