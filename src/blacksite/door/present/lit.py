@@ -73,6 +73,9 @@ BURST = WALK_RATE // 2
 FULL_EVERY = 1.0
 """Seconds between whole new pictures that are not the walk: the sharp one
 when you stop, a cut to another place's camera."""
+PREPARE_WHILE_WALKING = True
+"""While you walk, prepare the cheap picture of the next step (True), or
+prepare nothing until you stand still (False)."""
 FLAT_CELLS = 3000
 """Above this many cells, the walk's picture is one colour a cell pair
 (half the rows of pixels), so it can go out about 2.5 times a second
@@ -1397,7 +1400,8 @@ def prepare_around(eye: tuple[int, int, str], moving: bool, sharp: str, world: s
     dx, dy = street.HEADINGS[heading]
     turns = [(x, y, street.TURN_LEFT[heading]), (x, y, street.TURN_RIGHT[heading])]
     if moving:
-        around = [(x + dx, y + dy, heading, "low")]  # only the likely next step: CPU is budgeted too
+        # only the likely next step, if anything: CPU is budgeted too
+        around = [(x + dx, y + dy, heading, "low")] if PREPARE_WHILE_WALKING else []
     else:
         around = [*((tx, ty, f, sharp) for tx, ty, f in turns), (x + dx, y + dy, heading, "low"),
                   (x, y, street.BEHIND[heading], sharp)]

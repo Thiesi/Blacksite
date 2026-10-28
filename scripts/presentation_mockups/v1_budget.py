@@ -372,6 +372,93 @@ async def realtime(width: int, height: int, glyphs: str, tier: str) -> dict:
             "painted": len(lit.PAINTER.log), "prepared": sum(1 for what, _ in lit.PAINTER.log if what == "prepared")}
 
 
+MIX = "v1-provisional"
+"""Minutes an hour, set by the technical lead until S29's bot (`--render`)
+or real play measures a session: not measured play."""
+MIX_MINUTES = {"walking in a scene place": 10, "walking where there is no scene": 20,
+               "standing, a few stops a minute": 15, "menus, text and help": 15}
+SAMPLE = 12.0
+"""Seconds of each activity actually run, then scaled to its minutes."""
+
+
+class DoorClock:
+    """Seconds the door spends: renders, frames in, keys, its own updates
+    and the painter's slices. Not the server, which runs in its own
+    process in a real install, and not the harness."""
+
+    def __init__(self, caller: Caller, painter: lit.Painter) -> None:
+        self.spent = 0.0
+        display = caller.display
+        for name in ("render", "receive", "key", "update"):
+            setattr(display, name, self.timed(getattr(display, name)))
+        painter.work = self.timed(painter.work)  # type: ignore[method-assign]
+
+    def timed(self, call):  # type: ignore[no-untyped-def]
+        def wrapper(*args, **kwargs):  # type: ignore[no-untyped-def]
+            started = time.perf_counter()
+            try:
+                return call(*args, **kwargs)
+            finally:
+                self.spent += time.perf_counter() - started
+        return wrapper
+
+
+async def activity(width: int, height: int, glyphs: str, tier: str, what: str) -> float:
+    """Door CPU seconds a minute for one activity, run in real time: the
+    server ticks ten times a second, the door renders when dirty at most
+    ten times a second, a walking step every 200 ms."""
+    zone, view = ("sodium-row", "map") if what == "walking where there is no scene" else ("sodium-tin-halo", "street")
+    caller = Caller(width, height, tier, local=CANDIDATE)
+    place(caller.game, caller.client, zone, START if zone == "sodium-tin-halo" else (12, 11))
+    caller.pump(30)
+    display = caller.display
+    display.present, display.view_mode, display.glyphs, display.heading = True, view, glyphs, "right"
+    lit.CLOCK = time.monotonic
+    ready, stop = asyncio.Event(), asyncio.Event()
+    lit.PAINTER = lit.Painter(background=True, kick=ready.set)
+    painting = asyncio.create_task(pump(lit.PAINTER, ready, stop))
+    clock = DoorClock(caller, lit.PAINTER)
+    if what == "menus, text and help":
+        display.key("?", time.monotonic())
+    keys = {"walking in a scene place": ["up"] * 6 + ["right", "right"] + ["up"] * 6 + ["left", "left"],
+            "walking where there is no scene": ["right"] * 8 + ["left"] * 8}.get(what, [])
+    started = last_step = time.monotonic()
+    index = 0
+    while time.monotonic() - started < SAMPLE:
+        now = time.monotonic()
+        caller.game.step()
+        for frame in caller.game.frames_for(caller.client):
+            for out in display.receive(frame, now):
+                caller.client.send(out)
+        step_every = 0.2 if keys else 20.0  # standing: a step and a stop every 20 s, three a minute
+        if now - last_step >= step_every:
+            last_step = now
+            if keys:
+                for frame in display.key(keys[index % len(keys)], now):
+                    caller.client.send(frame)
+                index += 1
+            elif what == "standing, a few stops a minute":
+                for frame in display.key("up", now):
+                    caller.client.send(frame)
+        display.update(10.0, now)
+        output, ack = display.render(now)
+        if ack:
+            caller.client.send(ack)
+        await asyncio.sleep(0.1)
+    elapsed = time.monotonic() - started
+    stop.set()
+    await painting
+    return clock.spent / elapsed * 60
+
+
+async def mix(width: int, height: int, glyphs: str, tier: str, while_walking: bool) -> dict:
+    lit.PREPARE_WHILE_WALKING = while_walking
+    per_minute = {what: round(await activity(width, height, glyphs, tier, what), 2) for what in MIX_MINUTES}
+    hour = sum(per_minute[what] * minutes for what, minutes in MIX_MINUTES.items())
+    lit.PREPARE_WHILE_WALKING = True
+    return {"per_minute": per_minute, "seconds_an_hour": round(hour, 1)}
+
+
 def shown_sharp(slot: tuple) -> bool:
     shown = lit.PAINTER.shown.get(slot)
     return shown is not None and shown[0].grid != "low"
@@ -416,6 +503,18 @@ def table(rows: list[dict], latencies: dict, walks: dict, host: str) -> str:
     return "\n".join(lines) + "\n"
 
 
+def mix_table(mixes: dict) -> str:
+    lines = ["", f"Door CPU an hour on the `{MIX}` session mix (set by the technical lead, not measured play): "
+             + ", ".join(f"{m} min {w}" for w, m in MIX_MINUTES.items())
+             + ". Door CPU: renders, frames in, keys and painter slices; not the server. Target: 120 s an hour.", "",
+             "| Case | " + " | ".join(f"{w} (s/min)" for w in MIX_MINUTES) + " | Seconds an hour |",
+             "|---|" + "---|" * len(MIX_MINUTES) + "---|"]
+    for name, r in mixes.items():
+        lines.append(f"| {name} | " + " | ".join(str(r["per_minute"][w]) for w in MIX_MINUTES)
+                     + f" | {r['seconds_an_hour']} |")
+    return "\n".join(lines) + "\n"
+
+
 def main() -> None:
     args = [a for a in sys.argv[1:] if not a.startswith("--")]
     out = Path(args[0]) if args else OUT
@@ -437,11 +536,20 @@ def main() -> None:
             latencies[name] = asyncio.run(latency(width, height, glyphs, tier))
             walks[name] = asyncio.run(realtime(width, height, glyphs, tier))
             print(name, latencies[name], walks[name], flush=True)
+    mixes = {}
+    for width, height in sizes:
+        for while_walking in (True, False):
+            name = f"modern, truecolor, {width}x{height}, " + ("next step prepared while walking" if while_walking
+                                                              else "prepared only standing")
+            mixes[name] = asyncio.run(mix(width, height, "modern", "truecolor", while_walking))
+            print(name, mixes[name], flush=True)
     host = f"{platform.system()} {platform.machine()}, Python {platform.python_version()}, {os.cpu_count()} CPUs"
-    (out / "v1-budget.json").write_text(json.dumps({"host": host, "cases": rows, "latency": latencies, "walk": walks},
+    (out / "v1-budget.json").write_text(json.dumps({"host": host, "cases": rows, "latency": latencies, "walk": walks,
+                                                    "mix": {"name": MIX, "minutes": MIX_MINUTES, "results": mixes}},
                                                    indent=2) + "\n", encoding="utf-8")
-    (out / "v1-budget.md").write_text(table(rows, latencies, walks, host), encoding="utf-8")
-    print(table(rows, latencies, walks, host))
+    report = table(rows, latencies, walks, host) + mix_table(mixes)
+    (out / "v1-budget.md").write_text(report, encoding="utf-8")
+    print(report)
 
 
 if __name__ == "__main__":
