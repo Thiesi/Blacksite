@@ -321,7 +321,7 @@ async def realtime(width: int, height: int, glyphs: str, tier: str) -> dict:
     stepped: list[float] = []
     lag: dict[int, float] = {}
     pictures, sent, last = 0, 0, None
-    started = time.perf_counter()
+    started, picture_cpu = time.perf_counter(), 0.0
     eye = lambda: (caller.avatar.actor.x, caller.avatar.actor.y, caller.display.heading)
     headings = {(0, -1): "up", (1, 0): "right", (0, 1): "down", (-1, 0): "left"}
 
@@ -346,11 +346,13 @@ async def realtime(width: int, height: int, glyphs: str, tier: str) -> dict:
         stepped.append(time.perf_counter())
         deadline = stepped[-1] + STEP
         while time.perf_counter() < deadline:
-            data, _ = draw(caller, clock)
+            data, spent = draw(caller, clock)
             sent += len(data)
+            picture_cpu += spent
             look()
             await asyncio.sleep(0.01)
     walked = time.perf_counter() - started
+    picture_cpu += sum(seconds for _, seconds in lit.PAINTER.log)  # what the painter did in slices
     # then stand still until the sharp picture is up
     for _ in range(150):
         data, _ = draw(caller, clock)
@@ -366,6 +368,7 @@ async def realtime(width: int, height: int, glyphs: str, tier: str) -> dict:
             "lag_p95_ms": round(p95(lags) * 1000) if lags else None,
             "lag_max_ms": round(max(lags) * 1000) if lags else None,
             "walk_kib_per_s": round(sent / walked / 1024, 1), "pictures_per_s": round(pictures / walked, 1),
+            "cpu_s_per_min": round(picture_cpu / walked * 60, 1),
             "painted": len(lit.PAINTER.log), "prepared": sum(1 for what, _ in lit.PAINTER.log if what == "prepared")}
 
 
@@ -404,11 +407,11 @@ def table(rows: list[dict], latencies: dict, walks: dict, host: str) -> str:
                          f"{r['busy_ms']} ms | {r['turns']} |")
     lines += ["", "Walking in real time (a step every 200 ms, painting in slices, the walk's budget "
               f"{lit.WALK_RATE // 1024} KiB/s). Lag: from a step until a picture of it, or of a later step, is up.", "",
-              "| Case | Steps | Shown within the step | Lag p95 | Lag max | Bytes/s walking | Pictures/s | Painted (prepared) |",
-              "|---|---|---|---|---|---|---|---|"]
+              "| Case | Steps | Shown within the step | Lag p95 | Lag max | Bytes/s walking | Pictures/s | Picture CPU s per walking minute | Painted (prepared) |",
+              "|---|---|---|---|---|---|---|---|---|"]
     for name, r in walks.items():
         lines.append(f"| {name} | {r['steps']} | {r['steps_shown_in_time']} | {ms(r['lag_p95_ms'])} | "
-                     f"{ms(r['lag_max_ms'])} | {r['walk_kib_per_s']} KiB/s | {r['pictures_per_s']} | "
+                     f"{ms(r['lag_max_ms'])} | {r['walk_kib_per_s']} KiB/s | {r['pictures_per_s']} | {r['cpu_s_per_min']} | "
                      f"{r['painted']} ({r['prepared']}) |")
     return "\n".join(lines) + "\n"
 
