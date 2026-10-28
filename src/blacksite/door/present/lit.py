@@ -1388,16 +1388,16 @@ def prepare_places(body: dict[str, Any], view: tuple[int, int, str], sharp: str,
 def prepare_around(eye: tuple[int, int, str], moving: bool, sharp: str, world: street.World,
                    key_of: Callable[..., Any], job_of: Callable[..., Any]) -> None:
     """Pictures you are likely to want next, from ground the view already
-    shows. While you walk: the cheap picture a step on and of the turns.
-    Standing: the sharp one here, then the turns."""
+    shows. While you walk: only the cheap picture a step on (client CPU
+    is budgeted by the hour, architecture 11). Standing: the turns, sharp,
+    a step on and behind."""
     if not PAINTER.background:
         return
     x, y, heading = eye
     dx, dy = street.HEADINGS[heading]
     turns = [(x, y, street.TURN_LEFT[heading]), (x, y, street.TURN_RIGHT[heading])]
     if moving:
-        around = [(x + dx, y + dy, heading, "low"), *((tx, ty, f, "low") for tx, ty, f in turns),
-                  (x, y, heading, sharp)]
+        around = [(x + dx, y + dy, heading, "low")]  # only the likely next step: CPU is budgeted too
     else:
         around = [*((tx, ty, f, sharp) for tx, ty, f in turns), (x + dx, y + dy, heading, "low"),
                   (x, y, street.BEHIND[heading], sharp)]

@@ -350,7 +350,7 @@ async def realtime(width: int, height: int, glyphs: str, tier: str) -> dict:
             sent += len(data)
             picture_cpu += spent
             look()
-            await asyncio.sleep(0.01)
+            await asyncio.sleep(0.1)  # the door renders at most ten times a second (UI 6)
     walked = time.perf_counter() - started
     picture_cpu += sum(seconds for _, seconds in lit.PAINTER.log)  # what the painter did in slices
     # then stand still until the sharp picture is up
