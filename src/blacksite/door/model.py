@@ -425,8 +425,8 @@ class Display:
                     self.dirty = True  # a look ended, or the danger hold ran out
                 elif self.inspect and now - self.last_render >= 0.5:
                     self.dirty = True  # keep the inspector's clocks moving
-        if lit.PAINTER.take_fresh() or lit.PAINTER.settled(now):
-            self.dirty = True  # a picture landed, or you stopped and it can be sharp
+        if lit.PAINTER.take_fresh() or lit.PAINTER.due(now):
+            self.dirty = True  # a picture landed, you stopped, or a held picture may go
         if self.card_until and now >= self.card_until:
             self.card_until = 0.0
             self.dirty = True
@@ -511,6 +511,7 @@ class Display:
 
     def finish(self, buffer: CellBuffer, hint: str, now: float, flashed: bool) -> tuple[bytes, Frame | None]:
         output = buffer.diff(None if self.force_full else self.previous)
+        lit.PAINTER.charge(len(output), now)
         if self.prompt and not self.confirm_exit:
             output += f"\x1b[{self.layout.hint + 1};{min(self.layout.width - 1, 2 + display_width(hint))}H\x1b[?25h".encode("ascii")
         else:

@@ -65,6 +65,18 @@ CACHE_BYTES = 24 * 1024 * 1024
 PREFETCH = 6
 """Pictures waiting to be prepared; older ones give way to newer."""
 CLOCK = time.monotonic
+WALK_RATE = 64 * 1024
+"""Bytes a second the picture may take while you walk; it goes out less
+often to fit (plan 13.5, provisional until measured over real transports)."""
+BURST = WALK_RATE // 2
+"""The most the walk may spend at once: half a second of its budget."""
+FULL_EVERY = 1.0
+"""Seconds between whole new pictures that are not the walk: the sharp one
+when you stop, a cut to another place's camera."""
+FLAT_CELLS = 3000
+"""Above this many cells, the walk's picture is one colour a cell pair
+(half the rows of pixels), so it can go out about 2.5 times a second
+within WALK_RATE at 132x50; below, it keeps its half-blocks."""
 """When you last moved is measured on this clock (the door's own)."""
 
 
@@ -902,10 +914,11 @@ _STEPS = Steps()
 class Encoder:
     """Pixels to cells for one frame and tier. `sextant` frames have 2x3
     pixels a cell, `half` frames 1x2, and `low` frames (the walk) 1x2 over
-    two cells, in truecolor steps: the cheap class."""
+    two cells, in truecolor steps: the cheap class. `flat`: a low frame
+    with one colour a cell pair, for large pictures."""
 
-    def __init__(self, frame: Frame, tier: str) -> None:
-        self.frame, self.tier = frame, tier
+    def __init__(self, frame: Frame, tier: str, flat: bool = False) -> None:
+        self.frame, self.tier, self.flat = frame, tier, flat and frame.grid == "low"
         self.quant = _STEPS if frame.grid == "low" and tier == "truecolor" else quantiser(tier)
         self.styles: dict[tuple[Any, Any], Style] = {}
         self.cells: dict[tuple[str, Any, Any], Cell] = {}
@@ -940,6 +953,9 @@ class Encoder:
         if frame.grid == "low":
             col //= 2
         top, bottom = px(row * 2 * width + col), px((row * 2 + 1) * width + col)
+        if self.flat:
+            both = mean([top, bottom])
+            return self.cell(" ", both, both), both
         return self.cell("▀", top, bottom), bottom
 
 
@@ -950,7 +966,7 @@ def mean(colours: list[RGB8]) -> RGB8:
 
 def encoded(frame: Frame, tier: str, columns: int, rows: int) -> tuple[list[list[Cell]], list[list[RGB8]], Encoder]:
     """The static picture's cells, encoded once per tier."""
-    encoder = Encoder(frame, tier)
+    encoder = Encoder(frame, tier, columns * rows > FLAT_CELLS)
     found = frame.encoded.get((tier,))
     if found is None:
         grid, backs = [], []
@@ -1018,6 +1034,10 @@ class Painter:
         self.unsettled = False
         self.log: list[tuple[str, float]] = []
         """(what, seconds) per finished paint, for measurement."""
+        self.tokens, self.tokens_at = float(BURST), None
+        self.charging = False
+        self.last_full = -INF
+        self.held_until: float | None = None
 
     def clear(self) -> None:
         self.cache.clear()
@@ -1105,9 +1125,49 @@ class Painter:
             self.eye = eye
         return now - self.moved_at < SETTLE
 
-    def settle_in(self, now: float) -> float | None:
-        """Seconds until the picture should be drawn sharp, if it is due."""
-        return max(0.0, self.moved_at + SETTLE - now) if self.unsettled else None
+    def wake_in(self, now: float) -> float | None:
+        """Seconds until the picture should be drawn again on its own: sharp
+        after you stop, or a picture held back by the budget."""
+        times = [t for t in (self.moved_at + SETTLE if self.unsettled else None, self.held_until) if t is not None]
+        return max(0.0, min(times) - now) if times else None
+
+    def due(self, now: float) -> bool:
+        """True once when the picture should be drawn again on its own."""
+        held = self.held_until is not None and now >= self.held_until
+        if held:
+            self.held_until = None
+        return self.settled(now) or held
+
+    def allow(self, moving: bool, now: float) -> bool:
+        """May a new picture go out now? While you walk, from a budget that
+        refills at WALK_RATE (charged with what the frame cost); otherwise
+        (sharp on stop, a cut) at most one every FULL_EVERY seconds. When
+        not, the last picture stays up and `held_until` says when to try."""
+        if moving:
+            self._refill(now)
+            if self.tokens > 0:
+                self.charging = True
+                return True
+            self.held_until = now + -self.tokens / WALK_RATE + 0.001
+            return False
+        if now - self.last_full >= FULL_EVERY:
+            self.last_full = now
+            return True
+        self.held_until = self.last_full + FULL_EVERY
+        return False
+
+    def charge(self, sent: int, now: float) -> None:
+        """What a frame cost, while you walk (every frame then, so the budget
+        covers the walk, not only its pictures)."""
+        if self.charging or now - self.moved_at < SETTLE:
+            self._refill(now)
+            self.tokens -= sent
+            self.charging = False
+
+    def _refill(self, now: float) -> None:
+        if self.tokens_at is not None:
+            self.tokens = min(float(BURST), self.tokens + (now - self.tokens_at) * WALK_RATE)
+        self.tokens_at = now
 
     def settled(self, now: float) -> bool:
         """True once when the eye has stopped long enough."""
@@ -1257,7 +1317,11 @@ def render(buffer: CellBuffer, body: dict[str, Any], area: Rect, paint: Paint, h
         frame, cam = shown
     else:
         cam = camera_at(eye[0], eye[1], eye[2], area.width, rows, grid)
-        PAINTER.shown[slot] = (frame, cam)
+        shown = PAINTER.shown.get(slot)
+        if shown is not None and shown[0] is not frame and not PAINTER.allow(moving, now):
+            frame, cam = shown  # over budget: the last picture stays up a moment longer
+        else:
+            PAINTER.shown[slot] = (frame, cam)
         if view is not None:
             prepare_places(body, view, sharp, key_of, job_of)
         else:

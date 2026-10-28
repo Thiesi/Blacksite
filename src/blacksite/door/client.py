@@ -206,9 +206,9 @@ async def run(info: DoorInfo, terminal: Terminal) -> None:
                         await send([ack])
                 # Data and keys wake immediately; idle rendering stays asleep.
                 delay = max(0.001, min(1.0, model.last_render + 0.1 - now)) if model.dirty else 1.0
-                settle = lit.PAINTER.settle_in(now)
-                if settle is not None:
-                    delay = min(delay, max(0.001, settle))
+                again = lit.PAINTER.wake_in(now)
+                if again is not None:
+                    delay = min(delay, max(0.001, again))
                 try:
                     await asyncio.wait_for(changed.wait(), delay)
                 except asyncio.TimeoutError:

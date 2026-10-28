@@ -1931,9 +1931,11 @@ class _Validator:
                 if zone.tile_at(anchor) in (None, "wall", "locked-door"):
                     self.report(*owner, f"place {place.name!r}: anchor {list(anchor)} is not open ground", place.name)
                 # The fixed camera stands where anyone may stand (D1): open
-                # ground, never a hidden exit.
+                # ground, never a hidden exit, never a private instance.
+                # (Rooms behind an owner's door wait for D1's public-ground
+                # region; zone data cannot tell them yet.)
                 if place.view is not None and (zone.tile_at(place.view.at) not in OPEN_GROUND
-                                               or place.view.at in hidden):
+                                               or place.view.at in hidden or zone.meta.instanced):
                     self.report(*owner, f"place {place.name!r}: view {list(place.view.at)} is not public open ground",
                                 place.name)
             if look.scene is not None:

@@ -79,6 +79,16 @@ def test_a_viewpoint_must_stand_on_open_ground(tmp_path, at) -> None:
     assert any(f"view {at} is not public open ground" in p for p in problems), problems
 
 
+def test_a_viewpoint_may_not_stand_in_a_private_instance(tmp_path) -> None:
+    local = edited(tmp_path, lambda d: None)
+    zone = local / "zones/sodium-tin-halo.json"
+    data = json.loads(zone.read_text(encoding="utf-8"))
+    data["instanced"] = True
+    zone.write_text(json.dumps(data), encoding="utf-8")
+    problems = [p.message for p in validate(load_content(CONTENT, local))]
+    assert any("view [11, 9] is not public open ground" in p for p in problems), problems
+
+
 def test_the_server_sends_a_viewpoint_only_over_known_ground(info, tmp_path, trial) -> None:
     def far(data: dict) -> None:
         data["charted"] = False  # only what you have seen is known
@@ -328,3 +338,38 @@ def test_in_the_door_a_picture_lands_between_keys_and_is_drawn(info, content, tr
         assert any(0x1FB00 <= ord(ch) <= 0x1FB3B for ch in second.decode("utf-8"))
 
     asyncio.run(scenario())
+
+
+def test_the_walk_spends_from_a_budget_by_the_second() -> None:
+    painter = lit.Painter()
+    assert painter.allow(True, 10.0)
+    painter.charge(lit.BURST + 32 * 1024, 10.0)  # a costly picture overdraws it
+    assert not painter.allow(True, 10.1)  # the last picture stays up
+    assert painter.held_until is not None and 10.4 < painter.held_until < 10.6
+    assert painter.wake_in(10.1) == pytest.approx(painter.held_until - 10.1)
+    again = painter.held_until
+    assert not painter.due(10.3) and painter.due(again) and not painter.due(again + 0.1)  # once
+    assert painter.allow(True, again + 0.01)  # refilled at WALK_RATE
+
+
+def test_sharp_pictures_and_cuts_go_out_at_most_once_a_second() -> None:
+    painter = lit.Painter()
+    assert painter.allow(False, 5.0)
+    assert not painter.allow(False, 5.4) and painter.held_until == 6.0
+    assert painter.allow(False, 6.0)
+
+
+def test_large_walking_pictures_are_one_colour_a_cell_pair(info, content, trial, painter) -> None:
+    game, client, display = halo(info, content, ticks=6)
+    columns, rows = 108, 40  # above FLAT_CELLS
+    assert columns * rows > lit.FLAT_CELLS
+    area = Rect(0, 0, columns, rows)
+    lit.render(CellBuffer(columns, rows), display.body, area, paint(display), "right", hud=False)
+    move(game, client, "sodium-tin-halo", (SPOT[0] + 1, SPOT[1]))
+    for frame in game.frames_for(client):
+        display.receive(frame, 1)
+    painter[0] += 0.2
+    buffer = CellBuffer(columns, rows)
+    lit.render(buffer, display.body, area, paint(display), "right", hud=False)
+    assert {cell.glyph for row in buffer.cells for cell in row} <= {" ", "▀"}
+    assert sum(cell.glyph == " " and cell.style.fg == cell.style.bg for row in buffer.cells for cell in row) > 0.9 * columns * rows

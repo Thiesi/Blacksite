@@ -303,9 +303,10 @@ class RealClock:
 
 
 async def realtime(width: int, height: int, glyphs: str, tier: str) -> dict:
-    """The street route in real time, a step every 200 ms, background
-    painter: how many steps showed a picture of where you stood, and the
-    picture's lag behind you."""
+    """The street route in real time, a step every 200 ms, painting in
+    slices and spending the walk's byte budget: bytes and pictures a
+    second, and for each step how long until a picture of it (or of a
+    later step) was up."""
     caller, _ = setup(width, height, glyphs, tier, "street")
     lit.CLOCK = time.monotonic
     clock = RealClock()
@@ -314,31 +315,63 @@ async def realtime(width: int, height: int, glyphs: str, tier: str) -> dict:
     painting = asyncio.create_task(pump(lit.PAINTER, ready, stop))
     caller.display.heading = "right"
     draw(caller, clock, full=True)
-    current, lags, shown_at = 0, [], {}
+    area = caller.display.layout.viewport
+    slot = (area.width, area.height - 1, False)
+    eyes: list[tuple[int, int, str]] = []
+    stepped: list[float] = []
+    lag: dict[int, float] = {}
+    pictures, sent, last = 0, 0, None
+    started = time.perf_counter()
     eye = lambda: (caller.avatar.actor.x, caller.avatar.actor.y, caller.display.heading)
+    headings = {(0, -1): "up", (1, 0): "right", (0, 1): "down", (-1, 0): "left"}
+
+    def look() -> None:
+        nonlocal pictures, last
+        shown = lit.PAINTER.shown.get(slot)
+        if shown is None or shown[0] is last:
+            return
+        last = shown[0]
+        pictures += 1
+        cam = shown[1]
+        at = (int(cam.px - 0.5), int(cam.py - 0.5), headings[(cam.dx, cam.dy)])
+        now = time.perf_counter()
+        matches = [i for i, e in enumerate(eyes) if e == at]
+        if matches:
+            for i in range(matches[-1] + 1):
+                lag.setdefault(i, now - stepped[i])
+
     for move in STREET:
         caller.key(move, 4)
-        current += 1
-        target = eye()
-        stepped = time.perf_counter()
-        deadline = stepped + STEP
+        eyes.append(eye())
+        stepped.append(time.perf_counter())
+        deadline = stepped[-1] + STEP
         while time.perf_counter() < deadline:
-            draw(caller, clock)
-            area = caller.display.layout.viewport
-            shown = lit.PAINTER.shown.get((area.width, area.height - 1, False))
-            if shown is not None:
-                cam = shown[1]
-                at = (int(cam.px - 0.5), int(cam.py - 0.5))
-                if at == target[:2] and target not in shown_at:
-                    shown_at[target] = time.perf_counter() - stepped
-            await asyncio.sleep(0.02)
-        lags.append(shown_at.get(target))
+            data, _ = draw(caller, clock)
+            sent += len(data)
+            look()
+            await asyncio.sleep(0.01)
+    walked = time.perf_counter() - started
+    # then stand still until the sharp picture is up
+    for _ in range(150):
+        data, _ = draw(caller, clock)
+        sent += 0 * len(data)
+        look()
+        if not lit.PAINTER.busy() and lit.PAINTER.wake_in(time.monotonic()) is None and shown_sharp(slot):
+            break
+        await asyncio.sleep(0.02)
     stop.set()
     await painting
-    caught = [lag for lag in lags if lag is not None]
-    return {"steps": len(lags), "steps_shown_in_time": len(caught),
-            "lag_p95_ms": round(p95(caught) * 1000) if caught else None,
+    lags = [lag[i] for i in range(len(eyes)) if i in lag]
+    return {"steps": len(eyes), "steps_shown_in_time": sum(1 for v in lags if v <= STEP),
+            "lag_p95_ms": round(p95(lags) * 1000) if lags else None,
+            "lag_max_ms": round(max(lags) * 1000) if lags else None,
+            "walk_kib_per_s": round(sent / walked / 1024, 1), "pictures_per_s": round(pictures / walked, 1),
             "painted": len(lit.PAINTER.log), "prepared": sum(1 for what, _ in lit.PAINTER.log if what == "prepared")}
+
+
+def shown_sharp(slot: tuple) -> bool:
+    shown = lit.PAINTER.shown.get(slot)
+    return shown is not None and shown[0].grid != "low"
 
 
 def table(rows: list[dict], latencies: dict, walks: dict, host: str) -> str:
@@ -369,12 +402,14 @@ def table(rows: list[dict], latencies: dict, walks: dict, host: str) -> str:
         for mode, r in modes.items():
             lines.append(f"| {name} | {mode} | {r['key_wait_p95_ms']} ms | {r['key_wait_max_ms']} ms | "
                          f"{r['busy_ms']} ms | {r['turns']} |")
-    lines += ["", "Walking in real time (a step every 200 ms, painting in slices):", "",
-              "| Case | Steps | Picture of where you stood, within the step | Lag p95 | Pictures painted | Of them prepared |",
-              "|---|---|---|---|---|---|"]
+    lines += ["", "Walking in real time (a step every 200 ms, painting in slices, the walk's budget "
+              f"{lit.WALK_RATE // 1024} KiB/s). Lag: from a step until a picture of it, or of a later step, is up.", "",
+              "| Case | Steps | Shown within the step | Lag p95 | Lag max | Bytes/s walking | Pictures/s | Painted (prepared) |",
+              "|---|---|---|---|---|---|---|---|"]
     for name, r in walks.items():
-        lines.append(f"| {name} | {r['steps']} | {r['steps_shown_in_time']} | {ms(r['lag_p95_ms'])} | {r['painted']} | "
-                     f"{r['prepared']} |")
+        lines.append(f"| {name} | {r['steps']} | {r['steps_shown_in_time']} | {ms(r['lag_p95_ms'])} | "
+                     f"{ms(r['lag_max_ms'])} | {r['walk_kib_per_s']} KiB/s | {r['pictures_per_s']} | "
+                     f"{r['painted']} ({r['prepared']}) |")
     return "\n".join(lines) + "\n"
 
 
