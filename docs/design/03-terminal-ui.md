@@ -29,6 +29,32 @@ suits (`♦♣♥♠`), and a few symbols (`§°±≡`). No emoji, no combining 
 and a test asserts every glyph in `glyphs.json` round-trips through
 CP437.
 
+**Glyph tiers.** The game is built for a modern terminal and never
+requires one. Glyphs come in two tiers, chosen independently of colour:
+
+- **CP437 tier** (the set above): every caller can use it, and it is
+  complete. Nothing needed to play exists only in the modern tier.
+- **Modern tier**: a substitution, not a second renderer. Each
+  `glyphs.json` entry may carry a modern glyph beside its CP437 glyph,
+  which stays as the fallback. Layout, widths and the meaning of every
+  cell are the same in both tiers; only the character drawn changes. In
+  chrome that means, for example, eighth-block bars, diagonal arrows and
+  rounded corners. Eye-level pictures use sextants in the modern tier
+  and half-blocks in the CP437 tier.
+
+Map rules hold in both tiers: one glyph per tile, no sub-tile detail,
+and a map glyph means the same in both. A modern glyph may be a better
+drawing of the same symbol, never a symbol only modern callers see, so
+help, legends and advice between players work across tiers.
+
+Detection: NetBBS sends only the boolean `unicode_style`, so support is
+not detectable. The one-time first-play check shows a test row for each
+glyph family the modern tier uses. The modern tier is on by default when
+`color_depth` is truecolor and the caller confirms the rows look right;
+everyone else gets the CP437 tier. Either can be changed in settings.
+Every modern glyph is single width, has a CP437 fallback and appears in
+the check; replay tests run in both tiers.
+
 S30/S31 platform admission follows architecture 8.4: respect NetBBS's
 boolean `unicode_style`, returning a clear graphic-terminal requirement
 when false instead of silently overriding an ASCII preference. CP437

@@ -93,7 +93,7 @@ the tile in `.map` files; `glyph` is a `glyphs.json` id used to draw it;
 `colour` is a palette role whose per-tier values live in `palette.json`.
 
 The terminal tables beside it: `glyphs.json` (`glyphs`: glyph id to one
-CP437 character), `palette.json` (`roles`: role to tier to variant to
+CP437 character, with an optional modern-tier character, terminal UI §1), `palette.json` (`roles`: role to tier to variant to
 value) and `keymaps.json` (`actions`: action id to context and label;
 `keymaps`: id, label, bindings of action id to normalised key names).
 
