@@ -814,6 +814,14 @@ None of these slices is filed or started before D-T1.
   `validate.py`, `loader.py` and `palette.json`, which S25 also changes.
   Neither design PR should merge. Their code lands through P-slices,
   rebased after S25a (D-T2).
+- **A1 to A6 stay open until real play** (owner, 2026-10-28, relayed by
+  the presentation lead). The owner will not judge them from deliberate
+  trial sessions in the `playtest_68` harness. They are judged in PT1 or
+  a later playtest with real sessions. Until then Auto ships them as
+  tunable defaults, with the decider's trace (`BLACKSITE_AUTO_TRACE`)
+  available, so a real session's complaint can be traced to the rule
+  that caused it. Engineering consequence: P5's decider keeps each rule
+  as a named, separately tunable default, not inlined logic.
 - Canon: Auto changes `03-terminal-ui.md` §2 (camera), §4 (view kinds)
   and §5 (keys). That canon edit belongs in P0 once the owner accepts the
   direction, top-down and in the same PR as the first slice that depends
@@ -1025,3 +1033,36 @@ measurements, not from profiling:
   a lower frame rate and sharpens on stop. Whether that is preferable to
   repaint-on-stop is a presentation call; the budgets in §13.5 apply
   either way.
+
+### 13.7 V1 as an early spike on the trial path (2026-10-28)
+
+The owner cleared V1 to start. P2 and P5 do not exist yet, so the
+presentation lead builds V1's engine work against V0's trial path,
+stacked on #73 (`design/presentation-v1`), to retire the performance
+risk early. Porting onto P2's view shapes and P5's client switch is a
+later step, and V1's acceptance runs after that port. Terms:
+
+- Like V0: behind `BLACKSITE_PRESENTATION_TRIAL`, no shipped path
+  changes, not merged. The code is the draft for V1 proper.
+- Scope: coalescing; the lit layer cached per tile and heading, with
+  idle prefetch; the reduced byte class while moving; the fixed-camera
+  scene view (painted on entry, figures per step); the door's fallback
+  viewpoint from known tiles only.
+- Measurement, reported per tier at 132x50 and 80x24:
+  - step-picture p95 split into cold cache (first visit) and warm
+    (revisit), on the CI Linux runner as reference and locally;
+  - input latency while a paint or a prefetch runs: prefetch yields to
+    input and never delays a keypress;
+  - bytes per step while moving and on stop, against the 16 KiB
+    ceiling;
+  - cache memory per caller at peak, with an LRU cap.
+- Disclosure: prefetch and the cache use only tiles already in the
+  caller's view, so neither can paint ground the caller has not seen.
+- Not in the spike: measuring over the real NetBBS SSH and web
+  transports. That remains a V1 acceptance step.
+- **The authored viewpoint goes into the look data now**, as part of
+  the V3 draft schema, not door-side only. It is content, the validator
+  checks it on public ground (D1), and a door-only format would have to
+  be migrated later. The server sends a place's viewpoint only when its
+  tile is in the caller's known set. Otherwise the door uses its
+  fallback.
