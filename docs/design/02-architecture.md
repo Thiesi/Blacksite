@@ -350,11 +350,16 @@ actors[]: {..., class, jacked?}      presented class, see 5.5.4 (P4)
 objects[]: {..., role}               role by kind, not `text`/`muted` (P4)
 me: {..., district, pvp}             district id; whether PvP can reach you here (P4)
 charted: [[legend index, ...], ...]  public layout shown without sight, see 5.5.5 (P6)
-looks: {theme, regions[], signs[], marks[], glints[]}  place layer, masked, see 5.5.4 (P6)
+looks: {theme, regions[], signs[], marks[], glints[], names{}}  place layer, masked, see 5.5.4 (P6)
 place: {places[{name, rect, at, text, view?}], here}   named places and the fixed camera (V3)
 scene: {lights[], pieces[]}          set dressing for the picture, masked (V3)
 focus: {id, label, verb} | null      what E does now, see 5.5.2 (P3)
 ```
+
+`looks.names` labels tile ids for HERE. A look's `ambient` lines are
+not sent in the view; they reach the caller as `ambient` log lines
+(5.5.3). `charted` and `public` are content only; the view carries the
+synthesised `charted` grid.
 
 `LogLine` gains `kind`, and for speech `speaker` and `speaker_role`
 (5.5.3). `LatticeView` cells gain `owner` and `tier` for cores (a private
@@ -502,8 +507,9 @@ writes the caller's memory, so nothing charted becomes remembered. The
 validator rejects a `public` rectangle that contains a hidden exit or
 a passable tile next to one, overlaps a private interior (apartments,
 owner-door rooms), or belongs to an instanced zone. The fixed camera
-and Auto's walks read the same region. Only flagged zones move the mechanics fingerprint,
-and each such move is approved in the PR that flags the zone.
+and Auto's walks read the same region. Only flagged zones move the
+mechanics fingerprint, and each such move is approved in the PR that
+flags the zone.
 
 #### 5.5.6 Rules never read presentation
 
@@ -590,7 +596,8 @@ Detailed in `03-terminal-ui.md`. Architectural points:
   and colour codes send only what changed.
 - Eye-level pictures (street and scene views) are painted in slices on
   the door's event loop, between keys and frames, from a per-caller
-  cache keyed by position and heading. Input never waits for a picture;
+  cache keyed by position, heading and the known ground the picture was
+  painted from, so newly known ground repaints. Input never waits for a picture;
   the newest position wins and intermediate pictures are dropped.
 - Display width of every glyph is measured with the same East Asian
   width rules NetBBS uses; the client never assumes one column per code
@@ -746,9 +753,9 @@ machine.
 |---|---|
 | Tick (16 players, 6 active zones) | ≤ 40 ms p99 |
 | View delta per session per tick | ≤ 2 KiB typical, ≤ 16 KiB worst |
-| Client render per frame | ≤ 5 ms at 80×24, excluding picture painting |
-| Eye-level picture per step (reference host) | ≤ 100 ms p95, painted in slices of ≤ 5 ms |
-| Key wait while a picture paints | ≤ 20 ms |
+| Client render per frame | ≤ 5 ms at 80×24, excluding picture painting; the 132×50 figure is set from P1's baseline |
+| Eye-level picture per step (reference host) | ≤ 100 ms p95, painted in slices (target ≤ 5 ms each) |
+| Key wait while a picture paints | ≤ 20 ms (the acceptance figure) |
 | Picture bytes while walking | ≤ 64 KiB/s sustained, bursts ≤ 32 KiB; one-off whole pictures (stop, cut) ≤ 128 KiB, at most one a second; provisional until measured over the NetBBS SSH and web transports |
 | Picture cache per caller | ≤ 24 MiB, LRU |
 | Client CPU per hour of play | ≤ 120 s, pictures included; efficiency target, independent of configurable accumulated CPU ceiling |

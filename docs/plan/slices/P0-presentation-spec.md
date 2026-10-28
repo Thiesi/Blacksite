@@ -31,7 +31,8 @@ slice implements a contract instead of a proposal.
 
 ## Out of scope
 
-D8 (art prominence, decided by PT1), City Map geography (D-T7, its own
+D8 beyond the owner's decided default (the place card on entry; strip
+modes and the dashboard are decided by PT1), City Map geography (D-T7, its own
 proposal), any code.
 
 ## Acceptance
