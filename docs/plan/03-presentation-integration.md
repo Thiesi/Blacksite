@@ -1,6 +1,7 @@
 # Presentation integration: engineering assessment and plan
 
-**Status: proposal for the owner's decision. Nothing here is adopted.**
+**Status: adopted by the owner on 2026-10-28 (D-T1), with D-T2 to D-T8
+and V0-3 decided as recommended. See §14.**
 Issue #68. Technical lead's review, 2026-10-25, against `main` at
 `d80dacd`, S25 at `a97906b` (PR #66), S27 at `3754620`, and the
 presentation lead's working tree on `design/presentation-review`.
@@ -26,6 +27,9 @@ Contents:
 9. Decisions for the owner
 10. Review and acceptance process
 11. Notes for the presentation lead
+12. Planning for the Auto direction
+13. The visual target: the Tin Halo
+14. Adoption and owner decisions, 2026-10-28
 
 Evidence labels: **[V]** read in code, content or git at the stated
 commit; **[I]** inference. File paths are relative to `src/blacksite/`
@@ -1066,3 +1070,58 @@ later step, and V1's acceptance runs after that port. Terms:
   be migrated later. The server sends a place's viewpoint only when its
   tile is in the caller's known set. Otherwise the door uses its
   fallback.
+
+## 14. Adoption and owner decisions, 2026-10-28
+
+The owner decided in the technical lead's session on 2026-10-28,
+accepting every recommendation put to them. Two TR-2 recommendations
+were then corrected: game design §5.2 already set Undercity sight to 5,
+and D-T4 assumes S25's hidden-exit rule. The owner re-decided both
+with that information (rows marked below).
+
+### 14.1 Plan decisions
+
+| ID | Decision |
+|---|---|
+| D-T1 | **Adopted.** P0 to P10, C1, V1 to V3, the slice splits and the human gates H1 to H5 and PT1. |
+| D-T2 | **Yes.** S25's engine fixes and accepted canon corrections land as S25a, a separate PR with its own review. S25's human layout approval stays withheld. |
+| D-T3 | **Yes.** S08 hub geometry may change, under the same per-zone human gate and a fingerprint rebaseline. |
+| D-T4 | **Yes.** HERE names a hidden passage only while the caller stands on its tile, never from adjacency. |
+| D-T5 | **One global cutover** (P10). |
+| D-T6 | **Yes.** Presentation foundations come before S26b, S30b, S33b, S29b and S31; backend work continues in parallel. |
+| D-T7 | **Yes.** The presentation lead proposes a canon city plan (district positions, tram lines); the owner approves it. |
+| D-T8 | **Yes.** The plainclothes Warden gets a presented class distinct from its true faction, fixed in P4. |
+| V0-3 | **Yes, in lit pockets only.** Inside a lit pocket (an interior whose look declares lights), sight covers the whole room. Elsewhere sight rules are unchanged. This is a game rule: it lands top-down in `00-game-design.md` before code, in the slice that first draws pocket scenes (V1 port or P6). |
+
+H5 (owner look pass per scene place, §13.6) joins the gate list under
+D-T1.
+
+### 14.2 S25 rule changes (TR-2 on #66)
+
+| Change in #66 | Owner decision | Lands in |
+|---|---|---|
+| Gate Nine opens 60 s every 120 s | Accepted, provisional; tuned at the pacing gate | S25a |
+| Water doubles movement time | Accepted | S25a |
+| Same-spawner NPCs do not target each other (outsiders still) | Accepted | S25a |
+| Relay Zero's temporary credential permits only `worker_return` | Accepted | S25a |
+| NPC stat table (14 rows, XP 20, respawn 60 s) | Accepted, provisional; tuned at the pacing gate | S25a |
+| Gantry hazard 5 dps | Accepted, provisional | S25a |
+| Typed route credentials | Accepted in principle. Not counted as working until the doors they open stand in real walls and the Citadel lockdown test shows a route actually blocked (TR-4) | S25a mechanism, S25b proof |
+| Terraces sector 36 to 48 cells | Accepted, if needed for 24 homes | S25a canon, S25b content |
+| Three new vendors | Accepted, subject to a gazetteer check in review | S25b |
+| Undercity sight flattened to 5 | **Rejected: per-zone lighting.** Game design §5.2 is amended first: Undercity sight is set per zone by its lighting, using the gazetteer's values (Service 5, Drowned 4, Caverns 3, Outworks 6, Shaft Foot 10); a carried light raises it to at least 5, and existing light objects and dark-sight effects apply as now | S25a (canon first, then code) |
+| Hidden exits become unmarked passages usable by Interact on the tile; Listening, programs and dialogue point them out | **Accepted** (S25's rule). Consistent with D-T4 | S25a |
+| Landing's `tramyard-wall-gate` exit removed | **Restore,** unless the implementer records a reason the owner then accepts | S25b |
+| Outworks core raised to tier 5 | **Open.** The implementer records the reason; the owner decides | S25b |
+| S25 spec rewritten to permit engine work and hub changes | Superseded by D-T2 and D-T3: the S25 file returns to content scope and the rest moves to S25a and S25b | this PR |
+
+### 14.3 What is filed now
+
+Slice files and issues for the first wave, which can start at once:
+P0 (#75), P1 (#76), S25a (#77) and S25b (#78). The other slices in §7.3 and §13 are filed when
+their dependencies are close, so their files describe the code as it
+then stands. V1 continues as the trial-path spike (§13.7) on #73's
+stack.
+
+S25's original file is marked as split. S25c (geometry) is filed after
+H1, as §7.2 orders it.
