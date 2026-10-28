@@ -1,6 +1,6 @@
 # S25 — Undercity and Scour content: all remaining zone maps, spawners, salvage rings
 
-**Status:** planned
+**Status:** split on 2026-10-28 (D-T2): engine fixes and canon in [S25a](S25a-engine-fixes-and-canon.md) (#77), content bindings and generator fixes in [S25b](S25b-content-bindings.md) (#78), geometry and place identity in S25c (filed after H1; `docs/plan/03-presentation-integration.md` §7.3). Human layout approval: **not granted**.
 **Primary model:** Gemini or Sonnet · **Reviewer:** Sonnet (validator plus a read of each zone), Human for `under-shaft-foot` and `scour-ring-4`
 **Depends on:** S08, S11, S14, S17, S21, S24 · **Milestone:** M5
 **Issue:** https://github.com/Thiesi/blacksite/issues/25
