@@ -129,6 +129,61 @@ class LookPlace:
     at: Tile | None = None
 
 
+PieceKind = Literal["counter", "bench", "table", "shelf", "screens", "lamp", "cans", "sign", "board",
+                    "doorway", "pipe", "box", "ring"]
+
+
+@dataclass(frozen=True)
+class SceneLight:
+    """A light at eye level (V0 draft): where it hangs, its colour, how far
+    it reaches. Tile units; `z` is height above the floor."""
+
+    at: tuple[float, float]
+    z: float
+    colour: str
+    reach: float
+    power: float = 1.0
+
+
+@dataclass(frozen=True)
+class ScenePiece:
+    """Dressing that stands in a place (V0 draft): a box with a footprint
+    `rect` (`[x, y, w, h]`, tile units) from `z[0]` to `z[1]` high. A piece
+    in the space a body moves through stands only on tiles the map already
+    marks (cover, a thing, a wall), so the scene never shows an obstacle
+    the grid does not have."""
+
+    kind: PieceKind
+    rect: tuple[float, float, float, float]
+    z: tuple[float, float]
+    colour: str = ""
+    """Surface colour, `#rrggbb`; the kind's own when empty."""
+    glow: str = ""
+    """Light the piece gives off itself (screens, signs, bottles)."""
+    text: str = ""
+    """A sign's letters, drawn as text over its face."""
+    role: str = ""
+    """Palette role for `text`."""
+
+
+@dataclass(frozen=True)
+class LookScene:
+    """How a place looks at eye level (V0 draft, trial only). Decoration:
+    no rule reads it."""
+
+    interior: bool = True
+    ceiling: float = 3.2
+    walls: str = "#2a2630"
+    floor: str = "#1c1a1e"
+    wet: float = 0.0
+    """How much the floor mirrors the lights, 0 to 1."""
+    ambient: str = "#0c0b10"
+    haze: str = "#000000"
+    haze_reach: float = 40.0
+    lights: tuple[SceneLight, ...] = ()
+    pieces: tuple[ScenePiece, ...] = ()
+
+
 @dataclass(frozen=True)
 class Look:
     """`looks/<zone-id>.json`: what a zone looks like. Dressing never
@@ -147,6 +202,8 @@ class Look:
     places: tuple[LookPlace, ...] = ()
     charted: bool = False
     """Public geography known on arrival (decision D1; trial only)."""
+    scene: LookScene | None = None
+    """Lights and dressing at eye level (V0 spike; trial only)."""
     schema: int = CONTENT_SCHEMA
 
 

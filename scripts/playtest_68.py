@@ -7,6 +7,8 @@
     python scripts/playtest_68.py --view scene         # paradigm B: places
     python scripts/playtest_68.py --view auto          # paradigm C: chosen by context
     python scripts/playtest_68.py --view auto --inspect  # and show why (F10)
+    python scripts/playtest_68.py --geometry candidate --view scene --colour truecolor --glyphs modern
+                                                       # V0: the Tin Halo lit, in sextants
 
 Starts a private foreground service under `.test-tmp/playtest-68-*` with
 the trial switches on (charted public geography, ambient lines), then
@@ -90,6 +92,8 @@ def main() -> int:
     parser.add_argument("--view", choices=("shipped", "map", "street", "scene", "auto"), default="map",
                         help="the view to start in (F7 cycles)")
     parser.add_argument("--inspect", action="store_true", help="start with the auto inspector shown (F10)")
+    parser.add_argument("--glyphs", choices=("cp437", "modern"), default="cp437",
+                        help="modern: eye-level pictures in sextants (V0; needs a font that has them)")
     args = parser.parse_args()
 
     root = ROOT / ".test-tmp" / f"playtest-68-{args.geometry}"
@@ -127,7 +131,8 @@ def main() -> int:
         trace = root / "auto-trace.jsonl"
         door_env = dict(env, NETBBS_DOOR_INFO=str(info), BLACKSITE_INSTALL_DIR=str(install),
                         BLACKSITE_PRESENTATION="0" if args.view == "shipped" else args.view,
-                        BLACKSITE_AUTO_TRACE=str(trace), BLACKSITE_AUTO_INSPECT="1" if args.inspect else "0")
+                        BLACKSITE_AUTO_TRACE=str(trace), BLACKSITE_AUTO_INSPECT="1" if args.inspect else "0",
+                        BLACKSITE_GLYPH_TIER=args.glyphs)
         command = [sys.executable, "-m", "blacksite.door"] + (["--local"] if os.name == "nt" else [])
         with utf8_console():
             code = subprocess.call(command, env=door_env, cwd=ROOT)

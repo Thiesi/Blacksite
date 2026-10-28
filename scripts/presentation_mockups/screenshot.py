@@ -70,8 +70,9 @@ def colours(sgr: str) -> tuple[tuple[int, int, int], tuple[int, int, int]]:
     return (bg, fg) if reverse else (fg, bg)
 
 
-def png(term, path: Path) -> None:
-    cw, ch = 9, 18
+def png(term, path: Path, cell: tuple[int, int] = (9, 18)) -> None:
+    cw, ch = cell
+    font_main, font_symbols = (FONT, SYMBOLS) if cell == (9, 18) else (_font(FONTS, ch * 5 // 6), _font(FALLBACK, ch * 3 // 4))
     image = Image.new("RGB", (term.width * cw, term.height * ch))
     draw = ImageDraw.Draw(image)
     for y in range(term.height):
@@ -84,7 +85,16 @@ def png(term, path: Path) -> None:
             if glyph in blocks:
                 l, t, r, b = blocks[glyph]
                 draw.rectangle([x * cw + l * cw, y * ch + t * ch, x * cw + r * cw - 1, y * ch + b * ch - 1], fill=fg)
+            elif glyph and 0x1FB00 <= ord(glyph) <= 0x1FB3B:  # sextants: 2x3, bit 0 top left
+                pattern = ord(glyph) - 0x1FB00 + 1
+                pattern += pattern >= 21
+                pattern += pattern >= 42
+                for bit in range(6):
+                    if pattern >> bit & 1:
+                        r, c = divmod(bit, 2)
+                        draw.rectangle([x * cw + c * cw // 2, y * ch + r * ch // 3,
+                                        x * cw + (c + 1) * cw // 2 - 1, y * ch + (r + 1) * ch // 3 - 1], fill=fg)
             elif glyph and glyph != " ":
-                font = FONT if FONT.getmask(glyph).getbbox() else SYMBOLS
+                font = font_main if font_main.getmask(glyph).getbbox() else font_symbols
                 draw.text((x * cw, y * ch), glyph, font=font, fill=fg)
     image.save(path)

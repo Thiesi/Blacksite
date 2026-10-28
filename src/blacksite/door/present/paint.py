@@ -49,9 +49,11 @@ class Paint:
     """A palette plus the two things the shipped one does not do: bold and
     the dimmed light of known-but-unseen space."""
 
-    def __init__(self, palette: Palette) -> None:
+    def __init__(self, palette: Palette, glyphs: str = "cp437") -> None:
         self.palette = palette
         self.tier = palette.tier
+        self.glyphs = glyphs
+        """"modern" lets eye-level art use sextants (V0 spike); "cp437" does not."""
         self.dims: dict[Style, Style] = {}
 
     def __call__(self, role: str, bg: str | None = None, *, bold: bool = False, reverse: bool = False) -> Style:

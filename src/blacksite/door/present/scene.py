@@ -13,7 +13,7 @@ from typing import Any
 
 from blacksite.door.cells import CellBuffer, display_width, truncate
 from blacksite.door.layout import Rect
-from blacksite.door.present import street
+from blacksite.door.present import lit, street
 from blacksite.door.present.paint import Paint
 
 COMPASS = ["E", "SE", "S", "SW", "W", "NW", "N", "NE"]  # by angle, screen y down; CP437-safe
@@ -69,8 +69,11 @@ def render(buffer: CellBuffer, body: dict[str, Any], area: Rect, paint: Paint, h
     spot = next((p for p in place.get("places", []) if p["name"] == here_name), None)
     text = spot["text"] if spot and spot.get("text") else " ".join(place.get("lore", [])[:1])
     # A glimpse at eye level, the width of the view.
-    glimpse_rows = max(5, min(12, area.height // 3))
-    street.render(buffer, body, Rect(area.x, area.y, area.width, glimpse_rows), paint, heading, hud=False)
+    # A lit place (V0) earns a larger glimpse: the picture carries the place.
+    glimpse_rows = max(5, min(19, area.height * 2 // 5)) if body.get("scene") else max(5, min(12, area.height // 3))
+    glimpse = Rect(area.x, area.y, area.width, glimpse_rows)
+    if not lit.render(buffer, body, glimpse, paint, heading, hud=False):
+        street.render(buffer, body, glimpse, paint, heading, hud=False)
     y = area.y + glimpse_rows
     buffer.put(area.x, y, " " * area.width, paint("panel_text"))
     title = here_name.upper()

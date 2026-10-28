@@ -70,6 +70,10 @@ REQUIRED_ROLES = frozenset({
 DRESSING_TEXT = frozenset("ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789 -'&.,«»")
 DRESSING_LINES = frozenset("─│")
 DRESSING_GRAIN = frozenset("·∙,'` ")
+HEX_COLOUR = re.compile(r"#[0-9a-fA-F]{6}")
+BODY_SPACE = (0.2, 1.7)
+"""Heights (tile units) a body moves through: scene pieces there need a marked tile."""
+OPEN_GROUND = frozenset({"floor", "exit", "door", "water", "hazard"})
 
 _CLOSING_ACTIONS = frozenset({"close", "disable", "toggle"})
 _INTEGER = re.compile(r"-?[0-9]+")
@@ -1925,9 +1929,46 @@ class _Validator:
                 anchor = place.at or (x + w // 2, y + h // 2)
                 if zone.tile_at(anchor) in (None, "wall", "locked-door"):
                     self.report(*owner, f"place {place.name!r}: anchor {list(anchor)} is not open ground", place.name)
+            if look.scene is not None:
+                self.check_scene(look.scene, zone, owner)
             for line in [*look.ambient, *(p.text for p in look.places)]:
                 if "—" in line or len(line) > DIALOGUE_LINE_MAX:
                     self.report(*owner, f"ambient line {line[:30]!r}: no em-dash, at most {DIALOGUE_LINE_MAX} characters")
+
+    def check_scene(self, scene: s.LookScene, zone: s.Zone, owner: tuple[str, str]) -> None:
+        """Eye-level dressing (V0 draft). A piece that stands where a body
+        moves (between BODY_SPACE heights) may only stand on tiles the map
+        already marks, so the scene never shows an obstacle that is not
+        there; overhead pieces and floor marks may go anywhere."""
+        for value in (scene.walls, scene.floor, scene.ambient, scene.haze,
+                      *(light.colour for light in scene.lights),
+                      *(c for piece in scene.pieces for c in (piece.colour, piece.glow) if c)):
+            if not HEX_COLOUR.fullmatch(value):
+                self.report(*owner, f"scene colour {value!r}: use #rrggbb", value)
+        if not 0 <= scene.wet <= 1 or scene.ceiling <= 0 or scene.haze_reach <= 0:
+            self.report(*owner, "scene: wet 0 to 1, ceiling and haze_reach above 0")
+        inside = lambda x, y: 0 <= x < zone.width and 0 <= y < zone.height
+        for light in scene.lights:
+            if not inside(*light.at) or light.reach <= 0 or light.power <= 0 or not 0 <= light.z <= scene.ceiling:
+                self.report(*owner, f"light at {list(light.at)}: inside the zone, under the ceiling, reach and power above 0")
+        for piece in scene.pieces:
+            x, y, w, h = piece.rect
+            low, high = piece.z
+            label = f"{piece.kind} at {[x, y]}"
+            if w <= 0 or h <= 0 or not 0 <= low < high or not inside(x, y) or not inside(x + w - 1e-6, y + h - 1e-6):
+                self.report(*owner, f"{label}: a footprint inside the zone and 0 <= z[0] < z[1]")
+                continue
+            if piece.text:
+                self.role(piece.role, owner, "scene sign")
+                if set(piece.text) - DRESSING_TEXT:
+                    self.report(*owner, f"{label}: {piece.text!r} uses letters dressing cannot", piece.text)
+            if low < BODY_SPACE[1] and high > BODY_SPACE[0]:
+                under = {(tx, ty) for tx in range(int(x), int(x + w - 1e-6) + 1)
+                         for ty in range(int(y), int(y + h - 1e-6) + 1)}
+                plain = sorted(t for t in under if zone.tile_at(t) in OPEN_GROUND)
+                if plain:
+                    self.report(*owner, f"{label} stands in the way on open ground at {list(plain[0])}: "
+                                        "the map shows nothing there")
 
     # --- routes under every control, service and event state ----------------
 

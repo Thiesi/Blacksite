@@ -6,6 +6,7 @@ remembered), so dressing reveals nothing that sight has not.
 """
 
 import os
+from collections.abc import Callable, Iterator
 from dataclasses import dataclass
 from typing import Any
 
@@ -128,3 +129,52 @@ def for_zone(content: ContentTree, zone: s.Zone) -> ZoneLooks | None:
 def charted(content: ContentTree, zone: s.Zone) -> bool:
     look = content.looks.get(zone.id)
     return TRIAL and look is not None and look.charted
+
+
+WHOLE_ONLY = frozenset({"cans", "ring"})
+"""Pieces that only make sense whole (an annulus is drawn about its centre)."""
+
+
+def scene(look: s.Look, known: Callable[[tuple[int, int]], bool]) -> dict[str, Any] | None:
+    """Eye-level lights and dressing (V0 spike, trial only). Like a look,
+    a piece or light goes out only where the caller knows the ground it
+    stands on, so a scene reveals nothing the map does not: a piece that
+    is partly known is clipped to its known tiles, row by row, and a
+    ring, halo or sign goes out only when all of it is known."""
+    if not TRIAL or look.scene is None:
+        return None
+    sc = look.scene
+    pieces = []
+    for p in sc.pieces:
+        x, y, w, h = p.rect
+        rows = {ty: [tx for tx in range(int(x), int(x + w - 1e-6) + 1) if known((tx, ty))]
+                for ty in range(int(y), int(y + h - 1e-6) + 1)}
+        total = sum(1 for ty in rows for _ in range(int(x), int(x + w - 1e-6) + 1))
+        seen = sum(len(xs) for xs in rows.values())
+        if not seen or (seen < total and (p.kind in WHOLE_ONLY or p.text)):
+            continue
+        rects = [list(p.rect)] if seen == total else [
+            [max(x, a), max(y, ty), min(x + w, b + 1) - max(x, a), min(y + h, ty + 1) - max(y, ty)]
+            for ty, xs in rows.items() for a, b in runs(xs)]
+        pieces += [{"kind": p.kind, "rect": rect, "z": list(p.z), "colour": p.colour, "glow": p.glow,
+                    "text": p.text, "role": p.role} for rect in rects]
+    return {"interior": sc.interior, "ceiling": sc.ceiling, "walls": sc.walls, "floor": sc.floor, "wet": sc.wet,
+            "ambient": sc.ambient, "haze": sc.haze, "haze_reach": sc.haze_reach,
+            "lights": [{"at": list(li.at), "z": li.z, "colour": li.colour, "reach": li.reach, "power": li.power}
+                       for li in sc.lights if known((int(li.at[0]), int(li.at[1])))],
+            "pieces": pieces}
+
+
+def runs(xs: list[int]) -> Iterator[tuple[int, int]]:
+    """Contiguous runs in sorted integers, as (first, last)."""
+    start = previous = None
+    for x in xs:
+        if start is None:
+            start = previous = x
+        elif x == previous + 1:
+            previous = x
+        else:
+            yield start, previous
+            start = previous = x
+    if start is not None:
+        yield start, previous

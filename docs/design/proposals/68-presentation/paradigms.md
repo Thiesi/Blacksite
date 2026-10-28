@@ -482,8 +482,8 @@ commitment):
    owner 2026-10-25): full scenes for hub interiors and pockets first,
    simpler looks elsewhere.
 
-**First step (D-T10, agreed by the owner 2026-10-25; starts when the
-technical lead clears it):** a live spike, V0, that renders the Tin Halo
+**First step (D-T10, agreed by the owner 2026-10-25; built, see
+[`v0.md`](v0.md) for the live frames, costs and findings):** a live spike, V0, that renders the Tin Halo
 from look data (lights, set pieces, places) in the real door behind the
 trial flag. The owner compares live captures with this target before any
 authoring at scale; the spike's look schema becomes the draft content
