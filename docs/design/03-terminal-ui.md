@@ -20,14 +20,50 @@ caller's answer to a one-time on-screen check the first time they play
 | 16 | basic ANSI, bold as bright | same | selectable; used by the colour-blind variants too |
 
 There is no ASCII-glyph tier. UTF-8 is a platform guarantee. The set of
-Unicode glyphs used is fixed (`content/glyphs.json`) and restricted to
-characters that also exist in CP437, so a caller on a SyncTERM-class
+Unicode glyphs used is fixed (`content/glyphs.json`), and its CP437
+column is restricted to characters that also exist in CP437, so a caller on a SyncTERM-class
 Telnet client in CP437 mode, or any transcoding path, still sees the
 intended shapes: box-drawing (`─│┌┐└┘├┤┬┴┼` and the double-line set),
 blocks and shades (`█▓▒░▀▄`), arrows (`←↑→↓`), bullets (`•·`), card
 suits (`♦♣♥♠`), and a few symbols (`§°±≡`). No emoji, no combining marks,
-and a test asserts every glyph in `glyphs.json` round-trips through
-CP437.
+and a test asserts every glyph in the CP437 column round-trips through
+CP437. The modern column follows the glyph tier rules below.
+
+**Glyph tiers.** The game is built for a modern terminal and never
+requires one. Glyphs come in two tiers, chosen independently of colour:
+
+- **CP437 tier** (the set above): every caller can use it, and it is
+  complete. Nothing needed to play exists only in the modern tier.
+- **Modern tier**: a substitution, not a second renderer. Each
+  `glyphs.json` entry may carry a modern glyph beside its CP437 glyph,
+  which stays as the fallback. Layout, widths and the meaning of every
+  cell are the same in both tiers; only the character drawn changes. In
+  chrome that means, for example, eighth-block bars, diagonal arrows and
+  rounded corners. Eye-level pictures use sextants in the modern tier
+  and half-blocks in the CP437 tier.
+
+Map rules hold in both tiers: one glyph per tile, no sub-tile detail,
+and a map glyph means the same in both. A modern glyph may be a better
+drawing of the same symbol, never a symbol only modern callers see, so
+help, legends and advice between players work across tiers.
+
+Detection: NetBBS sends only the boolean `unicode_style`, so support is
+not detectable. The first-play check shows a test row for each glyph
+family the modern tier uses. The modern tier is on by default when
+`color_depth` is truecolor and the caller confirms the rows look right;
+everyone else gets the CP437 tier. Either can be changed in settings.
+
+The choice is stored per player but applies per connection, the way
+colour is capped by `color_depth`. The modern tier is drawn only while
+the connection is truecolor and `unicode_style` is true; an absent
+`unicode_style` counts as false here. When a later connection's
+transport or `color_depth` differs from the one the tier was confirmed
+on, the check runs again before the modern tier is used. A key drawn in
+CP437 glyphs always switches back to the CP437 tier, so a caller who
+sees broken cells, settings menu included, can recover.
+
+Every modern glyph is single width, has a CP437 fallback and appears in
+the check; replay tests run in both tiers.
 
 S30/S31 platform admission follows architecture 8.4: respect NetBBS's
 boolean `unicode_style`, returning a clear graphic-terminal requirement

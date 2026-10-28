@@ -556,7 +556,8 @@ S30 honors the boolean `unicode_style`. False means the caller requested
 ASCII styling; explain the ANSI graphic requirement and return cleanly
 before world entry, inviting selection of Unicode or CP437 in NetBBS.
 Do not force a preference change or add an ASCII tier. True permits the
-existing CP437-compatible glyph set; absence is unknown and uses the
+CP437-compatible glyph set, and the modern tier when the first-play check
+confirms it (terminal UI §1); absence is unknown and uses the
 existing graphic default. S31 tests actual CP437 transcoding as well as
 UTF-8, resize and 16-colour output. `node_id` is not a credential or a
 Link fingerprint; S32 may not assume the absent `node_fingerprint`.
