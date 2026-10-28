@@ -11,6 +11,7 @@ from blacksite.door.connection import Connection, Reconnect
 from blacksite.door.doorinfo import DoorInfo
 from blacksite.door.keys import KeyDecoder, ESCAPE_TIMEOUT_SECONDS
 from blacksite.door.model import Display
+from blacksite.door.present import lit
 from blacksite.door.terminal import Terminal
 from blacksite.server.protocol import Frame, ProtocolError, read_frame
 
@@ -46,6 +47,11 @@ async def run(info: DoorInfo, terminal: Terminal) -> None:
     connection = Connection()
     decoder = KeyDecoder()
     changed = asyncio.Event()
+    paint_ready = asyncio.Event()
+    # Lit pictures are painted in slices between keys and frames (V1): a
+    # landed picture wakes the loop like a frame or a key does.
+    previous_painter, lit.PAINTER = lit.PAINTER, lit.Painter(background=True, wake=changed.set,
+                                                             kick=paint_ready.set)
     retry = Reconnect()
     started = time.monotonic()
     blocked = False
@@ -86,6 +92,15 @@ async def run(info: DoorInfo, terminal: Terminal) -> None:
                     await send(model.key(key, now))
             if keys:
                 changed.set()
+
+    async def paint_pump() -> None:
+        while not model.leaving:
+            if lit.PAINTER.busy():
+                lit.PAINTER.work()
+                await asyncio.sleep(0)  # keys and frames go first
+            else:
+                paint_ready.clear()
+                await paint_ready.wait()
 
     async def output_pump() -> None:
         nonlocal info, blocked, resize_requested
@@ -191,6 +206,9 @@ async def run(info: DoorInfo, terminal: Terminal) -> None:
                         await send([ack])
                 # Data and keys wake immediately; idle rendering stays asleep.
                 delay = max(0.001, min(1.0, model.last_render + 0.1 - now)) if model.dirty else 1.0
+                settle = lit.PAINTER.settle_in(now)
+                if settle is not None:
+                    delay = min(delay, max(0.001, settle))
                 try:
                     await asyncio.wait_for(changed.wait(), delay)
                 except asyncio.TimeoutError:
@@ -207,7 +225,7 @@ async def run(info: DoorInfo, terminal: Terminal) -> None:
         # Title appears before the handshake, even when the service is absent.
         initial, _ = model.render(started)
         terminal.write(initial)
-        tasks = [asyncio.create_task(input_pump()), asyncio.create_task(output_pump())]
+        tasks = [asyncio.create_task(input_pump()), asyncio.create_task(output_pump()), asyncio.create_task(paint_pump())]
         _, pending = await asyncio.wait(tasks, return_when=asyncio.FIRST_COMPLETED)
         model.leaving = True
         for task in pending:
@@ -217,6 +235,7 @@ async def run(info: DoorInfo, terminal: Terminal) -> None:
             if isinstance(result, BaseException) and not isinstance(result, (asyncio.CancelledError, OSError, ValueError, ProtocolError)):
                 raise result
     finally:
+        lit.PAINTER = previous_painter
         for task in tasks:
             task.cancel()
         await asyncio.gather(*tasks, return_exceptions=True)

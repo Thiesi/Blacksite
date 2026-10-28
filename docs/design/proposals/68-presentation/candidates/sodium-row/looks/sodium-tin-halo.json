@@ -21,7 +21,14 @@
         3,
         3
       ],
-      "text": "You stand under a halo of tin cans a drunk welded up forty years ago. Nobody has taken it down."
+      "text": "You stand under a halo of tin cans a drunk welded up forty years ago. Nobody has taken it down.",
+      "view": {
+        "at": [
+          3,
+          8
+        ],
+        "facing": "up"
+      }
     },
     {
       "name": "The bar",
@@ -35,7 +42,14 @@
         12,
         14
       ],
-      "text": "A counter the length of the room. Vesper sits at its end with three screens and a drink that does not get lower."
+      "text": "A counter the length of the room. Vesper sits at its end with three screens and a drink that does not get lower.",
+      "view": {
+        "at": [
+          11,
+          9
+        ],
+        "facing": "down"
+      }
     },
     {
       "name": "The booths",
@@ -49,7 +63,14 @@
         20,
         3
       ],
-      "text": "High-backed booths under their own lamps. The regulars know things. Some of the things are true."
+      "text": "High-backed booths under their own lamps. The regulars know things. Some of the things are true.",
+      "view": {
+        "at": [
+          21,
+          10
+        ],
+        "facing": "up"
+      }
     },
     {
       "name": "The back room",
@@ -63,7 +84,14 @@
         31,
         19
       ],
-      "text": "A red light over a door you were not asked through."
+      "text": "A red light over a door you were not asked through.",
+      "view": {
+        "at": [
+          31,
+          14
+        ],
+        "facing": "down"
+      }
     },
     {
       "name": "The quiet end",
@@ -77,7 +105,14 @@
         34,
         14
       ],
-      "text": "A table at the quiet end of the bar. The Ferrymen liaison is sometimes in."
+      "text": "A table at the quiet end of the bar. The Ferrymen liaison is sometimes in.",
+      "view": {
+        "at": [
+          36,
+          10
+        ],
+        "facing": "down"
+      }
     },
     {
       "name": "The Tin Halo",
@@ -91,7 +126,14 @@
         21,
         10
       ],
-      "text": "The old advertising ring lights the ceiling now. Everyone who wants work comes here."
+      "text": "The old advertising ring lights the ceiling now. Everyone who wants work comes here.",
+      "view": {
+        "at": [
+          4,
+          10
+        ],
+        "facing": "right"
+      }
     }
   ],
   "scene": {

@@ -1,0 +1,30 @@
+name: presentation-budget
+
+# V1 (#68): the lit picture against plan section 13.5, measured on the
+# hosted Linux runner as the reference host. Trial work only: it runs on
+# the V1 branch or by hand, never as a gate.
+on:
+  push:
+    branches: [design/presentation-v1]
+  workflow_dispatch:
+
+jobs:
+  measure:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Install
+        run: python -m pip install -e .[test]
+      - name: Measure
+        run: python scripts/presentation_mockups/v1_budget.py budget
+      - name: Summary
+        if: always()
+        run: cat budget/v1-budget.md >> "$GITHUB_STEP_SUMMARY"
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: v1-budget
+          path: budget/v1-budget.*

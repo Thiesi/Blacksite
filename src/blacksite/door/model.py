@@ -20,6 +20,7 @@ from blacksite.door import present
 from blacksite.door.present import scene as present_scene
 from blacksite.door.present.context import Context, Decision
 from blacksite.door.present import inspect as present_inspect
+from blacksite.door.present import lit
 from blacksite.door.present import screen as present_screen
 from blacksite.door.present import street as present_street
 from blacksite.door.present.paint import Paint
@@ -424,6 +425,8 @@ class Display:
                     self.dirty = True  # a look ended, or the danger hold ran out
                 elif self.inspect and now - self.last_render >= 0.5:
                     self.dirty = True  # keep the inspector's clocks moving
+        if lit.PAINTER.take_fresh() or lit.PAINTER.settled(now):
+            self.dirty = True  # a picture landed, or you stopped and it can be sharp
         if self.card_until and now >= self.card_until:
             self.card_until = 0.0
             self.dirty = True
