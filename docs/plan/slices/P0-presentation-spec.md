@@ -1,6 +1,6 @@
 # P0 — Presentation spec decisions into canon
 
-**Status:** planned
+**Status:** done (PR #81; canon text approved by the owner 2026-10-28)
 **Primary model:** Opus (presentation lead drafts the design sections; technical lead drafts the engineering contracts) · **Reviewer:** technical lead and presentation lead, each on the other's sections
 **Depends on:** owner decisions D1 to D7 (#68, #69) · **Milestone:** presentation track
 **Issue:** https://github.com/Thiesi/Blacksite/issues/75
@@ -31,7 +31,8 @@ slice implements a contract instead of a proposal.
 
 ## Out of scope
 
-D8 (art prominence, decided by PT1), City Map geography (D-T7, its own
+D8 beyond the owner's decided default (the place card on entry; strip
+modes and the dashboard are decided by PT1), City Map geography (D-T7, its own
 proposal), any code.
 
 ## Acceptance

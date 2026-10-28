@@ -40,6 +40,9 @@ after their id.
 | id | slug | `core-plaza` |
 | name, district | str | |
 | safety | enum | safe, pocket, contested, open |
+| lit | bool | a pocket-class zone that is lit: sight covers it while you stand in it (game design 5.2); default false |
+| charted | bool | D1: the public region is known on arrival (terminal UI 2.3, architecture 5.5.5); default false |
+| public | list of `[x, y, w, h]` | D1: the public-ground region; required when `charted`. Architecture 5.5.5 says what it may contain |
 | lean | faction id or null | |
 | width, height | int | 40–200, 20–100; derived from the `.map`, not written in the sidecar |
 | tiles | grid of TileRef | from the `.map` legend |
@@ -51,9 +54,19 @@ after their id.
 | exits | list of Exit | id, tile, target zone, target tile, kind (street, door, tram, ladder, lift, gate, cable), requirement (pass, key, faction), hidden, optional relay |
 | spawners | list of Spawner | id, tile or region, npc template, count, respawn seconds, condition |
 | objects | list of ObjectSpec | id, tile, kind (door, terminal, vendor, vat, relay, cache, tram_stop, apartment_door, light, hardware, descent_console, workshop, bank, turret, camera, shutter, cable_car, pump, lift, patrol_beacon, gate, gantry), params, essential (clinic, public vat, public uplink) |
-| pockets | list of Region | rectangles that are `pocket` safety inside a contested zone |
+| pockets | list of Pocket | rectangles that are `pocket` safety inside a contested zone; each a Region with `lit` and `charted` (bools, default false), as for the zone. A charted pocket's rectangle joins the zone's public region, under the same checks |
 | lore | list of asset ids | ambient log lines, found texts |
 | instanced | bool | Blacksite levels only |
+
+`lit` is a rule (game design 5.2), read from the zone data only, never
+from a look (architecture 5.5.6). It is valid only on a zone whose
+safety is `pocket` and on pocket regions; the validator rejects it
+anywhere else. Once looks carry lights at eye level
+(the scene track, V3), a look that lights a pocket must agree with its
+`lit` flag, and the validator checks both ways. `charted` and `public`
+change what callers are shown and what walks may use, so they are zone
+data too, covered by the mechanics fingerprint; looks stay
+presentation only.
 
 `ZoneLayout` has `id`, `changes` (list of `{tile, tile_id}`),
 `warning_tiles` (list of Tile) and `alternate_routes` (exit IDs).
@@ -291,7 +304,16 @@ validated against game 3.5; temporary modifiers never alter these rows.
 
 `id, name, faction, grade, attributes, weapon, armour, behaviours[]
 (with params), dialogue (talker id or null), vendor (inventory id or null),
-loot[] (item, chance, count), xp, lore`.
+loot[] (item, chance, count), xp, lore, presents`.
+
+`presents` (optional) is the class a caller sees: `civilian`, `warden`,
+`security`, `service` or `hostile` (decision D-T8). It sets the NPC's
+colour, figure and NEARBY class, never its rules. A disguised NPC sets
+its cover: the plainclothes Warden presents `civilian`. Without it, the
+class is derived from faction and behaviour (architecture 5.5.4).
+`presents` is static content; the moment a disguised NPC acts against a
+caller, the reveal to that caller is runtime state of the NPC instance
+(architecture 5.5.4), never written back to the template.
 
 An optional explicit `health` pool and embedded `attack` weapon block
 support private training actors. `training` requires both and scopes
@@ -566,6 +588,45 @@ The `red-sable` card maps to `sable`. Existing standing under a card-only
 alias moves once to its faction key, combining and clamping at -100/100.
 The eight introductions set standing, not membership. They do not
 activate incomplete faction content or handlers.
+
+### 1.21 Themes and looks (`themes.json`, `looks/<zone-id>.json`)
+
+The presentation layer (decision D3, 2026-10-28): how places look. It is
+presentation only; what a caller may be shown without sight (`charted`,
+`public`) is zone data (1.1). No rule reads it (architecture 5.5.6),
+and removing every look changes no rule and no non-presentation view
+field.
+
+`themes.json` maps a theme id to `{ground_bg, ground_fg, texture,
+wall_bg, wall_fg, luma, pattern}`: palette roles for the ground and wall
+faces, the ground grain (`texture`, characters picked per tile by a
+stable hash; a space is bare ground), `luma` (`dark` or `light`; light
+grounds use `_light` people roles) and `pattern` (`grain` or `rings`).
+A theme has values per tier through its roles; content never names a
+colour directly.
+
+A look, one per zone, keyed by zone id:
+
+| Field | Type | Notes |
+|---|---|---|
+| theme | theme id | the zone's base theme |
+| regions | list of `{theme, rect}` or `{theme, circle}` | areas lit differently: a lamp pool, an alley; later regions win |
+| signs | list of `{at, text, role}` | lettering on wall faces, left to right from `at`; every letter on a wall tile |
+| marks | list of `{role, at, text}` or `{role, line, glyph}` | paint on plain floor: words, lane lines, arrows |
+| glints | list of Tile | water cells that catch the light (`glint_role`); on water only |
+| names | tile id to text | what a tile is here (`cover-2`: `barrels`), used by HERE |
+| ambient | list of text | the place's ambient lines (UI 2.5; voice rules apply) |
+
+Places (named parts of a zone with a fixed camera) and scenes (lights
+and set pieces at eye level) are drafts for the scene track (V3, issue
+#68) and not part of this record yet.
+
+Validator rules: every theme and role exists; region shapes are one of
+`rect` or `circle`; signs stay on wall tiles and use dressing letters
+only; marks lie on plain floor; glints lie on water; no look glyph is a
+rule glyph (UI 2.2); 16-colour backgrounds are 0-7; ambient lines follow
+the voice rules (no em-dash, at most 200 characters, no real or
+other-fiction names).
 
 ---
 
