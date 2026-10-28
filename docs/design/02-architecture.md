@@ -340,6 +340,28 @@ event: {name, remaining} | null
 hint: text                         one-line contextual key help
 ```
 
+Presentation fields (P0, plan `03-presentation-integration.md`; each is
+built by the slice named, and every one is additive, so older clients
+ignore it):
+
+```
+legend[]: {..., glyph_modern?}       modern-tier glyph, terminal UI §1 (V2)
+actors[]: {..., class, jacked?}      presented class, see 5.5.4 (P4)
+objects[]: {..., role}               role by kind, not `text`/`muted` (P4)
+me: {..., district, pvp}             district id; whether PvP can reach you here (P4)
+charted: [[legend index, ...], ...]  public layout shown without sight, see 5.5.5 (P6)
+looks: {theme, regions[], signs[], marks[], glints[]}  place layer, masked, see 5.5.4 (P6)
+place: {places[{name, rect, at, text, view?}], here}   named places and the fixed camera (V3)
+scene: {lights[], pieces[]}          set dressing for the picture, masked (V3)
+focus: {id, label, verb} | null      what E does now, see 5.5.2 (P3)
+```
+
+`LogLine` gains `kind`, and for speech `speaker` and `speaker_role`
+(5.5.3). `LatticeView` cells gain `owner` and `tier` for cores (a private
+core reads `private`), the sector gains `theme`, links gain `label`, and
+black ICE is marked from the caller's survey state, never from the
+template (P4).
+
 `remembered` matches the viewport and contains only terrain previously
 seen by this player. The renderer uses it when `tiles` contains `-2`;
 hidden actors and current object state never enter either memory grid.
@@ -390,6 +412,108 @@ cursor at the row the server says.
 
 `TextView.body`: `title, lines[], page, pages` for found texts, the
 Chronicle, help.
+
+### 5.5 Presentation contracts
+
+These hold for every view kind. They keep the presentation a pure
+function of what the caller is entitled to know, and keep rules out of
+presentation data.
+
+#### 5.5.1 One layout geometry
+
+One pure module computes the screen layout from terminal size and
+layout tier: named rectangles for header, viewport, side panel, log,
+hint, text area and overlay. The door's layout, the server's camera and
+every server-side wrap or page width (Wake briefing, City Map pages,
+contract panels, encounter and private-core text, menu page size) import
+it. Nothing else derives a width from the terminal size. Client and
+server ship in one package, so this needs no protocol field. A test
+asserts that no server module computes layout outside it.
+
+#### 5.5.2 Interaction focus
+
+Each subsystem that consumes E exposes a pure query beside its `input`
+handler: what E would do for this session now, as a target id, label
+and verb, or nothing. The server composes the queries in the same order
+as E dispatch, and both the dispatch and `ZoneView.focus` use the
+composed result, so the hint line can never name something E would not
+do. A test asserts that the predicted handler is the dispatched handler
+over every interactable tile of the fixture world and the shipped hubs,
+in physical and jacked states. Changing the order is a rule change,
+made only by explicit decision.
+
+Focus names a hidden exit only while the caller stands on its tile
+(D-T4), where Interact already uses it. It never names one from an
+adjacent tile, and never anything outside the caller's sight.
+
+#### 5.5.3 Log kinds
+
+Every log line passes through one emit entry point that requires a
+`kind`: `place`, `ambient`, `speech`, `danger`, `combat`, `system`,
+`reward` or `notice`. Speech carries `speaker` and `speaker_role`.
+Operator and service notices (crew restarts, maintenance) use `notice`,
+not the world log. Ambient lines come from one emitter with a
+per-caller rate budget and their own random stream derived per zone
+instance; they never draw from the zone's simulation RNG. Ambient lines
+are suppressed in combat and travel, and the client never lets ambient
+lines push a `danger` or `combat` line out of view within ten seconds.
+
+#### 5.5.4 Disclosure
+
+The door draws only from view fields, and the server builds view fields
+only from what this caller may know. For presentation that means:
+
+- **Ground.** A tile is known when it is visible now, remembered, or
+  charted (5.5.5). Looks, scene pieces, lights, signs and marks are sent
+  only on known tiles. A piece partly on known ground is clipped to its
+  known tiles, except kinds that are only meaningful whole (rings,
+  halos, signs), which are sent only when all their tiles are known.
+- **People and live state** (actors, object state, hazards) still need
+  sight. Charted ground never reveals them.
+- **Figures** in pictures are drawn only from `actors` in the same
+  view, and any allegiance mark on a figure comes from the actor's
+  presented class.
+- **Presented class.** `actors[].class` is what the caller sees:
+  `caller`, `civilian`, `warden`, `security`, `service`, `hostile` or
+  `drone`. For NPCs it comes from the template's `presents` (entities
+  1.8), which a disguised NPC sets to its cover (the plainclothes
+  Warden presents `civilian`); without it, the class is derived from
+  faction and behaviour. The view sends a name, colour and figure
+  consistent with the presented class, never the true faction of a
+  disguised NPC (D-T8).
+- **The fixed camera.** A place's authored viewpoint stands inside the
+  public-ground region (5.5.5), never on a hidden exit, in a private
+  interior or in an instanced zone. The validator checks this. The
+  server sends it only when its tile is known to the caller; otherwise
+  the door chooses a viewpoint from tiles in the view.
+- **City Map.** Only districts and zones the caller has visited are
+  named.
+- **Client memory.** The door may keep what views have sent this caller
+  in this zone (for example to cache pictures), and nothing else. It
+  discards it on a zone change.
+
+#### 5.5.5 Charted public ground (D1)
+
+A zone whose look sets `charted` shows its public layout on arrival,
+without sight. The public-ground region is the look's `public`
+rectangles (entities 1.21) minus hidden-exit tiles. The server
+synthesises the `charted` grid per view from that region; it never
+writes the caller's memory, so nothing charted becomes remembered. The
+validator rejects a `public` rectangle that contains a hidden exit or
+a passable tile next to one, overlaps a private interior (apartments,
+owner-door rooms), or belongs to an instanced zone. The fixed camera
+and Auto's walks read the same region. Only flagged zones move the mechanics fingerprint,
+and each such move is approved in the PR that flags the zone.
+
+#### 5.5.6 Rules never read presentation
+
+Simulation, sight, movement, combat and NPC code never read looks,
+scenes, themes, places or the presented class. Where a rule depends on
+something a look also shows, the rule reads a field in the zone data
+and the validator checks that the look agrees: lit pockets (game design
+5.2) are flagged `lit` on the pocket or zone, never inferred from look
+lights. The mechanics fingerprint (P1) enforces the separation: a
+presentation-only change leaves it unchanged.
 
 ## 6. Simulation and persistence
 
@@ -461,7 +585,13 @@ Detailed in `03-terminal-ui.md`. Architectural points:
 - The client keeps a **cell buffer** (glyph, fg, bg, attrs per terminal
   cell), renders each view model into it, and emits only the cells that
   changed since the last frame, with cursor-movement minimisation. Full
-  redraw on `view`, on tier change, and on a client-side `Ctrl-L`.
+  redraw on tier change and on a client-side `Ctrl-L`. A whole `view`
+  frame is diffed against the screen as it stands, like a delta (P5),
+  and colour codes send only what changed.
+- Eye-level pictures (street and scene views) are painted in slices on
+  the door's event loop, between keys and frames, from a per-caller
+  cache keyed by position and heading. Input never waits for a picture;
+  the newest position wins and intermediate pictures are dropped.
 - Display width of every glyph is measured with the same East Asian
   width rules NetBBS uses; the client never assumes one column per code
   point. Names from the BBS may contain anything.
@@ -616,8 +746,12 @@ machine.
 |---|---|
 | Tick (16 players, 6 active zones) | ≤ 40 ms p99 |
 | View delta per session per tick | ≤ 2 KiB typical, ≤ 16 KiB worst |
-| Client render per frame | ≤ 5 ms at 80×24 |
-| Client CPU per hour of play | ≤ 120 s; efficiency target, independent of configurable accumulated CPU ceiling |
+| Client render per frame | ≤ 5 ms at 80×24, excluding picture painting |
+| Eye-level picture per step (reference host) | ≤ 100 ms p95, painted in slices of ≤ 5 ms |
+| Key wait while a picture paints | ≤ 20 ms |
+| Picture bytes while walking | ≤ 64 KiB/s sustained, bursts ≤ 32 KiB; one-off whole pictures (stop, cut) ≤ 128 KiB, at most one a second; provisional until measured over the NetBBS SSH and web transports |
+| Picture cache per caller | ≤ 24 MiB, LRU |
+| Client CPU per hour of play | ≤ 120 s, pictures included; efficiency target, independent of configurable accumulated CPU ceiling |
 | Server RSS (16 players, full content) | ≤ 200 MiB |
 | Server start (full content) | ≤ 3 s |
 
