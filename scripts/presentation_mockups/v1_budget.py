@@ -44,6 +44,7 @@ from tests.character_helpers import place  # noqa: E402
 from tests.fake_terminal import FakeTerminal  # noqa: E402
 
 from blacksite.door.present import lit  # noqa: E402
+from blacksite.door.present import screen as present_screen  # noqa: E402
 
 CANDIDATE = ROOT / "docs/design/proposals/68-presentation/candidates/sodium-row"
 OUT = ROOT / "docs/design/proposals/68-presentation/target/v1"
@@ -139,6 +140,8 @@ def walk_route(caller: Caller, clock: Clock, view: str, frames: Path | None = No
     out = {"step_ms": [], "step_bytes": [], "stop_ms": [], "stop_bytes": [], "cut_ms": [], "cut_bytes": []}
 
     def record(kind: str) -> bytes:
+        if caller.display.force_full:
+            kind = "cut"  # the door was asked for a whole screen: a full view from the server
         data, spent = draw(caller, clock)
         out[f"{kind}_ms"].append(spent * 1000)
         out[f"{kind}_bytes"].append(len(data))
@@ -150,12 +153,12 @@ def walk_route(caller: Caller, clock: Clock, view: str, frames: Path | None = No
             target = move  # several steps: each is drawn
             while (caller.avatar.actor.x, caller.avatar.actor.y) != target:
                 start = (caller.avatar.actor.x, caller.avatar.actor.y)
-                here = caller.display.body.get("place", {}).get("here")
+                here = screen_state(caller)
                 before = caller.display.heading
                 caller.walk(next_tile(caller, target))
                 caller.display.heading = before
                 clock.now += STEP
-                record("step" if caller.display.body.get("place", {}).get("here") == here else "cut")
+                record("step" if screen_state(caller) == here else "cut")
                 if (caller.avatar.actor.x, caller.avatar.actor.y) == start:
                     break
         else:
@@ -169,6 +172,13 @@ def walk_route(caller: Caller, clock: Clock, view: str, frames: Path | None = No
             if frames is not None and index == 7:
                 shot(frames, f"{name}-stopped", data, caller)
     return out
+
+
+def screen_state(caller: Caller) -> tuple:
+    """What decides the whole picture in the scene view: the place you are
+    in (its camera) and whether danger has handed the screen to the map."""
+    body = caller.display.body
+    return body.get("place", {}).get("here"), present_screen.threatened(body)
 
 
 def next_tile(caller: Caller, target: tuple[int, int]) -> tuple[int, int]:
@@ -335,8 +345,11 @@ def table(rows: list[dict], latencies: dict, walks: dict, host: str) -> str:
     ms = lambda v: "-" if v is None else f"{v} ms"
     kib = lambda v: "-" if v is None else f"{v / 1024:.1f} KiB"
     lines = [f"Host: {host}", "",
-             "Picture time per step (the lit renderer's share; p95 / max). Cold: first visit. Warm: the route again.", "",
-             "| Case | Steps | Step cold | Step warm | Stop cold | Stop warm | Cut cold | Cut warm |",
+             "Picture time per step (the lit renderer's share; p95 / max). Cold: first visit. Warm: the route again. "
+             "Full: a whole new screen: the scene view cuts to another place's camera, danger hands the screen to the "
+             "map, or the server sends a whole view (at 80x24 when the viewport scrolls; the door then redraws "
+             "everything, in every view).", "",
+             "| Case | Steps | Step cold | Step warm | Stop cold | Stop warm | Full cold | Full warm |",
              "|---|---|---|---|---|---|---|---|"]
     for r in rows:
         pair = lambda k: f"{ms(r[k + '_p95'])} / {ms(r[k + '_max'])}"
@@ -344,7 +357,7 @@ def table(rows: list[dict], latencies: dict, walks: dict, host: str) -> str:
                      f"{pair('warm_step_ms')} | {pair('cold_stop_ms')} | {pair('warm_stop_ms')} | "
                      f"{pair('cold_cut_ms')} | {pair('warm_cut_ms')} |")
     lines += ["", "Bytes (p95 / max) against 16 KiB per delta, and the cache:", "",
-              "| Case | Step | Stop | Cut | Cache peak (cap) |", "|---|---|---|---|---|"]
+              "| Case | Step | Stop | Full | Cache peak (cap) |", "|---|---|---|---|---|"]
     for r in rows:
         pair = lambda k: f"{kib(r[k + '_p95'])} / {kib(r[k + '_max'])}"
         lines.append(f"| {r['view']}, {r['glyphs']}, {r['tier']}, {r['size']} | {pair('step_bytes')} | "

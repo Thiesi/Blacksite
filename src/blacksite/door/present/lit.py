@@ -205,7 +205,7 @@ class Known:
     """The tile at a zone position, memoised for one paint: what the view
     sent, or None where it sent nothing."""
 
-    def __init__(self, world: street.World) -> None:
+    def __init__(self, world: "street.World | Ground") -> None:
         self.world = world
         self.memo: dict[tuple[int, int], str | None] = {}
 
@@ -217,12 +217,62 @@ class Known:
         return tile
 
 
+class Ground:
+    """What views of one zone have sent this caller, by zone position: the
+    latest tile at each, seen now or remembered. Pictures are painted from
+    it, not from the current view alone, so a viewport that scrolls as you
+    walk neither changes a kept picture nor cuts it off at its edge. It
+    holds nothing the server did not send to this caller. `version`
+    changes only when something new is learned."""
+
+    def __init__(self, zone: str) -> None:
+        self.zone = zone
+        self.tiles: dict[tuple[int, int], str] = {}
+        self.version = 0
+        self.seen_arrays: Any = None
+
+    def learn(self, world: street.World) -> None:
+        if self.seen_arrays is not None and self.seen_arrays[0] is world.tiles and self.seen_arrays[1] is world.memory:
+            return
+        vx, vy = world.vp["x"], world.vp["y"]
+        legend, memory, tiles = world.legend, world.memory, self.tiles
+        changed = False
+        for row_index, row in enumerate(world.tiles):
+            for col, state in enumerate(row):
+                if state == -1:
+                    continue
+                index = state if state >= 0 else memory[row_index][col]
+                if 0 <= index < len(legend):
+                    key, tile = (col + vx, row_index + vy), legend[index]["id"]
+                    if tiles.get(key) != tile:
+                        tiles[key] = tile
+                        changed = True
+        if changed:
+            self.version += 1
+        self.seen_arrays = (world.tiles, world.memory)  # keeps them alive, so `is` stays honest
+
+    def at(self, x: int, y: int) -> tuple[str | None, int, dict[str, Any]]:
+        """Like `World.at`: (tile or None, 1, no look)."""
+        return self.tiles.get((x, y)), 1, {}
+
+
+_GROUND: list[Ground] = []
+
+
+def ground(body: dict[str, Any], world: street.World) -> Ground:
+    """This caller's known ground in the zone the view is of."""
+    zone = str((body.get("me") or {}).get("zone", ""))
+    if not _GROUND or _GROUND[0].zone != zone:
+        _GROUND[:] = [Ground(zone)]
+    _GROUND[0].learn(world)
+    return _GROUND[0]
+
+
 _SIGNATURE: list[Any] = [None, None, 0]
 
 
 def signature(world: street.World) -> int:
-    """The known ground, by zone position, whatever the viewport: two views
-    that know the same tiles paint the same picture from the same eye."""
+    """The known ground of one view, by zone position."""
     tiles, memory = world.tiles, world.memory
     if _SIGNATURE[0] is tiles and _SIGNATURE[1] is memory:
         return _SIGNATURE[2]
@@ -321,7 +371,7 @@ class Camera:
 # --- the static picture -------------------------------------------------------
 
 
-def paint_static(world: street.World, sc: Scene, cam: Camera, reach: float | None = None) -> Frame:
+def paint_static(world: "street.World | Ground", sc: Scene, cam: Camera, reach: float | None = None) -> Frame:
     """Everything but people, painted now."""
     return finish(paint_columns(world, sc, cam, reach))
 
@@ -334,7 +384,7 @@ def finish(columns: Generator[None, None, Frame]) -> Frame:
         return done.value
 
 
-def paint_columns(world: street.World, sc: Scene, cam: Camera, reach: float | None = None
+def paint_columns(world: "street.World | Ground", sc: Scene, cam: Camera, reach: float | None = None
                   ) -> Generator[None, None, Frame]:
     """Everything but people, a column at a time (the painter can stop
     between any two). With `reach`, ground further than that from the eye
@@ -1123,7 +1173,7 @@ def viewpoint(body: dict[str, Any], world: street.World) -> tuple[int, int, str]
     view = spot.get("view")
     if view and view.get("facing") in street.HEADINGS:
         return int(view["at"][0]), int(view["at"][1]), view["facing"]
-    key = (tuple(spot["rect"]), signature(world))
+    key = (tuple(spot["rect"]), str((body.get("me") or {}).get("zone", "")), signature(world))
     if key not in _VIEWS:
         _VIEWS[key] = choose_view(world, tuple(spot["rect"]))
         while len(_VIEWS) > 32:
@@ -1174,13 +1224,13 @@ def render(buffer: CellBuffer, body: dict[str, Any], area: Rect, paint: Paint, h
     me = next((a for a in body.get("actors", []) if a.get("role") == "player_self"), None)
     if sc is None or me is None:
         return False
+    known = ground(body, world)
     rows = area.height - (1 if hud else 0)
     if rows < 2 or area.width < 4:
         return True
     modern = paint.glyphs == "modern" and paint.tier != "16"
     view = viewpoint(body, world) if fixed else None
     eye = view or (me["x"], me["y"], heading)
-    known = signature(world)
     reach = None if view else sight(world, me)  # a fixed camera is not your eyes
     now = CLOCK()
     # Walking moves your eyes, not a fixed camera: only then the cheap class.
@@ -1188,11 +1238,11 @@ def render(buffer: CellBuffer, body: dict[str, Any], area: Rect, paint: Paint, h
     sharp = "sextant" if modern else "half"
 
     def key_of(x: int, y: int, facing: str, grid: str) -> tuple[Any, ...]:
-        return (x, y, facing, grid, area.width, rows, sc.key, known, reach)
+        return (x, y, facing, grid, area.width, rows, sc.key, known.zone, known.version, reach)
 
     def job_of(x: int, y: int, facing: str, grid: str) -> Callable[[], Generator[None, None, Frame]]:
         eye_cam = camera_at(x, y, facing, area.width, rows, grid)
-        return lambda: paint_columns(world, sc, eye_cam, reach)
+        return lambda: paint_columns(known, sc, eye_cam, reach)
 
     grid = "low" if moving else sharp
     frame = PAINTER.frame(key_of(*eye, grid), job_of(*eye, grid))

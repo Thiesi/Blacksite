@@ -266,14 +266,26 @@ def test_prepared_pictures_stand_only_on_known_ground(info, content, trial) -> N
 
 
 def test_a_picture_is_kept_by_known_ground(info, content, trial) -> None:
-    """Ground learned since a picture was painted makes a new picture, so a
-    kept one never stands in for a view that knows more or less."""
+    """Pictures are painted from what views of the zone have sent: ground
+    learned since makes a new picture; a view that shows less (a scrolled
+    viewport) does not unlearn it."""
     _, _, display = halo(info, content, ticks=6)
     body = json.loads(json.dumps(display.body))
     less = json.loads(json.dumps(body))
     row = next(i for i, r in enumerate(less["tiles"]) if any(v != -1 for v in r))
     less["tiles"][row] = [-1] * len(less["tiles"][row])
-    assert lit.signature(street.World(body)) != lit.signature(street.World(less))
+    lit._GROUND.clear()
+    first = lit.ground(less, street.World(less))
+    version = first.version
+    assert lit.ground(body, street.World(body)).version != version  # learned a row
+    version = first.version
+    assert lit.ground(less, street.World(less)).version == version  # showing less forgets nothing
+    other = {**body, "me": {**body["me"], "zone": "elsewhere"}}
+    assert lit.ground(other, street.World(other)) is not first  # another zone starts afresh
+    # Everything it holds came in a view.
+    sent = {(x + body["viewport"]["x"], y + body["viewport"]["y"]) for y, r in enumerate(body["tiles"])
+            for x, v in enumerate(r) if v != -1}
+    assert set(first.tiles) <= sent
 
 
 def test_other_places_are_prepared_only_from_viewpoints_the_server_sent(info, content, trial) -> None:
