@@ -206,11 +206,11 @@ Terrain:
 
 | Element | Shape | 256 colours and truecolor | 16 colours |
 |---|---|---|---|
-| Floor | theme grain (`· ∙ , ' \``) or bare | theme background, dim grain | `·` grey on black |
+| Floor | theme grain (`· ∙ , ' \``), or bare away from walls | theme background, dim grain | `·` grey on black |
 | Wall face (a wall beside open ground) | blank | facade background | `█` grey |
 | Roof (a wall with no open neighbour) | blank | near black | blank |
 | Sign | letters on wall faces | lit lettering on the facade | letter colour on black |
-| Paint | `─ │`, letters, `« »` | dim paint colour on the ground | dark grey |
+| Paint | `─ │` and letters | dim paint colour on the ground | dark grey |
 | Cover 1-3 | `░ ▒ ▓` | cover colour; named in HERE | same |
 | Water | `≈` | water background; glints change colour, never shape | blue |
 | Hazard, warned tiles | the tile's shape, `‼` in the log | amber on dark red | bright yellow, reverse |
@@ -223,7 +223,7 @@ Things:
 | Vendor, bank | `$` | gold |
 | Hardware | `■` | violet |
 | Door / closed or locked door | `+` / `≡` | brass |
-| Exit | `»` | white, with a painted or signed destination |
+| Exit | `»` | white, with a painted or signed destination; a hidden exit is not drawn as one (below) |
 | Light source (a rule light) | `☼` | warm white |
 | Clone vat | `Θ` | vat green |
 | Dropped cache | `*` | gold |
@@ -232,6 +232,17 @@ Things:
 
 A pool of lamplight drawn by a theme is not a light source: only `☼`
 objects change sight, and only they are drawn as `☼`.
+
+**Walkable and blocked ground differ by shape.** A wall face is a blank
+cell on the facade's background, so a floor tile beside a wall face
+always carries grain, even in a theme whose ground is otherwise bare: a
+blank cell is never walkable where a wall is near. In 16 colours wall
+faces are `█`. A render test checks that no bare floor cell borders a
+wall face.
+
+**A hidden exit is drawn as the ground around it:** no `»`, no paint, no
+sign naming a destination, until the caller has found it (the focus
+contract, architecture 5.5.2, says when HERE may name it).
 
 People:
 
@@ -294,16 +305,17 @@ Every line has a kind, shown by a gutter mark and a colour (D5):
 
 | Kind | Gutter | Colour |
 |---|---|---|
-| place | `∙` | warm |
-| ambient | `∙` | dim grey |
+| place | `»` | warm |
+| ambient | `·` | dim grey |
 | speech | `"` | speaker lit, words white |
 | combat | `*` | white |
 | danger | `‼` | amber, bold |
 | system | `+` | dark grey |
-| reward | `+` | dim |
+| reward | `√` | dim |
 
 The kinds are architecture 5.5.3's; a line in the Lattice keeps its kind
-and takes the sector's colour.
+and takes the sector's colour. Each kind has its own gutter mark, so no
+kind is told apart by colour alone.
 
 - **Place lines** name where you have arrived, once, on first entry.
 - **Ambient lines** are a place's own voice: at most one every 60 to 120
@@ -371,7 +383,9 @@ grid the old engineers laid out (Lattice 1), not a map of ground.
   cells are `╪` with double-line links `═ ║`; hidden cells `∙` with
   dotted links, shown only once found; the uplink `∩`; a descent `∞`.
 - Cores are buildings: `╔═╗ ║V║ ╚═╝` with the core's initial, or `▐V▌`
-  when rows are tight, in the owner's colour.
+  when rows are tight, in the owner's colour. Initial and colour come
+  from the owner the Lattice view discloses; a private core shows as
+  private, never as the person or faction behind it.
 - You are the reverse-video cell (`█` in the sketch). Other runners are
   `♦` beside their cell, in their relation colour.
 - Below the field, a caption: where you are, then every link from your
