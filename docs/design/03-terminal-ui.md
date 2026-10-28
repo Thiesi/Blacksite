@@ -264,7 +264,7 @@ person, a thing, a warned tile or your target.
   Sight still decides people and live state. Charted ground covers only
   the look's declared public region; it never shows a hidden passage or
   a private interior, and it never becomes part of what your character
-  remembers. Its disclosure terms are architecture 5.4.
+  remembers. Its disclosure terms are architecture 5.5.5.
 
 ### 2.4 The side panel
 
@@ -274,7 +274,7 @@ TARGET and the pinned vitals.
 1. **DANGER** (when warned): time to the hazard, the ways out.
 2. **NOW** (when present): event plans and the objective's next action.
 3. **HERE** (when something is in reach): what is within one step, as
-   the focus contract of architecture 5.4 discloses it.
+   the focus contract of architecture 5.5.2 discloses it.
 4. **TARGET**: name in its role colour, HP bar, range, cover in words,
    relation, warnings (Protected, Firing marks you), the weapon you would
    use. Empty: `none   Tab picks`.
@@ -300,19 +300,22 @@ Every line has a kind, shown by a gutter mark and a colour (D5):
 | combat | `*` | white |
 | danger | `‼` | amber, bold |
 | system | `+` | dark grey |
-| lattice | `∙` | the sector's colour |
+| reward | `+` | dim |
+
+The kinds are architecture 5.5.3's; a line in the Lattice keeps its kind
+and takes the sector's colour.
 
 - **Place lines** name where you have arrived, once, on first entry.
 - **Ambient lines** are a place's own voice: at most one every 60 to 120
   seconds per caller, never in combat or travel, and they can be muted
   in settings.
-- Identical lines within 10 seconds coalesce (`(x13)`); experience
-  gains within 5 seconds merge into one dim line.
-- Danger lines never coalesce with other kinds, and place, ambient or
-  system lines never push one out of the visible log within 10 seconds.
-- **Operator notices** (restarts, maintenance, news from the node) leave
-  the world log: they show once on the hint line and stay in help
-  (section 10). A new Wake's world log carries none in its first five
+- Identical lines within 10 seconds coalesce (`(x13)`); reward lines
+  within 5 seconds merge into one.
+- Danger lines never coalesce with other kinds, and no other line pushes
+  a danger or combat line out of the visible log within 10 seconds.
+- **Notices** (kind `notice`: restarts, maintenance, news from the node)
+  are not world-log lines: they show once on the hint line and stay in
+  help (section 10). A new Wake sees none in its log in the first five
   minutes.
 
 ### 2.6 The place card
