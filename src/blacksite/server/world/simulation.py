@@ -113,7 +113,8 @@ class ZoneSimulation:
         zone = self.world.zones[avatar.zone]
         actor = avatar.actor
         adjacent = lambda tile: max(abs(tile[0] - actor.x), abs(tile[1] - actor.y)) <= 1
-        candidates = [ex for ex in zone.template.meta.exits if not ex.hidden
+        candidates = [ex for ex in zone.template.meta.exits
+                      if (not ex.hidden or not street and ex.tile == actor.position)
                       and (ex.tile == actor.position if street else adjacent(ex.tile))
                       and (not street or ex.kind == "street")]
         candidates.sort(key=lambda ex: (ex.tile != actor.position, ex.id))
@@ -121,8 +122,10 @@ class ZoneSimulation:
             ex = candidates[0]
             if ex.target_zone not in self.world.zones:
                 self.log(session, "Construction blocks this route.")
-            elif (zone.id, ex.id) in self.locked_exits or not permitted(ex, self.access_provider(session)):
-                self.log(session, "You do not meet this exit's requirement.")
+            elif (zone.id, ex.id) in self.locked_exits:
+                self.log(session, "The controls keep this route locked.")
+            elif not permitted(ex, self.access_provider(session)):
+                self.log(session, ex.locked_text or "You do not meet this exit's requirement.")
             elif reason := self.travel_refusal(session, ex):
                 self.log(session, reason)
             elif self.fare_menu(session, ex):

@@ -1,0 +1,149 @@
+{
+  "schema": 1,
+  "id": "under-shaft-foot",
+  "name": "Shaft Foot",
+  "district": "Undercity",
+  "safety": "open",
+  "lean": null,
+  "sight_radius": 5,
+  "sector": "lat-undercity",
+  "spawn": [
+    3,
+    30
+  ],
+  "exits": [
+    {
+      "id": "to-spire-shaft-head",
+      "tile": [
+        30,
+        2
+      ],
+      "target_zone": "spire-shaft-head",
+      "target_tile": [
+        35,
+        20
+      ],
+      "kind": "lift",
+      "requirement": {
+        "kind": "story",
+        "ref": "shaft-cage"
+      },
+      "locked_text": "The cage stays sealed until the finale."
+    },
+    {
+      "id": "to-under-outworks",
+      "tile": [
+        2,
+        30
+      ],
+      "target_zone": "under-outworks",
+      "target_tile": [
+        117,
+        35
+      ],
+      "kind": "door"
+    }
+  ],
+  "objects": [
+    {
+      "id": "shaft-hardware",
+      "tile": [
+        46,
+        36
+      ],
+      "kind": "hardware",
+      "params": {
+        "name": "Shaft hardware",
+        "core": "lat-shaft"
+      }
+    },
+    {
+      "id": "shaft-telemetry",
+      "tile": [
+        45,
+        20
+      ],
+      "kind": "terminal",
+      "params": {
+        "name": "telemetry",
+        "sector": "lat-undercity"
+      }
+    },
+    {
+      "id": "season-door",
+      "tile": [
+        44,
+        20
+      ],
+      "kind": "descent_console",
+      "params": {
+        "name": "The season door is sealed. Depth and expeditions open with the season.",
+        "season_door": true
+      }
+    },
+    {
+      "id": "choir-shrine",
+      "tile": [
+        45,
+        19
+      ],
+      "kind": "cache",
+      "params": {
+        "name": "Choir sign beside the season door"
+      }
+    },
+    {
+      "id": "halvard-marker",
+      "tile": [
+        15,
+        40
+      ],
+      "kind": "cache",
+      "params": {
+        "name": "Halvard marker beside the season door"
+      }
+    },
+    {
+      "id": "area-light-1",
+      "tile": [
+        45,
+        21
+      ],
+      "kind": "light",
+      "params": {
+        "name": "Maintenance lamp"
+      }
+    }
+  ],
+  "spawners": [
+    {
+      "id": "old-maintenance-crew",
+      "npc": "npc-old-maintenance",
+      "count": 4,
+      "respawn_seconds": 60,
+      "condition": "always",
+      "region": {
+        "x": 24,
+        "y": 29,
+        "w": 3,
+        "h": 3
+      }
+    },
+    {
+      "id": "feral-crew",
+      "npc": "npc-feral",
+      "count": 2,
+      "respawn_seconds": 60,
+      "condition": "event:exhale",
+      "region": {
+        "x": 38,
+        "y": 39,
+        "w": 2,
+        "h": 3
+      }
+    }
+  ],
+  "lore": [
+    "zone-under-shaft-foot"
+  ]
+}

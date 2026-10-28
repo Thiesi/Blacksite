@@ -17,11 +17,10 @@ def test_world_3_complete_district_registry_and_inactive_templates(repo_root: Pa
     templates = {'lat-private-core', 'lat-relay-uplink', 'lat-uplink-hall'}
     assert set(tree.cores) == entries | templates
     assert all(tree.cores[cid].template and not tree.active('cores', cid) for cid in templates)
-    assert sum(tree.active('cores', cid) for cid in tree.cores) == 14
+    assert sum(tree.active('cores', cid) for cid in tree.cores) == 49
     for sector in tree.sectors.values():
         for cell in sector.cells:
             if cell.core_id:
-                assert access(cell) == 'public'
                 assert tree.active('cores', cell.core_id)
             elif cell.planned_core:
                 assert not tree.active('cores', cell.planned_core)
@@ -33,6 +32,10 @@ def test_world_3_complete_district_registry_and_inactive_templates(repo_root: Pa
         elif tree.active('cores', cid):
             assert all(hw.zone in tree.zones and hw.object_id for hw in core.hardware)
     assert {cid for cid, core in tree.cores.items() if len(core.hardware) == 2} == {'lat-shaft'}
+    entrances = {cell.core_id: cell for sector in tree.sectors.values() for cell in sector.cells if cell.core_id}
+    assert access(entrances['lat-halvard-citadel']) == 'gated'
+    assert entrances['lat-halvard-citadel'].requirement == 'program:key:2'
+    assert access(entrances['lat-ninety-nines-drop']) == 'hidden'
 
 
 def test_world_3_named_room_counts_and_bestiary_are_not_generic_placeholders(repo_root: Path):

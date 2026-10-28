@@ -1,0 +1,172 @@
+{
+  "schema": 1,
+  "id": "spire-mezzanine",
+  "name": "Spire Mezzanine",
+  "district": "Spire",
+  "safety": "safe",
+  "lean": "halvard",
+  "sight_radius": 12,
+  "sector": "lat-spire",
+  "spawn": [
+    3,
+    12
+  ],
+  "exits": [
+    {
+      "id": "to-spire-atrium",
+      "tile": [
+        47,
+        12
+      ],
+      "target_zone": "spire-atrium",
+      "target_tile": [
+        57,
+        15
+      ],
+      "kind": "lift"
+    },
+    {
+      "id": "to-spire-shaft-head",
+      "tile": [
+        2,
+        12
+      ],
+      "target_zone": "spire-shaft-head",
+      "target_tile": [
+        2,
+        20
+      ],
+      "kind": "lift",
+      "requirement": {
+        "kind": "member",
+        "ref": "halvard"
+      },
+      "alternatives": [
+        {
+          "kind": "story",
+          "ref": "halvard-service-lift"
+        }
+      ],
+      "locked_text": "The service lift needs Halvard membership or mission authorization."
+    }
+  ],
+  "objects": [
+    {
+      "id": "halvard-security-counter",
+      "tile": [
+        4,
+        3
+      ],
+      "kind": "vendor",
+      "params": {
+        "name": "Halvard Security Issue",
+        "vendor": "halvard-security"
+      }
+    },
+    {
+      "id": "ostrom-contract-counter",
+      "tile": [
+        42,
+        3
+      ],
+      "kind": "vendor",
+      "params": {
+        "name": "Ostrom Contract Sales",
+        "vendor": "ostrom-contract"
+      }
+    },
+    {
+      "id": "halvard-hall-vat",
+      "tile": [
+        37,
+        8
+      ],
+      "kind": "vat",
+      "params": {
+        "name": "Protected faction vat"
+      },
+      "essential": true
+    },
+    {
+      "id": "halvard-hall-bank",
+      "tile": [
+        36,
+        8
+      ],
+      "kind": "bank",
+      "params": {
+        "name": "Kestrel bank branch"
+      },
+      "essential": true
+    },
+    {
+      "id": "halvard-public-clinic",
+      "tile": [
+        37,
+        7
+      ],
+      "kind": "vendor",
+      "params": {
+        "name": "Public Sablier clinic",
+        "vendor": "sablier-clinic"
+      },
+      "essential": true
+    },
+    {
+      "id": "public-uplink-1",
+      "tile": [
+        37,
+        9
+      ],
+      "kind": "terminal",
+      "params": {
+        "name": "Public Lattice terminal",
+        "sector": "lat-spire",
+        "cell": "lat-spire-c01"
+      },
+      "essential": true
+    },
+    {
+      "id": "area-light-1",
+      "tile": [
+        38,
+        8
+      ],
+      "kind": "light",
+      "params": {
+        "name": "Maintenance lamp"
+      }
+    }
+  ],
+  "spawners": [
+    {
+      "id": "halvard-guard-crew",
+      "npc": "npc-halvard-guard-spire-mezzanine",
+      "count": 2,
+      "respawn_seconds": 60,
+      "condition": "always",
+      "region": {
+        "x": 12,
+        "y": 7,
+        "w": 2,
+        "h": 3
+      }
+    },
+    {
+      "id": "halvard-staff-crew",
+      "npc": "npc-halvard-staff",
+      "count": 2,
+      "respawn_seconds": 60,
+      "condition": "always",
+      "region": {
+        "x": 35,
+        "y": 15,
+        "w": 2,
+        "h": 3
+      }
+    }
+  ],
+  "lore": [
+    "zone-spire-mezzanine"
+  ]
+}

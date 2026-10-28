@@ -9,8 +9,12 @@
   "hardware": [
     {
       "zone": "sink-terraces",
-      "tile": null,
-      "label": "Sable's Back Room hardware"
+      "tile": [
+        60,
+        36
+      ],
+      "label": "Sable's Back Room hardware",
+      "object_id": "sables-back-room-hardware"
     }
   ],
   "entry": "entry",

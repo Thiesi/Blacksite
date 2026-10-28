@@ -9,8 +9,12 @@
   "hardware": [
     {
       "zone": "tramyard-depots",
-      "tile": null,
-      "label": "Depot Control hardware"
+      "tile": [
+        107,
+        16
+      ],
+      "label": "Depot Control hardware",
+      "object_id": "depot-control-hardware"
     }
   ],
   "entry": "entry",

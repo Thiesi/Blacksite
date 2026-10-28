@@ -1,5 +1,14 @@
 # Blacksite — Build Roadmap
 
+**Presentation review hold (2026-10-24):** S25 human layout approval is
+**not granted**. The user cannot meaningfully evaluate the supplied
+terminal presentation against the written world. See
+[issue #68](https://github.com/Thiesi/Blacksite/issues/68) and the
+[review brief and independent acceptance matrix](02-presentation-review.md).
+Preserve verified engineering; hold presentation changes and dependent
+completion claims pending the separate comprehensive review. Technical
+validation and navigation passes do not grant visual acceptance.
+
 The implementation plan: milestones, slices, dependencies, and which
 model each slice is written for. Every slice has its own file in
 `docs/plan/slices/` with the full specification and is filed as a GitHub

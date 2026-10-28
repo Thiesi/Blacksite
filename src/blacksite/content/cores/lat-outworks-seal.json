@@ -9,8 +9,12 @@
   "hardware": [
     {
       "zone": "under-outworks",
-      "tile": null,
-      "label": "Outworks Seal hardware"
+      "tile": [
+        55,
+        23
+      ],
+      "label": "Outworks Seal hardware",
+      "object_id": "outworks-seal-hardware"
     }
   ],
   "entry": "entry",

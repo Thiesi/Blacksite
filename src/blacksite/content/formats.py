@@ -1,8 +1,8 @@
 """On-disk content formats: the `.map` grid, JSON records, assets.
 
 Readers are pure: they take bytes or text and a path for messages, and
-return records plus a list of `Problem`s. Nothing here logs, caches, or
-touches global state, so the server can reload in a background task.
+return records plus a list of `Problem`s. Nothing here logs or touches
+global state, so the server can reload in a background task.
 
 JSON is decoded into the dataclasses of `schema.py` by `decode`, which
 checks every field against its type hint: required fields, unknown
@@ -21,6 +21,7 @@ from blacksite.content.ids import display_width
 from blacksite.version import CONTENT_SCHEMA
 
 T = TypeVar("T")
+_RecordTypes = dict[type[Any], tuple[dict[str, Any], dict[str, Any]]]
 
 
 @dataclass(frozen=True)
@@ -59,10 +60,12 @@ def _describe(value: Any) -> str:
 
 def decode(cls: type[T], data: Any, where: str = "") -> T:
     """Decode a JSON value into `cls`, raising `DecodeError` on mismatch."""
-    return _decode(cls, data, where)
+    # Resolve repeated nested record types once per input document. The
+    # metadata belongs to this decode; reloads share no mutable cache.
+    return _decode(cls, data, where, {})
 
 
-def _decode(tp: Any, value: Any, where: str) -> Any:
+def _decode(tp: Any, value: Any, where: str, records: _RecordTypes) -> Any:
     origin = get_origin(tp)
     if tp is Any or tp is object:
         return value
@@ -83,7 +86,7 @@ def _decode(tp: Any, value: Any, where: str) -> Any:
             if arm is type(None):
                 continue
             try:
-                return _decode(arm, value, where)
+                return _decode(arm, value, where, records)
             except DecodeError as exc:
                 errors.append(exc)
         if len(errors) == 1:
@@ -112,29 +115,30 @@ def _decode(tp: Any, value: Any, where: str) -> Any:
             raise DecodeError(where, f"expected a list, got {_describe(value)}")
         args = get_args(tp)
         if len(args) == 2 and args[1] is Ellipsis:
-            return tuple(_decode(args[0], v, f"{where}[{i}]") for i, v in enumerate(value))
+            return tuple(_decode(args[0], v, f"{where}[{i}]", records) for i, v in enumerate(value))
         if len(value) != len(args):
             raise DecodeError(where, f"expected {len(args)} values, got {len(value)}")
-        return tuple(_decode(a, v, f"{where}[{i}]") for i, (a, v) in enumerate(zip(args, value)))
+        return tuple(_decode(a, v, f"{where}[{i}]", records) for i, (a, v) in enumerate(zip(args, value)))
     if origin is dict:
         if not isinstance(value, dict):
             raise DecodeError(where, f"expected an object, got {_describe(value)}")
         key_tp, val_tp = get_args(tp)
         out = {}
         for k, v in value.items():
-            _decode(key_tp, k, f"{where}.{k}" if where else k)
-            out[k] = _decode(val_tp, v, f"{where}.{k}" if where else k)
+            _decode(key_tp, k, f"{where}.{k}" if where else k, records)
+            out[k] = _decode(val_tp, v, f"{where}.{k}" if where else k, records)
         return out
     if is_dataclass(tp):
-        return _decode_record(tp, value, where)
+        return _decode_record(tp, value, where, records)
     raise DecodeError(where, f"cannot decode type {tp!r}")
 
 
-def _decode_record(cls: Any, value: Any, where: str) -> Any:
+def _decode_record(cls: Any, value: Any, where: str, records: _RecordTypes) -> Any:
     if not isinstance(value, dict):
         raise DecodeError(where, f"expected an object, got {_describe(value)}")
-    hints = get_type_hints(cls)
-    known = {_json_key(f): f for f in fields(cls)}
+    if cls not in records:
+        records[cls] = get_type_hints(cls), {_json_key(f): f for f in fields(cls)}
+    hints, known = records[cls]
     for key in value:
         if key not in known:
             raise DecodeError(_join(where, key), "unknown field")
@@ -145,7 +149,7 @@ def _decode_record(cls: Any, value: Any, where: str) -> Any:
             if f.default is MISSING and f.default_factory is MISSING:
                 raise DecodeError(sub, "missing")
             continue
-        kwargs[f.name] = _decode(hints[f.name], value[key], sub)
+        kwargs[f.name] = _decode(hints[f.name], value[key], sub, records)
     record = cls(**kwargs)
     if "schema" in kwargs and kwargs["schema"] != CONTENT_SCHEMA:
         raise DecodeError(_join(where, "schema"), f"is {kwargs['schema']}, this build reads {CONTENT_SCHEMA}")

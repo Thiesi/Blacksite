@@ -1,0 +1,191 @@
+{
+  "schema": 1,
+  "id": "spire-shaft-head",
+  "name": "Shaft Head",
+  "district": "Spire",
+  "safety": "contested",
+  "lean": "halvard",
+  "sight_radius": 8,
+  "sector": "lat-spire",
+  "spawn": [
+    3,
+    20
+  ],
+  "exits": [
+    {
+      "id": "to-spire-mezzanine",
+      "tile": [
+        2,
+        20
+      ],
+      "target_zone": "spire-mezzanine",
+      "target_tile": [
+        2,
+        12
+      ],
+      "kind": "lift"
+    },
+    {
+      "id": "to-under-shaft-foot",
+      "tile": [
+        35,
+        20
+      ],
+      "target_zone": "under-shaft-foot",
+      "target_tile": [
+        30,
+        2
+      ],
+      "kind": "lift",
+      "requirement": {
+        "kind": "story",
+        "ref": "shaft-cage"
+      },
+      "locked_text": "The cage stays sealed until the finale."
+    }
+  ],
+  "objects": [
+    {
+      "id": "halvard-citadel-hardware",
+      "tile": [
+        60,
+        16
+      ],
+      "kind": "hardware",
+      "params": {
+        "name": "Halvard Citadel hardware",
+        "core": "lat-halvard-citadel"
+      }
+    },
+    {
+      "id": "halvard-citadel-security-doors-1-4",
+      "tile": [
+        52,
+        13
+      ],
+      "kind": "door",
+      "params": {
+        "name": "security doors 1–4",
+        "open": false,
+        "locked": true
+      }
+    },
+    {
+      "id": "halvard-citadel-sealed-shaft-camera",
+      "tile": [
+        51,
+        13
+      ],
+      "kind": "camera",
+      "params": {
+        "name": "sealed shaft camera"
+      }
+    },
+    {
+      "id": "relay-shaft-hardware",
+      "tile": [
+        52,
+        14
+      ],
+      "kind": "hardware",
+      "params": {
+        "name": "Shaft Relay hardware",
+        "core": "lat-relay-shaft"
+      }
+    },
+    {
+      "id": "relay-shaft",
+      "tile": [
+        33,
+        27
+      ],
+      "kind": "relay",
+      "params": {
+        "name": "Shaft Relay",
+        "relay": "shaft",
+        "vendor": "relay-shaft-counter"
+      }
+    },
+    {
+      "id": "shaft-hardware",
+      "tile": [
+        17,
+        25
+      ],
+      "kind": "hardware",
+      "params": {
+        "name": "Shaft hardware",
+        "core": "lat-shaft"
+      }
+    },
+    {
+      "id": "shaft-maintenance-cage",
+      "tile": [
+        53,
+        13
+      ],
+      "kind": "lift",
+      "params": {
+        "name": "maintenance cage",
+        "exits": [
+          "to-spire-mezzanine",
+          "to-under-shaft-foot"
+        ]
+      }
+    },
+    {
+      "id": "skywatch-hardware",
+      "tile": [
+        52,
+        25
+      ],
+      "kind": "hardware",
+      "params": {
+        "name": "Skywatch hardware",
+        "core": "lat-skywatch"
+      }
+    },
+    {
+      "id": "area-light-1",
+      "tile": [
+        50,
+        13
+      ],
+      "kind": "light",
+      "params": {
+        "name": "Maintenance lamp"
+      }
+    }
+  ],
+  "spawners": [
+    {
+      "id": "halvard-heavy-crew",
+      "npc": "npc-halvard-heavy-spire-shaft-head",
+      "count": 2,
+      "respawn_seconds": 60,
+      "condition": "always",
+      "region": {
+        "x": 14,
+        "y": 24,
+        "w": 3,
+        "h": 2
+      }
+    },
+    {
+      "id": "maintenance-drone-crew",
+      "npc": "npc-maintenance-drone",
+      "count": 1,
+      "respawn_seconds": 60,
+      "condition": "always",
+      "region": {
+        "x": 27,
+        "y": 29,
+        "w": 2,
+        "h": 3
+      }
+    }
+  ],
+  "lore": [
+    "zone-spire-shaft-head"
+  ]
+}

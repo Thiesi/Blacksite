@@ -1,0 +1,154 @@
+{
+  "schema": 1,
+  "id": "oldworks-drop",
+  "name": "The Drop",
+  "district": "Old Works",
+  "safety": "pocket",
+  "lean": "unmoored",
+  "sight_radius": 6,
+  "sector": "lat-old-works",
+  "spawn": [
+    3,
+    10
+  ],
+  "exits": [
+    {
+      "id": "to-oldworks-main",
+      "tile": [
+        20,
+        17
+      ],
+      "target_zone": "oldworks-main",
+      "target_tile": [
+        55,
+        2
+      ],
+      "kind": "door"
+    }
+  ],
+  "objects": [
+    {
+      "id": "ninety-nines-drop-hardware",
+      "tile": [
+        30,
+        9
+      ],
+      "kind": "hardware",
+      "params": {
+        "name": "Ninety-Nine's Drop hardware",
+        "core": "lat-ninety-nines-drop"
+      }
+    },
+    {
+      "id": "ninety-nines-drop-drop-lights",
+      "tile": [
+        30,
+        6
+      ],
+      "kind": "light",
+      "params": {
+        "name": "drop lights"
+      }
+    },
+    {
+      "id": "oldworks-deep-counter",
+      "tile": [
+        22,
+        6
+      ],
+      "kind": "vendor",
+      "params": {
+        "name": "Old Works Deep Bench",
+        "vendor": "oldworks-deep"
+      }
+    },
+    {
+      "id": "unmoored-hall-vat",
+      "tile": [
+        6,
+        15
+      ],
+      "kind": "vat",
+      "params": {
+        "name": "Protected faction vat"
+      },
+      "essential": true
+    },
+    {
+      "id": "unmoored-hall-bank",
+      "tile": [
+        29,
+        6
+      ],
+      "kind": "bank",
+      "params": {
+        "name": "Kestrel bank branch"
+      },
+      "essential": true
+    },
+    {
+      "id": "unmoored-public-clinic",
+      "tile": [
+        22,
+        9
+      ],
+      "kind": "vendor",
+      "params": {
+        "name": "Public Sablier clinic",
+        "vendor": "sablier-clinic"
+      },
+      "essential": true
+    },
+    {
+      "id": "area-light-1",
+      "tile": [
+        10,
+        13
+      ],
+      "kind": "light",
+      "params": {
+        "name": "Maintenance lamp"
+      }
+    },
+    {
+      "id": "unmoored-cache",
+      "tile": [
+        30,
+        5
+      ],
+      "kind": "cache",
+      "params": {
+        "name": "Unmoored cache"
+      }
+    },
+    {
+      "id": "strand-terminal",
+      "tile": [
+        30,
+        7
+      ],
+      "kind": "terminal",
+      "params": {
+        "name": "Strand terminal"
+      }
+    }
+  ],
+  "spawners": [
+    {
+      "id": "unmoored-guard-crew",
+      "npc": "npc-unmoored-guard",
+      "count": 2,
+      "respawn_seconds": 60,
+      "condition": "always",
+      "region": {
+        "x": 11,
+        "y": 8,
+        "w": 3,
+        "h": 3
+      }
+    }
+  ],
+  "lore": [
+    "zone-oldworks-drop"
+  ]
+}

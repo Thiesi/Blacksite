@@ -75,64 +75,17 @@
       }
     },
     {
-      "id": "apartment-door-1",
-      "tile": [
-        6,
-        19
-      ],
-      "kind": "apartment_door",
-      "essential": false,
-      "params": {
-        "name": "Apartment door 1"
-      }
-    },
-    {
-      "id": "apartment-door-2",
-      "tile": [
-        12,
-        19
-      ],
-      "kind": "apartment_door",
-      "essential": false,
-      "params": {
-        "name": "Apartment door 2"
-      }
-    },
-    {
-      "id": "apartment-door-3",
-      "tile": [
-        18,
-        19
-      ],
-      "kind": "apartment_door",
-      "essential": false,
-      "params": {
-        "name": "Apartment door 3"
-      }
-    },
-    {
-      "id": "apartment-door-4",
-      "tile": [
-        24,
-        19
-      ],
-      "kind": "apartment_door",
-      "essential": false,
-      "params": {
-        "name": "Apartment door 4"
-      }
-    },
-    {
-      "id": "apartment-door-5",
+      "id": "lobby-letting-terminal",
       "tile": [
         30,
-        19
+        8
       ],
-      "kind": "apartment_door",
-      "essential": false,
+      "kind": "terminal",
       "params": {
-        "name": "Apartment door 5"
-      }
+        "name": "Residence letting office",
+        "letting": true
+      },
+      "essential": true
     }
   ],
   "pockets": [],

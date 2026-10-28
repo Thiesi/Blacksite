@@ -18,6 +18,20 @@ and accepted [PR #38](https://github.com/Thiesi/Blacksite/pull/38).
 
 ## Goal
 
+<!-- presentation-review-hold:start -->
+
+S25 human layout approval is **not granted** (user review, 2026-10-24).
+[Issue #68](https://github.com/Thiesi/Blacksite/issues/68) requires a
+separate comprehensive presentation review against the world bible and
+terminal UI specification. Preserve the verified simulation/mechanics;
+do not perform an ad hoc visual overhaul or treat technical validation,
+navigation or mechanical receipts as visual acceptance. The
+[review brief](../02-presentation-review.md) identifies independent
+engineering acceptance and presentation-dependent work on hold.
+This slice's completion cannot silently bypass the S25 human gate.
+
+<!-- presentation-review-hold:end -->
+
 S19 native input handoff: preserve the door's successful read result when
 an Escape deadline and reader completion race. The input pump retains
 that task and drains pending bytes before treating its ordinary 200 ms
@@ -73,6 +87,19 @@ together. Nothing here changes a rule; it explains them.
 - First-run screen: shown once per BBS user before the Wake, from the
   found-texts asset, any key continues; stored as a flag on the player
   row.
+- S25 actual-map repair follow-up: explain attack versus Key programs,
+  target-core gate requirements, public software sources, current
+  prices, loading through the rig menu in a public district cell and
+  activating the appropriate Key. A faction-specific exception does not
+  become a generic link credential just because its program tier is high.
+  A Ghost's starter Pick/Umbrella does not satisfy the Sump's Key gate.
+  Give a protected public uplink route and distinguish one-time gear
+  preparation from the order's action fee. Do not imply membership is
+  required for a public repair or its guaranteed public program route.
+  See terminal UI section 11 and
+  [PR #66](https://github.com/Thiesi/Blacksite/pull/66), retaining
+  [PR #38](https://github.com/Thiesi/Blacksite/pull/38) and
+  [platform #56](https://github.com/Thiesi/Blacksite/issues/56).
 - Session-limit UX (`blacksite.door`): take the minimum positive host
   `session_limit_seconds` and explicit `DOOR_BLACKSITE_SESSION_LIMIT`
   (standalone `BLACKSITE_SESSION_LIMIT`). Zero/unset game override
@@ -302,3 +329,162 @@ corrections and deliberate R acknowledgement. A Convoy Beacon diversion ends
 on arrival or after 60 seconds, and actual arrival/loss revises its forecast
 so callers do not walk to a closed job.
 <!-- s24-review-policy:end -->
+
+<!-- s25-access:start -->
+### S25 physical route access handoff
+
+Reference: [S25 #25](https://github.com/Thiesi/Blacksite/issues/25),
+[PR #38](https://github.com/Thiesi/Blacksite/pull/38) and platform #56.
+Game 5.6 and entities 1.1 now specify typed member/story credentials,
+alternative requirements and a missing-credential message. This bounded
+runtime support is necessary to commission the canonical physical city;
+S25 otherwise remains content work. Missing NPC profiles use the
+initial values documented in game 5.5 and require pacing acceptance.
+
+Explain missing physical credentials with each exit's `locked_text`:
+standing or visitor pass for the Atrium, actual membership or story
+authorization for the service lift, and the active finale for the Shaft
+cage. Friendly standing alone is not membership. Show a usable outward
+alternative; no question may gate the screen.
+<!-- s25-access:end -->
+
+<!-- s25-city-decisions:start -->
+### S25 commissioning decisions (in progress)
+
+Reference: [S25 #25](https://github.com/Thiesi/Blacksite/issues/25),
+[PR #38](https://github.com/Thiesi/Blacksite/pull/38) and
+[platform #56](https://github.com/Thiesi/Blacksite/issues/56).
+
+The draft uses game 5.6's carried key OR exact local open-latch state for
+the optional Drowned bulkhead. Ordinary Outworks/Shaft Foot travel is
+free; a key is retained, not consumed. Hidden physical exits allow
+explicit Interact on their tile and never auto-travel on a walk. All
+Undercity base sight is five before carried light. Whole-zone `pocket`
+safety protects clinics, just as an authored pocket does.
+
+The existing Terraces sector expands from 36 to 48 cells: a public
+register wing supplies 24 distinct apartment addresses without reusing
+entry/uplink cells or changing existing hidden/gated routes. Halvard's
+member hall, vat and counter are in the Mezzanine; public recruitment,
+care and banking remain in the Atrium. Three secondary ration/flare and
+salvage counters bring ordinary vendors to 22; only Landing retains its
+20% salvage premium. New NPC profiles and gantry damage are documented
+initial values in game 5.5/6.4 and must pass actual-city pacing.
+
+Explain key-or-local-core access, physically found hidden exits and
+open ordinary return routes. Point public Halvard visitors to the Atrium
+and members to the Mezzanine. Show actual prices and letting locations;
+do not claim the new population has passed human pacing yet.
+
+These are in-progress decisions, not a claim of merge, native acceptance
+or completion of the Shaft Foot/Far Ring and broader human pacing gates.
+The real walled apartments also exposed a geometry-admission bug:
+a closed private door must not freeze unrelated public controls.
+Housing supplies the occupant's explicit Interact-to-leave doorstep as
+the escape origin; occupied tiles remain passable and private entry
+permissions still apply. Retain that proof under tenants, visitors,
+restart and overlapping effects. The Lobby's five inert private-door
+props are replaced by the real 24-unit Block Street pool.
+
+S25 places `ferrymen-corpse`, `choir-shrine`, `unmoored-dead-drop` and the
+empty Far Ring artifact sites as physical source hooks. S27 owns the
+corpse's one-time personal map and the shrine's daily claim receipt;
+S26 owns season artifact activation. A prop label alone grants no reward.
+Permanent hazards are excluded from salvage-node placement because
+incoming damage interrupts the harvest channel. If an optional opening
+closes over a saved position, reconnect recovers to the nearest free,
+non-hazardous tile in the public spawn component, respecting housing
+entry permissions. Include both in actual-city restart and event tests.
+
+Mezzanine physical admission does not grant a Citadel network credential;
+its loan terminal keeps the normal network gate. The Far mast uses the
+Scour sector and cannot bypass Static's Ring-fall gate. All 16 relay
+sites are mapped, but Shaft Relay retains `requires_level`; S26 must bind
+its availability to the committed level phase, alongside the story-route
+providers. Mapping never pretends that this seasonal gate is open.
+
+Native city commissioning also preserves fallback Interact on a physical
+prop underfoot before any adjacent public network terminal. Shaft Foot
+therefore reports its sealed season-console status; explicit J still
+jacks in. Retain this actual-map regression through S26 activation and
+later interaction handlers. See PR #66, alongside PR #38 and issue #56.
+
+A dedicated apartment doorstep chooses its door ahead of adjacent
+dropped goods; a prop underfoot still owns Interact. Native delivery-key
+testing exposed the previous accidental core-log action. Preserve this
+public/private interaction through future handlers. Full-city salvage
+checks allocate a proposal only when a field deadline is due; seeded
+respawns and the tick p99 below 10 ms requirement stay in force.
+
+The Citadel's executive lift lockdown closes only the Atrium inbound
+lift for 300 seconds. Gatehouse restores the same physical panel, with
+the latest committed operation winning. The Plaza exit and Mezzanine
+return remain available; machinery restoration grants no credentials.
+Disabled controls report a control lock instead of a missing credential.
+Retain this binding, return path and refusal distinction through seasonal
+activation, help, operator diagnostics, load tests and federation replay.
+See [PR #66](https://github.com/Thiesi/Blacksite/pull/66), alongside the
+[PR #38](https://github.com/Thiesi/Blacksite/pull/38) product review.
+
+Full-city pacing changes Gate Nine's ordinary opening to 60 seconds
+per 120-second UTC cycle (game 7.7). The former 300-second cycle allowed
+a 240-second idle wait; an actual native free-gate journey took 265
+seconds including its approach. The fixture-free first rifle/ammunition
+upgrade also left zero chits. Ordinary free waiting is now at most 60
+seconds; the 25-chit fast option, owner benefits and free inward route
+remain. Keep this schedule in seasonal controls, dialogue/help, operator
+views, load and federation checks. This is a product pacing correction,
+not a shortened capture clock or an accelerated acceptance fixture.
+Reference: [PR #66](https://github.com/Thiesi/Blacksite/pull/66), retaining
+[PR #38](https://github.com/Thiesi/Blacksite/pull/38) and
+[platform #56](https://github.com/Thiesi/Blacksite/issues/56).
+
+A deterministic quiet-zone replay found all four Shaft Foot maintenance
+units targeting their own crew and taking damage before caller contact.
+Game 5.5 now excludes the same server-bound local spawner crew from NPC
+hostility, including explicit hostile wildlife and machines. Outsiders
+still face the ordinary hostility rules. Use full-strength packs/cohorts
+in seasonal waves, dialogue, field pacing and load checks; never rely on
+self-inflicted damage to make those encounters affordable. This is a
+deliberate gameplay correction, not a claim that the new AI replay is
+byte-identical to the old one. See
+[PR #66](https://github.com/Thiesi/Blacksite/pull/66), retaining
+[PR #38](https://github.com/Thiesi/Blacksite/pull/38) and
+[platform #56](https://github.com/Thiesi/Blacksite/issues/56).
+<!-- s25-water:start -->
+
+Game 5.2 now gives destination terrain a data-driven movement cost:
+ordinary ground is 1 and water is 2 (400 ms walking / 200 ms sprinting
+before other modifiers). Pump layouts use the live tile, so draining
+restores dry timing and reflooding restores the penalty. The original
+S25 requirement promised slower water but the engine only checked
+passability. Seasonal layouts, NPC/dialogue guidance, operator views,
+load scenarios and help must preserve this meaningful route choice.
+Use exact cooldown tests for the rule; scripted route time is not a
+human earnings or challenge measurement. See
+[PR #66](https://github.com/Thiesi/Blacksite/pull/66), retaining
+[PR #38](https://github.com/Thiesi/Blacksite/pull/38) and
+[platform #56](https://github.com/Thiesi/Blacksite/issues/56).
+<!-- s25-water:end -->
+<!-- s25-city-decisions:end -->
+
+<!-- s25-worker-passage:start -->
+
+Relay Zero reserve now grants only `lat-relay-zero/worker_return`, opening
+the optional Old Works Main workshop passage for 20 minutes. The closed
+passage retains the public street; opening it saves at least eight steps.
+Opening requires a current worker credential; walking the opened door
+is public. Preserve the separate, ordinary public `relay_open` capture
+control. The former reserve binding to that public control supplied no
+meaningful reward. Retain this distinction in seasonal activation,
+dialogue/help, operator views, load and federation checks. Reference:
+[PR #66](https://github.com/Thiesi/Blacksite/pull/66), retaining
+[PR #38](https://github.com/Thiesi/Blacksite/pull/38) and
+[platform #56](https://github.com/Thiesi/Blacksite/issues/56).
+<!-- s25-worker-passage:end -->
+The shortcut saving is checked from the actual relay repair mast to the
+public Old Works counter, rather than arbitrary street mouths. Every
+ordinary spawn candidate and patrol point must retain a public escape
+without a locked shortcut. Sealed spawn rooms otherwise leave unrelated
+core latches permanently pending; S25 repairs the map paths while
+retaining the safety checks. Preserve this through future placements.

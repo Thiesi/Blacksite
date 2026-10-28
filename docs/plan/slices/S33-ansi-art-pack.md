@@ -7,6 +7,20 @@
 
 ## Goal
 
+<!-- presentation-review-hold:start -->
+
+S25 human layout approval is **not granted** (user review, 2026-10-24).
+[Issue #68](https://github.com/Thiesi/Blacksite/issues/68) requires a
+separate comprehensive presentation review against the world bible and
+terminal UI specification. Preserve the verified simulation/mechanics;
+do not perform an ad hoc visual overhaul or treat technical validation,
+navigation or mechanical receipts as visual acceptance. The
+[review brief](../02-presentation-review.md) identifies independent
+engineering acceptance and presentation-dependent work on hold.
+This slice's completion cannot silently bypass the S25 human gate.
+
+<!-- presentation-review-hold:end -->
+
 Ship the game's visual identity as ANSI art blocks the client can show
 at every tier, with a loader that measures them, a sidecar that
 declares their variants, and a text fallback for every piece so a

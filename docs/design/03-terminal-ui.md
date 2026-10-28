@@ -409,6 +409,15 @@ public/worker allocation, recipients and expiry. The reserving player's
 choice is visible before others join. Expired or stale choices refresh
 the panel and consume nothing. Route changes appear in the map and
 header; costs appear before the player commits the action.
+Repair help distinguishes an attack program from a Key program. It
+names the target core's gate requirement, an actual public program
+source and the rig-loading and activation actions before the trip.
+Explain the appropriate Key's effect; program tier alone does not turn
+a faction-specific gate exception into a generic link credential.
+Use the current listed price; permanent equipment preparation is
+different from a work order's action fee. Point to a protected public
+uplink in the relevant district, without implying faction membership
+or allowing the repair to bypass ordinary network credentials.
 
 The Silt panel labels the repeating signal and sampling window, counts
 the channel, marks a known riser and shows Sweeper warning/escape. A

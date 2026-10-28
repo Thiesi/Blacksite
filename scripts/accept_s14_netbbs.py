@@ -327,10 +327,12 @@ def scenario_content(probe: NativeProbe, stage: str) -> None:
         cell.update(kind='core_entrance', access='public', core_id=core['id'], label='S14 Gate Nine fixture entrance')
         write('sectors/lat-core.json', sector)
         sector = read('sectors/lat-tramyard.json')
-        old = next(c for c in sector['cells'] if c.get('planned_core') == core['id'])
+        old = next(c for c in sector['cells']
+                   if c.get('planned_core', c.get('core_id')) == core['id'])
         old['kind'] = 'gated'
         old.pop('core_placeholder',None)
         old.pop('planned_core',None)
+        old.pop('core_id',None)
         write('sectors/lat-tramyard.json',sector)
 
 

@@ -9,8 +9,12 @@
   "hardware": [
     {
       "zone": "under-service",
-      "tile": null,
-      "label": "Pumphouse hardware"
+      "tile": [
+        47,
+        21
+      ],
+      "label": "Pumphouse hardware",
+      "object_id": "pumphouse-hardware"
     }
   ],
   "entry": "entry",
@@ -104,7 +108,8 @@
           "reset_seconds": 300,
           "scope": "public",
           "permission": "public",
-          "safety_policy": "none"
+          "safety_policy": "none",
+          "warning_seconds": 5
         }
       ]
     },
@@ -154,7 +159,8 @@
           "reset_seconds": 300,
           "scope": "public",
           "permission": "public",
-          "safety_policy": "none"
+          "safety_policy": "none",
+          "warning_seconds": 5
         }
       ]
     }

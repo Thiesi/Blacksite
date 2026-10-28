@@ -19,21 +19,34 @@ class World:
 
     def free_tile(self, zone_id: str, start: Tile, actor: Actor | None = None) -> Tile:
         zone = self.zones[zone_id]
-        pending = deque([start])
-        seen = {start}
+        def safe(tile: Tile) -> bool:
+            key = zone.tile_id(tile)
+            return zone.passable(tile) and not zone.tiles[key].hazard and zone.entry_policy(actor, tile)
+
+        # A saved position can lie in an optional opening that has closed
+        # while the caller was away. Recover through the public component,
+        # rather than failing login or choosing an isolated/private floor.
+        recover = not safe(start)
+        seed = zone.template.meta.spawn if recover and zone.template.meta.spawn is not None else start
+        pending = deque([seed])
+        seen = {seed}
+        available: list[Tile] = []
         occupied = {other.position for other in zone.actors.values() if not other.behaviour.get('training')
                     and (actor is None or mission_pair(actor, other))}
         while pending:
             tile = pending.popleft()
-            key = zone.tile_id(tile)
-            if zone.passable(tile) and not zone.tiles[key].hazard:
-                if tile not in occupied and zone.entry_policy(actor, tile):
-                    return tile
+            if safe(tile):
+                if tile not in occupied:
+                    if not recover:
+                        return tile
+                    available.append(tile)
                 x, y = tile
                 for neighbour in ((x + 1, y), (x, y + 1), (x - 1, y), (x, y - 1)):
-                    if neighbour not in seen and zone.passable(neighbour):
+                    if neighbour not in seen and safe(neighbour):
                         seen.add(neighbour)
                         pending.append(neighbour)
+        if available:
+            return min(available, key=lambda tile: (abs(tile[0]-start[0])+abs(tile[1]-start[1]), tile))
         raise ValueError("zone has no available spawn tile")
 
     def enter(self, actor: Actor, zone_id: str, tile: Tile) -> None:

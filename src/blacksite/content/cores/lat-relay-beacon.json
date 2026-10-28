@@ -9,8 +9,12 @@
   "hardware": [
     {
       "zone": "scour-ring-2",
-      "tile": null,
-      "label": "Beacon Relay hardware"
+      "tile": [
+        45,
+        60
+      ],
+      "label": "Beacon Relay hardware",
+      "object_id": "relay-beacon-hardware"
     }
   ],
   "entry": "entry",

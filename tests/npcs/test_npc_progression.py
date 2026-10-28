@@ -84,6 +84,10 @@ def test_game_3_5_failed_npc_reward_keeps_xp_and_source_retryable(city):
 def test_game_3_5_nonlethal_failure_and_deleting_character_do_not_pay(city):
     game, caller = city
     player = game.core.characters.players[caller.session.player_id]
+    template = game.core.loop.content.npcs['npc-sable-enforcer']
+    # The one-tile respawn fixture must not be blocked by a corpse cache.
+    # This scenario isolates XP eligibility; other tests verify real loot.
+    game.core.loop.content.npcs[template.id] = replace(template, loot=())
     target = spawn(game)[0]
     target.behaviour["nonlethal"] = True
     old_xp = player.xp

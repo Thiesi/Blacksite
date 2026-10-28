@@ -9,8 +9,12 @@
   "hardware": [
     {
       "zone": "sink-terraces",
-      "tile": null,
-      "label": "Terrace Wards hardware"
+      "tile": [
+        67,
+        19
+      ],
+      "label": "Terrace Wards hardware",
+      "object_id": "terrace-wards-hardware"
     }
   ],
   "entry": "entry",

@@ -30,8 +30,8 @@ def test_game_9_5_complete_authored_bundle_stays_dormant_and_has_all_faction_poo
                                                    choir=4,sable=4,unmoored=5,ferrymen=4)
     state = Ledger('authored', authored)
     assert not {j.id for j in stories} & state.engine.templates.keys()
-    assert set(state.services.nodes) == {'cold-chain'}
-    counts = Counter(j.giver for j in state.engine.templates.values() if not j.story and not j.service)
+    assert set(state.services.nodes) == {'cold-chain', 'sump', 'depot', 'relay-zero'}
+    counts = Counter(j.giver for j in state.engine.templates.values() if not j.story and not j.service and not j.event_only)
     assert counts == dict(vesper=6,**{f:3 for f in authored.factions})
     assert {j.type for j in state.engine.templates.values() if j.giver == 'vesper' and not j.story} == {
         'fetch','hack','escort','clear','plant','survey'}

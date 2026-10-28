@@ -35,6 +35,7 @@ class HousingGeometry:
     def __init__(self, world: World, clock: Clock, saved: dict[str, Any]) -> None:
         self.world, self.clock = world, clock
         self.units: dict[str, Unit] = {}
+        self.unit_tiles: dict[tuple[str, Tile], Unit] = {}
         self.leases: Callable[[], dict[str, Any]] = lambda: saved.get("apartments", {})
         for zid, zone in world.zones.items():
             if not world.content.active("zones", zid):
@@ -46,6 +47,8 @@ class HousingGeometry:
                 unit = Unit(zid+":"+obj.spec.id, zid, obj.spec.id, anchor,
                     world.content.rooms[anchor.room], world.content.apartments[anchor.class_id])
                 self.units[unit.id] = unit
+                for tile in unit.region.tiles():
+                    self.unit_tiles[zid, tile] = unit
                 for local in unit.room.meta.objects:
                     params = {**local.params, "apartment_unit": unit.id}
                     if local.kind == "terminal":
@@ -59,7 +62,13 @@ class HousingGeometry:
             if any(unit.zone == zid for unit in self.units.values()):
                 zone.entry_policy = lambda actor, tile, zid=zid: self.can_enter(actor, zid, tile)
                 zone.position_update = self.mark
+                zone.escape_origin = self.escape_origin
         world.object_access = self.can_use
+
+    def escape_origin(self, actor: Actor) -> Tile:
+        """Game 8.7: an occupant may explicitly leave through a closed door."""
+        unit = self.containing(actor.zone, actor.position) if actor.zone else None
+        return unit.anchor.doorstep if unit else actor.position
 
     def mark(self, actor: Actor) -> None:
         unit = self.containing(actor.zone, actor.position) if actor.zone else None
@@ -70,7 +79,7 @@ class HousingGeometry:
             actor.behaviour.pop("private_owner", None)
 
     def containing(self, zone: str, tile: Tile) -> Unit | None:
-        return next((unit for unit in self.units.values() if unit.zone == zone and unit.region.contains(tile)), None)
+        return self.unit_tiles.get((zone, tile))
 
     def lease(self, unit: Unit) -> dict[str, Any] | None:
         return next((lease for lease in self.leases().values() if lease.get("unit") == unit.id), None)

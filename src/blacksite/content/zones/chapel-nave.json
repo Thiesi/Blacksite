@@ -1,0 +1,197 @@
+{
+  "schema": 1,
+  "id": "chapel-nave",
+  "name": "The Nave",
+  "district": "Chapel Ward",
+  "safety": "pocket",
+  "lean": "choir",
+  "sight_radius": 8,
+  "sector": "lat-chapel-ward",
+  "spawn": [
+    3,
+    15
+  ],
+  "exits": [
+    {
+      "id": "to-chapel-towers",
+      "tile": [
+        25,
+        27
+      ],
+      "target_zone": "chapel-towers",
+      "target_tile": [
+        77,
+        20
+      ],
+      "kind": "door"
+    }
+  ],
+  "objects": [
+    {
+      "id": "nave-hardware",
+      "tile": [
+        37,
+        14
+      ],
+      "kind": "hardware",
+      "params": {
+        "name": "Nave hardware",
+        "core": "lat-nave"
+      }
+    },
+    {
+      "id": "nave-hall-doors",
+      "tile": [
+        37,
+        10
+      ],
+      "kind": "door",
+      "params": {
+        "name": "hall doors",
+        "open": false,
+        "locked": true
+      }
+    },
+    {
+      "id": "chapel-almoner-counter",
+      "tile": [
+        19,
+        18
+      ],
+      "kind": "vendor",
+      "params": {
+        "name": "Chapel Almoner",
+        "vendor": "chapel-almoner"
+      }
+    },
+    {
+      "id": "chapel-foundry-counter",
+      "tile": [
+        35,
+        25
+      ],
+      "kind": "vendor",
+      "params": {
+        "name": "Chapel Foundry",
+        "vendor": "chapel-foundry"
+      }
+    },
+    {
+      "id": "choir-hall-vat",
+      "tile": [
+        25,
+        25
+      ],
+      "kind": "vat",
+      "params": {
+        "name": "Protected faction vat"
+      },
+      "essential": true
+    },
+    {
+      "id": "choir-hall-bank",
+      "tile": [
+        36,
+        10
+      ],
+      "kind": "bank",
+      "params": {
+        "name": "Kestrel bank branch"
+      },
+      "essential": true
+    },
+    {
+      "id": "choir-public-clinic",
+      "tile": [
+        37,
+        9
+      ],
+      "kind": "vendor",
+      "params": {
+        "name": "Public Sablier clinic",
+        "vendor": "sablier-clinic"
+      },
+      "essential": true
+    },
+    {
+      "id": "choir-public-board",
+      "tile": [
+        37,
+        11
+      ],
+      "kind": "terminal",
+      "params": {
+        "name": "Public jobs and faction counter",
+        "faction": "choir",
+        "contract_handler": "choir",
+        "sector": "lat-chapel-ward",
+        "cell": "lat-chapel-ward-c01"
+      },
+      "essential": true
+    },
+    {
+      "id": "area-light-1",
+      "tile": [
+        38,
+        10
+      ],
+      "kind": "light",
+      "params": {
+        "name": "Maintenance lamp"
+      }
+    },
+    {
+      "id": "quell-desk",
+      "tile": [
+        12,
+        20
+      ],
+      "kind": "terminal",
+      "params": {
+        "name": "Quell desk"
+      }
+    },
+    {
+      "id": "ansgar-desk",
+      "tile": [
+        37,
+        20
+      ],
+      "kind": "terminal",
+      "params": {
+        "name": "Ansgar desk"
+      }
+    }
+  ],
+  "spawners": [
+    {
+      "id": "choir-guard-crew",
+      "npc": "npc-choir-guard",
+      "count": 2,
+      "respawn_seconds": 60,
+      "condition": "always",
+      "region": {
+        "x": 14,
+        "y": 19,
+        "w": 3,
+        "h": 2
+      }
+    },
+    {
+      "id": "chorister-crew",
+      "npc": "npc-chorister",
+      "count": 2,
+      "respawn_seconds": 60,
+      "condition": "always",
+      "region": {
+        "x": 34,
+        "y": 19,
+        "w": 3,
+        "h": 2
+      }
+    }
+  ],
+  "lore": [
+    "zone-chapel-nave"
+  ]
+}

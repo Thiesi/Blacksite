@@ -31,13 +31,13 @@ def test_game_7_4_admin_acknowledges_commit_without_invented_capture_credit(rela
     assert 'relays_state' in effects[0] and 'interlock_state' in effects[0]
 
 
-def test_game_7_4_caller_cannot_use_admin_or_activate_future_relay(relay_game):
+def test_game_7_4_caller_cannot_use_admin_and_unknown_relay_is_rejected(relay_game):
     game,caller,_,_=relay_game
     caller.send(Frame('admin.relay.set',{'relay':'cold-chain','faction':'halvard'}))
     assert any(f.type=='bye' and f.data['reason']=='forbidden' for f in game.frames_for(caller))
     assert game.core.relays.owner('cold-chain') is None
     op=game.connect(frame=hello({'user_id':'operator','handle':'SysOp','node_name':'test'},secret=ADMIN_SECRET))
-    op.send(Frame('admin.relay.set',{'relay':'crash','faction':'halvard'}))
+    op.send(Frame('admin.relay.set',{'relay':'missing-relay','faction':'halvard'}))
     game.step()
     result=json.loads(next(f for f in game.frames_for(op) if f.type=='view').data['body']['lines'][0])
     assert not result['ok'] and 'commissioned' in result['error']

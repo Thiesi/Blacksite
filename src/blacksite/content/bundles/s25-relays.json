@@ -1,8 +1,10 @@
 {
   "schema": 1,
   "id": "s25-relays",
-  "status": "authoring",
-  "depends": [],
+  "status": "active",
+  "depends": [
+    "s25-cores"
+  ],
   "members": {
     "relays": [
       "shaft",

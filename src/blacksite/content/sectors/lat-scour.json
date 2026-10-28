@@ -130,9 +130,8 @@
       "label": "Patrol Beacon entrance",
       "requirement": "program:key:2",
       "access": "gated",
-      "core_placeholder": true,
-      "planned_core": "lat-patrol-beacon",
-      "gate_owner": "halvard"
+      "gate_owner": "halvard",
+      "core_id": "lat-patrol-beacon"
     },
     {
       "id": "lat-scour-c08",
@@ -148,8 +147,7 @@
       "label": "Landing entrance",
       "requirement": "program:key:2",
       "access": "gated",
-      "core_placeholder": true,
-      "planned_core": "lat-landing"
+      "core_id": "lat-landing"
     },
     {
       "id": "lat-scour-c09",
@@ -166,8 +164,7 @@
       "label": "Mile Relay entrance",
       "requirement": "program:key:2",
       "access": "gated",
-      "core_placeholder": true,
-      "planned_core": "lat-relay-mile"
+      "core_id": "lat-relay-mile"
     },
     {
       "id": "lat-scour-c10",
@@ -185,8 +182,7 @@
       "label": "Beacon Relay entrance",
       "requirement": "program:key:2",
       "access": "gated",
-      "core_placeholder": true,
-      "planned_core": "lat-relay-beacon"
+      "core_id": "lat-relay-beacon"
     },
     {
       "id": "lat-scour-c11",
@@ -203,8 +199,7 @@
       "label": "Crash Relay entrance",
       "requirement": "program:key:2",
       "access": "gated",
-      "core_placeholder": true,
-      "planned_core": "lat-relay-crash"
+      "core_id": "lat-relay-crash"
     },
     {
       "id": "lat-scour-c12",
@@ -221,8 +216,7 @@
       "label": "Far Relay entrance",
       "requirement": "program:key:2",
       "access": "gated",
-      "core_placeholder": true,
-      "planned_core": "lat-relay-far"
+      "core_id": "lat-relay-far"
     },
     {
       "id": "lat-scour-c13",

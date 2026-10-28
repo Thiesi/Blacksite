@@ -1,0 +1,673 @@
+{
+  "schema": 1,
+  "id": "sink-floor",
+  "name": "The Floor",
+  "district": "Sink",
+  "safety": "contested",
+  "lean": "sable",
+  "sight_radius": 5,
+  "sector": "lat-sink",
+  "spawn": [
+    3,
+    20
+  ],
+  "exits": [
+    {
+      "id": "to-sink-terraces",
+      "tile": [
+        35,
+        2
+      ],
+      "target_zone": "sink-terraces",
+      "target_tile": [
+        45,
+        57
+      ],
+      "kind": "street"
+    },
+    {
+      "id": "to-under-caverns",
+      "tile": [
+        35,
+        37
+      ],
+      "target_zone": "under-caverns",
+      "target_tile": [
+        2,
+        40
+      ],
+      "kind": "ladder"
+    }
+  ],
+  "objects": [
+    {
+      "id": "relay-sump-hardware",
+      "tile": [
+        36,
+        22
+      ],
+      "kind": "hardware",
+      "params": {
+        "name": "Sump Relay hardware",
+        "core": "lat-relay-sump"
+      }
+    },
+    {
+      "id": "relay-sump",
+      "tile": [
+        23,
+        22
+      ],
+      "kind": "relay",
+      "params": {
+        "name": "Sump Relay",
+        "relay": "sump",
+        "vendor": "relay-sump-counter"
+      }
+    },
+    {
+      "id": "sables-back-room-floor-market-lights",
+      "tile": [
+        52,
+        13
+      ],
+      "kind": "light",
+      "params": {
+        "name": "floor market lights"
+      }
+    },
+    {
+      "id": "sump-hardware",
+      "tile": [
+        51,
+        13
+      ],
+      "kind": "hardware",
+      "params": {
+        "name": "Sump hardware",
+        "core": "lat-sump"
+      }
+    },
+    {
+      "id": "sump-grate",
+      "tile": [
+        52,
+        12
+      ],
+      "kind": "door",
+      "params": {
+        "name": "grate",
+        "open": false,
+        "locked": true
+      }
+    },
+    {
+      "id": "sump-pump-regions",
+      "tile": [
+        52,
+        14
+      ],
+      "kind": "pump",
+      "params": {
+        "name": "Public shortcut and salvage pumps",
+        "layout": "sump-common",
+        "work_order_layouts": [
+          "sump-common",
+          "sump-reserve"
+        ]
+      }
+    },
+    {
+      "id": "black-clinic-counter",
+      "tile": [
+        53,
+        13
+      ],
+      "kind": "vendor",
+      "params": {
+        "name": "Black Clinic",
+        "vendor": "black-clinic"
+      },
+      "essential": true
+    },
+    {
+      "id": "area-light-1",
+      "tile": [
+        17,
+        26
+      ],
+      "kind": "light",
+      "params": {
+        "name": "Maintenance lamp"
+      }
+    },
+    {
+      "id": "sump-reserve-cache",
+      "tile": [
+        49,
+        27
+      ],
+      "kind": "cache",
+      "params": {
+        "name": "Workers salvage niche"
+      }
+    },
+    {
+      "id": "warm-stack-1",
+      "tile": [
+        50,
+        13
+      ],
+      "kind": "terminal",
+      "params": {
+        "name": "Warm stack 1",
+        "contract_handler": "sable"
+      },
+      "essential": true
+    },
+    {
+      "id": "warm-stack-2",
+      "tile": [
+        16,
+        26
+      ],
+      "kind": "terminal",
+      "params": {
+        "name": "Warm stack 2"
+      }
+    },
+    {
+      "id": "warm-stack-3",
+      "tile": [
+        52,
+        26
+      ],
+      "kind": "terminal",
+      "params": {
+        "name": "Warm stack 3"
+      }
+    },
+    {
+      "id": "warm-stack-4",
+      "tile": [
+        17,
+        13
+      ],
+      "kind": "terminal",
+      "params": {
+        "name": "Warm stack 4"
+      }
+    },
+    {
+      "id": "warm-stack-5",
+      "tile": [
+        35,
+        20
+      ],
+      "kind": "terminal",
+      "params": {
+        "name": "Warm stack 5"
+      }
+    },
+    {
+      "id": "sump-feed-locker",
+      "tile": [
+        51,
+        12
+      ],
+      "kind": "cache",
+      "params": {
+        "name": "Sump feed locker"
+      }
+    }
+  ],
+  "spawners": [
+    {
+      "id": "feral-crew",
+      "npc": "npc-feral",
+      "count": 2,
+      "respawn_seconds": 60,
+      "condition": "always",
+      "region": {
+        "x": 44,
+        "y": 14,
+        "w": 3,
+        "h": 3
+      }
+    },
+    {
+      "id": "dog-crew",
+      "npc": "npc-dog",
+      "count": 2,
+      "respawn_seconds": 60,
+      "condition": "always",
+      "region": {
+        "x": 54,
+        "y": 29,
+        "w": 3,
+        "h": 3
+      }
+    }
+  ],
+  "lore": [
+    "zone-sink-floor"
+  ],
+  "layouts": [
+    {
+      "id": "sump-pump-regions-active",
+      "changes": [
+        {
+          "tile": [
+            50,
+            16
+          ],
+          "tile_id": "floor"
+        },
+        {
+          "tile": [
+            51,
+            16
+          ],
+          "tile_id": "floor"
+        },
+        {
+          "tile": [
+            52,
+            16
+          ],
+          "tile_id": "floor"
+        },
+        {
+          "tile": [
+            53,
+            16
+          ],
+          "tile_id": "floor"
+        },
+        {
+          "tile": [
+            54,
+            16
+          ],
+          "tile_id": "floor"
+        }
+      ],
+      "warning_tiles": [],
+      "alternate_routes": [
+        "to-sink-terraces",
+        "to-under-caverns"
+      ]
+    },
+    {
+      "id": "sump-common",
+      "changes": [
+        {
+          "tile": [
+            20,
+            12
+          ],
+          "tile_id": "floor"
+        },
+        {
+          "tile": [
+            21,
+            12
+          ],
+          "tile_id": "floor"
+        },
+        {
+          "tile": [
+            22,
+            12
+          ],
+          "tile_id": "floor"
+        },
+        {
+          "tile": [
+            23,
+            12
+          ],
+          "tile_id": "floor"
+        },
+        {
+          "tile": [
+            24,
+            12
+          ],
+          "tile_id": "floor"
+        },
+        {
+          "tile": [
+            45,
+            26
+          ],
+          "tile_id": "water"
+        },
+        {
+          "tile": [
+            46,
+            26
+          ],
+          "tile_id": "water"
+        },
+        {
+          "tile": [
+            47,
+            26
+          ],
+          "tile_id": "water"
+        },
+        {
+          "tile": [
+            48,
+            26
+          ],
+          "tile_id": "water"
+        },
+        {
+          "tile": [
+            49,
+            26
+          ],
+          "tile_id": "water"
+        }
+      ],
+      "warning_tiles": [
+        [
+          20,
+          12
+        ],
+        [
+          21,
+          12
+        ],
+        [
+          22,
+          12
+        ],
+        [
+          23,
+          12
+        ],
+        [
+          24,
+          12
+        ],
+        [
+          45,
+          26
+        ],
+        [
+          46,
+          26
+        ],
+        [
+          47,
+          26
+        ],
+        [
+          48,
+          26
+        ],
+        [
+          49,
+          26
+        ]
+      ],
+      "alternate_routes": [
+        "to-sink-terraces",
+        "to-under-caverns"
+      ]
+    },
+    {
+      "id": "sump-reserve",
+      "changes": [
+        {
+          "tile": [
+            20,
+            12
+          ],
+          "tile_id": "water"
+        },
+        {
+          "tile": [
+            21,
+            12
+          ],
+          "tile_id": "water"
+        },
+        {
+          "tile": [
+            22,
+            12
+          ],
+          "tile_id": "water"
+        },
+        {
+          "tile": [
+            23,
+            12
+          ],
+          "tile_id": "water"
+        },
+        {
+          "tile": [
+            24,
+            12
+          ],
+          "tile_id": "water"
+        },
+        {
+          "tile": [
+            45,
+            26
+          ],
+          "tile_id": "floor"
+        },
+        {
+          "tile": [
+            46,
+            26
+          ],
+          "tile_id": "floor"
+        },
+        {
+          "tile": [
+            47,
+            26
+          ],
+          "tile_id": "floor"
+        },
+        {
+          "tile": [
+            48,
+            26
+          ],
+          "tile_id": "floor"
+        },
+        {
+          "tile": [
+            49,
+            26
+          ],
+          "tile_id": "floor"
+        }
+      ],
+      "warning_tiles": [
+        [
+          20,
+          12
+        ],
+        [
+          21,
+          12
+        ],
+        [
+          22,
+          12
+        ],
+        [
+          23,
+          12
+        ],
+        [
+          24,
+          12
+        ],
+        [
+          45,
+          26
+        ],
+        [
+          46,
+          26
+        ],
+        [
+          47,
+          26
+        ],
+        [
+          48,
+          26
+        ],
+        [
+          49,
+          26
+        ]
+      ],
+      "alternate_routes": [
+        "to-sink-terraces",
+        "to-under-caverns"
+      ]
+    },
+    {
+      "id": "sump-fault",
+      "changes": [
+        {
+          "tile": [
+            20,
+            12
+          ],
+          "tile_id": "water"
+        },
+        {
+          "tile": [
+            21,
+            12
+          ],
+          "tile_id": "water"
+        },
+        {
+          "tile": [
+            22,
+            12
+          ],
+          "tile_id": "water"
+        },
+        {
+          "tile": [
+            23,
+            12
+          ],
+          "tile_id": "water"
+        },
+        {
+          "tile": [
+            24,
+            12
+          ],
+          "tile_id": "water"
+        },
+        {
+          "tile": [
+            45,
+            26
+          ],
+          "tile_id": "water"
+        },
+        {
+          "tile": [
+            46,
+            26
+          ],
+          "tile_id": "water"
+        },
+        {
+          "tile": [
+            47,
+            26
+          ],
+          "tile_id": "water"
+        },
+        {
+          "tile": [
+            48,
+            26
+          ],
+          "tile_id": "water"
+        },
+        {
+          "tile": [
+            49,
+            26
+          ],
+          "tile_id": "water"
+        }
+      ],
+      "warning_tiles": [
+        [
+          20,
+          12
+        ],
+        [
+          21,
+          12
+        ],
+        [
+          22,
+          12
+        ],
+        [
+          23,
+          12
+        ],
+        [
+          24,
+          12
+        ],
+        [
+          45,
+          26
+        ],
+        [
+          46,
+          26
+        ],
+        [
+          47,
+          26
+        ],
+        [
+          48,
+          26
+        ],
+        [
+          49,
+          26
+        ]
+      ],
+      "alternate_routes": [
+        "to-sink-terraces",
+        "to-under-caverns"
+      ]
+    }
+  ],
+  "pockets": [
+    {
+      "x": 52,
+      "y": 12,
+      "w": 3,
+      "h": 3
+    }
+  ]
+}

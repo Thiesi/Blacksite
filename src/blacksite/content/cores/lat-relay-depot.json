@@ -9,8 +9,12 @@
   "hardware": [
     {
       "zone": "tramyard-depots",
-      "tile": null,
-      "label": "Depot Relay hardware"
+      "tile": [
+        29,
+        26
+      ],
+      "label": "Depot Relay hardware",
+      "object_id": "relay-depot-hardware"
     }
   ],
   "entry": "entry",

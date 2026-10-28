@@ -1,0 +1,186 @@
+{
+  "schema": 1,
+  "id": "tramyard-wall-gate",
+  "name": "Gate Nine",
+  "district": "Tramyard",
+  "safety": "contested",
+  "lean": "kestrel",
+  "sight_radius": 11,
+  "sector": "lat-tramyard",
+  "spawn": [
+    3,
+    25
+  ],
+  "exits": [
+    {
+      "id": "to-scour-ring-1",
+      "tile": [
+        35,
+        47
+      ],
+      "target_zone": "scour-ring-1",
+      "target_tile": [
+        2,
+        40
+      ],
+      "kind": "gate",
+      "relay": "gate-nine"
+    },
+    {
+      "id": "to-tramyard-depots",
+      "tile": [
+        2,
+        10
+      ],
+      "target_zone": "tramyard-depots",
+      "target_tile": [
+        2,
+        30
+      ],
+      "kind": "street"
+    }
+  ],
+  "objects": [
+    {
+      "id": "gatehouse-east-hardware",
+      "tile": [
+        36,
+        21
+      ],
+      "kind": "hardware",
+      "params": {
+        "name": "Gatehouse East hardware",
+        "core": "lat-gatehouse-east"
+      }
+    },
+    {
+      "id": "gatehouse-east-gate-nine-service-latch",
+      "tile": [
+        52,
+        16
+      ],
+      "kind": "door",
+      "params": {
+        "name": "Gate Nine service latch",
+        "open": false,
+        "locked": true
+      }
+    },
+    {
+      "id": "gatehouse-east-gate-nine-outbound",
+      "tile": [
+        17,
+        33
+      ],
+      "kind": "door",
+      "params": {
+        "name": "Gate Nine outbound",
+        "open": false,
+        "locked": true
+      }
+    },
+    {
+      "id": "gatehouse-east-gate-turret",
+      "tile": [
+        51,
+        16
+      ],
+      "kind": "turret",
+      "params": {
+        "name": "gate turret",
+        "spawners": [
+          "halvard-guard-crew"
+        ]
+      }
+    },
+    {
+      "id": "relay-gate-nine-hardware",
+      "tile": [
+        52,
+        15
+      ],
+      "kind": "hardware",
+      "params": {
+        "name": "Gate Relay Nine hardware",
+        "core": "lat-relay-gate-nine"
+      }
+    },
+    {
+      "id": "relay-gate-nine",
+      "tile": [
+        26,
+        21
+      ],
+      "kind": "relay",
+      "params": {
+        "name": "Gate Relay Nine",
+        "relay": "gate-nine",
+        "vendor": "relay-gate-nine-counter"
+      }
+    },
+    {
+      "id": "area-light-1",
+      "tile": [
+        52,
+        17
+      ],
+      "kind": "light",
+      "params": {
+        "name": "Maintenance lamp"
+      }
+    },
+    {
+      "id": "convoy-muster",
+      "tile": [
+        53,
+        16
+      ],
+      "kind": "terminal",
+      "params": {
+        "name": "Convoy muster"
+      }
+    },
+    {
+      "id": "ration-consignment",
+      "tile": [
+        16,
+        33
+      ],
+      "kind": "terminal",
+      "params": {
+        "name": "Ration consignment"
+      }
+    }
+  ],
+  "spawners": [
+    {
+      "id": "kestrel-guard-crew",
+      "npc": "npc-kestrel-guard",
+      "count": 2,
+      "respawn_seconds": 60,
+      "condition": "always",
+      "region": {
+        "x": 19,
+        "y": 19,
+        "w": 3,
+        "h": 3
+      }
+    },
+    {
+      "id": "halvard-guard-crew",
+      "npc": "npc-halvard-guard-tramyard-wall-gate",
+      "count": 2,
+      "respawn_seconds": 60,
+      "condition": "always",
+      "region": {
+        "x": 49,
+        "y": 29,
+        "w": 3,
+        "h": 3
+      }
+    }
+  ],
+  "lore": [
+    "zone-tramyard-wall-gate"
+  ]
+}

@@ -81,7 +81,7 @@ V  clone vat                L  light source (sight radius bump)
 - **Relays:** none.
 - **Terminals:** two public Lattice terminals, Halvard-sector cells only.
 - **Vendors / anchors:** Halvard recruiter (Liaison Desk), a Sablier
-  concession clinic, a Kestrel courier desk.
+  concession clinic, a Kestrel courier desk and bank branch.
 - **Spawners:** Halvard security (guard behaviour, escalating like
   Wardens but corporate).
 
@@ -109,11 +109,13 @@ too.
 - **Exits:** `spire-atrium` (lift); `spire-shaft-head` (service lift,
   locked: Halvard member or a story contract key).
 - **Relays:** none.
-- **Terminals:** one Halvard-member terminal (Halvard Citadel entrance,
-  tier 5).
+- **Terminals:** one public loan terminal in the admitted hall. The
+  Halvard Citadel entrance retains its separate tier-5 network gate;
+  physical admission does not grant a free core credential.
 - **Vendors / anchors:** Halvard quartermaster (heavy weapons, armour),
   Halvard contract handler, Director Halvard's outer office (story
-  anchor, not enterable).
+  anchor, not enterable), the member hall vat, a public Sablier clinic
+  and Kestrel bank branch.
 - **Spawners:** Halvard security, Halvard staff (talkers).
 
 The corporate floor. Carpet that has never seen the street, doors that
@@ -442,7 +444,7 @@ and Sable can stand at adjacent stalls and both pretend not to notice.
 - **Class:** contested. **Lean:** Kestrel. **Size:** 70 × 50.
   **Sight:** 11.
 - **Exits:** `tramyard-depots` (street); `scour-ring-1` (the gate:
-  opens on a Kestrel schedule every 5 minutes for 60 seconds, or on a
+  opens on a Kestrel schedule every 2 minutes for 60 seconds, or on a
   Gate core control, or for a convoy).
 - **Relays:** **Gate Relay Nine** (controls the gate schedule; holders
   open the gate on demand and tax non-members a toll in chits).
@@ -560,7 +562,8 @@ owns a hillside.
   regions; normal operation remains when neutral. Bounded work orders
   determine public or salvage drainage).
 - **Terminals:** one hardware terminal (Sump core, tier 2; controls the
-  pumps and the drain gallery grate).
+  pumps and the drain gallery grate). The first Warm Stack also carries
+  the public Sable work-order board for the local Sump repair.
 - **Vendors / anchors:** none regular. A Ferrymen smuggler who sometimes
   camps here (buys salvage, sells ring maps).
 - **Spawners:** rival gang NPCs, feral things that come up the Sump,
@@ -812,10 +815,10 @@ Between the blocks, alleys where the block lights do not reach.
 ### `terraces-lobby` — Residence Lobby
 
 - **Class:** pocket. **Lean:** neutral. **Size:** 40 × 24. **Sight:** 10.
-- **Exits:** `terraces-blocks` (street door); the player's apartment
-  interior (a per-player instanced room: storage, safe, terminal, private
-  core hardware; door opens only for the tenant and crew members the
-  tenant admits).
+- **Exits:** `terraces-blocks` (street door). The 24 real apartment doors
+  face Block Street; the Lobby lists that same rental pool. Their 6x4
+  private floors follow game 8.7, not a second set of instanced rooms.
+  Crew membership alone does not admit a visitor to a private interior.
 - **Relays:** none.
 - **Terminals:** one public terminal (market board, letting).
 - **Vendors / anchors:** a concierge (talker; reports who came by), a
@@ -834,7 +837,7 @@ number is the whole point.
 #.....[lift].......#
 #..%..........T....#
 #...[mailboxes]....#
-#..+..+..+..+..+...#  + apartment doors (instanced interiors)
+#.................#  listings point to Block Street homes
 ####################
 ```
 
@@ -949,7 +952,7 @@ they find in the tunnels, too.
 
 ### `under-drowned` — The Drowned Level
 
-- **Class:** open. **Lean:** none. **Size:** 100 × 60. **Sight:** 4.
+- **Class:** open. **Lean:** none. **Size:** 100 × 60. **Sight:** 5.
 - **Exits:** `under-service` (stair up); `under-outworks` (a sealed
   bulkhead, opened by a Drowned core control or an Undercity key item);
   `under-caverns` (a siphon: swim, hazard).
@@ -983,8 +986,9 @@ has had forty years alone to think about visitors.
 
 ### `under-caverns` — Karst Caverns
 
-- **Class:** open. **Lean:** none. **Size:** 150 × 80. **Sight:** 3
-  (5 with a light; some chambers are lit by phosphorescent growth, 8).
+- **Class:** open. **Lean:** none. **Size:** 150 × 80. **Sight:** 5
+  before carried-light benefits (game design 5.2). Phosphorescent growth
+  marks some chambers; it does not grant a second base sight rule.
 - **Exits:** `under-service` (breach); `sink-floor` (the Sump grate);
   `under-drowned` (siphon); `under-outworks` (a natural fissure that
   opens onto the outworks' collapsed side); `scour-ring-2` (a cave mouth
@@ -1023,11 +1027,13 @@ water does.
 
 ### `under-outworks` — Blacksite Outworks
 
-- **Class:** open. **Lean:** none. **Size:** 120 × 70. **Sight:** 6
-  (the outworks' own lighting is coming back on, section by section).
+- **Class:** open. **Lean:** none. **Size:** 120 × 70. **Sight:** 5
+  before carried-light benefits. The lights are coming back on in sections.
 - **Exits:** `under-drowned` (bulkhead); `under-caverns` (fissure);
-  `under-shaft-foot` (the outworks' inner door: an Undercity key item,
-  consumed; or the Outworks core control during an Exhale).
+  `under-shaft-foot` (the public inner door). Exhale opens an optional
+  maintenance shortcut, not the only route to the season door. The
+  Drowned bulkhead remains the key-or-core shortcut; ordinary access to
+  Shaft Foot never spends the event key or waits for an Exhale.
 - **Relays:** **Outworks Relay** (the deepest relay; holders' Descent
   contributions count +10 %, with no extra ballot weight; an Exhale capture
   is recorded in the Chronicle, without a repeatable contribution grant).
@@ -1064,8 +1070,8 @@ being the city and starts being the thing the city was built on top of.
 
 ### `under-shaft-foot` — Shaft Foot
 
-- **Class:** open. **Lean:** none. **Size:** 60 × 60. **Sight:** 10
-  (the shaft is lit from above and below).
+- **Class:** open. **Lean:** none. **Size:** 60 × 60. **Sight:** 5
+  before carried-light benefits; light from above marks the cage.
 - **Exits:** `under-outworks` (inner door); `spire-shaft-head` (the
   Shaft: the cage lift, story-gated, finale arc only); `blacksite-l1`
   (the season door: opens when the Depth meter fills; expeditions of 1 to 5
@@ -1254,9 +1260,10 @@ by the Ring.
 - **Relays:** **Far Relay** (a Site Zero telemetry mast from before the
   city; holders can hear the Custodian's carrier on it; the Choir and
   Halvard both want it and neither can keep it).
-- **Terminals:** one orphan terminal on the mast (the only terminal in
-  the Scour besides the Landing's; its cells belong to no sector and
-  drop into the Silt directly).
+- **Terminals:** one orphan terminal on the mast, on the Scour sector.
+  Other relay hardware remains a jack-in point. The sector's Static
+  descent retains its Ring-fall gate (Lattice 2); the mast does not grant
+  an unscoped shortcut into the Silt.
 - **Vendors / anchors:** the mast (landmark), the season artifact sites
   (Ring-fall of intact grade lands here and nowhere else).
 - **Spawners:** wildlife (apex), the Custodian's own drones (guard;
@@ -1315,8 +1322,9 @@ asset manifest can reference it.
   with owner-only object permissions and a separate vestibule. The
   Blacksite uses a separate persistent expedition instance.
 - **Hidden exits** (`under-caverns` cave mouth, the Drop's door) are
-  exits with a `hidden` flag revealed by a Listening check, a program, or
-  an NPC's dialogue flag on the character.
+  unmarked physical passages. Listening, programs and dialogue may point
+  out their location; they are not an additional character credential.
+  Explicit Interact on the actual tile works. Walking never auto-travels.
 - **Shared core** (`lat-shaft` at `spire-shaft-head` and `under-shaft-foot`) are one
   core with two hardware locations; cutting power at either affects
   both. This is the only such core and the content loader should assert
@@ -1360,7 +1368,13 @@ Cold Chain places its replacement socket beside a sheltered loan
 terminal. Depot places its manifest inspection point before the surplus
 warehouse fork. Relay Zero places a physical reset cabinet whose cover
 protects a solo player's body from routine NPC patrols. A crew can guard
-it in contested PvP. Every map shows these costs through geometry.
+it in contested PvP. Its reserve credential opens the workshop's
+north workshop passage through `worker_return`, saving at least eight
+steps between the repair mast and the public Old Works counter while
+the public street remains available. The gate stands at (22, 7),
+between the north street and the counter's workshop. Ordinary
+`relay_open` remains a separate public capture control. Every map shows
+these costs through geometry (game 7.5).
 
 The existing `under-shaft-foot` is permanent geography, never an Open
 ending reward. That ending changes only an optional east maintenance

@@ -9,8 +9,12 @@
   "hardware": [
     {
       "zone": "sink-terraces",
-      "tile": null,
-      "label": "Cable Car hardware"
+      "tile": [
+        51,
+        22
+      ],
+      "label": "Cable Car hardware",
+      "object_id": "cable-car-hardware"
     }
   ],
   "entry": "entry",

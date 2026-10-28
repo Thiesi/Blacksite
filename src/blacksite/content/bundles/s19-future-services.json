@@ -1,7 +1,7 @@
 {
   "schema": 1,
   "id": "s19-future-services",
-  "status": "authoring",
+  "status": "active",
   "depends": [
     "s25-cores",
     "s25-faction-sites",

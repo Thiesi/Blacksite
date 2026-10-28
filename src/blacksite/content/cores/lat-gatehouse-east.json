@@ -9,8 +9,12 @@
   "hardware": [
     {
       "zone": "tramyard-wall-gate",
-      "tile": null,
-      "label": "Gatehouse East hardware"
+      "tile": [
+        36,
+        21
+      ],
+      "label": "Gatehouse East hardware",
+      "object_id": "gatehouse-east-hardware"
     }
   ],
   "entry": "entry",

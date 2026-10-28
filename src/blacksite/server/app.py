@@ -89,6 +89,11 @@ class Server:
                 shutil.rmtree(previous)
             self.storage.mark_dirty("meta", "content_package_version", PACKAGE_VERSION)
             self.storage.flush_now()
+            # The atomic rename publishes the exact tree already parsed
+            # and validated above. Reuse its data with the final root;
+            # loading and validating the full city twice delays startup.
+            tree.root = target
+            return tree
         tree = load_content(target, self.install_dir / "content.local")
         problems = validate(tree)
         if problems:
@@ -173,7 +178,10 @@ class Server:
         if self.core.contracts:
             self.storage.mark_dirty('meta', 'contracts_state', self.core.contracts.record())
         if self.core.salvage:
-            self.storage.mark_dirty("meta", "salvage_state", self.core.salvage.record())
+            # mark_dirty freezes synchronously through JSON. Copying the
+            # four fields' RNG arrays first only repeats that snapshot work.
+            self.storage.mark_dirty("meta", "salvage_state", {
+                **self.core.salvage.state, "uptime": self.core.salvage.uptime})
         if self.core.lattice:
             sources = self.core.lattice.sources
             tick = self.clock.now_tick()

@@ -9,8 +9,12 @@
   "hardware": [
     {
       "zone": "oldworks-main",
-      "tile": null,
-      "label": "Relay Zero hardware"
+      "tile": [
+        25,
+        3
+      ],
+      "label": "Relay Zero hardware",
+      "object_id": "relay-zero-hardware"
     }
   ],
   "entry": "entry",
@@ -122,6 +126,19 @@
           "reset_seconds": 300,
           "scope": "public",
           "permission": "public",
+          "safety_policy": "none"
+        },
+        {
+          "id": "worker_return",
+          "label": "Workers passage",
+          "target": {
+            "zone": "oldworks-main",
+            "object": "relay-zero-workers-gate"
+          },
+          "action": "open",
+          "reset_seconds": 1200,
+          "scope": "mission",
+          "permission": "contract",
           "safety_policy": "none"
         }
       ]

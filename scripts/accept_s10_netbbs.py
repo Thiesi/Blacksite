@@ -64,6 +64,7 @@ class NativeProbe:
         self.console = ThreadPoolExecutor(max_workers=1, thread_name_prefix='native-proof-console') if show else None
         self.console_jobs: list[Future[None]] = []
         self.console_max_seconds = 0.0
+        self.native_time_limit = 900
 
     def display_write(self, data: bytes) -> None:
         # A slow physical console must never stall NetBBS's key relay or the
@@ -103,13 +104,15 @@ class NativeProbe:
         if client['python_tree_sha256'] != digest.hexdigest():
             raise RuntimeError('Native client source differs from the server; rebuild and install the current wheel.')
         (self.root/'native-client.json').write_text(json.dumps(client, indent=2)+'\n', encoding='utf-8')
+        started = time.monotonic()
         await self.service.start()
+        self.server_start_seconds = time.monotonic()-started
         self.game,self.commerce,self.combat = self.service.core.characters,self.service.core.commerce,self.service.core.combat
         self.db = Database(self.root/"node.db"); self.lane = DatabaseLane(self.db.path)
         owner = create_user(self.db,"S10SysOp",password="LocalProbe-S10",user_level=10)
         create_door(self.db,"Blacksite",str(self.python),args=("-m","blacksite.door"),creator=owner,
             profile=DoorProfile(install_dir=str(REPO),encoding="utf-8",max_sessions=16,multinode_certified=True,
-                time_limit=900,environment={"DOOR_BLACKSITE_INSTALL_DIR":str(self.service.install_dir)}).validate())
+                time_limit=self.native_time_limit,environment={"DOOR_BLACKSITE_INSTALL_DIR":str(self.service.install_dir)}).validate())
         async def handler(session: Any) -> None:
             user,sixteen = self.accounts.popleft()
             # Exercise NetBBS's real native-door 16-colour capability path.
@@ -129,7 +132,8 @@ class NativeProbe:
         else:
             print(message,flush=True)
 
-    async def open(self, width: int, height: int, label: str, archetype: int = 0, sixteen: bool = False) -> Connection:
+    async def open(self, width: int, height: int, label: str, archetype: int = 0,
+                   sixteen: bool = False, card: str | None = None) -> Connection:
         user=create_user(self.db,f"S10{label}{width}",password="LocalProbe-S10",user_level=10)
         self.accounts.append((user,sixteen))
         reader,writer=await asyncio.open_connection("127.0.0.1",self.node.port)
@@ -162,7 +166,18 @@ class NativeProbe:
         await caller.write(b"\r");await wait(lambda:"Name (Enter keeps default):" in caller.screen.screen_text())
         await caller.write(f"{label}界{width}".encode()+b"\r")
         await wait(lambda:"Briefing" in caller.screen.screen_text());await caller.write(b"s")
-        await wait(lambda:"Recruiter cards" in caller.screen.screen_text());await caller.write(b"\x1b")
+        await wait(lambda:"Recruiter cards" in caller.screen.screen_text())
+        if card is None:
+            await caller.write(b"\x1b")
+        else:
+            selected = list(self.game.content.wake_cards).index(card)
+            while self.game.wakes[session.id].cursor != selected:
+                current = self.game.wakes[session.id].cursor
+                delta = 1 if current < selected else -1
+                await caller.write(b"\x1b[B" if delta > 0 else b"\x1b[A")
+                await wait(lambda:self.game.wakes[session.id].cursor == current+delta)
+            await wait(lambda:session.ack_revision == session.view_revision)
+            await caller.write(b"\r")
         await wait(lambda:session.player_id in self.game.players)
         await wait(lambda:"Wake Hall" in caller.screen.screen_text().splitlines()[0])
         connection.avatar=self.game.sim.avatars[session.user_id]

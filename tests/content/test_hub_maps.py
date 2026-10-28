@@ -15,7 +15,8 @@ SIZES = {"core-plaza":(90,40),"core-tram-hub":(80,30),"core-precinct":(50,24),
 
 def test_ten_hub_zones_validate():
     tree = load_content(ROOT/"src/blacksite/content")
-    assert set(tree.zones) == SIZES.keys()
+    assert set(tree.bundles['m1-zone-preview'].members['zones']) == SIZES.keys()
+    assert SIZES.keys() <= tree.zones.keys()
     start = perf_counter()
     assert validate(tree) == []
     assert perf_counter()-start < 1
@@ -24,7 +25,7 @@ def test_ten_hub_zones_validate():
 
 def test_sizes_match_gazetteer():
     tree = load_content(ROOT/"src/blacksite/content")
-    assert {z.id:(z.width,z.height) for z in tree.zones.values()} == SIZES
+    assert {zid:(tree.zones[zid].width,tree.zones[zid].height) for zid in SIZES} == SIZES
 
 
 def test_exits_bidirectional():
@@ -51,7 +52,7 @@ def test_every_gazetteer_object_present_by_id():
         "sodium-row":{"row-drug-dealer","row-ticket-tout","row-stage","row-card-table",*[f"row-public-{i}" for i in range(1,4)],*[f"row-bar-{i}" for i in range(1,6)]},
         "sodium-tin-halo":{"vesper","halo-bar","halo-back-room","ferrymen-liaison","halo-contract-board","halo-market-board"},
         "terraces-blocks":{"letting-office","corner-grocer","warden-outpost","block-relay","block-relay-hardware",*[f"blocks-public-{i}" for i in range(1,4)],*[f"block-door-{i}" for i in range(1,6)]},
-        "terraces-lobby":{"lobby-concierge","lobby-lift","lobby-public-terminal","lobby-mailboxes",*[f"apartment-door-{i}" for i in range(1,6)]},
+        "terraces-lobby":{"lobby-concierge","lobby-lift","lobby-public-terminal","lobby-mailboxes","lobby-letting-terminal"},
         "vatside-clinics":{"sablier-main-clinic","sablier-descent","sablier-recruiter","clinic-pharmacy","clinic-public-west","clinic-public-east","sablier-member-terminal","cold-chain-relay","cold-chain-hardware","cold-chain-replacement-socket","cold-chain-loan-terminal"},
     }
     for zid, ids in required.items():
@@ -63,8 +64,12 @@ def test_every_gazetteer_object_present_by_id():
         assert any(p.contains(objects[oid].tile) for p in clinic.pockets)
 
 
-def test_future_boundaries_have_no_dangling_target():
+def test_s25_replaces_all_seven_construction_boundaries_with_real_exits():
     tree = load_content(ROOT/"src/blacksite/content")
     boundaries = [obj for zone in tree.zones.values() for obj in zone.meta.objects if "unavailable_target" in obj.params]
-    assert len(boundaries) == 7
-    assert all(obj.params["unavailable_target"] not in tree.zones for obj in boundaries)
+    assert not boundaries
+    for source,target in (('core-plaza','spire-atrium'), ('core-tram-hub','sink-rim'),
+                          ('core-tram-hub','tramyard-market'), ('core-tram-hub','chapel-towers'),
+                          ('sodium-row','oldworks-main'), ('terraces-blocks','chapel-towers'),
+                          ('vatside-vat-row','under-service')):
+        assert any(ex.target_zone == target for ex in tree.zones[source].meta.exits)
