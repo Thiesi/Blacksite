@@ -503,7 +503,8 @@ A zone flagged `charted` in its zone data (entities 1.1) shows its
 public layout on arrival, without sight. `charted` and `public` are zone
 data, not look data, because they change what callers are shown and
 what walks may use. The public-ground region is the zone's `public`
-rectangles minus hidden-exit tiles. The server synthesises the
+rectangles, plus the rectangle of every pocket flagged `charted`, minus
+hidden-exit tiles; all of it is under the checks below. The server synthesises the
 `charted` grid per view from that region; it never writes the caller's
 memory, so nothing charted becomes remembered.
 
