@@ -952,3 +952,55 @@ P1:
 V0-3 (pocket sight covering the whole room) is a sight rule change, and
 V0-5 (furniture as tiles) belongs to the geometry rework under S25's
 gate. Neither is a presentation setting.
+
+### 13.6 Owner decisions on V0 (2026-10-28)
+
+Recorded in `v0.md` §6 on #73 (`39117f0`), relayed by the presentation
+lead:
+
+- **Verdict.** V0 meets the Tin Halo target for the most part. The gap
+  is the room: at 44 tiles deep it reads "like a bowling alley", where
+  the target is an intimate bar. **Room size is therefore an input to the
+  geometry rework** (S25c, V0-5): authored feature layers set room depth
+  and proportions per place, not only furniture, and the human layout
+  gate judges them from captures. This stays under S25's withheld
+  approval.
+- **New gate, H5: owner look pass.** Every place with a scene gets an
+  owner look pass from captures before it ships. V3's offline authoring
+  renderer produces the captures (the three tiers, as in V0), and the
+  authoring slices carry H5 per place alongside H3. Like the other human
+  gates, no review or build substitutes for it.
+- **V0-1 decided: a drawn place card in 16 colours.** 16-colour callers
+  get 16-colour art per place, falling back to the text card where a
+  place has none. This needs an asset format under `04-assets.md`
+  (sizes for 80x24 and larger, the fallback rule, validation) before any
+  per-place art is authored. It joins V3's scope as a separate asset
+  kind; it does not use the lit renderer.
+- **D-T9 approved.** The contract change is #74 (UI §1, entities §1.2,
+  architecture §8.4), reviewed with two wording findings. It lands ahead
+  of V2, so V2 implements a contract already in canon instead of
+  carrying the amendment itself.
+- **Still open:** V0-2 (authored viewpoint), V0-3 (pocket sight), V0-4
+  (repaint on stop, or live redraw while walking).
+
+Engineering position on live redraw while walking (V0-4), from V0's
+measurements, not from profiling:
+
+- Full-fidelity repaint on every step is not within budget today: 110 to
+  270 ms of CPU against a 200 ms step, and about 50 KB against the
+  16 KiB ceiling. Walking would send about 250 KB/s.
+- Live redraw is feasible with three measures, all inside V1:
+  1. **Coalescing:** paint only the latest position. Input never waits
+     on a paint; intermediate steps are skipped while the walk outruns
+     the renderer.
+  2. **Cached static layer:** inside a pocket the known ground rarely
+     changes, so the lit static layer can be cached per tile and
+     heading, with figures drawn on top. Revisits are cheap; first visits
+     still pay. Neighbouring tiles can be prepared while idle.
+  3. **A reduced byte class while moving:** a cheaper frame (half
+     resolution, or only changed rows) while walking, with the full frame
+     on stop.
+- With those, the feasible target is a picture that follows the walk at
+  a lower frame rate and sharpens on stop. Whether that is preferable to
+  repaint-on-stop is a presentation call; the budgets in §13.5 apply
+  either way.
