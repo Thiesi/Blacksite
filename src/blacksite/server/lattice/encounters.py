@@ -12,6 +12,7 @@ from math import ceil
 from random import Random
 from typing import TYPE_CHECKING, Any
 
+from blacksite.layout import compute as screen_layout
 from blacksite.content.schema import DataSpec, ProgramTemplate
 from blacksite.formatting import display_number
 from blacksite.server.clock import TICK_HZ
@@ -1424,8 +1425,8 @@ class Encounters:
                 stats += f"  DECOY {presence.effects.decoy:g}"
             if body.get('black_risk'):
                 title = 'BLACK ICE / BODY RISK / '+title
-            columns = session.caps['width']//2-12 if session.caps['width'] >= 100 else session.caps['width']-16
-            detail = stats+'\n'+'\n'.join(wrapped(detail, max(20, columns)))
+            columns = screen_layout(session.caps['width'], session.caps['height']).encounter_width
+            detail = stats+'\n'+'\n'.join(wrapped(detail, columns))
             result = menu(title, rows, screen.cursor, detail,
                           self.lat.jack_key(session)+" escape  Esc/B returns without acting")
             result.update(me=body['me'], scope=body['scope'], sector=body['sector'],

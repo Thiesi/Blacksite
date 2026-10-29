@@ -4,6 +4,7 @@ from dataclasses import dataclass
 import textwrap
 from typing import Any
 
+from blacksite.layout import compute as screen_layout
 from blacksite.content.loader import ContentTree
 from blacksite.server.rules.character import ARCHETYPES, default_name
 
@@ -38,7 +39,8 @@ class Wake:
         return {key: getattr(self, key) for key in ("stage", "archetype", "name", "cursor", "screen", "page")}
 
     def body(self, content: ContentTree, handle: str, width: int, height: int) -> dict[str, Any]:
-        detail_width = (min(width - 6, 110) - 5) // 2 if width >= 100 else min(width - 10, 66)
+        layout = screen_layout(width, height)
+        detail_width = layout.wake_detail_width
         if self.stage == "archetype":
             rows = [{"id": slug, "cells": [slug.title()]} for slug, _ in ARCHETYPES]
             slug = rows[self.cursor]["id"]
@@ -60,8 +62,8 @@ class Wake:
                          "Enter keeps: " + default_name(handle), self.error]
                 title, hint = "THE WAKE - Choose your name", "Enter keeps default  Esc returns"
             elif self.stage == "briefing":
-                all_lines = wrapped(content.text[f"wake-briefing-{self.screen}"].body, width - 29)
-                count = max(1, height - min(8, 3 + max(0, height - 24) * 5 // 16) - 7)
+                all_lines = wrapped(content.text[f"wake-briefing-{self.screen}"].body, layout.briefing.width)
+                count = layout.briefing.rows
                 pages = max(1, (len(all_lines) + count - 1) // count)
                 self.page = min(self.page, pages - 1)
                 lines = all_lines[self.page * count:(self.page + 1) * count]
@@ -78,8 +80,9 @@ class Wake:
         if key.lower() == "s":
             self.stage, self.cursor = "card", len(content.wake_cards)
             return
-        all_lines = wrapped(content.text[f"wake-briefing-{self.screen}"].body, width - 29)
-        count = max(1, height - min(8, 3 + max(0, height - 24) * 5 // 16) - 7)
+        layout = screen_layout(width, height)
+        all_lines = wrapped(content.text[f"wake-briefing-{self.screen}"].body, layout.briefing.width)
+        count = layout.briefing.rows
         self.page += 1
         if self.page * count >= len(all_lines):
             self.screen, self.page = self.screen + 1, 0

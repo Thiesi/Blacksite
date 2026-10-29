@@ -2,12 +2,16 @@
 
 from typing import Any
 
+from blacksite.layout import MIN_LOG_WIDTH
 from blacksite.door.cells import clean_text, cell_width
 
 PREFIXES = {"system":"sys", "faction":"fac"}
 
 
 def rows(lines: list[dict[str, Any]], width: int) -> list[dict[str, str]]:
+    # Two continuation cells plus a whole two-cell glyph (terminal UI 6).
+    if width < MIN_LOG_WIDTH:
+        raise ValueError("log width must leave room for an indented wide glyph")
     result = []
     for line in lines:
         prefix = "[" + PREFIXES.get(line.get("channel", "system"), line.get("channel", "system")) + "] "

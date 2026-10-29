@@ -3,12 +3,13 @@
 from dataclasses import replace
 from typing import Any
 
-from blacksite.door.cells import CellBuffer, display_width, truncate
-from blacksite.door.layout import Rect
+from blacksite.door.cells import CellBuffer, truncate
+from blacksite.layout import Layout
 from blacksite.door.palette import Palette
 
 
-def render_zone(buffer: CellBuffer, body: dict[str, Any], area: Rect, palette: Palette) -> None:
+def render_zone(buffer: CellBuffer, body: dict[str, Any], layout: Layout, palette: Palette) -> None:
+    area = layout.viewport
     viewport = body["viewport"]
     legend = body["legend"]
     memory = body.get("remembered", [])
@@ -38,23 +39,12 @@ def render_zone(buffer: CellBuffer, body: dict[str, Any], area: Rect, palette: P
         if 0 <= x < min(area.width, viewport["w"]) and 0 <= y < min(area.height, viewport["h"]):
             buffer.put(area.x + x, area.y + y, entry["glyph"], palette.style(entry.get("role", "text")))
     me = body["me"]
-    header = f"{me['zone_name']}  "
-    buffer.put(2, 0, truncate(header, buffer.width - 18), palette.style("title"))
-    safety = me["safety"].upper()
-    sx = min(buffer.width - len(safety) - (16 if me.get("heat_until") else 10), 2 + display_width(header))
-    buffer.put(sx, 0, safety, palette.style("safety_" + me["safety"]))
-    if service := body.get('service'):
-        start = sx+len(safety)+2
-        buffer.put(start, 0, truncate(service.get('summary', ''), max(0, buffer.width-16-start)), palette.style('ui_highlight'))
-    buffer.put(buffer.width - 8, 0, me.get("clock", ""), palette.style("title"))
-    if me.get("heat_until"):
-        buffer.put(buffer.width - 14, 0, "HEAT", palette.style("warning"))
-    side_x, side_w = buffer.width - 23, 22
+    side_x, side_w = layout.side.x, layout.side.width
     rows: list[str] = []
     event_rows = [str(plan['summary']) for plan in (body.get('event') or {}).get('plans', [])]
     rows += event_rows
     objective = body.get("objective")
-    if objective and not (buffer.width < 100 and objective.get('compact_hint')):
+    if objective and not (not layout.wide and objective.get('compact_hint')):
         rows += [str(objective.get("next_action", "")), str(objective.get("cost", ""))]
     for hazard in body.get("hazards", [])[:1]:
         rows += [f"WARNING {hazard.get('warning', 0):g}s", "Escape: " + ", ".join(hazard.get("escape", []))]

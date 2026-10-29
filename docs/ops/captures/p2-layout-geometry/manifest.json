@@ -1,0 +1,317 @@
+{
+  "schema": 1,
+  "execution_head": "0203051ea3f1b36cf1faf3ec5f985002325d9b4d",
+  "source_clean": true,
+  "archived_utc": "2026-10-29T14:45:08.927098+00:00",
+  "pytest": {
+    "head": "0203051ea3f1b36cf1faf3ec5f985002325d9b4d",
+    "dirty": false,
+    "exit_code": 0,
+    "counts": {
+      "passed": 1650,
+      "failed": 0,
+      "skipped": 1
+    },
+    "seconds": 874.1560000000172,
+    "command": [
+      "C:\\Users\\Thiesi\\OneDrive\\Dev\\Blacksite\\.worktrees\\s11-npcs\\.venv\\Scripts\\python.exe",
+      "-m",
+      "pytest",
+      "-q",
+      "-p",
+      "no:cacheprovider",
+      "--basetemp",
+      "C:\\Users\\Thiesi\\AppData\\Local\\Temp\\blacksite-p2-mzood3tg\\pytest-full-final"
+    ],
+    "completed_utc": "2026-10-29T14:41:35.183278+00:00",
+    "transcript_sha256": "dd668f6b090fac34c375cbe7845defd34ed4f0a16ad13db479da792fb283f35f",
+    "goldens_and_mechanics_unchanged": true
+  },
+  "strict_cases": 99,
+  "authored_cp437_failures": 0,
+  "golden_identity": {
+    "golden_tree": "89f591be90a94231b34c35381d7919d8046fc44c",
+    "mechanics_blob": "83b0350980ca1578279fd7582c655c04c4c6e12c",
+    "base": "d0d248647e3d4384edbfc5b3d5b3d63aaf2f3734",
+    "mechanics_file_sha256": "08d306deab3bbf25cf98814df4c41509d03a7bc00091b69b1f109ee4f95508e8",
+    "golden_files": 132
+  },
+  "native_wide": {
+    "head": "0203051ea3f1b36cf1faf3ec5f985002325d9b4d",
+    "dirty": false,
+    "passed": true,
+    "cases": [
+      {
+        "size": [
+          80,
+          24
+        ],
+        "name": "P2ç•Œ80",
+        "tier": "16",
+        "captures": [
+          "wake-80x24",
+          "inventory-80x24",
+          "help-80x24",
+          "scrollback-80x24"
+        ],
+        "inventory_page_keys": true,
+        "help_page_2": true,
+        "scrollback": true,
+        "clean_exit": true
+      },
+      {
+        "size": [
+          132,
+          50
+        ],
+        "name": "P2ç•Œ132",
+        "tier": "16",
+        "captures": [
+          "wake-132x50",
+          "inventory-132x50",
+          "help-132x50",
+          "scrollback-132x50"
+        ],
+        "inventory_page_keys": true,
+        "help_page_2": true,
+        "scrollback": true,
+        "clean_exit": true
+      }
+    ],
+    "transport": "NetBBS Telnet -> registered native stdio",
+    "native_python_tree_sha256": "7c89901b958d417146a8f990e233868c51f22ea231d38faf03da05004b09132d",
+    "fixtures": "none beyond private node/world and ordinary new characters",
+    "human_approval": false,
+    "performance_gate": "not asserted; full native matrix required"
+  },
+  "native_transports": {
+    "head": "0203051ea3f1b36cf1faf3ec5f985002325d9b4d",
+    "dirty": false,
+    "exit_code": 0,
+    "result": {
+      "transports": [
+        "telnet",
+        "ssh",
+        "web"
+      ],
+      "sizes": [
+        [
+          80,
+          24
+        ],
+        [
+          132,
+          50
+        ]
+      ],
+      "passed": true
+    },
+    "native_python_tree_sha256": "7c89901b958d417146a8f990e233868c51f22ea231d38faf03da05004b09132d",
+    "completed_utc": "2026-10-29T14:35:01.861620+00:00",
+    "scope": "S04 service fixture with characters disabled; six registered native door transport/size cases, not full gameplay or performance",
+    "netbbs_distribution_version": "3.0.0",
+    "post_run_node_environment": {
+      "observed_utc": "2026-10-29T14:45:01.370240+00:00",
+      "application_version": "7.41.0",
+      "door_api": 5,
+      "checkout_head": "15f1605f80bb2235989f40accec3ab46f1cc3cae",
+      "checkout_dirty": true
+    }
+  },
+  "wheel_sha256": "63996e830e575398976822d5712f9cc34739d41db6073960398717f6f168ed72",
+  "initial_gate": {
+    "failed": 7,
+    "passed": 1643,
+    "skipped": 1,
+    "cause": "City Map page index shadowed by Page geometry; fixed before this clean final gate"
+  },
+  "human_approval": false,
+  "full_hosted_native_matrix": "required at PR head",
+  "files": [
+    {
+      "path": "golden-identity.json",
+      "bytes": 300,
+      "sha256": "df23786a869877c9dc20e73465b6f57ef2aea703353b6c7943e6eceb07e3d7c1"
+    },
+    {
+      "path": "native-transports/provenance.json",
+      "bytes": 881,
+      "sha256": "8f90ece501ec13a978d430c02774b7a715e6502bc95b719cf3637387a91b6164"
+    },
+    {
+      "path": "native-transports/result.json",
+      "bytes": 179,
+      "sha256": "9674a8f82b018f1e24150f3fce92e15ca292ac7e3c85a44db7f9591ae50916b0"
+    },
+    {
+      "path": "native-transports/ssh-132x50.ans",
+      "bytes": 34937,
+      "sha256": "999290a6f64b4a24853b8d477fb1ea67e4647f6532c676c83fb347449e5e587f"
+    },
+    {
+      "path": "native-transports/ssh-80x24.ans",
+      "bytes": 14198,
+      "sha256": "963d123d7658e6188c555e0f0391a3fd818835b51ab512633ac9dbe72c52d375"
+    },
+    {
+      "path": "native-transports/telnet-132x50.ans",
+      "bytes": 34980,
+      "sha256": "a7c22e70d798d2205499ba390d8949e5ccbae2fc34bf5e0cdcfde6c56233af85"
+    },
+    {
+      "path": "native-transports/telnet-80x24.ans",
+      "bytes": 14241,
+      "sha256": "d1c0dc54fe57f275d9c96ee95c924ad8b70651c042129edd5e05dbe7e6345daa"
+    },
+    {
+      "path": "native-transports/web-132x50.ans",
+      "bytes": 811245,
+      "sha256": "0c73b2b3b555d7fc3c857cbc48361e904e5d70f94f40e84c391cff853d453e8a"
+    },
+    {
+      "path": "native-transports/web-80x24.ans",
+      "bytes": 15542,
+      "sha256": "919e8fcf7b4d6fa77f1ea7e6d450d123f99ade57744c0e44a788f54ed49ae4ad"
+    },
+    {
+      "path": "native-wide/help-132x50.ans",
+      "bytes": 119303,
+      "sha256": "21930608a437aa90d132be71f5e70ad3a0508dac678cc061c64a006ce51b34b1"
+    },
+    {
+      "path": "native-wide/help-132x50.json",
+      "bytes": 17922,
+      "sha256": "f53527777c267b9390f4fb364df3d657b78e283b27b869f28bdffa0f09f17492"
+    },
+    {
+      "path": "native-wide/help-132x50.txt",
+      "bytes": 7575,
+      "sha256": "129a196107f3fd642364845268b9e68013615112cf942b418a271d71b1e7a073"
+    },
+    {
+      "path": "native-wide/help-80x24.ans",
+      "bytes": 48754,
+      "sha256": "ff3901c16871c216f5902e328bce96842be57cc3e432dedfafc358ef560f91f3"
+    },
+    {
+      "path": "native-wide/help-80x24.json",
+      "bytes": 7571,
+      "sha256": "583891aff3d4ddde1ca68ef74d2311f01dac06a2656f675d7072c8d2ac941b82"
+    },
+    {
+      "path": "native-wide/help-80x24.txt",
+      "bytes": 2387,
+      "sha256": "b97204f5a013618bf2637e09b7bec54fa7f25ce230e51b72cb8e0b5fab686c2c"
+    },
+    {
+      "path": "native-wide/inventory-132x50.ans",
+      "bytes": 104958,
+      "sha256": "b6e19da5824b88ee41c6bf588969c796feea0075253d51537b87414704ac4d6e"
+    },
+    {
+      "path": "native-wide/inventory-132x50.json",
+      "bytes": 21492,
+      "sha256": "6e4c326185a1a3bf94fe98780960dc4cfbc0a9f2f83628b7fabb849f9ada2401"
+    },
+    {
+      "path": "native-wide/inventory-132x50.txt",
+      "bytes": 8061,
+      "sha256": "fb25cfa2d77f06e8118d144378422ed23d4099a36b146ecd3c75960bf547166a"
+    },
+    {
+      "path": "native-wide/inventory-80x24.ans",
+      "bytes": 42494,
+      "sha256": "8ad4cbbea203a67e7faa3a861084bcbbb0d5e8d3f1e89191f4d59a4f9141ae04"
+    },
+    {
+      "path": "native-wide/inventory-80x24.json",
+      "bytes": 9326,
+      "sha256": "3979f02ba9064d5bcb9d4cd93b1273afe590143c893865213ece246a9ad97924"
+    },
+    {
+      "path": "native-wide/inventory-80x24.txt",
+      "bytes": 2671,
+      "sha256": "8a978d770f747d3b59852686a03a83c0b237bbb75f013c488bf4398d7afe7f8a"
+    },
+    {
+      "path": "native-wide/result.json",
+      "bytes": 1136,
+      "sha256": "d771665ac8720899d9b04e34c7d4cee788aae31a9ee8e3143732da68914e3113"
+    },
+    {
+      "path": "native-wide/scrollback-132x50.ans",
+      "bytes": 122964,
+      "sha256": "cf48f7b7255df498aa1fe2217ebc2e21b42fa4513addd75d392956929ad7c6c0"
+    },
+    {
+      "path": "native-wide/scrollback-132x50.json",
+      "bytes": 17846,
+      "sha256": "ea4696f0da5837742df908d7004f9824bf0b6cbc1d7e34a568dc0dc7cacf1be4"
+    },
+    {
+      "path": "native-wide/scrollback-132x50.txt",
+      "bytes": 7575,
+      "sha256": "9f7a5cb7fbc2bc410eeb9d01dbe35e6ee51a8e069de59205ab234d75cdca598a"
+    },
+    {
+      "path": "native-wide/scrollback-80x24.ans",
+      "bytes": 51580,
+      "sha256": "86b821f6cdf490f3403d8ee8f32c6f2d12de41d688e9dda5e50d31d7264bd8fe"
+    },
+    {
+      "path": "native-wide/scrollback-80x24.json",
+      "bytes": 7495,
+      "sha256": "2d6abc51a006b8aa0461f10cdc7820cd30db68d72b8277be1b8278b5b5d93fe1"
+    },
+    {
+      "path": "native-wide/scrollback-80x24.txt",
+      "bytes": 2387,
+      "sha256": "81cbc09f22563f3c002b8d4ff75f8a0b8afec70e67924a01415c2b09abc726c2"
+    },
+    {
+      "path": "native-wide/wake-132x50.ans",
+      "bytes": 71547,
+      "sha256": "f611790e80b40d0455c28815d8ba34aaf7792c80192f33b25c6e9a8db2ea573b"
+    },
+    {
+      "path": "native-wide/wake-132x50.json",
+      "bytes": 19487,
+      "sha256": "990b6452a59992d2a877484d5c96e33993aec99a233fd95ec89a81b07cdddbcb"
+    },
+    {
+      "path": "native-wide/wake-132x50.txt",
+      "bytes": 7821,
+      "sha256": "c883d1128f3a4dc75ed9c794e76055aff61e2d5d61be4f38827784da5bacf8f3"
+    },
+    {
+      "path": "native-wide/wake-80x24.ans",
+      "bytes": 30143,
+      "sha256": "c91f2959d9fbc2b9e1f23d725a2f68e1dee3c3ca6f5da607396e0cc3ada264da"
+    },
+    {
+      "path": "native-wide/wake-80x24.json",
+      "bytes": 9148,
+      "sha256": "def8938bbe067f23863a5fef3ee1698b3dd682e1d484685120cbc3fa73e40066"
+    },
+    {
+      "path": "native-wide/wake-80x24.txt",
+      "bytes": 2631,
+      "sha256": "9da91a792ffdd43e4f240f998d46c2cb07ba434197418c7fde1edc553fc6cd3d"
+    },
+    {
+      "path": "pytest.json",
+      "bytes": 682,
+      "sha256": "04b068cf75a6bd3219012ba3b462258f35696eee15aa153db24861d918ec8f68"
+    },
+    {
+      "path": "pytest.log",
+      "bytes": 1884,
+      "sha256": "dd668f6b090fac34c375cbe7845defd34ed4f0a16ad13db479da792fb283f35f"
+    },
+    {
+      "path": "strict-packet-summary.json",
+      "bytes": 403,
+      "sha256": "b27ccf1a07bafbae16d3cf812df58ecbbe9dbc77b6e70895da7cc77a70d34fc1"
+    }
+  ]
+}
