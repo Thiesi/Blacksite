@@ -11,12 +11,20 @@ Ctrl-P scrollback screens show recovery when the full paragraph has
 already scrolled above the visible log.
 
 The [capture index](captures/s25b-arrivals/README.md) holds the twelve
-clean-head arrivals and three scrollback recoveries at
+historical clean-head arrivals and three scrollback recoveries at
 `debc51416632de57025271a0f6a2442d8e61d782`. Its manifest preserves the
 file hashes and both failed local full-suite attempts. The focused set
 passes 66 tests and the strict packet passes 99 cases. Current-head
 hosted Linux/Windows checks still supply the required full-suite gate;
 the local failures are not relabelled as a pass.
+
+The [corrected follow-up](captures/s25b-arrivals/followup-word-wrap/README.md)
+adds the requested 80x24 Service Level and 132x50 Wake Hall replacements
+at clean source head `5fdce87439f17e69e14a96a2cd32e4dc8339fa88`.
+The lead accepts these two text captures without repeating all tiers.
+All four 16-colour native cases pass; the two requested screen payloads
+are archived with the strict packet summary and golden audit. No current
+full-suite or human-layout pass is inferred from these focused receipts.
 
 ## Reproduce
 

@@ -1,5 +1,9 @@
 # Live S25b arrival evidence
 
+The [corrected follow-up](followup-word-wrap/README.md) supplies the two
+replacement screens requested by the presentation lead. The matrix below
+is historical evidence from before the arrival-order and wrapping fixes.
+
 Clean execution head: `debc51416632de57025271a0f6a2442d8e61d782`.
 
 Received from a registered NetBBS native stdio door over Telnet. The hub
@@ -40,6 +44,8 @@ Hall capture also shows the existing cell-width wrap splitting a word.
 The 80x24 scrollback splits words too, including `lig / ht` and
 `invit / e`. `Arrival界80` is the deliberately wide-character fixture
 name shown in the status panel, not an added placeholder.
-These are P4/P5 observations, not hidden or re-rendered corrections.
+These initial observations led to the blocking presentation verdict in
+PR #97 comment 6496637951. The corrected live screens are linked above;
+the original received payloads remain unchanged.
 
 No human layout gate or performance gate is granted by these captures.
