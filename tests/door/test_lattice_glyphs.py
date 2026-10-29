@@ -16,8 +16,9 @@ from tests.harness import HeadlessServer
 
 @pytest.mark.parametrize('kind', ['open', 'gated', 'hidden'])
 @pytest.mark.parametrize('axis', ['h', 'v'])
+@pytest.mark.parametrize('legacy', [False, True])
 def test_ui_1_lattice_uses_registry_through_server_view(info: DoorInfo, repo_root: Path,
-                                                     kind: str, axis: str) -> None:
+                                                     kind: str, axis: str, legacy: bool) -> None:
     content = load_content(repo_root/'src/blacksite/content')
     # A valid local registry override must reach the terminal, not just load.
     key = f'lattice-edge-{kind}-{axis}'
@@ -31,6 +32,8 @@ def test_ui_1_lattice_uses_registry_through_server_view(info: DoorInfo, repo_roo
     presence = lattice.presences[client.session.player_id]
     body = lattice.view(client.session, presence)
     assert body['edge_glyphs'][kind][axis == 'v'] == '!'
+    if legacy:
+        del body['edge_glyphs']  # New door, still-running older service.
     # Use two disclosed cells to isolate each orientation from other edges.
     a, b = body['cells'][:2]
     body['cells'] = [{**a, 'x': 0, 'y': 0},

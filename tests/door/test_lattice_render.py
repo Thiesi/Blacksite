@@ -39,7 +39,7 @@ def sector_views():
 
 
 def draw(info, content, body, width, height, tier):
-    display = Display(replace(info, width=width, height=height, color_depth=tier))
+    display = Display(replace(info, width=width, height=height, color_depth=tier), glyphs=content.glyphs.glyphs)
     display.receive(Frame("welcome", {"keymap": asdict(content.keymaps), "palette": asdict(content.palette)}), 0)
     frame = Frame("view", {"rev": 1, "kind": "lattice", "body": body})
     encode(frame)

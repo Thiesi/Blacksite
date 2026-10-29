@@ -34,7 +34,7 @@ async def accept(root: Path, door_python: Path, tier: str) -> None:
             for sid, sector in sorted(lattice.sectors.records.items()):
                 # Labelled fixture: disclose the whole existing sector. Its
                 # topology, credentials, glyph table and renderer are shipped.
-                lattice.saved(player)['found_cells'][sid] = [cell.id for cell in sector.cells]
+                lattice.saved(player).setdefault('found_cells', {})[sid] = [cell.id for cell in sector.cells]
                 presence.sector, presence.cell = sid, lattice.sectors.entrance(sid)
                 caller.session.needs_full_view = True
                 heading = sector.district.upper()+' / LATTICE'

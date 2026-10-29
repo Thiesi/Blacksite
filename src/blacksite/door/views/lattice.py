@@ -8,7 +8,8 @@ from blacksite.door.palette import Palette
 from blacksite.formatting import display_number
 
 
-def render_lattice(buffer: CellBuffer, body: dict[str, Any], area: Rect, palette: Palette) -> None:
+def render_lattice(buffer: CellBuffer, body: dict[str, Any], area: Rect, palette: Palette, *,
+                   fallback_glyphs: dict[str, str] | None = None) -> None:
     buffer.put(2, 0, truncate(str(body.get("title", "LATTICE")), buffer.width-6), palette.style("title"))
     columns, rows = body.get("layout_size", [8, 6])
     cells = body.get("cells", [])
@@ -25,7 +26,9 @@ def render_lattice(buffer: CellBuffer, body: dict[str, Any], area: Rect, palette
         ax, bx = ax+2, bx+2
         steps = max(abs(bx-ax), abs(by-ay))
         kind = edge["kind"] if edge["kind"] in ("gated", "hidden") else "open"
-        horizontal, vertical = body["edge_glyphs"][kind]
+        local = fallback_glyphs or {}
+        horizontal, vertical = body.get("edge_glyphs", {}).get(kind,
+            [local.get(f"lattice-edge-{kind}-{axis}", "") for axis in ("h", "v")])
         glyph = horizontal if ay == by else vertical if ax == bx else "\\" if (bx-ax)*(by-ay) > 0 else "/"
         for step in range(1, steps):
             x, y = round(ax+(bx-ax)*step/steps), round(ay+(by-ay)*step/steps)
