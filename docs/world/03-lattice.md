@@ -76,6 +76,7 @@ district.
 | Terraces | 36 | 20 / 12 / 4 | Block A Super, Block B Super, Outpost Feed, Stairwell C cabinet, and one private-core entrance per rented apartment | *Basement Riser* (gated, resident key) |
 | Sodium Row | 20 | 14 / 4 / 2 | House Lights, Tin Halo Back Bar, Sign Grid | *Stage Door* (hidden) |
 | Warmwater (planned, #90) | 24 | 12 / 8 / 4 | Lamp Board, Bath Rota, Boiler Governor, Quiet Book Approach | *The Culvert* (hidden, along the warm-water main) |
+| Intake (planned, #101) | 20 | 10 / 6 / 4 | Beds Telemetry, Sluice Board, Hall Registry, Clearwell Approach | *The Bore* (hidden, at the foot of the deepest well shaft) |
 | Undercity | 26 | 4 / 8 / 14 | Pumphouse Panel, Cavern Relay, Outworks Seal Approach | *The Seam* (public and unmarked; it does not need to hide) |
 | Scour | 18 | 6 / 12 / 0 | one uplink cell per relay: Landing Uplink, Mile Relay, Beacon Relay, Crash Relay, Far Relay, Patrol Beacon | *Static* (gated, only during Ring-fall) |
 | Silt | procedural | see §6 | — | — |
@@ -453,6 +454,30 @@ house roster (which rooms are open; the Lamp Check contracts). Controls:
 `lamps @ warmwater-courts` (switches off every lamp in the Courts for
 30 s under the switched-off lamp rule, design §6.4: the Strike's old
 signal). ICE: Tripwire, Liar, Shiv.
+
+### 3.15 The Intake
+
+The core is planned (#101): canon only until a Stage 2 slice builds it.
+
+**Clearwell** (`lat-clearwell`) — Wardens, tier 4, 8 rooms, planned (#101).
+Hardware: the control room @ `intake-wellhead`. Data: the allocation
+schedule (which district's spare pressure runs tonight; a contract
+staple), intake telemetry, the night log (`text-clearwell-night-log`).
+Controls: `catwalk sluice @ intake-beds` (drops or raises the catwalk
+sluice, so the Beds' short and long routes swap; an ordinary control,
+reset after 10 min), `wash-down @ intake-wellhead` (floods the Wellhead's open floor
+strips for 30 s, a named effect under design §6.4). Neither control
+reduces delivered water or touches the Tap (bible §3.6). The catwalk
+sluice is a layout swap inside the Beds; it never opens or closes the
+members' sluice walk, which answers only to Intake Relay (design §7.7).
+ICE: Tripwire,
+Turnstile, Mastiff, Glasshouse.
+
+Clearwell is the controller Halvard installed after the Dry Eleven
+(bible §3.3). It is the "water core" of the Wardens' dossier. Its floor
+plan in the night log shows nine doors for eight rooms; no room is
+authored behind the ninth until the Wardens' Season 2 hook (factions)
+opens it. Nothing in this core says what the night traffic is.
 
 ## 4. ICE
 

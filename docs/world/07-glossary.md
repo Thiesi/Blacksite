@@ -30,6 +30,8 @@ terminal and a private core. Rent lapses to eviction. (design §8.7)
 Ghost, Cantor or Operator. Sets starting attributes and one unique
 ability. (bible §8.1, design §3.2)
 
+**Ardwin, Pell** — Chief of the well crews at the Wellhead; gives pump and pipe jobs. (gazetteer)
+
 **Ashgrove, Commander Ruth** — head of Halvard Spire Security. (factions)
 
 **Attributes** — Frame, Nerve, Cortex, Resonance, Vitals; 1 to 100,
@@ -72,6 +74,8 @@ sealed installation under the Spire. Also the game. (bible §3.3, §4.6)
 
 **Boilerhouse, the** — Warmwater's heat exchangers, where the warm-water main goes down, sealed. (gazetteer)
 
+**Bore, the** — The Intake sector's hidden descent cell, at the foot of the deepest well shaft. (Lattice)
+
 **Bounty** — Chits posted on a player's name on the market board;
 collected by whoever kills them outside a safe zone. Refused below
 grade 5. (design §8.3)
@@ -113,7 +117,11 @@ allegiance is unknown. (lattice)
 **Chronicle, the** — Read-only in-game history the server appends with
 each season's outcome. (bible §11, design §13)
 
+**Cistern Walk, the** — The street from Meridian Plaza round the Spire's west side to the Settling Beds. (gazetteer)
+
 **Civic Pattern** — Warden standard issue; Halvard designs in blue. (catalog)
+
+**Clearwell** — The Wardens' water core at the Intake, installed by Halvard after the Dry Eleven; controls the catwalk sluice and the wash-down. (Lattice)
 
 **Clone debt** — The cost of dying: a share of chits on hand, a fee by
 grade, and a fade of XP. (design §5.4)
@@ -225,6 +233,8 @@ Foot** — Undercity zones below the Service Level. (gazetteer)
 **Drugs** — Effective, addictive on a per-substance clock, with a crash.
 (bible §9, design §8.6)
 
+**Dry Eleven, the** — Year 11: eleven days with the treatment works run by hand, after its first controller failed. (bible §3.3)
+
 **Evasion** — Nerve / 2 plus cover; subtracted from to-hit. (design §3.1)
 
 **Event** — A scheduled or admin-forced world happening: Ring-fall,
@@ -256,6 +266,8 @@ edge, opened in Season 3. (story arcs)
 
 **Ferrymen, the** — Scour salvage clans led by the Ferry; hold the outer
 relays and the roads. (bible §3.3, §7)
+
+**Filter Lane, the** — The street from Clinic Row to the Settling Beds. (gazetteer)
 
 **First Lamp** — Title of the Lamp Compact's elected head. (factions)
 
@@ -317,6 +329,10 @@ risk, limited by tolerance and slot. (bible §9, design §8.5)
 
 **Influence** — Hourly income to a faction from a held relay; the season
 leaderboard score. (design §7.4)
+
+**Intake Relay** — The Intake's relay at the Wellhead; holders take the sluice walk. (design §7.7)
+
+**Intake, the** — The Civic treatment works north of the Spire, a district that leans Warden. (bible §4.3)
 
 **Integrity** — A runner's health analog in the Lattice, 100; at 0, forced
 jack-out. (design §6.1)
@@ -588,6 +604,8 @@ default. (design §5.4)
 
 **Senn, Auda** — First Lamp, head of the Lamp Compact. (bible §8.2; factions)
 
+**Settling Beds, the** — The Intake's basins under work lamps, where the Tap stands. (gazetteer)
+
 **Severance, the** — Year 0: the orbital network collided with itself and
 the global net partitioned in the same hour. (bible §3.2)
 
@@ -622,6 +640,8 @@ group. (design §3.3)
 **Sleeper** — A character who logged out in a contested or open zone and
 stays in the world sixty seconds. (design §2)
 
+**Sluice walk, the** — The short way from the Settling Beds to the Wellhead, open to Intake Relay holders; the public catwalk stays open. (design §7.7)
+
 **Sodium Row** — Entertainment district and neutral ground, enforced by
 Red Sable. Home of the Tin Halo. (bible §4.3)
 
@@ -649,6 +669,8 @@ ration issue, usually to the Sink. (found texts)
 **Sweeper** — a deep-Silt cleanup process of disputed origin. (lattice)
 
 **Talker** — an NPC dialogue record; a line and offers, never a tree. (personae)
+
+**Tap, the** — The public standpipe in the Settling Beds; it never runs dry. (gazetteer)
 
 **Telemetry 4** — the Site Zero mast in the Far Ring. (gazetteer)
 
@@ -683,6 +705,8 @@ forbidden; at 100, something is dispatched. (bible §5.1, design §6.3)
 
 **Tramyard** — Kestrel's district: depots, warehouses, wall gates,
 markets. (bible §4.3)
+
+**Treatment Hall, the** — The Intake's Civic hall and safe pocket, where Clerk Hass works. (gazetteer)
 
 **Undercity** — Service tunnels, caverns and Blacksite outworks beneath
 the city; an open zone. (bible §4.4)
@@ -736,6 +760,8 @@ their eyes. (bible §4.3, design §4)
 §7)
 
 **Warmwater** — The pleasure quarter in the north-east, the Lamp Compact's district. (bible §4.3)
+
+**Wellhead, the** — The Intake's pump housings over the well shafts; Clearwell's hardware and Intake Relay. (gazetteer)
 
 **Workshop** — where schematics and salvage become items. (catalog)
 

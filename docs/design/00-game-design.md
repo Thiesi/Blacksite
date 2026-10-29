@@ -643,7 +643,8 @@ real encounter. District gate counts and public uplinks remain intact.
 Named short effects are exceptions to that ordinary reset range: a
 mission latch lasts 120 s, a private delivery vestibule 30 s, Row lighting
 blackout 30 s, Row sign message 60 s, the bell-gallery hymn 60 s, and
-the Courts' lamps 30 s (planned, #90).
+the Courts' lamps 30 s (planned, #90), and the Wellhead wash-down 30 s
+(planned, #101).
 Foundry gantry debris lasts 30 s after its hazard warning and deals
 5 kinetic damage per second before armour (provisional, tuned at the
 pacing gate). Its map character is `x`,
@@ -652,6 +653,9 @@ Boilerhouse steam vents (planned, #90) use the same hazard layer on
 their authored vent tiles, on their schedule or when the Boiler
 Governor fires them: 10 s after the hazard warning, 5 chemical damage
 per second before armour (provisional, tuned at the pacing gate).
+The Wellhead wash-down (planned, #101) turns that zone's authored floor
+strips to water terrain (§5.2) 5 s after its warning, deals no damage,
+and drains when it ends.
 Transit holds retain their separate 30 s limit and 120 s immunity.
 A switched-off lamp reduces sight to 5 tiles within the zone's normal
 light radius around that lamp. Dark-sight equipment still applies.
@@ -1103,6 +1107,7 @@ are not additional perks. Scour cores remain reachable when neutral.
 | `block` / Block Relay | `terraces-blocks` | 2 | next rent invoice -10 %; one extra Tripwire in private core |
 | `lamp` / Lamp Relay | `warmwater-lamp-street` | 2 | planned (#90); bath detox and rooms at Compact counters -20 %, strongest discount only |
 | `boiler` / Boiler Relay | `warmwater-boilerhouse` | 3 | planned (#90); within Warmwater, out of combat, base shock decay 7 per second instead of 5, before other multipliers |
+| `intake` / Intake Relay | `intake-wellhead` | 3 | planned (#101); the sluice walk between the Settling Beds and the Wellhead opens for members; the public catwalk stays open |
 | `cavern` / Cavern Relay | `under-caverns` | 3 | current local patrol overlay, not exclusive base map |
 | `outworks` / Outworks Relay | `under-outworks` | 4 | contribution Depth +10 %, rounded down, no extra XP/ballot |
 | `mile` / Mile Relay | `scour-ring-1` | 2 | current local patrol route on convoy map; no combat immunity |
@@ -1127,6 +1132,14 @@ Relay Zero multiplies eligible trace gain by 0.90 after other trace
 modifiers. It never discounts costs explicitly classified as fixed by
 their action rule. The benefit applies Lattice-wide, ends with
 ownership or membership, and cannot stack with itself.
+
+Intake's sluice walk (planned, #101) is a members' gate on the shorter
+of two routes between the same zones, like Gate Nine's fast passage:
+the public catwalk stays open, and the relay never touches the Tap or
+delivered water (bible §3.6). Clearwell's `catwalk sluice` control is a
+separate layout swap inside the Beds (Lattice §3.15): it never opens or
+closes the sluice walk, so hacking the core does not bypass the relay
+benefit.
 
 Cable fare is 5 chits; a free stair/ladder route remains. Gate Nine's
 ordinary outbound opening is 60 s every 2 minutes, so the ordinary free

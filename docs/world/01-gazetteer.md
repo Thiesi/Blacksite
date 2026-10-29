@@ -43,6 +43,9 @@ migration.
 | `warmwater-baths` | The Long Baths (planned, #90) | Warmwater | pocket | Lamp Compact | 60 × 30 |
 | `warmwater-courts` | The Courts (planned, #90) | Warmwater | contested | Lamp Compact | 80 × 40 |
 | `warmwater-boilerhouse` | The Boilerhouse (planned, #90) | Warmwater | contested | Lamp Compact | 70 × 40 |
+| `intake-beds` | The Settling Beds (planned, #101) | The Intake | contested | Wardens | 100 × 40 |
+| `intake-hall` | The Treatment Hall (planned, #101) | The Intake | pocket | Wardens | 50 × 30 |
+| `intake-wellhead` | The Wellhead (planned, #101) | The Intake | contested | Wardens | 70 × 40 |
 | `under-service` | Service Level | Undercity | open | none | 120 × 50 |
 | `under-drowned` | The Drowned Level | Undercity | open | none | 100 × 60 |
 | `under-caverns` | Karst Caverns | Undercity | open | none | 150 × 80 |
@@ -55,7 +58,8 @@ migration.
 | `scour-ring-4` | Far Ring | The Scour | open | none | 200 × 100 |
 | `blacksite-l1` | Blacksite Level One | The Blacksite | instanced | none | see story arcs |
 
-Thirty-nine zone templates, four of them Warmwater's, planned (#90). Instancing is separate from safety;
+Forty-two zone templates, four of them Warmwater's, planned (#90), and
+three the Intake's, planned (#101). Instancing is separate from safety;
 `blacksite-l1` has open mission areas and a protected decision room.
 Count the safety classes from the overview instead of a second tally.
 
@@ -79,14 +83,15 @@ Tramyard's stretch of the wall, are sealed and are not drawn as exits.
 The Spire stands at the centre, on the sealed shaft, the highest point
 on the plateau. The Core is the downtown at the Spire's southern foot.
 The districts ring the Core in this order, clockwise from the
-north-west, with Warmwater last, in the north-east:
+north-west, with Warmwater in the north-east and the Intake last, in
+the north (planned, #101):
 
 ```
                           #####################
                       #####                   #####
-                   ####beds, fungal halls         ####
-                ###      treatment works              ###
-               ##                                       ##
+                   ####   beds, fungal halls      ####
+                ###                                   ###
+               ##          THE INTAKE                   ##
              ##                               WARMWATER   ##
             ##     VATSIDE                                 ##
           ##                                                 ##
@@ -119,8 +124,8 @@ north-west, with Warmwater last, in the north-east:
 | District | Where | Its street neighbours |
 |---|---|---|
 | The Spire | centre, on the shaft | the Core (the Spire steps) |
-| The Core | centre, south of the Spire | the Spire, Vatside (Sablier Boulevard), the Terraces, Sodium Row (the Neon Stair), Warmwater (the Lamp Walk) |
-| Vatside | north-west | the Core, the Terraces |
+| The Core | centre, south of the Spire | the Spire, Vatside (Sablier Boulevard), the Terraces, Sodium Row (the Neon Stair), Warmwater (the Lamp Walk), the Intake (the Cistern Walk) |
+| Vatside | north-west | the Core, the Terraces, the Intake (the Filter Lane) |
 | The Terraces | west | the Core, Vatside, Chapel Ward |
 | Chapel Ward | south-west | the Terraces |
 | Sodium Row | south, below the Core | the Core, Old Works |
@@ -128,10 +133,12 @@ north-west, with Warmwater last, in the north-east:
 | The Sink | east-south-east, against the wall | Tramyard (the Long Stair), Old Works |
 | Tramyard | east, along the wall | the Sink, Old Works, Warmwater (the Steam Stair), the Scour (Gate Nine) |
 | Warmwater | north-east, between the Spire and the wall | the Core (the Lamp Walk), Tramyard (the Steam Stair) |
+| The Intake | north, between the Spire and the wall; planned (#101) | the Core (the Cistern Walk), Vatside (the Filter Lane) |
 
-North of the Spire are the covered beds, fungal halls and treatment
-works that feed the city (bible 3.6). No zone is there.
-The City Map draws that ground as plain city fabric with no name.
+North of the Spire are the covered beds and fungal halls that feed the
+city, and among them the Civic treatment works, the Intake (bible 3.6;
+planned, #101). The beds and halls around the Intake have no zone; the
+City Map draws them as plain city fabric with no name.
 
 Tramyard runs along the east wall because the wall was Kestrel's
 project and the gate is Kestrel's. The Sink is a sinkhole a kilometre
@@ -178,6 +185,9 @@ Zones on the same spot are stacked; the map shows a stack as one place.
 | `warmwater-baths` | 59, 27 | planned (#90) |
 | `warmwater-courts` | 69, 25 | planned (#90) |
 | `warmwater-boilerhouse` | 74, 31 | planned (#90); the main goes down here, sealed |
+| `intake-beds` | 42, 23 | planned (#101); the Cistern Walk runs south round the Spire's west side to the plaza; the Filter Lane runs south-west to Clinic Row |
+| `intake-hall` | 50, 17 | planned (#101) |
+| `intake-wellhead` | 56, 18 | planned (#101); the well shafts go down here, sealed |
 
 ### Routes between districts
 
@@ -192,6 +202,8 @@ Zones on the same spot are stacked; the map shows a stack as one place.
 | The tolled tunnel | the Sink Terraces and the Fabrication Yards | through the sinkhole wall |
 | The Lamp Walk | Meridian Plaza and Lamp Street | street, round the Spire's east side |
 | The Steam Stair | Tramyard Market and Lamp Street | street, up from the market |
+| The Cistern Walk | Meridian Plaza and the Settling Beds | street, round the Spire's west side; planned (#101) |
+| The Filter Lane | Clinic Row and the Settling Beds | street; planned (#101) |
 
 Every other zone exit stays inside its district.
 
@@ -387,7 +399,8 @@ Everything metal is slightly, permanently, damp.
 - **Exits:** `spire-atrium` (steps); `core-tram-hub` (street);
   `core-precinct` (street); `sodium-row` (street, the Neon Stair);
   `terraces-blocks` (street); `vatside-clinics` (street, Sablier
-  Boulevard); `warmwater-lamp-street` (street, the Lamp Walk).
+  Boulevard); `warmwater-lamp-street` (street, the Lamp Walk);
+  `intake-beds` (street, the Cistern Walk; planned, #101).
 - **Relays:** none.
 - **Terminals:** four public Lattice terminals (Core sector).
 - **Vendors / anchors:** Kestrel bank branch, general vendor
@@ -519,7 +532,7 @@ of rain that never falls.
   **Sight:** 12.
 - **Exits:** `vatside-wake-hall` (door); `core-plaza` (street, Sablier
   Boulevard); `vatside-vat-row` (street); `core-tram-hub` (tram
-  platform).
+  platform); `intake-beds` (street, the Filter Lane; planned, #101).
 - **Relays:** **Cold Chain Relay** (controls elective cold-storage capacity; member surgery benefit
   and public work orders follow game design §7.5 and §7.7).
 - **Terminals:** two public terminals; one Sablier-member terminal
@@ -1270,6 +1283,117 @@ and says it is the same as yesterday.
 #.......R....%%..........#  R Boiler Relay
 #..[exchanger]......$....#
 #................[main]..#  the main goes down, sealed
+##########################
+```
+
+## The Intake
+
+### `intake-beds` — The Settling Beds
+
+- **Status:** planned (#101). Canon only until a Stage 2 slice builds it.
+- **Class:** contested. **Lean:** Wardens. **Size:** 100 × 40.
+  **Sight:** 8 (work lamps over black water).
+- **Exits:** `core-plaza` (the Cistern Walk); `vatside-clinics` (the
+  Filter Lane); `intake-hall` (the hall doors); `intake-wellhead` (the
+  public catwalk, the long way round the basins, or the sluice walk, the
+  short way, open to Intake Relay holders).
+- **Relays:** none. The sluice gate to the sluice walk answers only to
+  Intake Relay in the Wellhead. The catwalk sluice between the basins is
+  Clearwell's control (Lattice §3.15) and never opens that gate.
+- **Terminals:** two public terminals (Intake sector).
+- **Vendors / anchors:** the Tap (a public standpipe that never runs
+  dry), a fungal-hall stall (food), emote anchors (the basin rail, the
+  Tap's step).
+- **Spawners:** bed workers (talkers), a Warden patrol on a long loop,
+  Choir pilgrims at the basin edge, pipe thieves after dark (hostile).
+
+The covered beds run north from the Spire to the wall, and in the middle
+of them the city drinks. Long settling basins lie under rows of
+green-white work lamps, and every lamp is doubled in the black water, so
+the catwalks seem to hang between two ceilings. The air smells of wet
+stone and the fungal halls next door. At the end of the first catwalk
+stands the Tap, a brass standpipe on a step, with a queue that is never
+long and never empty. It has not run dry since the Dry Eleven. Everything
+else here is surplus, and surplus is what people argue about.
+
+```
+##################################
+#>.....L.......L.......L........>#  the cistern walk / the filter lane
+#..~~~~~~~~..~~~~~~~~..~~~~~~~~..#  ~ settling basins (slow, no cover)
+#..~~~~~~~~..~~~~~~~~..~~~~~~~~..#
+#.......$.......T.........%%.....#  $ the Tap
+#..~~~~~~~~..~~~~~~~~..~~~~~~~~..#
+#..+.....................+......>#  + hall doors / + sluice gate / > catwalk
+##################################
+```
+
+### `intake-hall` — The Treatment Hall
+
+- **Status:** planned (#101). Canon only until a Stage 2 slice builds it.
+- **Class:** pocket (Civic, safe). **Lean:** Wardens. **Size:** 50 × 30.
+  **Sight:** 12 (the brightest floor in the north).
+- **Exits:** `intake-beds` (the hall doors); `intake-wellhead` (the
+  gallery stair).
+- **Relays:** none.
+- **Terminals:** one public terminal.
+- **Vendors / anchors:** Clerk Wendel Hass's desk (Civic handler: water
+  contracts and the Warden contract board), a Civic counter (consumables,
+  water flasks), the hand log of the Dry Eleven in a glass case.
+- **Spawners:** Wardens (guard, two), Civic clerks (talkers).
+
+White tile, Civic blue, and glass galleries where the water goes through
+the filters in slow sheets. Nobody fights here; the Wardens see to that,
+and the clerks see to the Wardens. Hass works at a desk on the gallery
+floor rather than in an office, because from there he can hear the
+pumps. The glass case by the door holds the hand log from Year 11, open
+at day eleven. The last line is in his writing, and it says the water
+came back.
+
+```
+##################
+#+..............+#  + hall doors (beds) / + gallery stair (wellhead)
+#..L....L....L...#
+#..[filters].....#  glass filter galleries
+#.$.....T....$...#  Hass's desk / the Civic counter
+##################
+```
+
+### `intake-wellhead` — The Wellhead
+
+- **Status:** planned (#101). Canon only until a Stage 2 slice builds it.
+- **Class:** contested. **Lean:** Wardens. **Size:** 70 × 40.
+  **Sight:** 5 (lamps on the pump housings only).
+- **Exits:** `intake-beds` (the public catwalk; the sluice walk);
+  `intake-hall` (the gallery stair). The well shafts go down to the
+  aquifer, sealed below the pump housings.
+- **Relays:** **Intake Relay** (holds the sluice gate; holders take the
+  sluice walk to the Beds, design §7.7). It cannot touch the Tap or the
+  city's water (bible §3.6).
+- **Terminals:** one hardware terminal (Clearwell core, tier 4, in the
+  control room; a crew can cut its power, design §6.4).
+- **Vendors / anchors:** Pell Ardwin, chief of the well crews (contract
+  giver: pump and pipe jobs), the shaft rail (emote anchor; where the
+  Choir listens).
+- **Spawners:** well crews (talkers), a Warden patrol, Choir pilgrims,
+  pipe thieves (hostile).
+
+Where the water comes up. Pump housings the size of tram cars stand over
+the shafts, and the only light is on the housings, so the floor between
+them is dark and wet and loud. Water runs in strips across it where the
+wash-down channels drain. The crews talk with their hands. Choir pilgrims
+come to stand at the shaft rail and say the shafts hum, and the crews
+let them, because they keep out of the way. Late at night the pumps
+sometimes change rhythm for a few minutes. The crews look at the control
+room, and nobody is at the panel.
+
+```
+##########################
+#>......................+#  catwalk / + gallery stair
+#..[pump]..~~~..[pump]...#  ~ floor strips (the wash-down floods them)
+#..L.......~~~......L....#  L lamps on the pump housings only
+#...~~~...R....~~~...$...#  R Intake Relay / $ Pell Ardwin
+#..[pump]..T....[shafts].#  T Clearwell control room
+#+.......................#  + the sluice walk (relay holders)
 ##########################
 ```
 

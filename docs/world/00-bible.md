@@ -121,6 +121,14 @@ deep Lattice, into the unmapped region under the district sectors that
 runners call the Silt, and came back as a recording. The recording still
 talks.
 
+In Year 11 the treatment works' original controller failed. For eleven
+days, the Dry Eleven, the crews ran the filters by hand, Kestrel rationed
+water by the cup, and the Wardens worked the hand pump at the Tap in
+shifts. A junior clerk named Wendel Hass kept the hand log, and when it
+was over the Authority gave him the works. Halvard installed a
+replacement controller from its own stores and has held the plant's
+title since. It has never said what the controller was first built for.
+
 ### 3.4 The Choir (Years 21 to 40)
 
 People started hearing it. First the runners: a pattern in the noise floor
@@ -187,7 +195,7 @@ Riot and Brann's command begin in Year 22. The Lamp Strike is in Year
 leak is in Year 28; Reyes takes over in Year 29; the subscription-ledger
 release and its eleven collector deaths are in Year 33. These are two
 separate leaks. Kestrel announces its routing office in Year 6; the name
-Dispatcher becomes public in Year 9. The Wake program begins in Year 38;
+Dispatcher becomes public in Year 9. The Dry Eleven is in Year 11. The Wake program begins in Year 38;
 older specialist clones, including Vantongeren, predate it. Ute is the
 tenth Ferry, retired; Anouk is the eleventh and Ute's daughter.
 
@@ -250,6 +258,12 @@ design document.
   Bathhouses on the warm-water main, houses with a lamp over the door
   when they are open, steam in the streets all winter. Everything is for
   hire and nobody is for sale.
+- **The Intake** — the Civic treatment works north of the Spire, among
+  the covered beds, where the city's water comes up from the aquifer.
+  Leans Warden. Settling basins under work lamps, a hall of white tile,
+  and the Wellhead, where the pumps never stop. The Tap never runs dry;
+  everything else here is surplus, and surplus is what people argue
+  about.
 
 ### 4.4 The Undercity (open zone)
 
