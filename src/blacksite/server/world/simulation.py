@@ -7,10 +7,11 @@ from collections.abc import Callable
 from blacksite.layout import compute as screen_layout
 from blacksite.server.clock import Clock, TICK_HZ
 from blacksite.server.loop import TickContext
-from blacksite.server.protocol import Frame
+from blacksite.server.protocol import Frame, LogKind
 from blacksite.server.sessions import Session, Sessions
 from blacksite.server.views.delta import ViewStore
 from blacksite.server.views.zone_view import Perception, build
+from blacksite.server.views import presentation
 from blacksite.server.world.actors import Actor
 from blacksite.server.world.movement import move, regenerate
 from blacksite.server.world.registry import World
@@ -59,6 +60,21 @@ class ZoneSimulation:
         self.crew_view: Callable[[Session, dict[str, Any]], None] = lambda session, body: None
         self.fare_menu: Callable[[Session, Any], bool] = lambda session, exit: False
         self.travel_refusal: Callable[[Session, Exit], str | None] = lambda session, exit: None
+        self.pvp_provider: Callable[[Actor], bool] = lambda actor: bool(
+            actor.zone in self.world.zones and self.world.zones[actor.zone].safety_at(actor.position) == "open")
+
+    def place_context(self, actor: Actor) -> dict[str, Any]:
+        zone = self.world.zones.get(actor.zone)
+        return {"district": zone.template.meta.district if zone else None,
+                "pvp": self.pvp_provider(actor)}
+
+    def speak(self, session: Session, speaker: Actor, text: str) -> None:
+        """Speech metadata uses the same disclosure as the recipient's view."""
+        viewer = self.avatars[session.user_id].actor
+        label = presentation.name(speaker, viewer, self.world.content)
+        session.emit(f"{label}: {text}", kind="speech", channel="zone", role="chan_zone",
+                     at=self.clock.now_utc().isoformat(), speaker=label,
+                     speaker_role=presentation.presented_class(speaker, viewer, self.world.content))
 
     def discover(self, session: Session, avatar: Avatar) -> None:
         if avatar.zone in avatar.seen_zones:
@@ -67,10 +83,10 @@ class ZoneSimulation:
         for asset_id in self.world.zones[avatar.zone].template.meta.lore[:1]:
             asset = self.world.content.text.get(asset_id)
             if asset:
-                # S25b TR-9: retain wrapped prose in the width-safe log and
-                # scrollback instead of truncating it to one toast line.
+                # S25b TR-9: keep the complete paragraph in world history.
+                # P4 supplies its presentation kind without restoring a toast.
                 paragraph = asset.body.strip().split('\n\n', 1)[0]
-                self.log(session, ' '.join(paragraph.splitlines()))
+                self.log(session, ' '.join(paragraph.splitlines()), kind="place")
 
     def reset_view(self, session: Session, avatar: Avatar) -> None:
         avatar.perception.viewport = avatar.perception.grid_key = None
@@ -79,9 +95,9 @@ class ZoneSimulation:
         self.overlays.pop(session.id, None)
         session.needs_full_view = True
 
-    def log(self, session: Session, text: str) -> None:
-        session.send(Frame("log", {"lines": [{"channel": "zone", "text": text, "role": "chan_zone",
-                                                "at": self.clock.now_utc().isoformat()}]}))
+    def log(self, session: Session, text: str, *, kind: LogKind = "system") -> None:
+        session.emit(text, kind=kind, channel="zone", role="chan_zone",
+                     at=self.clock.now_utc().isoformat())
 
     def transition(self, session: Session, avatar: Avatar, now: float, tick: int) -> None:
         travel = avatar.travel
@@ -314,6 +330,7 @@ class ZoneSimulation:
                     overlay = {"title": body["title"], "lines": lines[page*count:(page+1)*count],
                                "page": page+1, "pages": pages, "hint": "PgUp/PgDn reads  Esc/B returns to the street"}
             if overlay is not None:
+                overlay = {**overlay, "me": {**overlay.get("me", {}), **self.place_context(avatar.actor)}}
                 if kind == "lattice":
                     if self.views[session.id].publish(session, overlay, ctx.tick, kind="lattice"):
                         self.overlays[session.id] = kind, overlay
@@ -337,6 +354,7 @@ class ZoneSimulation:
                          session.caps["width"], session.caps["height"], local, night, ctx.tick,
                          scouted,scouted_actors)
             body["me"].update(self.me_provider(session))
+            body["me"].update(self.place_context(avatar.actor))
             if self.target_provider:
                 body["target"] = self.target_provider(avatar.actor)
                 body["hint"] = "Tab target  F fire  X weapon  1-5 quick  V abilities  E interact  I inventory  ? help"

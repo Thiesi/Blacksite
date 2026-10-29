@@ -429,7 +429,8 @@ class Commerce:
                         if key in effect["patch"]: setattr(av.actor, key, effect["patch"][key])
                     if effect["actor_effects"] is not None: av.actor.effects = effect["actor_effects"]
                     self.sim.world.zones[av.zone].revision += 1
-                session.send(Frame("log", {"lines": [{"channel": "system", "text": effect["message"], "role": "chan_sys", "at": self.clock.now_utc().isoformat()}]}))
+                session.emit(effect["message"], kind="system", channel="system", role="chan_sys",
+                             at=self.clock.now_utc().isoformat())
                 self.toast(session, effect["message"])
         elif session:
             self.toast(session, "The transfer could not be saved. Your goods remain.")

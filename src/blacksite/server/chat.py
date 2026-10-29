@@ -108,8 +108,10 @@ class Chat:
         if source and source.user_id in self.settings(recipient).get("ignored", []):
             return
         faction = self.characters.content.factions.get(self.faction(recipient)) if self.characters and channel == "faction" else None
-        recipient.send(Frame("log", {"lines": [{"channel": channel, "text": sanitize(text),
-            "role": faction.colour if faction else "chan_" + ({"system":"sys", "shout":"say"}.get(channel, channel)), "at": self.clock.now_utc().isoformat()}]}))
+        recipient.emit(sanitize(text), kind="speech" if source else "system", channel=channel,
+            role=faction.colour if faction else "chan_" + ({"system":"sys", "shout":"say"}.get(channel, channel)),
+            at=self.clock.now_utc().isoformat(), speaker=self.name(source) if source else None,
+            speaker_role="caller" if source else None)
 
     def faction(self, session: Session) -> str | None:
         return self.characters.players[session.player_id].faction if self.characters else self.sim.avatars[session.user_id].actor.faction

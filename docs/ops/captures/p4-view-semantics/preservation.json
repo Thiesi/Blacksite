@@ -1,0 +1,9 @@
+{
+  "base": "92b7315053f4e81b64168084955d75c459bb2066",
+  "head": "929aa87cb874e3f74307b4dad18cb2cc728fbfa1",
+  "changed_goldens": [],
+  "golden_tree": "c29d6206b53dc8a5cc7fc779a57c0364ce6399dc",
+  "mechanics_blob": "83b0350980ca1578279fd7582c655c04c4c6e12c",
+  "mechanics_sha256": "08d306deab3bbf25cf98814df4c41509d03a7bc00091b69b1f109ee4f95508e8",
+  "reason": "All glyph/style goldens and mechanics match owner-merged S25b byte for byte; no P4 rebaseline."
+}

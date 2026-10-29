@@ -1,0 +1,17 @@
+{
+  "head": "929aa87cb874e3f74307b4dad18cb2cc728fbfa1",
+  "passed": 105,
+  "failed": 0,
+  "seconds": 323.67,
+  "tested_working_tree_committed_as": "b418778304b55c6a80a283f9e5e292eb0fec3643",
+  "source_and_tests_unchanged_since_that_commit": true,
+  "command": "pytest tests/content/test_npc_presentation.py tests/presentation/test_view_semantics.py tests/server/test_chat.py tests/world/test_arrival_prose.py tests/presentation/test_geometry.py tests/door/test_log_panel.py tests/door/test_city_render.py tests/door/test_drone_menu.py tests/server/test_drone_combat.py tests/server/test_drone_ownership.py -q --tb=short",
+  "covers": [
+    "real shipped Sodium Row spawn at both sizes",
+    "ordinary civilian cover name",
+    "per-caller reveal and instance lifetime",
+    "production retaliation-hook ordering",
+    "complete arrival paragraph without toast",
+    "known/unseen-zone reconnect ordering"
+  ]
+}

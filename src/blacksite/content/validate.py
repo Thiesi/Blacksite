@@ -1312,6 +1312,10 @@ class _Validator:
         for nid, npc in self.each("npcs"):
             assert isinstance(npc, s.NpcTemplate)
             owner = ("npcs", nid)
+            if npc.presents is not None and npc.cover_name is None:
+                self.report(*owner, "presents requires cover_name")
+            if npc.cover_name is not None and (not npc.cover_name.strip() or not npc.cover_name.isprintable()):
+                self.report(*owner, "cover_name must be a non-empty printable name")
             if npc.health is not None and npc.health <= 0: self.report(*owner,"health must be positive")
             if npc.attack: self._weapon_block(npc.attack,owner)
             if npc.training and (npc.health is None or npc.attack is None):

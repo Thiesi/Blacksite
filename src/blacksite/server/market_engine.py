@@ -62,8 +62,8 @@ class Trading:
     def notify(self, pid: str, text: str) -> None:
         session = self.core.combat.session(pid)
         if session:
-            session.send(Frame('log', {'lines': [{'channel': 'system', 'text': text,
-                'role': 'chan_sys', 'at': self.clock.now_utc().isoformat()}]}))
+            session.emit(text, kind="system", channel="system", role="chan_sys",
+                         at=self.clock.now_utc().isoformat())
             self.commerce.toast(session, text)
 
     def terminal(self, session: Session, target: str = '', bank: bool = False) -> Any:

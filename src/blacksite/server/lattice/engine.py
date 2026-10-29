@@ -17,7 +17,7 @@ from blacksite.server.lattice.presence import (
 from blacksite.server.lattice.sectors import Credentials, Sectors, access, permitted, requirement_label
 from blacksite.server.loop import TickContext
 from blacksite.server.players import Player
-from blacksite.server.protocol import Frame
+from blacksite.server.protocol import Frame, LogKind
 from blacksite.server.sessions import Session
 from blacksite.server.world.actors import Actor
 from blacksite.server.world.movement import direction
@@ -88,9 +88,9 @@ class Lattice:
             return presence.descent or presence.sector, presence.instance+":"+presence.room
         return (presence.sector, presence.cell) if presence else None
 
-    def log(self, session: Session, text: str, warning: bool = False) -> None:
-        session.send(Frame("log", {"lines": [{"channel": "lat", "text": text,
-            "role": "warning" if warning else "chan_lat", "at": self.clock.now_utc().isoformat()}]}))
+    def log(self, session: Session, text: str, warning: bool = False, *, kind: LogKind = "system") -> None:
+        session.emit(text, kind="danger" if warning else kind, channel="lat",
+                     role="warning" if warning else "chan_lat", at=self.clock.now_utc().isoformat())
 
     def jack_key(self, session: Session) -> str:
         return "Ctrl-O" if session.keymap_id == "vi" else "J"
@@ -502,9 +502,19 @@ class Lattice:
                   "core": c.core_id, "placeholder": c.core_placeholder,
                   "offline": bool(c.core_id and self.interlock.offline(c.core_id)),
                   "uplink": bool(c.uplink)} for c in known]
+        for entry in cells:
+            core = self.content.cores.get(entry["core"])
+            if core:
+                entry.update(owner="private" if core.owner_kind == "private" else core.owner, tier=core.tier)
+                if core.owner_kind == "relay":
+                    state = self.interlock.state.get("cores", {}).get(core.id, {})
+                    entry["owner"] = state.get("owner_faction") or "neutral"
+        labels = {c.id: c.label for c in known}
         edges = [{"a": c.id, "b": other, "kind": "hidden" if "hidden" in (access(c), access(self.sectors.cells[sector.id][other]))
                   else "gated" if "gated" in (access(c), access(self.sectors.cells[sector.id][other])) else "public"}
                  for c in known for other in c.neighbours if other in ids and c.id < other]
+        for edge in edges:
+            edge["label"] = labels[edge["a"]]+" / "+labels[edge["b"]]
         actor = self.sim.avatars[session.user_id].actor
         peers = []
         for other in self.presences.values():
@@ -522,6 +532,7 @@ class Lattice:
                           "marker_role": {"hostile": "player_hostile", "allied": "player_crew"}.get(relation, "player_neutral")})
         cell = self.sectors.cells[sector.id][presence.cell]
         return {"title": sector.district.upper()+" / LATTICE", "sector": sector.id,
+            "theme": sector.theme or sector.district,
             "layout_size": list(sector.layout_size), "cells": cells, "edges": edges,
             # UI 1: glyphs are registry data; V2 owns modern-tier selection.
             "edge_glyphs": {kind: [self.content.glyphs.glyphs[f"lattice-edge-{kind}-{axis}"]
@@ -533,7 +544,7 @@ class Lattice:
                 "escape_ticks": max(0, presence.escape.until_tick-self.clock.now_tick()) if presence.escape else None,
                 "interruptions": presence.escape.interruptions if presence.escape else 0,
                 "body_hp": actor.health, "body_hp_max": actor.health_max,
-                "hit_serial": actor.behaviour.get("hit_serial", 0)},
+                "hit_serial": actor.behaviour.get("hit_serial", 0), **self.sim.place_context(actor)},
             "room": None, "label": cell.label,
             "body_safety": self.game.world.zones[actor.zone].safety_at(actor.position),
             "hint": "Arrows links  E uplink / enter  "+self.jack_key(session)+" jack out  Tab target  1-7 cast  R rig"}

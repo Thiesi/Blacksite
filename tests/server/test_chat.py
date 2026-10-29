@@ -166,6 +166,10 @@ def test_offline_report_and_reversible_identity_ignore(social):
 
 def test_ring_replays_50_on_reconnect(social):
     game,a,b=social
+    # The placement fixture bypasses real zone-entry discovery. This is
+    # reconnect to a known place, not a first-entry announcement scenario.
+    sim = game.core.characters.sim
+    sim.discover(a.session, sim.avatars[a.session.user_id])
     assert (LOG_RING_LINES,LOG_REPLAY_LINES)==(500,50)
     for i in range(550):
         game.core.chat.emit(a.session,'system',str(i))
@@ -174,18 +178,37 @@ def test_ring_replays_50_on_reconnect(social):
     assert len(ring)==500 and ring[0]['text']=='50'
     game.core.sessions.disconnect(a.session)
     again=game.connect({'user_id':1,'handle':'First界','node_name':'test'})
-    # S25b arrival prose is itself a log-ring line. Reconnect emits it,
-    # then replays the latest fifty lines with stable IDs for client
-    # deduplication. The replay includes 49 system lines and that arrival.
+    # This known zone emits no new paragraph. The separate unseen-zone
+    # test below verifies that first-entry prose follows historical replay.
     frames=game.frames_for(again)
     for frame in frames: encode(frame)
     replay=next(frame.data['lines'] for frame in frames if frame.type=='log' and frame.data.get('replay'))
-    assert len(replay)==50 and replay[0]['text']=='501' and replay[-1]['channel']=='zone'
+    assert len(replay)==50 and replay[0]['text']=='500' and replay[-1]['text']=='549'
     assert [line['id'] for line in replay]==[line['id'] for line in list(again.session.log_ring)[-50:]]
     assert not a.session.log_ring
     act(game,again,Frame('intent',{'name':'resync','args':{}}))
     assert [line['id'] for line in lines(game,again)]==[line['id'] for line in replay]
     assert len(again.session.log_ring)==500
+
+
+def test_arch_5_5_3_first_entry_on_attach_follows_replay_exactly_once(social):
+    game,a,b=social
+    # An old save or an offline arrival may attach in an unseen zone.
+    sim = game.core.characters.sim
+    avatar = sim.avatars[a.session.user_id]
+    avatar.seen_zones.discard(avatar.zone)
+    game.core.chat.emit(a.session, 'system', 'Historical line.')
+    game.frames_for(a)
+    old = list(a.session.log_ring)
+    game.core.sessions.disconnect(a.session)
+    again = game.connect({'user_id':1,'handle':'First界','node_name':'test'})
+    frames = game.frames_for(again)
+    replay = [f for f in frames if f.type == 'log' and f.data.get('replay')]
+    fresh = [f for f in frames if f.type == 'log' and not f.data.get('replay')]
+    assert len(replay) == 1 and replay[0].data['lines'] == old[-50:]
+    assert len(fresh) == 1 and fresh[0].data['lines'][0]['kind'] == 'place'
+    assert frames.index(replay[0]) < frames.index(fresh[0])
+    assert list(again.session.log_ring) == [*old, fresh[0].data['lines'][0]]
 
 
 def test_fixed_and_free_form_emotes_share_chat_budget(social):

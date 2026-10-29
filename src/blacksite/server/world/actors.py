@@ -35,10 +35,21 @@ class Actor:
     sight_key: tuple[object, ...] | None = None
     visible: set[tuple[int, int]] = field(default_factory=set)
     overweight: bool = False
+    revealed_to: set[str] = field(default_factory=set)
+    """Architecture 5.5.4: caller ids, for this NPC instance only."""
 
     @property
     def position(self) -> tuple[int, int]:
         return self.x, self.y
+
+    def reveal_against(self, target: "Actor") -> bool:
+        """Record an NPC's hostile act, without consulting presentation data."""
+        if self.kind == "npc":
+            caller = target.owner if target.behaviour.get("player_drone") else target.id if target.kind == "player" else None
+            if caller and caller not in self.revealed_to:
+                self.revealed_to.add(caller)
+                return True
+        return False
 
 
 def mission_pair(one: Actor, other: Actor) -> bool:

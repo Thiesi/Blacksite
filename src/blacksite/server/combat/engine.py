@@ -24,6 +24,7 @@ from blacksite.server.skills import Use
 from blacksite.server.quality import value as quality_value, damage_multiplier
 from blacksite.server.wake import menu
 from blacksite.server.world.actors import Actor
+from blacksite.server.views import presentation
 from blacksite.server.world.sight import line, sees_actor, visible_tiles, line_of_sight, sight_radius, detection_limit
 from blacksite.server.world.sight import private_visible
 
@@ -48,10 +49,20 @@ class Combat:
         self.crew_together: Callable[[str, str], bool] = lambda one, other: False
         self.ability_effect: Callable[[Player, HymnTemplate], dict[str, Any]] = lambda player, ability: dict(ability.effect)
         self.sim.target_provider = self.target_view
+        self.sim.pvp_provider = self.pvp_eligible
         self.game.combat = self
 
     def now(self) -> float:
         return self.clock.now_utc().timestamp()
+
+    def pvp_eligible(self, actor: Actor) -> bool:
+        """Game 5.1: protection at this body, independent of an opponent."""
+        from blacksite.server.rules.character import DISCHARGE_GRADE
+        zone = self.world.zones.get(actor.zone)
+        player = self.game.players.get(actor.id)
+        return bool(zone and zone.allows_hostile(actor.position)
+                    and (zone.safety_at(actor.position) == "open"
+                         or player and player.grade >= DISCHARGE_GRADE))
 
     def session(self, pid: str) -> Session | None:
         return next((s for s in self.game.sessions.active.values() if s.player_id == pid and not s.closed), None)
@@ -63,8 +74,8 @@ class Combat:
     def log(self, actor: Actor, text: str, warning: bool = False) -> None:
         session = self.session(actor.owner if actor.behaviour.get("player_drone") else actor.id)
         if session:
-            session.send(Frame("log", {"lines":[{"channel":"combat", "text":text,
-                "role":"warning" if warning else "chan_sys", "at":self.clock.now_utc().isoformat()}]}))
+            session.emit(text, kind="danger" if warning else "combat", channel="combat",
+                         role="warning" if warning else "chan_sys", at=self.clock.now_utc().isoformat())
 
     def relation(self, source: Actor, target: Actor) -> str:
         if self.crew_together(source.id, target.id):
@@ -197,17 +208,22 @@ class Combat:
             radius = sight_radius(actor, zone, hour >= 20 or hour < 6)
             if not actor.modifiers.get("target_through_cover") or rules.distance(actor.position, target.position) > radius:
                 return None
-        return {"id":target.id, "name":target.name, "handle":target.handle, "faction":target.faction or "Freelance",
-            "name_role": "player_hostile" if target.marked else self.content.factions[target.faction].colour if target.faction in self.content.factions else "text",
+        hidden = presentation.covered(target, actor, self.content)
+        legacy_role = "player_hostile" if target.marked else self.content.factions[target.faction].colour if target.faction in self.content.factions else "text"
+        return {"id":target.id, "name":presentation.name(target, actor, self.content), "handle":target.handle,
+            "faction": presentation.presented_class(target, actor, self.content).title() if hidden else target.faction or "Freelance",
+            "class": presentation.presented_class(target, actor, self.content), "jacked": target.stance == "jacked",
+            "name_role": presentation.role(target, actor, self.content, legacy_role),
             "hp_percent":max(0,ceil(100 * target.health / target.health_max)),
             **({"hp": target.health, "hp_max": target.health_max} if actor.modifiers.get("target_through_cover") else {}),
             "range":round(rules.distance(actor.position,target.position),1), "cover":self.cover(actor,target),
-            "relation":self.relation(actor,target), "stance":target.stance,
+            "relation":"neutral" if hidden else self.relation(actor,target), "stance":target.stance,
             "protected":not self.legal(actor,target),
             "warning":"Protected" if not self.legal(actor,target) else "Obscured; no clear shot" if obscured
                 else "Firing marks you" if (target.kind == "player" or target.behaviour.get("player_drone")) and self.relation(actor,target) != "hostile" else ""}
 
     def warn(self, source: Actor, target: Actor, tick: int) -> bool:
+        self.reveal(source, target)
         key = source.id, target.id
         private_training = source.behaviour.get("training") or target.behaviour.get("training")
         if key not in self.warnings or (not private_training and tick-self.warnings[key] > rules.ticks(rules.COMBAT_SECONDS)
@@ -344,6 +360,7 @@ class Combat:
         if (not self.legal(source,target) or target.stance in ("down","dead") or not self.visible(source,target)
                 or rules.distance(source.position,target.position) > (weapon.range or 1.5)):
             return
+        self.reveal(source, target)
         if source.behaviour.get("interlock_initiator"):
             initiator = self.world.actors[source.behaviour["interlock_initiator"]]
             self.mark_indirect(initiator, target)  # A committed remote miss still marks.
@@ -412,8 +429,13 @@ class Combat:
             except ValueError: self.log(source,"The city is busy. Try again.",True)
             return
         if not self.legal(source,target) or target.stance in ("down","dead"): return
+        self.reveal(source, target)
         training = source.behaviour.get("training")
         self._apply_damage(source, target, amount, shock, source.id, source.name, bool(training), damage_type)
+
+    def reveal(self, source: Actor, target: Actor) -> None:
+        if source.reveal_against(target) and source.zone in self.world.zones:
+            self.world.zones[source.zone].revision += 1
 
     def feedback_hurt(self, target: Actor, amount: int, source_id: str, source_name: str,
                       permit: Callable[[], bool]) -> bool:

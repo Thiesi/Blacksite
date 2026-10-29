@@ -1,0 +1,17 @@
+{
+  "head": "929aa87cb874e3f74307b4dad18cb2cc728fbfa1",
+  "technical_record": "https://github.com/Thiesi/Blacksite/pull/100#issuecomment-6503940997",
+  "TR-1": "Shipped template presents civilian; test loads the actual Sodium Row spawner.",
+  "TR-2": "Validated cover_name is Sodium regular, matching a real civilian in the same zone.",
+  "TR-3": "Rebase follows owner merge 11873af; full paragraph/order/no-toast and all goldens retained.",
+  "automated_finding_1": "Not reproduced with real Npcs.provoked: caller-first hit and miss reveal the shipped Warden to the attacker before labels; the observer retains the cover.",
+  "reproduction": "shipped-retaliation.json",
+  "triage_comment": "https://github.com/Thiesi/Blacksite/pull/100#issuecomment-6505453517",
+  "written_withdrawal": "https://github.com/Thiesi/Blacksite/pull/100#issuecomment-6505463157",
+  "actual_reviewer_model": "Claude Sonnet 5.5; verified in source review job 40942682572; reviewers did not run tests or native acceptance.",
+  "black_ice_scope_triage": "https://github.com/Thiesi/Blacksite/pull/100#issuecomment-6506795748",
+  "black_ice_written_withdrawal": "https://github.com/Thiesi/Blacksite/pull/100#issuecomment-6506801192",
+  "drone_menu_finding": "Accepted and corrected: Drones.view now uses presentation.name. The shipped two-caller regression covers both sizes before/after reveal, and live menu captures use a declared one-drone inventory fixture.",
+  "drone_review": "https://github.com/Thiesi/Blacksite/pull/100#issuecomment-6505859479",
+  "approval": false
+}

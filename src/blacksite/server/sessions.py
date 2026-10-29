@@ -3,11 +3,11 @@
 from collections import deque
 from collections.abc import Callable
 from dataclasses import dataclass, field
-from typing import Any
+from typing import Any, get_args
 
 from blacksite.server.auth import Role, identity
 from blacksite.server.clock import Clock, TICK_HZ
-from blacksite.server.protocol import Frame
+from blacksite.server.protocol import Frame, LogKind
 
 # Main design §14; architecture §5.3; S03's bounded input queue.
 INPUTS_PER_SECOND = 20
@@ -91,6 +91,28 @@ class Session:
         self.send_queue.append(frame)
         self.notify()
         return True
+
+    def emit(self, text: str, *, kind: LogKind, channel: str, role: str,
+             at: str, speaker: str | None = None,
+             speaker_role: str | None = None) -> bool:
+        """Architecture 5.5.3: the sole entry for newly authored log lines.
+
+        Service notices reach the existing toast surface, outside world
+        history. Replay and reliable delivery stay transport operations.
+        """
+        if kind not in get_args(LogKind):
+            raise ValueError(f"unknown log kind: {kind}")
+        line = {"text": text, "kind": kind, "channel": channel,
+                "role": role, "at": at}
+        if kind == "speech":
+            if not speaker or speaker_role not in (
+                    "caller", "civilian", "warden", "security", "service", "hostile", "drone"):
+                raise ValueError("speech requires a speaker and presented class")
+            line.update(speaker=speaker, speaker_role=speaker_role)
+        if kind == "notice":
+            return self.send(Frame("toast", {"text": text, "role": role,
+                                            "seconds": 4, "kind": kind}))
+        return self.send(Frame("log", {"lines": [line]}))
 
     def allow(self, bucket: str, tick: int, count: int, seconds: int) -> bool:
         history = self.rate_counters.setdefault(bucket, deque())

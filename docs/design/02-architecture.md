@@ -345,7 +345,7 @@ built by the slice named, and every one is additive, so older clients
 ignore it):
 
 ```
-legend[]: {..., glyph_modern?}       modern-tier glyph, terminal UI §1 (V2)
+legend[]: {..., glyph_modern?}       modern-tier glyph, terminal UI §1 (P4; selected by V2)
 actors[]: {..., class, jacked?}      presented class, see 5.5.4 (P4)
 objects[]: {..., role}               role by kind, not `text`/`muted` (P4)
 me: {..., district, pvp}             district id; whether PvP can reach you here (P4)
@@ -366,6 +366,16 @@ not sent in the view; they reach the caller as `ambient` log lines
 core reads `private`), the sector gains `theme`, links gain `label`, and
 black ICE is marked from the caller's survey state, never from the
 template (P4).
+
+P4 retains `glyph` and object `legacy_role` for the current renderer.
+`actors[].glyph_id` names the actor's own shape even while `jacked`;
+the drone registry id is `actor-drone` (`τ`). The current renderer still
+uses its historical drone fallback and jacked glyph; the later renderer
+selects these shapes and semantic object roles. No rule reads either
+presentation field. A sector's optional `theme` id falls back to its
+district until authored sector themes land. Link `label` joins the
+already disclosed endpoint labels. A core cell's owner is `private`
+for a private core; a relay core uses committed live ownership.
 
 `remembered` matches the viewport and contains only terrain previously
 seen by this player. The renderer uses it when `tiles` contains `-2`;
@@ -464,7 +474,13 @@ Every log line passes through one emit entry point that requires a
 `kind`: `place`, `ambient`, `speech`, `danger`, `combat`, `system`,
 `reward` or `notice`. Speech carries `speaker` and `speaker_role`.
 Operator and service notices (crew restarts, maintenance) use `notice`,
-not the world log. Ambient lines come from one emitter with a
+not the world log. P4 delivers notices on the existing toast surface;
+they do not enter the world ring or reconnect replay. `speaker` is the
+displayed speaker name, and `speaker_role` is its presented class for
+this recipient, never a hidden faction. Reconnect queues historical replay
+before character attachment can emit a new first-entry line, so that
+line is delivered once and after older history.
+Ambient lines come from one emitter with a
 per-caller rate budget and their own random stream derived per zone
 instance; they never draw from the zone's simulation RNG. Ambient lines
 are suppressed in combat and travel, and the client never lets ambient
@@ -490,7 +506,9 @@ only from what this caller may know. For presentation that means:
   `drone`. For NPCs it comes from the template's `presents` (entities
   1.8), which a disguised NPC sets to its cover (the plainclothes
   Warden presents `civilian`); without it, the class is derived from
-  faction and behaviour. The view sends a name, colour and figure
+  faction and behaviour. A template that sets `presents` also requires
+  a validated `cover_name` (entities 1.8), used for displayed names and
+  speech until reveal. The view sends a name, colour and figure
   consistent with the presented class, never the true faction of a
   disguised NPC (D-T8), with one exception: once a disguised NPC acts
   against a caller (attacks, arrests or targets them), that caller's
