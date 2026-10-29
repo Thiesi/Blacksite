@@ -13,7 +13,7 @@ from blacksite.server.loop import TickLoop
 from blacksite.server.protocol import Frame, ProtocolError, validate
 from blacksite.server.sessions import INPUTS_PER_SECOND, Session, Sessions
 from blacksite.server.world.registry import World
-from blacksite.server.world.simulation import ZoneSimulation
+from blacksite.server.world.simulation import NIGHT_END_HOUR, NIGHT_START_HOUR, ZoneSimulation
 from blacksite.server.characters import Characters
 from blacksite.server.chat import Chat
 from blacksite.server.commerce import Commerce
@@ -236,7 +236,7 @@ class Core:
         if zone is None:
             return None, None
         hour = self.clock.now_local().hour
-        radius = sight_radius(actor, zone, hour >= 20 or hour < 6)
+        radius = sight_radius(actor, zone, hour >= NIGHT_START_HOUR or hour < NIGHT_END_HOUR)
         visible = visible_tiles(actor, zone, radius)
         def disclose(result: ResolvedInteraction | None) -> dict[str, str] | None:
             if result is None or result.choice.focus is None:
