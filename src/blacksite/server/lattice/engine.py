@@ -523,6 +523,9 @@ class Lattice:
         cell = self.sectors.cells[sector.id][presence.cell]
         return {"title": sector.district.upper()+" / LATTICE", "sector": sector.id,
             "layout_size": list(sector.layout_size), "cells": cells, "edges": edges,
+            # UI 1: glyphs are registry data; V2 owns modern-tier selection.
+            "edge_glyphs": {kind: [self.content.glyphs.glyphs[f"lattice-edge-{kind}-{axis}"]
+                                   for axis in ("h", "v")] for kind in ("open", "gated", "hidden")},
             "presences": peers, "me": {"cell": presence.cell, "integrity": presence.integrity, "integrity_max": presence.integrity_max,
                 "trace": presence.trace, "rig": [{"slot": i+1, "program": pid,
                     "name": self.content.programs[pid].name if pid in self.content.programs else "Empty", "cd": 0} for i, pid in enumerate(presence.rig)],

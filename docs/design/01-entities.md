@@ -125,7 +125,8 @@ the destination step's time (game 5.2). Water uses 2. Runtime layouts
 select the current tile type, including its cost.
 
 The terminal tables beside it: `glyphs.json` (`glyphs`: glyph id to one
-CP437 character, with an optional modern-tier character, terminal UI §1), `palette.json` (`roles`: role to tier to variant to
+CP437 character; optional `modern`: the same id to its modern-tier
+substitution, terminal UI §1), `palette.json` (`roles`: role to tier to variant to
 value) and `keymaps.json` (`actions`: action id to context and label;
 `keymaps`: id, label, bindings of action id to normalised key names).
 
