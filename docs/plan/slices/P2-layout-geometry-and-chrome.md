@@ -46,7 +46,8 @@ the screen in one place. Nothing on screen changes.
 ## Tests
 
 - Every glyph golden and every P1 style golden is byte-identical, in
-  all three tiers. There is no rebaseline.
+  all three colour tiers. "Tier" here means colour tiers, not layout
+  tiers, of which P2 defines only one. There is no rebaseline.
 - The P1 mechanics fingerprint is unchanged.
 - The no-other-width test fails on a deliberately added copy in a
   scratch module.

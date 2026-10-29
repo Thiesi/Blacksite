@@ -38,9 +38,13 @@ can draw them. Nothing is drawn differently in this slice.
 
 **Log lines:**
 
-- `kind` and `speaker` on every log line, through **one** emit entry
-  point that requires a kind (§5.5.3: `place`, `ambient`, `speech`,
-  `danger`, `combat`, `system`, `reward`, `notice`).
+- `kind` on every log line, through **one** emit entry point that
+  requires a kind (§5.5.3: `place`, `ambient`, `speech`, `danger`,
+  `combat`, `system`, `reward`, `notice`).
+- Speech lines also carry `speaker` and `speaker_role` (§5.4, §5.5.3).
+  `speaker_role` is the speaker's **presented** class, with the same
+  per-caller disguise reveal as `actors.class`. It is never the NPC's
+  true faction.
 - Every existing emitter passes a kind.
 - The first-entry place line becomes a `place` log line. The old
   renderer keeps its toast.
@@ -70,6 +74,8 @@ can draw them. Nothing is drawn differently in this slice.
   - a plainclothes Warden presents as its cover class, and only the
     caller it acted against sees its true class, until the instance
     ends;
+  - that NPC's speech lines carry its cover role in `speaker_role`
+    until the same reveal;
   - private cores read "private";
   - black ICE is marked only after a survey;
   - nothing outside sight gains a field.
