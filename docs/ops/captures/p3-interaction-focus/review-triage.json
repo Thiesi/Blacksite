@@ -1,19 +1,50 @@
 {
- "source_head": "8c72bb127f8522c2f3be0f8c7ba26dbf251f9238",
+ "source_head": "e465b1e2ba3e9104a46656a8ec73b5653ad2c0ab",
  "reviewer_model": "Claude Sonnet 5.5",
- "model_verified_in_jobs": [123770460231, 123773937960],
+ "model_verified_in_jobs": [
+  123793642257
+ ],
  "written_reviews": [
-  {"head": "3cd50d8c2d9fe57b33e557318c9113dba9a88f52", "url": "https://github.com/Thiesi/Blacksite/pull/103#issuecomment-6509845681", "result": "no actionable findings"},
-  {"head": "8c72bb127f8522c2f3be0f8c7ba26dbf251f9238", "url": "https://github.com/Thiesi/Blacksite/pull/103#issuecomment-6510098877", "result": "no actionable findings"},
-  {"head": "8c72bb127f8522c2f3be0f8c7ba26dbf251f9238", "url": "https://github.com/Thiesi/Blacksite/pull/103#issuecomment-6510055231", "scope": "shared-night-constant refinement", "result": "no credible remaining issues"}
+  {
+   "head": "e465b1e2ba3e9104a46656a8ec73b5653ad2c0ab",
+   "url": "https://github.com/Thiesi/Blacksite/pull/103#issuecomment-6510905718",
+   "result": "no actionable findings; static review only"
+  },
+  {
+   "head": "e465b1e2ba3e9104a46656a8ec73b5653ad2c0ab",
+   "url": "https://github.com/Thiesi/Blacksite/pull/103#issuecomment-6510900041",
+   "result": "no blocking findings; static review only"
+  }
  ],
- "resolved": [{"observation": "duplicated night-window literals", "change": "import simulation NIGHT_START_HOUR and NIGHT_END_HOUR", "focused_tests_passed": 25}],
+ "resolved": [
+  "Night disclosure reuses the simulation constants.",
+  "Whole-group hint fitting, label-only shortening and help retention are implemented.",
+  "Route, rig and contract wording follows the presentation request; channel progress owns its row.",
+  "116 matrix pairs have selected-entity name provenance; unnamed targets have no id-derived focus label.",
+  "Fresh local and hosted P3 captures are published; root CI and the strict packet pass."
+ ],
  "non_blocking": [
-  {"observation": "per-publish query cost", "triage": "no measured hot-path failure; retain simple state-correct composition"},
-  {"observation": "channel hint prefix wording", "triage": "pending presentation-lead wording decision; no channel mechanics change"},
-  {"observation": "optional predicate helper and dead conditional style", "triage": "no practical caller impact; no further implementation change"},
-  {"observation": "upstream acceptance tag reproducibility", "triage": "record exact resolved NetBBS commit 3d90efcc05cc1397d6adeb1c567674045fed1cd8 in acceptance provenance"}
+  {
+   "observation": "per-publish query cost",
+   "triage": "no measured tick overrun; defer caching and its invalidation contract"
+  },
+  {
+   "observation": "style and impossible sub-minimum-width edge cases",
+   "triage": "no practical supported-terminal failure; no extra churn"
+  },
+  {
+   "observation": "other screen-title fallbacks",
+   "triage": "not focus labels; the focus constructors use authored object, actor, zone, cell or room names, or explicit here/empty rig labels"
+  },
+  {
+   "observation": "upstream mutable release tag",
+   "triage": "record actual resolved NetBBS commit 3d90efcc05cc1397d6adeb1c567674045fed1cd8 in provenance"
+  }
  ],
+ "author_acceptance_finding": {
+  "evidence": "hint-regression.json",
+  "triage": "Broader native S19 acceptance finds missing objective feedback after whole-group fitting; requires technical/presentation decision. Static review does not waive it."
+ },
  "technical_decision_record": null,
  "presentation_wording_approval": false,
  "human_approval": false

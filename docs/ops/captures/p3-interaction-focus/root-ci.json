@@ -1,13 +1,29 @@
 {
- "source_head": "8c72bb127f8522c2f3be0f8c7ba26dbf251f9238",
- "hosted_run": "https://github.com/Thiesi/Blacksite/actions/runs/40967008721",
- "execution_head": "a578a6b25a6071988223bc74e9254b10932880e3",
- "execution_compare_to_source": {"ahead_by": 1, "behind_by": 0, "files_changed": 0},
+ "source_head": "e465b1e2ba3e9104a46656a8ec73b5653ad2c0ab",
+ "hosted_run": "https://github.com/Thiesi/Blacksite/actions/runs/40972867699",
+ "execution_head": "8a1f5096e3480db83a49a5c6ce07b0c500f8fc55",
+ "execution_compare_to_source": {
+  "ahead_by": 1,
+  "behind_by": 0,
+  "files_changed": 0
+ },
  "command": "pytest -q",
  "python": "3.12",
  "jobs": [
-  {"platform": "ubuntu-latest", "passed": 1745, "skipped": 0, "seconds": 387.32, "url": "https://github.com/Thiesi/Blacksite/actions/runs/40967008721/job/123773938293"},
-  {"platform": "windows-latest", "passed": 1744, "skipped": 1, "seconds": 336.49, "url": "https://github.com/Thiesi/Blacksite/actions/runs/40967008721/job/123773937909"}
+  {
+   "platform": "ubuntu-latest",
+   "passed": 1759,
+   "skipped": 0,
+   "seconds": 283.19,
+   "url": "https://github.com/Thiesi/Blacksite/actions/runs/40972867699/job/123793642207"
+  },
+  {
+   "platform": "windows-latest",
+   "passed": 1758,
+   "skipped": 1,
+   "seconds": 340.14,
+   "url": "https://github.com/Thiesi/Blacksite/actions/runs/40972867699/job/123793642524"
+  }
  ],
  "independent_local": {
   "source_head": "3cd50d8c2d9fe57b33e557318c9113dba9a88f52",
@@ -22,7 +38,29 @@
   "test_seconds": 1580.74,
   "worktree_clean_before_and_after": true
  },
- "subsequent_refinement": {"head": "8c72bb127f8522c2f3be0f8c7ba26dbf251f9238", "change": "reuse existing night constants, preserving values and predicate", "focused_command": "pytest tests/world/test_sight.py tests/presentation/test_interaction_focus.py -q", "passed": 25},
- "initial_local_diagnostic": {"result": "one Windows listener-shutdown timeout after WinError 10054 in the concurrent full run", "unchanged_isolated_stdio_cases_passed": 2, "clean_full_run_passed": true, "test_limits_changed": false},
- "human_approval": false
+ "subsequent_refinement": {
+  "head": "8c72bb127f8522c2f3be0f8c7ba26dbf251f9238",
+  "change": "reuse existing night constants, preserving values and predicate",
+  "focused_command": "pytest tests/world/test_sight.py tests/presentation/test_interaction_focus.py -q",
+  "passed": 25
+ },
+ "initial_local_diagnostic": {
+  "result": "one Windows listener-shutdown timeout after WinError 10054 in the concurrent full run",
+  "unchanged_isolated_stdio_cases_passed": 2,
+  "clean_full_run_passed": true,
+  "test_limits_changed": false
+ },
+ "human_approval": false,
+ "wording_correction": {
+  "source_head": "e465b1e2ba3e9104a46656a8ec73b5653ad2c0ab",
+  "local_p3_sight_door": {
+   "command": "pytest tests/presentation/test_interaction_focus.py tests/world/test_sight.py tests/door -q",
+   "passed": 303
+  },
+  "final_arrow_vi_cases": {
+   "command": "pytest tests/presentation/test_interaction_focus.py -k ui_3 -q",
+   "passed": 20
+  },
+  "existing_goldens_and_mechanics_unchanged": true
+ }
 }

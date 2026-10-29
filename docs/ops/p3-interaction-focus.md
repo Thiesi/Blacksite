@@ -16,7 +16,7 @@ when E/J context alone overflows. Keys and verbs remain intact. Help is
 retained when it fits after context. Channel progress owns the row.
 
 The presentation lead's [wording review](https://github.com/Thiesi/Blacksite/pull/103#issuecomment-6510595595)
-is being addressed before another acceptance request. Exit hints say
+is addressed by the corrected implementation and captures. Exit hints say
 `go to`, unlabelled rig actions say `jack in` / `jack out`, contract fetch
 says `take`, object planting says `plant at`, and tile objectives say
 `here`. The [distinct matrix label set](captures/p3-interaction-focus/focus-labels.json)
@@ -68,8 +68,9 @@ independent pre-P3 execution, pinned in
 
 Additional tests cover query purity, sight masking without fallback,
 hidden exits, S25a's underfoot/passive cases, apartment doorsteps, modal
-and disabled states, vi's Ctrl-O, and every shipped Lattice cell. Six
-glyph/style comparisons at both sizes and all colour tiers change only
+and disabled states, vi's Ctrl-O, and every shipped Lattice cell. Twelve
+glyph/style comparisons for arrows and vi at both sizes and all colour
+tiers change only
 the existing hint rectangle. No golden or mechanics baseline changes.
 
 ## Evidence and gates
@@ -85,8 +86,17 @@ simulation's named constants. Optional caching and code-style changes
 are deferred without a practical failure. The packet records the actual
 upstream commit resolved from the acceptance workflow's release tag.
 
-Presentation-lead wording approval is pending. The wording corrections
-require fresh native captures and another automated review. Channel
-mechanics keep their existing behaviour. Technical review and the owner's acceptance
+Presentation-lead wording approval is pending. The corrected source has
+fresh native captures and written automated reviews with no actionable
+findings. Broader S19 native acceptance fails: whole-group fitting drops
+the long contract `Next:` group after context. The objective advances,
+but the unchanged acceptance requires that visible feedback. The compact
+layout also relies on this hint for objective detail. The technical and
+presentation leads must resolve that priority before further changes;
+the acceptance assertion has not been weakened. The capture packet's
+`hint-regression.json` names the exact failure evidence.
+
+Channel mechanics keep their existing behaviour. Technical review and
+the owner's acceptance
 and merge remain separate gates. These engineering receipts grant no
 layout, content, pacing or balance approval.

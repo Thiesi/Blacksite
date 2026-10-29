@@ -1,155 +1,188 @@
 {
- "source_head": "8c72bb127f8522c2f3be0f8c7ba26dbf251f9238",
- "run": "https://github.com/Thiesi/Blacksite/actions/runs/40967008793",
- "passed_jobs": 28,
+ "source_head": "e465b1e2ba3e9104a46656a8ec73b5653ad2c0ab",
+ "run": "https://github.com/Thiesi/Blacksite/actions/runs/40972867743",
+ "as_of_utc": "2026-10-29 23:31:56 UTC",
+ "passed_jobs": 11,
  "skipped_jobs": 1,
- "failed_jobs": 0,
+ "failed_jobs": 3,
+ "pending_jobs": 14,
  "jobs": [
   {
-   "id": 123774510205,
+   "id": 123794189411,
    "name": "native-scope",
+   "status": "completed",
    "conclusion": "success"
   },
   {
-   "id": 123774581693,
-   "name": "crews-netbbs",
-   "conclusion": "success"
-  },
-  {
-   "id": 123774581704,
-   "name": "apartments-netbbs",
-   "conclusion": "success"
-  },
-  {
-   "id": 123774581717,
+   "id": 123794254854,
    "name": "market-netbbs (132x50)",
+   "status": "completed",
    "conclusion": "success"
   },
   {
-   "id": 123774581764,
+   "id": 123794254864,
+   "name": "crews-netbbs",
+   "status": "completed",
+   "conclusion": "success"
+  },
+  {
+   "id": 123794254877,
    "name": "market-netbbs (80x24)",
+   "status": "completed",
    "conclusion": "success"
   },
   {
-   "id": 123774581766,
+   "id": 123794254888,
    "name": "relays-netbbs (132x50)",
+   "status": "completed",
    "conclusion": "success"
   },
   {
-   "id": 123774581774,
+   "id": 123794254899,
+   "name": "apartments-netbbs",
+   "status": "completed",
+   "conclusion": "success"
+  },
+  {
+   "id": 123794254909,
    "name": "lattice-netbbs",
-   "conclusion": "success"
+   "status": "in_progress",
+   "conclusion": null
   },
   {
-   "id": 123774581778,
+   "id": 123794254915,
    "name": "relays-netbbs (80x24)",
+   "status": "completed",
    "conclusion": "success"
   },
   {
-   "id": 123774581794,
-   "name": "systemd-netbbs",
-   "conclusion": "success"
-  },
-  {
-   "id": 123774581812,
-   "name": "factions-netbbs",
-   "conclusion": "success"
-  },
-  {
-   "id": 123774581817,
-   "name": "events-netbbs (80x24)",
-   "conclusion": "success"
-  },
-  {
-   "id": 123774581818,
+   "id": 123794254932,
    "name": "events-netbbs (132x50)",
+   "status": "completed",
    "conclusion": "success"
   },
   {
-   "id": 123774581819,
-   "name": "fabrication-netbbs",
+   "id": 123794254942,
+   "name": "systemd-netbbs",
+   "status": "in_progress",
+   "conclusion": null
+  },
+  {
+   "id": 123794254960,
+   "name": "events-netbbs (80x24)",
+   "status": "completed",
    "conclusion": "success"
   },
   {
-   "id": 123774581828,
-   "name": "combat-netbbs",
-   "conclusion": "success"
-  },
-  {
-   "id": 123774581869,
-   "name": "npcs-netbbs (132x50)",
-   "conclusion": "success"
-  },
-  {
-   "id": 123774581907,
+   "id": 123794255040,
    "name": "interlock-netbbs",
-   "conclusion": "success"
+   "status": "in_progress",
+   "conclusion": null
   },
   {
-   "id": 123774581949,
-   "name": "contracts-netbbs (132x50, common)",
-   "conclusion": "success"
+   "id": 123794255048,
+   "name": "factions-netbbs",
+   "status": "in_progress",
+   "conclusion": null
   },
   {
-   "id": 123774581951,
-   "name": "contracts-netbbs (80x24, crew)",
-   "conclusion": "success"
+   "id": 123794255053,
+   "name": "combat-netbbs",
+   "status": "in_progress",
+   "conclusion": null
   },
   {
-   "id": 123774581968,
+   "id": 123794255122,
    "name": "npcs-netbbs (80x24)",
+   "status": "in_progress",
+   "conclusion": null
+  },
+  {
+   "id": 123794255127,
+   "name": "npcs-netbbs (132x50)",
+   "status": "in_progress",
+   "conclusion": null
+  },
+  {
+   "id": 123794255134,
+   "name": "fabrication-netbbs",
+   "status": "completed",
    "conclusion": "success"
   },
   {
-   "id": 123774581979,
-   "name": "contracts-netbbs (80x24, network)",
+   "id": 123794255167,
+   "name": "contracts-netbbs (132x50, common)",
+   "status": "completed",
    "conclusion": "success"
   },
   {
-   "id": 123774581981,
-   "name": "encounters-netbbs",
-   "conclusion": "success"
-  },
-  {
-   "id": 123774581990,
-   "name": "contracts-netbbs (132x50, crew)",
-   "conclusion": "success"
-  },
-  {
-   "id": 123774582014,
-   "name": "contracts-netbbs (80x24, common)",
-   "conclusion": "success"
-  },
-  {
-   "id": 123774582017,
+   "id": 123794255196,
    "name": "contracts-netbbs (132x50, manual)",
-   "conclusion": "success"
+   "status": "completed",
+   "conclusion": "failure"
   },
   {
-   "id": 123774582067,
-   "name": "contracts-netbbs (80x24, reserve)",
-   "conclusion": "success"
+   "id": 123794255231,
+   "name": "encounters-netbbs",
+   "status": "in_progress",
+   "conclusion": null
   },
   {
-   "id": 123774582074,
+   "id": 123794255243,
+   "name": "contracts-netbbs (80x24, network)",
+   "status": "completed",
+   "conclusion": "failure"
+  },
+  {
+   "id": 123794255247,
    "name": "contracts-netbbs (80x24, manual)",
-   "conclusion": "success"
+   "status": "in_progress",
+   "conclusion": null
   },
   {
-   "id": 123774582116,
+   "id": 123794255265,
+   "name": "contracts-netbbs (132x50, crew)",
+   "status": "in_progress",
+   "conclusion": null
+  },
+  {
+   "id": 123794255266,
    "name": "contracts-netbbs (132x50, network)",
-   "conclusion": "success"
+   "status": "completed",
+   "conclusion": "failure"
   },
   {
-   "id": 123774582166,
+   "id": 123794255273,
+   "name": "contracts-netbbs (80x24, crew)",
+   "status": "in_progress",
+   "conclusion": null
+  },
+  {
+   "id": 123794255282,
    "name": "contracts-netbbs (132x50, reserve)",
-   "conclusion": "success"
+   "status": "in_progress",
+   "conclusion": null
   },
   {
-   "id": 123774584303,
+   "id": 123794255304,
+   "name": "contracts-netbbs (80x24, common)",
+   "status": "in_progress",
+   "conclusion": null
+  },
+  {
+   "id": 123794255321,
+   "name": "contracts-netbbs (80x24, reserve)",
+   "status": "in_progress",
+   "conclusion": null
+  },
+  {
+   "id": 123794257513,
    "name": "door-subset-netbbs",
+   "status": "completed",
    "conclusion": "skipped"
   }
  ],
+ "passed": false,
+ "blocking_finding": "hint-regression.json; existing S19 Next: feedback is lost after context",
  "human_approval": false
 }

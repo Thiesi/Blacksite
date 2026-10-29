@@ -1,0 +1,16 @@
+{
+ "source_head": "e465b1e2ba3e9104a46656a8ec73b5653ad2c0ab",
+ "archetype": "ghost",
+ "fixture": "headless placement at Wake Hall (5,5); normal starting rig",
+ "jack_in": {
+  "verb": "jack in",
+  "label": ""
+ },
+ "jack_out": {
+  "verb": "jack out",
+  "label": ""
+ },
+ "predictions_match_dispatch": true,
+ "passed": true,
+ "human_approval": false
+}

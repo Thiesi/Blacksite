@@ -1,5 +1,5 @@
 {
- "source_head": "8c72bb127f8522c2f3be0f8c7ba26dbf251f9238",
+ "source_head": "e465b1e2ba3e9104a46656a8ec73b5653ad2c0ab",
  "passed": true,
  "netbbs": "v7.31.0",
  "transport": "NetBBS Telnet -> registered native stdio",
@@ -7,12 +7,12 @@
   {
    "size": "132x50",
    "version": "0.0.20",
-   "python_tree_sha256": "27d8d7418ed3037502a68dadba64db092b7d05ef756de894a7118f87c96472a7"
+   "python_tree_sha256": "09cc29ba5b4f8709df9213a68b96b65e809f2da50a5060619708cbe1965c96d7"
   },
   {
    "size": "80x24",
    "version": "0.0.20",
-   "python_tree_sha256": "27d8d7418ed3037502a68dadba64db092b7d05ef756de894a7118f87c96472a7"
+   "python_tree_sha256": "09cc29ba5b4f8709df9213a68b96b65e809f2da50a5060619708cbe1965c96d7"
   }
  ],
  "cases": [
@@ -169,5 +169,5 @@
  ],
  "human_approval": false,
  "netbbs_resolved_commit": "3d90efcc05cc1397d6adeb1c567674045fed1cd8",
- "upstream_commit_evidence_job": 123773937903
+ "upstream_commit_evidence_job": 123793642834
 }

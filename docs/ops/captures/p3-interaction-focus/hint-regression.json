@@ -1,0 +1,15 @@
+{
+ "source_head": "e465b1e2ba3e9104a46656a8ec73b5653ad2c0ab",
+ "job": "https://github.com/Thiesi/Blacksite/actions/runs/40972867743/job/123794255266",
+ "scenario": "S19 network route at 132x50",
+ "failed_assertion": "scripts/accept_s19_netbbs.py:121 waits for Next: in received screen output",
+ "observed": "The preceding objective index==1 wait succeeds. The failure capture shows Release the parcel and its cost in the side panel, the Objective recorded log, and E hack stairwell C parcel hatch plus J jack in at stairwell C loan terminal. It contains no Next: group.",
+ "cause": "Contract decoration supplies the objective as one long hint group. The requested whole-group policy skips it after E/J context. At 80 columns the existing compact_hint also suppresses objective side-panel rows.",
+ "artifact": "https://github.com/Thiesi/Blacksite/actions/runs/40972867743/artifacts/12940773753",
+ "artifact_zip_sha256": "8ede155e052fed3fa5ec5bfceb85a9688f2d07170b2a696b1655dcda86294979",
+ "artifact_capture": "unfinished-0.txt",
+ "artifact_trace": "failure-trace.txt",
+ "disposition": "Requires technical and presentation lead decision on objective/context priority; do not weaken the S19 acceptance assertion or invent another display surface in P3.",
+ "passed": false,
+ "human_approval": false
+}
