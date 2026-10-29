@@ -37,6 +37,9 @@ All arrivals came first in the observed log window. At 80x24, the
 Service Level arrival/XP notices push the first paragraph line above
 the visible log; the real Ctrl-P capture recovers it. The 132x50 Wake
 Hall capture also shows the existing cell-width wrap splitting a word.
+The 80x24 scrollback splits words too, including `lig / ht` and
+`invit / e`. `Arrival界80` is the deliberately wide-character fixture
+name shown in the status panel, not an added placeholder.
 These are P4/P5 observations, not hidden or re-rendered corrections.
 
 No human layout gate or performance gate is granted by these captures.

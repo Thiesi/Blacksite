@@ -85,6 +85,8 @@ The interim role is `chan_zone`. P4 adds `kind: place`; P5 can then style
 it separately. At 80x24, subsequent arrival and XP notices can push the
 first line of Service Level's paragraph above the three visible log
 rows. The text remains in scrollback. The existing log also wraps by
-cell width: a word can split at 132x50. These are recorded observations
+cell width: a word can split at 132x50 and in the 80x24 scrollback
+(`lig / ht`, `invit / e`). The status panel's `Arrival界80` is the
+deliberately wide-character fixture name. These are recorded observations
 for P4/P5, not hidden by this capture scenario or fixed as a renderer
 change in S25b.
