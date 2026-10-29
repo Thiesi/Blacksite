@@ -302,9 +302,9 @@ class ZoneSimulation:
                 if page is None:
                     kind, overlay = "menu", body
                 else:
-                    page = screen_layout(session.caps["width"], session.caps["height"]).city
-                    lines = wrapped(body["detail"], page.width)
-                    count = page.rows
+                    text_page = screen_layout(session.caps["width"], session.caps["height"]).city
+                    lines = wrapped(body["detail"], text_page.width)
+                    count = text_page.rows
                     pages = max(1, (len(lines) + count - 1) // count)
                     page = min(page, pages - 1)
                     self.maps[session.id] = cursor, page

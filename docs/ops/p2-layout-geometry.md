@@ -49,5 +49,11 @@ resolved text width are not terminal-layout calculations.
 
 Native acceptance uses the source-matched installed wheel through a real
 NetBBS registered native stdio door, at 80x24 and 132x50 with wide names.
+Run `scripts/accept_p2_netbbs.py --root /tmp/p2-native --door-python
+/path/to/wheel/venv/python --show` with the NetBBS interpreter. It creates
+ordinary wide-named characters and uses inventory page keys, help and
+scrollback, preserving actual received ANSI/text/style captures. The
+existing `scripts/accept_s04_netbbs.py` separately checks Telnet, SSH and
+WebSocket at both sizes with its S04 service fixture.
 The full hosted native matrix and technical review remain required. No
 human layout approval follows from unchanged output or engineering tests.
