@@ -117,7 +117,7 @@ async def accept(root: Path, door_python: Path, show: bool,
                     await caller.caller.write(b'\x1b[B')
                     await wait(lambda: drones.menus[caller.session.id] == selected+1)
                 def selected_ready() -> bool:
-                    body = probe.game.sim.views[caller.session.id].previous['body']
+                    _, body = probe.game.sim.overlays.get(caller.session.id, ('', {}))
                     rows = body.get('rows', [])
                     return (body.get('cursor') == index and len(rows) > index
                             and rows[index]['id'] == iid
