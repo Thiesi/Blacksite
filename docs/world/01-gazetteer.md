@@ -69,8 +69,8 @@ nothing.
 
 Karst sits on the plateau inside one wall: roughly round, built in
 straight runs, about ten kilometres across. Gate Nine, in the east
-wall, is the only gate that opens. The wall's other gates are sealed
-and are not drawn as exits.
+wall, is the only gate that opens. The wall's other gates, also on
+Tramyard's stretch of the wall, are sealed and are not drawn as exits.
 
 The Spire stands at the centre, on the sealed shaft, the highest point
 on the plateau. The Core is the downtown at the Spire's southern foot.
@@ -248,7 +248,8 @@ Geography is not a secret, but names are earned (architecture 5.5.4):
   unvisited district shows as unnamed ground, and an unvisited terminus
   as a bare stop.
 - Drawn only once found: hidden links (the Drop's door, the cave mouth)
-  and the zones behind them.
+  and the zones behind them. Found means the caller has passed through
+  that link; visiting the zones on both sides of it is not enough.
 - Never drawn: apartment interiors, the Blacksite instance, and the
   sealed gates.
 
