@@ -1,6 +1,6 @@
 # P1 — Verification foundation for presentation work
 
-**Status:** in progress (awaiting #86 merge and technical review)
+**Status:** in progress (awaiting technical review)
 **Primary model:** Sonnet · **Reviewer:** automated review, technical lead
 **Depends on:** none · **Milestone:** presentation track
 **Issue:** https://github.com/Thiesi/Blacksite/issues/76
@@ -51,8 +51,8 @@ fail a style golden and not the fingerprint.
 Automated review and technical review.
 
 The [scope decision][cp437] assigns authored U+2506 to prerequisite #86.
-P1 rebases onto that fix after it merges. The audit excludes exactly the
-cells reached by declared caller-supplied fixture strings, by source;
+PR #89 supplies the merged fix; P1 rebases onto it. The audit excludes
+exactly the cells reached by declared caller-supplied fixture strings, by source;
 their informational count is separate from passes and failures. An
 authored instance of the same text still fails. There is no code-point
 or known-violation allowlist, and no rendering correction in P1 itself.

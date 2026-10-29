@@ -1,9 +1,9 @@
 # Presentation verification (P1)
 
 P1 adds tools around the shipped door. It changes no renderer, rule,
-palette, map or caller flow. Its current work awaits prerequisite #86
-and technical review under the decision in [issue #76][cp437]. No human approval follows from a
-packet or a test result.
+palette, map or caller flow. Prerequisite #86 merged in PR #89; P1 now
+awaits technical review under the decision in [issue #76][cp437]. No
+human approval follows from a packet or a test result.
 
 ## Baselines and explicit regeneration
 
@@ -74,11 +74,13 @@ identical text in an authored field. A regression draws the exact same
 wide string as caller input and authored body copy and proves only the
 caller cells are excluded. Unprovenanced Unicode remains checked.
 
-The authored Lattice U+2506 is fixed by #86 before P1 merges; P1 then
-rebases and regenerates style snapshots for that approved rendering fix.
-Until then its strict job remains red for that authored glyph. P1 makes
-no replacement choice or rendering change. Omitting `--strict-cp437`
-collects evidence but does not turn reported failures into a passing gate.
+PR #89 fixes the authored Lattice U+2506 for #86. P1 rebases onto that
+merged fix and regenerates 60 Lattice style snapshots (20 scenarios at
+three colour tiers). Only their glyph rows change from U+2506 to `:`;
+styles and the mechanics fingerprint are unchanged. The strict packet
+passes all 99 combinations. P1 makes no replacement choice or rendering
+change. Omitting `--strict-cp437` collects evidence but does not turn
+reported failures into a passing gate.
 
 ## CPU and byte measurements
 
