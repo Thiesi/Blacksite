@@ -60,3 +60,27 @@ native receipts and hosted checks must be reported separately.
 TR-8 measures the hub validator's CPU time inside the three-second
 startup envelope, excluding shared-runner scheduling pauses. The full
 native startup wall-time gate remains three seconds.
+
+## Local engineering receipt
+
+Implementation `011bf66cdc53780288af13f485e6ab78d8403437` passes the full
+repository suite: 1,675 passed and one skipped. The clean-head strict
+packet passes all 99 cases with zero authored CP437 failures, 419,766
+checked authored cells and 714 separately counted caller observations.
+Only the two Wake Hall log rows and their six colour snapshots change,
+for the explicitly retained arrival paragraph.
+
+The [Windows receipt][receipt] also retains the failed native budgets.
+Both sizes complete the S25a fixture scenario through NetBBS Telnet and
+registered native stdio, but startup takes 9.328 seconds. The measured
+load call accounts for 7.233 seconds of wall time and 1.125 CPU seconds;
+validation takes 0.143 wall seconds. These measurements do not identify
+the cause of the wall-time gap. NPC p99 is 9.596 ms at 80x24 and 13.582 ms
+at 132x50. The native command therefore fails its existing startup and
+NPC gates. The installed wheel's Python tree matches the implementation.
+
+These are ten-hub fixture receipts. Full-city native walking, hosted
+native acceptance, the publication-boundary answer on #78, technical
+review and the district layout gates remain separate obligations.
+
+[receipt]: baselines/s25b-windows-011bf66.json
