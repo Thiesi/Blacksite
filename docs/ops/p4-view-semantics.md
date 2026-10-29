@@ -7,7 +7,8 @@ renderer. Codex (GPT-6) implements the Sonnet-assigned slice.
 ## Disclosure and compatibility
 
 - Actor class and speech role use one caller-specific presentation
-  query. `presents` is optional validated NPC content; setting it
+  query, including the drone command menu. `presents` is optional
+  validated NPC content; setting it
   requires a non-empty printable `cover_name`. Reveals belong
   to the live NPC instance and caller id, including attacks against a
   caller's drone. Target selection, weapon warning, a legal shot and
@@ -52,7 +53,7 @@ registered native stdio door. Run `scripts/accept_p4_netbbs.py` with
 `--root` naming a new directory, `--door-python` naming that wheel's
 interpreter, and `--show` to display the received 16-colour ANSI.
 
-1. Create a wide-name caller with ordinary keys. Enter Wake Hall. The
+1. Create a wide-name Operator with ordinary keys. Enter Wake Hall. The
    zone metadata includes district, PvP eligibility and actor flags.
 2. Open Ctrl-P scrollback. The complete first-entry paragraph is present,
    tagged `place` in authoritative history; the crew restart is absent.
@@ -63,7 +64,13 @@ interpreter, and `--show` to display the received 16-colour ANSI.
 5. Walk through Vatside Clinics and Core Plaza into Sodium Row. Target
    the actual shipped plainclothes Warden. Its target panel says Sodium
    regular and Civilian, matching the civilian name in the same zone.
-   Return to Core Plaza and leave cleanly.
+6. The harness provisions one owned Halvard Sentry
+   through server commerce, solely as an inventory fixture for the
+   affected menu. Open O, select that unit and deploy with U. The target
+   name remains Sodium regular; opening the menu records no reveal.
+   No attack order is issued. This fixture does not prove acquisition
+   or player pacing; NPCs, positions, funds, rules and clocks stay normal.
+7. Return to Core Plaza and leave cleanly.
 
 The script runs both 80x24 and 132x50 in all three colour tiers through
 Telnet into NetBBS native stdio. The existing full native matrix covers
@@ -73,6 +80,10 @@ walk observes the shipped disguised NPC without changing its template,
 position, behaviour or faction. It does not manufacture black ICE.
 
 ## Evidence
+
+The drone-menu follow-up requires fresh native captures and current-head
+root/review checks. The existing packet below describes source d447fcd
+before that follow-up and does not validate the new drone-menu path.
 
 The [evidence index](captures/p4-view-semantics/README.md) replaces the
 pre-S25b packet with 24 fresh hosted text captures and small receipts.

@@ -1,18 +1,23 @@
 """P4: additive view facts and first-entry history through native stdio.
 
-Ordinary creation, movement, training skip, jack-in and menu keys only.
+Creation, movement, training skip, jack-in and menus use ordinary keys.
 The private node/world has normal NPCs, rules and clock throughout.
+One owned attack drone is provisioned through server commerce solely for
+menu disclosure inspection, then deployed with ordinary keys. This is
+an inventory fixture, not acquisition or balance acceptance.
 """
 
 import argparse
 import asyncio
 import json
+from copy import deepcopy
 from pathlib import Path
 import subprocess
 from typing import Any
 
 from accept_s10_netbbs import NativeProbe, wait
 from tests.presentation.snapshots import snapshot
+from blacksite.server.items import make_item
 
 
 async def accept(root: Path, door_python: Path, show: bool,
@@ -26,7 +31,8 @@ async def accept(root: Path, door_python: Path, show: bool,
     try:
         for width, height in sizes:
             for tier in ('16', '256', 'truecolor'):
-                caller = await probe.open(width, height, 'P4'+tier, sixteen=tier == '16', truecolor=tier == 'truecolor')
+                caller = await probe.open(width, height, 'P4'+tier, archetype=3,
+                                          sixteen=tier == '16', truecolor=tier == 'truecolor')
                 assert caller.session.caps['tier'] == tier
                 screen = caller.caller.screen
                 await wait(lambda: caller.session.ack_revision == caller.session.view_revision)
@@ -87,6 +93,38 @@ async def accept(root: Path, door_python: Path, show: bool,
                 assert any(a.name == template.cover_name and a.behaviour.get('template') == 'npc-sodium-regular'
                            for a in zone.actors.values())
                 save(f'sodium-cover-{width}x{height}-{tier}')
+                # Declared inventory fixture: provision one owned attack drone
+                # through the server's normal durable commerce boundary. Keep
+                # NPC templates, positions, funds, rules and clocks untouched.
+                player = probe.game.players[caller.session.player_id]
+                iid = probe.game.sessions.origin+':p4-drone:'+caller.session.id
+                await wait(lambda: not probe.commerce.pending)
+                items = deepcopy(probe.commerce.items)
+                items[iid] = make_item(iid, probe.game.content.items['drn_halvard_sentry'],
+                                       player.id, probe.combat.clock.now_utc().isoformat())
+                grant: dict[str, bool] = {}
+                probe.commerce.settle(player, {'inventory': [*player.inventory, iid]},
+                                      items, probe.commerce.caches, probe.commerce.serial,
+                                      lambda success: grant.update(done=success))
+                await wait(lambda: 'done' in grant)
+                assert grant['done']
+                drones = probe.service.core.progression.drones
+                await caller.caller.write(b'o')
+                await wait(lambda: caller.session.id in drones.menus and 'DRONES' in screen.screen_text())
+                rows = drones.view(caller.session)['rows']
+                index = next(i for i, row in enumerate(rows) if row['id'] == iid)
+                for selected in range(index):
+                    await caller.caller.write(b'\x1b[B')
+                    await wait(lambda: drones.menus[caller.session.id] == selected+1)
+                await caller.caller.write(b'u')
+                await wait(lambda: iid in drones.actors and 'Target '+template.cover_name in screen.screen_text()
+                           and caller.session.ack_revision == caller.session.view_revision)
+                assert not npc.revealed_to
+                assert npc.name not in screen.screen_text()
+                save(f'drone-cover-{width}x{height}-{tier}')
+                await caller.caller.write(b'\x1b')
+                await wait(lambda: caller.session.id not in drones.menus
+                           and 'Sodium Row' in screen.screen_text().splitlines()[0])
                 # Leave from the public safe plaza through ordinary movement.
                 await probe.travel(caller, 'core-plaza')
                 await probe.leave(caller, f'finished-{width}x{height}-{tier}')
@@ -94,6 +132,8 @@ async def accept(root: Path, door_python: Path, show: bool,
                     'place_line': place[0]['text'], 'world_history_has_kinds': True,
                     'crew_restart_outside_world_history': True, 'lattice_fields': True,
                     'shipped_npc_cover': template.cover_name, 'shipped_npc_class': 'civilian',
+                    'drone_menu_cover': template.cover_name,
+                    'inventory_fixture': 'one owned Halvard Sentry via server commerce; normal deploy/menu keys',
                     'clean_exit': True})
         assert not probe.errors, probe.errors
     finally:
@@ -101,7 +141,8 @@ async def accept(root: Path, door_python: Path, show: bool,
     assert subprocess.check_output(['git', 'rev-parse', 'HEAD'], text=True).strip() == head
     assert not subprocess.check_output(['git', 'status', '--porcelain'], text=True).strip()
     result = {'head': head, 'passed': True, 'cases': cases, 'human_approval': False,
-        'transport': 'NetBBS Telnet -> registered native stdio', 'fixtures': 'private node/world only'}
+        'transport': 'NetBBS Telnet -> registered native stdio',
+        'fixtures': 'private node/world; one owned attack drone via server commerce for menu inspection only; no placement/funds/rules/clock fixtures'}
     (root/'result.json').write_text(json.dumps(result, ensure_ascii=False, indent=2)+'\n',
                                   encoding='utf-8', newline='\n')
     print(json.dumps({'passed': True, 'cases': len(cases)}), flush=True)

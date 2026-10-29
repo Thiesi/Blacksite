@@ -14,10 +14,13 @@ from tests.harness import HeadlessServer
 from tests.lattice.test_engine import actor, intent, jack, runners
 from tests.lattice.test_encounters import enter
 from tests.lattice.test_private_cores import apartment_fixture
+from tests.door.test_progression_menus import render
+from tests.door.conftest import info
+from tests.server.test_drone_combat import deploy
 
 
 @pytest.mark.parametrize('width,height', [(80, 24), (132, 50)])
-def test_arch_5_5_4_shipped_sodium_warden_cover_and_per_caller_reveal(repo_root, width, height):
+def test_arch_5_5_4_shipped_sodium_warden_cover_and_per_caller_reveal(repo_root, info, width, height):
     content = load_content(repo_root/'src/blacksite/content')
     template = content.npcs['npc-plainclothes-warden']
     assert template.presents == 'civilian' and template.cover_name == 'Sodium regular'
@@ -27,7 +30,7 @@ def test_arch_5_5_4_shipped_sodium_warden_cover_and_per_caller_reveal(repo_root,
     for uid, tile in ((1, (89, 3)), (2, (89, 4))):
         client = game.connect({'user_id': uid, 'handle': f'Cover界{uid}', 'node_name': 'P4'},
                               width=width, height=height)
-        create(game, client, name=f'Cover界{uid}', card='none')
+        create(game, client, archetype=3, name=f'Cover界{uid}', card='none')
         place(game, client, 'sodium-row', game.core.world.free_tile('sodium-row', tile))
         clients.append(client)
     one, two = clients
@@ -37,8 +40,15 @@ def test_arch_5_5_4_shipped_sodium_warden_cover_and_per_caller_reveal(repo_root,
     assert any(a.name == template.cover_name and a.behaviour.get('template') == 'npc-sodium-regular'
                for a in zone.actors.values())
     sim = game.core.characters.sim
+    drones = game.core.progression.drones
     for client in clients:
         caller = actor(game, client)
+        player = game.core.characters.players[caller.id]
+        drone = deploy(game, client, player, drones)
+        drones.menus[client.session.id] = 0
+        rows = drones.view(client.session)['rows']
+        drones.menus[client.session.id] = next(i for i, row in enumerate(rows)
+                                             if row['id'] == drone.behaviour['item'])
         caller.target = npc.id
         view = build(caller, zone, Perception(), content, width, height, '12:00', False, 0)
         assert next(a for a in view['actors'] if a['id'] == npc.id)['class'] == 'civilian'
@@ -49,6 +59,10 @@ def test_arch_5_5_4_shipped_sodium_warden_cover_and_per_caller_reveal(repo_root,
         sim.speak(client.session, npc, 'Stand here.')
         line = client.session.log_ring[-1]
         assert (line['speaker'], line['speaker_role']) == (template.cover_name, 'civilian')
+        menu = drones.view(client.session)
+        assert 'Target '+template.cover_name+':' in menu['detail']
+        assert template.name not in render(info, content, menu, (width, height))
+        assert not npc.revealed_to  # Viewing orders never acts against anyone.
     game.core.combat.warn(npc, actor(game, one), game.clock.now_tick())
     assert npc.revealed_to == {one.session.player_id}
     for client, name, role in ((one, template.name, 'warden'), (two, template.cover_name, 'civilian')):
@@ -56,6 +70,12 @@ def test_arch_5_5_4_shipped_sodium_warden_cover_and_per_caller_reveal(repo_root,
         assert client.session.log_ring[-1]['speaker'] == name
         assert client.session.log_ring[-1]['speaker_role'] == role
         assert game.core.combat.target_view(actor(game, client))['name'] == name
+        menu = drones.view(client.session)
+        assert 'Target '+name+':' in menu['detail']
+        text = render(info, content, menu, (width, height))
+        assert name in text
+        if client is two:
+            assert template.name not in text
     # A respawn is a new instance; content keeps only the authored cover.
     fresh = make_actor(template, 'test:new-shipped-instance', {'home': npc.position})
     assert not fresh.revealed_to

@@ -80,6 +80,8 @@ can draw them. Nothing is drawn differently in this slice.
     ends;
   - that NPC's speech lines carry its cover role in `speaker_role`
     until the same reveal;
+  - drone command menus use the same caller-specific cover name;
+    inspecting the menu does not reveal the NPC;
   - private cores read "private";
   - black ICE is marked only after a survey;
   - nothing outside sight gains a field.
