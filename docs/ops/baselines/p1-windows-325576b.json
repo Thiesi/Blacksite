@@ -406,7 +406,7 @@
         }
       },
       "cpu_s_per_hour": 97.87393804647536,
-      "cpu_120s_per_hour_pass": true
+      "cpu_120s_per_hour_pass": null
     },
     {
       "size": [
@@ -789,7 +789,7 @@
         }
       },
       "cpu_s_per_hour": 88.76892889903583,
-      "cpu_120s_per_hour_pass": true
+      "cpu_120s_per_hour_pass": null
     },
     {
       "size": [
@@ -1172,7 +1172,7 @@
         }
       },
       "cpu_s_per_hour": 61.57854393203839,
-      "cpu_120s_per_hour_pass": true
+      "cpu_120s_per_hour_pass": null
     },
     {
       "size": [
@@ -1555,7 +1555,7 @@
         }
       },
       "cpu_s_per_hour": 128.85607202290007,
-      "cpu_120s_per_hour_pass": false
+      "cpu_120s_per_hour_pass": null
     },
     {
       "size": [
@@ -1938,7 +1938,7 @@
         }
       },
       "cpu_s_per_hour": 150.67406678267704,
-      "cpu_120s_per_hour_pass": false
+      "cpu_120s_per_hour_pass": null
     },
     {
       "size": [
@@ -2321,7 +2321,9 @@
         }
       },
       "cpu_s_per_hour": 144.13116363767634,
-      "cpu_120s_per_hour_pass": false
+      "cpu_120s_per_hour_pass": null
     }
-  ]
+  ],
+  "cpu_budget_reference": false,
+  "cpu_clock_policy": "Archived Windows isolated-NPC diagnostic; short process CPU deltas are quantized and cannot supply a CPU budget verdict."
 }

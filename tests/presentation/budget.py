@@ -148,6 +148,8 @@ def activity(content: ContentTree, width: int, height: int, tier: str, what: str
         ticks += 1
         time.sleep(.1)  # Same real-time schedule as V1, outside the CPU meter.
     elapsed = time.monotonic()-started
+    if keys and caller.moves == 0:
+        raise AssertionError(f'walking activity made no successful moves: {what}; sample may be too short or blocked')
     return {'zone': zone, 'view': 'shipped map or local help', 'elapsed_s': elapsed,
         'ticks': ticks, 'key_steps': index, 'successful_moves': caller.moves,
         'cpu_s': caller.meter.cpu_ns/1e9, 'cpu_s_per_minute': caller.meter.cpu_ns/1e9/elapsed*60,

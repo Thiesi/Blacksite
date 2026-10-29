@@ -24,13 +24,15 @@ def main() -> None:
     if not 0 < args.seconds <= 600:
         parser.error('seconds must be positive and at most 600')
     content = load_content(ROOT/'src/blacksite/content')
+    cpu_budget_reference = platform.system() == 'Linux' and args.seconds == 12.0
     rows = []
     for width, height in ((80, 24), (132, 50)):
         for tier in ('16', '256', 'truecolor'):
             activities = {what: activity(content, width, height, tier, what, args.seconds) for what in MIX}
             row = {'size': [width, height], 'tier': tier, 'glyph_tier': 'cp437',
                 'frames': frames(content, width, height, tier), 'activities': activities,
-                'cpu_s_per_hour': hourly(activities), 'cpu_120s_per_hour_pass': hourly(activities) <= 120}
+                'cpu_s_per_hour': hourly(activities),
+                'cpu_120s_per_hour_pass': hourly(activities) <= 120 if cpu_budget_reference else None}
             rows.append(row)
             print(json.dumps({k: row[k] for k in ('size', 'tier', 'cpu_s_per_hour')}), flush=True)
     report = {'schema': 1, 'created_utc': datetime.now(timezone.utc).isoformat(),
@@ -39,6 +41,9 @@ def main() -> None:
         'platform': platform.platform(), 'processor': platform.processor(), 'python': sys.version,
         'mechanics_sha256': fingerprint(content)['sha256'], 'mix': 'v1-provisional', 'minutes': MIX,
         'sample_seconds': args.seconds, 'reference_duration': args.seconds == 12.0,
+        'cpu_budget_reference': cpu_budget_reference,
+        'cpu_clock_policy': 'process_time_ns per method; Windows scheduler-tick quantization makes '
+            'its CPU totals diagnostic only; use hosted Linux for the CPU budget reference',
         'npc_policy': 'shipped spawners retained; 30 warm-up ticks after placement; zone-ID seeds',
         'cpu_boundary': 'process CPU around Display.receive/key/update/render; server, harness, protocol codecs, '
             'socket/stdin pumps and terminal replay excluded; warm-up excluded; no background painter in shipped door',

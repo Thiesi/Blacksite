@@ -104,12 +104,21 @@ and `render`. This matches V1's method boundary, but records actual process
 CPU instead of method wall duration. It excludes warm-up, the server,
 harness, protocol codecs, I/O pumps, terminal replay and sleeping. Thus
 "door CPU/hour" means these measured door methods, not a whole native
-process trace. CPU clock granularity is host-dependent. Wall render
-latency is recorded separately; Windows per-frame CPU can be quantized.
+process trace. Wall render latency is recorded separately. Windows
+process CPU can quantize to scheduler ticks, making sums of short method
+calls noisy or biased: Windows CPU reports are diagnostic only
+(`cpu_budget_reference: false`) and `cpu_120s_per_hour_pass` is null.
+Use the hosted Linux workload as the CPU budget reference; other hosts
+remain diagnostic until their CPU clock is validated.
 
 The deterministic frame route records actual full/delta byte counts,
 render wall time and update/render CPU, including each raw sample and
 p50/p95/max. It rejects a run without movement or either output class.
+Walking activity samples reject zero successful moves, including samples
+too short to observe the input. Standing and help intentionally retain
+V1's published 12-second sample and 20-second step interval; their idle
+sampling limitation is part of that provisional workload, not a measured
+real-play hour. P1 does not silently change the technical lead's mix.
 The report identifies head, dirty state, host, interpreter, mechanics
 hash, sample duration and call counts. Budget results (100 ms p95,
 16 KiB per delta and 120 CPU seconds/hour) are recorded, not asserted:
@@ -135,7 +144,7 @@ Diagnostic CPU seconds per hour, before rounding activity contributions:
 | 80x24 | 97.9 | 88.8 | 61.6 |
 | 132x50 | 128.9 | 150.7 | 144.1 |
 
-All three 132x50 diagnostic cases miss 120 seconds/hour. On its frame
+The Windows CPU totals carry no 120-second budget verdict. On its frame
 route, full redraw maxima range from 4,143 to 15,086 bytes, delta maxima
 from 1,010 to 2,075 bytes, and worst render p95 is 22.2 ms. These sampled
 routes do not bound every screen or gameplay activity.
