@@ -858,7 +858,7 @@ Other repeatable Silt loot uses 30-minute uptime availability periods.
   perk must never be a flat combat multiplier.
 
 The existing Wake Hall recruiter-card desk keeps an admission contact
-open for all nine factions. A discharged caller with +30 standing can
+open for all eight factions; nine once the Lamp Compact is built (planned, #90). A discharged caller with +30 standing can
 join there or through a placed recruiter talker. Taking a card during
 the Wake still grants only the starting +10 standing, never membership.
 Cards name their faction explicitly; the old Red Sable card key is
@@ -1520,7 +1520,7 @@ delta and one non-recursive half-delta to its allies/opponents;
 `explicit` applies the authored vector once, without propagation. Round
 halves toward zero and clamp the final result to -100..+100. Story forks,
 finales, and Vesper's introductions use explicit vectors. This prevents
-a nine-faction introduction from rewarding and punishing itself.
+an eight-faction introduction (nine once the Lamp Compact is built, planned, #90) from rewarding and punishing itself.
 
 ### 9.4 Authored jobs that establish the game
 

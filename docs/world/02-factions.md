@@ -1131,8 +1131,8 @@ that Sablier does not lease.
 Bath consumables (warm-water tonics that clear shock), clothes and
 cosmetics (Warmwater dress is the city's most copied fashion), bath
 detox (design §8.6: cheaper and slower than Sablier's), discretion
-services, and a room by the hour (design §5.6: a paid private rest that
-fades out).
+services, and a room by the hour: a paid scene that fades out, with no
+mechanical effect (design §5.6).
 
 ### Contracts
 

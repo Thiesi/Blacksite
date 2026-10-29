@@ -694,7 +694,7 @@ playtests, not a claim that the design has already been played.
 
 ### S20 faction presentation
 
-Recruitment shows all nine standings and titles before actions. Join
+Recruitment shows all eight standings and titles before actions (nine once the Lamp Compact is built, planned, #90). Join
 and leave require a final chosen confirmation; Esc/B cancels. At 80x24
 membership requirements, card distinction and cooldown remain visible.
 Attending's visited vat choices use their own list with one select action.

@@ -489,7 +489,7 @@ at least once, on the theory that it saves a step.
 - **Relays:** none.
 - **Terminals:** one tutorial terminal (Wake Hall cell, tier 0, one ICE).
 - **Vendors / anchors:** Dr. Ilse Vantongeren (tutorial talker), the
-  Wake corridor (one scripted hostile drone), the nine recruiter cards
+  Wake corridor (one scripted hostile drone), the eight recruiter cards (nine once the Lamp Compact is built, planned, #90)
   on a rack.
 - **Spawners:** the tutorial drone only; Sablier orderlies (talkers).
 - **Vats:** the decant vats (default respawn for Freelance and Sablier
