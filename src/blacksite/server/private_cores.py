@@ -11,6 +11,7 @@ from dataclasses import replace
 from datetime import datetime, timezone
 from typing import Any, TYPE_CHECKING
 
+from blacksite.layout import compute as screen_layout
 from blacksite.content.schema import ControlTarget, HardwareLocation
 from blacksite.server.inventory import Inventory
 from blacksite.server.lattice.presence import Presence, Procedure
@@ -236,7 +237,7 @@ class PrivateCores:
             raise ValueError("Only the resident may read this core log.")
         lines = self.log_lines(apartment)
         cursor = max(0, min(cursor, len(lines)-1))
-        detail = ("\n".join(wrapped(lines[cursor], 52 if session.caps["width"] >= 100 else 66))
+        detail = ("\n".join(wrapped(lines[cursor], screen_layout(session.caps["width"], session.caps["height"]).private_core_width))
                   if lines else "No intrusion recorded.")
         self.lat.sim.external_views[session.id] = "menu", menu("APARTMENT / CORE LOG",
             [{"id": apartment["hack_log"][i].get("receipt", str(i)), "cells": [line,

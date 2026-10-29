@@ -28,7 +28,7 @@ def test_exact_layout(width: int, height: int, viewport: tuple[int, int], logs: 
     layout = compute(width, height)
     assert (layout.viewport.width, layout.viewport.height) == viewport
     assert layout.log.height == logs
-    assert layout.hint == height - 2
+    assert layout.hint.y == height - 2
 
 
 def test_log_rows_scale() -> None:

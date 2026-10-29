@@ -5,6 +5,7 @@ from math import ceil
 import textwrap
 from typing import Any
 
+from blacksite.layout import compute as screen_layout
 from blacksite.server.contracts.engine import Instance, Payment
 from blacksite.server.contracts.requirements import describe as describe_requirement
 from blacksite.server.protocol import Frame
@@ -300,12 +301,10 @@ class Panels:
                     detail.append(f"Effect: {permit['kind']} at {permit['target']} for {permit['expiry_seconds']} s.")
                 detail += ['This choice is personal and cannot be reversed.', 'The other publication option will close.']
             actions = [{'key': 'y', 'label': 'confirm'}]
-        width = 66 if session.caps['width'] < 100 else 50
+        page = screen_layout(session.caps['width'], session.caps['height']).contracts
+        width = page.width
         lines = [line for paragraph in detail for line in (textwrap.wrap(paragraph, width) or [''])]
-        count = max(1, min(20 if session.caps['height'] == 24 else session.caps['height']-6,
-                           session.caps['height']-4-min(8, 3+(session.caps['height']-24)*5//16))-6)
-        if session.caps['width'] >= 100:
-            count += 3
+        count = page.rows
         pages = max(1, ceil(len(lines)/count))
         panel.page = min(panel.page, pages-1)
         if pages > 1:
