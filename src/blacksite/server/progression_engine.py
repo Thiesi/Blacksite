@@ -270,8 +270,8 @@ class ProgressionEngine:
                 text += (f" Grade {result.grade}: {grade.title}. "+grade.promotion
                          if grade else f" You reach grade {result.grade}.")
                 self.commerce.toast(session, text)
-            session.send(Frame("log", {"lines": [{"channel": "system", "text": text,
-                "role": "chan_sys", "at": self.clock.now_utc().isoformat()}]}))
+            session.emit(text, kind="reward", channel="system", role="chan_sys",
+                         at=self.clock.now_utc().isoformat())
 
     def open_skills(self, session: Session) -> None:
         self.game.screens.pop(session.id, None)

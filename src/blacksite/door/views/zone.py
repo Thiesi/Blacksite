@@ -36,7 +36,9 @@ def render_zone(buffer: CellBuffer, body: dict[str, Any], area: Rect, palette: P
                   *(o for o in objects if o.get('kind') == 'beacon')]:
         x, y = entry["x"] - viewport["x"], entry["y"] - viewport["y"]
         if 0 <= x < min(area.width, viewport["w"]) and 0 <= y < min(area.height, viewport["h"]):
-            buffer.put(area.x + x, area.y + y, entry["glyph"], palette.style(entry.get("role", "text")))
+            # P4 carries semantic object roles; the current renderer retains
+            # its existing style until the approved renderer slice.
+            buffer.put(area.x + x, area.y + y, entry["glyph"], palette.style(entry.get("legacy_role", entry.get("role", "text"))))
     me = body["me"]
     header = f"{me['zone_name']}  "
     buffer.put(2, 0, truncate(header, buffer.width - 18), palette.style("title"))

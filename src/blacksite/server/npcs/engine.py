@@ -31,6 +31,7 @@ from blacksite.server.sessions import Session
 from blacksite.server.world.actors import Actor
 from blacksite.server.world.sight import detection_limit, sight_radius
 from blacksite.server.world.zone import ZoneInstance
+from blacksite.server.views import presentation
 
 
 class Npcs:
@@ -133,6 +134,7 @@ class Npcs:
         if controller:
             self.provocations[target.zone,group,controller.id] = self.combat.now()+PROVOCATION_SECONDS
         target.target = source.id
+        self.combat.reveal(target, source)
         target.behaviour.update(last_seen=self.clock.now_tick(), last_position=source.position, state="hunt")
         # Local faction guards protect their residents, without summoning
         # rival police into a district. The same safety checks still apply.
@@ -144,6 +146,7 @@ class Npcs:
                     if controller:
                         self.provocations[actor.zone,str(actor.behaviour.get("spawner")),controller.id] = self.combat.now()+PROVOCATION_SECONDS
                     actor.target = source.id
+                    self.combat.reveal(actor, source)
                     actor.behaviour.update(last_seen=self.clock.now_tick(), last_position=source.position, state="hunt")
 
     def refused(self, source: Actor, target: Actor) -> None:
@@ -313,6 +316,7 @@ class Npcs:
         if candidates:
             target = candidates[0]
             actor.target = target.id
+            self.combat.reveal(actor, target)
             actor.behaviour["last_seen"] = tick
             actor.behaviour["last_position"] = target.position
         elif target and (not self.combat.legal(actor, target) or not self.hostile(actor, target)
@@ -405,7 +409,7 @@ class Npcs:
                     return True
             if any(b.kind == "talker" for b in template.behaviours):
                 self.menus.add(session.id)
-                self.sim.external_views[session.id] = "text", {"title": template.name, "lines": ["Not yet."], "hint": "Esc/B returns"}
+                self.sim.external_views[session.id] = "text", {"title": presentation.name(other, actor, self.content), "lines": ["Not yet."], "hint": "Esc/B returns"}
                 return True
         return False
 

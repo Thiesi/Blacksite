@@ -250,8 +250,8 @@ class Core:
             self.characters.input(session, frame, event.data["tick"])
             return
         label = "intent" if frame.type == "intent" else frame.type
-        session.send(Frame("log", {"lines": [{"channel": "system", "text": f"You send {label}.",
-            "role": "muted", "at": self.clock.now_utc().isoformat()}]}))
+        session.emit(f"You send {label}.", kind="system", channel="system", role="muted",
+                     at=self.clock.now_utc().isoformat())
 
     def status(self) -> dict[str, Any]:
         return {"uptime": self.clock.now_tick() / TICK_HZ, "players": sum(

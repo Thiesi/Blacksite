@@ -203,6 +203,8 @@ class Views:
             rid = next((rid for rid, relay in owner.content.relays.items()
                         if relay.zone == actor.zone and relay.terminal == obj.get('id') and owner.active(rid)), None)
             if rid:
+                faction = owner.owner(rid)
+                obj['role'] = owner.content.factions[faction].colour if faction in owner.content.factions else 'relay'
                 obj['relay'] = {'faction': owner.owner(rid), 'state': self.status(rid),
                     'progress': [{'faction': c.faction, 'seconds': c.elapsed/TICK_HZ, 'needs_hack': not bool(c.hacked)}
                                  for c in owner.claims.active.values() if c.relay == rid]}

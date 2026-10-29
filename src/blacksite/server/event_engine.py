@@ -232,8 +232,8 @@ class Events:
         for session in self.core.sessions.active.values():
             if session.closed or session.role != 'caller':
                 continue
-            session.send(Frame('log', {'lines': [{'channel': 'system', 'text': text,
-                'role': 'chan_sys', 'at': self.clock.now_utc().isoformat()}]}))
+            session.emit(text, kind="danger" if warning else "system", channel="system", role="chan_sys",
+                         at=self.clock.now_utc().isoformat())
             if warning:
                 session.send(Frame('toast', {'text': text, 'role': 'warning', 'seconds': 5}))
 

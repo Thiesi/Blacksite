@@ -381,6 +381,8 @@ class Sector:
     layout_size: Tile = (8, 6)  # Game design 6.1: readable at 80x24.
     trace_policy: Literal["civic", "corporate", "black", "street", "none"] = "none"
     trace_owner: str | None = None
+    theme: str | None = None
+    """Presentation id; district is the fallback until sector themes land."""
 
 
 DataKind = Literal[
@@ -945,6 +947,7 @@ class NpcTemplate:
     training: bool = False
     lore: tuple[str, ...] = ()
     schema: int = CONTENT_SCHEMA
+    presents: Literal["civilian", "warden", "security", "service", "hostile"] | None = None
 
 
 @dataclass(frozen=True)

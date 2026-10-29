@@ -89,6 +89,7 @@
     "lattice-edge-gated-h": "═",
     "lattice-edge-gated-v": "║",
     "lattice-edge-hidden-h": "·",
-    "lattice-edge-hidden-v": ":"
+    "lattice-edge-hidden-v": ":",
+    "actor-drone": "τ"
   }
 }

@@ -1,6 +1,6 @@
 # P4 — View semantics
 
-**Status:** planned
+**Status:** in progress
 **Primary model:** Sonnet · **Reviewer:** automated review, technical lead
 **Depends on:** P0, P1 · **Milestone:** presentation track
 **Issue:** https://github.com/Thiesi/Blacksite/issues/95

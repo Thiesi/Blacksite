@@ -103,6 +103,8 @@ class Presence:
     return_cells: dict[int, str] = field(default_factory=dict)
     found_silt: dict[str, set[str]] = field(default_factory=dict)
     survey_records: set[str] = field(default_factory=set)
+    surveyed_black: set[tuple[str, str]] = field(default_factory=set)
+    """Instance/ICE ids actually surveyed by this caller (architecture 5.5.4)."""
     sampled: set[str] = field(default_factory=set)
     mapping_until: int = 0
     verified_maps: set[str] = field(default_factory=set)

@@ -68,7 +68,8 @@ class Crews:
             attached(session, player)
             if player.bbs_user_id not in self.announced:
                 self.announced.add(player.bbs_user_id)
-                self.log(player.id, self.text('restart'))
+                session.emit(self.text('restart'), kind="notice", channel="system", role="ui_text",
+                             at=self.clock.now_utc().isoformat())
         self.game.attached = on_attach
 
     def crew_id(self, player: str) -> str | None:
