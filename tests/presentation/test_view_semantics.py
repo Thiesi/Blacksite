@@ -5,13 +5,60 @@ from dataclasses import replace
 
 import pytest
 
+from blacksite.content.loader import load_content
 from blacksite.server.lattice.presence import Procedure
 from blacksite.server.npcs.templates import make_actor
 from blacksite.server.views.zone_view import Perception, build
-from tests.character_helpers import place
+from tests.character_helpers import create, place
+from tests.harness import HeadlessServer
 from tests.lattice.test_engine import actor, intent, jack, runners
 from tests.lattice.test_encounters import enter
 from tests.lattice.test_private_cores import apartment_fixture
+
+
+@pytest.mark.parametrize('width,height', [(80, 24), (132, 50)])
+def test_arch_5_5_4_shipped_sodium_warden_cover_and_per_caller_reveal(repo_root, width, height):
+    content = load_content(repo_root/'src/blacksite/content')
+    template = content.npcs['npc-plainclothes-warden']
+    assert template.presents == 'civilian' and template.cover_name == 'Sodium regular'
+    # Keep every shipped spawner/template; do not manufacture a Warden.
+    game = HeadlessServer(content, character_state={})
+    clients = []
+    for uid, tile in ((1, (89, 3)), (2, (89, 4))):
+        client = game.connect({'user_id': uid, 'handle': f'Cover界{uid}', 'node_name': 'P4'},
+                              width=width, height=height)
+        create(game, client, name=f'Cover界{uid}', card='none')
+        place(game, client, 'sodium-row', game.core.world.free_tile('sodium-row', tile))
+        clients.append(client)
+    one, two = clients
+    zone = game.core.world.zones['sodium-row']
+    npc = next(a for a in zone.actors.values() if a.behaviour.get('template') == template.id)
+    assert npc.zone == 'sodium-row'
+    assert any(a.name == template.cover_name and a.behaviour.get('template') == 'npc-sodium-regular'
+               for a in zone.actors.values())
+    sim = game.core.characters.sim
+    for client in clients:
+        caller = actor(game, client)
+        caller.target = npc.id
+        view = build(caller, zone, Perception(), content, width, height, '12:00', False, 0)
+        assert next(a for a in view['actors'] if a['id'] == npc.id)['class'] == 'civilian'
+        assert next(a for a in view['nearby'] if a['id'] == npc.id)['name'] == template.cover_name
+        target = game.core.combat.target_view(caller)
+        assert target['name'] == template.cover_name and target['class'] == 'civilian'
+        assert target['faction'] == 'Civilian' and target['name_role'] == 'npc_neutral'
+        sim.speak(client.session, npc, 'Stand here.')
+        line = client.session.log_ring[-1]
+        assert (line['speaker'], line['speaker_role']) == (template.cover_name, 'civilian')
+    game.core.combat.warn(npc, actor(game, one), game.clock.now_tick())
+    assert npc.revealed_to == {one.session.player_id}
+    for client, name, role in ((one, template.name, 'warden'), (two, template.cover_name, 'civilian')):
+        sim.speak(client.session, npc, 'Stand here.')
+        assert client.session.log_ring[-1]['speaker'] == name
+        assert client.session.log_ring[-1]['speaker_role'] == role
+        assert game.core.combat.target_view(actor(game, client))['name'] == name
+    # A respawn is a new instance; content keeps only the authored cover.
+    fresh = make_actor(template, 'test:new-shipped-instance', {'home': npc.position})
+    assert not fresh.revealed_to
 
 
 @pytest.mark.parametrize('width,height', [(80, 24), (132, 50)])
@@ -45,7 +92,7 @@ def test_arch_5_4_zone_lattice_menu_and_legacy_shapes(runners, width, height):
 def test_arch_5_5_4_disguise_target_speech_and_instance_lifetime(runners, width, height):
     game, one, two, _ = runners
     content = game.core.loop.content
-    template = replace(content.npcs['npc-warden-response'], presents='civilian')
+    template = replace(content.npcs['npc-warden-response'], presents='civilian', cover_name='Plaza resident')
     content.npcs[template.id] = template
     npc = make_actor(template, 'test:plainclothes', {})
     game.core.world.enter(npc, 'core-plaza', (30, 6))
@@ -56,10 +103,10 @@ def test_arch_5_5_4_disguise_target_speech_and_instance_lifetime(runners, width,
         caller.target = npc.id
         target = game.core.combat.target_view(caller)
         assert target['class'] == 'civilian' and target['faction'] == 'Civilian'
-        assert target['name'] == 'Civilian' and target['name_role'] == 'npc_neutral'
+        assert target['name'] == 'Plaza resident' and target['name_role'] == 'npc_neutral'
         sim.speak(client.session, npc, 'Stand here.')
         line = client.session.log_ring[-1]
-        assert (line['kind'], line['speaker'], line['speaker_role']) == ('speech', 'Civilian', 'civilian')
+        assert (line['kind'], line['speaker'], line['speaker_role']) == ('speech', 'Plaza resident', 'civilian')
     # The real warning path counts as acting even before a shot lands.
     game.core.combat.warn(npc, actor(game, one), game.clock.now_tick())
     assert npc.revealed_to == {one.session.player_id}
@@ -81,7 +128,7 @@ def test_arch_5_5_4_disguise_target_speech_and_instance_lifetime(runners, width,
 def test_arch_5_5_4_targeting_reveals_to_target_without_waiting_for_shot(runners):
     game, client, _, _ = runners
     content = game.core.loop.content
-    template = replace(content.npcs['npc-warden-response'], presents='civilian')
+    template = replace(content.npcs['npc-warden-response'], presents='civilian', cover_name='Plaza resident')
     content.npcs[template.id] = template
     place(game, client, 'vatside-clinics', (20, 3))
     npc = make_actor(template, 'test:hunter', {})
@@ -96,7 +143,7 @@ def test_arch_5_5_4_retaliation_reveals_before_hit_or_miss_log(runners):
     for who, tile in ((client, (20, 3)), (observer, (20, 4))):
         place(game, who, 'vatside-clinics', tile)
     content = game.core.loop.content
-    template = replace(content.npcs['npc-warden-response'], presents='civilian')
+    template = replace(content.npcs['npc-warden-response'], presents='civilian', cover_name='Plaza resident')
     content.npcs[template.id] = template
     npc = make_actor(template, 'test:retaliation', {'home': (21, 3)})
     game.core.world.enter(npc, 'vatside-clinics', (21, 3))
@@ -229,16 +276,21 @@ def test_arch_5_4_relay_role_uses_committed_owner(runners):
     assert obj['legacy_role'] == 'text'
 
 
-def test_arch_5_5_3_place_line_is_once_per_first_entry_with_old_toast(runners):
+def test_arch_5_5_3_complete_place_paragraph_is_once_without_toast(runners):
     game, client, _, _ = runners
     sim = game.core.characters.sim
     avatar = sim.avatars[client.session.user_id]
     avatar.seen_zones.discard(avatar.zone)
+    game.frames_for(client)
     before = len(client.session.log_ring)
     sim.discover(client.session, avatar)
     assert len(client.session.log_ring) == before+1
     assert client.session.log_ring[-1]['kind'] == 'place'
-    assert client.session.send_queue[-1].type == 'toast'
-    assert client.session.log_ring[-1]['text'] == client.session.send_queue[-1].data['text']
+    frames = game.frames_for(client)
+    assert not any(frame.type == 'toast' for frame in frames)
+    zone = game.core.world.zones[avatar.zone].template
+    asset = game.core.loop.content.text[zone.meta.lore[0]]
+    paragraph = ' '.join(asset.body.strip().split('\n\n', 1)[0].splitlines())
+    assert client.session.log_ring[-1]['text'] == paragraph
     sim.discover(client.session, avatar)
     assert len(client.session.log_ring) == before+1

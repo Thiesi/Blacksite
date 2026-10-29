@@ -24,6 +24,8 @@ can draw them. Nothing is drawn differently in this slice.
   `security`, `service`, `hostile` or `drone`.
   - It comes from the template's `presents` field, falling back to the
     current faction-derived role.
+  - A template with `presents` requires a validated `cover_name`. The
+    shipped plainclothes Warden shares the Sodium regular's name.
   - A disguised NPC shows its cover class until it acts against a
     caller. After that, that caller alone sees its true class, for the
     lifetime of that NPC instance (§5.5.4). Keep the reveal with the
@@ -70,6 +72,9 @@ can draw them. Nothing is drawn differently in this slice.
 - Every new field is present in zone, Lattice and menu views, at both
   sizes.
 - Disclosure:
+  - the unmodified shipped plainclothes Warden spawns in Sodium Row
+    with its authored cover class and the same displayed name as a
+    civilian in that zone;
   - a plainclothes Warden presents as its cover class, and only the
     caller it acted against sees its true class, until the instance
     ends;

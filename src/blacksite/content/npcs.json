@@ -416,6 +416,8 @@
     {
       "id": "npc-plainclothes-warden",
       "name": "Plainclothes Warden",
+      "presents": "civilian",
+      "cover_name": "Sodium regular",
       "faction": "wardens",
       "grade": 1,
       "attributes": {

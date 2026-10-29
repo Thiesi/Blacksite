@@ -324,7 +324,7 @@ validated against game 3.5; temporary modifiers never alter these rows.
 
 `id, name, faction, grade, attributes, weapon, armour, behaviours[]
 (with params), dialogue (talker id or null), vendor (inventory id or null),
-loot[] (item, chance, count), xp, lore, presents`.
+loot[] (item, chance, count), xp, lore, presents, cover_name`.
 
 `presents` (optional) is the class a caller sees: `civilian`, `warden`,
 `security`, `service` or `hostile` (decision D-T8). It sets the NPC's
@@ -334,6 +334,14 @@ class is derived from faction and behaviour (architecture 5.5.4).
 `presents` is static content; the moment a disguised NPC acts against a
 caller, the reveal to that caller is runtime state of the NPC instance
 (architecture 5.5.4), never written back to the template.
+
+`cover_name` is optional unless `presents` is set, when the validator
+requires a non-empty printable name. Views and speech use it while
+the NPC is covered, then use `name` after that caller's reveal. It is
+ordinary authored text, not a class label: the plainclothes Warden on
+Sodium Row shares `Sodium regular` with the real civilians there. The
+true name and faction never form the covered display name. This is
+presentation data; rules continue to read the true actor and faction.
 
 An optional explicit `health` pool and embedded `attack` weapon block
 support private training actors. `training` requires both and scopes

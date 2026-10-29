@@ -178,13 +178,12 @@ def test_ring_replays_50_on_reconnect(social):
     assert len(ring)==500 and ring[0]['text']=='50'
     game.core.sessions.disconnect(a.session)
     again=game.connect({'user_id':1,'handle':'First界','node_name':'test'})
-    # S25b arrival prose is itself a log-ring line. Reconnect emits it,
-    # then replays the latest fifty lines with stable IDs for client
-    # deduplication. The replay includes 49 system lines and that arrival.
+    # This known zone emits no new paragraph. The separate unseen-zone
+    # test below verifies that first-entry prose follows historical replay.
     frames=game.frames_for(again)
     for frame in frames: encode(frame)
     replay=next(frame.data['lines'] for frame in frames if frame.type=='log' and frame.data.get('replay'))
-    assert len(replay)==50 and replay[0]['text']=='501' and replay[-1]['channel']=='zone'
+    assert len(replay)==50 and replay[0]['text']=='500' and replay[-1]['text']=='549'
     assert [line['id'] for line in replay]==[line['id'] for line in list(again.session.log_ring)[-50:]]
     assert not a.session.log_ring
     act(game,again,Frame('intent',{'name':'resync','args':{}}))

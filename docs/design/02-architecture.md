@@ -506,7 +506,9 @@ only from what this caller may know. For presentation that means:
   `drone`. For NPCs it comes from the template's `presents` (entities
   1.8), which a disguised NPC sets to its cover (the plainclothes
   Warden presents `civilian`); without it, the class is derived from
-  faction and behaviour. The view sends a name, colour and figure
+  faction and behaviour. A template that sets `presents` also requires
+  a validated `cover_name` (entities 1.8), used for displayed names and
+  speech until reveal. The view sends a name, colour and figure
   consistent with the presented class, never the true faction of a
   disguised NPC (D-T8), with one exception: once a disguised NPC acts
   against a caller (attacks, arrests or targets them), that caller's

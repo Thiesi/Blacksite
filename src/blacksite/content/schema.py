@@ -948,6 +948,7 @@ class NpcTemplate:
     lore: tuple[str, ...] = ()
     schema: int = CONTENT_SCHEMA
     presents: Literal["civilian", "warden", "security", "service", "hostile"] | None = None
+    cover_name: str | None = None
 
 
 @dataclass(frozen=True)

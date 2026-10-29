@@ -34,8 +34,12 @@ def covered(actor: Actor, viewer: Actor, content: ContentTree) -> bool:
 
 
 def name(actor: Actor, viewer: Actor, content: ContentTree) -> str:
-    # No cover-name field exists. Do not leak "Warden" in an authored name.
-    return presented_class(actor, viewer, content).title() if covered(actor, viewer, content) else actor.name
+    if covered(actor, viewer, content):
+        template = content.npcs.get(actor.behaviour.get("template"))
+        if template is None or not template.cover_name:
+            raise ValueError("covered NPC requires a validated cover_name")
+        return template.cover_name
+    return actor.name
 
 
 def role(actor: Actor, viewer: Actor, content: ContentTree, legacy: str) -> str:

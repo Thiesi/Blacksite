@@ -1,5 +1,9 @@
 # P4 acceptance evidence
 
+Historical evidence below predates the owner-merged S25b integration.
+It does not validate the current head. Fresh evidence will replace this
+packet after the cover-name and complete-paragraph checks finish.
+
 Source head: `7b4833f250210548629b9985fe0c1a6c6504e9dc`.
 Base: `cae334f92386d2f70e94b3d6816ea2dd0f34026e`.
 
