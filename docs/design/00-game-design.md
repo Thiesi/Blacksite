@@ -550,6 +550,14 @@ flight preserves the destination and arrival deadline; reconnecting
 continues the same ride. There is no physical body in either zone during
 the ride. After offline arrival, ordinary destination logout rules apply.
 
+**Rooms by the hour** (Warmwater). A room at a Compact counter is a paid
+scene: the caller pays, a line of description plays, and the scene fades
+out before anything is shown (bible §2). It has no mechanical effect: no
+sexual service grants a buff, standing, XP or item, so nobody is
+rewarded for buying one. Rooms exist only in the Long Baths and the
+Courts' houses; the caller stays in the zone and its ordinary safety
+rules, and a room in the contested Courts gives no cover from attack.
+
 ## 6. The Lattice
 
 ### 6.1 Sectors and cells
@@ -634,11 +642,16 @@ real encounter. District gate counts and public uplinks remain intact.
 
 Named short effects are exceptions to that ordinary reset range: a
 mission latch lasts 120 s, a private delivery vestibule 30 s, Row lighting
-blackout 30 s, Row sign message 60 s, and the bell-gallery hymn 60 s.
+blackout 30 s, Row sign message 60 s, the bell-gallery hymn 60 s, and
+the Courts' lamps 30 s (planned, #90).
 Foundry gantry debris lasts 30 s after its hazard warning and deals
 5 kinetic damage per second before armour (provisional, tuned at the
 pacing gate). Its map character is `x`,
 rendered with the existing hazard glyph.
+Boilerhouse steam vents (planned, #90) use the same hazard layer on
+their authored vent tiles, on their schedule or when the Boiler
+Governor fires them: 10 s after the hazard warning, 5 chemical damage
+per second before armour (provisional, tuned at the pacing gate).
 Transit holds retain their separate 30 s limit and 120 s immunity.
 A switched-off lamp reduces sight to 5 tiles within the zone's normal
 light radius around that lamp. Dark-sight equipment still applies.
@@ -845,7 +858,7 @@ Other repeatable Silt loot uses 30-minute uptime availability periods.
   perk must never be a flat combat multiplier.
 
 The existing Wake Hall recruiter-card desk keeps an admission contact
-open for all eight factions. A discharged caller with +30 standing can
+open for all eight factions; nine once the Lamp Compact is built (planned, #90). A discharged caller with +30 standing can
 join there or through a placed recruiter talker. Taking a card during
 the Wake still grants only the starting +10 standing, never membership.
 Cards name their faction explicitly; the old Red Sable card key is
@@ -868,16 +881,20 @@ attack, tutorial target or uncompleted interaction.
 
 `H` hostile, `N` neutral, `A` allied. Rows are the acting faction.
 
-|  | Halvard | Sablier | Kestrel | Wardens | Choir | Sable | Unmoored | Ferrymen |
-|---|---|---|---|---|---|---|---|---|
-| Halvard | — | A | A | N | H | H | H | H |
-| Sablier | A | — | N | N | N | N | H | N |
-| Kestrel | A | N | — | A | N | H | N | H |
-| Wardens | N | N | A | — | N | H | H | N |
-| Choir | H | N | N | N | — | N | A | A |
-| Sable | H | N | H | H | N | — | H | N |
-| Unmoored | H | H | N | H | A | H | — | N |
-| Ferrymen | H | N | H | N | A | N | N | — |
+|  | Halvard | Sablier | Kestrel | Wardens | Choir | Sable | Unmoored | Ferrymen | Compact |
+|---|---|---|---|---|---|---|---|---|---|
+| Halvard | — | A | A | N | H | H | H | H | N |
+| Sablier | A | — | N | N | N | N | H | N | N |
+| Kestrel | A | N | — | A | N | H | N | H | N |
+| Wardens | N | N | A | — | N | H | H | N | A |
+| Choir | H | N | N | N | — | N | A | A | N |
+| Sable | H | N | H | H | N | — | H | N | H |
+| Unmoored | H | H | N | H | A | H | — | N | N |
+| Ferrymen | H | N | H | N | A | N | N | — | N |
+| Compact | N | N | N | A | N | H | H | N | — |
+
+The Compact's hostility to the Unmoored is one-sided by design: the
+Unmoored row stays neutral toward the Compact.
 
 The matrix is symmetric by construction except where the story wants a
 one-sided grudge; the data file is the truth and a test asserts the
@@ -1036,6 +1053,7 @@ fallbacks preserve necessary information and story access.
 | Sable | supplies unavailable goods; prices dependence | reserve one rotating vendor item for 10 min, once per UTC day | public stock after reservation expires |
 | Unmoored | shares access; exposes people and records | bound residual-fragment loan once per UTC day, consumed on jack-out | ordinary programs; public Ninety-Nine advice |
 | Ferrymen | brings parts home; chooses who gets guided | read committed Ring-fall forecast free | buy chart or use public warnings |
+| Compact | keeps confidences; protects the dangerous too | once per UTC day, the Quiet Book names the current zone of one NPC target on a contract you hold | ordinary search, sight and sitrep |
 
 Normal members can select their commissioned hall vat or nearest public
 vat at a recruitment contact; public is the default. An Attending may
@@ -1057,7 +1075,8 @@ The charge service fee is 150 chits per use, separate from the
 1 500-chit consumable. The perk cannot change range, time, or safety. A charge uses the ordinary
 interruptible five-second cut channel, from at most three tiles through
 a wall. Fee, charge, cut deadline and any standing/Mark share one receipt.
-Nobody can bar another player from the Tin Halo, remove a recruiter, or
+Nobody can bar another player from the Tin Halo or the Long Baths,
+remove a recruiter, or
 reserve essential stock. The Choir's historical nine seats do not cap
 players earning the Ninth title. Kestrel reservations do not close the
 public escort contract; they notify the member and preserve their slot.
@@ -1082,6 +1101,8 @@ are not additional perks. Scour cores remain reachable when neutral.
 | `zero` / Relay Zero | `oldworks-main` | 3 | trace gain -10 %, excluding fixed action costs |
 | `yard` / Yard Relay | `oldworks-yards` | 3 | fabrication quality +0.05, final cap 1.15 |
 | `block` / Block Relay | `terraces-blocks` | 2 | next rent invoice -10 %; one extra Tripwire in private core |
+| `lamp` / Lamp Relay | `warmwater-lamp-street` | 2 | planned (#90); bath detox and rooms at Compact counters -20 %, strongest discount only |
+| `boiler` / Boiler Relay | `warmwater-boilerhouse` | 3 | planned (#90); within Warmwater, out of combat, base shock decay 7 per second instead of 5, before other multipliers |
 | `cavern` / Cavern Relay | `under-caverns` | 3 | current local patrol overlay, not exclusive base map |
 | `outworks` / Outworks Relay | `under-outworks` | 4 | contribution Depth +10 %, rounded down, no extra XP/ballot |
 | `mile` / Mile Relay | `scour-ring-1` | 2 | current local patrol route on convoy map; no combat immunity |
@@ -1292,6 +1313,8 @@ Each substance has an effect, a duration, a **crash** (opposite effect
 for half the duration), and an addiction clock: three doses inside its
 window creates a dependency that imposes the crash until detox.
 Sablier detox costs 400 chits and takes 10 minutes, offline-safe.
+Bath detox at the Long Baths costs 250 chits and takes 20 minutes, under
+the same rules, in the baths' own safe pocket.
 
 Redosing refreshes one timed effect; it never stacks that substance's
 bonus or clears a dependency. Dependency withdrawal also applies during
@@ -1497,7 +1520,7 @@ delta and one non-recursive half-delta to its allies/opponents;
 `explicit` applies the authored vector once, without propagation. Round
 halves toward zero and clamp the final result to -100..+100. Story forks,
 finales, and Vesper's introductions use explicit vectors. This prevents
-an eight-faction introduction from rewarding and punishing itself.
+an eight-faction introduction (nine once the Lamp Compact is built, planned, #90) from rewarding and punishing itself.
 
 ### 9.4 Authored jobs that establish the game
 

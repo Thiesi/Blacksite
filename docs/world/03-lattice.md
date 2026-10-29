@@ -75,6 +75,7 @@ district.
 | Old Works | 34 | 12 / 6 / 16 | Foundry Floor, Annex Records, Ninety-Nine's Drop, the Tape Room | *Cut Cable* (hidden) |
 | Terraces | 36 | 20 / 12 / 4 | Block A Super, Block B Super, Outpost Feed, Stairwell C cabinet, and one private-core entrance per rented apartment | *Basement Riser* (gated, resident key) |
 | Sodium Row | 20 | 14 / 4 / 2 | House Lights, Tin Halo Back Bar, Sign Grid | *Stage Door* (hidden) |
+| Warmwater (planned, #90) | 24 | 12 / 8 / 4 | Lamp Board, Bath Rota, Boiler Governor, Quiet Book Approach | *The Culvert* (hidden, along the warm-water main) |
 | Undercity | 26 | 4 / 8 / 14 | Pumphouse Panel, Cavern Relay, Outworks Seal Approach | *The Seam* (public and unmarked; it does not need to hide) |
 | Scour | 18 | 6 / 12 / 0 | one uplink cell per relay: Landing Uplink, Mile Relay, Beacon Relay, Crash Relay, Far Relay, Patrol Beacon | *Static* (gated, only during Ring-fall) |
 | Silt | procedural | see §6 | — | — |
@@ -425,6 +426,32 @@ the level or completing its scripted encounter.
 fetch copies and journal evidence refer back to it. `template-source-drive`
 is at the archived Level 1 gallery, `brann-private-ledger` at the precinct
 archive; neither is an unrelated second loot spawn. Validate all references.
+
+### 3.14 Warmwater
+
+All three cores are planned (#90): canon only until a Stage 2 slice
+builds them.
+
+**The Quiet Book** (`lat-quiet-book`) — Lamp Compact, tier 4, 7 rooms, planned (#90).
+Hardware: the keeper's cabinet @ `warmwater-baths`, in the hall. Data:
+confidences (a lifted page names an NPC who owes the Compact and what
+for; a contract staple; never a player's private record). Controls: none;
+the Book is read, not worked. ICE: Liar ×2, Tripwire, Glasshouse,
+Sandman. The Compact knows when the Book has been read, and the Doors
+remember the reader.
+
+**Boiler Governor** (`lat-boiler-governor`) — Lamp Compact, tier 3, 5
+rooms, planned (#90). Hardware: governor panel @ `warmwater-boilerhouse`.
+Data: heat schedule. Controls: `steam vents @ warmwater-boilerhouse`
+(fires the vents off schedule, a hazard under design §6.4). ICE: Shiv,
+Tar, Turnstile.
+
+**Lamp Board** (`lat-lamp-board`) — Lamp Compact, tier 2, 4 rooms,
+planned (#90). Hardware: the lamp board @ `warmwater-lamp-street`. Data:
+house roster (which rooms are open; the Lamp Check contracts). Controls:
+`lamps @ warmwater-courts` (switches off every lamp in the Courts for
+30 s under the switched-off lamp rule, design §6.4: the Strike's old
+signal). ICE: Tripwire, Liar, Shiv.
 
 ## 4. ICE
 

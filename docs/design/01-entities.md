@@ -615,7 +615,7 @@ execution; the consuming slices supply those systems.
 `faction` (the actual faction ID; old fixtures default to the card ID).
 The `red-sable` card maps to `sable`. Existing standing under a card-only
 alias moves once to its faction key, combining and clamping at -100/100.
-The eight introductions set standing, not membership. They do not
+The eight introductions (nine once the Lamp Compact is built, planned, #90) set standing, not membership. They do not
 activate incomplete faction content or handlers.
 
 ### 1.21 Themes and looks (`themes.json`, `looks/<zone-id>.json`)
