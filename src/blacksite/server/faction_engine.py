@@ -1,5 +1,7 @@
 """S20 adapter: recruitment, durable membership and faction services."""
 
+from blacksite.server.interaction import Focus, Interaction, interact, object_interaction
+from blacksite.server.views import presentation
 from collections.abc import Callable
 from copy import deepcopy
 from dataclasses import dataclass
@@ -412,7 +414,29 @@ class Factions:
         body.update(kind="faction", actions=actions)
         return "menu", body
 
-    def input(self, session: Session, frame: Frame, tick: int) -> bool:
+    def interaction(self, session: Session, frame: Frame) -> Interaction | None:
+        if session.id in self.menus:
+            return Interaction()
+        if (not self.commerce.ready(session) or session.id in self.sim.external_views
+                or session.pending_prompts or not interact(frame)):
+            return None
+        actor = self.game.combat.actor(self.game.players[session.player_id])
+        zone = self.world.zones[actor.zone]
+        objects = sorted((o for o in zone.objects.values()
+            if max(abs(o.spec.tile[0]-actor.x), abs(o.spec.tile[1]-actor.y)) <= 1),
+            key=lambda o: (o.spec.tile != actor.position, o.spec.id))
+        if objects and objects[0].spec.params.get('recruiters'):
+            return object_interaction(objects[0])
+        other = next((other for other in zone.actors.values()
+            if other is not actor and max(abs(other.x-actor.x), abs(other.y-actor.y)) <= 1
+            and any(f.recruiter and f.recruiter == other.behaviour.get('template')
+                    for f in self.content.factions.values())), None)
+        if other:
+            return Interaction(Focus(other.id, presentation.name(other, actor, self.content), 'talk to'),
+                               other, other.position, other.id)
+        return None
+
+    def input(self, session: Session, frame: Frame, tick: int, *, interaction: Interaction | None = None) -> bool:
         name = frame.data.get("name", "") if frame.type == "intent" else ""
         args = frame.data.get("args", {})
         key = frame.data.get("k", "") if frame.type == "key" else ""
@@ -488,18 +512,9 @@ class Factions:
                 return True
             if name != "interact" and key not in ("e", "E"):
                 return False
-            actor = self.game.combat.actor(self.game.players[session.player_id])
-            zone = self.world.zones[actor.zone]
-            objects = sorted((o for o in zone.objects.values()
-                if max(abs(o.spec.tile[0]-actor.x), abs(o.spec.tile[1]-actor.y)) <= 1),
-                key=lambda o: (o.spec.tile != actor.position, o.spec.id))
-            if objects and objects[0].spec.params.get("recruiters"):
-                target = objects[0].spec.id
-            else:
-                target = next((other.id for other in zone.actors.values()
-                    if other is not actor and max(abs(other.x-actor.x), abs(other.y-actor.y)) <= 1
-                    and any(f.recruiter and f.recruiter == other.behaviour.get("template") for f in self.content.factions.values())), "")
-            if target:
+            choice = interaction or self.interaction(session, frame)
+            if choice:
+                target = choice.focus.id
                 self.station(session, target)
                 self.menus[session.id] = FactionMenu(target, 0, tick)
                 return True

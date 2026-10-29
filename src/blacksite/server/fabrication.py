@@ -1,5 +1,6 @@
 """Game 8.4: physical workshop/harvest channels and atomic craft receipts."""
 
+from blacksite.server.interaction import Interaction, interact, object_interaction
 from copy import deepcopy
 from typing import Any
 from collections.abc import Callable
@@ -209,7 +210,21 @@ class Fabrication:
         body.update(kind="workshop", actions=[{"key": "f", "label": "fabricate"}])
         return body
 
-    def input(self, session: Session, frame: Frame, tick: int) -> bool:
+    def interaction(self, session: Session, frame: Frame) -> Interaction | None:
+        if session.id in self.menus:
+            return Interaction()
+        if (not self.commerce.ready(session) or session.id in self.sim.external_views
+                or session.pending_prompts or not interact(frame)):
+            return None
+        actor = self.sim.avatars[session.user_id].actor
+        nearby = sorted((obj for obj in self.game.world.zones[actor.zone].objects.values()
+            if obj.spec.kind != 'salvage_field' and max(abs(obj.spec.tile[0]-actor.x), abs(obj.spec.tile[1]-actor.y)) <= 1),
+            key=lambda obj: (obj.spec.tile != actor.position, obj.spec.id))
+        if nearby and nearby[0].spec.kind in ('salvage_node', 'workshop'):
+            return object_interaction(nearby[0], 'harvest' if nearby[0].spec.kind == 'salvage_node' else 'open')
+        return None
+
+    def input(self, session: Session, frame: Frame, tick: int, *, interaction: Interaction | None = None) -> bool:
         name = frame.data.get("name", "") if frame.type == "intent" else ""
         key = frame.data.get("k", "") if frame.type == "key" else ""
         args = frame.data.get("args", {})
@@ -244,12 +259,10 @@ class Fabrication:
             if name != "interact" and key not in ("e", "E"):
                 return False
             actor = self.sim.avatars[session.user_id].actor
-            nearby = sorted((obj for obj in self.game.world.zones[actor.zone].objects.values()
-                if obj.spec.kind != "salvage_field" and max(abs(obj.spec.tile[0]-actor.x), abs(obj.spec.tile[1]-actor.y)) <= 1),
-                key=lambda obj: (obj.spec.tile != actor.position, obj.spec.id))
-            if not nearby:
+            choice = interaction or self.interaction(session, frame)
+            if not choice:
                 return False
-            obj = nearby[0]
+            obj = choice.value
             if obj.spec.kind == "salvage_node":
                 self.start(session, obj.spec.id)
                 return True

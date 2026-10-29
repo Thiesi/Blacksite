@@ -4,6 +4,7 @@ S16's owning engines attach reward grants to their existing transactions.
 This facade owns UI and manual spending; it never pays post-commit XP.
 """
 
+from blacksite.server.interaction import Interaction
 from copy import deepcopy
 from collections.abc import Callable
 from typing import Any, TYPE_CHECKING
@@ -319,7 +320,11 @@ class ProgressionEngine:
         return self.commerce.settle(player, patch, self.commerce.items,
             self.commerce.caches, self.commerce.serial, committed)
 
-    def input(self, session: Session, frame: Frame, tick: int) -> bool:
+    def interaction(self, session: Session, frame: Frame) -> Interaction | None:
+        return (self.clinics.interaction(session, frame) or self.drones.interaction(session, frame)
+                or (Interaction() if session.id in self.menus else None))
+
+    def input(self, session: Session, frame: Frame, tick: int, *, interaction: Interaction | None = None) -> bool:
         player = self.game.players.get(session.player_id)
         if player:
             self.sync_actor(player)

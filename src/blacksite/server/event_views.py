@@ -1,5 +1,6 @@
 """Authoritative forecast menus and public event summaries, game 12."""
 
+from blacksite.server.interaction import Interaction
 from dataclasses import dataclass
 from copy import deepcopy
 from math import ceil
@@ -201,7 +202,10 @@ class Views:
         body['page'], body['pages'] = start//PAGE_ROWS+1, max(1, (len(ids)+PAGE_ROWS-1)//PAGE_ROWS)
         return body
 
-    def input(self, session: Session, frame: Frame, tick: int) -> bool:
+    def interaction(self, session: Session, frame: Frame) -> Interaction | None:
+        return Interaction() if session.id in self.menus else None
+
+    def input(self, session: Session, frame: Frame, tick: int, *, interaction: Interaction | None = None) -> bool:
         name = frame.data.get('name') if frame.type == 'intent' else ''
         key = str(frame.data.get('k', '')).lower() if frame.type == 'key' else ''
         if name == 'event.open':

@@ -3,6 +3,7 @@
 Game design 4, 5.3, 5.4 and 7.3. No I/O or wall-clock reads occur here.
 """
 
+from blacksite.server.interaction import Focus, Interaction, interact, key_action, object_interaction
 from collections import deque
 from copy import deepcopy
 from datetime import datetime, timezone
@@ -677,13 +678,19 @@ class Combat:
         self.commerce.settle(player,{"inventory":draft.inventory,"equipment":draft.equipment,"recovery_kit_id":draft.recovery_kit_id},
             items,self.commerce.caches,serial,committed)
 
-    def pickup(self, source: Actor, target: Actor) -> bool:
+    def can_pickup(self, source: Actor, target: Actor) -> bool:
         player = self.game.players.get(target.id)
         if not player or target.stance != "down" or source.stance in ("down","dead","sleeper"): return False
         if source.zone != target.zone or rules.distance(source.position,target.position)>1.5: return False
         if not self.crew_together(source.id, target.id): return False
         if player.progress.get('combat', {}).get('until', float('inf')) <= self.now(): return False
-        if self.relation(source,target)=="hostile" or self.relation(target,source)=="hostile" or player.progress["combat"].get("killer")==source.id: return False
+        return not (self.relation(source,target)=="hostile" or self.relation(target,source)=="hostile"
+                    or player.progress["combat"].get("killer")==source.id)
+
+    def pickup(self, source: Actor, target: Actor) -> bool:
+        if not self.can_pickup(source, target):
+            return False
+        player = self.game.players[target.id]
         target.health = max(1,ceil(target.health_max*rules.REVIVE_FRACTION)); target.stance = "normal"
         player.progress.pop("combat",None)
         self.remember(player,target); self.log(target,source.name+" picks you up.")
@@ -770,7 +777,32 @@ class Combat:
         elif ability.kind == "dissonance" and threatened:
             self.game.progression.record_use(player.id, Use("dissonance_threat", "dissonance", receipt, True, threat=True))
 
-    def input(self, session: Session, frame: Frame, tick: int) -> bool:
+    def interaction(self, session: Session, frame: Frame) -> Interaction | None:
+        player = self.game.players.get(session.player_id)
+        actor = self.actor(player) if player else None
+        if not actor or session.pending_prompts.get('chat'):
+            return None
+        if player.progress.get('combat', {}).get('stage') in ('down', 'dead'):
+            return Interaction()
+        if actor.zone is None:
+            return None
+        if session.id in self.menus:
+            return Interaction()
+        if (session.id in self.game.screens or session.id in self.sim.maps
+                or session.id in self.commerce.menus or session.id in self.commerce.prompts):
+            return None
+        if interact(frame) or key_action(self.sim.keymap, session, frame) == 'interact':
+            for other in self.world.zones[actor.zone].actors.values():
+                if other is not actor and self.can_pickup(actor, other):
+                    return Interaction(Focus(other.id, presentation.name(other, actor, self.content), 'pick up'),
+                                       other, other.position, other.id)
+            vat = next((o for o in self.world.zones[actor.zone].objects.values() if o.spec.kind == 'vat'
+                and max(abs(actor.x-o.spec.tile[0]), abs(actor.y-o.spec.tile[1])) <= 1), None)
+            if vat:
+                return object_interaction(vat, 'use')
+        return None
+
+    def input(self, session: Session, frame: Frame, tick: int, *, interaction: Interaction | None = None) -> bool:
         player = self.game.players.get(session.player_id)
         actor = self.actor(player) if player else None
         if not actor: return False
@@ -839,11 +871,15 @@ class Combat:
                 actor.stance = "normal" if actor.stance == "stealth" else "stealth"
                 self.world.zones[actor.zone].revision += 1; return True
             if action == "interact" or key in ("e","E") or name == "pickup":
-                if any(self.pickup(actor,a) for a in tuple(self.world.zones[actor.zone].actors.values()) if a is not actor): return True
-                vat = next((o for o in self.world.zones[actor.zone].objects.values() if o.spec.kind=="vat"
-                    and max(abs(actor.x-o.spec.tile[0]),abs(actor.y-o.spec.tile[1]))<=1),None)
-                if vat:
-                    self.commerce.enqueue_system(lambda:self.recover_at_vat(player.id,vat.spec.id)); return True
+                # pickup is also a typed intent; its selection is the E query.
+                choice = interaction or self.interaction(session, Frame('intent', {'name': 'interact'}))
+                if choice:
+                    if choice.actor_id:
+                        self.pickup(actor, choice.value)
+                    else:
+                        vat = choice.value
+                        self.commerce.enqueue_system(lambda:self.recover_at_vat(player.id,vat.spec.id))
+                    return True
             if name == "recovery":
                 self.commerce.enqueue_system(lambda:self.recover_at_vat(player.id,str(args.get("target","")))); return True
             if key in ("b","B") and any(a.owner == actor.id and a.behaviour.get("training") for a in self.world.actors.values()):

@@ -4,6 +4,7 @@ Defenders return attributed events; reward proposals share Commerce's
 transaction outbox. Caller views expose costs and phases before an action.
 """
 
+from blacksite.server.interaction import Focus, Interaction
 from collections.abc import Callable
 from copy import deepcopy
 from dataclasses import dataclass
@@ -1223,8 +1224,19 @@ class Encounters:
             self.lat.interlock.start_flip(presence, row[8:])
         self.menus.pop(session.id, None)
 
+    def interaction(self, session: Session, presence: Presence) -> Interaction | None:
+        if session.id in self.menus:
+            return Interaction()
+        cell = self.lat.sectors.cells[presence.sector][presence.cell]
+        if presence.instance:
+            room = self.core(presence).graph.room(presence.room)
+            return Interaction(Focus(presence.instance+':'+room.id, room.label or room.id, 'inspect'), room, kind='encounter')
+        if cell.core_id or cell.kind == 'descent' or self.can_enter(presence, 'lat-wake-hall'):
+            return Interaction(Focus(presence.sector+':'+cell.id, cell.label, 'inspect'), cell, kind='encounter')
+        return None
+
     def input(self, session: Session, presence: Presence, name: str, action: str,
-              key: str, args: dict[str, Any], revision: int | None) -> bool:
+              key: str, args: dict[str, Any], revision: int | None, *, interaction: Interaction | None = None) -> bool:
         screen = self.menus.get(session.id)
         if screen:
             rows = self.rows(presence, screen)
@@ -1280,8 +1292,8 @@ class Encounters:
             presence.destination = presence.room_destination = None
         elif action == "interact" or key in ("e", "E"):
             self.inspect_contract(presence)
-            cell = self.lat.sectors.cells[presence.sector][presence.cell]
-            if presence.instance or cell.core_id or cell.kind == "descent" or self.can_enter(presence, "lat-wake-hall"):
+            choice = interaction or self.interaction(session, presence)
+            if choice and choice.kind == 'encounter':
                 self.menus[session.id] = EncounterMenu("room")
             else:
                 return False

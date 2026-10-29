@@ -1,5 +1,6 @@
 """Game 8.3: atomic world adapter for market and bounty proposals."""
 
+from blacksite.server.interaction import Interaction
 from collections.abc import Callable
 from copy import deepcopy
 from dataclasses import asdict, dataclass, field
@@ -296,8 +297,11 @@ class Trading:
             self.write(draft, session, finished)
         self.commerce.enqueue_system(prepare)
 
-    def input(self, session: Session, frame: Frame, tick: int) -> bool:
-        return self.views.input(session, frame, tick)
+    def interaction(self, session: Session, frame: Frame) -> Interaction | None:
+        return self.views.interaction(session, frame) if True else None
+
+    def input(self, session: Session, frame: Frame, tick: int, *, interaction: Interaction | None = None) -> bool:
+        return self.views.input(session, frame, tick, interaction=interaction)
 
     def admin(self, name: str, args: dict[str, Any], reply: Callable[[Any], None]) -> None:
         if name in ('market.list', 'bounty.list'):

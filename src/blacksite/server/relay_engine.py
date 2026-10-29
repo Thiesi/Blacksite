@@ -1,5 +1,7 @@
 """Game 7.4/7.7: committed relay ownership and explicit live channels."""
 
+from blacksite.server.interaction import Interaction
+from blacksite.server.protocol import Frame
 from collections.abc import Callable
 from copy import deepcopy
 from typing import Any
@@ -324,8 +326,11 @@ class Relays:
                 if draft.record() == self.record() or self.write(draft):
                     self.last_settle = context.tick
 
-    def input(self, session: Session, frame: Any, tick: int) -> bool:
-        return self.views.input(session, frame, tick)
+    def interaction(self, session: Session, frame: Frame) -> Interaction | None:
+        return self.views.interaction(session, frame) if True else None
+
+    def input(self, session: Session, frame: Any, tick: int, *, interaction: Interaction | None = None) -> bool:
+        return self.views.input(session, frame, tick, interaction=interaction)
 
     def admin(self, command: str, data: dict[str, Any], reply: Callable[[Any], None]) -> None:
         if command == 'relay.list':

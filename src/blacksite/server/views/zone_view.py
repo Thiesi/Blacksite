@@ -136,7 +136,7 @@ def build(actor: Actor, zone: ZoneInstance, perception: Perception, content: Con
                    "district": zone.template.meta.district,
                    "pvp": safety_at(zone, actor.position) == "open",
                    "clock": clock, "cooldowns": dict(actor.cooldowns), "effects": deepcopy(actor.effects)},
-            "target": None, "nearby": nearby,
+            "target": None, "nearby": nearby, "focus": None, "jack_focus": None,
             "crew": [], "event": None, "objective": None, "hazards": hazards,
             "service": None, "escape": {"routes": escapes, "action": "Ctrl-X leaves"},
             "hint": "Move: arrows  Shift: sprint  E interact  M map  ? help  Ctrl-X leave"}

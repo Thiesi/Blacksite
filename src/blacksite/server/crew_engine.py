@@ -1,5 +1,6 @@
 """Game 10: live social crew adapter, consent and authorized views."""
 
+from blacksite.server.interaction import Interaction
 from collections import deque
 from dataclasses import asdict, dataclass
 from dataclasses import replace
@@ -436,7 +437,10 @@ class Crews:
         self.sim.published.pop(session.id, None)
         session.needs_full_view = True
 
-    def input(self, session: Session, frame: Frame, tick: int) -> bool:
+    def interaction(self, session: Session, frame: Frame) -> Interaction | None:
+        return Interaction() if self.chat.ready(session) and session.id in self.menus else None
+
+    def input(self, session: Session, frame: Frame, tick: int, *, interaction: Interaction | None = None) -> bool:
         if not self.chat.ready(session):
             return False
         name = frame.data.get('name', '') if frame.type == 'intent' else ''

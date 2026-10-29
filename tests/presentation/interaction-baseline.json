@@ -1,0 +1,19 @@
+{
+  "source_base": "9907c90a66c036c0876803a180c22f9d53b403d3",
+  "reference_checkout": "4142cc31850be2daa8e68c480bc8c84569d65222",
+  "note": "Reference Python source is identical to source_base; both independent executions used the same matrix driver and content.",
+  "sha256": "05213f386e4ca644479f8ff80d43ca4e27ebd0acd0013e644b2072a9b9c59185",
+  "cases": 10704,
+  "handlers": {
+    "characters": 1468,
+    "combat": 108,
+    "commerce": 166,
+    "contracts": 72,
+    "factions": 18,
+    "interlock": 422,
+    "lattice": 8028,
+    "npcs": 30,
+    "relays": 36,
+    "terminal": 356
+  }
+}

@@ -1,5 +1,6 @@
 """NPC lifecycle, relations, legal combat and service interactions (5.5)."""
 
+from blacksite.server.interaction import Focus, Interaction, interact, object_interaction
 from collections.abc import Callable
 from copy import deepcopy
 from datetime import datetime, timezone
@@ -385,7 +386,29 @@ class Npcs:
             if behaviour.kind in ("guard", "warden"):
                 step_toward(actor, zone, tuple(actor.behaviour["home"]), tick, avoid=avoid)
 
-    def input(self, session: Session, frame: Frame, tick: int) -> bool:
+    def interaction(self, session: Session, frame: Frame) -> Interaction | None:
+        if session.id in self.menus:
+            return Interaction()
+        if not self.commerce.ready(session) or session.id in self.sim.external_views or not interact(frame):
+            return None
+        actor = self.sim.avatars[session.user_id].actor
+        zone = self.world.zones[actor.zone]
+        for other in sorted(zone.actors.values(), key=lambda a: (a.id != actor.target, a.id)):
+            template = self.content.npcs.get(other.behaviour.get('template'))
+            if other is actor or template is None or distance(actor.position, other.position) > 1.5 or other.stance == 'dead':
+                continue
+            if template.vendor:
+                counter = next((o for o in zone.objects.values() if o.spec.params.get('vendor') == template.vendor
+                                and distance(actor.position, o.spec.tile) <= 1.5), None)
+                if counter:
+                    choice = object_interaction(counter)
+                    return Interaction(choice.focus, ('vendor', counter), counter.spec.tile)
+            if any(b.kind == 'talker' for b in template.behaviours):
+                return Interaction(Focus(other.id, presentation.name(other, actor, self.content), 'talk to'),
+                                   ('talker', other), other.position, other.id)
+        return None
+
+    def input(self, session: Session, frame: Frame, tick: int, *, interaction: Interaction | None = None) -> bool:
         if session.id in self.menus:
             if (frame.type == "intent" and frame.data.get("name") == "menu_close") or (frame.type == "key" and frame.data.get("k") in ("b", "B", "escape")):
                 self.menus.discard(session.id)
@@ -397,21 +420,16 @@ class Npcs:
         if not ((frame.type == "key" and frame.data.get("k") in ("e", "E")) or (frame.type == "intent" and frame.data.get("name") == "interact")):
             return False
         actor = self.sim.avatars[session.user_id].actor
-        zone = self.world.zones[actor.zone]
-        for other in sorted(zone.actors.values(), key=lambda a: (a.id != actor.target, a.id)):
-            template = self.content.npcs.get(other.behaviour.get("template"))
-            if other is actor or template is None or distance(actor.position, other.position) > 1.5 or other.stance == "dead":
-                continue
-            if template.vendor:
-                counter = next((o for o in zone.objects.values() if o.spec.params.get("vendor") == template.vendor and distance(actor.position, o.spec.tile) <= 1.5), None)
-                if counter:
-                    self.commerce.menus[session.id] = CommerceMenu("vendor", counter.spec.id, opened=tick)
-                    return True
-            if any(b.kind == "talker" for b in template.behaviours):
-                self.menus.add(session.id)
-                self.sim.external_views[session.id] = "text", {"title": presentation.name(other, actor, self.content), "lines": ["Not yet."], "hint": "Esc/B returns"}
-                return True
-        return False
+        choice = interaction or self.interaction(session, frame)
+        if not choice:
+            return False
+        kind, target = choice.value
+        if kind == 'vendor':
+            self.commerce.menus[session.id] = CommerceMenu("vendor", target.spec.id, opened=tick)
+        else:
+            self.menus.add(session.id)
+            self.sim.external_views[session.id] = "text", {"title": presentation.name(target, actor, self.content), "lines": ["Not yet."], "hint": "Esc/B returns"}
+        return True
 
     def tick(self, ctx: TickContext) -> None:
         now = self.combat.now()

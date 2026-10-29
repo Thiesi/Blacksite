@@ -1,5 +1,6 @@
 """UI 11: server-owned contract cards, consent and acquired evidence."""
 
+from blacksite.server.interaction import Interaction, interact, object_interaction
 from dataclasses import dataclass
 from math import ceil
 import textwrap
@@ -397,7 +398,23 @@ class Panels:
                     owner.log(member, 'Contract proposal ready. Q opens its terms; A accepts.')
             panel.cursor, panel.page = 0, 0
 
-    def input(self, session: Session, frame: Frame, tick: int) -> bool:
+    def interaction(self, session: Session, frame: Frame) -> Interaction | None:
+        if session.player_id not in self.game.players:
+            return None
+        if session.id in self.menus:
+            return Interaction()
+        if (session.pending_prompts or session.id in self.game.screens or session.id in self.sim.maps
+                or session.id in self.sim.external_views and not self.owner.lat.location(session)):
+            return None
+        if interact(frame) and self.owner.commerce.ready(session):
+            actor = self.game.combat.actor(self.game.players[session.player_id])
+            objects = sorted((obj for obj in self.world_objects(actor)
+                              if obj.spec.params.get('contract_handler')), key=lambda obj: obj.spec.id)
+            if objects:
+                return object_interaction(objects[0])
+        return None
+
+    def input(self, session: Session, frame: Frame, tick: int, *, interaction: Interaction | None = None) -> bool:
         owner = self.owner
         if session.player_id not in self.game.players:
             return False
@@ -446,11 +463,9 @@ class Panels:
                 self.menus[session.id] = Panel(tick, target, handler, 'journal' if name == 'journal.open' else 'jobs')
                 return True
             if (name == 'interact' or key.lower() == 'e') and owner.commerce.ready(session):
-                actor = self.game.combat.actor(self.game.players[session.player_id])
-                objects = sorted((obj for obj in self.world_objects(actor)
-                    if obj.spec.params.get('contract_handler')), key=lambda obj: obj.spec.id)
-                if objects:
-                    target = objects[0].spec.id
+                choice = interaction or self.interaction(session, frame)
+                if choice:
+                    target = choice.value.spec.id
                     self.menus[session.id] = Panel(tick, target, self.station(session, target))
                     return True
         except (ValueError, KeyError, TypeError) as exc:

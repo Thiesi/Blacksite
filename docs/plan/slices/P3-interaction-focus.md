@@ -1,6 +1,6 @@
 # P3 — Interaction focus
 
-**Status:** planned
+**Status:** implementation in progress; wording acceptance pending
 **Primary model:** Opus · **Reviewer:** automated review, technical lead, presentation lead (wording)
 **Depends on:** P1 · **Milestone:** presentation track
 **Issue:** https://github.com/Thiesi/Blacksite/issues/94
@@ -68,3 +68,28 @@ approval of the wording.
 On a real terminal, the Wake Hall script at 80x24 and at 132x50 must
 show the hint line naming what E opens before E is pressed, and E must
 then do exactly that. Supply captures in three tiers.
+
+Run `python scripts/accept_p3_netbbs.py --root <fresh-directory>
+--door-python <installed-wheel-python> --show` from the committed
+worktree, with NetBBS available to the script interpreter. It creates a
+private node and world, checks that the native wheel matches the server
+source, and runs both sizes in all three colour tiers. It uses ordinary
+creation, movement, E, J and menu-close keys with normal NPCs, funds,
+rules and clock. The script's captures are evidence for the presentation
+lead's wording decision, not that decision itself.
+
+The dispatch matrix in `tests/presentation/interaction_matrix.py` adds
+the three fixture zones to the shipped game and covers them and the ten
+hub zones. It includes every authored object, exit and spawned NPC tile,
+and each tile's eight neighbours within zone bounds. Positions on an
+unwalkable object are declared input fixtures, not movement acceptance.
+Each point runs physical and loaned-rig presence states, E and J, as keys
+and intents: 10,704 cases. The outcome baseline was also executed against
+pre-P3 source; its provenance and digest are in
+`tests/presentation/interaction-baseline.json`.
+
+Additional consumers found beneath the plan's subsystem list are
+contract stage actions, work-order caches, and Lattice encounter menus.
+Clinics, drones and the skill menu under progression can also consume a
+key without a world target. They participate in the same composition.
+No E ordering, rule, number or mechanics fingerprint baseline changes.

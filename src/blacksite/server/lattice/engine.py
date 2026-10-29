@@ -4,6 +4,8 @@ The body remains in its physical zone. Only its owner's subscription and
 view change; the street continues to simulate and can still hurt it.
 """
 
+from blacksite.server.interaction import Focus, Interaction, interact, key_action, object_interaction
+from blacksite.server.views import presentation
 from collections.abc import Callable
 from math import ceil
 from typing import Any
@@ -230,7 +232,7 @@ class Lattice:
                 else:
                     self.reveal(player,presence.sector,cid,learn=True)
 
-    def jack_in(self, session: Session, target: str | None = None) -> None:
+    def jack_in(self, session: Session, target: str | None = None, *, choice: Interaction | None = None) -> None:
         player = self.game.players.get(session.player_id)
         avatar = self.sim.avatars.get(session.user_id)
         if not player or not avatar or avatar.actor.id != player.id or player.id in self.presences:
@@ -245,7 +247,7 @@ class Lattice:
         if self.combat.commerce.pending or self.combat.commerce.waiting or player.id in self.combat.casts:
             self.log(session, "Let your current action settle first.", True)
             return
-        terminal = self.terminal(actor, target)
+        terminal = choice.value if choice and choice.focus else self.terminal(actor, target)
         if target is not None and terminal is None:
             self.log(session, "Move next to that terminal.", True)
             return
@@ -394,7 +396,88 @@ class Lattice:
                 presence.move_until = min(presence.move_until, self.clock.now_tick()+
                     ceil(float(self.content.programs["prg_redline"].effect.amount)*TICK_HZ))
 
-    def input(self, session: Session, frame: Frame, tick: int) -> bool:
+    def jack_interaction(self, session: Session, target: str | None = None) -> Interaction:
+        """Physical jack selection, without loans, discovery, saves or setdefault."""
+        player = self.game.players.get(session.player_id)
+        avatar = self.sim.avatars.get(session.user_id)
+        if not player or not avatar or avatar.actor.id != player.id or player.id in self.presences:
+            return Interaction()
+        actor = avatar.actor
+        if (actor.zone is None or avatar.travel or actor.stance in ('down', 'dead', 'sleeper')
+                or session.id in self.game.screens or session.id in self.sim.maps
+                or session.id in self.combat.menus or session.id in self.combat.commerce.menus
+                or session.id in self.combat.commerce.prompts or self.combat.commerce.pending
+                or self.combat.commerce.waiting or player.id in self.combat.casts):
+            return Interaction()
+        terminal = self.terminal(actor, target)
+        if target is not None and terminal is None:
+            return Interaction()
+        slots = max(self.content.starts[player.archetype].rig_slots or 0, self.carried_slots(player))
+        if not terminal and not slots:
+            return Interaction()
+        zone = self.game.world.zones[actor.zone]
+        sector = terminal.spec.params.get('sector') if terminal else None
+        sector = sector or zone.template.meta.sector
+        if sector not in self.sectors.records:
+            return Interaction()
+        cell = str(terminal.spec.params.get('cell', self.sectors.entrance(sector))) if terminal else self.sectors.entrance(sector)
+        entry = self.sectors.cells[sector].get(cell)
+        if entry is None or entry.access_kind != 'public':
+            return Interaction()
+        if terminal:
+            choice = object_interaction(terminal, 'jack in at')
+            mobile = self.game.world.actors.get(terminal.spec.id)
+            if mobile:
+                return Interaction(Focus(mobile.id, presentation.name(mobile, actor, self.content), 'jack in at'),
+                                   terminal, mobile.position, mobile.id)
+            return choice
+        return Interaction(Focus(actor.id, 'carried rig', 'jack in with'), None, actor.position)
+
+    def interaction(self, session: Session, frame: Frame) -> Interaction | None:
+        action = key_action(self.sim.keymap, session, frame)
+        player = self.game.players.get(session.player_id)
+        presence = self.presences.get(session.player_id)
+        # input's modifier sync forces out a non-loaned presence after rig loss.
+        if presence and player and not presence.loaned_rig and not max(
+                self.content.starts[player.archetype].rig_slots or 0, self.carried_slots(player)):
+            presence = None
+        if presence and presence.jack_source and (presence.link_failed or self.mobile_link_status(presence) != 'ready'):
+            return Interaction()
+        if session.pending_prompts.get('chat'):
+            return None
+        if presence:
+            actor = self.sim.avatars[session.user_id].actor
+            if actor.stance in ('down', 'dead'):
+                return None  # input leaves the Lattice before falling through.
+            if self.social_overlay(session):
+                return Interaction()
+            if action == 'jack':
+                return Interaction(Focus(actor.id, 'street', 'jack out to'), actor, actor.position)
+            choice = self.encounters.interaction(session, presence)
+            if choice:
+                return choice
+            cell = self.sectors.cells[presence.sector][presence.cell]
+            if cell.uplink:
+                return Interaction(Focus(presence.sector+':'+cell.id, cell.label, 'use link at'), cell, kind='uplink')
+            return Interaction()
+        if action == 'jack':
+            return self.jack_interaction(session, frame.data.get('args', {}).get('target'))
+        return None
+
+    def terminal_interaction(self, session: Session, frame: Frame) -> Interaction | None:
+        if not (interact(frame) or key_action(self.sim.keymap, session, frame) == 'interact'):
+            return None
+        avatar = self.sim.avatars.get(session.user_id)
+        if avatar and avatar.actor.zone:
+            actor = avatar.actor
+            if any(obj.spec.tile == actor.position and obj.spec.kind not in ('terminal', 'light', 'camera', 'salvage_field')
+                   for obj in self.game.world.zones[actor.zone].objects.values()):
+                return None
+            if self.terminal(actor):
+                return self.jack_interaction(session)
+        return None
+
+    def input(self, session: Session, frame: Frame, tick: int, *, interaction: Interaction | None = None) -> bool:
         player = self.game.players.get(session.player_id)
         if player:
             self.sync_player_modifiers(player)
@@ -425,7 +508,7 @@ class Lattice:
                     self.encounters.menus.pop(session.id, None)
                     self.jack_out(session)
                 elif self.encounters.input(session, presence, name, action, key, args,
-                                           frame.data.get("expected_revision")):
+                                           frame.data.get("expected_revision"), interaction=interaction):
                     pass
                 elif name == "lat.move":
                     sector, cell = args.get("sector", presence.sector), args.get("cell")
@@ -440,7 +523,8 @@ class Lattice:
                     if target:
                         self.move(session, presence.sector, target)
                 elif action == "interact" or key in ("e", "E"):
-                    cell = self.sectors.cells[presence.sector][presence.cell]
+                    cell = (interaction.value if interaction and interaction.kind == 'uplink'
+                            else self.sectors.cells[presence.sector][presence.cell])
                     if cell.uplink:
                         self.move(session, cell.uplink.sector, cell.uplink.cell)
                     elif cell.kind == "core_entrance":
@@ -459,13 +543,13 @@ class Lattice:
         if action == "jack" or name == "lat.jack_in":
             target = args.get("target")
             if target is None or isinstance(target, str):
-                self.jack_in(session, target)
+                self.jack_in(session, target, choice=interaction)
             return True
         if name.startswith("lat."):
             return True
         return False
 
-    def terminal_input(self, session: Session, frame: Frame, tick: int) -> bool:
+    def terminal_input(self, session: Session, frame: Frame, tick: int, *, interaction: Interaction | None = None) -> bool:
         """Fallback E interaction after counters, recovery and NPC services.
 
         J remains an explicit jack action. Sharing a tile or adjacency
@@ -476,19 +560,9 @@ class Lattice:
         table = next((m for m in self.sim.keymap.get("keymaps", []) if m["id"] == session.keymap_id), {})
         action = next((a for a, keys in table.get("bindings", {}).items() if key in keys), name)
         if action == "interact" or key in ("e", "E"):
-            avatar = self.sim.avatars.get(session.user_id)
-            if avatar and avatar.actor.zone:
-                actor = avatar.actor
-                # This is fallback Interact. An authored physical prop
-                # underfoot must reach the ordinary world handler, rather
-                # than being stolen by an adjacent network terminal. Passive
-                # markers must not intercept E (S25a / game 5.6).
-                if any(obj.spec.tile == actor.position and obj.spec.kind not in ('terminal', 'light', 'camera', 'salvage_field')
-                       for obj in self.game.world.zones[actor.zone].objects.values()):
-                    return False
-                if not self.terminal(actor):
-                    return False
-                self.jack_in(session)
+            choice = interaction or self.terminal_interaction(session, frame)
+            if choice:
+                self.jack_in(session, choice=choice)
                 return True
         return False
 
