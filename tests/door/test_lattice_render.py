@@ -11,7 +11,7 @@ from blacksite.door.model import Display
 from blacksite.server.protocol import Frame, encode
 from tests.character_helpers import act, create, place
 from tests.fake_terminal import FakeTerminal
-from tests.harness import HeadlessServer
+from tests.harness import HeadlessServer, LATTICE_PEER
 
 
 @pytest.fixture(scope="module")
@@ -19,7 +19,7 @@ def sector_views():
     content = load_content(Path(__file__).parents[2]/"src/blacksite/content")
     game = HeadlessServer(content, character_state={})
     callers = []
-    for uid, name, tile in ((1, "First", (30, 5)), (2, "Runner界", (31, 6))):
+    for uid, name, tile in ((1, "First", (30, 5)), (2, LATTICE_PEER.text, (31, 6))):
         caller = game.connect({"user_id": uid, "handle": f"BBS界{uid}", "node_name": "test"})
         create(game, caller, archetype=0, name=name, card="none")
         place(game, caller, "core-plaza", tile)

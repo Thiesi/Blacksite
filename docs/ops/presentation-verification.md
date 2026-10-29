@@ -1,8 +1,8 @@
 # Presentation verification (P1)
 
 P1 adds tools around the shipped door. It changes no renderer, rule,
-palette, map or caller flow. Its current work is incomplete pending the
-CP437 decision in [issue #76][cp437]. No human approval follows from a
+palette, map or caller flow. Its current work awaits prerequisite #86
+and technical review under the decision in [issue #76][cp437]. No human approval follows from a
 packet or a test result.
 
 ## Baselines and explicit regeneration
@@ -55,14 +55,30 @@ Replay `.ans` files in order, beginning at `0000`; later frames may be
 deltas. Artifacts are headless captures, not screenshots or live NetBBS
 play. PNG generation is optional and is not part of pytest.
 
-The strict command returns 2 for a non-round-tripping cell. It checks
-every frame and every cell, including user text. Existing goldens contain
-the authored Lattice glyph U+2506 and the wide caller-name fixture U+754C.
-Both currently fail. Nothing in P1 exempts them, picks a replacement,
-changes canon or waives acceptance. The dedicated CI packet job remains
-red until the owning decision and correction are made. Without
-`--strict-cp437`, the builder still reports `cp437_pass: false`; that mode
-is evidence collection only, not a passing CP437 gate.
+The strict command returns 2 for a non-round-tripping authored cell. It
+checks every frame. `tests/harness.py` declares the caller-input fixture
+strings once. The golden harness tracks only caller-owned source fields:
+the drop-file handle, zone avatar name/handle and Lattice peer names.
+It rerenders the same display state with width-preserving substitutions
+at those sources; comparing the two terminal grids identifies exactly
+which cells came from those inputs, including wide continuation cells.
+Primary ANSI bytes and glyph/style snapshots are unchanged. No runtime
+renderer or server rule is patched by this test-only provenance step.
+
+Frame JSON lists the caller cells and their source declarations.
+`caller_input_cell_count` is informational, separate from
+`cp437_checked_cells` and `cp437_problems`; context and summary counts
+sum cell observations across frames. Caller cells are neither CP437
+passes nor failures. There is no code-point list or search that exempts
+identical text in an authored field. A regression draws the exact same
+wide string as caller input and authored body copy and proves only the
+caller cells are excluded. Unprovenanced Unicode remains checked.
+
+The authored Lattice U+2506 is fixed by #86 before P1 merges; P1 then
+rebases and regenerates style snapshots for that approved rendering fix.
+Until then its strict job remains red for that authored glyph. P1 makes
+no replacement choice or rendering change. Omitting `--strict-cp437`
+collects evidence but does not turn reported failures into a passing gate.
 
 ## CPU and byte measurements
 
@@ -140,4 +156,4 @@ structured text data retain the full matrix even in drafts.
 The ready-for-review transition explicitly runs the full matrix. P1's
 own workflow/tools changes use the full matrix. No label skips checks.
 
-[cp437]: https://github.com/Thiesi/Blacksite/issues/76#issuecomment-6483318963
+[cp437]: https://github.com/Thiesi/Blacksite/issues/76#issuecomment-6485149621

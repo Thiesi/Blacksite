@@ -18,7 +18,7 @@ CASES = ['tests/door/test_display.py::test_golden_screens',
 def main() -> int:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument('--output', type=Path, required=True)
-    parser.add_argument('--strict-cp437', action='store_true', help='Fail on every non-round-tripping cell, including user text')
+    parser.add_argument('--strict-cp437', action='store_true', help='Fail on every non-round-tripping authored cell')
     args = parser.parse_args()
     output = args.output.resolve()
     if output.exists() and any(output.iterdir()):
@@ -41,7 +41,9 @@ def main() -> int:
         'dirty': bool(subprocess.check_output(['git', 'status', '--porcelain'], cwd=ROOT)),
         'cases': len(contexts), 'glyph_style_pass': True, 'cp437_pass': not failed,
         'cp437_failures': failed, 'human_approval': False,
-        'cp437_policy': 'all rendered cells; no exemptions; existing failures remain visible pending #76'}
+        'caller_input_cell_count': sum(c['caller_input_cell_count'] for c in contexts),
+        'cp437_checked_cells': sum(c['cp437_checked_cells'] for c in contexts),
+        'cp437_policy': 'authored cells checked strictly; declared caller-input cells counted separately by source (#76)'}
     (output/'summary.json').write_text(json.dumps(summary, ensure_ascii=False, indent=2)+'\n', encoding='utf-8')
     print(json.dumps({'cases': len(contexts), 'cp437_pass': not failed, 'failed_cases': len(failed)}))
     return 2 if args.strict_cp437 and failed else 0

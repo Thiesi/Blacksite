@@ -14,6 +14,10 @@ from tests.ansi_style import Rendition
 from tests.fake_terminal import FakeTerminal
 from tests.presentation.mechanics import fingerprint, walk, zone_seed
 from tests.presentation.snapshots import assert_golden, canonical, cp437_problems, snapshot, write_packet
+from blacksite.door.doorinfo import DoorInfo
+from blacksite.door.model import Display
+from blacksite.server.protocol import Frame
+from tests.harness import WIDE_HANDLE
 
 
 @pytest.fixture(scope='module')
@@ -79,13 +83,39 @@ def test_mechanics_baseline(content: ContentTree, request: pytest.FixtureRequest
     assert path.read_text(encoding='utf-8') == current, 'mechanics fingerprint differs; explain any approved rebaseline'
 
 
-def test_cp437_gate_checks_every_cell_and_never_exempts_user_text(tmp_path: Path) -> None:
+def test_cp437_gate_rejects_unprovenanced_unicode(tmp_path: Path) -> None:
     terminal = FakeTerminal()
     terminal.write('┆界'.encode('utf-8'))
     problems = cp437_problems(terminal)
     assert [p['codepoints'] for p in problems] == [['U+2506'], ['U+754C']]
     write_packet(tmp_path, terminal, {'scenario': 'strict-cp437'})
     assert json.loads((tmp_path/'context.json').read_text(encoding='utf-8'))['cp437_pass'] is False
+
+
+def test_caller_provenance_excludes_only_input_cells_and_preserves_authored_identical_text(
+        caller_provenance: None, tmp_path: Path) -> None:
+    info = DoorInfo(tmp_path/'unused', tmp_path, {'handle': WIDE_HANDLE.text}, 80, 24, '256', 3600)
+    display = Display(info)
+    display.receive(Frame('view', {'rev': 1, 'kind': 'text',
+        'body': {'title': 'AUTHORED', 'lines': [WIDE_HANDLE.text]}}), 0)
+    terminal = FakeTerminal()
+    terminal.write(display.render(0)[0])
+    problems = cp437_problems(terminal)
+    assert len(problems) == 1 and problems[0]['codepoints'] == ['U+754C']
+    assert problems[0]['y'] != 0  # Identical body text stays authored.
+    assert len(terminal.caller_cells) == 6  # Four ASCII cells plus both wide cells.
+    assert {(x, y) for x, y in terminal.caller_cells if y != 0} == set()
+    write_packet(tmp_path/'packet', terminal, {'scenario': 'source-not-character'})
+    report = json.loads((tmp_path/'packet/context.json').read_text(encoding='utf-8'))
+    assert report['caller_input_cell_count'] == 6
+    assert report['cp437_pass'] is False
+    # An ordinary redraw must clear provenance where input is no longer
+    # present, while the identical authored line remains checked.
+    display.info = replace(info, raw={'handle': 'plain'})
+    display.dirty = True
+    terminal.write(display.render(1)[0])
+    assert not terminal.caller_cells
+    assert len(cp437_problems(terminal)) == 1
 
 
 def test_packet_replays_actual_delta_bytes_and_styles(tmp_path: Path) -> None:

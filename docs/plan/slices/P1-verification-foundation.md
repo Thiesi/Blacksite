@@ -1,6 +1,6 @@
 # P1 — Verification foundation for presentation work
 
-**Status:** in progress (CP437 acceptance decision pending in #76)
+**Status:** in progress (awaiting #86 merge and technical review)
 **Primary model:** Sonnet · **Reviewer:** automated review, technical lead
 **Depends on:** none · **Milestone:** presentation track
 **Issue:** https://github.com/Thiesi/Blacksite/issues/76
@@ -50,11 +50,14 @@ fail a style golden and not the fingerprint.
 
 Automated review and technical review.
 
-The existing authored U+2506 and wide caller fixture U+754C fail the
-strict CP437 check. The [scope decision][cp437] remains pending; no
-rendering correction or acceptance exception is part of this work.
+The [scope decision][cp437] assigns authored U+2506 to prerequisite #86.
+P1 rebases onto that fix after it merges. The audit excludes exactly the
+cells reached by declared caller-supplied fixture strings, by source;
+their informational count is separate from passes and failures. An
+authored instance of the same text still fails. There is no code-point
+or known-violation allowlist, and no rendering correction in P1 itself.
 Commands and evidence boundaries: [verification guide][guide].
 
 [cpu]: https://github.com/Thiesi/Blacksite/issues/76#issuecomment-6478100282
-[cp437]: https://github.com/Thiesi/Blacksite/issues/76#issuecomment-6483318963
+[cp437]: https://github.com/Thiesi/Blacksite/issues/76#issuecomment-6485149621
 [guide]: ../../ops/presentation-verification.md

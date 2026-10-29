@@ -15,6 +15,7 @@ from tests.door.test_lattice_render import draw
 from tests.lattice.test_engine import jack, runners
 from tests.lattice.test_encounters import enter
 from tests.lattice.test_silt_encounters import descend
+from tests.harness import ENCOUNTER_PEER
 
 
 def encounter_views():
@@ -23,7 +24,7 @@ def encounter_views():
     lattice = game.core.lattice
     first, second = enter(game, a, 'lat-civic-ledger'), enter(game, b, 'lat-civic-ledger')
     first.room = second.room = 'r-foyer'
-    game.core.characters.players[second.player_id].name = 'Guest\u754c'
+    game.core.characters.players[second.player_id].name = ENCOUNTER_PEER.text
     ice = lattice.encounters.defenders(first)[0]
     first.target = ice.id
     lattice.encounters.start_cast(first, 'prg_pick', ice.id)

@@ -11,6 +11,9 @@ import pytest
 
 from tests.presentation.snapshots import assert_golden
 from tests.fake_terminal import FakeTerminal
+from blacksite.door.model import Display
+from tests.presentation.provenance import render_with_provenance
+from blacksite.server.protocol import Frame
 
 
 class Golden(Protocol):
@@ -23,7 +26,15 @@ def pytest_addoption(parser: pytest.Parser) -> None:
 
 
 @pytest.fixture
-def golden(request: pytest.FixtureRequest) -> Golden:
+def caller_provenance(monkeypatch: pytest.MonkeyPatch) -> None:
+    render = Display.render
+    def tracked(model: Display, now: float) -> tuple[bytes, Frame | None]:
+        return render_with_provenance(render, model, now)
+    monkeypatch.setattr(Display, 'render', tracked)
+
+
+@pytest.fixture
+def golden(request: pytest.FixtureRequest, caller_provenance: None) -> Golden:
     def check(name: str, terminal: FakeTerminal, tier: str, *, trim: bool = False) -> None:
         assert_golden(REPO_ROOT/'tests/door/golden', name, terminal, tier,
             update=request.config.getoption('--update-goldens'), trim=trim,

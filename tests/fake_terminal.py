@@ -15,6 +15,9 @@ class FakeTerminal:
         self.renditions: dict[tuple[int, int], Rendition] = {}
         self.rendition = Rendition()
         self.frames: list[bytes] = []
+        self.caller_cells: set[tuple[int, int]] = set()
+        self.caller_inputs: list[dict[str, str]] = []
+        self._caller_shadow: FakeTerminal | None = None
         self.x = self.y = 0
         self.pending = ""
         self.decoder = codecs.getincrementaldecoder("utf-8")()
@@ -23,6 +26,11 @@ class FakeTerminal:
         self.cursor_visible = True
 
     def write(self, data: bytes) -> None:
+        if hasattr(data, 'caller_shadow') and self._caller_shadow is None:
+            self._caller_shadow = FakeTerminal(self.width, self.height)
+        if self._caller_shadow is not None:
+            self._caller_shadow.write(getattr(data, 'caller_shadow', data))
+            self.caller_inputs = getattr(data, 'caller_inputs', [])
         self.frames.append(data)
         self.written.extend(data)
         self.pending += self.decoder.decode(data)
@@ -80,6 +88,12 @@ class FakeTerminal:
                 self.grid[self.y][self.x + 1] = ""
                 self.renditions[self.x+1, self.y] = self.rendition
             self.x += size
+        if self._caller_shadow is not None:
+            self.caller_cells = {(x, y) for y, row in enumerate(self.grid) for x, glyph in enumerate(row)
+                if glyph != self._caller_shadow.grid[y][x]}
+            # A wide glyph owns both its leading and continuation cell.
+            self.caller_cells |= {(x+1, y) for x, y in self.caller_cells
+                if x+1 < self.width and self.grid[y][x+1] == ''}
 
     def cell(self, x: int, y: int) -> str:
         return self.grid[y][x]
