@@ -100,13 +100,34 @@ improvements. The CI artifact `p1-shipped-door-baseline` is the hosted
 Linux reference for its exact checked-out revision; local reports remain
 host-specific. A green recording job does not mean all targets passed.
 
+The first clean-head [Windows baseline][local] records commit `325576b`,
+Python 3.12.10, Windows 11 and an Intel Family 6 Model 186 host. This is a
+local measurement, not the hosted Linux reference or native acceptance.
+CPU seconds per hour, before rounding the activity contributions:
+
+| Size | 16 colours | 256 colours | Truecolour |
+|---|---:|---:|---:|
+| 80x24 | 97.9 | 88.8 | 61.6 |
+| 132x50 | 128.9 | 150.7 | 144.1 |
+
+All three 132x50 cases miss 120 seconds/hour. On its deterministic frame
+route, full redraw maxima range from 4,143 to 15,086 bytes, delta maxima
+from 1,010 to 2,075 bytes, and worst render p95 is 22.2 ms. These sampled
+routes do not bound every screen or gameplay activity.
+
+[local]: baselines/p1-windows-325576b.json
+
 ## Native scope in CI
 
-Draft PRs changing only `door/`, text/art or palette/glyph content, with
-supporting tests, run S04's registered native stdio door at 80x24 and
+Draft PRs changing only the display modules (`model`, `cells`, `screens`,
+`layout`, `palette`, `log` and `views/`), Markdown/plain text, art or
+palette/glyph content, with supporting tests, run S04's registered
+native stdio door at 80x24 and
 132x50 through Telnet, SSH and WebSocket. Scope is classified from the
 trusted base revision. Missing classifiers, uncertain paths, non-draft
 PRs and changes outside the allowlist retain the full existing matrix.
+Other door code (transport, raw input, startup and drop-file parsing) and
+structured text data retain the full matrix even in drafts.
 The ready-for-review transition explicitly runs the full matrix. P1's
 own workflow/tools changes use the full matrix. No label skips checks.
 

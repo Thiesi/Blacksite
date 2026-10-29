@@ -1,0 +1,2327 @@
+{
+  "schema": 1,
+  "created_utc": "2026-10-29T00:34:16.450400+00:00",
+  "head": "325576ba13ad198bd8a5a3eeba0d6260d76cf12b",
+  "dirty": false,
+  "platform": "Windows-11-10.0.26220-SP0",
+  "processor": "Intel64 Family 6 Model 186 Stepping 2, GenuineIntel",
+  "python": "3.12.10 (tags/v3.12.10:0cc8128, Apr  8 2025, 12:21:36) [MSC v.1943 64 bit (AMD64)]",
+  "mechanics_sha256": "57ee7fd5c21559c211743f314eac120c87027eab4ba38dab3a0f37897696bfcb",
+  "mix": "v1-provisional",
+  "minutes": {
+    "walking in a scene place": 10,
+    "walking where there is no scene": 20,
+    "standing, a few stops a minute": 15,
+    "menus, text and help": 15
+  },
+  "sample_seconds": 12.0,
+  "reference_duration": true,
+  "cpu_boundary": "process CPU around Display.receive/key/update/render; server, harness, protocol codecs, socket/stdin pumps and terminal replay excluded; warm-up excluded; no background painter in shipped door",
+  "comparison": "V1 weights, starts, keys and real-time schedule; shipped content only, isolated NPCs, no trial overlay; both walking categories use shipped map; V1 measured wall duration of method calls, P1 records actual process CPU",
+  "targets": {
+    "render_p95_ms": 100,
+    "delta_bytes": 16384,
+    "cpu_s_per_hour": 120
+  },
+  "policy": "baseline only: report existing budget misses; no optimization or acceptance waiver",
+  "cases": [
+    {
+      "size": [
+        80,
+        24
+      ],
+      "tier": "16",
+      "glyph_tier": "cp437",
+      "frames": {
+        "samples": [
+          {
+            "kind": "full",
+            "bytes": 4143,
+            "render_wall_ms": 9.5623,
+            "update_render_cpu_ms": 0.0
+          },
+          {
+            "kind": "delta",
+            "bytes": 776,
+            "render_wall_ms": 9.2383,
+            "update_render_cpu_ms": 15.625
+          },
+          {
+            "kind": "delta",
+            "bytes": 791,
+            "render_wall_ms": 11.4368,
+            "update_render_cpu_ms": 0.0
+          },
+          {
+            "kind": "delta",
+            "bytes": 790,
+            "render_wall_ms": 10.12,
+            "update_render_cpu_ms": 15.625
+          },
+          {
+            "kind": "delta",
+            "bytes": 790,
+            "render_wall_ms": 15.7036,
+            "update_render_cpu_ms": 15.625
+          },
+          {
+            "kind": "delta",
+            "bytes": 790,
+            "render_wall_ms": 12.9404,
+            "update_render_cpu_ms": 15.625
+          },
+          {
+            "kind": "delta",
+            "bytes": 789,
+            "render_wall_ms": 21.5498,
+            "update_render_cpu_ms": 31.25
+          },
+          {
+            "kind": "delta",
+            "bytes": 794,
+            "render_wall_ms": 11.524,
+            "update_render_cpu_ms": 15.625
+          },
+          {
+            "kind": "delta",
+            "bytes": 796,
+            "render_wall_ms": 11.1523,
+            "update_render_cpu_ms": 15.625
+          },
+          {
+            "kind": "delta",
+            "bytes": 796,
+            "render_wall_ms": 11.4419,
+            "update_render_cpu_ms": 0.0
+          },
+          {
+            "kind": "delta",
+            "bytes": 794,
+            "render_wall_ms": 12.6451,
+            "update_render_cpu_ms": 15.625
+          },
+          {
+            "kind": "delta",
+            "bytes": 791,
+            "render_wall_ms": 11.2207,
+            "update_render_cpu_ms": 15.625
+          },
+          {
+            "kind": "delta",
+            "bytes": 790,
+            "render_wall_ms": 13.0833,
+            "update_render_cpu_ms": 15.625
+          },
+          {
+            "kind": "delta",
+            "bytes": 790,
+            "render_wall_ms": 13.5161,
+            "update_render_cpu_ms": 0.0
+          },
+          {
+            "kind": "delta",
+            "bytes": 790,
+            "render_wall_ms": 9.7524,
+            "update_render_cpu_ms": 15.625
+          },
+          {
+            "kind": "delta",
+            "bytes": 791,
+            "render_wall_ms": 11.1798,
+            "update_render_cpu_ms": 15.625
+          },
+          {
+            "kind": "delta",
+            "bytes": 779,
+            "render_wall_ms": 9.1263,
+            "update_render_cpu_ms": 0.0
+          },
+          {
+            "kind": "delta",
+            "bytes": 776,
+            "render_wall_ms": 13.6352,
+            "update_render_cpu_ms": 15.625
+          },
+          {
+            "kind": "delta",
+            "bytes": 791,
+            "render_wall_ms": 8.4191,
+            "update_render_cpu_ms": 15.625
+          },
+          {
+            "kind": "delta",
+            "bytes": 790,
+            "render_wall_ms": 12.1583,
+            "update_render_cpu_ms": 15.625
+          },
+          {
+            "kind": "delta",
+            "bytes": 790,
+            "render_wall_ms": 6.3456,
+            "update_render_cpu_ms": 0.0
+          },
+          {
+            "kind": "delta",
+            "bytes": 790,
+            "render_wall_ms": 10.9849,
+            "update_render_cpu_ms": 15.625
+          },
+          {
+            "kind": "delta",
+            "bytes": 789,
+            "render_wall_ms": 11.5429,
+            "update_render_cpu_ms": 0.0
+          },
+          {
+            "kind": "delta",
+            "bytes": 794,
+            "render_wall_ms": 9.0674,
+            "update_render_cpu_ms": 15.625
+          },
+          {
+            "kind": "delta",
+            "bytes": 796,
+            "render_wall_ms": 9.4834,
+            "update_render_cpu_ms": 15.625
+          },
+          {
+            "kind": "delta",
+            "bytes": 796,
+            "render_wall_ms": 7.6153,
+            "update_render_cpu_ms": 15.625
+          },
+          {
+            "kind": "delta",
+            "bytes": 794,
+            "render_wall_ms": 10.032,
+            "update_render_cpu_ms": 0.0
+          },
+          {
+            "kind": "delta",
+            "bytes": 791,
+            "render_wall_ms": 7.3769,
+            "update_render_cpu_ms": 0.0
+          },
+          {
+            "kind": "delta",
+            "bytes": 790,
+            "render_wall_ms": 8.4503,
+            "update_render_cpu_ms": 0.0
+          },
+          {
+            "kind": "delta",
+            "bytes": 790,
+            "render_wall_ms": 7.9179,
+            "update_render_cpu_ms": 0.0
+          },
+          {
+            "kind": "delta",
+            "bytes": 790,
+            "render_wall_ms": 8.2904,
+            "update_render_cpu_ms": 15.625
+          },
+          {
+            "kind": "delta",
+            "bytes": 791,
+            "render_wall_ms": 7.0551,
+            "update_render_cpu_ms": 0.0
+          },
+          {
+            "kind": "delta",
+            "bytes": 779,
+            "render_wall_ms": 6.2233,
+            "update_render_cpu_ms": 15.625
+          },
+          {
+            "kind": "delta",
+            "bytes": 776,
+            "render_wall_ms": 6.6889,
+            "update_render_cpu_ms": 0.0
+          },
+          {
+            "kind": "delta",
+            "bytes": 791,
+            "render_wall_ms": 5.9697,
+            "update_render_cpu_ms": 15.625
+          },
+          {
+            "kind": "delta",
+            "bytes": 1010,
+            "render_wall_ms": 9.765,
+            "update_render_cpu_ms": 0.0
+          },
+          {
+            "kind": "delta",
+            "bytes": 790,
+            "render_wall_ms": 6.4141,
+            "update_render_cpu_ms": 0.0
+          },
+          {
+            "kind": "delta",
+            "bytes": 790,
+            "render_wall_ms": 5.7565,
+            "update_render_cpu_ms": 0.0
+          },
+          {
+            "kind": "delta",
+            "bytes": 789,
+            "render_wall_ms": 7.5182,
+            "update_render_cpu_ms": 15.625
+          },
+          {
+            "kind": "delta",
+            "bytes": 794,
+            "render_wall_ms": 5.17,
+            "update_render_cpu_ms": 0.0
+          },
+          {
+            "kind": "delta",
+            "bytes": 796,
+            "render_wall_ms": 5.8704,
+            "update_render_cpu_ms": 0.0
+          }
+        ],
+        "summary": {
+          "full": {
+            "bytes": {
+              "count": 1,
+              "p50": 4143,
+              "p95": 4143,
+              "max": 4143
+            },
+            "render_wall_ms": {
+              "count": 1,
+              "p50": 9.5623,
+              "p95": 9.5623,
+              "max": 9.5623
+            },
+            "update_render_cpu_ms": {
+              "count": 1,
+              "p50": 0.0,
+              "p95": 0.0,
+              "max": 0.0
+            }
+          },
+          "delta": {
+            "bytes": {
+              "count": 40,
+              "p50": 790,
+              "p95": 796,
+              "max": 1010
+            },
+            "render_wall_ms": {
+              "count": 40,
+              "p50": 9.4834,
+              "p95": 13.6352,
+              "max": 21.5498
+            },
+            "update_render_cpu_ms": {
+              "count": 40,
+              "p50": 15.625,
+              "p95": 15.625,
+              "max": 31.25
+            }
+          }
+        },
+        "successful_moves": 40,
+        "door_cpu_ms": 500.0,
+        "calls": {
+          "key": 41,
+          "update": 81,
+          "render": 81,
+          "receive": 40
+        },
+        "delta_16kib_pass": true,
+        "render_p95_100ms_pass": true
+      },
+      "activities": {
+        "walking in a scene place": {
+          "zone": "sodium-tin-halo",
+          "view": "shipped map or local help",
+          "elapsed_s": 12.09399999998277,
+          "ticks": 113,
+          "key_steps": 56,
+          "successful_moves": 22,
+          "cpu_s": 0.4375,
+          "cpu_s_per_minute": 2.170497767491103,
+          "calls": {
+            "update": 113,
+            "render": 113,
+            "key": 56,
+            "receive": 22
+          },
+          "output_frames": 75,
+          "output_bytes": 13651
+        },
+        "walking where there is no scene": {
+          "zone": "sodium-row",
+          "view": "shipped map or local help",
+          "elapsed_s": 12.061999999976251,
+          "ticks": 107,
+          "key_steps": 53,
+          "successful_moves": 52,
+          "cpu_s": 0.765625,
+          "cpu_s_per_minute": 3.8084480185782166,
+          "calls": {
+            "update": 107,
+            "render": 107,
+            "key": 53,
+            "receive": 52
+          },
+          "output_frames": 102,
+          "output_bytes": 41590
+        },
+        "standing, a few stops a minute": {
+          "zone": "sodium-tin-halo",
+          "view": "shipped map or local help",
+          "elapsed_s": 12.062999999965541,
+          "ticks": 118,
+          "key_steps": 0,
+          "successful_moves": 0,
+          "cpu_s": 0.0,
+          "cpu_s_per_minute": 0.0,
+          "calls": {
+            "update": 118,
+            "render": 118
+          },
+          "output_frames": 1,
+          "output_bytes": 238
+        },
+        "menus, text and help": {
+          "zone": "sodium-tin-halo",
+          "view": "shipped map or local help",
+          "elapsed_s": 12.063000000023749,
+          "ticks": 118,
+          "key_steps": 0,
+          "successful_moves": 0,
+          "cpu_s": 0.0,
+          "cpu_s_per_minute": 0.0,
+          "calls": {
+            "key": 1,
+            "update": 118,
+            "render": 118
+          },
+          "output_frames": 1,
+          "output_bytes": 1580
+        }
+      },
+      "cpu_s_per_hour": 97.87393804647536,
+      "cpu_120s_per_hour_pass": true
+    },
+    {
+      "size": [
+        80,
+        24
+      ],
+      "tier": "256",
+      "glyph_tier": "cp437",
+      "frames": {
+        "samples": [
+          {
+            "kind": "full",
+            "bytes": 5588,
+            "render_wall_ms": 6.5072,
+            "update_render_cpu_ms": 15.625
+          },
+          {
+            "kind": "delta",
+            "bytes": 1058,
+            "render_wall_ms": 6.9132,
+            "update_render_cpu_ms": 0.0
+          },
+          {
+            "kind": "delta",
+            "bytes": 1079,
+            "render_wall_ms": 54.7984,
+            "update_render_cpu_ms": 46.875
+          },
+          {
+            "kind": "delta",
+            "bytes": 1078,
+            "render_wall_ms": 11.223,
+            "update_render_cpu_ms": 0.0
+          },
+          {
+            "kind": "delta",
+            "bytes": 1078,
+            "render_wall_ms": 8.8204,
+            "update_render_cpu_ms": 15.625
+          },
+          {
+            "kind": "delta",
+            "bytes": 1078,
+            "render_wall_ms": 9.1893,
+            "update_render_cpu_ms": 0.0
+          },
+          {
+            "kind": "delta",
+            "bytes": 1079,
+            "render_wall_ms": 11.9852,
+            "update_render_cpu_ms": 15.625
+          },
+          {
+            "kind": "delta",
+            "bytes": 1082,
+            "render_wall_ms": 10.3112,
+            "update_render_cpu_ms": 0.0
+          },
+          {
+            "kind": "delta",
+            "bytes": 1084,
+            "render_wall_ms": 11.3227,
+            "update_render_cpu_ms": 15.625
+          },
+          {
+            "kind": "delta",
+            "bytes": 1084,
+            "render_wall_ms": 10.1424,
+            "update_render_cpu_ms": 0.0
+          },
+          {
+            "kind": "delta",
+            "bytes": 1082,
+            "render_wall_ms": 8.4704,
+            "update_render_cpu_ms": 0.0
+          },
+          {
+            "kind": "delta",
+            "bytes": 1079,
+            "render_wall_ms": 17.6027,
+            "update_render_cpu_ms": 15.625
+          },
+          {
+            "kind": "delta",
+            "bytes": 1078,
+            "render_wall_ms": 17.543,
+            "update_render_cpu_ms": 15.625
+          },
+          {
+            "kind": "delta",
+            "bytes": 1078,
+            "render_wall_ms": 14.251,
+            "update_render_cpu_ms": 0.0
+          },
+          {
+            "kind": "delta",
+            "bytes": 1078,
+            "render_wall_ms": 11.8535,
+            "update_render_cpu_ms": 0.0
+          },
+          {
+            "kind": "delta",
+            "bytes": 1079,
+            "render_wall_ms": 17.6343,
+            "update_render_cpu_ms": 15.625
+          },
+          {
+            "kind": "delta",
+            "bytes": 1059,
+            "render_wall_ms": 21.4046,
+            "update_render_cpu_ms": 15.625
+          },
+          {
+            "kind": "delta",
+            "bytes": 1058,
+            "render_wall_ms": 17.0322,
+            "update_render_cpu_ms": 15.625
+          },
+          {
+            "kind": "delta",
+            "bytes": 1079,
+            "render_wall_ms": 17.6777,
+            "update_render_cpu_ms": 15.625
+          },
+          {
+            "kind": "delta",
+            "bytes": 1078,
+            "render_wall_ms": 15.977,
+            "update_render_cpu_ms": 15.625
+          },
+          {
+            "kind": "delta",
+            "bytes": 1078,
+            "render_wall_ms": 16.3382,
+            "update_render_cpu_ms": 15.625
+          },
+          {
+            "kind": "delta",
+            "bytes": 1078,
+            "render_wall_ms": 12.3176,
+            "update_render_cpu_ms": 0.0
+          },
+          {
+            "kind": "delta",
+            "bytes": 1079,
+            "render_wall_ms": 15.7659,
+            "update_render_cpu_ms": 15.625
+          },
+          {
+            "kind": "delta",
+            "bytes": 1082,
+            "render_wall_ms": 9.2171,
+            "update_render_cpu_ms": 0.0
+          },
+          {
+            "kind": "delta",
+            "bytes": 1084,
+            "render_wall_ms": 11.6588,
+            "update_render_cpu_ms": 0.0
+          },
+          {
+            "kind": "delta",
+            "bytes": 1084,
+            "render_wall_ms": 11.6993,
+            "update_render_cpu_ms": 15.625
+          },
+          {
+            "kind": "delta",
+            "bytes": 1082,
+            "render_wall_ms": 10.6927,
+            "update_render_cpu_ms": 0.0
+          },
+          {
+            "kind": "delta",
+            "bytes": 1079,
+            "render_wall_ms": 8.8092,
+            "update_render_cpu_ms": 15.625
+          },
+          {
+            "kind": "delta",
+            "bytes": 1078,
+            "render_wall_ms": 9.439,
+            "update_render_cpu_ms": 15.625
+          },
+          {
+            "kind": "delta",
+            "bytes": 1078,
+            "render_wall_ms": 7.6725,
+            "update_render_cpu_ms": 0.0
+          },
+          {
+            "kind": "delta",
+            "bytes": 1078,
+            "render_wall_ms": 7.4812,
+            "update_render_cpu_ms": 0.0
+          },
+          {
+            "kind": "delta",
+            "bytes": 1079,
+            "render_wall_ms": 9.4274,
+            "update_render_cpu_ms": 15.625
+          },
+          {
+            "kind": "delta",
+            "bytes": 1059,
+            "render_wall_ms": 7.471,
+            "update_render_cpu_ms": 0.0
+          },
+          {
+            "kind": "delta",
+            "bytes": 1058,
+            "render_wall_ms": 8.7868,
+            "update_render_cpu_ms": 15.625
+          },
+          {
+            "kind": "delta",
+            "bytes": 1079,
+            "render_wall_ms": 5.9072,
+            "update_render_cpu_ms": 0.0
+          },
+          {
+            "kind": "delta",
+            "bytes": 1318,
+            "render_wall_ms": 9.2668,
+            "update_render_cpu_ms": 15.625
+          },
+          {
+            "kind": "delta",
+            "bytes": 1078,
+            "render_wall_ms": 9.289,
+            "update_render_cpu_ms": 15.625
+          },
+          {
+            "kind": "delta",
+            "bytes": 1078,
+            "render_wall_ms": 10.4958,
+            "update_render_cpu_ms": 0.0
+          },
+          {
+            "kind": "delta",
+            "bytes": 1079,
+            "render_wall_ms": 12.704,
+            "update_render_cpu_ms": 15.625
+          },
+          {
+            "kind": "delta",
+            "bytes": 1082,
+            "render_wall_ms": 13.936,
+            "update_render_cpu_ms": 15.625
+          },
+          {
+            "kind": "delta",
+            "bytes": 1084,
+            "render_wall_ms": 8.9938,
+            "update_render_cpu_ms": 15.625
+          }
+        ],
+        "summary": {
+          "full": {
+            "bytes": {
+              "count": 1,
+              "p50": 5588,
+              "p95": 5588,
+              "max": 5588
+            },
+            "render_wall_ms": {
+              "count": 1,
+              "p50": 6.5072,
+              "p95": 6.5072,
+              "max": 6.5072
+            },
+            "update_render_cpu_ms": {
+              "count": 1,
+              "p50": 15.625,
+              "p95": 15.625,
+              "max": 15.625
+            }
+          },
+          "delta": {
+            "bytes": {
+              "count": 40,
+              "p50": 1079,
+              "p95": 1084,
+              "max": 1318
+            },
+            "render_wall_ms": {
+              "count": 40,
+              "p50": 10.6927,
+              "p95": 17.6777,
+              "max": 54.7984
+            },
+            "update_render_cpu_ms": {
+              "count": 40,
+              "p50": 15.625,
+              "p95": 15.625,
+              "max": 46.875
+            }
+          }
+        },
+        "successful_moves": 40,
+        "door_cpu_ms": 562.5,
+        "calls": {
+          "key": 41,
+          "update": 81,
+          "render": 81,
+          "receive": 40
+        },
+        "delta_16kib_pass": true,
+        "render_p95_100ms_pass": true
+      },
+      "activities": {
+        "walking in a scene place": {
+          "zone": "sodium-tin-halo",
+          "view": "shipped map or local help",
+          "elapsed_s": 12.061999999976251,
+          "ticks": 112,
+          "key_steps": 55,
+          "successful_moves": 22,
+          "cpu_s": 0.5,
+          "cpu_s_per_minute": 2.487149726418427,
+          "calls": {
+            "update": 112,
+            "render": 112,
+            "key": 55,
+            "receive": 22
+          },
+          "output_frames": 76,
+          "output_bytes": 18193
+        },
+        "walking where there is no scene": {
+          "zone": "sodium-row",
+          "view": "shipped map or local help",
+          "elapsed_s": 12.03100000001723,
+          "ticks": 105,
+          "key_steps": 52,
+          "successful_moves": 51,
+          "cpu_s": 0.640625,
+          "cpu_s_per_minute": 3.1948715817425777,
+          "calls": {
+            "update": 105,
+            "render": 105,
+            "key": 52,
+            "receive": 51
+          },
+          "output_frames": 96,
+          "output_bytes": 55424
+        },
+        "standing, a few stops a minute": {
+          "zone": "sodium-tin-halo",
+          "view": "shipped map or local help",
+          "elapsed_s": 12.01500000001397,
+          "ticks": 118,
+          "key_steps": 0,
+          "successful_moves": 0,
+          "cpu_s": 0.0,
+          "cpu_s_per_minute": 0.0,
+          "calls": {
+            "update": 118,
+            "render": 118
+          },
+          "output_frames": 1,
+          "output_bytes": 246
+        },
+        "menus, text and help": {
+          "zone": "sodium-tin-halo",
+          "view": "shipped map or local help",
+          "elapsed_s": 12.047000000020489,
+          "ticks": 118,
+          "key_steps": 0,
+          "successful_moves": 0,
+          "cpu_s": 0.0,
+          "cpu_s_per_minute": 0.0,
+          "calls": {
+            "key": 1,
+            "update": 118,
+            "render": 118
+          },
+          "output_frames": 1,
+          "output_bytes": 1640
+        }
+      },
+      "cpu_s_per_hour": 88.76892889903583,
+      "cpu_120s_per_hour_pass": true
+    },
+    {
+      "size": [
+        80,
+        24
+      ],
+      "tier": "truecolor",
+      "glyph_tier": "cp437",
+      "frames": {
+        "samples": [
+          {
+            "kind": "full",
+            "bytes": 6559,
+            "render_wall_ms": 8.2929,
+            "update_render_cpu_ms": 0.0
+          },
+          {
+            "kind": "delta",
+            "bytes": 1239,
+            "render_wall_ms": 12.6489,
+            "update_render_cpu_ms": 0.0
+          },
+          {
+            "kind": "delta",
+            "bytes": 1262,
+            "render_wall_ms": 12.1741,
+            "update_render_cpu_ms": 0.0
+          },
+          {
+            "kind": "delta",
+            "bytes": 1261,
+            "render_wall_ms": 12.3103,
+            "update_render_cpu_ms": 15.625
+          },
+          {
+            "kind": "delta",
+            "bytes": 1261,
+            "render_wall_ms": 10.0035,
+            "update_render_cpu_ms": 15.625
+          },
+          {
+            "kind": "delta",
+            "bytes": 1261,
+            "render_wall_ms": 12.8958,
+            "update_render_cpu_ms": 15.625
+          },
+          {
+            "kind": "delta",
+            "bytes": 1265,
+            "render_wall_ms": 12.0974,
+            "update_render_cpu_ms": 15.625
+          },
+          {
+            "kind": "delta",
+            "bytes": 1265,
+            "render_wall_ms": 13.989,
+            "update_render_cpu_ms": 15.625
+          },
+          {
+            "kind": "delta",
+            "bytes": 1267,
+            "render_wall_ms": 12.4227,
+            "update_render_cpu_ms": 15.625
+          },
+          {
+            "kind": "delta",
+            "bytes": 1267,
+            "render_wall_ms": 11.4776,
+            "update_render_cpu_ms": 15.625
+          },
+          {
+            "kind": "delta",
+            "bytes": 1265,
+            "render_wall_ms": 9.4293,
+            "update_render_cpu_ms": 15.625
+          },
+          {
+            "kind": "delta",
+            "bytes": 1265,
+            "render_wall_ms": 9.6495,
+            "update_render_cpu_ms": 15.625
+          },
+          {
+            "kind": "delta",
+            "bytes": 1261,
+            "render_wall_ms": 11.9424,
+            "update_render_cpu_ms": 15.625
+          },
+          {
+            "kind": "delta",
+            "bytes": 1261,
+            "render_wall_ms": 12.9163,
+            "update_render_cpu_ms": 0.0
+          },
+          {
+            "kind": "delta",
+            "bytes": 1261,
+            "render_wall_ms": 11.7091,
+            "update_render_cpu_ms": 15.625
+          },
+          {
+            "kind": "delta",
+            "bytes": 1262,
+            "render_wall_ms": 9.5475,
+            "update_render_cpu_ms": 0.0
+          },
+          {
+            "kind": "delta",
+            "bytes": 1237,
+            "render_wall_ms": 9.21,
+            "update_render_cpu_ms": 15.625
+          },
+          {
+            "kind": "delta",
+            "bytes": 1239,
+            "render_wall_ms": 11.4537,
+            "update_render_cpu_ms": 15.625
+          },
+          {
+            "kind": "delta",
+            "bytes": 1262,
+            "render_wall_ms": 11.4368,
+            "update_render_cpu_ms": 0.0
+          },
+          {
+            "kind": "delta",
+            "bytes": 1261,
+            "render_wall_ms": 8.3675,
+            "update_render_cpu_ms": 15.625
+          },
+          {
+            "kind": "delta",
+            "bytes": 1261,
+            "render_wall_ms": 11.0985,
+            "update_render_cpu_ms": 15.625
+          },
+          {
+            "kind": "delta",
+            "bytes": 1261,
+            "render_wall_ms": 12.3851,
+            "update_render_cpu_ms": 15.625
+          },
+          {
+            "kind": "delta",
+            "bytes": 1265,
+            "render_wall_ms": 13.399,
+            "update_render_cpu_ms": 15.625
+          },
+          {
+            "kind": "delta",
+            "bytes": 1265,
+            "render_wall_ms": 12.2753,
+            "update_render_cpu_ms": 0.0
+          },
+          {
+            "kind": "delta",
+            "bytes": 1267,
+            "render_wall_ms": 10.9023,
+            "update_render_cpu_ms": 0.0
+          },
+          {
+            "kind": "delta",
+            "bytes": 1267,
+            "render_wall_ms": 7.7453,
+            "update_render_cpu_ms": 15.625
+          },
+          {
+            "kind": "delta",
+            "bytes": 1265,
+            "render_wall_ms": 9.3507,
+            "update_render_cpu_ms": 0.0
+          },
+          {
+            "kind": "delta",
+            "bytes": 1265,
+            "render_wall_ms": 9.2252,
+            "update_render_cpu_ms": 15.625
+          },
+          {
+            "kind": "delta",
+            "bytes": 1261,
+            "render_wall_ms": 8.1993,
+            "update_render_cpu_ms": 0.0
+          },
+          {
+            "kind": "delta",
+            "bytes": 1261,
+            "render_wall_ms": 10.3229,
+            "update_render_cpu_ms": 15.625
+          },
+          {
+            "kind": "delta",
+            "bytes": 1261,
+            "render_wall_ms": 8.3001,
+            "update_render_cpu_ms": 15.625
+          },
+          {
+            "kind": "delta",
+            "bytes": 1262,
+            "render_wall_ms": 11.233,
+            "update_render_cpu_ms": 15.625
+          },
+          {
+            "kind": "delta",
+            "bytes": 1237,
+            "render_wall_ms": 9.9482,
+            "update_render_cpu_ms": 15.625
+          },
+          {
+            "kind": "delta",
+            "bytes": 1239,
+            "render_wall_ms": 8.08,
+            "update_render_cpu_ms": 15.625
+          },
+          {
+            "kind": "delta",
+            "bytes": 1262,
+            "render_wall_ms": 10.1911,
+            "update_render_cpu_ms": 0.0
+          },
+          {
+            "kind": "delta",
+            "bytes": 1509,
+            "render_wall_ms": 9.3608,
+            "update_render_cpu_ms": 0.0
+          },
+          {
+            "kind": "delta",
+            "bytes": 1261,
+            "render_wall_ms": 15.2654,
+            "update_render_cpu_ms": 15.625
+          },
+          {
+            "kind": "delta",
+            "bytes": 1261,
+            "render_wall_ms": 8.1161,
+            "update_render_cpu_ms": 15.625
+          },
+          {
+            "kind": "delta",
+            "bytes": 1265,
+            "render_wall_ms": 74.8292,
+            "update_render_cpu_ms": 78.125
+          },
+          {
+            "kind": "delta",
+            "bytes": 1265,
+            "render_wall_ms": 8.6916,
+            "update_render_cpu_ms": 0.0
+          },
+          {
+            "kind": "delta",
+            "bytes": 1267,
+            "render_wall_ms": 9.6246,
+            "update_render_cpu_ms": 15.625
+          }
+        ],
+        "summary": {
+          "full": {
+            "bytes": {
+              "count": 1,
+              "p50": 6559,
+              "p95": 6559,
+              "max": 6559
+            },
+            "render_wall_ms": {
+              "count": 1,
+              "p50": 8.2929,
+              "p95": 8.2929,
+              "max": 8.2929
+            },
+            "update_render_cpu_ms": {
+              "count": 1,
+              "p50": 0.0,
+              "p95": 0.0,
+              "max": 0.0
+            }
+          },
+          "delta": {
+            "bytes": {
+              "count": 40,
+              "p50": 1262,
+              "p95": 1267,
+              "max": 1509
+            },
+            "render_wall_ms": {
+              "count": 40,
+              "p50": 10.9023,
+              "p95": 13.989,
+              "max": 74.8292
+            },
+            "update_render_cpu_ms": {
+              "count": 40,
+              "p50": 15.625,
+              "p95": 15.625,
+              "max": 78.125
+            }
+          }
+        },
+        "successful_moves": 40,
+        "door_cpu_ms": 578.125,
+        "calls": {
+          "key": 41,
+          "update": 81,
+          "render": 81,
+          "receive": 40
+        },
+        "delta_16kib_pass": true,
+        "render_p95_100ms_pass": true
+      },
+      "activities": {
+        "walking in a scene place": {
+          "zone": "sodium-tin-halo",
+          "view": "shipped map or local help",
+          "elapsed_s": 12.0,
+          "ticks": 111,
+          "key_steps": 55,
+          "successful_moves": 21,
+          "cpu_s": 0.515625,
+          "cpu_s_per_minute": 2.578125,
+          "calls": {
+            "update": 111,
+            "render": 111,
+            "key": 55,
+            "receive": 21
+          },
+          "output_frames": 75,
+          "output_bytes": 21102
+        },
+        "walking where there is no scene": {
+          "zone": "sodium-row",
+          "view": "shipped map or local help",
+          "elapsed_s": 12.047000000020489,
+          "ticks": 108,
+          "key_steps": 53,
+          "successful_moves": 53,
+          "cpu_s": 0.359375,
+          "cpu_s_per_minute": 1.7898646966019196,
+          "calls": {
+            "update": 108,
+            "render": 108,
+            "key": 53,
+            "receive": 53
+          },
+          "output_frames": 97,
+          "output_bytes": 67276
+        },
+        "standing, a few stops a minute": {
+          "zone": "sodium-tin-halo",
+          "view": "shipped map or local help",
+          "elapsed_s": 12.01500000001397,
+          "ticks": 118,
+          "key_steps": 0,
+          "successful_moves": 0,
+          "cpu_s": 0.0,
+          "cpu_s_per_minute": 0.0,
+          "calls": {
+            "update": 118,
+            "render": 118
+          },
+          "output_frames": 1,
+          "output_bytes": 254
+        },
+        "menus, text and help": {
+          "zone": "sodium-tin-halo",
+          "view": "shipped map or local help",
+          "elapsed_s": 12.079000000027008,
+          "ticks": 118,
+          "key_steps": 0,
+          "successful_moves": 0,
+          "cpu_s": 0.0,
+          "cpu_s_per_minute": 0.0,
+          "calls": {
+            "key": 1,
+            "update": 118,
+            "render": 118
+          },
+          "output_frames": 1,
+          "output_bytes": 1696
+        }
+      },
+      "cpu_s_per_hour": 61.57854393203839,
+      "cpu_120s_per_hour_pass": true
+    },
+    {
+      "size": [
+        132,
+        50
+      ],
+      "tier": "16",
+      "glyph_tier": "cp437",
+      "frames": {
+        "samples": [
+          {
+            "kind": "full",
+            "bytes": 10806,
+            "render_wall_ms": 10.1984,
+            "update_render_cpu_ms": 15.625
+          },
+          {
+            "kind": "delta",
+            "bytes": 1131,
+            "render_wall_ms": 7.947,
+            "update_render_cpu_ms": 15.625
+          },
+          {
+            "kind": "delta",
+            "bytes": 1147,
+            "render_wall_ms": 10.3966,
+            "update_render_cpu_ms": 15.625
+          },
+          {
+            "kind": "delta",
+            "bytes": 1148,
+            "render_wall_ms": 7.1486,
+            "update_render_cpu_ms": 0.0
+          },
+          {
+            "kind": "delta",
+            "bytes": 1148,
+            "render_wall_ms": 8.434,
+            "update_render_cpu_ms": 0.0
+          },
+          {
+            "kind": "delta",
+            "bytes": 1150,
+            "render_wall_ms": 8.6126,
+            "update_render_cpu_ms": 0.0
+          },
+          {
+            "kind": "delta",
+            "bytes": 1151,
+            "render_wall_ms": 8.3404,
+            "update_render_cpu_ms": 0.0
+          },
+          {
+            "kind": "delta",
+            "bytes": 1156,
+            "render_wall_ms": 8.8692,
+            "update_render_cpu_ms": 15.625
+          },
+          {
+            "kind": "delta",
+            "bytes": 1158,
+            "render_wall_ms": 8.6918,
+            "update_render_cpu_ms": 15.625
+          },
+          {
+            "kind": "delta",
+            "bytes": 1158,
+            "render_wall_ms": 9.7874,
+            "update_render_cpu_ms": 0.0
+          },
+          {
+            "kind": "delta",
+            "bytes": 1156,
+            "render_wall_ms": 8.8723,
+            "update_render_cpu_ms": 0.0
+          },
+          {
+            "kind": "delta",
+            "bytes": 1153,
+            "render_wall_ms": 10.6846,
+            "update_render_cpu_ms": 15.625
+          },
+          {
+            "kind": "delta",
+            "bytes": 1150,
+            "render_wall_ms": 22.2049,
+            "update_render_cpu_ms": 0.0
+          },
+          {
+            "kind": "delta",
+            "bytes": 1148,
+            "render_wall_ms": 14.0071,
+            "update_render_cpu_ms": 15.625
+          },
+          {
+            "kind": "delta",
+            "bytes": 1148,
+            "render_wall_ms": 13.3096,
+            "update_render_cpu_ms": 15.625
+          },
+          {
+            "kind": "delta",
+            "bytes": 1147,
+            "render_wall_ms": 18.6303,
+            "update_render_cpu_ms": 31.25
+          },
+          {
+            "kind": "delta",
+            "bytes": 1134,
+            "render_wall_ms": 24.9693,
+            "update_render_cpu_ms": 31.25
+          },
+          {
+            "kind": "delta",
+            "bytes": 1131,
+            "render_wall_ms": 13.482,
+            "update_render_cpu_ms": 15.625
+          },
+          {
+            "kind": "delta",
+            "bytes": 1147,
+            "render_wall_ms": 19.3276,
+            "update_render_cpu_ms": 15.625
+          },
+          {
+            "kind": "delta",
+            "bytes": 1148,
+            "render_wall_ms": 18.0067,
+            "update_render_cpu_ms": 15.625
+          },
+          {
+            "kind": "delta",
+            "bytes": 1148,
+            "render_wall_ms": 15.1993,
+            "update_render_cpu_ms": 15.625
+          },
+          {
+            "kind": "delta",
+            "bytes": 1150,
+            "render_wall_ms": 13.3952,
+            "update_render_cpu_ms": 15.625
+          },
+          {
+            "kind": "delta",
+            "bytes": 1151,
+            "render_wall_ms": 11.6389,
+            "update_render_cpu_ms": 15.625
+          },
+          {
+            "kind": "delta",
+            "bytes": 1156,
+            "render_wall_ms": 15.7861,
+            "update_render_cpu_ms": 0.0
+          },
+          {
+            "kind": "delta",
+            "bytes": 1158,
+            "render_wall_ms": 12.2175,
+            "update_render_cpu_ms": 15.625
+          },
+          {
+            "kind": "delta",
+            "bytes": 1158,
+            "render_wall_ms": 20.5758,
+            "update_render_cpu_ms": 15.625
+          },
+          {
+            "kind": "delta",
+            "bytes": 1156,
+            "render_wall_ms": 17.7144,
+            "update_render_cpu_ms": 15.625
+          },
+          {
+            "kind": "delta",
+            "bytes": 1153,
+            "render_wall_ms": 17.3269,
+            "update_render_cpu_ms": 31.25
+          },
+          {
+            "kind": "delta",
+            "bytes": 1150,
+            "render_wall_ms": 11.5214,
+            "update_render_cpu_ms": 15.625
+          },
+          {
+            "kind": "delta",
+            "bytes": 1148,
+            "render_wall_ms": 10.3885,
+            "update_render_cpu_ms": 15.625
+          },
+          {
+            "kind": "delta",
+            "bytes": 1148,
+            "render_wall_ms": 10.2212,
+            "update_render_cpu_ms": 15.625
+          },
+          {
+            "kind": "delta",
+            "bytes": 1147,
+            "render_wall_ms": 9.9434,
+            "update_render_cpu_ms": 0.0
+          },
+          {
+            "kind": "delta",
+            "bytes": 1134,
+            "render_wall_ms": 12.423,
+            "update_render_cpu_ms": 15.625
+          },
+          {
+            "kind": "delta",
+            "bytes": 1131,
+            "render_wall_ms": 10.2379,
+            "update_render_cpu_ms": 15.625
+          },
+          {
+            "kind": "delta",
+            "bytes": 1147,
+            "render_wall_ms": 10.3951,
+            "update_render_cpu_ms": 15.625
+          },
+          {
+            "kind": "delta",
+            "bytes": 1368,
+            "render_wall_ms": 9.9462,
+            "update_render_cpu_ms": 15.625
+          },
+          {
+            "kind": "delta",
+            "bytes": 1148,
+            "render_wall_ms": 13.7182,
+            "update_render_cpu_ms": 15.625
+          },
+          {
+            "kind": "delta",
+            "bytes": 1150,
+            "render_wall_ms": 9.7105,
+            "update_render_cpu_ms": 15.625
+          },
+          {
+            "kind": "delta",
+            "bytes": 1151,
+            "render_wall_ms": 9.6658,
+            "update_render_cpu_ms": 15.625
+          },
+          {
+            "kind": "delta",
+            "bytes": 1156,
+            "render_wall_ms": 8.7029,
+            "update_render_cpu_ms": 0.0
+          },
+          {
+            "kind": "delta",
+            "bytes": 1158,
+            "render_wall_ms": 8.9248,
+            "update_render_cpu_ms": 15.625
+          }
+        ],
+        "summary": {
+          "full": {
+            "bytes": {
+              "count": 1,
+              "p50": 10806,
+              "p95": 10806,
+              "max": 10806
+            },
+            "render_wall_ms": {
+              "count": 1,
+              "p50": 10.1984,
+              "p95": 10.1984,
+              "max": 10.1984
+            },
+            "update_render_cpu_ms": {
+              "count": 1,
+              "p50": 15.625,
+              "p95": 15.625,
+              "max": 15.625
+            }
+          },
+          "delta": {
+            "bytes": {
+              "count": 40,
+              "p50": 1150,
+              "p95": 1158,
+              "max": 1368
+            },
+            "render_wall_ms": {
+              "count": 40,
+              "p50": 10.3966,
+              "p95": 20.5758,
+              "max": 24.9693
+            },
+            "update_render_cpu_ms": {
+              "count": 40,
+              "p50": 15.625,
+              "p95": 31.25,
+              "max": 31.25
+            }
+          }
+        },
+        "successful_moves": 40,
+        "door_cpu_ms": 656.25,
+        "calls": {
+          "key": 41,
+          "update": 81,
+          "render": 81,
+          "receive": 40
+        },
+        "delta_16kib_pass": true,
+        "render_p95_100ms_pass": true
+      },
+      "activities": {
+        "walking in a scene place": {
+          "zone": "sodium-tin-halo",
+          "view": "shipped map or local help",
+          "elapsed_s": 12.077999999979511,
+          "ticks": 113,
+          "key_steps": 56,
+          "successful_moves": 22,
+          "cpu_s": 0.53125,
+          "cpu_s_per_minute": 2.6390958768052717,
+          "calls": {
+            "update": 113,
+            "render": 113,
+            "key": 56,
+            "receive": 22
+          },
+          "output_frames": 78,
+          "output_bytes": 5854
+        },
+        "walking where there is no scene": {
+          "zone": "sodium-row",
+          "view": "shipped map or local help",
+          "elapsed_s": 12.03100000001723,
+          "ticks": 103,
+          "key_steps": 51,
+          "successful_moves": 50,
+          "cpu_s": 1.015625,
+          "cpu_s_per_minute": 5.065040312518721,
+          "calls": {
+            "update": 103,
+            "render": 103,
+            "key": 51,
+            "receive": 50
+          },
+          "output_frames": 100,
+          "output_bytes": 57959
+        },
+        "standing, a few stops a minute": {
+          "zone": "sodium-tin-halo",
+          "view": "shipped map or local help",
+          "elapsed_s": 12.077999999979511,
+          "ticks": 118,
+          "key_steps": 0,
+          "successful_moves": 0,
+          "cpu_s": 0.0,
+          "cpu_s_per_minute": 0.0,
+          "calls": {
+            "update": 118,
+            "render": 118
+          },
+          "output_frames": 1,
+          "output_bytes": 238
+        },
+        "menus, text and help": {
+          "zone": "sodium-tin-halo",
+          "view": "shipped map or local help",
+          "elapsed_s": 12.077999999979511,
+          "ticks": 118,
+          "key_steps": 0,
+          "successful_moves": 0,
+          "cpu_s": 0.015625,
+          "cpu_s_per_minute": 0.07762046696486094,
+          "calls": {
+            "key": 1,
+            "update": 118,
+            "render": 118
+          },
+          "output_frames": 1,
+          "output_bytes": 2518
+        }
+      },
+      "cpu_s_per_hour": 128.85607202290007,
+      "cpu_120s_per_hour_pass": false
+    },
+    {
+      "size": [
+        132,
+        50
+      ],
+      "tier": "256",
+      "glyph_tier": "cp437",
+      "frames": {
+        "samples": [
+          {
+            "kind": "full",
+            "bytes": 13251,
+            "render_wall_ms": 9.5268,
+            "update_render_cpu_ms": 15.625
+          },
+          {
+            "kind": "delta",
+            "bytes": 1541,
+            "render_wall_ms": 8.8076,
+            "update_render_cpu_ms": 15.625
+          },
+          {
+            "kind": "delta",
+            "bytes": 1563,
+            "render_wall_ms": 9.3002,
+            "update_render_cpu_ms": 0.0
+          },
+          {
+            "kind": "delta",
+            "bytes": 1564,
+            "render_wall_ms": 14.3505,
+            "update_render_cpu_ms": 15.625
+          },
+          {
+            "kind": "delta",
+            "bytes": 1564,
+            "render_wall_ms": 11.3404,
+            "update_render_cpu_ms": 15.625
+          },
+          {
+            "kind": "delta",
+            "bytes": 1566,
+            "render_wall_ms": 11.4616,
+            "update_render_cpu_ms": 15.625
+          },
+          {
+            "kind": "delta",
+            "bytes": 1569,
+            "render_wall_ms": 12.3613,
+            "update_render_cpu_ms": 15.625
+          },
+          {
+            "kind": "delta",
+            "bytes": 1572,
+            "render_wall_ms": 13.6135,
+            "update_render_cpu_ms": 0.0
+          },
+          {
+            "kind": "delta",
+            "bytes": 1574,
+            "render_wall_ms": 10.8906,
+            "update_render_cpu_ms": 15.625
+          },
+          {
+            "kind": "delta",
+            "bytes": 1574,
+            "render_wall_ms": 10.3264,
+            "update_render_cpu_ms": 0.0
+          },
+          {
+            "kind": "delta",
+            "bytes": 1572,
+            "render_wall_ms": 9.9409,
+            "update_render_cpu_ms": 15.625
+          },
+          {
+            "kind": "delta",
+            "bytes": 1569,
+            "render_wall_ms": 10.5232,
+            "update_render_cpu_ms": 15.625
+          },
+          {
+            "kind": "delta",
+            "bytes": 1566,
+            "render_wall_ms": 9.3772,
+            "update_render_cpu_ms": 15.625
+          },
+          {
+            "kind": "delta",
+            "bytes": 1564,
+            "render_wall_ms": 12.4374,
+            "update_render_cpu_ms": 15.625
+          },
+          {
+            "kind": "delta",
+            "bytes": 1564,
+            "render_wall_ms": 13.3441,
+            "update_render_cpu_ms": 15.625
+          },
+          {
+            "kind": "delta",
+            "bytes": 1563,
+            "render_wall_ms": 10.8837,
+            "update_render_cpu_ms": 0.0
+          },
+          {
+            "kind": "delta",
+            "bytes": 1542,
+            "render_wall_ms": 9.9072,
+            "update_render_cpu_ms": 0.0
+          },
+          {
+            "kind": "delta",
+            "bytes": 1541,
+            "render_wall_ms": 10.4328,
+            "update_render_cpu_ms": 0.0
+          },
+          {
+            "kind": "delta",
+            "bytes": 1563,
+            "render_wall_ms": 15.8994,
+            "update_render_cpu_ms": 15.625
+          },
+          {
+            "kind": "delta",
+            "bytes": 1564,
+            "render_wall_ms": 28.2611,
+            "update_render_cpu_ms": 0.0
+          },
+          {
+            "kind": "delta",
+            "bytes": 1564,
+            "render_wall_ms": 20.5724,
+            "update_render_cpu_ms": 31.25
+          },
+          {
+            "kind": "delta",
+            "bytes": 1566,
+            "render_wall_ms": 72.5654,
+            "update_render_cpu_ms": 78.125
+          },
+          {
+            "kind": "delta",
+            "bytes": 1569,
+            "render_wall_ms": 12.9183,
+            "update_render_cpu_ms": 15.625
+          },
+          {
+            "kind": "delta",
+            "bytes": 1572,
+            "render_wall_ms": 12.3221,
+            "update_render_cpu_ms": 0.0
+          },
+          {
+            "kind": "delta",
+            "bytes": 1574,
+            "render_wall_ms": 15.4642,
+            "update_render_cpu_ms": 15.625
+          },
+          {
+            "kind": "delta",
+            "bytes": 1574,
+            "render_wall_ms": 13.4869,
+            "update_render_cpu_ms": 0.0
+          },
+          {
+            "kind": "delta",
+            "bytes": 1572,
+            "render_wall_ms": 10.2015,
+            "update_render_cpu_ms": 15.625
+          },
+          {
+            "kind": "delta",
+            "bytes": 1569,
+            "render_wall_ms": 12.1205,
+            "update_render_cpu_ms": 15.625
+          },
+          {
+            "kind": "delta",
+            "bytes": 1566,
+            "render_wall_ms": 11.5668,
+            "update_render_cpu_ms": 15.625
+          },
+          {
+            "kind": "delta",
+            "bytes": 1564,
+            "render_wall_ms": 12.4612,
+            "update_render_cpu_ms": 15.625
+          },
+          {
+            "kind": "delta",
+            "bytes": 1564,
+            "render_wall_ms": 19.3913,
+            "update_render_cpu_ms": 15.625
+          },
+          {
+            "kind": "delta",
+            "bytes": 1563,
+            "render_wall_ms": 17.5946,
+            "update_render_cpu_ms": 15.625
+          },
+          {
+            "kind": "delta",
+            "bytes": 1542,
+            "render_wall_ms": 16.1814,
+            "update_render_cpu_ms": 15.625
+          },
+          {
+            "kind": "delta",
+            "bytes": 1541,
+            "render_wall_ms": 14.7151,
+            "update_render_cpu_ms": 15.625
+          },
+          {
+            "kind": "delta",
+            "bytes": 1563,
+            "render_wall_ms": 13.9671,
+            "update_render_cpu_ms": 15.625
+          },
+          {
+            "kind": "delta",
+            "bytes": 1804,
+            "render_wall_ms": 11.5976,
+            "update_render_cpu_ms": 15.625
+          },
+          {
+            "kind": "delta",
+            "bytes": 1564,
+            "render_wall_ms": 17.5057,
+            "update_render_cpu_ms": 15.625
+          },
+          {
+            "kind": "delta",
+            "bytes": 1566,
+            "render_wall_ms": 22.1616,
+            "update_render_cpu_ms": 31.25
+          },
+          {
+            "kind": "delta",
+            "bytes": 1569,
+            "render_wall_ms": 15.6825,
+            "update_render_cpu_ms": 15.625
+          },
+          {
+            "kind": "delta",
+            "bytes": 1572,
+            "render_wall_ms": 21.5657,
+            "update_render_cpu_ms": 15.625
+          },
+          {
+            "kind": "delta",
+            "bytes": 1574,
+            "render_wall_ms": 18.2582,
+            "update_render_cpu_ms": 0.0
+          }
+        ],
+        "summary": {
+          "full": {
+            "bytes": {
+              "count": 1,
+              "p50": 13251,
+              "p95": 13251,
+              "max": 13251
+            },
+            "render_wall_ms": {
+              "count": 1,
+              "p50": 9.5268,
+              "p95": 9.5268,
+              "max": 9.5268
+            },
+            "update_render_cpu_ms": {
+              "count": 1,
+              "p50": 15.625,
+              "p95": 15.625,
+              "max": 15.625
+            }
+          },
+          "delta": {
+            "bytes": {
+              "count": 40,
+              "p50": 1566,
+              "p95": 1574,
+              "max": 1804
+            },
+            "render_wall_ms": {
+              "count": 40,
+              "p50": 12.4612,
+              "p95": 22.1616,
+              "max": 72.5654
+            },
+            "update_render_cpu_ms": {
+              "count": 40,
+              "p50": 15.625,
+              "p95": 31.25,
+              "max": 78.125
+            }
+          }
+        },
+        "successful_moves": 40,
+        "door_cpu_ms": 718.75,
+        "calls": {
+          "key": 41,
+          "update": 81,
+          "render": 81,
+          "receive": 40
+        },
+        "delta_16kib_pass": true,
+        "render_p95_100ms_pass": true
+      },
+      "activities": {
+        "walking in a scene place": {
+          "zone": "sodium-tin-halo",
+          "view": "shipped map or local help",
+          "elapsed_s": 12.079000000027008,
+          "ticks": 113,
+          "key_steps": 56,
+          "successful_moves": 22,
+          "cpu_s": 0.53125,
+          "cpu_s_per_minute": 2.6388773905065595,
+          "calls": {
+            "update": 113,
+            "render": 113,
+            "key": 56,
+            "receive": 22
+          },
+          "output_frames": 75,
+          "output_bytes": 7900
+        },
+        "walking where there is no scene": {
+          "zone": "sodium-row",
+          "view": "shipped map or local help",
+          "elapsed_s": 12.030999999959022,
+          "ticks": 95,
+          "key_steps": 47,
+          "successful_moves": 46,
+          "cpu_s": 1.234375,
+          "cpu_s_per_minute": 6.155972072167922,
+          "calls": {
+            "update": 95,
+            "render": 95,
+            "key": 47,
+            "receive": 46
+          },
+          "output_frames": 94,
+          "output_bytes": 72504
+        },
+        "standing, a few stops a minute": {
+          "zone": "sodium-tin-halo",
+          "view": "shipped map or local help",
+          "elapsed_s": 12.030999999959022,
+          "ticks": 118,
+          "key_steps": 0,
+          "successful_moves": 0,
+          "cpu_s": 0.0,
+          "cpu_s_per_minute": 0.0,
+          "calls": {
+            "update": 118,
+            "render": 118
+          },
+          "output_frames": 1,
+          "output_bytes": 246
+        },
+        "menus, text and help": {
+          "zone": "sodium-tin-halo",
+          "view": "shipped map or local help",
+          "elapsed_s": 12.062000000034459,
+          "ticks": 118,
+          "key_steps": 0,
+          "successful_moves": 0,
+          "cpu_s": 0.015625,
+          "cpu_s_per_minute": 0.07772342895020078,
+          "calls": {
+            "key": 1,
+            "update": 118,
+            "render": 118
+          },
+          "output_frames": 1,
+          "output_bytes": 2578
+        }
+      },
+      "cpu_s_per_hour": 150.67406678267704,
+      "cpu_120s_per_hour_pass": false
+    },
+    {
+      "size": [
+        132,
+        50
+      ],
+      "tier": "truecolor",
+      "glyph_tier": "cp437",
+      "frames": {
+        "samples": [
+          {
+            "kind": "full",
+            "bytes": 15086,
+            "render_wall_ms": 10.4964,
+            "update_render_cpu_ms": 15.625
+          },
+          {
+            "kind": "delta",
+            "bytes": 1802,
+            "render_wall_ms": 5.9963,
+            "update_render_cpu_ms": 0.0
+          },
+          {
+            "kind": "delta",
+            "bytes": 1826,
+            "render_wall_ms": 6.7169,
+            "update_render_cpu_ms": 0.0
+          },
+          {
+            "kind": "delta",
+            "bytes": 1827,
+            "render_wall_ms": 7.1232,
+            "update_render_cpu_ms": 15.625
+          },
+          {
+            "kind": "delta",
+            "bytes": 1827,
+            "render_wall_ms": 8.802,
+            "update_render_cpu_ms": 0.0
+          },
+          {
+            "kind": "delta",
+            "bytes": 1829,
+            "render_wall_ms": 7.5629,
+            "update_render_cpu_ms": 0.0
+          },
+          {
+            "kind": "delta",
+            "bytes": 1835,
+            "render_wall_ms": 9.0827,
+            "update_render_cpu_ms": 0.0
+          },
+          {
+            "kind": "delta",
+            "bytes": 1835,
+            "render_wall_ms": 9.4444,
+            "update_render_cpu_ms": 15.625
+          },
+          {
+            "kind": "delta",
+            "bytes": 1837,
+            "render_wall_ms": 15.9079,
+            "update_render_cpu_ms": 15.625
+          },
+          {
+            "kind": "delta",
+            "bytes": 1837,
+            "render_wall_ms": 13.1603,
+            "update_render_cpu_ms": 15.625
+          },
+          {
+            "kind": "delta",
+            "bytes": 1835,
+            "render_wall_ms": 9.2141,
+            "update_render_cpu_ms": 15.625
+          },
+          {
+            "kind": "delta",
+            "bytes": 1835,
+            "render_wall_ms": 9.4648,
+            "update_render_cpu_ms": 15.625
+          },
+          {
+            "kind": "delta",
+            "bytes": 1829,
+            "render_wall_ms": 10.99,
+            "update_render_cpu_ms": 15.625
+          },
+          {
+            "kind": "delta",
+            "bytes": 1827,
+            "render_wall_ms": 9.9787,
+            "update_render_cpu_ms": 0.0
+          },
+          {
+            "kind": "delta",
+            "bytes": 1827,
+            "render_wall_ms": 8.4849,
+            "update_render_cpu_ms": 0.0
+          },
+          {
+            "kind": "delta",
+            "bytes": 1826,
+            "render_wall_ms": 8.5999,
+            "update_render_cpu_ms": 15.625
+          },
+          {
+            "kind": "delta",
+            "bytes": 1800,
+            "render_wall_ms": 10.1046,
+            "update_render_cpu_ms": 15.625
+          },
+          {
+            "kind": "delta",
+            "bytes": 1802,
+            "render_wall_ms": 10.6761,
+            "update_render_cpu_ms": 0.0
+          },
+          {
+            "kind": "delta",
+            "bytes": 1826,
+            "render_wall_ms": 9.1066,
+            "update_render_cpu_ms": 15.625
+          },
+          {
+            "kind": "delta",
+            "bytes": 1827,
+            "render_wall_ms": 10.015,
+            "update_render_cpu_ms": 15.625
+          },
+          {
+            "kind": "delta",
+            "bytes": 1827,
+            "render_wall_ms": 11.0462,
+            "update_render_cpu_ms": 0.0
+          },
+          {
+            "kind": "delta",
+            "bytes": 1829,
+            "render_wall_ms": 10.3706,
+            "update_render_cpu_ms": 0.0
+          },
+          {
+            "kind": "delta",
+            "bytes": 1835,
+            "render_wall_ms": 10.4648,
+            "update_render_cpu_ms": 15.625
+          },
+          {
+            "kind": "delta",
+            "bytes": 1835,
+            "render_wall_ms": 11.5985,
+            "update_render_cpu_ms": 15.625
+          },
+          {
+            "kind": "delta",
+            "bytes": 1837,
+            "render_wall_ms": 11.0175,
+            "update_render_cpu_ms": 15.625
+          },
+          {
+            "kind": "delta",
+            "bytes": 1837,
+            "render_wall_ms": 10.2516,
+            "update_render_cpu_ms": 15.625
+          },
+          {
+            "kind": "delta",
+            "bytes": 1835,
+            "render_wall_ms": 10.0398,
+            "update_render_cpu_ms": 15.625
+          },
+          {
+            "kind": "delta",
+            "bytes": 1835,
+            "render_wall_ms": 11.322,
+            "update_render_cpu_ms": 15.625
+          },
+          {
+            "kind": "delta",
+            "bytes": 1829,
+            "render_wall_ms": 10.0961,
+            "update_render_cpu_ms": 15.625
+          },
+          {
+            "kind": "delta",
+            "bytes": 1827,
+            "render_wall_ms": 11.7369,
+            "update_render_cpu_ms": 15.625
+          },
+          {
+            "kind": "delta",
+            "bytes": 1827,
+            "render_wall_ms": 12.6081,
+            "update_render_cpu_ms": 15.625
+          },
+          {
+            "kind": "delta",
+            "bytes": 1826,
+            "render_wall_ms": 9.9272,
+            "update_render_cpu_ms": 0.0
+          },
+          {
+            "kind": "delta",
+            "bytes": 1800,
+            "render_wall_ms": 14.0892,
+            "update_render_cpu_ms": 15.625
+          },
+          {
+            "kind": "delta",
+            "bytes": 1802,
+            "render_wall_ms": 9.9982,
+            "update_render_cpu_ms": 15.625
+          },
+          {
+            "kind": "delta",
+            "bytes": 1826,
+            "render_wall_ms": 10.6536,
+            "update_render_cpu_ms": 0.0
+          },
+          {
+            "kind": "delta",
+            "bytes": 2075,
+            "render_wall_ms": 9.3168,
+            "update_render_cpu_ms": 0.0
+          },
+          {
+            "kind": "delta",
+            "bytes": 1827,
+            "render_wall_ms": 14.0847,
+            "update_render_cpu_ms": 0.0
+          },
+          {
+            "kind": "delta",
+            "bytes": 1829,
+            "render_wall_ms": 9.0128,
+            "update_render_cpu_ms": 0.0
+          },
+          {
+            "kind": "delta",
+            "bytes": 1835,
+            "render_wall_ms": 9.3067,
+            "update_render_cpu_ms": 15.625
+          },
+          {
+            "kind": "delta",
+            "bytes": 1835,
+            "render_wall_ms": 9.3935,
+            "update_render_cpu_ms": 15.625
+          },
+          {
+            "kind": "delta",
+            "bytes": 1837,
+            "render_wall_ms": 31.5057,
+            "update_render_cpu_ms": 31.25
+          }
+        ],
+        "summary": {
+          "full": {
+            "bytes": {
+              "count": 1,
+              "p50": 15086,
+              "p95": 15086,
+              "max": 15086
+            },
+            "render_wall_ms": {
+              "count": 1,
+              "p50": 10.4964,
+              "p95": 10.4964,
+              "max": 10.4964
+            },
+            "update_render_cpu_ms": {
+              "count": 1,
+              "p50": 15.625,
+              "p95": 15.625,
+              "max": 15.625
+            }
+          },
+          "delta": {
+            "bytes": {
+              "count": 40,
+              "p50": 1829,
+              "p95": 1837,
+              "max": 2075
+            },
+            "render_wall_ms": {
+              "count": 40,
+              "p50": 10.015,
+              "p95": 14.0892,
+              "max": 31.5057
+            },
+            "update_render_cpu_ms": {
+              "count": 40,
+              "p50": 15.625,
+              "p95": 15.625,
+              "max": 31.25
+            }
+          }
+        },
+        "successful_moves": 40,
+        "door_cpu_ms": 546.875,
+        "calls": {
+          "key": 41,
+          "update": 81,
+          "render": 81,
+          "receive": 40
+        },
+        "delta_16kib_pass": true,
+        "render_p95_100ms_pass": true
+      },
+      "activities": {
+        "walking in a scene place": {
+          "zone": "sodium-tin-halo",
+          "view": "shipped map or local help",
+          "elapsed_s": 12.061999999976251,
+          "ticks": 110,
+          "key_steps": 54,
+          "successful_moves": 21,
+          "cpu_s": 0.65625,
+          "cpu_s_per_minute": 3.2643840159241853,
+          "calls": {
+            "update": 110,
+            "render": 110,
+            "key": 54,
+            "receive": 21
+          },
+          "output_frames": 74,
+          "output_bytes": 8637
+        },
+        "walking where there is no scene": {
+          "zone": "sodium-row",
+          "view": "shipped map or local help",
+          "elapsed_s": 12.10899999999674,
+          "ticks": 102,
+          "key_steps": 50,
+          "successful_moves": 50,
+          "cpu_s": 1.125,
+          "cpu_s_per_minute": 5.5743661739217245,
+          "calls": {
+            "update": 102,
+            "render": 102,
+            "key": 50,
+            "receive": 50
+          },
+          "output_frames": 100,
+          "output_bytes": 91878
+        },
+        "standing, a few stops a minute": {
+          "zone": "sodium-tin-halo",
+          "view": "shipped map or local help",
+          "elapsed_s": 12.0,
+          "ticks": 117,
+          "key_steps": 0,
+          "successful_moves": 0,
+          "cpu_s": 0.0,
+          "cpu_s_per_minute": 0.0,
+          "calls": {
+            "update": 117,
+            "render": 117
+          },
+          "output_frames": 1,
+          "output_bytes": 254
+        },
+        "menus, text and help": {
+          "zone": "sodium-tin-halo",
+          "view": "shipped map or local help",
+          "elapsed_s": 12.030999999959022,
+          "ticks": 118,
+          "key_steps": 0,
+          "successful_moves": 0,
+          "cpu_s": 0.0,
+          "cpu_s_per_minute": 0.0,
+          "calls": {
+            "key": 1,
+            "update": 118,
+            "render": 118
+          },
+          "output_frames": 1,
+          "output_bytes": 2634
+        }
+      },
+      "cpu_s_per_hour": 144.13116363767634,
+      "cpu_120s_per_hour_pass": false
+    }
+  ]
+}

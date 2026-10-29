@@ -5,6 +5,9 @@ import json
 from pathlib import PurePosixPath
 import subprocess
 
+DISPLAY_FILES = {f'src/blacksite/door/{name}.py' for name in
+    ('model', 'cells', 'screens', 'layout', 'palette', 'log')}
+
 
 def full_native(paths: list[str], draft: bool) -> tuple[bool, str]:
     if not draft:
@@ -16,8 +19,9 @@ def full_native(paths: list[str], draft: bool) -> tuple[bool, str]:
         parts = PurePosixPath(path).parts
         if '..' in parts or path.startswith('/'):
             return True, 'unrecognized path'
-        allowed = (path.startswith('src/blacksite/door/')
-            or path.startswith(('src/blacksite/content/text/', 'src/blacksite/content/art/'))
+        allowed = (path in DISPLAY_FILES or path.startswith('src/blacksite/door/views/')
+            or (path.startswith('src/blacksite/content/text/') and PurePosixPath(path).suffix in ('.md', '.txt'))
+            or path.startswith('src/blacksite/content/art/')
             or path in ('src/blacksite/content/palette.json', 'src/blacksite/content/glyphs.json'))
         if allowed:
             presentation = True

@@ -14,7 +14,7 @@ from blacksite.content.loader import load_content
 @pytest.mark.parametrize('paths', [
     ['src/blacksite/door/model.py'],
     ['src/blacksite/content/palette.json', 'tests/door/test_display.py'],
-    ['src/blacksite/content/text/help.json'],
+    ['src/blacksite/content/text/help.md'],
     ['src/blacksite/content/art/title.ans'],
 ])
 def test_draft_presentation_subset_and_ready_full(paths: list[str]) -> None:
@@ -26,7 +26,10 @@ def test_draft_presentation_subset_and_ready_full(paths: list[str]) -> None:
     ['src/blacksite/door/model.py', 'src/blacksite/server/world/zone.py'],
     ['src/blacksite/content/zones/sodium-row.json'],
     ['src/blacksite/door/model.py', '.github/workflows/service-acceptance.yml'],
-    ['src/blacksite/door/../../server/core.py'], ['docs/design/03-terminal-ui.md']])
+    ['src/blacksite/door/../../server/core.py'], ['docs/design/03-terminal-ui.md'],
+    ['src/blacksite/content/text/emotes.json'],
+    *[[f'src/blacksite/door/{name}.py'] for name in
+      ('connection', 'client', 'keys', '__main__', 'terminal', 'doorinfo', 'windows_env', 'unknown')]])
 def test_uncertain_or_mixed_changes_keep_full_matrix(paths: list[str]) -> None:
     assert full_native(paths, True)[0] is True
 
