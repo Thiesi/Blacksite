@@ -1,0 +1,881 @@
+{
+  "schema": 1,
+  "capture_head": "debc51416632de57025271a0f6a2442d8e61d782",
+  "capture_tree_clean": true,
+  "archived_utc": "2026-10-29T11:44:15.521828+00:00",
+  "native_python_tree_sha256": "c2cbfe60f94f5df3029b4d7f21e7a1be3f96e569a98b74f14873f0ca37fdbb87",
+  "transport": "NetBBS Telnet -> registered native stdio",
+  "arrival_captures": 12,
+  "scrollback_captures": 3,
+  "human_approval": false,
+  "full_city_walking": false,
+  "pytest": {
+    "head": "debc51416632de57025271a0f6a2442d8e61d782",
+    "focused_passed": 66,
+    "full_gate": "not locally green; current-head hosted Linux/Windows gate required",
+    "workspace_attempt": {
+      "passed": 1677,
+      "failed": 1,
+      "skipped": 1,
+      "test": "tests/server/test_lifecycle.py::test_content_copied_on_first_start",
+      "failure": "WinError 5 renaming content.next to content in the OneDrive worktree",
+      "seconds": 1088.5
+    },
+    "system_temp_attempt": {
+      "passed": 1677,
+      "failed": 1,
+      "skipped": 1,
+      "test": "tests/admin/test_cli.py::test_real_console_alias_serve_status_stop",
+      "failure": "10-second process.communicate timeout after successful admin stop",
+      "seconds": 995.3
+    },
+    "focused_lifecycle_recheck": {
+      "passed": 1,
+      "seconds": 4.92
+    },
+    "focused_console_recheck": {
+      "passed": 1,
+      "seconds": 6.87
+    },
+    "runtime_or_test_relaxation": false
+  },
+  "strict_packet": {
+    "schema": 1,
+    "head": "debc51416632de57025271a0f6a2442d8e61d782",
+    "dirty": false,
+    "cases": 99,
+    "glyph_style_pass": true,
+    "cp437_pass": true,
+    "cp437_failures": [],
+    "human_approval": false,
+    "caller_input_cell_count": 714,
+    "cp437_checked_cells": 419766,
+    "cp437_policy": "authored cells checked strictly; declared caller-input cells counted separately by source (#76)"
+  },
+  "captures": [
+    {
+      "scenario": "wake-hall",
+      "zone": "vatside-wake-hall",
+      "size": [
+        80,
+        24
+      ],
+      "tier": "16",
+      "negotiated_tier": "16",
+      "arrival_text": "You wake on a gurney under a number. White light, warm plastic, a floor drain. Past the cards, a corridor. Past the corridor, a terminal.",
+      "arrival_role": "chan_zone",
+      "arrival_retained_in_ring": true,
+      "whole_paragraph_visible": true,
+      "arrival_first_log_since_walk_or_connection": true,
+      "observed_log_rows": [
+        "[zone] You wake on a gurney under a number. White light, warm plastic, a floor",
+        "   drain. Past the cards, a corridor. Past the corridor, a terminal.          ",
+        "[zone] Crews end on a service restart. Use G to invite.                       "
+      ],
+      "new_log_lines": [
+        {
+          "channel": "zone",
+          "text": "You wake on a gurney under a number. White light, warm plastic, a floor drain. Past the cards, a corridor. Past the corridor, a terminal.",
+          "role": "chan_zone",
+          "at": "2026-10-29T11:01:34.807887+00:00",
+          "id": "f5e04d48c06249f2a711df9e6b01a989:session:1:2026-10-29T11:01:33.902756+00:00:1"
+        },
+        {
+          "channel": "zone",
+          "text": "Crews end on a service restart. Use G to invite.",
+          "role": "chan_zone",
+          "at": "2026-10-29T11:01:34.807887+00:00",
+          "id": "f5e04d48c06249f2a711df9e6b01a989:session:1:2026-10-29T11:01:33.902756+00:00:2"
+        }
+      ],
+      "ansi": "arrival-wake-hall-80x24-16.ans",
+      "text": "arrival-wake-hall-80x24-16.txt",
+      "context": "arrival-wake-hall-80x24-16.json",
+      "directory": "shipped",
+      "archive_directory": "16/shipped"
+    },
+    {
+      "scenario": "wake-hall",
+      "zone": "vatside-wake-hall",
+      "size": [
+        132,
+        50
+      ],
+      "tier": "16",
+      "negotiated_tier": "16",
+      "arrival_text": "You wake on a gurney under a number. White light, warm plastic, a floor drain. Past the cards, a corridor. Past the corridor, a terminal.",
+      "arrival_role": "chan_zone",
+      "arrival_retained_in_ring": true,
+      "whole_paragraph_visible": true,
+      "arrival_first_log_since_walk_or_connection": true,
+      "observed_log_rows": [
+        "[zone] You wake on a gurney under a number. White light, warm plastic, a floor drain. Past the cards, a corridor. Past the corrido",
+        "  r, a terminal.                                                                                                                  ",
+        "[zone] Crews end on a service restart. Use G to invite.                                                                           ",
+        "                                                                                                                                  ",
+        "                                                                                                                                  ",
+        "                                                                                                                                  ",
+        "                                                                                                                                  ",
+        "                                                                                                                                  "
+      ],
+      "new_log_lines": [
+        {
+          "channel": "zone",
+          "text": "You wake on a gurney under a number. White light, warm plastic, a floor drain. Past the cards, a corridor. Past the corridor, a terminal.",
+          "role": "chan_zone",
+          "at": "2026-10-29T11:01:37.914390+00:00",
+          "id": "f5e04d48c06249f2a711df9e6b01a989:session:2:2026-10-29T11:01:36.695157+00:00:1"
+        },
+        {
+          "channel": "zone",
+          "text": "Crews end on a service restart. Use G to invite.",
+          "role": "chan_zone",
+          "at": "2026-10-29T11:01:37.915537+00:00",
+          "id": "f5e04d48c06249f2a711df9e6b01a989:session:2:2026-10-29T11:01:36.695157+00:00:2"
+        }
+      ],
+      "ansi": "arrival-wake-hall-132x50-16.ans",
+      "text": "arrival-wake-hall-132x50-16.txt",
+      "context": "arrival-wake-hall-132x50-16.json",
+      "directory": "shipped",
+      "archive_directory": "16/shipped"
+    },
+    {
+      "scenario": "under-service",
+      "zone": "under-service",
+      "size": [
+        80,
+        24
+      ],
+      "tier": "16",
+      "negotiated_tier": "16",
+      "arrival_text": "You follow pipes beneath the city. Most lamps are dark. Warm air moves through the breach ahead.",
+      "arrival_role": "chan_zone",
+      "arrival_retained_in_ring": true,
+      "whole_paragraph_visible": false,
+      "arrival_first_log_since_walk_or_connection": true,
+      "observed_log_rows": [
+        "  through the breach ahead.                                                   ",
+        "[zone] You arrive at Service Level.                                           ",
+        "[sys] You gain 25 XP.                                                         "
+      ],
+      "new_log_lines": [
+        {
+          "channel": "zone",
+          "text": "You follow pipes beneath the city. Most lamps are dark. Warm air moves through the breach ahead.",
+          "role": "chan_zone",
+          "at": "2026-10-29T11:02:59.138346+00:00",
+          "id": "5e4812626734422895b0123f1a2aaad3:session:1:2026-10-29T11:02:47.810417+00:00:4"
+        },
+        {
+          "channel": "zone",
+          "text": "You arrive at Service Level.",
+          "role": "chan_zone",
+          "at": "2026-10-29T11:02:59.139247+00:00",
+          "id": "5e4812626734422895b0123f1a2aaad3:session:1:2026-10-29T11:02:47.810417+00:00:5"
+        },
+        {
+          "channel": "system",
+          "text": "You gain 25 XP.",
+          "role": "chan_sys",
+          "at": "2026-10-29T11:02:59.150467+00:00",
+          "id": "5e4812626734422895b0123f1a2aaad3:session:1:2026-10-29T11:02:47.810417+00:00:6"
+        }
+      ],
+      "ansi": "arrival-under-service-80x24-16.ans",
+      "text": "arrival-under-service-80x24-16.txt",
+      "context": "arrival-under-service-80x24-16.json",
+      "scrollback": {
+        "ansi": "arrival-under-service-80x24-16-scrollback.ans",
+        "text": "arrival-under-service-80x24-16-scrollback.txt",
+        "context": "arrival-under-service-80x24-16-scrollback.json",
+        "whole_paragraph_visible": true
+      },
+      "directory": "generated",
+      "archive_directory": "16/generated"
+    },
+    {
+      "scenario": "under-service",
+      "zone": "under-service",
+      "size": [
+        132,
+        50
+      ],
+      "tier": "16",
+      "negotiated_tier": "16",
+      "arrival_text": "You follow pipes beneath the city. Most lamps are dark. Warm air moves through the breach ahead.",
+      "arrival_role": "chan_zone",
+      "arrival_retained_in_ring": true,
+      "whole_paragraph_visible": true,
+      "arrival_first_log_since_walk_or_connection": true,
+      "observed_log_rows": [
+        "[zone] You wake on a gurney under a number. White light, warm plastic, a floor drain. Past the cards, a corridor. Past the corrido",
+        "  r, a terminal.                                                                                                                  ",
+        "[zone] Crews end on a service restart. Use G to invite.                                                                           ",
+        "[combat] Your training drone wakes. Tab targets; F fires; B skips. Its shots cannot kill.                                         ",
+        "[zone] You follow pipes beneath the city. Most lamps are dark. Warm air moves through the breach ahead.                           ",
+        "[zone] You arrive at Service Level.                                                                                               ",
+        "[sys] You gain 25 XP.                                                                                                             ",
+        "                                                                                                                                  "
+      ],
+      "new_log_lines": [
+        {
+          "channel": "zone",
+          "text": "You follow pipes beneath the city. Most lamps are dark. Warm air moves through the breach ahead.",
+          "role": "chan_zone",
+          "at": "2026-10-29T11:03:13.724738+00:00",
+          "id": "5e4812626734422895b0123f1a2aaad3:session:2:2026-10-29T11:03:02.283763+00:00:4"
+        },
+        {
+          "channel": "zone",
+          "text": "You arrive at Service Level.",
+          "role": "chan_zone",
+          "at": "2026-10-29T11:03:13.726853+00:00",
+          "id": "5e4812626734422895b0123f1a2aaad3:session:2:2026-10-29T11:03:02.283763+00:00:5"
+        },
+        {
+          "channel": "system",
+          "text": "You gain 25 XP.",
+          "role": "chan_sys",
+          "at": "2026-10-29T11:03:13.749407+00:00",
+          "id": "5e4812626734422895b0123f1a2aaad3:session:2:2026-10-29T11:03:02.283763+00:00:6"
+        }
+      ],
+      "ansi": "arrival-under-service-132x50-16.ans",
+      "text": "arrival-under-service-132x50-16.txt",
+      "context": "arrival-under-service-132x50-16.json",
+      "directory": "generated",
+      "archive_directory": "16/generated"
+    },
+    {
+      "scenario": "wake-hall",
+      "zone": "vatside-wake-hall",
+      "size": [
+        80,
+        24
+      ],
+      "tier": "256",
+      "negotiated_tier": "256",
+      "arrival_text": "You wake on a gurney under a number. White light, warm plastic, a floor drain. Past the cards, a corridor. Past the corridor, a terminal.",
+      "arrival_role": "chan_zone",
+      "arrival_retained_in_ring": true,
+      "whole_paragraph_visible": true,
+      "arrival_first_log_since_walk_or_connection": true,
+      "observed_log_rows": [
+        "[zone] You wake on a gurney under a number. White light, warm plastic, a floor",
+        "   drain. Past the cards, a corridor. Past the corridor, a terminal.          ",
+        "[zone] Crews end on a service restart. Use G to invite.                       "
+      ],
+      "new_log_lines": [
+        {
+          "channel": "zone",
+          "text": "You wake on a gurney under a number. White light, warm plastic, a floor drain. Past the cards, a corridor. Past the corridor, a terminal.",
+          "role": "chan_zone",
+          "at": "2026-10-29T11:01:36.126188+00:00",
+          "id": "7e798f77977847a18fc592192d3ffd27:session:1:2026-10-29T11:01:35.242178+00:00:1"
+        },
+        {
+          "channel": "zone",
+          "text": "Crews end on a service restart. Use G to invite.",
+          "role": "chan_zone",
+          "at": "2026-10-29T11:01:36.127189+00:00",
+          "id": "7e798f77977847a18fc592192d3ffd27:session:1:2026-10-29T11:01:35.242178+00:00:2"
+        }
+      ],
+      "ansi": "arrival-wake-hall-80x24-256.ans",
+      "text": "arrival-wake-hall-80x24-256.txt",
+      "context": "arrival-wake-hall-80x24-256.json",
+      "directory": "shipped",
+      "archive_directory": "256/shipped"
+    },
+    {
+      "scenario": "wake-hall",
+      "zone": "vatside-wake-hall",
+      "size": [
+        132,
+        50
+      ],
+      "tier": "256",
+      "negotiated_tier": "256",
+      "arrival_text": "You wake on a gurney under a number. White light, warm plastic, a floor drain. Past the cards, a corridor. Past the corridor, a terminal.",
+      "arrival_role": "chan_zone",
+      "arrival_retained_in_ring": true,
+      "whole_paragraph_visible": true,
+      "arrival_first_log_since_walk_or_connection": true,
+      "observed_log_rows": [
+        "[zone] You wake on a gurney under a number. White light, warm plastic, a floor drain. Past the cards, a corridor. Past the corrido",
+        "  r, a terminal.                                                                                                                  ",
+        "[zone] Crews end on a service restart. Use G to invite.                                                                           ",
+        "                                                                                                                                  ",
+        "                                                                                                                                  ",
+        "                                                                                                                                  ",
+        "                                                                                                                                  ",
+        "                                                                                                                                  "
+      ],
+      "new_log_lines": [
+        {
+          "channel": "zone",
+          "text": "You wake on a gurney under a number. White light, warm plastic, a floor drain. Past the cards, a corridor. Past the corridor, a terminal.",
+          "role": "chan_zone",
+          "at": "2026-10-29T11:01:40.028073+00:00",
+          "id": "7e798f77977847a18fc592192d3ffd27:session:2:2026-10-29T11:01:38.873478+00:00:1"
+        },
+        {
+          "channel": "zone",
+          "text": "Crews end on a service restart. Use G to invite.",
+          "role": "chan_zone",
+          "at": "2026-10-29T11:01:40.028073+00:00",
+          "id": "7e798f77977847a18fc592192d3ffd27:session:2:2026-10-29T11:01:38.873478+00:00:2"
+        }
+      ],
+      "ansi": "arrival-wake-hall-132x50-256.ans",
+      "text": "arrival-wake-hall-132x50-256.txt",
+      "context": "arrival-wake-hall-132x50-256.json",
+      "directory": "shipped",
+      "archive_directory": "256/shipped"
+    },
+    {
+      "scenario": "under-service",
+      "zone": "under-service",
+      "size": [
+        80,
+        24
+      ],
+      "tier": "256",
+      "negotiated_tier": "256",
+      "arrival_text": "You follow pipes beneath the city. Most lamps are dark. Warm air moves through the breach ahead.",
+      "arrival_role": "chan_zone",
+      "arrival_retained_in_ring": true,
+      "whole_paragraph_visible": false,
+      "arrival_first_log_since_walk_or_connection": true,
+      "observed_log_rows": [
+        "  through the breach ahead.                                                   ",
+        "[zone] You arrive at Service Level.                                           ",
+        "[sys] You gain 25 XP.                                                         "
+      ],
+      "new_log_lines": [
+        {
+          "channel": "zone",
+          "text": "You follow pipes beneath the city. Most lamps are dark. Warm air moves through the breach ahead.",
+          "role": "chan_zone",
+          "at": "2026-10-29T11:02:59.005274+00:00",
+          "id": "25385fd8618643e59b679cc58302de7b:session:1:2026-10-29T11:02:47.389683+00:00:4"
+        },
+        {
+          "channel": "zone",
+          "text": "You arrive at Service Level.",
+          "role": "chan_zone",
+          "at": "2026-10-29T11:02:59.006271+00:00",
+          "id": "25385fd8618643e59b679cc58302de7b:session:1:2026-10-29T11:02:47.389683+00:00:5"
+        },
+        {
+          "channel": "system",
+          "text": "You gain 25 XP.",
+          "role": "chan_sys",
+          "at": "2026-10-29T11:02:59.017210+00:00",
+          "id": "25385fd8618643e59b679cc58302de7b:session:1:2026-10-29T11:02:47.389683+00:00:6"
+        }
+      ],
+      "ansi": "arrival-under-service-80x24-256.ans",
+      "text": "arrival-under-service-80x24-256.txt",
+      "context": "arrival-under-service-80x24-256.json",
+      "scrollback": {
+        "ansi": "arrival-under-service-80x24-256-scrollback.ans",
+        "text": "arrival-under-service-80x24-256-scrollback.txt",
+        "context": "arrival-under-service-80x24-256-scrollback.json",
+        "whole_paragraph_visible": true
+      },
+      "directory": "generated",
+      "archive_directory": "256/generated"
+    },
+    {
+      "scenario": "under-service",
+      "zone": "under-service",
+      "size": [
+        132,
+        50
+      ],
+      "tier": "256",
+      "negotiated_tier": "256",
+      "arrival_text": "You follow pipes beneath the city. Most lamps are dark. Warm air moves through the breach ahead.",
+      "arrival_role": "chan_zone",
+      "arrival_retained_in_ring": true,
+      "whole_paragraph_visible": true,
+      "arrival_first_log_since_walk_or_connection": true,
+      "observed_log_rows": [
+        "[zone] You wake on a gurney under a number. White light, warm plastic, a floor drain. Past the cards, a corridor. Past the corrido",
+        "  r, a terminal.                                                                                                                  ",
+        "[zone] Crews end on a service restart. Use G to invite.                                                                           ",
+        "[combat] Your training drone wakes. Tab targets; F fires; B skips. Its shots cannot kill.                                         ",
+        "[zone] You follow pipes beneath the city. Most lamps are dark. Warm air moves through the breach ahead.                           ",
+        "[zone] You arrive at Service Level.                                                                                               ",
+        "[sys] You gain 25 XP.                                                                                                             ",
+        "                                                                                                                                  "
+      ],
+      "new_log_lines": [
+        {
+          "channel": "zone",
+          "text": "You follow pipes beneath the city. Most lamps are dark. Warm air moves through the breach ahead.",
+          "role": "chan_zone",
+          "at": "2026-10-29T11:03:13.679775+00:00",
+          "id": "25385fd8618643e59b679cc58302de7b:session:2:2026-10-29T11:03:02.191777+00:00:4"
+        },
+        {
+          "channel": "zone",
+          "text": "You arrive at Service Level.",
+          "role": "chan_zone",
+          "at": "2026-10-29T11:03:13.681526+00:00",
+          "id": "25385fd8618643e59b679cc58302de7b:session:2:2026-10-29T11:03:02.191777+00:00:5"
+        },
+        {
+          "channel": "system",
+          "text": "You gain 25 XP.",
+          "role": "chan_sys",
+          "at": "2026-10-29T11:03:13.706151+00:00",
+          "id": "25385fd8618643e59b679cc58302de7b:session:2:2026-10-29T11:03:02.191777+00:00:6"
+        }
+      ],
+      "ansi": "arrival-under-service-132x50-256.ans",
+      "text": "arrival-under-service-132x50-256.txt",
+      "context": "arrival-under-service-132x50-256.json",
+      "directory": "generated",
+      "archive_directory": "256/generated"
+    },
+    {
+      "scenario": "wake-hall",
+      "zone": "vatside-wake-hall",
+      "size": [
+        80,
+        24
+      ],
+      "tier": "truecolor",
+      "negotiated_tier": "truecolor",
+      "arrival_text": "You wake on a gurney under a number. White light, warm plastic, a floor drain. Past the cards, a corridor. Past the corridor, a terminal.",
+      "arrival_role": "chan_zone",
+      "arrival_retained_in_ring": true,
+      "whole_paragraph_visible": true,
+      "arrival_first_log_since_walk_or_connection": true,
+      "observed_log_rows": [
+        "[zone] You wake on a gurney under a number. White light, warm plastic, a floor",
+        "   drain. Past the cards, a corridor. Past the corridor, a terminal.          ",
+        "[zone] Crews end on a service restart. Use G to invite.                       "
+      ],
+      "new_log_lines": [
+        {
+          "channel": "zone",
+          "text": "You wake on a gurney under a number. White light, warm plastic, a floor drain. Past the cards, a corridor. Past the corridor, a terminal.",
+          "role": "chan_zone",
+          "at": "2026-10-29T11:01:35.600029+00:00",
+          "id": "86b668e5ff6845f490cf3e86668ba464:session:1:2026-10-29T11:01:34.708972+00:00:1"
+        },
+        {
+          "channel": "zone",
+          "text": "Crews end on a service restart. Use G to invite.",
+          "role": "chan_zone",
+          "at": "2026-10-29T11:01:35.601028+00:00",
+          "id": "86b668e5ff6845f490cf3e86668ba464:session:1:2026-10-29T11:01:34.708972+00:00:2"
+        }
+      ],
+      "ansi": "arrival-wake-hall-80x24-truecolor.ans",
+      "text": "arrival-wake-hall-80x24-truecolor.txt",
+      "context": "arrival-wake-hall-80x24-truecolor.json",
+      "directory": "shipped",
+      "archive_directory": "truecolor/shipped"
+    },
+    {
+      "scenario": "wake-hall",
+      "zone": "vatside-wake-hall",
+      "size": [
+        132,
+        50
+      ],
+      "tier": "truecolor",
+      "negotiated_tier": "truecolor",
+      "arrival_text": "You wake on a gurney under a number. White light, warm plastic, a floor drain. Past the cards, a corridor. Past the corridor, a terminal.",
+      "arrival_role": "chan_zone",
+      "arrival_retained_in_ring": true,
+      "whole_paragraph_visible": true,
+      "arrival_first_log_since_walk_or_connection": true,
+      "observed_log_rows": [
+        "[zone] You wake on a gurney under a number. White light, warm plastic, a floor drain. Past the cards, a corridor. Past the corrido",
+        "  r, a terminal.                                                                                                                  ",
+        "[zone] Crews end on a service restart. Use G to invite.                                                                           ",
+        "                                                                                                                                  ",
+        "                                                                                                                                  ",
+        "                                                                                                                                  ",
+        "                                                                                                                                  ",
+        "                                                                                                                                  "
+      ],
+      "new_log_lines": [
+        {
+          "channel": "zone",
+          "text": "You wake on a gurney under a number. White light, warm plastic, a floor drain. Past the cards, a corridor. Past the corridor, a terminal.",
+          "role": "chan_zone",
+          "at": "2026-10-29T11:01:39.411438+00:00",
+          "id": "86b668e5ff6845f490cf3e86668ba464:session:2:2026-10-29T11:01:38.348348+00:00:1"
+        },
+        {
+          "channel": "zone",
+          "text": "Crews end on a service restart. Use G to invite.",
+          "role": "chan_zone",
+          "at": "2026-10-29T11:01:39.412578+00:00",
+          "id": "86b668e5ff6845f490cf3e86668ba464:session:2:2026-10-29T11:01:38.348348+00:00:2"
+        }
+      ],
+      "ansi": "arrival-wake-hall-132x50-truecolor.ans",
+      "text": "arrival-wake-hall-132x50-truecolor.txt",
+      "context": "arrival-wake-hall-132x50-truecolor.json",
+      "directory": "shipped",
+      "archive_directory": "truecolor/shipped"
+    },
+    {
+      "scenario": "under-service",
+      "zone": "under-service",
+      "size": [
+        80,
+        24
+      ],
+      "tier": "truecolor",
+      "negotiated_tier": "truecolor",
+      "arrival_text": "You follow pipes beneath the city. Most lamps are dark. Warm air moves through the breach ahead.",
+      "arrival_role": "chan_zone",
+      "arrival_retained_in_ring": true,
+      "whole_paragraph_visible": false,
+      "arrival_first_log_since_walk_or_connection": true,
+      "observed_log_rows": [
+        "  through the breach ahead.                                                   ",
+        "[zone] You arrive at Service Level.                                           ",
+        "[sys] You gain 25 XP.                                                         "
+      ],
+      "new_log_lines": [
+        {
+          "channel": "zone",
+          "text": "You follow pipes beneath the city. Most lamps are dark. Warm air moves through the breach ahead.",
+          "role": "chan_zone",
+          "at": "2026-10-29T11:03:00.051903+00:00",
+          "id": "6e7fc40925154146a217cb436c4ce39a:session:1:2026-10-29T11:02:48.814342+00:00:4"
+        },
+        {
+          "channel": "zone",
+          "text": "You arrive at Service Level.",
+          "role": "chan_zone",
+          "at": "2026-10-29T11:03:00.054439+00:00",
+          "id": "6e7fc40925154146a217cb436c4ce39a:session:1:2026-10-29T11:02:48.814342+00:00:5"
+        },
+        {
+          "channel": "system",
+          "text": "You gain 25 XP.",
+          "role": "chan_sys",
+          "at": "2026-10-29T11:03:00.077423+00:00",
+          "id": "6e7fc40925154146a217cb436c4ce39a:session:1:2026-10-29T11:02:48.814342+00:00:6"
+        }
+      ],
+      "ansi": "arrival-under-service-80x24-truecolor.ans",
+      "text": "arrival-under-service-80x24-truecolor.txt",
+      "context": "arrival-under-service-80x24-truecolor.json",
+      "scrollback": {
+        "ansi": "arrival-under-service-80x24-truecolor-scrollback.ans",
+        "text": "arrival-under-service-80x24-truecolor-scrollback.txt",
+        "context": "arrival-under-service-80x24-truecolor-scrollback.json",
+        "whole_paragraph_visible": true
+      },
+      "directory": "generated",
+      "archive_directory": "truecolor/generated"
+    },
+    {
+      "scenario": "under-service",
+      "zone": "under-service",
+      "size": [
+        132,
+        50
+      ],
+      "tier": "truecolor",
+      "negotiated_tier": "truecolor",
+      "arrival_text": "You follow pipes beneath the city. Most lamps are dark. Warm air moves through the breach ahead.",
+      "arrival_role": "chan_zone",
+      "arrival_retained_in_ring": true,
+      "whole_paragraph_visible": true,
+      "arrival_first_log_since_walk_or_connection": true,
+      "observed_log_rows": [
+        "[zone] You wake on a gurney under a number. White light, warm plastic, a floor drain. Past the cards, a corridor. Past the corrido",
+        "  r, a terminal.                                                                                                                  ",
+        "[zone] Crews end on a service restart. Use G to invite.                                                                           ",
+        "[combat] Your training drone wakes. Tab targets; F fires; B skips. Its shots cannot kill.                                         ",
+        "[zone] You follow pipes beneath the city. Most lamps are dark. Warm air moves through the breach ahead.                           ",
+        "[zone] You arrive at Service Level.                                                                                               ",
+        "[sys] You gain 25 XP.                                                                                                             ",
+        "                                                                                                                                  "
+      ],
+      "new_log_lines": [
+        {
+          "channel": "zone",
+          "text": "You follow pipes beneath the city. Most lamps are dark. Warm air moves through the breach ahead.",
+          "role": "chan_zone",
+          "at": "2026-10-29T11:03:14.634037+00:00",
+          "id": "6e7fc40925154146a217cb436c4ce39a:session:2:2026-10-29T11:03:02.658500+00:00:4"
+        },
+        {
+          "channel": "zone",
+          "text": "You arrive at Service Level.",
+          "role": "chan_zone",
+          "at": "2026-10-29T11:03:14.635827+00:00",
+          "id": "6e7fc40925154146a217cb436c4ce39a:session:2:2026-10-29T11:03:02.658500+00:00:5"
+        },
+        {
+          "channel": "system",
+          "text": "You gain 25 XP.",
+          "role": "chan_sys",
+          "at": "2026-10-29T11:03:14.653062+00:00",
+          "id": "6e7fc40925154146a217cb436c4ce39a:session:2:2026-10-29T11:03:02.658500+00:00:6"
+        }
+      ],
+      "ansi": "arrival-under-service-132x50-truecolor.ans",
+      "text": "arrival-under-service-132x50-truecolor.txt",
+      "context": "arrival-under-service-132x50-truecolor.json",
+      "directory": "generated",
+      "archive_directory": "truecolor/generated"
+    }
+  ],
+  "files": [
+    {
+      "path": "16/generated/arrival-under-service-132x50-16.ans",
+      "bytes": 94866,
+      "sha256": "606ee13067433b6ec4823e5afe6606259e12d5a2973a334da8f7e8669c6c8d2e"
+    },
+    {
+      "path": "16/generated/arrival-under-service-132x50-16.json",
+      "bytes": 23995,
+      "sha256": "bf2dcc67090ec8f4cadba2a5060c7cdcaedd073732f57723fb4644098adf1956"
+    },
+    {
+      "path": "16/generated/arrival-under-service-132x50-16.txt",
+      "bytes": 7792,
+      "sha256": "0d85d0c6c5baa3bbb5cb9d7d3ae06c188a7902fe249748c60ab4d300055dda20"
+    },
+    {
+      "path": "16/generated/arrival-under-service-80x24-16-scrollback.ans",
+      "bytes": 57831,
+      "sha256": "d770bf2d67309840090bf1bf92d21d14d555c2ad9242a75459b7efb898d63de2"
+    },
+    {
+      "path": "16/generated/arrival-under-service-80x24-16-scrollback.json",
+      "bytes": 9306,
+      "sha256": "ba987977e00dc3603556cd6fed23678a1435518d9c74ee48b1b614779dae1ebf"
+    },
+    {
+      "path": "16/generated/arrival-under-service-80x24-16-scrollback.txt",
+      "bytes": 2519,
+      "sha256": "10e30941fafd8f5736fa808b6ec31a5bc9d614cf4e1f59bf7a5b0bb2f35b5191"
+    },
+    {
+      "path": "16/generated/arrival-under-service-80x24-16.ans",
+      "bytes": 56379,
+      "sha256": "9a888ddc4db69d88117520ddf15dd67b3e9cbb98067cfa35fbb1ba4ddc3b297f"
+    },
+    {
+      "path": "16/generated/arrival-under-service-80x24-16.json",
+      "bytes": 11616,
+      "sha256": "8d031cf4bfe4dba15167cbe8e3a0a80e48f34cf34e1c1dd1271283b5b16bc16e"
+    },
+    {
+      "path": "16/generated/arrival-under-service-80x24-16.txt",
+      "bytes": 2602,
+      "sha256": "54e1b624107a4ccf4c9b40531f138aa16c38aae6962738d1c5a3c8a73dc29721"
+    },
+    {
+      "path": "16/result.json",
+      "bytes": 10736,
+      "sha256": "8897bdc16ecea2e0cf378f2f11daed092ca00eec61d453fe73bdc207b2740a99"
+    },
+    {
+      "path": "16/shipped/arrival-wake-hall-132x50-16.ans",
+      "bytes": 71617,
+      "sha256": "bddeb116c6d9233efe88df9a73f059b84a13664e48f1e5061645bccb8b4e98c1"
+    },
+    {
+      "path": "16/shipped/arrival-wake-hall-132x50-16.json",
+      "bytes": 24483,
+      "sha256": "e156cee19329b1a9f4c28bfd53338382632f92e9b7a619867fd60e23e336bd78"
+    },
+    {
+      "path": "16/shipped/arrival-wake-hall-132x50-16.txt",
+      "bytes": 7821,
+      "sha256": "4afa805fb6a552d2ae12a25503e195d19de9e857e005f4d738b93ea864f080c2"
+    },
+    {
+      "path": "16/shipped/arrival-wake-hall-80x24-16.ans",
+      "bytes": 30154,
+      "sha256": "8e2156aebf2dbfa35ad31f6ce36982547332ad403fed7f342c7763a695ab2a9c"
+    },
+    {
+      "path": "16/shipped/arrival-wake-hall-80x24-16.json",
+      "bytes": 12160,
+      "sha256": "14974d721918be8312657a2f9677b35e7a3722ab61c3ed88dd438f98d972af3a"
+    },
+    {
+      "path": "16/shipped/arrival-wake-hall-80x24-16.txt",
+      "bytes": 2631,
+      "sha256": "bfd08f8d1d852508c5742bf1f984b55dc36d7488757d6fdcff563d334a031e05"
+    },
+    {
+      "path": "256/generated/arrival-under-service-132x50-256.ans",
+      "bytes": 114087,
+      "sha256": "38bb86690f1869e6bba76e8bd4678948b99f2348178d6f22aa3dff7b031b69dd"
+    },
+    {
+      "path": "256/generated/arrival-under-service-132x50-256.json",
+      "bytes": 26217,
+      "sha256": "15ccb87b38b40c627315cdcaba23afe29c4da2ef8d4125bf47462b8d87bae943"
+    },
+    {
+      "path": "256/generated/arrival-under-service-132x50-256.txt",
+      "bytes": 7792,
+      "sha256": "0d85d0c6c5baa3bbb5cb9d7d3ae06c188a7902fe249748c60ab4d300055dda20"
+    },
+    {
+      "path": "256/generated/arrival-under-service-80x24-256-scrollback.ans",
+      "bytes": 79349,
+      "sha256": "d6d23b28331e87a03e8578b9ad7838e9c930ccffa0210d072e8b866188c8fc92"
+    },
+    {
+      "path": "256/generated/arrival-under-service-80x24-256-scrollback.json",
+      "bytes": 10574,
+      "sha256": "028a6092cbfd290d6036f072da0e98ea920ea187036b30b6f5a4b12b3d9d65a7"
+    },
+    {
+      "path": "256/generated/arrival-under-service-80x24-256-scrollback.txt",
+      "bytes": 2519,
+      "sha256": "10e30941fafd8f5736fa808b6ec31a5bc9d614cf4e1f59bf7a5b0bb2f35b5191"
+    },
+    {
+      "path": "256/generated/arrival-under-service-80x24-256.ans",
+      "bytes": 77812,
+      "sha256": "ab2bfd1c3b287e34b646ad4824d5b055fdafdfd121f57239f4f90de9458bea44"
+    },
+    {
+      "path": "256/generated/arrival-under-service-80x24-256.json",
+      "bytes": 13498,
+      "sha256": "86c28e8e016757b73e3d259aa5fb58ef55f372c939554be7123c3b9fb55ea31c"
+    },
+    {
+      "path": "256/generated/arrival-under-service-80x24-256.txt",
+      "bytes": 2602,
+      "sha256": "54e1b624107a4ccf4c9b40531f138aa16c38aae6962738d1c5a3c8a73dc29721"
+    },
+    {
+      "path": "256/result.json",
+      "bytes": 10758,
+      "sha256": "d17e17ec0a832156104111a2b63987fafe2d40f294782ddea5ca83737ae71440"
+    },
+    {
+      "path": "256/shipped/arrival-wake-hall-132x50-256.ans",
+      "bytes": 94891,
+      "sha256": "971c42777d5471e840c9e35ffd861923d15d509ae34c1dcc697f5ea16639abf4"
+    },
+    {
+      "path": "256/shipped/arrival-wake-hall-132x50-256.json",
+      "bytes": 26587,
+      "sha256": "0c61d5106131216343be9337b5b0edb6eb3aea2b51f239500bec71aac9e72150"
+    },
+    {
+      "path": "256/shipped/arrival-wake-hall-132x50-256.txt",
+      "bytes": 7821,
+      "sha256": "3f34370963a9c6154ade8471125d2d75418e275b3e9b85b80fe73548be9d4470"
+    },
+    {
+      "path": "256/shipped/arrival-wake-hall-80x24-256.ans",
+      "bytes": 36866,
+      "sha256": "a24179bc797156128e97f3a6060e2ab737ec900fbb928a28ce839fc360022335"
+    },
+    {
+      "path": "256/shipped/arrival-wake-hall-80x24-256.json",
+      "bytes": 14265,
+      "sha256": "2de57912fa2557076601bd545620e8dbaeddcff0170bd24b1ef5e175d1114b94"
+    },
+    {
+      "path": "256/shipped/arrival-wake-hall-80x24-256.txt",
+      "bytes": 2631,
+      "sha256": "28c28ade914502b6b6bd320232255fb826ad3b39d916004fd72c810f22c10b56"
+    },
+    {
+      "path": "truecolor/generated/arrival-under-service-132x50-truecolor.ans",
+      "bytes": 141413,
+      "sha256": "b173f03e7f5abb524fd2f86cd28a0c71e8bc2c8601c87b6d5f377ee2f654d182"
+    },
+    {
+      "path": "truecolor/generated/arrival-under-service-132x50-truecolor.json",
+      "bytes": 26500,
+      "sha256": "87814c7c8023cb08edd92b2247a68dcc1bd213c396e4b600b5a655cd405b5932"
+    },
+    {
+      "path": "truecolor/generated/arrival-under-service-132x50-truecolor.txt",
+      "bytes": 7792,
+      "sha256": "0d85d0c6c5baa3bbb5cb9d7d3ae06c188a7902fe249748c60ab4d300055dda20"
+    },
+    {
+      "path": "truecolor/generated/arrival-under-service-80x24-truecolor-scrollback.ans",
+      "bytes": 86997,
+      "sha256": "8ac03716c314e96e71b53f97196698f65b930b31bcda1f406f4ee357c8e8dcc4"
+    },
+    {
+      "path": "truecolor/generated/arrival-under-service-80x24-truecolor-scrollback.json",
+      "bytes": 10759,
+      "sha256": "4a9d440bab932b16aaf31f48c2fa5c0009124c6fa8b192d679a011848c677611"
+    },
+    {
+      "path": "truecolor/generated/arrival-under-service-80x24-truecolor-scrollback.txt",
+      "bytes": 2519,
+      "sha256": "10e30941fafd8f5736fa808b6ec31a5bc9d614cf4e1f59bf7a5b0bb2f35b5191"
+    },
+    {
+      "path": "truecolor/generated/arrival-under-service-80x24-truecolor.ans",
+      "bytes": 85254,
+      "sha256": "ba35abd33080f0f2b2a7d730fed43485947866c3f3ace592a90ce636da17d7d6"
+    },
+    {
+      "path": "truecolor/generated/arrival-under-service-80x24-truecolor.json",
+      "bytes": 13827,
+      "sha256": "11f975b9b3bce1eb44a16ba3d15b8042966ff7c1f901695f5f23da5e77240738"
+    },
+    {
+      "path": "truecolor/generated/arrival-under-service-80x24-truecolor.txt",
+      "bytes": 2602,
+      "sha256": "2dc0d9a94ac2e63b8a3f3e5a70b68d78233243b5f8bac0caa51798012b3a2388"
+    },
+    {
+      "path": "truecolor/result.json",
+      "bytes": 10911,
+      "sha256": "9c635332e294e9d5f548b4a94055005d7e6eed056bc8500b384ce02506cbb4d2"
+    },
+    {
+      "path": "truecolor/shipped/arrival-wake-hall-132x50-truecolor.ans",
+      "bytes": 93497,
+      "sha256": "e1fe07f1664b7cd109fa76b842f2bd1ec96bd187a4e4a0fec98c2aafd3a3e663"
+    },
+    {
+      "path": "truecolor/shipped/arrival-wake-hall-132x50-truecolor.json",
+      "bytes": 26880,
+      "sha256": "0e77cbf75379e64e9b3170e6a7700b1ea8e747b4de5e9dfe0f8c95bb275fe414"
+    },
+    {
+      "path": "truecolor/shipped/arrival-wake-hall-132x50-truecolor.txt",
+      "bytes": 7821,
+      "sha256": "e52ddeb6f603294dc485aa56735ffe57f422f2bde30ea204588a8b2b49fafae8"
+    },
+    {
+      "path": "truecolor/shipped/arrival-wake-hall-80x24-truecolor.ans",
+      "bytes": 37583,
+      "sha256": "e35347e62744386bcf91c0108294f5c5efc2158bfe299242b4ff17ce04033378"
+    },
+    {
+      "path": "truecolor/shipped/arrival-wake-hall-80x24-truecolor.json",
+      "bytes": 14558,
+      "sha256": "c9c82f01c92ea7a7259f2139d1a0018d4b6de117414ebe54365ff27569212e4b"
+    },
+    {
+      "path": "truecolor/shipped/arrival-wake-hall-80x24-truecolor.txt",
+      "bytes": 2631,
+      "sha256": "22e17f97f8593a62c6beec57a034f08a9e39059eb62743ca1e5b5f2f4ba897b1"
+    }
+  ]
+}

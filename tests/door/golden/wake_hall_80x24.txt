@@ -17,8 +17,8 @@
 │      ·                                                │Shock 0               │
 │                                                       │Ctrl-X leaves         │
 ├──────────────────────────────────────────────────────────────────────────────┤
-│                                                                              │
-│                                                                              │
+│[zone] You wake on a gurney under a number. White light, warm plastic, a floor│
+│  drain. Past the cards, a corridor. Past the corridor, a terminal.           │
 │                                                                              │
 │Move: arrows  Shift: sprint  E interact  M map  ? help  Ctrl-X leave          │
 └──────────────────────────────────────────────────────────────────────────────

@@ -24,7 +24,7 @@ def test_golden_zone_and_wide_name(info: DoorInfo, repo_root: Path, width: int, 
     game.step()
     for frame in game.frames_for(client):
         model.receive(frame, 0)
-    # Remove the first-entry toast so the golden represents a settled view.
+    # Settle transient UI. S25b's arrival paragraph remains in the log.
     model.update(9, 9)
     terminal.write(model.render(9)[0])
     text = terminal.screen_text()

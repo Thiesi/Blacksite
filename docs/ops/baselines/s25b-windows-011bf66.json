@@ -1,0 +1,82 @@
+{
+  "schema": 1,
+  "implementation_head": "011bf66cdc53780288af13f485e6ab78d8403437",
+  "recorded_utc": "2026-10-29T09:34:51.051468+00:00",
+  "root_pytest": {
+    "passed": 1675,
+    "skipped": 1,
+    "command": "pytest -q -p no:cacheprovider --basetemp=.test-tmp/pytest-s25b-head-011bf66"
+  },
+  "strict_packet": {
+    "schema": 1,
+    "head": "011bf66cdc53780288af13f485e6ab78d8403437",
+    "dirty": false,
+    "cases": 99,
+    "glyph_style_pass": true,
+    "cp437_pass": true,
+    "cp437_failures": [],
+    "human_approval": false,
+    "caller_input_cell_count": 714,
+    "cp437_checked_cells": 419766,
+    "cp437_policy": "authored cells checked strictly; declared caller-input cells counted separately by source (#76)"
+  },
+  "native": {
+    "passed": false,
+    "functional_passed": true,
+    "transport": "NetBBS Telnet native stdio",
+    "human_playtest": false,
+    "fixtures": "private hub overlay, one water tile and underfoot props",
+    "startup_seconds": 9.327999999979511,
+    "runs": [
+      {
+        "size": [
+          80,
+          24
+        ],
+        "water_walk_seconds": 0.625,
+        "passive_props_jack": true,
+        "console_interact_and_J": true,
+        "npc_p99_ms": 9.596200019586831
+      },
+      {
+        "size": [
+          132,
+          50
+        ],
+        "water_walk_seconds": 0.5459999999729916,
+        "passive_props_jack": true,
+        "console_interact_and_J": true,
+        "npc_p99_ms": 13.582499988842756
+      }
+    ]
+  },
+  "native_python_tree_sha256": "ceb6d6868a9de7695acfc84f6df094d22a028928ccefca310e6cc292721d8c5f",
+  "native_runtime_source_matches_implementation": true,
+  "startup_instrumented_call_totals": {
+    "copy": {
+      "calls": 252,
+      "wall_ms": 869.952300156001,
+      "cpu_ms": 437.5
+    },
+    "load": {
+      "calls": 1,
+      "wall_ms": 7232.99460002454,
+      "cpu_ms": 1125.0
+    },
+    "validate": {
+      "calls": 1,
+      "wall_ms": 143.11930001713336,
+      "cpu_ms": 156.25
+    }
+  },
+  "startup_phase_note": "Call totals, not an asserted partition of startup critical-path time.",
+  "native_scope": "S25a fixture overlay on ten shipped hubs; no full-city walking or human layout approval.",
+  "human_layout_approval": false,
+  "publication": "Generated 34-zone proposal remains outside shipped content; boundary question on issue #78.",
+  "pending": [
+    "Hosted full native matrix",
+    "Technical review",
+    "S25b publication boundary",
+    "Per-district H2/H3 layout gates"
+  ]
+}
