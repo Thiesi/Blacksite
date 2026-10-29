@@ -1,6 +1,6 @@
 # P1 — Verification foundation for presentation work
 
-**Status:** planned
+**Status:** done (PR #85)
 **Primary model:** Sonnet · **Reviewer:** automated review, technical lead
 **Depends on:** none · **Milestone:** presentation track
 **Issue:** https://github.com/Thiesi/Blacksite/issues/76
@@ -25,6 +25,9 @@ draws, what it costs, and proof that it changed no game rule.
 - Baselines of bytes per full redraw and per delta at 80x24 and 132x50
   in three tiers, and a CPU-per-frame measurement for the door, so V1's
   budgets (step picture 100 ms p95, 16 KiB ceiling) have a harness.
+- Shipped-door CPU per hour at both sizes under `v1-provisional`, per
+  the [technical lead's addition][cpu]. Existing misses are baselined;
+  P5 owns render optimizations.
 - A CP437 round-trip check on every rendered golden cell (CP437 column
   only, per UI §1).
 - A headless review packet builder: per-frame `.ans`, `.txt` and
@@ -46,3 +49,15 @@ fail a style golden and not the fingerprint.
 ## Acceptance
 
 Automated review and technical review.
+
+The [scope decision][cp437] assigns authored U+2506 to prerequisite #86.
+PR #89 supplies the merged fix; P1 rebases onto it. The audit excludes
+exactly the cells reached by declared caller-supplied fixture strings, by source;
+their informational count is separate from passes and failures. An
+authored instance of the same text still fails. There is no code-point
+or known-violation allowlist, and no rendering correction in P1 itself.
+Commands and evidence boundaries: [verification guide][guide].
+
+[cpu]: https://github.com/Thiesi/Blacksite/issues/76#issuecomment-6478100282
+[cp437]: https://github.com/Thiesi/Blacksite/issues/76#issuecomment-6485149621
+[guide]: ../../ops/presentation-verification.md

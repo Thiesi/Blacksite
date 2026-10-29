@@ -1,0 +1,71 @@
+name: Presentation verification
+
+on:
+  pull_request:
+    paths:
+      - 'src/blacksite/**'
+      - 'tests/**'
+      - 'scripts/presentation_*.py'
+      - '.github/workflows/presentation-verification.yml'
+      - 'pyproject.toml'
+  workflow_dispatch:
+    inputs:
+      compare_v1:
+        description: 'Run the pinned V1/P1 measurement comparison on this host'
+        type: boolean
+        default: false
+
+concurrency:
+  group: presentation-verification-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
+jobs:
+  review-packet-cp437:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - run: python -m pip install -e .[test]
+      - name: Compare glyphs and styles and strictly audit every CP437 cell
+        run: python scripts/presentation_packet.py --output "${{ runner.temp }}/p1-review" --strict-cp437
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: p1-review-packet
+          path: ${{ runner.temp }}/p1-review/
+
+  shipped-door-baseline:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - run: python -m pip install -e .[test]
+      - uses: actions/checkout@v4
+        if: github.event_name == 'workflow_dispatch' && inputs.compare_v1
+        with:
+          ref: 1060c9df2ac6b140db932b4e888989d192502b20
+          path: .test-tmp/v1-comparison-runtime
+      - name: Compare P1 and unmodified V1 activity on one host and runtime
+        if: github.event_name == 'workflow_dispatch' && inputs.compare_v1
+        run: python scripts/presentation_compare_v1.py --v1-root .test-tmp/v1-comparison-runtime --output "${{ runner.temp }}/p1-v1-comparison.json"
+      - uses: actions/upload-artifact@v4
+        if: always() && github.event_name == 'workflow_dispatch' && inputs.compare_v1
+        with:
+          name: p1-v1-comparison
+          path: ${{ runner.temp }}/p1-v1-comparison.json
+      - name: Record CPU and bytes at both sizes and all colour tiers
+        run: python scripts/presentation_baseline.py --output "${{ runner.temp }}/p1-baseline.json"
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: p1-shipped-door-baseline
+          path: ${{ runner.temp }}/p1-baseline.json

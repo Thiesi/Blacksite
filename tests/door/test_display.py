@@ -170,18 +170,18 @@ def test_doorinfo_optional_fields_and_limits(scratch_dir: Path) -> None:
         read({})
 
 
-def test_golden_screens(info: DoorInfo, repo_root: Path) -> None:
+@pytest.mark.parametrize('tier', ['16', '256', 'truecolor'])
+def test_golden_screens(info: DoorInfo, repo_root: Path, golden, tier: str) -> None:
     root = repo_root / "tests" / "door" / "golden"
     for width, height in ((80, 24), (132, 50)):
-        model = Display(replace(info, width=width, height=height))
+        model = Display(replace(info, width=width, height=height, color_depth=tier))
         model.receive(welcome(repo_root), 0)
         terminal = FakeTerminal(width, height)
         terminal.write(model.render(0)[0])
-        expected = (root / f"title_{width}x{height}.txt").read_text(encoding="utf-8")
-        assert "\n".join(line.rstrip() for line in terminal.screen_text().splitlines()) + "\n" == expected
+        golden(f'title_{width}x{height}', terminal, tier, trim=True)
         if width == 80:
             model.receive(Frame("view", {"rev": 1, "kind": "menu", "body": {
                 "title": "INVENTORY", "columns": ["Item"], "rows": [{"id": "sidearm", "cells": ["Sidearm"]}],
                 "cursor": 0, "actions": [{"key": "e", "label": "equip"}], "detail": "DETAIL: starter sidearm"}}), .2)
             terminal.write(model.render(.2)[0])
-            assert "\n".join(line.rstrip() for line in terminal.screen_text().splitlines()) + "\n" == (root / "menu_80x24.txt").read_text(encoding="utf-8")
+            golden('menu_80x24', terminal, tier, trim=True)
