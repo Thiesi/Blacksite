@@ -399,6 +399,9 @@ units; resident core logs paginate through authoritative menu cursors.
 
 S13 adds `sector`, `layout_size`, explicit `edges`, cell access/labels and
 uplink markers. Hidden cells and their edges are omitted until found.
+`edge_glyphs` carries the registry's CP437 `[horizontal, vertical]` pair
+for `open`, `gated` and `hidden` links. The door uses these presentation
+values; topology and access rules are unchanged.
 `me` includes body HP, hit serial, movement ticks and bounded escape
 progress; `body_safety` stays visible. The body remains a physical actor,
 while its session subscribes to a sector. Social menus preserve this

@@ -278,6 +278,10 @@ class _Validator:
     def check_glyphs(self) -> None:
         if self.t.glyphs is None:
             return
+        if self.t.sectors:
+            for gid in s.LATTICE_EDGE_GLYPHS:
+                if gid not in self.t.glyphs.glyphs:
+                    self.report("glyphs", "glyphs", f"required Lattice edge glyph {gid!r} is missing", gid)
         for gid, char in sorted(self.t.glyphs.glyphs.items()):
             if len(char) != 1:
                 self.report("glyphs", "glyphs", f"glyph {gid!r} must be one character, got {char!r}", gid)
@@ -285,6 +289,11 @@ class _Validator:
                 self.report("glyphs", "glyphs", f"glyph {gid!r} ({char!r}) is not one cell wide", gid)
             elif not round_trips(char):
                 self.report("glyphs", "glyphs", f"glyph {gid!r} ({char!r}) is not in CP437", gid)
+        for gid, char in sorted(self.t.glyphs.modern.items()):
+            if gid not in self.t.glyphs.glyphs:
+                self.report("glyphs", "glyphs", f"modern glyph {gid!r} has no CP437 fallback", gid)
+            if len(char) != 1 or display_width(char) != 1 or not char.isprintable():
+                self.report("glyphs", "glyphs", f"modern glyph {gid!r} must be one printable cell", gid)
 
     def check_palette(self) -> None:
         if self.t.palette is None:

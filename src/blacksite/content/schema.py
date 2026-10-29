@@ -41,6 +41,9 @@ def _key(name: str) -> dict[str, str]:
 
 # --- terminal tables (03-terminal-ui.md sections 1 and 5) -----------------
 
+LATTICE_EDGE_GLYPHS = tuple(f"lattice-edge-{kind}-{axis}"
+    for kind in ("open", "gated", "hidden") for axis in ("h", "v"))
+
 
 @dataclass(frozen=True)
 class GlyphTable:
@@ -48,6 +51,8 @@ class GlyphTable:
 
     glyphs: dict[str, str]
     schema: int = CONTENT_SCHEMA
+    modern: dict[str, str] = field(default_factory=dict)
+    """Optional substitutions keyed by CP437 fallback id (terminal UI 1)."""
 
 
 @dataclass(frozen=True)

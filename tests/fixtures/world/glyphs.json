@@ -83,6 +83,12 @@
     "box2-vl": "╣",
     "box2-hd": "╦",
     "box2-hu": "╩",
-    "box2-x": "╬"
+    "box2-x": "╬",
+    "lattice-edge-open-h": "─",
+    "lattice-edge-open-v": "│",
+    "lattice-edge-gated-h": "═",
+    "lattice-edge-gated-v": "║",
+    "lattice-edge-hidden-h": "·",
+    "lattice-edge-hidden-v": ":"
   }
 }
