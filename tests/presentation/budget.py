@@ -143,15 +143,16 @@ def activity(content: ContentTree, width: int, height: int, tier: str, what: str
     ticks = index = 0
     while time.monotonic()-started < seconds:
         now = time.monotonic()
+        caller.tick(now)  # Keep V1's server-tick, input, update/render order.
         # Absolute ten-Hz deadlines keep rendering time out of the sleep
         # budget. A relative sleep(.1) silently lowers the walking cadence.
-        if ticks and ticks % (2 if keys else 200) == 0:
+        if ticks and ticks % (2 if keys else 200) == 0 and (ticks+1)*.1 < seconds:
             if keys:
                 caller.key(keys[index % len(keys)], now)
                 index += 1
             elif what == 'standing, a few stops a minute':
                 caller.key('up', now)
-        caller.tick(now)  # Execute each sampled key, including the last one.
+        # Do not enqueue a key without another sampled server tick to run it.
         frame = caller.draw(now)
         if frame:
             samples.append(frame)

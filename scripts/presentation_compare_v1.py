@@ -22,6 +22,7 @@ from typing import Any, Callable
 
 ROOT = Path(__file__).resolve().parents[1]
 V1_REVISION = '1060c9df2ac6b140db932b4e888989d192502b20'
+V1_SCRIPT_SHA256 = 'b0e6226eb14ffd4b0e2513af4b29e735dfae2f28047c7d42c96578760f071fac'
 ACTIVITY = 'walking where there is no scene'
 
 
@@ -177,6 +178,8 @@ def main() -> None:
     source = runtime/'scripts/presentation_mockups/v1_budget.py'
     if not source.is_file() or not 0 < args.seconds <= 600:
         parser.error('requires a V1 checkout and 0 < seconds <= 600')
+    if sha256(source.read_bytes()).hexdigest() != V1_SCRIPT_SHA256:
+        parser.error('V1 budget script differs from the pinned, unmodified source')
     if args.case:
         measured = p1(ROOT if args.case == 'p1-current' else runtime, args.seconds,
                       args.case == 'p1-v1-charted') if args.case.startswith('p1-') else v1(runtime, args.seconds, args.case == 'v1-shipped')

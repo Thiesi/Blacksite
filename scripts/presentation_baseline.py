@@ -40,7 +40,7 @@ def main() -> None:
         'dirty': bool(subprocess.check_output(['git', 'status', '--porcelain'], cwd=ROOT)),
         'platform': platform.platform(), 'processor': platform.processor(), 'python': sys.version,
         'mechanics_sha256': fingerprint(content)['sha256'], 'mix': 'v1-provisional', 'minutes': MIX,
-        'workload': 'p1-closed-walk-v2', 'tick_hz': 10, 'walking_key_hz': 5,
+        'workload': 'p1-closed-walk-v3', 'tick_hz': 10, 'walking_key_hz': 5,
         'sample_seconds': args.seconds, 'reference_duration': args.seconds == 12.0,
         'cpu_budget_reference': cpu_budget_reference,
         'cpu_clock_policy': 'process_time_ns per method; Windows scheduler-tick quantization makes '

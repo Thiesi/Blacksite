@@ -102,11 +102,15 @@ Shipped NPC spawners remain enabled, with 30 warm-up ticks after placing
 the caller, as in V1. Only the mechanics fingerprint isolates NPCs.
 These differences are recorded in the report; this is
 a reproducible shipped-content baseline, not a repeat of trial V1 play.
-The `p1-closed-walk-v2` workload uses closed eight-tile horizontal walks
+The `p1-closed-walk-v3` workload uses closed eight-tile horizontal walks
 in both zones. Its absolute ten-Hz tick deadlines include processing
 time; walking keys arrive every two ticks (five Hz). Every key must
 produce a move, including the last sampled key. Reports include actual
 moves per minute, key steps, render calls and nonempty output frames.
+V1's server-tick, input, update/render order is preserved. Keys near the
+sample's end are issued only if another sampled tick can execute them;
+this avoids a pending final key without coalescing input and its reply
+into one render opportunity.
 This corrects the earlier scene route, which hit walls, and relative
 sleep scheduling, which added processing time to every tick. The session
 weights are unchanged. The standing sample is shorter than its

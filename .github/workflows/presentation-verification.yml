@@ -49,13 +49,6 @@ jobs:
         with:
           python-version: '3.12'
       - run: python -m pip install -e .[test]
-      - name: Record CPU and bytes at both sizes and all colour tiers
-        run: python scripts/presentation_baseline.py --output "${{ runner.temp }}/p1-baseline.json"
-      - uses: actions/upload-artifact@v4
-        if: always()
-        with:
-          name: p1-shipped-door-baseline
-          path: ${{ runner.temp }}/p1-baseline.json
       - uses: actions/checkout@v4
         if: github.event_name == 'workflow_dispatch' && inputs.compare_v1
         with:
@@ -69,3 +62,10 @@ jobs:
         with:
           name: p1-v1-comparison
           path: ${{ runner.temp }}/p1-v1-comparison.json
+      - name: Record CPU and bytes at both sizes and all colour tiers
+        run: python scripts/presentation_baseline.py --output "${{ runner.temp }}/p1-baseline.json"
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: p1-shipped-door-baseline
+          path: ${{ runner.temp }}/p1-baseline.json
