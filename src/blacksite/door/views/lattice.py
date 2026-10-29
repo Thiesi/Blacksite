@@ -24,7 +24,8 @@ def render_lattice(buffer: CellBuffer, body: dict[str, Any], area: Rect, palette
         bx, by = positions[edge["b"]]
         ax, bx = ax+2, bx+2
         steps = max(abs(bx-ax), abs(by-ay))
-        horizontal, vertical = ("═", "║") if edge["kind"] == "gated" else ("·", "┆") if edge["kind"] == "hidden" else ("─", "│")
+        kind = edge["kind"] if edge["kind"] in ("gated", "hidden") else "open"
+        horizontal, vertical = body["edge_glyphs"][kind]
         glyph = horizontal if ay == by else vertical if ax == bx else "\\" if (bx-ax)*(by-ay) > 0 else "/"
         for step in range(1, steps):
             x, y = round(ax+(bx-ax)*step/steps), round(ay+(by-ay)*step/steps)

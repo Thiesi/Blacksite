@@ -251,7 +251,9 @@ def _load_singletons(tree: ContentTree, layer: _Layer) -> None:
         if isinstance(record, s.GlyphTable):
             merged = dict(tree.glyphs.glyphs) if tree.glyphs else {}
             merged.update(record.glyphs)
-            tree.glyphs = s.GlyphTable(glyphs=merged)
+            modern = dict(tree.glyphs.modern) if tree.glyphs else {}
+            modern.update(record.modern)
+            tree.glyphs = s.GlyphTable(glyphs=merged, modern=modern)
         elif isinstance(record, s.Palette):
             roles = dict(tree.palette.roles) if tree.palette else {}
             roles.update(record.roles)

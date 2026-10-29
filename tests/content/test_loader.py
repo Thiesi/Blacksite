@@ -116,7 +116,8 @@ def test_file_name_must_match_id(world: World) -> None:
 
 def test_local_terminal_tables_merge(world: World, scratch_dir: Path) -> None:
     local = World(scratch_dir / "local")
-    local.write("glyphs.json", {"schema": 1, "glyphs": {"extra": "♣"}})
+    world.edit("glyphs.json", lambda d: d.update(modern={"wall": "▓"}))
+    local.write("glyphs.json", {"schema": 1, "glyphs": {"extra": "♣"}, "modern": {"extra": "♧"}})
     palette = world.read("palette.json")
     local.write("palette.json", {"schema": 1, "roles": {"wall": palette["roles"]["floor"]}})
     keymaps = world.read("keymaps.json")
@@ -126,6 +127,7 @@ def test_local_terminal_tables_merge(world: World, scratch_dir: Path) -> None:
     tree = load_content(world.root, local.root)
     assert tree.load_problems == []
     assert tree.glyphs.glyphs["extra"] == "♣" and tree.glyphs.glyphs["wall"] == "█"
+    assert tree.glyphs.modern == {"wall": "▓", "extra": "♧"}
     assert tree.palette.roles["wall"] == tree.palette.roles["floor"]
     assert "cover" in tree.palette.roles
     maps = {k.id: k for k in tree.keymaps.keymaps}
