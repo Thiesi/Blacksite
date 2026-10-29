@@ -1,11 +1,15 @@
 {
-  "source_head": "7b4833f250210548629b9985fe0c1a6c6504e9dc",
-  "working_tree_has_additional_review_test": true,
-  "command": "pytest tests/presentation/test_view_semantics.py tests/server/test_chat.py -q --tb=short",
-  "passed": 35,
+  "head": "d447fcd0fe08ddc57a0f7094c569f8f21e3d6df6",
+  "passed": 81,
   "failed": 0,
-  "seconds": 43.39,
-  "additional_test": "test_arch_5_5_4_retaliation_reveals_before_hit_or_miss_log",
-  "test_file_sha256": "20af8d9659a1df7d771841df5ebb1b574ed309879f62cce0457d5c66042bfe5f",
-  "runtime_harness_goldens_unchanged": true
+  "seconds": 198.18,
+  "command": "pytest tests/content/test_npc_presentation.py tests/presentation/test_view_semantics.py tests/server/test_chat.py tests/world/test_arrival_prose.py tests/presentation/test_geometry.py tests/door/test_log_panel.py tests/door/test_city_render.py -q --tb=short",
+  "covers": [
+    "real shipped Sodium Row spawn at both sizes",
+    "ordinary civilian cover name",
+    "per-caller reveal and instance lifetime",
+    "production retaliation-hook ordering",
+    "complete arrival paragraph without toast",
+    "known/unseen-zone reconnect ordering"
+  ]
 }

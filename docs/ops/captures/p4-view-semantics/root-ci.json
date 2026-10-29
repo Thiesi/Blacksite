@@ -1,0 +1,25 @@
+{
+  "head": "d447fcd0fe08ddc57a0f7094c569f8f21e3d6df6",
+  "run": 40933189602,
+  "url": "https://github.com/Thiesi/Blacksite/actions/runs/40933189602",
+  "conclusion": "success",
+  "jobs": [
+    {
+      "name": "test (ubuntu-latest, 3.12)",
+      "url": "https://github.com/Thiesi/Blacksite/actions/runs/40933189602/job/123656747784",
+      "passed": 1723,
+      "skipped": 0,
+      "conclusion": "success",
+      "command": "pytest -q"
+    },
+    {
+      "name": "test (windows-latest, 3.12)",
+      "url": "https://github.com/Thiesi/Blacksite/actions/runs/40933189602/job/123656748365",
+      "passed": 1722,
+      "skipped": 1,
+      "conclusion": "success",
+      "command": "pytest -q"
+    }
+  ],
+  "collected_utc": "2026-10-29T18:49:36.487959+00:00"
+}

@@ -1,22 +1,23 @@
 {
   "schema": 1,
-  "source_head": "7b4833f250210548629b9985fe0c1a6c6504e9dc",
-  "execution_head": "cd6ce9a60e1004dcaab246149db46a3d46c0ae36",
-  "execution_tree": "1db6e56838e581ddb57edf1a7012f8e92e0f589d",
+  "source_head": "d447fcd0fe08ddc57a0f7094c569f8f21e3d6df6",
+  "base": "92b7315053f4e81b64168084955d75c459bb2066",
+  "execution_head": "62a7da5321d3313ae13bad0bfa2c7ddc11361c0b",
+  "execution_tree": "491c552b6cfd43f07643da4fdd4c51d619e957e0",
   "execution_tree_equals_source_head": true,
-  "hosted_run": "https://github.com/Thiesi/Blacksite/actions/runs/40913607689",
+  "hosted_run": "https://github.com/Thiesi/Blacksite/actions/runs/40933190108",
   "captures": [
     {
       "scenario": "wake",
       "size": "80x24",
       "tier": "16",
       "file": "wake-80x24-16.txt",
-      "sha256": "362a196455dd771e2e5e706d2a44f521600a626b15022a5e4d838c74d9482e84",
+      "sha256": "14142dfb723c5e7947ff5c73c3516f9d1b89ebe7619d0b96173f5225ee59fbad",
       "bytes": 2608,
-      "run": "40913607689",
+      "run": "40933190108",
       "artifact": "p4-view-semantics-80x24",
-      "artifact_id": 12914388024,
-      "artifact_url": "https://github.com/Thiesi/Blacksite/actions/runs/40913607689/artifacts/12914388024",
+      "artifact_id": 12923752724,
+      "artifact_url": "https://github.com/Thiesi/Blacksite/actions/runs/40933190108/artifacts/12923752724",
       "committed": true
     },
     {
@@ -24,12 +25,12 @@
       "size": "80x24",
       "tier": "16",
       "file": "wake-80x24-16.ans",
-      "sha256": "8a5cffd93b5132aa26a493d061238e60a91eec23d214342aea5c7c155c02b8b5",
+      "sha256": "42cbc922f37800d29192eec71e67b244afc3407fe1681bfa952ff42511c82902",
       "bytes": 26560,
-      "run": "40913607689",
+      "run": "40933190108",
       "artifact": "p4-view-semantics-80x24",
-      "artifact_id": 12914388024,
-      "artifact_url": "https://github.com/Thiesi/Blacksite/actions/runs/40913607689/artifacts/12914388024",
+      "artifact_id": 12923752724,
+      "artifact_url": "https://github.com/Thiesi/Blacksite/actions/runs/40933190108/artifacts/12923752724",
       "committed": false
     },
     {
@@ -37,12 +38,12 @@
       "size": "80x24",
       "tier": "16",
       "file": "wake-80x24-16.json",
-      "sha256": "1136956cb1bd35d5c98c8488b100fdba3c98eb2435e734369f5e7579e89255dd",
-      "bytes": 9148,
-      "run": "40913607689",
+      "sha256": "1507517fe4019266c9ebdf73cae8e51e3dafdf49f7ee50c65c4c0928f3f924a8",
+      "bytes": 9147,
+      "run": "40933190108",
       "artifact": "p4-view-semantics-80x24",
-      "artifact_id": 12914388024,
-      "artifact_url": "https://github.com/Thiesi/Blacksite/actions/runs/40913607689/artifacts/12914388024",
+      "artifact_id": 12923752724,
+      "artifact_url": "https://github.com/Thiesi/Blacksite/actions/runs/40933190108/artifacts/12923752724",
       "committed": false
     },
     {
@@ -50,12 +51,12 @@
       "size": "80x24",
       "tier": "16",
       "file": "place-history-80x24-16.txt",
-      "sha256": "c2b001d81a964800db969a5b0c6d786cda2a356eb9cfb19ed75056b4153b831f",
+      "sha256": "8a93518e59c4779d77cce37959c017143c1bcf8d43b93dcc3bacdff152db34b8",
       "bytes": 2360,
-      "run": "40913607689",
+      "run": "40933190108",
       "artifact": "p4-view-semantics-80x24",
-      "artifact_id": 12914388024,
-      "artifact_url": "https://github.com/Thiesi/Blacksite/actions/runs/40913607689/artifacts/12914388024",
+      "artifact_id": 12923752724,
+      "artifact_url": "https://github.com/Thiesi/Blacksite/actions/runs/40933190108/artifacts/12923752724",
       "committed": true
     },
     {
@@ -63,12 +64,12 @@
       "size": "80x24",
       "tier": "16",
       "file": "place-history-80x24-16.ans",
-      "sha256": "412dfaa5225e388b8802eeb992d4fc9ee519182f15f6ea181042334df3bf3d7b",
-      "bytes": 27468,
-      "run": "40913607689",
+      "sha256": "8c7d7ee9e5496dc1486acb0bcca34b5f481d02a42785a224e77b5919c112e803",
+      "bytes": 27607,
+      "run": "40933190108",
       "artifact": "p4-view-semantics-80x24",
-      "artifact_id": 12914388024,
-      "artifact_url": "https://github.com/Thiesi/Blacksite/actions/runs/40913607689/artifacts/12914388024",
+      "artifact_id": 12923752724,
+      "artifact_url": "https://github.com/Thiesi/Blacksite/actions/runs/40933190108/artifacts/12923752724",
       "committed": false
     },
     {
@@ -76,12 +77,12 @@
       "size": "80x24",
       "tier": "16",
       "file": "place-history-80x24-16.json",
-      "sha256": "9884e1a0348a776cf6638cef11638e14a8f573bf2ebd5b8dad3264239f62f8e2",
+      "sha256": "550b265fa4bab5c5b28c0edd4842d7864babe32b8021f6a8311f168eedc8e35b",
       "bytes": 7491,
-      "run": "40913607689",
+      "run": "40933190108",
       "artifact": "p4-view-semantics-80x24",
-      "artifact_id": 12914388024,
-      "artifact_url": "https://github.com/Thiesi/Blacksite/actions/runs/40913607689/artifacts/12914388024",
+      "artifact_id": 12923752724,
+      "artifact_url": "https://github.com/Thiesi/Blacksite/actions/runs/40933190108/artifacts/12923752724",
       "committed": false
     },
     {
@@ -91,10 +92,10 @@
       "file": "lattice-80x24-16.txt",
       "sha256": "fc850446fec9f4cc5152485b18a4936ceac780cc4c70f94892205a3d95fd9687",
       "bytes": 2675,
-      "run": "40913607689",
+      "run": "40933190108",
       "artifact": "p4-view-semantics-80x24",
-      "artifact_id": 12914388024,
-      "artifact_url": "https://github.com/Thiesi/Blacksite/actions/runs/40913607689/artifacts/12914388024",
+      "artifact_id": 12923752724,
+      "artifact_url": "https://github.com/Thiesi/Blacksite/actions/runs/40933190108/artifacts/12923752724",
       "committed": true
     },
     {
@@ -102,12 +103,12 @@
       "size": "80x24",
       "tier": "16",
       "file": "lattice-80x24-16.ans",
-      "sha256": "cd20e0b0acb892dd1b187394d6ada50798bb30167fbf145bae1f4e56040d37e0",
-      "bytes": 55270,
-      "run": "40913607689",
+      "sha256": "4096c15cd4fceca1752878621b728f27952c3c01b850010a707647c6ca9a3f61",
+      "bytes": 60545,
+      "run": "40933190108",
       "artifact": "p4-view-semantics-80x24",
-      "artifact_id": 12914388024,
-      "artifact_url": "https://github.com/Thiesi/Blacksite/actions/runs/40913607689/artifacts/12914388024",
+      "artifact_id": 12923752724,
+      "artifact_url": "https://github.com/Thiesi/Blacksite/actions/runs/40933190108/artifacts/12923752724",
       "committed": false
     },
     {
@@ -117,10 +118,49 @@
       "file": "lattice-80x24-16.json",
       "sha256": "b36fd40d3c1255f4822d5ccf348ab15f9badf01a54c8888799f1deb9a05d533c",
       "bytes": 11876,
-      "run": "40913607689",
+      "run": "40933190108",
       "artifact": "p4-view-semantics-80x24",
-      "artifact_id": 12914388024,
-      "artifact_url": "https://github.com/Thiesi/Blacksite/actions/runs/40913607689/artifacts/12914388024",
+      "artifact_id": 12923752724,
+      "artifact_url": "https://github.com/Thiesi/Blacksite/actions/runs/40933190108/artifacts/12923752724",
+      "committed": false
+    },
+    {
+      "scenario": "sodium-cover",
+      "size": "80x24",
+      "tier": "16",
+      "file": "sodium-cover-80x24-16.txt",
+      "sha256": "11b5de0e65751a6c30c97ed87ad17237bf3ee7805052e568d0c155245e9eb980",
+      "bytes": 3488,
+      "run": "40933190108",
+      "artifact": "p4-view-semantics-80x24",
+      "artifact_id": 12923752724,
+      "artifact_url": "https://github.com/Thiesi/Blacksite/actions/runs/40933190108/artifacts/12923752724",
+      "committed": true
+    },
+    {
+      "scenario": "sodium-cover",
+      "size": "80x24",
+      "tier": "16",
+      "file": "sodium-cover-80x24-16.ans",
+      "sha256": "10119a040968a255da1a124ada88712863af290e6b3087245d1da6a05c77e3a4",
+      "bytes": 572713,
+      "run": "40933190108",
+      "artifact": "p4-view-semantics-80x24",
+      "artifact_id": 12923752724,
+      "artifact_url": "https://github.com/Thiesi/Blacksite/actions/runs/40933190108/artifacts/12923752724",
+      "committed": false
+    },
+    {
+      "scenario": "sodium-cover",
+      "size": "80x24",
+      "tier": "16",
+      "file": "sodium-cover-80x24-16.json",
+      "sha256": "4470e35b88197552d39b4ea2e3ed1dfc96c4b5a51e1c6d85ca258a6d4d7e7af8",
+      "bytes": 10805,
+      "run": "40933190108",
+      "artifact": "p4-view-semantics-80x24",
+      "artifact_id": 12923752724,
+      "artifact_url": "https://github.com/Thiesi/Blacksite/actions/runs/40933190108/artifacts/12923752724",
       "committed": false
     },
     {
@@ -128,12 +168,12 @@
       "size": "80x24",
       "tier": "256",
       "file": "wake-80x24-256.txt",
-      "sha256": "5c676aff7b88e562cf618c811841f5b94189f2289ee0529cb0a0166332fa60da",
+      "sha256": "1bd65d3ad1239c0211af341d37e62977ea873877c4da969ce2b6fc9333b3621b",
       "bytes": 2608,
-      "run": "40913607689",
+      "run": "40933190108",
       "artifact": "p4-view-semantics-80x24",
-      "artifact_id": 12914388024,
-      "artifact_url": "https://github.com/Thiesi/Blacksite/actions/runs/40913607689/artifacts/12914388024",
+      "artifact_id": 12923752724,
+      "artifact_url": "https://github.com/Thiesi/Blacksite/actions/runs/40933190108/artifacts/12923752724",
       "committed": true
     },
     {
@@ -141,12 +181,12 @@
       "size": "80x24",
       "tier": "256",
       "file": "wake-80x24-256.ans",
-      "sha256": "badca21537f896825b01326f0fdecfb09ba696e306c443c7fbfa795487ca848b",
+      "sha256": "39f18c3068f20d1a48f4f6ab91a732d27801e6201bb8d9b7d220a5efbbdc02f9",
       "bytes": 32567,
-      "run": "40913607689",
+      "run": "40933190108",
       "artifact": "p4-view-semantics-80x24",
-      "artifact_id": 12914388024,
-      "artifact_url": "https://github.com/Thiesi/Blacksite/actions/runs/40913607689/artifacts/12914388024",
+      "artifact_id": 12923752724,
+      "artifact_url": "https://github.com/Thiesi/Blacksite/actions/runs/40933190108/artifacts/12923752724",
       "committed": false
     },
     {
@@ -154,12 +194,12 @@
       "size": "80x24",
       "tier": "256",
       "file": "wake-80x24-256.json",
-      "sha256": "9eef6625b84903bddf3d2121bf7189c09c117d4acc0f99d6ca06592fc7d66f5a",
-      "bytes": 10878,
-      "run": "40913607689",
+      "sha256": "2da46963b64df70240e39a41f33f4e0df0f48b348353288ab676790f1ce66029",
+      "bytes": 10877,
+      "run": "40933190108",
       "artifact": "p4-view-semantics-80x24",
-      "artifact_id": 12914388024,
-      "artifact_url": "https://github.com/Thiesi/Blacksite/actions/runs/40913607689/artifacts/12914388024",
+      "artifact_id": 12923752724,
+      "artifact_url": "https://github.com/Thiesi/Blacksite/actions/runs/40933190108/artifacts/12923752724",
       "committed": false
     },
     {
@@ -167,12 +207,12 @@
       "size": "80x24",
       "tier": "256",
       "file": "place-history-80x24-256.txt",
-      "sha256": "732b4e5ffa5996c7ca90e81f1e311053286198fcda9096c2b6b293e43b8d26dc",
+      "sha256": "98968e2c3cd59729b66f30f74566d75f12abaeb029c81af08ad5bcd506dab2c7",
       "bytes": 2358,
-      "run": "40913607689",
+      "run": "40933190108",
       "artifact": "p4-view-semantics-80x24",
-      "artifact_id": 12914388024,
-      "artifact_url": "https://github.com/Thiesi/Blacksite/actions/runs/40913607689/artifacts/12914388024",
+      "artifact_id": 12923752724,
+      "artifact_url": "https://github.com/Thiesi/Blacksite/actions/runs/40933190108/artifacts/12923752724",
       "committed": true
     },
     {
@@ -180,12 +220,12 @@
       "size": "80x24",
       "tier": "256",
       "file": "place-history-80x24-256.ans",
-      "sha256": "1099b0b4f09c2f9cdbe41469f8b7519026c6211d37111c826e306d0da4d56ea5",
-      "bytes": 33526,
-      "run": "40913607689",
+      "sha256": "32e58cfe66509dd3c71b179f989e4847cca9c7973be1f427688e5fcc9392aaa4",
+      "bytes": 33679,
+      "run": "40933190108",
       "artifact": "p4-view-semantics-80x24",
-      "artifact_id": 12914388024,
-      "artifact_url": "https://github.com/Thiesi/Blacksite/actions/runs/40913607689/artifacts/12914388024",
+      "artifact_id": 12923752724,
+      "artifact_url": "https://github.com/Thiesi/Blacksite/actions/runs/40933190108/artifacts/12923752724",
       "committed": false
     },
     {
@@ -193,12 +233,12 @@
       "size": "80x24",
       "tier": "256",
       "file": "place-history-80x24-256.json",
-      "sha256": "b681192c0de8e94c9bd401b6e7ba8622250e8b41b1cc840597bce600675d81e2",
-      "bytes": 7859,
-      "run": "40913607689",
+      "sha256": "31fba336d4e8026c34b28d844985646b02d9c5625a86311f37eadc6b5860fc60",
+      "bytes": 8011,
+      "run": "40933190108",
       "artifact": "p4-view-semantics-80x24",
-      "artifact_id": 12914388024,
-      "artifact_url": "https://github.com/Thiesi/Blacksite/actions/runs/40913607689/artifacts/12914388024",
+      "artifact_id": 12923752724,
+      "artifact_url": "https://github.com/Thiesi/Blacksite/actions/runs/40933190108/artifacts/12923752724",
       "committed": false
     },
     {
@@ -206,12 +246,12 @@
       "size": "80x24",
       "tier": "256",
       "file": "lattice-80x24-256.txt",
-      "sha256": "e9733cd7ce8fd7b3a2070987d93e8802847a99ec0fb2e27f7227fbc598e830f6",
+      "sha256": "93a364e4e114cdad87a0be5f33dcb5f8175d5cf4d78f16c2c05b502bb6c3ca4b",
       "bytes": 2673,
-      "run": "40913607689",
+      "run": "40933190108",
       "artifact": "p4-view-semantics-80x24",
-      "artifact_id": 12914388024,
-      "artifact_url": "https://github.com/Thiesi/Blacksite/actions/runs/40913607689/artifacts/12914388024",
+      "artifact_id": 12923752724,
+      "artifact_url": "https://github.com/Thiesi/Blacksite/actions/runs/40933190108/artifacts/12923752724",
       "committed": true
     },
     {
@@ -219,12 +259,12 @@
       "size": "80x24",
       "tier": "256",
       "file": "lattice-80x24-256.ans",
-      "sha256": "28024a4d1e4249f53a38b6b09d92ff3d9d6858eb6c2d5c44a3a3aa157d383f8b",
-      "bytes": 78396,
-      "run": "40913607689",
+      "sha256": "6663b3a3879624fb0e8862a3117c32a369ceb5cb1fc7c6d48d8e1b63b8966bff",
+      "bytes": 78822,
+      "run": "40933190108",
       "artifact": "p4-view-semantics-80x24",
-      "artifact_id": 12914388024,
-      "artifact_url": "https://github.com/Thiesi/Blacksite/actions/runs/40913607689/artifacts/12914388024",
+      "artifact_id": 12923752724,
+      "artifact_url": "https://github.com/Thiesi/Blacksite/actions/runs/40933190108/artifacts/12923752724",
       "committed": false
     },
     {
@@ -232,12 +272,51 @@
       "size": "80x24",
       "tier": "256",
       "file": "lattice-80x24-256.json",
-      "sha256": "7f1966473c6f59e3e7b4c4edf2578da98862235d386fac13c8d65e6d64b74030",
+      "sha256": "e11d180a7848a615ff69fc4661510b7b58c398f251a99c3e2cabf007c78ec3fc",
       "bytes": 12219,
-      "run": "40913607689",
+      "run": "40933190108",
       "artifact": "p4-view-semantics-80x24",
-      "artifact_id": 12914388024,
-      "artifact_url": "https://github.com/Thiesi/Blacksite/actions/runs/40913607689/artifacts/12914388024",
+      "artifact_id": 12923752724,
+      "artifact_url": "https://github.com/Thiesi/Blacksite/actions/runs/40933190108/artifacts/12923752724",
+      "committed": false
+    },
+    {
+      "scenario": "sodium-cover",
+      "size": "80x24",
+      "tier": "256",
+      "file": "sodium-cover-80x24-256.txt",
+      "sha256": "f19747cac006e40180307514672747ef3921ea08d09d7fc921c526d1e8dc7483",
+      "bytes": 3484,
+      "run": "40933190108",
+      "artifact": "p4-view-semantics-80x24",
+      "artifact_id": 12923752724,
+      "artifact_url": "https://github.com/Thiesi/Blacksite/actions/runs/40933190108/artifacts/12923752724",
+      "committed": true
+    },
+    {
+      "scenario": "sodium-cover",
+      "size": "80x24",
+      "tier": "256",
+      "file": "sodium-cover-80x24-256.ans",
+      "sha256": "cac4362dbe331212159256cb8ded0e06c77473088f23fb2048d7b2357035cd8a",
+      "bytes": 754629,
+      "run": "40933190108",
+      "artifact": "p4-view-semantics-80x24",
+      "artifact_id": 12923752724,
+      "artifact_url": "https://github.com/Thiesi/Blacksite/actions/runs/40933190108/artifacts/12923752724",
+      "committed": false
+    },
+    {
+      "scenario": "sodium-cover",
+      "size": "80x24",
+      "tier": "256",
+      "file": "sodium-cover-80x24-256.json",
+      "sha256": "145883eb370f0d441d6e5a6373fc7c3ab17c6813a64d258a75b274eb1b636368",
+      "bytes": 12404,
+      "run": "40933190108",
+      "artifact": "p4-view-semantics-80x24",
+      "artifact_id": 12923752724,
+      "artifact_url": "https://github.com/Thiesi/Blacksite/actions/runs/40933190108/artifacts/12923752724",
       "committed": false
     },
     {
@@ -245,12 +324,12 @@
       "size": "80x24",
       "tier": "truecolor",
       "file": "wake-80x24-truecolor.txt",
-      "sha256": "2b2f908fafc4234a60917b463a3979406de9a4b61126aa4cf66b3a5c9e00a62e",
+      "sha256": "529a501e11bd848d07df50922f5d9b876a1fa797ca73daa4423820834c8b7f11",
       "bytes": 2608,
-      "run": "40913607689",
+      "run": "40933190108",
       "artifact": "p4-view-semantics-80x24",
-      "artifact_id": 12914388024,
-      "artifact_url": "https://github.com/Thiesi/Blacksite/actions/runs/40913607689/artifacts/12914388024",
+      "artifact_id": 12923752724,
+      "artifact_url": "https://github.com/Thiesi/Blacksite/actions/runs/40933190108/artifacts/12923752724",
       "committed": true
     },
     {
@@ -258,12 +337,12 @@
       "size": "80x24",
       "tier": "truecolor",
       "file": "wake-80x24-truecolor.ans",
-      "sha256": "7e8c15d8e76d659235918255c60d80d3864936eb2a93367206a0666dc3c977d0",
+      "sha256": "a9c0c05a2000d0a2888bf008e6da4c9d402daa6100f1e6851d93c3afda4e88d6",
       "bytes": 37380,
-      "run": "40913607689",
+      "run": "40933190108",
       "artifact": "p4-view-semantics-80x24",
-      "artifact_id": 12914388024,
-      "artifact_url": "https://github.com/Thiesi/Blacksite/actions/runs/40913607689/artifacts/12914388024",
+      "artifact_id": 12923752724,
+      "artifact_url": "https://github.com/Thiesi/Blacksite/actions/runs/40933190108/artifacts/12923752724",
       "committed": false
     },
     {
@@ -271,12 +350,12 @@
       "size": "80x24",
       "tier": "truecolor",
       "file": "wake-80x24-truecolor.json",
-      "sha256": "f559e8a55f09c97ac0448972e10d0c557631bfd725540d3e81ec310e36e34875",
-      "bytes": 11105,
-      "run": "40913607689",
+      "sha256": "c6eef8a6d594c8c309216f433525647b8ed521e7088c7ae3012b18e4b82a8cc1",
+      "bytes": 11104,
+      "run": "40933190108",
       "artifact": "p4-view-semantics-80x24",
-      "artifact_id": 12914388024,
-      "artifact_url": "https://github.com/Thiesi/Blacksite/actions/runs/40913607689/artifacts/12914388024",
+      "artifact_id": 12923752724,
+      "artifact_url": "https://github.com/Thiesi/Blacksite/actions/runs/40933190108/artifacts/12923752724",
       "committed": false
     },
     {
@@ -284,12 +363,12 @@
       "size": "80x24",
       "tier": "truecolor",
       "file": "place-history-80x24-truecolor.txt",
-      "sha256": "da9f38b681fb94830989d3b1fcf1e72f3e6dbd93dd2a4330dacb7c8b66b7a3bb",
+      "sha256": "8fc8595015561c7f9e154e5073dd2670aef1b7f0698ca351e74378f7aa71f650",
       "bytes": 2346,
-      "run": "40913607689",
+      "run": "40933190108",
       "artifact": "p4-view-semantics-80x24",
-      "artifact_id": 12914388024,
-      "artifact_url": "https://github.com/Thiesi/Blacksite/actions/runs/40913607689/artifacts/12914388024",
+      "artifact_id": 12923752724,
+      "artifact_url": "https://github.com/Thiesi/Blacksite/actions/runs/40933190108/artifacts/12923752724",
       "committed": true
     },
     {
@@ -297,12 +376,12 @@
       "size": "80x24",
       "tier": "truecolor",
       "file": "place-history-80x24-truecolor.ans",
-      "sha256": "379eae28d1d853c2f7a7350dd033cca9ee85b4a8399a09eef5d4a0cfbdb64e1c",
-      "bytes": 38413,
-      "run": "40913607689",
+      "sha256": "3445284f279fa2782c39799609ff303ef4bdc401329fbeb6483f5a58e0f6a1c9",
+      "bytes": 38598,
+      "run": "40933190108",
       "artifact": "p4-view-semantics-80x24",
-      "artifact_id": 12914388024,
-      "artifact_url": "https://github.com/Thiesi/Blacksite/actions/runs/40913607689/artifacts/12914388024",
+      "artifact_id": 12923752724,
+      "artifact_url": "https://github.com/Thiesi/Blacksite/actions/runs/40933190108/artifacts/12923752724",
       "committed": false
     },
     {
@@ -310,12 +389,12 @@
       "size": "80x24",
       "tier": "truecolor",
       "file": "place-history-80x24-truecolor.json",
-      "sha256": "c5705586716ddbf8a667d937fa9e53e048a040debfcaae92493a5516b595fcc0",
-      "bytes": 7951,
-      "run": "40913607689",
+      "sha256": "01b2643679037507d0e16287951a8df8da7abad714c07e7f0058ff0086ac3387",
+      "bytes": 8103,
+      "run": "40933190108",
       "artifact": "p4-view-semantics-80x24",
-      "artifact_id": 12914388024,
-      "artifact_url": "https://github.com/Thiesi/Blacksite/actions/runs/40913607689/artifacts/12914388024",
+      "artifact_id": 12923752724,
+      "artifact_url": "https://github.com/Thiesi/Blacksite/actions/runs/40933190108/artifacts/12923752724",
       "committed": false
     },
     {
@@ -323,12 +402,12 @@
       "size": "80x24",
       "tier": "truecolor",
       "file": "lattice-80x24-truecolor.txt",
-      "sha256": "c6838b51dc6dc25f1f692a91d014301ac1ca24817ac205a65a9a2b65f1a48a8e",
+      "sha256": "2ea976b851d81af5ebf3247a9bc583d3084430650be95a558b8591e91402515f",
       "bytes": 2661,
-      "run": "40913607689",
+      "run": "40933190108",
       "artifact": "p4-view-semantics-80x24",
-      "artifact_id": 12914388024,
-      "artifact_url": "https://github.com/Thiesi/Blacksite/actions/runs/40913607689/artifacts/12914388024",
+      "artifact_id": 12923752724,
+      "artifact_url": "https://github.com/Thiesi/Blacksite/actions/runs/40933190108/artifacts/12923752724",
       "committed": true
     },
     {
@@ -336,12 +415,12 @@
       "size": "80x24",
       "tier": "truecolor",
       "file": "lattice-80x24-truecolor.ans",
-      "sha256": "2bfdb315a952d50807244399ec780c26195bce9ab27eb806471b3f60a06e1561",
-      "bytes": 91062,
-      "run": "40913607689",
+      "sha256": "eae044fcf84bddb39fe167b203b6c87b488aa69fc07449082a55c0ad60b27584",
+      "bytes": 91635,
+      "run": "40933190108",
       "artifact": "p4-view-semantics-80x24",
-      "artifact_id": 12914388024,
-      "artifact_url": "https://github.com/Thiesi/Blacksite/actions/runs/40913607689/artifacts/12914388024",
+      "artifact_id": 12923752724,
+      "artifact_url": "https://github.com/Thiesi/Blacksite/actions/runs/40933190108/artifacts/12923752724",
       "committed": false
     },
     {
@@ -349,12 +428,51 @@
       "size": "80x24",
       "tier": "truecolor",
       "file": "lattice-80x24-truecolor.json",
-      "sha256": "be8a9c6f43a9e86fa7a91f2fd496f4960d701a89675f1fc9d14a71c6cf09af5d",
+      "sha256": "babf4b56ad409c52f8429c7534b5b911246237840d8a5f7055bc1e91b95a945d",
       "bytes": 12362,
-      "run": "40913607689",
+      "run": "40933190108",
       "artifact": "p4-view-semantics-80x24",
-      "artifact_id": 12914388024,
-      "artifact_url": "https://github.com/Thiesi/Blacksite/actions/runs/40913607689/artifacts/12914388024",
+      "artifact_id": 12923752724,
+      "artifact_url": "https://github.com/Thiesi/Blacksite/actions/runs/40933190108/artifacts/12923752724",
+      "committed": false
+    },
+    {
+      "scenario": "sodium-cover",
+      "size": "80x24",
+      "tier": "truecolor",
+      "file": "sodium-cover-80x24-truecolor.txt",
+      "sha256": "1220bd29e441e053e0e3673b7547340b14092f86412c8625bd3332b2b4044349",
+      "bytes": 3484,
+      "run": "40933190108",
+      "artifact": "p4-view-semantics-80x24",
+      "artifact_id": 12923752724,
+      "artifact_url": "https://github.com/Thiesi/Blacksite/actions/runs/40933190108/artifacts/12923752724",
+      "committed": true
+    },
+    {
+      "scenario": "sodium-cover",
+      "size": "80x24",
+      "tier": "truecolor",
+      "file": "sodium-cover-80x24-truecolor.ans",
+      "sha256": "56863bc14b9268ec5be55d7d7f16c5880ee014ac8f96594777749d5167278a6f",
+      "bytes": 874908,
+      "run": "40933190108",
+      "artifact": "p4-view-semantics-80x24",
+      "artifact_id": 12923752724,
+      "artifact_url": "https://github.com/Thiesi/Blacksite/actions/runs/40933190108/artifacts/12923752724",
+      "committed": false
+    },
+    {
+      "scenario": "sodium-cover",
+      "size": "80x24",
+      "tier": "truecolor",
+      "file": "sodium-cover-80x24-truecolor.json",
+      "sha256": "f9fef6ce0df1af76d7b5a6a2ea81c01af44ed4450853549b5c261479ea2edfeb",
+      "bytes": 12699,
+      "run": "40933190108",
+      "artifact": "p4-view-semantics-80x24",
+      "artifact_id": 12923752724,
+      "artifact_url": "https://github.com/Thiesi/Blacksite/actions/runs/40933190108/artifacts/12923752724",
       "committed": false
     },
     {
@@ -362,12 +480,12 @@
       "size": "132x50",
       "tier": "16",
       "file": "wake-132x50-16.txt",
-      "sha256": "47eabcced40f84596e16fe26eb4b8eec991fe5aa4106d9d23a6a574a28e7bccf",
+      "sha256": "44edb0fd9f5773acfed21b02a7f13d45e108cf452b42b101f3b1c1f63ba8777e",
       "bytes": 7772,
-      "run": "40913607689",
+      "run": "40933190108",
       "artifact": "p4-view-semantics-132x50",
-      "artifact_id": 12914697903,
-      "artifact_url": "https://github.com/Thiesi/Blacksite/actions/runs/40913607689/artifacts/12914697903",
+      "artifact_id": 12923293880,
+      "artifact_url": "https://github.com/Thiesi/Blacksite/actions/runs/40933190108/artifacts/12923293880",
       "committed": true
     },
     {
@@ -375,12 +493,12 @@
       "size": "132x50",
       "tier": "16",
       "file": "wake-132x50-16.ans",
-      "sha256": "6023b8b2823eb8a10c95c6aafa48650e5a043b9916f1d4c55947fadfad5b6431",
+      "sha256": "77f5ee6b8be5c67b51c63456530f1b1b119f4f0e2602181c3c38a606d64fbde0",
       "bytes": 71434,
-      "run": "40913607689",
+      "run": "40933190108",
       "artifact": "p4-view-semantics-132x50",
-      "artifact_id": 12914697903,
-      "artifact_url": "https://github.com/Thiesi/Blacksite/actions/runs/40913607689/artifacts/12914697903",
+      "artifact_id": 12923293880,
+      "artifact_url": "https://github.com/Thiesi/Blacksite/actions/runs/40933190108/artifacts/12923293880",
       "committed": false
     },
     {
@@ -388,12 +506,12 @@
       "size": "132x50",
       "tier": "16",
       "file": "wake-132x50-16.json",
-      "sha256": "2fd9db5b1e591abcfdadb90c66e59f0661701c314c48ef423690822d13850fd1",
+      "sha256": "ba80327b46cfe5f493f6fdca9bc46ca6eeeaf73a01dabd61f0d56972797f691d",
       "bytes": 19487,
-      "run": "40913607689",
+      "run": "40933190108",
       "artifact": "p4-view-semantics-132x50",
-      "artifact_id": 12914697903,
-      "artifact_url": "https://github.com/Thiesi/Blacksite/actions/runs/40913607689/artifacts/12914697903",
+      "artifact_id": 12923293880,
+      "artifact_url": "https://github.com/Thiesi/Blacksite/actions/runs/40933190108/artifacts/12923293880",
       "committed": false
     },
     {
@@ -401,12 +519,12 @@
       "size": "132x50",
       "tier": "16",
       "file": "place-history-132x50-16.txt",
-      "sha256": "ca2a566eb44ebcdde8aeb8a3ffd2536444743c4d458d77a14622aae622c4c1ce",
+      "sha256": "b2bfc817d825b5a61e2ce8b99efa2d40ca128ec44b1657417bca0582c0cdea23",
       "bytes": 7522,
-      "run": "40913607689",
+      "run": "40933190108",
       "artifact": "p4-view-semantics-132x50",
-      "artifact_id": 12914697903,
-      "artifact_url": "https://github.com/Thiesi/Blacksite/actions/runs/40913607689/artifacts/12914697903",
+      "artifact_id": 12923293880,
+      "artifact_url": "https://github.com/Thiesi/Blacksite/actions/runs/40933190108/artifacts/12923293880",
       "committed": true
     },
     {
@@ -414,12 +532,12 @@
       "size": "132x50",
       "tier": "16",
       "file": "place-history-132x50-16.ans",
-      "sha256": "775b2a61af4171481f498ab44f824f1f97e040249313521918de7be2b23091c2",
-      "bytes": 72398,
-      "run": "40913607689",
+      "sha256": "741fffc11f6ef1d966a1be9b72365c5937a9b607d3de9ccfa8726972f8fc024f",
+      "bytes": 72576,
+      "run": "40933190108",
       "artifact": "p4-view-semantics-132x50",
-      "artifact_id": 12914697903,
-      "artifact_url": "https://github.com/Thiesi/Blacksite/actions/runs/40913607689/artifacts/12914697903",
+      "artifact_id": 12923293880,
+      "artifact_url": "https://github.com/Thiesi/Blacksite/actions/runs/40933190108/artifacts/12923293880",
       "committed": false
     },
     {
@@ -427,12 +545,12 @@
       "size": "132x50",
       "tier": "16",
       "file": "place-history-132x50-16.json",
-      "sha256": "c55c2f468c962e9a1713a9303e6da6aa6b912b476e19db6b899b0e4270dc6a7a",
+      "sha256": "6ab2ee12a96dcfaf9ca702235ee69c43ffa52cb6ff6cd0317c9132d0ddb78515",
       "bytes": 17842,
-      "run": "40913607689",
+      "run": "40933190108",
       "artifact": "p4-view-semantics-132x50",
-      "artifact_id": 12914697903,
-      "artifact_url": "https://github.com/Thiesi/Blacksite/actions/runs/40913607689/artifacts/12914697903",
+      "artifact_id": 12923293880,
+      "artifact_url": "https://github.com/Thiesi/Blacksite/actions/runs/40933190108/artifacts/12923293880",
       "committed": false
     },
     {
@@ -440,12 +558,12 @@
       "size": "132x50",
       "tier": "16",
       "file": "lattice-132x50-16.txt",
-      "sha256": "9264fab3dc4168d5b2419d4e4156f5eac617e4fa9766b752ccc72a50b46a03ce",
+      "sha256": "e61a43654ba84759c5ea822a6fc3cd40d5ef3477351e30da1ec323663c45cd31",
       "bytes": 8293,
-      "run": "40913607689",
+      "run": "40933190108",
       "artifact": "p4-view-semantics-132x50",
-      "artifact_id": 12914697903,
-      "artifact_url": "https://github.com/Thiesi/Blacksite/actions/runs/40913607689/artifacts/12914697903",
+      "artifact_id": 12923293880,
+      "artifact_url": "https://github.com/Thiesi/Blacksite/actions/runs/40933190108/artifacts/12923293880",
       "committed": true
     },
     {
@@ -453,12 +571,12 @@
       "size": "132x50",
       "tier": "16",
       "file": "lattice-132x50-16.ans",
-      "sha256": "7eda581f9c346795cba24ffaec7eb4589d37163a06f915588f1ebc27370d80d8",
-      "bytes": 100872,
-      "run": "40913607689",
+      "sha256": "61573e8d3e8e563cddf210f1037789fd60ce75a9c2159fe425eece81061ae78b",
+      "bytes": 100995,
+      "run": "40933190108",
       "artifact": "p4-view-semantics-132x50",
-      "artifact_id": 12914697903,
-      "artifact_url": "https://github.com/Thiesi/Blacksite/actions/runs/40913607689/artifacts/12914697903",
+      "artifact_id": 12923293880,
+      "artifact_url": "https://github.com/Thiesi/Blacksite/actions/runs/40933190108/artifacts/12923293880",
       "committed": false
     },
     {
@@ -466,12 +584,51 @@
       "size": "132x50",
       "tier": "16",
       "file": "lattice-132x50-16.json",
-      "sha256": "5a74c8dc1b5513684d48db0222cc5dcc3b0da39ab072de366a212932bf4d825d",
+      "sha256": "6aae0df558934ce0fa046a5b3c871f0c5bd194a77351f904770088df888f35e1",
       "bytes": 28393,
-      "run": "40913607689",
+      "run": "40933190108",
       "artifact": "p4-view-semantics-132x50",
-      "artifact_id": 12914697903,
-      "artifact_url": "https://github.com/Thiesi/Blacksite/actions/runs/40913607689/artifacts/12914697903",
+      "artifact_id": 12923293880,
+      "artifact_url": "https://github.com/Thiesi/Blacksite/actions/runs/40933190108/artifacts/12923293880",
+      "committed": false
+    },
+    {
+      "scenario": "sodium-cover",
+      "size": "132x50",
+      "tier": "16",
+      "file": "sodium-cover-132x50-16.txt",
+      "sha256": "23e0828e8921e1906847a7bc23817f9f86e0ebd38b98e8ae55e670d1cb43437f",
+      "bytes": 9477,
+      "run": "40933190108",
+      "artifact": "p4-view-semantics-132x50",
+      "artifact_id": 12923293880,
+      "artifact_url": "https://github.com/Thiesi/Blacksite/actions/runs/40933190108/artifacts/12923293880",
+      "committed": true
+    },
+    {
+      "scenario": "sodium-cover",
+      "size": "132x50",
+      "tier": "16",
+      "file": "sodium-cover-132x50-16.ans",
+      "sha256": "3c130df422f50eb2ac6f596b3e2506ceba0263d647e7e231e0246b8086e78fff",
+      "bytes": 299039,
+      "run": "40933190108",
+      "artifact": "p4-view-semantics-132x50",
+      "artifact_id": 12923293880,
+      "artifact_url": "https://github.com/Thiesi/Blacksite/actions/runs/40933190108/artifacts/12923293880",
+      "committed": false
+    },
+    {
+      "scenario": "sodium-cover",
+      "size": "132x50",
+      "tier": "16",
+      "file": "sodium-cover-132x50-16.json",
+      "sha256": "86d8aee49e5a9772003c3e059828b6aa196660439f550d225fa01eeda8f4e222",
+      "bytes": 24288,
+      "run": "40933190108",
+      "artifact": "p4-view-semantics-132x50",
+      "artifact_id": 12923293880,
+      "artifact_url": "https://github.com/Thiesi/Blacksite/actions/runs/40933190108/artifacts/12923293880",
       "committed": false
     },
     {
@@ -479,12 +636,12 @@
       "size": "132x50",
       "tier": "256",
       "file": "wake-132x50-256.txt",
-      "sha256": "018287927aecd425f683e88c221cd0c23bb0b9572f9ad048db33c3b75b9747a0",
+      "sha256": "b0387f3b2b1c126f218cef5084bf34080da042c71e119fceaa3b0b59383613b1",
       "bytes": 7772,
-      "run": "40913607689",
+      "run": "40933190108",
       "artifact": "p4-view-semantics-132x50",
-      "artifact_id": 12914697903,
-      "artifact_url": "https://github.com/Thiesi/Blacksite/actions/runs/40913607689/artifacts/12914697903",
+      "artifact_id": 12923293880,
+      "artifact_url": "https://github.com/Thiesi/Blacksite/actions/runs/40933190108/artifacts/12923293880",
       "committed": true
     },
     {
@@ -492,12 +649,12 @@
       "size": "132x50",
       "tier": "256",
       "file": "wake-132x50-256.ans",
-      "sha256": "0233bdb6f52423dc4e61166fe11b12173b914c9781fa61e84714c7e8e8a30d59",
-      "bytes": 83283,
-      "run": "40913607689",
+      "sha256": "e677e8a31914acb1552e755b3db08829e5f102715a6b08e3ab3d5b6a016d27fd",
+      "bytes": 83323,
+      "run": "40933190108",
       "artifact": "p4-view-semantics-132x50",
-      "artifact_id": 12914697903,
-      "artifact_url": "https://github.com/Thiesi/Blacksite/actions/runs/40913607689/artifacts/12914697903",
+      "artifact_id": 12923293880,
+      "artifact_url": "https://github.com/Thiesi/Blacksite/actions/runs/40933190108/artifacts/12923293880",
       "committed": false
     },
     {
@@ -505,12 +662,12 @@
       "size": "132x50",
       "tier": "256",
       "file": "wake-132x50-256.json",
-      "sha256": "065af2933b19533cccffa4b06e2c93f1e9f5824d0ba6ec764269ee8edb23f40d",
-      "bytes": 21216,
-      "run": "40913607689",
+      "sha256": "727336b3656a19d7ecad68e6dfce2b19d44900054eb3b20793636016d686b56b",
+      "bytes": 21255,
+      "run": "40933190108",
       "artifact": "p4-view-semantics-132x50",
-      "artifact_id": 12914697903,
-      "artifact_url": "https://github.com/Thiesi/Blacksite/actions/runs/40913607689/artifacts/12914697903",
+      "artifact_id": 12923293880,
+      "artifact_url": "https://github.com/Thiesi/Blacksite/actions/runs/40933190108/artifacts/12923293880",
       "committed": false
     },
     {
@@ -518,12 +675,12 @@
       "size": "132x50",
       "tier": "256",
       "file": "place-history-132x50-256.txt",
-      "sha256": "d1791403c28a56f17dbd96fff4701ac8c85ae7b555f4a766733d7a8362dee383",
+      "sha256": "6d7f13f0e2c299dbac269bfb68d3fef78c68e192f9136a4ab31572a36c49d509",
       "bytes": 7520,
-      "run": "40913607689",
+      "run": "40933190108",
       "artifact": "p4-view-semantics-132x50",
-      "artifact_id": 12914697903,
-      "artifact_url": "https://github.com/Thiesi/Blacksite/actions/runs/40913607689/artifacts/12914697903",
+      "artifact_id": 12923293880,
+      "artifact_url": "https://github.com/Thiesi/Blacksite/actions/runs/40933190108/artifacts/12923293880",
       "committed": true
     },
     {
@@ -531,12 +688,12 @@
       "size": "132x50",
       "tier": "256",
       "file": "place-history-132x50-256.ans",
-      "sha256": "f3ccfd10a9490347926eb5c1382a5793aacf2987b87247d07bb6c8565b3949e5",
-      "bytes": 84298,
-      "run": "40913607689",
+      "sha256": "7f35491fc11db469584434d107d2f6c624089af5738b0c256f097e3245d56216",
+      "bytes": 84465,
+      "run": "40933190108",
       "artifact": "p4-view-semantics-132x50",
-      "artifact_id": 12914697903,
-      "artifact_url": "https://github.com/Thiesi/Blacksite/actions/runs/40913607689/artifacts/12914697903",
+      "artifact_id": 12923293880,
+      "artifact_url": "https://github.com/Thiesi/Blacksite/actions/runs/40933190108/artifacts/12923293880",
       "committed": false
     },
     {
@@ -544,12 +701,12 @@
       "size": "132x50",
       "tier": "256",
       "file": "place-history-132x50-256.json",
-      "sha256": "76310d8e380773806362e54ee913c9f202c84dee18d89589d8356fcb2282c4cf",
-      "bytes": 18208,
-      "run": "40913607689",
+      "sha256": "2017ab3e331d32dc656c3313ee4191d398dc39f62a8e729c94e3dbc6b2d75aa9",
+      "bytes": 18323,
+      "run": "40933190108",
       "artifact": "p4-view-semantics-132x50",
-      "artifact_id": 12914697903,
-      "artifact_url": "https://github.com/Thiesi/Blacksite/actions/runs/40913607689/artifacts/12914697903",
+      "artifact_id": 12923293880,
+      "artifact_url": "https://github.com/Thiesi/Blacksite/actions/runs/40933190108/artifacts/12923293880",
       "committed": false
     },
     {
@@ -557,12 +714,12 @@
       "size": "132x50",
       "tier": "256",
       "file": "lattice-132x50-256.txt",
-      "sha256": "23297a5c63a1a936b3308115c23bc0bc6d323cc16f7ebe4ecb2d8dee27b7b469",
+      "sha256": "02c3ebb71136dfc941b71b033beb5de01f565c6332a1752200d18301702881a2",
       "bytes": 8291,
-      "run": "40913607689",
+      "run": "40933190108",
       "artifact": "p4-view-semantics-132x50",
-      "artifact_id": 12914697903,
-      "artifact_url": "https://github.com/Thiesi/Blacksite/actions/runs/40913607689/artifacts/12914697903",
+      "artifact_id": 12923293880,
+      "artifact_url": "https://github.com/Thiesi/Blacksite/actions/runs/40933190108/artifacts/12923293880",
       "committed": true
     },
     {
@@ -570,12 +727,12 @@
       "size": "132x50",
       "tier": "256",
       "file": "lattice-132x50-256.ans",
-      "sha256": "3a452340e31b25000f293f414e46dc69f81fbfbf481c38b5c48be5c45fc62db0",
-      "bytes": 122457,
-      "run": "40913607689",
+      "sha256": "c062b7bd6646adf727cb67d731d353aec101501b9b76aa2af5e17d9532d3be4d",
+      "bytes": 122603,
+      "run": "40933190108",
       "artifact": "p4-view-semantics-132x50",
-      "artifact_id": 12914697903,
-      "artifact_url": "https://github.com/Thiesi/Blacksite/actions/runs/40913607689/artifacts/12914697903",
+      "artifact_id": 12923293880,
+      "artifact_url": "https://github.com/Thiesi/Blacksite/actions/runs/40933190108/artifacts/12923293880",
       "committed": false
     },
     {
@@ -583,12 +740,51 @@
       "size": "132x50",
       "tier": "256",
       "file": "lattice-132x50-256.json",
-      "sha256": "14fee86bd7466310b7fcce759d3f81ac5f6d19e69110eddbeab6cc5420a235e7",
-      "bytes": 28936,
-      "run": "40913607689",
+      "sha256": "806eb71e61c8c2980bb4b62c53bdac5fe526a0cbd9ff32df552abf59fdc683bf",
+      "bytes": 28975,
+      "run": "40933190108",
       "artifact": "p4-view-semantics-132x50",
-      "artifact_id": 12914697903,
-      "artifact_url": "https://github.com/Thiesi/Blacksite/actions/runs/40913607689/artifacts/12914697903",
+      "artifact_id": 12923293880,
+      "artifact_url": "https://github.com/Thiesi/Blacksite/actions/runs/40933190108/artifacts/12923293880",
+      "committed": false
+    },
+    {
+      "scenario": "sodium-cover",
+      "size": "132x50",
+      "tier": "256",
+      "file": "sodium-cover-132x50-256.txt",
+      "sha256": "9b06e88b9b59d8843f2b78f2379da58c5443f454ef9812a97040f2449dc1a5d8",
+      "bytes": 9402,
+      "run": "40933190108",
+      "artifact": "p4-view-semantics-132x50",
+      "artifact_id": 12923293880,
+      "artifact_url": "https://github.com/Thiesi/Blacksite/actions/runs/40933190108/artifacts/12923293880",
+      "committed": true
+    },
+    {
+      "scenario": "sodium-cover",
+      "size": "132x50",
+      "tier": "256",
+      "file": "sodium-cover-132x50-256.ans",
+      "sha256": "815c8fcff6fe8ccc0aa3cded690274d65f137d0b32e1180b0ae2834bd94ef30a",
+      "bytes": 381218,
+      "run": "40933190108",
+      "artifact": "p4-view-semantics-132x50",
+      "artifact_id": 12923293880,
+      "artifact_url": "https://github.com/Thiesi/Blacksite/actions/runs/40933190108/artifacts/12923293880",
+      "committed": false
+    },
+    {
+      "scenario": "sodium-cover",
+      "size": "132x50",
+      "tier": "256",
+      "file": "sodium-cover-132x50-256.json",
+      "sha256": "b1a8e8c172feb57c1bdebce0e81afd718d359531ab96c0fced5834306d94a378",
+      "bytes": 26657,
+      "run": "40933190108",
+      "artifact": "p4-view-semantics-132x50",
+      "artifact_id": 12923293880,
+      "artifact_url": "https://github.com/Thiesi/Blacksite/actions/runs/40933190108/artifacts/12923293880",
       "committed": false
     },
     {
@@ -596,12 +792,12 @@
       "size": "132x50",
       "tier": "truecolor",
       "file": "wake-132x50-truecolor.txt",
-      "sha256": "25e4b8a848a443cc1e5cd65b6792f679e354b55d4be42cceb9266fb2f1102d80",
+      "sha256": "d0532dfa77ad9c1ed3e7b5275c316321bb2910143151c8daea02d275a8346659",
       "bytes": 7772,
-      "run": "40913607689",
+      "run": "40933190108",
       "artifact": "p4-view-semantics-132x50",
-      "artifact_id": 12914697903,
-      "artifact_url": "https://github.com/Thiesi/Blacksite/actions/runs/40913607689/artifacts/12914697903",
+      "artifact_id": 12923293880,
+      "artifact_url": "https://github.com/Thiesi/Blacksite/actions/runs/40933190108/artifacts/12923293880",
       "committed": true
     },
     {
@@ -609,12 +805,12 @@
       "size": "132x50",
       "tier": "truecolor",
       "file": "wake-132x50-truecolor.ans",
-      "sha256": "4c689f75d2c9c5c2030c29a76480a260312980e5c4d4630b0e05bcf7cda3a693",
-      "bytes": 93288,
-      "run": "40913607689",
+      "sha256": "c9e650ff3520866e8e03097a45257483d78ce18788ef4210dc2b2271cfd0f55d",
+      "bytes": 93344,
+      "run": "40933190108",
       "artifact": "p4-view-semantics-132x50",
-      "artifact_id": 12914697903,
-      "artifact_url": "https://github.com/Thiesi/Blacksite/actions/runs/40913607689/artifacts/12914697903",
+      "artifact_id": 12923293880,
+      "artifact_url": "https://github.com/Thiesi/Blacksite/actions/runs/40933190108/artifacts/12923293880",
       "committed": false
     },
     {
@@ -622,12 +818,12 @@
       "size": "132x50",
       "tier": "truecolor",
       "file": "wake-132x50-truecolor.json",
-      "sha256": "018d0a787dba6ed05650dadb3bc6a52441842a8e064f7f097c95039fbf39bc4f",
-      "bytes": 21442,
-      "run": "40913607689",
+      "sha256": "9c4b0e1c3846370f7f722357e4d99186b89ff0d000910c61f186cd68ffa73e05",
+      "bytes": 21481,
+      "run": "40933190108",
       "artifact": "p4-view-semantics-132x50",
-      "artifact_id": 12914697903,
-      "artifact_url": "https://github.com/Thiesi/Blacksite/actions/runs/40913607689/artifacts/12914697903",
+      "artifact_id": 12923293880,
+      "artifact_url": "https://github.com/Thiesi/Blacksite/actions/runs/40933190108/artifacts/12923293880",
       "committed": false
     },
     {
@@ -635,12 +831,12 @@
       "size": "132x50",
       "tier": "truecolor",
       "file": "place-history-132x50-truecolor.txt",
-      "sha256": "1b9e4cd05ddbe8ef61b3cfca25dcc825fcbef58a6c55331a815944ce33c02f94",
+      "sha256": "77a157e410fb9c2c058281e1c4b55d2bc8a033dbd061f31db0654664fef88fe0",
       "bytes": 7508,
-      "run": "40913607689",
+      "run": "40933190108",
       "artifact": "p4-view-semantics-132x50",
-      "artifact_id": 12914697903,
-      "artifact_url": "https://github.com/Thiesi/Blacksite/actions/runs/40913607689/artifacts/12914697903",
+      "artifact_id": 12923293880,
+      "artifact_url": "https://github.com/Thiesi/Blacksite/actions/runs/40933190108/artifacts/12923293880",
       "committed": true
     },
     {
@@ -648,12 +844,12 @@
       "size": "132x50",
       "tier": "truecolor",
       "file": "place-history-132x50-truecolor.ans",
-      "sha256": "d7d40e7e407c4497b752ed2d1d2fa0b916db2dd887ded4718e0de38013678218",
-      "bytes": 94377,
-      "run": "40913607689",
+      "sha256": "832a6a2aa8e814a744907ecc866fd58661f7b7e1611c717f29e6f68f65faa5e2",
+      "bytes": 94576,
+      "run": "40933190108",
       "artifact": "p4-view-semantics-132x50",
-      "artifact_id": 12914697903,
-      "artifact_url": "https://github.com/Thiesi/Blacksite/actions/runs/40913607689/artifacts/12914697903",
+      "artifact_id": 12923293880,
+      "artifact_url": "https://github.com/Thiesi/Blacksite/actions/runs/40933190108/artifacts/12923293880",
       "committed": false
     },
     {
@@ -661,12 +857,12 @@
       "size": "132x50",
       "tier": "truecolor",
       "file": "place-history-132x50-truecolor.json",
-      "sha256": "57e83431dc766d05edb8ae05d71e3c9c31793fc8931450959c6671823f49baa4",
-      "bytes": 18300,
-      "run": "40913607689",
+      "sha256": "4a05cb3cd1fe14af2a9d730a32bd852044c0322730d727f1f16b36191e9a4647",
+      "bytes": 18415,
+      "run": "40933190108",
       "artifact": "p4-view-semantics-132x50",
-      "artifact_id": 12914697903,
-      "artifact_url": "https://github.com/Thiesi/Blacksite/actions/runs/40913607689/artifacts/12914697903",
+      "artifact_id": 12923293880,
+      "artifact_url": "https://github.com/Thiesi/Blacksite/actions/runs/40933190108/artifacts/12923293880",
       "committed": false
     },
     {
@@ -674,12 +870,12 @@
       "size": "132x50",
       "tier": "truecolor",
       "file": "lattice-132x50-truecolor.txt",
-      "sha256": "475e9f9733e17928e22dd9161f69e732e554c3584e2b6febfce82be2276a188f",
+      "sha256": "6b60fef180f3f96f6b80e4a75bee00703e592eafeabd8e26274f2f08c3ceee03",
       "bytes": 8279,
-      "run": "40913607689",
+      "run": "40933190108",
       "artifact": "p4-view-semantics-132x50",
-      "artifact_id": 12914697903,
-      "artifact_url": "https://github.com/Thiesi/Blacksite/actions/runs/40913607689/artifacts/12914697903",
+      "artifact_id": 12923293880,
+      "artifact_url": "https://github.com/Thiesi/Blacksite/actions/runs/40933190108/artifacts/12923293880",
       "committed": true
     },
     {
@@ -687,12 +883,12 @@
       "size": "132x50",
       "tier": "truecolor",
       "file": "lattice-132x50-truecolor.ans",
-      "sha256": "4d5558f25e6278075f7276f7e65cd415f435ee8e7f2bf80f6c5f7ee698cfb53f",
-      "bytes": 138986,
-      "run": "40913607689",
+      "sha256": "8a6a3caf771569cf98f67d40803e6da8324d3dfceabd17e63276d29ea38c8290",
+      "bytes": 138520,
+      "run": "40933190108",
       "artifact": "p4-view-semantics-132x50",
-      "artifact_id": 12914697903,
-      "artifact_url": "https://github.com/Thiesi/Blacksite/actions/runs/40913607689/artifacts/12914697903",
+      "artifact_id": 12923293880,
+      "artifact_url": "https://github.com/Thiesi/Blacksite/actions/runs/40933190108/artifacts/12923293880",
       "committed": false
     },
     {
@@ -700,16 +896,55 @@
       "size": "132x50",
       "tier": "truecolor",
       "file": "lattice-132x50-truecolor.json",
-      "sha256": "ad0f1d625c8a501a1a0dbfa9240b00c778cb074cd122988cb454f044b6e94740",
-      "bytes": 29130,
-      "run": "40913607689",
+      "sha256": "1806e0c5e20ef7cbe1bb68816d12b7a7118f07cb1b79d99e171b072ec99921d2",
+      "bytes": 29169,
+      "run": "40933190108",
       "artifact": "p4-view-semantics-132x50",
-      "artifact_id": 12914697903,
-      "artifact_url": "https://github.com/Thiesi/Blacksite/actions/runs/40913607689/artifacts/12914697903",
+      "artifact_id": 12923293880,
+      "artifact_url": "https://github.com/Thiesi/Blacksite/actions/runs/40933190108/artifacts/12923293880",
+      "committed": false
+    },
+    {
+      "scenario": "sodium-cover",
+      "size": "132x50",
+      "tier": "truecolor",
+      "file": "sodium-cover-132x50-truecolor.txt",
+      "sha256": "80a782510bc88ee5b06f5f8182ff634ac1b2790cb203e97dabd40128e7717f4e",
+      "bytes": 9477,
+      "run": "40933190108",
+      "artifact": "p4-view-semantics-132x50",
+      "artifact_id": 12923293880,
+      "artifact_url": "https://github.com/Thiesi/Blacksite/actions/runs/40933190108/artifacts/12923293880",
+      "committed": true
+    },
+    {
+      "scenario": "sodium-cover",
+      "size": "132x50",
+      "tier": "truecolor",
+      "file": "sodium-cover-132x50-truecolor.ans",
+      "sha256": "f3adc58828d04db4bef416667641be54a307641d50d9ebe1e9c7062a00891727",
+      "bytes": 440290,
+      "run": "40933190108",
+      "artifact": "p4-view-semantics-132x50",
+      "artifact_id": 12923293880,
+      "artifact_url": "https://github.com/Thiesi/Blacksite/actions/runs/40933190108/artifacts/12923293880",
+      "committed": false
+    },
+    {
+      "scenario": "sodium-cover",
+      "size": "132x50",
+      "tier": "truecolor",
+      "file": "sodium-cover-132x50-truecolor.json",
+      "sha256": "1c96c456112be60e418dc6cc81c6e9f82518bb5aa6283b9dee0f3b63073eea34",
+      "bytes": 26982,
+      "run": "40933190108",
+      "artifact": "p4-view-semantics-132x50",
+      "artifact_id": 12923293880,
+      "artifact_url": "https://github.com/Thiesi/Blacksite/actions/runs/40933190108/artifacts/12923293880",
       "committed": false
     }
   ],
-  "local_execution": "Independent six-case local native run; only its small receipts are committed. Hosted text and raw hashes below describe the hosted run, not local bytes.",
+  "local_execution": "Independent six-case local native run; its small receipts describe local output, not hosted capture bytes.",
   "human_approval": false,
   "committed_payloads": [
     {
@@ -720,47 +955,62 @@
     {
       "path": "132x50/lattice-132x50-16.txt",
       "bytes": 8293,
-      "sha256": "9264fab3dc4168d5b2419d4e4156f5eac617e4fa9766b752ccc72a50b46a03ce"
+      "sha256": "e61a43654ba84759c5ea822a6fc3cd40d5ef3477351e30da1ec323663c45cd31"
     },
     {
       "path": "132x50/lattice-132x50-256.txt",
       "bytes": 8291,
-      "sha256": "23297a5c63a1a936b3308115c23bc0bc6d323cc16f7ebe4ecb2d8dee27b7b469"
+      "sha256": "02c3ebb71136dfc941b71b033beb5de01f565c6332a1752200d18301702881a2"
     },
     {
       "path": "132x50/lattice-132x50-truecolor.txt",
       "bytes": 8279,
-      "sha256": "475e9f9733e17928e22dd9161f69e732e554c3584e2b6febfce82be2276a188f"
+      "sha256": "6b60fef180f3f96f6b80e4a75bee00703e592eafeabd8e26274f2f08c3ceee03"
     },
     {
       "path": "132x50/place-history-132x50-16.txt",
       "bytes": 7522,
-      "sha256": "ca2a566eb44ebcdde8aeb8a3ffd2536444743c4d458d77a14622aae622c4c1ce"
+      "sha256": "b2bfc817d825b5a61e2ce8b99efa2d40ca128ec44b1657417bca0582c0cdea23"
     },
     {
       "path": "132x50/place-history-132x50-256.txt",
       "bytes": 7520,
-      "sha256": "d1791403c28a56f17dbd96fff4701ac8c85ae7b555f4a766733d7a8362dee383"
+      "sha256": "6d7f13f0e2c299dbac269bfb68d3fef78c68e192f9136a4ab31572a36c49d509"
     },
     {
       "path": "132x50/place-history-132x50-truecolor.txt",
       "bytes": 7508,
-      "sha256": "1b9e4cd05ddbe8ef61b3cfca25dcc825fcbef58a6c55331a815944ce33c02f94"
+      "sha256": "77a157e410fb9c2c058281e1c4b55d2bc8a033dbd061f31db0654664fef88fe0"
+    },
+    {
+      "path": "132x50/sodium-cover-132x50-16.txt",
+      "bytes": 9477,
+      "sha256": "23e0828e8921e1906847a7bc23817f9f86e0ebd38b98e8ae55e670d1cb43437f"
+    },
+    {
+      "path": "132x50/sodium-cover-132x50-256.txt",
+      "bytes": 9402,
+      "sha256": "9b06e88b9b59d8843f2b78f2379da58c5443f454ef9812a97040f2449dc1a5d8"
+    },
+    {
+      "path": "132x50/sodium-cover-132x50-truecolor.txt",
+      "bytes": 9477,
+      "sha256": "80a782510bc88ee5b06f5f8182ff634ac1b2790cb203e97dabd40128e7717f4e"
     },
     {
       "path": "132x50/wake-132x50-16.txt",
       "bytes": 7772,
-      "sha256": "47eabcced40f84596e16fe26eb4b8eec991fe5aa4106d9d23a6a574a28e7bccf"
+      "sha256": "44edb0fd9f5773acfed21b02a7f13d45e108cf452b42b101f3b1c1f63ba8777e"
     },
     {
       "path": "132x50/wake-132x50-256.txt",
       "bytes": 7772,
-      "sha256": "018287927aecd425f683e88c221cd0c23bb0b9572f9ad048db33c3b75b9747a0"
+      "sha256": "b0387f3b2b1c126f218cef5084bf34080da042c71e119fceaa3b0b59383613b1"
     },
     {
       "path": "132x50/wake-132x50-truecolor.txt",
       "bytes": 7772,
-      "sha256": "25e4b8a848a443cc1e5cd65b6792f679e354b55d4be42cceb9266fb2f1102d80"
+      "sha256": "d0532dfa77ad9c1ed3e7b5275c316321bb2910143151c8daea02d275a8346659"
     },
     {
       "path": "80x24/lattice-80x24-16.txt",
@@ -770,102 +1020,137 @@
     {
       "path": "80x24/lattice-80x24-256.txt",
       "bytes": 2673,
-      "sha256": "e9733cd7ce8fd7b3a2070987d93e8802847a99ec0fb2e27f7227fbc598e830f6"
+      "sha256": "93a364e4e114cdad87a0be5f33dcb5f8175d5cf4d78f16c2c05b502bb6c3ca4b"
     },
     {
       "path": "80x24/lattice-80x24-truecolor.txt",
       "bytes": 2661,
-      "sha256": "c6838b51dc6dc25f1f692a91d014301ac1ca24817ac205a65a9a2b65f1a48a8e"
+      "sha256": "2ea976b851d81af5ebf3247a9bc583d3084430650be95a558b8591e91402515f"
     },
     {
       "path": "80x24/place-history-80x24-16.txt",
       "bytes": 2360,
-      "sha256": "c2b001d81a964800db969a5b0c6d786cda2a356eb9cfb19ed75056b4153b831f"
+      "sha256": "8a93518e59c4779d77cce37959c017143c1bcf8d43b93dcc3bacdff152db34b8"
     },
     {
       "path": "80x24/place-history-80x24-256.txt",
       "bytes": 2358,
-      "sha256": "732b4e5ffa5996c7ca90e81f1e311053286198fcda9096c2b6b293e43b8d26dc"
+      "sha256": "98968e2c3cd59729b66f30f74566d75f12abaeb029c81af08ad5bcd506dab2c7"
     },
     {
       "path": "80x24/place-history-80x24-truecolor.txt",
       "bytes": 2346,
-      "sha256": "da9f38b681fb94830989d3b1fcf1e72f3e6dbd93dd2a4330dacb7c8b66b7a3bb"
+      "sha256": "8fc8595015561c7f9e154e5073dd2670aef1b7f0698ca351e74378f7aa71f650"
+    },
+    {
+      "path": "80x24/sodium-cover-80x24-16.txt",
+      "bytes": 3488,
+      "sha256": "11b5de0e65751a6c30c97ed87ad17237bf3ee7805052e568d0c155245e9eb980"
+    },
+    {
+      "path": "80x24/sodium-cover-80x24-256.txt",
+      "bytes": 3484,
+      "sha256": "f19747cac006e40180307514672747ef3921ea08d09d7fc921c526d1e8dc7483"
+    },
+    {
+      "path": "80x24/sodium-cover-80x24-truecolor.txt",
+      "bytes": 3484,
+      "sha256": "1220bd29e441e053e0e3673b7547340b14092f86412c8625bd3332b2b4044349"
     },
     {
       "path": "80x24/wake-80x24-16.txt",
       "bytes": 2608,
-      "sha256": "362a196455dd771e2e5e706d2a44f521600a626b15022a5e4d838c74d9482e84"
+      "sha256": "14142dfb723c5e7947ff5c73c3516f9d1b89ebe7619d0b96173f5225ee59fbad"
     },
     {
       "path": "80x24/wake-80x24-256.txt",
       "bytes": 2608,
-      "sha256": "5c676aff7b88e562cf618c811841f5b94189f2289ee0529cb0a0166332fa60da"
+      "sha256": "1bd65d3ad1239c0211af341d37e62977ea873877c4da969ce2b6fc9333b3621b"
     },
     {
       "path": "80x24/wake-80x24-truecolor.txt",
       "bytes": 2608,
-      "sha256": "2b2f908fafc4234a60917b463a3979406de9a4b61126aa4cf66b3a5c9e00a62e"
+      "sha256": "529a501e11bd848d07df50922f5d9b876a1fa797ca73daa4423820834c8b7f11"
     },
     {
       "path": "focused-review-regression.json",
-      "bytes": 489,
-      "sha256": "e041165b2c525b3ac0f8de916359f1812a13a971247976d80869b74aeaad5ff5"
+      "bytes": 671,
+      "sha256": "cb818c92251aab823e0c77b5a808dd848357b5ae0f3e9df6174b39ad984de9db"
     },
     {
       "path": "local-node-environment.json",
       "bytes": 337,
-      "sha256": "53e51b61e51bc4faf2f5191fe35a35d4d90c87e1489e39295996d02377f35a36"
+      "sha256": "7b70606248c89686e1f0ac2dd5b5be8519841e8073bb8507938bf2a66e31d116"
     },
     {
       "path": "local-wheel.json",
       "bytes": 124,
-      "sha256": "3b4ce374ea2049294aec1edc0df9bf991ac6f3ed482ae86771ca1690eedb6ad0"
+      "sha256": "ce16d2f23c9ebdae17e0b9acfffd26b9e09cd3dc49e11c2790edb17cd6b70958"
     },
     {
       "path": "native-ci-132x50.json",
-      "bytes": 1177,
-      "sha256": "3be66c7365ccc869ffff55c60e28a73eec8558ec5e919cdb9d8740fe47e3c818"
+      "bytes": 1732,
+      "sha256": "50b9b74d12ce4023608e9257182e6f2754fdae5bc9b0aaf493ed2fe98b38ad5b"
     },
     {
       "path": "native-ci-80x24.json",
-      "bytes": 1171,
-      "sha256": "56f6e7e24330f9c7befe01a2fa0e3b85cd83c34d7f2b7b0bb978fb5ea1c39e31"
+      "bytes": 1726,
+      "sha256": "7da3b632226e8311e725bb7b9aca24492336d2927b68dec214eb49e69e6ae4b8"
+    },
+    {
+      "path": "native-ci-client-132x50.json",
+      "bytes": 214,
+      "sha256": "8507f510294a30b2bb3b71acbf665dfe070b1174338b6aa7059031da50e16627"
+    },
+    {
+      "path": "native-ci-client-80x24.json",
+      "bytes": 214,
+      "sha256": "8507f510294a30b2bb3b71acbf665dfe070b1174338b6aa7059031da50e16627"
     },
     {
       "path": "native-local-client.json",
-      "bytes": 282,
-      "sha256": "7ee47533e749f99d58e189766d19e8a117d742b809ae956bb203ad36785156d5"
+      "bytes": 288,
+      "sha256": "c2bfe3aaf474bf6ea81b1cae6dbd1793a741af26fdd12755b279702f957e4642"
     },
     {
       "path": "native-local-result.json",
-      "bytes": 2129,
-      "sha256": "4170e9bc5171331e6f3070361928aa002f5665ff5c45519552faeddd85028255"
+      "bytes": 3239,
+      "sha256": "64e1d5e29f3c9425ddf74fb76485d250c09016757338f29f103a1938d75b0417"
     },
     {
       "path": "preservation.json",
-      "bytes": 863,
-      "sha256": "7f57edd90f1d6a496269eb304d45305f2a9b44b3dc0c038cda3ccc16a149308f"
+      "bytes": 461,
+      "sha256": "89763b2681f5c133165e724b19a1d4c2a8654a178a0bcc1cc6eca51afe3d2999"
     },
     {
       "path": "pytest.json",
-      "bytes": 687,
-      "sha256": "6959d89e479527a80a77439ea4d308ab2f1944110ec442e0d19055d4b5981a86"
+      "bytes": 732,
+      "sha256": "9607173036310b2267809e799b06d0c79303223c398cefcea0148f2b4d9dcffe"
     },
     {
       "path": "README.md",
-      "bytes": 3132,
-      "sha256": "80e39ecc5d828f7197e193e7d6bd74ec9a421d83fd62451eb6793a8babba7340"
+      "bytes": 2581,
+      "sha256": "9aaf1d97d1b2f834ccfa3da02af8e55cee6667429d9bd78fda625ee99b075aa4"
     },
     {
       "path": "review-triage.json",
-      "bytes": 913,
-      "sha256": "548b5ec6ff8d73767e8a566f7c2cbd133b67f7c64657c689f14334f5129e3e8f"
+      "bytes": 1025,
+      "sha256": "dee319decf4d27c6752a3a711c0ea373043d2373b10386d2b97ba0a7b12414b7"
+    },
+    {
+      "path": "root-ci.json",
+      "bytes": 757,
+      "sha256": "76b275093f5f6d1fb6391b66f7dfecdb847953c8ce9034e9132e68d17c727a30"
+    },
+    {
+      "path": "shipped-retaliation.json",
+      "bytes": 990,
+      "sha256": "00789e8ca67a092cfbc4d42bf54baabbb3d1d97fb459c55ddd488b05825fed23"
     },
     {
       "path": "strict-packet-summary.json",
       "bytes": 403,
-      "sha256": "aba2fc5196bdab797b35c4ab0b0c17b3bad7cbca59ca0082413edbcb9204740e"
+      "sha256": "62d4e456397f6b6f84786496a3bca49cb5356744890997a6e923d2cc67215666"
     }
   ]
 }

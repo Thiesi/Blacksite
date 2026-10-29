@@ -1,9 +1,9 @@
-┌─Wake Hall  POCKET─────────────────────────────────────────────────────────────────────────────────────────────────────────16:39──┐
+┌─Wake Hall  POCKET─────────────────────────────────────────────────────────────────────────────────────────────────────────18:44──┐
 │███████████████                                                                                            │TARGET                │
 │█···············                                                                                           │None                  │
 │█···············                                                                                           │WEAPON                │
-│█··Θ·Θ·Θ·Θ······                                                                                           │Kestrel Issue Sidearm │
-│█·········☻·☻···                                                                                           │NEARBY                │
+│█··Θ·Θ·Θ·Θ·☻····                                                                                           │Kestrel Issue Sidearm │
+│█·········☻·····                                                                                           │NEARBY                │
 │█·····@·····$····                                                                                          │~ Sablier orderly     │
 │█···············                                                                                           │~ Sablier orderly     │
 │█···············                                                                                           │CREW                  │
@@ -38,8 +38,8 @@
 │                                                                                                           │Shock 0               │
 │                                                                                                           │Ctrl-X leaves         │
 ├The corridor teaches targeting. Tab selects; F fires; B skips training.───────────────────────────────────────────────────────────┤
-│[zone] You wake on a gurney under a number.                                                                                       │
-│                                                                                                                                  │
+│[zone] You wake on a gurney under a number. White light, warm plastic, a floor drain. Past the cards, a corridor. Past the        │
+│  corridor, a terminal.                                                                                                           │
 │                                                                                                                                  │
 │                                                                                                                                  │
 │                                                                                                                                  │

@@ -1,5 +1,5 @@
 ┌─VATSIDE / LATTICE132 ────────────────────────────────────────────────────────────────────────────────────────────────────────────┐
-│ Cells resolve..                                                                                           │INTEGRITY 100/100     │
+│ Cells resolve.                                                                                            │INTEGRITY 100/100     │
 │ (01)──────────(02)──────────[C1]───────────[C2]──────────(05)───────────[C3]──────────[C4]───────────(08) │TRACE 0               │
 │   │             │             │              │             │              │             ║              ║  │BODY POCKET           │
 │   │             │             │              │             │              │             ║              ║  │HP 130/130            │
@@ -38,13 +38,13 @@
 │                                                                                                           │                      │
 │                                                                                                           │                      │
 ├──────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────┤
-│[zone] You wake on a gurney under a number.                                                                                       │
+│[zone] You wake on a gurney under a number. White light, warm plastic, a floor drain. Past the cards, a corridor. Past the        │
+│  corridor, a terminal.                                                                                                           │
 │[combat] Your training drone wakes. Tab targets; F fires; B skips. Its shots cannot kill.                                         │
 │[lat] The city goes quiet. Cells resolve under your feet.                                                                         │
 │[lat] Your body stays upstairs. Its shelter still matters.                                                                        │
 │[lat] Arrows follow links. J brings you back from a public cell.                                                                  │
 │[lat] You enter Vatside. Wake Hall Node resolves.                                                                                 │
-│                                                                                                                                  │
 │                                                                                                                                  │
 │Arrows links  E uplink / enter  J jack out  Tab target  1-7 cast  R rig                                                           │
 └────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────── 

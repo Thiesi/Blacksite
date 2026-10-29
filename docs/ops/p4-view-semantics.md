@@ -74,12 +74,17 @@ position, behaviour or faction. It does not manufacture black ICE.
 
 ## Evidence
 
-The [evidence index](captures/p4-view-semantics/README.md) contains the
-previous head's captures and receipts. They are historical while the
-post-S25b head is validated again. Fresh root, strict-packet and native
-results must replace them before the next technical-review handoff.
-The native script now captures four screens in each of six size/tier
-cases, including the shipped Sodium Row cover.
+The [evidence index](captures/p4-view-semantics/README.md) replaces the
+pre-S25b packet with 24 fresh hosted text captures and small receipts.
+The combined source head `d447fcd0fe08ddc57a0f7094c569f8f21e3d6df6`
+passes full Windows and Linux root CI, recorded in `root-ci.json`.
+The independent clean local run before P2 integration, at
+`6911c832f05dae4b5de82603c436e653bc4aa826`, passes 1,709
+tests with 1 skipped. The strict packet
+passes 99 cases; focused shipped-content/disclosure/replay/arrival tests
+pass 81. Local and hosted native runs each pass six size/tier cases,
+including the real shipped Warden target panel. The installed Python
+tree matches source; raw local proof stays outside Git.
 
 Raw ANSI and style JSON remain in the P4 acceptance CI artifacts, named
 `p4-view-semantics-80x24` and `p4-view-semantics-132x50`. The manifest

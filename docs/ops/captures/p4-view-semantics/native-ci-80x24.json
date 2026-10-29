@@ -1,5 +1,5 @@
 {
-  "head": "cd6ce9a60e1004dcaab246149db46a3d46c0ae36",
+  "head": "62a7da5321d3313ae13bad0bfa2c7ddc11361c0b",
   "passed": true,
   "cases": [
     {
@@ -9,10 +9,12 @@
       ],
       "tier": "16",
       "name": "P416界80",
-      "place_line": "You wake on a gurney under a number.",
+      "place_line": "You wake on a gurney under a number. White light, warm plastic, a floor drain. Past the cards, a corridor. Past the corridor, a terminal.",
       "world_history_has_kinds": true,
       "crew_restart_outside_world_history": true,
       "lattice_fields": true,
+      "shipped_npc_cover": "Sodium regular",
+      "shipped_npc_class": "civilian",
       "clean_exit": true
     },
     {
@@ -22,10 +24,12 @@
       ],
       "tier": "256",
       "name": "P4256界80",
-      "place_line": "You wake on a gurney under a number.",
+      "place_line": "You wake on a gurney under a number. White light, warm plastic, a floor drain. Past the cards, a corridor. Past the corridor, a terminal.",
       "world_history_has_kinds": true,
       "crew_restart_outside_world_history": true,
       "lattice_fields": true,
+      "shipped_npc_cover": "Sodium regular",
+      "shipped_npc_class": "civilian",
       "clean_exit": true
     },
     {
@@ -35,10 +39,12 @@
       ],
       "tier": "truecolor",
       "name": "P4truecolor界80",
-      "place_line": "You wake on a gurney under a number.",
+      "place_line": "You wake on a gurney under a number. White light, warm plastic, a floor drain. Past the cards, a corridor. Past the corridor, a terminal.",
       "world_history_has_kinds": true,
       "crew_restart_outside_world_history": true,
       "lattice_fields": true,
+      "shipped_npc_cover": "Sodium regular",
+      "shipped_npc_class": "civilian",
       "clean_exit": true
     }
   ],

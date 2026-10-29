@@ -1,8 +1,8 @@
 ┌─ Karst · S10P41680 ──────────────────────────────────────────────────────────┐
 │ SCROLLBACK                                            │                      │
-│ [zone] You wake on a gurney under a number.           │                      │
-│                                                       │                      │
-│                                                       │                      │
+│ [zone] You wake on a gurney under a number. White     │                      │
+│   light, warm plastic, a floor drain. Past the cards, │                      │
+│   a corridor. Past the corridor, a terminal.          │                      │
 │                                                       │                      │
 │                                                       │                      │
 │                                                       │                      │
@@ -17,8 +17,8 @@
 │                                                       │                      │
 │                                                       │                      │
 ├The corridor teaches targeting. Tab selects; F fires; B skips training.───────┤
-│[zone] You wake on a gurney under a number.                                   │
-│                                                                              │
+│[zone] You wake on a gurney under a number. White light, warm plastic, a floor│
+│  drain. Past the cards, a corridor. Past the corridor, a terminal.           │
 │                                                                              │
 │Tab target  F fire  X weapon  1-5 quick  V abilities  E interact  I invento...│
 └────────────────────────────────────────────────────────────────────────────── 
