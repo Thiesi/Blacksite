@@ -66,7 +66,10 @@ class ZoneSimulation:
         for asset_id in self.world.zones[avatar.zone].template.meta.lore[:1]:
             asset = self.world.content.text.get(asset_id)
             if asset:
-                session.send(Frame("toast", {"text": asset.body.splitlines()[0], "role": "ui_text", "seconds": 8}))
+                # S25b TR-9: retain wrapped prose in the width-safe log and
+                # scrollback instead of truncating it to one toast line.
+                paragraph = asset.body.strip().split('\n\n', 1)[0]
+                self.log(session, ' '.join(paragraph.splitlines()))
 
     def reset_view(self, session: Session, avatar: Avatar) -> None:
         avatar.perception.viewport = avatar.perception.grid_key = None

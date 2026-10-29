@@ -82,9 +82,10 @@ district.
 
 Notes:
 
-- The table records the current 36-cell Terraces baseline. S25b's
-  commissioned 24-home pool expands it to 48 cells (32 public, 12 gated,
-  4 hidden), as accepted in plan §14.2. It keeps the existing cells and
+- The table records the current 36-cell Terraces baseline. The
+  commissioned 24-home pool (C1/S25c) expands it to 48 cells (32 public,
+  12 gated, 4 hidden), as accepted in plan §14.2. It keeps the existing
+  cells and
   links. A twelve-cell public residence register connects reciprocally
   to the public entry; its
   eleven unallocated cells and thirteen existing public cells supply

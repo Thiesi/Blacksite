@@ -655,7 +655,8 @@ and Sable can stand at adjacent stalls and both pretend not to notice.
 
 - **Class:** contested. **Lean:** Kestrel. **Size:** 70 × 50.
   **Sight:** 11.
-- **Exits:** `tramyard-depots` (street); `scour-ring-1` (the gate:
+- **Exits:** `tramyard-depots` (street); `scour-landing` (the camp road);
+  `scour-ring-1` (the gate:
   opens on a Kestrel schedule every 2 minutes for 60 seconds, or on a
   Gate core control, or for a convoy).
 - **Relays:** **Gate Relay Nine** (controls the gate schedule; holders
@@ -1471,7 +1472,8 @@ sign. The Choir have carved it again.
 
 - **Class:** pocket. **Lean:** Ferrymen. **Size:** 60 × 30. **Sight:** 12
   (open sky, Ring-light).
-- **Exits:** `scour-ring-1` (the causeway); `scour-ring-2` (the Ferrymen
+- **Exits:** `tramyard-wall-gate` (the gate approach);
+  `scour-ring-1` (the causeway); `scour-ring-2` (the Ferrymen
   road, a marked route that skips most of Ring One's patrols).
 - **Relays:** none.
 - **Terminals:** one Ferrymen terminal (Landing core, tier 2; the public shelter's

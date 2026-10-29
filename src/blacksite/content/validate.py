@@ -22,7 +22,7 @@ from math import isfinite
 import re
 import sys
 from collections import deque
-from collections.abc import Iterable, Iterator
+from collections.abc import Callable, Iterable, Iterator
 from pathlib import Path
 
 from blacksite.content import schema as s
@@ -31,7 +31,16 @@ from blacksite.content.formats import Problem, find_line, id_needles
 from blacksite.content.ids import display_width
 from blacksite.content.loader import ContentTree, load_content
 
-__all__ = ["Problem", "validate", "exit_warnings", "main"]
+__all__ = ["Problem", "validate", "exit_warnings", "route_door_warnings", "door_wall_axis", "main"]
+
+# #78 technical-lead scope decision: these S08 maps retain their D-T3
+# layout hold. Their route-door failures are reported to C1 as warnings;
+# the same invariant is an error for every other zone, including future ones.
+S08_ROUTE_DOOR_WARNING_ZONES = frozenset({
+    'core-plaza', 'core-tram-hub', 'core-precinct', 'vatside-wake-hall',
+    'vatside-clinics', 'vatside-vat-row', 'sodium-row', 'sodium-tin-halo',
+    'terraces-blocks', 'terraces-lobby',
+})
 
 # 00-game-design.md section 5.1: zone width 40-200, height 20-100.
 ZONE_WIDTH = (40, 200)
@@ -74,7 +83,8 @@ def validate(tree: ContentTree) -> list[Problem]:
     """Every problem in `tree`, load problems first."""
     v = _Validator(tree)
     v.run()
-    return list(tree.load_problems) + v.problems
+    return list(tree.load_problems) + v.problems + [problem for zid, problem in _route_door_problems(tree)
+                                                  if zid not in S08_ROUTE_DOOR_WARNING_ZONES]
 
 
 def exit_warnings(tree: ContentTree) -> list[Problem]:
@@ -84,6 +94,51 @@ def exit_warnings(tree: ContentTree) -> list[Problem]:
             for zone in tree.zones.values() for ex in zone.meta.exits
             if ex.target_zone in tree.zones and not any(back.target_zone == zone.id
                 for back in tree.zones[ex.target_zone].meta.exits)]
+
+
+def door_wall_axis(passable: Callable[[s.Tile], bool], tile: s.Tile) -> tuple[s.Tile, s.Tile] | None:
+    """Two solid flanks and two open sides: the cheap deterministic TR-4 test."""
+    x, y = tile
+    north, south, west, east = (x, y-1), (x, y+1), (x-1, y), (x+1, y)
+    if not passable(north) and not passable(south) and passable(west) and passable(east):
+        return north, south
+    if not passable(west) and not passable(east) and passable(north) and passable(south):
+        return west, east
+    return None
+
+
+def route_door_warnings(tree: ContentTree) -> list[Problem]:
+    """Visible C1 debt for protected S08 maps, never a silent exemption."""
+    return [Problem(problem.path, problem.line, problem.message+
+                    '; C1 #92 must repair this S08 route under D-T3')
+            for zid, problem in _route_door_problems(tree) if zid in S08_ROUTE_DOOR_WARNING_ZONES]
+
+
+def _route_door_problems(tree: ContentTree) -> Iterator[tuple[str, Problem]]:
+    controlled = {(control.target.zone, control.target.object) for core in tree.cores.values()
+                  for room in core.rooms for control in room.controls}
+    required_tiles: set[tuple[str, s.Tile]] = set()
+    for zone in tree.zones.values():
+        for ex in zone.meta.exits:
+            if ex.requirement is not None or ex.alternatives:
+                required_tiles.add((zone.id, ex.tile))
+            for credential in (ex.requirement, *ex.alternatives):
+                if credential is not None and credential.kind == 'open' and credential.object:
+                    controlled.add((credential.ref, credential.object))
+    for zid, zone in tree.zones.items():
+        def passable(tile: s.Tile) -> bool:
+            key = zone.tile_at(tile)
+            return key in tree.tiles and tree.tiles[key].passable
+        for obj in zone.meta.objects:
+            if obj.kind not in ('door', 'gate', 'shutter'):
+                continue
+            if not (obj.params.get('control') or (zid, obj.id) in controlled
+                    or (zid, obj.tile) in required_tiles):
+                continue
+            if door_wall_axis(passable, obj.tile) is None:
+                path = tree.source('zones', zid)
+                line = find_line(tree.texts.get(path, ''), *id_needles(obj.id))
+                yield zid, Problem(path, line, f'route-bearing door {obj.id}: needs a wall axis with open sides')
 
 
 class _Validator:
@@ -1205,7 +1260,7 @@ class _Validator:
                     if not self.t.active("zones",zid):
                         continue
                     for obj in zone.meta.objects:
-                        if obj.params.get("vendor") == vid and zone.meta.safety != "safe" and not any(
+                        if obj.params.get("vendor") == vid and zone.meta.safety not in ("safe", "pocket") and not any(
                                 pocket.contains(obj.tile) for pocket in zone.meta.pockets):
                             self.report(*owner,"Sablier clinic requires an existing safe pocket",obj.id)
 
@@ -1981,7 +2036,7 @@ def main(argv: list[str] | None = None) -> int:
     parser.add_argument("--local", type=Path, default=None, help="operator override directory")
     args = parser.parse_args(argv)
     tree = load_content(args.content, args.local)
-    for warning in exit_warnings(tree):
+    for warning in (*exit_warnings(tree), *route_door_warnings(tree)):
         print("warning: " + str(warning), file=sys.stderr)
     problems = validate(tree)
     if problems:
