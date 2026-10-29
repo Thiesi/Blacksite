@@ -121,7 +121,7 @@ each season's outcome. (bible §11, design §13)
 
 **Civic Pattern** — Warden standard issue; Halvard designs in blue. (catalog)
 
-**Clearwell** — The Wardens' water core at the Intake, installed by Halvard after the Dry Eleven; controls the sluice and the wash-down. (Lattice)
+**Clearwell** — The Wardens' water core at the Intake, installed by Halvard after the Dry Eleven; controls the catwalk sluice and the wash-down. (Lattice)
 
 **Clone debt** — The cost of dying: a share of chits on hand, a fee by
 grade, and a fade of XP. (design §5.4)

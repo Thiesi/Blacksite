@@ -1297,8 +1297,9 @@ and says it is the same as yesterday.
   Filter Lane); `intake-hall` (the hall doors); `intake-wellhead` (the
   public catwalk, the long way round the basins, or the sluice walk, the
   short way, open to Intake Relay holders).
-- **Relays:** none. The sluice gate here answers to Intake Relay in the
-  Wellhead.
+- **Relays:** none. The sluice gate to the sluice walk answers only to
+  Intake Relay in the Wellhead. The catwalk sluice between the basins is
+  Clearwell's control (Lattice §3.15) and never opens that gate.
 - **Terminals:** two public terminals (Intake sector).
 - **Vendors / anchors:** the Tap (a public standpipe that never runs
   dry), a fungal-hall stall (food), emote anchors (the basin rail, the

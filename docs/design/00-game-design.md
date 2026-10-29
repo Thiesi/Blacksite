@@ -1136,7 +1136,10 @@ ownership or membership, and cannot stack with itself.
 Intake's sluice walk (planned, #101) is a members' gate on the shorter
 of two routes between the same zones, like Gate Nine's fast passage:
 the public catwalk stays open, and the relay never touches the Tap or
-delivered water (bible §3.6).
+delivered water (bible §3.6). Clearwell's `catwalk sluice` control is a
+separate layout swap inside the Beds (Lattice §3.15): it never opens or
+closes the sluice walk, so hacking the core does not bypass the relay
+benefit.
 
 Cable fare is 5 chits; a free stair/ladder route remains. Gate Nine's
 ordinary outbound opening is 60 s every 2 minutes, so the ordinary free

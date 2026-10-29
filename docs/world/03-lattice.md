@@ -463,11 +463,14 @@ The core is planned (#101): canon only until a Stage 2 slice builds it.
 Hardware: the control room @ `intake-wellhead`. Data: the allocation
 schedule (which district's spare pressure runs tonight; a contract
 staple), intake telemetry, the night log (`text-clearwell-night-log`).
-Controls: `sluice @ intake-beds` (drops or raises the catwalk sluice, so
-the Beds' short and long routes swap; an ordinary control, reset after
-10 min), `wash-down @ intake-wellhead` (floods the Wellhead's open floor
+Controls: `catwalk sluice @ intake-beds` (drops or raises the catwalk
+sluice, so the Beds' short and long routes swap; an ordinary control,
+reset after 10 min), `wash-down @ intake-wellhead` (floods the Wellhead's open floor
 strips for 30 s, a named effect under design §6.4). Neither control
-reduces delivered water or touches the Tap (bible §3.6). ICE: Tripwire,
+reduces delivered water or touches the Tap (bible §3.6). The catwalk
+sluice is a layout swap inside the Beds; it never opens or closes the
+members' sluice walk, which answers only to Intake Relay (design §7.7).
+ICE: Tripwire,
 Turnstile, Mastiff, Glasshouse.
 
 Clearwell is the controller Halvard installed after the Dry Eleven
