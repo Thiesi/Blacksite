@@ -80,6 +80,7 @@ async def capture(probe: NativeProbe, caller: Connection, tier: str,
         'arrival_retained_in_ring': True,
         'whole_paragraph_visible': compact(expected) in compact(''.join(log_rows)),
         'arrival_first_log_since_walk_or_connection': logs[0]['id'] == arrival['id'],
+        'arrival_last_log_since_walk_or_connection': logs[-1]['id'] == arrival['id'],
         'observed_log_rows': log_rows, 'new_log_lines': logs,
         'ansi': label+'.ans', 'text': label+'.txt', 'context': label+'.json'}
     assert observed['negotiated_tier'] == tier, observed
@@ -136,7 +137,12 @@ async def accept(root: Path, door_python: Path, tier: str, show: bool) -> None:
                     await wait(lambda: player.progress.get('wake_combat') == 'skipped')
                     before = {line['id'] for line in caller.session.log_ring}
                     await probe.travel(caller, 'under-service')
+                    await wait(lambda: (caller.session.player_id, 'zone', caller.avatar.zone)
+                        not in probe.service.core.progression.pending_discoveries)
+                    await wait(lambda: any(line['text'] == 'You gain 25 XP.'
+                        for line in caller.session.log_ring if line['id'] not in before))
                     row = await capture(probe, caller, tier, 'under-service', before)
+                    assert row['whole_paragraph_visible'], row
                     await probe.travel(caller, 'vatside-wake-hall')
                 else:
                     row = await capture(probe, caller, tier, 'wake-hall', set())

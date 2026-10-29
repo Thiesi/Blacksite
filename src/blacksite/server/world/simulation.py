@@ -108,9 +108,9 @@ class ZoneSimulation:
             self.world.zones[target].activate(session.id, tick)
             avatar.travel = None
             self.reset_view(session, avatar)
-            self.discover(session, avatar)
             self.arrival_hook(session, avatar)
             self.log(session, "You arrive at " + self.world.zones[target].template.meta.name + ".")
+            self.discover(session, avatar)
 
     def interact(self, session: Session, avatar: Avatar, tick: int, *, street: bool = False) -> None:
         zone = self.world.zones[avatar.zone]

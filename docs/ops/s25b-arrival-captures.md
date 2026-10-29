@@ -82,11 +82,19 @@ fixture. Archive only clean-head receipts. A clipped arrival screen
 stays in the evidence; its `-scrollback` companion does not replace it.
 
 The interim role is `chan_zone`. P4 adds `kind: place`; P5 can then style
-it separately. At 80x24, subsequent arrival and XP notices can push the
-first line of Service Level's paragraph above the three visible log
-rows. The text remains in scrollback. The existing log also wraps by
-cell width: a word can split at 132x50 and in the 80x24 scrollback
-(`lig / ht`, `invit / e`). The status panel's `Arrival界80` is the
-deliberately wide-character fixture name. These are recorded observations
-for P4/P5, not hidden by this capture scenario or fixed as a renderer
-change in S25b.
+it separately. The initial `debc514` captures show clipping at 80x24 and
+split words in the 132x50 pane and 80x24 scrollback. The presentation
+verdict in PR #97 comment 6496637951 makes both S25b corrections.
+
+The paragraph now follows the arrival hook and the location notice.
+Discovery XP still logs only after its durable receipt, so it can follow
+the paragraph. The content test checks every shipped/generated first
+paragraph fits two rows using the shared 80x24 log width. The complete
+paragraph and the later XP notice therefore fit the three-row pane.
+The replacement Service Level capture waits for that real XP receipt.
+
+Both log and scrollback use the shared word wrapper: break at spaces,
+retain two continuation cells, and split only overlong words at whole
+glyph boundaries. The status panel's `Arrival界80` is the deliberately
+wide-character fixture name. Historical captures remain labelled; no
+received screen is edited to demonstrate a correction.

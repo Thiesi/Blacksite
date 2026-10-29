@@ -72,6 +72,12 @@ previous toast emitted only its first line. This is the explicit S25b
 TR-9 change, not an interaction-dispatch or renderer change.
 The fake-terminal checks cover 80x24 and 132x50;
 native receipts and hosted checks must be reported separately.
+The presentation follow-up places the paragraph after the arrival hook
+and location notice. Discovery XP remains dependent on its durable
+receipt. The paragraph fits two 80x24 rows alongside the later XP line;
+the content guard covers every shipped and generated zone. The shared
+pane/scrollback wrapper breaks at spaces, keeps the two-cell continuation
+indent and splits only overlong words without splitting a wide glyph.
 TR-8 measures the hub validator's CPU time inside the three-second
 startup envelope, excluding shared-runner scheduling pauses. The full
 native startup wall-time gate remains three seconds.
