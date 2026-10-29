@@ -1,0 +1,50 @@
+┌─Service Level  OPEN───────────────────────────────────────────────────────────────────────────────────────────────────────11:03──┐
+│                                                                                                           │TARGET                │
+│                                                                                                           │None                  │
+│                                                                                                           │WEAPON                │
+│                                                                                                           │Kestrel Issue Sidearm │
+│                                                                                                           │NEARBY                │
+│                                                                                                           │CREW                  │
+│                                                                                                           │None                  │
+│                                                                                                           │                      │
+│                                                                                                           │                      │
+│                                                                                                           │                      │
+│                                                                                                           │                      │
+│                                                                                                           │                      │
+│                                                                                                           │                      │
+│                                                                                                           │                      │
+│   ·                                                                                                       │                      │
+│█·····▒                                                                                                    │                      │
+│█······▒                                                                                                   │                      │
+│█·····▒▒                                                                                                   │                      │
+│█·····▒▒                                                                                                   │                      │
+│█·»@·····                                                                                                  │                      │
+│█·······                                                                                                   │                      │
+│█·······                                                                                                   │                      │
+│█·······                                                                                                   │                      │
+│█······                                                                                                    │                      │
+│   ·                                                                                                       │                      │
+│                                                                                                           │                      │
+│                                                                                                           │                      │
+│                                                                                                           │                      │
+│                                                                                                           │                      │
+│                                                                                                           │Arrival界132          │
+│                                                                                                           │BBS: S10Arrival132    │
+│                                                                                                           │HP ######## 130/130   │
+│                                                                                                           │STA ######## 70/70    │
+│                                                                                                           │Chits 200  Grade 1    │
+│                                                                                                           │Lease days 0/90       │
+│                                                                                                           │Discharge XP 25/1500  │
+│                                                                                                           │Shock 0               │
+│                                                                                                           │Ctrl-X leaves         │
+├──────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────┤
+│[zone] You wake on a gurney under a number. White light, warm plastic, a floor drain. Past the cards, a corridor. Past the corrido│
+│  r, a terminal.                                                                                                                  │
+│[zone] Crews end on a service restart. Use G to invite.                                                                           │
+│[combat] Your training drone wakes. Tab targets; F fires; B skips. Its shots cannot kill.                                         │
+│[zone] You follow pipes beneath the city. Most lamps are dark. Warm air moves through the breach ahead.                           │
+│[zone] You arrive at Service Level.                                                                                               │
+│[sys] You gain 25 XP.                                                                                                             │
+│                                                                                                                                  │
+│Tab target  F fire  X weapon  1-5 quick  V abilities  E interact  I inventory  ? help                                             │
+└────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────── 

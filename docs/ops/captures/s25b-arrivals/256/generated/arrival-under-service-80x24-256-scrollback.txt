@@ -1,0 +1,24 @@
+┌─ Karst · S10Arrival80 ───────────────────────────────────────────────────────┐
+│ SCROLLBACK                                            │                      │
+│ [zone] You wake on a gurney under a number. White lig │                      │
+│   ht, warm plastic, a floor drain. Past the cards, a  │                      │
+│   corridor. Past the corridor, a terminal.            │                      │
+│ [zone] Crews end on a service restart. Use G to invit │                      │
+│   e.                                                  │                      │
+│ [combat] Your training drone wakes. Tab targets; F fi │                      │
+│   res; B skips. Its shots cannot kill.                │                      │
+│ [zone] You follow pipes beneath the city. Most lamps  │                      │
+│   are dark. Warm air moves through the breach ahead.  │                      │
+│ [zone] You arrive at Service Level.                   │                      │
+│ [sys] You gain 25 XP.                                 │                      │
+│                                                       │                      │
+│                                                       │                      │
+│                                                       │                      │
+│                                                       │                      │
+│                                                       │                      │
+├──────────────────────────────────────────────────────────────────────────────┤
+│  through the breach ahead.                                                   │
+│[zone] You arrive at Service Level.                                           │
+│[sys] You gain 25 XP.                                                         │
+│Tab target  F fire  X weapon  1-5 quick  V abilities  E interact  I invento...│
+└────────────────────────────────────────────────────────────────────────────── 

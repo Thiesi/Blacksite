@@ -10,6 +10,14 @@ Level, at 80x24 and 132x50, in 16, 256 and truecolor. Additional live
 Ctrl-P scrollback screens show recovery when the full paragraph has
 already scrolled above the visible log.
 
+The [capture index](captures/s25b-arrivals/README.md) holds the twelve
+clean-head arrivals and three scrollback recoveries at
+`debc51416632de57025271a0f6a2442d8e61d782`. Its manifest preserves the
+file hashes and both failed local full-suite attempts. The focused set
+passes 66 tests and the strict packet passes 99 cases. Current-head
+hosted Linux/Windows checks still supply the required full-suite gate;
+the local failures are not relabelled as a pass.
+
 ## Reproduce
 
 Use a NetBBS interpreter with its SSH/web extras and a fresh installed
