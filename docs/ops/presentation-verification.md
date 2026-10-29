@@ -1,9 +1,9 @@
 # Presentation verification (P1)
 
 P1 adds tools around the shipped door. It changes no renderer, rule,
-palette, map or caller flow. Prerequisite #86 merged in PR #89; P1 now
-awaits technical review under the decision in [issue #76][cp437]. No
-human approval follows from a packet or a test result.
+palette, map or caller flow. It implements the scope decision in
+[issue #76][cp437]; prerequisite #86 merged in PR #89. No human approval
+follows from a packet or a test result.
 
 ## Baselines and explicit regeneration
 

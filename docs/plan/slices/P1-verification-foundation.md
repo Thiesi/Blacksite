@@ -1,6 +1,6 @@
 # P1 — Verification foundation for presentation work
 
-**Status:** in progress (awaiting technical review)
+**Status:** done (PR #85)
 **Primary model:** Sonnet · **Reviewer:** automated review, technical lead
 **Depends on:** none · **Milestone:** presentation track
 **Issue:** https://github.com/Thiesi/Blacksite/issues/76
