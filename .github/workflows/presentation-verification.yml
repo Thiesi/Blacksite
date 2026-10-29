@@ -2,6 +2,12 @@ name: Presentation verification
 
 on:
   pull_request:
+    paths:
+      - 'src/blacksite/**'
+      - 'tests/**'
+      - 'scripts/presentation_*.py'
+      - '.github/workflows/presentation-verification.yml'
+      - 'pyproject.toml'
   workflow_dispatch:
 
 concurrency:

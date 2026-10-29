@@ -99,6 +99,11 @@ P1 establishes the baseline, including existing misses. P5 owns render
 improvements. The CI artifact `p1-shipped-door-baseline` is the hosted
 Linux reference for its exact checked-out revision; local reports remain
 host-specific. A green recording job does not mean all targets passed.
+The packet and baseline workflow runs for source, tests, verification
+tools and packaging changes, and on manual dispatch. Unrelated docs-only
+PRs do not run the activity samples. Compare hosted reports with other
+hosted reports from the same workload; the local Windows record is a
+separate reference, not a CI threshold.
 
 The first clean-head [Windows baseline][local] records commit `325576b`,
 Python 3.12.10, Windows 11 and an Intel Family 6 Model 186 host. This is a
