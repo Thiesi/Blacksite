@@ -55,6 +55,203 @@ Thirty-five zone templates. Instancing is separate from safety;
 `blacksite-l1` has open mission areas and a protected decision room.
 Count the safety classes from the overview instead of a second tally.
 
+## City plan
+
+Where things are, seen from above. This section is the canon geography
+the City Map draws (presentation plan P9, decision D-T7). It places
+districts, zones and the routes between them; it does not change any
+exit, rule or zone map. The layout sketches under each zone stay
+proportion guides: their exit sides need not match the compass here,
+though geometry revisions (S25c) may align them where that costs
+nothing.
+
+### Shape of the city
+
+Karst sits on the plateau inside one wall: roughly round, built in
+straight runs, about ten kilometres across. Gate Nine, in the east
+wall, is the only gate that opens. The wall's other gates are sealed
+and are not drawn as exits.
+
+The Spire stands at the centre, on the sealed shaft, the highest point
+on the plateau. The Core is the downtown at the Spire's southern foot.
+The districts ring the Core in this order, clockwise from the
+north-west:
+
+```
+                          #####################
+                      #####                   #####
+                   ####    beds, fungal halls     ####
+                ###          treatment works          ###
+               ##                                       ##
+             ##                                           ##
+            ##     VATSIDE                                 ##
+          ##                                                 ##
+         ##              +                                    ##
+         #                .       SPIRE                        #
+        ##                                            TRAMYARD ##
+        #                   .       o                           #
+       ##                                                       #] Gate Nine
+       #  TERRACES            .                   .+             #
+       #            + .                       . .                #
+       #                . .     .         . .                    #
+       ##                   . .       . .   . . . . . +         ##
+        #                       . H . . . .                     #
+        ##                  . . .       CORE       THE SINK    ##
+         #                .                                    #
+         ##           + .                                     ##
+          ##  CHAPEL WARD                                    ##
+            ##              SODIUM ROW                     ##
+             ##                           OLD WORKS       ##
+               ##                                       ##
+                ###                                   ###
+                   ####                           ####
+                      #####                   #####
+                          #####################
+
+   o  the shaft   H  Central Tram Hub   + tram terminus   . tram line
+   ]  Gate Nine    #  the wall
+```
+
+| District | Where | Its street neighbours |
+|---|---|---|
+| The Spire | centre, on the shaft | the Core (the Spire steps) |
+| The Core | centre, south of the Spire | the Spire, Vatside (Sablier Boulevard), the Terraces, Sodium Row (the Neon Stair) |
+| Vatside | north-west | the Core, the Terraces |
+| The Terraces | west | the Core, Vatside, Chapel Ward |
+| Chapel Ward | south-west | the Terraces |
+| Sodium Row | south, below the Core | the Core, Old Works |
+| Old Works | south-east | Sodium Row, Tramyard (freight siding), the Sink (tunnel) |
+| The Sink | east-south-east, against the wall | Tramyard (the Long Stair), Old Works |
+| Tramyard | east, along the wall | the Sink, Old Works, the Scour (Gate Nine) |
+
+North and north-east of the Spire are the covered beds, fungal halls
+and treatment works that feed the city (bible 3.6). No zone is there.
+The City Map draws that ground as plain city fabric with no name.
+
+Tramyard runs along the east wall because the wall was Kestrel's
+project and the gate is Kestrel's. The Sink is a sinkhole a kilometre
+across, inside the wall near the east gate, and the Caverns beneath it
+reach out under the wall.
+
+### Zone positions
+
+Positions are on a plan of 100 by 100 units, north up, with the city's
+centre at 50, 50 and the wall at a radius of 40 (one unit is about 125
+metres). Each one is the zone's centre as the City Map places it. They
+are schematic: they fix order and direction, not walking distance.
+Zones on the same spot are stacked; the map shows a stack as one place.
+
+| Zone | Plan x, y | Notes |
+|---|---|---|
+| `spire-mezzanine` | 50, 41 | top of the Spire stack |
+| `spire-atrium` | 50, 41 | middle of the stack; the glass faces east, over Gate Nine |
+| `spire-shaft-head` | 50, 41 | base of the stack, on the shaft collar |
+| `core-plaza` | 50, 51 | |
+| `core-tram-hub` | 47, 57 | south of the plaza |
+| `core-precinct` | 57, 55 | south-east of the plaza |
+| `vatside-wake-hall` | 30, 26 | |
+| `vatside-clinics` | 35, 33 | Sablier Boulevard runs south-east to the plaza |
+| `vatside-vat-row` | 27, 38 | |
+| `terraces-blocks` | 28, 50 | |
+| `terraces-lobby` | 22, 52 | apartment interiors are not on the map |
+| `chapel-towers` | 30, 66 | |
+| `chapel-nave` | 25, 71 | |
+| `sodium-row` | 47, 68 | the Neon Stair climbs north to the plaza |
+| `sodium-tin-halo` | 43, 72 | |
+| `oldworks-main` | 62, 68 | the freight siding runs north-east to the depots |
+| `oldworks-drop` | 57, 74 | hidden: drawn only once found |
+| `oldworks-yards` | 68, 78 | |
+| `sink-rim` | 75, 56 | the north lip |
+| `sink-terraces` | 78, 63 | |
+| `sink-floor` | 77, 68 | |
+| `tramyard-market` | 71, 47 | |
+| `tramyard-depots` | 79, 43 | |
+| `tramyard-wall-gate` | 88, 45 | Gate Nine, in the east wall |
+
+### Routes between districts
+
+| Route | Joins | Kind |
+|---|---|---|
+| The Spire steps | Spire Atrium and Meridian Plaza | street |
+| Sablier Boulevard | Meridian Plaza and Clinic Row | street |
+| The Neon Stair | Meridian Plaza and Sodium Row | street, downhill to the Row |
+| The Long Stair | Tramyard Market and the Rim | street, down to the Rim |
+| The freight siding | Contractor Street and the Ration Depots | rail spur, walked |
+| The rim cable cars | the Rim and the Sink Terraces | three stations |
+| The tolled tunnel | the Sink Terraces and the Fabrication Yards | through the sinkhole wall |
+
+Every other zone exit stays inside its district.
+
+**Tram lines.** Kestrel's trams run five lines out from the Central Tram
+Hub. Each line has one terminus and no stops between, and is named for
+it:
+
+| Line | Terminus | Runs |
+|---|---|---|
+| Clinic line | Clinic Row | north-west |
+| Terraces line | Block Street | west |
+| Chapel line | Cooling Towers | south-west |
+| Rim line | the Rim | east |
+| Market line | Tramyard Market | north-east |
+
+The City Map draws each line as a straight run from the hub to its
+terminus. A line crosses ground where it does not stop, so a ride
+reveals nothing on the way.
+
+### The Undercity
+
+The Undercity is drawn as its own layer of the City Map, on the same
+plan as the city above it, so a caller sees what lies under what.
+
+| Zone | Plan x, y | Lies under | Ways up |
+|---|---|---|---|
+| `under-service` | 36, 58 | a long arc from Vat Row round under the Terraces and Chapel Ward to the Fabrication Yards | ladders to Vat Row and the Yards, the drain stair to the Cooling Towers |
+| `under-drowned` | 58, 62 | Sodium Row and the south of the Core | none; reached from the Service Level |
+| `under-outworks` | 52, 50 | the Core and the Spire, around the shaft | none |
+| `under-shaft-foot` | 50, 41 | the Spire, at the bottom of the shaft | the Shaft (story-gated) |
+| `under-caverns` | 77, 71 | the Sink and the south-east, reaching out under the wall | the Sump grate to the Floor |
+| `blacksite-l1` | 50, 41 | below Shaft Foot | not drawn; an instance |
+
+The Caverns' cave mouth opens outside the wall to the south-east, into
+the Beacon Ring. It is a hidden link, drawn only once the caller has
+found it.
+
+### The Scour
+
+The Scour is the third layer: the wall drawn small at its centre, the
+rings around it. Each ring goes all the way round the city, but each
+Scour zone is the stretch of its ring reached from Gate Nine, so all of
+them lie east of the wall.
+
+| Zone | Where |
+|---|---|
+| `scour-ring-1` | the Wall Ring, hugging the wall east of Gate Nine |
+| `scour-landing` | east-south-east, between the Wall Ring and the Beacon Ring, at the end of the causeway |
+| `scour-ring-2` | the Beacon Ring, east; the cave mouth sits in its south-east end |
+| `scour-ring-3` | the Crash Ring, east |
+| `scour-ring-4` | the Far Ring, east, with no outer edge drawn |
+
+On the Scour layer, at a scale where the wall has a radius of 16 units,
+the rings are 16 to 24 (Wall Ring), 24 to 32 (Beacon Ring), 32 to 41
+(Crash Ring) and 41 to 50 (Far Ring). The Landing sits at 27 units from
+the centre, bearing 110 degrees. The cave mouth sits at 28 units,
+bearing 135 degrees.
+
+### What the City Map may show
+
+Geography is not a secret, but names are earned (architecture 5.5.4):
+
+- Always drawn: the wall, Gate Nine, the shaft, the Sink's hole, the
+  tram hub and its five lines, and the district outlines as unnamed
+  ground.
+- Named only once visited: each district, zone and tram terminus. An
+  unvisited district shows as unnamed ground, and an unvisited terminus
+  as a bare stop.
+- Drawn only once found: hidden links (the Drop's door, the cave mouth)
+  and the zones behind them.
+- Never drawn: apartment interiors, the Blacksite instance, and the
+  sealed gates.
+
 ## Sketch legend
 
 Used in every layout sketch below. Sketches are proportion guides at
