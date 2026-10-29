@@ -1,0 +1,24 @@
+{
+  "head": "0203051ea3f1b36cf1faf3ec5f985002325d9b4d",
+  "dirty": false,
+  "exit_code": 0,
+  "counts": {
+    "passed": 1650,
+    "failed": 0,
+    "skipped": 1
+  },
+  "seconds": 874.1560000000172,
+  "command": [
+    "C:\\Users\\Thiesi\\OneDrive\\Dev\\Blacksite\\.worktrees\\s11-npcs\\.venv\\Scripts\\python.exe",
+    "-m",
+    "pytest",
+    "-q",
+    "-p",
+    "no:cacheprovider",
+    "--basetemp",
+    "C:\\Users\\Thiesi\\AppData\\Local\\Temp\\blacksite-p2-mzood3tg\\pytest-full-final"
+  ],
+  "completed_utc": "2026-10-29T14:41:35.183278+00:00",
+  "transcript_sha256": "dd668f6b090fac34c375cbe7845defd34ed4f0a16ad13db479da792fb283f35f",
+  "goldens_and_mechanics_unchanged": true
+}

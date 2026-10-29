@@ -4,6 +4,7 @@ from dataclasses import dataclass, field
 from copy import deepcopy
 from typing import Any
 
+from blacksite.layout import compute as screen_layout
 from blacksite.content.loader import ContentTree
 from blacksite.content.schema import Tile
 from blacksite.server.world.actors import Actor
@@ -31,9 +32,8 @@ class Perception:
 
 def camera(actor: Actor, zone: ZoneInstance, width: int, height: int,
            old: dict[str, int] | None) -> dict[str, int]:
-    # UI section 2: borders, divider and 22-column side panel.
-    logs = min(8, 3 + max(0, height - 24) * 5 // 16)
-    w, h = min(width - 25, zone.template.width), min(height - logs - 4, zone.template.height)
+    layout = screen_layout(width, height)
+    w, h = min(layout.viewport.width, zone.template.width), min(layout.viewport.height, zone.template.height)
     # Bound unusually large negotiated terminals to the protocol's local
     # snapshot budget; usual 80x24/132x50 rectangles remain unchanged.
     h = min(h, max(1, MAX_VIEW_CELLS // w))

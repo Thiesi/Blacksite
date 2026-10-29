@@ -36,6 +36,9 @@ renderer. Codex (GPT-6) implements the Sonnet-assigned slice.
 ## Baselines
 
 The owner merged S25b as `11873af6301cc52143aa0256289d631d21fe57a0`.
+P4 also integrates owner-merged P2/main
+`92b7315053f4e81b64168084955d75c459bb2066`, retaining its shared layout
+and the width guard before S25b's word-wrap loop.
 P4 preserves its complete first paragraph in the log, after the arrival
 notice and without a toast. P4 adds only the `place` kind to that text.
 Every glyph/style golden and the mechanics baseline are byte-identical

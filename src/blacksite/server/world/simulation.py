@@ -4,6 +4,7 @@ from dataclasses import dataclass, field
 from typing import Any
 from collections.abc import Callable
 
+from blacksite.layout import compute as screen_layout
 from blacksite.server.clock import Clock, TICK_HZ
 from blacksite.server.loop import TickContext
 from blacksite.server.protocol import Frame, LogKind
@@ -320,8 +321,9 @@ class ZoneSimulation:
                 if page is None:
                     kind, overlay = "menu", body
                 else:
-                    lines = wrapped(body["detail"], session.caps["width"] - 28)
-                    count = max(1, session.caps["height"] - 10)
+                    text_page = screen_layout(session.caps["width"], session.caps["height"]).city
+                    lines = wrapped(body["detail"], text_page.width)
+                    count = text_page.rows
                     pages = max(1, (len(lines) + count - 1) // count)
                     page = min(page, pages - 1)
                     self.maps[session.id] = cursor, page
