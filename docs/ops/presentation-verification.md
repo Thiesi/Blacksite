@@ -75,8 +75,10 @@ four activities for 12 real seconds each. It uses `v1-provisional`:
 10 minutes walking in a scene place, 20 walking where there is no scene,
 15 standing and 15 in menus/text/help (sampled as local help). The weights,
 starts, keys and schedule follow the V1 harness on #80. Both walking
-categories use the shipped map renderer. No trial overlay is loaded and
-NPCs are isolated. These differences are recorded in the report; this is
+categories use the shipped map renderer. No trial overlay is loaded.
+Shipped NPC spawners remain enabled, with 30 warm-up ticks after placing
+the caller, as in V1. Only the mechanics fingerprint isolates NPCs.
+These differences are recorded in the report; this is
 a reproducible shipped-content baseline, not a repeat of trial V1 play.
 The standing sample is shorter than its 20-second step interval, as in
 V1. `--seconds` allows a smoke run; only 12 seconds is the reference.
@@ -105,17 +107,19 @@ PRs do not run the activity samples. Compare hosted reports with other
 hosted reports from the same workload; the local Windows record is a
 separate reference, not a CI threshold.
 
-The first clean-head [Windows baseline][local] records commit `325576b`,
+An early clean-head [Windows diagnostic][local] records commit `325576b`,
 Python 3.12.10, Windows 11 and an Intel Family 6 Model 186 host. This is a
-local measurement, not the hosted Linux reference or native acceptance.
-CPU seconds per hour, before rounding the activity contributions:
+local measurement with NPCs isolated, not the shipped-NPC baseline,
+hosted Linux reference or native acceptance. The original sampler reused
+the mechanics fixture; the shipped-NPC sampler above corrects that.
+Diagnostic CPU seconds per hour, before rounding activity contributions:
 
 | Size | 16 colours | 256 colours | Truecolour |
 |---|---:|---:|---:|
 | 80x24 | 97.9 | 88.8 | 61.6 |
 | 132x50 | 128.9 | 150.7 | 144.1 |
 
-All three 132x50 cases miss 120 seconds/hour. On its deterministic frame
+All three 132x50 diagnostic cases miss 120 seconds/hour. On its frame
 route, full redraw maxima range from 4,143 to 15,086 bytes, delta maxima
 from 1,010 to 2,075 bytes, and worst render p95 is 22.2 ms. These sampled
 routes do not bound every screen or gameplay activity.

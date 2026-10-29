@@ -14,7 +14,7 @@ from blacksite.content.loader import ContentTree
 from blacksite.door.doorinfo import DoorInfo
 from blacksite.door.model import Display
 from tests.character_helpers import place
-from tests.presentation.mechanics import quiet_game
+from tests.presentation.mechanics import character_game
 
 MIX = {'walking in a scene place': 10, 'walking where there is no scene': 20,
        'standing, a few stops a minute': 15, 'menus, text and help': 15}
@@ -46,18 +46,21 @@ class Meter:
 
 class Caller:
     def __init__(self, content: ContentTree, width: int, height: int, tier: str, zone: str) -> None:
-        self.game, self.client = quiet_game(content, width, height)
+        self.game, self.client = character_game(content, width, height, isolate_npcs=False)
         self.avatar = self.game.core.characters.sim.avatars[self.client.session.user_id]
         start = (12, 11) if zone == 'sodium-row' else (4, 10)
         if not self.game.core.world.zones[zone].passable(start):
             raise AssertionError(f'V1 baseline start is not passable: {zone} {start}')
         place(self.game, self.client, zone, start)
         self.game.commit_commerce()
+        for _ in range(30):  # V1's activity warm-up, with shipped spawners.
+            self.game.step()
+            self.game.commit_commerce()
         self.display = Display(DoorInfo(Path('unused'), Path('.'),
             {'handle': 'Verifier\u754c', 'user_id': 1}, width, height, tier, 3600), 'p1-budget')
         self.meter = Meter()
         self.drain(0)
-        # quiet_game completed the wake before this Display existed. Its queued
+        # character_game completed the wake before this Display existed. Its queued
         # historical prompts have already been answered by create(), not by
         # this Display; start measurement with the settled live zone view.
         self.display.prompt = self.display.key_prompt = None

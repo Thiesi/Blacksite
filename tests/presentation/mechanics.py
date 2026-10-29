@@ -18,10 +18,12 @@ def zone_seed(zone_id: str) -> int:
     return int.from_bytes(sha256(('P1:'+zone_id).encode('utf-8')).digest()[:8], 'big')
 
 
-def quiet_game(content: ContentTree, width: int = 80, height: int = 24) -> tuple[HeadlessServer, FakeClient]:
+def character_game(content: ContentTree, width: int = 80, height: int = 24, *,
+                   isolate_npcs: bool = True) -> tuple[HeadlessServer, FakeClient]:
     tree = deepcopy(content)
-    tree.zones = {zid: replace(zone, meta=replace(zone.meta, spawners=()))
-                  for zid, zone in tree.zones.items()}
+    if isolate_npcs:
+        tree.zones = {zid: replace(zone, meta=replace(zone.meta, spawners=()))
+                      for zid, zone in tree.zones.items()}
     game = HeadlessServer(tree, character_state={},
                           zone_seeds={zid: zone_seed(zid) for zid in tree.zones})
     client = game.connect({'user_id': 1, 'handle': 'Verifier界', 'node_name': 'P1'}, width=width, height=height)
@@ -61,7 +63,7 @@ def projection(content: ContentTree) -> dict[str, Any]:
 
 
 def walk(content: ContentTree, width: int = 80, height: int = 24) -> list[dict[str, Any]]:
-    game, client = quiet_game(content, width, height)
+    game, client = character_game(content, width, height)
     avatar = game.core.characters.sim.avatars[client.session.user_id]
     rows: list[dict[str, Any]] = []
     directions = (('right', (1, 0), 'left'), ('down', (0, 1), 'up'),

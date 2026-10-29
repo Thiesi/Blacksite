@@ -39,10 +39,11 @@ def main() -> None:
         'platform': platform.platform(), 'processor': platform.processor(), 'python': sys.version,
         'mechanics_sha256': fingerprint(content)['sha256'], 'mix': 'v1-provisional', 'minutes': MIX,
         'sample_seconds': args.seconds, 'reference_duration': args.seconds == 12.0,
+        'npc_policy': 'shipped spawners retained; 30 warm-up ticks after placement; zone-ID seeds',
         'cpu_boundary': 'process CPU around Display.receive/key/update/render; server, harness, protocol codecs, '
             'socket/stdin pumps and terminal replay excluded; warm-up excluded; no background painter in shipped door',
         'comparison': 'V1 weights, starts, keys and real-time schedule; shipped content only, '
-            'isolated NPCs, no trial overlay; both walking categories use shipped map; '
+            'shipped NPCs, no trial overlay; both walking categories use shipped map; '
             'V1 measured wall duration of method calls, P1 records actual process CPU',
         'targets': {'render_p95_ms': 100, 'delta_bytes': 16384, 'cpu_s_per_hour': 120},
         'policy': 'baseline only: report existing budget misses; no optimization or acceptance waiver', 'cases': rows}

@@ -7,7 +7,7 @@ import pytest
 
 from scripts.presentation_scope import full_native
 from tests.presentation.budget import MIX, hourly, stats
-from tests.presentation.budget import frames
+from tests.presentation.budget import Caller, frames
 from blacksite.content.loader import load_content
 
 
@@ -59,3 +59,13 @@ def test_frame_measurement_exercises_live_input_and_both_output_classes(repo_roo
     assert result['summary']['full']['bytes']['count'] > 0
     assert result['summary']['delta']['bytes']['count'] > 0
     assert all(result['calls'][method] > 0 for method in ('receive', 'key', 'update', 'render'))
+
+
+def test_cpu_caller_keeps_shipped_spawners_and_a_settled_zone_view(repo_root: Path) -> None:
+    content = load_content(repo_root/'src/blacksite/content')
+    caller = Caller(content, 80, 24, '256', 'sodium-tin-halo')
+    assert caller.game.core.world.content.zones['sodium-tin-halo'].meta.spawners == content.zones['sodium-tin-halo'].meta.spawners
+    assert content.zones['sodium-tin-halo'].meta.spawners
+    assert len(caller.game.core.world.zones['sodium-tin-halo'].actors) > 1
+    assert caller.display.kind == 'zone'
+    assert caller.display.prompt is None and caller.display.key_prompt is None
