@@ -34,6 +34,10 @@ renderer. Codex (GPT-6) implements the Sonnet-assigned slice.
   Crew restart notices use the existing toast
   surface and stay out of world history. Ambient generation remains P8.
 
+The `black_ice` marker records survey-confirmed observations. Existing
+visible encounter stats and explicit body-risk consent keep their
+behavior. See the written review triage in the evidence packet.
+
 ## Baselines
 
 The owner merged S25b as `11873af6301cc52143aa0256289d631d21fe57a0`.
@@ -81,20 +85,18 @@ position, behaviour or faction. It does not manufacture black ICE.
 
 ## Evidence
 
-The drone-menu follow-up requires fresh native captures and current-head
-root/review checks. The existing packet below describes source d447fcd
-before that follow-up and does not validate the new drone-menu path.
-
 The [evidence index](captures/p4-view-semantics/README.md) replaces the
 pre-S25b packet with 24 fresh hosted text captures and small receipts.
-The combined source head `d447fcd0fe08ddc57a0f7094c569f8f21e3d6df6`
+The combined source head `929aa87cb874e3f74307b4dad18cb2cc728fbfa1`
 passes full Windows and Linux root CI, recorded in `root-ci.json`.
 The independent clean local run before P2 integration, at
 `6911c832f05dae4b5de82603c436e653bc4aa826`, passes 1,709
 tests with 1 skipped. The strict packet
 passes 99 cases; focused shipped-content/disclosure/replay/arrival tests
-pass 81. Local and hosted native runs each pass six size/tier cases,
-including the real shipped Warden target panel. The installed Python
+pass 105. Local and hosted native runs each pass six size/tier cases,
+including the shipped Warden target panel and the drone command menu.
+The latter uses the declared one-drone inventory fixture; it grants no
+acquisition or pacing acceptance. The installed Python
 tree matches source; raw local proof stays outside Git.
 
 Raw ANSI and style JSON remain in the P4 acceptance CI artifacts, named

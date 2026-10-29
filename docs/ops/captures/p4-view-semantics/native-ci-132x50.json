@@ -1,5 +1,5 @@
 {
-  "head": "62a7da5321d3313ae13bad0bfa2c7ddc11361c0b",
+  "head": "f988ed5904943fecda8a5784439aacd6ea00f3bb",
   "passed": true,
   "cases": [
     {
@@ -15,6 +15,8 @@
       "lattice_fields": true,
       "shipped_npc_cover": "Sodium regular",
       "shipped_npc_class": "civilian",
+      "drone_menu_cover": "Sodium regular",
+      "inventory_fixture": "one owned Halvard Sentry via server commerce; normal deploy/menu keys",
       "clean_exit": true
     },
     {
@@ -30,6 +32,8 @@
       "lattice_fields": true,
       "shipped_npc_cover": "Sodium regular",
       "shipped_npc_class": "civilian",
+      "drone_menu_cover": "Sodium regular",
+      "inventory_fixture": "one owned Halvard Sentry via server commerce; normal deploy/menu keys",
       "clean_exit": true
     },
     {
@@ -45,10 +49,12 @@
       "lattice_fields": true,
       "shipped_npc_cover": "Sodium regular",
       "shipped_npc_class": "civilian",
+      "drone_menu_cover": "Sodium regular",
+      "inventory_fixture": "one owned Halvard Sentry via server commerce; normal deploy/menu keys",
       "clean_exit": true
     }
   ],
   "human_approval": false,
   "transport": "NetBBS Telnet -> registered native stdio",
-  "fixtures": "private node/world only"
+  "fixtures": "private node/world; one owned attack drone via server commerce for menu inspection only; no placement/funds/rules/clock fixtures"
 }

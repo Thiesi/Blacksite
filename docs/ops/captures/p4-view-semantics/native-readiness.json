@@ -1,0 +1,14 @@
+{
+  "head": "929aa87cb874e3f74307b4dad18cb2cc728fbfa1",
+  "earlier_failed_heads": [
+    "b418778304b55c6a80a283f9e5e292eb0fec3643",
+    "70d7c7846341abf6c2634da2899e0ec202a6eeb1"
+  ],
+  "diagnosis": "U was sent before the selected row was acknowledged; the first guard inspected the empty zone cache during a menu.",
+  "correction": "Wait for the selected item in the actually published overlay and matching client acknowledgement.",
+  "runtime_and_tests_match": "b418778304b55c6a80a283f9e5e292eb0fec3643",
+  "timeouts_or_assertions_weakened": false,
+  "local_passed_cases": 6,
+  "hosted_passed_cases": 6,
+  "fixture": "One owned Halvard Sentry via durable server commerce; normal deployment/menu keys; not acquisition or pacing proof."
+}
