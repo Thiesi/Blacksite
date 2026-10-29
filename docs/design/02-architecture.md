@@ -477,7 +477,10 @@ Operator and service notices (crew restarts, maintenance) use `notice`,
 not the world log. P4 delivers notices on the existing toast surface;
 they do not enter the world ring or reconnect replay. `speaker` is the
 displayed speaker name, and `speaker_role` is its presented class for
-this recipient, never a hidden faction. Ambient lines come from one emitter with a
+this recipient, never a hidden faction. Reconnect queues historical replay
+before character attachment can emit a new first-entry line, so that
+line is delivered once and after older history.
+Ambient lines come from one emitter with a
 per-caller rate budget and their own random stream derived per zone
 instance; they never draw from the zone's simulation RNG. Ambient lines
 are suppressed in combat and travel, and the client never lets ambient

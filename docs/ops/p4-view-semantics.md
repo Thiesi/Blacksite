@@ -27,7 +27,8 @@ renderer. Codex (GPT-6) implements the Sonnet-assigned slice.
   from this caller's completed survey observations of the live instance.
 - Every authored log emitter calls `Session.emit` with a required kind.
   Speech requires a displayed name and presented class. Transport replay
-  preserves these fields. Crew restart notices use the existing toast
+  preserves these fields and precedes new attach-time place emission.
+  Crew restart notices use the existing toast
   surface and stay out of world history. Ambient generation remains P8.
 
 ## Baselines

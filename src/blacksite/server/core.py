@@ -160,11 +160,13 @@ class Core:
         session.send(Frame("welcome", {"proto": PROTOCOL_MAJOR, "server_version": PACKAGE_VERSION,
             "player": self.characters.summary(session.user_id) if self.characters and role == "caller" else None,
             "keymap": self.keymap, "palette": self.palette, "motd": self.motd}))
+        # Replay historical lines before attach can emit a new place line.
+        # Otherwise that line is delivered twice and precedes older history.
+        session.replay_log()
         if self.simulation is not None:
             self.simulation.connect(session)
         if self.characters is not None:
             self.characters.connect(session)
-        session.replay_log()
         return session
 
     def receive(self, session: Session, frame: Frame) -> None:
