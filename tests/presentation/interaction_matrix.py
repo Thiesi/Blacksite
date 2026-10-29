@@ -13,6 +13,7 @@ from hashlib import sha256
 import json
 from pathlib import Path
 from typing import Any
+from collections.abc import Callable
 
 from blacksite.content.loader import load_content
 from blacksite.server.bus import Event
@@ -69,7 +70,8 @@ def outcome(game: HeadlessServer, client: Any, consumed: str) -> dict[str, Any]:
     }
 
 
-def run_matrix(root: Path, *, verify: bool = True) -> tuple[dict[str, Any], list[Any]]:
+def run_matrix(root: Path, *, verify: bool = True,
+               inspect_focus: Callable[[Any, Any, Any], None] | None = None) -> tuple[dict[str, Any], list[Any]]:
     content, zones = matrix_content(root)
     game = HeadlessServer(content, character_state={})
     client = game.connect()
@@ -156,6 +158,8 @@ def run_matrix(root: Path, *, verify: bool = True) -> tuple[dict[str, Any], list
                                  if transport == 'key' else Frame('intent', {'name': action, 'args': {}}))
                         observed.clear()
                         prediction = core.resolve_interaction(session, frame) if verify else None
+                        if inspect_focus is not None:
+                            inspect_focus(core, session, prediction)
                         core._echo(Event('input', {'session': session, 'frame': frame, 'tick': game.clock.now_tick()}))
                         assert len(observed) == 1, (zid, tile, jacked, action, observed)
                         actual = observed[0]

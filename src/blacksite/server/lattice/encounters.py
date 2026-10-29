@@ -1230,7 +1230,8 @@ class Encounters:
         cell = self.lat.sectors.cells[presence.sector][presence.cell]
         if presence.instance:
             room = self.core(presence).graph.room(presence.room)
-            return Interaction(Focus(presence.instance+':'+room.id, room.label or room.id, 'inspect'), room, kind='encounter')
+            focus = Focus(presence.instance+':'+room.id, room.label, 'inspect') if room.label else None
+            return Interaction(focus, room, kind='encounter')
         if cell.core_id or cell.kind == 'descent' or self.can_enter(presence, 'lat-wake-hall'):
             return Interaction(Focus(presence.sector+':'+cell.id, cell.label, 'inspect'), cell, kind='encounter')
         return None

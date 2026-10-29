@@ -11,6 +11,19 @@ the corresponding inspection, uplink and return targets. Actor labels
 use the caller's existing name disclosure. Hidden exits remain own-tile
 only. No interaction ordering, game number, content, map or renderer
 changes are proposed. The existing zone hint row names the E/J targets.
+The shared chrome fits that row by whole groups and shortens only labels
+when E/J context alone overflows. Keys and verbs remain intact. Help is
+retained when it fits after context. Channel progress owns the row.
+
+The presentation lead's [wording review](https://github.com/Thiesi/Blacksite/pull/103#issuecomment-6510595595)
+is being addressed before another acceptance request. Exit hints say
+`go to`, unlabelled rig actions say `jack in` / `jack out`, contract fetch
+says `take`, object planting says `plant at`, and tile objectives say
+`here`. The [distinct matrix label set](captures/p3-interaction-focus/focus-labels.json)
+contains 116 pairs with provenance assertions. Fifteen unnamed selected
+objects (eight fixture objects, three clinic doors and four Wake vats)
+keep their input target without a focus label. No content or input log
+is renamed as part of this wording correction.
 
 ## Playable acceptance
 
@@ -66,15 +79,14 @@ live text captures, 72 payload hashes and exact CI artifact references.
 Raw ANSI and style JSON remain in CI. Current-head hosted root tests and
 the separate clean local run are distinguished in their receipts.
 
-The automated Sonnet 5.5 reviews found no actionable issue. Their
+The initial automated Sonnet 5.5 reviews found no actionable issue. Their
 non-blocking night-window observation is resolved by importing the zone
 simulation's named constants. Optional caching and code-style changes
 are deferred without a practical failure. The packet records the actual
 upstream commit resolved from the acceptance workflow's release tag.
 
-Presentation-lead wording approval is pending. That review includes
-the prefix's priority when the existing channel progress/cancel hint is
-present, as raised by the automated reviewer. Channel mechanics keep
-their existing behaviour. Technical review and the owner's acceptance
+Presentation-lead wording approval is pending. The wording corrections
+require fresh native captures and another automated review. Channel
+mechanics keep their existing behaviour. Technical review and the owner's acceptance
 and merge remain separate gates. These engineering receipts grant no
 layout, content, pacing or balance approval.

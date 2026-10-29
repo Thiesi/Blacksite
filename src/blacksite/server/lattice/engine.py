@@ -431,7 +431,7 @@ class Lattice:
                 return Interaction(Focus(mobile.id, presentation.name(mobile, actor, self.content), 'jack in at'),
                                    terminal, mobile.position, mobile.id)
             return choice
-        return Interaction(Focus(actor.id, 'carried rig', 'jack in with'), None, actor.position)
+        return Interaction(Focus(actor.id, '', 'jack in'), None, actor.position)
 
     def interaction(self, session: Session, frame: Frame) -> Interaction | None:
         action = key_action(self.sim.keymap, session, frame)
@@ -452,7 +452,7 @@ class Lattice:
             if self.social_overlay(session):
                 return Interaction()
             if action == 'jack':
-                return Interaction(Focus(actor.id, 'street', 'jack out to'), actor, actor.position)
+                return Interaction(Focus(actor.id, '', 'jack out'), actor, actor.position)
             choice = self.encounters.interaction(session, presence)
             if choice:
                 return choice

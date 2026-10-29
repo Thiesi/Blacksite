@@ -1,5 +1,10 @@
 # P3 acceptance evidence
 
+This initial engineering packet predates the presentation lead's wording
+corrections. Fresh captures will replace it before the next wording
+request. The [116-pair label set](focus-labels.json) reflects the corrected
+wording; it also names targets withheld because they have no authored name.
+
 Source and native execution head:
 `8c72bb127f8522c2f3be0f8c7ba26dbf251f9238`.
 Base: owner-merged P4/main `9907c90a66c036c0876803a180c22f9d53b403d3`.

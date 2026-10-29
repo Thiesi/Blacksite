@@ -344,11 +344,12 @@ class Actions:
     def target_interaction(self, actor: Any, target: Any, verb: str) -> Interaction:
         zone = self.world.zones[target.zone]
         obj = zone.objects.get(target.object)
+        verb = 'take' if verb == 'fetch' else verb
         if obj:
-            choice = object_interaction(obj, verb)
+            choice = object_interaction(obj, 'plant at' if verb == 'plant' else verb)
             return Interaction(choice.focus, target, choice.tile)
         x, y = target.tile
-        return Interaction(Focus(f'{target.zone}:{x},{y}', 'marked location', verb), target, target.tile)
+        return Interaction(Focus(f'{target.zone}:{x},{y}', 'here', verb), target, target.tile)
 
     def input(self, session: Session, frame: Frame, tick: int, *, interaction: Interaction | None = None) -> bool:
         owner = self.owner

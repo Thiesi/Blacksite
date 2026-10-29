@@ -486,6 +486,11 @@ handlers still run in order, including existing modifier synchronisation
 and forced exits before they pass input onward. The hint uses the
 existing hint rectangle, naming E first and J when both have targets.
 Its wording requires the P3 presentation review; it adds no HERE panel.
+An unnamed target still owns its input, but its internal id is never a
+display label. Active channel progress owns the hint row. For focus
+hints, the client fits whole key-help groups after the E/J context,
+retains help when it fits, and shortens only labels when context alone
+overflows. It uses the existing terminal cell-width and clipping helpers.
 
 #### 5.5.3 Log kinds
 

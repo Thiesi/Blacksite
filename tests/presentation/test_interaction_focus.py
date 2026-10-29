@@ -9,12 +9,17 @@ from typing import Any
 import pytest
 
 from blacksite.content.loader import load_content
-from blacksite.content.schema import ObjectSpec
+from blacksite.content.schema import ObjectSpec, StageTarget
+from blacksite.door import chrome
+from blacksite.door.cells import display_width
 from blacksite.door.model import Display
 from blacksite.layout import compute
 from blacksite.server.bus import Event
 from blacksite.server.commerce import CommerceMenu
 from blacksite.server.lattice.presence import Presence
+from blacksite.server.loop import TickContext
+from blacksite.server.interaction import object_interaction
+from blacksite.server.views import presentation
 from blacksite.server.protocol import Frame
 from blacksite.server.world.zone import ObjectState
 from tests.character_helpers import create, place
@@ -42,20 +47,55 @@ def dispatch(game: HeadlessServer, caller: Any, frame: Frame = E) -> None:
 
 
 def test_arch_5_5_2_predicted_equals_dispatched_and_pre_p3_behavior(repo_root: Path) -> None:
-    result, _ = run_matrix(repo_root)
+    labels: set[tuple[str, str]] = set()
+    def inspect(core: Any, session: Any, prediction: Any) -> None:
+        if prediction and prediction.choice.focus:
+            focus = prediction.choice.focus
+            assert_label_source(core, session, focus)
+            labels.add((focus.verb, focus.label))
+    result, _ = run_matrix(repo_root, inspect_focus=inspect)
     baseline = json.loads(Path(__file__).with_name('interaction-baseline.json').read_text())
     assert result['cases'] == baseline['cases']
     assert result['sha256'] == baseline['sha256'], 'E/J behavior differs from the independently executed pre-P3 baseline'
     assert result['handlers'] == baseline['handlers']
+    packet = json.loads((repo_root/'docs/ops/captures/p3-interaction-focus/focus-labels.json').read_text())
+    assert sorted(labels) == [tuple(pair) for pair in packet['matrix_pairs']]
+
+
+def assert_label_source(core: Any, session: Any, focus: Any) -> None:
+    """Every matrix label names its selected entity; ids are not a fallback."""
+    if not focus.label:
+        assert focus.verb in ('jack in', 'jack out')
+        return
+    actor = core.characters.sim.avatars[session.user_id].actor
+    if focus.id in core.world.actors:
+        assert focus.label == presentation.name(core.world.actors[focus.id], actor, core.characters.content)
+        return
+    zone = core.world.zones[actor.zone]
+    if focus.id in zone.objects:
+        assert focus.label == zone.objects[focus.id].spec.params.get('name')
+        return
+    for exit in zone.template.meta.exits:
+        if focus.id == exit.id:
+            assert focus.label == core.world.zones[exit.target_zone].template.meta.name
+            return
+    presence = core.lattice.presences.get(session.player_id)
+    if presence:
+        cell = core.lattice.sectors.cells[presence.sector][presence.cell]
+        assert focus.id == presence.sector+':'+cell.id and focus.label == cell.label
+        return
+    pytest.fail(f'No authored label source for {focus!r}')
 
 
 @pytest.mark.parametrize('size', [(80, 24), (132, 50)])
 @pytest.mark.parametrize('tier', ['16', '256', 'truecolor'])
+@pytest.mark.parametrize('keymap', ['arrows', 'vi'])
 def test_ui_3_focus_changes_only_existing_hint_cells(focus_game: tuple[HeadlessServer, Any], info: Any,
-                                                  size: tuple[int, int], tier: str) -> None:
+                                                  size: tuple[int, int], tier: str, keymap: str) -> None:
     game, caller = focus_game
     core = game.core
     caller.session.caps.update(width=size[0], height=size[1])
+    caller.session.keymap_id = keymap
     place(game, caller, 'vatside-wake-hall', (34, 15))
     game.commit_commerce()
     game.step()
@@ -68,7 +108,7 @@ def test_ui_3_focus_changes_only_existing_hint_cells(focus_game: tuple[HeadlessS
     def render(document: dict[str, Any]) -> FakeTerminal:
         model = Display(replace(info, width=size[0], height=size[1], color_depth=tier))
         model.receive(Frame('welcome', {'keymap': asdict(core.characters.content.keymaps),
-            'palette': asdict(core.characters.content.palette)}), 0)
+            'palette': asdict(core.characters.content.palette), 'player': {'settings': {'keymap': keymap}}}), 0)
         model.receive(Frame('view', {'rev': 1, 'kind': 'zone', 'body': document}), 1)
         terminal = FakeTerminal(*size)
         terminal.write(model.render(1)[0])
@@ -79,7 +119,14 @@ def test_ui_3_focus_changes_only_existing_hint_cells(focus_game: tuple[HeadlessS
         or any(before.renditions.get((x, y)) != after.renditions.get((x, y)) for x in range(size[0]))}
     assert changed == {hint.y}
     assert 'E open Sablier Wake Outfitter' in after.screen_text().splitlines()[hint.y]
-    assert 'J jack in at Tutorial terminal' in after.screen_text().splitlines()[hint.y]
+    jack_key = 'Ctrl-O' if keymap == 'vi' else 'J'
+    assert jack_key+' jack in at Tutorial terminal' in after.screen_text().splitlines()[hint.y]
+    row = after.screen_text().splitlines()[hint.y][hint.x:hint.right].rstrip()
+    context = ['E open Sablier Wake Outfitter', jack_key+' jack in at Tutorial terminal']
+    optional = legacy['hint'].split('  ')
+    assert row.split('  ')[:2] == context
+    assert all(group in optional for group in row.split('  ')[2:]), (row, optional)
+    assert '? help' in row
 
 
 @pytest.mark.parametrize('kind', ['light', 'camera', 'salvage_field', 'descent_console'])
@@ -138,7 +185,7 @@ def test_arch_5_5_2_j_keymap_and_jacked_return(focus_game: tuple[HeadlessServer,
     lat.presences[session.player_id] = presence
     avatar.actor.stance = 'jacked'
     focus, jack = core.interaction_views(session)
-    assert jack == {'id': avatar.actor.id, 'label': 'street', 'verb': 'jack out to'}
+    assert jack == {'id': avatar.actor.id, 'label': '', 'verb': 'jack out'}
     predicted = core.resolve_interaction(session, Frame('key', {'k': key}))
     assert predicted.route.name == 'lattice'
     dispatch(game, caller, Frame('key', {'k': key}))
@@ -248,3 +295,54 @@ def test_arch_5_5_2_modal_and_disabled_states_do_not_advertise_world_targets(
     assert result.choice.focus is None or mode == 'chat-intent'
     assert [route.name for route in core.input_routes()] == list(ORDER)
     dispatch(game, caller, frame)
+
+
+@pytest.mark.parametrize('key', ['J', 'Ctrl-O'])
+def test_ui_3_focus_hint_shortens_only_labels_and_keeps_help(key: str) -> None:
+    context = [('E talk to', 'Long界 name '*20), (f'{key} jack in at', 'Terminal界 '*20)]
+    raw = '  '.join((prefix+' '+label).rstrip() for prefix, label in context)
+    hint = chrome.focus_hint(raw+'  Move: arrows  Shift: sprint  ? help  Ctrl-X leave', 78, context)
+    groups = hint.split('  ')
+    assert display_width(hint) <= 78
+    assert groups[0].startswith('E talk to ') and groups[0].endswith('...')
+    assert groups[1].startswith(key+' jack in at ') and groups[1].endswith('...')
+    assert all(group in ('Move: arrows', 'Shift: sprint', '? help', 'Ctrl-X leave') for group in groups[2:])
+    short = [('E open', 'Counter'), (key+' jack in at', 'Terminal')]
+    raw = '  '.join(prefix+' '+label for prefix, label in short)
+    result = chrome.focus_hint(raw+'  This group cannot possibly fit in the remaining space  ? help  M map', 78, short)
+    assert result == raw+'  ? help  M map'
+
+
+def test_ui_3_channel_progress_owns_hint_row(focus_game: tuple[HeadlessServer, Any]) -> None:
+    game, caller = focus_game
+    place(game, caller, 'vatside-wake-hall', (34, 15))
+    game.commit_commerce()
+    sim = game.core.characters.sim
+    channel = {'owner': 'contract', 'label': 'Planting', 'remaining': 1.5}
+    sim.avatars[caller.session.user_id].actor.behaviour['channel'] = channel
+    game.clock.advance()
+    sim.publish(TickContext(game.clock.now_tick(), game.clock, game.core.bus, (caller.session,), game.core.characters.content))
+    body = sim.views[caller.session.id].previous['body']
+    assert body['focus']['id'] == 'wake-outfitter'  # Mechanics still select the same target.
+    assert body['hint'] == 'Planting 1.5s  Stay still; Esc/B cancels.'
+
+
+@pytest.mark.parametrize('verb,object_verb,tile_verb', [
+    ('fetch', 'take', 'take'), ('plant', 'plant at', 'plant'),
+    ('hack', 'hack', 'hack'), ('survey', 'survey', 'survey')])
+def test_ui_3_contract_hint_words(focus_game: tuple[HeadlessServer, Any], verb: str,
+                                 object_verb: str, tile_verb: str) -> None:
+    game, caller = focus_game
+    actor = game.core.characters.sim.avatars[caller.session.user_id].actor
+    target = StageTarget('object', zone=actor.zone, object='wake-outfitter')
+    choice = game.core.contracts.actions.target_interaction(actor, target, verb)
+    assert choice.focus.record() == {'id': 'wake-outfitter', 'label': 'Sablier Wake Outfitter', 'verb': object_verb}
+    target = StageTarget('tile', zone=actor.zone, tile=actor.position)
+    choice = game.core.contracts.actions.target_interaction(actor, target, verb)
+    assert choice.focus.label == 'here' and choice.focus.verb == tile_verb
+
+
+def test_ui_3_unnamed_objects_keep_input_target_without_raw_id() -> None:
+    obj = ObjectState(ObjectSpec('raw-internal-object-id', (1, 1), 'door', {}))
+    choice = object_interaction(obj, 'use')
+    assert choice.value is obj and choice.tile == obj.spec.tile and choice.focus is None

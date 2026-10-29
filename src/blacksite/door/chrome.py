@@ -7,7 +7,7 @@ renderers receive Layout and draw only inside their content rectangles.
 from typing import Any
 
 from blacksite.layout import Layout, Rect
-from blacksite.door.cells import CellBuffer, display_width, truncate
+from blacksite.door.cells import CellBuffer, clean_text, display_width, truncate
 from blacksite.door.palette import Palette
 from blacksite.door.log import rows as log_rows
 
@@ -23,6 +23,39 @@ def box(buffer: CellBuffer, rect: Rect, palette: Palette, title: str = "") -> No
         buffer.put(x + w - 1, row, "│", style)
     if title:
         buffer.put(x + 2, y, truncate(" " + title + " ", w - 4), palette.style("title"))
+
+
+def focus_hint(hint: str, width: int, context: list[tuple[str, str]]) -> str:
+    """Fit server-selected context, shortening labels and keeping help groups whole."""
+    raw = '  '.join((prefix + ' ' + label).rstrip() for prefix, label in context)
+    if not raw or not hint.startswith(raw):
+        return hint
+    labels = [clean_text(label) for _, label in context]
+    prefixes = [clean_text(prefix) for prefix, _ in context]
+    budgets = [display_width(label) for label in labels]
+    fixed = sum(display_width(prefix) + bool(label) for prefix, label in zip(prefixes, labels)) + 2*(len(context)-1)
+    if fixed + sum(budgets) > width:
+        # Share the available label cells; short names give unused cells back.
+        limits, budgets = budgets, [0]*len(labels)
+        for _ in range(max(0, width-fixed)):
+            eligible = [i for i in range(len(labels)) if budgets[i] < limits[i]]
+            if not eligible:
+                break
+            index = min(eligible, key=lambda i: budgets[i])
+            budgets[index] += 1
+    groups = [(prefix + (' ' + truncate(label, budget) if label else ''))
+              for prefix, label, budget in zip(prefixes, labels, budgets)]
+    tail = [group for group in hint[len(raw):].strip().split('  ') if group]
+    # Help keeps its place in the existing order, even if an earlier long group
+    # would otherwise consume its cells. Other groups are skipped, never cut.
+    reserve_help = '? help' in tail and display_width('  '.join([*groups, '? help'])) <= width
+    for group in tail:
+        reserve = 8 if reserve_help and group != '? help' else 0
+        if display_width('  '.join([*groups, group])) + reserve <= width:
+            groups.append(group)
+        if group == '? help':
+            reserve_help = False
+    return '  '.join(groups)
 
 
 def render_frame(buffer: CellBuffer, layout: Layout, palette: Palette, header: str,

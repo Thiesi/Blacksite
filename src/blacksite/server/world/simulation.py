@@ -143,8 +143,8 @@ class ZoneSimulation:
         if candidates:
             ex = candidates[0]
             destination = self.world.zones.get(ex.target_zone)
-            label = destination.template.meta.name if destination else ex.id.replace('-', ' ')
-            return Interaction(Focus(ex.id, label, 'use route to'), ex, ex.tile)
+            focus = Focus(ex.id, destination.template.meta.name, 'go to') if destination else None
+            return Interaction(focus, ex, ex.tile)
         if not street:
             objects = sorted((obj for obj in zone.objects.values() if adjacent(obj.spec.tile)),
                              key=lambda obj: (obj.spec.tile != actor.position, obj.spec.id))
@@ -387,17 +387,17 @@ class ZoneSimulation:
                 body["hint"] = "Tab target  F fire  X weapon  1-5 quick  V abilities  E interact  I inventory  ? help"
                 remaining = max(0,avatar.actor.cooldowns.get("weapon",0)-ctx.tick)/TICK_HZ
                 if remaining: body["hint"] = f"Weapon {remaining:.1f}s  " + body["hint"]
+            self.crew_view(session, body)
             body['focus'], body['jack_focus'] = focus, jack_focus
             if channel := avatar.actor.behaviour.get("channel"):
                 body["me"]["channel"] = dict(channel)
                 body["hint"] = f"{channel['label']} {channel['remaining']:.1f}s  Stay still; Esc/B cancels."
-            if focus:
-                context = f"E {focus['verb']} {focus['label']}"
+            elif focus or jack_focus:
+                context = f"E {focus['verb']} {focus['label']}".rstrip() if focus else ''
                 if jack_focus:
                     jack_key = 'Ctrl-O' if session.keymap_id == 'vi' else 'J'
-                    context += f"  {jack_key} {jack_focus['verb']} {jack_focus['label']}"
+                    context += ('  ' if context else '') + f"{jack_key} {jack_focus['verb']} {jack_focus['label']}".rstrip()
                 body['hint'] = context + '  ' + body['hint'].replace('E interact  ', '')
-            self.crew_view(session, body)
             if self.views[session.id].publish(session, body, ctx.tick):
                 self.published[session.id] = stamp
             elif body == (self.views[session.id].previous or {}).get("body"):

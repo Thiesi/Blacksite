@@ -88,7 +88,7 @@ async def accept(root: Path, door_python: Path, show: bool,
                     and caller.session.ack_revision == caller.session.view_revision)
                 kind, body = sim.overlays[caller.session.id]
                 assert kind == 'lattice' and 'focus' in body and 'jack_focus' in body
-                assert body['jack_focus']['verb'] == 'jack out to'
+                assert body['jack_focus']['verb'] == 'jack out' and body['jack_focus']['label'] == ''
                 save(f'terminal-after-e-{width}x{height}-{tier}')
                 await caller.caller.write(b'j')
                 await wait(lambda: caller.avatar.actor.stance == 'normal')
