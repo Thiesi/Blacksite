@@ -313,9 +313,11 @@ class City:
         meta, grid = self.meta[zid], self.grids[zid]
         old = next((obj for obj in meta['objects'] if obj['id'] == oid), None)
         if old:
+            if zid in self.hubs and old['kind'] != kind:
+                raise AssertionError(f'S08 object kind would change: {zid}/{oid}')
             old['kind'] = kind
             old.setdefault('params', {}).update(params or {})
-            if not (zid in self.hubs and kind == 'hardware'):
+            if zid not in self.hubs:
                 old['params']['name'] = name
             if essential:
                 old['essential'] = True
@@ -541,7 +543,7 @@ class City:
                  params={'exits': ['to-spire-shaft-head']})
         self.obj('terraces-lobby', 'lobby-letting-terminal', 'terminal', 'Residence letting office',
                  essential=True, params={'letting': True})
-        self.obj('terraces-blocks', 'letting-office', 'terminal', 'Residence letting office',
+        self.obj('terraces-blocks', 'letting-office', 'vendor', 'Letting office',
                  essential=True, params={'letting': True})
         lobby = self.meta['terraces-lobby']
         # Existing S08 apartment doors remain until C1/S25c approves its

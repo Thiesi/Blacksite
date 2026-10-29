@@ -91,9 +91,13 @@ def test_s25b_preserves_s08_terrain_hardware_and_deferred_homes(city: ContentTre
                 assert after.tile_at((x, y)) == markers.get((x, y), tile), (zid, x, y)
         objects = {o.id: o for o in after.meta.objects}
         for obj in before.meta.objects:
-            if obj.kind == 'hardware':
-                assert objects[obj.id].params.get('name') == obj.params.get('name'), (zid, obj.id)
-            elif obj.kind == 'apartment_door':
+            if target := obj.params.get('unavailable_target'):
+                assert obj.id not in objects
+                assert any(ex.target_zone == target for ex in after.meta.exits)
+                continue  # Retire the placeholder only when its route opens.
+            assert (objects[obj.id].tile, objects[obj.id].kind) == (obj.tile, obj.kind), (zid, obj.id)
+            assert objects[obj.id].params.get('name') == obj.params.get('name'), (zid, obj.id)
+            if obj.kind == 'apartment_door':
                 assert objects[obj.id] == obj
     assert len(city.sectors['lat-terraces'].cells) == 36
     assert not any(obj.housing for zone in city.zones.values() for obj in zone.meta.objects)

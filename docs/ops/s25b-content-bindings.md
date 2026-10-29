@@ -27,6 +27,13 @@ nearest available floor that admits a frame. Exit doors keep their
 route tile. Spawn tiles, arrival tiles, objects and patrol points remain
 protected. This does not establish location identity or room design.
 
+Existing S08 objects retain their IDs, tiles, kinds and inspection names;
+the generator rejects an attempt to change an existing hub object's
+kind. Unavailable-zone placeholders retire only when the corresponding
+exit opens. Bindings may add parameters and objects. In particular the
+letting office remains a vendor, so housing binding does not turn it
+into a public Lattice terminal while the new homes remain deferred.
+
 The validator reports seven existing S08 route-door violations as named
 warnings pointing to C1 #92. The same failures in every other zone are
 errors. A controlled Halo back door is covered; unbound decorative
