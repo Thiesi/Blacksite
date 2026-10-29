@@ -1,6 +1,6 @@
 # P3 — Interaction focus
 
-**Status:** implementation in progress; wording acceptance pending
+**Status:** implementation in progress (PR #103); wording acceptance pending
 **Primary model:** Opus · **Reviewer:** automated review, technical lead, presentation lead (wording)
 **Depends on:** P1 · **Milestone:** presentation track
 **Issue:** https://github.com/Thiesi/Blacksite/issues/94
@@ -93,3 +93,9 @@ contract stage actions, work-order caches, and Lattice encounter menus.
 Clinics, drones and the skill menu under progression can also consume a
 key without a world target. They participate in the same composition.
 No E ordering, rule, number or mechanics fingerprint baseline changes.
+
+The [acceptance notes](../../ops/p3-interaction-focus.md) describe the
+playable path and deterministic coverage. The [capture packet](../../ops/captures/p3-interaction-focus/README.md)
+contains current-source hosted and local native receipts, exact CI raw
+artifact links, test counts and automated-review triage. Presentation
+wording approval and the technical decision record are pending.

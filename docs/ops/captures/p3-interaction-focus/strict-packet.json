@@ -1,0 +1,13 @@
+{
+ "source_head": "8c72bb127f8522c2f3be0f8c7ba26dbf251f9238",
+ "run": "https://github.com/Thiesi/Blacksite/actions/runs/40967008815",
+ "job": "https://github.com/Thiesi/Blacksite/actions/runs/40967008815/job/123773938417",
+ "command": "python scripts/presentation_packet.py --output <fresh-temp> --strict-cp437",
+ "packet_cases": 99,
+ "failed_cases": 0,
+ "cp437_pass": true,
+ "supporting_tests_passed": 33,
+ "baseline_base": "9907c90a66c036c0876803a180c22f9d53b403d3",
+ "golden_or_mechanics_rebaseline": false,
+ "human_approval": false
+}

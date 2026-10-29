@@ -1,0 +1,24 @@
+┌─ Karst · S10P3truecolor80 ───────────────────────────────────────────────────┐
+│    ┌─ Sablier Wake Outfitter - BUY ─────────────────────────────────────┐    │
+│    │ Choice                                                             │    │
+│    │ Sablier Wake Coverall  1  not for sale                             │    │
+│    │ Kestrel Issue Sidearm  1  120                                      │    │
+│    │ 9x pistol rounds  50  25                                           │    │
+│    │ Kestrel Issue Baton  1  40                                         │    │
+│    │ Sablier Med Patch  1  40                                           │    │
+│    │ Kestrel Ration Bar  1  10                                          │    │
+│    │ Vesper's Card  1  not for sale                                     │    │
+│    │ Kestrel Issue Vest  1  220                                         │    │
+│    │ Chapel First Ear  1  900                                           │    │
+│    │ Hand 200  Buy-back budget 2000/2000                                │    │
+│    │ Quality 100%                                                       │    │
+│    │ Armour K2 E2 C4 D0                                                 │    │
+│    │                                                                    │    │
+│    │ enter buy  t buy/sell  Esc/B back                                  │    │
+│    └────────────────────────────────────────────────────────────────────┘    │
+├──────────────────────────────────────────────────────────────────────────────┤
+│  drain. Past the cards, a corridor. Past the corridor, a terminal.           │
+│[combat] Your training drone wakes. Tab targets; F fires; B skips. Its shots  │
+│  cannot kill.                                                                │
+│Esc/B returns                                                                 │
+└────────────────────────────────────────────────────────────────────────────── 

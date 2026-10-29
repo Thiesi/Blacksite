@@ -1,0 +1,163 @@
+{
+ "source_head": "8c72bb127f8522c2f3be0f8c7ba26dbf251f9238",
+ "passed": true,
+ "runtime_python_sha256": "27d8d7418ed3037502a68dadba64db092b7d05ef756de894a7118f87c96472a7",
+ "native_wheel_sha256": "affa351a660ab0fb6f83a9a11afae9a9ae576cc12c263151d0de8c68fad62050",
+ "seconds": 99.56300000002375,
+ "cases": [
+  {
+   "size": [
+    80,
+    24
+   ],
+   "tier": "16",
+   "outfitter_e": {
+    "id": "wake-outfitter",
+    "label": "Sablier Wake Outfitter",
+    "verb": "open"
+   },
+   "outfitter_j": {
+    "id": "wake-terminal",
+    "label": "Tutorial terminal",
+    "verb": "jack in at"
+   },
+   "terminal_e": {
+    "id": "wake-terminal",
+    "label": "Tutorial terminal",
+    "verb": "jack in at"
+   },
+   "predicted_equals_opened": true,
+   "explicit_j_uses_terminal_beside_counter": true,
+   "clean_exit": true
+  },
+  {
+   "size": [
+    80,
+    24
+   ],
+   "tier": "256",
+   "outfitter_e": {
+    "id": "wake-outfitter",
+    "label": "Sablier Wake Outfitter",
+    "verb": "open"
+   },
+   "outfitter_j": {
+    "id": "wake-terminal",
+    "label": "Tutorial terminal",
+    "verb": "jack in at"
+   },
+   "terminal_e": {
+    "id": "wake-terminal",
+    "label": "Tutorial terminal",
+    "verb": "jack in at"
+   },
+   "predicted_equals_opened": true,
+   "explicit_j_uses_terminal_beside_counter": true,
+   "clean_exit": true
+  },
+  {
+   "size": [
+    80,
+    24
+   ],
+   "tier": "truecolor",
+   "outfitter_e": {
+    "id": "wake-outfitter",
+    "label": "Sablier Wake Outfitter",
+    "verb": "open"
+   },
+   "outfitter_j": {
+    "id": "wake-terminal",
+    "label": "Tutorial terminal",
+    "verb": "jack in at"
+   },
+   "terminal_e": {
+    "id": "wake-terminal",
+    "label": "Tutorial terminal",
+    "verb": "jack in at"
+   },
+   "predicted_equals_opened": true,
+   "explicit_j_uses_terminal_beside_counter": true,
+   "clean_exit": true
+  },
+  {
+   "size": [
+    132,
+    50
+   ],
+   "tier": "16",
+   "outfitter_e": {
+    "id": "wake-outfitter",
+    "label": "Sablier Wake Outfitter",
+    "verb": "open"
+   },
+   "outfitter_j": {
+    "id": "wake-terminal",
+    "label": "Tutorial terminal",
+    "verb": "jack in at"
+   },
+   "terminal_e": {
+    "id": "wake-terminal",
+    "label": "Tutorial terminal",
+    "verb": "jack in at"
+   },
+   "predicted_equals_opened": true,
+   "explicit_j_uses_terminal_beside_counter": true,
+   "clean_exit": true
+  },
+  {
+   "size": [
+    132,
+    50
+   ],
+   "tier": "256",
+   "outfitter_e": {
+    "id": "wake-outfitter",
+    "label": "Sablier Wake Outfitter",
+    "verb": "open"
+   },
+   "outfitter_j": {
+    "id": "wake-terminal",
+    "label": "Tutorial terminal",
+    "verb": "jack in at"
+   },
+   "terminal_e": {
+    "id": "wake-terminal",
+    "label": "Tutorial terminal",
+    "verb": "jack in at"
+   },
+   "predicted_equals_opened": true,
+   "explicit_j_uses_terminal_beside_counter": true,
+   "clean_exit": true
+  },
+  {
+   "size": [
+    132,
+    50
+   ],
+   "tier": "truecolor",
+   "outfitter_e": {
+    "id": "wake-outfitter",
+    "label": "Sablier Wake Outfitter",
+    "verb": "open"
+   },
+   "outfitter_j": {
+    "id": "wake-terminal",
+    "label": "Tutorial terminal",
+    "verb": "jack in at"
+   },
+   "terminal_e": {
+    "id": "wake-terminal",
+    "label": "Tutorial terminal",
+    "verb": "jack in at"
+   },
+   "predicted_equals_opened": true,
+   "explicit_j_uses_terminal_beside_counter": true,
+   "clean_exit": true
+  }
+ ],
+ "transport": "NetBBS Telnet -> registered native stdio",
+ "console": "received ANSI forwarded to attached PTY with --show",
+ "fixtures": "private node/world only; ordinary keys, normal NPCs, rules, funds and clock",
+ "human_approval": false
+}

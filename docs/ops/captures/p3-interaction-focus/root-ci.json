@@ -1,0 +1,28 @@
+{
+ "source_head": "8c72bb127f8522c2f3be0f8c7ba26dbf251f9238",
+ "hosted_run": "https://github.com/Thiesi/Blacksite/actions/runs/40967008721",
+ "execution_head": "a578a6b25a6071988223bc74e9254b10932880e3",
+ "execution_compare_to_source": {"ahead_by": 1, "behind_by": 0, "files_changed": 0},
+ "command": "pytest -q",
+ "python": "3.12",
+ "jobs": [
+  {"platform": "ubuntu-latest", "passed": 1745, "skipped": 0, "seconds": 387.32, "url": "https://github.com/Thiesi/Blacksite/actions/runs/40967008721/job/123773938293"},
+  {"platform": "windows-latest", "passed": 1744, "skipped": 1, "seconds": 336.49, "url": "https://github.com/Thiesi/Blacksite/actions/runs/40967008721/job/123773937909"}
+ ],
+ "independent_local": {
+  "source_head": "3cd50d8c2d9fe57b33e557318c9113dba9a88f52",
+  "environment": "clean detached system-Temp worktree; matching private installed wheel; fresh test/cache directories",
+  "command": "python -m pytest -q --maxfail=8 --basetemp <fresh-temp> -o cache_dir=<fresh-temp> --tb=short",
+  "python": "3.12",
+  "pytest": "9.1.1",
+  "passed": 1744,
+  "skipped": 1,
+  "failed": 0,
+  "returncode": 0,
+  "test_seconds": 1580.74,
+  "worktree_clean_before_and_after": true
+ },
+ "subsequent_refinement": {"head": "8c72bb127f8522c2f3be0f8c7ba26dbf251f9238", "change": "reuse existing night constants, preserving values and predicate", "focused_command": "pytest tests/world/test_sight.py tests/presentation/test_interaction_focus.py -q", "passed": 25},
+ "initial_local_diagnostic": {"result": "one Windows listener-shutdown timeout after WinError 10054 in the concurrent full run", "unchanged_isolated_stdio_cases_passed": 2, "clean_full_run_passed": true, "test_limits_changed": false},
+ "human_approval": false
+}

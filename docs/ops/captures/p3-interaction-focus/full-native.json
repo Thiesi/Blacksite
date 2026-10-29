@@ -1,0 +1,155 @@
+{
+ "source_head": "8c72bb127f8522c2f3be0f8c7ba26dbf251f9238",
+ "run": "https://github.com/Thiesi/Blacksite/actions/runs/40967008793",
+ "passed_jobs": 28,
+ "skipped_jobs": 1,
+ "failed_jobs": 0,
+ "jobs": [
+  {
+   "id": 123774510205,
+   "name": "native-scope",
+   "conclusion": "success"
+  },
+  {
+   "id": 123774581693,
+   "name": "crews-netbbs",
+   "conclusion": "success"
+  },
+  {
+   "id": 123774581704,
+   "name": "apartments-netbbs",
+   "conclusion": "success"
+  },
+  {
+   "id": 123774581717,
+   "name": "market-netbbs (132x50)",
+   "conclusion": "success"
+  },
+  {
+   "id": 123774581764,
+   "name": "market-netbbs (80x24)",
+   "conclusion": "success"
+  },
+  {
+   "id": 123774581766,
+   "name": "relays-netbbs (132x50)",
+   "conclusion": "success"
+  },
+  {
+   "id": 123774581774,
+   "name": "lattice-netbbs",
+   "conclusion": "success"
+  },
+  {
+   "id": 123774581778,
+   "name": "relays-netbbs (80x24)",
+   "conclusion": "success"
+  },
+  {
+   "id": 123774581794,
+   "name": "systemd-netbbs",
+   "conclusion": "success"
+  },
+  {
+   "id": 123774581812,
+   "name": "factions-netbbs",
+   "conclusion": "success"
+  },
+  {
+   "id": 123774581817,
+   "name": "events-netbbs (80x24)",
+   "conclusion": "success"
+  },
+  {
+   "id": 123774581818,
+   "name": "events-netbbs (132x50)",
+   "conclusion": "success"
+  },
+  {
+   "id": 123774581819,
+   "name": "fabrication-netbbs",
+   "conclusion": "success"
+  },
+  {
+   "id": 123774581828,
+   "name": "combat-netbbs",
+   "conclusion": "success"
+  },
+  {
+   "id": 123774581869,
+   "name": "npcs-netbbs (132x50)",
+   "conclusion": "success"
+  },
+  {
+   "id": 123774581907,
+   "name": "interlock-netbbs",
+   "conclusion": "success"
+  },
+  {
+   "id": 123774581949,
+   "name": "contracts-netbbs (132x50, common)",
+   "conclusion": "success"
+  },
+  {
+   "id": 123774581951,
+   "name": "contracts-netbbs (80x24, crew)",
+   "conclusion": "success"
+  },
+  {
+   "id": 123774581968,
+   "name": "npcs-netbbs (80x24)",
+   "conclusion": "success"
+  },
+  {
+   "id": 123774581979,
+   "name": "contracts-netbbs (80x24, network)",
+   "conclusion": "success"
+  },
+  {
+   "id": 123774581981,
+   "name": "encounters-netbbs",
+   "conclusion": "success"
+  },
+  {
+   "id": 123774581990,
+   "name": "contracts-netbbs (132x50, crew)",
+   "conclusion": "success"
+  },
+  {
+   "id": 123774582014,
+   "name": "contracts-netbbs (80x24, common)",
+   "conclusion": "success"
+  },
+  {
+   "id": 123774582017,
+   "name": "contracts-netbbs (132x50, manual)",
+   "conclusion": "success"
+  },
+  {
+   "id": 123774582067,
+   "name": "contracts-netbbs (80x24, reserve)",
+   "conclusion": "success"
+  },
+  {
+   "id": 123774582074,
+   "name": "contracts-netbbs (80x24, manual)",
+   "conclusion": "success"
+  },
+  {
+   "id": 123774582116,
+   "name": "contracts-netbbs (132x50, network)",
+   "conclusion": "success"
+  },
+  {
+   "id": 123774582166,
+   "name": "contracts-netbbs (132x50, reserve)",
+   "conclusion": "success"
+  },
+  {
+   "id": 123774584303,
+   "name": "door-subset-netbbs",
+   "conclusion": "skipped"
+  }
+ ],
+ "human_approval": false
+}
