@@ -55,3 +55,35 @@ def test_s08_warning_is_named_and_future_zones_are_errors(repo_root: Path) -> No
         objects=tuple(replace(o, params={**o.params, 'control': True}) if o.id == 'holding-cell-west' else o
                       for o in old.meta.objects)))
     assert any('route-bearing door holding-cell-west' in p.message for p in validate(content_tree))
+
+
+def test_new_bad_route_door_in_s08_hub_is_an_error(repo_root: Path) -> None:
+    tree = load_content(repo_root/'src/blacksite/content')
+    zone = tree.zones['core-precinct']
+    used = {obj.tile for obj in zone.meta.objects}
+    def floor(tile: tuple[int, int]) -> bool:
+        key = zone.tile_at(tile)
+        return key in tree.tiles and tree.tiles[key].passable
+    tile = next((x, y) for y in range(1, zone.height-1) for x in range(1, zone.width-1)
+                if (x, y) not in used and all(floor(p) for p in
+                    ((x, y), (x-1, y), (x+1, y), (x, y-1), (x, y+1))))
+    old = next(obj for obj in zone.meta.objects if obj.id == 'holding-cell-west')
+    added = replace(old, id='new-route-door', tile=tile, params={'control': True})
+    tree.zones[zone.id] = replace(zone, meta=replace(zone.meta, objects=(*zone.meta.objects, added)))
+    assert any('route-bearing door new-route-door' in p.message for p in validate(tree))
+    assert len(route_door_warnings(tree)) == 7
+    assert not any('new-route-door' in p.message for p in route_door_warnings(tree))
+
+
+def test_repairing_a_known_door_removes_its_warning(repo_root: Path) -> None:
+    tree = load_content(repo_root/'src/blacksite/content')
+    zone = tree.zones['sodium-tin-halo']
+    door = next(obj for obj in zone.meta.objects if obj.id == 'halo-back-room')
+    x, y = door.tile
+    grid = [list(row) for row in zone.grid]
+    grid[y-1][x] = grid[y+1][x] = 'wall'
+    grid[y][x-1] = grid[y][x+1] = 'floor'
+    tree.zones[zone.id] = replace(zone, grid=tuple(tuple(row) for row in grid))
+    warnings = route_door_warnings(tree)
+    assert len(warnings) == 6
+    assert not any('halo-back-room' in p.message for p in warnings)

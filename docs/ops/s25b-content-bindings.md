@@ -34,9 +34,10 @@ exit opens. Bindings may add parameters and objects. In particular the
 letting office remains a vendor, so housing binding does not turn it
 into a public Lattice terminal while the new homes remain deferred.
 
-The validator reports seven existing S08 route-door violations as named
-warnings pointing to C1 #92. The same failures in every other zone are
-errors. A controlled Halo back door is covered; unbound decorative
+The validator pins seven existing S08 `(zone, object)` debts as named
+warnings pointing to C1 #92. Every other violation is an error, including
+a new door inside an S08 hub. C1 removes each pair after repair.
+A controlled Halo back door is covered; unbound decorative
 doors are excluded by behaviour. These are visible migration debts,
 not evidence that the existing hub doors already guard useful routes.
 
@@ -93,8 +94,16 @@ the cause of the wall-time gap. NPC p99 is 9.596 ms at 80x24 and 13.582 ms
 at 132x50. The native command therefore fails its existing startup and
 NPC gates. The installed wheel's Python tree matches the implementation.
 
-These are ten-hub fixture receipts. Full-city native walking, hosted
-native acceptance, the publication-boundary answer on #78, technical
-review and the district layout gates remain separate obligations.
+These are ten-hub fixture receipts. The hosted matrix at `00a3f86` is
+green; the local failure stays in the historical receipt. The lead
+confirmed the engineering/artifact boundary in #78 comment 6494001542.
+Full-city native walking and district layout acceptance stay with
+S25c. New heads still require hosted acceptance and technical review.
+
+The [live arrival scenario](s25b-arrival-captures.md) supplies the separate
+TR-1 screen evidence. No additional S08-binding PR is proposed before
+S25c: the existing native hub baseline is green, and commissioning the
+future S25 commerce/core/service bundles piecemeal is not needed for
+this engineering acceptance. District publication retains that work.
 
 [receipt]: baselines/s25b-windows-011bf66.json

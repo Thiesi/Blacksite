@@ -46,8 +46,7 @@ can draw them. Nothing is drawn differently in this slice.
   per-caller disguise reveal as `actors.class`. It is never the NPC's
   true faction.
 - Every existing emitter passes a kind.
-- The first-entry place line becomes a `place` log line. The old
-  renderer keeps its toast.
+- S25b moved the arrival paragraph into the log; P4 tags it `place`.
 - The crew restart notice moves off the world log.
 
 **LatticeView:**
@@ -82,11 +81,11 @@ can draw them. Nothing is drawn differently in this slice.
 - No emitter bypasses the single entry point, and every line carries a
   kind (a test that scans emitters, or a runtime assertion in tests).
 - The mechanics fingerprint is unchanged.
-- Glyph and style goldens are unchanged, except where the place toast
-  now also appears as a log line. Name and justify each rebaseline.
+- Glyph and style goldens are unchanged. S25b already moved the arrival
+  paragraph into the log and owns that visible rebaseline.
 
 ## Acceptance
 
 Automated review and technical review. The full native matrix stays
-green, and native acceptance shows no visible change apart from the
-place line in the log.
+green, and native acceptance shows no visible change, including S25b's
+existing arrival paragraph in the log.

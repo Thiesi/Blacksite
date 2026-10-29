@@ -33,13 +33,17 @@ from blacksite.content.loader import ContentTree, load_content
 
 __all__ = ["Problem", "validate", "exit_warnings", "route_door_warnings", "door_wall_axis", "main"]
 
-# #78 technical-lead scope decision: these S08 maps retain their D-T3
-# layout hold. Their route-door failures are reported to C1 as warnings;
-# the same invariant is an error for every other zone, including future ones.
-S08_ROUTE_DOOR_WARNING_ZONES = frozenset({
-    'core-plaza', 'core-tram-hub', 'core-precinct', 'vatside-wake-hall',
-    'vatside-clinics', 'vatside-vat-row', 'sodium-row', 'sodium-tin-halo',
-    'terraces-blocks', 'terraces-lobby',
+# #97 TR-2: only the seven known #92 debts retain D-T3 warnings. New
+# violations are errors even inside an S08 hub. C1 removes each repaired
+# pair rather than exempting the whole zone.
+S08_ROUTE_DOOR_WARNINGS = frozenset({
+    ('core-plaza', 'precinct-curfew-shutters'),
+    ('core-plaza', 'civic-ledger-hall-doors'),
+    ('core-plaza', 'kestrel-branch-branch-shutters'),
+    ('core-precinct', 'holding-cell-west'),
+    ('sodium-tin-halo', 'halo-back-room'),
+    ('terraces-blocks', 'block-super-lift-lock'),
+    ('vatside-vat-row', 'vatline-vat-lockdown'),
 })
 
 # 00-game-design.md section 5.1: zone width 40-200, height 20-100.
@@ -83,8 +87,8 @@ def validate(tree: ContentTree) -> list[Problem]:
     """Every problem in `tree`, load problems first."""
     v = _Validator(tree)
     v.run()
-    return list(tree.load_problems) + v.problems + [problem for zid, problem in _route_door_problems(tree)
-                                                  if zid not in S08_ROUTE_DOOR_WARNING_ZONES]
+    return list(tree.load_problems) + v.problems + [problem for key, problem in _route_door_problems(tree)
+                                                  if key not in S08_ROUTE_DOOR_WARNINGS]
 
 
 def exit_warnings(tree: ContentTree) -> list[Problem]:
@@ -111,10 +115,10 @@ def route_door_warnings(tree: ContentTree) -> list[Problem]:
     """Visible C1 debt for protected S08 maps, never a silent exemption."""
     return [Problem(problem.path, problem.line, problem.message+
                     '; C1 #92 must repair this S08 route under D-T3')
-            for zid, problem in _route_door_problems(tree) if zid in S08_ROUTE_DOOR_WARNING_ZONES]
+            for key, problem in _route_door_problems(tree) if key in S08_ROUTE_DOOR_WARNINGS]
 
 
-def _route_door_problems(tree: ContentTree) -> Iterator[tuple[str, Problem]]:
+def _route_door_problems(tree: ContentTree) -> Iterator[tuple[tuple[str, str], Problem]]:
     controlled = {(control.target.zone, control.target.object) for core in tree.cores.values()
                   for room in core.rooms for control in room.controls}
     required_tiles: set[tuple[str, s.Tile]] = set()
@@ -138,7 +142,7 @@ def _route_door_problems(tree: ContentTree) -> Iterator[tuple[str, Problem]]:
             if door_wall_axis(passable, obj.tile) is None:
                 path = tree.source('zones', zid)
                 line = find_line(tree.texts.get(path, ''), *id_needles(obj.id))
-                yield zid, Problem(path, line, f'route-bearing door {obj.id}: needs a wall axis with open sides')
+                yield (zid, obj.id), Problem(path, line, f'route-bearing door {obj.id}: needs a wall axis with open sides')
 
 
 class _Validator:
