@@ -40,7 +40,10 @@ def test_world_3_named_room_counts_and_bestiary_are_not_generic_placeholders(rep
     world = (repo_root/'docs/world/03-lattice.md').read_text(encoding='utf-8')
     for name, cid, description in re.findall(r'\*\*([^\n]+?)\*\* \(`(lat-[^`]+)`\)(.*?)(?=\n\n|\Z)', world, re.S):
         match = re.search(r'tier (\d),\s*(\d+) rooms', description)
-        if match:
+        if 'planned (#' in description:
+            # Canon ahead of content (#90): a Stage 2 slice builds it and removes the marker.
+            assert cid not in tree.cores
+        elif match:
             core = tree.cores[cid]
             assert (core.tier, len(core.rooms)) == tuple(map(int, match.groups()))
     assert len(tree.cores['lat-wake-hall'].rooms) == 1

@@ -66,7 +66,7 @@ sealed installation under the Spire. Also the game. (bible §3.3, §4.6)
 
 **Block Street** — the Terraces' main street. (gazetteer)
 
-**Boiler Governor** — The Lamp Compact's heat core in the Boilerhouse; controls the steam vents and street steam. (Lattice)
+**Boiler Governor** — The Lamp Compact's heat core in the Boilerhouse; controls the steam vents. (Lattice)
 
 **Boiler Relay** — Warmwater relay in the Boilerhouse; holders' shock clears faster within Warmwater. (design §7.7)
 

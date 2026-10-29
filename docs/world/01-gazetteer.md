@@ -39,10 +39,10 @@ migration.
 | `terraces-lobby` | Residence Lobby | The Terraces | pocket | neutral | 40 × 24 |
 | `sodium-row` | Sodium Row | Sodium Row | contested | neutral (Sable-enforced) | 100 × 30 |
 | `sodium-tin-halo` | The Tin Halo | Sodium Row | pocket | neutral | 44 × 22 |
-| `warmwater-lamp-street` | Lamp Street | Warmwater | contested | Lamp Compact | 100 × 30 |
-| `warmwater-baths` | The Long Baths | Warmwater | pocket | Lamp Compact | 60 × 30 |
-| `warmwater-courts` | The Courts | Warmwater | contested | Lamp Compact | 80 × 40 |
-| `warmwater-boilerhouse` | The Boilerhouse | Warmwater | contested | Lamp Compact | 70 × 40 |
+| `warmwater-lamp-street` | Lamp Street (planned, #90) | Warmwater | contested | Lamp Compact | 100 × 30 |
+| `warmwater-baths` | The Long Baths (planned, #90) | Warmwater | pocket | Lamp Compact | 60 × 30 |
+| `warmwater-courts` | The Courts (planned, #90) | Warmwater | contested | Lamp Compact | 80 × 40 |
+| `warmwater-boilerhouse` | The Boilerhouse (planned, #90) | Warmwater | contested | Lamp Compact | 70 × 40 |
 | `under-service` | Service Level | Undercity | open | none | 120 × 50 |
 | `under-drowned` | The Drowned Level | Undercity | open | none | 100 × 60 |
 | `under-caverns` | Karst Caverns | Undercity | open | none | 150 × 80 |
@@ -55,7 +55,7 @@ migration.
 | `scour-ring-4` | Far Ring | The Scour | open | none | 200 × 100 |
 | `blacksite-l1` | Blacksite Level One | The Blacksite | instanced | none | see story arcs |
 
-Thirty-nine zone templates. Instancing is separate from safety;
+Thirty-nine zone templates, four of them Warmwater's, planned (#90). Instancing is separate from safety;
 `blacksite-l1` has open mission areas and a protected decision room.
 Count the safety classes from the overview instead of a second tally.
 
@@ -174,10 +174,10 @@ Zones on the same spot are stacked; the map shows a stack as one place.
 | `tramyard-market` | 71, 47 | |
 | `tramyard-depots` | 79, 43 | |
 | `tramyard-wall-gate` | 88, 45 | Gate Nine, in the east wall |
-| `warmwater-lamp-street` | 64, 32 | the Lamp Walk runs south-west to the plaza |
-| `warmwater-baths` | 59, 27 | |
-| `warmwater-courts` | 69, 25 | |
-| `warmwater-boilerhouse` | 74, 31 | the main goes down here, sealed |
+| `warmwater-lamp-street` | 64, 32 | planned (#90); the Lamp Walk runs south-west to the plaza |
+| `warmwater-baths` | 59, 27 | planned (#90) |
+| `warmwater-courts` | 69, 25 | planned (#90) |
+| `warmwater-boilerhouse` | 74, 31 | planned (#90); the main goes down here, sealed |
 
 ### Routes between districts
 
@@ -206,7 +206,7 @@ it:
 | Chapel line | Cooling Towers | south-west |
 | Rim line | the Rim | east |
 | Market line | Tramyard Market | east-north-east |
-| Lamp line | Lamp Street | north-east |
+| Lamp line | Lamp Street | north-east; planned (#90) |
 
 The City Map draws each line as a straight run from the hub to its
 terminus. A line crosses ground where it does not stop, so a ride
@@ -1129,6 +1129,7 @@ things. Some of the things are true.
 
 ### `warmwater-lamp-street` — Lamp Street
 
+- **Status:** planned (#90). Canon only until a Stage 2 slice builds it.
 - **Class:** contested. **Lean:** Lamp Compact. **Size:** 100 × 30.
   **Sight:** 12 (a lamp over every open door).
 - **Exits:** `core-plaza` (the Lamp Walk); `core-tram-hub` (tram
@@ -1168,6 +1169,7 @@ about it, and mean the bath. Mostly.
 
 ### `warmwater-baths` — The Long Baths
 
+- **Status:** planned (#90). Canon only until a Stage 2 slice builds it.
 - **Class:** pocket. **Lean:** Lamp Compact. **Size:** 60 × 30.
   **Sight:** 7 (steam).
 - **Exits:** `warmwater-lamp-street` (the bath doors).
@@ -1201,6 +1203,7 @@ that is all you will ever see.
 
 ### `warmwater-courts` — The Courts
 
+- **Status:** planned (#90). Canon only until a Stage 2 slice builds it.
 - **Class:** contested. **Lean:** Lamp Compact. **Size:** 80 × 40.
   **Sight:** 7.
 - **Exits:** `warmwater-lamp-street` (the arch); `warmwater-boilerhouse`
@@ -1236,6 +1239,7 @@ everyone that they used to.
 
 ### `warmwater-boilerhouse` — The Boilerhouse
 
+- **Status:** planned (#90). Canon only until a Stage 2 slice builds it.
 - **Class:** contested. **Lean:** Lamp Compact. **Size:** 70 × 40.
   **Sight:** 6 (steam, low lamps).
 - **Exits:** `warmwater-lamp-street` (service gate);

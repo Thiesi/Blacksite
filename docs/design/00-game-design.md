@@ -642,11 +642,16 @@ real encounter. District gate counts and public uplinks remain intact.
 
 Named short effects are exceptions to that ordinary reset range: a
 mission latch lasts 120 s, a private delivery vestibule 30 s, Row lighting
-blackout 30 s, Row sign message 60 s, and the bell-gallery hymn 60 s.
+blackout 30 s, Row sign message 60 s, the bell-gallery hymn 60 s, and
+the Courts' lamps 30 s (planned, #90).
 Foundry gantry debris lasts 30 s after its hazard warning and deals
 5 kinetic damage per second before armour (provisional, tuned at the
 pacing gate). Its map character is `x`,
 rendered with the existing hazard glyph.
+Boilerhouse steam vents (planned, #90) use the same hazard layer on
+their authored vent tiles, on their schedule or when the Boiler
+Governor fires them: 10 s after the hazard warning, 5 chemical damage
+per second before armour (provisional, tuned at the pacing gate).
 Transit holds retain their separate 30 s limit and 120 s immunity.
 A switched-off lamp reduces sight to 5 tiles within the zone's normal
 light radius around that lamp. Dark-sight equipment still applies.
@@ -1096,8 +1101,8 @@ are not additional perks. Scour cores remain reachable when neutral.
 | `zero` / Relay Zero | `oldworks-main` | 3 | trace gain -10 %, excluding fixed action costs |
 | `yard` / Yard Relay | `oldworks-yards` | 3 | fabrication quality +0.05, final cap 1.15 |
 | `block` / Block Relay | `terraces-blocks` | 2 | next rent invoice -10 %; one extra Tripwire in private core |
-| `lamp` / Lamp Relay | `warmwater-lamp-street` | 2 | bath detox and rooms at Compact counters -20 %, strongest discount only |
-| `boiler` / Boiler Relay | `warmwater-boilerhouse` | 3 | out of combat, shock decays 7 per second instead of 5 within Warmwater |
+| `lamp` / Lamp Relay | `warmwater-lamp-street` | 2 | planned (#90); bath detox and rooms at Compact counters -20 %, strongest discount only |
+| `boiler` / Boiler Relay | `warmwater-boilerhouse` | 3 | planned (#90); within Warmwater, out of combat, base shock decay 7 per second instead of 5, before other multipliers |
 | `cavern` / Cavern Relay | `under-caverns` | 3 | current local patrol overlay, not exclusive base map |
 | `outworks` / Outworks Relay | `under-outworks` | 4 | contribution Depth +10 %, rounded down, no extra XP/ballot |
 | `mile` / Mile Relay | `scour-ring-1` | 2 | current local patrol route on convoy map; no combat immunity |
