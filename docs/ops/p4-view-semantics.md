@@ -64,9 +64,17 @@ walk does not manufacture disguised NPCs or black ICE.
 
 ## Evidence
 
-Validation receipts and text captures are added after execution. Large
-raw ANSI and style JSON belong to the P4 acceptance CI artifacts, named
-`p4-view-semantics-80x24` and `p4-view-semantics-132x50`, with their
-run/head and hashes referenced from the evidence manifest. Local raw
-captures remain outside the committed evidence tree. Native output is
-engineering evidence, not presentation approval or a performance gate.
+The [evidence index](captures/p4-view-semantics/README.md) contains 18
+hosted text captures and small local/hosted receipts. The full local
+root run passes 1,651 tests with one skipped; the strict packet passes
+99 cases. Local and hosted native runs each pass all six size/tier
+cases. The post-review chat/disclosure run passes 35 tests, including
+the production retaliation-hook regression.
+
+Raw ANSI and style JSON remain in the P4 acceptance CI artifacts, named
+`p4-view-semantics-80x24` and `p4-view-semantics-132x50`. The manifest
+records exact run/artifact ids, hashes, PR head and actual synthetic
+merge execution SHA, whose tree is verified identical to the source.
+Local raw captures remain outside Git. Final-head CI and technical
+review remain required. Native output is engineering evidence, not
+presentation approval or a performance gate.

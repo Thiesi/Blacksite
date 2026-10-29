@@ -1,0 +1,48 @@
+{
+  "head": "cd6ce9a60e1004dcaab246149db46a3d46c0ae36",
+  "passed": true,
+  "cases": [
+    {
+      "size": [
+        132,
+        50
+      ],
+      "tier": "16",
+      "name": "P416界132",
+      "place_line": "You wake on a gurney under a number.",
+      "world_history_has_kinds": true,
+      "crew_restart_outside_world_history": true,
+      "lattice_fields": true,
+      "clean_exit": true
+    },
+    {
+      "size": [
+        132,
+        50
+      ],
+      "tier": "256",
+      "name": "P4256界132",
+      "place_line": "You wake on a gurney under a number.",
+      "world_history_has_kinds": true,
+      "crew_restart_outside_world_history": true,
+      "lattice_fields": true,
+      "clean_exit": true
+    },
+    {
+      "size": [
+        132,
+        50
+      ],
+      "tier": "truecolor",
+      "name": "P4truecolor界132",
+      "place_line": "You wake on a gurney under a number.",
+      "world_history_has_kinds": true,
+      "crew_restart_outside_world_history": true,
+      "lattice_fields": true,
+      "clean_exit": true
+    }
+  ],
+  "human_approval": false,
+  "transport": "NetBBS Telnet -> registered native stdio",
+  "fixtures": "private node/world only"
+}

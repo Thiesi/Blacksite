@@ -1,0 +1,16 @@
+{
+  "base": "cae334f92386d2f70e94b3d6816ea2dd0f34026e",
+  "head": "7b4833f250210548629b9985fe0c1a6c6504e9dc",
+  "mechanics_sha256": "08d306deab3bbf25cf98814df4c41509d03a7bc00091b69b1f109ee4f95508e8",
+  "changed_goldens": [
+    "tests/door/golden/styles/cp437/16/wake_hall_132x50.json",
+    "tests/door/golden/styles/cp437/16/wake_hall_80x24.json",
+    "tests/door/golden/styles/cp437/256/wake_hall_132x50.json",
+    "tests/door/golden/styles/cp437/256/wake_hall_80x24.json",
+    "tests/door/golden/styles/cp437/truecolor/wake_hall_132x50.json",
+    "tests/door/golden/styles/cp437/truecolor/wake_hall_80x24.json",
+    "tests/door/golden/wake_hall_132x50.txt",
+    "tests/door/golden/wake_hall_80x24.txt"
+  ],
+  "reason": "P4 required first-entry place sentence on the previously empty log row; all other glyph/style baselines and mechanics are byte-identical."
+}

@@ -1,0 +1,20 @@
+{
+  "head": "7b4833f250210548629b9985fe0c1a6c6504e9dc",
+  "passed": true,
+  "protected_plaza_fire_does_not_disclose_npc_name": true,
+  "plaza_logs": [
+    "Protected: you cannot harm that body.",
+    "Wardens: lower your weapon. Heat for 10 minutes; patrols pursue outside safety."
+  ],
+  "legal_contested_shot_logs": [
+    "Hit: Warden responder."
+  ],
+  "retaliation_target_is_attacker_before_hit_or_miss_log": true,
+  "retaliation_reveals_only_to_attacker": true,
+  "npc_warning_reveals_recipient_before_name_log": true,
+  "npc_warning_logs": [
+    "Warden responder raises a weapon at you. Move to cover or safety."
+  ],
+  "callback": "Combat.shot -> exchange -> hostile_hook -> Npcs.provoked -> Combat.reveal, before the Hit/Miss log",
+  "fixtures": "isolated spawners and three normal headless characters; one template presents civilian; ordinary legal combat with the production retaliation hook intact"
+}

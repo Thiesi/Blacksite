@@ -1,0 +1,871 @@
+{
+  "schema": 1,
+  "source_head": "7b4833f250210548629b9985fe0c1a6c6504e9dc",
+  "execution_head": "cd6ce9a60e1004dcaab246149db46a3d46c0ae36",
+  "execution_tree": "1db6e56838e581ddb57edf1a7012f8e92e0f589d",
+  "execution_tree_equals_source_head": true,
+  "hosted_run": "https://github.com/Thiesi/Blacksite/actions/runs/40913607689",
+  "captures": [
+    {
+      "scenario": "wake",
+      "size": "80x24",
+      "tier": "16",
+      "file": "wake-80x24-16.txt",
+      "sha256": "362a196455dd771e2e5e706d2a44f521600a626b15022a5e4d838c74d9482e84",
+      "bytes": 2608,
+      "run": "40913607689",
+      "artifact": "p4-view-semantics-80x24",
+      "artifact_id": 12914388024,
+      "artifact_url": "https://github.com/Thiesi/Blacksite/actions/runs/40913607689/artifacts/12914388024",
+      "committed": true
+    },
+    {
+      "scenario": "wake",
+      "size": "80x24",
+      "tier": "16",
+      "file": "wake-80x24-16.ans",
+      "sha256": "8a5cffd93b5132aa26a493d061238e60a91eec23d214342aea5c7c155c02b8b5",
+      "bytes": 26560,
+      "run": "40913607689",
+      "artifact": "p4-view-semantics-80x24",
+      "artifact_id": 12914388024,
+      "artifact_url": "https://github.com/Thiesi/Blacksite/actions/runs/40913607689/artifacts/12914388024",
+      "committed": false
+    },
+    {
+      "scenario": "wake",
+      "size": "80x24",
+      "tier": "16",
+      "file": "wake-80x24-16.json",
+      "sha256": "1136956cb1bd35d5c98c8488b100fdba3c98eb2435e734369f5e7579e89255dd",
+      "bytes": 9148,
+      "run": "40913607689",
+      "artifact": "p4-view-semantics-80x24",
+      "artifact_id": 12914388024,
+      "artifact_url": "https://github.com/Thiesi/Blacksite/actions/runs/40913607689/artifacts/12914388024",
+      "committed": false
+    },
+    {
+      "scenario": "place-history",
+      "size": "80x24",
+      "tier": "16",
+      "file": "place-history-80x24-16.txt",
+      "sha256": "c2b001d81a964800db969a5b0c6d786cda2a356eb9cfb19ed75056b4153b831f",
+      "bytes": 2360,
+      "run": "40913607689",
+      "artifact": "p4-view-semantics-80x24",
+      "artifact_id": 12914388024,
+      "artifact_url": "https://github.com/Thiesi/Blacksite/actions/runs/40913607689/artifacts/12914388024",
+      "committed": true
+    },
+    {
+      "scenario": "place-history",
+      "size": "80x24",
+      "tier": "16",
+      "file": "place-history-80x24-16.ans",
+      "sha256": "412dfaa5225e388b8802eeb992d4fc9ee519182f15f6ea181042334df3bf3d7b",
+      "bytes": 27468,
+      "run": "40913607689",
+      "artifact": "p4-view-semantics-80x24",
+      "artifact_id": 12914388024,
+      "artifact_url": "https://github.com/Thiesi/Blacksite/actions/runs/40913607689/artifacts/12914388024",
+      "committed": false
+    },
+    {
+      "scenario": "place-history",
+      "size": "80x24",
+      "tier": "16",
+      "file": "place-history-80x24-16.json",
+      "sha256": "9884e1a0348a776cf6638cef11638e14a8f573bf2ebd5b8dad3264239f62f8e2",
+      "bytes": 7491,
+      "run": "40913607689",
+      "artifact": "p4-view-semantics-80x24",
+      "artifact_id": 12914388024,
+      "artifact_url": "https://github.com/Thiesi/Blacksite/actions/runs/40913607689/artifacts/12914388024",
+      "committed": false
+    },
+    {
+      "scenario": "lattice",
+      "size": "80x24",
+      "tier": "16",
+      "file": "lattice-80x24-16.txt",
+      "sha256": "fc850446fec9f4cc5152485b18a4936ceac780cc4c70f94892205a3d95fd9687",
+      "bytes": 2675,
+      "run": "40913607689",
+      "artifact": "p4-view-semantics-80x24",
+      "artifact_id": 12914388024,
+      "artifact_url": "https://github.com/Thiesi/Blacksite/actions/runs/40913607689/artifacts/12914388024",
+      "committed": true
+    },
+    {
+      "scenario": "lattice",
+      "size": "80x24",
+      "tier": "16",
+      "file": "lattice-80x24-16.ans",
+      "sha256": "cd20e0b0acb892dd1b187394d6ada50798bb30167fbf145bae1f4e56040d37e0",
+      "bytes": 55270,
+      "run": "40913607689",
+      "artifact": "p4-view-semantics-80x24",
+      "artifact_id": 12914388024,
+      "artifact_url": "https://github.com/Thiesi/Blacksite/actions/runs/40913607689/artifacts/12914388024",
+      "committed": false
+    },
+    {
+      "scenario": "lattice",
+      "size": "80x24",
+      "tier": "16",
+      "file": "lattice-80x24-16.json",
+      "sha256": "b36fd40d3c1255f4822d5ccf348ab15f9badf01a54c8888799f1deb9a05d533c",
+      "bytes": 11876,
+      "run": "40913607689",
+      "artifact": "p4-view-semantics-80x24",
+      "artifact_id": 12914388024,
+      "artifact_url": "https://github.com/Thiesi/Blacksite/actions/runs/40913607689/artifacts/12914388024",
+      "committed": false
+    },
+    {
+      "scenario": "wake",
+      "size": "80x24",
+      "tier": "256",
+      "file": "wake-80x24-256.txt",
+      "sha256": "5c676aff7b88e562cf618c811841f5b94189f2289ee0529cb0a0166332fa60da",
+      "bytes": 2608,
+      "run": "40913607689",
+      "artifact": "p4-view-semantics-80x24",
+      "artifact_id": 12914388024,
+      "artifact_url": "https://github.com/Thiesi/Blacksite/actions/runs/40913607689/artifacts/12914388024",
+      "committed": true
+    },
+    {
+      "scenario": "wake",
+      "size": "80x24",
+      "tier": "256",
+      "file": "wake-80x24-256.ans",
+      "sha256": "badca21537f896825b01326f0fdecfb09ba696e306c443c7fbfa795487ca848b",
+      "bytes": 32567,
+      "run": "40913607689",
+      "artifact": "p4-view-semantics-80x24",
+      "artifact_id": 12914388024,
+      "artifact_url": "https://github.com/Thiesi/Blacksite/actions/runs/40913607689/artifacts/12914388024",
+      "committed": false
+    },
+    {
+      "scenario": "wake",
+      "size": "80x24",
+      "tier": "256",
+      "file": "wake-80x24-256.json",
+      "sha256": "9eef6625b84903bddf3d2121bf7189c09c117d4acc0f99d6ca06592fc7d66f5a",
+      "bytes": 10878,
+      "run": "40913607689",
+      "artifact": "p4-view-semantics-80x24",
+      "artifact_id": 12914388024,
+      "artifact_url": "https://github.com/Thiesi/Blacksite/actions/runs/40913607689/artifacts/12914388024",
+      "committed": false
+    },
+    {
+      "scenario": "place-history",
+      "size": "80x24",
+      "tier": "256",
+      "file": "place-history-80x24-256.txt",
+      "sha256": "732b4e5ffa5996c7ca90e81f1e311053286198fcda9096c2b6b293e43b8d26dc",
+      "bytes": 2358,
+      "run": "40913607689",
+      "artifact": "p4-view-semantics-80x24",
+      "artifact_id": 12914388024,
+      "artifact_url": "https://github.com/Thiesi/Blacksite/actions/runs/40913607689/artifacts/12914388024",
+      "committed": true
+    },
+    {
+      "scenario": "place-history",
+      "size": "80x24",
+      "tier": "256",
+      "file": "place-history-80x24-256.ans",
+      "sha256": "1099b0b4f09c2f9cdbe41469f8b7519026c6211d37111c826e306d0da4d56ea5",
+      "bytes": 33526,
+      "run": "40913607689",
+      "artifact": "p4-view-semantics-80x24",
+      "artifact_id": 12914388024,
+      "artifact_url": "https://github.com/Thiesi/Blacksite/actions/runs/40913607689/artifacts/12914388024",
+      "committed": false
+    },
+    {
+      "scenario": "place-history",
+      "size": "80x24",
+      "tier": "256",
+      "file": "place-history-80x24-256.json",
+      "sha256": "b681192c0de8e94c9bd401b6e7ba8622250e8b41b1cc840597bce600675d81e2",
+      "bytes": 7859,
+      "run": "40913607689",
+      "artifact": "p4-view-semantics-80x24",
+      "artifact_id": 12914388024,
+      "artifact_url": "https://github.com/Thiesi/Blacksite/actions/runs/40913607689/artifacts/12914388024",
+      "committed": false
+    },
+    {
+      "scenario": "lattice",
+      "size": "80x24",
+      "tier": "256",
+      "file": "lattice-80x24-256.txt",
+      "sha256": "e9733cd7ce8fd7b3a2070987d93e8802847a99ec0fb2e27f7227fbc598e830f6",
+      "bytes": 2673,
+      "run": "40913607689",
+      "artifact": "p4-view-semantics-80x24",
+      "artifact_id": 12914388024,
+      "artifact_url": "https://github.com/Thiesi/Blacksite/actions/runs/40913607689/artifacts/12914388024",
+      "committed": true
+    },
+    {
+      "scenario": "lattice",
+      "size": "80x24",
+      "tier": "256",
+      "file": "lattice-80x24-256.ans",
+      "sha256": "28024a4d1e4249f53a38b6b09d92ff3d9d6858eb6c2d5c44a3a3aa157d383f8b",
+      "bytes": 78396,
+      "run": "40913607689",
+      "artifact": "p4-view-semantics-80x24",
+      "artifact_id": 12914388024,
+      "artifact_url": "https://github.com/Thiesi/Blacksite/actions/runs/40913607689/artifacts/12914388024",
+      "committed": false
+    },
+    {
+      "scenario": "lattice",
+      "size": "80x24",
+      "tier": "256",
+      "file": "lattice-80x24-256.json",
+      "sha256": "7f1966473c6f59e3e7b4c4edf2578da98862235d386fac13c8d65e6d64b74030",
+      "bytes": 12219,
+      "run": "40913607689",
+      "artifact": "p4-view-semantics-80x24",
+      "artifact_id": 12914388024,
+      "artifact_url": "https://github.com/Thiesi/Blacksite/actions/runs/40913607689/artifacts/12914388024",
+      "committed": false
+    },
+    {
+      "scenario": "wake",
+      "size": "80x24",
+      "tier": "truecolor",
+      "file": "wake-80x24-truecolor.txt",
+      "sha256": "2b2f908fafc4234a60917b463a3979406de9a4b61126aa4cf66b3a5c9e00a62e",
+      "bytes": 2608,
+      "run": "40913607689",
+      "artifact": "p4-view-semantics-80x24",
+      "artifact_id": 12914388024,
+      "artifact_url": "https://github.com/Thiesi/Blacksite/actions/runs/40913607689/artifacts/12914388024",
+      "committed": true
+    },
+    {
+      "scenario": "wake",
+      "size": "80x24",
+      "tier": "truecolor",
+      "file": "wake-80x24-truecolor.ans",
+      "sha256": "7e8c15d8e76d659235918255c60d80d3864936eb2a93367206a0666dc3c977d0",
+      "bytes": 37380,
+      "run": "40913607689",
+      "artifact": "p4-view-semantics-80x24",
+      "artifact_id": 12914388024,
+      "artifact_url": "https://github.com/Thiesi/Blacksite/actions/runs/40913607689/artifacts/12914388024",
+      "committed": false
+    },
+    {
+      "scenario": "wake",
+      "size": "80x24",
+      "tier": "truecolor",
+      "file": "wake-80x24-truecolor.json",
+      "sha256": "f559e8a55f09c97ac0448972e10d0c557631bfd725540d3e81ec310e36e34875",
+      "bytes": 11105,
+      "run": "40913607689",
+      "artifact": "p4-view-semantics-80x24",
+      "artifact_id": 12914388024,
+      "artifact_url": "https://github.com/Thiesi/Blacksite/actions/runs/40913607689/artifacts/12914388024",
+      "committed": false
+    },
+    {
+      "scenario": "place-history",
+      "size": "80x24",
+      "tier": "truecolor",
+      "file": "place-history-80x24-truecolor.txt",
+      "sha256": "da9f38b681fb94830989d3b1fcf1e72f3e6dbd93dd2a4330dacb7c8b66b7a3bb",
+      "bytes": 2346,
+      "run": "40913607689",
+      "artifact": "p4-view-semantics-80x24",
+      "artifact_id": 12914388024,
+      "artifact_url": "https://github.com/Thiesi/Blacksite/actions/runs/40913607689/artifacts/12914388024",
+      "committed": true
+    },
+    {
+      "scenario": "place-history",
+      "size": "80x24",
+      "tier": "truecolor",
+      "file": "place-history-80x24-truecolor.ans",
+      "sha256": "379eae28d1d853c2f7a7350dd033cca9ee85b4a8399a09eef5d4a0cfbdb64e1c",
+      "bytes": 38413,
+      "run": "40913607689",
+      "artifact": "p4-view-semantics-80x24",
+      "artifact_id": 12914388024,
+      "artifact_url": "https://github.com/Thiesi/Blacksite/actions/runs/40913607689/artifacts/12914388024",
+      "committed": false
+    },
+    {
+      "scenario": "place-history",
+      "size": "80x24",
+      "tier": "truecolor",
+      "file": "place-history-80x24-truecolor.json",
+      "sha256": "c5705586716ddbf8a667d937fa9e53e048a040debfcaae92493a5516b595fcc0",
+      "bytes": 7951,
+      "run": "40913607689",
+      "artifact": "p4-view-semantics-80x24",
+      "artifact_id": 12914388024,
+      "artifact_url": "https://github.com/Thiesi/Blacksite/actions/runs/40913607689/artifacts/12914388024",
+      "committed": false
+    },
+    {
+      "scenario": "lattice",
+      "size": "80x24",
+      "tier": "truecolor",
+      "file": "lattice-80x24-truecolor.txt",
+      "sha256": "c6838b51dc6dc25f1f692a91d014301ac1ca24817ac205a65a9a2b65f1a48a8e",
+      "bytes": 2661,
+      "run": "40913607689",
+      "artifact": "p4-view-semantics-80x24",
+      "artifact_id": 12914388024,
+      "artifact_url": "https://github.com/Thiesi/Blacksite/actions/runs/40913607689/artifacts/12914388024",
+      "committed": true
+    },
+    {
+      "scenario": "lattice",
+      "size": "80x24",
+      "tier": "truecolor",
+      "file": "lattice-80x24-truecolor.ans",
+      "sha256": "2bfdb315a952d50807244399ec780c26195bce9ab27eb806471b3f60a06e1561",
+      "bytes": 91062,
+      "run": "40913607689",
+      "artifact": "p4-view-semantics-80x24",
+      "artifact_id": 12914388024,
+      "artifact_url": "https://github.com/Thiesi/Blacksite/actions/runs/40913607689/artifacts/12914388024",
+      "committed": false
+    },
+    {
+      "scenario": "lattice",
+      "size": "80x24",
+      "tier": "truecolor",
+      "file": "lattice-80x24-truecolor.json",
+      "sha256": "be8a9c6f43a9e86fa7a91f2fd496f4960d701a89675f1fc9d14a71c6cf09af5d",
+      "bytes": 12362,
+      "run": "40913607689",
+      "artifact": "p4-view-semantics-80x24",
+      "artifact_id": 12914388024,
+      "artifact_url": "https://github.com/Thiesi/Blacksite/actions/runs/40913607689/artifacts/12914388024",
+      "committed": false
+    },
+    {
+      "scenario": "wake",
+      "size": "132x50",
+      "tier": "16",
+      "file": "wake-132x50-16.txt",
+      "sha256": "47eabcced40f84596e16fe26eb4b8eec991fe5aa4106d9d23a6a574a28e7bccf",
+      "bytes": 7772,
+      "run": "40913607689",
+      "artifact": "p4-view-semantics-132x50",
+      "artifact_id": 12914697903,
+      "artifact_url": "https://github.com/Thiesi/Blacksite/actions/runs/40913607689/artifacts/12914697903",
+      "committed": true
+    },
+    {
+      "scenario": "wake",
+      "size": "132x50",
+      "tier": "16",
+      "file": "wake-132x50-16.ans",
+      "sha256": "6023b8b2823eb8a10c95c6aafa48650e5a043b9916f1d4c55947fadfad5b6431",
+      "bytes": 71434,
+      "run": "40913607689",
+      "artifact": "p4-view-semantics-132x50",
+      "artifact_id": 12914697903,
+      "artifact_url": "https://github.com/Thiesi/Blacksite/actions/runs/40913607689/artifacts/12914697903",
+      "committed": false
+    },
+    {
+      "scenario": "wake",
+      "size": "132x50",
+      "tier": "16",
+      "file": "wake-132x50-16.json",
+      "sha256": "2fd9db5b1e591abcfdadb90c66e59f0661701c314c48ef423690822d13850fd1",
+      "bytes": 19487,
+      "run": "40913607689",
+      "artifact": "p4-view-semantics-132x50",
+      "artifact_id": 12914697903,
+      "artifact_url": "https://github.com/Thiesi/Blacksite/actions/runs/40913607689/artifacts/12914697903",
+      "committed": false
+    },
+    {
+      "scenario": "place-history",
+      "size": "132x50",
+      "tier": "16",
+      "file": "place-history-132x50-16.txt",
+      "sha256": "ca2a566eb44ebcdde8aeb8a3ffd2536444743c4d458d77a14622aae622c4c1ce",
+      "bytes": 7522,
+      "run": "40913607689",
+      "artifact": "p4-view-semantics-132x50",
+      "artifact_id": 12914697903,
+      "artifact_url": "https://github.com/Thiesi/Blacksite/actions/runs/40913607689/artifacts/12914697903",
+      "committed": true
+    },
+    {
+      "scenario": "place-history",
+      "size": "132x50",
+      "tier": "16",
+      "file": "place-history-132x50-16.ans",
+      "sha256": "775b2a61af4171481f498ab44f824f1f97e040249313521918de7be2b23091c2",
+      "bytes": 72398,
+      "run": "40913607689",
+      "artifact": "p4-view-semantics-132x50",
+      "artifact_id": 12914697903,
+      "artifact_url": "https://github.com/Thiesi/Blacksite/actions/runs/40913607689/artifacts/12914697903",
+      "committed": false
+    },
+    {
+      "scenario": "place-history",
+      "size": "132x50",
+      "tier": "16",
+      "file": "place-history-132x50-16.json",
+      "sha256": "c55c2f468c962e9a1713a9303e6da6aa6b912b476e19db6b899b0e4270dc6a7a",
+      "bytes": 17842,
+      "run": "40913607689",
+      "artifact": "p4-view-semantics-132x50",
+      "artifact_id": 12914697903,
+      "artifact_url": "https://github.com/Thiesi/Blacksite/actions/runs/40913607689/artifacts/12914697903",
+      "committed": false
+    },
+    {
+      "scenario": "lattice",
+      "size": "132x50",
+      "tier": "16",
+      "file": "lattice-132x50-16.txt",
+      "sha256": "9264fab3dc4168d5b2419d4e4156f5eac617e4fa9766b752ccc72a50b46a03ce",
+      "bytes": 8293,
+      "run": "40913607689",
+      "artifact": "p4-view-semantics-132x50",
+      "artifact_id": 12914697903,
+      "artifact_url": "https://github.com/Thiesi/Blacksite/actions/runs/40913607689/artifacts/12914697903",
+      "committed": true
+    },
+    {
+      "scenario": "lattice",
+      "size": "132x50",
+      "tier": "16",
+      "file": "lattice-132x50-16.ans",
+      "sha256": "7eda581f9c346795cba24ffaec7eb4589d37163a06f915588f1ebc27370d80d8",
+      "bytes": 100872,
+      "run": "40913607689",
+      "artifact": "p4-view-semantics-132x50",
+      "artifact_id": 12914697903,
+      "artifact_url": "https://github.com/Thiesi/Blacksite/actions/runs/40913607689/artifacts/12914697903",
+      "committed": false
+    },
+    {
+      "scenario": "lattice",
+      "size": "132x50",
+      "tier": "16",
+      "file": "lattice-132x50-16.json",
+      "sha256": "5a74c8dc1b5513684d48db0222cc5dcc3b0da39ab072de366a212932bf4d825d",
+      "bytes": 28393,
+      "run": "40913607689",
+      "artifact": "p4-view-semantics-132x50",
+      "artifact_id": 12914697903,
+      "artifact_url": "https://github.com/Thiesi/Blacksite/actions/runs/40913607689/artifacts/12914697903",
+      "committed": false
+    },
+    {
+      "scenario": "wake",
+      "size": "132x50",
+      "tier": "256",
+      "file": "wake-132x50-256.txt",
+      "sha256": "018287927aecd425f683e88c221cd0c23bb0b9572f9ad048db33c3b75b9747a0",
+      "bytes": 7772,
+      "run": "40913607689",
+      "artifact": "p4-view-semantics-132x50",
+      "artifact_id": 12914697903,
+      "artifact_url": "https://github.com/Thiesi/Blacksite/actions/runs/40913607689/artifacts/12914697903",
+      "committed": true
+    },
+    {
+      "scenario": "wake",
+      "size": "132x50",
+      "tier": "256",
+      "file": "wake-132x50-256.ans",
+      "sha256": "0233bdb6f52423dc4e61166fe11b12173b914c9781fa61e84714c7e8e8a30d59",
+      "bytes": 83283,
+      "run": "40913607689",
+      "artifact": "p4-view-semantics-132x50",
+      "artifact_id": 12914697903,
+      "artifact_url": "https://github.com/Thiesi/Blacksite/actions/runs/40913607689/artifacts/12914697903",
+      "committed": false
+    },
+    {
+      "scenario": "wake",
+      "size": "132x50",
+      "tier": "256",
+      "file": "wake-132x50-256.json",
+      "sha256": "065af2933b19533cccffa4b06e2c93f1e9f5824d0ba6ec764269ee8edb23f40d",
+      "bytes": 21216,
+      "run": "40913607689",
+      "artifact": "p4-view-semantics-132x50",
+      "artifact_id": 12914697903,
+      "artifact_url": "https://github.com/Thiesi/Blacksite/actions/runs/40913607689/artifacts/12914697903",
+      "committed": false
+    },
+    {
+      "scenario": "place-history",
+      "size": "132x50",
+      "tier": "256",
+      "file": "place-history-132x50-256.txt",
+      "sha256": "d1791403c28a56f17dbd96fff4701ac8c85ae7b555f4a766733d7a8362dee383",
+      "bytes": 7520,
+      "run": "40913607689",
+      "artifact": "p4-view-semantics-132x50",
+      "artifact_id": 12914697903,
+      "artifact_url": "https://github.com/Thiesi/Blacksite/actions/runs/40913607689/artifacts/12914697903",
+      "committed": true
+    },
+    {
+      "scenario": "place-history",
+      "size": "132x50",
+      "tier": "256",
+      "file": "place-history-132x50-256.ans",
+      "sha256": "f3ccfd10a9490347926eb5c1382a5793aacf2987b87247d07bb6c8565b3949e5",
+      "bytes": 84298,
+      "run": "40913607689",
+      "artifact": "p4-view-semantics-132x50",
+      "artifact_id": 12914697903,
+      "artifact_url": "https://github.com/Thiesi/Blacksite/actions/runs/40913607689/artifacts/12914697903",
+      "committed": false
+    },
+    {
+      "scenario": "place-history",
+      "size": "132x50",
+      "tier": "256",
+      "file": "place-history-132x50-256.json",
+      "sha256": "76310d8e380773806362e54ee913c9f202c84dee18d89589d8356fcb2282c4cf",
+      "bytes": 18208,
+      "run": "40913607689",
+      "artifact": "p4-view-semantics-132x50",
+      "artifact_id": 12914697903,
+      "artifact_url": "https://github.com/Thiesi/Blacksite/actions/runs/40913607689/artifacts/12914697903",
+      "committed": false
+    },
+    {
+      "scenario": "lattice",
+      "size": "132x50",
+      "tier": "256",
+      "file": "lattice-132x50-256.txt",
+      "sha256": "23297a5c63a1a936b3308115c23bc0bc6d323cc16f7ebe4ecb2d8dee27b7b469",
+      "bytes": 8291,
+      "run": "40913607689",
+      "artifact": "p4-view-semantics-132x50",
+      "artifact_id": 12914697903,
+      "artifact_url": "https://github.com/Thiesi/Blacksite/actions/runs/40913607689/artifacts/12914697903",
+      "committed": true
+    },
+    {
+      "scenario": "lattice",
+      "size": "132x50",
+      "tier": "256",
+      "file": "lattice-132x50-256.ans",
+      "sha256": "3a452340e31b25000f293f414e46dc69f81fbfbf481c38b5c48be5c45fc62db0",
+      "bytes": 122457,
+      "run": "40913607689",
+      "artifact": "p4-view-semantics-132x50",
+      "artifact_id": 12914697903,
+      "artifact_url": "https://github.com/Thiesi/Blacksite/actions/runs/40913607689/artifacts/12914697903",
+      "committed": false
+    },
+    {
+      "scenario": "lattice",
+      "size": "132x50",
+      "tier": "256",
+      "file": "lattice-132x50-256.json",
+      "sha256": "14fee86bd7466310b7fcce759d3f81ac5f6d19e69110eddbeab6cc5420a235e7",
+      "bytes": 28936,
+      "run": "40913607689",
+      "artifact": "p4-view-semantics-132x50",
+      "artifact_id": 12914697903,
+      "artifact_url": "https://github.com/Thiesi/Blacksite/actions/runs/40913607689/artifacts/12914697903",
+      "committed": false
+    },
+    {
+      "scenario": "wake",
+      "size": "132x50",
+      "tier": "truecolor",
+      "file": "wake-132x50-truecolor.txt",
+      "sha256": "25e4b8a848a443cc1e5cd65b6792f679e354b55d4be42cceb9266fb2f1102d80",
+      "bytes": 7772,
+      "run": "40913607689",
+      "artifact": "p4-view-semantics-132x50",
+      "artifact_id": 12914697903,
+      "artifact_url": "https://github.com/Thiesi/Blacksite/actions/runs/40913607689/artifacts/12914697903",
+      "committed": true
+    },
+    {
+      "scenario": "wake",
+      "size": "132x50",
+      "tier": "truecolor",
+      "file": "wake-132x50-truecolor.ans",
+      "sha256": "4c689f75d2c9c5c2030c29a76480a260312980e5c4d4630b0e05bcf7cda3a693",
+      "bytes": 93288,
+      "run": "40913607689",
+      "artifact": "p4-view-semantics-132x50",
+      "artifact_id": 12914697903,
+      "artifact_url": "https://github.com/Thiesi/Blacksite/actions/runs/40913607689/artifacts/12914697903",
+      "committed": false
+    },
+    {
+      "scenario": "wake",
+      "size": "132x50",
+      "tier": "truecolor",
+      "file": "wake-132x50-truecolor.json",
+      "sha256": "018d0a787dba6ed05650dadb3bc6a52441842a8e064f7f097c95039fbf39bc4f",
+      "bytes": 21442,
+      "run": "40913607689",
+      "artifact": "p4-view-semantics-132x50",
+      "artifact_id": 12914697903,
+      "artifact_url": "https://github.com/Thiesi/Blacksite/actions/runs/40913607689/artifacts/12914697903",
+      "committed": false
+    },
+    {
+      "scenario": "place-history",
+      "size": "132x50",
+      "tier": "truecolor",
+      "file": "place-history-132x50-truecolor.txt",
+      "sha256": "1b9e4cd05ddbe8ef61b3cfca25dcc825fcbef58a6c55331a815944ce33c02f94",
+      "bytes": 7508,
+      "run": "40913607689",
+      "artifact": "p4-view-semantics-132x50",
+      "artifact_id": 12914697903,
+      "artifact_url": "https://github.com/Thiesi/Blacksite/actions/runs/40913607689/artifacts/12914697903",
+      "committed": true
+    },
+    {
+      "scenario": "place-history",
+      "size": "132x50",
+      "tier": "truecolor",
+      "file": "place-history-132x50-truecolor.ans",
+      "sha256": "d7d40e7e407c4497b752ed2d1d2fa0b916db2dd887ded4718e0de38013678218",
+      "bytes": 94377,
+      "run": "40913607689",
+      "artifact": "p4-view-semantics-132x50",
+      "artifact_id": 12914697903,
+      "artifact_url": "https://github.com/Thiesi/Blacksite/actions/runs/40913607689/artifacts/12914697903",
+      "committed": false
+    },
+    {
+      "scenario": "place-history",
+      "size": "132x50",
+      "tier": "truecolor",
+      "file": "place-history-132x50-truecolor.json",
+      "sha256": "57e83431dc766d05edb8ae05d71e3c9c31793fc8931450959c6671823f49baa4",
+      "bytes": 18300,
+      "run": "40913607689",
+      "artifact": "p4-view-semantics-132x50",
+      "artifact_id": 12914697903,
+      "artifact_url": "https://github.com/Thiesi/Blacksite/actions/runs/40913607689/artifacts/12914697903",
+      "committed": false
+    },
+    {
+      "scenario": "lattice",
+      "size": "132x50",
+      "tier": "truecolor",
+      "file": "lattice-132x50-truecolor.txt",
+      "sha256": "475e9f9733e17928e22dd9161f69e732e554c3584e2b6febfce82be2276a188f",
+      "bytes": 8279,
+      "run": "40913607689",
+      "artifact": "p4-view-semantics-132x50",
+      "artifact_id": 12914697903,
+      "artifact_url": "https://github.com/Thiesi/Blacksite/actions/runs/40913607689/artifacts/12914697903",
+      "committed": true
+    },
+    {
+      "scenario": "lattice",
+      "size": "132x50",
+      "tier": "truecolor",
+      "file": "lattice-132x50-truecolor.ans",
+      "sha256": "4d5558f25e6278075f7276f7e65cd415f435ee8e7f2bf80f6c5f7ee698cfb53f",
+      "bytes": 138986,
+      "run": "40913607689",
+      "artifact": "p4-view-semantics-132x50",
+      "artifact_id": 12914697903,
+      "artifact_url": "https://github.com/Thiesi/Blacksite/actions/runs/40913607689/artifacts/12914697903",
+      "committed": false
+    },
+    {
+      "scenario": "lattice",
+      "size": "132x50",
+      "tier": "truecolor",
+      "file": "lattice-132x50-truecolor.json",
+      "sha256": "ad0f1d625c8a501a1a0dbfa9240b00c778cb074cd122988cb454f044b6e94740",
+      "bytes": 29130,
+      "run": "40913607689",
+      "artifact": "p4-view-semantics-132x50",
+      "artifact_id": 12914697903,
+      "artifact_url": "https://github.com/Thiesi/Blacksite/actions/runs/40913607689/artifacts/12914697903",
+      "committed": false
+    }
+  ],
+  "local_execution": "Independent six-case local native run; only its small receipts are committed. Hosted text and raw hashes below describe the hosted run, not local bytes.",
+  "human_approval": false,
+  "committed_payloads": [
+    {
+      "path": ".gitattributes",
+      "bytes": 143,
+      "sha256": "fbd64ce1ef14a1efc78cc14f3b5288ee5821b29301d82855aedb61cefb23eacd"
+    },
+    {
+      "path": "132x50/lattice-132x50-16.txt",
+      "bytes": 8293,
+      "sha256": "9264fab3dc4168d5b2419d4e4156f5eac617e4fa9766b752ccc72a50b46a03ce"
+    },
+    {
+      "path": "132x50/lattice-132x50-256.txt",
+      "bytes": 8291,
+      "sha256": "23297a5c63a1a936b3308115c23bc0bc6d323cc16f7ebe4ecb2d8dee27b7b469"
+    },
+    {
+      "path": "132x50/lattice-132x50-truecolor.txt",
+      "bytes": 8279,
+      "sha256": "475e9f9733e17928e22dd9161f69e732e554c3584e2b6febfce82be2276a188f"
+    },
+    {
+      "path": "132x50/place-history-132x50-16.txt",
+      "bytes": 7522,
+      "sha256": "ca2a566eb44ebcdde8aeb8a3ffd2536444743c4d458d77a14622aae622c4c1ce"
+    },
+    {
+      "path": "132x50/place-history-132x50-256.txt",
+      "bytes": 7520,
+      "sha256": "d1791403c28a56f17dbd96fff4701ac8c85ae7b555f4a766733d7a8362dee383"
+    },
+    {
+      "path": "132x50/place-history-132x50-truecolor.txt",
+      "bytes": 7508,
+      "sha256": "1b9e4cd05ddbe8ef61b3cfca25dcc825fcbef58a6c55331a815944ce33c02f94"
+    },
+    {
+      "path": "132x50/wake-132x50-16.txt",
+      "bytes": 7772,
+      "sha256": "47eabcced40f84596e16fe26eb4b8eec991fe5aa4106d9d23a6a574a28e7bccf"
+    },
+    {
+      "path": "132x50/wake-132x50-256.txt",
+      "bytes": 7772,
+      "sha256": "018287927aecd425f683e88c221cd0c23bb0b9572f9ad048db33c3b75b9747a0"
+    },
+    {
+      "path": "132x50/wake-132x50-truecolor.txt",
+      "bytes": 7772,
+      "sha256": "25e4b8a848a443cc1e5cd65b6792f679e354b55d4be42cceb9266fb2f1102d80"
+    },
+    {
+      "path": "80x24/lattice-80x24-16.txt",
+      "bytes": 2675,
+      "sha256": "fc850446fec9f4cc5152485b18a4936ceac780cc4c70f94892205a3d95fd9687"
+    },
+    {
+      "path": "80x24/lattice-80x24-256.txt",
+      "bytes": 2673,
+      "sha256": "e9733cd7ce8fd7b3a2070987d93e8802847a99ec0fb2e27f7227fbc598e830f6"
+    },
+    {
+      "path": "80x24/lattice-80x24-truecolor.txt",
+      "bytes": 2661,
+      "sha256": "c6838b51dc6dc25f1f692a91d014301ac1ca24817ac205a65a9a2b65f1a48a8e"
+    },
+    {
+      "path": "80x24/place-history-80x24-16.txt",
+      "bytes": 2360,
+      "sha256": "c2b001d81a964800db969a5b0c6d786cda2a356eb9cfb19ed75056b4153b831f"
+    },
+    {
+      "path": "80x24/place-history-80x24-256.txt",
+      "bytes": 2358,
+      "sha256": "732b4e5ffa5996c7ca90e81f1e311053286198fcda9096c2b6b293e43b8d26dc"
+    },
+    {
+      "path": "80x24/place-history-80x24-truecolor.txt",
+      "bytes": 2346,
+      "sha256": "da9f38b681fb94830989d3b1fcf1e72f3e6dbd93dd2a4330dacb7c8b66b7a3bb"
+    },
+    {
+      "path": "80x24/wake-80x24-16.txt",
+      "bytes": 2608,
+      "sha256": "362a196455dd771e2e5e706d2a44f521600a626b15022a5e4d838c74d9482e84"
+    },
+    {
+      "path": "80x24/wake-80x24-256.txt",
+      "bytes": 2608,
+      "sha256": "5c676aff7b88e562cf618c811841f5b94189f2289ee0529cb0a0166332fa60da"
+    },
+    {
+      "path": "80x24/wake-80x24-truecolor.txt",
+      "bytes": 2608,
+      "sha256": "2b2f908fafc4234a60917b463a3979406de9a4b61126aa4cf66b3a5c9e00a62e"
+    },
+    {
+      "path": "focused-review-regression.json",
+      "bytes": 489,
+      "sha256": "e041165b2c525b3ac0f8de916359f1812a13a971247976d80869b74aeaad5ff5"
+    },
+    {
+      "path": "local-node-environment.json",
+      "bytes": 337,
+      "sha256": "53e51b61e51bc4faf2f5191fe35a35d4d90c87e1489e39295996d02377f35a36"
+    },
+    {
+      "path": "local-wheel.json",
+      "bytes": 124,
+      "sha256": "3b4ce374ea2049294aec1edc0df9bf991ac6f3ed482ae86771ca1690eedb6ad0"
+    },
+    {
+      "path": "native-ci-132x50.json",
+      "bytes": 1177,
+      "sha256": "3be66c7365ccc869ffff55c60e28a73eec8558ec5e919cdb9d8740fe47e3c818"
+    },
+    {
+      "path": "native-ci-80x24.json",
+      "bytes": 1171,
+      "sha256": "56f6e7e24330f9c7befe01a2fa0e3b85cd83c34d7f2b7b0bb978fb5ea1c39e31"
+    },
+    {
+      "path": "native-local-client.json",
+      "bytes": 282,
+      "sha256": "7ee47533e749f99d58e189766d19e8a117d742b809ae956bb203ad36785156d5"
+    },
+    {
+      "path": "native-local-result.json",
+      "bytes": 2129,
+      "sha256": "4170e9bc5171331e6f3070361928aa002f5665ff5c45519552faeddd85028255"
+    },
+    {
+      "path": "preservation.json",
+      "bytes": 863,
+      "sha256": "7f57edd90f1d6a496269eb304d45305f2a9b44b3dc0c038cda3ccc16a149308f"
+    },
+    {
+      "path": "pytest.json",
+      "bytes": 687,
+      "sha256": "6959d89e479527a80a77439ea4d308ab2f1944110ec442e0d19055d4b5981a86"
+    },
+    {
+      "path": "README.md",
+      "bytes": 3132,
+      "sha256": "80e39ecc5d828f7197e193e7d6bd74ec9a421d83fd62451eb6793a8babba7340"
+    },
+    {
+      "path": "review-triage.json",
+      "bytes": 913,
+      "sha256": "548b5ec6ff8d73767e8a566f7c2cbd133b67f7c64657c689f14334f5129e3e8f"
+    },
+    {
+      "path": "strict-packet-summary.json",
+      "bytes": 403,
+      "sha256": "aba2fc5196bdab797b35c4ab0b0c17b3bad7cbca59ca0082413edbcb9204740e"
+    }
+  ]
+}

@@ -91,6 +91,36 @@ def test_arch_5_5_4_targeting_reveals_to_target_without_waiting_for_shot(runners
     assert npc.target == client.session.player_id and npc.revealed_to == {client.session.player_id}
 
 
+def test_arch_5_5_4_retaliation_reveals_before_hit_or_miss_log(runners):
+    game, client, observer, _ = runners
+    for who, tile in ((client, (20, 3)), (observer, (20, 4))):
+        place(game, who, 'vatside-clinics', tile)
+    content = game.core.loop.content
+    template = replace(content.npcs['npc-warden-response'], presents='civilian')
+    content.npcs[template.id] = template
+    npc = make_actor(template, 'test:retaliation', {'home': (21, 3)})
+    game.core.world.enter(npc, 'vatside-clinics', (21, 3))
+    game.commit_commerce()
+    caller = actor(game, client)
+    combat = game.core.combat
+    assert combat.legal(caller, npc) and combat.visible(caller, npc)
+    caller.target = npc.id
+    assert combat.target_view(caller)['class'] == 'civilian'
+    client.session.log_ring.clear()
+    observer.session.log_ring.clear()
+    # Use the production hostile_hook: exchange targets the attacker and
+    # records the reveal before shot formats either Hit or Miss.
+    combat.shot(caller, npc, combat.weapon(game.core.characters.players[caller.id])[1])
+    assert npc.target == caller.id and npc.revealed_to == {caller.id}
+    assert combat.target_view(caller)['class'] == 'warden'
+    lines = list(client.session.log_ring)
+    assert any(line['text'] in ('Hit: '+npc.name+'.', 'Miss: '+npc.name+'.') for line in lines)
+    assert not any(npc.name in line['text'] for line in observer.session.log_ring)
+    observer_body = actor(game, observer)
+    observer_body.target = npc.id
+    assert combat.target_view(observer_body)['class'] == 'civilian'
+
+
 def test_arch_5_4_modern_legend_and_no_offscreen_disclosure(runners):
     game, client, _, _ = runners
     content = game.core.loop.content
