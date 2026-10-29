@@ -514,7 +514,7 @@ class Factions:
                 return False
             choice = interaction or self.interaction(session, frame)
             if choice:
-                target = choice.focus.id
+                target = choice.actor_id or choice.value.spec.id
                 self.station(session, target)
                 self.menus[session.id] = FactionMenu(target, 0, tick)
                 return True

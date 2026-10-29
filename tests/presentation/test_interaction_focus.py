@@ -411,3 +411,18 @@ def test_ui_3_unnamed_objects_keep_input_target_without_raw_id() -> None:
     obj = ObjectState(ObjectSpec('raw-internal-object-id', (1, 1), 'door', {}))
     choice = object_interaction(obj, 'use')
     assert choice.value is obj and choice.tile == obj.spec.tile and choice.focus is None
+
+
+def test_arch_5_5_2_unnamed_recruiter_still_opens_selected_board(
+        focus_game: tuple[HeadlessServer, Any]) -> None:
+    game, caller = focus_game
+    zone = game.core.world.zones['vatside-wake-hall']
+    board = next(obj for obj in zone.objects.values() if obj.spec.params.get('recruiters'))
+    board.spec = replace(board.spec, params={k: v for k, v in board.spec.params.items() if k != 'name'})
+    # Input fixture, not movement acceptance: the board's own tile wins.
+    place(game, caller, zone.id, board.spec.tile)
+    game.commit_commerce()
+    choice = game.core.resolve_interaction(caller.session, E)
+    assert choice.route.name == 'factions' and choice.choice.focus is None
+    dispatch(game, caller)
+    assert game.core.factions.menus[caller.session.id].target == board.spec.id
