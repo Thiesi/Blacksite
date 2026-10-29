@@ -4,8 +4,10 @@ on:
   pull_request:
     paths:
       - 'scripts/build_city_content.py'
-      - 'src/blacksite/content/**'
-      - 'tests/content/test_commissioned_city.py'
+      - 'src/blacksite/**'
+      - 'tests/**'
+      - 'docs/world/01-gazetteer.md'
+      - 'pyproject.toml'
       - '.github/workflows/s25b-authoring.yml'
   workflow_dispatch:
 

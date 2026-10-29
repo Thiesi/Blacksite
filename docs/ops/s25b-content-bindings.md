@@ -54,8 +54,15 @@ and register. The corrected Shaft Foot console is at its southern
 gazetteer site, away from the old incidental telemetry adjacency.
 
 TR-9 sends the complete first arrival paragraph through the existing
-cell-width-safe log and local scrollback. It changes no interaction
-dispatch or renderer. The fake-terminal checks cover 80x24 and 132x50;
+cell-width-safe log and local scrollback. This is a player-visible change
+in every shipped zone, independent of the held city proposal. Like any
+zone log line, it uses one of the 500 retained entries and may occupy one
+of the 50 reconnect replay slots. The client deduplicates replay by ID.
+Discovery emits the first paragraph as the arrival summary; later
+paragraphs remain in the asset and are not emitted by discovery. The
+previous toast emitted only its first line. This is the explicit S25b
+TR-9 change, not an interaction-dispatch or renderer change.
+The fake-terminal checks cover 80x24 and 132x50;
 native receipts and hosted checks must be reported separately.
 TR-8 measures the hub validator's CPU time inside the three-second
 startup envelope, excluding shared-runner scheduling pauses. The full
