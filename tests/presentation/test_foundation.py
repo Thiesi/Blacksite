@@ -84,7 +84,7 @@ def test_walking_deadlines_include_render_cost_and_every_key_moves(
     monkeypatch.setattr(budget, 'time', SimpleNamespace(monotonic=lambda: clock.now, sleep=sleep,
         process_time_ns=time.process_time_ns, perf_counter_ns=time.perf_counter_ns))
     draw = budget.Caller.draw
-    def costly_draw(caller: budget.Caller, now: float):
+    def costly_draw(caller: budget.Caller, now: float) -> dict[str, object] | None:
         frame = draw(caller, now)
         clock.now += .03  # Simulated render cost must not reduce the five-Hz walk.
         return frame

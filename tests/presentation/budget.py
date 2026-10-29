@@ -30,6 +30,12 @@ def stats(values: list[float | int]) -> dict[str, float | int | None]:
         'max': max(values) if values else None}
 
 
+def view_counts(body: dict[str, Any]) -> dict[str, Any]:
+    tiles = [tile for row in body.get('tiles', []) for tile in row]
+    return {'viewport': body.get('viewport'), 'visible_cells': sum(tile >= 0 for tile in tiles),
+            'remembered_cells': tiles.count(-2), 'unknown_cells': tiles.count(-1)}
+
+
 class Meter:
     def __init__(self) -> None:
         self.cpu_ns = 0
@@ -128,6 +134,7 @@ def frames(content: ContentTree, width: int, height: int, tier: str) -> dict[str
 def activity(content: ContentTree, width: int, height: int, tier: str, what: str, seconds: float) -> dict[str, Any]:
     zone = 'sodium-row' if what == 'walking where there is no scene' else 'sodium-tin-halo'
     caller = Caller(content, width, height, tier, zone)
+    initial_view = view_counts(caller.display.body)
     if what == 'menus, text and help':
         caller.key('?', 1.0)
     keys = KEYS.get(what, [])
@@ -155,6 +162,7 @@ def activity(content: ContentTree, width: int, height: int, tier: str, what: str
         raise AssertionError(f'walking activity must execute every step: {what}; '
                              f'{caller.moves} moves / {index} keys')
     return {'zone': zone, 'view': 'shipped map or local help', 'elapsed_s': elapsed,
+        'initial_view': initial_view, 'final_view': view_counts(caller.display.body),
         'ticks': ticks, 'key_steps': index, 'successful_moves': caller.moves,
         'successful_moves_per_minute': caller.moves/elapsed*60,
         'route': 'closed eight-tile horizontal walk' if keys else 'V1 provisional standing/help',

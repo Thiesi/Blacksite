@@ -33,13 +33,34 @@ def result(cpu_ns: int, wall_ns: int, calls: dict[str, int], moves: int,
         'calls': dict(calls), 'output_frames': outputs}
 
 
-def p1(runtime: Path, seconds: float) -> dict[str, Any]:
+def view_counts(display: Any) -> dict[str, Any]:
+    tiles = [tile for row in display.body.get('tiles', []) for tile in row]
+    return {'viewport': display.body.get('viewport'), 'visible_cells': sum(t >= 0 for t in tiles),
+        'remembered_cells': tiles.count(-2), 'unknown_cells': tiles.count(-1)}
+
+
+def p1(runtime: Path, seconds: float, charted: bool = False) -> dict[str, Any]:
     os.environ.pop('BLACKSITE_PRESENTATION_TRIAL', None)
+    if charted:
+        os.environ['BLACKSITE_PRESENTATION_TRIAL'] = '1'
     sys.path[:0] = [str(runtime/'src'), str(ROOT), str(runtime)]
     from blacksite.content.loader import load_content
     from tests.presentation import budget
 
     meters = []
+    callers = []
+
+    class ProbedCaller(budget.Caller):
+        def __init__(self, *args: Any, **kwargs: Any) -> None:
+            super().__init__(*args, **kwargs)
+            if charted:
+                self.display.present = False
+                self.display.dirty = self.display.force_full = True
+                self.display.previous = None
+                self.draw(0)
+                self.meter = budget.Meter()  # Switch-control warm-up is excluded.
+            self.initial_view_counts = view_counts(self.display)
+            callers.append(self)
 
     class DualMeter(budget.Meter):
         def __init__(self) -> None:
@@ -63,6 +84,7 @@ def p1(runtime: Path, seconds: float) -> dict[str, Any]:
                 self.method_cpu_ns[name] += self.cpu_ns - cpu_before
 
     budget.Meter = DualMeter
+    budget.Caller = ProbedCaller
     measured = budget.activity(load_content(runtime/'src/blacksite/content'),
                               132, 50, 'truecolor', ACTIVITY, seconds)
     meter = meters[-1]  # The constructor resets the meter after warm-up.
@@ -72,7 +94,9 @@ def p1(runtime: Path, seconds: float) -> dict[str, Any]:
         'method_cpu_s_per_minute': {k: v/1e9/elapsed*60 for k,v in meter.method_cpu_ns.items()},
         'method_wall_s_per_minute_by_method': {k: v/1e9/elapsed*60 for k,v in meter.method_wall_ns.items()},
         'key_steps': measured['key_steps'], 'activity_result': measured,
-        'renderer': 'shipped', 'trial': False}
+        'initial_view': callers[-1].initial_view_counts,
+        'final_view': view_counts(callers[-1].display),
+        'renderer': 'shipped', 'trial': charted}
 
 
 def v1(runtime: Path, seconds: float, shipped: bool) -> dict[str, Any]:
@@ -91,6 +115,8 @@ def v1(runtime: Path, seconds: float, shipped: bool) -> dict[str, Any]:
             self.calls: Counter[str] = Counter()
             self.method_cpu_ns: Counter[str] = Counter()
             self.method_wall_ns: Counter[str] = Counter()
+            self.caller = caller
+            self.initial_view = view_counts(caller.display)
             if shipped:
                 caller.display.present = False  # Control only; no source edit.
             step = caller.game.step
@@ -135,6 +161,7 @@ def v1(runtime: Path, seconds: float, shipped: bool) -> dict[str, Any]:
         'method_cpu_s_per_minute': {k: v/1e9/elapsed*60 for k,v in probe.method_cpu_ns.items()},
         'method_wall_s_per_minute_by_method': {k: v/1e9/elapsed*60 for k,v in probe.method_wall_ns.items()},
         'original_v1_wall_s_per_minute': original,
+        'initial_view': probe.initial_view, 'final_view': view_counts(probe.caller.display),
         'renderer': 'shipped' if shipped else 'V1 proposal map', 'trial': True}
 
 
@@ -143,7 +170,7 @@ def main() -> None:
     parser.add_argument('--v1-root', type=Path, required=True)
     parser.add_argument('--output', type=Path)
     parser.add_argument('--seconds', type=float, default=12.0)
-    parser.add_argument('--case', choices=('p1-v1-runtime', 'v1', 'v1-shipped', 'p1-current'),
+    parser.add_argument('--case', choices=('p1-v1-runtime', 'v1', 'v1-shipped', 'p1-v1-charted', 'p1-current'),
                         help=argparse.SUPPRESS)
     args = parser.parse_args()
     runtime = args.v1_root.resolve()
@@ -151,13 +178,14 @@ def main() -> None:
     if not source.is_file() or not 0 < args.seconds <= 600:
         parser.error('requires a V1 checkout and 0 < seconds <= 600')
     if args.case:
-        measured = p1(ROOT if args.case == 'p1-current' else runtime, args.seconds) if args.case.startswith('p1-') else v1(runtime, args.seconds, args.case == 'v1-shipped')
+        measured = p1(ROOT if args.case == 'p1-current' else runtime, args.seconds,
+                      args.case == 'p1-v1-charted') if args.case.startswith('p1-') else v1(runtime, args.seconds, args.case == 'v1-shipped')
         print(json.dumps({'case': args.case, **measured}), flush=True)
         return
     if args.output is None:
         parser.error('--output is required')
     rows = []
-    for case in ('p1-v1-runtime', 'v1', 'v1-shipped', 'p1-current'):
+    for case in ('p1-v1-runtime', 'v1', 'v1-shipped', 'p1-v1-charted', 'p1-current'):
         command = [sys.executable, str(Path(__file__).resolve()), '--v1-root', str(runtime),
                    '--seconds', str(args.seconds), '--case', case]
         run = subprocess.run(command, capture_output=True, text=True, encoding='utf-8',
@@ -171,7 +199,7 @@ def main() -> None:
         'p1_head': subprocess.check_output(['git', 'rev-parse', 'HEAD'], cwd=ROOT, text=True).strip(),
         'v1_revision': V1_REVISION, 'v1_script_sha256': sha256(source.read_bytes()).hexdigest(),
         'activity': ACTIVITY, 'size': [132, 50], 'tier': 'truecolor', 'sample_seconds': args.seconds,
-        'policy': 'first three cases use the identical pinned V1 runtime; P1-current isolates revision differences; V1 source is unedited; wall and process CPU are separate; Windows CPU remains diagnostic',
+        'policy': 'first four cases use the identical pinned V1 runtime; P1-v1-charted enables trial charting but retains the shipped renderer; P1-current isolates revision differences; V1 source is unedited; wall and process CPU are separate; Windows CPU remains diagnostic',
         'cases': rows}
     args.output.parent.mkdir(parents=True, exist_ok=True)
     args.output.write_text(json.dumps(report, indent=2)+'\n', encoding='utf-8')
