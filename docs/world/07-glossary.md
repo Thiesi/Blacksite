@@ -45,6 +45,8 @@ never lost to death. (design §8.1)
 
 **Bark** — an idle line spoken to the zone log. (personae)
 
+**Bath detox** — The Long Baths' slower, cheaper drug detox: 250 chits, 20 minutes. (design §8.6)
+
 **The beacon line** — the Ferrymen's lit route through Beacon Ring. (gazetteer)
 
 **Black clinic** — A Sink surgery that installs implants at 60 % of list
@@ -63,6 +65,12 @@ opens when the Depth meter fills. (design §13)
 sealed installation under the Spire. Also the game. (bible §3.3, §4.6)
 
 **Block Street** — the Terraces' main street. (gazetteer)
+
+**Boiler Governor** — The Lamp Compact's heat core in the Boilerhouse; controls the steam vents and street steam. (Lattice)
+
+**Boiler Relay** — Warmwater relay in the Boilerhouse; holders' shock clears faster within Warmwater. (design §7.7)
+
+**Boilerhouse, the** — Warmwater's heat exchangers, where the warm-water main goes down, sealed. (gazetteer)
 
 **Bounty** — Chits posted on a player's name on the market board;
 collected by whoever kills them outside a safe zone. Refused below
@@ -145,11 +153,15 @@ minutes in contested and open zones. (design §5.4)
 **Cortex** — Attribute for Lattice speed, program strength, trace
 resistance and crafting. (design §3.1)
 
+**Courts, the** — Warmwater's four courtyards of houses. (gazetteer)
+
 **Cover** — A tile value 0 to 3 that reduces to-hit for a target adjacent
 to it. (design §5.3)
 
 **Crew** — A party of two to five players with shared chat, list, beacon
 and loot rules. (design §10)
+
+**Culvert, the** — Warmwater sector's hidden descent cell, along the warm-water main. (Lattice)
 
 **Curfew** — World event: the Wardens restrict inbound Core gates for an
 hour; outward travel remains open. (bible §10, design §12)
@@ -195,6 +207,8 @@ possibly a Custodian fragment. (bible §8.2)
 **Dissonance** — Cantor nerve-jam attacks, and the damage type they deal.
 (design §3.2, §5.3)
 
+**Doors, the** — The Lamp Compact's enforcers. They carry no guns inside the quarter. (factions)
+
 **Dorn** — a Kestrel ration clerk of the Long Quiet, Depot 4. (found texts)
 
 **Down** — Health 0: five seconds during which a crew member can pick you
@@ -222,7 +236,7 @@ with warm air, old data and things from below. (bible §3.5, §10)
 **Fabrication** — Turning salvage plus a schematic into an item at a
 workshop; also the Cortex skill line for it. (design §8.4)
 
-**Faction** — One of eight joinable powers, or Freelance. (bible §7,
+**Faction** — One of nine joinable powers, or Freelance. (bible §7,
 design §7)
 
 **Fade** — The XP lost on death: 2 % of progress to the next grade.
@@ -242,6 +256,8 @@ edge, opened in Season 3. (story arcs)
 
 **Ferrymen, the** — Scour salvage clans led by the Ferry; hold the outer
 relays and the roads. (bible §3.3, §7)
+
+**First Lamp** — Title of the Lamp Compact's elected head. (factions)
 
 **fragment** — the text residue of a runner who died in the Silt. (lattice)
 
@@ -331,6 +347,22 @@ rations, wall gates and Scour convoys. (bible §3.1, §7)
 
 **Kin** — Ferrymen +90 rank. (factions)
 
+**Lamarre, Remy** — Lamp Compact recruiter at the Wake Hall desk. (factions)
+
+**Lamp Board** — The board at the top of Lamp Street showing which houses are open; also its tier 2 core. (gazetteer; Lattice)
+
+**Lamp Compact** — Warmwater's licensed guild of houses and baths, the ninth joinable faction. One rule: nobody here belongs to anybody. (bible §7; factions)
+
+**Lamp line** — The tram line from the Central Tram Hub to Lamp Street. (gazetteer)
+
+**Lamp Relay** — Warmwater relay on Lamp Street; holders' bath detox and rooms cost less. (design §7.7)
+
+**Lamp Street** — Warmwater's main street. (gazetteer)
+
+**Lamp Strike** — Year 26: nine nights with every lamp in Warmwater out, which ended Sable's tithe. (bible §3.4)
+
+**Lamp Walk, the** — The street from Meridian Plaza round the Spire to Lamp Street. (gazetteer)
+
 **The Lamplighter** — the Undercity's lamp-keeper; nobody knows who pays him. (personae)
 
 **The Landing** — the Ferrymen's camp. (gazetteer)
@@ -355,6 +387,8 @@ the patch frame on the night of the Severance. (found texts)
 hearing the Tenant. (design §3.3)
 
 **The Listening Gallery** — Blacksite Level 3: nine chairs around a column. (story arcs)
+
+**Long Baths, the** — The shift baths of Site Zero's crews, now the Lamp Compact's hall and a safe pocket. (gazetteer)
 
 **Long Quiet, the** — Years 1 to 20 after the Severance, when the wall
 went up and the factions formed. (bible §3.3)
@@ -429,6 +463,8 @@ contracts, trade, and the crew beacon. (bible §8.1)
 **The Outworks Door** — Blacksite Level 1: the door in the concrete that is
 not on the pour plan. (story arcs)
 
+**Oyelaran, Tobiah** — The Bathmaster: keeps the Compact's boilers and baths. (factions)
+
 **the patch frame** — the physical cross-connect where the long-haul links
 were cut; padlocked, key in the director's office. (found texts)
 
@@ -449,6 +485,8 @@ loader, key, stealth or utility. (design §6.3)
 
 **Quell, Mother Serafine** — Hierophant of the Ninefold Choir. (bible
 §8.2)
+
+**Quiet Book, the** — The Lamp Compact's record of what people owe it for not writing things down; also its tier 4 core. (factions; Lattice)
 
 **Quiet, the** — The self-propagating fault that partitioned the global
 net on the day of the Severance. (bible §3.2)
@@ -501,6 +539,8 @@ salvage economy's source. (bible §3.2, §10, design §12)
 
 **Room** — A node inside a core; holds data, controls or ICE. (design §6.2)
 
+**Room by the hour** — A paid fade-out scene in Warmwater with no mechanical effect. (design §5.6)
+
 **The Routing Authority** — Season 2; the Dispatcher's provenance. (story arcs)
 
 **Routing authority instance zero / one** — routing labels in disputed
@@ -545,6 +585,8 @@ design §13)
 
 **Secured slot** — An inventory slot that never drops on death; three by
 default. (design §5.4)
+
+**Senn, Auda** — First Lamp, head of the Lamp Compact. (bible §8.2; factions)
 
 **Severance, the** — Year 0: the orbital network collided with itself and
 the global net partitioned in the same hour. (bible §3.2)
@@ -591,6 +633,8 @@ under corporate law. (bible §4.1)
 
 **Standing** — A character's −100 to +100 reputation with each faction.
 (design §7.1)
+
+**Steam Stair, the** — The street from Tramyard Market up to Lamp Street. (gazetteer)
 
 **Story contract** — a hand-written, chained contract that delivers a
 narrative beat, using ordinary contract types. (story arcs)
@@ -660,6 +704,8 @@ unexplained behaviour. (story arcs)
 **Vantongeren, Dr. Ilse** — Sablier's director of the Wake program; the
 first face every player sees. (bible §8.2)
 
+**Varga, Nell** — Keeper of the Quiet Book. (factions)
+
 **Vasko, Orin** — the Unmoored's best living runner. (factions)
 
 **Vat** — A Sablier clone tank; where the dead wake. (design §5.4)
@@ -671,6 +717,8 @@ first face every player sees. (bible §8.2)
 
 **Vitals** — Attribute for health, shock, implant and drug tolerance.
 (design §3.1)
+
+**Voss, Hanne** — Head of the Doors. (factions)
 
 **Wake** — A freshly decanted, memory-wiped clone leased by Sablier; every
 player character. Also the tutorial. (bible §3.5, §8.1, design §4)
@@ -686,6 +734,8 @@ their eyes. (bible §4.3, design §4)
 
 **Wardens, the** — The Civic Authority's police, and the faction. (bible
 §7)
+
+**Warmwater** — The pleasure quarter in the north-east, the Lamp Compact's district. (bible §4.3)
 
 **Workshop** — where schematics and salvage become items. (catalog)
 
