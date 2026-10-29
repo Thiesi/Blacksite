@@ -37,9 +37,11 @@ class FakeClient:
 
 class HeadlessServer:
     def __init__(self, content: ContentTree | None = None, spawn_zone: str | None = None,
-                 character_state: dict[str, Any] | None = None, clock: ManualClock | None = None) -> None:
+                 character_state: dict[str, Any] | None = None, clock: ManualClock | None = None,
+                 zone_seeds: dict[str, int] | None = None) -> None:
         self.clock = clock or ManualClock()
-        world = World(content, {zone: index for index, zone in enumerate(sorted(content.zones))}) if content and (spawn_zone or character_state is not None) else None
+        world = World(content, zone_seeds if zone_seeds is not None else
+                      {zone: index for index, zone in enumerate(sorted(content.zones))}) if content and (spawn_zone or character_state is not None) else None
         self.core = Core(self.clock, "test-origin", Authenticator(DOOR_SECRET, ADMIN_SECRET),
                          asdict(content.keymaps) if content and content.keymaps else {},
                          asdict(content.palette) if content and content.palette else {},

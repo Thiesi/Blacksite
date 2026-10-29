@@ -15,7 +15,7 @@ from blacksite.server.wake import Wake
 
 @pytest.mark.parametrize("width,height",[(80,24),(132,50)])
 @pytest.mark.parametrize("tier",["16","256","truecolor"])
-def test_wake_golden_wide_name_scroll_and_character_sheet(info: DoorInfo,repo_root: Path,width: int,height: int,tier: str) -> None:
+def test_wake_golden_wide_name_scroll_and_character_sheet(info: DoorInfo,repo_root: Path,width: int,height: int,tier: str,golden) -> None:
     game=HeadlessServer(load_content(repo_root/"src/blacksite/content"),character_state={})
     client=game.connect(width=width,height=height)
     model=Display(replace(info,width=width,height=height,color_depth=tier))
@@ -23,8 +23,7 @@ def test_wake_golden_wide_name_scroll_and_character_sheet(info: DoorInfo,repo_ro
     game.step()
     for frame in game.frames_for(client):model.receive(frame,0)
     terminal.write(model.render(0)[0])
-    actual="\n".join(row.rstrip() for row in terminal.screen_text().splitlines())+"\n"
-    assert actual==(repo_root/f"tests/door/golden/wake_archetype_{width}x{height}.txt").read_text(encoding="utf-8")
+    golden(f'wake_archetype_{width}x{height}', terminal, tier, trim=True)
     assert model.key("down",1)[0].data["name"]=="menu_cursor"
     create(game,client)
     for frame in game.frames_for(client):model.receive(frame,2)

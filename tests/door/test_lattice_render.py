@@ -51,7 +51,7 @@ def draw(info, content, body, width, height, tier):
 
 @pytest.mark.parametrize("size", [(80, 24), (132, 50)])
 @pytest.mark.parametrize("tier", ["16", "256", "truecolor"])
-def test_design_ui_3_all_eleven_layouts_no_overlap_and_wide_peer(info, sector_views, size, tier):
+def test_design_ui_3_all_eleven_layouts_no_overlap_and_wide_peer(info, sector_views, size, tier, golden):
     content, views = sector_views
     width, height = size
     for body in views.values():
@@ -70,9 +70,7 @@ def test_design_ui_3_all_eleven_layouts_no_overlap_and_wide_peer(info, sector_vi
             positions.update(occupied)
             assert terminal.cell(x, y) in ("(", "[")
             assert terminal.cell(x+3, y) in (")", "]")
-        if tier == "256":
-            expected = Path(__file__).with_name("golden")/f"lattice_{body['sector']}_{width}x{height}.txt"
-            assert terminal.screen_text()+"\n" == expected.read_text(encoding="utf-8")
+        golden(f"lattice_{body['sector']}_{width}x{height}", terminal, tier)
 
 
 def test_body_hits_and_escape_are_visible_while_jacked(info, sector_views):

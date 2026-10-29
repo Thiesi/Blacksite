@@ -4,12 +4,17 @@ import codecs
 import re
 import unicodedata
 
+from tests.ansi_style import Rendition
+
 
 class FakeTerminal:
     def __init__(self, width: int = 80, height: int = 24) -> None:
         self.width, self.height = width, height
         self.grid = [[" " for _ in range(width)] for _ in range(height)]
         self.styles: dict[tuple[int, int], str] = {}
+        self.renditions: dict[tuple[int, int], Rendition] = {}
+        self.rendition = Rendition()
+        self.frames: list[bytes] = []
         self.x = self.y = 0
         self.pending = ""
         self.decoder = codecs.getincrementaldecoder("utf-8")()
@@ -18,6 +23,7 @@ class FakeTerminal:
         self.cursor_visible = True
 
     def write(self, data: bytes) -> None:
+        self.frames.append(data)
         self.written.extend(data)
         self.pending += self.decoder.decode(data)
         while self.pending:
@@ -35,8 +41,10 @@ class FakeTerminal:
                     self.x = (parts[1] if len(parts) > 1 else 1) - 1
                 elif final == "m":
                     self.style = args
+                    self.rendition = self.rendition.apply(args)
                 elif final == "J" and args == "2":
                     self.grid = [[" " for _ in range(self.width)] for _ in range(self.height)]
+                    self.renditions = {(x, y): self.rendition for y in range(self.height) for x in range(self.width)}
                 elif final in ("h", "l") and args == "?25":
                     self.cursor_visible = final == "h"
                 elif final not in ("h", "l"):
@@ -67,8 +75,10 @@ class FakeTerminal:
             assert not (self.y == self.height - 1 and self.x + size == self.width), "bottom-right cell written"
             self.grid[self.y][self.x] = ch
             self.styles[(self.x, self.y)] = self.style
+            self.renditions[self.x, self.y] = self.rendition
             if size == 2:
                 self.grid[self.y][self.x + 1] = ""
+                self.renditions[self.x+1, self.y] = self.rendition
             self.x += size
 
     def cell(self, x: int, y: int) -> str:

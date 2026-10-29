@@ -46,9 +46,9 @@ def views():
 
 
 @pytest.mark.parametrize('size', [(80, 24), (132, 50)])
-@pytest.mark.parametrize('tier', ['16', '256'])
+@pytest.mark.parametrize('tier', ['16', '256', 'truecolor'])
 @pytest.mark.parametrize('scene', ['core', 'silt'])
-def test_ui_3_encounter_warnings_costs_and_escape_remain_visible(info, views, size, tier, scene):
+def test_ui_3_encounter_warnings_costs_and_escape_remain_visible(info, views, size, tier, scene, golden):
     content, bodies = views
     body = bodies[scene]
     display, terminal = draw(info, content, body, *size, tier)
@@ -76,9 +76,7 @@ def test_ui_3_encounter_warnings_costs_and_escape_remain_visible(info, views, si
         assert not marker & occupied
         occupied |= marker
         assert terminal.cell(x, y) == '(' and terminal.cell(x+3, y) == ')'
-    if tier == '256':
-        path = Path(__file__).with_name('golden')/f'encounter_{scene}_{size[0]}x{size[1]}.txt'
-        assert text+'\n' == path.read_text(encoding='utf-8')
+    golden(f'encounter_{scene}_{size[0]}x{size[1]}', terminal, tier)
 
 
 @pytest.mark.parametrize('size', [(80, 24), (132, 50)])
