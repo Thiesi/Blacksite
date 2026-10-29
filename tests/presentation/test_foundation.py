@@ -4,6 +4,8 @@ from copy import deepcopy
 from dataclasses import replace
 import json
 from pathlib import Path
+import time
+from types import SimpleNamespace
 
 import pytest
 
@@ -58,6 +60,51 @@ def test_rule_regression_changes_fingerprint_without_palette_change(content: Con
     changed.tiles['floor'] = replace(changed.tiles['floor'], cover=1)
     assert changed.palette == content.palette
     assert fingerprint(changed)['sha256'] != fingerprint(content)['sha256']
+
+
+def test_object_rule_parameters_change_fingerprint_but_display_name_does_not(content: ContentTree) -> None:
+    original = fingerprint(content)
+    changed = deepcopy(content)
+    terminal = next(obj for zone in changed.zones.values() for obj in zone.meta.objects
+                    if obj.kind == 'terminal' and 'sector' in obj.params)
+    terminal.params['name'] = 'A different inspection label'
+    assert fingerprint(changed) == original
+    terminal.params['sector'] = next(s for s in content.sectors if s != terminal.params['sector'])
+    assert fingerprint(changed)['sha256'] != original['sha256']
+
+
+@pytest.mark.parametrize('what', ['walking in a scene place', 'walking where there is no scene'])
+def test_walking_deadlines_include_render_cost_and_every_key_moves(
+        content: ContentTree, monkeypatch: pytest.MonkeyPatch, what: str) -> None:
+    from tests.presentation import budget
+    clock = SimpleNamespace(now=0.0)
+    def sleep(seconds: float) -> None:
+        assert seconds >= 0
+        clock.now += seconds
+    monkeypatch.setattr(budget, 'time', SimpleNamespace(monotonic=lambda: clock.now, sleep=sleep,
+        process_time_ns=time.process_time_ns, perf_counter_ns=time.perf_counter_ns))
+    draw = budget.Caller.draw
+    def costly_draw(caller: budget.Caller, now: float):
+        frame = draw(caller, now)
+        clock.now += .03  # Simulated render cost must not reduce the five-Hz walk.
+        return frame
+    monkeypatch.setattr(budget.Caller, 'draw', costly_draw)
+    measured = budget.activity(content, 132, 50, 'truecolor', what, 12)
+    assert 59 <= measured['key_steps'] <= 60
+    assert measured['successful_moves'] == measured['key_steps']
+    assert 290 <= measured['successful_moves_per_minute'] <= 300
+
+
+def test_blocked_walking_route_is_rejected(content: ContentTree, monkeypatch: pytest.MonkeyPatch) -> None:
+    from tests.presentation import budget
+    clock = SimpleNamespace(now=0.0)
+    def sleep(seconds: float) -> None:
+        clock.now += seconds
+    monkeypatch.setattr(budget, 'time', SimpleNamespace(monotonic=lambda: clock.now, sleep=sleep,
+        process_time_ns=time.process_time_ns, perf_counter_ns=time.perf_counter_ns))
+    monkeypatch.setitem(budget.KEYS, 'walking in a scene place', ['up'])
+    with pytest.raises(AssertionError, match='must execute every step'):
+        budget.activity(content, 132, 50, 'truecolor', 'walking in a scene place', 3)
 
 
 def test_zone_seeds_ignore_catalog_order_and_walk_is_viewport_independent(content: ContentTree) -> None:

@@ -40,6 +40,7 @@ def main() -> None:
         'dirty': bool(subprocess.check_output(['git', 'status', '--porcelain'], cwd=ROOT)),
         'platform': platform.platform(), 'processor': platform.processor(), 'python': sys.version,
         'mechanics_sha256': fingerprint(content)['sha256'], 'mix': 'v1-provisional', 'minutes': MIX,
+        'workload': 'p1-closed-walk-v2', 'tick_hz': 10, 'walking_key_hz': 5,
         'sample_seconds': args.seconds, 'reference_duration': args.seconds == 12.0,
         'cpu_budget_reference': cpu_budget_reference,
         'cpu_clock_policy': 'process_time_ns per method; Windows scheduler-tick quantization makes '
@@ -47,7 +48,8 @@ def main() -> None:
         'npc_policy': 'shipped spawners retained; 30 warm-up ticks after placement; zone-ID seeds',
         'cpu_boundary': 'process CPU around Display.receive/key/update/render; server, harness, protocol codecs, '
             'socket/stdin pumps and terminal replay excluded; warm-up excluded; no background painter in shipped door',
-        'comparison': 'V1 weights, starts, keys and real-time schedule; shipped content only, '
+        'comparison': 'V1 weights and starts; closed walking routes with every key executed, '
+            'absolute 10-Hz tick / 5-Hz key deadlines; shipped content only, '
             'shipped NPCs, no trial overlay; both walking categories use shipped map; '
             'V1 measured wall duration of method calls, P1 records actual process CPU',
         'targets': {'render_p95_ms': 100, 'delta_bytes': 16384, 'cpu_s_per_hour': 120},

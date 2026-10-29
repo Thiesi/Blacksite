@@ -31,7 +31,9 @@ cells retain a style. The glyph-tier axis currently accepts only
 `tests/presentation/mechanics.json` contains a world-coordinate projection
 and a scripted walk, hashed together. It includes tile rules, every
 zone's tile IDs and initial passability/opacity overrides, exits, object
-tiles, layouts, pockets, sight and sector topology and rule fields. The
+tiles, object parameters, layouts, pockets, sight and sector topology and
+rule fields. Only object `params.name` (inspection copy) is excluded;
+unknown future parameter keys remain in the projection. The
 walk records position, health, stamina, shock, stance, cooldowns, sight,
 cover and hazard. Seeds derive from the zone ID, not catalog order.
 Spawners are removed from a deep-copied test fixture; shipped content is
@@ -77,7 +79,9 @@ caller cells are excluded. Unprovenanced Unicode remains checked.
 PR #89 fixes the authored Lattice U+2506 for #86. P1 rebases onto that
 merged fix and regenerates 60 Lattice style snapshots (20 scenarios at
 three colour tiers). Only their glyph rows change from U+2506 to `:`;
-styles and the mechanics fingerprint are unchanged. The strict packet
+styles are unchanged. The #86 fix leaves mechanics unchanged; P1's
+technical-review follow-up separately expands fingerprint coverage to
+object parameters without changing world data or the scripted walk. The strict packet
 passes all 99 combinations. P1 makes no replacement choice or rendering
 change. Omitting `--strict-cp437` collects evidence but does not turn
 reported failures into a passing gate.
@@ -92,14 +96,22 @@ The default records both sizes and all three colour tiers, measuring
 four activities for 12 real seconds each. It uses `v1-provisional`:
 10 minutes walking in a scene place, 20 walking where there is no scene,
 15 standing and 15 in menus/text/help (sampled as local help). The weights,
-starts, keys and schedule follow the V1 harness on #80. Both walking
+starts follow the V1 harness on #80. Both walking
 categories use the shipped map renderer. No trial overlay is loaded.
 Shipped NPC spawners remain enabled, with 30 warm-up ticks after placing
 the caller, as in V1. Only the mechanics fingerprint isolates NPCs.
 These differences are recorded in the report; this is
 a reproducible shipped-content baseline, not a repeat of trial V1 play.
-The standing sample is shorter than its 20-second step interval, as in
-V1. `--seconds` allows a smoke run; only 12 seconds is the reference.
+The `p1-closed-walk-v2` workload uses closed eight-tile horizontal walks
+in both zones. Its absolute ten-Hz tick deadlines include processing
+time; walking keys arrive every two ticks (five Hz). Every key must
+produce a move, including the last sampled key. Reports include actual
+moves per minute, key steps, render calls and nonempty output frames.
+This corrects the earlier scene route, which hit walls, and relative
+sleep scheduling, which added processing time to every tick. The session
+weights are unchanged. The standing sample is shorter than its
+20-second step interval, as in V1. `--seconds` allows a smoke run; only
+12 seconds is the reference.
 
 CPU measures `process_time_ns` around `Display.receive`, `key`, `update`
 and `render`. This matches V1's method boundary, but records actual process
@@ -116,8 +128,8 @@ remain diagnostic until their CPU clock is validated.
 The deterministic frame route records actual full/delta byte counts,
 render wall time and update/render CPU, including each raw sample and
 p50/p95/max. It rejects a run without movement or either output class.
-Walking activity samples reject zero successful moves, including samples
-too short to observe the input. Standing and help intentionally retain
+Walking activity samples reject any unsuccessful step and samples too
+short to observe an input. Standing and help intentionally retain
 V1's published 12-second sample and 20-second step interval; their idle
 sampling limitation is part of that provisional workload, not a measured
 real-play hour. P1 does not silently change the technical lead's mix.
@@ -166,5 +178,8 @@ Other door code (transport, raw input, startup and drop-file parsing) and
 structured text data retain the full matrix even in drafts.
 The ready-for-review transition explicitly runs the full matrix. P1's
 own workflow/tools changes use the full matrix. No label skips checks.
+`model.py` also emits protocol intents: a draft subset pass does not
+cover their integration with every gameplay system. That coverage comes
+from the required full matrix on the ready-for-review head.
 
 [cp437]: https://github.com/Thiesi/Blacksite/issues/76#issuecomment-6485149621

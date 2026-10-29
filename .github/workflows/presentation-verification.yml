@@ -9,6 +9,11 @@ on:
       - '.github/workflows/presentation-verification.yml'
       - 'pyproject.toml'
   workflow_dispatch:
+    inputs:
+      compare_v1:
+        description: 'Run the pinned V1/P1 measurement comparison on this host'
+        type: boolean
+        default: false
 
 concurrency:
   group: presentation-verification-${{ github.event.pull_request.number || github.ref }}
@@ -51,3 +56,16 @@ jobs:
         with:
           name: p1-shipped-door-baseline
           path: ${{ runner.temp }}/p1-baseline.json
+      - uses: actions/checkout@v4
+        if: github.event_name == 'workflow_dispatch' && inputs.compare_v1
+        with:
+          ref: 1060c9df2ac6b140db932b4e888989d192502b20
+          path: .test-tmp/v1-comparison-runtime
+      - name: Compare P1 and unmodified V1 activity on one host and runtime
+        if: github.event_name == 'workflow_dispatch' && inputs.compare_v1
+        run: python scripts/presentation_compare_v1.py --v1-root .test-tmp/v1-comparison-runtime --output "${{ runner.temp }}/p1-v1-comparison.json"
+      - uses: actions/upload-artifact@v4
+        if: always() && github.event_name == 'workflow_dispatch' && inputs.compare_v1
+        with:
+          name: p1-v1-comparison
+          path: ${{ runner.temp }}/p1-v1-comparison.json

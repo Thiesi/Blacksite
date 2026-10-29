@@ -18,7 +18,7 @@ from tests.presentation.mechanics import character_game
 
 MIX = {'walking in a scene place': 10, 'walking where there is no scene': 20,
        'standing, a few stops a minute': 15, 'menus, text and help': 15}
-KEYS = {'walking in a scene place': ['up']*6+['right']*2+['up']*6+['left']*2,
+KEYS = {'walking in a scene place': ['right']*8+['left']*8,
         'walking where there is no scene': ['right']*8+['left']*8}
 T = TypeVar('T')
 
@@ -33,14 +33,16 @@ def stats(values: list[float | int]) -> dict[str, float | int | None]:
 class Meter:
     def __init__(self) -> None:
         self.cpu_ns = 0
+        self.wall_ns = 0
         self.calls: Counter[str] = Counter()
 
     def call(self, name: str, function: Callable[..., T], *args: Any) -> T:
-        started = time.process_time_ns()
+        started, wall = time.process_time_ns(), time.perf_counter_ns()
         try:
             return function(*args)
         finally:
             self.cpu_ns += time.process_time_ns()-started
+            self.wall_ns += time.perf_counter_ns()-wall
             self.calls[name] += 1
 
 
@@ -130,28 +132,33 @@ def activity(content: ContentTree, width: int, height: int, tier: str, what: str
         caller.key('?', 1.0)
     keys = KEYS.get(what, [])
     samples = []
-    started = last_step = time.monotonic()
+    started = time.monotonic()
     ticks = index = 0
     while time.monotonic()-started < seconds:
         now = time.monotonic()
-        caller.tick(now)
-        if now-last_step >= (.2 if keys else 20.0):
-            last_step = now
+        # Absolute ten-Hz deadlines keep rendering time out of the sleep
+        # budget. A relative sleep(.1) silently lowers the walking cadence.
+        if ticks and ticks % (2 if keys else 200) == 0:
             if keys:
                 caller.key(keys[index % len(keys)], now)
                 index += 1
             elif what == 'standing, a few stops a minute':
                 caller.key('up', now)
+        caller.tick(now)  # Execute each sampled key, including the last one.
         frame = caller.draw(now)
         if frame:
             samples.append(frame)
         ticks += 1
-        time.sleep(.1)  # Same real-time schedule as V1, outside the CPU meter.
+        time.sleep(max(0.0, started+ticks*.1-time.monotonic()))
     elapsed = time.monotonic()-started
-    if keys and caller.moves == 0:
-        raise AssertionError(f'walking activity made no successful moves: {what}; sample may be too short or blocked')
+    if keys and (index == 0 or caller.moves != index):
+        raise AssertionError(f'walking activity must execute every step: {what}; '
+                             f'{caller.moves} moves / {index} keys')
     return {'zone': zone, 'view': 'shipped map or local help', 'elapsed_s': elapsed,
         'ticks': ticks, 'key_steps': index, 'successful_moves': caller.moves,
+        'successful_moves_per_minute': caller.moves/elapsed*60,
+        'route': 'closed eight-tile horizontal walk' if keys else 'V1 provisional standing/help',
+        'method_wall_s_per_minute': caller.meter.wall_ns/1e9/elapsed*60,
         'cpu_s': caller.meter.cpu_ns/1e9, 'cpu_s_per_minute': caller.meter.cpu_ns/1e9/elapsed*60,
         'calls': dict(caller.meter.calls), 'output_frames': len(samples),
         'output_bytes': sum(frame['bytes'] for frame in samples)}
