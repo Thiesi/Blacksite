@@ -668,6 +668,15 @@ escape keep their normal positions. The Q panel separates active jobs,
 completed jobs and acquired records. A published patrol adds a visible
 journal entry only while its local telemetry permission is active.
 
+The hint row keeps this priority: an active prompt or notice, then a
+channel line by itself, then the active objective and its current cost,
+then E/J context, then remaining whole key-help groups. Help comes first
+among those remaining groups when it fits. This applies at both widths.
+Shorten E/J labels first, keeping at least the first word of each name
+and never cutting a key or verb. If that cannot fit, drop J, then E.
+Only then shorten the objective's target text; keep `Next:`, its verb
+and the current cost. This uses the existing hint row, not a new panel.
+
 Work-order panels show reservation owner, stage, supplied item, target,
 public/worker allocation, recipients and expiry. The reserving player's
 choice is visible before others join. Expired or stale choices refresh

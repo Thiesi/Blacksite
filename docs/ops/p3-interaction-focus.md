@@ -11,9 +11,11 @@ the corresponding inspection, uplink and return targets. Actor labels
 use the caller's existing name disclosure. Hidden exits remain own-tile
 only. No interaction ordering, game number, content, map or renderer
 changes are proposed. The existing zone hint row names the E/J targets.
-The shared chrome fits that row by whole groups and shortens only labels
-when E/J context alone overflows. Keys and verbs remain intact. Help is
-retained when it fits after context. Channel progress owns the row.
+The shared chrome keeps the active objective and cost ahead of E/J
+context. It shortens labels while retaining their first word, drops J
+and then E if needed, and only then shortens objective target text.
+Keys, verbs, `Next:` and the current cost remain intact. Remaining help
+groups stay whole, with help first when it fits. Channels own the row.
 
 The presentation lead's [wording review](https://github.com/Thiesi/Blacksite/pull/103#issuecomment-6510595595)
 is addressed by the corrected implementation and captures. Exit hints say
@@ -88,13 +90,14 @@ upstream commit resolved from the acceptance workflow's release tag.
 
 Presentation-lead wording approval is pending. The corrected source has
 fresh native captures and written automated reviews with no actionable
-findings. Broader S19 native acceptance fails: whole-group fitting drops
-the long contract `Next:` group after context. The objective advances,
-but the unchanged acceptance requires that visible feedback. The compact
-layout also relies on this hint for objective detail. The technical and
-presentation leads must resolve that priority before further changes;
-the acceptance assertion has not been weakened. The capture packet's
-`hint-regression.json` names the exact failure evidence.
+findings at the preceding source. Broader S19 native acceptance exposed
+missing `Next:` objective feedback. The leads confirmed that existing
+terminal UI 11 gives the objective and current cost priority over context.
+The fitter now applies that order and retains the first word of shortened
+E/J names. The four S19 acceptance assertions are unchanged. New checks
+and captures must replace the preceding engineering packet before the
+renewed technical and final wording review. `hint-regression.json` keeps
+the earlier failure evidence.
 
 Channel mechanics keep their existing behaviour. Technical review and
 the owner's acceptance

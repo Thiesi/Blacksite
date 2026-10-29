@@ -304,13 +304,78 @@ def test_ui_3_focus_hint_shortens_only_labels_and_keeps_help(key: str) -> None:
     hint = chrome.focus_hint(raw+'  Move: arrows  Shift: sprint  ? help  Ctrl-X leave', 78, context)
     groups = hint.split('  ')
     assert display_width(hint) <= 78
-    assert groups[0].startswith('E talk to ') and groups[0].endswith('...')
-    assert groups[1].startswith(key+' jack in at ') and groups[1].endswith('...')
+    assert groups[0].startswith('E talk to Long界') and groups[0].endswith('...')
+    assert groups[1].startswith(key+' jack in at Terminal界') and groups[1].endswith('...')
     assert all(group in ('Move: arrows', 'Shift: sprint', '? help', 'Ctrl-X leave') for group in groups[2:])
     short = [('E open', 'Counter'), (key+' jack in at', 'Terminal')]
     raw = '  '.join(prefix+' '+label for prefix, label in short)
     result = chrome.focus_hint(raw+'  This group cannot possibly fit in the remaining space  ? help  M map', 78, short)
     assert result == raw+'  ? help  M map'
+
+
+@pytest.mark.parametrize('width', [78, 130])
+@pytest.mark.parametrize('key', ['J', 'Ctrl-O'])
+def test_ui_11_objective_and_cost_precede_shortened_context(width: int, key: str) -> None:
+    objective = {'next_action': 'Survey here', 'progress': '0/1', 'cost': '2s'}
+    context = [('E open', 'Sablier '+('counter '*20)), (key+' jack in at', 'Tutorial '+('terminal '*20))]
+    raw = '  '.join((prefix+' '+label).rstrip() for prefix, label in context)
+    hint = chrome.focus_hint(raw+'  Next: Survey here 0/1 | 2s | E act Q jobs  F8 relays',
+                             width, context, objective)
+    groups = hint.split('  ')
+    assert groups[0] == 'Next: Survey here 0/1 | 2s'
+    assert groups[1].startswith('E open Sablier') and groups[1].endswith('...')
+    assert groups[2].startswith(key+' jack in at Tutorial') and groups[2].endswith('...')
+    assert display_width(hint) <= width
+
+
+def test_ui_11_drop_j_then_e_before_shortening_objective() -> None:
+    context = [('E open', 'Sablier counter'), ('J jack in at', 'Tutorial terminal')]
+    raw = '  '.join(prefix+' '+label for prefix, label in context)
+    objective = {'next_action': 'Survey the marked parcel at the gate', 'progress': '0/1', 'cost': '2s'}
+    hint = chrome.focus_hint(raw+'  Next: legacy', 78, context, objective)
+    assert hint.startswith('Next: Survey the marked parcel at the gate 0/1 | 2s  E open Sablier')
+    assert 'J jack in at' not in hint
+    objective['next_action'] = 'Survey the marked parcel at the far end of the gate'
+    hint = chrome.focus_hint(raw+'  Next: legacy', 78, context, objective)
+    assert 'E open' not in hint and 'J jack in at' not in hint
+    assert objective['next_action'] in hint  # Still no objective shortening.
+    objective['next_action'] += ' beyond the long passage '*8
+    objective['cost'] = '5s E: manual 5 s, network 0 trace'
+    hint = chrome.focus_hint(raw+'  Next: legacy', 78, context, objective)
+    assert hint.startswith('Next: Survey ') and '...' in hint
+    assert hint.endswith('0/1 | '+objective['cost'])
+    assert display_width(hint) <= 78
+
+
+def test_ui_11_names_never_shorten_before_their_first_word() -> None:
+    context = [('E open', '界'*60+' counter'), ('J jack in at', 'Tutorial terminal')]
+    raw = '  '.join(prefix+' '+label for prefix, label in context)
+    hint = chrome.focus_hint(raw+'  ? help  M map', 78, context)
+    assert hint == '? help  M map'  # Drop J, then the unshrinkable E group.
+    assert chrome.focus_hint('E open Counter  M map  ? help', 78,
+                             [('E open', 'Counter')]) == 'E open Counter  ? help  M map'
+
+
+@pytest.mark.parametrize('size', [(80, 24), (132, 50)])
+def test_ui_11_zone_renderer_retains_objective_without_focus(
+        focus_game: tuple[HeadlessServer, Any], info: Any, size: tuple[int, int]) -> None:
+    # Unnamed or occluded targets may have no focus. Their active objective
+    # still owns the compact hint, rather than falling back to tail clipping.
+    objective = {'next_action': 'Release the parcel hatch at the end of the corridor',
+                 'progress': '0/1', 'cost': '5s E: manual 5 s, network 0 trace'}
+    game, caller = focus_game
+    caller.session.caps.update(width=size[0], height=size[1])
+    game.step()
+    body = deepcopy(game.core.characters.sim.views[caller.session.id].previous['body'])
+    body.update(objective=objective, hint='Next: legacy marker', focus=None, jack_focus=None)
+    model = Display(replace(info, width=size[0], height=size[1]))
+    model.receive(Frame('welcome', {'keymap': asdict(game.core.characters.content.keymaps),
+                                   'palette': asdict(game.core.characters.content.palette)}), 0)
+    model.receive(Frame('view', {'rev': 1, 'kind': 'zone', 'body': body}), 1)
+    terminal = FakeTerminal(*size)
+    terminal.write(model.render(1)[0])
+    row = terminal.screen_text().splitlines()[compute(*size).hint.y]
+    assert 'Next: Release' in row and objective['cost'] in row
 
 
 def test_ui_3_channel_progress_owns_hint_row(focus_game: tuple[HeadlessServer, Any]) -> None:

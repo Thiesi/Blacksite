@@ -1,6 +1,6 @@
 # P3 — Interaction focus
 
-**Status:** implementation in progress (PR #103); contract hint decision and wording acceptance pending
+**Status:** implementation in progress (PR #103); final wording and technical review pending
 **Primary model:** Opus · **Reviewer:** automated review, technical lead, presentation lead (wording)
 **Depends on:** P1 · **Milestone:** presentation track
 **Issue:** https://github.com/Thiesi/Blacksite/issues/94
@@ -99,7 +99,9 @@ playable path and deterministic coverage. The [capture packet](../../ops/capture
 contains current-source hosted and local native receipts, exact CI raw
 artifact links, test counts and automated-review triage. Presentation
 wording approval and the technical decision record are pending.
-Broader S19 native acceptance fails after whole-group fitting hides its
-`Next:` objective feedback. The technical and presentation leads must
-resolve objective/context priority. The existing acceptance assertion is
-unchanged; `hint-regression.json` in the packet names the failure evidence.
+The technical and presentation leads confirmed terminal UI 11's priority:
+objective and cost precede E/J context. Shortened names retain their first
+word; drop J and then E before shortening objective target text. The
+existing four S19 manual/network acceptance cases remain unchanged.
+`hint-regression.json` records the earlier failure and its correction;
+fresh source-head receipts are required before the renewed review.

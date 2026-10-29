@@ -271,7 +271,7 @@ class Display:
                 for key, field in (('E', 'focus'), ('Ctrl-O' if self.selected_keymap == 'vi' else 'J', 'jack_focus')):
                     if focus := self.body.get(field):
                         context.append((f"{key} {focus['verb']}", str(focus['label'])))
-                hint = chrome.focus_hint(hint, self.layout.hint.width, context)
+                hint = chrome.focus_hint(hint, self.layout.hint.width, context, self.body.get('objective'))
         header = "" if self.kind == "zone" and self.local is None else "Karst · " + truncate(self.info.handle, self.layout.header_slots.handle_width)
         chrome.render_frame(buffer, self.layout, self.palette, header, list(self.logs), hint)
         if self.local is not None:

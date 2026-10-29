@@ -1,5 +1,8 @@
 # P3 acceptance evidence
 
+This packet precedes the lead-directed objective-priority correction.
+Fresh captures and check receipts will replace it before renewed review.
+
 Source and native execution head:
 `e465b1e2ba3e9104a46656a8ec73b5653ad2c0ab`.
 Base: owner-merged P4/main `9907c90a66c036c0876803a180c22f9d53b403d3`.

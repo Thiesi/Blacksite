@@ -25,36 +25,64 @@ def box(buffer: CellBuffer, rect: Rect, palette: Palette, title: str = "") -> No
         buffer.put(x + 2, y, truncate(" " + title + " ", w - 4), palette.style("title"))
 
 
-def focus_hint(hint: str, width: int, context: list[tuple[str, str]]) -> str:
-    """Fit server-selected context, shortening labels and keeping help groups whole."""
+def _objective_hint(objective: dict[str, Any], width: int | None = None) -> str:
+    """UI 11: retain Next, its verb, progress and the server's current cost."""
+    action = clean_text(str(objective['next_action'])).strip()
+    verb, _, target = action.partition(' ')
+    prefix = 'Next: ' + verb
+    suffix = f" {objective['progress']} | {objective['cost']}"
+    suffix = clean_text(suffix)
+    if target and width is not None:
+        target = truncate(target, max(0, width-display_width(prefix+' '+suffix)))
+    return prefix + (' '+target if target else '') + suffix
+
+
+def focus_hint(hint: str, width: int, context: list[tuple[str, str]],
+               objective: dict[str, Any] | None = None) -> str:
+    """UI 11: objective/cost, E/J, then whole help groups; never clip a key."""
     raw = '  '.join((prefix + ' ' + label).rstrip() for prefix, label in context)
-    if not raw or not hint.startswith(raw):
+    if (not raw and not objective) or raw and not hint.startswith(raw):
         return hint
-    labels = [clean_text(label) for _, label in context]
+    labels = [clean_text(label).strip() for _, label in context]
     prefixes = [clean_text(prefix) for prefix, _ in context]
-    budgets = [display_width(label) for label in labels]
-    fixed = sum(display_width(prefix) + bool(label) for prefix, label in zip(prefixes, labels)) + 2*(len(context)-1)
-    if fixed + sum(budgets) > width:
-        # Share the available label cells; short names give unused cells back.
-        limits, budgets = budgets, [0]*len(labels)
-        for _ in range(max(0, width-fixed)):
-            eligible = [i for i in range(len(labels)) if budgets[i] < limits[i]]
-            if not eligible:
-                break
-            index = min(eligible, key=lambda i: budgets[i])
-            budgets[index] += 1
-    groups = [(prefix + (' ' + truncate(label, budget) if label else ''))
+    limits = [display_width(label) for label in labels]
+    # A shortened name must retain its whole first word and the ellipsis.
+    minima = [min(limit, display_width(label.split()[0])+3) if ' ' in label else limit
+              for label, limit in zip(labels, limits)]
+    objective_group = _objective_hint(objective) if objective else ''
+
+    def fixed_width() -> int:
+        groups = [prefix+(' ' if label else '') for prefix, label in zip(prefixes, labels)]
+        return display_width('  '.join(([objective_group] if objective_group else [])+groups))
+
+    # Try the shortest legal names before dropping J, then E. The full
+    # objective only shortens after both lower-priority groups are gone.
+    while prefixes and fixed_width()+sum(minima) > width:
+        prefixes.pop()
+        labels.pop()
+        limits.pop()
+        minima.pop()
+    if objective and not prefixes:
+        objective_group = _objective_hint(objective, width)
+    budgets = minima[:]
+    available = max(0, width-fixed_width()-sum(budgets))
+    for _ in range(available):
+        eligible = [i for i in range(len(labels)) if budgets[i] < limits[i]]
+        if not eligible:
+            break
+        index = min(eligible, key=lambda i: budgets[i])
+        budgets[index] += 1
+    groups = ([objective_group] if objective_group else []) + [(prefix + (' ' + truncate(label, budget) if label else ''))
               for prefix, label, budget in zip(prefixes, labels, budgets)]
     tail = [group for group in hint[len(raw):].strip().split('  ') if group]
-    # Help keeps its place in the existing order, even if an earlier long group
-    # would otherwise consume its cells. Other groups are skipped, never cut.
-    reserve_help = '? help' in tail and display_width('  '.join([*groups, '? help'])) <= width
+    if objective:
+        # The legacy objective string also carries its action/journal help.
+        # The structured objective above owns the text and unabridged cost.
+        tail = ['E act Q jobs' if 'Next:' in group else group for group in tail]
+    tail = ['? help', *(group for group in tail if group != '? help')]
     for group in tail:
-        reserve = 8 if reserve_help and group != '? help' else 0
-        if display_width('  '.join([*groups, group])) + reserve <= width:
+        if display_width('  '.join([*groups, group])) <= width:
             groups.append(group)
-        if group == '? help':
-            reserve_help = False
     return '  '.join(groups)
 
 

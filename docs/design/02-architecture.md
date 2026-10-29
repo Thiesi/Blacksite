@@ -489,8 +489,11 @@ Its wording requires the P3 presentation review; it adds no HERE panel.
 An unnamed target still owns its input, but its internal id is never a
 display label. Active channel progress owns the hint row. For focus
 hints, the client fits whole key-help groups after the E/J context,
-retains help when it fits, and shortens only labels when context alone
-overflows. It uses the existing terminal cell-width and clipping helpers.
+with the objective and current cost ahead of context (terminal UI 11).
+It shortens labels while retaining their first word, then drops J and E
+in that order, before shortening objective target text. `Next:`, its
+verb and current cost remain. Help is first among remaining groups when
+it fits. The existing terminal cell-width and clipping helpers apply.
 
 #### 5.5.3 Log kinds
 
