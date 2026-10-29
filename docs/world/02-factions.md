@@ -469,8 +469,10 @@ players on the sitrep city-wide.
   colleagues. *"I did the ninety days. It's not a metaphor; it's a
   number. Make it to five, then we'll talk."*
 - **Clerk Wendel Hass**, the Authority's actual administrator, a
-  civilian who has run the lights and the water for thirty years and
-  whom Brann obeys on anything that is not a gun. *"The pumps don't care
+  civilian who has run the lights and the water for thirty years, since
+  he kept the hand log through the Dry Eleven in Year 11, and whom Brann
+  obeys on anything that is not a gun. He works from a desk in the
+  Treatment Hall at the Intake (planned, #101). *"The pumps don't care
   who's Marshal. Neither do I."*
 
 **Hall:** `core-precinct`, the Warden precinct on the Core plaza. The
@@ -513,7 +515,8 @@ people in.
 ### Relays
 
 The Core has no relays. The Wardens care about Block Relay in the Terraces and Sump Relay
-below the Sink. Sodium Row has no relay: its neutrality is maintained
+below the Sink, and, once the Intake is built (planned, #101), Intake
+Relay at the Wellhead, in the only district that leans their way. Sodium Row has no relay: its neutrality is maintained
 through service and patrol contracts, not capturable ownership.
 
 ### Relations rationale

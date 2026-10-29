@@ -24,7 +24,7 @@ def test_world_2_sector_counts_layout_access_and_baseline_routes() -> None:
             expected[parts[1]] = int(parts[2]), tuple(map(int, re.findall(r"\d+", parts[3])))
     sectors = Sectors(tree.sectors.values())
     assert len(sectors.records) == len(expected) == 11
-    assert planned == {"Warmwater"}
+    assert planned == {"Warmwater", "Intake"}
     assert not planned & {sector.district for sector in sectors.records.values()}
     for sector in sectors.records.values():
         count, classes = expected[sector.district]
@@ -69,7 +69,7 @@ def test_game_7_7_all_sixteen_relay_instances_and_service_cores() -> None:
     planned = [c.planned_core or c.core_id for sector in tree.sectors.values()
                for c in sector.cells if c.kind == "core_entrance"]
     assert len(relays) == 16
-    assert canon_only == {"lamp", "boiler"}
+    assert canon_only == {"lamp", "boiler", "intake"}
     assert not {"lat-relay-"+slug for slug in canon_only} & (set(planned) | set(tree.cores))
     assert {"lat-relay-"+slug for slug in relays} <= set(planned)
     assert len(planned) == len(set(planned))
@@ -86,7 +86,7 @@ def test_s25_complete_city_must_activate_all_district_core_entrances() -> None:
     canon_only = {z for z, section in zones.items() if "**Status:** planned (#" in section}
     ordinary = {z for z in zones if not z.startswith("blacksite-")} - canon_only
     assert len(ordinary) == 34
-    assert len(canon_only) == 4 and not canon_only & tree.zones.keys()
+    assert len(canon_only) == 7 and not canon_only & tree.zones.keys()
     if ordinary <= tree.zones.keys():
         for sector in tree.sectors.values():
             for cell in sector.cells:
