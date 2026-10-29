@@ -155,3 +155,26 @@ def test_game_7_5_reserve_credential_binds_one_gate_and_expires_without_ice_immu
     assert not owner.control_permit(players[0].id, binding.core, 'other-gate')
     game.clock.advance(12000)
     assert not owner.control_permit(players[0].id, binding.core, binding.control)
+
+
+def test_game_7_5_relay_zero_credential_only_permits_worker_return(live) -> None:
+    game, owner, callers, players = live
+    reserve = next(a for a in owner.content.services['relay-zero'].allocations if a.id == 'reserve')
+    credential = next(e for e in reserve.effects if e.params.get('what') == 'credential')
+    binding = credential.binding
+    assert (binding.core, binding.control) == ('lat-relay-zero', 'worker_return')
+    sid, target = service(live)
+    change(owner, sid, allocations=(Allocation('common', 'Public'),
+        Allocation('reserve', 'Workers', (credential,))))
+    proposal = owner.propose_service(players[0].id, sid, 'reserve', (players[0].id,))
+    owner.consent(proposal.id, players[0].id)
+    owner.start(proposal.id, players[0].id)
+    game.commit_commerce()
+    instance = next(iter(owner.state.engine.instances.values()))
+    owner.actions.perform(callers[0].session, instance.id, target)
+    game.commit_commerce()
+    assert owner.control_permit(players[0].id, 'lat-relay-zero', 'worker_return')
+    assert not owner.control_permit(players[0].id, 'lat-relay-zero', 'relay_open')
+    assert not owner.control_permit(players[1].id, 'lat-relay-zero', 'worker_return')
+    game.clock.advance(12000)
+    assert not owner.control_permit(players[0].id, 'lat-relay-zero', 'worker_return')

@@ -85,7 +85,8 @@
       "char": "~",
       "glyph": "water",
       "colour": "water",
-      "passable": true
+      "passable": true,
+      "movement_cost": 2
     },
     {
       "id": "hazard",
@@ -129,6 +130,17 @@
       "colour": "hardware",
       "passable": true,
       "interaction": "hardware"
+    },
+    {
+      "id": "gantry-hazard",
+      "char": "x",
+      "glyph": "hazard",
+      "colour": "hazard",
+      "passable": true,
+      "hazard": {
+        "damage_per_second": 5,
+        "type": "kinetic"
+      }
     }
   ]
 }

@@ -1,6 +1,6 @@
 # S25a — S25 engine fixes and accepted canon corrections
 
-**Status:** planned
+**Status:** in progress; implementation and acceptance under review
 **Primary model:** Opus · **Reviewer:** automated review, technical lead
 **Depends on:** S24 · **Milestone:** M5
 **Issue:** https://github.com/Thiesi/Blacksite/issues/77
@@ -83,3 +83,19 @@ Canon, top-down, in this PR before the code that depends on it:
 
 Technical review per `docs/plan/04-technical-review.md`. No human
 layout gate applies, because no map changes.
+
+Run `scripts/accept_s25a_netbbs.py --root <private-proof-directory>
+--door-python <installed-wheel-python>` using NetBBS's interpreter.
+It exercises the E/J reproducer and water timing in an explicit private
+hub fixture at 80x24 and 132x50, with a wide-character name. The server
+and installed door must have matching Python trees. It retains live ANSI
+captures, startup copy/load/validate phases and NPC tick/GC/storage
+diagnostics. The three-second startup and sub-10-ms NPC p99 gates are
+unchanged; a failed budget still leaves functional evidence and a failing
+process exit. Root CI and the existing native matrix remain required.
+
+Physical route walls, lockdown proof, new NPC placements, Terraces' 24
+homes and the Relay Zero shortcut remain S25b/S25c acceptance. The
+fixture proofs here neither commission those bindings nor grant layout
+approval. The five Undercity sight values are exercised in fixture zones
+through the existing sight/effect path; S25b must assert them on its maps.

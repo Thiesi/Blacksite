@@ -81,6 +81,13 @@ district.
 
 Notes:
 
+- The table records the current 36-cell Terraces baseline. S25b's
+  commissioned 24-home pool expands it to 48 cells (32 public, 12 gated,
+  4 hidden), as accepted in plan §14.2. It keeps the existing cells and
+  links. A twelve-cell public residence register connects reciprocally
+  to the public entry; its
+  eleven unallocated cells and thirteen existing public cells supply
+  the 24 apartment addresses. No unit consumes an entry or uplink cell.
 - Gated cells accept a suitable key program as an alternative to the
   named physical credential, following game design 6.1. S13's authored
   baseline is `program:key:2`; S14 refines access with its live catalog.
@@ -129,6 +136,12 @@ ICE: Tripwire ×2, Glasshouse ×2, Mirror, Blackglass ×2, Hound (at trace
 non-corporate crew to the public levels for 30 minutes), visitor logs.
 Controls: `turnstiles @ spire-atrium`, `public lifts @ spire-atrium`.
 ICE: Tripwire, Turnstile, Mastiff, Glasshouse.
+
+The Citadel lockdown closes the Atrium-to-Mezzanine lift for its
+300-second reset window. Gatehouse's public-lift control opens the same
+physical panel, so the latest committed operation wins. The Plaza exit
+and the Mezzanine's return remain available. Credential refusals describe
+missing admission; a disabled panel reports its control lock instead.
 
 **Skywatch** (`lat-skywatch`) — Halvard, tier 4, 7 rooms. Hardware: array control @
 `spire-shaft-head`. Data: Ring-fall forecast (names the next Ring-fall ring and
@@ -375,6 +388,13 @@ with a stable ID `lat-relay-<relay slug>`, including neutral relays.
 Its hardware is the mast beside the physical capture terminal. Its
 `relay_open` control targets that relay, not unrelated service hardware.
 All relay instance IDs and tiers are game design §7.7.
+
+Relay Zero also exposes `worker_return` in its Archive. This separate
+work-order control opens the optional north workshop passage between
+the relay mast and the public Old Works counter
+in Old Works Main for 20 minutes. It requires the active reserve
+allocation's worker credential. The longer street stays public; ordinary
+`relay_open` remains public and retains its capture meaning (game §7.5).
 
 ### 3.13 Season cores
 

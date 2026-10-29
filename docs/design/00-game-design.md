@@ -262,9 +262,19 @@ only, never PvP. Tutorial simulation is the bounded exception in §4.
   on ticks, with at most one tick of carried credit. Idle time never
   accumulates a burst. Fractional stamina costs and regeneration retain
   their fractions rather than erasing small bonuses.
+- Terrain multiplies the destination step's movement time. Ordinary
+  ground costs 1; water costs 2 (400 ms walking, 200 ms sprinting before
+  other modifiers). Authored costs are positive integers. Apply terrain
+  after equipment timing, before excess carry weight, effect minimums
+  and shock. Use the current tile layout: draining water restores dry
+  timing and reflooding restores the penalty. Diagonals use the same cost.
 - Sight is line of sight with a radius per zone lighting (Core: 12 tiles;
-  Undercity: 5 unless you carry a light). Stealth stance halves the range
-  at which others see you.
+  Undercity: per-zone lighting, as in the gazetteer: Service 5,
+  Drowned 4, Caverns 3, Outworks 6, Shaft Foot 10). A carried light
+  raises sight to at least 5. Existing light objects and switched-off
+  lamps still apply; Lowlight Eyes adds dark sight and an active Flare
+  Stick retains its radius-8 minimum (8.5). Stealth stance halves the
+  range at which others see you.
 - In a **lit pocket** (a pocket or pocket-class zone flagged `lit` in its
   zone data), sight reaches the whole pocket while you stand in it;
   walls and opaque tiles still block line of sight. You see everyone in
@@ -274,6 +284,10 @@ only, never PvP. Tutorial simulation is the bounded exception in §4.
   outside use their normal sight.
 - Players in the same zone see each other's glyph, name (on target or
   hover), and faction colour.
+- If a saved position becomes blocked when an optional passage closes,
+  reconnect uses the nearest available non-hazardous floor connected to
+  the public spawn. Recovery respects private entry permissions; it
+  cannot place a returning outsider inside someone else's apartment.
 
 ### 5.3 Combat
 
@@ -432,6 +446,9 @@ movement and weapon cooldowns still run at ten ticks per second. Patrols
 loop or bounce through authored passable waypoints. Hunt follows the last
 seen position and stops immediately when its reason to attack expires.
 Provoking an NPC makes its spawner group hostile for five minutes.
+Members of one spawning crew do not hunt one another. This also applies
+to wildlife packs and maintenance cohorts that attack all outsiders;
+they remain hostile to players, player drones and other hostile crews.
 Unarmed residents retreat from an active threat rather than chase it;
 armed actors flee below the 20 % threshold. Local guards of that NPC's
 faction answer too; Sable residents summon Sable
@@ -458,6 +475,36 @@ deadline together. Catch-up fills only vacant slots, never every missed
 respawn. Named service anchors stay during dormancy; their counters remain
 available even while their physical attendant is absent.
 
+The commissioned city adds the following initial profiles. They keep
+the hub attributes above. A dash in health uses the normal attribute
+formula; weapon and armour IDs use their existing catalog stats.
+This stat table, including XP 20 and the 60 s respawn, is provisional
+and is tuned at the human pacing gate on the real city routes.
+
+| Profile | Grade | Health | Weapon / attack | Armour |
+|---|---:|---:|---|---|
+| Halvard security | 3 | - | `wpn_halvard_hv7` | `arm_kestrel_vest` |
+| Halvard heavy security / recovery guard | 8 | 140 | `wpn_halvard_hv9` | `arm_halvard_guard_suit` |
+| Kestrel security | 2 | - | `wpn_kestrel_sidearm` | `arm_kestrel_vest` |
+| Choir warden | 3 | - | `wpn_chapel_tuning_fork` | `arm_chapel_vestment` |
+| Unmoored runner | 3 | - | `wpn_ow_arcpen` | `arm_sable_leathers` |
+| Ferrymen guard | 4 | - | `wpn_ferry_slugthrower` | `arm_ferry_scrap_plate` |
+| Scavenger raider | 6 | 100 | `wpn_kestrel_sidearm` | `arm_sable_leathers` |
+| Feral dog | 1 | 30 | 6 kinetic, 1.5 s, 60%, range 1 | none |
+| Feral hunter | 5 | 75 | 10 kinetic, 1.5 s, 60%, range 1 | none |
+| Water hunter | 7 | 90 | 12 kinetic, 1.5 s, 65%, range 1 | none |
+| Blind swarm | 6 | 55 | 8 chemical, 1 s, 60%, range 1 | none |
+| Scour apex hunter | 16 | 180 | 20 kinetic, 1.5 s, 70%, range 1 | none |
+| Blacksite maintenance drone | 10 | 100 | 12 energy, 1.5 s, 65%, range 6 | none |
+| Custodian recovery drone | 20 | 200 | 20 energy, 1.5 s, 70%, range 8 | none |
+
+These armed profiles expose base XP 20 to the existing eligibility and
+grade-scaling rule. They grant no new equipment loot. Their ordinary
+respawn is 60 s; event-owned recovery guards expire with their source
+and do not become ordinary respawners. Existing faction relationships
+govern faction guards; wild creatures and old autonomous machines are
+hostile. Recovery guards contest the advertised Ring-fall impact site.
+
 Mission actors are owned copies. Another caller cannot harm or command
 them. Escort requires explicit willingness; subdue requires adjacent
 shock 80 and an uninterrupted three-second channel. Subdue creates no
@@ -474,6 +521,25 @@ doors, ladders and lifts (zone exits), lights. Zone transitions take
 time during which the actor is absent from both zones: street exits are
 instant, ladders and lifts 1 s, cable cars 3 s, trams 10 s (hub and
 spoke: every district platform goes to the Core tram hub only).
+
+Physical exits may accept alternative credentials. The Atrium lift
+accepts Halvard standing +10 or a carried Spire Visitor's Pass. The
+service lift accepts Halvard membership or its story authorization;
+standing alone is not membership. The Shaft cage requires the active
+finale authorization in either direction. The server checks those
+sources at boarding. Story access stays closed until its owning system
+supplies a committed permission; saved client flags grant nothing.
+A local latch opened by its core may be an alternative to a carried
+key, as at the Drowned bulkhead. Hidden physical exits are unmarked,
+not an extra credential: a caller who finds the actual tile can use
+Interact there. Walking over it never triggers hidden travel.
+An interactive physical prop underfoot takes precedence over a nearby
+public terminal for fallback Interact. Passive light, camera and salvage
+field markers do not intercept that network action. `J` remains the explicit network action.
+Credential refusals name the missing credential; a disabled control
+reports that the machinery is locked. Every destination retains
+its ordinary outward route; an authorized ride already in flight still
+completes if a permission later expires.
 
 Trams depart every 90 seconds on a stable UTC schedule. Waking a zone or
 restarting the service does not restart that schedule. S15 may hold a
@@ -569,7 +635,10 @@ real encounter. District gate counts and public uplinks remain intact.
 Named short effects are exceptions to that ordinary reset range: a
 mission latch lasts 120 s, a private delivery vestibule 30 s, Row lighting
 blackout 30 s, Row sign message 60 s, and the bell-gallery hymn 60 s.
-Foundry gantry debris lasts 30 s after its hazard warning.
+Foundry gantry debris lasts 30 s after its hazard warning and deals
+5 kinetic damage per second before armour (provisional, tuned at the
+pacing gate). Its map character is `x`,
+rendered with the existing hazard glyph.
 Transit holds retain their separate 30 s limit and 120 s immunity.
 A switched-off lamp reduces sight to 5 tiles within the zone's normal
 light radius around that lamp. Dark-sight equipment still applies.
@@ -594,6 +663,11 @@ The theft limit is one unit, not a stack, per apartment per rolling 24 h,
 shared by all attackers. Impounded goods remain protected.
 
 Every closed route has manual egress or an alternate return route.
+The Citadel's executive lift lockdown closes only the Atrium inbound
+lift for 300 seconds. Gatehouse's public-lift control restores the same
+panel; the latest committed operation wins. The Plaza exit and the
+Mezzanine return remain available. Restored machinery grants no standing,
+membership or story authorization.
 In-flight transitions complete; a tram hold cannot strand an absent
 actor. Transit holds last at most 30 s, followed by 120 s immunity.
 Gate Nine's inward pedestrian egress remains available; its 25-chit toll
@@ -928,7 +1002,14 @@ essential stock, vats, rent, or standing thresholds. Sump water affects
 authored regions only, with 5 s warning. Cold Chain never refuses care.
 Sump and Depot reserve caches each contain two `slv_power` units per
 order, shared by its workers. Common and reserve cannot both be claimed.
-Relay Zero's credential opens one declared gate, not ICE immunity.
+Relay Zero's credential permits `worker_return` in `lat-relay-zero`,
+opening `relay-zero-workers-gate` in `oldworks-main` for 20 minutes.
+The passage saves at least eight walking steps between the relay's
+hardware and the public Old Works workshop counter;
+the longer public street remains open. This is a scoped control permit,
+not ICE immunity or ownership of the passage. Once opened, anyone can
+walk through it until reset. Ordinary public `relay_open` remains the
+separate relay-capture control and grants no workers' reward by itself.
 Cold Chain changes the installation service fee only, after ordinary fee
 rounding; it changes neither implant price, removal fee, detox nor risk.
 The strongest eligible service discount applies once. Depot changes the
@@ -1027,8 +1108,10 @@ their action rule. The benefit applies Lattice-wide, ends with
 ownership or membership, and cannot stack with itself.
 
 Cable fare is 5 chits; a free stair/ladder route remains. Gate Nine's
-ordinary outbound opening is 60 s every 5 minutes. Trams depart every
-90 s with a 10 s journey and no fare in v1. These are schedules anchored
+ordinary outbound opening is 60 s every 2 minutes, so the ordinary free
+wait never exceeds 60 s. Trams depart every
+90 s with a 10 s journey and no fare in v1. Gate Nine's timing is
+provisional, tuned at the pacing gate. These are schedules anchored
 to the injected clock, never reset on entering a dormant zone. Private
 ICE cannot inflict black feedback or bypass the theft cap.
 
@@ -1120,6 +1203,10 @@ Baseline salvage: each ring keeps 2-6 nodes, one replacement per
 power/compute/intact = 90/10/0/0/0, 55/25/20/0/0, 35/25/25/15/0,
 20/20/25/30/5. Restart preserves node units and RNG. Intact cannot be
 bought from or sold to NPC vendors; player trading is allowed.
+
+Nodes spawn on passable, unoccupied ground outside live hazards.
+Damage interrupts harvesting; a permanent hazard must not hold a node
+that cannot finish its channel and permanently consume the field's cap.
 
 Learned schematics persist. Fabrication consumes inputs on successful
 completion of a 3 s channel. Quality = 0.85 + 0.15 * skill/100 + U(0,
@@ -1225,6 +1312,14 @@ a safe with banked chits and a terminal. Rent lapse of
 two weeks evicts and moves everything to a Kestrel impound (fee to
 reclaim).
 
+The commissioned Terraces pool has 24 distinct units: eight of each
+class. Letting terminals in the Lobby and Blocks offer the same pool.
+Each unit reserves its own public register cell, never the sector entry,
+an inter-district uplink or another unit's cell. The residence register
+adds twelve public cells to the existing 36-cell sector: one connects
+reciprocally to the public entry, and eleven complete the 24 unit slots.
+Existing hidden/gated cells and public inter-district links stay intact.
+
 Legal discharge, by grade 5 or the 90-day calendar, permits one tenancy
 per character. Signing pays one week. Due invoices use the bank first,
 then hand chits, without splitting a paid invoice across later visits.
@@ -1252,6 +1347,8 @@ same protected delivery with no fee. A rented room is a 6x4 pocket;
 only its resident can use storage, safe, terminal and bed. A successful
 door key opens a 30-second vestibule only. All actions, including stale
 menus, recheck tenancy and interior permission on the server.
+A dedicated public doorstep selects its apartment door ahead of adjacent
+dropped goods. A prop directly underfoot still receives Interact first.
 
 Signing issues one physical apartment key. It records this tenancy and
 the current lock tier, weighs nothing, has no resale value and changes

@@ -560,6 +560,32 @@ leaves it unchanged.
 - Determinism: each zone instance has its own seeded RNG; tests can run
   a zone forward with scripted inputs and assert outcomes.
 
+Geometry admission checks retain actor entry permissions, including
+private-room boundaries. Housing supplies each occupant's public
+doorstep as the escape origin, because the existing apartment action
+lets that occupant leave without opening the physical private door.
+The actual occupied tile must still be passable, and no layout may
+introduce a hazard into its safe room. A tenant at home must not freeze
+unrelated public controls, nor make a private floor a public bypass.
+`entry_policy(None, tile)` identifies public ground every actor may
+enter; actor-specific permission may additionally admit private floors.
+A geometry proposal floods that public component once, then checks only
+actors whose escape origin is outside it. Housing indexes its static
+room tiles directly; lease and visitor permissions remain live checks.
+Fallback Interact preserves an interactive physical prop underfoot
+before considering an adjacent public network terminal. Passive light,
+camera and salvage field markers do not intercept the fallback. Explicit `J` still jacks in. This
+keeps Shaft Foot's season-console status usable beside its telemetry.
+Housing resolves a dedicated public doorstep to its door before adjacent
+props, while respecting a prop underfoot. Dropping a delivery key beside
+the doorstep must not divert entry into the private core-log menu.
+
+Admission/reconnect preserves a valid saved position. If an expired
+opening makes it invalid, `World.free_tile` searches the public spawn's
+reachable component and chooses the nearest free, non-hazardous tile.
+Every candidate respects actor entry permissions. The fallback cannot
+select an isolated room or an unauthorized apartment behind a wall.
+
 ### 6.2 Persistence
 
 The character subsystem loads pure snapshots at boot and returns a write
@@ -1021,6 +1047,15 @@ safe checkpoint. Service reservation, allocation, public control expiry,
 relay ownership and season/event overlays remain separate fields so
 removing one layer cannot undo another. Their composed map must preserve
 essential services, outward travel and safe-zone immunity.
+
+Physical route permissions are another committed-source consumer.
+`Characters.route_permissions(player)` defaults to an empty immutable
+set; S26 binds it to committed story/season state before caller input.
+It does not trust client flags or arbitrary saved progress. Physical
+membership checks use the character's current faction, independently of
+standing. Alternative credentials share the ordinary travel path and
+cannot bypass Curfew or control locks. Persisted in-flight journeys
+retain their original arrival even if access later closes.
 
 Story settlement rechecks the character's completed-template receipt,
 including parallel crew copies accepted before the first payout. A
