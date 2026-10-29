@@ -89,3 +89,22 @@ def test_body_hits_and_escape_are_visible_while_jacked(info, sector_views):
     assert terminal.styles[(0, 0)] == normal
     assert display.key("up", 3)[0].data["k"] == "up"
     assert display.key("7", 4)[0].data["k"] == "7"
+
+
+@pytest.mark.parametrize('size', [(80, 24), (132, 50)])
+@pytest.mark.parametrize('tier', ['16', '256', 'truecolor'])
+def test_issue_67_fractional_ice_numbers_are_compact_without_changing_state(info, sector_views, size, tier):
+    content, views = sector_views
+    body = deepcopy(views['lat-core'])
+    body['room'] = {'ice': [{'id': 'fractional-ice', 'name': 'Sandman',
+        'integrity': 19.9925, 'maximum': 40, 'phase': 'idle', 'role': 'sentinel',
+        'trigger': 'active', 'damage': 10.0075, 'meat': 0, 'counter': 'Move or shield.'}],
+        'data': [], 'controls': []}
+    body['me'].update(target='fractional-ice', integrity=19.9925)
+    original = deepcopy(body)
+    _, terminal = draw(info, content, body, *size, tier)
+    screen = terminal.screen_text()
+    assert '19.99/40' in screen and '10.01 integrity' in screen
+    assert 'INTEGRITY 19.99/100' in screen
+    assert '19.9925' not in screen and '10.0075' not in screen
+    assert body == original

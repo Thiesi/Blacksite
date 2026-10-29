@@ -1,0 +1,46 @@
+name: Issue 67 display acceptance
+
+on:
+  pull_request:
+    paths:
+      - 'src/blacksite/**'
+      - 'scripts/accept_issue67_netbbs.py'
+      - 'scripts/accept_s10_netbbs.py'
+      - '.github/workflows/issue67-acceptance.yml'
+
+jobs:
+  display-netbbs:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    permissions:
+      contents: read
+    strategy:
+      fail-fast: false
+      matrix:
+        tier: ['16', '256', 'truecolor']
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - uses: actions/checkout@v4
+        with:
+          repository: Thiesi/NetBBS
+          ref: v7.31.0
+          path: .test-tmp/netbbs
+      - name: Install NetBBS and an isolated Blacksite wheel
+        shell: bash
+        run: |
+          python -m pip install './.test-tmp/netbbs[ssh,web]'
+          python -m pip wheel --no-deps . -w "$RUNNER_TEMP/issue67-wheels"
+          python -m venv "$RUNNER_TEMP/issue67-venv"
+          "$RUNNER_TEMP/issue67-venv/bin/python" -m pip install "$RUNNER_TEMP"/issue67-wheels/*.whl
+      - name: Capture recruiter and ICE screens at both sizes
+        shell: bash
+        run: |
+          python scripts/accept_issue67_netbbs.py --root "$RUNNER_TEMP/issue67-proof" --door-python "$RUNNER_TEMP/issue67-venv/bin/python" --tier '${{ matrix.tier }}'
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: issue67-display-proof-${{ matrix.tier }}
+          path: ${{ runner.temp }}/issue67-proof
