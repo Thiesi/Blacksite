@@ -1,8 +1,6 @@
 """Two I/O pumps around the pure display model."""
 
 import asyncio
-from importlib.resources import files
-import json
 import signal
 import time
 import uuid
@@ -44,10 +42,7 @@ async def read_input(terminal: Terminal, decoder: KeyDecoder) -> bytes | None:
 
 
 async def run(info: DoorInfo, terminal: Terminal) -> None:
-    # UI 1 / issue 86: keep new doors usable before an older service is
-    # restarted. Resource I/O stays here, outside the pure display model.
-    glyphs = json.loads(files("blacksite.content").joinpath("glyphs.json").read_text(encoding="utf-8"))["glyphs"]
-    model = Display(info, uuid.uuid4().hex, glyphs=glyphs)
+    model = Display(info, uuid.uuid4().hex)
     connection = Connection()
     decoder = KeyDecoder()
     changed = asyncio.Event()

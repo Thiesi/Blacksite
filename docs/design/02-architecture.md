@@ -402,8 +402,10 @@ uplink markers. Hidden cells and their edges are omitted until found.
 `edge_glyphs` carries the registry's CP437 `[horizontal, vertical]` pair
 for `open`, `gated` and `hidden` links. The door uses these presentation
 values; topology and access rules are unchanged.
-This field is optional during upgrades: the door loads its packaged
-CP437 registry at startup and uses it until the service supplies pairs.
+The new door requires this field. During this upgrade, hold new door
+launches, drain existing callers, update the package and restart the
+service before reopening the door. Do not run a new door against a
+still-running older service; content remains server-only (S02).
 `me` includes body HP, hit serial, movement ticks and bounded escape
 progress; `body_safety` stays visible. The body remains a physical actor,
 while its session subscribes to a sector. Social menus preserve this

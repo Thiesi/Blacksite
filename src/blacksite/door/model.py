@@ -2,7 +2,6 @@
 
 from collections import deque
 from copy import deepcopy
-from functools import partial
 from typing import Any
 
 from blacksite.door.cells import CellBuffer, display_width, truncate
@@ -18,10 +17,8 @@ from blacksite.server.protocol import Frame
 
 
 class Display:
-    def __init__(self, info: DoorInfo, request_prefix: str = "client", *,
-                 glyphs: dict[str, str] | None = None) -> None:
+    def __init__(self, info: DoorInfo, request_prefix: str = "client") -> None:
         self.info = info
-        self.glyphs = glyphs or {}
         self.layout = compute(info.width, info.height)
         self.palette = Palette({}, resolve_tier(info.color_depth))
         self.kind = "text"
@@ -48,8 +45,7 @@ class Display:
         self.request_prefix = request_prefix
         self.selected_keymap = "arrows"
         self.warnings = SessionWarnings(info.session_limit)
-        self.renderers: dict[str, Renderer] = {"text": render_text, "dead": render_text, "menu": render_menu, "zone": render_zone,
-            "lattice": partial(render_lattice, fallback_glyphs=self.glyphs)}
+        self.renderers: dict[str, Renderer] = {"text": render_text, "dead": render_text, "menu": render_menu, "zone": render_zone, "lattice": render_lattice}
 
     def resize(self, info: DoorInfo) -> None:
         self.info = info
