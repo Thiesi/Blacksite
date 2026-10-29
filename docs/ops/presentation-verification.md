@@ -33,8 +33,8 @@ and a scripted walk, hashed together. It includes tile rules, every
 zone's tile IDs and initial passability/opacity overrides, exits, object
 tiles, object parameters, layouts, pockets, sight and sector topology and
 rule fields. Only object `params.name` (inspection copy) is excluded;
-unknown future parameter keys remain in the projection. The
-walk records position, health, stamina, shock, stance, cooldowns, sight,
+unknown future parameter keys remain in the projection. The walk records
+position, health, stamina, shock, stance, cooldowns, sight,
 cover and hazard. Seeds derive from the zone ID, not catalog order.
 Spawners are removed from a deep-copied test fixture; shipped content is
 untouched. Both viewport sizes must produce the same walk. Scratch
@@ -81,8 +81,8 @@ merged fix and regenerates 60 Lattice style snapshots (20 scenarios at
 three colour tiers). Only their glyph rows change from U+2506 to `:`;
 styles are unchanged. The #86 fix leaves mechanics unchanged; P1's
 technical-review follow-up separately expands fingerprint coverage to
-object parameters without changing world data or the scripted walk. The strict packet
-passes all 99 combinations. P1 makes no replacement choice or rendering
+object parameters without changing world data or the scripted walk. The
+strict packet passes all 99 combinations. P1 makes no replacement choice or rendering
 change. Omitting `--strict-cp437` collects evidence but does not turn
 reported failures into a passing gate.
 
@@ -149,6 +149,80 @@ tools and packaging changes, and on manual dispatch. Unrelated docs-only
 PRs do not run the activity samples. Compare hosted reports with other
 hosted reports from the same workload; the local Windows record is a
 separate reference, not a CI threshold.
+
+### Reconciling P1 and V1 (technical review TR-1)
+
+The [paired Linux report][paired] runs both harnesses on one hosted
+runner, Python 3.12.15, for 12 seconds of no-scene walking at 132x50 in
+truecolor. The first four rows use the identical V1 runtime at
+`1060c9df2ac6b140db932b4e888989d192502b20`. P1's measurement code is at
+`00470f9a448cda7f7c459836c0b38d9694f70692`; the last row uses its own
+runtime. The V1 script is unedited and its SHA-256 is checked. CPU and
+wall time cover the same method calls; render calls include empty
+returns, while frames count only nonempty output.
+
+| Harness and renderer | CPU s/min | Wall s/min | Moves/min | Renders | Frames |
+|---|---:|---:|---:|---:|---:|
+| P1, shipped, on V1 runtime | 3.312 | 3.323 | 295.0 | 120 | 73 |
+| V1, proposal map | 9.032 | 9.033 | 234.3 | 97 | 96 |
+| V1, shipped control | 10.045 | 10.046 | 229.3 | 95 | 94 |
+| P1, shipped, trial charting | 8.187 | 8.199 | 295.0 | 120 | 75 |
+| P1, current shipped runtime | 2.795 | 2.806 | 295.0 | 120 | 69 |
+
+The gap has observed causes:
+
+- **Known ground.** Both use a 100x30 source viewport. P1 starts with
+  516 visible and 2,484 unknown cells. V1's trial starts with 271 visible
+  and 2,729 remembered cells, with none unknown. Its trial geography is
+  charted on arrival. The shipped renderer skips unknown cells, but
+  draws remembered ones. Enabling trial charting in P1 while retaining
+  its fixture and the shipped renderer raises total CPU from 3.312 to
+  8.187 s/min, about 2.47 times. Render CPU rises from 2.287 to 7.154;
+  receive CPU changes only from 1.019 to 1.026. This control preserves
+  all 59 successful moves and nearly the same number of output frames.
+- **Output count and cadence.** Unmodified V1 adds processing time to
+  each 100 ms sleep. It executes 47 of 48 keys in the proposal case and
+  46 of 47 in the shipped control, leaving the final key pending. P1
+  executes all 59 keys on absolute deadlines. Its tick order matches
+  V1, but render gating still gives different nonempty output counts.
+  In the two charted shipped controls, total method CPU divided by
+  output frames is 21.8 ms for P1 and 21.4 ms for V1: a similar cost per
+  output frame, with 75 versus 94 outputs. This quotient includes all
+  measured methods; it is not a render-only timer.
+- **Clock units.** V1's original result is method wall time. The paired
+  clock shows that CPU and wall time are close on this runner. Clock
+  units do not explain the factor-of-two gap here. Windows remains
+  diagnostic because its per-call CPU clock quantizes to scheduler ticks.
+
+P1's original scene route also hit walls (23 moves for 57 keys), and
+its relative sleep lowered the achieved cadence. The corrected reference
+uses closed routes, absolute deadlines and complete-step checks. The
+provisional mix weights are unchanged; its standing/help limitation
+remains as documented above.
+
+The old 53.5-96.6 CPU s/h figures and intermediate workload versions are
+superseded. The new reference describes shipped exploration state, not
+V1's charted map. Even the charted P1 control's 20 no-scene minutes alone
+cost about 164 CPU seconds, above the whole-hour 120-second target.
+A fresh-arrival P1 pass therefore says nothing about the charted
+presentation meeting that target. P5 must compare the same renderer,
+known-ground state, achieved movement and output counts. This correction
+changes measurement and coverage only, not a renderer, rule or target.
+
+To reproduce, use a separate checkout of the pinned V1 revision:
+
+```sh
+python scripts/presentation_compare_v1.py --v1-root /path/to/v1-checkout \
+  --output .test-tmp/p1-v1-comparison.json
+```
+
+The existing `presentation-verification.yml` workflow also accepts
+`compare_v1=true` on manual dispatch. It checks out that exact V1 SHA and
+runs the comparison and full six-case reference on the same runner.
+The [hosted run][paired-run] retains the comparison and baseline artifacts.
+
+[paired]: baselines/p1-v1-comparison-00470f9.json
+[paired-run]: https://github.com/Thiesi/Blacksite/actions/runs/40829008369
 
 An early clean-head [Windows diagnostic][local] records commit `325576b`,
 Python 3.12.10, Windows 11 and an Intel Family 6 Model 186 host. This is a
