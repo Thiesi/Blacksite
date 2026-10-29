@@ -2,7 +2,7 @@
 
 from dataclasses import replace
 from pathlib import Path
-from time import perf_counter
+from time import process_time
 
 from blacksite.content.loader import load_content
 from blacksite.content.validate import validate, exit_warnings
@@ -16,9 +16,12 @@ SIZES = {"core-plaza":(90,40),"core-tram-hub":(80,30),"core-precinct":(50,24),
 def test_ten_hub_zones_validate():
     tree = load_content(ROOT/"src/blacksite/content")
     assert set(tree.zones) == SIZES.keys()
-    start = perf_counter()
+    start = process_time()
     assert validate(tree) == []
-    assert perf_counter()-start < 1
+    # S25b TR-8: CPU time excludes shared-runner scheduling pauses. Keep
+    # validation inside the S25 three-second startup envelope; native
+    # acceptance independently enforces the full startup wall-time gate.
+    assert process_time()-start < 3
     assert tree.bundles["m1-zone-preview"].status == "active"
 
 

@@ -1112,7 +1112,7 @@ D-T1.
 | Undercity sight flattened to 5 | **Rejected: per-zone lighting.** Game design §5.2 is amended first: Undercity sight is set per zone by its lighting, using the gazetteer's values (Service 5, Drowned 4, Caverns 3, Outworks 6, Shaft Foot 10); a carried light raises it to at least 5, and existing light objects and dark-sight effects apply as now | S25a (canon first, then code) |
 | Hidden exits become unmarked passages usable by Interact on the tile; Listening, programs and dialogue point them out | **Accepted** (S25's rule). Consistent with D-T4 | S25a |
 | Landing's `tramyard-wall-gate` exit removed | **Restore,** unless the implementer records a reason the owner then accepts | S25b |
-| Outworks core raised to tier 5 | **Open.** The implementer records the reason; the owner decides | S25b |
+| Outworks core raised to tier 5 | **Closed 2026-10-29: no change; the seal was already tier 5 (#78).** The Outworks Relay stays tier 4 | S25b |
 | S25 spec rewritten to permit engine work and hub changes | Superseded by D-T2 and D-T3: the S25 file returns to content scope and the rest moves to S25a and S25b | this PR |
 
 ### 14.3 What is filed now

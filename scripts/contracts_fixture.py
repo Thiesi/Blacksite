@@ -37,6 +37,9 @@ def build_fixture(shipped: Path, local: Path) -> dict[str,Any]:
         obj('fx-'+sid+'-board',(x,4),'terminal',name='FIXTURE '+sid+' board',contract_handler=giver)
         obj('fx-'+sid+'-supply',(x,6),'cache',name='FIXTURE bound supplies')
         obj('fx-'+sid+'-hardware',(x,8),'door',name='FIXTURE '+sid+' hardware',open=False)
+        # S25b TR-4 applies to fixture zones too. These controlled doors
+        # have solid flanks and open north/south approaches.
+        grid[8][x-1] = grid[8][x+1] = '#'
     obj('fx-loan',(8,10),'terminal',name='FIXTURE public loan terminal',cell='lat-core-c11')
     obj('fx-core-hardware',(9,10),'hardware',name='FIXTURE service cabinet')
     obj('fx-sump-cache',(32,5),'cache',name='FIXTURE Sump workers cache')

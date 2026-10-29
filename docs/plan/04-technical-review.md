@@ -69,6 +69,15 @@ an earlier review's notes. Then read:
 | A significant player experience, new or changed | A representative playable acceptance scenario: a written sequence of steps a person plays from a stated starting point, with the expected result at each step. |
 | Rules, numbers or protocol | The canon section changed in the same PR, and any fingerprint or golden rebaseline named and justified. |
 
+Where evidence lives:
+
+- **Commit to the repository:**
+  - the plain-text renderings of captures (`.txt`);
+  - a manifest naming each capture, its scenario and its SHA-256;
+  - small JSON summaries.
+- **Keep as CI artifacts:** raw `.ans` streams and large JSON snapshots. Name them from the manifest by run and artifact.
+- **Size limit:** a PR adds at most about 200 KB of evidence to the repository, unless the review explains why it needs more.
+
 Missing evidence is never a pass. The reviewer records it as
 `insufficient evidence`.
 
