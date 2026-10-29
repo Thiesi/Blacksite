@@ -1,0 +1,50 @@
+┌─ Karst · S10P2132 ───────────────────────────────────────────────────────────────────────────────────────────────────────────────┐
+│          ┌─ INVENTORY ────────────────────────────────────────────────────────────────────────────────────────────────┐          │
+│          │ Choice                                               Carry 5/20 kg. 3 secured slots.                       │          │
+│          │ Kestrel Issue Sidearm  1  1kg    weapon_side         Quality 100%                                          │          │
+│          │ 9x pistol rounds  50  0kg                            Damage 12, range 6.                                   │          │
+│          │ Kestrel Issue Baton  1  0.9kg    melee               The starter pistol. Everyone in Karst has fired on... │          │
+│          │ Sablier Med Patch  1  0kg                                                                                  │          │
+│          │ Sablier Med Patch  1  0kg    quick1                                                                        │          │
+│          │ Kestrel Ration Bar  1  0kg                                                                                 │          │
+│          │ Kestrel Ration Bar  1  0kg                                                                                 │          │
+│          │ Vesper's Card  1  0.1kg  S                                                                                 │          │
+│          │ Kestrel Issue Vest  1  3kg    body                                                                         │          │
+│          │                                                                                                            │          │
+│          │                                                                                                            │          │
+│          │                                                                                                            │          │
+│          │                                                                                                            │          │
+│          │                                                                                                            │          │
+│          │                                                                                                            │          │
+│          │                                                                                                            │          │
+│          │                                                                                                            │          │
+│          │                                                                                                            │          │
+│          │                                                                                                            │          │
+│          │                                                                                                            │          │
+│          │                                                                                                            │          │
+│          │                                                                                                            │          │
+│          │                                                                                                            │          │
+│          │                                                                                                            │          │
+│          │                                                                                                            │          │
+│          │                                                                                                            │          │
+│          │                                                                                                            │          │
+│          │                                                                                                            │          │
+│          │                                                                                                            │          │
+│          │                                                                                                            │          │
+│          │                                                                                                            │          │
+│          │                                                                                                            │          │
+│          │                                                                                                            │          │
+│          │                                                                                                            │          │
+│          │ q equip  f slot  e equipment  s secure  d drop  x split  u use  Esc/B back                                 │          │
+│          └────────────────────────────────────────────────────────────────────────────────────────────────────────────┘          │
+├The corridor teaches targeting. Tab selects; F fires; B skips training.───────────────────────────────────────────────────────────┤
+│[zone] Crews end on a service restart. Use G to invite.                                                                           │
+│                                                                                                                                  │
+│                                                                                                                                  │
+│                                                                                                                                  │
+│                                                                                                                                  │
+│                                                                                                                                  │
+│                                                                                                                                  │
+│                                                                                                                                  │
+│Esc/B returns                                                                                                                     │
+└────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────── 

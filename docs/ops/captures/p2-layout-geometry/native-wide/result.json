@@ -1,0 +1,48 @@
+{
+  "head": "0203051ea3f1b36cf1faf3ec5f985002325d9b4d",
+  "dirty": false,
+  "passed": true,
+  "cases": [
+    {
+      "size": [
+        80,
+        24
+      ],
+      "name": "P2界80",
+      "tier": "16",
+      "captures": [
+        "wake-80x24",
+        "inventory-80x24",
+        "help-80x24",
+        "scrollback-80x24"
+      ],
+      "inventory_page_keys": true,
+      "help_page_2": true,
+      "scrollback": true,
+      "clean_exit": true
+    },
+    {
+      "size": [
+        132,
+        50
+      ],
+      "name": "P2界132",
+      "tier": "16",
+      "captures": [
+        "wake-132x50",
+        "inventory-132x50",
+        "help-132x50",
+        "scrollback-132x50"
+      ],
+      "inventory_page_keys": true,
+      "help_page_2": true,
+      "scrollback": true,
+      "clean_exit": true
+    }
+  ],
+  "transport": "NetBBS Telnet -> registered native stdio",
+  "native_python_tree_sha256": "7c89901b958d417146a8f990e233868c51f22ea231d38faf03da05004b09132d",
+  "fixtures": "none beyond private node/world and ordinary new characters",
+  "human_approval": false,
+  "performance_gate": "not asserted; full native matrix required"
+}

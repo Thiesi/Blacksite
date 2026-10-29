@@ -57,3 +57,19 @@ existing `scripts/accept_s04_netbbs.py` separately checks Telnet, SSH and
 WebSocket at both sizes with its S04 service fixture.
 The full hosted native matrix and technical review remain required. No
 human layout approval follows from unchanged output or engineering tests.
+
+## Recorded local receipt
+
+[The evidence bundle](captures/p2-layout-geometry/README.md) records clean
+head `0203051ea3f1b36cf1faf3ec5f985002325d9b4d`: root pytest 1,650 passed
+and one skipped; strict packet 99/99; both wide-name native cases and all
+six transport/size cases passed. All glyph/style goldens and mechanics
+remain byte-identical to base `d0d2486`. An initial City Map variable
+collision was fixed before this final gate; its failures are not waived.
+
+The local node environment is observed as NetBBS 7.41.0, door API 5, from
+a dirty checkout at `15f1605f80bb2235989f40accec3ab46f1cc3cae`. Its package
+distribution metadata still says 3.0.0; the provenance distinguishes
+that metadata from the application version. This is local compatibility
+evidence. The clean hosted matrix pinned to NetBBS v7.31.0 remains the
+independent minimum-version gate.

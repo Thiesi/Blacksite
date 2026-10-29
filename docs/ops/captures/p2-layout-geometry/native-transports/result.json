@@ -1,0 +1,18 @@
+{
+  "transports": [
+    "telnet",
+    "ssh",
+    "web"
+  ],
+  "sizes": [
+    [
+      80,
+      24
+    ],
+    [
+      132,
+      50
+    ]
+  ],
+  "passed": true
+}
