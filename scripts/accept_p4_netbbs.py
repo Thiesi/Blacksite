@@ -116,6 +116,15 @@ async def accept(root: Path, door_python: Path, show: bool,
                 for selected in range(index):
                     await caller.caller.write(b'\x1b[B')
                     await wait(lambda: drones.menus[caller.session.id] == selected+1)
+                def selected_ready() -> bool:
+                    body = probe.game.sim.views[caller.session.id].previous['body']
+                    rows = body.get('rows', [])
+                    return (body.get('cursor') == index and len(rows) > index
+                            and rows[index]['id'] == iid
+                            and caller.session.ack_revision == caller.session.view_revision)
+                # Menu actions carry the client's selected row and revision.
+                # Server cursor movement alone does not mean it arrived yet.
+                await wait(selected_ready)
                 await caller.caller.write(b'u')
                 await wait(lambda: iid in drones.actors and 'Target '+template.cover_name in screen.screen_text()
                            and caller.session.ack_revision == caller.session.view_revision)
