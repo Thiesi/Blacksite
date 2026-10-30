@@ -96,7 +96,7 @@ activity; short runs and Windows process-CPU totals are diagnostic only.
 Any regression needs a measured explanation in the PR.
 
 For native acceptance, build a clean committed wheel and install it into
-an isolated interpreter. With NetBBS v7.31.0 installed for the runner:
+an isolated interpreter. With NetBBS v7.45.0 installed for the runner:
 
 ```
 python scripts/accept_p5_netbbs.py --root PATH --door-python PYTHON --size 80x24 --show
@@ -137,3 +137,7 @@ terminal receipts and the exact execution head. Raw ANSI and large style
 snapshots remain in the linked CI artifacts. The packet records the wide
 character-name / ASCII BBS-handle distinction and verifies both fields in
 the same pinned row at 132x50. It grants no creative or human approval.
+Those captures retain their actual v7.31.0 provenance. Following the
+technical lead's floor-change notice on #82, P5's new native workflow now
+pins v7.45.0; its fresh results are reported separately on PR #110. The
+floor/canon PR #111 must be owner-merged before it is used as a new base.
