@@ -224,7 +224,11 @@ only when every condition holds at the current head:
    the automated review is triaged and either the presentation lead has
    co-signed on the PR or the owner has applied `no-technical-review`.
    An own PR that touches presentation canon needs the presentation
-   lead's co-sign in every case.
+   lead's co-sign in every case. On a PR that does not touch
+   presentation, that co-sign covers wording and presentation effect;
+   it is not an independent technical review. A co-sign or sign-off is
+   an explicit, unconditional approval on the PR; "Presentation lead:
+   hold" with a reason is an open objection under condition 5.
 2. **Green.** CI is green and the automated review is triaged.
 3. **No owner matter.** The PR needs no human gate, changes no game
    bible or game design canon (`AGENTS.md` §2 levels 1 and 2), files or
