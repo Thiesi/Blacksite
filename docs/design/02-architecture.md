@@ -30,9 +30,9 @@ quarter blocks. It does not use `datetime_format`: game time is shown in
 the game's own terms. `season` matters only to the deferred opt-in
 publication adapter (§8.3). The Enter guard only drops an Enter typed
 right after the door picker's choice; it adds no keypress, so scripted
-native harnesses send the same input as before. v7.45.0 is NetBBS's feature-freeze release and is now
-the floor, so every native CI job pins it and the fields below are
-always present on a supported node.
+native harnesses send the same input as before. v7.45.0 is NetBBS's
+feature-freeze release and is now the floor, so every native CI job pins
+it and the fields below are always present on a supported node.
 
 - A door is a **subprocess per caller**, launched with argv, never a shell,
   under the service account. Profile `time_limit` and `cpu_seconds` each
@@ -57,7 +57,8 @@ always present on a supported node.
   `ascii`, the set NetBBS converts door output to) and `quadrants`
   (v7.43.0: whether U+2596-U+259F show; when false NetBBS replaces them
   with half or full blocks). There is no published `node_fingerprint`,
-  guest flag or user level. A third-party door receives the shared guest account's identity.
+  guest flag or user level. A third-party door receives the shared guest
+  account's identity.
 - Native stdio resize uses rewritten door info plus opt-in `SIGUSR1`
   (`resize_signal: true`). Custom profile environment uses `DOOR_*`,
   including `DOOR_BLACKSITE_INSTALL_DIR` and an optional
