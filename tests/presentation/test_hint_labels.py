@@ -80,3 +80,13 @@ def test_ui_11_objective_retains_jobs_help_without_generic_e() -> None:
     row = chrome.focus_hint('E survey Parcel  Next: legacy | E act Q jobs', 130, context, objective)
     assert row.startswith('Next: Survey Parcel 0/1 | 2s  E survey Parcel')
     assert 'Q jobs' in row and 'E act' not in row
+
+
+@pytest.mark.parametrize('jack_key', ['J', 'Ctrl-O'])
+def test_ui_11_combined_group_drops_j_before_a_fitting_e(jack_key: str) -> None:
+    focus = {'id': 'terminal', 'label': 'Tutorial terminal', 'verb': 'jack in at'}
+    context = focus_context(focus, focus, jack_key)
+    raw = context[0][0]+' '+context[0][1]
+    objective = {'next_action': 'Survey the marked loan cabinet', 'progress': '0/1', 'cost': '5s no fee'}
+    row = chrome.focus_hint(raw+'  Next: legacy', 78, context, objective)
+    assert row == 'Next: Survey the marked loan cabinet 0/1 | 5s no fee  E jack in at Tutorial...'

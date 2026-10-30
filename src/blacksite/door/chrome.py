@@ -58,6 +58,10 @@ def focus_hint(hint: str, width: int, context: list[tuple[str, str]],
     # Try the shortest legal names before dropping J, then E. The full
     # objective only shortens after both lower-priority groups are gone.
     while prefixes and fixed_width()+sum(minima) > width:
+        if len(prefixes) == 1 and prefixes[0].startswith('E/'):
+            # A combined group still drops the J alias before its E action.
+            prefixes[0] = 'E '+prefixes[0].partition(' ')[2]
+            continue
         prefixes.pop()
         labels.pop()
         limits.pop()

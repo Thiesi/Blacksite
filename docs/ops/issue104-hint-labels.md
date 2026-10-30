@@ -6,7 +6,8 @@ handlers, target IDs, geometry, rules and dispatch order stay unchanged.
 
 - The same target and verb produce one E/J group, or E/Ctrl-O in vi.
   Different IDs or verbs retain their separate groups. Both producer and
-  fitter use the same presentation-only grouping helper.
+  fitter use the same presentation-only grouping helper. If the combined
+  group cannot fit beside an objective but E can, drop only the J alias.
 - Objective/cost priority stays intact; the generic E act group is
   removed and Q retains its job-panel help.
 - Sablier Clinic and The Tin Halo lose their internal parenthetical notes
