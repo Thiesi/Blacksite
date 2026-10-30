@@ -187,7 +187,15 @@ acceptance. The presentation lead co-reviews P5; merge authority follows
 [technical review section 7.1](../plan/04-technical-review.md#71-delegated-merge).
 S25 layout and the full S27 human/presentation gates remain held.
 
-The committed [native review packet](captures/p5-client-foundations/README.md)
+The current [notice correction packet](captures/p5-notice-corrections/README.md)
+contains the two requested fresh 80x24 Wake Hall and drone-fight captures,
+executed at `c59c90f7093a10ecc7846085bc6b514f0efe3855`. It identifies the
+original ANSI/style artifacts, hashes, source-matched wheel and PTY
+receipts. The correction changes no existing P5 style golden. Tests,
+runtime, scripts, workflows and packaging match the evidence-only commit;
+final-head checks and review decisions are recorded on PR #110.
+
+The earlier [native review packet](captures/p5-client-foundations/README.md)
 contains all 48 untrimmed text captures, original capture hashes, attached
 terminal receipts and the exact execution head. Raw ANSI and large style
 snapshots remain in the linked CI artifacts. The packet records the wide
@@ -200,8 +208,8 @@ names every corrected P5 golden and every changed text/style capture,
 including the requested Wake Hall, drone fight and lifted Plaza person.
 Earlier captures retain their actual provenance in Git history and the
 earlier runs' artifacts. The owner merged the floor/canon PR #111 before
-P5 was rebased onto it. The packet does not prove the later TR-3/notice
-corrections; fresh Wake Hall and drone-fight evidence is required.
+P5 was rebased onto it. That earlier packet does not prove the later
+TR-3/notice corrections; the linked correction packet supplies those.
 Other native workflows inherit #111's v7.45.0 pins; final-head results
 and budget changes against `450d918` are recorded on PR #110.
 The new charset admission and check-order rules remain S30/S31 work;
