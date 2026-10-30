@@ -1,6 +1,6 @@
 # Technical review
 
-Every implementation PR gets two reviews before the owner merges it:
+Every implementation PR gets two reviews before it is merged:
 
 1. The **automated Claude review** (`.github/workflows/claude-code-review.yml`)
    checks ordinary code correctness. It is unchanged by this document.
@@ -11,7 +11,8 @@ Every implementation PR gets two reviews before the owner merges it:
 
 Neither review replaces the other, and neither replaces a human gate.
 The owner alone grants human acceptance gates (including S25's withheld
-layout approval) and alone merges.
+layout approval). The owner merges, or the technical lead merges under
+the delegation in §7.1.
 
 ## 1. Scope
 
@@ -204,13 +205,44 @@ Rules for the reviewer:
 2. Automated review delivered and triaged (`AGENTS.md` §3).
 3. Technical review record at the same head: ready to merge.
 4. Human gates the slice names, granted by the owner.
-5. The owner merges.
+5. The owner merges, or the technical lead merges under §7.1.
 
 A push after step 3 that changes code, content or canon needs a new
 record. A push that only marks the slice file done or fixes a typo in a
 PR-local document does not need a new review: the technical lead edits
 the record's heading to the new SHA and notes why, which re-runs the
 gate.
+
+### 7.1 Delegated merge
+
+Decided by the owner on 2026-10-30. The technical lead may merge a PR
+only when every condition holds at the current head:
+
+1. **Record.** The technical review record says ready to merge at that
+   exact head SHA, against the current base. For the technical lead's
+   own docs and process PRs, which have no independent technical review,
+   the automated review is triaged and either the presentation lead has
+   co-signed on the PR or the owner has applied `no-technical-review`.
+   An own PR that touches presentation canon needs the presentation
+   lead's co-sign in every case.
+2. **Green.** CI is green and the automated review is triaged.
+3. **No owner matter.** The PR needs no human gate, changes no game
+   bible or game design canon (`AGENTS.md` §2 levels 1 and 2), files or
+   re-scopes no slice, changes no adopted plan decision, and moves no
+   golden or fingerprint beyond what its slice explicitly allows. A
+   class E canon or spec change (plan §10.1) also needs the owner's
+   approval of its substance, recorded on the PR or its issue.
+4. **Presentation.** A presentation-class PR (plan §10.1 class C) has
+   the presentation lead's written sign-off on the PR.
+5. **No objection.** No reviewer, agent or the owner has an open
+   objection or an unanswered question on the PR.
+
+If any condition is missing, the PR waits for the owner. The technical
+lead merges with a squash merge. Afterwards it posts a one-line note on
+the PR and on the queue issue (#82), and reports each merge to the owner.
+The owner can narrow or revoke this delegation at any time. It never
+grants a human gate: S25's human layout approval stays withheld until
+the owner grants it.
 
 ## 8. Automation
 
