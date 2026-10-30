@@ -4,6 +4,12 @@ This follow-up implements issue #104's seven wording items on main's P3
 route. Codex (GPT-6) implements it. The existing target queries, input
 handlers, target IDs, geometry, rules and dispatch order stay unchanged.
 
+The execution head also integrates the owner's S27 backend merge
+`85d3ddabaf104c656824696ca857e5260bfbc164`. Both dialogue and inspection
+validation remain in force. The combined hint, dialogue, referral and
+validation checks pass 106 tests. The cast stays dormant; these P3
+captures grant none of S27's held native or human acceptance.
+
 - The same target and verb produce one E/J group, or E/Ctrl-O in vi.
   Different IDs or verbs retain their separate groups. Both producer and
   fitter use the same presentation-only grouping helper. If the combined

@@ -1,15 +1,15 @@
 # Issue 104 terminal and label evidence
 
-Execution source: `03dad628af71fbdd5cb2128d9b01bcb7c79d4ab5`, based on
-owner-merged main `5f0c993afb82c468acd533656b7282d5336faa7e`.
-These captures predate the owner's S27 merge at `85d3dda`. They are
-historical during the current integration check. Fresh captures and
-receipts for the combined runtime are being prepared; do not use this
-packet as proof of the rebased runtime's source identity yet.
+Execution source: `ca1e2831d2147423f4d9c3bf81e78b6495e66ddb`, based on
+owner-merged main `85d3ddabaf104c656824696ca857e5260bfbc164`.
+The follow-up evidence commit changes only documentation and receipts;
+the runtime, content, test and acceptance-script trees stay identical.
+This execution includes the owner-merged S27 backend, with its cast
+still dormant and all S27 presentation/native/human gates held.
 
 ## Native captures
 
-[Hosted run 41031110108](https://github.com/Thiesi/Blacksite/actions/runs/41031110108)
+[Hosted run 41036525447](https://github.com/Thiesi/Blacksite/actions/runs/41036525447)
 ran the actual NetBBS Telnet node and registered native stdio door at
 80x24 and 132x50 in 16, 256 and truecolor. Every case uses ordinary
 creation, movement and action keys, normal NPCs, funds, rules and clock.

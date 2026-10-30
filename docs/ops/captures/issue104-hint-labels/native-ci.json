@@ -1,5 +1,5 @@
 {
-  "source_head": "03dad628af71fbdd5cb2128d9b01bcb7c79d4ab5",
+  "source_head": "ca1e2831d2147423f4d9c3bf81e78b6495e66ddb",
   "passed": true,
   "cases": [
     {
@@ -171,7 +171,7 @@
       "clean_exit": true
     }
   ],
-  "runtime_python_sha256": "80c45c6ac5d77e66660d944898b37111fd57bceb99a148adf0a0f6838134b325",
+  "runtime_python_sha256": "f2bfadf81efc94b9d99061435f76555757a4096181839c43045ac182fc8ca449",
   "transport": "NetBBS Telnet -> registered native stdio",
   "netbbs_ref": "v7.31.0",
   "human_approval": false
