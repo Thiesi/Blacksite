@@ -44,7 +44,7 @@ python scripts/accept_s25b_arrivals.py \
 Repeat with fresh roots and `--tier 256` and `--tier truecolor`.
 `--show` forwards the 16-colour caller's actual ANSI to the terminal.
 The `S25b live arrival captures` workflow runs all tiers with NetBBS
-v7.31.0 and a wheel built at the checked-out head.
+v7.45.0 (v7.31.0 when these captures were made) and a wheel built at the checked-out head.
 
 ## Playable sequence and fixture boundary
 

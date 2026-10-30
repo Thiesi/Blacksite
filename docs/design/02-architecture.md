@@ -11,7 +11,7 @@ integration; the external runner remains an operator-managed alternative.
 
 ## 1. Constraints from the platform
 
-Verified on 2026-10-22 against released NetBBS v7.33.0, source commit
+First verified on 2026-10-22 against released NetBBS v7.33.0, source commit
 `f354e898dc2664b13c35a4e2cbbbbfa80d84776d`: its door guide, Developer
 Handbook and `src/netbbs/doors/{runtime,profiles,services,outbound,events}.py`.
 [Platform catch-up](../plan/01-netbbs-platform.md) links the exact sources,
@@ -829,7 +829,9 @@ older than the 7.45.0 floor: refuse before world entry with a message
 that tells the SysOp NetBBS 7.45.0 or later is required, not one that
 calls the door info malformed. A present value other than `utf-8`,
 `cp437` or `ascii` is malformed door info and refused like a bad
-`door_api`.
+`door_api`. Check in that order: `door_api`, then a missing `charset`
+(the floor message), then its value, then the `ascii` return, so a host
+below the floor always gets the floor message.
 Blacksite draws no quarter blocks; any future art that does must follow
 `quadrants`, or draw half blocks itself.
 Do not force a preference change or add an ASCII tier. True permits the

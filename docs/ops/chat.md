@@ -57,7 +57,8 @@ or a view resync, replays the last 50 authorized lines. Stable line IDs
 prevent duplicate display. History expires with the service process;
 private chat is not written to ordinary server logs.
 
-Acceptance uses two callers through a private NetBBS v7.31.0 Telnet node
+Acceptance (captured on NetBBS v7.31.0; reproduce on the v7.45.0 floor)
+uses two callers through a private NetBBS Telnet node
 and registered native stdio door at 80x24 and 132x50:
 
 ```powershell

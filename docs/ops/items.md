@@ -57,7 +57,8 @@ activation/anchors or its required bank.
 
 ## Acceptance
 
-Run with NetBBS v7.31.0's Python environment and the installed Blacksite
+Captured on NetBBS v7.31.0. To reproduce, run with the supported floor's
+(v7.45.0) Python environment and the installed Blacksite
 door interpreter, in a real terminal:
 
 ```powershell

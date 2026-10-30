@@ -136,6 +136,10 @@ not a second speculative future-version preset.
 - `test_content_bootstrap_copies_once_and_resyncs_on_version_change`
 - `test_content_local_never_touched_by_resync`
 - `test_client_refuses_unsupported_integer_door_api_before_world_entry`
+- `test_missing_charset_names_the_netbbs_floor_before_charset_rules`
+  (order: `door_api`, then a missing `charset` with the NetBBS 7.45.0
+  message, then an unknown `charset` value as malformed, then S30's
+  `ascii` return)
 - `test_unlimited_and_shorter_effective_session_deadlines`
 - `test_ascii_preference_refusal_and_outbound_disabled_policy`
 - `test_version_constant_matches_pyproject`
