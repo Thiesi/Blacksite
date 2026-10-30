@@ -3,6 +3,7 @@
 Game design 4, 5.3, 5.4 and 7.3. No I/O or wall-clock reads occur here.
 """
 
+from blacksite.server.interaction import Focus, Interaction, interact, key_action, object_interaction
 from collections import deque
 from copy import deepcopy
 from datetime import datetime, timezone
@@ -24,6 +25,7 @@ from blacksite.server.skills import Use
 from blacksite.server.quality import value as quality_value, damage_multiplier
 from blacksite.server.wake import menu
 from blacksite.server.world.actors import Actor
+from blacksite.server.views import presentation
 from blacksite.server.world.sight import line, sees_actor, visible_tiles, line_of_sight, sight_radius, detection_limit
 from blacksite.server.world.sight import private_visible
 
@@ -48,10 +50,20 @@ class Combat:
         self.crew_together: Callable[[str, str], bool] = lambda one, other: False
         self.ability_effect: Callable[[Player, HymnTemplate], dict[str, Any]] = lambda player, ability: dict(ability.effect)
         self.sim.target_provider = self.target_view
+        self.sim.pvp_provider = self.pvp_eligible
         self.game.combat = self
 
     def now(self) -> float:
         return self.clock.now_utc().timestamp()
+
+    def pvp_eligible(self, actor: Actor) -> bool:
+        """Game 5.1: protection at this body, independent of an opponent."""
+        from blacksite.server.rules.character import DISCHARGE_GRADE
+        zone = self.world.zones.get(actor.zone)
+        player = self.game.players.get(actor.id)
+        return bool(zone and zone.allows_hostile(actor.position)
+                    and (zone.safety_at(actor.position) == "open"
+                         or player and player.grade >= DISCHARGE_GRADE))
 
     def session(self, pid: str) -> Session | None:
         return next((s for s in self.game.sessions.active.values() if s.player_id == pid and not s.closed), None)
@@ -63,8 +75,8 @@ class Combat:
     def log(self, actor: Actor, text: str, warning: bool = False) -> None:
         session = self.session(actor.owner if actor.behaviour.get("player_drone") else actor.id)
         if session:
-            session.send(Frame("log", {"lines":[{"channel":"combat", "text":text,
-                "role":"warning" if warning else "chan_sys", "at":self.clock.now_utc().isoformat()}]}))
+            session.emit(text, kind="danger" if warning else "combat", channel="combat",
+                         role="warning" if warning else "chan_sys", at=self.clock.now_utc().isoformat())
 
     def relation(self, source: Actor, target: Actor) -> str:
         if self.crew_together(source.id, target.id):
@@ -197,17 +209,22 @@ class Combat:
             radius = sight_radius(actor, zone, hour >= 20 or hour < 6)
             if not actor.modifiers.get("target_through_cover") or rules.distance(actor.position, target.position) > radius:
                 return None
-        return {"id":target.id, "name":target.name, "handle":target.handle, "faction":target.faction or "Freelance",
-            "name_role": "player_hostile" if target.marked else self.content.factions[target.faction].colour if target.faction in self.content.factions else "text",
+        hidden = presentation.covered(target, actor, self.content)
+        legacy_role = "player_hostile" if target.marked else self.content.factions[target.faction].colour if target.faction in self.content.factions else "text"
+        return {"id":target.id, "name":presentation.name(target, actor, self.content), "handle":target.handle,
+            "faction": presentation.presented_class(target, actor, self.content).title() if hidden else target.faction or "Freelance",
+            "class": presentation.presented_class(target, actor, self.content), "jacked": target.stance == "jacked",
+            "name_role": presentation.role(target, actor, self.content, legacy_role),
             "hp_percent":max(0,ceil(100 * target.health / target.health_max)),
             **({"hp": target.health, "hp_max": target.health_max} if actor.modifiers.get("target_through_cover") else {}),
             "range":round(rules.distance(actor.position,target.position),1), "cover":self.cover(actor,target),
-            "relation":self.relation(actor,target), "stance":target.stance,
+            "relation":"neutral" if hidden else self.relation(actor,target), "stance":target.stance,
             "protected":not self.legal(actor,target),
             "warning":"Protected" if not self.legal(actor,target) else "Obscured; no clear shot" if obscured
                 else "Firing marks you" if (target.kind == "player" or target.behaviour.get("player_drone")) and self.relation(actor,target) != "hostile" else ""}
 
     def warn(self, source: Actor, target: Actor, tick: int) -> bool:
+        self.reveal(source, target)
         key = source.id, target.id
         private_training = source.behaviour.get("training") or target.behaviour.get("training")
         if key not in self.warnings or (not private_training and tick-self.warnings[key] > rules.ticks(rules.COMBAT_SECONDS)
@@ -344,6 +361,7 @@ class Combat:
         if (not self.legal(source,target) or target.stance in ("down","dead") or not self.visible(source,target)
                 or rules.distance(source.position,target.position) > (weapon.range or 1.5)):
             return
+        self.reveal(source, target)
         if source.behaviour.get("interlock_initiator"):
             initiator = self.world.actors[source.behaviour["interlock_initiator"]]
             self.mark_indirect(initiator, target)  # A committed remote miss still marks.
@@ -412,8 +430,13 @@ class Combat:
             except ValueError: self.log(source,"The city is busy. Try again.",True)
             return
         if not self.legal(source,target) or target.stance in ("down","dead"): return
+        self.reveal(source, target)
         training = source.behaviour.get("training")
         self._apply_damage(source, target, amount, shock, source.id, source.name, bool(training), damage_type)
+
+    def reveal(self, source: Actor, target: Actor) -> None:
+        if source.reveal_against(target) and source.zone in self.world.zones:
+            self.world.zones[source.zone].revision += 1
 
     def feedback_hurt(self, target: Actor, amount: int, source_id: str, source_name: str,
                       permit: Callable[[], bool]) -> bool:
@@ -655,13 +678,19 @@ class Combat:
         self.commerce.settle(player,{"inventory":draft.inventory,"equipment":draft.equipment,"recovery_kit_id":draft.recovery_kit_id},
             items,self.commerce.caches,serial,committed)
 
-    def pickup(self, source: Actor, target: Actor) -> bool:
+    def can_pickup(self, source: Actor, target: Actor) -> bool:
         player = self.game.players.get(target.id)
         if not player or target.stance != "down" or source.stance in ("down","dead","sleeper"): return False
         if source.zone != target.zone or rules.distance(source.position,target.position)>1.5: return False
         if not self.crew_together(source.id, target.id): return False
         if player.progress.get('combat', {}).get('until', float('inf')) <= self.now(): return False
-        if self.relation(source,target)=="hostile" or self.relation(target,source)=="hostile" or player.progress["combat"].get("killer")==source.id: return False
+        return not (self.relation(source,target)=="hostile" or self.relation(target,source)=="hostile"
+                    or player.progress["combat"].get("killer")==source.id)
+
+    def pickup(self, source: Actor, target: Actor) -> bool:
+        if not self.can_pickup(source, target):
+            return False
+        player = self.game.players[target.id]
         target.health = max(1,ceil(target.health_max*rules.REVIVE_FRACTION)); target.stance = "normal"
         player.progress.pop("combat",None)
         self.remember(player,target); self.log(target,source.name+" picks you up.")
@@ -748,7 +777,32 @@ class Combat:
         elif ability.kind == "dissonance" and threatened:
             self.game.progression.record_use(player.id, Use("dissonance_threat", "dissonance", receipt, True, threat=True))
 
-    def input(self, session: Session, frame: Frame, tick: int) -> bool:
+    def interaction(self, session: Session, frame: Frame) -> Interaction | None:
+        player = self.game.players.get(session.player_id)
+        actor = self.actor(player) if player else None
+        if not actor or session.pending_prompts.get('chat'):
+            return None
+        if player.progress.get('combat', {}).get('stage') in ('down', 'dead'):
+            return Interaction()
+        if actor.zone is None:
+            return None
+        if session.id in self.menus:
+            return Interaction()
+        if (session.id in self.game.screens or session.id in self.sim.maps
+                or session.id in self.commerce.menus or session.id in self.commerce.prompts):
+            return None
+        if interact(frame) or key_action(self.sim.keymap, session, frame) == 'interact':
+            for other in self.world.zones[actor.zone].actors.values():
+                if other is not actor and self.can_pickup(actor, other):
+                    return Interaction(Focus(other.id, presentation.name(other, actor, self.content), 'pick up'),
+                                       other, other.position, other.id)
+            vat = next((o for o in self.world.zones[actor.zone].objects.values() if o.spec.kind == 'vat'
+                and max(abs(actor.x-o.spec.tile[0]), abs(actor.y-o.spec.tile[1])) <= 1), None)
+            if vat:
+                return object_interaction(vat, 'use')
+        return None
+
+    def input(self, session: Session, frame: Frame, tick: int, *, interaction: Interaction | None = None) -> bool:
         player = self.game.players.get(session.player_id)
         actor = self.actor(player) if player else None
         if not actor: return False
@@ -817,11 +871,15 @@ class Combat:
                 actor.stance = "normal" if actor.stance == "stealth" else "stealth"
                 self.world.zones[actor.zone].revision += 1; return True
             if action == "interact" or key in ("e","E") or name == "pickup":
-                if any(self.pickup(actor,a) for a in tuple(self.world.zones[actor.zone].actors.values()) if a is not actor): return True
-                vat = next((o for o in self.world.zones[actor.zone].objects.values() if o.spec.kind=="vat"
-                    and max(abs(actor.x-o.spec.tile[0]),abs(actor.y-o.spec.tile[1]))<=1),None)
-                if vat:
-                    self.commerce.enqueue_system(lambda:self.recover_at_vat(player.id,vat.spec.id)); return True
+                # pickup is also a typed intent; its selection is the E query.
+                choice = interaction or self.interaction(session, Frame('intent', {'name': 'interact'}))
+                if choice:
+                    if choice.actor_id:
+                        self.pickup(actor, choice.value)
+                    else:
+                        vat = choice.value
+                        self.commerce.enqueue_system(lambda:self.recover_at_vat(player.id,vat.spec.id))
+                    return True
             if name == "recovery":
                 self.commerce.enqueue_system(lambda:self.recover_at_vat(player.id,str(args.get("target","")))); return True
             if key in ("b","B") and any(a.owner == actor.id and a.behaviour.get("training") for a in self.world.actors.values()):

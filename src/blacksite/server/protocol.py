@@ -100,12 +100,18 @@ class Delta(TypedDict):
     ops: list[dict[str, Any]]
 
 
+LogKind = Literal["place", "ambient", "speech", "danger", "combat", "system", "reward", "notice"]
+
+
 class LogLine(TypedDict):
     id: NotRequired[str]
     channel: str
     text: str
     role: str
     at: str
+    kind: LogKind
+    speaker: NotRequired[str]
+    speaker_role: NotRequired[str]
 
 
 class Log(TypedDict):

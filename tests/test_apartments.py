@@ -15,7 +15,7 @@ from blacksite.server.housing_rules import LAPSE_SECONDS, WEEK_SECONDS
 from blacksite.server.items import make_item
 from blacksite.server.protocol import Frame
 from scripts.housing_fixture import build_fixture
-from tests.character_helpers import create, place, state
+from tests.character_helpers import act, create, place, state
 from tests.harness import HeadlessServer
 
 
@@ -60,6 +60,70 @@ def rent(game, client, index=1):
 
 def inside(game, client, unit):
     place(game, client, unit.zone, unit.tile(unit.room.meta.spawn))
+
+
+def test_game_8_7_closed_home_does_not_freeze_public_geometry(housing):
+    game, client, outsider = housing
+    apartments, record, unit = rent(game, client)
+    inside(game, client, unit)
+    actor = game.core.combat.actor(player(game, client))
+    zone = game.core.world.zones[unit.zone]
+    assert zone.objects[unit.door].open is False
+    assert zone.safe_geometry({})
+    assert not zone.safe_geometry({actor.position: 'wall'})
+    assert not zone.safe_geometry({actor.position: 'hazard'})
+    # Recovery from a lapsed private saved position must find public floor.
+    returning = game.core.combat.actor(player(game, outsider))
+    tile = game.core.world.free_tile(unit.zone, actor.position, returning)
+    assert apartments.geometry.containing(unit.zone, tile) is None
+    # A closed home still has its existing explicit egress action.
+    place(game, client, unit.zone, unit.tile(unit.anchor.vestibule))
+    act(game, client, Frame('intent', {'name': 'interact', 'args': {}}))
+    assert actor.position == unit.anchor.doorstep
+
+
+def test_game_8_7_dropped_goods_beside_doorstep_do_not_steal_entry(housing):
+    game, client, _ = housing
+    apartments, record, unit = rent(game, client)
+    p = player(game, client)
+    issued = next(i for i in p.inventory if game.core.commerce.items[i].key_for == p.apartment_id)
+    place(game, client, unit.zone, (unit.anchor.doorstep[0]-1, unit.anchor.doorstep[1]))
+    game.core.commerce.propose(client.session, 'inv.drop', {'item': issued})
+    game.commit_commerce()
+    cache = next(iter(game.core.commerce.caches))
+    # Force the production ordering: a hex world-origin cache sorts before
+    # the fixture's home ID, so ID ordering alone selects the wrong target.
+    zone = game.core.world.zones[unit.zone]
+    obj = zone.objects.pop(cache)
+    zone.objects['0-cache-before-door'] = replace(obj, spec=replace(obj.spec, id='0-cache-before-door'))
+    place(game, client, unit.zone, unit.anchor.doorstep)
+    prediction = game.core.resolve_interaction(client.session, Frame('intent', {'name': 'interact', 'args': {}}))
+    assert prediction.route.name == 'apartments' and prediction.choice.focus.id == unit.door
+    act(game, client, Frame('intent', {'name': 'interact', 'args': {}}))
+    assert unit.region.contains(game.core.combat.actor(p).position)
+    assert client.session.id not in game.core.lattice.interlock.log_menus
+
+
+def test_architecture_6_1_public_crowd_shares_housing_escape_search(housing):
+    game, client, _ = housing
+    from blacksite.server.world.actors import Actor
+    zone = game.core.world.zones['vatside-wake-hall']
+    zone.actors.clear()
+    for n in range(30):
+        actor = Actor(f'crowd:{n}', 'Wide界', zone=zone.id)
+        actor.x, actor.y = game.core.world.free_tile(zone.id, zone.template.meta.spawn, actor)
+        zone.actors[actor.id] = actor
+    calls = 0
+    original = zone.entry_policy
+
+    def counted(actor, tile):
+        nonlocal calls
+        calls += 1
+        return original(actor, tile)
+
+    zone.entry_policy = counted
+    assert zone.safe_geometry({})
+    assert calls < 4*zone.template.width*zone.template.height
 
 
 def item(game, client, template="wpn_halvard_hv7", quality=1.08, count=1):

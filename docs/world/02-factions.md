@@ -469,8 +469,10 @@ players on the sitrep city-wide.
   colleagues. *"I did the ninety days. It's not a metaphor; it's a
   number. Make it to five, then we'll talk."*
 - **Clerk Wendel Hass**, the Authority's actual administrator, a
-  civilian who has run the lights and the water for thirty years and
-  whom Brann obeys on anything that is not a gun. *"The pumps don't care
+  civilian who has run the lights and the water for thirty years, since
+  he kept the hand log through the Dry Eleven in Year 11, and whom Brann
+  obeys on anything that is not a gun. He works from a desk in the
+  Treatment Hall at the Intake (planned, #101). *"The pumps don't care
   who's Marshal. Neither do I."*
 
 **Hall:** `core-precinct`, the Warden precinct on the Core plaza. The
@@ -513,7 +515,8 @@ people in.
 ### Relays
 
 The Core has no relays. The Wardens care about Block Relay in the Terraces and Sump Relay
-below the Sink. Sodium Row has no relay: its neutrality is maintained
+below the Sink, and, once the Intake is built (planned, #101), Intake
+Relay at the Wellhead, in the only district that leans their way. Sodium Row has no relay: its neutrality is maintained
 through service and patrol contracts, not capturable ownership.
 
 ### Relations rationale
@@ -775,6 +778,10 @@ of the public meeting place.
   give it away. The Unmoored also once published Sable's client ledger,
   which is the kind of thing Sable remembers. The Unmoored regard Sable
   as the corporations with worse manners.
+- **Hostile, the Lamp Compact:** the Lamp Strike cost Sable Warmwater and
+  its tithe, and the Compact still buys people out of Sable's houses in
+  the Sink. Reyes keeps the Row neutral for the Compact's people like
+  anyone else's, and has never once set foot in the baths.
 - **Neutral, Sablier:** the black clinics are Sablier-supplied and Reyes's
   sister runs the vault. This neutrality is a family arrangement, and
   it holds because both siblings would rather die than discuss it.
@@ -1033,7 +1040,157 @@ theirs by right and everyone else's holdings as temporary.
 
 ---
 
-## 9. Freelance
+## 9. The Lamp Compact
+
+*"Everything for hire. Nobody for sale."*
+
+**Colours:** rose `#F472B6` (256: 211, 16: 13) on pearl `#F5F0E6`
+(256: 255, 16: 15). **Sigil:** `♨` (ASCII `&`; the baths). **Visual tell:** good clothes worn loose, a small brass
+lamp pin, and the habit of remembering your name before you give it.
+
+### History since the Severance
+
+Warmwater began as the shift baths. Halvard built them for Site Zero's
+crews on the warm-water main from the geothermal plant: long tiled halls
+where a shift came up from the lower levels and sat in hot water until
+it could talk again. Where there are tired people with wages and a warm
+room, there is everything else, and by the end of the contract the
+baths had a street of houses around them that the company pretended not
+to see.
+
+After the Severance the baths were the warmest public rooms in a city
+on rations, and the houses were the only trade in Karst that never ran
+out of stock. Red Sable came up out of the Sink in the Long Quiet and
+sold the houses protection, which in Warmwater meant a tithe on every
+room and Sable's say over who worked in them. For twenty years the
+quarter paid.
+
+In Year 26 the people who worked the houses put out every lamp in the
+quarter, the lamp over the door that says a house is open, for nine
+nights. Sable's collectors came and found nothing to collect; the
+clients went home; the baths stayed open and fed anyone who stayed out.
+The Lamp Strike ended when the Civic Authority, glad of anything that
+weakened Sable after the Sink Riot, licensed the houses to the workers'
+own compact instead of to their landlords. Sable has never forgiven
+the Authority or the Compact, and has never been able to go back
+without a war on the Row.
+
+The Lamp Compact owns Warmwater collectively now: the houses, the
+baths, the boilers that heat them, and the Quiet Book, which records
+nothing anyone did and everything anyone owes for its not being
+written down.
+
+### Structure and ranks
+
+A licensed guild with an elected head. Members are workers, bath
+staff, the Doors (the Compact's enforcers) and anyone else who keeps
+its rule. Ranks by standing: **Host** (+30), **Lamp** (+50), **Steward**
+(+70), **Confidant** (+90).
+
+The Compact has one rule, written over the bath doors: *nobody here
+belongs to anybody.* Nobody works a room on a lease, a debt or someone
+else's say. Wakes are welcome in the baths and the bars from their first
+day; the houses hire only people who own themselves, which in Karst
+means personhood. The Compact will pay off a stranger's debt to get
+them out of a Sable house, and will not tell anyone it did.
+
+### Leadership
+
+- **Auda Senn**, First Lamp (leader). Elected by the houses every three
+  years; this is her third term. Fifty-eight. Worked the Courts for
+  twenty years, called the strike, and still knows every regular by
+  their own name and their house name. *"Sable called it protection. We
+  called it rent. Now we pay neither, and Sable pays for his own
+  drinks."*
+- **Tobiah Oyelaran**, the Bathmaster. A Kestrel pipe engineer who came
+  for the water and stayed for the work. He keeps the boilers, the main
+  and the baths at forty-one degrees. *"Same as the city's age. I keep it
+  there out of spite."*
+- **Nell Varga**, keeper of the Quiet Book. A perfect memory and a habit
+  of not using it. The most dangerous person in Warmwater, and the
+  politest. *"I don't write down what you did. I write down that you'd
+  rather I hadn't seen it."*
+- **Hanne Voss**, head of the Doors. The Doors carry no guns inside the
+  quarter and do not need them. *"Ask nicely. Then ask the door."*
+- **Remy Lamarre**, Recruiter, who works the Wake Hall desk at the next
+  card over from Lio Vance. They have not spoken in four years.
+
+**Hall:** `warmwater-baths`, upstairs in the bathhouse. The Compact's
+vat is a Sablier unit the Compact bought outright, the only vat in Karst
+that Sablier does not lease.
+
+### Recruiter's pitch (Remy Lamarre)
+
+> They decanted you, named you and put a date on you. Somebody always
+> has a date on you in this city. Not in Warmwater. We're the houses, the
+> baths and the people who keep the lamps lit, and we keep one rule:
+> nobody here belongs to anybody. Not to Sablier, not to Sable, not to
+> us. Come and get warm. Work if you want to, and get paid if you do.
+> Whatever you tell us stays in the Book. Take the card. The first bath's
+> on the house.
+
+### Vendor
+
+Bath consumables (warm-water tonics that clear shock), clothes and
+cosmetics (Warmwater dress is the city's most copied fashion), bath
+detox (design §8.6: cheaper and slower than Sablier's), discretion
+services, and a room by the hour: a paid scene that fades out, with no
+mechanical effect (design §5.6).
+
+### Contracts
+
+Templates: *Walk Home* (escort a named worker through a contested zone
+to their door), *Quiet* (recover a blackmailer's copy before it is sold:
+an item from an NPC, by talk, theft or force), *Lamp Check* (run a
+licensed house's lamp core and find who tapped it).
+
+Reserved story hooks (not automatic season events): **Season 1**: the
+Quiet Book's oldest pages are the shift baths' tallies, the only roster
+of Site Zero crews outside Halvard: names of specialists who went down
+and never came back up to bathe. Halvard wants them burned, Sablier
+wants them read, and Reyes wants to buy them. **Season 2**: a Sable
+house in the Sink is working leased Wakes; Senn wants it closed without
+a war on Sodium Row. **Season 3**: the warm-water main runs cold for the
+first time since the Severance, and the Compact asks a crew to follow it
+down.
+
+### Relays
+
+The **Lamp Relay** on Lamp Street, which runs the lamp board that tells
+the city which houses are open, and the **Boiler Relay** in the
+Boilerhouse, which governs the heat. The Long Baths have none: the
+Compact keeps the baths open to everyone, holder or not.
+
+### Relations rationale
+
+- **Allied, the Wardens:** a Civic licence is the only wall the Compact
+  has. The Wardens patrol Lamp Street, the Compact keeps its houses
+  clean of Sable, and both sides find the arrangement cheaper than the
+  alternative. Brann has been to the baths. Nobody has written it down.
+- **Hostile, Red Sable:** the Lamp Strike, the lost tithe, and every
+  unlicensed house Sable still runs in the Sink. Sable keeps the Row
+  neutral and the Compact respects that; anywhere else, the Doors and
+  Sable's enforcers know each other by sight.
+- **Hostile, the Unmoored (one-sided):** the Unmoored publish ledgers,
+  and the Compact's whole trade is a ledger nobody reads. The Unmoored
+  hold no grudge; they think the Quiet Book is a public good that has
+  not been published yet, which is exactly the problem.
+- **Neutral, Halvard:** Spire executives are regulars and Spire security
+  hates it. The Quiet Book is why neither side pushes.
+- **Neutral, Sablier:** Sablier sells the Compact its tonics and sold it
+  its vat, and resents the one rule, which Sablier's lawyers read as a
+  comment on the Wake lease. They are right.
+- **Neutral, Kestrel:** the trams bring the clients and the boiler coal
+  comes up on Kestrel's freight. Business.
+- **Neutral, the Choir:** choristers come to the baths to listen to the
+  pipes, which hum. The Compact lets them.
+- **Neutral, the Ferrymen:** Ferrymen come in from the Scour twice a
+  season, pay in salvage and leave the rooms cleaner than they found
+  them. Everyone likes the Ferrymen in Warmwater.
+
+---
+
+## 10. Freelance
 
 *"Nobody's."*
 
@@ -1067,7 +1224,7 @@ else.
 
 ---
 
-## 10. Faction chat culture
+## 11. Faction chat culture
 
 Sample lines in each faction channel, for tone. Content slices should
 write NPC channel chatter and system messages in these voices.
@@ -1120,6 +1277,12 @@ write NPC channel chatter and system messages in these voices.
 - `Sel wants the optics grade *before* you strip it this time.`
 - `Pilgrim at the Landing needs a walk to the fourth. Anyone bored?`
 
+**Lamp Compact**
+- `Lamps are lit on the north court. Doors, two to the arch, please.`
+- `Sable collector in the back alley again. Don't touch him. Smile at him. He hates that.`
+- `Tobiah says the main's knocking. Tobiah always says the main's knocking.`
+- `Whoever left a Spire pass in room four, it's at the counter. Nell has already forgotten your face.`
+
 ---
 
 ## Glossary
@@ -1132,7 +1295,7 @@ The public hall and vat map is binding: Halvard at `spire-atrium`,
 Sablier at `vatside-clinics` with public vat at `vatside-wake-hall`,
 Kestrel at `tramyard-depots`, Wardens at `core-precinct`, Choir at
 `chapel-nave`, Sable at `sink-terraces`, Unmoored at `oldworks-drop`,
-Ferrymen at `scour-landing`. Every vat occupies a protected pocket.
+Ferrymen at `scour-landing`, Lamp Compact at `warmwater-baths`. Every vat occupies a protected pocket.
 
 All perks, including their thresholds and limits, are game design §7.6.
 A high rank changes how a resident prepares, obtains access, or keeps

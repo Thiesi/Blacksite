@@ -1,0 +1,105 @@
+{
+  "schema": 1,
+  "id": "reyes",
+  "name": "Tomasz \"Sable\" Reyes",
+  "faction": "sable",
+  "title": "Head of Red Sable",
+  "terminal": false,
+  "machine_mind": false,
+  "lines": [
+    {
+      "id": "marked",
+      "text": "Marked, and you came to me. Smart. Nobody in the Sink cares what colour your name is. Now what's it worth?",
+      "when": [
+        "marked"
+      ],
+      "required": true
+    },
+    {
+      "id": "enemy",
+      "text": "One of Ninety-Nine's. You know what your people cost me? I'll tell you the number. Then I'll tell you what you're going to cost them.",
+      "when": [
+        "enemy_of_me"
+      ],
+      "required": true
+    },
+    {
+      "id": "finale",
+      "text": "You have a receipt, friend. That's something we can price. What was listening is another matter.",
+      "when": [
+        "season_stage finale_done"
+      ],
+      "required": true
+    },
+    {
+      "id": "record-sab-red-s1-4-candles",
+      "text": "You recorded five points around the warm stack. The account names no candle keeper. Somebody still has to tend a candle.",
+      "when": [
+        "has_evidence s19-sab-red-s1-4-candles"
+      ],
+      "required": true
+    },
+    {
+      "id": "record-sab-red-s1-3-dark",
+      "text": "Your power schedule names no terrace for that load. It routes below the Sink. A blank address still uses power.",
+      "when": [
+        "has_evidence s19-sab-red-s1-3-dark"
+      ],
+      "required": true
+    },
+    {
+      "id": "record-sab-red-s1-2-drop",
+      "text": "The note in your cache blames Ninety-Nine for ledger week. It is dated last month. Keep the note; ask what supports it.",
+      "when": [
+        "has_evidence s19-sab-red-s1-2-drop"
+      ],
+      "required": true
+    },
+    {
+      "id": "record-sab-red-s1-1-remind",
+      "text": "Three subscribers restrained, alive. The notice calls that collection. A notice can name a debt without proving who owes it.",
+      "when": [
+        "has_evidence s19-sab-red-s1-1-remind"
+      ],
+      "required": true
+    },
+    {
+      "id": "first",
+      "text": "Friend! Sit down, the car doesn't stop, that's the whole trick of it. What do you need and what's it worth to you?",
+      "when": [
+        "first_meeting"
+      ],
+      "required": true
+    },
+    {
+      "id": "wake",
+      "text": "A Wake. Day what? Doesn't matter. In the Sink you were a person the moment you could pay.",
+      "when": [
+        "is_wake"
+      ],
+      "required": true
+    },
+    {
+      "id": "greeting",
+      "text": "Friend! Sit down, the car doesn't stop, that's the whole trick of it. What do you need and what's it worth to you?",
+      "when": [],
+      "required": true
+    }
+  ],
+  "offers": [
+    {
+      "kind": "contract",
+      "ref": "sab-red-s1-1-remind",
+      "label": "Work board",
+      "hotkey": "c",
+      "when": []
+    }
+  ],
+  "barks": [
+    {
+      "text": "Forty minutes round. I've done it eleven thousand times. I know every face on every terrace. That's the trouble with knowing.",
+      "weight": 1,
+      "min_interval_seconds": 90
+    }
+  ]
+}

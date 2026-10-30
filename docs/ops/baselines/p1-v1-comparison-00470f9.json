@@ -1,0 +1,409 @@
+{
+  "schema": 1,
+  "platform": "Linux-7.0.0-1017-azure-x86_64-with-glibc2.43",
+  "python": "3.12.15 (main, Oct  1 2026, 02:36:28) [GCC 15.2.0]",
+  "p1_head": "00470f9a448cda7f7c459836c0b38d9694f70692",
+  "v1_revision": "1060c9df2ac6b140db932b4e888989d192502b20",
+  "v1_script_sha256": "b0e6226eb14ffd4b0e2513af4b29e735dfae2f28047c7d42c96578760f071fac",
+  "activity": "walking where there is no scene",
+  "size": [
+    132,
+    50
+  ],
+  "tier": "truecolor",
+  "sample_seconds": 12.0,
+  "policy": "first four cases use the identical pinned V1 runtime; P1-v1-charted enables trial charting but retains the shipped renderer; P1-current isolates revision differences; V1 source is unedited; wall and process CPU are separate; Windows CPU remains diagnostic",
+  "cases": [
+    {
+      "case": "p1-v1-runtime",
+      "elapsed_s": 12.000086742,
+      "process_cpu_s_per_minute": 3.312278262196582,
+      "method_wall_s_per_minute": 3.3229643299523413,
+      "successful_moves": 59,
+      "successful_moves_per_minute": 294.997867607914,
+      "calls": {
+        "update": 120,
+        "render": 120,
+        "receive": 83,
+        "key": 59
+      },
+      "output_frames": 73,
+      "method_cpu_s_per_minute": {
+        "update": 0.003961306365696936,
+        "render": 2.2866850956967855,
+        "receive": 1.018604542017068,
+        "key": 0.0030273181170309906
+      },
+      "method_wall_s_per_minute_by_method": {
+        "update": 0.0060699311235028735,
+        "render": 2.28937983121789,
+        "receive": 1.022567988367296,
+        "key": 0.004946579243651937
+      },
+      "key_steps": 59,
+      "activity_result": {
+        "zone": "sodium-row",
+        "view": "shipped map or local help",
+        "elapsed_s": 12.000086742,
+        "initial_view": {
+          "viewport": {
+            "x": 0,
+            "y": 0,
+            "w": 100,
+            "h": 30
+          },
+          "visible_cells": 516,
+          "remembered_cells": 0,
+          "unknown_cells": 2484
+        },
+        "final_view": {
+          "viewport": {
+            "x": 0,
+            "y": 0,
+            "w": 100,
+            "h": 30
+          },
+          "visible_cells": 517,
+          "remembered_cells": 199,
+          "unknown_cells": 2284
+        },
+        "ticks": 120,
+        "key_steps": 59,
+        "successful_moves": 59,
+        "successful_moves_per_minute": 294.997867607914,
+        "route": "closed eight-tile horizontal walk",
+        "method_wall_s_per_minute": 3.3132024705159417,
+        "cpu_s": 0.662460441,
+        "cpu_s_per_minute": 3.312278262196582,
+        "calls": {
+          "update": 120,
+          "render": 120,
+          "receive": 83,
+          "key": 59
+        },
+        "output_frames": 73,
+        "output_bytes": 113088
+      },
+      "initial_view": {
+        "viewport": {
+          "x": 0,
+          "y": 0,
+          "w": 100,
+          "h": 30
+        },
+        "visible_cells": 516,
+        "remembered_cells": 0,
+        "unknown_cells": 2484
+      },
+      "final_view": {
+        "viewport": {
+          "x": 0,
+          "y": 0,
+          "w": 100,
+          "h": 30
+        },
+        "visible_cells": 517,
+        "remembered_cells": 199,
+        "unknown_cells": 2284
+      },
+      "renderer": "shipped",
+      "trial": false
+    },
+    {
+      "case": "v1",
+      "elapsed_s": 12.037355410000004,
+      "process_cpu_s_per_minute": 9.032435547236199,
+      "method_wall_s_per_minute": 9.033224710609417,
+      "successful_moves": 47,
+      "successful_moves_per_minute": 234.27072674595053,
+      "calls": {
+        "update": 97,
+        "render": 97,
+        "key": 48,
+        "receive": 55
+      },
+      "output_frames": 96,
+      "key_steps": 48,
+      "method_cpu_s_per_minute": {
+        "update": 0.0033648404172191833,
+        "render": 8.342001584216742,
+        "key": 0.005839357367616346,
+        "receive": 0.6812297652346212
+      },
+      "method_wall_s_per_minute_by_method": {
+        "update": 0.0033656429190703765,
+        "render": 8.34219847131688,
+        "key": 0.00610430759059892,
+        "receive": 0.6815562887828696
+      },
+      "original_v1_wall_s_per_minute": 9.033224710609419,
+      "initial_view": {
+        "viewport": {
+          "x": 0,
+          "y": 0,
+          "w": 100,
+          "h": 30
+        },
+        "visible_cells": 271,
+        "remembered_cells": 2729,
+        "unknown_cells": 0
+      },
+      "final_view": {
+        "viewport": {
+          "x": 0,
+          "y": 0,
+          "w": 100,
+          "h": 30
+        },
+        "visible_cells": 256,
+        "remembered_cells": 2744,
+        "unknown_cells": 0
+      },
+      "renderer": "V1 proposal map",
+      "trial": true
+    },
+    {
+      "case": "v1-shipped",
+      "elapsed_s": 12.03618002799999,
+      "process_cpu_s_per_minute": 10.045194420383764,
+      "method_wall_s_per_minute": 10.04581299039374,
+      "successful_moves": 46,
+      "successful_moves_per_minute": 229.3086339336368,
+      "calls": {
+        "update": 95,
+        "render": 95,
+        "key": 47,
+        "receive": 54
+      },
+      "output_frames": 94,
+      "key_steps": 47,
+      "method_cpu_s_per_minute": {
+        "update": 0.003385019159336226,
+        "render": 9.371459677206492,
+        "key": 0.003046076073530796,
+        "receive": 0.6673036479444063
+      },
+      "method_wall_s_per_minute_by_method": {
+        "update": 0.0033931945106329903,
+        "render": 9.37172757449554,
+        "key": 0.0030591416806947107,
+        "receive": 0.6676330797068738
+      },
+      "original_v1_wall_s_per_minute": 10.045812990393745,
+      "initial_view": {
+        "viewport": {
+          "x": 0,
+          "y": 0,
+          "w": 100,
+          "h": 30
+        },
+        "visible_cells": 271,
+        "remembered_cells": 2729,
+        "unknown_cells": 0
+      },
+      "final_view": {
+        "viewport": {
+          "x": 0,
+          "y": 0,
+          "w": 100,
+          "h": 30
+        },
+        "visible_cells": 246,
+        "remembered_cells": 2754,
+        "unknown_cells": 0
+      },
+      "renderer": "shipped",
+      "trial": true
+    },
+    {
+      "case": "p1-v1-charted",
+      "elapsed_s": 12.000098187999996,
+      "process_cpu_s_per_minute": 8.187158229942312,
+      "method_wall_s_per_minute": 8.198557476669876,
+      "successful_moves": 59,
+      "successful_moves_per_minute": 294.997586231417,
+      "calls": {
+        "update": 120,
+        "render": 120,
+        "receive": 83,
+        "key": 59
+      },
+      "output_frames": 75,
+      "method_cpu_s_per_minute": {
+        "update": 0.004086501562882047,
+        "render": 7.154224401751206,
+        "receive": 1.0259363504468022,
+        "key": 0.002910976181422559
+      },
+      "method_wall_s_per_minute_by_method": {
+        "update": 0.00608281022841911,
+        "render": 7.1579022166580994,
+        "receive": 1.0297651191185406,
+        "key": 0.0048073306648180585
+      },
+      "key_steps": 59,
+      "activity_result": {
+        "zone": "sodium-row",
+        "view": "shipped map or local help",
+        "elapsed_s": 12.000098187999996,
+        "initial_view": {
+          "viewport": {
+            "x": 0,
+            "y": 0,
+            "w": 100,
+            "h": 30
+          },
+          "visible_cells": 516,
+          "remembered_cells": 2484,
+          "unknown_cells": 0
+        },
+        "final_view": {
+          "viewport": {
+            "x": 0,
+            "y": 0,
+            "w": 100,
+            "h": 30
+          },
+          "visible_cells": 517,
+          "remembered_cells": 2483,
+          "unknown_cells": 0
+        },
+        "ticks": 120,
+        "key_steps": 59,
+        "successful_moves": 59,
+        "successful_moves_per_minute": 294.997586231417,
+        "route": "closed eight-tile horizontal walk",
+        "method_wall_s_per_minute": 8.188843011156873,
+        "cpu_s": 1.637445044,
+        "cpu_s_per_minute": 8.187158229942312,
+        "calls": {
+          "update": 120,
+          "render": 120,
+          "receive": 83,
+          "key": 59
+        },
+        "output_frames": 75,
+        "output_bytes": 133902
+      },
+      "initial_view": {
+        "viewport": {
+          "x": 0,
+          "y": 0,
+          "w": 100,
+          "h": 30
+        },
+        "visible_cells": 516,
+        "remembered_cells": 2484,
+        "unknown_cells": 0
+      },
+      "final_view": {
+        "viewport": {
+          "x": 0,
+          "y": 0,
+          "w": 100,
+          "h": 30
+        },
+        "visible_cells": 517,
+        "remembered_cells": 2483,
+        "unknown_cells": 0
+      },
+      "renderer": "shipped",
+      "trial": true
+    },
+    {
+      "case": "p1-current",
+      "elapsed_s": 12.000091202000007,
+      "process_cpu_s_per_minute": 2.795369049729325,
+      "method_wall_s_per_minute": 2.805691376277923,
+      "successful_moves": 59,
+      "successful_moves_per_minute": 294.997757967873,
+      "calls": {
+        "update": 120,
+        "render": 120,
+        "receive": 83,
+        "key": 59
+      },
+      "output_frames": 69,
+      "method_cpu_s_per_minute": {
+        "update": 0.0022843226387672232,
+        "render": 2.12568569443444,
+        "receive": 0.6649140965420469,
+        "key": 0.0024849361140713753
+      },
+      "method_wall_s_per_minute_by_method": {
+        "update": 0.004198458091018763,
+        "render": 2.128378748966777,
+        "receive": 0.6688793964051071,
+        "key": 0.004234772815020808
+      },
+      "key_steps": 59,
+      "activity_result": {
+        "zone": "sodium-row",
+        "view": "shipped map or local help",
+        "elapsed_s": 12.000091202000007,
+        "initial_view": {
+          "viewport": {
+            "x": 0,
+            "y": 0,
+            "w": 100,
+            "h": 30
+          },
+          "visible_cells": 516,
+          "remembered_cells": 0,
+          "unknown_cells": 2484
+        },
+        "final_view": {
+          "viewport": {
+            "x": 0,
+            "y": 0,
+            "w": 100,
+            "h": 30
+          },
+          "visible_cells": 517,
+          "remembered_cells": 199,
+          "unknown_cells": 2284
+        },
+        "ticks": 120,
+        "key_steps": 59,
+        "successful_moves": 59,
+        "successful_moves_per_minute": 294.997757967873,
+        "route": "closed eight-tile horizontal walk",
+        "method_wall_s_per_minute": 2.796425901697074,
+        "cpu_s": 0.559078059,
+        "cpu_s_per_minute": 2.795369049729325,
+        "calls": {
+          "update": 120,
+          "render": 120,
+          "receive": 83,
+          "key": 59
+        },
+        "output_frames": 69,
+        "output_bytes": 112948
+      },
+      "initial_view": {
+        "viewport": {
+          "x": 0,
+          "y": 0,
+          "w": 100,
+          "h": 30
+        },
+        "visible_cells": 516,
+        "remembered_cells": 0,
+        "unknown_cells": 2484
+      },
+      "final_view": {
+        "viewport": {
+          "x": 0,
+          "y": 0,
+          "w": 100,
+          "h": 30
+        },
+        "visible_cells": 517,
+        "remembered_cells": 199,
+        "unknown_cells": 2284
+      },
+      "renderer": "shipped",
+      "trial": false
+    }
+  ]
+}

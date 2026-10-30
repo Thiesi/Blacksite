@@ -19,6 +19,8 @@ from tests.test_dialogue_runtime import content
     ({'offers': (Offer('vendor', 'Trade', 'b', 'vesper'),)}, 'unique single key'),
     ({'offers': (Offer('service', 'Surgery', 's', 'vesper'),)}, 'no clinic service'),
     ({'lines': (DialogueLine('bad', 'Wait.', ('unknown_flag',)), DialogueLine('fallback', 'Sit.'))}, 'unknown condition'),
+    ({'lines': (DialogueLine('bad', 'Wait.', ('receipt no-such-receipt',)), DialogueLine('fallback', 'Sit.'))}, 'no branch group'),
+    ({'lines': (DialogueLine('bad', 'Wait.', ('chronicle_choice 999 no-such-option',)), DialogueLine('fallback', 'Sit.'))}, 'no season 999 finale option'),
 ])
 def test_game_13_4_invalid_talker_fails_validation_before_runtime(
         content: ContentTree, change: dict, message: str) -> None:

@@ -1,0 +1,45 @@
+{
+  "schema": 1,
+  "id": "vael",
+  "name": "Petra Vael",
+  "faction": "halvard",
+  "title": "Recruiter",
+  "terminal": false,
+  "machine_mind": false,
+  "lines": [
+    {
+      "id": "wake",
+      "text": "You can earn the discharge. Until then the lease is still a lease.",
+      "when": [
+        "is_wake"
+      ],
+      "required": true
+    },
+    {
+      "id": "first",
+      "text": "Your card isn't a contract. Read the terms. I was a Wake too.",
+      "when": [
+        "first_meeting"
+      ],
+      "required": true
+    },
+    {
+      "id": "greeting",
+      "text": "Your card isn't a contract. Read the terms. I was a Wake too.",
+      "when": [],
+      "required": true
+    }
+  ],
+  "offers": [
+    {
+      "kind": "recruit",
+      "ref": "halvard",
+      "label": "Recruitment terms",
+      "hotkey": "j",
+      "when": [
+        "not_member_of halvard"
+      ]
+    }
+  ],
+  "barks": []
+}

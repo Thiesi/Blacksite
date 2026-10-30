@@ -1,0 +1,48 @@
+name: S25a engine acceptance
+
+on:
+  pull_request:
+    paths:
+      - 'src/blacksite/**'
+      - 'scripts/accept_s25a_netbbs.py'
+      - 'scripts/accept_s10_netbbs.py'
+      - 'scripts/accept_s11_netbbs.py'
+      - '.github/workflows/s25a-acceptance.yml'
+  workflow_dispatch:
+
+jobs:
+  engine-netbbs:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    permissions:
+      contents: read
+    strategy:
+      fail-fast: false
+      matrix:
+        size: ['80x24', '132x50']
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - uses: actions/checkout@v4
+        with:
+          repository: Thiesi/NetBBS
+          ref: v7.31.0
+          path: .test-tmp/netbbs
+      - name: Install NetBBS and the isolated Blacksite wheel
+        shell: bash
+        run: |
+          python -m pip install './.test-tmp/netbbs[ssh,web]'
+          python -m pip wheel --no-deps . -w "$RUNNER_TEMP/s25a-wheels"
+          python -m venv "$RUNNER_TEMP/s25a-venv"
+          "$RUNNER_TEMP/s25a-venv/bin/python" -m pip install "$RUNNER_TEMP"/s25a-wheels/*.whl
+      - name: Exercise fixture interactions through native stdio
+        shell: bash
+        run: |
+          python scripts/accept_s25a_netbbs.py --root "$RUNNER_TEMP/s25a-proof" --door-python "$RUNNER_TEMP/s25a-venv/bin/python" --size '${{ matrix.size }}'
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: s25a-engine-proof-${{ matrix.size }}
+          path: ${{ runner.temp }}/s25a-proof

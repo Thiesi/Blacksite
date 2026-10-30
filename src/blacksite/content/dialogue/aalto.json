@@ -1,0 +1,51 @@
+{
+  "schema": 1,
+  "id": "aalto",
+  "name": "Kestrel Convoy Master Sanne Aalto",
+  "faction": "kestrel",
+  "title": "Convoy master",
+  "terminal": false,
+  "machine_mind": false,
+  "lines": [
+    {
+      "id": "situation",
+      "text": "If the grille goes quiet mid-route, we stop. I've got a rule for it.",
+      "when": [
+        "event_active convoy"
+      ],
+      "required": true
+    },
+    {
+      "id": "work",
+      "text": "The escort terms name the convoy. Stay with that one. Dispatch won't walk the road for you.",
+      "when": [
+        "has_contract kes-s1-1-escort"
+      ],
+      "required": true
+    },
+    {
+      "id": "first",
+      "text": "Dispatch posts the rating. Dispatch isn't on the sled. Read the escort terms before you come.",
+      "when": [
+        "first_meeting"
+      ],
+      "required": true
+    },
+    {
+      "id": "greeting",
+      "text": "Dispatch has a clock. I've got people. Read the card; both matter on the road.",
+      "when": [],
+      "required": true
+    }
+  ],
+  "offers": [
+    {
+      "kind": "contract",
+      "ref": "kes-s1-1-escort",
+      "label": "Work board",
+      "hotkey": "c",
+      "when": []
+    }
+  ],
+  "barks": []
+}

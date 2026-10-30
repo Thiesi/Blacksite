@@ -1,0 +1,43 @@
+{
+  "schema": 1,
+  "id": "lindgren",
+  "name": "Hanne Lindgren",
+  "faction": "wardens",
+  "title": "Precinct armourer",
+  "terminal": false,
+  "machine_mind": false,
+  "lines": [
+    {
+      "id": "situation",
+      "text": "Civic list only. You want an energy rifle, go to the Spire and ask nicely.",
+      "when": [
+        "grade_below 10"
+      ],
+      "required": true
+    },
+    {
+      "id": "first",
+      "text": "Civic list only. You want an energy rifle, go to the Spire and ask nicely.",
+      "when": [
+        "first_meeting"
+      ],
+      "required": true
+    },
+    {
+      "id": "greeting",
+      "text": "Every serial in the book. You buy from me, it stays in the book.",
+      "when": [],
+      "required": true
+    }
+  ],
+  "offers": [
+    {
+      "kind": "vendor",
+      "ref": "warden-quartermaster",
+      "label": "Trade",
+      "hotkey": "v",
+      "when": []
+    }
+  ],
+  "barks": []
+}

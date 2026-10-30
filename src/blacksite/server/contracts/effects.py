@@ -1,5 +1,6 @@
 """Game 7.5: owned service geometry and narrowly scoped economic effects."""
 
+from blacksite.server.interaction import Interaction, object_interaction
 from math import ceil
 from copy import deepcopy
 from typing import Any, Iterator
@@ -143,15 +144,24 @@ class ServiceEffects:
             if actor and actor.zone == zone:
                 self.owner.log(player.id, text)
 
-    def cache(self, session: Any) -> bool:
+    def cache_interaction(self, session: Any) -> Interaction | None:
         player = self.owner.game.players[session.player_id]
         actor = self.owner.game.combat.actor(player)
         for sid, effect in self.each(player.id):
             if effect.type != 'cache' or effect.zone != actor.zone:
                 continue
             obj = self.owner.world.zones[actor.zone].objects.get(effect.params.get('object'))
-            if not obj or max(abs(actor.x-obj.spec.tile[0]), abs(actor.y-obj.spec.tile[1])) > 1:
-                continue
+            if obj and max(abs(actor.x-obj.spec.tile[0]), abs(actor.y-obj.spec.tile[1])) <= 1:
+                choice = object_interaction(obj, 'collect')
+                return Interaction(choice.focus, (sid, effect), choice.tile)
+        return None
+
+    def cache(self, session: Any, choice: Interaction | None = None) -> bool:
+        player = self.owner.game.players[session.player_id]
+        actor = self.owner.game.combat.actor(player)
+        choice = choice or self.cache_interaction(session)
+        if choice:
+            sid, effect = choice.value
             if self.owner.commerce.pending:
                 raise ValueError('Let the current transfer settle first.')
             draft = self.owner.state.fork()

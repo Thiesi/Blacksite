@@ -1,10 +1,11 @@
 """Game 9 adapter: consenting rosters and atomic contract transactions."""
 
+from blacksite.server.interaction import Interaction
 from collections.abc import Callable, Iterator
 from copy import deepcopy
 from dataclasses import dataclass, field, replace
 from math import ceil
-from typing import Any
+from typing import Any, TYPE_CHECKING
 
 from blacksite.content.schema import ContractTemplate, DataSpec, Stage, StageTarget
 from blacksite.server.clock import TICK_HZ
@@ -21,6 +22,9 @@ from blacksite.server.progression import Grant, award
 from blacksite.server.factions import apply_vector
 from blacksite.server.protocol import Frame
 from blacksite.server.sessions import Session
+
+if TYPE_CHECKING:
+    from blacksite.server.dialogue_runtime import Dialogue
 
 
 @dataclass
@@ -59,6 +63,8 @@ class Contracts:
         self.scenes = Scenes(self)
         from blacksite.server.contracts.actions import Actions
         self.actions = Actions(self)
+        # Core installs S27 after the owning action systems are constructed.
+        self.dialogue: 'Dialogue | None' = None
         self.lat.encounters.contract_rows = self.actions.core_rows
         self.lat.encounters.start_contract_plant = self.actions.start_plant
         self.lat.encounters.finish_contract_plant = self.actions.finish_plant
@@ -90,8 +96,15 @@ class Contracts:
         self.lat.interlock.permit = lambda player, core, action: (
             permission(player, core, action) or self.control_permit(player, core, action))
 
-    def input(self, session: Session, frame: Frame, tick: int) -> bool:
-        return self.actions.input(session, frame, tick) or self.panels.input(session, frame, tick)
+    def interaction(self, session: Session, frame: Frame) -> Interaction | None:
+        return (self.actions.interaction(session, frame)
+                or self.dialogue and self.dialogue.interaction(session, frame)
+                or self.panels.interaction(session, frame))
+
+    def input(self, session: Session, frame: Frame, tick: int, *, interaction: Interaction | None = None) -> bool:
+        return (self.actions.input(session, frame, tick, interaction=interaction)
+                or self.dialogue is not None and self.dialogue.input(session, frame, tick, interaction=interaction)
+                or self.panels.input(session, frame, tick, interaction=interaction))
 
     def now(self) -> float:
         return self.clock.now_utc().timestamp()

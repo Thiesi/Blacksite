@@ -39,6 +39,13 @@ migration.
 | `terraces-lobby` | Residence Lobby | The Terraces | pocket | neutral | 40 × 24 |
 | `sodium-row` | Sodium Row | Sodium Row | contested | neutral (Sable-enforced) | 100 × 30 |
 | `sodium-tin-halo` | The Tin Halo | Sodium Row | pocket | neutral | 44 × 22 |
+| `warmwater-lamp-street` | Lamp Street (planned, #90) | Warmwater | contested | Lamp Compact | 100 × 30 |
+| `warmwater-baths` | The Long Baths (planned, #90) | Warmwater | pocket | Lamp Compact | 60 × 30 |
+| `warmwater-courts` | The Courts (planned, #90) | Warmwater | contested | Lamp Compact | 80 × 40 |
+| `warmwater-boilerhouse` | The Boilerhouse (planned, #90) | Warmwater | contested | Lamp Compact | 70 × 40 |
+| `intake-beds` | The Settling Beds (planned, #101) | The Intake | contested | Wardens | 100 × 40 |
+| `intake-hall` | The Treatment Hall (planned, #101) | The Intake | pocket | Wardens | 50 × 30 |
+| `intake-wellhead` | The Wellhead (planned, #101) | The Intake | contested | Wardens | 70 × 40 |
 | `under-service` | Service Level | Undercity | open | none | 120 × 50 |
 | `under-drowned` | The Drowned Level | Undercity | open | none | 100 × 60 |
 | `under-caverns` | Karst Caverns | Undercity | open | none | 150 × 80 |
@@ -51,9 +58,226 @@ migration.
 | `scour-ring-4` | Far Ring | The Scour | open | none | 200 × 100 |
 | `blacksite-l1` | Blacksite Level One | The Blacksite | instanced | none | see story arcs |
 
-Thirty-five zone templates. Instancing is separate from safety;
+Forty-two zone templates, four of them Warmwater's, planned (#90), and
+three the Intake's, planned (#101). Instancing is separate from safety;
 `blacksite-l1` has open mission areas and a protected decision room.
 Count the safety classes from the overview instead of a second tally.
+
+## City plan
+
+Where things are, seen from above. This section is the canon geography
+the City Map draws (presentation plan P9, decision D-T7). It places
+districts, zones and the routes between them; it does not change any
+exit, rule or zone map. The layout sketches under each zone stay
+proportion guides: their exit sides need not match the compass here,
+though geometry revisions (S25c) may align them where that costs
+nothing.
+
+### Shape of the city
+
+Karst sits on the plateau inside one wall: roughly round, built in
+straight runs, about ten kilometres across. Gate Nine, in the east
+wall, is the only gate that opens. The wall's other gates, also on
+Tramyard's stretch of the wall, are sealed and are not drawn as exits.
+
+The Spire stands at the centre, on the sealed shaft, the highest point
+on the plateau. The Core is the downtown at the Spire's southern foot.
+The districts ring the Core in this order, clockwise from the
+north-west, with Warmwater in the north-east and the Intake last, in
+the north (planned, #101):
+
+```
+                          #####################
+                      #####                   #####
+                   ####   beds, fungal halls      ####
+                ###                                   ###
+               ##          THE INTAKE                   ##
+             ##                               WARMWATER   ##
+            ##     VATSIDE                                 ##
+          ##                                                 ##
+         ##              +                    +               ##
+         #                .       SPIRE                        #
+        ##                                  .         TRAMYARD ##
+        #                   .       o     .                     #
+       ##                               .                       #] Gate Nine
+       #  TERRACES            .                   .+             #
+       #            + .               .       . .                #
+       #                . .     .         . .                    #
+       ##                   . .     . . .   . . . . . +         ##
+        #                       . H . . . .                     #
+        ##                  . . .       CORE       THE SINK    ##
+         #                .                                    #
+         ##           + .                                     ##
+          ##  CHAPEL WARD                                    ##
+            ##              SODIUM ROW                     ##
+             ##                           OLD WORKS       ##
+               ##                                       ##
+                ###                                   ###
+                   ####                           ####
+                      #####                   #####
+                          #####################
+
+   o  the shaft   H  Central Tram Hub   + tram terminus   . tram line
+   ]  Gate Nine    #  the wall
+```
+
+| District | Where | Its street neighbours |
+|---|---|---|
+| The Spire | centre, on the shaft | the Core (the Spire steps) |
+| The Core | centre, south of the Spire | the Spire, Vatside (Sablier Boulevard), the Terraces, Sodium Row (the Neon Stair), Warmwater (the Lamp Walk), the Intake (the Cistern Walk) |
+| Vatside | north-west | the Core, the Terraces, the Intake (the Filter Lane) |
+| The Terraces | west | the Core, Vatside, Chapel Ward |
+| Chapel Ward | south-west | the Terraces |
+| Sodium Row | south, below the Core | the Core, Old Works |
+| Old Works | south-east | Sodium Row, Tramyard (freight siding), the Sink (tunnel) |
+| The Sink | east-south-east, against the wall | Tramyard (the Long Stair), Old Works |
+| Tramyard | east, along the wall | the Sink, Old Works, Warmwater (the Steam Stair), the Scour (Gate Nine) |
+| Warmwater | north-east, between the Spire and the wall | the Core (the Lamp Walk), Tramyard (the Steam Stair) |
+| The Intake | north, between the Spire and the wall; planned (#101) | the Core (the Cistern Walk), Vatside (the Filter Lane) |
+
+North of the Spire are the covered beds and fungal halls that feed the
+city, and among them the Civic treatment works, the Intake (bible 3.6;
+planned, #101). The beds and halls around the Intake have no zone; the
+City Map draws them as plain city fabric with no name.
+
+Tramyard runs along the east wall because the wall was Kestrel's
+project and the gate is Kestrel's. The Sink is a sinkhole a kilometre
+across, inside the wall near the east gate, and the Caverns beneath it
+reach out under the wall. Warmwater sits on the warm-water main that
+runs north-east from Site Zero's geothermal plant; its baths were the
+shift baths before they were anything else.
+
+### Zone positions
+
+Positions are on a plan of 100 by 100 units, north up, with the city's
+centre at 50, 50 and the wall at a radius of 40 (one unit is about 125
+metres). Each one is the zone's centre as the City Map places it. They
+are schematic: they fix order and direction, not walking distance.
+Zones on the same spot are stacked; the map shows a stack as one place.
+
+| Zone | Plan x, y | Notes |
+|---|---|---|
+| `spire-mezzanine` | 50, 41 | top of the Spire stack |
+| `spire-atrium` | 50, 41 | middle of the stack; the glass faces east, over Gate Nine |
+| `spire-shaft-head` | 50, 41 | base of the stack, on the shaft collar |
+| `core-plaza` | 50, 51 | |
+| `core-tram-hub` | 47, 57 | south of the plaza |
+| `core-precinct` | 57, 55 | south-east of the plaza |
+| `vatside-wake-hall` | 30, 26 | |
+| `vatside-clinics` | 35, 33 | Sablier Boulevard runs south-east to the plaza |
+| `vatside-vat-row` | 27, 38 | |
+| `terraces-blocks` | 28, 50 | |
+| `terraces-lobby` | 22, 52 | apartment interiors are not on the map |
+| `chapel-towers` | 30, 66 | |
+| `chapel-nave` | 25, 71 | |
+| `sodium-row` | 47, 68 | the Neon Stair climbs north to the plaza |
+| `sodium-tin-halo` | 43, 72 | |
+| `oldworks-main` | 62, 68 | the freight siding runs north-east to the depots |
+| `oldworks-drop` | 57, 74 | hidden: drawn only once found |
+| `oldworks-yards` | 68, 78 | |
+| `sink-rim` | 75, 56 | the north lip |
+| `sink-terraces` | 78, 63 | |
+| `sink-floor` | 77, 68 | |
+| `tramyard-market` | 71, 47 | |
+| `tramyard-depots` | 79, 43 | |
+| `tramyard-wall-gate` | 88, 45 | Gate Nine, in the east wall |
+| `warmwater-lamp-street` | 64, 32 | planned (#90); the Lamp Walk runs south-west to the plaza |
+| `warmwater-baths` | 59, 27 | planned (#90) |
+| `warmwater-courts` | 69, 25 | planned (#90) |
+| `warmwater-boilerhouse` | 74, 31 | planned (#90); the main goes down here, sealed |
+| `intake-beds` | 42, 23 | planned (#101); the Cistern Walk runs south round the Spire's west side to the plaza; the Filter Lane runs south-west to Clinic Row |
+| `intake-hall` | 50, 17 | planned (#101) |
+| `intake-wellhead` | 56, 18 | planned (#101); the well shafts go down here, sealed |
+
+### Routes between districts
+
+| Route | Joins | Kind |
+|---|---|---|
+| The Spire steps | Spire Atrium and Meridian Plaza | street |
+| Sablier Boulevard | Meridian Plaza and Clinic Row | street |
+| The Neon Stair | Meridian Plaza and Sodium Row | street, downhill to the Row |
+| The Long Stair | Tramyard Market and the Rim | street, down to the Rim |
+| The freight siding | Contractor Street and the Ration Depots | rail spur, walked |
+| The rim cable cars | the Rim and the Sink Terraces | three stations |
+| The tolled tunnel | the Sink Terraces and the Fabrication Yards | through the sinkhole wall |
+| The Lamp Walk | Meridian Plaza and Lamp Street | street, round the Spire's east side |
+| The Steam Stair | Tramyard Market and Lamp Street | street, up from the market |
+| The Cistern Walk | Meridian Plaza and the Settling Beds | street, round the Spire's west side; planned (#101) |
+| The Filter Lane | Clinic Row and the Settling Beds | street; planned (#101) |
+
+Every other zone exit stays inside its district.
+
+**Tram lines.** Kestrel's trams run six lines out from the Central Tram
+Hub. Each line has one terminus and no stops between, and is named for
+it:
+
+| Line | Terminus | Runs |
+|---|---|---|
+| Clinic line | Clinic Row | north-west |
+| Terraces line | Block Street | west |
+| Chapel line | Cooling Towers | south-west |
+| Rim line | the Rim | east |
+| Market line | Tramyard Market | east-north-east |
+| Lamp line | Lamp Street | north-east; planned (#90) |
+
+The City Map draws each line as a straight run from the hub to its
+terminus. A line crosses ground where it does not stop, so a ride
+reveals nothing on the way.
+
+### The Undercity
+
+The Undercity is drawn as its own layer of the City Map, on the same
+plan as the city above it, so a caller sees what lies under what.
+
+| Zone | Plan x, y | Lies under | Ways up |
+|---|---|---|---|
+| `under-service` | 36, 58 | a long arc from Vat Row round under the Terraces and Chapel Ward to the Fabrication Yards | ladders to Vat Row and the Yards, the drain stair to the Cooling Towers |
+| `under-drowned` | 58, 62 | Sodium Row and the south of the Core | none; reached from the Service Level |
+| `under-outworks` | 52, 50 | the Core and the Spire, around the shaft | none |
+| `under-shaft-foot` | 50, 41 | the Spire, at the bottom of the shaft | the Shaft (story-gated) |
+| `under-caverns` | 77, 71 | the Sink and the south-east, reaching out under the wall | the Sump grate to the Floor |
+| `blacksite-l1` | 50, 41 | below Shaft Foot | not drawn; an instance |
+
+The Caverns' cave mouth opens outside the wall to the south-east, into
+the Beacon Ring. It is a hidden link, drawn only once the caller has
+found it.
+
+### The Scour
+
+The Scour is the third layer: the wall drawn small at its centre, the
+rings around it. Each ring goes all the way round the city, but each
+Scour zone is the stretch of its ring reached from Gate Nine, so all of
+them lie east of the wall.
+
+| Zone | Where |
+|---|---|
+| `scour-ring-1` | the Wall Ring, hugging the wall east of Gate Nine |
+| `scour-landing` | east-south-east, between the Wall Ring and the Beacon Ring, at the end of the causeway |
+| `scour-ring-2` | the Beacon Ring, east; the cave mouth sits in its south-east end |
+| `scour-ring-3` | the Crash Ring, east |
+| `scour-ring-4` | the Far Ring, east, with no outer edge drawn |
+
+On the Scour layer, at a scale where the wall has a radius of 16 units,
+the rings are 16 to 24 (Wall Ring), 24 to 32 (Beacon Ring), 32 to 41
+(Crash Ring) and 41 to 50 (Far Ring). The Landing sits at 27 units from
+the centre, bearing 110 degrees. The cave mouth sits at 28 units,
+bearing 135 degrees.
+
+### What the City Map may show
+
+Geography is not a secret, but names are earned (architecture 5.5.4):
+
+- Always drawn: the wall, Gate Nine, the shaft, the Sink's hole, the
+  tram hub and its six lines, and the district outlines as unnamed
+  ground.
+- Named only once visited: each district, zone and tram terminus. An
+  unvisited district shows as unnamed ground, and an unvisited terminus
+  as a bare stop.
+- Drawn only once found: hidden links (the Drop's door, the cave mouth)
+  and the zones behind them. Found means the caller has passed through
+  that link; visiting the zones on both sides of it is not enough.
+- Never drawn: apartment interiors, the Blacksite instance, and the
+  sealed gates.
 
 ## Sketch legend
 
@@ -175,7 +399,8 @@ Everything metal is slightly, permanently, damp.
 - **Exits:** `spire-atrium` (steps); `core-tram-hub` (street);
   `core-precinct` (street); `sodium-row` (street, the Neon Stair);
   `terraces-blocks` (street); `vatside-clinics` (street, Sablier
-  Boulevard).
+  Boulevard); `warmwater-lamp-street` (street, the Lamp Walk);
+  `intake-beds` (street, the Cistern Walk; planned, #101).
 - **Relays:** none.
 - **Terminals:** four public Lattice terminals (Core sector).
 - **Vendors / anchors:** Kestrel bank branch, general vendor
@@ -209,7 +434,8 @@ The Marshal keeps count.
 - **Class:** safe. **Lean:** Kestrel / Wardens. **Size:** 80 × 30.
   **Sight:** 12.
 - **Exits:** `core-plaza` (street); trams to `tramyard-market`,
-  `vatside-clinics`, `terraces-blocks`, `chapel-towers`, `sink-rim`
+  `vatside-clinics`, `terraces-blocks`, `chapel-towers`, `sink-rim`,
+  `warmwater-lamp-street`
   (tram platforms; a tram departs every 90 seconds and the ride is a
   10-second transition).
 - **Relays:** none.
@@ -276,7 +502,7 @@ at least once, on the theory that it saves a step.
 - **Relays:** none.
 - **Terminals:** one tutorial terminal (Wake Hall cell, tier 0, one ICE).
 - **Vendors / anchors:** Dr. Ilse Vantongeren (tutorial talker), the
-  Wake corridor (one scripted hostile drone), the eight recruiter cards
+  Wake corridor (one scripted hostile drone), the eight recruiter cards (nine once the Lamp Compact is built, planned, #90)
   on a rack.
 - **Spawners:** the tutorial drone only; Sablier orderlies (talkers).
 - **Vats:** the decant vats (default respawn for Freelance and Sablier
@@ -306,7 +532,7 @@ of rain that never falls.
   **Sight:** 12.
 - **Exits:** `vatside-wake-hall` (door); `core-plaza` (street, Sablier
   Boulevard); `vatside-vat-row` (street); `core-tram-hub` (tram
-  platform).
+  platform); `intake-beds` (street, the Filter Lane; planned, #101).
 - **Relays:** **Cold Chain Relay** (controls elective cold-storage capacity; member surgery benefit
   and public work orders follow game design §7.5 and §7.7).
 - **Terminals:** two public terminals; one Sablier-member terminal
@@ -411,7 +637,8 @@ one pallet at a time.
 - **Class:** contested. **Lean:** Kestrel. **Size:** 80 × 36.
   **Sight:** 12.
 - **Exits:** `tramyard-depots` (street); `core-tram-hub` (tram
-  platform); `sink-rim` (street, the Long Stair down).
+  platform); `sink-rim` (street, the Long Stair down);
+  `warmwater-lamp-street` (street, the Steam Stair up).
 - **Relays:** none.
 - **Terminals:** two public terminals (market board access).
 - **Vendors / anchors:** the market: general goods, ammo, food,
@@ -441,8 +668,9 @@ and Sable can stand at adjacent stalls and both pretend not to notice.
 
 - **Class:** contested. **Lean:** Kestrel. **Size:** 70 × 50.
   **Sight:** 11.
-- **Exits:** `tramyard-depots` (street); `scour-ring-1` (the gate:
-  opens on a Kestrel schedule every 5 minutes for 60 seconds, or on a
+- **Exits:** `tramyard-depots` (street); `scour-landing` (the camp road);
+  `scour-ring-1` (the gate:
+  opens on a Kestrel schedule every 2 minutes for 60 seconds, or on a
   Gate core control, or for a convoy).
 - **Relays:** **Gate Relay Nine** (controls the gate schedule; holders
   open the gate on demand and tax non-members a toll in chits).
@@ -911,6 +1139,266 @@ things. Some of the things are true.
 
 ---
 
+## Warmwater
+
+### `warmwater-lamp-street` — Lamp Street
+
+- **Status:** planned (#90). Canon only until a Stage 2 slice builds it.
+- **Class:** contested. **Lean:** Lamp Compact. **Size:** 100 × 30.
+  **Sight:** 12 (a lamp over every open door).
+- **Exits:** `core-plaza` (the Lamp Walk); `core-tram-hub` (tram
+  platform); `tramyard-market` (the Steam Stair); `warmwater-baths` (the
+  bath doors); `warmwater-courts` (street, through the arch);
+  `warmwater-boilerhouse` (service gate, unlocked).
+- **Relays:** **Lamp Relay** (runs the lamp board; holders' bath detox
+  and rooms at Compact counters cost 20 % less).
+- **Terminals:** two public terminals; one hardware terminal (Lamp Board
+  core, tier 2).
+- **Vendors / anchors:** bars, a clothier (Warmwater dress), a tonic
+  stall, the lamp board (which houses are open, in lights), emote
+  anchors (a bench under the arch, the bath steps).
+- **Spawners:** the Doors (guard, aggro on anyone who attacks anyone),
+  crowds, workers and patrons (talkers, flirting and gossip), Warden
+  patrols, Sable collectors after dark (aggro on Compact members only).
+
+Steam comes up through the gratings all winter and the whole street
+smells of hot stone and somebody's perfume. Every open house has a lamp
+over its door and the lamp board at the top of the street shows which,
+so the street reads like a switchboard that wants you to call. People
+come here to be looked at, and they are: the Doors look at everybody,
+kindly, for exactly as long as it takes to decide. The workers on the
+steps will tell you that you look tired, and offer to do something
+about it, and mean the bath. Mostly.
+
+```
+##################################
+#>>>>......$.....T........$.....>#  tram / steam stair
+#..##+##..##+##..[lamp board]....#  + the bath doors
+#..%.....L.....L.....L.....%.....#
+#.$...$.....R.....$.....$........#  R Lamp Relay
+#..........T..........>.......+..#  > the arch to the courts / + boilerhouse gate
+#>...............................#  > the lamp walk to core-plaza
+##################################
+```
+
+### `warmwater-baths` — The Long Baths
+
+- **Status:** planned (#90). Canon only until a Stage 2 slice builds it.
+- **Class:** pocket. **Lean:** Lamp Compact. **Size:** 60 × 30.
+  **Sight:** 7 (steam).
+- **Exits:** `warmwater-lamp-street` (the bath doors).
+- **Relays:** none. The baths are open to everyone, holder or not.
+- **Terminals:** one public terminal; one hardware terminal (the Quiet
+  Book core, tier 4, in the hall upstairs).
+- **Vendors / anchors:** the bath counter (tonics, bath detox, a room
+  by the hour), the Compact hall upstairs (handler Nell Varga, vendor,
+  vat, contract board, Descent console), emote anchors (the pools).
+- **Spawners:** bathers and attendants (talkers), one of the Doors.
+
+The shift baths, forty years on and more. Long halls of green tile, warm pools
+the length of a tram, the main knocking in the walls like a slow heart.
+Nobody fights in the baths and nobody needs to be told. People come in
+from every district to sit in hot water with strangers, which in Karst
+is as close to trust as anyone gets. The rooms along the far wall have
+curtains and lamps, and when a lamp goes out the curtain closes, and
+that is all you will ever see.
+
+```
+######################
+#+...................#  + lamp street
+#..~~~~~~....~~~~~~..#  ~ warm pools (slow, no cover)
+#..~~~~~~....~~~~~~..#
+#.......$....$.......#  attendants, the bath counter
+#..+..+..+..+........#  + rooms by the hour
+#######+##############  + stair up to the hall
+#.$..V..T....$..[Q]..#  the hall: handler, vat, board, the Quiet Book
+######################
+```
+
+### `warmwater-courts` — The Courts
+
+- **Status:** planned (#90). Canon only until a Stage 2 slice builds it.
+- **Class:** contested. **Lean:** Lamp Compact. **Size:** 80 × 40.
+  **Sight:** 7.
+- **Exits:** `warmwater-lamp-street` (the arch); `warmwater-boilerhouse`
+  (the back alley).
+- **Relays:** none.
+- **Terminals:** one public terminal.
+- **Vendors / anchors:** the houses (rooms by the hour, folded into the
+  map as doors onto each court), a house kitchen (food), a Compact
+  notary (discretion services).
+- **Spawners:** the Doors, workers and patrons (talkers), Sable
+  collectors in the alleys after dark.
+
+The houses stand around four courtyards with a fountain that has not
+run since the Severance and a lemon tree that, somehow, has. Every
+house is different and every house has the same rule painted small
+beside the door. It is quieter than Lamp Street and warmer, and the
+voices from the upper windows are mostly laughing. The alleys between
+the courts are where Sable's collectors still walk at night, to remind
+everyone that they used to.
+
+```
+############################
+#>.......%%.......%%......>#  the arch / back alley to the boilerhouse
+#..####+####..####+####....#
+#..#.L.....#..#.....L.#....#  + house doors
+#..####+####..####+####....#
+#.....$.....[court]....$...#
+#..####+####..####+####.%%.#
+#..#..L....#..#....L..#....#
+#..####+####..####+####....#
+############################
+```
+
+### `warmwater-boilerhouse` — The Boilerhouse
+
+- **Status:** planned (#90). Canon only until a Stage 2 slice builds it.
+- **Class:** contested. **Lean:** Lamp Compact. **Size:** 70 × 40.
+  **Sight:** 6 (steam, low lamps).
+- **Exits:** `warmwater-lamp-street` (service gate);
+  `warmwater-courts` (the back alley). The warm-water main continues
+  down, sealed.
+- **Relays:** **Boiler Relay** (governs the district heat; holders'
+  shock clears faster within Warmwater).
+- **Terminals:** one hardware terminal (Boiler Governor core, tier 3).
+- **Vendors / anchors:** the Bathmaster's bench (salvage buyer: pipe,
+  valves, power), a steam-cleaning station (cosmetic).
+- **Spawners:** boilermen (talkers), the Doors, now and then a Sable
+  saboteur (hostile to Compact members).
+
+Where the warmth comes from. Heat exchangers the size of tram cars,
+taking the geothermal main from Site Zero's plant and turning it into
+every hot pool, warm room and steaming grate in the quarter. Vents
+breathe on a schedule the boilermen know by ear and visitors learn by
+getting scalded. In the far wall the main goes down through a sealed
+collar into the dark. Tobiah Oyelaran puts his hand on it every morning
+and says it is the same as yesterday.
+
+```
+##########################
+#>.........!!!..........>#  service gate / back alley
+#..[boiler]...[boiler]...#
+#..!!.....T......!!......#  ! steam vents (hazard, on a schedule)
+#.......R....%%..........#  R Boiler Relay
+#..[exchanger]......$....#
+#................[main]..#  the main goes down, sealed
+##########################
+```
+
+## The Intake
+
+### `intake-beds` — The Settling Beds
+
+- **Status:** planned (#101). Canon only until a Stage 2 slice builds it.
+- **Class:** contested. **Lean:** Wardens. **Size:** 100 × 40.
+  **Sight:** 8 (work lamps over black water).
+- **Exits:** `core-plaza` (the Cistern Walk); `vatside-clinics` (the
+  Filter Lane); `intake-hall` (the hall doors); `intake-wellhead` (the
+  public catwalk, the long way round the basins, or the sluice walk, the
+  short way, open to Intake Relay holders).
+- **Relays:** none. The sluice gate to the sluice walk answers only to
+  Intake Relay in the Wellhead. The catwalk sluice between the basins is
+  Clearwell's control (Lattice §3.15) and never opens that gate.
+- **Terminals:** two public terminals (Intake sector).
+- **Vendors / anchors:** the Tap (a public standpipe that never runs
+  dry), a fungal-hall stall (food), emote anchors (the basin rail, the
+  Tap's step).
+- **Spawners:** bed workers (talkers), a Warden patrol on a long loop,
+  Choir pilgrims at the basin edge, pipe thieves after dark (hostile).
+
+The covered beds run north from the Spire to the wall, and in the middle
+of them the city drinks. Long settling basins lie under rows of
+green-white work lamps, and every lamp is doubled in the black water, so
+the catwalks seem to hang between two ceilings. The air smells of wet
+stone and the fungal halls next door. At the end of the first catwalk
+stands the Tap, a brass standpipe on a step, with a queue that is never
+long and never empty. It has not run dry since the Dry Eleven. Everything
+else here is surplus, and surplus is what people argue about.
+
+```
+##################################
+#>.....L.......L.......L........>#  the cistern walk / the filter lane
+#..~~~~~~~~..~~~~~~~~..~~~~~~~~..#  ~ settling basins (slow, no cover)
+#..~~~~~~~~..~~~~~~~~..~~~~~~~~..#
+#.......$.......T.........%%.....#  $ the Tap
+#..~~~~~~~~..~~~~~~~~..~~~~~~~~..#
+#..+.....................+......>#  + hall doors / + sluice gate / > catwalk
+##################################
+```
+
+### `intake-hall` — The Treatment Hall
+
+- **Status:** planned (#101). Canon only until a Stage 2 slice builds it.
+- **Class:** pocket (Civic, safe). **Lean:** Wardens. **Size:** 50 × 30.
+  **Sight:** 12 (the brightest floor in the north).
+- **Exits:** `intake-beds` (the hall doors); `intake-wellhead` (the
+  gallery stair).
+- **Relays:** none.
+- **Terminals:** one public terminal.
+- **Vendors / anchors:** Clerk Wendel Hass's desk (Civic handler: water
+  contracts and the Warden contract board), a Civic counter (consumables,
+  water flasks), the hand log of the Dry Eleven in a glass case.
+- **Spawners:** Wardens (guard, two), Civic clerks (talkers).
+
+White tile, Civic blue, and glass galleries where the water goes through
+the filters in slow sheets. Nobody fights here; the Wardens see to that,
+and the clerks see to the Wardens. Hass works at a desk on the gallery
+floor rather than in an office, because from there he can hear the
+pumps. The glass case by the door holds the hand log from Year 11, open
+at day eleven. The last line is in his writing, and it says the water
+came back.
+
+```
+##################
+#+..............+#  + hall doors (beds) / + gallery stair (wellhead)
+#..L....L....L...#
+#..[filters].....#  glass filter galleries
+#.$.....T....$...#  Hass's desk / the Civic counter
+##################
+```
+
+### `intake-wellhead` — The Wellhead
+
+- **Status:** planned (#101). Canon only until a Stage 2 slice builds it.
+- **Class:** contested. **Lean:** Wardens. **Size:** 70 × 40.
+  **Sight:** 5 (lamps on the pump housings only).
+- **Exits:** `intake-beds` (the public catwalk; the sluice walk);
+  `intake-hall` (the gallery stair). The well shafts go down to the
+  aquifer, sealed below the pump housings.
+- **Relays:** **Intake Relay** (holds the sluice gate; holders take the
+  sluice walk to the Beds, design §7.7). It cannot touch the Tap or the
+  city's water (bible §3.6).
+- **Terminals:** one hardware terminal (Clearwell core, tier 4, in the
+  control room; a crew can cut its power, design §6.4).
+- **Vendors / anchors:** Pell Ardwin, chief of the well crews (contract
+  giver: pump and pipe jobs), the shaft rail (emote anchor; where the
+  Choir listens).
+- **Spawners:** well crews (talkers), a Warden patrol, Choir pilgrims,
+  pipe thieves (hostile).
+
+Where the water comes up. Pump housings the size of tram cars stand over
+the shafts, and the only light is on the housings, so the floor between
+them is dark and wet and loud. Water runs in strips across it where the
+wash-down channels drain. The crews talk with their hands. Choir pilgrims
+come to stand at the shaft rail and say the shafts hum, and the crews
+let them, because they keep out of the way. Late at night the pumps
+sometimes change rhythm for a few minutes. The crews look at the control
+room, and nobody is at the panel.
+
+```
+##########################
+#>......................+#  catwalk / + gallery stair
+#..[pump]..~~~..[pump]...#  ~ floor strips (the wash-down floods them)
+#..L.......~~~......L....#  L lamps on the pump housings only
+#...~~~...R....~~~...$...#  R Intake Relay / $ Pell Ardwin
+#..[pump]..T....[shafts].#  T Clearwell control room
+#+.......................#  + the sluice walk (relay holders)
+##########################
+```
+
+---
+
 ## The Undercity
 
 ### `under-service` — Service Level
@@ -1108,7 +1596,8 @@ sign. The Choir have carved it again.
 
 - **Class:** pocket. **Lean:** Ferrymen. **Size:** 60 × 30. **Sight:** 12
   (open sky, Ring-light).
-- **Exits:** `scour-ring-1` (the causeway); `scour-ring-2` (the Ferrymen
+- **Exits:** `tramyard-wall-gate` (the gate approach);
+  `scour-ring-1` (the causeway); `scour-ring-2` (the Ferrymen
   road, a marked route that skips most of Ring One's patrols).
 - **Relays:** none.
 - **Terminals:** one Ferrymen terminal (Landing core, tier 2; the public shelter's
@@ -1315,8 +1804,9 @@ asset manifest can reference it.
   with owner-only object permissions and a separate vestibule. The
   Blacksite uses a separate persistent expedition instance.
 - **Hidden exits** (`under-caverns` cave mouth, the Drop's door) are
-  exits with a `hidden` flag revealed by a Listening check, a program, or
-  an NPC's dialogue flag on the character.
+  unmarked physical passages. Listening, programs and dialogue may point
+  out their location; they are not an additional character credential.
+  Explicit Interact on the actual tile works. Walking never auto-travels.
 - **Shared core** (`lat-shaft` at `spire-shaft-head` and `under-shaft-foot`) are one
   core with two hardware locations; cutting power at either affects
   both. This is the only such core and the content loader should assert
@@ -1345,6 +1835,7 @@ heat, faction enemies, and Curfew do not disable protection.
 | Drowned / Outworks | `lat-drowned` / `lat-outworks-seal` |
 | Shaft Head and Shaft Foot | `lat-shaft`, two hardware locations |
 | Landing | `lat-landing` |
+| Quiet Book / Boiler / Lamp Board | `lat-quiet-book` / `lat-boiler-governor` / `lat-lamp-board` |
 
 Add every named core's hardware and controls to its listed zone, even
 when an early sketch omitted the cabinet. Safe hardware uses mission
@@ -1360,7 +1851,12 @@ Cold Chain places its replacement socket beside a sheltered loan
 terminal. Depot places its manifest inspection point before the surplus
 warehouse fork. Relay Zero places a physical reset cabinet whose cover
 protects a solo player's body from routine NPC patrols. A crew can guard
-it in contested PvP. Every map shows these costs through geometry.
+it in contested PvP. Its reserve credential opens the workshop's
+north workshop passage through `worker_return`, saving at least eight
+steps between the repair mast and the public Old Works counter while
+the public street remains available. S25b supplies the physical binding and proves the shortcut. Ordinary
+`relay_open` remains a separate public capture control. Every map shows
+these costs through geometry (game 7.5).
 
 The existing `under-shaft-foot` is permanent geography, never an Open
 ending reward. That ending changes only an optional east maintenance

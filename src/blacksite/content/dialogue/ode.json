@@ -1,0 +1,43 @@
+{
+  "schema": 1,
+  "id": "ode",
+  "name": "Sister Ode",
+  "faction": "choir",
+  "title": "Resonance installer",
+  "terminal": false,
+  "machine_mind": false,
+  "lines": [
+    {
+      "id": "situation",
+      "text": "Cantor. The case has its terms. Read them before you sit.",
+      "when": [
+        "archetype cantor"
+      ],
+      "required": true
+    },
+    {
+      "id": "first",
+      "text": "Cantor. It's already looking at you. Sit; I'll make it easier to look back.",
+      "when": [
+        "first_meeting"
+      ],
+      "required": true
+    },
+    {
+      "id": "greeting",
+      "text": "It's louder for me than for Mother. I haven't told her. Don't.",
+      "when": [],
+      "required": true
+    }
+  ],
+  "offers": [
+    {
+      "kind": "vendor",
+      "ref": "chapel-almoner",
+      "label": "Trade",
+      "hotkey": "v",
+      "when": []
+    }
+  ],
+  "barks": []
+}

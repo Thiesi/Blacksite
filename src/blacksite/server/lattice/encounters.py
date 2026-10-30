@@ -4,6 +4,7 @@ Defenders return attributed events; reward proposals share Commerce's
 transaction outbox. Caller views expose costs and phases before an action.
 """
 
+from blacksite.server.interaction import Focus, Interaction
 from collections.abc import Callable
 from copy import deepcopy
 from dataclasses import dataclass
@@ -12,7 +13,9 @@ from math import ceil
 from random import Random
 from typing import TYPE_CHECKING, Any
 
+from blacksite.layout import compute as screen_layout
 from blacksite.content.schema import DataSpec, ProgramTemplate
+from blacksite.formatting import display_number
 from blacksite.server.clock import TICK_HZ
 from blacksite.server.inventory import Inventory
 from blacksite.server.items import make_item
@@ -25,7 +28,7 @@ from blacksite.server.lattice.silt_scene import BandGraph
 from blacksite.server.players import Player
 from blacksite.server.progression import Grant, award
 from blacksite.server.sessions import Session
-from blacksite.server.protocol import Frame
+from blacksite.server.protocol import Frame, LogKind
 from blacksite.server.skills import Use
 from blacksite.server.wake import menu, wrapped
 
@@ -96,8 +99,8 @@ class Encounters:
         for session in self.game.sessions.active.values():
             recipient = self.game.players.get(session.player_id)
             if recipient and recipient.faction == owner and not session.closed:
-                session.send(Frame("log", {"lines": [{"channel": "faction", "text": text,
-                    "role": "warning", "at": self.clock.now_utc().isoformat()}]}))
+                session.emit(text, kind="danger", channel="faction", role="warning",
+                             at=self.clock.now_utc().isoformat())
 
     def reported_location(self, viewer: Session, target: Session) -> str | None:
         observer = self.game.players.get(viewer.player_id)
@@ -118,10 +121,10 @@ class Encounters:
     def actor(self, presence: Presence):
         return self.combat.actor(self.game.players[presence.player_id])
 
-    def log(self, presence: Presence, text: str, warning: bool = False) -> None:
+    def log(self, presence: Presence, text: str, warning: bool = False, *, kind: LogKind = "system") -> None:
         session = self.session(presence.player_id)
         if session and not session.closed:
-            self.lat.log(session, text, warning)
+            self.lat.log(session, text, warning, kind=kind)
 
     def hit_serial(self, presence: Presence) -> int:
         actor = self.actor(presence)
@@ -388,6 +391,9 @@ class Encounters:
     def complete_survey(self, presence: Presence, procedure: Procedure) -> None:
         tick = self.clock.now_tick()
         player = self.game.players[presence.player_id]
+        if presence.instance:
+            presence.surveyed_black.update((presence.instance, ice.id)
+                for ice in self.defenders(presence) if ice.meat_damage)
         if not presence.descent:
             player.progress.setdefault("lattice_cooldowns", {})["survey"] = self.clock.now_utc().timestamp()+10
             self.game.queue("save", player.bbs_user_id, player, immediate=True)
@@ -637,7 +643,7 @@ class Encounters:
                 amount = ice.effects.receive(amount).integrity
                 ice.hit(amount, player.id, tick)
                 self.activate(ice, presence, "attack")
-                self.log(presence, f"{program.name} hits {ice.template.name}: {amount:g}. Integrity {ice.integrity:g}.")
+                self.log(presence, f"{program.name} hits {ice.template.name}: {display_number(amount)}. Integrity {display_number(ice.integrity)}.", kind="combat")
         elif kind == "open_gate" and params.get("private_vestibule"):
             deferred_learning = True
             self.lat.interlock.open_vestibule(presence,
@@ -884,8 +890,8 @@ class Encounters:
         if (source_ice and source_ice.template.class_ == "drift" and not redirected
                 and not presence.effects.has("prg_anchor", self.clock.now_tick())):
             self.displace(presence)
-        self.log(presence, f"{name}: {hit.integrity:g} integrity, {hit.meat} body damage"+
-                 ("; decoy absorbs the hit." if redirected else "."), bool(hit.meat))
+        self.log(presence, f"{name}: {display_number(hit.integrity)} integrity, {hit.meat} body damage"+
+                 ("; decoy absorbs the hit." if redirected else "."), bool(hit.meat), kind="combat")
         if presence.integrity <= 0:
             self.force_out(presence)
         return True
@@ -1132,7 +1138,7 @@ class Encounters:
                      {"id": "risk:"+core_id, "cells": ["Enter with NPC risk", "BLACK ICE may injure body"]}]
                     if core_id else []) + [{"id": "survey", "cells": ["Survey", "3s / 10s cooldown"]}]
         room = instance.graph.room(presence.room)
-        rows = self.contract_rows(presence)+[{"id": "ice:"+i.id, "cells": [i.template.name, f"{i.integrity:g} integrity", i.phase]}
+        rows = self.contract_rows(presence)+[{"id": "ice:"+i.id, "cells": [i.template.name, f"{display_number(i.integrity)} integrity", i.phase]}
                 for i in self.defenders(presence)]
         for ice in self.defenders(presence):
             if ice.template.class_ == "liar" and instance.id not in presence.verified_maps:
@@ -1183,7 +1189,7 @@ class Encounters:
             ice = self.target(presence, presence.target)
             if ice:
                 self.log(presence, f"{ice.template.name}: {ice.template.role}, trigger {ice.template.trigger}, "
-                    f"{ice.template.attack:g} integrity / {ice.template.meat_damage} body damage; {ice.template.counter_label}.")
+                    f"{display_number(ice.template.attack)} integrity / {ice.template.meat_damage} body damage; {ice.template.counter_label}.")
         elif row.startswith(("enter:", "risk:")):
             self.enter(session, row.split(":", 1)[1], row.startswith("risk:"))
         elif row.startswith("theft:"):
@@ -1218,8 +1224,20 @@ class Encounters:
             self.lat.interlock.start_flip(presence, row[8:])
         self.menus.pop(session.id, None)
 
+    def interaction(self, session: Session, presence: Presence) -> Interaction | None:
+        if session.id in self.menus:
+            return Interaction()
+        cell = self.lat.sectors.cells[presence.sector][presence.cell]
+        if presence.instance:
+            room = self.core(presence).graph.room(presence.room)
+            focus = Focus(presence.instance+':'+room.id, room.label, 'inspect') if room.label else None
+            return Interaction(focus, room, kind='encounter')
+        if cell.core_id or cell.kind == 'descent' or self.can_enter(presence, 'lat-wake-hall'):
+            return Interaction(Focus(presence.sector+':'+cell.id, cell.label, 'inspect'), cell, kind='encounter')
+        return None
+
     def input(self, session: Session, presence: Presence, name: str, action: str,
-              key: str, args: dict[str, Any], revision: int | None) -> bool:
+              key: str, args: dict[str, Any], revision: int | None, *, interaction: Interaction | None = None) -> bool:
         screen = self.menus.get(session.id)
         if screen:
             rows = self.rows(presence, screen)
@@ -1275,8 +1293,8 @@ class Encounters:
             presence.destination = presence.room_destination = None
         elif action == "interact" or key in ("e", "E"):
             self.inspect_contract(presence)
-            cell = self.lat.sectors.cells[presence.sector][presence.cell]
-            if presence.instance or cell.core_id or cell.kind == "descent" or self.can_enter(presence, "lat-wake-hall"):
+            choice = interaction or self.interaction(session, presence)
+            if choice and choice.kind == 'encounter':
                 self.menus[session.id] = EncounterMenu("room")
             else:
                 return False
@@ -1339,8 +1357,10 @@ class Encounters:
                 label=graph.room(presence.room).label,
                 hint=self.lat.jack_key(session)+" escape  B retreat  E room  Tab target  1-7 cast  R rig")
             body["cells"] = [{"id": room.id, "x": room.pos[0], "y": room.pos[1], "kind": "room",
-                "label": room.label} for room in graph.rooms.values()]
-            body["edges"] = [{"a": room.id, "b": other, "kind": "public"}
+                "label": room.label, "owner": "private" if graph.spec.owner_kind == "private" else graph.spec.owner,
+                "tier": graph.spec.tier} for room in graph.rooms.values()]
+            body["edges"] = [{"a": room.id, "b": other, "kind": "public",
+                "label": room.label+" / "+graph.room(other).label}
                 for room in graph.rooms.values() for other in room.neighbours if room.id < other]
             body["me"]["cell"] = presence.room
             body["presences"] = [{**row, "cell": self.lat.presences[row["id"].removesuffix(":presence")].room}
@@ -1349,6 +1369,7 @@ class Encounters:
                 "trigger": ice.template.trigger, "phase": ice.phase, "integrity": ice.integrity,
                 "maximum": ice.maximum, "target": ice.target, "counter": ice.template.counter_label,
                 "damage": ice.attack, "meat": ice.meat_damage,
+                "black_ice": (instance.id, ice.id) in presence.surveyed_black,
                 "warning_ticks": max(0, ice.activations[player.id].warned-tick) if player.id in ice.activations and ice.template.class_ != "sweeper" else 0,
                 "cooldown_ticks": max(0, ice.next_attack-tick)} for ice in self.defenders(presence)]
             body["black_risk"] = instance.id in presence.risk_consent
@@ -1416,15 +1437,15 @@ class Encounters:
             if screen.kind in ("record", "evidence"):
                 title = (screen.label or screen.target.replace("-", " ")).upper()
                 detail = rows[screen.cursor]["cells"][0] if rows else "No text."
-            stats = f"HP {body['me']['body_hp']}/{body['me']['body_hp_max']}  INT {presence.integrity:g}  TRACE {presence.trace:g}"
+            stats = f"HP {body['me']['body_hp']}/{body['me']['body_hp_max']}  INT {display_number(presence.integrity)}  TRACE {presence.trace:g}"
             if shield:
                 stats += f"  SHIELD {shield.budget:g}"
             if presence.effects.decoy:
                 stats += f"  DECOY {presence.effects.decoy:g}"
             if body.get('black_risk'):
                 title = 'BLACK ICE / BODY RISK / '+title
-            columns = session.caps['width']//2-12 if session.caps['width'] >= 100 else session.caps['width']-16
-            detail = stats+'\n'+'\n'.join(wrapped(detail, max(20, columns)))
+            columns = screen_layout(session.caps['width'], session.caps['height']).encounter_width
+            detail = stats+'\n'+'\n'.join(wrapped(detail, columns))
             result = menu(title, rows, screen.cursor, detail,
                           self.lat.jack_key(session)+" escape  Esc/B returns without acting")
             result.update(me=body['me'], scope=body['scope'], sector=body['sector'],

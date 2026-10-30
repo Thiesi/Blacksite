@@ -1,0 +1,97 @@
+{
+  "schema": 1,
+  "id": "vesper",
+  "name": "Vesper",
+  "faction": null,
+  "title": "Fixer at the Tin Halo",
+  "terminal": false,
+  "machine_mind": false,
+  "lines": [
+    {
+      "id": "marked",
+      "text": "Red name. Sit at the back. The Row's neutral; that's a thing I arrange, not a thing that happens.",
+      "when": [
+        "marked"
+      ],
+      "required": true
+    },
+    {
+      "id": "enemy",
+      "text": "Everyone's a faction enemy in here, sweetheart. That's why the drinks are expensive.",
+      "when": [
+        "enemy_of_me"
+      ],
+      "required": true
+    },
+    {
+      "id": "finale",
+      "text": "You've got a receipt, sweetheart. Keep it. People will offer to explain it for you. Charge them first.",
+      "when": [
+        "season_stage finale_done"
+      ],
+      "required": true
+    },
+    {
+      "id": "first-card",
+      "text": "Sweetheart. You've got the card. Sit. First one's on Vantongeren; she pays me to say that.",
+      "when": [
+        "first_meeting",
+        "has_item story_vesper_card"
+      ],
+      "required": true
+    },
+    {
+      "id": "first-done",
+      "text": "Good. That's a thing done. You'll find there are more.",
+      "when": [
+        "completed_contract vesper-first-thing"
+      ],
+      "required": true
+    },
+    {
+      "id": "first",
+      "text": "Sweetheart. Sit. A thing on the tablet, a price on the card. You can look before you choose.",
+      "when": [
+        "first_meeting"
+      ],
+      "required": true
+    },
+    {
+      "id": "wake",
+      "text": "Vantongeren's card. She sends me the ones she thinks will last. Don't make her wrong.",
+      "when": [
+        "is_wake"
+      ],
+      "required": true
+    },
+    {
+      "id": "greeting",
+      "text": "Sweetheart. Sit. A thing on the tablet, a price on the card. You can look before you choose.",
+      "when": [],
+      "required": true
+    }
+  ],
+  "offers": [
+    {
+      "kind": "contract",
+      "ref": "vesper-first-thing",
+      "label": "Work board",
+      "hotkey": "c",
+      "when": []
+    },
+    {
+      "kind": "vendor",
+      "ref": "vesper",
+      "label": "Trade",
+      "hotkey": "v",
+      "when": []
+    }
+  ],
+  "barks": [
+    {
+      "text": "The ring above us lit the whole Row once. Now it lights me. I take that personally.",
+      "weight": 1,
+      "min_interval_seconds": 90
+    }
+  ]
+}

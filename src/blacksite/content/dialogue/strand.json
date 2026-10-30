@@ -1,0 +1,83 @@
+{
+  "schema": 1,
+  "id": "strand",
+  "name": "Ilka Strand",
+  "faction": "unmoored",
+  "title": "Drop keeper",
+  "terminal": false,
+  "machine_mind": false,
+  "lines": [
+    {
+      "id": "record-unm-s1-5-open",
+      "text": "Your release log names the accepted mission credential. It proves that door opened for that work. It does not grant the whole installation.",
+      "when": [
+        "has_evidence s19-unm-s1-5-open"
+      ],
+      "required": true
+    },
+    {
+      "id": "record-unm-s1-4-ask",
+      "text": "The stutter moves one word in your record. Ninety-Nine asks for no more copies. A changed recording still gets to be heard.",
+      "when": [
+        "has_evidence s19-unm-s1-4-ask"
+      ],
+      "required": true
+    },
+    {
+      "id": "record-unm-s1-3-fresher",
+      "text": "The second fragment repeats the same unfinished words. You retain its sealed copy. Resemblance does not prove continuity.",
+      "when": [
+        "has_evidence s19-unm-s1-3-fresher"
+      ],
+      "required": true
+    },
+    {
+      "id": "record-unm-s1-2-vat-nine",
+      "text": "Four willing templates reach shelter in your record. The rig reports masked tags. They receive no clinic evaluation. Keep both costs in view.",
+      "when": [
+        "has_evidence s19-unm-s1-2-vat-nine"
+      ],
+      "required": true
+    },
+    {
+      "id": "record-unm-s1-1-map",
+      "text": "You mapped five cells and the unlisted entrance. Strand says it is missing from the public chart. Keep both versions.",
+      "when": [
+        "has_evidence s19-unm-s1-1-map"
+      ],
+      "required": true
+    },
+    {
+      "id": "work",
+      "text": "Map what you find. An unlisted entrance isn't permission to publish everything behind it. Read the terms.",
+      "when": [
+        "has_contract unm-s1-1-map"
+      ],
+      "required": true
+    },
+    {
+      "id": "first",
+      "text": "We don't have leaders. We have whoever's holding the terminal. Sit.",
+      "when": [
+        "first_meeting"
+      ],
+      "required": true
+    },
+    {
+      "id": "greeting",
+      "text": "We don't have leaders. We have whoever's holding the terminal. You can read the board without joining us.",
+      "when": [],
+      "required": true
+    }
+  ],
+  "offers": [
+    {
+      "kind": "contract",
+      "ref": "unm-s1-1-map",
+      "label": "Work board",
+      "hotkey": "c",
+      "when": []
+    }
+  ],
+  "barks": []
+}

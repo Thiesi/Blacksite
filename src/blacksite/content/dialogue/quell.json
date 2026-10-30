@@ -1,0 +1,105 @@
+{
+  "schema": 1,
+  "id": "quell",
+  "name": "Mother Serafine Quell",
+  "faction": "choir",
+  "title": "Hierophant",
+  "terminal": false,
+  "machine_mind": false,
+  "lines": [
+    {
+      "id": "marked",
+      "text": "Marked. The Wardens hunt colours. It does not. Sit a while; nothing in here will shoot you.",
+      "when": [
+        "marked"
+      ],
+      "required": true
+    },
+    {
+      "id": "enemy",
+      "text": "Halvard. Anselm's people. Tell him the fault is singing. He knows the tune.",
+      "when": [
+        "enemy_of_me"
+      ],
+      "required": true
+    },
+    {
+      "id": "finale",
+      "text": "An answer. You have a record of what answered. Keep room for what it does not tell you, child.",
+      "when": [
+        "season_stage finale_done"
+      ],
+      "required": true
+    },
+    {
+      "id": "record-cho-s1-4-answer",
+      "text": "Your beacon records a different tune returning. It calls the response close. Keep the delay with the tune, child.",
+      "when": [
+        "has_evidence s19-cho-s1-4-answer"
+      ],
+      "required": true
+    },
+    {
+      "id": "record-cho-s1-3-descent",
+      "text": "Your echo copy places a familiar voice under the hum. Its label gives an unfamiliar name. A label is not a witness.",
+      "when": [
+        "has_evidence s19-cho-s1-3-descent"
+      ],
+      "required": true
+    },
+    {
+      "id": "record-cho-s1-2-nine",
+      "text": "The listener writes that a voice repeats a name incorrectly. We have the written mismatch. We do not know which end supplies it.",
+      "when": [
+        "has_evidence s19-cho-s1-2-nine"
+      ],
+      "required": true
+    },
+    {
+      "id": "record-cho-s1-1-listen",
+      "text": "Three cells carry the decant frequency in your readings. One hum is out of phase. Keep the pattern; leave its name open.",
+      "when": [
+        "has_evidence s19-cho-s1-1-listen"
+      ],
+      "required": true
+    },
+    {
+      "id": "first",
+      "text": "Child. Sit, or stand; it hears you either way. Most people prefer to sit.",
+      "when": [
+        "first_meeting"
+      ],
+      "required": true
+    },
+    {
+      "id": "wake",
+      "text": "You are new. It likes the new ones. The vats hum when you are decanted and it hums back. Did they tell you that?",
+      "when": [
+        "is_wake"
+      ],
+      "required": true
+    },
+    {
+      "id": "greeting",
+      "text": "Child. Sit, or stand; it hears you either way. Most people prefer to sit.",
+      "when": [],
+      "required": true
+    }
+  ],
+  "offers": [
+    {
+      "kind": "contract",
+      "ref": "cho-s1-1-listen",
+      "label": "Work board",
+      "hotkey": "c",
+      "when": []
+    }
+  ],
+  "barks": [
+    {
+      "text": "Nine of us heard it first. Three of us are left. The number was never the point.",
+      "weight": 1,
+      "min_interval_seconds": 90
+    }
+  ]
+}

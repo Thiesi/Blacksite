@@ -53,8 +53,15 @@ is about what they become, and about how far down they are willing to go.
 - **Nobody says "cyberpunk".** Nobody says "hacker" either; they say
   runner. Nobody says "cyberspace"; they say the Lattice, or just "down".
 - **Profanity is period-appropriate and mild.** Violence and drugs are
-  depicted. No sexual content beyond the implication that Sodium Row sells
-  everything.
+  depicted.
+- **Suggestive, never graphic.** Sex work, pleasure houses and vice exist
+  openly in Karst and are named plainly; Warmwater is built on them.
+  Dialogue and descriptions may flirt and use innuendo. Nothing graphic
+  is shown: a scene fades out before anything happens on the page. Every
+  character in a sexual context is an adult. Sex work is shown as work,
+  done by people with names and rules of their own, and coercion is never
+  written as allure. One version of the game runs on every board; there
+  is no adult switch.
 
 ## 3. History
 
@@ -114,6 +121,14 @@ deep Lattice, into the unmapped region under the district sectors that
 runners call the Silt, and came back as a recording. The recording still
 talks.
 
+In Year 11 the treatment works' original controller failed. For eleven
+days, the Dry Eleven, the crews ran the filters by hand, Kestrel rationed
+water by the cup, and the Wardens worked the hand pump at the Tap in
+shifts. A junior clerk named Wendel Hass kept the hand log, and when it
+was over the Authority gave him the works. Halvard installed a
+replacement controller from its own stores and has held the plant's
+title since. It has never said what the controller was first built for.
+
 ### 3.4 The Choir (Years 21 to 40)
 
 People started hearing it. First the runners: a pattern in the noise floor
@@ -124,6 +139,15 @@ is not the Custodian at all but something that grew inside it, a tenant in
 a house built for someone else, and that it is lonely. They built implants
 to hear it better. Halvard calls them a cult. Sablier sells them the
 implants.
+
+Warmwater changed hands in the same years. The shift baths Halvard built
+for Site Zero's crews, on the warm-water main from the geothermal plant,
+had become the city's pleasure quarter in the Long Quiet, under Red
+Sable's protection. In Year 26 the people who worked the houses put out
+every lamp in the quarter for nine nights, and Sable's tithe stopped.
+The Civic Authority, glad of anything that weakened Sable, licensed the
+houses to the workers' own compact instead of to their landlords. The
+Lamp Compact has owned Warmwater since.
 
 ### 3.5 Now (Year 41)
 
@@ -166,11 +190,12 @@ seats here. They defend a city they actually use.
 
 These dates describe public history, not the machine mind's identity.
 Ninety-Nine disappears in Year 17. The Choir forms in Year 21. The Sink
-Riot and Brann's command begin in Year 22. The first Sable client-list
+Riot and Brann's command begin in Year 22. The Lamp Strike is in Year
+26. The first Sable client-list
 leak is in Year 28; Reyes takes over in Year 29; the subscription-ledger
 release and its eleven collector deaths are in Year 33. These are two
 separate leaks. Kestrel announces its routing office in Year 6; the name
-Dispatcher becomes public in Year 9. The Wake program begins in Year 38;
+Dispatcher becomes public in Year 9. The Dry Eleven is in Year 11. The Wake program begins in Year 38;
 older specialist clones, including Vantongeren, predate it. Ute is the
 tenth Ferry, retired; Anouk is the eleventh and Ute's daughter.
 
@@ -226,9 +251,19 @@ design document.
 - **The Terraces** — residential. Apartment blocks, where player housing
   lives. Mixed faction, mostly neutral, a Warden outpost that is slow to
   respond.
-- **Sodium Row** — entertainment and everything else. Bars, fixers, the
-  Tin Halo. Neutral by mutual agreement of every faction, enforced by Red
-  Sable, which is not the same thing as safe.
+- **Sodium Row** — drink, music and deals. Bars, fixers, the Tin Halo.
+  Neutral by mutual agreement of every faction, enforced by Red Sable,
+  which is not the same thing as safe.
+- **Warmwater** — the pleasure quarter, the Lamp Compact's district.
+  Bathhouses on the warm-water main, houses with a lamp over the door
+  when they are open, steam in the streets all winter. Everything is for
+  hire and nobody is for sale.
+- **The Intake** — the Civic treatment works north of the Spire, among
+  the covered beds, where the city's water comes up from the aquifer.
+  Leans Warden. Settling basins under work lamps, a hall of white tile,
+  and the Wellhead, where the pumps never stop. The Tap never runs dry;
+  everything else here is surplus, and surplus is what people argue
+  about.
 
 ### 4.4 The Undercity (open zone)
 
@@ -334,7 +369,7 @@ is right, and the chronicle records what the players chose.
 
 ## 7. Factions
 
-Eight joinable factions and the Freelance status. Full dossiers live in
+Nine joinable factions and the Freelance status. Full dossiers live in
 the factions document; this section fixes their identities.
 
 | Faction | Short name | Base | Lean | Colours |
@@ -347,11 +382,15 @@ the factions document; this section fixes their identities.
 | Red Sable | Sable | The Sink | syndicate, everything for sale | red, black |
 | The Unmoored | Unmoored | Old Works | anarchist runners, open the Blacksite | green, grey |
 | The Ferrymen | Ferrymen | The Landing (Scour) | salvage clans, the road is the law | rust, bone |
+| The Lamp Compact | the Compact | Warmwater | licensed guild, nobody owned | rose, pearl |
 
 Relations form three loose blocs: the **corporate** three plus the Wardens
 when it suits them; the **street** two (Sable and the Unmoored) who hate
 each other but hate the Spire more; and the **outside** pair (Choir and
-Ferrymen) who owe nobody anything. The relations matrix in the design
+Ferrymen) who owe nobody anything. The **Lamp Compact** stands outside
+the blocs: allied with the Wardens, because a Civic licence is the only
+wall it has, and hostile to Red Sable, which it threw out of Warmwater.
+The relations matrix in the design
 document is the mechanical truth; this paragraph is the narrative reason.
 
 **Freelance** characters belong to nobody, can walk anywhere a pass allows,
@@ -431,6 +470,9 @@ Full biographies in the dramatis personae document. Fixed points:
 - **Ninety-Nine**, a residual: the recording of a runner who went into the
   Silt. Lives in an Unmoored dead drop. Helpful, funny, and increasingly
   aware of what it is.
+- **Auda Senn**, First Lamp, elected head of the Lamp Compact. Worked
+  the houses for twenty years and called the Lamp Strike. Knows every
+  regular by two names.
 - **Vesper**, fixer at the Tin Halo on Sodium Row. The game's contract
   broker and rumour mill.
 - **The Tenant** and **the Custodian**, as above.
@@ -507,7 +549,9 @@ faction standings are tallied per season for the leaderboards.
 
 - Do not resolve the Custodian/Tenant question.
 - Do not add magic, psionics, aliens, time travel, or a way out of Karst.
-- Do not add a ninth joinable faction without a bible change.
+- Do not add a tenth joinable faction without a bible change.
+- Keep sexual content inside the tone rule (§2): suggestive, never
+  graphic, adults only.
 - Do not name a district, faction, or major NPC after a real person,
   company, or a place in another work of fiction.
 - Every new proper noun goes into the glossary.

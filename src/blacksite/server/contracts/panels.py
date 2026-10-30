@@ -1,10 +1,12 @@
 """UI 11: server-owned contract cards, consent and acquired evidence."""
 
+from blacksite.server.interaction import Interaction, interact, object_interaction
 from dataclasses import dataclass
 from math import ceil
 import textwrap
 from typing import Any
 
+from blacksite.layout import compute as screen_layout
 from blacksite.server.contracts.engine import Instance, Payment
 from blacksite.server.contracts.requirements import describe as describe_requirement
 from blacksite.server.protocol import Frame
@@ -304,12 +306,10 @@ class Panels:
                     detail.append(f"Effect: {permit['kind']} at {permit['target']} for {permit['expiry_seconds']} s.")
                 detail += ['This choice is personal and cannot be reversed.', 'The other publication option will close.']
             actions = [{'key': 'y', 'label': 'confirm'}]
-        width = 66 if session.caps['width'] < 100 else 50
+        page = screen_layout(session.caps['width'], session.caps['height']).contracts
+        width = page.width
         lines = [line for paragraph in detail for line in (textwrap.wrap(paragraph, width) or [''])]
-        count = max(1, min(20 if session.caps['height'] == 24 else session.caps['height']-6,
-                           session.caps['height']-4-min(8, 3+(session.caps['height']-24)*5//16))-6)
-        if session.caps['width'] >= 100:
-            count += 3
+        count = page.rows
         pages = max(1, ceil(len(lines)/count))
         panel.page = min(panel.page, pages-1)
         if pages > 1:
@@ -403,7 +403,23 @@ class Panels:
                     owner.log(member, 'Contract proposal ready. Q opens its terms; A accepts.')
             panel.cursor, panel.page = 0, 0
 
-    def input(self, session: Session, frame: Frame, tick: int) -> bool:
+    def interaction(self, session: Session, frame: Frame) -> Interaction | None:
+        if session.player_id not in self.game.players:
+            return None
+        if session.id in self.menus:
+            return Interaction()
+        if (session.pending_prompts or session.id in self.game.screens or session.id in self.sim.maps
+                or session.id in self.sim.external_views and not self.owner.lat.location(session)):
+            return None
+        if interact(frame) and self.owner.commerce.ready(session):
+            actor = self.game.combat.actor(self.game.players[session.player_id])
+            objects = sorted((obj for obj in self.world_objects(actor)
+                              if obj.spec.params.get('contract_handler')), key=lambda obj: obj.spec.id)
+            if objects:
+                return object_interaction(objects[0])
+        return None
+
+    def input(self, session: Session, frame: Frame, tick: int, *, interaction: Interaction | None = None) -> bool:
         owner = self.owner
         if session.player_id not in self.game.players:
             return False
@@ -452,11 +468,9 @@ class Panels:
                 self.menus[session.id] = Panel(tick, target, handler, 'journal' if name == 'journal.open' else 'jobs')
                 return True
             if (name == 'interact' or key.lower() == 'e') and owner.commerce.ready(session):
-                actor = self.game.combat.actor(self.game.players[session.player_id])
-                objects = sorted((obj for obj in self.world_objects(actor)
-                    if obj.spec.params.get('contract_handler')), key=lambda obj: obj.spec.id)
-                if objects:
-                    target = objects[0].spec.id
+                choice = interaction or self.interaction(session, frame)
+                if choice:
+                    target = choice.value.spec.id
                     self.menus[session.id] = Panel(tick, target, self.station(session, target))
                     return True
         except (ValueError, KeyError, TypeError) as exc:

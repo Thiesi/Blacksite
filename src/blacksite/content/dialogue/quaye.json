@@ -1,0 +1,45 @@
+{
+  "schema": 1,
+  "id": "quaye",
+  "name": "Sergeant Ama Quaye",
+  "faction": "wardens",
+  "title": "Recruiter",
+  "terminal": false,
+  "machine_mind": false,
+  "lines": [
+    {
+      "id": "wake",
+      "text": "Ninety days or the work certificate. The lease is a number, not a metaphor.",
+      "when": [
+        "is_wake"
+      ],
+      "required": true
+    },
+    {
+      "id": "first",
+      "text": "Colleague. Card and terms are on the desk. Read them before you sign.",
+      "when": [
+        "first_meeting"
+      ],
+      "required": true
+    },
+    {
+      "id": "greeting",
+      "text": "Colleague. Card and terms are on the desk. Read them before you sign.",
+      "when": [],
+      "required": true
+    }
+  ],
+  "offers": [
+    {
+      "kind": "recruit",
+      "ref": "wardens",
+      "label": "Recruitment terms",
+      "hotkey": "j",
+      "when": [
+        "not_member_of wardens"
+      ]
+    }
+  ],
+  "barks": []
+}

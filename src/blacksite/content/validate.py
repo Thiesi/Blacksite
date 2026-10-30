@@ -22,7 +22,7 @@ from math import isfinite
 import re
 import sys
 from collections import deque
-from collections.abc import Iterable, Iterator
+from collections.abc import Callable, Iterable, Iterator
 from pathlib import Path
 
 from blacksite.content import schema as s
@@ -31,11 +31,25 @@ from blacksite.content.formats import Problem, find_line, id_needles
 from blacksite.content.ids import display_width
 from blacksite.content.loader import ContentTree, load_content
 
-__all__ = ["Problem", "validate", "exit_warnings", "main"]
+__all__ = ["Problem", "validate", "exit_warnings", "route_door_warnings", "door_wall_axis", "main"]
+
+# #97 TR-2: only the seven known #92 debts retain D-T3 warnings. New
+# violations are errors even inside an S08 hub. C1 removes each repaired
+# pair rather than exempting the whole zone.
+S08_ROUTE_DOOR_WARNINGS = frozenset({
+    ('core-plaza', 'precinct-curfew-shutters'),
+    ('core-plaza', 'civic-ledger-hall-doors'),
+    ('core-plaza', 'kestrel-branch-branch-shutters'),
+    ('core-precinct', 'holding-cell-west'),
+    ('sodium-tin-halo', 'halo-back-room'),
+    ('terraces-blocks', 'block-super-lift-lock'),
+    ('vatside-vat-row', 'vatline-vat-lockdown'),
+})
 
 # 00-game-design.md section 5.1: zone width 40-200, height 20-100.
 ZONE_WIDTH = (40, 200)
 ZONE_HEIGHT = (20, 100)
+MIN_MOVEMENT_COST = 1  # Game design 5.2: positive integer terrain cost.
 MAX_CONTRACT_OBJECTIVE_FACTOR = 3  # Game 9.1: a five-person roster.
 CONTRACT_PLANT_SECONDS = 3  # Game 9.1: physical and core planting.
 # 00-game-design.md section 6.2: a core has 3 to 12 rooms, tier 1 to 5;
@@ -73,7 +87,8 @@ def validate(tree: ContentTree) -> list[Problem]:
     """Every problem in `tree`, load problems first."""
     v = _Validator(tree)
     v.run()
-    return list(tree.load_problems) + v.problems
+    return list(tree.load_problems) + v.problems + [problem for key, problem in _route_door_problems(tree)
+                                                  if key not in S08_ROUTE_DOOR_WARNINGS]
 
 
 def exit_warnings(tree: ContentTree) -> list[Problem]:
@@ -83,6 +98,51 @@ def exit_warnings(tree: ContentTree) -> list[Problem]:
             for zone in tree.zones.values() for ex in zone.meta.exits
             if ex.target_zone in tree.zones and not any(back.target_zone == zone.id
                 for back in tree.zones[ex.target_zone].meta.exits)]
+
+
+def door_wall_axis(passable: Callable[[s.Tile], bool], tile: s.Tile) -> tuple[s.Tile, s.Tile] | None:
+    """Two solid flanks and two open sides: the cheap deterministic TR-4 test."""
+    x, y = tile
+    north, south, west, east = (x, y-1), (x, y+1), (x-1, y), (x+1, y)
+    if not passable(north) and not passable(south) and passable(west) and passable(east):
+        return north, south
+    if not passable(west) and not passable(east) and passable(north) and passable(south):
+        return west, east
+    return None
+
+
+def route_door_warnings(tree: ContentTree) -> list[Problem]:
+    """Visible C1 debt for protected S08 maps, never a silent exemption."""
+    return [Problem(problem.path, problem.line, problem.message+
+                    '; C1 #92 must repair this S08 route under D-T3')
+            for key, problem in _route_door_problems(tree) if key in S08_ROUTE_DOOR_WARNINGS]
+
+
+def _route_door_problems(tree: ContentTree) -> Iterator[tuple[tuple[str, str], Problem]]:
+    controlled = {(control.target.zone, control.target.object) for core in tree.cores.values()
+                  for room in core.rooms for control in room.controls}
+    required_tiles: set[tuple[str, s.Tile]] = set()
+    for zone in tree.zones.values():
+        for ex in zone.meta.exits:
+            if ex.requirement is not None or ex.alternatives:
+                required_tiles.add((zone.id, ex.tile))
+            for credential in (ex.requirement, *ex.alternatives):
+                if credential is not None and credential.kind == 'open' and credential.object:
+                    controlled.add((credential.ref, credential.object))
+    for zid, zone in tree.zones.items():
+        def passable(tile: s.Tile) -> bool:
+            key = zone.tile_at(tile)
+            return key in tree.tiles and tree.tiles[key].passable
+        for obj in zone.meta.objects:
+            if obj.kind not in ('door', 'gate', 'shutter'):
+                continue
+            if not (obj.params.get('control') or (zid, obj.id) in controlled
+                    or (zid, obj.tile) in required_tiles):
+                continue
+            if door_wall_axis(passable, obj.tile) is None:
+                path = tree.source('zones', zid)
+                line = find_line(tree.texts.get(path, ''), *id_needles(obj.id))
+                yield (zid, obj.id), Problem(path, line, f'route-bearing door {obj.id}: needs a wall axis with open sides')
 
 
 class _Validator:
@@ -277,6 +337,10 @@ class _Validator:
     def check_glyphs(self) -> None:
         if self.t.glyphs is None:
             return
+        if self.t.sectors:
+            for gid in s.LATTICE_EDGE_GLYPHS:
+                if gid not in self.t.glyphs.glyphs:
+                    self.report("glyphs", "glyphs", f"required Lattice edge glyph {gid!r} is missing", gid)
         for gid, char in sorted(self.t.glyphs.glyphs.items()):
             if len(char) != 1:
                 self.report("glyphs", "glyphs", f"glyph {gid!r} must be one character, got {char!r}", gid)
@@ -284,6 +348,11 @@ class _Validator:
                 self.report("glyphs", "glyphs", f"glyph {gid!r} ({char!r}) is not one cell wide", gid)
             elif not round_trips(char):
                 self.report("glyphs", "glyphs", f"glyph {gid!r} ({char!r}) is not in CP437", gid)
+        for gid, char in sorted(self.t.glyphs.modern.items()):
+            if gid not in self.t.glyphs.glyphs:
+                self.report("glyphs", "glyphs", f"modern glyph {gid!r} has no CP437 fallback", gid)
+            if len(char) != 1 or display_width(char) != 1 or not char.isprintable():
+                self.report("glyphs", "glyphs", f"modern glyph {gid!r} must be one printable cell", gid)
 
     def check_palette(self) -> None:
         if self.t.palette is None:
@@ -349,6 +418,8 @@ class _Validator:
             self.role(tile.colour, owner, f"tile {tid!r}")
             if not 0 <= tile.cover <= 3:
                 self.report(*owner, f"tile {tid!r}: cover {tile.cover} is outside 0-3")
+            if tile.movement_cost < MIN_MOVEMENT_COST:
+                self.report(*owner, f"tile {tid!r}: movement_cost must be positive")
             if tile.hazard is not None and tile.hazard.damage_per_second <= 0:
                 self.report(*owner, f"tile {tid!r}: hazard damage must be positive")
 
@@ -468,9 +539,19 @@ class _Validator:
                 if not self.passable(target, ex.target_tile):
                     self.report(*owner, f"{label}: target tile {list(ex.target_tile)} "
                                 f"is not a passable tile in {ex.target_zone}", ex.id)
-            if ex.requirement is not None:
-                kind = "factions" if ex.requirement.kind == "faction" else "items"
-                self.ref(kind, ex.requirement.ref, owner, f"{label}: requirement", ex.id)
+            if ex.alternatives and ex.requirement is None:
+                self.report(*owner, f'{label}: alternatives need a primary requirement', ex.id)
+            for requirement in (() if ex.requirement is None else (ex.requirement, *ex.alternatives)):
+                if requirement.kind == 'story':
+                    if not re.fullmatch(r'[a-z0-9]+(-[a-z0-9]+)*', requirement.ref):
+                        self.report(*owner, f'{label}: story permission must be a slug', ex.id)
+                elif requirement.kind == 'open':
+                    latch = self.object_at(requirement.ref, requirement.object or '')
+                    if requirement.ref != zone.id or latch is None or latch.kind not in ('door', 'gate', 'shutter'):
+                        self.report(*owner, f'{label}: open credential needs a local physical latch', ex.id)
+                else:
+                    kind = 'factions' if requirement.kind in ('faction', 'member') else 'items'
+                    self.ref(kind, requirement.ref, owner, f'{label}: requirement', ex.id)
             if ex.relay and self.ref('relays', ex.relay, owner, f'{label}: relay', ex.id):
                 relay = self.t.relays[ex.relay]
                 expected = {'fast_gate': 'gate', 'cable_ride': 'cable'}.get(relay.benefit.kind)
@@ -1191,7 +1272,7 @@ class _Validator:
                     if not self.t.active("zones",zid):
                         continue
                     for obj in zone.meta.objects:
-                        if obj.params.get("vendor") == vid and zone.meta.safety != "safe" and not any(
+                        if obj.params.get("vendor") == vid and zone.meta.safety not in ("safe", "pocket") and not any(
                                 pocket.contains(obj.tile) for pocket in zone.meta.pockets):
                             self.report(*owner,"Sablier clinic requires an existing safe pocket",obj.id)
 
@@ -1239,6 +1320,10 @@ class _Validator:
         for nid, npc in self.each("npcs"):
             assert isinstance(npc, s.NpcTemplate)
             owner = ("npcs", nid)
+            if npc.presents is not None and npc.cover_name is None:
+                self.report(*owner, "presents requires cover_name")
+            if npc.cover_name is not None and (not npc.cover_name.strip() or not npc.cover_name.isprintable()):
+                self.report(*owner, "cover_name must be a non-empty printable name")
             if npc.health is not None and npc.health <= 0: self.report(*owner,"health must be positive")
             if npc.attack: self._weapon_block(npc.attack,owner)
             if npc.training and (npc.health is None or npc.attack is None):
@@ -1576,6 +1661,10 @@ class _Validator:
         if len(args) != len(kinds):
             self.report(*owner, f"{what}: {name} takes {len(kinds)} argument(s), got {len(args)}", name)
             return
+        if name == 'chronicle_choice' and self.current_active and _INTEGER.fullmatch(args[0]):
+            season = next((season for season in self.t.seasons.values() if season.number == int(args[0])), None)
+            if season is None or args[1] not in {choice.id for choice in season.finale_choices}:
+                self.report(*owner, f'{what}: no season {args[0]} finale option {args[1]!r}', name)
         for kind, arg in zip(kinds, args):
             label = f"{what} {name}"
             if kind == "N":
@@ -1593,7 +1682,7 @@ class _Validator:
                 self.ref("evidence", arg, owner, label, name)
             elif kind == "SERVICE":
                 self.ref("services", arg, owner, label, name)
-            elif kind == 'RECEIPT' and owner[0] == 'contracts' and self.current_active:
+            elif kind == 'RECEIPT' and self.current_active:
                 if not any(job.branch_group == arg for job in self.t.contracts.values()):
                     self.report(*owner, f'{label}: no branch group {arg!r} can supply this receipt', name)
             elif kind == "STAGE" and arg not in s.SEASON_STAGES:
@@ -1980,7 +2069,7 @@ def main(argv: list[str] | None = None) -> int:
     parser.add_argument("--local", type=Path, default=None, help="operator override directory")
     args = parser.parse_args(argv)
     tree = load_content(args.content, args.local)
-    for warning in exit_warnings(tree):
+    for warning in (*exit_warnings(tree), *route_door_warnings(tree)):
         print("warning: " + str(warning), file=sys.stderr)
     problems = validate(tree)
     if problems:

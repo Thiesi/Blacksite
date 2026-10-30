@@ -15,7 +15,7 @@ from tests.harness import HeadlessServer
 
 @pytest.mark.parametrize("width,height", [(80, 24), (132, 50)])
 @pytest.mark.parametrize("tier", ["16", "256", "truecolor"])
-def test_golden_zone_and_wide_name(info: DoorInfo, repo_root: Path, width: int, height: int, tier: str) -> None:
+def test_golden_zone_and_wide_name(info: DoorInfo, repo_root: Path, width: int, height: int, tier: str, golden) -> None:
     content = load_content(repo_root / "src/blacksite/content")
     game = HeadlessServer(content, "vatside-wake-hall")
     client = game.connect(width=width, height=height)
@@ -24,14 +24,13 @@ def test_golden_zone_and_wide_name(info: DoorInfo, repo_root: Path, width: int, 
     game.step()
     for frame in game.frames_for(client):
         model.receive(frame, 0)
-    # Remove the first-entry toast so the golden represents a settled view.
+    # Settle transient UI. S25b's arrival paragraph remains in the log.
     model.update(9, 9)
     terminal.write(model.render(9)[0])
     text = terminal.screen_text()
     assert "Wake Hall" in text and "POCKET" in text and "Wide界" in text
     assert "HP " in text and "STA " in text and "@" in text
-    expected = (repo_root / f"tests/door/golden/wake_hall_{width}x{height}.txt").read_text(encoding="utf-8")
-    assert "\n".join(row.rstrip() for row in text.splitlines()) + "\n" == expected
+    golden(f'wake_hall_{width}x{height}', terminal, tier, trim=True)
     # A local help overlay and resuming the zone still use the same buffer.
     model.key("?", 10)
     terminal.write(model.render(10)[0])

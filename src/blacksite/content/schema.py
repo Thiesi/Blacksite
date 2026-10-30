@@ -41,6 +41,9 @@ def _key(name: str) -> dict[str, str]:
 
 # --- terminal tables (03-terminal-ui.md sections 1 and 5) -----------------
 
+LATTICE_EDGE_GLYPHS = tuple(f"lattice-edge-{kind}-{axis}"
+    for kind in ("open", "gated", "hidden") for axis in ("h", "v"))
+
 
 @dataclass(frozen=True)
 class GlyphTable:
@@ -48,6 +51,8 @@ class GlyphTable:
 
     glyphs: dict[str, str]
     schema: int = CONTENT_SCHEMA
+    modern: dict[str, str] = field(default_factory=dict)
+    """Optional substitutions keyed by CP437 fallback id (terminal UI 1)."""
 
 
 @dataclass(frozen=True)
@@ -122,6 +127,7 @@ class TileType:
     interaction: ObjectKind | None = None
     sound_line: str | None = None
     schema: int = CONTENT_SCHEMA
+    movement_cost: int = 1  # Game design 5.2: ordinary ground.
 
 
 @dataclass(frozen=True)
@@ -142,15 +148,16 @@ class Emote:
 
 
 ExitKind = Literal["street", "door", "tram", "ladder", "lift", "gate", "cable"]
-RequirementKind = Literal["pass", "key", "faction"]
+RequirementKind = Literal["pass", "key", "faction", "member", "story", "open"]
 
 
 @dataclass(frozen=True)
 class Requirement:
     kind: RequirementKind
     ref: str
-    """Item id for pass and key, faction id for faction."""
+    """Item id, faction id, or server-owned story route permission."""
     standing: int | None = None
+    object: str | None = None  # Local latch for an open-state credential.
 
 
 @dataclass(frozen=True)
@@ -162,8 +169,14 @@ class Exit:
     kind: ExitKind
     requirement: Requirement | None = None
     hidden: bool = False
-    """Revealed by Listening, a program or dialogue (01-gazetteer.md)."""
+    """Unmarked; explicit Interact on its tile works (game 5.6).
+
+    Listening, programs and dialogue may point out its location. There
+    is no additional per-player entitlement to a physical passage.
+    """
     relay: str | None = None  # Game 7.7 optional gate/cable passage.
+    alternatives: tuple[Requirement, ...] = ()  # Game 5.6: complete OR credentials.
+    locked_text: str | None = None
 
 
 @dataclass(frozen=True)
@@ -369,6 +382,8 @@ class Sector:
     layout_size: Tile = (8, 6)  # Game design 6.1: readable at 80x24.
     trace_policy: Literal["civic", "corporate", "black", "street", "none"] = "none"
     trace_owner: str | None = None
+    theme: str | None = None
+    """Presentation id; district is the fallback until sector themes land."""
 
 
 DataKind = Literal[
@@ -933,6 +948,8 @@ class NpcTemplate:
     training: bool = False
     lore: tuple[str, ...] = ()
     schema: int = CONTENT_SCHEMA
+    presents: Literal["civilian", "warden", "security", "service", "hostile"] | None = None
+    cover_name: str | None = None
 
 
 @dataclass(frozen=True)

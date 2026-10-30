@@ -1,0 +1,100 @@
+{
+  "changed_files": [
+    "tests/door/golden/styles/cp437/16/wake_hall_132x50.json",
+    "tests/door/golden/styles/cp437/16/wake_hall_80x24.json",
+    "tests/door/golden/styles/cp437/256/wake_hall_132x50.json",
+    "tests/door/golden/styles/cp437/256/wake_hall_80x24.json",
+    "tests/door/golden/styles/cp437/truecolor/wake_hall_132x50.json",
+    "tests/door/golden/styles/cp437/truecolor/wake_hall_80x24.json",
+    "tests/door/golden/wake_hall_132x50.txt",
+    "tests/door/golden/wake_hall_80x24.txt"
+  ],
+  "style_changes": [
+    {
+      "path": "tests/door/golden/styles/cp437/16/wake_hall_132x50.json",
+      "rows": [
+        {
+          "y": 40,
+          "before": "\u2502[zone] You wake on a gurney under a number. White light, warm plastic, a floor drain. Past the cards, a corridor. Past the corrido\u2502",
+          "after": "\u2502[zone] You wake on a gurney under a number. White light, warm plastic, a floor drain. Past the cards, a corridor. Past the        \u2502",
+          "styles_changed": false
+        },
+        {
+          "y": 41,
+          "before": "\u2502  r, a terminal.                                                                                                                  \u2502",
+          "after": "\u2502  corridor, a terminal.                                                                                                           \u2502",
+          "styles_changed": false
+        }
+      ]
+    },
+    {
+      "path": "tests/door/golden/styles/cp437/16/wake_hall_80x24.json",
+      "rows": [
+        {
+          "y": 20,
+          "before": "\u2502   drain. Past the cards, a corridor. Past the corridor, a terminal.          \u2502",
+          "after": "\u2502  drain. Past the cards, a corridor. Past the corridor, a terminal.           \u2502",
+          "styles_changed": false
+        }
+      ]
+    },
+    {
+      "path": "tests/door/golden/styles/cp437/256/wake_hall_132x50.json",
+      "rows": [
+        {
+          "y": 40,
+          "before": "\u2502[zone] You wake on a gurney under a number. White light, warm plastic, a floor drain. Past the cards, a corridor. Past the corrido\u2502",
+          "after": "\u2502[zone] You wake on a gurney under a number. White light, warm plastic, a floor drain. Past the cards, a corridor. Past the        \u2502",
+          "styles_changed": true
+        },
+        {
+          "y": 41,
+          "before": "\u2502  r, a terminal.                                                                                                                  \u2502",
+          "after": "\u2502  corridor, a terminal.                                                                                                           \u2502",
+          "styles_changed": true
+        }
+      ]
+    },
+    {
+      "path": "tests/door/golden/styles/cp437/256/wake_hall_80x24.json",
+      "rows": [
+        {
+          "y": 20,
+          "before": "\u2502   drain. Past the cards, a corridor. Past the corridor, a terminal.          \u2502",
+          "after": "\u2502  drain. Past the cards, a corridor. Past the corridor, a terminal.           \u2502",
+          "styles_changed": true
+        }
+      ]
+    },
+    {
+      "path": "tests/door/golden/styles/cp437/truecolor/wake_hall_132x50.json",
+      "rows": [
+        {
+          "y": 40,
+          "before": "\u2502[zone] You wake on a gurney under a number. White light, warm plastic, a floor drain. Past the cards, a corridor. Past the corrido\u2502",
+          "after": "\u2502[zone] You wake on a gurney under a number. White light, warm plastic, a floor drain. Past the cards, a corridor. Past the        \u2502",
+          "styles_changed": true
+        },
+        {
+          "y": 41,
+          "before": "\u2502  r, a terminal.                                                                                                                  \u2502",
+          "after": "\u2502  corridor, a terminal.                                                                                                           \u2502",
+          "styles_changed": true
+        }
+      ]
+    },
+    {
+      "path": "tests/door/golden/styles/cp437/truecolor/wake_hall_80x24.json",
+      "rows": [
+        {
+          "y": 20,
+          "before": "\u2502   drain. Past the cards, a corridor. Past the corridor, a terminal.          \u2502",
+          "after": "\u2502  drain. Past the cards, a corridor. Past the corridor, a terminal.           \u2502",
+          "styles_changed": true
+        }
+      ]
+    }
+  ],
+  "mechanics_sha256": "08d306deab3bbf25cf98814df4c41509d03a7bc00091b69b1f109ee4f95508e8",
+  "outside_log_unchanged": true
+}

@@ -1,0 +1,27 @@
+{
+  "schema": 1,
+  "id": "lamplighter",
+  "name": "The Lamplighter",
+  "faction": null,
+  "title": "Maintenance lamps",
+  "terminal": false,
+  "machine_mind": false,
+  "lines": [
+    {
+      "id": "first",
+      "text": "Lamps go out when it breathes. I relight them. Somebody has to.",
+      "when": [
+        "first_meeting"
+      ],
+      "required": true
+    },
+    {
+      "id": "greeting",
+      "text": "It came up the east shaft first, last time. Warm. Smelled of tram brakes.",
+      "when": [],
+      "required": true
+    }
+  ],
+  "offers": [],
+  "barks": []
+}

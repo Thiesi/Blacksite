@@ -1,0 +1,27 @@
+{
+  "schema": 1,
+  "id": "wren",
+  "name": "Wren",
+  "faction": null,
+  "title": "Maintenance unit",
+  "terminal": false,
+  "machine_mind": false,
+  "lines": [
+    {
+      "id": "first",
+      "text": "MAINTENANCE. UNIT. WREN. The shaft is sealed. The shaft was sealed. The shaft. Tense error.",
+      "when": [
+        "first_meeting"
+      ],
+      "required": true
+    },
+    {
+      "id": "greeting",
+      "text": "It sends me up. To look. At you. I look. I go down. I say what I saw.",
+      "when": [],
+      "required": true
+    }
+  ],
+  "offers": [],
+  "barks": []
+}

@@ -1,6 +1,7 @@
 """Game 4/6.7: live core rules through the production headless core."""
 
 from dataclasses import replace
+from math import isclose
 
 import pytest
 
@@ -63,6 +64,30 @@ def test_game_4_private_training_defeat_lift_and_leave(runners):
     assert presence.instance is None and actor(game, a).stance == "jacked"
     intent(game, a, "lat.jack_out")
     assert actor(game, a).stance == "normal"
+
+
+def test_issue_67_hit_log_rounds_text_and_preserves_fractional_combat(runners):
+    game, client, _, _ = runners
+    place(game, client, 'vatside-wake-hall', (34, 15))
+    presence = enter(game, client, 'lat-wake-hall')
+    encounters = game.core.lattice.encounters
+    ice = encounters.defenders(presence)[0]
+    ice.integrity, ice.maximum = 30, 40
+    player = game.core.characters.players[presence.player_id]
+    mods = game.core.progression.modifiers(player)
+    multiplier = 1+mods.skill(player, 'programs')/200
+    program = encounters.content.programs['prg_pick']
+    encounters.content.programs[program.id] = replace(program,
+        effect=replace(program.effect, amount=10.0075/multiplier))
+    game.frames_for(client)
+    cast(game, client, program.id, ice.id)
+    assert isclose(ice.integrity, 19.9925)
+    messages = [line['text'] for frame in game.frames_for(client) if frame.type == 'log'
+                for line in frame.data['lines']]
+    assert any('10.01. Integrity 19.99.' in message for message in messages)
+    view = encounters.view(client.session, presence, game.core.lattice.view(client.session, presence))
+    # The normal view payload, like simulation state, retains its fraction.
+    assert isclose(view[1]['room']['ice'][0]['integrity'], 19.9925)
 
 
 def test_game_4_training_instances_and_chat_are_private(runners):

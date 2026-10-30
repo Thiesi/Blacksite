@@ -1,0 +1,83 @@
+{
+  "schema": 1,
+  "id": "maartens",
+  "name": "Captain Ines Maartens",
+  "faction": "halvard",
+  "title": "Recovery handler",
+  "terminal": false,
+  "machine_mind": false,
+  "lines": [
+    {
+      "id": "record-hal-s1-4-descend",
+      "text": "Three marks, and a door absent from the pour plan. Keep the plan with the record. Neither explains the change alone.",
+      "when": [
+        "has_evidence s19-hal-s1-4-descend"
+      ],
+      "required": true
+    },
+    {
+      "id": "record-hal-s1-3-plug",
+      "text": "Your monitor records an intact, warm seal. It places the heat below. It does not name the source.",
+      "when": [
+        "has_evidence s19-hal-s1-3-plug"
+      ],
+      "required": true
+    },
+    {
+      "id": "record-hal-s1-2-audit",
+      "text": "The audit carries an early authority header. A date on a header does not tell us who supplied it.",
+      "when": [
+        "has_evidence s19-hal-s1-2-audit"
+      ],
+      "required": true
+    },
+    {
+      "id": "record-hal-s1-1-recovery",
+      "text": "You brought back a warm unit. Maartens calls it Directorate property. The temperature does not identify its owner.",
+      "when": [
+        "has_evidence s19-hal-s1-1-recovery"
+      ],
+      "required": true
+    },
+    {
+      "id": "situation",
+      "text": "Hardline. Read the recovery card. Directorate needs someone who brings the record back.",
+      "when": [
+        "archetype hardline"
+      ],
+      "required": true
+    },
+    {
+      "id": "work",
+      "text": "Warm telemetry. Directorate wants the unit and the record of where you found it. Read the delivery terms.",
+      "when": [
+        "has_contract hal-s1-1-recovery"
+      ],
+      "required": true
+    },
+    {
+      "id": "first",
+      "text": "Directorate has a recovery in the third ring. You are expendable enough to be useful.",
+      "when": [
+        "first_meeting"
+      ],
+      "required": true
+    },
+    {
+      "id": "greeting",
+      "text": "Read the objective. Bring back the record. Directorate can afford opinions after that.",
+      "when": [],
+      "required": true
+    }
+  ],
+  "offers": [
+    {
+      "kind": "contract",
+      "ref": "hal-s1-1-recovery",
+      "label": "Work board",
+      "hotkey": "c",
+      "when": []
+    }
+  ],
+  "barks": []
+}

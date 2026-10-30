@@ -20,6 +20,11 @@ from tests.combat.test_engine import body, build_duel, fire
 @pytest.fixture(scope='module')
 def content() -> ContentTree:
     tree = load_content(Path(__file__).parents[1]/'src/blacksite/content')
+    # Only this fixture's Vesper is active. Shipped cast and all future
+    # placement remain authoring content under issue #82.
+    bundle = tree.bundles['s27-cast']
+    tree.bundles[bundle.id] = replace(bundle, members={
+        **bundle.members, 'dialogue': tuple(did for did in bundle.members['dialogue'] if did != 'vesper')})
     tree.dialogue['vesper'] = DialogueNode('vesper', 'Vesper', (
         DialogueLine('marked', 'Take the back seat.', ('marked',)),
         DialogueLine('first', 'Show me the card.', ('first_meeting',)),
@@ -130,6 +135,9 @@ def test_game_13_4_terminal_talker_uses_its_current_lattice_cell_and_colour_role
     tree = deepcopy(content)
     tree.dialogue['ninety-nine'] = DialogueNode('ninety-nine', 'Ninety-Nine', (
         DialogueLine('fallback', 'You leave the original in place. //99'),), terminal=True)
+    bundle = tree.bundles['s27-cast']
+    tree.bundles[bundle.id] = replace(bundle, members={
+        **bundle.members, 'dialogue': tuple(did for did in bundle.members['dialogue'] if did != 'ninety-nine')})
     sector_id = tree.zones['sodium-tin-halo'].meta.sector
     sector = tree.sectors[sector_id]
     tree.sectors[sector_id] = replace(sector, cells=tuple(
@@ -154,29 +162,128 @@ def test_game_13_4_terminal_talker_uses_its_current_lattice_cell_and_colour_role
     assert player.progress['met_talkers'] == ['ninety-nine']
 
 
-def test_game_13_4_barks_measure_real_distance_and_suppress_the_active_talker(content: ContentTree) -> None:
+def test_arch_5_5_3_authored_barks_stay_dormant_until_p8(content: ContentTree) -> None:
     game, caller, player = setup(content)
-    dialogue = game.core.dialogue
     zone = game.core.world.zones[player.zone]
-    point = zone.objects['vesper'].spec.tile
-    # Explicit placement/clock fixtures isolate audience and scheduling;
-    # they are not native travel or pacing evidence.
     game.frames_for(caller)
-    dialogue.barks.next_due.clear()
-    def tick_at(tick: int) -> list[str]:
-        game.clock.advance(tick-game.clock.now_tick()-1)
-        game.step()
-        return [line['text'] for frame in game.frames_for(caller) if frame.type == 'log'
+    state = zone.rng.getstate()
+    # The dialogue subsystem must not run a competing emitter or consume
+    # simulation randomness while P8 is pending.
+    from types import SimpleNamespace
+    game.core.dialogue.tick(SimpleNamespace(tick=900, sessions=[caller.session]))
+    assert zone.rng.getstate() == state
+    assert not [line for frame in game.frames_for(caller) if frame.type == 'log'
                 for line in frame.data['lines'] if 'The ring stays dark.' in line['text']]
-    start = ((game.clock.now_tick()//10)+1)*10
-    assert len(tick_at(start)) == 1
-    assert not tick_at(start+890)
+
+
+def test_arch_5_5_2_talker_focus_is_pure_and_matches_e(content: ContentTree) -> None:
+    game, caller, player = setup(content)
+    zone = game.core.world.zones[player.zone]
+    state = zone.rng.getstate()
+    for _ in range(3):
+        focus, _ = game.core.interaction_views(caller.session)
+        assert focus == {'id': 'vesper', 'label': 'Vesper', 'verb': 'talk to'}
+    assert zone.rng.getstate() == state
+    assert not game.core.dialogue.menus and 'met_talkers' not in player.progress
+    game.frames_for(caller)
     open_talker(game, caller)
-    assert not tick_at(start+900)
+    assert game.core.dialogue.menus[caller.session.id].contact.target == focus['id']
+    speech = [line for frame in game.frames_for(caller) if frame.type == 'log'
+              for line in frame.data['lines'] if line['kind'] == 'speech']
+    assert any(line['speaker'] == 'Vesper' and line['speaker_role'] == 'service' for line in speech)
+
+
+@pytest.mark.parametrize('kind', ['vendor', 'service'])
+def test_entities_1_11_handoff_uses_the_local_counter_not_template_object_id(
+        content: ContentTree, kind: str) -> None:
+    tree = deepcopy(content)
+    tree.vendors['fixture-counter'] = replace(tree.vendors['vesper'], id='fixture-counter',
+        object_id=None, clinic='sablier' if kind == 'service' else None)
+    tree.dialogue['vesper'] = replace(tree.dialogue['vesper'], offers=(
+        Offer(kind, 'Read terms', 's' if kind == 'service' else 'v', 'fixture-counter'),))
+    zone = tree.zones['sodium-tin-halo']
+    tree.zones[zone.id] = replace(zone, meta=replace(zone.meta, objects=tuple(
+        replace(obj, params={**obj.params, 'vendor': 'fixture-counter'}) if obj.id == 'vesper' else obj
+        for obj in zone.meta.objects)))
+    game, caller, player = setup(tree)
+    before = player.chits_hand, list(player.inventory), dict(player.implants)
+    open_talker(game, caller)
+    press(game, caller, 's' if kind == 'service' else 'v')
+    assert caller.session.id not in game.core.dialogue.menus
+    if kind == 'service':
+        assert game.core.progression.clinics.menus[caller.session.id].target == 'vesper'
+    else:
+        assert game.core.commerce.menus[caller.session.id].target == 'vesper'
     press(game, caller, 'b')
-    assert len(tick_at(start+910)) == 1
-    place(game, caller, zone.id, (point[0]+7, point[1]))
-    assert not tick_at(start+1810)
+    assert (player.chits_hand, player.inventory, player.implants) == before
+
+
+def test_game_7_2_talker_join_hotkey_opens_verbatim_terms_without_membership(content: ContentTree) -> None:
+    tree = deepcopy(content)
+    tree.dialogue['vesper'] = replace(tree.dialogue['vesper'], offers=(
+        Offer('recruit', 'Read terms', 'j', 'wardens'),))
+    zone = tree.zones['sodium-tin-halo']
+    tree.zones[zone.id] = replace(zone, meta=replace(zone.meta, objects=tuple(
+        replace(obj, params={**obj.params, 'recruiters': ['wardens']}) if obj.id == 'vesper' else obj
+        for obj in zone.meta.objects)))
+    game, caller, player = setup(tree)
+    open_talker(game, caller)
+    press(game, caller, 'j')
+    assert caller.session.id not in game.core.dialogue.menus
+    assert game.core.factions.menus[caller.session.id].target == 'vesper'
+    assert player.faction is None and not player.legal_at
+    assert game.core.factions.card('wardens').pitch == 'faction-wardens-pitch'
+    press(game, caller, 'b')
+    assert player.faction is None
+
+
+def test_game_13_4_scripted_machine_bank_cannot_be_an_ordinary_talker(content: ContentTree) -> None:
+    tree = deepcopy(content)
+    tree.dialogue['vesper'] = replace(tree.dialogue['vesper'], machine_mind=True)
+    game, caller, player = setup(tree)
+    assert game.core.dialogue.contact(caller.session) is None
+    open_talker(game, caller)
+    assert not game.core.dialogue.menus and 'met_talkers' not in player.progress
+
+
+def test_arch_5_5_2_unseen_actor_cannot_open_a_named_talker(
+        content: ContentTree, monkeypatch: pytest.MonkeyPatch) -> None:
+    game, caller, player = setup(content)
+    tree = game.core.loop.content
+    original = next(npc for npc in tree.npcs.values() if not npc.training)
+    template = replace(original, id='hidden-contact', name='Hidden contact', faction=None,
+                       behaviours=(), dialogue='vesper', health=100)
+    tree.npcs[template.id] = template
+    actor = game.core.characters.sim.avatars[caller.session.user_id].actor
+    npc = make_actor(template, 'test-origin:hidden-contact', {})
+    game.core.world.enter(npc, actor.zone, (actor.x, actor.y+1))
+    monkeypatch.setattr(game.core.combat, 'visible', lambda viewer, target: False)
+    assert game.core.dialogue.contact(caller.session, npc.id) is None
+    act(game, caller, Frame('intent', {'name': 'talk', 'args': {'target': npc.id}}))
+    assert not game.core.dialogue.menus and 'met_talkers' not in player.progress
+
+
+@pytest.mark.parametrize('locked', [False, True])
+def test_game_13_4_travel_hotkey_uses_the_selected_exit_and_its_existing_lock(
+        content: ContentTree, locked: bool) -> None:
+    tree = deepcopy(content)
+    zone = tree.zones['sodium-tin-halo']
+    exit = next(exit for exit in zone.meta.exits if not exit.hidden)
+    tree.zones[zone.id] = replace(zone, meta=replace(zone.meta, objects=tuple(
+        replace(obj, tile=exit.tile) if obj.id == 'vesper' else obj for obj in zone.meta.objects)))
+    tree.dialogue['vesper'] = replace(tree.dialogue['vesper'], offers=(
+        Offer('travel', 'Read route', 't', exit.target_zone),))
+    game, caller, player = setup(tree)
+    if locked:
+        game.core.characters.sim.locked_exits.add((zone.id, exit.id))
+    open_talker(game, caller)
+    press(game, caller, 't')
+    avatar = game.core.characters.sim.avatars[caller.session.user_id]
+    assert caller.session.id not in game.core.dialogue.menus
+    if locked:
+        assert avatar.zone == zone.id and avatar.travel is None
+    else:
+        assert avatar.zone == exit.target_zone or avatar.travel.exit.id == exit.id
 
 
 @pytest.mark.parametrize('safe', [False, True])

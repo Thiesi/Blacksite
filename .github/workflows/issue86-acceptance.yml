@@ -1,0 +1,46 @@
+name: Issue 86 Lattice glyph acceptance
+
+on:
+  pull_request:
+    paths:
+      - 'src/blacksite/**'
+      - 'scripts/accept_issue86_netbbs.py'
+      - 'scripts/accept_s10_netbbs.py'
+      - '.github/workflows/issue86-acceptance.yml'
+
+jobs:
+  display-netbbs:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    permissions:
+      contents: read
+    strategy:
+      fail-fast: false
+      matrix:
+        tier: ['16', '256', 'truecolor']
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - uses: actions/checkout@v4
+        with:
+          repository: Thiesi/NetBBS
+          ref: v7.31.0
+          path: .test-tmp/netbbs
+      - name: Install NetBBS and an isolated Blacksite wheel
+        shell: bash
+        run: |
+          python -m pip install './.test-tmp/netbbs[ssh,web]'
+          python -m pip wheel --no-deps . -w "$RUNNER_TEMP/issue86-wheels"
+          python -m venv "$RUNNER_TEMP/issue86-venv"
+          "$RUNNER_TEMP/issue86-venv/bin/python" -m pip install "$RUNNER_TEMP"/issue86-wheels/*.whl
+      - name: Capture every sector at both sizes
+        shell: bash
+        run: |
+          python scripts/accept_issue86_netbbs.py --root "$RUNNER_TEMP/issue86-proof" --door-python "$RUNNER_TEMP/issue86-venv/bin/python" --tier '${{ matrix.tier }}'
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: issue86-display-proof-${{ matrix.tier }}
+          path: ${{ runner.temp }}/issue86-proof

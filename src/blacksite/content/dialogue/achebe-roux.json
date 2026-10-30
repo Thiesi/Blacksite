@@ -1,0 +1,45 @@
+{
+  "schema": 1,
+  "id": "achebe-roux",
+  "name": "Tamsin Achebe-Roux",
+  "faction": "unmoored",
+  "title": "Recruiter",
+  "terminal": false,
+  "machine_mind": false,
+  "lines": [
+    {
+      "id": "wake",
+      "text": "Read your lease. Then read our card. We don't get to choose for you either.",
+      "when": [
+        "is_wake"
+      ],
+      "required": true
+    },
+    {
+      "id": "first",
+      "text": "I'll tell you what's in your lease. Free. That's the whole pitch, really.",
+      "when": [
+        "first_meeting"
+      ],
+      "required": true
+    },
+    {
+      "id": "greeting",
+      "text": "I'll tell you what's in your lease. Free. That's the whole pitch, really.",
+      "when": [],
+      "required": true
+    }
+  ],
+  "offers": [
+    {
+      "kind": "recruit",
+      "ref": "unmoored",
+      "label": "Recruitment terms",
+      "hotkey": "j",
+      "when": [
+        "not_member_of unmoored"
+      ]
+    }
+  ],
+  "barks": []
+}

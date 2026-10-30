@@ -1,0 +1,105 @@
+{
+  "schema": 1,
+  "id": "anouk",
+  "name": "Anouk, the Ferry",
+  "faction": "ferrymen",
+  "title": "Ferry of the clans",
+  "terminal": false,
+  "machine_mind": false,
+  "lines": [
+    {
+      "id": "marked",
+      "text": "The colour on your name means nothing past the wall. Out here your name means what you carry back.",
+      "when": [
+        "marked"
+      ],
+      "required": true
+    },
+    {
+      "id": "enemy",
+      "text": "Kestrel. You run convoys on my road and call it yours. We'll trade. We'll also take the third one back. That's the road.",
+      "when": [
+        "enemy_of_me"
+      ],
+      "required": true
+    },
+    {
+      "id": "finale",
+      "text": "You came back with a record. That's the road. A record is not the whole ground.",
+      "when": [
+        "season_stage finale_done"
+      ],
+      "required": true
+    },
+    {
+      "id": "record-fer-s1-4-sled",
+      "text": "Your sled reaches the caverns. Bram calls the mouth a route kept off city maps. A route can have more than one user.",
+      "when": [
+        "has_evidence s19-fer-s1-4-sled"
+      ],
+      "required": true
+    },
+    {
+      "id": "record-fer-s1-3-conduit",
+      "text": "Your stake records a hum rising from below its sensor. Below is a direction, not a distance.",
+      "when": [
+        "has_evidence s19-fer-s1-3-conduit"
+      ],
+      "required": true
+    },
+    {
+      "id": "record-fer-s1-2-far-side",
+      "text": "Three viewpoints. A light in the fog. Ute sells you the viewpoints, not a verified road beyond the edge.",
+      "when": [
+        "has_evidence s19-fer-s1-2-far-side"
+      ],
+      "required": true
+    },
+    {
+      "id": "record-fer-s1-1-race",
+      "text": "You recovered the named piece. The log gives a window before Directorate arrival. Ask who watches the other sled. That's the road.",
+      "when": [
+        "has_evidence s19-fer-s1-1-race"
+      ],
+      "required": true
+    },
+    {
+      "id": "first",
+      "text": "Wall-folk. Two rings out and you found the Landing. That's the road. Sit; the fire's not for you but it doesn't know that.",
+      "when": [
+        "first_meeting"
+      ],
+      "required": true
+    },
+    {
+      "id": "wake",
+      "text": "New-decanted. You smell of the vats. The ground smells it too; keep moving and it stops noticing.",
+      "when": [
+        "is_wake"
+      ],
+      "required": true
+    },
+    {
+      "id": "greeting",
+      "text": "Wall-folk. Two rings out and you found the Landing. That's the road. Sit; the fire's not for you but it doesn't know that.",
+      "when": [],
+      "required": true
+    }
+  ],
+  "offers": [
+    {
+      "kind": "contract",
+      "ref": "fer-s1-1-race",
+      "label": "Work board",
+      "hotkey": "c",
+      "when": []
+    }
+  ],
+  "barks": [
+    {
+      "text": "Sky's there whether you watch it or not. Watch it.",
+      "weight": 1,
+      "min_interval_seconds": 90
+    }
+  ]
+}

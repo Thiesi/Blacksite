@@ -1,0 +1,35 @@
+{
+  "schema": 1,
+  "id": "loos",
+  "name": "Ferdi Loos",
+  "faction": "unmoored",
+  "title": "Rig builder",
+  "terminal": false,
+  "machine_mind": false,
+  "lines": [
+    {
+      "id": "first",
+      "text": "Compute grade, intact, I pay double. Everyone else is scared of it.",
+      "when": [
+        "first_meeting"
+      ],
+      "required": true
+    },
+    {
+      "id": "greeting",
+      "text": "Ninety-Nine's rig was mine. First one I built. Best I ever... sorry. It's catching.",
+      "when": [],
+      "required": true
+    }
+  ],
+  "offers": [
+    {
+      "kind": "vendor",
+      "ref": "oldworks-bench",
+      "label": "Trade",
+      "hotkey": "v",
+      "when": []
+    }
+  ],
+  "barks": []
+}

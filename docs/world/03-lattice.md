@@ -75,12 +75,22 @@ district.
 | Old Works | 34 | 12 / 6 / 16 | Foundry Floor, Annex Records, Ninety-Nine's Drop, the Tape Room | *Cut Cable* (hidden) |
 | Terraces | 36 | 20 / 12 / 4 | Block A Super, Block B Super, Outpost Feed, Stairwell C cabinet, and one private-core entrance per rented apartment | *Basement Riser* (gated, resident key) |
 | Sodium Row | 20 | 14 / 4 / 2 | House Lights, Tin Halo Back Bar, Sign Grid | *Stage Door* (hidden) |
+| Warmwater (planned, #90) | 24 | 12 / 8 / 4 | Lamp Board, Bath Rota, Boiler Governor, Quiet Book Approach | *The Culvert* (hidden, along the warm-water main) |
+| Intake (planned, #101) | 20 | 10 / 6 / 4 | Beds Telemetry, Sluice Board, Hall Registry, Clearwell Approach | *The Bore* (hidden, at the foot of the deepest well shaft) |
 | Undercity | 26 | 4 / 8 / 14 | Pumphouse Panel, Cavern Relay, Outworks Seal Approach | *The Seam* (public and unmarked; it does not need to hide) |
 | Scour | 18 | 6 / 12 / 0 | one uplink cell per relay: Landing Uplink, Mile Relay, Beacon Relay, Crash Relay, Far Relay, Patrol Beacon | *Static* (gated, only during Ring-fall) |
 | Silt | procedural | see §6 | — | — |
 
 Notes:
 
+- The table records the current 36-cell Terraces baseline. The
+  commissioned 24-home pool (C1/S25c) expands it to 48 cells (32 public,
+  12 gated, 4 hidden), as accepted in plan §14.2. It keeps the existing
+  cells and
+  links. A twelve-cell public residence register connects reciprocally
+  to the public entry; its
+  eleven unallocated cells and thirteen existing public cells supply
+  the 24 apartment addresses. No unit consumes an entry or uplink cell.
 - Gated cells accept a suitable key program as an alternative to the
   named physical credential, following game design 6.1. S13's authored
   baseline is `program:key:2`; S14 refines access with its live catalog.
@@ -129,6 +139,12 @@ ICE: Tripwire ×2, Glasshouse ×2, Mirror, Blackglass ×2, Hound (at trace
 non-corporate crew to the public levels for 30 minutes), visitor logs.
 Controls: `turnstiles @ spire-atrium`, `public lifts @ spire-atrium`.
 ICE: Tripwire, Turnstile, Mastiff, Glasshouse.
+
+The Citadel lockdown closes the Atrium-to-Mezzanine lift for its
+300-second reset window. Gatehouse's public-lift control opens the same
+physical panel, so the latest committed operation wins. The Plaza exit
+and the Mezzanine's return remain available. Credential refusals describe
+missing admission; a disabled panel reports its control lock instead.
 
 **Skywatch** (`lat-skywatch`) — Halvard, tier 4, 7 rooms. Hardware: array control @
 `spire-shaft-head`. Data: Ring-fall forecast (names the next Ring-fall ring and
@@ -376,6 +392,13 @@ Its hardware is the mast beside the physical capture terminal. Its
 `relay_open` control targets that relay, not unrelated service hardware.
 All relay instance IDs and tiers are game design §7.7.
 
+Relay Zero also exposes `worker_return` in its Archive. This separate
+work-order control opens the optional north workshop passage between
+the relay mast and the public Old Works counter
+in Old Works Main for 20 minutes. It requires the active reserve
+allocation's worker credential. The longer street stays public; ordinary
+`relay_open` remains public and retains its capture meaning (game §7.5).
+
 ### 3.13 Season cores
 
 Defined by `05-story-arcs.md` and built with their Blacksite level; listed
@@ -405,6 +428,56 @@ the level or completing its scripted encounter.
 fetch copies and journal evidence refer back to it. `template-source-drive`
 is at the archived Level 1 gallery, `brann-private-ledger` at the precinct
 archive; neither is an unrelated second loot spawn. Validate all references.
+
+### 3.14 Warmwater
+
+All three cores are planned (#90): canon only until a Stage 2 slice
+builds them.
+
+**The Quiet Book** (`lat-quiet-book`) — Lamp Compact, tier 4, 7 rooms, planned (#90).
+Hardware: the keeper's cabinet @ `warmwater-baths`, in the hall. Data:
+confidences (a lifted page names an NPC who owes the Compact and what
+for; a contract staple; never a player's private record). Controls: none;
+the Book is read, not worked. ICE: Liar ×2, Tripwire, Glasshouse,
+Sandman. The Compact knows when the Book has been read, and the Doors
+remember the reader.
+
+**Boiler Governor** (`lat-boiler-governor`) — Lamp Compact, tier 3, 5
+rooms, planned (#90). Hardware: governor panel @ `warmwater-boilerhouse`.
+Data: heat schedule. Controls: `steam vents @ warmwater-boilerhouse`
+(fires the vents off schedule, a hazard under design §6.4). ICE: Shiv,
+Tar, Turnstile.
+
+**Lamp Board** (`lat-lamp-board`) — Lamp Compact, tier 2, 4 rooms,
+planned (#90). Hardware: the lamp board @ `warmwater-lamp-street`. Data:
+house roster (which rooms are open; the Lamp Check contracts). Controls:
+`lamps @ warmwater-courts` (switches off every lamp in the Courts for
+30 s under the switched-off lamp rule, design §6.4: the Strike's old
+signal). ICE: Tripwire, Liar, Shiv.
+
+### 3.15 The Intake
+
+The core is planned (#101): canon only until a Stage 2 slice builds it.
+
+**Clearwell** (`lat-clearwell`) — Wardens, tier 4, 8 rooms, planned (#101).
+Hardware: the control room @ `intake-wellhead`. Data: the allocation
+schedule (which district's spare pressure runs tonight; a contract
+staple), intake telemetry, the night log (`text-clearwell-night-log`).
+Controls: `catwalk sluice @ intake-beds` (drops or raises the catwalk
+sluice, so the Beds' short and long routes swap; an ordinary control,
+reset after 10 min), `wash-down @ intake-wellhead` (floods the Wellhead's open floor
+strips for 30 s, a named effect under design §6.4). Neither control
+reduces delivered water or touches the Tap (bible §3.6). The catwalk
+sluice is a layout swap inside the Beds; it never opens or closes the
+members' sluice walk, which answers only to Intake Relay (design §7.7).
+ICE: Tripwire,
+Turnstile, Mastiff, Glasshouse.
+
+Clearwell is the controller Halvard installed after the Dry Eleven
+(bible §3.3). It is the "water core" of the Wardens' dossier. Its floor
+plan in the night log shows nine doors for eight rooms; no room is
+authored behind the ninth until the Wardens' Season 2 hook (factions)
+opens it. Nothing in this core says what the night traffic is.
 
 ## 4. ICE
 

@@ -1,0 +1,45 @@
+{
+  "schema": 1,
+  "id": "vance",
+  "name": "Lio Vance",
+  "faction": "sable",
+  "title": "Recruiter",
+  "terminal": false,
+  "machine_mind": false,
+  "lines": [
+    {
+      "id": "wake",
+      "text": "Lease still running? That's Sablier's paper. Our card's only an introduction.",
+      "when": [
+        "is_wake"
+      ],
+      "required": true
+    },
+    {
+      "id": "first",
+      "text": "You want paid, you read the terms. Mr. Reyes likes people who read the terms.",
+      "when": [
+        "first_meeting"
+      ],
+      "required": true
+    },
+    {
+      "id": "greeting",
+      "text": "You want paid, you read the terms. Mr. Reyes likes people who read the terms.",
+      "when": [],
+      "required": true
+    }
+  ],
+  "offers": [
+    {
+      "kind": "recruit",
+      "ref": "sable",
+      "label": "Recruitment terms",
+      "hotkey": "j",
+      "when": [
+        "not_member_of sable"
+      ]
+    }
+  ],
+  "barks": []
+}

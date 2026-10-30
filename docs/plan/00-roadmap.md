@@ -108,6 +108,14 @@ the relevant spec sections is recommended (protocol, renderer, hacking
 model). Before S10 and S16 land, an **Astra** or **Fable** balance read
 of the numbers against the catalog.
 
+Presentation integration (adopted 2026-10-28, D-T1): the
+[integration plan](03-presentation-integration.md) adds slices P0 to
+P10, C1 and V1 to V3, splits S25 into S25a, S25b and S25c, and adds the
+human gates H1 to H5 and PT1. Its §7.2 sequence and §14 decisions
+govern the order of S25 to S33 where they differ from §5 below. Slice
+files are filed as their dependencies come close: P0, P1, S25a and S25b
+first, then P2 to P4 once P1 merged.
+
 ## 5. Suggested order for one developer at a time
 
 S01 -> S02 -> S03 -> S04 -> S05 -> S06 -> S07 -> S08 -> S09 -> S12 -> S10 ->
@@ -160,6 +168,9 @@ retains them alongside the earlier vendor/core activation gates.
   an operator-facing behaviour changed, the slice file marked done with
   the PR number.
 - No new runtime dependency.
+- A technical review decision record at the final head recommends
+  merge (`docs/plan/04-technical-review.md`), and every human gate the
+  slice names has been granted by the owner.
 
 ## 8. Lore/design integration gates
 

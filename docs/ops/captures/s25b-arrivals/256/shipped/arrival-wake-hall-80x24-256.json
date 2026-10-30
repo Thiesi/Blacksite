@@ -1,0 +1,894 @@
+{
+  "capture": {
+    "scenario": "wake-hall",
+    "zone": "vatside-wake-hall",
+    "size": [
+      80,
+      24
+    ],
+    "tier": "256",
+    "negotiated_tier": "256",
+    "arrival_text": "You wake on a gurney under a number. White light, warm plastic, a floor drain. Past the cards, a corridor. Past the corridor, a terminal.",
+    "arrival_role": "chan_zone",
+    "arrival_retained_in_ring": true,
+    "whole_paragraph_visible": true,
+    "arrival_first_log_since_walk_or_connection": true,
+    "observed_log_rows": [
+      "[zone] You wake on a gurney under a number. White light, warm plastic, a floor",
+      "   drain. Past the cards, a corridor. Past the corridor, a terminal.          ",
+      "[zone] Crews end on a service restart. Use G to invite.                       "
+    ],
+    "new_log_lines": [
+      {
+        "channel": "zone",
+        "text": "You wake on a gurney under a number. White light, warm plastic, a floor drain. Past the cards, a corridor. Past the corridor, a terminal.",
+        "role": "chan_zone",
+        "at": "2026-10-29T11:01:36.126188+00:00",
+        "id": "7e798f77977847a18fc592192d3ffd27:session:1:2026-10-29T11:01:35.242178+00:00:1"
+      },
+      {
+        "channel": "zone",
+        "text": "Crews end on a service restart. Use G to invite.",
+        "role": "chan_zone",
+        "at": "2026-10-29T11:01:36.127189+00:00",
+        "id": "7e798f77977847a18fc592192d3ffd27:session:1:2026-10-29T11:01:35.242178+00:00:2"
+      }
+    ],
+    "ansi": "arrival-wake-hall-80x24-256.ans",
+    "text": "arrival-wake-hall-80x24-256.txt",
+    "context": "arrival-wake-hall-80x24-256.json"
+  },
+  "snapshot": {
+    "schema": 1,
+    "width": 80,
+    "height": 24,
+    "glyph_rows": [
+      "┌─Wake Hall  POCKET─────────────────────────────────────────────────────11:01──┐",
+      "│███████████████                                        │TARGET                │",
+      "│█···············                                       │None                  │",
+      "│█···············                                       │WEAPON                │",
+      "│█··Θ·Θ·Θ·Θ······                                       │Kestrel Issue Sidearm │",
+      "│█··········☻·☻··                                       │NEARBY                │",
+      "│█·····@·····$····                                      │~ Sablier orderly     │",
+      "│█···············                                       │~ Sablier orderly     │",
+      "│█···············                                       │                      │",
+      "│█···············                                       │Arrival界80           │",
+      "│█···············                                       │BBS: S10Arrival80     │",
+      "│█·······$······                                        │HP ######## 130/130   │",
+      "│█··············                                        │STA ######## 70/70    │",
+      "│█·············                                         │Chits 200  Grade 1    │",
+      "│█············                                          │Lease days 0/90       │",
+      "│  ·········                                            │Discharge XP 0/1500   │",
+      "│      ·                                                │Shock 0               │",
+      "│                                                       │Ctrl-X leaves         │",
+      "├The corridor teaches targeting. Tab selects; F fires; B skips training.───────┤",
+      "│[zone] You wake on a gurney under a number. White light, warm plastic, a floor│",
+      "│   drain. Past the cards, a corridor. Past the corridor, a terminal.          │",
+      "│[zone] Crews end on a service restart. Use G to invite.                       │",
+      "│Tab target  F fire  X weapon  1-5 quick  V abilities  E interact  I invento...│",
+      "└────────────────────────────────────────────────────────────────────────────── "
+    ],
+    "styles": [
+      {
+        "foreground": [
+          0,
+          7
+        ],
+        "background": [
+          0,
+          0
+        ],
+        "attributes": []
+      },
+      {
+        "foreground": [
+          1,
+          231
+        ],
+        "background": [
+          1,
+          0
+        ],
+        "attributes": []
+      },
+      {
+        "foreground": [
+          1,
+          237
+        ],
+        "background": [
+          1,
+          0
+        ],
+        "attributes": []
+      },
+      {
+        "foreground": [
+          1,
+          240
+        ],
+        "background": [
+          1,
+          0
+        ],
+        "attributes": []
+      },
+      {
+        "foreground": [
+          1,
+          243
+        ],
+        "background": [
+          1,
+          0
+        ],
+        "attributes": []
+      },
+      {
+        "foreground": [
+          1,
+          252
+        ],
+        "background": [
+          1,
+          0
+        ],
+        "attributes": []
+      },
+      {
+        "foreground": [
+          1,
+          254
+        ],
+        "background": [
+          1,
+          0
+        ],
+        "attributes": []
+      },
+      {
+        "foreground": [
+          1,
+          255
+        ],
+        "background": [
+          1,
+          0
+        ],
+        "attributes": []
+      },
+      {
+        "foreground": [
+          1,
+          41
+        ],
+        "background": [
+          1,
+          0
+        ],
+        "attributes": []
+      },
+      {
+        "foreground": [
+          1,
+          79
+        ],
+        "background": [
+          1,
+          0
+        ],
+        "attributes": []
+      }
+    ],
+    "style_rows": [
+      [
+        [
+          2,
+          4
+        ],
+        [
+          11,
+          1
+        ],
+        [
+          6,
+          9
+        ],
+        [
+          53,
+          4
+        ],
+        [
+          5,
+          1
+        ],
+        [
+          3,
+          4
+        ]
+      ],
+      [
+        [
+          1,
+          4
+        ],
+        [
+          15,
+          3
+        ],
+        [
+          40,
+          6
+        ],
+        [
+          1,
+          4
+        ],
+        [
+          22,
+          6
+        ],
+        [
+          1,
+          4
+        ]
+      ],
+      [
+        [
+          1,
+          4
+        ],
+        [
+          1,
+          3
+        ],
+        [
+          15,
+          2
+        ],
+        [
+          39,
+          6
+        ],
+        [
+          1,
+          4
+        ],
+        [
+          22,
+          6
+        ],
+        [
+          1,
+          4
+        ]
+      ],
+      [
+        [
+          1,
+          4
+        ],
+        [
+          1,
+          3
+        ],
+        [
+          15,
+          2
+        ],
+        [
+          39,
+          6
+        ],
+        [
+          1,
+          4
+        ],
+        [
+          22,
+          6
+        ],
+        [
+          1,
+          4
+        ]
+      ],
+      [
+        [
+          1,
+          4
+        ],
+        [
+          1,
+          3
+        ],
+        [
+          2,
+          2
+        ],
+        [
+          1,
+          6
+        ],
+        [
+          1,
+          2
+        ],
+        [
+          1,
+          6
+        ],
+        [
+          1,
+          2
+        ],
+        [
+          1,
+          6
+        ],
+        [
+          1,
+          2
+        ],
+        [
+          1,
+          6
+        ],
+        [
+          6,
+          2
+        ],
+        [
+          39,
+          6
+        ],
+        [
+          1,
+          4
+        ],
+        [
+          22,
+          6
+        ],
+        [
+          1,
+          4
+        ]
+      ],
+      [
+        [
+          1,
+          4
+        ],
+        [
+          1,
+          3
+        ],
+        [
+          10,
+          2
+        ],
+        [
+          1,
+          7
+        ],
+        [
+          1,
+          2
+        ],
+        [
+          1,
+          7
+        ],
+        [
+          2,
+          2
+        ],
+        [
+          39,
+          6
+        ],
+        [
+          1,
+          4
+        ],
+        [
+          22,
+          6
+        ],
+        [
+          1,
+          4
+        ]
+      ],
+      [
+        [
+          1,
+          4
+        ],
+        [
+          1,
+          3
+        ],
+        [
+          5,
+          2
+        ],
+        [
+          1,
+          1
+        ],
+        [
+          5,
+          2
+        ],
+        [
+          1,
+          6
+        ],
+        [
+          4,
+          2
+        ],
+        [
+          38,
+          6
+        ],
+        [
+          1,
+          4
+        ],
+        [
+          17,
+          7
+        ],
+        [
+          5,
+          6
+        ],
+        [
+          1,
+          4
+        ]
+      ],
+      [
+        [
+          1,
+          4
+        ],
+        [
+          1,
+          3
+        ],
+        [
+          15,
+          2
+        ],
+        [
+          39,
+          6
+        ],
+        [
+          1,
+          4
+        ],
+        [
+          17,
+          7
+        ],
+        [
+          5,
+          6
+        ],
+        [
+          1,
+          4
+        ]
+      ],
+      [
+        [
+          1,
+          4
+        ],
+        [
+          1,
+          3
+        ],
+        [
+          15,
+          2
+        ],
+        [
+          39,
+          6
+        ],
+        [
+          1,
+          4
+        ],
+        [
+          22,
+          6
+        ],
+        [
+          1,
+          4
+        ]
+      ],
+      [
+        [
+          1,
+          4
+        ],
+        [
+          1,
+          3
+        ],
+        [
+          15,
+          2
+        ],
+        [
+          39,
+          6
+        ],
+        [
+          1,
+          4
+        ],
+        [
+          11,
+          1
+        ],
+        [
+          11,
+          6
+        ],
+        [
+          1,
+          4
+        ]
+      ],
+      [
+        [
+          1,
+          4
+        ],
+        [
+          1,
+          3
+        ],
+        [
+          15,
+          2
+        ],
+        [
+          39,
+          6
+        ],
+        [
+          1,
+          4
+        ],
+        [
+          22,
+          6
+        ],
+        [
+          1,
+          4
+        ]
+      ],
+      [
+        [
+          1,
+          4
+        ],
+        [
+          1,
+          3
+        ],
+        [
+          7,
+          2
+        ],
+        [
+          1,
+          6
+        ],
+        [
+          6,
+          2
+        ],
+        [
+          40,
+          6
+        ],
+        [
+          1,
+          4
+        ],
+        [
+          19,
+          8
+        ],
+        [
+          3,
+          6
+        ],
+        [
+          1,
+          4
+        ]
+      ],
+      [
+        [
+          1,
+          4
+        ],
+        [
+          1,
+          3
+        ],
+        [
+          14,
+          2
+        ],
+        [
+          40,
+          6
+        ],
+        [
+          1,
+          4
+        ],
+        [
+          18,
+          1
+        ],
+        [
+          4,
+          6
+        ],
+        [
+          1,
+          4
+        ]
+      ],
+      [
+        [
+          1,
+          4
+        ],
+        [
+          1,
+          3
+        ],
+        [
+          13,
+          2
+        ],
+        [
+          41,
+          6
+        ],
+        [
+          1,
+          4
+        ],
+        [
+          22,
+          6
+        ],
+        [
+          1,
+          4
+        ]
+      ],
+      [
+        [
+          1,
+          4
+        ],
+        [
+          1,
+          3
+        ],
+        [
+          12,
+          2
+        ],
+        [
+          42,
+          6
+        ],
+        [
+          1,
+          4
+        ],
+        [
+          22,
+          6
+        ],
+        [
+          1,
+          4
+        ]
+      ],
+      [
+        [
+          1,
+          4
+        ],
+        [
+          2,
+          6
+        ],
+        [
+          9,
+          2
+        ],
+        [
+          44,
+          6
+        ],
+        [
+          1,
+          4
+        ],
+        [
+          22,
+          6
+        ],
+        [
+          1,
+          4
+        ]
+      ],
+      [
+        [
+          1,
+          4
+        ],
+        [
+          6,
+          6
+        ],
+        [
+          1,
+          2
+        ],
+        [
+          48,
+          6
+        ],
+        [
+          1,
+          4
+        ],
+        [
+          22,
+          6
+        ],
+        [
+          1,
+          4
+        ]
+      ],
+      [
+        [
+          1,
+          4
+        ],
+        [
+          55,
+          6
+        ],
+        [
+          1,
+          4
+        ],
+        [
+          13,
+          1
+        ],
+        [
+          9,
+          6
+        ],
+        [
+          1,
+          4
+        ]
+      ],
+      [
+        [
+          1,
+          4
+        ],
+        [
+          71,
+          6
+        ],
+        [
+          8,
+          4
+        ]
+      ],
+      [
+        [
+          1,
+          4
+        ],
+        [
+          78,
+          5
+        ],
+        [
+          1,
+          4
+        ]
+      ],
+      [
+        [
+          1,
+          4
+        ],
+        [
+          68,
+          5
+        ],
+        [
+          10,
+          6
+        ],
+        [
+          1,
+          4
+        ]
+      ],
+      [
+        [
+          1,
+          4
+        ],
+        [
+          55,
+          5
+        ],
+        [
+          23,
+          6
+        ],
+        [
+          1,
+          4
+        ]
+      ],
+      [
+        [
+          1,
+          4
+        ],
+        [
+          78,
+          1
+        ],
+        [
+          1,
+          4
+        ]
+      ],
+      [
+        [
+          79,
+          4
+        ],
+        [
+          1,
+          0
+        ]
+      ]
+    ]
+  }
+}

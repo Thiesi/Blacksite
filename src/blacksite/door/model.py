@@ -4,12 +4,13 @@ from collections import deque
 from copy import deepcopy
 from typing import Any
 
-from blacksite.door.cells import CellBuffer, display_width, truncate
+from blacksite.door.cells import CellBuffer, truncate
+from blacksite.door import chrome
 from blacksite.door.doorinfo import DoorInfo
 from blacksite.door.layout import compute
 from blacksite.door.palette import Palette, resolve_tier
 from blacksite.door.screens import SessionWarnings, first_run, help_pages, title
-from blacksite.door.views import LinePrompt, Renderer, menu_rect, render_frame, render_menu, render_text
+from blacksite.door.views import LinePrompt, Renderer, render_menu, render_text
 from blacksite.door.views.zone import render_zone
 from blacksite.door.views.lattice import render_lattice
 from blacksite.door.log import rows as log_rows
@@ -53,7 +54,7 @@ class Display:
         self.previous = None
         self.force_full = self.dirty = True
         if self.local and self.local.get("title") == "SCROLLBACK":
-            self.open_help(log_rows(list(self.logs), self.layout.viewport.width - 2), "SCROLLBACK")
+            self.open_help(log_rows(list(self.logs), self.layout.text_area.width), "SCROLLBACK")
 
     def receive(self, frame: Frame, now: float) -> list[Frame]:
         old_hit = self.body.get("me",{}).get("hit_serial")
@@ -201,7 +202,7 @@ class Display:
             if key in ("escape", "b", "B"):
                 self.local = None
             elif key in ("pagedown", "pageup", "pgdn", "pgup"):
-                count = max(1, self.layout.viewport.height - 2)
+                count = max(1, self.layout.text_area.height)
                 pages = max(1, (len(self.local_lines) + count - 1) // count)
                 self.local_page = max(0, min(pages - 1, self.local_page + (1 if key in ("pagedown", "pgdn") else -1)))
             return []
@@ -209,7 +210,7 @@ class Display:
             self.open_help()
             return []  # S03 has no help subsystem; use the specified local fallback.
         if key == "ctrl-p" or (key == "L" and self.kind == "zone" and self.selected_keymap != "vi"):
-            self.open_help(log_rows(list(self.logs), self.layout.viewport.width - 2), "SCROLLBACK")
+            self.open_help(log_rows(list(self.logs), self.layout.text_area.width), "SCROLLBACK")
             return []
         if self.body.get("title") == "BLACKSITE" and key in ("i", "I"):
             self.open_help(first_run()["lines"], "WHAT THIS IS")
@@ -217,7 +218,7 @@ class Display:
         if not self.connected:
             return []
         if self.kind == "text" and self.body.get("title") == "The tram hums." and key == "escape":
-            self.open_help(log_rows(list(self.logs), self.layout.viewport.width - 2), "SCROLLBACK")
+            self.open_help(log_rows(list(self.logs), self.layout.text_area.width), "SCROLLBACK")
             return []
         effective_kind = self.body.get("kind") if self.kind == "wake" else self.kind
         effective_body = self.body.get("body", {}) if self.kind == "wake" else self.body
@@ -227,7 +228,7 @@ class Display:
             if key in ("escape", "b", "B"):
                 return [Frame("intent", {"name": "menu_close", "args": {}})]
             if key in ("up", "down", "pageup", "pagedown", "pgup", "pgdn"):
-                page = max(1, menu_rect(self.layout).height-(5 if self.layout.width >= 100 else 9))
+                page = self.layout.menu.cursor_page
                 distance = 1 if key in ("up", "down") else page
                 return [Frame("intent", {"name": "menu_cursor", "args": {"delta": -distance if key in ("up", "pageup", "pgup") else distance}})]
             actions = {action.get("key") for action in effective_body.get("actions", [])}
@@ -266,34 +267,31 @@ class Display:
             hint = str(self.key_prompt["label"])
         elif "hint" in self.body:
             hint = str(self.body["hint"])
-        header = "" if self.kind == "zone" and self.local is None else "Karst · " + truncate(self.info.handle, self.layout.width - 20)
-        render_frame(buffer, self.layout, self.palette, header, list(self.logs), hint)
-        area = self.layout.viewport
+            if self.kind == 'zone' and not self.body.get('me', {}).get('channel'):
+                context = []
+                for key, field in (('E', 'focus'), ('Ctrl-O' if self.selected_keymap == 'vi' else 'J', 'jack_focus')):
+                    if focus := self.body.get(field):
+                        context.append((f"{key} {focus['verb']}", str(focus['label'])))
+                hint = chrome.focus_hint(hint, self.layout.hint.width, context, self.body.get('objective'))
+        header = "" if self.kind == "zone" and self.local is None else "Karst · " + truncate(self.info.handle, self.layout.header_slots.handle_width)
+        chrome.render_frame(buffer, self.layout, self.palette, header, list(self.logs), hint)
         if self.local is not None:
-            count = max(1, area.height - 2)
+            count = max(1, self.layout.text_area.height)
             body = {**self.local, "lines": self.local_lines[self.local_page * count:(self.local_page + 1) * count],
                     "page": self.local_page + 1, "pages": max(1, (len(self.local_lines) + count - 1) // count)}
-            render_text(buffer, body, area, self.palette)
+            render_text(buffer, body, self.layout, self.palette)
         else:
             kind = self.body.get("kind") if self.kind == "wake" else self.kind
             body = self.body.get("body", {}) if self.kind == "wake" else self.body
             if kind in self.renderers:
-                self.renderers[kind](buffer, body, menu_rect(self.layout) if kind == "menu" else area, self.palette)
-        if self.toast:
-            buffer.put(1, self.layout.separator, truncate(self.toast[0], self.layout.width - 2), self.palette.style(self.toast[1]))
+                chrome.render_view_shell(buffer, self.layout, self.palette, kind, body)
+                self.renderers[kind](buffer, body, self.layout, self.palette)
         flashed = self.hit_flash
+        chrome.render_effects(buffer, self.layout, self.palette, self.toast, flashed)
         if flashed:
-            for x in range(buffer.width-1):
-                buffer.put(x,0,"-",self.palette.style("warning"))
-            for y in range(1,buffer.height-1):
-                buffer.put(0,y,"|",self.palette.style("warning"))
-                buffer.put(buffer.width-1,y,"|",self.palette.style("warning"))
             self.hit_flash = False
         output = buffer.diff(None if self.force_full else self.previous)
-        if self.prompt and not self.confirm_exit:
-            output += f"\x1b[{self.layout.hint + 1};{min(self.layout.width - 1, 2 + display_width(hint))}H\x1b[?25h".encode("ascii")
-        else:
-            output += b"\x1b[?25l"
+        output += chrome.cursor(self.layout, hint, bool(self.prompt and not self.confirm_exit))
         self.previous = buffer
         self.last_render = now
         self.force_full = False

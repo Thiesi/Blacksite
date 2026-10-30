@@ -11,7 +11,7 @@ from blacksite.door.model import Display
 from blacksite.server.protocol import Frame, encode
 from tests.character_helpers import act, create, place
 from tests.fake_terminal import FakeTerminal
-from tests.harness import HeadlessServer
+from tests.harness import HeadlessServer, LATTICE_PEER
 
 
 @pytest.fixture(scope="module")
@@ -19,7 +19,7 @@ def sector_views():
     content = load_content(Path(__file__).parents[2]/"src/blacksite/content")
     game = HeadlessServer(content, character_state={})
     callers = []
-    for uid, name, tile in ((1, "First", (30, 5)), (2, "Runner界", (31, 6))):
+    for uid, name, tile in ((1, "First", (30, 5)), (2, LATTICE_PEER.text, (31, 6))):
         caller = game.connect({"user_id": uid, "handle": f"BBS界{uid}", "node_name": "test"})
         create(game, caller, archetype=0, name=name, card="none")
         place(game, caller, "core-plaza", tile)
@@ -51,7 +51,7 @@ def draw(info, content, body, width, height, tier):
 
 @pytest.mark.parametrize("size", [(80, 24), (132, 50)])
 @pytest.mark.parametrize("tier", ["16", "256", "truecolor"])
-def test_design_ui_3_all_eleven_layouts_no_overlap_and_wide_peer(info, sector_views, size, tier):
+def test_design_ui_3_all_eleven_layouts_no_overlap_and_wide_peer(info, sector_views, size, tier, golden):
     content, views = sector_views
     width, height = size
     for body in views.values():
@@ -70,9 +70,7 @@ def test_design_ui_3_all_eleven_layouts_no_overlap_and_wide_peer(info, sector_vi
             positions.update(occupied)
             assert terminal.cell(x, y) in ("(", "[")
             assert terminal.cell(x+3, y) in (")", "]")
-        if tier == "256":
-            expected = Path(__file__).with_name("golden")/f"lattice_{body['sector']}_{width}x{height}.txt"
-            assert terminal.screen_text()+"\n" == expected.read_text(encoding="utf-8")
+        golden(f"lattice_{body['sector']}_{width}x{height}", terminal, tier)
 
 
 def test_body_hits_and_escape_are_visible_while_jacked(info, sector_views):
@@ -89,3 +87,22 @@ def test_body_hits_and_escape_are_visible_while_jacked(info, sector_views):
     assert terminal.styles[(0, 0)] == normal
     assert display.key("up", 3)[0].data["k"] == "up"
     assert display.key("7", 4)[0].data["k"] == "7"
+
+
+@pytest.mark.parametrize('size', [(80, 24), (132, 50)])
+@pytest.mark.parametrize('tier', ['16', '256', 'truecolor'])
+def test_issue_67_fractional_ice_numbers_are_compact_without_changing_state(info, sector_views, size, tier):
+    content, views = sector_views
+    body = deepcopy(views['lat-core'])
+    body['room'] = {'ice': [{'id': 'fractional-ice', 'name': 'Sandman',
+        'integrity': 19.9925, 'maximum': 40, 'phase': 'idle', 'role': 'sentinel',
+        'trigger': 'active', 'damage': 10.0075, 'meat': 0, 'counter': 'Move or shield.'}],
+        'data': [], 'controls': []}
+    body['me'].update(target='fractional-ice', integrity=19.9925)
+    original = deepcopy(body)
+    _, terminal = draw(info, content, body, *size, tier)
+    screen = terminal.screen_text()
+    assert '19.99/40' in screen and '10.01 integrity' in screen
+    assert 'INTEGRITY 19.99/100' in screen
+    assert '19.9925' not in screen and '10.0075' not in screen
+    assert body == original

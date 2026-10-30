@@ -15,6 +15,7 @@ from tests.door.test_lattice_render import draw
 from tests.lattice.test_engine import jack, runners
 from tests.lattice.test_encounters import enter
 from tests.lattice.test_silt_encounters import descend
+from tests.harness import ENCOUNTER_PEER
 
 
 def encounter_views():
@@ -23,7 +24,7 @@ def encounter_views():
     lattice = game.core.lattice
     first, second = enter(game, a, 'lat-civic-ledger'), enter(game, b, 'lat-civic-ledger')
     first.room = second.room = 'r-foyer'
-    game.core.characters.players[second.player_id].name = 'Guest\u754c'
+    game.core.characters.players[second.player_id].name = ENCOUNTER_PEER.text
     ice = lattice.encounters.defenders(first)[0]
     first.target = ice.id
     lattice.encounters.start_cast(first, 'prg_pick', ice.id)
@@ -46,9 +47,9 @@ def views():
 
 
 @pytest.mark.parametrize('size', [(80, 24), (132, 50)])
-@pytest.mark.parametrize('tier', ['16', '256'])
+@pytest.mark.parametrize('tier', ['16', '256', 'truecolor'])
 @pytest.mark.parametrize('scene', ['core', 'silt'])
-def test_ui_3_encounter_warnings_costs_and_escape_remain_visible(info, views, size, tier, scene):
+def test_ui_3_encounter_warnings_costs_and_escape_remain_visible(info, views, size, tier, scene, golden):
     content, bodies = views
     body = bodies[scene]
     display, terminal = draw(info, content, body, *size, tier)
@@ -76,9 +77,7 @@ def test_ui_3_encounter_warnings_costs_and_escape_remain_visible(info, views, si
         assert not marker & occupied
         occupied |= marker
         assert terminal.cell(x, y) == '(' and terminal.cell(x+3, y) == ')'
-    if tier == '256':
-        path = Path(__file__).with_name('golden')/f'encounter_{scene}_{size[0]}x{size[1]}.txt'
-        assert text+'\n' == path.read_text(encoding='utf-8')
+    golden(f'encounter_{scene}_{size[0]}x{size[1]}', terminal, tier)
 
 
 @pytest.mark.parametrize('size', [(80, 24), (132, 50)])

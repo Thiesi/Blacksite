@@ -1,5 +1,6 @@
 """Server-authoritative social layer; game design §11/§14, terminal UI §5."""
 
+from blacksite.server.interaction import Interaction
 from collections.abc import Callable
 from dataclasses import dataclass
 import re
@@ -108,8 +109,10 @@ class Chat:
         if source and source.user_id in self.settings(recipient).get("ignored", []):
             return
         faction = self.characters.content.factions.get(self.faction(recipient)) if self.characters and channel == "faction" else None
-        recipient.send(Frame("log", {"lines": [{"channel": channel, "text": sanitize(text),
-            "role": faction.colour if faction else "chan_" + ({"system":"sys", "shout":"say"}.get(channel, channel)), "at": self.clock.now_utc().isoformat()}]}))
+        recipient.emit(sanitize(text), kind="speech" if source else "system", channel=channel,
+            role=faction.colour if faction else "chan_" + ({"system":"sys", "shout":"say"}.get(channel, channel)),
+            at=self.clock.now_utc().isoformat(), speaker=self.name(source) if source else None,
+            speaker_role="caller" if source else None)
 
     def faction(self, session: Session) -> str | None:
         return self.characters.players[session.player_id].faction if self.characters else self.sim.avatars[session.user_id].actor.faction
@@ -259,7 +262,14 @@ class Chat:
         if session:
             self.toast(session, "Reported." if success else "Your report could not be saved. Try again.")
 
-    def input(self, session: Session, frame: Frame, tick: int) -> bool:
+    def interaction(self, session: Session, frame: Frame) -> Interaction | None:
+        if not self.ready(session):
+            return None
+        if session.pending_prompts.get('chat') and frame.type == 'key' or session.id in self.sitreps:
+            return Interaction()
+        return None
+
+    def input(self, session: Session, frame: Frame, tick: int, *, interaction: Interaction | None = None) -> bool:
         if not self.ready(session):
             return False
         name = frame.data.get("name", "") if frame.type == "intent" else ""

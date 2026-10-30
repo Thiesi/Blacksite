@@ -1,0 +1,105 @@
+{
+  "schema": 1,
+  "id": "halvard",
+  "name": "Director Anselm Halvard",
+  "faction": "halvard",
+  "title": "Director of the Spire",
+  "terminal": false,
+  "machine_mind": false,
+  "lines": [
+    {
+      "id": "marked",
+      "text": "Security will see you to the tram. If you resist, security will see you to Vatside.",
+      "when": [
+        "marked"
+      ],
+      "required": true
+    },
+    {
+      "id": "enemy",
+      "text": "Quell's people. You hear a voice in a hole and call it a god. My grandfather heard it and called it a fault.",
+      "when": [
+        "enemy_of_me"
+      ],
+      "required": true
+    },
+    {
+      "id": "finale",
+      "text": "You will appreciate that a completed expedition is evidence of access, not evidence of intent.",
+      "when": [
+        "season_stage finale_done"
+      ],
+      "required": true
+    },
+    {
+      "id": "record-hal-s1-4-descend",
+      "text": "Three marks, and a door absent from the pour plan. Keep the plan with the record. Neither explains the change alone.",
+      "when": [
+        "has_evidence s19-hal-s1-4-descend"
+      ],
+      "required": true
+    },
+    {
+      "id": "record-hal-s1-3-plug",
+      "text": "Your monitor records an intact, warm seal. It places the heat below. It does not name the source.",
+      "when": [
+        "has_evidence s19-hal-s1-3-plug"
+      ],
+      "required": true
+    },
+    {
+      "id": "record-hal-s1-2-audit",
+      "text": "The audit carries an early authority header. A date on a header does not tell us who supplied it.",
+      "when": [
+        "has_evidence s19-hal-s1-2-audit"
+      ],
+      "required": true
+    },
+    {
+      "id": "record-hal-s1-1-recovery",
+      "text": "You brought back a warm unit. Maartens calls it Directorate property. The temperature does not identify its owner.",
+      "when": [
+        "has_evidence s19-hal-s1-1-recovery"
+      ],
+      "required": true
+    },
+    {
+      "id": "first",
+      "text": "You will appreciate that I do not usually receive visitors who arrived on the tram.",
+      "when": [
+        "first_meeting"
+      ],
+      "required": true
+    },
+    {
+      "id": "wake",
+      "text": "A Wake. My family funds your program. That is not a kindness; it is a supply chain.",
+      "when": [
+        "is_wake"
+      ],
+      "required": true
+    },
+    {
+      "id": "greeting",
+      "text": "You will appreciate that I do not usually receive visitors who arrived on the tram.",
+      "when": [],
+      "required": true
+    }
+  ],
+  "offers": [
+    {
+      "kind": "contract",
+      "ref": "hal-s1-1-recovery",
+      "label": "Work board",
+      "hotkey": "c",
+      "when": []
+    }
+  ],
+  "barks": [
+    {
+      "text": "The concrete over the shaft is nine metres thick. It was poured in one night. I have the invoice.",
+      "weight": 1,
+      "min_interval_seconds": 90
+    }
+  ]
+}

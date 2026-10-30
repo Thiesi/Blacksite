@@ -1,0 +1,29 @@
+{
+  "head": "b418778304b55c6a80a283f9e5e292eb0fec3643",
+  "production_path": "Combat.shot -> exchange -> hostile_hook Npcs.provoked -> reveal(target, source) before Hit/Miss label",
+  "cases": [
+    {
+      "seed": 0,
+      "caller_attacks_first": true,
+      "template": "npc-plainclothes-warden",
+      "zone": "sodium-row",
+      "label": "Miss: Plainclothes Warden.",
+      "retaliation_target": "test-origin:player:1",
+      "attacker_target_name": "Plainclothes Warden",
+      "observer_target_name": "Sodium regular",
+      "template_and_hook_unmodified": true
+    },
+    {
+      "seed": 1,
+      "caller_attacks_first": true,
+      "template": "npc-plainclothes-warden",
+      "zone": "sodium-row",
+      "label": "Hit: Plainclothes Warden.",
+      "retaliation_target": "test-origin:player:1",
+      "attacker_target_name": "Plainclothes Warden",
+      "observer_target_name": "Sodium regular",
+      "template_and_hook_unmodified": true
+    }
+  ],
+  "finding_reproduced": false
+}

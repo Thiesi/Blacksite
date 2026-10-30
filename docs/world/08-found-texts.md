@@ -459,6 +459,39 @@ can carry a tune.]
 
 ---
 
+## text-clearwell-night-log
+
+- **Status:** planned (#101). Canon only until a Stage 2 slice builds it.
+- **Found:** Clearwell core, the Intake sector, room "Night Log"
+  (tier 4).
+- **Length:** long
+
+```
+KARST CIVIC AUTHORITY   INTAKE WORKS   CONTROLLER NIGHT LOG
+Controller: CLEARWELL (installed Year 11, Halvard stores)
+Annotations: W. Hass
+
+01:00  Intake pumps 1-6 nominal. Tap pressure nominal.
+02:00  Intake pumps 1-6 nominal. Tap pressure nominal.
+03:00  Intake pumps 1-6 nominal. Tap pressure nominal.
+03:11  Pump rhythm change, all housings. No operator at panel.
+       No fault raised. Delivered volume unchanged.
+03:16  Pump rhythm nominal.
+       [WH: Again.]
+04:00  Intake pumps 1-6 nominal. Tap pressure nominal.
+
+CONTROLLER ROOM LIST (as reported by controller)
+  1 Intake Telemetry     5 Sluice Board
+  2 Allocation           6 Wash-down
+  3 Night Log            7 Maintenance
+  4 Filter Gallery       8 Halvard Service
+
+[WH: Eight rooms. The installation plan Halvard gave us in
+Year 11 has nine doors. I have asked. I will ask again.]
+```
+
+---
+
 ## text-silt-fragment-a
 
 - **Found:** the Silt, a descent cell at depth 3 or greater. Renders

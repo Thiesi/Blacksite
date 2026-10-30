@@ -4,6 +4,7 @@ S16's owning engines attach reward grants to their existing transactions.
 This facade owns UI and manual spending; it never pays post-commit XP.
 """
 
+from blacksite.server.interaction import Interaction
 from copy import deepcopy
 from collections.abc import Callable
 from typing import Any, TYPE_CHECKING
@@ -270,8 +271,8 @@ class ProgressionEngine:
                 text += (f" Grade {result.grade}: {grade.title}. "+grade.promotion
                          if grade else f" You reach grade {result.grade}.")
                 self.commerce.toast(session, text)
-            session.send(Frame("log", {"lines": [{"channel": "system", "text": text,
-                "role": "chan_sys", "at": self.clock.now_utc().isoformat()}]}))
+            session.emit(text, kind="reward", channel="system", role="chan_sys",
+                         at=self.clock.now_utc().isoformat())
 
     def open_skills(self, session: Session) -> None:
         self.game.screens.pop(session.id, None)
@@ -319,7 +320,11 @@ class ProgressionEngine:
         return self.commerce.settle(player, patch, self.commerce.items,
             self.commerce.caches, self.commerce.serial, committed)
 
-    def input(self, session: Session, frame: Frame, tick: int) -> bool:
+    def interaction(self, session: Session, frame: Frame) -> Interaction | None:
+        return (self.clinics.interaction(session, frame) or self.drones.interaction(session, frame)
+                or (Interaction() if session.id in self.menus else None))
+
+    def input(self, session: Session, frame: Frame, tick: int, *, interaction: Interaction | None = None) -> bool:
         player = self.game.players.get(session.player_id)
         if player:
             self.sync_actor(player)

@@ -1,5 +1,6 @@
 """Pure character/Wake lifecycle. The I/O layer executes the write outbox."""
 
+from blacksite.server.interaction import Interaction
 from copy import deepcopy
 from collections.abc import Callable
 from dataclasses import asdict, replace
@@ -37,6 +38,8 @@ class Characters:
         self.sim = ZoneSimulation(world, sessions, clock, "vatside-wake-hall", keymap)
         self.sim.me_provider = self.me
         self.sim.access_provider = self.access
+        # Game 5.6: S26 supplies committed story/season route permissions.
+        self.route_permissions: Callable[[Player], frozenset[str]] = lambda player: frozenset()
         self.item_templates = {row["id"]: row["template"] for row in state.get("items", [])}
         self.items = {row["id"]: ItemInstance.from_record(row) for row in state.get("items", [])}
         self.wakes: dict[str, Wake] = {}
@@ -108,7 +111,11 @@ class Characters:
 
     def access(self, session: Session) -> dict[str, Any]:
         player = self.players[session.player_id]
-        return {"standing": player.standing, "items": [self.item_templates.get(iid, iid) for iid in player.inventory]}
+        return {"standing": player.standing, "faction": player.faction,
+                "story": self.route_permissions(player),
+                "zone": player.zone,
+                "open_objects": frozenset(key for key, obj in self.world.zones[player.zone].objects.items() if obj.open),
+                "items": [self.item_templates.get(iid, iid) for iid in player.inventory]}
 
     def identity(self, user: str) -> dict[str, Any]:
         if user not in self.identities:
@@ -175,6 +182,7 @@ class Characters:
             data["tile"], data["target_tile"] = tuple(data["tile"]), tuple(data["target_tile"])
             if data.get("requirement"):
                 data["requirement"] = Requirement(**data["requirement"])
+            data['alternatives'] = tuple(Requirement(**row) for row in data.get('alternatives', ()))
             avatar.travel = Travel(Exit(**data), travel["departure"], travel["arrival"], True)
             self.world.zones[player.zone].deactivate(session.id, self.clock.now_tick())
             self.world.leave(actor)
@@ -345,7 +353,13 @@ class Characters:
                     self.wakes[token] = Wake()
                 self.dirty_screens.add(token)
 
-    def input(self, session: Session, frame: Frame, tick: int) -> None:
+    def interaction(self, session: Session, frame: Frame) -> Interaction:
+        if (session.id in self.wakes or session.id in self.screens
+                or session.player_id not in self.players):
+            return Interaction()
+        return self.sim.interaction(session, frame)
+
+    def input(self, session: Session, frame: Frame, tick: int, *, interaction: Interaction | None = None) -> None:
         name = frame.data.get("name", "") if frame.type == "intent" else ""
         key = frame.data.get("k", "") if frame.type == "key" else ""
         if name == "resync":
@@ -413,7 +427,7 @@ class Characters:
         if player is None:
             return
         if session.id in self.sim.maps or (self.sim.avatars.get(session.user_id) and self.sim.avatars[session.user_id].travel):
-            self.sim.input(session, frame, tick)
+            self.sim.input(session, frame, tick, interaction=interaction)
             return
         if screen == "delete":
             if name == "prompt_cancel":
@@ -454,7 +468,7 @@ class Characters:
             self.screens[session.id] = ("sheet", 0)
             self.dirty_screens.add(session.id)
         else:
-            self.sim.input(session, frame, tick)
+            self.sim.input(session, frame, tick, interaction=interaction)
 
     def me(self, session: Session) -> dict[str, Any]:
         player = self.players[session.player_id]

@@ -1,0 +1,35 @@
+name: S25b authored city
+
+on:
+  pull_request:
+    paths:
+      - 'scripts/build_city_content.py'
+      - 'src/blacksite/**'
+      - 'tests/**'
+      - 'docs/world/01-gazetteer.md'
+      - 'pyproject.toml'
+      - '.github/workflows/s25b-authoring.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  authored-content:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - run: python -m pip install -e .[test]
+      - name: Generate the held city proposal outside shipped content
+        run: python scripts/build_city_content.py --output "$RUNNER_TEMP/s25b-authored"
+      - name: Validate all 34 scoped zones
+        run: python -m blacksite.content.validate "$RUNNER_TEMP/s25b-authored"
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: s25b-authored-content
+          path: ${{ runner.temp }}/s25b-authored/

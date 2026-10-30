@@ -1,15 +1,18 @@
 """Session-to-world adapter for the deterministic S03 tick loop."""
 
+from blacksite.server.interaction import Focus, Interaction, interact, key_action, object_interaction
 from dataclasses import dataclass, field
 from typing import Any
 from collections.abc import Callable
 
+from blacksite.layout import compute as screen_layout
 from blacksite.server.clock import Clock, TICK_HZ
 from blacksite.server.loop import TickContext
-from blacksite.server.protocol import Frame
+from blacksite.server.protocol import Frame, LogKind
 from blacksite.server.sessions import Session, Sessions
 from blacksite.server.views.delta import ViewStore
 from blacksite.server.views.zone_view import Perception, build
+from blacksite.server.views import presentation
 from blacksite.server.world.actors import Actor
 from blacksite.server.world.movement import move, regenerate
 from blacksite.server.world.registry import World
@@ -46,6 +49,7 @@ class ZoneSimulation:
         self.serial = 0
         self.me_provider: Callable[[Session], dict[str, Any]] = lambda session: {}
         self.target_provider: Callable[[Actor], dict[str, Any] | None] | None = None
+        self.interaction_provider: Callable[[Session], tuple[dict[str, str] | None, dict[str, str] | None]] = lambda session: (None, None)
         self.access_provider: Callable[[Session], dict[str, Any]] = lambda session: {}
         self.maps: dict[str, tuple[int, int | None]] = {}
         self.map_opened: dict[str, int] = {}
@@ -58,6 +62,21 @@ class ZoneSimulation:
         self.crew_view: Callable[[Session, dict[str, Any]], None] = lambda session, body: None
         self.fare_menu: Callable[[Session, Any], bool] = lambda session, exit: False
         self.travel_refusal: Callable[[Session, Exit], str | None] = lambda session, exit: None
+        self.pvp_provider: Callable[[Actor], bool] = lambda actor: bool(
+            actor.zone in self.world.zones and self.world.zones[actor.zone].safety_at(actor.position) == "open")
+
+    def place_context(self, actor: Actor) -> dict[str, Any]:
+        zone = self.world.zones.get(actor.zone)
+        return {"district": zone.template.meta.district if zone else None,
+                "pvp": self.pvp_provider(actor)}
+
+    def speak(self, session: Session, speaker: Actor, text: str) -> None:
+        """Speech metadata uses the same disclosure as the recipient's view."""
+        viewer = self.avatars[session.user_id].actor
+        label = presentation.name(speaker, viewer, self.world.content)
+        session.emit(f"{label}: {text}", kind="speech", channel="zone", role="chan_zone",
+                     at=self.clock.now_utc().isoformat(), speaker=label,
+                     speaker_role=presentation.presented_class(speaker, viewer, self.world.content))
 
     def discover(self, session: Session, avatar: Avatar) -> None:
         if avatar.zone in avatar.seen_zones:
@@ -66,7 +85,10 @@ class ZoneSimulation:
         for asset_id in self.world.zones[avatar.zone].template.meta.lore[:1]:
             asset = self.world.content.text.get(asset_id)
             if asset:
-                session.send(Frame("toast", {"text": asset.body.splitlines()[0], "role": "ui_text", "seconds": 8}))
+                # S25b TR-9: keep the complete paragraph in world history.
+                # P4 supplies its presentation kind without restoring a toast.
+                paragraph = asset.body.strip().split('\n\n', 1)[0]
+                self.log(session, ' '.join(paragraph.splitlines()), kind="place")
 
     def reset_view(self, session: Session, avatar: Avatar) -> None:
         avatar.perception.viewport = avatar.perception.grid_key = None
@@ -75,9 +97,9 @@ class ZoneSimulation:
         self.overlays.pop(session.id, None)
         session.needs_full_view = True
 
-    def log(self, session: Session, text: str) -> None:
-        session.send(Frame("log", {"lines": [{"channel": "zone", "text": text, "role": "chan_zone",
-                                                "at": self.clock.now_utc().isoformat()}]}))
+    def log(self, session: Session, text: str, *, kind: LogKind = "system") -> None:
+        session.emit(text, kind=kind, channel="zone", role="chan_zone",
+                     at=self.clock.now_utc().isoformat())
 
     def transition(self, session: Session, avatar: Avatar, now: float, tick: int) -> None:
         travel = avatar.travel
@@ -105,24 +127,52 @@ class ZoneSimulation:
             self.world.zones[target].activate(session.id, tick)
             avatar.travel = None
             self.reset_view(session, avatar)
-            self.discover(session, avatar)
             self.arrival_hook(session, avatar)
             self.log(session, "You arrive at " + self.world.zones[target].template.meta.name + ".")
+            self.discover(session, avatar)
 
-    def interact(self, session: Session, avatar: Avatar, tick: int, *, street: bool = False) -> None:
+    def interaction_target(self, avatar: Avatar, *, street: bool = False) -> Interaction:
         zone = self.world.zones[avatar.zone]
         actor = avatar.actor
-        adjacent = lambda tile: max(abs(tile[0] - actor.x), abs(tile[1] - actor.y)) <= 1
-        candidates = [ex for ex in zone.template.meta.exits if not ex.hidden
+        adjacent = lambda tile: max(abs(tile[0]-actor.x), abs(tile[1]-actor.y)) <= 1
+        candidates = [ex for ex in zone.template.meta.exits
+                      if (not ex.hidden or not street and ex.tile == actor.position)
                       and (ex.tile == actor.position if street else adjacent(ex.tile))
-                      and (not street or ex.kind == "street")]
+                      and (not street or ex.kind == 'street')]
         candidates.sort(key=lambda ex: (ex.tile != actor.position, ex.id))
         if candidates:
             ex = candidates[0]
+            destination = self.world.zones.get(ex.target_zone)
+            focus = Focus(ex.id, destination.template.meta.name, 'go to') if destination else None
+            return Interaction(focus, ex, ex.tile)
+        if not street:
+            objects = sorted((obj for obj in zone.objects.values() if adjacent(obj.spec.tile)),
+                             key=lambda obj: (obj.spec.tile != actor.position, obj.spec.id))
+            if objects:
+                obj = objects[0]
+                verb = 'use' if obj.spec.kind in ('door', 'apartment_door', 'gate', 'shutter') else 'inspect'
+                return object_interaction(obj, verb)
+        return Interaction()
+
+    def interaction(self, session: Session, frame: Frame) -> Interaction:
+        avatar = self.avatars.get(session.user_id)
+        if (session.role != 'caller' or avatar is None or avatar.travel or session.id in self.maps
+                or not (interact(frame) or key_action(self.keymap, session, frame) == 'interact')):
+            return Interaction()
+        return self.interaction_target(avatar)
+
+    def interact(self, session: Session, avatar: Avatar, tick: int, *, street: bool = False, choice: Interaction | None = None) -> None:
+        zone = self.world.zones[avatar.zone]
+        actor = avatar.actor
+        choice = choice or self.interaction_target(avatar, street=street)
+        if isinstance(choice.value, Exit):
+            ex = choice.value
             if ex.target_zone not in self.world.zones:
                 self.log(session, "Construction blocks this route.")
-            elif (zone.id, ex.id) in self.locked_exits or not permitted(ex, self.access_provider(session)):
-                self.log(session, "You do not meet this exit's requirement.")
+            elif (zone.id, ex.id) in self.locked_exits:
+                self.log(session, "The controls keep this route locked.")
+            elif not permitted(ex, self.access_provider(session)):
+                self.log(session, ex.locked_text or "You do not meet this exit's requirement.")
             elif reason := self.travel_refusal(session, ex):
                 self.log(session, reason)
             elif self.fare_menu(session, ex):
@@ -134,10 +184,8 @@ class ZoneSimulation:
             return
         if street:
             return
-        objects = sorted((obj for obj in zone.objects.values() if adjacent(obj.spec.tile)),
-                         key=lambda obj: (obj.spec.tile != actor.position, obj.spec.id))
-        if objects:
-            obj = objects[0]
+        if choice.value is not None:
+            obj = choice.value
             if obj.spec.params.get("unavailable_target"):
                 self.log(session, "Construction blocks this route.")
             elif obj.spec.kind in ("door", "apartment_door", "gate", "shutter") and obj.spec.params.get("locked") and not obj.open:
@@ -186,7 +234,7 @@ class ZoneSimulation:
             self.world.zones[avatar.zone].deactivate(session.id, self.clock.now_tick())
             self.world.leave(avatar.actor)
 
-    def input(self, session: Session, frame: Frame, tick: int) -> None:
+    def input(self, session: Session, frame: Frame, tick: int, *, interaction: Interaction | None = None) -> None:
         avatar = self.avatars.get(session.user_id)
         if session.role != "caller" or avatar is None:
             return
@@ -229,7 +277,7 @@ class ZoneSimulation:
             self.maps[session.id] = (0, None)
             self.map_opened[session.id] = tick
         elif action == "interact" or key in ("e", "E"):
-            self.interact(session, avatar, tick)
+            self.interact(session, avatar, tick, choice=interaction)
         elif action == "resync":
             session.needs_full_view = True
         else:
@@ -298,15 +346,18 @@ class ZoneSimulation:
                 if page is None:
                     kind, overlay = "menu", body
                 else:
-                    lines = wrapped(body["detail"], session.caps["width"] - 28)
-                    count = max(1, session.caps["height"] - 10)
+                    text_page = screen_layout(session.caps["width"], session.caps["height"]).city
+                    lines = wrapped(body["detail"], text_page.width)
+                    count = text_page.rows
                     pages = max(1, (len(lines) + count - 1) // count)
                     page = min(page, pages - 1)
                     self.maps[session.id] = cursor, page
                     overlay = {"title": body["title"], "lines": lines[page*count:(page+1)*count],
                                "page": page+1, "pages": pages, "hint": "PgUp/PgDn reads  Esc/B returns to the street"}
             if overlay is not None:
+                overlay = {**overlay, "me": {**overlay.get("me", {}), **self.place_context(avatar.actor)}}
                 if kind == "lattice":
+                    overlay["focus"], overlay["jack_focus"] = self.interaction_provider(session)
                     if self.views[session.id].publish(session, overlay, ctx.tick, kind="lattice"):
                         self.overlays[session.id] = kind, overlay
                     continue
@@ -320,7 +371,8 @@ class ZoneSimulation:
                 continue
             zone = self.world.zones[avatar.zone]
             local = self.clock.now_local(session.door_info.get("timezone")).strftime("%H:%M")
-            stamp = (zone.id, zone.revision, local, night, session.caps["width"], session.caps["height"],
+            focus, jack_focus = self.interaction_provider(session)
+            stamp = (zone.id, zone.revision, local, night, session.caps["width"], session.caps["height"], focus, jack_focus,
                      ctx.tick if zone.layers or avatar.actor.behaviour.get("channel") else None)
             if stamp == self.published.get(session.id) and not session.needs_full_view:
                 continue
@@ -329,15 +381,23 @@ class ZoneSimulation:
                          session.caps["width"], session.caps["height"], local, night, ctx.tick,
                          scouted,scouted_actors)
             body["me"].update(self.me_provider(session))
+            body["me"].update(self.place_context(avatar.actor))
             if self.target_provider:
                 body["target"] = self.target_provider(avatar.actor)
                 body["hint"] = "Tab target  F fire  X weapon  1-5 quick  V abilities  E interact  I inventory  ? help"
                 remaining = max(0,avatar.actor.cooldowns.get("weapon",0)-ctx.tick)/TICK_HZ
                 if remaining: body["hint"] = f"Weapon {remaining:.1f}s  " + body["hint"]
+            self.crew_view(session, body)
+            body['focus'], body['jack_focus'] = focus, jack_focus
             if channel := avatar.actor.behaviour.get("channel"):
                 body["me"]["channel"] = dict(channel)
                 body["hint"] = f"{channel['label']} {channel['remaining']:.1f}s  Stay still; Esc/B cancels."
-            self.crew_view(session, body)
+            elif focus or jack_focus:
+                context = f"E {focus['verb']} {focus['label']}".rstrip() if focus else ''
+                if jack_focus:
+                    jack_key = 'Ctrl-O' if session.keymap_id == 'vi' else 'J'
+                    context += ('  ' if context else '') + f"{jack_key} {jack_focus['verb']} {jack_focus['label']}".rstrip()
+                body['hint'] = context + '  ' + body['hint'].replace('E interact  ', '')
             if self.views[session.id].publish(session, body, ctx.tick):
                 self.published[session.id] = stamp
             elif body == (self.views[session.id].previous or {}).get("body"):

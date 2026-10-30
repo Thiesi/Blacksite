@@ -1,5 +1,6 @@
 """Game 5.3: durable player tools, owned instances and local commands."""
 
+from blacksite.server.interaction import Interaction
 from copy import deepcopy
 from typing import Any, TYPE_CHECKING
 
@@ -20,6 +21,7 @@ from blacksite.server.skills import Use
 from blacksite.server.quality import value as quality_value, damage_multiplier, detail as quality_detail
 from blacksite.content.schema import ObjectSpec
 from blacksite.server.world.zone import ObjectState
+from blacksite.server.views import presentation
 
 if TYPE_CHECKING:
     from blacksite.server.progression_engine import ProgressionEngine
@@ -509,7 +511,7 @@ class Drones:
                     marked = bool(other and self.game.combat.relation(body,target) != "hostile" and any(
                         self.world.zones[person.zone].safety_at(person.position) != "open" for person in (body,other_body)))
                     status = "order marks you for 15 minutes" if marked else "order gives a two-second warning"
-                detail = f"Target {target.name}: {status}.\n"+detail
+                detail = f"Target {presentation.name(target, body, self.game.content)}: {status}.\n"+detail
         else:
             rows = [{"id":"none","cells":["You carry no drone."]}]
         details = "\n".join(line for paragraph in detail.split("\n") for line in wrapped(paragraph,52))
@@ -522,6 +524,9 @@ class Drones:
         if self.sim.external_views.get(session.id,("",))[0] == "menu":
             self.sim.external_views.pop(session.id,None)
         self.sim.reset_view(session,self.sim.avatars[session.user_id])
+
+    def interaction(self, session: Session, frame: Frame) -> Interaction | None:
+        return Interaction() if session.player_id in self.game.players and session.id in self.menus else None
 
     def input(self, session: Session, frame: Frame, tick: int) -> bool:
         player = self.game.players.get(session.player_id)

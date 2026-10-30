@@ -1,5 +1,6 @@
 """Game 8.5/8.6: local clinic menus and confirmed, atomic operations."""
 
+from blacksite.server.interaction import Interaction
 from copy import deepcopy
 from collections.abc import Callable
 from dataclasses import dataclass
@@ -229,6 +230,16 @@ class Clinics:
                 if not session.closed:
                     self.publish(session)
         return self.commerce.settle(player,patch,items,self.commerce.caches,serial,committed)
+
+    def interaction(self, session: Session, frame: Frame) -> Interaction | None:
+        player = self.game.players.get(session.player_id)
+        if player is None:
+            return None
+        if drugs.detox_until(player) > self.game.clock.now_utc().timestamp():
+            if session.pending_prompts.get('chat') and frame.type == 'key':
+                return None
+            return Interaction()
+        return Interaction() if session.id in self.menus else None
 
     def input(self, session: Session, frame: Frame, tick: int) -> bool:
         player = self.game.players.get(session.player_id)

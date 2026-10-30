@@ -116,8 +116,9 @@ class Substances:
                     lines.append("Detox ends. Your dependencies clear. You can leave the clinic.")
                 session = self.game.combat.session(pid)
                 if session and lines:
-                    session.send(Frame("log", {"lines": [{"channel": "system", "text": line,
-                        "role": "chan_sys", "at": self.game.clock.now_utc().isoformat()} for line in lines]}))
+                    for line in lines:
+                        session.emit(line, kind="system", channel="system", role="chan_sys",
+                                     at=self.game.clock.now_utc().isoformat())
                 self.game.dirty_screens.update(s.id for s in self.game.sessions.active.values() if s.player_id == pid)
             self.commerce.settle(player, patch, items, self.commerce.caches,
                                  self.commerce.serial, committed)

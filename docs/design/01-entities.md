@@ -40,6 +40,9 @@ after their id.
 | id | slug | `core-plaza` |
 | name, district | str | |
 | safety | enum | safe, pocket, contested, open |
+| lit | bool | a pocket-class zone that is lit: sight covers it while you stand in it (game design 5.2); default false |
+| charted | bool | D1: the public region is known on arrival (terminal UI 2.3, architecture 5.5.5); default false |
+| public | list of `[x, y, w, h]` | D1: the public-ground region; required when `charted`. Architecture 5.5.5 says what it may contain |
 | lean | faction id or null | |
 | width, height | int | 40–200, 20–100; derived from the `.map`, not written in the sidecar |
 | tiles | grid of TileRef | from the `.map` legend |
@@ -48,12 +51,22 @@ after their id.
 | spawn | Tile, optional | passable preview/initial entry tile |
 | sector | sector id, optional | native/portable rig's district entry; terminals may override with `params.sector` |
 | layouts | list of ZoneLayout, optional | named service/event geometry variants |
-| exits | list of Exit | id, tile, target zone, target tile, kind (street, door, tram, ladder, lift, gate, cable), requirement (pass, key, faction), hidden, optional relay |
+| exits | list of Exit | id, tile, target zone, target tile, kind (street, door, tram, ladder, lift, gate, cable), requirement, optional alternatives and locked_text, hidden, optional relay |
 | spawners | list of Spawner | id, tile or region, npc template, count, respawn seconds, condition |
 | objects | list of ObjectSpec | id, tile, kind (door, terminal, vendor, vat, relay, cache, tram_stop, apartment_door, light, hardware, descent_console, workshop, bank, turret, camera, shutter, cable_car, pump, lift, patrol_beacon, gate, gantry), params, essential (clinic, public vat, public uplink) |
-| pockets | list of Region | rectangles that are `pocket` safety inside a contested zone |
+| pockets | list of Pocket | rectangles that are `pocket` safety inside a contested zone; each a Region with `lit` and `charted` (bools, default false), as for the zone. A charted pocket's rectangle joins the zone's public region, under the same checks |
 | lore | list of asset ids | ambient log lines, found texts |
 | instanced | bool | Blacksite levels only |
+
+`lit` is a rule (game design 5.2), read from the zone data only, never
+from a look (architecture 5.5.6). It is valid only on a zone whose
+safety is `pocket` and on pocket regions; the validator rejects it
+anywhere else. Once looks carry lights at eye level
+(the scene track, V3), a look that lights a pocket must agree with its
+`lit` flag, and the validator checks both ways. `charted` and `public`
+change what callers are shown and what walks may use, so they are zone
+data too, covered by the mechanics fingerprint; looks stay
+presentation only.
 
 `ZoneLayout` has `id`, `changes` (list of `{tile, tile_id}`),
 `warning_tiles` (list of Tile) and `alternate_routes` (exit IDs).
@@ -64,6 +77,22 @@ composition rechecks reachability from every physical body; an unsafe
 closure waits. Layers expire independently and compose in source-ID order.
 A door's optional `params.open` overrides its base tile's passability and
 opacity; without it, the tile type supplies the initial state.
+
+An exit requirement has `kind` (`pass`, `key`, `faction`, `member`,
+`story`, `open`), `ref` and optional `standing`/`object`. Pass/key refs resolve carried
+items; faction means a minimum standing; member means that exact
+membership. An `open` requirement names the local zone and an actual
+door/gate/shutter object; its committed open state grants that
+alternative, independently of the key. Story refs name route permissions provided by the
+owning story/season system, closed by default. An exit's `alternatives`
+lists other complete requirements accepted instead of its primary one;
+it cannot appear without a primary requirement. `locked_text` optionally
+explains a refusal. These checks never consume a credential or replace
+Curfew/control restrictions. Character route-permission providers are
+server-owned callbacks, not client or saved-progress assertions. S26
+owns `halvard-service-lift` and `shaft-cage` authorization lifetimes.
+Hidden physical exits stay absent from the exit marker list. Explicit
+Interact on the discovered tile can use them; auto-walking never does.
 
 S06 preview actors use Hardline's starting attributes and derived pools
 (game design 3.1–3.2: HP 130, STA 70). They are temporary bodies, not saved
@@ -91,9 +120,13 @@ the catalog underscore form. Room blueprints are content, not new zones.
 (optional ambient log)`. `char` is the single character that stands for
 the tile in `.map` files; `glyph` is a `glyphs.json` id used to draw it;
 `colour` is a palette role whose per-tier values live in `palette.json`.
+`movement_cost` is an optional positive integer, default 1, multiplying
+the destination step's time (game 5.2). Water uses 2. Runtime layouts
+select the current tile type, including its cost.
 
 The terminal tables beside it: `glyphs.json` (`glyphs`: glyph id to one
-CP437 character), `palette.json` (`roles`: role to tier to variant to
+CP437 character; optional `modern`: the same id to its modern-tier
+substitution, terminal UI §1), `palette.json` (`roles`: role to tier to variant to
 value) and `keymaps.json` (`actions`: action id to context and label;
 `keymaps`: id, label, bindings of action id to normalised key names).
 
@@ -292,21 +325,42 @@ validated against game 3.5; temporary modifiers never alter these rows.
 
 `id, name, faction, grade, attributes, weapon, armour, behaviours[]
 (with params), dialogue (talker id or null), vendor (inventory id or null),
-loot[] (item, chance, count), xp, lore`.
+loot[] (item, chance, count), xp, lore, presents, cover_name`.
+
+`presents` (optional) is the class a caller sees: `civilian`, `warden`,
+`security`, `service` or `hostile` (decision D-T8). It sets the NPC's
+colour, figure and NEARBY class, never its rules. A disguised NPC sets
+its cover: the plainclothes Warden presents `civilian`. Without it, the
+class is derived from faction and behaviour (architecture 5.5.4).
+`presents` is static content; the moment a disguised NPC acts against a
+caller, the reveal to that caller is runtime state of the NPC instance
+(architecture 5.5.4), never written back to the template.
+
+`cover_name` is optional unless `presents` is set, when the validator
+requires a non-empty printable name. Views and speech use it while
+the NPC is covered, then use `name` after that caller's reveal. It is
+ordinary authored text, not a class label: the plainclothes Warden on
+Sodium Row shares `Sodium regular` with the real civilians there. The
+true name and faction never form the covered display name. This is
+presentation data; rules continue to read the true actor and faction.
 
 An optional explicit `health` pool and embedded `attack` weapon block
 support private training actors. `training` requires both and scopes
-the actor to its server-assigned owner. Ordinary NPCs derive health
-from attributes and use their authored equipment. Recovery quantities
-live in each character start's `recovery_items` mapping. Hymn records
+the actor to its server-assigned owner. Ordinary NPCs default to health
+from attributes and authored equipment. Game 5.5's documented creature
+and machine profiles may supply explicit health and embedded attacks.
+Recovery quantities live in each character start's `recovery_items`
+mapping. Hymn records
 list `requires_one_of` implant IDs for tiers above one.
 
 S11 behaviours include `wander` and `hunt` as well as the original kinds.
 Patrol params hold `waypoints: [[x,y], ...]` and optional `bounce`; every
 spawner validates these against its own map. `anchor: true` preserves a
 named service attendant during dormancy; `hostile_all: true` is an explicit
-unsafe threat rather than an inference from open ground. Embedded health
-and attack also support the generic maintenance drone from design 18.
+unsafe threat rather than an inference from open ground. It targets
+outsiders, not NPCs bound to the same local spawner crew (game 5.5).
+Embedded health and attack also support the generic maintenance drone
+from design 18.
 `per_player` spawners require private training templates. Canonical NPC
 template IDs are hyphenated slugs (`npc-wake-drone`); item IDs retain their
 existing underscore format.
@@ -490,9 +544,11 @@ Service references resolve either a work-order node or a vendor with a
 clinic; both retain the owning system's normal counter/board checks.
 
 Barks are `text, weight (positive integer), min_interval_seconds
-(positive integer, default 90)`. The server uses the zone's seeded RNG
-and supplied ticks, emits only with a viewer within six tiles, and
-suppresses the talker's barks while anyone is interacting (game 13.4).
+(positive integer, default 90)`. P8's single ambient emitter uses a
+derived per-zone RNG and supplied ticks (architecture 5.5.3), emits only
+with a viewer within six tiles, and suppresses the talker's barks while
+anyone is interacting (game 13.4). S27 authors the records and pure
+scheduler; it does not install an independent emission loop.
 
 The closed condition set and terminal delivery are specified in
 "Dialogue system notes" in `docs/world/04-dramatis-personae.md`.
@@ -501,6 +557,10 @@ Conditions read the viewing player's committed facts. An unset
 the engine's zero-based index. Historical choices read settled Chronicle
 records; actor placement or another crew's recent outcome grants none.
 Tags and internal facts never enter a client menu or journal.
+Records marked `machine_mind` are scripted encounter line banks, excluded
+from ordinary actor, object and cell contacts. S26 consumes each required
+finale voice explicitly; first-match talker selection is not a substitute
+for the two guaranteed registers.
 
 Neutral story proposals record the server-validated `broker: vesper`.
 Accepted instances retain it in their durable `runtime.broker` field.
@@ -558,6 +618,11 @@ allocations[]` with exactly one `common` and one `reserve` allocation,
 each `id, label, effects[]` (event effect records). Live state is the
 `ServiceNode` of §2.13.
 
+Relay Zero's reserve credential binds the contract-permission
+`lat-relay-zero/worker_return` control to the optional
+`oldworks-main/relay-zero-workers-gate` door. The ordinary public
+`relay_open` keeps its relay-capture binding (game 7.5/7.7).
+
 ### 1.18 Vendor and hymn tables (`vendors.json`, `hymns.json`)
 
 Vendor: `id, name, tier (list, member, restricted), stock[] (item,
@@ -596,8 +661,47 @@ execution; the consuming slices supply those systems.
 `faction` (the actual faction ID; old fixtures default to the card ID).
 The `red-sable` card maps to `sable`. Existing standing under a card-only
 alias moves once to its faction key, combining and clamping at -100/100.
-The eight introductions set standing, not membership. They do not
+The eight introductions (nine once the Lamp Compact is built, planned, #90) set standing, not membership. They do not
 activate incomplete faction content or handlers.
+
+### 1.21 Themes and looks (`themes.json`, `looks/<zone-id>.json`)
+
+The presentation layer (decision D3, 2026-10-28): how places look. It is
+presentation only; what a caller may be shown without sight (`charted`,
+`public`) is zone data (1.1). No rule reads it (architecture 5.5.6),
+and removing every look changes no rule and no non-presentation view
+field.
+
+`themes.json` maps a theme id to `{ground_bg, ground_fg, texture,
+wall_bg, wall_fg, luma, pattern}`: palette roles for the ground and wall
+faces, the ground grain (`texture`, characters picked per tile by a
+stable hash; a space is bare ground), `luma` (`dark` or `light`; light
+grounds use `_light` people roles) and `pattern` (`grain` or `rings`).
+A theme has values per tier through its roles; content never names a
+colour directly.
+
+A look, one per zone, keyed by zone id:
+
+| Field | Type | Notes |
+|---|---|---|
+| theme | theme id | the zone's base theme |
+| regions | list of `{theme, rect}` or `{theme, circle}` | areas lit differently: a lamp pool, an alley; later regions win |
+| signs | list of `{at, text, role}` | lettering on wall faces, left to right from `at`; every letter on a wall tile |
+| marks | list of `{role, at, text}` or `{role, line, glyph}` | paint on plain floor: words, lane lines, arrows |
+| glints | list of Tile | water cells that catch the light (`glint_role`); on water only |
+| names | tile id to text | what a tile is here (`cover-2`: `barrels`), used by HERE |
+| ambient | list of text | the place's ambient lines (UI 2.5; voice rules apply) |
+
+Places (named parts of a zone with a fixed camera) and scenes (lights
+and set pieces at eye level) are drafts for the scene track (V3, issue
+#68) and not part of this record yet.
+
+Validator rules: every theme and role exists; region shapes are one of
+`rect` or `circle`; signs stay on wall tiles and use dressing letters
+only; marks lie on plain floor; glints lie on water; no look glyph is a
+rule glyph (UI 2.2); 16-colour backgrounds are 0-7; ambient lines follow
+the voice rules (no em-dash, at most 200 characters, no real or
+other-fiction names).
 
 ---
 

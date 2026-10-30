@@ -7,6 +7,14 @@
 
 ## Goal
 
+**Backend/cast resumption (issue #82, 2026-10-30):** the owner merged P3
+in #103. Backend work and all cast authoring proceed on current `main`.
+The checkpoint and remaining gates are recorded in
+[`docs/ops/s27-backend-cast.md`](../../ops/s27-backend-cast.md).
+Speech uses architecture 5.5.3's structured emission. Cast and ambient
+assets remain in an authoring bundle; placement and native delivery
+await P8 and S25c anchors. No independent bark emitter is installed.
+
 **Presentation review hold (2026-10-24):** S25 human layout approval is
 **not granted**. [Issue #68](https://github.com/Thiesi/Blacksite/issues/68)
 requires a separate comprehensive review against the world bible and
@@ -31,9 +39,8 @@ the work.
   optional-line weighting from main design 13.4, offers and their hotkeys, delivery rules,
   terminal talkers, content validation list); Parts I and II for every
   NPC's lines.
-- `docs/design/01-entities.md` §1.11 (dialogue file; this slice replaces
-  the placeholder node/response shape with the talker shape and updates
-  the entity doc in the same PR), §1.8 (NPC template `dialogue` field).
+- `docs/design/01-entities.md` §1.11 (typed talker file and owner-system
+  handoffs), §1.8 (NPC template `dialogue` field).
 - `docs/design/00-game-design.md` §3.4 (grade 5), §7 (standing,
   membership, relations), §7.3 (Marked), §13 (season stages), §11
   (channels).

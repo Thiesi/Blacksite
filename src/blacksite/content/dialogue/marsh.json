@@ -1,0 +1,51 @@
+{
+  "schema": 1,
+  "id": "marsh",
+  "name": "Warden Constable Teo Marsh",
+  "faction": "wardens",
+  "title": "Terraces outpost",
+  "terminal": false,
+  "machine_mind": false,
+  "lines": [
+    {
+      "id": "situation",
+      "text": "Marked. I should engage. I'm going to finish this sandwich.",
+      "when": [
+        "marked"
+      ],
+      "required": true
+    },
+    {
+      "id": "work",
+      "text": "Block Four. Current objective's on the card. Bring me proof and I'll bring you chits.",
+      "when": [
+        "has_contract war-s1-1-stairwell"
+      ],
+      "required": true
+    },
+    {
+      "id": "first",
+      "text": "I'm one man and a radio. The Marshal's very sorry. She said to say.",
+      "when": [
+        "first_meeting"
+      ],
+      "required": true
+    },
+    {
+      "id": "greeting",
+      "text": "I'm one man and a radio. The sandwich is a separate department.",
+      "when": [],
+      "required": true
+    }
+  ],
+  "offers": [
+    {
+      "kind": "contract",
+      "ref": "war-s1-1-stairwell",
+      "label": "Work board",
+      "hotkey": "c",
+      "when": []
+    }
+  ],
+  "barks": []
+}

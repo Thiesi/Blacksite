@@ -2,8 +2,11 @@ name: Service and shared-zone acceptance
 
 on:
   pull_request:
+    types: [opened, synchronize, reopened, ready_for_review, converted_to_draft]
     paths:
       - 'src/blacksite/**'
+      - 'tests/**'
+      - 'scripts/presentation*'
       - 'deploy/**'
       - 'scripts/accept_s05_systemd.py'
       - 'scripts/accept_s06_netbbs.py'
@@ -38,7 +41,76 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
+  native-scope:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    outputs:
+      full: ${{ steps.scope.outputs.full }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - id: scope
+        name: Classify using the trusted base revision
+        env:
+          BASE: ${{ github.event.pull_request.base.sha }}
+          HEAD: ${{ github.event.pull_request.head.sha }}
+          DRAFT: ${{ github.event.pull_request.draft }}
+        shell: python
+        run: |
+          import json, os, pathlib, subprocess
+          base, head = os.environ['BASE'], os.environ['HEAD']
+          result = {'full': True, 'reason': 'missing trusted base classifier'}
+          if base and head:
+              source = subprocess.run(['git', 'show', base+':scripts/presentation_scope.py'], capture_output=True)
+              if source.returncode == 0:
+                  path = pathlib.Path(os.environ['RUNNER_TEMP'])/'presentation_scope.py'
+                  path.write_bytes(source.stdout)
+                  result = json.loads(subprocess.check_output(['python', str(path), '--base', base,
+                      '--head', head, '--draft', os.environ['DRAFT'].lower()]))
+          print(result)
+          with open(os.environ['GITHUB_OUTPUT'], 'a') as output:
+              output.write('full='+str(result['full']).lower()+'\n')
+
+  door-subset-netbbs:
+    needs: native-scope
+    if: needs.native-scope.outputs.full == 'false'
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    permissions:
+      contents: read
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - uses: actions/checkout@v4
+        with:
+          repository: Thiesi/NetBBS
+          ref: v7.31.0
+          path: .test-tmp/netbbs
+      - name: Install native door wheel
+        shell: bash
+        run: |
+          python -m pip install './.test-tmp/netbbs[ssh,web]'
+          python -m pip wheel --no-deps . -w "$RUNNER_TEMP/p1-wheels"
+          python -m venv "$RUNNER_TEMP/p1-venv"
+          "$RUNNER_TEMP/p1-venv/bin/python" -m pip install "$RUNNER_TEMP"/p1-wheels/*.whl
+      - name: Door flow at both sizes through Telnet SSH and WebSocket
+        run: python scripts/accept_s04_netbbs.py --root "${{ runner.temp }}/p1-door" --door-python "${{ runner.temp }}/p1-venv/bin/python"
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: p1-draft-native-door
+          path: ${{ runner.temp }}/p1-door/
+
   events-netbbs:
+    needs: native-scope
+    if: needs.native-scope.outputs.full == 'true'
     runs-on: ubuntu-latest
     timeout-minutes: 25
     permissions:
@@ -83,6 +155,8 @@ jobs:
             ${{ runner.temp }}/s24-proof/**/progress.log
 
   market-netbbs:
+    needs: native-scope
+    if: needs.native-scope.outputs.full == 'true'
     runs-on: ubuntu-latest
     timeout-minutes: 25
     permissions:
@@ -126,6 +200,8 @@ jobs:
             ${{ runner.temp }}/s23-proof/**/progress.log
 
   relays-netbbs:
+    needs: native-scope
+    if: needs.native-scope.outputs.full == 'true'
     runs-on: ubuntu-latest
     timeout-minutes: 20
     permissions:
@@ -169,6 +245,8 @@ jobs:
             ${{ runner.temp }}/s21-proof/**/progress.log
 
   contracts-netbbs:
+    needs: native-scope
+    if: needs.native-scope.outputs.full == 'true'
     runs-on: ubuntu-latest
     timeout-minutes: 30
     permissions:
@@ -220,6 +298,8 @@ jobs:
             ${{ runner.temp }}/s19-proof/**/progress.log
 
   crews-netbbs:
+    needs: native-scope
+    if: needs.native-scope.outputs.full == 'true'
     runs-on: ubuntu-latest
     timeout-minutes: 15
     permissions:
@@ -256,6 +336,8 @@ jobs:
             ${{ runner.temp }}/s22-proof/progress.log
 
   factions-netbbs:
+    needs: native-scope
+    if: needs.native-scope.outputs.full == 'true'
     runs-on: ubuntu-latest
     timeout-minutes: 15
     permissions:
@@ -294,6 +376,8 @@ jobs:
             ${{ runner.temp }}/s20-proof/progress.log
 
   apartments-netbbs:
+    needs: native-scope
+    if: needs.native-scope.outputs.full == 'true'
     runs-on: ubuntu-latest
     timeout-minutes: 15
     permissions:
@@ -330,6 +414,8 @@ jobs:
             ${{ runner.temp }}/s18-proof/progress.log
 
   fabrication-netbbs:
+    needs: native-scope
+    if: needs.native-scope.outputs.full == 'true'
     runs-on: ubuntu-latest
     timeout-minutes: 15
     permissions:
@@ -366,6 +452,8 @@ jobs:
             ${{ runner.temp }}/s17-proof/progress.log
 
   interlock-netbbs:
+    needs: native-scope
+    if: needs.native-scope.outputs.full == 'true'
     runs-on: ubuntu-latest
     timeout-minutes: 40
     permissions:
@@ -406,6 +494,8 @@ jobs:
             ${{ runner.temp }}/s15-proof/**/failure-state.json
             ${{ runner.temp }}/s15-proof/**/progress.log
   encounters-netbbs:
+    needs: native-scope
+    if: needs.native-scope.outputs.full == 'true'
     runs-on: ubuntu-latest
     timeout-minutes: 40
     permissions:
@@ -454,6 +544,8 @@ jobs:
           name: s14-encounter-proof
           path: ${{ runner.temp }}/s14-proof
   lattice-netbbs:
+    needs: native-scope
+    if: needs.native-scope.outputs.full == 'true'
     runs-on: ubuntu-latest
     timeout-minutes: 20
     permissions:
@@ -485,6 +577,8 @@ jobs:
           name: s13-lattice-proof
           path: ${{ runner.temp }}/s13-proof
   npcs-netbbs:
+    needs: native-scope
+    if: needs.native-scope.outputs.full == 'true'
     runs-on: ubuntu-latest
     timeout-minutes: 40
     strategy:
@@ -520,6 +614,8 @@ jobs:
           name: s11-npcs-proof-${{ matrix.size }}
           path: ${{ runner.temp }}/s11-proof
   combat-netbbs:
+    needs: native-scope
+    if: needs.native-scope.outputs.full == 'true'
     runs-on: ubuntu-latest
     timeout-minutes: 20
     permissions:
@@ -551,6 +647,8 @@ jobs:
           name: s10-combat-proof
           path: ${{ runner.temp }}/s10-proof
   systemd-netbbs:
+    needs: native-scope
+    if: needs.native-scope.outputs.full == 'true'
     runs-on: ubuntu-latest
     timeout-minutes: 25
     permissions:

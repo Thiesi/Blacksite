@@ -1,0 +1,35 @@
+{
+  "schema": 1,
+  "id": "kroll",
+  "name": "Halvard Recovery Sergeant Mads Kroll",
+  "faction": "halvard",
+  "title": "Recovery sergeant",
+  "terminal": false,
+  "machine_mind": false,
+  "lines": [
+    {
+      "id": "situation",
+      "text": "You are in a live recovery zone. Read the rating. Read it again before you move.",
+      "when": [
+        "enemy_of_me"
+      ],
+      "required": true
+    },
+    {
+      "id": "first",
+      "text": "Halvard recovery. Salvage in this ring is Directorate property. Drop it and walk.",
+      "when": [
+        "first_meeting"
+      ],
+      "required": true
+    },
+    {
+      "id": "greeting",
+      "text": "Ferrymen get the hull. Halvard gets the compute. That's not a deal; it's an order.",
+      "when": [],
+      "required": true
+    }
+  ],
+  "offers": [],
+  "barks": []
+}

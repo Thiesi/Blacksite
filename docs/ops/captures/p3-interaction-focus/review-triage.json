@@ -1,0 +1,56 @@
+{
+ "source_head": "93641f5dc5db6dc7a60124de200d1033ac12d686",
+ "reviewer_model": "Claude Sonnet 5.5",
+ "model_verified_in_jobs": [
+  123806389560
+ ],
+ "written_reviews": [
+  {
+   "head": "93641f5dc5db6dc7a60124de200d1033ac12d686",
+   "url": "https://github.com/Thiesi/Blacksite/pull/103#issuecomment-6511440993",
+   "result": "no actionable findings; static full-source review"
+  },
+  {
+   "head": "93641f5dc5db6dc7a60124de200d1033ac12d686",
+   "url": "https://github.com/Thiesi/Blacksite/pull/103#issuecomment-6511426601",
+   "result": "no credible remaining issues; static recruitment-fix review"
+  }
+ ],
+ "resolved": [
+  {
+   "finding": "lost objective/current-cost feedback",
+   "fix_head": "b5d75956f7a586b05758edac26bd27eaebcf9219",
+   "triage": "UI 11 priority confirmed by technical/presentation leads; first words retained; all four unchanged native S19 manual/network cases pass."
+  },
+  {
+   "finding": "unnamed recruitment board dereferences display focus",
+   "fix_head": "93641f5dc5db6dc7a60124de200d1033ac12d686",
+   "triage": "Reproduced AttributeError before fix. Input now uses the selected object/actor id independent of optional focus; 100 P3/faction checks pass."
+  },
+  {
+   "finding": "stale PR-body and capture references in static review",
+   "triage": "Current head/source and freshly regenerated capture provenance are explicit; earlier failed attempts remain labelled as earlier evidence."
+  }
+ ],
+ "non_blocking": [
+  {
+   "observation": "per-publish query cost",
+   "triage": "no measured tick overrun; no unrelated cache/invalidation change"
+  },
+  {
+   "observation": "hypothetical missing viewport/keymap drift and unsupported widths",
+   "triage": "no demonstrated supported-session failure; normal welcome/zone bodies provide keymap and viewport"
+  },
+  {
+   "observation": "cosmetic style and other screen-title fallbacks",
+   "triage": "no practical caller impact; focus labels have selected-entity provenance"
+  },
+  {
+   "observation": "mutable upstream release tag",
+   "triage": "record actual resolved NetBBS commit 3d90efcc05cc1397d6adeb1c567674045fed1cd8 in provenance"
+  }
+ ],
+ "technical_decision_record": null,
+ "presentation_wording_approval": false,
+ "human_approval": false
+}

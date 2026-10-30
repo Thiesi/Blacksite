@@ -16,9 +16,22 @@ DOOR_SECRET = b"d" * 32
 ADMIN_SECRET = b"a" * 32
 
 
+@dataclass(frozen=True)
+class CallerInput:
+    """Declared caller-supplied fixture text, never an authored glyph."""
+    id: str
+    text: str
+
+
+WIDE_HANDLE = CallerInput('wide-handle', 'Wide\u754c')
+LATTICE_PEER = CallerInput('lattice-peer', 'Runner\u754c')
+ENCOUNTER_PEER = CallerInput('encounter-peer', 'Guest\u754c')
+CALLER_INPUTS = (WIDE_HANDLE, LATTICE_PEER, ENCOUNTER_PEER)
+
+
 def hello(info: dict[str, Any] | None = None, secret: bytes = DOOR_SECRET,
           width: int = 80, height: int = 24) -> Frame:
-    info = info if info is not None else {"user_id": 1, "handle": "Wide界", "node_name": "test"}
+    info = info if info is not None else {"user_id": 1, "handle": WIDE_HANDLE.text, "node_name": "test"}
     return Frame("hello", {"proto": PROTOCOL_MAJOR, "door_info": info,
         "hmac": sign(info, secret), "client_version": PACKAGE_VERSION,
         "caps": {"width": width, "height": height, "tier": "256", "unicode": True}})
@@ -37,9 +50,11 @@ class FakeClient:
 
 class HeadlessServer:
     def __init__(self, content: ContentTree | None = None, spawn_zone: str | None = None,
-                 character_state: dict[str, Any] | None = None, clock: ManualClock | None = None) -> None:
+                 character_state: dict[str, Any] | None = None, clock: ManualClock | None = None,
+                 zone_seeds: dict[str, int] | None = None) -> None:
         self.clock = clock or ManualClock()
-        world = World(content, {zone: index for index, zone in enumerate(sorted(content.zones))}) if content and (spawn_zone or character_state is not None) else None
+        world = World(content, zone_seeds if zone_seeds is not None else
+                      {zone: index for index, zone in enumerate(sorted(content.zones))}) if content and (spawn_zone or character_state is not None) else None
         self.core = Core(self.clock, "test-origin", Authenticator(DOOR_SECRET, ADMIN_SECRET),
                          asdict(content.keymaps) if content and content.keymaps else {},
                          asdict(content.palette) if content and content.palette else {},

@@ -476,6 +476,17 @@ def test_machine_mind_needs_both_voices(world: World) -> None:
     only(world, "a machine-mind talker needs a TEN line")
 
 
+def test_dialogue_chronicle_option_resolves_the_named_season(world: World) -> None:
+    world.write('seasons/1.json', _season())
+    talker = _talker()
+    talker['lines'][0]['when'] = ['chronicle_choice 1 seal']
+    world.write('dialogue/fx-recruiter.json', talker)
+    assert world.messages() == []
+    talker['lines'][0]['when'] = ['chronicle_choice 1 no-such-choice']
+    world.write('dialogue/fx-recruiter.json', talker)
+    only(world, "no season 1 finale option 'no-such-choice'")
+
+
 # --- seasons (00-game-design.md 13) ---------------------------------------------
 
 

@@ -6,12 +6,14 @@ from dataclasses import dataclass
 from datetime import datetime
 from typing import Any
 
-from blacksite.content.schema import DialogueNode, Offer
+from blacksite.content.schema import DialogueNode, Exit, Offer
 from blacksite.server.clock import TICK_HZ
 from blacksite.server.commerce import CommerceMenu
 from blacksite.server.contracts.panels import Panel as ContractPanel
-from blacksite.server.dialogue import BARK_RADIUS, BarkScheduler, Facts, eligible_offers, evaluate
+from blacksite.server.dialogue import Facts, eligible_offers, evaluate
 from blacksite.server.factions import relation
+from blacksite.server.interaction import Focus, Interaction, interact
+from blacksite.server.views import presentation
 from blacksite.server.loop import TickContext
 from blacksite.server.protocol import Frame
 from blacksite.server.sessions import Session
@@ -48,7 +50,6 @@ class Dialogue:
         self.content, self.world, self.commerce = self.game.content, core.world, core.commerce
         self.sim = self.game.sim
         self.menus: dict[str, TalkerMenu] = {}
-        self.barks = BarkScheduler()
         # S26 binds only its committed settlement. No placement or pending
         # finale proposal supplies a historical outcome.
         self.season_facts: Callable[[Any], SeasonFacts] = lambda player: SeasonFacts()
@@ -81,13 +82,15 @@ class Dialogue:
         found = []
         for obj in zone.objects.values():
             did = obj.spec.params.get('dialogue')
-            if did in self.content.dialogue and self.content.active('dialogue', did):
+            if (did in self.content.dialogue and not self.content.dialogue[did].machine_mind
+                    and self.content.active('dialogue', did)):
                 found.append(Contact(did, obj.spec.id, zone.id, obj.spec.tile))
         for actor in zone.actors.values():
             template = self.content.npcs.get(actor.behaviour.get('template'))
             if template and template.dialogue in self.content.dialogue and actor.health > 0:
                 did = template.dialogue
-                if self.content.active('dialogue', did) and actor.stance not in ('down', 'dead'):
+                if (not self.content.dialogue[did].machine_mind and self.content.active('dialogue', did)
+                        and actor.stance not in ('down', 'dead')):
                     found.append(Contact(did, actor.id, zone.id, actor.position))
         return found
 
@@ -101,7 +104,8 @@ class Dialogue:
             cell = self.core.lattice.sectors.cells[presence.sector][presence.cell]
             did = cell.dialogue
             cid = 'cell:'+presence.sector+':'+cell.id
-            if (did in self.content.dialogue and self.content.active('dialogue', did)
+            if (did in self.content.dialogue and not self.content.dialogue[did].machine_mind
+                    and self.content.active('dialogue', did)
                     and (not target or target == cid)):
                 actor = self.sim.avatars[session.user_id].actor
                 return Contact(did, cid, actor.zone, actor.position, True)
@@ -113,7 +117,10 @@ class Dialogue:
         found = [contact for contact in self.contacts(zone)
                  if (not target or contact.target == target)
                  and max(abs(contact.tile[0]-actor.x), abs(contact.tile[1]-actor.y)) <= 1
-                 and zone.entry_policy(actor, contact.tile)]
+                  and zone.entry_policy(actor, contact.tile)
+                  and (self.core.combat.visible(actor, zone.actors[contact.target])
+                       if contact.target in zone.actors
+                       else self.world.object_access(actor, zone.objects[contact.target].spec))]
         found.sort(key=lambda contact: (contact.tile != actor.position, contact.target))
         return found[0] if found else None
 
@@ -129,10 +136,15 @@ class Dialogue:
             return
         self.menus[session.id] = TalkerMenu(contact, text, tick)
         talker = self.content.dialogue[contact.talker]
-        if contact.lattice:
-            self.core.lattice.log(session, talker.name+': '+text)
+        actor = self.world.zones[contact.zone].actors.get(contact.target)
+        if actor is not None and not contact.lattice:
+            self.sim.speak(session, actor, text)
         else:
-            self.sim.log(session, talker.name+': '+text)
+            session.emit(talker.name+': '+text, kind='speech',
+                         channel='lat' if contact.lattice else 'zone',
+                         role='chan_lat' if contact.lattice else 'chan_zone',
+                         at=self.clock.now_utc().isoformat(),
+                         speaker=talker.name, speaker_role='service')
         self.publish(session)
 
     def open(self, session: Session, contact: Contact, tick: int) -> None:
@@ -144,7 +156,7 @@ class Dialogue:
             return
         player = self.game.players[session.player_id]
         progress = deepcopy(player.progress)
-        progress['met_talkers'] = sorted(facts.met | {talker.id})
+        progress['met_talkers'] = sorted((facts.met & self.content.dialogue.keys()) | {talker.id})
         def committed(success: bool) -> None:
             if success:
                 # A read-only inventory may have opened during the write.
@@ -201,13 +213,24 @@ class Dialogue:
             service = self.content.services[offer.ref]
             self.board(session, self.content.contracts[service.contract].giver, 'service:'+service.id)
         elif offer.kind in ('vendor', 'service'):
-            vendor = self.content.vendors[offer.ref]
-            self.commerce.vendor(session, vendor.object_id)
+            actor = self.sim.avatars[session.user_id].actor
+            contact = self.menus[session.id].contact
+            counters = sorted((obj for obj in self.world.zones[actor.zone].objects.values()
+                               if obj.spec.params.get('vendor') == offer.ref
+                               and max(abs(obj.spec.tile[0]-actor.x), abs(obj.spec.tile[1]-actor.y)) <= 1),
+                              key=lambda obj: (obj.spec.id != contact.target,
+                                               obj.spec.tile != actor.position, obj.spec.id))
+            if not counters:
+                raise ValueError('Stand beside that counter before choosing its terms.')
+            target = counters[0].spec.id
+            self.commerce.vendor(session, target)
+            if offer.kind == 'service':
+                self.core.progression.clinics.counter(session, target)
             self.close(session)
             if offer.kind == 'service':
-                self.core.progression.clinics.open(session, vendor.object_id)
+                self.core.progression.clinics.open(session, target)
             else:
-                self.commerce.menus[session.id] = CommerceMenu('vendor', vendor.object_id,
+                self.commerce.menus[session.id] = CommerceMenu('vendor', target,
                                                               opened=self.clock.now_tick())
         elif offer.kind == 'recruit':
             target = self.menus[session.id].contact.target
@@ -220,16 +243,40 @@ class Dialogue:
             self.core.factions.menus[session.id].cursor = factions.index(offer.ref)
         elif offer.kind == 'travel':
             avatar = self.sim.avatars[session.user_id]
-            exits = sorted((ex for ex in self.world.zones[avatar.zone].template.meta.exits
-                            if not ex.hidden and max(abs(ex.tile[0]-avatar.actor.x),
-                                                     abs(ex.tile[1]-avatar.actor.y)) <= 1),
-                           key=lambda ex: (ex.tile != avatar.actor.position, ex.id))
-            if not exits or exits[0].target_zone != offer.ref:
+            choice = self.sim.interaction_target(avatar)
+            if (not isinstance(choice.value, Exit) or choice.value.hidden
+                    or choice.value.target_zone != offer.ref):
                 raise ValueError('Stand beside that route before choosing travel.')
             self.close(session)
-            self.sim.interact(session, avatar, self.clock.now_tick())
+            self.sim.interact(session, avatar, self.clock.now_tick(), choice=choice)
 
-    def input(self, session: Session, frame: Frame, tick: int) -> bool:
+    def interaction(self, session: Session, frame: Frame) -> Interaction | None:
+        if session.player_id not in self.game.players:
+            return None
+        if session.id in self.menus:
+            return Interaction()
+        name = frame.data.get('name', '') if frame.type == 'intent' else ''
+        external = self.sim.external_views.get(session.id)
+        network = bool(session.player_id in self.core.lattice.presences and external and external[0] == 'lattice')
+        if (not (interact(frame) or name == 'talk') or session.pending_prompts
+                or external and not network or session.id in self.game.screens
+                or session.id in self.sim.maps or session.id in self.commerce.menus):
+            return None
+        target = frame.data.get('args', {}).get('target', '') if name == 'talk' else ''
+        if not isinstance(target, str):
+            return Interaction()
+        contact = self.contact(session, target)
+        if contact is None:
+            return None
+        talker = self.content.dialogue[contact.talker]
+        actor = self.world.zones[contact.zone].actors.get(contact.target)
+        viewer = self.sim.avatars[session.user_id].actor
+        label = presentation.name(actor, viewer, self.content) if actor else talker.name
+        return Interaction(Focus(contact.target, label, 'talk to'), contact,
+                           None if contact.lattice else contact.tile,
+                           actor.id if actor else None, kind='dialogue')
+
+    def input(self, session: Session, frame: Frame, tick: int, *, interaction: Interaction | None = None) -> bool:
         name = frame.data.get('name', '') if frame.type == 'intent' else ''
         key = frame.data.get('k', '').lower() if frame.type == 'key' else ''
         screen = self.menus.get(session.id)
@@ -248,15 +295,12 @@ class Dialogue:
                     if offer:
                         self.dispatch(session, offer)
                 return True
-            external = self.sim.external_views.get(session.id)
-            network = bool(session.player_id in self.core.lattice.presences and external and external[0] == 'lattice')
-            if (name not in ('talk', 'interact') and key != 'e'
-                    or session.pending_prompts or external and not network
-                    or session.id in self.sim.maps or session.id in self.commerce.menus):
-                return False
-            contact = self.contact(session, frame.data.get('args', {}).get('target', '') if name == 'talk' else '')
-            if contact:
-                self.open(session, contact, tick)
+            if interaction is not None and interaction.kind != 'dialogue':
+                return False  # The composite route selected a mission or board.
+            choice = interaction or self.interaction(session, frame)
+            if choice is not None:
+                if choice.value is not None:
+                    self.open(session, choice.value, tick)
                 return True
         except (ValueError, KeyError) as exc:
             self.commerce.toast(session, str(exc) if isinstance(exc, ValueError) else 'That contact is unavailable.')
@@ -278,21 +322,5 @@ class Dialogue:
                 self.close(session)
             else:
                 self.publish(session)
-        if ctx.tick % TICK_HZ:
-            return
-        interacting = {screen.contact.talker for screen in self.menus.values()}
-        for zone in self.world.zones.values():
-            sessions = [session for session in ctx.sessions
-                        if (avatar := self.sim.avatars.get(session.user_id)) and avatar.zone == zone.id]
-            if not sessions:
-                continue
-            for contact in self.contacts(zone):
-                nearby = [session for session in sessions
-                          if (self.sim.avatars[session.user_id].actor.x-contact.tile[0])**2
-                          + (self.sim.avatars[session.user_id].actor.y-contact.tile[1])**2 <= BARK_RADIUS**2]
-                talker = self.content.dialogue[contact.talker]
-                bark = self.barks.choose(talker, ctx.tick, zone.rng, nearby=bool(nearby),
-                                         interacting=talker.id in interacting)
-                if bark:
-                    for session in nearby:
-                        self.sim.log(session, talker.name+': '+bark.text)
+        # P8 owns ambient emission and its derived RNG (architecture 5.5.3).
+        # Authored barks and the pure scheduler remain dormant until then.

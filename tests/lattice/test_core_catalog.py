@@ -40,7 +40,10 @@ def test_world_3_named_room_counts_and_bestiary_are_not_generic_placeholders(rep
     world = (repo_root/'docs/world/03-lattice.md').read_text(encoding='utf-8')
     for name, cid, description in re.findall(r'\*\*([^\n]+?)\*\* \(`(lat-[^`]+)`\)(.*?)(?=\n\n|\Z)', world, re.S):
         match = re.search(r'tier (\d),\s*(\d+) rooms', description)
-        if match:
+        if 'planned (#' in description:
+            # Canon ahead of content (#90): a Stage 2 slice builds it and removes the marker.
+            assert cid not in tree.cores
+        elif match:
             core = tree.cores[cid]
             assert (core.tier, len(core.rooms)) == tuple(map(int, match.groups()))
     assert len(tree.cores['lat-wake-hall'].rooms) == 1
@@ -78,7 +81,7 @@ def test_world_08_finished_found_texts_are_loaded_verbatim(repo_root: Path):
     tree = load_content(repo_root/'src/blacksite/content')
     source = (repo_root/'docs/world/08-found-texts.md').read_text(encoding='utf-8')
     assets = [key for key in tree.text if key.startswith('text-') and '## '+key+'\n' in source]
-    assert len(assets) == 13
+    assert len(assets) == 15  # S27 authors the dormant bar lines and graffiti.
     for asset in assets:
         section = source.split('## '+asset+'\n', 1)[1].split('\n## ', 1)[0]
         expected = section.split('```', 2)[1].strip('\n')

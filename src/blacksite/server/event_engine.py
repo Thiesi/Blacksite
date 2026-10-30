@@ -1,5 +1,6 @@
 """Game 12 adapter: commit plans before forecasts or live effects exist."""
 
+from blacksite.server.interaction import Interaction
 from collections.abc import Callable, Iterator
 from copy import deepcopy
 from dataclasses import asdict
@@ -87,6 +88,11 @@ class Events:
             and all(point.zone in self.world.zones for point in route.waypoints))
 
     def active(self) -> tuple[Plan, ...]:
+        # Most combat/spawn policy queries run between live events. A
+        # forecast cannot apply effects before its committed start, so
+        # avoid repeated clock/window work when no plan has started.
+        if not any(plan.state == 'active' for plan in self.scheduler.reserved()):
+            return ()
         return tuple(plan for plan in self.scheduler.active(self.now())
                      if plan.template in self.content.events
                      and self.eligible(self.content.events[plan.template], plan.where)
@@ -202,8 +208,11 @@ class Events:
             return self.content.sectors[place].district.replace('-', ' ').title()+' sector'
         return place
 
-    def input(self, session: Session, frame: Frame, tick: int) -> bool:
-        return session.player_id in self.game.players and self.views.input(session, frame, tick)
+    def interaction(self, session: Session, frame: Frame) -> Interaction | None:
+        return self.views.interaction(session, frame) if session.player_id in self.game.players else None
+
+    def input(self, session: Session, frame: Frame, tick: int, *, interaction: Interaction | None = None) -> bool:
+        return session.player_id in self.game.players and self.views.input(session, frame, tick, interaction=interaction)
 
     def preview(self, player: Player, faction: str) -> EventOffer | None:
         if faction not in ('kestrel', 'choir', 'ferrymen') or not perk(player, faction):
@@ -227,8 +236,8 @@ class Events:
         for session in self.core.sessions.active.values():
             if session.closed or session.role != 'caller':
                 continue
-            session.send(Frame('log', {'lines': [{'channel': 'system', 'text': text,
-                'role': 'chan_sys', 'at': self.clock.now_utc().isoformat()}]}))
+            session.emit(text, kind="danger" if warning else "system", channel="system", role="chan_sys",
+                         at=self.clock.now_utc().isoformat())
             if warning:
                 session.send(Frame('toast', {'text': text, 'role': 'warning', 'seconds': 5}))
 

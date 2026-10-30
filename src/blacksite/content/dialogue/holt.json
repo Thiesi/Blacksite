@@ -1,0 +1,75 @@
+{
+  "schema": 1,
+  "id": "holt",
+  "name": "Foreman Dagny Holt",
+  "faction": "kestrel",
+  "title": "Yard foreman",
+  "terminal": false,
+  "machine_mind": false,
+  "lines": [
+    {
+      "id": "record-kes-s1-4-quiet",
+      "text": "Your record carries an interruption. Keep the actual interval with the manifest. An apology is not an explanation.",
+      "when": [
+        "has_evidence s19-kes-s1-4-quiet"
+      ],
+      "required": true
+    },
+    {
+      "id": "record-kes-s1-3-frequency",
+      "text": "Nine years of headers on your copy. Log says Ferrymen recipients. Someone still has to answer for the older addresses.",
+      "when": [
+        "has_evidence s19-kes-s1-3-frequency"
+      ],
+      "required": true
+    },
+    {
+      "id": "record-kes-s1-2-diversion",
+      "text": "Your records carry the matching consignment IDs. Compare the allocation with the delivery. Keep both copies.",
+      "when": [
+        "has_evidence s19-kes-s1-2-diversion"
+      ],
+      "required": true
+    },
+    {
+      "id": "record-kes-s1-1-escort",
+      "text": "Your convoy arrives without a recorded loss. Dispatch rates it amber. A safe arrival does not tell you what sets that rating.",
+      "when": [
+        "has_evidence s19-kes-s1-1-escort"
+      ],
+      "required": true
+    },
+    {
+      "id": "work",
+      "text": "Stay with the convoy on your work card. Dispatch writes the rating; you bring the people back.",
+      "when": [
+        "has_contract kes-s1-1-escort"
+      ],
+      "required": true
+    },
+    {
+      "id": "first",
+      "text": "Dispatch posts the escort work. Read the route and the rate. I say bring a spare magazine.",
+      "when": [
+        "first_meeting"
+      ],
+      "required": true
+    },
+    {
+      "id": "greeting",
+      "text": "Gate opens on Dispatch's clock, not mine. Not yours either.",
+      "when": [],
+      "required": true
+    }
+  ],
+  "offers": [
+    {
+      "kind": "contract",
+      "ref": "kes-s1-1-escort",
+      "label": "Work board",
+      "hotkey": "c",
+      "when": []
+    }
+  ],
+  "barks": []
+}

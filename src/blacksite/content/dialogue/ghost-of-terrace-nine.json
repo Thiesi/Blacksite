@@ -1,0 +1,27 @@
+{
+  "schema": 1,
+  "id": "ghost-of-terrace-nine",
+  "name": "Ghost of Terrace Nine",
+  "faction": null,
+  "title": "Armourer",
+  "terminal": false,
+  "machine_mind": false,
+  "lines": [
+    {
+      "id": "first",
+      "text": "No serials. No questions. One question: do you hear it?",
+      "when": [
+        "first_meeting"
+      ],
+      "required": true
+    },
+    {
+      "id": "greeting",
+      "text": "Everything below Nine hums. Everything above Nine pretends not to.",
+      "when": [],
+      "required": true
+    }
+  ],
+  "offers": [],
+  "barks": []
+}

@@ -3,12 +3,13 @@
 from typing import Any
 
 from blacksite.door.cells import CellBuffer, display_width, truncate
-from blacksite.door.layout import Rect
+from blacksite.layout import Layout
 from blacksite.door.palette import Palette
+from blacksite.formatting import display_number
 
 
-def render_lattice(buffer: CellBuffer, body: dict[str, Any], area: Rect, palette: Palette) -> None:
-    buffer.put(2, 0, truncate(str(body.get("title", "LATTICE")), buffer.width-6), palette.style("title"))
+def render_lattice(buffer: CellBuffer, body: dict[str, Any], layout: Layout, palette: Palette) -> None:
+    area = layout.viewport
     columns, rows = body.get("layout_size", [8, 6])
     cells = body.get("cells", [])
     room = body.get("room")
@@ -23,7 +24,8 @@ def render_lattice(buffer: CellBuffer, body: dict[str, Any], area: Rect, palette
         bx, by = positions[edge["b"]]
         ax, bx = ax+2, bx+2
         steps = max(abs(bx-ax), abs(by-ay))
-        horizontal, vertical = ("═", "║") if edge["kind"] == "gated" else ("·", "┆") if edge["kind"] == "hidden" else ("─", "│")
+        kind = edge["kind"] if edge["kind"] in ("gated", "hidden") else "open"
+        horizontal, vertical = body["edge_glyphs"][kind]
         glyph = horizontal if ay == by else vertical if ax == bx else "\\" if (bx-ax)*(by-ay) > 0 else "/"
         for step in range(1, steps):
             x, y = round(ax+(bx-ax)*step/steps), round(ay+(by-ay)*step/steps)
@@ -49,9 +51,9 @@ def render_lattice(buffer: CellBuffer, body: dict[str, Any], area: Rect, palette
             buffer.put(x+1, y, "♦", palette.style(peer.get("marker_role", "player_neutral"), reverse=reverse))
         elif any(beacon["cell"] == cell["id"] for beacon in body.get("beacons", [])):
             buffer.put(x+1, y, "♦", palette.style("player_crew", reverse=reverse))
-    side_x, side_w = buffer.width-23, 22
+    side_x, side_w = layout.side.x, layout.side.width
     status: list[tuple[str, str]] = [
-        (f"INTEGRITY {me.get('integrity', 100):g}/{me.get('integrity_max', 100):g}", "hp_ok"),
+        (f"INTEGRITY {display_number(me.get('integrity', 100))}/{display_number(me.get('integrity_max', 100))}", "hp_ok"),
         (f"TRACE {me.get('trace', 0):g}", "ui_highlight"),
         ("BODY NPC RISK" if body.get("black_risk") and body.get("body_safety") == "safe"
          else "BODY "+str(body.get("body_safety", "")).upper(),
@@ -114,7 +116,7 @@ def render_lattice(buffer: CellBuffer, body: dict[str, Any], area: Rect, palette
     rig = [f"{r['slot']} {r.get('name', 'Empty')}"+
            (f" {r['cd']:.1f}s" if r.get("cd") else "") for r in me.get("rig", [])]
     status_budget = max(1, area.height-1-(len(rig)+2)//3)
-    if buffer.width < 100 and (event_rows or crew) and len(status) > status_budget:
+    if not layout.wide and (event_rows or crew) and len(status) > status_budget:
         # Leave room for the rig while retaining body risk, escape, events,
         # the selected runner and one ally. Full peer/crew lists use G.
         compact = status[:3]
@@ -173,8 +175,8 @@ def render_lattice(buffer: CellBuffer, body: dict[str, Any], area: Rect, palette
             if selected.get('warning_ticks'):
                 phase += f" {selected['warning_ticks']/10:.1f}s"
             details += [(f"{'>' if selected['id'] == me.get('target') else 'Tab'} {selected['name']} "
-                         f"{selected['integrity']:g}/{selected['maximum']:g} [{phase}]", "warning"),
-                        (f"{selected['role']} / {selected['trigger']} / {selected['damage']:g} integrity, "
+                         f"{display_number(selected['integrity'])}/{display_number(selected['maximum'])} [{phase}]", "warning"),
+                        (f"{selected['role']} / {selected['trigger']} / {display_number(selected['damage'])} integrity, "
                          f"{selected['meat']} body damage", "text"),
                         (str(selected['counter']), "muted")]
         else:

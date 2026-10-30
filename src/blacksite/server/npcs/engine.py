@@ -1,5 +1,6 @@
 """NPC lifecycle, relations, legal combat and service interactions (5.5)."""
 
+from blacksite.server.interaction import Focus, Interaction, interact, object_interaction
 from collections.abc import Callable
 from copy import deepcopy
 from datetime import datetime, timezone
@@ -29,7 +30,9 @@ from blacksite.server.rules.combat import (
 )
 from blacksite.server.sessions import Session
 from blacksite.server.world.actors import Actor
+from blacksite.server.world.sight import detection_limit, sight_radius
 from blacksite.server.world.zone import ZoneInstance
+from blacksite.server.views import presentation
 
 
 class Npcs:
@@ -101,6 +104,9 @@ class Npcs:
             return False
         if actor.behaviour.get("training"):
             return actor.owner == other.id
+        group = actor.behaviour.get("spawner")
+        if group and group == other.behaviour.get("spawner"):
+            return False  # Game 5.5: packs and cohorts do not hunt siblings.
         template = self.content.npcs.get(actor.behaviour.get("template"))
         if template is None:
             return False
@@ -129,6 +135,7 @@ class Npcs:
         if controller:
             self.provocations[target.zone,group,controller.id] = self.combat.now()+PROVOCATION_SECONDS
         target.target = source.id
+        self.combat.reveal(target, source)
         target.behaviour.update(last_seen=self.clock.now_tick(), last_position=source.position, state="hunt")
         # Local faction guards protect their residents, without summoning
         # rival police into a district. The same safety checks still apply.
@@ -140,6 +147,7 @@ class Npcs:
                     if controller:
                         self.provocations[actor.zone,str(actor.behaviour.get("spawner")),controller.id] = self.combat.now()+PROVOCATION_SECONDS
                     actor.target = source.id
+                    self.combat.reveal(actor, source)
                     actor.behaviour.update(last_seen=self.clock.now_tick(), last_position=source.position, state="hunt")
 
     def refused(self, source: Actor, target: Actor) -> None:
@@ -295,14 +303,21 @@ class Npcs:
         template = self.content.npcs[actor.behaviour["template"]]
         if template.training:
             return
+        # Compute the observer's radius once. Most full-city candidates
+        # are too far away even before hostility, occlusion and body rules.
+        hour = self.clock.now_local().hour
+        radius = sight_radius(actor, zone, hour >= 20 or hour < 6)
         candidates = [other for other in zone.actors.values() if other is not actor
-            and other.stance not in ("down", "dead") and self.hostile(actor, other)
-            and self.combat.legal(actor, other) and self.combat.visible(actor, other)]
+            and other.stance not in ("down", "dead")
+            and (actor.x-other.x)**2+(actor.y-other.y)**2 <= detection_limit(radius, other)**2
+            and self.hostile(actor, other)
+            and self.combat.visible(actor, other) and self.combat.legal(actor, other)]
         candidates.sort(key=lambda a: (distance(actor.position, a.position), a.id))
         target = self.world.actors.get(actor.target)
         if candidates:
             target = candidates[0]
             actor.target = target.id
+            self.combat.reveal(actor, target)
             actor.behaviour["last_seen"] = tick
             actor.behaviour["last_position"] = target.position
         elif target and (not self.combat.legal(actor, target) or not self.hostile(actor, target)
@@ -371,7 +386,29 @@ class Npcs:
             if behaviour.kind in ("guard", "warden"):
                 step_toward(actor, zone, tuple(actor.behaviour["home"]), tick, avoid=avoid)
 
-    def input(self, session: Session, frame: Frame, tick: int) -> bool:
+    def interaction(self, session: Session, frame: Frame) -> Interaction | None:
+        if session.id in self.menus:
+            return Interaction()
+        if not self.commerce.ready(session) or session.id in self.sim.external_views or not interact(frame):
+            return None
+        actor = self.sim.avatars[session.user_id].actor
+        zone = self.world.zones[actor.zone]
+        for other in sorted(zone.actors.values(), key=lambda a: (a.id != actor.target, a.id)):
+            template = self.content.npcs.get(other.behaviour.get('template'))
+            if other is actor or template is None or distance(actor.position, other.position) > 1.5 or other.stance == 'dead':
+                continue
+            if template.vendor:
+                counter = next((o for o in zone.objects.values() if o.spec.params.get('vendor') == template.vendor
+                                and distance(actor.position, o.spec.tile) <= 1.5), None)
+                if counter:
+                    choice = object_interaction(counter)
+                    return Interaction(choice.focus, ('vendor', counter), counter.spec.tile)
+            if any(b.kind == 'talker' for b in template.behaviours):
+                return Interaction(Focus(other.id, presentation.name(other, actor, self.content), 'talk to'),
+                                   ('talker', other), other.position, other.id)
+        return None
+
+    def input(self, session: Session, frame: Frame, tick: int, *, interaction: Interaction | None = None) -> bool:
         if session.id in self.menus:
             if (frame.type == "intent" and frame.data.get("name") == "menu_close") or (frame.type == "key" and frame.data.get("k") in ("b", "B", "escape")):
                 self.menus.discard(session.id)
@@ -383,21 +420,16 @@ class Npcs:
         if not ((frame.type == "key" and frame.data.get("k") in ("e", "E")) or (frame.type == "intent" and frame.data.get("name") == "interact")):
             return False
         actor = self.sim.avatars[session.user_id].actor
-        zone = self.world.zones[actor.zone]
-        for other in sorted(zone.actors.values(), key=lambda a: (a.id != actor.target, a.id)):
-            template = self.content.npcs.get(other.behaviour.get("template"))
-            if other is actor or template is None or distance(actor.position, other.position) > 1.5 or other.stance == "dead":
-                continue
-            if template.vendor:
-                counter = next((o for o in zone.objects.values() if o.spec.params.get("vendor") == template.vendor and distance(actor.position, o.spec.tile) <= 1.5), None)
-                if counter:
-                    self.commerce.menus[session.id] = CommerceMenu("vendor", counter.spec.id, opened=tick)
-                    return True
-            if any(b.kind == "talker" for b in template.behaviours):
-                self.menus.add(session.id)
-                self.sim.external_views[session.id] = "text", {"title": template.name, "lines": ["Not yet."], "hint": "Esc/B returns"}
-                return True
-        return False
+        choice = interaction or self.interaction(session, frame)
+        if not choice:
+            return False
+        kind, target = choice.value
+        if kind == 'vendor':
+            self.commerce.menus[session.id] = CommerceMenu("vendor", target.spec.id, opened=tick)
+        else:
+            self.menus.add(session.id)
+            self.sim.external_views[session.id] = "text", {"title": presentation.name(target, actor, self.content), "lines": ["Not yet."], "hint": "Esc/B returns"}
+        return True
 
     def tick(self, ctx: TickContext) -> None:
         now = self.combat.now()

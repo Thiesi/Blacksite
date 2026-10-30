@@ -1,5 +1,6 @@
 """Game 8.7: rental proposals, personal storage and protected impound."""
 
+from blacksite.server.interaction import Interaction, interact, object_interaction
 from collections.abc import Callable
 from copy import deepcopy
 from dataclasses import dataclass, replace
@@ -590,7 +591,26 @@ class Apartments:
         else:
             self.propose(session, row, args)
 
-    def input(self, session: Session, frame: Frame, tick: int) -> bool:
+    def interaction(self, session: Session, frame: Frame) -> Interaction | None:
+        if session.id in self.prompts or session.id in self.menus:
+            return Interaction()
+        if (not self.commerce.ready(session) or session.id in self.sim.external_views
+                or session.pending_prompts or not interact(frame)):
+            return None
+        actor = self.game.combat.actor(self.game.players[session.player_id])
+        objects = sorted((obj for obj in self.game.world.zones[actor.zone].objects.values()
+            if max(abs(obj.spec.tile[0]-actor.x), abs(obj.spec.tile[1]-actor.y)) <= 1),
+            key=lambda obj: (obj.spec.tile != actor.position,
+                not (obj.spec.housing and obj.spec.housing.doorstep == actor.position), obj.spec.id))
+        if objects:
+            obj = objects[0]
+            unit = self.geometry.units.get(obj.spec.params.get('apartment_unit'))
+            if (obj.spec.housing or obj.spec.params.get('letting')
+                    or unit and obj.spec.kind in ('storage', 'apartment_safe', 'bed')):
+                return object_interaction(obj, 'use' if obj.spec.housing else 'open')
+        return None
+
+    def input(self, session: Session, frame: Frame, tick: int, *, interaction: Interaction | None = None) -> bool:
         name = frame.data.get("name", "") if frame.type == "intent" else ""
         key = frame.data.get("k", "") if frame.type == "key" else ""
         args = frame.data.get("args", {})
@@ -641,12 +661,10 @@ class Apartments:
             if name != "interact" and key not in ("e", "E"):
                 return False
             actor = self.game.combat.actor(self.game.players[session.player_id])
-            objects = sorted((obj for obj in self.game.world.zones[actor.zone].objects.values()
-                if max(abs(obj.spec.tile[0]-actor.x), abs(obj.spec.tile[1]-actor.y)) <= 1),
-                key=lambda obj: (obj.spec.tile != actor.position, obj.spec.id))
-            if not objects:
+            choice = interaction or self.interaction(session, frame)
+            if not choice:
                 return False
-            obj = objects[0]
+            obj = choice.value
             if obj.spec.housing:
                 self.door(session, self.geometry.units[actor.zone+":"+obj.spec.id])
                 return True

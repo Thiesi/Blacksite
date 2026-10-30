@@ -1,6 +1,6 @@
 # S25 — Undercity and Scour content: all remaining zone maps, spawners, salvage rings
 
-**Status:** planned
+**Status:** split on 2026-10-28 (D-T2): engine fixes and canon in [S25a](S25a-engine-fixes-and-canon.md) (#77), content bindings and generator fixes in [S25b](S25b-content-bindings.md) (#78), geometry and place identity in S25c (filed after H1; `docs/plan/03-presentation-integration.md` §7.3). Human layout approval: **not granted**.
 **Primary model:** Gemini or Sonnet · **Reviewer:** Sonnet (validator plus a read of each zone), Human for `under-shaft-foot` and `scour-ring-4`
 **Depends on:** S08, S11, S14, S17, S21, S24 · **Milestone:** M5
 **Issue:** https://github.com/Thiesi/blacksite/issues/25
@@ -41,7 +41,7 @@ Deliver, for each zone, `content/zones/<id>.map` and
 | `under-service` | 120 × 50 | open | exits to `vatside-vat-row` (ladder), `chapel-towers` (drain stair), `under-drowned`, `under-caverns` (breach); two orphan terminals; Unmoored dead drop object; spawners: rogue maintenance drones (hunt), feral dogs (hunt) |
 | `under-drowned` | 100 × 60 | open | water tiles over ≥ 30 % of the map; exits `under-service`, `under-outworks` (sealed bulkhead, requirement: Undercity key); hardware terminal for the Drowned core (tier 3); Ferrymen corpse object (one-time map); spawners: water hunters from water tiles |
 | `under-caverns` | 150 × 80 | open | exits `under-service`, `sink-floor` (Sump grate), `under-outworks` (fissure); **Cavern Relay** with orphan terminal; Ferrymen way-station vendor; spawners: feral things (several templates), blind swarms |
-| `under-outworks` | 120 × 70 | open | exits `under-drowned`, `under-caverns`, `under-shaft-foot` (inner door); **Outworks Relay**; hardware terminal for the Outworks core (tier 4); Halvard survey markers (lore objects); spawners: Blacksite maintenance drones (guard) |
+| `under-outworks` | 120 × 70 | open | exits `under-drowned`, `under-caverns`, `under-shaft-foot` (inner door); **Outworks Relay**; hardware terminal for the Outworks core (tier 5); Halvard survey markers (lore objects); spawners: Blacksite maintenance drones (guard) |
 | `under-shaft-foot` | 60 × 60 | open | exit `under-outworks`, `spire-shaft-head` (shaft, requirement: story); hardware terminal for the Shaft core (tier 5, shared with Shaft Head, the one two-location core); the **season door** object (`descent_console` kind with a `season_door` param); spawners: maintenance drones (guard, many) plus an Exhale-conditioned spawner |
 | `scour-landing` | 60 × 30 | pocket | exits `scour-ring-1` (causeway), `scour-ring-2` (Ferrymen track), `tramyard-wall-gate` per gazetteer; Ferrymen terminal (Landing core, tier 2); anchors: Anouk, quartermaster, contract handler, salvage buyer; spawners: Ferrymen guards (warn only within the safe pocket; perimeter aggro outside) |
 | `scour-ring-1` | 160 × 80 | open | exits `tramyard-wall-gate`, `scour-landing`, `scour-ring-2`; **Mile Relay**; the convoy road as a marked tile line with waypoint objects; spawners: Halvard patrols, Kestrel road crews, scavengers; Ring-fall region |

@@ -43,6 +43,8 @@ def move(actor: Actor, zone: ZoneInstance, name: str, tick: int, sprint: bool = 
     # Game design 3.1 / S12: excess carry weight doubles tile time.
     duration = ((actor.modifiers.get("sprint_ms", SPRINT_TICKS*100)/100) if sprint else WALK_TICKS)
     duration = max(duration, actor.modifiers.get("move_ms", 0)/100)
+    # Game 5.2: pump layouts change the live destination tile's cost.
+    duration *= zone.tiles[zone.tile_id(target)].movement_cost
     duration *= 2 if actor.overweight else 1
     duration = max(duration,max((int(e.get("move_ticks",0)) for e in actor.effects),default=0))
     duration = action_seconds(duration,actor.shock)

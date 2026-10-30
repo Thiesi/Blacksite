@@ -1,0 +1,114 @@
+{
+  "schema": 1,
+  "id": "vantongeren",
+  "name": "Dr. Ilse Vantongeren",
+  "faction": "sablier",
+  "title": "Director of the Wake program",
+  "terminal": false,
+  "machine_mind": false,
+  "lines": [
+    {
+      "id": "marked",
+      "text": "You've a mark on you. I don't ask why. But the Wardens will, and they ask with the safety off.",
+      "when": [
+        "marked"
+      ],
+      "required": true
+    },
+    {
+      "id": "enemy",
+      "text": "You've chosen the people who break into my vats for the templates. I'll treat you anyway. That's the job.",
+      "when": [
+        "enemy_of_me"
+      ],
+      "required": true
+    },
+    {
+      "id": "finale",
+      "text": "You've brought a receipt from down there. I'll read it. I won't call it a diagnosis.",
+      "when": [
+        "season_stage finale_done"
+      ],
+      "required": true
+    },
+    {
+      "id": "record-sab-s1-4-batch",
+      "text": "The canister has a Site Zero stamp. I recognise the template. That is my identification, not proof of where the voice comes from.",
+      "when": [
+        "has_evidence s19-sab-s1-4-batch"
+      ],
+      "required": true
+    },
+    {
+      "id": "record-sab-s1-3-dreaming",
+      "text": "Okafor returns quietly in your record. She says she asks about the dreams. What she keeps private is hers to keep.",
+      "when": [
+        "has_evidence s19-sab-s1-3-dreaming"
+      ],
+      "required": true
+    },
+    {
+      "id": "record-sab-s1-2-provenance",
+      "text": "No origin appears in the lineage index you copied. That is a gap in a record. It is not a diagnosis.",
+      "when": [
+        "has_evidence s19-sab-s1-2-provenance"
+      ],
+      "required": true
+    },
+    {
+      "id": "record-sab-s1-1-retrieval",
+      "text": "Four willing templates reach the clinic in your record. Their recall tags enter its register. Care and registration both have consequences.",
+      "when": [
+        "has_evidence s19-sab-s1-1-retrieval"
+      ],
+      "required": true
+    },
+    {
+      "id": "first",
+      "text": "Open your eyes slowly. The light's cheap and it stays on. I'm Vantongeren. I was decanted here too.",
+      "when": [
+        "first_meeting"
+      ],
+      "required": true
+    },
+    {
+      "id": "wake",
+      "text": "Your lease still runs. You'll find the elapsed days on your record. Grade five earns an early discharge. Time does not earn a grade.",
+      "when": [
+        "is_wake"
+      ],
+      "required": true
+    },
+    {
+      "id": "greeting",
+      "text": "Still here. Good. Most aren't, and I don't say that to be cruel.",
+      "when": [],
+      "required": true
+    }
+  ],
+  "offers": [
+    {
+      "kind": "contract",
+      "ref": "sab-s1-1-retrieval",
+      "label": "Work board",
+      "hotkey": "c",
+      "when": []
+    },
+    {
+      "kind": "recruit",
+      "ref": "sablier",
+      "label": "Sablier terms",
+      "hotkey": "j",
+      "when": [
+        "not_member_of sablier"
+      ]
+    }
+  ],
+  "barks": [
+    {
+      "text": "The vats hum a quarter-tone flat when the Blacksite breathes. Nobody else hears it. You'll find you do.",
+      "weight": 1,
+      "min_interval_seconds": 90
+    }
+  ]
+}

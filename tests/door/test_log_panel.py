@@ -7,6 +7,7 @@ import pytest
 from blacksite.content.loader import load_content
 from blacksite.door.cells import display_width
 from blacksite.door.log import rows
+from blacksite.door.layout import compute
 from blacksite.door.model import Display
 from blacksite.server.protocol import Frame
 from tests.fake_terminal import FakeTerminal
@@ -18,6 +19,33 @@ def test_wrap_by_display_width():
     assert all(display_width(row['text'])<=78 for row in result)
     assert ''.join(row['text'] for row in result).count('界')==100
     assert all(row['role']=='chan_say' for row in result)
+
+
+@pytest.mark.parametrize('width,height', [(80, 24), (132, 50)])
+def test_word_boundaries_in_pane_and_scrollback(width: int, height: int) -> None:
+    layout = compute(width, height)
+    text = ('White light, warm plastic, a floor drain. Past the cards, a corridor. '
+            'Crews end on a service restart. Use G to invite. Wide界 names stay whole. ' * 3).strip()
+    for available in (layout.log.width, layout.viewport.width - 2):
+        wrapped = rows([{'channel': 'zone', 'text': text, 'role': 'chan_zone'}], available)
+        assert ' '.join(row['text'].strip() for row in wrapped) == '[zone] ' + text
+        assert all(display_width(row['text']) <= available for row in wrapped)
+        assert all(row['text'].startswith('  ') for row in wrapped[1:])
+        assert all(row['role'] == 'chan_zone' for row in wrapped)
+
+
+def test_only_overlong_words_split_without_losing_wide_or_combining_glyphs() -> None:
+    word = '界e\u0301' * 20
+    wrapped = rows([{'channel': 'say', 'text': 'short ' + word + ' tail'}], 20)
+    assert wrapped[0]['text'].startswith('[say] short ')
+    assert ''.join(''.join(row['text'].split()) for row in wrapped) == '[say]short' + word + 'tail'
+    assert all(display_width(row['text']) <= 20 for row in wrapped)
+    assert all(not row['text'].endswith('e') for row in wrapped)
+
+
+def test_word_that_fits_a_continuation_is_not_split() -> None:
+    wrapped = rows([{'channel': 'say', 'text': 'short abcdefghijklmno'}], 20)
+    assert [row['text'] for row in wrapped] == ['[say] short', '  abcdefghijklmno']
 
 
 @pytest.mark.parametrize('width,height',[(80,24),(132,50)])

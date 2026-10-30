@@ -1,0 +1,105 @@
+{
+  "schema": 1,
+  "id": "brann",
+  "name": "Marshal Odile Brann",
+  "faction": "wardens",
+  "title": "Commander of the Wardens",
+  "terminal": false,
+  "machine_mind": false,
+  "lines": [
+    {
+      "id": "marked",
+      "text": "Marked. Walk out of the Core slowly and I'll pretend I didn't see the colour of your name.",
+      "when": [
+        "marked"
+      ],
+      "required": true
+    },
+    {
+      "id": "enemy",
+      "text": "Reyes sent you. Tell Reyes the Row stays his exactly as long as it stays quiet.",
+      "when": [
+        "enemy_of_me"
+      ],
+      "required": true
+    },
+    {
+      "id": "finale",
+      "text": "Receipt noted. Your route, your losses, your decision. File all three.",
+      "when": [
+        "season_stage finale_done"
+      ],
+      "required": true
+    },
+    {
+      "id": "record-war-s1-4-line",
+      "text": "Eight spawns cleared in your record. Brann calls it a first deployment below the old limit. Ask how the next patrol reaches it.",
+      "when": [
+        "has_evidence s19-war-s1-4-line"
+      ],
+      "required": true
+    },
+    {
+      "id": "record-war-s1-3-book",
+      "text": "You copied a page of my book. My record for my successor. The Undercity appears twice. File what the next entry leaves out.",
+      "when": [
+        "has_evidence s19-war-s1-3-book"
+      ],
+      "required": true
+    },
+    {
+      "id": "record-war-s1-2-curfew",
+      "text": "You have the gate-cycle record. Keep the times attached. An order and the reason for it are separate records.",
+      "when": [
+        "has_evidence s19-war-s1-2-curfew"
+      ],
+      "required": true
+    },
+    {
+      "id": "record-war-s1-1-stairwell",
+      "text": "Your work card records the stairwell. The residents still have to use it. File the proof where they can find it.",
+      "when": [
+        "has_evidence s19-war-s1-1-stairwell"
+      ],
+      "required": true
+    },
+    {
+      "id": "first",
+      "text": "Marshal. You're in the Core; that's the good news. Don't make me give you the other kind.",
+      "when": [
+        "first_meeting"
+      ],
+      "required": true
+    },
+    {
+      "id": "wake",
+      "text": "Wake. Your lease and your grade are on the record. The Core has protection; past the ring road, check the street.",
+      "when": [
+        "is_wake"
+      ],
+      "required": true
+    },
+    {
+      "id": "greeting",
+      "text": "Marshal. You're in the Core; that's the good news. Don't make me give you the other kind.",
+      "when": [],
+      "required": true
+    }
+  ],
+  "offers": [
+    {
+      "kind": "contract",
+      "ref": "war-s1-1-stairwell",
+      "label": "Work board",
+      "hotkey": "c",
+      "when": []
+    }
+  ],
+  "barks": [
+    {
+      "text": "Curfew drills at oh-four-hundred. Same time every year. Same reason nobody asks about.",
+      "weight": 1,
+      "min_interval_seconds": 90
+    }
+  ]
+}

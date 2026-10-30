@@ -1,0 +1,75 @@
+{
+  "schema": 1,
+  "id": "pale",
+  "name": "Corvin Pale",
+  "faction": "sable",
+  "title": "Red Sable handler",
+  "terminal": false,
+  "machine_mind": false,
+  "lines": [
+    {
+      "id": "record-sab-red-s1-4-candles",
+      "text": "You recorded five points around the warm stack. The account names no candle keeper. Somebody still has to tend a candle.",
+      "when": [
+        "has_evidence s19-sab-red-s1-4-candles"
+      ],
+      "required": true
+    },
+    {
+      "id": "record-sab-red-s1-3-dark",
+      "text": "Your power schedule names no terrace for that load. It routes below the Sink. A blank address still uses power.",
+      "when": [
+        "has_evidence s19-sab-red-s1-3-dark"
+      ],
+      "required": true
+    },
+    {
+      "id": "record-sab-red-s1-2-drop",
+      "text": "The note in your cache blames Ninety-Nine for ledger week. It is dated last month. Keep the note; ask what supports it.",
+      "when": [
+        "has_evidence s19-sab-red-s1-2-drop"
+      ],
+      "required": true
+    },
+    {
+      "id": "record-sab-red-s1-1-remind",
+      "text": "Three subscribers restrained, alive. The notice calls that collection. A notice can name a debt without proving who owes it.",
+      "when": [
+        "has_evidence s19-sab-red-s1-1-remind"
+      ],
+      "required": true
+    },
+    {
+      "id": "work",
+      "text": "Lapsed accounts. Restraint, not a killing. You talk to me when the work card has its proof.",
+      "when": [
+        "has_contract sab-red-s1-1-remind"
+      ],
+      "required": true
+    },
+    {
+      "id": "first",
+      "text": "Reyes rides. I walk. You talk to me.",
+      "when": [
+        "first_meeting"
+      ],
+      "required": true
+    },
+    {
+      "id": "greeting",
+      "text": "Ledger week I lost ten friends. Ninety-Nine's people call it a prank.",
+      "when": [],
+      "required": true
+    }
+  ],
+  "offers": [
+    {
+      "kind": "contract",
+      "ref": "sab-red-s1-1-remind",
+      "label": "Work board",
+      "hotkey": "c",
+      "when": []
+    }
+  ],
+  "barks": []
+}

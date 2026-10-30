@@ -89,6 +89,21 @@
     "box2-hd": "╦",
     "box2-hu": "╩",
     "box2-x": "╬",
-    "actor-jacked": "▒"
+    "actor-jacked": "▒",
+    "lattice-edge-open-h": "─",
+    "lattice-edge-open-v": "│",
+    "lattice-edge-gated-h": "═",
+    "lattice-edge-gated-v": "║",
+    "lattice-edge-hidden-h": "·",
+    "lattice-edge-hidden-v": ":",
+    "actor-drone": "τ"
+  },
+  "modern": {
+    "lattice-edge-open-h": "─",
+    "lattice-edge-open-v": "│",
+    "lattice-edge-gated-h": "═",
+    "lattice-edge-gated-v": "║",
+    "lattice-edge-hidden-h": "┄",
+    "lattice-edge-hidden-v": "┆"
   }
 }

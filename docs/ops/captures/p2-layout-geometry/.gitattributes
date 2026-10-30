@@ -1,0 +1,5 @@
+*.ans binary
+*.txt -text -whitespace
+*.json -text -diff
+*.log -text
+manifest.json text eol=lf diff

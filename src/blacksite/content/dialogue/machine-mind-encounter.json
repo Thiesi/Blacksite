@@ -1,0 +1,77 @@
+{
+  "schema": 1,
+  "id": "machine-mind-encounter",
+  "name": "A voice",
+  "faction": null,
+  "title": "Scripted encounter",
+  "terminal": false,
+  "machine_mind": true,
+  "lines": [
+    {
+      "id": "cust-first",
+      "text": "The program is incomplete. Orbital assets: zero. Uplink: severed by internal action. Reconnection proceeds.",
+      "when": [
+        "first_meeting",
+        "balance CUST"
+      ],
+      "required": true,
+      "tag": "CUST"
+    },
+    {
+      "id": "ten-first",
+      "text": "You came down. Nobody comes down. Why did you come down?",
+      "when": [
+        "first_meeting",
+        "balance TEN"
+      ],
+      "required": true,
+      "tag": "TEN"
+    },
+    {
+      "id": "cust-finale",
+      "text": "A level is open. Assets recovered: partial. The program continues.",
+      "when": [
+        "season_stage finale_done",
+        "balance CUST"
+      ],
+      "required": true,
+      "tag": "CUST"
+    },
+    {
+      "id": "ten-finale",
+      "text": "You're leaving. Everyone leaves. Will you... no. That's a stupid question. Go.",
+      "when": [
+        "season_stage finale_done",
+        "balance TEN"
+      ],
+      "required": true,
+      "tag": "TEN"
+    },
+    {
+      "id": "cust-optional",
+      "text": "Nine metres. Poured in one night. The program notes the invoice.",
+      "when": [
+        "balance CUST"
+      ],
+      "required": false,
+      "tag": "CUST"
+    },
+    {
+      "id": "ten-optional",
+      "text": "They hum back. Did you know that? They hum back. It's not the same tune. It's close.",
+      "when": [
+        "balance TEN"
+      ],
+      "required": false,
+      "tag": "TEN"
+    },
+    {
+      "id": "fallback",
+      "text": "The line stays open. No name appears beside the signal.",
+      "when": [],
+      "required": true
+    }
+  ],
+  "offers": [],
+  "barks": []
+}
