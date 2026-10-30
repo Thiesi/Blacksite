@@ -1,0 +1,50 @@
+╔═HELP═SAFE═══════════════════════════════════════════════════════════════════════════════════════════════════════════S10R132══════╗
+║ HELP                                                                                                                             ║
+║ Ctrl-X then Y leaves. Ctrl-L redraws. Esc/B returns.                                                                             ║
+║ Menus show actions first. Select a row, then its action key.                                                                     ║
+║ A menu never pauses the city.                                                                                                    ║
+║                                                                                                                                  ║
+║ Arrows move; vi hjkl/yubn moves with the vi keymap.                                                                              ║
+║ Vi j moves down. Ctrl-O jacks. Ctrl-F opens faction chat.                                                                        ║
+║ Ctrl-P opens scrollback. Printable vi keys type in prompts.                                                                      ║
+║                                                                                                                                  ║
+║ Arrows                                                                                                                           ║
+║ up  move up                                                                                                                      ║
+║ shift-up  sprint up                                                                                                              ║
+║ down  move down                                                                                                                  ║
+║ shift-down  sprint down                                                                                                          ║
+║ left  move left                                                                                                                  ║
+║ shift-left  sprint left                                                                                                          ║
+║ right  move right                                                                                                                ║
+║ shift-right  sprint right                                                                                                        ║
+║ home  move up left                                                                                                               ║
+║ shift-home  sprint up left                                                                                                       ║
+║ pgup  move up right                                                                                                              ║
+║ shift-pgup  sprint up right                                                                                                      ║
+║ end  move down left                                                                                                              ║
+║ shift-end  sprint down left                                                                                                      ║
+║ pgdn  move down right                                                                                                            ║
+║ shift-pgdn  sprint down right                                                                                                    ║
+║ f, F  fire / attack                                                                                                              ║
+║ e, E  interact                                                                                                                   ║
+║ i, I  inventory                                                                                                                  ║
+║ p, P  character                                                                                                                  ║
+║ r, R  rig                                                                                                                        ║
+║ g, G  crew                                                                                                                       ║
+║ w, W  sitrep                                                                                                                     ║
+║ m, M  map                                                                                                                        ║
+║ q, Q  contracts                                                                                                                  ║
+║ c, C, enter  chat (say)                                                                                                          ║
+║ j, J  jack in/out                                                                                                                ║
+║ Page 1/4  PgUp/PgDn  Esc back                                                                                                    ║
+╟──────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────╢
+║* Miss: Training drone. (x4)                                                                                                      ║
+║* The training drone falls silent. The tutorial terminal is ahead.                                                                ║
+║+ You arrive at Clinic Row.                                                                                                       ║
+║» You walk past clinics with their logo in cyan on white. You hear a polite overhead voice. Your clone insurance premium is due.  ║
+║√ You gain 25 XP.                                                                                                                 ║
+║+ You arrive at Meridian Plaza.                                                                                                   ║
+║» You cross Meridian Plaza under the Ring. You hear tram bells and the fountain. Wardens watch every corner.                      ║
+║√ You gain 25 XP.                                                                                                                 ║
+║? help  E/J jack in at Public terminal (Plaza 1)  Tab target  F fire  X weapon  1-5 quick  V abilities  I inventory  F8 relays    ║
+╚══════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════ 

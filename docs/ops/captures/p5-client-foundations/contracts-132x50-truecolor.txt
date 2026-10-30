@@ -1,0 +1,50 @@
+╔═CONTRACTS / JOBS═SAFE═══════════════════════════════════════════════════════════════════════════════════════════════S10R132══════╗
+║          ┌─ CONTRACTS / JOBS ─────────────────────────────────────────────────────────────────────────────────────────┐          ║
+║          │ Choice 1/1; detail 1/1                               Visit a hall or the Tin Halo contract board for       │          ║
+║          │ No records yet                                       offers.                                               │          ║
+║          │                                                      Accepted jobs and crew proposals appear here.         │          ║
+║          │                                                                                                            │          ║
+║          │                                                                                                            │          ║
+║          │                                                                                                            │          ║
+║          │                                                                                                            │          ║
+║          │                                                                                                            │          ║
+║          │                                                                                                            │          ║
+║          │                                                                                                            │          ║
+║          │                                                                                                            │          ║
+║          │                                                                                                            │          ║
+║          │                                                                                                            │          ║
+║          │                                                                                                            │          ║
+║          │                                                                                                            │          ║
+║          │                                                                                                            │          ║
+║          │                                                                                                            │          ║
+║          │                                                                                                            │          ║
+║          │                                                                                                            │          ║
+║          │                                                                                                            │          ║
+║          │                                                                                                            │          ║
+║          │                                                                                                            │          ║
+║          │                                                                                                            │          ║
+║          │                                                                                                            │          ║
+║          │                                                                                                            │          ║
+║          │                                                                                                            │          ║
+║          │                                                                                                            │          ║
+║          │                                                                                                            │          ║
+║          │                                                                                                            │          ║
+║          │                                                                                                            │          ║
+║          │                                                                                                            │          ║
+║          │                                                                                                            │          ║
+║          │                                                                                                            │          ║
+║          │                                                                                                            │          ║
+║          │                                                                                                            │          ║
+║          │ j journal  d done  Esc/B back                                                                              │          ║
+║          └────────────────────────────────────────────────────────────────────────────────────────────────────────────┘          ║
+╟──────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────╢
+║* Miss: Training drone. (x4)                                                                                                      ║
+║* The training drone falls silent. The tutorial terminal is ahead.                                                                ║
+║+ You arrive at Clinic Row.                                                                                                       ║
+║» You walk past clinics with their logo in cyan on white. You hear a polite overhead voice. Your clone insurance premium is due.  ║
+║√ You gain 25 XP.                                                                                                                 ║
+║+ You arrive at Meridian Plaza.                                                                                                   ║
+║» You cross Meridian Plaza under the Ring. You hear tram bells and the fountain. Wardens watch every corner.                      ║
+║√ You gain 25 XP.                                                                                                                 ║
+║? help  Esc/B returns; the world continues.                                                                                       ║
+╚══════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════ 

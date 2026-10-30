@@ -53,7 +53,8 @@ class Meter:
 
 
 class Caller:
-    def __init__(self, content: ContentTree, width: int, height: int, tier: str, zone: str) -> None:
+    def __init__(self, content: ContentTree, width: int, height: int, tier: str, zone: str, *,
+                 presentation: bool = False, fully_known: bool = False) -> None:
         self.game, self.client = character_game(content, width, height, isolate_npcs=False)
         self.avatar = self.game.core.characters.sim.avatars[self.client.session.user_id]
         start = (12, 11) if zone == 'sodium-row' else (4, 10)
@@ -64,8 +65,18 @@ class Caller:
         for _ in range(30):  # V1's activity warm-up, with shipped spawners.
             self.game.step()
             self.game.commit_commerce()
+        if fully_known:
+            # Budget-only knowledge fixture, identical in the off/on arms.
+            # It changes no geometry, actors, rules or native play evidence.
+            instance = self.game.core.world.zones[zone]
+            self.avatar.perception.remembered[zone] = {
+                (x, y): instance.tile_id((x, y)) for y in range(instance.template.height)
+                for x in range(instance.template.width)}
+            self.avatar.perception.grid_key = None
+            self.client.session.needs_full_view = True
+            self.game.step()
         self.display = Display(DoorInfo(Path('unused'), Path('.'),
-            {'handle': 'Verifier\u754c', 'user_id': 1}, width, height, tier, 3600), 'p1-budget')
+            {'handle': 'Verifier\u754c', 'user_id': 1}, width, height, tier, 3600), 'p1-budget', presentation=presentation)
         self.meter = Meter()
         self.drain(0)
         # character_game completed the wake before this Display existed. Its queued
@@ -75,6 +86,8 @@ class Caller:
         self.draw(0)
         self.meter = Meter()  # Character creation and initial handshake are warm-up.
         self.moves = 0
+        if fully_known and view_counts(self.display.body)['unknown_cells']:
+            raise AssertionError('Fully known workload contains unknown viewport cells')
 
     def drain(self, now: float) -> None:
         for frame in self.game.frames_for(self.client):
@@ -107,8 +120,9 @@ class Caller:
             'render_wall_ms': wall, 'update_render_cpu_ms': (self.meter.cpu_ns-before_cpu)/1e6}
 
 
-def frames(content: ContentTree, width: int, height: int, tier: str) -> dict[str, Any]:
-    caller = Caller(content, width, height, tier, 'sodium-row')
+def frames(content: ContentTree, width: int, height: int, tier: str, *,
+           presentation: bool = False, fully_known: bool = False) -> dict[str, Any]:
+    caller = Caller(content, width, height, tier, 'sodium-row', presentation=presentation, fully_known=fully_known)
     samples = []
     # A real full redraw, then input-driven deltas at five steps a second.
     caller.key('ctrl-l', 1.0)
@@ -131,9 +145,10 @@ def frames(content: ContentTree, width: int, height: int, tier: str) -> dict[str
         'render_p95_100ms_pass': all(summary[k]['render_wall_ms']['p95'] <= 100 for k in summary)}
 
 
-def activity(content: ContentTree, width: int, height: int, tier: str, what: str, seconds: float) -> dict[str, Any]:
+def activity(content: ContentTree, width: int, height: int, tier: str, what: str, seconds: float, *,
+             presentation: bool = False, fully_known: bool = False) -> dict[str, Any]:
     zone = 'sodium-row' if what == 'walking where there is no scene' else 'sodium-tin-halo'
-    caller = Caller(content, width, height, tier, zone)
+    caller = Caller(content, width, height, tier, zone, presentation=presentation, fully_known=fully_known)
     initial_view = view_counts(caller.display.body)
     if what == 'menus, text and help':
         caller.key('?', 1.0)

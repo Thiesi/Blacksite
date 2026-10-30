@@ -1,0 +1,50 @@
+{
+  "run": 41108032615,
+  "execution_head": "b9896d4375b90f94f8b762fba84bc25a08911b25",
+  "receipts": [
+    {
+      "head": "b9896d4375b90f94f8b762fba84bc25a08911b25",
+      "passed": true,
+      "transport": "NetBBS Telnet -> registered native stdio, DOOR_BLACKSITE_PRESENTATION=1",
+      "show": true,
+      "console": {
+        "isatty": true,
+        "size": [
+          132,
+          50
+        ]
+      },
+      "human_approval": false,
+      "fixtures": "private node/world/accounts only; normal game rules",
+      "source_matched_wheel": {
+        "version": "0.0.20",
+        "file": "/home/runner/work/_temp/p5-venv/lib/python3.12/site-packages/blacksite/__init__.py",
+        "python_tree_sha256": "1b10d6365afd302cae9f9bbd2e8b3a9b156976c4072e4447b0a8ff6ec9fe786e"
+      },
+      "result_sha256": "1621a47f56467d34f46c6cafaecca5ff5e8687ec96b309ffe305e02479b9747a",
+      "source_directory": "132x50/p5-proof"
+    },
+    {
+      "head": "b9896d4375b90f94f8b762fba84bc25a08911b25",
+      "passed": true,
+      "transport": "NetBBS Telnet -> registered native stdio, DOOR_BLACKSITE_PRESENTATION=1",
+      "show": true,
+      "console": {
+        "isatty": true,
+        "size": [
+          80,
+          24
+        ]
+      },
+      "human_approval": false,
+      "fixtures": "private node/world/accounts only; normal game rules",
+      "source_matched_wheel": {
+        "version": "0.0.20",
+        "file": "/home/runner/work/_temp/p5-venv/lib/python3.12/site-packages/blacksite/__init__.py",
+        "python_tree_sha256": "1b10d6365afd302cae9f9bbd2e8b3a9b156976c4072e4447b0a8ff6ec9fe786e"
+      },
+      "result_sha256": "4e5d91e262e7af7db07900ff017105e427d779e9922be557f3731a37e76b3796",
+      "source_directory": "80x24/p5-proof"
+    }
+  ]
+}

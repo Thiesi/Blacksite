@@ -1,0 +1,1021 @@
+{
+  "schema": 1,
+  "execution_head": "b9896d4375b90f94f8b762fba84bc25a08911b25",
+  "python_tree_sha256": "1b10d6365afd302cae9f9bbd2e8b3a9b156976c4072e4447b0a8ff6ec9fe786e",
+  "run": 41108032615,
+  "human_approval": false,
+  "console": "sized attached Linux PTY, --show",
+  "transport": "real NetBBS v7.45.0 Telnet -> source-matched native stdio wheel",
+  "width_evidence": "ASCII host handle, wide ordinary character name; synthetic wide BBS handle in headless goldens",
+  "wide_name_handle_rows": [
+    {
+      "capture": "wake-hall-132x50-16",
+      "row": 33,
+      "name": "P界132",
+      "handle": "S10P132",
+      "text": "║                                                                                                           │ P界132 · S10P132 G1  ║"
+    },
+    {
+      "capture": "training-drone-132x50-16",
+      "row": 33,
+      "name": "P界132",
+      "handle": "S10P132",
+      "text": "║                                                                                                           │ P界132 · S10P132 G1  ║"
+    },
+    {
+      "capture": "training-complete-132x50-16",
+      "row": 33,
+      "name": "P界132",
+      "handle": "S10P132",
+      "text": "║                                                                                                           │ P界132 · S10P132 G1  ║"
+    },
+    {
+      "capture": "meridian-plaza-132x50-16",
+      "row": 33,
+      "name": "P界132",
+      "handle": "S10P132",
+      "text": "║                                                                                                           │ P界132 · S10P132 G1  ║"
+    },
+    {
+      "capture": "wake-hall-132x50-256",
+      "row": 33,
+      "name": "Q界132",
+      "handle": "S10Q132",
+      "text": "║                                                                                                           │ Q界132 · S10Q132 G1  ║"
+    },
+    {
+      "capture": "training-drone-132x50-256",
+      "row": 33,
+      "name": "Q界132",
+      "handle": "S10Q132",
+      "text": "║                                                                                                           │ Q界132 · S10Q132 G1  ║"
+    },
+    {
+      "capture": "training-complete-132x50-256",
+      "row": 33,
+      "name": "Q界132",
+      "handle": "S10Q132",
+      "text": "║                                                                                                           │ Q界132 · S10Q132 G1  ║"
+    },
+    {
+      "capture": "meridian-plaza-132x50-256",
+      "row": 33,
+      "name": "Q界132",
+      "handle": "S10Q132",
+      "text": "║                                                                                                           │ Q界132 · S10Q132 G1  ║"
+    },
+    {
+      "capture": "wake-hall-132x50-truecolor",
+      "row": 33,
+      "name": "R界132",
+      "handle": "S10R132",
+      "text": "║                                                                                                           │ R界132 · S10R132 G1  ║"
+    },
+    {
+      "capture": "training-drone-132x50-truecolor",
+      "row": 33,
+      "name": "R界132",
+      "handle": "S10R132",
+      "text": "║                                                                                                           │ R界132 · S10R132 G1  ║"
+    },
+    {
+      "capture": "training-complete-132x50-truecolor",
+      "row": 33,
+      "name": "R界132",
+      "handle": "S10R132",
+      "text": "║                                                                                                           │ R界132 · S10R132 G1  ║"
+    },
+    {
+      "capture": "meridian-plaza-132x50-truecolor",
+      "row": 33,
+      "name": "R界132",
+      "handle": "S10R132",
+      "text": "║                                                                                                           │ R界132 · S10R132 G1  ║"
+    }
+  ],
+  "cases": [
+    {
+      "size": [
+        132,
+        50
+      ],
+      "tier": "16",
+      "handle": "S10P132",
+      "character_name": "P界132",
+      "wide_bbs_handle": false,
+      "wide_character_name": true,
+      "new_safe_frame": true,
+      "training_fight": "done",
+      "plaza_person_lift": null,
+      "captures": [
+        "wake-132x50-16",
+        "wake-hall-132x50-16",
+        "training-drone-132x50-16",
+        "training-complete-132x50-16",
+        "meridian-plaza-132x50-16",
+        "inventory-132x50-16",
+        "contracts-132x50-16",
+        "help-132x50-16"
+      ],
+      "ordinary_inputs": true
+    },
+    {
+      "size": [
+        132,
+        50
+      ],
+      "tier": "256",
+      "handle": "S10Q132",
+      "character_name": "Q界132",
+      "wide_bbs_handle": false,
+      "wide_character_name": true,
+      "new_safe_frame": true,
+      "training_fight": "done",
+      "plaza_person_lift": null,
+      "captures": [
+        "wake-132x50-256",
+        "wake-hall-132x50-256",
+        "training-drone-132x50-256",
+        "training-complete-132x50-256",
+        "meridian-plaza-132x50-256",
+        "inventory-132x50-256",
+        "contracts-132x50-256",
+        "help-132x50-256"
+      ],
+      "ordinary_inputs": true
+    },
+    {
+      "size": [
+        132,
+        50
+      ],
+      "tier": "truecolor",
+      "handle": "S10R132",
+      "character_name": "R界132",
+      "wide_bbs_handle": false,
+      "wide_character_name": true,
+      "new_safe_frame": true,
+      "training_fight": "done",
+      "plaza_person_lift": {
+        "role": "npc_wardens",
+        "original_rgb": [
+          37,
+          99,
+          235
+        ],
+        "paint_rgb": [
+          130,
+          145,
+          255
+        ],
+        "original_distance": 46.06156571096115,
+        "paint_distance": 63.52087333710712,
+        "people_floor": 63.38528726606927,
+        "terminal_cells": [
+          [
+            53,
+            5
+          ],
+          [
+            110,
+            6
+          ]
+        ]
+      },
+      "captures": [
+        "wake-132x50-truecolor",
+        "wake-hall-132x50-truecolor",
+        "training-drone-132x50-truecolor",
+        "training-complete-132x50-truecolor",
+        "meridian-plaza-132x50-truecolor",
+        "inventory-132x50-truecolor",
+        "contracts-132x50-truecolor",
+        "help-132x50-truecolor"
+      ],
+      "ordinary_inputs": true
+    },
+    {
+      "size": [
+        80,
+        24
+      ],
+      "tier": "16",
+      "handle": "S10P80",
+      "character_name": "P界80",
+      "wide_bbs_handle": false,
+      "wide_character_name": true,
+      "new_safe_frame": true,
+      "training_fight": "done",
+      "plaza_person_lift": null,
+      "captures": [
+        "wake-80x24-16",
+        "wake-hall-80x24-16",
+        "training-drone-80x24-16",
+        "training-complete-80x24-16",
+        "meridian-plaza-80x24-16",
+        "inventory-80x24-16",
+        "contracts-80x24-16",
+        "help-80x24-16"
+      ],
+      "ordinary_inputs": true
+    },
+    {
+      "size": [
+        80,
+        24
+      ],
+      "tier": "256",
+      "handle": "S10Q80",
+      "character_name": "Q界80",
+      "wide_bbs_handle": false,
+      "wide_character_name": true,
+      "new_safe_frame": true,
+      "training_fight": "done",
+      "plaza_person_lift": null,
+      "captures": [
+        "wake-80x24-256",
+        "wake-hall-80x24-256",
+        "training-drone-80x24-256",
+        "training-complete-80x24-256",
+        "meridian-plaza-80x24-256",
+        "inventory-80x24-256",
+        "contracts-80x24-256",
+        "help-80x24-256"
+      ],
+      "ordinary_inputs": true
+    },
+    {
+      "size": [
+        80,
+        24
+      ],
+      "tier": "truecolor",
+      "handle": "S10R80",
+      "character_name": "R界80",
+      "wide_bbs_handle": false,
+      "wide_character_name": true,
+      "new_safe_frame": true,
+      "training_fight": "done",
+      "plaza_person_lift": {
+        "role": "npc_wardens",
+        "original_rgb": [
+          37,
+          99,
+          235
+        ],
+        "paint_rgb": [
+          130,
+          145,
+          255
+        ],
+        "original_distance": 46.06156571096115,
+        "paint_distance": 63.52087333710712,
+        "people_floor": 63.38528726606927,
+        "terminal_cells": [
+          [
+            14,
+            5
+          ],
+          [
+            58,
+            6
+          ]
+        ]
+      },
+      "captures": [
+        "wake-80x24-truecolor",
+        "wake-hall-80x24-truecolor",
+        "training-drone-80x24-truecolor",
+        "training-complete-80x24-truecolor",
+        "meridian-plaza-80x24-truecolor",
+        "inventory-80x24-truecolor",
+        "contracts-80x24-truecolor",
+        "help-80x24-truecolor"
+      ],
+      "ordinary_inputs": true
+    }
+  ],
+  "captures": [
+    {
+      "capture": "wake-132x50-16",
+      "size": [
+        132,
+        50
+      ],
+      "tier": "16",
+      "text": "wake-132x50-16.txt",
+      "text_sha256": "60ece67192ff3b830229cdea91710153c6d55d984815a4c60c3480aff527bf7e",
+      "ansi": "wake-132x50-16.ans",
+      "ansi_sha256": "f247c04340d9006594b16d233856f722249025008c32c634094bba6b51447986",
+      "style": "wake-132x50-16.json",
+      "style_sha256": "9adb7d43fd3d0f66b1636e80b4911962c20fcefabf3b920f7de33d49cd43f0f1",
+      "source_directory": "132x50\\p5-proof"
+    },
+    {
+      "capture": "wake-hall-132x50-16",
+      "size": [
+        132,
+        50
+      ],
+      "tier": "16",
+      "text": "wake-hall-132x50-16.txt",
+      "text_sha256": "de9318369af56df684f638bcb79383443430880e4ee43836595aec86c50b4660",
+      "ansi": "wake-hall-132x50-16.ans",
+      "ansi_sha256": "7843724c29e67599cf686b85253ed6e0f3d424b9bf4a02a10b1e8ac07938866e",
+      "style": "wake-hall-132x50-16.json",
+      "style_sha256": "4d89d64357966d4949a7536104a4cbb487c2a8cef1731f4a42bef5861b79ab63",
+      "source_directory": "132x50\\p5-proof"
+    },
+    {
+      "capture": "training-drone-132x50-16",
+      "size": [
+        132,
+        50
+      ],
+      "tier": "16",
+      "text": "training-drone-132x50-16.txt",
+      "text_sha256": "8429c2c7749b037800bae4c323884834e0463576f36a37dad51fe55e87383351",
+      "ansi": "training-drone-132x50-16.ans",
+      "ansi_sha256": "47fbb3acc8dc3e8eb3f9b6868d50113f6836a18b595448d23f48a39a484c739d",
+      "style": "training-drone-132x50-16.json",
+      "style_sha256": "8cf175f3d67fd1bd6c89a23e51c887d4499b79c3d004fdd1ff608625d43f7b2a",
+      "source_directory": "132x50\\p5-proof"
+    },
+    {
+      "capture": "training-complete-132x50-16",
+      "size": [
+        132,
+        50
+      ],
+      "tier": "16",
+      "text": "training-complete-132x50-16.txt",
+      "text_sha256": "a84693a5e23cd4094732949a0a8c8f22bdeebeb4aa7c716d5780046e1419ce94",
+      "ansi": "training-complete-132x50-16.ans",
+      "ansi_sha256": "117894efddd519330968d6e8b1ec53c1a8f16ddc869d733b364b7917d3d0328b",
+      "style": "training-complete-132x50-16.json",
+      "style_sha256": "1587381a1643cc52ad2ae52c84ea8fc3f02ac544645ff3cd5efa8ee88113d797",
+      "source_directory": "132x50\\p5-proof"
+    },
+    {
+      "capture": "meridian-plaza-132x50-16",
+      "size": [
+        132,
+        50
+      ],
+      "tier": "16",
+      "text": "meridian-plaza-132x50-16.txt",
+      "text_sha256": "2c7aa32f5e450a7d92ca7cdd298cca00bf310435baaca2c08cd6044fb07b386d",
+      "ansi": "meridian-plaza-132x50-16.ans",
+      "ansi_sha256": "019e78807adbb519449e0e6dbbbfe901102dfd80d328660aa8b9c4ed919699b8",
+      "style": "meridian-plaza-132x50-16.json",
+      "style_sha256": "fc6cf6a7436a37b5774b6393d4e38ad8b0f110fa0143c90509709cdd3edfd877",
+      "source_directory": "132x50\\p5-proof"
+    },
+    {
+      "capture": "inventory-132x50-16",
+      "size": [
+        132,
+        50
+      ],
+      "tier": "16",
+      "text": "inventory-132x50-16.txt",
+      "text_sha256": "63dee6965e20f8cc9eec6fa0ff06f4e96b79a321bdf38adad23e4c1ab9b7477b",
+      "ansi": "inventory-132x50-16.ans",
+      "ansi_sha256": "76e561f9d87b73552dc6025e4c0e92ae916fcf650605d895c1463a8de5812614",
+      "style": "inventory-132x50-16.json",
+      "style_sha256": "c9cef562bcc9abc440faa67dcee855a66acdc2b86b5ecceb3b0a865aadac0d8a",
+      "source_directory": "132x50\\p5-proof"
+    },
+    {
+      "capture": "contracts-132x50-16",
+      "size": [
+        132,
+        50
+      ],
+      "tier": "16",
+      "text": "contracts-132x50-16.txt",
+      "text_sha256": "961c607cff08e64352c47cd16a675d962231d1ac6c9c86efea25ba2aeb4de57d",
+      "ansi": "contracts-132x50-16.ans",
+      "ansi_sha256": "1d884e7996e69ffef56e3e9fad4d84ad3f2d07579760786b5e5cebf31ea96627",
+      "style": "contracts-132x50-16.json",
+      "style_sha256": "40f5bda195f0eedf99a1da491df98bb56391fcd45175a9ec557cad94d2514f03",
+      "source_directory": "132x50\\p5-proof"
+    },
+    {
+      "capture": "help-132x50-16",
+      "size": [
+        132,
+        50
+      ],
+      "tier": "16",
+      "text": "help-132x50-16.txt",
+      "text_sha256": "88ccc74bec5ad8118eae78987692da5b50ff995b42f7c62c4aac1da3206c9e7b",
+      "ansi": "help-132x50-16.ans",
+      "ansi_sha256": "3b8b640674173618f79cc041116e940128f8dc652642ad5691d1e213ef3e4812",
+      "style": "help-132x50-16.json",
+      "style_sha256": "deee9b08527fcb16b825fdd6cfbfa2b27bfbeb4dacebaad8c67be96e52adaf90",
+      "source_directory": "132x50\\p5-proof"
+    },
+    {
+      "capture": "wake-132x50-256",
+      "size": [
+        132,
+        50
+      ],
+      "tier": "256",
+      "text": "wake-132x50-256.txt",
+      "text_sha256": "357b8c275d92af93c7cf4aebb94e47058c3f1728c2ebf95e6eef7b731e7e6047",
+      "ansi": "wake-132x50-256.ans",
+      "ansi_sha256": "a928bfc50e04f7bce571bea617196d11624607f105ac6ed2e8aa65f7652edec5",
+      "style": "wake-132x50-256.json",
+      "style_sha256": "a97662ced5df516497f9b122e5a7ec9d034b20b0c92d8a6c114e43cac1f5b5d4",
+      "source_directory": "132x50\\p5-proof"
+    },
+    {
+      "capture": "wake-hall-132x50-256",
+      "size": [
+        132,
+        50
+      ],
+      "tier": "256",
+      "text": "wake-hall-132x50-256.txt",
+      "text_sha256": "11392ee99018c02df57e16f0455408de53415eb1ad30fef769bee6653d9ff010",
+      "ansi": "wake-hall-132x50-256.ans",
+      "ansi_sha256": "ae9bd66758d1c7927a65633ffeed1d990ada962d0710058acce2e73b201cca8b",
+      "style": "wake-hall-132x50-256.json",
+      "style_sha256": "9c311a729685029e4b9dff73499ebc47df010db7e0019aa4a1afb35633100405",
+      "source_directory": "132x50\\p5-proof"
+    },
+    {
+      "capture": "training-drone-132x50-256",
+      "size": [
+        132,
+        50
+      ],
+      "tier": "256",
+      "text": "training-drone-132x50-256.txt",
+      "text_sha256": "af9a4a15bfa74a4214298c94b5f320b95ea097f70655ffac96c17c9eb1fc4ed3",
+      "ansi": "training-drone-132x50-256.ans",
+      "ansi_sha256": "111efa2bfaf3504f190e082fba40a9fdf032a2b091098bb2be8f1e3348bd90fd",
+      "style": "training-drone-132x50-256.json",
+      "style_sha256": "ecafef2c4f6a8b064fdbd98937b8abba06fd9aef9413dcdfb33b5352f3afdb68",
+      "source_directory": "132x50\\p5-proof"
+    },
+    {
+      "capture": "training-complete-132x50-256",
+      "size": [
+        132,
+        50
+      ],
+      "tier": "256",
+      "text": "training-complete-132x50-256.txt",
+      "text_sha256": "99502ad647feab99cf169a3c25fa44dd2c0313240a290059453a25ea7214eaf9",
+      "ansi": "training-complete-132x50-256.ans",
+      "ansi_sha256": "24c7e45a04883a847c1db5c2b86707f90c4535d9af6d64320f723ea1107874ee",
+      "style": "training-complete-132x50-256.json",
+      "style_sha256": "336932c9bbb5ddf1ef25399bc4185f4a056ef6d211cc611dbdfb642822131ad2",
+      "source_directory": "132x50\\p5-proof"
+    },
+    {
+      "capture": "meridian-plaza-132x50-256",
+      "size": [
+        132,
+        50
+      ],
+      "tier": "256",
+      "text": "meridian-plaza-132x50-256.txt",
+      "text_sha256": "43247c7910f8a3e1fda70b744313e06d4ae553efdc4dc544b9c3f24a45e22a16",
+      "ansi": "meridian-plaza-132x50-256.ans",
+      "ansi_sha256": "80b1e757145c81deb94312724cf8d53ada08a298e279036d56c2006c7275b382",
+      "style": "meridian-plaza-132x50-256.json",
+      "style_sha256": "b73ec9ea127186b655f9bf72ec9e816b50c4648fcb98ab050555f4c3f827b8d8",
+      "source_directory": "132x50\\p5-proof"
+    },
+    {
+      "capture": "inventory-132x50-256",
+      "size": [
+        132,
+        50
+      ],
+      "tier": "256",
+      "text": "inventory-132x50-256.txt",
+      "text_sha256": "e6ce5cc2ea1bf96bef08a9b37d2ad8f5d32b67c2b20e941b60718972208dbbc2",
+      "ansi": "inventory-132x50-256.ans",
+      "ansi_sha256": "68c56fe18d97b7d3e512530638c3a42658dcd2e67003c202382b467815f64945",
+      "style": "inventory-132x50-256.json",
+      "style_sha256": "505a832bc40b4bd8347aaaf34ef85fb2ae659a51a254d914f27f2bec0c9fe868",
+      "source_directory": "132x50\\p5-proof"
+    },
+    {
+      "capture": "contracts-132x50-256",
+      "size": [
+        132,
+        50
+      ],
+      "tier": "256",
+      "text": "contracts-132x50-256.txt",
+      "text_sha256": "adef3b747ed76a33452bbc9ba88551f76f088c48b6d2df7920c37b42d0eda31f",
+      "ansi": "contracts-132x50-256.ans",
+      "ansi_sha256": "7772ea5881f61b94f6a4f1e3878335b3356c2fec524abcd69a686293c69efaae",
+      "style": "contracts-132x50-256.json",
+      "style_sha256": "7b5352f7df4bc7a0e7189aa90a8cc474bf86ba0b3eab92b698833d00cb8b2a9e",
+      "source_directory": "132x50\\p5-proof"
+    },
+    {
+      "capture": "help-132x50-256",
+      "size": [
+        132,
+        50
+      ],
+      "tier": "256",
+      "text": "help-132x50-256.txt",
+      "text_sha256": "39d718647d261b4b42d133489ceea32b86f8519ed95707a81867a2d5bceeb42d",
+      "ansi": "help-132x50-256.ans",
+      "ansi_sha256": "6641cec1f20874b25bd9e158c0dac9b786fab0b038a23d659d07b5a996619b8e",
+      "style": "help-132x50-256.json",
+      "style_sha256": "70a529cf03e9b2bf610f52541006fd08abe2f2a9d1debfdfd3fa7b801e6445f9",
+      "source_directory": "132x50\\p5-proof"
+    },
+    {
+      "capture": "wake-132x50-truecolor",
+      "size": [
+        132,
+        50
+      ],
+      "tier": "truecolor",
+      "text": "wake-132x50-truecolor.txt",
+      "text_sha256": "549a358ab5a2126874e40a88235aade7a1bfc8f56071fb8321f96c5472afc303",
+      "ansi": "wake-132x50-truecolor.ans",
+      "ansi_sha256": "c60372276b6e514410d183dfaa75f79353d7742f8ca3df250d700de28c4da5ae",
+      "style": "wake-132x50-truecolor.json",
+      "style_sha256": "d70fbdd90ccbbc11be14239fb045af86c85353b2548a0308d2e15ffa2c168550",
+      "source_directory": "132x50\\p5-proof"
+    },
+    {
+      "capture": "wake-hall-132x50-truecolor",
+      "size": [
+        132,
+        50
+      ],
+      "tier": "truecolor",
+      "text": "wake-hall-132x50-truecolor.txt",
+      "text_sha256": "3b45f52d99fc9b4b1436b3a5fa757dc1be399c53c72084a30b91efc95634d88b",
+      "ansi": "wake-hall-132x50-truecolor.ans",
+      "ansi_sha256": "8854f77de6fbd6c4eda34754a316e79b43f817755581e209c360b36ad5ede05c",
+      "style": "wake-hall-132x50-truecolor.json",
+      "style_sha256": "9dc8a3839b46ce4f2ed3a2281f5cdc05daeab1cdd5d4a892a04b220834494613",
+      "source_directory": "132x50\\p5-proof"
+    },
+    {
+      "capture": "training-drone-132x50-truecolor",
+      "size": [
+        132,
+        50
+      ],
+      "tier": "truecolor",
+      "text": "training-drone-132x50-truecolor.txt",
+      "text_sha256": "96bcf440d100b0e3894c2c25f846f01eaf5312888b247c1389287a4f2133695f",
+      "ansi": "training-drone-132x50-truecolor.ans",
+      "ansi_sha256": "5ec12a88252658fa29df728a216c8e5aaca08aab54679e16dffc7c6ef2ef33ca",
+      "style": "training-drone-132x50-truecolor.json",
+      "style_sha256": "bf9aeae3a6595746126ec94cbf17cb9894ff36d0491dce07997845c265b41fb3",
+      "source_directory": "132x50\\p5-proof"
+    },
+    {
+      "capture": "training-complete-132x50-truecolor",
+      "size": [
+        132,
+        50
+      ],
+      "tier": "truecolor",
+      "text": "training-complete-132x50-truecolor.txt",
+      "text_sha256": "8d46b712126ff4fad2b693387e92dae6ae9d3cb91ad78ef239a8d7bbd320dc75",
+      "ansi": "training-complete-132x50-truecolor.ans",
+      "ansi_sha256": "a0889b0e7c9d896b5e2beac8e7c63f4990a6634a7e036e88d45d7b78058730f8",
+      "style": "training-complete-132x50-truecolor.json",
+      "style_sha256": "c8c9d4714d86d2b1200fe4d1eb69f3ceff0317095410ad38d7c16f8ca3d38353",
+      "source_directory": "132x50\\p5-proof"
+    },
+    {
+      "capture": "meridian-plaza-132x50-truecolor",
+      "size": [
+        132,
+        50
+      ],
+      "tier": "truecolor",
+      "text": "meridian-plaza-132x50-truecolor.txt",
+      "text_sha256": "eac0c856d8297b66991dc5886a587212b42183418432eea6b564c078612459b2",
+      "ansi": "meridian-plaza-132x50-truecolor.ans",
+      "ansi_sha256": "c808ba7b58a99882e5ff978f15e9a0c38b7a533f73d78b4d48705a6d83efc4da",
+      "style": "meridian-plaza-132x50-truecolor.json",
+      "style_sha256": "d17148f768634b29912f55cf5f3285deb3f405a2895ee3113173faafb277e33d",
+      "source_directory": "132x50\\p5-proof"
+    },
+    {
+      "capture": "inventory-132x50-truecolor",
+      "size": [
+        132,
+        50
+      ],
+      "tier": "truecolor",
+      "text": "inventory-132x50-truecolor.txt",
+      "text_sha256": "a766500e08dae408e23f56849651b29b9b7010e984cd9ca78c060eff44249e32",
+      "ansi": "inventory-132x50-truecolor.ans",
+      "ansi_sha256": "25bf488be8279756e1c02a524857b14e5ac7343ffb293b4233ae44655d82a4b9",
+      "style": "inventory-132x50-truecolor.json",
+      "style_sha256": "c777ec10326e378d3edfeee3ad24f418111a0775d9ba2a4f225a94c15c5457bc",
+      "source_directory": "132x50\\p5-proof"
+    },
+    {
+      "capture": "contracts-132x50-truecolor",
+      "size": [
+        132,
+        50
+      ],
+      "tier": "truecolor",
+      "text": "contracts-132x50-truecolor.txt",
+      "text_sha256": "81446bd0d1dc81fa55dadf8d2fcfd9f54abac196fc82c102f0c283880484940d",
+      "ansi": "contracts-132x50-truecolor.ans",
+      "ansi_sha256": "13a3be6df207527d71eed4170dd2a04b787bca4c9200dce1d1650646c9eb65e0",
+      "style": "contracts-132x50-truecolor.json",
+      "style_sha256": "02412740d43e541e9018980974428cfafd9c88ef5e995d6b39b2387aab58520c",
+      "source_directory": "132x50\\p5-proof"
+    },
+    {
+      "capture": "help-132x50-truecolor",
+      "size": [
+        132,
+        50
+      ],
+      "tier": "truecolor",
+      "text": "help-132x50-truecolor.txt",
+      "text_sha256": "e89b07c1d732e155d911fd486344b7a52994150a28b258a5a2beec6f207980be",
+      "ansi": "help-132x50-truecolor.ans",
+      "ansi_sha256": "a4b6748b62902f26f7ea4e7a1f7e98223eade0de11f55674e37a5102909f367f",
+      "style": "help-132x50-truecolor.json",
+      "style_sha256": "835111a2921a07e11a0da526d629ca8edfb2da33c8ce116d8791e4396c269a22",
+      "source_directory": "132x50\\p5-proof"
+    },
+    {
+      "capture": "wake-80x24-16",
+      "size": [
+        80,
+        24
+      ],
+      "tier": "16",
+      "text": "wake-80x24-16.txt",
+      "text_sha256": "2d5dbc682ac9402f2ea519633907d5e9f0f6e4a0307d12c0d418cec9422d61ba",
+      "ansi": "wake-80x24-16.ans",
+      "ansi_sha256": "271fb99e427c3c6313ec23cb4f7d5cb7b2532fb853d79134d2de2636195f1a84",
+      "style": "wake-80x24-16.json",
+      "style_sha256": "31b1a066b822a9e09acdffc041a13496aabedceebf95273a66064ac38ca63507",
+      "source_directory": "80x24\\p5-proof"
+    },
+    {
+      "capture": "wake-hall-80x24-16",
+      "size": [
+        80,
+        24
+      ],
+      "tier": "16",
+      "text": "wake-hall-80x24-16.txt",
+      "text_sha256": "545757bde55d3942ac1a7c905e83080008591369ac8d7cda7bedbfecd1206d60",
+      "ansi": "wake-hall-80x24-16.ans",
+      "ansi_sha256": "6306a41f5d9c9d103ccbe3250f2835d65f245ae7d867008ddd41bf5eda85829b",
+      "style": "wake-hall-80x24-16.json",
+      "style_sha256": "15f076e45d6b422712c097a0ee0000e53e25e56782a1bf1087868b3e03c937a3",
+      "source_directory": "80x24\\p5-proof"
+    },
+    {
+      "capture": "training-drone-80x24-16",
+      "size": [
+        80,
+        24
+      ],
+      "tier": "16",
+      "text": "training-drone-80x24-16.txt",
+      "text_sha256": "2e8a841f9b8c0b162f5b1d119b8c5098d85fa753563334ae8b342868fe12db60",
+      "ansi": "training-drone-80x24-16.ans",
+      "ansi_sha256": "9331254c2a510db48ee532644a80ab46e64ace8688a9edd013b8a7ea71dc622f",
+      "style": "training-drone-80x24-16.json",
+      "style_sha256": "285b2a718ee6be34d3a3cdc0f5eb834292377f37b7dfc891aa28a5c364c338f0",
+      "source_directory": "80x24\\p5-proof"
+    },
+    {
+      "capture": "training-complete-80x24-16",
+      "size": [
+        80,
+        24
+      ],
+      "tier": "16",
+      "text": "training-complete-80x24-16.txt",
+      "text_sha256": "0bd5a7e9905ebe1b66fcc71a45c50ad6eef2c8f1434b2b3bb8704e34c569a783",
+      "ansi": "training-complete-80x24-16.ans",
+      "ansi_sha256": "9cbb0a7b0ac4af24b9efe3a5cbdcc5ccd91b0f348f8e792b627b51f3a32d3478",
+      "style": "training-complete-80x24-16.json",
+      "style_sha256": "1e6f0f51b8a61bb7432ff150c0f5386dd639452ea0f1f660580e664023e9c7b6",
+      "source_directory": "80x24\\p5-proof"
+    },
+    {
+      "capture": "meridian-plaza-80x24-16",
+      "size": [
+        80,
+        24
+      ],
+      "tier": "16",
+      "text": "meridian-plaza-80x24-16.txt",
+      "text_sha256": "99001af26c36da52dc72e9ad9bf4a15d05b8da808732f6e07e9430d8a186de05",
+      "ansi": "meridian-plaza-80x24-16.ans",
+      "ansi_sha256": "e688a238f5b7950fb12dda96202251da8b5edbf3c055ec18bd9aac98bb925771",
+      "style": "meridian-plaza-80x24-16.json",
+      "style_sha256": "c453b26829f948394fd0b6f18cf0567d88ad75cd4e4dec83c00253e1275d1398",
+      "source_directory": "80x24\\p5-proof"
+    },
+    {
+      "capture": "inventory-80x24-16",
+      "size": [
+        80,
+        24
+      ],
+      "tier": "16",
+      "text": "inventory-80x24-16.txt",
+      "text_sha256": "bb27bc2c2282a0642a5b79e31097ece2c625f438e8d1e73e13e6d8d81c3bf515",
+      "ansi": "inventory-80x24-16.ans",
+      "ansi_sha256": "45fcde7d1fb387b2ddaf4faeac782c708037c4a7418a91c8725fe0cec7dffa6b",
+      "style": "inventory-80x24-16.json",
+      "style_sha256": "5043b8623ba58329d609d44c799cd9a15418930a1a4d1ea94e2842ea7a3e554f",
+      "source_directory": "80x24\\p5-proof"
+    },
+    {
+      "capture": "contracts-80x24-16",
+      "size": [
+        80,
+        24
+      ],
+      "tier": "16",
+      "text": "contracts-80x24-16.txt",
+      "text_sha256": "1f7ecae0e9742c278c8d5a95b4dc92acf37213142ff8b7887589840ecf90ae32",
+      "ansi": "contracts-80x24-16.ans",
+      "ansi_sha256": "779d9da42afb45aa4c5ec0e5099095e3a1a02ee7dde40aa0719fddfdcf19f9b9",
+      "style": "contracts-80x24-16.json",
+      "style_sha256": "2801f5afe16dbe12226227149a9f089b68142fb8aad147dbad61b984cc6b21c7",
+      "source_directory": "80x24\\p5-proof"
+    },
+    {
+      "capture": "help-80x24-16",
+      "size": [
+        80,
+        24
+      ],
+      "tier": "16",
+      "text": "help-80x24-16.txt",
+      "text_sha256": "6bb424d7aa070c4034f9d952db8a9e284da761807ac4f88c4867ff644152edb8",
+      "ansi": "help-80x24-16.ans",
+      "ansi_sha256": "96c6f08d5b8bcd832205b480973591b45a4d3b76bdf1df29513b6985cf257401",
+      "style": "help-80x24-16.json",
+      "style_sha256": "c64aeb1d4795d6894357c574edf11d7d5f8242fdc8599bca303282fdd6ec81b0",
+      "source_directory": "80x24\\p5-proof"
+    },
+    {
+      "capture": "wake-80x24-256",
+      "size": [
+        80,
+        24
+      ],
+      "tier": "256",
+      "text": "wake-80x24-256.txt",
+      "text_sha256": "cf1d7b809af688f251cb7de606038172fde64d730a5fe3e0d3a5641725e1de93",
+      "ansi": "wake-80x24-256.ans",
+      "ansi_sha256": "2b78f0e51570057f2622638f204b8fd967161ff296dfb2a12bc325ba7e0d0b35",
+      "style": "wake-80x24-256.json",
+      "style_sha256": "1c3938780bedb6726134ae3604cec61b1b3895913ce2b946e9ac0f1e0ae10f24",
+      "source_directory": "80x24\\p5-proof"
+    },
+    {
+      "capture": "wake-hall-80x24-256",
+      "size": [
+        80,
+        24
+      ],
+      "tier": "256",
+      "text": "wake-hall-80x24-256.txt",
+      "text_sha256": "a3d38649a45cf882f001a3a6a7cfd2dc283ac249fea2d9e52ce0df8743bb68aa",
+      "ansi": "wake-hall-80x24-256.ans",
+      "ansi_sha256": "f1a68a57bc4dc215e1609d06af881161ce064935002afa5faaf411b0fca4397a",
+      "style": "wake-hall-80x24-256.json",
+      "style_sha256": "7a2ae1aefe9c74b62b99337ff23a959a8ee02cf6f7456daee176df3b4c715cef",
+      "source_directory": "80x24\\p5-proof"
+    },
+    {
+      "capture": "training-drone-80x24-256",
+      "size": [
+        80,
+        24
+      ],
+      "tier": "256",
+      "text": "training-drone-80x24-256.txt",
+      "text_sha256": "bcf816771a4720f281e4776521b4cb9fb58bec137691d10b5e96d5725838a686",
+      "ansi": "training-drone-80x24-256.ans",
+      "ansi_sha256": "756877cb3dc3571d2d62334750a050ebd2c2739370a4a423b77b6def073d1d89",
+      "style": "training-drone-80x24-256.json",
+      "style_sha256": "82c45530619b59e3d4c6d16844937c906743b16574e1706dc9c5b731e8bd4598",
+      "source_directory": "80x24\\p5-proof"
+    },
+    {
+      "capture": "training-complete-80x24-256",
+      "size": [
+        80,
+        24
+      ],
+      "tier": "256",
+      "text": "training-complete-80x24-256.txt",
+      "text_sha256": "00c40c9e08a0eb02a35577f3eb8fab5a8ccb60baf7214ebc0f4cc15805039ef3",
+      "ansi": "training-complete-80x24-256.ans",
+      "ansi_sha256": "5519edede2f1a0165078a8f808d67790b71880c003a63d6a96e3c9f8bcacbfa8",
+      "style": "training-complete-80x24-256.json",
+      "style_sha256": "df9039fd068808daa666d13728d318c73b315c03da3e292bc264b9bf1d95ba5e",
+      "source_directory": "80x24\\p5-proof"
+    },
+    {
+      "capture": "meridian-plaza-80x24-256",
+      "size": [
+        80,
+        24
+      ],
+      "tier": "256",
+      "text": "meridian-plaza-80x24-256.txt",
+      "text_sha256": "18819babf7a1fcda2636123cbc5947e94d85b892c88bbe6968246b600af79df6",
+      "ansi": "meridian-plaza-80x24-256.ans",
+      "ansi_sha256": "b15b707c831496ffa0c55b65da941cda0403bf7d7845bf9b581d9e94fd7202ae",
+      "style": "meridian-plaza-80x24-256.json",
+      "style_sha256": "31099f82a77823b2a87ef5596720bd9bd1c9d1c7dafbdd1a0dcbfe980c781682",
+      "source_directory": "80x24\\p5-proof"
+    },
+    {
+      "capture": "inventory-80x24-256",
+      "size": [
+        80,
+        24
+      ],
+      "tier": "256",
+      "text": "inventory-80x24-256.txt",
+      "text_sha256": "2f856303075fe054fd20d8020b6b1bbf6b564198e88b4f747acb3355afa601de",
+      "ansi": "inventory-80x24-256.ans",
+      "ansi_sha256": "a89d594bb6f7437c46e4a38574125b300f4eba0e69f9c88f281ccb953c42197a",
+      "style": "inventory-80x24-256.json",
+      "style_sha256": "567d3ff79523365b77bc57f48d78973aeeaa739fcd08816637057b205e6ae2a6",
+      "source_directory": "80x24\\p5-proof"
+    },
+    {
+      "capture": "contracts-80x24-256",
+      "size": [
+        80,
+        24
+      ],
+      "tier": "256",
+      "text": "contracts-80x24-256.txt",
+      "text_sha256": "7128d52bb0a5b5e5432ae26a4580ff8d9ed99c3b896410899ba310a123573c4f",
+      "ansi": "contracts-80x24-256.ans",
+      "ansi_sha256": "43513f41d7b20f7fb9c17d21f2a3fa6162c9b28f084d95f57eefdd22c2f008cf",
+      "style": "contracts-80x24-256.json",
+      "style_sha256": "6f75402a5a4007fb530f125bc96dcd2895567a4532d14466b314433c7300f0a9",
+      "source_directory": "80x24\\p5-proof"
+    },
+    {
+      "capture": "help-80x24-256",
+      "size": [
+        80,
+        24
+      ],
+      "tier": "256",
+      "text": "help-80x24-256.txt",
+      "text_sha256": "3eb7ca49db8d628d6f2ee6b18d9fcec2b0bf05bd91919d44fd2557a289523939",
+      "ansi": "help-80x24-256.ans",
+      "ansi_sha256": "9e07927a66c8534ca7f8259a58b50a536d069186154f06ad8cc2398e34140700",
+      "style": "help-80x24-256.json",
+      "style_sha256": "1cdf3d0d5be35e3f409dab8fa424af9ef8cbca9382c2bccb440ea6566fc8a342",
+      "source_directory": "80x24\\p5-proof"
+    },
+    {
+      "capture": "wake-80x24-truecolor",
+      "size": [
+        80,
+        24
+      ],
+      "tier": "truecolor",
+      "text": "wake-80x24-truecolor.txt",
+      "text_sha256": "dd6ae0b18a007ef4eca9ef172084d95f66790bb286a3024d2ebbd37080f2f886",
+      "ansi": "wake-80x24-truecolor.ans",
+      "ansi_sha256": "18e3448802ab9774885756b122ada8d01a271ac98215b11142f5f3096ccedf08",
+      "style": "wake-80x24-truecolor.json",
+      "style_sha256": "7e5bc2ef206ebceed7f44bd6ebcc77a283375be085b076057eb9f31cf15bcbfc",
+      "source_directory": "80x24\\p5-proof"
+    },
+    {
+      "capture": "wake-hall-80x24-truecolor",
+      "size": [
+        80,
+        24
+      ],
+      "tier": "truecolor",
+      "text": "wake-hall-80x24-truecolor.txt",
+      "text_sha256": "741e7ddba0bfb889be7e7031b5626cc8fd1952794409ffbf2cff6991cf8a0968",
+      "ansi": "wake-hall-80x24-truecolor.ans",
+      "ansi_sha256": "8af55da375e7b7b4bf0a2df290cbfcae70cb912cf4caabf1c8150a85a8995811",
+      "style": "wake-hall-80x24-truecolor.json",
+      "style_sha256": "c10ca739ae90d34cfa1ebfe2f084f4b7275fe48731e0e8b9d93536bdcbe21f8c",
+      "source_directory": "80x24\\p5-proof"
+    },
+    {
+      "capture": "training-drone-80x24-truecolor",
+      "size": [
+        80,
+        24
+      ],
+      "tier": "truecolor",
+      "text": "training-drone-80x24-truecolor.txt",
+      "text_sha256": "346b27fcb5979d0d41ecc158f4271c02100fa77b821f916eb32bcdeb306d70ec",
+      "ansi": "training-drone-80x24-truecolor.ans",
+      "ansi_sha256": "2fdd2ba5a95c0515f6c606ec950e5d90aed1d3644f9c220bf0258b4ae72c9916",
+      "style": "training-drone-80x24-truecolor.json",
+      "style_sha256": "5ad9fc26910b694a0297ab671c2854b23db4c4c9356037bb68f4d167b58c623f",
+      "source_directory": "80x24\\p5-proof"
+    },
+    {
+      "capture": "training-complete-80x24-truecolor",
+      "size": [
+        80,
+        24
+      ],
+      "tier": "truecolor",
+      "text": "training-complete-80x24-truecolor.txt",
+      "text_sha256": "ccaf9fb6b112fa87c4c74c3b21e68697095f3cd915cc1e1374cd80d68c55c310",
+      "ansi": "training-complete-80x24-truecolor.ans",
+      "ansi_sha256": "9abb5c7a5edc79053d3f445465de9fd21b24de1c9afc833abb77ac0c10394c08",
+      "style": "training-complete-80x24-truecolor.json",
+      "style_sha256": "37fab3be9fae48f8dfe5861949ee5dcf151e12197462a00d0633fb75576117af",
+      "source_directory": "80x24\\p5-proof"
+    },
+    {
+      "capture": "meridian-plaza-80x24-truecolor",
+      "size": [
+        80,
+        24
+      ],
+      "tier": "truecolor",
+      "text": "meridian-plaza-80x24-truecolor.txt",
+      "text_sha256": "38dd212fa60c4b44be3cba852a95dc2f7907da4ef355512740f5048c64c3798e",
+      "ansi": "meridian-plaza-80x24-truecolor.ans",
+      "ansi_sha256": "030cf0eaa8a9872f8e1ff395471b99f13e8285fcbb7ce68cdf27fe5ea4671083",
+      "style": "meridian-plaza-80x24-truecolor.json",
+      "style_sha256": "6496980041703a585ae8cd89d8661f0bdccd5d26079603066280e64161884a55",
+      "source_directory": "80x24\\p5-proof"
+    },
+    {
+      "capture": "inventory-80x24-truecolor",
+      "size": [
+        80,
+        24
+      ],
+      "tier": "truecolor",
+      "text": "inventory-80x24-truecolor.txt",
+      "text_sha256": "d61d6385272c5c7c111917034b5f0f140ddff25aca0361ab86e6100038354007",
+      "ansi": "inventory-80x24-truecolor.ans",
+      "ansi_sha256": "917e5c59abeeec8ea5408e4507994337dee9843fc3eb2371f3c8c5f763948aea",
+      "style": "inventory-80x24-truecolor.json",
+      "style_sha256": "b5c26cb8e7d1d50918089bf708639b76c4c5ad90ef68a8062d1433e4e495f7a7",
+      "source_directory": "80x24\\p5-proof"
+    },
+    {
+      "capture": "contracts-80x24-truecolor",
+      "size": [
+        80,
+        24
+      ],
+      "tier": "truecolor",
+      "text": "contracts-80x24-truecolor.txt",
+      "text_sha256": "a75139c19bffc20d0d42622502f0f5effee0ad18fc80504a196a31fe7fd45c8a",
+      "ansi": "contracts-80x24-truecolor.ans",
+      "ansi_sha256": "6e77d85495820213f3b6b5877d3e8a02dbf2f0c34a344d380367255363c0ddeb",
+      "style": "contracts-80x24-truecolor.json",
+      "style_sha256": "afca47e04218c909cc72095df553c59f784872e0d167c2e3855037ba2a43f549",
+      "source_directory": "80x24\\p5-proof"
+    },
+    {
+      "capture": "help-80x24-truecolor",
+      "size": [
+        80,
+        24
+      ],
+      "tier": "truecolor",
+      "text": "help-80x24-truecolor.txt",
+      "text_sha256": "b58e672c5e7d2499d32e67f963f382252918d630eb2dc6040ff6d573c7fcccee",
+      "ansi": "help-80x24-truecolor.ans",
+      "ansi_sha256": "4e08a290ade0501c41fa2a8849ba21e3ec2a3ea4b9e3acc3233ccb0e4fdded7e",
+      "style": "help-80x24-truecolor.json",
+      "style_sha256": "c73dc3cdb3ece117973689c3dd2f219eac06beb436c6d6631a0763bb63fc1f42",
+      "source_directory": "80x24\\p5-proof"
+    }
+  ],
+  "budget_evidence": "Separate P5 comparison artifact and exact-head verdict on PR #110"
+}

@@ -15,35 +15,43 @@ def rows(lines: list[dict[str, Any]], width: int) -> list[dict[str, str]]:
     result = []
     for line in lines:
         prefix = "[" + PREFIXES.get(line.get("channel", "system"), line.get("channel", "system")) + "] "
-        text = clean_text(prefix + str(line.get("text", "")))
-        indent = ""
-        while text:
-            used, end = len(indent), 0
-            for char in text:
-                size = cell_width(char)
-                if used + size > width:
-                    break
-                used += size
-                end += 1
-            if end == len(text):
-                result.append({"text": indent + text, "role": line.get("role", "text")})
+        result.extend({"text": text, "role": line.get("role", "text")}
+                      for text in wrap(prefix + str(line.get("text", "")), width))
+    return result
+
+
+def wrap(text: str, width: int, *, continuation: int = 2) -> list[str]:
+    """#97's word wrap, shared by the legacy log and P5's guttered log."""
+    if width < continuation + 2:
+        raise ValueError("log width must leave room for an indented wide glyph")
+    text, indent, result = clean_text(text), '', []
+    while text:
+        used, end = len(indent), 0
+        for char in text:
+            size = cell_width(char)
+            if used + size > width:
                 break
-            # A space just beyond the fitting prefix is also a valid break.
-            # Only an overlong word is split, always between whole glyphs.
-            boundary = text.rfind(" ", 0, end + 1)
-            if 0 < boundary < end:
-                word_width = 0
-                for char in text[boundary + 1:]:
-                    if char == " ":
-                        break
-                    word_width += cell_width(char)
-                    if word_width > width - 2:
-                        boundary = -1
-                        break
-            if boundary > 0:
-                current, text = text[:boundary].rstrip(" "), text[boundary + 1:].lstrip(" ")
-            else:
-                current, text = text[:end], text[end:]
-            result.append({"text": indent + current, "role": line.get("role", "text")})
-            indent = "  "
+            used += size
+            end += 1
+        if end == len(text):
+            result.append(indent + text)
+            break
+        # A space just beyond the fitting prefix is also a valid break.
+        # Only an overlong word is split, always between whole glyphs.
+        boundary = text.rfind(' ', 0, end + 1)
+        if 0 < boundary < end:
+            word_width = 0
+            for char in text[boundary + 1:]:
+                if char == ' ':
+                    break
+                word_width += cell_width(char)
+                if word_width > width - continuation:
+                    boundary = -1
+                    break
+        if boundary > 0:
+            current, text = text[:boundary].rstrip(' '), text[boundary + 1:].lstrip(' ')
+        else:
+            current, text = text[:end], text[end:]
+        result.append(indent + current)
+        indent = ' ' * continuation
     return result

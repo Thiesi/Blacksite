@@ -69,6 +69,7 @@ class Layout:
     log: Rect
     hint: Rect
     text_area: Rect
+    full_text_area: Rect
     overlay: Rect
     wide: bool
     menu: MenuLayout
@@ -123,6 +124,7 @@ def compute(width: int, height: int, tier: LayoutTier = "current") -> Layout:
         log=Rect(1, viewport.bottom + 1, width - 2, logs),
         hint=Rect(1, height - 2, width - 2, 1),
         text_area=Rect(viewport.x + 1, viewport.y + 1, viewport.width - 2, viewport.height - 2),
+        full_text_area=Rect(2, 2, width - 4, viewport.height - 2),
         overlay=overlay, wide=wide, menu=menu, contract_menu=contract_menu,
         briefing=Page(width - 29, max(1, viewport.height - 3)),
         city=Page(width - 28, max(1, height - 10)),

@@ -1,6 +1,7 @@
 """Two I/O pumps around the pure display model."""
 
 import asyncio
+import os
 import signal
 import time
 import uuid
@@ -42,7 +43,8 @@ async def read_input(terminal: Terminal, decoder: KeyDecoder) -> bytes | None:
 
 
 async def run(info: DoorInfo, terminal: Terminal) -> None:
-    model = Display(info, uuid.uuid4().hex)
+    # One per-launch switch, off by default; no input key or protocol field.
+    model = Display(info, uuid.uuid4().hex, presentation=os.environ.get('DOOR_BLACKSITE_PRESENTATION') == '1')
     connection = Connection()
     decoder = KeyDecoder()
     changed = asyncio.Event()

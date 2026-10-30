@@ -1,0 +1,24 @@
+╔═INVENTORY═SAFE═══════════════════════════════════════════════════S10R80══════╗
+║    ┌─ INVENTORY ────────────────────────────────────────────────────────┐    ║
+║    │ Choice                                                             │    ║
+║    │ Kestrel Issue Sidearm  1  1kg    weapon_side                       │    ║
+║    │ 9x pistol rounds  48  0kg                                          │    ║
+║    │ Kestrel Issue Baton  1  0.9kg    melee                             │    ║
+║    │ Sablier Med Patch  1  0kg                                          │    ║
+║    │ Sablier Med Patch  1  0kg    quick1                                │    ║
+║    │ Kestrel Ration Bar  1  0kg                                         │    ║
+║    │ Kestrel Ration Bar  1  0kg                                         │    ║
+║    │ Vesper's Card  1  0.1kg  S                                         │    ║
+║    │ Kestrel Issue Vest  1  3kg    body                                 │    ║
+║    │ Carry 5/20 kg. 3 secured slots.                                    │    ║
+║    │ Quality 100%                                                       │    ║
+║    │ Damage 12, range 6.                                                │    ║
+║    │ The starter pistol. Everyone in Karst has fired one; most of th... │    ║
+║    │ q equip  f slot  e equipment  s secure  d drop  x split  u use ... │    ║
+║    └────────────────────────────────────────────────────────────────────┘    ║
+╟──────────────────────────────────────────────────────────────────────────────╢
+║» You cross Meridian Plaza under the Ring. You hear tram bells and the        ║
+║  fountain. Wardens watch every corner.                                       ║
+║√ You gain 25 XP.                                                             ║
+║? help  Esc/B returns                                                         ║
+╚══════════════════════════════════════════════════════════════════════════════ 

@@ -1,0 +1,114 @@
+{
+  "schema": 1,
+  "execution_head": "c59c90f7093a10ecc7846085bc6b514f0efe3855",
+  "run": 41124990753,
+  "python_tree_sha256": "57f991279d8db3a1ed14b701ad457c87403309832550ad376270f2e3aacd17fe",
+  "human_approval": false,
+  "transport": "real NetBBS v7.45.0 Telnet -> source-matched native stdio wheel",
+  "captures": [
+    {
+      "capture": "wake-hall-80x24-256",
+      "size": [
+        80,
+        24
+      ],
+      "tier": "256",
+      "text": "wake-hall-80x24-256.txt",
+      "text_sha256": "fea1cedb648bb9ef385e8e59cbbe8a165e0319e9a8d97eaf6178e2c070220e86",
+      "ansi": "wake-hall-80x24-256.ans",
+      "ansi_sha256": "a8631e02f9b57cc26e69c4e36f9c7e1e55f7edebd2afecb9daf29a67f450bbf7",
+      "style": "wake-hall-80x24-256.json",
+      "style_sha256": "13fbe0251f1aed5a22976917a6447c08c809b16970e744d2ae3de29971265c7b",
+      "source_directory": "80x24\\p5-proof",
+      "header": "╔═VATSIDE═Wake Hall═POCKET══════════════════════════════╤════════════20:43═════╗",
+      "hint": "║The corridor teaches targeting. Tab selects; F fires; B skip...  Ctrl-X leaves║",
+      "world_log": [
+        "║» You wake on a gurney under a number. White light, warm plastic, a floor     ║",
+        "║  drain. Past the cards, a corridor. Past the corridor, a terminal.           ║",
+        "║                                                                              ║"
+      ]
+    },
+    {
+      "capture": "training-drone-80x24-16",
+      "size": [
+        80,
+        24
+      ],
+      "tier": "16",
+      "text": "training-drone-80x24-16.txt",
+      "text_sha256": "d5b8efddfbd04532d54522cd27d9e87773ace1b98507a2dc48fc9c3c69d93cc4",
+      "ansi": "training-drone-80x24-16.ans",
+      "ansi_sha256": "c13abe90a30046537638abc184b553b2acb418e74235be7275dbfdb39294ee51",
+      "style": "training-drone-80x24-16.json",
+      "style_sha256": "7a723a2697ba70b7e04d639671972469ecda7297e92bc273979a5ff601ebb700",
+      "source_directory": "80x24\\p5-proof",
+      "header": "╔═...═POCKET══The corridor teaches targeting. Tab selects; F fires; B s...═════╗",
+      "hint": "║E use Corridor door  ? help  Tab target  F fire  X weapon  1-5 quick          ║",
+      "world_log": [
+        "║‼ You raise your weapon. Fire again after two seconds; the target can move to ║",
+        "║  safety.                                                                     ║",
+        "║‼ Training drone hits you for 1.                                              ║"
+      ]
+    }
+  ],
+  "receipts": [
+    {
+      "head": "c59c90f7093a10ecc7846085bc6b514f0efe3855",
+      "passed": true,
+      "transport": "NetBBS Telnet -> registered native stdio, DOOR_BLACKSITE_PRESENTATION=1",
+      "show": true,
+      "console": {
+        "isatty": true,
+        "size": [
+          132,
+          50
+        ]
+      },
+      "human_approval": false,
+      "source_matched_wheel": {
+        "version": "0.0.20",
+        "file": "/home/runner/work/_temp/p5-venv/lib/python3.12/site-packages/blacksite/__init__.py",
+        "python_tree_sha256": "57f991279d8db3a1ed14b701ad457c87403309832550ad376270f2e3aacd17fe"
+      },
+      "result_sha256": "2019fa8bdaed8fa22e2be7f450675cfb8751970696942a2c7cf583f8600c5897"
+    },
+    {
+      "head": "c59c90f7093a10ecc7846085bc6b514f0efe3855",
+      "passed": true,
+      "transport": "NetBBS Telnet -> registered native stdio, DOOR_BLACKSITE_PRESENTATION=1",
+      "show": true,
+      "console": {
+        "isatty": true,
+        "size": [
+          80,
+          24
+        ]
+      },
+      "human_approval": false,
+      "source_matched_wheel": {
+        "version": "0.0.20",
+        "file": "/home/runner/work/_temp/p5-venv/lib/python3.12/site-packages/blacksite/__init__.py",
+        "python_tree_sha256": "57f991279d8db3a1ed14b701ad457c87403309832550ad376270f2e3aacd17fe"
+      },
+      "result_sha256": "597d4e49f68da228213fb623521b88854338c1343ad65a955c4edd709b90916b"
+    }
+  ],
+  "artifacts": [
+    {
+      "id": 13009908960,
+      "name": "p5-native-80x24"
+    },
+    {
+      "id": 13009284691,
+      "name": "p5-native-132x50"
+    }
+  ],
+  "verification": {
+    "original_hashes": 144,
+    "ansi_glyph_style_replays": 48,
+    "native_cases": 6,
+    "complete_name_handle_rows": 12
+  },
+  "goldens_changed_by_this_correction": [],
+  "prior_packet": "p5-client-foundations is historical before TR-3/notice correction; its files are not regenerated"
+}

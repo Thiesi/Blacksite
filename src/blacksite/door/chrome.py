@@ -38,18 +38,29 @@ def _objective_hint(objective: dict[str, Any], width: int | None = None) -> str:
 
 
 def focus_hint(hint: str, width: int, context: list[tuple[str, str]],
-               objective: dict[str, Any] | None = None) -> str:
+               objective: dict[str, Any] | None = None, *,
+               fit_all: bool = False, primary: bool = False,
+               objective_in_panel: bool = False, escape: str = '') -> str:
     """UI 11: objective/cost, E/J, then whole help groups; never clip a key."""
     raw = '  '.join((prefix + ' ' + label).rstrip() for prefix, label in context)
-    if (not raw and not objective) or raw and not hint.startswith(raw):
+    if primary:
+        # A prompt/channel is one priority field, not optional help groups.
+        if escape:
+            escape = truncate(clean_text(escape), width)
+            field = truncate(clean_text(hint), max(0, width - display_width(escape) - 2))
+            return '  '.join(text for text in (field, escape) if text)
+        return truncate(clean_text(hint), width)
+    if not fit_all and ((not raw and not objective) or raw and not hint.startswith(raw)):
         return hint
+    if raw and not hint.startswith(raw):
+        context, raw = [], ''
     labels = [clean_text(label).strip() for _, label in context]
     prefixes = [clean_text(prefix) for prefix, _ in context]
     limits = [display_width(label) for label in labels]
     # A shortened name must retain its whole first word and the ellipsis.
     minima = [min(limit, display_width(label.split()[0])+3) if ' ' in label else limit
               for label, limit in zip(labels, limits)]
-    objective_group = _objective_hint(objective) if objective else ''
+    objective_group = _objective_hint(objective) if objective and not objective_in_panel else ''
 
     def fixed_width() -> int:
         groups = [prefix+(' ' if label else '') for prefix, label in zip(prefixes, labels)]
@@ -66,7 +77,7 @@ def focus_hint(hint: str, width: int, context: list[tuple[str, str]],
         labels.pop()
         limits.pop()
         minima.pop()
-    if objective and not prefixes:
+    if objective and not prefixes and not objective_in_panel:
         objective_group = _objective_hint(objective, width)
     budgets = minima[:]
     available = max(0, width-fixed_width()-sum(budgets))

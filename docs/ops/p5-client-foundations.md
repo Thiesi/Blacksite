@@ -1,0 +1,240 @@
+# P5 client foundations
+
+P5 ports the rule-layer presentation from trial
+`1060c9df2ac6b140db932b4e888989d192502b20`. The integration base is
+`d8b570f0afbf6cd5fd36f4b7fc0d3d326cd1b6ca`, including the owner's merges
+of the wall clarification (#108), hint polish (#109), NetBBS v7.45.0
+floor/canon audit (#111, `62e205e`) and review-process update (#112).
+The original P5 integration and earlier capture runs used
+`22d4971fbc49aebc3553552e6a3f21c939cdaab8` as their main base.
+
+## Launch switch
+
+Set `DOOR_BLACKSITE_PRESENTATION=1` in the registered native door's launch
+environment to enable P5. Leave it absent for the existing renderer.
+The default is off. The switch covers every view kind, nested Wake
+screens, dialogue menus and local help. There is no toggle key or
+protocol field. F9 retains public-terminal services; F5, F7 and F10 gain
+no presentation binding.
+
+NetBBS's frozen profile contract permits custom environment keys only
+under `DOOR_*`; the launch variable uses that namespace.
+
+The client and server must use the same package, as before. This changes
+no gameplay rule, simulation, persisted data, view contract or geometry.
+The palette adds roles without changing existing role values. Both paths
+use P2's `blacksite.layout`, P3's focus and hint fitter, and the existing
+palette lookup and cell buffer. The old content renderers remain intact.
+Text uses an additional full-width rectangle computed in the shared
+layout; server pagination and existing rectangles remain unchanged.
+Local help and disconnected screens keep the last server-reported body
+safety; opening a local screen does not imply safe ground.
+
+## Trial corrections
+
+Canon is UI sections 1, 2, 4 and 11 and architecture section 5.5.
+The [technical answer](https://github.com/Thiesi/Blacksite/issues/106#issuecomment-6524134331)
+and [HERE addendum](https://github.com/Thiesi/Blacksite/issues/106#issuecomment-6524153930)
+resolve the preflight differences without changing canon or server data.
+
+| Trial behavior | P5 behavior |
+|---|---|
+| Walls depend on trial looks | UI 2.2: blank facade faces at 256/truecolor, `█` at 16; near-black blank roofs. Generic floor has grain; remembered floor retains grain beside opaque structure. No authored place themes yet. |
+| Trial renderer/view keys | One default-off launch switch; no added key or intent. |
+| Trial hint painter fits its own groups | P3 fits once; the new chrome draws its exact output, including prompt/channel priority. |
+| Actor shape from trial `kind`; jacked is reverse | P4 `glyph_id`, presented `class` and `jacked`; own registered shape, dim while jacked, never reverse while jacked, including hostile bodies. You and hostiles otherwise retain reverse. NEARBY/CREW name jacked state. |
+| Log classification from channel/text | P4's declared `kind`, `speaker` and `speaker_role`; canon gutters. Notices remain on P4's toast surface. |
+| Cross-kind identical text can merge | Only identical same-kind lines coalesce within ten seconds. Reward lines merge within five seconds, retaining XP totals and other reward text. |
+| New log lines can displace immediate danger | Recent danger/combat rows retain visible capacity for ten seconds after delivery, measured by the injected client clock. When protected rows themselves exceed capacity, newest protected rows win. |
+| Auto infers threats and chooses other paradigms | Pure provisional map-only decider, no threat input, scene/look or clock read. Other Auto views need a later server contract. |
+| HERE scans objects and exits | Only P3 focus/jack-focus labels and adjacent cover classes in nonnegative, sight-masked view tiles. No memory lookup, object/exit scan or hidden-exit inference. |
+| Trial geometry and role lookup | Shared P2 rectangles and Palette lookup, including bounded background-role cache keys. No trial deep-camera formula. |
+| Global dim-colour cache | Immutable xterm table and per-client Paint style cache. |
+
+Lattice drawing remains the existing renderer until P7; its outer chrome
+uses P5. Place records, themes, charting, street/scene/look rendering,
+ambient emission, place cards and `Toast.full` are not ported.
+Lattice control-label sentence case stays with P7. P3 focus-cost work
+stays with S29.
+
+The rule layer resolves each disclosed terrain index once per frame and
+reuses its seen/remembered style. Cardinal-neighbour checks read those
+resolved IDs. This removes repeated work on fully known ground; that
+optimization preserved the P5 glyph/style goldens before the review
+corrections below.
+
+## Validation and acceptance
+
+The new headless style goldens cover title, text, dead, menu, talker,
+Wake, zone and Lattice at 80x24 and 132x50 in 16/256/truecolor, with a
+wide-character handle. They live separately under
+`tests/presentation/golden/p5`; the existing goldens are unchanged.
+Regenerate only after reviewing a deliberate P5 presentation correction:
+
+```
+pytest tests/presentation/test_client_foundations.py --update-goldens
+```
+
+Run `pytest` at the root for regression checks, including the existing
+off-path glyph/style goldens and P1 mechanics fingerprint. The new tests
+also check wall/roof treatment, contrast in all palette variants,
+adjacent grain for every shipped opaque tile class, jacked-hostile
+precedence, HERE disclosure, map-only context, unchanged keys and the
+hint row.
+
+The [TR-1 decision](https://github.com/Thiesi/Blacksite/pull/110#issuecomment-6528855270)
+fixes contrast in CIE L* (sRGB/D65), after the colour tier maps it. Mean
+sRGB is not the contrast metric. The shared `BAND_STEP` is 8 L*: structure
+stands above ground, the darkest thing above structure, and the darkest
+person above the darkest thing. This is a floor order, not a requirement
+that a person outshine a white exit. Floor grain stays below structure.
+
+`Paint` caches person-role lifts in LCh, keeping hue and reducing chroma
+only to fit sRGB; 256 colours choose a floor-compliant xterm index by hue
+distance. The shared hue tolerance is 10 degrees. Reverse video puts the
+role colour behind you or a hostile. Jacked bodies are dimmed first, then
+kept above structure plus the step and below the people floor. Palette
+role values and the switch-off path are untouched.
+
+TR-3 also covers supported operator `content.local` palette overrides.
+If a floor/window has no representable colour, Paint retains the original
+colour passed to the lift and caches it. This prevents a caller crash;
+it does not certify the override's contrast. The shipped-palette tests
+still require every floor and forbid taking that fallback.
+
+At 16 colours, people use bright intensity; Halvard uses light grey 7,
+while dark grey 8 marks jacked bodies. Ground, structures and thing roles
+keep their existing treatment. Every palette variant is checked. P5 draws
+no light grounds, but the same helper measures L* distance from a synthetic
+light ground in tests; P6 must apply it to its real `_light` themes.
+
+The [creative blockers](https://github.com/Thiesi/Blacksite/pull/110#issuecomment-6528893124)
+and [engineering limits](https://github.com/Thiesi/Blacksite/pull/110#issuecomment-6528908391)
+also require these corrections:
+
+- Both log paths share #97's word wrapper; only an overlong word splits.
+- The separator contains rule glyphs only. Structured objectives use NOW
+  at 132 columns and P3's hint fitter at 80 columns.
+- Notices use P3's priority hint field, ahead of objective/context/help,
+  with escape actions retained. They stay for at least eight seconds and
+  until a key after arrival. A prompt/channel/exit confirmation, hazard,
+  hostile target or recent declared danger/combat line moves the notice
+  into the header's bounded right segment. It returns to the hint when
+  those declarations clear. Each arrival adds one local notice entry to
+  scrollback; the visible world log excludes it. The server and legacy
+  toast remain unchanged. This corrects the earlier log-placement scope:
+  [notice decision](https://github.com/Thiesi/Blacksite/pull/110#issuecomment-6532427268).
+- Every new hint uses P3's one fitter, including empty focus, menus, text
+  and priority prompts. Legacy fitting keeps its existing defaults.
+- One origin centres small viewport axes on the disclosed player and
+  translates every terrain/actor/object/waypoint/beacon/hazard layer.
+  Full-sized axes retain the server crop. World coordinates do not change.
+- NEARBY keeps the entry's explicit `!`, `~` or `+` relation tag.
+
+The corrected P5 goldens change 39 files: dead, lattice, menu, talker,
+text and Wake at both sizes in all three tiers, plus zone at 132x50 in all
+three tiers. The six title and three 80x24 zone goldens stay identical.
+No existing switch-off golden or mechanics fingerprint is rebaselined.
+
+`scripts/presentation_p5.py --output PATH` compares switch off/on on
+P1's `v1-provisional` closed-walk workload, with the same seeds, normal
+NPCs and initial knowledge. It additionally measures fully known 132x50
+terrain in both arms. That explicit knowledge fixture belongs only to
+the budget workload; it is not charting or native play evidence.
+
+Frame assertions are render p95 at most 100 ms and delta output at most
+16 KiB. The script records CPU against 120 CPU s/hour and whether the new
+path is worse. The reference is hosted Linux at twelve real seconds per
+activity; short runs and Windows process-CPU totals are diagnostic only.
+Any regression needs a measured explanation in the PR.
+
+For native acceptance, build a clean committed wheel and install it into
+an isolated interpreter. With NetBBS v7.45.0 installed for the runner:
+
+```
+python scripts/accept_p5_netbbs.py --root PATH --door-python PYTHON --size 80x24 --show
+```
+
+This runs ordinary Wake creation, a live training-drone fight, walking
+through Wake Hall and the Clinic to Meridian Plaza and its patrol route,
+inventory, contracts and help. The truecolor Plaza receipt checks a live
+NPC glyph's lifted terminal colour against Paint. The Blacksite character
+name contains a wide character entered
+through ordinary creation. Released NetBBS account names are ASCII-only,
+and its door API uses that username as `handle`: no wide BBS handle can
+be tested natively without bypassing the host's supported contract. The
+headless cases still exercise a synthetic wide BBS handle. This native
+acceptance distinction is
+[accepted for P5](https://github.com/Thiesi/Blacksite/issues/106#issuecomment-6526049298).
+Short native test names keep the wide name and differing ASCII handle
+visible together in full at 132x50. The live packet covers both sizes
+in 16 and 256 colours as well as truecolor.
+Both sizes run in all three tiers. The script registers the
+default-off switch explicitly for this private node, verifies the new
+safe frame and the installed wheel's Python tree, and records text,
+style, ordered ANSI and hashes at each step. It changes no position,
+inventory, funds, NPC, rule or clock state.
+
+Resize the attached terminal to the selected size. Run a second packet
+with `--size 132x50` after resizing. The receipt records the attached
+terminal dimensions and checks them against the selected size.
+
+The P5 Actions workflow runs this acceptance with `--show` through a
+sized, attached Linux PTY, retaining the console stream and native
+captures as artifacts. The full existing native matrix remains the
+switch-off check. Neither workflow grants visual, creative or human
+acceptance. The presentation lead co-reviews P5; merge authority follows
+[technical review section 7.1](../plan/04-technical-review.md#71-delegated-merge).
+S25 layout and the full S27 human/presentation gates remain held.
+
+The current [notice correction packet](captures/p5-notice-corrections/README.md)
+contains the two requested fresh 80x24 Wake Hall and drone-fight captures,
+executed at `c59c90f7093a10ecc7846085bc6b514f0efe3855`. It identifies the
+original ANSI/style artifacts, hashes, source-matched wheel and PTY
+receipts. The correction changes no existing P5 style golden. Tests,
+runtime, scripts, workflows and packaging match the evidence-only commit;
+final-head checks and review decisions are recorded on PR #110.
+
+The earlier [native review packet](captures/p5-client-foundations/README.md)
+contains all 48 untrimmed text captures, original capture hashes, attached
+terminal receipts and the exact execution head. Raw ANSI and large style
+snapshots remain in the linked CI artifacts. The packet records the wide
+character-name / ASCII BBS-handle distinction and verifies both fields in
+the same pinned row at 132x50. It grants no creative or human approval.
+The existing packet contains historical v7.45.0 captures before TR-3 and
+the corrected notice behavior. It was
+executed at `b9896d4375b90f94f8b762fba84bc25a08911b25`. Its change list
+names every corrected P5 golden and every changed text/style capture,
+including the requested Wake Hall, drone fight and lifted Plaza person.
+Earlier captures retain their actual provenance in Git history and the
+earlier runs' artifacts. The owner merged the floor/canon PR #111 before
+P5 was rebased onto it. That earlier packet does not prove the later
+TR-3/notice corrections; the linked correction packet supplies those.
+Other native workflows inherit #111's v7.45.0 pins; final-head results
+and budget changes against `450d918` are recorded on PR #110.
+The new charset admission and check-order rules remain S30/S31 work;
+this rebase adds no runtime implementation of those future contracts.
+
+## Representative playable scenario
+
+Start with a new ASCII NetBBS account, a registered native door with the
+switch enabled, and a UTF-8 ANSI terminal at the chosen size and tier.
+
+1. Launch Blacksite. Choose the first archetype with Enter, enter a wide
+   character name, press S to skip the briefing and Esc to take no card.
+   Expect the new chrome through the Wake screens, then Wake Hall's safe
+   frame and a wide name in the side panel.
+2. Follow the training objective to the range. Use Tab to select the
+   training drone and F to fire until the objective completes. Expect the
+   selected drone's target panel, combat feedback and completion state.
+3. Walk through the Clinic exits to Meridian Plaza using movement keys.
+   Expect each hub's title and rule map, stable frame and updated focus
+   hints. At 132x50 the complete differing handle and name share the
+   pinned row.
+4. Open inventory with I, contracts with Q and help with ?, returning
+   with Esc after each. Expect each screen's content immediately, shared
+   chrome, full-width help and a return to the unchanged Plaza position.
+
+Repeat at 80x24 and 132x50 in 16 and 256 colours; the recorded packet also
+includes truecolor. These steps describe what the native script plays;
+they are not a claim that a person granted creative or human acceptance.
