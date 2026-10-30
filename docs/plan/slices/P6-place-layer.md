@@ -71,12 +71,17 @@ P6 lands as two PRs, in order.
    - no look glyph is a rule glyph (UI §2.2);
    - 16-colour backgrounds are 0 to 7;
    - ambient lines follow the voice rules;
-   - **contrast:** each theme's ground and wall roles meet P5's band
-     floors (`paint.BAND_STEP`, structure ≥ ground + 8 L*, things and
-     people floors kept). A `luma: light` theme is measured with
-     `paint.light_distance` from its ground, and its people roles use
-     their `_light` variants. Any `_light` role P6 adds must exist in
-     all three tiers and variants;
+   - **contrast, from each theme's own ground:**
+     - Every band floor (`paint.BAND_STEP`; structure, things and
+       people) is measured from the drawn ground of each theme **and
+       of each region**, after tier mapping, not from black.
+     - A light ground, from a `luma: light` theme or a light region
+       role, is measured with `paint.light_distance`. Its people roles
+       use their `_light` variants.
+     - Any `_light` role P6 adds must exist in all three tiers and
+       variants;
+   - **signs are readable:** sign letters are a thing-band role and meet
+     the thing floor against the wall face they sit on;
    - **charted (architecture §5.5.5):** the validator rejects any
      `public` region, or charted pocket rectangle, that:
      - contains a hidden exit or a passable tile next to one;
@@ -110,12 +115,22 @@ P6 lands as two PRs, in order.
      the ground grain from `texture`, using a stable per-tile hash and
      never `zone.rng` or the wall clock.
    - It also draws regions, signs on wall faces, floor marks and glints.
+   - At 16 colours, sign letters are drawn on the wall's background
+     colour, never on `█` (UI §2.2: letter colour on black).
+   - **People lift per ground.** `Paint` lifts a person role against the
+     ground of the cell it draws on: the theme's ground, or a region's.
+     The lift is cached per (role, ground), so there is still no
+     per-cell LCh work. P5's non-raising fallback still applies.
    - Charted tiles are drawn as known (UI §2.3 dimming).
    - §2.2 still holds in every theme: a floor tile beside a wall face
      always carries grain, and walls follow the §2.2 tier table.
    - HERE uses `looks.names` for a visible adjacent cover tile when a
-     name is sent (for example `barrels`), and otherwise P5's generic
-     cover label. It still names nothing else.
+     name is sent, and otherwise P5's generic cover label. Each HERE
+     entry leads with its thing's shape glyph (#114), for example
+     `▒ barrels`, `+ Corridor door` or `» Clinic Row`. HERE still names
+     only P3's focus and visible adjacent cover.
+   - The header notice no longer shortens the zone name to `...` while
+     cells at the right end stay empty (#114).
    - All colour goes through `Paint`, which already lifts people roles
      and falls back without raising (P5 TR-3).
    - The legacy renderer ignores the new fields.
@@ -134,12 +149,16 @@ P6 lands as two PRs, in order.
    proposes to chart, among these three. That moves the mechanics
    fingerprint for those zones only. The PR lists the move, and the
    owner approves it there (plan §11 note 5).
-4. **Spawner spread.** Widen spawner regions so NPCs use the space, for
+4. **Charting proposal.** Meridian Plaza is charted (D1, #69 §8.1).
+   The presentation lead proposes Clinic Row and Sodium Row in the
+   same PR, listing each region against architecture §5.5.5, so the
+   owner sees the whole fingerprint move in one place.
+5. **Spawner spread.** Widen spawner regions so NPCs use the space, for
    example the Plaza civilians now held in x5 to 22, y3 to 8. This is
    content only. Spawner regions are not in the rule projection, so the
    fingerprint does not move for it. Walk and budget goldens that
    include live NPCs are regenerated and listed.
-5. No geometry change. Room size, alleys and furniture-as-tiles belong
+6. No geometry change. Room size, alleys and furniture-as-tiles belong
    to S25c under S25's withheld approval.
 
 ## Out of scope
@@ -190,7 +209,15 @@ method, switch on, on the hosted Linux reference.
   flagged `charted` moves only its own projection entry.
 - Style goldens of the fixture zone at 80x24 and 132x50 in three tiers,
   in dark and light themes. Band floors hold after the actual tier
-  mapping on the light ground.
+  mapping, measured from each theme's ground and each region's ground.
+- A person standing on a region ground lighter than its theme's ground
+  meets the people floor against that region, and the lift is cached
+  per (role, ground).
+- Signs: the validator rejects letters below the thing floor against
+  their wall face, and at 16 colours sign letters render on the wall's
+  background colour, never on `█`.
+- HERE leads each entry with its shape glyph, and the header notice
+  keeps the zone name when there is room at the right end.
 - §2.2's render test in every fixture theme: no bare floor beside a
   wall face.
 - Grain is stable: the same tile gives the same grain across frames and
@@ -206,11 +233,27 @@ method, switch on, on the hosted Linux reference.
 - the full native matrix green with the switch off.
 
 **P6b:**
-- **Live walk.** The walk the presentation lead names from proposal #69
-  §8, reproduced live through NetBBS Telnet at 80x24 and 132x50, in 256
-  and 16 colours, with the switch on (plan §11 note 6: no teleports and
-  no local handle override). Text and style captures, committed under
-  the evidence rule.
+- **Live walk.** Proposal #69's §8 walk, trimmed to P6's zones and
+  extended to Sodium Row. It is reproduced live through NetBBS Telnet
+  with the switch on, with no teleports and no local handle override
+  (plan §11 note 6):
+  1. Wake Hall to Clinic Row.
+  2. In through a clinic to its public terminal, and back out. Jack in
+     and out there; the Lattice frames are judged in P7.
+  3. The boulevard outside the pharmacy (#69 §8.2).
+  4. North into Meridian Plaza, stopping at its second public terminal
+     (#69 §8.1).
+  5. South through `to-sodium-row`, then east along Sodium Row to the
+     Tin Halo door, without entering it. The Tin Halo interior is a
+     separate zone, not part of P6b.
+
+  Capture each of these at 80x24 and 132x50, in 256 and 16 colours.
+  Text and style captures are committed under the evidence rule.
+  - the clinic interior after leaving it (known dimming);
+  - the pharmacy frontage;
+  - the Plaza terminal;
+  - the Sodium Row entry;
+  - the Tin Halo frontage.
 - **The presentation lead's sign-off.**
 - **H1** by the owner for Meridian Plaza, Clinic Row and Sodium Row:
   - plan §10.3 criteria 1 to 7, judged by a reviewer who has not read
@@ -228,8 +271,9 @@ approval stays withheld.
 ## Related work outside the slice
 
 - **V1 measurements.** The presentation lead's V1 measurements (plan
-  §13.7), now taken against the P5 frame. They are the presentation
-  lead's deliverable and do not gate P6a.
-- **#114 follow-ups.** HERE's leading shape glyph and the width of the
-  header notice may be picked up in P6a if the presentation lead asks
-  at preflight. Otherwise they stay in #114.
+  §13.7), now taken against the P5 frame. They come before the
+  presentation lead's P6b sign-off and are attached to the P6b PR, so
+  H1 sees them. They do not gate P6a, and they are not a merge gate.
+- **#114 follow-ups.** HERE's leading shape glyph and the header notice
+  width are in P6a (above). The tutorial line's length is server
+  content and stays in #114.
