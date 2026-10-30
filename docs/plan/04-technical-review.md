@@ -219,7 +219,10 @@ Decided by the owner on 2026-10-30. The technical lead may merge a PR
 only when every condition holds at the current head:
 
 1. **Record.** The technical review record says ready to merge at that
-   exact head SHA, against the current base. For the technical lead's
+   exact head SHA, against the current base. A record retargeted under
+   §7 counts only if its retarget note lists every file the push changed
+   and each change is a slice-done mark or a typo; otherwise a new
+   review is needed. For the technical lead's
    own docs and process PRs, which have no independent technical review,
    the automated review is triaged and either the presentation lead has
    co-signed on the PR or the owner has applied `no-technical-review`.
@@ -235,7 +238,11 @@ only when every condition holds at the current head:
    re-scopes no slice, changes no adopted plan decision, and moves no
    golden or fingerprint beyond what its slice explicitly allows. A
    class E canon or spec change (plan §10.1) also needs the owner's
-   approval of its substance, recorded on the PR or its issue.
+   approval of its substance, recorded on the PR or its issue. A PR
+   that changes the merge rules themselves always waits for the owner:
+   §7, §7.1, §8 and the gate script and workflow, the
+   `no-technical-review` rule, the review rules in `AGENTS.md` §3, or
+   the roles in plan §8.
 4. **Presentation.** A presentation-class PR (plan §10.1 class C) has
    the presentation lead's written sign-off on the PR.
 5. **No objection.** No reviewer, agent or the owner has an open
@@ -244,6 +251,11 @@ only when every condition holds at the current head:
 If any condition is missing, the PR waits for the owner. The technical
 lead merges with a squash merge. Afterwards it posts a one-line note on
 the PR and on the queue issue (#82), and reports each merge to the owner.
+The note links, by URL, the record or co-sign and any owner approval it
+relied on. Each must be dated after the last push that changed content;
+a co-sign or approval given on an earlier head does not carry over.
+Every agent posts through the owner's account, so these links are the
+audit trail.
 The owner can narrow or revoke this delegation at any time. It never
 grants a human gate: S25's human layout approval stays withheld until
 the owner grants it.
