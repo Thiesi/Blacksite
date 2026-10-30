@@ -25,8 +25,12 @@ every change to those files and guides since v7.31.0. `door_api` is
 still 5. Profiles, services, the launcher and account validation are
 unchanged. The changes inside API 5 are additive door info fields, the
 optional `season` event type, a host Enter guard at launch and quarter
-block substitution; the bullets below and §8.4 record what Blacksite
-does with them. v7.45.0 is NetBBS's feature-freeze release and is now
+block substitution. Blacksite reads `charset` (§8.4) and draws no
+quarter blocks. It does not use `datetime_format`: game time is shown in
+the game's own terms. `season` matters only to the deferred opt-in
+publication adapter (§8.3). The Enter guard only drops an Enter typed
+right after the door picker's choice; it adds no keypress, so scripted
+native harnesses send the same input as before. v7.45.0 is NetBBS's feature-freeze release and is now
 the floor, so every native CI job pins it and the fields below are
 always present on a supported node.
 
@@ -52,8 +56,8 @@ always present on a supported node.
   `datetime_format` (v7.41.0), `charset` (v7.42.0: `utf-8`, `cp437` or
   `ascii`, the set NetBBS converts door output to) and `quadrants`
   (v7.43.0: whether U+2596-U+259F show; when false NetBBS replaces them
-  with half or full blocks). There is no published `node_fingerprint`, guest flag or user
-  level. A third-party door receives the shared guest account's identity.
+  with half or full blocks). There is no published `node_fingerprint`,
+  guest flag or user level. A third-party door receives the shared guest account's identity.
 - Native stdio resize uses rewritten door info plus opt-in `SIGUSR1`
   (`resize_signal: true`). Custom profile environment uses `DOOR_*`,
   including `DOOR_BLACKSITE_INSTALL_DIR` and an optional
@@ -803,7 +807,8 @@ v7.3.0, 4 with v7.12.0, 5 with v7.31.0. S31 supports API 5 for the
 certified release, clearly refusing older/missing, malformed (including
 boolean) and newer unknown versions before world entry. Ignore unknown
 additive fields within a supported version and permit optional fields
-to be absent; do not guess unknown-version semantics. A future API bump
+to be absent, with one exception: `charset`, which every supported node
+sends (below). Do not guess unknown-version semantics. A future API bump
 requires a bounded compatibility review, not silent acceptance.
 
 S30 honors the boolean `unicode_style`. False means the caller requested
@@ -817,9 +822,13 @@ Auto whose terminal NetBBS could not detect, who gets ASCII output.
 on Auto rather than one who chose ASCII, so the text never says they
 chose it; both cases get the same instruction to select Unicode or
 CP437 in NetBBS. The modern glyph tier requires `charset` to be `utf-8`
-(terminal UI §1). A supported node always sends `charset`; if
-it is missing or not one of the three values, treat the door info as
-malformed and refuse before world entry, as for a bad `door_api`.
+(terminal UI §1). `charset` is the one required field added within
+API 5. Every supported node sends it, so its absence means a NetBBS
+older than the 7.45.0 floor: refuse before world entry with a message
+that tells the SysOp NetBBS 7.45.0 or later is required, not one that
+calls the door info malformed. A present value other than `utf-8`,
+`cp437` or `ascii` is malformed door info and refused like a bad
+`door_api`.
 Blacksite draws no quarter blocks; any future art that does must follow
 `quadrants`, or draw half blocks itself.
 Do not force a preference change or add an ASCII tier. True permits the
