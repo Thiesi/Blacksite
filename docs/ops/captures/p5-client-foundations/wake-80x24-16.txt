@@ -1,0 +1,24 @@
+╔═THE WAKE - Choose your archetype═SAFE════════════════════════════S10P80══════╗
+║    ┌─ THE WAKE - Choose your archetype ─────────────────────────────────┐    ║
+║    │ Choice                                                             │    ║
+║    │ Hardline                                                           │    ║
+║    │ Ghost                                                              │    ║
+║    │ Cantor                                                             │    ║
+║    │ Operator                                                           │    ║
+║    │                                                                    │    ║
+║    │                                                                    │    ║
+║    │                                                                    │    ║
+║    │                                                                    │    ║
+║    │                                                                    │    ║
+║    │ You hold the heavy end. You can use heavy weapons and armour. Your │    ║
+║    │ frame takes the load. Your implant tolerance gains two points.     │    ║
+║    │                                                                    │    ║
+║    │                                                                    │    ║
+║    │ enter select  Esc/B back                                           │    ║
+║    └────────────────────────────────────────────────────────────────────┘    ║
+╟──────────────────────────────────────────────────────────────────────────────╢
+║                                                                              ║
+║                                                                              ║
+║                                                                              ║
+║Enter selects  Esc/B leaves                                                   ║
+╚══════════════════════════════════════════════════════════════════════════════ 

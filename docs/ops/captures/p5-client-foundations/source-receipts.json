@@ -1,0 +1,51 @@
+{
+  "run": 41080513207,
+  "receipts": [
+    {
+      "artifact_id": 12990420104,
+      "artifact_name": "p5-native-132x50",
+      "result_sha256": "1d054c16df17a5623ae82422efd7ee2a12ceeee8b03377202a837a0c7f78c7f5",
+      "head": "4bb5c7ebed145421f0daafc3fff40b9e5b7f088e",
+      "passed": true,
+      "show": true,
+      "console": {
+        "isatty": true,
+        "size": [
+          132,
+          50
+        ]
+      },
+      "source_matched_wheel": {
+        "version": "0.0.20",
+        "file": "/home/runner/work/_temp/p5-venv/lib/python3.12/site-packages/blacksite/__init__.py",
+        "python_tree_sha256": "15caec2f1a3272270a98c40ec7bfd656a941aa0ec4aabaca102cc9db4ba0b921"
+      },
+      "human_approval": false,
+      "transport": "NetBBS Telnet -> registered native stdio, DOOR_BLACKSITE_PRESENTATION=1",
+      "fixtures": "private node/world/accounts only; normal game rules"
+    },
+    {
+      "artifact_id": 12990450114,
+      "artifact_name": "p5-native-80x24",
+      "result_sha256": "f907ad471d89d98863567602f64834685312a65862a3a99641efc14a1517f614",
+      "head": "4bb5c7ebed145421f0daafc3fff40b9e5b7f088e",
+      "passed": true,
+      "show": true,
+      "console": {
+        "isatty": true,
+        "size": [
+          80,
+          24
+        ]
+      },
+      "source_matched_wheel": {
+        "version": "0.0.20",
+        "file": "/home/runner/work/_temp/p5-venv/lib/python3.12/site-packages/blacksite/__init__.py",
+        "python_tree_sha256": "15caec2f1a3272270a98c40ec7bfd656a941aa0ec4aabaca102cc9db4ba0b921"
+      },
+      "human_approval": false,
+      "transport": "NetBBS Telnet -> registered native stdio, DOOR_BLACKSITE_PRESENTATION=1",
+      "fixtures": "private node/world/accounts only; normal game rules"
+    }
+  ]
+}

@@ -1,0 +1,24 @@
+╔═HELP═SAFE════════════════════════════════════════════════════════S10Q80══════╗
+║ HELP                                                                         ║
+║ Ctrl-X then Y leaves. Ctrl-L redraws. Esc/B returns.                         ║
+║ Menus show actions first. Select a row, then its action key.                 ║
+║ A menu never pauses the city.                                                ║
+║                                                                              ║
+║ Arrows move; vi hjkl/yubn moves with the vi keymap.                          ║
+║ Vi j moves down. Ctrl-O jacks. Ctrl-F opens faction chat.                    ║
+║ Ctrl-P opens scrollback. Printable vi keys type in prompts.                  ║
+║                                                                              ║
+║ Arrows                                                                       ║
+║ up  move up                                                                  ║
+║ shift-up  sprint up                                                          ║
+║ down  move down                                                              ║
+║ shift-down  sprint down                                                      ║
+║ left  move left                                                              ║
+║ shift-left  sprint left                                                      ║
+║ Page 1/8  PgUp/PgDn  Esc back                                                ║
+╟──────────────────────────────────────────────────────────────────────────────╢
+║» You cross Meridian Plaza under the Ring. You hear tram bells and the fountai║
+║  n. Wardens watch every corner.                                              ║
+║√ You gain 25 XP.                                                             ║
+║E go to Clinic Row  ? help  Tab target  F fire  X weapon  1-5 quick           ║
+╚══════════════════════════════════════════════════════════════════════════════ 

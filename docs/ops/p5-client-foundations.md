@@ -130,3 +130,10 @@ captures as artifacts. The full existing native matrix remains the
 switch-off check. Neither workflow grants visual, creative or human
 acceptance. The presentation lead co-reviews P5; the owner alone merges.
 S25 layout and the full S27 human/presentation gates remain held.
+
+The committed [native review packet](captures/p5-client-foundations/README.md)
+contains all 48 untrimmed text captures, original capture hashes, attached
+terminal receipts and the exact execution head. Raw ANSI and large style
+snapshots remain in the linked CI artifacts. The packet records the wide
+character-name / ASCII BBS-handle distinction and verifies both fields in
+the same pinned row at 132x50. It grants no creative or human approval.

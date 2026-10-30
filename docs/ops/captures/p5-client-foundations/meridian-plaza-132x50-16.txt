@@ -1,0 +1,50 @@
+╔═THE CORE═Meridian Plaza═SAFE══════════════════════════════════════════════════════════════════════════════╤════════════15:26═════╗
+║                                                                                 ████████                  │─ HERE ───────────────║
+║                                                                            ·············█                 │ Clinic Row           ║
+║                                                                            ···········»·█                 │─ TARGET ─────────────║
+║                                                                           ············@·█                 │ none   Tab picks     ║
+║                                                                            ☻············█                 │─ NEARBY ─────────────║
+║                                                                            $············█                 │ ☻ Ostrom Showroom    ║
+║                                                                            ·············█                 │                      ║
+║                                                                            ·············                  │                      ║
+║                                                                             ············                  │                      ║
+║                                                                             ············                  │                      ║
+║                                                                              ···········                  │                      ║
+║                                                                               ··········                  │                      ║
+║                                                                                ·········                  │                      ║
+║                                                                                 ········                  │                      ║
+║                                                                                   ······                  │                      ║
+║                                                                                       ·                   │                      ║
+║                                                                                                           │                      ║
+║                                                                                                           │                      ║
+║                                                                                                           │                      ║
+║                                                                                                           │                      ║
+║                                                                                                           │                      ║
+║                                                                                                           │                      ║
+║                                                                                                           │                      ║
+║                                                                                                           │                      ║
+║                                                                                                           │                      ║
+║                                                                                                           │                      ║
+║                                                                                                           │                      ║
+║                                                                                                           │                      ║
+║                                                                                                           │                      ║
+║                                                                                                           │                      ║
+║                                                                                                           │                      ║
+║                                                                                                           │──────────────────────║
+║                                                                                                           │ P界132 · S10P132 G1  ║
+║                                                                                                           │ HP  █████████▌ 129   ║
+║                                                                                                           │ STA ██████████ 70    ║
+║                                                                                                           │ SHK ░░░░░░░░░░ 0     ║
+║                                                                                                           │ 200 ch   lease 0/90  ║
+║                                                                                                           │ discharge 25/1500    ║
+╟───────────────────────────────────────────────────────────────────────────────────────────────────────────┴──────────────────────╢
+║* Hit: Training drone. (x2)                                                                                                       ║
+║* The training drone falls silent. The tutorial terminal is ahead.                                                                ║
+║+ You arrive at Clinic Row.                                                                                                       ║
+║» You walk past clinics with their logo in cyan on white. You hear a polite overhead voice. Your clone insurance premium is due.  ║
+║√ You gain 25 XP.                                                                                                                 ║
+║+ You arrive at Meridian Plaza.                                                                                                   ║
+║» You cross Meridian Plaza under the Ring. You hear tram bells and the fountain. Wardens watch every corner.                      ║
+║√ You gain 25 XP.                                                                                                                 ║
+║E go to Clinic Row  ? help  Tab target  F fire  X weapon  1-5 quick  V abilities  I inventory                                     ║
+╚══════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════ 
