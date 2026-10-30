@@ -99,6 +99,11 @@ together. Nothing here changes a rule; it explains them.
   graphic requirement and clean return before world entry, inviting
   Unicode/CP437 selection in NetBBS. Do not silently override preference
   or add an ASCII tier. Missing is unknown; retain the graphic default.
+  `charset: ascii` gets the same return (architecture §8.4), worded for
+  both a caller who chose ASCII and an undetected Telnet caller on Auto.
+  This turns away callers admitted today with `unicode_style: true`
+  (owner decision 2026-10-30, #111); the refusal names the NetBBS
+  setting that lets them in. The modern tier also needs `charset: utf-8`.
   S31 owns platform API/version enforcement and real transport proof.
 - Title screen composition with the tagline block (art itself is S33;
   the text fallback is here).
@@ -185,7 +190,8 @@ unbounded or at least 420 seconds for the seven-minute override test.
   A game override can only shorten it; zero cannot disable a host cap.
   Reconnect does not restart the launch timer. Test finite/unlimited,
   absent/zero override, shorter host/override and invalid values with
-  a fake clock, plus ASCII-preference refusal before character entry.
+  a fake clock, plus ASCII-preference refusal before character entry,
+  and refusal for `unicode_style: true` with `charset: ascii`.
 - Palette changes must re-render through the cell buffer, not by
   re-emitting the last frame with new colours.
 - Keep help text under 76 columns in the source; the client wraps by

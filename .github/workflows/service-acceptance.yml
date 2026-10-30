@@ -91,7 +91,7 @@ jobs:
       - uses: actions/checkout@v4
         with:
           repository: Thiesi/NetBBS
-          ref: v7.31.0
+          ref: v7.45.0
           path: .test-tmp/netbbs
       - name: Install native door wheel
         shell: bash
@@ -127,7 +127,7 @@ jobs:
       - uses: actions/checkout@v4
         with:
           repository: Thiesi/NetBBS
-          ref: v7.31.0
+          ref: v7.45.0
           path: .test-tmp/netbbs
       - name: Build and install the event acceptance wheel
         shell: bash
@@ -173,7 +173,7 @@ jobs:
       - uses: actions/checkout@v4
         with:
           repository: Thiesi/NetBBS
-          ref: v7.31.0
+          ref: v7.45.0
           path: .test-tmp/netbbs
       - name: Build and install the market acceptance wheel
         shell: bash
@@ -218,7 +218,7 @@ jobs:
       - uses: actions/checkout@v4
         with:
           repository: Thiesi/NetBBS
-          ref: v7.31.0
+          ref: v7.45.0
           path: .test-tmp/netbbs
       - name: Build and install the relay acceptance wheel
         shell: bash
@@ -264,7 +264,7 @@ jobs:
       - uses: actions/checkout@v4
         with:
           repository: Thiesi/NetBBS
-          ref: v7.31.0
+          ref: v7.45.0
           path: .test-tmp/netbbs
       - name: Build and install the contract acceptance wheel
         shell: bash
@@ -312,7 +312,7 @@ jobs:
       - uses: actions/checkout@v4
         with:
           repository: Thiesi/NetBBS
-          ref: v7.31.0
+          ref: v7.45.0
           path: .test-tmp/netbbs
       - name: Build and install the crew acceptance wheel
         shell: bash
@@ -350,7 +350,7 @@ jobs:
       - uses: actions/checkout@v4
         with:
           repository: Thiesi/NetBBS
-          ref: v7.31.0
+          ref: v7.45.0
           path: .test-tmp/netbbs
       - name: Build and install the wheel for faction acceptance
         shell: bash
@@ -390,7 +390,7 @@ jobs:
       - uses: actions/checkout@v4
         with:
           repository: Thiesi/NetBBS
-          ref: v7.31.0
+          ref: v7.45.0
           path: .test-tmp/netbbs
       - name: Build and install the wheel for apartment acceptance
         shell: bash
@@ -428,7 +428,7 @@ jobs:
       - uses: actions/checkout@v4
         with:
           repository: Thiesi/NetBBS
-          ref: v7.31.0
+          ref: v7.45.0
           path: .test-tmp/netbbs
       - name: Build and install the wheel for fabrication acceptance
         shell: bash
@@ -466,7 +466,7 @@ jobs:
       - uses: actions/checkout@v4
         with:
           repository: Thiesi/NetBBS
-          ref: v7.31.0
+          ref: v7.45.0
           path: .test-tmp/netbbs
       - name: Build and install the wheel for real interlock acceptance
         shell: bash
@@ -508,7 +508,7 @@ jobs:
       - uses: actions/checkout@v4
         with:
           repository: Thiesi/NetBBS
-          ref: v7.31.0
+          ref: v7.45.0
           path: .test-tmp/netbbs
       - name: Build and install the wheel for real encounter acceptance
         shell: bash
@@ -558,7 +558,7 @@ jobs:
       - uses: actions/checkout@v4
         with:
           repository: Thiesi/NetBBS
-          ref: v7.31.0
+          ref: v7.45.0
           path: .test-tmp/netbbs
       - name: Build and install the wheel for real Lattice acceptance
         shell: bash
@@ -595,7 +595,7 @@ jobs:
       - uses: actions/checkout@v4
         with:
           repository: Thiesi/NetBBS
-          ref: v7.31.0
+          ref: v7.45.0
           path: .test-tmp/netbbs
       - name: Build and install the wheel for real NPC acceptance
         shell: bash
@@ -628,7 +628,7 @@ jobs:
       - uses: actions/checkout@v4
         with:
           repository: Thiesi/NetBBS
-          ref: v7.31.0
+          ref: v7.45.0
           path: .test-tmp/netbbs
       - name: Build and install the wheel for real combat acceptance
         shell: bash
@@ -661,7 +661,7 @@ jobs:
       - uses: actions/checkout@v4
         with:
           repository: Thiesi/NetBBS
-          ref: v7.31.0
+          ref: v7.45.0
           path: .test-tmp/netbbs
       - name: Build wheel and prepare isolated service account installation
         shell: bash

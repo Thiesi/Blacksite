@@ -26,7 +26,7 @@ jobs:
       - uses: actions/checkout@v4
         with:
           repository: Thiesi/NetBBS
-          ref: v7.31.0
+          ref: v7.45.0
           path: .test-tmp/netbbs
       - name: Install NetBBS and an isolated Blacksite wheel
         shell: bash
