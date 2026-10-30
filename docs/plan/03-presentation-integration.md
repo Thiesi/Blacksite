@@ -621,7 +621,7 @@ Codex builds, owner plays. Feeds S33b and S30b.
 | **Codex** (the implementing agent; slice files carry the roadmap §3 model label, and an implementer that differs says so in its PR) | Implementation: P1, P2, P4 to P8, P10, P9 view, S25a/b, S26a, S27 backend, S28, S29a, S30a, S33a, #67; S25c generator work under the human gate. |
 | **Sonnet or Gemini** | Content batches: Lattice labels, C1 records, S27 cast files, through the validator and a review. |
 | **Automated Claude review** | Independent code review on every PR, unchanged. |
-| **Owner** | Product decisions (§9), human gates H1 to H4 and PT1, S25 layout approval, merges. |
+| **Owner** | Product decisions (§9), human gates H1 to H4 and PT1, S25 layout approval, merges (delegated to the technical lead within technical review §7.1). |
 
 ## 9. Decisions for the owner
 
@@ -654,7 +654,7 @@ plan's own.
 
 | Class | Examples | Required before merge |
 |---|---|---|
-| A. Rule or engine | S25a, S26a, S27 backend | pytest; slice acceptance script; automated review; technical lead for cross-subsystem effects; owner merge |
+| A. Rule or engine | S25a, S26a, S27 backend | pytest; slice acceptance script; automated review; technical lead for cross-subsystem effects; owner merge, or a delegated merge (technical review §7.1) |
 | B. View contract | P3, P4 | A, plus the disclosure checklist; fingerprint unchanged except named additions |
 | C. Player-visible presentation | P5 to P8, C1 | B, plus style goldens, frame budgets, real-terminal script at both sizes and two tiers, presentation lead creative sign-off, the named human gate if any |
 | D. Geometry | S25c, hub geometry | C, plus approved fingerprint rebaseline, re-run coordinate-bound receipts, per-zone human gate |

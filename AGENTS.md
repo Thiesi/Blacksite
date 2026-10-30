@@ -72,7 +72,8 @@ contradiction by editing only the lower document.
   `docs/plan/04-technical-review.md`. The `technical-review` status
   check reads those records. Only the technical lead writes a record,
   and only the owner applies the `no-technical-review` label. Neither
-  review grants a human acceptance gate, and only the owner merges.
+  review grants a human acceptance gate. The owner merges, or the
+  technical lead merges under the owner's delegation in that file's §7.1.
 
 ## 4. Coding rules
 
