@@ -247,13 +247,14 @@ method, switch on, on the hosted Linux reference.
      Tin Halo door, without entering it. The Tin Halo interior is a
      separate zone, not part of P6b.
 
-  Capture each of these at 80x24 and 132x50, in 256 and 16 colours.
-  Text and style captures are committed under the evidence rule.
+  Capture points, each at 80x24 and 132x50, in 256 and 16 colours:
   - the clinic interior after leaving it (known dimming);
   - the pharmacy frontage;
   - the Plaza terminal;
   - the Sodium Row entry;
   - the Tin Halo frontage.
+
+  Text and style captures are committed under the evidence rule.
 - **The presentation lead's sign-off.**
 - **H1** by the owner for Meridian Plaza, Clinic Row and Sodium Row:
   - plan §10.3 criteria 1 to 7, judged by a reviewer who has not read
