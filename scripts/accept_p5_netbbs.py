@@ -23,7 +23,7 @@ class PresentationProbe(NativeProbe):
 
 
 async def accept(root: Path, door_python: Path, show: bool,
-                 sizes: tuple[tuple[int, int], ...]) -> None:
+                 sizes: tuple[tuple[int, int], ...], tiers: tuple[str, ...]) -> None:
     head = subprocess.check_output(['git', 'rev-parse', 'HEAD'], text=True).strip()
     assert not subprocess.check_output(['git', 'status', '--porcelain'], text=True).strip()
     root.mkdir(parents=True, exist_ok=False)
@@ -33,13 +33,14 @@ async def accept(root: Path, door_python: Path, show: bool,
     cases = []
     try:
         for width, height in sizes:
-            for tier in ('16', '256', 'truecolor'):
-                # The actual NetBBS account handle and chosen character name
-                # contain a wide character, not a renderer-only substitution.
-                caller = await probe.open(width, height, 'P5界' + tier, archetype=0,
+            for tier in tiers:
+                # Released NetBBS usernames/door handles are ASCII-only. Use
+                # ordinary character creation for genuine live wide-name data.
+                caller = await probe.open(width, height, 'P5' + tier, archetype=0,
                                           sixteen=tier == '16', truecolor=tier == 'truecolor', capture_wake=True)
                 assert caller.session.caps['tier'] == tier
-                assert '界' in caller.session.door_info['handle']
+                name = probe.game.players[caller.session.player_id].name
+                assert '界' in name
                 display = caller.caller.screen
                 captures = [f'wake-{width}x{height}-{tier}']
 
@@ -86,6 +87,7 @@ async def accept(root: Path, door_python: Path, show: bool,
                     await settled()
                 cases.append({'size': [width, height], 'tier': tier,
                               'handle': caller.session.door_info['handle'],
+                              'character_name': name, 'wide_bbs_handle': False, 'wide_character_name': True,
                               'new_safe_frame': True, 'training_fight': 'done',
                               'captures': captures, 'ordinary_inputs': True})
                 await probe.leave(caller, f'finished-{width}x{height}-{tier}')
@@ -112,6 +114,8 @@ if __name__ == '__main__':
     parser.add_argument('--door-python', type=Path, required=True)
     parser.add_argument('--show', action='store_true')
     parser.add_argument('--size', choices=['80x24', '132x50'])
+    parser.add_argument('--tier', choices=['16', '256', 'truecolor'], help='Diagnostic subset; default runs all tiers')
     args = parser.parse_args()
     sizes = (tuple(map(int, args.size.split('x'))),) if args.size else ((80, 24), (132, 50))
-    asyncio.run(accept(args.root.resolve(), args.door_python, args.show, sizes))
+    tiers = (args.tier,) if args.tier else ('16', '256', 'truecolor')
+    asyncio.run(accept(args.root.resolve(), args.door_python, args.show, sizes, tiers))

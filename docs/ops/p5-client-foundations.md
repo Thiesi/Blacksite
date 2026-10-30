@@ -97,8 +97,13 @@ python scripts/accept_p5_netbbs.py --root PATH --door-python PYTHON --show
 
 This runs ordinary Wake creation, a live training-drone fight, walking
 through Wake Hall and the Clinic to Meridian Plaza, inventory, contracts
-and help. The actual NetBBS account and character name contain a wide
-character. Both sizes run in all three tiers. The script registers the
+and help. The Blacksite character name contains a wide character entered
+through ordinary creation. Released NetBBS account names are ASCII-only,
+and its door API uses that username as `handle`: no wide BBS handle can
+be tested natively without bypassing the host's supported contract. The
+headless cases still exercise a synthetic wide BBS handle. This native
+acceptance distinction is recorded for lead review on #106.
+Both sizes run in all three tiers. The script registers the
 default-off switch explicitly for this private node, verifies the new
 safe frame and the installed wheel's Python tree, and records text,
 style, ordered ANSI and hashes at each step. It changes no position,
