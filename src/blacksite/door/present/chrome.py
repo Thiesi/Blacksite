@@ -9,7 +9,8 @@ from datetime import datetime
 import re
 from typing import Any
 
-from blacksite.door.cells import CellBuffer, cell_width, clean_text, display_width, truncate
+from blacksite.door.cells import CellBuffer, clean_text, display_width, truncate
+from blacksite.door.log import wrap as word_wrap
 from blacksite.layout import Layout
 from blacksite.door.present.paint import Paint
 
@@ -146,26 +147,21 @@ def digest(lines: list[dict[str, Any]]) -> list[LogEntry]:
     return out
 
 
-def wrap(text: str, width: int) -> list[str]:
-    rows, current, used = [], '', 0
-    for char in clean_text(text):
-        size = cell_width(char)
-        if used + size > width:
-            rows.append(current)
-            current, used = '', 0
-        current += char
-        used += size
-    return [*rows, current]
-
-
-def visible_rows(lines: list[dict[str, Any]], width: int, height: int,
-                 now: float) -> list[tuple[LogEntry, str, bool]]:
+def _rows(lines: list[dict[str, Any]], width: int) -> list[tuple[LogEntry, str, bool]]:
     rows = []
     for entry in digest(lines):
         text = entry.shown
         if entry.kind == 'speech' and entry.speaker and not text.startswith(entry.speaker + ': '):
             text = entry.speaker + ': ' + text
-        rows.extend((entry, line, index == 0) for index, line in enumerate(wrap(text, width - 2)))
+        rows.extend((entry, line, index == 0)
+                    for index, line in enumerate(word_wrap(text, width - 2, continuation=0)))
+    return rows
+
+
+def _select(rows: list[tuple[LogEntry, str, bool]], height: int,
+            now: float) -> list[tuple[LogEntry, str, bool]]:
+    if height <= 0:
+        return []
     protected = [i for i, (entry, _, _) in enumerate(rows)
                  if entry.kind in ('danger', 'combat') and 0 <= now - entry.arrived < PROTECT_SECONDS]
     selected = set(protected[-height:])
@@ -176,9 +172,21 @@ def visible_rows(lines: list[dict[str, Any]], width: int, height: int,
     return [rows[i] for i in sorted(selected)]
 
 
-def log(buffer: CellBuffer, layout: Layout, paint: Paint, lines: list[dict[str, Any]], now: float) -> None:
+def visible_rows(lines: list[dict[str, Any]], width: int, height: int,
+                 now: float) -> list[tuple[LogEntry, str, bool]]:
+    return _select(_rows(lines, width), height, now)
+
+
+def log(buffer: CellBuffer, layout: Layout, paint: Paint, lines: list[dict[str, Any]], now: float,
+        toast: tuple[str, str, float] | None = None) -> None:
     area = layout.log
-    for index, (entry, text, first) in enumerate(visible_rows(lines, area.width, area.height, now)):
+    rows = _rows(lines, area.width)
+    # P4's separate notice surface lives inside the log rectangle, never on
+    # the separator. Reserve at least one typed row, so the newest protected
+    # warning remains visible even while a long notice owns the other rows.
+    notices = (word_wrap(toast[0], area.width, continuation=0)[:area.height - bool(rows)]
+               if toast else [])
+    for index, (entry, text, first) in enumerate(_select(rows, area.height - len(notices), now)):
         y, role = area.y + index, 'log_' + entry.kind
         if first:
             buffer.put(area.x, y, GUTTERS[entry.kind], paint(role, bold=entry.kind == 'danger'))
@@ -192,6 +200,8 @@ def log(buffer: CellBuffer, layout: Layout, paint: Paint, lines: list[dict[str, 
             buffer.put(x, y, truncate(text, area.right - x), paint('log_speech'))
         else:
             buffer.put(area.x + 2, y, text, paint(role, bold=entry.kind == 'danger'))
+    for index, text in enumerate(notices):
+        buffer.put(area.x, area.bottom - len(notices) + index, text, paint(toast[1] if toast else 'panel_text'))
 
 
 def hints(buffer: CellBuffer, layout: Layout, paint: Paint, hint: str) -> None:

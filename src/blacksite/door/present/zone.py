@@ -36,9 +36,27 @@ def _beside(ids: list[list[str]], x: int, y: int, wanted: frozenset[str]) -> boo
             or y + 1 < len(ids) and x < len(ids[y + 1]) and ids[y + 1][x] in wanted)
 
 
-def terrain(buffer: CellBuffer, body: dict[str, Any], layout: Layout, paint: Paint) -> None:
+def origin(body: dict[str, Any], layout: Layout) -> tuple[int, int]:
+    """Translate the disclosed viewport once; small axes centre on you.
+
+    Full-size axes keep the server's crop. No camera, focus or world
+    coordinate is changed, and every map layer shares this translation.
+    """
+    area, vp = layout.viewport, body['viewport']
+    me = next((entry for entry in body.get('actors', []) if entry.get('role') == 'player_self'), None)
+    x, y = area.x, area.y
+    if vp['w'] < area.width:
+        x += area.width // 2 - (me['x'] - vp['x']) if me else (area.width - vp['w']) // 2
+    if vp['h'] < area.height:
+        y += area.height // 2 - (me['y'] - vp['y']) if me else (area.height - vp['h']) // 2
+    return x, y
+
+
+def terrain(buffer: CellBuffer, body: dict[str, Any], layout: Layout, paint: Paint,
+            draw_origin: tuple[int, int] | None = None) -> None:
     """Rule layer only. No place records, looks, charting or deep camera."""
     area, vp = layout.viewport, body['viewport']
+    ox, oy = draw_origin if draw_origin is not None else origin(body, layout)
     grid, memory, legend = body['tiles'], body.get('remembered', []), body['legend']
     hazards = {tuple(tile) for hazard in body.get('hazards', []) for tile in hazard.get('tiles', [])}
 
@@ -53,8 +71,12 @@ def terrain(buffer: CellBuffer, body: dict[str, Any], layout: Layout, paint: Pai
     open_tiles = frozenset(entry['id'] for entry in legend if entry['id'] not in OPAQUE)
     styles: dict[tuple[int, bool, bool], tuple[str, Style]] = {}
 
-    for y, row in enumerate(grid[:area.height]):
-        for x, value in enumerate(row[:area.width]):
+    for y, row in enumerate(grid[:vp['h']]):
+        if not area.y <= oy + y < area.bottom:
+            continue
+        for x, value in enumerate(row[:vp['w']]):
+            if not area.x <= ox + x < area.right:
+                continue
             index = resolved[y][x]
             if index < 0:
                 continue
@@ -71,7 +93,7 @@ def terrain(buffer: CellBuffer, body: dict[str, Any], layout: Layout, paint: Pai
                 if (paint.tier == '16' and glyph == '·' and (vp['x'] + x + vp['y'] + y) % 3
                         and not _beside(ids, x, y, OPAQUE)):
                     glyph = ' '
-            buffer.put(area.x + x, area.y + y, glyph, style)
+            buffer.put(ox + x, oy + y, glyph, style)
 
 
 def cell(paint: Paint, entry: dict[str, Any], *, roof: bool = False) -> tuple[str, Style]:
@@ -87,15 +109,18 @@ def cell(paint: Paint, entry: dict[str, Any], *, roof: bool = False) -> tuple[st
     return glyph, paint(role, bold=tile not in ('cover-1', 'cover-2', 'cover-3', 'water'))
 
 
-def people(buffer: CellBuffer, body: dict[str, Any], layout: Layout, paint: Paint) -> None:
+def people(buffer: CellBuffer, body: dict[str, Any], layout: Layout, paint: Paint,
+           draw_origin: tuple[int, int] | None = None) -> None:
     area, vp = layout.viewport, body['viewport']
+    ox, oy = draw_origin if draw_origin is not None else origin(body, layout)
     relation = {n['id']: n.get('relation', '~') for n in body.get('nearby', [])}
     target = (body.get('target') or {}).get('id')
 
     def inside(entry: dict[str, Any]) -> tuple[int, int] | None:
         x, y = entry['x'] - vp['x'], entry['y'] - vp['y']
-        if 0 <= x < min(area.width, vp['w']) and 0 <= y < min(area.height, vp['h']):
-            return x, y
+        if (0 <= x < vp['w'] and 0 <= y < vp['h']
+                and area.x <= ox + x < area.right and area.y <= oy + y < area.bottom):
+            return ox + x, oy + y
         return None
 
     objects = body.get('objects', [])
@@ -111,7 +136,7 @@ def people(buffer: CellBuffer, body: dict[str, Any], layout: Layout, paint: Pain
             role = 'panel_dim'
         elif obj.get('kind') in ('door', 'apartment_door', 'gate', 'shutter') and state.get('open') is False:
             glyph = '≡'
-        buffer.put(area.x + at[0], area.y + at[1], glyph, paint(role, bold=True))
+        buffer.put(*at, glyph, paint(role, bold=True))
     shapes = {'actor-self': '@', 'actor-player': '☺', 'actor-npc': '☻', 'actor-drone': 'τ'}
     for entry in body.get('actors', []):
         at = inside(entry)
@@ -125,20 +150,20 @@ def people(buffer: CellBuffer, body: dict[str, Any], layout: Layout, paint: Pain
         role = entry.get('role', 'npc_neutral')
         style = paint(role, bold=True, reverse=self or relation.get(entry['id']) == '!')
         if jacked:
-            style = paint.known(paint(role))  # Jacked beats hostile/self: never reverse.
+            style = paint.jacked(paint(role))  # Jacked beats hostile/self: never reverse.
         if entry['id'] == target:
             style = Style(style.fg, style.bg, (*style.attrs, 4), style.tier)
-        buffer.put(area.x + at[0], area.y + at[1], glyph, style)
+        buffer.put(*at, glyph, style)
     occupied = {(a['x'], a['y']) for a in body.get('actors', [])} | {(o['x'], o['y']) for o in objects}
     occupied.update(tuple(tile) for hazard in body.get('hazards', []) for tile in hazard.get('tiles', []))
     for route in body.get('patrol_routes', []):
         for point in route.get('waypoints', []):
             at = inside(point)
             if at is not None and (point['x'], point['y']) not in occupied:
-                buffer.put(area.x + at[0], area.y + at[1], '°', paint('log_danger'))
+                buffer.put(*at, '°', paint('log_danger'))
     for obj in [o for o in objects if o.get('kind') == 'beacon']:
         if (at := inside(obj)) is not None:
-            buffer.put(area.x + at[0], area.y + at[1], '♦', paint('player_crew', bold=True))
+            buffer.put(*at, '♦', paint('player_crew', bold=True))
 
 
 def at_hand(body: dict[str, Any]) -> list[str]:
@@ -200,11 +225,11 @@ def panel(buffer: CellBuffer, body: dict[str, Any], layout: Layout, paint: Paint
         line("out: " + ", ".join(hazard.get("escape", [])) if hazard.get("escape") else "move off the marked ground", "panel_text")
     plans = [str(plan["summary"]) for plan in (body.get("event") or {}).get("plans", [])]
     objective = body.get("objective")
-    if plans or objective:
+    if plans or objective and layout.wide:
         section("NOW")
         for text in plans[:2]:
             line(text, "log_place")
-        if objective and not (layout.width < 100 and objective.get("compact_hint") and plans):
+        if objective and layout.wide:
             line(str(objective.get("next_action", "")), "panel_strong")
             if objective.get("cost") and layout.height >= 30:
                 line(str(objective["cost"]), "panel_label")
@@ -244,9 +269,13 @@ def panel(buffer: CellBuffer, body: dict[str, Any], layout: Layout, paint: Paint
             jacked = entry.get('jacked', False)
             style = paint(entry.get('role', 'npc_neutral'), bold=True, reverse=hostile and not jacked)
             if jacked:
-                style = paint.known(paint(entry.get('role', 'npc_neutral')))
+                style = paint.jacked(paint(entry.get('role', 'npc_neutral')))
             buffer.put(x + 1, y, glyph, style)
-            buffer.put(x + 3, y, truncate((entry.get("name", "Someone") + (" jacked" if entry.get("jacked") else "")), w - 4), paint("log_danger" if hostile else "panel_text"))
+            relation = entry.get('relation', '~')
+            relation = relation if relation in TAGS else '~'
+            suffix = (' jacked' if jacked else '') + ' ' + relation
+            label = truncate(entry.get('name', 'Someone'), w - 4 - len(suffix)) + suffix
+            buffer.put(x + 3, y, label, paint("log_danger" if hostile else "panel_text"))
             y += 1
     limit = vy - 1
     if crew and y < limit - 1:
@@ -291,7 +320,8 @@ def head(buffer: CellBuffer, body: dict[str, Any], layout: Layout, paint: Paint)
 
 
 def render(buffer: CellBuffer, body: dict[str, Any], layout: Layout, paint: Paint) -> None:
-    terrain(buffer, body, layout, paint)
-    people(buffer, body, layout, paint)
+    draw_origin = origin(body, layout)
+    terrain(buffer, body, layout, paint, draw_origin)
+    people(buffer, body, layout, paint, draw_origin)
     panel(buffer, body, layout, paint)
     head(buffer, body, layout, paint)

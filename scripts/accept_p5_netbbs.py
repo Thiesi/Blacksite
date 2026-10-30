@@ -13,6 +13,8 @@ from pathlib import Path
 import subprocess
 
 from accept_s10_netbbs import Connection, NativeProbe, wait
+from blacksite.door.palette import Palette
+from blacksite.door.present.paint import Paint, light_distance
 from tests.presentation.snapshots import snapshot
 
 
@@ -83,8 +85,31 @@ async def accept(root: Path, door_python: Path, show: bool,
                 save('training-complete')
                 await probe.travel(caller, 'vatside-clinics')
                 await probe.travel(caller, 'core-plaza')
+                # Walk beside the shipped patrol route, rather than capture
+                # only the already-bright neutral NPC near the clinic exit.
+                # This changes ordinary inputs, never actors or world state.
+                await probe.walk(caller, (31, 5))
                 await settled()
                 assert 'Meridian Plaza' in display.screen_text().splitlines()[0]
+                person_lift = None
+                if tier == 'truecolor':
+                    data = json.loads((Path(__file__).resolve().parents[1] /
+                        'src/blacksite/content/palette.json').read_text(encoding='utf-8'))
+                    palette = Palette(data, tier)
+                    paint = Paint(palette)
+                    original, lifted = palette.style('npc_wardens').fg, paint('npc_wardens').fg
+                    assert original != lifted
+
+                    def lifted_people() -> list[tuple[int, int]]:
+                        return [(x, y) for y, row in enumerate(display.grid) for x, glyph in enumerate(row)
+                                if glyph == '☻' and display.renditions.get((x, y)) is not None
+                                and display.renditions[x, y].foreground == (2, *lifted)]
+
+                    await wait(lambda: bool(lifted_people()))
+                    person_lift = {'role': 'npc_wardens', 'original_rgb': original, 'paint_rgb': lifted,
+                        'original_distance': light_distance(original, paint.bands.ground),
+                        'paint_distance': light_distance(lifted, paint.bands.ground),
+                        'people_floor': paint.bands.people, 'terminal_cells': lifted_people()}
                 save('meridian-plaza')
                 for key, title, step in ((b'i', 'INVENTORY', 'inventory'),
                                          (b'q', 'CONTRACTS', 'contracts'),
@@ -100,6 +125,7 @@ async def accept(root: Path, door_python: Path, show: bool,
                               'handle': caller.session.door_info['handle'],
                               'character_name': name, 'wide_bbs_handle': False, 'wide_character_name': True,
                               'new_safe_frame': True, 'training_fight': 'done',
+                               'plaza_person_lift': person_lift,
                               'captures': captures, 'ordinary_inputs': True})
                 await probe.leave(caller, f'finished-{width}x{height}-{tier}')
                 probe.report(f'PASS P5 {width}x{height} {tier}: Wake, training, Plaza, inventory, contracts, help')

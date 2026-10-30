@@ -282,10 +282,20 @@ class Display:
             hint = str(self.key_prompt["label"])
         elif "hint" in self.body:
             hint = str(self.body["hint"])
-            if self.kind == 'zone' and not self.body.get('me', {}).get('channel'):
+            if not self.presentation and self.kind == 'zone' and not self.body.get('me', {}).get('channel'):
                 context = focus_context(self.body.get('focus'), self.body.get('jack_focus'),
                                         'Ctrl-O' if self.selected_keymap == 'vi' else 'J')
                 hint = chrome.focus_hint(hint, self.layout.hint.width, context, self.body.get('objective'))
+        if self.presentation:
+            shown = self.body.get('body', {}) if self.kind == 'wake' else self.body
+            primary = bool(self.confirm_exit or self.prompt or self.key_prompt
+                           or shown.get('me', {}).get('channel'))
+            zone_hint = self.kind == 'zone' and self.local is None and not primary
+            context = focus_context(shown.get('focus'), shown.get('jack_focus'),
+                                    'Ctrl-O' if self.selected_keymap == 'vi' else 'J') if zone_hint else []
+            objective = shown.get('objective') if zone_hint else None
+            hint = chrome.focus_hint(hint, self.layout.hint.width, context, objective,
+                                     fit_all=True, primary=primary, objective_in_panel=self.layout.wide)
         header = "" if self.kind == "zone" and self.local is None else "Karst · " + truncate(self.info.handle, self.layout.header_slots.handle_width)
         if not self.presentation:
             chrome.render_frame(buffer, self.layout, self.palette, header, list(self.logs), hint)

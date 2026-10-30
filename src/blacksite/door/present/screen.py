@@ -72,7 +72,5 @@ def render(buffer: CellBuffer, layout: Layout, paint: Paint, kind: str, body: di
                       [(str(body.get('title', 'Karst')), 'head_zone'), (word.upper(), 'word_' + word)],
                       [(truncate(handle, layout.header_slots.handle_width), 'panel_label'),
                        (str(me.get('clock', '')), 'head_info')])
-    chrome.log(buffer, layout, paint, logs, now)
+    chrome.log(buffer, layout, paint, logs, now, toast)
     chrome.hints(buffer, layout, paint, hint)
-    if toast:
-        buffer.put(layout.log.x, layout.separator.y, truncate(toast[0], layout.log.width), paint(toast[1]))

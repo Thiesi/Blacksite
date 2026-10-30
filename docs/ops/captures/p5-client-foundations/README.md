@@ -1,11 +1,11 @@
 # P5 native review packet
 
 Execution head: `547ce7c418c19c60e5726adda081a01f05911ce2`.
-Runtime, content, tests, acceptance scripts and the P5 workflow remain
-identical to this head. The owner subsequently merged #111, and P5 was
-rebased onto that floor/canon audit. Other native workflows now inherit
-its v7.45.0 pins. Fresh combined-head CI and review results are linked
-from PR #110; this packet retains its actual execution provenance.
+This is the pre-correction packet reviewed at `450d918`. It is historical:
+TR-1 and the five creative blockers require new colours, wrapping, hint
+fitting, separator placement, centring and relation tags. It is not proof
+of those fixes. A fresh packet will replace these files after new native
+execution; current validation and review status is recorded on PR #110.
 
 Transport: real NetBBS v7.45.0 Telnet to a registered native stdio door,
 using a source-matched isolated Blacksite wheel and

@@ -81,10 +81,44 @@ adjacent grain for every shipped opaque tile class, jacked-hostile
 precedence, HERE disclosure, map-only context, unchanged keys and the
 hint row.
 
-The first contrast floor uses a normalised mean sRGB step of at least
-0.08 between ground and facade backgrounds at 256 and truecolor. The
-16-colour gate checks the distinct floor/wall shapes. Palette variants
-are all checked; P5 does not introduce place themes.
+The [TR-1 decision](https://github.com/Thiesi/Blacksite/pull/110#issuecomment-6528855270)
+fixes contrast in CIE L* (sRGB/D65), after the colour tier maps it. Mean
+sRGB is not the contrast metric. The shared `BAND_STEP` is 8 L*: structure
+stands above ground, the darkest thing above structure, and the darkest
+person above the darkest thing. This is a floor order, not a requirement
+that a person outshine a white exit. Floor grain stays below structure.
+
+`Paint` caches person-role lifts in LCh, keeping hue and reducing chroma
+only to fit sRGB; 256 colours choose a floor-compliant xterm index by hue
+distance. The shared hue tolerance is 10 degrees. Reverse video puts the
+role colour behind you or a hostile. Jacked bodies are dimmed first, then
+kept above structure plus the step and below the people floor. Palette
+role values and the switch-off path are untouched.
+
+At 16 colours, people use bright intensity; Halvard uses light grey 7,
+while dark grey 8 marks jacked bodies. Ground, structures and thing roles
+keep their existing treatment. Every palette variant is checked. P5 draws
+no light grounds, but the same helper measures L* distance from a synthetic
+light ground in tests; P6 must apply it to its real `_light` themes.
+
+The [creative blockers](https://github.com/Thiesi/Blacksite/pull/110#issuecomment-6528893124)
+and [engineering limits](https://github.com/Thiesi/Blacksite/pull/110#issuecomment-6528908391)
+also require these corrections:
+
+- Both log paths share #97's word wrapper; only an overlong word splits.
+- The separator contains rule glyphs only. Notices use the log rectangle.
+  Objectives use NOW at 132 columns and P3's hint fitter at 80 columns.
+- Every new hint uses P3's one fitter, including empty focus, menus, text
+  and priority prompts. Legacy fitting keeps its existing defaults.
+- One origin centres small viewport axes on the disclosed player and
+  translates every terrain/actor/object/waypoint/beacon/hazard layer.
+  Full-sized axes retain the server crop. World coordinates do not change.
+- NEARBY keeps the entry's explicit `!`, `~` or `+` relation tag.
+
+The corrected P5 goldens change 39 files: dead, lattice, menu, talker,
+text and Wake at both sizes in all three tiers, plus zone at 132x50 in all
+three tiers. The six title and three 80x24 zone goldens stay identical.
+No existing switch-off golden or mechanics fingerprint is rebaselined.
 
 `scripts/presentation_p5.py --output PATH` compares switch off/on on
 P1's `v1-provisional` closed-walk workload, with the same seeds, normal
@@ -106,8 +140,9 @@ python scripts/accept_p5_netbbs.py --root PATH --door-python PYTHON --size 80x24
 ```
 
 This runs ordinary Wake creation, a live training-drone fight, walking
-through Wake Hall and the Clinic to Meridian Plaza, inventory, contracts
-and help. The Blacksite character name contains a wide character entered
+through Wake Hall and the Clinic to Meridian Plaza and its patrol route,
+inventory, contracts and help. The truecolor Plaza receipt checks a live
+NPC glyph's lifted terminal colour against Paint. The Blacksite character name contains a wide character entered
 through ordinary creation. Released NetBBS account names are ASCII-only,
 and its door API uses that username as `handle`: no wide BBS handle can
 be tested natively without bypassing the host's supported contract. The
@@ -141,12 +176,13 @@ terminal receipts and the exact execution head. Raw ANSI and large style
 snapshots remain in the linked CI artifacts. The packet records the wide
 character-name / ASCII BBS-handle distinction and verifies both fields in
 the same pinned row at 132x50. It grants no creative or human approval.
-The packet now contains v7.45.0 captures, following the technical lead's
-floor-change notice on #82. Earlier v7.31.0 captures retain their actual
+The existing packet contains historical v7.45.0 captures before the
+review corrections above; fresh captures are required for those changes.
+Earlier v7.31.0 captures retain their actual
 provenance in Git history and the earlier run's artifacts. The owner
-merged the floor/canon PR #111 before P5 was rebased onto it. Runtime,
-content, tests, acceptance scripts and the P5 workflow remain identical
-to the packet's execution head. Other native workflows inherit #111's
+merged the floor/canon PR #111 before P5 was rebased onto it. The packet's
+README identifies its execution head; it does not prove the later review
+corrections. Other native workflows inherit #111's
 v7.45.0 pins, and their combined-head results are recorded on PR #110.
 The new charset admission and check-order rules remain S30/S31 work;
 this rebase adds no runtime implementation of those future contracts.
