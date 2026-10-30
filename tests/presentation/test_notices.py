@@ -225,3 +225,18 @@ def test_ui_2_5_session_warning_uses_the_same_notice_surface_once(content: Any) 
     model.key('ctrl-l', 14)
     assert model.toast is None
     assert len([line for line in model.logs if line.get('kind') == 'notice']) == 1
+
+
+@pytest.mark.parametrize('size', SIZES)
+@pytest.mark.parametrize('kind', ['menu', 'text', 'local'])
+def test_ui_2_5_notice_keeps_existing_back_action_on_every_local_or_server_view(
+        content: Any, size: tuple[int, int], kind: str) -> None:
+    model = display(content, *size)
+    body = {'title': 'Report', 'lines': ['You read.'], 'rows': [], 'hint': 'Enter selects  Esc/B leaves'}
+    model.receive(Frame('view', {'rev': 1, 'kind': 'menu' if kind == 'menu' else 'text', 'body': body}), 0)
+    if kind == 'local':
+        model.open_help(['You read a note.'])
+    send_notice(model)
+    term = render(model, 1)
+    hint = term.screen_text().splitlines()[model.layout.hint.y]
+    assert all(text in hint for text in ('Maintenance soon.', 'Esc/B leaves', 'Ctrl-X leave'))

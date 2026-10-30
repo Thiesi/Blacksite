@@ -336,8 +336,11 @@ class Display:
             self.notice_header = bool(self.toast and self._notice_to_header(now))
             if self.toast and not self.notice_header:
                 escape = str((shown.get('escape') or {}).get('action', 'Ctrl-X leave'))
-                if self.local is not None or shown_kind == 'menu':
-                    escape = 'Esc/B back  ' + escape
+                back = next((group for group in hint.split('  ') if group.startswith('Esc')), '')
+                if not back and (self.local is not None or shown_kind == 'menu'):
+                    back = 'Esc/B back'
+                if back:
+                    escape = back + '  ' + escape
                 hint = chrome.focus_hint(self.toast[0], self.layout.hint.width, [],
                                          fit_all=True, primary=True, escape=escape)
             else:
