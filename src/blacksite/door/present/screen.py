@@ -44,12 +44,13 @@ def menu(buffer: CellBuffer, body: dict[str, Any], layout: Layout, paint: Paint)
 def render(buffer: CellBuffer, layout: Layout, paint: Paint, kind: str, body: dict[str, Any],
            logs: list[dict[str, Any]], hint: str, now: float, *, flash: bool = False,
            toast: tuple[str, str, float] | None = None, handle: str = '',
-           body_safety: str | None = None) -> None:
+           body_safety: str | None = None, notice_in_header: bool = False) -> None:
     """Compose all kinds, including nested Wake and talker menus."""
     word = safety(body, body_safety)
     chrome.frame(buffer, layout, paint, word, side=kind in ('zone', 'lattice'), flash=flash)
+    header_notice = toast if notice_in_header else None
     if kind == 'zone':
-        zone.render(buffer, body, layout, paint)
+        zone.render(buffer, body, layout, paint, notice=header_notice)
     elif kind == 'lattice':
         # P7 replaces sector/room drawing; P5 supplies only the common chrome.
         render_lattice(buffer, body, layout, paint.palette)
@@ -71,6 +72,6 @@ def render(buffer: CellBuffer, layout: Layout, paint: Paint, kind: str, body: di
         chrome.header(buffer, layout, paint,
                       [(str(body.get('title', 'Karst')), 'head_zone'), (word.upper(), 'word_' + word)],
                       [(truncate(handle, layout.header_slots.handle_width), 'panel_label'),
-                       (str(me.get('clock', '')), 'head_info')])
-    chrome.log(buffer, layout, paint, logs, now, toast)
-    chrome.hints(buffer, layout, paint, hint)
+                       (str(me.get('clock', '')), 'head_info')], notice=header_notice)
+    chrome.log(buffer, layout, paint, logs, now)
+    chrome.hints(buffer, layout, paint, hint, toast[1] if toast and not notice_in_header else 'key_text')

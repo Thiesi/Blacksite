@@ -1,6 +1,11 @@
 # P5 native review packet
 
 Execution head: `b9896d4375b90f94f8b762fba84bc25a08911b25`.
+This packet is now historical for notice behavior: its log-row notices
+were rejected at `cf48304`. TR-3 and the corrected UI 2.5 notice lifecycle
+need new evidence. The accepted word wrap, bands, centring, relation tags
+and other unchanged screens remain reference evidence; this packet does
+not establish the later corrections or current acceptance.
 This packet replaces the pre-correction captures reviewed at `450d918`.
 It records TR-1 and the five creative corrections, without granting
 technical, creative or human acceptance.

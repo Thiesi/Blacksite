@@ -21,6 +21,7 @@ GUTTERS = {'place': '»', 'ambient': '·', 'speech': '"', 'combat': '*',
 COALESCE_SECONDS = 10.0  # Terminal UI 2.5.
 REWARD_SECONDS = 5.0  # Terminal UI 2.5.
 PROTECT_SECONDS = 10.0  # Terminal UI 2.5.
+NOTICE_SECONDS = 8.0  # Terminal UI 2.5: minimum, plus a key after arrival.
 
 
 def frame(buffer: CellBuffer, layout: Layout, paint: Paint, safety: str, *,
@@ -44,9 +45,19 @@ def frame(buffer: CellBuffer, layout: Layout, paint: Paint, safety: str, *,
 
 
 def header(buffer: CellBuffer, layout: Layout, paint: Paint, left: list[tuple[str, str]],
-           right: list[tuple[str, str]]) -> None:
+           right: list[tuple[str, str]], *, notice: tuple[str, str, float] | None = None) -> None:
     """Drop low-priority whole segments before shortening the zone."""
     area = layout.header
+    if notice:
+        # Use the existing right segment ahead of clock/handle. Preserve
+        # safety/threat words and room for the zone ellipsis; the normal
+        # drop order below removes district/service, then shortens the zone.
+        fixed = [clean_text(text) for text, role in left[1:] if text
+                 and role != 'head_district' and not (role == 'head_info' and text != 'PvP G5+')]
+        zone_room = min(display_width(clean_text(left[0][0])), len('...')) if left else 0
+        reserve = display_width(' '.join(fixed)) + zone_room + bool(fixed and zone_room)
+        text = truncate(clean_text(notice[0]), max(0, area.width - reserve - 2))
+        right = [(text, notice[1])] if text else []
     right_text = ' '.join(clean_text(text) for text, _ in right)
     room = area.width - (display_width(right_text) + 2 if right_text else 0)
     shown = [(clean_text(text), role) for text, role in left if text]
@@ -177,16 +188,9 @@ def visible_rows(lines: list[dict[str, Any]], width: int, height: int,
     return _select(_rows(lines, width), height, now)
 
 
-def log(buffer: CellBuffer, layout: Layout, paint: Paint, lines: list[dict[str, Any]], now: float,
-        toast: tuple[str, str, float] | None = None) -> None:
+def log(buffer: CellBuffer, layout: Layout, paint: Paint, lines: list[dict[str, Any]], now: float) -> None:
     area = layout.log
-    rows = _rows(lines, area.width)
-    # P4's separate notice surface lives inside the log rectangle, never on
-    # the separator. Reserve at least one typed row, so the newest protected
-    # warning remains visible even while a long notice owns the other rows.
-    notices = (word_wrap(toast[0], area.width, continuation=0)[:area.height - bool(rows)]
-               if toast else [])
-    for index, (entry, text, first) in enumerate(_select(rows, area.height - len(notices), now)):
+    for index, (entry, text, first) in enumerate(visible_rows(lines, area.width, area.height, now)):
         y, role = area.y + index, 'log_' + entry.kind
         if first:
             buffer.put(area.x, y, GUTTERS[entry.kind], paint(role, bold=entry.kind == 'danger'))
@@ -200,10 +204,8 @@ def log(buffer: CellBuffer, layout: Layout, paint: Paint, lines: list[dict[str, 
             buffer.put(x, y, truncate(text, area.right - x), paint('log_speech'))
         else:
             buffer.put(area.x + 2, y, text, paint(role, bold=entry.kind == 'danger'))
-    for index, text in enumerate(notices):
-        buffer.put(area.x, area.bottom - len(notices) + index, text, paint(toast[1] if toast else 'panel_text'))
 
 
-def hints(buffer: CellBuffer, layout: Layout, paint: Paint, hint: str) -> None:
+def hints(buffer: CellBuffer, layout: Layout, paint: Paint, hint: str, role: str = 'key_text') -> None:
     """Host the exact P3 fitter output, including prompts and channels."""
-    buffer.put(layout.hint.x, layout.hint.y, truncate(hint, layout.hint.width), paint('key_text'))
+    buffer.put(layout.hint.x, layout.hint.y, truncate(hint, layout.hint.width), paint(role))

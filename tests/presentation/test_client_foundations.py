@@ -304,7 +304,12 @@ def test_ui_2_4_objective_and_notice_never_overwrite_separator(content, size, ki
     model.render(1)
     rows = [''.join(cell.glyph for cell in row) for row in model.previous.cells]
     assert set(rows[model.layout.separator.y]) <= set('─┴╟╢├┤')
-    assert 'The corridor teaches targeting.' in rows[model.layout.log.bottom - 1]
+    assert 'The corridor teaches targeting.' in rows[model.layout.hint.y]
+    assert 'The corridor teaches targeting.' not in '\n'.join(rows[model.layout.log.y:model.layout.log.bottom])
+    model.key('ctrl-l', 1.1)
+    model.update(9.1, 9.1)
+    model.render(9.1)
+    rows = [''.join(cell.glyph for cell in row) for row in model.previous.cells]
     hint = rows[model.layout.hint.y]
     side = '\n'.join(row[model.layout.side.x:model.layout.side.right] for row in rows[:model.layout.side.bottom])
     if model.layout.wide:
@@ -319,11 +324,13 @@ def test_ui_2_4_objective_and_notice_never_overwrite_separator(content, size, ki
 def test_ui_2_5_notice_and_newest_protected_combat_both_remain_visible(content):
     model = display(content)
     lines = [{'kind': 'combat', 'text': f'Critical {i}', '_arrived': 0} for i in range(model.layout.log.height)]
-    buffer = CellBuffer(80, 24)
-    chrome.log(buffer, model.layout, model.paint, lines, 1, ('A notice.', 'ui_text', 5))
-    rows = [''.join(cell.glyph for cell in row) for row in buffer.cells]
+    model.receive(Frame('log', {'lines': lines}), 0)
+    model.receive(Frame('toast', {'text': 'A notice.', 'role': 'ui_text', 'seconds': 5}), 0)
+    model.render(1)
+    rows = [''.join(cell.glyph for cell in row) for row in model.previous.cells]
     assert f'Critical {model.layout.log.height - 1}' in '\n'.join(rows)
-    assert 'A notice.' in '\n'.join(rows)
+    assert 'A notice.' in rows[model.layout.header.y]
+    assert 'A notice.' not in '\n'.join(rows[model.layout.log.y:model.layout.log.bottom])
 
 
 def test_ui_2_small_wake_hall_centres_on_the_player(content):
@@ -379,9 +386,13 @@ def test_ui_2_4_nearby_always_has_an_explicit_relation_tag(content, size):
 
 @pytest.mark.parametrize('tier', ['256', 'truecolor'])
 @pytest.mark.parametrize('variant', ['default', 'deutan', 'protan'])
-def test_ui_2_2_every_band_and_jacked_floor_after_actual_tier_mapping(content, tier, variant):
+def test_ui_2_2_every_band_and_jacked_floor_after_actual_tier_mapping(content, tier, variant, monkeypatch):
     from math import atan2, degrees, hypot
     from blacksite.door.present.paint import HUE_TOLERANCE, hue_distance, lab
+    from blacksite.door.present import paint as paint_module
+    def forbid_fallback(colour):
+        pytest.fail('The shipped palette must meet its floors without fallback')
+    monkeypatch.setattr(paint_module, '_unreachable', forbid_fallback)
     palette = Palette(asdict(content.palette), tier, variant)
     paint = Paint(palette)
     bands = paint.bands

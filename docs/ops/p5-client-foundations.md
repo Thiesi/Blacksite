@@ -96,6 +96,12 @@ role colour behind you or a hostile. Jacked bodies are dimmed first, then
 kept above structure plus the step and below the people floor. Palette
 role values and the switch-off path are untouched.
 
+TR-3 also covers supported operator `content.local` palette overrides.
+If a floor/window has no representable colour, Paint retains the original
+colour passed to the lift and caches it. This prevents a caller crash;
+it does not certify the override's contrast. The shipped-palette tests
+still require every floor and forbid taking that fallback.
+
 At 16 colours, people use bright intensity; Halvard uses light grey 7,
 while dark grey 8 marks jacked bodies. Ground, structures and thing roles
 keep their existing treatment. Every palette variant is checked. P5 draws
@@ -107,8 +113,17 @@ and [engineering limits](https://github.com/Thiesi/Blacksite/pull/110#issuecomme
 also require these corrections:
 
 - Both log paths share #97's word wrapper; only an overlong word splits.
-- The separator contains rule glyphs only. Notices use the log rectangle.
-  Objectives use NOW at 132 columns and P3's hint fitter at 80 columns.
+- The separator contains rule glyphs only. Structured objectives use NOW
+  at 132 columns and P3's hint fitter at 80 columns.
+- Notices use P3's priority hint field, ahead of objective/context/help,
+  with escape actions retained. They stay for at least eight seconds and
+  until a key after arrival. A prompt/channel/exit confirmation, hazard,
+  hostile target or recent declared danger/combat line moves the notice
+  into the header's bounded right segment. It returns to the hint when
+  those declarations clear. Each arrival adds one local notice entry to
+  scrollback; the visible world log excludes it. The server and legacy
+  toast remain unchanged. This corrects the earlier log-placement scope:
+  [notice decision](https://github.com/Thiesi/Blacksite/pull/110#issuecomment-6532427268).
 - Every new hint uses P3's one fitter, including empty focus, menus, text
   and priority prompts. Legacy fitting keeps its existing defaults.
 - One origin centres small viewport axes on the disclosed player and
@@ -178,14 +193,15 @@ terminal receipts and the exact execution head. Raw ANSI and large style
 snapshots remain in the linked CI artifacts. The packet records the wide
 character-name / ASCII BBS-handle distinction and verifies both fields in
 the same pinned row at 132x50. It grants no creative or human approval.
-The packet contains fresh v7.45.0 captures of the review corrections,
+The existing packet contains historical v7.45.0 captures before TR-3 and
+the corrected notice behavior. It was
 executed at `b9896d4375b90f94f8b762fba84bc25a08911b25`. Its change list
 names every corrected P5 golden and every changed text/style capture,
 including the requested Wake Hall, drone fight and lifted Plaza person.
 Earlier captures retain their actual provenance in Git history and the
 earlier runs' artifacts. The owner merged the floor/canon PR #111 before
-P5 was rebased onto it. Runtime, content, tests, scripts and the P5
-workflow in the evidence-only packet commit match its execution head.
+P5 was rebased onto it. The packet does not prove the later TR-3/notice
+corrections; fresh Wake Hall and drone-fight evidence is required.
 Other native workflows inherit #111's v7.45.0 pins; final-head results
 and budget changes against `450d918` are recorded on PR #110.
 The new charset admission and check-order rules remain S30/S31 work;

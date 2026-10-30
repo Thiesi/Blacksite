@@ -302,7 +302,8 @@ def panel(buffer: CellBuffer, body: dict[str, Any], layout: Layout, paint: Paint
             buffer.put(x + 1, vy + 5, truncate(f"discharge {me['xp']}/{me['discharge_xp']}", w - 1), paint("panel_label"))
 
 
-def head(buffer: CellBuffer, body: dict[str, Any], layout: Layout, paint: Paint) -> None:
+def head(buffer: CellBuffer, body: dict[str, Any], layout: Layout, paint: Paint, *,
+         notice: tuple[str, str, float] | None = None) -> None:
     me = body['me']
     safety = me['safety']
     left = [(me['zone_name'], 'head_zone'), (safety.upper(), 'word_' + safety)]
@@ -316,12 +317,13 @@ def head(buffer: CellBuffer, body: dict[str, Any], layout: Layout, paint: Paint)
         left.append((str(me['district']).upper(), 'head_district'))
     if service := body.get('service'):
         left.append((str(service.get('summary', '')), 'head_info'))
-    chrome.header(buffer, layout, paint, left, [(me.get('clock', ''), 'head_info')])
+    chrome.header(buffer, layout, paint, left, [(me.get('clock', ''), 'head_info')], notice=notice)
 
 
-def render(buffer: CellBuffer, body: dict[str, Any], layout: Layout, paint: Paint) -> None:
+def render(buffer: CellBuffer, body: dict[str, Any], layout: Layout, paint: Paint, *,
+           notice: tuple[str, str, float] | None = None) -> None:
     draw_origin = origin(body, layout)
     terrain(buffer, body, layout, paint, draw_origin)
     people(buffer, body, layout, paint, draw_origin)
     panel(buffer, body, layout, paint)
-    head(buffer, body, layout, paint)
+    head(buffer, body, layout, paint, notice=notice)

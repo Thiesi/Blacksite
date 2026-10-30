@@ -40,11 +40,15 @@ def _objective_hint(objective: dict[str, Any], width: int | None = None) -> str:
 def focus_hint(hint: str, width: int, context: list[tuple[str, str]],
                objective: dict[str, Any] | None = None, *,
                fit_all: bool = False, primary: bool = False,
-               objective_in_panel: bool = False) -> str:
+               objective_in_panel: bool = False, escape: str = '') -> str:
     """UI 11: objective/cost, E/J, then whole help groups; never clip a key."""
     raw = '  '.join((prefix + ' ' + label).rstrip() for prefix, label in context)
     if primary:
         # A prompt/channel is one priority field, not optional help groups.
+        if escape:
+            escape = truncate(clean_text(escape), width)
+            field = truncate(clean_text(hint), max(0, width - display_width(escape) - 2))
+            return '  '.join(text for text in (field, escape) if text)
         return truncate(clean_text(hint), width)
     if not fit_all and ((not raw and not objective) or raw and not hint.startswith(raw)):
         return hint

@@ -18,6 +18,7 @@ from blacksite.door.log import rows as log_rows
 from blacksite.door.present.context import Context
 from blacksite.door.present.paint import Paint
 from blacksite.door.present import screen as presentation_screen
+from blacksite.door.present.chrome import NOTICE_SECONDS, PROTECT_SECONDS
 from blacksite.server.protocol import Frame
 
 
@@ -42,6 +43,8 @@ class Display:
         self.prompt: LinePrompt | None = None
         self.key_prompt: dict[str, Any] | None = None
         self.toast: tuple[str, str, float] | None = None
+        self.notice_started = 0.0
+        self.notice_pressed = self.notice_header = False
         self.confirm_exit = False
         self.leaving = False
         self.connected = False
@@ -116,7 +119,10 @@ class Display:
             self.prompt = LinePrompt(data["id"], data["label"], min(200, data["max_len"])) if data["kind"] == "line" else None
             self.key_prompt = data if data["kind"] == "key" else None
         elif frame.type == "toast":
-            self.toast = (data["text"], data["role"], now + data["seconds"])
+            if self.presentation:
+                self._notice(data['text'], data['role'], data['seconds'], now)
+            else:
+                self.toast = (data["text"], data["role"], now + data["seconds"])
         elif frame.type == "bye":
             self.connected = False
         elif frame.type == "pong":
@@ -188,6 +194,9 @@ class Display:
 
     def key(self, key: str, now: float) -> list[Frame]:
         self.dirty = True
+        if self.presentation and self.toast is not None and now >= self.notice_started:
+            self.notice_pressed = True
+            self._expire_notice(now)
         if key == "ctrl-l":
             self.force_full = True
             return []
@@ -259,12 +268,41 @@ class Display:
             return []
         return [Frame("key", {"k": key, "t": max(0, int(now * 1000))})]
 
-    def update(self, elapsed: float, now: float) -> None:
-        if self.toast is not None and now >= self.toast[2]:
+    def _notice(self, text: str, role: str, seconds: float, now: float) -> None:
+        """UI 2.5: one local history entry, separate from the world log."""
+        self.toast = (text, role, now + max(NOTICE_SECONDS, seconds))
+        self.notice_started, self.notice_pressed = now, False
+        if len(self.logs) == self.logs.maxlen:
+            self.log_ids.discard(self.logs[0].get('id'))
+        self.logs.append({'kind': 'notice', 'channel': 'system', 'text': text,
+                          'role': role, '_arrived': now})
+        self.dirty = True
+
+    def _expire_notice(self, now: float) -> None:
+        if (self.toast is not None and now >= self.toast[2]
+                and (not self.presentation or self.notice_pressed)):
             self.toast = None
             self.dirty = True
+
+    def _notice_to_header(self, now: float) -> bool:
+        """Only declared fields protect prompts and current danger; no inference."""
+        shown = self.body.get('body', {}) if self.kind == 'wake' else self.body
+        return bool(self.confirm_exit or self.prompt or self.key_prompt
+                    or shown.get('me', {}).get('channel') or shown.get('hazards')
+                    or (shown.get('target') or {}).get('relation') in ('hostile', '!')
+                    or any(line.get('kind') in ('danger', 'combat')
+                           and 0 <= now - line.get('_arrived', float('-inf')) < PROTECT_SECONDS
+                           for line in reversed(self.logs)))
+
+    def update(self, elapsed: float, now: float) -> None:
+        self._expire_notice(now)
+        if self.presentation and self.toast and self.notice_header != self._notice_to_header(now):
+            self.dirty = True  # A protected line can age out without a new view.
         for text in self.warnings.update(elapsed):
-            self.toast = (text, "warning", now + 8)
+            if self.presentation:
+                self._notice(text, 'warning', NOTICE_SECONDS, now)
+            else:
+                self.toast = (text, "warning", now + 8)
             self.dirty = True
         if elapsed >= self.info.session_limit:
             self.leaving = True
@@ -295,8 +333,16 @@ class Display:
             context = focus_context(shown.get('focus'), shown.get('jack_focus'),
                                     'Ctrl-O' if self.selected_keymap == 'vi' else 'J') if zone_hint else []
             objective = shown.get('objective') if zone_hint else None
-            hint = chrome.focus_hint(hint, self.layout.hint.width, context, objective,
-                                     fit_all=True, primary=primary, objective_in_panel=self.layout.wide)
+            self.notice_header = bool(self.toast and self._notice_to_header(now))
+            if self.toast and not self.notice_header:
+                escape = str((shown.get('escape') or {}).get('action', 'Ctrl-X leave'))
+                if self.local is not None or shown_kind == 'menu':
+                    escape = 'Esc/B back  ' + escape
+                hint = chrome.focus_hint(self.toast[0], self.layout.hint.width, [],
+                                         fit_all=True, primary=True, escape=escape)
+            else:
+                hint = chrome.focus_hint(hint, self.layout.hint.width, context, objective,
+                                         fit_all=True, primary=primary, objective_in_panel=self.layout.wide)
         header = "" if self.kind == "zone" and self.local is None else "Karst · " + truncate(self.info.handle, self.layout.header_slots.handle_width)
         if not self.presentation:
             chrome.render_frame(buffer, self.layout, self.palette, header, list(self.logs), hint)
@@ -336,4 +382,4 @@ class Display:
             self.paint = Paint(self.palette)
         presentation_screen.render(buffer, self.layout, self.paint, kind, body, list(self.logs), hint, now,
                                    flash=self.hit_flash, toast=self.toast, handle=self.info.handle,
-                                   body_safety=self.body_safety)
+                                   body_safety=self.body_safety, notice_in_header=self.notice_header)

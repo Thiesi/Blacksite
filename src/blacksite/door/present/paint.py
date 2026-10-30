@@ -100,6 +100,16 @@ def _gamut_rgb(light: float, chroma: float, hue: float) -> tuple[int, int, int]:
     return tuple(round(max(0.0, min(1.0, c)) * 255) for c in encoded)  # type: ignore[return-value]
 
 
+def _unreachable(colour: Color) -> Color:
+    """An operator's palette may have no legal band: retain its colour.
+
+    Paint caches this result just like a successful lift. Shipped palette
+    tests forbid reaching this fallback; a local override must not crash a
+    caller's door while rendering (P5 TR-3).
+    """
+    return colour
+
+
 def lift(colour: Color, floor: float, tier: str, *, ground: Color = 0,
          ceiling: float | None = None) -> Color:
     """Cached by Paint's callers; never perform LCh conversion per cell."""
@@ -121,14 +131,14 @@ def lift(colour: Color, floor: float, tier: str, *, ground: Color = 0,
             shown = light_distance(rgb, ground)
             if shown >= floor and (ceiling is None or shown < ceiling):
                 return rgb
-        raise ValueError('unrepresentable truecolor contrast floor')
+        return _unreachable(colour)
     target_lab = lab(rgb)
     fits = [index for index in range(16, 256)
             if abs(_XTERM_LAB[index][0] - ground_light) >= floor
             and (ceiling is None or abs(_XTERM_LAB[index][0] - ground_light) < ceiling)
             and (chroma <= _ACHROMATIC or _XTERM_LCH[index][1] > _ACHROMATIC)]
     if not fits:
-        raise ValueError('unrepresentable xterm contrast floor')
+        return _unreachable(colour)
     return min(fits, key=lambda i: (
         hue_distance(_XTERM_LCH[i][2], hue) if chroma > _ACHROMATIC else 0,
         sum((a - b) ** 2 for a, b in zip(_XTERM_LAB[i], target_lab)), i))
