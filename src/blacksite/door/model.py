@@ -290,7 +290,8 @@ class Display:
             shown = self.body.get('body', {}) if self.kind == 'wake' else self.body
             primary = bool(self.confirm_exit or self.prompt or self.key_prompt
                            or shown.get('me', {}).get('channel'))
-            zone_hint = self.kind == 'zone' and self.local is None and not primary
+            shown_kind = self.body.get('kind') if self.kind == 'wake' else self.kind
+            zone_hint = shown_kind == 'zone' and self.local is None and not primary
             context = focus_context(shown.get('focus'), shown.get('jack_focus'),
                                     'Ctrl-O' if self.selected_keymap == 'vi' else 'J') if zone_hint else []
             objective = shown.get('objective') if zone_hint else None

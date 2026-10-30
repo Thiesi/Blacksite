@@ -290,14 +290,16 @@ def test_ui_2_5_p5_uses_word_boundaries_and_preserves_wide_text(size):
 
 
 @pytest.mark.parametrize('size', SIZES)
-def test_ui_2_4_objective_and_notice_never_overwrite_separator(content, size):
+@pytest.mark.parametrize('kind', ['zone', 'wake'])
+def test_ui_2_4_objective_and_notice_never_overwrite_separator(content, size, kind):
     width, height = size
     model = display(content, width, height)
     body = zone_body(content, width, height)
     body.update(focus=None, jack_focus=None, event=None,
                 hint='Next: Complete training 0/1 | 3 chits  Tab target  F fire  ? help')
     body['objective'] = {'next_action': 'Complete training', 'progress': '0/1', 'cost': '3 chits'}
-    model.receive(Frame('view', {'rev': 1, 'kind': 'zone', 'body': body}), 1)
+    document = body if kind == 'zone' else {'kind': 'zone', 'body': body, 'hint': body['hint']}
+    model.receive(Frame('view', {'rev': 1, 'kind': kind, 'body': document}), 1)
     model.receive(Frame('toast', {'text': 'The corridor teaches targeting.', 'role': 'ui_text', 'seconds': 5}), 1)
     model.render(1)
     rows = [''.join(cell.glyph for cell in row) for row in model.previous.cells]
@@ -311,6 +313,7 @@ def test_ui_2_4_objective_and_notice_never_overwrite_separator(content, size):
     else:
         assert 'Next: Complete training 0/1 | 3 chits' in hint
         assert 'NOW' not in side
+    assert '\n'.join(rows).count('Complete training') == 1
 
 
 def test_ui_2_5_notice_and_newest_protected_combat_both_remain_visible(content):
