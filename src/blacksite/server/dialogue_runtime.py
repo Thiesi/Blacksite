@@ -206,8 +206,9 @@ class Dialogue:
                              if job.template == template.id
                              and session.player_id in {member.player for member in job.roster}), '')
             if not offer_id:
-                offer_id = next((job.id for job in owner.state.engine.board(template.giver, owner.now())
-                                 if job.template == template.id), '')
+                offer_id = (template.id if template.story else next(
+                    (job.id for job in owner.state.engine.board(template.giver, owner.now())
+                     if job.template == template.id), ''))
             self.board(session, template.giver, offer_id)
         elif offer.kind == 'service' and offer.ref in self.content.services:
             service = self.content.services[offer.ref]

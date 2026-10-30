@@ -120,6 +120,20 @@ def test_game_13_4_chosen_action_opens_the_owning_system_without_accepting_or_bu
     assert (player.chits_hand, player.inventory) == before
 
 
+def test_game_13_4_story_hotkey_selects_its_card_ahead_of_an_unrelated_active_job(content: ContentTree) -> None:
+    game, caller, player = setup(content)
+    owner = game.core.contracts
+    other = replace(owner.content.contracts['vesper-first-thing'], id='unrelated-story')
+    owner.content.contracts[other.id] = other
+    owner.state.engine.templates[other.id] = other
+    owner.state.engine.accept(owner.state.engine.story_offer(other.id, player.id),
+                              (owner.participant(player.id),), owner.now())
+    open_talker(game, caller)
+    press(game, caller, 'c')
+    panel = owner.panels.menus[caller.session.id]
+    assert owner.panels.rows(caller.session, panel)[panel.cursor]['id'] == 'vesper-first-thing'
+
+
 def test_game_13_4_remote_talk_target_is_refused_and_disconnect_clears_the_menu(content: ContentTree) -> None:
     game, caller, player = setup(content)
     place(game, caller, 'vatside-wake-hall', (6, 5))
