@@ -2,8 +2,10 @@
 
 Execution source: `03dad628af71fbdd5cb2128d9b01bcb7c79d4ab5`, based on
 owner-merged main `5f0c993afb82c468acd533656b7282d5336faa7e`.
-The follow-up evidence commit changes only documentation and receipts;
-the runtime, content, test and acceptance-script trees stay identical.
+These captures predate the owner's S27 merge at `85d3dda`. They are
+historical during the current integration check. Fresh captures and
+receipts for the combined runtime are being prepared; do not use this
+packet as proof of the rebased runtime's source identity yet.
 
 ## Native captures
 
