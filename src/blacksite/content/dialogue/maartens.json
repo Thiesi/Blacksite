@@ -1,0 +1,83 @@
+{
+  "schema": 1,
+  "id": "maartens",
+  "name": "Captain Ines Maartens",
+  "faction": "halvard",
+  "title": "Recovery handler",
+  "terminal": false,
+  "machine_mind": false,
+  "lines": [
+    {
+      "id": "record-hal-s1-4-descend",
+      "text": "Three marks around an unlisted door. I say the invoice does not mention it. File your inspection beside that claim; do not make either stand in for the other.",
+      "when": [
+        "has_evidence s19-hal-s1-4-descend"
+      ],
+      "required": true
+    },
+    {
+      "id": "record-hal-s1-3-plug",
+      "text": "Seal intact. Reading warm. Those are the readings. Do not write a cause into the temperature column.",
+      "when": [
+        "has_evidence s19-hal-s1-3-plug"
+      ],
+      "required": true
+    },
+    {
+      "id": "record-hal-s1-2-audit",
+      "text": "The header is earlier. The copy establishes that much. Directorate still has to answer for the name on its old routing entry.",
+      "when": [
+        "has_evidence s19-hal-s1-2-audit"
+      ],
+      "required": true
+    },
+    {
+      "id": "record-hal-s1-1-recovery",
+      "text": "My recovery list calls it Directorate property. Your unit is warm. Put the temperature on the card; leave the cause blank until we have one.",
+      "when": [
+        "has_evidence s19-hal-s1-1-recovery"
+      ],
+      "required": true
+    },
+    {
+      "id": "situation",
+      "text": "Hardline. Read the recovery card. Directorate needs someone who brings the record back.",
+      "when": [
+        "archetype hardline"
+      ],
+      "required": true
+    },
+    {
+      "id": "work",
+      "text": "Warm telemetry. Directorate wants the unit and the record of where you found it. Read the delivery terms.",
+      "when": [
+        "has_contract hal-s1-1-recovery"
+      ],
+      "required": true
+    },
+    {
+      "id": "first",
+      "text": "Directorate has a recovery in the third ring. You are expendable enough to be useful.",
+      "when": [
+        "first_meeting"
+      ],
+      "required": true
+    },
+    {
+      "id": "greeting",
+      "text": "Read the objective. Bring back the record. Directorate can afford opinions after that.",
+      "when": [],
+      "required": true
+    }
+  ],
+  "offers": [
+    {
+      "kind": "contract",
+      "ref": "hal-s1-1-recovery",
+      "label": "Work board",
+      "hotkey": "c",
+      "when": []
+    }
+  ],
+  "barks": []
+}

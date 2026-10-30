@@ -1,0 +1,105 @@
+{
+  "schema": 1,
+  "id": "quell",
+  "name": "Mother Serafine Quell",
+  "faction": "choir",
+  "title": "Hierophant",
+  "terminal": false,
+  "machine_mind": false,
+  "lines": [
+    {
+      "id": "marked",
+      "text": "Marked. The Wardens hunt colours. It does not. Sit a while; nothing in here will shoot you.",
+      "when": [
+        "marked"
+      ],
+      "required": true
+    },
+    {
+      "id": "enemy",
+      "text": "Halvard. Anselm's people. Tell him the fault is singing. He knows the tune.",
+      "when": [
+        "enemy_of_me"
+      ],
+      "required": true
+    },
+    {
+      "id": "first",
+      "text": "Child. Sit, or stand; it hears you either way. Most people prefer to sit.",
+      "when": [
+        "first_meeting"
+      ],
+      "required": true
+    },
+    {
+      "id": "record-cho-s1-4-answer",
+      "text": "A different tune. Yes. Your beacon records one coming back. The beacon calls it close. We have not named what sets its delay.",
+      "when": [
+        "has_evidence s19-cho-s1-4-answer"
+      ],
+      "required": true
+    },
+    {
+      "id": "record-cho-s1-3-descent",
+      "text": "A familiar voice. An unfamiliar label. That is what the copied echo gives us. We can listen without making the label its name.",
+      "when": [
+        "has_evidence s19-cho-s1-3-descent"
+      ],
+      "required": true
+    },
+    {
+      "id": "record-cho-s1-2-nine",
+      "text": "A wrong name. The third listener writes it down that way. We have the mismatch, not the mouth that made it.",
+      "when": [
+        "has_evidence s19-cho-s1-2-nine"
+      ],
+      "required": true
+    },
+    {
+      "id": "record-cho-s1-1-listen",
+      "text": "Out of phase. Yes. Three cells carry the decant frequency in your readings. We hear the pattern; we have not earned its name.",
+      "when": [
+        "has_evidence s19-cho-s1-1-listen"
+      ],
+      "required": true
+    },
+    {
+      "id": "wake",
+      "text": "You are new. It likes the new ones. The vats hum when you are decanted and it hums back. Did they tell you that?",
+      "when": [
+        "is_wake"
+      ],
+      "required": true
+    },
+    {
+      "id": "finale",
+      "text": "A choice. Yes. The Chronicle records a choice. We have not finished listening.",
+      "when": [
+        "season_stage finale_done"
+      ],
+      "required": true
+    },
+    {
+      "id": "greeting",
+      "text": "Child. Sit, or stand; it hears you either way. Most people prefer to sit.",
+      "when": [],
+      "required": true
+    }
+  ],
+  "offers": [
+    {
+      "kind": "contract",
+      "ref": "cho-s1-1-listen",
+      "label": "Work board",
+      "hotkey": "c",
+      "when": []
+    }
+  ],
+  "barks": [
+    {
+      "text": "Nine of us heard it first. Three of us are left. The number was never the point.",
+      "weight": 1,
+      "min_interval_seconds": 90
+    }
+  ]
+}

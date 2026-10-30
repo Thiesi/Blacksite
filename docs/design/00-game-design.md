@@ -1481,6 +1481,17 @@ Tin Halo or their commissioning faction's board; their standing reward
 still belongs to the commissioning faction. Story referrals retain their
 separate dialogue and prerequisite checks.
 
+At the Tin Halo, Vesper can refer a story without its giver's minimum
+standing only when the caller's faction has relation **H** to the giver
+(§7.2), blocking its own handler. Only that giver-standing check is waived;
+low personal standing alone does not qualify. Grade, items, predecessors,
+personal branches, membership and event conditions remain. At proposal
+and start, the broker rechecks the live relation and prerequisites for
+each consenting participant.
+Completed story work may return through Vesper or its original handler;
+the commissioning faction retains its standing rewards. Public work
+orders still require their own local board and frozen service allocation.
+
 ### 9.2 Evidence, custody, and intrigue
 
 The journal stores discovered records with asset ID, source object,
@@ -1861,6 +1872,12 @@ probability 0.7 at |balance| = 1 or 2, 0.9 at 3, no skip at 0. These
 weights never suppress instructions, costs, warnings, or a required clue.
 Future NPC positions and dialogue condition on settled outcomes or the
 viewing player's receipt, never the most recent crew's completion.
+
+Ordinary talkers select the first eligible conditional line and show
+actions without requiring a reply. An idle bark requires a player
+within six tiles, defaults to a 90-second per-talker interval, and stays
+silent while anyone is interacting. Authored bark intervals may differ.
+Talking never pauses the world or changes the location's safety rules.
 
 ## 14. Anti-abuse and fairness
 

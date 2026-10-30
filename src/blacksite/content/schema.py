@@ -365,6 +365,7 @@ class Cell:
     planned_core: str | None = None
     uplink: Uplink | None = None
     gate_owner: str | None = None
+    dialogue: str | None = None
 
     @property
     def access_kind(self) -> str:

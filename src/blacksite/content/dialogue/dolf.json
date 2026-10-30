@@ -1,0 +1,35 @@
+{
+  "schema": 1,
+  "id": "dolf",
+  "name": "Dolf",
+  "faction": null,
+  "title": "Tin Halo bartender",
+  "terminal": false,
+  "machine_mind": false,
+  "lines": [
+    {
+      "id": "situation",
+      "text": "Hardline template. Same as some of you. Chose the bar. You can choose too.",
+      "when": [
+        "archetype hardline"
+      ],
+      "required": true
+    },
+    {
+      "id": "first",
+      "text": "Vesper's at the end. Drink if you want. Row's neutral; the chair's free.",
+      "when": [
+        "first_meeting"
+      ],
+      "required": true
+    },
+    {
+      "id": "greeting",
+      "text": "Row's neutral. I'm the reason it stays that way when Sable's not looking.",
+      "when": [],
+      "required": true
+    }
+  ],
+  "offers": [],
+  "barks": []
+}

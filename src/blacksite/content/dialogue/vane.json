@@ -1,0 +1,75 @@
+{
+  "schema": 1,
+  "id": "vane",
+  "name": "Kasimir Vane",
+  "faction": "sablier",
+  "title": "Sablier handler",
+  "terminal": false,
+  "machine_mind": false,
+  "lines": [
+    {
+      "id": "record-sab-s1-4-batch",
+      "text": "Director Vantongeren identifies the template as her original. Your record gives the stamp and the warm canister. Her identification needs its own verification.",
+      "when": [
+        "has_evidence s19-sab-s1-4-batch"
+      ],
+      "required": true
+    },
+    {
+      "id": "record-sab-s1-3-dreaming",
+      "text": "Your record has Okafor back from the nave. She says the visit is about the dreams. That is her account; Sablier does not get to fill in the silence.",
+      "when": [
+        "has_evidence s19-sab-s1-3-dreaming"
+      ],
+      "required": true
+    },
+    {
+      "id": "record-sab-s1-2-provenance",
+      "text": "The index gives no earlier template. I can tell you what it records. I cannot sign a lineage it does not have.",
+      "when": [
+        "has_evidence s19-sab-s1-2-provenance"
+      ],
+      "required": true
+    },
+    {
+      "id": "record-sab-s1-1-retrieval",
+      "text": "The register has four arrivals. The clinic promises care. A promise from Sablier has a department behind it; keep the entry if you need to call us on it.",
+      "when": [
+        "has_evidence s19-sab-s1-1-retrieval"
+      ],
+      "required": true
+    },
+    {
+      "id": "work",
+      "text": "The clinic offers care. The alternatives are on the record. Read them before you promise anyone a destination.",
+      "when": [
+        "has_contract sab-s1-1-retrieval"
+      ],
+      "required": true
+    },
+    {
+      "id": "first",
+      "text": "Sablier made you. Sablier can make you better. Card's on the desk.",
+      "when": [
+        "first_meeting"
+      ],
+      "required": true
+    },
+    {
+      "id": "greeting",
+      "text": "Sablier made you. That doesn't mean a card chooses your work. Read it yourself.",
+      "when": [],
+      "required": true
+    }
+  ],
+  "offers": [
+    {
+      "kind": "contract",
+      "ref": "sab-s1-1-retrieval",
+      "label": "Work board",
+      "hotkey": "c",
+      "when": []
+    }
+  ],
+  "barks": []
+}

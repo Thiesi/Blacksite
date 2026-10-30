@@ -1,0 +1,43 @@
+{
+  "schema": 1,
+  "id": "kroll",
+  "name": "Halvard Recovery Sergeant Mads Kroll",
+  "faction": "halvard",
+  "title": "Recovery sergeant",
+  "terminal": false,
+  "machine_mind": false,
+  "lines": [
+    {
+      "id": "ferrymen",
+      "text": "Ferrymen. Halvard recovery patrol. Drop the salvage and walk. That is an order, not a trade.",
+      "when": [
+        "member_of ferrymen"
+      ],
+      "required": true
+    },
+    {
+      "id": "unmoored",
+      "text": "Unmoored. Directorate recovery zone. Keep away from the compute crates. Your terminal does not give you a claim here.",
+      "when": [
+        "member_of unmoored"
+      ],
+      "required": true
+    },
+    {
+      "id": "first",
+      "text": "Halvard recovery. Salvage in this ring is Directorate property. Drop it and walk.",
+      "when": [
+        "first_meeting"
+      ],
+      "required": true
+    },
+    {
+      "id": "greeting",
+      "text": "Ferrymen get the hull. Halvard gets the compute. That's not a deal; it's an order.",
+      "when": [],
+      "required": true
+    }
+  ],
+  "offers": [],
+  "barks": []
+}

@@ -32,7 +32,7 @@ class Panel:
 
 
 def takes_turnin(handler: str, instance: Instance) -> bool:
-    return handler == instance.giver or (handler == 'vesper' and not instance.story and not instance.service)
+    return handler == instance.giver or (handler == 'vesper' and not instance.service)
 
 
 def payment(payment: Payment) -> str:
@@ -101,9 +101,10 @@ class Panels:
                 if service.zone == actor.zone and owner.content.contracts[service.contract].giver == panel.handler:
                     result.append({'id': 'service:'+sid, 'cells': [node.state, service.name]})
             for tid, job in owner.state.engine.templates.items():
-                if (job.story and job.giver == panel.handler and tid not in owner.state.engine.completed.get(pid, set())
+                if (job.story and (job.giver == panel.handler or panel.handler == 'vesper' and not job.service)
+                        and tid not in owner.state.engine.completed.get(pid, set())
                         and not owner.state.engine.helper_for(job, pid)
-                        and not owner.requirements(pid, job)
+                        and not owner.requirements(pid, job, broker=panel.handler == 'vesper')
                         and not any(j.template == tid and j.state != 'turned_in' and pid in {p.player for p in j.roster}
                                     for j in owner.state.engine.instances.values())):
                     result.append({'id': tid, 'cells': ['Story', job.name or job.id]})
@@ -265,7 +266,10 @@ class Panels:
                 'Grade: '+str(job.min_grade)+'. '+('Story; no overall deadline.' if job.story else 'Generated; 60 min after acceptance.'),
                 'Cost: no acceptance fee. Actions and hazards appear on the objective card.']
             detail += consequences(job)
-            missing = owner.requirements(pid, job)
+            missing = owner.requirements(pid, job, broker=panel.handler == 'vesper')
+            if job.story and panel.handler == 'vesper' and job.giver != 'vesper':
+                detail += ['Neutral referral: only hostile giver-standing gates are waived. Other prerequisites remain.',
+                           'Completed work may return here; faction rewards retain their original owner.']
             if missing:
                 detail += ['Requires: '+', '.join(describe_requirement(condition, owner.content) for condition in missing)]
             else:
@@ -389,7 +393,8 @@ class Panels:
             crew = owner.game.crews.registry.crew_of(pid)
             roster = (pid,) if key != 'c' or not crew else (pid, *(p for p in crew.members if p != pid))
             approach = job.approaches[int(key)-1].id if key.isdigit() else 'default'
-            proposal = owner.propose(pid, offer, roster, approach)
+            proposal = owner.propose(pid, offer, roster, approach,
+                                     broker='vesper' if panel.handler == 'vesper' and job.story else '')
             owner.consent(proposal.id, pid)
             if len(roster) == 1:
                 panel.confirmation = ('start', proposal.id, '')

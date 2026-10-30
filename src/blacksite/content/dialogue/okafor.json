@@ -1,0 +1,43 @@
+{
+  "schema": 1,
+  "id": "okafor",
+  "name": "Nurse Bea Okafor",
+  "faction": "sablier",
+  "title": "Wake Hall floor nurse",
+  "terminal": false,
+  "machine_mind": false,
+  "lines": [
+    {
+      "id": "situation",
+      "text": "Your day count's on the record. Keep an eye on it. Vantongeren does the speech; I do the walking.",
+      "when": [
+        "is_wake"
+      ],
+      "required": true
+    },
+    {
+      "id": "first",
+      "text": "Up you get. Vantongeren does the speech; I do the walking.",
+      "when": [
+        "first_meeting"
+      ],
+      "required": true
+    },
+    {
+      "id": "greeting",
+      "text": "Up you get. You can read the clinic terms before you sit down. Nobody needs a speech from me as well.",
+      "when": [],
+      "required": true
+    }
+  ],
+  "offers": [
+    {
+      "kind": "service",
+      "ref": "sablier-clinic",
+      "label": "Clinic terms",
+      "hotkey": "s",
+      "when": []
+    }
+  ],
+  "barks": []
+}

@@ -134,7 +134,8 @@ value) and `keymaps.json` (`actions`: action id to context and label;
 
 `id, district, cells[]` where a cell is `id, kind (public, gated, hidden,
 core_entrance, descent), pos (grid position on the sector view),
-neighbours[], requirement, label, core_id (optional), lore`. A sector also
+neighbours[], requirement, label, core_id (optional), lore, dialogue
+(optional terminal talker ID)`. A sector also
 names its public `entry` cell and `layout_size` (at most 8 by 6).
 Its `trace_policy` names the district schedule; optional `trace_owner`
 is the faction receiving named trace reports, not territorial ownership.
@@ -519,18 +520,57 @@ Saved scene checkpoints retain surviving units' positions and condition.
 
 ### 1.11 Dialogue (`dialogue/<npc>.json`)
 
-Talkers with ordered conditional lines, first match wins: `lines[]` of
-`id, text (inline, at most 200 characters), when (conditions (a closed set: standing, grade, faction,
-marked, contract state, season, event, season flag, legal status,
-evidence, receipt, service state), offers[] (label,
-hotkey, effect: contract offer, join, vendor, text asset), barks[],
-tag (CUST, TEN, or none)`, plus `required` on lines the balance weights
-may never skip and `machine_mind` on talkers that need a line in each
-voice. The full shape, including terminal
-talkers (the Dispatcher, Ninety-Nine) and the validation tests, is
+One record per talker: `id, name, faction (or null), title, lines[],
+offers[], barks[], terminal, machine_mind, schema`. Existing NPC templates
+bind their `dialogue` to the record ID. Terminal objects bind the same
+ID in `params.dialogue`; a terminal talker needs no separate actor.
+Lattice cells may bind that terminal record through `dialogue`. The
+viewing presence must occupy the cell; delivery uses the Lattice colour
+role. Ninety-Nine's authored lines retain their `//99` suffix.
+
+Lines are ordered records: `id, text (at most 200 characters), when[]`
+(closed condition strings), `tag (CUST, TEN, or null), required`. The
+first eligible line wins, subject only to game 13.4's optional opposing
+voice weighting. The last line has no conditions and supplies an
+unskippable fallback. Required instructions, costs, warnings and clues
+must use `required: true`. Machine-mind records retain both voice tags;
+their lines never resolve the identity question.
+
+Offers are `kind (contract, vendor, service, recruit, travel), label,
+hotkey, ref, when[]`. Hotkeys are unique single characters; Esc/B always
+leaves. Showing a line or offer grants nothing. The selected hotkey
+dispatches to the owning subsystem and its live eligibility checks.
+Service references resolve either a work-order node or a vendor with a
+clinic; both retain the owning system's normal counter/board checks.
+
+Barks are `text, weight (positive integer), min_interval_seconds
+(positive integer, default 90)`. P8's single ambient emitter uses a
+derived per-zone RNG and supplied ticks (architecture 5.5.3), emits only
+with a viewer within six tiles, and suppresses the talker's barks while
+anyone is interacting (game 13.4). S27 authors the records and pure
+scheduler; it does not install an independent emission loop.
+
+The closed condition set and terminal delivery are specified in
 "Dialogue system notes" in `docs/world/04-dramatis-personae.md`.
-This contract and game design section 13.4 govern weighting and required
-lines; flavour cannot remove a warning, objective or offered action.
+Conditions read the viewing player's committed facts. An unset
+`legal_at` means Wake regardless of grade. Contract stage numbers match
+the engine's zero-based index. Historical choices read settled Chronicle
+records; actor placement or another crew's recent outcome grants none.
+Tags and internal facts never enter a client menu or journal.
+Records marked `machine_mind` are scripted encounter line banks, excluded
+from ordinary actor, object and cell contacts. S26 consumes each required
+finale voice explicitly; first-match talker selection is not a substitute
+for the two guaranteed registers.
+
+Neutral story proposals record the server-validated `broker: vesper`.
+Accepted instances retain it in their durable `runtime.broker` field.
+The live Tin Halo contact and each participant's faction relation to the
+giver are checked at proposal and start. Only relation H permits the
+giver-standing waiver; no client flag waives prerequisites. Completed
+stories can use that neutral turn-in counter without changing the
+commissioning faction (game 9.1).
+S26 supplies `Core.dialogue.season_facts(player)` with committed stage,
+balance and Chronicle choices; the default exposes no settled outcome.
 
 ### 1.12 Event template (`events.json`)
 

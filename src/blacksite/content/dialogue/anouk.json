@@ -1,0 +1,105 @@
+{
+  "schema": 1,
+  "id": "anouk",
+  "name": "Anouk, the Ferry",
+  "faction": "ferrymen",
+  "title": "Ferry of the clans",
+  "terminal": false,
+  "machine_mind": false,
+  "lines": [
+    {
+      "id": "marked",
+      "text": "The colour on your name means nothing past the wall. Out here your name means what you carry back.",
+      "when": [
+        "marked"
+      ],
+      "required": true
+    },
+    {
+      "id": "enemy",
+      "text": "Kestrel. You run convoys on my road and call it yours. We'll trade. We'll also take the third one back. That's the road.",
+      "when": [
+        "enemy_of_me"
+      ],
+      "required": true
+    },
+    {
+      "id": "first",
+      "text": "Wall-folk. You found the Landing. That's the road. Sit; the fire's not for you but it doesn't know that.",
+      "when": [
+        "first_meeting"
+      ],
+      "required": true
+    },
+    {
+      "id": "record-fer-s1-4-sled",
+      "text": "Long sled from Landing to caverns. Bram calls the mouth a route kept off city maps. One journey in the record. It does not tell you who else uses the road.",
+      "when": [
+        "has_evidence s19-fer-s1-4-sled"
+      ],
+      "required": true
+    },
+    {
+      "id": "record-fer-s1-3-conduit",
+      "text": "Stake says the hum rises from below its sensor. Below. No distance on that word. Keep your feet on the ground you can measure.",
+      "when": [
+        "has_evidence s19-fer-s1-3-conduit"
+      ],
+      "required": true
+    },
+    {
+      "id": "record-fer-s1-2-far-side",
+      "text": "Three viewpoints. Light in the fog. Ute offers the views; she does not name the light. No road off the plateau comes with that offer.",
+      "when": [
+        "has_evidence s19-fer-s1-2-far-side"
+      ],
+      "required": true
+    },
+    {
+      "id": "record-fer-s1-1-race",
+      "text": "Named salvage recovered, says your record. Log gives a window before Directorate arrival. Who watches that clock? That's the road.",
+      "when": [
+        "has_evidence s19-fer-s1-1-race"
+      ],
+      "required": true
+    },
+    {
+      "id": "wake",
+      "text": "New-decanted. You smell of the vats. The ground smells it too; keep moving and it stops noticing.",
+      "when": [
+        "is_wake"
+      ],
+      "required": true
+    },
+    {
+      "id": "finale",
+      "text": "The expedition has a record. That's the road. A record is not the whole ground.",
+      "when": [
+        "season_stage finale_done"
+      ],
+      "required": true
+    },
+    {
+      "id": "greeting",
+      "text": "Wall-folk. You found the Landing. That's the road. Sit; the fire's not for you but it doesn't know that.",
+      "when": [],
+      "required": true
+    }
+  ],
+  "offers": [
+    {
+      "kind": "contract",
+      "ref": "fer-s1-1-race",
+      "label": "Work board",
+      "hotkey": "c",
+      "when": []
+    }
+  ],
+  "barks": [
+    {
+      "text": "Sky's there whether you watch it or not. Watch it.",
+      "weight": 1,
+      "min_interval_seconds": 90
+    }
+  ]
+}

@@ -1,0 +1,105 @@
+{
+  "schema": 1,
+  "id": "dispatcher",
+  "name": "The Dispatcher",
+  "faction": "kestrel",
+  "title": "Tramyard dispatch",
+  "terminal": true,
+  "machine_mind": false,
+  "lines": [
+    {
+      "id": "marked",
+      "text": "Tramyard dispatch. Marked status noted. Check the public Curfew warning before travelling to the Core.",
+      "when": [
+        "marked"
+      ],
+      "required": true
+    },
+    {
+      "id": "enemy",
+      "text": "Tramyard dispatch. Clan affiliation noted. Check the current gate and convoy terms at their counters.",
+      "when": [
+        "enemy_of_me"
+      ],
+      "required": true
+    },
+    {
+      "id": "first",
+      "text": "Tramyard dispatch. Departures and routes are posted at the terminal. Kestrel wishes you a long commute.",
+      "when": [
+        "first_meeting"
+      ],
+      "required": true
+    },
+    {
+      "id": "record-kes-s1-4-quiet",
+      "text": "Tramyard archive. The stored record quotes a denial after a ninety-second interval. That is the stored account. This terminal supplies no cause for the discrepancy.",
+      "when": [
+        "has_evidence s19-kes-s1-4-quiet"
+      ],
+      "required": true
+    },
+    {
+      "id": "record-kes-s1-3-frequency",
+      "text": "Tramyard channel copy: nine years of headers. The log names Ferrymen recipients. The older addresses have no verified assigner in this record.",
+      "when": [
+        "has_evidence s19-kes-s1-3-frequency"
+      ],
+      "required": true
+    },
+    {
+      "id": "record-kes-s1-2-diversion",
+      "text": "Tramyard allocation and Gate Nine crate carry matching IDs in your copies. The allocation records a six-year diversion. Authorisation is not identified.",
+      "when": [
+        "has_evidence s19-kes-s1-2-diversion"
+      ],
+      "required": true
+    },
+    {
+      "id": "record-kes-s1-1-escort",
+      "text": "Tramyard dispatch. Your record lists the convoy at the ring-two depot with no loss. Rating recorded: amber. Cause of rating: not supplied in this account.",
+      "when": [
+        "has_evidence s19-kes-s1-1-escort"
+      ],
+      "required": true
+    },
+    {
+      "id": "wake",
+      "text": "Wake designation confirmed at Tramyard dispatch. Your lease record and your departure board are separate records.",
+      "when": [
+        "is_wake"
+      ],
+      "required": true
+    },
+    {
+      "id": "finale",
+      "text": "Tramyard dispatch. Expedition receipt available for inspection. Self-attribution remains unverified.",
+      "when": [
+        "season_stage finale_done"
+      ],
+      "required": true
+    },
+    {
+      "id": "greeting",
+      "text": "Tramyard dispatch. Departures and routes are posted at the terminal. Kestrel wishes you a long commute.",
+      "when": [],
+      "required": true
+    }
+  ],
+  "offers": [
+    {
+      "kind": "contract",
+      "ref": "kes-s1-1-escort",
+      "label": "Work board",
+      "hotkey": "c",
+      "when": []
+    }
+  ],
+  "barks": [
+    {
+      "text": "Tramyard dispatch. Departure boards are posted at the Depot terminal.",
+      "weight": 1,
+      "min_interval_seconds": 90
+    }
+  ]
+}

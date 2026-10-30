@@ -134,8 +134,17 @@ class Core:
             self.loop.subsystems.append(self.events)
             social = self.lattice.social_overlay
             self.lattice.social_overlay = lambda session, previous=social: previous(session) or session.id in self.events.views.menus
+        from blacksite.server.dialogue_runtime import Dialogue
+        self.dialogue = Dialogue(self) if self.contracts else None
+        if self.dialogue:
+            self.contracts.dialogue = self.dialogue
+            self.loop.subsystems.append(self.dialogue)
+            social = self.lattice.social_overlay
+            self.lattice.social_overlay = lambda session, previous=social: previous(session) or session.id in self.dialogue.menus
 
     def _disconnect_character(self, session: Session) -> None:
+        if self.dialogue:
+            self.dialogue.close(session)
         if self.events:
             self.events.views.close(session)
         if self.market:

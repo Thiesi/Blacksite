@@ -1,0 +1,62 @@
+{
+  "schema": 1,
+  "id": "s27-cast",
+  "status": "authoring",
+  "depends": [
+    "s19-season-one",
+    "s25-commerce",
+    "s24-future-events"
+  ],
+  "members": {
+    "dialogue": [
+      "aalto",
+      "achterberg",
+      "achebe-roux",
+      "amsel",
+      "anouk",
+      "ansgar",
+      "bram",
+      "brann",
+      "dispatcher",
+      "dolf",
+      "duarte",
+      "ghost-of-terrace-nine",
+      "halvard",
+      "holt",
+      "iloh",
+      "ivey",
+      "kettle",
+      "kroll",
+      "lamplighter",
+      "lindgren",
+      "loos",
+      "maartens",
+      "machine-mind-encounter",
+      "marsh",
+      "ninety-nine",
+      "ode",
+      "okafor",
+      "old-tam",
+      "pale",
+      "quaye",
+      "quell",
+      "ranke",
+      "reyes",
+      "sefa",
+      "solenne",
+      "strand",
+      "stroud",
+      "ute",
+      "vael",
+      "vance",
+      "vane",
+      "vantongeren",
+      "vesper",
+      "wren"
+    ],
+    "text": [
+      "text-tin-halo-ambient",
+      "text-graffiti-set-1"
+    ]
+  }
+}

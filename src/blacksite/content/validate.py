@@ -572,6 +572,11 @@ class _Validator:
         seen: set[str] = set()
         fields = 0
         for obj in zone.meta.objects:
+            if 'dialogue' in obj.params:
+                did = obj.params['dialogue']
+                if self.ref('dialogue', did, owner, 'terminal talker', obj.id):
+                    if self.t.dialogue[did].machine_mind:
+                        self.report(*owner, 'scripted machine-mind records cannot be physical talkers', obj.id)
             if obj.kind == "salvage_field":
                 fields += 1
                 if type(obj.params.get("ring")) is not int or obj.params["ring"] not in (1, 2, 3, 4):
@@ -737,6 +742,9 @@ class _Validator:
                 self.report(*owner, "sector has more than one descent cell")
             positions: dict[s.Tile, str] = {}
             for cell in sector.cells:
+                if self.ref('dialogue', cell.dialogue, owner, f'cell {cell.id}: talker', cell.id) and cell.dialogue:
+                    if not self.t.dialogue[cell.dialogue].terminal or self.t.dialogue[cell.dialogue].machine_mind:
+                        self.report(*owner, 'a cell needs an ordinary terminal talker', cell.id)
                 label = f"cell {cell.id}"
                 if not (0 <= cell.pos[0] < width and 0 <= cell.pos[1] < height):
                     self.report(*owner, f"{label}: position is outside layout bounds", cell.id)
@@ -1653,6 +1661,10 @@ class _Validator:
         if len(args) != len(kinds):
             self.report(*owner, f"{what}: {name} takes {len(kinds)} argument(s), got {len(args)}", name)
             return
+        if name == 'chronicle_choice' and self.current_active and _INTEGER.fullmatch(args[0]):
+            season = next((season for season in self.t.seasons.values() if season.number == int(args[0])), None)
+            if season is None or args[1] not in {choice.id for choice in season.finale_choices}:
+                self.report(*owner, f'{what}: no season {args[0]} finale option {args[1]!r}', name)
         for kind, arg in zip(kinds, args):
             label = f"{what} {name}"
             if kind == "N":
@@ -1670,7 +1682,7 @@ class _Validator:
                 self.ref("evidence", arg, owner, label, name)
             elif kind == "SERVICE":
                 self.ref("services", arg, owner, label, name)
-            elif kind == 'RECEIPT' and owner[0] == 'contracts' and self.current_active:
+            elif kind == 'RECEIPT' and self.current_active:
                 if not any(job.branch_group == arg for job in self.t.contracts.values()):
                     self.report(*owner, f'{label}: no branch group {arg!r} can supply this receipt', name)
             elif kind == "STAGE" and arg not in s.SEASON_STAGES:
@@ -1864,6 +1876,13 @@ class _Validator:
                     self.report(*owner, f"line {ln.id}: longer than {DIALOGUE_LINE_MAX} characters", ln.id)
                 for cond in ln.when:
                     self.condition(cond, owner, f"line {ln.id}")
+            if node.lines and node.lines[-1].tag and not node.lines[-1].required:
+                self.report(*owner, 'the fallback cannot be an optional weighted voice')
+            for bark in node.barks:
+                if not bark.text or len(bark.text) > DIALOGUE_LINE_MAX:
+                    self.report(*owner, f'bark text must contain 1..{DIALOGUE_LINE_MAX} characters')
+                if bark.weight <= 0 or bark.min_interval_seconds <= 0:
+                    self.report(*owner, 'bark weight and interval must be positive')
             if node.machine_mind:
                 tags = {ln.tag for ln in node.lines}
                 for tag in ("CUST", "TEN"):
@@ -1871,12 +1890,18 @@ class _Validator:
                         self.report(*owner, f"a machine-mind talker needs a {tag} line")
             hotkeys: set[str] = set()
             for offer in node.offers:
-                if len(offer.hotkey) != 1 or offer.hotkey.lower() in hotkeys:
+                if (len(offer.hotkey) != 1 or offer.hotkey.lower() in hotkeys
+                        or offer.hotkey.lower() == 'b'):
                     self.report(*owner, f"offer {offer.label!r}: hotkey {offer.hotkey!r} is not a unique single key")
                 hotkeys.add(offer.hotkey.lower())
                 kind = {"contract": "contracts", "vendor": "vendors", "service": "services",
                         "recruit": "factions", "travel": "zones"}[offer.kind]
-                self.ref(kind, offer.ref, owner, f"offer {offer.label!r}")
+                if offer.kind == 'service' and offer.ref in self.t.vendors:
+                    self.ref('vendors', offer.ref, owner, f"offer {offer.label!r}")
+                    if not self.t.vendors[offer.ref].clinic:
+                        self.report(*owner, f'offer {offer.label!r}: vendor has no clinic service')
+                else:
+                    self.ref(kind, offer.ref, owner, f"offer {offer.label!r}")
                 for cond in offer.when:
                     self.condition(cond, owner, f"offer {offer.label!r}")
 

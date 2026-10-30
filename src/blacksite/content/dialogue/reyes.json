@@ -1,0 +1,105 @@
+{
+  "schema": 1,
+  "id": "reyes",
+  "name": "Tomasz \"Sable\" Reyes",
+  "faction": "sable",
+  "title": "Head of Red Sable",
+  "terminal": false,
+  "machine_mind": false,
+  "lines": [
+    {
+      "id": "marked",
+      "text": "Marked, and you came to me. Smart. Nobody in the Sink cares what colour your name is. Now what's it worth?",
+      "when": [
+        "marked"
+      ],
+      "required": true
+    },
+    {
+      "id": "enemy",
+      "text": "One of Ninety-Nine's. You know what your people cost me? I'll tell you the number. Then I'll tell you what you're going to cost them.",
+      "when": [
+        "enemy_of_me"
+      ],
+      "required": true
+    },
+    {
+      "id": "first",
+      "text": "Friend! Sit down, the car doesn't stop, that's the whole trick of it. What do you need and what's it worth to you?",
+      "when": [
+        "first_meeting"
+      ],
+      "required": true
+    },
+    {
+      "id": "record-sab-red-s1-4-candles",
+      "text": "Five points, warm Site Zero stack, candles. Nobody in your account signs for tending them. That's labour, friend. Labour has a bill.",
+      "when": [
+        "has_evidence s19-sab-red-s1-4-candles"
+      ],
+      "required": true
+    },
+    {
+      "id": "record-sab-red-s1-3-dark",
+      "text": "Your schedule sends an unnamed load below the Sink. That's the trouble, friend: an address nobody admits is still a bill someone pays.",
+      "when": [
+        "has_evidence s19-sab-red-s1-3-dark"
+      ],
+      "required": true
+    },
+    {
+      "id": "record-sab-red-s1-2-drop",
+      "text": "I still put that bill at Ninety-Nine's door. A note dated last month doesn't pay it. Keep the original, friend; this city likes to change its handwriting.",
+      "when": [
+        "has_evidence s19-sab-red-s1-2-drop"
+      ],
+      "required": true
+    },
+    {
+      "id": "record-sab-red-s1-1-remind",
+      "text": "Three subscribers alive, friend. The notice calls it collection. That's the price I put on being polite. They can still argue about the account.",
+      "when": [
+        "has_evidence s19-sab-red-s1-1-remind"
+      ],
+      "required": true
+    },
+    {
+      "id": "wake",
+      "text": "A Wake. Day what? Doesn't matter. In the Sink you were a person the moment you could pay.",
+      "when": [
+        "is_wake"
+      ],
+      "required": true
+    },
+    {
+      "id": "finale",
+      "text": "Read the Chronicle, friend. What a choice costs is written there. What it means? That's the trouble.",
+      "when": [
+        "season_stage finale_done"
+      ],
+      "required": true
+    },
+    {
+      "id": "greeting",
+      "text": "Friend! Sit down, the car doesn't stop, that's the whole trick of it. What do you need and what's it worth to you?",
+      "when": [],
+      "required": true
+    }
+  ],
+  "offers": [
+    {
+      "kind": "contract",
+      "ref": "sab-red-s1-1-remind",
+      "label": "Work board",
+      "hotkey": "c",
+      "when": []
+    }
+  ],
+  "barks": [
+    {
+      "text": "Forty minutes round. I've done it eleven thousand times. I know every face on every terrace. That's the trouble with knowing.",
+      "weight": 1,
+      "min_interval_seconds": 90
+    }
+  ]
+}

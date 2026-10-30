@@ -447,7 +447,8 @@ action is a hotkey; `Esc` or `B` closes without side effects.
 Menus: inventory, equipment, rig, character sheet, skills and grade
 points, contract board, active contracts, vendor, market, bounties, crew,
 sitrep, settings (keymap, palette, log verbosity, sitrep visibility),
-dialogue (the talker's line above, responses as rows), apartment, bank,
+dialogue (the talker's line as detail, offers as hotkeys, no response
+rows), apartment, bank,
 workshop, descent console, chronicle, territory, help.
 
 F8 at a physical terminal or relay opens the public territory list. E at

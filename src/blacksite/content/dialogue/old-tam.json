@@ -1,0 +1,35 @@
+{
+  "schema": 1,
+  "id": "old-tam",
+  "name": "Old Tam",
+  "faction": "kestrel",
+  "title": "Ration and salvage counter",
+  "terminal": false,
+  "machine_mind": false,
+  "lines": [
+    {
+      "id": "first",
+      "text": "Hull, power, I'll take. Compute, no. Compute's how the trouble started.",
+      "when": [
+        "first_meeting"
+      ],
+      "required": true
+    },
+    {
+      "id": "greeting",
+      "text": "Chits used to be ration scrip. Still are. People forget.",
+      "when": [],
+      "required": true
+    }
+  ],
+  "offers": [
+    {
+      "kind": "vendor",
+      "ref": "kestrel-depot",
+      "label": "Trade",
+      "hotkey": "v",
+      "when": []
+    }
+  ],
+  "barks": []
+}

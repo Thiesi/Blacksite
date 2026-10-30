@@ -1,0 +1,45 @@
+{
+  "schema": 1,
+  "id": "achterberg",
+  "name": "Sunny Achterberg",
+  "faction": "kestrel",
+  "title": "Recruiter",
+  "terminal": false,
+  "machine_mind": false,
+  "lines": [
+    {
+      "id": "wake",
+      "text": "Wake. New boots, then. Read the route before you volunteer for it.",
+      "when": [
+        "is_wake"
+      ],
+      "required": true
+    },
+    {
+      "id": "first",
+      "text": "Yard's open. Terms are on the card. Take a look; the timetable won't take offence.",
+      "when": [
+        "first_meeting"
+      ],
+      "required": true
+    },
+    {
+      "id": "greeting",
+      "text": "Yard's open. Terms are on the card. Take a look; the timetable won't take offence.",
+      "when": [],
+      "required": true
+    }
+  ],
+  "offers": [
+    {
+      "kind": "recruit",
+      "ref": "kestrel",
+      "label": "Recruitment terms",
+      "hotkey": "j",
+      "when": [
+        "not_member_of kestrel"
+      ]
+    }
+  ],
+  "barks": []
+}

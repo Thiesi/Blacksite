@@ -1,0 +1,45 @@
+{
+  "schema": 1,
+  "id": "kettle",
+  "name": "Jory Kettle",
+  "faction": "ferrymen",
+  "title": "Recruiter",
+  "terminal": false,
+  "machine_mind": false,
+  "lines": [
+    {
+      "id": "wake",
+      "text": "Take the card if you want. Bring boots when you come; the road does not read a lease.",
+      "when": [
+        "is_wake"
+      ],
+      "required": true
+    },
+    {
+      "id": "first",
+      "text": "Card's real. Coat smells of the Scour. Both are free to inspect.",
+      "when": [
+        "first_meeting"
+      ],
+      "required": true
+    },
+    {
+      "id": "greeting",
+      "text": "Card's real. Coat smells of the Scour. Both are free to inspect.",
+      "when": [],
+      "required": true
+    }
+  ],
+  "offers": [
+    {
+      "kind": "recruit",
+      "ref": "ferrymen",
+      "label": "Recruitment terms",
+      "hotkey": "j",
+      "when": [
+        "not_member_of ferrymen"
+      ]
+    }
+  ],
+  "barks": []
+}

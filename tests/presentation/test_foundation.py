@@ -130,6 +130,16 @@ def test_mechanics_baseline(content: ContentTree, request: pytest.FixtureRequest
     assert path.read_text(encoding='utf-8') == current, 'mechanics fingerprint differs; explain any approved rebaseline'
 
 
+def test_entities_1_11_absent_cell_dialogue_keeps_baseline_but_binding_is_guarded(content: ContentTree) -> None:
+    from tests.presentation.mechanics import projection
+    baseline = projection(content)
+    sid, sector = next(iter(content.sectors.items()))
+    assert all('dialogue' not in cell for cell in baseline['sectors'][sid]['cells'])
+    changed = deepcopy(content)
+    changed.sectors[sid] = replace(sector, cells=(replace(sector.cells[0], dialogue='ninety-nine'), *sector.cells[1:]))
+    assert projection(changed) != baseline
+
+
 def test_cp437_gate_rejects_unprovenanced_unicode(tmp_path: Path) -> None:
     terminal = FakeTerminal()
     terminal.write('┆界'.encode('utf-8'))

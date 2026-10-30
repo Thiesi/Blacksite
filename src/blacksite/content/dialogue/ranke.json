@@ -1,0 +1,27 @@
+{
+  "schema": 1,
+  "id": "ranke",
+  "name": "Yusuf Ranke",
+  "faction": null,
+  "title": "Public terminal attendant",
+  "terminal": false,
+  "machine_mind": false,
+  "lines": [
+    {
+      "id": "first",
+      "text": "Public sector's public. Everything past the gate cells isn't. Watch your trace. I mean it.",
+      "when": [
+        "first_meeting"
+      ],
+      "required": true
+    },
+    {
+      "id": "greeting",
+      "text": "I ran with Ninety-Nine's crew. Once. Don't ask what I saw. Buy a decoy.",
+      "when": [],
+      "required": true
+    }
+  ],
+  "offers": [],
+  "barks": []
+}

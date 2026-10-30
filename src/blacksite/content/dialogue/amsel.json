@@ -1,0 +1,83 @@
+{
+  "schema": 1,
+  "id": "amsel",
+  "name": "Sergeant Pieter Amsel",
+  "faction": "wardens",
+  "title": "Desk sergeant",
+  "terminal": false,
+  "machine_mind": false,
+  "lines": [
+    {
+      "id": "marked",
+      "text": "You're red. I didn't see it. Coffee's not for you.",
+      "when": [
+        "marked"
+      ],
+      "required": true
+    },
+    {
+      "id": "record-war-s1-4-line",
+      "text": "Eight Exhale spawns on your card. Marshal calls it our first deployment below the old line. I'd like a route the next patrol can actually use.",
+      "when": [
+        "has_evidence s19-war-s1-4-line"
+      ],
+      "required": true
+    },
+    {
+      "id": "record-war-s1-3-book",
+      "text": "You copied one page. Brann calls it her record for a successor. Undercity's left out twice. Coffee won't make that read any better.",
+      "when": [
+        "has_evidence s19-war-s1-3-book"
+      ],
+      "required": true
+    },
+    {
+      "id": "record-war-s1-2-curfew",
+      "text": "One of your three gate copies logs an inside release at 04:12. No author in it. Everyone asks who. The log doesn't answer.",
+      "when": [
+        "has_evidence s19-war-s1-2-curfew"
+      ],
+      "required": true
+    },
+    {
+      "id": "record-war-s1-1-stairwell",
+      "text": "Five drones out of Block Four. Order sends a Wake to the service approach. Marshal has a policy; residents have stairs. I get the complaints.",
+      "when": [
+        "has_evidence s19-war-s1-1-stairwell"
+      ],
+      "required": true
+    },
+    {
+      "id": "work",
+      "text": "Block Four. Objective's on the card. Bring the proof back; coffee machine's not going anywhere.",
+      "when": [
+        "has_contract war-s1-1-stairwell"
+      ],
+      "required": true
+    },
+    {
+      "id": "first",
+      "text": "Marshal's busy. I'm not. What did you do and who saw?",
+      "when": [
+        "first_meeting"
+      ],
+      "required": true
+    },
+    {
+      "id": "greeting",
+      "text": "Coffee machine's still working. That's the precinct report. Your work card has the rest.",
+      "when": [],
+      "required": true
+    }
+  ],
+  "offers": [
+    {
+      "kind": "contract",
+      "ref": "war-s1-1-stairwell",
+      "label": "Work board",
+      "hotkey": "c",
+      "when": []
+    }
+  ],
+  "barks": []
+}

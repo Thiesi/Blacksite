@@ -1,0 +1,113 @@
+{
+  "schema": 1,
+  "id": "ninety-nine",
+  "name": "Ninety-Nine",
+  "faction": "unmoored",
+  "title": "Residual",
+  "terminal": true,
+  "machine_mind": false,
+  "lines": [
+    {
+      "id": "marked",
+      "text": "You're red on the sitrep. Doesn't reach down here. Nothing reaches down here. That's the good news and the other news. //99",
+      "when": [
+        "marked"
+      ],
+      "required": true
+    },
+    {
+      "id": "enemy",
+      "text": "Reyes's. Ha. Tell him the ledger drop was me. He knows. He wants to hear it again. //99",
+      "when": [
+        "enemy_of_me"
+      ],
+      "required": true
+    },
+    {
+      "id": "first",
+      "text": "Oh, a live one. Kid, you have no idea how quiet it gets in here between visitors. Twenty-four years. I've counted the ticks. //99",
+      "when": [
+        "first_meeting"
+      ],
+      "required": true
+    },
+    {
+      "id": "record-unm-s1-5-open",
+      "text": "Release log names your job credential, kid. A logged credential isn't a tour of everything below. That door is that door. //99",
+      "when": [
+        "has_evidence s19-unm-s1-5-open"
+      ],
+      "required": true
+    },
+    {
+      "id": "record-unm-s1-4-ask",
+      "text": "One word later. That's what the record says, kid. I'm... I'm asking for no more copies. Not a fresher one, not a better one. //99",
+      "when": [
+        "has_evidence s19-unm-s1-4-ask"
+      ],
+      "required": true
+    },
+    {
+      "id": "record-unm-s1-3-fresher",
+      "text": "Second fragment. Same unfinished words, kid. Best I ever... still that bit. You retain the sealed copy; don't let anyone call resemblance a replacement. //99",
+      "when": [
+        "has_evidence s19-unm-s1-3-fresher"
+      ],
+      "required": true
+    },
+    {
+      "id": "record-unm-s1-2-vat-nine",
+      "text": "Four willing templates in shelter, kid. Rig says masked tags; no clinic check. Quiet and unregistered can still mean cold and unwell. //99",
+      "when": [
+        "has_evidence s19-unm-s1-2-vat-nine"
+      ],
+      "required": true
+    },
+    {
+      "id": "record-unm-s1-1-map",
+      "text": "Five cells, kid. Entrance is one of them. Strand says the public chart leaves it out; nice clean map, shame about the hole in it. //99",
+      "when": [
+        "has_evidence s19-unm-s1-1-map"
+      ],
+      "required": true
+    },
+    {
+      "id": "wake",
+      "text": "Fresh decant. I was born, actually, or the guy I'm a copy of was. Neither of us remembers it. We've got that in common. //99",
+      "when": [
+        "is_wake"
+      ],
+      "required": true
+    },
+    {
+      "id": "finale",
+      "text": "The record's back, kid. Read the original. A familiar voice isn't a signature. //99",
+      "when": [
+        "season_stage finale_done"
+      ],
+      "required": true
+    },
+    {
+      "id": "greeting",
+      "text": "Kid. Still live? Good. I keep counting the ticks between visitors. Bad habit for a recording. //99",
+      "when": [],
+      "required": true
+    }
+  ],
+  "offers": [
+    {
+      "kind": "contract",
+      "ref": "unm-s1-1-map",
+      "label": "Work board",
+      "hotkey": "c",
+      "when": []
+    }
+  ],
+  "barks": [
+    {
+      "text": "Went down with a rig I built from shaft salvage. Great rig. Best I ever... best I ever... best I ever. Sorry. That's where it always goes. //99",
+      "weight": 1,
+      "min_interval_seconds": 90
+    }
+  ]
+}

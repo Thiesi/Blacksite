@@ -57,7 +57,11 @@ def projection(content: ContentTree) -> dict[str, Any]:
             'layouts': [asdict(layout) for layout in meta.layouts]}
     sectors = {sid: {'entry': sector.entry, 'trace_policy': sector.trace_policy,
         'trace_owner': sector.trace_owner,
-        'cells': [{key: value for key, value in asdict(cell).items() if key not in ('label', 'lore')}
+        'cells': [{key: value for key, value in asdict(cell).items()
+                   if key not in ('label', 'lore')
+                   # S27 adds an optional binding. An absent binding keeps
+                   # the old projection; a populated binding stays a rule.
+                   and not (key == 'dialogue' and value is None)}
                   for cell in sorted(sector.cells, key=lambda cell: cell.id)]}
         for sid, sector in sorted(content.sectors.items())}
     tile_rules = {tid: {'passable': tile.passable, 'opaque': tile.opaque, 'cover': tile.cover,

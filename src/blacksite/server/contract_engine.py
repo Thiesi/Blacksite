@@ -5,7 +5,7 @@ from collections.abc import Callable, Iterator
 from copy import deepcopy
 from dataclasses import dataclass, field, replace
 from math import ceil
-from typing import Any
+from typing import Any, TYPE_CHECKING
 
 from blacksite.content.schema import ContractTemplate, DataSpec, Stage, StageTarget
 from blacksite.server.clock import TICK_HZ
@@ -19,9 +19,12 @@ from blacksite.server.items import ItemInstance, make_item
 from blacksite.server.lattice.programs import learn as learn_program
 from blacksite.server.loop import TickContext
 from blacksite.server.progression import Grant, award
-from blacksite.server.factions import apply_vector
+from blacksite.server.factions import apply_vector, relation
 from blacksite.server.protocol import Frame
 from blacksite.server.sessions import Session
+
+if TYPE_CHECKING:
+    from blacksite.server.dialogue_runtime import Dialogue
 
 
 @dataclass
@@ -35,6 +38,7 @@ class Proposal:
     allocation: str = ''
     service_revision: int = 0
     consent: set[str] = field(default_factory=set)
+    broker: str = ''
 
 
 class Contracts:
@@ -59,6 +63,8 @@ class Contracts:
         self.scenes = Scenes(self)
         from blacksite.server.contracts.actions import Actions
         self.actions = Actions(self)
+        # Core installs S27 after the owning action systems are constructed.
+        self.dialogue: 'Dialogue | None' = None
         self.lat.encounters.contract_rows = self.actions.core_rows
         self.lat.encounters.start_contract_plant = self.actions.start_plant
         self.lat.encounters.finish_contract_plant = self.actions.finish_plant
@@ -91,10 +97,14 @@ class Contracts:
             permission(player, core, action) or self.control_permit(player, core, action))
 
     def interaction(self, session: Session, frame: Frame) -> Interaction | None:
-        return self.actions.interaction(session, frame) or self.panels.interaction(session, frame)
+        return (self.actions.interaction(session, frame)
+                or self.dialogue and self.dialogue.interaction(session, frame)
+                or self.panels.interaction(session, frame))
 
     def input(self, session: Session, frame: Frame, tick: int, *, interaction: Interaction | None = None) -> bool:
-        return self.actions.input(session, frame, tick, interaction=interaction) or self.panels.input(session, frame, tick, interaction=interaction)
+        return (self.actions.input(session, frame, tick, interaction=interaction)
+                or self.dialogue is not None and self.dialogue.input(session, frame, tick, interaction=interaction)
+                or self.panels.input(session, frame, tick, interaction=interaction))
 
     def now(self) -> float:
         return self.clock.now_utc().timestamp()
@@ -506,18 +516,21 @@ class Contracts:
                 return offered
         if oid in self.state.engine.templates and self.state.engine.templates[oid].story:
             job = self.state.engine.templates[oid]
-            if job.giver == handler:
+            if job.giver == handler or handler == 'vesper' and not job.service:
                 return self.state.engine.story_offer(oid, player)
         raise ValueError('That offer changed. Read the current board.')
 
     def offers(self, handler: str) -> tuple[Offer, ...]:
         return (*self.state.engine.board(handler, self.now()), *self.additional_offers(handler))
 
-    def requirements(self, pid: str, template: ContractTemplate) -> tuple[str, ...]:
+    def requirements(self, pid: str, template: ContractTemplate, *, broker: bool = False) -> tuple[str, ...]:
         """Read current authoritative facts before a proposal and its start."""
         player = self.game.players[pid]
         if self.state.engine.helper_for(template, pid):
             return ()  # A previously paid helper need not grind entry standing again.
+        # Game 9.1 / 7.2: Vesper bypasses a hostile handler, not earned standing.
+        hostile_referral = (broker and template.story and not template.service
+                            and relation(self.content.factions, player.faction, template.giver) == 'H')
         missing = []
         if player.grade < template.min_grade:
             missing.append('grade_at_least '+str(template.min_grade))
@@ -532,7 +545,9 @@ class Contracts:
             name, *args = condition.split()
             if name == 'grade_at_least': ready = player.grade >= int(args[0])
             elif name == 'grade_below': ready = player.grade < int(args[0])
-            elif name == 'standing_at_least': ready = player.standing.get(args[0], 0) >= int(args[1])
+            elif name == 'standing_at_least':
+                ready = (hostile_referral and args[0] == template.giver
+                         or player.standing.get(args[0], 0) >= int(args[1]))
             elif name == 'standing_below': ready = player.standing.get(args[0], 0) < int(args[1])
             elif name == 'member_of': ready = player.faction == args[0]
             elif name == 'not_member_of': ready = player.faction != args[0]
@@ -555,15 +570,23 @@ class Contracts:
                 missing.append(condition)
         return tuple(missing)
 
-    def check_requirements(self, roster: tuple[str, ...], template: ContractTemplate) -> None:
+    def check_requirements(self, roster: tuple[str, ...], template: ContractTemplate, *, broker: bool = False) -> None:
         for pid in roster:
-            missing = self.requirements(pid, template)
+            missing = self.requirements(pid, template, broker=broker)
             if missing:
                 raise ValueError(self.game.players[pid].name+' requires: '+
                     ', '.join(describe_requirement(condition, self.content) for condition in missing)+'.')
 
+    def check_broker(self, player: str, template: ContractTemplate, broker: str) -> None:
+        if not broker:
+            return
+        session = self.game.combat.session(player)
+        if (broker != 'vesper' or not template.story or template.service or not session
+                or self.panels.station(session, 'vesper') != 'vesper'):
+            raise ValueError('A neutral story referral requires the Tin Halo broker.')
+
     def propose(self, player: str, offer: Offer, roster: tuple[str, ...],
-                approach: str = 'default') -> Proposal:
+                approach: str = 'default', *, broker: str = '') -> Proposal:
         if not roster or roster[0] != player:
             raise ValueError('The proposer must join the listed roster.')
         crew = self.game.crews.registry.crew_of(player)
@@ -573,11 +596,14 @@ class Contracts:
             if not self.game.combat.session(pid):
                 raise ValueError('Every proposed participant must be online.')
         # Validate terms without consuming slots, branches, supplies or receipts.
-        self.check_requirements(roster, self.state.engine.templates[offer.template])
+        template = self.state.engine.templates[offer.template]
+        self.check_broker(player, template, broker)
+        self.check_requirements(roster, template, broker=bool(broker))
         self.validate_offer(offer)
         self.state.engine.fork().accept(offer, tuple(self.participant(pid) for pid in roster), self.now(), approach)
         self.proposal_serial += 1
-        proposal = Proposal(f'{self.origin}:proposal:{self.proposal_serial}', player, offer, roster, approach)
+        proposal = Proposal(f'{self.origin}:proposal:{self.proposal_serial}', player, offer, roster, approach,
+                            broker=broker)
         self.proposals[proposal.id] = proposal
         return proposal
 
@@ -644,7 +670,9 @@ class Contracts:
             raise ValueError('The proposed crew changed. Offer the job again.')
         draft = self.state.fork()
         offer = offered.offer
-        self.check_requirements(offered.roster, self.state.engine.templates[offer.template])
+        template = self.state.engine.templates[offer.template]
+        self.check_broker(player, template, offered.broker)
+        self.check_requirements(offered.roster, template, broker=bool(offered.broker))
         self.validate_offer(offer)
         if offered.service:
             node = draft.services.reserve(offered.service, offered.allocation, offered.roster,
@@ -653,6 +681,8 @@ class Contracts:
         instance = draft.engine.accept(offer, tuple(self.participant(pid) for pid in offered.roster),
                                        self.now(), offered.approach)
         self.prepare_accept(offer, instance)
+        if offered.broker:
+            instance.runtime['broker'] = offered.broker
         if instance.season is None:
             instance.season = self.lat.season
         if offered.service:

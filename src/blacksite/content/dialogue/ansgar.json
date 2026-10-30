@@ -1,0 +1,75 @@
+{
+  "schema": 1,
+  "id": "ansgar",
+  "name": "Brother Ansgar",
+  "faction": "choir",
+  "title": "Choir handler",
+  "terminal": false,
+  "machine_mind": false,
+  "lines": [
+    {
+      "id": "record-cho-s1-4-answer",
+      "text": "Beacon calls the return close. Your record has a different tune coming back. I know what a return signal looks like. I don't know what sets this delay.",
+      "when": [
+        "has_evidence s19-cho-s1-4-answer"
+      ],
+      "required": true
+    },
+    {
+      "id": "record-cho-s1-3-descent",
+      "text": "The copied echo labels a familiar voice with an unfamiliar name. That is the echo's label. I'd check a signal twice before trusting its filing.",
+      "when": [
+        "has_evidence s19-cho-s1-3-descent"
+      ],
+      "required": true
+    },
+    {
+      "id": "record-cho-s1-2-nine",
+      "text": "The third listener's log says the name repeats wrong. A fault in the voice or a fault in the recording? I've repaired enough lines to check both ends.",
+      "when": [
+        "has_evidence s19-cho-s1-2-nine"
+      ],
+      "required": true
+    },
+    {
+      "id": "record-cho-s1-1-listen",
+      "text": "Three cells, decant frequency. One out of phase on your record. I used to fix rails by measuring them. I'd keep that phase plot before naming a voice.",
+      "when": [
+        "has_evidence s19-cho-s1-1-listen"
+      ],
+      "required": true
+    },
+    {
+      "id": "work",
+      "text": "Three cells. Bring the readings back as readings. Mother can argue about what they mean.",
+      "when": [
+        "has_contract cho-s1-1-listen"
+      ],
+      "required": true
+    },
+    {
+      "id": "first",
+      "text": "Listening jobs. We pay for what you hear, not what you kill.",
+      "when": [
+        "first_meeting"
+      ],
+      "required": true
+    },
+    {
+      "id": "greeting",
+      "text": "Rails hum at forty hertz. Under Chapel Ward they hum at forty-one. That's not the rails.",
+      "when": [],
+      "required": true
+    }
+  ],
+  "offers": [
+    {
+      "kind": "contract",
+      "ref": "cho-s1-1-listen",
+      "label": "Work board",
+      "hotkey": "c",
+      "when": []
+    }
+  ],
+  "barks": []
+}

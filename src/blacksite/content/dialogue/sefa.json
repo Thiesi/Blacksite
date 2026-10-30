@@ -1,0 +1,35 @@
+{
+  "schema": 1,
+  "id": "sefa",
+  "name": "Pilgrim Sefa",
+  "faction": "choir",
+  "title": "Outworks pilgrim",
+  "terminal": false,
+  "machine_mind": false,
+  "lines": [
+    {
+      "id": "situation",
+      "text": "Sit. Listen. It's clearer here than in the Ward. Mother knows. Mother won't come down.",
+      "when": [
+        "archetype cantor"
+      ],
+      "required": true
+    },
+    {
+      "id": "first",
+      "text": "Sit. Listen. It's clearer here than in the Ward. Mother knows. Mother won't come down.",
+      "when": [
+        "first_meeting"
+      ],
+      "required": true
+    },
+    {
+      "id": "greeting",
+      "text": "Three of the Nine came down here. Two went further. I'm not the third.",
+      "when": [],
+      "required": true
+    }
+  ],
+  "offers": [],
+  "barks": []
+}

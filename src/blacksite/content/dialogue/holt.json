@@ -1,0 +1,75 @@
+{
+  "schema": 1,
+  "id": "holt",
+  "name": "Foreman Dagny Holt",
+  "faction": "kestrel",
+  "title": "Yard foreman",
+  "terminal": false,
+  "machine_mind": false,
+  "lines": [
+    {
+      "id": "record-kes-s1-4-quiet",
+      "text": "Your stored account says ninety seconds, then a denial. I can read what's on it. I won't put words into the grille.",
+      "when": [
+        "has_evidence s19-kes-s1-4-quiet"
+      ],
+      "required": true
+    },
+    {
+      "id": "record-kes-s1-3-frequency",
+      "text": "Nine years of headers. Ferrymen names, according to the log. I run a yard, not an address register. The older headers still don't say who assigned them.",
+      "when": [
+        "has_evidence s19-kes-s1-3-frequency"
+      ],
+      "required": true
+    },
+    {
+      "id": "record-kes-s1-2-diversion",
+      "text": "Depot's allocation says six years around intact track. Your crate copy has the same consignment ID. I keep the timetable. That entry still needs explaining.",
+      "when": [
+        "has_evidence s19-kes-s1-2-diversion"
+      ],
+      "required": true
+    },
+    {
+      "id": "record-kes-s1-1-escort",
+      "text": "Ring-two depot, no loss in your book. Amber, Dispatch calls it. I watch the road, not a colour. I'd still like to know what set that rating.",
+      "when": [
+        "has_evidence s19-kes-s1-1-escort"
+      ],
+      "required": true
+    },
+    {
+      "id": "work",
+      "text": "Stay with the convoy on your work card. Dispatch writes the rating; you bring the people back.",
+      "when": [
+        "has_contract kes-s1-1-escort"
+      ],
+      "required": true
+    },
+    {
+      "id": "first",
+      "text": "Dispatch posts the escort work. Read the route and the rate. I say bring a spare magazine.",
+      "when": [
+        "first_meeting"
+      ],
+      "required": true
+    },
+    {
+      "id": "greeting",
+      "text": "Gate opens on Dispatch's clock, not mine. Not yours either.",
+      "when": [],
+      "required": true
+    }
+  ],
+  "offers": [
+    {
+      "kind": "contract",
+      "ref": "kes-s1-1-escort",
+      "label": "Work board",
+      "hotkey": "c",
+      "when": []
+    }
+  ],
+  "barks": []
+}

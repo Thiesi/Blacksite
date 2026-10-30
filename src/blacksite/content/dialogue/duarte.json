@@ -1,0 +1,35 @@
+{
+  "schema": 1,
+  "id": "duarte",
+  "name": "Marisol \"Needle\" Duarte",
+  "faction": "sable",
+  "title": "Black clinic",
+  "terminal": false,
+  "machine_mind": false,
+  "lines": [
+    {
+      "id": "first",
+      "text": "Terms are on the counter. Read the failure rate before you sit. Still here? Good. Three, two...",
+      "when": [
+        "first_meeting"
+      ],
+      "required": true
+    },
+    {
+      "id": "greeting",
+      "text": "Sablier trained me. Sablier would like that forgotten.",
+      "when": [],
+      "required": true
+    }
+  ],
+  "offers": [
+    {
+      "kind": "service",
+      "ref": "black-clinic",
+      "label": "Clinic terms",
+      "hotkey": "s",
+      "when": []
+    }
+  ],
+  "barks": []
+}

@@ -1,0 +1,35 @@
+{
+  "schema": 1,
+  "id": "ute",
+  "name": "Old Ferry Ute",
+  "faction": "ferrymen",
+  "title": "Retired Ferry",
+  "terminal": false,
+  "machine_mind": false,
+  "lines": [
+    {
+      "id": "first",
+      "text": "Went to the edge, I did. Anouk did too. She won't say. I will, for a price.",
+      "when": [
+        "first_meeting"
+      ],
+      "required": true
+    },
+    {
+      "id": "greeting",
+      "text": "Went to the edge, I did. Anouk did too. She won't say. I will, for a price.",
+      "when": [],
+      "required": true
+    }
+  ],
+  "offers": [
+    {
+      "kind": "vendor",
+      "ref": "landing-trade",
+      "label": "Trade",
+      "hotkey": "v",
+      "when": []
+    }
+  ],
+  "barks": []
+}

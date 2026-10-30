@@ -1,0 +1,35 @@
+{
+  "schema": 1,
+  "id": "ivey",
+  "name": "Superintendent Rasa Ivey",
+  "faction": null,
+  "title": "Apartments and impound",
+  "terminal": false,
+  "machine_mind": false,
+  "lines": [
+    {
+      "id": "situation",
+      "text": "A Wake wants a lease? Bring the discharge receipt. I don't rent to numbers.",
+      "when": [
+        "is_wake"
+      ],
+      "required": true
+    },
+    {
+      "id": "first",
+      "text": "Two weeks lapsed, you're out and it's in impound. Everyone knows the rule. Now you do.",
+      "when": [
+        "first_meeting"
+      ],
+      "required": true
+    },
+    {
+      "id": "greeting",
+      "text": "Private core comes with the flat. Tier one. Runners get in; that's your problem, sweetheart, not mine.",
+      "when": [],
+      "required": true
+    }
+  ],
+  "offers": [],
+  "barks": []
+}

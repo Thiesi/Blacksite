@@ -1,0 +1,27 @@
+{
+  "schema": 1,
+  "id": "stroud",
+  "name": "Dr. Emil Stroud",
+  "faction": "halvard",
+  "title": "Spire surgeon",
+  "terminal": false,
+  "machine_mind": false,
+  "lines": [
+    {
+      "id": "first",
+      "text": "Halvard-grade tolerance work. Not the vat-shop kind. Sit.",
+      "when": [
+        "first_meeting"
+      ],
+      "required": true
+    },
+    {
+      "id": "greeting",
+      "text": "I trained under Vantongeren. We disagree about what a person is. Professionally.",
+      "when": [],
+      "required": true
+    }
+  ],
+  "offers": [],
+  "barks": []
+}

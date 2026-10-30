@@ -1,0 +1,45 @@
+{
+  "schema": 1,
+  "id": "iloh",
+  "name": "Sister Nadezhda Iloh",
+  "faction": "choir",
+  "title": "Recruiter",
+  "terminal": false,
+  "machine_mind": false,
+  "lines": [
+    {
+      "id": "wake",
+      "text": "You can read the card without joining. Attention is a choice too.",
+      "when": [
+        "is_wake"
+      ],
+      "required": true
+    },
+    {
+      "id": "first",
+      "text": "I didn't need the implant. Neither will you, maybe. Most people do.",
+      "when": [
+        "first_meeting"
+      ],
+      "required": true
+    },
+    {
+      "id": "greeting",
+      "text": "I didn't need the implant. Neither will you, maybe. Most people do.",
+      "when": [],
+      "required": true
+    }
+  ],
+  "offers": [
+    {
+      "kind": "recruit",
+      "ref": "choir",
+      "label": "Recruitment terms",
+      "hotkey": "j",
+      "when": [
+        "not_member_of choir"
+      ]
+    }
+  ],
+  "barks": []
+}
