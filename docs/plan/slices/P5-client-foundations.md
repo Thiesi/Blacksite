@@ -2,7 +2,7 @@
 
 **Status:** planned
 **Primary model:** Codex (the plan's owner) · **Reviewer:** automated review, technical lead, presentation lead (co-reviewer and presentation gate)
-**Depends on:** P0, P2, P3, P4 · **Milestone:** presentation track
+**Depends on:** P0, P2, P4 (P3 for HERE) · **Milestone:** presentation track
 **Issue:** https://github.com/Thiesi/Blacksite/issues/106
 
 From `docs/plan/03-presentation-integration.md` §7.3 (P5), §10.1
@@ -75,10 +75,18 @@ ambient or `Toast.full` code (P8).
 
 ## Corrections the port must make
 
-1. **Walls keep their shape** (plan §11.2, terminal UI §8). At 256 and
-   truecolour the trial draws walls as blank background cells. Walls
-   must keep their shape glyph in every tier. Signage letters, when P6
-   adds them, replace only signed cells.
+1. **Walls follow terminal UI §2.2,** the canon merged in P0, not plan
+   §11.2's earlier note.
+   - At 256 and truecolour, a wall face is a blank cell on the facade
+     background, and a roof is blank near black.
+   - At 16 colours a wall face is `█`.
+   - Walkable and blocked ground differ by shape: a floor tile beside a
+     wall face always carries grain, even in a theme whose ground is
+     otherwise bare.
+   - Check the trial against this table and correct any difference. Do
+     not bring in a wall glyph that canon doesn't have. Shaped walls at
+     256 and truecolour would need a canon change and the owner's
+     approval first.
 2. **No trial key** (above).
 3. **No second hint row** (above).
 
@@ -117,7 +125,9 @@ on the same workload and the same knowledge state.
 - With the switch off, every existing glyph and style golden stays
   byte-identical, and so does the P1 mechanics fingerprint.
 - Contrast floors in every tier.
-- Walls draw a shape glyph in every tier, for every wall tile class.
+- §2.2's render test: no bare floor cell borders a wall face, in every
+  tier and theme, for every opaque tile class. Wall faces and roofs
+  match §2.2's terrain table in each tier.
 - The context decider is pure: the same bodies and clock give the same
   result, and it never reads `zone.rng` or the wall clock directly.
 - With the switch on, every walk-golden input makes the decider select
