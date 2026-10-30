@@ -47,8 +47,10 @@ Run from a clean committed tree with the matching installed door wheel:
 python scripts/accept_p3_netbbs.py --root <fresh-directory> --door-python <wheel-python> --show
 ```
 
-Fresh evidence and check receipts accompany the PR. No text or style
-golden rebaseline is assumed; any required changes must be named and
-justified. Automated review, technical review and the presentation lead's
+The [capture packet](captures/issue104-hint-labels/README.md) contains six
+hosted text captures, their 18 exact ANSI/style payload hashes, the
+matching local TTY run and strict packet receipt. All six native cases
+passed on both hosts. No text or style golden was rebaselined.
+Automated review, technical review and the presentation lead's
 wording approval remain separate gates. This work grants no S25 layout,
 S27 placement, pacing or other human approval. Only the owner merges.

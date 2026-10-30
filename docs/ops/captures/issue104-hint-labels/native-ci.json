@@ -1,0 +1,178 @@
+{
+  "source_head": "03dad628af71fbdd5cb2128d9b01bcb7c79d4ab5",
+  "passed": true,
+  "cases": [
+    {
+      "size": [
+        80,
+        24
+      ],
+      "tier": "16",
+      "outfitter_e": {
+        "id": "wake-outfitter",
+        "label": "Sablier Wake Outfitter",
+        "verb": "open"
+      },
+      "outfitter_j": {
+        "id": "wake-terminal",
+        "label": "Tutorial terminal",
+        "verb": "jack in at"
+      },
+      "terminal_e": {
+        "id": "wake-terminal",
+        "label": "Tutorial terminal",
+        "verb": "jack in at"
+      },
+      "predicted_equals_opened": true,
+      "terminal_hint": "│E/J jack in at Tutorial terminal  ? help  Tab target  F fire  X weapon        │",
+      "combined_terminal_group": true,
+      "no_generic_e": true,
+      "explicit_j_uses_terminal_beside_counter": true,
+      "clean_exit": true
+    },
+    {
+      "size": [
+        80,
+        24
+      ],
+      "tier": "256",
+      "outfitter_e": {
+        "id": "wake-outfitter",
+        "label": "Sablier Wake Outfitter",
+        "verb": "open"
+      },
+      "outfitter_j": {
+        "id": "wake-terminal",
+        "label": "Tutorial terminal",
+        "verb": "jack in at"
+      },
+      "terminal_e": {
+        "id": "wake-terminal",
+        "label": "Tutorial terminal",
+        "verb": "jack in at"
+      },
+      "predicted_equals_opened": true,
+      "terminal_hint": "│E/J jack in at Tutorial terminal  ? help  Tab target  F fire  X weapon        │",
+      "combined_terminal_group": true,
+      "no_generic_e": true,
+      "explicit_j_uses_terminal_beside_counter": true,
+      "clean_exit": true
+    },
+    {
+      "size": [
+        80,
+        24
+      ],
+      "tier": "truecolor",
+      "outfitter_e": {
+        "id": "wake-outfitter",
+        "label": "Sablier Wake Outfitter",
+        "verb": "open"
+      },
+      "outfitter_j": {
+        "id": "wake-terminal",
+        "label": "Tutorial terminal",
+        "verb": "jack in at"
+      },
+      "terminal_e": {
+        "id": "wake-terminal",
+        "label": "Tutorial terminal",
+        "verb": "jack in at"
+      },
+      "predicted_equals_opened": true,
+      "terminal_hint": "│E/J jack in at Tutorial terminal  ? help  Tab target  F fire  X weapon        │",
+      "combined_terminal_group": true,
+      "no_generic_e": true,
+      "explicit_j_uses_terminal_beside_counter": true,
+      "clean_exit": true
+    },
+    {
+      "size": [
+        132,
+        50
+      ],
+      "tier": "16",
+      "outfitter_e": {
+        "id": "wake-outfitter",
+        "label": "Sablier Wake Outfitter",
+        "verb": "open"
+      },
+      "outfitter_j": {
+        "id": "wake-terminal",
+        "label": "Tutorial terminal",
+        "verb": "jack in at"
+      },
+      "terminal_e": {
+        "id": "wake-terminal",
+        "label": "Tutorial terminal",
+        "verb": "jack in at"
+      },
+      "predicted_equals_opened": true,
+      "terminal_hint": "│E/J jack in at Tutorial terminal  ? help  Tab target  F fire  X weapon  1-5 quick  V abilities  I inventory  F8 relays            │",
+      "combined_terminal_group": true,
+      "no_generic_e": true,
+      "explicit_j_uses_terminal_beside_counter": true,
+      "clean_exit": true
+    },
+    {
+      "size": [
+        132,
+        50
+      ],
+      "tier": "256",
+      "outfitter_e": {
+        "id": "wake-outfitter",
+        "label": "Sablier Wake Outfitter",
+        "verb": "open"
+      },
+      "outfitter_j": {
+        "id": "wake-terminal",
+        "label": "Tutorial terminal",
+        "verb": "jack in at"
+      },
+      "terminal_e": {
+        "id": "wake-terminal",
+        "label": "Tutorial terminal",
+        "verb": "jack in at"
+      },
+      "predicted_equals_opened": true,
+      "terminal_hint": "│E/J jack in at Tutorial terminal  ? help  Tab target  F fire  X weapon  1-5 quick  V abilities  I inventory  F8 relays            │",
+      "combined_terminal_group": true,
+      "no_generic_e": true,
+      "explicit_j_uses_terminal_beside_counter": true,
+      "clean_exit": true
+    },
+    {
+      "size": [
+        132,
+        50
+      ],
+      "tier": "truecolor",
+      "outfitter_e": {
+        "id": "wake-outfitter",
+        "label": "Sablier Wake Outfitter",
+        "verb": "open"
+      },
+      "outfitter_j": {
+        "id": "wake-terminal",
+        "label": "Tutorial terminal",
+        "verb": "jack in at"
+      },
+      "terminal_e": {
+        "id": "wake-terminal",
+        "label": "Tutorial terminal",
+        "verb": "jack in at"
+      },
+      "predicted_equals_opened": true,
+      "terminal_hint": "│E/J jack in at Tutorial terminal  ? help  Tab target  F fire  X weapon  1-5 quick  V abilities  I inventory  F8 relays            │",
+      "combined_terminal_group": true,
+      "no_generic_e": true,
+      "explicit_j_uses_terminal_beside_counter": true,
+      "clean_exit": true
+    }
+  ],
+  "runtime_python_sha256": "80c45c6ac5d77e66660d944898b37111fd57bceb99a148adf0a0f6838134b325",
+  "transport": "NetBBS Telnet -> registered native stdio",
+  "netbbs_ref": "v7.31.0",
+  "human_approval": false
+}
