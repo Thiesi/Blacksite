@@ -16,8 +16,8 @@ from blacksite.door.views import render_text
 from blacksite.door.views.lattice import render_lattice
 
 
-def safety(body: dict[str, Any]) -> str:
-    value = body.get('body_safety', body.get('me', {}).get('safety', 'safe'))
+def safety(body: dict[str, Any], last_body: str | None = None) -> str:
+    value = body.get('body_safety', body.get('me', {}).get('safety', last_body or 'safe'))
     return value if value in ('safe', 'pocket', 'contested', 'open') else 'contested'
 
 
@@ -43,9 +43,10 @@ def menu(buffer: CellBuffer, body: dict[str, Any], layout: Layout, paint: Paint)
 
 def render(buffer: CellBuffer, layout: Layout, paint: Paint, kind: str, body: dict[str, Any],
            logs: list[dict[str, Any]], hint: str, now: float, *, flash: bool = False,
-           toast: tuple[str, str, float] | None = None, handle: str = '') -> None:
+           toast: tuple[str, str, float] | None = None, handle: str = '',
+           body_safety: str | None = None) -> None:
     """Compose all kinds, including nested Wake and talker menus."""
-    word = safety(body)
+    word = safety(body, body_safety)
     chrome.frame(buffer, layout, paint, word, side=kind in ('zone', 'lattice'), flash=flash)
     if kind == 'zone':
         zone.render(buffer, body, layout, paint)

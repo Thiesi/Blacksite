@@ -231,3 +231,20 @@ def test_ui_2_4_crew_and_jacked_state_survive_a_busy_small_panel(content):
     term = FakeTerminal()
     term.write(model.render(1)[0])
     assert all(text in term.screen_text() for text in ('CREW', '72%', 'jacked', 'Meridian Plaza', 'HP', 'STA', 'SHK'))
+
+
+@pytest.mark.parametrize('local', [True, False])
+def test_ui_2_1_local_and_disconnected_screens_keep_server_body_safety(content, local):
+    body = zone_body(content)
+    body['me']['safety'] = 'open'
+    model = display(content)
+    model.receive(Frame('view', {'rev': 1, 'kind': 'zone', 'body': body}), 1)
+    if local:
+        model.open_help(['You read a note.'])
+    else:
+        # The I/O pump replaces the body when the connection drops.
+        model.kind, model.body = 'text', {'title': 'DISCONNECTED', 'lines': ['You try again.']}
+    term = FakeTerminal()
+    term.write(model.render(2)[0])
+    assert term.cell(0, 0) == '┌' and 'OPEN' in term.screen_text().splitlines()[0]
+    assert 'SAFE' not in term.screen_text().splitlines()[0]

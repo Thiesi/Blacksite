@@ -29,6 +29,7 @@ class Display:
         self.presentation = presentation
         self.paint = Paint(self.palette)
         self.context = Context()
+        self.body_safety: str | None = None
         self.kind = "text"
         self.body = title()
         self.revision = 0
@@ -123,6 +124,13 @@ class Display:
         new_hit = self.body.get("me",{}).get("hit_serial")
         if old_hit is not None and new_hit is not None and new_hit != old_hit:
             self.hit_flash = True
+        if self.presentation:
+            shown = self.body.get('body', {}) if self.kind == 'wake' else self.body
+            reported = shown.get('body_safety', shown.get('me', {}).get('safety'))
+            if reported in ('safe', 'pocket', 'contested', 'open'):
+                self.body_safety = reported
+            elif self.kind == 'wake':
+                self.body_safety = None  # A new Wake has no previous physical body.
         self.dirty = True
         return result
 
@@ -316,4 +324,5 @@ class Display:
         if self.paint.palette is not self.palette:
             self.paint = Paint(self.palette)
         presentation_screen.render(buffer, self.layout, self.paint, kind, body, list(self.logs), hint, now,
-                                   flash=self.hit_flash, toast=self.toast, handle=self.info.handle)
+                                   flash=self.hit_flash, toast=self.toast, handle=self.info.handle,
+                                   body_safety=self.body_safety)

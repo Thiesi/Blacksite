@@ -24,6 +24,8 @@ use P2's `blacksite.layout`, P3's focus and hint fitter, and the existing
 palette lookup and cell buffer. The old content renderers remain intact.
 Text uses an additional full-width rectangle computed in the shared
 layout; server pagination and existing rectangles remain unchanged.
+Local help and disconnected screens keep the last server-reported body
+safety; opening a local screen does not imply safe ground.
 
 ## Trial corrections
 

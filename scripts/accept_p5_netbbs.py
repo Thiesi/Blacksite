@@ -11,12 +11,12 @@ import json
 from pathlib import Path
 import subprocess
 
-from accept_s10_netbbs import NativeProbe, wait
+from accept_s10_netbbs import Connection, NativeProbe, wait
 from tests.presentation.snapshots import snapshot
 
 
 class PresentationProbe(NativeProbe):
-    def save(self, connection, label: str) -> None:
+    def save(self, connection: Connection, label: str) -> None:
         super().save(connection, label)
         (self.root / (label + '.json')).write_text(json.dumps(snapshot(connection.caller.screen),
             ensure_ascii=False, separators=(',', ':')) + '\n', encoding='utf-8', newline='\n')
