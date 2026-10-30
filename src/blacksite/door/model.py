@@ -4,6 +4,7 @@ from collections import deque
 from copy import deepcopy
 from typing import Any
 
+from blacksite.hints import focus_context
 from blacksite.door.cells import CellBuffer, truncate
 from blacksite.door import chrome
 from blacksite.door.doorinfo import DoorInfo
@@ -268,10 +269,8 @@ class Display:
         elif "hint" in self.body:
             hint = str(self.body["hint"])
             if self.kind == 'zone' and not self.body.get('me', {}).get('channel'):
-                context = []
-                for key, field in (('E', 'focus'), ('Ctrl-O' if self.selected_keymap == 'vi' else 'J', 'jack_focus')):
-                    if focus := self.body.get(field):
-                        context.append((f"{key} {focus['verb']}", str(focus['label'])))
+                context = focus_context(self.body.get('focus'), self.body.get('jack_focus'),
+                                        'Ctrl-O' if self.selected_keymap == 'vi' else 'J')
                 hint = chrome.focus_hint(hint, self.layout.hint.width, context, self.body.get('objective'))
         header = "" if self.kind == "zone" and self.local is None else "Karst · " + truncate(self.info.handle, self.layout.header_slots.handle_width)
         chrome.render_frame(buffer, self.layout, self.palette, header, list(self.logs), hint)

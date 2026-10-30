@@ -34,7 +34,8 @@
       "kind": "vendor",
       "essential": false,
       "params": {
-        "name": "Lobby concierge"
+        "name": "Lobby concierge",
+        "inspect_verb": "look at"
       }
     },
     {

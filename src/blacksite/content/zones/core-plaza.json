@@ -195,7 +195,7 @@
       "kind": "terminal",
       "essential": true,
       "params": {
-        "name": "Plaza public 3"
+        "name": "Public terminal (Plaza 3)"
       }
     },
     {
@@ -255,7 +255,7 @@
       ],
       "kind": "terminal",
       "params": {
-        "name": "camera net",
+        "name": "Camera net",
         "control": "camera-net"
       }
     },
@@ -267,7 +267,7 @@
       ],
       "kind": "door",
       "params": {
-        "name": "curfew shutters",
+        "name": "Curfew shutters",
         "control": "curfew-shutters"
       }
     },

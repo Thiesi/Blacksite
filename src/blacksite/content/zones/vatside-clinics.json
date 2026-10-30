@@ -74,7 +74,7 @@
       "kind": "vendor",
       "essential": true,
       "params": {
-        "name": "Sablier Clinic (any)",
+        "name": "Sablier Clinic",
         "vendor": "sablier-clinic"
       }
     },
@@ -174,7 +174,8 @@
       "kind": "door",
       "essential": false,
       "params": {
-        "open": true
+        "open": true,
+        "name": "Clinic door"
       }
     },
     {
@@ -186,7 +187,8 @@
       "kind": "door",
       "essential": false,
       "params": {
-        "open": true
+        "open": true,
+        "name": "Clinic door"
       }
     },
     {
@@ -198,7 +200,8 @@
       "kind": "door",
       "essential": false,
       "params": {
-        "open": true
+        "open": true,
+        "name": "Clinic door"
       }
     },
     {
@@ -209,7 +212,7 @@
       ],
       "kind": "hardware",
       "params": {
-        "name": "cold chain hardware",
+        "name": "Cold chain hardware",
         "core": "lat-relay-cold-chain"
       }
     },
@@ -232,7 +235,7 @@
       ],
       "kind": "terminal",
       "params": {
-        "name": "cold chain loan terminal"
+        "name": "Cold chain loan terminal"
       }
     },
     {

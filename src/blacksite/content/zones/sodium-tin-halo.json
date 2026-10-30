@@ -34,7 +34,7 @@
       "kind": "vendor",
       "essential": false,
       "params": {
-        "name": "The Tin Halo (Vesper)",
+        "name": "The Tin Halo",
         "vendor": "vesper",
         "contract_handler": "vesper",
         "trade_counter": "vesper"

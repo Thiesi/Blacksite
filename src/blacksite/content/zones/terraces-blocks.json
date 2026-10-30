@@ -189,7 +189,7 @@
       "kind": "terminal",
       "essential": true,
       "params": {
-        "name": "Blocks public 1"
+        "name": "Public terminal (Blocks 1)"
       }
     },
     {
@@ -327,7 +327,7 @@
       ],
       "kind": "terminal",
       "params": {
-        "name": "impound manifest",
+        "name": "Impound manifest",
         "control": "impound-manifest"
       }
     },
@@ -351,7 +351,7 @@
       ],
       "kind": "terminal",
       "params": {
-        "name": "outpost cameras",
+        "name": "Outpost cameras",
         "control": "outpost-cameras"
       }
     },
@@ -363,7 +363,7 @@
       ],
       "kind": "door",
       "params": {
-        "name": "stairwell C parcel hatch",
+        "name": "Stairwell C parcel hatch",
         "open": false
       }
     },
@@ -386,7 +386,7 @@
       ],
       "kind": "terminal",
       "params": {
-        "name": "stairwell C loan terminal",
+        "name": "Stairwell C loan terminal",
         "sector": "lat-terraces",
         "cell": "lat-terraces-c11"
       }
@@ -399,7 +399,7 @@
       ],
       "kind": "hardware",
       "params": {
-        "name": "stairwell C cabinet",
+        "name": "Stairwell C cabinet",
         "core": "lat-stairwell-c"
       }
     }

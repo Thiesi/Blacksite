@@ -58,7 +58,7 @@ def test_arch_5_5_2_predicted_equals_dispatched_and_pre_p3_behavior(repo_root: P
     assert result['cases'] == baseline['cases']
     assert result['sha256'] == baseline['sha256'], 'E/J behavior differs from the independently executed pre-P3 baseline'
     assert result['handlers'] == baseline['handlers']
-    packet = json.loads((repo_root/'docs/ops/captures/p3-interaction-focus/focus-labels.json').read_text())
+    packet = json.loads((repo_root/'docs/ops/captures/issue104-hint-labels/focus-labels.json').read_text())
     assert sorted(labels) == [tuple(pair) for pair in packet['matrix_pairs']]
 
 

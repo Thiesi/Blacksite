@@ -34,7 +34,7 @@
       ],
       "kind": "vat",
       "essential": true,
-      "params": {}
+      "params": {"name": "Decant vat"}
     },
     {
       "id": "decant-vat-2",
@@ -44,7 +44,7 @@
       ],
       "kind": "vat",
       "essential": true,
-      "params": {}
+      "params": {"name": "Decant vat"}
     },
     {
       "id": "decant-vat-3",
@@ -54,7 +54,7 @@
       ],
       "kind": "vat",
       "essential": true,
-      "params": {}
+      "params": {"name": "Decant vat"}
     },
     {
       "id": "decant-vat-4",
@@ -64,7 +64,7 @@
       ],
       "kind": "vat",
       "essential": true,
-      "params": {}
+      "params": {"name": "Decant vat"}
     },
     {
       "id": "vantongeren-desk",
@@ -75,7 +75,8 @@
       "kind": "vendor",
       "essential": false,
       "params": {
-        "name": "Dr. Ilse Vantongeren"
+        "name": "Dr. Ilse Vantongeren",
+        "inspect_verb": "look at"
       }
     },
     {

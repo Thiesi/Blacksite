@@ -97,7 +97,7 @@
       "controls": [
         {
           "id": "sign-grid",
-          "label": "sign grid",
+          "label": "Sign grid",
           "target": {
             "zone": "sodium-row",
             "object": "house-lights-sign-grid"

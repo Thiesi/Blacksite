@@ -78,7 +78,7 @@ def focus_hint(hint: str, width: int, context: list[tuple[str, str]],
     if objective:
         # The legacy objective string also carries its action/journal help.
         # The structured objective above owns the text and unabridged cost.
-        tail = ['E act Q jobs' if 'Next:' in group else group for group in tail]
+        tail = ['Q jobs' if 'Next:' in group else group for group in tail]
     tail = ['? help', *(group for group in tail if group != '? help')]
     for group in tail:
         if display_width('  '.join([*groups, group])) <= width:

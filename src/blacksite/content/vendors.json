@@ -205,7 +205,7 @@
     },
     {
       "id": "sablier-clinic",
-      "name": "Sablier Clinic (any)",
+      "name": "Sablier Clinic",
       "clinic": "sablier",
       "tier": "list",
       "stock": [
@@ -771,7 +771,7 @@
     },
     {
       "id": "vesper",
-      "name": "The Tin Halo (Vesper)",
+      "name": "The Tin Halo",
       "tier": "list",
       "stock": [
         {

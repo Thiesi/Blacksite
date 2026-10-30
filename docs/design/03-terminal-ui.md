@@ -673,6 +673,9 @@ The hint row keeps this priority: an active prompt or notice, then a
 channel line by itself, then the active objective and its current cost,
 then E/J context, then remaining whole key-help groups. Help comes first
 among those remaining groups when it fits. This applies at both widths.
+When E and J select the same target with the same verb, show one `E/J`
+group (`E/Ctrl-O` in vi). Distinct targets or verbs keep separate groups.
+Do not append a generic `E act` group; Q keeps its job-panel help.
 Shorten E/J labels first, keeping at least the first word of each name
 and never cutting a key or verb. If that cannot fit, drop J, then E.
 Only then shorten the objective's target text; keep `Next:`, its verb

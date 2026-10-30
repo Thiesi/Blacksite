@@ -43,9 +43,12 @@ async def accept(root: Path, door_python: Path, show: bool,
                     def ready() -> bool:
                         body = zone_body()
                         focus = body.get('focus')
+                        jack = body.get('jack_focus')
+                        key = ('E/J' if focus and jack and focus['id'] == jack['id']
+                               and focus['verb'] == jack['verb'] else 'E')
                         return bool(focus and focus['id'] == target
                             and caller.session.ack_revision == caller.session.view_revision
-                            and f"E {focus['verb']} {focus['label']}" in screen.screen_text().splitlines()[layout.hint.y])
+                            and f"{key} {focus['verb']} {focus['label']}" in screen.screen_text().splitlines()[layout.hint.y])
                     await wait(ready)
                     return dict(zone_body()['focus'])
 
@@ -82,6 +85,10 @@ async def accept(root: Path, door_python: Path, show: bool,
                 # Outside counter range, fallback E now selects the terminal.
                 await probe.walk(caller, (36, 15))
                 terminal = await predicted('wake-terminal')
+                assert zone_body()['jack_focus'] == terminal
+                terminal_hint = screen.screen_text().splitlines()[layout.hint.y].strip()
+                assert terminal_hint.count('E/J jack in at Tutorial terminal') == 1
+                assert 'E act' not in terminal_hint and '  J jack in at' not in terminal_hint
                 save(f'terminal-before-e-{width}x{height}-{tier}')
                 await caller.caller.write(b'e')
                 await wait(lambda: caller.session.player_id in lat.presences and 'INTEGRITY' in screen.screen_text()
@@ -97,6 +104,8 @@ async def accept(root: Path, door_python: Path, show: bool,
                 cases.append({'size': [width, height], 'tier': tier,
                     'outfitter_e': outfitter, 'outfitter_j': jack,
                     'terminal_e': terminal, 'predicted_equals_opened': True,
+                    'terminal_hint': terminal_hint, 'combined_terminal_group': True,
+                    'no_generic_e': True,
                     'explicit_j_uses_terminal_beside_counter': True, 'clean_exit': True})
         assert not probe.errors, probe.errors
     finally:

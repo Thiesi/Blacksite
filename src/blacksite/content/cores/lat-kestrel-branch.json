@@ -99,7 +99,7 @@
       "controls": [
         {
           "id": "impound-manifest",
-          "label": "impound manifest",
+          "label": "Impound manifest",
           "target": {
             "zone": "terraces-blocks",
             "object": "kestrel-branch-impound-manifest"

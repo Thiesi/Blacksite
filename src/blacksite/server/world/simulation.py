@@ -6,6 +6,7 @@ from typing import Any
 from collections.abc import Callable
 
 from blacksite.layout import compute as screen_layout
+from blacksite.hints import focus_context
 from blacksite.server.clock import Clock, TICK_HZ
 from blacksite.server.loop import TickContext
 from blacksite.server.protocol import Frame, LogKind
@@ -393,10 +394,8 @@ class ZoneSimulation:
                 body["me"]["channel"] = dict(channel)
                 body["hint"] = f"{channel['label']} {channel['remaining']:.1f}s  Stay still; Esc/B cancels."
             elif focus or jack_focus:
-                context = f"E {focus['verb']} {focus['label']}".rstrip() if focus else ''
-                if jack_focus:
-                    jack_key = 'Ctrl-O' if session.keymap_id == 'vi' else 'J'
-                    context += ('  ' if context else '') + f"{jack_key} {jack_focus['verb']} {jack_focus['label']}".rstrip()
+                groups = focus_context(focus, jack_focus, 'Ctrl-O' if session.keymap_id == 'vi' else 'J')
+                context = '  '.join((prefix+' '+label).rstrip() for prefix, label in groups)
                 body['hint'] = context + '  ' + body['hint'].replace('E interact  ', '')
             if self.views[session.id].publish(session, body, ctx.tick):
                 self.published[session.id] = stamp

@@ -50,9 +50,10 @@ def projection(content: ContentTree) -> dict[str, Any]:
                       for ex in sorted(meta.exits, key=lambda ex: ex.id)],
             'objects': [{'id': obj.id, 'kind': obj.kind, 'tile': obj.tile,
                          'essential': obj.essential,
-                         # name labels inspection text; unknown future keys
+                         # These fields label inspection text; unknown future keys
                          # stay in the rule projection until classified.
-                         'params': {key: value for key, value in obj.params.items() if key != 'name'}}
+                         'params': {key: value for key, value in obj.params.items()
+                                    if key not in ('name', 'inspect_verb')}}
                         for obj in sorted(meta.objects, key=lambda obj: obj.id)],
             'layouts': [asdict(layout) for layout in meta.layouts]}
     sectors = {sid: {'entry': sector.entry, 'trace_policy': sector.trace_policy,

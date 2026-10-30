@@ -47,7 +47,8 @@
       "kind": "vendor",
       "essential": false,
       "params": {
-        "name": "Row drug dealer"
+        "name": "Row drug dealer",
+        "inspect_verb": "look at"
       }
     },
     {
@@ -167,7 +168,7 @@
       "kind": "terminal",
       "essential": true,
       "params": {
-        "name": "Row public 2"
+        "name": "Public terminal (Row 2)"
       }
     },
     {
@@ -215,7 +216,7 @@
       ],
       "kind": "terminal",
       "params": {
-        "name": "sign grid",
+        "name": "Sign grid",
         "control": "sign-grid"
       }
     }

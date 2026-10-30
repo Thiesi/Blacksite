@@ -150,7 +150,7 @@ class Contracts:
             if 'viewport' in body:
                 body['objective']['compact_hint'] = True
                 if not body.get('me', {}).get('channel'):
-                    body['hint'] = f"{window}Next: {stage.label or stage.verb} {body['objective']['progress']} | {seconds:g}s {cost} | E act Q jobs"
+                    body['hint'] = f"{window}Next: {stage.label or stage.verb} {body['objective']['progress']} | {seconds:g}s {cost} | Q jobs"
         if actor:
             for sid, node in self.state.services.nodes.items():
                 template = self.content.services[sid]
