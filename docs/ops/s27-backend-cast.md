@@ -82,12 +82,15 @@ owning-system affordances. Terminal talkers can speak from their
 occupied cell; physical work and counter actions require the physical
 counter. Terminal placement is still held.
 
-Vesper's neutral board waives only the giver's minimum standing for a
-story. Grade, other factions' standing, items, predecessor or paid branch
-receipts, membership, events and personal branch limits stay with S19.
-The live broker is rechecked at proposal and start. Service work remains
-local. Turn-in keeps the commissioning faction's reward and atomic
-once-only payment. Crew consent and paid-helper rules are unchanged.
+Vesper's neutral board waives a story giver's minimum standing only when
+the caller's faction has relation H to the giver (game 7.2 / 9.1). Low
+personal standing alone does not qualify. Grade, other factions' standing,
+items, predecessor or paid branch receipts, membership, events and personal
+branch limits stay with S19.
+The live broker and each participant's relation are rechecked at proposal
+and start. Service work remains local. Turn-in keeps the commissioning
+faction's reward and atomic once-only payment. Crew consent and paid-helper
+rules are unchanged.
 
 The Wake's existing three briefing assets and faction pitches remain
 the verbatim onboarding sources. Vesper's first-card line requires both

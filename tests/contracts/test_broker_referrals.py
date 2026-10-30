@@ -1,4 +1,4 @@
-"""Game 7.5 / S27: a neutral route without weakening story prerequisites."""
+"""Game 9.1 / S27: a neutral route without weakening story prerequisites."""
 
 from dataclasses import replace
 
@@ -8,6 +8,7 @@ from blacksite.content.loader import ContentTree
 from blacksite.content.schema import ContractTemplate
 from blacksite.server.contract_engine import Contracts
 from blacksite.server.contracts.panels import Panel, takes_turnin
+from blacksite.server.factions import relation
 from blacksite.server.players import Player
 from tests.character_helpers import place
 from tests.harness import FakeClient, HeadlessServer
@@ -28,6 +29,8 @@ def referral(content: ContentTree) -> tuple[HeadlessServer, FakeClient, Player, 
     owner.content.contracts[job.id] = job
     owner.state.engine.templates[job.id] = job
     player.update_progression(1500)
+    player.faction = 'sable'
+    assert relation(owner.content.factions, player.faction, job.giver) == 'H'
     owner.state.engine.completed[player.id] = {'vesper-first-thing'}
     owner.event_active = lambda eid: eid == 'curfew'
     return game, caller, player, owner, job
@@ -48,6 +51,49 @@ def test_game_7_5_broker_waives_only_the_givers_minimum_standing(content: Conten
     assert 'grade_at_least 5' in missing
     assert 'event_active curfew' in missing
     assert 'completed_contract vesper-first-thing' in missing
+
+
+@pytest.mark.parametrize(('faction', 'standing'), [
+    (None, 0), (None, -10), ('halvard', 0), ('kestrel', 0), ('wardens', 0),
+])
+def test_game_9_1_nonhostile_callers_cannot_bypass_giver_standing(
+    content: ContentTree, faction: str | None, standing: int,
+) -> None:
+    game, caller, player, owner, job = referral(content)
+    offer = owner.offer(job.id, player.id, 'vesper')
+    player.faction = faction
+    player.standing['wardens'] = standing
+    assert relation(owner.content.factions, player.faction, job.giver) != 'H'
+    assert owner.requirements(player.id, job, broker=True) == ('standing_at_least wardens 10',)
+    panel = Panel(game.clock.now_tick(), 'vesper', 'vesper')
+    assert not any(row['id'] == job.id for row in owner.panels.rows(caller.session, panel))
+    # A stale selection or a direct proposal cannot bypass the filtered board.
+    with pytest.raises(ValueError, match='requires'):
+        owner.propose(player.id, offer, (player.id,), broker='vesper')
+    assert not owner.proposals and not owner.state.engine.instances
+    # Non-hostile callers can still take the normal route once qualified.
+    player.standing['wardens'] = 10
+    assert owner.requirements(player.id, job, broker=True) == ()
+    assert any(row['id'] == job.id for row in owner.panels.rows(caller.session, panel))
+
+
+@pytest.mark.parametrize('change', ['membership', 'relation'])
+def test_game_9_1_referral_rechecks_live_hostility_before_start(
+    content: ContentTree, change: str,
+) -> None:
+    game, caller, player, owner, job = referral(content)
+    proposal = owner.propose(player.id, owner.offer(job.id, player.id, 'vesper'),
+                             (player.id,), broker='vesper')
+    owner.consent(proposal.id, player.id)
+    if change == 'membership':
+        player.faction = None
+    else:
+        faction = owner.content.factions['sable']
+        owner.content.factions['sable'] = replace(faction, relations={**faction.relations, 'wardens': 'N'})
+    with pytest.raises(ValueError, match='requires'):
+        owner.start(proposal.id, player.id)
+    game.commit_commerce()
+    assert not owner.state.engine.instances
 
 
 def test_game_7_5_referral_appears_at_the_broker_and_commits_its_original_faction(content: ContentTree) -> None:

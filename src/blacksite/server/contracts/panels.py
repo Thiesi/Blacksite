@@ -268,7 +268,7 @@ class Panels:
             detail += consequences(job)
             missing = owner.requirements(pid, job, broker=panel.handler == 'vesper')
             if job.story and panel.handler == 'vesper' and job.giver != 'vesper':
-                detail += ['Neutral referral: giver standing is waived. Other prerequisites remain.',
+                detail += ['Neutral referral: only hostile giver-standing gates are waived. Other prerequisites remain.',
                            'Completed work may return here; faction rewards retain their original owner.']
             if missing:
                 detail += ['Requires: '+', '.join(describe_requirement(condition, owner.content) for condition in missing)]

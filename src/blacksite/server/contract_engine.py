@@ -19,7 +19,7 @@ from blacksite.server.items import ItemInstance, make_item
 from blacksite.server.lattice.programs import learn as learn_program
 from blacksite.server.loop import TickContext
 from blacksite.server.progression import Grant, award
-from blacksite.server.factions import apply_vector
+from blacksite.server.factions import apply_vector, relation
 from blacksite.server.protocol import Frame
 from blacksite.server.sessions import Session
 
@@ -528,6 +528,9 @@ class Contracts:
         player = self.game.players[pid]
         if self.state.engine.helper_for(template, pid):
             return ()  # A previously paid helper need not grind entry standing again.
+        # Game 9.1 / 7.2: Vesper bypasses a hostile handler, not earned standing.
+        hostile_referral = (broker and template.story and not template.service
+                            and relation(self.content.factions, player.faction, template.giver) == 'H')
         missing = []
         if player.grade < template.min_grade:
             missing.append('grade_at_least '+str(template.min_grade))
@@ -543,7 +546,7 @@ class Contracts:
             if name == 'grade_at_least': ready = player.grade >= int(args[0])
             elif name == 'grade_below': ready = player.grade < int(args[0])
             elif name == 'standing_at_least':
-                ready = (broker and template.story and not template.service and args[0] == template.giver
+                ready = (hostile_referral and args[0] == template.giver
                          or player.standing.get(args[0], 0) >= int(args[1]))
             elif name == 'standing_below': ready = player.standing.get(args[0], 0) < int(args[1])
             elif name == 'member_of': ready = player.faction == args[0]

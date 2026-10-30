@@ -564,9 +564,11 @@ for the two guaranteed registers.
 
 Neutral story proposals record the server-validated `broker: vesper`.
 Accepted instances retain it in their durable `runtime.broker` field.
-The live Tin Halo contact is checked at proposal and start; no client
-flag waives prerequisites. Completed stories can use that neutral
-turn-in counter without changing the commissioning faction (game 9.1).
+The live Tin Halo contact and each participant's faction relation to the
+giver are checked at proposal and start. Only relation H permits the
+giver-standing waiver; no client flag waives prerequisites. Completed
+stories can use that neutral turn-in counter without changing the
+commissioning faction (game 9.1).
 S26 supplies `Core.dialogue.season_facts(player)` with committed stage,
 balance and Chronicle choices; the default exposes no settled outcome.
 

@@ -1482,9 +1482,12 @@ still belongs to the commissioning faction. Story referrals retain their
 separate dialogue and prerequisite checks.
 
 At the Tin Halo, Vesper can refer a story without its giver's minimum
-standing. Only that giver-standing check is waived. Grade, items,
-predecessors, personal branches, membership and event conditions remain.
-The broker verifies the referral again when the consenting roster starts.
+standing only when the caller's faction has relation **H** to the giver
+(§7.2), blocking its own handler. Only that giver-standing check is waived;
+low personal standing alone does not qualify. Grade, items, predecessors,
+personal branches, membership and event conditions remain. At proposal
+and start, the broker rechecks the live relation and prerequisites for
+each consenting participant.
 Completed story work may return through Vesper or its original handler;
 the commissioning faction retains its standing rewards. Public work
 orders still require their own local board and frozen service allocation.
