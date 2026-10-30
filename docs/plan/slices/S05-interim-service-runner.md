@@ -8,7 +8,7 @@
 ## Goal
 
 Historical S05 scope below is complete. NetBBS services have since
-shipped; S31 now integrates the released supervisor with NetBBS >= 7.31.0.
+shipped; S31 now integrates the released supervisor with NetBBS >= 7.45.0.
 This runner remains the explicit external/development alternative. See
 `docs/plan/01-netbbs-platform.md` (issue #56); S05 is not reopened.
 

@@ -26,12 +26,40 @@ source commit `f354e898dc2664b13c35a4e2cbbbbfa80d84776d`:
 - [Character preference](https://github.com/Thiesi/NetBBS/blob/f354e898dc2664b13c35a4e2cbbbbfa80d84776d/src/netbbs/net/unicode_style_preference.py):
   `unicode_style` is false for ASCII, true for Unicode/CP437 decoration.
 
-S31's supported minimum is **NetBBS >= 7.31.0**, door API 5. This avoids
+S31's supported minimum is **NetBBS >= 7.45.0**, door API 5 (raised from
+7.31.0 by the owner on 2026-10-30, see below). This avoids
 promising a matrix of old hosts with different output, callback and stop
 semantics. Services/limits/metadata/presence/install support already
 shipped in v7.3.0; chat arrived in v7.12.0, CP437 output conversion in
 v7.14.0, events and bounded stop refinements in v7.31.0. Historical
 request bodies stay archived, with released outcomes in their headers.
+
+Re-checked 2026-10-30 against [NetBBS v7.45.0](https://github.com/Thiesi/NetBBS/releases/tag/v7.45.0)
+(source commit `614725882b12749c2e90b40e0d051484d7f0ee47`, feature
+freeze), diffing the door runtime, events, outbound, profiles, services,
+launcher, character preference and both guides from v7.31.0:
+
+- `door_api` stays 5. Profiles, services, the launcher and username
+  validation are unchanged; the `DOOR_*` environment rule still holds.
+- Additive door info: `datetime_format` (v7.41.0), `charset` (v7.42.0)
+  and `quadrants` (v7.43.0). Architecture §1 and §8.4 record their use.
+- Events gain `season` (v7.43.0), an announcement naming no caller.
+  Publication stays off by default (§4); a future opt-in adapter may use
+  it and must check the advertised `types` first.
+- Door posts to a board that sends real names to an FTN network are
+  refused (v7.34.0, issue 1443). No effect while publication is off.
+- An Enter typed after the door picker's choice no longer reaches the
+  door as its first key (v7.41.0, issue 1546).
+- Usernames remain ASCII, so a live wide BBS handle cannot exist; live
+  acceptance uses a wide character name (§5), with wide handles covered
+  headlessly.
+
+No NetBBS notice of these changes reached this repository; this audit is
+the record. The owner raised the floor to v7.45.0, the freeze release:
+Blacksite has no installed base yet, and one target removes the
+missing-`charset` fallback and the second CI matrix. Every native CI job
+pins v7.45.0. Evidence recorded earlier against v7.31.0 stays valid as
+history.
 
 ## 2. Current implementation versus remaining work
 
@@ -162,7 +190,9 @@ reconnect and shorter overrides with a fake clock.
 
 `unicode_style: false` is a requested ASCII style. Respect it with an
 explanatory return before world entry; invite the caller to select
-Unicode/CP437 in NetBBS. Do not change their preference. ANSI graphic
+Unicode/CP437 in NetBBS. Do not change their preference. `charset:
+ascii` gets the same return, and only `utf-8` permits the modern glyph
+tier (architecture §8.4). ANSI graphic
 output remains the floor, so there is no new ASCII tier or weakened
 width rule. Native output stays UTF-8 and NetBBS converts it for CP437.
 S31 real acceptance includes both physical encodings, a wide name,

@@ -47,16 +47,17 @@ and a map glyph means the same in both. A modern glyph may be a better
 drawing of the same symbol, never a symbol only modern callers see, so
 help, legends and advice between players work across tiers.
 
-Detection: NetBBS sends only the boolean `unicode_style`, so support is
-not detectable. The first-play check shows a test row for each glyph
-family the modern tier uses. The modern tier is on by default when
+Detection: NetBBS cannot report which glyphs a font draws, so support
+is not fully detectable. It does report the character set it converts
+output to (`charset`, architecture §8.4). The first-play check shows a test row
+for each glyph family the modern tier uses. The modern tier is on by default when
 `color_depth` is truecolor and the caller confirms the rows look right;
 everyone else gets the CP437 tier. Either can be changed in settings.
 
 The choice is stored per player but applies per connection, the way
 colour is capped by `color_depth`. The modern tier is drawn only while
-the connection is truecolor and `unicode_style` is true; an absent
-`unicode_style` counts as false here. When a later connection's
+the connection is truecolor, `unicode_style` is true and `charset` is
+`utf-8`; an absent `unicode_style` counts as false here. When a later connection's
 transport or `color_depth` differs from the one the tier was confirmed
 on, the check runs again before the modern tier is used. A key drawn in
 CP437 glyphs always switches back to the CP437 tier, so a caller who

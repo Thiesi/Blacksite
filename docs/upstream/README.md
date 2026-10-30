@@ -10,7 +10,7 @@ below each header is historical, not the current API specification.
 
 Verified 2026-10-22 against released NetBBS v7.33.0 and its guide/source;
 see [issue #56 catch-up](../plan/01-netbbs-platform.md) for pinned sources,
-Blacksite ownership and the supported NetBBS >= 7.31.0 release baseline.
+Blacksite ownership and the supported NetBBS >= 7.45.0 release baseline.
 The initial implementation was NetBBS v7.3.0, PRs
 [#499](https://github.com/Thiesi/NetBBS/pull/499) and
 [#506](https://github.com/Thiesi/NetBBS/pull/506).

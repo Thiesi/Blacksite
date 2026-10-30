@@ -25,7 +25,7 @@ source of truth. Platform work Blacksite needs from NetBBS is in
   number changes `docs/design/00-game-design.md` in the same PR.
 - **No slice waits for speculative upstream work.** The six original
   platform requests shipped in NetBBS v7.3.0. S31 targets released
-  NetBBS >= 7.31.0 and keeps the external runner as an alternative.
+  NetBBS >= 7.45.0 and keeps the external runner as an alternative.
   Optional BBS publication cannot weaken registered-only admission.
 
 ## 2. Milestones
@@ -99,7 +99,7 @@ not a numeric execution order. Cross-milestone dependencies are explicit.
 | S28 | Operator tooling: full admin CLI, moderation, backup/restore, migrations, audit, SysOp guide | Sonnet | S05, S16, S23, S26 |
 | S29 | Load and latency: bot client, 16-bot hour, profiling, delta compaction if needed | Opus | S15, S22, S24, S26 |
 | S30 | Onboarding and help: hint system, help pages, first-run screen, session-limit UX, colour-blind palettes, settings | Sonnet | S07, S09, S13, S19 |
-| S31 | NetBBS >= 7.31 integration: supervised preset, guest-safe admission, install guide, packaging, first release | Sonnet | S26, S28, S29, S30, S32, S33 |
+| S31 | NetBBS >= 7.45 integration: supervised preset, guest-safe admission, install guide, packaging, first release | Sonnet | S26, S28, S29, S30, S32, S33 |
 | S32 | Federation readiness audit (design only): origin/authority invariants, protocol reservations, a written bridge design against NetBBS #168 | Fable, Astra review | S21, S26 |
 | S33 | ANSI art pack: title, sigils, vignettes, the Ring, Wake Hall, dead screen, transitions | Opus composition, Human pass | S04 |
 

@@ -85,7 +85,7 @@ gets one here; this slice makes them one coherent tool.
 - Player reports (`/report` from S09) listed and resolved here.
 - `docs/ops/sysop-guide.md`: install (venv, wheel, install dir),
   register the door in NetBBS (points at S31's preset), start the
-  service (released supervisor with NetBBS >= 7.31.0, or S05's explicit
+  service (released supervisor with NetBBS >= 7.45.0, or S05's explicit
   rc.d/systemd alternative with the service block removed), first start and
   secrets, daily operation (`status`, `who`), moderation, events,
   seasons and the Chronicle, backup and restore with the manifest

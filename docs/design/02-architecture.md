@@ -16,7 +16,19 @@ Verified on 2026-10-22 against released NetBBS v7.33.0, source commit
 Handbook and `src/netbbs/doors/{runtime,profiles,services,outbound,events}.py`.
 [Platform catch-up](../plan/01-netbbs-platform.md) links the exact sources,
 release history and Blacksite implementation gaps reported in issue #56.
-The S31 supported installation floor is **NetBBS >= 7.31.0**.
+The S31 supported installation floor is **NetBBS >= 7.45.0** (raised
+from 7.31.0 by the owner on 2026-10-30).
+
+Re-verified on 2026-10-30 against released NetBBS v7.45.0 (feature
+freeze), source commit `614725882b12749c2e90b40e0d051484d7f0ee47`, for
+every change to those files and guides since v7.31.0. `door_api` is
+still 5. Profiles, services, the launcher and account validation are
+unchanged. The changes inside API 5 are additive door info fields, the
+optional `season` event type, a host Enter guard at launch and quarter
+block substitution; the bullets below and §8.4 record what Blacksite
+does with them. v7.45.0 is NetBBS's feature-freeze release and is now
+the floor, so every native CI job pins it and the fields below are
+always present on a supported node.
 
 - A door is a **subprocess per caller**, launched with argv, never a shell,
   under the service account. Profile `time_limit` and `cpu_seconds` each
@@ -36,7 +48,11 @@ The S31 supported installation floor is **NetBBS >= 7.31.0**.
   `16`), integer `door_api`, boolean `unicode_style`, `transport`, node
   display `timezone`, `node_name`, stable opaque `node_id`, and an optional
   positive `session_limit_seconds`. Absence of the latter means no host
-  deadline. There is no published `node_fingerprint`, guest flag or user
+  deadline. Added within API 5 and sent by every supported node:
+  `datetime_format` (v7.41.0), `charset` (v7.42.0: `utf-8`, `cp437` or
+  `ascii`, the set NetBBS converts door output to) and `quadrants`
+  (v7.43.0: whether U+2596-U+259F show; when false NetBBS replaces them
+  with half or full blocks). There is no published `node_fingerprint`, guest flag or user
   level. A third-party door receives the shared guest account's identity.
 - Native stdio resize uses rewritten door info plus opt-in `SIGUSR1`
   (`resize_signal: true`). Custom profile environment uses `DOOR_*`,
@@ -136,7 +152,7 @@ path, so it exists before the first zone loads.
 
 ### 3.1 Primary: released NetBBS door service supervision
 
-S31 ships one primary preset requiring NetBBS >= 7.31.0. Companion
+S31 ships one primary preset requiring NetBBS >= 7.45.0. Companion
 services shipped in v7.3.0; the block is no longer speculative:
 
 ```json
@@ -793,6 +809,16 @@ requires a bounded compatibility review, not silent acceptance.
 S30 honors the boolean `unicode_style`. False means the caller requested
 ASCII styling; explain the ANSI graphic requirement and return cleanly
 before world entry, inviting selection of Unicode or CP437 in NetBBS.
+`unicode_style` is not the terminal's character set: it is true for every
+preference except ASCII, including CP437 terminals and a Telnet caller on
+Auto whose terminal NetBBS could not detect, who gets ASCII output.
+`charset` is authoritative: `ascii` gets the same explanatory return as
+`unicode_style: false`, and the modern glyph tier requires `charset` to
+be `utf-8` (terminal UI §1). A supported node always sends `charset`; if
+it is missing or not one of the three values, treat the door info as
+malformed and refuse before world entry, as for a bad `door_api`.
+Blacksite draws no quarter blocks; any future art that does must follow
+`quadrants`, or draw half blocks itself.
 Do not force a preference change or add an ASCII tier. True permits the
 CP437-compatible glyph set, and the modern tier when the first-play check
 confirms it (terminal UI §1); absence is unknown and uses the

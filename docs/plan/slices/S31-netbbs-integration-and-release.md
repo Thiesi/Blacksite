@@ -11,7 +11,7 @@ Turn the repository into something a SysOp installs: a wheel with the
 content inside it, a door profile preset they import on NetBBS's
 Compatibility screen, an install guide that goes from a bare service
 account to a playing caller, a release checklist, and the first tagged
-release. Require NetBBS >= 7.31.0 and integrate its already released
+release. Require NetBBS >= 7.45.0 and integrate its already released
 companion service. Keep the external runner as an explicit alternative,
 not a second speculative future-version preset.
 
@@ -195,7 +195,8 @@ not a second speculative future-version preset.
   Preserve that check: a development PYTHONPATH does not install or update
   the separately launched client. The one game venv must contain the
   released wheel for both service and caller entry points.
-- The supported minimum is NetBBS >= 7.31.0, verified against v7.33.0.
+- The supported minimum is NetBBS >= 7.45.0, re-verified on 2026-10-30
+  (raised from 7.31.0; architecture §1).
   Limits accept zero or 1-86400; zero cannot bypass a host hard limit.
   CPU exhaustion is not graceful logout and supplies no warning signal.
 - NetBBS is built and run on NetBSD; test the wheel there, not only on
