@@ -1,6 +1,6 @@
 # P3 — Interaction focus
 
-**Status:** implementation in progress (PR #103); final wording and technical review pending
+**Status:** done (PR #103)
 **Primary model:** Opus · **Reviewer:** automated review, technical lead, presentation lead (wording)
 **Depends on:** P1 · **Milestone:** presentation track
 **Issue:** https://github.com/Thiesi/Blacksite/issues/94
