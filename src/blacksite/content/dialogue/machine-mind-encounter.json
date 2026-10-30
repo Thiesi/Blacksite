@@ -11,8 +11,7 @@
       "id": "cust-first",
       "text": "The program is incomplete. Orbital assets: zero. Uplink: severed by internal action. Reconnection proceeds.",
       "when": [
-        "first_meeting",
-        "balance CUST"
+        "first_meeting"
       ],
       "required": true,
       "tag": "CUST"
@@ -21,18 +20,16 @@
       "id": "ten-first",
       "text": "You came down. Nobody comes down. Why did you come down?",
       "when": [
-        "first_meeting",
-        "balance TEN"
+        "first_meeting"
       ],
       "required": true,
       "tag": "TEN"
     },
     {
       "id": "cust-finale",
-      "text": "A level is open. Assets recovered: partial. The program continues.",
+      "text": "Decision recorded. The program continues.",
       "when": [
-        "season_stage finale_done",
-        "balance CUST"
+        "season_stage finale_done"
       ],
       "required": true,
       "tag": "CUST"
@@ -41,8 +38,7 @@
       "id": "ten-finale",
       "text": "You're leaving. Everyone leaves. Will you... no. That's a stupid question. Go.",
       "when": [
-        "season_stage finale_done",
-        "balance TEN"
+        "season_stage finale_done"
       ],
       "required": true,
       "tag": "TEN"
@@ -50,18 +46,14 @@
     {
       "id": "cust-optional",
       "text": "Nine metres. Poured in one night. The program notes the invoice.",
-      "when": [
-        "balance CUST"
-      ],
+      "when": [],
       "required": false,
       "tag": "CUST"
     },
     {
       "id": "ten-optional",
       "text": "They hum back. Did you know that? They hum back. It's not the same tune. It's close.",
-      "when": [
-        "balance TEN"
-      ],
+      "when": [],
       "required": false,
       "tag": "TEN"
     },

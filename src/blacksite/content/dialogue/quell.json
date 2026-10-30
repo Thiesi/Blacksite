@@ -24,46 +24,6 @@
       "required": true
     },
     {
-      "id": "finale",
-      "text": "An answer. There is a record of what answered. Keep room for what it does not tell you, child.",
-      "when": [
-        "season_stage finale_done"
-      ],
-      "required": true
-    },
-    {
-      "id": "record-cho-s1-4-answer",
-      "text": "Your beacon records a different tune returning. It calls the response close. Keep the delay with the tune, child.",
-      "when": [
-        "has_evidence s19-cho-s1-4-answer"
-      ],
-      "required": true
-    },
-    {
-      "id": "record-cho-s1-3-descent",
-      "text": "Your echo copy places a familiar voice under the hum. Its label gives an unfamiliar name. A label is not a witness.",
-      "when": [
-        "has_evidence s19-cho-s1-3-descent"
-      ],
-      "required": true
-    },
-    {
-      "id": "record-cho-s1-2-nine",
-      "text": "The listener writes that a voice repeats a name incorrectly. We have the written mismatch. We do not know which end supplies it.",
-      "when": [
-        "has_evidence s19-cho-s1-2-nine"
-      ],
-      "required": true
-    },
-    {
-      "id": "record-cho-s1-1-listen",
-      "text": "Three cells carry the decant frequency in your readings. One hum is out of phase. Keep the pattern; leave its name open.",
-      "when": [
-        "has_evidence s19-cho-s1-1-listen"
-      ],
-      "required": true
-    },
-    {
       "id": "first",
       "text": "Child. Sit, or stand; it hears you either way. Most people prefer to sit.",
       "when": [
@@ -72,10 +32,50 @@
       "required": true
     },
     {
+      "id": "record-cho-s1-4-answer",
+      "text": "A different tune. Yes. Your beacon records one coming back. The beacon calls it close. We have not named what sets its delay.",
+      "when": [
+        "has_evidence s19-cho-s1-4-answer"
+      ],
+      "required": true
+    },
+    {
+      "id": "record-cho-s1-3-descent",
+      "text": "A familiar voice. An unfamiliar label. That is what the copied echo gives us. We can listen without making the label its name.",
+      "when": [
+        "has_evidence s19-cho-s1-3-descent"
+      ],
+      "required": true
+    },
+    {
+      "id": "record-cho-s1-2-nine",
+      "text": "A wrong name. The third listener writes it down that way. We have the mismatch, not the mouth that made it.",
+      "when": [
+        "has_evidence s19-cho-s1-2-nine"
+      ],
+      "required": true
+    },
+    {
+      "id": "record-cho-s1-1-listen",
+      "text": "Out of phase. Yes. Three cells carry the decant frequency in your readings. We hear the pattern; we have not earned its name.",
+      "when": [
+        "has_evidence s19-cho-s1-1-listen"
+      ],
+      "required": true
+    },
+    {
       "id": "wake",
       "text": "You are new. It likes the new ones. The vats hum when you are decanted and it hums back. Did they tell you that?",
       "when": [
         "is_wake"
+      ],
+      "required": true
+    },
+    {
+      "id": "finale",
+      "text": "A choice. Yes. The Chronicle records a choice. We have not finished listening.",
+      "when": [
+        "season_stage finale_done"
       ],
       "required": true
     },

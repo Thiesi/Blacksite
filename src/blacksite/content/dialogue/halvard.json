@@ -24,46 +24,6 @@
       "required": true
     },
     {
-      "id": "finale",
-      "text": "You will appreciate that a completed expedition is evidence of access, not evidence of intent.",
-      "when": [
-        "season_stage finale_done"
-      ],
-      "required": true
-    },
-    {
-      "id": "record-hal-s1-4-descend",
-      "text": "Three marks, and a door absent from the pour plan. Keep the plan with the record. Neither explains the change alone.",
-      "when": [
-        "has_evidence s19-hal-s1-4-descend"
-      ],
-      "required": true
-    },
-    {
-      "id": "record-hal-s1-3-plug",
-      "text": "Your monitor records an intact, warm seal. It places the heat below. It does not name the source.",
-      "when": [
-        "has_evidence s19-hal-s1-3-plug"
-      ],
-      "required": true
-    },
-    {
-      "id": "record-hal-s1-2-audit",
-      "text": "The audit carries an early authority header. A date on a header does not tell us who supplied it.",
-      "when": [
-        "has_evidence s19-hal-s1-2-audit"
-      ],
-      "required": true
-    },
-    {
-      "id": "record-hal-s1-1-recovery",
-      "text": "You brought back a warm unit. Maartens calls it Directorate property. The temperature does not identify its owner.",
-      "when": [
-        "has_evidence s19-hal-s1-1-recovery"
-      ],
-      "required": true
-    },
-    {
       "id": "first",
       "text": "You will appreciate that I do not usually receive visitors who arrived on the tram.",
       "when": [
@@ -72,10 +32,50 @@
       "required": true
     },
     {
+      "id": "record-hal-s1-4-descend",
+      "text": "The plan you inspected has no door. Maartens reports the same absence from the invoice. Neither document names the person who changed it.",
+      "when": [
+        "has_evidence s19-hal-s1-4-descend"
+      ],
+      "required": true
+    },
+    {
+      "id": "record-hal-s1-3-plug",
+      "text": "The monitor records an intact seal. Warmth is an observation. You will appreciate that it does not, by itself, void the sealing order.",
+      "when": [
+        "has_evidence s19-hal-s1-3-plug"
+      ],
+      "required": true
+    },
+    {
+      "id": "record-hal-s1-2-audit",
+      "text": "The audit carries an authority header earlier than the office announcement. A header supplies a date, not the identity of whoever supplied it.",
+      "when": [
+        "has_evidence s19-hal-s1-2-audit"
+      ],
+      "required": true
+    },
+    {
+      "id": "record-hal-s1-1-recovery",
+      "text": "Maartens lists the unit as Directorate property. You record its warmth. You will appreciate that its temperature does not identify the source of that heat.",
+      "when": [
+        "has_evidence s19-hal-s1-1-recovery"
+      ],
+      "required": true
+    },
+    {
       "id": "wake",
       "text": "A Wake. My family funds your program. That is not a kindness; it is a supply chain.",
       "when": [
         "is_wake"
+      ],
+      "required": true
+    },
+    {
+      "id": "finale",
+      "text": "You will appreciate that a completed expedition is evidence of access, not evidence of intent.",
+      "when": [
+        "season_stage finale_done"
       ],
       "required": true
     },

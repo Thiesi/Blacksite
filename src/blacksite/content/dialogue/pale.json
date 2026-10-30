@@ -9,7 +9,7 @@
   "lines": [
     {
       "id": "record-sab-red-s1-4-candles",
-      "text": "You recorded five points around the warm stack. The account names no candle keeper. Somebody still has to tend a candle.",
+      "text": "Five points around the Site Zero stack. Warm, with candles. Account names no keeper. I can't give you a name this one doesn't carry.",
       "when": [
         "has_evidence s19-sab-red-s1-4-candles"
       ],
@@ -17,7 +17,7 @@
     },
     {
       "id": "record-sab-red-s1-3-dark",
-      "text": "Your power schedule names no terrace for that load. It routes below the Sink. A blank address still uses power.",
+      "text": "The copy shows power routed below the Sink. No terrace assigned. I collect at doors. That entry hasn't given me one.",
       "when": [
         "has_evidence s19-sab-red-s1-3-dark"
       ],
@@ -25,7 +25,7 @@
     },
     {
       "id": "record-sab-red-s1-2-drop",
-      "text": "The note in your cache blames Ninety-Nine for ledger week. It is dated last month. Keep the note; ask what supports it.",
+      "text": "Ten friends in ledger week. Ninety-Nine's name on your note, dated last month. I don't forgive it. Keep the paper; anger isn't a date stamp.",
       "when": [
         "has_evidence s19-sab-red-s1-2-drop"
       ],
@@ -33,7 +33,7 @@
     },
     {
       "id": "record-sab-red-s1-1-remind",
-      "text": "Three subscribers restrained, alive. The notice calls that collection. A notice can name a debt without proving who owes it.",
+      "text": "Three restrained, none dead. That's what your record says. Notice calls it collection. The people on the floor may have another word.",
       "when": [
         "has_evidence s19-sab-red-s1-1-remind"
       ],

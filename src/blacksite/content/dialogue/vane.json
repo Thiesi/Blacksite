@@ -9,7 +9,7 @@
   "lines": [
     {
       "id": "record-sab-s1-4-batch",
-      "text": "The canister has a Site Zero stamp. Vantongeren calls the template her original. Keep her claim beside the record, not in place of it.",
+      "text": "Director Vantongeren identifies the template as her original. Your record gives the stamp and the warm canister. Her identification needs its own verification.",
       "when": [
         "has_evidence s19-sab-s1-4-batch"
       ],
@@ -17,7 +17,7 @@
     },
     {
       "id": "record-sab-s1-3-dreaming",
-      "text": "Okafor returns quietly in your record. She says she asks about the dreams. What she keeps private is hers to keep.",
+      "text": "Your record has Okafor back from the nave. She says the visit is about the dreams. That is her account; Sablier does not get to fill in the silence.",
       "when": [
         "has_evidence s19-sab-s1-3-dreaming"
       ],
@@ -25,7 +25,7 @@
     },
     {
       "id": "record-sab-s1-2-provenance",
-      "text": "No origin appears in the lineage index you copied. That is a gap in a record. It is not a diagnosis.",
+      "text": "The index gives no earlier template. I can tell you what it records. I cannot sign a lineage it does not have.",
       "when": [
         "has_evidence s19-sab-s1-2-provenance"
       ],
@@ -33,7 +33,7 @@
     },
     {
       "id": "record-sab-s1-1-retrieval",
-      "text": "Four willing templates reach the clinic in your record. Their recall tags enter its register. Care and registration both have consequences.",
+      "text": "The register has four arrivals. The clinic promises care. A promise from Sablier has a department behind it; keep the entry if you need to call us on it.",
       "when": [
         "has_evidence s19-sab-s1-1-retrieval"
       ],

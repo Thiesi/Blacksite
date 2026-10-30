@@ -53,8 +53,12 @@ Every one of S19's 33 Season 1 evidence records has a required reaction
 at its faction's fixed talker and named handler. Each requires that
 viewer's `has_evidence` fact. The lines distinguish the observation,
 the source's claim and the question left open; they require no quiz.
-Newest eligible evidence precedes ordinary greetings. Immediate Marked
-and enemy warnings retain priority.
+Immediate Marked and enemy warnings retain priority. First introductions,
+the viewer's evidence and Wake status precede a global settled-finale
+line, so a late arrival still hears their own situation. Newest eligible
+evidence precedes ordinary returning greetings. Each reaction belongs to
+its speaker's own voice and attributes claims without copying a source's
+third-person attribution into the claimant's mouth.
 
 Work hotkeys open the existing local board; clinic and trade hotkeys
 resolve a nearby server-owned counter, including reusable vendor

@@ -24,27 +24,11 @@
       "required": true
     },
     {
-      "id": "finale",
-      "text": "There's a record now, sweetheart. Read it before you pay anyone to explain it. Charge them for the chair.",
-      "when": [
-        "season_stage finale_done"
-      ],
-      "required": true
-    },
-    {
       "id": "first-card",
       "text": "Sweetheart. You've got the card. Sit. First one's on Vantongeren; she pays me to say that.",
       "when": [
         "first_meeting",
         "has_item story_vesper_card"
-      ],
-      "required": true
-    },
-    {
-      "id": "first-done",
-      "text": "Good. That's a thing done. You'll find there are more.",
-      "when": [
-        "completed_contract vesper-first-thing"
       ],
       "required": true
     },
@@ -61,6 +45,22 @@
       "text": "Vantongeren's card. She sends me the ones she thinks will last. Don't make her wrong.",
       "when": [
         "is_wake"
+      ],
+      "required": true
+    },
+    {
+      "id": "finale",
+      "text": "There's a record now, sweetheart. Read it before you pay anyone to explain it. Charge them for the chair.",
+      "when": [
+        "season_stage finale_done"
+      ],
+      "required": true
+    },
+    {
+      "id": "first-done",
+      "text": "Good. That's a thing done. You'll find there are more.",
+      "when": [
+        "completed_contract vesper-first-thing"
       ],
       "required": true
     },

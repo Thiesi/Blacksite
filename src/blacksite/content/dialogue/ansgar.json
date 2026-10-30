@@ -9,7 +9,7 @@
   "lines": [
     {
       "id": "record-cho-s1-4-answer",
-      "text": "Your beacon records a different tune returning. It calls the response close. Keep the delay with the tune, child.",
+      "text": "Beacon calls the return close. Your record has a different tune coming back. I know what a return signal looks like. I don't know what sets this delay.",
       "when": [
         "has_evidence s19-cho-s1-4-answer"
       ],
@@ -17,7 +17,7 @@
     },
     {
       "id": "record-cho-s1-3-descent",
-      "text": "Your echo copy places a familiar voice under the hum. Its label gives an unfamiliar name. A label is not a witness.",
+      "text": "The copied echo labels a familiar voice with an unfamiliar name. That is the echo's label. I'd check a signal twice before trusting its filing.",
       "when": [
         "has_evidence s19-cho-s1-3-descent"
       ],
@@ -25,7 +25,7 @@
     },
     {
       "id": "record-cho-s1-2-nine",
-      "text": "The listener writes that a voice repeats a name incorrectly. We have the written mismatch. We do not know which end supplies it.",
+      "text": "The third listener's log says the name repeats wrong. A fault in the voice or a fault in the recording? I've repaired enough lines to check both ends.",
       "when": [
         "has_evidence s19-cho-s1-2-nine"
       ],
@@ -33,7 +33,7 @@
     },
     {
       "id": "record-cho-s1-1-listen",
-      "text": "Three cells carry the decant frequency in your readings. One hum is out of phase. Keep the pattern; leave its name open.",
+      "text": "Three cells, decant frequency. One out of phase on your record. I used to fix rails by measuring them. I'd keep that phase plot before naming a voice.",
       "when": [
         "has_evidence s19-cho-s1-1-listen"
       ],

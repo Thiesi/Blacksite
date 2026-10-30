@@ -8,8 +8,16 @@
   "machine_mind": false,
   "lines": [
     {
+      "id": "marked",
+      "text": "You're red. I didn't see it. Coffee's not for you.",
+      "when": [
+        "marked"
+      ],
+      "required": true
+    },
+    {
       "id": "record-war-s1-4-line",
-      "text": "Eight spawns cleared in your record. Brann calls it a first deployment below the old limit. Ask how the next patrol reaches it.",
+      "text": "Eight Exhale spawns on your card. Marshal calls it our first deployment below the old line. I'd like a route the next patrol can actually use.",
       "when": [
         "has_evidence s19-war-s1-4-line"
       ],
@@ -17,7 +25,7 @@
     },
     {
       "id": "record-war-s1-3-book",
-      "text": "You copied a page. Marshal calls it her record for a successor. Undercity's in there twice. Keep the page; keep asking about the next one.",
+      "text": "You copied one page. Brann calls it her record for a successor. Undercity's left out twice. Coffee won't make that read any better.",
       "when": [
         "has_evidence s19-war-s1-3-book"
       ],
@@ -25,7 +33,7 @@
     },
     {
       "id": "record-war-s1-2-curfew",
-      "text": "You have the gate-cycle record. Keep the times attached. An order and the reason for it are separate records.",
+      "text": "One of your three gate copies logs an inside release at 04:12. No author in it. Everyone asks who. The log doesn't answer.",
       "when": [
         "has_evidence s19-war-s1-2-curfew"
       ],
@@ -33,7 +41,7 @@
     },
     {
       "id": "record-war-s1-1-stairwell",
-      "text": "Your work card records the stairwell. The residents still have to use it. File the proof where they can find it.",
+      "text": "Five drones out of Block Four. Order sends a Wake to the service approach. Marshal has a policy; residents have stairs. I get the complaints.",
       "when": [
         "has_evidence s19-war-s1-1-stairwell"
       ],

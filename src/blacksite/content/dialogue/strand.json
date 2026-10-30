@@ -9,7 +9,7 @@
   "lines": [
     {
       "id": "record-unm-s1-5-open",
-      "text": "Your release log names the accepted mission credential. It proves that door opened for that work. It does not grant the whole installation.",
+      "text": "Release log records your mission credential. That's the logged authorisation. Don't turn one entry into a claim on every door below Karst.",
       "when": [
         "has_evidence s19-unm-s1-5-open"
       ],
@@ -17,7 +17,7 @@
     },
     {
       "id": "record-unm-s1-4-ask",
-      "text": "The stutter moves one word in your record. Ninety-Nine asks for no more copies. A changed recording still gets to be heard.",
+      "text": "Your record puts the stutter one word later. The account says Ninety-Nine asks for no more copies. Stop calling a new recording consent.",
       "when": [
         "has_evidence s19-unm-s1-4-ask"
       ],
@@ -25,7 +25,7 @@
     },
     {
       "id": "record-unm-s1-3-fresher",
-      "text": "The second fragment repeats the same unfinished words. You retain its sealed copy. Resemblance does not prove continuity.",
+      "text": "Second fragment copied, sealed copy retained. It repeats the old words. I'm not voting to replace someone because a new recording sounds familiar.",
       "when": [
         "has_evidence s19-unm-s1-3-fresher"
       ],
@@ -33,7 +33,7 @@
     },
     {
       "id": "record-unm-s1-2-vat-nine",
-      "text": "Four willing templates reach shelter in your record. The rig reports masked tags. They receive no clinic evaluation. Keep both costs in view.",
+      "text": "Four people choose shelter. Rig says their tags are masked. They get no clinic evaluation. Don't sell me freedom as if it also came with a nurse.",
       "when": [
         "has_evidence s19-unm-s1-2-vat-nine"
       ],
@@ -41,7 +41,7 @@
     },
     {
       "id": "record-unm-s1-1-map",
-      "text": "You mapped five cells and the unlisted entrance. Strand says it is missing from the public chart. Keep both versions.",
+      "text": "Five cells inspected, entrance included. I told you the public chart leaves it out. Your record has the entrance. Someone likes their maps clean.",
       "when": [
         "has_evidence s19-unm-s1-1-map"
       ],

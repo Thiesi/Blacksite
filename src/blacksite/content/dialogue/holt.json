@@ -9,7 +9,7 @@
   "lines": [
     {
       "id": "record-kes-s1-4-quiet",
-      "text": "Your record carries an interruption. Keep the actual interval with the manifest. An apology is not an explanation.",
+      "text": "Your stored account says ninety seconds, then a denial. I can read what's on it. I won't put words into the grille.",
       "when": [
         "has_evidence s19-kes-s1-4-quiet"
       ],
@@ -17,7 +17,7 @@
     },
     {
       "id": "record-kes-s1-3-frequency",
-      "text": "Nine years of headers on your copy. Log says Ferrymen recipients. Someone still has to answer for the older addresses.",
+      "text": "Nine years of headers. Ferrymen names, according to the log. I run a yard, not an address register. The older headers still don't say who assigned them.",
       "when": [
         "has_evidence s19-kes-s1-3-frequency"
       ],
@@ -25,7 +25,7 @@
     },
     {
       "id": "record-kes-s1-2-diversion",
-      "text": "Your records carry the matching consignment IDs. Compare the allocation with the delivery. Keep both copies.",
+      "text": "Depot's allocation says six years around intact track. Your crate copy has the same consignment ID. I keep the timetable. That entry still needs explaining.",
       "when": [
         "has_evidence s19-kes-s1-2-diversion"
       ],
@@ -33,7 +33,7 @@
     },
     {
       "id": "record-kes-s1-1-escort",
-      "text": "Your convoy arrives without a recorded loss. Dispatch rates it amber. A safe arrival does not tell you what sets that rating.",
+      "text": "Ring-two depot, no loss in your book. Amber, Dispatch calls it. I watch the road, not a colour. I'd still like to know what set that rating.",
       "when": [
         "has_evidence s19-kes-s1-1-escort"
       ],

@@ -9,7 +9,7 @@ import pytest
 from blacksite.content.loader import ContentTree, load_content
 from blacksite.content.schema import DIALOGUE_CONDITIONS
 from blacksite.content.validate import validate
-from blacksite.server.dialogue import Facts, eligible_offers, evaluate
+from blacksite.server.dialogue import Facts, eligible_offers, evaluate, matches
 
 
 FIXED = {'vantongeren', 'brann', 'halvard', 'quell', 'reyes', 'anouk',
@@ -47,6 +47,17 @@ def test_game_13_4_every_fixed_talker_has_required_situations(cast: ContentTree,
                for line in talker.lines)
 
 
+@pytest.mark.parametrize('slug', sorted(FIXED))
+def test_game_13_4_late_arrival_keeps_personal_dialogue_ahead_of_global_finale(
+        cast: ContentTree, slug: str) -> None:
+    talker = cast.dialogue[slug]
+    assert evaluate(talker, Facts(season_stage='finale_done'), Random(0)).id == 'first'
+    returning = Facts(met=frozenset({slug}), season_stage='finale_done')
+    assert evaluate(talker, returning, Random(0)).id == 'wake'
+    discharged = Facts(legal=True, met=frozenset({slug}), season_stage='finale_done')
+    assert evaluate(talker, discharged, Random(0)).id == 'finale'
+
+
 def test_game_13_4_authored_references_resolve_even_while_bundle_is_dormant(cast: ContentTree) -> None:
     kinds = {'FACTION':'factions', 'CONTRACT':'contracts', 'ITEM':'items', 'EVENT':'events',
              'EVIDENCE':'evidence', 'SERVICE':'services'}
@@ -74,8 +85,9 @@ def test_game_13_4_source_reactions_require_each_viewers_actual_record(cast: Con
             name, eid = condition.split()
             assert name == 'has_evidence' and eid in records and line.required
             covered.add(eid)
-            facts = Facts(legal=True, met=frozenset({talker.id}), evidence=frozenset({eid}))
-            assert evaluate(talker, facts, Random(0)) is line
+            for stage in ('open', 'finale_done'):
+                facts = Facts(legal=True, met=frozenset({talker.id}), evidence=frozenset({eid}), season_stage=stage)
+                assert evaluate(talker, facts, Random(0)) is line
             # A second caller's empty journal cannot see this historical line.
             assert not evaluate(talker, Facts(legal=True, met=frozenset({talker.id})), Random(0)).id.startswith('record-')
     assert covered == records
@@ -88,6 +100,15 @@ def test_game_13_4_terminal_and_encounter_records_keep_distinct_delivery(cast: C
     assert encounter.machine_mind and not encounter.offers and not encounter.barks
     assert {line.tag for line in encounter.lines if line.required and 'season_stage finale_done' in line.when} == {'CUST', 'TEN'}
     assert not any(line.tag for line in cast.dialogue['wren'].lines)
+
+
+def test_game_13_4_neutral_balance_keeps_both_required_encounter_registers(cast: ContentTree) -> None:
+    bank = cast.dialogue['machine-mind-encounter']
+    for condition, facts in (
+            ('first_meeting', Facts(balance=0)),
+            ('season_stage finale_done', Facts(balance=0, met=frozenset({bank.id}), season_stage='finale_done'))):
+        assert {line.tag for line in bank.lines if line.required and condition in line.when
+                and matches(line.when, bank, facts)} == {'CUST', 'TEN'}
 
 
 def test_game_13_4_recruiters_offer_existing_terms_without_joining(cast: ContentTree) -> None:

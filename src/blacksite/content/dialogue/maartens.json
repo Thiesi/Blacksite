@@ -9,7 +9,7 @@
   "lines": [
     {
       "id": "record-hal-s1-4-descend",
-      "text": "Three marks, and a door absent from the pour plan. Keep the plan with the record. Neither explains the change alone.",
+      "text": "Three marks around an unlisted door. I say the invoice does not mention it. File your inspection beside that claim; do not make either stand in for the other.",
       "when": [
         "has_evidence s19-hal-s1-4-descend"
       ],
@@ -17,7 +17,7 @@
     },
     {
       "id": "record-hal-s1-3-plug",
-      "text": "Your monitor records an intact, warm seal. It places the heat below. It does not name the source.",
+      "text": "Seal intact. Reading warm. Those are the readings. Do not write a cause into the temperature column.",
       "when": [
         "has_evidence s19-hal-s1-3-plug"
       ],
@@ -25,7 +25,7 @@
     },
     {
       "id": "record-hal-s1-2-audit",
-      "text": "The audit carries an early authority header. A date on a header does not tell us who supplied it.",
+      "text": "The header is earlier. The copy establishes that much. Directorate still has to answer for the name on its old routing entry.",
       "when": [
         "has_evidence s19-hal-s1-2-audit"
       ],
@@ -33,7 +33,7 @@
     },
     {
       "id": "record-hal-s1-1-recovery",
-      "text": "You brought back a warm unit. Maartens calls it Directorate property. The temperature does not identify its owner.",
+      "text": "My recovery list calls it Directorate property. Your unit is warm. Put the temperature on the card; leave the cause blank until we have one.",
       "when": [
         "has_evidence s19-hal-s1-1-recovery"
       ],

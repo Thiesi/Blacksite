@@ -24,46 +24,6 @@
       "required": true
     },
     {
-      "id": "finale",
-      "text": "There's a record now, friend. That's something we can price. What was listening is another matter.",
-      "when": [
-        "season_stage finale_done"
-      ],
-      "required": true
-    },
-    {
-      "id": "record-sab-red-s1-4-candles",
-      "text": "You recorded five points around the warm stack. The account names no candle keeper. Somebody still has to tend a candle.",
-      "when": [
-        "has_evidence s19-sab-red-s1-4-candles"
-      ],
-      "required": true
-    },
-    {
-      "id": "record-sab-red-s1-3-dark",
-      "text": "Your power schedule names no terrace for that load. It routes below the Sink. A blank address still uses power.",
-      "when": [
-        "has_evidence s19-sab-red-s1-3-dark"
-      ],
-      "required": true
-    },
-    {
-      "id": "record-sab-red-s1-2-drop",
-      "text": "The note in your cache blames Ninety-Nine for ledger week. It is dated last month. Keep the note; ask what supports it.",
-      "when": [
-        "has_evidence s19-sab-red-s1-2-drop"
-      ],
-      "required": true
-    },
-    {
-      "id": "record-sab-red-s1-1-remind",
-      "text": "Three subscribers restrained, alive. The notice calls that collection. A notice can name a debt without proving who owes it.",
-      "when": [
-        "has_evidence s19-sab-red-s1-1-remind"
-      ],
-      "required": true
-    },
-    {
       "id": "first",
       "text": "Friend! Sit down, the car doesn't stop, that's the whole trick of it. What do you need and what's it worth to you?",
       "when": [
@@ -72,10 +32,50 @@
       "required": true
     },
     {
+      "id": "record-sab-red-s1-4-candles",
+      "text": "Five points, warm Site Zero stack, candles. Nobody in your account signs for tending them. That's labour, friend. Labour has a bill.",
+      "when": [
+        "has_evidence s19-sab-red-s1-4-candles"
+      ],
+      "required": true
+    },
+    {
+      "id": "record-sab-red-s1-3-dark",
+      "text": "Your schedule sends an unnamed load below the Sink. That's the trouble, friend: an address nobody admits is still a bill someone pays.",
+      "when": [
+        "has_evidence s19-sab-red-s1-3-dark"
+      ],
+      "required": true
+    },
+    {
+      "id": "record-sab-red-s1-2-drop",
+      "text": "I still put that bill at Ninety-Nine's door. A note dated last month doesn't pay it. Keep the original, friend; this city likes to change its handwriting.",
+      "when": [
+        "has_evidence s19-sab-red-s1-2-drop"
+      ],
+      "required": true
+    },
+    {
+      "id": "record-sab-red-s1-1-remind",
+      "text": "Three subscribers alive, friend. The notice calls it collection. That's the price I put on being polite. They can still argue about the account.",
+      "when": [
+        "has_evidence s19-sab-red-s1-1-remind"
+      ],
+      "required": true
+    },
+    {
       "id": "wake",
       "text": "A Wake. Day what? Doesn't matter. In the Sink you were a person the moment you could pay.",
       "when": [
         "is_wake"
+      ],
+      "required": true
+    },
+    {
+      "id": "finale",
+      "text": "Read the Chronicle, friend. What a choice costs is written there. What it means? That's the trouble.",
+      "when": [
+        "season_stage finale_done"
       ],
       "required": true
     },
