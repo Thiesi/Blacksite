@@ -74,8 +74,13 @@ async def accept(root: Path, door_python: Path, show: bool,
                 drone = next(a for a in probe.service.world.actors.values()
                              if a.owner == caller.avatar.actor.id and a.behaviour.get('training'))
                 await probe.target(caller, drone.id)
+                # TARGET and HP labels also exist with no selected target.
+                # Wait for the actual name in TARGET as well as NEARBY.
+                await wait(lambda: display.screen_text().count('Training drone') >= 2)
+                revision = caller.session.view_revision
                 await caller.caller.write(b'f')
-                await wait(lambda: 'TARGET' in display.screen_text() and 'HP' in display.screen_text())
+                await wait(lambda: caller.session.ack_revision > revision
+                           and display.screen_text().count('Training drone') >= 2)
                 save('training-drone')
                 async with asyncio.timeout(45):
                     while probe.game.players[caller.session.player_id].progress.get('wake_combat') != 'done':
