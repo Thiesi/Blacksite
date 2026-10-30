@@ -105,3 +105,6 @@ word; drop J and then E before shortening objective target text. The
 existing four S19 manual/network acceptance cases remain unchanged.
 `hint-regression.json` records the earlier failure and its correction;
 fresh source-head receipts are required before the renewed review.
+The refreshed packet identifies those receipts and retains the earlier
+failure evidence. The unnamed recruitment-board regression also asserts
+that a missing display label never prevents the selected target opening.

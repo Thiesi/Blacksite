@@ -9,7 +9,36 @@
  "artifact_zip_sha256": "8ede155e052fed3fa5ec5bfceb85a9688f2d07170b2a696b1655dcda86294979",
  "artifact_capture": "unfinished-0.txt",
  "artifact_trace": "failure-trace.txt",
- "disposition": "Requires technical and presentation lead decision on objective/context priority; do not weaken the S19 acceptance assertion or invent another display surface in P3.",
- "passed": false,
- "human_approval": false
+ "disposition": "Resolved by the technical/presentation leads confirming existing UI 11 priority: objective/current cost before E/J; retain first words; drop J then E before shortening objective target text. No S19 assertion or timeout change.",
+ "human_approval": false,
+ "original_attempt_passed": false,
+ "resolved_source_head": "93641f5dc5db6dc7a60124de200d1033ac12d686",
+ "technical_decision": "https://github.com/Thiesi/Blacksite/pull/103#issuecomment-6511119663",
+ "presentation_agreement": "https://github.com/Thiesi/Blacksite/pull/103#issuecomment-6511124463",
+ "successful_unchanged_s19_jobs": [
+  {
+   "id": 123807023007,
+   "name": "contracts-netbbs (132x50, network)",
+   "status": "completed",
+   "conclusion": "success"
+  },
+  {
+   "id": 123807023103,
+   "name": "contracts-netbbs (80x24, manual)",
+   "status": "completed",
+   "conclusion": "success"
+  },
+  {
+   "id": 123807023163,
+   "name": "contracts-netbbs (132x50, manual)",
+   "status": "completed",
+   "conclusion": "success"
+  },
+  {
+   "id": 123807023211,
+   "name": "contracts-netbbs (80x24, network)",
+   "status": "completed",
+   "conclusion": "success"
+  }
+ ]
 }

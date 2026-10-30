@@ -1,0 +1,50 @@
+{
+ "source_head": "93641f5dc5db6dc7a60124de200d1033ac12d686",
+ "captures": [
+  {
+   "scenario": "Live S19 Next: Check objective; full no-fee inspection cost before context",
+   "size": [
+    132,
+    50
+   ],
+   "source_head": "93641f5dc5db6dc7a60124de200d1033ac12d686",
+   "payloads": {
+    "text": {
+     "file": "s19-first-objective-network-132.txt",
+     "sha256": "876ae034bf0ac045d7c403dec05e4f5f096d994ac20a0095d29fb0bd51d59a81",
+     "bytes": 8613
+    },
+    "ansi": {
+     "file": "s19-first-objective-network-132.ans",
+     "sha256": "ba3edf901204f0fc7fb664bc182895af7e0767a9a9661eedfb00f628ad377217",
+     "bytes": 497087
+    }
+   },
+   "artifact_url": "https://github.com/Thiesi/Blacksite/actions/runs/40976696156/artifacts/12943700769",
+   "artifact_zip_sha256": "134544c2cc75c84ab2d2b6e8f7de8a704fa757cdf211586d7a8e49fade22e776"
+  },
+  {
+   "scenario": "Live S19 Next: Check objective; full no-fee inspection cost before context",
+   "size": [
+    80,
+    24
+   ],
+   "source_head": "93641f5dc5db6dc7a60124de200d1033ac12d686",
+   "payloads": {
+    "text": {
+     "file": "s19-first-objective-network-80.txt",
+     "sha256": "0dea94752be78ac5e16a2a825aa3f40959481f64f6b4500f5abb0889afbd15c0",
+     "bytes": 2742
+    },
+    "ansi": {
+     "file": "s19-first-objective-network-80.ans",
+     "sha256": "4a02c19ee88dd9ebd43d939f13ff2e7903667a709731a474d7d0a9a2235b5ef7",
+     "bytes": 1109830
+    }
+   },
+   "artifact_url": "https://github.com/Thiesi/Blacksite/actions/runs/40976696156/artifacts/12943297389",
+   "artifact_zip_sha256": "379c462aa8509c0f8c7f632d4ab3bf82991c875f6907faed66e98cccdc71aec3"
+  }
+ ],
+ "human_approval": false
+}

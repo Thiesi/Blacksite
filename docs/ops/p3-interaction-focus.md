@@ -90,14 +90,17 @@ upstream commit resolved from the acceptance workflow's release tag.
 
 Presentation-lead wording approval is pending. The corrected source has
 fresh native captures and written automated reviews with no actionable
-findings at the preceding source. Broader S19 native acceptance exposed
+findings. Broader S19 native acceptance exposed
 missing `Next:` objective feedback. The leads confirmed that existing
 terminal UI 11 gives the objective and current cost priority over context.
 The fitter now applies that order and retains the first word of shortened
-E/J names. The four S19 acceptance assertions are unchanged. New checks
-and captures must replace the preceding engineering packet before the
-renewed technical and final wording review. `hint-regression.json` keeps
-the earlier failure evidence.
+E/J names. The four S19 acceptance assertions are unchanged. The packet
+contains fresh source-matched captures and check receipts for renewed
+technical and final wording review. `hint-regression.json` keeps the
+earlier failure evidence and its resolution. An additional review found
+an unnamed recruitment-board crash; a regression reproduces it before
+the fix, and input now uses the selected actor/object id without relying
+on a display label.
 
 Channel mechanics keep their existing behaviour. Technical review and
 the owner's acceptance

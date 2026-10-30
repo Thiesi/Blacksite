@@ -1,188 +1,188 @@
 {
- "source_head": "e465b1e2ba3e9104a46656a8ec73b5653ad2c0ab",
- "run": "https://github.com/Thiesi/Blacksite/actions/runs/40972867743",
- "as_of_utc": "2026-10-29 23:31:56 UTC",
- "passed_jobs": 11,
+ "source_head": "93641f5dc5db6dc7a60124de200d1033ac12d686",
+ "run": "https://github.com/Thiesi/Blacksite/actions/runs/40976696156",
+ "as_of_utc": "2026-10-30 00:20:57 UTC",
+ "passed": true,
+ "passed_jobs": 28,
  "skipped_jobs": 1,
- "failed_jobs": 3,
- "pending_jobs": 14,
+ "failed_jobs": 0,
+ "pending_jobs": 0,
  "jobs": [
   {
-   "id": 123794189411,
+   "id": 123806882199,
    "name": "native-scope",
    "status": "completed",
    "conclusion": "success"
   },
   {
-   "id": 123794254854,
-   "name": "market-netbbs (132x50)",
-   "status": "completed",
-   "conclusion": "success"
-  },
-  {
-   "id": 123794254864,
+   "id": 123807022772,
    "name": "crews-netbbs",
    "status": "completed",
    "conclusion": "success"
   },
   {
-   "id": 123794254877,
-   "name": "market-netbbs (80x24)",
-   "status": "completed",
-   "conclusion": "success"
-  },
-  {
-   "id": 123794254888,
-   "name": "relays-netbbs (132x50)",
-   "status": "completed",
-   "conclusion": "success"
-  },
-  {
-   "id": 123794254899,
-   "name": "apartments-netbbs",
-   "status": "completed",
-   "conclusion": "success"
-  },
-  {
-   "id": 123794254909,
-   "name": "lattice-netbbs",
-   "status": "in_progress",
-   "conclusion": null
-  },
-  {
-   "id": 123794254915,
-   "name": "relays-netbbs (80x24)",
-   "status": "completed",
-   "conclusion": "success"
-  },
-  {
-   "id": 123794254932,
-   "name": "events-netbbs (132x50)",
-   "status": "completed",
-   "conclusion": "success"
-  },
-  {
-   "id": 123794254942,
-   "name": "systemd-netbbs",
-   "status": "in_progress",
-   "conclusion": null
-  },
-  {
-   "id": 123794254960,
+   "id": 123807022778,
    "name": "events-netbbs (80x24)",
    "status": "completed",
    "conclusion": "success"
   },
   {
-   "id": 123794255040,
+   "id": 123807022792,
+   "name": "market-netbbs (80x24)",
+   "status": "completed",
+   "conclusion": "success"
+  },
+  {
+   "id": 123807022796,
+   "name": "events-netbbs (132x50)",
+   "status": "completed",
+   "conclusion": "success"
+  },
+  {
+   "id": 123807022801,
+   "name": "systemd-netbbs",
+   "status": "completed",
+   "conclusion": "success"
+  },
+  {
+   "id": 123807022813,
+   "name": "lattice-netbbs",
+   "status": "completed",
+   "conclusion": "success"
+  },
+  {
+   "id": 123807022820,
+   "name": "encounters-netbbs",
+   "status": "completed",
+   "conclusion": "success"
+  },
+  {
+   "id": 123807022849,
    "name": "interlock-netbbs",
-   "status": "in_progress",
-   "conclusion": null
+   "status": "completed",
+   "conclusion": "success"
   },
   {
-   "id": 123794255048,
+   "id": 123807022865,
+   "name": "apartments-netbbs",
+   "status": "completed",
+   "conclusion": "success"
+  },
+  {
+   "id": 123807022867,
+   "name": "relays-netbbs (80x24)",
+   "status": "completed",
+   "conclusion": "success"
+  },
+  {
+   "id": 123807022899,
    "name": "factions-netbbs",
-   "status": "in_progress",
-   "conclusion": null
+   "status": "completed",
+   "conclusion": "success"
   },
   {
-   "id": 123794255053,
+   "id": 123807022910,
+   "name": "market-netbbs (132x50)",
+   "status": "completed",
+   "conclusion": "success"
+  },
+  {
+   "id": 123807022929,
    "name": "combat-netbbs",
-   "status": "in_progress",
-   "conclusion": null
+   "status": "completed",
+   "conclusion": "success"
   },
   {
-   "id": 123794255122,
+   "id": 123807022956,
+   "name": "relays-netbbs (132x50)",
+   "status": "completed",
+   "conclusion": "success"
+  },
+  {
+   "id": 123807022983,
    "name": "npcs-netbbs (80x24)",
-   "status": "in_progress",
-   "conclusion": null
+   "status": "completed",
+   "conclusion": "success"
   },
   {
-   "id": 123794255127,
+   "id": 123807023003,
+   "name": "contracts-netbbs (80x24, common)",
+   "status": "completed",
+   "conclusion": "success"
+  },
+  {
+   "id": 123807023007,
+   "name": "contracts-netbbs (132x50, network)",
+   "status": "completed",
+   "conclusion": "success"
+  },
+  {
+   "id": 123807023024,
    "name": "npcs-netbbs (132x50)",
-   "status": "in_progress",
-   "conclusion": null
+   "status": "completed",
+   "conclusion": "success"
   },
   {
-   "id": 123794255134,
+   "id": 123807023035,
    "name": "fabrication-netbbs",
    "status": "completed",
    "conclusion": "success"
   },
   {
-   "id": 123794255167,
+   "id": 123807023074,
+   "name": "contracts-netbbs (132x50, reserve)",
+   "status": "completed",
+   "conclusion": "success"
+  },
+  {
+   "id": 123807023103,
+   "name": "contracts-netbbs (80x24, manual)",
+   "status": "completed",
+   "conclusion": "success"
+  },
+  {
+   "id": 123807023115,
+   "name": "contracts-netbbs (80x24, reserve)",
+   "status": "completed",
+   "conclusion": "success"
+  },
+  {
+   "id": 123807023116,
+   "name": "contracts-netbbs (132x50, crew)",
+   "status": "completed",
+   "conclusion": "success"
+  },
+  {
+   "id": 123807023163,
+   "name": "contracts-netbbs (132x50, manual)",
+   "status": "completed",
+   "conclusion": "success"
+  },
+  {
+   "id": 123807023181,
    "name": "contracts-netbbs (132x50, common)",
    "status": "completed",
    "conclusion": "success"
   },
   {
-   "id": 123794255196,
-   "name": "contracts-netbbs (132x50, manual)",
+   "id": 123807023186,
+   "name": "contracts-netbbs (80x24, crew)",
    "status": "completed",
-   "conclusion": "failure"
+   "conclusion": "success"
   },
   {
-   "id": 123794255231,
-   "name": "encounters-netbbs",
-   "status": "in_progress",
-   "conclusion": null
-  },
-  {
-   "id": 123794255243,
+   "id": 123807023211,
    "name": "contracts-netbbs (80x24, network)",
    "status": "completed",
-   "conclusion": "failure"
+   "conclusion": "success"
   },
   {
-   "id": 123794255247,
-   "name": "contracts-netbbs (80x24, manual)",
-   "status": "in_progress",
-   "conclusion": null
-  },
-  {
-   "id": 123794255265,
-   "name": "contracts-netbbs (132x50, crew)",
-   "status": "in_progress",
-   "conclusion": null
-  },
-  {
-   "id": 123794255266,
-   "name": "contracts-netbbs (132x50, network)",
-   "status": "completed",
-   "conclusion": "failure"
-  },
-  {
-   "id": 123794255273,
-   "name": "contracts-netbbs (80x24, crew)",
-   "status": "in_progress",
-   "conclusion": null
-  },
-  {
-   "id": 123794255282,
-   "name": "contracts-netbbs (132x50, reserve)",
-   "status": "in_progress",
-   "conclusion": null
-  },
-  {
-   "id": 123794255304,
-   "name": "contracts-netbbs (80x24, common)",
-   "status": "in_progress",
-   "conclusion": null
-  },
-  {
-   "id": 123794255321,
-   "name": "contracts-netbbs (80x24, reserve)",
-   "status": "in_progress",
-   "conclusion": null
-  },
-  {
-   "id": 123794257513,
+   "id": 123807025092,
    "name": "door-subset-netbbs",
    "status": "completed",
    "conclusion": "skipped"
   }
  ],
- "passed": false,
- "blocking_finding": "hint-regression.json; existing S19 Next: feedback is lost after context",
+ "s19_assertions_and_timeouts_unchanged": true,
  "human_approval": false
 }
