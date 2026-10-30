@@ -41,6 +41,14 @@
       "required": true
     },
     {
+      "id": "first-done",
+      "text": "Good. That's a thing done. You'll find there are more.",
+      "when": [
+        "completed_contract vesper-first-thing"
+      ],
+      "required": true
+    },
+    {
       "id": "wake",
       "text": "Vantongeren's card. She sends me the ones she thinks will last. Don't make her wrong.",
       "when": [
@@ -53,14 +61,6 @@
       "text": "There's a record now, sweetheart. Read it before you pay anyone to explain it. Charge them for the chair.",
       "when": [
         "season_stage finale_done"
-      ],
-      "required": true
-    },
-    {
-      "id": "first-done",
-      "text": "Good. That's a thing done. You'll find there are more.",
-      "when": [
-        "completed_contract vesper-first-thing"
       ],
       "required": true
     },

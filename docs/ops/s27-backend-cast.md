@@ -60,6 +60,14 @@ evidence precedes ordinary returning greetings. Each reaction belongs to
 its speaker's own voice and attributes claims without copying a source's
 third-person attribution into the claimant's mouth.
 
+This is deliberate content priority: a returning Wake hears the lease
+line instead of a generic public-finale reaction when no more specific
+personal progress applies. Discharged callers can hear the public-finale
+line. Vesper's paid first-job acknowledgement is personal progress and
+precedes both. These finale reactions are flavour, not the required
+finale instructions or the two encounter registers. S26's Chronicle and
+settlement records remain their own authoritative surfaces.
+
 Work hotkeys open the existing local board; clinic and trade hotkeys
 resolve a nearby server-owned counter, including reusable vendor
 templates without an `object_id`. Recruitment opens the existing terms

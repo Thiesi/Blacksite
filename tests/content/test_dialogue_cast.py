@@ -58,6 +58,14 @@ def test_game_13_4_late_arrival_keeps_personal_dialogue_ahead_of_global_finale(
     assert evaluate(talker, discharged, Random(0)).id == 'finale'
 
 
+@pytest.mark.parametrize('legal', [False, True])
+def test_game_9_1_vesper_acknowledges_the_paid_first_job_before_generic_status(
+        cast: ContentTree, legal: bool) -> None:
+    facts = Facts(legal=legal, met=frozenset({'vesper'}),
+                  completed=frozenset({'vesper-first-thing'}), season_stage='finale_done')
+    assert evaluate(cast.dialogue['vesper'], facts, Random(0)).id == 'first-done'
+
+
 def test_game_13_4_authored_references_resolve_even_while_bundle_is_dormant(cast: ContentTree) -> None:
     kinds = {'FACTION':'factions', 'CONTRACT':'contracts', 'ITEM':'items', 'EVENT':'events',
              'EVIDENCE':'evidence', 'SERVICE':'services'}
