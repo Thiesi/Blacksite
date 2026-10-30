@@ -25,6 +25,15 @@ TILE_ROLES = {"wall": "wall", "door": "thing_door", "locked-door": "thing_door",
               "vat": "thing_vat", "light": "thing_light", "hardware": "thing_hardware",
               "cover-1": "thing_cover", "cover-2": "thing_cover", "cover-3": "thing_cover"}
 TAGS = {"!": "hostile", "~": "neutral", "+": "ally"}
+OPAQUE = frozenset(('wall', 'locked-door'))  # Shipped opaque rule-tile classes; tested against content.
+
+
+def _beside(ids: list[list[str]], x: int, y: int, wanted: frozenset[str]) -> bool:
+    """Four disclosed neighbours, without repeated memory/legend resolution."""
+    return (x > 0 and ids[y][x - 1] in wanted
+            or x + 1 < len(ids[y]) and ids[y][x + 1] in wanted
+            or y > 0 and x < len(ids[y - 1]) and ids[y - 1][x] in wanted
+            or y + 1 < len(ids) and x < len(ids[y + 1]) and ids[y + 1][x] in wanted)
 
 
 def terrain(buffer: CellBuffer, body: dict[str, Any], layout: Layout, paint: Paint) -> None:
@@ -33,30 +42,34 @@ def terrain(buffer: CellBuffer, body: dict[str, Any], layout: Layout, paint: Pai
     grid, memory, legend = body['tiles'], body.get('remembered', []), body['legend']
     hazards = {tuple(tile) for hazard in body.get('hazards', []) for tile in hazard.get('tiles', [])}
 
-    def tile_at(x: int, y: int) -> dict[str, Any] | None:
-        if not (0 <= y < len(grid) and 0 <= x < len(grid[y])):
-            return None
-        value = grid[y][x]
-        if value == -2:
-            value = memory[y][x] if y < len(memory) and x < len(memory[y]) else -1
-        return legend[value] if 0 <= value < len(legend) else None
+    # Resolve memory/legend indices once. The trial repeated this for every
+    # neighbour and dimmed the same style for every remembered floor cell.
+    resolved = []
+    for y, row in enumerate(grid):
+        recall = memory[y] if y < len(memory) else []
+        indices = [recall[x] if value == -2 and x < len(recall) else value for x, value in enumerate(row)]
+        resolved.append([index if 0 <= index < len(legend) else -1 for index in indices])
+    ids = [[legend[index]['id'] if index >= 0 else '' for index in row] for row in resolved]
+    open_tiles = frozenset(entry['id'] for entry in legend if entry['id'] not in OPAQUE)
+    styles: dict[tuple[int, bool, bool], tuple[str, Style]] = {}
 
     for y, row in enumerate(grid[:area.height]):
         for x, value in enumerate(row[:area.width]):
-            entry = tile_at(x, y)
-            if entry is None:
+            index = resolved[y][x]
+            if index < 0:
                 continue
-            roof = entry['id'] == 'wall' and not any(
-                (near := tile_at(x + dx, y + dy)) and near['id'] not in ('wall', 'locked-door')
-                for dx, dy in ((-1, 0), (1, 0), (0, -1), (0, 1)))
-            glyph, style = cell(paint, entry, roof=roof)
+            entry = legend[index]
+            roof = entry['id'] == 'wall' and not _beside(ids, x, y, open_tiles)
+            key = index, roof, value < 0
+            if key not in styles:
+                glyph, style = cell(paint, entry, roof=roof)
+                styles[key] = glyph, paint.known(style) if value < 0 else style
+            glyph, style = styles[key]
             if value >= 0 and (vp['x'] + x, vp['y'] + y) in hazards:
                 style = paint('thing_hazard', 'hazard_warn', bold=True, reverse=paint.tier == '16')
             elif value < 0:
-                style = paint.known(style)
                 if (paint.tier == '16' and glyph == '·' and (vp['x'] + x + vp['y'] + y) % 3
-                        and not any((near := tile_at(x + dx, y + dy)) and near['id'] in ('wall', 'locked-door')
-                                    for dx, dy in ((-1, 0), (1, 0), (0, -1), (0, 1)))):
+                        and not _beside(ids, x, y, OPAQUE)):
                     glyph = ' '
             buffer.put(area.x + x, area.y + y, glyph, style)
 

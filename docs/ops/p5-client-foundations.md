@@ -54,6 +54,11 @@ ambient emission, place cards and `Toast.full` are not ported.
 Lattice control-label sentence case stays with P7. P3 focus-cost work
 stays with S29.
 
+The rule layer resolves each disclosed terrain index once per frame and
+reuses its seen/remembered style. Cardinal-neighbour checks read those
+resolved IDs. This removes repeated work on fully known ground; the P5
+glyph/style goldens remain unchanged.
+
 ## Validation and acceptance
 
 The new headless style goldens cover title, text, dead, menu, talker,
