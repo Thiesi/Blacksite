@@ -2,8 +2,11 @@
 
 P5 ports the rule-layer presentation from trial
 `1060c9df2ac6b140db932b4e888989d192502b20`. The integration base is
-`22d4971fbc49aebc3553552e6a3f21c939cdaab8`, after the owner's merges of
-the wall clarification (#108) and hint polish (#109).
+`d8b570f0afbf6cd5fd36f4b7fc0d3d326cd1b6ca`, including the owner's merges
+of the wall clarification (#108), hint polish (#109), NetBBS v7.45.0
+floor/canon audit (#111, `62e205e`) and review-process update (#112).
+The original P5 integration and earlier capture runs used
+`22d4971fbc49aebc3553552e6a3f21c939cdaab8` as their main base.
 
 ## Launch switch
 
@@ -128,7 +131,8 @@ The P5 Actions workflow runs this acceptance with `--show` through a
 sized, attached Linux PTY, retaining the console stream and native
 captures as artifacts. The full existing native matrix remains the
 switch-off check. Neither workflow grants visual, creative or human
-acceptance. The presentation lead co-reviews P5; the owner alone merges.
+acceptance. The presentation lead co-reviews P5; merge authority follows
+[technical review section 7.1](../plan/04-technical-review.md#71-delegated-merge).
 S25 layout and the full S27 human/presentation gates remain held.
 
 The committed [native review packet](captures/p5-client-foundations/README.md)
@@ -139,8 +143,13 @@ character-name / ASCII BBS-handle distinction and verifies both fields in
 the same pinned row at 132x50. It grants no creative or human approval.
 The packet now contains v7.45.0 captures, following the technical lead's
 floor-change notice on #82. Earlier v7.31.0 captures retain their actual
-provenance in Git history and the earlier run's artifacts. The floor/canon
-PR #111 must be owner-merged before it is used as a new base.
+provenance in Git history and the earlier run's artifacts. The owner
+merged the floor/canon PR #111 before P5 was rebased onto it. Runtime,
+content, tests, acceptance scripts and the P5 workflow remain identical
+to the packet's execution head. Other native workflows inherit #111's
+v7.45.0 pins, and their combined-head results are recorded on PR #110.
+The new charset admission and check-order rules remain S30/S31 work;
+this rebase adds no runtime implementation of those future contracts.
 
 ## Representative playable scenario
 

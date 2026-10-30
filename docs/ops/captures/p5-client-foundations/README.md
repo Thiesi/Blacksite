@@ -1,8 +1,11 @@
 # P5 native review packet
 
 Execution head: `547ce7c418c19c60e5726adda081a01f05911ce2`.
-The evidence commit changes documentation only; runtime, content,
-tests, acceptance scripts and workflows remain identical to this head.
+Runtime, content, tests, acceptance scripts and the P5 workflow remain
+identical to this head. The owner subsequently merged #111, and P5 was
+rebased onto that floor/canon audit. Other native workflows now inherit
+its v7.45.0 pins. Fresh combined-head CI and review results are linked
+from PR #110; this packet retains its actual execution provenance.
 
 Transport: real NetBBS v7.45.0 Telnet to a registered native stdio door,
 using a source-matched isolated Blacksite wheel and
