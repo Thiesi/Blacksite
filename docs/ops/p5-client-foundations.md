@@ -7,12 +7,15 @@ the wall clarification (#108) and hint polish (#109).
 
 ## Launch switch
 
-Set `BLACKSITE_PRESENTATION=1` in the registered native door's launch
+Set `DOOR_BLACKSITE_PRESENTATION=1` in the registered native door's launch
 environment to enable P5. Leave it absent for the existing renderer.
 The default is off. The switch covers every view kind, nested Wake
 screens, dialogue menus and local help. There is no toggle key or
 protocol field. F9 retains public-terminal services; F5, F7 and F10 gain
 no presentation binding.
+
+NetBBS's frozen profile contract permits custom environment keys only
+under `DOOR_*`; the launch variable uses that namespace.
 
 The client and server must use the same package, as before. This changes
 no gameplay rule, simulation, persisted data, view contract or geometry.

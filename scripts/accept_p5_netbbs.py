@@ -28,7 +28,7 @@ async def accept(root: Path, door_python: Path, show: bool,
     assert not subprocess.check_output(['git', 'status', '--porcelain'], text=True).strip()
     root.mkdir(parents=True, exist_ok=False)
     probe = PresentationProbe(root, door_python, show,
-                              door_environment={'BLACKSITE_PRESENTATION': '1'}, show_all_tiers=True)
+                              door_environment={'DOOR_BLACKSITE_PRESENTATION': '1'}, show_all_tiers=True)
     await probe.start()
     cases = []
     try:
@@ -99,7 +99,7 @@ async def accept(root: Path, door_python: Path, show: bool,
                 for case in cases for label in case['captures']
                 for ext in ('.ans', '.txt', '.json') for path in [root / (label + ext)]}
     (root / 'result.json').write_text(json.dumps({'head': head, 'passed': True, 'cases': cases,
-        'transport': 'NetBBS Telnet -> registered native stdio, BLACKSITE_PRESENTATION=1',
+        'transport': 'NetBBS Telnet -> registered native stdio, DOOR_BLACKSITE_PRESENTATION=1',
         'source_matched_wheel': json.loads((root / 'native-client.json').read_text()),
         'show': show, 'human_approval': False, 'fixtures': 'private node/world/accounts only; normal game rules',
         'manifest': manifest}, ensure_ascii=False, indent=2) + '\n', encoding='utf-8', newline='\n')
