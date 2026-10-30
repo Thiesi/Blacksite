@@ -1,6 +1,6 @@
 # P5 — Client foundations
 
-**Status:** planned
+**Status:** in progress (engineering and acceptance; reviews outstanding)
 **Primary model:** Codex (the plan's owner) · **Reviewer:** automated review, technical lead, presentation lead (co-reviewer and presentation gate)
 **Depends on:** P0, P2, P4 (P3 for HERE) · **Milestone:** presentation track
 **Issue:** https://github.com/Thiesi/Blacksite/issues/106

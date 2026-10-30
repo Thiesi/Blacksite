@@ -1,0 +1,79 @@
+name: P5 client foundations acceptance
+
+on:
+  pull_request:
+    paths:
+      - 'src/blacksite/**'
+      - 'tests/**'
+      - 'scripts/accept_p5_netbbs.py'
+      - 'scripts/accept_s10_netbbs.py'
+      - 'scripts/presentation_p5.py'
+      - '.github/workflows/p5-acceptance.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  comparison:
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - run: python -m pip install -e .[test]
+      - name: Compare switch on/off on P1's matched workload and fully known 132x50 ground
+        run: python scripts/presentation_p5.py --output "${{ runner.temp }}/p5-comparison.json"
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: p5-budget-comparison
+          path: ${{ runner.temp }}/p5-comparison.json
+
+  native:
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    strategy:
+      fail-fast: false
+      matrix:
+        size: ['80x24', '132x50']
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - uses: actions/checkout@v4
+        with:
+          repository: Thiesi/NetBBS
+          ref: v7.31.0
+          path: .test-tmp/netbbs
+      - name: Install NetBBS and isolated source-matched native wheel
+        shell: bash
+        run: |
+          python -m pip install './.test-tmp/netbbs[ssh,web]'
+          python -m pip wheel --no-deps . -w "$RUNNER_TEMP/p5-wheels"
+          python -m venv "$RUNNER_TEMP/p5-venv"
+          "$RUNNER_TEMP/p5-venv/bin/python" -m pip install "$RUNNER_TEMP"/p5-wheels/*.whl
+      - name: Play with the switch on through an attached PTY and native NetBBS door
+        shell: bash
+        run: |
+          size='${{ matrix.size }}'
+          columns="${size%x*}"
+          rows="${size#*x}"
+          script -q -e -c "stty cols $columns rows $rows; python scripts/accept_p5_netbbs.py --root '$RUNNER_TEMP/p5-proof' --door-python '$RUNNER_TEMP/p5-venv/bin/python' --size '$size' --show" "$RUNNER_TEMP/p5-console.ans"
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: p5-native-${{ matrix.size }}
+          path: |
+            ${{ runner.temp }}/p5-proof/*.ans
+            ${{ runner.temp }}/p5-proof/*.txt
+            ${{ runner.temp }}/p5-proof/*.json
+            ${{ runner.temp }}/p5-proof/progress.log
+            ${{ runner.temp }}/p5-console.ans

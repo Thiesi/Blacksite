@@ -15,14 +15,20 @@ from blacksite.door.views import LinePrompt, Renderer, render_menu, render_text
 from blacksite.door.views.zone import render_zone
 from blacksite.door.views.lattice import render_lattice
 from blacksite.door.log import rows as log_rows
+from blacksite.door.present.context import Context
+from blacksite.door.present.paint import Paint
+from blacksite.door.present import screen as presentation_screen
 from blacksite.server.protocol import Frame
 
 
 class Display:
-    def __init__(self, info: DoorInfo, request_prefix: str = "client") -> None:
+    def __init__(self, info: DoorInfo, request_prefix: str = "client", *, presentation: bool = False) -> None:
         self.info = info
         self.layout = compute(info.width, info.height)
         self.palette = Palette({}, resolve_tier(info.color_depth))
+        self.presentation = presentation
+        self.paint = Paint(self.palette)
+        self.context = Context()
         self.kind = "text"
         self.body = title()
         self.revision = 0
@@ -102,7 +108,7 @@ class Display:
                     continue
                 if len(self.logs) == self.logs.maxlen:
                     self.log_ids.discard(self.logs[0].get("id"))
-                self.logs.append(line)
+                self.logs.append({**line, '_arrived': now} if self.presentation else line)
                 if token:
                     self.log_ids.add(token)
         elif frame.type == "prompt":
@@ -273,20 +279,29 @@ class Display:
                                         'Ctrl-O' if self.selected_keymap == 'vi' else 'J')
                 hint = chrome.focus_hint(hint, self.layout.hint.width, context, self.body.get('objective'))
         header = "" if self.kind == "zone" and self.local is None else "Karst · " + truncate(self.info.handle, self.layout.header_slots.handle_width)
-        chrome.render_frame(buffer, self.layout, self.palette, header, list(self.logs), hint)
+        if not self.presentation:
+            chrome.render_frame(buffer, self.layout, self.palette, header, list(self.logs), hint)
         if self.local is not None:
             count = max(1, self.layout.text_area.height)
             body = {**self.local, "lines": self.local_lines[self.local_page * count:(self.local_page + 1) * count],
                     "page": self.local_page + 1, "pages": max(1, (len(self.local_lines) + count - 1) // count)}
-            render_text(buffer, body, self.layout, self.palette)
+            if self.presentation:
+                self._present(buffer, 'text', body, hint, now)
+            else:
+                render_text(buffer, body, self.layout, self.palette)
         else:
             kind = self.body.get("kind") if self.kind == "wake" else self.kind
             body = self.body.get("body", {}) if self.kind == "wake" else self.body
-            if kind in self.renderers:
+            if self.presentation:
+                if kind == 'zone':
+                    self.context.choose(body, now)
+                self._present(buffer, kind, body, hint, now)
+            elif kind in self.renderers:
                 chrome.render_view_shell(buffer, self.layout, self.palette, kind, body)
                 self.renderers[kind](buffer, body, self.layout, self.palette)
         flashed = self.hit_flash
-        chrome.render_effects(buffer, self.layout, self.palette, self.toast, flashed)
+        if not self.presentation:
+            chrome.render_effects(buffer, self.layout, self.palette, self.toast, flashed)
         if flashed:
             self.hit_flash = False
         output = buffer.diff(None if self.force_full else self.previous)
@@ -296,3 +311,9 @@ class Display:
         self.force_full = False
         self.dirty = flashed
         return output, Frame("ack", {"rev": self.revision}) if self.connected else None
+
+    def _present(self, buffer: CellBuffer, kind: str, body: dict[str, Any], hint: str, now: float) -> None:
+        if self.paint.palette is not self.palette:
+            self.paint = Paint(self.palette)
+        presentation_screen.render(buffer, self.layout, self.paint, kind, body, list(self.logs), hint, now,
+                                   flash=self.hit_flash, toast=self.toast, handle=self.info.handle)

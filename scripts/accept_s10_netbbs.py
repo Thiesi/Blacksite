@@ -53,10 +53,13 @@ class Connection:
 
 
 class NativeProbe:
-    def __init__(self, root: Path, python: Path, show: bool) -> None:
+    def __init__(self, root: Path, python: Path, show: bool, *,
+                 door_environment: dict[str, str] | None = None, show_all_tiers: bool = False) -> None:
         # Resolving a Unix venv's Python symlink launches the base interpreter
         # instead, losing the installed wheel. Preserve the venv path.
         self.root,self.python,self.show = root.resolve(),python.absolute(),show
+        self.door_environment = dict(door_environment or {})
+        self.show_all_tiers = show_all_tiers
         self.service = Server(self.root/"world",tcp=True)
         self.connections: list[Connection] = []
         self.accounts: deque[tuple[Any,bool]] = deque()
@@ -111,7 +114,7 @@ class NativeProbe:
         owner = create_user(self.db,"S10SysOp",password="LocalProbe-S10",user_level=10)
         create_door(self.db,"Blacksite",str(self.python),args=("-m","blacksite.door"),creator=owner,
             profile=DoorProfile(install_dir=str(REPO),encoding="utf-8",max_sessions=16,multinode_certified=True,
-                time_limit=900,environment={"DOOR_BLACKSITE_INSTALL_DIR":str(self.service.install_dir)}).validate())
+                time_limit=900,environment={**self.door_environment, "DOOR_BLACKSITE_INSTALL_DIR":str(self.service.install_dir)}).validate())
         async def handler(session: Any) -> None:
             user,sixteen = self.accounts.popleft()
             # Exercise NetBBS's real native-door 16-colour capability path.
@@ -133,7 +136,7 @@ class NativeProbe:
 
     async def open(self, width: int, height: int, label: str, archetype: int = 0,
                    sixteen: bool = False, capture_cards: bool = False,
-                   truecolor: bool = False) -> Connection:
+                    truecolor: bool = False, capture_wake: bool = False) -> Connection:
         user=create_user(self.db,f"S10{label}{width}",password="LocalProbe-S10",user_level=10)
         self.accounts.append((user,sixteen))
         reader,writer=await asyncio.open_connection("127.0.0.1",self.node.port)
@@ -145,7 +148,7 @@ class NativeProbe:
         if truecolor:
             writer.write(b'\xff\xfb\x27\xff\xfa\x27\x00\x00COLORTERM\x01truecolor\xff\xf0')
         await writer.drain()
-        caller=CombatCaller(lambda:reader.read(65536),send,width,height,self.show and sixteen)
+        caller=CombatCaller(lambda:reader.read(65536),send,width,height,self.show and (sixteen or self.show_all_tiers))
         caller.display_write = self.display_write
         await caller.expect("Available doors");await caller.write(b"\x1b[B\r")
         try:
@@ -163,6 +166,9 @@ class NativeProbe:
         session=next(s for s in self.game.sessions.active.values() if s.id in self.game.wakes)
         connection=Connection(caller,writer,task,session,None)
         self.connections.append(connection)
+        if capture_wake:
+            await wait(lambda:session.ack_revision==session.view_revision)
+            self.save(connection, f'wake-{width}x{height}-{session.caps["tier"]}')
         for index in range(archetype):
             await caller.write(b"\x1b[B")
             await wait(lambda:self.game.wakes[session.id].cursor==index+1)

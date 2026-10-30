@@ -1037,6 +1037,788 @@
         "deutan": 11,
         "protan": 11
       }
+    },
+    "bar_empty": {
+      "truecolor": {
+        "default": "#3A3A3A",
+        "deutan": "#3A3A3A",
+        "protan": "#3A3A3A"
+      },
+      "256": {
+        "default": 237,
+        "deutan": 237,
+        "protan": 237
+      },
+      "16": {
+        "default": 8,
+        "deutan": 8,
+        "protan": 8
+      }
+    },
+    "bar_hp": {
+      "truecolor": {
+        "default": "#5FAF5F",
+        "deutan": "#3B82F6",
+        "protan": "#3B82F6"
+      },
+      "256": {
+        "default": 71,
+        "deutan": 33,
+        "protan": 33
+      },
+      "16": {
+        "default": 2,
+        "deutan": 12,
+        "protan": 12
+      }
+    },
+    "bar_int": {
+      "truecolor": {
+        "default": "#87D7D7",
+        "deutan": "#87D7D7",
+        "protan": "#87D7D7"
+      },
+      "256": {
+        "default": 116,
+        "deutan": 116,
+        "protan": 116
+      },
+      "16": {
+        "default": 14,
+        "deutan": 14,
+        "protan": 14
+      }
+    },
+    "bar_shock": {
+      "truecolor": {
+        "default": "#D7AF5F",
+        "deutan": "#D7AF5F",
+        "protan": "#D7AF5F"
+      },
+      "256": {
+        "default": 179,
+        "deutan": 179,
+        "protan": 179
+      },
+      "16": {
+        "default": 3,
+        "deutan": 3,
+        "protan": 3
+      }
+    },
+    "bar_sta": {
+      "truecolor": {
+        "default": "#5FAFD7",
+        "deutan": "#5FAFD7",
+        "protan": "#5FAFD7"
+      },
+      "256": {
+        "default": 74,
+        "deutan": 74,
+        "protan": 74
+      },
+      "16": {
+        "default": 6,
+        "deutan": 6,
+        "protan": 6
+      }
+    },
+    "bar_trace": {
+      "truecolor": {
+        "default": "#FF875F",
+        "deutan": "#FF875F",
+        "protan": "#FF875F"
+      },
+      "256": {
+        "default": 209,
+        "deutan": 209,
+        "protan": 209
+      },
+      "16": {
+        "default": 11,
+        "deutan": 11,
+        "protan": 11
+      }
+    },
+    "frame_contested": {
+      "truecolor": {
+        "default": "#A07A20",
+        "deutan": "#A07A20",
+        "protan": "#A07A20"
+      },
+      "256": {
+        "default": 136,
+        "deutan": 136,
+        "protan": 136
+      },
+      "16": {
+        "default": 3,
+        "deutan": 3,
+        "protan": 3
+      }
+    },
+    "frame_open": {
+      "truecolor": {
+        "default": "#A02020",
+        "deutan": "#A0207A",
+        "protan": "#A0207A"
+      },
+      "256": {
+        "default": 124,
+        "deutan": 127,
+        "protan": 127
+      },
+      "16": {
+        "default": 1,
+        "deutan": 5,
+        "protan": 5
+      }
+    },
+    "frame_pocket": {
+      "truecolor": {
+        "default": "#2A8A8A",
+        "deutan": "#2A8A8A",
+        "protan": "#2A8A8A"
+      },
+      "256": {
+        "default": 30,
+        "deutan": 30,
+        "protan": 30
+      },
+      "16": {
+        "default": 6,
+        "deutan": 6,
+        "protan": 6
+      }
+    },
+    "frame_safe": {
+      "truecolor": {
+        "default": "#1F5F9F",
+        "deutan": "#1F5F9F",
+        "protan": "#1F5F9F"
+      },
+      "256": {
+        "default": 25,
+        "deutan": 25,
+        "protan": 25
+      },
+      "16": {
+        "default": 4,
+        "deutan": 4,
+        "protan": 4
+      }
+    },
+    "head_district": {
+      "truecolor": {
+        "default": "#8A8A8A",
+        "deutan": "#8A8A8A",
+        "protan": "#8A8A8A"
+      },
+      "256": {
+        "default": 245,
+        "deutan": 245,
+        "protan": 245
+      },
+      "16": {
+        "default": 7,
+        "deutan": 7,
+        "protan": 7
+      }
+    },
+    "head_info": {
+      "truecolor": {
+        "default": "#BCBCBC",
+        "deutan": "#BCBCBC",
+        "protan": "#BCBCBC"
+      },
+      "256": {
+        "default": 250,
+        "deutan": 250,
+        "protan": 250
+      },
+      "16": {
+        "default": 7,
+        "deutan": 7,
+        "protan": 7
+      }
+    },
+    "head_night": {
+      "truecolor": {
+        "default": "#FFD7AF",
+        "deutan": "#FFD7AF",
+        "protan": "#FFD7AF"
+      },
+      "256": {
+        "default": 223,
+        "deutan": 223,
+        "protan": 223
+      },
+      "16": {
+        "default": 11,
+        "deutan": 11,
+        "protan": 11
+      }
+    },
+    "head_zone": {
+      "truecolor": {
+        "default": "#FFFFFF",
+        "deutan": "#FFFFFF",
+        "protan": "#FFFFFF"
+      },
+      "256": {
+        "default": 231,
+        "deutan": 231,
+        "protan": 231
+      },
+      "16": {
+        "default": 15,
+        "deutan": 15,
+        "protan": 15
+      }
+    },
+    "key_cap": {
+      "truecolor": {
+        "default": "#FFFFFF",
+        "deutan": "#FFFFFF",
+        "protan": "#FFFFFF"
+      },
+      "256": {
+        "default": 231,
+        "deutan": 231,
+        "protan": 231
+      },
+      "16": {
+        "default": 15,
+        "deutan": 15,
+        "protan": 15
+      }
+    },
+    "key_text": {
+      "truecolor": {
+        "default": "#808080",
+        "deutan": "#808080",
+        "protan": "#808080"
+      },
+      "256": {
+        "default": 244,
+        "deutan": 244,
+        "protan": 244
+      },
+      "16": {
+        "default": 8,
+        "deutan": 8,
+        "protan": 8
+      }
+    },
+    "log_ambient": {
+      "truecolor": {
+        "default": "#8A8A8A",
+        "deutan": "#8A8A8A",
+        "protan": "#8A8A8A"
+      },
+      "256": {
+        "default": 245,
+        "deutan": 245,
+        "protan": 245
+      },
+      "16": {
+        "default": 8,
+        "deutan": 8,
+        "protan": 8
+      }
+    },
+    "log_combat": {
+      "truecolor": {
+        "default": "#D0D0D0",
+        "deutan": "#D0D0D0",
+        "protan": "#D0D0D0"
+      },
+      "256": {
+        "default": 252,
+        "deutan": 252,
+        "protan": 252
+      },
+      "16": {
+        "default": 7,
+        "deutan": 7,
+        "protan": 7
+      }
+    },
+    "log_danger": {
+      "truecolor": {
+        "default": "#FFAF00",
+        "deutan": "#FFAF00",
+        "protan": "#FFAF00"
+      },
+      "256": {
+        "default": 214,
+        "deutan": 214,
+        "protan": 214
+      },
+      "16": {
+        "default": 11,
+        "deutan": 11,
+        "protan": 11
+      }
+    },
+    "log_place": {
+      "truecolor": {
+        "default": "#D7AF87",
+        "deutan": "#D7AF87",
+        "protan": "#D7AF87"
+      },
+      "256": {
+        "default": 180,
+        "deutan": 180,
+        "protan": 180
+      },
+      "16": {
+        "default": 7,
+        "deutan": 7,
+        "protan": 7
+      }
+    },
+    "log_speaker": {
+      "truecolor": {
+        "default": "#87D7FF",
+        "deutan": "#87D7FF",
+        "protan": "#87D7FF"
+      },
+      "256": {
+        "default": 117,
+        "deutan": 117,
+        "protan": 117
+      },
+      "16": {
+        "default": 14,
+        "deutan": 14,
+        "protan": 14
+      }
+    },
+    "log_speech": {
+      "truecolor": {
+        "default": "#DADADA",
+        "deutan": "#DADADA",
+        "protan": "#DADADA"
+      },
+      "256": {
+        "default": 253,
+        "deutan": 253,
+        "protan": 253
+      },
+      "16": {
+        "default": 15,
+        "deutan": 15,
+        "protan": 15
+      }
+    },
+    "log_system": {
+      "truecolor": {
+        "default": "#585858",
+        "deutan": "#585858",
+        "protan": "#585858"
+      },
+      "256": {
+        "default": 240,
+        "deutan": 240,
+        "protan": 240
+      },
+      "16": {
+        "default": 8,
+        "deutan": 8,
+        "protan": 8
+      }
+    },
+    "panel_dim": {
+      "truecolor": {
+        "default": "#6C6C6C",
+        "deutan": "#6C6C6C",
+        "protan": "#6C6C6C"
+      },
+      "256": {
+        "default": 242,
+        "deutan": 242,
+        "protan": 242
+      },
+      "16": {
+        "default": 8,
+        "deutan": 8,
+        "protan": 8
+      }
+    },
+    "panel_label": {
+      "truecolor": {
+        "default": "#808080",
+        "deutan": "#808080",
+        "protan": "#808080"
+      },
+      "256": {
+        "default": 244,
+        "deutan": 244,
+        "protan": 244
+      },
+      "16": {
+        "default": 8,
+        "deutan": 8,
+        "protan": 8
+      }
+    },
+    "panel_rule": {
+      "truecolor": {
+        "default": "#4E4E4E",
+        "deutan": "#4E4E4E",
+        "protan": "#4E4E4E"
+      },
+      "256": {
+        "default": 239,
+        "deutan": 239,
+        "protan": 239
+      },
+      "16": {
+        "default": 8,
+        "deutan": 8,
+        "protan": 8
+      }
+    },
+    "panel_strong": {
+      "truecolor": {
+        "default": "#FFFFFF",
+        "deutan": "#FFFFFF",
+        "protan": "#FFFFFF"
+      },
+      "256": {
+        "default": 231,
+        "deutan": 231,
+        "protan": 231
+      },
+      "16": {
+        "default": 15,
+        "deutan": 15,
+        "protan": 15
+      }
+    },
+    "panel_text": {
+      "truecolor": {
+        "default": "#D0D0D0",
+        "deutan": "#D0D0D0",
+        "protan": "#D0D0D0"
+      },
+      "256": {
+        "default": 252,
+        "deutan": 252,
+        "protan": 252
+      },
+      "16": {
+        "default": 7,
+        "deutan": 7,
+        "protan": 7
+      }
+    },
+    "self_bg": {
+      "truecolor": {
+        "default": "#FFFFFF",
+        "deutan": "#FFFFFF",
+        "protan": "#FFFFFF"
+      },
+      "256": {
+        "default": 231,
+        "deutan": 231,
+        "protan": 231
+      },
+      "16": {
+        "default": 7,
+        "deutan": 7,
+        "protan": 7
+      }
+    },
+    "self_fg": {
+      "truecolor": {
+        "default": "#000000",
+        "deutan": "#000000",
+        "protan": "#000000"
+      },
+      "256": {
+        "default": 16,
+        "deutan": 16,
+        "protan": 16
+      },
+      "16": {
+        "default": 0,
+        "deutan": 0,
+        "protan": 0
+      }
+    },
+    "thing_cover": {
+      "truecolor": {
+        "default": "#87875F",
+        "deutan": "#87875F",
+        "protan": "#87875F"
+      },
+      "256": {
+        "default": 101,
+        "deutan": 101,
+        "protan": 101
+      },
+      "16": {
+        "default": 2,
+        "deutan": 2,
+        "protan": 2
+      }
+    },
+    "thing_door": {
+      "truecolor": {
+        "default": "#D7AF5F",
+        "deutan": "#D7AF5F",
+        "protan": "#D7AF5F"
+      },
+      "256": {
+        "default": 179,
+        "deutan": 179,
+        "protan": 179
+      },
+      "16": {
+        "default": 3,
+        "deutan": 3,
+        "protan": 3
+      }
+    },
+    "thing_exit": {
+      "truecolor": {
+        "default": "#FFFFFF",
+        "deutan": "#FFFFFF",
+        "protan": "#FFFFFF"
+      },
+      "256": {
+        "default": 231,
+        "deutan": 231,
+        "protan": 231
+      },
+      "16": {
+        "default": 15,
+        "deutan": 15,
+        "protan": 15
+      }
+    },
+    "thing_hardware": {
+      "truecolor": {
+        "default": "#AF87FF",
+        "deutan": "#AF87FF",
+        "protan": "#AF87FF"
+      },
+      "256": {
+        "default": 141,
+        "deutan": 141,
+        "protan": 141
+      },
+      "16": {
+        "default": 13,
+        "deutan": 13,
+        "protan": 13
+      }
+    },
+    "thing_hazard": {
+      "truecolor": {
+        "default": "#FFAF00",
+        "deutan": "#FFAF00",
+        "protan": "#FFAF00"
+      },
+      "256": {
+        "default": 214,
+        "deutan": 214,
+        "protan": 214
+      },
+      "16": {
+        "default": 11,
+        "deutan": 11,
+        "protan": 11
+      }
+    },
+    "thing_terminal": {
+      "truecolor": {
+        "default": "#00D7FF",
+        "deutan": "#00D7FF",
+        "protan": "#00D7FF"
+      },
+      "256": {
+        "default": 45,
+        "deutan": 45,
+        "protan": 45
+      },
+      "16": {
+        "default": 14,
+        "deutan": 14,
+        "protan": 14
+      }
+    },
+    "thing_vat": {
+      "truecolor": {
+        "default": "#5FD7AF",
+        "deutan": "#5FD7AF",
+        "protan": "#5FD7AF"
+      },
+      "256": {
+        "default": 79,
+        "deutan": 79,
+        "protan": 79
+      },
+      "16": {
+        "default": 10,
+        "deutan": 10,
+        "protan": 10
+      }
+    },
+    "thing_vendor": {
+      "truecolor": {
+        "default": "#FFD700",
+        "deutan": "#FFD700",
+        "protan": "#FFD700"
+      },
+      "256": {
+        "default": 220,
+        "deutan": 220,
+        "protan": 220
+      },
+      "16": {
+        "default": 11,
+        "deutan": 11,
+        "protan": 11
+      }
+    },
+    "word_contested": {
+      "truecolor": {
+        "default": "#FFAF00",
+        "deutan": "#FFAF00",
+        "protan": "#FFAF00"
+      },
+      "256": {
+        "default": 214,
+        "deutan": 214,
+        "protan": 214
+      },
+      "16": {
+        "default": 11,
+        "deutan": 11,
+        "protan": 11
+      }
+    },
+    "word_open": {
+      "truecolor": {
+        "default": "#FF5F5F",
+        "deutan": "#FF5FD7",
+        "protan": "#FF5FD7"
+      },
+      "256": {
+        "default": 203,
+        "deutan": 206,
+        "protan": 206
+      },
+      "16": {
+        "default": 9,
+        "deutan": 13,
+        "protan": 13
+      }
+    },
+    "word_pocket": {
+      "truecolor": {
+        "default": "#5FD7D7",
+        "deutan": "#5FD7D7",
+        "protan": "#5FD7D7"
+      },
+      "256": {
+        "default": 80,
+        "deutan": 80,
+        "protan": 80
+      },
+      "16": {
+        "default": 14,
+        "deutan": 14,
+        "protan": 14
+      }
+    },
+    "word_safe": {
+      "truecolor": {
+        "default": "#5FAFFF",
+        "deutan": "#5FAFFF",
+        "protan": "#5FAFFF"
+      },
+      "256": {
+        "default": 75,
+        "deutan": 75,
+        "protan": 75
+      },
+      "16": {
+        "default": 12,
+        "deutan": 12,
+        "protan": 12
+      }
+    },
+    "wall_face": {
+      "truecolor": {
+        "default": "#4A4E58",
+        "deutan": "#4A4E58",
+        "protan": "#4A4E58"
+      },
+      "256": {
+        "default": 240,
+        "deutan": 240,
+        "protan": 240
+      },
+      "16": {
+        "default": 0,
+        "deutan": 0,
+        "protan": 0
+      }
+    },
+    "ground_black": {
+      "truecolor": {
+        "default": "#000000",
+        "deutan": "#000000",
+        "protan": "#000000"
+      },
+      "256": {
+        "default": 16,
+        "deutan": 16,
+        "protan": 16
+      },
+      "16": {
+        "default": 0,
+        "deutan": 0,
+        "protan": 0
+      }
+    },
+    "log_reward": {
+      "truecolor": {
+        "default": "#6C6C6C",
+        "deutan": "#6C6C6C",
+        "protan": "#6C6C6C"
+      },
+      "256": {
+        "default": 242,
+        "deutan": 242,
+        "protan": 242
+      },
+      "16": {
+        "default": 8,
+        "deutan": 8,
+        "protan": 8
+      }
+    },
+    "hazard_warn": {
+      "truecolor": {
+        "default": "#301414",
+        "deutan": "#301414",
+        "protan": "#301414"
+      },
+      "256": {
+        "default": 52,
+        "deutan": 52,
+        "protan": 52
+      },
+      "16": {
+        "default": 0,
+        "deutan": 0,
+        "protan": 0
+      }
     }
   }
 }

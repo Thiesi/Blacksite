@@ -40,26 +40,35 @@ class Palette:
         self.roles = data.get("roles", {})
         self.tier = tier
         self.variant = variant if variant in ("default", "deutan", "protan") else "default"
-        self.styles: dict[tuple[str, bool], Style] = {}
+        self.styles: dict[tuple[str, bool] | tuple[str, bool, str], Style] = {}
 
-    def style(self, role: str = "text", *, reverse: bool = False) -> Style:
+    def style(self, role: str = "text", *, reverse: bool = False, bg: str | None = None) -> Style:
         role = {"text": "ui_text", "border": "ui_border", "title": "ui_highlight",
                 "hint": "ui_highlight", "muted": "ui_dim", "warning": "hp_low"}.get(role, role)
         # Bound the cache to shipped roles plus one fallback, regardless of
         # labels in incoming log lines. Styles are immutable within a palette.
         role = role if role in self.roles else ""
-        key = (role, reverse)
+        bg = bg if bg in self.roles else None
+        key = (role, reverse) if bg is None else (role, reverse, bg)
         if key in self.styles:
             return self.styles[key]
-        raw = self.roles.get(role, {}).get(self.tier, {}).get(self.variant, 7)
-        color: Color = 7
-        if self.tier == "truecolor" and isinstance(raw, str) and len(raw) == 7 and raw.startswith("#"):
-            try:
-                color = tuple(int(raw[i:i + 2], 16) for i in (1, 3, 5))
-            except ValueError:
-                pass
-        elif type(raw) is int and 0 <= raw <= (15 if self.tier == "16" else 255):
-            color = raw
-        style = Style(color, 0, (7,) if reverse else (), self.tier)
+        color = self.colour(role, 7)
+        back = self.colour(bg, 0) if bg else 0
+        # Terminal UI 1: backgrounds at 16 colours are restricted to 0-7.
+        if self.tier == '16' and isinstance(back, int) and back > 7:
+            back = 0
+        style = Style(color, back, (7,) if reverse else (), self.tier)
         self.styles[key] = style
         return style
+
+    def colour(self, role: str, fallback: int) -> Color:
+        """The one palette lookup for foreground and background roles."""
+        raw = self.roles.get(role, {}).get(self.tier, {}).get(self.variant, fallback)
+        if self.tier == "truecolor" and isinstance(raw, str) and len(raw) == 7 and raw.startswith("#"):
+            try:
+                return tuple(int(raw[i:i + 2], 16) for i in (1, 3, 5))
+            except ValueError:
+                return fallback
+        elif type(raw) is int and 0 <= raw <= (15 if self.tier == "16" else 255):
+            return raw
+        return fallback
