@@ -1,5 +1,6 @@
 """Game 12 adapter: commit plans before forecasts or live effects exist."""
 
+from blacksite.server.interaction import Interaction
 from collections.abc import Callable, Iterator
 from copy import deepcopy
 from dataclasses import asdict
@@ -207,8 +208,11 @@ class Events:
             return self.content.sectors[place].district.replace('-', ' ').title()+' sector'
         return place
 
-    def input(self, session: Session, frame: Frame, tick: int) -> bool:
-        return session.player_id in self.game.players and self.views.input(session, frame, tick)
+    def interaction(self, session: Session, frame: Frame) -> Interaction | None:
+        return self.views.interaction(session, frame) if session.player_id in self.game.players else None
+
+    def input(self, session: Session, frame: Frame, tick: int, *, interaction: Interaction | None = None) -> bool:
+        return session.player_id in self.game.players and self.views.input(session, frame, tick, interaction=interaction)
 
     def preview(self, player: Player, faction: str) -> EventOffer | None:
         if faction not in ('kestrel', 'choir', 'ferrymen') or not perk(player, faction):

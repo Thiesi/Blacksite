@@ -1,5 +1,6 @@
 """Game 5.3: durable player tools, owned instances and local commands."""
 
+from blacksite.server.interaction import Interaction
 from copy import deepcopy
 from typing import Any, TYPE_CHECKING
 
@@ -523,6 +524,9 @@ class Drones:
         if self.sim.external_views.get(session.id,("",))[0] == "menu":
             self.sim.external_views.pop(session.id,None)
         self.sim.reset_view(session,self.sim.avatars[session.user_id])
+
+    def interaction(self, session: Session, frame: Frame) -> Interaction | None:
+        return Interaction() if session.player_id in self.game.players and session.id in self.menus else None
 
     def input(self, session: Session, frame: Frame, tick: int) -> bool:
         player = self.game.players.get(session.player_id)

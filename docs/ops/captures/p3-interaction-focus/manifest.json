@@ -1,0 +1,578 @@
+{
+ "schema": 1,
+ "source_head": "93641f5dc5db6dc7a60124de200d1033ac12d686",
+ "base": "9907c90a66c036c0876803a180c22f9d53b403d3",
+ "execution_head": "93641f5dc5db6dc7a60124de200d1033ac12d686",
+ "hosted_run": "https://github.com/Thiesi/Blacksite/actions/runs/40976696170",
+ "runtime_python_sha256": "44e4e3b046973df940e679380b7ab41675d4e0483f9a55563814fa2b491cfb42",
+ "captures": [
+  {
+   "scenario": "outfitter-before-e",
+   "size": "80x24",
+   "tier": "16",
+   "text": {
+    "file": "outfitter-before-e-80x24-16.txt",
+    "sha256": "8f9bf6c24050b004f7e577d5ccd722f7ac26473997bc22385195d089a56588cb",
+    "bytes": 3052
+   },
+   "ansi": {
+    "file": "outfitter-before-e-80x24-16.ans",
+    "sha256": "faa0f12b9d51dbabfe057091da292f29296eefae3549909cb5e71b9ca6eaf8c1",
+    "bytes": 53946
+   },
+   "style": {
+    "file": "outfitter-before-e-80x24-16.json",
+    "sha256": "fbc3712a8ea9c33314f9c04464be57b863f936494a748965e3c0e05c61894117",
+    "bytes": 11569
+   },
+   "artifact": "p3-interaction-focus-80x24",
+   "artifact_id": 12942633653,
+   "artifact_url": "https://github.com/Thiesi/Blacksite/actions/runs/40976696170/artifacts/12942633653"
+  },
+  {
+   "scenario": "outfitter-after-e",
+   "size": "80x24",
+   "tier": "16",
+   "text": {
+    "file": "outfitter-after-e-80x24-16.txt",
+    "sha256": "50327526dad40360ca16a5c069a56f9ace2f63083d515786baad36d6c36bf1a4",
+    "bytes": 2748
+   },
+   "ansi": {
+    "file": "outfitter-after-e-80x24-16.ans",
+    "sha256": "671138de0d8f3d8342c38409048f24d80f5dcdb926d564c103549db611d0e6ea",
+    "bytes": 58169
+   },
+   "style": {
+    "file": "outfitter-after-e-80x24-16.json",
+    "sha256": "edc78145d4520c6e485114b27961dc52fa008b6e749d2e2749e0cfd0c0dbc46e",
+    "bytes": 9585
+   },
+   "artifact": "p3-interaction-focus-80x24",
+   "artifact_id": 12942633653,
+   "artifact_url": "https://github.com/Thiesi/Blacksite/actions/runs/40976696170/artifacts/12942633653"
+  },
+  {
+   "scenario": "terminal-before-e",
+   "size": "80x24",
+   "tier": "16",
+   "text": {
+    "file": "terminal-before-e-80x24-16.txt",
+    "sha256": "2e69aef7da2145cc26f3e2b8d6451f1fbfcefa2240daa13a11f066a04ab0ee0b",
+    "bytes": 3051
+   },
+   "ansi": {
+    "file": "terminal-before-e-80x24-16.ans",
+    "sha256": "28b300e4af4533a2670ade211fbcd92b8db25f8afb0abb9266c63fdde201a7a5",
+    "bytes": 76775
+   },
+   "style": {
+    "file": "terminal-before-e-80x24-16.json",
+    "sha256": "2a9219e5e575620b0d267be533cf4d1b440ed7a8af8090e607ab992993db87ba",
+    "bytes": 11295
+   },
+   "artifact": "p3-interaction-focus-80x24",
+   "artifact_id": 12942633653,
+   "artifact_url": "https://github.com/Thiesi/Blacksite/actions/runs/40976696170/artifacts/12942633653"
+  },
+  {
+   "scenario": "terminal-after-e",
+   "size": "80x24",
+   "tier": "16",
+   "text": {
+    "file": "terminal-after-e-80x24-16.txt",
+    "sha256": "960c42c6ee154aa7a1eee0d09058046c501fdd11deabde27edc449b71eb5ded7",
+    "bytes": 2675
+   },
+   "ansi": {
+    "file": "terminal-after-e-80x24-16.ans",
+    "sha256": "53df9e096340e26fd1e959d2b0943ab6765a0efba06e6df9386f88276f25044a",
+    "bytes": 81565
+   },
+   "style": {
+    "file": "terminal-after-e-80x24-16.json",
+    "sha256": "fc106d3a9c03fa8ce7bc69e3eaa065451b61769053e40dafe46b84342674b054",
+    "bytes": 11876
+   },
+   "artifact": "p3-interaction-focus-80x24",
+   "artifact_id": 12942633653,
+   "artifact_url": "https://github.com/Thiesi/Blacksite/actions/runs/40976696170/artifacts/12942633653"
+  },
+  {
+   "scenario": "outfitter-before-e",
+   "size": "80x24",
+   "tier": "256",
+   "text": {
+    "file": "outfitter-before-e-80x24-256.txt",
+    "sha256": "e1aab8f63d7d490f024b38c1008686991d909e9890f9e5ba4d62a02fbcb63cd7",
+    "bytes": 3052
+   },
+   "ansi": {
+    "file": "outfitter-before-e-80x24-256.ans",
+    "sha256": "81f53857e5e90f29482389efa36c3ff0f9a928cf2c987deb0728541d0c772c71",
+    "bytes": 69756
+   },
+   "style": {
+    "file": "outfitter-before-e-80x24-256.json",
+    "sha256": "9a7c8a390549f115117776a75becf3bb8779c6490076bea48630da46bfdc599d",
+    "bytes": 13807
+   },
+   "artifact": "p3-interaction-focus-80x24",
+   "artifact_id": 12942633653,
+   "artifact_url": "https://github.com/Thiesi/Blacksite/actions/runs/40976696170/artifacts/12942633653"
+  },
+  {
+   "scenario": "outfitter-after-e",
+   "size": "80x24",
+   "tier": "256",
+   "text": {
+    "file": "outfitter-after-e-80x24-256.txt",
+    "sha256": "aabeb1f2006e47762220d3f52c16d62b1400db20de64422c83a4eb63f9a3a2e5",
+    "bytes": 2746
+   },
+   "ansi": {
+    "file": "outfitter-after-e-80x24-256.ans",
+    "sha256": "56405da125a18298efd281ae90b80b5cedf5fb35937cb3d10a09c865c2a4c9ca",
+    "bytes": 75071
+   },
+   "style": {
+    "file": "outfitter-after-e-80x24-256.json",
+    "sha256": "82c5646db54074044ad0a815f60af84df881ff4fa1f5e6601c72f6f1f2daaab7",
+    "bytes": 9863
+   },
+   "artifact": "p3-interaction-focus-80x24",
+   "artifact_id": 12942633653,
+   "artifact_url": "https://github.com/Thiesi/Blacksite/actions/runs/40976696170/artifacts/12942633653"
+  },
+  {
+   "scenario": "terminal-before-e",
+   "size": "80x24",
+   "tier": "256",
+   "text": {
+    "file": "terminal-before-e-80x24-256.txt",
+    "sha256": "d1d3db531ffd9d03d54446e4bd9c5aa0443b34c8cefa3595002c236b6e5a793a",
+    "bytes": 3051
+   },
+   "ansi": {
+    "file": "terminal-before-e-80x24-256.ans",
+    "sha256": "16641de03f1c12358bd6a8b49385697032a9743d524857e360c8d23b9ee4539a",
+    "bytes": 100487
+   },
+   "style": {
+    "file": "terminal-before-e-80x24-256.json",
+    "sha256": "7cfa31179fe39df1ddca564560fa730bef1c2da1cb6256bd869b1fafcf607c20",
+    "bytes": 13703
+   },
+   "artifact": "p3-interaction-focus-80x24",
+   "artifact_id": 12942633653,
+   "artifact_url": "https://github.com/Thiesi/Blacksite/actions/runs/40976696170/artifacts/12942633653"
+  },
+  {
+   "scenario": "terminal-after-e",
+   "size": "80x24",
+   "tier": "256",
+   "text": {
+    "file": "terminal-after-e-80x24-256.txt",
+    "sha256": "9b0f4d82f99c3f3b2425eedb31772fa2c435090b8a882eb6fcb400bf95ee9d03",
+    "bytes": 2673
+   },
+   "ansi": {
+    "file": "terminal-after-e-80x24-256.ans",
+    "sha256": "81375ae035ce1764ccfcda5a258cd67e36118ab8b144ed66e067bdaef9993a8d",
+    "bytes": 106915
+   },
+   "style": {
+    "file": "terminal-after-e-80x24-256.json",
+    "sha256": "f20732d5332ea1636e55ef3565f54c4421442adda027d8b617b112a5c42d87a3",
+    "bytes": 12219
+   },
+   "artifact": "p3-interaction-focus-80x24",
+   "artifact_id": 12942633653,
+   "artifact_url": "https://github.com/Thiesi/Blacksite/actions/runs/40976696170/artifacts/12942633653"
+  },
+  {
+   "scenario": "outfitter-before-e",
+   "size": "80x24",
+   "tier": "truecolor",
+   "text": {
+    "file": "outfitter-before-e-80x24-truecolor.txt",
+    "sha256": "1b997eca4b24ef76594ca2d801939e997cad20851c0d4c80b7c50d7784cf61fe",
+    "bytes": 3052
+   },
+   "ansi": {
+    "file": "outfitter-before-e-80x24-truecolor.ans",
+    "sha256": "972486d1415b5fa6e45baf2aa5dc640bf8dff69c8ab0acd56b9b37387c813fcb",
+    "bytes": 80642
+   },
+   "style": {
+    "file": "outfitter-before-e-80x24-truecolor.json",
+    "sha256": "c7935aa1a00e5dad98efbb6c1f89115f70745d0199b3edc38a772ce92fe268fa",
+    "bytes": 14066
+   },
+   "artifact": "p3-interaction-focus-80x24",
+   "artifact_id": 12942633653,
+   "artifact_url": "https://github.com/Thiesi/Blacksite/actions/runs/40976696170/artifacts/12942633653"
+  },
+  {
+   "scenario": "outfitter-after-e",
+   "size": "80x24",
+   "tier": "truecolor",
+   "text": {
+    "file": "outfitter-after-e-80x24-truecolor.txt",
+    "sha256": "1f998403c2fbb57f440d6fd8c5d30b3e1c22cfa15a97cee5806c2b5d49978173",
+    "bytes": 2734
+   },
+   "ansi": {
+    "file": "outfitter-after-e-80x24-truecolor.ans",
+    "sha256": "3480572479d02c3f9dc9b6293ff45a01d41aaa98ca65c7e39a936bf05b547330",
+    "bytes": 86905
+   },
+   "style": {
+    "file": "outfitter-after-e-80x24-truecolor.json",
+    "sha256": "4ab6a901cc8cddb3983aff6d8a510be5864e64147599b8840e29cc1fef9a17f3",
+    "bytes": 10006
+   },
+   "artifact": "p3-interaction-focus-80x24",
+   "artifact_id": 12942633653,
+   "artifact_url": "https://github.com/Thiesi/Blacksite/actions/runs/40976696170/artifacts/12942633653"
+  },
+  {
+   "scenario": "terminal-before-e",
+   "size": "80x24",
+   "tier": "truecolor",
+   "text": {
+    "file": "terminal-before-e-80x24-truecolor.txt",
+    "sha256": "5f69e559d19fc8c5949842bae03e50257cb4cc2bf935645cee86a7e517644d84",
+    "bytes": 3051
+   },
+   "ansi": {
+    "file": "terminal-before-e-80x24-truecolor.ans",
+    "sha256": "6d1cf7d62c3b6fdf2cdbc8a466e2f7474361dc06df8686e255d53da93756d082",
+    "bytes": 116924
+   },
+   "style": {
+    "file": "terminal-before-e-80x24-truecolor.json",
+    "sha256": "fa49064332925281a923d97469fb2c800b1ede0193f9c68a32211716a6d14bdc",
+    "bytes": 14000
+   },
+   "artifact": "p3-interaction-focus-80x24",
+   "artifact_id": 12942633653,
+   "artifact_url": "https://github.com/Thiesi/Blacksite/actions/runs/40976696170/artifacts/12942633653"
+  },
+  {
+   "scenario": "terminal-after-e",
+   "size": "80x24",
+   "tier": "truecolor",
+   "text": {
+    "file": "terminal-after-e-80x24-truecolor.txt",
+    "sha256": "33e8e5ecaa6ad2145f16c5e4185dfcd8e183643c34e786d568369b93071a1973",
+    "bytes": 2661
+   },
+   "ansi": {
+    "file": "terminal-after-e-80x24-truecolor.ans",
+    "sha256": "e4a7319894ba54948365307bae7d8470624c7d17d280ae4b2004b2033d8cdc5e",
+    "bytes": 124763
+   },
+   "style": {
+    "file": "terminal-after-e-80x24-truecolor.json",
+    "sha256": "5604007ca9fe184c922b56fb4fd78522697512d44d6a7197b18e6bc7d48332da",
+    "bytes": 12362
+   },
+   "artifact": "p3-interaction-focus-80x24",
+   "artifact_id": 12942633653,
+   "artifact_url": "https://github.com/Thiesi/Blacksite/actions/runs/40976696170/artifacts/12942633653"
+  },
+  {
+   "scenario": "outfitter-before-e",
+   "size": "132x50",
+   "tier": "16",
+   "text": {
+    "file": "outfitter-before-e-132x50-16.txt",
+    "sha256": "356dd947036af8c5e92dcd30b7289e1b6ac7ea46b260555559419abc1b5ca569",
+    "bytes": 8304
+   },
+   "ansi": {
+    "file": "outfitter-before-e-132x50-16.ans",
+    "sha256": "dc242acab50f6ada6839604a802f72f75211ad6443aad71f5274e70056e5672d",
+    "bytes": 86111
+   },
+   "style": {
+    "file": "outfitter-before-e-132x50-16.json",
+    "sha256": "50e6cce04901bf87cb24037dbab53fd8729065cbfd4ff85fba8cde083b35754a",
+    "bytes": 22031
+   },
+   "artifact": "p3-interaction-focus-132x50",
+   "artifact_id": 12942158814,
+   "artifact_url": "https://github.com/Thiesi/Blacksite/actions/runs/40976696170/artifacts/12942158814"
+  },
+  {
+   "scenario": "outfitter-after-e",
+   "size": "132x50",
+   "tier": "16",
+   "text": {
+    "file": "outfitter-after-e-132x50-16.txt",
+    "sha256": "fa62139f36453f1cd955e0d2db0bd0565b6c0d5780545736fb8821c32f543291",
+    "bytes": 8112
+   },
+   "ansi": {
+    "file": "outfitter-after-e-132x50-16.ans",
+    "sha256": "374b08405f93613c0dc9d0f59372bafd51781c7bd80300352e3585a5d11c79f3",
+    "bytes": 97338
+   },
+   "style": {
+    "file": "outfitter-after-e-132x50-16.json",
+    "sha256": "d2234dfc5ec0f37770d66741a593d1eb94196e7c4c00543ac1a6c7f60ccc39d8",
+    "bytes": 21711
+   },
+   "artifact": "p3-interaction-focus-132x50",
+   "artifact_id": 12942158814,
+   "artifact_url": "https://github.com/Thiesi/Blacksite/actions/runs/40976696170/artifacts/12942158814"
+  },
+  {
+   "scenario": "terminal-before-e",
+   "size": "132x50",
+   "tier": "16",
+   "text": {
+    "file": "terminal-before-e-132x50-16.txt",
+    "sha256": "d48fc2b259c3f217c2ba6e3b5f36909735caf2cee4ab96c6361faebca4f6c9f2",
+    "bytes": 8303
+   },
+   "ansi": {
+    "file": "terminal-before-e-132x50-16.ans",
+    "sha256": "aa2c95287b7b9ce8f79fa1b4c2fd8995a5458aa98a7b71c1195a6610d0e2d47e",
+    "bytes": 143750
+   },
+   "style": {
+    "file": "terminal-before-e-132x50-16.json",
+    "sha256": "f91284c75f01393abed74e10d924e38c1a9cd4ad758e511aaee33026c623167f",
+    "bytes": 22029
+   },
+   "artifact": "p3-interaction-focus-132x50",
+   "artifact_id": 12942158814,
+   "artifact_url": "https://github.com/Thiesi/Blacksite/actions/runs/40976696170/artifacts/12942158814"
+  },
+  {
+   "scenario": "terminal-after-e",
+   "size": "132x50",
+   "tier": "16",
+   "text": {
+    "file": "terminal-after-e-132x50-16.txt",
+    "sha256": "5d7b7cc847844128403ab8ed4fe2e8640cf457fb10ef6d959cbb913a2f2c0b7d",
+    "bytes": 8293
+   },
+   "ansi": {
+    "file": "terminal-after-e-132x50-16.ans",
+    "sha256": "04c6b4bc37bfeb4ee6fa1e1e711a37af0f24c8243d05774ea4c2cfc5a7c05ce8",
+    "bytes": 157034
+   },
+   "style": {
+    "file": "terminal-after-e-132x50-16.json",
+    "sha256": "093762d00a09080ff0c425078c7769f3ab8cea5a6405455858cdd0232ec74560",
+    "bytes": 28317
+   },
+   "artifact": "p3-interaction-focus-132x50",
+   "artifact_id": 12942158814,
+   "artifact_url": "https://github.com/Thiesi/Blacksite/actions/runs/40976696170/artifacts/12942158814"
+  },
+  {
+   "scenario": "outfitter-before-e",
+   "size": "132x50",
+   "tier": "256",
+   "text": {
+    "file": "outfitter-before-e-132x50-256.txt",
+    "sha256": "463553fdcbe0788e2390e14095654d99ed771885ed6023889a5628dbc001de8c",
+    "bytes": 8304
+   },
+   "ansi": {
+    "file": "outfitter-before-e-132x50-256.ans",
+    "sha256": "3df862c3c71b1177ab313eb57e25443b8ffafb0d6a0b26b6889fff596015ac14",
+    "bytes": 103144
+   },
+   "style": {
+    "file": "outfitter-before-e-132x50-256.json",
+    "sha256": "511657b21db4bc0df00d6484b4994484bb422101203ea43af10f75bfecd9a689",
+    "bytes": 24581
+   },
+   "artifact": "p3-interaction-focus-132x50",
+   "artifact_id": 12942158814,
+   "artifact_url": "https://github.com/Thiesi/Blacksite/actions/runs/40976696170/artifacts/12942158814"
+  },
+  {
+   "scenario": "outfitter-after-e",
+   "size": "132x50",
+   "tier": "256",
+   "text": {
+    "file": "outfitter-after-e-132x50-256.txt",
+    "sha256": "9199ba4a8b3168d514f2bf8ce82c9d1faba47d984f434735d8fd879ca1318de0",
+    "bytes": 8110
+   },
+   "ansi": {
+    "file": "outfitter-after-e-132x50-256.ans",
+    "sha256": "2eb38e103ff88aef787ca18a25560d71a73eb2555db4a2d1db432f89203f367b",
+    "bytes": 116693
+   },
+   "style": {
+    "file": "outfitter-after-e-132x50-256.json",
+    "sha256": "6b46b22f0da0bc51e070c16c40cfbb343ee23f35e7c19cf83e302ca1d71751c1",
+    "bytes": 22027
+   },
+   "artifact": "p3-interaction-focus-132x50",
+   "artifact_id": 12942158814,
+   "artifact_url": "https://github.com/Thiesi/Blacksite/actions/runs/40976696170/artifacts/12942158814"
+  },
+  {
+   "scenario": "terminal-before-e",
+   "size": "132x50",
+   "tier": "256",
+   "text": {
+    "file": "terminal-before-e-132x50-256.txt",
+    "sha256": "889a44ee1f81345d34201d332e3bb5d86566313ec4ff7a9537ecb4b2086ce5e4",
+    "bytes": 8303
+   },
+   "ansi": {
+    "file": "terminal-before-e-132x50-256.ans",
+    "sha256": "902a825aeb8bbcd68cda3ca3a13d3d09c526f79110cb3d087517be255cf22f42",
+    "bytes": 175065
+   },
+   "style": {
+    "file": "terminal-before-e-132x50-256.json",
+    "sha256": "9996caedcceb9304813bebe4791392359959b4fc9ad66b0761f92046b2266e64",
+    "bytes": 24914
+   },
+   "artifact": "p3-interaction-focus-132x50",
+   "artifact_id": 12942158814,
+   "artifact_url": "https://github.com/Thiesi/Blacksite/actions/runs/40976696170/artifacts/12942158814"
+  },
+  {
+   "scenario": "terminal-after-e",
+   "size": "132x50",
+   "tier": "256",
+   "text": {
+    "file": "terminal-after-e-132x50-256.txt",
+    "sha256": "403065c234b5ff7fbf7f02902a910b9ec272b1ae47881bd6a32bb4d8bc03a473",
+    "bytes": 8291
+   },
+   "ansi": {
+    "file": "terminal-after-e-132x50-256.ans",
+    "sha256": "cc7e2026c2b79e639c9004186f30dea1705be7f08cedb8dc8c0a8039824949a7",
+    "bytes": 192161
+   },
+   "style": {
+    "file": "terminal-after-e-132x50-256.json",
+    "sha256": "3b9567543b43c8ebba9a4425e491ed6d615385476e14c682923b503bf5a8df7f",
+    "bytes": 29013
+   },
+   "artifact": "p3-interaction-focus-132x50",
+   "artifact_id": 12942158814,
+   "artifact_url": "https://github.com/Thiesi/Blacksite/actions/runs/40976696170/artifacts/12942158814"
+  },
+  {
+   "scenario": "outfitter-before-e",
+   "size": "132x50",
+   "tier": "truecolor",
+   "text": {
+    "file": "outfitter-before-e-132x50-truecolor.txt",
+    "sha256": "67e576e8858eb1992e545280fc4965b8dede1ad69730c957dd1aa3338db9dfc7",
+    "bytes": 8304
+   },
+   "ansi": {
+    "file": "outfitter-before-e-132x50-truecolor.ans",
+    "sha256": "c81388d75e1997ba995cc5436d1b168c18b056d826bd915a8260e2807b4df94d",
+    "bytes": 115900
+   },
+   "style": {
+    "file": "outfitter-before-e-132x50-truecolor.json",
+    "sha256": "6727781f58449fee82b872da5e3c460b3db89e73e80a0f8eede11371971691ee",
+    "bytes": 24718
+   },
+   "artifact": "p3-interaction-focus-132x50",
+   "artifact_id": 12942158814,
+   "artifact_url": "https://github.com/Thiesi/Blacksite/actions/runs/40976696170/artifacts/12942158814"
+  },
+  {
+   "scenario": "outfitter-after-e",
+   "size": "132x50",
+   "tier": "truecolor",
+   "text": {
+    "file": "outfitter-after-e-132x50-truecolor.txt",
+    "sha256": "80f6cb5e052cbbd356aacd43974d03ac0c85e86afff531e9cf9d87f35889cbc7",
+    "bytes": 8098
+   },
+   "ansi": {
+    "file": "outfitter-after-e-132x50-truecolor.ans",
+    "sha256": "21c945d2d63ac1aacd7ad30fa35d6be3e4c26307da6fc085986ae7c9e01aac7f",
+    "bytes": 131492
+   },
+   "style": {
+    "file": "outfitter-after-e-132x50-truecolor.json",
+    "sha256": "f654bd4807c5cb7c1624b59c63fa40ad23fc21e02a370bc14fad71613aa582fb",
+    "bytes": 22170
+   },
+   "artifact": "p3-interaction-focus-132x50",
+   "artifact_id": 12942158814,
+   "artifact_url": "https://github.com/Thiesi/Blacksite/actions/runs/40976696170/artifacts/12942158814"
+  },
+  {
+   "scenario": "terminal-before-e",
+   "size": "132x50",
+   "tier": "truecolor",
+   "text": {
+    "file": "terminal-before-e-132x50-truecolor.txt",
+    "sha256": "f8195a75e17d8939d595f528d8ab0de1a754aaa741d41bd1f607b636e67b494b",
+    "bytes": 8303
+   },
+   "ansi": {
+    "file": "terminal-before-e-132x50-truecolor.ans",
+    "sha256": "2b11cc7271c6a6c131503f7c79ff9349b905083e245afe85f020bb1aa4428523",
+    "bytes": 198767
+   },
+   "style": {
+    "file": "terminal-before-e-132x50-truecolor.json",
+    "sha256": "7f4382ee5272a1c36484e67b20a78e3751c92ee376cb4346a0a6f8ac36a0419c",
+    "bytes": 25047
+   },
+   "artifact": "p3-interaction-focus-132x50",
+   "artifact_id": 12942158814,
+   "artifact_url": "https://github.com/Thiesi/Blacksite/actions/runs/40976696170/artifacts/12942158814"
+  },
+  {
+   "scenario": "terminal-after-e",
+   "size": "132x50",
+   "tier": "truecolor",
+   "text": {
+    "file": "terminal-after-e-132x50-truecolor.txt",
+    "sha256": "7cc9de0103b8c9acde54d3aec736fe16067b3adbb1084c81bf10f69ecefb36ae",
+    "bytes": 8279
+   },
+   "ansi": {
+    "file": "terminal-after-e-132x50-truecolor.ans",
+    "sha256": "de80206a220f08c5899459b759459f5e3cf47f6052e8852438d5731625045ca4",
+    "bytes": 219159
+   },
+   "style": {
+    "file": "terminal-after-e-132x50-truecolor.json",
+    "sha256": "c9a07ec026006bfd1be2c52f83249edb807aea402e1c650d0a0e736105ee33ba",
+    "bytes": 29207
+   },
+   "artifact": "p3-interaction-focus-132x50",
+   "artifact_id": 12942158814,
+   "artifact_url": "https://github.com/Thiesi/Blacksite/actions/runs/40976696170/artifacts/12942158814"
+  }
+ ],
+ "human_approval": false,
+ "artifact_archives": [
+  {
+   "id": 12942633653,
+   "name": "p3-interaction-focus-80x24",
+   "archive_sha256": "0c38e5d863ddfe0e2e0cee15f335e7fff8ad34045589fec7c144cdce6c802c6d",
+   "archive_bytes": 132036
+  },
+  {
+   "id": 12942158814,
+   "name": "p3-interaction-focus-132x50",
+   "archive_sha256": "3b4c2176368f1d665af5ce93a840d61fdadd9de41e464454256425905d52fcef",
+   "archive_bytes": 167464
+  }
+ ],
+ "supporting_objective_captures": "s19-objectives.json"
+}

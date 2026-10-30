@@ -354,6 +354,7 @@ looks: {theme, regions[], signs[], marks[], glints[], names{}}  place layer, mas
 place: {places[{name, rect, at, text, view?}], here}   named places and the fixed camera (V3)
 scene: {lights[], pieces[]}          set dressing for the picture, masked (V3)
 focus: {id, label, verb} | null      what E does now, see 5.5.2 (P3)
+jack_focus: {id, label, verb} | null what J does now (Ctrl-O in vi), see 5.5.2 (P3)
 ```
 
 `looks.names` labels tile ids for HERE. A look's `ambient` lines are
@@ -467,6 +468,32 @@ made only by explicit decision.
 Focus names a hidden exit only while the caller stands on its tile
 (D-T4), where Interact already uses it. It never names one from an
 adjacent tile, and never anything outside the caller's sight.
+
+`jack_focus` uses the same composition and disclosure rules, including
+the current keymap. Both fields are also present in a published
+`LatticeView`: E inspects the current room or cell, or uses its uplink;
+J returns to the street. Their presence does not change either action.
+
+A query distinguishes passing input onward from consuming it without a
+world target. Menus, prompts and disabled states can consume a key while
+publishing null focus. Disclosure masks the selected target; it never
+substitutes a lower-priority visible target. Actor labels use the same
+per-caller name disclosure as the rest of the view. Queries never open
+menus, discover cells, grant loans, queue writes or emit messages.
+
+The composed decision supplies the selected handler's target. Earlier
+handlers still run in order, including existing modifier synchronisation
+and forced exits before they pass input onward. The hint uses the
+existing hint rectangle, naming E first and J when both have targets.
+Its wording requires the P3 presentation review; it adds no HERE panel.
+An unnamed target still owns its input, but its internal id is never a
+display label. Active channel progress owns the hint row. For focus
+hints, the client fits whole key-help groups after the E/J context,
+with the objective and current cost ahead of context (terminal UI 11).
+It shortens labels while retaining their first word, then drops J and E
+in that order, before shortening objective target text. `Next:`, its
+verb and current cost remain. Help is first among remaining groups when
+it fits. The existing terminal cell-width and clipping helpers apply.
 
 #### 5.5.3 Log kinds
 

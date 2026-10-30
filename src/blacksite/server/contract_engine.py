@@ -1,5 +1,6 @@
 """Game 9 adapter: consenting rosters and atomic contract transactions."""
 
+from blacksite.server.interaction import Interaction
 from collections.abc import Callable, Iterator
 from copy import deepcopy
 from dataclasses import dataclass, field, replace
@@ -89,8 +90,11 @@ class Contracts:
         self.lat.interlock.permit = lambda player, core, action: (
             permission(player, core, action) or self.control_permit(player, core, action))
 
-    def input(self, session: Session, frame: Frame, tick: int) -> bool:
-        return self.actions.input(session, frame, tick) or self.panels.input(session, frame, tick)
+    def interaction(self, session: Session, frame: Frame) -> Interaction | None:
+        return self.actions.interaction(session, frame) or self.panels.interaction(session, frame)
+
+    def input(self, session: Session, frame: Frame, tick: int, *, interaction: Interaction | None = None) -> bool:
+        return self.actions.input(session, frame, tick, interaction=interaction) or self.panels.input(session, frame, tick, interaction=interaction)
 
     def now(self) -> float:
         return self.clock.now_utc().timestamp()

@@ -1,0 +1,53 @@
+{
+ "source_head": "93641f5dc5db6dc7a60124de200d1033ac12d686",
+ "execution_head": "fb5d3e1e70393635315ffd959f21ef17ba35f986",
+ "execution_compare_to_source": {
+  "ahead_by": 1,
+  "behind_by": 0,
+  "files_changed": 0
+ },
+ "hosted_run": "https://github.com/Thiesi/Blacksite/actions/runs/40976696099",
+ "command": "pytest -q",
+ "python": "3.12",
+ "jobs": [
+  {
+   "platform": "ubuntu-latest",
+   "passed": 1768,
+   "skipped": 0,
+   "seconds": 404.41,
+   "url": "https://github.com/Thiesi/Blacksite/actions/runs/40976696099/job/123806390092"
+  },
+  {
+   "platform": "windows-latest",
+   "passed": 1767,
+   "skipped": 1,
+   "seconds": 363.49,
+   "url": "https://github.com/Thiesi/Blacksite/actions/runs/40976696099/job/123806389511"
+  }
+ ],
+ "independent_local": {
+  "source_head": "3cd50d8c2d9fe57b33e557318c9113dba9a88f52",
+  "environment": "clean detached system-Temp worktree; matching private installed wheel; fresh test/cache directories",
+  "command": "python -m pytest -q --maxfail=8 --basetemp <fresh-temp> -o cache_dir=<fresh-temp> --tb=short",
+  "python": "3.12",
+  "pytest": "9.1.1",
+  "passed": 1744,
+  "skipped": 1,
+  "failed": 0,
+  "returncode": 0,
+  "test_seconds": 1580.74,
+  "worktree_clean_before_and_after": true
+ },
+ "local_priority_checks": {
+  "source_head": "b5d75956f7a586b05758edac26bd27eaebcf9219",
+  "command": "pytest tests/presentation/test_interaction_focus.py tests/world/test_sight.py tests/door -q",
+  "passed": 317
+ },
+ "local_final_checks": {
+  "source_head": "93641f5dc5db6dc7a60124de200d1033ac12d686",
+  "command": "pytest tests/presentation/test_interaction_focus.py tests/test_factions.py tests/server/test_faction_engine.py tests/door/test_faction_menus.py tests/npcs/test_faction_standing.py tests/lattice/test_faction_services.py tests/combat/test_faction_outcomes.py -q",
+  "passed": 100
+ },
+ "existing_goldens_and_mechanics_unchanged": true,
+ "human_approval": false
+}

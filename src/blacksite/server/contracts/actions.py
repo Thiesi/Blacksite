@@ -1,5 +1,7 @@
 """Game 9: verified physical objective actions and interruptible channels."""
 
+from blacksite.server.interaction import Focus, Interaction, interact, object_interaction
+from blacksite.server.views import presentation
 from copy import deepcopy
 from collections import Counter
 from dataclasses import dataclass
@@ -253,15 +255,15 @@ class Actions:
                                                        'The action could not be saved. Your supplies remain.'),
                     linked_control=(player.id, stage.linked_control) if stage.linked_control else None)
 
-    def interact_npc(self, session: Session, iid: str) -> bool:
+    def interact_npc(self, session: Session, iid: str, actor: Any = None) -> bool:
         owner, pid = self.owner, session.player_id
         instance = owner.state.engine.instances[iid]
         progress = instance.stages[instance.index]
         source = self.game.combat.actor(self.game.players[pid])
-        for index, target in enumerate(progress.targets):
-            actor = self.world.actors.get(owner.scenes.unit(instance, progress, index))
-            if not actor or actor.zone != source.zone or max(abs(actor.x-source.x), abs(actor.y-source.y)) > 1:
-                continue
+        if actor is None:
+            choice = self.npc_interaction(session, iid)
+            actor = choice.value if choice else None
+        if actor is not None:
             if progress.stage.verb == 'clear' and progress.stage.resolution == 'subdue':
                 if source.id in self.game.npcs.restraints:
                     return True
@@ -271,8 +273,6 @@ class Actions:
             if progress.stage.verb == 'escort':
                 if not actor.behaviour.get('willing'):
                     raise ValueError('That person has not agreed to follow.')
-                if actor.behaviour.get('escort') == pid:
-                    continue  # Repeated E assigns the next willing group member.
                 if owner.commerce.pending:
                     raise ValueError('The city is busy. Try again.')
                 draft = owner.state.fork()
@@ -286,7 +286,72 @@ class Actions:
                 return True
         return False
 
-    def input(self, session: Session, frame: Frame, tick: int) -> bool:
+    def npc_interaction(self, session: Session, iid: str) -> Interaction | None:
+        owner, pid = self.owner, session.player_id
+        instance = owner.state.engine.instances[iid]
+        progress = instance.stages[instance.index]
+        source = self.game.combat.actor(self.game.players[pid])
+        for index, target in enumerate(progress.targets):
+            actor = self.world.actors.get(owner.scenes.unit(instance, progress, index))
+            if not actor or actor.zone != source.zone or max(abs(actor.x-source.x), abs(actor.y-source.y)) > 1:
+                continue
+            if progress.stage.verb == 'clear' and progress.stage.resolution == 'subdue':
+                verb = 'restrain'
+            elif progress.stage.verb == 'escort':
+                if actor.behaviour.get('willing') and actor.behaviour.get('escort') == pid:
+                    continue
+                verb = 'escort'
+            else:
+                continue
+            return Interaction(Focus(actor.id, presentation.name(actor, source, owner.content), verb),
+                               actor, actor.position, actor.id)
+        return None
+
+    def interaction(self, session: Session, frame: Frame) -> Interaction | None:
+        owner = self.owner
+        if (not interact(frame) or not owner.commerce.ready(session) or session.id in owner.sim.external_views
+                or session.pending_prompts or session.id in owner.panels.menus):
+            return None
+        cached = owner.effects.cache_interaction(session)
+        if cached:
+            return Interaction(cached.focus, cached.value, cached.tile, kind='contract_cache')
+        wanted = frame.data.get('args', {}).get('instance', '')
+        actor = self.game.combat.actor(self.game.players[session.player_id])
+        for iid, instance in owner.state.engine.instances.items():
+            if (instance.state != 'active' or wanted and wanted != iid
+                    or session.player_id not in {p.player for p in instance.roster} - instance.withdrawn):
+                continue
+            stage = instance.stages[instance.index].stage
+            if self.required(stage) and not self.carried(self.game.players[session.player_id], iid, self.required(stage)):
+                for source in self.supplies(instance):
+                    if self.near(actor, source):
+                        choice = self.target_interaction(actor, source, 'collect')
+                        return Interaction(choice.focus, (iid, source), choice.tile, kind='contract_reissue')
+            if stage.verb in ('clear', 'escort'):
+                choice = self.npc_interaction(session, iid)
+                if choice:
+                    return Interaction(choice.focus, (iid, choice.value), choice.tile,
+                                       choice.actor_id, 'contract_npc')
+                continue
+            if stage.target.kind in ('core_room', 'core_control', 'cell', 'silt_data'):
+                continue
+            for target in instance.stages[instance.index].targets:
+                if self.near(actor, target):
+                    choice = self.target_interaction(actor, target, stage.verb)
+                    return Interaction(choice.focus, (iid, target), choice.tile, kind='contract_action')
+        return None
+
+    def target_interaction(self, actor: Any, target: Any, verb: str) -> Interaction:
+        zone = self.world.zones[target.zone]
+        obj = zone.objects.get(target.object)
+        verb = 'take' if verb == 'fetch' else verb
+        if obj:
+            choice = object_interaction(obj, 'plant at' if verb == 'plant' else verb)
+            return Interaction(choice.focus, target, choice.tile)
+        x, y = target.tile
+        return Interaction(Focus(f'{target.zone}:{x},{y}', 'here', verb), target, target.tile)
+
+    def input(self, session: Session, frame: Frame, tick: int, *, interaction: Interaction | None = None) -> bool:
         owner = self.owner
         name = frame.data.get('name', '') if frame.type == 'intent' else ''
         key = frame.data.get('k', '') if frame.type == 'key' else ''
@@ -308,6 +373,21 @@ class Actions:
                 or session.pending_prompts or session.id in owner.panels.menus):
             return False
         try:
+            if not typed:
+                choice = interaction or self.interaction(session, frame)
+                if choice is None or not choice.kind.startswith('contract_'):
+                    return False
+                if choice.kind == 'contract_cache':
+                    owner.effects.cache(session, choice)
+                else:
+                    iid, target = choice.value
+                    if choice.kind == 'contract_reissue':
+                        self.reissue(session, iid, target)
+                    elif choice.kind == 'contract_npc':
+                        self.interact_npc(session, iid, target)
+                    else:
+                        self.perform(session, iid, target)
+                return True
             if typed:
                 request = frame.data.get('request_id', '')
                 if (not request or request in self.requests.get(session.id, [])
@@ -317,8 +397,6 @@ class Actions:
                 self.requests[session.id] = self.requests[session.id][-128:]
             wanted = frame.data.get('args', {}).get('instance', '')
             actor = self.game.combat.actor(self.game.players[session.player_id])
-            if not typed and owner.effects.cache(session):
-                return True
             for iid, instance in owner.state.engine.instances.items():
                 if (instance.state != 'active' or wanted and wanted != iid
                         or session.player_id not in {p.player for p in instance.roster} - instance.withdrawn):

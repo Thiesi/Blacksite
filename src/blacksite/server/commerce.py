@@ -1,5 +1,6 @@
 """S12 social-world adapter. Proposals commit in the I/O layer, then publish."""
 
+from blacksite.server.interaction import Interaction, interact, key_action, object_interaction
 from copy import deepcopy
 from collections import deque
 from dataclasses import asdict, dataclass, replace
@@ -482,7 +483,26 @@ class Commerce:
         self.prompts[session.id] = {"id": token, "name": name, "args": args}
         session.send(Frame("prompt", {"id": token, "kind": "line", "label": "Chits" if name.startswith("bank.") else "Quantity", "max_len": 10}))
 
-    def input(self, session: Session, frame: Frame, tick: int) -> bool:
+    def interaction(self, session: Session, frame: Frame) -> Interaction | None:
+        if not self.ready(session) or session.pending_prompts.get('chat'):
+            return None
+        if session.id in self.prompts or session.id in self.menus:
+            return Interaction()
+        if session.id in self.game.screens or session.id in self.sim.maps or session.id in self.sim.external_views:
+            return None
+        if interact(frame) or key_action(self.sim.keymap, session, frame) == 'interact':
+            av = self.sim.avatars[session.user_id]
+            zone = self.sim.world.zones[av.zone]
+            objects = sorted((o for o in zone.objects.values()
+                if max(abs(o.spec.tile[0]-av.actor.x), abs(o.spec.tile[1]-av.actor.y)) <= 1),
+                key=lambda o: (o.spec.tile != av.actor.position, o.spec.id))
+            if objects:
+                obj = objects[0]
+                if obj.spec.kind == 'bank' or obj.spec.id in self.caches or obj.spec.params.get('vendor'):
+                    return object_interaction(obj)
+        return None
+
+    def input(self, session: Session, frame: Frame, tick: int, *, interaction: Interaction | None = None) -> bool:
         if not self.ready(session): return False
         if session.pending_prompts.get("chat"): return False
         name = frame.data.get("name", "") if frame.type == "intent" else ""
@@ -532,15 +552,11 @@ class Commerce:
             if action == "inventory": self.menus[session.id] = CommerceMenu("inventory", opened=tick); return True
             if action == "equipment": self.menus[session.id] = CommerceMenu("equipment", opened=tick); return True
             if action == "interact" or key in ("e", "E"):
-                av = self.sim.avatars[session.user_id]
-                zone = self.sim.world.zones[av.zone]
-                objects = sorted((o for o in zone.objects.values() if max(abs(o.spec.tile[0]-av.actor.x),abs(o.spec.tile[1]-av.actor.y)) <= 1),
-                    key=lambda o:(o.spec.tile != av.actor.position, o.spec.id))
-                if objects:
-                    obj = objects[0]
-                    if obj.spec.kind == "bank" or obj.spec.id in self.caches or obj.spec.params.get("vendor"):
-                        kind = "bank" if obj.spec.kind == "bank" else "cache" if obj.spec.id in self.caches else "vendor"
-                        self.menus[session.id] = CommerceMenu(kind, obj.spec.id, opened=tick); return True
+                choice = interaction or self.interaction(session, frame)
+                if choice:
+                    obj = choice.value
+                    kind = "bank" if obj.spec.kind == "bank" else "cache" if obj.spec.id in self.caches else "vendor"
+                    self.menus[session.id] = CommerceMenu(kind, obj.spec.id, opened=tick); return True
         except (ValueError, KeyError, TypeError) as exc:
             self.toast(session, str(exc) if isinstance(exc, ValueError) else "That action is no longer available.")
             return True

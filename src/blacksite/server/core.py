@@ -3,6 +3,8 @@
 from collections.abc import Callable
 from typing import Any
 
+from blacksite.server.interaction import InputRoute, Interaction, ResolvedInteraction, interact, key_action
+from blacksite.server.world.sight import private_visible, sees_actor, sight_radius, visible_tiles
 from blacksite.server import admin_endpoint
 from blacksite.server.auth import Authenticator
 from blacksite.server.bus import Event, EventBus
@@ -11,7 +13,7 @@ from blacksite.server.loop import TickLoop
 from blacksite.server.protocol import Frame, ProtocolError, validate
 from blacksite.server.sessions import INPUTS_PER_SECOND, Session, Sessions
 from blacksite.server.world.registry import World
-from blacksite.server.world.simulation import ZoneSimulation
+from blacksite.server.world.simulation import NIGHT_END_HOUR, NIGHT_START_HOUR, ZoneSimulation
 from blacksite.server.characters import Characters
 from blacksite.server.chat import Chat
 from blacksite.server.commerce import Commerce
@@ -57,6 +59,8 @@ class Core:
             self.loop.subsystems.append(self.characters)
             self.loop.publishers.append(self.characters.publish)
         sim = self.characters.sim if self.characters else self.simulation
+        if sim is not None:
+            sim.interaction_provider = self.interaction_views
         self.chat = Chat(self.sessions, sim, clock, self.characters) if sim else None
         if self.chat:
             self.loop.subsystems.append(self.chat)
@@ -198,6 +202,57 @@ class Core:
         else:
             session.enqueue(frame, self.clock.now_tick())
 
+    def input_routes(self) -> list[InputRoute]:
+        """The existing priority, shared by focus and all input dispatch."""
+        routes = [InputRoute(name, owner.input, owner.interaction) for name, owner in (
+            ('events', self.events), ('market', self.market), ('contracts', self.contracts),
+            ('factions', self.factions), ('crews', self.crews), ('relays', self.relays),
+            ('apartments', self.apartments), ('progression', self.progression),
+            ('lattice', self.lattice), ('interlock', self.lattice.interlock if self.lattice else None),
+            ('combat', self.combat), ('fabrication', self.fabrication), ('commerce', self.commerce),
+            ('npcs', self.npcs), ('chat', self.chat)) if owner is not None]
+        if self.lattice:
+            routes.append(InputRoute('terminal', self.lattice.terminal_input, self.lattice.terminal_interaction))
+        if self.simulation is not None:
+            routes.append(InputRoute('simulation', self.simulation.input, self.simulation.interaction, True))
+        elif self.characters is not None:
+            routes.append(InputRoute('characters', self.characters.input, self.characters.interaction, True))
+        return routes
+
+    def resolve_interaction(self, session: Session, frame: Frame,
+                            routes: list[InputRoute] | None = None) -> ResolvedInteraction | None:
+        for index, route in enumerate(self.input_routes() if routes is None else routes):
+            choice = route.query(session, frame)
+            if choice is not None:
+                return ResolvedInteraction(index, route, choice)
+        return None
+
+    def interaction_views(self, session: Session) -> tuple[dict[str, str] | None, dict[str, str] | None]:
+        sim = self.characters.sim if self.characters else self.simulation
+        if sim is None or session.user_id not in sim.avatars:
+            return None, None
+        actor = sim.avatars[session.user_id].actor
+        zone = sim.world.zones.get(actor.zone)
+        if zone is None:
+            return None, None
+        hour = self.clock.now_local().hour
+        radius = sight_radius(actor, zone, hour >= NIGHT_START_HOUR or hour < NIGHT_END_HOUR)
+        visible = visible_tiles(actor, zone, radius)
+        def disclose(result: ResolvedInteraction | None) -> dict[str, str] | None:
+            if result is None or result.choice.focus is None:
+                return None
+            choice = result.choice
+            if choice.tile is not None and choice.tile not in visible:
+                return None
+            if choice.actor_id:
+                other = sim.world.actors.get(choice.actor_id)
+                if other is None or not private_visible(actor, other) or not sees_actor(actor, other, visible, radius):
+                    return None
+            return choice.focus.record()
+        e = Frame('key', {'k': 'e'})
+        jack = Frame('key', {'k': 'ctrl-o' if session.keymap_id == 'vi' else 'j'})
+        return disclose(self.resolve_interaction(session, e)), disclose(self.resolve_interaction(session, jack))
+
     def _echo(self, event: Event) -> None:
         session = event.data["session"]
         frame = event.data["frame"]
@@ -212,45 +267,17 @@ class Core:
             return
         if frame.type == "intent" and frame.data["name"] == "resync":
             session.replay_log()
-        if self.events and self.events.input(session, frame, event.data['tick']):
-            return
-        if self.market and self.market.input(session, frame, event.data['tick']):
-            return
-        if self.contracts and self.contracts.input(session, frame, event.data['tick']):
-            return
-        if self.factions and self.factions.input(session, frame, event.data["tick"]):
-            return
-        if self.crews and self.crews.input(session, frame, event.data["tick"]):
-            return
-        if self.relays and self.relays.input(session, frame, event.data["tick"]):
-            return
-        if self.apartments and self.apartments.input(session, frame, event.data["tick"]):
-            return
-        if self.progression and self.progression.input(session, frame, event.data["tick"]):
-            return
-        if self.lattice and self.lattice.input(session, frame, event.data["tick"]):
-            return
-        if self.lattice and self.lattice.interlock.input(session, frame, event.data["tick"]):
-            return
-        if self.combat and self.combat.input(session, frame, event.data["tick"]):
-            return
-        if self.fabrication and self.fabrication.input(session, frame, event.data["tick"]):
-            return
-        if self.commerce and self.commerce.input(session, frame, event.data["tick"]):
-            return
-        if self.npcs and self.npcs.input(session, frame, event.data["tick"]):
-            return
-        if self.chat and self.chat.input(session, frame, event.data["tick"]):
-            return
-        if self.lattice and self.lattice.terminal_input(session, frame, event.data["tick"]):
-            return
+        routes = self.input_routes()
+        action = key_action(self.keymap, session, frame)
+        selected = self.resolve_interaction(session, frame, routes) if interact(frame) or action in ('interact', 'jack') else None
+        for index, route in enumerate(routes):
+            if selected is not None and index == selected.index:
+                consumed = route.handler(session, frame, event.data['tick'], interaction=selected.choice)
+            else:
+                consumed = route.handler(session, frame, event.data['tick'])
+            if consumed or route.final:
+                return
         # Echo only the verb, never args, arbitrary chat, or private data.
-        if self.simulation is not None:
-            self.simulation.input(session, frame, event.data["tick"])
-            return
-        if self.characters is not None:
-            self.characters.input(session, frame, event.data["tick"])
-            return
         label = "intent" if frame.type == "intent" else frame.type
         session.emit(f"You send {label}.", kind="system", channel="system", role="muted",
                      at=self.clock.now_utc().isoformat())

@@ -1,5 +1,6 @@
 """Server-owned terminal, market and anonymous bounty menus."""
 
+from blacksite.server.interaction import Interaction
 from dataclasses import dataclass, field
 from typing import Any
 
@@ -282,7 +283,10 @@ class Views:
                 action = 'buyout' if key == 'u' else 'cancel'
                 panel.confirmation = action, {'listing': row}, f'Buyout total {listing.buyout} chits. Your existing bid escrow counts toward it.' if key == 'u' else 'Cancel this unsold listing? Its weight returns to your inventory.'
 
-    def input(self, session: Session, frame: Frame, tick: int) -> bool:
+    def interaction(self, session: Session, frame: Frame) -> Interaction | None:
+        return Interaction() if session.player_id in self.owner.game.players and session.id in self.menus else None
+
+    def input(self, session: Session, frame: Frame, tick: int, *, interaction: Interaction | None = None) -> bool:
         if session.player_id not in self.owner.game.players:
             return False
         name = frame.data.get('name', '') if frame.type == 'intent' else ''

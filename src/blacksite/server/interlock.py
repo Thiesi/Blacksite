@@ -5,6 +5,7 @@ physical effect is published. Content owns targets; S19 supplies permits
 and S21 supplies live relay ownership.
 """
 
+from blacksite.server.interaction import Interaction, interact, object_interaction
 from collections.abc import Callable
 from copy import deepcopy
 from math import ceil
@@ -455,7 +456,36 @@ class Interlock:
         if avatar:
             self.sim.reset_view(session, avatar)
 
-    def input(self, session: Session, frame: Frame, tick: int) -> bool:
+    def interaction(self, session: Session, frame: Frame) -> Interaction | None:
+        if session.id in self.log_menus or session.id in self.menus:
+            return Interaction()
+        if not interact(frame):
+            return None
+        avatar = self.lat.avatar(session)
+        if not avatar or avatar.actor.stance != 'normal' or session.id in self.sim.external_views:
+            return None
+        actor = avatar.actor
+        zone = self.game.world.zones[actor.zone]
+        if any(obj.spec.tile == actor.position and (obj.spec.kind in ('bank', 'vendor', 'cache', 'terminal', 'workshop', 'salvage_node')
+                or obj.spec.params.get('vendor')) for obj in zone.objects.values()):
+            return None
+        apartment_door = next((obj for obj in zone.objects.values() if obj.spec.kind == 'apartment_door'
+            and obj.spec.params.get('apartment_id')
+            and max(abs(actor.x-obj.spec.tile[0]), abs(actor.y-obj.spec.tile[1])) <= 1), None)
+        if apartment_door:
+            choice = object_interaction(apartment_door, 'inspect')
+            return Interaction(choice.focus, ('apartment', apartment_door), choice.tile)
+        candidates = [(zid, oid) for zid, oid in self.hardware if zid == actor.zone
+            and max(abs(actor.x-self.game.world.zones[zid].objects[oid].spec.tile[0]),
+                    abs(actor.y-self.game.world.zones[zid].objects[oid].spec.tile[1])) <= 3]
+        if candidates:
+            zid, oid = min(candidates, key=lambda key: (
+                self.game.world.zones[key[0]].objects[key[1]].spec.tile != actor.position, key))
+            choice = object_interaction(zone.objects[oid], 'inspect')
+            return Interaction(choice.focus, ('hardware', (zid, oid)), choice.tile)
+        return None
+
+    def input(self, session: Session, frame: Frame, tick: int, *, interaction: Interaction | None = None) -> bool:
         name = frame.data.get("name", "") if frame.type == "intent" else ""
         key = frame.data.get("k", "") if frame.type == "key" else ""
         if session.id in self.log_menus:
@@ -506,27 +536,17 @@ class Interlock:
         avatar = self.lat.avatar(session)
         if not avatar or avatar.actor.stance != "normal" or session.id in self.sim.external_views:
             return False
-        actor = avatar.actor
-        zone = self.game.world.zones[actor.zone]
-        if any(obj.spec.tile == actor.position and (obj.spec.kind in ("bank", "vendor", "cache", "terminal", "workshop", "salvage_node")
-                or obj.spec.params.get("vendor")) for obj in zone.objects.values()):
-            return False  # An adjacent cabinet cannot steal the counter key.
-        apartment_door = next((obj for obj in zone.objects.values() if obj.spec.kind == "apartment_door"
-            and obj.spec.params.get("apartment_id")
-            and max(abs(actor.x-obj.spec.tile[0]), abs(actor.y-obj.spec.tile[1])) <= 1), None)
-        if apartment_door:
+        choice = interaction or self.interaction(session, frame)
+        if not choice:
+            return False
+        kind, target = choice.value
+        if kind == 'apartment':
             try:
-                self.private.open_log(session, apartment_door.spec.params["apartment_id"])
+                self.private.open_log(session, target.spec.params["apartment_id"])
             except ValueError as exc:
                 self.sim.log(session, str(exc))
             return True
-        candidates = [(zid, oid) for zid, oid in self.hardware if zid == actor.zone
-            and max(abs(actor.x-self.game.world.zones[zid].objects[oid].spec.tile[0]),
-                    abs(actor.y-self.game.world.zones[zid].objects[oid].spec.tile[1])) <= 3]
-        if not candidates:
-            return False
-        zid, oid = min(candidates, key=lambda key: (
-            self.game.world.zones[key[0]].objects[key[1]].spec.tile != actor.position, key))
+        zid, oid = target
         self.menus[session.id] = zid, oid, False
         return True
 

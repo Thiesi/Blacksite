@@ -155,6 +155,8 @@ def test_game_5_6_hidden_door_is_usable_after_physically_finding_its_tile(conten
     gate = replace(original, hidden=True, kind='door')
     zone.template = replace(zone.template, meta=replace(zone.template.meta, exits=(gate,)))
     place(game, caller, zone.id, (gate.tile[0]-1, gate.tile[1]))
+    focus, _ = game.core.interaction_views(caller.session)
+    assert focus is None or focus['id'] != gate.id
     act(game, caller, Frame('intent', {'name': 'interact', 'args': {}}))
     avatar = game.core.characters.sim.avatars[caller.session.user_id]
     assert avatar.zone == zone.id
@@ -164,6 +166,8 @@ def test_game_5_6_hidden_door_is_usable_after_physically_finding_its_tile(conten
         act(game, caller, Frame('intent', {'name': 'interact', 'args': {}}))
     act(game, caller, Frame('intent', {'name': 'move', 'args': {'dir': 'right'}}))
     assert avatar.actor.position == gate.tile
+    focus, _ = game.core.interaction_views(caller.session)
+    assert focus and focus['id'] == gate.id
     act(game, caller, Frame('intent', {'name': 'interact', 'args': {}}))
     assert avatar.zone == gate.target_zone
 

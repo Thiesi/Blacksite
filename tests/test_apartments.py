@@ -97,6 +97,8 @@ def test_game_8_7_dropped_goods_beside_doorstep_do_not_steal_entry(housing):
     obj = zone.objects.pop(cache)
     zone.objects['0-cache-before-door'] = replace(obj, spec=replace(obj.spec, id='0-cache-before-door'))
     place(game, client, unit.zone, unit.anchor.doorstep)
+    prediction = game.core.resolve_interaction(client.session, Frame('intent', {'name': 'interact', 'args': {}}))
+    assert prediction.route.name == 'apartments' and prediction.choice.focus.id == unit.door
     act(game, client, Frame('intent', {'name': 'interact', 'args': {}}))
     assert unit.region.contains(game.core.combat.actor(p).position)
     assert client.session.id not in game.core.lattice.interlock.log_menus

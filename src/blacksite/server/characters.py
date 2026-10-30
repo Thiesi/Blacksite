@@ -1,5 +1,6 @@
 """Pure character/Wake lifecycle. The I/O layer executes the write outbox."""
 
+from blacksite.server.interaction import Interaction
 from copy import deepcopy
 from collections.abc import Callable
 from dataclasses import asdict, replace
@@ -352,7 +353,13 @@ class Characters:
                     self.wakes[token] = Wake()
                 self.dirty_screens.add(token)
 
-    def input(self, session: Session, frame: Frame, tick: int) -> None:
+    def interaction(self, session: Session, frame: Frame) -> Interaction:
+        if (session.id in self.wakes or session.id in self.screens
+                or session.player_id not in self.players):
+            return Interaction()
+        return self.sim.interaction(session, frame)
+
+    def input(self, session: Session, frame: Frame, tick: int, *, interaction: Interaction | None = None) -> None:
         name = frame.data.get("name", "") if frame.type == "intent" else ""
         key = frame.data.get("k", "") if frame.type == "key" else ""
         if name == "resync":
@@ -420,7 +427,7 @@ class Characters:
         if player is None:
             return
         if session.id in self.sim.maps or (self.sim.avatars.get(session.user_id) and self.sim.avatars[session.user_id].travel):
-            self.sim.input(session, frame, tick)
+            self.sim.input(session, frame, tick, interaction=interaction)
             return
         if screen == "delete":
             if name == "prompt_cancel":
@@ -461,7 +468,7 @@ class Characters:
             self.screens[session.id] = ("sheet", 0)
             self.dirty_screens.add(session.id)
         else:
-            self.sim.input(session, frame, tick)
+            self.sim.input(session, frame, tick, interaction=interaction)
 
     def me(self, session: Session) -> dict[str, Any]:
         player = self.players[session.player_id]

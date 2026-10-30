@@ -1,5 +1,6 @@
 """Server-owned territory cards and explicit hold/support actions."""
 
+from blacksite.server.interaction import Interaction, interact, object_interaction
 from dataclasses import dataclass
 from typing import Any
 
@@ -130,7 +131,27 @@ class Views:
             self.close(session)
             owner.commerce.menus[session.id] = CommerceMenu('vendor', relay.terminal, opened=owner.clock.now_tick())
 
-    def input(self, session: Session, frame: Frame, tick: int) -> bool:
+    def interaction(self, session: Session, frame: Frame) -> Interaction | None:
+        owner = self.owner
+        if session.player_id not in owner.game.players:
+            return None
+        if session.id in self.menus:
+            return Interaction()
+        if (session.pending_prompts or session.id in owner.sim.external_views
+                or session.id in owner.game.screens or session.id in owner.sim.maps or not interact(frame)):
+            return None
+        actor = owner.world.actors.get(session.player_id)
+        holding = bool(actor and actor.behaviour.get('channel', {}).get('owner') == 'relay')
+        if holding or owner.commerce.ready(session):
+            rid = next((rid for rid in owner.content.relays if owner.active(rid) and owner.near(session.player_id, rid)), None)
+            if rid:
+                relay = owner.content.relays[rid]
+                obj = owner.world.zones[relay.zone].objects[relay.terminal]
+                choice = object_interaction(obj)
+                return Interaction(choice.focus, rid, choice.tile)
+        return None
+
+    def input(self, session: Session, frame: Frame, tick: int, *, interaction: Interaction | None = None) -> bool:
         owner = self.owner
         if session.player_id not in owner.game.players:
             return False
@@ -175,9 +196,9 @@ class Views:
                     raise ValueError('Use a public terminal to inspect territory.')
                 return False
             if (name == 'interact' or key.lower() == 'e') and (holding or owner.commerce.ready(session)):
-                rid = next((rid for rid in owner.content.relays if owner.active(rid) and owner.near(session.player_id, rid)), None)
-                if rid:
-                    self.menus[session.id] = Panel(rid, opened=tick)
+                choice = interaction or self.interaction(session, frame)
+                if choice:
+                    self.menus[session.id] = Panel(choice.value, opened=tick)
                     return True
         except (ValueError, KeyError, TypeError) as exc:
             owner.log(session.player_id, str(exc) if isinstance(exc, ValueError) else 'Read the current relay card.')

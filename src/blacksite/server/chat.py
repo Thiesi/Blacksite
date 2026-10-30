@@ -1,5 +1,6 @@
 """Server-authoritative social layer; game design §11/§14, terminal UI §5."""
 
+from blacksite.server.interaction import Interaction
 from collections.abc import Callable
 from dataclasses import dataclass
 import re
@@ -261,7 +262,14 @@ class Chat:
         if session:
             self.toast(session, "Reported." if success else "Your report could not be saved. Try again.")
 
-    def input(self, session: Session, frame: Frame, tick: int) -> bool:
+    def interaction(self, session: Session, frame: Frame) -> Interaction | None:
+        if not self.ready(session):
+            return None
+        if session.pending_prompts.get('chat') and frame.type == 'key' or session.id in self.sitreps:
+            return Interaction()
+        return None
+
+    def input(self, session: Session, frame: Frame, tick: int, *, interaction: Interaction | None = None) -> bool:
         if not self.ready(session):
             return False
         name = frame.data.get("name", "") if frame.type == "intent" else ""

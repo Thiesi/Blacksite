@@ -1,0 +1,187 @@
+{
+ "schema": 1,
+ "matrix_cases": 10704,
+ "outcome_sha256": "05213f386e4ca644479f8ff80d43ca4e27ebd0acd0013e644b2072a9b9c59185",
+ "scope": "Three fixture zones and ten shipped hubs; physical and loaned-rig presence; E/J keys and intents. Active contract stages and carried-rig starts are separate focused cases, not reached by this matrix.",
+ "unnamed_targets_without_focus": [
+  [
+   "fx-open",
+   "fx-open-hw"
+  ],
+  [
+   "fx-safe",
+   "fx-safe-light"
+  ],
+  [
+   "fx-safe",
+   "fx-safe-terminal"
+  ],
+  [
+   "fx-safe",
+   "fx-safe-terminal-2"
+  ],
+  [
+   "fx-safe",
+   "fx-safe-vat"
+  ],
+  [
+   "fx-street",
+   "fx-street-cache"
+  ],
+  [
+   "fx-street",
+   "fx-street-hw"
+  ],
+  [
+   "fx-street",
+   "fx-street-vendor"
+  ],
+  [
+   "vatside-clinics",
+   "clinic-door-12"
+  ],
+  [
+   "vatside-clinics",
+   "clinic-door-47"
+  ],
+  [
+   "vatside-clinics",
+   "clinic-door-70"
+  ],
+  [
+   "vatside-wake-hall",
+   "decant-vat-1"
+  ],
+  [
+   "vatside-wake-hall",
+   "decant-vat-2"
+  ],
+  [
+   "vatside-wake-hall",
+   "decant-vat-3"
+  ],
+  [
+   "vatside-wake-hall",
+   "decant-vat-4"
+  ]
+ ],
+ "human_approval": false,
+ "matrix_pairs": [
+  ["go to", "Block Street"],
+  ["go to", "Central Tram Hub"],
+  ["go to", "Clinic Row"],
+  ["go to", "Fixture Hall"],
+  ["go to", "Fixture Street"],
+  ["go to", "Fixture Waste"],
+  ["go to", "Meridian Plaza"],
+  ["go to", "Residence Lobby"],
+  ["go to", "Sodium Row"],
+  ["go to", "The Tin Halo"],
+  ["go to", "Vat Row"],
+  ["go to", "Wake Hall"],
+  ["go to", "Warden Precinct"],
+  ["inspect", "Black clinic"],
+  ["inspect", "Block Super hardware"],
+  ["inspect", "Block relay hardware"],
+  ["inspect", "Civic descent"],
+  ["inspect", "Corner grocer"],
+  ["inspect", "Descent console"],
+  ["inspect", "Dr. Ilse Vantongeren"],
+  ["inspect", "Ferrymen liaison"],
+  ["inspect", "Fixture lamp"],
+  ["inspect", "Halo bar"],
+  ["inspect", "House Lights hardware"],
+  ["inspect", "Hub noodle counter"],
+  ["inspect", "Kestrel Branch hardware"],
+  ["inspect", "Kestrel recruiter"],
+  ["inspect", "Kestrel ticket office"],
+  ["inspect", "Letting office"],
+  ["inspect", "Lobby concierge"],
+  ["inspect", "Lobby mailboxes"],
+  ["inspect", "Pharmacy"],
+  ["inspect", "Plaza light east"],
+  ["inspect", "Plaza light west"],
+  ["inspect", "Precinct vault hardware"],
+  ["inspect", "Records annex cabinet"],
+  ["inspect", "Row bar 1"],
+  ["inspect", "Row bar 2"],
+  ["inspect", "Row bar 3"],
+  ["inspect", "Row bar 4"],
+  ["inspect", "Row bar 5"],
+  ["inspect", "Row card table"],
+  ["inspect", "Row drug dealer"],
+  ["inspect", "Row stage"],
+  ["inspect", "Row ticket tout"],
+  ["inspect", "Sablier Clinical hardware"],
+  ["inspect", "Sablier recruiter"],
+  ["inspect", "Terrace Outpost hardware"],
+  ["inspect", "Tin Halo hardware"],
+  ["inspect", "Tram Signal hardware"],
+  ["inspect", "Vat technicians"],
+  ["inspect", "Vatline hardware"],
+  ["inspect", "Vesper parcel shelf"],
+  ["inspect", "Wake Hall Node"],
+  ["inspect", "Warden recruiter"],
+  ["inspect", "cold chain hardware"],
+  ["inspect", "stairwell C cabinet"],
+  ["jack in at", "Blocks public 1"],
+  ["jack in at", "Blocks public 2"],
+  ["jack in at", "Blocks public 3"],
+  ["jack in at", "Bounty desk"],
+  ["jack in at", "Civic notice board"],
+  ["jack in at", "Halo contract board"],
+  ["jack in at", "Halo market board"],
+  ["jack in at", "Hub public east"],
+  ["jack in at", "Hub public west"],
+  ["jack in at", "Lobby public terminal"],
+  ["jack in at", "Member terminal"],
+  ["jack in at", "Plaza public 1"],
+  ["jack in at", "Plaza public 2"],
+  ["jack in at", "Plaza public 3"],
+  ["jack in at", "Plaza public 4"],
+  ["jack in at", "Precinct member terminal"],
+  ["jack in at", "Public terminal"],
+  ["jack in at", "Row public 1"],
+  ["jack in at", "Row public 2"],
+  ["jack in at", "Row public 3"],
+  ["jack in at", "Tutorial terminal"],
+  ["jack in at", "camera net"],
+  ["jack in at", "cold chain loan terminal"],
+  ["jack in at", "impound manifest"],
+  ["jack in at", "outpost cameras"],
+  ["jack in at", "sign grid"],
+  ["jack in at", "stairwell C loan terminal"],
+  ["jack out", ""],
+  ["open", "Block relay"],
+  ["open", "Cold Chain Relay"],
+  ["open", "Fixture bank"],
+  ["open", "Fixture counter"],
+  ["open", "Halo contract board"],
+  ["open", "Kestrel bank"],
+  ["open", "Ostrom Showroom"],
+  ["open", "Public terminal"],
+  ["open", "Recruiter cards"],
+  ["open", "Sablier Clinic"],
+  ["open", "Sablier Clinic (any)"],
+  ["open", "Sablier Wake Outfitter"],
+  ["open", "The Tin Halo (Vesper)"],
+  ["open", "Warden Quartermaster"],
+  ["open", "Warden contract handler"],
+  ["talk to", "Sablier orderly"],
+  ["use", "Apartment door 1"],
+  ["use", "Apartment door 2"],
+  ["use", "Apartment door 3"],
+  ["use", "Apartment door 4"],
+  ["use", "Apartment door 5"],
+  ["use", "Construction boundary"],
+  ["use", "Corridor door"],
+  ["use", "Halo back room"],
+  ["use", "Holding cell east"],
+  ["use", "Holding cell west"],
+  ["use", "Lobby lift"],
+  ["use", "Marshal office"],
+  ["use", "Sablier faction vat"],
+  ["use", "Warden faction vat"],
+  ["use", "curfew shutters"]
+ ]
+}

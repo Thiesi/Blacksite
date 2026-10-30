@@ -1,0 +1,4 @@
+# Preserve captured cells, the reserved corner, and original receipt bytes.
+* -text
+*.txt whitespace=-blank-at-eol
+*.json whitespace=cr-at-eol
