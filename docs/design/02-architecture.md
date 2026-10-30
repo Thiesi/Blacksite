@@ -813,8 +813,11 @@ before world entry, inviting selection of Unicode or CP437 in NetBBS.
 preference except ASCII, including CP437 terminals and a Telnet caller on
 Auto whose terminal NetBBS could not detect, who gets ASCII output.
 `charset` is authoritative: `ascii` gets the same explanatory return as
-`unicode_style: false`, and the modern glyph tier requires `charset` to
-be `utf-8` (terminal UI §1). A supported node always sends `charset`; if
+`unicode_style: false`. That caller may be an undetected Telnet caller
+on Auto rather than one who chose ASCII, so the text never says they
+chose it; both cases get the same instruction to select Unicode or
+CP437 in NetBBS. The modern glyph tier requires `charset` to be `utf-8`
+(terminal UI §1). A supported node always sends `charset`; if
 it is missing or not one of the three values, treat the door info as
 malformed and refuse before world entry, as for a bad `door_api`.
 Blacksite draws no quarter blocks; any future art that does must follow
