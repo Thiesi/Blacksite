@@ -1,4 +1,4 @@
-╔═VATSIDE═Wake Hall═POCKET══════════════════════════════╤════════════15:27═════╗
+╔═VATSIDE═Wake Hall═POCKET══════════════════════════════╤════════════15:50═════╗
 ║ ···················                                   │─ HERE ───────────────║
 ║ ··Θ·Θ·Θ·Θ··········                                   │ Corridor door        ║
 ║ ···················                                   │─ TARGET ─────────────║
@@ -17,8 +17,8 @@
 ║          ·········· ··········                        │ SHK ▌░░░░░░░░░ 1     ║
 ║          ·········· ··········                        │ 200 ch   lease 0/90  ║
 ╟───────────────────────────────────────────────────────┴──────────────────────╢
+║* Miss: Training drone. (x2)                                                  ║
 ║* Hit: Training drone. (x2)                                                   ║
-║* Miss: Training drone.                                                       ║
 ║* The training drone falls silent. The tutorial terminal is ahead.            ║
 ║E use Corridor door  ? help  Weapon 0.7s  Tab target  F fire  X weapon        ║
 ╚══════════════════════════════════════════════════════════════════════════════ 

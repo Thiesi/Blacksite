@@ -1,11 +1,11 @@
-╔═THE CORE═Meridian Plaza═SAFE══════════════════════════════════════════════════════════════════════════════╤════════════15:27═════╗
+╔═THE CORE═Meridian Plaza═SAFE══════════════════════════════════════════════════════════════════════════════╤════════════15:52═════╗
 ║                                                                                                           │─ HERE ───────────────║
 ║                                                                            ·············                  │ Clinic Row           ║
 ║                                                                            ···········»·                  │─ TARGET ─────────────║
 ║                                                                           ············@·                  │ none   Tab picks     ║
-║                                                                            ☻············                  │─ NEARBY ─────────────║
+║                                                                            ·············                  │─ NEARBY ─────────────║
 ║                                                                            $············                  │ ☻ Ostrom Showroom    ║
-║                                                                            ·············                  │                      ║
+║                                                                            ·☻···········                  │                      ║
 ║                                                                            ·············                  │                      ║
 ║                                                                             ············                  │                      ║
 ║                                                                             ············                  │                      ║
@@ -38,7 +38,7 @@
 ║                                                                                                           │ 200 ch   lease 0/90  ║
 ║                                                                                                           │ discharge 50/1500    ║
 ╟───────────────────────────────────────────────────────────────────────────────────────────────────────────┴──────────────────────╢
-║‼ Training drone hits you for 1.                                                                                                  ║
+║* Hit: Training drone. (x2)                                                                                                       ║
 ║* The training drone falls silent. The tutorial terminal is ahead.                                                                ║
 ║+ You arrive at Clinic Row.                                                                                                       ║
 ║» You walk past clinics with their logo in cyan on white. You hear a polite overhead voice. Your clone insurance premium is due.  ║

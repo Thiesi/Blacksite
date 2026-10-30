@@ -1,18 +1,19 @@
 {
-  "run": 41080513207,
+  "run": 41083554221,
   "receipts": [
     {
-      "artifact_id": 12990420104,
-      "artifact_name": "p5-native-132x50",
-      "result_sha256": "1d054c16df17a5623ae82422efd7ee2a12ceeee8b03377202a837a0c7f78c7f5",
-      "head": "4bb5c7ebed145421f0daafc3fff40b9e5b7f088e",
+      "artifact_id": 12990284280,
+      "artifact_name": "p5-native-80x24",
+      "netbbs": "v7.45.0",
+      "result_sha256": "52c5b5efc5aa60534430a4d6059732e23b1b4ee545d7e634c7a19f59590c2a0b",
+      "head": "547ce7c418c19c60e5726adda081a01f05911ce2",
       "passed": true,
       "show": true,
       "console": {
         "isatty": true,
         "size": [
-          132,
-          50
+          80,
+          24
         ]
       },
       "source_matched_wheel": {
@@ -25,17 +26,18 @@
       "fixtures": "private node/world/accounts only; normal game rules"
     },
     {
-      "artifact_id": 12990450114,
-      "artifact_name": "p5-native-80x24",
-      "result_sha256": "f907ad471d89d98863567602f64834685312a65862a3a99641efc14a1517f614",
-      "head": "4bb5c7ebed145421f0daafc3fff40b9e5b7f088e",
+      "artifact_id": 12991501332,
+      "artifact_name": "p5-native-132x50",
+      "netbbs": "v7.45.0",
+      "result_sha256": "6b9942af6d8c37fbaf95bf3e850919e4dab21b64d2b414dd1671024257144798",
+      "head": "547ce7c418c19c60e5726adda081a01f05911ce2",
       "passed": true,
       "show": true,
       "console": {
         "isatty": true,
         "size": [
-          80,
-          24
+          132,
+          50
         ]
       },
       "source_matched_wheel": {

@@ -137,7 +137,31 @@ terminal receipts and the exact execution head. Raw ANSI and large style
 snapshots remain in the linked CI artifacts. The packet records the wide
 character-name / ASCII BBS-handle distinction and verifies both fields in
 the same pinned row at 132x50. It grants no creative or human approval.
-Those captures retain their actual v7.31.0 provenance. Following the
-technical lead's floor-change notice on #82, P5's new native workflow now
-pins v7.45.0; its fresh results are reported separately on PR #110. The
-floor/canon PR #111 must be owner-merged before it is used as a new base.
+The packet now contains v7.45.0 captures, following the technical lead's
+floor-change notice on #82. Earlier v7.31.0 captures retain their actual
+provenance in Git history and the earlier run's artifacts. The floor/canon
+PR #111 must be owner-merged before it is used as a new base.
+
+## Representative playable scenario
+
+Start with a new ASCII NetBBS account, a registered native door with the
+switch enabled, and a UTF-8 ANSI terminal at the chosen size and tier.
+
+1. Launch Blacksite. Choose the first archetype with Enter, enter a wide
+   character name, press S to skip the briefing and Esc to take no card.
+   Expect the new chrome through the Wake screens, then Wake Hall's safe
+   frame and a wide name in the side panel.
+2. Follow the training objective to the range. Use Tab to select the
+   training drone and F to fire until the objective completes. Expect the
+   selected drone's target panel, combat feedback and completion state.
+3. Walk through the Clinic exits to Meridian Plaza using movement keys.
+   Expect each hub's title and rule map, stable frame and updated focus
+   hints. At 132x50 the complete differing handle and name share the
+   pinned row.
+4. Open inventory with I, contracts with Q and help with ?, returning
+   with Esc after each. Expect each screen's content immediately, shared
+   chrome, full-width help and a return to the unchanged Plaza position.
+
+Repeat at 80x24 and 132x50 in 16 and 256 colours; the recorded packet also
+includes truecolor. These steps describe what the native script plays;
+they are not a claim that a person granted creative or human acceptance.

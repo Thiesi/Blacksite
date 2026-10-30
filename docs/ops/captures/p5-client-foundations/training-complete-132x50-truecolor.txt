@@ -1,19 +1,19 @@
-╔═VATSIDE═Wake Hall═POCKET══════════════════════════════════════════════════════════════════════════════════╤════════════15:27═════╗
+╔═VATSIDE═Wake Hall═POCKET══════════════════════════════════════════════════════════════════════════════════╤════════════15:52═════╗
 ║                                                                                                           │─ HERE ───────────────║
 ║ ···················                                                                                       │ Corridor door        ║
 ║ ···················                                                                                       │─ TARGET ─────────────║
-║ ··Θ·Θ·Θ·Θ··········                                                                                       │ Training drone       ║
-║ ···················                                                                                       │ HP  ████░░░░░░ 40%   ║
-║ ···········$·······                                                                                       │ 2 m  open  hostile   ║
-║ ···················                                                                                       │ with Kestrel Issue...║
-║ ···················                                                                                       │─ NEARBY ─────────────║
-║ ···················                                                                                       │ τ Training drone     ║
+║ ··Θ·Θ·Θ·Θ··········                                                                                       │ none   Tab picks     ║
+║ ···················                                                                                       │                      ║
+║ ···········$·······                                                                                       │                      ║
+║ ···················                                                                                       │                      ║
+║ ···················                                                                                       │                      ║
+║ ···················                                                                                       │                      ║
 ║ ···················                                                                                       │                      ║
 ║ ·······$···········                                                                                       │                      ║
 ║ ···················                                                                                       │                      ║
 ║ ··················· ··········                                                                            │                      ║
 ║ ··················· ··········                                                                            │                      ║
-║  ··················+@·τ········                                                                           │                      ║
+║  ··················+@··········                                                                           │                      ║
 ║      ·············· ··········                                                                            │                      ║
 ║          ·········· ··········                                                                            │                      ║
 ║          ·········· ··········                                                                            │                      ║
@@ -42,9 +42,9 @@
 ║  terminal.                                                                                                                       ║
 ║‼ Your training drone wakes. Tab targets; F fires; B skips. Its shots cannot kill.                                                ║
 ║‼ You raise your weapon. Fire again after two seconds; the target can move to safety.                                             ║
-║* Miss: Training drone. (x5)                                                                                                      ║
-║* Hit: Training drone. (x2)                                                                                                       ║
 ║‼ Training drone hits you for 1.                                                                                                  ║
+║* Hit: Training drone. (x2)                                                                                                       ║
 ║* The training drone falls silent. The tutorial terminal is ahead.                                                                ║
-║E use Corridor door  ? help  Tab target  F fire  X weapon  1-5 quick  V abilities  I inventory                                    ║
+║                                                                                                                                  ║
+║E use Corridor door  ? help  Weapon 0.7s  Tab target  F fire  X weapon  1-5 quick  V abilities  I inventory                       ║
 ╚══════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════ 

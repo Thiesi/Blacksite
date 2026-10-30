@@ -1,10 +1,10 @@
 # P5 native review packet
 
-Execution head: `4bb5c7ebed145421f0daafc3fff40b9e5b7f088e`.
+Execution head: `547ce7c418c19c60e5726adda081a01f05911ce2`.
 The evidence commit changes documentation only; runtime, content,
 tests, acceptance scripts and workflows remain identical to this head.
 
-Transport: real NetBBS v7.31.0 Telnet to a registered native stdio door,
+Transport: real NetBBS v7.45.0 Telnet to a registered native stdio door,
 using a source-matched isolated Blacksite wheel and
 `DOOR_BLACKSITE_PRESENTATION=1`. The runner's stdout is an attached
 Linux PTY whose size is checked against the selected size. The private
@@ -39,9 +39,9 @@ to it. `manifest.json` records twelve verified pinned-row examples.
 
 ## Provenance and verification
 
-- [Native run 41080513207](https://github.com/Thiesi/Blacksite/actions/runs/41080513207).
-- [80x24 artifact 12990450114](https://github.com/Thiesi/Blacksite/actions/runs/41080513207/artifacts/12990450114).
-- [132x50 artifact 12990420104](https://github.com/Thiesi/Blacksite/actions/runs/41080513207/artifacts/12990420104).
+- [Native run 41083554221](https://github.com/Thiesi/Blacksite/actions/runs/41083554221).
+- [80x24 artifact 12990284280](https://github.com/Thiesi/Blacksite/actions/runs/41083554221/artifacts/12990284280).
+- [132x50 artifact 12991501332](https://github.com/Thiesi/Blacksite/actions/runs/41083554221/artifacts/12991501332).
 
 `source-receipts.json` copies the run's success, attached-terminal
 dimensions and installed-wheel receipt, and hashes each original
@@ -55,7 +55,7 @@ test terminal; its glyph/style grid and text matched the producer's
 snapshot. The installed Python tree matches the committed execution
 head. Both console receipts match the sizes used by all six cases.
 
-The 48 untrimmed full-screen texts and native manifest total 294,029
+The 48 untrimmed full-screen texts and native manifest total 293,996
 bytes before this README and the small source receipts. This exceeds
 the approximately 200 KB evidence guideline because all eight required
 steps, two sizes and three tiers are retained. Large style grids, raw

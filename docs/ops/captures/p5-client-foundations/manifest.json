@@ -1,11 +1,11 @@
 {
   "schema": 1,
-  "execution_head": "4bb5c7ebed145421f0daafc3fff40b9e5b7f088e",
+  "execution_head": "547ce7c418c19c60e5726adda081a01f05911ce2",
   "python_tree_sha256": "15caec2f1a3272270a98c40ec7bfd656a941aa0ec4aabaca102cc9db4ba0b921",
-  "run": 41080513207,
+  "run": 41083554221,
   "human_approval": false,
   "console": "sized attached Linux PTY, --show",
-  "transport": "real NetBBS v7.31.0 Telnet -> source-matched native stdio wheel",
+  "transport": "real NetBBS v7.45.0 Telnet -> source-matched native stdio wheel",
   "width_evidence": "ASCII host handle, wide ordinary character name; synthetic wide BBS handle in headless goldens",
   "wide_name_handle_rows": [
     {
@@ -250,7 +250,7 @@
       "text": "wake-132x50-16.txt",
       "text_sha256": "97e93ef24a3dc02f3c52b8371bfdde0338dcc6224082a2afde1ca3c6960403e4",
       "ansi": "wake-132x50-16.ans",
-      "ansi_sha256": "53bd2149bdd6c93f35585f7ed9e5244db797db97d8a61c41efca1ed692c20b1f",
+      "ansi_sha256": "a3fb7f9c3c369e616f1d2d534cc55b6386c3b17f246cc11b357784bf640340c5",
       "style": "wake-132x50-16.json",
       "style_sha256": "1d1318e9ee230feb0b94b37334b842cd0c68d6bf92fac5073fa234aba3c9132c",
       "source_directory": "132x50\\p5-proof"
@@ -263,11 +263,11 @@
       ],
       "tier": "16",
       "text": "wake-hall-132x50-16.txt",
-      "text_sha256": "fd4d7f431c5e42398defd9ffc82698a08823c224205fb549c3f78671f511308c",
+      "text_sha256": "195561ff10f79ed2fe08d2d374b40049865b34366321cf3eb4a15653a268e24b",
       "ansi": "wake-hall-132x50-16.ans",
-      "ansi_sha256": "7518a7b967fa75fc3fada7e30bfc1d5518f99bb1b5c59663a5b897be354f5286",
+      "ansi_sha256": "af36897f45fb6c410f7be5d1f37ec6ea324355128ed7b033dde334cceb464f6e",
       "style": "wake-hall-132x50-16.json",
-      "style_sha256": "1f3ffdd74dcd03a593505a68c83efeb33f81436107c29b002463238bc06970ad",
+      "style_sha256": "c38a27c9c73930b1224ca790928127c0bb2c215a7f89883dd08ab115cea19058",
       "source_directory": "132x50\\p5-proof"
     },
     {
@@ -278,11 +278,11 @@
       ],
       "tier": "16",
       "text": "training-drone-132x50-16.txt",
-      "text_sha256": "678f0e1b36e55ed74c37be99a5b492cb0ce861ec6b4aa980dcf6402f74baa610",
+      "text_sha256": "6d108fd071ecd72487569a090a50c6a4ba34d1ece7b2d23731abeddf215f6b79",
       "ansi": "training-drone-132x50-16.ans",
-      "ansi_sha256": "ca8a52edbfc1d5fe684609275f4c165c2be6d3548b2696cab5911255ad7e1563",
+      "ansi_sha256": "4a9650270f3c19e0f8526a3170cd971dfba2fe58f347385d87bbc60fca2f0cc0",
       "style": "training-drone-132x50-16.json",
-      "style_sha256": "14a8d10205f76d1ae15790547e3aa4d89c69aa2b706a099af1af07970ec84f0d",
+      "style_sha256": "8188a4df5aefcc60d109e806b4bbb85a8b7a2d8cd5b6bc82db0cba9aa53dba2b",
       "source_directory": "132x50\\p5-proof"
     },
     {
@@ -293,11 +293,11 @@
       ],
       "tier": "16",
       "text": "training-complete-132x50-16.txt",
-      "text_sha256": "e0bcbfc7ddd3af0dda05e5c11a75148c76d0f0552f9c0b47fafa940f408efd57",
+      "text_sha256": "cb4002793d7908b2a013d3ac8711ebde29320772da871263d4ed27e2dd0ceaf6",
       "ansi": "training-complete-132x50-16.ans",
-      "ansi_sha256": "e3cefc0d3204ddf88d62a1c0304db1ff0b9b27aa84646ce0683dd62b04ad2f7a",
+      "ansi_sha256": "cc2a1375761eaaa71acca8c480fd93ca6c9286d096b367f5c32f9c443001cddf",
       "style": "training-complete-132x50-16.json",
-      "style_sha256": "3bd0653aa40d57ab4370343547acaf548ba7957fffc13186b59e3fad4ee7ce8a",
+      "style_sha256": "be087ffa62fad17404087837726281401aa69d5f2531c85484da88f5281c7094",
       "source_directory": "132x50\\p5-proof"
     },
     {
@@ -308,11 +308,11 @@
       ],
       "tier": "16",
       "text": "meridian-plaza-132x50-16.txt",
-      "text_sha256": "ddb8bb53a42dced63893bb2b8b50dd87e1b97f316bd9309ee65531a6f4df96d4",
+      "text_sha256": "e43e31e8fc2c2512959db6edca30797f0fe7ac7eecf9935680664189f84e2773",
       "ansi": "meridian-plaza-132x50-16.ans",
-      "ansi_sha256": "1090bf31373778574e78096eeef28bb64a7367a8c4ab8efcabfe33832b2ad66c",
+      "ansi_sha256": "51661c34a6711042db6d4d4a8005c2b2b6c36fea7a9180570a47a5aeb59f424b",
       "style": "meridian-plaza-132x50-16.json",
-      "style_sha256": "7c4820013d18e6d771dbccc1c1405bc5fb1f4abea23266da67d0a7de9fdd3d94",
+      "style_sha256": "f6b2e5ff03607547d01ca2feec49ffe3986f2ea117b02888f920ed958560b517",
       "source_directory": "132x50\\p5-proof"
     },
     {
@@ -325,7 +325,7 @@
       "text": "inventory-132x50-16.txt",
       "text_sha256": "c335be7e1703ece827b73567ae06fd2fe694849cb8cf0392955e10955a928c9a",
       "ansi": "inventory-132x50-16.ans",
-      "ansi_sha256": "281f7f45f6be8fea10b330a06e77c0ec20ac9200ac9a795fe09f3c50fe908ece",
+      "ansi_sha256": "b910cbd93bb5d48d64fe0931ff6c97b4f419c645afe8462878b183ef51fd9865",
       "style": "inventory-132x50-16.json",
       "style_sha256": "7b5e78b25636ad82b8cdd07771cba4ac48a98e45b6f0680b24ba5478a4d0046d",
       "source_directory": "132x50\\p5-proof"
@@ -340,7 +340,7 @@
       "text": "contracts-132x50-16.txt",
       "text_sha256": "cf06d4ad1bf8622eab48c12ade3bd1c81166bb93a4d43fb60db6e92b4e35767c",
       "ansi": "contracts-132x50-16.ans",
-      "ansi_sha256": "d245771b909398b0fd20041b51be58c151786da4f7001a2b982bb3a72165ec9d",
+      "ansi_sha256": "a715e37a541bca7fbb4c5bf65ce5da89e1dbb4b4352820722362db7f8f0537d5",
       "style": "contracts-132x50-16.json",
       "style_sha256": "8b80eb5e44c0a7f7bb439fd75269d095d3a145e40acc6dbc46ef94eae40aa5ec",
       "source_directory": "132x50\\p5-proof"
@@ -355,7 +355,7 @@
       "text": "help-132x50-16.txt",
       "text_sha256": "06a46e48d4a98e7eeac3cc645e7f33785b509e3a93fef56201064f7e499b8a52",
       "ansi": "help-132x50-16.ans",
-      "ansi_sha256": "448ffb2ad588f63cc4fdc7452938a3315c063a8118440f44fefaa66c9fa76449",
+      "ansi_sha256": "22fa7d153853b9213fe9274d4c2ddf862c9adf4e9e998dd9b1a47672165fe7c8",
       "style": "help-132x50-16.json",
       "style_sha256": "6c0cd3ddee4c5c723c3d906bee4334b9b8ce65c58dac4960b2b42792d0ba5a4a",
       "source_directory": "132x50\\p5-proof"
@@ -370,7 +370,7 @@
       "text": "wake-132x50-256.txt",
       "text_sha256": "77d61d7165c964a26ad5d9aa4a7cd20a34db4e5399a64bfd421f468bf7bdde56",
       "ansi": "wake-132x50-256.ans",
-      "ansi_sha256": "9fcb9ff5f88a3cdefd44aa0b694a0eb80bef1751a8f61f8a9cafb0afb7fb3b66",
+      "ansi_sha256": "575e99f3401c258687de555a871ceb75045883d7c70d2f6496c68e3d4da659d9",
       "style": "wake-132x50-256.json",
       "style_sha256": "eecc7a581734927e587d4d284b60e3a2321cd6e87d1d0fd426d1b2fe4bf5904e",
       "source_directory": "132x50\\p5-proof"
@@ -383,11 +383,11 @@
       ],
       "tier": "256",
       "text": "wake-hall-132x50-256.txt",
-      "text_sha256": "3ca0926110a8c05f3b8ddf271ed7a69f7103a34d94a8f15633606bba7714c99d",
+      "text_sha256": "7d37d059e84cca14e2bcef9014e89eec9c7abc806f3805373039007543d09094",
       "ansi": "wake-hall-132x50-256.ans",
-      "ansi_sha256": "9c8c039825bf67762a615eb6d0000d6998c58fac05311c5f428aca979b249aaa",
+      "ansi_sha256": "0f0678fb7fc53edc032feeb0357b47e46e8040a06ae6935bae71f69945d36c68",
       "style": "wake-hall-132x50-256.json",
-      "style_sha256": "b297afd45413e5cf0bbcae1870a68329ae79e085fc15dfbdcc1d2b77326a9f24",
+      "style_sha256": "ddbf40ebf1d6b43fe88345a21849937392fc4fba10f4f9054521ce73e28be1a8",
       "source_directory": "132x50\\p5-proof"
     },
     {
@@ -398,11 +398,11 @@
       ],
       "tier": "256",
       "text": "training-drone-132x50-256.txt",
-      "text_sha256": "2c1dcb976a197a3f694b53b5f75f8702c83fc9e3b663d60ffb94d592dcb58c66",
+      "text_sha256": "46c65cf521bb8be7b55fc21db654389cd0f99ffe065d97740c2beb69dbaa98d0",
       "ansi": "training-drone-132x50-256.ans",
-      "ansi_sha256": "dcb3103bf3b06da456b3ddc68fa2ece59a1b0b241b0bedd48ff5f0ca43c99d89",
+      "ansi_sha256": "7b17da99603c6b44c776b7cd4826de4be6f36abcca02f92202abba1794ae5b92",
       "style": "training-drone-132x50-256.json",
-      "style_sha256": "4f96706ccc93ec2ffa4c3d2278e3535b9bfbd09b5fba61c6cfa8fe0b6dc072ef",
+      "style_sha256": "dc176cab6717c1309fd681eec5cb47aabf1eff270394c4fb5c18ea775a5a69cb",
       "source_directory": "132x50\\p5-proof"
     },
     {
@@ -413,11 +413,11 @@
       ],
       "tier": "256",
       "text": "training-complete-132x50-256.txt",
-      "text_sha256": "c24d28dbc43984470f35bc5922e391ebc22a48bcf4f3688f4130ab18d9010a9b",
+      "text_sha256": "58bf7dd94bb58a0c3881ddf5c9ec1fe25e489e7df01da2479a955b9d5ac04ea5",
       "ansi": "training-complete-132x50-256.ans",
-      "ansi_sha256": "f485f9affae9694faea0bffa4fb8c31be5df201b8f58193fa3b5253026aec8a7",
+      "ansi_sha256": "102ff934723a995df8bd1a47096653f27ecef9e7bcf3a7e6713c7872b261a77d",
       "style": "training-complete-132x50-256.json",
-      "style_sha256": "1a8057f304e28d1e4835b10ac897794cd6468dd4654b89b441bccefead60410e",
+      "style_sha256": "5b2e16809fcc76720233b40f24c6bebbf8b8591b4e95417e5ae24af10301abfc",
       "source_directory": "132x50\\p5-proof"
     },
     {
@@ -428,11 +428,11 @@
       ],
       "tier": "256",
       "text": "meridian-plaza-132x50-256.txt",
-      "text_sha256": "ec54c829204d22fd3d7f6a8f83e26075700ee3940442034d57c223a527e99bd5",
+      "text_sha256": "1117b6f8530b80f52ebb85bb0b425b4f01de494a5e9a93ae87d0882ab39e3663",
       "ansi": "meridian-plaza-132x50-256.ans",
-      "ansi_sha256": "fb3be4702a26d30cab617dcf684a14e6d612a0f9129fbe03166a2d035abc2437",
+      "ansi_sha256": "01963fb03f07de8ca5431a1b85f595b8ceab4239c3fcb72dc8d6670facbc450a",
       "style": "meridian-plaza-132x50-256.json",
-      "style_sha256": "4fa207e6c1e3a0453b31c488479b7dc27e710f5e2edc9575fa4fd421faabef3e",
+      "style_sha256": "d9c2c83419e3047d08309ca14d5e18eaded9239d8f4aff58879e51e0a796ab85",
       "source_directory": "132x50\\p5-proof"
     },
     {
@@ -445,7 +445,7 @@
       "text": "inventory-132x50-256.txt",
       "text_sha256": "a15785de79281416c0017d93093d2f5db245c8c1f821cf562b41e3ad4c6e2f45",
       "ansi": "inventory-132x50-256.ans",
-      "ansi_sha256": "d3238713805223ae37a4cb2e6391d1b54abb69d2d9acc9612f40645353190c0f",
+      "ansi_sha256": "97c6851a4d54dc8f97d68daea34b8295adb12242ccc5d4bddba052054c85fd91",
       "style": "inventory-132x50-256.json",
       "style_sha256": "0c11d8309503d657de292974ae1a7e06ddc9329e8d3a855c57ea1e00716b5232",
       "source_directory": "132x50\\p5-proof"
@@ -460,7 +460,7 @@
       "text": "contracts-132x50-256.txt",
       "text_sha256": "ca043b6e437b4cae7f15c7014224328986849849de68fe15eed5a3f84e647461",
       "ansi": "contracts-132x50-256.ans",
-      "ansi_sha256": "c1c7aefcdddf9b51288b911a5ce0409f9acfbd0ef8a85fd42e3e05b80e6d18b6",
+      "ansi_sha256": "f5e0163aafd61af02baafddeaca3c34f91e1f1437c258621db181f4849c89ff8",
       "style": "contracts-132x50-256.json",
       "style_sha256": "b97fb61554c639c52bf60e32a4862d1adc6e51df599cfb84a0556cbbce315120",
       "source_directory": "132x50\\p5-proof"
@@ -475,7 +475,7 @@
       "text": "help-132x50-256.txt",
       "text_sha256": "f52fc28da2dc6b84be73426bd88fe5baf8265082061ac21dddf5e6b9c618647f",
       "ansi": "help-132x50-256.ans",
-      "ansi_sha256": "195fef4eede34a35239c9ba0bdb2c05bba76f6dff0ae8e94ef1145be517ab271",
+      "ansi_sha256": "6d37eacfa3ad8f224d5ee7c3f18d95e0e99840e845f1c3bbdce67bb6d7a99ef6",
       "style": "help-132x50-256.json",
       "style_sha256": "02e4a6c1ea4bbc177ce11b3e13bf1f7a8d33feaf2db1d25f634fd0f9e91ed2a3",
       "source_directory": "132x50\\p5-proof"
@@ -490,7 +490,7 @@
       "text": "wake-132x50-truecolor.txt",
       "text_sha256": "848e5ca15a46d7644acb1535fad42d86ec211ec799e1bf9373e4b13b81a1f535",
       "ansi": "wake-132x50-truecolor.ans",
-      "ansi_sha256": "d78fd1b3067efe5805fb8238c55866c2821a36091e9a2df3d53041a8725edf4e",
+      "ansi_sha256": "cd86fae8fc483eaaf2830943d2f5a0de94e7007d733e1824d8c95c1bdf5b8c99",
       "style": "wake-132x50-truecolor.json",
       "style_sha256": "4f76943d3c2ad74f83329d257744443b7ed6a522bd3db2f040ff6a4470e2b985",
       "source_directory": "132x50\\p5-proof"
@@ -503,11 +503,11 @@
       ],
       "tier": "truecolor",
       "text": "wake-hall-132x50-truecolor.txt",
-      "text_sha256": "17c503c7cc29f8f5cbbcb25b7c3c5cf78aeeb592870b70cb400c2cf7964868c6",
+      "text_sha256": "fe491353e9abda4b48c59f1dd9852bd092c934d4fa11c1f54f1c74ae4892c800",
       "ansi": "wake-hall-132x50-truecolor.ans",
-      "ansi_sha256": "2b4111d7b6e5beece1b9ac08005f7cbb69e03423c413161b2190c7de2677fbe4",
+      "ansi_sha256": "b545045b98400c0a38b727b5539dbea6146204799f9794c27d5a20e9a9a527bf",
       "style": "wake-hall-132x50-truecolor.json",
-      "style_sha256": "e2328682f47c80cfb75556547a9c3f2006e8ff59b1381faf672313f1ba016159",
+      "style_sha256": "a11c06ea247dbe22c04f4dabe518aa6600252ce07cc6e3ab536bc507004129c6",
       "source_directory": "132x50\\p5-proof"
     },
     {
@@ -518,11 +518,11 @@
       ],
       "tier": "truecolor",
       "text": "training-drone-132x50-truecolor.txt",
-      "text_sha256": "74e375b342ac9180c5b16344ab3581d314e94c172cb375751801af8ed7716f0f",
+      "text_sha256": "717aad328dbbd81b519761c99019d1a96da89af6df05a7bb8667b9547b7998b7",
       "ansi": "training-drone-132x50-truecolor.ans",
-      "ansi_sha256": "b565f4b76c20be3d3031d940a0815211054673d4a3b7141a1dd71f2112c27bf4",
+      "ansi_sha256": "4c3ebc7c3e43884c2b037ea3cd4bb137fbd025e8d505a00833522b83ccd39de2",
       "style": "training-drone-132x50-truecolor.json",
-      "style_sha256": "c652c1c9cb7c16173258d079beb1e789bc421015bee33fd0d4ebb2091bf0f605",
+      "style_sha256": "5369c369cdcb57aaa345b7a91d0fa60ea1a943ca2e6edbc26ca37f5856b7745f",
       "source_directory": "132x50\\p5-proof"
     },
     {
@@ -533,11 +533,11 @@
       ],
       "tier": "truecolor",
       "text": "training-complete-132x50-truecolor.txt",
-      "text_sha256": "af3a91de183d7ffc2aa07393bfeffe555fdf62f983a32a180153222defecddc8",
+      "text_sha256": "f3e8b61ba95d94d924226f1b1935a8324a672519b39ad8a18c8cc1e4fe47968e",
       "ansi": "training-complete-132x50-truecolor.ans",
-      "ansi_sha256": "f38a7317bad06198060d5bbbfde6902031a030c6917b0bd84d1f1068160b71e3",
+      "ansi_sha256": "823f8535579bc34d8595b0ca0c10af027b91717919d5db4588a6afdd5f9a5d3d",
       "style": "training-complete-132x50-truecolor.json",
-      "style_sha256": "ef5ef6510acdf6c7fa19ddabed39f78d3b7aaac76d0860fe749cf8580a9fe9bf",
+      "style_sha256": "291cf69e1f2b1db1cb87cdc429824271bb819e8bb710c2c85afe9032bfb68662",
       "source_directory": "132x50\\p5-proof"
     },
     {
@@ -548,11 +548,11 @@
       ],
       "tier": "truecolor",
       "text": "meridian-plaza-132x50-truecolor.txt",
-      "text_sha256": "7ac248731bd7b3661c9de41dff795fe70ecb87193c830d119a2867482f67123e",
+      "text_sha256": "39758d3e6ac17bf81c758c6e63efeded0e8b0dbcbb2c914bd25c2678ec32a8d9",
       "ansi": "meridian-plaza-132x50-truecolor.ans",
-      "ansi_sha256": "d250b974004b0def6fadad1100802268f355774e84595d04fead863203c5ad6f",
+      "ansi_sha256": "69084902fd704d09547b4a95d3981068a2d82d2ef4a3c64196828087289ce7bd",
       "style": "meridian-plaza-132x50-truecolor.json",
-      "style_sha256": "951eb77dc15bd6017be9556464a5f860be5d35d3df55ac89aba883e25398e0a7",
+      "style_sha256": "9b7400a096a579f5697478af6c8b2dac6a56586130958893feaca74aa4d2c3ca",
       "source_directory": "132x50\\p5-proof"
     },
     {
@@ -563,11 +563,11 @@
       ],
       "tier": "truecolor",
       "text": "inventory-132x50-truecolor.txt",
-      "text_sha256": "7147af9a58a6e5c151b6c04b3576a06708c8d41d6500bfa87597010c2c2e22dc",
+      "text_sha256": "8313df6185a3d873017aeb8e58f2af6125ce9726c449ba9092eb2ceeee37a296",
       "ansi": "inventory-132x50-truecolor.ans",
-      "ansi_sha256": "11f4e53d4a19911b11956c6c9d1ab5fd63e38c70ae8100c4202b3191c326093f",
+      "ansi_sha256": "55591b49a9801b03ea9671070b670e3edc006a7e5a097543bdf40eebd8e5c56e",
       "style": "inventory-132x50-truecolor.json",
-      "style_sha256": "6309e8e1c2239d35736889a9e33cc2da47a6eeec4d2c839aa0cd8c682aad4d75",
+      "style_sha256": "2c201b943a16c4529e39c0dc34a3953767564e01d2bdcd458787266e1da65ab5",
       "source_directory": "132x50\\p5-proof"
     },
     {
@@ -578,11 +578,11 @@
       ],
       "tier": "truecolor",
       "text": "contracts-132x50-truecolor.txt",
-      "text_sha256": "b9ca4e12e58b874ca52fe39a34ca5e8f08c2673841350fe5a7ab5027b6991e7e",
+      "text_sha256": "af59f46542347a249b066d2dd252b66af1f56743bec827940cba2c74d4f96990",
       "ansi": "contracts-132x50-truecolor.ans",
-      "ansi_sha256": "ca14342c696d317050ffd4c09a841df8844ca643c82cc85de9506dfe6168e3d9",
+      "ansi_sha256": "7bf520915556438ae648cf401799ce10d869bca0d50f2c30b45a7972a9e15d0f",
       "style": "contracts-132x50-truecolor.json",
-      "style_sha256": "f1808557efca39d6d3a3a33291fdcf7b69e9e6ce390d4d4530e38df7d77f3452",
+      "style_sha256": "8e63887f71c294b58eabfd0a70a5965614762f2df2c173cd7e6ad015b2f096cf",
       "source_directory": "132x50\\p5-proof"
     },
     {
@@ -593,11 +593,11 @@
       ],
       "tier": "truecolor",
       "text": "help-132x50-truecolor.txt",
-      "text_sha256": "12fdd5d0b32c347938573787b6c1c760c7b999e8b7f61bc26f7708a67f375a85",
+      "text_sha256": "cfca6773cb180b9db9761bd5b727164e78a95ed36c9cbd6ae2fc0f56802e5665",
       "ansi": "help-132x50-truecolor.ans",
-      "ansi_sha256": "d3352f875eccd76886e183e1e731c13dab8b4dd814f82efda76f3a8c7b055b9b",
+      "ansi_sha256": "24bebd02869b5da23d7515cda53328c0e428e8ee5a74790a50606e2a17ce0a0b",
       "style": "help-132x50-truecolor.json",
-      "style_sha256": "a0a2d28dfcd612bd9bed474086d0d1fd8381f6b603ce5a62ef5d5aae5c33c676",
+      "style_sha256": "d620a67cedf312ee0d0eaf6239651d709c07e80a2014103104db71db26e9639d",
       "source_directory": "132x50\\p5-proof"
     },
     {
@@ -610,7 +610,7 @@
       "text": "wake-80x24-16.txt",
       "text_sha256": "f374ea90227f67eac8798580fb97ab1b2fea43674c856e0c4f82b8ed60019d0c",
       "ansi": "wake-80x24-16.ans",
-      "ansi_sha256": "5577cecd02265cd980a85e6a7f69ebc3ae869a22c4c4ce147e8102da95189018",
+      "ansi_sha256": "cffc4d54b64fbe63b5bd0ff2880a34bb0b718aef808ba8c855fb420541be0128",
       "style": "wake-80x24-16.json",
       "style_sha256": "6a5c8e9744e19f83a233dc7e25417b290a95ac511dd0547e27bbe6446808512d",
       "source_directory": "80x24\\p5-proof"
@@ -623,11 +623,11 @@
       ],
       "tier": "16",
       "text": "wake-hall-80x24-16.txt",
-      "text_sha256": "fcd4f6445ba09f7c01d001d8d9248ffabbd93f05274baf13697164722c5408c0",
+      "text_sha256": "76ca9674c14783ab09d85203625f360703c9718baec517b79e0fd34e60d31e53",
       "ansi": "wake-hall-80x24-16.ans",
-      "ansi_sha256": "323220965c921ae3d03e9125709d4d2f8f30136275fb8e85ee2b26520505458c",
+      "ansi_sha256": "bf2b36cf5c2694ed48a8275a522755e36e3faeaaff81dadc7e8c517cf4975ffc",
       "style": "wake-hall-80x24-16.json",
-      "style_sha256": "f7b434b39ab7fadd209c9588bd6ed7b3cfbb68486433f2f4d9ce50722d011e42",
+      "style_sha256": "0489568ad494bf32a781f41b53294407866b9400ddafd6781843885c68f08f80",
       "source_directory": "80x24\\p5-proof"
     },
     {
@@ -638,11 +638,11 @@
       ],
       "tier": "16",
       "text": "training-drone-80x24-16.txt",
-      "text_sha256": "45acbb356e52b53446aaf5bb36e711edab4169e268e6f20f872e2c6b6b5db3b4",
+      "text_sha256": "57e382f04b032aeb90f6b879dcfee252271f2195d9d99f17a095ffc4648c32c2",
       "ansi": "training-drone-80x24-16.ans",
-      "ansi_sha256": "b3ec9e4d0b511ea5be187bb26d054a154f0c944d55f8bf88838aca274ba6cb53",
+      "ansi_sha256": "87255de85d6ef7d814c55e108ffa6de9660514d806111f15e7e6ad274f4a412f",
       "style": "training-drone-80x24-16.json",
-      "style_sha256": "79c21257650e90e6967ce6ab2b180f2a1ff998894efe397c01c395f9d1bf210b",
+      "style_sha256": "fbfcd5a50b5290a494dfcb7bb5e3608e93b01b2c7e0f0f1d89feb83120bbfd5c",
       "source_directory": "80x24\\p5-proof"
     },
     {
@@ -653,11 +653,11 @@
       ],
       "tier": "16",
       "text": "training-complete-80x24-16.txt",
-      "text_sha256": "2314bab76686bf182d28d2c19b17c266ea4375047c5aa58ba930f77e2551a1d8",
+      "text_sha256": "1917423c74cd742a6101bd5229629ef621234711ffb21bbcb5c65fdbe726358c",
       "ansi": "training-complete-80x24-16.ans",
-      "ansi_sha256": "6318a50a09b239e6c5783a04452db2e526cdadfa950f800e74c22655b0ab0d39",
+      "ansi_sha256": "0275b3c9c4b47e61a34dce272fd607a302654f9a11a93953a0e57f25da7fbd0f",
       "style": "training-complete-80x24-16.json",
-      "style_sha256": "2eacdc03888108d82ba4c41921d7675a4be70bebcb3452fb605bffb720a47820",
+      "style_sha256": "a8718d0c1f2e992f636208d8de6a71ac63ceb90eaa35445aba1ec6b8fcb1d149",
       "source_directory": "80x24\\p5-proof"
     },
     {
@@ -668,11 +668,11 @@
       ],
       "tier": "16",
       "text": "meridian-plaza-80x24-16.txt",
-      "text_sha256": "8afe86abf7e62a8bd609c0eb324d87392ac31a4722a26d706994c20bfd635668",
+      "text_sha256": "a0568fd91878de2024b6bd3823d978c1ddbff3ef67d69f402180fa208228ed3e",
       "ansi": "meridian-plaza-80x24-16.ans",
-      "ansi_sha256": "cebda21a4b8aa5bb472615b08dfafbc4d18f70227818011cca39bf89d31a78d4",
+      "ansi_sha256": "3c507a77315b6a5a6fc9508c9fca66580c8537d8441479cab2dbc4fc41eadc84",
       "style": "meridian-plaza-80x24-16.json",
-      "style_sha256": "b87e457ba8d0364d5ef07847b02656dacd5fdb057fe5252730462fe92e058652",
+      "style_sha256": "b9354aef25a80c0b3951a984099322414953dc55107732079556e8592c885c10",
       "source_directory": "80x24\\p5-proof"
     },
     {
@@ -685,7 +685,7 @@
       "text": "inventory-80x24-16.txt",
       "text_sha256": "8790494583a07c36fbb36d5e8cd51dc293d72841de1e4ad6ec83992f11362477",
       "ansi": "inventory-80x24-16.ans",
-      "ansi_sha256": "b223a19f0d1aaa5f2215eb8b55bb8d898c10f3afce5d33c67416ca64ff1f8cdc",
+      "ansi_sha256": "b992dfe3381df09c87716720ec0e9cc1c3c0a5c76a226c798d7063c746dc515f",
       "style": "inventory-80x24-16.json",
       "style_sha256": "ff84cc6471d60cc29aebad5d4cd503554cdef72e43da6d92e66e63f3c5f6fd93",
       "source_directory": "80x24\\p5-proof"
@@ -700,7 +700,7 @@
       "text": "contracts-80x24-16.txt",
       "text_sha256": "b5fee59e576e5e2eb45d586bc954ccf613aa998d9f3f01b40652f34bfcedb0b1",
       "ansi": "contracts-80x24-16.ans",
-      "ansi_sha256": "fec1d99e084e09a4680431bb6df2783e38d2469064f76c58c49bf6463cf26a96",
+      "ansi_sha256": "184b4e39975814094eaae160b9cbd53cdcb816842eb40d25dfb3193173da3d8a",
       "style": "contracts-80x24-16.json",
       "style_sha256": "8f7a18d6eed911e86988e48ce7335d008257008c30c1777fb0c4ab10cb1aa837",
       "source_directory": "80x24\\p5-proof"
@@ -715,7 +715,7 @@
       "text": "help-80x24-16.txt",
       "text_sha256": "0c936e9146525aea68e18a84f78ae15a0d9fdd42106764228ba7670cbc898d4f",
       "ansi": "help-80x24-16.ans",
-      "ansi_sha256": "df0d8d1dade2e8632fe3bc3461e377f624e8769532b971ff28708197afa32deb",
+      "ansi_sha256": "e7fc24fd2d208d859e1d16561696d21e94f795764e65dff2fa21f08db3d3e8b3",
       "style": "help-80x24-16.json",
       "style_sha256": "41a44c7a24f045e596f817ad8fe7f974aad7d3cecc4e402d5c823e1118d9bc42",
       "source_directory": "80x24\\p5-proof"
@@ -730,7 +730,7 @@
       "text": "wake-80x24-256.txt",
       "text_sha256": "540d6010ee2d0330685bb782b571eea3651b880f22bcaa4c23373614ede19810",
       "ansi": "wake-80x24-256.ans",
-      "ansi_sha256": "010319d9dab1632f3a2523fcd6abe942e35341f5a8e775c8af25119a7ef1f81d",
+      "ansi_sha256": "88962323b82c057cb964919fb8642b32b0b99841ffff7c321fdce3005424b73e",
       "style": "wake-80x24-256.json",
       "style_sha256": "b7fa48c1128294fab87b8adeb892d24076d3a201eb9089c6e54a104cd0eb1967",
       "source_directory": "80x24\\p5-proof"
@@ -743,11 +743,11 @@
       ],
       "tier": "256",
       "text": "wake-hall-80x24-256.txt",
-      "text_sha256": "fbbb2a3e1dbc8fd723f886a93f1040eb77d9c514ccfa71a986109ac70067d232",
+      "text_sha256": "b834dea832a8165e8ae61820c7298221de00d17bdff052e9713972239ed9752e",
       "ansi": "wake-hall-80x24-256.ans",
-      "ansi_sha256": "f019ab84b9dc23fb9eadda564ecb6cdeadebdd95470f55e00942148ae8d89a64",
+      "ansi_sha256": "20ce09faa44fe8561a8b9308d6f00069998bdf0572faa6f4a0b24f96f6223adf",
       "style": "wake-hall-80x24-256.json",
-      "style_sha256": "ba8b5b6d2e1149979fd050030b809f7be75c32243ccdc3f3ad5c22741066d188",
+      "style_sha256": "433eae50bc0047018beb1e8d35447473705444daa2a63b61dfe98e705e80bb3e",
       "source_directory": "80x24\\p5-proof"
     },
     {
@@ -758,11 +758,11 @@
       ],
       "tier": "256",
       "text": "training-drone-80x24-256.txt",
-      "text_sha256": "5b760af1f181b99b9b1bba4f1559c6f85ae2b4c7e4cae7ca6c383e9ed798f494",
+      "text_sha256": "92ae3c24f52a2b884f2ede1b780321ac2b4aa69ae74660f75af8edf1a3fb448f",
       "ansi": "training-drone-80x24-256.ans",
-      "ansi_sha256": "fd82e5d02714165202208ab16155111ffb2e891fc10b037535bacaf00528a6fe",
+      "ansi_sha256": "bb3ba8e1243505ebee171f87181612b2f820ab7f888697b3bf6ae2170ffa718b",
       "style": "training-drone-80x24-256.json",
-      "style_sha256": "df7e32862f5c0d124433d74dd85bd0dc6407a570263aa45e98ff25fccee0289a",
+      "style_sha256": "629ad1b6beb064465c6a71e3feb43845ef7afb1b6945087412b52f2eb6ccdbd5",
       "source_directory": "80x24\\p5-proof"
     },
     {
@@ -773,11 +773,11 @@
       ],
       "tier": "256",
       "text": "training-complete-80x24-256.txt",
-      "text_sha256": "e8aaba206ba77335e64cb04c314d1afc2e70a272b8b2a7364b599c1df6237c4c",
+      "text_sha256": "e02ea9963ce58270d4e2bc1a9383e4bbf7f91e0fa6855bf50f46253dee625f9f",
       "ansi": "training-complete-80x24-256.ans",
-      "ansi_sha256": "e0e014ac8e163087a70fd7884eda9c75e067c50e0e738d407554686c4e611ac5",
+      "ansi_sha256": "6a3ac5aebf2d15460f52a4e8937339b3b07d8d0c776597d4921e913280d77d84",
       "style": "training-complete-80x24-256.json",
-      "style_sha256": "df71cbb96cad47986c4c692c826df77dac7473b99c24f08666c41273475b64fc",
+      "style_sha256": "97509e19ba131f32ef3ad936d432d90018c2e2c68773d6e4addf6bd347bbc1ed",
       "source_directory": "80x24\\p5-proof"
     },
     {
@@ -788,11 +788,11 @@
       ],
       "tier": "256",
       "text": "meridian-plaza-80x24-256.txt",
-      "text_sha256": "fdc57f2d6f6320576a270b91990bff5701df33ce6bdc5ca55647fcc1e302f08e",
+      "text_sha256": "38459d623b4ce6c29f41f27541563d84a4376554ad2c56c5e6e899363c469df1",
       "ansi": "meridian-plaza-80x24-256.ans",
-      "ansi_sha256": "fcfb7a92820a52f6cb39d06dc12896454a81b64cca1ad1db9f33694f1ea0ab93",
+      "ansi_sha256": "ffeee5deec53e5ca4498d389e8658eb69076e6dd3d3a583bf9baba9379f8fb1a",
       "style": "meridian-plaza-80x24-256.json",
-      "style_sha256": "f03adad3b3f928f47a7f8c12a84223a75949c24b7a5bf2b3f4623bfc413f0a98",
+      "style_sha256": "09ec0902250eb22350a5323642ac3a3330f20ccefa4d535da3eec0e921bc2d66",
       "source_directory": "80x24\\p5-proof"
     },
     {
@@ -803,11 +803,11 @@
       ],
       "tier": "256",
       "text": "inventory-80x24-256.txt",
-      "text_sha256": "da74da731497a31e788b77212ab94e82ac5d8a02d81685ba9255421f200b0633",
+      "text_sha256": "766bdabd06e9b42ee6e3c355e7e5fa259d06d7649f39b1c341677370e0671d85",
       "ansi": "inventory-80x24-256.ans",
-      "ansi_sha256": "a9f57c4b5ca96994d1d885c6cbd46222068d32cd65f296d0b5f898a5204c90e4",
+      "ansi_sha256": "aff29c889cd28cb02546c212aac3f3abe7ef61cb8b94f15ce60c1074da657794",
       "style": "inventory-80x24-256.json",
-      "style_sha256": "dce0c3b3422b71b2bde34be69d388ff5ba8cbc9793a7dccc17f4c51f985cc69f",
+      "style_sha256": "ec36b6acb21266aa896a8c41b35d2730a82f4659c16120d127efb87a42a7067f",
       "source_directory": "80x24\\p5-proof"
     },
     {
@@ -820,7 +820,7 @@
       "text": "contracts-80x24-256.txt",
       "text_sha256": "26a6f81a9e248bf429df09fac972edb4244e562919e3253bc32c943031ef82ff",
       "ansi": "contracts-80x24-256.ans",
-      "ansi_sha256": "038e4dc5705c059639b1cebb12de0cdd86f4272265c2dd8d11a9298be1c8715f",
+      "ansi_sha256": "b8fd97707405180074d319252518df398046f03a0d59acc1f7c10a7e4960f50b",
       "style": "contracts-80x24-256.json",
       "style_sha256": "394e346b28c516fe526456d4bdb981eeb5d26a5389354dd5dd143b69946a5b7d",
       "source_directory": "80x24\\p5-proof"
@@ -835,7 +835,7 @@
       "text": "help-80x24-256.txt",
       "text_sha256": "897893b4efe42d28f944063493b28d8eaa822cd9fb4934670c8fc241997ada07",
       "ansi": "help-80x24-256.ans",
-      "ansi_sha256": "3d53a6dd8397feeb02e3d41f2f4db793ac404ff6e2b8a57ee3359762456335df",
+      "ansi_sha256": "b07b10e70fe7c3075092f5fdb2c8a0abd302a6d5f14a8b9c4a3f71815e6d0a9e",
       "style": "help-80x24-256.json",
       "style_sha256": "cb2033f25eb64af6c5cfb78076a65e11a8f783b30bc1c31587a0fd770d95761f",
       "source_directory": "80x24\\p5-proof"
@@ -850,7 +850,7 @@
       "text": "wake-80x24-truecolor.txt",
       "text_sha256": "a1142d88ef2de2ebfda4735ca090a72a1462e08887c8164a37b2cefded686c26",
       "ansi": "wake-80x24-truecolor.ans",
-      "ansi_sha256": "9edfd1ab2cae015349da109b4f0b14cbfabd2f484c139a2f5c48e4ccd22b2059",
+      "ansi_sha256": "27a6f6ea58cb56f5535548903cd63783bc15f2d79c5d2ac627d63b94be859bed",
       "style": "wake-80x24-truecolor.json",
       "style_sha256": "675205a8f7b4fc4614fbfe0e5f66268fab5fdc1922450efe78e28a7b29889f7e",
       "source_directory": "80x24\\p5-proof"
@@ -863,11 +863,11 @@
       ],
       "tier": "truecolor",
       "text": "wake-hall-80x24-truecolor.txt",
-      "text_sha256": "c97ce790d6241f39e63df31a1be963ee928fd85220cbed5bc30d3e49eb1b3ba8",
+      "text_sha256": "528a327a554167f0a450c688a8fedabfb786f6c6ffb5dfb03c79878eb0690444",
       "ansi": "wake-hall-80x24-truecolor.ans",
-      "ansi_sha256": "f6f791600f2866236fa141cbe34af7e9cf14fc7df4e792438ba823c51a2235b8",
+      "ansi_sha256": "5dba2a81391afaf51aab0de087822bfab0864113294d947dac1513c6c4889d0a",
       "style": "wake-hall-80x24-truecolor.json",
-      "style_sha256": "4998746815f91786a6681b400d8f6cc2dbf0c64a2fae881ad46bc9484da1fd5a",
+      "style_sha256": "20072fb143c21336bf2b68c60e44837749539db51388c12799d6cc8045da7b89",
       "source_directory": "80x24\\p5-proof"
     },
     {
@@ -878,11 +878,11 @@
       ],
       "tier": "truecolor",
       "text": "training-drone-80x24-truecolor.txt",
-      "text_sha256": "c95cc9f038ae1895dfc6ed614d7a56abc536abc9e6d9a79fd84c59e456768066",
+      "text_sha256": "384e92f33b11f5ced9547fe42236a6cb52c40316b019c9c6c36545998cc8b401",
       "ansi": "training-drone-80x24-truecolor.ans",
-      "ansi_sha256": "f67289ed3a61a4c853c29eb9a353b83789c6cadacbf4eab8f8f5cc4f24aef92f",
+      "ansi_sha256": "9d26b4a836a0052dd6a6794507d254530875ba401fe624f1d094de13ca5c6122",
       "style": "training-drone-80x24-truecolor.json",
-      "style_sha256": "5aceeeefd9e26068a22cef7995ac432fed578b399a58891c95f2a0c53517595e",
+      "style_sha256": "6145201c8563d58c63fc75c2f04a6d5fd22c6aa859473d2408ef1b558ae7ba1e",
       "source_directory": "80x24\\p5-proof"
     },
     {
@@ -893,11 +893,11 @@
       ],
       "tier": "truecolor",
       "text": "training-complete-80x24-truecolor.txt",
-      "text_sha256": "c323e9665d93854ef720a3073d2f5a6af605a13a6945d58d7892be6f6417c2db",
+      "text_sha256": "f4927b01cb4f3f2d099449d8b78a20c71132ed1bdf09f5610013b143f92f7cae",
       "ansi": "training-complete-80x24-truecolor.ans",
-      "ansi_sha256": "93aec46e4253be392a73779037607caca79f61d089ad1a2b7f65ca760024c25b",
+      "ansi_sha256": "d68488577147c02c3caedde769a2f31d0cf2f672f81d6cb5fc2ce95e86867e1a",
       "style": "training-complete-80x24-truecolor.json",
-      "style_sha256": "7977ca570073e6791e8ba98720adf92326246c19693185b955892510fe8e0afa",
+      "style_sha256": "a69756ef060990e384fce5217f2bea955782a88eea50ce2ab09b127297399850",
       "source_directory": "80x24\\p5-proof"
     },
     {
@@ -908,11 +908,11 @@
       ],
       "tier": "truecolor",
       "text": "meridian-plaza-80x24-truecolor.txt",
-      "text_sha256": "9d8a83474df1edf49c8f1bf510b8e91a54c5999a120e9b19949c4f054f5ba195",
+      "text_sha256": "f2392c017a09438d8f5d05b25a7e57e306b3f0fd901ab2d5e757fb1ffe9948eb",
       "ansi": "meridian-plaza-80x24-truecolor.ans",
-      "ansi_sha256": "9890af42e6fff7159373e7c75338d1b091c4299a3f519a3fed4f38914ff591a3",
+      "ansi_sha256": "18eee8415c5aa2d25ec6ab515eab2d1341834e20dec82ef4ba118e865f1f1b92",
       "style": "meridian-plaza-80x24-truecolor.json",
-      "style_sha256": "ccb38a0b16b8547a565f78e12827f393a4966a7cb84eec781fa7000932a069b4",
+      "style_sha256": "aa06c0433d07885d06f4edef90222130b2df83647bbabbff42e2f94df2169d38",
       "source_directory": "80x24\\p5-proof"
     },
     {
@@ -925,7 +925,7 @@
       "text": "inventory-80x24-truecolor.txt",
       "text_sha256": "96e65103f0c11292a77511c4b47c377b013996a4347d98e8d6b4a0d2b9c4e0dc",
       "ansi": "inventory-80x24-truecolor.ans",
-      "ansi_sha256": "c325392cacc730ef53579f263289b1619f38686a7dcd4c63c5604fb068454aec",
+      "ansi_sha256": "486b89f02c087c5c5821faa192d804d83788ab45e0207b3df4ea7507fb45cf32",
       "style": "inventory-80x24-truecolor.json",
       "style_sha256": "df36c0eaccbeb9752a14441a1b6f20f1d2c7e74e2fdc8d1dade62a943ff92b92",
       "source_directory": "80x24\\p5-proof"
@@ -940,7 +940,7 @@
       "text": "contracts-80x24-truecolor.txt",
       "text_sha256": "51f48db1406191133a716ec0191e7eb3873dc846986d03f8bf52c9d9fd8220e1",
       "ansi": "contracts-80x24-truecolor.ans",
-      "ansi_sha256": "5589082a73993f0ec22193550bd02467a7272fbf64809e863e8e74e597187e5f",
+      "ansi_sha256": "0a287a8c9fe8dae5a8c9a457b239dfc01a4bddd8897bcd52d9c6cbbf2fbf6e07",
       "style": "contracts-80x24-truecolor.json",
       "style_sha256": "dc6ff6070dd9fef8cb679773ed6c334509034efca7bc20755056accdcddf96d9",
       "source_directory": "80x24\\p5-proof"
@@ -955,7 +955,7 @@
       "text": "help-80x24-truecolor.txt",
       "text_sha256": "008289f172ea96da79f95904d51316de808dff46a081a5ce5576199f7697e1bf",
       "ansi": "help-80x24-truecolor.ans",
-      "ansi_sha256": "8cd1a32b2d13fb776fe56ba145b221e5faafd92304d81df814326fc9828c92f2",
+      "ansi_sha256": "00f38371dcf24be6ee2057d249c9aa8ea350e1729ac74745a6a7eaa18985161f",
       "style": "help-80x24-truecolor.json",
       "style_sha256": "d03493f3dbb6ad6183adc727ca5fb404a553d8471f471b9748b32606bfb97231",
       "source_directory": "80x24\\p5-proof"
