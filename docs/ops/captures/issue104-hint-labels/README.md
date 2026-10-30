@@ -2,10 +2,17 @@
 
 Execution source: `ca1e2831d2147423f4d9c3bf81e78b6495e66ddb`, based on
 owner-merged main `85d3ddabaf104c656824696ca857e5260bfbc164`.
-The follow-up evidence commit changes only documentation and receipts;
-the runtime, content, test and acceptance-script trees stay identical.
 This execution includes the owner-merged S27 backend, with its cast
 still dormant and all S27 presentation/native/human gates held.
+
+The subsequent whole-tree wording correction changes terminal names and
+inspection metadata outside the captured Wake Hall, plus label/audit
+evidence and tests. Python runtime, renderer, Wake Hall content and
+capture-producing scripts remain unchanged. The presentation and
+technical leads requested a regenerated label list and explicitly said
+[new captures are not needed](https://github.com/Thiesi/Blacksite/pull/109#issuecomment-6520713225).
+The receipts below describe their recorded execution head, not a new
+native execution of the later content correction.
 
 ## Native captures
 
@@ -36,8 +43,14 @@ from plain text. [Hosted receipts](native-ci.json) and the
 
 ## Labels and preservation
 
-The [117-pair regenerated label list](focus-labels.json) includes the
-seven requested naming scopes. All target IDs stay stable. Its 10,704
+The [118-pair regenerated label list](focus-labels.json) includes the
+seven requested naming scopes. The [whole-tree audit](wording-audit.json)
+records all 15 generic public terminals and 12 person-shaped objects,
+found by full-content grep and a read of all 129 zone objects plus the
+six private-room template objects. Two regression
+guards enforce the public name form, declared person inspection verbs
+and known person roles while things retain `inspect`.
+All target IDs stay stable. The 10,704
 input outcomes keep the pre-P3 hash, and the P1 mechanics baseline is
 unchanged. No text or style goldens were rebaselined.
 

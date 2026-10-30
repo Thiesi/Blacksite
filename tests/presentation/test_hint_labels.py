@@ -1,6 +1,7 @@
 """Issue 104 / terminal UI 11: labels and aliases preserve input choices."""
 
 from dataclasses import asdict, replace
+import re
 from typing import Any
 
 import pytest
@@ -90,3 +91,44 @@ def test_ui_11_combined_group_drops_j_before_a_fitting_e(jack_key: str) -> None:
     objective = {'next_action': 'Survey the marked loan cabinet', 'progress': '0/1', 'cost': '5s no fee'}
     row = chrome.focus_hint(raw+'  Next: legacy', 78, context, objective)
     assert row == 'Next: Survey the marked loan cabinet 0/1 | 5s no fee  E jack in at Tutorial...'
+
+
+def test_ui_11_every_shipped_generic_public_terminal_uses_one_name_form(
+    focus_game: tuple[HeadlessServer, Any],
+) -> None:
+    game, _ = focus_game
+    public = []
+    for zone in game.core.characters.content.zones.values():
+        for obj in zone.meta.objects:
+            name = str(obj.params.get('name', ''))
+            if obj.kind == 'terminal' and ('public' in obj.id.split('-')
+                    or re.search(r'\bpublic\b', name, re.IGNORECASE)):
+                public.append(obj.id)
+                assert re.fullmatch(r'Public terminal \([A-Z][^()]+\)', name), (zone.id, obj.id, name)
+    assert public
+
+
+def test_ui_11_shipped_people_use_look_at_and_things_keep_inspect(
+    focus_game: tuple[HeadlessServer, Any],
+) -> None:
+    game, _ = focus_game
+    # Role names catch omitted markers; explicit overrides also cover named
+    # people whose names carry no occupation. Boards and counters are things.
+    roles = re.compile(r'\b(recruiter|liaison|technicians?|tout|concierge|dealer|grocer|quartermaster|contract handler)$',
+                       re.IGNORECASE)
+    people = things = 0
+    for zone in game.core.characters.content.zones.values():
+        for spec in zone.meta.objects:
+            name = str(spec.params.get('name', ''))
+            if not name:
+                continue
+            person = bool(name.startswith('Dr. ') or roles.search(name)
+                          or spec.params.get('inspect_verb') == 'look at')
+            obj = ObjectState(spec)
+            choice = object_interaction(obj, 'inspect')
+            assert choice.focus.verb == ('look at' if person else 'inspect'), (zone.id, spec.id, name)
+            assert choice.value is obj and choice.tile == spec.tile
+            assert object_interaction(obj, 'open').focus.verb == 'open'
+            people += person
+            things += not person
+    assert people and things

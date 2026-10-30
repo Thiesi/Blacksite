@@ -60,7 +60,8 @@
       "kind": "vendor",
       "essential": false,
       "params": {
-        "name": "Row ticket tout"
+        "name": "Row ticket tout",
+        "inspect_verb": "look at"
       }
     },
     {
@@ -156,7 +157,7 @@
       "kind": "terminal",
       "essential": true,
       "params": {
-        "name": "Row public 1"
+        "name": "Public terminal (Row 1)"
       }
     },
     {
@@ -180,7 +181,7 @@
       "kind": "terminal",
       "essential": true,
       "params": {
-        "name": "Row public 3"
+        "name": "Public terminal (Row 3)"
       }
     },
     {

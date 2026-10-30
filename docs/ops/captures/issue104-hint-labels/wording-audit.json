@@ -1,0 +1,302 @@
+{
+  "schema": 1,
+  "issue": 104,
+  "reviewed_head": "b062241b33353eb1d9c4406f4c4858a962a2277a",
+  "method": [
+    "Grep all shipped content JSON name/label fields for public names and people roles, plus inspect_verb; review non-zone object sources as well.",
+    "rg -n -e public -e liaison -e recruiter -e technicians -e tout -e concierge -e dealer -e Vantongeren src/blacksite/content/zones",
+    "Enumerate every object in every shipped zone JSON, read all vendor/terminal records and every remaining object name, without filtering authoring bundles.",
+    "Classify people by their authored names/roles; shops, offices, counters, boards and recruiter cards are things. inspect_verb applies only to inspection; other owner-system verbs remain unchanged.",
+    "Public IDs/names identify generic public terminals. Dedicated tutorial, control, member and mission-loan terminals retain their specific names."
+  ],
+  "zone_files": 10,
+  "objects_read": 129,
+  "vendor_objects_read": 29,
+  "terminal_objects_read": 28,
+  "public_terminals": [
+    {
+      "zone": "core-plaza",
+      "id": "plaza-public-1",
+      "before": "Plaza public 1",
+      "name": "Public terminal (Plaza 1)"
+    },
+    {
+      "zone": "core-plaza",
+      "id": "plaza-public-2",
+      "before": "Plaza public 2",
+      "name": "Public terminal (Plaza 2)"
+    },
+    {
+      "zone": "core-plaza",
+      "id": "plaza-public-3",
+      "before": "Public terminal (Plaza 3)",
+      "name": "Public terminal (Plaza 3)"
+    },
+    {
+      "zone": "core-plaza",
+      "id": "plaza-public-4",
+      "before": "Plaza public 4",
+      "name": "Public terminal (Plaza 4)"
+    },
+    {
+      "zone": "core-tram-hub",
+      "id": "hub-public-west",
+      "before": "Hub public west",
+      "name": "Public terminal (Hub west)"
+    },
+    {
+      "zone": "core-tram-hub",
+      "id": "hub-public-east",
+      "before": "Hub public east",
+      "name": "Public terminal (Hub east)"
+    },
+    {
+      "zone": "sodium-row",
+      "id": "row-public-1",
+      "before": "Row public 1",
+      "name": "Public terminal (Row 1)"
+    },
+    {
+      "zone": "sodium-row",
+      "id": "row-public-2",
+      "before": "Public terminal (Row 2)",
+      "name": "Public terminal (Row 2)"
+    },
+    {
+      "zone": "sodium-row",
+      "id": "row-public-3",
+      "before": "Row public 3",
+      "name": "Public terminal (Row 3)"
+    },
+    {
+      "zone": "terraces-blocks",
+      "id": "blocks-public-1",
+      "before": "Public terminal (Blocks 1)",
+      "name": "Public terminal (Blocks 1)"
+    },
+    {
+      "zone": "terraces-blocks",
+      "id": "blocks-public-2",
+      "before": "Blocks public 2",
+      "name": "Public terminal (Blocks 2)"
+    },
+    {
+      "zone": "terraces-blocks",
+      "id": "blocks-public-3",
+      "before": "Blocks public 3",
+      "name": "Public terminal (Blocks 3)"
+    },
+    {
+      "zone": "terraces-lobby",
+      "id": "lobby-public-terminal",
+      "before": "Lobby public terminal",
+      "name": "Public terminal (Lobby)"
+    },
+    {
+      "zone": "vatside-clinics",
+      "id": "clinic-public-west",
+      "before": "Public terminal",
+      "name": "Public terminal (Clinic west)"
+    },
+    {
+      "zone": "vatside-clinics",
+      "id": "clinic-public-east",
+      "before": "Public terminal",
+      "name": "Public terminal (Clinic east)"
+    }
+  ],
+  "people": [
+    {
+      "zone": "core-plaza",
+      "id": "warden-recruiter",
+      "name": "Warden recruiter",
+      "before": "inspect",
+      "inspect_verb": "look at"
+    },
+    {
+      "zone": "core-precinct",
+      "id": "warden-quartermaster",
+      "name": "Warden Quartermaster",
+      "before": "inspect",
+      "inspect_verb": "look at"
+    },
+    {
+      "zone": "core-precinct",
+      "id": "warden-contract-handler",
+      "name": "Warden contract handler",
+      "before": "inspect",
+      "inspect_verb": "look at"
+    },
+    {
+      "zone": "core-tram-hub",
+      "id": "kestrel-recruiter",
+      "name": "Kestrel recruiter",
+      "before": "inspect",
+      "inspect_verb": "look at"
+    },
+    {
+      "zone": "sodium-row",
+      "id": "row-drug-dealer",
+      "name": "Row drug dealer",
+      "before": "look at",
+      "inspect_verb": "look at"
+    },
+    {
+      "zone": "sodium-row",
+      "id": "row-ticket-tout",
+      "name": "Row ticket tout",
+      "before": "inspect",
+      "inspect_verb": "look at"
+    },
+    {
+      "zone": "sodium-tin-halo",
+      "id": "ferrymen-liaison",
+      "name": "Ferrymen liaison",
+      "before": "inspect",
+      "inspect_verb": "look at"
+    },
+    {
+      "zone": "terraces-blocks",
+      "id": "corner-grocer",
+      "name": "Corner grocer",
+      "before": "inspect",
+      "inspect_verb": "look at"
+    },
+    {
+      "zone": "terraces-lobby",
+      "id": "lobby-concierge",
+      "name": "Lobby concierge",
+      "before": "look at",
+      "inspect_verb": "look at"
+    },
+    {
+      "zone": "vatside-clinics",
+      "id": "sablier-recruiter",
+      "name": "Sablier recruiter",
+      "before": "inspect",
+      "inspect_verb": "look at"
+    },
+    {
+      "zone": "vatside-vat-row",
+      "id": "vat-technicians",
+      "name": "Vat technicians",
+      "before": "inspect",
+      "inspect_verb": "look at"
+    },
+    {
+      "zone": "vatside-wake-hall",
+      "id": "vantongeren-desk",
+      "name": "Dr. Ilse Vantongeren",
+      "before": "look at",
+      "inspect_verb": "look at"
+    }
+  ],
+  "new_terminal_names": 12,
+  "new_person_overrides": 9,
+  "changed_zone_files": [
+    "src/blacksite/content/zones/core-plaza.json",
+    "src/blacksite/content/zones/core-precinct.json",
+    "src/blacksite/content/zones/core-tram-hub.json",
+    "src/blacksite/content/zones/sodium-row.json",
+    "src/blacksite/content/zones/sodium-tin-halo.json",
+    "src/blacksite/content/zones/terraces-blocks.json",
+    "src/blacksite/content/zones/terraces-lobby.json",
+    "src/blacksite/content/zones/vatside-clinics.json",
+    "src/blacksite/content/zones/vatside-vat-row.json"
+  ],
+  "dispatch_changed": false,
+  "new_captures_required": false,
+  "full_content_grep_argv": [
+    "rg",
+    "-n",
+    "-i",
+    "-g",
+    "*.json",
+    "-e",
+    "\"(?:name|label)\"\\s*:\\s*\"[^\"]*(?:public|recruiter|liaison|technician|tout|concierge|dealer|grocer|quartermaster|contract handler|vantongeren)",
+    "-e",
+    "inspect_verb",
+    "src/blacksite/content"
+  ],
+  "other_object_sources_read": [
+    {
+      "file": "src\\blacksite\\content\\rooms\\apartment.json",
+      "path": ".objects",
+      "id": "storage",
+      "tile": [
+        0,
+        2
+      ],
+      "kind": "storage"
+    },
+    {
+      "file": "src\\blacksite\\content\\rooms\\apartment.json",
+      "path": ".objects",
+      "id": "safe",
+      "tile": [
+        1,
+        2
+      ],
+      "kind": "apartment_safe"
+    },
+    {
+      "file": "src\\blacksite\\content\\rooms\\apartment.json",
+      "path": ".objects",
+      "id": "bed",
+      "tile": [
+        3,
+        2
+      ],
+      "kind": "bed"
+    },
+    {
+      "file": "src\\blacksite\\content\\rooms\\apartment.json",
+      "path": ".objects",
+      "id": "terminal",
+      "tile": [
+        4,
+        2
+      ],
+      "kind": "terminal"
+    },
+    {
+      "file": "src\\blacksite\\content\\rooms\\apartment.json",
+      "path": ".objects",
+      "id": "hardware",
+      "tile": [
+        2,
+        2
+      ],
+      "kind": "hardware"
+    },
+    {
+      "file": "src\\blacksite\\content\\rooms\\apartment.json",
+      "path": ".objects",
+      "id": "light",
+      "tile": [
+        4,
+        1
+      ],
+      "kind": "light"
+    }
+  ],
+  "other_object_records_read": 6,
+  "total_object_records_read": 135,
+  "zone_source_sha256": {
+    "core-plaza.json": "7d317b595e2f0a4df1eb775f16c348986c10f0c75ca432ce56be6844f4dc97de",
+    "core-precinct.json": "83c47a45bb03e1ee06ecfb1fa45c1adf773d888eed0a9f401dc38e746d5c8243",
+    "core-tram-hub.json": "3bbcca6a9db1f7a16032c449d224c98ffcd8ac6247f5b4cae4d9d7b39eb745b2",
+    "sodium-row.json": "dfffef7474cfd616b3c3723b28f4b8a40d6b4ecab997001b4107cac15f2037cb",
+    "sodium-tin-halo.json": "4cc59d2ec1f98be226e84eca7c6063fba3236e19ce4e152d99b1f3a19487abf8",
+    "terraces-blocks.json": "fc27aa33609b9b75622c3d318575679b6396150220c851f21c5bff89ede6750a",
+    "terraces-lobby.json": "6627312313ea8f32691c45fd432a0dc9035e4947722e586fd556beac6f3131e9",
+    "vatside-clinics.json": "44d271e259d25ec0a2cab421e85b059a875352e2ef537c39c819c99c6314f80b",
+    "vatside-vat-row.json": "f9e06ac2dc7dac4432bc153760b17056f0f786a48f9e16bbeae936df4f7c7b68",
+    "vatside-wake-hall.json": "e221437a88519c82d96836bcd939ec8b66e8ddbc264dc4dbf92e60dba5b911fc"
+  },
+  "rule_fields_unchanged": true,
+  "capture_inputs_unchanged": true,
+  "python_runtime_sha256": "f2bfadf81efc94b9d99061435f76555757a4096181839c43045ac182fc8ca449",
+  "label_pairs": 118,
+  "frozen_outcome_sha256": "05213f386e4ca644479f8ff80d43ca4e27ebd0acd0013e644b2072a9b9c59185"
+}

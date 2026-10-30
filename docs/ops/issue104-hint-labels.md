@@ -6,8 +6,7 @@ handlers, target IDs, geometry, rules and dispatch order stay unchanged.
 
 The execution head also integrates the owner's S27 backend merge
 `85d3ddabaf104c656824696ca857e5260bfbc164`. Both dialogue and inspection
-validation remain in force. The combined hint, dialogue, referral and
-validation checks pass 106 tests. The cast stays dormant; these P3
+validation remain in force. The cast stays dormant; these P3
 captures grant none of S27's held native or human acceptance.
 
 - The same target and verb produce one E/J group, or E/Ctrl-O in vi.
@@ -19,18 +18,21 @@ captures grant none of S27's held native or human acceptance.
 - Sablier Clinic and The Tin Halo lose their internal parenthetical notes
   in object, vendor and NPC display names. The named hardware and controls
   use sentence case, including their corresponding Lattice labels.
-- The three public terminals use the presentation lead's suggested
-  `Public terminal (Plaza 3)`, `Public terminal (Row 2)` and
-  `Public terminal (Blocks 1)` wording. Their IDs stay unchanged.
+- All 15 generic public terminals use `Public terminal (…)`: Plaza 1-4,
+  Row 1-3, Blocks 1-3, Hub east/west, Lobby and Clinic east/west. The audit
+  searches both IDs and names; dedicated tutorial and mission terminals
+  retain their specific names. All IDs stay unchanged.
 - Four Wake Hall vats are named `Decant vat`; three clinic doors are
   named `Clinic door`.
-- Vantongeren, the concierge and the drug dealer have the authored
-  `inspect_verb: look at` display override. It affects only an inspection
+- All 12 person-shaped objects have the authored `inspect_verb: look at`
+  display override. Shops, offices, counters and boards remain things.
+  The [audit](captures/issue104-hint-labels/wording-audit.json) records the
+  complete classification and search method. It affects only an inspection
   hint, never another verb or the consuming handler. The validator limits
   it to `inspect` or `look at` (entities 1.1).
 
 The regenerated [label list](captures/issue104-hint-labels/focus-labels.json)
-contains 117 distinct verb/label pairs. The 10,704-case interaction matrix
+contains 118 distinct verb/label pairs. The 10,704-case interaction matrix
 retains its frozen outcome hash
 `05213f386e4ca644479f8ff80d43ca4e27ebd0acd0013e644b2072a9b9c59185`.
 The mechanics projection omits only the existing display name and the
@@ -57,6 +59,9 @@ The [capture packet](captures/issue104-hint-labels/README.md) contains six
 hosted text captures, their 18 exact ANSI/style payload hashes, the
 matching local TTY run and strict packet receipt. All six native cases
 passed on both hosts. No text or style golden was rebaselined.
+The later content-only correction changes none of the Wake Hall capture
+inputs. Per the leads' wording review, the updated audit and label list
+supply its evidence; no replacement capture run is claimed.
 Automated review, technical review and the presentation lead's
 wording approval remain separate gates. This work grants no S25 layout,
 S27 placement, pacing or other human approval. Only the owner merges.
