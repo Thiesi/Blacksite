@@ -46,5 +46,5 @@
 ║+ You arrive at Meridian Plaza.                                                                                                   ║
 ║» You cross Meridian Plaza under the Ring. You hear tram bells and the fountain. Wardens watch every corner.                      ║
 ║√ You gain 25 XP.                                                                                                                 ║
-║Esc/B returns; the world continues.                                                                                               ║
+║? help  Esc/B returns; the world continues.                                                                                       ║
 ╚══════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════ 

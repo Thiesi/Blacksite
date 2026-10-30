@@ -1,0 +1,358 @@
+{
+  "execution_head": "b9896d4375b90f94f8b762fba84bc25a08911b25",
+  "run": 41108032615,
+  "compared_with": "450d91896b8f2eefc076823ca286e2c036a8c6a7",
+  "changed_goldens": [
+    "tests/presentation/golden/p5/dead_132x50_16.json",
+    "tests/presentation/golden/p5/dead_132x50_256.json",
+    "tests/presentation/golden/p5/dead_132x50_truecolor.json",
+    "tests/presentation/golden/p5/dead_80x24_16.json",
+    "tests/presentation/golden/p5/dead_80x24_256.json",
+    "tests/presentation/golden/p5/dead_80x24_truecolor.json",
+    "tests/presentation/golden/p5/lattice_132x50_16.json",
+    "tests/presentation/golden/p5/lattice_132x50_256.json",
+    "tests/presentation/golden/p5/lattice_132x50_truecolor.json",
+    "tests/presentation/golden/p5/lattice_80x24_16.json",
+    "tests/presentation/golden/p5/lattice_80x24_256.json",
+    "tests/presentation/golden/p5/lattice_80x24_truecolor.json",
+    "tests/presentation/golden/p5/menu_132x50_16.json",
+    "tests/presentation/golden/p5/menu_132x50_256.json",
+    "tests/presentation/golden/p5/menu_132x50_truecolor.json",
+    "tests/presentation/golden/p5/menu_80x24_16.json",
+    "tests/presentation/golden/p5/menu_80x24_256.json",
+    "tests/presentation/golden/p5/menu_80x24_truecolor.json",
+    "tests/presentation/golden/p5/talker_132x50_16.json",
+    "tests/presentation/golden/p5/talker_132x50_256.json",
+    "tests/presentation/golden/p5/talker_132x50_truecolor.json",
+    "tests/presentation/golden/p5/talker_80x24_16.json",
+    "tests/presentation/golden/p5/talker_80x24_256.json",
+    "tests/presentation/golden/p5/talker_80x24_truecolor.json",
+    "tests/presentation/golden/p5/text_132x50_16.json",
+    "tests/presentation/golden/p5/text_132x50_256.json",
+    "tests/presentation/golden/p5/text_132x50_truecolor.json",
+    "tests/presentation/golden/p5/text_80x24_16.json",
+    "tests/presentation/golden/p5/text_80x24_256.json",
+    "tests/presentation/golden/p5/text_80x24_truecolor.json",
+    "tests/presentation/golden/p5/wake_132x50_16.json",
+    "tests/presentation/golden/p5/wake_132x50_256.json",
+    "tests/presentation/golden/p5/wake_132x50_truecolor.json",
+    "tests/presentation/golden/p5/wake_80x24_16.json",
+    "tests/presentation/golden/p5/wake_80x24_256.json",
+    "tests/presentation/golden/p5/wake_80x24_truecolor.json",
+    "tests/presentation/golden/p5/zone_132x50_16.json",
+    "tests/presentation/golden/p5/zone_132x50_256.json",
+    "tests/presentation/golden/p5/zone_132x50_truecolor.json"
+  ],
+  "captures": [
+    {
+      "capture": "wake-132x50-16",
+      "text_changed": true,
+      "style_changed": true
+    },
+    {
+      "capture": "wake-hall-132x50-16",
+      "text_changed": true,
+      "style_changed": true
+    },
+    {
+      "capture": "training-drone-132x50-16",
+      "text_changed": true,
+      "style_changed": true
+    },
+    {
+      "capture": "training-complete-132x50-16",
+      "text_changed": true,
+      "style_changed": true
+    },
+    {
+      "capture": "meridian-plaza-132x50-16",
+      "text_changed": true,
+      "style_changed": true
+    },
+    {
+      "capture": "inventory-132x50-16",
+      "text_changed": true,
+      "style_changed": true
+    },
+    {
+      "capture": "contracts-132x50-16",
+      "text_changed": true,
+      "style_changed": true
+    },
+    {
+      "capture": "help-132x50-16",
+      "text_changed": true,
+      "style_changed": true
+    },
+    {
+      "capture": "wake-132x50-256",
+      "text_changed": true,
+      "style_changed": true
+    },
+    {
+      "capture": "wake-hall-132x50-256",
+      "text_changed": true,
+      "style_changed": true
+    },
+    {
+      "capture": "training-drone-132x50-256",
+      "text_changed": true,
+      "style_changed": true
+    },
+    {
+      "capture": "training-complete-132x50-256",
+      "text_changed": true,
+      "style_changed": true
+    },
+    {
+      "capture": "meridian-plaza-132x50-256",
+      "text_changed": true,
+      "style_changed": true
+    },
+    {
+      "capture": "inventory-132x50-256",
+      "text_changed": true,
+      "style_changed": true
+    },
+    {
+      "capture": "contracts-132x50-256",
+      "text_changed": true,
+      "style_changed": true
+    },
+    {
+      "capture": "help-132x50-256",
+      "text_changed": true,
+      "style_changed": true
+    },
+    {
+      "capture": "wake-132x50-truecolor",
+      "text_changed": true,
+      "style_changed": true
+    },
+    {
+      "capture": "wake-hall-132x50-truecolor",
+      "text_changed": true,
+      "style_changed": true
+    },
+    {
+      "capture": "training-drone-132x50-truecolor",
+      "text_changed": true,
+      "style_changed": true
+    },
+    {
+      "capture": "training-complete-132x50-truecolor",
+      "text_changed": true,
+      "style_changed": true
+    },
+    {
+      "capture": "meridian-plaza-132x50-truecolor",
+      "text_changed": true,
+      "style_changed": true
+    },
+    {
+      "capture": "inventory-132x50-truecolor",
+      "text_changed": true,
+      "style_changed": true
+    },
+    {
+      "capture": "contracts-132x50-truecolor",
+      "text_changed": true,
+      "style_changed": true
+    },
+    {
+      "capture": "help-132x50-truecolor",
+      "text_changed": true,
+      "style_changed": true
+    },
+    {
+      "capture": "wake-80x24-16",
+      "text_changed": true,
+      "style_changed": true
+    },
+    {
+      "capture": "wake-hall-80x24-16",
+      "text_changed": true,
+      "style_changed": true
+    },
+    {
+      "capture": "training-drone-80x24-16",
+      "text_changed": true,
+      "style_changed": true
+    },
+    {
+      "capture": "training-complete-80x24-16",
+      "text_changed": true,
+      "style_changed": true
+    },
+    {
+      "capture": "meridian-plaza-80x24-16",
+      "text_changed": true,
+      "style_changed": true
+    },
+    {
+      "capture": "inventory-80x24-16",
+      "text_changed": true,
+      "style_changed": true
+    },
+    {
+      "capture": "contracts-80x24-16",
+      "text_changed": true,
+      "style_changed": true
+    },
+    {
+      "capture": "help-80x24-16",
+      "text_changed": true,
+      "style_changed": true
+    },
+    {
+      "capture": "wake-80x24-256",
+      "text_changed": true,
+      "style_changed": true
+    },
+    {
+      "capture": "wake-hall-80x24-256",
+      "text_changed": true,
+      "style_changed": true
+    },
+    {
+      "capture": "training-drone-80x24-256",
+      "text_changed": true,
+      "style_changed": true
+    },
+    {
+      "capture": "training-complete-80x24-256",
+      "text_changed": true,
+      "style_changed": true
+    },
+    {
+      "capture": "meridian-plaza-80x24-256",
+      "text_changed": true,
+      "style_changed": true
+    },
+    {
+      "capture": "inventory-80x24-256",
+      "text_changed": true,
+      "style_changed": true
+    },
+    {
+      "capture": "contracts-80x24-256",
+      "text_changed": true,
+      "style_changed": true
+    },
+    {
+      "capture": "help-80x24-256",
+      "text_changed": true,
+      "style_changed": true
+    },
+    {
+      "capture": "wake-80x24-truecolor",
+      "text_changed": true,
+      "style_changed": true
+    },
+    {
+      "capture": "wake-hall-80x24-truecolor",
+      "text_changed": true,
+      "style_changed": true
+    },
+    {
+      "capture": "training-drone-80x24-truecolor",
+      "text_changed": true,
+      "style_changed": true
+    },
+    {
+      "capture": "training-complete-80x24-truecolor",
+      "text_changed": true,
+      "style_changed": true
+    },
+    {
+      "capture": "meridian-plaza-80x24-truecolor",
+      "text_changed": true,
+      "style_changed": true
+    },
+    {
+      "capture": "inventory-80x24-truecolor",
+      "text_changed": true,
+      "style_changed": true
+    },
+    {
+      "capture": "contracts-80x24-truecolor",
+      "text_changed": true,
+      "style_changed": true
+    },
+    {
+      "capture": "help-80x24-truecolor",
+      "text_changed": true,
+      "style_changed": true
+    }
+  ],
+  "requested_captures": [
+    "wake-hall-80x24-256",
+    "wake-hall-132x50-256",
+    "training-drone-80x24-16",
+    "meridian-plaza-80x24-truecolor"
+  ],
+  "plaza_person_lift": [
+    {
+      "role": "npc_wardens",
+      "original_rgb": [
+        37,
+        99,
+        235
+      ],
+      "paint_rgb": [
+        130,
+        145,
+        255
+      ],
+      "original_distance": 46.06156571096115,
+      "paint_distance": 63.52087333710712,
+      "people_floor": 63.38528726606927,
+      "terminal_cells": [
+        [
+          53,
+          5
+        ],
+        [
+          110,
+          6
+        ]
+      ],
+      "size": [
+        132,
+        50
+      ]
+    },
+    {
+      "role": "npc_wardens",
+      "original_rgb": [
+        37,
+        99,
+        235
+      ],
+      "paint_rgb": [
+        130,
+        145,
+        255
+      ],
+      "original_distance": 46.06156571096115,
+      "paint_distance": 63.52087333710712,
+      "people_floor": 63.38528726606927,
+      "terminal_cells": [
+        [
+          14,
+          5
+        ],
+        [
+          58,
+          6
+        ]
+      ],
+      "size": [
+        80,
+        24
+      ]
+    }
+  ],
+  "style_evidence": "Full original JSON style grids and ANSI remain in the run artifacts; manifest names and hashes each file.",
+  "human_approval": false
+}

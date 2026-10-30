@@ -59,8 +59,9 @@ stays with S29.
 
 The rule layer resolves each disclosed terrain index once per frame and
 reuses its seen/remembered style. Cardinal-neighbour checks read those
-resolved IDs. This removes repeated work on fully known ground; the P5
-glyph/style goldens remain unchanged.
+resolved IDs. This removes repeated work on fully known ground; that
+optimization preserved the P5 glyph/style goldens before the review
+corrections below.
 
 ## Validation and acceptance
 
@@ -142,7 +143,8 @@ python scripts/accept_p5_netbbs.py --root PATH --door-python PYTHON --size 80x24
 This runs ordinary Wake creation, a live training-drone fight, walking
 through Wake Hall and the Clinic to Meridian Plaza and its patrol route,
 inventory, contracts and help. The truecolor Plaza receipt checks a live
-NPC glyph's lifted terminal colour against Paint. The Blacksite character name contains a wide character entered
+NPC glyph's lifted terminal colour against Paint. The Blacksite character
+name contains a wide character entered
 through ordinary creation. Released NetBBS account names are ASCII-only,
 and its door API uses that username as `handle`: no wide BBS handle can
 be tested natively without bypassing the host's supported contract. The
@@ -176,14 +178,16 @@ terminal receipts and the exact execution head. Raw ANSI and large style
 snapshots remain in the linked CI artifacts. The packet records the wide
 character-name / ASCII BBS-handle distinction and verifies both fields in
 the same pinned row at 132x50. It grants no creative or human approval.
-The existing packet contains historical v7.45.0 captures before the
-review corrections above; fresh captures are required for those changes.
-Earlier v7.31.0 captures retain their actual
-provenance in Git history and the earlier run's artifacts. The owner
-merged the floor/canon PR #111 before P5 was rebased onto it. The packet's
-README identifies its execution head; it does not prove the later review
-corrections. Other native workflows inherit #111's
-v7.45.0 pins, and their combined-head results are recorded on PR #110.
+The packet contains fresh v7.45.0 captures of the review corrections,
+executed at `b9896d4375b90f94f8b762fba84bc25a08911b25`. Its change list
+names every corrected P5 golden and every changed text/style capture,
+including the requested Wake Hall, drone fight and lifted Plaza person.
+Earlier captures retain their actual provenance in Git history and the
+earlier runs' artifacts. The owner merged the floor/canon PR #111 before
+P5 was rebased onto it. Runtime, content, tests, scripts and the P5
+workflow in the evidence-only packet commit match its execution head.
+Other native workflows inherit #111's v7.45.0 pins; final-head results
+and budget changes against `450d918` are recorded on PR #110.
 The new charset admission and check-order rules remain S30/S31 work;
 this rebase adds no runtime implementation of those future contracts.
 

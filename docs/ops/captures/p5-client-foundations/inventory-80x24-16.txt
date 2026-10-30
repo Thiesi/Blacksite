@@ -17,8 +17,8 @@
 ║    │ q equip  f slot  e equipment  s secure  d drop  x split  u use ... │    ║
 ║    └────────────────────────────────────────────────────────────────────┘    ║
 ╟──────────────────────────────────────────────────────────────────────────────╢
-║» You cross Meridian Plaza under the Ring. You hear tram bells and the fountai║
-║  n. Wardens watch every corner.                                              ║
+║» You cross Meridian Plaza under the Ring. You hear tram bells and the        ║
+║  fountain. Wardens watch every corner.                                       ║
 ║√ You gain 25 XP.                                                             ║
-║Esc/B returns                                                                 ║
+║? help  Esc/B returns                                                         ║
 ╚══════════════════════════════════════════════════════════════════════════════ 

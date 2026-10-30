@@ -38,7 +38,7 @@
 ║          │ j journal  d done  Esc/B back                                                                              │          ║
 ║          └────────────────────────────────────────────────────────────────────────────────────────────────────────────┘          ║
 ╟──────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────╢
-║* Hit: Training drone. (x2)                                                                                                       ║
+║* Miss: Training drone. (x4)                                                                                                      ║
 ║* The training drone falls silent. The tutorial terminal is ahead.                                                                ║
 ║+ You arrive at Clinic Row.                                                                                                       ║
 ║» You walk past clinics with their logo in cyan on white. You hear a polite overhead voice. Your clone insurance premium is due.  ║
@@ -46,5 +46,5 @@
 ║+ You arrive at Meridian Plaza.                                                                                                   ║
 ║» You cross Meridian Plaza under the Ring. You hear tram bells and the fountain. Wardens watch every corner.                      ║
 ║√ You gain 25 XP.                                                                                                                 ║
-║Esc/B returns; the world continues.                                                                                               ║
+║? help  Esc/B returns; the world continues.                                                                                       ║
 ╚══════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════ 

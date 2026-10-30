@@ -20,5 +20,5 @@
 ║                                                                              ║
 ║                                                                              ║
 ║                                                                              ║
-║Enter selects  Esc/B leaves                                                   ║
+║? help  Enter selects  Esc/B leaves                                           ║
 ╚══════════════════════════════════════════════════════════════════════════════ 

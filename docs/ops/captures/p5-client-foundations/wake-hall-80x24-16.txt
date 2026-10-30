@@ -1,24 +1,24 @@
-╔═VATSIDE═Wake Hall═POCKET══════════════════════════════╤════════════15:49═════╗
-║ ██████████████                                        │─ TARGET ─────────────║
-║█···············                                       │ none   Tab picks     ║
-║█···············                                       │─ NEARBY ─────────────║
-║█··Θ·Θ·Θ·Θ······                                       │ ☻ Sablier orderly    ║
-║█········☻☻·····                                       │ ☻ Sablier orderly    ║
-║█·····@·····$····                                      │                      ║
-║█···············                                       │                      ║
-║█···············                                       │                      ║
-║█···············                                       │                      ║
-║█···············                                       │                      ║
-║█·······$······                                        │                      ║
-║█··············                                        │──────────────────────║
-║█·············                                         │ P界80            G1  ║
-║█············                                          │ HP  ██████████ 130   ║
-║  ·········                                            │ STA ██████████ 70    ║
-║      ·                                                │ SHK ░░░░░░░░░░ 0     ║
+╔═VATSIDE═Wake Hall═POCKET══════════════════════════════╤════════════18:35═════╗
+║                      ██████████████                   │─ TARGET ─────────────║
+║                     █···············                  │ none   Tab picks     ║
+║                     █···············                  │─ NEARBY ─────────────║
+║                     █··Θ·Θ·Θ·Θ☻·····                  │ ☻ Sablier orderly ~  ║
+║                     █············☻··                  │ ☻ Sablier orderly ~  ║
+║                     █·····@·····$····                 │                      ║
+║                     █···············                  │                      ║
+║                     █···············                  │                      ║
+║                     █···············                  │                      ║
+║                     █···············                  │                      ║
+║                     █·······$······                   │                      ║
+║                     █··············                   │──────────────────────║
+║                     █·············                    │ P界80            G1  ║
+║                     █············                     │ HP  ██████████ 130   ║
+║                       ·········                       │ STA ██████████ 70    ║
+║                           ·                           │ SHK ░░░░░░░░░░ 0     ║
 ║                                                       │ 200 ch   lease 0/90  ║
-╟The corridor teaches targeting. Tab selects; F fires; B skips training.───────╢
-║» You wake on a gurney under a number. White light, warm plastic, a floor drai║
-║  n. Past the cards, a corridor. Past the corridor, a terminal.               ║
-║                                                                              ║
-║Tab target  F fire  X weapon  1-5 quick  V abilities  E interact  I invento...║
+╟───────────────────────────────────────────────────────┴──────────────────────╢
+║» You wake on a gurney under a number. White light, warm plastic, a floor     ║
+║  drain. Past the cards, a corridor. Past the corridor, a terminal.           ║
+║The corridor teaches targeting. Tab selects; F fires; B skips training.       ║
+║? help  Tab target  F fire  X weapon  1-5 quick  V abilities  E interact      ║
 ╚══════════════════════════════════════════════════════════════════════════════ 
