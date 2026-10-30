@@ -25,7 +25,7 @@
     },
     {
       "id": "finale",
-      "text": "You've brought a receipt from down there. I'll read it. I won't call it a diagnosis.",
+      "text": "There's a settled record from down there. I'll read it. I won't call it a diagnosis.",
       "when": [
         "season_stage finale_done"
       ],

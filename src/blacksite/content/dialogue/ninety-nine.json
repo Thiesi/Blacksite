@@ -25,7 +25,7 @@
     },
     {
       "id": "finale",
-      "text": "You brought the record back, kid. Keep the original. A familiar voice isn't a signature. //99",
+      "text": "The record's back, kid. Read the original. A familiar voice isn't a signature. //99",
       "when": [
         "season_stage finale_done"
       ],

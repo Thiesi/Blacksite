@@ -25,7 +25,7 @@
     },
     {
       "id": "finale",
-      "text": "You've got a receipt, sweetheart. Keep it. People will offer to explain it for you. Charge them first.",
+      "text": "There's a record now, sweetheart. Read it before you pay anyone to explain it. Charge them for the chair.",
       "when": [
         "season_stage finale_done"
       ],

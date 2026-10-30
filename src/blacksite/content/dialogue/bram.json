@@ -49,7 +49,7 @@
     },
     {
       "id": "first",
-      "text": "Fall's due. I'll be there. Race you. Loser carries.",
+      "text": "Wall-folk. Read the recovery card. We'll race when the work calls for it. Loser carries.",
       "when": [
         "first_meeting"
       ],

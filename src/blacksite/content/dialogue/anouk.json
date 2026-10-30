@@ -25,7 +25,7 @@
     },
     {
       "id": "finale",
-      "text": "You came back with a record. That's the road. A record is not the whole ground.",
+      "text": "The expedition has a record. That's the road. A record is not the whole ground.",
       "when": [
         "season_stage finale_done"
       ],
@@ -65,7 +65,7 @@
     },
     {
       "id": "first",
-      "text": "Wall-folk. Two rings out and you found the Landing. That's the road. Sit; the fire's not for you but it doesn't know that.",
+      "text": "Wall-folk. You found the Landing. That's the road. Sit; the fire's not for you but it doesn't know that.",
       "when": [
         "first_meeting"
       ],
@@ -81,7 +81,7 @@
     },
     {
       "id": "greeting",
-      "text": "Wall-folk. Two rings out and you found the Landing. That's the road. Sit; the fire's not for you but it doesn't know that.",
+      "text": "Wall-folk. You found the Landing. That's the road. Sit; the fire's not for you but it doesn't know that.",
       "when": [],
       "required": true
     }

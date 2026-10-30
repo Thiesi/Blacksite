@@ -44,7 +44,8 @@ requirement. Voice tags never reach a caller.
 The nine ordinary fixed talkers have first-meeting, Marked, Wake, enemy,
 settled-finale and fallback lines. Ninety-Nine retains `//99` throughout.
 Wren has neither voice tag. Future-outcome examples are adapted to
-receipt-based lines, rather than asserting a particular ending or
+settled public records, rather than assuming the listener participated,
+asserting a particular ending or
 muting the Dispatcher before settlement. Static example day counts and
 unsupported fare/rate promises are not runtime dialogue.
 

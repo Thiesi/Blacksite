@@ -25,7 +25,7 @@
     },
     {
       "id": "finale",
-      "text": "An answer. You have a record of what answered. Keep room for what it does not tell you, child.",
+      "text": "An answer. There is a record of what answered. Keep room for what it does not tell you, child.",
       "when": [
         "season_stage finale_done"
       ],

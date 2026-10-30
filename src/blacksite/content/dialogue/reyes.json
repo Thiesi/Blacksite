@@ -25,7 +25,7 @@
     },
     {
       "id": "finale",
-      "text": "You have a receipt, friend. That's something we can price. What was listening is another matter.",
+      "text": "There's a record now, friend. That's something we can price. What was listening is another matter.",
       "when": [
         "season_stage finale_done"
       ],

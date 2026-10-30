@@ -25,7 +25,7 @@
     },
     {
       "id": "finale",
-      "text": "Receipt noted. Your route, your losses, your decision. File all three.",
+      "text": "Expedition filed. Routes, losses, decisions. Keep all three in the record.",
       "when": [
         "season_stage finale_done"
       ],
