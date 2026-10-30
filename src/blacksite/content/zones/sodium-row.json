@@ -47,7 +47,8 @@
       "kind": "vendor",
       "essential": false,
       "params": {
-        "name": "Row drug dealer"
+        "name": "Row drug dealer",
+        "inspect_verb": "look at"
       }
     },
     {
@@ -59,7 +60,8 @@
       "kind": "vendor",
       "essential": false,
       "params": {
-        "name": "Row ticket tout"
+        "name": "Row ticket tout",
+        "inspect_verb": "look at"
       }
     },
     {
@@ -155,7 +157,7 @@
       "kind": "terminal",
       "essential": true,
       "params": {
-        "name": "Row public 1"
+        "name": "Public terminal (Row 1)"
       }
     },
     {
@@ -167,7 +169,7 @@
       "kind": "terminal",
       "essential": true,
       "params": {
-        "name": "Row public 2"
+        "name": "Public terminal (Row 2)"
       }
     },
     {
@@ -179,7 +181,7 @@
       "kind": "terminal",
       "essential": true,
       "params": {
-        "name": "Row public 3"
+        "name": "Public terminal (Row 3)"
       }
     },
     {
@@ -215,7 +217,7 @@
       ],
       "kind": "terminal",
       "params": {
-        "name": "sign grid",
+        "name": "Sign grid",
         "control": "sign-grid"
       }
     }

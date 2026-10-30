@@ -185,7 +185,7 @@
       "controls": [
         {
           "id": "curfew-shutters",
-          "label": "curfew shutters",
+          "label": "Curfew shutters",
           "target": {
             "zone": "core-plaza",
             "object": "precinct-curfew-shutters"
@@ -240,7 +240,7 @@
       "controls": [
         {
           "id": "camera-net",
-          "label": "camera net",
+          "label": "Camera net",
           "target": {
             "zone": "core-plaza",
             "object": "precinct-camera-net"

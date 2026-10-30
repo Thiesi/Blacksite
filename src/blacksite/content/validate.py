@@ -577,6 +577,8 @@ class _Validator:
                 if self.ref('dialogue', did, owner, 'terminal talker', obj.id):
                     if self.t.dialogue[did].machine_mind:
                         self.report(*owner, 'scripted machine-mind records cannot be physical talkers', obj.id)
+            if obj.params.get("inspect_verb", "inspect") not in ("inspect", "look at"):
+                self.report(*owner, "inspect_verb must be inspect or look at", obj.id)
             if obj.kind == "salvage_field":
                 fields += 1
                 if type(obj.params.get("ring")) is not int or obj.params["ring"] not in (1, 2, 3, 4):

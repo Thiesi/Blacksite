@@ -99,7 +99,7 @@
       "controls": [
         {
           "id": "outpost-cameras",
-          "label": "outpost cameras",
+          "label": "Outpost cameras",
           "target": {
             "zone": "terraces-blocks",
             "object": "terrace-outpost-outpost-cameras"

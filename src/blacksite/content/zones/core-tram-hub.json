@@ -72,7 +72,8 @@
       "kind": "vendor",
       "essential": false,
       "params": {
-        "name": "Kestrel recruiter"
+        "name": "Kestrel recruiter",
+        "inspect_verb": "look at"
       }
     },
     {
@@ -96,7 +97,7 @@
       "kind": "terminal",
       "essential": true,
       "params": {
-        "name": "Hub public west"
+        "name": "Public terminal (Hub west)"
       }
     },
     {
@@ -108,7 +109,7 @@
       "kind": "terminal",
       "essential": true,
       "params": {
-        "name": "Hub public east"
+        "name": "Public terminal (Hub east)"
       }
     },
     {

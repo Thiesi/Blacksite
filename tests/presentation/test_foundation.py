@@ -68,6 +68,7 @@ def test_object_rule_parameters_change_fingerprint_but_display_name_does_not(con
     terminal = next(obj for zone in changed.zones.values() for obj in zone.meta.objects
                     if obj.kind == 'terminal' and 'sector' in obj.params)
     terminal.params['name'] = 'A different inspection label'
+    terminal.params['inspect_verb'] = 'look at'
     assert fingerprint(changed) == original
     terminal.params['sector'] = next(s for s in content.sectors if s != terminal.params['sector'])
     assert fingerprint(changed)['sha256'] != original['sha256']

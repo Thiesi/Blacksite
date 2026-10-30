@@ -1,0 +1,148 @@
+{
+  "schema": 1,
+  "source_head": "ca1e2831d2147423f4d9c3bf81e78b6495e66ddb",
+  "base": "85d3ddabaf104c656824696ca857e5260bfbc164",
+  "hosted_run": "https://github.com/Thiesi/Blacksite/actions/runs/41036525447",
+  "runtime_python_sha256": "f2bfadf81efc94b9d99061435f76555757a4096181839c43045ac182fc8ca449",
+  "captures": [
+    {
+      "scenario": "Wake Hall terminal before E",
+      "size": "80x24",
+      "tier": "16",
+      "text": {
+        "file": "terminal-before-e-80x24-16.txt",
+        "sha256": "26b41fcd436fd3a8b4914bf4b69eb433f5105c8b58eb3b13a15220cc628c0377",
+        "bytes": 3051
+      },
+      "ansi": {
+        "file": "terminal-before-e-80x24-16.ans",
+        "sha256": "0b4ad0123ebe5b06ac23d4d2927cdf10e1432bc28249692a8cd7be6bdc66e07d",
+        "bytes": 76732
+      },
+      "style": {
+        "file": "terminal-before-e-80x24-16.json",
+        "sha256": "622dc154493c3d9817a1df779334ef7e0ecc1e3e1f48be6ff384bdba77143eb1",
+        "bytes": 11333
+      },
+      "artifact": "p3-interaction-focus-80x24",
+      "artifact_id": 12968875040,
+      "artifact_url": "https://github.com/Thiesi/Blacksite/actions/runs/41036525447/artifacts/12968875040"
+    },
+    {
+      "scenario": "Wake Hall terminal before E",
+      "size": "80x24",
+      "tier": "256",
+      "text": {
+        "file": "terminal-before-e-80x24-256.txt",
+        "sha256": "a446bad987786a05aa5ace65858f808a92bdf7e6ed1e9c08cc425c65b00c3328",
+        "bytes": 3051
+      },
+      "ansi": {
+        "file": "terminal-before-e-80x24-256.ans",
+        "sha256": "514d4c449f70a4d8f2c8e4895bd0271c0688144ce9a2b0c678fe1a75be9d00bf",
+        "bytes": 100318
+      },
+      "style": {
+        "file": "terminal-before-e-80x24-256.json",
+        "sha256": "b808f299bbf0e23953664afb0af5e1344451f0dba89cde4b25e1ab4c0fb297e4",
+        "bytes": 13742
+      },
+      "artifact": "p3-interaction-focus-80x24",
+      "artifact_id": 12968875040,
+      "artifact_url": "https://github.com/Thiesi/Blacksite/actions/runs/41036525447/artifacts/12968875040"
+    },
+    {
+      "scenario": "Wake Hall terminal before E",
+      "size": "80x24",
+      "tier": "truecolor",
+      "text": {
+        "file": "terminal-before-e-80x24-truecolor.txt",
+        "sha256": "83bf5592a83f891c795466bd0ed218185f174a6b5f5f92ac69fffe643997518b",
+        "bytes": 3051
+      },
+      "ansi": {
+        "file": "terminal-before-e-80x24-truecolor.ans",
+        "sha256": "a2e8a11ce4b8f0f9d123f95270a2b870e42d209f300b58d6ef65b3dfe3160193",
+        "bytes": 116911
+      },
+      "style": {
+        "file": "terminal-before-e-80x24-truecolor.json",
+        "sha256": "f04ed0ad4740aaab0cca49f0d219259428c1900345eedd0f87385833236abe09",
+        "bytes": 14038
+      },
+      "artifact": "p3-interaction-focus-80x24",
+      "artifact_id": 12968875040,
+      "artifact_url": "https://github.com/Thiesi/Blacksite/actions/runs/41036525447/artifacts/12968875040"
+    },
+    {
+      "scenario": "Wake Hall terminal before E",
+      "size": "132x50",
+      "tier": "16",
+      "text": {
+        "file": "terminal-before-e-132x50-16.txt",
+        "sha256": "12b3a659553e5ddbe37f2aa0e1a80f469977c3e60d5d1cf638e540acda585c5a",
+        "bytes": 8303
+      },
+      "ansi": {
+        "file": "terminal-before-e-132x50-16.ans",
+        "sha256": "cdd1e15904023d92ab8fe3499c69bf5ee8a14a63092d4f2674dc2bad2846bccd",
+        "bytes": 143807
+      },
+      "style": {
+        "file": "terminal-before-e-132x50-16.json",
+        "sha256": "d1041fe34faa4d5c53062e160627c7725ffceebc3566381075dd788e5d85b26b",
+        "bytes": 22030
+      },
+      "artifact": "p3-interaction-focus-132x50",
+      "artifact_id": 12967713955,
+      "artifact_url": "https://github.com/Thiesi/Blacksite/actions/runs/41036525447/artifacts/12967713955"
+    },
+    {
+      "scenario": "Wake Hall terminal before E",
+      "size": "132x50",
+      "tier": "256",
+      "text": {
+        "file": "terminal-before-e-132x50-256.txt",
+        "sha256": "038d250fc9d1ba2a06c86f68617455bddf1a7e81ede97fb3838d166a1b0b2b18",
+        "bytes": 8303
+      },
+      "ansi": {
+        "file": "terminal-before-e-132x50-256.ans",
+        "sha256": "22a98cd46ec749a7e6a087ef456b342a990762bcc29719e8814be60788f3cc9b",
+        "bytes": 175136
+      },
+      "style": {
+        "file": "terminal-before-e-132x50-256.json",
+        "sha256": "2f0accdab70bfe808fbd586888a8fcc8c18beb38a9cd0eb881cd18e10614058f",
+        "bytes": 24915
+      },
+      "artifact": "p3-interaction-focus-132x50",
+      "artifact_id": 12967713955,
+      "artifact_url": "https://github.com/Thiesi/Blacksite/actions/runs/41036525447/artifacts/12967713955"
+    },
+    {
+      "scenario": "Wake Hall terminal before E",
+      "size": "132x50",
+      "tier": "truecolor",
+      "text": {
+        "file": "terminal-before-e-132x50-truecolor.txt",
+        "sha256": "86268641c0a6744cfdaf95c9e30c27ea262bdcf7191380bb194af5cf5ddeac0f",
+        "bytes": 8303
+      },
+      "ansi": {
+        "file": "terminal-before-e-132x50-truecolor.ans",
+        "sha256": "01135678b84132a06e3f9e5c953fe8cfb1a3fb71df40f2076d0c7c56d117d457",
+        "bytes": 198900
+      },
+      "style": {
+        "file": "terminal-before-e-132x50-truecolor.json",
+        "sha256": "8f8aa5fcc4cac9f9f7fa26afe0950dcbd5ed87b80b997280fb7c7b99979064cb",
+        "bytes": 25048
+      },
+      "artifact": "p3-interaction-focus-132x50",
+      "artifact_id": 12967713955,
+      "artifact_url": "https://github.com/Thiesi/Blacksite/actions/runs/41036525447/artifacts/12967713955"
+    }
+  ],
+  "human_approval": false
+}

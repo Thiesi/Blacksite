@@ -35,7 +35,8 @@
       "essential": false,
       "params": {
         "name": "Warden Quartermaster",
-        "vendor": "warden-quartermaster"
+        "vendor": "warden-quartermaster",
+        "inspect_verb": "look at"
       }
     },
     {
@@ -48,7 +49,8 @@
       "essential": false,
       "params": {
         "name": "Warden contract handler",
-        "contract_handler": "wardens"
+        "contract_handler": "wardens",
+        "inspect_verb": "look at"
       }
     },
     {

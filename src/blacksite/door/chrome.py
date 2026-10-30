@@ -58,6 +58,10 @@ def focus_hint(hint: str, width: int, context: list[tuple[str, str]],
     # Try the shortest legal names before dropping J, then E. The full
     # objective only shortens after both lower-priority groups are gone.
     while prefixes and fixed_width()+sum(minima) > width:
+        if len(prefixes) == 1 and prefixes[0].startswith('E/'):
+            # A combined group still drops the J alias before its E action.
+            prefixes[0] = 'E '+prefixes[0].partition(' ')[2]
+            continue
         prefixes.pop()
         labels.pop()
         limits.pop()
@@ -78,7 +82,7 @@ def focus_hint(hint: str, width: int, context: list[tuple[str, str]],
     if objective:
         # The legacy objective string also carries its action/journal help.
         # The structured objective above owns the text and unabridged cost.
-        tail = ['E act Q jobs' if 'Next:' in group else group for group in tail]
+        tail = ['Q jobs' if 'Next:' in group else group for group in tail]
     tail = ['? help', *(group for group in tail if group != '? help')]
     for group in tail:
         if display_width('  '.join([*groups, group])) <= width:

@@ -64,5 +64,7 @@ def interact(frame: Frame) -> bool:
 def object_interaction(obj: ObjectState, verb: str = "open") -> Interaction:
     # Unnamed content still owns the input; internal ids are not display names.
     label = obj.spec.params.get("name")
+    if verb == "inspect":
+        verb = obj.spec.params.get("inspect_verb", verb)
     focus = Focus(obj.spec.id, str(label), verb) if label else None
     return Interaction(focus, obj, obj.spec.tile)

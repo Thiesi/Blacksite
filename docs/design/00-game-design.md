@@ -2219,7 +2219,7 @@ valid; zone/core instance IDs retain their own documented convention.
 | Halvard Security Issue | The Spire | `wpn_halvard_hv9`, `wpn_halvard_dmr`, `arm_halvard_guard_suit`, `imp_halvard_reflex_arm`, `drn_halvard_sentry`; `wpn_halvard_hv12`, `wpn_halvard_anvil`, `arm_halvard_plate`, `arm_halvard_breacher_helm`, `wpn_halvard_ram`, `imp_halvard_dermal_plate`, `imp_halvard_heavy_mount`, `drn_halvard_hound` (standing +60) | member |
 | Ostrom Showroom | The Core | `wpn_ostrom_pinlight`, `imp_ostrom_lowlight`, `imp_ostrom_rangefinder`, `drn_ostrom_eye`, `ammo_cell` | list |
 | Ostrom Contract Sales | The Spire | `wpn_ostrom_lance`, `wpn_ostrom_arc_projector`, `arm_ostrom_weave`, `imp_ostrom_target_lock`; `wpn_ostrom_scalpel`, `wpn_ostrom_sunlance`, `wpn_ostrom_pulse_carbine` (Halvard or Sablier member, standing +50) | restricted |
-| Sablier Clinic (any) | Vatside, faction halls | all Sablier implants, `con_sablier_patch`, `con_sablier_trauma_kit`, `con_sablier_neutraliser`, `con_sablier_pickup`, `drug_sablier_focus`, `drug_sablier_calm`, detox, surgery | list |
+| Sablier Clinic | Vatside, faction halls | all Sablier implants, `con_sablier_patch`, `con_sablier_trauma_kit`, `con_sablier_neutraliser`, `con_sablier_pickup`, `drug_sablier_focus`, `drug_sablier_calm`, detox, surgery | list |
 | Sablier Wake Outfitter | Vatside | starter kit items, `arm_wake_coverall` | list |
 | Warden Quartermaster | The Core | Civic Pattern equivalents of `arm_halvard_guard_suit`, `wpn_halvard_hv9`, `wpn_halvard_shock_baton` (same stats, blue) | member |
 | Sink Market | The Sink | `wpn_sable_streetsweeper`, `wpn_sable_spitter`, `wpn_sable_shiv`, `arm_sable_leathers`, `con_sable_stim`, all Sable drugs, `ammo_gel`, `ammo_needle` | list |
@@ -2231,7 +2231,7 @@ valid; zone/core instance IDs retain their own documented convention.
 | Chapel Foundry | Chapel Ward | `wpn_chapel_tuning_fork`, all tier-2 resonance implants; `wpn_chapel_choir_bell`, `wpn_chapel_hand_bell`, tier-3 resonance implants (standing +60) | member |
 | The Landing Trade Post | The Landing | `wpn_ferry_slugthrower`, `wpn_ferry_wrench`, `arm_ferry_scrap_plate`, `con_ferry_flare_stick`, `drug_ferry_ringdust`, `ammo_scrap`, tier-1 schematics; buys salvage at +20 % | list |
 | Ferry's Own | The Landing | `wpn_ferry_meteor_cannon`, `drn_ferry_lifter`, tier-2 and tier-3 Ferry-make schematics (standing gates as listed) | member |
-| The Tin Halo (Vesper) | Sodium Row | contracts, rumours, `drug_sable_glass`, `con_sable_stim`, one rotating tier-2 item per day from any maker at +40 % | list |
+| The Tin Halo | Sodium Row | contracts, rumours, `drug_sable_glass`, `con_sable_stim`, one rotating tier-2 item per day from any maker at +40 % | list |
 
 #### 13. Apartments
 

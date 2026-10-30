@@ -77,6 +77,10 @@ composition rechecks reachability from every physical body; an unsafe
 closure waits. Layers expire independently and compose in source-ID order.
 A door's optional `params.open` overrides its base tile's passability and
 opacity; without it, the tile type supplies the initial state.
+An object's `params.name` supplies its display name. Optional
+`params.inspect_verb` is `inspect` (default) or `look at` for a
+person-shaped object. It changes only the inspection hint's wording;
+the selected target, input handler and other action verbs stay the same.
 
 An exit requirement has `kind` (`pass`, `key`, `faction`, `member`,
 `story`, `open`), `ref` and optional `standing`/`object`. Pass/key refs resolve carried

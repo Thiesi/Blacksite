@@ -1,0 +1,13 @@
+{
+  "schema": 1,
+  "head": "ca1e2831d2147423f4d9c3bf81e78b6495e66ddb",
+  "dirty": false,
+  "cases": 99,
+  "glyph_style_pass": true,
+  "cp437_pass": true,
+  "cp437_failures": [],
+  "human_approval": false,
+  "caller_input_cell_count": 714,
+  "cp437_checked_cells": 419766,
+  "cp437_policy": "authored cells checked strictly; declared caller-input cells counted separately by source (#76)"
+}

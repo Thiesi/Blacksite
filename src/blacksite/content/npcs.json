@@ -561,7 +561,7 @@
     },
     {
       "id": "npc-vendor-vatside-clinics-sablier-main-clinic",
-      "name": "Sablier Clinic (any)",
+      "name": "Sablier Clinic",
       "faction": null,
       "grade": 1,
       "attributes": {
@@ -584,7 +584,7 @@
     },
     {
       "id": "npc-vendor-sodium-tin-halo-vesper",
-      "name": "The Tin Halo (Vesper)",
+      "name": "The Tin Halo",
       "faction": null,
       "grade": 1,
       "attributes": {

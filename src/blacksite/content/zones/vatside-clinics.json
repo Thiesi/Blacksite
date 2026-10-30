@@ -74,7 +74,7 @@
       "kind": "vendor",
       "essential": true,
       "params": {
-        "name": "Sablier Clinic (any)",
+        "name": "Sablier Clinic",
         "vendor": "sablier-clinic"
       }
     },
@@ -87,7 +87,7 @@
       "kind": "terminal",
       "essential": true,
       "params": {
-        "name": "Public terminal",
+        "name": "Public terminal (Clinic west)",
         "contract_handler": "sablier"
       }
     },
@@ -112,7 +112,8 @@
       "kind": "vendor",
       "essential": false,
       "params": {
-        "name": "Sablier recruiter"
+        "name": "Sablier recruiter",
+        "inspect_verb": "look at"
       }
     },
     {
@@ -124,7 +125,7 @@
       "kind": "terminal",
       "essential": true,
       "params": {
-        "name": "Public terminal"
+        "name": "Public terminal (Clinic east)"
       }
     },
     {
@@ -174,7 +175,8 @@
       "kind": "door",
       "essential": false,
       "params": {
-        "open": true
+        "open": true,
+        "name": "Clinic door"
       }
     },
     {
@@ -186,7 +188,8 @@
       "kind": "door",
       "essential": false,
       "params": {
-        "open": true
+        "open": true,
+        "name": "Clinic door"
       }
     },
     {
@@ -198,7 +201,8 @@
       "kind": "door",
       "essential": false,
       "params": {
-        "open": true
+        "open": true,
+        "name": "Clinic door"
       }
     },
     {
@@ -209,7 +213,7 @@
       ],
       "kind": "hardware",
       "params": {
-        "name": "cold chain hardware",
+        "name": "Cold chain hardware",
         "core": "lat-relay-cold-chain"
       }
     },
@@ -232,7 +236,7 @@
       ],
       "kind": "terminal",
       "params": {
-        "name": "cold chain loan terminal"
+        "name": "Cold chain loan terminal"
       }
     },
     {
