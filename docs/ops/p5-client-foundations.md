@@ -99,7 +99,7 @@ For native acceptance, build a clean committed wheel and install it into
 an isolated interpreter. With NetBBS v7.31.0 installed for the runner:
 
 ```
-python scripts/accept_p5_netbbs.py --root PATH --door-python PYTHON --show
+python scripts/accept_p5_netbbs.py --root PATH --door-python PYTHON --size 80x24 --show
 ```
 
 This runs ordinary Wake creation, a live training-drone fight, walking
@@ -109,12 +109,20 @@ through ordinary creation. Released NetBBS account names are ASCII-only,
 and its door API uses that username as `handle`: no wide BBS handle can
 be tested natively without bypassing the host's supported contract. The
 headless cases still exercise a synthetic wide BBS handle. This native
-acceptance distinction is recorded for lead review on #106.
+acceptance distinction is
+[accepted for P5](https://github.com/Thiesi/Blacksite/issues/106#issuecomment-6526049298).
+Short native test names keep the wide name and differing ASCII handle
+visible together in full at 132x50. The live packet covers both sizes
+in 16 and 256 colours as well as truecolor.
 Both sizes run in all three tiers. The script registers the
 default-off switch explicitly for this private node, verifies the new
 safe frame and the installed wheel's Python tree, and records text,
 style, ordered ANSI and hashes at each step. It changes no position,
 inventory, funds, NPC, rule or clock state.
+
+Resize the attached terminal to the selected size. Run a second packet
+with `--size 132x50` after resizing. The receipt records the attached
+terminal dimensions and checks them against the selected size.
 
 The P5 Actions workflow runs this acceptance with `--show` through a
 sized, attached Linux PTY, retaining the console stream and native

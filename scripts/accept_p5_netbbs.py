@@ -8,6 +8,7 @@ import argparse
 import asyncio
 from hashlib import sha256
 import json
+import os
 from pathlib import Path
 import subprocess
 
@@ -26,6 +27,13 @@ async def accept(root: Path, door_python: Path, show: bool,
                  sizes: tuple[tuple[int, int], ...], tiers: tuple[str, ...]) -> None:
     head = subprocess.check_output(['git', 'rev-parse', 'HEAD'], text=True).strip()
     assert not subprocess.check_output(['git', 'status', '--porcelain'], text=True).strip()
+    console = {'isatty': os.isatty(1), 'size': None}
+    if show:
+        assert console['isatty'], '--show requires an attached terminal'
+        terminal = os.get_terminal_size(1)
+        console['size'] = [terminal.columns, terminal.lines]
+        if len(sizes) == 1:
+            assert tuple(console['size']) == sizes[0], 'Resize the attached terminal to --size'
     root.mkdir(parents=True, exist_ok=False)
     probe = PresentationProbe(root, door_python, show,
                               door_environment={'DOOR_BLACKSITE_PRESENTATION': '1'}, show_all_tiers=True)
@@ -36,7 +44,10 @@ async def accept(root: Path, door_python: Path, show: bool,
             for tier in tiers:
                 # Released NetBBS usernames/door handles are ASCII-only. Use
                 # ordinary character creation for genuine live wide-name data.
-                caller = await probe.open(width, height, 'P5' + tier, archetype=0,
+                # At 132x50 the combined wide name + ASCII handle fits the
+                # pinned name row in full, as requested in #106's handoff.
+                label = {'16': 'P', '256': 'Q', 'truecolor': 'R'}[tier]
+                caller = await probe.open(width, height, label, archetype=0,
                                           sixteen=tier == '16', truecolor=tier == 'truecolor', capture_wake=True)
                 assert caller.session.caps['tier'] == tier
                 name = probe.game.players[caller.session.player_id].name
@@ -103,7 +114,7 @@ async def accept(root: Path, door_python: Path, show: bool,
     (root / 'result.json').write_text(json.dumps({'head': head, 'passed': True, 'cases': cases,
         'transport': 'NetBBS Telnet -> registered native stdio, DOOR_BLACKSITE_PRESENTATION=1',
         'source_matched_wheel': json.loads((root / 'native-client.json').read_text()),
-        'show': show, 'human_approval': False, 'fixtures': 'private node/world/accounts only; normal game rules',
+        'show': show, 'console': console, 'human_approval': False, 'fixtures': 'private node/world/accounts only; normal game rules',
         'manifest': manifest}, ensure_ascii=False, indent=2) + '\n', encoding='utf-8', newline='\n')
     print(json.dumps({'passed': True, 'cases': len(cases)}), flush=True)
 
