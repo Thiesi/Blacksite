@@ -31,7 +31,14 @@ Port:
   drop order, side panel sections and bars.
 - `door/present/screen.py`.
 - `door/present/context.py`: the context decider, a pure module driven
-  by view bodies and a clock (plan §12.2 row P5).
+  by view bodies and a clock (plan §12.2 row P5). At `1060c9d` it is
+  the Auto decider, choosing between the map, an F5 eye-level look and
+  the scene view. P5 ports no scene or street renderer, and Auto's rules
+  stay provisional until PT1 (D8). So in P5:
+  - port it with its tests, allowed to select only the zone map;
+  - bind no F5 or F10 key;
+  - mark its rule order and its `HOLD` constant provisional in the
+    module docstring.
 - `door/present/zone.py`: the zone renderer, rule layer only. There are
   no place records until P6.
 - The matching parts of the trial's `tests/door/test_present.py`.
@@ -113,6 +120,8 @@ on the same workload and the same knowledge state.
 - Walls draw a shape glyph in every tier, for every wall tile class.
 - The context decider is pure: the same bodies and clock give the same
   result, and it never reads `zone.rng` or the wall clock directly.
+- With the switch on, every walk-golden input makes the decider select
+  the zone map.
 - The hint row under the new chrome matches P3's fitter output for the
   same view.
 - There is no second copy of layout geometry, focus or palette lookup
@@ -125,7 +134,8 @@ Class C (plan §10.1).
 - Automated review, then technical review.
 - The presentation lead's creative sign-off. They co-review the PR.
 - **Real terminal, switch on:** NetBBS Telnet at 80x24 and 132x50, in 256
-  and 16 colours. Walk the Wake, the Wake Hall and Meridian Plaza, fight
+  and 16 colours, with a wide-character handle (plan §10.3). Walk the
+  Wake, the Wake Hall and Meridian Plaza, fight
   the training drone, and open inventory, contracts and help.
 - **Captures:** text and style captures of each step, committed under
   the evidence rule (technical review §4).
