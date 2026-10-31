@@ -1891,12 +1891,11 @@ Values are initial, tuned at the pacing gate.
     per-recipient limit, so a drop's acceptance never depends on what
     other senders did.
   - **Kestrel fee.** Leaving a drop costs the sender the market board's
-    5 % Kestrel fee (section 8.3), charged on the greater of the
-    item's catalog base price and its last market board sale price,
-    times the units dropped, rounded up, at least 1 chit; an item with
-    neither pays the 1-chit minimum. It is paid when the drop is
-    left and never refunded, so a drop is never a cheaper channel than
-    a sale.
+    5 % Kestrel fee (section 8.3), charged on the item's catalog base
+    price times the units dropped, rounded up, at least 1 chit; an item
+    with no catalog base price pays the 1-chit minimum. It is paid when
+    the drop is left and never refunded. Market prices are not used,
+    so no sale can be staged to move the fee.
   - A drop from a sender the recipient ignores never arrives. To the
     sender it looks exactly like an unanswered drop: it returns only at
     the 7-day expiry, so it never reveals the ignore. The recipient may
