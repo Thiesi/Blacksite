@@ -1655,8 +1655,9 @@ Values are initial, tuned at the pacing gate.
 
 - **Lasting roster.** A crew survives logout and restart; members
   leave only by leaving or being kicked. It dissolves when its last
-  member leaves. A crew of one keeps its name and notes for 14 days so
-  its member can invite again; then it dissolves. Leadership passes as
+  member leaves. A crew of one keeps its name and notes for 14 days,
+  counted from the day it became one member, so its member can invite
+  again; then it dissolves. Leadership passes as
   in section 10 when the leader leaves the crew, not when the leader
   logs out.
 - **Inactivity.** When the leader has not logged in for 7 days,
@@ -1680,7 +1681,8 @@ Values are initial, tuned at the pacing gate.
   character's next login. A BBS identity may have at most 5
   outstanding offline invitations across all its characters, and at
   most one to the same character across all its characters. A
-  character holds at most 10 pending invitations; while they hold 10,
+  character holds at most 10 pending invitations, counting only those
+  that reached them (an ignored sender's never count); while they hold 10,
   further invitations are refused and the sender is told the invitation
   could not be left. Nothing is evicted silently. A character can
   decline all pending invitations with one action. Identity-based ignores, the five-player limit and
@@ -1776,7 +1778,9 @@ Values are initial, tuned at the pacing gate.
   crew membership, withdraws its invitations and handoff offers (a job
   on offer returns to its holder, or ends with the holder's retirement
   as any job does), removes its tag, and settles its dead drops under
-  section 11.1's retirement rules. A crew whose last member retires dissolves.
+  section 11.1's retirement rules. The away report's persisted records
+  are keyed by character, so a retired character appears in them only
+  as "a resident" from then on, even if the name is later reused. A crew whose last member retires dissolves.
 
 ## 11. Social layer
 
@@ -1820,7 +1824,10 @@ Values are initial, tuned at the pacing gate.
     reader's own crew members.
   - It also lists what is addressed to the reader: crew invitations,
     handoff offers, dead drops waiting, the reader's own drops returned,
-    the reader's crew dissolving (its notes go with it),
+    the reader's crew dissolving (its notes go with it), the reader
+    being removed from a crew, the outcome of the reader's own handoff
+    offers (accepted, withdrawn or expired), the giver's share being
+    paid, capped or forfeited,
     new crew notes, and the existing apartment-theft notice (section
     6.4). These come first, each kind collapsed to one line with a
     count and its soonest expiry ("3 invitations, the first ends in 2
