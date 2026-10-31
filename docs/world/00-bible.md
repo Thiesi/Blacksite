@@ -247,6 +247,7 @@ design document.
   market, worst lighting.
 - **Chapel Ward** — the Ninefold Choir's district. Old cathedral-scale
   cooling towers repurposed as halls. Quiet. Strangely well-kept.
+  Between the towers, a cloister where anyone may sleep.
 - **Old Works** — the original contractor town, half-abandoned, half
   squatted. The Unmoored's ground. Best illegal Lattice access in the city.
   Its generator hall, built for a five-year job, was never turned off.
