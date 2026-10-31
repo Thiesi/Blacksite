@@ -1,7 +1,6 @@
 """P6b spawner spread: armed NPCs keep clear of arrivals and of rooms."""
 
 from collections import deque
-from math import dist
 from pathlib import Path
 
 import pytest
@@ -11,14 +10,18 @@ from blacksite.content.loader import load_content
 ROOT = Path(__file__).resolve().parents[2]
 P6B_ZONES = ("core-plaza", "vatside-clinics", "sodium-row")
 DOORS = ("door", "gate", "shutter")
-# Armed spawns stay at least this far from every arrival tile, as before
-# the spread, so nobody is engaged the moment they step in.
+# Armed spawns stay at least this many tiles (Chebyshev) from every
+# arrival, as before the spread, so nobody is engaged on stepping in.
 ARRIVAL_CLEARANCE = 5
 
 
 @pytest.fixture(scope="module")
 def tree():
     return load_content(ROOT/"src/blacksite/content")
+
+
+def chebyshev(a, b):
+    return max(abs(a[0]-b[0]), abs(a[1]-b[1]))
 
 
 def arrivals(tree, zid):
@@ -60,7 +63,7 @@ def test_armed_spawns_keep_clear_of_arrivals(tree, zid):
     for sp in zone.meta.spawners:
         if not tree.npcs[sp.npc].weapon:
             continue
-        near = [(t, a) for t in candidates(tree, zone, sp) for a in landing if dist(t, a) < ARRIVAL_CLEARANCE]
+        near = [(t, a) for t in candidates(tree, zone, sp) for a in landing if chebyshev(t, a) < ARRIVAL_CLEARANCE]
         assert not near, f"{sp.id} can spawn within {ARRIVAL_CLEARANCE} tiles of an arrival: {near[:3]}"
 
 
