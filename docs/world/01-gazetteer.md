@@ -1289,7 +1289,6 @@ Sable plays cards at the court, sells in the alley and watches.
 | **The Clause** | Wakes, strays, Ferrymen in town | chalked prices; regulars tally days on the sign and drink to day ninety |
 | **Spare Parts** | Unmoored runners | at the Old Works end; a public terminal behind the counter |
 
-A bar's prices follow the drinker's standing with its crowd's faction.
 Members of a faction are welcome anywhere on the Row, and quieter in
 some doorways than in others.
 
