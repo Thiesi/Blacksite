@@ -263,7 +263,7 @@ design document.
   Leans Warden. Settling basins under work lamps, a hall of white tile,
   and the Wellhead, where the pumps never stop. Beside the beds, the
   fungal halls grow most of the city's food in the dark. The Tap never
-  runs dry and the ration line never moves; everything else here is
+  runs dry and the minimum ration never drops; everything else here is
   surplus, and surplus is what people argue about.
 
 ### 4.4 The Undercity (open zone)

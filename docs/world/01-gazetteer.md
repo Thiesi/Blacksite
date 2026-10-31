@@ -1429,7 +1429,7 @@ fermentation vats tick as they cool. When a bed blooms, the air over it
 thickens, and the crews tie cloths over their faces and work round it
 until the extractors clear it. By the ramp, Kestrel's weigh gate counts
 every crate onto the carts for the Ration Depots, and the clerk writes
-the number down twice. The ration line never moves. What else leaves
+the number down twice. The minimum ration never drops. What else leaves
 tonight, and for which district, is posted on the Crop Rota, and Hester
 Dunmore has more requests for the next good crate than she has crates.
 
