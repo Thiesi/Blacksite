@@ -1,0 +1,18 @@
+{
+  "class_id": "fixture",
+  "room": "fixture",
+  "origin": [
+    12,
+    12
+  ],
+  "sector": "fixture",
+  "cell": "fixture",
+  "doorstep": [
+    10,
+    13
+  ],
+  "vestibule": [
+    0,
+    1
+  ]
+}

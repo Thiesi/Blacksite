@@ -91,6 +91,12 @@ Notes:
   to the public entry; its
   eleven unallocated cells and thirteen existing public cells supply
   the 24 apartment addresses. No unit consumes an entry or uplink cell.
+- The Wallwalk (planned, #119) adds one gated cell to the Tramyard
+  sector when its slice builds it: **Wall Telemetry**, which takes the
+  Kestrel key or a key program. The Tramyard counts above are the
+  shipped baseline until then. A runner in the cell gets the spotters'
+  post's Ring-fall reading 30 seconds before impact, against the post's
+  60 (design §12).
 - Gated cells accept a suitable key program as an alternative to the
   named physical credential, following game design 6.1. S13's authored
   baseline is `program:key:2`; S14 refines access with its live catalog.

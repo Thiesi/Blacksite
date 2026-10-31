@@ -234,6 +234,12 @@ class _Validator:
         self.check_keymaps()
         self.check_tiles()
         self.check_zones()
+        from blacksite.content.places import charting_problems
+        from blacksite.content.place_validation import validate_places
+        for zid, zone in self.t.zones.items():
+            for message in charting_problems(zone, self.t.tiles):
+                self.report('zones', zid, message)
+        validate_places(self.t, self.report)
         self.check_housing()
         self.check_sectors()
         self.check_cores()

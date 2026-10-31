@@ -144,7 +144,7 @@ def test_ui_2_4_here_only_focus_and_visible_adjacent_cover(content):
             'escape': {'routes': ['Hidden passage']},
             'focus': {'id': 'counter', 'label': 'A counter', 'verb': 'open'},
             'jack_focus': {'id': 'counter', 'label': 'A counter', 'verb': 'open'}}
-    assert zone.at_hand(body) == ['A counter', '░ Light cover']
+    assert zone.at_hand(body) == ['■ A counter', '░ Light cover']
     body['focus'] = body['jack_focus'] = None
     body['tiles'][0][0] = -1
     assert zone.at_hand(body) == []

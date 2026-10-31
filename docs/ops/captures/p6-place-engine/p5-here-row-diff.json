@@ -1,0 +1,55 @@
+{
+  "base": "51cc5dba185662363fe1cf7541a80757ea21ff6d",
+  "allowed_by": "issue 115 comment 6536245124",
+  "existing_goldens_changed": [
+    {
+      "path": "tests/presentation/golden/p5/zone_132x50_16.json",
+      "rows_zero_based": [
+        2
+      ],
+      "before": "║                                                  █··············                                          │ Camera net           ║",
+      "after": "║                                                  █··············                                          │ § Camera net         ║"
+    },
+    {
+      "path": "tests/presentation/golden/p5/zone_132x50_256.json",
+      "rows_zero_based": [
+        2
+      ],
+      "before": "║                                                   ··············                                          │ Camera net           ║",
+      "after": "║                                                   ··············                                          │ § Camera net         ║"
+    },
+    {
+      "path": "tests/presentation/golden/p5/zone_132x50_truecolor.json",
+      "rows_zero_based": [
+        2
+      ],
+      "before": "║                                                   ··············                                          │ Camera net           ║",
+      "after": "║                                                   ··············                                          │ § Camera net         ║"
+    },
+    {
+      "path": "tests/presentation/golden/p5/zone_80x24_16.json",
+      "rows_zero_based": [
+        2
+      ],
+      "before": "║█··············                                        │ Camera net           ║",
+      "after": "║█··············                                        │ § Camera net         ║"
+    },
+    {
+      "path": "tests/presentation/golden/p5/zone_80x24_256.json",
+      "rows_zero_based": [
+        2
+      ],
+      "before": "║ ··············                                        │ Camera net           ║",
+      "after": "║ ··············                                        │ § Camera net         ║"
+    },
+    {
+      "path": "tests/presentation/golden/p5/zone_80x24_truecolor.json",
+      "rows_zero_based": [
+        2
+      ],
+      "before": "║ ··············                                        │ Camera net           ║",
+      "after": "║ ··············                                        │ § Camera net         ║"
+    }
+  ],
+  "verdict": "Only the six HERE rows moved; all other cells and styles unchanged."
+}

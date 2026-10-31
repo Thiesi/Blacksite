@@ -1,0 +1,70 @@
+{
+  "id": "p6-fixture",
+  "theme": "p6-dark",
+  "regions": [
+    {
+      "theme": "p6-light",
+      "rect": [
+        8,
+        4,
+        5,
+        5
+      ]
+    },
+    {
+      "theme": "p6-ring",
+      "circle": [
+        16,
+        12,
+        2
+      ]
+    }
+  ],
+  "signs": [
+    {
+      "at": [
+        2,
+        0
+      ],
+      "text": "TEST",
+      "role": "thing_exit"
+    }
+  ],
+  "marks": [
+    {
+      "at": [
+        2,
+        3
+      ],
+      "text": "LANE",
+      "role": "p6_grain"
+    },
+    {
+      "line": [
+        [
+          2,
+          7
+        ],
+        [
+          9,
+          7
+        ]
+      ],
+      "glyph": "─",
+      "role": "p6_grain"
+    }
+  ],
+  "glints": [
+    [
+      5,
+      8
+    ]
+  ],
+  "glint_role": "thing_exit",
+  "names": {
+    "cover-2": "barrels"
+  },
+  "ambient": [
+    "You hear the fan."
+  ]
+}

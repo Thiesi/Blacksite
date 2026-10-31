@@ -1,0 +1,27 @@
+{
+  "themes": {
+    "p6-dark": {
+      "ground_bg": "p6_ground",
+      "ground_fg": "p6_grain",
+      "wall_bg": "p6_wall",
+      "wall_fg": "wall",
+      "texture": "  · ,"
+    },
+    "p6-light": {
+      "ground_bg": "p6_light",
+      "ground_fg": "p6_grain",
+      "wall_bg": "p6_light_wall",
+      "wall_fg": "wall",
+      "texture": " · ",
+      "luma": "light"
+    },
+    "p6-ring": {
+      "ground_bg": "p6_ground",
+      "ground_fg": "p6_grain",
+      "wall_bg": "p6_wall",
+      "wall_fg": "wall",
+      "texture": " · ",
+      "pattern": "rings"
+    }
+  }
+}
