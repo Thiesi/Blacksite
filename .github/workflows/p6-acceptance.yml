@@ -8,6 +8,7 @@ on:
       - 'scripts/accept_p6_netbbs.py'
       - 'scripts/presentation_p6.py'
       - 'scripts/presentation_p6_masks.py'
+      - 'scripts/presentation_p6_validation.py'
       - 'scripts/presentation_p6_packet.py'
       - 'scripts/p6_golden_diff.py'
       - 'scripts/p6_cell_diff.py'
@@ -40,6 +41,11 @@ jobs:
         run: python scripts/p6_cell_diff.py --output "${{ runner.temp }}/p6-cell-diff.json"
       - name: Measure supplied Plaza and Sodium Row region geometry
         run: python scripts/presentation_p6_masks.py --output "${{ runner.temp }}/p6-mask-geometry.json"
+      - name: Validate A6 cache and sign policy on the pinned content input
+        shell: bash
+        run: |
+          git fetch --no-tags origin 3e585c71eebf8c8cd19a591016dfe78a788c5b9b
+          python scripts/presentation_p6_validation.py --output "${{ runner.temp }}/p6-validation.json"
       - name: Compare charted fixture generic/looks using the P1 CPU method
         run: python scripts/presentation_p6.py --output "${{ runner.temp }}/p6-charted-budget.json"
       - uses: actions/upload-artifact@v4
@@ -51,6 +57,7 @@ jobs:
             ${{ runner.temp }}/p6-here-row-diff.json
             ${{ runner.temp }}/p6-cell-diff.json
             ${{ runner.temp }}/p6-mask-geometry.json
+            ${{ runner.temp }}/p6-validation.json
 
   native-fixtures:
     runs-on: ubuntu-latest
