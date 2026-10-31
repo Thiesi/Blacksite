@@ -26,6 +26,7 @@ class Perception:
     remembered: dict[str, dict[Tile, str]] = field(default_factory=dict)
     viewport: dict[str, int] | None = None
     grid_key: tuple[object, ...] | None = None
+    grid_revision: int = 0
     tiles: list[list[int]] = field(default_factory=list)
     memory: list[list[int]] = field(default_factory=list)
     legend: list[dict[str, str]] = field(default_factory=list)
@@ -97,6 +98,7 @@ def build(actor: Actor, zone: ZoneInstance, perception: Perception, content: Con
         # Replace arrays rather than mutate them: published revisions own the
         # previous arrays, including while their network writer is pending.
         perception.tiles, perception.memory, perception.grid_key = tiles, memory, grid_key
+        perception.grid_revision += 1
     actors = []
     for other in sorted(zone.actors.values(), key=lambda a: a.id):
         if not private_visible(actor, other):
@@ -169,10 +171,10 @@ def build(actor: Actor, zone: ZoneInstance, perception: Perception, content: Con
             perception.chart_key = chart_key
         result['charted'] = perception.charted
     if zone.id in content.looks:
-        # grid_key already tracks sight, scouts and viewport changes. Only
-        # inspect the bounded published grid on a cache miss, never enumerate
-        # a caller's whole remembered map to construct a cache key.
-        look_key = id(zone.template), id(content.looks[zone.id]), perception.grid_key, perception.chart_key
+        # The grid revision records sight/scout/viewport rebuilds, including
+        # explicit memory restoration with unchanged coordinates. Inspect
+        # the bounded grid on a miss; never enumerate whole-map memory.
+        look_key = id(zone.template), id(content.looks[zone.id]), perception.grid_revision, perception.chart_key
         if perception.look_key != look_key:
             chart = perception.charted if public else []
             known = {(viewport['x'] + x, viewport['y'] + y)

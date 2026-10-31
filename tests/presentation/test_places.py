@@ -368,15 +368,21 @@ def test_ui_2_cached_terrain_matches_fresh_paint_through_movement(fixtures,tier)
     cached = Paint(Palette(palette,tier))
     layout = compute(80,24)
     origin = layout.viewport.x,layout.viewport.y
-    for x in (4,5,6,5,4):
+    for step,x in enumerate((4,5,6,5,4)):
         caller.x = x
         caller.sight_key = None
+        instance.geometry.clear()
+        if step == 2:
+            instance.geometry[6,7] = 'cover-1'
+        instance.geometry_revision += 1
         body = build(caller,instance,perception,fixtures,80,24,'12:00',False,x)
+        body['hazards'] = [{'tiles':[[6,7]]}] if step in (1,2) else []
+        draw_origin = origin[0] + (step == 4), origin[1]
         frames = []
         for paint in (cached,Paint(Palette(palette,tier))):
             buffer = CellBuffer(80,24)
-            drawing.terrain(buffer,body,layout,paint,origin)
-            drawing.people(buffer,body,layout,paint,origin)
+            drawing.terrain(buffer,body,layout,paint,draw_origin)
+            drawing.people(buffer,body,layout,paint,draw_origin)
             term = FakeTerminal()
             term.write(buffer.full())
             frames.append(canonical(snapshot(term)))
@@ -412,3 +418,42 @@ def test_arch_5_5_4_whole_known_ring_and_sign_can_cross_viewport(fixtures):
     assert result['signs'][0]['text'] == 'KNOWN SIGN'
     blocked = masked(content,content.zones['p6-fixture'],known,set(),known_at=(whole-{(40,10),(71,0)}).__contains__)
     assert not blocked['regions'] and not blocked['signs']
+    # P1's fully-explored preparation invalidates the grid without moving
+    # the caller. The dependent look mask must observe that rebuild too.
+    zone = content.zones['p6-fixture']
+    content.zones[zone.id] = replace(zone,meta=replace(zone.meta,charted=False,public=()))
+    body,caller,instance,perception = view(content,position=(40,5))
+    assert not body['looks']['regions']
+    perception.remembered[zone.id] = {(x,y):zone.grid[y][x] for y in range(50) for x in range(120)}
+    perception.grid_key = None
+    restored = build(caller,instance,perception,content,80,24,'12:00',False,1)
+    assert any('circle' in region for region in restored['looks']['regions'])
+
+
+@pytest.mark.parametrize('tier',['16','256','truecolor'])
+def test_ui_2_cached_terrain_follows_actual_server_camera_scroll(fixtures,tier):
+    content = deepcopy(fixtures)
+    zone = content.zones['p6-fixture']
+    content.zones[zone.id] = replace(zone,
+        meta=replace(zone.meta,public=(s.Region(0,0,120,50),),exits=(),objects=()),
+        grid=tuple(tuple('wall' if x in (0,119) or y in (0,49) else 'floor'
+                         for x in range(120)) for y in range(50)))
+    instance = ZoneInstance(content.zones[zone.id],content.tiles,7)
+    caller = Actor('camera:caller','Wide界',zone=zone.id,x=52,y=24)
+    instance.actors[caller.id] = caller
+    perception = Perception()
+    cached = Paint(Palette(asdict(content.palette),tier))
+    crops = []
+    for x in (52,78,79,52):
+        caller.x = x
+        body = build(caller,instance,perception,content,80,24,'12:00',False,x)
+        crops.append(body['viewport']['x'])
+        frames = []
+        for paint in (cached,Paint(Palette(asdict(content.palette),tier))):
+            buffer = CellBuffer(80,24)
+            drawing.render(buffer,body,compute(80,24),paint)
+            terminal = FakeTerminal()
+            terminal.write(buffer.full())
+            frames.append(canonical(snapshot(terminal)))
+        assert frames[0] == frames[1]
+    assert len(set(crops)) > 1

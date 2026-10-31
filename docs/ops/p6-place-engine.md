@@ -74,8 +74,11 @@ The P6 workflow separately records look payload bytes at first send and
 during a real headless revision/delta walk. It asserts ANSI delta size
 and render latency, and records CPU against 120 CPU s/h on hosted Linux.
 The 132x50 cases include a fully explored large zone as well as charted
-ground without seeded memory. A short local Windows run is diagnostic
-only.
+ground without seeded memory. Three additional cases draw a wholly known
+57x29 ring. The original nine cases retain their workloads for direct
+comparison. A separate 60-build server probe reports chart-only and
+remembered ring masking; it is outside the door CPU boundary. A short
+local Windows run is diagnostic only.
 
 ## Native fixture captures
 
@@ -94,3 +97,36 @@ The full switch-off native matrix remains required. Automated review,
 technical review and the presentation lead's fixture sign-off remain
 separate gates. No capture grants H1, P6b fingerprint approval or S25
 human layout approval. All three remain withheld.
+
+## Playable fixture scenario
+
+This sequence is what the native harness plays. Its explicit starting
+fixture is a newly created caller placed at `(4,5)` in Fixture hall,
+with `tests/fixtures/p6` loaded through the private node's content.local.
+It is engine evidence, never the no-teleport shipped-place P6b walk.
+
+1. Start the sized harness on an attached 80x24 or 132x50 terminal:
+   `python scripts/accept_p6_netbbs.py --root <new-directory>`
+   `--door-python <source-matched-wheel-python> --size 80x24`
+   `--theme dark --show` (repeat with the other size and light theme).
+   The private NetBBS v7.45.0 node creates the ordinary caller and
+   registers the stdio door with the presentation switch enabled.
+2. Stand at `(4,5)`. HERE names `Public terminal (Plaza)` with its
+   terminal shape. At 80 columns the parenthetical suffix remains
+   legible. The public layout is dim beyond sight; a locked door keeps
+   `≡`, cover keeps its shape, and signs stay on wall faces.
+3. Press Right once to `(5,5)`. HERE shows adjacent `▒ barrels`, using
+   its authored name. Press Right four more times to `(9,5)`. Your
+   marker crosses the light region without losing contrast. HERE now
+   names `(Clinic)` distinctly from `(Plaza)`. The isolated gated room
+   and hidden-exit corridor stay unknown.
+4. The harness sends a typed fixture danger and then a service notice.
+   The protected log routes the notice to the header. The header keeps
+   Fixture hall when space permits. These synthetic fixture emissions
+   are disclosed; the look's ambient field is never emitted.
+5. Leave with Ctrl-X and confirm with Y. The harness verifies the real
+   return to NetBBS, closes the private node and records all captures.
+
+The script runs all three tiers. The full switch-off native matrix
+separately verifies ordinary shipped play. Neither run grants the
+presentation lead's sign-off or an owner human gate.

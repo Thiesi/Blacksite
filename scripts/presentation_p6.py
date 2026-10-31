@@ -9,16 +9,20 @@ from pathlib import Path
 import platform
 import subprocess
 import sys
+import time
 from typing import Any
 
 ROOT = Path(__file__).resolve().parents[1]
 sys.path[:0] = [str(ROOT/'src'), str(ROOT)]
 
 from blacksite.content.loader import ContentTree, load_content
-from blacksite.content.schema import Region, Zone
+from blacksite.content.schema import LookRegion, Region, Zone
 from blacksite.content.places import charting_problems
 from blacksite.server.protocol import encode
-from tests.presentation.budget import Caller, MIX, KEYS, activity, frames, hourly
+from blacksite.server.views.zone_view import Perception, build
+from blacksite.server.world.actors import Actor
+from blacksite.server.world.zone import ZoneInstance
+from tests.presentation.budget import Caller, MIX, KEYS, activity, frames, hourly, stats
 
 
 def fixture_content() -> ContentTree:
@@ -88,9 +92,12 @@ class WireCaller(Caller):
                 self.client.send(output)
 
 
-def wire_walk(content: ContentTree, width: int, height: int, tier: str, fully_known: bool = False) -> dict[str, Any]:
+def wire_walk(content: ContentTree, width: int, height: int, tier: str, fully_known: bool = False,
+              *, large_ring: bool = False) -> dict[str, Any]:
     caller = WireCaller(content,width,height,tier,'sodium-row',presentation=True,fully_known=fully_known)
     first = next(sample['look_bytes'] for sample in caller.wire if sample['kind']=='view' and sample['look_bytes'])
+    if large_ring:
+        assert any(region.get('circle') == [40,24,14] for region in caller.display.body['looks']['regions'])
     caller.wire = []
     for tick in range(1,81):
         now = 1.+tick*.101
@@ -105,6 +112,57 @@ def wire_walk(content: ContentTree, width: int, height: int, tier: str, fully_kn
             'delta_look_bytes':sum(row['look_bytes'] for row in deltas),
             'delta_look_share':sum(row['look_bytes'] for row in deltas)/sum(row['bytes'] for row in deltas),
             'max_delta_wire_bytes':max(row['bytes'] for row in deltas),'successful_moves':caller.moves}
+
+
+def measure_case(content: ContentTree, bare: ContentTree, width: int, height: int, tier: str,
+                 fully_known: bool, seconds: float, *, large_ring: bool = False) -> dict[str, Any]:
+    arms = {}
+    for label,tree in (('generic',bare),('looks',content)):
+        activities = {what:activity(tree,width,height,tier,what,seconds,
+                                    presentation=True,fully_known=fully_known) for what in MIX}
+        sample = frames(tree,width,height,tier,presentation=True,fully_known=fully_known)
+        assert sample['delta_16kib_pass'] and sample['render_p95_100ms_pass'], (width,height,tier,label,fully_known,sample)
+        arms[label] = {'activities':activities,'cpu_s_per_hour':hourly(activities),'frames':sample}
+    for what in MIX:
+        for field in ('initial_view','final_view','successful_moves'):
+            assert arms['generic']['activities'][what][field] == arms['looks']['activities'][what][field]
+    delta = arms['looks']['cpu_s_per_hour']-arms['generic']['cpu_s_per_hour']
+    case = {'size':[width,height],'tier':tier,'fully_known':fully_known,'large_ring':large_ring,'arms':arms,
+            'cpu_delta_s_per_hour':delta,'cpu_120s_per_hour_pass':arms['looks']['cpu_s_per_hour']<=120,
+            'wire':wire_walk(content,width,height,tier,fully_known,large_ring=large_ring)}
+    print(json.dumps({key:case[key] for key in ('size','tier','fully_known','large_ring','cpu_delta_s_per_hour','cpu_120s_per_hour_pass','wire')}),flush=True)
+    return case
+
+
+def server_ring_masks(content: ContentTree) -> dict[str, Any]:
+    """Measure server-only footprint checks separately from door CPU."""
+    tree = deepcopy(content)
+    original = tree.zones['p6-fixture']
+    meta = replace(original.meta,objects=(),exits=(),public=(Region(0,0,120,50),))
+    grid = tuple(tuple('wall' if x in (0,119) or y in (0,49) else 'floor'
+                       for x in range(120)) for y in range(50))
+    tree.zones[meta.id] = Zone(meta,grid)
+    tree.looks[meta.id] = replace(tree.looks[meta.id],regions=(LookRegion('p6-ring',circle=(40,24,14)),),
+                                 signs=(),marks=(),glints=(),names={})
+    result = {}
+    for remembered in (False,True):
+        zone = ZoneInstance(tree.zones[meta.id],tree.tiles,7)
+        caller = Actor('mask:caller','Mask',zone=zone.id,x=40,y=5)
+        zone.actors[caller.id] = caller
+        perception = Perception()
+        if remembered:
+            perception.remembered[zone.id] = {(x,y):grid[y][x] for y in range(50) for x in range(120)}
+        samples,cpu = [],0
+        for step in range(60):
+            caller.x = 40+step%8
+            started,process = time.perf_counter_ns(),time.process_time_ns()
+            body = build(caller,zone,perception,tree,132,50,'12:00',False,step)
+            cpu += time.process_time_ns()-process
+            samples.append((time.perf_counter_ns()-started)/1e6)
+            assert any('circle' in region for region in body['looks']['regions'])
+        result['remembered' if remembered else 'charted'] = {'calls':len(samples),'build_wall_ms':stats(samples),
+                                                           'build_cpu_ms':cpu/1e6,'ring':[40,24,14]}
+    return {'boundary':'zone_view.build only; separate from door CPU/120s-per-hour verdict','cases':result}
 
 
 def main() -> None:
@@ -122,22 +180,14 @@ def main() -> None:
     for width,height in ((80,24),(132,50)):
         for tier in ('16','256','truecolor'):
             for fully_known in (False,True) if width==132 else (False,):
-                arms = {}
-                for label,tree in (('generic',bare),('looks',content)):
-                    activities = {what:activity(tree,width,height,tier,what,args.seconds,
-                                                presentation=True,fully_known=fully_known) for what in MIX}
-                    sample = frames(tree,width,height,tier,presentation=True,fully_known=fully_known)
-                    assert sample['delta_16kib_pass'] and sample['render_p95_100ms_pass'], (width,height,tier,label,fully_known,sample)
-                    arms[label] = {'activities':activities,'cpu_s_per_hour':hourly(activities),'frames':sample}
-                for what in MIX:
-                    for field in ('initial_view','final_view','successful_moves'):
-                        assert arms['generic']['activities'][what][field] == arms['looks']['activities'][what][field]
-                delta = arms['looks']['cpu_s_per_hour']-arms['generic']['cpu_s_per_hour']
-                case = {'size':[width,height],'tier':tier,'fully_known':fully_known,'arms':arms,
-                        'cpu_delta_s_per_hour':delta,'cpu_120s_per_hour_pass':arms['looks']['cpu_s_per_hour']<=120,
-                        'wire':wire_walk(content,width,height,tier,fully_known)}
-                cases.append(case)
-                print(json.dumps({key:case[key] for key in ('size','tier','fully_known','cpu_delta_s_per_hour','cpu_120s_per_hour_pass','wire')}),flush=True)
+                cases.append(measure_case(content,bare,width,height,tier,fully_known,args.seconds))
+    large = deepcopy(content)
+    for zid in ('sodium-row','sodium-tin-halo'):
+        look = large.looks[zid]
+        large.looks[zid] = replace(look,regions=(*(region for region in look.regions if region.circle is None),
+                                               LookRegion('p6-ring',circle=(40,24,14))))
+    for tier in ('16','256','truecolor'):
+        cases.append(measure_case(large,bare,132,50,tier,True,args.seconds,large_ring=True))
     result = {'head':subprocess.check_output(['git','rev-parse','HEAD'],text=True).strip(),
               'dirty':bool(subprocess.check_output(['git','status','--porcelain'],text=True).strip()),
               'created_utc':datetime.now(timezone.utc).isoformat(),'platform':platform.platform(),'python':sys.version,
@@ -147,7 +197,8 @@ def main() -> None:
               'fixture':'at least 120x50 charted rectangle; real object/exit bindings, excluded doors/private/hidden cells; dark base plus light region; no spawners',
               'comparison':'generic P5 fallback versus P6 looks on identical charted fixture/knowledge/moves; not the shipped P5 workload',
               'p5_final_shipped_reference':{'run':41126237721,'cpu_132x50_known':[93.3807,87.1260,99.3039]},
-              'targets':{'render_p95_ms':100,'delta_bytes':16384,'cpu_s_per_hour':120},'cases':cases}
+              'targets':{'render_p95_ms':100,'delta_bytes':16384,'cpu_s_per_hour':120},'cases':cases,
+              'server_ring_mask_probe':server_ring_masks(content)}
     args.output.parent.mkdir(parents=True,exist_ok=True)
     args.output.write_text(json.dumps(result,indent=2)+'\n',encoding='utf-8',newline='\n')
 
