@@ -762,7 +762,7 @@ their eyes. (bible §4.3, design §4)
 
 **Wall Ring, Beacon Ring, Crash Ring, Far Ring** — the four Scour rings. (gazetteer)
 
-**Wall Telemetry** — The gated Tramyard sector cell that carries the spotters' post's Ring-fall reading. (Lattice)
+**Wall Telemetry** — The gated Tramyard sector cell that carries the spotters' post's Ring-fall reading, 30 seconds before impact. (Lattice)
 
 **Wall-folk** — Ferrymen term for anyone from inside the wall. (personae)
 
