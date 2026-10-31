@@ -1,0 +1,66 @@
+{
+ "base": "4e5390b80463b59365cfca38049dee98b0744f91",
+ "allowed_by": "issue 115 comments 6538957810 and 6539068401",
+ "p5_and_switch_off": "byte-identical",
+ "fixture_map_cells": [
+  {
+   "world": [
+    10,
+    5
+   ],
+   "before": ".",
+   "after": "T"
+  }
+ ],
+ "goldens": [
+  {
+   "path": "tests/presentation/golden/p6/dark_80x24_16.json",
+   "cells": []
+  },
+  {
+   "path": "tests/presentation/golden/p6/dark_80x24_256.json",
+   "cells": []
+  },
+  {
+   "path": "tests/presentation/golden/p6/dark_80x24_truecolor.json",
+   "cells": []
+  },
+  {
+   "path": "tests/presentation/golden/p6/dark_132x50_16.json",
+   "cells": []
+  },
+  {
+   "path": "tests/presentation/golden/p6/dark_132x50_256.json",
+   "cells": []
+  },
+  {
+   "path": "tests/presentation/golden/p6/dark_132x50_truecolor.json",
+   "cells": []
+  },
+  {
+   "path": "tests/presentation/golden/p6/light_80x24_16.json",
+   "cells": []
+  },
+  {
+   "path": "tests/presentation/golden/p6/light_80x24_256.json",
+   "cells": []
+  },
+  {
+   "path": "tests/presentation/golden/p6/light_80x24_truecolor.json",
+   "cells": []
+  },
+  {
+   "path": "tests/presentation/golden/p6/light_132x50_16.json",
+   "cells": []
+  },
+  {
+   "path": "tests/presentation/golden/p6/light_132x50_256.json",
+   "cells": []
+  },
+  {
+   "path": "tests/presentation/golden/p6/light_132x50_truecolor.json",
+   "cells": []
+  }
+ ],
+ "changed_cells": 0
+}
