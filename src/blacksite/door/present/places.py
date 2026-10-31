@@ -84,7 +84,7 @@ class Places:
                 style = paint(theme.ground_fg, theme.ground_bg)
             if glyph == ' ' and beside_wall:
                 glyph = '·'
-            if at in self.marks:
+            if at in self.marks and not entry.get('ground_only'):
                 glyph, role = self.marks[at]
                 style = paint(role, 'ground_black' if paint.tier == '16' else theme.ground_bg)
             if glyph == ' ' and beside_wall:

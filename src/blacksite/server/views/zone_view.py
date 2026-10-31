@@ -16,6 +16,7 @@ from blacksite.server.npcs.templates import relation
 from blacksite.server.views import presentation
 from blacksite.server.views import looks
 from blacksite.content.places import public_tiles, wall, water, plain
+from blacksite.place import CHARTED_GROUND
 
 SCROLL_MARGIN = 4  # Terminal UI section 2.
 MAX_VIEW_CELLS = 4096  # Architecture 5.4: bound large-terminal snapshots.
@@ -33,6 +34,7 @@ class Perception:
     indices: dict[str, int] = field(default_factory=dict)
     public_template: Zone | None = None
     public: set[Tile] = field(default_factory=set)
+    ground_only: set[Tile] = field(default_factory=set)
     chart_key: tuple[object, ...] | None = None
     charted: list[list[int]] = field(default_factory=list)
     look_key: tuple[object, ...] | None = None
@@ -153,18 +155,24 @@ def build(actor: Actor, zone: ZoneInstance, perception: Perception, content: Con
     if perception.public_template is not zone.template:
         perception.public_template = zone.template
         perception.public = public_tiles(zone.template)
+        object_tiles = {obj.tile for obj in zone.template.meta.objects}
+        perception.ground_only = {at for at in perception.public
+                                 if at in object_tiles or (kind := content.tiles[zone.template.tile_at(at)]).hazard
+                                 or kind.interaction}
         perception.chart_key = None
     public = perception.public
     if public:
-        # Static template terrain only. A chart never publishes a live door
-        # state, geometry hazard, hidden exit, actor, or remembered cell.
+        # Static template terrain only. Withheld classes share one marker;
+        # a chart never publishes live state, hazards, actors or memory.
         chart_key = id(zone.template), tuple(viewport.values())
         if perception.chart_key != chart_key:
             hidden = {ex.tile for ex in zone.template.meta.exits if ex.hidden}
             def chart_index(tile: Tile) -> int:
                 kind = content.tiles[zone.template.tile_at(tile)]
-                if tile not in public or kind.hazard or kind.interaction or tile in hidden:
+                if tile not in public or tile in hidden:
                     return -1
+                if tile in perception.ground_only:
+                    return CHARTED_GROUND
                 return perception.indices[kind.id]
             perception.charted = [[chart_index((x, y)) for x in range(viewport['x'], viewport['x'] + viewport['w'])]
                                  for y in range(viewport['y'], viewport['y'] + viewport['h'])]
@@ -180,16 +188,16 @@ def build(actor: Actor, zone: ZoneInstance, perception: Perception, content: Con
             known = {(viewport['x'] + x, viewport['y'] + y)
                      for y, row in enumerate(perception.tiles) for x, index in enumerate(row)
                      if index >= 0 or index == -2 and perception.memory[y][x] >= 0
-                     or y < len(chart) and chart[y][x] >= 0}
+                     or y < len(chart) and (chart[y][x] >= 0 or chart[y][x] == CHARTED_GROUND)}
             hidden = {ex.tile for ex in zone.template.meta.exits if ex.hidden}
             def known_at(tile: Tile) -> bool:
                 if tile in visible or tile in remembered:
                     return True
-                if tile not in public or tile in hidden:
-                    return False
-                kind = content.tiles[zone.template.tile_at(tile)]
-                return not (kind.hazard or kind.interaction)
-            perception.looks = looks.masked(content, zone.template, known, visible, known_at=known_at)
+                return tile in public and tile not in hidden
+            def ground_only_at(tile: Tile) -> bool:
+                return tile in perception.ground_only and tile not in visible and tile not in remembered
+            perception.looks = looks.masked(content, zone.template, known, visible,
+                                            known_at=known_at, ground_only_at=ground_only_at)
             perception.look_key = look_key
         result['looks'] = perception.looks
         # Add class metadata only for the new place layer. The old no-look

@@ -32,6 +32,12 @@ def validate_places(tree: ContentTree, report: Callable[[str, str, str], None]) 
             return False
         return True
 
+    def ansi_backgrounds(theme: s.Theme, kind: str, rid: str) -> None:
+        for bg in (theme.ground_bg,theme.wall_bg):
+            if bg in roles and any(type(n) is not int or not 0<=n<=7
+                                   for n in roles[bg].get('16',{}).values()):
+                report(kind,rid,'16-colour background must be 0-7')
+
     def contrast(theme: s.Theme, kind: str, rid: str) -> None:
         if not tree.palette or not all(r in roles for r in (theme.ground_bg, theme.wall_bg)):
             return
@@ -39,6 +45,21 @@ def validate_places(tree: ContentTree, report: Callable[[str, str, str], None]) 
             for variant in s.VARIANTS:
                 paint = Paint(Palette(asdict(tree.palette), tier, variant))
                 ground, structure, light = paint.roles_for(theme)
+                if tier == '16':
+                    # TR-1 rule 7: ANSI uses categories, not numeric L*
+                    # distances. Things keep their roles, people use P5's
+                    # bright mapping, Halvard stays 7 and jacked bodies 8.
+                    if paint.palette.style(structure).fg != 8:
+                        report(kind, rid, f'16/{variant}: wall foreground must be grey 8')
+                    for role in roles:
+                        if not role.startswith(('npc_', 'player_', 'thing_')):
+                            continue
+                        expected = paint(role)
+                        if paint.on_theme(role,theme) != expected:
+                            report(kind, rid, f'16/{variant}: categorical role mapping fails for {role!r}')
+                        if role.startswith(('npc_', 'player_')) and paint.on_theme(role,theme,jacked=True) != paint.jacked(expected):
+                            report(kind, rid, f'16/{variant}: categorical jacked mapping fails for {role!r}')
+                    continue
                 bands = paint.bands_on(ground, structure)
                 if bands.structure < BAND_STEP or bands.things < bands.structure + BAND_STEP:
                     report(kind, rid, f'{tier}/{variant}: structure/things contrast fails against theme ground')
@@ -61,6 +82,7 @@ def validate_places(tree: ContentTree, report: Callable[[str, str, str], None]) 
         for value in (theme.ground_bg, theme.ground_fg, theme.wall_bg, theme.wall_fg):
             if value is not None:
                 role_ok(value, 'themes', tid)
+        ansi_backgrounds(theme,'themes',tid)
         if theme.ground_bg is not None and theme.wall_bg is not None:
             contrast(theme_over(DEFAULT_THEME, theme), 'themes', tid)
 
@@ -105,10 +127,9 @@ def validate_places(tree: ContentTree, report: Callable[[str, str, str], None]) 
         effective.extend(set(ground_at.values()))
         for theme in set(effective):
             contrast(theme, 'looks', zid)
+            ansi_backgrounds(theme,'looks',zid)
             for bg in (theme.ground_bg, theme.wall_bg):
-                if role_ok(bg, 'looks', zid) and any(type(n) is not int or not 0 <= n <= 7
-                        for n in roles[bg].get('16', {}).values()):
-                    report('looks', zid, '16-colour background must be 0-7')
+                role_ok(bg,'looks',zid)
 
         def tile_type(at: s.Tile) -> s.TileType | None:
             return tree.tiles.get(zone.tile_at(at))
@@ -133,6 +154,10 @@ def validate_places(tree: ContentTree, report: Callable[[str, str, str], None]) 
                             paint = Paint(Palette(asdict(tree.palette), tier, variant))
                             # UI 2.2 mandates a black face behind ANSI letters.
                             bg = 0 if tier == '16' else paint.palette.style(theme.wall_bg).fg
+                            if tier == '16':
+                                if paint.palette.style(sign.role).fg == bg:
+                                    report('looks', zid, f'16/{variant}: sign letters must differ from the black wall background')
+                                continue
                             if light_distance(paint.palette.style(sign.role).fg, bg) < BAND_STEP:
                                 report('looks', zid, f'{tier}/{variant}: sign contrast fails against wall face')
         for mark in look.marks:
@@ -147,6 +172,9 @@ def validate_places(tree: ContentTree, report: Callable[[str, str, str], None]) 
                 report('looks', zid, 'mark needs text at a tile or one straight glyph line')
             for at, ch in mark_cells(mark):
                 tile = tile_type(at)
+                if ch == ' ' and any((other := tile_type((at[0]+dx, at[1]+dy))) and wall(other)
+                                     for dx,dy in ((1,0),(-1,0),(0,1),(0,-1))):
+                    report('looks', zid, f'mark space at {at} borders a wall; move that space off wall-adjacent ground')
                 if any(ex.hidden and ex.tile == at for ex in zone.meta.exits):
                     report('looks', zid, 'a hidden exit must never carry floor paint')
                 if not dressing(ch) or tile is None or not plain(tile):

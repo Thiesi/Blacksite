@@ -19,6 +19,7 @@ from blacksite.door.present import zone as drawing, chrome
 from blacksite.door.present.paint import Paint, BAND_STEP, light_distance, theme_roles
 from blacksite.door.present.places import for_frame
 from blacksite.layout import compute
+from blacksite.place import CHARTED_GROUND
 from blacksite.server.views.delta import changes
 from blacksite.server.views.zone_view import build, Perception
 from blacksite.server.world.actors import Actor
@@ -109,6 +110,33 @@ def test_ui_2_2_rejects_bright_ansi_background_and_unreadable_sign(fixtures):
     assert any('sign contrast' in error for error in problems(content))
 
 
+def test_ui_2_2_ansi_uses_categories_not_numeric_band_floors(fixtures):
+    content = deepcopy(fixtures)
+    # The shipped green cover is below the grey ANSI wall in L*. It is
+    # still the required categorical thing colour, with no numeric floor.
+    content.palette.roles['thing_cover']['16'] = {variant:2 for variant in s.VARIANTS}
+    assert not problems(content)  # 256 and truecolor retain valid floors.
+    content.palette.roles['wall']['16']['default'] = 2
+    assert any('wall foreground must be grey 8' in error for error in problems(content))
+    content = deepcopy(fixtures)
+    content.palette.roles['thing_exit']['16']['default'] = 0
+    assert any('black wall background' in error for error in problems(content))
+
+
+@pytest.mark.parametrize('variant',s.VARIANTS)
+def test_ui_2_2_ansi_themed_people_equal_p5_including_halvard_and_jacked(fixtures,variant):
+    paint = Paint(Palette(asdict(fixtures.palette),'16',variant))
+    for theme in fixtures.themes.themes.values():
+        for role in fixtures.palette.roles:
+            if not role.startswith(('npc_','player_')):
+                continue
+            for reverse in (False,True):
+                expected = paint(role,bold=True,reverse=reverse)
+                assert paint.on_theme(role,theme,bold=True,reverse=reverse) == expected
+                assert paint.on_theme(role,theme,bold=True,reverse=reverse,jacked=True) == paint.jacked(expected)
+    assert paint.on_theme('npc_halvard',s.Theme()).fg == 7
+
+
 @pytest.mark.parametrize('region,needle', [
     (s.Region(29,10,1,1), 'hidden exit'),
     (s.Region(30,10,1,1), 'hidden exit'),
@@ -143,7 +171,7 @@ def test_arch_5_5_4_masking_whole_only_and_memory(fixtures):
     chart = body['charted']
     vp = body['viewport']
     known = {(vp['x']+x,vp['y']+y) for y,row in enumerate(body['tiles']) for x,n in enumerate(row)
-             if n != -1 or chart[y][x] >= 0}
+             if n != -1 or chart[y][x] >= 0 or chart[y][x] == CHARTED_GROUND}
     look = body['looks']
     for region in look['regions']:
         if 'rect' in region:
@@ -159,6 +187,69 @@ def test_arch_5_5_4_masking_whole_only_and_memory(fixtures):
     assert perception.remembered == remembered
     assert (14,5) in public_tiles(instance.template)
     assert (14,5) not in perception.remembered[instance.id]
+
+
+def test_ui_2_2_mark_rejects_only_wall_adjacent_spaces_and_names_cell(fixtures):
+    content = deepcopy(fixtures)
+    look = content.looks['p6-fixture']
+    content.looks[look.id] = replace(look,marks=(s.LookMark('p6_grain',at=(2,1),text='A B'),))
+    assert any('mark space at (3, 1)' in error for error in problems(content))
+    # Letters may border the same wall; spaces away from it remain legal.
+    for at,text in (((2,1),'A·B'),((2,2),'A B')):
+        content.looks[look.id] = replace(look,marks=(s.LookMark('p6_grain',at=at,text=text),))
+        assert not problems(content)
+
+
+@pytest.mark.parametrize('tier',['16','256','truecolor'])
+@pytest.mark.parametrize('light',[False,True])
+def test_arch_5_5_5_withheld_charted_cells_are_uniform_ground_not_void(fixtures,tier,light):
+    content = deepcopy(fixtures)
+    at = (14,4)
+    original = content.zones['p6-fixture']
+    look = content.looks[original.id]
+    if light:
+        look = replace(look,theme='p6-light')
+    # Make grain nonblank at the test cell, without changing its class or
+    # introducing a new authored rule. Dressing must not expose its kind.
+    theme = content.themes.themes[look.theme]
+    content.themes.themes[look.theme] = replace(theme,texture='·')
+    content.looks[look.id] = replace(look,marks=(s.LookMark('p6_grain',at=at,text='X'),),
+        glints=(at,),glint_role='p6_grain',signs=())
+    frames,charts = [],[]
+    for tile_id,kind in (('floor','hardware'),('terminal',None),('hazard',None)):
+        grid = [list(row) for row in original.grid]
+        grid[at[1]][at[0]] = tile_id
+        objects = original.meta.objects + ((s.ObjectSpec('withheld',at,kind),) if kind else ())
+        content.zones[original.id] = replace(original,grid=tuple(tuple(row) for row in grid),
+                                              meta=replace(original.meta,objects=objects))
+        body,caller,instance,perception = view(content)
+        vp = body['viewport']
+        x,y = at[0]-vp['x'],at[1]-vp['y']
+        assert body['tiles'][y][x] == -1
+        assert body['charted'][y][x] == CHARTED_GROUND
+        assert at not in perception.remembered[instance.id]
+        assert not any(obj['x']==at[0] and obj['y']==at[1] for obj in body['objects'])
+        assert not body['looks']['marks'] and not body['looks']['glints']
+        charts.append((body['charted'],body['looks']))
+        paint = Paint(Palette(asdict(content.palette),tier))
+        buffer = CellBuffer(80,24)
+        drawing.terrain(buffer,body,compute(80,24),paint)
+        terminal = FakeTerminal()
+        terminal.write(buffer.full())
+        ox,oy = drawing.origin(body,compute(80,24))
+        assert terminal.cell(ox+x,oy+y) == '·'
+        places = for_frame(paint,body)
+        glyph,style = places.cell(paint,{'id':':charted-ground','plain':True,'ground_only':True},
+            at,roof=False,beside_wall=False,live=False)
+        assert glyph == '·' and style == paint.known(paint('floor') if tier=='16'
+                                                   else paint(theme.ground_fg,theme.ground_bg))
+        frames.append(canonical(snapshot(terminal)))
+        before = deepcopy(body['charted'])
+        instance.geometry[at] = 'wall'
+        instance.geometry_revision += 1
+        assert build(caller,instance,perception,content,80,24,'12:00',False,1)['charted'] == before
+    assert frames[0] == frames[1] == frames[2]
+    assert charts[0] == charts[1] == charts[2]
 
 
 def test_arch_5_5_6_looks_remove_without_rules_or_other_view_change(fixtures):
@@ -215,7 +306,10 @@ def test_ui_2_2_person_lift_uses_region_ground_and_cached(fixtures, tier):
     assert paint.on_theme(*args) is first
     assert len(paint.ground_lifts) == count
     ground, wall, _ = theme_roles(theme,tier)
-    assert light_distance(first.fg, first.bg) >= paint.bands_on(ground,wall).people
+    if tier == '16':
+        assert first == paint('npc_neutral')
+    else:
+        assert light_distance(first.fg, first.bg) >= paint.bands_on(ground,wall).people
     assert paint.on_theme('npc_neutral',replace(theme,luma='dark')).fg == first.fg
     dimmed = paint.on_theme('npc_neutral',theme,jacked=True,reverse=True)
     assert 7 not in dimmed.attrs
