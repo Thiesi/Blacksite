@@ -1,6 +1,6 @@
 # P6 — Place layer and representative locations
 
-**Status:** P6a done (PR #118); Part A engine follow-up in progress; P6b planned (draft PR #126)
+**Status:** P6a done (PR #118); Part A done (PR #129); A5 done (PR #130); P6b planned (draft PR #126)
 **Primary model:** Codex for P6a (engine) · the presentation lead for P6b (content), with Codex assisting · **Reviewer:** automated review, technical lead, presentation lead (co-reviewer and presentation gate)
 **Depends on:** P0 (D1 to D3 in canon), P4, P5 · **Milestone:** presentation track
 **Issue:** https://github.com/Thiesi/Blacksite/issues/115
@@ -164,9 +164,30 @@ people cells at 16 colours. Supply a per-cell diff labelled by cause.
 P5 and switch-off goldens stay byte-identical. Technical review and the
 presentation lead's fixture sign-off are required; Codex does not merge.
 
-Part B on #126 waits for Part A's merge. The presentation lead owns its
+Part B on #126 waits for Part A and A5 to merge. The presentation lead owns its
 content. Codex assists with the assigned live walk, budgets, goldens and
 fingerprint diff; H1 and fingerprint approval remain the owner's gates.
+
+## A5 public door faces (Codex)
+
+Assigned after Part A on #115 (6540000208, 6540002602). Start from
+merged #129. This is a separate class C engine PR before Part B's
+captures, with technical review and the presentation lead's sign-off.
+
+- Admit a non-hidden barrier face only beside flood-fill-reached
+  passable ground. Do not flood through the face into a room or chain
+  permission through another barrier. Hidden exits, their passable
+  neighbours and private interiors remain excluded.
+- Chart the face as uniform ground-only `-3`, including a requirement
+  exit on a plain map tile. Never publish live door or permission state
+  or write charted cells to memory.
+- At the same unseen cell, door and terminal frames must be identical
+  at every tier: dimmed theme/region ground and stable grain, without a
+  glyph, wall shape or gap marker. A facade gap is accepted for A5.
+- Keep every existing golden unchanged. Prove the blocked room and
+  hidden/private exclusions, both door states, memory and native
+  fixtures at both sizes. Shipped content edits remain in #126, after
+  A5 merges; clinic interiors are not made public.
 
 ## P6b scope (presentation lead, with Codex assisting)
 

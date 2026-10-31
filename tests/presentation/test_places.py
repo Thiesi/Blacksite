@@ -165,6 +165,117 @@ def test_arch_5_5_5_required_public_private_instanced_and_pocket(fixtures):
     assert not list(charting_problems(plain, fixtures.tiles))
 
 
+@pytest.mark.parametrize('source,kind', [
+    (source,kind) for source in ('object','interaction')
+    for kind in ('door','gate','shutter','apartment_door')
+] + [('requirement','door')])
+def test_arch_5_5_5_public_barrier_face_does_not_admit_the_room(fixtures, source, kind):
+    content = deepcopy(fixtures)
+    zone = content.zones['p6-fixture']
+    face = (20, 5)
+    objects = tuple(obj for obj in zone.meta.objects if obj.tile != face)
+    exits = zone.meta.exits
+    grid = [list(row) for row in zone.grid]
+    grid[5][20] = 'floor'
+    if source == 'object':
+        objects += (s.ObjectSpec('face', face, kind, {'open': True}),)
+    elif source == 'interaction':
+        grid[5][20] = 'door'
+        content.tiles['door'] = replace(content.tiles['door'], interaction=kind)
+    else:
+        exits += (s.Exit('face', face, zone.id, (4, 5), 'door',
+                         s.Requirement('story', 'fixture-access')),)
+    zone = replace(zone, grid=tuple(tuple(row) for row in grid),
+                   meta=replace(zone.meta, objects=objects, exits=exits,
+                                public=(s.Region(*face, 1, 1),)))
+    assert not list(charting_problems(zone, content.tiles))
+    # Admitting the face must not extend the flood fill, even by one cell.
+    for behind in ((21, 5), (22, 5)):
+        room = replace(zone, meta=replace(zone.meta, public=(s.Region(*behind, 1, 1),)))
+        assert any('unreachable' in error for error in charting_problems(room, content.tiles))
+    # A second barrier cannot qualify merely by touching the admitted face.
+    chained = replace(zone, meta=replace(zone.meta,
+        objects=(*zone.meta.objects, s.ObjectSpec('second-face', (21, 5), 'door')),
+        public=(s.Region(21, 5, 1, 1),)))
+    assert any('unreachable' in error for error in charting_problems(chained, content.tiles))
+
+
+def test_arch_5_5_5_barrier_face_never_admits_a_private_interior(fixtures):
+    zone = fixtures.zones['p6-fixture']
+    anchor = decode(s.HousingAnchor, json.loads((ROOT/'tests/fixtures/p6-private-anchor.json').read_text()))
+    anchor = replace(anchor, origin=(20, 5))
+    objects = tuple(obj for obj in zone.meta.objects if obj.tile != (20, 5))
+    obj = s.ObjectSpec('private-face', (20, 5), 'apartment_door', housing=anchor)
+    zone = replace(zone, meta=replace(zone.meta, objects=(*objects, obj),
+                                    public=(s.Region(20, 5, 1, 1),)))
+    assert any('private interior' in error for error in charting_problems(zone, fixtures.tiles))
+
+
+@pytest.mark.parametrize('dx,dy', [(x,y) for x in (-1,0,1) for y in (-1,0,1)])
+def test_arch_5_5_5_barrier_exception_preserves_hidden_exclusions(fixtures, dx, dy):
+    zone = fixtures.zones['p6-fixture']
+    at = (30+dx, 10+dy)
+    grid = [list(row) for row in zone.grid]
+    grid[at[1]][at[0]] = 'floor'
+    zone = replace(zone, grid=tuple(tuple(row) for row in grid),
+        meta=replace(zone.meta, public=(s.Region(*at, 1, 1),),
+                     objects=(*zone.meta.objects, s.ObjectSpec('near-hidden', at, 'door'))))
+    assert any('hidden exit' in error for error in charting_problems(zone, fixtures.tiles))
+    # In valid content those cells remain outside the chart, including diagonals.
+    body, _, _, _ = view(fixtures, 132, 50)
+    vp = body['viewport']
+    assert body['charted'][at[1]-vp['y']][at[0]-vp['x']] == -1
+
+
+@pytest.mark.parametrize('tier', ['16', '256', 'truecolor'])
+@pytest.mark.parametrize('size', [(80,24), (132,50)])
+@pytest.mark.parametrize('region', [False, True])
+def test_arch_5_5_5_door_terminal_and_required_exit_have_identical_ground(fixtures, tier, size, region):
+    content = deepcopy(fixtures)
+    original = content.zones['p6-fixture']
+    face = (20, 5)
+    look = content.looks[original.id]
+    if region:
+        content.looks[original.id] = replace(look, regions=(s.LookRegion('p6-light', rect=(*face,1,1)),))
+    frames, charts = [], []
+    for kind in ('door', 'terminal', 'requirement'):
+        objects = tuple(obj for obj in original.meta.objects if obj.tile != face)
+        exits = original.meta.exits
+        grid = [list(row) for row in original.grid]
+        grid[5][20] = 'floor'
+        if kind == 'requirement':
+            exits += (s.Exit('face', face, original.id, (4,5), 'door',
+                             s.Requirement('story', 'fixture-access')),)
+        else:
+            objects += (s.ObjectSpec('face', face, kind),)
+        content.zones[original.id] = replace(original, grid=tuple(tuple(row) for row in grid),
+            meta=replace(original.meta, objects=objects, exits=exits,
+                         public=(*original.meta.public, s.Region(*face,1,1))))
+        assert not list(charting_problems(content.zones[original.id], content.tiles))
+        body, caller, instance, perception = view(content, *size)
+        remembered = deepcopy(perception.remembered)
+        for opened in (False, True):
+            if kind == 'door':
+                instance.objects['face'].open = opened
+            # Rebuild both chart and sight; the result must not depend on caches.
+            perception.chart_key = perception.grid_key = perception.look_key = None
+            body = build(caller, instance, perception, content, *size, '12:00', False, 1)
+            vp = body['viewport']
+            x,y = face[0]-vp['x'],face[1]-vp['y']
+            assert body['tiles'][y][x] == body['remembered'][y][x] == -1
+            assert body['charted'][y][x] == CHARTED_GROUND
+            assert not any((obj['x'],obj['y']) == face for obj in body['objects'])
+            assert perception.remembered == remembered and face not in remembered[instance.id]
+            buffer = CellBuffer(*size)
+            drawing.terrain(buffer, body, compute(*size), Paint(Palette(asdict(content.palette), tier)))
+            terminal = FakeTerminal(*size)
+            terminal.write(buffer.full())
+            frames.append(canonical(snapshot(terminal)))
+            charts.append((body['charted'],body['looks']))
+    assert all(frame == frames[0] for frame in frames)
+    assert all(chart == charts[0] for chart in charts)
+
+
 def test_arch_5_5_4_masking_whole_only_and_memory(fixtures):
     body, caller, instance, perception = view(fixtures)
     remembered = deepcopy(perception.remembered)

@@ -599,6 +599,13 @@ never a live object's state or a dynamic hazard. No hidden-exit tile is
 disclosed, and ground-only cells disclose neither their tile class nor
 whether they are passable.
 
+A non-hidden door, gate, shutter, apartment-door or requirement-exit
+face may be public if a cardinal neighbour is reachable by the flood
+fill below. Its cell carries only ground-only `-3`, even when its map
+tile is plain floor. Admitting the face never extends that flood fill
+through it or admits an adjacent barrier. Hidden-exit and private
+exclusions still apply to the face.
+
 The validator rejects a `public` region that:
 
 - contains a hidden exit or a passable tile next to one;
@@ -606,7 +613,7 @@ The validator rejects a `public` region that:
   unrestricted exits and spawn points without crossing a hidden exit,
   an exit with a requirement (pass, key, faction) or a lockable door,
   so no corridor behind a hidden exit and no room behind a gate is
-  ever charted;
+  ever charted; the adjacent barrier face alone is allowed as above;
 - overlaps a private interior (apartments, owner-door rooms);
 - belongs to an instanced zone.
 
