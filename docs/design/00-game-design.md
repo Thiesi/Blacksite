@@ -73,6 +73,8 @@ because a menu was reopened.
   work. No client limit changes progression or offline simulation.
 - Logging out from a safe zone is instant. From elsewhere it is the
   sleeper rule above.
+- After at least an hour away, login opens the away report before play
+  (section 11.1; planned, #125).
 
 ## 3. Characters
 
@@ -1605,6 +1607,8 @@ Leaving or disconnecting removes that member. On leader logout the
 longest-serving remaining member leads; a single remaining member means
 dissolution. Promotion never changes service order. Crews are live only
 and end on server restart, independently of S26 expedition rosters.
+Once built, section 10.1 (planned, #125) replaces this paragraph's
+live-only, leader-logout and single-member rules; the rest stands.
 
 Crew friendly fire is refused before faction/Marked attack checks.
 Refusal never marks or trains a skill. Marked names remain red, while a
@@ -1629,6 +1633,48 @@ without being blocked by crew mode or the killer's private window.
 Shared XP is a whole-number award, rounded down after the section 10
 grade multiplier; it retains the recipient's own identity caps.
 
+### 10.1 Lasting crews, notes and handoffs (planned, #125)
+
+On a node where members are rarely online together, a crew must outlast
+a session. These rules extend section 10; its live rules (pickup,
+beacon, friendly fire, loot modes, shared XP and the six-tile
+contribution test) still apply to members who are online and present.
+Values are initial, tuned at the pacing gate.
+
+- **Lasting roster.** A crew has a name (3 to 24 characters, the
+  character-name character rules, unique on the node) and survives
+  logout and restart. It dissolves when its last member leaves. A crew
+  of one keeps its name and notes for 14 days so its member can invite
+  again; then it dissolves. Leadership passes as in section 10 when the
+  leader leaves the crew, not when the leader logs out.
+- **Offline invitations.** An invitation may be left for an offline
+  character. It waits up to 7 days and is accepted or declined at that
+  character's next login. Identity-based ignores, the five-player limit
+  and membership checks are rechecked on acceptance.
+- **Crew notes.** Members share up to 20 notes of up to 200 characters,
+  visible to members only. The author or the leader removes a note; a
+  leaving member's notes stay. Notes use chat's text rules and rate
+  limit, are covered by report, and are removable by the admin CLI.
+  Notes are never shown outside the crew and are never world log lines.
+- **Handoffs.** The holder of a generated job may hand it to a crew
+  member after completing at least one stage. The offer waits up to
+  24 hours, or until the job's own deadline if sooner, and the receiver
+  accepts at any time they are online. The receiver becomes the holder
+  under the frozen terms (section 9.1); completed stages stay complete,
+  and nothing rerolls.
+  - The job's deadline, and every prepared world state the stages
+    created (credentials, latches, opened controls), keep their own
+    timers (section 6.4). A handoff never extends them.
+  - The disclosed reward is paid once. It is divided between the
+    identities that committed its stages, in proportion to stages each
+    committed, rounded down, and each identity's own caps apply
+    (section 3.5). A handoff never multiplies or transfers a reward.
+  - Story jobs, work orders and descent rosters cannot be handed off.
+    Personal and mission records stay with the identity that earned
+    them (section 10).
+  - Items bound to a stage move with the handoff only through the
+    receiver's acceptance; an expired offer returns them to the holder.
+
 ## 11. Social layer
 
 - **Say** (zone, 20-tile radius), **shout** (zone), **whisper** (player,
@@ -1649,6 +1695,50 @@ grade multiplier; it retains the recipient's own identity caps.
 - **Ignore** and **report**, the latter written to the admin log.
 - The BBS handle is always visible next to the character name in sitrep
   and whisper; the character name is what the world uses.
+
+### 11.1 The away report, tags and dead drops (planned, #125)
+
+Players who are rarely online together still see each other's work.
+Values are initial, tuned at the pacing gate.
+
+- **The away report.** At login after at least an hour away, the client
+  shows one screen of what happened since the character's last logout,
+  newest first, at most 12 lines, and keeps it in the journal for 7
+  days. It is a full-width text view, never world log lines or a
+  notice.
+  - It is built only from receipts and public log lines the server
+    already writes: relays that changed hands, public services repaired
+    with the allocation chosen and the repairer's character name, newly
+    Marked names, convoy and Ring-fall outcomes, and the deaths of the
+    reader's own crew members.
+  - It also lists what is addressed to the reader: crew invitations,
+    handoff offers, dead drops waiting, new crew notes, and the existing
+    apartment-theft notice (section 6.4).
+  - It discloses nothing beyond what sitrep and public logs already
+    showed: no tile positions, no Marked players' zones (a Wardens
+    member benefit, section 7.6), and nothing about housing interiors
+    (architecture 5.5.4). A zone or cell the reader has never visited
+    is named only by its district, as on the City Map.
+- **Tags.** A character may leave one tag at a time: one non-rule glyph
+  on a passable tile in a contested or open zone, with up to 40
+  characters of text shown in HERE. It expires after 7 days or when
+  replaced.
+  - Never on a hidden exit, a door or another interaction tile, and
+    never in a safe zone or pocket.
+  - Anyone who sees the tile sees the tag, except a player who ignores
+    its author. Tags use chat's text rules, are covered by report, and
+    are removable by the admin CLI.
+- **Dead drops.** A character may leave one item stack at an authored
+  dead-drop object, addressed to one named character. Only that
+  character sees it and can collect it; nobody can loot it. Uncollected
+  after 7 days, it returns to the sender's Kestrel impound.
+  - One outgoing drop per character at a time.
+  - Only items the market board accepts may be dropped; equipped,
+    secured, bound and mission items cannot (section 8.3). Player
+    trading of intact salvage stays allowed (section 8.4).
+  - Dead-drop objects are authored content, at least one per district,
+    never in a safe zone or pocket. The gazetteer places them.
+
 
 ## 12. World events
 

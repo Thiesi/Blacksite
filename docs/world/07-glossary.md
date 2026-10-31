@@ -41,6 +41,8 @@ ability. (bible §8.1, design §3.2)
 **Attributes** — Frame, Nerve, Cortex, Resonance, Vitals; 1 to 100,
 raised through skill lines and grade. (design §3.1)
 
+**Away report** — The one-screen summary of public events and things addressed to you, shown at login after an hour away. (design §11.1, planned)
+
 **Balance weight** — the probability adjustment applied to CUST/TEN- tagged
 lines by the season's Custodian/Tenant balance. (personae)
 
@@ -193,6 +195,8 @@ objectives, season contributions. (design §6.2)
 
 **Day count** — the Wake's running tally toward day ninety, shown by Sablier staff. (personae)
 
+**Dead drop (player)** — One item stack left at an authored drop object for one named character; returns to the sender's impound after 7 days. (design §11.1, planned)
+
 **Deep** — Unmoored +90 rank. (factions)
 
 **Demir, Yusra** — Red Sable's Cable Boss. (factions)
@@ -308,6 +312,8 @@ concrete over the shaft keeps Karst alive. (bible §8.2)
 
 **Halvard-Ostrom Dynamics** — The corporate-military contractor that built
 Site Zero and now holds the Spire. (bible §3.1, §7)
+
+**Handoff** — Passing a generated job, with its completed stages, to a crew member who carries it on later. (design §10.1, planned)
 
 **Hardline** — Archetype decanted from a Site Zero security template;
 heavy frame, heavy weapons. (bible §8.1)
@@ -492,6 +498,8 @@ contracts, trade, and the crew beacon. (bible §8.1)
 not on the pour plan. (story arcs)
 
 **Oyelaran, Tobiah** — The Bathmaster: keeps the Compact's boilers and baths. (factions)
+
+**Tag** — A player's one-glyph mark on a contested or open tile, with short text shown in HERE. (design §11.1, planned)
 
 **the patch frame** — the physical cross-connect where the long-haul links
 were cut; padlocked, key in the director's office. (found texts)
