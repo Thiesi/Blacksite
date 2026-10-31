@@ -1,0 +1,61 @@
+{
+  "id": "p6-fixture",
+  "name": "Fixture hall",
+  "district": "VATSIDE",
+  "safety": "safe",
+  "sight_radius": 5,
+  "spawn": [
+    4,
+    5
+  ],
+  "charted": true,
+  "public": [
+    [
+      1,
+      0,
+      15,
+      10
+    ]
+  ],
+  "exits": [
+    {
+      "id": "hidden-fixture",
+      "tile": [
+        30,
+        10
+      ],
+      "target_zone": "p6-fixture",
+      "target_tile": [
+        4,
+        5
+      ],
+      "kind": "door",
+      "hidden": true
+    }
+  ],
+  "objects": [
+    {
+      "id": "fixture-terminal",
+      "tile": [3, 5],
+      "kind": "terminal",
+      "params": {"name": "Public terminal (Plaza)"}
+    },
+    {
+      "id": "fixture-terminal-clinic",
+      "tile": [10, 5],
+      "kind": "terminal",
+      "params": {"name": "Public terminal (Clinic)"}
+    },
+    {
+      "id": "fixture-gate",
+      "tile": [
+        20,
+        5
+      ],
+      "kind": "door",
+      "params": {
+        "open": true
+      }
+    }
+  ]
+}

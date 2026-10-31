@@ -1,0 +1,531 @@
+{
+  "roles": {
+    "p6_ground": {
+      "truecolor": {
+        "default": "#080808",
+        "deutan": "#080808",
+        "protan": "#080808"
+      },
+      "256": {
+        "default": 232,
+        "deutan": 232,
+        "protan": 232
+      },
+      "16": {
+        "default": 0,
+        "deutan": 0,
+        "protan": 0
+      }
+    },
+    "p6_wall": {
+      "truecolor": {
+        "default": "#303030",
+        "deutan": "#303030",
+        "protan": "#303030"
+      },
+      "256": {
+        "default": 236,
+        "deutan": 236,
+        "protan": 236
+      },
+      "16": {
+        "default": 4,
+        "deutan": 4,
+        "protan": 4
+      }
+    },
+    "p6_light": {
+      "truecolor": {
+        "default": "#e0e0e0",
+        "deutan": "#e0e0e0",
+        "protan": "#e0e0e0"
+      },
+      "256": {
+        "default": 253,
+        "deutan": 253,
+        "protan": 253
+      },
+      "16": {
+        "default": 7,
+        "deutan": 7,
+        "protan": 7
+      }
+    },
+    "p6_light_wall": {
+      "truecolor": {
+        "default": "#bbbbbb",
+        "deutan": "#bbbbbb",
+        "protan": "#bbbbbb"
+      },
+      "256": {
+        "default": 250,
+        "deutan": 250,
+        "protan": 250
+      },
+      "16": {
+        "default": 6,
+        "deutan": 6,
+        "protan": 6
+      }
+    },
+    "p6_grain": {
+      "truecolor": {
+        "default": "#202020",
+        "deutan": "#202020",
+        "protan": "#202020"
+      },
+      "256": {
+        "default": 234,
+        "deutan": 234,
+        "protan": 234
+      },
+      "16": {
+        "default": 8,
+        "deutan": 8,
+        "protan": 8
+      }
+    },
+    "player_self_light": {
+      "truecolor": {
+        "default": "#101010",
+        "deutan": "#101010",
+        "protan": "#101010"
+      },
+      "256": {
+        "default": 233,
+        "deutan": 233,
+        "protan": 233
+      },
+      "16": {
+        "default": 0,
+        "deutan": 0,
+        "protan": 0
+      }
+    },
+    "player_crew_light": {
+      "truecolor": {
+        "default": "#101010",
+        "deutan": "#101010",
+        "protan": "#101010"
+      },
+      "256": {
+        "default": 233,
+        "deutan": 233,
+        "protan": 233
+      },
+      "16": {
+        "default": 0,
+        "deutan": 0,
+        "protan": 0
+      }
+    },
+    "player_neutral_light": {
+      "truecolor": {
+        "default": "#101010",
+        "deutan": "#101010",
+        "protan": "#101010"
+      },
+      "256": {
+        "default": 233,
+        "deutan": 233,
+        "protan": 233
+      },
+      "16": {
+        "default": 0,
+        "deutan": 0,
+        "protan": 0
+      }
+    },
+    "player_hostile_light": {
+      "truecolor": {
+        "default": "#101010",
+        "deutan": "#101010",
+        "protan": "#101010"
+      },
+      "256": {
+        "default": 233,
+        "deutan": 233,
+        "protan": 233
+      },
+      "16": {
+        "default": 0,
+        "deutan": 0,
+        "protan": 0
+      }
+    },
+    "player_marked_light": {
+      "truecolor": {
+        "default": "#101010",
+        "deutan": "#101010",
+        "protan": "#101010"
+      },
+      "256": {
+        "default": 233,
+        "deutan": 233,
+        "protan": 233
+      },
+      "16": {
+        "default": 0,
+        "deutan": 0,
+        "protan": 0
+      }
+    },
+    "npc_neutral_light": {
+      "truecolor": {
+        "default": "#101010",
+        "deutan": "#101010",
+        "protan": "#101010"
+      },
+      "256": {
+        "default": 233,
+        "deutan": 233,
+        "protan": 233
+      },
+      "16": {
+        "default": 0,
+        "deutan": 0,
+        "protan": 0
+      }
+    },
+    "npc_hostile_light": {
+      "truecolor": {
+        "default": "#101010",
+        "deutan": "#101010",
+        "protan": "#101010"
+      },
+      "256": {
+        "default": 233,
+        "deutan": 233,
+        "protan": 233
+      },
+      "16": {
+        "default": 0,
+        "deutan": 0,
+        "protan": 0
+      }
+    },
+    "npc_warden_light": {
+      "truecolor": {
+        "default": "#101010",
+        "deutan": "#101010",
+        "protan": "#101010"
+      },
+      "256": {
+        "default": 233,
+        "deutan": 233,
+        "protan": 233
+      },
+      "16": {
+        "default": 0,
+        "deutan": 0,
+        "protan": 0
+      }
+    },
+    "npc_vendor_light": {
+      "truecolor": {
+        "default": "#101010",
+        "deutan": "#101010",
+        "protan": "#101010"
+      },
+      "256": {
+        "default": 233,
+        "deutan": 233,
+        "protan": 233
+      },
+      "16": {
+        "default": 0,
+        "deutan": 0,
+        "protan": 0
+      }
+    },
+    "npc_halvard_light": {
+      "truecolor": {
+        "default": "#101010",
+        "deutan": "#101010",
+        "protan": "#101010"
+      },
+      "256": {
+        "default": 233,
+        "deutan": 233,
+        "protan": 233
+      },
+      "16": {
+        "default": 0,
+        "deutan": 0,
+        "protan": 0
+      }
+    },
+    "npc_sablier_light": {
+      "truecolor": {
+        "default": "#101010",
+        "deutan": "#101010",
+        "protan": "#101010"
+      },
+      "256": {
+        "default": 233,
+        "deutan": 233,
+        "protan": 233
+      },
+      "16": {
+        "default": 0,
+        "deutan": 0,
+        "protan": 0
+      }
+    },
+    "npc_kestrel_light": {
+      "truecolor": {
+        "default": "#101010",
+        "deutan": "#101010",
+        "protan": "#101010"
+      },
+      "256": {
+        "default": 233,
+        "deutan": 233,
+        "protan": 233
+      },
+      "16": {
+        "default": 0,
+        "deutan": 0,
+        "protan": 0
+      }
+    },
+    "npc_wardens_light": {
+      "truecolor": {
+        "default": "#101010",
+        "deutan": "#101010",
+        "protan": "#101010"
+      },
+      "256": {
+        "default": 233,
+        "deutan": 233,
+        "protan": 233
+      },
+      "16": {
+        "default": 0,
+        "deutan": 0,
+        "protan": 0
+      }
+    },
+    "npc_choir_light": {
+      "truecolor": {
+        "default": "#101010",
+        "deutan": "#101010",
+        "protan": "#101010"
+      },
+      "256": {
+        "default": 233,
+        "deutan": 233,
+        "protan": 233
+      },
+      "16": {
+        "default": 0,
+        "deutan": 0,
+        "protan": 0
+      }
+    },
+    "npc_sable_light": {
+      "truecolor": {
+        "default": "#101010",
+        "deutan": "#101010",
+        "protan": "#101010"
+      },
+      "256": {
+        "default": 233,
+        "deutan": 233,
+        "protan": 233
+      },
+      "16": {
+        "default": 0,
+        "deutan": 0,
+        "protan": 0
+      }
+    },
+    "npc_unmoored_light": {
+      "truecolor": {
+        "default": "#101010",
+        "deutan": "#101010",
+        "protan": "#101010"
+      },
+      "256": {
+        "default": 233,
+        "deutan": 233,
+        "protan": 233
+      },
+      "16": {
+        "default": 0,
+        "deutan": 0,
+        "protan": 0
+      }
+    },
+    "npc_ferrymen_light": {
+      "truecolor": {
+        "default": "#101010",
+        "deutan": "#101010",
+        "protan": "#101010"
+      },
+      "256": {
+        "default": 233,
+        "deutan": 233,
+        "protan": 233
+      },
+      "16": {
+        "default": 0,
+        "deutan": 0,
+        "protan": 0
+      }
+    },
+    "thing_cover": {
+      "truecolor": {
+        "default": "#777777",
+        "deutan": "#777777",
+        "protan": "#777777"
+      },
+      "256": {
+        "default": 243,
+        "deutan": 243,
+        "protan": 243
+      },
+      "16": {
+        "default": 7,
+        "deutan": 7,
+        "protan": 7
+      }
+    },
+    "thing_door": {
+      "truecolor": {
+        "default": "#777777",
+        "deutan": "#777777",
+        "protan": "#777777"
+      },
+      "256": {
+        "default": 243,
+        "deutan": 243,
+        "protan": 243
+      },
+      "16": {
+        "default": 7,
+        "deutan": 7,
+        "protan": 7
+      }
+    },
+    "thing_exit": {
+      "truecolor": {
+        "default": "#777777",
+        "deutan": "#777777",
+        "protan": "#777777"
+      },
+      "256": {
+        "default": 243,
+        "deutan": 243,
+        "protan": 243
+      },
+      "16": {
+        "default": 7,
+        "deutan": 7,
+        "protan": 7
+      }
+    },
+    "thing_hardware": {
+      "truecolor": {
+        "default": "#777777",
+        "deutan": "#777777",
+        "protan": "#777777"
+      },
+      "256": {
+        "default": 243,
+        "deutan": 243,
+        "protan": 243
+      },
+      "16": {
+        "default": 7,
+        "deutan": 7,
+        "protan": 7
+      }
+    },
+    "thing_hazard": {
+      "truecolor": {
+        "default": "#777777",
+        "deutan": "#777777",
+        "protan": "#777777"
+      },
+      "256": {
+        "default": 243,
+        "deutan": 243,
+        "protan": 243
+      },
+      "16": {
+        "default": 7,
+        "deutan": 7,
+        "protan": 7
+      }
+    },
+    "thing_terminal": {
+      "truecolor": {
+        "default": "#777777",
+        "deutan": "#777777",
+        "protan": "#777777"
+      },
+      "256": {
+        "default": 243,
+        "deutan": 243,
+        "protan": 243
+      },
+      "16": {
+        "default": 7,
+        "deutan": 7,
+        "protan": 7
+      }
+    },
+    "thing_vat": {
+      "truecolor": {
+        "default": "#777777",
+        "deutan": "#777777",
+        "protan": "#777777"
+      },
+      "256": {
+        "default": 243,
+        "deutan": 243,
+        "protan": 243
+      },
+      "16": {
+        "default": 7,
+        "deutan": 7,
+        "protan": 7
+      }
+    },
+    "thing_vendor": {
+      "truecolor": {
+        "default": "#777777",
+        "deutan": "#777777",
+        "protan": "#777777"
+      },
+      "256": {
+        "default": 243,
+        "deutan": 243,
+        "protan": 243
+      },
+      "16": {
+        "default": 7,
+        "deutan": 7,
+        "protan": 7
+      }
+    },
+    "wall": {
+      "truecolor": {
+        "default": "#aaaaaa",
+        "deutan": "#aaaaaa",
+        "protan": "#aaaaaa"
+      },
+      "256": {
+        "default": 248,
+        "deutan": 248,
+        "protan": 248
+      },
+      "16": {
+        "default": 8,
+        "deutan": 8,
+        "protan": 8
+      }
+    }
+  }
+}

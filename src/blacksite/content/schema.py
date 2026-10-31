@@ -14,6 +14,7 @@ from dataclasses import dataclass, field
 from typing import Any, Literal
 
 from blacksite.version import CONTENT_SCHEMA
+from blacksite.place import Theme
 
 Tile = tuple[int, int]
 """A tile position `[x, y]`, zero-based from the top-left of the map."""
@@ -65,6 +66,52 @@ class Palette:
     """
 
     roles: dict[str, dict[Tier, dict[PaletteVariant, str | int]]]
+    schema: int = CONTENT_SCHEMA
+
+
+@dataclass(frozen=True)
+class ThemeTable:
+    themes: dict[str, Theme]
+    schema: int = CONTENT_SCHEMA
+
+
+@dataclass(frozen=True)
+class LookRegion:
+    theme: str
+    rect: tuple[int, int, int, int] | None = None
+    circle: tuple[int, int, int] | None = None
+    """[x, y, radius in rows]; columns count half, as in the prototype."""
+
+
+@dataclass(frozen=True)
+class LookSign:
+    at: Tile
+    text: str
+    role: str
+
+
+@dataclass(frozen=True)
+class LookMark:
+    role: str
+    at: Tile | None = None
+    text: str = ""
+    line: tuple[Tile, Tile] | None = None
+    glyph: str = ""
+
+
+@dataclass(frozen=True)
+class Look:
+    """Entities 1.21; no scene, place, light or disclosure policy here."""
+
+    id: str
+    theme: str
+    regions: tuple[LookRegion, ...] = ()
+    signs: tuple[LookSign, ...] = ()
+    marks: tuple[LookMark, ...] = ()
+    glints: tuple[Tile, ...] = ()
+    glint_role: str | None = None
+    names: dict[str, str] = field(default_factory=dict)
+    ambient: tuple[str, ...] = ()
     schema: int = CONTENT_SCHEMA
 
 
@@ -205,6 +252,13 @@ class Region:
 
 
 @dataclass(frozen=True)
+class Pocket(Region):
+    """Zone disclosure, not dressing. Sight's `lit` rule is deferred."""
+
+    charted: bool = False
+
+
+@dataclass(frozen=True)
 class Spawner:
     id: str
     npc: str
@@ -302,12 +356,14 @@ class ZoneMeta:
     exits: tuple[Exit, ...] = ()
     spawners: tuple[Spawner, ...] = ()
     objects: tuple[ObjectSpec, ...] = ()
-    pockets: tuple[Region, ...] = ()
+    pockets: tuple[Pocket, ...] = ()
     lore: tuple[str, ...] = ()
     instanced: bool = False
     spawn: Tile | None = None
     layouts: tuple[ZoneLayout, ...] = ()
     sector: str | None = None
+    charted: bool = False
+    public: tuple[Region, ...] = ()
     schema: int = CONTENT_SCHEMA
 
 

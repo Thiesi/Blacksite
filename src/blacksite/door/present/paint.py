@@ -1,19 +1,27 @@
-"""P5 styles, ported from presentation-v1 1060c9d: UI 1 and 2.3.
+"""P5/P6 styles, from presentation-v1 1060c9d: UI 1, 2.2 and 2.3.
 
 Palette remains the sole role lookup. Dimming is cached per Paint, not
-in shared mutable state. Place themes and modern glyphs wait for P6/V2.
+in shared mutable state. P6 caches person lifts against actual region ground.
 """
 
 from dataclasses import dataclass
 from math import atan2, cos, degrees, hypot, radians, sin
 
 from blacksite.door.palette import Color, Palette, Style
+from blacksite.place import Theme
 
 KNOWN_FG, KNOWN_BG = 0.55, 0.62  # Known space: the same hues, about 55-60 per cent light.
 BAND_STEP = 8.0  # UI 2.2 / presentation decision, PR #110 comment 6528855270.
 HUE_TOLERANCE = 10.0  # Same decision; degrees in CIE LCh.
 JACKED_16, HALVARD_16 = 8, 7
 PEOPLE_16 = (7, 9, 10, 11, 12, 13, 14, 15, 7, 9, 10, 11, 12, 13, 14, 15)
+
+
+def theme_roles(theme: Theme, tier: str) -> tuple[str, str, bool]:
+    """UI 2.2's actual mapped ground, structure and light-role policy."""
+    if tier == '16':
+        return 'ground_black', theme.wall_fg or 'wall', False
+    return theme.ground_bg or 'ground_black', theme.wall_bg or 'wall_face', theme.luma == 'light'
 
 
 def _xterm() -> tuple[tuple[int, int, int], ...]:
@@ -133,7 +141,7 @@ def lift(colour: Color, floor: float, tier: str, *, ground: Color = 0,
                 return rgb
         return _unreachable(colour)
     target_lab = lab(rgb)
-    fits = [index for index in range(16, 256)
+    fits = [index for index in (range(16) if tier == '16' else range(16, 256))
             if abs(_XTERM_LAB[index][0] - ground_light) >= floor
             and (ceiling is None or abs(_XTERM_LAB[index][0] - ground_light) < ceiling)
             and (chroma <= _ACHROMATIC or _XTERM_LCH[index][1] > _ACHROMATIC)]
@@ -190,6 +198,10 @@ class Paint:
         self.jacked_styles: dict[Style, Style] = {}
         self.styles: dict[tuple[Style, str, bool, bool], Style] = {}
         self._bands: BandFloors | None = None
+        self.ground_bands: dict[tuple[str, str], BandFloors] = {}
+        self.ground_styles: dict[tuple[str, str, str, bool, bool, bool, bool], Style] = {}
+        self.ground_lifts: dict[tuple[str, Color, float, float | None], Color] = {}
+        self.theme_policies: dict[Theme, tuple[str, str, bool]] = {}
 
     @property
     def bands(self) -> BandFloors:
@@ -224,6 +236,64 @@ class Paint:
 
     def has(self, role: str | None) -> bool:
         return bool(role) and role in self.palette.roles
+
+    def bands_on(self, ground: str, wall: str) -> BandFloors:
+        """P6 floors are distances from the actual theme/region ground."""
+        key = ground, wall
+        if key not in self.ground_bands:
+            colour = self.palette.style(ground).fg
+            structure = light_distance(self.palette.style(wall).fg, colour)
+            things = min((light_distance(self.palette.style(role).fg, colour)
+                          for role in self.palette.roles if role.startswith('thing_')),
+                         default=structure + BAND_STEP)
+            self.ground_bands[key] = BandFloors(colour, structure, things,
+                                               things + BAND_STEP, structure + BAND_STEP)
+        return self.ground_bands[key]
+
+    def on_ground(self, role: str, ground: str, wall: str, *, light: bool = False,
+                  bold: bool = False, reverse: bool = False, jacked: bool = False) -> Style:
+        """Cache a person lift per role and ground; no per-cell colour math.
+
+        The old call path remains byte-identical for zones without looks.
+        An impossible operator palette still uses P5's non-raising lift.
+        """
+        key = role, ground, wall, light, bold, reverse, jacked
+        if key not in self.ground_styles:
+            person = role.startswith(('npc_', 'player_'))
+            chosen = role + '_light' if person and light and self.has(role + '_light') else role
+            base = self.palette.style(chosen, bg=ground)
+            colour = base.fg
+            if person:
+                bands = self.bands_on(ground, wall)
+                floor, ceiling = (bands.jacked, bands.people) if jacked else (bands.people, None)
+                lift_key = chosen, bands.ground, floor, ceiling
+                if lift_key not in self.ground_lifts:
+                    if jacked and self.tier == '16':
+                        self.ground_lifts[lift_key] = JACKED_16  # UI 2.2 explicit ANSI exception.
+                    else:
+                        if jacked:
+                            colour = self.scale(colour, KNOWN_FG)
+                        self.ground_lifts[lift_key] = lift(colour, floor, self.tier,
+                                                          ground=bands.ground, ceiling=ceiling)
+                colour = self.ground_lifts[lift_key]
+            attrs = () if jacked else (*base.attrs, *((7,) if reverse else ()),
+                                      *((1,) if bold and self.tier != '16' else ()))
+            self.ground_styles[key] = Style(colour, base.bg, attrs, base.tier)
+        return self.ground_styles[key]
+
+    def on_theme(self, role: str, theme: Theme, *, bold: bool = False,
+                 reverse: bool = False, jacked: bool = False) -> Style:
+        ground, wall, light = self.roles_for(theme)
+        return self.on_ground(role, ground, wall, light=light, bold=bold, reverse=reverse, jacked=jacked)
+
+    def roles_for(self, theme: Theme) -> tuple[str, str, bool]:
+        if theme not in self.theme_policies:
+            ground, wall, light = theme_roles(theme, self.tier)
+            # A local region role can be light after mapping even if its
+            # author left luma at its default. Its people still need _light.
+            light = self.tier != '16' and (light or lab(self.palette.style(ground).fg)[0] >= 50)
+            self.theme_policies[theme] = ground, wall, light
+        return self.theme_policies[theme]
 
     def known(self, style: Style) -> Style:
         """Terrain you know but cannot see now. 16 colours cannot dim, so

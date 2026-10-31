@@ -6,7 +6,7 @@ from typing import Any
 
 from blacksite.layout import compute as screen_layout
 from blacksite.content.loader import ContentTree
-from blacksite.content.schema import Tile
+from blacksite.content.schema import Tile, Zone
 from blacksite.server.world.actors import Actor
 from blacksite.server.world.sight import sees_actor, visible_tiles, sight_radius, private_visible
 from blacksite.server.world.zone import ZoneInstance
@@ -14,6 +14,8 @@ from blacksite.server.world.safety import safety_at
 from blacksite.server.clock import TICK_HZ
 from blacksite.server.npcs.templates import relation
 from blacksite.server.views import presentation
+from blacksite.server.views import looks
+from blacksite.content.places import public_tiles, wall, water, plain
 
 SCROLL_MARGIN = 4  # Terminal UI section 2.
 MAX_VIEW_CELLS = 4096  # Architecture 5.4: bound large-terminal snapshots.
@@ -28,6 +30,12 @@ class Perception:
     memory: list[list[int]] = field(default_factory=list)
     legend: list[dict[str, str]] = field(default_factory=list)
     indices: dict[str, int] = field(default_factory=dict)
+    public_template: Zone | None = None
+    public: set[Tile] = field(default_factory=set)
+    chart_key: tuple[object, ...] | None = None
+    charted: list[list[int]] = field(default_factory=list)
+    look_key: tuple[object, ...] | None = None
+    looks: dict[str, Any] | None = None
 
 
 def camera(actor: Actor, zone: ZoneInstance, width: int, height: int,
@@ -127,7 +135,7 @@ def build(actor: Actor, zone: ZoneInstance, perception: Perception, content: Con
               for entry in actors if entry["id"] != actor.id]
     nearby.sort(key=lambda entry: (entry["relation"] != "!", zone.actors[entry["id"]].kind != "player",
         (zone.actors[entry["id"]].x-actor.x)**2+(zone.actors[entry["id"]].y-actor.y)**2, entry["id"]))
-    return {"viewport": viewport, "tiles": perception.tiles, "remembered": perception.memory, "legend": perception.legend,
+    result = {"viewport": viewport, "tiles": perception.tiles, "remembered": perception.memory, "legend": perception.legend,
             "actors": actors, "objects": objects,
             "me": {"name": actor.name, "handle": actor.handle, "faction": actor.faction, "grade": None,
                    "hp": actor.health, "hp_max": actor.health_max, "sta": actor.stamina, "sta_max": actor.stamina_max,
@@ -140,3 +148,39 @@ def build(actor: Actor, zone: ZoneInstance, perception: Perception, content: Con
             "crew": [], "event": None, "objective": None, "hazards": hazards,
             "service": None, "escape": {"routes": escapes, "action": "Ctrl-X leaves"},
             "hint": "Move: arrows  Shift: sprint  E interact  M map  ? help  Ctrl-X leave"}
+    if perception.public_template is not zone.template:
+        perception.public_template = zone.template
+        perception.public = public_tiles(zone.template)
+        perception.chart_key = None
+    public = perception.public
+    if public:
+        # Static template terrain only. A chart never publishes a live door
+        # state, geometry hazard, hidden exit, actor, or remembered cell.
+        chart_key = id(zone.template), tuple(viewport.values())
+        if perception.chart_key != chart_key:
+            hidden = {ex.tile for ex in zone.template.meta.exits if ex.hidden}
+            def chart_index(tile: Tile) -> int:
+                kind = content.tiles[zone.template.tile_at(tile)]
+                if tile not in public or kind.hazard or kind.interaction or tile in hidden:
+                    return -1
+                return perception.indices[kind.id]
+            perception.charted = [[chart_index((x, y)) for x in range(viewport['x'], viewport['x'] + viewport['w'])]
+                                 for y in range(viewport['y'], viewport['y'] + viewport['h'])]
+            perception.chart_key = chart_key
+        result['charted'] = perception.charted
+    if zone.id in content.looks:
+        known = {tile for tile in visible | set(remembered) | public
+                 if viewport['x'] <= tile[0] < viewport['x'] + viewport['w']
+                 and viewport['y'] <= tile[1] < viewport['y'] + viewport['h']}
+        look_key = id(zone.template), id(content.looks[zone.id]), frozenset(known), frozenset(visible & known)
+        if perception.look_key != look_key:
+            perception.looks = looks.masked(content, zone.template, known, visible)
+            perception.look_key = look_key
+        result['looks'] = perception.looks
+        # Add class metadata only for the new place layer. The old no-look
+        # legend and switch-off rendering retain their bytes.
+        result['legend'] = [{**entry, 'wall': wall(content.tiles[entry['id']]),
+                             'water': water(content.tiles[entry['id']]),
+                             'plain': plain(content.tiles[entry['id']])}
+                            for entry in perception.legend]
+    return result

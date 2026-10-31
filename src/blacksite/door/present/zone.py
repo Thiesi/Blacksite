@@ -1,16 +1,18 @@
-"""P5 zone rule layer, ported from V1 1060c9d with #106 corrections.
+"""P5 rule drawing and P6 caller-masked places, with shared geometry.
 
-Draws only the authorized P4 rule layer. Tiles and memory decide what
-exists; live overlays require the current view. Looks, place themes and
-charting wait for P6. Geometry and focus remain their shared contracts.
+Tiles, memory and the chart decide known ground. Live overlays require
+the current view. Optional looks dress that ground; missing looks retain
+the P5 tile drawing. Geometry and focus remain their shared contracts.
 """
 
 from typing import Any
 
-from blacksite.door.cells import CellBuffer, truncate
+from blacksite.door.cells import CellBuffer, clean_text, display_width, truncate
+import re
 from blacksite.door.layout import Layout
 from blacksite.door.palette import Style
 from blacksite.door.present import chrome
+from blacksite.door.present.places import for_frame
 from blacksite.door.present.paint import Paint
 
 # Things you can use: one fixed shape and one colour family per kind.
@@ -54,10 +56,12 @@ def origin(body: dict[str, Any], layout: Layout) -> tuple[int, int]:
 
 def terrain(buffer: CellBuffer, body: dict[str, Any], layout: Layout, paint: Paint,
             draw_origin: tuple[int, int] | None = None) -> None:
-    """Rule layer only. No place records, looks, charting or deep camera."""
+    """Draw known terrain, optional dressing and currently visible warnings."""
     area, vp = layout.viewport, body['viewport']
     ox, oy = draw_origin if draw_origin is not None else origin(body, layout)
     grid, memory, legend = body['tiles'], body.get('remembered', []), body['legend']
+    charted = body.get('charted', [])
+    places = for_frame(paint, body)
     hazards = {tuple(tile) for hazard in body.get('hazards', []) for tile in hazard.get('tiles', [])}
 
     # Resolve memory/legend indices once. The trial repeated this for every
@@ -65,10 +69,13 @@ def terrain(buffer: CellBuffer, body: dict[str, Any], layout: Layout, paint: Pai
     resolved = []
     for y, row in enumerate(grid):
         recall = memory[y] if y < len(memory) else []
-        indices = [recall[x] if value == -2 and x < len(recall) else value for x, value in enumerate(row)]
+        chart = charted[y] if y < len(charted) else []
+        indices = [recall[x] if value == -2 and x < len(recall) else
+                   chart[x] if value < 0 and x < len(chart) else value for x, value in enumerate(row)]
         resolved.append([index if 0 <= index < len(legend) else -1 for index in indices])
     ids = [[legend[index]['id'] if index >= 0 else '' for index in row] for row in resolved]
-    open_tiles = frozenset(entry['id'] for entry in legend if entry['id'] not in OPAQUE)
+    opaque = frozenset(entry['id'] for entry in legend if entry.get('wall', entry['id'] in OPAQUE))
+    open_tiles = frozenset(entry['id'] for entry in legend if entry['id'] not in opaque)
     styles: dict[tuple[int, bool, bool], tuple[str, Style]] = {}
 
     for y, row in enumerate(grid[:vp['h']]):
@@ -81,17 +88,22 @@ def terrain(buffer: CellBuffer, body: dict[str, Any], layout: Layout, paint: Pai
             if index < 0:
                 continue
             entry = legend[index]
-            roof = entry['id'] == 'wall' and not _beside(ids, x, y, open_tiles)
+            roof = entry.get('wall', entry['id'] == 'wall') and not _beside(ids, x, y, open_tiles)
             key = index, roof, value < 0
             if key not in styles:
                 glyph, style = cell(paint, entry, roof=roof)
                 styles[key] = glyph, paint.known(style) if value < 0 else style
             glyph, style = styles[key]
+            if places:
+                glyph, style = places.cell(paint, entry, (vp['x'] + x, vp['y'] + y),
+                                           roof=roof, beside_wall=_beside(ids, x, y, opaque), live=value >= 0)
+                if value < 0:
+                    style = paint.known(style)
             if value >= 0 and (vp['x'] + x, vp['y'] + y) in hazards:
                 style = paint('thing_hazard', 'hazard_warn', bold=True, reverse=paint.tier == '16')
             elif value < 0:
                 if (paint.tier == '16' and glyph == '·' and (vp['x'] + x + vp['y'] + y) % 3
-                        and not _beside(ids, x, y, OPAQUE)):
+                        and not _beside(ids, x, y, opaque)):
                     glyph = ' '
             buffer.put(ox + x, oy + y, glyph, style)
 
@@ -114,6 +126,7 @@ def people(buffer: CellBuffer, body: dict[str, Any], layout: Layout, paint: Pain
     area, vp = layout.viewport, body['viewport']
     ox, oy = draw_origin if draw_origin is not None else origin(body, layout)
     relation = {n['id']: n.get('relation', '~') for n in body.get('nearby', [])}
+    places = for_frame(paint, body)
     target = (body.get('target') or {}).get('id')
 
     def inside(entry: dict[str, Any]) -> tuple[int, int] | None:
@@ -136,7 +149,8 @@ def people(buffer: CellBuffer, body: dict[str, Any], layout: Layout, paint: Pain
             role = 'panel_dim'
         elif obj.get('kind') in ('door', 'apartment_door', 'gate', 'shutter') and state.get('open') is False:
             glyph = '≡'
-        buffer.put(*at, glyph, paint(role, bold=True))
+        theme = places.theme((obj['x'], obj['y'])) if places else None
+        buffer.put(*at, glyph, paint.on_theme(role, theme, bold=True) if theme else paint(role, bold=True))
     shapes = {'actor-self': '@', 'actor-player': '☺', 'actor-npc': '☻', 'actor-drone': 'τ'}
     for entry in body.get('actors', []):
         at = inside(entry)
@@ -151,6 +165,9 @@ def people(buffer: CellBuffer, body: dict[str, Any], layout: Layout, paint: Pain
         style = paint(role, bold=True, reverse=self or relation.get(entry['id']) == '!')
         if jacked:
             style = paint.jacked(paint(role))  # Jacked beats hostile/self: never reverse.
+        if places:
+            theme = places.theme((entry['x'], entry['y']))
+            style = paint.on_theme(role, theme, bold=True, reverse=self or relation.get(entry['id']) == '!', jacked=jacked)
         if entry['id'] == target:
             style = Style(style.fg, style.bg, (*style.attrs, 4), style.tier)
         buffer.put(*at, glyph, style)
@@ -169,10 +186,19 @@ def people(buffer: CellBuffer, body: dict[str, Any], layout: Layout, paint: Pain
 def at_hand(body: dict[str, Any]) -> list[str]:
     """#106: P3 focus plus visible adjacent cover only. Never scan objects/exits."""
     names = []
+    labels = set()
     for key in ('focus', 'jack_focus'):
         focus = body.get(key)
-        if focus and focus.get('label') and focus['label'] not in names:
-            names.append(str(focus['label']))
+        if focus and focus.get('label') and focus['label'] not in labels:
+            labels.add(focus['label'])
+            obj = next((obj for obj in body.get('objects', []) if obj['id'] == focus.get('id')), None)
+            if obj:
+                shape = THINGS.get(obj.get('kind'), (obj.get('glyph', '■'), ''))[0]
+                if obj.get('state', {}).get('open') is False and obj.get('kind') in ('door', 'gate', 'shutter', 'apartment_door'):
+                    shape = '≡'
+            else:
+                shape = '§' if key == 'jack_focus' else '»' if focus.get('id') in body.get('escape', {}).get('routes', []) else '■'
+            names.append(shape + ' ' + str(focus['label']))
     me = next((a for a in body.get('actors', []) if a.get('role') == 'player_self'), None)
     if me is None:
         return names
@@ -184,9 +210,40 @@ def at_hand(body: dict[str, Any]) -> list[str]:
             value = grid[cy][cx]
             if 0 <= value < len(legend) and legend[value]['id'] in ('cover-1', 'cover-2', 'cover-3'):
                 covers.add(legend[value]['id'])
-    names.extend({'cover-1': '░ Light cover', 'cover-2': '▒ Cover', 'cover-3': '▓ Heavy cover'}[key]
-                 for key in sorted(covers))
+    authored = (body.get('looks') or {}).get('names', {})
+    generic = {'cover-1': ('░', 'Light cover'), 'cover-2': ('▒', 'Cover'), 'cover-3': ('▓', 'Heavy cover')}
+    names.extend(generic[key][0] + ' ' + authored.get(key, generic[key][1]) for key in sorted(covers))
     return names
+
+
+def fit_here(text: str, width: int) -> str:
+    """Keep the distinguishing suffix when a HERE entry cannot fit (#114).
+
+    Shape and space are retained. Parenthetical place names take priority
+    over generic prefixes such as Public terminal; otherwise elide the
+    middle so the start and the distinguishing end both survive.
+    """
+    text = clean_text(text)
+    if display_width(text) <= width:
+        return text
+    shape, _, label = text.partition(' ')
+    budget = max(0, width - display_width(shape) - 1)
+    match = re.match(r'^(.*?)\s*(\([^)]*\))$', label)
+    if match and display_width(match[2]) <= budget:
+        suffix = match[2]
+        room = budget - display_width(suffix) - 1
+        prefix = truncate(match[1], max(0, room))
+        return truncate(shape + ' ' + (prefix + ' ' if prefix else '') + suffix, width)
+    if budget <= 3:
+        return truncate(text, width)
+    # Slice by measured cells, including wide-character names.
+    tail = ''
+    tail_room = (budget - 3 + 1) // 2
+    for ch in reversed(label):
+        if display_width(ch + tail) > tail_room:
+            break
+        tail = ch + tail
+    return shape + ' ' + truncate(label, budget - display_width(tail) - 3, ellipsis=False) + '...' + tail
 
 
 def panel(buffer: CellBuffer, body: dict[str, Any], layout: Layout, paint: Paint) -> None:
@@ -237,7 +294,7 @@ def panel(buffer: CellBuffer, body: dict[str, Any], layout: Layout, paint: Paint
     if hand:
         section("HERE")
         for name in hand:
-            line(name, "panel_text")
+            line(fit_here(name, w - 1), "panel_text")
     limit += target_reserve
     target = body.get("target")
     section("TARGET")
