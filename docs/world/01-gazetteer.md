@@ -1113,7 +1113,9 @@ are building something.
 - **Terminals:** one public terminal. The hall governor is a Foundry
   control (Lattice §3.7).
 - **Vendors / anchors:** Wyn Calloway, Civic grid engineer (the Grid
-  work-order handler; Wardens); the gallery and the heat wall (emote
+  work-order handler; Wardens); the workers' bench on the gallery (a
+  fabrication workshop open only to a Grid reserve allocation's
+  workers, design §7.5); the gallery and the heat wall (emote
   anchors; the squatters sleep against the heat wall).
 - **Spawners:** Civic engineers (talkers), Unmoored runners (guard, as
   in the Yards), squatters living off the hall's heat (talkers), cable
