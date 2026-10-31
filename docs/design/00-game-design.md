@@ -1679,7 +1679,7 @@ Values are initial, tuned at the pacing gate.
   character. It waits up to 7 days and is accepted or declined at that
   character's next login. A BBS identity may have at most 5
   outstanding offline invitations across all its characters, and at
-  most one to the same character. A
+  most one to the same character across all its characters. A
   character holds at most 10 pending invitations; while they hold 10,
   further invitations are refused and the sender is told the invitation
   could not be left. Nothing is evicted silently. A character can
@@ -1836,8 +1836,10 @@ Values are initial, tuned at the pacing gate.
   - Never on a wall or other impassable tile, a hidden exit, a door or
     another visible interaction tile, and never in a safe zone or
     pocket. Every refusal gives the same one message. A hidden exit
-    looks like the wall around it and is refused exactly as a wall is,
-    so tagging never reveals one.
+    looks like the wall around it and is refused exactly as a wall is.
+    Any other tile that looks like plain floor accepts a tag, whatever
+    is hidden there, so tagging never reveals a hidden exit or a hidden
+    interaction tile.
   - A tag is drawn only where nothing else is: an item, hazard, actor
     or object on the tile always shows instead, and the tag stays
     listed in HERE.
@@ -1849,7 +1851,8 @@ Values are initial, tuned at the pacing gate.
   dead-drop object, addressed to one named character. Leaving it gives
   the same result for any name that has existed on the node, whether
   that character is active, retired or ignoring the sender; only a
-  name never used on the node is refused. Only that
+  name never used on the node is refused. Whether a name was ever used
+  on the node is not treated as secret. Only that
   character sees it and can collect it; nobody can loot it. Uncollected
   after 7 days, the same item instance returns to the sender as a free
   collection at any Kestrel branch, as a purchased market delivery is
