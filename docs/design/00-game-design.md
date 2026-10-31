@@ -1611,8 +1611,9 @@ Leaving or disconnecting removes that member. On leader logout the
 longest-serving remaining member leads; a single remaining member means
 dissolution. Promotion never changes service order. Crews are live only
 and end on server restart, independently of S26 expedition rosters.
-Once built, section 10.1 (planned, #125) replaces these sentences of
-this paragraph: the 60-second expiry (for offline invitations only),
+Once built, section 10.1 (planned, #125) replaces the first bullet's
+"A crew is 2 to 5 players" with 1 to 5 (a crew of one exists only as
+section 10.1 describes), and these sentences of this paragraph: the 60-second expiry (for offline invitations only),
 "an unanswered invitation creates no one-person crew", "Leaving or
 disconnecting removes that member" (disconnecting no longer does),
 the leader-logout rule, "a single remaining member means dissolution"
@@ -1724,9 +1725,11 @@ Values are initial, tuned at the pacing gate.
     which are held in escrow. The holder may withdraw the offer.
     Acceptance moves the job and its items together; withdrawal or
     expiry returns both to the holder unchanged.
-  - **Stage deadlines.** A stage deadline keeps running while an offer
-    is open. If the job fails while locked, the offer ends and its
-    escrowed items return to the holder.
+  - **Stage deadlines.** Stage deadlines pause while an offer is open,
+    like the 60-minute expiry; the offer window is bounded, so a pause
+    lasts at most 24 hours. The offer view shows the receiver each
+    open stage's remaining time. If the job fails anyway, the offer
+    ends and its escrowed items return to the holder.
   - **Expiry.** A generated job's 60-minute expiry (section 9.1)
     pauses while an offer is open, and acceptance gives the receiver a
     fresh 60 minutes. A job that returns to its holder after a
@@ -1798,7 +1801,7 @@ Values are initial, tuned at the pacing gate.
   looking back at most 14 days, from persisted receipts and public log
   records (section 12),
   newest first, at most 12 lines, and keeps it in the journal for 7
-  days. It is a full-width text view, never world log lines or a
+  days from the login that showed it. It is a full-width text view, never world log lines or a
   notice.
   - It is built only from receipts and public log lines the server
     already writes: relays that changed hands, public services repaired
