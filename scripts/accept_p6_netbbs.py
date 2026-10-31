@@ -17,6 +17,10 @@ import subprocess
 
 from accept_p5_netbbs import PresentationProbe
 from accept_s10_netbbs import wait
+from blacksite.door.present.zone import origin
+from blacksite.layout import compute
+from blacksite.place import CHARTED_GROUND
+from tests.ansi_style import Rendition
 
 ROOT = Path(__file__).resolve().parents[1]
 
@@ -54,6 +58,17 @@ async def accept(root: Path, python: Path, size: tuple[int, int], theme: str, sh
             await wait(lambda: connection.session.ack_revision == connection.session.view_revision)
             assert connection.session.caps['tier'] == tier
             assert '(Plaza)' in screen.screen_text()
+            # The Clinic fixture has an actual interaction tile as well as
+            # an object binding. Before sight it must be ordinary dim ground,
+            # with no terminal shape or unpainted void. Later walking reveals it.
+            vp = avatar.perception.viewport
+            cx,cy = 10-vp['x'],5-vp['y']
+            assert avatar.perception.tiles[cy][cx] == -1
+            assert avatar.perception.charted[cy][cx] == CHARTED_GROUND
+            ox,oy = origin({'viewport':vp,'actors':[{'role':'player_self',
+                'x':avatar.actor.x,'y':avatar.actor.y}]},compute(*size))
+            assert screen.cell(ox+cx,oy+cy) not in ('§','+','≡','‼')
+            assert screen.renditions[ox+cx,oy+cy] != Rendition(), 'withheld ground rendered as void'
             captures = []
             def save(step: str) -> None:
                 name = f'{theme}-{step}-{size[0]}x{size[1]}-{tier}'

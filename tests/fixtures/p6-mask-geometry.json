@@ -1,0 +1,312 @@
+{
+  "source": {
+    "pull_request": 126,
+    "head": "9b2c5da65f59dd725c083ab3d2d7d9724a4173c9",
+    "themes_sha256": "4f3138332924f7a74ad1070673382bfc68bf3109986f54164a4b11cb92836010"
+  },
+  "themes": {
+    "schema": 1,
+    "themes": {
+      "core-street": {
+        "ground_bg": "ground_core_street",
+        "ground_fg": "grain_core_street",
+        "wall_bg": "wall_core_street",
+        "wall_fg": "wallgrain_core_street",
+        "texture": "·   ∙    ",
+        "luma": "dark"
+      },
+      "core-paving": {
+        "ground_bg": "ground_core_paving",
+        "ground_fg": "grain_core_paving",
+        "texture": "∙·",
+        "pattern": "rings",
+        "luma": "dark"
+      },
+      "core-rim": {
+        "ground_bg": "ground_core_rim",
+        "ground_fg": "grain_core_rim",
+        "texture": "·",
+        "luma": "dark"
+      },
+      "core-lamp": {
+        "ground_bg": "ground_core_lamp",
+        "ground_fg": "grain_core_lamp",
+        "texture": "·∙ ",
+        "luma": "dark"
+      },
+      "core-water": {
+        "ground_bg": "ground_core_water",
+        "ground_fg": "grain_core_water",
+        "texture": "·",
+        "luma": "dark"
+      },
+      "core-lane": {
+        "ground_bg": "ground_core_lane",
+        "ground_fg": "grain_core_lane",
+        "texture": "·   ",
+        "luma": "dark"
+      },
+      "vat-street": {
+        "ground_bg": "ground_vat_street",
+        "ground_fg": "grain_vat_street",
+        "wall_bg": "wall_vat_street",
+        "wall_fg": "wallgrain_vat_street",
+        "texture": "·    ",
+        "luma": "dark"
+      },
+      "vat-boulevard": {
+        "ground_bg": "ground_vat_boulevard",
+        "ground_fg": "grain_vat_boulevard",
+        "texture": "·  ∙  ",
+        "luma": "dark"
+      },
+      "vat-facade": {
+        "wall_bg": "wall_vat_facade",
+        "wall_fg": "wallgrain_vat_facade",
+        "texture": "·",
+        "luma": "dark"
+      },
+      "vat-interior": {
+        "ground_bg": "ground_vat_interior",
+        "ground_fg": "grain_vat_interior",
+        "wall_bg": "wall_vat_interior",
+        "wall_fg": "wallgrain_vat_interior",
+        "texture": "   ·",
+        "luma": "dark"
+      },
+      "vat-alley": {
+        "ground_bg": "ground_vat_alley",
+        "ground_fg": "grain_vat_alley",
+        "texture": "· , `  ",
+        "luma": "dark"
+      },
+      "vat-yard": {
+        "ground_bg": "ground_vat_yard",
+        "ground_fg": "grain_vat_yard",
+        "texture": "·   ",
+        "luma": "dark"
+      },
+      "sodium-street": {
+        "ground_bg": "ground_sodium_street",
+        "ground_fg": "grain_sodium_street",
+        "wall_bg": "wall_sodium_street",
+        "wall_fg": "wallgrain_sodium_street",
+        "texture": "·  , ·  ",
+        "luma": "dark"
+      },
+      "sodium-lamp": {
+        "ground_bg": "ground_sodium_lamp",
+        "ground_fg": "grain_sodium_lamp",
+        "texture": "·∙ · ",
+        "luma": "dark"
+      },
+      "sodium-door-pink": {
+        "ground_bg": "ground_sodium_door_pink",
+        "ground_fg": "grain_sodium_door_pink",
+        "texture": "· ∙",
+        "luma": "dark"
+      },
+      "sodium-door-teal": {
+        "ground_bg": "ground_sodium_door_teal",
+        "ground_fg": "grain_sodium_door_teal",
+        "texture": "· ∙",
+        "luma": "dark"
+      },
+      "sodium-stage": {
+        "ground_bg": "ground_sodium_stage",
+        "ground_fg": "grain_sodium_stage",
+        "texture": "·∙ ",
+        "luma": "dark"
+      }
+    }
+  },
+  "zones": {
+    "core-plaza": {
+      "size": [
+        90,
+        40
+      ],
+      "theme": "core-street",
+      "regions": [
+        {
+          "theme": "core-lane",
+          "rect": [
+            1,
+            1,
+            88,
+            3
+          ]
+        },
+        {
+          "theme": "core-lane",
+          "rect": [
+            1,
+            35,
+            88,
+            4
+          ]
+        },
+        {
+          "theme": "core-paving",
+          "rect": [
+            30,
+            9,
+            30,
+            19
+          ]
+        },
+        {
+          "theme": "core-lamp",
+          "circle": [
+            36,
+            13,
+            3
+          ]
+        },
+        {
+          "theme": "core-lamp",
+          "circle": [
+            54,
+            13,
+            3
+          ]
+        },
+        {
+          "theme": "core-rim",
+          "rect": [
+            39,
+            13,
+            12,
+            11
+          ]
+        },
+        {
+          "theme": "core-water",
+          "rect": [
+            40,
+            14,
+            10,
+            9
+          ]
+        }
+      ],
+      "look_sha256": "904f6007b9a65e0e6f51f92055c0a758352c4c3168ba8d9b5d59a95b30abb5bd",
+      "map_sha256": "e33ce6ee67854350b385f6f0161e2438e43aaf4183d85b1039fce8a662b42fb1"
+    },
+    "sodium-row": {
+      "size": [
+        100,
+        30
+      ],
+      "theme": "sodium-street",
+      "regions": [
+        {
+          "theme": "sodium-lamp",
+          "circle": [
+            13,
+            11,
+            3
+          ]
+        },
+        {
+          "theme": "sodium-lamp",
+          "circle": [
+            37,
+            11,
+            3
+          ]
+        },
+        {
+          "theme": "sodium-lamp",
+          "circle": [
+            61,
+            11,
+            3
+          ]
+        },
+        {
+          "theme": "sodium-lamp",
+          "circle": [
+            85,
+            11,
+            3
+          ]
+        },
+        {
+          "theme": "sodium-lamp",
+          "circle": [
+            25,
+            24,
+            3
+          ]
+        },
+        {
+          "theme": "sodium-lamp",
+          "circle": [
+            49,
+            24,
+            3
+          ]
+        },
+        {
+          "theme": "sodium-lamp",
+          "circle": [
+            73,
+            24,
+            3
+          ]
+        },
+        {
+          "theme": "sodium-door-pink",
+          "circle": [
+            8,
+            7,
+            2
+          ]
+        },
+        {
+          "theme": "sodium-door-teal",
+          "circle": [
+            18,
+            7,
+            2
+          ]
+        },
+        {
+          "theme": "sodium-door-pink",
+          "circle": [
+            50,
+            7,
+            2
+          ]
+        },
+        {
+          "theme": "sodium-door-teal",
+          "circle": [
+            63,
+            7,
+            2
+          ]
+        },
+        {
+          "theme": "sodium-door-pink",
+          "circle": [
+            75,
+            7,
+            2
+          ]
+        },
+        {
+          "theme": "sodium-stage",
+          "circle": [
+            30,
+            7,
+            2
+          ]
+        }
+      ],
+      "look_sha256": "8b13f8a090dabb8e3e4ce1b764ec62a6d2f2824155294c55534cce58166a7d4f",
+      "map_sha256": "b939a6567fcf320f623db154868acad5b32289b581eab80bca53cdfce1eeaac8"
+    }
+  }
+}
