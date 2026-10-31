@@ -633,7 +633,10 @@ real encounter. District gate counts and public uplinks remain intact.
 
 ### 6.4 Interlock rules
 
-- Each control in a core maps to one object in one zone. Flipping it
+- Each control in a core maps to one object in one zone. The one
+  exception is Grid's `yard lights`, which targets the yard lamp group
+  once Grid is built (section 7.5, planned, #119); while Grid is in
+  `fault`, `repairing` or `allocated`, that control is suspended. Flipping it
   changes the object immediately and posts to the zone log ("The gate
   cycles open. Nobody touched it.").
 - Ordinary controls reset on their declared timer (5 to 30 minutes).
@@ -1026,8 +1029,8 @@ radius of any switched-off lamp, and dark-sight equipment still
 applies; an enabled lamp nearby does not offset it.
 - **One control, many lamps.** The `yard lights` control targets the
   yard lamp group: one control switches every lamp in the group. This
-  is the first group-target control; the build slice adds group
-  targets to section 6.4's one-control-one-object rule for this case.
+  is the one exception to section 6.4's one-control-one-object rule,
+  stated there.
 - **Coverage.** The `yard lights` objects are placed so that every
   passable Yards tile darkens, except the exit neighbourhoods: no
   `yard lights` object lies within the Yards' sight radius of an exit
