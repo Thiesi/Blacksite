@@ -86,7 +86,7 @@ def test_s25_complete_city_must_activate_all_district_core_entrances() -> None:
     canon_only = {z for z, section in zones.items() if "**Status:** planned (#" in section}
     ordinary = {z for z in zones if not z.startswith("blacksite-")} - canon_only
     assert len(ordinary) == 34
-    assert len(canon_only) == 10 and not canon_only & tree.zones.keys()
+    assert len(canon_only) == 11 and not canon_only & tree.zones.keys()
     if ordinary <= tree.zones.keys():
         for sector in tree.sectors.values():
             for cell in sector.cells:
