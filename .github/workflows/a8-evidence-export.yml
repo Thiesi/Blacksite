@@ -1,38 +1,67 @@
-name: Native failure evidence export
+name: Native failure diagnosis
 on:
   push:
     branches: ['evidence/a8-export-426b8c0']
 permissions:
-  actions: read
   contents: read
 jobs:
-  export:
+  reproduce:
     runs-on: ubuntu-latest
-    timeout-minutes: 5
-    strategy:
-      fail-fast: false
-      matrix:
-        include:
-          - {artifact: p4-view-semantics-132x50, run: 41219647058}
-          - {artifact: s19-contract-proof-network-132x50, run: 41219647157}
-          - {artifact: s23-market-proof-80x24, run: 41219647157}
+    timeout-minutes: 10
     steps:
-      - uses: actions/download-artifact@v4
+      - uses: actions/checkout@v4
         with:
-          name: ${{ matrix.artifact }}
-          path: evidence
-          github-token: ${{ secrets.GITHUB_TOKEN }}
-          repository: Thiesi/Blacksite
-          run-id: ${{ matrix.run }}
-      - name: Emit unfinished caller screen and bounded diagnostic tail
-        shell: python
+          ref: c4a2443149a1a4eb211ae39b0afac5cfd7881bca
+          fetch-depth: 0
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - uses: actions/checkout@v4
+        with:
+          repository: Thiesi/NetBBS
+          ref: v7.45.0
+          path: .test-tmp/netbbs
+      - name: Install identical source-matched native wheel and node
+        shell: bash
         run: |
-          import hashlib, json
+          python -m pip install -e '.[test]' './.test-tmp/netbbs[ssh,web]'
+          python -m pip wheel --no-deps . -w "$RUNNER_TEMP/probe-wheels"
+          python -m venv "$RUNNER_TEMP/probe-venv"
+          "$RUNNER_TEMP/probe-venv/bin/python" -m pip install "$RUNNER_TEMP"/probe-wheels/*.whl
+      - name: Reproduce the unchanged 132x50 network contract walk
+        shell: python
+        env:
+          PROBE_ROOT: ${{ runner.temp }}/native-diagnosis
+          PROBE_PYTHON: ${{ runner.temp }}/probe-venv/bin/python
+        run: |
+          import asyncio, json, os, sys, traceback
           from pathlib import Path
-          for path in sorted(Path('evidence').rglob('*')):
-              if not path.is_file(): continue
-              if (path.name.startswith('unfinished-') and path.suffix == '.txt') or path.name in ('failure-trace.txt','progress.log'):
-                  raw = path.read_bytes()
-                  print('P6B_DIAG '+json.dumps(dict(path=path.as_posix(),sha256=hashlib.sha256(raw).hexdigest(),text=raw.decode('utf-8')),ensure_ascii=True,separators=(',',':')))
-              elif path.name == 'input-tail.json':
-                  print('P6B_DIAG '+json.dumps(dict(path=path.as_posix(),inputs=json.loads(path.read_bytes())[-40:]),ensure_ascii=True,separators=(',',':')))
+          sys.path[:0] = [str(Path.cwd()/'src'),str(Path.cwd()/'scripts'),str(Path.cwd())]
+          from accept_s10_netbbs import NativeProbe
+          from accept_s19_netbbs import accept
+          original = NativeProbe.walk
+          async def observed(self, connection, target):
+              try:
+                  return await original(self, connection, target)
+              except BaseException:
+                  av = connection.avatar
+                  zone = self.service.world.zones[av.zone]
+                  data = dict(zone=av.zone,position=av.actor.position,target=target,stance=av.actor.stance,health=av.actor.health,shock=av.actor.shock,cooldowns=av.actor.cooldowns,tick=self.service.clock.now_tick(),service_failure=repr(self.service.failure),stop_requested=self.service.core.stop_requested,session_closed=connection.session.closed,passable_target=zone.can_enter(av.actor,target),actors=[dict(id=a.id,name=a.name,position=a.position,stance=a.stance,template=a.behaviour.get('template')) for a in zone.actors.values()])
+                  print('P6B_STATE '+json.dumps(data,default=repr),flush=True)
+                  if self.service.failure:
+                      traceback.print_exception(self.service.failure)
+                  log = self.service.install_dir/'logs/server.log'
+                  if log.exists():
+                      print('P6B_SERVER_LOG '+log.read_text(encoding='utf-8')[-12000:],flush=True)
+                  raise
+          NativeProbe.walk = observed
+          asyncio.run(accept(Path(os.environ['PROBE_ROOT']),Path(os.environ['PROBE_PYTHON']),False,sizes=((132,50),),routes=(True,)))
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: p6b-native-diagnosis
+          path: |
+            ${{ runner.temp }}/native-diagnosis/*.txt
+            ${{ runner.temp }}/native-diagnosis/*.json
+            ${{ runner.temp }}/native-diagnosis/*.log
+            ${{ runner.temp }}/native-diagnosis/world/logs/server.log
