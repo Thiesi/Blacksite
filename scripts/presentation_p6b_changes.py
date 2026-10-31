@@ -21,7 +21,8 @@ from tests.presentation.mechanics import fingerprint
 from tests.presentation.snapshots import canonical
 
 BASE = '54adc53c6686eb5b2430f2e90cd457a09332b833'
-CONTENT = '0c4b19db5152c159601fafe63d55743549cc2474'
+# Presentation lead's published fixed-post data, signed off on #126.
+CONTENT = 'f69541473704f1164cd5b5e8dbd315c2fa811504'
 ZONES = ('core-plaza', 'sodium-row', 'vatside-clinics')
 # Freeze this B3 exception at its reviewed candidates. A future rebaseline
 # needs an explicit update, rather than inheriting a six-file blank cheque.
