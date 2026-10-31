@@ -1663,7 +1663,10 @@ Values are initial, tuned at the pacing gate.
 - **Inactivity.** When the leader has not logged in for 7 days,
   leadership passes to the longest-serving member who has logged in
   within those 7 days. The handover is checked at every member's login,
-  so a member who returns after the 7 days takes over then. A crew in
+  so a member who returns after the 7 days takes over then. It is
+  temporary: the original leader takes leadership back at their next
+  login, and until then the acting leader cannot kick them or remove
+  their notes. A crew in
   which no member has logged in for 30 days dissolves and releases its
   name.
 - **Naming.** The inviter names the crew with its first invitation: 3
@@ -1888,9 +1891,10 @@ Values are initial, tuned at the pacing gate.
     per-recipient limit, so a drop's acceptance never depends on what
     other senders did.
   - **Kestrel fee.** Leaving a drop costs the sender the market board's
-    5 % Kestrel fee (section 8.3), charged on the catalog base price
+    5 % Kestrel fee (section 8.3), charged on the greater of the
+    item's catalog base price and its last market board sale price,
     times the units dropped, rounded up, at least 1 chit; an item with
-    no catalog base price pays the 1-chit minimum. It is paid when the drop is
+    neither pays the 1-chit minimum. It is paid when the drop is
     left and never refunded, so a drop is never a cheaper channel than
     a sale.
   - A drop from a sender the recipient ignores never arrives. To the
