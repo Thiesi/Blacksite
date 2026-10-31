@@ -1665,8 +1665,9 @@ Values are initial, tuned at the pacing gate.
   character. It waits up to 7 days and is accepted or declined at that
   character's next login. A sender may have at most 5 outstanding
   offline invitations, and at most one to the same character. A
-  character holds at most 10 pending invitations; a newer one replaces
-  the oldest. Identity-based ignores, the five-player limit and
+  character holds at most 10 pending invitations; while they hold 10,
+  further invitations are refused and the sender is told the invitation
+  could not be left. Nothing is evicted silently. Identity-based ignores, the five-player limit and
   membership checks are rechecked on acceptance; an ignored sender's
   invitation never arrives, and ignoring a sender withdraws theirs.
 - **Crew notes.** Members share up to 20 notes of up to 200 characters,
@@ -1676,7 +1677,8 @@ Values are initial, tuned at the pacing gate.
   Notes are never shown outside the crew and are never world log lines.
 - **Handoffs.** The holder of a generated job may offer it to a crew
   member after completing at least one stage, while at least one stage
-  remains. Each job can be handed off once. The offer waits up to
+  remains. Each job can be offered once: any offer, accepted,
+  withdrawn or expired, uses that up. The offer waits up to
   24 hours, and the receiver accepts at any time they are online.
   - **When an offer is allowed.** Not while a stage holds a live
     escort assignment or an open mission instance owned by the holder;
@@ -1696,8 +1698,10 @@ Values are initial, tuned at the pacing gate.
     expiry returns both to the holder unchanged.
   - **Expiry.** A generated job's 60-minute expiry (section 9.1)
     pauses while an offer is open, and acceptance gives the receiver a
-    fresh 60 minutes. A job can therefore live at most 60 minutes, plus
-    24 hours on offer, plus 60 minutes. Every prepared world state the stages created
+    fresh 60 minutes. A job that returns to its holder after a
+    withdrawn or expired offer resumes its remaining time, never a fresh
+    60 minutes. A job can therefore live at most 60 minutes, plus 24
+    hours on offer, plus 60 minutes. Every prepared world state the stages created
     (credentials, latches, opened controls) keeps its own timer
     (section 6.4) and is never paused; a later stage that needs an
     expired state recreates it under section 9.1's retry rule.
@@ -1790,9 +1794,10 @@ Values are initial, tuned at the pacing gate.
 - **Dead drops.** A character may leave one item stack at an authored
   dead-drop object, addressed to one named character. Only that
   character sees it and can collect it; nobody can loot it. Uncollected
-  after 7 days, it returns to the sender as a free collection at any
-  Kestrel branch that keeps the item's source, like a purchased market
-  delivery (section 8.3); it is not an impound reclaim with a fee.
+  after 7 days, the same item instance returns to the sender as a free
+  collection at any Kestrel branch, as a purchased market delivery is
+  collected (section 8.3), whether or not the item was ever listed; it
+  is not an impound reclaim with a fee.
   - If the recipient retires, the drop returns to the sender at once.
     If the sender retires, the drop stays for the recipient until it
     expires; uncollected, it is deleted with the sender's other
