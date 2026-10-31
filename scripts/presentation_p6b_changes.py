@@ -23,8 +23,19 @@ from tests.presentation.snapshots import canonical
 BASE = 'fd4020e7eaa413301145eca969333f2239a6cfcf'
 CONTENT = '0c4b19db5152c159601fafe63d55743549cc2474'
 ZONES = ('core-plaza', 'sodium-row', 'vatside-clinics')
-ALLOWED = {f'tests/presentation/golden/p5/zone_{size}_{tier}.json'
-           for size in ('80x24','132x50') for tier in ('16','256','truecolor')}
+# Freeze this B3 exception at its reviewed candidates. A future rebaseline
+# needs an explicit update, rather than inheriting a six-file blank cheque.
+GOLDEN_SHA256 = {
+    '132x50_16': 'bc9036ad07cd7b3834bb954c9f0ba902361e01d04501c5896fa761e50ae4a60f',
+    '132x50_256': 'cdebe7bcac5a204f36497e2d7845fa9eafc369bc872e6826370675c7f760b1a9',
+    '132x50_truecolor': '50d95e5365963df54e22ec7929e886d07ebe2243408adb762c8c39c4876202c3',
+    '80x24_16': '72343d9bbf3fa68d9357d5f31c4ce6b3b8898957285bb05a69a576dd31a223da',
+    '80x24_256': 'b0fd55109d9b3f7c96a9ca719afe6cbdab72996fcf57d47ccb809686d8b636ef',
+    '80x24_truecolor': '44d5a7ab3fa6c371c74ab8c2a5635067e2f260a09f6101d2a7babdd91e41a91b',
+}
+PINNED_GOLDENS = {f'tests/presentation/golden/p5/zone_{key}.json': value
+                  for key,value in GOLDEN_SHA256.items()}
+ALLOWED = frozenset(PINNED_GOLDENS)
 MECHANICS = 'tests/presentation/mechanics.json'
 
 
@@ -35,6 +46,7 @@ def git(*args: str) -> bytes:
 def report(base: str, content_ref: str, propose: bool) -> dict[str, Any]:
     if not all(re.fullmatch('[0-9a-f]{40}', value) for value in (base, content_ref)):
         raise ValueError('baseline/content refs must be full Git ids')
+    git('merge-base','--is-ancestor',content_ref,'HEAD')
     data_changes = git('diff','--name-only',content_ref,'--','src/blacksite/content').decode().splitlines()
     if any(not path.endswith('.py') for path in data_changes):
         raise ValueError('presentation-owned content was modified')
@@ -64,11 +76,13 @@ def report(base: str, content_ref: str, propose: bool) -> dict[str, Any]:
     if not propose and json.loads((ROOT/MECHANICS).read_text(encoding='utf-8')) != new:
         raise ValueError('candidate mechanics fixture differs; use --propose-baseline explicitly')
     paths = git('diff','--name-only',base,'--','tests/presentation/golden','tests/door/golden').decode().splitlines()
-    if not set(paths) <= ALLOWED:
-        raise ValueError(f'unassigned goldens changed: {set(paths)-ALLOWED}')
+    if set(paths) != ALLOWED:
+        raise ValueError(f'expected exactly the six B3 zone goldens: {paths}')
     goldens = []
     for path in paths:
         a_bytes,b_bytes = git('show',f'{base}:{path}'),(ROOT/path).read_bytes()
+        if sha256(b_bytes).hexdigest() != PINNED_GOLDENS[path]:
+            raise ValueError(f'{path}: differs from the frozen B3 candidate; rebaseline requires explicit review')
         a,b = json.loads(a_bytes),json.loads(b_bytes)
         if (a['width'],a['height']) != (b['width'],b['height']):
             raise ValueError(f'{path}: dimensions changed')
@@ -94,7 +108,8 @@ if __name__ == '__main__':
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument('--baseline',default=BASE)
     parser.add_argument('--content-ref',default=CONTENT)
-    parser.add_argument('--propose-baseline',action='store_true')
+    parser.add_argument('--propose-baseline',action='store_true',
+                        help='Write the candidate fixture; commit it before native acceptance. Grants no owner approval.')
     parser.add_argument('--output',type=Path,required=True)
     args = parser.parse_args()
     if args.output.exists():

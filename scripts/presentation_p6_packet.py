@@ -66,8 +66,14 @@ def verify_capture(directory: Path, stem: str, width: int, height: int) -> int:
     start = stream.find(b'\x1b[?1049h')
     require(start>=0 and b'\x1b[?1049l' not in stream[start:],
             f'{stem}: expected an active native door alternate screen')
-    terminal.write(stream[start:])
-    require(terminal.screen_text()==text.read_bytes().decode('utf-8'),
+    # Feed the exact stream incrementally, as the live caller does.
+    # A multi-megabyte cumulative walk otherwise makes FakeTerminal's
+    # pending-string parser quadratic; no capture bytes are changed.
+    for offset in range(start,len(stream),4096):
+        terminal.write(stream[offset:offset+4096])
+    # NativeProbe uses the host's text newlines. Compare logical rows on
+    # Windows too; retain and hash the original bytes without rewriting.
+    require(terminal.screen_text()==text.read_bytes().decode('utf-8').replace('\r\n','\n'),
             f'{stem}: ANSI replay differs from captured text')
     require(canonical(snapshot(terminal))==canonical(json.loads(style.read_text(encoding='utf-8'))),
             f'{stem}: ANSI replay differs from captured styles')

@@ -52,7 +52,6 @@ def measure(content: ContentTree, bare: ContentTree, zid: str, start: tuple[int,
         activities = {what: activity(tree, *size, tier, what, seconds, presentation=True,
                                     fully_known=known, zone=zid, start=start) for what in MIX}
         sample = frames(tree, *size, tier, presentation=True, fully_known=known, zone=zid, start=start)
-        assert sample['delta_16kib_pass'] and sample['render_p95_100ms_pass'], (zid, size, tier, label, sample)
         arms[label] = {'activities': activities, 'cpu_s_per_hour': hourly(activities), 'frames': sample}
     for what in MIX:
         for field in ('initial_view', 'final_view', 'successful_moves'):
@@ -66,7 +65,9 @@ def measure(content: ContentTree, bare: ContentTree, zid: str, start: tuple[int,
                'p5_regression_requires_explanation': cpu > p5,
                'paired_looks_cost_s_per_hour': cpu-arms['generic']['cpu_s_per_hour']}
     result = {'zone': zid, 'start': start, 'size': size, 'tier': tier, 'fully_known': known,
-              'arms': arms, 'verdict': verdict,
+              'arms': arms, 'verdict': verdict, 'frame_budgets_pass': all(
+                  arm['frames']['delta_16kib_pass'] and arm['frames']['render_p95_100ms_pass']
+                  for arm in arms.values()),
               'wire': wire_walk(content, *size, tier, known, zone=zid, start=start)}
     print(json.dumps({k: result[k] for k in ('zone', 'start', 'size', 'tier', 'fully_known', 'verdict')}), flush=True)
     return result
@@ -92,9 +93,7 @@ def main() -> None:
     reference = json.loads(REFERENCE.read_text(encoding='utf-8'))
     start = route(content, args.zone)
     sizes = (tuple(map(int, args.size.split('x'))),) if args.size else ((80, 24), (132, 50))
-    cases = [measure(content, bare, args.zone, start, size, tier, known, args.seconds, reference)
-             for size in sizes for tier in ((args.tier,) if args.tier else ('16', '256', 'truecolor'))
-             for known in ((True,) if args.known else ((False, True) if size[0] == 132 else (False,)))]
+    cases = []
     result = {'schema': 1, 'head': subprocess.check_output(['git', 'rev-parse', 'HEAD'], cwd=ROOT, text=True).strip(),
               'dirty': dirty, 'created_utc': datetime.now(timezone.utc).isoformat(),
               'platform': platform.platform(), 'python': sys.version,
@@ -109,7 +108,25 @@ def main() -> None:
               'policy': 'Frame budgets asserted; CPU recorded with verdict, regressions require explanation/review',
               'p5_reference': {k: v for k, v in reference.items() if k != 'cases'}, 'cases': cases}
     args.output.parent.mkdir(parents=True, exist_ok=True)
-    args.output.write_text(json.dumps(result, indent=2)+'\n', encoding='utf-8', newline='\n')
+    def retain() -> None:
+        args.output.write_text(json.dumps(result, indent=2)+'\n', encoding='utf-8', newline='\n')
+
+    for size in sizes:
+        for tier in ((args.tier,) if args.tier else ('16', '256', 'truecolor')):
+            for known in ((True,) if args.known else ((False, True) if size[0] == 132 else (False,))):
+                try:
+                    cases.append(measure(content, bare, args.zone, start, size, tier, known, args.seconds, reference))
+                except Exception as exc:
+                    result['incomplete_error'] = {'type': type(exc).__name__, 'message': str(exc),
+                                                   'size': size, 'tier': tier, 'fully_known': known}
+                    retain()
+                    raise
+                retain()  # Preserve each completed measurement, including misses.
+    result['complete'] = True
+    result['frame_budgets_pass'] = all(case['frame_budgets_pass'] for case in cases)
+    retain()
+    if not result['frame_budgets_pass']:
+        raise SystemExit('Frame budget exceeded; full failed measurements retained in '+str(args.output))
 
 
 if __name__ == '__main__':

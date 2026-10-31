@@ -27,7 +27,7 @@ def build(root: Path, metadata: list[dict[str, Any]], run: int, head: str,
     artifacts = {a['name']: a for a in metadata if a['name'].startswith('p6b-')}
     require(set(artifacts) == expected, 'expected five native and three budget artifacts')
     files: dict[str, bytes] = {}
-    records, budgets, provenance = [], [], {}
+    records, budgets, provenance, incomplete = [], [], {}, []
     for name, artifact in artifacts.items():
         require(artifact.get('workflow_run', {}).get('head_sha') == head, f'{name}: artifact head mismatch')
         provenance[name] = {'id': artifact['id'], 'archive_digest': artifact['digest'],
@@ -67,23 +67,36 @@ def build(root: Path, metadata: list[dict[str, Any]], run: int, head: str,
     for zid in ZONES:
         name = f'p6b-budget-{zid}'
         directory = root/name
-        data = json.loads((directory/'b2-budget.json').read_text(encoding='utf-8'))
-        require(data['head'] == head and not data['dirty'] and data['cpu_budget_reference']
-                and data['seconds'] == 12., f'{name}: clean Linux reference required')
-        require(len(data['cases']) == 9, f'{name}: expected nine budget cases')
-        provenance[name]['report_sha256'] = digest(directory/'b2-budget.json')
-        for case in data['cases']:
-            require(case['zone'] == zid, f'{name}: zone mismatch')
-            for arm in case['arms'].values():
-                require(arm['frames']['delta_16kib_pass'] and arm['frames']['render_p95_100ms_pass'], f'{name}: frame budget miss')
-            budgets.append({key: case[key] for key in ('zone','start','size','tier','fully_known','verdict','wire')})
         changes = json.loads((directory/'b3-changes.json').read_text(encoding='utf-8'))
         require(not changes['owner_fingerprint_approval'] and {g['path'] for g in changes['goldens']} == ALLOWED,
                 f'{name}: B3 scope or owner gate mismatch')
         require(change_report is None or changes == change_report, 'B3 artifacts disagree')
         change_report = changes
+        if not (directory/'b2-budget.json').exists():
+            # The first B2 run asserted before its end-only report write.
+            # Preserve the verified B1/B3 packet and label the missing B2
+            # evidence; never turn the missing report into a budget pass.
+            incomplete.append(zid)
+            provenance[name]['report_unavailable'] = True
+            continue
+        data = json.loads((directory/'b2-budget.json').read_text(encoding='utf-8'))
+        require(data['head'] == head and not data['dirty'] and data['cpu_budget_reference']
+                and data['seconds'] == 12., f'{name}: clean Linux reference required')
+        if len(data['cases']) != 9 or data.get('incomplete_error'):
+            incomplete.append(zid)
+        provenance[name]['report_sha256'] = digest(directory/'b2-budget.json')
+        for case in data['cases']:
+            require(case['zone'] == zid, f'{name}: zone mismatch')
+            row = {key: case[key] for key in ('zone','start','size','tier','fully_known','verdict','wire')}
+            row['frame_summary'] = {label: arm['frames']['summary'] for label,arm in case['arms'].items()}
+            row['frame_budgets_pass'] = all(arm['frames']['delta_16kib_pass'] and arm['frames']['render_p95_100ms_pass']
+                                           for arm in case['arms'].values())
+            budgets.append(row)
     files['changes.json'] = (json.dumps(change_report,separators=(',',':'))+'\n').encode()
-    files['performance.json'] = (json.dumps({'cases': budgets, 'cpu_policy':
+    budget_pass = not incomplete and len(budgets) == 27 and all(
+        row['frame_budgets_pass'] and row['verdict']['cpu_120s_per_hour_pass'] for row in budgets)
+    files['performance.json'] = (json.dumps({'cases': budgets, 'incomplete_zones': incomplete,
+        'budget_acceptance': False, 'all_numeric_targets_pass': budget_pass, 'cpu_policy':
         '120 s/h verdict recorded; every historical P5 increase requires explanation/review; '
         'different shipped maps/content, not a causal comparison'},separators=(',',':'))+'\n').encode()
     manifest = {'schema': 1, 'execution_head': head, 'run': run, 'source_git_tree': source_tree,
@@ -94,6 +107,10 @@ def build(root: Path, metadata: list[dict[str, Any]], run: int, head: str,
                     'Budget: disclosed pose/knowledge, shipped population and seeded world, unchanged P1 meter.',
         'human_approval': False, 'fingerprint_approval': False, 'presentation_signoff': False,
         's25_layout_approval': False}
+    manifest['capture_stage'] = 'pre-A7 diagnostic; final Part B capture waits for owner A7 merge'
+    manifest['b1_acceptance'] = False
+    manifest['budget_evidence_complete'] = not incomplete and len(budgets) == 27
+    manifest['budget_acceptance'] = False
     files['manifest.json'] = (json.dumps(manifest,ensure_ascii=False,separators=(',',':'))+'\n').encode('utf-8')
     total = sum(map(len,files.values()))
     require(total <= 195*1024, f'{total} bytes exceeds packet budget; review text selection explicitly')
@@ -101,6 +118,7 @@ def build(root: Path, metadata: list[dict[str, Any]], run: int, head: str,
     for name,data in files.items():
         (destination/name).write_bytes(data)
     return {'execution_head': head, 'captures_replayed': len(records), 'budget_cases': len(budgets),
+            'incomplete_budget_zones': incomplete, 'budget_acceptance': False,
             'committed_text_captures': len(files)-3, 'repository_bytes': total}
 
 
