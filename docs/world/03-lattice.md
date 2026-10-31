@@ -76,7 +76,7 @@ district.
 | Terraces | 36 | 20 / 12 / 4 | Block A Super, Block B Super, Outpost Feed, Stairwell C cabinet, and one private-core entrance per rented apartment | *Basement Riser* (gated, resident key) |
 | Sodium Row | 20 | 14 / 4 / 2 | House Lights, Tin Halo Back Bar, Sign Grid | *Stage Door* (hidden) |
 | Warmwater (planned, #90) | 24 | 12 / 8 / 4 | Lamp Board, Bath Rota, Boiler Governor, Quiet Book Approach | *The Culvert* (hidden, along the warm-water main) |
-| Intake (planned, #101) | 20 | 10 / 6 / 4 | Beds Telemetry, Sluice Board, Hall Registry, Clearwell Approach | *The Bore* (hidden, at the foot of the deepest well shaft) |
+| Intake (planned, #101) | 21 | 11 / 6 / 4 | Beds Telemetry, Sluice Board, Hall Registry, Clearwell Approach, Crop Rota (planned, #119) | *The Bore* (hidden, at the foot of the deepest well shaft) |
 | Undercity | 26 | 4 / 8 / 14 | Pumphouse Panel, Cavern Relay, Outworks Seal Approach | *The Seam* (public and unmarked; it does not need to hide) |
 | Scour | 18 | 6 / 12 / 0 | one uplink cell per relay: Landing Uplink, Mile Relay, Beacon Relay, Crash Relay, Far Relay, Patrol Beacon | *Static* (gated, only during Ring-fall) |
 | Silt | procedural | see §6 | — | — |
