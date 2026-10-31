@@ -5,6 +5,7 @@ from typing import Any
 
 from blacksite.place import Theme, DEFAULT_THEME, theme_over
 from blacksite.door.palette import Style
+from blacksite.door.cells import CellBuffer
 from blacksite.door.present.paint import Paint
 
 
@@ -42,7 +43,10 @@ class Places:
         self.marks = {(mark['at'][0] + i, mark['at'][1]): (ch, mark['role'])
                       for mark in self.look.get('marks', []) for i, ch in enumerate(mark['text'])}
         self.glints = {tuple(at) for at in self.look.get('glints', [])}
-        self.cells: dict[tuple[tuple[int, int], str, bool, bool], tuple[str, Style]] = {}
+        self.cells: dict[tuple[tuple[int, int], str, bool, bool, bool], tuple[str, Style]] = {}
+        self.terrain_buffer: CellBuffer | None = None
+        self.terrain_geometry: tuple[int, ...] | None = None
+        self.terrain_states: dict[tuple[int, int], tuple[object, ...]] = {}
 
     def theme(self, at: tuple[int, int]) -> Theme:
         return self.grounds.get(at, (self.base, (0., 0.)))[0]
@@ -51,9 +55,10 @@ class Places:
              roof: bool, beside_wall: bool, live: bool) -> tuple[str, Style]:
         # The look and viewport are immutable for this cache. Memory dimming,
         # warnings and live overlays are applied by the caller afterwards.
-        key = at, entry.get('id', ''), roof, beside_wall
+        key = at, entry.get('id', ''), roof, beside_wall, live
         if key not in self.cells:
-            self.cells[key] = self._cell(paint, entry, at, roof=roof, beside_wall=beside_wall)
+            glyph, style = self._cell(paint, entry, at, roof=roof, beside_wall=beside_wall)
+            self.cells[key] = glyph, style if live else paint.known(style)
         return self.cells[key]
 
     def _cell(self, paint: Paint, entry: dict[str, Any], at: tuple[int, int], *,

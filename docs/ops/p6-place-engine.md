@@ -24,10 +24,18 @@ The presentation switch remains off by default.
   Ambient, undisclosed geometry and whole-piece origins are withheld.
 - The existing revision/delta store suppresses unchanged looks. Server
   caches belong to a caller's perception; client caches belong to Paint.
-  Mask-cache keys use the existing sight/grid and chart revisions; misses
-  inspect only the published viewport, never the whole remembered map.
+  Mask-cache keys use the existing sight/grid and chart revisions. The
+  mask grid inspects only the viewport. Whole-only rings, signs and text
+  query their candidate footprint by direct memory/chart membership,
+  so a wholly known piece may cross the viewport without disappearing.
+  Neither path enumerates the whole remembered map.
   No mutable global cache or simulation RNG is used. Non-ground tiles
   reuse P5's glyph, role and attribute rules before re-grounding colour.
+- Place terrain is cached separately from live overlays. Changes to
+  tile, knowledge, adjacency, roof or warning repaint that cached cell;
+  viewport, look, palette or small-map origin changes reset it. The
+  cell buffer copies already width-checked immutable cells with clipped
+  wide-glyph and bottom-right safety. No renderer writes raw cells.
 - At 16 colours UI 2.2 maps floors to black and walls to grey blocks.
   Contrast and person lifting use that actual mapped ground. The
   higher tiers use each theme/region ground, including `_light` people

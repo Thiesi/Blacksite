@@ -62,6 +62,14 @@ def terrain(buffer: CellBuffer, body: dict[str, Any], layout: Layout, paint: Pai
     grid, memory, legend = body['tiles'], body.get('remembered', []), body['legend']
     charted = body.get('charted', [])
     places = for_frame(paint, body)
+    target = buffer
+    if places:
+        geometry = (buffer.width, buffer.height, ox, oy, area.x, area.y, area.width, area.height)
+        if places.terrain_geometry != geometry:
+            places.terrain_buffer = CellBuffer(buffer.width, buffer.height)
+            places.terrain_states.clear()
+            places.terrain_geometry = geometry
+        target = places.terrain_buffer
     hazards = {tuple(tile) for hazard in body.get('hazards', []) for tile in hazard.get('tiles', [])}
 
     # Resolve memory/legend indices once. The trial repeated this for every
@@ -76,6 +84,8 @@ def terrain(buffer: CellBuffer, body: dict[str, Any], layout: Layout, paint: Pai
     ids = [[legend[index]['id'] if index >= 0 else '' for index in row] for row in resolved]
     opaque = frozenset(entry['id'] for entry in legend if entry.get('wall', entry['id'] in OPAQUE))
     open_tiles = frozenset(entry['id'] for entry in legend if entry['id'] not in opaque)
+    near_walls = {(x + dx, y + dy) for y, row in enumerate(ids) for x, tile in enumerate(row)
+                  if tile in opaque for dx, dy in ((-1,0),(1,0),(0,-1),(0,1))} if places else set()
     styles: dict[tuple[int, bool, bool], tuple[str, Style]] = {}
 
     for y, row in enumerate(grid[:vp['h']]):
@@ -85,10 +95,19 @@ def terrain(buffer: CellBuffer, body: dict[str, Any], layout: Layout, paint: Pai
             if not area.x <= ox + x < area.right:
                 continue
             index = resolved[y][x]
+            beside_wall = (x,y) in near_walls if places else False
+            roof = index >= 0 and legend[index].get('wall', legend[index]['id'] == 'wall') and not _beside(ids, x, y, open_tiles)
+            warned = value >= 0 and (vp['x'] + x, vp['y'] + y) in hazards
+            if places:
+                state = index, roof, value < 0, warned, beside_wall
+                if places.terrain_states.get((x,y)) == state:
+                    continue
+                places.terrain_states[x,y] = state
             if index < 0:
+                if places:
+                    target.put(ox+x,oy+y,' ')
                 continue
             entry = legend[index]
-            roof = entry.get('wall', entry['id'] == 'wall') and not _beside(ids, x, y, open_tiles)
             key = index, roof, value < 0
             if key not in styles:
                 glyph, style = cell(paint, entry, roof=roof)
@@ -96,16 +115,16 @@ def terrain(buffer: CellBuffer, body: dict[str, Any], layout: Layout, paint: Pai
             glyph, style = styles[key]
             if places:
                 glyph, style = places.cell(paint, entry, (vp['x'] + x, vp['y'] + y),
-                                           roof=roof, beside_wall=_beside(ids, x, y, opaque), live=value >= 0)
-                if value < 0:
-                    style = paint.known(style)
-            if value >= 0 and (vp['x'] + x, vp['y'] + y) in hazards:
+                                           roof=roof, beside_wall=beside_wall, live=value >= 0)
+            if warned:
                 style = paint('thing_hazard', 'hazard_warn', bold=True, reverse=paint.tier == '16')
             elif value < 0:
                 if (paint.tier == '16' and glyph == '·' and (vp['x'] + x + vp['y'] + y) % 3
-                        and not _beside(ids, x, y, opaque)):
+                        and not (beside_wall if places else _beside(ids, x, y, opaque))):
                     glyph = ' '
-            buffer.put(ox + x, oy + y, glyph, style)
+            target.put(ox + x, oy + y, glyph, style)
+    if places:
+        buffer.copy_from(target, area.x, area.y, area.width, area.height)
 
 
 def cell(paint: Paint, entry: dict[str, Any], *, roof: bool = False) -> tuple[str, Style]:

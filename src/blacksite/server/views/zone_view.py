@@ -179,7 +179,15 @@ def build(actor: Actor, zone: ZoneInstance, perception: Perception, content: Con
                      for y, row in enumerate(perception.tiles) for x, index in enumerate(row)
                      if index >= 0 or index == -2 and perception.memory[y][x] >= 0
                      or y < len(chart) and chart[y][x] >= 0}
-            perception.looks = looks.masked(content, zone.template, known, visible)
+            hidden = {ex.tile for ex in zone.template.meta.exits if ex.hidden}
+            def known_at(tile: Tile) -> bool:
+                if tile in visible or tile in remembered:
+                    return True
+                if tile not in public or tile in hidden:
+                    return False
+                kind = content.tiles[zone.template.tile_at(tile)]
+                return not (kind.hazard or kind.interaction)
+            perception.looks = looks.masked(content, zone.template, known, visible, known_at=known_at)
             perception.look_key = look_key
         result['looks'] = perception.looks
         # Add class metadata only for the new place layer. The old no-look

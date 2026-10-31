@@ -328,6 +328,7 @@ def test_ui_2_2_look_keeps_p5_rule_glyphs_roles_and_attributes(fixtures,tier):
         glyph,style = places.cell(paint,entry,(7,3),roof=False,beside_wall=False,live=True)
         assert glyph == expected_glyph
         assert style.fg == expected_style.fg and style.attrs == expected_style.attrs
+        assert style.bg == (0 if tier=='16' else paint.palette.style('p6_ground').fg)
         if tid == 'locked-door':
             assert glyph == '≡'
 
@@ -358,3 +359,56 @@ def test_ui_2_legacy_renderer_ignores_places_and_charting(fixtures):
         model.receive(Frame('view',{'rev':1,'kind':'zone','body':value}),1)
         outputs.append(model.render(2)[0])
     assert outputs[0] == outputs[1]
+
+
+@pytest.mark.parametrize('tier',['16','256','truecolor'])
+def test_ui_2_cached_terrain_matches_fresh_paint_through_movement(fixtures,tier):
+    body,caller,instance,perception = view(fixtures)
+    palette = asdict(fixtures.palette)
+    cached = Paint(Palette(palette,tier))
+    layout = compute(80,24)
+    origin = layout.viewport.x,layout.viewport.y
+    for x in (4,5,6,5,4):
+        caller.x = x
+        caller.sight_key = None
+        body = build(caller,instance,perception,fixtures,80,24,'12:00',False,x)
+        frames = []
+        for paint in (cached,Paint(Palette(palette,tier))):
+            buffer = CellBuffer(80,24)
+            drawing.terrain(buffer,body,layout,paint,origin)
+            drawing.people(buffer,body,layout,paint,origin)
+            term = FakeTerminal()
+            term.write(buffer.full())
+            frames.append(canonical(snapshot(term)))
+        assert frames[0] == frames[1]
+        places = for_frame(cached,body)
+        assert not any(cell.glyph == '@' for row in places.terrain_buffer.cells for cell in row)
+
+
+def test_arch_5_5_4_whole_known_ring_and_sign_can_cross_viewport(fixtures):
+    from blacksite.server.views.looks import masked
+    content = deepcopy(fixtures)
+    zone = content.zones['p6-fixture']
+    content.zones[zone.id] = replace(zone,
+        meta=replace(zone.meta,public=(s.Region(0,0,120,50),),exits=(),objects=()),
+        grid=tuple(tuple('wall' if x in (0,119) or y in (0,49) else 'floor'
+                         for x in range(120)) for y in range(50)))
+    look = replace(content.looks['p6-fixture'],regions=(s.LookRegion('p6-ring',circle=(40,24,14)),),
+                   signs=(s.LookSign((62,0),'KNOWN SIGN','thing_exit'),),marks=(),glints=())
+    content.looks['p6-fixture'] = look
+    assert not problems(content)
+    for size in ((80,24),(132,50)):
+        body, *_ = view(content,*size,position=(40,5))
+        assert any('circle' in region for region in body['looks']['regions'])
+        assert body['looks']['signs'][0]['text'] == 'KNOWN SIGN'
+    # A clipped viewport knows only a subset of the ring/sign, while the
+    # caller's chart or memory authorizes their complete footprint.
+    known = {(40,24),(62,0)}
+    ring = {(x,y) for y in range(10,39) for x in range(12,69)
+            if (x-40)**2+4*(y-24)**2 <=4*14**2}
+    whole = ring | {(x,0) for x in range(62,72)}
+    result = masked(content,content.zones['p6-fixture'],known,set(),known_at=whole.__contains__)
+    assert len(result['regions']) == 1 and result['regions'][0]['circle'] == [40,24,14]
+    assert result['signs'][0]['text'] == 'KNOWN SIGN'
+    blocked = masked(content,content.zones['p6-fixture'],known,set(),known_at=(whole-{(40,10),(71,0)}).__contains__)
+    assert not blocked['regions'] and not blocked['signs']

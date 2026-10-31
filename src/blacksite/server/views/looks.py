@@ -2,6 +2,7 @@
 
 from dataclasses import asdict
 from typing import Any
+from collections.abc import Callable
 
 from blacksite.content.loader import ContentTree
 from blacksite.content import schema as s
@@ -9,12 +10,13 @@ from blacksite.content.places import DEFAULT_THEME, mark_cells, region_tiles, th
 
 
 def masked(content: ContentTree, zone: s.Zone, known: set[s.Tile],
-           visible: set[s.Tile]) -> dict[str, Any] | None:
+           visible: set[s.Tile], *, known_at: Callable[[s.Tile], bool] | None = None) -> dict[str, Any] | None:
     look = content.looks.get(zone.id)
     themes = content.themes.themes if content.themes else {}
     if look is None or look.theme not in themes:
         return None
     base = theme_over(DEFAULT_THEME, themes[look.theme])
+    whole_known = known_at if known_at is not None else known.__contains__
     result: dict[str, Any] = {'theme': asdict(base), 'regions': [], 'signs': [],
                               'marks': [], 'glints': [], 'names': {}}
     for region in look.regions:
@@ -24,7 +26,7 @@ def masked(content: ContentTree, zone: s.Zone, known: set[s.Tile],
         if not disclosed:
             continue
         if theme.pattern == 'rings':
-            if cells <= known:
+            if all(whole_known(at) for at in cells):
                 result['regions'].append({'theme': asdict(theme),
                     **({'rect': list(region.rect)} if region.rect else {'circle': list(region.circle)})})
             continue
@@ -40,13 +42,13 @@ def masked(content: ContentTree, zone: s.Zone, known: set[s.Tile],
                 start = end = x
     for sign in look.signs:
         cells = {(sign.at[0] + i, sign.at[1]) for i in range(len(sign.text))}
-        if cells <= known:
+        if cells & known and all(whole_known(at) for at in cells):
             result['signs'].append(asdict(sign))
     for mark in look.marks:
         cells = mark_cells(mark)
         # Text is meaningful whole, like signs. A lane line is tile-local.
         if mark.at is not None:
-            if all(at in known for at, ch in cells):
+            if any(at in known for at,ch in cells) and all(whole_known(at) for at, ch in cells):
                 result['marks'].append({'at': list(mark.at), 'text': mark.text, 'role': mark.role})
         else:
             result['marks'].extend({'at': list(at), 'text': ch, 'role': mark.role}
