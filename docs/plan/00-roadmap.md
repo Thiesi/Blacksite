@@ -102,6 +102,10 @@ not a numeric execution order. Cross-milestone dependencies are explicit.
 | S31 | NetBBS >= 7.45 integration: supervised preset, guest-safe admission, install guide, packaging, first release | Sonnet | S26, S28, S29, S30, S32, S33 |
 | S32 | Federation readiness audit (design only): origin/authority invariants, protocol reservations, a written bridge design against NetBBS #168 | Fable, Astra review | S21, S26 |
 | S33 | ANSI art pack: title, sigils, vignettes, the Ring, Wake Hall, dead screen, transitions | Opus composition, Human pass | S04 |
+| S34 | Lasting crews: persistent rosters, offline invitations, notes, handoffs (planned, #125) | Codex | S22, S19, S23 |
+| S35 | The away report: persisted public records and the login screen (planned, #125) | Codex | S34 |
+| S36 | Tags: one short public mark per character (planned, #125) | Codex | S08, S09, P6 |
+| S37 | Dead drops: addressed item stacks and Kestrel returns (planned, #125) | Codex | S23, S35 |
 
 Reviews: before S03, S04, and S14 start, an **Astra** critique pass over
 the relevant spec sections is recommended (protocol, renderer, hacking
@@ -121,6 +125,9 @@ first, then P2 to P4 once P1 merged.
 S01 -> S02 -> S03 -> S04 -> S05 -> S06 -> S07 -> S08 -> S09 -> S12 -> S10 ->
 S11 -> S13 -> S14 -> S15 -> S16 -> S17 -> S18 -> S20 -> S22 -> S19 -> S21 ->
 S23 -> S24 -> S25 -> S27 -> S26 -> S28 -> S30 -> S29 -> S33 -> S32 -> S31
+
+S34 -> S35 -> S36 -> S37 follow the owner's timing of 2026-10-31: after
+H1, beside C1 and S25c.
 
 ## 6. Parallel planning
 
