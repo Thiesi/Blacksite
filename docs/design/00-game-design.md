@@ -1648,7 +1648,8 @@ On a node where members are rarely online together, a crew must outlast
 a session. These rules extend section 10; its live rules (pickup,
 beacon, friendly fire, loot modes, shared XP and the six-tile
 contribution test) still apply, but only to members who are online
-and present: round-robin offers, frozen loot rosters, beacons and XP
+and present, except that a member's sleeper (section 2) keeps crew
+friendly-fire protection and is never in a loot roster: round-robin offers, frozen loot rosters, beacons and XP
 and loot eligibility include only members online and in the same zone
 or sector, so an offline member is never offered a turn.
 Values are initial, tuned at the pacing gate.
@@ -1736,8 +1737,8 @@ Values are initial, tuned at the pacing gate.
     Acceptance moves the job and its items together; withdrawal or
     expiry returns both to the holder unchanged. Escrowed items that
     no longer fit the holder's inventory go to a free collection at any
-    Kestrel branch, as a returned dead drop does (section 11.1), bound
-    items included; nothing is ever destroyed.
+    Kestrel branch, as a returned dead drop does (section 11.1); bound
+    items stay bound to the holder there.
   - **Stage deadlines.** Stage deadlines pause while an offer is open,
     like the 60-minute expiry; the offer window is bounded, so a pause
     lasts at most 24 hours. The offer view shows the receiver each
@@ -1849,13 +1850,14 @@ Values are initial, tuned at the pacing gate.
   picks it, outside the rule glyphs, so a tag can never imitate a thing
   or an exit. HERE shows the start of its text, and looking at the tag
   shows it whole. It expires after 7 days or when replaced.
-  - Never on a wall or other impassable tile, a hidden exit, a door or
-    another visible interaction tile, and never in a safe zone or
-    pocket. Every refusal gives the same one message. A hidden exit
-    looks like the wall around it and is refused exactly as a wall is.
-    Any other tile that looks like plain floor accepts a tag, whatever
-    is hidden there, so tagging never reveals a hidden exit or a hidden
-    interaction tile.
+  - Never on a wall or other impassable tile, a door or another
+    visible interaction tile, and never in a safe zone or pocket; every
+    refusal gives the same one message. Any tile a character can stand
+    on that is not refused this way accepts a tag, whatever is hidden
+    there, a hidden exit included.
+  - A tag on a hidden exit is drawn only for viewers who have found
+    that exit, so it never marks the exit for anyone else. A tag on a
+    hidden interaction tile draws as on plain floor.
   - A tag is drawn only where nothing visible is: an item, hazard,
     actor or object the viewer can see on the tile shows instead, and
     the tag stays listed in HERE. Undiscovered contents never affect
@@ -1890,6 +1892,9 @@ Values are initial, tuned at the pacing gate.
     channel beside the market board (section 8.3). There is no
     per-recipient limit, so a drop's acceptance never depends on what
     other senders did.
+  - **Returns.** A free Kestrel collection from a returned drop or
+    escrow lasts 30 days, then follows section 8.3's impound rules, so
+    it never becomes free permanent storage.
   - **Kestrel fee.** Leaving a drop costs the sender the market board's
     5 % Kestrel fee (section 8.3), charged on the item's catalog base
     price times the units dropped, rounded up, at least 1 chit; an item
