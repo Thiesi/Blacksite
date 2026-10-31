@@ -1062,8 +1062,9 @@ applies; an enabled lamp nearby does not offset it.
 - **Choosing the reserve.** The reserve allocation can be chosen only
   by a reserver standing in the Yards or the Dynamo Hall, and it takes
   effect only if at least one member of the frozen roster is in the
-  Yards or the hall when the repair completes; otherwise the common
-  allocation applies. The disclosure shown before the roster joins
+  Yards or the hall when the repair completes, counted by where each
+  member's body is (a jacked-in runner counts where their body lies);
+  otherwise the common allocation applies. The disclosure shown before the roster joins
   states this condition, so the fallback is never a surprise. Nobody
   can darken the Yards for others from a distance. A crew present in
   the Yards may still use the dark for PvP; that is the accepted cost
