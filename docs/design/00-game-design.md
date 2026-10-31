@@ -1739,8 +1739,13 @@ in the Tramyard sector's Wall Telemetry cell, see each committed impact
 site 60 seconds before impact (planned, #119). The reading is a log
 line that names the bearing and the slit facing the site, so it works
 on its own. The watcher also gets a mark at that slit, for the 60
-seconds. It is information only and never draws a Scour zone's tiles
-(architecture §5.5.4). Everyone gets the 5 s impact warning. Local job hazards
+seconds. A watcher is a caller standing at the scope rail when the reading
+comes; each caller gets each site once. When an event's notice is
+shorter than 60 seconds, as with an operator force, the reading comes
+as soon as the site is committed. A reading passed on, by a player or
+in a spotter's talk, carries no more lead than its 60 seconds. It is
+information only and never draws a Scour zone's tiles (architecture
+§5.5.4). Everyone gets the 5 s impact warning. Local job hazards
 and service faults are separate bounded state machines, not extra world
 event slots. They cannot change safe/pocket tiles.
 
