@@ -1,8 +1,8 @@
 # Sodium Row: experience design (proposal)
 
-**Status:** proposal for review by the owner, the technical lead and the
-presentation lead. Nothing here is canon until the owner approves it and
-it is written into the gazetteer, game design or cast documents top-down.
+**Status:** owner decisions of 2026-10-31 recorded in §10 (Q1 to Q6).
+This file stays a design record. Canon changes still go top-down in
+their own PRs (Q4: gazetteer), and geometry stays behind S25c and H3.
 **Author:** creative consultant (Claude Opus 5.5), 2026-10-31.
 **Scope:** `sodium-row` and `sodium-tin-halo`. Base: `main` at 6f1eac4,
 the truce decision in #141 (S38), and the place layer in #126 (P6b).
@@ -136,8 +136,10 @@ is the intent the gate judges, not an authored map.
 | **Spare Parts** | Unmoored runners | Old Works end; a public terminal inside [canon: most bars have one] |
 
 No bar for Wardens or Sable, deliberately. Wardens drink on the Row only
-in plain clothes, and Sable doesn't drink: it watches. That is the
-politics, in geography.
+in plain clothes, and Sable keeps no bar: it plays cards at the court,
+sells at the alley mouth and watches. That is the politics, in
+geography. Canon's "music from six doorways" is the five bars and the
+Halo.
 
 - **You perceive:** whose colours sit in which doorway, which crowd goes
   quiet when you walk in, which bar's prices are kinder to you.
@@ -165,7 +167,9 @@ politics, in geography.
   pit, the one place crowds bunch.
 - **You do:** watch, gather, emote [built: zone emotes]. A runner in the
   House Lights core can black out the stage lights: sight drops to 5 for
-  30 seconds around it [built]. That's the Row's sanctioned chaos, and
+  30 seconds around it [built]. The Lattice canon calls it "stealth for
+  everyone"; the build caps sight. Hunters see less rather than losing
+  you outright, and the playtests use the built effect. That's the Row's sanctioned chaos, and
   it isn't an attack under the truce (S38).
 - **Extra work, later:** the sign-grid message, a runner's 20-column text
   on every sign for 60 seconds [canon, not built]. The best multiplayer
@@ -189,7 +193,8 @@ politics, in geography.
   behind" [canon]. The getaway route, and the hardware behind the Row's
   lights.
 - **Distinct because:** narrow, dark, two passages in, out of the Strip's
-  sightline. Mira Solenne works its west mouth [canon cast]. The House
+  sightline. Mira Solenne, Sable's franchisee [canon cast], works its
+west mouth [new placement]. The House
   Lights sign-grid room is here [canon], so a crew cutting the Row's
   lights by hand stands in the alley.
 - **Truce:** it applies here too, so the alley is not lawless. It is
@@ -208,8 +213,10 @@ politics, in geography.
 - **Purpose:** where work and people meet. The one room on the Row where
   nobody can be touched (pocket [built]), and so the safest public chair
   to jack in from in the south of the city.
-- **Distinct because:** small. About 28 × 12 instead of 44 × 22, so the
-  whole room is visible (V0-3 lit pockets) and Vesper, at the end of the
+- **Distinct because:** small. The room is about 28 × 12 instead of
+  44 × 22. The map stays at least 40 × 20 (game design §5.1's zone floor),
+  with the room built inside it and the rest solid, so no rule changes.
+  The whole room is visible (V0-3 lit pockets) and Vesper, at the end of the
   bar, faces the door [canon]: you see her the moment you enter, and she
   saw you first. Dolf behind the bar [canon, unplaced]. Booths for crews.
   The back room behind the bar.
@@ -220,7 +227,10 @@ politics, in geography.
   into the alley. The Halo core's `back-door` control already opens the
   back room for 300 seconds [built]. With an alley door, that control
   becomes a way out. This is a route change, so it's under the layout
-  gate and listed for decision (§10, Q2).
+  gate (§10, Q2, approved). It isn't free: the runner must get through
+  the Halo core's ICE and Vesper notices [canon], and the alley door is
+  in plain sight from the alley, so a hunter's crew that covers both
+  doors wins. That balance is a playtest question.
 - **Playtest passes if:** the owner calls the room intimate, and names
   Vesper as its centre without reading the label.
 
@@ -239,8 +249,7 @@ politics, in geography.
 This is 16 NPCs on the Row against 8 today. The Row already misses the
 132 × 50 CPU budget at 8 (P6b). The technical lead has added an 8/11/16
 sweep to A8's evidence, so main gets no increase until it's measured.
-The demo branch may run 16. Fallback: one per bar and no card players
-(11).
+The demo branch may run 16. Fallback: one per bar, keeping the card players (11).
 
 Halo regulars become a mix of factions, not four Sable members.
 
@@ -279,8 +288,12 @@ fine:
    may hunt you and Wardens engage [built]. Add: Vesper's contract offer
    carries `not_marked` [dormant condition], so drawing on the Row costs
    you the Row's work until the Mark expires.
-3. **Escape takes skill.** That's geometry: the only sanctuary is up the
-   Neon Stair into the safe Core, and enforcers post at its foot. Two
+3. **Escape takes skill.** That's geometry: the sanctuary is up the
+   Neon Stair into the safe Core, and enforcers post at its foot. The
+   Halo next door is a pocket; whether it may shelter a truce-breaker is
+   open (§10, Q7). During Curfew the Stair is shut, so on Curfew nights
+   there is no sanctuary: the Row's most dangerous night, and it should
+   say so. Two
    alley passages give a choice. Hunters give up 20 seconds after losing
    sight [built]. A crewmate can black out the lights for 30 seconds from
    the Lattice [built]. Those are the stories people tell.
@@ -375,36 +388,39 @@ The smallest thing that lets the owner judge this design in play.
      name the bars' crowds after one walk? Can you say the Row's rule?
   2. Return as a grade 5 faction member, with prepared state. Does the
      Row treat you differently? Do you want a drink in your own bar?
-  3. Two callers on Curfew night. One draws; can the other Mark and chase
-     them? Does the getaway feel earned?
+  3. Two callers on an ordinary night. One draws; does Sable make them
+     pay, and does the getaway feel earned? Curfew night is a separate,
+     optional run, because the Stair is shut and there is no sanctuary.
 - **Split:** Codex's queue is full, so the creative consultant and the
   presentation lead build it from shipped systems: I do content, layout
   and speech, and the presentation lead does dressing and the switch.
   The technical lead reviews it for safety and disclosure only. Scope is
   agreed by all three before any code.
 
-## 10. Decisions for the owner
+## 10. Decisions
 
-Q1 (the truce) is decided. Still open:
+Decided by the owner on 2026-10-31 (Q1 in #141; Q2 to Q6 recorded on
+#143 by the technical lead):
 
-- **Q2. The Halo's back way out.** May the back room gain a door into the
-  alley, opened by the Halo core's existing `back-door` control? It adds
-  an escape route for bounty targets. Recommend yes.
-- **Q3. The price.** May the Row's enforcers get their own grade and kit,
-  tuned so that a solo grade-5+ player who fights Sable on the Row loses?
-  It's a balance change, with numbers in game design. Reinforcements
-  would be a later, separate decision. Recommend yes.
-- **Q4. Bars with crowds by custom.** Approve the five bars (Upstairs,
-  the Long Shift, the Quarter Tone, the Clause, Spare Parts) as gazetteer
-  canon, with crowds by custom rather than ownership. Recommend yes.
-- **Q5. The demonstration.** Build §9 as a non-production demo branch,
-  outside the S25c gate, so you can judge the direction in play.
-  Recommend yes.
-- **Q6. Speech before the final presentation.** May a narrow slice after
-  #126 and S38 put the dormant cast (Vesper, Dolf, Solenne and the
-  others) live on main as plain log lines, ahead of P8 and S25c? Talkers
-  would stop answering "Not yet." across the city. It changes the
-  adopted plan order. Recommend yes.
+| Q | Decision | What follows |
+|---|---|---|
+| Q1 | The truce: yes | S38 (#141) |
+| Q2 | The Halo's back room gets an alley door: yes | production behind S25c and H3, with C1's Halo door (#92); allowed on the demo now |
+| Q3 | The price: yes in direction, numbers first | concrete enforcer grade and kit to the owner before any PR; the fingerprint moves in that PR |
+| Q4 | Five bars with crowds by custom: yes | gazetteer and glossary PR; map placement behind S25c; crowd sizes after A8's NPC sweep |
+| Q5 | The demo: yes | branch never merged, outside the S25c gate; built by the creative consultant and the presentation lead; the technical lead reviews safety and disclosure |
+| Q6 | Speech before P8 as plain log lines on `main`: yes | a narrow slice after #126 and S38, filed by the technical lead |
+
+Open, raised in review after the decisions (to settle before playtest 3):
+
+- **Q7. May the Halo shelter a truce-breaker?** The Halo is a pocket, so
+  a Marked attacker can step in and wait out the Mark, which undercuts
+  the price when the fight is near its door. Recommendation: the Halo's
+  bouncer turns away a player Marked for breaking the Row's truce until
+  the Mark ends. Players Marked elsewhere still get Vesper's "Sit at the
+  back." This is a new rule (door refusal by Mark cause). The demo can
+  try it before the owner decides; game design §7.6's "nobody can bar
+  another player" is about players, not this.
 
 ## 11. Ideas recorded for later
 
