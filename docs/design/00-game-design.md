@@ -1044,7 +1044,9 @@ applies; an enabled lamp nearby does not offset it.
 - **Controls.** While Grid is `fault` or `allocated`, the Foundry's
   public `yard lights` control is suspended and cannot relight or
   darken the Yards, and using it answers with the reason. When the
-  state ends the Yards' lights are on and the control resumes, as
+  state ends, whether by a player's repair or the NPC repair that
+  closes an unclaimed fault, the Yards' lights are on and the control
+  resumes, as
   Relay Zero's permit states its relation to the ordinary control.
   Yard Relay's effect is its fabrication modifier only; it controls no
   lights, so no relay holder can relight or darken the Yards.
