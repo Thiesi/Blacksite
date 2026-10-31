@@ -84,9 +84,9 @@ public logs already showed.
 
 ## Acceptance script
 
-1. B logs out. A captures a relay, repairs a public service and dies
-   in a crew fight. B logs in two hours later and sees each, in words,
-   with the relay first if it was addressed.
+1. A and B are in a crew. B logs out. A captures a relay, repairs a
+   public service and dies in a fight. B logs in two hours later and
+   sees each, in words, newest first, after any addressed items.
 2. B has three invitations: one line reads "3 invitations; the next
    ends in 2 days".
 3. A Marked player's zone is absent from a non-Warden's report.

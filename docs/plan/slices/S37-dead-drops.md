@@ -67,8 +67,9 @@ transfer channel and never reveal an ignore or a retirement.
 
 ## Protocol and view models
 
-- The drop object is drawn only for a recipient with a drop waiting
-  there; everyone else sees ordinary ground.
+- Every viewer sees the dead-drop object itself. Only the recipient of
+  a waiting drop sees it in its "waiting" look and gets a HERE line for
+  it; everyone else sees the object as usual.
 - A drop view: leave (with "10 of N fit in a drop" and the fee
   confirmation), collect, refuse (one key).
 - Kestrel collections show "kept until <date>".
