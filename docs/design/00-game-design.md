@@ -1020,36 +1020,45 @@ revision and receipt, independent of crew leadership.
 | Grid / `oldworks-dynamo-hall` (planned, #119) | brownout: the Yards' lights go out; carry a power unit to the hall and re-sync the hall governor in the network | the Yards' lights come back at once | the spare load runs a workers' bench in the hall, and the Yards stay dark for the allocation's 20 minutes from repair completion |
 
 Grid (planned, #119): the brownout turns off only the Yards' lights,
-the `yard lights` control's objects; sight there falls to 5 tiles under
-section 6.4's switched-off lamp rule, and dark-sight equipment still
-applies. The `yard lights` objects are placed so that their light radii
-cover all of the Yards' passable ground, so the whole zone darkens; the
-build slice tests that coverage beside the exit-lamp test below. The Dynamo Hall, pockets and safe zones keep their lights, and
-nothing else changes. The brownout is the service's declared `fault`
-state, so a client may name it from that state and never infers it
-from darkness. The workers' bench is a fabrication workshop for the
-workers only, at the ordinary quality rule plus 0.05, capped at 1.15
-and not stacking with Yard Relay. The handler is a Civic engineer,
-so the standing reward goes to the Wardens in section 9.3's
-`propagate` mode, as for any Wardens reward. The Wardens and the
-Unmoored are hostile (section 7.2), so with the standard +5 the
-Wardens' opponents, Sable and the Unmoored, each change by -2, and its
-allies, Kestrel and the Compact, by +2 (halves rounded toward zero). While Grid is `fault` or `allocated`, the Foundry's
-public `yard lights` control is suspended and cannot relight or darken
-the Yards, and using it answers with the reason; when the state ends
-the Yards' lights are on and the control resumes, as Relay Zero's permit
-states its relation to the ordinary control. Yard Relay's effect is
-its fabrication modifier only; it controls no lights, so no relay
-holder can relight or darken the Yards in any Grid state. The safe
-return route is the cable trench, whose tiles keep their lights in
-every Grid state; the brownout never darkens the trench or the hall.
-Every exit tile of the Yards also stays within the light radius of an
-exit lamp: an authored light object separate from the `yard lights`
-objects, which neither the brownout nor any control switches off. So a
-caller caught in the dark can always reach a lit way out; the build
-slice proves it with a test that every Yards exit tile is lit in every
-Grid state and that no exit lamp belongs to the `yard lights` set. Hazard tiles and their warnings render regardless of
-lighting, so the 2 s warning rule (section 5.3) holds in the dark.
+the `yard lights` control's objects. Under section 6.4's switched-off
+lamp rule, sight falls to 5 tiles for a caller within the Yards' sight
+radius of any switched-off lamp, and dark-sight equipment still
+applies; an enabled lamp nearby does not offset it.
+- **Coverage.** The `yard lights` objects are placed so that every
+  passable Yards tile darkens, except the exit neighbourhoods: no
+  `yard lights` object lies within the Yards' sight radius of an exit
+  tile, the cable trench included. A caller who reaches any exit
+  therefore sees normally in every Grid state, so there is always a
+  way out of the dark. Exit lamps, authored apart from the `yard
+  lights` set and never switched off, mark those exits. The build
+  slice tests both: darkness everywhere outside the exit
+  neighbourhoods, and full sight on every exit tile in every Grid
+  state.
+- **Unchanged.** The Dynamo Hall, pockets and safe zones keep their
+  lights, and nothing else changes. Hazard tiles and their warnings
+  render regardless of lighting, so the 2 s warning rule (section 5.3)
+  holds in the dark.
+- **Declared state.** The brownout is the service's declared `fault`
+  state, so a client may name it from that state and never infers it
+  from darkness.
+- **Controls.** While Grid is `fault` or `allocated`, the Foundry's
+  public `yard lights` control is suspended and cannot relight or
+  darken the Yards, and using it answers with the reason. When the
+  state ends the Yards' lights are on and the control resumes, as
+  Relay Zero's permit states its relation to the ordinary control.
+  Yard Relay's effect is its fabrication modifier only; it controls no
+  lights, so no relay holder can relight or darken the Yards.
+- **The bench.** The workers' bench is a fabrication workshop for the
+  workers only, at the ordinary quality rule plus 0.05, capped at 1.15
+  and not stacking with Yard Relay.
+- **Standing.** The handler is a Civic engineer, so the standing reward
+  goes to the Wardens in section 9.3's `propagate` mode, as for any
+  Wardens reward. Under section 7.2, with the standard +5, the
+  Wardens' opponents, Sable and the Unmoored, each change by -2, and
+  its allies, Kestrel and the Compact, by +2 (halves rounded toward
+  zero).
+- **Return route.** The safe return route is the cable trench, an exit
+  neighbourhood; the brownout never darkens the trench or the hall.
 
 Each order identifies the exact changed door, cache, vendor, or core,
 the foregone allocation, and a safe return route. Effects never change
