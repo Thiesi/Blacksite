@@ -1,0 +1,369 @@
+{
+ "execution_head": "70b346c0b6090694c8fc6dfe442e7f55c2f1ae39",
+ "p6_reference": {
+  "execution_head": "70b346c0b6090694c8fc6dfe442e7f55c2f1ae39",
+  "run": 41159079066,
+  "artifact_id": 13026374277,
+  "artifact_name": "p6-charted-budget",
+  "report_sha256": "ee3f906c8ab1dc2a0f4bd3443c4e970a798ea3afc72508e31aefb03cf081938c",
+  "method": "unchanged P1 Meter: Display receive/key/update/render only; server/codecs excluded",
+  "seconds": 12.0,
+  "targets": {
+   "render_p95_ms": 100,
+   "delta_bytes": 16384,
+   "cpu_s_per_hour": 120
+  },
+  "all_twelve_targets_pass": true,
+  "cases": [
+   {
+    "size": [
+     80,
+     24
+    ],
+    "tier": "16",
+    "known": false,
+    "large_ring": false,
+    "generic_cpu_s_h": 59.5196,
+    "looks_cpu_s_h": 44.3264,
+    "p95_ms": 2.967216,
+    "max_ansi_delta_bytes": 354,
+    "first_look_bytes": 1207,
+    "walking_look_delta_bytes": 0,
+    "max_wire_delta_bytes": 3665
+   },
+   {
+    "size": [
+     80,
+     24
+    ],
+    "tier": "256",
+    "known": false,
+    "large_ring": false,
+    "generic_cpu_s_h": 58.3723,
+    "looks_cpu_s_h": 47.1874,
+    "p95_ms": 3.089736,
+    "max_ansi_delta_bytes": 1200,
+    "first_look_bytes": 1207,
+    "walking_look_delta_bytes": 0,
+    "max_wire_delta_bytes": 3665
+   },
+   {
+    "size": [
+     80,
+     24
+    ],
+    "tier": "truecolor",
+    "known": false,
+    "large_ring": false,
+    "generic_cpu_s_h": 57.588,
+    "looks_cpu_s_h": 45.247,
+    "p95_ms": 3.061963,
+    "max_ansi_delta_bytes": 1488,
+    "first_look_bytes": 1207,
+    "walking_look_delta_bytes": 0,
+    "max_wire_delta_bytes": 3665
+   },
+   {
+    "size": [
+     132,
+     50
+    ],
+    "tier": "16",
+    "known": false,
+    "large_ring": false,
+    "generic_cpu_s_h": 177.2749,
+    "looks_cpu_s_h": 98.6043,
+    "p95_ms": 7.886193,
+    "max_ansi_delta_bytes": 448,
+    "first_look_bytes": 1207,
+    "walking_look_delta_bytes": 0,
+    "max_wire_delta_bytes": 5007
+   },
+   {
+    "size": [
+     132,
+     50
+    ],
+    "tier": "16",
+    "known": true,
+    "large_ring": false,
+    "generic_cpu_s_h": 175.943,
+    "looks_cpu_s_h": 95.4953,
+    "p95_ms": 7.176557,
+    "max_ansi_delta_bytes": 448,
+    "first_look_bytes": 1207,
+    "walking_look_delta_bytes": 0,
+    "max_wire_delta_bytes": 3542
+   },
+   {
+    "size": [
+     132,
+     50
+    ],
+    "tier": "256",
+    "known": false,
+    "large_ring": false,
+    "generic_cpu_s_h": 154.1955,
+    "looks_cpu_s_h": 96.9981,
+    "p95_ms": 7.965982,
+    "max_ansi_delta_bytes": 1689,
+    "first_look_bytes": 1207,
+    "walking_look_delta_bytes": 0,
+    "max_wire_delta_bytes": 5007
+   },
+   {
+    "size": [
+     132,
+     50
+    ],
+    "tier": "256",
+    "known": true,
+    "large_ring": false,
+    "generic_cpu_s_h": 159.1326,
+    "looks_cpu_s_h": 96.2279,
+    "p95_ms": 7.210714,
+    "max_ansi_delta_bytes": 1689,
+    "first_look_bytes": 1207,
+    "walking_look_delta_bytes": 0,
+    "max_wire_delta_bytes": 3542
+   },
+   {
+    "size": [
+     132,
+     50
+    ],
+    "tier": "truecolor",
+    "known": false,
+    "large_ring": false,
+    "generic_cpu_s_h": 154.289,
+    "looks_cpu_s_h": 98.7311,
+    "p95_ms": 7.269443,
+    "max_ansi_delta_bytes": 2105,
+    "first_look_bytes": 1207,
+    "walking_look_delta_bytes": 0,
+    "max_wire_delta_bytes": 5007
+   },
+   {
+    "size": [
+     132,
+     50
+    ],
+    "tier": "truecolor",
+    "known": true,
+    "large_ring": false,
+    "generic_cpu_s_h": 155.7785,
+    "looks_cpu_s_h": 95.9094,
+    "p95_ms": 7.678761,
+    "max_ansi_delta_bytes": 2105,
+    "first_look_bytes": 1207,
+    "walking_look_delta_bytes": 0,
+    "max_wire_delta_bytes": 3542
+   },
+   {
+    "size": [
+     132,
+     50
+    ],
+    "tier": "16",
+    "known": true,
+    "large_ring": true,
+    "generic_cpu_s_h": 176.5372,
+    "looks_cpu_s_h": 96.4792,
+    "p95_ms": 7.083249,
+    "max_ansi_delta_bytes": 448,
+    "first_look_bytes": 1208,
+    "walking_look_delta_bytes": 0,
+    "max_wire_delta_bytes": 3542
+   },
+   {
+    "size": [
+     132,
+     50
+    ],
+    "tier": "256",
+    "known": true,
+    "large_ring": true,
+    "generic_cpu_s_h": 156.3988,
+    "looks_cpu_s_h": 96.2704,
+    "p95_ms": 7.772516,
+    "max_ansi_delta_bytes": 1691,
+    "first_look_bytes": 1208,
+    "walking_look_delta_bytes": 0,
+    "max_wire_delta_bytes": 3542
+   },
+   {
+    "size": [
+     132,
+     50
+    ],
+    "tier": "truecolor",
+    "known": true,
+    "large_ring": true,
+    "generic_cpu_s_h": 155.0696,
+    "looks_cpu_s_h": 96.7058,
+    "p95_ms": 7.418329,
+    "max_ansi_delta_bytes": 2107,
+    "first_look_bytes": 1208,
+    "walking_look_delta_bytes": 0,
+    "max_wire_delta_bytes": 3542
+   }
+  ],
+  "server_probe_separate_from_door_cpu": {
+   "boundary": "zone_view.build only; separate from door CPU/120s-per-hour verdict",
+   "cases": {
+    "charted": {
+     "calls": 60,
+     "build_wall_ms": {
+      "count": 60,
+      "p50": 3.266405,
+      "p95": 3.475074,
+      "max": 22.65879
+     },
+     "build_cpu_ms": 217.652632,
+     "ring": [
+      40,
+      24,
+      14
+     ]
+    },
+    "remembered": {
+     "calls": 60,
+     "build_wall_ms": {
+      "count": 60,
+      "p50": 3.062093,
+      "p95": 3.275111,
+      "max": 6.159052
+     },
+     "build_cpu_ms": 189.777762,
+     "ring": [
+      40,
+      24,
+      14
+     ]
+    }
+   }
+  }
+ },
+ "p5_shipped_comparison": {
+  "execution_head": "70b346c0b6090694c8fc6dfe442e7f55c2f1ae39",
+  "run": 41159079111,
+  "artifact_id": 13027190198,
+  "artifact_name": "p5-budget-comparison",
+  "report_sha256": "98b57339c047d2c52e12dc48b5cf9d7528bce673fd5e9693b543fb3c2d0a50d6",
+  "all_nine_cpu_targets_pass": true,
+  "cases": [
+   {
+    "size": [
+     80,
+     24
+    ],
+    "tier": "16",
+    "known": false,
+    "off_cpu_s_h": 27.204,
+    "on_cpu_s_h": 26.5268
+   },
+   {
+    "size": [
+     80,
+     24
+    ],
+    "tier": "256",
+    "known": false,
+    "off_cpu_s_h": 25.4584,
+    "on_cpu_s_h": 26.1914
+   },
+   {
+    "size": [
+     80,
+     24
+    ],
+    "tier": "truecolor",
+    "known": false,
+    "off_cpu_s_h": 24.8686,
+    "on_cpu_s_h": 27.2279
+   },
+   {
+    "size": [
+     132,
+     50
+    ],
+    "tier": "16",
+    "known": false,
+    "off_cpu_s_h": 47.1514,
+    "on_cpu_s_h": 52.2966
+   },
+   {
+    "size": [
+     132,
+     50
+    ],
+    "tier": "16",
+    "known": true,
+    "off_cpu_s_h": 126.5316,
+    "on_cpu_s_h": 79.2906
+   },
+   {
+    "size": [
+     132,
+     50
+    ],
+    "tier": "256",
+    "known": false,
+    "off_cpu_s_h": 50.0387,
+    "on_cpu_s_h": 53.5362
+   },
+   {
+    "size": [
+     132,
+     50
+    ],
+    "tier": "256",
+    "known": true,
+    "off_cpu_s_h": 109.3195,
+    "on_cpu_s_h": 62.4782
+   },
+   {
+    "size": [
+     132,
+     50
+    ],
+    "tier": "truecolor",
+    "known": false,
+    "off_cpu_s_h": 45.5225,
+    "on_cpu_s_h": 47.1589
+   },
+   {
+    "size": [
+     132,
+     50
+    ],
+    "tier": "truecolor",
+    "known": true,
+    "off_cpu_s_h": 103.521,
+    "on_cpu_s_h": 62.3399
+   }
+  ],
+  "final_P5_main_baseline": {
+   "run": 41126237721,
+   "cpu_132x50_known": [
+    93.3807,
+    87.126,
+    99.3039
+   ]
+  },
+  "boundary": "Shipped P5 workload, distinct from P6 paired stress fixture; on means presentation enabled without shipped looks."
+ },
+ "local_windows_diagnostic": {
+  "execution_head": "70b346c0b6090694c8fc6dfe442e7f55c2f1ae39",
+  "reference_cpu_verdict": false,
+  "fully_known_132_p95_ms": {
+   "16": 47.6324,
+   "256": 27.2779,
+   "truecolor": 29.8386
+  },
+  "local_native_attached_80_dark_cases": 3,
+  "wheel_sha256": "0306c302b86770b96e8c103d683be97f98dc7af46f14513abb3ac86e804d772d"
+ },
+ "human_approval": false,
+ "presentation_signoff": false
+}

@@ -121,6 +121,33 @@ class CellBuffer:
                     self.cells[y][x + 1] = Cell("", style)
             x += size
 
+    def copy_from(self, source: "CellBuffer", x: int, y: int, width: int, height: int) -> None:
+        """Copy already width-checked cells at the same screen coordinates.
+
+        Cells are immutable. This lets a cached terrain layer be reused
+        without re-measuring its strings or sharing mutable row lists.
+        Cropped wide glyphs become blanks, and the last terminal cell is
+        still excluded, exactly as in put/fill.
+        """
+        if (source.width, source.height) != (self.width, self.height):
+            raise ValueError('cell-buffer copy requires matching dimensions')
+        if source is self:
+            return
+        for row_index in range(max(0, y), min(self.height, y + height)):
+            left, right = max(0, x), min(self.width - (row_index == self.height - 1), x + width)
+            if left >= right:
+                continue
+            if self.cells[row_index][left].glyph == '':
+                self._clear_glyph(left, row_index)
+            if right < self.width and self.cells[row_index][right].glyph == '':
+                self._clear_glyph(right, row_index)
+            cells = source.cells[row_index][left:right]
+            if cells[0].glyph == '':
+                cells[0] = Cell(style=cells[0].style)
+            if right < source.width and source.cells[row_index][right].glyph == '':
+                cells[-1] = Cell(style=cells[-1].style)
+            self.cells[row_index][left:right] = cells
+
     def diff(self, previous: "CellBuffer | None") -> bytes:
         if previous is not None and (previous.width, previous.height) != (self.width, self.height):
             previous = None

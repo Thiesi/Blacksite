@@ -54,7 +54,11 @@ def header(buffer: CellBuffer, layout: Layout, paint: Paint, left: list[tuple[st
         # drop order below removes district/service, then shortens the zone.
         fixed = [clean_text(text) for text, role in left[1:] if text
                  and role != 'head_district' and not (role == 'head_info' and text != 'PvP G5+')]
-        zone_room = min(display_width(clean_text(left[0][0])), len('...')) if left else 0
+        # Share scarce width when both names are long; otherwise keep the
+        # full zone and give the notice every remaining cell at the right.
+        notice_room = min(display_width(clean_text(notice[0])), area.width // 2)
+        available = max(0, area.width - display_width(' '.join(fixed)) - bool(fixed) - notice_room - 2)
+        zone_room = min(display_width(clean_text(left[0][0])), available) if left else 0
         reserve = display_width(' '.join(fixed)) + zone_room + bool(fixed and zone_room)
         text = truncate(clean_text(notice[0]), max(0, area.width - reserve - 2))
         right = [(text, notice[1])] if text else []

@@ -4,6 +4,41 @@ from blacksite.door.cells import CellBuffer, display_width, truncate
 from tests.fake_terminal import FakeTerminal
 
 
+def test_cached_copy_preserves_wide_combining_and_rejects_partial_glyphs() -> None:
+    source = CellBuffer(80,24)
+    source.put(2,2,'界e\u0301')
+    target = CellBuffer(80,24)
+    target.copy_from(source,0,0,80,24)
+    terminal = FakeTerminal()
+    terminal.write(target.full())
+    assert terminal.cell(2,2) == '界' and terminal.cell(3,2) == ''
+    assert terminal.cell(4,2) == 'e\u0301'
+    cropped = CellBuffer(80,24)
+    cropped.copy_from(source,3,2,1,1)
+    cropped.copy_from(source,2,3,1,1)
+    cropped.copy_from(source,2,2,1,1)
+    screen = FakeTerminal()
+    screen.write(cropped.full())
+    assert screen.cell(2,2) == screen.cell(3,2) == ' '
+    assert source.cells[2][2].glyph == '界'  # Cropping never edits the source.
+
+
+def test_cached_copy_isolates_rows_clears_old_wide_glyphs_and_keeps_last_cell_safe() -> None:
+    source,target = CellBuffer(80,24),CellBuffer(80,24)
+    source.put(3,2,'a')
+    target.put(2,2,'界')
+    target.copy_from(source,3,2,1,1)
+    target.put(3,2,'b')
+    assert source.cells[2][3].glyph == 'a'
+    source.put(78,23,'x')
+    source.put(79,23,'y')
+    target.copy_from(source,-1,-1,100,30)
+    screen = FakeTerminal()
+    screen.write(target.full())
+    assert screen.cell(2,2) == ' ' and screen.cell(3,2) == 'a'
+    assert screen.cell(78,23) == 'x' and screen.cell(79,23) == ' '
+
+
 def test_wide_glyph_two_cells_and_combining_zero_width() -> None:
     buffer = CellBuffer(80, 24)
     buffer.put(0, 0, "界e\u0301")
