@@ -1655,7 +1655,8 @@ Values are initial, tuned at the pacing gate.
   in section 10 when the leader leaves the crew, not when the leader
   logs out.
 - **Inactivity.** When the leader has not logged in for 7 days,
-  leadership passes to the longest-serving member who has. A crew in
+  leadership passes to the longest-serving member who has logged in
+  within those 7 days. A crew in
   which no member has logged in for 30 days dissolves and releases its
   name.
 - **Naming.** The inviter names the crew with its first invitation: 3
@@ -1789,8 +1790,11 @@ Values are initial, tuned at the pacing gate.
   picks it, outside the rule glyphs, so a tag can never imitate a thing
   or an exit. HERE shows the start of its text, and looking at the tag
   shows it whole. It expires after 7 days or when replaced.
-  - Never on a hidden exit, a door or another interaction tile, and
-    never in a safe zone or pocket.
+  - Never on a door or another visible interaction tile, and never in
+    a safe zone or pocket; those refusals give one message, the same
+    for every refused tile.
+  - A tag placed on a hidden exit is accepted like any other, but only
+    its author ever sees it, so tagging never reveals a hidden exit.
   - A tag is drawn only where nothing else is: an item, hazard, actor
     or object on the tile always shows instead, and the tag stays
     listed in HERE.
@@ -1805,8 +1809,9 @@ Values are initial, tuned at the pacing gate.
   collection at any Kestrel branch, as a purchased market delivery is
   collected (section 8.3), whether or not the item was ever listed; it
   is not an impound reclaim with a fee.
-  - If the recipient retires, the drop returns to the sender at once.
-    If the sender retires, the drop stays for the recipient until it
+  - If the recipient retires, the drop returns to the sender at the
+    7-day expiry, like an unanswered drop, so a return never reveals a
+    retirement. If the sender retires, the drop stays for the recipient until it
     expires; uncollected, it is deleted with the sender's other
     property. If both have retired, it is deleted.
   - One outgoing drop per character at a time, at most one per
