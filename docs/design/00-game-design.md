@@ -1024,7 +1024,7 @@ the `yard lights` control's objects; sight there falls to 5 tiles under
 section 6.4's switched-off lamp rule, and dark-sight equipment still
 applies. The `yard lights` objects are placed so that their light radii
 cover all of the Yards' passable ground, so the whole zone darkens; the
-build slice tests that coverage beside the exit-lamp test. The Dynamo Hall, pockets and safe zones keep their lights, and
+build slice tests that coverage beside the exit-lamp test below. The Dynamo Hall, pockets and safe zones keep their lights, and
 nothing else changes. The brownout is the service's declared `fault`
 state, so a client may name it from that state and never infers it
 from darkness. The workers' bench is a fabrication workshop for the
