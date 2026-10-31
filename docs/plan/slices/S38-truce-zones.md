@@ -56,6 +56,10 @@ proposal, with the presentation lead's wording.
   - The place card shows "CONTESTED · TRUCE".
   - After firing: "You break <zone name>'s truce. You are Marked for 15
     min." (the zone's name, not a hard-coded "the Row").
+  - Whenever a truce attack provokes the keeper's guards, the attacker's
+    log reads "<Keeper>'s enforcers turn on you." ("Sable's enforcers
+    turn on you." on the Row), so an attack on an NPC, which has no
+    Mark line, is readable too.
   - No fire confirmation and no HERE entry.
 
 ## Out of scope
