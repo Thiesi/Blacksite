@@ -3,7 +3,7 @@
 **Status:** planned (approved by the owner 2026-10-31)
 **Primary model:** Codex · **Reviewer:** automated review, technical lead, presentation lead (views and wording)
 **Depends on:** S22, S19, S23 · **Milestone:** asynchronous presence (#125)
-**Issue:** filed on approval
+**Issue:** https://github.com/Thiesi/Blacksite/issues/136
 
 Canon: game design §10.1 (lasting crews, notes and handoffs), from #128.
 Where this file and canon differ, canon wins.

@@ -3,7 +3,7 @@
 **Status:** planned (approved by the owner 2026-10-31)
 **Primary model:** Codex for engine · presentation lead or Codex for drop-object placement · **Reviewer:** automated review, technical lead, presentation lead (views, wording and placement)
 **Depends on:** S23, S35 · **Milestone:** asynchronous presence (#125)
-**Issue:** filed on approval
+**Issue:** https://github.com/Thiesi/Blacksite/issues/139
 
 Canon: game design §11.1, "Dead drops", from #128. Where this file and
 canon differ, canon wins.
