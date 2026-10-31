@@ -110,6 +110,40 @@ def test_ui_2_2_rejects_bright_ansi_background_and_unreadable_sign(fixtures):
     assert any('sign contrast' in error for error in problems(content))
 
 
+def test_ui_2_2_sign_only_role_uses_wall_contrast_not_light_ground(fixtures):
+    content = deepcopy(fixtures)
+    role = 'thing_sign_fixture'
+    # Equal to light ground: zero ground distance, but legible on the wall.
+    content.palette.roles[role] = deepcopy(content.palette.roles['p6_light'])
+    content.palette.roles[role]['16'] = {variant:7 for variant in s.VARIANTS}
+    look = content.looks['p6-fixture']
+    content.looks[look.id] = replace(look, signs=(s.LookSign((2,0),'LAMP',role),))
+    assert not problems(content)
+    # The sign still must contrast against its own wall in every tier.
+    content.palette.roles[role] = deepcopy(content.palette.roles['p6_wall'])
+    # ANSI sign faces are forced black, independent of the authored wall role.
+    content.palette.roles[role]['16'] = {variant:0 for variant in s.VARIANTS}
+    errors = problems(content)
+    assert errors and all('sign' in error for error in errors)
+    assert any('16/' in error for error in errors)
+    assert any('256/' in error for error in errors)
+    assert any('truecolor/' in error for error in errors)
+    # The exception does not waive the floor for ordinary ground things.
+    content.palette.roles['thing_fixture'] = deepcopy(content.palette.roles['p6_light'])
+    assert any('structure/things contrast' in error for error in problems(content))
+
+
+def test_entities_1_21_validation_cache_does_not_survive_palette_changes(fixtures):
+    content = deepcopy(fixtures)
+    assert not problems(content)
+    content.palette.roles['wall']['16']['default'] = 2
+    first = problems(content)
+    assert any('wall foreground must be grey 8' in error for error in first)
+    assert problems(content) == first
+    content.palette.roles['wall']['16']['default'] = fixtures.palette.roles['wall']['16']['default']
+    assert not problems(content)
+
+
 def test_ui_2_2_ansi_uses_categories_not_numeric_band_floors(fixtures):
     content = deepcopy(fixtures)
     # The shipped green cover is below the grey ANSI wall in L*. It is
