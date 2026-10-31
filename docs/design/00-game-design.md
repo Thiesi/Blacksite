@@ -1661,11 +1661,12 @@ Values are initial, tuned at the pacing gate.
   name.
 - **Naming.** The inviter names the crew with its first invitation: 3
   to 24 characters, the character-name rules and reserved-name check,
-  unique on the node. The name is held while that invitation is open
-  and released if nobody accepts. An uncrewed character can hold at
-  most one name this way at a time. A name released by an expired
-  invitation or a dissolved crew cannot be taken again by the same
-  character for 7 days. Crew names are covered by report;
+  unique on the node. The name is checked when the invitation is left
+  but claimed only when someone accepts; an open invitation holds no
+  name. If the name was claimed meanwhile, the acceptance asks the
+  inviter for another before the crew forms. A name released by a
+  dissolved crew cannot be taken again by the same character for 7
+  days. Crew names are covered by report;
   the admin CLI can rename or dissolve a crew.
 - **Offline invitations.** An invitation may be left for an offline
   character. It waits up to 7 days and is accepted or declined at that
@@ -1697,7 +1698,11 @@ Values are initial, tuned at the pacing gate.
     conditions for the receiver (section 9.1); a receiver who fails
     them cannot accept. The
   receiver becomes the holder under the frozen terms (section 9.1);
-  completed stages stay complete, and nothing rerolls.
+  completed stages stay complete, and nothing rerolls. Acceptance
+  removes the giver from the job's participants: the giver can no
+  longer resume it (section 9.1) and keeps only the share for stages
+  already committed. The giver's job slot stays occupied while the
+  offer is open and is freed on acceptance.
   - **The job is locked while an offer is open.** Neither party can
     complete a stage, abandon the job or use its stage-bound items,
     which are held in escrow. The holder may withdraw the offer.
@@ -1765,6 +1770,8 @@ Values are initial, tuned at the pacing gate.
 
 - **The away report.** At login after at least an hour away, the client
   shows one screen of what happened since the character's last logout,
+  looking back at most 14 days, from persisted receipts and public log
+  records (section 12),
   newest first, at most 12 lines, and keeps it in the journal for 7
   days. It is a full-width text view, never world log lines or a
   notice.
