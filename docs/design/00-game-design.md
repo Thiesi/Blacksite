@@ -1607,8 +1607,12 @@ Leaving or disconnecting removes that member. On leader logout the
 longest-serving remaining member leads; a single remaining member means
 dissolution. Promotion never changes service order. Crews are live only
 and end on server restart, independently of S26 expedition rosters.
-Once built, section 10.1 (planned, #125) replaces this paragraph's
-live-only, leader-logout and single-member rules; the rest stands.
+Once built, section 10.1 (planned, #125) replaces these sentences of
+this paragraph: the 60-second expiry (for offline invitations only),
+"an unanswered invitation creates no one-person crew", "Leaving or
+disconnecting removes that member" (disconnecting no longer does),
+the leader-logout rule, "a single remaining member means dissolution"
+and "Crews are live only and end on server restart". The rest stands.
 
 Crew friendly fire is refused before faction/Marked attack checks.
 Refusal never marks or trains a skill. Marked names remain red, while a
@@ -1641,39 +1645,60 @@ beacon, friendly fire, loot modes, shared XP and the six-tile
 contribution test) still apply to members who are online and present.
 Values are initial, tuned at the pacing gate.
 
-- **Lasting roster.** A crew has a name (3 to 24 characters, the
-  character-name character rules, unique on the node) and survives
-  logout and restart. It dissolves when its last member leaves. A crew
-  of one keeps its name and notes for 14 days so its member can invite
-  again; then it dissolves. Leadership passes as in section 10 when the
-  leader leaves the crew, not when the leader logs out.
+- **Lasting roster.** A crew survives logout and restart; members
+  leave only by leaving or being kicked. It dissolves when its last
+  member leaves. A crew of one keeps its name and notes for 14 days so
+  its member can invite again; then it dissolves. Leadership passes as
+  in section 10 when the leader leaves the crew, not when the leader
+  logs out.
+- **Naming.** The inviter names the crew with its first invitation: 3
+  to 24 characters, the character-name rules and reserved-name check,
+  unique on the node. The name is held while that invitation is open
+  and released if nobody accepts. Crew names are covered by report;
+  the admin CLI can rename or dissolve a crew.
 - **Offline invitations.** An invitation may be left for an offline
   character. It waits up to 7 days and is accepted or declined at that
-  character's next login. Identity-based ignores, the five-player limit
-  and membership checks are rechecked on acceptance.
+  character's next login. A character may have at most 5 outstanding
+  offline invitations. Identity-based ignores, the five-player limit
+  and membership checks are rechecked on acceptance; an ignored
+  sender's invitation never arrives.
 - **Crew notes.** Members share up to 20 notes of up to 200 characters,
   visible to members only. The author or the leader removes a note; a
   leaving member's notes stay. Notes use chat's text rules and rate
   limit, are covered by report, and are removable by the admin CLI.
   Notes are never shown outside the crew and are never world log lines.
-- **Handoffs.** The holder of a generated job may hand it to a crew
+- **Handoffs.** The holder of a generated job may offer it to a crew
   member after completing at least one stage. The offer waits up to
-  24 hours, or until the job's own deadline if sooner, and the receiver
-  accepts at any time they are online. The receiver becomes the holder
-  under the frozen terms (section 9.1); completed stages stay complete,
-  and nothing rerolls.
-  - The job's deadline, and every prepared world state the stages
-    created (credentials, latches, opened controls), keep their own
-    timers (section 6.4). A handoff never extends them.
-  - The disclosed reward is paid once. It is divided between the
-    identities that committed its stages, in proportion to stages each
-    committed, rounded down, and each identity's own caps apply
-    (section 3.5). A handoff never multiplies or transfers a reward.
+  24 hours, and the receiver accepts at any time they are online. The
+  receiver becomes the holder under the frozen terms (section 9.1);
+  completed stages stay complete, and nothing rerolls.
+  - **The job is locked while an offer is open.** Neither party can
+    complete a stage, abandon the job or use its stage-bound items,
+    which are held in escrow. The holder may withdraw the offer.
+    Acceptance moves the job and its items together; withdrawal or
+    expiry returns both to the holder unchanged.
+  - **Expiry.** A generated job's 60-minute expiry (section 9.1)
+    pauses while an offer is open, and acceptance gives the receiver a
+    fresh 60 minutes. Every prepared world state the stages created
+    (credentials, latches, opened controls) keeps its own timer
+    (section 6.4) and is never paused; a later stage that needs an
+    expired state recreates it under section 9.1's retry rule.
+  - **Job slots.** The receiver needs a free slot under section 9.1's
+    three-job limit. Acceptance without one is refused and the offer
+    stays open until it expires.
+  - **Rewards.** The disclosed reward is paid once. It is divided
+    between the identities that committed its stages, in proportion to
+    stages each committed, rounded down. Each identity's own caps apply
+    (section 3.5); a share a cap withholds is forfeited, never passed to
+    the other party. A handoff never multiplies or transfers a reward.
   - Story jobs, work orders and descent rosters cannot be handed off.
     Personal and mission records stay with the identity that earned
     them (section 10).
-  - Items bound to a stage move with the handoff only through the
-    receiver's acceptance; an expired offer returns them to the holder.
+- **Retirement.** Confirmed character retirement ends that character's
+  crew membership, withdraws its invitations and handoff offers (a job
+  on offer returns to its holder, or ends with the holder's retirement
+  as any job does), removes its tag, and settles its dead drops
+  (section 11.1). A crew whose last member retires dissolves.
 
 ## 11. Social layer
 
@@ -1734,7 +1759,13 @@ Values are initial, tuned at the pacing gate.
 - **Dead drops.** A character may leave one item stack at an authored
   dead-drop object, addressed to one named character. Only that
   character sees it and can collect it; nobody can loot it. Uncollected
-  after 7 days, it returns to the sender's Kestrel impound.
+  after 7 days, it returns to the sender as a free collection at any
+  Kestrel branch that keeps the item's source, like a purchased market
+  delivery (section 8.3); it is not an impound reclaim with a fee.
+  - If the recipient retires, the drop returns to the sender at once.
+    If the sender retires, the drop stays for the recipient until it
+    expires; uncollected, it is deleted with the sender's other
+    property.
   - One outgoing drop per character at a time.
   - Only items the market board accepts may be dropped; equipped,
     secured, bound and mission items cannot (section 8.3). Player
