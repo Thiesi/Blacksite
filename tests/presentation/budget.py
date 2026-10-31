@@ -54,10 +54,11 @@ class Meter:
 
 class Caller:
     def __init__(self, content: ContentTree, width: int, height: int, tier: str, zone: str, *,
-                 presentation: bool = False, fully_known: bool = False) -> None:
+                 presentation: bool = False, fully_known: bool = False,
+                 start: tuple[int, int] | None = None) -> None:
         self.game, self.client = character_game(content, width, height, isolate_npcs=False)
         self.avatar = self.game.core.characters.sim.avatars[self.client.session.user_id]
-        start = (12, 11) if zone == 'sodium-row' else (4, 10)
+        start = start if start is not None else ((12, 11) if zone == 'sodium-row' else (4, 10))
         if not self.game.core.world.zones[zone].passable(start):
             raise AssertionError(f'V1 baseline start is not passable: {zone} {start}')
         place(self.game, self.client, zone, start)
@@ -121,8 +122,10 @@ class Caller:
 
 
 def frames(content: ContentTree, width: int, height: int, tier: str, *,
-           presentation: bool = False, fully_known: bool = False) -> dict[str, Any]:
-    caller = Caller(content, width, height, tier, 'sodium-row', presentation=presentation, fully_known=fully_known)
+           presentation: bool = False, fully_known: bool = False,
+           zone: str = 'sodium-row', start: tuple[int, int] | None = None) -> dict[str, Any]:
+    caller = Caller(content, width, height, tier, zone, presentation=presentation,
+                    fully_known=fully_known, start=start)
     samples = []
     # A real full redraw, then input-driven deltas at five steps a second.
     caller.key('ctrl-l', 1.0)
@@ -146,9 +149,11 @@ def frames(content: ContentTree, width: int, height: int, tier: str, *,
 
 
 def activity(content: ContentTree, width: int, height: int, tier: str, what: str, seconds: float, *,
-             presentation: bool = False, fully_known: bool = False) -> dict[str, Any]:
-    zone = 'sodium-row' if what == 'walking where there is no scene' else 'sodium-tin-halo'
-    caller = Caller(content, width, height, tier, zone, presentation=presentation, fully_known=fully_known)
+             presentation: bool = False, fully_known: bool = False,
+             zone: str | None = None, start: tuple[int, int] | None = None) -> dict[str, Any]:
+    zone = zone or ('sodium-row' if what == 'walking where there is no scene' else 'sodium-tin-halo')
+    caller = Caller(content, width, height, tier, zone, presentation=presentation,
+                    fully_known=fully_known, start=start)
     initial_view = view_counts(caller.display.body)
     if what == 'menus, text and help':
         caller.key('?', 1.0)
