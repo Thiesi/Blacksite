@@ -169,11 +169,16 @@ def build(actor: Actor, zone: ZoneInstance, perception: Perception, content: Con
             perception.chart_key = chart_key
         result['charted'] = perception.charted
     if zone.id in content.looks:
-        known = {tile for tile in visible | set(remembered) | public
-                 if viewport['x'] <= tile[0] < viewport['x'] + viewport['w']
-                 and viewport['y'] <= tile[1] < viewport['y'] + viewport['h']}
-        look_key = id(zone.template), id(content.looks[zone.id]), frozenset(known), frozenset(visible & known)
+        # grid_key already tracks sight, scouts and viewport changes. Only
+        # inspect the bounded published grid on a cache miss, never enumerate
+        # a caller's whole remembered map to construct a cache key.
+        look_key = id(zone.template), id(content.looks[zone.id]), perception.grid_key, perception.chart_key
         if perception.look_key != look_key:
+            chart = perception.charted if public else []
+            known = {(viewport['x'] + x, viewport['y'] + y)
+                     for y, row in enumerate(perception.tiles) for x, index in enumerate(row)
+                     if index >= 0 or index == -2 and perception.memory[y][x] >= 0
+                     or y < len(chart) and chart[y][x] >= 0}
             perception.looks = looks.masked(content, zone.template, known, visible)
             perception.look_key = look_key
         result['looks'] = perception.looks

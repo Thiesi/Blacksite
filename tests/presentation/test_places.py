@@ -230,6 +230,23 @@ def test_ui_2_4_here_shapes_authored_cover_and_distinct_suffix():
         assert fitted.startswith('§ ') and display_width(fitted) <= 21
 
 
+def test_arch_5_5_2_fixture_terminals_are_actual_focus_targets(fixtures):
+    from tests.harness import HeadlessServer
+    from tests.character_helpers import create, place
+    game = HeadlessServer(fixtures,character_state={})
+    client = game.connect(width=80,height=24)
+    create(game,client,archetype=0,name='Fixture界',card='none')
+    for at,suffix in (((4,5),'(Plaza)'),((9,5),'(Clinic)')):
+        place(game,client,'p6-fixture',at)
+        focus,jack = game.core.interaction_views(client.session)
+        assert jack is not None and jack['label'].endswith(suffix)
+        avatar = game.core.characters.sim.avatars[client.session.user_id]
+        body = build(avatar.actor,game.core.world.zones[avatar.zone],avatar.perception,
+                     fixtures,80,24,'12:00',False,game.clock.now_tick())
+        body['focus'],body['jack_focus'] = focus,jack
+        assert any(line.startswith('§ ') and suffix in drawing.fit_here(line,21) for line in drawing.at_hand(body))
+
+
 def test_ui_2_1_notice_header_preserves_zone_when_notice_can_shorten(fixtures):
     paint = Paint(Palette(asdict(fixtures.palette)))
     buf = CellBuffer(80,24)
@@ -296,6 +313,36 @@ def test_ui_2_2_stable_grain_and_required_grain_beside_walls(fixtures):
     body['looks']['marks'].append({'at':[2,1],'text':' ','role':'p6_grain'})
     places = for_frame(paint,body)
     assert places.cell(paint,floor,(2,1),roof=False,beside_wall=True,live=True)[0] == '·'
+
+
+@pytest.mark.parametrize('tier',['16','256','truecolor'])
+def test_ui_2_2_look_keeps_p5_rule_glyphs_roles_and_attributes(fixtures,tier):
+    body, *_ = view(fixtures)
+    paint = Paint(Palette(asdict(fixtures.palette),tier))
+    places = for_frame(paint,body)
+    for tid in ('locked-door','cover-1','cover-2','cover-3','water','terminal','hazard'):
+        tile = fixtures.tiles[tid]
+        entry = {'id':tid,'glyph':fixtures.glyphs.glyphs[tile.glyph], 'role':tile.colour,
+                 'water':tid=='water'}
+        expected_glyph,expected_style = drawing.cell(paint,entry)
+        glyph,style = places.cell(paint,entry,(7,3),roof=False,beside_wall=False,live=True)
+        assert glyph == expected_glyph
+        assert style.fg == expected_style.fg and style.attrs == expected_style.attrs
+        if tid == 'locked-door':
+            assert glyph == '≡'
+
+
+def test_arch_5_5_4_mask_cache_does_not_enumerate_whole_memory(fixtures):
+    class ViewportMemory(dict):
+        def __iter__(self):
+            raise AssertionError('Do not enumerate the remembered map to mask one viewport')
+    body,caller,instance,perception = view(fixtures)
+    perception.remembered[instance.id] = ViewportMemory(perception.remembered[instance.id])
+    caller.x += 1
+    caller.sight_key = None
+    body = build(caller,instance,perception,fixtures,80,24,'12:00',False,1)
+    same = build(caller,instance,perception,fixtures,80,24,'12:01',False,2)
+    assert same['looks'] is body['looks']
 
 
 def test_ui_2_legacy_renderer_ignores_places_and_charting(fixtures):

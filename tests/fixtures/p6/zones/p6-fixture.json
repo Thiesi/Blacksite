@@ -38,13 +38,13 @@
       "id": "fixture-terminal",
       "tile": [3, 5],
       "kind": "terminal",
-      "params": {"name": "Public terminal (Plaza)"}
+      "params": {"name": "Public terminal (Plaza)", "sector": "lat-vatside"}
     },
     {
       "id": "fixture-terminal-clinic",
       "tile": [10, 5],
       "kind": "terminal",
-      "params": {"name": "Public terminal (Clinic)"}
+      "params": {"name": "Public terminal (Clinic)", "sector": "lat-vatside"}
     },
     {
       "id": "fixture-gate",

@@ -58,6 +58,9 @@ class Places:
 
     def _cell(self, paint: Paint, entry: dict[str, Any], at: tuple[int, int], *,
               roof: bool, beside_wall: bool) -> tuple[str, Style]:
+        # Late import keeps the shared P5 vocabulary authoritative without
+        # an import cycle while zone.py loads this optional place layer.
+        from blacksite.door.present.zone import cell as rule_cell
         theme, centre = self.grounds.get(at, (self.base, (0., 0.)))
         if entry.get('wall'):
             if roof:
@@ -83,10 +86,15 @@ class Places:
                 glyph = '·'  # A painted space cannot erase the wall/floor distinction.
             return glyph, style
         if entry.get('water'):
-            role = self.look.get('glint_role') if at in self.glints else entry.get('role', 'water')
-            return entry['glyph'], paint(role, 'ground_black' if paint.tier == '16' else theme.ground_bg)
+            glyph, base = rule_cell(paint, entry)
+            if at in self.glints:
+                base = paint(self.look['glint_role'])
+            bg = paint.palette.style('ground_black' if paint.tier == '16' else theme.ground_bg).fg
+            return glyph, Style(base.fg, bg, base.attrs, base.tier)
         # Rule glyph and role always win; decoration changes no tile meaning.
-        return entry['glyph'], paint(entry.get('role', 'panel_text'), 'ground_black' if paint.tier == '16' else theme.ground_bg, bold=True)
+        glyph, base = rule_cell(paint, entry)
+        bg = paint.palette.style('ground_black' if paint.tier == '16' else theme.ground_bg).fg
+        return glyph, Style(base.fg, bg, base.attrs, base.tier)
 
 
 def for_frame(paint: Paint, body: dict[str, Any]) -> Places | None:

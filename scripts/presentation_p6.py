@@ -88,8 +88,8 @@ class WireCaller(Caller):
                 self.client.send(output)
 
 
-def wire_walk(content: ContentTree, width: int, height: int, tier: str) -> dict[str, Any]:
-    caller = WireCaller(content,width,height,tier,'sodium-row',presentation=True)
+def wire_walk(content: ContentTree, width: int, height: int, tier: str, fully_known: bool = False) -> dict[str, Any]:
+    caller = WireCaller(content,width,height,tier,'sodium-row',presentation=True,fully_known=fully_known)
     first = next(sample['look_bytes'] for sample in caller.wire if sample['kind']=='view' and sample['look_bytes'])
     caller.wire = []
     for tick in range(1,81):
@@ -121,22 +121,23 @@ def main() -> None:
     cases = []
     for width,height in ((80,24),(132,50)):
         for tier in ('16','256','truecolor'):
-            arms = {}
-            for label,tree in (('generic',bare),('looks',content)):
-                activities = {what:activity(tree,width,height,tier,what,args.seconds,presentation=True)
-                              for what in MIX}
-                sample = frames(tree,width,height,tier,presentation=True)
-                assert sample['delta_16kib_pass'] and sample['render_p95_100ms_pass'], (width,height,tier,label,sample)
-                arms[label] = {'activities':activities,'cpu_s_per_hour':hourly(activities),'frames':sample}
-            for what in MIX:
-                for field in ('initial_view','final_view','successful_moves'):
-                    assert arms['generic']['activities'][what][field] == arms['looks']['activities'][what][field]
-            delta = arms['looks']['cpu_s_per_hour']-arms['generic']['cpu_s_per_hour']
-            case = {'size':[width,height],'tier':tier,'arms':arms,'cpu_delta_s_per_hour':delta,
-                    'cpu_120s_per_hour_pass':arms['looks']['cpu_s_per_hour']<=120,
-                    'wire':wire_walk(content,width,height,tier)}
-            cases.append(case)
-            print(json.dumps({key:case[key] for key in ('size','tier','cpu_delta_s_per_hour','cpu_120s_per_hour_pass','wire')}),flush=True)
+            for fully_known in (False,True) if width==132 else (False,):
+                arms = {}
+                for label,tree in (('generic',bare),('looks',content)):
+                    activities = {what:activity(tree,width,height,tier,what,args.seconds,
+                                                presentation=True,fully_known=fully_known) for what in MIX}
+                    sample = frames(tree,width,height,tier,presentation=True,fully_known=fully_known)
+                    assert sample['delta_16kib_pass'] and sample['render_p95_100ms_pass'], (width,height,tier,label,fully_known,sample)
+                    arms[label] = {'activities':activities,'cpu_s_per_hour':hourly(activities),'frames':sample}
+                for what in MIX:
+                    for field in ('initial_view','final_view','successful_moves'):
+                        assert arms['generic']['activities'][what][field] == arms['looks']['activities'][what][field]
+                delta = arms['looks']['cpu_s_per_hour']-arms['generic']['cpu_s_per_hour']
+                case = {'size':[width,height],'tier':tier,'fully_known':fully_known,'arms':arms,
+                        'cpu_delta_s_per_hour':delta,'cpu_120s_per_hour_pass':arms['looks']['cpu_s_per_hour']<=120,
+                        'wire':wire_walk(content,width,height,tier,fully_known)}
+                cases.append(case)
+                print(json.dumps({key:case[key] for key in ('size','tier','fully_known','cpu_delta_s_per_hour','cpu_120s_per_hour_pass','wire')}),flush=True)
     result = {'head':subprocess.check_output(['git','rev-parse','HEAD'],text=True).strip(),
               'dirty':bool(subprocess.check_output(['git','status','--porcelain'],text=True).strip()),
               'created_utc':datetime.now(timezone.utc).isoformat(),'platform':platform.platform(),'python':sys.version,

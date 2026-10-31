@@ -24,7 +24,10 @@ The presentation switch remains off by default.
   Ambient, undisclosed geometry and whole-piece origins are withheld.
 - The existing revision/delta store suppresses unchanged looks. Server
   caches belong to a caller's perception; client caches belong to Paint.
-  No mutable global cache or simulation RNG is used.
+  Mask-cache keys use the existing sight/grid and chart revisions; misses
+  inspect only the published viewport, never the whole remembered map.
+  No mutable global cache or simulation RNG is used. Non-ground tiles
+  reuse P5's glyph, role and attribute rules before re-grounding colour.
 - At 16 colours UI 2.2 maps floors to black and walls to grey blocks.
   Contrast and person lifting use that actual mapped ground. The
   higher tiers use each theme/region ground, including `_light` people
@@ -62,7 +65,9 @@ is run 41126237721: 93.4 / 87.1 / 99.3 CPU s/h at fully known 132x50
 The P6 workflow separately records look payload bytes at first send and
 during a real headless revision/delta walk. It asserts ANSI delta size
 and render latency, and records CPU against 120 CPU s/h on hosted Linux.
-A short local Windows run is diagnostic only.
+The 132x50 cases include a fully explored large zone as well as charted
+ground without seeded memory. A short local Windows run is diagnostic
+only.
 
 ## Native fixture captures
 
