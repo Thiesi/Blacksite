@@ -291,9 +291,9 @@
       "respawn_seconds": 60,
       "condition": "always",
       "region": {
-        "x": 4,
+        "x": 9,
         "y": 3,
-        "w": 50,
+        "w": 45,
         "h": 8
       }
     },
