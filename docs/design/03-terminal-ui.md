@@ -240,6 +240,7 @@ Terrain:
 Sign-only `thing_sign_*` roles are checked against their wall face,
 not included in the darkest-thing floor measured from theme ground.
 Ordinary things keep that ground floor.
+P5's generic, non-theme floor is unchanged.
 
 Things:
 
