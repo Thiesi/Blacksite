@@ -34,6 +34,7 @@ migration.
 | `sink-floor` | The Floor | The Sink | contested | Sable | 70 × 40 |
 | `chapel-towers` | Cooling Towers | Chapel Ward | contested | Choir | 80 × 40 |
 | `chapel-nave` | The Nave | Chapel Ward | pocket | Choir | 50 × 30 |
+| `chapel-cloister` | The Cloister (planned, #119) | Chapel Ward | pocket | Choir | 50 × 30 |
 | `oldworks-main` | Contractor Street | Old Works | contested | Unmoored | 110 × 34 |
 | `oldworks-yards` | Fabrication Yards | Old Works | contested | Unmoored | 100 × 50 |
 | `oldworks-drop` | The Drop | Old Works | pocket | Unmoored | 40 × 20 |
@@ -61,9 +62,10 @@ migration.
 | `scour-ring-4` | Far Ring | The Scour | open | none | 200 × 100 |
 | `blacksite-l1` | Blacksite Level One | The Blacksite | instanced | none | see story arcs |
 
-Forty-five zone templates: four of them Warmwater's, planned (#90),
+Forty-six zone templates: four of them Warmwater's, planned (#90),
 four the Intake's (three planned in #101 and the Fungal Halls, planned
-in #119), and the Wallwalk and the Assay Floor, both planned (#119).
+in #119), and the Wallwalk, the Assay Floor and the Cloister, all planned
+(#119).
 Instancing is separate from safety;
 `blacksite-l1` has open mission areas and a protected decision room.
 Count the safety classes from the overview instead of a second tally.
@@ -176,6 +178,7 @@ Zones on the same spot are stacked; the map shows a stack as one place.
 | `terraces-lobby` | 22, 52 | apartment interiors are not on the map |
 | `chapel-towers` | 30, 66 | |
 | `chapel-nave` | 25, 71 | |
+| `chapel-cloister` | 33, 70 | planned (#119); between two of the towers |
 | `sodium-row` | 47, 68 | the Neon Stair climbs north to the plaza |
 | `sodium-tin-halo` | 43, 72 | |
 | `oldworks-main` | 62, 68 | the freight siding runs north-east to the depots |
@@ -913,8 +916,9 @@ who wants it guarded can hold the Floor for long.
 
 - **Class:** contested. **Lean:** Choir. **Size:** 80 × 40. **Sight:** 10.
 - **Exits:** `core-tram-hub` (tram platform); `chapel-nave` (the great
-  door); `terraces-blocks` (street); `under-service` (a tower's drain
-  stair, unlocked).
+  door); `chapel-cloister` (the cloister gate; planned, #119);
+  `terraces-blocks` (street); `under-service` (a tower's drain stair,
+  unlocked).
 - **Relays:** **Bell Relay** (controls the towers' resonance bells;
   holders' Cantors get +1 tile hymn range in Chapel Ward).
 - **Terminals:** two public terminals (Chapel sector; hidden cells are
@@ -944,6 +948,40 @@ Halvard sends people to watch the pilgrims. The pilgrims know.
 #...#..#........#..#...$..+....#  + great door to nave
 #...####...>....####...........#  > drain stair to under-service
 ################################
+```
+
+### `chapel-cloister` — The Cloister
+
+- **Status:** planned (#119). Canon only until a Stage 2 slice builds it.
+- **Class:** pocket. **Lean:** Choir. **Size:** 50 × 30.
+  **Sight:** 10 (whitewash and daylight in the garth).
+- **Exits:** `chapel-towers` (the cloister gate).
+- **Relays:** none.
+- **Terminals:** none. The Choir keeps no terminal where people sleep.
+- **Vendors / anchors:** Sister Agathe Lune, keeper of the cloister
+  (Choir contract giver: carry and care jobs, such as bringing crates
+  from the Fungal Halls); the names wall; the cots (emote anchors).
+- **Spawners:** choristers on the night round (talkers), sleepers
+  (talkers; some will not say where they came from), pilgrims resting
+  between the towers (talkers).
+
+A covered walk round a square of garden between two of the towers,
+whitewashed every spring, with cots along the inner wall for anyone who
+asks. The Choir does not ask anything back. The cots are made every
+morning, including the ones nobody slept in. Along the north walk is
+the names wall: names in chalk, in ink, scratched with a nail, written
+by whoever stayed or by whoever came looking for them. None of them has
+a date. Some of the names are on Sablier's lease rolls. Some are on no
+roll at all. Sablier would pay for a copy of the wall. Sister Lune asks
+you not to make one, and she does not say who wrote the names.
+
+```
+##########################
+#+.....[names wall]......#  + the cloister gate (towers)
+#..[cots]..........[cots]#
+#......%%..[garth]..%%...#
+#..[cots]......$...[cots]#  $ Sister Agathe Lune
+##########################
 ```
 
 ### `chapel-nave` — The Nave
