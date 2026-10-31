@@ -1663,8 +1663,9 @@ Values are initial, tuned at the pacing gate.
   to 24 characters, the character-name rules and reserved-name check,
   unique on the node. The name is checked when the invitation is left
   but claimed only when someone accepts; an open invitation holds no
-  name. If the name was claimed meanwhile, the acceptance asks the
-  inviter for another before the crew forms. A name released by a
+  name. If the name was claimed meanwhile, the acceptance fails with
+  "name taken", the invitation ends, and the inviter learns it in their
+  away report and may invite again under another name. A name released by a
   dissolved crew cannot be taken again by the same character for 7
   days. Crew names are covered by report;
   the admin CLI can rename or dissolve a crew.
@@ -1677,7 +1678,9 @@ Values are initial, tuned at the pacing gate.
   could not be left. Nothing is evicted silently. A character can
   decline all pending invitations with one action. Identity-based ignores, the five-player limit and
   membership checks are rechecked on acceptance; an ignored sender's
-  invitation never arrives, and ignoring a sender withdraws theirs.
+  invitation never arrives, and ignoring a sender withdraws theirs. To
+  the sender, an invitation to someone who ignores them looks exactly
+  like one left normally, so it never reveals the ignore.
 - **Crew notes.** Members share up to 20 notes of up to 200 characters,
   visible to members only. The author or the leader removes a note; a
   departed member's notes stay until any member removes them. Notes use chat's text rules and rate
@@ -1693,7 +1696,9 @@ Values are initial, tuned at the pacing gate.
     those stages finish first, so mission-owned subjects never need to
     change owner.
   - **Rechecks.** An offer is withdrawn when either party leaves the
-    crew, and never reaches a receiver who ignores the holder.
+    crew, and never reaches a receiver who ignores the holder; to the
+    holder it looks like any open offer, which they can withdraw at any
+    time.
     Acceptance rechecks crew membership and the handler's own accept
     conditions for the receiver (section 9.1); a receiver who fails
     them cannot accept. The
@@ -1739,8 +1744,8 @@ Values are initial, tuned at the pacing gate.
 - **Retirement.** Confirmed character retirement ends that character's
   crew membership, withdraws its invitations and handoff offers (a job
   on offer returns to its holder, or ends with the holder's retirement
-  as any job does), removes its tag, and settles its dead drops
-  (section 11.1). A crew whose last member retires dissolves.
+  as any job does), removes its tag, and settles its dead drops under
+  section 11.1's retirement rules. A crew whose last member retires dissolves.
 
 ## 11. Social layer
 
