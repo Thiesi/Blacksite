@@ -134,6 +134,10 @@ def _decode(tp: Any, value: Any, where: str, records: _RecordTypes) -> Any:
 
 
 def _decode_record(cls: Any, value: Any, where: str, records: _RecordTypes) -> Any:
+    # Entities 1.1 public rectangles use [x,y,w,h]; older pockets use
+    # named coordinates. Both retain strict integer/unknown-field checks.
+    if cls in (s.Region, s.Pocket) and isinstance(value, list) and len(value) == 4:
+        value = dict(zip(("x", "y", "w", "h"), value))
     if not isinstance(value, dict):
         raise DecodeError(where, f"expected an object, got {_describe(value)}")
     if cls not in records:
@@ -389,6 +393,7 @@ TABLE_FILES: dict[str, tuple[str, type]] = {
 """Table file name to (list key and record kind, record type)."""
 
 RECORD_DIRS: dict[str, type] = {
+    "looks": s.Look,
     "sectors": s.Sector,
     "cores": s.Core,
     "dialogue": s.DialogueNode,
@@ -398,6 +403,7 @@ RECORD_DIRS: dict[str, type] = {
 """Directories of one-record JSON files, named `<id>.json`."""
 
 SINGLETON_FILES: dict[str, type] = {
+    "themes.json": s.ThemeTable,
     "glyphs.json": s.GlyphTable,
     "palette.json": s.Palette,
     "keymaps.json": s.KeymapTable,

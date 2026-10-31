@@ -69,6 +69,8 @@ class ContentTree:
     hash: str = ""
     glyphs: s.GlyphTable | None = None
     palette: s.Palette | None = None
+    themes: s.ThemeTable | None = None
+    looks: dict[str, s.Look] = field(default_factory=dict)
     keymaps: s.KeymapTable | None = None
     silt: s.SiltRules | None = None
     salvage: s.SalvageRules | None = None
@@ -258,6 +260,12 @@ def _load_singletons(tree: ContentTree, layer: _Layer) -> None:
             roles = dict(tree.palette.roles) if tree.palette else {}
             roles.update(record.roles)
             tree.palette = s.Palette(roles=roles)
+        elif isinstance(record, s.ThemeTable):
+            themes = dict(tree.themes.themes) if tree.themes else {}
+            themes.update(record.themes)
+            tree.themes = s.ThemeTable(themes)
+            for tid in record.themes:
+                tree.sources[("themes", tid)] = rel
         elif isinstance(record, s.KeymapTable):
             if tree.keymaps is None:
                 tree.keymaps = record

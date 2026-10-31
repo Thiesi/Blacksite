@@ -37,7 +37,9 @@ def projection(content: ContentTree) -> dict[str, Any]:
     for zid, zone in sorted(world.zones.items()):
         meta = zone.template.meta
         zones[zid] = {'size': [zone.template.width, zone.template.height],
-            'spawn': meta.spawn, 'safety': meta.safety, 'pockets': [asdict(p) for p in meta.pockets],
+            'spawn': meta.spawn, 'safety': meta.safety,
+            'pockets': [{k: v for k, v in asdict(p).items() if k != 'charted' or v}
+                        for p in meta.pockets],
             'sight': [meta.sight_radius, meta.sight_radius_night],
             'tiles': [[zone.tile_id((x, y)) for x in range(zone.template.width)]
                       for y in range(zone.template.height)],
@@ -56,6 +58,10 @@ def projection(content: ContentTree) -> dict[str, Any]:
                                     if key not in ('name', 'inspect_verb')}}
                         for obj in sorted(meta.objects, key=lambda obj: obj.id)],
             'layouts': [asdict(layout) for layout in meta.layouts]}
+        if meta.charted:
+            zones[zid]['charted'] = True
+        if meta.public:
+            zones[zid]['public'] = [asdict(region) for region in meta.public]
     sectors = {sid: {'entry': sector.entry, 'trace_policy': sector.trace_policy,
         'trace_owner': sector.trace_owner,
         'cells': [{key: value for key, value in asdict(cell).items()
