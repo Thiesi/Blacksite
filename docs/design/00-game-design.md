@@ -1737,8 +1737,9 @@ Values are initial, tuned at the pacing gate.
     Marked names, convoy and Ring-fall outcomes, and the deaths of the
     reader's own crew members.
   - It also lists what is addressed to the reader: crew invitations,
-    handoff offers, dead drops waiting, new crew notes, and the existing
-    apartment-theft notice (section 6.4). When the report has more than
+    handoff offers, dead drops waiting, the reader's own drops returned,
+    new crew notes, and the existing apartment-theft notice (section
+    6.4). When the report has more than
     12 lines, these come first.
   - It discloses nothing beyond what sitrep and public logs already
     showed: no tile positions, no Marked players' zones (a Wardens

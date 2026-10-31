@@ -195,7 +195,7 @@ objectives, season contributions. (design §6.2)
 
 **Day count** — the Wake's running tally toward day ninety, shown by Sablier staff. (personae)
 
-**Dead drop (player)** — One item stack left at an authored drop object for one named character; returns to the sender's impound after 7 days. (design §11.1, planned)
+**Dead drop (player)** — One item stack left at an authored drop object for one named character; uncollected after 7 days, it returns to the sender as a free Kestrel collection. (design §11.1, planned)
 
 **Deep** — Unmoored +90 rank. (factions)
 
