@@ -240,7 +240,8 @@ design document.
   where every new character opens their eyes. Clean, bright, smells of
   antiseptic and warm plastic. The Wake Hall itself is a safe pocket.
 - **Tramyard** — Kestrel's district. Depots, ration warehouses, the wall
-  gates, the convoy staging yards. Markets. The loudest place in the city.
+  gates, the convoy staging yards, and the roofed walk along the top of
+  the wall. Markets. The loudest place in the city.
 - **The Sink** — a district built into the walls of a sinkhole a kilometre
   across. Terraces of shacks, cable cars, Red Sable's territory. Best black
   market, worst lighting.

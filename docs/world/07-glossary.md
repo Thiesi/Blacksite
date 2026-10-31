@@ -648,6 +648,8 @@ Red Sable. Home of the Tin Halo. (bible §4.3)
 **Spire, the** — Halvard's arcology over the sealed shaft; a safe zone
 under corporate law. (bible §4.1)
 
+**Spotters' post, the** — The scope rail on the Wallwalk where Ring-fall impact sites can be read 60 seconds early. (gazetteer)
+
 **Stamina** — 30 + Nerve + Frame / 2; drained by sprinting and melee.
 (design §3.1)
 
@@ -754,7 +756,11 @@ their eyes. (bible §4.3, design §4)
 
 **Wall Ring, Beacon Ring, Crash Ring, Far Ring** — the four Scour rings. (gazetteer)
 
+**Wall Telemetry** — The gated Tramyard sector cell that carries the spotters' post's Ring-fall reading. (Lattice)
+
 **Wall-folk** — Ferrymen term for anyone from inside the wall. (personae)
+
+**Wallwalk, the** — Kestrel's roofed walk along the top of the east wall, north of Gate Nine. (gazetteer)
 
 **Wardens, the** — The Civic Authority's police, and the faction. (bible
 §7)
