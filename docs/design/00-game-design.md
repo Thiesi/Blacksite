@@ -1737,9 +1737,10 @@ Skywatch narrows its timing, and Beacon Relay reveals sites 5 minutes
 before impact. A watcher at the Wallwalk's spotters' post, and a runner
 in the Tramyard sector's Wall Telemetry cell, see each committed impact
 site 60 seconds before impact (planned, #119). The reading is a log
-line, plus a mark on the Wallwalk's strip for the watcher. It is
-information only and never draws a Scour zone's tiles (architecture
-§5.5.4). Everyone gets the 5 s impact warning. Local job hazards
+line that names the bearing and the slit facing the site, so it works
+on its own. The watcher also gets a mark at that slit, for the 60
+seconds. It is information only and never draws a Scour zone's tiles
+(architecture §5.5.4). Everyone gets the 5 s impact warning. Local job hazards
 and service faults are separate bounded state machines, not extra world
 event slots. They cannot change safe/pocket tiles.
 
