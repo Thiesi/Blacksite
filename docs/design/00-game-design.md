@@ -1646,7 +1646,10 @@ grade multiplier; it retains the recipient's own identity caps.
 On a node where members are rarely online together, a crew must outlast
 a session. These rules extend section 10; its live rules (pickup,
 beacon, friendly fire, loot modes, shared XP and the six-tile
-contribution test) still apply to members who are online and present.
+contribution test) still apply, but only to members who are online
+and present: round-robin offers, frozen loot rosters, beacons and XP
+and loot eligibility include only members online and in the same zone
+or sector, so an offline member is never offered a turn.
 Values are initial, tuned at the pacing gate.
 
 - **Lasting roster.** A crew survives logout and restart; members
@@ -1721,6 +1724,9 @@ Values are initial, tuned at the pacing gate.
     which are held in escrow. The holder may withdraw the offer.
     Acceptance moves the job and its items together; withdrawal or
     expiry returns both to the holder unchanged.
+  - **Stage deadlines.** A stage deadline keeps running while an offer
+    is open. If the job fails while locked, the offer ends and its
+    escrowed items return to the holder.
   - **Expiry.** A generated job's 60-minute expiry (section 9.1)
     pauses while an offer is open, and acceptance gives the receiver a
     fresh 60 minutes. A job that returns to its holder after a
@@ -1812,8 +1818,9 @@ Values are initial, tuned at the pacing gate.
     (architecture 5.5.4). A zone or cell the reader has never visited
     is named only by its district, as on the City Map. Lines that
     name a character the reader ignores are left out.
-- **Tags.** A character may leave one tag at a time on a passable tile
-  in a contested or open zone, with up to 40 characters of text. Every
+- **Tags.** A character may leave one tag at a time, on the tile they
+  are standing on, when it is a passable tile in a contested or open
+  zone, with up to 40 characters of text. Every
   tag uses one fixed tag glyph, the same for all tags; presentation
   picks it, outside the rule glyphs, so a tag can never imitate a thing
   or an exit. HERE shows the start of its text, and looking at the tag
@@ -1831,7 +1838,10 @@ Values are initial, tuned at the pacing gate.
     its author. Tags use chat's text rules, are covered by report, and
     are removable by the admin CLI.
 - **Dead drops.** A character may leave one item stack at an authored
-  dead-drop object, addressed to one named character. Only that
+  dead-drop object, addressed to one named character. Leaving it gives
+  the same result for any name that has existed on the node, whether
+  that character is active, retired or ignoring the sender; only a
+  name never used on the node is refused. Only that
   character sees it and can collect it; nobody can loot it. Uncollected
   after 7 days, the same item instance returns to the sender as a free
   collection at any Kestrel branch, as a purchased market delivery is
