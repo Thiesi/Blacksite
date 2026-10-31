@@ -415,9 +415,13 @@ Open, raised in review after the decisions (to settle before playtest 3):
 
 - **Q7. May the Halo shelter a truce-breaker?** The Halo is a pocket, so
   a Marked attacker can step in and wait out the Mark, which undercuts
-  the price when the fight is near its door. Recommendation: the Halo's
-  bouncer turns away a player Marked for breaking the Row's truce until
-  the Mark ends. Players Marked elsewhere still get Vesper's "Sit at the
+  the price when the fight is near its door. Recommendation: the Halo
+  refuses entry to a player Marked for breaking the Row's truce until the
+  Mark ends. The refusal is a rule on entering the Halo zone by any
+  entrance (the front door, or the alley door of Q2 however it was
+  opened), voiced by the bouncer at the front. A crewmate who opens the
+  back door from the Halo core opens it for everyone else, not for the
+  truce-breaker. Players Marked elsewhere still get Vesper's "Sit at the
   back." This is a new rule (door refusal by Mark cause). The demo can
   try it before the owner decides; game design §7.6's "nobody can bar
   another player" is about players, not this.
