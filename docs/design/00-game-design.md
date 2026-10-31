@@ -1050,7 +1050,8 @@ applies; an enabled lamp nearby does not offset it.
   from darkness.
 - **Controls.** While Grid is `fault`, `repairing` or `allocated`, the
   Foundry's public `yard lights` control is suspended and cannot relight
-  or darken the Yards, and using it answers with the reason. The Yards
+  or darken the Yards, and using it answers with the reason. Entering
+  `fault` cancels any pending reset of a toggle made before it. The Yards
   stay dark through `repairing`, and a repair that reverts to `fault`
   leaves them dark. When the state ends, whether by a player's repair
   or the NPC repair that closes an unclaimed fault, the Yards' lights
