@@ -1858,6 +1858,11 @@ Values are initial, tuned at the pacing gate.
     channel beside the market board (section 8.3). There is no
     per-recipient limit, so a drop's acceptance never depends on what
     other senders did.
+  - **Kestrel fee.** Leaving a drop costs the sender the market board's
+    5 % Kestrel fee (section 8.3), charged on the stack's catalog base
+    price, rounded up, at least 1 chit. It is paid when the drop is
+    left and never refunded, so a drop is never a cheaper channel than
+    a sale.
   - A drop from a sender the recipient ignores never arrives. To the
     sender it looks exactly like an unanswered drop: it returns only at
     the 7-day expiry, so it never reveals the ignore. The recipient may
