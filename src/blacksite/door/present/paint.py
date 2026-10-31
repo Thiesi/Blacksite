@@ -243,8 +243,10 @@ class Paint:
         if key not in self.ground_bands:
             colour = self.palette.style(ground).fg
             structure = light_distance(self.palette.style(wall).fg, colour)
+            # UI 2.2: sign-only lettering is checked against its wall face.
             things = min((light_distance(self.palette.style(role).fg, colour)
-                          for role in self.palette.roles if role.startswith('thing_')),
+                          for role in self.palette.roles
+                          if role.startswith('thing_') and not role.startswith('thing_sign_')),
                          default=structure + BAND_STEP)
             self.ground_bands[key] = BandFloors(colour, structure, things,
                                                things + BAND_STEP, structure + BAND_STEP)
