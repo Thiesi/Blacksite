@@ -1661,7 +1661,8 @@ Values are initial, tuned at the pacing gate.
   logs out.
 - **Inactivity.** When the leader has not logged in for 7 days,
   leadership passes to the longest-serving member who has logged in
-  within those 7 days. A crew in
+  within those 7 days. The handover is checked at every member's login,
+  so a member who returns after the 7 days takes over then. A crew in
   which no member has logged in for 30 days dissolves and releases its
   name.
 - **Naming.** The inviter names the crew with its first invitation: 3
@@ -1676,8 +1677,9 @@ Values are initial, tuned at the pacing gate.
   the admin CLI can rename or dissolve a crew.
 - **Offline invitations.** An invitation may be left for an offline
   character. It waits up to 7 days and is accepted or declined at that
-  character's next login. A sender may have at most 5 outstanding
-  offline invitations, and at most one to the same character. A
+  character's next login. A BBS identity may have at most 5
+  outstanding offline invitations across all its characters, and at
+  most one to the same character. A
   character holds at most 10 pending invitations; while they hold 10,
   further invitations are refused and the sender is told the invitation
   could not be left. Nothing is evicted silently. A character can
@@ -1862,8 +1864,9 @@ Values are initial, tuned at the pacing gate.
     per-recipient limit, so a drop's acceptance never depends on what
     other senders did.
   - **Kestrel fee.** Leaving a drop costs the sender the market board's
-    5 % Kestrel fee (section 8.3), charged on the stack's catalog base
-    price, rounded up, at least 1 chit. It is paid when the drop is
+    5 % Kestrel fee (section 8.3), charged on the catalog base price
+    times the units dropped, rounded up, at least 1 chit; an item with
+    no catalog base price pays the 1-chit minimum. It is paid when the drop is
     left and never refunded, so a drop is never a cheaper channel than
     a sale.
   - A drop from a sender the recipient ignores never arrives. To the
