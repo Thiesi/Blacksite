@@ -3,7 +3,7 @@
 **Status:** planned (approved by the owner 2026-10-31)
 **Primary model:** Codex · **Reviewer:** automated review, technical lead, presentation lead (screen, wording and disclosure)
 **Depends on:** S34 · **Milestone:** asynchronous presence (#125)
-**Issue:** filed on approval
+**Issue:** https://github.com/Thiesi/Blacksite/issues/137
 
 Canon: game design §11.1, "The away report", from #128. Where this file
 and canon differ, canon wins.
