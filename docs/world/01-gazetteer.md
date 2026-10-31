@@ -46,6 +46,7 @@ migration.
 | `intake-beds` | The Settling Beds (planned, #101) | The Intake | contested | Wardens | 100 × 40 |
 | `intake-hall` | The Treatment Hall (planned, #101) | The Intake | pocket | Wardens | 50 × 30 |
 | `intake-wellhead` | The Wellhead (planned, #101) | The Intake | contested | Wardens | 70 × 40 |
+| `intake-fungal-halls` | The Fungal Halls (planned, #119) | The Intake | contested | Wardens | 80 × 36 |
 | `under-service` | Service Level | Undercity | open | none | 120 × 50 |
 | `under-drowned` | The Drowned Level | Undercity | open | none | 100 × 60 |
 | `under-caverns` | Karst Caverns | Undercity | open | none | 150 × 80 |
@@ -58,8 +59,9 @@ migration.
 | `scour-ring-4` | Far Ring | The Scour | open | none | 200 × 100 |
 | `blacksite-l1` | Blacksite Level One | The Blacksite | instanced | none | see story arcs |
 
-Forty-two zone templates, four of them Warmwater's, planned (#90), and
-three the Intake's, planned (#101). Instancing is separate from safety;
+Forty-three zone templates, four of them Warmwater's, planned (#90), and
+four the Intake's: three planned in #101 and the Fungal Halls, planned
+in #119. Instancing is separate from safety;
 `blacksite-l1` has open mission areas and a protected decision room.
 Count the safety classes from the overview instead of a second tally.
 
@@ -137,8 +139,9 @@ the north (planned, #101):
 
 North of the Spire are the covered beds and fungal halls that feed the
 city, and among them the Civic treatment works, the Intake (bible 3.6;
-planned, #101). The beds and halls around the Intake have no zone; the
-City Map draws them as plain city fabric with no name.
+planned, #101). The covered beds around the Intake have no zone; the
+City Map draws them as plain city fabric with no name. The fungal halls
+beside the Settling Beds are a zone, the Fungal Halls (planned, #119).
 
 Tramyard runs along the east wall because the wall was Kestrel's
 project and the gate is Kestrel's. The Sink is a sinkhole a kilometre
@@ -188,6 +191,7 @@ Zones on the same spot are stacked; the map shows a stack as one place.
 | `intake-beds` | 42, 23 | planned (#101); the Cistern Walk runs south round the Spire's west side to the plaza; the Filter Lane runs south-west to Clinic Row |
 | `intake-hall` | 50, 17 | planned (#101) |
 | `intake-wellhead` | 56, 18 | planned (#101); the well shafts go down here, sealed |
+| `intake-fungal-halls` | 36, 19 | planned (#119); cut into the limestone west of the Beds |
 
 ### Routes between districts
 
@@ -1294,7 +1298,8 @@ and says it is the same as yesterday.
 - **Class:** contested. **Lean:** Wardens. **Size:** 100 × 40.
   **Sight:** 8 (work lamps over black water).
 - **Exits:** `core-plaza` (the Cistern Walk); `vatside-clinics` (the
-  Filter Lane); `intake-hall` (the hall doors); `intake-wellhead` (the
+  Filter Lane); `intake-hall` (the hall doors); `intake-fungal-halls`
+  (the hall ramp); `intake-wellhead` (the
   public catwalk, the long way round the basins, or the sluice walk, the
   short way, open to Intake Relay holders).
 - **Relays:** none. The sluice gate to the sluice walk answers only to
@@ -1395,6 +1400,48 @@ room, and nobody is at the panel.
 #..[pump]..T....[shafts].#  T Clearwell control room
 #+.......................#  + the sluice walk (relay holders)
 ##########################
+```
+
+### `intake-fungal-halls` — The Fungal Halls
+
+- **Status:** planned (#119). Canon only until a Stage 2 slice builds it.
+- **Class:** contested. **Lean:** Wardens. **Size:** 80 × 36.
+  **Sight:** 5 (a lamp every tenth bay).
+- **Exits:** `intake-beds` (the hall ramp).
+- **Relays:** none. The halls' surplus goes out by contract and by the
+  Crop Rota, never by a relay. No control here can reduce the minimum
+  ration (bible §3.6).
+- **Terminals:** one public terminal (Intake sector).
+- **Vendors / anchors:** Hester Dunmore, hall forewoman (Civic contract
+  giver: bed repair, extractor and cart-escort jobs); Kestrel's weigh
+  gate (a ration clerk counts every crate onto the carts); emote anchors
+  (the rack ladders, the vat rail).
+- **Spawners:** hall crews (talkers), a Kestrel ration clerk, crop
+  thieves after dark (hostile). A bed in bloom is a hazard tile on a
+  schedule, like the Boilerhouse's steam vents.
+
+Long, low halls cut into the limestone beside the Settling Beds, where
+most of what Karst eats grows in the dark. The racks run back further
+than the lamps reach, tray on tray of pale caps in black compost, and
+the loudest sound is the drip. A lamp burns in every tenth bay, because
+the crop does not need it and the crews do. At the far end the
+fermentation vats tick as they cool. When a bed blooms, the air over it
+thickens, and the crews tie cloths over their faces and work round it
+until the extractors clear it. By the ramp, Kestrel's weigh gate counts
+every crate onto the carts for the Ration Depots, and the clerk writes
+the number down twice. The minimum ration never drops. What else leaves
+tonight, and for which district, is posted on the Crop Rota, and Hester
+Dunmore has more requests for the next good crate than she has crates.
+
+```
+##############################
+#>......L.........L..........#  > the hall ramp (settling beds)
+#..[racks]...[racks]...!!....#  ! a bed in bloom (hazard, on a schedule)
+#............................#
+#..[racks]...[racks]...[vats]#  fermentation vats
+#..%%.....T.......$..........#  T terminal / $ Hester Dunmore
+#..[weigh gate]...........%%.#  Kestrel's weigh gate
+##############################
 ```
 
 ---

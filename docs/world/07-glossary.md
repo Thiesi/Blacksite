@@ -169,6 +169,8 @@ to it. (design §5.3)
 **Crew** — A party of two to five players with shared chat, list, beacon
 and loot rules. (design §10)
 
+**Crop Rota** — The public Intake sector cell where the Fungal Halls post what surplus leaves tonight, and for which district. (Lattice)
+
 **Culvert, the** — Warmwater sector's hidden descent cell, along the warm-water main. (Lattice)
 
 **Curfew** — World event: the Wardens restrict inbound Core gates for an
@@ -235,6 +237,8 @@ Foot** — Undercity zones below the Service Level. (gazetteer)
 
 **Dry Eleven, the** — Year 11: eleven days with the treatment works run by hand, after its first controller failed. (bible §3.3)
 
+**Dunmore, Hester** — Forewoman of the Fungal Halls; Civic contract giver for bed repair, extractor and cart-escort jobs. (gazetteer)
+
 **Evasion** — Nerve / 2 plus cover; subtracted from to-hit. (design §3.1)
 
 **Event** — A scheduled or admin-forced world happening: Ring-fall,
@@ -278,6 +282,8 @@ armour. (design §3.1)
 
 **Freelance** — Belonging to no faction: walk anywhere a pass allows,
 capture nothing, pay full price. (bible §7)
+
+**Fungal Halls, the** — The Intake's food halls beside the Settling Beds, where most of Karst's food grows in the dark. (gazetteer)
 
 **Gate Nine** — the Tramyard wall gate; Kestrel runs it. (gazetteer)
 
@@ -760,6 +766,8 @@ their eyes. (bible §4.3, design §4)
 §7)
 
 **Warmwater** — The pleasure quarter in the north-east, the Lamp Compact's district. (bible §4.3)
+
+**Weigh gate** — Kestrel's count point in the Fungal Halls, where every crate goes onto the carts for the Ration Depots. (gazetteer)
 
 **Wellhead, the** — The Intake's pump housings over the well shafts; Clearwell's hardware and Intake Relay. (gazetteer)
 
