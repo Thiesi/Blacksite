@@ -1440,7 +1440,8 @@ the frozen count and rewards do not reroll. Retry keeps the accepted
 terms and prior completed stages, reissuing bound supplies as needed.
 Original participants can resume a withdrawn generated/story job under
 those frozen terms. They must contribute again; resumption adds no new
-participant and cannot bypass the three-job limit. Retrying an abandoned
+participant and cannot bypass the three-job limit. A handoff (section
+10.1, planned, #125) is the one way a participant joins later. Retrying an abandoned
 stage retains earlier completed stages. Work-order withdrawal is final
 for that reservation; disconnect instead retains its original deadline.
 Completed generated jobs awaiting turn-in still occupy an active slot.
@@ -1678,9 +1679,13 @@ Values are initial, tuned at the pacing gate.
   could not be left. Nothing is evicted silently. A character can
   decline all pending invitations with one action. Identity-based ignores, the five-player limit and
   membership checks are rechecked on acceptance; an ignored sender's
-  invitation never arrives, and ignoring a sender withdraws theirs. To
+  invitation never arrives, and ignoring a sender removes theirs from the recipient's list. To
   the sender, an invitation to someone who ignores them looks exactly
-  like one left normally, so it never reveals the ignore.
+  like one left normally, so it never reveals the ignore: the sender
+  gets exactly the result a sender who is not ignored would get,
+  including the full-inbox refusal, and the ignored invitation holds
+  the sender's slots until its normal expiry. Ignored handoff offers
+  and dead drops hold the sender's slots the same way.
 - **Crew notes.** Members share up to 20 notes of up to 200 characters,
   visible to members only. The author or the leader removes a note; a
   departed member's notes stay until any member removes them. Notes use chat's text rules and rate
@@ -1705,8 +1710,9 @@ Values are initial, tuned at the pacing gate.
   receiver becomes the holder under the frozen terms (section 9.1);
   completed stages stay complete, and nothing rerolls. Acceptance
   removes the giver from the job's participants: the giver can no
-  longer resume it (section 9.1) and keeps only the share for stages
-  already committed. The giver's job slot stays occupied while the
+  longer resume it (section 9.1). The giver's share for the stages
+  already committed is paid on acceptance, so it never depends on the
+  receiver finishing. The giver's job slot stays occupied while the
   offer is open and is freed on acceptance.
   - **The job is locked while an offer is open.** Neither party can
     complete a stage, abandon the job or use its stage-bound items,
@@ -1730,9 +1736,11 @@ Values are initial, tuned at the pacing gate.
     and standing are paid once, divided between the identities that
     committed its stages in proportion to stages each committed,
     rounded down. The frozen roster size stays the original one, so
-    a handoff never applies section 9.1's roster scaling. Each share
-    is paid to its identity at turn-in, online or not, and the Operator
-    chit bonus applies per recipient as in section 9.1. Declared item and program rewards are granted once,
+    a handoff never applies section 9.1's roster scaling. The giver's
+    share is paid at acceptance; the rest is paid at turn-in, and only
+    if the job is completed. Each share is paid to its identity online
+    or not, and the Operator chit bonus applies per recipient as in
+    section 9.1. Declared item and program rewards are granted once,
     to the holder who turns in, never one per participant. Each
     identity's own caps apply (section 3.5); a share a cap withholds,
     or one owed to a retired identity, is forfeited, never passed to
@@ -1788,8 +1796,10 @@ Values are initial, tuned at the pacing gate.
   - It also lists what is addressed to the reader: crew invitations,
     handoff offers, dead drops waiting, the reader's own drops returned,
     new crew notes, and the existing apartment-theft notice (section
-    6.4). When the report has more than
-    12 lines, these come first.
+    6.4). These come first, each kind collapsed to one line with a
+    count and its soonest expiry ("3 invitations, the first ends in 2
+    days"), so a pending item is never cut off. Pending invitations,
+    offers and drops are also always listed in their own views.
   - It discloses nothing beyond what sitrep and public logs already
     showed: no tile positions, no Marked players' zones (a Wardens
     member benefit, section 7.6), and nothing about housing interiors
@@ -1812,7 +1822,8 @@ Values are initial, tuned at the pacing gate.
     listed in HERE.
   - A character places or replaces a tag at most once per 10 minutes.
   - Anyone who sees the tile sees the tag, except a player who ignores
-    its author. Tags use chat's text rules, are covered by report, and
+    its author, and except a tag on a hidden exit, which only its author
+    sees (above). Tags use chat's text rules, are covered by report, and
     are removable by the admin CLI.
 - **Dead drops.** A character may leave one item stack at an authored
   dead-drop object, addressed to one named character. Only that
@@ -1826,10 +1837,11 @@ Values are initial, tuned at the pacing gate.
     retirement. If the sender retires, the drop stays for the recipient until it
     expires; uncollected, it is deleted with the sender's other
     property. If both have retired, it is deleted.
-  - One outgoing drop per character at a time, at most one per
-    character per rolling 24 hours, and at most 10 units in the stack,
-    so drops never become a bulk transfer channel beside the market
-    board (section 8.3).
+  - One outgoing drop per character at a time, at most one per BBS
+    identity across all its characters per rolling 24 hours, at most
+    one received per character per rolling 24 hours, and at most 10
+    units in the stack, so drops never become a bulk transfer channel
+    beside the market board (section 8.3).
   - A drop from a sender the recipient ignores never arrives. To the
     sender it looks exactly like an unanswered drop: it returns only at
     the 7-day expiry, so it never reveals the ignore. The recipient may
