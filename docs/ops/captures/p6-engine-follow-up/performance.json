@@ -1,0 +1,343 @@
+{
+ "execution_head": "f8e5dac925b6c33bf8d6b4888bf889c78e881760",
+ "source_git_tree": "348b5eb94e9ea98199ec12cfe0a0b5c21203e007",
+ "root_pytest": {
+  "run": 41170887340,
+  "linux_passed": 2115,
+  "windows_passed": 2114,
+  "windows_skipped": 1
+ },
+ "p6_door_reference": {
+  "execution_head": "f8e5dac925b6c33bf8d6b4888bf889c78e881760",
+  "run": 41171629564,
+  "artifact_name": "p6-charted-budget",
+  "artifact_id": 13031786547,
+  "report_sha256": "3d8bacb5227f38684a06fa7f1f9b9b31f6769b0ebd33f300f7927539d2ce8325",
+  "method": "unchanged P1 Meter: Display receive/key/update/render only; server/codecs excluded",
+  "seconds": 12.0,
+  "targets": {
+   "render_p95_ms": 100,
+   "delta_bytes": 16384,
+   "cpu_s_per_hour": 120
+  },
+  "all_twelve_targets_pass": true,
+  "cases": [
+   {
+    "size": [
+     80,
+     24
+    ],
+    "tier": "16",
+    "known": false,
+    "large_ring": false,
+    "looks_cpu_s_h": 45.8103,
+    "generic_cpu_s_h": 60.0885,
+    "p95_ms": 3.092191,
+    "max_ansi_delta_bytes": 354,
+    "walking_look_delta_bytes": 0
+   },
+   {
+    "size": [
+     80,
+     24
+    ],
+    "tier": "256",
+    "known": false,
+    "large_ring": false,
+    "looks_cpu_s_h": 46.3744,
+    "generic_cpu_s_h": 59.7163,
+    "p95_ms": 3.341016,
+    "max_ansi_delta_bytes": 1200,
+    "walking_look_delta_bytes": 0
+   },
+   {
+    "size": [
+     80,
+     24
+    ],
+    "tier": "truecolor",
+    "known": false,
+    "large_ring": false,
+    "looks_cpu_s_h": 46.2151,
+    "generic_cpu_s_h": 59.1033,
+    "p95_ms": 3.16106,
+    "max_ansi_delta_bytes": 1488,
+    "walking_look_delta_bytes": 0
+   },
+   {
+    "size": [
+     132,
+     50
+    ],
+    "tier": "16",
+    "known": false,
+    "large_ring": false,
+    "looks_cpu_s_h": 96.3921,
+    "generic_cpu_s_h": 176.7193,
+    "p95_ms": 8.268215,
+    "max_ansi_delta_bytes": 448,
+    "walking_look_delta_bytes": 0
+   },
+   {
+    "size": [
+     132,
+     50
+    ],
+    "tier": "16",
+    "known": true,
+    "large_ring": false,
+    "looks_cpu_s_h": 100.8652,
+    "generic_cpu_s_h": 175.0098,
+    "p95_ms": 7.163734,
+    "max_ansi_delta_bytes": 448,
+    "walking_look_delta_bytes": 0
+   },
+   {
+    "size": [
+     132,
+     50
+    ],
+    "tier": "256",
+    "known": false,
+    "large_ring": false,
+    "looks_cpu_s_h": 95.9795,
+    "generic_cpu_s_h": 156.2515,
+    "p95_ms": 7.224585,
+    "max_ansi_delta_bytes": 1689,
+    "walking_look_delta_bytes": 0
+   },
+   {
+    "size": [
+     132,
+     50
+    ],
+    "tier": "256",
+    "known": true,
+    "large_ring": false,
+    "looks_cpu_s_h": 97.3637,
+    "generic_cpu_s_h": 159.6108,
+    "p95_ms": 7.246583,
+    "max_ansi_delta_bytes": 1689,
+    "walking_look_delta_bytes": 0
+   },
+   {
+    "size": [
+     132,
+     50
+    ],
+    "tier": "truecolor",
+    "known": false,
+    "large_ring": false,
+    "looks_cpu_s_h": 98.2648,
+    "generic_cpu_s_h": 153.2303,
+    "p95_ms": 7.4118,
+    "max_ansi_delta_bytes": 2105,
+    "walking_look_delta_bytes": 0
+   },
+   {
+    "size": [
+     132,
+     50
+    ],
+    "tier": "truecolor",
+    "known": true,
+    "large_ring": false,
+    "looks_cpu_s_h": 98.9836,
+    "generic_cpu_s_h": 166.0391,
+    "p95_ms": 7.415027,
+    "max_ansi_delta_bytes": 2105,
+    "walking_look_delta_bytes": 0
+   },
+   {
+    "size": [
+     132,
+     50
+    ],
+    "tier": "16",
+    "known": true,
+    "large_ring": true,
+    "looks_cpu_s_h": 92.8477,
+    "generic_cpu_s_h": 169.7866,
+    "p95_ms": 7.059821,
+    "max_ansi_delta_bytes": 448,
+    "walking_look_delta_bytes": 0
+   },
+   {
+    "size": [
+     132,
+     50
+    ],
+    "tier": "256",
+    "known": true,
+    "large_ring": true,
+    "looks_cpu_s_h": 93.4481,
+    "generic_cpu_s_h": 155.7566,
+    "p95_ms": 7.140512,
+    "max_ansi_delta_bytes": 1691,
+    "walking_look_delta_bytes": 0
+   },
+   {
+    "size": [
+     132,
+     50
+    ],
+    "tier": "truecolor",
+    "known": true,
+    "large_ring": true,
+    "looks_cpu_s_h": 96.0996,
+    "generic_cpu_s_h": 153.7021,
+    "p95_ms": 7.222416,
+    "max_ansi_delta_bytes": 2107,
+    "walking_look_delta_bytes": 0
+   }
+  ]
+ },
+ "geometry_only_mask_probe": {
+  "run": 41171629564,
+  "artifact_name": "p6-charted-budget",
+  "file": "p6-mask-geometry.json",
+  "source": {
+   "pull_request": 126,
+   "head": "9b2c5da65f59dd725c083ab3d2d7d9724a4173c9",
+   "themes_sha256": "4f3138332924f7a74ad1070673382bfc68bf3109986f54164a4b11cb92836010"
+  },
+  "boundary": "looks.masked only, geometry-only; excludes view construction, codecs and door CPU",
+  "report_sha256": "9b2d75d0fbb71ac043b72717b008edcbde8e9f4d3f3a4ba193e346fbf0768bd2",
+  "cases": [
+   {
+    "zone": "core-plaza",
+    "terminal": [
+     80,
+     24
+    ],
+    "knowledge": "wholly known",
+    "circles": 2,
+    "whole_only": 1,
+    "p95_ms": 0.60859,
+    "added_cpu_ms_per_call": 0.51263823
+   },
+   {
+    "zone": "core-plaza",
+    "terminal": [
+     80,
+     24
+    ],
+    "knowledge": "partly known",
+    "circles": 2,
+    "whole_only": 1,
+    "p95_ms": 0.402734,
+    "added_cpu_ms_per_call": 0.34217131500000003
+   },
+   {
+    "zone": "core-plaza",
+    "terminal": [
+     132,
+     50
+    ],
+    "knowledge": "wholly known",
+    "circles": 2,
+    "whole_only": 1,
+    "p95_ms": 0.941333,
+    "added_cpu_ms_per_call": 0.8796781399999999
+   },
+   {
+    "zone": "core-plaza",
+    "terminal": [
+     132,
+     50
+    ],
+    "knowledge": "partly known",
+    "circles": 2,
+    "whole_only": 1,
+    "p95_ms": 0.574396,
+    "added_cpu_ms_per_call": 0.5299029550000001
+   },
+   {
+    "zone": "sodium-row",
+    "terminal": [
+     80,
+     24
+    ],
+    "knowledge": "wholly known",
+    "circles": 13,
+    "whole_only": 0,
+    "p95_ms": 0.444122,
+    "added_cpu_ms_per_call": 0.38110029500000003
+   },
+   {
+    "zone": "sodium-row",
+    "terminal": [
+     80,
+     24
+    ],
+    "knowledge": "partly known",
+    "circles": 13,
+    "whole_only": 0,
+    "p95_ms": 0.381143,
+    "added_cpu_ms_per_call": 0.29283987
+   },
+   {
+    "zone": "sodium-row",
+    "terminal": [
+     132,
+     50
+    ],
+    "knowledge": "wholly known",
+    "circles": 13,
+    "whole_only": 0,
+    "p95_ms": 0.73167,
+    "added_cpu_ms_per_call": 0.6947315450000001
+   },
+   {
+    "zone": "sodium-row",
+    "terminal": [
+     132,
+     50
+    ],
+    "knowledge": "partly known",
+    "circles": 13,
+    "whole_only": 0,
+    "p95_ms": 0.481742,
+    "added_cpu_ms_per_call": 0.44673517499999993
+   }
+  ],
+  "door_cpu_verdict": null
+ },
+ "p5_shipped_comparison": {
+  "execution_head": "f8e5dac925b6c33bf8d6b4888bf889c78e881760",
+  "run": 41171629512,
+  "artifact_name": "p5-budget-comparison",
+  "artifact_id": 13032345207,
+  "report_sha256": "d52ce80d2f6ecec3cb5943e3aa14287e2a434b91e615672e615090449e49223e",
+  "all_nine_cpu_targets_pass": true,
+  "known_132_on_cpu_s_h": {
+   "16": 65.5355,
+   "256": 61.3609,
+   "truecolor": 75.1608
+  },
+  "final_P5_main_baseline": {
+   "run": 41126237721,
+   "cpu_132x50_known": [
+    93.3807,
+    87.126,
+    99.3039
+   ]
+  }
+ },
+ "service_workflow": {
+  "run": 41171629525,
+  "latest_successful_jobs": 28,
+  "expected_scope_skip": 1,
+  "initial_combat_failure_job": 124450650531,
+  "initial_failure_artifact": 13031418607,
+  "unmodified_retry_job": 124455956696,
+  "retry_artifact": 13031637864,
+  "retry_passed_both_sizes": true,
+  "triage": "Initial combined hurt/shock/flash observation failed at 132 columns; raw evidence retained. Exact predicate and root cause unproven. One unmodified retry passed. No combat assertion, fixture or rule changed."
+ },
+ "native_cases": 12,
+ "captures_replayed": 48,
+ "source_pin_verified": true,
+ "human_approval": false,
+ "presentation_signoff": false
+}

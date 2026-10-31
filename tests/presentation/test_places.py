@@ -202,17 +202,20 @@ def test_ui_2_2_mark_rejects_only_wall_adjacent_spaces_and_names_cell(fixtures):
 
 @pytest.mark.parametrize('tier',['16','256','truecolor'])
 @pytest.mark.parametrize('light',[False,True])
-def test_arch_5_5_5_withheld_charted_cells_are_uniform_ground_not_void(fixtures,tier,light):
+@pytest.mark.parametrize('at',[(14,4),(11,7)])
+def test_arch_5_5_5_withheld_charted_cells_are_uniform_ground_not_void(fixtures,tier,light,at):
     content = deepcopy(fixtures)
-    at = (14,4)
     original = content.zones['p6-fixture']
     look = content.looks[original.id]
     if light:
         look = replace(look,theme='p6-light')
     # Make grain nonblank at the test cell, without changing its class or
     # introducing a new authored rule. Dressing must not expose its kind.
-    theme = content.themes.themes[look.theme]
-    content.themes.themes[look.theme] = replace(theme,texture='·')
+    for tid,record in list(content.themes.themes.items()):
+        content.themes.themes[tid] = replace(record,texture='·')
+    # (11,7) is inside the light region, even when the base is dark.
+    # This also proves the server keeps region ground over marker cells.
+    theme = content.themes.themes['p6-light' if at==(11,7) else look.theme]
     content.looks[look.id] = replace(look,marks=(s.LookMark('p6_grain',at=at,text='X'),),
         glints=(at,),glint_role='p6_grain',signs=())
     frames,charts = [],[]

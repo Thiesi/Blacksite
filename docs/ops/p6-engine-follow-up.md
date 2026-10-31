@@ -8,6 +8,10 @@ balance numbers or mechanics baseline changes here.
 
 ## Contracts and regression checks
 
+Run proof and measurement commands in the development environment with
+`.[test]` installed. The native door uses a separate installed-wheel
+interpreter.
+
 - ANSI themes reuse P5's categorical people mapping, Halvard on 7 and
   jacked bodies on 8. Numeric band checks run only at 256/truecolor.
   Grey walls, legal backgrounds and readable sign letters remain
@@ -83,6 +87,9 @@ attached terminals, 80x24/132x50 and all tiers in dark/light themes. The
 fixture scenario and explicit placement remain documented in
 `p6-place-engine.md`. Captures are engineering evidence; the technical
 and presentation leads make their own decisions at a head SHA.
+The [Part A packet](captures/p6-engine-follow-up/README.md) names the
+pinned execution source, original streams, semantic replays and the
+separate measurement reports.
 
 H1, P6b fingerprint approval and S25 human layout approval remain
 NOT GRANTED. Codex grants no approval and performs no merge.
