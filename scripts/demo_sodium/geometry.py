@@ -19,15 +19,42 @@ CONTENT = ROOT/"src/blacksite/content"
 W, H = 100, 30
 STRIP = (9, 16)          # y range of the Strip, inclusive
 AXIS = 12                # arrival row: the Stair landing and the Halo door
-BARS = [                 # (interior x0, sign text, role, crowd)
-    (6, " UPSTAIRS ", "thing_sign_blue", "Halvard and Sablier staff"),
-    (22, "24H LONG SHIFT", "thing_sign_orange", "Kestrel"),
-    (38, " quarter tone ", "thing_sign_pink", "Choir"),  # kept low
-    (54, " THE CLAUSE ", "thing_sign_street", "Wakes and strays"),
-    (70, " SPA E PA TS ", "thing_sign_green", "Unmoored"),
+# Each bar keeps a 15-wide lettered front (x0 .. x0+14, wall at y 8) but
+# its own room and door, so a bar reads by shape as well as by sign.
+BARS = [  # (x0, door x or None for an open front, sign x, text, role, crowd)
+    (6, None, 5, "UPSTAIRS", "thing_sign_blue", "Halvard and Sablier staff"),
+    (22, 35, 21, "24H LONG SHIFT", "thing_sign_orange", "Kestrel"),
+    (38, 38, 39, " quarter tone ", "thing_sign_pink", "Choir"),  # kept low
+    (54, 57, 58, " THE CLAUSE ", "thing_sign_street", "Wakes and strays"),
+    (70, 70, 71, " SPA E PA TS ", "thing_sign_green", "Unmoored"),
 ]
-BAR_W = 15               # interior width; side walls between alcoves
-ALCOVE = (2, 7)          # alcove interior y range; front wall at y 8
+BAR_DOORS = [(door, 8) for _, door, *_ in BARS if door is not None]
+
+
+def bars(g, fill):
+    # Upstairs: shallow and open-fronted, a clean room seen from the Strip.
+    fill(7, 5, 19, 7)
+    fill(13, 8, 14, 8)
+    # Long Shift: the deepest, a long counter down the west side, door east.
+    fill(22, 2, 36, 7)
+    for y in range(3, 7):
+        g[y][24] = "%"
+    # Quarter Tone: an L turned away from the street, booths in the back.
+    fill(38, 5, 44, 7)
+    fill(38, 2, 52, 4)
+    for x in (43, 47):
+        g[2][x] = g[3][x] = "#"
+    # The Clause: narrow and cramped, door central.
+    fill(55, 4, 59, 7)
+    # Spare Parts: an irregular back, the terminal in a nook off the line
+    # of sight from the door.
+    fill(70, 5, 82, 7)
+    fill(74, 3, 80, 4)
+    fill(76, 2, 78, 2)
+    fill(84, 2, 84, 5)
+    fill(83, 5, 83, 5)
+    for door, y in BAR_DOORS:
+        g[y][door] = "+"
 
 
 def row_map():
@@ -41,10 +68,18 @@ def row_map():
     # The Strip and the Stair landing at its west end.
     fill(1, STRIP[0], 89, STRIP[1])
     fill(1, 9, 4, 16)
-    # Five bar alcoves on the north side, doorways in their front walls.
-    for x0, *_ in BARS:
-        fill(x0, ALCOVE[0], x0+BAR_W-1, ALCOVE[1])
-        g[8][x0] = "+"
+    # Five bar alcoves on the north side.
+    bars(g, fill)
+    # Cover clusters on the Strip, off a clear lane along the axis
+    # (y 11-13): stalls, a cart, barrels. Places to stand, sight to break.
+    for x, y in ((11, 15), (12, 15), (12, 16), (13, 16),
+                 (31, 9), (32, 9), (32, 10),
+                 (50, 15), (51, 15), (51, 16), (52, 16), (53, 15),
+                 (68, 15), (69, 15), (69, 16)):
+        g[y][x] = "%"
+    # The street ends: the south side pinches in before the Halo bay.
+    fill(74, 14, 81, 14, "#")
+    fill(74, 15, 89, 16, "#")
     # Old Works approach in the north-east corner, ending at the boundary.
     fill(87, 2, 98, 7)
     fill(87, 8, 89, 8)
@@ -75,12 +110,12 @@ def row_map():
 
 ROW_OBJECTS = {
     # Bars at the back of each alcove.
-    "row-bar-1": (13, 3), "row-bar-2": (29, 3), "row-bar-3": (45, 3),
-    "row-bar-4": (61, 3), "row-bar-5": (77, 3),
+    "row-bar-1": (13, 5), "row-bar-2": (23, 4), "row-bar-3": (51, 3),
+    "row-bar-4": (57, 4), "row-bar-5": (77, 3),
     "row-stage": (26, 21), "row-card-table": (52, 19),
     "row-drug-dealer": (60, 21), "row-ticket-tout": (92, 5),
     # Spare Parts has a public terminal inside (gazetteer: most bars do).
-    "row-public-1": (3, 15), "row-public-2": (40, 16), "row-public-3": (82, 6),
+    "row-public-1": (3, 15), "row-public-2": (40, 16), "row-public-3": (84, 2),
     "boundary-oldworks-main": (96, 2),
     "house-lights-sign-grid": (37, 21), "sign-grid-hardware": (38, 21),
 }
@@ -196,7 +231,7 @@ def main():
             ex["target_tile"] = list(HALO_ARRIVAL)
     write_map(zones/"sodium-row.map", g)
     doors = {tuple(o["tile"]) for o in row["objects"] if o["kind"] == "door"}
-    doors |= {(x0, 8) for x0, *_ in BARS} | {(38, 23), (90, AXIS)}
+    doors |= set(BAR_DOORS) | {(38, 23), (90, AXIS)}
     row["public"] = public_rects(g, [ROW_ARRIVAL_FROM_PLAZA, ROW_ARRIVAL_FROM_HALO], doors)
     # Placeholder population for a valid map; the consultant owns it.
     row["spawners"] = [
@@ -214,6 +249,9 @@ def main():
     h = halo_map()
     halo = json.loads((zones/"sodium-tin-halo.json").read_text(encoding="utf-8"))
     mark_objects(h, HALO_OBJECTS, halo)
+    for o in halo["objects"]:
+        if o["id"] == "halo-back-room":  # the core's back-door control opens it
+            o["params"]["open"] = False
     halo["spawn"] = list(HALO_SPAWN)
     halo["sight_radius"] = 28  # demo: the whole room in sight (V0-3 is still open)
     halo["exits"] = [
@@ -254,13 +292,13 @@ def main():
     look["regions"] = (
         [{"theme": "sodium-lamp", "circle": [x, y, 3]} for x, y in
          ((10, 12), (32, 10), (54, 14), (76, 10), (50, 24))]
-        + [{"theme": "sodium-door-teal" if i % 2 else "sodium-door-pink", "circle": [x0, 9, 2]}
-           for i, (x0, *_) in enumerate(BARS)]
+        + [{"theme": "sodium-door-teal" if i % 2 else "sodium-door-pink", "circle": [door or 13, 9, 2]}
+           for i, (_, door, *_) in enumerate(BARS)]
         + [{"theme": "sodium-stage", "circle": [26, 19, 3]},
            {"theme": "sodium-door-pink", "circle": [86, 12, 2]}]
     )
     look["signs"] = (
-        [{"at": [x0+1, 8], "text": text, "role": role} for x0, text, role, _ in BARS]
+        [{"at": [sx, 8], "text": text, "role": role} for _, _, sx, text, role, _ in BARS]
         + [{"at": [82, 10], "text": " TIN HAL", "role": "thing_sign_orange"},
            {"at": [19, 21], "text": " STAGE ", "role": "thing_sign_amber"}]
     )
@@ -268,7 +306,7 @@ def main():
         {"at": [2, 10], "text": "← NEON STAIR", "role": "paint"},
         {"at": [5, 14], "text": "TIN HALO →", "role": "paint"},
         # The Clause's regulars chalk their days under its sign.
-        {"at": [56, 10], "text": "||||/ ||||/ ||||/ ||", "role": "paint"},
+        {"at": [58, 10], "text": "||||/ ||||/ ||||/ ||", "role": "paint"},
     ]
     dump(CONTENT/"looks/sodium-row.json", look)
 
