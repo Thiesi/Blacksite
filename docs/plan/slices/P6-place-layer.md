@@ -186,8 +186,10 @@ method, switch on, on the hosted Linux reference.
   deltas while walking.
 - **Recorded, with a verdict:** CPU against 120 CPU s/h, including a
   charted 132x50 walk.
-  - P5's fully known figures are the baseline: 73 to 80 s/h on the new
-    path, against 117 to 122 s/h on the old one.
+  - P5's final fully known figures are the baseline: 93.4, 87.1 and
+    99.3 s/h on the new path at 132x50 in 16, 256 and truecolor
+    (reference run 41126237721). The earlier 73 to 80 s/h figures came
+    before P5's last correction and are not the baseline.
   - A regression against P5 in the same state is a finding unless the
     PR explains it.
 
@@ -222,8 +224,13 @@ method, switch on, on the hosted Linux reference.
   wall face.
 - Grain is stable: the same tile gives the same grain across frames and
   runs, with no `zone.rng` or clock read.
-- With the switch off, every existing golden, the hint row, and the P5
-  goldens of zones without a look stay byte-identical.
+- With the switch off, every existing golden and the hint row stay
+  byte-identical.
+- The P5 style goldens of zones without a look keep their tile drawing
+  byte-identical. Only the rows that the two #114 corrections above
+  change may move: the HERE entries, which gain their shape glyph, and
+  the header, only where a notice shares it. Those goldens are
+  regenerated in the P6a PR, which shows that no other row changed.
 
 ## Acceptance
 
