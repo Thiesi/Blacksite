@@ -212,7 +212,10 @@ lock @ vatside-clinics`. ICE: Tripwire, Suture, Glasshouse, Mastiff.
 
 **Gatehouse East** (`lat-gatehouse-east`) — Kestrel, tier 3, 7 rooms.
 Hardware: gate control hut @ `tramyard-wall-gate`. Data: convoy manifests
-(predict Convoy events and cargo), gate schedules. Controls: `Gate Nine
+(predict Convoy events and cargo), gate schedules, and, once #119's
+Assay Floor is built, the assay ledger (every load weighed in at the
+gate, by grade and by name; set against the manifests, it shows loads
+that went out and never came back). Controls: `Gate Nine
 outbound @ tramyard-wall-gate`, `Gate Nine service latch @
 tramyard-wall-gate`, `gate turret @ tramyard-wall-gate`. ICE: Tripwire,
 Turnstile, Lockstep, Mastiff, Hornets.

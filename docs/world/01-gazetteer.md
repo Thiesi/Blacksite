@@ -28,6 +28,7 @@ migration.
 | `tramyard-market` | Tramyard Market | Tramyard | contested | Kestrel | 80 × 36 |
 | `tramyard-wall-gate` | Gate Nine | Tramyard | contested | Kestrel | 70 × 50 |
 | `tramyard-wallwalk` | The Wallwalk (planned, #119) | Tramyard | contested | Kestrel | 140 × 14 |
+| `tramyard-assay-floor` | The Assay Floor (planned, #119) | Tramyard | pocket | Kestrel | 40 × 20 |
 | `sink-rim` | The Rim | The Sink | contested | Sable | 100 × 30 |
 | `sink-terraces` | Sink Terraces | The Sink | contested | Sable | 90 × 60 |
 | `sink-floor` | The Floor | The Sink | contested | Sable | 70 × 40 |
@@ -61,9 +62,10 @@ migration.
 | `scour-ring-4` | Far Ring | The Scour | open | none | 200 × 100 |
 | `blacksite-l1` | Blacksite Level One | The Blacksite | instanced | none | see story arcs |
 
-Forty-five zone templates: four of them Warmwater's, planned (#90),
+Forty-six zone templates: four of them Warmwater's, planned (#90),
 four the Intake's (three planned in #101 and the Fungal Halls, planned
-in #119), and the Wallwalk and the Cloister, both planned (#119).
+in #119), and the Wallwalk, the Assay Floor and the Cloister, all planned
+(#119).
 Instancing is separate from safety;
 `blacksite-l1` has open mission areas and a protected decision room.
 Count the safety classes from the overview instead of a second tally.
@@ -189,6 +191,7 @@ Zones on the same spot are stacked; the map shows a stack as one place.
 | `tramyard-depots` | 79, 43 | |
 | `tramyard-wall-gate` | 88, 45 | Gate Nine, in the east wall |
 | `tramyard-wallwalk` | 86, 36 | planned (#119); on top of the east wall, north of Gate Nine |
+| `tramyard-assay-floor` | 88, 45 | planned (#119); in Gate Nine's blockhouse, stacked with the gate |
 | `warmwater-lamp-street` | 64, 32 | planned (#90); the Lamp Walk runs south-west to the plaza |
 | `warmwater-baths` | 59, 27 | planned (#90) |
 | `warmwater-courts` | 69, 25 | planned (#90) |
@@ -679,7 +682,8 @@ and Sable can stand at adjacent stalls and both pretend not to notice.
 - **Class:** contested. **Lean:** Kestrel. **Size:** 70 × 50.
   **Sight:** 11.
 - **Exits:** `tramyard-depots` (street); `tramyard-wallwalk` (the
-  gatehouse stair; planned, #119); `scour-landing` (the camp road);
+  gatehouse stair; planned, #119); `tramyard-assay-floor` (the assay
+  door; planned, #119); `scour-landing` (the camp road);
   `scour-ring-1` (the gate:
   opens on a Kestrel schedule every 2 minutes for 60 seconds, or on a
   Gate core control, or for a convoy).
@@ -751,6 +755,45 @@ to the top.
 #>....L.......[spotters' post]...T.....L........>#  > gatehouse stair (Gate Nine) / > north ladder (depots)
 #..!!..........%%.........[sealed gatehouse]..!!.#  ! broken parapet (hazard)
 ##################################################
+```
+
+### `tramyard-assay-floor` — The Assay Floor
+
+- **Status:** planned (#119). Canon only until a Stage 2 slice builds it.
+- **Class:** pocket. **Lean:** Kestrel. **Size:** 40 × 20.
+  **Sight:** 12.
+- **Exits:** `tramyard-wall-gate` (the assay door).
+- **Relays:** none.
+- **Terminals:** one public terminal.
+- **Vendors / anchors:** Assayer Ottla Kesk at the ledger desk (Kestrel
+  contract giver: count and ledger jobs); a Ferrymen tallyman (Ferrymen
+  contract giver: the same ledger, from the other side); the Kestrel
+  impound counter, a Kestrel branch for market deliveries and impound
+  (design §8.3); the scales (emote anchor, where traders meet).
+- **Spawners:** Kestrel clerks and weighers (talkers), Ferrymen crews
+  waiting for their count (talkers), a Halvard inspector who looks only
+  at compute grade (talker).
+
+A long room in the gate's own blockhouse, where Kestrel weighs
+everything that comes in from the Scour. The scales are set into the
+floor, big enough for a cart, and the ledger desk has three clerks and
+one pen that works. Every load is weighed in by grade and by name, and
+the ledger never forgets a name. The Ferrymen send a tallyman to stand
+at the scales and count under his breath, because they have been
+counted short since Year 3. Nobody here buys salvage. The scales only
+say what it is; the buying happens in the market, or between two people
+who stand at the scales long enough to trust each other. Intact pieces
+are weighed like everything else, and the clerk underlines them. The
+assay ledger lives in Gatehouse East. Set beside the convoy manifests,
+it shows which loads went out and never came back to the scales.
+
+```
+##############################
+#+..........[scales].........#  + the assay door (Gate Nine)
+#..$.....................$...#  $ Ottla Kesk / $ the Ferrymen tallyman
+#..[ledger desk]....%%.......#
+#..T.........[impound].......#  T terminal / Kestrel impound counter
+##############################
 ```
 
 ---

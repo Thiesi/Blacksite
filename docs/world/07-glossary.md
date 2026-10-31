@@ -34,6 +34,10 @@ ability. (bible §8.1, design §3.2)
 
 **Ashgrove, Commander Ruth** — head of Halvard Spire Security. (factions)
 
+**Assay Floor, the** — Kestrel's weighing room in Gate Nine's blockhouse, where every load from the Scour is weighed in by grade and by name; it buys nothing. (gazetteer)
+
+**Assay ledger** — The Assay Floor's record of every load weighed in at Gate Nine, kept in Gatehouse East. (Lattice)
+
 **Attributes** — Frame, Nerve, Cortex, Resonance, Vitals; 1 to 100,
 raised through skill lines and grade. (design §3.1)
 
@@ -359,6 +363,8 @@ for forty-one years. (bible §1)
 
 **Karst Civic Authority** — The nominal government; its police are the
 Wardens. (bible §7)
+
+**Kesk, Ottla** — Kestrel's assayer at the Assay Floor; gives count and ledger jobs. (gazetteer)
 
 **Kestrel Issue** — Kestrel's cheap standard-issue gear line. (catalog)
 
