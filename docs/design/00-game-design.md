@@ -1059,6 +1059,12 @@ applies; an enabled lamp nearby does not offset it.
   relation to the ordinary control. Yard Relay's effect is its
   fabrication modifier only; it controls no lights, so no relay holder
   can relight or darken the Yards.
+- **Choosing the reserve.** The reserve allocation can be chosen only
+  by a reserver standing in the Yards or the Dynamo Hall, and it takes
+  effect only if at least one member of the frozen roster is in the
+  Yards or the hall when the repair completes; otherwise the common
+  allocation applies. Nobody can darken the Yards for others from a
+  distance.
 - **The bench.** The workers' bench is a fabrication workshop for the
   workers only, at the ordinary quality rule plus 0.05, capped at 1.15
   and not stacking with Yard Relay.
