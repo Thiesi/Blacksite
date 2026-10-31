@@ -1858,6 +1858,8 @@ Values are initial, tuned at the pacing gate.
     the tag stays listed in HERE. Undiscovered contents never affect
     whether a tag is drawn, for any viewer.
   - A character places or replaces a tag at most once per 10 minutes.
+    A tile holds at most 3 tags; a new one on a full tile replaces the
+    oldest, so tags never bury what HERE must show.
   - Anyone who sees the tile sees the tag, except a player who ignores
     its author. Tags use chat's text rules, are covered by report, and
     are removable by the admin CLI.
@@ -1876,7 +1878,9 @@ Values are initial, tuned at the pacing gate.
     7-day expiry, like an unanswered drop, so a return never reveals a
     retirement. If the sender retires, the drop stays for the recipient until it
     expires; uncollected, it is deleted with the sender's other
-    property. If both have retired, it is deleted.
+    property. If both have retired, it is deleted. The retirement
+    confirmation lists the sender's drops still in flight and says
+    they will be lost, so the loss is never a surprise.
   - One outgoing drop per character at a time, at most one per BBS
     identity across all its characters per rolling 24 hours, and at
     most 10 units in the stack, so drops never become a bulk transfer
