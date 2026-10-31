@@ -1651,24 +1651,32 @@ Values are initial, tuned at the pacing gate.
   its member can invite again; then it dissolves. Leadership passes as
   in section 10 when the leader leaves the crew, not when the leader
   logs out.
+- **Inactivity.** When the leader has not logged in for 7 days,
+  leadership passes to the longest-serving member who has. A crew in
+  which no member has logged in for 30 days dissolves and releases its
+  name.
 - **Naming.** The inviter names the crew with its first invitation: 3
   to 24 characters, the character-name rules and reserved-name check,
   unique on the node. The name is held while that invitation is open
-  and released if nobody accepts. Crew names are covered by report;
+  and released if nobody accepts. An uncrewed character can hold at
+  most one name this way at a time. Crew names are covered by report;
   the admin CLI can rename or dissolve a crew.
 - **Offline invitations.** An invitation may be left for an offline
   character. It waits up to 7 days and is accepted or declined at that
-  character's next login. A character may have at most 5 outstanding
-  offline invitations. Identity-based ignores, the five-player limit
-  and membership checks are rechecked on acceptance; an ignored
-  sender's invitation never arrives.
+  character's next login. A sender may have at most 5 outstanding
+  offline invitations, and at most one to the same character. A
+  character holds at most 10 pending invitations; a newer one replaces
+  the oldest. Identity-based ignores, the five-player limit and
+  membership checks are rechecked on acceptance; an ignored sender's
+  invitation never arrives, and ignoring a sender withdraws theirs.
 - **Crew notes.** Members share up to 20 notes of up to 200 characters,
   visible to members only. The author or the leader removes a note; a
-  leaving member's notes stay. Notes use chat's text rules and rate
+  departed member's notes stay until any member removes them. Notes use chat's text rules and rate
   limit, are covered by report, and are removable by the admin CLI.
   Notes are never shown outside the crew and are never world log lines.
 - **Handoffs.** The holder of a generated job may offer it to a crew
-  member after completing at least one stage. The offer waits up to
+  member after completing at least one stage, while at least one stage
+  remains. Each job can be handed off once. The offer waits up to
   24 hours, and the receiver accepts at any time they are online. The
   receiver becomes the holder under the frozen terms (section 9.1);
   completed stages stay complete, and nothing rerolls.
@@ -1679,18 +1687,23 @@ Values are initial, tuned at the pacing gate.
     expiry returns both to the holder unchanged.
   - **Expiry.** A generated job's 60-minute expiry (section 9.1)
     pauses while an offer is open, and acceptance gives the receiver a
-    fresh 60 minutes. Every prepared world state the stages created
+    fresh 60 minutes. A job can therefore live at most 60 minutes, plus
+    24 hours on offer, plus 60 minutes. Every prepared world state the stages created
     (credentials, latches, opened controls) keeps its own timer
     (section 6.4) and is never paused; a later stage that needs an
     expired state recreates it under section 9.1's retry rule.
   - **Job slots.** The receiver needs a free slot under section 9.1's
     three-job limit. Acceptance without one is refused and the offer
     stays open until it expires.
-  - **Rewards.** The disclosed reward is paid once. It is divided
-    between the identities that committed its stages, in proportion to
-    stages each committed, rounded down. Each identity's own caps apply
-    (section 3.5); a share a cap withholds is forfeited, never passed to
-    the other party. A handoff never multiplies or transfers a reward.
+  - **Rewards.** The current holder turns the job in. Its chits, XP
+    and standing are paid once, divided between the identities that
+    committed its stages in proportion to stages each committed,
+    rounded down. Declared item and program rewards are granted once,
+    to the holder who turns in, never one per participant. Each
+    identity's own caps apply (section 3.5); a share a cap withholds,
+    or one owed to a retired identity, is forfeited, never passed to
+    the other party. A handoff never multiplies or transfers a
+    reward.
   - Story jobs, work orders and descent rosters cannot be handed off.
     Personal and mission records stay with the identity that earned
     them (section 10).
@@ -1754,6 +1767,10 @@ Values are initial, tuned at the pacing gate.
   shows it whole. It expires after 7 days or when replaced.
   - Never on a hidden exit, a door or another interaction tile, and
     never in a safe zone or pocket.
+  - A tag is drawn only where nothing else is: an item, hazard, actor
+    or object on the tile always shows instead, and the tag stays
+    listed in HERE.
+  - A character places or replaces a tag at most once per 10 minutes.
   - Anyone who sees the tile sees the tag, except a player who ignores
     its author. Tags use chat's text rules, are covered by report, and
     are removable by the admin CLI.
@@ -1766,8 +1783,10 @@ Values are initial, tuned at the pacing gate.
   - If the recipient retires, the drop returns to the sender at once.
     If the sender retires, the drop stays for the recipient until it
     expires; uncollected, it is deleted with the sender's other
-    property.
-  - One outgoing drop per character at a time.
+    property. If both have retired, it is deleted.
+  - One outgoing drop per character at a time, and at most one per
+    character per rolling 24 hours, so drops never become a bulk
+    transfer channel beside the market board (section 8.3).
   - Only items the market board accepts may be dropped; equipped,
     secured, bound and mission items cannot (section 8.3). Player
     trading of intact salvage stays allowed (section 8.4).
