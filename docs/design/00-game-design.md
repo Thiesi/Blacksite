@@ -636,8 +636,8 @@ real encounter. District gate counts and public uplinks remain intact.
 - Each control in a core maps to one object in one zone. The one
   exception is Grid's `yard lights`, which targets the yard lamp group
   once Grid is built (section 7.5, planned, #119); while Grid is in
-  `fault`, `repairing` or `allocated`, that control is suspended. Flipping it
-  changes the object immediately and posts to the zone log ("The gate
+  `fault`, `repairing` or `allocated`, that control is suspended.
+  Flipping a control changes its object immediately and posts to the zone log ("The gate
   cycles open. Nobody touched it.").
 - Ordinary controls reset on their declared timer (5 to 30 minutes).
   Only controls tagged `owner_policy` persist for a relay owner. Travel
