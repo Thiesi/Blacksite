@@ -88,7 +88,12 @@ def build(root: Path, metadata: list[dict[str, Any]], run: int, head: str,
                     and case['phases'][0]['initial'] == case['phases'][1]['initial']
                     and all(p['initial'] == p['final'] and p['successful_moves'] == 16
                             for p in case['phases']), f'{name}: profile walk mismatch')
-            profiles.append({key: case[key] for key in ('zone', 'tier', 'fully_known', 'phases')})
+            profiles.append({key: case[key] for key in ('zone', 'tier', 'fully_known')} | {
+                'phases': [{'phase': p['phase'], 'moves': p['successful_moves'],
+                    'places_replacements': p['places_replacements'],
+                    'step_p95': {key: p['steps'][key]['p95'] for key in
+                        ('terrain_wall_ms', 'terrain_frame_percent', 'diff_wall_ms', 'emitted_cells')}}
+                    for p in case['phases']]})
         if not (directory/'b2-budget.json').exists():
             # The first B2 run asserted before its end-only report write.
             # Preserve the verified B1/B3 packet and label the missing B2
@@ -105,7 +110,13 @@ def build(root: Path, metadata: list[dict[str, Any]], run: int, head: str,
         for case in data['cases']:
             require(case['zone'] == zid, f'{name}: zone mismatch')
             row = {key: case[key] for key in ('zone','start','size','tier','fully_known','verdict','wire')}
-            row['frame_summary'] = {label: arm['frames']['summary'] for label,arm in case['arms'].items()}
+            # The unchanged raw reports remain linked and hashed. Keep the
+            # committed review packet below its cap without trimming any
+            # required native text or dropping a case/failure verdict.
+            row['frame_summary'] = {label: {kind: {
+                'max_bytes': arm['frames']['summary'][kind]['bytes']['max'],
+                'render_p95_ms': arm['frames']['summary'][kind]['render_wall_ms']['p95']}
+                for kind in ('full', 'delta')} for label,arm in case['arms'].items()}
             row['frame_budgets_pass'] = all(arm['frames']['delta_16kib_pass'] and arm['frames']['render_p95_100ms_pass']
                                            for arm in case['arms'].values())
             if case.get('origin_policy_control'):
@@ -116,6 +127,7 @@ def build(root: Path, metadata: list[dict[str, Any]], run: int, head: str,
     budget_pass = not incomplete and len(budgets) == 27 and all(
         row['frame_budgets_pass'] and row['verdict']['cpu_120s_per_hour_pass'] for row in budgets)
     files['performance.json'] = (json.dumps({'cases': budgets, 'cold_warm_profiles': profiles,
+        'summary_only_full_raw_reports_hashed_in_manifest': True,
         'incomplete_zones': incomplete,
         'budget_acceptance': False, 'all_numeric_targets_pass': budget_pass, 'cpu_policy':
         '120 s/h verdict recorded; every historical P5 increase requires explanation/review; '
