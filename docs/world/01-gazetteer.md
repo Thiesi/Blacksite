@@ -27,6 +27,7 @@ migration.
 | `tramyard-depots` | Ration Depots | Tramyard | contested | Kestrel | 120 × 40 |
 | `tramyard-market` | Tramyard Market | Tramyard | contested | Kestrel | 80 × 36 |
 | `tramyard-wall-gate` | Gate Nine | Tramyard | contested | Kestrel | 70 × 50 |
+| `tramyard-wallwalk` | The Wallwalk (planned, #119) | Tramyard | contested | Kestrel | 140 × 14 |
 | `sink-rim` | The Rim | The Sink | contested | Sable | 100 × 30 |
 | `sink-terraces` | Sink Terraces | The Sink | contested | Sable | 90 × 60 |
 | `sink-floor` | The Floor | The Sink | contested | Sable | 70 × 40 |
@@ -59,9 +60,9 @@ migration.
 | `scour-ring-4` | Far Ring | The Scour | open | none | 200 × 100 |
 | `blacksite-l1` | Blacksite Level One | The Blacksite | instanced | none | see story arcs |
 
-Forty-three zone templates, four of them Warmwater's, planned (#90), and
-four the Intake's: three planned in #101 and the Fungal Halls, planned
-in #119. Instancing is separate from safety;
+Forty-four zone templates: four of them Warmwater's, planned (#90),
+four the Intake's (three planned in #101 and the Fungal Halls, planned
+in #119), and the Wallwalk, planned (#119). Instancing is separate from safety;
 `blacksite-l1` has open mission areas and a protected decision room.
 Count the safety classes from the overview instead of a second tally.
 
@@ -184,6 +185,7 @@ Zones on the same spot are stacked; the map shows a stack as one place.
 | `tramyard-market` | 71, 47 | |
 | `tramyard-depots` | 79, 43 | |
 | `tramyard-wall-gate` | 88, 45 | Gate Nine, in the east wall |
+| `tramyard-wallwalk` | 86, 36 | planned (#119); on top of the east wall, north of Gate Nine |
 | `warmwater-lamp-street` | 64, 32 | planned (#90); the Lamp Walk runs south-west to the plaza |
 | `warmwater-baths` | 59, 27 | planned (#90) |
 | `warmwater-courts` | 69, 25 | planned (#90) |
@@ -607,7 +609,8 @@ ladder behind that goes down to where the vats drain.
 - **Class:** contested. **Lean:** Kestrel. **Size:** 120 × 40.
   **Sight:** 10.
 - **Exits:** `tramyard-market` (street); `tramyard-wall-gate` (street);
-  `oldworks-main` (freight siding).
+  `oldworks-main` (freight siding); `tramyard-wallwalk` (the north
+  ladder; planned, #119).
 - **Relays:** **Depot Relay** (controls the ration distribution
   schedule; holders' faction vendor buy-back pools refill every 30 min).
 - **Terminals:** one hardware terminal (Depot Control core, tier 2; controls the
@@ -672,7 +675,8 @@ and Sable can stand at adjacent stalls and both pretend not to notice.
 
 - **Class:** contested. **Lean:** Kestrel. **Size:** 70 × 50.
   **Sight:** 11.
-- **Exits:** `tramyard-depots` (street); `scour-landing` (the camp road);
+- **Exits:** `tramyard-depots` (street); `tramyard-wallwalk` (the
+  gatehouse stair; planned, #119); `scour-landing` (the camp road);
   `scour-ring-1` (the gate:
   opens on a Kestrel schedule every 2 minutes for 60 seconds, or on a
   Gate core control, or for a convoy).
@@ -701,6 +705,49 @@ Karst stand here and watch the count and then do not.
 #....[convoy yard]...#
 #..!!..........!!....#  ! checkpoint barriers
 ######>>>>>>##########  > the gate to scour-ring-1
+```
+
+### `tramyard-wallwalk` — The Wallwalk
+
+- **Status:** planned (#119). Canon only until a Stage 2 slice builds it.
+- **Class:** contested. **Lean:** Kestrel. **Size:** 140 × 14.
+  **Sight:** 8 (daylight through the slits).
+- **Exits:** `tramyard-wall-gate` (the gatehouse stair);
+  `tramyard-depots` (the north ladder). The old north gatehouse on the
+  walk is sealed and bricked. It is drawn as structure with a sign,
+  never as an exit, and its inside is never charted.
+- **Relays:** none.
+- **Terminals:** one public terminal at the spotters' post (Tramyard
+  sector). Wall Telemetry is a gated cell (Lattice §2 notes).
+- **Vendors / anchors:** Halim Osei, Wall Marshal, on his rounds
+  (contract giver: wall-watch jobs); the spotters' post, the scope rail
+  where Ring-fall spotting works (design §12); emote anchors (the
+  parapet, the scope rail).
+- **Spawners:** the Kestrel wall watch on a long loop, freelance
+  spotters (talkers; they sell readings), a Ferrymen lookout who buys
+  them, and plate thieves after dark (hostile). Broken stretches of
+  parapet are hazard tiles, because the wind comes through. The outer
+  edge is impassable, and nothing on the walk drops a caller off the
+  wall. A reading passed on, by a player or in a spotter's talk, is the
+  same information with no more lead (design §12).
+
+The wall is eleven metres of concrete and hull plate, and Kestrel roofed
+the walk along its top in the Long Quiet, against Ring-fall. So the view
+from up here is through slits: a hand's width of Scour, a strip of sky,
+the Ring when it is night. The watch walks the length of it on a loop
+and counts the slits as it goes. At the spotters' post a long scope
+sits on a rail, and through it you can read a fall's streaks before
+they come down. Spotters sell what they read to whoever is waiting at
+the bottom of the stair. Some of them sell it twice. Halim Osei walks
+the walk himself once a night and does not say why. At the north end,
+the old gatehouse still has its sign, and the gate below it is concrete
+to the top.
+
+```
+##################################################
+#>....L.......[spotters' post]...T.....L........>#  > gatehouse stair (Gate Nine) / > north ladder (depots)
+#..!!..........%%.........[sealed gatehouse]..!!.#  ! broken parapet (hazard)
+##################################################
 ```
 
 ---
