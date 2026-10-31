@@ -5,6 +5,7 @@ the current view. Optional looks dress that ground; missing looks retain
 the P5 tile drawing. Geometry and focus remain their shared contracts.
 """
 
+import json
 from typing import Any
 
 from blacksite.door.cells import CellBuffer, clean_text, display_width, truncate
@@ -60,14 +61,31 @@ def terrain(buffer: CellBuffer, body: dict[str, Any], layout: Layout, paint: Pai
     charted = body.get('charted', [])
     places = for_frame(paint, body)
     target = buffer
+    hazards = frozenset(tuple(tile) for hazard in body.get('hazards', []) for tile in hazard.get('tiles', []))
+    changed_rows: set[int] | None = None
     if places:
         geometry = (buffer.width, buffer.height, ox, oy, area.x, area.y, area.width, area.height)
         if places.terrain_geometry != geometry:
             places.terrain_buffer = CellBuffer(buffer.width, buffer.height)
             places.terrain_states.clear()
+            places.terrain_rows = ()
             places.terrain_geometry = geometry
         target = places.terrain_buffer
-    hazards = {tuple(tile) for hazard in body.get('hazards', []) for tile in hazard.get('tiles', [])}
+        # Keep value snapshots: protocol bodies may reuse or mutate lists.
+        # A row also depends on its two neighbours (roof/wall edges).
+        rows = tuple((tuple(row), tuple(memory[y]) if y < len(memory) else (),
+                      tuple(charted[y]) if y < len(charted) else ())
+                     for y, row in enumerate(grid))
+        legend_key = json.dumps(legend, sort_keys=True, separators=(',', ':'))
+        if places.terrain_legend != legend_key:
+            places.terrain_states.clear()
+            places.cells.clear()
+        elif places.terrain_hazards == hazards and len(places.terrain_rows) == len(rows):
+            changed_rows = {near for y, row in enumerate(rows)
+                            if row != places.terrain_rows[y] for near in (y-1, y, y+1)}
+        if changed_rows == set():
+            buffer.copy_from(target, area.x, area.y, area.width, area.height)
+            return
 
     # Resolve memory/legend indices once. The trial repeated this for every
     # neighbour and dimmed the same style for every remembered floor cell.
@@ -86,6 +104,8 @@ def terrain(buffer: CellBuffer, body: dict[str, Any], layout: Layout, paint: Pai
     styles: dict[tuple[int, bool, bool], tuple[str, Style]] = {}
 
     for y, row in enumerate(grid[:vp['h']]):
+        if changed_rows is not None and y not in changed_rows:
+            continue
         if not area.y <= oy + y < area.bottom:
             continue
         for x, value in enumerate(row[:vp['w']]):
@@ -125,6 +145,9 @@ def terrain(buffer: CellBuffer, body: dict[str, Any], layout: Layout, paint: Pai
             target.put(ox + x, oy + y, glyph, style)
     if places:
         buffer.copy_from(target, area.x, area.y, area.width, area.height)
+        places.terrain_rows = rows
+        places.terrain_legend = legend_key
+        places.terrain_hazards = hazards
 
 
 def cell(paint: Paint, entry: dict[str, Any], *, roof: bool = False) -> tuple[str, Style]:

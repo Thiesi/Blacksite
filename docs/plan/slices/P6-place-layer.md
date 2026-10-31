@@ -325,6 +325,28 @@ method, switch on, on the hosted Linux reference.
 No review, build or capture substitutes for H1. S25's human layout
 approval stays withheld.
 
+## A8: CPU follow-up (Codex)
+
+Assigned on #115 (6545201365, 6545985790), queued after the fixed-post
+B1/B2 refresh on #126. Depends on merged A7 (#133); does not depend on
+P6b merge or H1. Status: implementation and evidence in progress.
+
+Reuse unchanged terrain rows and immutable cells without changing their
+appearance. A7's still origin, disclosure, goldens, fingerprint and frame
+budgets remain fixed. Every Plaza and Sodium 132x50 ordinary/fully-known
+case in all three tiers must reach at most 108 CPU s/h on B2's hosted
+12-second P1 method. Report all 27 paired before/after cases, including
+Clinic and any misses. Compare deterministic ANSI bytes independently.
+
+Also measure Sodium at 8, 11 and 16 NPCs, 132x50, both knowledge states
+and all tiers. The 108 target applies at today's count of 8. For this
+measurement-only sweep, keep the two Sable posts and one warden, varying
+regulars from 5 to 8 to 13. No shipped population decision is made.
+Use the author's fixed-post Git data as a pinned data-only input; do not
+stack on or edit the unmerged P6b content. Run the existing native P6
+acceptance and root suite, retain raw reports as artifacts, and request
+automated and technical review. This grants no human acceptance gate.
+
 ## Related work outside the slice
 
 - **V1 measurements.** The presentation lead's V1 measurements (plan

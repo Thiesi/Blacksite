@@ -47,6 +47,9 @@ class Places:
         self.terrain_buffer: CellBuffer | None = None
         self.terrain_geometry: tuple[int, ...] | None = None
         self.terrain_states: dict[tuple[int, int], tuple[object, ...]] = {}
+        self.terrain_rows: tuple[tuple[tuple[int, ...], ...], ...] = ()
+        self.terrain_legend: str | None = None
+        self.terrain_hazards: frozenset[tuple[int, int]] = frozenset()
 
     def theme(self, at: tuple[int, int]) -> Theme:
         return self.grounds.get(at, (self.base, (0., 0.)))[0]
