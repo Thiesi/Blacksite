@@ -54,7 +54,8 @@ stay, applied to members who are online and present.
   one per target, a 10-invitation inbox, decline-all, and every recheck
   at acceptance. Ignored invitations never arrive and look to the
   sender exactly like delivered ones, including slot use and the
-  full-inbox refusal.
+  full-inbox refusal. The sender may withdraw an invitation at any
+  time, with the same result whether it was delivered or ignored.
 - **Crew notes.** 20 notes of 200 characters, chat text rules and rate
   limit, author or leader removal, report coverage.
 - **Handoffs.** Everything in §10.1's handoff bullets: eligibility
@@ -104,7 +105,8 @@ stay, applied to members who are online and present.
   30-day and crew-of-one dissolution on a fake clock.
 - Invitations: identity limits across characters, inbox of 10,
   decline-all, name claimed at acceptance, ignore indistinguishable to
-  the sender (same result, same slots, same refusal).
+  the sender (same result, same slots, same refusal), and withdrawal
+  gives the same result either way and frees the slots.
 - Handoffs: eligibility refusals, the two-offer limit whether or not
   delivered, escrow on offer, withdrawal and expiry return, deadline and
   expiry pause, fresh 60 minutes on acceptance, divided rewards with
