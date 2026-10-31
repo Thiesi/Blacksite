@@ -1,0 +1,54 @@
+name: A8 evidence export
+on:
+  push:
+    branches: ['evidence/a8-export-426b8c0']
+permissions:
+  actions: read
+  contents: read
+jobs:
+  export:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    strategy:
+      fail-fast: false
+      matrix:
+        artifact:
+          - p6-cpu-core-plaza-shipped
+          - p6-cpu-vatside-clinics-shipped
+          - p6-cpu-sodium-row-shipped
+          - p6-cpu-sodium-row-11
+          - p6-cpu-sodium-row-16
+          - p6-fixture-dark-80x24
+          - p6-fixture-light-80x24
+          - p6-fixture-dark-132x50
+          - p6-fixture-light-132x50
+    steps:
+      - uses: actions/download-artifact@v4
+        with:
+          name: ${{ matrix.artifact }}
+          path: evidence
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          repository: Thiesi/Blacksite
+          run-id: 41224964416
+      - name: Emit original capture text or compact numeric report
+        shell: python
+        run: |
+          import hashlib, json
+          from pathlib import Path
+          root = Path('evidence')
+          for path in sorted(root.rglob('*.txt')):
+              raw = path.read_bytes()
+              print('A8_EXPORT '+json.dumps(dict(kind='capture',path=path.relative_to(root).as_posix(),sha256=hashlib.sha256(raw).hexdigest(),text=raw.decode('utf-8')),ensure_ascii=True,separators=(',',':')))
+          for path in sorted(root.rglob('p6-cpu.json')):
+              raw = path.read_bytes()
+              report = json.loads(raw)
+              keep = {k:v for k,v in report.items() if k != 'cases'}
+              keep['cases'] = []
+              for case in report['cases']:
+                  row = {k:v for k,v in case.items() if k != 'arms'}
+                  row['arms'] = {}
+                  for name, arm in case['arms'].items():
+                      frames = arm['frames']
+                      row['arms'][name] = dict(cpu_s_per_hour=arm['cpu_s_per_hour'],frames={k:v for k,v in frames.items() if k != 'samples'})
+                  keep['cases'].append(row)
+              print('A8_EXPORT '+json.dumps(dict(kind='cpu',sha256=hashlib.sha256(raw).hexdigest(),report=keep),ensure_ascii=True,separators=(',',':')))
