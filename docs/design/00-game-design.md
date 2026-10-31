@@ -1063,8 +1063,11 @@ applies; an enabled lamp nearby does not offset it.
   by a reserver standing in the Yards or the Dynamo Hall, and it takes
   effect only if at least one member of the frozen roster is in the
   Yards or the hall when the repair completes; otherwise the common
-  allocation applies. Nobody can darken the Yards for others from a
-  distance.
+  allocation applies. The disclosure shown before the roster joins
+  states this condition, so the fallback is never a surprise. Nobody
+  can darken the Yards for others from a distance. A crew present in
+  the Yards may still use the dark for PvP; that is the accepted cost
+  of the reserve choice (bible section 14), bounded by the lit exits.
 - **The bench.** The workers' bench is a fabrication workshop for the
   workers only, at the ordinary quality rule plus 0.05, capped at 1.15
   and not stacking with Yard Relay.
@@ -1072,8 +1075,8 @@ applies; an enabled lamp nearby does not offset it.
   goes to the Wardens in section 9.3's `propagate` mode, as for any
   Wardens reward. Under section 7.2, with the standard +5, the
   Wardens' opponents, Sable and the Unmoored, each change by -2, and
-  its allies, Kestrel and the Compact, by +2 (halves rounded toward
-  zero).
+  its allies, Kestrel and (once built, #90) the Compact, by +2 (halves
+  rounded toward zero).
 - **Return route.** The safe return route is the cable trench, an exit
   neighbourhood; the brownout never darkens the trench or the hall.
 
