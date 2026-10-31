@@ -1,0 +1,116 @@
+{
+  "schema": 1,
+  "themes": {
+    "core-street": {
+      "ground_bg": "ground_core_street",
+      "ground_fg": "grain_core_street",
+      "wall_bg": "wall_core_street",
+      "wall_fg": "wallgrain_core_street",
+      "texture": "·   ∙    ",
+      "luma": "dark"
+    },
+    "core-paving": {
+      "ground_bg": "ground_core_paving",
+      "ground_fg": "grain_core_paving",
+      "texture": "∙·",
+      "pattern": "rings",
+      "luma": "dark"
+    },
+    "core-rim": {
+      "ground_bg": "ground_core_rim",
+      "ground_fg": "grain_core_rim",
+      "texture": "·",
+      "luma": "dark"
+    },
+    "core-lamp": {
+      "ground_bg": "ground_core_lamp",
+      "ground_fg": "grain_core_lamp",
+      "texture": "·∙ ",
+      "luma": "dark"
+    },
+    "core-water": {
+      "ground_bg": "ground_core_water",
+      "ground_fg": "grain_core_water",
+      "texture": "·",
+      "luma": "dark"
+    },
+    "core-lane": {
+      "ground_bg": "ground_core_lane",
+      "ground_fg": "grain_core_lane",
+      "texture": "·   ",
+      "luma": "dark"
+    },
+    "vat-street": {
+      "ground_bg": "ground_vat_street",
+      "ground_fg": "grain_vat_street",
+      "wall_bg": "wall_vat_street",
+      "wall_fg": "wallgrain_vat_street",
+      "texture": "·    ",
+      "luma": "dark"
+    },
+    "vat-boulevard": {
+      "ground_bg": "ground_vat_boulevard",
+      "ground_fg": "grain_vat_boulevard",
+      "texture": "·  ∙  ",
+      "luma": "dark"
+    },
+    "vat-facade": {
+      "wall_bg": "wall_vat_facade",
+      "wall_fg": "wallgrain_vat_facade",
+      "texture": "·",
+      "luma": "dark"
+    },
+    "vat-interior": {
+      "ground_bg": "ground_vat_interior",
+      "ground_fg": "grain_vat_interior",
+      "wall_bg": "wall_vat_interior",
+      "wall_fg": "wallgrain_vat_interior",
+      "texture": "   ·",
+      "luma": "dark"
+    },
+    "vat-alley": {
+      "ground_bg": "ground_vat_alley",
+      "ground_fg": "grain_vat_alley",
+      "texture": "· , `  ",
+      "luma": "dark"
+    },
+    "vat-yard": {
+      "ground_bg": "ground_vat_yard",
+      "ground_fg": "grain_vat_yard",
+      "texture": "·   ",
+      "luma": "dark"
+    },
+    "sodium-street": {
+      "ground_bg": "ground_sodium_street",
+      "ground_fg": "grain_sodium_street",
+      "wall_bg": "wall_sodium_street",
+      "wall_fg": "wallgrain_sodium_street",
+      "texture": "·  , ·  ",
+      "luma": "dark"
+    },
+    "sodium-lamp": {
+      "ground_bg": "ground_sodium_lamp",
+      "ground_fg": "grain_sodium_lamp",
+      "texture": "·∙ · ",
+      "luma": "dark"
+    },
+    "sodium-door-pink": {
+      "ground_bg": "ground_sodium_door_pink",
+      "ground_fg": "grain_sodium_door_pink",
+      "texture": "· ∙",
+      "luma": "dark"
+    },
+    "sodium-door-teal": {
+      "ground_bg": "ground_sodium_door_teal",
+      "ground_fg": "grain_sodium_door_teal",
+      "texture": "· ∙",
+      "luma": "dark"
+    },
+    "sodium-stage": {
+      "ground_bg": "ground_sodium_stage",
+      "ground_fg": "grain_sodium_stage",
+      "texture": "·∙ ",
+      "luma": "dark"
+    }
+  }
+}
