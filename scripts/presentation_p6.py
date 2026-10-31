@@ -71,9 +71,11 @@ class WireCaller(Caller):
     """Observe actual headless transport frames outside the CPU boundary."""
 
     def __init__(self, content: ContentTree, width: int, height: int, tier: str, zone: str, *,
-                 presentation: bool = False, fully_known: bool = False) -> None:
+                 presentation: bool = False, fully_known: bool = False,
+                 start: tuple[int, int] | None = None) -> None:
         self.wire: list[dict[str, Any]] = []
-        super().__init__(content, width, height, tier, zone, presentation=presentation, fully_known=fully_known)
+        super().__init__(content, width, height, tier, zone, presentation=presentation,
+                         fully_known=fully_known, start=start)
 
     def drain(self, now: float) -> None:
         for frame in self.game.frames_for(self.client):
@@ -93,8 +95,9 @@ class WireCaller(Caller):
 
 
 def wire_walk(content: ContentTree, width: int, height: int, tier: str, fully_known: bool = False,
-              *, large_ring: bool = False) -> dict[str, Any]:
-    caller = WireCaller(content,width,height,tier,'sodium-row',presentation=True,fully_known=fully_known)
+              *, large_ring: bool = False, zone: str = 'sodium-row',
+              start: tuple[int, int] | None = None) -> dict[str, Any]:
+    caller = WireCaller(content,width,height,tier,zone,presentation=True,fully_known=fully_known,start=start)
     first = next(sample['look_bytes'] for sample in caller.wire if sample['kind']=='view' and sample['look_bytes'])
     if large_ring:
         assert any(region.get('circle') == [40,24,14] for region in caller.display.body['looks']['regions'])

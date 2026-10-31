@@ -1,0 +1,98 @@
+name: P6b shipped places acceptance
+
+on:
+  pull_request:
+    paths:
+      - 'src/blacksite/**'
+      - 'tests/**'
+      - 'scripts/accept_p6b_netbbs.py'
+      - 'scripts/accept_p5_netbbs.py'
+      - 'scripts/accept_s10_netbbs.py'
+      - 'scripts/presentation_p6*.py'
+      - '.github/workflows/p6b-acceptance.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: p6b-acceptance-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  shipped-budget:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    strategy:
+      fail-fast: false
+      matrix:
+        zone: ['core-plaza', 'vatside-clinics', 'sodium-row']
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
+          fetch-depth: 0
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - run: python -m pip install -e .[test]
+      - name: List only assigned goldens and the candidate charting fingerprint
+        run: python scripts/presentation_p6b_changes.py --output "${{ runner.temp }}/b3-changes.json"
+      - name: Measure the shipped zone using unchanged P1 activities
+        run: python scripts/presentation_p6b.py --zone '${{ matrix.zone }}' --output "${{ runner.temp }}/b2-budget.json"
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: p6b-budget-${{ matrix.zone }}
+          path: |
+            ${{ runner.temp }}/b2-budget.json
+            ${{ runner.temp }}/b3-changes.json
+
+  native-walk:
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - {size: '80x24', tier: '16'}
+          - {size: '80x24', tier: '256'}
+          - {size: '132x50', tier: '16'}
+          - {size: '132x50', tier: '256'}
+          - {size: '132x50', tier: 'truecolor'}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - uses: actions/checkout@v4
+        with:
+          repository: Thiesi/NetBBS
+          ref: v7.45.0
+          path: .test-tmp/netbbs
+      - name: Install released NetBBS and an isolated source-matched wheel
+        shell: bash
+        run: |
+          python -m pip install './.test-tmp/netbbs[ssh,web]'
+          python -m pip wheel --no-deps . -w "$RUNNER_TEMP/p6b-wheels"
+          python -m venv "$RUNNER_TEMP/p6b-venv"
+          "$RUNNER_TEMP/p6b-venv/bin/python" -m pip install "$RUNNER_TEMP"/p6b-wheels/*.whl
+      - name: Walk the shipped places through a real PTY and native door
+        shell: bash
+        run: |
+          size='${{ matrix.size }}'
+          columns="${size%x*}"
+          rows="${size#*x}"
+          script -q -e -c "stty cols $columns rows $rows; python scripts/accept_p6b_netbbs.py --root '$RUNNER_TEMP/p6b-proof' --door-python '$RUNNER_TEMP/p6b-venv/bin/python' --size '$size' --tier '${{ matrix.tier }}' --show" "$RUNNER_TEMP/p6b-console.ans"
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: p6b-native-${{ matrix.size }}-${{ matrix.tier }}
+          path: |
+            ${{ runner.temp }}/p6b-proof/*.ans
+            ${{ runner.temp }}/p6b-proof/*.txt
+            ${{ runner.temp }}/p6b-proof/*.json
+            ${{ runner.temp }}/p6b-proof/progress.log
+            ${{ runner.temp }}/p6b-console.ans
