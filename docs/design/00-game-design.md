@@ -1726,7 +1726,10 @@ Values are initial, tuned at the pacing gate.
     complete a stage, abandon the job or use its stage-bound items,
     which are held in escrow. The holder may withdraw the offer.
     Acceptance moves the job and its items together; withdrawal or
-    expiry returns both to the holder unchanged.
+    expiry returns both to the holder unchanged. Escrowed items that
+    no longer fit the holder's inventory go to a free collection at any
+    Kestrel branch, as a returned dead drop does (section 11.1), bound
+    items included; nothing is ever destroyed.
   - **Stage deadlines.** Stage deadlines pause while an offer is open,
     like the 60-minute expiry; the offer window is bounded, so a pause
     lasts at most 24 hours. The offer view shows the receiver each
