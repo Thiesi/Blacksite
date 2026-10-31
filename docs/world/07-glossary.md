@@ -129,6 +129,8 @@ each season's outcome. (bible §11, design §13)
 
 **Civic Pattern** — Warden standard issue; Halvard designs in blue. (catalog)
 
+**Clause, the** — Sodium Row's bar for Wakes, strays and Ferrymen in town; regulars tally days on its sign. (gazetteer)
+
 **Clearwell** — The Wardens' water core at the Intake, installed by Halvard after the Dry Eleven; controls the catwalk sluice and the wash-down. (Lattice)
 
 **Cloister, the** — The Choir's whitewashed cloister between two Chapel Ward towers, where anyone may sleep. (gazetteer)
@@ -438,6 +440,8 @@ went up and the factions formed. (bible §3.3)
 **The Long Sled** — Bram's salvage sled, and by extension the Ferrymen's
 first-ring salvage crews. (personae)
 
+**The Long Shift** — Sodium Row's Kestrel bar; drivers and depot crews. (gazetteer)
+
 **The Long Stair** — the stair from Tramyard Market to the Rim. (gazetteer)
 
 **"looked after"** — Sable term for a door under protection. (found texts)
@@ -528,6 +532,8 @@ one unsecured item per day. (design §6.4, §8.7)
 loader, key, stealth or utility. (design §6.3)
 
 **Quaye, Sergeant Ama** — Warden recruiter. (factions)
+
+**Quarter Tone, the** — Sodium Row's Choir bar, where the music is kept low. (gazetteer)
 
 **Quell, Mother Serafine** — Hierophant of the Ninefold Choir. (bible
 §8.2)
@@ -675,6 +681,8 @@ stays in the world sixty seconds. (design §2)
 **Sodium Row** — Entertainment district and neutral ground, enforced by
 Red Sable. Home of the Tin Halo. (bible §4.3)
 
+**Spare Parts** — Sodium Row's Unmoored bar at the Old Works end, with a public terminal. (gazetteer)
+
 **Spire, the** — Halvard's arcology over the sealed shaft; a safe zone
 under corporate law. (bible §4.1)
 
@@ -754,6 +762,8 @@ unexplained behaviour. (story arcs)
 **uplink cell** — a gated cell joining two sectors without jacking out. (lattice)
 
 **The Uplink Hall** — Blacksite Level 2: where the Year 0 severance was done by hand. (story arcs)
+
+**Upstairs** — Sodium Row's bar nearest the Neon Stair; Halvard and Sablier staff. (gazetteer)
 
 **Vael, Petra** — Halvard recruiter. (factions)
 

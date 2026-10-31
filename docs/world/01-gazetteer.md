@@ -1257,13 +1257,13 @@ number is the whole point.
 - **Relays:** none, by agreement. The agreement is enforced by Sable
   enforcers who attack anyone who attacks anyone.
 - **Terminals:** three public terminals.
-- **Vendors / anchors:** bars (drinks: cheap consumables with a small
-  shock reduction), a drug dealer (street drugs, unlicensed), a ticket
-  tout (convoy passage, Scour rides), emote anchors (a stage, a card
-  table).
+- **Vendors / anchors:** five bars (drinks: cheap consumables with a
+  small shock reduction; see "The bars" below), a drug dealer (street
+  drugs, unlicensed), a ticket tout (convoy passage, Scour rides), emote
+  anchors (a stage, a card table).
 - **Spawners:** Sable enforcers (guard, aggro on any attacker), crowds,
   Warden plainclothes (talkers, pickpocket detection), every faction's
-  off-duty members (talkers, gossip).
+  off-duty members (talkers, gossip), each crowd in its own bar.
 
 The one street where everyone pretends. Orange lamps, wet pavement,
 music from six doorways at once, and the unwritten rule that nobody
@@ -1272,6 +1272,26 @@ anywhere else. Fixers work here. Deals get made in the doorways and
 unmade in the alleys behind, and the Tin Halo's sign at the end of the
 street has been half burnt out for so long that "Tin Hal" is what people
 call it.
+
+**The bars.** Five bars open onto the street, and with the Halo they
+are the six doorways. Nobody owns a bar's crowd; each crowd drinks
+where it always has, by custom. The order runs from respectable at the
+foot of the Neon Stair to rough at the Old Works end, so a walk down
+the Row reads the city's politics. There is no Warden bar, because the
+Wardens drink here only in plain clothes, and no Sable bar, because
+Sable plays cards at the court, sells in the alley and watches.
+
+| Bar | Crowd by custom | What it is like |
+|---|---|---|
+| **Upstairs** | Halvard and Sablier staff | nearest the Stair, the shortest walk back to safety; steady light, expensive glass |
+| **The Long Shift** | Kestrel drivers and depot crews | loud and cheap, full at every shift change |
+| **The Quarter Tone** | the Choir and Cantors | music kept low; Mira Solenne's best customers |
+| **The Clause** | Wakes, strays, Ferrymen in town | chalked prices; regulars tally days on the sign and drink to day ninety |
+| **Spare Parts** | Unmoored runners | at the Old Works end; a public terminal behind the counter |
+
+A bar's prices follow the drinker's standing with its crowd's faction.
+Members of a faction are welcome anywhere on the Row, and quieter in
+some doorways than in others.
 
 ```
 ##################################
