@@ -12,6 +12,8 @@ on:
       - 'scripts/presentation_p6_packet.py'
       - 'scripts/p6_golden_diff.py'
       - 'scripts/p6_cell_diff.py'
+      - 'scripts/p6_camera_diff.py'
+      - 'scripts/presentation_p6_camera.py'
       - '.github/workflows/p6-acceptance.yml'
   workflow_dispatch:
 
@@ -23,6 +25,29 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
+  camera-budget:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
+          fetch-depth: 0
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - run: python -m pip install -e .[test]
+      - name: Compare A7 origins using the unchanged B2 frame method
+        shell: bash
+        run: |
+          git fetch --no-tags origin 0c4b19db5152c159601fafe63d55743549cc2474
+          python scripts/presentation_p6_camera.py --output "$RUNNER_TEMP/p6-camera-budget.json"
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: p6-camera-budget
+          path: ${{ runner.temp }}/p6-camera-budget.json
+
   charted-budget:
     runs-on: ubuntu-latest
     timeout-minutes: 35
@@ -40,11 +65,10 @@ jobs:
         run: |
           if test -f src/blacksite/content/looks/core-plaza.json; then
             # B3 supersedes P6a's HERE-only exception for six P5 zone
-            # snapshots; every other golden stays at merged A6.
+            # snapshots; every other golden stays at owner-merged A7.
             python scripts/presentation_p6b_changes.py --output "$RUNNER_TEMP/p6-b3-changes.json"
           else
-            python scripts/p6_golden_diff.py --output "$RUNNER_TEMP/p6-here-row-diff.json"
-            python scripts/p6_cell_diff.py --output "$RUNNER_TEMP/p6-cell-diff.json"
+            python scripts/p6_camera_diff.py --output "$RUNNER_TEMP/p6-camera-cell-diff.json"
           fi
       - name: Measure supplied Plaza and Sodium Row region geometry
         run: python scripts/presentation_p6_masks.py --output "${{ runner.temp }}/p6-mask-geometry.json"
@@ -61,8 +85,7 @@ jobs:
           name: p6-charted-budget
           path: |
             ${{ runner.temp }}/p6-charted-budget.json
-            ${{ runner.temp }}/p6-here-row-diff.json
-            ${{ runner.temp }}/p6-cell-diff.json
+            ${{ runner.temp }}/p6-camera-cell-diff.json
             ${{ runner.temp }}/p6-mask-geometry.json
             ${{ runner.temp }}/p6-validation.json
             ${{ runner.temp }}/p6-b3-changes.json

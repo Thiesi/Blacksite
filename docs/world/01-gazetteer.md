@@ -37,6 +37,7 @@ migration.
 | `chapel-cloister` | The Cloister (planned, #119) | Chapel Ward | pocket | Choir | 50 × 30 |
 | `oldworks-main` | Contractor Street | Old Works | contested | Unmoored | 110 × 34 |
 | `oldworks-yards` | Fabrication Yards | Old Works | contested | Unmoored | 100 × 50 |
+| `oldworks-dynamo-hall` | The Dynamo Hall (planned, #119) | Old Works | contested | Unmoored | 80 × 40 |
 | `oldworks-drop` | The Drop | Old Works | pocket | Unmoored | 40 × 20 |
 | `terraces-blocks` | Block Street | The Terraces | contested | neutral | 120 × 40 |
 | `terraces-lobby` | Residence Lobby | The Terraces | pocket | neutral | 40 × 24 |
@@ -62,9 +63,10 @@ migration.
 | `scour-ring-4` | Far Ring | The Scour | open | none | 200 × 100 |
 | `blacksite-l1` | Blacksite Level One | The Blacksite | instanced | none | see story arcs |
 
-Forty-six zone templates: four of them Warmwater's, planned (#90),
+Forty-seven zone templates: four of them Warmwater's, planned (#90),
 four the Intake's (three planned in #101 and the Fungal Halls, planned
-in #119), and the Wallwalk, the Assay Floor and the Cloister, all planned
+in #119), and the Wallwalk, the Assay Floor, the Cloister and the Dynamo
+Hall, all planned
 (#119).
 Instancing is separate from safety;
 `blacksite-l1` has open mission areas and a protected decision room.
@@ -184,6 +186,7 @@ Zones on the same spot are stacked; the map shows a stack as one place.
 | `oldworks-main` | 62, 68 | the freight siding runs north-east to the depots |
 | `oldworks-drop` | 57, 74 | hidden: drawn only once found |
 | `oldworks-yards` | 68, 78 | |
+| `oldworks-dynamo-hall` | 72, 73 | planned (#119); beside the Yards, at the end of the cable trench |
 | `sink-rim` | 75, 56 | the north lip |
 | `sink-terraces` | 78, 63 | |
 | `sink-floor` | 77, 68 | |
@@ -1068,9 +1071,10 @@ as they need it, an anarchist.
 - **Class:** contested. **Lean:** Unmoored. **Size:** 100 × 50.
   **Sight:** 7.
 - **Exits:** `oldworks-main` (street); `sink-terraces` (tunnel,
-  Sable-tolled); `under-service` (a collapsed floor; a ladder, unlocked).
-- **Relays:** **Yard Relay** (controls the yard power; holders'
-  fabrication quality +0.05, capped 1.15).
+  Sable-tolled); `under-service` (a collapsed floor; a ladder, unlocked);
+  `oldworks-dynamo-hall` (the cable trench; planned, #119).
+- **Relays:** **Yard Relay** (the yard's fabrication rig; holders'
+  fabrication quality +0.05, capped 1.15; it controls no lights).
 - **Terminals:** one hardware terminal (Foundry core, tier 3; controls the
   gantry and the yard lights).
 - **Vendors / anchors:** the fabrication workshop (public workshop, the
@@ -1096,6 +1100,47 @@ are building something.
 #..!!!!......[foundry]...........$.......#
 #..!!!!.............................>....#  > ladder to under-service
 ##########################################
+```
+
+### `oldworks-dynamo-hall` — The Dynamo Hall
+
+- **Status:** planned (#119). Canon only until a Stage 2 slice builds it.
+- **Class:** contested. **Lean:** Unmoored. **Size:** 80 × 40.
+  **Sight:** 6 (work lamps on the gallery; the generator floor is dark).
+- **Exits:** `oldworks-yards` (the cable trench).
+- **Relays:** none. The hall is the Grid service's location (design
+  §7.5, planned).
+- **Terminals:** one public terminal. The hall governor is a Foundry
+  control (Lattice §3.7).
+- **Vendors / anchors:** Wyn Calloway, Civic grid engineer (the Grid
+  work-order handler; Wardens); the workers' bench on the gallery (a
+  fabrication workshop open only to a Grid reserve allocation's
+  workers, design §7.5); the gallery and the heat wall (emote
+  anchors; the squatters sleep against the heat wall).
+- **Spawners:** Civic engineers (talkers), Unmoored runners (guard, as
+  in the Yards), squatters living off the hall's heat (talkers), cable
+  thieves after dark (hostile). Steam vents are hazard tiles on a
+  schedule, like the Boilerhouse's.
+
+The contractor town's generator hall, built to light a five-year job
+and never turned off. Six machines the size of houses turn in a long
+hall under a gallery of gauges, and the floor between them is warm,
+dark and loud. Half the south takes its street lamps from here, and so
+do the Yards, through cables the Unmoored ran forty years ago and the
+Civic Authority pretends not to see. Wyn Calloway keeps the machines
+turning for the Authority from the gallery. The Unmoored keep her
+company, because the alternative is a Halvard crew. When the governor
+slips, the Yards go dark, and somebody has to decide what the spare
+load runs before the lights come back.
+
+```
+##############################
+#>.....[gallery].....T.......#  > the cable trench (yards) / T terminal
+#..[gen]..[gen]..[gen]..!!...#  ! steam vents (hazard, on a schedule)
+#............................#
+#..[gen]..[gen]..[gen].......#
+#..$....%%.....[heat wall]...#  $ Wyn Calloway
+##############################
 ```
 
 ### `oldworks-drop` — The Drop

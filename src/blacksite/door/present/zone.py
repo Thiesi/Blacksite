@@ -40,19 +40,15 @@ def _beside(ids: list[list[str]], x: int, y: int, wanted: frozenset[str]) -> boo
 
 
 def origin(body: dict[str, Any], layout: Layout) -> tuple[int, int]:
-    """Translate the disclosed viewport once; small axes centre on you.
+    """Centre fitting axes once; keep the server's crop on larger axes.
 
-    Full-size axes keep the server's crop. No camera, focus or world
-    coordinate is changed, and every map layer shares this translation.
+    UI section 2: the server camera already owns the four-tile scroll
+    margin and edge clamps. A fitting zone stays still while you walk.
+    Every map layer shares this translation; disclosure stays unchanged.
     """
     area, vp = layout.viewport, body['viewport']
-    me = next((entry for entry in body.get('actors', []) if entry.get('role') == 'player_self'), None)
-    x, y = area.x, area.y
-    if vp['w'] < area.width:
-        x += area.width // 2 - (me['x'] - vp['x']) if me else (area.width - vp['w']) // 2
-    if vp['h'] < area.height:
-        y += area.height // 2 - (me['y'] - vp['y']) if me else (area.height - vp['h']) // 2
-    return x, y
+    return (area.x + max(0, (area.width - vp['w']) // 2),
+            area.y + max(0, (area.height - vp['h']) // 2))
 
 
 def terrain(buffer: CellBuffer, body: dict[str, Any], layout: Layout, paint: Paint,

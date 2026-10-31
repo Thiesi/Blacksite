@@ -41,6 +41,8 @@ ability. (bible §8.1, design §3.2)
 **Attributes** — Frame, Nerve, Cortex, Resonance, Vitals; 1 to 100,
 raised through skill lines and grade. (design §3.1)
 
+**Away report** — The one-screen summary of public events and things addressed to you, shown at login after an hour away. (design §11.1, planned)
+
 **Balance weight** — the probability adjustment applied to CUST/TEN- tagged
 lines by the season's Custodian/Tenant balance. (personae)
 
@@ -91,6 +93,8 @@ nineteen years by any means. (bible §8.2)
 (design §6.1)
 
 **Cable Boss** — Red Sable title held by Yusra Demir. (factions)
+
+**Calloway, Wyn** — Civic grid engineer at the Dynamo Hall; handles the Grid work order. (gazetteer)
 
 **Cantillations** — Choir program items for the rig. (factions)
 
@@ -195,6 +199,8 @@ objectives, season contributions. (design §6.2)
 
 **Day count** — the Wake's running tally toward day ninety, shown by Sablier staff. (personae)
 
+**Dead drop (player)** — One item stack left at an authored drop object for one named character; uncollected after 7 days, it returns to the sender as a free Kestrel collection. (design §11.1, planned)
+
 **Deep** — Unmoored +90 rank. (factions)
 
 **Demir, Yusra** — Red Sable's Cable Boss. (factions)
@@ -244,6 +250,8 @@ Foot** — Undercity zones below the Service Level. (gazetteer)
 **Dry Eleven, the** — Year 11: eleven days with the treatment works run by hand, after its first controller failed. (bible §3.3)
 
 **Dunmore, Hester** — Forewoman of the Fungal Halls; Civic contract giver for bed repair, extractor and cart-escort jobs. (gazetteer)
+
+**Dynamo Hall, the** — The Old Works generator hall, built for a five-year job and never turned off; the Grid service's location. (gazetteer)
 
 **Evasion** — Nerve / 2 plus cover; subtracted from to-hit. (design §3.1)
 
@@ -303,6 +311,8 @@ gives grade points and Vitals. (design §3.4)
 
 **Grade points** — Spent on skill lines; three per grade. (design §3.3)
 
+**Grid** — The planned public service run from the Dynamo Hall; its brownout darkens the Fabrication Yards. (design §7.5)
+
 **Halvard Ordnance / Ostrom Optical** — Halvard subsidiaries that make weapons and optics. (catalog)
 
 **Halvard, Director Anselm** — Grandson of the founder; believes the
@@ -310,6 +320,8 @@ concrete over the shaft keeps Karst alive. (bible §8.2)
 
 **Halvard-Ostrom Dynamics** — The corporate-military contractor that built
 Site Zero and now holds the Spire. (bible §3.1, §7)
+
+**Handoff** — Passing a generated job, with its completed stages, to a crew member who carries it on later. (design §10.1, planned)
 
 **Hardline** — Archetype decanted from a Site Zero security template;
 heavy frame, heavy weapons. (bible §8.1)
@@ -687,6 +699,8 @@ ration issue, usually to the Sink. (found texts)
 **The Sump** — the drain gallery at the bottom of the Sink; entrance to the caverns. (gazetteer)
 
 **Sweeper** — a deep-Silt cleanup process of disputed origin. (lattice)
+
+**Tag** — A player's mark on a contested or open tile, drawn with the one fixed tag glyph, with short text whose start shows in HERE. (design §11.1, planned)
 
 **Talker** — an NPC dialogue record; a line and offers, never a tree. (personae)
 

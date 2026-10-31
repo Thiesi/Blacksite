@@ -1,0 +1,9 @@
+{
+  "execution_head": "9b82a175aace457c95c8e071e109e7d11af9b8f0",
+  "native_cases": 12,
+  "captures_replayed": 48,
+  "committed_text_captures": 28,
+  "sha256_checks": "all result-manifest files matched",
+  "human_approval": false,
+  "presentation_signoff": false
+}

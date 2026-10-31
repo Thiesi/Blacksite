@@ -13,16 +13,50 @@ import platform
 import subprocess
 import sys
 from typing import Any
+from unittest.mock import patch
 
 ROOT = Path(__file__).resolve().parents[1]
 sys.path[:0] = [str(ROOT/'src'), str(ROOT), str(ROOT/'scripts')]
 
 from blacksite.content.loader import ContentTree, load_content
+from blacksite.door.present import zone
 from presentation_p6 import wire_walk
+from presentation_p6_validation import module
 from tests.presentation.budget import MIX, activity, frames, hourly
 
 ZONES = ('core-plaza', 'vatside-clinics', 'sodium-row')
 REFERENCE = ROOT/'tests/presentation/p6b-p5-reference.json'
+ORIGIN_BASE = 'fd4020e7eaa413301145eca969333f2239a6cfcf'
+
+
+def origin_control(content: ContentTree, zid: str, start: tuple[int, int],
+                   size: tuple[int, int], tier: str, seconds: float,
+                   current: dict[str, Any]) -> dict[str, Any]:
+    """Isolate origin policy on identical shipped data, not historical P5.
+
+    Only the old origin function is substituted. Both arms use the P1
+    activity/meter unchanged, with the same NPCs, knowledge and seeds.
+    This isolates the combined clipping/caching policy; it does not
+    separately attribute those two effects or explain every P5 change.
+    """
+    source = subprocess.check_output(
+        ['git', 'show', f'{ORIGIN_BASE}:src/blacksite/door/present/zone.py'], cwd=ROOT)
+    old = module('_b2_origin_control', source).origin
+    with patch.object(zone, 'origin', old):
+        activities = {what: activity(content, *size, tier, what, seconds,
+                                    presentation=True, fully_known=True,
+                                    zone=zid, start=start) for what in MIX}
+    keys = ('initial_view', 'final_view', 'successful_moves', 'ticks', 'key_steps')
+    matched = all(activities[what][key] == current['activities'][what][key]
+                  for what in MIX for key in keys)
+    before, after = hourly(activities), current['cpu_s_per_hour']
+    return {'baseline_origin_ref': ORIGIN_BASE, 'only_origin_replaced': True,
+            'matched_workloads': matched, 'baseline_activities': activities,
+            'old_moving_clipped_cpu_s_per_hour': before,
+            'a7_still_whole_cpu_s_per_hour': after,
+            'a7_minus_old_s_per_hour': after-before,
+            'causal_boundary': 'origin policy only; combined clipping and cache geometry effects; '
+                               'historical P5 has different content and is not this control'}
 
 
 def route(content: ContentTree, zid: str) -> tuple[int, int]:
@@ -63,12 +97,16 @@ def measure(content: ContentTree, bare: ContentTree, zid: str, start: tuple[int,
                'p5_final_cpu_s_per_hour': p5, 'difference_from_p5_s_per_hour': cpu-p5,
                'difference_from_p5_percent': (cpu/p5-1)*100,
                'p5_regression_requires_explanation': cpu > p5,
+               'cpu_at_or_above_108s_per_hour_finding': cpu >= .9*120,
                'paired_looks_cost_s_per_hour': cpu-arms['generic']['cpu_s_per_hour']}
     result = {'zone': zid, 'start': start, 'size': size, 'tier': tier, 'fully_known': known,
               'arms': arms, 'verdict': verdict, 'frame_budgets_pass': all(
                   arm['frames']['delta_16kib_pass'] and arm['frames']['render_p95_100ms_pass']
                   for arm in arms.values()),
               'wire': wire_walk(content, *size, tier, known, zone=zid, start=start)}
+    if size == (132, 50) and known:
+        result['origin_policy_control'] = origin_control(
+            content, zid, start, size, tier, seconds, arms['looks'])
     print(json.dumps({k: result[k] for k in ('zone', 'start', 'size', 'tier', 'fully_known', 'verdict')}), flush=True)
     return result
 

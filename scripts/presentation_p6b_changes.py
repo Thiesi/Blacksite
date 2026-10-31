@@ -20,15 +20,15 @@ from p6_cell_diff import cells
 from tests.presentation.mechanics import fingerprint
 from tests.presentation.snapshots import canonical
 
-BASE = 'fd4020e7eaa413301145eca969333f2239a6cfcf'
+BASE = '54adc53c6686eb5b2430f2e90cd457a09332b833'
 CONTENT = '0c4b19db5152c159601fafe63d55743549cc2474'
 ZONES = ('core-plaza', 'sodium-row', 'vatside-clinics')
 # Freeze this B3 exception at its reviewed candidates. A future rebaseline
 # needs an explicit update, rather than inheriting a six-file blank cheque.
 GOLDEN_SHA256 = {
-    '132x50_16': 'bc9036ad07cd7b3834bb954c9f0ba902361e01d04501c5896fa761e50ae4a60f',
-    '132x50_256': 'cdebe7bcac5a204f36497e2d7845fa9eafc369bc872e6826370675c7f760b1a9',
-    '132x50_truecolor': '50d95e5365963df54e22ec7929e886d07ebe2243408adb762c8c39c4876202c3',
+    '132x50_16': '7940fac0fb30fff556aea4659c4803cc9baf7097b356aa2f1d8fa09cbc5900e5',
+    '132x50_256': 'df410386b6ae60a42058adf3bb82435218bee1a210d2b23501ba8ec924e461df',
+    '132x50_truecolor': 'c2f7294131f68ec828161bedcb949340ff1a52d844be68a795eb978ec7bd8d59',
     '80x24_16': '72343d9bbf3fa68d9357d5f31c4ce6b3b8898957285bb05a69a576dd31a223da',
     '80x24_256': 'b0fd55109d9b3f7c96a9ca719afe6cbdab72996fcf57d47ccb809686d8b636ef',
     '80x24_truecolor': '44d5a7ab3fa6c371c74ab8c2a5635067e2f260a09f6101d2a7babdd91e41a91b',

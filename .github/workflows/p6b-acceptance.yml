@@ -54,9 +54,7 @@ jobs:
             ${{ runner.temp }}/b3-changes.json
 
   native-walk:
-    # Technical lead queue #82/6542565665: final B1 captures wait for
-    # the owner's A7 merge. Remove this explicit hold only after that merge.
-    if: ${{ false }}
+    # Owner merged A7 as 54adc53; queue #82/6544461526 unblocks B1.
     runs-on: ubuntu-latest
     timeout-minutes: 25
     strategy:

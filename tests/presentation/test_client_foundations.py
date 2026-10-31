@@ -333,7 +333,7 @@ def test_ui_2_5_notice_and_newest_protected_combat_both_remain_visible(content):
     assert 'A notice.' not in '\n'.join(rows[model.layout.log.y:model.layout.log.bottom])
 
 
-def test_ui_2_small_wake_hall_centres_on_the_player(content):
+def test_ui_2_small_wake_hall_centres_the_zone(content):
     width, height = 132, 50
     game = HeadlessServer(content, 'vatside-wake-hall')
     caller = game.connect(width=width, height=height)
@@ -345,7 +345,10 @@ def test_ui_2_small_wake_hall_centres_on_the_player(content):
     model.render(1)
     area, vp = model.layout.viewport, body['viewport']
     assert vp['w'] < area.width and vp['h'] < area.height
-    assert model.previous.cells[area.y + area.height // 2][area.x + area.width // 2].glyph == '@'
+    ox,oy = zone.origin(body,model.layout)
+    assert (ox-area.x,oy-area.y) == ((area.width-vp['w'])//2,(area.height-vp['h'])//2)
+    me = next(a for a in body['actors'] if a['role']=='player_self')
+    assert model.previous.cells[oy+me['y']-vp['y']][ox+me['x']-vp['x']].glyph == '@'
 
 
 @pytest.mark.parametrize('size', SIZES)

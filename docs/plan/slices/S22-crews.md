@@ -5,6 +5,10 @@
 **Depends on:** S09, S10, S13, S16 · **Milestone:** M4
 **Issue:** https://github.com/Thiesi/blacksite/issues/22
 
+Note: lasting crews (game design §10.1, planned, #125) supersede this
+slice's live-only crew rules once they are built; until then this slice
+stands as shipped.
+
 S18 housing permissions remain personal: crew membership, shared loot,
 scouting and beacons do not grant entry or storage/safe/terminal/bed
 access. Private room bodies and resident drones remain hidden from

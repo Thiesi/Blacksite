@@ -3,6 +3,7 @@
 import argparse
 import json
 from pathlib import Path
+import subprocess
 import sys
 from typing import Any
 
@@ -10,7 +11,7 @@ ROOT = Path(__file__).resolve().parents[1]
 sys.path[:0] = [str(ROOT/'src'), str(ROOT), str(ROOT/'scripts')]
 
 from scripts.presentation_p6_packet import digest, require, safe_filename, source_hash, verify_capture
-from scripts.presentation_p6b_changes import ALLOWED, ZONES
+from scripts.presentation_p6b_changes import ALLOWED, BASE, ZONES
 
 CONFIGS = (('80x24','16'), ('80x24','256'), ('132x50','16'),
            ('132x50','256'), ('132x50','truecolor'))
@@ -22,12 +23,15 @@ def build(root: Path, metadata: list[dict[str, Any]], run: int, head: str,
           source_tree: str, destination: Path) -> dict[str, Any]:
     require(not destination.exists(), 'preserve existing evidence; choose a new packet directory')
     expected_source = source_hash(head, source_tree)
+    require(subprocess.run(['git', 'merge-base', '--is-ancestor', BASE, head],
+                           cwd=ROOT, capture_output=True).returncode == 0,
+            'post-A7 packet requires merged A7 ancestry at the execution head')
     expected = {f'p6b-native-{size}-{tier}' for size,tier in CONFIGS}
     expected |= {f'p6b-budget-{zid}' for zid in ZONES}
     artifacts = {a['name']: a for a in metadata if a['name'].startswith('p6b-')}
     require(set(artifacts) == expected, 'expected five native and three budget artifacts')
     files: dict[str, bytes] = {}
-    records, budgets, provenance, incomplete = [], [], {}, []
+    records, budgets, profiles, provenance, incomplete = [], [], [], {}, []
     for name, artifact in artifacts.items():
         require(artifact.get('workflow_run', {}).get('head_sha') == head, f'{name}: artifact head mismatch')
         provenance[name] = {'id': artifact['id'], 'archive_digest': artifact['digest'],
@@ -72,6 +76,19 @@ def build(root: Path, metadata: list[dict[str, Any]], run: int, head: str,
                 f'{name}: B3 scope or owner gate mismatch')
         require(change_report is None or changes == change_report, 'B3 artifacts disagree')
         change_report = changes
+        profile = json.loads((directory/'b2-profile.json').read_text(encoding='utf-8'))
+        require(profile['head'] == head and profile['source_tree'] == source_tree
+                and profile['complete'] and profile['linux_timing_reference']
+                and not profile['dirty'] and len(profile['cases']) == 6,
+                f'{name}: complete clean Linux cold/warm profile required')
+        provenance[name]['profile_sha256'] = digest(directory/'b2-profile.json')
+        for case in profile['cases']:
+            require(case['zone'] == zid and case['size'] == [132, 50], f'{name}: profile case mismatch')
+            require([p['phase'] for p in case['phases']] == ['cold', 'warm']
+                    and case['phases'][0]['initial'] == case['phases'][1]['initial']
+                    and all(p['initial'] == p['final'] and p['successful_moves'] == 16
+                            for p in case['phases']), f'{name}: profile walk mismatch')
+            profiles.append({key: case[key] for key in ('zone', 'tier', 'fully_known', 'phases')})
         if not (directory/'b2-budget.json').exists():
             # The first B2 run asserted before its end-only report write.
             # Preserve the verified B1/B3 packet and label the missing B2
@@ -91,11 +108,15 @@ def build(root: Path, metadata: list[dict[str, Any]], run: int, head: str,
             row['frame_summary'] = {label: arm['frames']['summary'] for label,arm in case['arms'].items()}
             row['frame_budgets_pass'] = all(arm['frames']['delta_16kib_pass'] and arm['frames']['render_p95_100ms_pass']
                                            for arm in case['arms'].values())
+            if case.get('origin_policy_control'):
+                row['origin_policy_control'] = {key:value for key,value in case['origin_policy_control'].items()
+                                                if key != 'baseline_activities'}
             budgets.append(row)
     files['changes.json'] = (json.dumps(change_report,separators=(',',':'))+'\n').encode()
     budget_pass = not incomplete and len(budgets) == 27 and all(
         row['frame_budgets_pass'] and row['verdict']['cpu_120s_per_hour_pass'] for row in budgets)
-    files['performance.json'] = (json.dumps({'cases': budgets, 'incomplete_zones': incomplete,
+    files['performance.json'] = (json.dumps({'cases': budgets, 'cold_warm_profiles': profiles,
+        'incomplete_zones': incomplete,
         'budget_acceptance': False, 'all_numeric_targets_pass': budget_pass, 'cpu_policy':
         '120 s/h verdict recorded; every historical P5 increase requires explanation/review; '
         'different shipped maps/content, not a causal comparison'},separators=(',',':'))+'\n').encode()
@@ -107,7 +128,9 @@ def build(root: Path, metadata: list[dict[str, Any]], run: int, head: str,
                     'Budget: disclosed pose/knowledge, shipped population and seeded world, unchanged P1 meter.',
         'human_approval': False, 'fingerprint_approval': False, 'presentation_signoff': False,
         's25_layout_approval': False}
-    manifest['capture_stage'] = 'pre-A7 diagnostic; final Part B capture waits for owner A7 merge'
+    manifest['capture_stage'] = 'post-A7 engineering evidence; human and fingerprint gates ungranted'
+    manifest['merged_a7'] = BASE
+    manifest['native_walk_complete'] = len(records) == 25
     manifest['b1_acceptance'] = False
     manifest['budget_evidence_complete'] = not incomplete and len(budgets) == 27
     manifest['budget_acceptance'] = False
