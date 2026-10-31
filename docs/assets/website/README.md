@@ -2,8 +2,10 @@
 
 Three mockups of Blacksite at its highest fidelity: a 132x50 terminal in
 truecolor with Unicode glyphs, rendered at 2112x1600 (16x32 pixels per
-cell). Together they tell one evening in Sodium Row: the street, the bar
-you sit down in, and the Lattice you go down into from its chair.
+cell). Together they told one evening in Sodium Row: the street, the bar
+you sit down in, and the Lattice you go down into from its chair. Since
+#135 the website shows the Tin Halo and the Lattice with the maps of
+Karst below; the street screen stays here but is no longer on the site.
 
 They are mockups of the target presentation (issue #68), not captures of
 the shipped game. Each follows canon (terminal UI sections 2 and 3, the
