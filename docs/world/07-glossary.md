@@ -129,6 +129,8 @@ each season's outcome. (bible §11, design §13)
 
 **Clearwell** — The Wardens' water core at the Intake, installed by Halvard after the Dry Eleven; controls the catwalk sluice and the wash-down. (Lattice)
 
+**Cloister, the** — The Choir's whitewashed cloister between two Chapel Ward towers, where anyone may sleep. (gazetteer)
+
 **Clone debt** — The cost of dying: a share of chits on hand, a fee by
 grade, and a fade of XP. (design §5.4)
 
@@ -434,6 +436,8 @@ first-ring salvage crews. (personae)
 
 **"looked after"** — Sable term for a door under protection. (found texts)
 
+**Lune, Sister Agathe** — Keeper of the Cloister; gives Choir carry and care jobs. (gazetteer)
+
 **Maalouf, T.** — Halvard uplink engineer on shift the night of the
 Severance; author of the severance log; left Halvard in Year 1. (found
 texts)
@@ -455,6 +459,8 @@ from any terminal, with a Kestrel fee. (design §8.3)
 **Meatspace** — The physical city, as opposed to the Lattice. (design §1)
 
 **Meridian Plaza** — the Core's central plaza. (gazetteer)
+
+**Names wall, the** — The Cloister's wall of undated names; some are on Sablier's lease rolls and some on no roll. (gazetteer)
 
 **Native rig** — the built-in rig every Ghost is decanted with. (catalog)
 
