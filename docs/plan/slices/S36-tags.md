@@ -47,6 +47,9 @@ imitate a thing or an exit, and never reveals anything hidden.
 - **HERE and look.** HERE lists up to three tags, newest first, with
   the start of their text, under the same hidden-exit rule. Looking at
   a tag shows it whole.
+- **Retirement.** Retirement deletes the author's tag, through character retirement (the existing character-delete path in
+  `server/characters.py`, through its `before_delete` hook).
+  A later character who reuses the name starts with no tag.
 - **Ignore, report and admin.** A tag by an ignored author is never
   drawn or listed for the ignorer. Tags are covered by report. Admin
   CLI `tag list <zone>`, `tag remove`.
@@ -75,6 +78,8 @@ imitate a thing or an exit, and never reveals anything hidden.
 - The 10-minute limit, 3 per tile with the oldest replaced, 7-day
   expiry, replacement of one's own tag.
 - Ignore filter; report and admin removal.
+- Retirement deletes the tag; a character reusing the name is neither
+  shown as its author nor blocked by it.
 - Goldens at both sizes and three
   tiers.
 

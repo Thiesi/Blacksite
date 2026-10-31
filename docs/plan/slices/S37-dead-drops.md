@@ -33,8 +33,11 @@ transfer channel and never reveal an ignore or a retirement.
 
 - **Persistence.** A migration (numbered in merge order): drop (sender, sender
   identity, recipient, object, item instance, units, fee, left, state).
-  The free Kestrel collection record (returned drops and S34's
-  escrow), kept 30 days and then under §8.3's impound rules. Leaving,
+  A **name history** (name, first used), written at character
+  creation, backfilled from existing characters by the migration, and
+  never deleted at retirement: it is the only source for "a name that
+  has existed on the node". Returned and withdrawn drops use S34's free
+  Kestrel collection record; this slice adds no second one. Leaving,
   collecting, refusing and returning each commit immediately with the
   item transfer.
 - **Leaving.** At an authored dead-drop object, to any name that has
@@ -84,7 +87,8 @@ transfer channel and never reveal an ignore or a retirement.
 ## Tests
 
 - Same result for active, retired, ignoring and ordinary recipients;
-  refusal only for a never-used name.
+  refusal only for a never-used name. A retired, a deleted and a reused
+  name are all accepted alike, from the name history.
 - Limits: one outgoing per character, one per identity per 24 hours,
   10 units, market-accepted items only.
 - Fee arithmetic, rounding, the 1-chit floor, can't-pay refusal, never

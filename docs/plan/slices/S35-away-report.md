@@ -33,10 +33,14 @@ public logs already showed.
 
 - **Record store.** A migration (numbered in merge order): a typed, append-only
   table of public records and addressed records, keyed by character
-  for addressed ones. Writers: relay changes, public service repairs
-  with allocation and repairer, new Marks, convoy and Ring-fall
-  outcomes, crew deaths, the apartment-theft notice, and every S34
-  record. Each record is written in the same transaction as the
+  for addressed ones. This slice adds the writers for features already
+  built: relay changes (S21), new Marks (S20), convoy and Ring-fall
+  outcomes (S24), crew deaths, the apartment-theft notice (S18), and
+  every S34 record. Features built later add their own writer in their
+  own slice: public service repairs with allocation and repairer (the
+  Grid build slice), dead drops (S37), and anything else the report
+  canon lists. A missing writer means that kind is absent from the
+  report, never a wrong line. Each record is written in the same transaction as the
   receipt or public log line it mirrors. Records older than 14 days are
   pruned daily.
 - **Retirement re-keying.** At retirement, records naming the retired

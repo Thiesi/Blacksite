@@ -2,7 +2,7 @@
 
 **Status:** planned (approved by the owner 2026-10-31)
 **Primary model:** Codex · **Reviewer:** automated review, technical lead, presentation lead (views and wording)
-**Depends on:** S22, S19 · **Milestone:** asynchronous presence (#125)
+**Depends on:** S22, S19, S23 · **Milestone:** asynchronous presence (#125)
 **Issue:** filed on approval
 
 Canon: game design §10.1 (lasting crews, notes and handoffs), from #128.
@@ -68,8 +68,12 @@ stay, applied to members who are online and present.
 - **Dissolution and retirement.** Every route withdraws invitations
   and offers and returns offered jobs and items. Retirement ends
   membership. Escrowed items that no longer fit go to a free Kestrel
-  collection (shared with [S37](S37-dead-drops.md); if S37 is not yet
-  built, this slice adds the collection record it reuses).
+  collection. **This slice owns the free Kestrel collection record**
+  (item instance, owner, reason, kept-until date; 30 days, then S23's
+  impound rules) and its collection view at every Kestrel branch, built
+  on S23's market collection. [S37](S37-dead-drops.md) reuses it for
+  returned and withdrawn drops. Retirement hooks into character retirement (the existing character-delete path in
+  `server/characters.py`, through its `before_delete` hook).
 - **Admin CLI.** `crew list`, `crew show <name>`, `crew rename`,
   `crew dissolve`, `crew note remove`.
 - **Away-report records.** Emit a typed record for every event the away
