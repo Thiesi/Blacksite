@@ -1017,21 +1017,25 @@ revision and receipt, independent of crew leadership.
 | Cold Chain / `vatside-clinics` | elective surgery discount unavailable; carry power unit and verify thermal record | surgery service fee −10 % for visitors | surgery service fee −20 % for workers only |
 | Depot / `tramyard-depots` | surplus warehouse shut; carry manifest and release latch | surplus vendor buy-back budget ×2 for everyone | reserve surplus salvage cache for workers |
 | Relay Zero / `oldworks-main` | survey feed stale; reset hardware and calibrate in network | publish local core's current patrol route | workers receive temporary local gate credential |
-| Grid / `oldworks-dynamo-hall` (planned, #119) | brownout: the Yards' lights go out; carry a power unit to the hall and re-sync the hall governor in the network | the Yards' lights come back at once | the spare load runs a workers' bench in the hall, and the Yards stay dark for the 20 minutes |
+| Grid / `oldworks-dynamo-hall` (planned, #119) | brownout: the Yards' lights go out; carry a power unit to the hall and re-sync the hall governor in the network | the Yards' lights come back at once | the spare load runs a workers' bench in the hall, and the Yards stay dark for the allocation's 20 minutes from repair completion |
 
 Grid (planned, #119): the brownout turns off only the Yards' lights,
-the `yard lights` control's objects; sight there falls to the dark
-radius. The Dynamo Hall, pockets and safe zones keep their lights, and
+the `yard lights` control's objects; sight there falls to 5 tiles under
+section 6.4's switched-off lamp rule, and dark-sight equipment still
+applies. The Dynamo Hall, pockets and safe zones keep their lights, and
 nothing else changes. The brownout is the service's declared `fault`
 state, so a client may name it from that state and never infers it
 from darkness. The workers' bench is a fabrication workshop for the
 workers only, at the ordinary quality rule plus 0.05, capped at 1.15
 and not stacking with Yard Relay. The handler is a Civic engineer,
 so the standing reward goes to the Wardens in section 9.3's
-`propagate` mode, as for any Wardens reward: Unmoored standing falls by
-half that amount. While Grid is `fault` or `allocated`, the Foundry's
+`propagate` mode, as for any Wardens reward. The Wardens and the
+Unmoored are hostile (section 7.2), so with the standard +5 the
+Wardens' opponents, Sable and the Unmoored, each change by -2, and its
+allies, Kestrel and the Compact, by +2 (halves rounded toward zero). While Grid is `fault` or `allocated`, the Foundry's
 public `yard lights` control is suspended and cannot relight or darken
-the Yards; it resumes when the state ends, as Relay Zero's permit
+the Yards, and using it answers with the reason; it resumes when the
+state ends, as Relay Zero's permit
 states its relation to the ordinary control. Yard Relay's effect is
 its fabrication modifier only; it controls no lights, so no relay
 holder can relight or darken the Yards in any Grid state. The safe
