@@ -5,6 +5,7 @@ the current view. Optional looks dress that ground; missing looks retain
 the P5 tile drawing. Geometry and focus remain their shared contracts.
 """
 
+import json
 from typing import Any
 
 from blacksite.door.cells import CellBuffer, clean_text, display_width, truncate
@@ -60,40 +61,93 @@ def terrain(buffer: CellBuffer, body: dict[str, Any], layout: Layout, paint: Pai
     charted = body.get('charted', [])
     places = for_frame(paint, body)
     target = buffer
+    hazards = frozenset(tuple(tile) for hazard in body.get('hazards', []) for tile in hazard.get('tiles', []))
+    changed_rows: set[int] | None = None
+    reuse_topology = False
     if places:
         geometry = (buffer.width, buffer.height, ox, oy, area.x, area.y, area.width, area.height)
         if places.terrain_geometry != geometry:
             places.terrain_buffer = CellBuffer(buffer.width, buffer.height)
             places.terrain_states.clear()
+            places.terrain_rows = ()
+            places.terrain_indices.clear()
+            places.terrain_ids.clear()
             places.terrain_geometry = geometry
         target = places.terrain_buffer
-    hazards = {tuple(tile) for hazard in body.get('hazards', []) for tile in hazard.get('tiles', [])}
+        # Keep value snapshots: protocol bodies may reuse or mutate lists.
+        # A row also depends on its two neighbours (roof/wall edges).
+        rows = tuple((tuple(row), tuple(memory[y]) if y < len(memory) else (),
+                      tuple(charted[y]) if y < len(charted) else ())
+                     for y, row in enumerate(grid))
+        legend_key = json.dumps(legend, sort_keys=True, separators=(',', ':'))
+        if places.terrain_legend != legend_key:
+            places.terrain_states.clear()
+            places.cells.clear()
+        elif len(places.terrain_rows) == len(rows):
+            reuse_topology = True
+            if places.terrain_hazards == hazards:
+                changed_rows = {near for y, row in enumerate(rows)
+                                if row != places.terrain_rows[y] for near in (y-1, y, y+1)}
+        if changed_rows == set():
+            buffer.copy_from(target, area.x, area.y, area.width, area.height)
+            return
 
     # Resolve memory/legend indices once. The trial repeated this for every
     # neighbour and dimmed the same style for every remembered floor cell.
-    resolved = []
+    # Visibility often changes while disclosed tile classes stay the same.
+    # Reuse their topology; never keep a tile after its disclosed index changes.
+    resolved, ids = [], []
+    topology_rows: set[int] = set()
     for y, row in enumerate(grid):
+        if reuse_topology and rows[y] == places.terrain_rows[y]:
+            resolved.append(places.terrain_indices[y])
+            ids.append(places.terrain_ids[y])
+            continue
         recall = memory[y] if y < len(memory) else []
         chart = charted[y] if y < len(charted) else []
         indices = [recall[x] if value == -2 and x < len(recall) and recall[x] >= 0 else
                    chart[x] if value < 0 and x < len(chart) else value for x, value in enumerate(row)]
-        resolved.append([index if 0 <= index < len(legend) or index == CHARTED_GROUND else -1 for index in indices])
-    ids = [[legend[index]['id'] if index >= 0 else '' for index in row] for row in resolved]
+        indices = [index if 0 <= index < len(legend) or index == CHARTED_GROUND else -1 for index in indices]
+        resolved.append(indices)
+        if reuse_topology and indices == places.terrain_indices[y]:
+            ids.append(places.terrain_ids[y])
+        else:
+            ids.append([legend[index]['id'] if index >= 0 else '' for index in indices])
+            topology_rows.update((y-1, y, y+1))
     opaque = frozenset(entry['id'] for entry in legend if entry.get('wall', entry['id'] in OPAQUE))
     open_tiles = frozenset(entry['id'] for entry in legend if entry['id'] not in opaque)
-    near_walls = {(x + dx, y + dy) for y, row in enumerate(ids) for x, tile in enumerate(row)
-                  if tile in opaque for dx, dy in ((-1,0),(1,0),(0,-1),(0,1))} if places else set()
+    if places:
+        if not reuse_topology or topology_rows:
+            near_walls = {(x + dx, y + dy) for y, row in enumerate(ids) for x, tile in enumerate(row)
+                          if tile in opaque for dx, dy in ((-1,0),(1,0),(0,-1),(0,1))}
+            roofs = {at for at in places.terrain_roofs if reuse_topology and at[1] not in topology_rows}
+            roofs.update((x,y) for y, row in enumerate(resolved) if not reuse_topology or y in topology_rows
+                         for x, index in enumerate(row) if index >= 0
+                         and legend[index].get('wall', legend[index]['id'] == 'wall')
+                         and not _beside(ids, x, y, open_tiles))
+        else:
+            near_walls, roofs = places.terrain_near_walls, places.terrain_roofs
+    else:
+        near_walls, roofs = set(), set()
+    reuse_cells = reuse_topology and not topology_rows and places.terrain_hazards == hazards
     styles: dict[tuple[int, bool, bool], tuple[str, Style]] = {}
 
     for y, row in enumerate(grid[:vp['h']]):
+        if changed_rows is not None and y not in changed_rows:
+            continue
         if not area.y <= oy + y < area.bottom:
             continue
         for x, value in enumerate(row[:vp['w']]):
             if not area.x <= ox + x < area.right:
                 continue
             index = resolved[y][x]
+            if (reuse_cells and index == places.terrain_indices[y][x]
+                    and (value < 0) == (places.terrain_rows[y][0][x] < 0)):
+                continue
             beside_wall = (x,y) in near_walls if places else False
-            roof = index >= 0 and legend[index].get('wall', legend[index]['id'] == 'wall') and not _beside(ids, x, y, open_tiles)
+            roof = ((x,y) in roofs if places else index >= 0
+                    and legend[index].get('wall', legend[index]['id'] == 'wall')
+                    and not _beside(ids, x, y, open_tiles))
             warned = value >= 0 and (vp['x'] + x, vp['y'] + y) in hazards
             if places:
                 state = index, roof, value < 0, warned, beside_wall
@@ -125,6 +179,11 @@ def terrain(buffer: CellBuffer, body: dict[str, Any], layout: Layout, paint: Pai
             target.put(ox + x, oy + y, glyph, style)
     if places:
         buffer.copy_from(target, area.x, area.y, area.width, area.height)
+        places.terrain_rows = rows
+        places.terrain_legend = legend_key
+        places.terrain_hazards = hazards
+        places.terrain_indices, places.terrain_ids = resolved, ids
+        places.terrain_roofs, places.terrain_near_walls = roofs, near_walls
 
 
 def cell(paint: Paint, entry: dict[str, Any], *, roof: bool = False) -> tuple[str, Style]:
