@@ -257,6 +257,11 @@ class Paint:
         The old call path remains byte-identical for zones without looks.
         An impossible operator palette still uses P5's non-raising lift.
         """
+        if self.tier == '16':
+            # TR-1 rule 7 is categorical, independent of theme/region L*.
+            # Reuse P5's PEOPLE_16/HALVARD_16 and JACKED_16 mappings.
+            style = self(role,bold=bold,reverse=reverse)
+            return self.jacked(style) if jacked else style
         key = role, ground, wall, light, bold, reverse, jacked
         if key not in self.ground_styles:
             person = role.startswith(('npc_', 'player_'))

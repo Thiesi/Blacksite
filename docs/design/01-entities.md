@@ -709,6 +709,11 @@ rule glyph (UI 2.2); 16-colour backgrounds are 0-7; ambient lines follow
 the voice rules (no em-dash, at most 200 characters, no real or
 other-fiction names).
 
+A space in a floor mark must not border a wall in the four cardinal
+directions: UI 2.2 forces grain there. The validator names the offending
+space cell; non-space letters beside walls and spaces away from walls
+remain legal.
+
 ---
 
 ## 2. Persistent state (SQLite)

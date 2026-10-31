@@ -1,0 +1,24 @@
+╔═VATSIDE═Fixture hall═SAFE══════════════Fixture notice: you hear the fan.═════╗
+║                    TEST                               │─ HERE ───────────────║
+║                   ,········,,····                     │ § Public ... (Clinic)║
+║                   ·· ,·  ,  ·                         │─ TARGET ─────────────║
+║                   ·LANE ≡·  , ,,                      │ none   Tab picks     ║
+║                   ,· ,· ,   ·                         │                      ║
+║                   ·· · ·  @§    ·                     │                      ║
+║                   ··· ·▒,·     ,                      │                      ║
+║                   ·────────  · ·                      │                      ║
+║                   ··  ≈,    ·  ·,                     │                      ║
+║                   ,        ,··                        │                      ║
+║                        ,, ·                           │                      ║
+║                                                       │──────────────────────║
+║                                                       │ Y界80            G1  ║
+║                                                       │ HP  ██████████ 130   ║
+║                                                       │ STA ██████████ 70    ║
+║                                                       │ SHK ░░░░░░░░░░ 0     ║
+║                                                       │ 200 ch   lease 0/90  ║
+╟───────────────────────────────────────────────────────┴──────────────────────╢
+║» You wake on a gurney under a number. White light, warm plastic, a floor     ║
+║  drain. Past the cards, a corridor. Past the corridor, a terminal.           ║
+║‼ Fixture warning.                                                            ║
+║E/J jack in at Public terminal (Clinic)  ? help  Tab target  F fire  X weapon ║
+╚══════════════════════════════════════════════════════════════════════════════ 

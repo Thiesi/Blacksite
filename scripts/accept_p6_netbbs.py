@@ -17,6 +17,10 @@ import subprocess
 
 from accept_p5_netbbs import PresentationProbe
 from accept_s10_netbbs import wait
+from blacksite.door.present.zone import origin
+from blacksite.layout import compute
+from blacksite.place import CHARTED_GROUND
+from tests.ansi_style import Rendition
 
 ROOT = Path(__file__).resolve().parents[1]
 
@@ -31,6 +35,12 @@ async def accept(root: Path, python: Path, size: tuple[int, int], theme: str, sh
         door_environment={'DOOR_BLACKSITE_PRESENTATION':'1'}, show_all_tiers=True)
     local = probe.service.install_dir/'content.local'
     shutil.copytree(ROOT/'tests/fixtures/p6', local)
+    # A5 setup: disclose only the existing gate's public face, not the
+    # enclosed room. Committed fixtures/goldens and shipped data stay fixed.
+    zone_path = local/'zones/p6-fixture.json'
+    zone = json.loads(zone_path.read_text(encoding='utf-8'))
+    zone['public'].append([20,5,1,1])
+    zone_path.write_text(json.dumps(zone)+'\n', encoding='utf-8')
     look_path = local/'looks/p6-fixture.json'
     look = json.loads(look_path.read_text(encoding='utf-8'))
     look['theme'] = 'p6-'+theme
@@ -54,6 +64,23 @@ async def accept(root: Path, python: Path, size: tuple[int, int], theme: str, sh
             await wait(lambda: connection.session.ack_revision == connection.session.view_revision)
             assert connection.session.caps['tier'] == tier
             assert '(Plaza)' in screen.screen_text()
+            # The Clinic fixture has an actual interaction tile as well as
+            # an object binding. Before sight it must be ordinary dim ground,
+            # with no terminal shape or unpainted void. Later walking reveals it.
+            vp = avatar.perception.viewport
+            cx,cy = 10-vp['x'],5-vp['y']
+            assert avatar.perception.tiles[cy][cx] == -1
+            assert avatar.perception.charted[cy][cx] == CHARTED_GROUND
+            ox,oy = origin({'viewport':vp,'actors':[{'role':'player_self',
+                'x':avatar.actor.x,'y':avatar.actor.y}]},compute(*size))
+            assert screen.cell(ox+cx,oy+cy) not in ('§','+','≡','‼')
+            assert screen.renditions[ox+cx,oy+cy] != Rendition(), 'withheld ground rendered as void'
+            dx,dy = 20-vp['x'],5-vp['y']
+            assert avatar.perception.tiles[dy][dx] == -1
+            assert avatar.perception.charted[dy][dx] == CHARTED_GROUND
+            assert (20,5) not in avatar.perception.remembered[avatar.zone]
+            assert screen.cell(ox+dx,oy+dy) not in ('+','≡','§')
+            assert screen.renditions[ox+dx,oy+dy] != Rendition(), 'public door face rendered as void'
             captures = []
             def save(step: str) -> None:
                 name = f'{theme}-{step}-{size[0]}x{size[1]}-{tier}'
@@ -78,6 +105,7 @@ async def accept(root: Path, python: Path, size: tuple[int, int], theme: str, sh
             save('notice')
             cases.append({'size':list(size),'tier':tier,'theme':theme,'captures':captures,
                           'initial_fixture_position':[4,5], 'walk_end':[9,5],
+                          'public_door_face':[20,5], 'door_face_ground_only':True,
                           'name':probe.game.players[connection.session.player_id].name,
                           'handle':connection.session.door_info['handle']})
             await probe.leave(connection, f'{theme}-return-{tier}')
