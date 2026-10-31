@@ -1024,6 +1024,10 @@ the `yard lights` control's objects. Under section 6.4's switched-off
 lamp rule, sight falls to 5 tiles for a caller within the Yards' sight
 radius of any switched-off lamp, and dark-sight equipment still
 applies; an enabled lamp nearby does not offset it.
+- **One control, many lamps.** The `yard lights` control targets the
+  yard lamp group: one control switches every lamp in the group. This
+  is the first group-target control; the build slice adds group
+  targets to section 6.4's one-control-one-object rule for this case.
 - **Coverage.** The `yard lights` objects are placed so that every
   passable Yards tile darkens, except the exit neighbourhoods: no
   `yard lights` object lies within the Yards' sight radius of an exit
@@ -1041,15 +1045,16 @@ applies; an enabled lamp nearby does not offset it.
 - **Declared state.** The brownout is the service's declared `fault`
   state, so a client may name it from that state and never infers it
   from darkness.
-- **Controls.** While Grid is `fault` or `allocated`, the Foundry's
-  public `yard lights` control is suspended and cannot relight or
-  darken the Yards, and using it answers with the reason. When the
-  state ends, whether by a player's repair or the NPC repair that
-  closes an unclaimed fault, the Yards' lights are on and the control
-  resumes, as
-  Relay Zero's permit states its relation to the ordinary control.
-  Yard Relay's effect is its fabrication modifier only; it controls no
-  lights, so no relay holder can relight or darken the Yards.
+- **Controls.** While Grid is `fault`, `repairing` or `allocated`, the
+  Foundry's public `yard lights` control is suspended and cannot relight
+  or darken the Yards, and using it answers with the reason. The Yards
+  stay dark through `repairing`, and a repair that reverts to `fault`
+  leaves them dark. When the state ends, whether by a player's repair
+  or the NPC repair that closes an unclaimed fault, the Yards' lights
+  are on and the control resumes, as Relay Zero's permit states its
+  relation to the ordinary control. Yard Relay's effect is its
+  fabrication modifier only; it controls no lights, so no relay holder
+  can relight or darken the Yards.
 - **The bench.** The workers' bench is a fabrication workshop for the
   workers only, at the ordinary quality rule plus 0.05, capped at 1.15
   and not stacking with Yard Relay.
