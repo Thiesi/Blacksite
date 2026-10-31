@@ -1,0 +1,950 @@
+{
+  "schema": 1,
+  "execution_head": "9b82a175aace457c95c8e071e109e7d11af9b8f0",
+  "run": 41199775074,
+  "source_git_tree": "03ac4e72f83af322ed5e0012e0888cf7e96147ef",
+  "source_python_tree_sha256": "41773742f2b9e654f72d8ae4c14e59de2cbb29d2633a9394c974142ee571c0e7",
+  "transport": "NetBBS v7.45.0 Telnet -> registered native stdio; sized attached PTY; source-matched wheel",
+  "fixture": "tests/fixtures/p6 via content.local; ordinary character creation; explicit initial placement (4,5), then real walking keys",
+  "caller_provenance": "Wide character name is entered through ordinary character creation; genuine BBS handles remain ASCII. No handle override.",
+  "artifacts": {
+    "p6-fixture-light-80x24": {
+      "id": 13042471031,
+      "url": "https://github.com/Thiesi/Blacksite/actions/runs/41199775074/artifacts/13042471031",
+      "result_sha256": "08f569449c4e8ba6e899da9985510094096bb590ee321c88e280a568faaffb6a"
+    },
+    "p6-fixture-light-132x50": {
+      "id": 13042246455,
+      "url": "https://github.com/Thiesi/Blacksite/actions/runs/41199775074/artifacts/13042246455",
+      "result_sha256": "ecb7498c329b16581862df469a0fbb07edad25948f9859bb3efdeaa91996cdc6"
+    },
+    "p6-fixture-dark-80x24": {
+      "id": 13042066720,
+      "url": "https://github.com/Thiesi/Blacksite/actions/runs/41199775074/artifacts/13042066720",
+      "result_sha256": "e13b0b76c2d889b6068dedfb8be6d89b8feb2aa395819a6aca64eaee9e5e0b02"
+    },
+    "p6-fixture-dark-132x50": {
+      "id": 13041738865,
+      "url": "https://github.com/Thiesi/Blacksite/actions/runs/41199775074/artifacts/13041738865",
+      "result_sha256": "938d364b50797b9284eda555324ef03700409926655f87309f50a86a46094fba"
+    }
+  },
+  "captures": [
+    {
+      "name": "light-charted-and-here-80x24-16",
+      "scenario": "charted-and-here",
+      "size": [
+        80,
+        24
+      ],
+      "tier": "16",
+      "theme": "light",
+      "artifact": "p6-fixture-light-80x24",
+      "artifact_path": "p6-proof/light-charted-and-here-80x24-16",
+      "text_sha256": "19e1794aecaba7a125082299b0fd4e710ce08b820516123ea6addb182b59232d",
+      "ansi_sha256": "19da8820b13b57a4460719318ed3cd5e4a8fe279ab52b800b1d1e2c3ca976fb6",
+      "style_sha256": "6116ba739c9710fbc510019d72d170c908ef7f61d186fec5d6b0ea2c4f5690f7",
+      "door_ansi_offset": 961,
+      "committed_text": "light-charted-and-here-80x24-16.txt",
+      "caller_name": "X界80",
+      "bbs_handle": "S10X80"
+    },
+    {
+      "name": "light-authored-cover-80x24-16",
+      "scenario": "authored-cover",
+      "size": [
+        80,
+        24
+      ],
+      "tier": "16",
+      "theme": "light",
+      "artifact": "p6-fixture-light-80x24",
+      "artifact_path": "p6-proof/light-authored-cover-80x24-16",
+      "text_sha256": "824eb07448ad46d8aa40b7991863d1b6a25bbf0330900b0c628e9b0653a85af3",
+      "ansi_sha256": "05238518648446782495aa5c8ee29877d0fb6a91ebd400b9ba206c233067b8dd",
+      "style_sha256": "4d5af57656b58a14f1c15afe24ed2791e98b99b0a32343259af768b0f17896ba",
+      "door_ansi_offset": 961,
+      "committed_text": null,
+      "caller_name": "X界80",
+      "bbs_handle": "S10X80"
+    },
+    {
+      "name": "light-light-region-and-here-80x24-16",
+      "scenario": "light-region-and-here",
+      "size": [
+        80,
+        24
+      ],
+      "tier": "16",
+      "theme": "light",
+      "artifact": "p6-fixture-light-80x24",
+      "artifact_path": "p6-proof/light-light-region-and-here-80x24-16",
+      "text_sha256": "572c8b0265bad9cca768016b51d85aa871a5a993ee749c75c353d447540a810c",
+      "ansi_sha256": "47f301c64a57dd724d45d33279846d88d64d0d8bbb60472cef553ba624724619",
+      "style_sha256": "6c5557a902681f5c4d635f13d4e3026873b1c9814bea67a8ef6f582cc6522477",
+      "door_ansi_offset": 961,
+      "committed_text": "light-light-region-and-here-80x24-16.txt",
+      "caller_name": "X界80",
+      "bbs_handle": "S10X80"
+    },
+    {
+      "name": "light-notice-80x24-16",
+      "scenario": "notice",
+      "size": [
+        80,
+        24
+      ],
+      "tier": "16",
+      "theme": "light",
+      "artifact": "p6-fixture-light-80x24",
+      "artifact_path": "p6-proof/light-notice-80x24-16",
+      "text_sha256": "8bf8577710e0d11be5d10a1c5beb2407ea02ed0870c26c2392bdbe0d0dbe09d2",
+      "ansi_sha256": "b8f97fb351c60cdde2feb872f4a0eec4c69db308a2a7d88f180d13622ae1e04d",
+      "style_sha256": "fdaebaf6768bf585f9dbb0db49ac422439c2045f78a81f99c6ba1294f1a557c6",
+      "door_ansi_offset": 961,
+      "committed_text": null,
+      "caller_name": "X界80",
+      "bbs_handle": "S10X80"
+    },
+    {
+      "name": "light-charted-and-here-80x24-256",
+      "scenario": "charted-and-here",
+      "size": [
+        80,
+        24
+      ],
+      "tier": "256",
+      "theme": "light",
+      "artifact": "p6-fixture-light-80x24",
+      "artifact_path": "p6-proof/light-charted-and-here-80x24-256",
+      "text_sha256": "87090a6454a477313f61a039d4a95695f5a8d71460d1fa41e3a508ba25cde9c1",
+      "ansi_sha256": "a01dc50207da93386aeebbd992f7e9d6a8bc63045ac78f625e287ebb1b4caabc",
+      "style_sha256": "db72c76ae6cf87ad565ed195b424d0e82350c846d77f1276627c8b4c5968f407",
+      "door_ansi_offset": 1068,
+      "committed_text": "light-charted-and-here-80x24-256.txt",
+      "caller_name": "Y界80",
+      "bbs_handle": "S10Y80"
+    },
+    {
+      "name": "light-authored-cover-80x24-256",
+      "scenario": "authored-cover",
+      "size": [
+        80,
+        24
+      ],
+      "tier": "256",
+      "theme": "light",
+      "artifact": "p6-fixture-light-80x24",
+      "artifact_path": "p6-proof/light-authored-cover-80x24-256",
+      "text_sha256": "85f64b729382f6daf892a5c25c819b924f35b38fa6404bdff29595ffaf78ceb8",
+      "ansi_sha256": "86cf4a9b4f3ba371fe11a70c7d9197ff45f1afb7324493dcb34af0b637f5262f",
+      "style_sha256": "bba202790259f45a11102f998be4be2037d1460ca2328c6c6c49396662095342",
+      "door_ansi_offset": 1068,
+      "committed_text": null,
+      "caller_name": "Y界80",
+      "bbs_handle": "S10Y80"
+    },
+    {
+      "name": "light-light-region-and-here-80x24-256",
+      "scenario": "light-region-and-here",
+      "size": [
+        80,
+        24
+      ],
+      "tier": "256",
+      "theme": "light",
+      "artifact": "p6-fixture-light-80x24",
+      "artifact_path": "p6-proof/light-light-region-and-here-80x24-256",
+      "text_sha256": "7d4ab387ac02c3a711bb9a9b137a0ab9f559fb81e8934725227d7a227fa14c8c",
+      "ansi_sha256": "b7526de09e80bd9404e632bb42bdb5280ecb3c52d2e25357ff5de0b710f82404",
+      "style_sha256": "4ba26cf8011707c2ef16095523948465ede7e274bfddf1167a48970e1d494d7f",
+      "door_ansi_offset": 1068,
+      "committed_text": "light-light-region-and-here-80x24-256.txt",
+      "caller_name": "Y界80",
+      "bbs_handle": "S10Y80"
+    },
+    {
+      "name": "light-notice-80x24-256",
+      "scenario": "notice",
+      "size": [
+        80,
+        24
+      ],
+      "tier": "256",
+      "theme": "light",
+      "artifact": "p6-fixture-light-80x24",
+      "artifact_path": "p6-proof/light-notice-80x24-256",
+      "text_sha256": "8c616f12f8e9356b4bf40f544cc6fa60c96fd07528a37761ef06e5f89e0d5d10",
+      "ansi_sha256": "38aca51a751ab2b5623366fab995556458d962b1c8a6d399f0fa09d71928b5b4",
+      "style_sha256": "089bd06dfc65039ba52994810444cc1a1caa0ac801ba97fe709ef57838041dde",
+      "door_ansi_offset": 1068,
+      "committed_text": null,
+      "caller_name": "Y界80",
+      "bbs_handle": "S10Y80"
+    },
+    {
+      "name": "light-charted-and-here-80x24-truecolor",
+      "scenario": "charted-and-here",
+      "size": [
+        80,
+        24
+      ],
+      "tier": "truecolor",
+      "theme": "light",
+      "artifact": "p6-fixture-light-80x24",
+      "artifact_path": "p6-proof/light-charted-and-here-80x24-truecolor",
+      "text_sha256": "8ac9d1dc7e93ed489e5894373afa9484e162bae448eb966e660b25183c18e72b",
+      "ansi_sha256": "e1360604fbd868af0e4865d45ce900ff52d6c954a50c24109771c9285cbee3c6",
+      "style_sha256": "3fe5535a8f463ae1e55ebdce007dd7f01b7b9b181cc73da243fe73a86de19ad4",
+      "door_ansi_offset": 1068,
+      "committed_text": "light-charted-and-here-80x24-truecolor.txt",
+      "caller_name": "Z界80",
+      "bbs_handle": "S10Z80"
+    },
+    {
+      "name": "light-authored-cover-80x24-truecolor",
+      "scenario": "authored-cover",
+      "size": [
+        80,
+        24
+      ],
+      "tier": "truecolor",
+      "theme": "light",
+      "artifact": "p6-fixture-light-80x24",
+      "artifact_path": "p6-proof/light-authored-cover-80x24-truecolor",
+      "text_sha256": "fd7109f219ed8936fe7184ad8db44a919c45d7d9126d38827498614ad8820825",
+      "ansi_sha256": "595ca6c45358418e380f92394b368f9c11e5d478539648be580ddd9069acfbb1",
+      "style_sha256": "b5c06e8ac701fcbc27ff9bc036434b651c0a01d65f400744a5e45b4985b3f91e",
+      "door_ansi_offset": 1068,
+      "committed_text": null,
+      "caller_name": "Z界80",
+      "bbs_handle": "S10Z80"
+    },
+    {
+      "name": "light-light-region-and-here-80x24-truecolor",
+      "scenario": "light-region-and-here",
+      "size": [
+        80,
+        24
+      ],
+      "tier": "truecolor",
+      "theme": "light",
+      "artifact": "p6-fixture-light-80x24",
+      "artifact_path": "p6-proof/light-light-region-and-here-80x24-truecolor",
+      "text_sha256": "82aafe308538fdbb7fd8463c3d83591d203b6ab82914c83de2be776f5f8878c8",
+      "ansi_sha256": "257c6de1f2715e5e5d040cf95e1c93027840c026a94d218184b0a0a067885f0e",
+      "style_sha256": "ed8652bc66f69fcd14e8f3fba243c6f6a3899c9aa63afd43f3abe5e67cc1f8a5",
+      "door_ansi_offset": 1068,
+      "committed_text": "light-light-region-and-here-80x24-truecolor.txt",
+      "caller_name": "Z界80",
+      "bbs_handle": "S10Z80"
+    },
+    {
+      "name": "light-notice-80x24-truecolor",
+      "scenario": "notice",
+      "size": [
+        80,
+        24
+      ],
+      "tier": "truecolor",
+      "theme": "light",
+      "artifact": "p6-fixture-light-80x24",
+      "artifact_path": "p6-proof/light-notice-80x24-truecolor",
+      "text_sha256": "944a1a7d4938127dbcf52cccbd8085e0c9081415b64492618dbe4bb5ef6bd18c",
+      "ansi_sha256": "44104a9fcdf244b3a55e42da9dba2516ae5328b6c1195e0e77eb5fc94c081423",
+      "style_sha256": "4addb787eaa35b4cdfd4cfabe24a6c1078c76b3abf4fc346829ae0d01db9cf4d",
+      "door_ansi_offset": 1068,
+      "committed_text": null,
+      "caller_name": "Z界80",
+      "bbs_handle": "S10Z80"
+    },
+    {
+      "name": "light-charted-and-here-132x50-16",
+      "scenario": "charted-and-here",
+      "size": [
+        132,
+        50
+      ],
+      "tier": "16",
+      "theme": "light",
+      "artifact": "p6-fixture-light-132x50",
+      "artifact_path": "p6-proof/light-charted-and-here-132x50-16",
+      "text_sha256": "fbd13e0ddf954baaf1f9883edd545bb9b981dadcc48b1af1cd6084b4285ec64c",
+      "ansi_sha256": "0234e8de7cd33fa7095459fb9292ce0835a5d1c3dedbf372c813a64e4cc06824",
+      "style_sha256": "41d9215e78f2ac01a0541dc5670fa76ed749c74c46cbb9e4963c57191ca7f011",
+      "door_ansi_offset": 1065,
+      "committed_text": "light-charted-and-here-132x50-16.txt",
+      "caller_name": "X界132",
+      "bbs_handle": "S10X132"
+    },
+    {
+      "name": "light-authored-cover-132x50-16",
+      "scenario": "authored-cover",
+      "size": [
+        132,
+        50
+      ],
+      "tier": "16",
+      "theme": "light",
+      "artifact": "p6-fixture-light-132x50",
+      "artifact_path": "p6-proof/light-authored-cover-132x50-16",
+      "text_sha256": "cec980ad1ee7742e0b9582c6ebd07b784ee46f90c3df5c255c6300f1a936dffc",
+      "ansi_sha256": "69b3e769a45601008eea2910a30505035fe2deeb52ca6029fb6be2a8ae639e7c",
+      "style_sha256": "78cd773453a6a3ff04a492dc63c7ef77a950f617d3aabd90f599569f03de863b",
+      "door_ansi_offset": 1065,
+      "committed_text": null,
+      "caller_name": "X界132",
+      "bbs_handle": "S10X132"
+    },
+    {
+      "name": "light-light-region-and-here-132x50-16",
+      "scenario": "light-region-and-here",
+      "size": [
+        132,
+        50
+      ],
+      "tier": "16",
+      "theme": "light",
+      "artifact": "p6-fixture-light-132x50",
+      "artifact_path": "p6-proof/light-light-region-and-here-132x50-16",
+      "text_sha256": "91273d8d269200e197a90bb8d53f638f1b26bc19e90c17b62ea9ec43fd13ea6a",
+      "ansi_sha256": "8d44e2319f5772a636dfa47905da79cc6d4d885d0015e409a94df55b61959c7f",
+      "style_sha256": "0316e0fb3e31b9e2195f74884fe340c00972baf93a5aa57e78bce980ace79bc5",
+      "door_ansi_offset": 1065,
+      "committed_text": "light-light-region-and-here-132x50-16.txt",
+      "caller_name": "X界132",
+      "bbs_handle": "S10X132"
+    },
+    {
+      "name": "light-notice-132x50-16",
+      "scenario": "notice",
+      "size": [
+        132,
+        50
+      ],
+      "tier": "16",
+      "theme": "light",
+      "artifact": "p6-fixture-light-132x50",
+      "artifact_path": "p6-proof/light-notice-132x50-16",
+      "text_sha256": "10b75fe0eaaf2bfd5fa752815b6391106acfe901a1f8825c72c751589258bda7",
+      "ansi_sha256": "bc6c9ddf9531415c0da2746685ee25cae902d64b6ec55fd2c13fd2611b43649f",
+      "style_sha256": "aaf13f2ffd3e02605be93909338f383bb621adb01ff2f7adbc92219ac3dc06a7",
+      "door_ansi_offset": 1065,
+      "committed_text": null,
+      "caller_name": "X界132",
+      "bbs_handle": "S10X132"
+    },
+    {
+      "name": "light-charted-and-here-132x50-256",
+      "scenario": "charted-and-here",
+      "size": [
+        132,
+        50
+      ],
+      "tier": "256",
+      "theme": "light",
+      "artifact": "p6-fixture-light-132x50",
+      "artifact_path": "p6-proof/light-charted-and-here-132x50-256",
+      "text_sha256": "132d9986e3d06ddfb8b10ddb2230d15e50c349d135b606f717083d896853ea67",
+      "ansi_sha256": "757e10154a9f1764e3b887f6e47ee3991a6386688d2e2c23d8c01bd77c927db6",
+      "style_sha256": "06aee7e5f88b1479eed10ef662617b4880525f471c9d9f8d7e251dcd26fb7dca",
+      "door_ansi_offset": 1172,
+      "committed_text": "light-charted-and-here-132x50-256.txt",
+      "caller_name": "Y界132",
+      "bbs_handle": "S10Y132"
+    },
+    {
+      "name": "light-authored-cover-132x50-256",
+      "scenario": "authored-cover",
+      "size": [
+        132,
+        50
+      ],
+      "tier": "256",
+      "theme": "light",
+      "artifact": "p6-fixture-light-132x50",
+      "artifact_path": "p6-proof/light-authored-cover-132x50-256",
+      "text_sha256": "bdd5c35904278fdb527239a497e119531d552c6b53631deddc61ae909e9cd89d",
+      "ansi_sha256": "82d9a74ee3b3342d75416a04f7797bbf9f7fc11ce74ad88a54de683b516b593d",
+      "style_sha256": "b3a06d952a6c2dabd5435309fd8d0898f7896de439d14f5b7cd7e6f1d1a898e6",
+      "door_ansi_offset": 1172,
+      "committed_text": null,
+      "caller_name": "Y界132",
+      "bbs_handle": "S10Y132"
+    },
+    {
+      "name": "light-light-region-and-here-132x50-256",
+      "scenario": "light-region-and-here",
+      "size": [
+        132,
+        50
+      ],
+      "tier": "256",
+      "theme": "light",
+      "artifact": "p6-fixture-light-132x50",
+      "artifact_path": "p6-proof/light-light-region-and-here-132x50-256",
+      "text_sha256": "68c2052ebb7c1fea57bb5e35757834254bbfc20c6f9d85a67b20ec0bf1846053",
+      "ansi_sha256": "7b1c789d80ce16752cc70ae0bc01ab540f26fa8dbc53520c5ebee950ddea4774",
+      "style_sha256": "85f1a24849f486bc2d50972c8623bc6f3683ef45d0e0e4f8602a232b0e18894d",
+      "door_ansi_offset": 1172,
+      "committed_text": "light-light-region-and-here-132x50-256.txt",
+      "caller_name": "Y界132",
+      "bbs_handle": "S10Y132"
+    },
+    {
+      "name": "light-notice-132x50-256",
+      "scenario": "notice",
+      "size": [
+        132,
+        50
+      ],
+      "tier": "256",
+      "theme": "light",
+      "artifact": "p6-fixture-light-132x50",
+      "artifact_path": "p6-proof/light-notice-132x50-256",
+      "text_sha256": "a3370f54378aae0041732da68c345085477786e6ed3f9ff31c4eae9f1d6203ff",
+      "ansi_sha256": "644e442151be8c0e63283622796ed9c24f390a5022eea1bd22dd96c5b1a84017",
+      "style_sha256": "0229b52021bc99e817448c5d51970311fd3a24c13a3c4de0f4404f73ef282f7b",
+      "door_ansi_offset": 1172,
+      "committed_text": null,
+      "caller_name": "Y界132",
+      "bbs_handle": "S10Y132"
+    },
+    {
+      "name": "light-charted-and-here-132x50-truecolor",
+      "scenario": "charted-and-here",
+      "size": [
+        132,
+        50
+      ],
+      "tier": "truecolor",
+      "theme": "light",
+      "artifact": "p6-fixture-light-132x50",
+      "artifact_path": "p6-proof/light-charted-and-here-132x50-truecolor",
+      "text_sha256": "1b64e1694187afa45fccc0a85db14a12a7f1bf93ade811d0b1e09295f76857d9",
+      "ansi_sha256": "d130f49604d14417a18876a1bd195460f552bbb83145dd36feac229434509f98",
+      "style_sha256": "274b462919bd1ea61a0ad206b08e10072688564e1026b8529ec8960a11868648",
+      "door_ansi_offset": 1172,
+      "committed_text": "light-charted-and-here-132x50-truecolor.txt",
+      "caller_name": "Z界132",
+      "bbs_handle": "S10Z132"
+    },
+    {
+      "name": "light-authored-cover-132x50-truecolor",
+      "scenario": "authored-cover",
+      "size": [
+        132,
+        50
+      ],
+      "tier": "truecolor",
+      "theme": "light",
+      "artifact": "p6-fixture-light-132x50",
+      "artifact_path": "p6-proof/light-authored-cover-132x50-truecolor",
+      "text_sha256": "1865b129a184012fd75650ad5edf7f031a4e6d10cfbdbb8c312e6610ae832c00",
+      "ansi_sha256": "44e975568f5e2b116fcabbbf2ebe858a647eaf6dd60c257c294bdab90febb4ee",
+      "style_sha256": "d5ca48aaec97ec9041099ce81e1a3447d5b5ac35654fa7306e139e6b9eaa3c4d",
+      "door_ansi_offset": 1172,
+      "committed_text": "light-authored-cover-132x50-truecolor.txt",
+      "caller_name": "Z界132",
+      "bbs_handle": "S10Z132"
+    },
+    {
+      "name": "light-light-region-and-here-132x50-truecolor",
+      "scenario": "light-region-and-here",
+      "size": [
+        132,
+        50
+      ],
+      "tier": "truecolor",
+      "theme": "light",
+      "artifact": "p6-fixture-light-132x50",
+      "artifact_path": "p6-proof/light-light-region-and-here-132x50-truecolor",
+      "text_sha256": "5207782ec6a21e0faa74cd5f37d1a7098356f9ebbb2470f3b54fd3087e34f014",
+      "ansi_sha256": "799ed388721fbf76f4daf85673ae275bf91324cf8c6d17fe95aadd1347aae84e",
+      "style_sha256": "fa6b396b1e97519cee5809f38cbfe1cbb7fe7563548116cdae08756d39df6b0f",
+      "door_ansi_offset": 1172,
+      "committed_text": "light-light-region-and-here-132x50-truecolor.txt",
+      "caller_name": "Z界132",
+      "bbs_handle": "S10Z132"
+    },
+    {
+      "name": "light-notice-132x50-truecolor",
+      "scenario": "notice",
+      "size": [
+        132,
+        50
+      ],
+      "tier": "truecolor",
+      "theme": "light",
+      "artifact": "p6-fixture-light-132x50",
+      "artifact_path": "p6-proof/light-notice-132x50-truecolor",
+      "text_sha256": "f8d9c1e81a3ca39077780be7ade094c14dc368d321e0f196bd42acc428de9e31",
+      "ansi_sha256": "8cc3959b78794dfbfe85df59a7c361c951107cfbdf4a866b26adc10d851cb9fb",
+      "style_sha256": "44191379680cd01ce83fa1a8f85c8eb270d9ec818a8f20c9e05ce0acfff7e394",
+      "door_ansi_offset": 1172,
+      "committed_text": "light-notice-132x50-truecolor.txt",
+      "caller_name": "Z界132",
+      "bbs_handle": "S10Z132"
+    },
+    {
+      "name": "dark-charted-and-here-80x24-16",
+      "scenario": "charted-and-here",
+      "size": [
+        80,
+        24
+      ],
+      "tier": "16",
+      "theme": "dark",
+      "artifact": "p6-fixture-dark-80x24",
+      "artifact_path": "p6-proof/dark-charted-and-here-80x24-16",
+      "text_sha256": "ccef5840432fbdf42045515cb10cfbaf8559de808228928e1bcc81f407941cdd",
+      "ansi_sha256": "a345c305202a58258915a17c9c0334e8f2063d3c2c2d2a7a86ddb0def1dfdf51",
+      "style_sha256": "aa83a55c166a908f672295889318a11e1e1e294ace6e68695b1c6471c9881119",
+      "door_ansi_offset": 961,
+      "committed_text": "dark-charted-and-here-80x24-16.txt",
+      "caller_name": "X界80",
+      "bbs_handle": "S10X80"
+    },
+    {
+      "name": "dark-authored-cover-80x24-16",
+      "scenario": "authored-cover",
+      "size": [
+        80,
+        24
+      ],
+      "tier": "16",
+      "theme": "dark",
+      "artifact": "p6-fixture-dark-80x24",
+      "artifact_path": "p6-proof/dark-authored-cover-80x24-16",
+      "text_sha256": "e105b9c502fb78feb1e2abc389de68e713c3ac484445d555e163325a2fc42e8d",
+      "ansi_sha256": "e2657907ae493b40e537c2f8bf0a5a201cfc29ae11ef2b7810de1b4f8397f123",
+      "style_sha256": "9b4edadff66a238c9c50919f766c07772fc5186e0dc14b92ba2eb51b725aa8b3",
+      "door_ansi_offset": 961,
+      "committed_text": null,
+      "caller_name": "X界80",
+      "bbs_handle": "S10X80"
+    },
+    {
+      "name": "dark-light-region-and-here-80x24-16",
+      "scenario": "light-region-and-here",
+      "size": [
+        80,
+        24
+      ],
+      "tier": "16",
+      "theme": "dark",
+      "artifact": "p6-fixture-dark-80x24",
+      "artifact_path": "p6-proof/dark-light-region-and-here-80x24-16",
+      "text_sha256": "9537efdfe91a937bdeee83474ff3f6542b7d6c99cf7e4497bfcbf872605cd45b",
+      "ansi_sha256": "365e0459ef8b66fa966e9280c1ac6da7d81896fb16172b3f250b325309cd853b",
+      "style_sha256": "d973f6993fc4c1295546b2f7d5f5127d74c0efc0f1bce32a64af356b9085def2",
+      "door_ansi_offset": 961,
+      "committed_text": "dark-light-region-and-here-80x24-16.txt",
+      "caller_name": "X界80",
+      "bbs_handle": "S10X80"
+    },
+    {
+      "name": "dark-notice-80x24-16",
+      "scenario": "notice",
+      "size": [
+        80,
+        24
+      ],
+      "tier": "16",
+      "theme": "dark",
+      "artifact": "p6-fixture-dark-80x24",
+      "artifact_path": "p6-proof/dark-notice-80x24-16",
+      "text_sha256": "8bf8577710e0d11be5d10a1c5beb2407ea02ed0870c26c2392bdbe0d0dbe09d2",
+      "ansi_sha256": "afda9e818000e3293b277522c5fd2a05d24c32be427fe4a4d1645b1737793952",
+      "style_sha256": "fdaebaf6768bf585f9dbb0db49ac422439c2045f78a81f99c6ba1294f1a557c6",
+      "door_ansi_offset": 961,
+      "committed_text": null,
+      "caller_name": "X界80",
+      "bbs_handle": "S10X80"
+    },
+    {
+      "name": "dark-charted-and-here-80x24-256",
+      "scenario": "charted-and-here",
+      "size": [
+        80,
+        24
+      ],
+      "tier": "256",
+      "theme": "dark",
+      "artifact": "p6-fixture-dark-80x24",
+      "artifact_path": "p6-proof/dark-charted-and-here-80x24-256",
+      "text_sha256": "ad3330e50f5698948683ef3fc27bb80693aafee091445c0b44c769fcbe50a392",
+      "ansi_sha256": "e8083a95983b768dd0996021f2bb289cfd102b48ee9178ec0e9aabe870eccf7b",
+      "style_sha256": "4e9ff1296a28da24dd1f35d56a9ab07547b8a6b68e30246f8c132bdcf905a707",
+      "door_ansi_offset": 1068,
+      "committed_text": "dark-charted-and-here-80x24-256.txt",
+      "caller_name": "Y界80",
+      "bbs_handle": "S10Y80"
+    },
+    {
+      "name": "dark-authored-cover-80x24-256",
+      "scenario": "authored-cover",
+      "size": [
+        80,
+        24
+      ],
+      "tier": "256",
+      "theme": "dark",
+      "artifact": "p6-fixture-dark-80x24",
+      "artifact_path": "p6-proof/dark-authored-cover-80x24-256",
+      "text_sha256": "4367443bd4058e9a32de0f88b0d6c94d36bf8f939cfa9da6ee2c3b723658deb8",
+      "ansi_sha256": "8c19cd04859c105e0f5a1901c09ed350b01dc0d0ee6e8ae943f93e7f63c147fd",
+      "style_sha256": "ec49930ee797e721b26302575443829461048e7a8aa318a60003d2c9b463ffe4",
+      "door_ansi_offset": 1068,
+      "committed_text": "dark-authored-cover-80x24-256.txt",
+      "caller_name": "Y界80",
+      "bbs_handle": "S10Y80"
+    },
+    {
+      "name": "dark-light-region-and-here-80x24-256",
+      "scenario": "light-region-and-here",
+      "size": [
+        80,
+        24
+      ],
+      "tier": "256",
+      "theme": "dark",
+      "artifact": "p6-fixture-dark-80x24",
+      "artifact_path": "p6-proof/dark-light-region-and-here-80x24-256",
+      "text_sha256": "16ec0bb1a3b3df02bbc9761d8331dbab71e778aa25504e25e582dfd38130ac4a",
+      "ansi_sha256": "d7c635a72063aba189cdd4576c2af8453c7609a089de2be021b5102b5bf8569a",
+      "style_sha256": "b255d8928680117e1523015bd8e05c9a5afaaf8170947acdf1feea5c15e905e5",
+      "door_ansi_offset": 1068,
+      "committed_text": "dark-light-region-and-here-80x24-256.txt",
+      "caller_name": "Y界80",
+      "bbs_handle": "S10Y80"
+    },
+    {
+      "name": "dark-notice-80x24-256",
+      "scenario": "notice",
+      "size": [
+        80,
+        24
+      ],
+      "tier": "256",
+      "theme": "dark",
+      "artifact": "p6-fixture-dark-80x24",
+      "artifact_path": "p6-proof/dark-notice-80x24-256",
+      "text_sha256": "8d2fe6dae49aa3719e5dc7021159c65a2cbe4ef9850d348dfb9c1c9b7253fd71",
+      "ansi_sha256": "e1a6229d2ea74c6ee3c55023050c60f56874dd0b1c3111f8ded548740787b232",
+      "style_sha256": "a4cd1aedd4e50119f988ebd75711d2dbc7e3bcac3bd1c67388e8ad55200f2648",
+      "door_ansi_offset": 1068,
+      "committed_text": "dark-notice-80x24-256.txt",
+      "caller_name": "Y界80",
+      "bbs_handle": "S10Y80"
+    },
+    {
+      "name": "dark-charted-and-here-80x24-truecolor",
+      "scenario": "charted-and-here",
+      "size": [
+        80,
+        24
+      ],
+      "tier": "truecolor",
+      "theme": "dark",
+      "artifact": "p6-fixture-dark-80x24",
+      "artifact_path": "p6-proof/dark-charted-and-here-80x24-truecolor",
+      "text_sha256": "c311c1be728e90533b616e4a96b235f6a272ff71bd7911577716bc2e3f64f131",
+      "ansi_sha256": "6c4bbdeae050ccf1c460a9a1597893bb861b2249c5a580d390b3933e80cab305",
+      "style_sha256": "8b12f32b5ed5736ec388d4a55b2f1b51b4c73d2e6a695dd5a607a43992254c76",
+      "door_ansi_offset": 1068,
+      "committed_text": "dark-charted-and-here-80x24-truecolor.txt",
+      "caller_name": "Z界80",
+      "bbs_handle": "S10Z80"
+    },
+    {
+      "name": "dark-authored-cover-80x24-truecolor",
+      "scenario": "authored-cover",
+      "size": [
+        80,
+        24
+      ],
+      "tier": "truecolor",
+      "theme": "dark",
+      "artifact": "p6-fixture-dark-80x24",
+      "artifact_path": "p6-proof/dark-authored-cover-80x24-truecolor",
+      "text_sha256": "5a0b42d4d1f5b8bbc15d71299fb61aafdf9f379b302d9c46ce490726e8b5b5e2",
+      "ansi_sha256": "1e794f7ac1a5e86f12060e1774bd8b8ac9f2a0b839c2ec8e9c4bd0154b612ce3",
+      "style_sha256": "0e4f1b035dbe3913867423e6dff1d3876bef41d71430170e5620019d42f71e45",
+      "door_ansi_offset": 1068,
+      "committed_text": null,
+      "caller_name": "Z界80",
+      "bbs_handle": "S10Z80"
+    },
+    {
+      "name": "dark-light-region-and-here-80x24-truecolor",
+      "scenario": "light-region-and-here",
+      "size": [
+        80,
+        24
+      ],
+      "tier": "truecolor",
+      "theme": "dark",
+      "artifact": "p6-fixture-dark-80x24",
+      "artifact_path": "p6-proof/dark-light-region-and-here-80x24-truecolor",
+      "text_sha256": "5a331365d22a52153be94ce77081fae9109a5483619265d0b78e36df485a9343",
+      "ansi_sha256": "7b1807407b08d6ce63df62fa1c345f6b9cedb5a0e53b67da1ea1848e117a915a",
+      "style_sha256": "bd7b4f40ca19aae90506585575f7dfeb93eed9071edface70783e580d47ffce2",
+      "door_ansi_offset": 1068,
+      "committed_text": "dark-light-region-and-here-80x24-truecolor.txt",
+      "caller_name": "Z界80",
+      "bbs_handle": "S10Z80"
+    },
+    {
+      "name": "dark-notice-80x24-truecolor",
+      "scenario": "notice",
+      "size": [
+        80,
+        24
+      ],
+      "tier": "truecolor",
+      "theme": "dark",
+      "artifact": "p6-fixture-dark-80x24",
+      "artifact_path": "p6-proof/dark-notice-80x24-truecolor",
+      "text_sha256": "b9be1fed9a1cbdb85b1c5fc39a57753d5c89310fdf7fae3cff5fc7f55875b6c8",
+      "ansi_sha256": "3f695ff78826139703f6630dc9600dfff79ae589e3608a2f324324d8f54cfa2d",
+      "style_sha256": "6762fcfbee9908e8192c251f6b53c10a5f0467bed641c0334816372b127fb9d2",
+      "door_ansi_offset": 1068,
+      "committed_text": null,
+      "caller_name": "Z界80",
+      "bbs_handle": "S10Z80"
+    },
+    {
+      "name": "dark-charted-and-here-132x50-16",
+      "scenario": "charted-and-here",
+      "size": [
+        132,
+        50
+      ],
+      "tier": "16",
+      "theme": "dark",
+      "artifact": "p6-fixture-dark-132x50",
+      "artifact_path": "p6-proof/dark-charted-and-here-132x50-16",
+      "text_sha256": "2eee237b3c7ead5a0967bb344ad4aae2c1cceb3ab97578bc4d42efb3ee385e9c",
+      "ansi_sha256": "847098a04e3f75ba077afef2b18f314ba96d404ed398ce5436aadc5e3a321f4e",
+      "style_sha256": "8a9a821b73b32e07f4d5e1eb288be39cc5cf57251b4c307254564fcaf72ff872",
+      "door_ansi_offset": 1065,
+      "committed_text": "dark-charted-and-here-132x50-16.txt",
+      "caller_name": "X界132",
+      "bbs_handle": "S10X132"
+    },
+    {
+      "name": "dark-authored-cover-132x50-16",
+      "scenario": "authored-cover",
+      "size": [
+        132,
+        50
+      ],
+      "tier": "16",
+      "theme": "dark",
+      "artifact": "p6-fixture-dark-132x50",
+      "artifact_path": "p6-proof/dark-authored-cover-132x50-16",
+      "text_sha256": "1fa58c98fbed626a0783316b8705432ff3254968d4c3e48ac434c366da71d181",
+      "ansi_sha256": "b8cc6387edc642eebabfef251e6d7ba22dce48a79bd4ae5ed198c865d13c8b62",
+      "style_sha256": "4bd9f33bc85dc04dd4c82d5e6ba2dd30af6ded4538176288e367ae9a64a663a3",
+      "door_ansi_offset": 1065,
+      "committed_text": null,
+      "caller_name": "X界132",
+      "bbs_handle": "S10X132"
+    },
+    {
+      "name": "dark-light-region-and-here-132x50-16",
+      "scenario": "light-region-and-here",
+      "size": [
+        132,
+        50
+      ],
+      "tier": "16",
+      "theme": "dark",
+      "artifact": "p6-fixture-dark-132x50",
+      "artifact_path": "p6-proof/dark-light-region-and-here-132x50-16",
+      "text_sha256": "9020aadcad6ee0c2700f29e6404374fe709597ca125ad90b848ae2591cc210de",
+      "ansi_sha256": "a79ac691541bb9432e0b4279069e0cc975b4ddc4cd52e052aef65c2a9df66589",
+      "style_sha256": "40ef3a6841f475b33f28482d8137bb2ea4e8390d71d0172a707721f00ffb2363",
+      "door_ansi_offset": 1065,
+      "committed_text": "dark-light-region-and-here-132x50-16.txt",
+      "caller_name": "X界132",
+      "bbs_handle": "S10X132"
+    },
+    {
+      "name": "dark-notice-132x50-16",
+      "scenario": "notice",
+      "size": [
+        132,
+        50
+      ],
+      "tier": "16",
+      "theme": "dark",
+      "artifact": "p6-fixture-dark-132x50",
+      "artifact_path": "p6-proof/dark-notice-132x50-16",
+      "text_sha256": "10b75fe0eaaf2bfd5fa752815b6391106acfe901a1f8825c72c751589258bda7",
+      "ansi_sha256": "4b3a0eb1052151b5f72b8017f2c2c4b89c53d07a63a8b525a3ba5da0903871a9",
+      "style_sha256": "aaf13f2ffd3e02605be93909338f383bb621adb01ff2f7adbc92219ac3dc06a7",
+      "door_ansi_offset": 1065,
+      "committed_text": null,
+      "caller_name": "X界132",
+      "bbs_handle": "S10X132"
+    },
+    {
+      "name": "dark-charted-and-here-132x50-256",
+      "scenario": "charted-and-here",
+      "size": [
+        132,
+        50
+      ],
+      "tier": "256",
+      "theme": "dark",
+      "artifact": "p6-fixture-dark-132x50",
+      "artifact_path": "p6-proof/dark-charted-and-here-132x50-256",
+      "text_sha256": "2b9fa15ac08affe61491670cecb0de2929278aa1a7697180460d979ccd34604a",
+      "ansi_sha256": "4c595aa4fc4b1de974d51d08a7d32d6ef1c446e561111adec25da8334ed00926",
+      "style_sha256": "66f70de1f7c43f2af8ba5d7eccad66d201d3c17fc12dab589c650dfac3416946",
+      "door_ansi_offset": 1172,
+      "committed_text": "dark-charted-and-here-132x50-256.txt",
+      "caller_name": "Y界132",
+      "bbs_handle": "S10Y132"
+    },
+    {
+      "name": "dark-authored-cover-132x50-256",
+      "scenario": "authored-cover",
+      "size": [
+        132,
+        50
+      ],
+      "tier": "256",
+      "theme": "dark",
+      "artifact": "p6-fixture-dark-132x50",
+      "artifact_path": "p6-proof/dark-authored-cover-132x50-256",
+      "text_sha256": "3ba4c81c4ef0c9d997e2926464f20fb8747b3998c7ae98d644f2d1f3e6d70e82",
+      "ansi_sha256": "b6f18292e8238cb1c0c54ba7a892d5f2b2118caa81ede744c4aa814487329a91",
+      "style_sha256": "2eef8b7e5bcf094fcc1b41d94e7ee12e7dcd7096daa882cd2714164238a5d413",
+      "door_ansi_offset": 1172,
+      "committed_text": null,
+      "caller_name": "Y界132",
+      "bbs_handle": "S10Y132"
+    },
+    {
+      "name": "dark-light-region-and-here-132x50-256",
+      "scenario": "light-region-and-here",
+      "size": [
+        132,
+        50
+      ],
+      "tier": "256",
+      "theme": "dark",
+      "artifact": "p6-fixture-dark-132x50",
+      "artifact_path": "p6-proof/dark-light-region-and-here-132x50-256",
+      "text_sha256": "ac1f079046d661c927250ac129808d15a5c766ca1e2b897d2f7c1f0baef63044",
+      "ansi_sha256": "c6f6f9b677508fe2f52cf5071b294907d29361b6e77660bf6a1a85f0eb2ecd2e",
+      "style_sha256": "6a2ad50a761f548c36ef67b9d903e5465b1aac8fbf46a7b8d06e4e691817a948",
+      "door_ansi_offset": 1172,
+      "committed_text": "dark-light-region-and-here-132x50-256.txt",
+      "caller_name": "Y界132",
+      "bbs_handle": "S10Y132"
+    },
+    {
+      "name": "dark-notice-132x50-256",
+      "scenario": "notice",
+      "size": [
+        132,
+        50
+      ],
+      "tier": "256",
+      "theme": "dark",
+      "artifact": "p6-fixture-dark-132x50",
+      "artifact_path": "p6-proof/dark-notice-132x50-256",
+      "text_sha256": "bfa05a03fa12cf2e142a196956637de02af28266f5642080c59371e43256f948",
+      "ansi_sha256": "48c69b4f01562b808e0c3d9401c2b795395090723f82a69189fb4abf98b856f9",
+      "style_sha256": "1af0544830690ff691b7643612601ffae3a7de2c253d1c6ff6fdb0385e363366",
+      "door_ansi_offset": 1172,
+      "committed_text": null,
+      "caller_name": "Y界132",
+      "bbs_handle": "S10Y132"
+    },
+    {
+      "name": "dark-charted-and-here-132x50-truecolor",
+      "scenario": "charted-and-here",
+      "size": [
+        132,
+        50
+      ],
+      "tier": "truecolor",
+      "theme": "dark",
+      "artifact": "p6-fixture-dark-132x50",
+      "artifact_path": "p6-proof/dark-charted-and-here-132x50-truecolor",
+      "text_sha256": "732a06933fda513ecb4fc284e49761743fd051926f2ae12ef1beb21117cd8d79",
+      "ansi_sha256": "70d50c9c85626c5cb887f480207b6ba007d04335755ec4810bc9953cb99ecd23",
+      "style_sha256": "c67bf1f4951359099f72caf17be71a3b7343ca3f8cb4dbe184fe87b9990ce8c6",
+      "door_ansi_offset": 1172,
+      "committed_text": "dark-charted-and-here-132x50-truecolor.txt",
+      "caller_name": "Z界132",
+      "bbs_handle": "S10Z132"
+    },
+    {
+      "name": "dark-authored-cover-132x50-truecolor",
+      "scenario": "authored-cover",
+      "size": [
+        132,
+        50
+      ],
+      "tier": "truecolor",
+      "theme": "dark",
+      "artifact": "p6-fixture-dark-132x50",
+      "artifact_path": "p6-proof/dark-authored-cover-132x50-truecolor",
+      "text_sha256": "55af09762bb37fc10a7554057f30d3b4d363a930a960816e9d71a9b2babb2a6d",
+      "ansi_sha256": "65202a383475f7e8a17c744f47370c496ea5c9b77eb1ea0d08b37ea402a31122",
+      "style_sha256": "3e4ca7489f27496cc46e1e269ea7d3ef10f81f7f4b737b3a3303dec6a34d4164",
+      "door_ansi_offset": 1172,
+      "committed_text": null,
+      "caller_name": "Z界132",
+      "bbs_handle": "S10Z132"
+    },
+    {
+      "name": "dark-light-region-and-here-132x50-truecolor",
+      "scenario": "light-region-and-here",
+      "size": [
+        132,
+        50
+      ],
+      "tier": "truecolor",
+      "theme": "dark",
+      "artifact": "p6-fixture-dark-132x50",
+      "artifact_path": "p6-proof/dark-light-region-and-here-132x50-truecolor",
+      "text_sha256": "218cd8a747421b6b67c1e0711387b13943263cd04ca36d0afe19080d8b958e16",
+      "ansi_sha256": "cb0d11c3ea42f3071294807b9d8a2ac7db533f6dd9cc350c4d7cd3ada32267bc",
+      "style_sha256": "a487a0f5ae8c1c60a56f1ab47e98f6a3c54f23c367b4cdc7301e5b573b3c6d10",
+      "door_ansi_offset": 1172,
+      "committed_text": "dark-light-region-and-here-132x50-truecolor.txt",
+      "caller_name": "Z界132",
+      "bbs_handle": "S10Z132"
+    },
+    {
+      "name": "dark-notice-132x50-truecolor",
+      "scenario": "notice",
+      "size": [
+        132,
+        50
+      ],
+      "tier": "truecolor",
+      "theme": "dark",
+      "artifact": "p6-fixture-dark-132x50",
+      "artifact_path": "p6-proof/dark-notice-132x50-truecolor",
+      "text_sha256": "ca433321dae563dfe02491ad2a3b595fad5db67f5e39727279105f48e4916259",
+      "ansi_sha256": "e7771ac459b1e6dd9c79e41cd0ad5ecab8443b5c5e8313b7d67b1ff8d4288fcb",
+      "style_sha256": "754c905b8cf01f8a6fdf7bf93cc8218b63f79b1a2decad9181874ff77413269c",
+      "door_ansi_offset": 1172,
+      "committed_text": null,
+      "caller_name": "Z界132",
+      "bbs_handle": "S10Z132"
+    }
+  ],
+  "replay_glyph_and_style_checks": 48,
+  "human_approval": false,
+  "presentation_signoff": false,
+  "shipped_place_acceptance": false
+}
