@@ -1677,7 +1677,16 @@ Values are initial, tuned at the pacing gate.
 - **Handoffs.** The holder of a generated job may offer it to a crew
   member after completing at least one stage, while at least one stage
   remains. Each job can be handed off once. The offer waits up to
-  24 hours, and the receiver accepts at any time they are online. The
+  24 hours, and the receiver accepts at any time they are online.
+  - **When an offer is allowed.** Not while a stage holds a live
+    escort assignment or an open mission instance owned by the holder;
+    those stages finish first, so mission-owned subjects never need to
+    change owner.
+  - **Rechecks.** An offer is withdrawn when either party leaves the
+    crew, and never reaches a receiver who ignores the holder.
+    Acceptance rechecks crew membership and the handler's own accept
+    conditions for the receiver (section 9.1); a receiver who fails
+    them cannot accept. The
   receiver becomes the holder under the frozen terms (section 9.1);
   completed stages stay complete, and nothing rerolls.
   - **The job is locked while an offer is open.** Neither party can
@@ -1698,7 +1707,10 @@ Values are initial, tuned at the pacing gate.
   - **Rewards.** The current holder turns the job in. Its chits, XP
     and standing are paid once, divided between the identities that
     committed its stages in proportion to stages each committed,
-    rounded down. Declared item and program rewards are granted once,
+    rounded down. The frozen roster size stays the original one, so
+    a handoff never applies section 9.1's roster scaling. Each share
+    is paid to its identity at turn-in, online or not, and the Operator
+    chit bonus applies per recipient as in section 9.1. Declared item and program rewards are granted once,
     to the holder who turns in, never one per participant. Each
     identity's own caps apply (section 3.5); a share a cap withholds,
     or one owed to a retired identity, is forfeited, never passed to
@@ -1758,7 +1770,8 @@ Values are initial, tuned at the pacing gate.
     showed: no tile positions, no Marked players' zones (a Wardens
     member benefit, section 7.6), and nothing about housing interiors
     (architecture 5.5.4). A zone or cell the reader has never visited
-    is named only by its district, as on the City Map.
+    is named only by its district, as on the City Map. Lines that
+    name a character the reader ignores are left out.
 - **Tags.** A character may leave one tag at a time on a passable tile
   in a contested or open zone, with up to 40 characters of text. Every
   tag uses one fixed tag glyph, the same for all tags; presentation
@@ -1784,9 +1797,13 @@ Values are initial, tuned at the pacing gate.
     If the sender retires, the drop stays for the recipient until it
     expires; uncollected, it is deleted with the sender's other
     property. If both have retired, it is deleted.
-  - One outgoing drop per character at a time, and at most one per
-    character per rolling 24 hours, so drops never become a bulk
-    transfer channel beside the market board (section 8.3).
+  - One outgoing drop per character at a time, at most one per
+    character per rolling 24 hours, and at most 10 units in the stack,
+    so drops never become a bulk transfer channel beside the market
+    board (section 8.3).
+  - A drop from a sender the recipient ignores never arrives and
+    returns to the sender at once. The recipient may refuse any drop,
+    which returns it to the sender the same way.
   - Only items the market board accepts may be dropped; equipped,
     secured, bound and mission items cannot (section 8.3). Player
     trading of intact salvage stays allowed (section 8.4).
