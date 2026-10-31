@@ -50,6 +50,10 @@ class Places:
         self.terrain_rows: tuple[tuple[tuple[int, ...], ...], ...] = ()
         self.terrain_legend: str | None = None
         self.terrain_hazards: frozenset[tuple[int, int]] = frozenset()
+        self.terrain_indices: list[list[int]] = []
+        self.terrain_ids: list[list[str]] = []
+        self.terrain_roofs: set[tuple[int, int]] = set()
+        self.terrain_near_walls: set[tuple[int, int]] = set()
 
     def theme(self, at: tuple[int, int]) -> Theme:
         return self.grounds.get(at, (self.base, (0., 0.)))[0]

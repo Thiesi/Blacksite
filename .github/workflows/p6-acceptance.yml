@@ -96,8 +96,11 @@ jobs:
         with:
           python-version: '3.12'
       - run: python -m pip install -e .[test]
-      - name: Reproduce the A7 origin-only per-cell golden exception
-        run: python scripts/p6_camera_diff.py --output "${{ runner.temp }}/p6-camera-cell-diff.json"
+      - name: Reproduce the immutable merged A7 camera-only golden audit
+        shell: bash
+        run: |
+          git worktree add --detach "$RUNNER_TEMP/p6-a7-proof" 54adc53c6686eb5b2430f2e90cd457a09332b833
+          python -X utf8 "$RUNNER_TEMP/p6-a7-proof/scripts/p6_camera_diff.py" --output "$RUNNER_TEMP/p6-camera-cell-diff.json"
       - name: Measure supplied Plaza and Sodium Row region geometry
         run: python scripts/presentation_p6_masks.py --output "${{ runner.temp }}/p6-mask-geometry.json"
       - name: Validate A6 cache and sign policy on the pinned content input
