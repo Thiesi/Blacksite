@@ -434,11 +434,16 @@ guard (hold, aggro on hostile), hunt (chase), flee (below 20 % health),
 vendor, talker. Aggro rules use the faction relations matrix; a Halvard
 patrol shoots Unmoored members in the Scour and ignores Kestrel. In a
 **truce** zone (planned, S38; Sodium Row) the matrix never makes an NPC
-hostile: NPCs there turn only on an actor who attacked a player or NPC
-in the zone, through provocation as below. A truce zone names its
-keeper faction (Sable on the Row): any eligible attack there, on a
-player or on an NPC of any faction, provokes the keeper's guards in the
-zone against the attacker. Wardens still engage Marked players. Freelance
+hostile: NPCs there turn only on an actor who broke the peace, through
+provocation as below. A truce zone names its keeper faction (Sable on
+the Row). An attack whose target is in the zone breaks the peace when it
+is an attack on a player that Marks the attacker (section 7.3), or an
+attack on an NPC that was not already hostile to the attacker. Breaking
+the peace provokes the keeper's guards in the zone against the
+responsible player, besides the usual provocation of an attacked NPC's
+own group and guards. Firing back at a Marked player, or at an NPC that
+is already after you, breaks nothing. Wardens still engage Marked
+players. Freelance
 characters are neutral to faction NPCs unless a declared restricted
 perimeter or hostile action gives a reason to engage. Open ground permits
 violence; it does not make traders automatic enemies. Hostile perimeters
@@ -934,9 +939,10 @@ participant keeps the normal grade protection and aggression consequence.
 
 In a truce zone (planned, S38), the hostile-faction exception does not
 apply: an eligible attack on any player who is not already Marked makes
-the attacker Marked, whatever the two factions. The truce applies when
-the attacker's or the target's body is in the zone. Firing back at a
-Marked attacker stays exempt, and grade protection is unchanged.
+the attacker Marked, whatever the two factions. The truce follows the
+target: it applies when the target's body is in the zone, wherever the
+attacker, drone or burn comes from. Firing back at a Marked attacker
+stays exempt, and grade protection is unchanged.
 
 Check legality at hostile action commitment, including misses, controls,
 drones, and burning; attribute it once to the responsible player.
