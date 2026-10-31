@@ -1,4 +1,4 @@
-name: A8 evidence export
+name: Native failure evidence export
 on:
   push:
     branches: ['evidence/a8-export-426b8c0']
@@ -12,12 +12,10 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        artifact:
-          - p6-cpu-core-plaza-shipped
-          - p6-cpu-vatside-clinics-shipped
-          - p6-cpu-sodium-row-shipped
-          - p6-cpu-sodium-row-11
-          - p6-cpu-sodium-row-16
+        include:
+          - {artifact: p4-view-semantics-132x50, run: 41219647058}
+          - {artifact: s19-contract-proof-network-132x50, run: 41219647157}
+          - {artifact: s23-market-proof-80x24, run: 41219647157}
     steps:
       - uses: actions/download-artifact@v4
         with:
@@ -25,26 +23,16 @@ jobs:
           path: evidence
           github-token: ${{ secrets.GITHUB_TOKEN }}
           repository: Thiesi/Blacksite
-          run-id: 41221879891
-      - name: Emit original capture text or compact numeric report
+          run-id: ${{ matrix.run }}
+      - name: Emit unfinished caller screen and bounded diagnostic tail
         shell: python
         run: |
           import hashlib, json
           from pathlib import Path
-          root = Path('evidence')
-          for path in sorted(root.rglob('*.txt')):
-              raw = path.read_bytes()
-              print('A8_EXPORT '+json.dumps(dict(kind='capture',path=path.relative_to(root).as_posix(),sha256=hashlib.sha256(raw).hexdigest(),text=raw.decode('utf-8')),ensure_ascii=True,separators=(',',':')))
-          for path in sorted(root.rglob('p6-cpu.json')):
-              raw = path.read_bytes()
-              report = json.loads(raw)
-              keep = {k:v for k,v in report.items() if k != 'cases'}
-              keep['cases'] = []
-              for case in report['cases']:
-                  row = {k:v for k,v in case.items() if k != 'arms'}
-                  row['arms'] = {}
-                  for name, arm in case['arms'].items():
-                      frames = arm['frames']
-                      row['arms'][name] = dict(cpu_s_per_hour=arm['cpu_s_per_hour'],frames={k:v for k,v in frames.items() if k != 'samples'})
-                  keep['cases'].append(row)
-              print('A8_EXPORT '+json.dumps(dict(kind='cpu',sha256=hashlib.sha256(raw).hexdigest(),report=keep),ensure_ascii=True,separators=(',',':')))
+          for path in sorted(Path('evidence').rglob('*')):
+              if not path.is_file(): continue
+              if (path.name.startswith('unfinished-') and path.suffix == '.txt') or path.name in ('failure-trace.txt','progress.log'):
+                  raw = path.read_bytes()
+                  print('P6B_DIAG '+json.dumps(dict(path=path.as_posix(),sha256=hashlib.sha256(raw).hexdigest(),text=raw.decode('utf-8')),ensure_ascii=True,separators=(',',':')))
+              elif path.name == 'input-tail.json':
+                  print('P6B_DIAG '+json.dumps(dict(path=path.as_posix(),inputs=json.loads(path.read_bytes())[-40:]),ensure_ascii=True,separators=(',',':')))
