@@ -1027,7 +1027,14 @@ state, so a client may name it from that state and never infers it
 from darkness. The workers' bench is a fabrication workshop for the
 workers only, at the ordinary quality rule plus 0.05, capped at 1.15
 and not stacking with Yard Relay. The handler is a Civic engineer,
-so the standing reward goes to the Wardens.
+so the standing reward goes to the Wardens, and section 7.1's
+propagation applies as for any Wardens reward: Unmoored standing falls
+by half that amount. While Grid is `fault` or `allocated`, the Foundry's
+public `yard lights` control is suspended and cannot relight or darken
+the Yards; it resumes when the state ends, as Relay Zero's permit
+states its relation to the ordinary control. The safe return route is
+the cable trench, whose tiles keep their lights in every Grid state;
+the brownout never darkens the trench or the hall.
 
 Each order identifies the exact changed door, cache, vendor, or core,
 the foregone allocation, and a safe return route. Effects never change

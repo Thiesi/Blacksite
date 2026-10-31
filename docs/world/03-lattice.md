@@ -282,7 +282,8 @@ so.
 Halvard tooling. Controls: `yard lights @ oldworks-yards`, `gantry @
 oldworks-yards` (drops a load: a hazard tile row for 30 s), and, once
 #119's Dynamo Hall is built, `hall governor @ oldworks-dynamo-hall`
-(the Grid work order's network step, design §7.5). ICE:
+(the Grid work order's network step, design §7.5). `yard lights` is
+suspended while Grid is in fault or allocated (design §7.5). ICE:
 Tripwire, Sandman, Hornets, Mastiff.
 
 **Site Zero Annex** (`lat-site-zero-annex`) — abandoned Halvard, tier 4, 9 rooms. Hardware: annex
