@@ -237,6 +237,11 @@ Terrain:
 | Water | `≈` | water background; glints change colour, never shape | blue |
 | Hazard, warned tiles | the tile's shape, `‼` in the log | amber on dark red | bright yellow, reverse |
 
+Sign-only `thing_sign_*` roles are checked against their wall face,
+not included in the darkest-thing floor measured from theme ground.
+Ordinary things keep that ground floor.
+P5's generic, non-theme floor is unchanged.
+
 Things:
 
 | Kind | Shape | Colour family |

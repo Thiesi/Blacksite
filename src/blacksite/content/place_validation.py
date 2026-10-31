@@ -25,6 +25,14 @@ def dressing(text: str) -> bool:
 def validate_places(tree: ContentTree, report: Callable[[str, str, str], None]) -> None:
     themes = tree.themes.themes if tree.themes else {}
     roles = tree.palette.roles if tree.palette else {}
+    palette_data = asdict(tree.palette) if tree.palette else {}
+    paints: dict[tuple[str, str], Paint] = {}
+
+    def paint_for(tier: str, variant: str) -> Paint:
+        key = tier, variant
+        if key not in paints:
+            paints[key] = Paint(Palette(palette_data, tier, variant))
+        return paints[key]
 
     def role_ok(role: str | None, kind: str, rid: str) -> bool:
         if role not in roles:
@@ -43,7 +51,7 @@ def validate_places(tree: ContentTree, report: Callable[[str, str, str], None]) 
             return
         for tier in s.TIERS:
             for variant in s.VARIANTS:
-                paint = Paint(Palette(asdict(tree.palette), tier, variant))
+                paint = paint_for(tier, variant)
                 ground, structure, light = paint.roles_for(theme)
                 if tier == '16':
                     # TR-1 rule 7: ANSI uses categories, not numeric L*
@@ -151,7 +159,7 @@ def validate_places(tree: ContentTree, report: Callable[[str, str, str], None]) 
                 for theme in set(effective):
                     for tier in s.TIERS:
                         for variant in s.VARIANTS:
-                            paint = Paint(Palette(asdict(tree.palette), tier, variant))
+                            paint = paint_for(tier, variant)
                             # UI 2.2 mandates a black face behind ANSI letters.
                             bg = 0 if tier == '16' else paint.palette.style(theme.wall_bg).fg
                             if tier == '16':

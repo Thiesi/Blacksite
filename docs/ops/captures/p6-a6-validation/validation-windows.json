@@ -1,0 +1,168 @@
+{
+  "head": "7752508a684623ad91b58cc2ba88fcc121897a1c",
+  "baseline": "c2f990312d1c6cf88200f56dc4722fe83f9f7321",
+  "input_ref": "3e585c71eebf8c8cd19a591016dfe78a788c5b9b",
+  "python": "3.12.10",
+  "platform": "Windows-11-10.0.26220-SP0",
+  "boundary": "full validate(tree), CPU only; load/I/O excluded",
+  "source_sha256": {
+    "src/blacksite/door/present/paint.py": "b054fcfee0b2be9d8838c2280c216402caf9a85defd9ab02ad85b7715477b26c",
+    "src/blacksite/content/place_validation.py": "373b0efabc7f111f8cb3d6c1841e629a4355e87ef7da6a8142944ca9e41ee7bf"
+  },
+  "cases": [
+    {
+      "case": "shipped",
+      "before": {
+        "cpu_seconds": [
+          0.34375,
+          0.21875,
+          0.25
+        ],
+        "median_cpu_seconds": 0.25,
+        "operations_per_validation": {
+          "palette_conversions": 0,
+          "paints": 0
+        },
+        "diagnostics": 0,
+        "ordered_diagnostics_sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+      },
+      "cache_only": {
+        "cpu_seconds": [
+          0.234375,
+          0.203125,
+          0.171875
+        ],
+        "median_cpu_seconds": 0.203125,
+        "operations_per_validation": {
+          "palette_conversions": 1,
+          "paints": 0
+        },
+        "diagnostics": 0,
+        "ordered_diagnostics_sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+      },
+      "after": {
+        "cpu_seconds": [
+          0.234375,
+          0.25,
+          0.21875
+        ],
+        "median_cpu_seconds": 0.234375,
+        "operations_per_validation": {
+          "palette_conversions": 1,
+          "paints": 0
+        },
+        "diagnostics": 0,
+        "ordered_diagnostics_sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+      },
+      "cache_diagnostics_identical_in_order": true,
+      "sign_floor_diagnostics_removed": 0
+    },
+    {
+      "case": "shipped_plus_p6b",
+      "before": {
+        "cpu_seconds": [
+          11.84375,
+          10.734375,
+          11.15625
+        ],
+        "median_cpu_seconds": 11.15625,
+        "operations_per_validation": {
+          "palette_conversions": 1359,
+          "paints": 1359
+        },
+        "diagnostics": 0,
+        "ordered_diagnostics_sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+      },
+      "cache_only": {
+        "cpu_seconds": [
+          1.703125,
+          1.703125,
+          1.921875
+        ],
+        "median_cpu_seconds": 1.703125,
+        "operations_per_validation": {
+          "palette_conversions": 1,
+          "paints": 9
+        },
+        "diagnostics": 0,
+        "ordered_diagnostics_sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+      },
+      "after": {
+        "cpu_seconds": [
+          1.640625,
+          1.5625,
+          1.4375
+        ],
+        "median_cpu_seconds": 1.5625,
+        "operations_per_validation": {
+          "palette_conversions": 1,
+          "paints": 9
+        },
+        "diagnostics": 0,
+        "ordered_diagnostics_sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+      },
+      "cache_diagnostics_identical_in_order": true,
+      "sign_floor_diagnostics_removed": 0
+    },
+    {
+      "case": "p6b_plus_light_fixture",
+      "before": {
+        "cpu_seconds": [
+          13.96875,
+          12.4375,
+          11.734375
+        ],
+        "median_cpu_seconds": 12.4375,
+        "operations_per_validation": {
+          "palette_conversions": 1440,
+          "paints": 1440
+        },
+        "diagnostics": 12,
+        "ordered_diagnostics_sha256": "fb74cfa984fd13d829f7174b2894b77220810816f49a66949986eaa025bd93a5"
+      },
+      "cache_only": {
+        "cpu_seconds": [
+          1.484375,
+          1.640625,
+          1.609375
+        ],
+        "median_cpu_seconds": 1.609375,
+        "operations_per_validation": {
+          "palette_conversions": 1,
+          "paints": 9
+        },
+        "diagnostics": 12,
+        "ordered_diagnostics_sha256": "fb74cfa984fd13d829f7174b2894b77220810816f49a66949986eaa025bd93a5"
+      },
+      "after": {
+        "cpu_seconds": [
+          1.640625,
+          1.71875,
+          1.65625
+        ],
+        "median_cpu_seconds": 1.65625,
+        "operations_per_validation": {
+          "palette_conversions": 1,
+          "paints": 9
+        },
+        "diagnostics": 0,
+        "ordered_diagnostics_sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+      },
+      "cache_diagnostics_identical_in_order": true,
+      "sign_floor_diagnostics_removed": 12
+    }
+  ],
+  "input_files_sha256": {
+    "src/blacksite/content/looks/core-plaza.json": "904f6007b9a65e0e6f51f92055c0a758352c4c3168ba8d9b5d59a95b30abb5bd",
+    "src/blacksite/content/looks/sodium-row.json": "8b13f8a090dabb8e3e4ce1b764ec62a6d2f2824155294c55534cce58166a7d4f",
+    "src/blacksite/content/looks/vatside-clinics.json": "9f4f1905e10ef0c849712360b9551c33f0a30969046cf17ccfec75a765415c17",
+    "src/blacksite/content/palette.json": "035b347ef6802d699604bd51a500526c513cc295ac7b180b6ffd95a3086c3268",
+    "src/blacksite/content/themes.json": "4f3138332924f7a74ad1070673382bfc68bf3109986f54164a4b11cb92836010",
+    "src/blacksite/content/zones/core-plaza.json": "bc5245137e8843cb0b082018b82430d21e38a94a895723aba332c5f136c333f4",
+    "src/blacksite/content/zones/core-plaza.map": "e33ce6ee67854350b385f6f0161e2438e43aaf4183d85b1039fce8a662b42fb1",
+    "src/blacksite/content/zones/sodium-row.json": "6aef65782e5778c405f97478ca32ab3445b2d059c2d77156174a50d519afbfbf",
+    "src/blacksite/content/zones/sodium-row.map": "b939a6567fcf320f623db154868acad5b32289b581eab80bca53cdfce1eeaac8",
+    "src/blacksite/content/zones/vatside-clinics.json": "34ab8fae4adcca44768c82bfed3402ddc9d03f2ade622891e350578bd3540df6",
+    "src/blacksite/content/zones/vatside-clinics.map": "2e9fa5b499200e5e6dbd9c7893bf80b80cb6346602a95e6174b6f834c536b67a"
+  }
+}
