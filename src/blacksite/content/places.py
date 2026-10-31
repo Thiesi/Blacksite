@@ -91,6 +91,10 @@ def charting_problems(zone: s.Zone, tiles: dict[str, s.TileType]) -> Iterable[st
             if nxt in allowed and nxt not in seen:
                 seen.add(nxt)
                 pending.append(nxt)
+    # Architecture 5.5.5: disclose a barrier's public face, never use it
+    # as a flood-fill step into the room behind or another barrier.
+    faces = {(x, y) for x, y in barriers - hidden - private
+             if any(nxt in seen for nxt in ((x-1,y), (x+1,y), (x,y-1), (x,y+1)))}
     for i, region in enumerate(regions):
         if (region.w <= 0 or region.h <= 0 or region.x < 0 or region.y < 0
                 or region.x + region.w > zone.width or region.y + region.h > zone.height):
@@ -101,5 +105,5 @@ def charting_problems(zone: s.Zone, tiles: dict[str, s.TileType]) -> Iterable[st
             yield f'public/charted region {i} contains or neighbours a hidden exit'
         if cells & private:
             yield f'public/charted region {i} overlaps a private interior'
-        if cells & passable - seen:
+        if cells & passable - seen - faces:
             yield f'public/charted region {i} includes gated or unreachable passable ground'
