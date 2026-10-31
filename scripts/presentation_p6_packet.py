@@ -57,6 +57,23 @@ def source_hash(head: str, source_tree: str) -> str:
     return digest.hexdigest()
 
 
+def verify_capture(directory: Path, stem: str, width: int, height: int) -> int:
+    """Replay the shared native-door boundary without editing capture bytes."""
+    safe_filename(stem)
+    ansi,text,style = (directory/(stem+suffix) for suffix in ('.ans','.txt','.json'))
+    terminal = FakeTerminal(width,height)
+    stream = ansi.read_bytes()
+    start = stream.find(b'\x1b[?1049h')
+    require(start>=0 and b'\x1b[?1049l' not in stream[start:],
+            f'{stem}: expected an active native door alternate screen')
+    terminal.write(stream[start:])
+    require(terminal.screen_text()==text.read_bytes().decode('utf-8'),
+            f'{stem}: ANSI replay differs from captured text')
+    require(canonical(snapshot(terminal))==canonical(json.loads(style.read_text(encoding='utf-8'))),
+            f'{stem}: ANSI replay differs from captured styles')
+    return start
+
+
 def build_packet(root: Path, metadata: list[dict[str,Any]], run: int, head: str,
                  destination: Path, *, source_tree: str) -> dict[str,Any]:
     if destination.exists():
@@ -97,19 +114,10 @@ def build_packet(root: Path, metadata: list[dict[str,Any]], run: int, head: str,
             for stem in case['captures']:
                 safe_filename(stem)
                 ansi,text,style = (directory/(stem+suffix) for suffix in ('.ans','.txt','.json'))
-                terminal = FakeTerminal(width,height)
-                stream = ansi.read_bytes()
                 # NativeProbe's Caller.replay starts at the door's alternate
                 # screen, after NetBBS/Telnet negotiation. Preserve and hash
                 # the entire stream; replay that same displayed boundary.
-                start = stream.find(b'\x1b[?1049h')
-                require(start>=0 and b'\x1b[?1049l' not in stream[start:],
-                        f'{stem}: expected an active native door alternate screen')
-                terminal.write(stream[start:])
-                require(terminal.screen_text()==text.read_bytes().decode('utf-8'),
-                        f'{stem}: ANSI replay differs from captured text')
-                require(canonical(snapshot(terminal))==canonical(json.loads(style.read_text(encoding='utf-8'))),
-                        f'{stem}: ANSI replay differs from captured styles')
+                start = verify_capture(directory,stem,width,height)
                 step = stem.removeprefix(case['theme']+'-').removesuffix(f'-{width}x{height}-{case["tier"]}')
                 require(step in ('charted-and-here','authored-cover','light-region-and-here','notice'),
                         f'{stem}: unrecognised checkpoint; update the review selection explicitly')
