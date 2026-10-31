@@ -1711,9 +1711,10 @@ Values are initial, tuned at the pacing gate.
   completed stages stay complete, and nothing rerolls. Acceptance
   removes the giver from the job's participants: the giver can no
   longer resume it (section 9.1). The giver's share for the stages
-  already committed is paid on acceptance, so it never depends on the
-  receiver finishing. It counts against the giver's section 3.5 limits
-  exactly as an ordinary job reward does. The giver's job slot stays occupied while the
+  already committed is paid at turn-in, like every share, and only if
+  the job is completed (section 9.1); a giver trusts the receiver to
+  finish. It counts against the giver's section 3.5 limits exactly as
+  an ordinary job reward does. The giver's job slot stays occupied while the
   offer is open and is freed on acceptance.
   - **The job is locked while an offer is open.** Neither party can
     complete a stage, abandon the job or use its stage-bound items,
@@ -1737,9 +1738,9 @@ Values are initial, tuned at the pacing gate.
     and standing are paid once, divided between the identities that
     committed its stages in proportion to stages each committed,
     rounded down. The frozen roster size stays the original one, so
-    a handoff never applies section 9.1's roster scaling. The giver's
-    share is paid at acceptance; the rest is paid at turn-in, and only
-    if the job is completed. Each share is paid to its identity online
+    a handoff never applies section 9.1's roster scaling. Every share,
+    the giver's included, is paid at turn-in, and only if the job is
+    completed. Each share is paid to its identity online
     or not, and the Operator chit bonus applies per recipient as in
     section 9.1. Declared item and program rewards are granted once,
     to the holder who turns in, never one per participant. Each
@@ -1817,18 +1818,17 @@ Values are initial, tuned at the pacing gate.
   picks it, outside the rule glyphs, so a tag can never imitate a thing
   or an exit. HERE shows the start of its text, and looking at the tag
   shows it whole. It expires after 7 days or when replaced.
-  - Never on a door or another visible interaction tile, and never in
-    a safe zone or pocket; those refusals give one message, the same
-    for every refused tile.
-  - A tag placed on a hidden exit is accepted like any other, but only
-    its author ever sees it, so tagging never reveals a hidden exit.
+  - Never on a wall or other impassable tile, a hidden exit, a door or
+    another visible interaction tile, and never in a safe zone or
+    pocket. Every refusal gives the same one message. A hidden exit
+    looks like the wall around it and is refused exactly as a wall is,
+    so tagging never reveals one.
   - A tag is drawn only where nothing else is: an item, hazard, actor
     or object on the tile always shows instead, and the tag stays
     listed in HERE.
   - A character places or replaces a tag at most once per 10 minutes.
   - Anyone who sees the tile sees the tag, except a player who ignores
-    its author, and except a tag on a hidden exit, which only its author
-    sees (above). Tags use chat's text rules, are covered by report, and
+    its author. Tags use chat's text rules, are covered by report, and
     are removable by the admin CLI.
 - **Dead drops.** A character may leave one item stack at an authored
   dead-drop object, addressed to one named character. Only that
