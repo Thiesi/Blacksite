@@ -40,6 +40,7 @@ after their id.
 | id | slug | `core-plaza` |
 | name, district | str | |
 | safety | enum | safe, pocket, contested, open |
+| truce | bool | planned, S38: a contested zone where NPCs are never hostile from the relations matrix and any attack Marks the attacker (game design 5.5, 7.3); the validator rejects it on other classes; default false |
 | lit | bool | a pocket-class zone that is lit: sight covers it while you stand in it (game design 5.2); default false |
 | charted | bool | D1: the public region is known on arrival (terminal UI 2.3, architecture 5.5.5); default false |
 | public | list of `[x, y, w, h]` | D1: the public-ground region; required when `charted`. Architecture 5.5.5 says what it may contain |

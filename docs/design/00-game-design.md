@@ -432,7 +432,11 @@ exchanges create neither combat-logout penalties nor death debt.
 Non-player actors run **behaviours**: idle, wander, patrol (waypoints),
 guard (hold, aggro on hostile), hunt (chase), flee (below 20 % health),
 vendor, talker. Aggro rules use the faction relations matrix; a Halvard
-patrol shoots Unmoored members in the Scour and ignores Kestrel. Freelance
+patrol shoots Unmoored members in the Scour and ignores Kestrel. In a
+**truce** zone (planned, S38; Sodium Row) the matrix never makes an NPC
+hostile: NPCs there turn only on an actor who attacked a player or NPC
+in the zone, through provocation as below, and Wardens still engage
+Marked players. Freelance
 characters are neutral to faction NPCs unless a declared restricted
 perimeter or hostile action gives a reason to engage. Open ground permits
 violence; it does not make traders automatic enemies. Hostile perimeters
@@ -925,6 +929,12 @@ in contested zones, and your name shows red. Killing a Marked player gives
 standing with the Wardens. In open zones nothing marks anyone. For remote
 burning, both bodies must be in open areas for that exception; a contested
 participant keeps the normal grade protection and aggression consequence.
+
+In a truce zone (planned, S38), the hostile-faction exception does not
+apply: an eligible attack on any player who is not already Marked makes
+the attacker Marked, whatever the two factions. The truce applies when
+the attacker's or the target's body is in the zone. Firing back at a
+Marked attacker stays exempt, and grade protection is unchanged.
 
 Check legality at hostile action commitment, including misses, controls,
 drones, and burning; attribute it once to the responsible player.
