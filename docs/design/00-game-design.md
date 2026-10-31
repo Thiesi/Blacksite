@@ -1712,7 +1712,8 @@ Values are initial, tuned at the pacing gate.
   removes the giver from the job's participants: the giver can no
   longer resume it (section 9.1). The giver's share for the stages
   already committed is paid on acceptance, so it never depends on the
-  receiver finishing. The giver's job slot stays occupied while the
+  receiver finishing. It counts against the giver's section 3.5 limits
+  exactly as an ordinary job reward does. The giver's job slot stays occupied while the
   offer is open and is freed on acceptance.
   - **The job is locked while an offer is open.** Neither party can
     complete a stage, abandon the job or use its stage-bound items,
@@ -1749,6 +1750,10 @@ Values are initial, tuned at the pacing gate.
   - Story jobs, work orders and descent rosters cannot be handed off.
     Personal and mission records stay with the identity that earned
     them (section 10).
+- **Dissolution.** A crew dissolved by any route (its last member
+  leaving, inactivity, the crew-of-one expiry or the admin CLI)
+  withdraws all its invitations and handoff offers, as leaving does;
+  offered jobs and their items return to their holders.
 - **Retirement.** Confirmed character retirement ends that character's
   crew membership, withdraws its invitations and handoff offers (a job
   on offer returns to its holder, or ends with the holder's retirement
@@ -1838,10 +1843,11 @@ Values are initial, tuned at the pacing gate.
     expires; uncollected, it is deleted with the sender's other
     property. If both have retired, it is deleted.
   - One outgoing drop per character at a time, at most one per BBS
-    identity across all its characters per rolling 24 hours, at most
-    one received per character per rolling 24 hours, and at most 10
-    units in the stack, so drops never become a bulk transfer channel
-    beside the market board (section 8.3).
+    identity across all its characters per rolling 24 hours, and at
+    most 10 units in the stack, so drops never become a bulk transfer
+    channel beside the market board (section 8.3). There is no
+    per-recipient limit, so a drop's acceptance never depends on what
+    other senders did.
   - A drop from a sender the recipient ignores never arrives. To the
     sender it looks exactly like an unanswered drop: it returns only at
     the 7-day expiry, so it never reveals the ignore. The recipient may
