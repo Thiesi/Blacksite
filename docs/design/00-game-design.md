@@ -1077,7 +1077,13 @@ applies; an enabled lamp nearby does not offset it.
   Wardens reward. Under section 7.2, with the standard +5, the
   Wardens' opponents, Sable and the Unmoored, each change by -2, and
   its allies, Kestrel and (once built, #90) the Compact, by +2 (halves
-  rounded toward zero).
+  rounded toward zero). This cost is deliberate (owner decision,
+  2026-10-31): the job is Civic work for the Wardens on Unmoored
+  ground, so an Unmoored member who takes it pays a little with their
+  own faction for it. Keeping the lights on is useful work that costs
+  standing, the kind of choice bible section 14 asks for, and an
+  Unmoored player may leave the order to others. It is not an
+  oversight, and a build slice must not exempt it.
 - **Return route.** The safe return route is the cable trench, an exit
   neighbourhood; the brownout never darkens the trench or the hall.
 
