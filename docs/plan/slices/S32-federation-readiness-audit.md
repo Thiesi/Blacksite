@@ -96,7 +96,7 @@ slice produces documents and tests only; it changes no game behaviour.
   - Fiction: proposal for how other nodes appear in Karst (recommended:
     through the Silt, as other cities' severed Lattices, which keeps the
     bible's "no way out" intact).
-  - Sizing: which slices it would take (a rough S34–S38 list) and which
+  - Sizing: which slices it would take (a rough list of new slices, numbered after the highest filed) and which
     NetBBS work it needs beyond #168 (likely: a relay-backed local
     socket adapter).
 - Tests added under `tests/federation/` for items 1, 3, 4, 5, 6 of the
