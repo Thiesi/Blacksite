@@ -1,12 +1,15 @@
 # S36 — Tags: one short public mark per character
 
-**Status:** proposed (awaiting the owner's approval)
+**Status:** planned (approved by the owner 2026-10-31)
 **Primary model:** Codex · **Reviewer:** automated review, technical lead, presentation lead (glyph, drawing and wording)
 **Depends on:** S08, S09, P6 (place layer and charted ground) · **Milestone:** asynchronous presence (#125)
 **Issue:** filed on approval
 
 Canon: game design §11.1, "Tags", from #128. Where this file and canon
 differ, canon wins.
+
+**Timing (owner, 2026-10-31):** starts after H1, beside C1 and S25c.
+Until P10's cutover, every view is built in both presentations.
 
 ## Goal
 

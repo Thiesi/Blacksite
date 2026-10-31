@@ -1,12 +1,15 @@
 # S35 — The away report: persisted public records and the login screen
 
-**Status:** proposed (awaiting the owner's approval)
+**Status:** planned (approved by the owner 2026-10-31)
 **Primary model:** Codex · **Reviewer:** automated review, technical lead, presentation lead (screen, wording and disclosure)
 **Depends on:** S34 · **Milestone:** asynchronous presence (#125)
 **Issue:** filed on approval
 
 Canon: game design §11.1, "The away report", from #128. Where this file
 and canon differ, canon wins.
+
+**Timing (owner, 2026-10-31):** starts after H1, beside C1 and S25c.
+Until P10's cutover, every view is built in both presentations.
 
 ## Goal
 

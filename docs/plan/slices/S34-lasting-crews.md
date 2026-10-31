@@ -1,12 +1,15 @@
 # S34 — Lasting crews: persistent rosters, offline invitations, notes and handoffs
 
-**Status:** proposed (awaiting the owner's approval)
+**Status:** planned (approved by the owner 2026-10-31)
 **Primary model:** Codex · **Reviewer:** automated review, technical lead, presentation lead (views and wording)
 **Depends on:** S22, S19 · **Milestone:** asynchronous presence (#125)
 **Issue:** filed on approval
 
 Canon: game design §10.1 (lasting crews, notes and handoffs), from #128.
 Where this file and canon differ, canon wins.
+
+**Timing (owner, 2026-10-31):** starts after H1, beside C1 and S25c.
+Until P10's cutover, every view is built in both presentations.
 
 ## Goal
 
@@ -78,7 +81,6 @@ stay, applied to members who are online and present.
 ## Out of scope
 
 - The away report screen itself (S35).
-- Sender withdrawal of an offline invitation: see "Owner decisions".
 - Changing S22's live rules, loot modes or XP sharing.
 
 ## Protocol and view models
@@ -137,10 +139,11 @@ updated to say this slice is built.
 
 ## Owner decisions
 
-- **Sender withdrawal of an offline invitation** (#125, review point 1).
-  Canon has none, so an invitation to an inactive character holds one
-  of the sender's 5 slots for 7 days. Recommendation: allow withdrawal,
-  with the same result whether or not it was delivered.
+- **Sender withdrawal of an offline invitation:** allowed (2026-10-31),
+  now in §10.1. It gives the same result whether or not the invitation
+  was delivered or ignored, and frees the sender's slots. Wording from
+  the presentation lead: "Withdraw your invitation to Name? (y/n)",
+  then "Invitation withdrawn."
 
 ## Implementer notes
 

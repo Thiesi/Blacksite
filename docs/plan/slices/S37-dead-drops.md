@@ -1,12 +1,15 @@
 # S37 — Dead drops: addressed item stacks and Kestrel returns
 
-**Status:** proposed (awaiting the owner's approval)
+**Status:** planned (approved by the owner 2026-10-31)
 **Primary model:** Codex for engine · presentation lead or Codex for drop-object placement · **Reviewer:** automated review, technical lead, presentation lead (views, wording and placement)
 **Depends on:** S23, S35 · **Milestone:** asynchronous presence (#125)
 **Issue:** filed on approval
 
 Canon: game design §11.1, "Dead drops", from #128. Where this file and
 canon differ, canon wins.
+
+**Timing (owner, 2026-10-31):** starts after H1, beside C1 and S25c.
+Until P10's cutover, every view is built in both presentations.
 
 ## Goal
 
@@ -41,7 +44,13 @@ transfer channel and never reveal an ignore or a retirement.
   one per identity per rolling 24 hours, at most 10 units, only items
   the market board accepts. The fee is 5 % of catalog base price times
   units, rounded up, at least 1 chit, paid on leaving and never
-  refunded.
+  refunded. Items with no catalog base price cannot be dropped and get
+  the same refusal as other items the board won't take.
+- **Withdrawal.** The sender withdraws a drop until it is collected:
+  it returns as a free Kestrel collection, the fee is kept, the result
+  is the same whether or not it arrived, and the 24-hour limit still
+  counts it. Wording: "Withdraw your drop for Name? It goes to a
+  Kestrel branch. The fee is not refunded. (y/n)".
 - **Collecting and refusing.** Only the recipient sees the drop and
   can collect or refuse it. Refusal returns it.
 - **Returns.** After 7 days uncollected, or on refusal, the same item
@@ -61,8 +70,6 @@ transfer channel and never reveal an ignore or a retirement.
 
 ## Out of scope
 
-- Sender withdrawal of a drop and the fee for items with no catalog
-  base price: see "Owner decisions".
 - Any change to the market board.
 
 ## Protocol and view models
@@ -81,7 +88,9 @@ transfer channel and never reveal an ignore or a retirement.
 - Limits: one outgoing per character, one per identity per 24 hours,
   10 units, market-accepted items only.
 - Fee arithmetic, rounding, the 1-chit floor, can't-pay refusal, never
-  refunded.
+  refunded; an item with no catalog base price is refused.
+- Withdrawal: same sender view whether delivered, ignored or not;
+  the item reaches a Kestrel collection; the 24-hour limit still counts.
 - Collect, refuse, expiry and ignore paths; the same item instance
   returns; the sender's view is identical in every return case.
 - Retirement paths and the confirmation listing.
@@ -105,11 +114,5 @@ presentation lead signs off views, wording and placement.
 
 ## Owner decisions
 
-- **Sender withdrawal of a drop** (#125, review point 1). Canon has
-  none, so a drop to an inactive or mistyped name locks the sender's
-  one outgoing drop for 7 days. Recommendation: allow withdrawal,
-  returning the item through the free Kestrel collection with the fee
-  kept, and the same result whether or not it was delivered.
-- **Items with no catalog base price** (#125, review point 2). Canon
-  charges them the 1-chit floor, so valuable crafted or looted items
-  can move cheaply. Recommendation: make them undroppable.
+Decided 2026-10-31 and now in §11.1: senders may withdraw a drop, and
+items with no catalog base price cannot be dropped.

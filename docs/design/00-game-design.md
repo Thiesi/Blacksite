@@ -1766,8 +1766,12 @@ Values are initial, tuned at the pacing gate.
   like one left normally, so it never reveals the ignore: the sender
   gets exactly the result a sender who is not ignored would get,
   including the full-inbox refusal, and the ignored invitation holds
-  the sender's slots until its normal expiry. Ignored handoff offers
-  and dead drops hold the sender's slots the same way.
+  the sender's slots until its normal expiry or until the sender
+  withdraws it. The sender may withdraw any invitation they left at
+  any time; withdrawal frees the slots and gives the same result
+  whether the invitation was delivered or ignored. Ignored handoff
+  offers and dead drops hold the sender's slots the same way and are
+  withdrawn the same way.
 - **Crew notes.** Members share up to 20 notes of up to 200 characters,
   visible to members only. The author or the leader removes a note; a
   departed member's notes stay until any member removes them. Notes use chat's text rules and rate
@@ -1967,16 +1971,25 @@ Values are initial, tuned at the pacing gate.
     it never becomes free permanent storage.
   - **Kestrel fee.** Leaving a drop costs the sender the market board's
     5 % Kestrel fee (section 8.3), charged on the item's catalog base
-    price times the units dropped, rounded up, at least 1 chit; an item
-    with no catalog base price pays the 1-chit minimum. It is paid when
+    price times the units dropped, rounded up, at least 1 chit. It is
+    paid when
     the drop is left and never refunded. Market prices are not used,
     so no sale can be staged to move the fee.
   - A drop from a sender the recipient ignores never arrives. To the
     sender it looks exactly like an unanswered drop: it returns only at
-    the 7-day expiry, so it never reveals the ignore. The recipient may
-    also refuse a drop they can see, which returns it to the sender.
-  - Only items the market board accepts may be dropped; equipped,
-    secured, bound and mission items cannot (section 8.3). Player
+    the 7-day expiry or when the sender withdraws it, so it never
+    reveals the ignore. The recipient may also refuse a drop they can
+    see, which returns it to the sender.
+  - **Withdrawal.** The sender may withdraw a drop until it is
+    collected. It returns as a free Kestrel collection, as a returned
+    drop does, and the fee is kept. The result is the same whether or
+    not the drop arrived, so withdrawal never reveals an ignore. It
+    frees the sender's one outgoing drop; the 24-hour limit still
+    counts it.
+  - Only items the market board accepts and that have a catalog base
+    price may be dropped; equipped, secured, bound and mission items
+    cannot (section 8.3), and neither can an item with no catalog
+    base price, so the fee always reflects what moves. Player
     trading of intact salvage stays allowed (section 8.4).
   - Dead-drop objects are authored content, at least one per district,
     never in a safe zone or pocket. The gazetteer places them.
