@@ -983,7 +983,8 @@ the receipt across factions and characters on that identity.
 
 ### 7.5 Public services and work orders
 
-Four services have bounded work orders with state `normal`, `fault`,
+Four services have bounded work orders (a fifth, Grid, is planned in
+#119) with state `normal`, `fault`,
 `repairing`, or `allocated`. They use ordinary contracts and controls,
 not a population simulation. The S19 work-order scheduler offers a fault every 60 minutes of
 server uptime per service, at most one fault on the node. It lasts
@@ -1016,6 +1017,17 @@ revision and receipt, independent of crew leadership.
 | Cold Chain / `vatside-clinics` | elective surgery discount unavailable; carry power unit and verify thermal record | surgery service fee −10 % for visitors | surgery service fee −20 % for workers only |
 | Depot / `tramyard-depots` | surplus warehouse shut; carry manifest and release latch | surplus vendor buy-back budget ×2 for everyone | reserve surplus salvage cache for workers |
 | Relay Zero / `oldworks-main` | survey feed stale; reset hardware and calibrate in network | publish local core's current patrol route | workers receive temporary local gate credential |
+| Grid / `oldworks-dynamo-hall` (planned, #119) | brownout: the Yards' lights go out; carry a power unit to the hall and re-sync the hall governor in the network | the Yards' lights come back at once | the spare load runs a workers' bench in the hall, and the Yards stay dark for the 20 minutes |
+
+Grid (planned, #119): the brownout turns off only the Yards' lights,
+the `yard lights` control's objects; sight there falls to the dark
+radius. The Dynamo Hall, pockets and safe zones keep their lights, and
+nothing else changes. The brownout is the service's declared `fault`
+state, so a client may name it from that state and never infers it
+from darkness. The workers' bench is a fabrication workshop for the
+workers only, at the ordinary quality rule plus 0.05, capped at 1.15
+and not stacking with Yard Relay. The handler is a Civic engineer,
+so the standing reward goes to the Wardens.
 
 Each order identifies the exact changed door, cache, vendor, or core,
 the foregone allocation, and a safe return route. Effects never change

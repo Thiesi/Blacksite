@@ -248,6 +248,7 @@ design document.
   cooling towers repurposed as halls. Quiet. Strangely well-kept.
 - **Old Works** — the original contractor town, half-abandoned, half
   squatted. The Unmoored's ground. Best illegal Lattice access in the city.
+  Its generator hall, built for a five-year job, was never turned off.
 - **The Terraces** — residential. Apartment blocks, where player housing
   lives. Mixed faction, mostly neutral, a Warden outpost that is slow to
   respond.
