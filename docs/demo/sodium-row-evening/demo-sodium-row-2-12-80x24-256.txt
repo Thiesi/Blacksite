@@ -1,0 +1,24 @@
+┌─SODIUM ROW─Sodium Row─CONTESTED─PvP G5+───────────────┬────────────00:00─────┐
+│                                                       │─ HERE ───────────────│
+│                                                       │ » Meridian Plaza     │
+│                                                       │─ TARGET ─────────────│
+│       ·                                               │ none   Tab picks     │
+│      +               ∙               ∙               ∙│─ NEARBY ─────────────│
+│ ·∙···∙∙·· ·,      ∙∙··· ·∙∙ ·  ∙ ∙∙∙ ∙··  ·,     ·∙  ∙│ ☻ Sable enforcer ~   │
+│ ,← NEON STA☻R∙· ,    · ···∙∙∙  · ·   ∙  ·    ·· ,  ·  │ ☻ Sodium regular ~   │
+│ ·    ··∙·∙ · · ··      ··  ·∙∙∙ ·∙ ··∙ ··    , ··    ∙│                      │
+│ ·@,    ∙·  ·∙···  ,··     ,  ∙   ∙∙∙·     ,··    ·    │                      │
+│ ·   ·· ☻  ∙  ∙∙,     ··,     ··      ··,     ··,· ·∙·∙│                      │
+│ ··· TIN HALO →   ·· ,    ·· ,    ·· ,    ·· ,  ·  ∙·  │                      │
+│ ·,§··      ··    , ··    , ··    , ··    , ··   ·· ···│──────────────────────│
+│ ······,····   ,··     ,··∙    ,··     ,··     ,·· ∙∙··│ Verifier界       G1  │
+│                  · , ··∙ ··∙·∙             ,     ··, ·│ HP  ██████████ 130   │
+│                 ,   ∙·∙·∙ ···∙  ,            ·· ,    ·│ STA ██████████ 70    │
+│                 ·  ··∙· ∙∙∙ ∙∙· ·            ,▒▒·    ,│ SHK ░░░░░░░░░░ 0     │
+│                    ·  · · ∙·∙·∙            ··     ,·· │ 200 ch   lease 0/90  │
+├───────────────────────────────────────────────────────┴──────────────────────┤
+│» You wake on a gurney under a number. White light, warm plastic, a floor     │
+│  drain. Past the cards, a corridor. Past the corridor, a terminal.           │
+│                                                                              │
+│The corridor teaches targeting. Tab selects; F fires; B skip...  Ctrl-X leaves│
+└────────────────────────────────────────────────────────────────────────────── 

@@ -4,22 +4,35 @@
   "name": "The Tin Halo",
   "district": "Sodium Row",
   "safety": "pocket",
-  "sight_radius": 8,
+  "sight_radius": 28,
   "spawn": [
-    3,
-    3
+    9,
+    11
   ],
   "exits": [
     {
       "id": "to-sodium-row",
       "tile": [
-        2,
+        7,
+        10
+      ],
+      "target_zone": "sodium-row",
+      "target_tile": [
+        89,
+        12
+      ],
+      "kind": "door"
+    },
+    {
+      "id": "to-sodium-row-back",
+      "tile": [
+        34,
         2
       ],
       "target_zone": "sodium-row",
       "target_tile": [
-        94,
-        27
+        89,
+        24
       ],
       "kind": "door"
     }
@@ -28,8 +41,8 @@
     {
       "id": "vesper",
       "tile": [
-        8,
-        15
+        34,
+        10
       ],
       "kind": "vendor",
       "essential": false,
@@ -43,8 +56,8 @@
     {
       "id": "halo-bar",
       "tile": [
-        16,
-        15
+        24,
+        8
       ],
       "kind": "vendor",
       "essential": false,
@@ -55,8 +68,8 @@
     {
       "id": "halo-back-room",
       "tile": [
-        31,
-        18
+        30,
+        4
       ],
       "kind": "door",
       "essential": false,
@@ -68,8 +81,8 @@
     {
       "id": "ferrymen-liaison",
       "tile": [
-        34,
-        15
+        31,
+        14
       ],
       "kind": "vendor",
       "essential": false,
@@ -81,8 +94,8 @@
     {
       "id": "halo-contract-board",
       "tile": [
-        38,
-        3
+        9,
+        6
       ],
       "kind": "terminal",
       "essential": false,
@@ -94,8 +107,8 @@
     {
       "id": "halo-market-board",
       "tile": [
-        37,
-        16
+        9,
+        14
       ],
       "kind": "terminal",
       "essential": false,
@@ -106,8 +119,8 @@
     {
       "id": "halo-cabinet-hardware",
       "tile": [
-        18,
-        15
+        25,
+        8
       ],
       "kind": "hardware",
       "params": {
@@ -128,8 +141,8 @@
       "respawn_seconds": 60,
       "condition": "always",
       "region": {
-        "x": 4,
-        "y": 3,
+        "x": 9,
+        "y": 9,
         "w": 1,
         "h": 1
       }
@@ -141,9 +154,9 @@
       "respawn_seconds": 60,
       "condition": "always",
       "region": {
-        "x": 8,
-        "y": 3,
-        "w": 12,
+        "x": 13,
+        "y": 12,
+        "w": 16,
         "h": 2
       }
     },
@@ -154,9 +167,9 @@
       "respawn_seconds": 60,
       "condition": "always",
       "region": {
-        "x": 7,
-        "y": 14,
-        "w": 3,
+        "x": 33,
+        "y": 9,
+        "w": 1,
         "h": 3
       }
     }

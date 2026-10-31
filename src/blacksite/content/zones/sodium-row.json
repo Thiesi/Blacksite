@@ -7,55 +7,139 @@
   "sight_radius": 13,
   "spawn": [
     3,
-    3
+    12
   ],
   "charted": true,
   "public": [
     [
-      0,
-      0,
-      100,
-      2
-    ],
-    [
-      0,
+      87,
       2,
-      96,
+      9,
       1
     ],
     [
       97,
       2,
+      2,
+      1
+    ],
+    [
+      87,
+      3,
+      12,
+      5
+    ],
+    [
+      87,
+      8,
       3,
       1
     ],
     [
-      0,
-      3,
-      100,
-      23
-    ],
-    [
-      0,
-      26,
-      94,
+      1,
+      9,
+      89,
       1
     ],
     [
-      95,
-      26,
-      5,
+      1,
+      10,
+      81,
       1
     ],
     [
-      0,
-      27,
-      100,
+      1,
+      11,
+      89,
       3
     ],
     [
-      94,
+      1,
+      14,
+      81,
+      1
+    ],
+    [
+      1,
+      15,
+      89,
+      2
+    ],
+    [
+      17,
+      17,
+      2,
+      7
+    ],
+    [
+      20,
+      17,
+      14,
+      4
+    ],
+    [
+      44,
+      17,
+      17,
+      5
+    ],
+    [
+      62,
+      17,
+      2,
+      7
+    ],
+    [
       26,
+      21,
+      1,
+      1
+    ],
+    [
+      6,
+      24,
+      84,
+      2
+    ],
+    [
+      6,
+      8,
+      1,
+      1
+    ],
+    [
+      22,
+      8,
+      1,
+      1
+    ],
+    [
+      38,
+      8,
+      1,
+      1
+    ],
+    [
+      38,
+      23,
+      1,
+      1
+    ],
+    [
+      54,
+      8,
+      1,
+      1
+    ],
+    [
+      70,
+      8,
+      1,
+      1
+    ],
+    [
+      90,
+      12,
       1,
       1
     ],
@@ -70,8 +154,8 @@
     {
       "id": "to-core-plaza",
       "tile": [
-        2,
-        2
+        1,
+        12
       ],
       "target_zone": "core-plaza",
       "target_tile": [
@@ -83,13 +167,13 @@
     {
       "id": "to-sodium-tin-halo",
       "tile": [
-        94,
-        26
+        90,
+        12
       ],
       "target_zone": "sodium-tin-halo",
       "target_tile": [
-        2,
-        3
+        8,
+        10
       ],
       "kind": "door"
     }
@@ -98,8 +182,8 @@
     {
       "id": "row-drug-dealer",
       "tile": [
-        48,
-        20
+        60,
+        21
       ],
       "kind": "vendor",
       "essential": false,
@@ -111,8 +195,8 @@
     {
       "id": "row-ticket-tout",
       "tile": [
-        64,
-        20
+        92,
+        5
       ],
       "kind": "vendor",
       "essential": false,
@@ -124,8 +208,8 @@
     {
       "id": "row-stage",
       "tile": [
-        30,
-        7
+        26,
+        21
       ],
       "kind": "light",
       "essential": false,
@@ -136,8 +220,8 @@
     {
       "id": "row-card-table",
       "tile": [
-        38,
-        20
+        52,
+        19
       ],
       "kind": "light",
       "essential": false,
@@ -148,8 +232,8 @@
     {
       "id": "row-bar-1",
       "tile": [
-        8,
-        7
+        13,
+        3
       ],
       "kind": "vendor",
       "essential": false,
@@ -160,8 +244,8 @@
     {
       "id": "row-bar-2",
       "tile": [
-        18,
-        7
+        29,
+        3
       ],
       "kind": "vendor",
       "essential": false,
@@ -172,8 +256,8 @@
     {
       "id": "row-bar-3",
       "tile": [
-        50,
-        7
+        45,
+        3
       ],
       "kind": "vendor",
       "essential": false,
@@ -184,8 +268,8 @@
     {
       "id": "row-bar-4",
       "tile": [
-        63,
-        7
+        61,
+        3
       ],
       "kind": "vendor",
       "essential": false,
@@ -196,8 +280,8 @@
     {
       "id": "row-bar-5",
       "tile": [
-        75,
-        7
+        77,
+        3
       ],
       "kind": "vendor",
       "essential": false,
@@ -208,7 +292,7 @@
     {
       "id": "row-public-1",
       "tile": [
-        19,
+        3,
         15
       ],
       "kind": "terminal",
@@ -220,8 +304,8 @@
     {
       "id": "row-public-2",
       "tile": [
-        50,
-        15
+        40,
+        16
       ],
       "kind": "terminal",
       "essential": true,
@@ -232,8 +316,8 @@
     {
       "id": "row-public-3",
       "tile": [
-        80,
-        15
+        82,
+        6
       ],
       "kind": "terminal",
       "essential": true,
@@ -257,8 +341,8 @@
     {
       "id": "sign-grid-hardware",
       "tile": [
-        52,
-        7
+        38,
+        21
       ],
       "kind": "hardware",
       "params": {
@@ -269,8 +353,8 @@
     {
       "id": "house-lights-sign-grid",
       "tile": [
-        51,
-        7
+        37,
+        21
       ],
       "kind": "terminal",
       "params": {
@@ -285,14 +369,27 @@
   ],
   "spawners": [
     {
-      "id": "sable-enforcer",
+      "id": "sable-enforcer-stair",
       "npc": "npc-sable-enforcer",
-      "count": 2,
+      "count": 1,
       "respawn_seconds": 60,
       "condition": "always",
       "region": {
-        "x": 43,
-        "y": 20,
+        "x": 8,
+        "y": 11,
+        "w": 1,
+        "h": 3
+      }
+    },
+    {
+      "id": "sable-enforcer-strip",
+      "npc": "npc-sable-enforcer",
+      "count": 1,
+      "respawn_seconds": 60,
+      "condition": "always",
+      "region": {
+        "x": 45,
+        "y": 9,
         "w": 2,
         "h": 1
       }
@@ -304,10 +401,10 @@
       "respawn_seconds": 60,
       "condition": "always",
       "region": {
-        "x": 3,
-        "y": 3,
-        "w": 92,
-        "h": 24
+        "x": 10,
+        "y": 9,
+        "w": 70,
+        "h": 8
       }
     },
     {
@@ -317,10 +414,10 @@
       "respawn_seconds": 60,
       "condition": "always",
       "region": {
-        "x": 55,
-        "y": 14,
-        "w": 40,
-        "h": 12
+        "x": 40,
+        "y": 9,
+        "w": 30,
+        "h": 8
       }
     }
   ],

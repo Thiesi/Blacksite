@@ -6,104 +6,96 @@
     {
       "theme": "sodium-lamp",
       "circle": [
-        13,
-        11,
+        10,
+        12,
         3
       ]
     },
     {
       "theme": "sodium-lamp",
       "circle": [
-        37,
-        11,
+        32,
+        10,
         3
       ]
     },
     {
       "theme": "sodium-lamp",
       "circle": [
-        61,
-        11,
+        54,
+        14,
         3
       ]
     },
     {
       "theme": "sodium-lamp",
       "circle": [
-        85,
-        11,
+        76,
+        10,
         3
       ]
     },
     {
       "theme": "sodium-lamp",
-      "circle": [
-        25,
-        24,
-        3
-      ]
-    },
-    {
-      "theme": "sodium-lamp",
-      "circle": [
-        49,
-        24,
-        3
-      ]
-    },
-    {
-      "theme": "sodium-lamp",
-      "circle": [
-        73,
-        24,
-        3
-      ]
-    },
-    {
-      "theme": "sodium-door-pink",
-      "circle": [
-        8,
-        7,
-        2
-      ]
-    },
-    {
-      "theme": "sodium-door-teal",
-      "circle": [
-        18,
-        7,
-        2
-      ]
-    },
-    {
-      "theme": "sodium-door-pink",
       "circle": [
         50,
-        7,
+        24,
+        3
+      ]
+    },
+    {
+      "theme": "sodium-door-pink",
+      "circle": [
+        6,
+        9,
         2
       ]
     },
     {
       "theme": "sodium-door-teal",
       "circle": [
-        63,
-        7,
+        22,
+        9,
         2
       ]
     },
     {
       "theme": "sodium-door-pink",
       "circle": [
-        75,
-        7,
+        38,
+        9,
+        2
+      ]
+    },
+    {
+      "theme": "sodium-door-teal",
+      "circle": [
+        54,
+        9,
+        2
+      ]
+    },
+    {
+      "theme": "sodium-door-pink",
+      "circle": [
+        70,
+        9,
         2
       ]
     },
     {
       "theme": "sodium-stage",
       "circle": [
-        30,
-        7,
+        26,
+        19,
+        3
+      ]
+    },
+    {
+      "theme": "sodium-door-pink",
+      "circle": [
+        86,
+        12,
         2
       ]
     }
@@ -111,84 +103,84 @@
   "signs": [
     {
       "at": [
-        3,
-        0
+        7,
+        8
       ],
-      "text": " DRINKS ",
-      "role": "thing_sign_pink"
+      "text": " UPSTAIRS ",
+      "role": "thing_sign_blue"
     },
     {
       "at": [
-        14,
-        0
+        23,
+        8
       ],
-      "text": " LIVE MUSIC ",
-      "role": "thing_sign_cyan"
-    },
-    {
-      "at": [
-        26,
-        0
-      ],
-      "text": " STAGE ",
-      "role": "thing_sign_amber"
-    },
-    {
-      "at": [
-        45,
-        0
-      ],
-      "text": " DRINKS ",
-      "role": "thing_sign_pink"
-    },
-    {
-      "at": [
-        58,
-        0
-      ],
-      "text": " TICKETS ",
-      "role": "thing_sign_cyan"
-    },
-    {
-      "at": [
-        71,
-        0
-      ],
-      "text": " OPEN LATE ",
+      "text": "24H LONG SHIFT",
       "role": "thing_sign_orange"
     },
     {
       "at": [
-        86,
-        29
+        39,
+        8
+      ],
+      "text": " quarter tone ",
+      "role": "thing_sign_pink"
+    },
+    {
+      "at": [
+        55,
+        8
+      ],
+      "text": " THE CLAUSE ",
+      "role": "thing_sign_street"
+    },
+    {
+      "at": [
+        71,
+        8
+      ],
+      "text": " SPA E PA TS ",
+      "role": "thing_sign_green"
+    },
+    {
+      "at": [
+        82,
+        10
       ],
       "text": " TIN HAL",
       "role": "thing_sign_orange"
     },
     {
       "at": [
-        94,
-        29
+        19,
+        21
       ],
-      "text": "O ",
-      "role": "thing_sign_orange"
+      "text": " STAGE ",
+      "role": "thing_sign_amber"
     }
   ],
   "marks": [
     {
       "at": [
-        3,
-        2
+        2,
+        10
       ],
       "text": "← NEON STAIR",
       "role": "paint"
     },
     {
       "at": [
-        82,
-        27
+        5,
+        14
       ],
       "text": "TIN HALO →",
+      "role": "paint"
+    },
+    {
+      "at": [
+        56,
+        10
+      ],
+      "text": "||||/ ||||/ ||||/ ||",
       "role": "paint"
     }
   ],
