@@ -1048,7 +1048,7 @@ exit lamp: an authored light object separate from the `yard lights`
 objects, which neither the brownout nor any control switches off. So a
 caller caught in the dark can always reach a lit way out; the build
 slice proves it with a test that every Yards exit tile is lit in every
-Grid state. Hazard tiles and their warnings render regardless of
+Grid state and that no exit lamp belongs to the `yard lights` set. Hazard tiles and their warnings render regardless of
 lighting, so the 2 s warning rule (section 5.3) holds in the dark.
 
 Each order identifies the exact changed door, cache, vendor, or core,
