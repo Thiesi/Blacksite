@@ -499,7 +499,7 @@ not on the pour plan. (story arcs)
 
 **Oyelaran, Tobiah** — The Bathmaster: keeps the Compact's boilers and baths. (factions)
 
-**Tag** — A player's one-glyph mark on a contested or open tile, with short text shown in HERE. (design §11.1, planned)
+**Tag** — A player's mark on a contested or open tile, drawn with the one fixed tag glyph, with short text whose start shows in HERE. (design §11.1, planned)
 
 **the patch frame** — the physical cross-connect where the long-haul links
 were cut; padlocked, key in the director's office. (found texts)

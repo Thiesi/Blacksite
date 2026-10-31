@@ -1713,16 +1713,19 @@ Values are initial, tuned at the pacing gate.
     reader's own crew members.
   - It also lists what is addressed to the reader: crew invitations,
     handoff offers, dead drops waiting, new crew notes, and the existing
-    apartment-theft notice (section 6.4).
+    apartment-theft notice (section 6.4). When the report has more than
+    12 lines, these come first.
   - It discloses nothing beyond what sitrep and public logs already
     showed: no tile positions, no Marked players' zones (a Wardens
     member benefit, section 7.6), and nothing about housing interiors
     (architecture 5.5.4). A zone or cell the reader has never visited
     is named only by its district, as on the City Map.
-- **Tags.** A character may leave one tag at a time: one non-rule glyph
-  on a passable tile in a contested or open zone, with up to 40
-  characters of text shown in HERE. It expires after 7 days or when
-  replaced.
+- **Tags.** A character may leave one tag at a time on a passable tile
+  in a contested or open zone, with up to 40 characters of text. Every
+  tag uses one fixed tag glyph, the same for all tags; presentation
+  picks it, outside the rule glyphs, so a tag can never imitate a thing
+  or an exit. HERE shows the start of its text, and looking at the tag
+  shows it whole. It expires after 7 days or when replaced.
   - Never on a hidden exit, a door or another interaction tile, and
     never in a safe zone or pocket.
   - Anyone who sees the tile sees the tag, except a player who ignores
