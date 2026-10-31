@@ -111,8 +111,11 @@ is the intent the gate judges, not an authored map.
 - **Systems:** exit; guard spawner posts; `event:curfew` spawner for the
   crowd at the gate [built].
 - **Extra work:** geometry (landing, sightline), S25c.
-- **Presentation:** presentation lead's. The view down the street must
-  end on the Halo sign.
+- **Presentation:** presentation lead's. At 132 × 50 the view down the
+  street ends on the Halo sign. At 80 × 24 the arrival and the Halo door
+  share one axis, the Halo carries a sign band facing down the Strip,
+  and a painted "TIN HALO →" street sign stands at the landing. Painted
+  signs count as in-world cues in playtest 1; frame labels don't.
 - **Playtest passes if:** on first arrival the player walks toward the
   Halo without consulting the map label.
 
@@ -120,7 +123,8 @@ is the intent the gate judges, not an authored map.
 
 - **Purpose:** the city's meeting ground, read from left to right.
 - **Distinct because:** each bar is a doorway into a shallow alcove with
-  its own crowd by custom. Order runs from respectable to rough with
+  its own crowd by custom. Each alcove has a street wall face at least
+  14 tiles wide, with its doorway on that face, to carry its sign. Order runs from respectable to rough with
   distance from the Stair, so the walk itself tells you something.
 
 | Bar [new name] | Crowd by custom | Why there |
@@ -190,6 +194,10 @@ politics, in geography.
   lights by hand stands in the alley.
 - **Truce:** it applies here too, so the alley is not lawless. It is
   where pursuit is slow and witnesses are few.
+- **Dark is mood, not rule.** Sight stays the zone's. The alley is
+  dangerous because of its shape: out of the Strip's line of sight, two
+  ways in, cover. The stage blackout is the only rule that darkens the
+  Row.
 - **Systems:** geometry, a hardware object [built], Solenne as a vendor
   (stock to author).
 - **Playtest passes if:** a player who draws on the Strip thinks of the
