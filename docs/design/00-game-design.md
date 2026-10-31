@@ -1037,9 +1037,13 @@ its fabrication modifier only; it controls no lights, so no relay
 holder can relight or darken the Yards in any Grid state. The safe
 return route is the cable trench, whose tiles keep their lights in
 every Grid state; the brownout never darkens the trench or the hall.
-Every exit tile of the Yards also stays within the light radius of a
-lamp the brownout does not switch off, so a caller caught in the dark
-can always reach a lit way out.
+Every exit tile of the Yards also stays within the light radius of an
+exit lamp: an authored light object separate from the `yard lights`
+objects, which neither the brownout nor any control switches off. So a
+caller caught in the dark can always reach a lit way out; the build
+slice proves it with a test that every Yards exit tile is lit in every
+Grid state. Hazard tiles and their warnings render regardless of
+lighting, so the 2 s warning rule (section 5.3) holds in the dark.
 
 Each order identifies the exact changed door, cache, vendor, or core,
 the foregone allocation, and a safe return route. Effects never change

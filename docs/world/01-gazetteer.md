@@ -1073,8 +1073,8 @@ as they need it, an anarchist.
 - **Exits:** `oldworks-main` (street); `sink-terraces` (tunnel,
   Sable-tolled); `under-service` (a collapsed floor; a ladder, unlocked);
   `oldworks-dynamo-hall` (the cable trench; planned, #119).
-- **Relays:** **Yard Relay** (controls the yard power; holders'
-  fabrication quality +0.05, capped 1.15).
+- **Relays:** **Yard Relay** (the yard's fabrication rig; holders'
+  fabrication quality +0.05, capped 1.15; it controls no lights).
 - **Terminals:** one hardware terminal (Foundry core, tier 3; controls the
   gantry and the yard lights).
 - **Vendors / anchors:** the fabrication workshop (public workshop, the
