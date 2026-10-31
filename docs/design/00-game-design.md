@@ -1022,7 +1022,9 @@ revision and receipt, independent of crew leadership.
 Grid (planned, #119): the brownout turns off only the Yards' lights,
 the `yard lights` control's objects; sight there falls to 5 tiles under
 section 6.4's switched-off lamp rule, and dark-sight equipment still
-applies. The Dynamo Hall, pockets and safe zones keep their lights, and
+applies. The `yard lights` objects are placed so that their light radii
+cover all of the Yards' passable ground, so the whole zone darkens; the
+build slice tests that coverage beside the exit-lamp test. The Dynamo Hall, pockets and safe zones keep their lights, and
 nothing else changes. The brownout is the service's declared `fault`
 state, so a client may name it from that state and never infers it
 from darkness. The workers' bench is a fabrication workshop for the
@@ -1034,8 +1036,8 @@ Unmoored are hostile (section 7.2), so with the standard +5 the
 Wardens' opponents, Sable and the Unmoored, each change by -2, and its
 allies, Kestrel and the Compact, by +2 (halves rounded toward zero). While Grid is `fault` or `allocated`, the Foundry's
 public `yard lights` control is suspended and cannot relight or darken
-the Yards, and using it answers with the reason; it resumes when the
-state ends, as Relay Zero's permit
+the Yards, and using it answers with the reason; when the state ends
+the Yards' lights are on and the control resumes, as Relay Zero's permit
 states its relation to the ordinary control. Yard Relay's effect is
 its fabrication modifier only; it controls no lights, so no relay
 holder can relight or darken the Yards in any Grid state. The safe
