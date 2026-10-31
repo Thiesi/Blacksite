@@ -1813,9 +1813,10 @@ Values are initial, tuned at the pacing gate.
     character per rolling 24 hours, and at most 10 units in the stack,
     so drops never become a bulk transfer channel beside the market
     board (section 8.3).
-  - A drop from a sender the recipient ignores never arrives and
-    returns to the sender at once. The recipient may refuse any drop,
-    which returns it to the sender the same way.
+  - A drop from a sender the recipient ignores never arrives. To the
+    sender it looks exactly like an unanswered drop: it returns only at
+    the 7-day expiry, so it never reveals the ignore. The recipient may
+    also refuse a drop they can see, which returns it to the sender.
   - Only items the market board accepts may be dropped; equipped,
     secured, bound and mission items cannot (section 8.3). Player
     trading of intact salvage stays allowed (section 8.4).
