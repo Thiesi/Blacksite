@@ -633,8 +633,11 @@ real encounter. District gate counts and public uplinks remain intact.
 
 ### 6.4 Interlock rules
 
-- Each control in a core maps to one object in one zone. Flipping it
-  changes the object immediately and posts to the zone log ("The gate
+- Each control in a core maps to one object in one zone. The one
+  exception is Grid's `yard lights`, which targets the yard lamp group
+  once Grid is built (section 7.5, planned, #119); while Grid is in
+  `fault`, `repairing` or `allocated`, that control is suspended.
+  Flipping a control changes its object immediately and posts to the zone log ("The gate
   cycles open. Nobody touched it.").
 - Ordinary controls reset on their declared timer (5 to 30 minutes).
   Only controls tagged `owner_policy` persist for a relay owner. Travel
@@ -983,7 +986,8 @@ the receipt across factions and characters on that identity.
 
 ### 7.5 Public services and work orders
 
-Four services have bounded work orders with state `normal`, `fault`,
+Four services have bounded work orders (a fifth, Grid, is planned in
+#119) with state `normal`, `fault`,
 `repairing`, or `allocated`. They use ordinary contracts and controls,
 not a population simulation. The S19 work-order scheduler offers a fault every 60 minutes of
 server uptime per service, at most one fault on the node. It lasts
@@ -1016,6 +1020,72 @@ revision and receipt, independent of crew leadership.
 | Cold Chain / `vatside-clinics` | elective surgery discount unavailable; carry power unit and verify thermal record | surgery service fee −10 % for visitors | surgery service fee −20 % for workers only |
 | Depot / `tramyard-depots` | surplus warehouse shut; carry manifest and release latch | surplus vendor buy-back budget ×2 for everyone | reserve surplus salvage cache for workers |
 | Relay Zero / `oldworks-main` | survey feed stale; reset hardware and calibrate in network | publish local core's current patrol route | workers receive temporary local gate credential |
+| Grid / `oldworks-dynamo-hall` (planned, #119) | brownout: the Yards' lights go out; carry a power unit to the hall and re-sync the hall governor in the network | the Yards' lights come back at once | the spare load runs a workers' bench in the hall, and the Yards stay dark for the allocation's 20 minutes from repair completion |
+
+Grid (planned, #119): the brownout turns off only the Yards' lights,
+the `yard lights` control's objects. Under section 6.4's switched-off
+lamp rule, sight falls to 5 tiles for a caller within the Yards' sight
+radius of any switched-off lamp, and dark-sight equipment still
+applies; an enabled lamp nearby does not offset it.
+- **One control, many lamps.** The `yard lights` control targets the
+  yard lamp group: one control switches every lamp in the group. This
+  is the one exception to section 6.4's one-control-one-object rule,
+  stated there.
+- **Coverage.** The `yard lights` objects are placed so that every
+  passable Yards tile darkens, except the exit neighbourhoods: no
+  `yard lights` object lies within the Yards' sight radius of an exit
+  tile, the cable trench included. A caller who reaches any exit
+  therefore sees normally in every Grid state, so there is always a
+  way out of the dark. Exit lamps, authored apart from the `yard
+  lights` set and never switched off, mark those exits. The build
+  slice tests both: darkness everywhere outside the exit
+  neighbourhoods, and full sight on every exit tile in every Grid
+  state.
+- **Unchanged.** The Dynamo Hall, pockets and safe zones keep their
+  lights, and nothing else changes. Hazard tiles and their warnings
+  render regardless of lighting, so the 2 s warning rule (section 5.3)
+  holds in the dark.
+- **Declared state.** The brownout is the service's declared `fault`
+  state, so a client may name it from that state and never infers it
+  from darkness.
+- **Controls.** While Grid is `fault`, `repairing` or `allocated`, the
+  Foundry's public `yard lights` control is suspended and cannot relight
+  or darken the Yards, and using it answers with the reason. Entering
+  `fault` cancels any pending reset of a toggle made before it. The Yards
+  stay dark through `repairing`, and a repair that reverts to `fault`
+  leaves them dark. When the state ends, whether by a player's repair
+  or the NPC repair that closes an unclaimed fault, the Yards' lights
+  are on and the control resumes, as Relay Zero's permit states its
+  relation to the ordinary control. Yard Relay's effect is its
+  fabrication modifier only; it controls no lights, so no relay holder
+  can relight or darken the Yards.
+- **Choosing the reserve.** The reserve allocation can be chosen only
+  by a reserver standing in the Yards or the Dynamo Hall, and it takes
+  effect only if at least one member of the frozen roster is in the
+  Yards or the hall when the repair completes, counted by where each
+  member's body is (a jacked-in runner counts where their body lies);
+  otherwise the common allocation applies. The disclosure shown before the roster joins
+  states this condition, so the fallback is never a surprise. Nobody
+  can darken the Yards for others from a distance. A crew present in
+  the Yards may still use the dark for PvP; that is the accepted cost
+  of the reserve choice (bible section 14), bounded by the lit exits.
+- **The bench.** The workers' bench is a fabrication workshop for the
+  workers only, at the ordinary quality rule plus 0.05, capped at 1.15
+  and not stacking with Yard Relay.
+- **Standing.** The handler is a Civic engineer, so the standing reward
+  goes to the Wardens in section 9.3's `propagate` mode, as for any
+  Wardens reward. Under section 7.2, with the standard +5, the
+  Wardens' opponents, Sable and the Unmoored, each change by -2, and
+  its allies, Kestrel and (once built, #90) the Compact, by +2 (halves
+  rounded toward zero). This cost is deliberate (owner decision,
+  2026-10-31): the job is Civic work for the Wardens on Unmoored
+  ground, so an Unmoored member who takes it pays a little with their
+  own faction for it. Keeping the lights on is useful work that costs
+  standing, the kind of choice bible section 14 asks for, and an
+  Unmoored player may leave the order to others. It is not an
+  oversight, and a build slice must not exempt it.
+- **Return route.** The safe return route is the cable trench, an exit
+  neighbourhood; the brownout never darkens the trench or the hall.
 
 Each order identifies the exact changed door, cache, vendor, or core,
 the foregone allocation, and a safe return route. Effects never change

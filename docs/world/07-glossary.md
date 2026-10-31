@@ -92,6 +92,8 @@ nineteen years by any means. (bible §8.2)
 
 **Cable Boss** — Red Sable title held by Yusra Demir. (factions)
 
+**Calloway, Wyn** — Civic grid engineer at the Dynamo Hall; handles the Grid work order. (gazetteer)
+
 **Cantillations** — Choir program items for the rig. (factions)
 
 **Cantor** — Archetype decanted from a template Sablier will not discuss;
@@ -245,6 +247,8 @@ Foot** — Undercity zones below the Service Level. (gazetteer)
 
 **Dunmore, Hester** — Forewoman of the Fungal Halls; Civic contract giver for bed repair, extractor and cart-escort jobs. (gazetteer)
 
+**Dynamo Hall, the** — The Old Works generator hall, built for a five-year job and never turned off; the Grid service's location. (gazetteer)
+
 **Evasion** — Nerve / 2 plus cover; subtracted from to-hit. (design §3.1)
 
 **Event** — A scheduled or admin-forced world happening: Ring-fall,
@@ -302,6 +306,8 @@ fast, quiet, born with a native rig. (bible §8.1)
 gives grade points and Vitals. (design §3.4)
 
 **Grade points** — Spent on skill lines; three per grade. (design §3.3)
+
+**Grid** — The planned public service run from the Dynamo Hall; its brownout darkens the Fabrication Yards. (design §7.5)
 
 **Halvard Ordnance / Ostrom Optical** — Halvard subsidiaries that make weapons and optics. (catalog)
 
