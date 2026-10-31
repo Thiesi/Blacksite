@@ -29,6 +29,11 @@ proposal, with the presentation lead's wording.
   does (the spawner group and same-faction local guards, five minutes),
   and Wardens still engage Marked players and players with Warden heat.
   Outside truce zones nothing changes.
+- **Guards answer attacks on players** (`NpcEngine.provoked`). Today an
+  attack on a player provokes no NPC. In a truce zone, an eligible
+  attack on a player provokes every guard-behaviour NPC in the zone
+  against the attacker (and a drone's controller) for the usual five
+  minutes, so the enforcers answer whoever breaks the peace.
 - **Marking** (`CombatEngine.would_mark`). When the attacker's or the
   target's body is in a truce zone, the hostile-relation exemption does
   not apply: an eligible attack on a player who is not already Marked
@@ -39,9 +44,14 @@ proposal, with the presentation lead's wording.
   - Frame header in a truce zone: `CONTESTED─TRUCE─PvP G5+`.
   - Place card and first-arrival line: "Sable keeps the peace here." /
     "Nobody draws on Sodium Row. Sable makes sure of it."
-  - The TARGET panel's warning, for every eligible target in a truce
-    zone: "Truce: firing marks you".
-  - After firing: "You break the Row's truce. You are Marked for 15 min."
+  - The TARGET panel's warning: on a player target, the existing
+    "Firing marks you", driven by `would_mark` (so hostile-faction
+    targets show it too); on an NPC target whose attack would provoke
+    the enforcers, "Truce: Sable answers". Both fit the 80x24 panel's
+    21 columns.
+  - The place card shows "CONTESTED · TRUCE".
+  - After firing: "You break <zone name>'s truce. You are Marked for 15
+    min." (the zone's name, not a hard-coded "the Row").
   - No fire confirmation and no HERE entry.
 
 ## Out of scope
@@ -57,7 +67,9 @@ proposal, with the presentation lead's wording.
 - A Kestrel, Halvard, Warden or Unmoored player is never targeted by an
   enforcer on Sodium Row; the existing §7.2 test still passes outside it.
 - Plainclothes Wardens and enforcers do not engage each other there.
-- Attacking a player or NPC on the Row provokes the enforcers as today.
+- Attacking an NPC on the Row provokes the enforcers as today; an
+  eligible attack on a player there now provokes them too, and outside
+  a truce zone an attack on a player still provokes no NPC.
 - An eligible attack on a hostile-faction player on the Row Marks the
   attacker; firing back at a Marked attacker does not Mark the victim.
 - Grade protection below 5, crew friendly fire and open zones are

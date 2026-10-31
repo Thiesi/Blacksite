@@ -435,8 +435,9 @@ vendor, talker. Aggro rules use the faction relations matrix; a Halvard
 patrol shoots Unmoored members in the Scour and ignores Kestrel. In a
 **truce** zone (planned, S38; Sodium Row) the matrix never makes an NPC
 hostile: NPCs there turn only on an actor who attacked a player or NPC
-in the zone, through provocation as below, and Wardens still engage
-Marked players. Freelance
+in the zone, through provocation as below. In a truce zone an eligible
+attack on a player provokes the zone's guards against the attacker, as
+an attack on an NPC does. Wardens still engage Marked players. Freelance
 characters are neutral to faction NPCs unless a declared restricted
 perimeter or hostile action gives a reason to engage. Open ground permits
 violence; it does not make traders automatic enemies. Hostile perimeters
