@@ -370,7 +370,7 @@ legend[]: {..., glyph_modern?}       modern-tier glyph, terminal UI §1 (P4; sel
 actors[]: {..., class, jacked?}      presented class, see 5.5.4 (P4)
 objects[]: {..., role}               role by kind, not `text`/`muted` (P4)
 me: {..., district, pvp}             district id; whether PvP can reach you here (P4)
-charted: [[legend index, ...], ...]  public layout shown without sight, see 5.5.5 (P6)
+charted: [[legend index | -1 | -3, ...], ...]  public layout without sight, see 5.5.5 (P6)
 looks: {theme, regions[], signs[], marks[], glints[], names{}}  place layer, masked, see 5.5.4 (P6)
 place: {places[{name, rect, at, text, view?}], here}   named places and the fixed camera (V3)
 scene: {lights[], pieces[]}          set dressing for the picture, masked (V3)
@@ -382,6 +382,12 @@ jack_focus: {id, label, verb} | null what J does now (Ctrl-O in vi), see 5.5.2 (
 not sent in the view; they reach the caller as `ambient` log lines
 (5.5.3). The view carries the synthesised `charted` grid; the zone's
 `charted` flag and `public` region stay on the server.
+In `charted`, `-1` is outside the disclosed public layout and `-3` means
+ground only. The same `-3` covers every withheld object, interaction or
+hazard tile; it never identifies which kind was withheld. The client
+draws the dimmed theme or region ground and stable grain there, without
+rule glyphs, signs, floor marks or glints. Visible terrain and genuine
+memory take precedence. The legacy renderer ignores this additive grid.
 
 `LogLine` gains `kind`, and for speech `speaker` and `speaker_role`
 (5.5.3). `LatticeView` cells gain `owner` and `tier` for cores (a private
@@ -587,6 +593,19 @@ trimmed to fit. The server synthesises the `charted` grid per view from
 that region; it never writes the caller's memory, so nothing charted
 becomes remembered.
 
+Withheld public tiles use the uniform ground-only marker in 5.4 rather
+than leaving holes in the layout. It comes from static template data,
+never a live object's state or a dynamic hazard. No hidden-exit tile is
+disclosed, and ground-only cells disclose neither their tile class nor
+whether they are passable.
+
+A non-hidden door, gate, shutter, apartment-door or requirement-exit
+face may be public if a cardinal neighbour is reachable by the flood
+fill below. Its cell carries only ground-only `-3`, even when its map
+tile is plain floor. Admitting the face never extends that flood fill
+through it or admits an adjacent barrier. Hidden-exit and private
+exclusions still apply to the face.
+
 The validator rejects a `public` region that:
 
 - contains a hidden exit or a passable tile next to one;
@@ -594,7 +613,7 @@ The validator rejects a `public` region that:
   unrestricted exits and spawn points without crossing a hidden exit,
   an exit with a requirement (pass, key, faction) or a lockable door,
   so no corridor behind a hidden exit and no room behind a gate is
-  ever charted;
+  ever charted; the adjacent barrier face alone is allowed as above;
 - overlaps a private interior (apartments, owner-door rooms);
 - belongs to an instanced zone.
 

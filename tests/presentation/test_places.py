@@ -19,6 +19,7 @@ from blacksite.door.present import zone as drawing, chrome
 from blacksite.door.present.paint import Paint, BAND_STEP, light_distance, theme_roles
 from blacksite.door.present.places import for_frame
 from blacksite.layout import compute
+from blacksite.place import CHARTED_GROUND
 from blacksite.server.views.delta import changes
 from blacksite.server.views.zone_view import build, Perception
 from blacksite.server.world.actors import Actor
@@ -109,6 +110,33 @@ def test_ui_2_2_rejects_bright_ansi_background_and_unreadable_sign(fixtures):
     assert any('sign contrast' in error for error in problems(content))
 
 
+def test_ui_2_2_ansi_uses_categories_not_numeric_band_floors(fixtures):
+    content = deepcopy(fixtures)
+    # The shipped green cover is below the grey ANSI wall in L*. It is
+    # still the required categorical thing colour, with no numeric floor.
+    content.palette.roles['thing_cover']['16'] = {variant:2 for variant in s.VARIANTS}
+    assert not problems(content)  # 256 and truecolor retain valid floors.
+    content.palette.roles['wall']['16']['default'] = 2
+    assert any('wall foreground must be grey 8' in error for error in problems(content))
+    content = deepcopy(fixtures)
+    content.palette.roles['thing_exit']['16']['default'] = 0
+    assert any('black wall background' in error for error in problems(content))
+
+
+@pytest.mark.parametrize('variant',s.VARIANTS)
+def test_ui_2_2_ansi_themed_people_equal_p5_including_halvard_and_jacked(fixtures,variant):
+    paint = Paint(Palette(asdict(fixtures.palette),'16',variant))
+    for theme in fixtures.themes.themes.values():
+        for role in fixtures.palette.roles:
+            if not role.startswith(('npc_','player_')):
+                continue
+            for reverse in (False,True):
+                expected = paint(role,bold=True,reverse=reverse)
+                assert paint.on_theme(role,theme,bold=True,reverse=reverse) == expected
+                assert paint.on_theme(role,theme,bold=True,reverse=reverse,jacked=True) == paint.jacked(expected)
+    assert paint.on_theme('npc_halvard',s.Theme()).fg == 7
+
+
 @pytest.mark.parametrize('region,needle', [
     (s.Region(29,10,1,1), 'hidden exit'),
     (s.Region(30,10,1,1), 'hidden exit'),
@@ -137,13 +165,124 @@ def test_arch_5_5_5_required_public_private_instanced_and_pocket(fixtures):
     assert not list(charting_problems(plain, fixtures.tiles))
 
 
+@pytest.mark.parametrize('source,kind', [
+    (source,kind) for source in ('object','interaction')
+    for kind in ('door','gate','shutter','apartment_door')
+] + [('requirement','door')])
+def test_arch_5_5_5_public_barrier_face_does_not_admit_the_room(fixtures, source, kind):
+    content = deepcopy(fixtures)
+    zone = content.zones['p6-fixture']
+    face = (20, 5)
+    objects = tuple(obj for obj in zone.meta.objects if obj.tile != face)
+    exits = zone.meta.exits
+    grid = [list(row) for row in zone.grid]
+    grid[5][20] = 'floor'
+    if source == 'object':
+        objects += (s.ObjectSpec('face', face, kind, {'open': True}),)
+    elif source == 'interaction':
+        grid[5][20] = 'door'
+        content.tiles['door'] = replace(content.tiles['door'], interaction=kind)
+    else:
+        exits += (s.Exit('face', face, zone.id, (4, 5), 'door',
+                         s.Requirement('story', 'fixture-access')),)
+    zone = replace(zone, grid=tuple(tuple(row) for row in grid),
+                   meta=replace(zone.meta, objects=objects, exits=exits,
+                                public=(s.Region(*face, 1, 1),)))
+    assert not list(charting_problems(zone, content.tiles))
+    # Admitting the face must not extend the flood fill, even by one cell.
+    for behind in ((21, 5), (22, 5)):
+        room = replace(zone, meta=replace(zone.meta, public=(s.Region(*behind, 1, 1),)))
+        assert any('unreachable' in error for error in charting_problems(room, content.tiles))
+    # A second barrier cannot qualify merely by touching the admitted face.
+    chained = replace(zone, meta=replace(zone.meta,
+        objects=(*zone.meta.objects, s.ObjectSpec('second-face', (21, 5), 'door')),
+        public=(s.Region(21, 5, 1, 1),)))
+    assert any('unreachable' in error for error in charting_problems(chained, content.tiles))
+
+
+def test_arch_5_5_5_barrier_face_never_admits_a_private_interior(fixtures):
+    zone = fixtures.zones['p6-fixture']
+    anchor = decode(s.HousingAnchor, json.loads((ROOT/'tests/fixtures/p6-private-anchor.json').read_text()))
+    anchor = replace(anchor, origin=(20, 5))
+    objects = tuple(obj for obj in zone.meta.objects if obj.tile != (20, 5))
+    obj = s.ObjectSpec('private-face', (20, 5), 'apartment_door', housing=anchor)
+    zone = replace(zone, meta=replace(zone.meta, objects=(*objects, obj),
+                                    public=(s.Region(20, 5, 1, 1),)))
+    assert any('private interior' in error for error in charting_problems(zone, fixtures.tiles))
+
+
+@pytest.mark.parametrize('dx,dy', [(x,y) for x in (-1,0,1) for y in (-1,0,1)])
+def test_arch_5_5_5_barrier_exception_preserves_hidden_exclusions(fixtures, dx, dy):
+    zone = fixtures.zones['p6-fixture']
+    at = (30+dx, 10+dy)
+    grid = [list(row) for row in zone.grid]
+    grid[at[1]][at[0]] = 'floor'
+    zone = replace(zone, grid=tuple(tuple(row) for row in grid),
+        meta=replace(zone.meta, public=(s.Region(*at, 1, 1),),
+                     objects=(*zone.meta.objects, s.ObjectSpec('near-hidden', at, 'door'))))
+    assert any('hidden exit' in error for error in charting_problems(zone, fixtures.tiles))
+    # In valid content those cells remain outside the chart, including diagonals.
+    body, _, _, _ = view(fixtures, 132, 50)
+    vp = body['viewport']
+    assert body['charted'][at[1]-vp['y']][at[0]-vp['x']] == -1
+
+
+@pytest.mark.parametrize('tier', ['16', '256', 'truecolor'])
+@pytest.mark.parametrize('size', [(80,24), (132,50)])
+@pytest.mark.parametrize('region', [False, True])
+def test_arch_5_5_5_door_terminal_and_required_exit_have_identical_ground(fixtures, tier, size, region):
+    content = deepcopy(fixtures)
+    original = content.zones['p6-fixture']
+    face = (20, 5)
+    look = content.looks[original.id]
+    if region:
+        content.looks[original.id] = replace(look, regions=(s.LookRegion('p6-light', rect=(*face,1,1)),))
+    frames, charts = [], []
+    for kind in ('door', 'terminal', 'requirement'):
+        objects = tuple(obj for obj in original.meta.objects if obj.tile != face)
+        exits = original.meta.exits
+        grid = [list(row) for row in original.grid]
+        grid[5][20] = 'floor'
+        if kind == 'requirement':
+            exits += (s.Exit('face', face, original.id, (4,5), 'door',
+                             s.Requirement('story', 'fixture-access')),)
+        else:
+            objects += (s.ObjectSpec('face', face, kind),)
+        content.zones[original.id] = replace(original, grid=tuple(tuple(row) for row in grid),
+            meta=replace(original.meta, objects=objects, exits=exits,
+                         public=(*original.meta.public, s.Region(*face,1,1))))
+        assert not list(charting_problems(content.zones[original.id], content.tiles))
+        body, caller, instance, perception = view(content, *size)
+        remembered = deepcopy(perception.remembered)
+        for opened in (False, True):
+            if kind == 'door':
+                instance.objects['face'].open = opened
+            # Rebuild both chart and sight; the result must not depend on caches.
+            perception.chart_key = perception.grid_key = perception.look_key = None
+            body = build(caller, instance, perception, content, *size, '12:00', False, 1)
+            vp = body['viewport']
+            x,y = face[0]-vp['x'],face[1]-vp['y']
+            assert body['tiles'][y][x] == body['remembered'][y][x] == -1
+            assert body['charted'][y][x] == CHARTED_GROUND
+            assert not any((obj['x'],obj['y']) == face for obj in body['objects'])
+            assert perception.remembered == remembered and face not in remembered[instance.id]
+            buffer = CellBuffer(*size)
+            drawing.terrain(buffer, body, compute(*size), Paint(Palette(asdict(content.palette), tier)))
+            terminal = FakeTerminal(*size)
+            terminal.write(buffer.full())
+            frames.append(canonical(snapshot(terminal)))
+            charts.append((body['charted'],body['looks']))
+    assert all(frame == frames[0] for frame in frames)
+    assert all(chart == charts[0] for chart in charts)
+
+
 def test_arch_5_5_4_masking_whole_only_and_memory(fixtures):
     body, caller, instance, perception = view(fixtures)
     remembered = deepcopy(perception.remembered)
     chart = body['charted']
     vp = body['viewport']
     known = {(vp['x']+x,vp['y']+y) for y,row in enumerate(body['tiles']) for x,n in enumerate(row)
-             if n != -1 or chart[y][x] >= 0}
+             if n != -1 or chart[y][x] >= 0 or chart[y][x] == CHARTED_GROUND}
     look = body['looks']
     for region in look['regions']:
         if 'rect' in region:
@@ -159,6 +298,72 @@ def test_arch_5_5_4_masking_whole_only_and_memory(fixtures):
     assert perception.remembered == remembered
     assert (14,5) in public_tiles(instance.template)
     assert (14,5) not in perception.remembered[instance.id]
+
+
+def test_ui_2_2_mark_rejects_only_wall_adjacent_spaces_and_names_cell(fixtures):
+    content = deepcopy(fixtures)
+    look = content.looks['p6-fixture']
+    content.looks[look.id] = replace(look,marks=(s.LookMark('p6_grain',at=(2,1),text='A B'),))
+    assert any('mark space at (3, 1)' in error for error in problems(content))
+    # Letters may border the same wall; spaces away from it remain legal.
+    for at,text in (((2,1),'A·B'),((2,2),'A B')):
+        content.looks[look.id] = replace(look,marks=(s.LookMark('p6_grain',at=at,text=text),))
+        assert not problems(content)
+
+
+@pytest.mark.parametrize('tier',['16','256','truecolor'])
+@pytest.mark.parametrize('light',[False,True])
+@pytest.mark.parametrize('at',[(14,4),(11,7)])
+def test_arch_5_5_5_withheld_charted_cells_are_uniform_ground_not_void(fixtures,tier,light,at):
+    content = deepcopy(fixtures)
+    original = content.zones['p6-fixture']
+    look = content.looks[original.id]
+    if light:
+        look = replace(look,theme='p6-light')
+    # Make grain nonblank at the test cell, without changing its class or
+    # introducing a new authored rule. Dressing must not expose its kind.
+    for tid,record in list(content.themes.themes.items()):
+        content.themes.themes[tid] = replace(record,texture='·')
+    # (11,7) is inside the light region, even when the base is dark.
+    # This also proves the server keeps region ground over marker cells.
+    theme = content.themes.themes['p6-light' if at==(11,7) else look.theme]
+    content.looks[look.id] = replace(look,marks=(s.LookMark('p6_grain',at=at,text='X'),),
+        glints=(at,),glint_role='p6_grain',signs=())
+    frames,charts = [],[]
+    for tile_id,kind in (('floor','hardware'),('terminal',None),('hazard',None)):
+        grid = [list(row) for row in original.grid]
+        grid[at[1]][at[0]] = tile_id
+        objects = original.meta.objects + ((s.ObjectSpec('withheld',at,kind),) if kind else ())
+        content.zones[original.id] = replace(original,grid=tuple(tuple(row) for row in grid),
+                                              meta=replace(original.meta,objects=objects))
+        body,caller,instance,perception = view(content)
+        vp = body['viewport']
+        x,y = at[0]-vp['x'],at[1]-vp['y']
+        assert body['tiles'][y][x] == -1
+        assert body['charted'][y][x] == CHARTED_GROUND
+        assert at not in perception.remembered[instance.id]
+        assert not any(obj['x']==at[0] and obj['y']==at[1] for obj in body['objects'])
+        assert not body['looks']['marks'] and not body['looks']['glints']
+        charts.append((body['charted'],body['looks']))
+        paint = Paint(Palette(asdict(content.palette),tier))
+        buffer = CellBuffer(80,24)
+        drawing.terrain(buffer,body,compute(80,24),paint)
+        terminal = FakeTerminal()
+        terminal.write(buffer.full())
+        ox,oy = drawing.origin(body,compute(80,24))
+        assert terminal.cell(ox+x,oy+y) == '·'
+        places = for_frame(paint,body)
+        glyph,style = places.cell(paint,{'id':':charted-ground','plain':True,'ground_only':True},
+            at,roof=False,beside_wall=False,live=False)
+        assert glyph == '·' and style == paint.known(paint('floor') if tier=='16'
+                                                   else paint(theme.ground_fg,theme.ground_bg))
+        frames.append(canonical(snapshot(terminal)))
+        before = deepcopy(body['charted'])
+        instance.geometry[at] = 'wall'
+        instance.geometry_revision += 1
+        assert build(caller,instance,perception,content,80,24,'12:00',False,1)['charted'] == before
+    assert frames[0] == frames[1] == frames[2]
+    assert charts[0] == charts[1] == charts[2]
 
 
 def test_arch_5_5_6_looks_remove_without_rules_or_other_view_change(fixtures):
@@ -215,7 +420,10 @@ def test_ui_2_2_person_lift_uses_region_ground_and_cached(fixtures, tier):
     assert paint.on_theme(*args) is first
     assert len(paint.ground_lifts) == count
     ground, wall, _ = theme_roles(theme,tier)
-    assert light_distance(first.fg, first.bg) >= paint.bands_on(ground,wall).people
+    if tier == '16':
+        assert first == paint('npc_neutral')
+    else:
+        assert light_distance(first.fg, first.bg) >= paint.bands_on(ground,wall).people
     assert paint.on_theme('npc_neutral',replace(theme,luma='dark')).fg == first.fg
     dimmed = paint.on_theme('npc_neutral',theme,jacked=True,reverse=True)
     assert 7 not in dimmed.attrs

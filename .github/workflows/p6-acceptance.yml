@@ -7,7 +7,10 @@ on:
       - 'tests/**'
       - 'scripts/accept_p6_netbbs.py'
       - 'scripts/presentation_p6.py'
+      - 'scripts/presentation_p6_masks.py'
+      - 'scripts/presentation_p6_packet.py'
       - 'scripts/p6_golden_diff.py'
+      - 'scripts/p6_cell_diff.py'
       - '.github/workflows/p6-acceptance.yml'
   workflow_dispatch:
 
@@ -33,6 +36,10 @@ jobs:
       - run: python -m pip install -e .[test]
       - name: Prove only the six authorized HERE rows moved
         run: python scripts/p6_golden_diff.py --output "${{ runner.temp }}/p6-here-row-diff.json"
+      - name: Prove the Part A per-cell golden exception
+        run: python scripts/p6_cell_diff.py --output "${{ runner.temp }}/p6-cell-diff.json"
+      - name: Measure supplied Plaza and Sodium Row region geometry
+        run: python scripts/presentation_p6_masks.py --output "${{ runner.temp }}/p6-mask-geometry.json"
       - name: Compare charted fixture generic/looks using the P1 CPU method
         run: python scripts/presentation_p6.py --output "${{ runner.temp }}/p6-charted-budget.json"
       - uses: actions/upload-artifact@v4
@@ -42,6 +49,8 @@ jobs:
           path: |
             ${{ runner.temp }}/p6-charted-budget.json
             ${{ runner.temp }}/p6-here-row-diff.json
+            ${{ runner.temp }}/p6-cell-diff.json
+            ${{ runner.temp }}/p6-mask-geometry.json
 
   native-fixtures:
     runs-on: ubuntu-latest

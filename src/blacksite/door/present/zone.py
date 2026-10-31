@@ -14,6 +14,7 @@ from blacksite.door.palette import Style
 from blacksite.door.present import chrome
 from blacksite.door.present.places import for_frame
 from blacksite.door.present.paint import Paint
+from blacksite.place import CHARTED_GROUND
 
 # Things you can use: one fixed shape and one colour family per kind.
 THINGS = {"terminal": ("§", "thing_terminal"), "descent_console": ("§", "thing_terminal"),
@@ -78,9 +79,9 @@ def terrain(buffer: CellBuffer, body: dict[str, Any], layout: Layout, paint: Pai
     for y, row in enumerate(grid):
         recall = memory[y] if y < len(memory) else []
         chart = charted[y] if y < len(charted) else []
-        indices = [recall[x] if value == -2 and x < len(recall) else
+        indices = [recall[x] if value == -2 and x < len(recall) and recall[x] >= 0 else
                    chart[x] if value < 0 and x < len(chart) else value for x, value in enumerate(row)]
-        resolved.append([index if 0 <= index < len(legend) else -1 for index in indices])
+        resolved.append([index if 0 <= index < len(legend) or index == CHARTED_GROUND else -1 for index in indices])
     ids = [[legend[index]['id'] if index >= 0 else '' for index in row] for row in resolved]
     opaque = frozenset(entry['id'] for entry in legend if entry.get('wall', entry['id'] in OPAQUE))
     open_tiles = frozenset(entry['id'] for entry in legend if entry['id'] not in opaque)
@@ -103,14 +104,17 @@ def terrain(buffer: CellBuffer, body: dict[str, Any], layout: Layout, paint: Pai
                 if places.terrain_states.get((x,y)) == state:
                     continue
                 places.terrain_states[x,y] = state
-            if index < 0:
+            if index < 0 and index != CHARTED_GROUND:
                 if places:
                     target.put(ox+x,oy+y,' ')
                 continue
-            entry = legend[index]
+            # Ground-only carries no tile class or rule shape. It also makes
+            # no claim about passability for the neighbouring roof test.
+            entry = ({'id': ':charted-ground', 'plain': True, 'ground_only': True}
+                     if index == CHARTED_GROUND else legend[index])
             key = index, roof, value < 0
             if key not in styles:
-                glyph, style = cell(paint, entry, roof=roof)
+                glyph, style = cell(paint, {'id':'floor'} if index == CHARTED_GROUND else entry, roof=roof)
                 styles[key] = glyph, paint.known(style) if value < 0 else style
             glyph, style = styles[key]
             if places:

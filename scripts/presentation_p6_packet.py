@@ -7,9 +7,13 @@ policy); selected byte-preserved text plus hashes go in the repository.
 
 import argparse
 from hashlib import sha256
+from io import BytesIO
 import json
 from pathlib import Path
+import re
+import subprocess
 import sys
+import tarfile
 from typing import Any
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -35,10 +39,29 @@ def safe_filename(value: str) -> str:
     return value
 
 
+def source_hash(head: str, source_tree: str) -> str:
+    """Tie native Python bytes to a separately pinned Git source tree."""
+    require(bool(re.fullmatch('[0-9a-f]{40}',head)) and bool(re.fullmatch('[0-9a-f]{40}',source_tree)),
+            'head and source-tree must be full Git object ids')
+    actual = subprocess.check_output(['git','rev-parse',f'{head}:src/blacksite'],cwd=ROOT,text=True).strip()
+    require(actual==source_tree, f'expected source tree {source_tree}, but {head} contains {actual}')
+    archive = subprocess.check_output(['git','archive',source_tree],cwd=ROOT)
+    digest = sha256()
+    # Read in memory, never extract artifact or archive paths. Match the
+    # source-matched wheel guard in NativeProbe, including LF normalisation.
+    with tarfile.open(fileobj=BytesIO(archive)) as tree:
+        for member in sorted(tree.getmembers(),key=lambda item:item.name):
+            if member.isfile() and member.name.endswith('.py'):
+                data = tree.extractfile(member).read()
+                digest.update(member.name.encode()+b'\0'+data.replace(b'\r\n',b'\n')+b'\0')
+    return digest.hexdigest()
+
+
 def build_packet(root: Path, metadata: list[dict[str,Any]], run: int, head: str,
-                 destination: Path) -> dict[str,Any]:
+                 destination: Path, *, source_tree: str) -> dict[str,Any]:
     if destination.exists():
         raise FileExistsError('preserve existing evidence; use a new packet directory')
+    expected_source = source_hash(head,source_tree)
     files: dict[str,bytes] = {}
     records,artifacts,source_hashes = [],{},set()
     cases = 0
@@ -54,7 +77,10 @@ def build_packet(root: Path, metadata: list[dict[str,Any]], run: int, head: str,
         result = json.loads((directory/'result.json').read_text(encoding='utf-8'))
         require(result['head']==head and result['passed'] and result['show'],
                 f'{name}: head, native pass or attached-terminal provenance mismatch')
-        source_hashes.add(result['source_matched_wheel']['python_tree_sha256'])
+        native_source = result['source_matched_wheel']['python_tree_sha256']
+        require(native_source==expected_source,
+                f'{name}: native Python source hash differs from pinned source tree {source_tree}')
+        source_hashes.add(native_source)
         for filename,expected in result['manifest'].items():
             require(digest(directory/safe_filename(filename))==expected,
                     f'{name}/{filename}: SHA-256 mismatch')
@@ -102,7 +128,8 @@ def build_packet(root: Path, metadata: list[dict[str,Any]], run: int, head: str,
     require(set(artifacts)==expected_artifacts and cases==12 and len(records)==48 and len(source_hashes)==1,
             f'expected four artifacts, twelve cases, 48 captures and one source tree; '
             f'got {len(artifacts)}, {cases}, {len(records)}, {len(source_hashes)}')
-    manifest = {'schema':1,'execution_head':head,'run':run,'source_python_tree_sha256':source_hashes.pop(),
+    manifest = {'schema':1,'execution_head':head,'run':run,'source_git_tree':source_tree,
+        'source_python_tree_sha256':source_hashes.pop(),
         'transport':'NetBBS v7.45.0 Telnet -> registered native stdio; sized attached PTY; source-matched wheel',
         'fixture':'tests/fixtures/p6 via content.local; ordinary character creation; explicit initial placement (4,5), then real walking keys',
         'caller_provenance':'Wide character name is entered through ordinary character creation; genuine BBS handles remain ASCII. No handle override.',
@@ -127,12 +154,14 @@ def main() -> None:
     parser.add_argument('--metadata',type=Path,required=True)
     parser.add_argument('--run',type=int,required=True)
     parser.add_argument('--head',required=True)
+    parser.add_argument('--source-tree',required=True,help='pinned Git object id of execution head:src/blacksite')
     parser.add_argument('--output',type=Path,required=True)
     args = parser.parse_args()
     metadata = json.loads(args.metadata.read_text(encoding='utf-8-sig'))
     if isinstance(metadata,dict):
         metadata = metadata['artifacts']
-    print(json.dumps(build_packet(args.artifacts_root,metadata,args.run,args.head,args.output),indent=2))
+    print(json.dumps(build_packet(args.artifacts_root,metadata,args.run,args.head,args.output,
+                                  source_tree=args.source_tree),indent=2))
 
 
 if __name__=='__main__':

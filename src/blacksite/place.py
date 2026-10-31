@@ -3,6 +3,10 @@
 from dataclasses import dataclass, replace
 from typing import Literal
 
+# Architecture 5.4/5.5.5: charted terrain withheld for any reason carries
+# the same ground-only marker, never an interaction or hazard tile id.
+CHARTED_GROUND = -3
+
 
 @dataclass(frozen=True)
 class Theme:

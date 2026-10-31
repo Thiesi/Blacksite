@@ -211,6 +211,12 @@ one below in every theme and tier, by at least a minimum lightness step
 that the first contrast test fixes (proposed: 8 per cent in 256 colours
 and truecolor).
 
+At 16 colours the bands are categorical, not numeric L* distances:
+wall faces use grey 8, people use P5's bright-intensity mapping, Halvard
+uses 7, and jacked bodies use 8 without reverse video. Things keep
+their role colours. Sign letters sit on black; backgrounds remain 0-7.
+Themes and region grounds use these same categories.
+
 | Band | Contents | Treatment |
 |---|---|---|
 | Ground | floor, paving, paint, roof | the theme's background; sparse, low-contrast grain |
