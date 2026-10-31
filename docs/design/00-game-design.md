@@ -1453,7 +1453,10 @@ The initial generated-job baseline is 200 chits, 200 XP and +5 standing
 with its handler faction (Vesper has no ordinary faction delta). Scale
 the numeric reward once for the accepted roster, then apply the
 recipient's Operator chit bonus. Declared item/program rewards remain
-one grant per participant. Story jobs, publication forks and service
+one grant per participant, except for a handed-off job (section 10.1,
+planned, #125): its receiver joins the frozen terms on acceptance, and
+its item and program rewards are granted once, to the holder who turns
+in. Story jobs, publication forks and service
 orders use their fixed authored schedules instead. The S19 earning
 report measures these sources against the catalog; their human pacing
 and the complete city's balance remain section 18 acceptance work.
@@ -1659,7 +1662,9 @@ Values are initial, tuned at the pacing gate.
   to 24 characters, the character-name rules and reserved-name check,
   unique on the node. The name is held while that invitation is open
   and released if nobody accepts. An uncrewed character can hold at
-  most one name this way at a time. Crew names are covered by report;
+  most one name this way at a time. A name released by an expired
+  invitation or a dissolved crew cannot be taken again by the same
+  character for 7 days. Crew names are covered by report;
   the admin CLI can rename or dissolve a crew.
 - **Offline invitations.** An invitation may be left for an offline
   character. It waits up to 7 days and is accepted or declined at that
@@ -1667,7 +1672,8 @@ Values are initial, tuned at the pacing gate.
   offline invitations, and at most one to the same character. A
   character holds at most 10 pending invitations; while they hold 10,
   further invitations are refused and the sender is told the invitation
-  could not be left. Nothing is evicted silently. Identity-based ignores, the five-player limit and
+  could not be left. Nothing is evicted silently. A character can
+  decline all pending invitations with one action. Identity-based ignores, the five-player limit and
   membership checks are rechecked on acceptance; an ignored sender's
   invitation never arrives, and ignoring a sender withdraws theirs.
 - **Crew notes.** Members share up to 20 notes of up to 200 characters,
@@ -1705,9 +1711,10 @@ Values are initial, tuned at the pacing gate.
     (credentials, latches, opened controls) keeps its own timer
     (section 6.4) and is never paused; a later stage that needs an
     expired state recreates it under section 9.1's retry rule.
-  - **Job slots.** The receiver needs a free slot under section 9.1's
-    three-job limit. Acceptance without one is refused and the offer
-    stays open until it expires.
+  - **Job slots and room.** The receiver needs a free slot under
+    section 9.1's three-job limit and room for the escrowed items.
+    Acceptance without either is refused and the offer stays open
+    until it expires; nothing is dropped.
   - **Rewards.** The current holder turns the job in. Its chits, XP
     and standing are paid once, divided between the identities that
     committed its stages in proportion to stages each committed,
