@@ -156,6 +156,9 @@ def build(actor: Actor, zone: ZoneInstance, perception: Perception, content: Con
         perception.public_template = zone.template
         perception.public = public_tiles(zone.template)
         object_tiles = {obj.tile for obj in zone.template.meta.objects}
+        # A required exit may use plain floor without an object binding.
+        # Its public face still carries no class or live permission state.
+        object_tiles.update(ex.tile for ex in zone.template.meta.exits if ex.requirement is not None)
         perception.ground_only = {at for at in perception.public
                                  if at in object_tiles or (kind := content.tiles[zone.template.tile_at(at)]).hazard
                                  or kind.interaction}
