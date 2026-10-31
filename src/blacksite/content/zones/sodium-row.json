@@ -291,10 +291,10 @@
       "respawn_seconds": 60,
       "condition": "always",
       "region": {
-        "x": 9,
-        "y": 3,
-        "w": 45,
-        "h": 8
+        "x": 43,
+        "y": 20,
+        "w": 2,
+        "h": 1
       }
     },
     {

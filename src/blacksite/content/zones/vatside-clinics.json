@@ -443,10 +443,10 @@
       "respawn_seconds": 60,
       "condition": "always",
       "region": {
-        "x": 38,
-        "y": 1,
-        "w": 22,
-        "h": 4
+        "x": 13,
+        "y": 13,
+        "w": 2,
+        "h": 1
       }
     },
     {
