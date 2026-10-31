@@ -73,6 +73,8 @@ because a menu was reopened.
   work. No client limit changes progression or offline simulation.
 - Logging out from a safe zone is instant. From elsewhere it is the
   sleeper rule above.
+- After at least an hour away, login opens the away report before play
+  (section 11.1; planned, #125).
 
 ## 3. Characters
 
@@ -1508,7 +1510,8 @@ the frozen count and rewards do not reroll. Retry keeps the accepted
 terms and prior completed stages, reissuing bound supplies as needed.
 Original participants can resume a withdrawn generated/story job under
 those frozen terms. They must contribute again; resumption adds no new
-participant and cannot bypass the three-job limit. Retrying an abandoned
+participant and cannot bypass the three-job limit. A handoff (section
+10.1, planned, #125) is the one way a participant joins later. Retrying an abandoned
 stage retains earlier completed stages. Work-order withdrawal is final
 for that reservation; disconnect instead retains its original deadline.
 Completed generated jobs awaiting turn-in still occupy an active slot.
@@ -1521,7 +1524,10 @@ The initial generated-job baseline is 200 chits, 200 XP and +5 standing
 with its handler faction (Vesper has no ordinary faction delta). Scale
 the numeric reward once for the accepted roster, then apply the
 recipient's Operator chit bonus. Declared item/program rewards remain
-one grant per participant. Story jobs, publication forks and service
+one grant per participant, except for a handed-off job (section 10.1,
+planned, #125): its receiver joins the frozen terms on acceptance, and
+its item and program rewards are granted once, to the holder who turns
+in. Story jobs, publication forks and service
 orders use their fixed authored schedules instead. The S19 earning
 report measures these sources against the catalog; their human pacing
 and the complete city's balance remain section 18 acceptance work.
@@ -1675,6 +1681,13 @@ Leaving or disconnecting removes that member. On leader logout the
 longest-serving remaining member leads; a single remaining member means
 dissolution. Promotion never changes service order. Crews are live only
 and end on server restart, independently of S26 expedition rosters.
+Once built, section 10.1 (planned, #125) replaces the first bullet's
+"A crew is 2 to 5 players" with 1 to 5 (a crew of one exists only as
+section 10.1 describes), and these sentences of this paragraph: the 60-second expiry (for offline invitations only),
+"an unanswered invitation creates no one-person crew", "Leaving or
+disconnecting removes that member" (disconnecting no longer does),
+the leader-logout rule, "a single remaining member means dissolution"
+and "Crews are live only and end on server restart". The rest stands.
 
 Crew friendly fire is refused before faction/Marked attack checks.
 Refusal never marks or trains a skill. Marked names remain red, while a
@@ -1699,6 +1712,150 @@ without being blocked by crew mode or the killer's private window.
 Shared XP is a whole-number award, rounded down after the section 10
 grade multiplier; it retains the recipient's own identity caps.
 
+### 10.1 Lasting crews, notes and handoffs (planned, #125)
+
+On a node where members are rarely online together, a crew must outlast
+a session. These rules extend section 10; its live rules (pickup,
+beacon, friendly fire, loot modes, shared XP and the six-tile
+contribution test) still apply, but only to members who are online
+and present, except that a member's sleeper (section 2) keeps crew
+friendly-fire protection and is never in a loot roster: round-robin offers, frozen loot rosters, beacons and XP
+and loot eligibility include only members online and in the same zone
+or sector, so an offline member is never offered a turn.
+Values are initial, tuned at the pacing gate.
+
+- **Lasting roster.** A crew survives logout and restart; members
+  leave only by leaving or being kicked. It dissolves when its last
+  member leaves. A crew of one keeps its name and notes for 14 days,
+  counted from the day it became one member, so its member can invite
+  again; then it dissolves. Leadership passes as
+  in section 10 when the leader leaves the crew, not when the leader
+  logs out.
+- **Inactivity.** When the leader has not logged in for 7 days,
+  leadership passes to the longest-serving member who has logged in
+  within those 7 days. The handover is checked at every member's login,
+  so a member who returns after the 7 days takes over then. It is
+  temporary: the original leader takes leadership back at their next
+  login, and until then the acting leader cannot kick them or remove
+  their notes. A crew in
+  which no member has logged in for 30 days dissolves and releases its
+  name.
+- **Naming.** The inviter names the crew with its first invitation: 3
+  to 24 characters, the character-name rules and reserved-name check,
+  unique on the node. The name is checked when the invitation is left
+  but claimed only when someone accepts; an open invitation holds no
+  name. If the name was claimed meanwhile, the acceptance fails with
+  "name taken", the invitation ends, and the inviter learns it in their
+  away report and may invite again under another name. A name released by a
+  dissolved crew cannot be taken again by the same BBS identity, with
+  any of its characters, for 7 days. Crew names are covered by report;
+  the admin CLI can rename or dissolve a crew.
+- **Offline invitations.** An invitation may be left for an offline
+  character. It waits up to 7 days and is accepted or declined at that
+  character's next login. A BBS identity may have at most 5
+  outstanding offline invitations across all its characters, and at
+  most one to the same character across all its characters. A
+  character holds at most 10 pending invitations, counting only those
+  that reached them (an ignored sender's never count); while they hold 10,
+  further invitations are refused and the sender is told the invitation
+  could not be left. Nothing is evicted silently. A character can
+  decline all pending invitations with one action. Identity-based ignores, the five-player limit and
+  membership checks are rechecked on acceptance; an ignored sender's
+  invitation never arrives, and ignoring a sender removes theirs from the recipient's list. To
+  the sender, an invitation to someone who ignores them looks exactly
+  like one left normally, so it never reveals the ignore: the sender
+  gets exactly the result a sender who is not ignored would get,
+  including the full-inbox refusal, and the ignored invitation holds
+  the sender's slots until its normal expiry. Ignored handoff offers
+  and dead drops hold the sender's slots the same way.
+- **Crew notes.** Members share up to 20 notes of up to 200 characters,
+  visible to members only. The author or the leader removes a note; a
+  departed member's notes stay until any member removes them. Notes use chat's text rules and rate
+  limit, are covered by report, and are removable by the admin CLI.
+  Notes are never shown outside the crew and are never world log lines.
+- **Handoffs.** The holder of a generated job may offer it to a crew
+  member after completing at least one stage, while at least one stage
+  remains. Only a job with a single participant can be handed off, so
+  no other participant's rights or rewards change. A job can be offered at most twice: a withdrawn or expired
+  offer may be followed by one more, and an accepted offer ends
+  offering. This holds the same whether or not an offer was delivered,
+  so a second chance never reveals an ignore. The offer waits up to
+  24 hours, and the receiver accepts at any time they are online.
+  - **When an offer is allowed.** Not while a stage holds a live
+    escort assignment or an open mission instance owned by the holder;
+    those stages finish first, so mission-owned subjects never need to
+    change owner.
+  - **Rechecks.** An offer is withdrawn when either party leaves the
+    crew, and never reaches a receiver who ignores the holder; to the
+    holder it looks like any open offer, which they can withdraw at any
+    time.
+    Acceptance rechecks crew membership and the handler's own accept
+    conditions for the receiver (section 9.1); a receiver who fails
+    them cannot accept. The
+  receiver becomes the holder under the frozen terms (section 9.1);
+  completed stages stay complete, and nothing rerolls. Acceptance
+  removes the giver from the job's participants: the giver can no
+  longer resume it (section 9.1). The giver's share for the stages
+  already committed is paid at turn-in, like every share, and only if
+  the job is completed (section 9.1); a giver trusts the receiver to
+  finish. It counts against the giver's section 3.5 limits exactly as
+  an ordinary job reward does. The giver's job slot stays occupied while the
+  offer is open and is freed on acceptance.
+  - **The job is locked while an offer is open.** Neither party can
+    complete a stage, abandon the job or use its stage-bound items,
+    which are held in escrow. The holder may withdraw the offer.
+    Acceptance moves the job and its items together; withdrawal or
+    expiry returns both to the holder unchanged. Escrowed items that
+    no longer fit the holder's inventory go to a free collection at any
+    Kestrel branch, as a returned dead drop does (section 11.1); bound
+    items stay bound to the holder there.
+  - **Stage deadlines.** Stage deadlines pause while an offer is open,
+    like the 60-minute expiry; the offer window is bounded, so a pause
+    lasts at most 24 hours. The offer view shows the receiver each
+    open stage's remaining time. If the job fails anyway, the offer
+    ends and its escrowed items return to the holder.
+  - **Expiry.** A generated job's 60-minute expiry (section 9.1)
+    pauses while an offer is open, and acceptance gives the receiver a
+    fresh 60 minutes. A job that returns to its holder after a
+    withdrawn or expired offer resumes its remaining time, never a fresh
+    60 minutes. A job can therefore live at most 60 minutes, plus 48
+    hours on offer, plus 60 minutes. Every prepared world state the stages created
+    (credentials, latches, opened controls) keeps its own timer
+    (section 6.4) and is never paused; a later stage that needs an
+    expired state recreates it under section 9.1's retry rule.
+  - **Job slots and room.** The receiver needs a free slot under
+    section 9.1's three-job limit and room for the escrowed items.
+    Acceptance without either is refused and the offer stays open
+    until it expires; nothing is dropped.
+  - **Rewards.** The current holder turns the job in. Its chits, XP
+    and standing are paid once, divided between the identities that
+    committed its stages in proportion to stages each committed,
+    rounded down. The frozen roster size stays the original one, so
+    a handoff never applies section 9.1's roster scaling. Every share,
+    the giver's included, is paid at turn-in, and only if the job is
+    completed. Each share is paid to its identity online
+    or not, and the Operator chit bonus applies per recipient as in
+    section 9.1. Declared item and program rewards are granted once,
+    to the holder who turns in, never one per participant. Each
+    identity's own caps apply (section 3.5); a share a cap withholds,
+    or one owed to a retired identity, is forfeited, never passed to
+    the other party. A handoff never multiplies or transfers a
+    reward.
+  - Story jobs, work orders and descent rosters cannot be handed off.
+    Personal and mission records stay with the identity that earned
+    them (section 10).
+- **Dissolution.** A crew dissolved by any route (its last member
+  leaving, inactivity, the crew-of-one expiry or the admin CLI)
+  withdraws all its invitations and handoff offers, as leaving does;
+  offered jobs and their items return to their holders.
+- **Retirement.** Confirmed character retirement ends that character's
+  crew membership, withdraws its invitations and handoff offers (a job
+  on offer returns to its holder, or ends with the holder's retirement
+  as any job does), removes its tag, and settles its dead drops under
+  section 11.1's retirement rules. The away report's persisted records
+  are keyed by character, so a retired character appears in them only
+  as "a resident" from then on, even if the name is later reused. A crew whose last member retires dissolves.
+
 ## 11. Social layer
 
 - **Say** (zone, 20-tile radius), **shout** (zone), **whisper** (player,
@@ -1719,6 +1876,111 @@ grade multiplier; it retains the recipient's own identity caps.
 - **Ignore** and **report**, the latter written to the admin log.
 - The BBS handle is always visible next to the character name in sitrep
   and whisper; the character name is what the world uses.
+
+### 11.1 The away report, tags and dead drops (planned, #125)
+
+Players who are rarely online together still see each other's work.
+Values are initial, tuned at the pacing gate.
+
+- **The away report.** At login after at least an hour away, the client
+  shows one screen of what happened since the character's last logout,
+  looking back at most 14 days. The server keeps the records it draws
+  on (relay changes, repairs and allocations, new Marks, event outcomes,
+  crew deaths, and items addressed to the reader) for 14 days; the
+  in-memory world ring is not enough, and the build slice persists them,
+  newest first, at most 12 lines, and keeps it in the journal for 7
+  days from the login that showed it. It is a full-width text view, never world log lines or a
+  notice.
+  - It reports only facts from receipts and public log lines that the
+    server already produces, persisted as above: relays that changed hands, public services repaired
+    with the allocation chosen and the repairer's character name, newly
+    Marked names, convoy and Ring-fall outcomes, and the deaths of the
+    reader's own crew members.
+  - It also lists what is addressed to the reader: crew invitations,
+    handoff offers, dead drops waiting, the reader's own drops returned,
+    the reader's crew dissolving (its notes go with it), the reader
+    being removed from a crew, the outcome of the reader's own handoff
+    offers (accepted, withdrawn or expired), the giver's share being
+    paid, capped or forfeited,
+    new crew notes, and the existing apartment-theft notice (section
+    6.4). These come first, each kind collapsed to one line with a
+    count and its soonest expiry ("3 invitations, the first ends in 2
+    days"), so a pending item is never cut off. Pending invitations,
+    offers and drops are also always listed in their own views.
+  - It discloses nothing beyond what sitrep and public logs already
+    showed: no tile positions, no Marked players' zones (a Wardens
+    member benefit, section 7.6), and nothing about housing interiors
+    (architecture 5.5.4). A zone or cell the reader has never visited
+    is named only by its district, as on the City Map. Lines that
+    name a character the reader ignores are left out.
+- **Tags.** A character may leave one tag at a time, on the tile they
+  are standing on, when it is a passable tile in a contested or open
+  zone, with up to 40 characters of text. Every
+  tag uses one fixed tag glyph, the same for all tags; presentation
+  picks it, outside the rule glyphs, so a tag can never imitate a thing
+  or an exit. HERE shows the start of its text, and looking at the tag
+  shows it whole. It expires after 7 days or when replaced.
+  - Never on a wall or other impassable tile, a door or another
+    visible interaction tile, and never in a safe zone or pocket; every
+    refusal gives the same one message. Any tile a character can stand
+    on that is not refused this way accepts a tag, whatever is hidden
+    there, a hidden exit included.
+  - A tag on a hidden exit is drawn only for viewers who have found
+    that exit, so it never marks the exit for anyone else. A tag on a
+    hidden interaction tile draws as on plain floor.
+  - A tag is drawn only where nothing visible is: an item, hazard,
+    actor or object the viewer can see on the tile shows instead, and
+    the tag stays listed in HERE. Undiscovered contents never affect
+    whether a tag is drawn, for any viewer.
+  - A character places or replaces a tag at most once per 10 minutes.
+    A tile holds at most 3 tags; a new one on a full tile replaces the
+    oldest, so tags never bury what HERE must show.
+  - Anyone who sees the tile sees the tag, except a player who ignores
+    its author. Tags use chat's text rules, are covered by report, and
+    are removable by the admin CLI.
+- **Dead drops.** A character may leave one item stack at an authored
+  dead-drop object, addressed to one named character. Leaving it gives
+  the same result for any name that has existed on the node, whether
+  that character is active, retired or ignoring the sender; only a
+  name never used on the node is refused. Whether a name was ever used
+  on the node is not treated as secret. Only that
+  character sees it and can collect it; nobody can loot it. Uncollected
+  after 7 days, the same item instance returns to the sender as a free
+  collection at any Kestrel branch, as a purchased market delivery is
+  collected (section 8.3), whether or not the item was ever listed; it
+  is not an impound reclaim with a fee.
+  - If the recipient retires, the drop returns to the sender at the
+    7-day expiry, like an unanswered drop, so a return never reveals a
+    retirement. If the sender retires, the drop stays for the recipient until it
+    expires; uncollected, it is deleted with the sender's other
+    property. If both have retired, it is deleted. The retirement
+    confirmation lists the sender's drops still in flight and says
+    they will be lost, so the loss is never a surprise.
+  - One outgoing drop per character at a time, at most one per BBS
+    identity across all its characters per rolling 24 hours, and at
+    most 10 units in the stack, so drops never become a bulk transfer
+    channel beside the market board (section 8.3). There is no
+    per-recipient limit, so a drop's acceptance never depends on what
+    other senders did.
+  - **Returns.** A free Kestrel collection from a returned drop or
+    escrow lasts 30 days, then follows section 8.3's impound rules, so
+    it never becomes free permanent storage.
+  - **Kestrel fee.** Leaving a drop costs the sender the market board's
+    5 % Kestrel fee (section 8.3), charged on the item's catalog base
+    price times the units dropped, rounded up, at least 1 chit; an item
+    with no catalog base price pays the 1-chit minimum. It is paid when
+    the drop is left and never refunded. Market prices are not used,
+    so no sale can be staged to move the fee.
+  - A drop from a sender the recipient ignores never arrives. To the
+    sender it looks exactly like an unanswered drop: it returns only at
+    the 7-day expiry, so it never reveals the ignore. The recipient may
+    also refuse a drop they can see, which returns it to the sender.
+  - Only items the market board accepts may be dropped; equipped,
+    secured, bound and mission items cannot (section 8.3). Player
+    trading of intact salvage stays allowed (section 8.4).
+  - Dead-drop objects are authored content, at least one per district,
+    never in a safe zone or pocket. The gazetteer places them.
+
 
 ## 12. World events
 

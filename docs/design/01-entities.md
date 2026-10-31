@@ -739,7 +739,7 @@ remain legal.
 | rig {slots[] → program ids} | |
 | drugs_active[], dependencies[] | |
 | apartment_id | nullable |
-| crew_id | live only, not persisted |
+| crew_id | live only, not persisted; persisted once lasting crews (game design §10.1, planned, #125) are built |
 | settings | keymap variant, palette, sitrep visibility, log verbosity |
 | stats | kills, deaths, runs, contributions, relays; per season |
 | clone_debt, recovery_kit_id, listened_enabled | debt survives decant; calibration is reversible |
@@ -1080,6 +1080,13 @@ mode, ten-second deadline and rotation version. Only a committed drop
 advances that version; a rejected storage write cannot consume a turn.
 These drop entitlements do not persist live social crew membership or
 replace an expedition's independent, durable consenting roster.
+
+Lasting crews (game design §10.1, planned, #125) replace this live-only
+record once built: the crew gains a persisted `name`, members with join
+times and last-login times, offline invitations with an absolute UTC
+expiry instead of `until_tick`, up to 20 notes, and handoff offers with
+their escrowed items and paused job expiry. Until then this section
+stands.
 
 Cache offers retain the victim's independent recovery right and use an
 absolute UTC deadline when persisted. Shared core-data offers key on the
