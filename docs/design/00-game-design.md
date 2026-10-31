@@ -1699,7 +1699,8 @@ Values are initial, tuned at the pacing gate.
   Notes are never shown outside the crew and are never world log lines.
 - **Handoffs.** The holder of a generated job may offer it to a crew
   member after completing at least one stage, while at least one stage
-  remains. A job can be offered at most twice: a withdrawn or expired
+  remains. Only a job with a single participant can be handed off, so
+  no other participant's rights or rewards change. A job can be offered at most twice: a withdrawn or expired
   offer may be followed by one more, and an accepted offer ends
   offering. This holds the same whether or not an offer was delivered,
   so a second chance never reveals an ignore. The offer waits up to
@@ -1805,13 +1806,15 @@ Values are initial, tuned at the pacing gate.
 
 - **The away report.** At login after at least an hour away, the client
   shows one screen of what happened since the character's last logout,
-  looking back at most 14 days, from persisted receipts and public log
-  records (section 12),
+  looking back at most 14 days. The server keeps the records it draws
+  on (relay changes, repairs and allocations, new Marks, event outcomes,
+  crew deaths, and items addressed to the reader) for 14 days; the
+  in-memory world ring is not enough, and the build slice persists them,
   newest first, at most 12 lines, and keeps it in the journal for 7
   days from the login that showed it. It is a full-width text view, never world log lines or a
   notice.
-  - It is built only from receipts and public log lines the server
-    already writes: relays that changed hands, public services repaired
+  - It reports only facts from receipts and public log lines that the
+    server already produces, persisted as above: relays that changed hands, public services repaired
     with the allocation chosen and the repairer's character name, newly
     Marked names, convoy and Ring-fall outcomes, and the deaths of the
     reader's own crew members.
@@ -1843,9 +1846,10 @@ Values are initial, tuned at the pacing gate.
     Any other tile that looks like plain floor accepts a tag, whatever
     is hidden there, so tagging never reveals a hidden exit or a hidden
     interaction tile.
-  - A tag is drawn only where nothing else is: an item, hazard, actor
-    or object on the tile always shows instead, and the tag stays
-    listed in HERE.
+  - A tag is drawn only where nothing visible is: an item, hazard,
+    actor or object the viewer can see on the tile shows instead, and
+    the tag stays listed in HERE. Undiscovered contents never affect
+    whether a tag is drawn, for any viewer.
   - A character places or replaces a tag at most once per 10 minutes.
   - Anyone who sees the tile sees the tag, except a player who ignores
     its author. Tags use chat's text rules, are covered by report, and
