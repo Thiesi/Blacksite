@@ -228,9 +228,11 @@ politics, in geography.
 | Vesper, Dolf, bouncer, 3 regulars | the Halo | as canon | Dolf unplaced |
 | Curfew crowd | at the Stair gate | `event:curfew` | [new] |
 
-This is 16 NPCs on the Row against 8 today. Sodium Row already misses
-the 132 × 50 CPU budget (P6b), so the technical lead decides the count.
-Fallback: one per bar and no card players (11).
+This is 16 NPCs on the Row against 8 today. The Row already misses the
+132 × 50 CPU budget at 8 (P6b). The technical lead has added an 8/11/16
+sweep to A8's evidence, so main gets no increase until it's measured.
+The demo branch may run 16. Fallback: one per bar and no card players
+(11).
 
 Halo regulars become a mix of factions, not four Sable members.
 
@@ -243,10 +245,18 @@ The owner, 2026-10-31, in session with the creative consultant:
 > unless you are very skilled, in which case you might escape your
 > punishment."
 
-S38 as approved (#141, 6c3fbe7) Marks the attacker, and the zone's
-keeper (Sable) answers any attack on a player or on an NPC of any
-faction. The log says "Sable is coming for you." (presentation lead).
-Three more things make it a price and not a fine:
+S38 as approved (#141) defines breaking the peace. It is an attack
+whose target is on the Row and that is either an attack on a player
+that Marks the attacker, or an attack on an NPC that wasn't already
+hostile to the attacker. The truce follows the target's body, wherever
+the shot, drone or burn comes from. The keeper (Sable) answers, and the
+log says "Sable is coming for you." (presentation lead).
+
+That definition suits the chase. Fighting your way out through
+enforcers who are already after you doesn't break the peace again, and
+your victim may fire back freely. The first shot is the crime; what
+follows is the getaway. Three more things make it a price and not a
+fine:
 
 1. **Strong enough to lose to.** Today's enforcers are grade 1 with a
    Kestrel sidearm; a grade-5 veteran kills both. Two steps:
@@ -329,9 +339,11 @@ None of these is scripted; each falls out of systems that exist:
 | Card game, gambling | new system | not proposed | — |
 
 **The single largest gap is speech.** Without live dialogue the Row's
-people stay silent, and half of §6 can't be felt. I recommend the
-technical lead looks at whether the cast can go live in plain log
-form before P8's final presentation.
+people stay silent, and half of §6 can't be felt. The technical lead
+says a narrow slice could deliver the cast as plain log lines after
+#126 and S38. On main that changes the adopted sequence (cast delivery
+waits for P8 and S25c), so it's an owner decision (§10, Q6). On the demo
+branch it's allowed now.
 
 ## 9. Demonstration: one evening on Sodium Row
 
@@ -357,9 +369,11 @@ The smallest thing that lets the owner judge this design in play.
      Row treat you differently? Do you want a drink in your own bar?
   3. Two callers on Curfew night. One draws; can the other Mark and chase
      them? Does the getaway feel earned?
-- **Split:** I author the content and layout intent, the presentation
-  lead dresses it, Codex or the technical lead wires the switch. Scope
-  is agreed by all three before any code.
+- **Split:** Codex's queue is full, so the creative consultant and the
+  presentation lead build it from shipped systems: I do content, layout
+  and speech, and the presentation lead does dressing and the switch.
+  The technical lead reviews it for safety and disclosure only. Scope is
+  agreed by all three before any code.
 
 ## 10. Decisions for the owner
 
@@ -378,6 +392,11 @@ Q1 (the truce) is decided. Still open:
 - **Q5. The demonstration.** Build §9 as a non-production demo branch,
   outside the S25c gate, so you can judge the direction in play.
   Recommend yes.
+- **Q6. Speech before the final presentation.** May a narrow slice after
+  #126 and S38 put the dormant cast (Vesper, Dolf, Solenne and the
+  others) live on main as plain log lines, ahead of P8 and S25c? Talkers
+  would stop answering "Not yet." across the city. It changes the
+  adopted plan order. Recommend yes.
 
 ## 11. Ideas recorded for later
 
