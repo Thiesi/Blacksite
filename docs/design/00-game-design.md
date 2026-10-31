@@ -1672,8 +1672,8 @@ Values are initial, tuned at the pacing gate.
   name. If the name was claimed meanwhile, the acceptance fails with
   "name taken", the invitation ends, and the inviter learns it in their
   away report and may invite again under another name. A name released by a
-  dissolved crew cannot be taken again by the same character for 7
-  days. Crew names are covered by report;
+  dissolved crew cannot be taken again by the same BBS identity, with
+  any of its characters, for 7 days. Crew names are covered by report;
   the admin CLI can rename or dissolve a crew.
 - **Offline invitations.** An invitation may be left for an offline
   character. It waits up to 7 days and is accepted or declined at that
@@ -1699,8 +1699,10 @@ Values are initial, tuned at the pacing gate.
   Notes are never shown outside the crew and are never world log lines.
 - **Handoffs.** The holder of a generated job may offer it to a crew
   member after completing at least one stage, while at least one stage
-  remains. Each job can be offered once: any offer, accepted,
-  withdrawn or expired, uses that up. The offer waits up to
+  remains. A job can be offered at most twice: a withdrawn or expired
+  offer may be followed by one more, and an accepted offer ends
+  offering. This holds the same whether or not an offer was delivered,
+  so a second chance never reveals an ignore. The offer waits up to
   24 hours, and the receiver accepts at any time they are online.
   - **When an offer is allowed.** Not while a stage holds a live
     escort assignment or an open mission instance owned by the holder;
@@ -1739,7 +1741,7 @@ Values are initial, tuned at the pacing gate.
     pauses while an offer is open, and acceptance gives the receiver a
     fresh 60 minutes. A job that returns to its holder after a
     withdrawn or expired offer resumes its remaining time, never a fresh
-    60 minutes. A job can therefore live at most 60 minutes, plus 24
+    60 minutes. A job can therefore live at most 60 minutes, plus 48
     hours on offer, plus 60 minutes. Every prepared world state the stages created
     (credentials, latches, opened controls) keeps its own timer
     (section 6.4) and is never paused; a later stage that needs an
@@ -1815,6 +1817,7 @@ Values are initial, tuned at the pacing gate.
     reader's own crew members.
   - It also lists what is addressed to the reader: crew invitations,
     handoff offers, dead drops waiting, the reader's own drops returned,
+    the reader's crew dissolving (its notes go with it),
     new crew notes, and the existing apartment-theft notice (section
     6.4). These come first, each kind collapsed to one line with a
     count and its soonest expiry ("3 invitations, the first ends in 2
