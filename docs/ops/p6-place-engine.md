@@ -100,6 +100,10 @@ human layout approval. All three remain withheld.
 
 ## Playable fixture scenario
 
+The [live fixture packet](captures/p6-place-engine/README.md) names the
+execution head, capture scenarios, artifact hashes and performance
+reports. Its text captures are replays of actual native sessions.
+
 This sequence is what the native harness plays. Its explicit starting
 fixture is a newly created caller placed at `(4,5)` in Fixture hall,
 with `tests/fixtures/p6` loaded through the private node's content.local.
