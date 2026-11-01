@@ -141,6 +141,9 @@ class Core:
             self.loop.subsystems.append(self.dialogue)
             social = self.lattice.social_overlay
             self.lattice.social_overlay = lambda session, previous=social: previous(session) or session.id in self.dialogue.menus
+        # Demo only (demo/sodium-row-evening): inert unless BLACKSITE_DEMO is set.
+        from blacksite.server import demo_truce
+        demo_truce.install(self)
 
     def _disconnect_character(self, session: Session) -> None:
         if self.dialogue:
