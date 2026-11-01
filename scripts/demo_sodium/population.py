@@ -174,6 +174,14 @@ TEMPLATES = [
     template("npc-row-card-player", "Card player", "sable", "row-card-player", "talker"),
     template("npc-row-solenne", "Mira Solenne", "sable", "solenne", "talker"),
     template("npc-halo-dolf", "Dolf", None, "dolf", "talker"),
+    # Q3, approved by the owner 2026-11-01 for the demo: a Row enforcer a solo
+    # grade-5+ player loses to if they stand and fight (about 14 s against two),
+    # with time to break sight and escape. Estimates, to be felt in playtest 3.
+    {"id": "npc-row-enforcer", "name": "Sable enforcer", "faction": "sable", "grade": 6,
+     "attributes": {"frame": 35, "nerve": 30, "cortex": 10, "resonance": 5, "vitals": 50},
+     "behaviours": [{"kind": "guard", "params": {}}], "xp": 20,
+     "weapon": "wpn_halvard_hv7", "armour": "arm_sable_leathers",
+     "loot": [{"item": "ammo_5x", "chance": 0.5, "count": 10}]},
 ]
 
 
@@ -184,8 +192,8 @@ def spawner(sid: str, npc: str, count: int, x: int, y: int, w: int, h: int) -> d
 
 # Regions from the frozen map (b7a2b68): bar interiors north of row 8.
 ROW_SPAWNERS = [
-    spawner("sable-enforcer-stair", "npc-sable-enforcer", 1, 8, 11, 1, 3),
-    spawner("sable-enforcer-strip", "npc-sable-enforcer", 1, 45, 9, 2, 1),
+    spawner("sable-enforcer-stair", "npc-row-enforcer", 1, 8, 11, 1, 3),
+    spawner("sable-enforcer-strip", "npc-row-enforcer", 1, 45, 9, 2, 1),
     spawner("upstairs-halvard", "npc-row-halvard-offduty", 1, 8, 5, 11, 3),
     spawner("upstairs-sablier", "npc-row-sablier-offduty", 1, 8, 5, 11, 3),
     spawner("long-shift-crew", "npc-row-kestrel-crew", 2, 25, 2, 11, 5),
