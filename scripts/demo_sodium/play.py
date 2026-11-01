@@ -1,8 +1,9 @@
 """Demo only: play the Sodium Row demo locally in a Windows console.
 
-Run the server first, in another console:
+Run the server first, in another console (PowerShell shown; in cmd use
+`set BLACKSITE_DEMO=sodium-row-evening`):
 
-    set BLACKSITE_DEMO=sodium-row-evening
+    $env:BLACKSITE_DEMO = 'sodium-row-evening'
     python -m blacksite.server --install-dir <dir> --tcp
 
 Then, in Windows Terminal (or any VT console):
@@ -36,12 +37,15 @@ def utf8_console():
     kernel.SetConsoleOutputCP(65001)
     handle = kernel.GetStdHandle(-11)
     mode = ctypes.c_uint32()
-    if kernel.GetConsoleMode(handle, ctypes.byref(mode)):
+    had_mode = bool(kernel.GetConsoleMode(handle, ctypes.byref(mode)))
+    if had_mode:
         kernel.SetConsoleMode(handle, mode.value | 0x0004)  # ENABLE_VIRTUAL_TERMINAL_PROCESSING
 
     def restore():
         kernel.SetConsoleCP(previous[0])
         kernel.SetConsoleOutputCP(previous[1])
+        if had_mode:
+            kernel.SetConsoleMode(handle, mode.value)
     return restore
 
 

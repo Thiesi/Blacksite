@@ -19,7 +19,8 @@ from datetime import datetime, timezone
 from pathlib import Path
 
 from blacksite.server.clock import RealClock
-from blacksite.server.rules.character import grade_threshold
+from blacksite.server.players import Player
+from blacksite.server.rules.character import grade_threshold, health_max
 from blacksite.server.storage.db import Storage
 from blacksite.server.storage.lease import Lease
 
@@ -55,8 +56,13 @@ def main(argv: list[str] | None = None) -> int:
             return 2
         player = matches[0]
         now = datetime.now(timezone.utc).isoformat()
-        player['grade'] = max(player.get('grade') or 1, args.grade)
-        player['xp'] = max(player.get('xp') or 0, grade_threshold(player['grade']))
+        # The game's own grade-up path: attributes, Vitals and grade points.
+        body = Player.from_record(player)
+        target = grade_threshold(max(body.grade, args.grade))
+        if target > body.xp:
+            body.update_progression(target)
+        body.health = health_max(body.attributes['vitals'])
+        player = {**player, **body.record()}
         player['legal_at'] = player.get('legal_at') or now
         if args.faction:
             player['standing'] = {**(player.get('standing') or {}), args.faction: STANDING}

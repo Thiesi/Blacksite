@@ -19,13 +19,15 @@ or note, what you think as you go. About 20 minutes each.
   `DOOR_BLACKSITE_DEMO_SIGNS=charted` with the server's sign toggle.
 - **Launch (Windows, from this branch's checkout, in its venv):**
   1. Pick a private world folder, for example `.test-tmp/demo-world`.
-  2. Server, in one console:
+  2. Server, in one console. In PowerShell (Windows Terminal's default):
      ```
-     set BLACKSITE_DEMO=sodium-row-evening
+     $env:BLACKSITE_DEMO = 'sodium-row-evening'
      python -m blacksite.server --install-dir .test-tmp/demo-world --tcp
      ```
-     Add `set BLACKSITE_DEMO_BOUNCER=1` before it for the Q7 variant, and
-     `set BLACKSITE_DEMO_SIGNS=charted` for far signs at night.
+     In cmd, use `set BLACKSITE_DEMO=sodium-row-evening` instead. Before
+     starting, add `$env:BLACKSITE_DEMO_BOUNCER = '1'` for the Q7 variant
+     and `$env:BLACKSITE_DEMO_SIGNS = 'charted'` for far signs at night
+     (cmd: `set NAME=value`).
   3. Door, in Windows Terminal at 132x50 or 80x24:
      ```
      python scripts/demo_sodium/play.py --install-dir .test-tmp/demo-world --handle Thiesi
