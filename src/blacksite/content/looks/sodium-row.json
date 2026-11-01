@@ -4,6 +4,33 @@
   "theme": "sodium-street",
   "regions": [
     {
+      "theme": "sodium-alley",
+      "rect": [
+        6,
+        24,
+        84,
+        2
+      ]
+    },
+    {
+      "theme": "sodium-alley",
+      "rect": [
+        17,
+        17,
+        2,
+        7
+      ]
+    },
+    {
+      "theme": "sodium-alley",
+      "rect": [
+        62,
+        17,
+        2,
+        7
+      ]
+    },
+    {
       "theme": "sodium-lamp",
       "circle": [
         10,
@@ -36,15 +63,7 @@
       ]
     },
     {
-      "theme": "sodium-lamp",
-      "circle": [
-        50,
-        24,
-        3
-      ]
-    },
-    {
-      "theme": "sodium-door-pink",
+      "theme": "sodium-door-blue",
       "circle": [
         13,
         9,
@@ -52,7 +71,7 @@
       ]
     },
     {
-      "theme": "sodium-door-teal",
+      "theme": "sodium-door-orange",
       "circle": [
         35,
         9,
@@ -60,7 +79,7 @@
       ]
     },
     {
-      "theme": "sodium-door-pink",
+      "theme": "sodium-door-violet",
       "circle": [
         38,
         9,
@@ -68,7 +87,7 @@
       ]
     },
     {
-      "theme": "sodium-door-teal",
+      "theme": "sodium-door-chalk",
       "circle": [
         57,
         9,
@@ -76,7 +95,7 @@
       ]
     },
     {
-      "theme": "sodium-door-pink",
+      "theme": "sodium-door-green",
       "circle": [
         70,
         9,

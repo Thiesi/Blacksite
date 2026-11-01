@@ -111,6 +111,42 @@
       "ground_fg": "grain_sodium_stage",
       "texture": "·∙ ",
       "luma": "dark"
+    },
+    "sodium-door-blue": {
+      "ground_bg": "ground_sodium_door_blue",
+      "ground_fg": "grain_sodium_door_blue",
+      "texture": "· ∙",
+      "luma": "dark"
+    },
+    "sodium-door-orange": {
+      "ground_bg": "ground_sodium_door_orange",
+      "ground_fg": "grain_sodium_door_orange",
+      "texture": "· ∙",
+      "luma": "dark"
+    },
+    "sodium-door-violet": {
+      "ground_bg": "ground_sodium_door_violet",
+      "ground_fg": "grain_sodium_door_violet",
+      "texture": "· ∙",
+      "luma": "dark"
+    },
+    "sodium-door-chalk": {
+      "ground_bg": "ground_sodium_door_chalk",
+      "ground_fg": "grain_sodium_door_chalk",
+      "texture": "· ∙",
+      "luma": "dark"
+    },
+    "sodium-door-green": {
+      "ground_bg": "ground_sodium_door_green",
+      "ground_fg": "grain_sodium_door_green",
+      "texture": "· ∙",
+      "luma": "dark"
+    },
+    "sodium-alley": {
+      "ground_bg": "ground_sodium_alley",
+      "ground_fg": "grain_sodium_alley",
+      "texture": "·    ,  ",
+      "luma": "dark"
     }
   }
 }
