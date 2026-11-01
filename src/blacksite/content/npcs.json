@@ -311,7 +311,7 @@
     {
       "id": "npc-sodium-regular",
       "name": "Sodium regular",
-      "faction": "sable",
+      "faction": null,
       "grade": 1,
       "attributes": {
         "frame": 20,

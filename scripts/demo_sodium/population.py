@@ -284,6 +284,11 @@ def main() -> None:
     for n in npcs["npcs"]:
         if n["id"] == "npc-vendor-sodium-tin-halo-vesper":
             n["dialogue"] = "vesper"
+        if n["id"] == "npc-sodium-regular":
+            # The Strip's crowd belongs to nobody, on paper. Unaffiliated, it
+            # presents and draws as a civilian, like the plainclothes Warden's
+            # cover. A Sable crowd would leave the Warden the only white one.
+            n["faction"] = None
     save("npcs.json", npcs)
 
 
