@@ -1089,6 +1089,86 @@
       "relay": "far",
       "zone": "scour-ring-4",
       "object_id": "relay-far"
+    },
+    {
+      "id": "row-upstairs",
+      "name": "Upstairs",
+      "tier": "list",
+      "stock": [
+        {
+          "item": "con_row_amber"
+        },
+        {
+          "item": "con_kestrel_ration"
+        }
+      ],
+      "faction": "halvard",
+      "zone": "sodium-row",
+      "object_id": "row-bar-1"
+    },
+    {
+      "id": "row-long-shift",
+      "name": "The Long Shift",
+      "tier": "list",
+      "stock": [
+        {
+          "item": "con_row_shift"
+        },
+        {
+          "item": "con_kestrel_ration"
+        }
+      ],
+      "faction": "kestrel",
+      "zone": "sodium-row",
+      "object_id": "row-bar-2"
+    },
+    {
+      "id": "row-quarter-tone",
+      "name": "The Quarter Tone",
+      "tier": "list",
+      "stock": [
+        {
+          "item": "con_row_low_note"
+        },
+        {
+          "item": "con_kestrel_ration"
+        }
+      ],
+      "faction": "choir",
+      "zone": "sodium-row",
+      "object_id": "row-bar-3"
+    },
+    {
+      "id": "row-clause",
+      "name": "The Clause",
+      "tier": "list",
+      "stock": [
+        {
+          "item": "con_row_tally"
+        },
+        {
+          "item": "con_kestrel_ration"
+        }
+      ],
+      "faction": null,
+      "zone": "sodium-row",
+      "object_id": "row-bar-4"
+    },
+    {
+      "id": "row-spare-parts",
+      "name": "Spare Parts",
+      "tier": "list",
+      "stock": [
+        {
+          "item": "con_row_coolant"
+        },
+        {
+          "item": "con_kestrel_ration"
+        }
+      ],
+      "faction": "unmoored",
+      "zone": "sodium-row",
+      "object_id": "row-bar-5"
     }
   ]
 }

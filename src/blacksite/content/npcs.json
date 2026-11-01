@@ -603,7 +603,8 @@
         }
       ],
       "xp": 0,
-      "vendor": "vesper"
+      "vendor": "vesper",
+      "dialogue": "vesper"
     },
     {
       "id": "npc-walked-template",
@@ -748,6 +749,264 @@
         "accuracy": 60,
         "damage_type": "kinetic"
       }
+    },
+    {
+      "id": "npc-row-halvard-offduty",
+      "name": "Halvard staff",
+      "faction": "halvard",
+      "grade": 1,
+      "attributes": {
+        "frame": 20,
+        "nerve": 20,
+        "cortex": 10,
+        "resonance": 5,
+        "vitals": 20
+      },
+      "behaviours": [
+        {
+          "kind": "wander",
+          "params": {}
+        }
+      ],
+      "xp": 0,
+      "dialogue": "row-halvard-offduty",
+      "loot": [
+        {
+          "item": "con_kestrel_ration",
+          "chance": 1,
+          "count": 1
+        }
+      ]
+    },
+    {
+      "id": "npc-row-sablier-offduty",
+      "name": "Sablier staff",
+      "faction": "sablier",
+      "grade": 1,
+      "attributes": {
+        "frame": 20,
+        "nerve": 20,
+        "cortex": 10,
+        "resonance": 5,
+        "vitals": 20
+      },
+      "behaviours": [
+        {
+          "kind": "wander",
+          "params": {}
+        }
+      ],
+      "xp": 0,
+      "dialogue": "row-sablier-offduty",
+      "loot": [
+        {
+          "item": "con_kestrel_ration",
+          "chance": 1,
+          "count": 1
+        }
+      ]
+    },
+    {
+      "id": "npc-row-kestrel-crew",
+      "name": "Kestrel crew",
+      "faction": "kestrel",
+      "grade": 1,
+      "attributes": {
+        "frame": 20,
+        "nerve": 20,
+        "cortex": 10,
+        "resonance": 5,
+        "vitals": 20
+      },
+      "behaviours": [
+        {
+          "kind": "wander",
+          "params": {}
+        }
+      ],
+      "xp": 0,
+      "dialogue": "row-kestrel-crew",
+      "loot": [
+        {
+          "item": "con_kestrel_ration",
+          "chance": 1,
+          "count": 1
+        }
+      ]
+    },
+    {
+      "id": "npc-row-choir-listener",
+      "name": "Choir listener",
+      "faction": "choir",
+      "grade": 1,
+      "attributes": {
+        "frame": 20,
+        "nerve": 20,
+        "cortex": 10,
+        "resonance": 5,
+        "vitals": 20
+      },
+      "behaviours": [
+        {
+          "kind": "wander",
+          "params": {}
+        }
+      ],
+      "xp": 0,
+      "dialogue": "row-choir-listener",
+      "loot": [
+        {
+          "item": "con_kestrel_ration",
+          "chance": 1,
+          "count": 1
+        }
+      ]
+    },
+    {
+      "id": "npc-row-clause-regular",
+      "name": "Clause regular",
+      "faction": null,
+      "grade": 1,
+      "attributes": {
+        "frame": 20,
+        "nerve": 20,
+        "cortex": 10,
+        "resonance": 5,
+        "vitals": 20
+      },
+      "behaviours": [
+        {
+          "kind": "wander",
+          "params": {}
+        }
+      ],
+      "xp": 0,
+      "dialogue": "row-clause-regular",
+      "loot": [
+        {
+          "item": "con_kestrel_ration",
+          "chance": 1,
+          "count": 1
+        }
+      ]
+    },
+    {
+      "id": "npc-row-unmoored-runner",
+      "name": "Unmoored runner",
+      "faction": "unmoored",
+      "grade": 1,
+      "attributes": {
+        "frame": 20,
+        "nerve": 20,
+        "cortex": 10,
+        "resonance": 5,
+        "vitals": 20
+      },
+      "behaviours": [
+        {
+          "kind": "wander",
+          "params": {}
+        }
+      ],
+      "xp": 0,
+      "dialogue": "row-unmoored-runner",
+      "loot": [
+        {
+          "item": "con_kestrel_ration",
+          "chance": 1,
+          "count": 1
+        }
+      ]
+    },
+    {
+      "id": "npc-row-card-player",
+      "name": "Card player",
+      "faction": "sable",
+      "grade": 1,
+      "attributes": {
+        "frame": 20,
+        "nerve": 20,
+        "cortex": 10,
+        "resonance": 5,
+        "vitals": 20
+      },
+      "behaviours": [
+        {
+          "kind": "talker",
+          "params": {
+            "anchor": true
+          }
+        }
+      ],
+      "xp": 0,
+      "dialogue": "row-card-player",
+      "loot": [
+        {
+          "item": "con_kestrel_ration",
+          "chance": 1,
+          "count": 1
+        }
+      ]
+    },
+    {
+      "id": "npc-row-solenne",
+      "name": "Mira Solenne",
+      "faction": "sable",
+      "grade": 1,
+      "attributes": {
+        "frame": 20,
+        "nerve": 20,
+        "cortex": 10,
+        "resonance": 5,
+        "vitals": 20
+      },
+      "behaviours": [
+        {
+          "kind": "talker",
+          "params": {
+            "anchor": true
+          }
+        }
+      ],
+      "xp": 0,
+      "dialogue": "solenne",
+      "loot": [
+        {
+          "item": "con_kestrel_ration",
+          "chance": 1,
+          "count": 1
+        }
+      ]
+    },
+    {
+      "id": "npc-halo-dolf",
+      "name": "Dolf",
+      "faction": null,
+      "grade": 1,
+      "attributes": {
+        "frame": 20,
+        "nerve": 20,
+        "cortex": 10,
+        "resonance": 5,
+        "vitals": 20
+      },
+      "behaviours": [
+        {
+          "kind": "talker",
+          "params": {
+            "anchor": true
+          }
+        }
+      ],
+      "xp": 0,
+      "dialogue": "dolf",
+      "loot": [
+        {
+          "item": "con_kestrel_ration",
+          "chance": 1,
+          "count": 1
+        }
+      ]
     }
   ]
 }
