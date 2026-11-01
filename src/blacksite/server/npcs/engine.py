@@ -357,7 +357,7 @@ class Npcs:
                 destinations = [ex.tile for ex in zone.template.meta.exits] + [o.spec.tile for o in zone.objects.values() if o.spec.kind == "vat"]
                 destinations.sort(key=lambda p: (distance(actor.position, p)-distance(target.position, p), p))
                 away = (actor.x + (1 if actor.x >= target.x else -1), actor.y + (1 if actor.y >= target.y else -1))
-                step_toward(actor, zone, destinations[0] if destinations else away, tick)
+                step_toward(actor, zone, destinations[0] if destinations else away, tick, avoid=avoid)
                 return
             arm = weapon(self.content, template)
             if arm and self.combat.visible(actor, target) and distance(actor.position, target.position) <= (1.5 if arm.melee else arm.range):
