@@ -17,11 +17,32 @@ or note, what you think as you go. About 20 minutes each.
   12 s between ambient lines per caller).
 - **Door:** `DOOR_BLACKSITE_PRESENTATION=1`, and
   `DOOR_BLACKSITE_DEMO_SIGNS=charted` with the server's sign toggle.
-- **Launch recipe and prepared characters:** from the technical lead
-  (pending). Playtests 2 and 3 need characters at grade 5, one a faction
-  member. No admin command sets grade or faction today.
-- Play at 132 × 50 truecolor first. Repeat playtest 1 at 80 × 24 if time
-  allows.
+- **Launch (Windows, from this branch's checkout, in its venv):**
+  1. Pick a private world folder, for example `.test-tmp/demo-world`.
+  2. Server, in one console:
+     ```
+     set BLACKSITE_DEMO=sodium-row-evening
+     python -m blacksite.server --install-dir .test-tmp/demo-world --tcp
+     ```
+     Add `set BLACKSITE_DEMO_BOUNCER=1` before it for the Q7 variant, and
+     `set BLACKSITE_DEMO_SIGNS=charted` for far signs at night.
+  3. Door, in Windows Terminal at 132x50 or 80x24:
+     ```
+     python scripts/demo_sodium/play.py --install-dir .test-tmp/demo-world --handle Thiesi
+     ```
+     Add `--signs` with the server's sign setting, and `--color 256` or
+     `--color 16` for the other tiers. The script sets the console to
+     UTF-8 and VT output and restores it on exit, and turns on the new
+     presentation. A second caller (playtest 3) uses `--user-id 2
+     --handle Second` in another console.
+- **Prepared characters:** create each character normally through the
+  door, quit, stop the server (Ctrl-C), then:
+  ```
+  python scripts/demo_sodium/seed.py --install-dir .test-tmp/demo-world --name <name> --grade 5 --faction kestrel --completed vesper-first-thing
+  ```
+  For playtest 3, seed the first caller `--faction kestrel` and the
+  second `--faction sable`, both `--grade 5`. Restart the server and play.
+  The seed refuses to run while the server holds the world.
 
 ## Playtest 1: arriving as a Wake
 
