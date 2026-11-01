@@ -105,11 +105,16 @@ is the intent the gate judges, not an authored map.
   closes the far end of the view.
 - **You perceive:** the Halo sign straight ahead, enforcers posted at the
   bottom of the steps, the header `CONTESTED─TRUCE─PvP G5+` (S38).
-- **You do:** arrive, leave, wait for someone. During Curfew the Stair
-  gate is shut [built: entry restriction]. The Row fills with people who
-  can't get home, which the Warden curfew log already describes [canon].
-- **Systems:** exit; guard spawner posts; `event:curfew` spawner for the
-  crowd at the gate [built].
+- **You do:** arrive, leave, wait for someone. During Curfew the climb
+  to Meridian Plaza is refused [built]: Curfew's entry restriction on
+  the Core zones (events.json) refuses travel into `core-plaza` except
+  for an unmarked holder of a valid Curfew pass. There is no gate object
+  or warning on the Row itself [new]. The Row filling with people who
+  can't get home is described in the Warden curfew log [canon] but not
+  built: the crowd is an `event:curfew` spawner still to author [new].
+- **Systems:** exit; guard spawner posts; Curfew's entry restriction
+  [built]; the `event:curfew` spawner condition exists [built], the
+  Row's curfew crowd doesn't [new].
 - **Extra work:** geometry (landing, sightline), S25c.
 - **Presentation:** presentation lead's. At 132 × 50 the view down the
   street ends on the Halo sign. At 80 × 24 the arrival and the Halo door
@@ -284,9 +289,11 @@ fine:
      it as a separate slice with its own approval, only if the tuned
      posts prove too easy in the demo.
 2. **It follows you.** The Mark already does: 15 minutes in which anyone
-   may hunt you and Wardens engage [built]. Add: Vesper's contract offer
-   carries `not_marked` [dormant condition], so drawing on the Row costs
-   you the Row's work until the Mark expires.
+   may hunt you and Wardens engage [built]. Add: Vesper's work closes to
+   a Marked player until the Mark expires [new rule]. `not_marked` exists
+   only as a dialogue condition; gating her talker's offer hides it in
+   speech, but the Halo contract board and her counter stay open. Closing
+   the work itself is a rule change (§8, owner gate).
 3. **Escape takes skill.** That's geometry: the sanctuary is up the
    Neon Stair into the safe Core, and enforcers post at its foot. The
    Halo next door is a pocket; whether it may shelter a truce-breaker is
@@ -335,8 +342,9 @@ None of these is scripted; each falls out of systems that exist:
   When something does, it's a chase.
 - **Blackout.** Somebody kills the stage lights. For 30 seconds, sight
   is 5 for everyone near it: a handoff, an escape, a joke.
-- **Curfew night.** The Stair is shut and the Row is crowded with
-  callers who can't get home.
+- **Curfew night.** The Stair is shut [built] and the Row is crowded
+  with callers who can't get home. The NPC crowd is [new]; the callers
+  are whoever is there.
 
 ## 8. Feasibility
 
@@ -347,8 +355,10 @@ None of these is scripted; each falls out of systems that exist:
 | Bar vendors and stock | content | me | technical review |
 | Drink items with shock reduction | content + numbers | me, game design edit | owner |
 | Bar names, crowd custom | canon (gazetteer) | me | owner |
-| `event:curfew` crowd | content | me | technical review |
-| Vesper `not_marked` offer, crowd and Dolf lines | content, dormant system | me | needs speech live |
+| `event:curfew` crowd on the Row | content (condition built) | me | technical review |
+| A visible closed Stair during Curfew (gate object, warning) | content + presentation | me, presentation lead | technical review |
+| Vesper's work closed while Marked (board, counter, talker) | rule change | technical lead | owner |
+| Crowd and Dolf lines, Vesper's talker offer | content, dormant system | me | needs speech live |
 | Activating speech and barks | engineering, S27 and P8 | technical lead | plan order |
 | Geometry: Stair landing, alcoves, alley, small Halo | layout | S25c | H3 |
 | Halo back room to alley door | route change | S25c | owner, H3 |
@@ -390,6 +400,8 @@ The smallest thing that lets the owner judge this design in play.
   3. Two callers on an ordinary night. One draws; does Sable make them
      pay, and does the getaway feel earned? Curfew night is a separate,
      optional run, because the Stair is shut and there is no sanctuary.
+     It runs on today's Curfew (an operator starts the event); the Row's
+     curfew crowd and visible gate are not in the demo yet.
 - **Split:** Codex's queue is full, so the creative consultant and the
   presentation lead build it from shipped systems: I do content, layout
   and speech, and the presentation lead does dressing and the switch.
