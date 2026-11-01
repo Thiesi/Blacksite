@@ -36,10 +36,10 @@ def test_one_ambient_line_per_caller_per_gap(repo_root, monkeypatch):
     assert len(speech(caller)) == 1  # three talkers in earshot, one line
 
 
-def test_no_barks_while_targeting(repo_root, monkeypatch):
+def test_no_barks_while_in_combat(repo_root, monkeypatch):
     game, caller = boot(repo_root, monkeypatch)
     place(game, caller, "sodium-row", (40, 12))
-    body(game, caller).target = "someone"  # targeting before the talker arrives
+    body(game, caller).cooldowns["combat"] = 10**9  # in combat before the talker arrives
     spawn(game, "sodium-row", "npc-row-card-player", (44, 12), group="cards")
     game.step(5)
     assert not speech(caller)
