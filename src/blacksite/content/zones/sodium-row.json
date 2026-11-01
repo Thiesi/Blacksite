@@ -238,7 +238,8 @@
       "kind": "vendor",
       "essential": false,
       "params": {
-        "name": "Row bar 1"
+        "name": "Upstairs",
+        "vendor": "row-upstairs"
       }
     },
     {
@@ -250,7 +251,8 @@
       "kind": "vendor",
       "essential": false,
       "params": {
-        "name": "Row bar 2"
+        "name": "The Long Shift",
+        "vendor": "row-long-shift"
       }
     },
     {
@@ -262,7 +264,8 @@
       "kind": "vendor",
       "essential": false,
       "params": {
-        "name": "Row bar 3"
+        "name": "The Quarter Tone",
+        "vendor": "row-quarter-tone"
       }
     },
     {
@@ -274,7 +277,8 @@
       "kind": "vendor",
       "essential": false,
       "params": {
-        "name": "Row bar 4"
+        "name": "The Clause",
+        "vendor": "row-clause"
       }
     },
     {
@@ -286,7 +290,8 @@
       "kind": "vendor",
       "essential": false,
       "params": {
-        "name": "Row bar 5"
+        "name": "Spare Parts",
+        "vendor": "row-spare-parts"
       }
     },
     {
@@ -395,16 +400,107 @@
       }
     },
     {
-      "id": "sodium-regular",
-      "npc": "npc-sodium-regular",
-      "count": 5,
+      "id": "upstairs-halvard",
+      "npc": "npc-row-halvard-offduty",
+      "count": 1,
       "respawn_seconds": 60,
       "condition": "always",
       "region": {
-        "x": 10,
-        "y": 9,
-        "w": 70,
-        "h": 8
+        "x": 8,
+        "y": 5,
+        "w": 11,
+        "h": 3
+      }
+    },
+    {
+      "id": "upstairs-sablier",
+      "npc": "npc-row-sablier-offduty",
+      "count": 1,
+      "respawn_seconds": 60,
+      "condition": "always",
+      "region": {
+        "x": 8,
+        "y": 5,
+        "w": 11,
+        "h": 3
+      }
+    },
+    {
+      "id": "long-shift-crew",
+      "npc": "npc-row-kestrel-crew",
+      "count": 2,
+      "respawn_seconds": 60,
+      "condition": "always",
+      "region": {
+        "x": 25,
+        "y": 2,
+        "w": 11,
+        "h": 5
+      }
+    },
+    {
+      "id": "quarter-tone-listeners",
+      "npc": "npc-row-choir-listener",
+      "count": 2,
+      "respawn_seconds": 60,
+      "condition": "always",
+      "region": {
+        "x": 39,
+        "y": 2,
+        "w": 13,
+        "h": 5
+      }
+    },
+    {
+      "id": "clause-regulars",
+      "npc": "npc-row-clause-regular",
+      "count": 2,
+      "respawn_seconds": 60,
+      "condition": "always",
+      "region": {
+        "x": 55,
+        "y": 4,
+        "w": 5,
+        "h": 3
+      }
+    },
+    {
+      "id": "spare-parts-runners",
+      "npc": "npc-row-unmoored-runner",
+      "count": 2,
+      "respawn_seconds": 60,
+      "condition": "always",
+      "region": {
+        "x": 71,
+        "y": 3,
+        "w": 12,
+        "h": 4
+      }
+    },
+    {
+      "id": "card-court-players",
+      "npc": "npc-row-card-player",
+      "count": 2,
+      "respawn_seconds": 60,
+      "condition": "always",
+      "region": {
+        "x": 49,
+        "y": 18,
+        "w": 7,
+        "h": 1
+      }
+    },
+    {
+      "id": "card-court-solenne",
+      "npc": "npc-row-solenne",
+      "count": 1,
+      "respawn_seconds": 60,
+      "condition": "always",
+      "region": {
+        "x": 59,
+        "y": 20,
+        "w": 1,
+        "h": 1
       }
     },
     {
@@ -414,9 +510,9 @@
       "respawn_seconds": 60,
       "condition": "always",
       "region": {
-        "x": 40,
+        "x": 10,
         "y": 9,
-        "w": 30,
+        "w": 70,
         "h": 8
       }
     }

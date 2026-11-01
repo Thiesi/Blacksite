@@ -148,19 +148,6 @@
       }
     },
     {
-      "id": "halo-regular",
-      "npc": "npc-halo-regular",
-      "count": 4,
-      "respawn_seconds": 60,
-      "condition": "always",
-      "region": {
-        "x": 13,
-        "y": 12,
-        "w": 16,
-        "h": 2
-      }
-    },
-    {
       "id": "vendor-sodium-tin-halo-vesper",
       "npc": "npc-vendor-sodium-tin-halo-vesper",
       "count": 1,
@@ -170,6 +157,58 @@
         "x": 33,
         "y": 9,
         "w": 1,
+        "h": 3
+      }
+    },
+    {
+      "id": "halo-dolf",
+      "npc": "npc-halo-dolf",
+      "count": 1,
+      "respawn_seconds": 60,
+      "condition": "always",
+      "region": {
+        "x": 16,
+        "y": 6,
+        "w": 14,
+        "h": 1
+      }
+    },
+    {
+      "id": "halo-regular-crew",
+      "npc": "npc-row-kestrel-crew",
+      "count": 1,
+      "respawn_seconds": 60,
+      "condition": "always",
+      "region": {
+        "x": 12,
+        "y": 10,
+        "w": 18,
+        "h": 3
+      }
+    },
+    {
+      "id": "halo-regular-stray",
+      "npc": "npc-row-clause-regular",
+      "count": 1,
+      "respawn_seconds": 60,
+      "condition": "always",
+      "region": {
+        "x": 12,
+        "y": 10,
+        "w": 18,
+        "h": 3
+      }
+    },
+    {
+      "id": "halo-regular-runner",
+      "npc": "npc-row-unmoored-runner",
+      "count": 1,
+      "respawn_seconds": 60,
+      "condition": "always",
+      "region": {
+        "x": 12,
+        "y": 10,
+        "w": 18,
         "h": 3
       }
     }
