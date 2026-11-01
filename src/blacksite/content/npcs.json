@@ -1007,6 +1007,35 @@
           "count": 1
         }
       ]
+    },
+    {
+      "id": "npc-row-enforcer",
+      "name": "Sable enforcer",
+      "faction": "sable",
+      "grade": 6,
+      "attributes": {
+        "frame": 35,
+        "nerve": 30,
+        "cortex": 10,
+        "resonance": 5,
+        "vitals": 50
+      },
+      "behaviours": [
+        {
+          "kind": "guard",
+          "params": {}
+        }
+      ],
+      "xp": 20,
+      "weapon": "wpn_halvard_hv7",
+      "armour": "arm_sable_leathers",
+      "loot": [
+        {
+          "item": "ammo_5x",
+          "chance": 0.5,
+          "count": 10
+        }
+      ]
     }
   ]
 }

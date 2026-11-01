@@ -1,5 +1,6 @@
 """P6: caller-masked place records; charting never changes sight or memory."""
 
+import os
 from dataclasses import asdict
 from typing import Any
 from collections.abc import Callable
@@ -7,6 +8,17 @@ from collections.abc import Callable
 from blacksite.content.loader import ContentTree
 from blacksite.content import schema as s
 from blacksite.content.places import DEFAULT_THEME, mark_cells, region_tiles, theme_over
+
+
+# Demo only (demo/sodium-row-evening): public signs read from a distance.
+# A sign whose every letter sits on a wall face bordering public ground is
+# sent before its wall is seen. Only the lettering is disclosed: the door
+# draws it on unknown cells without revealing the wall behind it.
+DEMO_SIGNS = os.environ.get('BLACKSITE_DEMO_SIGNS') == 'charted'
+
+
+def _public_face(public: set[s.Tile], at: s.Tile) -> bool:
+    return any((at[0] + dx, at[1] + dy) in public for dx, dy in ((-1, 0), (1, 0), (0, -1), (0, 1)))
 
 
 def masked(content: ContentTree, zone: s.Zone, known: set[s.Tile],
@@ -43,9 +55,13 @@ def masked(content: ContentTree, zone: s.Zone, known: set[s.Tile],
                     continue
                 result['regions'].append({'theme': asdict(theme), 'rect': [start, y, end - start + 1, 1]})
                 start = end = x
+    public = ({t for region in zone.meta.public for t in region.tiles()}
+              if DEMO_SIGNS and zone.meta.charted else set())
     for sign in look.signs:
         cells = {(sign.at[0] + i, sign.at[1]) for i in range(len(sign.text))}
         if cells & known and all(dressed(at) for at in cells):
+            result['signs'].append(asdict(sign))
+        elif public and all(_public_face(public, at) for at in cells):
             result['signs'].append(asdict(sign))
     for mark in look.marks:
         cells = mark_cells(mark)

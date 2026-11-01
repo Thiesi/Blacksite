@@ -375,7 +375,7 @@
   "spawners": [
     {
       "id": "sable-enforcer-stair",
-      "npc": "npc-sable-enforcer",
+      "npc": "npc-row-enforcer",
       "count": 1,
       "respawn_seconds": 60,
       "condition": "always",
@@ -388,7 +388,7 @@
     },
     {
       "id": "sable-enforcer-strip",
-      "npc": "npc-sable-enforcer",
+      "npc": "npc-row-enforcer",
       "count": 1,
       "respawn_seconds": 60,
       "condition": "always",
@@ -501,6 +501,19 @@
         "y": 20,
         "w": 1,
         "h": 1
+      }
+    },
+    {
+      "id": "sodium-regular",
+      "npc": "npc-sodium-regular",
+      "count": 3,
+      "respawn_seconds": 60,
+      "condition": "always",
+      "region": {
+        "x": 10,
+        "y": 9,
+        "w": 70,
+        "h": 8
       }
     },
     {
