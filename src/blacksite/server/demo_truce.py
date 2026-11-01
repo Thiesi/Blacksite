@@ -44,10 +44,14 @@ class Truce:
         self.breakers: dict[str, float] = {}  # player id -> Mark expiry, truce breaks only
         self._hostile, self._would_mark = self.npcs.hostile, self.combat.would_mark
         self._provoked, self._mark = self.combat.hostile_hook, self.combat.mark
+        self._mark_indirect, self._target_view = self.combat.mark_indirect, self.combat.target_view
         self.npcs.hostile = self.hostile
         self.combat.would_mark = self.would_mark
         self.combat.hostile_hook = self.provoked
         self.combat.mark = self.mark
+        self.combat.mark_indirect = self.mark_indirect
+        self.combat.target_view = self.target_view
+        view_field()
         sim = core.characters.sim if core.characters else core.simulation
         if bouncer and sim is not None:
             previous = sim.travel_refusal
@@ -78,13 +82,36 @@ class Truce:
         return self._would_mark(source, target, indirect)
 
     def mark(self, source: Actor, target: Actor) -> None:
-        was = source.marked
-        self._mark(source, target)
-        if target.zone in TRUCE and source.marked and not was and source.kind == 'player':
+        self.marking(source, target, self._mark, indirect=False)
+
+    def mark_indirect(self, source: Actor, target: Actor) -> None:
+        self.marking(source, target, self._mark_indirect, indirect=True)
+
+    def marking(self, source: Actor, target: Actor, original: Any, indirect: bool) -> None:
+        breaking = (target.zone in TRUCE and source.kind == 'player' and not source.marked
+                    and self.would_mark(source, target, indirect))
+        if breaking:  # the truce line comes before the Mark line
+            self.combat.log(source, f"You break {self.zone_name(target.zone)}'s truce.", True)
+        original(source, target)
+        if breaking and source.marked:
             player = self.combat.game.players.get(source.id)
             if player and player.marked_until:
                 self.breakers[source.id] = datetime.fromisoformat(player.marked_until).timestamp()
-            self.combat.log(source, f"You break {self.zone_name(target.zone)}'s truce.", True)
+
+    # TARGET panel: warn from the truce rules, not the relations matrix.
+    def target_view(self, actor: Actor) -> dict[str, Any] | None:
+        view = self._target_view(actor)
+        target = self.combat.world.actors.get(actor.target) if view else None
+        if not view or target is None or target.zone not in TRUCE or view.get('warning') in ('Protected', 'Obscured; no clear shot'):
+            return view
+        responsible = self.controller(actor) or actor
+        if target.kind == 'player' or target.behaviour.get('player_drone'):
+            view['warning'] = 'Firing marks you' if self.would_mark(responsible, target) else ''
+        elif self.breaks(actor, target):
+            name = KEEPER_NAME.get(TRUCE[target.zone], TRUCE[target.zone].title())
+            line = f'Truce: {name} answers'
+            view['warning'] = line if len(line) <= 21 else f'{name} answers'
+        return view
 
     # Provocation: breaking the peace also calls the keeper's guards.
     def provoked(self, source: Actor, target: Actor) -> None:
@@ -161,3 +188,24 @@ class Truce:
         zone = self.combat.world.zones.get(zone_id)
         meta = getattr(getattr(zone, 'template', None), 'meta', None)
         return getattr(meta, 'name', None) or zone_id
+
+
+def view_field() -> None:
+    """The zone view carries `me.truce` (the keeper) for the client's TRUCE header.
+
+    The simulation imported `build` by name, so its module reference is
+    wrapped once per process; the wrapper checks the switch on every call.
+    """
+    from blacksite.server.world import simulation
+    if getattr(simulation.build, 'demo_truce', False):
+        return
+    original = simulation.build
+
+    def build(*args: Any, **kwargs: Any) -> Any:
+        result = original(*args, **kwargs)
+        me = result.get('me') if isinstance(result, dict) else None
+        if enabled() and me and me.get('zone') in TRUCE:
+            me['truce'] = TRUCE[me['zone']]
+        return result
+    build.demo_truce = True  # type: ignore[attr-defined]
+    simulation.build = build

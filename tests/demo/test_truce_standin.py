@@ -118,3 +118,52 @@ def test_bouncer_refuses_a_marked_truce_breaker(repo_root, monkeypatch):
     assert "Not tonight" in sim.travel_refusal(caller.session, exit)
     truce.breakers[caller.session.player_id] = game.core.combat.now() - 1
     assert sim.travel_refusal(caller.session, exit) is None
+
+
+def two_players(repo_root, monkeypatch, **kw):
+    game, caller = boot(repo_root, monkeypatch, **kw)
+    other = game.connect({"user_id": 2, "handle": "Other", "node_name": "test"})
+    create(game, other, card="none")
+    place(game, caller, "sodium-row", (60, 12))
+    place(game, other, "sodium-row", (62, 12))
+    a, b = body(game, caller), body(game, other)
+    a.faction, b.faction = "halvard", "unmoored"
+    return game, caller, other, a, b
+
+
+def test_truce_line_comes_before_the_mark_line(repo_root, monkeypatch):
+    game, caller, _, a, b = two_players(repo_root, monkeypatch)
+    game.core.combat.mark(a, b)
+    texts = lines(game, caller)
+    truce = next(i for i, t in enumerate(texts) if "truce" in t)
+    marked = next(i for i, t in enumerate(texts) if "Marked" in t)
+    assert a.marked and truce < marked
+
+
+def test_indirect_truce_break_reaches_the_bouncer(repo_root, monkeypatch):
+    game, caller, _, a, b = two_players(repo_root, monkeypatch, bouncer=True)
+    game.core.combat.mark_indirect(a, b)
+    truce = game.core.combat.hostile_hook.__self__
+    assert a.marked and caller.session.player_id in truce.breakers
+
+
+def test_target_warning_follows_the_truce(repo_root, monkeypatch):
+    game, caller, _, a, b = two_players(repo_root, monkeypatch)
+    # Grade protection is not under test here; allow the shot so the warning shows.
+    monkeypatch.setattr(game.core.combat, "legal", lambda source, target: True)
+    a.target = b.id
+    view = game.core.combat.target_view(a)
+    assert view and view["warning"] == "Firing marks you"
+    regular = spawn(game, "sodium-row", "npc-sodium-regular", (61, 13), group="regulars")
+    a.target = regular.id
+    view = game.core.combat.target_view(a)
+    assert view and view["warning"] == "Truce: Sable answers"
+
+
+def test_zone_view_carries_the_keeper(repo_root, monkeypatch):
+    game, caller = boot(repo_root, monkeypatch)
+    place(game, caller, "sodium-row", (60, 12))
+    game.step(2)
+    mes = [f.data["body"]["me"] for f in game.frames_for(caller)
+           if f.type == "view" and isinstance(f.data.get("body", {}).get("me"), dict)]
+    assert mes and mes[-1].get("truce") == "sable"
