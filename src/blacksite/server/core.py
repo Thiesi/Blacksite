@@ -144,6 +144,8 @@ class Core:
         # Demo only (demo/sodium-row-evening): inert unless BLACKSITE_DEMO is set.
         from blacksite.server import demo_truce
         demo_truce.install(self)
+        from blacksite.server import demo_speech
+        demo_speech.install(self)
 
     def _disconnect_character(self, session: Session) -> None:
         if self.dialogue:
