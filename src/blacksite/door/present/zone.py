@@ -65,7 +65,8 @@ def terrain(buffer: CellBuffer, body: dict[str, Any], layout: Layout, paint: Pai
     changed_rows: set[int] | None = None
     reuse_topology = False
     if places:
-        geometry = (buffer.width, buffer.height, ox, oy, area.x, area.y, area.width, area.height)
+        geometry = (buffer.width, buffer.height, ox, oy, area.x, area.y, area.width, area.height,
+                    vp['x'], vp['y'], vp['w'], vp['h'])
         if places.terrain_geometry != geometry:
             places.terrain_buffer = CellBuffer(buffer.width, buffer.height)
             places.terrain_states.clear()

@@ -19,10 +19,14 @@ class Places:
     viewport: dict[str, int]
 
     def __post_init__(self) -> None:
+        # Protocol updates may mutate the caller's viewport dictionary.
+        # Retain its value so a camera scroll always rebuilds this cache.
+        self.viewport = dict(self.viewport)
         self.base = theme_over(DEFAULT_THEME, Theme(**self.look['theme']))
         self.grounds: dict[tuple[int, int], tuple[Theme, tuple[float, float]]] = {}
         for region in self.look.get('regions', []):
             theme = Theme(**region['theme'])
+            merged: dict[Theme, Theme] = {}
             if 'rect' in region:
                 rx, ry, rw, rh = region['rect']
                 centre = rx + (rw - 1) / 2, ry + (rh - 1) / 2
@@ -37,7 +41,11 @@ class Places:
                 if (self.viewport['x'] <= at[0] < self.viewport['x'] + self.viewport['w']
                         and self.viewport['y'] <= at[1] < self.viewport['y'] + self.viewport['h']):
                     previous = self.grounds.get(at, (self.base, (0., 0.)))[0]
-                    self.grounds[at] = theme_over(previous, theme), centre
+                    # Each immutable base/overlay pair has one result, even
+                    # when a disclosed region covers thousands of cells.
+                    if previous not in merged:
+                        merged[previous] = theme_over(previous, theme)
+                    self.grounds[at] = merged[previous], centre
         self.signs = {(sign['at'][0] + i, sign['at'][1]): (ch, sign['role'])
                       for sign in self.look.get('signs', []) for i, ch in enumerate(sign['text'])}
         self.marks = {(mark['at'][0] + i, mark['at'][1]): (ch, mark['role'])

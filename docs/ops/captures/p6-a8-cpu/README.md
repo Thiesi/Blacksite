@@ -5,7 +5,9 @@ Door Git tree: `120067854c53aa4d9a736ba30e3fc434f0fb9232`.
 Pinned author data: `f69541473704f1164cd5b5e8dbd315c2fa811504`.
 [Current hosted run](https://github.com/Thiesi/Blacksite/actions/runs/41224964416).
 
-All 12 required Plaza/Sodium 132x50 cases reach <=108 CPU s/h. The
+This packet records the second pass, not completed A8 acceptance.
+Under the expanded Plaza/Clinic/Sodium target, 17 of 18 132x50 cases
+reach <=108 CPU s/h; Clinic ordinary/256 misses at 111.3507. The
 unchanged B2 method uses clean Linux, 12 seconds per P1 activity, the
 provisional hourly mix, ten-Hz ticks and five-Hz walking. Metering
 includes Display receive/key/update/render; it excludes server/codecs.
@@ -18,8 +20,8 @@ includes Display receive/key/update/render; it excludes server/codecs.
 | Sodium, 11 NPCs | 113.1783 | 3146 | 24.938818 |
 | Sodium, 16 NPCs | 137.1009 | 3454 | 5.394514 |
 
-The 108 target applies to today's eight-NPC Sodium population and Plaza.
-Clinic and higher-count misses remain reported. The sweep varies only
+The 108 target applies to Plaza, Clinic and today's eight-NPC Sodium
+population. Higher-count misses remain measurement-only. The sweep varies only
 regulars (5/8/13), retaining two Sable posts and one warden. It changes
 no shipped population and grants no population decision.
 

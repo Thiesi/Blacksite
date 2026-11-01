@@ -1,6 +1,6 @@
 # P6 — Place layer and representative locations
 
-**Status:** P6a done (PR #118); Part A done (PR #129); A5 done (PR #130); A6 done (PR #131); A7 done (PR #133); A8 in review (PR #144); P6b planned (draft PR #126)
+**Status:** P6a done (PR #118); Part A done (PR #129); A5 done (PR #130); A6 done (PR #131); A7 done (PR #133); A8 in progress (PR #144); P6b planned (draft PR #126)
 **Primary model:** Codex for P6a (engine) · the presentation lead for P6b (content), with Codex assisting · **Reviewer:** automated review, technical lead, presentation lead (co-reviewer and presentation gate)
 **Depends on:** P0 (D1 to D3 in canon), P4, P5 · **Milestone:** presentation track
 **Issue:** https://github.com/Thiesi/Blacksite/issues/115
@@ -329,13 +329,16 @@ approval stays withheld.
 
 Assigned on #115 (6545201365, 6545985790), queued after the fixed-post
 B1/B2 refresh on #126. Depends on merged A7 (#133); does not depend on
-P6b merge or H1. Status: engineering checks pass (PR #144); technical
-review pending. Evidence: `docs/ops/captures/p6-a8-cpu/`.
+P6b merge or H1. Status: in progress (PR #144). Clinic Row's ordinary
+132x50/256 case remains over budget in the second pass (111.3507 s/h).
+Technical review is withdrawn pending all 18 target cases passing.
+Evidence: `docs/ops/captures/p6-a8-cpu/`.
 
 Reuse unchanged terrain rows and immutable cells without changing their
 appearance. A7's still origin, disclosure, goldens, fingerprint and frame
-budgets remain fixed. Every Plaza and Sodium 132x50 ordinary/fully-known
-case in all three tiers must reach at most 108 CPU s/h on B2's hosted
+budgets remain fixed. Every Plaza, Clinic Row and Sodium 132x50 case,
+ordinary and fully-known in all three tiers, must reach at most 108
+CPU s/h on B2's hosted
 12-second P1 method. Report all 27 paired before/after cases, including
 Clinic and any misses. Compare deterministic ANSI bytes independently.
 
