@@ -45,9 +45,11 @@ def test_wall_axis_requires_open_sides() -> None:
 def test_s08_warning_is_named_and_future_zones_are_errors(repo_root: Path) -> None:
     content_tree = load_content(repo_root/'src/blacksite/content')
     warnings = route_door_warnings(content_tree)
-    assert len(warnings) == 7
+    # Demo branch: the redrawn Tin Halo sets halo-back-room in a wall line,
+    # which repairs that one C1 #92 door, so six remain.
+    assert len(warnings) == 6
     assert all('C1 #92' in p.message for p in warnings)
-    assert any('halo-back-room' in p.message for p in warnings)
+    assert not any('halo-back-room' in p.message for p in warnings)
     assert not any('marshal-office' in p.message for p in warnings)
     assert not validate(content_tree)
     old = content_tree.zones.pop('core-precinct')
@@ -71,7 +73,7 @@ def test_new_bad_route_door_in_s08_hub_is_an_error(repo_root: Path) -> None:
     added = replace(old, id='new-route-door', tile=tile, params={'control': True})
     tree.zones[zone.id] = replace(zone, meta=replace(zone.meta, objects=(*zone.meta.objects, added)))
     assert any('route-bearing door new-route-door' in p.message for p in validate(tree))
-    assert len(route_door_warnings(tree)) == 7
+    assert len(route_door_warnings(tree)) == 6
     assert not any('new-route-door' in p.message for p in route_door_warnings(tree))
 
 
