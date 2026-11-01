@@ -90,7 +90,7 @@ is the intent the gate judges, not an authored map.
 # I  :E......#####.......%%..T.....%%.......T..........E..... ##+## #    end of the view
 # R  :.......#STAGE#..pit......#####[card court]#####.......  #   # #
 # >  #####...#####..#########..#####....$$....######..#####.. #   # #
-#          .|alley  $Solenne.......%%....[house lights]......+back #
+#          .|alley  ...............%%....[house lights]......+back #
 ######################################################################
  E  Sable enforcer post    : the Stair landing    $ counter / anchor
  T  public terminal        %  cover               H  the Tin Halo
@@ -181,7 +181,9 @@ Halo.
 
 - **Purpose:** Sable's corner of the street, and its free rumour exchange.
 - **Distinct because:** a half-enclosed square off the Strip, tables as
-  cover, Sable regulars playing.
+  cover, Sable regulars playing, and Mira Solenne, Sable's franchisee
+  [canon cast], at her counter [new placement]. Keeping her out of the
+  alley keeps both passages clear for a chase.
 - **You do:** listen. Card players' talk comes from the city's live state
   (`event_active`, `service_state` conditions [dormant]). It's sometimes
   stale, the free bottom rung of the ladder.
@@ -193,9 +195,7 @@ Halo.
   behind" [canon]. The getaway route, and the hardware behind the Row's
   lights.
 - **Distinct because:** narrow, dark, two passages in, out of the Strip's
-  sightline. Mira Solenne, Sable's franchisee [canon cast], works its
-west mouth [new placement]. The House
-  Lights sign-grid room is here [canon], so a crew cutting the Row's
+  sightline. The House Lights sign-grid room is here [canon], so a crew cutting the Row's
   lights by hand stands in the alley.
 - **Truce:** it applies here too, so the alley is not lawless. It is
   where pursuit is slow and witnesses are few.
@@ -203,8 +203,7 @@ west mouth [new placement]. The House
   dangerous because of its shape: out of the Strip's line of sight, two
   ways in, cover. The stage blackout is the only rule that darkens the
   Row.
-- **Systems:** geometry, a hardware object [built], Solenne as a vendor
-  (stock to author).
+- **Systems:** geometry and a hardware object [built].
 - **Playtest passes if:** a player who draws on the Strip thinks of the
   alley as a way out without being told.
 
@@ -242,7 +241,7 @@ west mouth [new placement]. The House
 | Off-duty crowds, 2 per bar | inside their alcove | wander in alcove | [new] templates |
 | Sable card players ×2 | card court | idle talkers | [new] |
 | Plainclothes Warden ×1 | moves between bars | talker, disguised | built |
-| Mira Solenne | alley west mouth | vendor, talker | cast [canon], unplaced |
+| Mira Solenne | card court | vendor, talker | cast [canon], unplaced |
 | Vesper, Dolf, bouncer, 3 regulars | the Halo | as canon | Dolf unplaced |
 | Curfew crowd | at the Stair gate | `event:curfew` | [new] |
 
