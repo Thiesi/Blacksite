@@ -504,6 +504,19 @@
       }
     },
     {
+      "id": "sodium-regular",
+      "npc": "npc-sodium-regular",
+      "count": 3,
+      "respawn_seconds": 60,
+      "condition": "always",
+      "region": {
+        "x": 10,
+        "y": 9,
+        "w": 70,
+        "h": 8
+      }
+    },
+    {
       "id": "plainclothes-warden",
       "npc": "npc-plainclothes-warden",
       "count": 1,

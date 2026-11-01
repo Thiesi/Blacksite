@@ -202,6 +202,10 @@ ROW_SPAWNERS = [
     spawner("spare-parts-runners", "npc-row-unmoored-runner", 2, 71, 3, 12, 4),
     spawner("card-court-players", "npc-row-card-player", 2, 49, 18, 7, 1),
     spawner("card-court-solenne", "npc-row-solenne", 1, 59, 20, 1, 1),
+    # The plainclothes Warden presents as a civilian "Sodium regular". Its
+    # cover needs real company with the same name and class (presentation
+    # lead, 2026-11-01), so a small street crowd stays on the Strip.
+    spawner("sodium-regular", "npc-sodium-regular", 3, 10, 9, 70, 8),
     spawner("plainclothes-warden", "npc-plainclothes-warden", 1, 10, 9, 70, 8),
 ]
 
