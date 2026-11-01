@@ -111,6 +111,14 @@ DIALOGUE = {
             line("greeting", "Cards are Sable's. So's the peace. Pull up a crate."),
         ], [bark("Somebody sold a Halvard pass for two hundred. Expired, of course."),
             bark("Nobody draws on the Row. Somebody always thinks they're the exception.")]),
+    # One record shared by the Strip's real Sodium regulars and the
+    # plainclothes Warden's cover, so talking to either gives the same answer.
+    "row-street-regular": talker(
+        "row-street-regular", "Sodium regular", None, "Sodium Row", [
+            line("marked", "Not near me. Not tonight.", "marked"),
+            line("wake", "First time down the Stair? Walk to the end. Everybody does.", "is_wake"),
+            line("greeting", "Keep walking, the stage is full."),
+        ], [bark("A tram goes over somewhere above the roofs. The puddles shiver.")]),
 }
 
 # Fixed-cast additions on the demo branch (lines from personae, plus new
@@ -289,6 +297,11 @@ def main() -> None:
             # presents and draws as a civilian, like the plainclothes Warden's
             # cover. A Sable crowd would leave the Warden the only white one.
             n["faction"] = None
+        if n["id"] in ("npc-sodium-regular", "npc-plainclothes-warden"):
+            # The cover must match in every channel: name, class, colour,
+            # movement and speech. Both wander and share one talker record.
+            n["behaviours"] = [{"kind": "wander", "params": {}}]
+            n["dialogue"] = "row-street-regular"
     save("npcs.json", npcs)
 
 
