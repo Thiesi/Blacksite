@@ -1,0 +1,72 @@
+[
+  {
+    "frame": "tin-halo-v0-door-modern-132x50-truecolor",
+    "first_ms": 604,
+    "first_picture_ms": 543,
+    "cached_ms": 171,
+    "cached_picture_ms": 100,
+    "full_bytes": 69565,
+    "step_bytes": 55741,
+    "step_ms": 401,
+    "step_picture_ms": 363,
+    "look_first_ms": 751,
+    "look_bytes": 130060
+  },
+  {
+    "frame": "tin-halo-v0-door-cp437-132x50-256",
+    "first_ms": 1216,
+    "first_picture_ms": 1165,
+    "cached_ms": 78,
+    "cached_picture_ms": 31,
+    "full_bytes": 38771,
+    "step_bytes": 22869,
+    "step_ms": 714,
+    "step_picture_ms": 665
+  },
+  {
+    "frame": "tin-halo-v0-door-cp437-80x25-16",
+    "first_ms": 98,
+    "first_picture_ms": 81,
+    "cached_ms": 23,
+    "cached_picture_ms": 7,
+    "full_bytes": 7379,
+    "step_bytes": 2747,
+    "step_ms": 40,
+    "step_picture_ms": 31
+  },
+  {
+    "frame": "tin-halo-v0-bar-modern-132x50-truecolor",
+    "first_ms": 410,
+    "first_picture_ms": 365,
+    "cached_ms": 121,
+    "cached_picture_ms": 75,
+    "full_bytes": 62843,
+    "step_bytes": 51726,
+    "step_ms": 341,
+    "step_picture_ms": 304,
+    "look_first_ms": 905,
+    "look_bytes": 96438
+  },
+  {
+    "frame": "tin-halo-v0-bar-cp437-132x50-256",
+    "first_ms": 345,
+    "first_picture_ms": 313,
+    "cached_ms": 62,
+    "cached_picture_ms": 29,
+    "full_bytes": 35686,
+    "step_bytes": 18975,
+    "step_ms": 159,
+    "step_picture_ms": 131
+  },
+  {
+    "frame": "tin-halo-v0-bar-cp437-80x25-16",
+    "first_ms": 75,
+    "first_picture_ms": 56,
+    "cached_ms": 22,
+    "cached_picture_ms": 6,
+    "full_bytes": 7669,
+    "step_bytes": 2807,
+    "step_ms": 43,
+    "step_picture_ms": 32
+  }
+]

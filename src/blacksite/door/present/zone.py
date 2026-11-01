@@ -405,6 +405,9 @@ def head(buffer: CellBuffer, body: dict[str, Any], layout: Layout, paint: Paint,
     safety = me['safety']
     left = [(me['zone_name'], 'head_zone'), (safety.upper(), 'word_' + safety)]
     if safety == 'contested':
+        if me.get('truce'):
+            # S38 (demo stand-in): a safety modifier, never dropped for room.
+            left.append(('TRUCE', 'word_contested'))
         left.append(('PvP G5+', 'head_info'))
     if me.get('heat_until'):
         left.append(('HEAT', 'log_danger'))
