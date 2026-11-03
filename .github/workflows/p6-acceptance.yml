@@ -60,8 +60,7 @@ jobs:
         with:
           python-version: '3.12'
       - run: python -m pip install -e .[test]
-      - name: Reproduce the A7 origin-only per-cell golden exception
-        run: python scripts/p6_camera_diff.py --output "${{ runner.temp }}/p6-camera-cell-diff.json"
+      # The A7 per-cell camera proof runs from A7's own tree in p6-a7-camera.yml.
       - name: Measure supplied Plaza and Sodium Row region geometry
         run: python scripts/presentation_p6_masks.py --output "${{ runner.temp }}/p6-mask-geometry.json"
       - name: Validate A6 cache and sign policy on the pinned content input
@@ -77,7 +76,6 @@ jobs:
           name: p6-charted-budget
           path: |
             ${{ runner.temp }}/p6-charted-budget.json
-            ${{ runner.temp }}/p6-camera-cell-diff.json
             ${{ runner.temp }}/p6-mask-geometry.json
             ${{ runner.temp }}/p6-validation.json
 
