@@ -6,6 +6,7 @@ import os
 from pathlib import Path
 import subprocess
 import sys
+import tempfile
 
 ROOT = Path(__file__).resolve().parents[1]
 CASES = ['tests/door/test_display.py::test_golden_screens',
@@ -25,8 +26,11 @@ def main() -> int:
         parser.error('output must be a new or empty directory (preserve prior evidence)')
     output.mkdir(parents=True, exist_ok=True)
     env = {**os.environ, 'PYTHONPATH': str(ROOT/'src')+os.pathsep+str(ROOT)}
-    result = subprocess.run([sys.executable, '-m', 'pytest', '-q', *CASES,
-        '--review-packet', str(output), '--basetemp', str(output/'pytest-temp')], cwd=ROOT, env=env)
+    # pytest's own scratch stays in the system temp folder and is removed afterwards
+    # (AGENTS.md section 5, local disk hygiene); only the packet lands in output.
+    with tempfile.TemporaryDirectory(prefix='blacksite-packet-', ignore_cleanup_errors=True) as scratch:
+        result = subprocess.run([sys.executable, '-m', 'pytest', '-q', *CASES,
+            '--review-packet', str(output), '--basetemp', str(Path(scratch)/'pytest')], cwd=ROOT, env=env)
     if result.returncode:
         return result.returncode
     contexts = [json.loads(p.read_text(encoding='utf-8')) for p in output.glob('*/*/*/context.json')]

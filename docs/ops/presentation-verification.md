@@ -45,10 +45,12 @@ This is a defined projection, not proof of every game rule or interaction.
 ## Review packets and the CP437 gate
 
 ```sh
-python scripts/presentation_packet.py --output .test-tmp/p1-review --strict-cp437
+python scripts/presentation_packet.py --output "$TMPDIR/p1-review" --strict-cp437
 ```
 
-Choose a new output directory for each run. The builder runs all existing
+Choose a new output directory for each run, in the system temp folder
+(`$env:TEMP` on Windows), not inside the worktree (AGENTS.md section 5,
+local disk hygiene). Commit or attach what you need to keep. The builder runs all existing
 golden scenarios through the shipped renderer, compares glyph and style
 baselines and requires exactly 99 scenario/colour combinations. It emits
 each actual byte frame as `.ans`, the replayed screen as `.txt`, and

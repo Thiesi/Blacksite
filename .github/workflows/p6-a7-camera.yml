@@ -1,0 +1,55 @@
+name: P6 A7 camera proof
+
+# A7 (#133) changed only the client camera origin(). This reproduces that
+# per-cell golden exception exactly, from A7's merge tree (54adc53): the
+# script, zone.py, goldens, fixtures and content all come from that tree,
+# so the result is a constant and later PRs cannot change it.
+#
+# Later camera or viewport golden changes (P7 labels, the lit layer, the
+# S25 cameras) are NOT covered by this proof. The ordinary golden tests
+# and the presentation lead's sign-off cover them.
+
+on:
+  pull_request:
+    paths:
+      - 'scripts/p6_camera_diff.py'
+      - 'scripts/presentation_p6_camera.py'
+      - 'scripts/p6_cell_diff.py'
+      - '.github/workflows/p6-a7-camera.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: p6-a7-camera-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
+
+env:
+  A7_MERGE: 54adc53c6686eb5b2430f2e90cd457a09332b833
+
+jobs:
+  a7-camera-proof:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
+          fetch-depth: 0
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Check out A7's merge tree
+        run: git worktree add --detach "$RUNNER_TEMP/a7" "$A7_MERGE"
+      - name: Install A7's tree
+        working-directory: ${{ runner.temp }}/a7
+        run: python -m pip install -e .[test]
+      - name: Reproduce the A7 origin-only per-cell golden exception
+        working-directory: ${{ runner.temp }}/a7
+        run: python scripts/p6_camera_diff.py --output "$RUNNER_TEMP/p6-camera-cell-diff.json"
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: p6-a7-camera-cell-diff
+          path: ${{ runner.temp }}/p6-camera-cell-diff.json
