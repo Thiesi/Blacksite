@@ -85,7 +85,8 @@ async def accept(root: Path, door_python: Path, show: bool,
                 # moving-patrol approach; all travel still uses real keys.
                 await approach(probe, caller, peer, hostile_tile=False)
                 await probe.target(caller, peer.id)
-                await wait(lambda: caller.session.ack_revision == caller.session.view_revision)
+                await wait(lambda: (probe.game.sim.views[caller.session.id].previous['body'].get('target') or {}).get('id') == peer.id
+                           and caller.session.ack_revision == caller.session.view_revision)
                 peer_view = probe.game.sim.views[caller.session.id].previous['body']
                 assert peer_view['target']['name'] == template.cover_name
                 assert peer_view['target']['class'] == 'civilian'
@@ -95,6 +96,7 @@ async def accept(root: Path, door_python: Path, show: bool,
                 await approach(probe, caller, npc, hostile_tile=False)
                 await probe.target(caller, npc.id)
                 await wait(lambda: template.cover_name in screen.screen_text()
+                           and (probe.game.sim.views[caller.session.id].previous['body'].get('target') or {}).get('id') == npc.id
                            and caller.session.ack_revision == caller.session.view_revision)
                 view = probe.game.sim.views[caller.session.id].previous['body']
                 assert view['target']['name'] == template.cover_name
