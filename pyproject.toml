@@ -14,7 +14,7 @@ requires-python = ">=3.12"
 dependencies = []
 
 [project.optional-dependencies]
-test = ["pytest>=7.3"]
+test = ["pytest"]
 
 [project.scripts]
 blacksite = "blacksite.__main__:main"
