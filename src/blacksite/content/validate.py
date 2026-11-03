@@ -30,6 +30,7 @@ from blacksite.content.cp437 import round_trips
 from blacksite.content.formats import Problem, find_line, id_needles
 from blacksite.content.ids import display_width
 from blacksite.content.loader import ContentTree, load_content
+from blacksite.npc_presentation import channels as npc_channels
 
 __all__ = ["Problem", "validate", "exit_warnings", "route_door_warnings", "door_wall_axis", "main"]
 
@@ -254,6 +255,7 @@ class _Validator:
         self.check_vendors()
         self.check_relays()
         self.check_npcs()
+        self.check_npc_covers()
         self.check_factions()
         self.check_faction_sites()
         self.check_evidence()
@@ -1323,6 +1325,33 @@ class _Validator:
                 self.report(*owner, "relay core requires its relay_open control")
 
     # --- NPCs and factions --------------------------------------------------
+
+    def check_npc_covers(self) -> None:
+        # Architecture 5.5.4: a cover must blend into a real local crowd
+        # in every presented channel, not merely reuse its displayed name.
+        for zid, zone in self.each('zones'):
+            assert isinstance(zone, s.Zone)
+            if not self.current_active:
+                continue
+            spawned = {sp.npc for sp in zone.meta.spawners if sp.count > 0
+                       and sp.npc in self.t.npcs and self.is_active('npcs', sp.npc)}
+            crowd = [self.t.npcs[nid] for nid in sorted(spawned)
+                     if self.t.npcs[nid].presents is None]
+            peers = [npc_channels(peer) for peer in crowd]
+            for nid in sorted(spawned):
+                npc = self.t.npcs[nid]
+                if npc.presents is None:
+                    continue
+                cover = npc_channels(npc)
+                mismatches = [tuple(key for key, value in cover.items()
+                                    if peer[key] != value) for peer in peers]
+                if () in mismatches:
+                    continue
+                details = (', '.join(min(mismatches, key=lambda keys: (len(keys), keys)))
+                           if mismatches else 'no uncovered template spawns here')
+                self.report('npcs', nid,
+                    f'cover in zone {zid!r} needs an uncovered same-zone match in every '
+                    f'presented channel: {details}', 'cover_name')
 
     def check_npcs(self) -> None:
         for nid, npc in self.each("npcs"):

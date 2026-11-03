@@ -16,6 +16,8 @@ import subprocess
 from typing import Any
 
 from accept_s10_netbbs import NativeProbe, wait
+from accept_s11_netbbs import approach
+from blacksite.npc_presentation import channels
 from tests.presentation.snapshots import snapshot
 from blacksite.server.items import make_item
 
@@ -76,19 +78,28 @@ async def accept(root: Path, door_python: Path, show: bool,
                 template = probe.game.content.npcs['npc-plainclothes-warden']
                 npc = next(a for a in zone.actors.values()
                            if a.behaviour.get('template') == template.id)
-                occupied = {a.position for a in zone.actors.values() if a is not caller.avatar.actor}
-                adjacent = [(npc.x+dx, npc.y+dy) for dx, dy in
-                            ((-1, 0), (0, 1), (1, 0), (0, -1))
-                            if (npc.x+dx, npc.y+dy) not in occupied
-                            and zone.can_enter(caller.avatar.actor, (npc.x+dx, npc.y+dy))]
-                assert adjacent, 'The shipped covered NPC needs a reachable viewing tile.'
-                await probe.walk(caller, adjacent[0])
+                peer = next(a for a in zone.actors.values()
+                            if a.behaviour.get('template') == 'npc-sodium-regular')
+                assert channels(template) == channels(probe.game.content.npcs['npc-sodium-regular'])
+                # Both authored templates now wander. Reuse the existing
+                # moving-patrol approach; all travel still uses real keys.
+                await approach(probe, caller, peer, hostile_tile=False)
+                await probe.target(caller, peer.id)
+                await wait(lambda: caller.session.ack_revision == caller.session.view_revision)
+                peer_view = probe.game.sim.views[caller.session.id].previous['body']
+                assert peer_view['target']['name'] == template.cover_name
+                assert peer_view['target']['class'] == 'civilian'
+                assert peer_view['target']['faction'] == 'Civilian'
+                assert peer_view['target']['name_role'] == 'npc_neutral'
+                save(f'sodium-regular-{width}x{height}-{tier}')
+                await approach(probe, caller, npc, hostile_tile=False)
                 await probe.target(caller, npc.id)
                 await wait(lambda: template.cover_name in screen.screen_text()
                            and caller.session.ack_revision == caller.session.view_revision)
                 view = probe.game.sim.views[caller.session.id].previous['body']
                 assert view['target']['name'] == template.cover_name
                 assert view['target']['class'] == 'civilian' and view['target']['faction'] == 'Civilian'
+                assert view['target']['name_role'] == peer_view['target']['name_role'] == 'npc_neutral'
                 assert npc.name not in screen.screen_text()
                 assert any(a.name == template.cover_name and a.behaviour.get('template') == 'npc-sodium-regular'
                            for a in zone.actors.values())
@@ -141,6 +152,8 @@ async def accept(root: Path, door_python: Path, show: bool,
                     'place_line': place[0]['text'], 'world_history_has_kinds': True,
                     'crew_restart_outside_world_history': True, 'lattice_fields': True,
                     'shipped_npc_cover': template.cover_name, 'shipped_npc_class': 'civilian',
+                    'peer_class': peer_view['target']['class'], 'peer_role': peer_view['target']['name_role'],
+                    'shared_dialogue': template.dialogue,
                     'drone_menu_cover': template.cover_name,
                     'inventory_fixture': 'one owned Halvard Sentry via server commerce; normal deploy/menu keys',
                     'clean_exit': True})

@@ -2,6 +2,7 @@
 
 from blacksite.content.loader import ContentTree
 from blacksite.server.world.actors import Actor
+from blacksite.npc_presentation import npc_class, cover_role
 
 
 def true_class(actor: Actor, content: ContentTree) -> str:
@@ -10,16 +11,7 @@ def true_class(actor: Actor, content: ContentTree) -> str:
     if actor.kind == "drone":
         return "drone"
     template = content.npcs.get(actor.behaviour.get("template"))
-    if actor.faction == "wardens":
-        return "warden"
-    behaviours = {b.kind for b in template.behaviours} if template else set()
-    if "guard" in behaviours:
-        return "security"
-    if template and (template.vendor or "vendor" in behaviours or "talker" in behaviours):
-        return "service"
-    if template and any(b.params.get("hostile_all") for b in template.behaviours):
-        return "hostile"
-    return "civilian"
+    return npc_class(template, actor.faction)
 
 
 def presented_class(actor: Actor, viewer: Actor, content: ContentTree) -> str:
@@ -45,9 +37,7 @@ def name(actor: Actor, viewer: Actor, content: ContentTree) -> str:
 def role(actor: Actor, viewer: Actor, content: ContentTree, legacy: str) -> str:
     if not covered(actor, viewer, content):
         return legacy
-    return {"civilian": "npc_neutral", "warden": "npc_warden",
-            "security": "npc_neutral", "service": "npc_vendor",
-            "hostile": "npc_hostile"}[presented_class(actor, viewer, content)]
+    return cover_role(presented_class(actor, viewer, content))
 
 
 def object_role(kind: str, params: dict[str, object]) -> str:
