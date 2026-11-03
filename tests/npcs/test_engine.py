@@ -14,7 +14,7 @@ from blacksite.server.npcs.templates import relation
 from blacksite.server.protocol import Frame
 from blacksite.server.storage.db import Storage
 from tests.character_helpers import act, create, place, state
-from tests.harness import HeadlessServer
+from tests.harness import FakeClient, HeadlessServer
 
 
 @pytest.fixture
@@ -399,3 +399,34 @@ def test_design_5_5_npc_sight_matches_full_fov_for_walls_radius_and_stealth(city
             target.x,target.y=tile
             expected=sees_actor(observer,target,visible_tiles(observer,zone,radius),radius)
             assert game.core.combat.visible(observer,target)==expected
+
+
+@pytest.mark.parametrize('reserved_kind', ['exit', 'object', 'spawn'])
+def test_design_5_5_flee_keeps_service_and_exit_tiles_clear(
+        city: tuple[HeadlessServer, FakeClient], reserved_kind: str) -> None:
+    game, caller = city
+    actor = spawn(game)[0]
+    runner = body(game, caller)
+    zone = game.core.world.zones[actor.zone]
+    blocked = (25, 3)  # The next retreat step away from the caller at (20,3).
+    exit_ = replace(zone.template.meta.exits[0],
+                    tile=blocked if reserved_kind == 'exit' else (26, 3))
+    meta = replace(zone.template.meta, exits=(exit_,),
+                   spawn=blocked if reserved_kind == 'spawn' else zone.template.meta.spawn)
+    zone.template = replace(zone.template, meta=meta)
+    if reserved_kind == 'object':
+        obj = next(iter(zone.objects.values()))
+        obj.spec = replace(obj.spec, tile=blocked)
+    avoid = game.core.npcs.spawners.reserved(zone)
+    assert blocked in avoid and zone.passable(blocked)
+    game.core.npcs.provoked(runner, actor)
+    actor.health = actor.health_max // 10
+    tick = game.clock.now_tick() + 100
+    game.core.npcs.evaluate(actor, zone, tick)
+    assert actor.behaviour['state'] == 'flee'
+    before = actor.position
+    game.core.npcs.act(actor, zone, tick, avoid)
+    assert actor.position not in avoid
+    assert actor.position != before
+    assert sum((a-b)**2 for a,b in zip(actor.position, runner.position)) > sum(
+        (a-b)**2 for a,b in zip(before, runner.position))
