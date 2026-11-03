@@ -14,7 +14,7 @@ requires-python = ">=3.12"
 dependencies = []
 
 [project.optional-dependencies]
-test = ["pytest"]
+test = ["pytest>=7.3"]
 
 [project.scripts]
 blacksite = "blacksite.__main__:main"
@@ -37,3 +37,6 @@ blacksite = ["**/__pycache__/*"]
 
 [tool.pytest.ini_options]
 testpaths = ["tests"]
+# Keep only failed tests' temp dirs, from the last run only (disk hygiene, AGENTS.md section 5).
+tmp_path_retention_policy = "failed"
+tmp_path_retention_count = 1
