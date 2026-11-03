@@ -5,7 +5,12 @@ passed all six P4 cases through NetBBS v7.45.0 Telnet into a registered
 native stdio door: 80x24 and 132x50, each at 16, 256 and truecolor.
 The manifest identifies source head 01386df and GitHub's test merge
 71696ab. Their entire trees were identical when the run executed.
-Later evidence-only commits do not change the executed code or content.
+The later evidence commit leaves the executed code and content intact.
+A subsequent S11 acceptance correction attacks a real Sable enforcer
+and requires another enforcer to respond. S11 must no longer expect
+Sable to protect the newly unaffiliated regulars. That correction leaves
+the game runtime, content and P4 proof unchanged; its full native run
+is reported separately on the PR.
 
 Each size/tier supplies three live terminal captures:
 
