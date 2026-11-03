@@ -51,12 +51,15 @@ Inspect `logs/server.log` for JSON `world open`, content hash and season.
 Operator actions go to both the database audit table and the append-only
 `logs/audit.log`. Authentication credentials are never logged.
 
-Run tests from the repository root with a writable temp parent:
+Run tests from the repository root with pytest's default temporary
+directory (AGENTS.md section 5, local disk hygiene):
 
 ```powershell
-New-Item -ItemType Directory -Force .test-tmp | Out-Null
-python -m pytest -q --basetemp=.test-tmp/suite
+python -m pytest -q
 ```
+
+If your sandbox can write only inside the worktree, use the one fixed
+local path, which every run replaces: `--basetemp=.test-tmp/pytest`.
 
 Multiplayer tests use `tests/harness.py`, manual ticks and the production
 protocol core without sockets. Lifecycle tests use local sockets only.

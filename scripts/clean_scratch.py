@@ -98,8 +98,8 @@ def report(root: Path, limit: int) -> int:
         elif tree != common and git(tree, 'rev-parse', 'HEAD') and \
                 subprocess.run(['git', '-C', str(tree), 'merge-base', '--is-ancestor', 'HEAD', 'origin/main']).returncode == 0 \
                 and not git(tree, 'status', '--porcelain'):
-            notes.append('clean and already on origin/main: remove it')
-        flagged += bool(notes)
+            notes.append('no commits of its own: remove it if its PR has merged and no session is using it')
+        flagged += any(note.startswith('OVER') for note in notes)
         print(f'{total:>9,}  {tree.name if tree != common else "(main checkout)"}  {"; ".join(notes)}')
     return 1 if flagged else 0
 
