@@ -1,0 +1,69 @@
+{
+  "head": "71696ab4cdf14cc174986f85f1df849b8f4736ad",
+  "passed": true,
+  "cases": [
+    {
+      "size": [
+        80,
+        24
+      ],
+      "tier": "16",
+      "name": "P416界80",
+      "place_line": "You wake on a gurney under a number. White light, warm plastic, a floor drain. Past the cards, a corridor. Past the corridor, a terminal.",
+      "world_history_has_kinds": true,
+      "crew_restart_outside_world_history": true,
+      "lattice_fields": true,
+      "shipped_npc_cover": "Sodium regular",
+      "shipped_npc_class": "civilian",
+      "peer_class": "civilian",
+      "peer_role": "npc_neutral",
+      "shared_dialogue": "row-street-regular",
+      "drone_menu_cover": "Sodium regular",
+      "inventory_fixture": "one owned Halvard Sentry via server commerce; normal deploy/menu keys",
+      "clean_exit": true
+    },
+    {
+      "size": [
+        80,
+        24
+      ],
+      "tier": "256",
+      "name": "P4256界80",
+      "place_line": "You wake on a gurney under a number. White light, warm plastic, a floor drain. Past the cards, a corridor. Past the corridor, a terminal.",
+      "world_history_has_kinds": true,
+      "crew_restart_outside_world_history": true,
+      "lattice_fields": true,
+      "shipped_npc_cover": "Sodium regular",
+      "shipped_npc_class": "civilian",
+      "peer_class": "civilian",
+      "peer_role": "npc_neutral",
+      "shared_dialogue": "row-street-regular",
+      "drone_menu_cover": "Sodium regular",
+      "inventory_fixture": "one owned Halvard Sentry via server commerce; normal deploy/menu keys",
+      "clean_exit": true
+    },
+    {
+      "size": [
+        80,
+        24
+      ],
+      "tier": "truecolor",
+      "name": "P4truecolor界80",
+      "place_line": "You wake on a gurney under a number. White light, warm plastic, a floor drain. Past the cards, a corridor. Past the corridor, a terminal.",
+      "world_history_has_kinds": true,
+      "crew_restart_outside_world_history": true,
+      "lattice_fields": true,
+      "shipped_npc_cover": "Sodium regular",
+      "shipped_npc_class": "civilian",
+      "peer_class": "civilian",
+      "peer_role": "npc_neutral",
+      "shared_dialogue": "row-street-regular",
+      "drone_menu_cover": "Sodium regular",
+      "inventory_fixture": "one owned Halvard Sentry via server commerce; normal deploy/menu keys",
+      "clean_exit": true
+    }
+  ],
+  "human_approval": false,
+  "transport": "NetBBS Telnet -> registered native stdio",
+  "fixtures": "private node/world; one owned attack drone via server commerce for menu inspection only; no placement/funds/rules/clock fixtures"
+}
