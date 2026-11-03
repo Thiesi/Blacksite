@@ -126,8 +126,9 @@ Plaza punishes anyone who draws.
    or the civilian; heat appears in the header.
 3. Walk into Clinic Row with heat: a Warden patrol engages on sight.
    Ten minutes later it does not.
-4. On Sodium Row, attack a regular: Sable enforcers, not Wardens,
-   respond.
+4. On Sodium Row, attack a Sable enforcer: another Sable enforcer,
+   not Wardens, responds. Following #147, regulars are unaffiliated
+   and do not summon Sable guards until S38 adds the keeper rule.
 5. Leave a zone for 35 minutes (or use a manual-clock test): the
    dormant actors are rebuilt from their spawners on return.
 6. `admin status` tick p99 under 10 ms with all hub zones active.
