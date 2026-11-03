@@ -39,7 +39,8 @@ no golden rebaseline or rendering change is included.
 ## Deterministic checks
 
 Run pytest from the worktree root with its `src` on `PYTHONPATH` and
-a private `--basetemp` under `.test-tmp`.
+pytest's default temporary directory (or the fixed
+`--basetemp=.test-tmp/pytest`; AGENTS.md section 5).
 
 | Check | Local result |
 |---|---|

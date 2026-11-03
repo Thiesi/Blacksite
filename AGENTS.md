@@ -126,6 +126,31 @@ contradiction by editing only the lower document.
 - Windows development is supported for tests and the client; the server's
   Unix socket has a `127.0.0.1` TCP fallback for that case only.
 
+### Local disk hygiene
+
+Scratch left in local worktrees once grew to several million files and
+took the development host down. These rules keep it bounded:
+
+- Run `pytest` without `--basetemp`; it then uses the system temp folder
+  and keeps only failed tests' directories from the last run. If your
+  sandbox can write only inside the worktree, use exactly
+  `--basetemp=.test-tmp/pytest`, which every run replaces. The test
+  suite refuses any other `--basetemp` inside the worktree.
+- Native proofs, review packets, captures and venvs go to the system
+  temp folder or, if they must be inside the worktree, to one fixed
+  `.test-tmp/<kind>` path that you reuse. Never a new numbered folder
+  per run.
+- Evidence you need to keep is committed under `docs/` or attached to the
+  PR; the scratch it came from is then deleted.
+- The test suite refuses to start when `.test-tmp` and `.pytest_cache`
+  hold more than 50,000 files. `python scripts/clean_scratch.py` removes
+  the worktree's ignored scratch (`.test-tmp`, `.pytest_cache`,
+  `__pycache__`, `*.egg-info`; never `.venv` or tracked files).
+- One worktree per active branch. Remove it with `git worktree remove`
+  when its PR merges or closes, and clean your scratch before you go
+  idle. `python scripts/clean_scratch.py --report` lists every worktree's
+  file count and flags those over the limit or already on `origin/main`.
+
 ## 6. Working with NetBBS
 
 - **Never commit to NetBBS from here.** Anything the platform needs is
