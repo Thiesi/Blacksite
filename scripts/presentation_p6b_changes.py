@@ -23,6 +23,13 @@ from tests.presentation.snapshots import canonical
 BASE = '54adc53c6686eb5b2430f2e90cd457a09332b833'
 # Presentation lead's published fixed-post data, signed off on #126.
 CONTENT = 'f69541473704f1164cd5b5e8dbd315c2fa811504'
+# Owner/delegated-merged #154 supplies these non-presentation data updates.
+# Keep the author's looks, palettes and zone/spawner files pinned separately.
+PREREQUISITE = 'db54b245a75b02fa2394ddfa41e17a986e9e0851'
+PREREQUISITE_DATA = (
+    'src/blacksite/content/npcs.json',
+    'src/blacksite/content/dialogue/row-street-regular.json',
+)
 ZONES = ('core-plaza', 'sodium-row', 'vatside-clinics')
 # Freeze this B3 exception at its reviewed candidates. A future rebaseline
 # needs an explicit update, rather than inheriting a six-file blank cheque.
@@ -44,13 +51,28 @@ def git(*args: str) -> bytes:
     return subprocess.check_output(['git', *args], cwd=ROOT)
 
 
+def check_content(content_ref: str) -> list[dict[str, str]]:
+    """Admit only the exact merged prerequisite beside the author's data."""
+    git('merge-base','--is-ancestor',content_ref,'HEAD')
+    git('merge-base','--is-ancestor',PREREQUISITE,'HEAD')
+    data_changes = git('diff','--name-only',content_ref,'--','src/blacksite/content').decode().splitlines()
+    if any(not path.endswith('.py') and path not in PREREQUISITE_DATA for path in data_changes):
+        raise ValueError('presentation-owned content was modified')
+    updates = []
+    for path in PREREQUISITE_DATA:
+        expected = git('rev-parse',f'{PREREQUISITE}:{path}').decode().strip()
+        # Apply Git's text filters, just as the diff does, on Windows too.
+        actual = git('hash-object','--path='+path,path).decode().strip()
+        if actual != expected:
+            raise ValueError(f'{path}: differs from the merged prerequisite')
+        updates.append({'path':path,'blob':expected})
+    return updates
+
+
 def report(base: str, content_ref: str, propose: bool) -> dict[str, Any]:
     if not all(re.fullmatch('[0-9a-f]{40}', value) for value in (base, content_ref)):
         raise ValueError('baseline/content refs must be full Git ids')
-    git('merge-base','--is-ancestor',content_ref,'HEAD')
-    data_changes = git('diff','--name-only',content_ref,'--','src/blacksite/content').decode().splitlines()
-    if any(not path.endswith('.py') for path in data_changes):
-        raise ValueError('presentation-owned content was modified')
+    updates = check_content(content_ref)
     old = json.loads(git('show',f'{base}:{MECHANICS}'))
     new = json.loads(canonical(fingerprint(load_content(ROOT/'src/blacksite/content'))))
     if {k:v for k,v in old.items() if k not in ('projection','sha256')} != {
@@ -98,7 +120,9 @@ def report(base: str, content_ref: str, propose: bool) -> dict[str, Any]:
                         'changed_cells':changed_cells,'changed_rows':rows})
     if propose:
         (ROOT/MECHANICS).write_text(canonical(new),encoding='utf-8',newline='\n')
-    return {'baseline':base,'content_owner_head':content_ref,'owner_fingerprint_approval':False,
+    return {'baseline':base,'content_owner_head':content_ref,
+            'merged_prerequisite':{'head':PREREQUISITE,'data':updates},
+            'owner_fingerprint_approval':False,
             'h1_granted':False,'s25_layout_approval':False,
             'fingerprint':{'before':old['sha256'],'candidate':new['sha256'],'zones':zone_rows,
                            'geometry_rules_exits_objects_walk':'unchanged'},
