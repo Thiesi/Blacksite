@@ -27,12 +27,16 @@ def cast() -> ContentTree:
 
 
 def test_game_13_4_complete_cast_loads_without_activating_placement(cast: ContentTree) -> None:
-    assert set(cast.dialogue) == FIXED | MINOR | RECRUITERS | {'machine-mind-encounter'}
+    held_cast = FIXED | MINOR | RECRUITERS | {'machine-mind-encounter'}
+    assert set(cast.dialogue) == held_cast | {'row-street-regular'}
     assert validate(cast) == []
-    assert set(cast.bundles['s27-cast'].members['dialogue']) == set(cast.dialogue)
-    assert all(not cast.active('dialogue', did) for did in cast.dialogue)
+    assert set(cast.bundles['s27-cast'].members['dialogue']) == held_cast
+    assert all(not cast.active('dialogue', did) for did in held_cast)
+    assert cast.active('dialogue', 'row-street-regular')  # #147's explicit street binding.
     assert not any(obj.params.get('dialogue') for zone in cast.zones.values() for obj in zone.meta.objects)
-    assert not any(npc.dialogue for npc in cast.npcs.values())
+    assert not any(npc.dialogue in held_cast for npc in cast.npcs.values())
+    assert {npc.id for npc in cast.npcs.values() if npc.dialogue} == {
+        'npc-sodium-regular', 'npc-plainclothes-warden'}
     assert not any(cell.dialogue for sector in cast.sectors.values() for cell in sector.cells)
 
 

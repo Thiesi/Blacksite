@@ -1,0 +1,24 @@
+┌─ Karst · S10P4truecolor80 ───────────────────────────────────────────────────┐
+│    ┌─ DRONES ───────────────────────────────────────────────────────────┐    │
+│    │ Choice                                                             │    │
+│    │ Kestrel Mule  packed  60/60                                        │    │
+│    │ Halvard Sentry  follow  80/80                                      │    │
+│    │                                                                    │    │
+│    │                                                                    │    │
+│    │                                                                    │    │
+│    │                                                                    │    │
+│    │                                                                    │    │
+│    │                                                                    │    │
+│    │                                                                    │    │
+│    │ Target Sodium regular: order gives a two-second                    │    │
+│    │ warning.                                                           │    │
+│    │                                                                    │    │
+│    │ Drone slots 1/2. Select a unit. Idle mode toggles                  │    │
+│    │ u deploy  r recall  f follow  h hold  t target  Esc/B back         │    │
+│    └────────────────────────────────────────────────────────────────────┘    │
+├──────────────────────────────────────────────────────────────────────────────┤
+│  doorways. At the street's end, you see the Tin Halo's half-burnt sign.      │
+│[sys] You gain 25 XP.                                                         │
+│[combat] You deploy Halvard Sentry. It follows.                               │
+│U deploy  R recall  F follow  H hold  T current target  Esc/B returns         │
+└────────────────────────────────────────────────────────────────────────────── 

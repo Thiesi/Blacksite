@@ -347,7 +347,12 @@ the NPC is covered, then use `name` after that caller's reveal. It is
 ordinary authored text, not a class label: the plainclothes Warden on
 Sodium Row shares `Sodium regular` with the real civilians there. The
 true name and faction never form the covered display name. This is
-presentation data; rules continue to read the true actor and faction.
+presentation data; rules continue to read the true actor and faction. A
+covered template must match an uncovered template that spawns in the
+same zone in every presented channel: name, class and colour role,
+behaviour kinds and anchoring, offered interactions, and dialogue binding.
+The validator reports a content error for a mismatch. Hidden faction
+and combat rules remain independent of that presentation match.
 
 An optional explicit `health` pool and embedded `attack` weapon block
 support private training actors. `training` requires both and scopes

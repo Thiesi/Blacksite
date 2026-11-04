@@ -570,6 +570,14 @@ only from what this caller may know. For presentation that means:
   The reveal is per caller: other callers keep seeing the cover until
   it acts against them. The server keeps the reveal with the NPC
   instance, not in content.
+  A covered template must have an uncovered counterpart spawned in the
+  same zone with matching name, class, colour role, behaviour kinds,
+  anchoring, interactions and dialogue binding (entities 1.8). The content
+  validator checks the complete counterpart, not separate partial matches.
+  TARGET uses the class label and neutral NPC role for an unaffiliated
+  NPC, consistent with its cover counterpart. The `Freelance` label
+  remains the unaffiliated caller's label. Disguised NPC dialogue titles
+  use the same per-caller displayed name, including after reveal.
 - **The fixed camera.** A place's authored viewpoint stands inside the
   public-ground region (5.5.5), never on a hidden exit, in a private
   interior or in an instanced zone. The validator checks this. The

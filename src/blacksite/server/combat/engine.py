@@ -210,10 +210,14 @@ class Combat:
             if not actor.modifiers.get("target_through_cover") or rules.distance(actor.position, target.position) > radius:
                 return None
         hidden = presentation.covered(target, actor, self.content)
-        legacy_role = "player_hostile" if target.marked else self.content.factions[target.faction].colour if target.faction in self.content.factions else "text"
+        shown_class = presentation.presented_class(target, actor, self.content)
+        neutral_npc = target.kind == "npc" and target.faction is None
+        legacy_role = ("player_hostile" if target.marked else
+                       self.content.factions[target.faction].colour if target.faction in self.content.factions else
+                       "npc_neutral" if target.kind == "npc" else "text")
         return {"id":target.id, "name":presentation.name(target, actor, self.content), "handle":target.handle,
-            "faction": presentation.presented_class(target, actor, self.content).title() if hidden else target.faction or "Freelance",
-            "class": presentation.presented_class(target, actor, self.content), "jacked": target.stance == "jacked",
+            "faction": shown_class.title() if hidden or neutral_npc else target.faction or "Freelance",
+            "class": shown_class, "jacked": target.stance == "jacked",
             "name_role": presentation.role(target, actor, self.content, legacy_role),
             "hp_percent":max(0,ceil(100 * target.health / target.health_max)),
             **({"hp": target.health, "hp_max": target.health_max} if actor.modifiers.get("target_through_cover") else {}),

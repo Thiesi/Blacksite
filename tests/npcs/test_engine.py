@@ -172,7 +172,10 @@ def test_design_5_5_local_guard_investigates_report_beyond_sight(city):
     runner=body(game,caller)
     game.core.world.enter(guard,zone.id,(50,3))
     from blacksite.server.npcs.templates import make_actor
-    resident=make_actor(game.core.world.content.npcs["npc-sodium-regular"],"reported-resident",{"spawner":"residents"})
+    # This fixture exercises same-faction reporting, not the Row's now
+    # unaffiliated street crowd (#147; keeper-wide response waits for S38).
+    resident_template=replace(game.core.world.content.npcs["npc-sodium-regular"],faction="sable")
+    resident=make_actor(resident_template,"reported-resident",{"spawner":"residents"})
     game.core.world.enter(resident,zone.id,(22,3))
     assert not game.core.combat.visible(guard,runner)
     game.core.npcs.provoked(runner,resident)
@@ -430,3 +433,18 @@ def test_design_5_5_flee_keeps_service_and_exit_tiles_clear(
     assert actor.position != before
     assert sum((a-b)**2 for a,b in zip(actor.position, runner.position)) > sum(
         (a-b)**2 for a,b in zip(before, runner.position))
+
+
+
+def test_game_7_2_unaffiliated_row_regular_does_not_alert_sable(
+        city: tuple[HeadlessServer, FakeClient]) -> None:
+    game, caller = city
+    guard = spawn(game)[0]
+    zone = game.core.world.zones[guard.zone]
+    runner = body(game, caller)
+    from blacksite.server.npcs.templates import make_actor
+    resident = make_actor(game.core.world.content.npcs['npc-sodium-regular'], 'row-regular', {})
+    assert resident.faction is None
+    game.core.world.enter(resident, zone.id, (22, 3))
+    game.core.npcs.provoked(runner, resident)
+    assert guard.target is None
