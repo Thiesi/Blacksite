@@ -549,6 +549,9 @@ Interact there. Walking over it never triggers hidden travel.
 An interactive physical prop underfoot takes precedence over a nearby
 public terminal for fallback Interact. Passive light, camera and salvage
 field markers do not intercept that network action. `J` remains the explicit network action.
+An exit or door on the caller's own tile takes precedence over an
+adjacent talker for Interact: what you stand on beats what stands beside
+you. One tile away, the talker wins (planned, S39).
 Credential refusals name the missing credential; a disabled control
 reports that the machinery is locked. Every destination retains
 its ordinary outward route; an authorized ride already in flight still
