@@ -30,6 +30,11 @@ https://github.com/Thiesi/Blacksite/pull/126#issuecomment-6622283046).
   - **Exit:** an exit whose `tile` equals the caller's position,
     including hidden exits. Hidden exits keep D-T4: they are named only
     while the caller stands on the tile.
+    - Including hidden exits is intended. A caller standing on an
+      unmarked hidden exit beside a regular now gets the exit for E, not
+      the dialogue, and that exit may be slow or credential-gated. The
+      focus prompt names the exit before the keypress, so the caller
+      sees what E will do. Do not exclude hidden exits to avoid that.
     - `Simulation.interaction_target` also returns exits on adjacent
       tiles. Those are never promoted: an exit beside the caller keeps
       today's order, so the talker or vendor still wins there.
@@ -53,8 +58,14 @@ https://github.com/Thiesi/Blacksite/pull/126#issuecomment-6622283046).
     could still consume E ahead of the promoted exit. Focus would then
     say "exit" while E opened a dialogue: the same bug.
   - When an interaction is selected, routes other than the selected one
-    must not consume that E key. The selected route handles it with the
+    must not consume that key. The selected route handles it with the
     selected choice.
+  - This applies to every key that `_echo` resolves a selection for:
+    E (`interact`) and J (`jack`).
+  - Only E's resolution changes. The exit is never promoted for J, and
+    `lattice` and `terminal` keep their place, so J's selected target is
+    the same as on `main`. Honouring the selection for J only makes
+    dispatch match the J focus that P3 already advertises.
   - Non-interaction input (movement, chat, menus already open) keeps
     today's dispatch.
 - **Everywhere else talkers and vendors keep winning,** including on
@@ -102,8 +113,11 @@ beside you") already covers it.
     through, and one tile off it gets the vendor's trade.
   - An exit on an **adjacent** tile with a talker also adjacent: the
     talker wins, because only an exit underfoot is promoted.
-  - A hidden exit (named only on its tile) and an apartment doorstep.
-    Record whether the doorstep case already passed on `main`.
+  - A hidden exit underfoot with an adjacent talker: the caller gets the
+    exit, named only on its tile. This is the intended change from
+    `main`, where the dialogue opened.
+  - An apartment doorstep. Record whether it already passed on `main`.
+  - The same matrix pressing J: every J result equals `main`'s.
 - **Arrival-tile audit.**
   - List every shipped exit whose `target_tile` lands a caller on an exit
     tile, including the exit back.
