@@ -432,7 +432,18 @@ exchanges create neither combat-logout penalties nor death debt.
 Non-player actors run **behaviours**: idle, wander, patrol (waypoints),
 guard (hold, aggro on hostile), hunt (chase), flee (below 20 % health),
 vendor, talker. Aggro rules use the faction relations matrix; a Halvard
-patrol shoots Unmoored members in the Scour and ignores Kestrel. Freelance
+patrol shoots Unmoored members in the Scour and ignores Kestrel. In a
+**truce** zone (planned, S38; Sodium Row) the matrix never makes an NPC
+hostile: NPCs there turn only on an actor who broke the peace, through
+provocation as below. A truce zone names its keeper faction (Sable on
+the Row). An attack whose target is in the zone breaks the peace when it
+is an attack on a player that Marks the attacker (section 7.3), or an
+attack on an NPC that was not already hostile to the attacker. Breaking
+the peace provokes the keeper's guards in the zone against the
+responsible player, besides the usual provocation of an attacked NPC's
+own group and guards. Firing back at a Marked player, or at an NPC that
+is already after you, breaks nothing. Wardens still engage Marked
+players. Freelance
 characters are neutral to faction NPCs unless a declared restricted
 perimeter or hostile action gives a reason to engage. Open ground permits
 violence; it does not make traders automatic enemies. Hostile perimeters
@@ -925,6 +936,13 @@ in contested zones, and your name shows red. Killing a Marked player gives
 standing with the Wardens. In open zones nothing marks anyone. For remote
 burning, both bodies must be in open areas for that exception; a contested
 participant keeps the normal grade protection and aggression consequence.
+
+In a truce zone (planned, S38), the hostile-faction exception does not
+apply: an eligible attack on any player who is not already Marked makes
+the attacker Marked, whatever the two factions. The truce follows the
+target: it applies when the target's body is in the zone, wherever the
+attacker, drone or burn comes from. Firing back at a Marked attacker
+stays exempt, and grade protection is unchanged.
 
 Check legality at hostile action commitment, including misses, controls,
 drones, and burning; attribute it once to the responsible player.
@@ -1766,8 +1784,12 @@ Values are initial, tuned at the pacing gate.
   like one left normally, so it never reveals the ignore: the sender
   gets exactly the result a sender who is not ignored would get,
   including the full-inbox refusal, and the ignored invitation holds
-  the sender's slots until its normal expiry. Ignored handoff offers
-  and dead drops hold the sender's slots the same way.
+  the sender's slots until its normal expiry or until the sender
+  withdraws it. The sender may withdraw any invitation they left at
+  any time; withdrawal frees the slots and gives the same result
+  whether the invitation was delivered or ignored. Ignored handoff
+  offers and dead drops hold the sender's slots the same way and are
+  withdrawn the same way.
 - **Crew notes.** Members share up to 20 notes of up to 200 characters,
   visible to members only. The author or the leader removes a note; a
   departed member's notes stay until any member removes them. Notes use chat's text rules and rate
@@ -1967,16 +1989,25 @@ Values are initial, tuned at the pacing gate.
     it never becomes free permanent storage.
   - **Kestrel fee.** Leaving a drop costs the sender the market board's
     5 % Kestrel fee (section 8.3), charged on the item's catalog base
-    price times the units dropped, rounded up, at least 1 chit; an item
-    with no catalog base price pays the 1-chit minimum. It is paid when
+    price times the units dropped, rounded up, at least 1 chit. It is
+    paid when
     the drop is left and never refunded. Market prices are not used,
     so no sale can be staged to move the fee.
   - A drop from a sender the recipient ignores never arrives. To the
     sender it looks exactly like an unanswered drop: it returns only at
-    the 7-day expiry, so it never reveals the ignore. The recipient may
-    also refuse a drop they can see, which returns it to the sender.
-  - Only items the market board accepts may be dropped; equipped,
-    secured, bound and mission items cannot (section 8.3). Player
+    the 7-day expiry or when the sender withdraws it, so it never
+    reveals the ignore. The recipient may also refuse a drop they can
+    see, which returns it to the sender.
+  - **Withdrawal.** The sender may withdraw a drop until it is
+    collected. It returns as a free Kestrel collection, as a returned
+    drop does, and the fee is kept. The result is the same whether or
+    not the drop arrived, so withdrawal never reveals an ignore. It
+    frees the sender's one outgoing drop; the 24-hour limit still
+    counts it.
+  - Only items the market board accepts and that have a catalog base
+    price may be dropped; equipped, secured, bound and mission items
+    cannot (section 8.3), and neither can an item with no catalog
+    base price, so the fee always reflects what moves. Player
     trading of intact salvage stays allowed (section 8.4).
   - Dead-drop objects are authored content, at least one per district,
     never in a safe zone or pocket. The gazetteer places them.

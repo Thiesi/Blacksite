@@ -73,9 +73,12 @@ Its source path points at the same checkout; runtime dependencies stay
 standard-library only. This CPU probe is separate from transport proof.
 
 The test suite replays emitted ANSI into an independent fake terminal.
-Run it with a repository-local temporary directory:
+Run it with pytest's default temporary directory (AGENTS.md section 5,
+local disk hygiene):
 
 ```powershell
-New-Item -ItemType Directory -Force .test-tmp | Out-Null
-python -m pytest -q --basetemp=.test-tmp/suite
+python -m pytest -q
 ```
+
+If your sandbox can write only inside the worktree, use the one fixed
+local path, which every run replaces: `--basetemp=.test-tmp/pytest`.

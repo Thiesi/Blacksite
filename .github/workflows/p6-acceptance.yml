@@ -60,6 +60,8 @@ jobs:
         with:
           python-version: '3.12'
       - run: python -m pip install -e .[test]
+      # A7's per-cell camera proof runs from its own pinned tree in
+      # p6-a7-camera.yml. P6b separately freezes its six B3 candidates.
       - name: Prove the golden exception for the active content stage
         shell: bash
         run: |
@@ -67,8 +69,6 @@ jobs:
             # B3 supersedes P6a's HERE-only exception for six P5 zone
             # snapshots; every other golden stays at owner-merged A7.
             python scripts/presentation_p6b_changes.py --output "$RUNNER_TEMP/p6-b3-changes.json"
-          else
-            python scripts/p6_camera_diff.py --output "$RUNNER_TEMP/p6-camera-cell-diff.json"
           fi
       - name: Measure supplied Plaza and Sodium Row region geometry
         run: python scripts/presentation_p6_masks.py --output "${{ runner.temp }}/p6-mask-geometry.json"
@@ -85,7 +85,6 @@ jobs:
           name: p6-charted-budget
           path: |
             ${{ runner.temp }}/p6-charted-budget.json
-            ${{ runner.temp }}/p6-camera-cell-diff.json
             ${{ runner.temp }}/p6-mask-geometry.json
             ${{ runner.temp }}/p6-validation.json
             ${{ runner.temp }}/p6-b3-changes.json

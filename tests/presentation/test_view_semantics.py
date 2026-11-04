@@ -6,8 +6,10 @@ from dataclasses import replace
 import pytest
 
 from blacksite.content.loader import load_content
+from blacksite.npc_presentation import channels
 from blacksite.server.lattice.presence import Procedure
 from blacksite.server.npcs.templates import make_actor
+from blacksite.server.dialogue_runtime import Contact, TalkerMenu
 from blacksite.server.views.zone_view import Perception, build
 from tests.character_helpers import create, place
 from tests.harness import HeadlessServer
@@ -39,9 +41,13 @@ def test_arch_5_5_4_shipped_sodium_warden_cover_and_per_caller_reveal(repo_root,
     assert npc.zone == 'sodium-row'
     # Test disclosure, not the content author's street-wide spawn choice.
     # Keep the shipped instance/template and put it in both callers' sight.
-    npc.x, npc.y = game.core.world.free_tile('sodium-row', (90, 3))
-    assert any(a.name == template.cover_name and a.behaviour.get('template') == 'npc-sodium-regular'
-               for a in zone.actors.values())
+    game.core.world.enter(npc, zone.id, game.core.world.free_tile(zone.id, (90, 3)))
+    peer = next(a for a in zone.actors.values() if a.behaviour.get('template') == 'npc-sodium-regular')
+    assert peer.name == template.cover_name
+    assert channels(template) == channels(content.npcs['npc-sodium-regular'])
+    assert template.faction == 'wardens' and peer.faction is None
+    contacts = {contact.target: contact.talker for contact in game.core.dialogue.contacts(zone)}
+    assert contacts[npc.id] == contacts[peer.id] == 'row-street-regular'
     sim = game.core.characters.sim
     drones = game.core.progression.drones
     for client in clients:
@@ -53,12 +59,29 @@ def test_arch_5_5_4_shipped_sodium_warden_cover_and_per_caller_reveal(repo_root,
         drones.menus[client.session.id] = next(i for i, row in enumerate(rows)
                                              if row['id'] == drone.behaviour['item'])
         caller.target = npc.id
-        view = build(caller, zone, Perception(), content, width, height, '12:00', False, 0)
-        assert next(a for a in view['actors'] if a['id'] == npc.id)['class'] == 'civilian'
+        view = build(caller, zone, Perception(), content, width, height, '12:00', False, 0,
+                     scouted_actors={peer.id})
+        covered = next(a for a in view['actors'] if a['id'] == npc.id)
+        regular = next(a for a in view['actors'] if a['id'] == peer.id)
+        assert covered['class'] == regular['class'] == 'civilian'
+        assert covered['role'] == regular['role'] == 'npc_neutral'
+        assert next(a for a in view['nearby'] if a['id'] == peer.id)['name'] == template.cover_name
         assert next(a for a in view['nearby'] if a['id'] == npc.id)['name'] == template.cover_name
         target = game.core.combat.target_view(caller)
         assert target['name'] == template.cover_name and target['class'] == 'civilian'
         assert target['faction'] == 'Civilian' and target['name_role'] == 'npc_neutral'
+        # Inspect the real peer through TARGET as well as the zone/NEARBY
+        # document. This is a headless positioning fixture, with no ticks.
+        position = caller.position
+        game.core.world.enter(caller, zone.id, game.core.world.free_tile(zone.id, peer.position))
+        caller.target = peer.id
+        peer_target = game.core.combat.target_view(caller)
+        assert peer_target['name'] == target['name']
+        assert peer_target['class'] == target['class'] == 'civilian'
+        assert peer_target['faction'] == target['faction'] == 'Civilian'
+        assert peer_target['name_role'] == target['name_role'] == 'npc_neutral'
+        game.core.world.enter(caller, zone.id, position)
+        caller.target = npc.id
         sim.speak(client.session, npc, 'Stand here.')
         line = client.session.log_ring[-1]
         assert (line['speaker'], line['speaker_role']) == (template.cover_name, 'civilian')
@@ -79,6 +102,14 @@ def test_arch_5_5_4_shipped_sodium_warden_cover_and_per_caller_reveal(repo_root,
         assert name in text
         if client is two:
             assert template.name not in text
+    # The newly shared dialogue must also respect per-caller reveal.
+    for client, shown in ((one, template.name), (two, template.cover_name)):
+        dialogue = game.core.dialogue
+        contact = Contact(template.dialogue, npc.id, zone.id, npc.position)
+        dialogue.menus[client.session.id] = TalkerMenu(contact, 'Keep walking, the stage is full.', 0)
+        dialogue.publish(client.session)
+        assert sim.external_views[client.session.id][1]['title'] == shown+' - Sodium Row'
+        dialogue.close(client.session)
     # A respawn is a new instance; content keeps only the authored cover.
     fresh = make_actor(template, 'test:new-shipped-instance', {'home': npc.position})
     assert not fresh.revealed_to

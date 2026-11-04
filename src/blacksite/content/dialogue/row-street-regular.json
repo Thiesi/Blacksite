@@ -1,0 +1,41 @@
+{
+  "schema": 1,
+  "id": "row-street-regular",
+  "name": "Sodium regular",
+  "faction": null,
+  "title": "Sodium Row",
+  "terminal": false,
+  "machine_mind": false,
+  "lines": [
+    {
+      "id": "marked",
+      "text": "Not near me. Not tonight.",
+      "when": [
+        "marked"
+      ],
+      "required": true
+    },
+    {
+      "id": "wake",
+      "text": "First time down the Stair? Walk to the end. Everybody does.",
+      "when": [
+        "is_wake"
+      ],
+      "required": true
+    },
+    {
+      "id": "greeting",
+      "text": "Keep walking, the stage is full.",
+      "when": [],
+      "required": true
+    }
+  ],
+  "offers": [],
+  "barks": [
+    {
+      "text": "A tram goes over somewhere above the roofs. The puddles shiver.",
+      "weight": 1,
+      "min_interval_seconds": 90
+    }
+  ]
+}
