@@ -96,7 +96,7 @@ def test_travel_waits_for_acked_door_focus_before_one_e(door_arrives: bool) -> N
         keys.append(key)
         avatar.zone = 'halo'
 
-    probe = helpers(wait=wait)()
+    probe = helpers(asyncio=asyncio, wait=wait)()
     probe.walk = walk
     probe.game = NS(sim=NS(views={session.id: view}))
     probe.service = NS(world=NS(zones={
