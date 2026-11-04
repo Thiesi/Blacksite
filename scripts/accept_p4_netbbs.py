@@ -9,10 +9,12 @@ an inventory fixture, not acquisition or balance acceptance.
 
 import argparse
 import asyncio
+from collections import deque
 import json
 from copy import deepcopy
 from pathlib import Path
 import subprocess
+import time
 from typing import Any
 
 from accept_s10_netbbs import NativeProbe, wait
@@ -20,6 +22,37 @@ from accept_s11_netbbs import approach
 from blacksite.npc_presentation import channels
 from tests.presentation.snapshots import snapshot
 from blacksite.server.items import make_item
+from blacksite.server.world.actors import Actor
+from blacksite.server.world.sight import line_of_sight
+
+
+async def navigate(probe: NativeProbe, caller: Any, target: Actor) -> None:
+    """Reach a live four-tile arrival pose before the local approach."""
+    actor = caller.avatar.actor
+    zone = probe.service.world.zones[actor.zone]
+
+    def goal() -> tuple[int, int] | None:
+        assert actor.zone == target.zone == zone.id
+        occupied = {a.position for a in zone.actors.values() if a is not actor}
+        exits = {e.tile for e in zone.template.meta.exits if e.kind == 'street'}
+        pending, reachable = deque([actor.position]), {actor.position}
+        while pending:
+            x, y = pending.popleft()
+            for tile in ((x+1,y), (x,y+1), (x-1,y), (x,y-1)):
+                if tile not in reachable and tile not in occupied and tile not in exits and zone.passable(tile):
+                    reachable.add(tile)
+                    pending.append(tile)
+        candidates = [tile for tile in reachable
+                      if (tile[0]-target.x)**2+(tile[1]-target.y)**2 <= 16
+                      and line_of_sight(zone, tile, target.position)]
+        return min(candidates, key=lambda p: ((p[0]-actor.x)**2+(p[1]-actor.y)**2, p)) if candidates else None
+
+    started = time.monotonic()
+    origin, target_origin = actor.position, target.position
+    await probe.walk(caller, goal)
+    assert (actor.x-target.x)**2+(actor.y-target.y)**2 <= 16
+    probe.report(f'PASS live navigation {target.id}: {origin}/{target_origin} -> '
+                 f'{actor.position}/{target.position} in {time.monotonic()-started:.3f}s')
 
 
 async def accept(root: Path, door_python: Path, show: bool,
@@ -81,8 +114,10 @@ async def accept(root: Path, door_python: Path, show: bool,
                 peer = next(a for a in zone.actors.values()
                             if a.behaviour.get('template') == 'npc-sodium-regular')
                 assert channels(template) == channels(probe.game.content.npcs['npc-sodium-regular'])
-                # Both authored templates now wander. Reuse the existing
-                # moving-patrol approach; all travel still uses real keys.
+                # Street-wide navigation uses the exact walker's original
+                # 120-second bound. Only then start the local 20-second
+                # approach; reselect each wanderer's live pose every step.
+                await navigate(probe, caller, peer)
                 await approach(probe, caller, peer, hostile_tile=False)
                 await probe.target(caller, peer.id)
                 await wait(lambda: (probe.game.sim.views[caller.session.id].previous['body'].get('target') or {}).get('id') == peer.id
@@ -93,6 +128,7 @@ async def accept(root: Path, door_python: Path, show: bool,
                 assert peer_view['target']['faction'] == 'Civilian'
                 assert peer_view['target']['name_role'] == 'npc_neutral'
                 save(f'sodium-regular-{width}x{height}-{tier}')
+                await navigate(probe, caller, npc)
                 await approach(probe, caller, npc, hostile_tile=False)
                 await probe.target(caller, npc.id)
                 await wait(lambda: template.cover_name in screen.screen_text()
