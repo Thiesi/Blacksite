@@ -371,12 +371,21 @@ async def accept(root: Path, door_python: Path, show: bool) -> None:
             await wait(lambda:winner.session.ack_revision==winner.session.view_revision)
             await winner.caller.write(b"\r");await wait(lambda:iid not in probe.commerce.caches[cid]["items"])
             await winner.caller.write(b"\x1b");await wait(lambda:winner.session.id not in probe.commerce.menus)
+            # Clinic Row's Wardens pursue a Marked caller. Leave immediately
+            # after looting, while the loser recovers; do not idle in the alley.
+            # Another winner death must fail, never be absorbed as recovery.
+            assert winner.avatar.actor.stance=="normal"
+            evacuation=time.monotonic()
+            await probe.travel(winner,"core-plaza")
+            assert winner.avatar.actor.stance=="normal"
+            probe.report(f"PASS winner evacuation {width}x{height}: {time.monotonic()-evacuation:.1f}s, no additional death")
             await wait(lambda:loser.avatar.actor.stance=="normal",25)
             assert loser.avatar.zone=="vatside-wake-hall" and loser.avatar.actor.health==loser.avatar.actor.health_max
             assert any(probe.commerce.items[i].bound for i in player.inventory)
             for connection,tile in ((winner,(5,3)),(loser,(7,3))):
                 if connection.avatar.zone=="vatside-wake-hall": await probe.travel(connection,"vatside-clinics")
-                await probe.travel(connection,"core-plaza");await probe.walk(connection,tile)
+                if connection.avatar.zone!="core-plaza": await probe.travel(connection,"core-plaza")
+                await probe.walk(connection,tile)
             before=b.avatar.actor.health
             await probe.target(a,b.avatar.actor.id)
             await a.caller.write(b"f");await asyncio.sleep(.3)
