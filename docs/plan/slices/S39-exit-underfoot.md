@@ -45,8 +45,18 @@ https://github.com/Thiesi/Blacksite/pull/126#issuecomment-6622283046).
     - The slice does not change it. A matrix case pins the behaviour
       and records whether it already passed on `main`.
 - **Exactly which routes the exit may jump.**
-  - The exit (from `simulation`) is promoted only over a choice from
-    `commerce` or `npcs`, and only under the condition above.
+  - The exit (from `simulation`) is promoted only over:
+    - a real talker choice from `npcs`; or
+    - a vendor or object choice from `commerce` on an **adjacent**
+      tile.
+  - It is never promoted over:
+    - the empty open-screen marker. `dialogue_runtime.interaction` and
+      `commerce.interaction` return an empty `Interaction()` while a
+      dialogue, shop or prompt is open, so that E reaches the open
+      screen.
+    - a `commerce` choice on the caller's own tile. A vendor or prop
+      underfoot keeps its precedence (game design 5.5).
+  - It is promoted only under the own-tile condition above.
   - It never lifts above `events`, `market`, `contracts`, `factions`,
     `crews`, `relays`, `apartments`, `progression`, `lattice`,
     `interlock`, `combat`, `fabrication`, `chat` or the Lattice
@@ -122,7 +132,11 @@ beside you") already covers it.
     exit, named only on its tile. This is the intended change from
     `main`, where the dialogue opened.
   - An apartment doorstep. Record whether it already passed on `main`.
-  - The same matrix pressing J: every J result equals `main`'s.
+  - The same matrix pressing J: for every case, the handler that
+    actually consumed J, and its result, equal `main`'s. Comparing the
+    advertised J focus alone is not enough.
+  - A vendor or interactive prop on the same tile as an exit: the
+    vendor or prop wins, as on `main`.
   - E on an exit tile while a talker's dialogue or a vendor's shop is
     already open: the open screen handles it, and the caller does not
     travel.
