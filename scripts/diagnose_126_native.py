@@ -6,12 +6,14 @@ from collections import deque
 import json
 from pathlib import Path
 import subprocess
+import sys
 import time
 from typing import Any
 
 import accept_p4_netbbs as p4
 import accept_s19_netbbs as s19
 from accept_s10_netbbs import NativeProbe
+from blacksite.server.sessions import Session
 
 BASE = 'fe4dcf1a841c1b29f833389beea2f6238e58f8b8'
 SOURCE = 'e6940dd7a51003850b4f0478b3cab2128a5d97cf'
@@ -19,6 +21,8 @@ ROOT = Path(__file__).resolve().parents[1]
 original_start = NativeProbe.start
 original_close = NativeProbe.close
 original_approach = p4.approach
+original_publish = Session.publish_view
+view_history: dict[str, dict[int, dict[str, Any]]] = {}
 
 
 def actor_state(actor: Any) -> dict[str, Any]:
@@ -34,23 +38,46 @@ async def start(probe: NativeProbe) -> None:
     await original_start(probe)
     core = probe.service.core
     receive, resolve = core.receive, core.resolve_interaction
+    pending: dict[int, int] = {}
+    sequence = 0
+
+    def published(session: Any, full: Any, delta: Any, tick: int) -> bool:
+        result = original_publish(session, full, delta, tick)
+        if result:
+            history = view_history.setdefault(session.id, {})
+            body = full.data['body']
+            history[session.view_revision] = {
+                'revision': session.view_revision, 'tick': tick,
+                'focus': body.get('focus'), 'jack_focus': body.get('jack_focus')}
+            while len(history) > 512:
+                del history[next(iter(history))]
+        return result
 
     def context(session: Any, frame: Any, phase: str) -> dict[str, Any]:
         avatar = probe.game.sim.avatars.get(session.user_id)
         return {'phase': phase, 'at': time.monotonic(),
                 'tick': probe.service.clock.now_tick(), 'data': dict(frame.data),
                 'ack_revision': session.ack_revision, 'view_revision': session.view_revision,
-                'actor': actor_state(avatar.actor) if avatar else None}
+                'actor': actor_state(avatar.actor) if avatar else None,
+                'acked_view': view_history.get(session.id, {}).get(session.ack_revision),
+                'latest_view': view_history.get(session.id, {}).get(session.view_revision)}
 
     def received(session: Any, frame: Any) -> None:
+        nonlocal sequence
         if frame.type == 'key' and frame.data.get('k') in ('e', 'E'):
-            probe.diagnostic_inputs.append(context(session, frame, 'received'))
+            sequence += 1
+            pending[id(frame)] = sequence
+            row = context(session, frame, 'received')
+            row['sequence'] = sequence
+            probe.diagnostic_inputs.append(row)
         receive(session, frame)
 
     def resolved(session: Any, frame: Any, routes: Any = None) -> Any:
         selected = resolve(session, frame, routes)
-        if frame.type == 'key' and frame.data.get('k') in ('e', 'E'):
+        if (frame.type == 'key' and frame.data.get('k') in ('e', 'E')
+                and sys._getframe(1).f_code.co_name == '_echo'):
             row = context(session, frame, 'resolved')
+            row['sequence'] = pending.pop(id(frame), None)
             row['selected'] = None if selected is None else {
                 'route': selected.route.name,
                 'focus': selected.choice.focus.record() if selected.choice.focus else None,
@@ -60,6 +87,7 @@ async def start(probe: NativeProbe) -> None:
         return selected
 
     core.receive, core.resolve_interaction = received, resolved
+    Session.publish_view = published
 
 
 async def approach(probe: NativeProbe, caller: Any, target: Any,
@@ -91,6 +119,8 @@ async def close(probe: NativeProbe) -> None:
     try:
         await original_close(probe)
     finally:
+        Session.publish_view = original_publish
+        view_history.clear()
         report = {'diagnostic_only': True, 'approval': False, 'base': BASE,
                   'head': subprocess.check_output(['git', 'rev-parse', 'HEAD'], cwd=ROOT,
                                                   text=True).strip(),
