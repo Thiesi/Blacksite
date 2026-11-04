@@ -67,7 +67,12 @@ https://github.com/Thiesi/Blacksite/pull/126#issuecomment-6622283046).
     the same as on `main`. Honouring the selection for J only makes
     dispatch match the J focus that P3 already advertises.
   - Non-interaction input (movement, chat, menus already open) keeps
-    today's dispatch.
+    today's dispatch. E pressed while a dialogue, shop or menu is open
+    belongs to that open screen, never to a promoted exit underfoot.
+  - The promotion keys on the exit's tile alone, whichever mode of
+    `Simulation.interaction_target` produced the choice (including its
+    `street` mode). A lift, tram or other non-street exit underfoot is
+    promoted exactly like a street exit.
 - **Everywhere else talkers and vendors keep winning,** including on
   the tile next to the door. To talk or trade at a threshold, the caller
   steps off the door tile.
@@ -118,6 +123,11 @@ beside you") already covers it.
     `main`, where the dialogue opened.
   - An apartment doorstep. Record whether it already passed on `main`.
   - The same matrix pressing J: every J result equals `main`'s.
+  - E on an exit tile while a talker's dialogue or a vendor's shop is
+    already open: the open screen handles it, and the caller does not
+    travel.
+  - A non-street exit (a lift or tram stop) underfoot with an adjacent
+    talker: the exit wins, the same as for a street exit.
 - **Arrival-tile audit.**
   - List every shipped exit whose `target_tile` lands a caller on an exit
     tile, including the exit back.
