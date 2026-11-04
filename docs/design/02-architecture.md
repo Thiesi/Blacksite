@@ -679,6 +679,11 @@ keeps Shaft Foot's season-console status usable beside its telemetry.
 Housing resolves a dedicated public doorstep to its door before adjacent
 props, while respecting a prop underfoot. Dropping a delivery key beside
 the doorstep must not divert entry into the private core-log menu.
+An exit on the caller's own tile resolves ahead of an adjacent talker's
+dialogue or vendor's trade (the `npcs` and `commerce` routes only), in
+the same composed resolver that focus and dispatch share. An exit on an
+adjacent tile is not promoted. Only the selected route may consume a
+selected E (planned, S39). Every other pair keeps the route order.
 
 Admission/reconnect preserves a valid saved position. If an expired
 opening makes it invalid, `World.free_tile` searches the public spawn's
