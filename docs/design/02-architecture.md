@@ -680,7 +680,7 @@ Housing resolves a dedicated public doorstep to its door before adjacent
 props, while respecting a prop underfoot. Dropping a delivery key beside
 the doorstep must not divert entry into the private core-log menu.
 An exit or a doorstep's door on the caller's own tile resolves ahead of
-an adjacent talker's dialogue, in the same composed resolver that
+an adjacent talker's dialogue or vendor's trade, in the same composed resolver that
 focus and dispatch share (planned, S39). Every other pair keeps the
 route order.
 
