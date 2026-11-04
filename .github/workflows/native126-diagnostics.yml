@@ -1,0 +1,51 @@
+name: P126 read-only native diagnostics
+
+on:
+  push:
+    branches: ['diagnostic/126-native-state']
+
+permissions:
+  contents: read
+
+jobs:
+  observe:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    strategy:
+      fail-fast: false
+      matrix:
+        sample: ['a', 'b']
+        case:
+          - {scenario: 'p4', size: '80x24'}
+          - {scenario: 'p4', size: '132x50'}
+          - {scenario: 'network', size: '132x50'}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - uses: actions/checkout@v4
+        with:
+          repository: Thiesi/NetBBS
+          ref: v7.45.0
+          path: .test-tmp/netbbs
+      - name: Install the same NetBBS and isolated native wheel
+        shell: bash
+        run: |
+          python -m pip install './.test-tmp/netbbs[ssh,web]'
+          python -m pip wheel --no-deps . -w "$RUNNER_TEMP/diag126-wheels"
+          python -m venv "$RUNNER_TEMP/diag126-venv"
+          "$RUNNER_TEMP/diag126-venv/bin/python" -m pip install "$RUNNER_TEMP"/diag126-wheels/*.whl
+      - name: Observe the unmodified scenario
+        run: python scripts/diagnose_126_native.py --root '${{ runner.temp }}/diag126-proof' --door-python '${{ runner.temp }}/diag126-venv/bin/python' --scenario '${{ matrix.case.scenario }}' --size '${{ matrix.case.size }}'
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: diag126-${{ matrix.case.scenario }}-${{ matrix.case.size }}-${{ matrix.sample }}
+          path: |
+            ${{ runner.temp }}/diag126-proof/*.json
+            ${{ runner.temp }}/diag126-proof/*.ans
+            ${{ runner.temp }}/diag126-proof/*.txt
+            ${{ runner.temp }}/diag126-proof/progress.log
