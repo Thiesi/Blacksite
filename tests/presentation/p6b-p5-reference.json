@@ -1,0 +1,91 @@
+{
+  "head": "acd70d3d2a557d553b24138012787f56f4dbca70",
+  "run": 41126237721,
+  "artifact": 13010629694,
+  "report_sha256": "67350b01b1566555e1617db3a32674a7c73688d4536cd1ef10e211466c343496",
+  "artifact_digest": "aec422d02ecaae20a70691df542753f74767c3b560b157adc3062a1cc72614af",
+  "source": "https://github.com/Thiesi/Blacksite/actions/runs/41126237721/artifacts/13010629694",
+  "cases": [
+    {
+      "size": [
+        80,
+        24
+      ],
+      "tier": "16",
+      "fully_known": false,
+      "cpu_s_per_hour": 40.84172469687894
+    },
+    {
+      "size": [
+        80,
+        24
+      ],
+      "tier": "256",
+      "fully_known": false,
+      "cpu_s_per_hour": 41.433575817376905
+    },
+    {
+      "size": [
+        80,
+        24
+      ],
+      "tier": "truecolor",
+      "fully_known": false,
+      "cpu_s_per_hour": 40.88865887858879
+    },
+    {
+      "size": [
+        132,
+        50
+      ],
+      "tier": "16",
+      "fully_known": false,
+      "cpu_s_per_hour": 68.24627764510895
+    },
+    {
+      "size": [
+        132,
+        50
+      ],
+      "tier": "16",
+      "fully_known": true,
+      "cpu_s_per_hour": 93.38065482648197
+    },
+    {
+      "size": [
+        132,
+        50
+      ],
+      "tier": "256",
+      "fully_known": false,
+      "cpu_s_per_hour": 62.67691395964606
+    },
+    {
+      "size": [
+        132,
+        50
+      ],
+      "tier": "256",
+      "fully_known": true,
+      "cpu_s_per_hour": 87.125972868998
+    },
+    {
+      "size": [
+        132,
+        50
+      ],
+      "tier": "truecolor",
+      "fully_known": false,
+      "cpu_s_per_hour": 63.729937905912905
+    },
+    {
+      "size": [
+        132,
+        50
+      ],
+      "tier": "truecolor",
+      "fully_known": true,
+      "cpu_s_per_hour": 99.30392285023612
+    }
+  ]
+}
