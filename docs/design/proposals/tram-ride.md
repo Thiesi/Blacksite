@@ -61,11 +61,13 @@ ride: there is no place, no people and no time.
 ## 3. The proposal: six parts
 
 **3.1 The platform is a place [new].** Waiting no longer covers the
-view. You stand on the platform and see it. The countdown moves to the
-status line ("Clinic line, 34 s"), and moving off the platform still
-cancels boarding. Each hub platform gets a departure board: a sign
-showing the line name and the next departure, with no other
-destinations. The hub's commuters move to the platforms: two or three on
+view. You stand on the platform and see it. The countdown takes the
+hint row while it runs ("Clinic line, 34 s"), and moving off the
+platform still cancels boarding. The platform edge gets a ground look,
+so you can see where to stand. Each hub platform gets a departure board:
+a sign with a 22-wide face showing its line name and a coarse state
+(NEXT 1 MIN, BOARDING or HELD), never a live count and never other
+destinations. (Presentation lead, #157 review.) The hub's commuters move to the platforms: two or three on
 each platform's edge, and the rest between platforms. The Kestrel staff
 stand at the ticket office and the Wardens stand by the plaza exit. The
 district platforms get one or two of the local crowd waiting:
@@ -74,13 +76,13 @@ you and get off at the other end, but only as text (3.2), so no NPC
 movement code changes.
 
 **3.2 The shared car [new].** At departure, everyone on the same line's
-same departure is in the same car. While riding, the overlay names them:
+same departure is in the same car. While riding, the map pane shows the
+car, and the side panel's NEARBY becomes IN THE CAR:
 
 > The Clinic line car. Riding with you: Second, a Kestrel clerk,
 > two commuters.
 
-Callers are listed as the NEARBY panel would show them, using the same
-code, so a disguise or a cover holds in the car too. NPC passengers are
+IN THE CAR is the NEARBY panel's own code, so a disguise or a cover holds in the car too. NPC passengers are
 generic ("two commuters", "a patient"), never named, and are drawn from
 the crowds at both ends of the line. On arrival, the car's callers step
 out together on neighbouring tiles. Arrival already works that way; the
@@ -91,15 +93,17 @@ zone. Seeing who rode with you is information, so this needs the
 technical lead's review and the owner's yes (T2).
 
 **3.3 A view from each line, naming nothing [new].** Each line gets
-three or four lines of text shown in the car overlay during the ride, in
-order, with the timing split evenly. They describe what the window
+three or four lines of text shown in the car's map pane during the ride
+(not in the log), in order. The ride time is split evenly, and the
+"Brakes." line always gets the last slice. Each line stays under about
+70 characters. They describe what the window
 shows, never a district name, a street name or a sign. The ride reveals
 no map knowledge (no seen-zone update and no map reveal), which keeps
 the canon in §2. A first draft for the Clinic line:
 
 > The car lurches out of the shed into the dark.
-> Pipes run alongside the line, then away below it. Steam rises off
-> something large and warm to the right.
+> Pipes run alongside the line, then drop away below it.
+> Steam rises off something large and warm to the right.
 > Lit windows, close enough to see the shelves inside, then gone.
 > Brakes. The smell of disinfectant comes in before the doors open.
 
