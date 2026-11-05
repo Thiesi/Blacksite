@@ -1,0 +1,255 @@
+{
+  "schema": 1,
+  "id": "vatside-clinics",
+  "theme": "vat-street",
+  "regions": [
+    {
+      "theme": "vat-boulevard",
+      "rect": [
+        1,
+        1,
+        78,
+        4
+      ]
+    },
+    {
+      "theme": "vat-alley",
+      "rect": [
+        22,
+        5,
+        16,
+        8
+      ]
+    },
+    {
+      "theme": "vat-alley",
+      "rect": [
+        60,
+        5,
+        5,
+        8
+      ]
+    },
+    {
+      "theme": "vat-yard",
+      "rect": [
+        1,
+        13,
+        78,
+        20
+      ]
+    },
+    {
+      "theme": "vat-facade",
+      "rect": [
+        4,
+        5,
+        18,
+        8
+      ]
+    },
+    {
+      "theme": "vat-facade",
+      "rect": [
+        38,
+        5,
+        22,
+        8
+      ]
+    },
+    {
+      "theme": "vat-facade",
+      "rect": [
+        65,
+        5,
+        12,
+        8
+      ]
+    },
+    {
+      "theme": "vat-interior",
+      "rect": [
+        5,
+        6,
+        16,
+        6
+      ]
+    },
+    {
+      "theme": "vat-interior",
+      "rect": [
+        39,
+        6,
+        20,
+        6
+      ]
+    },
+    {
+      "theme": "vat-interior",
+      "rect": [
+        66,
+        6,
+        10,
+        6
+      ]
+    }
+  ],
+  "signs": [
+    {
+      "at": [
+        1,
+        0
+      ],
+      "text": " WAKE HALL ",
+      "role": "thing_sign_cyan"
+    },
+    {
+      "at": [
+        22,
+        0
+      ],
+      "text": " CLONE INSURANCE: RENEW TODAY ",
+      "role": "thing_sign_cyan"
+    },
+    {
+      "at": [
+        61,
+        0
+      ],
+      "text": " MERIDIAN PLAZA ",
+      "role": "thing_sign_street"
+    },
+    {
+      "at": [
+        5,
+        5
+      ],
+      "text": " SABLIER CLINIC ",
+      "role": "thing_sign_sablier"
+    },
+    {
+      "at": [
+        40,
+        5
+      ],
+      "text": " SABLIER PHARMACY ",
+      "role": "thing_sign_sablier"
+    },
+    {
+      "at": [
+        65,
+        5
+      ],
+      "text": " MEMBERS ",
+      "role": "thing_sign_sablier"
+    },
+    {
+      "at": [
+        13,
+        12
+      ],
+      "text": " SURGERY ",
+      "role": "thing_sign_sablier"
+    },
+    {
+      "at": [
+        48,
+        12
+      ],
+      "text": " RECRUITING ",
+      "role": "thing_sign_sablier"
+    }
+  ],
+  "marks": [
+    {
+      "line": [
+        [
+          26,
+          15
+        ],
+        [
+          44,
+          15
+        ]
+      ],
+      "glyph": "─",
+      "role": "paint_bay"
+    },
+    {
+      "line": [
+        [
+          26,
+          23
+        ],
+        [
+          44,
+          23
+        ]
+      ],
+      "glyph": "─",
+      "role": "paint_bay"
+    },
+    {
+      "line": [
+        [
+          26,
+          16
+        ],
+        [
+          26,
+          22
+        ]
+      ],
+      "glyph": "│",
+      "role": "paint_bay"
+    },
+    {
+      "line": [
+        [
+          44,
+          16
+        ],
+        [
+          44,
+          22
+        ]
+      ],
+      "glyph": "│",
+      "role": "paint_bay"
+    },
+    {
+      "at": [
+        28,
+        16
+      ],
+      "text": "COLD CHAIN",
+      "role": "paint_bay_text"
+    },
+    {
+      "at": [
+        2,
+        30
+      ],
+      "text": "← TRAMS",
+      "role": "paint"
+    },
+    {
+      "at": [
+        68,
+        29
+      ],
+      "text": "VAT ROW →",
+      "role": "paint"
+    }
+  ],
+  "names": {
+    "cover-1": "bollard",
+    "cover-2": "bollard",
+    "cover-3": "bollard"
+  },
+  "ambient": [
+    "A polite overhead voice reminds you that your clone insurance premium is due.",
+    "An orderly mops a floor that was already clean.",
+    "A clinic door sighs open and shut."
+  ]
+}

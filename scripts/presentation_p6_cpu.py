@@ -1,4 +1,4 @@
-"""A8: pair merged-main and current rendering on B2's pinned content.
+"""A8: pair owner-merged P6b and current rendering on identical content.
 
 CPU uses the unchanged P1/B2 12-second activities and meter. Deterministic
 frame streams are compared separately, including ANSI bytes. NPC sweeps
@@ -29,8 +29,8 @@ from blacksite.door.present import places, zone
 from presentation_p6_validation import git, module, snapshot
 from tests.presentation import budget
 
-BASE = '6f1eac4c150946864e8d99e90e5943ed7bdf23e2'
-INPUT = 'f69541473704f1164cd5b5e8dbd315c2fa811504'
+BASE = 'dd489f9ec7676b2c37b553fa7587c4d0a4ed6d56'
+INPUT = BASE
 STARTS = {'core-plaza': (41, 26), 'vatside-clinics': (36, 17), 'sodium-row': (46, 14)}
 SOURCES = ('src/blacksite/door/present/zone.py', 'src/blacksite/door/cells.py',
            'src/blacksite/door/present/places.py')

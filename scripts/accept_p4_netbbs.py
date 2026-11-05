@@ -9,15 +9,50 @@ an inventory fixture, not acquisition or balance acceptance.
 
 import argparse
 import asyncio
+from collections import deque
 import json
 from copy import deepcopy
 from pathlib import Path
 import subprocess
+import time
 from typing import Any
 
 from accept_s10_netbbs import NativeProbe, wait
+from accept_s11_netbbs import approach
+from blacksite.npc_presentation import channels
 from tests.presentation.snapshots import snapshot
 from blacksite.server.items import make_item
+from blacksite.server.world.actors import Actor
+from blacksite.server.world.sight import line_of_sight
+
+
+async def navigate(probe: NativeProbe, caller: Any, target: Actor) -> None:
+    """Reach a live four-tile arrival pose before the local approach."""
+    actor = caller.avatar.actor
+    zone = probe.service.world.zones[actor.zone]
+
+    def goal() -> tuple[int, int] | None:
+        assert actor.zone == target.zone == zone.id
+        occupied = {a.position for a in zone.actors.values() if a is not actor}
+        exits = {e.tile for e in zone.template.meta.exits if e.kind == 'street'}
+        pending, reachable = deque([actor.position]), {actor.position}
+        while pending:
+            x, y = pending.popleft()
+            for tile in ((x+1,y), (x,y+1), (x-1,y), (x,y-1)):
+                if tile not in reachable and tile not in occupied and tile not in exits and zone.passable(tile):
+                    reachable.add(tile)
+                    pending.append(tile)
+        candidates = [tile for tile in reachable
+                      if (tile[0]-target.x)**2+(tile[1]-target.y)**2 <= 16
+                      and line_of_sight(zone, tile, target.position)]
+        return min(candidates, key=lambda p: ((p[0]-actor.x)**2+(p[1]-actor.y)**2, p)) if candidates else None
+
+    started = time.monotonic()
+    origin, target_origin = actor.position, target.position
+    await probe.walk(caller, goal)
+    assert (actor.x-target.x)**2+(actor.y-target.y)**2 <= 16
+    probe.report(f'PASS live navigation {target.id}: {origin}/{target_origin} -> '
+                 f'{actor.position}/{target.position} in {time.monotonic()-started:.3f}s')
 
 
 async def accept(root: Path, door_python: Path, show: bool,
@@ -76,19 +111,33 @@ async def accept(root: Path, door_python: Path, show: bool,
                 template = probe.game.content.npcs['npc-plainclothes-warden']
                 npc = next(a for a in zone.actors.values()
                            if a.behaviour.get('template') == template.id)
-                occupied = {a.position for a in zone.actors.values() if a is not caller.avatar.actor}
-                adjacent = [(npc.x+dx, npc.y+dy) for dx, dy in
-                            ((-1, 0), (0, 1), (1, 0), (0, -1))
-                            if (npc.x+dx, npc.y+dy) not in occupied
-                            and zone.can_enter(caller.avatar.actor, (npc.x+dx, npc.y+dy))]
-                assert adjacent, 'The shipped covered NPC needs a reachable viewing tile.'
-                await probe.walk(caller, adjacent[0])
+                peer = next(a for a in zone.actors.values()
+                            if a.behaviour.get('template') == 'npc-sodium-regular')
+                assert channels(template) == channels(probe.game.content.npcs['npc-sodium-regular'])
+                # Street-wide navigation uses the exact walker's original
+                # 120-second bound. Only then start the local 20-second
+                # approach; reselect each wanderer's live pose every step.
+                await navigate(probe, caller, peer)
+                await approach(probe, caller, peer, hostile_tile=False)
+                await probe.target(caller, peer.id)
+                await wait(lambda: (probe.game.sim.views[caller.session.id].previous['body'].get('target') or {}).get('id') == peer.id
+                           and caller.session.ack_revision == caller.session.view_revision)
+                peer_view = probe.game.sim.views[caller.session.id].previous['body']
+                assert peer_view['target']['name'] == template.cover_name
+                assert peer_view['target']['class'] == 'civilian'
+                assert peer_view['target']['faction'] == 'Civilian'
+                assert peer_view['target']['name_role'] == 'npc_neutral'
+                save(f'sodium-regular-{width}x{height}-{tier}')
+                await navigate(probe, caller, npc)
+                await approach(probe, caller, npc, hostile_tile=False)
                 await probe.target(caller, npc.id)
                 await wait(lambda: template.cover_name in screen.screen_text()
+                           and (probe.game.sim.views[caller.session.id].previous['body'].get('target') or {}).get('id') == npc.id
                            and caller.session.ack_revision == caller.session.view_revision)
                 view = probe.game.sim.views[caller.session.id].previous['body']
                 assert view['target']['name'] == template.cover_name
                 assert view['target']['class'] == 'civilian' and view['target']['faction'] == 'Civilian'
+                assert view['target']['name_role'] == peer_view['target']['name_role'] == 'npc_neutral'
                 assert npc.name not in screen.screen_text()
                 assert any(a.name == template.cover_name and a.behaviour.get('template') == 'npc-sodium-regular'
                            for a in zone.actors.values())
@@ -141,6 +190,8 @@ async def accept(root: Path, door_python: Path, show: bool,
                     'place_line': place[0]['text'], 'world_history_has_kinds': True,
                     'crew_restart_outside_world_history': True, 'lattice_fields': True,
                     'shipped_npc_cover': template.cover_name, 'shipped_npc_class': 'civilian',
+                    'peer_class': peer_view['target']['class'], 'peer_role': peer_view['target']['name_role'],
+                    'shared_dialogue': template.dialogue,
                     'drone_menu_cover': template.cover_name,
                     'inventory_fixture': 'one owned Halvard Sentry via server commerce; normal deploy/menu keys',
                     'clean_exit': True})

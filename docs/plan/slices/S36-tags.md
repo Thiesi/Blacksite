@@ -3,7 +3,7 @@
 **Status:** planned (approved by the owner 2026-10-31)
 **Primary model:** Codex · **Reviewer:** automated review, technical lead, presentation lead (glyph, drawing and wording)
 **Depends on:** S08, S09, P6 (place layer and charted ground) · **Milestone:** asynchronous presence (#125)
-**Issue:** filed on approval
+**Issue:** https://github.com/Thiesi/Blacksite/issues/138
 
 Canon: game design §11.1, "Tags", from #128. Where this file and canon
 differ, canon wins.

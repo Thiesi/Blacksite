@@ -195,7 +195,7 @@ and a word in the header.
 |---|---|---|---|
 | safe | double `═ ║` | Warden blue | SAFE |
 | pocket | double | teal | POCKET |
-| contested | single `─ │` | amber | CONTESTED, and `PvP G5+` |
+| contested | single `─ │` | amber | CONTESTED, and `PvP G5+`; in a truce zone (planned, S38) `CONTESTED─TRUCE─PvP G5+` |
 | open | single | red | OPEN |
 
 Safe ground is Warden blue, not green (D4). Safe and pocket ground both

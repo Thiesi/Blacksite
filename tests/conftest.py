@@ -20,6 +20,16 @@ class Golden(Protocol):
     def __call__(self, name: str, terminal: FakeTerminal, tier: str, *, trim: bool = False) -> None: ...
 
 
+def pytest_configure(config: pytest.Config) -> None:
+    """Refuse runs that would grow unbounded local scratch (tests/scratch_guard.py)."""
+    from tests.scratch_guard import basetemp_problem, scratch_problem
+    problem = basetemp_problem(config.option.basetemp, REPO_ROOT) or scratch_problem(REPO_ROOT)
+    if problem:
+        raise pytest.UsageError(problem)
+    if config.option.basetemp:
+        Path(config.option.basetemp).resolve().parent.mkdir(parents=True, exist_ok=True)
+
+
 def pytest_addoption(parser: pytest.Parser) -> None:
     parser.addoption('--update-goldens', action='store_true', help='Regenerate P1 glyph/style baselines explicitly')
     parser.addoption('--review-packet', type=Path, help='Write byte-preserved headless review frames')

@@ -311,7 +311,7 @@
     {
       "id": "npc-sodium-regular",
       "name": "Sodium regular",
-      "faction": "sable",
+      "faction": null,
       "grade": 1,
       "attributes": {
         "frame": 20,
@@ -333,7 +333,8 @@
           "chance": 1,
           "count": 1
         }
-      ]
+      ],
+      "dialogue": "row-street-regular"
     },
     {
       "id": "npc-halo-bouncer",
@@ -429,13 +430,12 @@
       },
       "behaviours": [
         {
-          "kind": "talker",
-          "params": {
-            "anchor": true
-          }
+          "kind": "wander",
+          "params": {}
         }
       ],
-      "xp": 0
+      "xp": 0,
+      "dialogue": "row-street-regular"
     },
     {
       "id": "npc-maintenance-drone",

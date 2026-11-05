@@ -175,7 +175,14 @@ class Dialogue:
         screen = self.menus[session.id]
         talker = self.content.dialogue[screen.contact.talker]
         offers = eligible_offers(talker, self.facts(session, talker))
-        title = talker.name+(' - '+talker.title if talker.title else '')
+        actor = self.world.zones[screen.contact.zone].actors.get(screen.contact.target)
+        label = talker.name
+        if actor is not None:
+            template = self.content.npcs.get(actor.behaviour.get('template'))
+            if template and template.presents:
+                viewer = self.sim.avatars[session.user_id].actor
+                label = presentation.name(actor, viewer, self.content)
+        title = label+(' - '+talker.title if talker.title else '')
         body = menu(title, [], 0, screen.line, 'Choose an action  Esc/B leaves')
         body['kind'] = 'talker'
         body['actions'] = [{'key': offer.hotkey.lower(), 'label': offer.label} for offer in offers]

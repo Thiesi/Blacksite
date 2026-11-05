@@ -171,24 +171,26 @@ async def sodium_response(probe: NativeProbe, caller: Connection, width: int, he
     await probe.walk(caller,(16,5))
     sodium=probe.service.world.zones[actor.zone]
     guards=[a for a in sodium.actors.values() if a.behaviour.get("template")=="npc-sable-enforcer"]
-    regular=min((a for a in sodium.actors.values() if a.behaviour.get("template")=="npc-sodium-regular"),
-                key=lambda a:(a.x-actor.x)**2+(a.y-actor.y)**2)
-    # A moving civilian can leave weapon range between warning and firing.
-    # Approach and keep pressing real F until an actual shot provokes guards.
+    assert len(guards)>=2 and all(a.faction=="sable" for a in guards)
+    victim=min(guards,key=lambda a:(a.x-actor.x)**2+(a.y-actor.y)**2)
+    responders=[a for a in guards if a.id!=victim.id]
+    # #147 makes regulars unaffiliated: Sable no longer answers their attacks.
+    # Provoke a real Sable peer and require another enforcer to answer.
+    # Keep using real movement/fire keys if the victim leaves weapon range.
     async with asyncio.timeout(30):
-        while not any(a.target==actor.id for a in guards):
-            if (regular.x-actor.x)**2+(regular.y-actor.y)**2>16:
+        while not any(a.target==actor.id for a in responders):
+            if (victim.x-actor.x)**2+(victim.y-actor.y)**2>16:
                 occupied={a.position for a in sodium.actors.values()}
-                candidates=[(x,y) for x in range(regular.x-1,regular.x+2) for y in range(regular.y-1,regular.y+2)
+                candidates=[(x,y) for x in range(victim.x-1,victim.x+2) for y in range(victim.y-1,victim.y+2)
                     if sodium.passable((x,y)) and (x,y) not in occupied]
                 tile=min(candidates,key=lambda p:(p[0]-actor.x)**2+(p[1]-actor.y)**2)
                 await probe.walk(caller,tile)
-            await probe.target(caller,regular.id)
+            await probe.target(caller,victim.id)
             await caller.caller.write(b"f")
             await asyncio.sleep(.25)
     assert not any(a.faction=="wardens" and a.target==actor.id for a in sodium.actors.values())
     probe.save(caller,f"s11-sodium-{width}x{height}")
-    probe.report(f"PASS local response {width}x{height}: Sable enforcers answer provocation, no Wardens")
+    probe.report(f"PASS local response {width}x{height}: another Sable enforcer answers an attack on a Sable peer, no Wardens")
 
 
 async def accept(root: Path, door_python: Path, show: bool,

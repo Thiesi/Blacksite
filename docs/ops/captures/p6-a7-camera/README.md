@@ -73,6 +73,14 @@ Exactly three P5 132x50 zone and twelve P6 fixture goldens change:
 lists the positions/counts; the full per-cell report is in this run's
 `p6-charted-budget` artifact as `p6-camera-cell-diff.json`.
 
+Since #153 the proof runs from A7's merge tree (`54adc53`) in
+`.github/workflows/p6-a7-camera.yml`, uploaded as the
+`p6-a7-camera-cell-diff` artifact, and only when its own scripts or
+workflow change. That run reproduces the report above byte for byte
+(SHA-256 `33e79cfd…51cfe91f`). Later camera or viewport golden changes
+are covered by the ordinary golden tests and presentation sign-off, not
+by this proof.
+
 Nine fitting/non-fitting/mixed-axis/Wake cases passed at both sizes.
 Before PR creation, root pytest passed 2,162 on Linux and 2,161 plus one
 skip on Windows (run 41198991201). Automated static review found no
