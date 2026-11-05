@@ -39,6 +39,9 @@ def test_arch_5_5_4_shipped_sodium_warden_cover_and_per_caller_reveal(repo_root,
     zone = game.core.world.zones['sodium-row']
     npc = next(a for a in zone.actors.values() if a.behaviour.get('template') == template.id)
     assert npc.zone == 'sodium-row'
+    # Test disclosure, not the content author's street-wide spawn choice.
+    # Keep the shipped instance/template and put it in both callers' sight.
+    game.core.world.enter(npc, zone.id, game.core.world.free_tile(zone.id, (90, 3)))
     peer = next(a for a in zone.actors.values() if a.behaviour.get('template') == 'npc-sodium-regular')
     assert peer.name == template.cover_name
     assert channels(template) == channels(content.npcs['npc-sodium-regular'])

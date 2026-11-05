@@ -1819,6 +1819,924 @@
         "deutan": 0,
         "protan": 0
       }
+    },
+    "grain_core_lamp": {
+      "truecolor": {
+        "default": "#6A4156",
+        "deutan": "#6A4156",
+        "protan": "#6A4156"
+      },
+      "256": {
+        "default": 239,
+        "deutan": 239,
+        "protan": 239
+      },
+      "16": {
+        "default": 13,
+        "deutan": 13,
+        "protan": 13
+      }
+    },
+    "grain_core_lane": {
+      "truecolor": {
+        "default": "#33343E",
+        "deutan": "#33343E",
+        "protan": "#33343E"
+      },
+      "256": {
+        "default": 236,
+        "deutan": 236,
+        "protan": 236
+      },
+      "16": {
+        "default": 8,
+        "deutan": 8,
+        "protan": 8
+      }
+    },
+    "grain_core_paving": {
+      "truecolor": {
+        "default": "#444558",
+        "deutan": "#444558",
+        "protan": "#444558"
+      },
+      "256": {
+        "default": 238,
+        "deutan": 238,
+        "protan": 238
+      },
+      "16": {
+        "default": 4,
+        "deutan": 4,
+        "protan": 4
+      }
+    },
+    "grain_core_rim": {
+      "truecolor": {
+        "default": "#515257",
+        "deutan": "#515257",
+        "protan": "#515257"
+      },
+      "256": {
+        "default": 239,
+        "deutan": 239,
+        "protan": 239
+      },
+      "16": {
+        "default": 7,
+        "deutan": 7,
+        "protan": 7
+      }
+    },
+    "grain_core_street": {
+      "truecolor": {
+        "default": "#393C56",
+        "deutan": "#393C56",
+        "protan": "#393C56"
+      },
+      "256": {
+        "default": 237,
+        "deutan": 237,
+        "protan": 237
+      },
+      "16": {
+        "default": 4,
+        "deutan": 4,
+        "protan": 4
+      }
+    },
+    "grain_core_water": {
+      "truecolor": {
+        "default": "#002658",
+        "deutan": "#002658",
+        "protan": "#002658"
+      },
+      "256": {
+        "default": 235,
+        "deutan": 235,
+        "protan": 235
+      },
+      "16": {
+        "default": 12,
+        "deutan": 12,
+        "protan": 12
+      }
+    },
+    "grain_sodium_door_pink": {
+      "truecolor": {
+        "default": "#6C275D",
+        "deutan": "#6C275D",
+        "protan": "#6C275D"
+      },
+      "256": {
+        "default": 89,
+        "deutan": 89,
+        "protan": 89
+      },
+      "16": {
+        "default": 13,
+        "deutan": 13,
+        "protan": 13
+      }
+    },
+    "grain_sodium_door_teal": {
+      "truecolor": {
+        "default": "#004A52",
+        "deutan": "#004A52",
+        "protan": "#004A52"
+      },
+      "256": {
+        "default": 238,
+        "deutan": 238,
+        "protan": 238
+      },
+      "16": {
+        "default": 14,
+        "deutan": 14,
+        "protan": 14
+      }
+    },
+    "grain_sodium_lamp": {
+      "truecolor": {
+        "default": "#6A4302",
+        "deutan": "#6A4302",
+        "protan": "#6A4302"
+      },
+      "256": {
+        "default": 239,
+        "deutan": 239,
+        "protan": 239
+      },
+      "16": {
+        "default": 11,
+        "deutan": 11,
+        "protan": 11
+      }
+    },
+    "grain_sodium_stage": {
+      "truecolor": {
+        "default": "#5A316F",
+        "deutan": "#5A316F",
+        "protan": "#5A316F"
+      },
+      "256": {
+        "default": 89,
+        "deutan": 89,
+        "protan": 89
+      },
+      "16": {
+        "default": 13,
+        "deutan": 13,
+        "protan": 13
+      }
+    },
+    "grain_sodium_street": {
+      "truecolor": {
+        "default": "#492F10",
+        "deutan": "#492F10",
+        "protan": "#492F10"
+      },
+      "256": {
+        "default": 236,
+        "deutan": 236,
+        "protan": 236
+      },
+      "16": {
+        "default": 3,
+        "deutan": 3,
+        "protan": 3
+      }
+    },
+    "grain_vat_alley": {
+      "truecolor": {
+        "default": "#262829",
+        "deutan": "#262829",
+        "protan": "#262829"
+      },
+      "256": {
+        "default": 235,
+        "deutan": 235,
+        "protan": 235
+      },
+      "16": {
+        "default": 8,
+        "deutan": 8,
+        "protan": 8
+      }
+    },
+    "grain_vat_boulevard": {
+      "truecolor": {
+        "default": "#0B4F4F",
+        "deutan": "#0B4F4F",
+        "protan": "#0B4F4F"
+      },
+      "256": {
+        "default": 238,
+        "deutan": 238,
+        "protan": 238
+      },
+      "16": {
+        "default": 6,
+        "deutan": 6,
+        "protan": 6
+      }
+    },
+    "grain_vat_interior": {
+      "truecolor": {
+        "default": "#4F5354",
+        "deutan": "#4F5354",
+        "protan": "#4F5354"
+      },
+      "256": {
+        "default": 239,
+        "deutan": 239,
+        "protan": 239
+      },
+      "16": {
+        "default": 15,
+        "deutan": 15,
+        "protan": 15
+      }
+    },
+    "grain_vat_street": {
+      "truecolor": {
+        "default": "#0C4040",
+        "deutan": "#0C4040",
+        "protan": "#0C4040"
+      },
+      "256": {
+        "default": 237,
+        "deutan": 237,
+        "protan": 237
+      },
+      "16": {
+        "default": 6,
+        "deutan": 6,
+        "protan": 6
+      }
+    },
+    "grain_vat_yard": {
+      "truecolor": {
+        "default": "#2D3132",
+        "deutan": "#2D3132",
+        "protan": "#2D3132"
+      },
+      "256": {
+        "default": 236,
+        "deutan": 236,
+        "protan": 236
+      },
+      "16": {
+        "default": 8,
+        "deutan": 8,
+        "protan": 8
+      }
+    },
+    "ground_core_lamp": {
+      "truecolor": {
+        "default": "#54345C",
+        "deutan": "#54345C",
+        "protan": "#54345C"
+      },
+      "256": {
+        "default": 53,
+        "deutan": 53,
+        "protan": 53
+      },
+      "16": {
+        "default": 0,
+        "deutan": 0,
+        "protan": 0
+      }
+    },
+    "ground_core_lane": {
+      "truecolor": {
+        "default": "#252830",
+        "deutan": "#252830",
+        "protan": "#252830"
+      },
+      "256": {
+        "default": 235,
+        "deutan": 235,
+        "protan": 235
+      },
+      "16": {
+        "default": 0,
+        "deutan": 0,
+        "protan": 0
+      }
+    },
+    "ground_core_paving": {
+      "truecolor": {
+        "default": "#363944",
+        "deutan": "#363944",
+        "protan": "#363944"
+      },
+      "256": {
+        "default": 237,
+        "deutan": 237,
+        "protan": 237
+      },
+      "16": {
+        "default": 0,
+        "deutan": 0,
+        "protan": 0
+      }
+    },
+    "ground_core_rim": {
+      "truecolor": {
+        "default": "#41444E",
+        "deutan": "#41444E",
+        "protan": "#41444E"
+      },
+      "256": {
+        "default": 238,
+        "deutan": 238,
+        "protan": 238
+      },
+      "16": {
+        "default": 0,
+        "deutan": 0,
+        "protan": 0
+      }
+    },
+    "ground_core_street": {
+      "truecolor": {
+        "default": "#2D303B",
+        "deutan": "#2D303B",
+        "protan": "#2D303B"
+      },
+      "256": {
+        "default": 236,
+        "deutan": 236,
+        "protan": 236
+      },
+      "16": {
+        "default": 0,
+        "deutan": 0,
+        "protan": 0
+      }
+    },
+    "ground_core_water": {
+      "truecolor": {
+        "default": "#061847",
+        "deutan": "#061847",
+        "protan": "#061847"
+      },
+      "256": {
+        "default": 17,
+        "deutan": 17,
+        "protan": 17
+      },
+      "16": {
+        "default": 0,
+        "deutan": 0,
+        "protan": 0
+      }
+    },
+    "ground_sodium_door_pink": {
+      "truecolor": {
+        "default": "#55214A",
+        "deutan": "#55214A",
+        "protan": "#55214A"
+      },
+      "256": {
+        "default": 53,
+        "deutan": 53,
+        "protan": 53
+      },
+      "16": {
+        "default": 0,
+        "deutan": 0,
+        "protan": 0
+      }
+    },
+    "ground_sodium_door_teal": {
+      "truecolor": {
+        "default": "#0F3A40",
+        "deutan": "#0F3A40",
+        "protan": "#0F3A40"
+      },
+      "256": {
+        "default": 236,
+        "deutan": 236,
+        "protan": 236
+      },
+      "16": {
+        "default": 0,
+        "deutan": 0,
+        "protan": 0
+      }
+    },
+    "ground_sodium_lamp": {
+      "truecolor": {
+        "default": "#58360C",
+        "deutan": "#58360C",
+        "protan": "#58360C"
+      },
+      "256": {
+        "default": 237,
+        "deutan": 237,
+        "protan": 237
+      },
+      "16": {
+        "default": 0,
+        "deutan": 0,
+        "protan": 0
+      }
+    },
+    "ground_sodium_stage": {
+      "truecolor": {
+        "default": "#472465",
+        "deutan": "#472465",
+        "protan": "#472465"
+      },
+      "256": {
+        "default": 53,
+        "deutan": 53,
+        "protan": 53
+      },
+      "16": {
+        "default": 0,
+        "deutan": 0,
+        "protan": 0
+      }
+    },
+    "ground_sodium_street": {
+      "truecolor": {
+        "default": "#2B2723",
+        "deutan": "#2B2723",
+        "protan": "#2B2723"
+      },
+      "256": {
+        "default": 235,
+        "deutan": 235,
+        "protan": 235
+      },
+      "16": {
+        "default": 0,
+        "deutan": 0,
+        "protan": 0
+      }
+    },
+    "ground_vat_alley": {
+      "truecolor": {
+        "default": "#181C1D",
+        "deutan": "#181C1D",
+        "protan": "#181C1D"
+      },
+      "256": {
+        "default": 234,
+        "deutan": 234,
+        "protan": 234
+      },
+      "16": {
+        "default": 0,
+        "deutan": 0,
+        "protan": 0
+      }
+    },
+    "ground_vat_boulevard": {
+      "truecolor": {
+        "default": "#2E3B3E",
+        "deutan": "#2E3B3E",
+        "protan": "#2E3B3E"
+      },
+      "256": {
+        "default": 237,
+        "deutan": 237,
+        "protan": 237
+      },
+      "16": {
+        "default": 0,
+        "deutan": 0,
+        "protan": 0
+      }
+    },
+    "ground_vat_interior": {
+      "truecolor": {
+        "default": "#414546",
+        "deutan": "#414546",
+        "protan": "#414546"
+      },
+      "256": {
+        "default": 238,
+        "deutan": 238,
+        "protan": 238
+      },
+      "16": {
+        "default": 0,
+        "deutan": 0,
+        "protan": 0
+      }
+    },
+    "ground_vat_street": {
+      "truecolor": {
+        "default": "#262D2F",
+        "deutan": "#262D2F",
+        "protan": "#262D2F"
+      },
+      "256": {
+        "default": 236,
+        "deutan": 236,
+        "protan": 236
+      },
+      "16": {
+        "default": 0,
+        "deutan": 0,
+        "protan": 0
+      }
+    },
+    "ground_vat_yard": {
+      "truecolor": {
+        "default": "#1F2526",
+        "deutan": "#1F2526",
+        "protan": "#1F2526"
+      },
+      "256": {
+        "default": 235,
+        "deutan": 235,
+        "protan": 235
+      },
+      "16": {
+        "default": 0,
+        "deutan": 0,
+        "protan": 0
+      }
+    },
+    "paint": {
+      "truecolor": {
+        "default": "#767676",
+        "deutan": "#767676",
+        "protan": "#767676"
+      },
+      "256": {
+        "default": 243,
+        "deutan": 243,
+        "protan": 243
+      },
+      "16": {
+        "default": 8,
+        "deutan": 8,
+        "protan": 8
+      }
+    },
+    "paint_bay": {
+      "truecolor": {
+        "default": "#005F87",
+        "deutan": "#005F87",
+        "protan": "#005F87"
+      },
+      "256": {
+        "default": 24,
+        "deutan": 24,
+        "protan": 24
+      },
+      "16": {
+        "default": 4,
+        "deutan": 4,
+        "protan": 4
+      }
+    },
+    "paint_bay_text": {
+      "truecolor": {
+        "default": "#0087AF",
+        "deutan": "#0087AF",
+        "protan": "#0087AF"
+      },
+      "256": {
+        "default": 31,
+        "deutan": 31,
+        "protan": 31
+      },
+      "16": {
+        "default": 6,
+        "deutan": 6,
+        "protan": 6
+      }
+    },
+    "ring_glint": {
+      "truecolor": {
+        "default": "#FFFFAF",
+        "deutan": "#FFFFAF",
+        "protan": "#FFFFAF"
+      },
+      "256": {
+        "default": 229,
+        "deutan": 229,
+        "protan": 229
+      },
+      "16": {
+        "default": 11,
+        "deutan": 11,
+        "protan": 11
+      }
+    },
+    "wall_core_street": {
+      "truecolor": {
+        "default": "#535761",
+        "deutan": "#535761",
+        "protan": "#535761"
+      },
+      "256": {
+        "default": 240,
+        "deutan": 240,
+        "protan": 240
+      },
+      "16": {
+        "default": 0,
+        "deutan": 0,
+        "protan": 0
+      }
+    },
+    "wall_sodium_street": {
+      "truecolor": {
+        "default": "#5D564F",
+        "deutan": "#5D564F",
+        "protan": "#5D564F"
+      },
+      "256": {
+        "default": 240,
+        "deutan": 240,
+        "protan": 240
+      },
+      "16": {
+        "default": 0,
+        "deutan": 0,
+        "protan": 0
+      }
+    },
+    "wall_vat_facade": {
+      "truecolor": {
+        "default": "#5E6466",
+        "deutan": "#5E6466",
+        "protan": "#5E6466"
+      },
+      "256": {
+        "default": 241,
+        "deutan": 241,
+        "protan": 241
+      },
+      "16": {
+        "default": 0,
+        "deutan": 0,
+        "protan": 0
+      }
+    },
+    "wall_vat_interior": {
+      "truecolor": {
+        "default": "#595F61",
+        "deutan": "#595F61",
+        "protan": "#595F61"
+      },
+      "256": {
+        "default": 59,
+        "deutan": 59,
+        "protan": 59
+      },
+      "16": {
+        "default": 0,
+        "deutan": 0,
+        "protan": 0
+      }
+    },
+    "wall_vat_street": {
+      "truecolor": {
+        "default": "#52585B",
+        "deutan": "#52585B",
+        "protan": "#52585B"
+      },
+      "256": {
+        "default": 240,
+        "deutan": 240,
+        "protan": 240
+      },
+      "16": {
+        "default": 0,
+        "deutan": 0,
+        "protan": 0
+      }
+    },
+    "wallgrain_core_street": {
+      "truecolor": {
+        "default": "#5C606A",
+        "deutan": "#5C606A",
+        "protan": "#5C606A"
+      },
+      "256": {
+        "default": 242,
+        "deutan": 242,
+        "protan": 242
+      },
+      "16": {
+        "default": 8,
+        "deutan": 8,
+        "protan": 8
+      }
+    },
+    "wallgrain_sodium_street": {
+      "truecolor": {
+        "default": "#55504A",
+        "deutan": "#55504A",
+        "protan": "#55504A"
+      },
+      "256": {
+        "default": 240,
+        "deutan": 240,
+        "protan": 240
+      },
+      "16": {
+        "default": 8,
+        "deutan": 8,
+        "protan": 8
+      }
+    },
+    "wallgrain_vat_facade": {
+      "truecolor": {
+        "default": "#C4CBCD",
+        "deutan": "#C4CBCD",
+        "protan": "#C4CBCD"
+      },
+      "256": {
+        "default": 250,
+        "deutan": 250,
+        "protan": 250
+      },
+      "16": {
+        "default": 8,
+        "deutan": 8,
+        "protan": 8
+      }
+    },
+    "wallgrain_vat_interior": {
+      "truecolor": {
+        "default": "#C4CBCD",
+        "deutan": "#C4CBCD",
+        "protan": "#C4CBCD"
+      },
+      "256": {
+        "default": 250,
+        "deutan": 250,
+        "protan": 250
+      },
+      "16": {
+        "default": 8,
+        "deutan": 8,
+        "protan": 8
+      }
+    },
+    "wallgrain_vat_street": {
+      "truecolor": {
+        "default": "#55595C",
+        "deutan": "#55595C",
+        "protan": "#55595C"
+      },
+      "256": {
+        "default": 240,
+        "deutan": 240,
+        "protan": 240
+      },
+      "16": {
+        "default": 8,
+        "deutan": 8,
+        "protan": 8
+      }
+    },
+    "thing_sign_amber": {
+      "truecolor": {
+        "default": "#FFAF00",
+        "deutan": "#FFAF00",
+        "protan": "#FFAF00"
+      },
+      "256": {
+        "default": 214,
+        "deutan": 214,
+        "protan": 214
+      },
+      "16": {
+        "default": 11,
+        "deutan": 11,
+        "protan": 11
+      }
+    },
+    "thing_sign_blue": {
+      "truecolor": {
+        "default": "#5FAFFF",
+        "deutan": "#5FAFFF",
+        "protan": "#5FAFFF"
+      },
+      "256": {
+        "default": 75,
+        "deutan": 75,
+        "protan": 75
+      },
+      "16": {
+        "default": 12,
+        "deutan": 12,
+        "protan": 12
+      }
+    },
+    "thing_sign_cyan": {
+      "truecolor": {
+        "default": "#00FFFF",
+        "deutan": "#00FFFF",
+        "protan": "#00FFFF"
+      },
+      "256": {
+        "default": 51,
+        "deutan": 51,
+        "protan": 51
+      },
+      "16": {
+        "default": 14,
+        "deutan": 14,
+        "protan": 14
+      }
+    },
+    "thing_sign_green": {
+      "truecolor": {
+        "default": "#87FF87",
+        "deutan": "#87FF87",
+        "protan": "#87FF87"
+      },
+      "256": {
+        "default": 120,
+        "deutan": 120,
+        "protan": 120
+      },
+      "16": {
+        "default": 10,
+        "deutan": 10,
+        "protan": 10
+      }
+    },
+    "thing_sign_orange": {
+      "truecolor": {
+        "default": "#FF8700",
+        "deutan": "#FF8700",
+        "protan": "#FF8700"
+      },
+      "256": {
+        "default": 208,
+        "deutan": 208,
+        "protan": 208
+      },
+      "16": {
+        "default": 11,
+        "deutan": 11,
+        "protan": 11
+      }
+    },
+    "thing_sign_pink": {
+      "truecolor": {
+        "default": "#FF87FF",
+        "deutan": "#FF87FF",
+        "protan": "#FF87FF"
+      },
+      "256": {
+        "default": 213,
+        "deutan": 213,
+        "protan": 213
+      },
+      "16": {
+        "default": 13,
+        "deutan": 13,
+        "protan": 13
+      }
+    },
+    "thing_sign_sablier": {
+      "truecolor": {
+        "default": "#58C0C0",
+        "deutan": "#58C0C0",
+        "protan": "#58C0C0"
+      },
+      "256": {
+        "default": 109,
+        "deutan": 109,
+        "protan": 109
+      },
+      "16": {
+        "default": 6,
+        "deutan": 6,
+        "protan": 6
+      }
+    },
+    "thing_sign_street": {
+      "truecolor": {
+        "default": "#BCBCBC",
+        "deutan": "#BCBCBC",
+        "protan": "#BCBCBC"
+      },
+      "256": {
+        "default": 250,
+        "deutan": 250,
+        "protan": 250
+      },
+      "16": {
+        "default": 7,
+        "deutan": 7,
+        "protan": 7
+      }
     }
   }
 }

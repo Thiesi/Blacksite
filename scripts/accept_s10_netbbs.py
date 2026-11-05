@@ -9,6 +9,7 @@ No teleports. Run the NetBBS interpreter with --show in a real terminal.
 import argparse
 import asyncio
 from collections import deque
+from collections.abc import Callable
 from dataclasses import dataclass
 import json
 from hashlib import sha256
@@ -188,25 +189,34 @@ class NativeProbe:
         if sixteen: assert session.caps["tier"]=="16",session.caps
         return connection
 
-    async def walk(self, connection: Connection, target: tuple[int,int]) -> None:
+    async def walk(self, connection: Connection,
+                   target: tuple[int,int] | Callable[[], tuple[int,int] | None]) -> None:
         av=connection.avatar
         zone=self.service.world.zones[av.zone]
         deadline=time.monotonic()+120
-        while av.actor.position!=target:
-            assert time.monotonic()<deadline,("walk timeout",zone.id,av.actor.position,target)
+        while True:
+            # A moving actor's arrival pose is reselected after each key.
+            # Fixed tile callers keep the same exact destination and bound.
+            destination=target() if callable(target) else target
+            if av.actor.position==destination:
+                break
+            assert time.monotonic()<deadline,("walk timeout",zone.id,av.actor.position,destination)
+            if destination is None:
+                await asyncio.sleep(.2)
+                continue
             start=av.actor.position
             occupied={a.position for a in zone.actors.values() if a is not av.actor and not (a.behaviour.get("training") and a.owner!=av.actor.id)}
             pending,previous=deque([start]),{start:None}
             exits={e.tile for e in zone.template.meta.exits if e.kind=="street"}
-            while pending and target not in previous:
+            while pending and destination not in previous:
                 x,y=pending.popleft()
                 for tile in ((x+1,y),(x,y+1),(x-1,y),(x,y-1)):
-                    if tile not in previous and tile not in occupied and zone.passable(tile) and (tile not in exits or tile==target):
+                    if tile not in previous and tile not in occupied and zone.passable(tile) and (tile not in exits or tile==destination):
                         previous[tile]=(x,y);pending.append(tile)
-            if target not in previous:
+            if destination not in previous:
                 await asyncio.sleep(.2)
                 continue
-            step=target
+            step=destination
             while previous[step]!=start: step=previous[step]
             await wait(lambda:self.service.clock.now_tick()>=max(av.actor.cooldowns.get("move",0),av.actor.cooldowns.get("knockdown",0)))
             vector=step[0]-start[0],step[1]-start[1]
@@ -231,8 +241,21 @@ class NativeProbe:
         origin=av.zone
         exit_=next(e for e in self.service.world.zones[origin].template.meta.exits if e.target_zone==destination)
         await self.walk(connection,exit_.tile)
-        if av.zone==origin: await connection.caller.write(b"e")
-        await wait(lambda:av.zone==destination)
+        # Share the original ten-second transition bound with prompt/ACK
+        # readiness. A persistent talker fails rather than buying more time.
+        async with asyncio.timeout(10):
+            if av.zone==origin:
+                def door_ready() -> bool:
+                    view=self.game.sim.views[connection.session.id].previous
+                    focus=(view or {}).get('body',{}).get('focus') or {}
+                    return (av.zone==origin and av.actor.position==exit_.tile
+                        and connection.session.ack_revision==connection.session.view_revision
+                        and focus.get('id')==exit_.id and focus.get('verb')=='go to')
+                # A nearby wandering talker may own E after the last move.
+                # Wait for the actual acknowledged door prompt, then act once.
+                await wait(door_ready)
+                await connection.caller.write(b"e")
+            await wait(lambda:av.zone==destination)
         await wait(lambda:self.service.world.zones[destination].template.meta.name in connection.caller.screen.screen_text().splitlines()[0])
 
     def fixture(self, connection: Connection) -> None:
@@ -371,12 +394,21 @@ async def accept(root: Path, door_python: Path, show: bool) -> None:
             await wait(lambda:winner.session.ack_revision==winner.session.view_revision)
             await winner.caller.write(b"\r");await wait(lambda:iid not in probe.commerce.caches[cid]["items"])
             await winner.caller.write(b"\x1b");await wait(lambda:winner.session.id not in probe.commerce.menus)
+            # Clinic Row's Wardens pursue a Marked caller. Leave immediately
+            # after looting, while the loser recovers; do not idle in the alley.
+            # Another winner death must fail, never be absorbed as recovery.
+            assert winner.avatar.actor.stance=="normal"
+            evacuation=time.monotonic()
+            await probe.travel(winner,"core-plaza")
+            assert winner.avatar.actor.stance=="normal"
+            probe.report(f"PASS winner evacuation {width}x{height}: {time.monotonic()-evacuation:.1f}s, no additional death")
             await wait(lambda:loser.avatar.actor.stance=="normal",25)
             assert loser.avatar.zone=="vatside-wake-hall" and loser.avatar.actor.health==loser.avatar.actor.health_max
             assert any(probe.commerce.items[i].bound for i in player.inventory)
             for connection,tile in ((winner,(5,3)),(loser,(7,3))):
                 if connection.avatar.zone=="vatside-wake-hall": await probe.travel(connection,"vatside-clinics")
-                await probe.travel(connection,"core-plaza");await probe.walk(connection,tile)
+                if connection.avatar.zone!="core-plaza": await probe.travel(connection,"core-plaza")
+                await probe.walk(connection,tile)
             before=b.avatar.actor.health
             await probe.target(a,b.avatar.actor.id)
             await a.caller.write(b"f");await asyncio.sleep(.3)
