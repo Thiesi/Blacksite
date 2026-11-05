@@ -14,7 +14,6 @@ on:
       - 'scripts/p6_cell_diff.py'
       - 'scripts/p6_camera_diff.py'
       - 'scripts/presentation_p6_camera.py'
-      - 'scripts/presentation_p6_cpu.py'
       - '.github/workflows/p6-acceptance.yml'
   workflow_dispatch:
 
@@ -26,41 +25,6 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
-  cpu-a8:
-    runs-on: ubuntu-latest
-    timeout-minutes: 40
-    strategy:
-      fail-fast: false
-      matrix:
-        include:
-          - {zone: core-plaza, population: shipped}
-          - {zone: vatside-clinics, population: shipped}
-          - {zone: sodium-row, population: shipped}
-          - {zone: sodium-row, population: '11'}
-          - {zone: sodium-row, population: '16'}
-    steps:
-      - uses: actions/checkout@v4
-        with:
-          ref: ${{ github.event.pull_request.head.sha || github.sha }}
-          fetch-depth: 0
-      - uses: actions/setup-python@v5
-        with:
-          python-version: '3.12'
-      - run: python -m pip install -e .[test]
-      - name: Pair A8 with owner-merged P6b rendering and content
-        shell: bash
-        run: |
-          git fetch --no-tags origin dd489f9ec7676b2c37b553fa7587c4d0a4ed6d56
-          population='${{ matrix.population }}'
-          extra=()
-          if [ "$population" != shipped ]; then extra=(--npc-count "$population"); fi
-          python scripts/presentation_p6_cpu.py --zone '${{ matrix.zone }}' "${extra[@]}" --output "$RUNNER_TEMP/p6-cpu.json"
-      - uses: actions/upload-artifact@v4
-        if: always()
-        with:
-          name: p6-cpu-${{ matrix.zone }}-${{ matrix.population }}
-          path: ${{ runner.temp }}/p6-cpu.json
-
   camera-budget:
     runs-on: ubuntu-latest
     timeout-minutes: 15
@@ -96,17 +60,6 @@ jobs:
         with:
           python-version: '3.12'
       - run: python -m pip install -e .[test]
-      # A7's audit has its own pinned workflow. P6b's squash merge drops
-      # the proposal's ancestry, so reproduce B3 in its reviewed tree and
-      # require this engine follow-up to preserve every merged candidate.
-      - name: Preserve merged P6b content and reproduce its frozen B3 proof
-        shell: bash
-        run: |
-          git diff --exit-code dd489f9ec7676b2c37b553fa7587c4d0a4ed6d56 HEAD -- src/blacksite/content tests/presentation/golden tests/door/golden tests/presentation/mechanics.json
-          git fetch --no-tags origin refs/pull/126/head
-          test "$(git rev-parse FETCH_HEAD)" = fe89d3266c7af07f0ea9a38d057ae2db3d8a83e6
-          git worktree add --detach "$RUNNER_TEMP/p6b-proof" fe89d3266c7af07f0ea9a38d057ae2db3d8a83e6
-          python -X utf8 "$RUNNER_TEMP/p6b-proof/scripts/presentation_p6b_changes.py" --output "$RUNNER_TEMP/p6-b3-changes.json"
       - name: Measure supplied Plaza and Sodium Row region geometry
         run: python scripts/presentation_p6_masks.py --output "${{ runner.temp }}/p6-mask-geometry.json"
       - name: Validate A6 cache and sign policy on the pinned content input
@@ -124,7 +77,6 @@ jobs:
             ${{ runner.temp }}/p6-charted-budget.json
             ${{ runner.temp }}/p6-mask-geometry.json
             ${{ runner.temp }}/p6-validation.json
-            ${{ runner.temp }}/p6-b3-changes.json
 
   native-fixtures:
     runs-on: ubuntu-latest

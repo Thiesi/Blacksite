@@ -1,6 +1,6 @@
 # P6 — Place layer and representative locations
 
-**Status:** P6a done (PR #118); Part A done (PR #129); A5 done (PR #130); A6 done (PR #131); A7 done (PR #133); A8 in progress (PR #144); P6b merged (PR #126), human gates ungranted
+**Status:** P6a done (PR #118); Part A done (PR #129); A5 done (PR #130); A6 done (PR #131); A7 done (PR #133); A8 in progress (PR #144); P6b merged (PR #126), fingerprint approved; H1/S25 ungranted
 **Primary model:** Codex for P6a (engine) · the presentation lead for P6b (content), with Codex assisting · **Reviewer:** automated review, technical lead, presentation lead (co-reviewer and presentation gate)
 **Depends on:** P0 (D1 to D3 in canon), P4, P5 · **Milestone:** presentation track
 **Issue:** https://github.com/Thiesi/Blacksite/issues/115
@@ -329,10 +329,18 @@ approval stays withheld.
 
 Assigned on #115 (6545201365, 6545985790), queued after the fixed-post
 B1/B2 refresh on #126. Depends on merged A7 (#133); does not depend on
-P6b merge or H1. Status: in progress (PR #144). Clinic Row's ordinary
-132x50/256 case remains over budget in the second pass (111.3507 s/h).
-Technical review is withdrawn pending all 18 target cases passing.
-Evidence: `docs/ops/captures/p6-a8-cpu/`.
+P6b merge or H1. Status: in progress (PR #144). The current validation
+incorporates owner-merged P6b dd489f9. At head
+`4ab6470b10821f9fddbac718615af7d56c6048eb`, all 18 required 132x50
+cases pass <=108 CPU s/h (maximum 94.00947392152614). All 39 paired
+cases match ANSI output and workloads and pass frame budgets.
+[Current run](https://github.com/Thiesi/Blacksite/actions/runs/41966224396).
+The older Clinic 111.3507 miss remains historical evidence, not the
+current result. Technical review is requested; the renderer sign-off
+has a workflow objection to resolve before merge. No review or merge
+is granted here. H1 and S25 remain ungranted; the owner approved the
+specific P6b fingerprint move in #126 (6649759185).
+Evidence and retained misses: `docs/ops/captures/p6-a8-cpu/`.
 
 Reuse unchanged terrain rows and immutable cells without changing their
 appearance. A7's still origin, disclosure, goldens, fingerprint and frame
