@@ -1,6 +1,7 @@
 # The tram ride: travel, not teleport (proposal)
 
-**Status:** proposal for the owner, with questions T1 to T4 in §6.
+**Status:** the owner agreed to T1 to T4 on 2026-11-05 (§6), as
+recommended.
 Nothing here changes canon or code. Canon changes go top-down in their
 own PRs.
 **Author:** creative consultant (Claude Opus 5.5), 2026-11-04.
@@ -199,3 +200,15 @@ describes the Clinic ride as travel.
   recommend yes.
 - **T4. A demo branch** with one dressed line and one plain line (§4)?
   I recommend yes, after the Sodium Row playtest.
+
+**Owner decisions, 2026-11-05:** T1 to T4 agreed, as recommended.
+
+- **T1:** ride times scale with distance, in the demo first, after the
+  technical lead's movement checks.
+- **T2:** the car shows who rides with you, through IN THE CAR.
+- **T3:** each line keeps one terminus.
+- **T4:** a never-merged demo branch, with the Clinic line dressed and
+  the Terraces line plain, after the Sodium Row playtest.
+
+Canon is unchanged. The ride times go to canon (game design §5.6) only
+after the demo.
