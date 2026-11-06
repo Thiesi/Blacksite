@@ -392,6 +392,9 @@ itself (the owner's default under D8; other art modes and a larger
 dashboard wait for a playtest). 16-colour callers get a drawn 16-colour
 card where the place has one (assets 4), otherwise the text card.
 
+A truce zone's card (planned) shows `CONTESTED · TRUCE` and
+'<Keeper> keeps the peace here.'
+
 - It lasts up to 8 seconds. **Any key closes it, and that key still
   acts**: a move on the card is a move.
 - It never opens while anything threatens you (a hazard, a target, a

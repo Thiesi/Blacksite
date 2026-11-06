@@ -1,7 +1,8 @@
 # S38 truce acceptance
 
-PR #159 implements issue #142 on owner-merged A8, base
-`8db772ce550c810d007890400320c53a7c2b69c1`. This packet records
+PR #159 implements issue #142 after owner-merged A8 (#144). Its base
+includes the owner-merged A8 docs correction (#160),
+`11ef1313c76cb2756fe93e31c9d0f6d26a626ec8`. This packet records
 engineering evidence; it grants no human or presentation acceptance.
 
 ## Playable scenario
@@ -163,16 +164,21 @@ The current presentations have no place-card consumer. The public view
 supplies the keeper and `Sable keeps the peace here.`; the existing
 header, TARGET warning and arrival/log surfaces render their approved
 text. The required place-card label `CONTESTED · TRUCE` and keeper
-sentence are not claimed as rendered. The author requested a spec
-clarification on issue #142, comment 6673216233, rather than inventing
-a new timed/dismissible card in this rules slice. This remains an open
-requirement until explicitly disposed of by the owner. The technical
-lead confirmed in review 6675920960 (TR-5) that S38 has no card consumer
-to extend and requested that owner decision. The public `truce_text`
-stays. The presentation lead approved the remote `<Keeper> is waiting
-for you on <zone>.` wording in comment 6676013490 (TR-6). Final
-presentation sign-off remains pending; that wording approval does not
-resolve the owner-only card requirement.
+sentence are not claimed as rendered. The owner deferred both strings
+out of S38 to a new text-card slice on 2026-11-06, recorded by the
+technical lead in [comment 6688864271](https://github.com/Thiesi/Blacksite/pull/159#issuecomment-6688864271).
+The S38 spec and UI 2.6 record that decision; `truce_text` stays. The
+presentation lead approved the remote `<Keeper> is waiting for you on
+<zone>.` wording in comment 6676013490 (TR-6). Final presentation
+sign-off remains pending.
+
+The same owner decision makes the specific d39c7ff S11 132x50 failure
+(33.836831 ms, job 127704009383, run 42160061781) nonblocking for S38.
+The failed artifact 13476989684 and its archive SHA-256
+`f344269a51f2ba75c8445964ec449c7d4761f3a6dae5e049ce0d0e00a97effd9`
+stay retained. The 10 ms gate stays unchanged. A new S11 failure at a
+later S38 head is a new measurement to report for disposition. S40
+follows S38; this decision does not grant later-head timing acceptance.
 
 Presentation wording/header sign-off, technical review, and any owner
 gates remain separate. H1 and S25 human layout approval remain withheld.
