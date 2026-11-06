@@ -164,7 +164,8 @@ class Combat:
     def select(self, actor: Actor, backwards: bool = False) -> None:
         candidates = sorted((a for a in self.world.zones[actor.zone].actors.values()
             if a is not actor and a.stance not in ("down", "dead") and self.visible(actor, a)),
-            key=lambda a:(self.relation(actor,a)!="hostile",rules.distance(actor.position, a.position), a.id))
+            key=lambda a:(presentation.covered(a, actor, self.content) or self.relation(actor,a)!="hostile",
+                          rules.distance(actor.position, a.position), a.id))
         ids = [a.id for a in candidates]
         if not ids: actor.target = None
         elif actor.target not in ids: actor.target = ids[-1 if backwards else 0]

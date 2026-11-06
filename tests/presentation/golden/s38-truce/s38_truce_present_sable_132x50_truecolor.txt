@@ -46,5 +46,5 @@
 │                                                                                                                                  │
 │                                                                                                                                  │
 │                                                                                                                                  │
-│Name (Enter keeps default):                                                                                                       │
+│J jack in  ? help  Tab target  F fire  X weapon  1-5 quick  V abilities  I inventory                                              │
 └──────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────

@@ -123,6 +123,19 @@ async def accept(root: Path, door_python: Path, width: int, height: int,
             probe.save(caller, f"truce-regular-warning-{width}x{height}-{tier}")
             await shoot_until(probe, caller, regular, lambda: any(g.target == caller.avatar.actor.id for g in guards))
             await wait(lambda: any(line["text"] == "Sable is coming for you." for line in caller.session.log_ring))
+            def response_visible() -> bool:
+                target = probe.service.core.combat.target_view(caller.avatar.actor)
+                if not target or target["id"] != regular.id or target["relation"] != "hostile" or target["warning"]:
+                    return False
+                side = compute(width, height).side
+                text = "\n".join("".join(row[side.x:side.right])
+                                 for row in caller.caller.screen.grid[side.y:side.bottom])
+                # Logs can arrive before the next TARGET render. A miss
+                # legitimately leaves full health; match the actual view.
+                return (target["name"] in text
+                        and any("HP " in line and f' {target["hp_percent"]}%' in line for line in text.splitlines())
+                        and "Truce: Sable answers" not in text)
+            await wait(response_visible)
             probe.save(caller, f"truce-keeper-response-{width}x{height}-{tier}")
             assert not caller.avatar.actor.marked
             cases.append({"size": [width, height], "tier": tier, "presentation": modern,
@@ -130,7 +143,9 @@ async def accept(root: Path, door_python: Path, width: int, height: int,
                           "mark_before_chase": True, "grade_fixture": 5,
                           "faction_fixture": ["sable", "wardens"],
                           "owned_drone_fixture": "loaned Sentry; deployed and recalled with caller keys",
-                          "drone_order_mark_warning": True})
+                          "drone_order_mark_warning": True,
+                          "keeper_response_target": {key: probe.service.core.combat.target_view(caller.avatar.actor)[key]
+                                                     for key in ("id", "name", "hp_percent", "relation", "warning")}})
             await probe.leave(caller, f"finished-regular-{width}x{height}-{tier}")
         assert not probe.errors
         (root/"result.json").write_text(json.dumps({"head": head, "cases": cases,

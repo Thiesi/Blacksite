@@ -169,8 +169,10 @@ a new timed/dismissible card in this rules slice. This remains an open
 requirement until explicitly disposed of by the owner. The technical
 lead confirmed in review 6675920960 (TR-5) that S38 has no card consumer
 to extend and requested that owner decision. The public `truce_text`
-stays. The remote `<Keeper> is waiting for you on <zone>.` wording also
-awaits explicit presentation-lead sign-off (TR-6).
+stays. The presentation lead approved the remote `<Keeper> is waiting
+for you on <zone>.` wording in comment 6676013490 (TR-6). Final
+presentation sign-off remains pending; that wording approval does not
+resolve the owner-only card requirement.
 
 Presentation wording/header sign-off, technical review, and any owner
 gates remain separate. H1 and S25 human layout approval remain withheld.
@@ -202,8 +204,23 @@ failures, a related warning mismatch and a missing compatibility test:
 - TR-7: direct and indirect attacks on players outside a truce zone
   explicitly assert no NPC provocation, while normal marking remains.
 
-The pre-existing Tab-order tell stays with issue #125. No new card,
-balance, population, geometry or ownership-rule change is introduced.
+The follow-up review at d39c7ff (comment 6688497853) confirmed TR-1
+through TR-4 and TR-7, and requested two further corrections:
+
+- TR-8: Tab now uses the same cover mask as TARGET. Covered Wardens and
+  ordinary residents sort by distance for both Marked and heated
+  callers. Once revealed, a hostile Warden retains hostile priority.
+  Forward/backward selection tests cover both distance orders.
+- TR-10: UI 2.1 uses the presentation lead's supplied text. The old
+  keeper-response sample saved after a hit log but before TARGET had
+  rendered its new state. Native acceptance now waits for the selected
+  resident's rendered name, current health and cleared keeper warning,
+  with hostile server relation. A miss may correctly leave 100% health.
+  S38 goldens also replay the default-name Enter through the client;
+  they no longer show an unfinished character-creation prompt.
+
+The broader issue #125 remains separate. No new card, balance,
+population, geometry or ownership-rule change is introduced.
 The corrected head's full suite, automated review and fresh P4/S11/S38
 runs are recorded on the PR; older evidence retains its original SHA.
 

@@ -6,6 +6,7 @@ import pytest
 
 from blacksite.content.loader import load_content
 from blacksite.door.model import Display
+from blacksite.server.protocol import Frame
 from tests.character_helpers import create, place
 from tests.fake_terminal import FakeTerminal
 from tests.harness import HeadlessServer
@@ -33,11 +34,18 @@ def test_ui_2_1_truce_header_and_warning(repo_root, info, request, caller_proven
     display = Display(replace(info, width=width, height=height, color_depth=tier), presentation=presentation)
     for frame in game.frames_for(caller):
         display.receive(frame, 0)
+        if frame.type == "prompt":
+            # create() accepted the default name directly on the server.
+            # Replay that input through the client too, as a real caller
+            # does, so the zone golden has no unfinished creation prompt.
+            assert display.key("enter", 0) == [Frame("line", {"id": frame.data["id"], "text": ""})]
+    assert display.prompt is None
     display.toast = None
     display.update(20, 20)
     terminal = FakeTerminal(width, height)
     terminal.write(display.render(20)[0])
     text = terminal.screen_text()
+    assert "Name (Enter keeps default):" not in text
     assert "CONTESTED─TRUCE─PvP G5+" in text.splitlines()[0]
     keeper_name = game.core.loop.content.factions[keeper].short
     warning = "Truce: Sable answers" if keeper == "sable" else "Unmoored answers"

@@ -198,24 +198,21 @@ and a word in the header.
 | contested | single `─ │` | amber | CONTESTED, and `PvP G5+`; in a truce zone `CONTESTED─TRUCE─PvP G5+` |
 | open | single | red | OPEN |
 
-
-Truce messages (S38):
-
-A truce zone's place description includes "<Keeper> keeps the peace
-here." Its first-arrival history adds "Nobody draws on <zone>.
-<Keeper> makes sure of it." The TARGET warning is "Firing marks you"
-for an eligible player target, or "Truce: <Keeper> answers" for an NPC
-whose attack would provoke the keeper. The latter drops "Truce: " if
-needed to fit the 21-column TARGET panel. Already-hostile NPCs get no
+Truce zones. The first-arrival history adds "Nobody draws on <zone>.
+<Keeper> makes sure of it." The TARGET warning reads "Firing marks you"
+on a player target when firing would Mark you, and "Truce: <Keeper>
+answers" on an NPC whose attack would provoke the keeper's guards.
+The second drops "Truce: " when it would exceed the 21-column panel.
+An NPC already hunting you, or already provoked against you, shows no
 keeper warning.
 
-An attack that Marks the caller in a truce zone logs "You break
-<zone>'s truce. You are Marked for 15 min." Before any keeper chase
-line, it names the target's zone. Keeper provocation logs "<Keeper> is
-coming for you." If the responsible caller's body is outside the
-zone, it instead logs "<Keeper> is waiting for you on <zone>." Guards
-do not cross zones. These are danger lines, without a fire confirmation
-or HERE entry.
+An attack that Marks you logs "You break <zone>'s truce. You are Marked
+for 15 min.", naming the target's zone. An attack that provokes the
+keeper's guards then logs "<Keeper> is coming for you." If your body
+is outside the zone it logs "<Keeper> is waiting for you on <zone>."
+instead, because guards do not cross zones. These are danger lines,
+and the Mark line comes first. Truce rules add no fire confirmation
+and no HERE entry.
 
 Safe ground is Warden blue, not green (D4). Safe and pocket ground both
 use double lines; the header word tells them apart, so colour is never

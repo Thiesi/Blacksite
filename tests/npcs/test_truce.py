@@ -384,6 +384,39 @@ def test_ui_2_1_truce_warning_keeps_warden_cover_until_provocation(row, alert):
     assert game.core.npcs.hostile(keeper, source)
 
 
+@pytest.mark.parametrize("alert", ["marked", "heat"])
+@pytest.mark.parametrize("closer,revealed", [("regular", False), ("warden", False), ("regular", True)])
+def test_ui_2_1_tab_respects_warden_cover_and_distance(row, alert, closer, revealed):
+    game, a, b = row
+    place(game, b, "vatside-clinics", (25, 3))
+    source = body(game, a)
+    regular = npc(game, "npc-sodium-regular", "regular", (27 if closer == "regular" else 29, 3))
+    warden = npc(game, "npc-plainclothes-warden", "covered-warden", (27 if closer == "warden" else 29, 3))
+    player = game.core.characters.players[source.id]
+    if alert == "marked":
+        source.marked = True
+        player.marked_until = datetime.fromtimestamp(
+            game.core.combat.now() + rules.MARKED_SECONDS, timezone.utc).isoformat()
+    else:
+        player.warden_heat_until = datetime.fromtimestamp(
+            game.core.combat.now() + HEAT_SECONDS, timezone.utc).isoformat()
+    if revealed:
+        game.core.combat.reveal(warden, source)
+    assert game.core.combat.relation(source, warden) == "hostile"
+    source.target = warden.id
+    assert game.core.combat.target_view(source)["relation"] == ("hostile" if revealed else "neutral")
+    first = warden if revealed or closer == "warden" else regular
+    second = regular if first is warden else warden
+    source.target = None
+    game.core.combat.select(source)
+    assert source.target == first.id
+    game.core.combat.select(source)
+    assert source.target == second.id
+    game.core.combat.select(source, backwards=True)
+    assert source.target == first.id
+    assert (source.id in warden.revealed_to) is revealed
+
+
 def test_game_5_5_live_provocation_exempts_npc_even_before_hunt(row):
     game, a, _ = row
     source = body(game, a)
