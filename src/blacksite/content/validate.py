@@ -465,6 +465,10 @@ class _Validator:
                 self.report(*owner, "spawn is not a passable tile", "spawn")
             if meta.lean is not None:
                 self.ref("factions", meta.lean, owner, "lean")
+            if meta.truce is not None:
+                self.ref("factions", meta.truce, owner, "truce")
+                if meta.safety != "contested":
+                    self.report(*owner, "truce requires a contested zone", "truce")
             for asset in meta.lore:
                 self.ref("text", asset, owner, "lore", asset)
             self._check_zone_hazards(zone)

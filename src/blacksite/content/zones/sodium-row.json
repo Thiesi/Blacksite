@@ -4,6 +4,7 @@
   "name": "Sodium Row",
   "district": "Sodium Row",
   "safety": "contested",
+  "truce": "sable",
   "sight_radius": 13,
   "spawn": [
     3,
