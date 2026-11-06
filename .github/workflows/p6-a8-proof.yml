@@ -1,0 +1,113 @@
+name: P6 A8 CPU and frozen-content proof
+
+# Reproduce the reviewed A8 rendering/content proof from its exact tree.
+# The scripts, runtime, tests and content are all pinned to A8_PROOF_HEAD;
+# later PRs cannot turn this historical proof into a content/render freeze.
+# Run 41966224396 retains the original 18/18 CPU and native evidence.
+#
+# Later content, golden and rendering changes are covered by the root
+# golden/fingerprint tests and the presentation lead's sign-off.
+# Unapproved fingerprint moves remain the owner's gate. This constant
+# proof grants neither a new fingerprint move nor H1/S25 acceptance.
+
+on:
+  pull_request:
+    paths:
+      - 'scripts/presentation_p6_cpu.py'
+      - 'scripts/presentation_p6b_changes.py'
+      - '.github/workflows/p6-a8-proof.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: p6-a8-proof-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
+
+env:
+  A8_PROOF_HEAD: 4ab6470b10821f9fddbac718615af7d56c6048eb
+
+jobs:
+  cpu-a8:
+    runs-on: ubuntu-latest
+    timeout-minutes: 40
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - {zone: core-plaza, population: shipped}
+          - {zone: vatside-clinics, population: shipped}
+          - {zone: sodium-row, population: shipped}
+          - {zone: sodium-row, population: '11'}
+          - {zone: sodium-row, population: '16'}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
+          fetch-depth: 0
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Resolve the evidence tree through the A8 PR ref
+        shell: bash
+        run: |
+          git fetch --no-tags origin refs/pull/144/head
+          git merge-base --is-ancestor "$A8_PROOF_HEAD" FETCH_HEAD
+          git worktree add --detach "$RUNNER_TEMP/a8-proof" "$A8_PROOF_HEAD"
+          test "$(git -C "$RUNNER_TEMP/a8-proof" rev-parse HEAD)" = "$A8_PROOF_HEAD"
+      - name: Install the pinned A8 tree
+        working-directory: ${{ runner.temp }}/a8-proof
+        run: python -m pip install -e .[test]
+      - name: Pair A8 with owner-merged P6b rendering and content
+        working-directory: ${{ runner.temp }}/a8-proof
+        shell: bash
+        run: |
+          git fetch --no-tags origin dd489f9ec7676b2c37b553fa7587c4d0a4ed6d56
+          population='${{ matrix.population }}'
+          extra=()
+          if [ "$population" != shipped ]; then extra=(--npc-count "$population"); fi
+          python scripts/presentation_p6_cpu.py --zone '${{ matrix.zone }}' "${extra[@]}" --output "$RUNNER_TEMP/p6-cpu.json"
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: p6-cpu-${{ matrix.zone }}-${{ matrix.population }}
+          path: ${{ runner.temp }}/p6-cpu.json
+
+  frozen-content-proof:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
+          fetch-depth: 0
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Resolve the evidence tree through the A8 PR ref
+        shell: bash
+        run: |
+          git fetch --no-tags origin refs/pull/144/head
+          git merge-base --is-ancestor "$A8_PROOF_HEAD" FETCH_HEAD
+          git worktree add --detach "$RUNNER_TEMP/a8-proof" "$A8_PROOF_HEAD"
+          test "$(git -C "$RUNNER_TEMP/a8-proof" rev-parse HEAD)" = "$A8_PROOF_HEAD"
+      - name: Install the pinned A8 tree
+        working-directory: ${{ runner.temp }}/a8-proof
+        run: python -m pip install -e .[test]
+      # P6b's squash drops its proposal ancestry. Reproduce the unchanged
+      # B3 audit at the exact reviewed tree, separately from A8's freeze.
+      - name: Preserve merged P6b content and reproduce its frozen B3 proof
+        working-directory: ${{ runner.temp }}/a8-proof
+        shell: bash
+        run: |
+          git diff --exit-code dd489f9ec7676b2c37b553fa7587c4d0a4ed6d56 HEAD -- src/blacksite/content tests/presentation/golden tests/door/golden tests/presentation/mechanics.json
+          git fetch --no-tags origin refs/pull/126/head
+          test "$(git rev-parse FETCH_HEAD)" = fe89d3266c7af07f0ea9a38d057ae2db3d8a83e6
+          git worktree add --detach "$RUNNER_TEMP/p6b-proof" fe89d3266c7af07f0ea9a38d057ae2db3d8a83e6
+          python -X utf8 "$RUNNER_TEMP/p6b-proof/scripts/presentation_p6b_changes.py" --output "$RUNNER_TEMP/p6-b3-changes.json"
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: p6-a8-frozen-content-proof
+          path: ${{ runner.temp }}/p6-b3-changes.json
