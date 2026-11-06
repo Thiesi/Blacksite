@@ -8,12 +8,11 @@ from the operation, and wall minus CPU is not labelled as an I/O cause.
 
 from collections import deque
 from collections.abc import Callable
-from dataclasses import dataclass
 from functools import wraps
 import threading
 import time
 import sys
-from typing import Any
+from typing import Any, NamedTuple
 
 try:
     import resource
@@ -25,8 +24,7 @@ COUNTERS = ("voluntary_switches", "involuntary_switches", "minor_faults",
             "major_faults", "input_blocks", "output_blocks")
 
 
-@dataclass(frozen=True)
-class Sample:
+class Sample(NamedTuple):
     began_ns: int
     ended_ns: int
     thread_ns: int
@@ -95,7 +93,7 @@ class WriteProfile:
     def __init__(self, server: Any, *, reader: Callable[[], Sample] = sample) -> None:
         self.server, self.reader = server, reader
         self.loop = server.core.loop
-        self.calls: deque[dict[str, Any]] = deque(maxlen=self.loop.timings.maxlen)
+        self._calls: deque[dict[str, Any]] = deque(maxlen=self.loop.timings.maxlen)
         self.gates: list[dict[str, Any]] = []
         self.current: dict[str, Any] | None = None
         self.stack: list[int] = []
@@ -126,10 +124,9 @@ class WriteProfile:
         if self.current is None:
             return function(*args, **kwargs)
         entries = self.current["operations"]
-        entry: dict[str, Any] = {"operation": operation,
-                                 "parent": self.stack[-1] if self.stack else None}
+        parent = self.stack[-1] if self.stack else None
         index = len(entries)
-        entries.append(entry)
+        entries.append(None)
         self.stack.append(index)
         start = self.reader()
         try:
@@ -137,7 +134,17 @@ class WriteProfile:
         finally:
             end = self.reader()
             self.stack.pop()
-            entry.update(difference(start, end))
+            # Keep only raw readings in the timed path. Dictionary/counter
+            # formatting can allocate heavily on a write-rich tick; export
+            # it after collection instead of charging it to its parent.
+            entries[index] = (operation, parent, start, end)
+
+    @property
+    def calls(self) -> list[dict[str, Any]]:
+        return [{**row, "operations": [
+            {"operation": operation, "parent": parent, **difference(start, end)}
+            for operation, parent, start, end in row["operations"]]}
+                for row in self._calls]
 
     def __enter__(self) -> "WriteProfile":
         original_writes, original_status = self.server._character_writes, self.server.status
@@ -150,7 +157,7 @@ class WriteProfile:
                 self.measure("character_writes", original_writes)
             finally:
                 self.current = None
-                self.calls.append(row)
+                self._calls.append(row)
 
         def status() -> dict[str, Any]:
             result = original_status()

@@ -143,3 +143,25 @@ def test_s40_missing_thread_counters_and_slow_sampling_are_explicit() -> None:
     assert row['wall_ms'] == 10
     assert row['sampling_wall_ms'] == 5
     assert row['thread_counters'] is None
+
+
+def test_s40_formats_records_after_collection(scratch_dir: Path, monkeypatch: pytest.MonkeyPatch) -> None:
+    """S40's observer must not format a counter dictionary in each tick."""
+    store = Storage(scratch_dir/'world.db', ManualClock())
+    server = service(store, lambda: store.mark_dirty('meta', 'balance', 8))
+    converted: list[str] = []
+    def exported(start: Sample, end: Sample) -> dict[str, Any]:
+        assert not probe.current, 'Formatting ran inside a measured write'
+        converted.append('span')
+        return difference(start, end)
+    monkeypatch.setattr('blacksite.server.write_profile.difference', exported)
+    try:
+        with WriteProfile(server) as probe:
+            server._character_writes()
+            assert not converted
+        records = json.loads(json.dumps(probe.calls))
+        assert len(converted) == len(records[0]['operations']) == 3
+        assert [span['operation'] for span in records[0]['operations']] == [
+            'character_writes', 'storage.mark_dirty:meta:balance', 'storage._json']
+    finally:
+        store.close()

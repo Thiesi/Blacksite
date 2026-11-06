@@ -208,6 +208,7 @@ async def accept(root: Path, door_python: Path, show: bool,
     probe=NativeProbe(root,door_python,show)
     await probe.start()
     results=[]
+    heat_profiles: list[tuple[int, int, int, int, dict[str, Any], WriteProfile]] = []
     try:
         for width,height in sizes:
             caller=await probe.open(width,height,"NpcRunner",0,True)
@@ -261,10 +262,22 @@ async def accept(root: Path, door_python: Path, show: bool,
             safe_hp=actor.health
             until=probe.game.players[actor.id].warden_heat_until
             from datetime import datetime
-            while probe.combat.now()<datetime.fromisoformat(until).timestamp():
-                await asyncio.sleep(min(30,datetime.fromisoformat(until).timestamp()-probe.combat.now()))
-                probe.report(f"WAIT heat {width}x{height}: {max(0,datetime.fromisoformat(until).timestamp()-probe.combat.now()):.0f}s remain in protected clinic")
-                assert actor.health==safe_hp
+            # A short gate window need not contain the rare off-CPU pause.
+            # Observe the existing heat wait as well; keep its real deadline
+            # and cadence, and export only after service shutdown so writing
+            # a long diagnostic cannot perturb the final gate window.
+            began = probe.service.core.loop.last_tick
+            heat_profile = WriteProfile(probe.service)
+            try:
+                with heat_profile:
+                    while probe.combat.now()<datetime.fromisoformat(until).timestamp():
+                        await asyncio.sleep(min(30,datetime.fromisoformat(until).timestamp()-probe.combat.now()))
+                        probe.report(f"WAIT heat {width}x{height}: {max(0,datetime.fromisoformat(until).timestamp()-probe.combat.now()):.0f}s remain in protected clinic")
+                        assert actor.health==safe_hp
+            finally:
+                heat_profiles.append((width, height, began,
+                                      probe.service.core.loop.last_tick,
+                                      heat_profile.metadata(), heat_profile))
             await probe.walk(caller,(44,3))
             await approach(probe,caller,patrol)
             await asyncio.sleep(3)
@@ -282,7 +295,16 @@ async def accept(root: Path, door_python: Path, show: bool,
         (probe.root/"result.json").write_text(json.dumps({"passed":True,"transport":"NetBBS Telnet native stdio",
             "teleports":False,"human_playtest":False,"runs":results},indent=2),encoding="utf-8")
     finally:
-        await probe.close()
+        try:
+            await probe.close()
+        finally:
+            for width, height, began, ended, metadata, trace in heat_profiles:
+                (probe.root/f'npc-heat-writes-{width}x{height}.json').write_text(json.dumps({
+                    'diagnostic_only': True, 'began_tick': began, 'ended_tick': ended,
+                    'retention': 'Latest calls only, bounded by loop.timings.maxlen',
+                    'max_calls': trace.loop.timings.maxlen,
+                    'write_probe': metadata, 'write_calls': trace.calls},
+                    indent=2)+'\n', encoding='utf-8')
 
 
 if __name__=="__main__":

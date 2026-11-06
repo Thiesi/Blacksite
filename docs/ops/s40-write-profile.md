@@ -13,13 +13,27 @@ both. Its two profile JSON files per size cover the original first and
 final all-hub windows; each still warms up for two seconds and samples
 for ten seconds.
 
-`WriteProfile` is installed only inside these profile windows. Normal
-service execution imports no probe and has no probe branch in its tick
-or persistence paths. The probe delegates each write and callback
-synchronously, and restores the original instance attributes and
-storage-owned SQLite connection on exit, including exceptional exits.
-No snapshot contents, SQL text or player/item IDs are recorded in
-operation labels.
+`WriteProfile` is installed in these windows and separately during the
+existing heat wait. Normal service execution imports no probe and has
+no probe branch in its tick or persistence paths. The probe delegates
+each write and callback synchronously, and restores the original
+instance attributes and storage-owned SQLite connection on exit,
+including exceptional exits. No snapshot contents, SQL text or
+player/item IDs are recorded in operation labels.
+
+Collection keeps raw clock/counter tuples. Per-operation dictionaries,
+counter deltas and unit conversion are built only when records are
+exported after the profile window. This reduces observer work inside
+the gate; it does not remove clock reads or all capture overhead.
+
+The supplementary `npc-heat-writes-<size>.json` captures the existing
+real heat wait, retaining at most the latest 6,000 write calls. It
+changes no deadline, sleep cadence, player input or gate window, and
+does not define another acceptance gate. Long traces are exported
+after service shutdown, including on a failed run, so their JSON
+formatting and file writes cannot pause the final profile. Capture
+overhead and retained-object/GC effects remain limits of any inference.
+The two gate profiles remain separate, with their exact sample vectors.
 
 Use one fixed local proof root, `blacksite-proof/s40` under the system
 temp folder. Publish durable evidence as a GitHub artifact, on the PR
@@ -71,6 +85,11 @@ to the measured callback. The real tick gate still includes all probe
 overhead; no measured time is subtracted or waived. The existing
 subsystem, GC and flush records remain in the profile.
 
+The CPU/counter reads fall inside those brackets. Their delta interval
+is not exactly the wall interval, so tiny spans can show more CPU than
+wall time. Do not treat that difference as negative wait or sum nested
+spans as independent costs.
+
 Wall time greater than thread CPU does not by itself identify disk
 I/O, GIL contention or the runner. Compare operation nesting, process
 CPU, scheduling/fault/block counters, sampling brackets and GC. Keep
@@ -93,5 +112,53 @@ operations. This is an overhead observation in that fixture, not
 Linux acceptance or a timing assertion. Earlier 200-call rounds were
 too short for useful Windows CPU-accounting resolution; no zero-cost
 claim is made. The benchmark's private database was removed afterward.
-Linux counter overhead and the actual stall still require native
-profile evidence.
+The six-span fixture does not bound a write-heavy native tick; the
+first native measurement below exposed that limit.
+
+## First native measurement: 90a6981
+
+[Service run 42274954910](https://github.com/Thiesi/Blacksite/actions/runs/42274954910)
+used released NetBBS v7.45.0, Telnet to registered native stdio. It
+passed actual 600-second heat expiry and local response at both sizes.
+Each of the four gate vectors has 100 samples; selecting index 98
+reproduces the reported p99 exactly. The committed
+[summary](s40-evidence/90a6981.json) retains those vectors, hashes and
+the original GitHub artifact pointers.
+
+| Size | Initial p99 | Final p99 | Result |
+|---|---:|---:|---|
+| 80x24 | 1.935121 ms | 4.716198 ms | pass |
+| 132x50 | 6.399963 ms | 10.568753 ms | **fail** |
+
+The failed final window remains a failure at the unchanged 10 ms gate.
+No retry, subtraction or waiver replaces it. In the largest nearby
+132x50 tick, total wall/thread CPU were 11.082925/10.587962 ms; writes
+were 4.993338/4.501309 ms. The largest captured final SQLite commit
+was 2.013769/0.615348 ms with nine voluntary switches and 368 output
+blocks. These are observations. This predominantly CPU-heavy failure
+does not demonstrate the cause of the historical 30-160 ms off-CPU
+stalls, or establish that the cause lies outside the game.
+
+The first probe formatted each span inside the write stage. In one
+nearby slow tick its clock/counter brackets alone sum to 0.476027 ms
+across 76 operations, with other bookkeeping cost unquantified. This
+could matter to a borderline gate; no unchanged-outcome claim follows
+from the earlier six-span Windows benchmark. Record export now happens
+after collection, and raw readings use immutable tuples.
+
+The service job also runs `scripts/benchmark_s40_probe.py` after native
+acceptance, when a profile exists. It replays the richest recorded call
+shape with synthetic callbacks, alternating capture/baseline order,
+and publishes `probe-overhead.json` with the native artifact. No game
+operation, payload, SQLite write or heat wait is replayed. It measures
+capture allocation/GC and clocks; it neither bounds all wrapper cost
+nor proves that a real gate would have the same outcome. It never
+subtracts a duration or changes acceptance.
+
+A Windows comparison of the first and deferred-export collectors on
+that 76-span shape (three rounds of 500 calls) observed median extra
+wall time fall from 329.995 to 225.841 microseconds/call. Thread CPU
+fell from 312.5 to 250 microseconds/call, at coarse Windows accounting
+resolution. This is a synthetic observer measurement, not Linux native
+acceptance. The updated head still needs its own native results. No
+game or persistence fix, root cause, or slice completion is claimed.

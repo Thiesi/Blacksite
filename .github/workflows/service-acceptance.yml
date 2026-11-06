@@ -16,6 +16,7 @@ on:
       - 'scripts/accept_s12_netbbs.py'
       - 'scripts/accept_s10_netbbs.py'
       - 'scripts/accept_s11_netbbs.py'
+      - 'scripts/benchmark_s40_probe.py'
       - 'scripts/accept_s13_netbbs.py'
       - 'scripts/accept_s14_netbbs.py'
       - 'scripts/accept_s15_netbbs.py'
@@ -608,6 +609,15 @@ jobs:
         shell: bash
         run: |
           python scripts/accept_s11_netbbs.py --root "$RUNNER_TEMP/s11-proof" --door-python "$RUNNER_TEMP/s11-venv/bin/python" --size "${{ matrix.size }}"
+      - name: Measure observer capture cost using the recorded write-call shape
+        if: always()
+        shell: bash
+        run: |
+          if compgen -G "$RUNNER_TEMP/s11-proof/npc-profile-*.json" > /dev/null; then
+            python scripts/benchmark_s40_probe.py --profile-root "$RUNNER_TEMP/s11-proof" --output "$RUNNER_TEMP/s11-proof/probe-overhead.json"
+          else
+            echo "No write profile available for the observer benchmark"
+          fi
       - uses: actions/upload-artifact@v4
         if: always()
         with:
