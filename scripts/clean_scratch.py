@@ -1,11 +1,15 @@
 """Remove a worktree's local scratch, or report scratch across all worktrees.
 
     python scripts/clean_scratch.py            # clean the worktree this script is in
-    python scripts/clean_scratch.py --report   # file counts for the checkout and every worktree
+    python scripts/clean_scratch.py --report   # file counts for the checkout, worktrees and temp folder
+    python scripts/clean_scratch.py --temp     # remove this project's stale folders in the temp folder
 
 Cleaning deletes only ignored, reproducible scratch: `.test-tmp`,
 `.pytest_cache`, `__pycache__` and `*.egg-info` (never `.venv`, never
 tracked files). Keep any evidence you need in docs/ or on the PR first.
+`--temp` deletes only top-level `blacksite-*` and `native-proof-*` entries
+in the system temp folder with nothing written for 24 hours, so a proof
+that is still running is left alone. It never touches anything else there.
 The report never deletes anything; it flags trees over the limit and
 worktrees whose branch is already on origin/main, so their owners can
 `git worktree remove` them.
@@ -18,11 +22,13 @@ import shutil
 import stat
 import subprocess
 import sys
+import time
+import tempfile
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parent.parent
 sys.path.insert(0, str(ROOT))
-from tests.scratch_guard import DEFAULT_LIMIT, SCRATCH_DIRS, count_files  # noqa: E402
+from tests.scratch_guard import DEFAULT_LIMIT, SCRATCH_DIRS, count_files, temp_files, temp_folders  # noqa: E402
 
 SKIP = {'.git', '.venv', '.worktrees', 'node_modules'}
 
@@ -68,6 +74,34 @@ def clean(root: Path) -> int:
     return 1 if failed else 0
 
 
+def newest_write(path: Path) -> float:
+    newest = path.lstat().st_mtime
+    if path.is_dir() and not path.is_symlink():
+        for top, dirs, files in os.walk(path):
+            for name in dirs + files:
+                try:
+                    newest = max(newest, os.lstat(os.path.join(top, name)).st_mtime)
+                except OSError:
+                    continue
+    return newest
+
+
+def clean_temp(temp: Path | None = None, hours: float = 24, now: float | None = None) -> int:
+    now = time.time() if now is None else now
+    removed, kept, failed = 0, 0, []
+    for path in temp_folders(temp):
+        if now - newest_write(path) < hours * 3600:
+            kept += 1
+            continue
+        failed += remove(path)
+        removed += 1
+    print(f'Temp folder: {removed} stale entries removed, {kept} written to in the last {hours:g} h kept, '
+          f'{len(failed)} paths could not be deleted.')
+    for name in failed[:20]:
+        print(f'  {name}')
+    return 1 if failed else 0
+
+
 def count_tree(tree: Path) -> int:
     """Files in a checkout, leaving out .git, .venv and nested worktrees."""
     total = 0
@@ -84,9 +118,11 @@ def git(root: Path, *args: str) -> str:
 
 def report(root: Path, limit: int) -> int:
     common = Path(git(root, 'rev-parse', '--path-format=absolute', '--git-common-dir')).parent
-    trees = [common] + sorted(p for p in (common / '.worktrees').glob('*') if p.is_dir())
     registered = {Path(line.split(' ', 1)[1]).resolve() for line in git(common, 'worktree', 'list', '--porcelain').splitlines()
                   if line.startswith('worktree ')}
+    # A worktree created outside .worktrees/ counts too.
+    found = {p.resolve() for p in (common / '.worktrees').glob('*') if p.is_dir()} | registered
+    trees = [common] + sorted(found - {common.resolve()})
     flagged = 0
     for tree in trees:
         total = count_tree(tree)
@@ -101,14 +137,21 @@ def report(root: Path, limit: int) -> int:
             notes.append('no commits of its own: remove it if its PR has merged and no session is using it')
         flagged += any(note.startswith('OVER') for note in notes)
         print(f'{total:>9,}  {tree.name if tree != common else "(main checkout)"}  {"; ".join(notes)}')
+    in_temp = temp_files()
+    flagged += in_temp > limit
+    over = f'OVER {limit:,}: run clean_scratch.py --temp' if in_temp > limit else ''
+    print(f'{in_temp:>9,}  (system temp folder, {Path(tempfile.gettempdir())})  {over}')
     return 1 if flagged else 0
 
 
 def main(argv: list[str] | None = None) -> int:
     parser = argparse.ArgumentParser(description=__doc__.splitlines()[0])
     parser.add_argument('--report', action='store_true', help='report every worktree; delete nothing')
+    parser.add_argument('--temp', action='store_true', help="remove this project's stale folders in the temp folder")
     parser.add_argument('--limit', type=int, default=DEFAULT_LIMIT, help='files per tree before it is flagged')
     args = parser.parse_args(argv)
+    if args.temp:
+        return clean_temp()
     return report(ROOT, args.limit) if args.report else clean(ROOT)
 
 
