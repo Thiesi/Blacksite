@@ -155,11 +155,17 @@ class CellBuffer:
         cursor: tuple[int, int] | None = None
         active: Style | None = None
         for y, row in enumerate(self.cells):
+            old_row = previous.cells[y] if previous is not None else None
+            # Cached terrain shares immutable cells. List equality skips
+            # identical cells in C, including whole unchanged screen rows.
+            if old_row is not None and row == old_row:
+                continue
             x = 0
             limit = self.width - (y == self.height - 1)
             while x < limit:
                 cell = row[x]
-                if not cell.glyph or (previous is not None and cell == previous.cells[y][x]):
+                if not cell.glyph or (old_row is not None and
+                                      (cell is old_row[x] or cell == old_row[x])):
                     x += 1
                     continue
                 end = x
@@ -168,7 +174,7 @@ class CellBuffer:
                     next_cell = row[end]
                     if not next_cell.glyph or (next_cell.style is not cell.style and next_cell.style != cell.style):
                         break
-                    if previous is not None and next_cell == previous.cells[y][end]:
+                    if old_row is not None and (next_cell is old_row[end] or next_cell == old_row[end]):
                         break
                     run.append(next_cell.glyph)
                     end += 1 if ord(next_cell.glyph[0]) < 127 else cell_width(next_cell.glyph[0])
