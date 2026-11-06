@@ -1,8 +1,9 @@
 # P11 — The text place card
 
-**Status:** proposed by the presentation lead, 2026-11-06, at the owner's request (S38 ruling, #159); not yet approved
+**Status:** planned (approved by the owner 2026-11-06)
 **Primary model:** Codex · **Reviewer:** automated review, technical lead, presentation lead (presentation acceptance)
-**Depends on:** P5, P6a, S38 (`truce_text`) · **Milestone:** presentation track
+**Depends on:** P5, P6a, S38 (`me.truce_text`, added by #159) · **Milestone:** presentation track
+**Issue:** https://github.com/Thiesi/Blacksite/issues/164
 
 Canon: terminal UI 2.6. Where this file and canon differ, canon wins,
 apart from the two canon changes listed under Scope, which this slice
@@ -80,12 +81,16 @@ change 1). While threatened, `A` opens nothing and the hint row says "Not
 with danger this close." `A` is added to `keymaps.json`, the key table
 and help.
 
-**Threat.** The decision reads only fields the server has already
-declared and masked: `hazards`, `target`, a `!` in `nearby`,
-`me.heat_until`, and danger or combat log lines within the existing
-`PROTECT_SECONDS`. There is no door-side inference. Plan §11 note 12
-applies: when the card opens or closes is a visible signal, so a covered
-NPC must never change it before the caller could know.
+**Threat.** The card reads one server-declared field, `me.threat`: null,
+or the reason you're threatened. Plan §11 note 12 and the P4 row in §12
+called for this field, but P4 shipped without it, so this slice adds it.
+The server sets it when a hazard is in sight, you have a target, anything
+in `nearby` shows `!`, you have heat, or a danger or combat line reached
+you within the door's `PROTECT_SECONDS` window. It uses the same masks as
+the view, so a covered NPC counts only once the caller could know. The
+door combines nothing itself, and the later Auto decider reads this same
+field. When the card opens or closes is a visible signal, so this field
+carries the disclosure test.
 
 **Data.** The door needs the card's text at first sight and on request,
 and it must not sit in every view body. The server sends one additive,
@@ -95,6 +100,10 @@ request intent:
 It isn't replayed on reconnect. The door discards a frame whose zone isn't
 the current one, under architecture 5.5.4. District, name, safety and
 `truce_text` come from `me` and aren't repeated.
+
+A frame lost to a disconnect is lost, and that's accepted: the zone is
+already seen, the log keeps the paragraph, and `A` shows the card again.
+Tracking delivery would cost more than one missed introduction.
 
 The server answers a request only when the caller has a body in a zone.
 During a tram ride, in the Lattice and on non-zone views it sends nothing,
@@ -144,9 +153,10 @@ so `A` can't read the wrong zone.
   caller, with the same intent as with no card.
 - The timer closes it at 8 seconds on the injected clock. A requested card
   has no timer.
-- It doesn't open with each threat input present (hazard, target, `!`,
-  heat, recent danger line). It closes when each one appears.
-- Disclosure: a covered NPC on the Row doesn't change opening or closing,
+- `me.threat` is set for each input (hazard, target, `!`, heat, recent
+  danger line). The card doesn't open while it's set, and closes when it
+  becomes set. The door has no other threat logic.
+- Disclosure: a covered NPC on the Row doesn't change `me.threat`,
   including for a Marked or heated caller, until it reveals itself.
 - Prompt, menu and overlay block opening. `Ctrl-X` confirm still works over
   a card.

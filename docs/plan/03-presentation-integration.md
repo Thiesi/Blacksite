@@ -580,16 +580,16 @@ of the map at both sizes.
 **P10 Cutover.** *Purpose:* one grammar everywhere. *Scope:* switch
 default on; old zone and Lattice renderers and old chrome removed;
 goldens regenerated; every shipped zone has a place record (validator
-becomes strict). *Depends:* P5 to P8, C1, S25c complete. *Owner:* Codex.
-*Gate:* technical lead, presentation lead, owner.
+becomes strict). *Depends:* P5 to P8, P11, C1, S25c complete. *Owner:*
+Codex. *Gate:* technical lead, presentation lead, owner.
 
-**P11 Text place card (proposed, not yet approved).** *Purpose:* terminal
-UI 2.6 had no owning slice; the first sight of a zone introduces it.
-*Scope:* [`P11-place-card.md`](slices/P11-place-card.md), including S38's
-deferred `CONTESTED · TRUCE` and keeper sentence. *Excludes:* drawn
-16-colour art (V3). *Depends:* P5, P6a, S38. If approved, P10 depends on
-it. *Owner:* Codex. *Gate:* automated review, technical lead, presentation
-lead.
+**P11 Text place card (approved by the owner 2026-11-06, #164).**
+*Purpose:* terminal UI 2.6 had no owning slice; the first sight of a zone
+introduces it. *Scope:* [`P11-place-card.md`](slices/P11-place-card.md),
+including S38's deferred `CONTESTED · TRUCE` and keeper sentence, and the
+server-declared `me.threat` field that §11 note 12 called for. *Excludes:*
+drawn 16-colour art (V3). *Depends:* P5, P6a, S38. *Owner:* Codex.
+*Gate:* automated review, technical lead, presentation lead.
 
 **C1 Hub place records.** The seven remaining S08 hubs, by the
 presentation lead or Sonnet against P6's format. Geometry changes only

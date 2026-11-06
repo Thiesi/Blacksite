@@ -116,7 +116,7 @@ of the numbers against the catalog.
 
 Presentation integration (adopted 2026-10-28, D-T1): the
 [integration plan](03-presentation-integration.md) adds slices P0 to
-P10, C1 and V1 to V3, splits S25 into S25a, S25b and S25c, and adds the
+P11, C1 and V1 to V3, splits S25 into S25a, S25b and S25c, and adds the
 human gates H1 to H5 and PT1. Its §7.2 sequence and §14 decisions
 govern the order of S25 to S33 where they differ from §5 below. Slice
 files are filed as their dependencies come close: P0, P1, S25a and S25b
