@@ -18,7 +18,9 @@ import sys
 from datetime import datetime, timezone
 from pathlib import Path
 
-from blacksite.server.clock import RealClock
+sys.path.insert(0, str(Path(__file__).resolve().parents[2] / 'src'))  # this checkout, not the venv's install
+
+from blacksite.server.clock import RealClock  # noqa: E402
 from blacksite.server.players import Player
 from blacksite.server.rules.character import grade_threshold, health_max
 from blacksite.server.storage.db import Storage

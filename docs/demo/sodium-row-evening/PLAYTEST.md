@@ -11,40 +11,35 @@ or note, what you think as you go. About 20 minutes each.
 
 ## Setup
 
-- **Server:** `BLACKSITE_DEMO=sodium-row-evening`. Optional:
-  `BLACKSITE_DEMO_BOUNCER=1` (the Halo turns away a truce-breaker, Q7),
-  `BLACKSITE_DEMO_SIGNS=charted`, and `BLACKSITE_DEMO_BARK_GAP` (default
-  12 s between ambient lines per caller).
-- **Door:** `DOOR_BLACKSITE_PRESENTATION=1`, and
-  `DOOR_BLACKSITE_DEMO_SIGNS=charted` with the server's sign toggle.
-- **Launch (Windows, from this branch's checkout, in its venv):**
-  1. Pick a private world folder, for example `.test-tmp/demo-world`.
-  2. Server, in one console. In PowerShell (Windows Terminal's default):
-     ```
-     $env:BLACKSITE_DEMO = 'sodium-row-evening'
-     python -m blacksite.server --install-dir .test-tmp/demo-world --tcp
-     ```
-     In cmd, use `set BLACKSITE_DEMO=sodium-row-evening` instead. Before
-     starting, add `$env:BLACKSITE_DEMO_BOUNCER = '1'` for the Q7 variant
-     and `$env:BLACKSITE_DEMO_SIGNS = 'charted'` for far signs at night
-     (cmd: `set NAME=value`).
-  3. Door, in Windows Terminal at 132x50 or 80x24:
-     ```
-     python scripts/demo_sodium/play.py --install-dir .test-tmp/demo-world --handle Thiesi
-     ```
-     Add `--signs` with the server's sign setting, and `--color 256` or
-     `--color 16` for the other tiers. The script sets the console to
-     UTF-8 and VT output and restores it on exit, and turns on the new
-     presentation. A second caller (playtest 3) uses `--user-id 2
-     --handle Second` in another console.
-- **Prepared characters:** create each character normally through the
-  door, quit, stop the server (Ctrl-C), then:
-  ```
-  python scripts/demo_sodium/seed.py --install-dir .test-tmp/demo-world --name <name> --grade 5 --faction kestrel --completed vesper-first-thing
-  ```
-  For playtest 3, seed the first caller `--faction kestrel` and the
-  second `--faction sable`, both `--grade 5`. Restart the server and play.
-  The seed refuses to run while the server holds the world.
+All commands run in PowerShell, from this branch's checkout
+(`.worktrees/demo-review`), with the main checkout's `.venv` active. The
+scripts run this checkout's source themselves. Don't start the server
+with `python -m blacksite.server`: the venv would run main, without the
+demo.
+
+1. **Server, in one console:**
+   ```
+   python scripts/demo_sodium/serve.py --install-dir .test-tmp/demo-world
+   ```
+   Add `--bouncer` for the Q7 variant and `--signs` for far signs at night.
+2. **Door, in Windows Terminal at 132x50 or 80x24:**
+   ```
+   python scripts/demo_sodium/play.py --install-dir .test-tmp/demo-world --handle Thiesi
+   ```
+   Add `--signs` if the server has it, and `--color 256` or `--color 16` for
+   the other tiers. A second caller (playtest 3) uses `--user-id 2 --handle
+   Second` in another console. The script sets the console to UTF-8 and VT
+   output and restores it on exit.
+3. **Prepared characters:** create each character through the door, quit,
+   stop the server (Ctrl-C), then:
+   ```
+   python scripts/demo_sodium/seed.py --install-dir .test-tmp/demo-world --name <name> --grade 5 --faction kestrel --completed vesper-first-thing
+   ```
+   For playtest 3, seed the first caller `--faction kestrel` and the second
+   `--faction sable`, both `--grade 5`. Restart the server and play. The seed
+   refuses to run while the server holds the world.
+
+Delete `.test-tmp/demo-world` when the playtests are done.
 
 ## Playtest 1: arriving as a Wake
 

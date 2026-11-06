@@ -1,10 +1,8 @@
 """Demo only: play the Sodium Row demo locally in a Windows console.
 
-Run the server first, in another console (PowerShell shown; in cmd use
-`set BLACKSITE_DEMO=sodium-row-evening`):
+Run the server first, in another console:
 
-    $env:BLACKSITE_DEMO = 'sodium-row-evening'
-    python -m blacksite.server --install-dir <dir> --tcp
+    python scripts/demo_sodium/serve.py --install-dir <dir>
 
 Then, in Windows Terminal (or any VT console):
 
@@ -24,7 +22,6 @@ import os
 import shutil
 import subprocess
 import sys
-import tempfile
 from pathlib import Path
 
 
@@ -62,10 +59,12 @@ def main(argv: list[str] | None = None) -> int:
     info = {'handle': args.handle, 'user_id': args.user_id, 'node_name': 'local',
             'terminal_width': size.columns, 'terminal_height': size.lines,
             'color_depth': args.color, 'unicode_style': True}
-    drop = Path(tempfile.gettempdir()) / f'blacksite-demo-door-{args.user_id}.json'
+    drop = args.install_dir / f'door-{args.user_id}.json'
+    args.install_dir.mkdir(parents=True, exist_ok=True)
     drop.write_text(json.dumps(info), encoding='utf-8')
     env = {**os.environ, 'NETBBS_DOOR_INFO': str(drop), 'BLACKSITE_INSTALL_DIR': str(args.install_dir.resolve()),
-           'DOOR_BLACKSITE_PRESENTATION': '1'}
+           'DOOR_BLACKSITE_PRESENTATION': '1',
+           'PYTHONPATH': str(Path(__file__).resolve().parents[2] / 'src')}
     if args.signs:
         env['DOOR_BLACKSITE_DEMO_SIGNS'] = 'charted'
     restore = utf8_console()
