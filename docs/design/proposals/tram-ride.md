@@ -117,7 +117,7 @@ and both would see each other in NEARBY on arrival anyway.
 three or four lines of text shown in the car's map pane during the ride
 (not in the log), in order. The ride time is split evenly, and the
 "Brakes." line always gets the last slice. Each line stays under about
-70 characters. They describe what the window
+70 characters and stays on screen until the ride ends. They describe what the window
 shows, never a district name, a street name or a sign. The ride reveals
 no map knowledge (no seen-zone update and no map reveal), which keeps
 the canon in §2. A first draft for the Clinic line:
