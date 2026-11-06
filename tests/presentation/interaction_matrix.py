@@ -48,6 +48,7 @@ def outcome(game: HeadlessServer, client: Any, consumed: str) -> dict[str, Any]:
     sim, lat = core.characters.sim, core.lattice
     avatar = sim.avatars[session.user_id]
     actor = avatar.actor
+    zone = core.world.zones[actor.zone or avatar.zone]
     menus = {}
     for name, mapping in (
         ('commerce', core.commerce.menus), ('housing', core.apartments.menus),
@@ -70,9 +71,9 @@ def outcome(game: HeadlessServer, client: Any, consumed: str) -> dict[str, Any]:
         # separately asserted by S38's presentation/native tests.
         'logs': [line['text'] for line in session.log_ring
                  if not (line.get('kind') == 'place'
-                         and core.world.zones[actor.zone].template.meta.truce
-                         and line['text'] == "Nobody draws on " + core.world.zones[actor.zone].template.meta.name
-                         + ". " + core.characters.content.factions[core.world.zones[actor.zone].template.meta.truce].short
+                         and zone.template.meta.truce
+                         and line['text'] == "Nobody draws on " + zone.template.meta.name
+                         + ". " + core.characters.content.factions[zone.template.meta.truce].short
                          + " makes sure of it.")],
         'pending': bool(core.commerce.pending), 'waiting': len(core.commerce.waiting),
     }

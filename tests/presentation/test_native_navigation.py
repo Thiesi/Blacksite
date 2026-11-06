@@ -67,9 +67,9 @@ def test_missing_live_goal_does_not_restart_the_120_second_bound() -> None:
         asyncio.run(probe.walk(caller, lambda: None))
 
 
-@pytest.mark.parametrize('door_arrives', [True, False])
-def test_travel_waits_for_acked_door_focus_before_one_e(door_arrives: bool) -> None:
-    actor, session = NS(position=(0, 0)), NS(id='caller', ack_revision=1, view_revision=1)
+@pytest.mark.parametrize('valid_focus', [True, False])
+def test_travel_waits_for_ack_then_asserts_focus_without_waiting_for_a_talker(valid_focus: bool) -> None:
+    actor, session = NS(position=(0, 0)), NS(id='caller', ack_revision=1, view_revision=2)
     avatar = NS(actor=actor, zone='street')
     exit_ = NS(id='to-halo', tile=(2, 2), target_zone='halo')
     view = NS(previous={'body': {'focus': {'id': 'regular', 'verb': 'talk to'}}})
@@ -81,18 +81,15 @@ def test_travel_waits_for_acked_door_focus_before_one_e(door_arrives: bool) -> N
 
     async def wait(condition: Any, timeout: float = 10) -> None:
         if not checks:
-            checks.append(condition())  # Acked talker must not receive E.
-            view.previous['body']['focus'] = {'id': exit_.id, 'verb': 'go to'}
-            session.view_revision = 2
-            checks.append(condition())  # Unacked door must not receive E.
-            if not door_arrives:
-                raise TimeoutError('no acknowledged door')
+            checks.append(condition())  # Wait only for the new view's ACK.
+            if valid_focus:
+                view.previous['body']['focus'] = {'id': exit_.id, 'verb': 'go to'}
             session.ack_revision = 2
             checks.append(condition())
         assert condition()
 
     async def write(key: bytes) -> None:
-        assert checks == [False, False, True]
+        assert checks == [False, True]
         keys.append(key)
         avatar.zone = 'halo'
 
@@ -104,10 +101,11 @@ def test_travel_waits_for_acked_door_focus_before_one_e(door_arrives: bool) -> N
         'halo': NS(template=NS(meta=NS(name='The Tin Halo')))}))
     caller = NS(avatar=avatar, session=session, caller=NS(
         write=write, screen=NS(screen_text=lambda: 'The Tin Halo\n')))
-    if door_arrives:
+    if valid_focus:
         asyncio.run(probe.travel(caller, 'halo'))
         assert keys == [b'e']
     else:
-        with pytest.raises(TimeoutError, match='no acknowledged door'):
+        # S39 makes a talker focus here a bug, not a reason to wait/retry.
+        with pytest.raises(AssertionError):
             asyncio.run(probe.travel(caller, 'halo'))
         assert keys == []

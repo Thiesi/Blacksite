@@ -551,7 +551,11 @@ public terminal for fallback Interact. Passive light, camera and salvage
 field markers do not intercept that network action. `J` remains the explicit network action.
 An exit or door on the caller's own tile takes precedence over an
 adjacent talker or vendor for Interact: what you stand on beats what stands beside
-you. One tile away, the talker or vendor wins (planned, S39).
+you. One tile away, the talker or vendor wins. This applies to a talker's
+dialogue, including a contract giver's dialogue, whichever subsystem
+delivers it. Contract mission actions, boards and already open screens
+keep their precedence. A vendor or interactive prop underfoot also keeps
+its precedence. Explicit targeted talk and `J` keep their existing order.
 Credential refusals name the missing credential; a disabled control
 reports that the machinery is locked. Every destination retains
 its ordinary outward route; an authorized ride already in flight still

@@ -1,0 +1,9 @@
+{
+  "scope": "Every shipped zone, including inactive authoring bundles. Static base geometry, public flood from spawn; ignores temporary actors and dynamic locks. NPC regions and patrol waypoints are possible positions, not observations of live placement.",
+  "zones": 10,
+  "contact_positions_checked": 2746,
+  "arrivals_on_exits": [],
+  "only_exit_access": [],
+  "no_public_access": [],
+  "exit_adjacent_givers": []
+}
