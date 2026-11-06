@@ -2,7 +2,7 @@
 
 **Status:** planned (approved by the owner 2026-11-06)
 **Primary model:** Codex · **Reviewer:** automated review, technical lead, presentation lead (presentation acceptance)
-**Depends on:** P5, P6a, S38 (`me.truce_text`, added by #159) · **Milestone:** presentation track
+**Depends on:** P5, P6a, S38 (merged; supplies `me.truce_text`) · **Milestone:** presentation track
 **Issue:** https://github.com/Thiesi/Blacksite/issues/164
 
 Canon: terminal UI 2.6. Where this file and canon differ, canon wins,
@@ -129,7 +129,7 @@ so `A` can't read the wrong zone.
    for it, when it stays until a key or a threat closes it." `A` replaces
    the unnamed request.
 2. Terminal UI 2.6: "A truce zone's card (planned) shows..." loses
-   "(planned)". S38 adds that line.
+   "(planned)". S38 added that line.
 
 ## Owner decisions, 2026-11-06
 
