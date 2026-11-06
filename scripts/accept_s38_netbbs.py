@@ -51,6 +51,7 @@ async def accept(root: Path, door_python: Path, width: int, height: int,
             first = await probe.open(width, height, "TruceA"+tier, **kwargs)
             second = await probe.open(width, height, "TruceB"+tier, **kwargs)
             for caller in (first, second):
+                assert caller.session.caps["tier"] == tier, caller.session.caps
                 player = probe.game.players[caller.session.player_id]
                 player.grade = 5  # Explicit PvP fixture, not an earned-grade claim.
                 probe.game.queue("save", player.bbs_user_id, player, immediate=True)
@@ -72,6 +73,7 @@ async def accept(root: Path, door_python: Path, width: int, height: int,
             await probe.leave(second, f"finished-player-b-{width}x{height}-{tier}")
 
             caller = await probe.open(width, height, "TruceN"+tier, **kwargs)
+            assert caller.session.caps["tier"] == tier, caller.session.caps
             await enter_row(probe, caller)
             zone = probe.service.world.zones["sodium-row"]
             regular = next(a for a in zone.actors.values() if a.behaviour.get("template") == "npc-sodium-regular")
