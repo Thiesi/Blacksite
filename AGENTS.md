@@ -158,7 +158,8 @@ offline disk check. These rules keep it bounded:
   the temp folder hold more than 50,000 files.
   `python scripts/clean_scratch.py --temp` removes those entries that
   have had nothing written for 24 hours, and nothing else in the temp
-  folder.
+  folder. If recent folders are the problem, check no proof is running,
+  then add `--older-than 0`.
 - One worktree per active branch. Remove it with `git worktree remove`
   when its PR merges or closes, and clean your scratch before you go
   idle. `python scripts/clean_scratch.py --report` lists every worktree's

@@ -3,13 +3,15 @@
     python scripts/clean_scratch.py            # clean the worktree this script is in
     python scripts/clean_scratch.py --report   # file counts for the checkout, worktrees and temp folder
     python scripts/clean_scratch.py --temp     # remove this project's stale folders in the temp folder
+    python scripts/clean_scratch.py --temp --older-than 0   # also recent ones; first check no proof is running
 
 Cleaning deletes only ignored, reproducible scratch: `.test-tmp`,
 `.pytest_cache`, `__pycache__` and `*.egg-info` (never `.venv`, never
 tracked files). Keep any evidence you need in docs/ or on the PR first.
 `--temp` deletes only top-level `blacksite-*` and `native-proof-*` entries
 in the system temp folder with nothing written for 24 hours, so a proof
-that is still running is left alone. It never touches anything else there.
+that is still running is left alone. `--older-than HOURS` changes the 24.
+It never touches anything else there.
 The report never deletes anything; it flags trees over the limit and
 worktrees whose branch is already on origin/main, so their owners can
 `git worktree remove` them.
@@ -53,7 +55,13 @@ def remove(path: Path) -> list[str]:
             function(name)
         except OSError:
             failed.append(name)
-    if path.is_dir():
+    if path.is_symlink():
+        # Remove the link only: chmod and rmtree would act on, or refuse, its target.
+        try:
+            path.unlink()
+        except OSError:
+            failed.append(str(path))
+    elif path.is_dir():
         shutil.rmtree(path, onexc=retry)
     else:
         retry(os.remove, str(path), None)
@@ -149,10 +157,12 @@ def main(argv: list[str] | None = None) -> int:
     parser = argparse.ArgumentParser(description=__doc__.splitlines()[0])
     parser.add_argument('--report', action='store_true', help='report every worktree; delete nothing')
     parser.add_argument('--temp', action='store_true', help="remove this project's stale folders in the temp folder")
+    parser.add_argument('--older-than', type=float, default=24, metavar='HOURS',
+                        help='with --temp: keep entries written to more recently than this (default 24)')
     parser.add_argument('--limit', type=int, default=DEFAULT_LIMIT, help='files per tree before it is flagged')
     args = parser.parse_args(argv)
     if args.temp:
-        return clean_temp()
+        return clean_temp(hours=args.older_than)
     return report(ROOT, args.limit) if args.report else clean(ROOT)
 
 

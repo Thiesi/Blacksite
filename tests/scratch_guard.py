@@ -96,7 +96,8 @@ def temp_folders(temp: Path | None = None) -> list[Path]:
 def temp_files(temp: Path | None = None, stop_after: int = 10**9) -> int:
     total = 0
     for path in temp_folders(temp):
-        total += count_files(path, stop_after - total) if path.is_dir() else 1
+        # A link counts as one entry: its target isn't this project's scratch.
+        total += count_files(path, stop_after - total) if path.is_dir() and not path.is_symlink() else 1
         if total > stop_after:
             break
     return total
@@ -108,6 +109,7 @@ def temp_problem(temp: Path | None = None, limit: int | None = None) -> str | No
         return (f'This project holds more than {limit:,} files in the system temp folder '
                 f'({", ".join(TEMP_PATTERNS)}). The temp folder is not storage, and past half a million '
                 f'entries it has taken this host down. Run `python scripts/clean_scratch.py --temp`, '
-                f'and keep any evidence you need on the PR or in docs/ first. '
+                f'and keep any evidence you need on the PR or in docs/ first. That keeps folders written '
+                f'to in the last 24 hours; once no proof is running, `--temp --older-than 0` removes them too. '
                 f'BLACKSITE_SCRATCH_LIMIT raises the limit for one run.')
     return None

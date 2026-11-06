@@ -1,6 +1,8 @@
 """Local scratch stays bounded (tests/scratch_guard.py, AGENTS.md section 5)."""
 from pathlib import Path
 
+import pytest
+
 from tests.scratch_guard import LOCAL_BASETEMP, basetemp_problem, count_files, scratch_problem, temp_files, temp_problem
 
 
@@ -53,3 +55,17 @@ def test_temp_over_the_limit_is_refused_and_only_our_folders_count(tmp_path: Pat
 
 def test_an_empty_temp_folder_is_fine(tmp_path: Path) -> None:
     assert temp_problem(tmp_path, limit=0) is None
+
+
+def test_a_link_counts_once_and_its_target_is_not_walked(tmp_path: Path) -> None:
+    target = tmp_path / 'elsewhere'
+    target.mkdir()
+    for i in range(5):
+        (target / f'f{i}').write_text('x')
+    temp = tmp_path / 'temp'
+    temp.mkdir()
+    try:
+        (temp / 'blacksite-link').symlink_to(target, target_is_directory=True)
+    except OSError:
+        pytest.skip('this account cannot create symlinks')
+    assert temp_files(temp) == 1

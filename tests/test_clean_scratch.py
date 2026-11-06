@@ -4,6 +4,8 @@ import os
 import time
 from pathlib import Path
 
+import pytest
+
 from tests.conftest import REPO_ROOT
 
 spec = importlib.util.spec_from_file_location('clean_scratch', REPO_ROOT / 'scripts' / 'clean_scratch.py')
@@ -38,3 +40,27 @@ def test_clean_temp_removes_only_our_stale_folders(tmp_path: Path) -> None:
     assert clean_scratch.clean_temp(tmp_path, hours=24, now=now) == 0
     assert sorted(p.name for p in tmp_path.iterdir()) == ['blacksite-running', 'claude', 'other', 'pytest-of-me']
     assert (tmp_path / 'claude' / 'session' / 'scratchpad' / 'e').exists()
+
+
+def test_older_than_zero_clears_recent_folders(tmp_path: Path) -> None:
+    (tmp_path / 'blacksite-recent').mkdir()
+    (tmp_path / 'blacksite-recent' / 'f').write_text('x')
+    assert clean_scratch.clean_temp(tmp_path, hours=24) == 0
+    assert (tmp_path / 'blacksite-recent').exists()
+    assert clean_scratch.clean_temp(tmp_path, hours=0, now=time.time() + 1) == 0
+    assert not (tmp_path / 'blacksite-recent').exists()
+
+
+def test_a_stale_link_is_removed_and_its_target_left_alone(tmp_path: Path) -> None:
+    target = tmp_path / 'elsewhere'
+    target.mkdir()
+    (target / 'keep').write_text('x')
+    link = tmp_path / 'temp' / 'blacksite-link'
+    link.parent.mkdir()
+    try:
+        link.symlink_to(target, target_is_directory=True)
+    except OSError:
+        pytest.skip('this account cannot create symlinks')
+    assert clean_scratch.clean_temp(link.parent, hours=0, now=time.time() + 1) == 0
+    assert not link.is_symlink()
+    assert (target / 'keep').exists()
