@@ -29,10 +29,13 @@ the gate; it does not remove clock reads or all capture overhead.
 The supplementary `npc-heat-writes-<size>.json` captures the existing
 real heat wait, retaining at most the latest 6,000 write calls. It
 changes no deadline, sleep cadence, player input or gate window, and
-does not define another acceptance gate. Long traces are exported
-after service shutdown, including on a failed run, so their JSON
-formatting and file writes cannot pause the final profile. Capture
-overhead and retained-object/GC effects remain limits of any inference.
+does not define another acceptance gate. Long traces are exported and
+released before final profiling, including on a failed heat wait, so
+neither their formatting nor their retained object graph remains in
+the final gate. No forced GC or clock reset is used. The original
+two-second warmup and ten-second gate window still follow, and the
+window's samples exclude the earlier export. Capture overhead and GC
+effects during the heat trace remain limits of its interpretation.
 The two gate profiles remain separate, with their exact sample vectors.
 
 Use one fixed local proof root, `blacksite-proof/s40` under the system
