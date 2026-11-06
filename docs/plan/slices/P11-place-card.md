@@ -88,12 +88,17 @@ applies: when the card opens or closes is a visible signal, so a covered
 NPC must never change it before the caller could know.
 
 **Data.** The door needs the card's text at first sight and on request,
-and it must not sit in every view body. Suggested shape, which the
-technical lead may change: one additive frame from the server, sent when
-`discover` finds a first sight and in answer to a request intent, marked
-as opening or requested. It carries only the current zone's paragraph.
-The door discards it on zone change, under architecture 5.5.4. `truce_text`
-stays in `me`.
+and it must not sit in every view body. The server sends one additive,
+one-shot frame when `discover` finds a first sight and in answer to a
+request intent:
+`Frame("place_card", {"zone": <id>, "reason": "first" | "requested", "text": <paragraph>})`.
+It isn't replayed on reconnect. The door discards a frame whose zone isn't
+the current one, under architecture 5.5.4. District, name, safety and
+`truce_text` come from `me` and aren't repeated.
+
+The server answers a request only when the caller has a body in a zone.
+During a tram ride, in the Lattice and on non-zone views it sends nothing,
+so `A` can't read the wrong zone.
 
 **Canon changes, made by this slice:**
 
@@ -146,7 +151,11 @@ stays in `me`.
 - Prompt, menu and overlay block opening. `Ctrl-X` confirm still works over
   a card.
 - `A` works in both keymaps, and refuses with the approved line while
-  threatened.
+  threatened. The server sends no card for a request during a ride, in the
+  Lattice or on a non-zone view.
+- A door without the card, including the old renderer, ignores `place_card`
+  and doesn't fail.
+- A frame for another zone is discarded.
 - Every shipped zone's card fits at 80x24 and 132x50 with no cut text,
   including the longest district and zone names.
 - The truce label appears only where the header shows the truce word.
