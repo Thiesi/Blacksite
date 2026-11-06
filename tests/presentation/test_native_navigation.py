@@ -68,11 +68,13 @@ def test_missing_live_goal_does_not_restart_the_120_second_bound() -> None:
 
 
 @pytest.mark.parametrize('valid_focus', [True, False])
-def test_travel_waits_for_ack_then_asserts_focus_without_waiting_for_a_talker(valid_focus: bool) -> None:
-    actor, session = NS(position=(0, 0)), NS(id='caller', ack_revision=1, view_revision=2)
+def test_travel_waits_for_arrival_ack_then_asserts_focus_without_waiting_for_a_talker(valid_focus: bool) -> None:
+    actor, session = NS(id='avatar', position=(0, 0)), NS(id='caller', ack_revision=1, view_revision=2)
     avatar = NS(actor=actor, zone='street')
     exit_ = NS(id='to-halo', tile=(2, 2), target_zone='halo')
-    view = NS(previous={'body': {'focus': {'id': 'regular', 'verb': 'talk to'}}})
+    visible_actor = {'id': actor.id, 'x': 0, 'y': 0}
+    view = NS(previous={'kind': 'zone', 'body': {'me': {'zone': 'street'}, 'actors': [visible_actor],
+                                              'focus': {'id': 'regular', 'verb': 'talk to'}}})
     keys, checks = [], []
 
     async def walk(caller: Any, target: tuple[int, int]) -> None:
@@ -81,15 +83,17 @@ def test_travel_waits_for_ack_then_asserts_focus_without_waiting_for_a_talker(va
 
     async def wait(condition: Any, timeout: float = 10) -> None:
         if not checks:
-            checks.append(condition())  # Wait only for the new view's ACK.
+            checks.append(condition())  # The previous view is unacknowledged.
+            session.ack_revision = 2
+            checks.append(condition())  # An old, acked pose is still stale.
+            visible_actor.update(x=exit_.tile[0], y=exit_.tile[1])
             if valid_focus:
                 view.previous['body']['focus'] = {'id': exit_.id, 'verb': 'go to'}
-            session.ack_revision = 2
             checks.append(condition())
         assert condition()
 
     async def write(key: bytes) -> None:
-        assert checks == [False, True]
+        assert checks == [False, False, True]
         keys.append(key)
         avatar.zone = 'halo'
 

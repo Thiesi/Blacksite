@@ -32,7 +32,20 @@ the only changed E cases are the seven explicitly promoted exit cases.
 The declared apartment doorstep already selected `apartments` on main.
 
 Focused checks: 45 original focus tests passed; 39 added S39/navigation
-tests passed. This is separate from full-suite and native acceptance.
+tests passed. The full local suite at `5888131` passed 2,338 tests,
+with 3 skipped and the brief's one native-pipe case deselected, in
+693.62 seconds. It used `PYTHONPATH=src` and the shared test interpreter.
+The exclusive suite slot was released to the technical lead afterwards.
+
+The automated review's probe-readiness finding is accepted. Backpressure
+can reject a delta, so ACK equality alone does not prove the published
+pose has arrived. Travel now waits for an acknowledged zone view showing
+the caller on the exit tile, then asserts focus once. A stale acknowledged
+pose must keep waiting; wrong focus at the current pose fails immediately.
+The helper correction passed the same 39 focused tests. Recruiter
+precedence and selected-handler fallthrough retain the approved spec:
+faction services are protected, and only the selected route handles E/J.
+The PR carries the detailed impact-based dispositions.
 
 ## Layout audit
 
@@ -88,3 +101,13 @@ The S19 network first-job route runs before any such fixtures.
 These were changed fixture/helper runs, not unchanged retries of a
 native or CI gate. No assertion or gate was weakened, and no S11
 timing acceptance is claimed.
+
+Local native setup also exposed a stale NetBBS editable install; the
+successful CLI preflight used the verified NetBBS `src` directory on
+`PYTHONPATH`. The Blacksite test environment lacked setuptools, so its
+wheel-build attempt stopped before acceptance; the existing NetBBS build
+tools built the isolated wheel without modifying either shared environment.
+Two attached-terminal attempts failed before process creation with a
+PowerShell PTY access error. Captured real Telnet/native-stdio proof is
+separate from attached-terminal or human acceptance. The technical lead
+was informed of these boundaries.

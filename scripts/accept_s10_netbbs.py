@@ -257,7 +257,14 @@ class NativeProbe:
         # wandering talker to release it.
         async with asyncio.timeout(10):
             if av.zone==origin:
-                await wait(lambda:connection.session.ack_revision==connection.session.view_revision)
+                def arrival_acknowledged() -> bool:
+                    view=self.game.sim.views[connection.session.id].previous or {}
+                    body=view.get('body',{})
+                    return (view.get('kind')=='zone' and body.get('me',{}).get('zone')==origin
+                        and any(actor['id']==av.actor.id and (actor['x'],actor['y'])==exit_.tile
+                                for actor in body.get('actors',[]))
+                        and connection.session.ack_revision==connection.session.view_revision)
+                await wait(arrival_acknowledged)
                 view=self.game.sim.views[connection.session.id].previous
                 focus=(view or {}).get('body',{}).get('focus') or {}
                 assert av.actor.position==exit_.tile and focus.get('id')==exit_.id and focus.get('verb')=='go to', focus
