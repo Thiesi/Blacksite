@@ -55,10 +55,14 @@ this text card until V3 supplies drawn cards.
 - On first sight of a zone, which the server decides from `seen_zones`.
   The door must not treat every zone change as first sight, as the trial
   did: returning to a place opens nothing, and neither does reconnecting.
-- Only on the zone view with no prompt, menu or overlay open.
-- Never while anything threatens you (below). A first sight that can't
-  open is not retried. The log already has the paragraph, and the card
-  can be asked for later.
+- Only on the zone view with no prompt, menu or overlay open. A first
+  sight that arrives during the Wake, a screen, a menu or a prompt is held
+  until that closes, as long as you're still in that zone. The server marks
+  a zone seen when `discover` runs, which can be before the zone view
+  appears, so a new character's first zone would otherwise never get a card.
+- Never while anything threatens you (below). A first sight that meets a
+  threat, including a held one, is dropped and not retried. The log already
+  has the paragraph, and the card can be asked for later.
 
 **When it closes.**
 
@@ -68,11 +72,13 @@ this text card until V3 supplies drawn cards.
   the same frame and with no added delay. `Ctrl-X` and `Ctrl-L` behave as
   they always do.
 
-**On request.** `Z` shows the current zone's card again, in both keymaps.
-A card you asked for stays until a key or a threat closes it, since you
-asked to read it (canon change 1). While threatened, `Z` opens nothing
-and the hint row says "Not with danger this close." `Z` is added to the
-key table and to help.
+**On request.** `A` shows the current zone's card again, in both keymaps.
+`keymaps.json` leaves `a` unbound on the zone view in both; contract and
+crew menus use it, and a menu blocks the card. A card you asked for stays
+until a key or a threat closes it, since you asked to read it (canon
+change 1). While threatened, `A` opens nothing and the hint row says "Not
+with danger this close." `A` is added to `keymaps.json`, the key table
+and help.
 
 **Threat.** The decision reads only fields the server has already
 declared and masked: `hazards`, `target`, a `!` in `nearby`,
@@ -92,28 +98,28 @@ stays in `me`.
 **Canon changes, made by this slice:**
 
 1. Terminal UI 2.6: "It lasts up to 8 seconds" gains "unless you asked
-   for it, when it stays until a key or a threat closes it." `Z` replaces
+   for it, when it stays until a key or a threat closes it." `A` replaces
    the unnamed request.
 2. Terminal UI 2.6: "A truce zone's card (planned) shows..." loses
    "(planned)". S38 adds that line.
 
-## Decisions for the owner
+## Owner decisions, 2026-11-06
 
 1. **The paragraph shows twice.** On first arrival it's on the card and in
-   the log below it at once. I recommend keeping both. The log is the
-   record (S25b TR-9), and the card closes on your first key.
-2. **Slice number and order.** I'd make this P11, before P10's cutover,
-   since 2.6 calls it the default way a place presents itself. It takes no
-   place ahead of the current queue (S38, S40, A9, S39).
-3. **Sodium Row playtests.** I recommend not waiting for this slice and not
-   adding it to them. Play them as planned, and if the owner wants the
-   first impression judged with a card, that can be a later pass.
+   the log below it at once. Both stay. The log is the record (S25b TR-9),
+   and the card closes on your first key.
+2. **Slice number and order.** This is P11, before P10's cutover, since 2.6
+   calls it the default way a place presents itself. It takes no place
+   ahead of the current queue (S38, S40, A9, S39).
+3. **Sodium Row playtests.** They don't wait for this slice and don't
+   include it. If the first impression should be judged with a card, that
+   can be a later pass.
 
 ## Out of scope
 
 - The on-entry setting. 2.6 makes this a setting, and the settings path is
   S30a. If S30a isn't merged when this starts, on-entry stays on and the
-  setting joins S30a's list. `Z` ships either way.
+  setting joins S30a's list. `A` ships either way.
 - Drawn 16-colour art and its format (V3, assets 4). Vignettes above the
   text (S33). Strip modes and a larger dashboard (PT1).
 - The Lattice, which never gets a card, and text, menu, Wake and dead views.
@@ -124,6 +130,11 @@ stays in `me`.
 
 - First sight opens the card. Revisiting and reconnecting don't, using a
   saved `seen_zones`.
+- A new character's first zone gets its card when the Wake closes, and a
+  first sight held behind a screen or menu opens when that closes. A held
+  one is dropped on leaving the zone or meeting a threat.
+- `A` conflicts with no zone-view binding in either keymap, and `Z` still
+  toggles stealth.
 - Any key closes the card and still acts: a move on the card moves the
   caller, with the same intent as with no card.
 - The timer closes it at 8 seconds on the injected clock. A requested card
@@ -134,7 +145,7 @@ stays in `me`.
   including for a Marked or heated caller, until it reveals itself.
 - Prompt, menu and overlay block opening. `Ctrl-X` confirm still works over
   a card.
-- `Z` works in both keymaps, and refuses with the approved line while
+- `A` works in both keymaps, and refuses with the approved line while
   threatened.
 - Every shipped zone's card fits at 80x24 and 132x50 with no cut text,
   including the longest district and zone names.
@@ -150,7 +161,7 @@ stays in `me`.
 
 Roadmap §7, plus native evidence through NetBBS Telnet to native stdio,
 at both sizes and all three tiers: first arrival on Sodium Row opens the
-card, a move key closes it and moves, `Z` reopens it, and a threat closes
+card, a move key closes it and moves, `A` reopens it, and a threat closes
 it. CPU stays within the P1 budget with the card open and closed.
 Presentation lead acceptance from captures. H1 and S25 layout approval
 are not part of this slice and aren't granted by it.
