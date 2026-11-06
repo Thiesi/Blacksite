@@ -1,0 +1,24 @@
+┌─Sodium Row  CONTESTED─TRUCE─PvP G5+───────────────────────────────────00:00──┐
+│                   ████████████                        │TARGET                │
+│             ·························                 │Sodium regular        │
+│             ·························                 │HP ######## 100%      │
+│            ·············@·☻···········                │Range 2 Cover 0       │
+│             ·························                 │Civilian              │
+│             ·························                 │neutral               │
+│             ·························                 │Truce: Sable answers  │
+│             ·····$···········☼·······                 │                      │
+│             ·························                 │Truce界               │
+│              ·······················                  │BBS: Truce界          │
+│               ·····················                   │HP ######## 90/90     │
+│               ·····················                   │STA ######## 77/77    │
+│                ···················                    │Chits 200  Grade 1    │
+│                 ·················                     │Lease days 0/90       │
+│                   ·············                       │Discharge XP 0/1500   │
+│                    ···········                        │Shock 0               │
+│                         ·                             │Ctrl-X leaves         │
+├──────────────────────────────────────────────────────────────────────────────┤
+│[zone] You walk under orange lamps on wet pavement. You hear music from six   │
+│  doorways. At the street's end, you see the Tin Halo's half-burnt sign.      │
+│[zone] Nobody draws on Sodium Row. Sable makes sure of it.                    │
+│J jack in  ? help  Tab target  F fire  X weapon  1-5 quick  V abilities       │
+└──────────────────────────────────────────────────────────────────────────────

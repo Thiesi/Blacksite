@@ -32,7 +32,8 @@ async def navigate(probe: NativeProbe, caller: Any, target: Actor) -> None:
     zone = probe.service.world.zones[actor.zone]
 
     def goal() -> tuple[int, int] | None:
-        assert actor.zone == target.zone == zone.id
+        assert actor.zone == target.zone == zone.id, {"actor_zone": actor.zone,
+            "target_zone": target.zone, "expected_zone": zone.id, "target_id": target.id}
         occupied = {a.position for a in zone.actors.values() if a is not actor}
         exits = {e.tile for e in zone.template.meta.exits if e.kind == 'street'}
         pending, reachable = deque([actor.position]), {actor.position}

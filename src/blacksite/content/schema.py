@@ -365,6 +365,7 @@ class ZoneMeta:
     charted: bool = False
     public: tuple[Region, ...] = ()
     schema: int = CONTENT_SCHEMA
+    truce: str | None = None  # Game design 5.5/7.3: contested-zone keeper.
 
 
 @dataclass(frozen=True)

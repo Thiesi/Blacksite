@@ -129,23 +129,37 @@ contradiction by editing only the lower document.
 ### Local disk hygiene
 
 Scratch left in local worktrees once grew to several million files and
-took the development host down. These rules keep it bounded:
+took the development host down. Later the same scratch, moved to the
+system temp folder, passed half a million entries there and had to be
+cleared by hand. Recovery from that state has taken a full day, with an
+offline disk check. These rules keep it bounded:
 
 - Run `pytest` without `--basetemp`; it then uses the system temp folder
   and keeps only failed tests' directories from the last run. If your
   sandbox can write only inside the worktree, use exactly
   `--basetemp=.test-tmp/pytest`, which every run replaces. The test
   suite refuses any other `--basetemp` inside the worktree.
-- Native proofs, review packets, captures and venvs go to the system
-  temp folder or, if they must be inside the worktree, to one fixed
-  `.test-tmp/<kind>` path that you reuse. Never a new numbered folder
-  per run.
+- **The system temp folder is not storage.** Native proofs, review
+  packets, captures, wheels, venvs and clones use one fixed folder per
+  kind, reused by every run: `blacksite-proof/<kind>` in the temp folder,
+  or `.test-tmp/<kind>` in the worktree. Never a new folder per run or
+  per head. Delete it when the run is done, including anything you
+  downloaded to verify.
 - Evidence you need to keep is committed under `docs/` or attached to the
-  PR; the scratch it came from is then deleted.
+  PR, as a GitHub artifact where it is large. The cleanup above deleted
+  evidence kept only in the temp folder, so never cite a temp path as
+  where something is retained.
 - The test suite refuses to start when `.test-tmp` and `.pytest_cache`
   hold more than 50,000 files. `python scripts/clean_scratch.py` removes
   the worktree's ignored scratch (`.test-tmp`, `.pytest_cache`,
   `__pycache__`, `*.egg-info`; never `.venv` or tracked files).
+- The test suite and native proofs built on `NativeProbe` also refuse to
+  start when this project's `blacksite-*` and `native-proof-*` entries in
+  the temp folder hold more than 50,000 files.
+  `python scripts/clean_scratch.py --temp` removes those entries that
+  have had nothing written for 24 hours, and nothing else in the temp
+  folder. If recent folders are the problem, check no proof is running,
+  then add `--older-than 0`.
 - One worktree per active branch. Remove it with `git worktree remove`
   when its PR merges or closes, and clean your scratch before you go
   idle. `python scripts/clean_scratch.py --report` lists every worktree's

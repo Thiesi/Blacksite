@@ -13,6 +13,7 @@ from collections.abc import Callable
 from dataclasses import dataclass
 import json
 from hashlib import sha256
+import importlib.util
 from pathlib import Path
 import re
 import time
@@ -53,9 +54,19 @@ class Connection:
     avatar: Any
 
 
+def refuse_full_temp() -> None:
+    """Native proofs leave the most behind, so they check as the test suite does."""
+    spec = importlib.util.spec_from_file_location('scratch_guard', REPO/'tests'/'scratch_guard.py')
+    guard = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(guard)
+    if problem := guard.temp_problem():
+        raise SystemExit(problem)
+
+
 class NativeProbe:
     def __init__(self, root: Path, python: Path, show: bool, *,
                  door_environment: dict[str, str] | None = None, show_all_tiers: bool = False) -> None:
+        refuse_full_temp()
         # Resolving a Unix venv's Python symlink launches the base interpreter
         # instead, losing the installed wheel. Preserve the venv path.
         self.root,self.python,self.show = root.resolve(),python.absolute(),show

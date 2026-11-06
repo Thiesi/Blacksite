@@ -65,7 +65,15 @@ def outcome(game: HeadlessServer, client: Any, consumed: str) -> dict[str, Any]:
                       presence.loaned_rig, asdict(presence.escape) if presence.escape else None]
                      if presence else None),
         'travel': avatar.travel.exit.id if avatar.travel else None,
-        'logs': [line['text'] for line in session.log_ring],
+        # S38 adds only a first-arrival place line to these unchanged E/J
+        # outcomes. Keep the independent pre-P3 digest; the new line is
+        # separately asserted by S38's presentation/native tests.
+        'logs': [line['text'] for line in session.log_ring
+                 if not (line.get('kind') == 'place'
+                         and core.world.zones[actor.zone].template.meta.truce
+                         and line['text'] == "Nobody draws on " + core.world.zones[actor.zone].template.meta.name
+                         + ". " + core.characters.content.factions[core.world.zones[actor.zone].template.meta.truce].short
+                         + " makes sure of it.")],
         'pending': bool(core.commerce.pending), 'waiting': len(core.commerce.waiting),
     }
 

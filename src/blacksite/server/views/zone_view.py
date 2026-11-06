@@ -135,7 +135,7 @@ def build(actor: Actor, zone: ZoneInstance, perception: Perception, content: Con
     escapes = [ex.id for ex in zone.template.meta.exits if not ex.hidden and ex.tile in visible]
     nearby = [{"id": entry["id"], "name": presentation.name(zone.actors[entry["id"]], actor, content), "role": entry["role"],
                "class": entry["class"], "jacked": entry["jacked"],
-               "relation": "~" if presentation.covered(zone.actors[entry["id"]], actor, content) else "!" if zone.actors[entry["id"]].marked or zone.actors[entry["id"]].target == actor.id or zone.actors[entry["id"]].behaviour.get("training") else {"H":"!","N":"~","A":"+"}[relation(content, actor.faction, zone.actors[entry["id"]].faction)]}
+               "relation": "~" if presentation.covered(zone.actors[entry["id"]], actor, content) else "!" if zone.actors[entry["id"]].marked or zone.actors[entry["id"]].target == actor.id or zone.actors[entry["id"]].behaviour.get("training") else "~" if zone.template.meta.truce and zone.actors[entry["id"]].kind != "player" else {"H":"!","N":"~","A":"+"}[relation(content, actor.faction, zone.actors[entry["id"]].faction)]}
               for entry in actors if entry["id"] != actor.id]
     nearby.sort(key=lambda entry: (entry["relation"] != "!", zone.actors[entry["id"]].kind != "player",
         (zone.actors[entry["id"]].x-actor.x)**2+(zone.actors[entry["id"]].y-actor.y)**2, entry["id"]))

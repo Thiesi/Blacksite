@@ -97,6 +97,9 @@ class Npcs:
             return "hostile" if target.owner == source.id else "neutral"
         if target.marked or self.hostile(target, source) or self.hostile(source, target):
             return "hostile"
+        zone = self.world.zones.get(target.zone)
+        if zone and zone.template.meta.truce and (source.kind != "player" or target.kind != "player"):
+            return "neutral"
         return {"H": "hostile", "N": "neutral", "A": "allied"}[relation(self.content, source.faction, target.faction)]
 
     def hostile(self, actor: Actor, other: Actor) -> bool:
@@ -117,6 +120,8 @@ class Npcs:
         if actor.faction == "wardens" and player:
             if other.marked or (player.warden_heat_until and datetime.fromisoformat(player.warden_heat_until).timestamp() > now):
                 return True
+        if self.world.zones[actor.zone].template.meta.truce:
+            return False  # Game 5.5: only provocation/heat breaks the truce.
         explicit = any(b.params.get("hostile_all") for b in template.behaviours)
         return explicit or relation(self.content, actor.faction, other.faction) == "H"
 
@@ -125,7 +130,69 @@ class Npcs:
         item = self.content.items.get(template.armour) if template else None
         return int(getattr(item.armour.armour, kind)) if item and item.armour else 0
 
+    def truce_keeper(self, source: Actor, target: Actor) -> str | None:
+        """Game 5.5/7.3: one predicate for the warning and keeper response."""
+        victim = (self.game.progression.drones.controller_body(target, acting=False)
+                  if target.behaviour.get("player_drone") else target)
+        zone = self.world.zones.get(victim.zone) if victim else None
+        controller = self.game.progression.controller(source)
+        if (not zone or not zone.template.meta.truce or not controller
+                or target.behaviour.get("training")
+                or not self.combat.permits_indirect(source, target)):
+            return None
+        body = self.combat.actor(controller)
+        if body is None:
+            return None
+        if victim.kind == "player":
+            breaks = self.combat.would_mark(body, victim, indirect=True)
+        else:
+            attackers = {source.id, body.id}
+            provoked = any(self.provocations.get(
+                (target.zone, str(target.behaviour.get("spawner")), attacker), 0) > self.combat.now()
+                for attacker in attackers)
+            breaks = not (provoked or target.target in attackers and target.behaviour.get("state") == "hunt")
+        return zone.template.meta.truce if breaks else None
+
+    def keep_truce(self, source: Actor, target: Actor, keeper: str) -> None:
+        """Alert the target zone's guards; remote controllers are not chased out."""
+        if target.behaviour.get("player_drone"):
+            target = self.game.progression.drones.controller_body(target, acting=False)
+            if target is None:
+                return
+        zone = self.world.zones[target.zone]
+        controller = self.game.progression.controller(source)
+        body = self.combat.actor(controller) if controller else None
+        if body is None:
+            return
+        now = self.combat.now()
+        until = now + PROVOCATION_SECONDS
+        guards = []
+        for guard in zone.actors.values():
+            template = self.content.npcs.get(guard.behaviour.get("template"))
+            if (guard.faction != keeper or not template
+                    or not any(b.kind == "guard" for b in template.behaviours)):
+                continue
+            guards.append(guard)
+        already_provoked = any(self.provocations.get(
+            (zone.id, str(guard.behaviour.get("spawner")), body.id), 0) > now for guard in guards)
+        for guard in guards:
+            group = str(guard.behaviour.get("spawner"))
+            for attacker in {source.id, body.id}:
+                self.provocations[zone.id, group, attacker] = until
+            if source.zone == zone.id:
+                guard.target = source.id
+                self.combat.reveal(guard, source)
+                guard.behaviour.update(last_seen=self.clock.now_tick(),
+                                       last_position=source.position, state="hunt")
+        name = self.content.factions[keeper].short
+        line = (f"{name} is coming for you." if body.zone == zone.id else
+                f"{name} is waiting for you on {zone.template.meta.name}.")
+        if guards and not already_provoked:
+            self.combat.log(body, line, True)
+
     def provoked(self, source: Actor, target: Actor) -> None:
+        if keeper := self.truce_keeper(source, target):
+            self.keep_truce(source, target, keeper)
         if (source.kind != "player" and not source.behaviour.get("player_drone")
                 or target.kind == "player" or target.behaviour.get("player_drone") or target.behaviour.get("training")):
             return
@@ -134,9 +201,10 @@ class Npcs:
         controller = self.game.progression.controller(source)
         if controller:
             self.provocations[target.zone,group,controller.id] = self.combat.now()+PROVOCATION_SECONDS
-        target.target = source.id
-        self.combat.reveal(target, source)
-        target.behaviour.update(last_seen=self.clock.now_tick(), last_position=source.position, state="hunt")
+        if source.zone == target.zone:
+            target.target = source.id
+            self.combat.reveal(target, source)
+            target.behaviour.update(last_seen=self.clock.now_tick(), last_position=source.position, state="hunt")
         # Local faction guards protect their residents, without summoning
         # rival police into a district. The same safety checks still apply.
         for actor in self.world.zones[target.zone].actors.values():
@@ -146,9 +214,10 @@ class Npcs:
                     self.provocations[actor.zone, str(actor.behaviour.get("spawner")), source.id] = self.combat.now() + PROVOCATION_SECONDS
                     if controller:
                         self.provocations[actor.zone,str(actor.behaviour.get("spawner")),controller.id] = self.combat.now()+PROVOCATION_SECONDS
-                    actor.target = source.id
-                    self.combat.reveal(actor, source)
-                    actor.behaviour.update(last_seen=self.clock.now_tick(), last_position=source.position, state="hunt")
+                    if source.zone == actor.zone:
+                        actor.target = source.id
+                        self.combat.reveal(actor, source)
+                        actor.behaviour.update(last_seen=self.clock.now_tick(), last_position=source.position, state="hunt")
 
     def refused(self, source: Actor, target: Actor) -> None:
         zone = self.world.zones.get(source.zone)

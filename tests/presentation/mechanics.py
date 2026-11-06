@@ -58,6 +58,8 @@ def projection(content: ContentTree) -> dict[str, Any]:
                                     if key not in ('name', 'inspect_verb')}}
                         for obj in sorted(meta.objects, key=lambda obj: obj.id)],
             'layouts': [asdict(layout) for layout in meta.layouts]}
+        if meta.truce:
+            zones[zid]["truce"] = meta.truce
         if meta.charted:
             zones[zid]['charted'] = True
         if meta.public:

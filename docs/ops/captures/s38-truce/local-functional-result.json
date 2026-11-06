@@ -1,0 +1,43 @@
+{
+  "head": "d82602197128f92e3e4113034601643e473ffcf9",
+  "cases": [
+    {
+      "size": [
+        80,
+        24
+      ],
+      "tier": "16",
+      "presentation": true,
+      "player_marked": true,
+      "regular_attack_provokes_keeper": true,
+      "mark_before_chase": true,
+      "grade_fixture": 5
+    },
+    {
+      "size": [
+        80,
+        24
+      ],
+      "tier": "256",
+      "presentation": true,
+      "player_marked": true,
+      "regular_attack_provokes_keeper": true,
+      "mark_before_chase": true,
+      "grade_fixture": 5
+    },
+    {
+      "size": [
+        80,
+        24
+      ],
+      "tier": "truecolor",
+      "presentation": true,
+      "player_marked": true,
+      "regular_attack_provokes_keeper": true,
+      "mark_before_chase": true,
+      "grade_fixture": 5
+    }
+  ],
+  "transport": "NetBBS Telnet -> registered native stdio",
+  "human_acceptance": false
+}
