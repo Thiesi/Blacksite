@@ -1,7 +1,7 @@
 # The tram ride: travel, not teleport (proposal)
 
 **Status:** the owner agreed to T1 to T4 on 2026-11-05 (§6). The technical
-lead's and presentation lead's reviews are folded in. T5 is open.
+lead's and presentation lead's reviews are folded in. T5 and T6 are open.
 Nothing here changes canon or code. Canon changes go top-down in their
 own PRs.
 **Author:** creative consultant (Claude Opus 5.5), 2026-11-04.
@@ -100,13 +100,17 @@ holds, and these rules replace the sight test:
 2. The private-visibility and training filters stay, so a mission-isolated
    caller never appears.
 3. Stealth doesn't hide you. It shortens detection range, and a sealed car
-   has no range. This is today's rule, and I don't propose a new one.
+   has no range. So a stealthed hunter who boards a target's car is named
+   10 to 16 s before they land side by side, when stealth would end anyway.
+   A hunter who wants to stay hidden takes the next car. This touches
+   visibility, so it is T6.
 4. A Mark shows as it does in NEARBY. It is already public.
 5. Entries are names only. They carry no target action, Tab doesn't select
    them, and no entry shows who anyone is hunting.
 6. The arrival line ("You arrive at Clinic Row with Second.") follows the
    same rules.
-7. The list starts at departure and reaches nobody outside the car.
+7. The list starts at departure and reaches nobody outside the car. It is
+   live, so a rider who disconnects drops off it.
 
 Riders on one departure already land side by side, so arriving together
 needs no code and no spread. What is new is knowing who is aboard 10 to
@@ -152,6 +156,8 @@ wide as it is tall in characters, so one row counts as two columns.
 | Rim (not built) | 1.5 | 15 s |
 | Lamp (not built) | 1.61 | 16 s |
 
+Each ride is 10 s times the relative length, rounded to the nearest second.
+
 This replaces my first table, which came from the website's schematic and
 wrongly had Clinic as the shortest line.
 
@@ -187,7 +193,8 @@ During Curfew, the Curfew line replaces the 30 s call. The Dispatcher
 announces; it never chats, never says "I" and never uses a handle, so its
 rare personal address keeps its weight. In the demo these are log lines
 from a tick-time check that calls `schedule()` and remembers each platform
-and departure in memory. Speech is dormant on `main` until the Q6 slice.
+and departure in memory, so a restart can repeat or miss one line. Speech is
+dormant on `main` until the Q6 slice.
 
 **3.6 Multi-stop: not now [new].** The canon says one terminus per line
 (§2), and I recommend keeping it. A stop is only worth adding if it is a
@@ -221,7 +228,9 @@ Questions for the tester to answer, before reading the success criteria:
 
 The test succeeds if, in run 1, the tester calls the Clinic line farther
 at equal time, names at least one fellow passenger and describes the ride
-as travel. T1 holds if, in run 2, the extra time reads as distance. One
+as travel. T1 holds if, in run 2, the extra time reads as distance: Clinic
+gains 5 s over run 1, a third of a longer ride. If the tester doesn't notice
+it, that is no case for changing canon, and rides stay at 10 s. One
 tester playing both runs is thin evidence, and the second run knows the
 first, so a weak result reopens the question rather than settling it.
 
@@ -254,6 +263,11 @@ hub transfer at the 74 s window.
   on convoy channels and, occasionally, to a player". The bible doesn't
   decide it. I recommend amending the factions line to match the cast file,
   in the canon PR that follows the demo. The demo can run without an answer.
+- **T6. Should a stealthed rider be named in the car?** Open. T2 was agreed
+  before this was spelled out (§3.2, rule 3). I recommend yes: sharing a
+  sealed car is the hunter's choice, and the next car keeps them hidden. The
+  alternative is a new rule, where the list honours stealth at boarding. The
+  demo needs an answer.
 
 **Owner decisions, 2026-11-05:** T1 to T4 agreed, as recommended.
 
