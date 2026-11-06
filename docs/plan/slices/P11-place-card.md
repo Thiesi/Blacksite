@@ -5,9 +5,8 @@
 **Depends on:** P5, P6a, S38 (merged; supplies `me.truce_text`) · **Milestone:** presentation track
 **Issue:** https://github.com/Thiesi/Blacksite/issues/164
 
-Canon: terminal UI 2.6. Where this file and canon differ, canon wins,
-apart from the two canon changes listed under Scope, which this slice
-makes once approved.
+Canon: terminal UI 2.6 and the key table in section 5, marked "planned,
+P11". Where this file and canon differ, canon wins.
 
 ## Goal
 
@@ -44,6 +43,10 @@ didn't fit. Here a test fails any shipped zone whose card doesn't fit at
 80x24. Today's 10 zone files fit: the longest first paragraph wraps to 4
 lines at 45 columns.
 
+**A zone with no lore.** The card still opens and leaves out the text block.
+Every shipped zone has lore today, so this only guards against a later zone
+or a missing asset.
+
 **Light.** The box takes the place's most common ground colour from the
 visible `looks`, worked out once when the card opens, so it doesn't
 change or cost anything per frame. A zone with no looks uses the plain
@@ -79,8 +82,7 @@ this text card until V3 supplies drawn cards.
 **On request.** `A` shows the current zone's card again, in both keymaps.
 `keymaps.json` leaves `a` unbound on the zone view in both; contract and
 crew menus use it, and a menu blocks the card. A card you asked for stays
-until a key or a threat closes it, since you asked to read it (canon
-change 1). While threatened, `A` opens nothing and the hint row says "Not
+until a key or a threat closes it, since you asked to read it. While threatened, `A` opens nothing and the hint row says "Not
 with danger this close." `A` is added to `keymaps.json`, the key table
 and help.
 
@@ -111,9 +113,17 @@ and it must not sit in every view body. The server sends one additive,
 one-shot frame when `discover` finds a first sight and in answer to a
 request intent:
 `Frame("place_card", {"zone": <id>, "reason": "first" | "requested", "text": <paragraph>})`.
-It isn't replayed on reconnect. The door discards a frame whose zone isn't
-the current one, under architecture 5.5.4. District, name, safety and
-`truce_text` come from `me` and aren't repeated.
+It isn't replayed on reconnect. District, name, safety and `truce_text` come
+from `me` and aren't repeated.
+
+The frame usually arrives first. `transition` and login call `discover`
+before the new zone's first view goes out, so the door can't compare the
+frame with its current zone on arrival, or it would discard most first
+sights. The door keeps the latest frame, keyed by zone. If it already holds a
+view for that zone, that view judges the frame. Otherwise the next zone view
+does: a view for the frame's zone can open the card, and a view for any other
+zone drops the frame. Frames arrive in order on one session, so no older
+view can follow the frame.
 
 A frame lost to a disconnect is lost, and that's accepted: the zone is
 already seen, the log keeps the paragraph, and `A` shows the card again.
@@ -123,13 +133,9 @@ The server answers a request only when the caller has a body in a zone.
 During a tram ride, in the Lattice and on non-zone views it sends nothing,
 so `A` can't read the wrong zone.
 
-**Canon changes, made by this slice:**
-
-1. Terminal UI 2.6: "It lasts up to 8 seconds" gains "unless you asked
-   for it, when it stays until a key or a threat closes it." `A` replaces
-   the unnamed request.
-2. Terminal UI 2.6: "A truce zone's card (planned) shows..." loses
-   "(planned)". S38 added that line.
+**Canon.** The PR filing this slice wrote the card's behaviour into terminal
+UI 2.6 and the key table, marked "planned, P11". The implementation removes
+both marks.
 
 ## Owner decisions, 2026-11-06
 
@@ -182,7 +188,10 @@ so `A` can't read the wrong zone.
   Lattice or on a non-zone view.
 - A door without the card, including the old renderer, ignores `place_card`
   and doesn't fail.
-- A frame for another zone is discarded.
+- A first-sight frame that arrives before its zone's first view opens the
+  card when that view arrives, on a transition and at login. A view for
+  another zone drops it.
+- A zone with no lore opens a card without the text block.
 - Every shipped zone's card fits at 80x24 and 132x50 with no cut text,
   including the longest district and zone names.
 - The truce label appears only where the header shows the truce word.

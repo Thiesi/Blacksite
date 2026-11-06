@@ -385,6 +385,8 @@ kind is told apart by colour alone.
 
 ### 2.6 The place card
 
+Planned, P11: no build draws the card yet.
+
 On first sight of a zone the map area shows the place card: district and
 zone in letter-spaced capitals, the safety word and the zone's text, lit
 by the place's own ground colour. It is the default way a place presents
@@ -392,16 +394,16 @@ itself (the owner's default under D8; other art modes and a larger
 dashboard wait for a playtest). 16-colour callers get a drawn 16-colour
 card where the place has one (assets 4), otherwise the text card.
 
-A truce zone's card (planned) shows `CONTESTED · TRUCE` and
-'<Keeper> keeps the peace here.'
+A truce zone's card shows `CONTESTED · TRUCE` and '<Keeper> keeps the
+peace here.'
 
-- It lasts up to 8 seconds. **Any key closes it, and that key still
+- It lasts up to 8 seconds, unless you asked for it, when it stays until
+  a key or a threat closes it. **Any key closes it, and that key still
   acts**: a move on the card is a move.
 - It never opens while anything threatens you (a hazard, a target, a
   hostile nearby, combat, heat), and closes the moment one appears or
   you are hit.
-- It can be shown again on request; whether it opens on entry is a
-  setting.
+- `A` shows it again; whether it opens on entry is a setting.
 
 ### 2.7 Atmosphere: allowed and not
 
@@ -546,6 +548,7 @@ Two shipped keymaps, switchable in settings and remembered per player:
 | crew | G | g |
 | sitrep | W | w |
 | map (zone overview) | M | m |
+| place card again (planned, P11) | A | a |
 | contracts | Q | q |
 | chat (say) | C or Enter | c or Enter |
 | whisper / crew / faction | ` / T / Ctrl-F | same |
