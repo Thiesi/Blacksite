@@ -402,7 +402,8 @@ def test_game_5_5_live_provocation_exempts_npc_even_before_hunt(row):
     assert keeper.target == source.id
 
 
-def test_game_5_5_remote_truce_attack_preserves_local_chase(row):
+@pytest.mark.parametrize("victim_kind", ["player", "sable-npc"])
+def test_game_5_5_remote_truce_attack_preserves_local_chase(row, victim_kind):
     game, a, b = row
     keeper = guard(game)
     local = body(game, a)
@@ -419,7 +420,9 @@ def test_game_5_5_remote_truce_attack_preserves_local_chase(row):
     game.core.characters.players[remote.session.player_id].grade = 5
     place(game, remote, "vatside-clinics", (25, 3))
     before = (keeper.target, dict(keeper.behaviour))
-    game.core.combat.mark_indirect(body(game, remote), body(game, b))
+    victim = (body(game, b) if victim_kind == "player" else
+              npc(game, "npc-sable-enforcer", "remote-victim", (28, 4)))
+    game.core.combat.mark_indirect(body(game, remote), victim)
     assert (keeper.target, keeper.behaviour) == before
     assert (zone.id, "keeper", body(game, remote).id) in game.core.npcs.provocations
     game.core.npcs.evaluate(keeper, zone, game.clock.now_tick())

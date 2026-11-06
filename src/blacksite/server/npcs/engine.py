@@ -201,9 +201,10 @@ class Npcs:
         controller = self.game.progression.controller(source)
         if controller:
             self.provocations[target.zone,group,controller.id] = self.combat.now()+PROVOCATION_SECONDS
-        target.target = source.id
-        self.combat.reveal(target, source)
-        target.behaviour.update(last_seen=self.clock.now_tick(), last_position=source.position, state="hunt")
+        if source.zone == target.zone:
+            target.target = source.id
+            self.combat.reveal(target, source)
+            target.behaviour.update(last_seen=self.clock.now_tick(), last_position=source.position, state="hunt")
         # Local faction guards protect their residents, without summoning
         # rival police into a district. The same safety checks still apply.
         for actor in self.world.zones[target.zone].actors.values():
@@ -213,9 +214,10 @@ class Npcs:
                     self.provocations[actor.zone, str(actor.behaviour.get("spawner")), source.id] = self.combat.now() + PROVOCATION_SECONDS
                     if controller:
                         self.provocations[actor.zone,str(actor.behaviour.get("spawner")),controller.id] = self.combat.now()+PROVOCATION_SECONDS
-                    actor.target = source.id
-                    self.combat.reveal(actor, source)
-                    actor.behaviour.update(last_seen=self.clock.now_tick(), last_position=source.position, state="hunt")
+                    if source.zone == actor.zone:
+                        actor.target = source.id
+                        self.combat.reveal(actor, source)
+                        actor.behaviour.update(last_seen=self.clock.now_tick(), last_position=source.position, state="hunt")
 
     def refused(self, source: Actor, target: Actor) -> None:
         zone = self.world.zones.get(source.zone)

@@ -188,7 +188,10 @@ failures, a related warning mismatch and a missing compatibility test:
 - TR-2: remote provocation records the response without replacing a
   guard's current local target, state or last-seen position. A test
   keeps an out-of-sight local chase alive after another player's remote
-  attack and subsequent NPC evaluation.
+  attack and subsequent NPC evaluation, for both player and Sable NPC
+  victims. The latter also exercises the usual own-group/faction
+  response, which must record provocation without assigning a remote
+  actor as a physical chase target.
 - TR-3: the DRONES order detail uses `would_mark(..., indirect=True)`.
   Tests cover hostile targets on and off the Row and neutral targets
   outside. The updated native acceptance captures that actual menu in
