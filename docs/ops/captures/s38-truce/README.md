@@ -97,17 +97,41 @@ entry; the raw-stream hash covers the entire unchanged file.
 P4 also passed both sizes at that same head:
 [run 42141227469](https://github.com/Thiesi/Blacksite/actions/runs/42141227469).
 These are explicitly earlier-head results. The later announcement fix
-does not change the first-attack frames shown here. Current-head native
-results and any failures are linked in the PR handoff; this packet
-does not relabel earlier captures as current-head captures.
+does not change the first-attack frames shown here. This packet does
+not relabel earlier captures as current-head captures.
+
+The final implementation proof is
+[native run 42248045953](https://github.com/Thiesi/Blacksite/actions/runs/42248045953),
+at `25a355ea2be348d6d905923f4c764e3b0c777b96`. The final documentation
+push leaves `src/`, `tests/` and `scripts/` identical to that head.
+All four jobs passed, covering both sizes, both presentations and all
+three colour tiers. Its artifact text captures, rather than the
+committed 8c6c1d6 samples, are where the corrected keeper-response
+frame gets checked:
+
+| Size / presentation | Artifact |
+|---|---|
+| 80x24 legacy | [13519109884](https://github.com/Thiesi/Blacksite/actions/runs/42248045953/artifacts/13519109884) |
+| 80x24 modern | [13519534133](https://github.com/Thiesi/Blacksite/actions/runs/42248045953/artifacts/13519534133) |
+| 132x50 legacy | [13520525191](https://github.com/Thiesi/Blacksite/actions/runs/42248045953/artifacts/13520525191) |
+| 132x50 modern | [13520070430](https://github.com/Thiesi/Blacksite/actions/runs/42248045953/artifacts/13520070430) |
+
+Each contains `s38-proof/truce-keeper-response-<size>-<tier>.txt` and
+the corresponding `.ans`, plus `result.json` with the implementation
+head and `keeper_response_target`. The author independently replayed
+all 60 streams and checked all 12 DRONES menus and keeper panels;
+[verification and hashes](https://github.com/Thiesi/Blacksite/pull/159#issuecomment-6689564579)
+are recorded on the PR. This evidence grants no presentation sign-off.
 
 The initial local native attempt at
 `3fb3554065cdfe015087a0da7df243ffde4ba203` reached the player-mark
 capture and then failed in the harness: `NativeProbe.leave` lacked its
 required capture label. Commit
 `280499ae2e642109c6ac8d896adf54527a27adfb` fixes those calls. The
-original capture archive is retained in the fixed local scratch path
-`%TEMP%/blacksite-s38/native-local-first-failure.zip`, SHA-256
+original capture archive was local-only at
+`%TEMP%/blacksite-s38/native-local-first-failure.zip`. The owner's
+2026-11-06 cleanup at about 16:36 UTC deleted it. It can no longer be
+re-checked. Its recorded SHA-256 remains
 `da4dfed12b6a4d17527345e7c82babbdaa95f01aa4393f891750694c547a37e5`.
 It is a failed attempt, not completed acceptance. Its small failure
 manifest is retained beside this document.
@@ -176,7 +200,9 @@ The same owner decision makes the specific d39c7ff S11 132x50 failure
 (33.836831 ms, job 127704009383, run 42160061781) nonblocking for S38.
 The failed artifact 13476989684 and its archive SHA-256
 `f344269a51f2ba75c8445964ec449c7d4761f3a6dae5e049ce0d0e00a97effd9`
-stay retained. The 10 ms gate stays unchanged. A new S11 failure at a
+stay recorded. The GitHub original remains available as verified below;
+its local TEMP copy was deleted in the same cleanup. The 10 ms gate
+stays unchanged. A new S11 failure at a
 later S38 head is a new measurement to report for disposition. S40
 follows S38; this decision does not grant later-head timing acceptance.
 
@@ -242,5 +268,42 @@ unchanged. Replaying each of the four failed captures proves the new
 reader recognizes the warning; changing `order` in the rendered detail
 makes each negative control fail as required. The failed run, artifact
 IDs, original archive hashes and capture hashes are retained in
-`technical-native-first-failure.json`. All four original ZIPs remain
-in `%TEMP%/blacksite-s38/technical-first-failure/` and on GitHub.
+`technical-native-first-failure.json`. The local ZIP copies in
+`%TEMP%/blacksite-s38/technical-first-failure/` were deleted in the
+owner's 2026-11-06 cleanup. All four GitHub originals still downloaded
+on 2026-11-06 and matched their recorded archive hashes.
+
+## Artifact availability after the TEMP cleanup
+
+The owner cleared `%TEMP%` on 2026-11-06 at about 16:36 UTC. All local
+`%TEMP%/blacksite-s38` evidence, venvs, wheels and NetBBS copies are
+gone. Prior PR comments and the restart checkpoint's historical paths
+do not establish local availability. Recorded hashes remain evidence
+of what existed; the local-only first-failure ZIP cannot be re-checked.
+
+At 17:09 UTC on 2026-11-06, all 18 GitHub originals listed below
+downloaded and passed ZIP CRC verification. The 48 original native
+ANSI/text hash pairs matched `manifest.json`; seven previously
+recorded archive hashes also matched (the four expanded failures,
+the d39 S11 failure and both final S11 proofs). All 12 keeper-response
+text captures in run 42248045953 showed hostile state with no stale
+keeper warning. No downloaded archive was written to disk.
+
+| Run | Artifact IDs | GitHub expiry (UTC) |
+|---|---|---|
+| 42141227625 | 13469215090, 13468805653, 13468466149, 13466744559 | 2027-02-04 01:03:44 |
+| 42141227469 | 13468167927, 13467864140 | 2027-02-04 01:03:43 |
+| 42158356269 | 13476171344, 13476165653, 13476121612, 13476041340 | 2027-02-04 03:44:31 |
+| 42160061781 | 13477635483, 13476989684 | 2027-02-04 04:02:09 |
+| 42248045953 | 13520525191, 13520070430, 13519534133, 13519109884 | 2027-02-04 15:58:49 |
+| 42248046086 | 13520497634, 13519888717 | 2027-02-04 15:58:49 |
+
+These are the GitHub API's reported expiry times, not permanent
+retention promises. The failed attempts remain failed. The new
+passing proofs neither erase them nor establish a performance cause.
+
+Under the owner's [updated TEMP rule](https://github.com/Thiesi/Blacksite/issues/82#issuecomment-6690465319),
+TEMP is not evidence storage. Future proofs reuse one fixed root per
+proof kind and remove it, its venvs, wheels, clones and downloaded
+artifacts when finished. Durable evidence stays in GitHub artifacts,
+on the PR or committed under `docs/`.
