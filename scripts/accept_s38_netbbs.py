@@ -68,8 +68,8 @@ async def accept(root: Path, door_python: Path, width: int, height: int,
             assert lines.index(mark) < lines.index("Sable is coming for you.")
             await wait(lambda: first.session.ack_revision == first.session.view_revision)
             probe.save(first, f"truce-marked-{width}x{height}-{tier}")
-            await probe.leave(first)
-            await probe.leave(second)
+            await probe.leave(first, f"finished-player-a-{width}x{height}-{tier}")
+            await probe.leave(second, f"finished-player-b-{width}x{height}-{tier}")
 
             caller = await probe.open(width, height, "TruceN"+tier, **kwargs)
             await enter_row(probe, caller)
@@ -87,7 +87,7 @@ async def accept(root: Path, door_python: Path, width: int, height: int,
             cases.append({"size": [width, height], "tier": tier, "presentation": modern,
                           "player_marked": True, "regular_attack_provokes_keeper": True,
                           "mark_before_chase": True, "grade_fixture": 5})
-            await probe.leave(caller)
+            await probe.leave(caller, f"finished-regular-{width}x{height}-{tier}")
         assert not probe.errors
         (root/"result.json").write_text(json.dumps({"head": head, "cases": cases,
             "transport": "NetBBS Telnet -> registered native stdio", "human_acceptance": False}, indent=2)+"\n",
