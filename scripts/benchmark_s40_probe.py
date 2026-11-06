@@ -23,12 +23,23 @@ from blacksite.server.write_profile import WriteProfile
 
 def shape(root: Path) -> tuple[str, str, list[str], list[list[int]]]:
     richest: tuple[str, str, list[dict[str, Any]]] | None = None
-    for path in sorted(root.glob('npc-profile-*.json')):
-        raw = path.read_bytes()
-        for call in json.loads(raw).get('write_calls', []):
-            operations = call['operations']
+    manifests = sorted(root.glob('npc-write-shape-*.json'))
+    if manifests:
+        # Native export supplies a small hash-linked shape manifest, so the
+        # benchmark never has to materialize a long diagnostic trace.
+        for path in manifests:
+            data = json.loads(path.read_bytes())
+            operations = data['operations']
             if richest is None or len(operations) > len(richest[2]):
-                richest = path.name, hashlib.sha256(raw).hexdigest(), operations
+                richest = data['profile'], data['profile_sha256'], operations
+    else:
+        # Retained first-phase profiles remain valid comparison fixtures.
+        for path in sorted(root.glob('npc-profile-*.json')):
+            raw = path.read_bytes()
+            for call in json.loads(raw).get('write_calls', []):
+                operations = call['operations']
+                if richest is None or len(operations) > len(richest[2]):
+                    richest = path.name, hashlib.sha256(raw).hexdigest(), operations
     if richest is None or not richest[2]:
         raise ValueError('No captured write call in the profile root')
     name, digest, operations = richest

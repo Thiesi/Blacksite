@@ -613,10 +613,10 @@ jobs:
         if: always()
         shell: bash
         run: |
-          if compgen -G "$RUNNER_TEMP/s11-proof/npc-profile-*.json" > /dev/null; then
+          if compgen -G "$RUNNER_TEMP/s11-proof/npc-write-shape-*.json" > /dev/null; then
             python scripts/benchmark_s40_probe.py --profile-root "$RUNNER_TEMP/s11-proof" --output "$RUNNER_TEMP/s11-proof/probe-overhead.json"
           else
-            echo "No write profile available for the observer benchmark"
+            echo "No supplementary write shape available; inspect the canonical acceptance outcome"
           fi
       - uses: actions/upload-artifact@v4
         if: always()

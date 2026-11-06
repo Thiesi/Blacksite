@@ -9,6 +9,9 @@ from the operation, and wall minus CPU is not labelled as an I/O cause.
 from collections import deque
 from collections.abc import Callable, Iterator
 from functools import wraps
+import hashlib
+import json
+from pathlib import Path
 import threading
 import time
 import sys
@@ -90,8 +93,10 @@ class WriteProfile:
     outside this acceptance-only context.
     """
 
-    def __init__(self, server: Any, *, reader: Callable[[], Sample] = sample) -> None:
+    def __init__(self, server: Any, *, reader: Callable[[], Sample] = sample,
+                 trace_writes: bool = True) -> None:
         self.server, self.reader = server, reader
+        self.trace_writes = trace_writes
         self.loop = server.core.loop
         self._calls: deque[dict[str, Any]] = deque(maxlen=self.loop.timings.maxlen)
         self.gates: list[dict[str, Any]] = []
@@ -150,6 +155,34 @@ class WriteProfile:
                 {"operation": operation, "parent": parent, **difference(start, end)}
                 for operation, parent, start, end in row["operations"]]}
 
+    def export_trace(self, path: Path, metadata: dict[str, Any]) -> dict[str, Any]:
+        """Stream diagnostic data, returning a small hash/shape manifest."""
+        header = {**metadata, "max_calls": self.loop.timings.maxlen,
+                  "write_probe": self.metadata()}
+        richest: list[dict[str, Any]] = []
+        richest_tick, count = None, 0
+        began = time.perf_counter()
+        with path.open('w', encoding='utf-8', newline='\n') as output:
+            output.write(json.dumps(header, separators=(',', ':'))[:-1])
+            output.write(',"write_calls":[')
+            for row in self.iter_calls():
+                if count:
+                    output.write(',')
+                json.dump(row, output, separators=(',', ':'))
+                count += 1
+                if len(row['operations']) > len(richest):
+                    richest = [{"operation": op['operation'], "parent": op['parent']}
+                               for op in row['operations']]
+                    richest_tick = row['tick']
+            output.write(']}\n')
+        elapsed = time.perf_counter()-began
+        with path.open('rb') as source:
+            digest = hashlib.file_digest(source, 'sha256').hexdigest()
+        return {"profile": path.name, "profile_sha256": digest,
+                "trace_bytes": path.stat().st_size, "export_seconds": elapsed,
+                "exported_calls": count, "richest_tick": richest_tick,
+                "operations": richest}
+
     def __enter__(self) -> "WriteProfile":
         original_writes, original_status = self.server._character_writes, self.server.status
 
@@ -179,11 +212,13 @@ class WriteProfile:
             return "storage.mark_dirty:" + kind + (":" + record_id if kind == "meta" else "")
 
         try:
-            self.replace(self.server, "_character_writes", writes)
             self.replace(self.server, "status", status)
             storage, core = self.server.storage, self.server.core
             # Server.start binds this callback before the probe is installed.
             self.replace(core, "status_provider", status)
+            if not self.trace_writes:
+                return self
+            self.replace(self.server, "_character_writes", writes)
             self.wrap(storage, "mark_dirty", dirty_label)
             for name in ("_json", "_flush", "character_write", "commerce_write", "report", "meta"):
                 self.wrap(storage, name, "storage." + name)
@@ -211,7 +246,9 @@ class WriteProfile:
         return {**gate, "samples_ms": list(gate["samples_ms"]), "reported": dict(gate["reported"])}
 
     def metadata(self) -> dict[str, Any]:
-        return {"clock_counters": "wall brackets, thread/process CPU; optional RUSAGE_THREAD deltas",
+        return {"trace_writes": self.trace_writes,
+                "clock_counters": ("wall brackets, thread/process CPU; optional RUSAGE_THREAD deltas"
+                                   if self.trace_writes else "none; status-only gate snapshot"),
                 "counter_order": list(COUNTERS), "gil_switch_interval_s": sys.getswitchinterval(),
                 "threads": [{"name": thread.name, "ident": thread.ident} for thread in threading.enumerate()],
                 "interpretation": "Wall minus CPU is not a cause. Inspect operation nesting, counter deltas and sampling brackets; null counters mean unsupported."}

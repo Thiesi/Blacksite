@@ -13,33 +13,42 @@ both. Its two profile JSON files per size cover the original first and
 final all-hub windows; each still warms up for two seconds and samples
 for ten seconds.
 
-`WriteProfile` is installed in these windows and separately during the
-existing heat wait. Normal service execution imports no probe and has
-no probe branch in its tick or persistence paths. The probe delegates
-each write and callback synchronously, and restores the original
-instance attributes and storage-owned SQLite connection on exit,
-including exceptional exits. No snapshot contents, SQL text or
-player/item IDs are recorded in operation labels.
+The canonical windows use `WriteProfile(trace_writes=False)`: only the
+synchronous status snapshot is added. No per-operation clocks, write
+wrappers or SQLite proxy are installed. The original coarse subsystem,
+GC and flush probes remain as before S40. Normal service execution
+imports no probe and has no probe branch in its tick/persistence paths.
+
+After the final canonical result has been saved, including a failed
+result, a separate 120-second all-hub diagnostic installs the detailed
+collector. It delegates each write synchronously and restores all
+bindings, including failures. It adds no player input or gameplay
+fixture. No snapshot contents, SQL text or player/item IDs enter labels.
+The diagnostic's timings are never substituted for acceptance.
+For the default two-size command, detailed capture follows only the
+last size's final gate, or a failed final gate before the run aborts.
+CI runs each size in its own service, so each gets a diagnostic and no
+earlier diagnostic can precede a later canonical window.
 
 Collection keeps raw clock/counter tuples. Per-operation dictionaries,
 counter deltas and unit conversion are built only when records are
-exported after the profile window. This reduces observer work inside
-the gate; it does not remove clock reads or all capture overhead.
+exported after the diagnostic window. This reduces observer work but
+does not remove clock reads or all capture overhead.
 
-The supplementary `npc-heat-writes-<size>.json` captures the existing
-real heat wait, retaining at most the latest 6,000 write calls. It
-changes no deadline, sleep cadence, player input or gate window, and
-does not define another acceptance gate. Long traces are exported and
-released before final profiling, including on a failed heat wait, so
-neither their formatting nor their retained object graph remains in
-the final gate. No forced GC or clock reset is used. The original
-two-second warmup and ten-second gate window still follow, and the
-window's samples exclude the earlier export. Capture overhead and GC
-effects during the heat trace remain limits of its interpretation.
-The two gate profiles remain separate, with their exact sample vectors.
+`npc-write-diagnostic-<size>.json` retains at most the latest 6,000
+write calls from the supplementary all-hub window. The real heat wait
+has no detailed probe. Neither detailed capture, retained objects nor
+export precedes or enters the canonical windows. No forced GC or
+clock reset is used. Detailed capture/GC effects remain limits of the
+supplementary diagnostic; it does not define an acceptance gate.
+The two gate profiles retain their exact sample vectors and coarse
+timings; their `write_calls` array is empty and `trace_writes` is false.
 Long-trace export is compact and streams one expanded call at a time.
 It does not allocate a second full trace of dictionaries or one full
 JSON string; the retained raw trace is still bounded by 6,000 calls.
+The small `npc-write-shape-<size>.json` manifest records its SHA-256,
+byte count, export duration and richest call's labels/parent indices.
+The benchmark reads that manifest instead of loading the whole trace.
 
 Use one fixed local proof root, `blacksite-proof/s40` under the system
 temp folder. Publish durable evidence as a GitHub artifact, on the PR
@@ -70,7 +79,7 @@ separately bracketed durations.
 
 ## Reading write operations
 
-`write_calls` groups operations by the simulation's processed tick and
+The diagnostic's `write_calls` groups operations by the processed tick and
 thread. Each operation has a `parent` index within that call, so nested
 JSON encoding, SQLite work and callbacks can be distinguished from
 their callers. Labels cover the character-write stage, contract/NPC/
@@ -87,9 +96,10 @@ dependent.
 
 `sampling_wall_ms` brackets the clock/counter reads separately from
 the operation. If that bracket is large, do not attribute its pause
-to the measured callback. The real tick gate still includes all probe
-overhead; no measured time is subtracted or waived. The existing
-subsystem, GC and flush records remain in the profile.
+to the measured callback. No measured time is subtracted or waived.
+Detailed operation clocks are confined to the later diagnostic. The
+original subsystem, GC and flush overhead remains included in the
+canonical gate and its profile.
 
 The CPU/counter reads fall inside those brackets. Their delta interval
 is not exactly the wall interval, so tiny spans can show more CPU than
@@ -168,3 +178,33 @@ fell from 312.5 to 250 microseconds/call, at coarse Windows accounting
 resolution. This is a synthetic observer measurement, not Linux native
 acceptance. The updated head still needs its own native results. No
 game or persistence fix, root cause, or slice completion is claimed.
+
+## Second native measurement: cd16740
+
+[Service run 42282914816](https://github.com/Thiesi/Blacksite/actions/runs/42282914816)
+passed actual heat expiry/local response at both sizes, and S24 passed
+both sizes without retrying the old failed job. Its
+[summary](s40-evidence/cd16740.json) preserves the second timing failure.
+
+| Size | Initial p99 / n | Final p99 / n |
+|---|---:|---:|
+| 80x24 | 3.388407 ms / 100 | 6.969807 ms / 100, pass |
+| 132x50 | 5.069048 ms / 101 | 10.110753 ms / 101, **fail** |
+
+All four vectors reproduce p99 exactly. Same-runner synthetic capture
+cost was 0.622849/0.613626 ms per 76-span call. That is material beside
+a 0.110753 ms miss, but it is not a value to subtract from p99. Neither
+probed failure is erased or dispositioned by a later result.
+
+The clinic heat traces held 5,620/5,597 calls, at most 15 spans each,
+and were 11,730,871/11,676,638 bytes. They parsed correctly. No SQLite
+commit or write-root pause at least 10 ms was captured; maxima were
+0.872063/0.533210 ms. Thus that wait did not exercise the write-heavy
+final all-hub path or identify the historical off-CPU cause.
+
+These observations motivated the separation described above: original
+canonical gates with status-only sample capture, followed by detailed
+all-hub diagnostics. It prevents the new operation observer from
+entering acceptance and avoids the unrepresentative clinic trace.
+No estimator, threshold, heat wait, canonical workload or persistence
+rule changes. A diagnostic cannot turn a failed gate into a pass.

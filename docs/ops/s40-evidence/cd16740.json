@@ -1,0 +1,1276 @@
+{
+  "schema": 1,
+  "head": "cd16740bca1a885e063d6e00af10238e92e0e88b",
+  "service_run": 42282914816,
+  "transport": "NetBBS v7.45.0 Telnet to registered native stdio; no show/PTY flag",
+  "interpretation": "132x50 final failed, preserved without retry/subtraction/waiver. Detailed capture overhead material; no game/historical-stall/outside-game cause established. Heat trace is not the all-hub workload.",
+  "records": [
+    {
+      "size": "80x24",
+      "artifact_id": 13537357226,
+      "job": 128117910896,
+      "artifact_url": "https://github.com/Thiesi/Blacksite/actions/runs/42282914816/artifacts/13537357226",
+      "archive_sha256": "f45618c9c87a6087814021c01e4817838437811c29e0f3c675fd236f29f93aff",
+      "profiles": [
+        {
+          "file": "npc-profile-80x24-1.json",
+          "sha256": "8959f9936037e9facd2597f97e5e1f4c8f5baf7af28260682791aded78b94ebf",
+          "gate": {
+            "id": 0,
+            "samples_ms": [
+              2.6466750000082584,
+              3.0865369999872883,
+              2.3361380000039844,
+              3.112857000004965,
+              2.3342650000017784,
+              3.1754419999998618,
+              2.3346360000005006,
+              3.1776750000034326,
+              2.2790609999958633,
+              3.1497929999915186,
+              2.3275550000079193,
+              3.1470079999991185,
+              2.3307390000013584,
+              3.113247999991131,
+              2.3305790000023308,
+              3.042681000010816,
+              2.341274999992038,
+              3.220299000005866,
+              2.3435590000104867,
+              3.1089109999982156,
+              2.3297380000002477,
+              3.076872999997704,
+              2.985515999995414,
+              3.065646000010247,
+              2.2686360000108152,
+              3.0281699999932243,
+              2.2000529999957052,
+              3.0985550000082185,
+              2.347344000000362,
+              3.16906199999778,
+              2.421485999988704,
+              3.166808999992554,
+              3.095350000009489,
+              3.133789000003162,
+              3.0880400000086183,
+              3.196662999997102,
+              2.325314999993111,
+              3.083486999997831,
+              2.3935469999969428,
+              3.262927000008631,
+              2.320917999995231,
+              3.2114499999948976,
+              2.3281990000043606,
+              3.185029000007944,
+              3.044989000002829,
+              3.1823949999960632,
+              2.413777000001005,
+              3.0891950000011548,
+              2.4302919999996675,
+              2.9469910000017308,
+              2.6864289999934954,
+              3.63334600000087,
+              3.1596619999874065,
+              3.0920299999905865,
+              2.3503129999937755,
+              3.10098300001016,
+              2.450422999999091,
+              3.0698160000071084,
+              2.3864759999980834,
+              3.1753760000015063,
+              2.3110329999980195,
+              3.272832999996922,
+              2.5380449999943266,
+              3.195665999996322,
+              2.3001759999914384,
+              3.2470029999984718,
+              2.403591999993182,
+              3.1221449999918605,
+              3.1939340000093353,
+              3.1389399999994794,
+              2.3954300000070816,
+              3.1465420000102995,
+              2.333778000007669,
+              3.0655390000049465,
+              3.240023000003589,
+              3.1453200000015613,
+              2.470592999998189,
+              3.1138920000017833,
+              2.4304630000102634,
+              3.136596000004488,
+              2.3713239999949565,
+              3.1208430000049248,
+              2.300558000001729,
+              3.2389210000047797,
+              3.1178779999976314,
+              3.1666630000017904,
+              3.2440390000090247,
+              3.280373999999142,
+              2.4629010000012386,
+              3.230579000003786,
+              2.483573000006345,
+              3.2091660000048705,
+              3.1850399999910906,
+              3.2794029999934082,
+              2.4072880000005625,
+              3.2538039999963075,
+              2.4639430000092943,
+              3.3884070000027577,
+              2.4062859999958164,
+              3.2214549999878273
+            ],
+            "count": 100,
+            "reported": {
+              "p50_ms": 3.083486999997831,
+              "p99_ms": 3.3884070000027577
+            }
+          },
+          "gate_pass": true,
+          "active_zones": 10,
+          "nearby_max_tick_including_warmup": {
+            "tick": 600,
+            "loop_wall_ms": 36.96433599999693,
+            "loop_cpu_ms": 3.8650579999996992,
+            "writes_wall_ms": 0.36955699999907665,
+            "writes_cpu_ms": 0.3698989999998403,
+            "total_wall_ms": 37.34500000000196,
+            "total_cpu_ms": 4.2421180000005165
+          }
+        },
+        {
+          "file": "npc-profile-80x24-2.json",
+          "sha256": "d7d5469bba3662e13c82b2b105353b2f5ccd736ce2e61b1740e6cb022c5d39b5",
+          "gate": {
+            "id": 0,
+            "samples_ms": [
+              3.8549359999251465,
+              3.6784300000363146,
+              3.238267000028827,
+              2.4477160000060394,
+              2.7366409999558527,
+              2.498863999903733,
+              2.5363600000218867,
+              5.97704300002988,
+              4.759608999961529,
+              2.341525999895566,
+              3.21284899996499,
+              2.471343000024717,
+              2.4712719999797628,
+              2.4488679999876695,
+              3.3336709999503,
+              7.708640000032574,
+              3.939622999951098,
+              2.5206059999618446,
+              3.3000009999568647,
+              2.494676999958756,
+              3.229964999945878,
+              2.512633999913305,
+              2.64042599997083,
+              5.9075169999687205,
+              2.806396999972094,
+              2.5558190000083414,
+              2.608889000043746,
+              3.2371350000630628,
+              2.6187039999285844,
+              2.547896999999466,
+              2.551952999965579,
+              6.30770999998731,
+              2.635238999914691,
+              2.5898000000097454,
+              2.675739999972393,
+              2.52550400000473,
+              3.310636000037448,
+              2.5268959999493745,
+              2.62055700000019,
+              3.8414760000478054,
+              2.575809999939338,
+              2.5627700000541154,
+              2.5870169999961945,
+              2.6088089999802833,
+              2.590111000017714,
+              2.82576600000084,
+              3.5067119999894203,
+              6.540009999980612,
+              2.775950999989618,
+              3.245858000013868,
+              2.5138759999663307,
+              3.338568000003761,
+              2.5635709999960454,
+              3.322714999967502,
+              2.6004259999581336,
+              6.969807000018591,
+              2.637552000010146,
+              2.5404549999166193,
+              2.8870569999526197,
+              3.235662999941269,
+              3.2125179999411557,
+              3.315131999897858,
+              3.3258089999890217,
+              5.479852999997092,
+              2.5725440000314848,
+              2.610751000020173,
+              2.499063999948703,
+              3.0727580000302623,
+              2.4029589999372547,
+              2.477731999988464,
+              2.4248710000165374,
+              4.151393000029202,
+              2.5357789999134184,
+              3.3661699999356642,
+              2.573746000052779,
+              2.533175000053234,
+              3.3289140000078987,
+              2.443158999994921,
+              3.3899259999543574,
+              6.8378280000160885,
+              5.577480000056312,
+              2.5828000000274187,
+              2.491432000056193,
+              2.550720999920486,
+              2.711664000003111,
+              3.3599399999957313,
+              3.3286230000157957,
+              3.816989000029025,
+              2.649950999966677,
+              2.7409279999801583,
+              3.227110000011635,
+              3.3275719999892317,
+              2.630040999974881,
+              2.564402000075461,
+              3.2765549999567156,
+              6.787852999991628,
+              5.602937999924507,
+              2.4386930000446227,
+              2.520086000004085,
+              2.5761300000795018
+            ],
+            "count": 100,
+            "reported": {
+              "p50_ms": 2.649950999966677,
+              "p99_ms": 6.969807000018591
+            }
+          },
+          "gate_pass": true,
+          "active_zones": 10,
+          "nearby_max_tick_including_warmup": {
+            "tick": 7220,
+            "loop_wall_ms": 3.59397199997602,
+            "loop_cpu_ms": 3.5949670000015033,
+            "writes_wall_ms": 4.096599000035894,
+            "writes_cpu_ms": 3.2237689999981,
+            "total_wall_ms": 7.7028299999710725,
+            "total_cpu_ms": 6.827017999999185
+          }
+        }
+      ],
+      "native_client": {
+        "version": "0.0.20",
+        "file": "/home/runner/work/_temp/s11-venv/lib/python3.12/site-packages/blacksite/__init__.py",
+        "python_tree_sha256": "e1e9d693ac64b8670623e9756c1bb0a0b13a9b3c583a4072e45d986a9251af3d"
+      },
+      "benchmark": {
+        "purpose": "Synthetic capture overhead; not game timing or acceptance",
+        "profile": "npc-profile-80x24-2.json",
+        "profile_sha256": "d7d5469bba3662e13c82b2b105353b2f5ccd736ce2e61b1740e6cb022c5d39b5",
+        "operations_per_call": 76,
+        "calls_per_batch": 500,
+        "rounds": [
+          {
+            "order": [
+              false,
+              true
+            ],
+            "baseline": {
+              "wall_us_per_call": 13.423636,
+              "thread_cpu_us_per_call": 13.405
+            },
+            "capture": {
+              "wall_us_per_call": 565.3890180000001,
+              "thread_cpu_us_per_call": 565.327532
+            }
+          },
+          {
+            "order": [
+              true,
+              false
+            ],
+            "baseline": {
+              "wall_us_per_call": 12.942492,
+              "thread_cpu_us_per_call": 12.928974
+            },
+            "capture": {
+              "wall_us_per_call": 745.172882,
+              "thread_cpu_us_per_call": 745.02369
+            }
+          },
+          {
+            "order": [
+              false,
+              true
+            ],
+            "baseline": {
+              "wall_us_per_call": 13.04865,
+              "thread_cpu_us_per_call": 13.041822
+            },
+            "capture": {
+              "wall_us_per_call": 635.89811,
+              "thread_cpu_us_per_call": 635.831726
+            }
+          }
+        ],
+        "python": "3.12.16 (main, Oct 26 2026, 02:48:44) [GCC 15.2.0]",
+        "platform": "Linux-7.0.0-1019-azure-x86_64-with-glibc2.43",
+        "median_increment_us_per_call": {
+          "wall_us_per_call": 622.84946,
+          "thread_cpu_us_per_call": 622.789904
+        },
+        "limits": "Replays labels and nesting without payload, SQLite, logging, or all instance-wrapper work. Includes capture allocation/GC. Does not bound whole-probe overhead or prove an unchanged gate outcome. No time is subtracted from any gate."
+      },
+      "heat_and_local_response_passed": true,
+      "heat_trace": {
+        "file": "npc-heat-writes-80x24.json",
+        "uncompressed_bytes": 11730871,
+        "metadata": {
+          "diagnostic_only": true,
+          "began_tick": 987,
+          "ended_tick": 6616,
+          "retention": "Latest calls only, bounded by loop.timings.maxlen",
+          "max_calls": 6000,
+          "export": "Before final profiling; trace released without a forced GC",
+          "write_probe": {
+            "clock_counters": "wall brackets, thread/process CPU; optional RUSAGE_THREAD deltas",
+            "counter_order": [
+              "voluntary_switches",
+              "involuntary_switches",
+              "minor_faults",
+              "major_faults",
+              "input_blocks",
+              "output_blocks"
+            ],
+            "gil_switch_interval_s": 0.005,
+            "threads": [
+              {
+                "name": "MainThread",
+                "ident": 133206033648576
+              },
+              {
+                "name": "ThreadPoolExecutor-0_0",
+                "ident": 133205952423616
+              },
+              {
+                "name": "asyncio_0",
+                "ident": 133205860546240
+              }
+            ],
+            "interpretation": "Wall minus CPU is not a cause. Inspect operation nesting, counter deltas and sampling brackets; null counters mean unsupported."
+          }
+        },
+        "retained_calls": 5620,
+        "max_spans_per_call": 15,
+        "at_capacity": false,
+        "root_wall_p50_ms": 0.199301,
+        "root_wall_p99_ms": 0.365361,
+        "roots_over_10_ms": 0,
+        "interpretation": "Character writes only, not the S11 tick gate. Wall minus CPU is not a cause. Retained records only; compare counters, nesting and sampling brackets.",
+        "sha256": "dd9338ba749ad2cbf3defc600e88a9da64e55587e77527c2329bda6be1fdfb8e",
+        "largest_root": {
+          "tick": 5150,
+          "thread": 133206033648576,
+          "operations": [
+            {
+              "operation": "character_writes",
+              "parent": null,
+              "start_ns": 570527048996,
+              "end_ns": 570527921059,
+              "wall_ms": 0.872063,
+              "thread_cpu_ms": 0.95627,
+              "process_cpu_ms": 0.92255,
+              "sampling_wall_ms": 0.145109,
+              "thread_counters": {
+                "voluntary_switches": 0,
+                "involuntary_switches": 0,
+                "minor_faults": 4,
+                "major_faults": 0,
+                "input_blocks": 0,
+                "output_blocks": 0
+              }
+            },
+            {
+              "operation": "contracts.record",
+              "parent": 0,
+              "start_ns": 570527063277,
+              "end_ns": 570527229357,
+              "wall_ms": 0.16608,
+              "thread_cpu_ms": 0.169081,
+              "process_cpu_ms": 0.169091,
+              "sampling_wall_ms": 0.006039,
+              "thread_counters": {
+                "voluntary_switches": 0,
+                "involuntary_switches": 0,
+                "minor_faults": 1,
+                "major_faults": 0,
+                "input_blocks": 0,
+                "output_blocks": 0
+              }
+            },
+            {
+              "operation": "storage.mark_dirty:meta:contracts_state",
+              "parent": 0,
+              "start_ns": 570527272002,
+              "end_ns": 570527509710,
+              "wall_ms": 0.237708,
+              "thread_cpu_ms": 0.272014,
+              "process_cpu_ms": 0.272034,
+              "sampling_wall_ms": 0.036936,
+              "thread_counters": {
+                "voluntary_switches": 0,
+                "involuntary_switches": 0,
+                "minor_faults": 1,
+                "major_faults": 0,
+                "input_blocks": 0,
+                "output_blocks": 0
+              }
+            },
+            {
+              "operation": "storage._json",
+              "parent": 2,
+              "start_ns": 570527346213,
+              "end_ns": 570527385423,
+              "wall_ms": 0.03921,
+              "thread_cpu_ms": 0.041973,
+              "process_cpu_ms": 0.042012,
+              "sampling_wall_ms": 0.005848,
+              "thread_counters": {
+                "voluntary_switches": 0,
+                "involuntary_switches": 0,
+                "minor_faults": 0,
+                "major_faults": 0,
+                "input_blocks": 0,
+                "output_blocks": 0
+              }
+            },
+            {
+              "operation": "storage.mark_dirty:meta:salvage_state",
+              "parent": 0,
+              "start_ns": 570527521848,
+              "end_ns": 570527554798,
+              "wall_ms": 0.03295,
+              "thread_cpu_ms": 0.035533,
+              "process_cpu_ms": 0.035673,
+              "sampling_wall_ms": 0.005378,
+              "thread_counters": {
+                "voluntary_switches": 0,
+                "involuntary_switches": 0,
+                "minor_faults": 0,
+                "major_faults": 0,
+                "input_blocks": 0,
+                "output_blocks": 0
+              }
+            },
+            {
+              "operation": "storage._json",
+              "parent": 4,
+              "start_ns": 570527526024,
+              "end_ns": 570527536230,
+              "wall_ms": 0.010206,
+              "thread_cpu_ms": 0.012779,
+              "process_cpu_ms": 0.012889,
+              "sampling_wall_ms": 0.005377,
+              "thread_counters": {
+                "voluntary_switches": 0,
+                "involuntary_switches": 0,
+                "minor_faults": 0,
+                "major_faults": 0,
+                "input_blocks": 0,
+                "output_blocks": 0
+              }
+            },
+            {
+              "operation": "storage.character_write",
+              "parent": 0,
+              "start_ns": 570527650111,
+              "end_ns": 570527890133,
+              "wall_ms": 0.240022,
+              "thread_cpu_ms": 0.271042,
+              "process_cpu_ms": 0.24268,
+              "sampling_wall_ms": 0.033811,
+              "thread_counters": {
+                "voluntary_switches": 0,
+                "involuntary_switches": 0,
+                "minor_faults": 2,
+                "major_faults": 0,
+                "input_blocks": 0,
+                "output_blocks": 0
+              }
+            },
+            {
+              "operation": "storage.mark_dirty:identities",
+              "parent": 6,
+              "start_ns": 570527656671,
+              "end_ns": 570527673777,
+              "wall_ms": 0.017106,
+              "thread_cpu_ms": 0.019509,
+              "process_cpu_ms": 0.019529,
+              "sampling_wall_ms": 0.004897,
+              "thread_counters": {
+                "voluntary_switches": 0,
+                "involuntary_switches": 0,
+                "minor_faults": 0,
+                "major_faults": 0,
+                "input_blocks": 0,
+                "output_blocks": 0
+              }
+            },
+            {
+              "operation": "storage._json",
+              "parent": 7,
+              "start_ns": 570527660497,
+              "end_ns": 570527666806,
+              "wall_ms": 0.006309,
+              "thread_cpu_ms": 0.008723,
+              "process_cpu_ms": 0.008763,
+              "sampling_wall_ms": 0.004848,
+              "thread_counters": {
+                "voluntary_switches": 0,
+                "involuntary_switches": 0,
+                "minor_faults": 0,
+                "major_faults": 0,
+                "input_blocks": 0,
+                "output_blocks": 0
+              }
+            },
+            {
+              "operation": "storage.mark_dirty:players",
+              "parent": 6,
+              "start_ns": 570527681108,
+              "end_ns": 570527880378,
+              "wall_ms": 0.19927,
+              "thread_cpu_ms": 0.201839,
+              "process_cpu_ms": 0.20197,
+              "sampling_wall_ms": 0.005449,
+              "thread_counters": {
+                "voluntary_switches": 0,
+                "involuntary_switches": 0,
+                "minor_faults": 2,
+                "major_faults": 0,
+                "input_blocks": 0,
+                "output_blocks": 0
+              }
+            },
+            {
+              "operation": "storage._json",
+              "parent": 9,
+              "start_ns": 570527687768,
+              "end_ns": 570527808810,
+              "wall_ms": 0.121042,
+              "thread_cpu_ms": 0.126237,
+              "process_cpu_ms": 0.126317,
+              "sampling_wall_ms": 0.007772,
+              "thread_counters": {
+                "voluntary_switches": 0,
+                "involuntary_switches": 0,
+                "minor_faults": 1,
+                "major_faults": 0,
+                "input_blocks": 0,
+                "output_blocks": 0
+              }
+            },
+            {
+              "operation": "characters.committed",
+              "parent": 0,
+              "start_ns": 570527899627,
+              "end_ns": 570527911154,
+              "wall_ms": 0.011527,
+              "thread_cpu_ms": 0.014201,
+              "process_cpu_ms": 0.014201,
+              "sampling_wall_ms": 0.005228,
+              "thread_counters": {
+                "voluntary_switches": 0,
+                "involuntary_switches": 0,
+                "minor_faults": 0,
+                "major_faults": 0,
+                "input_blocks": 0,
+                "output_blocks": 0
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "size": "132x50",
+      "artifact_id": 13537577113,
+      "job": 128117910917,
+      "artifact_url": "https://github.com/Thiesi/Blacksite/actions/runs/42282914816/artifacts/13537577113",
+      "archive_sha256": "3ba9010dc205d9f978838185b9e375ac281ca50bd054810c8b31a005c20aa065",
+      "profiles": [
+        {
+          "file": "npc-profile-132x50-1.json",
+          "sha256": "c1b555b713519fbd84fc3c13f9df7f4442cbbcc768c1c1985f84670291794b70",
+          "gate": {
+            "id": 0,
+            "samples_ms": [
+              4.502012999978433,
+              2.4187640000263855,
+              4.6378160000131174,
+              2.623033000020314,
+              4.288326999983383,
+              2.572068000006311,
+              4.344042000013815,
+              2.6775440000506023,
+              4.971396000030381,
+              2.5706760000048234,
+              4.562846999988324,
+              2.325199999972938,
+              4.582102999961535,
+              2.441144999977496,
+              4.60564700000532,
+              2.3400869999932183,
+              4.453162999993765,
+              2.550829000028898,
+              4.407909999997628,
+              2.339216000052602,
+              4.724797999983821,
+              2.8225439999687296,
+              4.863095000018802,
+              2.8323120000095514,
+              4.822900000021946,
+              3.001315999995313,
+              4.516190999993341,
+              2.8526500000225496,
+              4.657362999978432,
+              2.868428999988737,
+              4.732020999995257,
+              2.8865330000371614,
+              4.888934000007339,
+              2.7803560000165817,
+              4.840872999977819,
+              2.8648819999830266,
+              4.95597799999814,
+              2.8712540000128683,
+              4.700313000000733,
+              2.386684000043715,
+              4.889535000017986,
+              2.9385299999944436,
+              4.362384000046404,
+              2.5284069999997882,
+              4.468640999959916,
+              2.344466000010925,
+              4.388452999990022,
+              2.9267379999851073,
+              5.069047999995746,
+              2.82759399999577,
+              4.889905000027284,
+              2.747304000024542,
+              5.08542799997258,
+              2.788951999946221,
+              4.490974000020742,
+              2.7779819999977917,
+              4.1122300000324685,
+              2.2711490000233425,
+              4.708789000005709,
+              2.940913999964323,
+              5.056073999980981,
+              2.52218600002152,
+              4.507763999981762,
+              2.700427000036143,
+              4.52357500000744,
+              2.480518000027132,
+              4.295420000005379,
+              2.558573999976943,
+              4.727521999996043,
+              2.8133259999663096,
+              4.551354999989599,
+              2.512888000012481,
+              4.356191999988823,
+              2.5050039999996443,
+              4.387721000000511,
+              2.4731450000103905,
+              4.415041999948244,
+              2.5157740000167905,
+              4.430801000012252,
+              2.339265999978579,
+              4.370870000002469,
+              2.345386999991206,
+              4.857213000036609,
+              2.771287999962624,
+              4.310548000034942,
+              2.3940970000353445,
+              4.4003140000086205,
+              2.3160920000009355,
+              4.331806999971377,
+              2.410968999981833,
+              4.584767000039847,
+              2.5581419999980426,
+              4.2281549999643175,
+              2.7856950000000325,
+              4.4238780000114275,
+              2.407583000035629,
+              4.333210000027066,
+              2.5462899999979527,
+              4.605555000011918,
+              2.1979029999670274,
+              4.130182999972476
+            ],
+            "count": 101,
+            "reported": {
+              "p50_ms": 4.1122300000324685,
+              "p99_ms": 5.069047999995746
+            }
+          },
+          "gate_pass": true,
+          "active_zones": 10,
+          "nearby_max_tick_including_warmup": {
+            "tick": 476,
+            "loop_wall_ms": 40.786380999975336,
+            "loop_cpu_ms": 40.77968899999984,
+            "writes_wall_ms": 0.3773109999656299,
+            "writes_cpu_ms": 0.37785600000006525,
+            "total_wall_ms": 41.1737599999924,
+            "total_cpu_ms": 41.16569999999964
+          }
+        },
+        {
+          "file": "npc-profile-132x50-2.json",
+          "sha256": "a2fc02c902363d5c19cfe472fcbd4d581b34fbefa07af9b8af5a7aaeadf06fb3",
+          "gate": {
+            "id": 0,
+            "samples_ms": [
+              5.497723999951631,
+              2.62368000016977,
+              4.5733679999102606,
+              2.4335369998880196,
+              3.191122999851359,
+              4.704812999989372,
+              3.0240640001011343,
+              7.514247000017349,
+              4.582235000043511,
+              2.6173180001478613,
+              4.35670700016999,
+              2.4990480001179094,
+              2.4584020000020246,
+              2.4989379999169614,
+              4.456631000039124,
+              9.738965999986249,
+              5.622084999913568,
+              2.552977999812356,
+              2.6168570000209,
+              6.38371900004131,
+              3.206568999985393,
+              3.0997540000043955,
+              3.160886999921786,
+              9.253465000028882,
+              4.9732009999843285,
+              3.076290000080917,
+              4.953624999870954,
+              3.5607690001597803,
+              3.328819000216754,
+              2.7528890000212414,
+              2.6637439998467016,
+              5.5183729998589115,
+              2.9142289999981585,
+              2.8845940000792325,
+              5.3497689998494025,
+              3.0827820000922657,
+              3.2245249999505177,
+              3.146755999978268,
+              3.0916579999029636,
+              10.588654000002862,
+              10.110752999935357,
+              3.295747000038318,
+              3.285306999941895,
+              3.1397579998611036,
+              5.219326999849727,
+              3.160626999942906,
+              3.4125329998460074,
+              5.819942000016454,
+              3.178911000077278,
+              2.8805659999306954,
+              3.207713999927364,
+              2.8403210001215484,
+              4.824094000014156,
+              2.8938909999851603,
+              2.923194999993939,
+              7.229848999941169,
+              2.8042450001066754,
+              2.924048000068069,
+              2.9486930000075517,
+              2.561743999876853,
+              4.824955000003683,
+              2.7892479999991338,
+              4.718898999954035,
+              7.083386999966024,
+              3.0738549999114184,
+              4.710052999826075,
+              3.282533000174226,
+              2.979269999968892,
+              2.826335999998264,
+              2.9758140001376887,
+              2.7164020000327582,
+              8.784654999999475,
+              5.124792000060552,
+              2.6802949998909753,
+              2.7015040000151203,
+              3.5017089999200834,
+              4.801533000090785,
+              3.0563429997982894,
+              5.031769000197528,
+              5.6751230001736985,
+              3.330121000090003,
+              2.947980999806532,
+              4.8610930000450026,
+              2.9783590000533877,
+              2.817609999965498,
+              4.533484999910797,
+              3.1396680001307686,
+              7.32340300010037,
+              3.436498999917603,
+              2.9908210001394764,
+              3.0332300000281975,
+              5.307857999923726,
+              2.981974000022092,
+              3.064828999868041,
+              4.825226000093608,
+              7.753700999955981,
+              3.3924869999282237,
+              2.597551000008025,
+              2.931670999942071,
+              4.590941000060411,
+              3.1047730001318996
+            ],
+            "count": 101,
+            "reported": {
+              "p50_ms": 3.191122999851359,
+              "p99_ms": 10.110752999935357
+            }
+          },
+          "gate_pass": false,
+          "active_zones": 10,
+          "nearby_max_tick_including_warmup": {
+            "tick": 7262,
+            "loop_wall_ms": 6.304982999836284,
+            "loop_cpu_ms": 6.3073959999968565,
+            "writes_wall_ms": 4.265447000079803,
+            "writes_cpu_ms": 3.964697999997213,
+            "total_wall_ms": 10.582623000118474,
+            "total_cpu_ms": 10.280279999996367
+          }
+        }
+      ],
+      "native_client": {
+        "version": "0.0.20",
+        "file": "/home/runner/work/_temp/s11-venv/lib/python3.12/site-packages/blacksite/__init__.py",
+        "python_tree_sha256": "e1e9d693ac64b8670623e9756c1bb0a0b13a9b3c583a4072e45d986a9251af3d"
+      },
+      "benchmark": {
+        "purpose": "Synthetic capture overhead; not game timing or acceptance",
+        "profile": "npc-profile-132x50-2.json",
+        "profile_sha256": "a2fc02c902363d5c19cfe472fcbd4d581b34fbefa07af9b8af5a7aaeadf06fb3",
+        "operations_per_call": 76,
+        "calls_per_batch": 500,
+        "rounds": [
+          {
+            "order": [
+              false,
+              true
+            ],
+            "baseline": {
+              "wall_us_per_call": 18.529792,
+              "thread_cpu_us_per_call": 18.519986
+            },
+            "capture": {
+              "wall_us_per_call": 605.5735960000001,
+              "thread_cpu_us_per_call": 605.5613519999999
+            }
+          },
+          {
+            "order": [
+              true,
+              false
+            ],
+            "baseline": {
+              "wall_us_per_call": 17.964723999999997,
+              "thread_cpu_us_per_call": 17.95515
+            },
+            "capture": {
+              "wall_us_per_call": 663.6951879999999,
+              "thread_cpu_us_per_call": 663.6381779999999
+            }
+          },
+          {
+            "order": [
+              false,
+              true
+            ],
+            "baseline": {
+              "wall_us_per_call": 18.104784,
+              "thread_cpu_us_per_call": 18.101602
+            },
+            "capture": {
+              "wall_us_per_call": 631.73065,
+              "thread_cpu_us_per_call": 631.668024
+            }
+          }
+        ],
+        "python": "3.12.16 (main, Oct 26 2026, 02:48:44) [GCC 15.2.0]",
+        "platform": "Linux-7.0.0-1019-azure-x86_64-with-glibc2.43",
+        "median_increment_us_per_call": {
+          "wall_us_per_call": 613.625866,
+          "thread_cpu_us_per_call": 613.566422
+        },
+        "limits": "Replays labels and nesting without payload, SQLite, logging, or all instance-wrapper work. Includes capture allocation/GC. Does not bound whole-probe overhead or prove an unchanged gate outcome. No time is subtracted from any gate."
+      },
+      "heat_and_local_response_passed": true,
+      "heat_trace": {
+        "file": "npc-heat-writes-132x50.json",
+        "uncompressed_bytes": 11676638,
+        "metadata": {
+          "diagnostic_only": true,
+          "began_tick": 1060,
+          "ended_tick": 6657,
+          "retention": "Latest calls only, bounded by loop.timings.maxlen",
+          "max_calls": 6000,
+          "export": "Before final profiling; trace released without a forced GC",
+          "write_probe": {
+            "clock_counters": "wall brackets, thread/process CPU; optional RUSAGE_THREAD deltas",
+            "counter_order": [
+              "voluntary_switches",
+              "involuntary_switches",
+              "minor_faults",
+              "major_faults",
+              "input_blocks",
+              "output_blocks"
+            ],
+            "gil_switch_interval_s": 0.005,
+            "threads": [
+              {
+                "name": "MainThread",
+                "ident": 133132578393024
+              },
+              {
+                "name": "ThreadPoolExecutor-0_0",
+                "ident": 133132496168640
+              },
+              {
+                "name": "asyncio_0",
+                "ident": 133132479387328
+              }
+            ],
+            "interpretation": "Wall minus CPU is not a cause. Inspect operation nesting, counter deltas and sampling brackets; null counters mean unsupported."
+          }
+        },
+        "retained_calls": 5597,
+        "max_spans_per_call": 15,
+        "at_capacity": false,
+        "root_wall_p50_ms": 0.216201,
+        "root_wall_p99_ms": 0.400734,
+        "roots_over_10_ms": 0,
+        "interpretation": "Character writes only, not the S11 tick gate. Wall minus CPU is not a cause. Retained records only; compare counters, nesting and sampling brackets.",
+        "sha256": "d4fd99ca63bb9f44a3df9babe96e31faf919efcd75a040b44a9f828d3791115c",
+        "largest_root": {
+          "tick": 4200,
+          "thread": 133132578393024,
+          "operations": [
+            {
+              "operation": "character_writes",
+              "parent": null,
+              "start_ns": 829375683010,
+              "end_ns": 829376216220,
+              "wall_ms": 0.53321,
+              "thread_cpu_ms": 0.55669,
+              "process_cpu_ms": 0.555248,
+              "sampling_wall_ms": 0.028233,
+              "thread_counters": {
+                "voluntary_switches": 0,
+                "involuntary_switches": 0,
+                "minor_faults": 5,
+                "major_faults": 0,
+                "input_blocks": 0,
+                "output_blocks": 0
+              }
+            },
+            {
+              "operation": "contracts.record",
+              "parent": 0,
+              "start_ns": 829375698088,
+              "end_ns": 829375756937,
+              "wall_ms": 0.058849,
+              "thread_cpu_ms": 0.062306,
+              "process_cpu_ms": 0.062447,
+              "sampling_wall_ms": 0.007153,
+              "thread_counters": {
+                "voluntary_switches": 0,
+                "involuntary_switches": 0,
+                "minor_faults": 0,
+                "major_faults": 0,
+                "input_blocks": 0,
+                "output_blocks": 0
+              }
+            },
+            {
+              "operation": "storage.mark_dirty:meta:contracts_state",
+              "parent": 0,
+              "start_ns": 829375768529,
+              "end_ns": 829375839160,
+              "wall_ms": 0.070631,
+              "thread_cpu_ms": 0.073428,
+              "process_cpu_ms": 0.073507,
+              "sampling_wall_ms": 0.010079,
+              "thread_counters": {
+                "voluntary_switches": 0,
+                "involuntary_switches": 0,
+                "minor_faults": 0,
+                "major_faults": 0,
+                "input_blocks": 0,
+                "output_blocks": 0
+              }
+            },
+            {
+              "operation": "storage._json",
+              "parent": 2,
+              "start_ns": 829375775852,
+              "end_ns": 829375808423,
+              "wall_ms": 0.032571,
+              "thread_cpu_ms": 0.035165,
+              "process_cpu_ms": 0.035256,
+              "sampling_wall_ms": 0.00557,
+              "thread_counters": {
+                "voluntary_switches": 0,
+                "involuntary_switches": 0,
+                "minor_faults": 0,
+                "major_faults": 0,
+                "input_blocks": 0,
+                "output_blocks": 0
+              }
+            },
+            {
+              "operation": "storage.mark_dirty:meta:salvage_state",
+              "parent": 0,
+              "start_ns": 829375858085,
+              "end_ns": 829375884494,
+              "wall_ms": 0.026409,
+              "thread_cpu_ms": 0.029535,
+              "process_cpu_ms": 0.029485,
+              "sampling_wall_ms": 0.005971,
+              "thread_counters": {
+                "voluntary_switches": 0,
+                "involuntary_switches": 0,
+                "minor_faults": 0,
+                "major_faults": 0,
+                "input_blocks": 0,
+                "output_blocks": 0
+              }
+            },
+            {
+              "operation": "storage._json",
+              "parent": 4,
+              "start_ns": 829375863004,
+              "end_ns": 829375872823,
+              "wall_ms": 0.009819,
+              "thread_cpu_ms": 0.012504,
+              "process_cpu_ms": 0.012573,
+              "sampling_wall_ms": 0.00548,
+              "thread_counters": {
+                "voluntary_switches": 0,
+                "involuntary_switches": 0,
+                "minor_faults": 0,
+                "major_faults": 0,
+                "input_blocks": 0,
+                "output_blocks": 0
+              }
+            },
+            {
+              "operation": "lattice.record",
+              "parent": 0,
+              "start_ns": 829375896487,
+              "end_ns": 829375902968,
+              "wall_ms": 0.006481,
+              "thread_cpu_ms": 0.009157,
+              "process_cpu_ms": 0.009167,
+              "sampling_wall_ms": 0.005341,
+              "thread_counters": {
+                "voluntary_switches": 0,
+                "involuntary_switches": 0,
+                "minor_faults": 0,
+                "major_faults": 0,
+                "input_blocks": 0,
+                "output_blocks": 0
+              }
+            },
+            {
+              "operation": "storage.mark_dirty:meta:lattice_state",
+              "parent": 0,
+              "start_ns": 829375911074,
+              "end_ns": 829375933545,
+              "wall_ms": 0.022471,
+              "thread_cpu_ms": 0.025077,
+              "process_cpu_ms": 0.025067,
+              "sampling_wall_ms": 0.008516,
+              "thread_counters": {
+                "voluntary_switches": 0,
+                "involuntary_switches": 0,
+                "minor_faults": 0,
+                "major_faults": 0,
+                "input_blocks": 0,
+                "output_blocks": 0
+              }
+            },
+            {
+              "operation": "storage._json",
+              "parent": 7,
+              "start_ns": 829375915552,
+              "end_ns": 829375923667,
+              "wall_ms": 0.008115,
+              "thread_cpu_ms": 0.01068,
+              "process_cpu_ms": 0.01072,
+              "sampling_wall_ms": 0.00524,
+              "thread_counters": {
+                "voluntary_switches": 0,
+                "involuntary_switches": 0,
+                "minor_faults": 0,
+                "major_faults": 0,
+                "input_blocks": 0,
+                "output_blocks": 0
+              }
+            },
+            {
+              "operation": "storage.character_write",
+              "parent": 0,
+              "start_ns": 829375946900,
+              "end_ns": 829376198748,
+              "wall_ms": 0.251848,
+              "thread_cpu_ms": 0.254486,
+              "process_cpu_ms": 0.254475,
+              "sampling_wall_ms": 0.005269,
+              "thread_counters": {
+                "voluntary_switches": 0,
+                "involuntary_switches": 0,
+                "minor_faults": 2,
+                "major_faults": 0,
+                "input_blocks": 0,
+                "output_blocks": 0
+              }
+            },
+            {
+              "operation": "storage.mark_dirty:identities",
+              "parent": 9,
+              "start_ns": 829375954194,
+              "end_ns": 829375975373,
+              "wall_ms": 0.021179,
+              "thread_cpu_ms": 0.023874,
+              "process_cpu_ms": 0.023905,
+              "sampling_wall_ms": 0.00544,
+              "thread_counters": {
+                "voluntary_switches": 0,
+                "involuntary_switches": 0,
+                "minor_faults": 0,
+                "major_faults": 0,
+                "input_blocks": 0,
+                "output_blocks": 0
+              }
+            },
+            {
+              "operation": "storage._json",
+              "parent": 10,
+              "start_ns": 829375958612,
+              "end_ns": 829375966336,
+              "wall_ms": 0.007724,
+              "thread_cpu_ms": 0.010339,
+              "process_cpu_ms": 0.01036,
+              "sampling_wall_ms": 0.00526,
+              "thread_counters": {
+                "voluntary_switches": 0,
+                "involuntary_switches": 0,
+                "minor_faults": 0,
+                "major_faults": 0,
+                "input_blocks": 0,
+                "output_blocks": 0
+              }
+            },
+            {
+              "operation": "storage.mark_dirty:players",
+              "parent": 9,
+              "start_ns": 829375986764,
+              "end_ns": 829376192256,
+              "wall_ms": 0.205492,
+              "thread_cpu_ms": 0.208309,
+              "process_cpu_ms": 0.208439,
+              "sampling_wall_ms": 0.006151,
+              "thread_counters": {
+                "voluntary_switches": 0,
+                "involuntary_switches": 0,
+                "minor_faults": 1,
+                "major_faults": 0,
+                "input_blocks": 0,
+                "output_blocks": 0
+              }
+            },
+            {
+              "operation": "storage._json",
+              "parent": 12,
+              "start_ns": 829376074888,
+              "end_ns": 829376141722,
+              "wall_ms": 0.066834,
+              "thread_cpu_ms": 0.070411,
+              "process_cpu_ms": 0.070391,
+              "sampling_wall_ms": 0.007203,
+              "thread_counters": {
+                "voluntary_switches": 0,
+                "involuntary_switches": 0,
+                "minor_faults": 0,
+                "major_faults": 0,
+                "input_blocks": 0,
+                "output_blocks": 0
+              }
+            },
+            {
+              "operation": "characters.committed",
+              "parent": 0,
+              "start_ns": 829376206763,
+              "end_ns": 829376208907,
+              "wall_ms": 0.002144,
+              "thread_cpu_ms": 0.004658,
+              "process_cpu_ms": 0.004669,
+              "sampling_wall_ms": 0.005019,
+              "thread_counters": {
+                "voluntary_switches": 0,
+                "involuntary_switches": 0,
+                "minor_faults": 0,
+                "major_faults": 0,
+                "input_blocks": 0,
+                "output_blocks": 0
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "current_head_reviews": [
+    6694015053,
+    6694055611
+  ],
+  "review_model": "Claude Sonnet 5.5",
+  "full_ci": {
+    "run": 42282914794,
+    "ubuntu": {
+      "passed": 2315,
+      "job": 128116241606
+    },
+    "windows": {
+      "passed": 2314,
+      "skipped": 1,
+      "job": 128116241179
+    }
+  },
+  "s24": {
+    "80x24": {
+      "job": 128117910752,
+      "result": "success"
+    },
+    "132x50": {
+      "job": 128117910639,
+      "result": "success"
+    }
+  }
+}

@@ -1,6 +1,7 @@
 """S40: observational write probes and exact, race-free gate evidence."""
 
 import json
+import hashlib
 from collections.abc import Callable
 from pathlib import Path
 from types import SimpleNamespace
@@ -112,12 +113,13 @@ def test_s40_probe_preserves_rollback_exception_and_restores_after_failure(scrat
 
 
 @pytest.mark.parametrize('count,expected', [(0, 0), (99, 99), (100, 99)])
+@pytest.mark.parametrize('trace_writes', [False, True])
 def test_s40_serialized_gate_reproduces_same_status_samples_after_later_ticks(
-        scratch_dir: Path, count: int, expected: int) -> None:
+        scratch_dir: Path, count: int, expected: int, trace_writes: bool) -> None:
     store = Storage(scratch_dir/'world.db', ManualClock())
     server = service(store, lambda: None)
     try:
-        with WriteProfile(server) as probe:
+        with WriteProfile(server, trace_writes=trace_writes) as probe:
             for value in range(1, count + 1):
                 server.core.loop.record_timing(value/1000)
             # The admin input is processed before the current tick's timing
@@ -145,6 +147,25 @@ def test_s40_missing_thread_counters_and_slow_sampling_are_explicit() -> None:
     assert row['thread_counters'] is None
 
 
+def test_s40_status_only_gate_installs_no_write_observer(scratch_dir: Path) -> None:
+    store = Storage(scratch_dir/'world.db', ManualClock())
+    server = service(store, lambda: store.mark_dirty('meta', 'balance', 8))
+    original_writes, original_db = server._character_writes, store.db
+    def forbidden_clock() -> Sample:
+        raise AssertionError('Detailed observer ran in a canonical gate')
+    try:
+        with WriteProfile(server, reader=forbidden_clock, trace_writes=False) as probe:
+            assert server._character_writes is original_writes and store.db is original_db
+            assert not {'mark_dirty', '_json', '_flush'} & vars(store).keys()
+            server._character_writes()
+            response = server.core.status_provider()
+            assert probe.gate(response)['count'] == 0 and not probe.calls
+            assert probe.metadata()['trace_writes'] is False
+        assert server._character_writes is original_writes and store.db is original_db
+    finally:
+        store.close()
+
+
 def test_s40_formats_records_after_collection(scratch_dir: Path, monkeypatch: pytest.MonkeyPatch) -> None:
     """S40's observer must not format a counter dictionary in each tick."""
     store = Storage(scratch_dir/'world.db', ManualClock())
@@ -169,5 +190,30 @@ def test_s40_formats_records_after_collection(scratch_dir: Path, monkeypatch: py
         assert len(records[0]['operations']) == 3
         assert [span['operation'] for span in records[0]['operations']] == [
             'character_writes', 'storage.mark_dirty:meta:balance', 'storage._json']
+    finally:
+        store.close()
+
+
+@pytest.mark.parametrize('calls', [0, 3])
+def test_s40_stream_export_and_small_shape_manifest(scratch_dir: Path, calls: int) -> None:
+    store = Storage(scratch_dir/'world.db', ManualClock())
+    server = service(store, lambda: store.mark_dirty('meta', 'balance', 8))
+    try:
+        with WriteProfile(server) as probe:
+            for tick in range(calls):
+                server.core.loop.last_tick = tick
+                server._character_writes()
+        path = scratch_dir/'trace.json'
+        manifest = probe.export_trace(path, {'diagnostic_only': True})
+        saved = json.loads(path.read_text(encoding='utf-8'))
+        assert saved['write_calls'] == probe.calls
+        assert saved['diagnostic_only'] and saved['write_probe']['trace_writes']
+        assert manifest['profile_sha256'] == hashlib.sha256(path.read_bytes()).hexdigest()
+        assert manifest['trace_bytes'] == path.stat().st_size
+        assert manifest['exported_calls'] == calls
+        expected = [{'operation': op['operation'], 'parent': op['parent']}
+                    for op in probe.calls[0]['operations']] if calls else []
+        assert manifest['operations'] == expected
+        assert manifest['richest_tick'] == (0 if calls else None)
     finally:
         store.close()

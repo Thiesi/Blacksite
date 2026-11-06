@@ -62,7 +62,9 @@ async def approach(probe: NativeProbe, caller: Connection, target: Actor,
 
 
 async def profile(probe: NativeProbe, width: int, height: int) -> float:
-    with WriteProfile(probe.service) as writes_profile:
+    # Only the synchronous status snapshot is added to the canonical gate.
+    # Per-operation clocks/proxies are reserved for the later diagnostic.
+    with WriteProfile(probe.service, trace_writes=False) as writes_profile:
         return await _profile(probe, width, height, writes_profile)
 
 
@@ -176,6 +178,36 @@ async def _profile(probe: NativeProbe, width: int, height: int,
             'gate': writes_profile.gate(status) if status else None}, indent=2)+'\n', encoding='utf-8')
 
 
+async def write_diagnostic(probe: NativeProbe, width: int, height: int) -> None:
+    """Collect detailed all-hub writes after the canonical result is saved."""
+    loop = probe.service.core.loop
+    began_tick, began = loop.last_tick, time.perf_counter()
+    for zone in probe.service.world.zones.values():
+        zone.activate('s40-write-diagnostic', probe.service.clock.now_tick())
+    trace = WriteProfile(probe.service)
+    try:
+        with trace:
+            await asyncio.sleep(120)
+    finally:
+        try:
+            path = probe.root/f'npc-write-diagnostic-{width}x{height}.json'
+            manifest = trace.export_trace(path, {
+                'diagnostic_only': True, 'phase': 'after_final_canonical_gate',
+                'began_tick': began_tick, 'ended_tick': loop.last_tick,
+                'all_hub_zones': len(probe.service.world.zones),
+                'requested_seconds': 120, 'elapsed_seconds': time.perf_counter()-began,
+                'retention': 'Latest calls only, bounded by loop.timings.maxlen',
+                'limits': 'Detailed probe overhead is included here; these are not gate samples.'})
+            (probe.root/f'npc-write-shape-{width}x{height}.json').write_text(
+                json.dumps(manifest, indent=2)+'\n', encoding='utf-8')
+            probe.report(f"S40 DIAGNOSTIC {width}x{height}: {manifest['exported_calls']} calls, "
+                         f"{manifest['trace_bytes']} bytes, export {manifest['export_seconds']:.3f}s; not a gate")
+        finally:
+            for zone in probe.service.world.zones.values():
+                zone.deactivate('s40-write-diagnostic', probe.service.clock.now_tick())
+            del trace
+
+
 async def sodium_response(probe: NativeProbe, caller: Connection, width: int, height: int) -> None:
     actor=caller.avatar.actor
     await probe.walk(caller,(16,5))
@@ -261,42 +293,10 @@ async def accept(root: Path, door_python: Path, show: bool,
             safe_hp=actor.health
             until=probe.game.players[actor.id].warden_heat_until
             from datetime import datetime
-            # A short gate window need not contain the rare off-CPU pause.
-            # Observe the existing heat wait as well; keep its real deadline
-            # and cadence. Export and release the long trace before final
-            # profiling, so its retained objects are not in the gate's heap.
-            began = probe.service.core.loop.last_tick
-            heat_profile = WriteProfile(probe.service)
-            try:
-                with heat_profile:
-                    while probe.combat.now()<datetime.fromisoformat(until).timestamp():
-                        await asyncio.sleep(min(30,datetime.fromisoformat(until).timestamp()-probe.combat.now()))
-                        probe.report(f"WAIT heat {width}x{height}: {max(0,datetime.fromisoformat(until).timestamp()-probe.combat.now()):.0f}s remain in protected clinic")
-                        assert actor.health==safe_hp
-            finally:
-                try:
-                    header = {
-                        'diagnostic_only': True, 'began_tick': began,
-                        'ended_tick': probe.service.core.loop.last_tick,
-                        'retention': 'Latest calls only, bounded by loop.timings.maxlen',
-                        'max_calls': heat_profile.loop.timings.maxlen,
-                        'export': 'Before final profiling; trace released without a forced GC',
-                        'write_probe': heat_profile.metadata()}
-                    # Expand/encode only one call at a time. Avoid a second
-                    # full trace of dictionaries plus one huge JSON string.
-                    with (probe.root/f'npc-heat-writes-{width}x{height}.json').open('w', encoding='utf-8') as output:
-                        output.write(json.dumps(header, separators=(',', ':'))[:-1])
-                        output.write(',"write_calls":[')
-                        for index, row in enumerate(heat_profile.iter_calls()):
-                            if index:
-                                output.write(',')
-                            json.dump(row, output, separators=(',', ':'))
-                        output.write(']}\n')
-                    # A for-loop retains its final value; don't carry even
-                    # that expanded row across the final gate window.
-                    row = None
-                finally:
-                    del heat_profile
+            while probe.combat.now()<datetime.fromisoformat(until).timestamp():
+                await asyncio.sleep(min(30,datetime.fromisoformat(until).timestamp()-probe.combat.now()))
+                probe.report(f"WAIT heat {width}x{height}: {max(0,datetime.fromisoformat(until).timestamp()-probe.combat.now()):.0f}s remain in protected clinic")
+                assert actor.health==safe_hp
             await probe.walk(caller,(44,3))
             await approach(probe,caller,patrol)
             await asyncio.sleep(3)
@@ -306,7 +306,17 @@ async def accept(root: Path, door_python: Path, show: bool,
             await probe.travel(caller,"core-plaza")
             await probe.travel(caller,"sodium-row")
             await sodium_response(probe,caller,width,height)
-            p99=await profile(probe,width,height)
+            try:
+                p99=await profile(probe,width,height)
+            except AssertionError:
+                probe.report(f"S40 DIAGNOSTIC {width}x{height}: final canonical gate FAILED; preserving result before detailed capture")
+                await write_diagnostic(probe,width,height)
+                raise
+            # With both sizes in one service, leave every canonical window
+            # ahead of detailed collection. CI uses one service per size.
+            if (width, height) == sizes[-1]:
+                probe.report(f"S40 DIAGNOSTIC {width}x{height}: final canonical gate passed; collecting supplementary evidence")
+                await write_diagnostic(probe,width,height)
             await probe.leave(caller,f"s11-complete-{width}x{height}")
             results.append({"size":[width,height],"warning_seconds":response,"heat_wait":"actual 600-second deadline",
                 "safe_damage":False,"local_guards":True,"all_hub_p99_ms":p99})
