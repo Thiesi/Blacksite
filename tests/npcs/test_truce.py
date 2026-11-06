@@ -216,33 +216,49 @@ def test_game_7_3_owned_drone_mark_and_keeper_respect_controller_authority(opera
     ("vatside-clinics", "sodium-row", False, True, False),
     ("sodium-row", "vatside-clinics", True, True, True),
 ])
+@pytest.mark.parametrize("path", ["direct", "remote", "machinery"])
 def test_game_7_3_defending_drone_uses_owner_body_for_mark_and_keeper(
-        operator, owner_zone, drone_zone, hostile, marks, answers):
+        operator, owner_zone, drone_zone, hostile, marks, answers, path):
     from tests.server.test_drone_combat import deploy
     game, a, b, player, engine = operator
     for caller in (a, b):
         game.core.characters.players[caller.session.player_id].grade = 5
-    place(game, a, "sodium-row", (25, 3))
+    place(game, a, drone_zone, (25, 3))
     drone = deploy(game, a, player, engine)
-    game.core.world.enter(drone, drone_zone, (26, 3))
+    engine.command(player, drone.behaviour["item"], "hold")
+    game.commit_commerce()
     place(game, a, owner_zone, (25, 3))
     place(game, b, drone_zone, (27, 3))
     source, owner = body(game, b), body(game, a)
     source.faction, owner.faction = "sable", "wardens" if hostile else None
+    game.core.characters.players[source.id].faction = source.faction
+    player.faction = owner.faction
     keeper = guard(game)
     combat = game.core.combat
     assert combat.legal(source, drone)
     assert combat.would_mark(source, drone) is marks
     assert game.core.npcs.truce_keeper(source, drone) == ("sable" if answers else None)
-    combat.mark(source, drone)
-    combat.exchange(source, drone)
+    if path == "direct":
+        combat.mark(source, drone)
+        combat.exchange(source, drone)
+    elif path == "remote":
+        combat.mark_indirect(source, drone)
+        combat.mark_indirect(source, drone)
+    else:
+        physical = game.core.lattice.interlock.physical
+        before = drone.health
+        for _ in range(2):
+            physical.pending_damage[drone.id, source.id, drone.zone] = 1
+            physical.flush_hits()
+            game.commit_commerce()
+        assert drone.health == before - 2
     assert source.marked is marks
     assert keeper.target is None
     assert (("sodium-row", "keeper", source.id) in game.core.npcs.provocations) is answers
     lines = [line["text"] for line in b.session.log_ring]
     if answers:
         assert "You break Sodium Row's truce. You are Marked for 15 min." in lines
-        assert "Sable is waiting for you on Sodium Row." in lines
+        assert lines.count("Sable is waiting for you on Sodium Row.") == 1
     else:
         assert not any("Sable is " in line for line in lines)
         if marks:

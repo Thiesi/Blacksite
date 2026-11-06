@@ -136,6 +136,12 @@ both directions: a drone on the Row with its owner elsewhere retains
 ordinary non-truce marking; a drone elsewhere with its owner on the
 Row invokes the Row's truce and waiting guards. Hostile-faction and
 neutral targets are covered without relaxing grade or safety.
+The same arrangements run through direct fire, `mark_indirect`, and
+two committed machinery hits in `PhysicalEffects.flush_hits`. The
+fixtures deploy a real owned drone and issue its normal hold command
+before its owner leaves. Remote marking resolves that defending body
+before both the Mark text and keeper-hook zone check. Repeated remote
+hits produce one waiting announcement while refreshing provocation.
 
 The review's zone-wide alert question is answered by S38's explicit
 requirement to provoke every keeper guard in the zone. No new sight or

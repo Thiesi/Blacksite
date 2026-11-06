@@ -288,6 +288,10 @@ class Combat:
 
     def mark_indirect(self, source: Actor, target: Actor) -> None:
         """Remote attacks mark before the keeper's chase line (game 7.3)."""
+        if target.behaviour.get("player_drone"):
+            target = self.game.progression.drones.controller_body(target, acting=False)
+            if target is None:
+                return
         self._mark_player(source, target, indirect=True)
         zone = self.world.zones.get(target.zone)
         if zone and zone.template.meta.truce:
