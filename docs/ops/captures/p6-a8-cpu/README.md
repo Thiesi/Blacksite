@@ -1,8 +1,13 @@
 # A8 CPU and unchanged-output evidence
 
-## Final validated execution, 2026-11-05
+## Last validated execution, 2026-11-05
 
 A8 merged as 8db772c (PR #144), by the owner, from head `0666dfe`.
+The results below are from `4ab6470`, whose `src`, `tests` and `scripts`
+are identical to `0666dfe`. At `0666dfe`, the service matrix did not pass
+in full. Two jobs failed at 80x24, and the owner decided neither blocks
+A8: P4 and S11
+([record](https://github.com/Thiesi/Blacksite/pull/144#issuecomment-6671666999)).
 
 Head: `4ab6470b10821f9fddbac718615af7d56c6048eb`.
 Runtime tree: `2d7df79aedb20cc9510d888127442e3bca259469`.

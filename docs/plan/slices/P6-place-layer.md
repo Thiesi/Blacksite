@@ -338,8 +338,10 @@ cases match ANSI output and workloads and pass frame budgets.
 The older Clinic 111.3507 miss remains historical evidence, not the
 final result. The workflow objection on the renderer sign-off was
 resolved before merge, by the pinned audit workflow. The merged head,
-`0666dfe`, retained two timing failures that the owner decided don't
-block A8: P4 and S11 at 80x24
+`0666dfe`, retained two failures at 80x24 that the owner decided don't
+block A8: P4, in `goal()` while walking to the plainclothes Warden,
+probably because Sable enforcers had killed it, and S11's final profile
+gate, at 20.105 ms against 10 ms
 ([record](https://github.com/Thiesi/Blacksite/pull/144#issuecomment-6671666999)).
 H1 and S25 remain ungranted; the owner approved the
 specific P6b fingerprint move in #126 (6649759185).
