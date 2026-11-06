@@ -583,6 +583,14 @@ goldens regenerated; every shipped zone has a place record (validator
 becomes strict). *Depends:* P5 to P8, C1, S25c complete. *Owner:* Codex.
 *Gate:* technical lead, presentation lead, owner.
 
+**P11 Text place card (proposed, not yet approved).** *Purpose:* terminal
+UI 2.6 had no owning slice; the first sight of a zone introduces it.
+*Scope:* [`P11-place-card.md`](slices/P11-place-card.md), including S38's
+deferred `CONTESTED · TRUCE` and keeper sentence. *Excludes:* drawn
+16-colour art (V3). *Depends:* P5, P6a, S38. If approved, P10 depends on
+it. *Owner:* Codex. *Gate:* automated review, technical lead, presentation
+lead.
+
 **C1 Hub place records.** The seven remaining S08 hubs, by the
 presentation lead or Sonnet against P6's format. Geometry changes only
 if D-T3 allows. *Gate:* H3 per hub.
