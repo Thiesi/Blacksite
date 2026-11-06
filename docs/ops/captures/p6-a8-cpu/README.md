@@ -1,6 +1,8 @@
 # A8 CPU and unchanged-output evidence
 
-## Current validated execution, 2026-11-05
+## Final validated execution, 2026-11-05
+
+A8 merged as 8db772c (PR #144), by the owner, from head `0666dfe`.
 
 Head: `4ab6470b10821f9fddbac718615af7d56c6048eb`.
 Runtime tree: `2d7df79aedb20cc9510d888127442e3bca259469`.
@@ -43,10 +45,11 @@ is still tracked separately in #158; this pass does not explain it.
 
 The owner approved the specific P6b fingerprint move in
 [6649759185](https://github.com/Thiesi/Blacksite/pull/126#issuecomment-6649759185).
-H1 and S25 layout approval remain NOT GRANTED. Technical review and
-merge are separate gates. The renderer sign-off at 4ab6470 is recorded
-in [6649998476](https://github.com/Thiesi/Blacksite/pull/144#issuecomment-6649998476),
-with a workflow objection to resolve before merge.
+H1 and S25 layout approval remain NOT GRANTED. The renderer sign-off at
+4ab6470 is recorded in
+[6649998476](https://github.com/Thiesi/Blacksite/pull/144#issuecomment-6649998476).
+Its workflow objection was resolved before merge, by the pinned audit workflow
+([hold lifted](https://github.com/Thiesi/Blacksite/pull/144#issuecomment-6650101446)).
 
 The workflow follow-up changes only workflows and these evidence notes;
 `src/` stays identical. `p6-a8-proof.yml` reproduces CPU and frozen-content
