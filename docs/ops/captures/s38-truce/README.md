@@ -203,3 +203,18 @@ The pre-existing Tab-order tell stays with issue #125. No new card,
 balance, population, geometry or ownership-rule change is introduced.
 The corrected head's full suite, automated review and fresh P4/S11/S38
 runs are recorded on the PR; older evidence retains its original SHA.
+
+The first expanded native run at 19963d5 failed all four jobs while
+waiting for `15 minutes` on one rendered line. The saved screens show
+the correct warning, wrapped across two rows for longer handles. At
+132 columns the choice list occupies the adjacent column, so joining
+the entire screen would also mix unrelated list text into the detail.
+The harness now reads the existing shared menu-detail rectangle and
+joins its rows before matching the complete unchanged sentence. Both
+renderers use that rectangle. The timeout and all gameplay checks stay
+unchanged. Replaying each of the four failed captures proves the new
+reader recognizes the warning; changing `order` in the rendered detail
+makes each negative control fail as required. The failed run, artifact
+IDs, original archive hashes and capture hashes are retained in
+`technical-native-first-failure.json`. All four original ZIPs remain
+in `%TEMP%/blacksite-s38/technical-first-failure/` and on GitHub.

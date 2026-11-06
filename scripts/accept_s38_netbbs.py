@@ -16,6 +16,7 @@ from collections.abc import Callable
 from accept_s10_netbbs import Connection, NativeProbe, wait
 from accept_p4_netbbs import navigate
 from accept_s16_netbbs import commit_key, key, loan
+from blacksite.layout import compute
 from blacksite.server.world.actors import Actor
 
 
@@ -57,8 +58,15 @@ async def drone_warning(probe: NativeProbe, caller: Connection, victim: Connecti
         await key(caller, b"\x1b[B" if old < wanted else b"\x1b[A")
         await wait(lambda: drones.menus[caller.session.id] != old)
     await commit_key(probe, caller, b"u", lambda: iid in drones.actors)
-    await wait(lambda: "order marks you" in caller.caller.screen.screen_text()
-               and "15 minutes" in caller.caller.screen.screen_text())
+    def warning_visible() -> bool:
+        screen = caller.caller.screen
+        detail = compute(width, height).menu.detail
+        # Read the shared detail rectangle: wide menus put choices beside
+        # it, and longer handles wrap "15 minutes" over two rendered rows.
+        text = " ".join("".join(row[detail.x:detail.right])
+                        for row in screen.grid[detail.y:detail.bottom])
+        return "order marks you for 15 minutes." in " ".join(text.split())
+    await wait(warning_visible)
     probe.save(caller, f"truce-drone-order-warning-{width}x{height}-{tier}")
     # Recall before player combat so this probe does not add pet damage.
     await commit_key(probe, caller, b"r", lambda: iid not in drones.actors)
