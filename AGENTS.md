@@ -74,6 +74,15 @@ contradiction by editing only the lower document.
   and only the owner applies the `no-technical-review` label. Neither
   review grants a human acceptance gate. The owner merges, or the
   technical lead merges under the owner's delegation in that file's §7.1.
+- **Who reports to whom.** The technical lead is the overall lead,
+  responsible for the product as a whole. Every other lead and agent
+  reports to the technical lead and only to the technical lead, unless
+  the owner asks them directly. If you need an owner decision, explain
+  it to the technical lead with your recommendation; the technical lead
+  asks the owner. Work out disagreements with the technical lead or
+  another lead first. If that fails, the technical lead decides. Your
+  own reviews and sign-offs stay yours, and human gates stay the
+  owner's.
 
 ## 4. Coding rules
 
