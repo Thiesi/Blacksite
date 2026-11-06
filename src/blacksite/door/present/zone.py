@@ -442,8 +442,9 @@ def head(buffer: CellBuffer, body: dict[str, Any], layout: Layout, paint: Paint,
          notice: tuple[str, str, float] | None = None) -> None:
     me = body['me']
     safety = me['safety']
-    left = [(me['zone_name'], 'head_zone'), (safety.upper(), 'word_' + safety)]
-    if safety == 'contested':
+    word = 'CONTESTED─TRUCE─PvP G5+' if safety == 'contested' and me.get('truce') else safety.upper()
+    left = [(me['zone_name'], 'head_zone'), (word, 'word_' + safety)]
+    if safety == 'contested' and not me.get('truce'):
         left.append(('PvP G5+', 'head_info'))
     if me.get('heat_until'):
         left.append(('HEAT', 'log_danger'))

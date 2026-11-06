@@ -1,0 +1,6 @@
+{
+  "head": "3fb3554065cdfe015087a0da7df243ffde4ba203",
+  "archive_sha256": "da4dfed12b6a4d17527345e7c82babbdaa95f01aa4393f891750694c547a37e5",
+  "failure": "accept_s38_netbbs.py:71 TypeError NativeProbe.leave missing label; marking capture already reached",
+  "native_transport": "NetBBS 7.45.0 Telnet to registered stdio; no attached PTY on Windows"
+}

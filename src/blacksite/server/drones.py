@@ -506,10 +506,7 @@ class Drones:
                 if not self.game.combat.legal(actor,target):
                     status = "protected; no attack"
                 else:
-                    other = self.progression.controller(target)
-                    other_body = self.controller_body(target,acting=False) if target.behaviour.get("player_drone") else target
-                    marked = bool(other and self.game.combat.relation(body,target) != "hostile" and any(
-                        self.world.zones[person.zone].safety_at(person.position) != "open" for person in (body,other_body)))
+                    marked = self.game.combat.would_mark(body, target, indirect=True)
                     status = "order marks you for 15 minutes" if marked else "order gives a two-second warning"
                 detail = f"Target {presentation.name(target, body, self.game.content)}: {status}.\n"+detail
         else:

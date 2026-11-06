@@ -1,6 +1,6 @@
 # S38 — Truce zones: Sodium Row keeps the peace
 
-**Status:** planned (approved by the owner 2026-10-31)
+**Status:** done (PR #159)
 **Primary model:** Codex · **Reviewer:** automated review, technical lead, presentation lead (wording and header)
 **Depends on:** S11, S20, #126 (P6b; it also edits `sodium-row.json`, so S38 starts after #126 merges) · **Milestone:** world rules
 **Issue:** https://github.com/Thiesi/Blacksite/issues/142
@@ -50,8 +50,8 @@ proposal, with the presentation lead's wording.
   truce zone follows today's rules exactly.
 - **Presentation** (both presentations until P10):
   - Frame header in a truce zone: `CONTESTED─TRUCE─PvP G5+`.
-  - Place card and first-arrival line: "Sable keeps the peace here." /
-    "Nobody draws on Sodium Row. Sable makes sure of it."
+  - First-arrival line: "Nobody draws on Sodium Row. Sable makes sure
+    of it."
   - The TARGET panel's warning: on a player target, the existing
     "Firing marks you", driven by `would_mark` (so hostile-faction
     targets show it too); on an NPC target whose attack would provoke
@@ -61,7 +61,6 @@ proposal, with the presentation lead's wording.
   - The warning follows the target, like the Mark: it shows for a
     target in a truce zone whatever zone the attacker is in. Both fit the 80x24 panel's
     21 columns.
-  - The place card shows "CONTESTED · TRUCE".
   - After firing: "You break <zone name>'s truce. You are Marked for 15
     min." (the zone's name, not a hard-coded "the Row").
   - Whenever a truce attack provokes the keeper's guards, the attacker's
@@ -73,6 +72,9 @@ proposal, with the presentation lead's wording.
   - No fire confirmation and no HERE entry.
 
 ## Out of scope
+
+Place-card strings: deferred to a new text-card slice by the owner,
+2026-11-06. S38 supplies `truce_text` for it.
 
 - Applying the flag anywhere else. Warmwater's Lamp Street describes the
   same rule; that is Warmwater's Stage 2 decision.

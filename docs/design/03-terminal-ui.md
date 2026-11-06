@@ -195,8 +195,24 @@ and a word in the header.
 |---|---|---|---|
 | safe | double `═ ║` | Warden blue | SAFE |
 | pocket | double | teal | POCKET |
-| contested | single `─ │` | amber | CONTESTED, and `PvP G5+`; in a truce zone (planned, S38) `CONTESTED─TRUCE─PvP G5+` |
+| contested | single `─ │` | amber | CONTESTED, and `PvP G5+`; in a truce zone `CONTESTED─TRUCE─PvP G5+` |
 | open | single | red | OPEN |
+
+Truce zones. The first-arrival history adds "Nobody draws on <zone>.
+<Keeper> makes sure of it." The TARGET warning reads "Firing marks you"
+on a player target when firing would Mark you, and "Truce: <Keeper>
+answers" on an NPC whose attack would provoke the keeper's guards.
+The second drops "Truce: " when it would exceed the 21-column panel.
+An NPC already hunting you, or already provoked against you, shows no
+keeper warning.
+
+An attack that Marks you logs "You break <zone>'s truce. You are Marked
+for 15 min.", naming the target's zone. An attack that provokes the
+keeper's guards then logs "<Keeper> is coming for you." If your body
+is outside the zone it logs "<Keeper> is waiting for you on <zone>."
+instead, because guards do not cross zones. These are danger lines,
+and the Mark line comes first. Truce rules add no fire confirmation
+and no HERE entry.
 
 Safe ground is Warden blue, not green (D4). Safe and pocket ground both
 use double lines; the header word tells them apart, so colour is never
@@ -375,6 +391,9 @@ by the place's own ground colour. It is the default way a place presents
 itself (the owner's default under D8; other art modes and a larger
 dashboard wait for a playtest). 16-colour callers get a drawn 16-colour
 card where the place has one (assets 4), otherwise the text card.
+
+A truce zone's card (planned) shows `CONTESTED · TRUCE` and
+'<Keeper> keeps the peace here.'
 
 - It lasts up to 8 seconds. **Any key closes it, and that key still
   acts**: a move on the card is a move.

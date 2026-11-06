@@ -30,6 +30,9 @@ from blacksite.server.world.sight import line, sees_actor, visible_tiles, line_o
 from blacksite.server.world.sight import private_visible
 
 
+TARGET_WARNING_WIDTH = 21  # Terminal UI 2.1: narrow TARGET panel.
+
+
 class Combat:
     def __init__(self, commerce: Commerce) -> None:
         self.commerce, self.game, self.sim = commerce, commerce.game, commerce.sim
@@ -161,7 +164,8 @@ class Combat:
     def select(self, actor: Actor, backwards: bool = False) -> None:
         candidates = sorted((a for a in self.world.zones[actor.zone].actors.values()
             if a is not actor and a.stance not in ("down", "dead") and self.visible(actor, a)),
-            key=lambda a:(self.relation(actor,a)!="hostile",rules.distance(actor.position, a.position), a.id))
+            key=lambda a:(presentation.covered(a, actor, self.content) or self.relation(actor,a)!="hostile",
+                          rules.distance(actor.position, a.position), a.id))
         ids = [a.id for a in candidates]
         if not ids: actor.target = None
         elif actor.target not in ids: actor.target = ids[-1 if backwards else 0]
@@ -215,6 +219,10 @@ class Combat:
         legacy_role = ("player_hostile" if target.marked else
                        self.content.factions[target.faction].colour if target.faction in self.content.factions else
                        "npc_neutral" if target.kind == "npc" else "text")
+        keeper = self.game.npcs.truce_keeper(actor, target)
+        truce_warning = f"Truce: {self.content.factions[keeper].short} answers" if keeper else ""
+        if len(truce_warning) > TARGET_WARNING_WIDTH:
+            truce_warning = truce_warning.removeprefix("Truce: ")
         return {"id":target.id, "name":presentation.name(target, actor, self.content), "handle":target.handle,
             "faction": shown_class.title() if hidden or neutral_npc else target.faction or "Freelance",
             "class": shown_class, "jacked": target.stance == "jacked",
@@ -225,7 +233,8 @@ class Combat:
             "relation":"neutral" if hidden else self.relation(actor,target), "stance":target.stance,
             "protected":not self.legal(actor,target),
             "warning":"Protected" if not self.legal(actor,target) else "Obscured; no clear shot" if obscured
-                else "Firing marks you" if (target.kind == "player" or target.behaviour.get("player_drone")) and self.relation(actor,target) != "hostile" else ""}
+                else "Firing marks you" if self.would_mark(actor, target,
+                    indirect=bool(target.behaviour.get("player_drone"))) else truce_warning}
 
     def warn(self, source: Actor, target: Actor, tick: int) -> bool:
         self.reveal(source, target)
@@ -240,38 +249,55 @@ class Combat:
         return tick >= self.warnings[key] + rules.ticks(rules.WARNING_SECONDS)
 
     def would_mark(self, source: Actor, target: Actor, indirect: bool = False) -> bool:
-        if self.crew_together(source.id, target.id):
+        if source.behaviour.get("player_drone"):
+            source = self.game.progression.drones.controller_body(source, acting=True)
+        if target.behaviour.get("player_drone"):
+            target = self.game.progression.drones.controller_body(target, acting=False)
+        if (source is None or target is None or source.kind != "player" or target.kind != "player"
+                or self.crew_together(source.id, target.id)):
             return False
-        if source.kind != "player" or target.kind != "player" or self.relation(source, target) == "hostile":
+        zone = self.world.zones[target.zone]
+        # Game 7.3: the target body's truce overrides faction hostility.
+        if zone.template.meta.truce:
+            return not target.marked and self.permits_indirect(source, target)
+        if self.relation(source, target) == "hostile":
             return False
         bodies = (source, target) if indirect else (source,)
         return not all(self.world.zones[actor.zone].safety_at(actor.position) == "open" for actor in bodies)
 
-    def mark(self, source: Actor, target: Actor) -> None:
-        if source.behaviour.get("player_drone") or target.behaviour.get("player_drone"):
-            source_body = self.game.progression.drones.controller_body(source,acting=True) if source.behaviour.get("player_drone") else source
-            target_body = self.game.progression.drones.controller_body(target,acting=False) if target.behaviour.get("player_drone") else target
-            if source_body and target_body:
-                self.mark_indirect(source_body,target_body)
-            return
-        if not self.would_mark(source, target): return
-        player = self.game.players[source.id]
-        player.marked_until = datetime.fromtimestamp(self.now()+rules.MARKED_SECONDS,timezone.utc).isoformat()
-        already_marked = source.marked
-        source.marked = True
-        if not already_marked: self.log(source,"You are Marked for fifteen minutes.",True)
-        self.game.queue("save", player.bbs_user_id, player, immediate=True)
-
-    def mark_indirect(self, source: Actor, target: Actor) -> None:
-        """Game 7.3: the remote open exception requires both bodies open."""
-        if not self.would_mark(source, target, indirect=True):
+    def _mark_player(self, source: Actor, target: Actor, *, indirect: bool) -> None:
+        if not self.would_mark(source, target, indirect=indirect):
             return
         player = self.game.players[source.id]
         player.marked_until = datetime.fromtimestamp(self.now()+rules.MARKED_SECONDS, timezone.utc).isoformat()
         if not source.marked:
-            self.log(source, "You are Marked for fifteen minutes.", True)
+            zone = self.world.zones[target.zone]
+            line = (f"You break {zone.template.meta.name}'s truce. You are Marked for 15 min."
+                    if zone.template.meta.truce else "You are Marked for fifteen minutes.")
+            self.log(source, line, True)
         source.marked = True
         self.game.queue("save", player.bbs_user_id, player, immediate=True)
+
+    def mark(self, source: Actor, target: Actor) -> None:
+        indirect = bool(source.behaviour.get("player_drone") or target.behaviour.get("player_drone"))
+        if indirect:
+            source = (self.game.progression.drones.controller_body(source, acting=True)
+                      if source.behaviour.get("player_drone") else source)
+            target = (self.game.progression.drones.controller_body(target, acting=False)
+                      if target.behaviour.get("player_drone") else target)
+        if source and target:
+            self._mark_player(source, target, indirect=indirect)
+
+    def mark_indirect(self, source: Actor, target: Actor) -> None:
+        """Remote attacks mark before the keeper's chase line (game 7.3)."""
+        if target.behaviour.get("player_drone"):
+            target = self.game.progression.drones.controller_body(target, acting=False)
+            if target is None:
+                return
+        self._mark_player(source, target, indirect=True)
+        zone = self.world.zones.get(target.zone)
+        if zone and zone.template.meta.truce:
+            self.hostile_hook(source, target)
 
     def weapon(self, player: Player) -> tuple[Any, WeaponBlock] | None:
         slots = [player.progress.get("weapon_slot",""), "weapon_main", "weapon_side", "melee"]

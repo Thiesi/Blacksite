@@ -69,7 +69,10 @@ class ZoneSimulation:
     def place_context(self, actor: Actor) -> dict[str, Any]:
         zone = self.world.zones.get(actor.zone)
         return {"district": zone.template.meta.district if zone else None,
-                "pvp": self.pvp_provider(actor)}
+                "pvp": self.pvp_provider(actor),
+                **({"truce": self.world.content.factions[zone.template.meta.truce].short,
+                    "truce_text": self.world.content.factions[zone.template.meta.truce].short + " keeps the peace here."}
+                   if zone and zone.template.meta.truce else {})}
 
     def speak(self, session: Session, speaker: Actor, text: str) -> None:
         """Speech metadata uses the same disclosure as the recipient's view."""
@@ -83,13 +86,18 @@ class ZoneSimulation:
         if avatar.zone in avatar.seen_zones:
             return
         avatar.seen_zones.add(avatar.zone)
-        for asset_id in self.world.zones[avatar.zone].template.meta.lore[:1]:
+        zone = self.world.zones[avatar.zone]
+        for asset_id in zone.template.meta.lore[:1]:
             asset = self.world.content.text.get(asset_id)
             if asset:
                 # S25b TR-9: keep the complete paragraph in world history.
                 # P4 supplies its presentation kind without restoring a toast.
                 paragraph = asset.body.strip().split('\n\n', 1)[0]
                 self.log(session, ' '.join(paragraph.splitlines()), kind="place")
+
+        if zone.template.meta.truce:
+            keeper = self.world.content.factions[zone.template.meta.truce].short
+            self.log(session, f"Nobody draws on {zone.template.meta.name}. {keeper} makes sure of it.", kind="place")
 
     def reset_view(self, session: Session, avatar: Avatar) -> None:
         avatar.perception.viewport = avatar.perception.grid_key = None

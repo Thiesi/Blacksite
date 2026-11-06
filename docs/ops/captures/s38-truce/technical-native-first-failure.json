@@ -1,0 +1,37 @@
+{
+  "head": "19963d53e8e2f8c5b95482f64a1c3d5be63bf66b",
+  "run_id": 42158356269,
+  "run_url": "https://github.com/Thiesi/Blacksite/actions/runs/42158356269",
+  "result": "all four jobs failed waiting for a contiguous phrase that correctly wrapped",
+  "correction": "read the shared menu detail rectangle; join its rendered rows; unchanged complete expected wording and timeout",
+  "artifacts": [
+    {
+      "name": "s38-native-80x24-legacy",
+      "id": 13476171344,
+      "archive_sha256": "d233b8cfdc7a031445758e47bb1f89e8618b89905ff67cccf13ea426e154cc2e",
+      "failed_capture_sha256": "a9467efa1200d913597a3d2c349d778ba41f97e7d5f463329fbf3b011d869775",
+      "corrected_reader_positive_and_negative_checks": true
+    },
+    {
+      "name": "s38-native-132x50-legacy",
+      "id": 13476165653,
+      "archive_sha256": "e5486046f27cf2034902da5a16705e12207538c4ebd1b0adddfc89e285960477",
+      "failed_capture_sha256": "3d22a3cfc04e631369493d0f9c873c1eb08ab65e8d70550ca2f8946ec90aa036",
+      "corrected_reader_positive_and_negative_checks": true
+    },
+    {
+      "name": "s38-native-80x24-modern",
+      "id": 13476121612,
+      "archive_sha256": "adc4426ef8dc7d75a16d3da89a86bc12c20a531fca008d1fe67d79c3a9efd1aa",
+      "failed_capture_sha256": "1cbe6e386f3dd20b34ae3fe67d221edaa87f77662cc1e61019fdf3be4f27a173",
+      "corrected_reader_positive_and_negative_checks": true
+    },
+    {
+      "name": "s38-native-132x50-modern",
+      "id": 13476041340,
+      "archive_sha256": "03f21e22c3cc7c12adb5aeec71b5b3981ee8e365fc95c341c2f36c99cbe2608a",
+      "failed_capture_sha256": "f30235afa57498a40751460a6f5b23173ed9515a1c775e81ca97fc3419eedb76",
+      "corrected_reader_positive_and_negative_checks": true
+    }
+  ]
+}

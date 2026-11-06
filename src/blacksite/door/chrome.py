@@ -118,7 +118,7 @@ def _zone_header(buffer: CellBuffer, layout: Layout, body: dict[str, Any], palet
     slots = layout.header_slots
     header = f"{me['zone_name']}  "
     buffer.put(slots.zone_title.x, slots.zone_title.y, truncate(header, slots.zone_title.width), palette.style("title"))
-    safety = me["safety"].upper()
+    safety = "CONTESTED─TRUCE─PvP G5+" if me["safety"] == "contested" and me.get("truce") else me["safety"].upper()
     sx = min((slots.heat_safety_right if me.get("heat_until") else slots.safety_right) - len(safety), slots.zone_title.x + display_width(header))
     buffer.put(sx, slots.zone_title.y, safety, palette.style("safety_" + me["safety"]))
     if service := body.get('service'):

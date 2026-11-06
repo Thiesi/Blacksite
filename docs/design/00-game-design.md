@@ -433,7 +433,7 @@ Non-player actors run **behaviours**: idle, wander, patrol (waypoints),
 guard (hold, aggro on hostile), hunt (chase), flee (below 20 % health),
 vendor, talker. Aggro rules use the faction relations matrix; a Halvard
 patrol shoots Unmoored members in the Scour and ignores Kestrel. In a
-**truce** zone (planned, S38; Sodium Row) the matrix never makes an NPC
+**truce** zone (Sodium Row) the matrix never makes an NPC
 hostile: NPCs there turn only on an actor who broke the peace, through
 provocation as below. A truce zone names its keeper faction (Sable on
 the Row). An attack whose target is in the zone breaks the peace when it
@@ -940,7 +940,7 @@ standing with the Wardens. In open zones nothing marks anyone. For remote
 burning, both bodies must be in open areas for that exception; a contested
 participant keeps the normal grade protection and aggression consequence.
 
-In a truce zone (planned, S38), the hostile-faction exception does not
+In a truce zone, the hostile-faction exception does not
 apply: an eligible attack on any player who is not already Marked makes
 the attacker Marked, whatever the two factions. The truce follows the
 target: it applies when the target's body is in the zone, wherever the
