@@ -93,11 +93,12 @@ def clean_temp(temp: Path | None = None, hours: float = 24, now: float | None = 
         if now - newest_write(path) < hours * 3600:
             kept += 1
             continue
-        failed += remove(path)
-        removed += 1
+        refused = remove(path)
+        failed += refused
+        removed += not refused
     print(f'Temp folder: {removed} stale entries removed, {kept} written to in the last {hours:g} h kept, '
           f'{len(failed)} paths could not be deleted.')
-    for name in failed[:20]:
+    for name in sorted(set(failed))[:20]:
         print(f'  {name}')
     return 1 if failed else 0
 
