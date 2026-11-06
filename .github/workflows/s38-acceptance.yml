@@ -8,6 +8,7 @@ on:
       - 'scripts/accept_s38_netbbs.py'
       - 'scripts/accept_p4_netbbs.py'
       - 'scripts/accept_s10_netbbs.py'
+      - 'scripts/accept_s16_netbbs.py'
       - '.github/workflows/s38-acceptance.yml'
   workflow_dispatch:
 

@@ -232,7 +232,8 @@ class Combat:
             "relation":"neutral" if hidden else self.relation(actor,target), "stance":target.stance,
             "protected":not self.legal(actor,target),
             "warning":"Protected" if not self.legal(actor,target) else "Obscured; no clear shot" if obscured
-                else "Firing marks you" if self.would_mark(actor, target) else truce_warning}
+                else "Firing marks you" if self.would_mark(actor, target,
+                    indirect=bool(target.behaviour.get("player_drone"))) else truce_warning}
 
     def warn(self, source: Actor, target: Actor, tick: int) -> bool:
         self.reveal(source, target)

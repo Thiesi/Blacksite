@@ -15,10 +15,16 @@ The automated script is `scripts/accept_s38_netbbs.py`.
    Sodium Row. The header reads `CONTESTED─TRUCE─PvP G5+`. First arrival
    logs `Nobody draws on Sodium Row. Sable makes sure of it.`
 2. For this PvP exercise only, the script supplies grade-five players
-   through the owning server and queues their saves. This is an
-   explicit fixture, not evidence of earning a grade. Bring both
+   through the owning server and queues their saves. The current script
+   also supplies Sable/Warden factions and loans an owned Sentry. These
+   are explicit fixtures, not grade, membership or item acquisition
+   evidence. Bring both
    callers into sight near (12, 5) and (14, 5); target the other caller
    with the normal target keys. TARGET says `Firing marks you`.
+   Open DRONES with O, select the loaned Sentry, and deploy with U.
+   Its order detail says `order marks you for 15 minutes` even though
+   the target belongs to a hostile faction. Capture the menu, recall
+   with R and leave with Esc before firing. No drone attack is ordered.
 3. Fire through the ordinary warning interval. The attacker becomes
    Marked. The log says `You break Sodium Row's truce. You are Marked
    for 15 min.` before `Sable is coming for you.` The header shows the
@@ -160,7 +166,40 @@ text. The required place-card label `CONTESTED · TRUCE` and keeper
 sentence are not claimed as rendered. The author requested a spec
 clarification on issue #142, comment 6673216233, rather than inventing
 a new timed/dismissible card in this rules slice. This remains an open
-requirement until explicitly disposed of by the appropriate lead/owner.
+requirement until explicitly disposed of by the owner. The technical
+lead confirmed in review 6675920960 (TR-5) that S38 has no card consumer
+to extend and requested that owner decision. The public `truce_text`
+stays. The remote `<Keeper> is waiting for you on <zone>.` wording also
+awaits explicit presentation-lead sign-off (TR-6).
 
 Presentation wording/header sign-off, technical review, and any owner
 gates remain separate. H1 and S25 human layout approval remain withheld.
+
+## Technical-review corrections
+
+The review at f9eab8a (comment 6675920960) identified three caller
+failures, a related warning mismatch and a missing compatibility test:
+
+- TR-1: keeper warnings now depend on a live provocation or an actual
+  hunt, not intrinsic Warden hostility. Marked and heated callers see
+  the same warning on a covered Warden and a regular until they
+  provoke it. Tests assert both cover-safe warning and keeper response,
+  and that only live provocation entries suppress the warning.
+- TR-2: remote provocation records the response without replacing a
+  guard's current local target, state or last-seen position. A test
+  keeps an out-of-sight local chase alive after another player's remote
+  attack and subsequent NPC evaluation.
+- TR-3: the DRONES order detail uses `would_mark(..., indirect=True)`.
+  Tests cover hostile targets on and off the Row and neutral targets
+  outside. The updated native acceptance captures that actual menu in
+  each size/presentation/colour-tier combination with declared fixtures.
+- TR-4: TARGET uses the indirect both-body rule for drone targets. An
+  open-area shooter targeting gear whose owner remains in contested
+  ground gets the warning that matches the eventual Mark.
+- TR-7: direct and indirect attacks on players outside a truce zone
+  explicitly assert no NPC provocation, while normal marking remains.
+
+The pre-existing Tab-order tell stays with issue #125. No new card,
+balance, population, geometry or ownership-rule change is introduced.
+The corrected head's full suite, automated review and fresh P4/S11/S38
+runs are recorded on the PR; older evidence retains its original SHA.

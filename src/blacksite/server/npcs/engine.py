@@ -147,8 +147,10 @@ class Npcs:
             breaks = self.combat.would_mark(body, victim, indirect=True)
         else:
             attackers = {source.id, body.id}
-            breaks = not (self.hostile(target, source) or self.hostile(target, body)
-                          or target.target in attackers and target.behaviour.get("state") == "hunt")
+            provoked = any(self.provocations.get(
+                (target.zone, str(target.behaviour.get("spawner")), attacker), 0) > self.combat.now()
+                for attacker in attackers)
+            breaks = not (provoked or target.target in attackers and target.behaviour.get("state") == "hunt")
         return zone.template.meta.truce if breaks else None
 
     def keep_truce(self, source: Actor, target: Actor, keeper: str) -> None:
@@ -177,11 +179,11 @@ class Npcs:
             group = str(guard.behaviour.get("spawner"))
             for attacker in {source.id, body.id}:
                 self.provocations[zone.id, group, attacker] = until
-            guard.target = source.id if source.zone == zone.id else None
-            self.combat.reveal(guard, source)
-            guard.behaviour.update(last_seen=self.clock.now_tick(),
-                                   last_position=source.position if guard.target else guard.position,
-                                   state="hunt" if guard.target else "base")
+            if source.zone == zone.id:
+                guard.target = source.id
+                self.combat.reveal(guard, source)
+                guard.behaviour.update(last_seen=self.clock.now_tick(),
+                                       last_position=source.position, state="hunt")
         name = self.content.factions[keeper].short
         line = (f"{name} is coming for you." if body.zone == zone.id else
                 f"{name} is waiting for you on {zone.template.meta.name}.")

@@ -353,3 +353,137 @@ def test_game_5_5_remote_hook_does_not_change_nontruce_npc_response(row):
     game.core.combat.mark_indirect(body(game, a), resident)
     assert resident.target is None
     assert not body(game, a).marked
+
+
+@pytest.mark.parametrize("alert", ["marked", "heat"])
+def test_ui_2_1_truce_warning_keeps_warden_cover_until_provocation(row, alert):
+    game, a, _ = row
+    source = body(game, a)
+    player = game.core.characters.players[source.id]
+    if alert == "marked":
+        source.marked = True
+        player.marked_until = datetime.fromtimestamp(
+            game.core.combat.now() + rules.MARKED_SECONDS, timezone.utc).isoformat()
+    else:
+        player.warden_heat_until = datetime.fromtimestamp(
+            game.core.combat.now() + HEAT_SECONDS, timezone.utc).isoformat()
+    keeper = guard(game)
+    regular = npc(game, "npc-sodium-regular", "regular", (28, 3))
+    warden = npc(game, "npc-plainclothes-warden", "covered-warden", (29, 3))
+    assert game.core.npcs.hostile(warden, source)
+    views = []
+    for target in (regular, warden):
+        source.target = target.id
+        view = game.core.combat.target_view(source)
+        views.append({key: view[key] for key in ("name", "relation", "warning")})
+    assert views[0] == views[1] == {
+        "name": "Sodium regular", "relation": "neutral", "warning": "Truce: Sable answers"}
+    assert source.id not in warden.revealed_to
+    game.core.npcs.provoked(source, warden)
+    assert keeper.target == source.id
+    assert game.core.npcs.hostile(keeper, source)
+
+
+def test_game_5_5_live_provocation_exempts_npc_even_before_hunt(row):
+    game, a, _ = row
+    source = body(game, a)
+    target = npc(game, "npc-plainclothes-warden", "provoked-warden", (28, 3))
+    keeper = guard(game)
+    source.target = target.id
+    key = (target.zone, str(target.behaviour["spawner"]), source.id)
+    game.core.npcs.provocations[key] = game.core.combat.now() + HEAT_SECONDS
+    assert target.target is None
+    assert game.core.combat.target_view(source)["warning"] == ""
+    assert game.core.npcs.truce_keeper(source, target) is None
+    # An expired entry is not a continuing provocation.
+    game.core.npcs.provocations[key] = game.core.combat.now() - 1
+    assert game.core.combat.target_view(source)["warning"] == "Truce: Sable answers"
+    game.core.npcs.provoked(source, target)
+    assert keeper.target == source.id
+
+
+def test_game_5_5_remote_truce_attack_preserves_local_chase(row):
+    game, a, b = row
+    keeper = guard(game)
+    local = body(game, a)
+    game.core.combat.mark(local, body(game, b))
+    game.core.combat.exchange(local, body(game, b))
+    zone = game.core.world.zones["sodium-row"]
+    far = next((x, y) for y in range(zone.template.height) for x in range(zone.template.width)
+               if zone.passable((x, y)) and zone.allows_hostile((x, y))
+               and (x - keeper.x)**2 + (y - keeper.y)**2 > 1600)
+    place(game, a, zone.id, far)
+    assert not game.core.combat.visible(keeper, local)
+    remote = game.connect({"user_id": 3, "handle": "Remote", "node_name": "S38"})
+    create(game, remote, card="none")
+    game.core.characters.players[remote.session.player_id].grade = 5
+    place(game, remote, "vatside-clinics", (25, 3))
+    before = (keeper.target, dict(keeper.behaviour))
+    game.core.combat.mark_indirect(body(game, remote), body(game, b))
+    assert (keeper.target, keeper.behaviour) == before
+    assert (zone.id, "keeper", body(game, remote).id) in game.core.npcs.provocations
+    game.core.npcs.evaluate(keeper, zone, game.clock.now_tick())
+    assert keeper.target == local.id and keeper.behaviour["state"] == "hunt"
+
+
+@pytest.mark.parametrize("zone_id,hostile,marks", [
+    ("sodium-row", True, True),
+    ("vatside-clinics", True, False),
+    ("vatside-clinics", False, True),
+])
+def test_ui_2_1_drone_order_menu_uses_actual_mark_rule(operator, zone_id, hostile, marks):
+    from tests.server.test_drone_combat import deploy
+    game, a, b, player, engine = operator
+    for caller, tile in ((a, (25, 3)), (b, (27, 3))):
+        game.core.characters.players[caller.session.player_id].grade = 5
+        place(game, caller, zone_id, tile)
+    player.faction = body(game, a).faction = "sable"
+    game.core.characters.players[b.session.player_id].faction = body(game, b).faction = "wardens" if hostile else None
+    drone = deploy(game, a, player, engine)
+    body(game, a).target = body(game, b).id
+    engine.menus[a.session.id] = 0
+    engine.menus[a.session.id] = next(index for index, row in enumerate(engine.view(a.session)["rows"])
+                                    if row["id"] == drone.behaviour["item"])
+    detail = " ".join(engine.view(a.session)["detail"].split())
+    assert game.core.combat.would_mark(body(game, a), body(game, b), indirect=True) is marks
+    expected = "order marks you for 15 minutes" if marks else "order gives a two-second warning"
+    assert expected in detail
+
+
+def test_ui_2_1_drone_target_warns_open_attacker_about_contested_owner(operator):
+    from tests.server.test_drone_combat import deploy
+    game, a, b, player, engine = operator
+    for caller in (a, b):
+        game.core.characters.players[caller.session.player_id].grade = 5
+    place(game, a, "sodium-row", (25, 3))
+    drone = deploy(game, a, player, engine)
+    engine.command(player, drone.behaviour["item"], "hold")
+    game.commit_commerce()
+    place(game, a, "vatside-clinics", (25, 3))
+    zone = game.core.world.zones["sodium-row"]
+    # Explicit open variant, not shipped truce geography.
+    zone.template = replace(zone.template, meta=replace(zone.template.meta, safety="open", truce=None, pockets=()))
+    place(game, b, zone.id, (27, 3))
+    source = body(game, b)
+    source.target = drone.id
+    assert game.core.combat.legal(source, drone)
+    assert game.core.combat.target_view(source)["warning"] == "Firing marks you"
+    game.core.combat.mark(source, drone)
+    assert source.marked
+
+
+@pytest.mark.parametrize("indirect", [False, True])
+def test_game_5_5_attack_on_nontruce_player_never_provokes_npcs(row, indirect):
+    game, a, b = row
+    for caller, tile in ((a, (25, 3)), (b, (27, 3))):
+        place(game, caller, "vatside-clinics", tile)
+    keeper = guard(game)
+    game.core.world.enter(keeper, "vatside-clinics", (30, 3))
+    if indirect:
+        game.core.combat.mark_indirect(body(game, a), body(game, b))
+    else:
+        game.core.combat.mark(body(game, a), body(game, b))
+        game.core.combat.exchange(body(game, a), body(game, b))
+    assert body(game, a).marked
+    assert keeper.target is None
+    assert not game.core.npcs.provocations

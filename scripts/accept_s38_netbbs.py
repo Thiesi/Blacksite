@@ -1,8 +1,8 @@
 """S38: real NetBBS stdio truce headers, marking and keeper response.
 
-Private accounts/world only. A documented grade-five player fixture is
-queued through the owning server; this is not progression/acquisition
-acceptance. Creation, travel, targeting, firing and logout use real keys.
+Private accounts/world only. Grade-five, hostile-faction and owned-drone
+fixtures isolate the rules; this is not progression/acquisition acceptance.
+Creation, travel, targeting, drone commands, firing and logout use real keys.
 """
 
 import argparse
@@ -15,6 +15,7 @@ from collections.abc import Callable
 
 from accept_s10_netbbs import Connection, NativeProbe, wait
 from accept_p4_netbbs import navigate
+from accept_s16_netbbs import commit_key, key, loan
 from blacksite.server.world.actors import Actor
 
 
@@ -34,6 +35,35 @@ async def shoot_until(probe: NativeProbe, caller: Connection, target: Actor, con
             await probe.target(caller, target.id)
             await caller.caller.write(b"f")
             await asyncio.sleep(.25)
+
+
+async def drone_warning(probe: NativeProbe, caller: Connection, victim: Connection,
+                        width: int, height: int, tier: str) -> None:
+    # Disclosed owning-server fixtures; no faction or item acquisition claim.
+    for connection, faction in ((caller, "sable"), (victim, "wardens")):
+        player = probe.game.players[connection.session.player_id]
+        player.faction = faction
+        probe.service.core.progression.sync_actor(player)
+        probe.game.queue("save", player.bbs_user_id, player, immediate=True)
+    await wait(lambda: not probe.commerce.pending)
+    iid = loan(probe, caller, "drn_halvard_sentry")
+    await probe.target(caller, victim.avatar.actor.id)
+    drones = probe.service.core.progression.drones
+    await key(caller, b"o")
+    await wait(lambda: caller.session.id in drones.menus)
+    wanted = next(index for index, row in enumerate(drones.view(caller.session)["rows"]) if row["id"] == iid)
+    while drones.menus[caller.session.id] != wanted:
+        old = drones.menus[caller.session.id]
+        await key(caller, b"\x1b[B" if old < wanted else b"\x1b[A")
+        await wait(lambda: drones.menus[caller.session.id] != old)
+    await commit_key(probe, caller, b"u", lambda: iid in drones.actors)
+    await wait(lambda: "order marks you" in caller.caller.screen.screen_text()
+               and "15 minutes" in caller.caller.screen.screen_text())
+    probe.save(caller, f"truce-drone-order-warning-{width}x{height}-{tier}")
+    # Recall before player combat so this probe does not add pet damage.
+    await commit_key(probe, caller, b"r", lambda: iid not in drones.actors)
+    await key(caller, b"\x1b")
+    await wait(lambda: caller.session.id not in drones.menus)
 
 
 async def accept(root: Path, door_python: Path, width: int, height: int,
@@ -59,6 +89,7 @@ async def accept(root: Path, door_python: Path, width: int, height: int,
             await probe.walk(first, (12, 5))
             await probe.walk(second, (14, 5))
             source, victim = first.avatar.actor, second.avatar.actor
+            await drone_warning(probe, first, second, width, height, tier)
             await probe.target(first, victim.id)
             await wait(lambda: "Firing marks you" in first.caller.screen.screen_text())
             probe.save(first, f"truce-player-warning-{width}x{height}-{tier}")
@@ -88,7 +119,10 @@ async def accept(root: Path, door_python: Path, width: int, height: int,
             assert not caller.avatar.actor.marked
             cases.append({"size": [width, height], "tier": tier, "presentation": modern,
                           "player_marked": True, "regular_attack_provokes_keeper": True,
-                          "mark_before_chase": True, "grade_fixture": 5})
+                          "mark_before_chase": True, "grade_fixture": 5,
+                          "faction_fixture": ["sable", "wardens"],
+                          "owned_drone_fixture": "loaned Sentry; deployed and recalled with caller keys",
+                          "drone_order_mark_warning": True})
             await probe.leave(caller, f"finished-regular-{width}x{height}-{tier}")
         assert not probe.errors
         (root/"result.json").write_text(json.dumps({"head": head, "cases": cases,
