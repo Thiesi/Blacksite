@@ -82,7 +82,9 @@ contradiction by editing only the lower document.
   asks the owner. Work out disagreements with the technical lead or
   another lead first. If that fails, the technical lead decides. Your
   own reviews and sign-offs stay yours, and human gates stay the
-  owner's.
+  owner's. A decision of that kind doesn't stand in for a sign-off that
+  technical review §7.1 requires: if a lead still withholds one, the PR
+  waits for the owner, with both views.
 
 ## 4. Coding rules
 

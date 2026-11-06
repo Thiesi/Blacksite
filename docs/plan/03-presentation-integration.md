@@ -630,12 +630,15 @@ them directly. A party that needs an owner decision explains it to the
 technical lead, who asks the owner. Disagreements are worked out between
 the parties first; if that fails, the technical lead decides. This changes
 no ownership above: each party's reviews and sign-offs stay its own, and
-human gates and merges stay as stated.
+human gates and merges stay as stated. A decision of that kind doesn't
+stand in for a sign-off that technical review §7.1 requires: if a party
+still withholds one, the PR waits for the owner, with both views.
 
 ## 9. Decisions for the owner
 
-The presentation lead's D1 to D8 are theirs to put to the owner; the
-engineering consequences of each are noted. The D-T items are this
+The presentation lead's D1 to D8 are theirs to draft, and they reach the
+owner through the technical lead (§8); the engineering consequences of
+each are noted. The D-T items are this
 plan's own.
 
 | ID | Decision | Recommendation | Why it matters |
