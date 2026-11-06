@@ -106,7 +106,7 @@ not a numeric execution order. Cross-milestone dependencies are explicit.
 | S35 | The away report: persisted public records and the login screen (planned, #125) | Codex | S34 |
 | S36 | Tags: one short public mark per character (planned, #125) | Codex | S08, S09, P6 |
 | S37 | Dead drops: addressed item stacks and Kestrel returns (planned, #125) | Codex | S23, S35 |
-| S38 | Truce zones: Sodium Row keeps the peace (planned, #142) | Codex | S11, S20, #126 (P6b) |
+| S38 | Truce zones: Sodium Row keeps the peace (in progress, #142, PR #159) | Codex | S11, S20, #126 (P6b) |
 | S39 | Exit underfoot: a door on your tile outranks an adjacent talker or vendor for E (planned, #155) | Codex | P3, #126 (P6b) |
 
 Reviews: before S03, S04, and S14 start, an **Astra** critique pass over

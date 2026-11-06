@@ -1,6 +1,6 @@
 # S38 — Truce zones: Sodium Row keeps the peace
 
-**Status:** in progress (approved by the owner 2026-10-31)
+**Status:** in progress (PR #159; approved by the owner 2026-10-31)
 **Primary model:** Codex · **Reviewer:** automated review, technical lead, presentation lead (wording and header)
 **Depends on:** S11, S20, #126 (P6b; it also edits `sodium-row.json`, so S38 starts after #126 merges) · **Milestone:** world rules
 **Issue:** https://github.com/Thiesi/Blacksite/issues/142
