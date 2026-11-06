@@ -211,6 +211,56 @@ def test_game_7_3_owned_drone_mark_and_keeper_respect_controller_authority(opera
         assert keeper.target == drone.id
 
 
+@pytest.mark.parametrize("owner_zone,drone_zone,hostile,marks,answers", [
+    ("vatside-clinics", "sodium-row", True, False, False),
+    ("vatside-clinics", "sodium-row", False, True, False),
+    ("sodium-row", "vatside-clinics", True, True, True),
+])
+def test_game_7_3_defending_drone_uses_owner_body_for_mark_and_keeper(
+        operator, owner_zone, drone_zone, hostile, marks, answers):
+    from tests.server.test_drone_combat import deploy
+    game, a, b, player, engine = operator
+    for caller in (a, b):
+        game.core.characters.players[caller.session.player_id].grade = 5
+    place(game, a, "sodium-row", (25, 3))
+    drone = deploy(game, a, player, engine)
+    game.core.world.enter(drone, drone_zone, (26, 3))
+    place(game, a, owner_zone, (25, 3))
+    place(game, b, drone_zone, (27, 3))
+    source, owner = body(game, b), body(game, a)
+    source.faction, owner.faction = "sable", "wardens" if hostile else None
+    keeper = guard(game)
+    combat = game.core.combat
+    assert combat.legal(source, drone)
+    assert combat.would_mark(source, drone) is marks
+    assert game.core.npcs.truce_keeper(source, drone) == ("sable" if answers else None)
+    combat.mark(source, drone)
+    combat.exchange(source, drone)
+    assert source.marked is marks
+    assert keeper.target is None
+    assert (("sodium-row", "keeper", source.id) in game.core.npcs.provocations) is answers
+    lines = [line["text"] for line in b.session.log_ring]
+    if answers:
+        assert "You break Sodium Row's truce. You are Marked for 15 min." in lines
+        assert "Sable is waiting for you on Sodium Row." in lines
+    else:
+        assert not any("Sable is " in line for line in lines)
+        if marks:
+            assert "You are Marked for fifteen minutes." in lines
+
+
+def test_ui_2_1_no_keeper_announcement_without_keeper_guards(runners):
+    game, a, b, _ = runners
+    for caller, tile in ((a, (25, 3)), (b, (27, 3))):
+        game.core.characters.players[caller.session.player_id].grade = 5
+        place(game, caller, "sodium-row", tile)
+    for _ in range(3):
+        game.core.combat.mark(body(game, a), body(game, b))
+        game.core.combat.exchange(body(game, a), body(game, b))
+    assert body(game, a).marked
+    assert not any("Sable is coming" in line["text"] for line in a.session.log_ring)
+
+
 def test_game_7_3_grade_and_crew_protection_still_apply(row):
     game, a, b = row
     keeper = guard(game)

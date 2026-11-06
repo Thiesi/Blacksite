@@ -132,7 +132,9 @@ class Npcs:
 
     def truce_keeper(self, source: Actor, target: Actor) -> str | None:
         """Game 5.5/7.3: one predicate for the warning and keeper response."""
-        zone = self.world.zones.get(target.zone)
+        victim = (self.game.progression.drones.controller_body(target, acting=False)
+                  if target.behaviour.get("player_drone") else target)
+        zone = self.world.zones.get(victim.zone) if victim else None
         controller = self.game.progression.controller(source)
         if (not zone or not zone.template.meta.truce or not controller
                 or target.behaviour.get("training")
@@ -141,10 +143,8 @@ class Npcs:
         body = self.combat.actor(controller)
         if body is None:
             return None
-        if target.kind == "player" or target.behaviour.get("player_drone"):
-            victim = (self.game.progression.drones.controller_body(target, acting=False)
-                      if target.behaviour.get("player_drone") else target)
-            breaks = bool(victim and self.combat.would_mark(body, victim, indirect=True))
+        if victim.kind == "player":
+            breaks = self.combat.would_mark(body, victim, indirect=True)
         else:
             attackers = {source.id, body.id}
             breaks = not (self.hostile(target, source) or self.hostile(target, body)
@@ -153,6 +153,10 @@ class Npcs:
 
     def keep_truce(self, source: Actor, target: Actor, keeper: str) -> None:
         """Alert the target zone's guards; remote controllers are not chased out."""
+        if target.behaviour.get("player_drone"):
+            target = self.game.progression.drones.controller_body(target, acting=False)
+            if target is None:
+                return
         zone = self.world.zones[target.zone]
         controller = self.game.progression.controller(source)
         body = self.combat.actor(controller) if controller else None
@@ -181,7 +185,7 @@ class Npcs:
         name = self.content.factions[keeper].short
         line = (f"{name} is coming for you." if body.zone == zone.id else
                 f"{name} is waiting for you on {zone.template.meta.name}.")
-        if not already_provoked:
+        if guards and not already_provoked:
             self.combat.log(body, line, True)
 
     def provoked(self, source: Actor, target: Actor) -> None:

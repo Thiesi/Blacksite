@@ -46,7 +46,8 @@ progression, human pacing, presentation sign-off or H1/S25 acceptance.
 suppression, retained Warden heat/Marked behaviour, attacks on all
 three kinds of Row resident, defense against Marked/hunting targets,
 grade and crew protection, valid owned-drone attribution, rejected
-out-of-zone drone control, remote source bodies, actual Lattice burn
+out-of-zone drone control, a defending drone whose owner is elsewhere,
+remote source bodies, actual Lattice burn
 completion, target-zone marking, renewed provocation and announcement
 deduplication. The shipped enforcer/covered-Warden regression runs 300
 deterministic ticks without faction-driven targeting, harm or reveal.
@@ -124,6 +125,25 @@ provocation; every hit still refreshes the response. New tests cover
 multiple guards sharing a spawner, repeated hits and an expired
 response. Final validation and current-head review are recorded on
 the PR.
+
+The b52c67a review confirmed that fix and found a defending-drone zone
+mismatch. A held drone can remain behind after its controller leaves:
+`controller_body(acting=False)` intentionally retains its owner's
+protection, whereas an attacking drone needs current control authority.
+The keeper selection and response now use that same defending owner
+body as marking does, consistent with game design 5.3/7.3. Tests cover
+both directions: a drone on the Row with its owner elsewhere retains
+ordinary non-truce marking; a drone elsewhere with its owner on the
+Row invokes the Row's truce and waiting guards. Hostile-faction and
+neutral targets are covered without relaxing grade or safety.
+
+The review's zone-wide alert question is answered by S38's explicit
+requirement to provoke every keeper guard in the zone. No new sight or
+distance limit is imposed. If there are no keeper guards, the attack
+still Marks as required but does not announce a nonexistent chase.
+Speculative unrelated-provocation suppression and import-order notes
+do not change behaviour; repeated indirect and direct responses share
+the tested announcement gate.
 
 ## Open presentation boundary
 
