@@ -275,14 +275,26 @@ async def accept(root: Path, door_python: Path, show: bool,
                         assert actor.health==safe_hp
             finally:
                 try:
-                    (probe.root/f'npc-heat-writes-{width}x{height}.json').write_text(json.dumps({
+                    header = {
                         'diagnostic_only': True, 'began_tick': began,
                         'ended_tick': probe.service.core.loop.last_tick,
                         'retention': 'Latest calls only, bounded by loop.timings.maxlen',
                         'max_calls': heat_profile.loop.timings.maxlen,
                         'export': 'Before final profiling; trace released without a forced GC',
-                        'write_probe': heat_profile.metadata(),
-                        'write_calls': heat_profile.calls}, indent=2)+'\n', encoding='utf-8')
+                        'write_probe': heat_profile.metadata()}
+                    # Expand/encode only one call at a time. Avoid a second
+                    # full trace of dictionaries plus one huge JSON string.
+                    with (probe.root/f'npc-heat-writes-{width}x{height}.json').open('w', encoding='utf-8') as output:
+                        output.write(json.dumps(header, separators=(',', ':'))[:-1])
+                        output.write(',"write_calls":[')
+                        for index, row in enumerate(heat_profile.iter_calls()):
+                            if index:
+                                output.write(',')
+                            json.dump(row, output, separators=(',', ':'))
+                        output.write(']}\n')
+                    # A for-loop retains its final value; don't carry even
+                    # that expanded row across the final gate window.
+                    row = None
                 finally:
                     del heat_profile
             await probe.walk(caller,(44,3))

@@ -7,7 +7,7 @@ from the operation, and wall minus CPU is not labelled as an I/O cause.
 """
 
 from collections import deque
-from collections.abc import Callable
+from collections.abc import Callable, Iterator
 from functools import wraps
 import threading
 import time
@@ -141,10 +141,14 @@ class WriteProfile:
 
     @property
     def calls(self) -> list[dict[str, Any]]:
-        return [{**row, "operations": [
-            {"operation": operation, "parent": parent, **difference(start, end)}
-            for operation, parent, start, end in row["operations"]]}
-                for row in self._calls]
+        return list(self.iter_calls())
+
+    def iter_calls(self) -> Iterator[dict[str, Any]]:
+        """Expand one call at a time for bounded-memory long-trace export."""
+        for row in self._calls:
+            yield {**row, "operations": [
+                {"operation": operation, "parent": parent, **difference(start, end)}
+                for operation, parent, start, end in row["operations"]]}
 
     def __enter__(self) -> "WriteProfile":
         original_writes, original_status = self.server._character_writes, self.server.status

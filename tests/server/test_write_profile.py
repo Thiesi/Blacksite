@@ -157,10 +157,16 @@ def test_s40_formats_records_after_collection(scratch_dir: Path, monkeypatch: py
     monkeypatch.setattr('blacksite.server.write_profile.difference', exported)
     try:
         with WriteProfile(server) as probe:
-            server._character_writes()
+            for _ in range(3):
+                server._character_writes()
             assert not converted
-        records = json.loads(json.dumps(probe.calls))
-        assert len(converted) == len(records[0]['operations']) == 3
+        rows = probe.iter_calls()
+        assert not converted
+        first = next(rows)
+        assert len(converted) == 3  # Later rows have not been expanded.
+        records = json.loads(json.dumps([first, *rows]))
+        assert len(records) == 3 and len(converted) == 9
+        assert len(records[0]['operations']) == 3
         assert [span['operation'] for span in records[0]['operations']] == [
             'character_writes', 'storage.mark_dirty:meta:balance', 'storage._json']
     finally:

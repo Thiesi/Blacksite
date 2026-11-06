@@ -37,6 +37,9 @@ two-second warmup and ten-second gate window still follow, and the
 window's samples exclude the earlier export. Capture overhead and GC
 effects during the heat trace remain limits of its interpretation.
 The two gate profiles remain separate, with their exact sample vectors.
+Long-trace export is compact and streams one expanded call at a time.
+It does not allocate a second full trace of dictionaries or one full
+JSON string; the retained raw trace is still bounded by 6,000 calls.
 
 Use one fixed local proof root, `blacksite-proof/s40` under the system
 temp folder. Publish durable evidence as a GitHub artifact, on the PR
