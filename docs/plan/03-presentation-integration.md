@@ -587,8 +587,7 @@ Codex. *Gate:* technical lead, presentation lead, owner.
 *Purpose:* terminal UI 2.6 had no owning slice; the first sight of a zone
 introduces it. *Scope:* [`P11-place-card.md`](slices/P11-place-card.md),
 including S38's deferred `CONTESTED · TRUCE` and keeper sentence, and the
-server-declared `me.threat` and `me.threat_until` fields that §11 note 12
-called for. *Excludes:*
+server-declared `me.threat` field that §11 note 12 called for. *Excludes:*
 drawn 16-colour art (V3). *Depends:* P5, P6a, S38. *Owner:* Codex.
 *Gate:* automated review, technical lead, presentation lead.
 

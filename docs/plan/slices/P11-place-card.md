@@ -62,7 +62,7 @@ this text card until V3 supplies drawn cards.
   a zone seen when `discover` runs, which can be before the zone view
   appears, so a new character's first zone would otherwise never get a card.
 - Only when a zone view for that zone has arrived, judged by that view's
-  threat fields. A `place_card` frame alone paints nothing, so a card can't
+  `me.threat`. A `place_card` frame alone paints nothing, so a card can't
   flash for one frame ahead of a threatened view.
 - Never while anything threatens you (below). A first sight that meets a
   threat, including a held one, is dropped and not retried. The log already
@@ -84,26 +84,27 @@ change 1). While threatened, `A` opens nothing and the hint row says "Not
 with danger this close." `A` is added to `keymaps.json`, the key table
 and help.
 
-**Threat.** The card reads two server-declared fields, which P11 adds.
-Plan §11 note 12 and the P4 row in §12 called for a declared signal, but P4
-shipped without it. The later Auto decider reads these same fields.
+**Threat.** The card reads two things, and you're threatened if either
+says so. The later Auto decider can use the same two.
 
-- `me.threat`: null, or the reason you're threatened now. One server
-  function sets it from the view's already-masked `hazards`, `target` and
-  `nearby` (a `!`) and from heat, so a covered NPC can't leak through a
-  second code path.
-- `me.threat_until`: null, or a UTC time 10 seconds after the last danger
-  or combat line reached you. `Session.emit`, the sole entry for log lines,
-  sets it, which covers every emitter. The server doesn't have to publish a
-  new view when it passes. The server's 10 s constant has a test that it
-  matches the door's `PROTECT_SECONDS`.
+- `me.threat`: null, or the reason you're threatened now. Plan §11 note 12
+  and the P4 row in §12 called for a declared signal, but P4 shipped without
+  it, so P11 adds this field. One server function sets it from the view's
+  already-masked `hazards`, `target` and `nearby` (a `!`) and from heat, so
+  a covered NPC can't leak through a second code path.
+- A danger or combat line that arrived within `PROTECT_SECONDS`: the door's
+  existing arrival-stamped check (`model.py:294`), shared rather than copied.
+  This isn't new inference under note 12. The server already sent and masked
+  these lines, and the check only times them. It uses the door's own clock,
+  and it agrees with the existing notice and log protection by construction.
 
-The door combines nothing for the card. It only compares `threat_until`
-with a wall clock passed in for that purpose. Its usual `now` is
-`time.monotonic()` and can't be compared with UTC. The existing notice and
-log protection (`chrome.py`, `model.py`) stays as it is. When the card
-opens or closes is a visible signal, so these fields carry the disclosure
-test.
+The door works out no other threat for the card. When the card opens or
+closes is a visible signal, so `me.threat` carries the disclosure test.
+
+A new door process stamps replayed log lines on arrival, so after a reconnect
+recent danger lines count afresh. `A` can refuse for up to 10 seconds then.
+That's harmless, because reconnecting opens no card. A door that's still
+running skips lines it has already seen.
 
 **Data.** The door needs the card's text at first sight and on request,
 and it must not sit in every view body. The server sends one additive,
@@ -166,11 +167,10 @@ so `A` can't read the wrong zone.
   caller, with the same intent as with no card.
 - The timer closes it at 8 seconds on the injected clock. A requested card
   has no timer.
-- `me.threat` is set for each input (hazard, target, `!`, heat), and
-  `me.threat_until` for a danger or combat line from each emitter. The card
-  doesn't open while either applies, and closes when one does.
-- The door compares `threat_until` with its injected wall clock, and the
-  server's 10 s constant matches `PROTECT_SECONDS`.
+- `me.threat` is set for each input (hazard, target, `!`, heat). The card
+  doesn't open while it's set or while a danger or combat line is within
+  `PROTECT_SECONDS`, and closes when either applies.
+- The card and the notice protection share one recent-line check.
 - A `place_card` frame that arrives with a threatened view, in either order,
   never paints the card, not even for one frame.
 - Disclosure: a covered NPC on the Row doesn't change `me.threat`,
