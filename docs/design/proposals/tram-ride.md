@@ -1,7 +1,7 @@
 # The tram ride: travel, not teleport (proposal)
 
 **Status:** the owner agreed to T1 to T4 on 2026-11-05 (§6). The technical
-lead's and presentation lead's reviews are folded in. T5 and T6 are open.
+lead's and presentation lead's reviews are folded in. The owner agreed to T5 and T6 on 2026-11-06.
 Nothing here changes canon or code. Canon changes go top-down in their
 own PRs.
 **Author:** creative consultant (Claude Opus 5.5), 2026-11-04.
@@ -102,8 +102,7 @@ holds, and these rules replace the sight test:
 3. Stealth doesn't hide you. It shortens detection range, and a sealed car
    has no range. So a stealthed hunter who boards a target's car is named
    10 to 16 s before they land side by side, when stealth would end anyway.
-   A hunter who wants to stay hidden takes the next car. This touches
-   visibility, so it is T6.
+   A hunter who wants to stay hidden takes the next car (T6).
 4. A Mark shows as it does in NEARBY. It is already public.
 5. Entries are names only. They carry no target action, Tab doesn't select
    them, and no entry shows who anyone is hunting.
@@ -236,7 +235,9 @@ first, so a weak result reopens the question rather than settling it.
 
 The demo also exercises what the search couldn't rule out: a Marked
 escape, a disconnect and reconnect during a ride, a contract timer, and a
-hub transfer at the 74 s window.
+hub transfer at the 74 s window. In the disconnect, the rider leaves the
+list, returns on reconnecting, and isn't named in the arrival line while
+offline.
 
 ## 5. Who does what
 
@@ -253,21 +254,22 @@ hub transfer at the 74 s window.
   yes, in the demo first, after the technical lead's movement checks.
 - **T2. The passenger list** names the callers in your car (§3.2)? I
   recommend yes: it's what makes the car shared, and it never leaves the
-  car.
+  car. A rider learns two things 10 to 16 s sooner than NEARBY would tell
+  them at the destination: who is aboard, and that someone aboard has
+  disconnected. Both are earlier, not new.
 - **T3. Keep one terminus per line**, with no multi-stop (§3.6)? I
   recommend yes.
 - **T4. A demo branch** with one dressed line and one plain line (§4)?
   I recommend yes, after the Sodium Row playtest.
-- **T5. Does the Dispatcher speak on the tram public address?** Open. The
+- **T5. Does the Dispatcher speak on the tram public address?** The
   cast file and the gazetteer say yes, and `02-factions.md:341` says "only
   on convoy channels and, occasionally, to a player". The bible doesn't
   decide it. I recommend amending the factions line to match the cast file,
   in the canon PR that follows the demo. The demo can run without an answer.
-- **T6. Should a stealthed rider be named in the car?** Open. T2 was agreed
+- **T6. Should a stealthed rider be named in the car?** T2 was agreed
   before this was spelled out (§3.2, rule 3). I recommend yes: sharing a
   sealed car is the hunter's choice, and the next car keeps them hidden. The
-  alternative is a new rule, where the list honours stealth at boarding. The
-  demo needs an answer.
+  alternative is a new rule, where the list honours stealth at boarding.
 
 **Owner decisions, 2026-11-05:** T1 to T4 agreed, as recommended.
 
@@ -281,5 +283,11 @@ hub transfer at the 74 s window.
 After the owner agreed, checking the city plan changed the per-line
 numbers within T1's 10 to 16 s (§3.4), and the two-run test replaced a
 single comparison within T4's dressed and plain lines (§4).
+
+**Owner decisions, 2026-11-06:** T5 and T6 agreed, as recommended.
+
+- **T5:** the Dispatcher speaks on the tram public address. The factions
+  line changes to match the cast file in the canon PR that follows the demo.
+- **T6:** a stealthed rider is named in the car.
 
 Canon is unchanged. The ride times go to canon only after the demo.
