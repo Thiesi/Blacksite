@@ -9,6 +9,7 @@ import pytest
 
 from blacksite.server.clock import ManualClock
 from blacksite.server.protocol import Frame
+from blacksite.server.players import Player
 from blacksite.server.storage.db import Storage
 from scripts.benchmark_s40_disk import baseline
 from scripts.minimal_s40_profile import MinimalProfile
@@ -144,3 +145,29 @@ def test_s40_disk_baseline_reports_every_commit_and_deletes_only_its_database(
     with pytest.raises(FileExistsError):
         baseline(scratch_dir, count=1)
     assert path.read_bytes() == b'preserve'
+
+
+def test_s40_baseline_crosses_default_checkpoint_cycles_without_explicit_checkpoint(
+        scratch_dir: Path) -> None:
+    result = baseline(scratch_dir, count=4096)
+    assert result['wal_autocheckpoint_pages'] == 1000
+    assert result['checkpoint_inferred_count'] >= 3
+    rows = result['observations']
+    for previous, current in zip(rows, rows[1:]):
+        assert previous['checkpoint_inferred_from_next_restart'] == current['header_restarted_this_transaction']
+    assert result['commits_over_5_ms'] == [row for row in rows if row['wall_ms'] > 5]
+    assert result['commit_wall_ms'] == [row['wall_ms'] for row in rows]
+    assert result['max_wal_bytes'] < 8 * 1024 * 1024
+    assert not list(scratch_dir.iterdir())
+
+
+def test_s40_baseline_uses_frozen_representative_player_receipt(scratch_dir: Path) -> None:
+    player = Player('baseline', 'origin', 'user', 'Caller', 'Caller',
+                    'hardline', '2026-11-06T00:00:00+00:00').record()
+    shape = {'basis': 'test player-only receipt', 'effect': {
+        **effect(), 'player': player}}
+    result = baseline(scratch_dir, count=3, shape=shape)
+    assert 's40_baseline_serial' not in player['progress']
+    assert result['shape_basis'] == shape['basis']
+    assert result['representative_effect_json_bytes'] > len(str(player))
+    assert not list(scratch_dir.iterdir())

@@ -115,18 +115,40 @@ bound on every live tick. Hosted measurements precede collection. No
 time is subtracted from the gate and there is no flaky timing assertion.
 
 After the final canonical result is saved, the workflow runs
-`benchmark_s40_disk.py`: 256 standalone WAL/FULL commits of 4 KiB rows
-in a new database under the same proof `world/` directory. It reports
-every duration, p50/p95/p99 and maximum in `disk-baseline.json`, then
-deletes only that database and its sidecars. It neither opens the game
-database nor changes its configuration. A clean baseline cannot refute
-an intermittent game/disk stall. No baseline precedes a canonical gate.
+`benchmark_s40_disk.py` in a new database under the same proof `world/`
+directory. The original 256-commit, 4 KiB baseline did not demonstrate
+checkpoint coverage. Following lead record
+[6697695642](https://github.com/Thiesi/Blacksite/pull/166#issuecomment-6697695642),
+the extended baseline runs 4,096 actual `Storage.commerce_write` calls.
+Its representative player-only skill receipt is frozen after the
+canonical result, using the largest current player record plus current
+caches and vendor budgets. This is not the captured stalled payload.
+Only the standalone copy receives a diagnostic serial to dirty its pages.
+No game database is opened or changed by this experiment.
+
+FULL, the default automatic-checkpoint threshold, SQL schema and receipt
+method are retained. WAL size and its 24-byte header are read after each
+timed commit. A changed generation/salt identifies a restart; in this
+single-connection, no-reader experiment it supports inferring a completed
+checkpoint in the preceding commit. This is not a checkpoint hook, and
+a size plateau alone proves only that the file did not grow. The final
+commit may checkpoint without a subsequent observable restart.
+
+`disk-baseline.json` records every duration and WAL observation, each
+commit above 5 ms with its checkpoint evidence, the distribution and
+maximum, representative payload size and shape hash. The experiment
+must show at least three checkpoint/restart cycles; otherwise it saves
+the incomplete result and fails explicitly. It issues no checkpoint
+pragma. Its database and sidecars are deleted after use. A clean result
+cannot refute intermittent game/disk stalls. No baseline precedes a gate.
 
 Manual service-workflow dispatch is S11-only, optionally one size.
-The lead permits up to ten diagnostic runs per size at the measurement
-head, stopping early when a stall is captured. Every outcome, including
-failures, is reported on PR #166. These runs do not count towards the
-five-run completion criterion, grant approval, or authorise a fix.
+The first pair at e6ec3d6 captured a 108.188959 ms successful commit;
+collection stopped and no manual dispatch was used. The checkpoint
+follow-up permits one normal service run per size, with no S11-only
+dispatch. Every outcome, including failures, is reported on PR #166.
+These measurements do not count towards the five-run completion
+criterion, grant approval, or authorise a product fix.
 
 ## Reading write operations
 

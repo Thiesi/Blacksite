@@ -8,6 +8,7 @@ import argparse
 import asyncio
 import gc
 from collections import deque
+from dataclasses import asdict
 import json
 from pathlib import Path
 import time
@@ -190,6 +191,18 @@ async def _profile(probe: NativeProbe, width: int, height: int,
 async def write_diagnostic(probe: NativeProbe, width: int, height: int) -> None:
     """Collect detailed all-hub writes after the canonical result is saved."""
     loop = probe.service.core.loop
+    # Model the NPC armour-learning receipt after the canonical result is
+    # saved. This is a current snapshot, not the stalled receipt's payload.
+    game, commerce = probe.service.core.characters, probe.service.core.commerce
+    records = [player.record() for player in game.players.values()]
+    player = max(records, key=lambda row: len(json.dumps(row).encode('utf-8')))
+    shape = {'basis': 'Post-result largest current player; record_use player-only receipt',
+             'tick': loop.last_tick, 'not_captured_stalled_payload': True,
+             'effect': {'player': player, 'players': [], 'items': [], 'delete_items': [],
+                        'budgets': {key: asdict(value) for key, value in commerce.budgets.items()},
+                        'caches': commerce.caches, 'serial': commerce.serial}}
+    (probe.root/'disk-baseline-shape.json').write_text(
+        json.dumps(shape, ensure_ascii=False)+'\n', encoding='utf-8')
     began_tick, began = loop.last_tick, time.perf_counter()
     for zone in probe.service.world.zones.values():
         zone.activate('s40-write-diagnostic', probe.service.clock.now_tick())
