@@ -9,13 +9,14 @@ from blacksite.door.model import Display
 from tests.character_helpers import create, place
 from tests.fake_terminal import FakeTerminal
 from tests.harness import HeadlessServer
+from tests.presentation.snapshots import assert_golden
 
 
 @pytest.mark.parametrize("width,height", [(80, 24), (132, 50)])
 @pytest.mark.parametrize("tier", ["16", "256", "truecolor"])
 @pytest.mark.parametrize("presentation", [False, True])
 @pytest.mark.parametrize("keeper", ["sable", "unmoored"])
-def test_ui_2_1_truce_header_and_warning(repo_root, info, golden, width, height, tier, presentation, keeper):
+def test_ui_2_1_truce_header_and_warning(repo_root, info, request, caller_provenance, width, height, tier, presentation, keeper):
     game = HeadlessServer(load_content(repo_root/"src/blacksite/content"), character_state={})
     caller = game.connect({"user_id": 1, "handle": "Truce界", "node_name": "S38"}, width=width, height=height)
     create(game, caller, card="none")
@@ -43,4 +44,5 @@ def test_ui_2_1_truce_header_and_warning(repo_root, info, golden, width, height,
     assert warning in text
     assert display.body["me"]["truce_text"] == keeper_name + " keeps the peace here."
     assert any(line["text"] == "Nobody draws on Sodium Row. " + keeper_name + " makes sure of it." for line in caller.session.log_ring)
-    golden(f"s38_truce_{'present' if presentation else 'legacy'}_{keeper}_{width}x{height}_{tier}", terminal, tier, trim=True)
+    assert_golden(repo_root/"tests/presentation/golden/s38-truce", f"s38_truce_{'present' if presentation else 'legacy'}_{keeper}_{width}x{height}_{tier}", terminal, tier, trim=True,
+                  update=request.config.getoption("--update-goldens"))
