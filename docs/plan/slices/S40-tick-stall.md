@@ -2,12 +2,18 @@
 
 **Status:** planned (approved by the owner 2026-11-05)
 **Primary model:** Codex · **Reviewer:** automated review, technical lead
-**Depends on:** S11, S38 (queue order, not code; the owner put S40 right after it) · **Milestone:** service health
+**Depends on:** S11 · **Milestone:** service health
 **Issue:** https://github.com/Thiesi/Blacksite/issues/158
 
-Canon: architecture's performance budgets. S11's acceptance step 6
-(`admin status` tick p99 under 10 ms with all hub zones active) stays
-as it is. Where this file and canon differ, canon wins.
+The owner queued this right after S38 (#159). That is queue order: S40
+has no code dependency on S38.
+
+Canon: architecture's performance table allows a tick p99 of 40 ms at 16
+players and 6 active zones. S11's acceptance step 6 (`admin status` tick
+p99 under 10 ms with all hub zones active) is a tighter gate of its own,
+not canon, and every p99 below is inside the 40 ms budget. The owner
+decided on 2026-11-05 to keep the 10 ms gate. Where this file and canon
+differ, canon wins.
 
 ## Goal
 
@@ -67,8 +73,9 @@ all still open. A hosted runner's own scheduling may be part of it.
 
 If the evidence shows that the time is lost in the runner or the
 operating system, with no operation in the game to fix, stop and report
-it on #158 with that evidence. What happens to the gate is then the
-owner's decision.
+it on #158 with that evidence. The measurement and the auditable profile
+can still merge. What happens to the gate, and whether the slice closes
+on that basis, is then the owner's decision.
 
 ## Out of scope
 
@@ -95,5 +102,9 @@ Roadmap §7, plus:
   it, and separates what was observed from what was inferred.
 - The S11 job passes at both sizes in five service runs at the final
   head. Every run counts: a failure is reported with its artifact, and
-  is not replaced by a retry.
+  is not replaced by a retry. Five passes are a sanity check, not proof
+  that the failure rate is zero, so the named operation above is the
+  main evidence.
+- If the cause is outside the game, the section above applies instead of
+  the five runs.
 - No golden or mechanics fingerprint moves.

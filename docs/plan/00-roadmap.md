@@ -108,7 +108,7 @@ not a numeric execution order. Cross-milestone dependencies are explicit.
 | S37 | Dead drops: addressed item stacks and Kestrel returns (planned, #125) | Codex | S23, S35 |
 | S38 | Truce zones: Sodium Row keeps the peace (planned, #142) | Codex | S11, S20, #126 (P6b) |
 | S39 | Exit underfoot: a door on your tile outranks an adjacent talker or vendor for E (planned, #155) | Codex | P3, #126 (P6b) |
-| S40 | Tick gate: find and fix the character-write stall behind S11's intermittent p99 failures (planned, #158) | Codex | S11, S38 |
+| S40 | Tick gate: find and fix the character-write stall behind S11's intermittent p99 failures (planned, #158) | Codex | S11 |
 
 Reviews: before S03, S04, and S14 start, an **Astra** critique pass over
 the relevant spec sections is recommended (protocol, renderer, hacking
