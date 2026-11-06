@@ -19,6 +19,7 @@ from blacksite.admin.client import request
 from blacksite.server.loop import TickContext
 from blacksite.server.world.actors import Actor
 from blacksite.server.world.sight import line_of_sight
+from blacksite.server.write_profile import WriteProfile
 
 
 async def approach(probe: NativeProbe, caller: Connection, target: Actor,
@@ -61,6 +62,12 @@ async def approach(probe: NativeProbe, caller: Connection, target: Actor,
 
 
 async def profile(probe: NativeProbe, width: int, height: int) -> float:
+    with WriteProfile(probe.service) as writes_profile:
+        return await _profile(probe, width, height, writes_profile)
+
+
+async def _profile(probe: NativeProbe, width: int, height: int,
+                   writes_profile: WriteProfile) -> float:
     loop = probe.service.core.loop
     original_subsystems, original_step = loop.subsystems, loop.step
     original_writes = probe.service._character_writes
@@ -115,6 +122,7 @@ async def profile(probe: NativeProbe, width: int, height: int) -> float:
         try:
             original_step()
         finally:
+            current['tick'] = loop.last_tick
             current['loop_wall_ms'] = (time.perf_counter()-wall)*1000
             current['loop_cpu_ms'] = (time.thread_time()-cpu)*1000
 
@@ -163,7 +171,9 @@ async def profile(probe: NativeProbe, width: int, height: int) -> float:
             'status': status, 'sampling_started_tick': sampling_tick,
             'instrumentation': 'wall/thread CPU, GC and storage flush probes; same 10 ms gate including overhead',
             'gc_pauses': gc_pauses, 'storage_flushes': flushes,
-            'ticks': rows}, indent=2)+'\n', encoding='utf-8')
+            'ticks': rows, 'write_probe': writes_profile.metadata(),
+            'write_calls': list(writes_profile.calls),
+            'gate': writes_profile.gate(status) if status else None}, indent=2)+'\n', encoding='utf-8')
 
 
 async def sodium_response(probe: NativeProbe, caller: Connection, width: int, height: int) -> None:

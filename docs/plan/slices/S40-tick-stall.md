@@ -1,6 +1,6 @@
 # S40 — Tick gate: find and fix the character-write stall
 
-**Status:** planned (approved by the owner 2026-11-05)
+**Status:** in progress (approved by the owner 2026-11-05)
 **Primary model:** Codex · **Reviewer:** automated review, technical lead
 **Depends on:** S11 · **Milestone:** service health
 **Issue:** https://github.com/Thiesi/Blacksite/issues/158
