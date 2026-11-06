@@ -158,12 +158,18 @@ class Npcs:
         body = self.combat.actor(controller) if controller else None
         if body is None:
             return
-        until = self.combat.now() + PROVOCATION_SECONDS
+        now = self.combat.now()
+        until = now + PROVOCATION_SECONDS
+        guards = []
         for guard in zone.actors.values():
             template = self.content.npcs.get(guard.behaviour.get("template"))
             if (guard.faction != keeper or not template
                     or not any(b.kind == "guard" for b in template.behaviours)):
                 continue
+            guards.append(guard)
+        already_provoked = any(self.provocations.get(
+            (zone.id, str(guard.behaviour.get("spawner")), body.id), 0) > now for guard in guards)
+        for guard in guards:
             group = str(guard.behaviour.get("spawner"))
             for attacker in {source.id, body.id}:
                 self.provocations[zone.id, group, attacker] = until
@@ -175,7 +181,8 @@ class Npcs:
         name = self.content.factions[keeper].short
         line = (f"{name} is coming for you." if body.zone == zone.id else
                 f"{name} is waiting for you on {zone.template.meta.name}.")
-        self.combat.log(body, line, True)
+        if not already_provoked:
+            self.combat.log(body, line, True)
 
     def provoked(self, source: Actor, target: Actor) -> None:
         if keeper := self.truce_keeper(source, target):

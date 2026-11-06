@@ -8,11 +8,14 @@ import pytest
 from blacksite.content.loader import load_content
 from blacksite.content.schema import Behaviour
 from blacksite.content.validate import validate
+from blacksite.server.rules import combat as rules
 from blacksite.server.npcs.templates import HEAT_SECONDS, make_actor
 from blacksite.server.world.actors import Actor
 from tests.character_helpers import create, place
 from tests.combat.test_engine import body, build_duel
 from tests.harness import HeadlessServer
+from tests.lattice.test_engine import runners
+from tests.lattice.test_encounters import cast, enter
 from tests.server.test_drone_ownership import operator
 
 
@@ -98,6 +101,61 @@ def test_game_7_3_firing_back_at_marked_player_does_not_provoke_keeper(row):
     game.core.combat.mark(body(game, a), body(game, b))
     game.core.combat.exchange(body(game, a), body(game, b))
     assert not body(game, a).marked and keeper.target is None
+
+
+def test_ui_2_1_keeper_announces_once_while_hits_refresh_provocation(row):
+    game, a, b = row
+    keeper = guard(game)
+    second_guard = npc(game, "npc-sable-enforcer", "second-keeper", (31, 3))
+    second_guard.behaviour["spawner"] = "keeper"
+    source, target = body(game, a), body(game, b)
+    combat = game.core.combat
+    combat.mark(source, target)
+    combat.exchange(source, target)
+    key = ("sodium-row", "keeper", source.id)
+    first_deadline = game.core.npcs.provocations[key]
+    game.step()
+    for _ in range(3):
+        combat.exchange(source, target)
+    assert game.core.npcs.provocations[key] > first_deadline
+    lines = [line["text"] for line in a.session.log_ring]
+    assert lines.count("Sable is coming for you.") == 1
+    assert keeper.target == source.id
+    # A genuinely expired response is announced again without waiting in real time.
+    game.core.npcs.provocations[key] = combat.now() - 1
+    combat.exchange(source, target)
+    assert [line["text"] for line in a.session.log_ring].count("Sable is coming for you.") == 2
+
+
+@pytest.mark.parametrize("marked", [False, True])
+def test_game_7_3_lattice_burn_uses_target_body_truce_and_keeper(runners, marked):
+    game, a, b, _ = runners
+    first, second = enter(game, a, "lat-civic-ledger"), enter(game, b, "lat-civic-ledger")
+    # Explicit remote-body fixture: the runners share a core, their bodies do not.
+    place(game, a, "vatside-clinics", (25, 3))
+    place(game, b, "sodium-row", (27, 3))
+    source, target = body(game, a), body(game, b)
+    source.faction, target.faction = "sable", "wardens"
+    source.stance = target.stance = "jacked"
+    target.marked = marked
+    if marked:
+        game.core.characters.players[target.id].marked_until = datetime.fromtimestamp(
+            game.core.combat.now() + rules.MARKED_SECONDS, timezone.utc).isoformat()
+    for caller in (a, b):
+        game.core.characters.players[caller.session.player_id].grade = 5
+    keeper = guard(game)
+    first.rig = ("prg_burn", None, None)
+    cast(game, a, "prg_burn", second.player_id)
+    assert second.integrity == 82
+    assert source.marked is not marked
+    key = ("sodium-row", "keeper", source.id)
+    assert (key in game.core.npcs.provocations) is not marked
+    assert keeper.zone == "sodium-row" and keeper.target is None
+    lines = [line["text"] for line in a.session.log_ring]
+    if not marked:
+        assert lines.index("You break Sodium Row's truce. You are Marked for 15 min.") < lines.index("Sable is waiting for you on Sodium Row.")
+    else:
+        assert "Sable is waiting for you on Sodium Row." not in lines
 
 
 def test_game_5_5_already_hunting_npc_has_no_keeper_warning_or_response(row):
