@@ -18,7 +18,7 @@ from types import SimpleNamespace
 from typing import Any
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[1]/'src'))
-from blacksite.server.write_profile import WriteProfile
+from write_profile import WriteProfile
 
 
 def shape(root: Path) -> tuple[str, str, list[str], list[list[int]]]:

@@ -11,7 +11,7 @@ import pytest
 
 from blacksite.server.clock import ManualClock
 from blacksite.server.storage.db import Storage
-from blacksite.server.write_profile import Sample, WriteProfile, difference
+from scripts.write_profile import Sample, WriteProfile, difference
 from tests.harness import HeadlessServer
 
 
@@ -175,7 +175,7 @@ def test_s40_formats_records_after_collection(scratch_dir: Path, monkeypatch: py
         assert not probe.current, 'Formatting ran inside a measured write'
         converted.append('span')
         return difference(start, end)
-    monkeypatch.setattr('blacksite.server.write_profile.difference', exported)
+    monkeypatch.setattr('scripts.write_profile.difference', exported)
     try:
         with WriteProfile(server) as probe:
             for _ in range(3):

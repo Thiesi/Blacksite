@@ -13,11 +13,18 @@ both. Its two profile JSON files per size cover the original first and
 final all-hub windows; each still warms up for two seconds and samples
 for ten seconds.
 
-The canonical windows use `WriteProfile(trace_writes=False)`: only the
-synchronous status snapshot is added. No per-operation clocks, write
-wrappers or SQLite proxy are installed. The original coarse subsystem,
-GC and flush probes remain as before S40. Normal service execution
-imports no probe and has no probe branch in its tick/persistence paths.
+The canonical windows use `WriteProfile(trace_writes=False)` for the
+synchronous status snapshot. Following technical-lead record
+[6696717829](https://github.com/Thiesi/Blacksite/pull/166#issuecomment-6696717829),
+`MinimalProfile` adds a sparse commerce-commit timer and two coarse loop
+boundaries. There are no write wrappers, SQLite proxy, rusage calls or
+new thread CPU clocks in these windows. The original subsystem, GC and
+flush probes remain. Normal service imports no probe; its optional
+observer attributes are `None` and read no wall clocks.
+
+The detailed and minimal observers live under `scripts/`; the installed
+door does not need either. The existing host acceptance script drives
+the source service and a separately installed, source-matched door.
 
 After the final canonical result has been saved, including a failed
 result, a separate 120-second all-hub diagnostic installs the detailed
@@ -76,6 +83,50 @@ samples this selects the maximum; at 100 it selects the second-highest.
 No estimator or sample-window change is made to smooth that boundary.
 Use this vector for the gate, not the nearby `ticks` rows' rounded or
 separately bracketed durations.
+
+## Sparse canonical diagnostics
+
+`commerce_commits` records processed tick, raw start/end nanoseconds,
+wall duration and success for each observed `commerce_write` SQLite
+context exit. One `perf_counter_ns` pair surrounds the existing implicit
+commit, after all transaction SQL. No connection proxy or replacement
+transaction is used. A failed commit can include SQLite's automatic
+rollback; an SQL failure before the commit starts produces no commit
+span. The transaction, `synchronous=FULL`, write order, callbacks and
+dirty-state removal retain their original behaviour. No timer runs for
+ordinary player snapshots or other transactions.
+
+The loop keeps all clocks in the acceptance observer. It signals after
+input processing and before publishers. Together with the existing
+outer step clocks, these two extra reads yield `inputs_wall_ms`,
+`subsystems_wall_ms` (including bracket overhead), and
+`publishers_wall_ms`. Inputs include session expiry/context preparation;
+publishers include player snapshots produced during publication. This
+does not measure individual publishers or copies. No deeper loop probe
+or game fix is part of this measurement.
+
+Before native acceptance, `benchmark_s40_minimal.py` alternates baseline
+and capture batches of the actual storage method against a no-disk
+transaction body and the actual empty tick loop. It publishes all seven
+rounds of 100,000 calls in `minimal-overhead.json`. The first Windows
+measurement observed median increments of 1.101 microseconds per commit
+and 0.642 per loop split. This measures synthetic observer cost, not a
+bound on every live tick. Hosted measurements precede collection. No
+time is subtracted from the gate and there is no flaky timing assertion.
+
+After the final canonical result is saved, the workflow runs
+`benchmark_s40_disk.py`: 256 standalone WAL/FULL commits of 4 KiB rows
+in a new database under the same proof `world/` directory. It reports
+every duration, p50/p95/p99 and maximum in `disk-baseline.json`, then
+deletes only that database and its sidecars. It neither opens the game
+database nor changes its configuration. A clean baseline cannot refute
+an intermittent game/disk stall. No baseline precedes a canonical gate.
+
+Manual service-workflow dispatch is S11-only, optionally one size.
+The lead permits up to ten diagnostic runs per size at the measurement
+head, stopping early when a stall is captured. Every outcome, including
+failures, is reported on PR #166. These runs do not count towards the
+five-run completion criterion, grant approval, or authorise a fix.
 
 ## Reading write operations
 
@@ -202,9 +253,9 @@ commit or write-root pause at least 10 ms was captured; maxima were
 0.872063/0.533210 ms. Thus that wait did not exercise the write-heavy
 final all-hub path or identify the historical off-CPU cause.
 
-These observations motivated the separation described above: original
+These observations motivated the separated measurement at 2327ddc:
 canonical gates with status-only sample capture, followed by detailed
-all-hub diagnostics. It prevents the new operation observer from
-entering acceptance and avoids the unrepresentative clinic trace.
+all-hub diagnostics. That head passed both sizes; the sparse canonical
+timer described above is a later, separately authorised measurement.
 No estimator, threshold, heat wait, canonical workload or persistence
 rule changes. A diagnostic cannot turn a failed gate into a pass.

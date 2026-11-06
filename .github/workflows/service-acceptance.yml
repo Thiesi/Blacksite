@@ -1,6 +1,14 @@
 name: Service and shared-zone acceptance
+run-name: ${{ github.event_name == 'workflow_dispatch' && format('S40 diagnostic ({0}) at {1}', inputs.size, github.sha) || github.workflow }}
 
 on:
+  workflow_dispatch:
+    inputs:
+      size:
+        description: 'S40 diagnostic only; every outcome counts, no acceptance credit'
+        type: choice
+        options: [both, 80x24, 132x50]
+        default: both
   pull_request:
     types: [opened, synchronize, reopened, ready_for_review, converted_to_draft]
     paths:
@@ -17,6 +25,10 @@ on:
       - 'scripts/accept_s10_netbbs.py'
       - 'scripts/accept_s11_netbbs.py'
       - 'scripts/benchmark_s40_probe.py'
+      - 'scripts/benchmark_s40_minimal.py'
+      - 'scripts/benchmark_s40_disk.py'
+      - 'scripts/minimal_s40_profile.py'
+      - 'scripts/write_profile.py'
       - 'scripts/accept_s13_netbbs.py'
       - 'scripts/accept_s14_netbbs.py'
       - 'scripts/accept_s15_netbbs.py'
@@ -61,12 +73,15 @@ jobs:
           BASE: ${{ github.event.pull_request.base.sha }}
           HEAD: ${{ github.event.pull_request.head.sha }}
           DRAFT: ${{ github.event.pull_request.draft }}
+          DIAGNOSTIC: ${{ github.event_name == 'workflow_dispatch' }}
         shell: python
         run: |
           import json, os, pathlib, subprocess
           base, head = os.environ['BASE'], os.environ['HEAD']
           result = {'full': True, 'reason': 'missing trusted base classifier'}
-          if base and head:
+          if os.environ['DIAGNOSTIC'] == 'true':
+              result = {'full': False, 'reason': 'S40 manual diagnostic: S11 only'}
+          elif base and head:
               source = subprocess.run(['git', 'show', base+':scripts/presentation_scope.py'], capture_output=True)
               if source.returncode == 0:
                   path = pathlib.Path(os.environ['RUNNER_TEMP'])/'presentation_scope.py'
@@ -79,7 +94,7 @@ jobs:
 
   door-subset-netbbs:
     needs: native-scope
-    if: needs.native-scope.outputs.full == 'false'
+    if: needs.native-scope.outputs.full == 'false' && github.event_name != 'workflow_dispatch'
     runs-on: ubuntu-latest
     timeout-minutes: 20
     permissions:
@@ -579,13 +594,13 @@ jobs:
           path: ${{ runner.temp }}/s13-proof
   npcs-netbbs:
     needs: native-scope
-    if: needs.native-scope.outputs.full == 'true'
+    if: needs.native-scope.outputs.full == 'true' || github.event_name == 'workflow_dispatch'
     runs-on: ubuntu-latest
     timeout-minutes: 40
     strategy:
       fail-fast: false
       matrix:
-        size: [80x24, 132x50]
+        size: ${{ fromJSON(inputs.size == '80x24' && '["80x24"]' || inputs.size == '132x50' && '["132x50"]' || '["80x24","132x50"]') }}
     permissions:
       contents: read
     steps:
@@ -605,10 +620,23 @@ jobs:
           python -m pip wheel --no-deps . -w "$RUNNER_TEMP/s11-wheels"
           python -m venv "$RUNNER_TEMP/s11-venv"
           "$RUNNER_TEMP/s11-venv/bin/python" -m pip install "$RUNNER_TEMP"/s11-wheels/*.whl
+      - name: Measure sparse observer cost before canonical acceptance
+        shell: bash
+        run: |
+          python scripts/benchmark_s40_minimal.py --output "$RUNNER_TEMP/s11-proof/minimal-overhead.json"
       - name: Accept NPCs and actual heat deadlines through NetBBS
         shell: bash
         run: |
           python scripts/accept_s11_netbbs.py --root "$RUNNER_TEMP/s11-proof" --door-python "$RUNNER_TEMP/s11-venv/bin/python" --size "${{ matrix.size }}"
+      - name: Diagnose WAL FULL disk latency after saved canonical result
+        if: always()
+        shell: bash
+        run: |
+          if compgen -G "$RUNNER_TEMP/s11-proof/npc-profile-*-2.json" > /dev/null; then
+            python scripts/benchmark_s40_disk.py --profile-root "$RUNNER_TEMP/s11-proof"
+          else
+            echo "No saved final canonical profile; disk baseline was not run"
+          fi
       - name: Measure observer capture cost using the recorded write-call shape
         if: always()
         shell: bash

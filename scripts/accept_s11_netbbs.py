@@ -19,7 +19,8 @@ from blacksite.admin.client import request
 from blacksite.server.loop import TickContext
 from blacksite.server.world.actors import Actor
 from blacksite.server.world.sight import line_of_sight
-from blacksite.server.write_profile import WriteProfile
+from write_profile import WriteProfile
+from minimal_s40_profile import MinimalProfile
 
 
 async def approach(probe: NativeProbe, caller: Connection, target: Actor,
@@ -62,14 +63,15 @@ async def approach(probe: NativeProbe, caller: Connection, target: Actor,
 
 
 async def profile(probe: NativeProbe, width: int, height: int) -> float:
-    # Only the synchronous status snapshot is added to the canonical gate.
-    # Per-operation clocks/proxies are reserved for the later diagnostic.
-    with WriteProfile(probe.service, trace_writes=False) as writes_profile:
-        return await _profile(probe, width, height, writes_profile)
+    # Only status, sparse commit exits and two loop boundaries are added.
+    # Detailed write wrappers/proxies remain in the later diagnostic.
+    with (WriteProfile(probe.service, trace_writes=False) as writes_profile,
+          MinimalProfile(probe.service) as minimal):
+        return await _profile(probe, width, height, writes_profile, minimal)
 
 
 async def _profile(probe: NativeProbe, width: int, height: int,
-                   writes_profile: WriteProfile) -> float:
+                   writes_profile: WriteProfile, minimal: MinimalProfile) -> float:
     loop = probe.service.core.loop
     original_subsystems, original_step = loop.subsystems, loop.step
     original_writes = probe.service._character_writes
@@ -120,13 +122,15 @@ async def _profile(probe: NativeProbe, width: int, height: int,
         nonlocal current
         current = {'tick': probe.service.clock.now_tick(), 'segments': {},
                    '_wall': time.perf_counter(), '_cpu': time.thread_time()}
-        wall, cpu = time.perf_counter(), time.thread_time()
+        wall, cpu = time.perf_counter_ns(), time.thread_time()
         try:
             original_step()
         finally:
+            ended = time.perf_counter_ns()
             current['tick'] = loop.last_tick
-            current['loop_wall_ms'] = (time.perf_counter()-wall)*1000
+            current['loop_wall_ms'] = (ended-wall)/1_000_000
             current['loop_cpu_ms'] = (time.thread_time()-cpu)*1000
+            current.update(minimal.intervals(wall, ended))
 
     def writes() -> None:
         nonlocal current
@@ -174,6 +178,11 @@ async def _profile(probe: NativeProbe, width: int, height: int,
             'instrumentation': 'wall/thread CPU, GC and storage flush probes; same 10 ms gate including overhead',
             'gc_pauses': gc_pauses, 'storage_flushes': flushes,
             'ticks': rows, 'write_probe': writes_profile.metadata(),
+            'commerce_commits': minimal.export(),
+            'canonical_observer': {
+                'commit': 'Two perf_counter_ns reads around existing SQLite context exit; wall only',
+                'loop': 'Two extra perf_counter_ns reads: after inputs, before publishers',
+                'limits': 'Commit failure may include SQLite rollback; no thread CPU or rusage; no gate correction'},
             'write_calls': list(writes_profile.calls),
             'gate': writes_profile.gate(status) if status else None}, indent=2)+'\n', encoding='utf-8')
 
