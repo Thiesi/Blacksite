@@ -153,10 +153,12 @@ needs `--bouncer` and covers only rule 2 so far, and Vesper's work closes only i
 her talker's offer: her board and counter stay open. Rule 4 goes on the demo with
 the notices, after the moving-versus-seated comparison.
 
-**What the owner saw:** they noticed `TRUCE` only, not "Firing marks you". They
-had shot an NPC, so TARGET would have said "Truce: Sable answers" instead, which
-they don't report noticing either. That supports this proposal. The presentation
-lead holds any TARGET change until after round 2.
+**What the owner saw:** they noticed `TRUCE` only. They had shot an NPC, and on
+the demo they played, "Truce: Sable answers" never reached the screen, because of
+a wiring fault in the demo's stand-in. `main` isn't affected: S38 builds the
+warning into the base method. So round 1 says nothing about whether TARGET's
+warning gets noticed. Round 3 has the fix, and the presentation lead holds any
+TARGET change until that has been played.
 
 ## Order, if only some of it goes ahead
 
