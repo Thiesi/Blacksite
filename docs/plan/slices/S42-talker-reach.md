@@ -121,6 +121,12 @@ canon "acts against a caller" rule.
    costs nothing beyond shooting any regular. It does cost exactly that:
    on the Row it breaks the truce, and the keeper answers, as for a shot
    at a regular. The reveal for local guards stays.
+   - **Local guards answer as for the crowd.** `provoked()` also calls in
+     every guard or warden of the target's faction in the zone. For a
+     covered, unarmed target, that loop uses the faction of the group it
+     poses as, not its own, so the guards who answer are exactly those who
+     would answer a shot regular. Otherwise, in any zone with a Warden
+     patrol, real Wardens would come for the shooter of a "regular".
    Architecture 5.5.4 now says "hunts" where it said "targets". Check
    every `combat.reveal` caller, including the Tab-target view, and
    say on the PR that none relied on targeting alone.
@@ -190,7 +196,10 @@ uses a declared fixture.
 - **Warden, through real views:** shoot a regular and the Warden flees
   with the crowd, name unchanged. Shoot the Warden and the regulars flee,
   the shooter's view shows the cover, the keeper answers as for a shot
-  regular, and nothing else follows. The
+  regular, and nothing else follows. In a fixture zone with a Warden
+  patrol and a guard of the posed faction, shooting the plainclothes
+  Warden calls in the same guards as shooting a regular, and no Warden.
+  The
   Warden and the regulars go back to wandering on the same tick. A second
   group with the same cover name in the zone doesn't react. The validator
   refuses a missing or mismatched `poses_as`. A Marked
