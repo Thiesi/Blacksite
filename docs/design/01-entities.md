@@ -350,7 +350,8 @@ true name and faction never form the covered display name. This is
 presentation data; rules continue to read the true actor and faction. A
 covered template must match an uncovered template that spawns in the
 same zone in every presented channel: name, class and colour role,
-behaviour kinds and anchoring, offered interactions, and dialogue binding.
+behaviour kinds and anchoring, offered interactions, dialogue binding, and
+loot, because a death leaves a cache only if there is loot to fill it.
 The validator reports a content error for a mismatch. Hidden faction
 and combat rules remain independent of that presentation match.
 

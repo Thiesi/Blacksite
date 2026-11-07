@@ -1,0 +1,95 @@
+{
+  "transport": "NetBBS Telnet / native stdio",
+  "human_layout_approval": false,
+  "notes": [
+    "Canonical S38 fixtures; these are live native captures, not composed frames.",
+    "Colour rendition is retained in the source artifact ANSI; text retains glyphs only.",
+    "The packet does not grant H1 or S25 approval."
+  ],
+  "captures": [
+    {
+      "file": "truce-regular-warning-80x24-16.txt",
+      "scenario": "Canonical S38 live Sodium regular warning, modern presentation",
+      "terminal": "80x24",
+      "colours": "16",
+      "source_head": "f21c97e542f7c3c9a3923eec4417088fa6c4ad46",
+      "run": 42340736092,
+      "artifact_id": 13561394134,
+      "artifact_zip_sha256": "ec4046152abaa8f0e4356267102efc5c98aa6d9f7ce83e7ef4365da3d8860c36",
+      "source_member": "s38-proof/truce-regular-warning-80x24-16.txt",
+      "method": "Direct copy of native screen text saved before leaving; cells unaltered",
+      "sha256": "631bbd0cd20862aeba168ab74502f174decda56b11e91d52acd9e767b848a0ba",
+      "raw_ansi_artifact": 13561394134
+    },
+    {
+      "file": "truce-regular-warning-80x24-256.txt",
+      "scenario": "Canonical S38 live Sodium regular warning, modern presentation",
+      "terminal": "80x24",
+      "colours": "256",
+      "source_head": "f21c97e542f7c3c9a3923eec4417088fa6c4ad46",
+      "run": 42340736092,
+      "artifact_id": 13561394134,
+      "artifact_zip_sha256": "ec4046152abaa8f0e4356267102efc5c98aa6d9f7ce83e7ef4365da3d8860c36",
+      "source_member": "s38-proof/truce-regular-warning-80x24-256.txt",
+      "method": "Direct copy of native screen text saved before leaving; cells unaltered",
+      "sha256": "2dc74b9382ffbfbe6990259200046323bb17bbe4c8e0967024c821cffa0a0693",
+      "raw_ansi_artifact": 13561394134
+    },
+    {
+      "file": "truce-regular-warning-80x24-truecolor.txt",
+      "scenario": "Canonical S38 live Sodium regular warning, modern presentation",
+      "terminal": "80x24",
+      "colours": "truecolor",
+      "source_head": "f21c97e542f7c3c9a3923eec4417088fa6c4ad46",
+      "run": 42340736092,
+      "artifact_id": 13561394134,
+      "artifact_zip_sha256": "ec4046152abaa8f0e4356267102efc5c98aa6d9f7ce83e7ef4365da3d8860c36",
+      "source_member": "s38-proof/truce-regular-warning-80x24-truecolor.txt",
+      "method": "Direct copy of native screen text saved before leaving; cells unaltered",
+      "sha256": "937331212831de5063888937a849343939d64f1a1b76022fbb1df682c7f2849e",
+      "raw_ansi_artifact": 13561394134
+    },
+    {
+      "file": "truce-regular-warning-132x50-16.txt",
+      "scenario": "Canonical S38 live Sodium regular warning, modern presentation",
+      "terminal": "132x50",
+      "colours": "16",
+      "source_head": "f21c97e542f7c3c9a3923eec4417088fa6c4ad46",
+      "run": 42340736092,
+      "artifact_id": 13561961513,
+      "artifact_zip_sha256": "3b6cbdb9055468ffb9d6b3659ca88c0ac9da617096d40cfd71d31dcfc026f69a",
+      "source_member": "s38-proof/truce-regular-warning-132x50-16.txt",
+      "method": "Direct copy of native screen text saved before leaving; cells unaltered",
+      "sha256": "69e5f2358e19fd59d64ca11b6e3fabdbe1ad7558e7b78f9c35c2f67075aaece3",
+      "raw_ansi_artifact": 13561961513
+    },
+    {
+      "file": "truce-regular-warning-132x50-256.txt",
+      "scenario": "Canonical S38 live Sodium regular warning, modern presentation",
+      "terminal": "132x50",
+      "colours": "256",
+      "source_head": "f21c97e542f7c3c9a3923eec4417088fa6c4ad46",
+      "run": 42340736092,
+      "artifact_id": 13561961513,
+      "artifact_zip_sha256": "3b6cbdb9055468ffb9d6b3659ca88c0ac9da617096d40cfd71d31dcfc026f69a",
+      "source_member": "s38-proof/truce-regular-warning-132x50-256.txt",
+      "method": "Direct copy of native screen text saved before leaving; cells unaltered",
+      "sha256": "40368ddf099813b0f8c66f766af516d2afd076797454f22e9d62d3d3de907b9a",
+      "raw_ansi_artifact": 13561961513
+    },
+    {
+      "file": "truce-regular-warning-132x50-truecolor.txt",
+      "scenario": "Canonical S38 live Sodium regular warning, modern presentation",
+      "terminal": "132x50",
+      "colours": "truecolor",
+      "source_head": "f21c97e542f7c3c9a3923eec4417088fa6c4ad46",
+      "run": 42340736092,
+      "artifact_id": 13561961513,
+      "artifact_zip_sha256": "3b6cbdb9055468ffb9d6b3659ca88c0ac9da617096d40cfd71d31dcfc026f69a",
+      "source_member": "s38-proof/truce-regular-warning-132x50-truecolor.txt",
+      "method": "Direct copy of native screen text saved before leaving; cells unaltered",
+      "sha256": "5d615ab966c70081bd0cf18efc3ff79c29ac28932cf513c70253f8092db9d066",
+      "raw_ansi_artifact": 13561961513
+    }
+  ]
+}

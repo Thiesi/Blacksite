@@ -1,6 +1,6 @@
 # P6 — Place layer and representative locations
 
-**Status:** P6a done (PR #118); Part A done (PR #129); A5 done (PR #130); A6 done (PR #131); A7 done (PR #133); A8 done (PR #144); P6b merged (PR #126), fingerprint approved; H1/S25 ungranted
+**Status:** P6a done (PR #118); Part A done (PR #129); A5 done (PR #130); A6 done (PR #131); A7 done (PR #133); A8 done (PR #144); A9 done (PR #180); P6b merged (PR #126), fingerprint approved; H1/S25 ungranted
 **Primary model:** Codex for P6a (engine) · the presentation lead for P6b (content), with Codex assisting · **Reviewer:** automated review, technical lead, presentation lead (co-reviewer and presentation gate)
 **Depends on:** P0 (D1 to D3 in canon), P4, P5 · **Milestone:** presentation track
 **Issue:** https://github.com/Thiesi/Blacksite/issues/115
@@ -363,6 +363,67 @@ Use the author's fixed-post Git data as a pinned data-only input; do not
 stack on or edit the unmerged P6b content. Run the existing native P6
 acceptance and root suite, retain raw reports as artifacts, and request
 automated and technical review. This grants no human acceptance gate.
+
+## A9: NPC clearance and bounded consumable shock (Codex)
+
+Assigned after S40, on #115
+([gathered scope](https://github.com/Thiesi/Blacksite/issues/115#issuecomment-6701521461)).
+Status: done (PR #180). Starts from owner-merged main bfd9a34, independently
+of S39 and S41. Changes no interaction resolver, echo, talker reach rule
+or talk page. H1 and S25 layout approval remain ungranted.
+
+- Audit ordinary spawners and enforce game design 5.5's player clearance,
+  including its farthest-tile fallback. Reject occupied player tiles;
+  allow adjacent fallback if no farther authored free tile exists.
+- Keep wander and patrol steps off exits, including the shipped Sodium
+  regular/Plaza exit and plainclothes Warden/Halo door cases. Flee's
+  existing #150 protection remains in place.
+- Return every out-of-region wanderer toward home, using ordinary
+  movement and the same random draws as wandering. Apply uniformly to
+  ordinary and covered actors.
+- Clamp consumable shock to game design 3.1's 0..100 range. Test negative
+  shock at low shock and committed/failed consumption.
+
+Audit at the base: `Spawners.location` excludes occupied, reserved,
+hazardous and inaccessible tiles, but has no player-distance check.
+`Npcs.tick` already passes reserved exits to wander and patrol movement;
+regression tests exercise that path without another movement rule.
+An out-of-region wanderer is confined by the region check, so cannot
+walk back. Consumables currently cap shock only at 100.
+
+The lead's follow-up ruling on #115 (6701887236) softens the original
+adjacency ban: hard deferral starves small authored posts and convoys.
+It also pins the interaction matrix's original NPC scene. Read-only
+attribution at head 836d43c showed only spawn clearance changes that
+matrix: the first Wake Hall orderly moves from (10,4) to (13,4). Pinning
+only NPC positions restores all 10,704 original outcome rows and the
+frozen SHA-256 05213f386e4ca644479f8ff80d43ca4e27ebd0acd0013e644b2072a9b9c59185.
+This changes the driver's setup, not its assertions, baseline or hash.
+
+Native S10 at ac606e3 exposes an injured Marked winner's evacuation race.
+The lead's #180 ruling (6702439669) allows the S10-local route through
+the tram hub, with the actual schedule/ride allowance. Shared travel
+bounds, real HP, Mark, live NPCs and second-death failure stay intact.
+The nearer walk and waiting platform can still be unsafe; another
+failure needs a new measurement record. Curfew remains an actual entry
+restriction; the proof starts no such event and never clears it. The
+evidence ledger records the retained comparison and fresh-root timing.
+
+Acceptance: root pytest, including the unchanged mechanics fingerprint;
+spawn preference/fallback/player occupancy; wander/patrol beside exits and the
+shipped door cases; uniform return-home with unchanged random draws;
+consumable bounds and receipt outcomes. If any RNG change moves a digest,
+stop and refer it to the technical lead; do not regenerate it. Run the
+canonical native service matrix, including S11 and S12 through NetBBS
+Telnet/native stdio at 80x24 and 132x50. Retain every outcome under the
+S40 S11 disposition procedure; a failed gate needs its own ruling, never
+a retry solely to clear it. Automated and technical reviews are required.
+
+Implementation and first complete native matrix pass at f21c97e. The
+evidence ledger and six live captures (both sizes, all colour tiers) are
+in `docs/ops/captures/a9-npc-clearance/`. The final documentation/evidence
+push changes no runtime, script or test. Final-head CI and technical
+review remain merge gates; the done mark grants no human approval.
 
 ## Related work outside the slice
 

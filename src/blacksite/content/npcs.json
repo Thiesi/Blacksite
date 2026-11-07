@@ -435,6 +435,13 @@
         }
       ],
       "xp": 0,
+      "loot": [
+        {
+          "item": "con_kestrel_ration",
+          "chance": 1,
+          "count": 1
+        }
+      ],
       "dialogue": "row-street-regular"
     },
     {
