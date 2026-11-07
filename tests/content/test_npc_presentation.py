@@ -35,7 +35,7 @@ def test_entities_1_8_legacy_npc_does_not_need_a_cover_name(repo_root):
 
 
 @pytest.mark.parametrize('channel', ['name', 'class', 'colour_role', 'behaviour_kinds',
-                                    'anchored', 'interactions', 'dialogue'])
+                                    'anchored', 'interactions', 'dialogue', 'loot'])
 def test_arch_5_5_4_cover_rejects_each_presented_channel(repo_root: Path, channel: str) -> None:
     content = load_content(repo_root/'src/blacksite/content')
     warden = content.npcs['npc-plainclothes-warden']
@@ -52,6 +52,8 @@ def test_arch_5_5_4_cover_rejects_each_presented_channel(repo_root: Path, channe
         content.npcs[peer.id] = replace(peer, behaviours=(Behaviour('wander', {'anchor': True}),))
     elif channel == 'interactions':
         content.npcs[peer.id] = replace(peer, vendor=next(iter(content.vendors)))
+    elif channel == 'loot':
+        content.npcs[peer.id] = replace(peer, loot=())
     else:
         duplicate = replace(content.dialogue[peer.dialogue], id='test-cover-dialogue')
         content.dialogue[duplicate.id] = duplicate

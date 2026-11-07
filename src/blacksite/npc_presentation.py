@@ -36,4 +36,6 @@ def channels(template: NpcTemplate) -> dict[str, object]:
             'behaviour_kinds': kinds,
             'anchored': any(bool(b.params.get('anchor')) for b in template.behaviours),
             'interactions': (bool(template.dialogue or 'talker' in kinds), template.vendor),
-            'dialogue': template.dialogue}
+            'dialogue': template.dialogue,
+            # A death leaves a cache only if there is loot, in plain sight.
+            'loot': tuple((entry.item, entry.chance, entry.count) for entry in template.loot)}
