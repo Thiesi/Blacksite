@@ -74,6 +74,7 @@ class Truce:
             sim.me_provider = lambda session: {**provider(session), 'hunted': self.hunted(session.player_id)}
             self.discovering(sim)
             self.back_door(sim)
+        self.settling()
         panels = getattr(getattr(core, 'contracts', None), 'panels', None)
         if panels is not None:
             station = panels.station
@@ -84,6 +85,30 @@ class Truce:
                     self.vesper_refuses(session.player_id)
                 return handler
             panels.station = closed
+
+    def settling(self) -> None:
+        """The owner's ruling (#170): any death settles the debt with the keeper.
+
+        It clears the provocation, so the Halo's refusal and `hunted` go with it.
+        A Mark isn't settled: its 15 minutes, no Halo and no work are untouched.
+        The line comes after the vat's, so a respawn reads in order.
+        """
+        respawn, log = self.combat.respawn, self.combat.log
+        settled: dict[str, str] = {}
+
+        def respawning(player: Any, actor: Any) -> None:
+            for zone_id, keeper in TRUCE.items():
+                if self.answered_until(player.id, zone_id) > self.combat.now():
+                    settled[player.id] = KEEPER_NAME.get(keeper, keeper.title())
+                    for group in self.groups(zone_id):
+                        self.npcs.provocations.pop((zone_id, group, player.id), None)
+            respawn(player, actor)
+
+        def logging(actor: Any, text: str, *args: Any, **fields: Any) -> None:
+            log(actor, text, *args, **fields)
+            if text.startswith('You wake in the vat') and actor.id in settled:
+                log(actor, f'{settled.pop(actor.id)} considers it settled.')
+        self.combat.respawn, self.combat.log = respawning, logging
 
     def back_door(self, sim: Any) -> None:
         """The alley's locked east door says what it is. Its tile can't hold an object."""

@@ -167,3 +167,49 @@ def test_the_alley_door_says_what_it_is(repo_root, monkeypatch):
     assert 'No handle this side.' in [line.get('text', '') for line in caller.session.log_ring]
     assert seen[-1]['exit'] == 'row-halo-back-door' and seen[-1]['outcome'] == 'No handle this side.'
     assert avatar.zone == 'sodium-row'
+
+
+def killed_and_back(game, caller):
+    player = game.core.characters.players[caller.session.player_id]
+    game.core.combat.respawn(player, body(game, caller))
+    game.commit_commerce()
+    game.step()
+    return player
+
+
+def test_dying_settles_the_debt_with_the_keeper(repo_root, monkeypatch):
+    game, caller, truce, sim, door = row(repo_root, monkeypatch)
+    guard = shoot_an_npc(game, caller)
+    assert truce.hunted(caller.session.player_id)
+    killed_and_back(game, caller)
+    assert not truce.hunted(caller.session.player_id)
+    assert sim.travel_refusal(caller.session, door) is None
+    assert not game.core.npcs.hostile(guard, body(game, caller))
+    said = [line.get('text', '') for line in caller.session.log_ring]
+    assert 'Sable considers it settled.' in said
+    assert said.index('Sable considers it settled.') > next(i for i, t in enumerate(said) if t.startswith('You wake'))
+
+
+def test_a_clean_respawn_says_nothing_about_sable(repo_root, monkeypatch):
+    game, caller, truce, sim, door = row(repo_root, monkeypatch)
+    killed_and_back(game, caller)
+    assert not any('settled' in line.get('text', '') for line in caller.session.log_ring)
+
+
+def test_dying_does_not_settle_a_mark(repo_root, monkeypatch):
+    game, caller, truce, sim, door = row(repo_root, monkeypatch)
+    guard = shoot_an_npc(game, caller)
+    player = game.core.characters.players[caller.session.player_id]
+    now = game.core.combat.now()
+    until = datetime.fromtimestamp(now + 14*60 - 5, timezone.utc).isoformat()
+    player.marked_until = until
+    body(game, caller).marked = True
+    truce.breakers[player.id] = now + 14*60 - 5
+    killed_and_back(game, caller)
+    assert player.marked_until == until
+    assert 'Not after the Row. 14 min' in sim.travel_refusal(caller.session, door)
+    with pytest.raises(ValueError, match='Come back in 14 min'):
+        truce.vesper_refuses(player.id)
+    # The keeper is finished with them; the Mark's open season is someone else's.
+    assert not truce.hunted(player.id)
+    assert not game.core.npcs.hostile(guard, body(game, caller))
