@@ -1,14 +1,36 @@
 """Versioned local protocol I/O; no game rules or service spawning."""
 
 import asyncio
+import logging
 from dataclasses import dataclass
 
 from blacksite.door.doorinfo import DoorInfo
 from blacksite.door.palette import resolve_tier
 from blacksite.server.auth import sign
-from blacksite.server.protocol import Frame, ProtocolError, encode, read_frame
+from blacksite.server.protocol import Frame, ProtocolError, UnsupportedFrame, encode, read_frame
 from blacksite.server.transport import connect
 from blacksite.version import PACKAGE_VERSION, PROTOCOL_MAJOR
+
+
+class ServerFrames:
+    """Architecture §5.3: tolerance only after the strict handshake."""
+
+    def __init__(self) -> None:
+        self.unknown_types: set[str] = set()
+
+    async def read(self, reader: asyncio.StreamReader) -> Frame:
+        while True:
+            try:
+                return await read_frame(reader, "server")
+            except UnsupportedFrame as exc:
+                frame = exc.frame
+                if frame.type == "view":
+                    # Display must suspend deltas against this discarded view.
+                    return frame
+                if frame.type not in self.unknown_types:
+                    self.unknown_types.add(frame.type)
+                    # No terminal handler: diagnostics are opt-in, not game text.
+                    logging.getLogger(__name__).info("Ignoring unknown server frame %r", frame.type)
 
 
 @dataclass
