@@ -47,6 +47,12 @@ A9's return-home rule and S39's resolver.
   that NPC's talk page open. So an idle player, or two at a chokepoint,
   can't pin the crowd in place, and a griefer can't keep a regular by
   their side by standing still.
+- **Counted in ticks.** "Last acted" is a tick number (300 ticks at 10 Hz),
+  never a wall-clock read (AGENTS.md §4), so tests step it without
+  sleeping.
+- **Accepted residue:** a player who keeps pressing keys still holds the
+  wanderers beside them. That costs little: they shuffle in place, exits
+  stay clear, and flee, hunt and the walk home still move them.
 - It uses no extra `zone.rng` draws. The random step is chosen as today
   and filtered.
 
