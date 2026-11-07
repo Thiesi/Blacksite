@@ -12,7 +12,7 @@ from blacksite.server.commerce import CommerceMenu
 from blacksite.server.clock import TICK_HZ
 from blacksite.server.items import make_item
 from blacksite.server.loop import TickContext
-from blacksite.server.npcs.behaviours import patrol, step_toward
+from blacksite.server.npcs.behaviours import keep_reach, patrol, step_toward
 from blacksite.server.npcs.spawn import Spawners
 from blacksite.server.npcs.templates import (
     DORMANT_SECONDS, EVALUATION_TICKS, FLEE_FRACTION, HEAT_SECONDS,
@@ -376,7 +376,7 @@ class Npcs:
                 if tick < int(actor.behaviour.get("pause", 0)):
                     return
                 tile = actor.x+zone.rng.choice((-1, 0, 1)), actor.y+zone.rng.choice((-1, 0, 1))
-                step_toward(actor, zone, tile, tick, actor.behaviour.get("region"), avoid)
+                step_toward(actor, zone, tile, tick, actor.behaviour.get("region"), keep_reach(actor, zone, avoid))
                 actor.behaviour["pause"] = tick + zone.rng.randint(*WANDER_PAUSE_TICKS)
                 return
             if behaviour.kind == "patrol":

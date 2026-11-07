@@ -42,6 +42,7 @@ class TalkerMenu:
     contact: Contact
     line: str
     opened: int
+    at: tuple[int, int] | None = None  # where the caller stood when it opened
 
 
 class Dialogue:
@@ -131,10 +132,23 @@ class Dialogue:
         if avatar:
             self.sim.reset_view(session, avatar)
 
-    def show(self, session: Session, contact: Contact, text: str, tick: int) -> None:
-        if session.closed or self.contact(session, contact.target) is None:
+    def walked_off(self, session: Session, screen: TalkerMenu) -> None:
+        """The page closed because the person left, not because the caller did."""
+        zone = self.world.zones.get(screen.contact.zone)
+        other = zone.actors.get(screen.contact.target) if zone else None
+        avatar = self.sim.avatars.get(session.user_id)
+        if (other is None or avatar is None or other.stance in ('down', 'dead') or other.health <= 0
+                or avatar.actor.zone != other.zone or avatar.actor.position != screen.at
+                or max(abs(other.x-avatar.actor.x), abs(other.y-avatar.actor.y)) <= 1):
             return
-        self.menus[session.id] = TalkerMenu(contact, text, tick)
+        session.emit(presentation.name(other, avatar.actor, self.content)+' walks off.',
+                     kind='system', channel='system', role='muted', at=self.clock.now_utc().isoformat())
+
+    def show(self, session: Session, contact: Contact, text: str, tick: int) -> bool:
+        if session.closed or self.contact(session, contact.target) is None:
+            return False
+        at = self.sim.avatars[session.user_id].actor.position
+        self.menus[session.id] = TalkerMenu(contact, text, tick, at)
         talker = self.content.dialogue[contact.talker]
         actor = self.world.zones[contact.zone].actors.get(contact.target)
         if actor is not None and not contact.lattice:
@@ -146,6 +160,19 @@ class Dialogue:
                          at=self.clock.now_utc().isoformat(),
                          speaker=talker.name, speaker_role='service')
         self.publish(session)
+        return True
+
+    def forget(self, player: Any, talker: str) -> None:
+        """A first meeting nobody saw doesn't count: the first line stays owed."""
+        def undo() -> None:
+            progress = deepcopy(player.progress)
+            progress['met_talkers'] = [met for met in progress.get('met_talkers', ()) if met != talker]
+            self.commerce.settle(player, {'progress': progress}, self.commerce.items,
+                                 self.commerce.caches, self.commerce.serial, lambda success: None)
+        try:
+            self.commerce.enqueue_system(undo)
+        except ValueError:
+            pass  # The queue is full: they stay met, which only costs the first line.
 
     def open(self, session: Session, contact: Contact, tick: int) -> None:
         talker = self.content.dialogue[contact.talker]
@@ -159,12 +186,14 @@ class Dialogue:
         progress['met_talkers'] = sorted((facts.met & self.content.dialogue.keys()) | {talker.id})
         def committed(success: bool) -> None:
             if success:
-                # A read-only inventory may have opened during the write.
-                # Record the encounter without overwriting another menu.
+                # A read-only inventory may have opened during the write, or the
+                # person may have gone. Don't overwrite another menu; if the
+                # line couldn't be shown, the meeting didn't happen.
                 external = self.sim.external_views.get(session.id)
-                if ((external is None or contact.lattice and external[0] == 'lattice')
-                        and session.id not in self.commerce.menus):
-                    self.show(session, contact, line, tick)
+                if not ((external is None or contact.lattice and external[0] == 'lattice')
+                        and session.id not in self.commerce.menus
+                        and self.show(session, contact, line, tick)):
+                    self.forget(player, talker.id)
             else:
                 self.commerce.toast(session, 'The introduction could not be saved. Try again.')
         if not self.commerce.settle(player, {'progress': progress}, self.commerce.items,
@@ -320,6 +349,8 @@ class Dialogue:
             contact = self.contact(session, screen.contact.target)
             if (contact is None or ctx.tick-screen.opened >= MENU_TIMEOUT_SECONDS*TICK_HZ
                     and self.world.zones[contact.zone].allows_hostile(contact.tile)):
+                if contact is None:
+                    self.walked_off(session, screen)
                 self.close(session)
             else:
                 self.publish(session)
