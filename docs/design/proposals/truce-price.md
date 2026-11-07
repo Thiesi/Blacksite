@@ -66,7 +66,8 @@ from the zone.
 - **On first arrival in a truce zone, once per character.** Returning players
   aren't told again. This needs no new saved state: `discover()` already runs
   once per character per zone, from the saved `seen_zones`, and S38's rule line
-  is emitted there [built]. This one is rarely threatened, so it can use the
+  is emitted there [built]. The notice is sent one-shot at that moment, and the
+  door remembers nothing. This one is rarely threatened, so it can use the
   hint line (63 cells, 1 to spare). If it does land in the header, the "Sable
   comes" half survives.
 
@@ -78,13 +79,13 @@ from the zone.
 
   | TARGET shows | Notice | Cells |
   |---|---|---|
-  | "Firing marks you" | Marked 15 min. No Halo, no work. | 32 |
+  | "Firing marks you" | Fire: Marked 15m. No Halo, no work. | 35 |
   | "Truce: Sable answers" | Fire here and Sable comes. | 26 |
 
   The first line drops "Sable comes" to fit, and the arrival notice and the
-  enforcer carry it. "Firing marks you" sits beside it in TARGET, so it doesn't
-  need to say "fire". An attack on an NPC brings no Mark, so the second line
-  rightly doesn't mention the Halo.
+  enforcer carry it. It keeps "Fire:" because without it the line reads as though
+  you're already Marked. An attack on an NPC brings no Mark, so as the rules are
+  recorded the second line doesn't mention the Halo (see "Still open").
 
   The door reads the existing `target.warning`, so this needs no server field
   and adds no key. S38's "no fire confirmation" stands. The owner reports you
@@ -140,9 +141,15 @@ slice, and these notices must not ship ahead of them, or they'd state a rule tha
 doesn't exist yet. On the demo, the refusal needs `--bouncer`, and Vesper's work
 closes only in her talker's offer: her board and counter stay open.
 
-**Still open:** the owner noticed one of `TRUCE` or "Firing marks you", and the
-technical lead has asked which. Whichever they missed may have a problem of its
-own.
+**Still open:**
+
+- **Attacking an NPC and the Halo.** As recorded, someone who shoots an enforcer
+  isn't Marked, so the Halo stays open while Sable hunts them. That may be a gap
+  in the rule; the technical lead is taking it to the owner. If the rule changes,
+  the NPC line and the arrival notice change with it.
+- **What the owner saw.** They noticed `TRUCE` only, not "Firing marks you". They
+  had shot an NPC, so TARGET would have said "Truce: Sable answers" instead,
+  which they don't report noticing either. That supports this proposal.
 
 ## Order, if only some of it goes ahead
 
