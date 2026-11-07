@@ -92,8 +92,13 @@ owner ruled.
 The Halo's back way out is locked from inside too, in this round only. Pressing
 E on the door gets you "The door is locked." Only the back door control in the
 Halo's core opens it, for 5 minutes, so someone has to jack in and get through
-the ICE. Which door that control should open in the real game is still with the
-owner.
+the ICE. Patrons can't stand in the back room while it's shut, which is accepted
+for this test. Which door that control should open in the real game is still
+with the owner.
+
+Please try that control at least once: jack in and open the door from the core,
+then have someone leave by it. Nobody has run it end to end yet, so this is its
+first real test.
 
 1. Both meet in the card court, and nothing happens for a minute.
 2. One draws on the other.
@@ -112,6 +117,7 @@ Afterwards:
   a page ever get in your way?
 - Did you know the price before you fired? What told you?
 - Did being turned away from the Halo feel right? Did you know how long for?
+- Opening the back door from the core: did it work? Was it worth the trouble?
 - At any point, did you think you were barred from somewhere you weren't?
 - Would you ever draw on the Row again? When?
 
