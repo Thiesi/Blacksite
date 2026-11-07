@@ -39,8 +39,13 @@ def line(lid: str, text: str, *when: str) -> dict:
     return {"id": lid, "text": text, "when": list(when), "required": True}
 
 
-def bark(text: str) -> dict:
-    return {"text": text, "weight": 1, "min_interval_seconds": 90}
+def bark(text: str, weight: int = 1) -> dict:
+    return {"text": text, "weight": weight, "min_interval_seconds": 90}
+
+
+def pull(text: str) -> dict:
+    """Round 2: a line that points down the street, said a little more often."""
+    return bark(text, 2)
 
 
 def talker(did: str, name: str, faction, title: str, lines, barks=()) -> dict:
@@ -62,14 +67,20 @@ DIALOGUE = {
             line("wake", "A Wake on the Row. Stay near the Stair. That's what we do.", "is_wake"),
             line("greeting", "Best glass on the Row and the shortest walk home. You pay for both."),
         ], [bark("Two flights up and you're back under Warden blue. That's the whole charm."),
-            bark("Ring's bright tonight. Somebody's salvage bill just went up.")]),
+            bark("Ring's bright tonight. Somebody's salvage bill just went up."),
+            pull("You want the Halo? Far end of the street. We don't go that far."),
+            bark("Nobody upstairs knows I come down here. Everybody upstairs comes down here."),
+            bark("Badge stays in the coat pocket. The coat stays on.")]),
     "row-sablier-offduty": talker(
         "row-sablier-offduty", "Sablier staff, off duty", "sablier", "Upstairs regular", [
             line("member", "Clinic shift ended an hour ago. Don't make me look at anything.", "member_of sablier"),
             line("enemy", "Truce. I patch your kind on Tuesdays. Tonight I'm drinking.", "enemy_of_me"),
             line("wake", "Vantongeren's? Keep that lease paper dry. The Row is wet.", "is_wake"),
             line("greeting", "We sit by the window so the Row can see we're fine. We are fine."),
-        ], [bark("Upstairs closes when the last of us remembers the Stair.")]),
+        ], [bark("Upstairs closes when the last of us remembers the Stair."),
+            pull("The Halo's the far end, past Spare Parts. Bring chits and a steady hand."),
+            bark("Half this street owes the Clinic. The other half hasn't noticed yet."),
+            bark("I've seen what the pink ones do to a liver. I had two anyway.")]),
     "row-kestrel-crew": talker(
         "row-kestrel-crew", "Kestrel crew, off shift", "kestrel", "Long Shift regular", [
             line("member", "Shift's on the board, drinks are on the slate. Sit, you're blocking the door.", "member_of kestrel"),
@@ -77,7 +88,10 @@ DIALOGUE = {
             line("veteran", "You've got the look of somebody who's been shot at. Gate Nine or the Sink?", "grade_at_least 5"),
             line("greeting", "Long Shift's open every hour a tram runs. That's every hour."),
         ], [bark("Dispatcher held me at the Rim for nine minutes. No reason given. There's never a reason."),
-            bark("Ration count's off again. Off by the same amount as last week.")]),
+            bark("Ration count's off again. Off by the same amount as last week."),
+            pull("Halo? Keep walking till the street stops. Long way on foot. Should've put a tram in."),
+            bark("Double shift, then a bar. Then the next double."),
+            bark("Market closes, we open. Nobody's ever seen both of us awake.")]),
     "row-choir-listener": talker(
         "row-choir-listener", "Choir listener", "choir", "Quarter Tone regular", [
             line("cantor", "You hear it too, don't you. Sit. The music's kept low so we can.", "archetype cantor"),
@@ -85,7 +99,10 @@ DIALOGUE = {
             line("enemy", "Halvard drinks two doors up. We don't mind. They mind.", "enemy_of_me"),
             line("greeting", "Keep your voice down, please. Not for us."),
         ], [bark("There. Under the bass. Did you hear it?"),
-            bark("Solenne says we buy more than Sable does. That's not a sin. It's a ledger.")]),
+            bark("Solenne says we buy more than Sable does. That's not a sin. It's a ledger."),
+            pull("Follow the street to where it stops. That's Vesper's door. She doesn't sing."),
+            bark("Turn it down. Thank you. Now listen."),
+            bark("Some nights the whole room stops talking at once. Nobody decides to.")]),
     "row-clause-regular": talker(
         "row-clause-regular", "Clause regular", None, "The Clause", [
             line("legal", "Day zero. Nobody here owns your lease. Chalk a line for somebody who hasn't made it.", "legal"),
@@ -93,14 +110,22 @@ DIALOGUE = {
             line("veteran", "Grade five and still drinking with us. Most of them move up the street.", "grade_at_least 5"),
             line("greeting", "The Clause doesn't care who decanted you. It cares who's buying."),
         ], [bark("Somebody's tally stopped at sixty-one. Nobody rubs it out."),
-            bark("Stray's no insult on the Row. Say it two streets over and see.")]),
+            bark("Stray's no insult on the Row. Say it two streets over and see."),
+            pull("Looking for Vesper? Everybody is, first week. Last door on the street, past Spare Parts."),
+            bark("Day forty and I still check the lease. Nothing on it. I check."),
+            bark("Ninety days, the paper says. Nobody here has read the rest."),
+            bark("A Ferryman drank here last night. Paid up front and left before the round.")]),
     "row-unmoored-runner": talker(
         "row-unmoored-runner", "Unmoored runner", "unmoored", "Spare Parts regular", [
             line("member", "Terminal's behind the counter. Trace down here is Sable's, so jack light.", "member_of unmoored"),
             line("enemy", "Truce holds. Doesn't mean we talk.", "enemy_of_me"),
             line("ghost", "Ghost template. You'll want the House Lights core one night. Everybody does once.", "archetype ghost"),
             line("greeting", "Spare Parts. Everything in here used to be something else. Us too."),
-        ], [bark("Thirty seconds of dark. You'd be amazed what thirty seconds is worth on this street.")]),
+        ], [bark("Thirty seconds of dark. You'd be amazed what thirty seconds is worth on this street."),
+            pull("Halo's the next door along. End of the street. You can't miss it. People do."),
+            bark("Old Works is loud tonight. That's not a complaint."),
+            bark("Everything's salvage eventually. Some of us just got there early."),
+            bark("Don't buy a program off anyone who's smiling.")]),
     "row-card-player": talker(
         "row-card-player", "Card player", "sable", "Sable's card court", [
             line("marked", "You drew on the Row. We saw. Everybody saw. Run, or sit very still.", "marked"),
@@ -110,15 +135,34 @@ DIALOGUE = {
             line("enemy", "We don't bite on the Row. That's the arrangement. Don't ask whose.", "enemy_of_me"),
             line("greeting", "Cards are Sable's. So's the peace. Pull up a crate."),
         ], [bark("Somebody sold a Halvard pass for two hundred. Expired, of course."),
-            bark("Nobody draws on the Row. Somebody always thinks they're the exception.")]),
+            bark("Nobody draws on the Row. Somebody always thinks they're the exception."),
+            pull("Halo's down the end. Vesper sees you before you see her. Cards are quicker."),
+            bark("Enforcers don't play. They watch the hands. Not the cards, the hands."),
+            bark("Sable doesn't run this street. Sable just knows what it costs.")]),
     # One record shared by the Strip's real Sodium regulars and the
     # plainclothes Warden's cover, so talking to either gives the same answer.
+    # Its barks are shared too: nothing here may fit one and not the other.
     "row-street-regular": talker(
         "row-street-regular", "Sodium regular", None, "Sodium Row", [
             line("marked", "Not near me. Not tonight.", "marked"),
             line("wake", "First time down the Stair? Walk to the end. Everybody does.", "is_wake"),
             line("greeting", "Keep walking, the stage is full."),
-        ], [bark("A tram goes over somewhere above the roofs. The puddles shiver.")]),
+        ], [bark("A tram goes over somewhere above the roofs. The puddles shiver."),
+            pull("Everyone walks to the end eventually. That's where the Halo is."),
+            pull("Past Spare Parts, then the street gives up. That's your Halo."),
+            bark("Music from every door and I can't name one song."),
+            bark("Somebody's lease ran out tonight. You can tell by how they're buying."),
+            bark("Keep your hands where Sable can count them."),
+            bark("I only came down for one.")]),
+    # Round 2: company in the lit stretch outside the Halo, so the end of the
+    # street looks like somewhere people go. They stand; they don't go in.
+    "row-halo-doorstep": talker(
+        "row-halo-doorstep", "Doorstep regular", None, "Outside the Tin Halo", [
+            line("marked", "Not this door. Not tonight.", "marked"),
+            line("wake", "That's the Halo. Go on, she's expecting somebody. Might as well be you.", "is_wake"),
+            line("greeting", "I'm waiting for someone. They're late. They're always late."),
+        ], [bark("One more and I'll go in. I said that an hour ago."),
+            bark("Door's open. Door's always open. That's not the same as welcome.")]),
 }
 
 # Fixed-cast additions on the demo branch (lines from personae, plus new
@@ -131,7 +175,9 @@ DOLF_LINES = [
     line("returned", "Good. You came back. Most don't, the first week.", "completed_contract vesper-first-thing"),
     line("greeting", "Row's neutral. I'm the reason it stays that way when Sable's not looking."),
 ]
-DOLF_BARKS = [bark("Hardline template. Hands this size, and all they do is pour.")]
+DOLF_BARKS = [bark("Hardline template. Hands this size, and all they do is pour."),
+              bark("Sit anywhere. She's already seen you."),
+              bark("Nobody's been shot in here. Nobody's been told why.")]
 
 SOLENNE_LINES = [
     line("marked", "Red name at my counter. Cash only, sweetheart, and quick.", "marked"),
@@ -139,7 +185,9 @@ SOLENNE_LINES = [
     line("first", "Pink for the shakes, blue for the jack-in, nothing for the crash. The crash is the price.", "first_meeting"),
     line("greeting", "Choir buys more than Sable does. Don't tell Reyes; he'd raise the rent."),
 ]
-SOLENNE_BARKS = [bark("Three in a day and you're mine for a week. Business model, sweetheart.")]
+SOLENNE_BARKS = [bark("Three in a day and you're mine for a week. Business model, sweetheart."),
+                 pull("Vesper's end of the street charges for the truth. I charge for the morning after."),
+                 bark("Nobody's ever come back to complain about the pink. Think about that.")]
 
 # --- Drinks and counters --------------------------------------------------
 # Canon wants "a small shock reduction"; the purchase path does not floor
@@ -179,6 +227,7 @@ TEMPLATES = [
     template("npc-row-choir-listener", "Choir listener", "choir", "row-choir-listener"),
     template("npc-row-clause-regular", "Clause regular", None, "row-clause-regular"),
     template("npc-row-unmoored-runner", "Unmoored runner", "unmoored", "row-unmoored-runner"),
+    template("npc-row-halo-doorstep", "Doorstep regular", None, "row-halo-doorstep", "idle"),
     template("npc-row-card-player", "Card player", "sable", "row-card-player", "talker"),
     template("npc-row-solenne", "Mira Solenne", "sable", "solenne", "talker"),
     template("npc-halo-dolf", "Dolf", None, "dolf", "talker"),
@@ -210,6 +259,9 @@ ROW_SPAWNERS = [
     spawner("spare-parts-runners", "npc-row-unmoored-runner", 2, 71, 3, 12, 4),
     spawner("card-court-players", "npc-row-card-player", 2, 49, 18, 7, 1),
     spawner("card-court-solenne", "npc-row-solenne", 1, 59, 20, 1, 1),
+    # Under the Halo's lamp (#168); the tile in front of the door stays clear.
+    spawner("halo-doorstep-1", "npc-row-halo-doorstep", 1, 85, 11, 1, 1),
+    spawner("halo-doorstep-2", "npc-row-halo-doorstep", 1, 87, 13, 1, 1),
     # The plainclothes Warden presents as a civilian "Sodium regular". Its
     # cover needs real company with the same name and class (presentation
     # lead, 2026-11-01), so a small street crowd stays on the Strip.

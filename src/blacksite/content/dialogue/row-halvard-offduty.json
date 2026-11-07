@@ -49,6 +49,21 @@
       "text": "Ring's bright tonight. Somebody's salvage bill just went up.",
       "weight": 1,
       "min_interval_seconds": 90
+    },
+    {
+      "text": "You want the Halo? Far end of the street. We don't go that far.",
+      "weight": 2,
+      "min_interval_seconds": 90
+    },
+    {
+      "text": "Nobody upstairs knows I come down here. Everybody upstairs comes down here.",
+      "weight": 1,
+      "min_interval_seconds": 90
+    },
+    {
+      "text": "Badge stays in the coat pocket. The coat stays on.",
+      "weight": 1,
+      "min_interval_seconds": 90
     }
   ]
 }

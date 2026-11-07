@@ -49,6 +49,21 @@
       "text": "Ration count's off again. Off by the same amount as last week.",
       "weight": 1,
       "min_interval_seconds": 90
+    },
+    {
+      "text": "Halo? Keep walking till the street stops. Long way on foot. Should've put a tram in.",
+      "weight": 2,
+      "min_interval_seconds": 90
+    },
+    {
+      "text": "Double shift, then a bar. Then the next double.",
+      "weight": 1,
+      "min_interval_seconds": 90
+    },
+    {
+      "text": "Market closes, we open. Nobody's ever seen both of us awake.",
+      "weight": 1,
+      "min_interval_seconds": 90
     }
   ]
 }

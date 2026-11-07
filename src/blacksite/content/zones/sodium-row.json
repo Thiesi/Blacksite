@@ -504,6 +504,32 @@
       }
     },
     {
+      "id": "halo-doorstep-1",
+      "npc": "npc-row-halo-doorstep",
+      "count": 1,
+      "respawn_seconds": 60,
+      "condition": "always",
+      "region": {
+        "x": 85,
+        "y": 11,
+        "w": 1,
+        "h": 1
+      }
+    },
+    {
+      "id": "halo-doorstep-2",
+      "npc": "npc-row-halo-doorstep",
+      "count": 1,
+      "respawn_seconds": 60,
+      "condition": "always",
+      "region": {
+        "x": 87,
+        "y": 13,
+        "w": 1,
+        "h": 1
+      }
+    },
+    {
       "id": "sodium-regular",
       "npc": "npc-sodium-regular",
       "count": 3,

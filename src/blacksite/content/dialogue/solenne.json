@@ -44,6 +44,16 @@
       "text": "Three in a day and you're mine for a week. Business model, sweetheart.",
       "weight": 1,
       "min_interval_seconds": 90
+    },
+    {
+      "text": "Vesper's end of the street charges for the truth. I charge for the morning after.",
+      "weight": 2,
+      "min_interval_seconds": 90
+    },
+    {
+      "text": "Nobody's ever come back to complain about the pink. Think about that.",
+      "weight": 1,
+      "min_interval_seconds": 90
     }
   ]
 }

@@ -49,6 +49,26 @@
       "text": "Stray's no insult on the Row. Say it two streets over and see.",
       "weight": 1,
       "min_interval_seconds": 90
+    },
+    {
+      "text": "Looking for Vesper? Everybody is, first week. Last door on the street, past Spare Parts.",
+      "weight": 2,
+      "min_interval_seconds": 90
+    },
+    {
+      "text": "Day forty and I still check the lease. Nothing on it. I check.",
+      "weight": 1,
+      "min_interval_seconds": 90
+    },
+    {
+      "text": "Ninety days, the paper says. Nobody here has read the rest.",
+      "weight": 1,
+      "min_interval_seconds": 90
+    },
+    {
+      "text": "A Ferryman drank here last night. Paid up front and left before the round.",
+      "weight": 1,
+      "min_interval_seconds": 90
     }
   ]
 }

@@ -44,6 +44,21 @@
       "text": "Upstairs closes when the last of us remembers the Stair.",
       "weight": 1,
       "min_interval_seconds": 90
+    },
+    {
+      "text": "The Halo's the far end, past Spare Parts. Bring chits and a steady hand.",
+      "weight": 2,
+      "min_interval_seconds": 90
+    },
+    {
+      "text": "Half this street owes the Clinic. The other half hasn't noticed yet.",
+      "weight": 1,
+      "min_interval_seconds": 90
+    },
+    {
+      "text": "I've seen what the pink ones do to a liver. I had two anyway.",
+      "weight": 1,
+      "min_interval_seconds": 90
     }
   ]
 }

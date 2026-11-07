@@ -36,6 +36,36 @@
       "text": "A tram goes over somewhere above the roofs. The puddles shiver.",
       "weight": 1,
       "min_interval_seconds": 90
+    },
+    {
+      "text": "Everyone walks to the end eventually. That's where the Halo is.",
+      "weight": 2,
+      "min_interval_seconds": 90
+    },
+    {
+      "text": "Past Spare Parts, then the street gives up. That's your Halo.",
+      "weight": 2,
+      "min_interval_seconds": 90
+    },
+    {
+      "text": "Music from every door and I can't name one song.",
+      "weight": 1,
+      "min_interval_seconds": 90
+    },
+    {
+      "text": "Somebody's lease ran out tonight. You can tell by how they're buying.",
+      "weight": 1,
+      "min_interval_seconds": 90
+    },
+    {
+      "text": "Keep your hands where Sable can count them.",
+      "weight": 1,
+      "min_interval_seconds": 90
+    },
+    {
+      "text": "I only came down for one.",
+      "weight": 1,
+      "min_interval_seconds": 90
     }
   ]
 }

@@ -65,6 +65,21 @@
       "text": "Nobody draws on the Row. Somebody always thinks they're the exception.",
       "weight": 1,
       "min_interval_seconds": 90
+    },
+    {
+      "text": "Halo's down the end. Vesper sees you before you see her. Cards are quicker.",
+      "weight": 2,
+      "min_interval_seconds": 90
+    },
+    {
+      "text": "Enforcers don't play. They watch the hands. Not the cards, the hands.",
+      "weight": 1,
+      "min_interval_seconds": 90
+    },
+    {
+      "text": "Sable doesn't run this street. Sable just knows what it costs.",
+      "weight": 1,
+      "min_interval_seconds": 90
     }
   ]
 }

@@ -61,6 +61,16 @@
       "text": "Hardline template. Hands this size, and all they do is pour.",
       "weight": 1,
       "min_interval_seconds": 90
+    },
+    {
+      "text": "Sit anywhere. She's already seen you.",
+      "weight": 1,
+      "min_interval_seconds": 90
+    },
+    {
+      "text": "Nobody's been shot in here. Nobody's been told why.",
+      "weight": 1,
+      "min_interval_seconds": 90
     }
   ]
 }

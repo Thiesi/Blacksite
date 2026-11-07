@@ -49,6 +49,21 @@
       "text": "Solenne says we buy more than Sable does. That's not a sin. It's a ledger.",
       "weight": 1,
       "min_interval_seconds": 90
+    },
+    {
+      "text": "Follow the street to where it stops. That's Vesper's door. She doesn't sing.",
+      "weight": 2,
+      "min_interval_seconds": 90
+    },
+    {
+      "text": "Turn it down. Thank you. Now listen.",
+      "weight": 1,
+      "min_interval_seconds": 90
+    },
+    {
+      "text": "Some nights the whole room stops talking at once. Nobody decides to.",
+      "weight": 1,
+      "min_interval_seconds": 90
     }
   ]
 }

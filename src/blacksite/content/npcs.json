@@ -919,6 +919,34 @@
       ]
     },
     {
+      "id": "npc-row-halo-doorstep",
+      "name": "Doorstep regular",
+      "faction": null,
+      "grade": 1,
+      "attributes": {
+        "frame": 20,
+        "nerve": 20,
+        "cortex": 10,
+        "resonance": 5,
+        "vitals": 20
+      },
+      "behaviours": [
+        {
+          "kind": "idle",
+          "params": {}
+        }
+      ],
+      "xp": 0,
+      "dialogue": "row-halo-doorstep",
+      "loot": [
+        {
+          "item": "con_kestrel_ration",
+          "chance": 1,
+          "count": 1
+        }
+      ]
+    },
+    {
       "id": "npc-row-card-player",
       "name": "Card player",
       "faction": "sable",

@@ -44,6 +44,26 @@
       "text": "Thirty seconds of dark. You'd be amazed what thirty seconds is worth on this street.",
       "weight": 1,
       "min_interval_seconds": 90
+    },
+    {
+      "text": "Halo's the next door along. End of the street. You can't miss it. People do.",
+      "weight": 2,
+      "min_interval_seconds": 90
+    },
+    {
+      "text": "Old Works is loud tonight. That's not a complaint.",
+      "weight": 1,
+      "min_interval_seconds": 90
+    },
+    {
+      "text": "Everything's salvage eventually. Some of us just got there early.",
+      "weight": 1,
+      "min_interval_seconds": 90
+    },
+    {
+      "text": "Don't buy a program off anyone who's smiling.",
+      "weight": 1,
+      "min_interval_seconds": 90
     }
   ]
 }

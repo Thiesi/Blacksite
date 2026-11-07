@@ -1,0 +1,46 @@
+{
+  "schema": 1,
+  "id": "row-halo-doorstep",
+  "name": "Doorstep regular",
+  "faction": null,
+  "title": "Outside the Tin Halo",
+  "terminal": false,
+  "machine_mind": false,
+  "lines": [
+    {
+      "id": "marked",
+      "text": "Not this door. Not tonight.",
+      "when": [
+        "marked"
+      ],
+      "required": true
+    },
+    {
+      "id": "wake",
+      "text": "That's the Halo. Go on, she's expecting somebody. Might as well be you.",
+      "when": [
+        "is_wake"
+      ],
+      "required": true
+    },
+    {
+      "id": "greeting",
+      "text": "I'm waiting for someone. They're late. They're always late.",
+      "when": [],
+      "required": true
+    }
+  ],
+  "offers": [],
+  "barks": [
+    {
+      "text": "One more and I'll go in. I said that an hour ago.",
+      "weight": 1,
+      "min_interval_seconds": 90
+    },
+    {
+      "text": "Door's open. Door's always open. That's not the same as welcome.",
+      "weight": 1,
+      "min_interval_seconds": 90
+    }
+  ]
+}
