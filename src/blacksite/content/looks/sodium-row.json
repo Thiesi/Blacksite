@@ -204,6 +204,14 @@
     },
     {
       "at": [
+        5,
+        12
+      ],
+      "text": "NOBODY DRAWS",
+      "role": "paint"
+    },
+    {
+      "at": [
         30,
         14
       ],

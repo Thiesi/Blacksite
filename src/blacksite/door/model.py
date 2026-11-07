@@ -45,6 +45,7 @@ class Display:
         self.toast: tuple[str, str, float] | None = None
         self.notice_started = 0.0
         self.notice_pressed = self.notice_header = False
+        self.truce_notice_shown = False
         self.confirm_exit = False
         self.leaving = False
         self.connected = False
@@ -137,8 +138,28 @@ class Display:
                 self.body_safety = reported
             elif self.kind == 'wake':
                 self.body_safety = None  # A new Wake has no previous physical body.
+            self._first_target_notice(shown, now)
         self.dirty = True
         return result
+
+    def _first_target_notice(self, shown: dict[str, Any], now: float) -> None:
+        """Demo round 3 (#170): the price, once a session, when you first take aim.
+
+        Reads only the declared `me.truce` and `target.warning`. The header can
+        hold 36 cells at 80x24, so these lines say only what applies to this target.
+        """
+        if self.truce_notice_shown or self.kind != 'zone' or not shown.get('me', {}).get('truce'):
+            return
+        warning = (shown.get('target') or {}).get('warning') or ''
+        if warning == 'Firing marks you':
+            text = 'Fire: Marked 15m. No Halo, no work.'
+        elif warning.endswith(' answers'):
+            keeper = warning.removeprefix('Truce: ').removesuffix(' answers')
+            text = f'Fire here and {keeper} comes. No Halo.'
+        else:
+            return
+        self.truce_notice_shown = True
+        self._notice(text, 'log_danger', NOTICE_SECONDS, now)
 
     @staticmethod
     def _patch(document: dict[str, Any], ops: list[dict[str, Any]]) -> None:
