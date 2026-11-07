@@ -109,12 +109,20 @@ That's harmless, because reconnecting opens no card. A door that's still
 running skips lines it has already seen.
 
 **Data.** The door needs the card's text at first sight and on request,
-and it must not sit in every view body. The server sends one additive,
-one-shot frame when `discover` finds a first sight and in answer to a
-request intent:
+and it must not sit in every view body. The server sends one one-shot frame
+when `discover` finds a first sight and in answer to a request intent:
 `Frame("place_card", {"zone": <id>, "reason": "first" | "requested", "text": <paragraph>})`.
 It isn't replayed on reconnect. District, name, safety and `truce_text` come
 from `me` and aren't repeated.
+
+**This frame isn't backward compatible.** `protocol.validate` raises
+`ProtocolError` on an unknown frame type (`protocol.py:172`), and the door's
+client treats that as a disconnect and redials (`door/client.py:174`). An older
+door would disconnect on every `place_card` it received. So the slice adds
+`place_card` to the protocol's frame types and to `validate`'s `server` set with
+its fields checked, and door and service upgrade in lockstep, as they ship
+today. Making unknown frames safe to ignore is separate work, not part of this
+slice.
 
 The frame usually arrives first. `transition` and login call `discover`
 before the new zone's first view goes out, so the door can't compare the
@@ -186,8 +194,9 @@ both marks.
 - `A` works in both keymaps, and refuses with the approved line while
   threatened. The server sends no card for a request during a ride, in the
   Lattice or on a non-zone view.
-- A door without the card, including the old renderer, ignores `place_card`
-  and doesn't fail.
+- `validate` accepts `place_card` from the server with valid fields, and rejects
+  it from a client or with invalid fields. This door's old renderer, which draws
+  no card, ignores the frame and doesn't fail.
 - A first-sight frame that arrives before its zone's first view opens the
   card when that view arrives, on a transition and at login. A view for
   another zone drops it.
