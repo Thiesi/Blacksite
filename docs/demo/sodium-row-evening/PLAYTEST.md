@@ -21,7 +21,9 @@ demo.
    ```
    python scripts/demo_sodium/serve.py --install-dir .test-tmp/demo-world
    ```
-   Add `--bouncer` for the Q7 variant and `--signs` for far signs at night.
+   Add `--bouncer` for the Q7 variant, `--signs` for far signs at night and
+   `--seated` for the seated comparison in round 2. Each start refreshes the
+   world's copy of the content. Characters stay.
 2. **Door, in Windows Terminal at 132x50 or 80x24:**
    ```
    python scripts/demo_sodium/play.py --install-dir .test-tmp/demo-world --handle Thiesi
@@ -106,6 +108,36 @@ Optional fourth run, on Curfew (an operator starts the event with
 `blacksite.admin event force`). The Stair is shut, so there is no
 sanctuary. There is no curfew crowd or visible gate yet.
 
+## Round 2: moving or seated
+
+**What changed since round 1:**
+
+- People stay within reach once you're beside them. They can shift about,
+  but a wandering step won't take them out of reach. If they do leave,
+  because they're running or hunting, the log says "<name> walks off."
+- A first meeting you never got to see no longer counts as met.
+- There are about three times as much street talk, and some of it points
+  you down the street.
+- The Tin Halo's end of the street has a new lamp, a pool of light at the
+  door and pointers along the way (#168), and two people stand outside.
+
+**The comparison:** play the same night twice, in the same world, with the
+same signs setting. Walk the street end to end and go into three bars. Talk to
+whoever you like. About 10 minutes each.
+
+1. As it comes: the drinkers move about their bars.
+2. Restart the server with `--seated`: the drinkers in the bars and the Halo
+   sit still. Only the street regulars move. Everyone else stays as they were.
+
+Afterwards:
+
+- Which felt more inhabited? Where did you notice the difference?
+- With everyone seated, was the street still busy enough?
+- Moving: could you talk to whoever you wanted? Did anyone walk off?
+- Did people's talk tell you where to go? Did you find the Halo more directly
+  than before?
+- Which lines do you remember? Did any repeat too soon?
+
 ## What would count as success
 
 From the design (#143 §3 and §9):
@@ -116,6 +148,10 @@ From the design (#143 §3 and §9):
   differently, and gives a reason to come back.
 - Playtest 3: standing and fighting loses; at least one getaway succeeds
   by skill; the attacker says the cost was clear before firing.
+- Round 2: the player can talk to anyone they walk up to, and says which
+  version felt inhabited. If seated holds up with only four people moving,
+  that supports the lower NPC count for the real Row. If it doesn't, moving
+  drinkers stay in the design and the count has to be argued from the sweep.
 
 ## What the consultant will do with your notes
 
