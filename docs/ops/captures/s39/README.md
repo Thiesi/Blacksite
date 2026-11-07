@@ -38,8 +38,8 @@ hashes, edited glyph/style captures and an existing output directory.
 
 The captures belong to the exact head and run recorded above. They are
 not relabelled with a later PR SHA. The game source tree is
-`ec2e6643e843e8d5c3addbfbefd268c63c815230`. The later main merge only
-adds S41 planning and housekeeping docs, and the packet commit adds
+`ec2e6643e843e8d5c3addbfbefd268c63c815230`. The later main merges only
+add S41/P11 planning and housekeeping docs, and the packet commit adds
 evidence and review status. Neither changes runtime code, content,
 native scripts, tests or workflows from the captured candidate. Current
 head CI and review are recorded separately on PR #167.
