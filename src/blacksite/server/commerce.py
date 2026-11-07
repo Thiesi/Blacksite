@@ -300,7 +300,7 @@ class Commerce:
             if "stamina" in effects or "stamina_full" in effects:
                 draft.stamina = av.actor.stamina_max if effects.get("stamina_full") else min(av.actor.stamina_max, draft.stamina + effects["stamina"])
                 supported = True
-            draft.shock = min(100, draft.shock + effects.get("shock", 0))
+            draft.shock = max(0, min(100, draft.shock + effects.get("shock", 0)))
             if effects.get("remove_ring_dust_crash"):
                 actor_effects = [e for e in actor_effects if e.get("kind") != "ring_dust_crash"]
                 drugs.end_ringdust_crash(draft, now); supported = True

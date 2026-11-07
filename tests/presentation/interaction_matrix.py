@@ -86,6 +86,20 @@ def run_matrix(root: Path, *, verify: bool = True,
     create(game, client, archetype=0, name='Matrix界', card='none')
     game.commit_characters()
     game.commit_commerce()
+    # This is an interaction fixture, not spawn-placement acceptance.
+    # Pin the original pre-P3 scene independently of ambient spawn RNG.
+    # A9 ruling #115/6701887236 keeps every outcome and the frozen hash.
+    zone = game.core.world.zones['vatside-wake-hall']
+    npc_scene = (
+        ('npc-sablier-orderly', ((10, 4), (13, 3))),
+        ('npc-vendor-vatside-wake-hall-wake-outfitter', ((34, 16),)),
+    )
+    for template, positions in npc_scene:
+        actors = sorted((a for a in zone.actors.values()
+                         if a.behaviour.get('template') == template), key=lambda a: a.id)
+        assert len(actors) == len(positions), (template, len(actors), positions)
+        for actor, tile in zip(actors, positions):
+            game.core.world.enter(actor, zone.id, tile)
     core, session = game.core, client.session
     sim, lat = core.characters.sim, core.lattice
     avatar = sim.avatars[session.user_id]

@@ -3,6 +3,7 @@
 from copy import deepcopy
 from dataclasses import replace
 from datetime import datetime, timedelta
+from random import Random
 
 import pytest
 
@@ -10,7 +11,7 @@ from blacksite.content.loader import load_content
 from blacksite.content.schema import Behaviour, Region, Spawner
 from blacksite.content.validate import validate
 from blacksite.server.npcs.behaviours import patrol
-from blacksite.server.npcs.templates import relation
+from blacksite.server.npcs.templates import WANDER_PAUSE_TICKS, make_actor, relation
 from blacksite.server.protocol import Frame
 from blacksite.server.storage.db import Storage
 from tests.character_helpers import act, create, place, state
@@ -40,6 +41,134 @@ def spawn(game, key="npc-sable-enforcer", count=1, tile=(24,3)):
     zone.template = replace(zone.template, meta=replace(zone.template.meta, spawners=(spec,)))
     game.step()
     return sorted((a for a in zone.actors.values() if a.kind != "player"), key=lambda a:a.id)
+
+
+@pytest.mark.parametrize("players, expected", [
+    (((20, 3),), {(26, 3), (27, 3), (28, 3), (29, 3)}),
+    (((20, 3), (29, 3)), {(24, 3), (25, 3)}),
+    ((), {(x, 3) for x in range(21, 30)}),
+])
+def test_design_5_5_spawn_clearance_and_farthest_fallback(city, monkeypatch, players, expected):
+    game, caller = city
+    zone = game.core.world.zones["vatside-clinics"]
+    runner = body(game, caller)
+    game.core.world.leave(runner)
+    for index, position in enumerate(players):
+        player = deepcopy(runner)
+        player.id = f"clearance-player-{index}"
+        game.core.world.enter(player, zone.id, position)
+    spec = Spawner("clearance", "npc-patient", 1, 60, region=Region(21, 3, 9, 1))
+    choices = []
+    def choose(candidates):
+        choices.append(set(candidates))
+        return candidates[0]
+    monkeypatch.setattr(zone.rng, "choice", choose)
+    assert game.core.npcs.spawners.location(zone, spec) in expected
+    assert choices == [expected]  # Exactly one draw, including fallback ties.
+
+
+def test_design_5_5_spawn_never_uses_a_player_tile(city, monkeypatch):
+    game, caller = city
+    zone = game.core.world.zones["vatside-clinics"]
+    spec = Spawner("clearance", "npc-patient", 1, 60, tile=body(game, caller).position)
+    def no_draw(candidates):
+        pytest.fail("A deferred spawn must not draw RNG")
+    monkeypatch.setattr(zone.rng, "choice", no_draw)
+    assert game.core.npcs.spawners.location(zone, spec) is None
+
+
+@pytest.mark.parametrize("tile", [(21, 3), (21, 4), (20, 4)])
+def test_design_5_5_spawn_fills_an_adjacent_authored_post_when_no_farther_tile_exists(city, tile):
+    game, caller = city
+    zone = game.core.world.zones["vatside-clinics"]
+    spec = Spawner("clearance", "npc-patient", 1, 60, tile=tile)
+    assert game.core.npcs.spawners.location(zone, spec) == tile
+
+
+def test_design_5_5_shipped_halo_post_fills_beside_arriving_caller(city, repo_root):
+    game, caller = city
+    zone = game.core.world.zones["sodium-tin-halo"]
+    shipped = load_content(repo_root / "src/blacksite/content").zones[zone.id]
+    spec = next(sp for sp in shipped.meta.spawners if sp.id == "halo-bouncer")
+    zone.template = replace(zone.template, meta=replace(zone.template.meta, spawners=(spec,)))
+    place(game, caller, zone.id, zone.template.meta.spawn)
+    bouncers = [a for a in zone.actors.values() if a.behaviour.get("spawner") == spec.id]
+    assert len(bouncers) == 1
+    assert bouncers[0].position == (4, 3)
+    assert body(game, caller).position == (3, 3)
+
+
+@pytest.mark.parametrize("key", ["npc-patient", "npc-sodium-regular", "npc-plainclothes-warden"])
+def test_design_5_5_every_wanderer_returns_from_outside_region_without_extra_rng(city, key):
+    game, caller = city
+    zone = game.core.world.zones["vatside-clinics"]
+    region = Region(26, 3, 4, 1)
+    actor = make_actor(game.core.loop.content.npcs[key], "returning-wanderer",
+                       {"home": (26, 3), "region": region})
+    game.core.world.enter(actor, zone.id, (24, 3))
+    expected_rng = Random()
+    expected_rng.setstate(zone.rng.getstate())
+    expected_rng.choice((-1, 0, 1)); expected_rng.choice((-1, 0, 1))
+    pause = expected_rng.randint(*WANDER_PAUSE_TICKS)
+    avoid = game.core.npcs.spawners.reserved(zone)
+    game.core.npcs.act(actor, zone, 100, avoid)
+    assert actor.position == (25, 3)
+    assert actor.behaviour["pause"] == 100 + pause
+    assert zone.rng.getstate() == expected_rng.getstate()
+    for tick in range(120, 201, 20):
+        game.core.npcs.act(actor, zone, tick, avoid)
+        if region.contains(actor.position):
+            break
+    assert region.contains(actor.position)
+
+
+@pytest.mark.parametrize("kind", ["wander", "patrol"])
+def test_design_5_5_tick_keeps_wander_and_patrol_off_exit(city, monkeypatch, kind):
+    game, caller = city
+    actor = spawn(game, "npc-patient")[0]
+    zone = game.core.world.zones[actor.zone]
+    blocked = (25, 3)
+    exit_ = replace(zone.template.meta.exits[0], tile=blocked)
+    zone.template = replace(zone.template, meta=replace(zone.template.meta, spawners=(), exits=(exit_,)))
+    content = game.core.loop.content
+    template = content.npcs[actor.behaviour["template"]]
+    content.npcs[template.id] = replace(template,
+        behaviours=(Behaviour(kind, {"waypoints": [blocked]}),))
+    actor.behaviour.update(region=Region(23, 2, 5, 3), pause=0, state="idle")
+    actor.cooldowns.clear()
+    # The first attempted step goes straight onto the exit.
+    values = iter((1, 0))
+    monkeypatch.setattr(zone.rng, "choice", lambda candidates: next(values))
+    before = actor.position
+    game.step()
+    assert actor.position != before
+    assert actor.position != blocked
+
+
+@pytest.mark.parametrize("key, exit_id, start", [
+    ("npc-sodium-regular", "to-core-plaza", (3, 2)),
+    ("npc-plainclothes-warden", "to-sodium-tin-halo", (94, 25)),
+])
+def test_design_5_5_shipped_row_wanderers_keep_plaza_and_halo_exits_clear(city, repo_root, monkeypatch, key, exit_id, start):
+    game, caller = city
+    place(game, caller, "sodium-row", (44, 20))
+    zone = game.core.world.zones["sodium-row"]
+    # Restore the shipped region, removed only by the isolated city fixture.
+    shipped = load_content(repo_root / "src/blacksite/content").zones["sodium-row"]
+    spec = next(sp for sp in shipped.meta.spawners if sp.npc == key)
+    home = (max(spec.region.x, min(start[0], spec.region.x + spec.region.w - 1)),
+            max(spec.region.y, min(start[1], spec.region.y + spec.region.h - 1)))
+    actor = make_actor(game.core.loop.content.npcs[key], "row-wanderer",
+                       {"home": home, "region": spec.region, "state": "idle"})
+    game.core.world.enter(actor, zone.id, start)
+    exit_ = next(ex for ex in zone.template.meta.exits if ex.id == exit_id)
+    assert zone.can_enter(actor, exit_.tile)
+    delta = (exit_.tile[0]-start[0], exit_.tile[1]-start[1])
+    values = iter(delta)
+    monkeypatch.setattr(zone.rng, "choice", lambda candidates: next(values))
+    game.step()
+    assert actor.position != exit_.tile
+    assert actor.position != start
 
 
 def test_design_5_5_count_respawn_and_lazy_catchup(city):
