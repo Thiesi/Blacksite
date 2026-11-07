@@ -297,7 +297,7 @@ fine:
 3. **Escape takes skill.** That's geometry: the sanctuary is up the
    Neon Stair into the safe Core, and enforcers post at its foot. The
    Halo next door is a pocket, and it refuses a truce-breaker while they're
-   Marked (§10, Q7). During Curfew the Stair is shut, so on Curfew nights
+   Marked or Sable is answering them (§10, Q7). During Curfew the Stair is shut, so on Curfew nights
    there is no sanctuary: the Row's most dangerous night, and it should
    say so. Two
    alley passages give a choice. Hunters give up 20 seconds after losing
@@ -429,6 +429,7 @@ technical lead):
 |---|---|---|
 | Q7 | The Halo refuses a Marked truce-breaker: yes | top-down canon edit and a slice; `truce-price.md` tells players first |
 | §8 | Vesper's work closes to a Marked player: yes | top-down canon edit and a slice covering board, counter and talker; `truce-price.md` tells players first |
+| Q7, extended | The Halo also refuses anyone Sable is answering, for as long as it answers (5 minutes today), Marked or not: yes | same slice; on the demo after the moving-versus-seated comparison |
 
 Q7 as it was raised in review:
 
@@ -449,6 +450,10 @@ Q7 as it was raised in review:
 
 Not part of this proposal; recorded so they don't widen it:
 
+- Deleting a character escapes the Mark and the Row's price, as the owner did in
+  the first playtest. Acceptable for now, since in real play it costs the
+  character (technical lead, 2026-11-07). Don't design for it yet; look again if
+  players start doing it routinely.
 - The sign-grid message (canon, unbuilt), with chat-grade filtering.
 - The Ferrymen liaison present in the Halo only during a Convoy
   (`event:convoy`, dormant event).
