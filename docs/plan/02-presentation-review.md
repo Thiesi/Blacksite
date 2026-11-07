@@ -82,7 +82,7 @@ not visual or human acceptance. Local installed-wheel native cases
 passed at 132x50 (Relay Zero reserve, real gate activation/walking,
 2.485-second startup) and 80x24 (Sump common, 2.547-second startup).
 Fixtures and remaining acceptance scopes are retained in
-[the acceptance record](../ops/s25-acceptance.md) and
+[the acceptance record](https://github.com/Thiesi/Blacksite/pull/66) and
 [PR #66](https://github.com/Thiesi/Blacksite/pull/66).
 
 S27's separate branch preserves unfinished dialogue/referral work.
