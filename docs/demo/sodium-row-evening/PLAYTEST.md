@@ -137,6 +137,15 @@ Afterwards:
 - Did people's talk tell you where to go? Did you find the Halo more directly
   than before?
 - Which lines do you remember? Did any repeat too soon?
+- Did you ever think you weren't allowed somewhere? Where, and what told you?
+
+**Notes for the run:**
+
+- Events can start on their own. If the log mentions Curfew, the Stair is shut,
+  so please note it. A chase during Curfew isn't an ordinary night.
+- Every attempt to use an exit on the Row or in the Halo now goes to
+  `logs/server.log` in the world folder, with the words shown, so you needn't
+  remember them. It changes nothing in play.
 
 ## What would count as success
 
