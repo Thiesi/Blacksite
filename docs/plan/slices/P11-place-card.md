@@ -2,7 +2,7 @@
 
 **Status:** planned (approved by the owner 2026-11-06)
 **Primary model:** Codex · **Reviewer:** automated review, technical lead, presentation lead (presentation acceptance)
-**Depends on:** P5, P6a, S38 (merged; supplies `me.truce_text`), S41 (#173, shipped in an earlier upgrade than this slice) · **Milestone:** presentation track
+**Depends on:** P5, P6a, S38 (merged; supplies `me.truce_text`), S41 (#173, see **This frame relies on S41** and the definition of done) · **Milestone:** presentation track
 **Issue:** https://github.com/Thiesi/Blacksite/issues/164
 
 Canon: terminal UI 2.6 and the key table in section 5, marked "planned,
@@ -92,7 +92,9 @@ asked to read it. While threatened, `A` opens nothing and the hint row says
 and help.
 
 **Threat.** The card reads two things, and you're threatened if either
-says so. The later Auto decider can use the same two.
+says so. The recent-line check is the card's own. The later Auto decider
+reads only `me.threat`, as note 12 says, and if it needs recent danger the
+server has to declare it.
 
 - `me.threat`: null, or the reason you're threatened now. Plan §11 note 12
   and the P4 row in §12 called for a declared signal, but P4 shipped without
@@ -126,8 +128,9 @@ disconnect and redials, so a door session still running across a service
 upgrade would drop its player on the first `place_card`. S41 makes a door drop a
 frame type it doesn't know and stay connected. That door simply shows no card,
 and a request it sends gets an answer it ignores. So S41 has to reach operators
-in an earlier upgrade than this slice, and the PR says so for the operator. The
-slice adds `place_card` to the protocol's frame types and to `validate`'s
+in an earlier upgrade than this slice. Merge order doesn't guarantee that and
+there are no tagged releases to point at, so the definition of done makes it a
+checked statement. The slice adds `place_card` to the protocol's frame types and to `validate`'s
 `server` set with its fields checked, so a known frame with bad fields is still
 a protocol error. Lockstep upgrades stay the supported path, as S41 says.
 
@@ -242,6 +245,11 @@ in 5.4.
   Clinic Row, Sodium Row (truce), and a zone with no looks.
 
 ## Definition of done
+
+Build doesn't start until S41 has merged. Before this PR merges, its description
+names the deployed build that already carries S41, or says that no deployment
+exists without it, and the technical reviewer checks that statement. If a
+deployment still lacks S41, it upgrades to S41 first, and this PR waits.
 
 Roadmap §7, plus native evidence through NetBBS Telnet to native stdio,
 at both sizes and all three tiers: first arrival on Sodium Row opens the
