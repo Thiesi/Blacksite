@@ -13,8 +13,10 @@ at `e6ec3d6`, S11 132x50, records a 108.188959 ms successful commit at
 tick 7183. Writes took 109.447249 ms wall / 1.503110 ms thread CPU; the
 unchanged gate failed at 113.895432 ms with 99 samples. The
 [paired manifest](https://github.com/Thiesi/Blacksite/pull/166#issuecomment-6697704773)
-retains vectors, spans, hashes and artifact pointers. This names the
-operation, not a particular sync, checkpoint, locking or scheduler wait.
+retains vectors, spans, hashes and artifact pointers. The committed
+[summary](s40-evidence/e6ec3d6.json) preserves both final gate vectors
+and commit spans from that record. This names the operation, not a
+particular sync, checkpoint, locking or scheduler wait.
 
 The [extended baseline](https://github.com/Thiesi/Blacksite/pull/166#issuecomment-6698925746)
 at `fa3a108` observed 33 checkpoint/restart cycles in each 4,096-commit

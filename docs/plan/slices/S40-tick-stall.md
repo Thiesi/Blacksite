@@ -79,9 +79,10 @@ The [captured failure] at `e6ec3d6`, S11 132x50, names the successful
 SQLite commit/context exit in `Storage.commerce_write`: 108.188959 ms
 at tick 7183, inside 109.447249 ms of write wall time and 1.503110 ms
 of write thread CPU. The unchanged gate failed at 113.895432 ms, with
-99 samples. The [paired evidence] retains the vectors, timer spans,
-hashes and original artifacts. This identifies the operation, not
-whether its wait was sync, checkpoint, locking or host scheduling.
+99 samples. The [retained summary] preserves both final gate vectors,
+timer spans and hashes from the [paired evidence], which links the
+original artifacts. This identifies the operation, not whether its
+wait was sync, checkpoint, locking or host scheduling.
 
 The later [checkpoint baseline] at `fa3a108` ran 4,096 commerce-sized
 WAL/FULL commits per size and observed 33 checkpoint/restart cycles
@@ -156,6 +157,7 @@ PR because it records owner decisions and re-scopes a slice.
 [owner decision]: https://github.com/Thiesi/Blacksite/pull/166#issuecomment-6699732646
 [captured failure]: https://github.com/Thiesi/Blacksite/pull/166#issuecomment-6697673052
 [paired evidence]: https://github.com/Thiesi/Blacksite/pull/166#issuecomment-6697704773
+[retained summary]: ../../ops/s40-evidence/e6ec3d6.json
 [checkpoint baseline]: https://github.com/Thiesi/Blacksite/pull/166#issuecomment-6698925746
 [design note]: https://github.com/Thiesi/Blacksite/pull/166#issuecomment-6698930471
 [read-only cost analysis]: https://github.com/Thiesi/Blacksite/pull/166#issuecomment-6699245842
