@@ -8,8 +8,8 @@
 This comes before P11 (#164). P11's `me.threat` disclosure test would
 fail on `main` today because of the Warden tells in part 4.
 
-Canon: game design 5.5 (NPCs), architecture 5.5.4 (disguise reveal) and
-terminal UI 4 (overlays). This PR writes the new rules there, marked
+Canon: game design 5.5 (NPCs), entities 1.8 (`poses_as`), architecture
+5.5.4 (disguise reveal) and terminal UI 4 (overlays). This PR writes the new rules there, marked
 "planned, S42". The implementation removes the marks. Where this file
 and canon differ, canon wins.
 
@@ -57,21 +57,25 @@ A9's return-home rule and S39's resolver.
 
 The owner's rule, 2026-11-07.
 
-- **A movement key that none of the page's offers claims closes the page
-  and moves you, in the same press.** An offer's hotkey wins over a
-  movement key (in vi, an offer on `j` keeps `j`). Arrow keys always
-  walk, because no offer uses them.
+- **A movement key of your keymap that neither an offer nor Back claims
+  closes the page and moves you, in the same press.** An offer or Back
+  wins over a movement key. In vi, an offer on `j` keeps `j`, and `b`
+  (move down-left) is Back, so it closes the page without a step. In the
+  arrows keymap, PgUp and PgDn walk on a talker page rather than page,
+  since a talker page has no rows. In vi, arrow keys aren't movement keys
+  and do nothing on a talker page.
 - **A hit closes the page.** Any damage to the caller closes an open talk
   page on the next tick.
 - **Only talker pages.** Shops, menus, Lattice dialogue and other
   overlays keep swallowing movement as today.
 - **The door must not hardcode keys.** Which keys walk comes from the
   keymap the server sends in `welcome`, for the caller's selected keymap.
-  On a talker page the door forwards a walking key that no listed action
-  claims; the server decides the rest.
+  On a talker page the door forwards a walking key that neither an offer
+  nor Back claims; the server decides the rest.
 - **The hint row says you can walk away.** The demo used "Move or Esc/B
   leaves". The presentation lead fits the final wording at both sizes and
-  co-signs it. A page with no offers doesn't ask you to choose one.
+  co-signs it; it doesn't name arrows, which vi doesn't use. A page with
+  no offers doesn't ask you to choose one.
 
 ### 4. The plainclothes Warden reacts with its crowd (#179)
 
@@ -80,11 +84,24 @@ keyed on **covered and unarmed**, so a later armed undercover character,
 or a Warden acting through pickpocket detection, still reveals under the
 canon "acts against a caller" rule.
 
-1. **Group reaction, both ways.** A covered, unarmed NPC reacts with its
-   counterpart's spawner group. Shoot a regular and the Warden flees with
-   the regulars. Shoot the Warden and the regulars flee too. Today
-   `provoked()` provokes by spawner group, and the Warden's group has one
-   member, so the one person who doesn't run gives it away.
+1. **Group reaction, both ways.** A covered, unarmed NPC reacts with the
+   one group it poses as. Shoot a regular and the Warden flees with the
+   regulars. Shoot the Warden and the regulars flee too. The reaction
+   ends together as well: the Warden and its group calm on the same tick.
+   Today `provoked()` provokes by spawner group, and the Warden's group
+   has one member, so the one person who doesn't run gives it away.
+   - **The group is declared, not guessed.** The covered spawner names it
+     with `poses_as` (entities 1.8), for example `poses_as:
+     "sodium-regular"` on the plainclothes Warden's spawner. The engine
+     must not react to every group that shares the cover name, because
+     once the Row's crowd splits into several groups, the Warden would run
+     while some of the people around it stay put.
+   - **The validator** checks that `poses_as` names a spawner in the same
+     zone whose template presents the same `cover_name` and class, and
+     refuses a covered, unarmed spawner without one. A disguise with no
+     crowd is unmasked by NEARBY anyway. The implementation adds
+     `poses_as` to the shipped Warden spawner on the Row and moves nothing.
+     Placement stays the creative consultant's.
 2. **Fleeing doesn't reveal.** In `evaluate()`, picking up a target
    reveals a covered, unarmed NPC only if it will act against the caller
    (hunt), not if it will flee. In `provoked()`, the direct
@@ -146,14 +163,19 @@ uses a declared fixture.
 - **Walks off:** the line appears under the presented name when the
   person leaves, including a covered NPC's cover name. No line when the
   caller moved or the person went down.
-- **Talk page:** in both keymaps, an unclaimed movement key closes the
-  page and moves the caller in the same press. An offer on a movement key
-  in vi keeps it. A hit closes the page. Shops, menus and Lattice
+- **Talk page:** in both keymaps, a movement key that neither an offer
+  nor Back claims closes the page and moves the caller in the same press,
+  including PgUp and PgDn in arrows. An offer on a movement key in vi
+  keeps it, and vi `b` closes the page without a step. A hit closes the
+  page. Shops, menus and Lattice
   dialogue still swallow movement. The door derives walking keys from
   the welcome keymap; a test changes the keymap and the door follows.
 - **Warden, through real views:** shoot a regular and the Warden flees
   with the crowd, name unchanged. Shoot the Warden and the regulars flee,
-  the shooter's view shows the cover, and nothing else follows. A Marked
+  the shooter's view shows the cover, and nothing else follows. The
+  Warden and the regulars go back to wandering on the same tick. A second
+  group with the same cover name in the zone doesn't react. The validator
+  refuses a missing or mismatched `poses_as`. A Marked
   and a heated caller walking past change nothing. An armed covered
   fixture still reveals when it acts.
 - **First meeting:** both triggers (the person steps away during the

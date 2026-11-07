@@ -525,8 +525,8 @@ listings, so sellers can inspect earlier outcomes.
 
 Overlays never stop the world. Movement keys are swallowed while a menu
 is open, with one exception (planned, S42): on a talker's page, a
-movement key that none of the page's offers claims closes the page and
-moves you in the same press, and a hit closes the page. The log keeps
+movement key of your keymap that neither an offer nor Back claims closes
+the page and moves you in the same press, and a hit closes the page. The log keeps
 scrolling and the viewport underneath keeps
 updating; a menu that has been open for 60 s in a contested or open zone
 closes itself with a toast.
