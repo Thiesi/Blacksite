@@ -12,7 +12,7 @@ from blacksite.server.commerce import CommerceMenu
 from blacksite.server.contracts.panels import Panel as ContractPanel
 from blacksite.server.dialogue import Facts, eligible_offers, evaluate
 from blacksite.server.factions import relation
-from blacksite.server.interaction import Focus, Interaction, interact
+from blacksite.server.interaction import Focus, Interaction, interact, key_action
 from blacksite.server.views import presentation
 from blacksite.server.loop import TickContext
 from blacksite.server.protocol import Frame
@@ -43,6 +43,7 @@ class TalkerMenu:
     line: str
     opened: int
     at: tuple[int, int] | None = None  # where the caller stood when it opened
+    hit: int | None = None  # the caller's last hit when it opened
 
 
 class Dialogue:
@@ -147,8 +148,8 @@ class Dialogue:
     def show(self, session: Session, contact: Contact, text: str, tick: int) -> bool:
         if session.closed or self.contact(session, contact.target) is None:
             return False
-        at = self.sim.avatars[session.user_id].actor.position
-        self.menus[session.id] = TalkerMenu(contact, text, tick, at)
+        body = self.sim.avatars[session.user_id].actor
+        self.menus[session.id] = TalkerMenu(contact, text, tick, body.position, body.cooldowns.get('last_hit'))
         talker = self.content.dialogue[contact.talker]
         actor = self.world.zones[contact.zone].actors.get(contact.target)
         if actor is not None and not contact.lattice:
@@ -205,7 +206,8 @@ class Dialogue:
         talker = self.content.dialogue[screen.contact.talker]
         offers = eligible_offers(talker, self.facts(session, talker))
         title = talker.name+(' - '+talker.title if talker.title else '')
-        body = menu(title, [], 0, screen.line, 'Choose an action  Esc/B leaves')
+        leaves = 'Esc/B leaves' if screen.contact.lattice else 'Move or Esc/B leaves'  # Round 3: walking away works
+        body = menu(title, [], 0, screen.line, 'Choose an action  '+leaves)
         body['kind'] = 'talker'
         body['actions'] = [{'key': offer.hotkey.lower(), 'label': offer.label} for offer in offers]
         body['actions'].append({'key': 'b', 'label': 'Back'})
@@ -314,6 +316,10 @@ class Dialogue:
             if screen:
                 if name == 'menu_close' or key in ('escape', 'b'):
                     self.close(session)
+                elif self.walks_away(session, screen, frame, key):
+                    # Round 3, owner's ruling: this press closes the page and moves.
+                    self.close(session)
+                    return False
                 else:
                     value = frame.data.get('args', {}).get('key', '') if name == 'menu_select' else key
                     action = value.lower() if isinstance(value, str) else ''
@@ -337,6 +343,16 @@ class Dialogue:
             return True
         return False
 
+    def walks_away(self, session: Session, screen: TalkerMenu, frame: Frame, key: str) -> bool:
+        """A movement key the page's offers don't claim. Arrows always walk."""
+        if screen.contact.lattice:
+            return False
+        action = key_action(self.sim.keymap, session, frame)
+        if not action.startswith(('move_', 'sprint_')) and action not in ('move', 'sprint'):
+            return False
+        talker = self.content.dialogue[screen.contact.talker]
+        return not any(offer.hotkey.lower() == key for offer in eligible_offers(talker, self.facts(session, talker)))
+
     def tick(self, ctx: TickContext) -> None:
         if not self.content.dialogue:
             return
@@ -347,6 +363,11 @@ class Dialogue:
                 self.sim.external_views.pop(sid, None)
                 continue
             contact = self.contact(session, screen.contact.target)
+            avatar = self.sim.avatars.get(session.user_id)
+            if (not screen.contact.lattice and avatar
+                    and avatar.actor.cooldowns.get('last_hit') != screen.hit):
+                self.close(session)  # Round 3, owner's ruling: a hit gives you the map back.
+                continue
             if (contact is None or ctx.tick-screen.opened >= MENU_TIMEOUT_SECONDS*TICK_HZ
                     and self.world.zones[contact.zone].allows_hostile(contact.tile)):
                 if contact is None:

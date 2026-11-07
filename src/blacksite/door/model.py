@@ -21,6 +21,13 @@ from blacksite.door.present import screen as presentation_screen
 from blacksite.door.present.chrome import NOTICE_SECONDS, PROTECT_SECONDS
 from blacksite.server.protocol import Frame
 
+# Demo round 3: the movement keys of each keymap (keymaps.json). The door doesn't hold the table.
+TALKER_WALK = {
+    'arrows': frozenset(f'{shift}{key}' for shift in ('', 'shift-')
+                        for key in ('up', 'down', 'left', 'right', 'home', 'end', 'pgup', 'pgdn')),
+    'vi': frozenset('kjhlyubnKJHLYUBN'),
+}
+
 
 class Display:
     def __init__(self, info: DoorInfo, request_prefix: str = "client", *, presentation: bool = False) -> None:
@@ -272,6 +279,12 @@ class Display:
                 return [Frame("intent", {"name": "lat.jack_out", "args": {}})]
             if key in ("escape", "b", "B"):
                 return [Frame("intent", {"name": "menu_close", "args": {}})]
+            if effective_body.get('kind') == 'talker':
+                # Round 3: a talker page has no rows, so a movement key its offers
+                # don't claim goes to the server, which closes the page and moves.
+                claimed = {action.get("key") for action in effective_body.get("actions", [])}
+                if key in TALKER_WALK.get(self.selected_keymap, ()) and key.lower() not in claimed:
+                    return [Frame("key", {"k": key, "t": max(0, int(now * 1000))})]
             if key in ("up", "down", "pageup", "pagedown", "pgup", "pgdn"):
                 page = self.layout.menu.cursor_page
                 distance = 1 if key in ("up", "down") else page

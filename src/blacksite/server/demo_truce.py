@@ -73,6 +73,11 @@ class Truce:
             provider = sim.me_provider
             sim.me_provider = lambda session: {**provider(session), 'hunted': self.hunted(session.player_id)}
             self.discovering(sim)
+            # Views read the provider, which already holds the base method and the
+            # crew engine's decoration, so the warning has to be applied here.
+            target_provider = sim.target_provider
+            if target_provider:
+                sim.target_provider = lambda actor: self.warned(target_provider(actor), actor)
             self.back_door(sim)
         self.settling()
         panels = getattr(getattr(core, 'contracts', None), 'panels', None)
@@ -217,7 +222,9 @@ class Truce:
 
     # TARGET panel: warn from the truce rules, not the relations matrix.
     def target_view(self, actor: Actor) -> dict[str, Any] | None:
-        view = self._target_view(actor)
+        return self.warned(self._target_view(actor), actor)
+
+    def warned(self, view: dict[str, Any] | None, actor: Actor) -> dict[str, Any] | None:
         target = self.combat.world.actors.get(actor.target) if view else None
         if not view or target is None or target.zone not in TRUCE or view.get('warning') in ('Protected', 'Obscured; no clear shot'):
             return view

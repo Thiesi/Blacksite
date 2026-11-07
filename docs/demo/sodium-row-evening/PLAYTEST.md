@@ -102,6 +102,8 @@ Afterwards:
 - Did drawing feel like a decision with a cost before you made it?
 - Standing and fighting: did you lose, and did it feel fair?
 - Running: did you get away? Was it skill or luck?
+- On a talker's page, walking closes it and moves you, and a hit closes it. Did
+  a page ever get in your way?
 - Did you know the price before you fired? What told you?
 - Did being turned away from the Halo feel right? Did you know how long for?
 - At any point, did you think you were barred from somewhere you weren't?
