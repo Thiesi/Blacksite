@@ -140,7 +140,7 @@ bounded disconnect escape, per-identity street lockout, atomic source
 receipts and the initial optional loot schedule. Game 4 preserves the
 Wake's existing open exit and optional lessons. Game 7.3 covers mixed
 open/contested bodies for remote Burn. The world/entity contracts mirror
-the master; no ninth joinable faction or future map/vendor is introduced.
+the master; no tenth joinable faction or future map/vendor is introduced.
 
 The twelve nontraining hub approaches cannot remain behind generic
 tier-two key gates whose shops do not exist until S25. Reachable starter

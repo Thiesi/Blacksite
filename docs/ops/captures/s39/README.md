@@ -1,8 +1,48 @@
 # S39 evidence
 
-Implementation is in progress. Native acceptance, automated review,
-technical review and presentation acceptance remain outstanding. H1 and
+Author verification and the native review packet are recorded below.
+Technical review and presentation acceptance remain outstanding. H1 and
 S25 layout approval: NOT GRANTED.
+
+## Native review packet
+
+[Manifest](native/manifest.json) and [results](native/results.json) retain
+the exact provenance of 12 live captures from successful native CI
+[run 42354746481](https://github.com/Thiesi/Blacksite/actions/runs/42354746481),
+at source head `fa2a4d1e8dbbc652df20b83ee795fdd9a76844ee`.
+Both terminal sizes, 80x24 and 132x50, passed in 16, 256 and truecolor.
+Both unmodified S19 network first-job routes passed before the declared
+fixtures were installed. Travel never waits for a talker to release focus.
+
+The two scenarios in each size/colour combination are:
+
+- `exit-beside-regular`: the hint names `E go to The Tin Halo`, and E
+  travels through that exit despite the adjacent regular.
+- `mission-beside-giver`: the hint names `E survey Threshold contact`,
+  and E completes the mission without travelling or opening dialogue.
+
+The `.txt` files in [native/](native/) are direct byte copies of those
+captured screens. Padding is terminal data and is deliberately retained.
+Raw `.ans` streams and large style snapshots remain in the two CI
+artifacts linked by the manifest. Every capture's three hashes were
+checked, and the raw ANSI was independently replayed to verify both
+glyphs and styles. The source-matched client hash was checked against
+the Python bytes in the recorded Git source tree. The packet stays
+within the 200 KB review evidence budget.
+
+Reproduce the packet with `scripts/packet_s39.py`, supplying the two
+named artifact directories under `--root`, the GitHub run metadata as
+`--run`, and its artifact metadata as `--artifacts`. The tool refuses
+failed runs, incomplete capture matrices, mismatched source or file
+hashes, edited glyph/style captures and an existing output directory.
+
+The captures belong to the exact head and run recorded above. They are
+not relabelled with a later PR SHA. The game source tree is
+`ec2e6643e843e8d5c3addbfbefd268c63c815230`. The later main merge only
+adds S41 planning and housekeeping docs, and the packet commit adds
+evidence and review status. Neither changes runtime code, content,
+native scripts, tests or workflows from the captured candidate. Current
+head CI and review are recorded separately on PR #167.
 
 ## Resolver and dispatch
 
@@ -46,6 +86,21 @@ The helper correction passed the same 39 focused tests. Recruiter
 precedence and selected-handler fallthrough retain the approved spec:
 faction services are protected, and only the selected route handles E/J.
 The PR carries the detailed impact-based dispositions.
+
+After merging A9, the Warden loot correction and S40 from main,
+89 interaction/focus/navigation tests passed in 311.78 seconds. Five
+mechanics-fingerprint and native-replay verifier tests passed in
+9.44 seconds. The static layout audit was regenerated and was identical
+to the committed result. The original P3 outcome digest and mechanics
+fingerprint remain unchanged; no golden was rebaselined.
+
+Two delivered reviews of the merged capture candidate found no
+actionable defects. Both used Claude Sonnet 5.5; the automatic run's
+model is recorded in its workflow log, and the requested pass states it
+explicitly. The latter's shallow checkout could not diff upstream merge
+changes: its review does not independently establish A9/Warden/S10
+integration. The merge inspection and focused tests above are author
+evidence; final-head CI and technical review remain separate gates.
 
 ## Layout audit
 

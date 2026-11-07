@@ -1,0 +1,53 @@
+{
+  "passed": true,
+  "runs": [
+    {
+      "artifact": "s39-exit-underfoot-80x24",
+      "source_head": "fa2a4d1e8dbbc652df20b83ee795fdd9a76844ee",
+      "network_routes": [
+        {
+          "size": [
+            80,
+            24
+          ],
+          "route": "network",
+          "chits": 200,
+          "xp": 100,
+          "loan_trace": 0,
+          "wide_name": "S19network\u754c80",
+          "fixtures": []
+        }
+      ],
+      "fixtures": [
+        "relocated paused Sodium regular",
+        "physical dialogue copy of Vesper",
+        "survey mission at declared giver beside Tin Halo exit"
+      ],
+      "captures_verified": 6
+    },
+    {
+      "artifact": "s39-exit-underfoot-132x50",
+      "source_head": "fa2a4d1e8dbbc652df20b83ee795fdd9a76844ee",
+      "network_routes": [
+        {
+          "size": [
+            132,
+            50
+          ],
+          "route": "network",
+          "chits": 200,
+          "xp": 100,
+          "loan_trace": 0,
+          "wide_name": "S19network\u754c132",
+          "fixtures": []
+        }
+      ],
+      "fixtures": [
+        "relocated paused Sodium regular",
+        "physical dialogue copy of Vesper",
+        "survey mission at declared giver beside Tin Halo exit"
+      ],
+      "captures_verified": 6
+    }
+  ]
+}
