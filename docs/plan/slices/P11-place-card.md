@@ -140,6 +140,11 @@ the next zone view does: a view for the frame's zone can open the card, and a
 view for any other zone drops the frame. Frames arrive in order on one session,
 so no older view can follow the frame.
 
+"View" here and under **When it opens** means the door's zone body after any
+`view` or `delta` frame. A zone change can arrive as a delta, so the door judges
+a held frame after applying either one, and a frame that only a delta would
+satisfy doesn't wait for a later full view.
+
 **A redial starts clean.** `welcome` comes first on every connection and already
 replaces the door's view (`Display.receive`), so a view from before a disconnect
 can't judge a frame. The slice adds the rest to the same place: `welcome` also
@@ -222,6 +227,9 @@ in 5.4.
 - A first-sight frame that arrives before its zone's first view opens the
   card when that view arrives, on a transition and at login. A view for
   another zone drops it.
+- The same when the zone change arrives as a `delta`: the patched body for the
+  frame's zone opens the card, a threatened patched body never paints it, and a
+  patched body for another zone drops the frame.
 - A zone with no lore opens a card without the text block.
 - Every shipped zone's card fits at 80x24 and 132x50 with no cut text,
   including the longest district and zone names.
