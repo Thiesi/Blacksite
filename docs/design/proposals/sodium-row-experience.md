@@ -296,8 +296,8 @@ fine:
    the work itself is a rule change (§8, owner gate).
 3. **Escape takes skill.** That's geometry: the sanctuary is up the
    Neon Stair into the safe Core, and enforcers post at its foot. The
-   Halo next door is a pocket; whether it may shelter a truce-breaker is
-   open (§10, Q7). During Curfew the Stair is shut, so on Curfew nights
+   Halo next door is a pocket, and it refuses a truce-breaker while they're
+   Marked (§10, Q7). During Curfew the Stair is shut, so on Curfew nights
    there is no sanctuary: the Row's most dangerous night, and it should
    say so. Two
    alley passages give a choice. Hunters give up 20 seconds after losing
@@ -422,7 +422,15 @@ Decided by the owner on 2026-10-31 (Q1 in #141; Q2 to Q6 recorded on
 | Q5 | The demo: yes | branch never merged, outside the S25c gate; built by the creative consultant and the presentation lead; the technical lead reviews safety and disclosure |
 | Q6 | Speech before P8 as plain log lines on `main`: yes | a narrow slice after #126 and S38, filed by the technical lead |
 
-Open, raised in review after the decisions (to settle before playtest 3):
+Decided by the owner on 2026-11-07, after playing it (recorded on #170 by the
+technical lead):
+
+| Q | Decision | What follows |
+|---|---|---|
+| Q7 | The Halo refuses a Marked truce-breaker: yes | top-down canon edit and a slice; `truce-price.md` tells players first |
+| §8 | Vesper's work closes to a Marked player: yes | top-down canon edit and a slice covering board, counter and talker; `truce-price.md` tells players first |
+
+Q7 as it was raised in review:
 
 - **Q7. May the Halo shelter a truce-breaker?** The Halo is a pocket, so
   a Marked attacker can step in and wait out the Mark, which undercuts

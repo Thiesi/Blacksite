@@ -1,15 +1,16 @@
 # Knowing the price before you draw (proposal)
 
-**Status:** proposal, not canon. Nothing here is built, and nothing goes on
-the running demo until the technical lead says so.
+**Status:** proposal with owner decisions recorded (see Decisions). Not canon
+until the top-down edits are made, and nothing here is built.
 **Authors:** creative consultant and presentation lead, 2026-11-07.
-**Scope:** truce zones, meaning Sodium Row today. Targets `main`, as a small
-slice before P11 and separate from it, tried on the demo first if the technical
-lead agrees.
+**Scope:** truce zones, meaning Sodium Row today.
+**Timing (technical lead):** after the owner's moving-versus-seated comparison,
+so the two questions don't blur. Then on the demo, then a small slice on `main`
+before P11 and separate from it.
 
 Labels: **[built]** works on `main`; **[demo]** only on
-`demo/sodium-row-evening`; **[open]** waits on an owner decision; **[new]** is
-proposed here.
+`demo/sodium-row-evening`; **[decided]** the owner has ruled but it isn't built;
+**[new]** is proposed here.
 
 ## The finding
 
@@ -43,7 +44,7 @@ before you fire [built]:
 1. Sable's people will come for you, and you'll probably lose.
 2. Fire on a player and you're Marked for 15 minutes, so anyone can hunt you.
    Attacking an NPC brings the guards but no Mark [built].
-3. The Halo and Vesper's work are closed until the Mark runs out [open].
+3. The Halo and Vesper's work are closed until the Mark runs out [decided].
 
 The proposal doesn't say how to get away. That stays the player's skill.
 
@@ -63,10 +64,13 @@ So the wording fits where each notice is likely to land. The keeper's name comes
 from the zone.
 
 - **On first arrival in a truce zone, once per character.** Returning players
-  aren't told again. This one is rarely threatened, so it can use the hint line
-  (54 cells). If it does land in the header, the "Sable comes" half survives.
+  aren't told again. This needs no new saved state: `discover()` already runs
+  once per character per zone, from the saved `seen_zones`, and S38's rule line
+  is emitted there [built]. This one is rarely threatened, so it can use the
+  hint line (63 cells, 1 to spare). If it does land in the header, the "Sable
+  comes" half survives.
 
-  > Fire here and Sable comes. At a player: Marked 15 min.
+  > Fire: Sable comes. At a player: Marked 15 min, no Halo or work.
 
 - **The first time per session that TARGET shows a truce warning.** That's when
   a new player is actually deciding, and it often lands in the header, so it
@@ -74,8 +78,13 @@ from the zone.
 
   | TARGET shows | Notice | Cells |
   |---|---|---|
-  | "Firing marks you" | Fire: Marked 15 min. Sable comes. | 33 |
+  | "Firing marks you" | Marked 15 min. No Halo, no work. | 32 |
   | "Truce: Sable answers" | Fire here and Sable comes. | 26 |
+
+  The first line drops "Sable comes" to fit, and the arrival notice and the
+  enforcer carry it. "Firing marks you" sits beside it in TARGET, so it doesn't
+  need to say "fire". An attack on an NPC brings no Mark, so the second line
+  rightly doesn't mention the Halo.
 
   The door reads the existing `target.warning`, so this needs no server field
   and adds no key. S38's "no fire confirmation" stands. The owner reports you
@@ -113,20 +122,27 @@ guaranteed, so it supports the notice and doesn't replace it.
 **Unchanged:** the P11 card. It comes later in the queue and your first key
 closes it, so nothing should rely on it.
 
-## Decisions for the owner
+## Decisions
 
-1. **Notices outside node news.** UI 2.5 defines notices as node news, so this
-   needs a small top-down canon edit. We recommend yes.
-2. **Item 3.** Q7 (the Halo refuses you) and closing Vesper's work (#143 §8, an
-   owner gate) aren't recorded. The notices leave this out until they are. If
-   both land, the wording needs another pass, because neither form fits as it
-   stands: adding "No Halo, no work." makes the arrival notice 72 cells (limit
-   64), and "Fire: Marked 15 min. No Halo, no work." is 38 (header limit 36).
-   It's the owner's actual complaint, so we'd want it there.
+The owner decided on 2026-11-07 (recorded on #170 by the technical lead):
 
-**One question first:** did the owner notice `TRUCE` in the header or "Firing
-marks you" at all? If they did and it still didn't register, that supports this
-proposal. If they missed them, TARGET and the header have a problem of their own.
+1. **Notices outside node news: yes.** This allows the top-down edit to terminal
+   UI 2.5.
+2. **The Halo refuses a Marked truce-breaker (Q7): yes.**
+3. **Vesper's work closes to a Marked player (#143 §8): yes.**
+
+The owner approved earlier wording, before the header fit. The technical lead
+treats these shorter lines as within that approval and reports the final text to
+the owner.
+
+Rules 2 and 3 aren't built on `main`. They need their own top-down canon edit and
+slice, and these notices must not ship ahead of them, or they'd state a rule that
+doesn't exist yet. On the demo, the refusal needs `--bouncer`, and Vesper's work
+closes only in her talker's offer: her board and counter stay open.
+
+**Still open:** the owner noticed one of `TRUCE` or "Firing marks you", and the
+technical lead has asked which. Whichever they missed may have a problem of its
+own.
 
 ## Order, if only some of it goes ahead
 
