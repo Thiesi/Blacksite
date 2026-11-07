@@ -445,7 +445,11 @@ class Npcs:
                 if tick < int(actor.behaviour.get("pause", 0)):
                     return
                 tile = actor.x+zone.rng.choice((-1, 0, 1)), actor.y+zone.rng.choice((-1, 0, 1))
-                step_toward(actor, zone, tile, tick, actor.behaviour.get("region"), avoid)
+                region = actor.behaviour.get("region")
+                if region and not region.contains(actor.position):
+                    step_toward(actor, zone, tuple(actor.behaviour["home"]), tick, avoid=avoid)
+                else:
+                    step_toward(actor, zone, tile, tick, region, avoid)
                 actor.behaviour["pause"] = tick + zone.rng.randint(*WANDER_PAUSE_TICKS)
                 return
             if behaviour.kind == "patrol":

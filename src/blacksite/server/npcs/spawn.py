@@ -10,6 +10,11 @@ from blacksite.server.world.registry import World
 from blacksite.server.world.zone import ZoneInstance
 
 
+# Game design 5.5: prefer more than five tiles; never spawn adjacent.
+SPAWN_CLEARANCE = 5
+SPAWN_MIN_CLEARANCE = 1
+
+
 class Spawners:
     def __init__(self, world: World, state: dict[str, Any], origin: str) -> None:
         self.world = world
@@ -33,6 +38,14 @@ class Spawners:
         reserved = self.reserved(zone)
         candidates = [t for t in candidates if t is not None and zone.can_enter(None, t)
                       and not zone.tiles[zone.tile_id(t)].hazard and t not in occupied | reserved]
+        players = [a.position for a in zone.actors.values() if a.kind == "player"]
+        if players and candidates:
+            clearance = {t: min(max(abs(t[0]-p[0]), abs(t[1]-p[1])) for p in players)
+                         for t in candidates}
+            preferred = [t for t in candidates if clearance[t] > SPAWN_CLEARANCE]
+            farthest = max(clearance.values())
+            candidates = preferred or [t for t in candidates
+                                       if clearance[t] == farthest and farthest > SPAWN_MIN_CLEARANCE]
         return zone.rng.choice(candidates) if candidates else None
 
     def process(self, zone: ZoneInstance, now: float) -> None:

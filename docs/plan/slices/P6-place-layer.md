@@ -364,6 +364,43 @@ stack on or edit the unmerged P6b content. Run the existing native P6
 acceptance and root suite, retain raw reports as artifacts, and request
 automated and technical review. This grants no human acceptance gate.
 
+## A9: NPC clearance and bounded consumable shock (Codex)
+
+Assigned after S40, on #115
+([gathered scope](https://github.com/Thiesi/Blacksite/issues/115#issuecomment-6701521461)).
+Status: in progress. Starts from owner-merged main bfd9a34, independently
+of S39 and S41. Changes no interaction resolver, echo, talker reach rule
+or talk page. H1 and S25 layout approval remain ungranted.
+
+- Audit ordinary spawners and enforce game design 5.5's player clearance,
+  including its farthest-tile fallback. Defer if all free candidates are
+  adjacent; never weaken clearance merely to fill a slot.
+- Keep wander and patrol steps off exits, including the shipped Sodium
+  regular/Plaza exit and plainclothes Warden/Halo door cases. Flee's
+  existing #150 protection remains in place.
+- Return every out-of-region wanderer toward home, using ordinary
+  movement and the same random draws as wandering. Apply uniformly to
+  ordinary and covered actors.
+- Clamp consumable shock to game design 3.1's 0..100 range. Test negative
+  shock at low shock and committed/failed consumption.
+
+Audit at the base: `Spawners.location` excludes occupied, reserved,
+hazardous and inaccessible tiles, but has no player-distance check.
+`Npcs.tick` already passes reserved exits to wander and patrol movement;
+regression tests exercise that path without another movement rule.
+An out-of-region wanderer is confined by the region check, so cannot
+walk back. Consumables currently cap shock only at 100.
+
+Acceptance: root pytest, including the unchanged mechanics fingerprint;
+spawn preference/fallback/deferral; wander/patrol beside exits and the
+shipped door cases; uniform return-home with unchanged random draws;
+consumable bounds and receipt outcomes. If any RNG change moves a digest,
+stop and refer it to the technical lead; do not regenerate it. Run the
+canonical native service matrix, including S11 and S12 through NetBBS
+Telnet/native stdio at 80x24 and 132x50. Retain every outcome under the
+S40 S11 disposition procedure; a failed gate needs its own ruling, never
+a retry solely to clear it. Automated and technical reviews are required.
+
 ## Related work outside the slice
 
 - **V1 measurements.** The presentation lead's V1 measurements (plan
