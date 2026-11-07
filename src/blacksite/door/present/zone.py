@@ -413,6 +413,9 @@ def head(buffer: CellBuffer, body: dict[str, Any], layout: Layout, paint: Paint,
         left.append(('HEAT', 'log_danger'))
     if me.get('marked_until'):
         left.append(('MARKED', 'log_danger'))
+    if me.get('hunted'):
+        # Demo round 3 (#170): the keeper's guards are answering you.
+        left.append(('HUNTED', 'log_danger'))
     if me.get('district'):
         left.append((str(me['district']).upper(), 'head_district'))
     if service := body.get('service'):
