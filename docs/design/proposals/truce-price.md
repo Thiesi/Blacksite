@@ -26,9 +26,10 @@ is the problem.
 
 ## Why it flies by
 
-The rule is the third sentence of the arrival paragraph in the log, in the same
-style as the rest, as you start walking. Nothing states the price before you
-fire [built]:
+On `main` the rule is its own line straight after the arrival paragraph in the
+log, in the same style [built]. On the demo it's the paragraph's third sentence
+[demo]. Either way it arrives as you start walking. Nothing states the price
+before you fire [built]:
 
 | When | What S38 shows | Says the cost? |
 |---|---|---|
@@ -48,22 +49,42 @@ The proposal doesn't say how to get away. That stays the player's skill.
 
 ## The proposal
 
-**The guarantee: a notice, twice [new].** The hint line is the only surface
-that shows at every size and holds: until a key and at least 8 s (terminal UI
-2.5), moving to the header if you're threatened or a prompt is open. It's one
-unwrapped line, cut at 62 cells at 80x24 in our capture.
+**The guarantee: a notice, twice [new].** A notice is the only thing that shows
+at every size and holds: until a key and at least 8 s (terminal UI 2.5). It
+isn't always on the hint line, though. It moves to the header if you're
+threatened, a prompt is open or your target's relation is hostile, which
+includes a Marked or hostile-faction target. At 80x24 on the Row the limits for
+one unwrapped line are:
 
-> Fire here and Sable comes. At a player: Marked 15 min.
+- **Hint line:** 64 cells with `Ctrl-X leave`, less if `Esc/B back` shows.
+- **Header:** 36 cells.
 
-That is 54 cells, and the keeper's name comes from the zone. It's shown:
+So the wording fits where each notice is likely to land. The keeper's name comes
+from the zone.
 
 - **On first arrival in a truce zone, once per character.** Returning players
-  aren't told again.
+  aren't told again. This one is rarely threatened, so it can use the hint line
+  (54 cells). If it does land in the header, the "Sable comes" half survives.
+
+  > Fire here and Sable comes. At a player: Marked 15 min.
+
 - **The first time per session that TARGET shows a truce warning.** That's when
-  a new player is actually deciding. The door reads the existing
-  `target.warning`, so this needs no server field and adds no key. S38's "no
-  fire confirmation" stands. The owner reports you can't fire by accident, so
-  there's no case for a confirm.
+  a new player is actually deciding, and it often lands in the header, so it
+  must fit there. It says only what applies to this target:
+
+  | TARGET shows | Notice | Cells |
+  |---|---|---|
+  | "Firing marks you" | Fire: Marked 15 min. Sable comes. | 33 |
+  | "Truce: Sable answers" | Fire here and Sable comes. | 26 |
+
+  The door reads the existing `target.warning`, so this needs no server field
+  and adds no key. S38's "no fire confirmation" stands. The owner reports you
+  can't fire by accident, so there's no case for a confirm. The build must test
+  both texts through the header at 80x24.
+
+**The cost:** the first-target notice can cover the key hints for at least 8 s,
+once per session, just when a new player may want the `F` hint. We accept that,
+because the price matters more at that moment.
 
 The log line and the TARGET wording stay as they are. TARGET has 21 columns at
 80x24, so it can't carry the price.
@@ -83,7 +104,8 @@ guaranteed, so it supports the notice and doesn't replace it.
   HALO →" and the Clause's tally. Not a sign in Sable's colours: the Row belongs
   to nobody, on paper [canon], and Sable doesn't advertise. It reads as what
   everyone knows, and somebody wrote it and nobody painted over it. On the demo
-  it goes near (3,17); on `main` its place follows S25c.
+  it goes near the arrival tile, around (4,13) under the first lamp, with the
+  position settled at capture. On `main` its place follows S25c.
 - **Repetition.** A few more barks mention the price, and `is_wake` lines can
   state it on a first meeting. On `main`, all talk here waits on the cast going
   live (Q6, P8), so the notice can't depend on it.
@@ -96,11 +118,11 @@ closes it, so nothing should rely on it.
 1. **Notices outside node news.** UI 2.5 defines notices as node news, so this
    needs a small top-down canon edit. We recommend yes.
 2. **Item 3.** Q7 (the Halo refuses you) and closing Vesper's work (#143 §8, an
-   owner gate) aren't recorded. The notice leaves this out until they are. If
-   both land, the player half becomes "At a player: Marked 15 min. No Halo, no
-   work.", which makes 72 cells with the first half as written, 10 over the
-   limit, so the wording gets another pass then. It's the owner's actual
-   complaint, so we'd want it there.
+   owner gate) aren't recorded. The notices leave this out until they are. If
+   both land, the wording needs another pass, because neither form fits as it
+   stands: adding "No Halo, no work." makes the arrival notice 72 cells (limit
+   64), and "Fire: Marked 15 min. No Halo, no work." is 38 (header limit 36).
+   It's the owner's actual complaint, so we'd want it there.
 
 **One question first:** did the owner notice `TRUCE` in the header or "Firing
 marks you" at all? If they did and it still didn't register, that supports this
@@ -119,7 +141,8 @@ proposal. If they missed them, TARGET and the header have a problem of their own
   visibility, access, combat or balance.
 - **Disclosure:** the rule and its price are public. Nothing here says who
   arranged the truce, and nothing distinguishes the plainclothes Warden.
-- **Not tested:** the hint line and TARGET limits come from code and captures,
-  not play. The presentation lead will judge the paint from a capture.
+- **Not tested:** the presentation lead ran the wording through `main`'s text
+  fitters and checked the S38 strings against `main`. Nobody has seen these
+  notices in play, and the presentation lead will judge the paint from a capture.
 - **Playtest passes if:** a new player, asked before they ever fire, can say what
   happens if they draw on the Row, and someone who draws anyway says they knew.
