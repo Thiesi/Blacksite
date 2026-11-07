@@ -253,19 +253,22 @@ class NativeProbe:
         origin=av.zone
         exit_=next(e for e in self.service.world.zones[origin].template.meta.exits if e.target_zone==destination)
         await self.walk(connection,exit_.tile)
-        # Share the original ten-second transition bound with prompt/ACK
-        # readiness. A persistent talker fails rather than buying more time.
+        # Share the original transition bound with view acknowledgement.
+        # S39 makes focus deterministic at the threshold; never wait for a
+        # wandering talker to release it.
         async with asyncio.timeout(10):
             if av.zone==origin:
-                def door_ready() -> bool:
-                    view=self.game.sim.views[connection.session.id].previous
-                    focus=(view or {}).get('body',{}).get('focus') or {}
-                    return (av.zone==origin and av.actor.position==exit_.tile
-                        and connection.session.ack_revision==connection.session.view_revision
-                        and focus.get('id')==exit_.id and focus.get('verb')=='go to')
-                # A nearby wandering talker may own E after the last move.
-                # Wait for the actual acknowledged door prompt, then act once.
-                await wait(door_ready)
+                def arrival_acknowledged() -> bool:
+                    view=self.game.sim.views[connection.session.id].previous or {}
+                    body=view.get('body',{})
+                    return (view.get('kind')=='zone' and body.get('me',{}).get('zone')==origin
+                        and any(actor['id']==av.actor.id and (actor['x'],actor['y'])==exit_.tile
+                                for actor in body.get('actors',[]))
+                        and connection.session.ack_revision==connection.session.view_revision)
+                await wait(arrival_acknowledged)
+                view=self.game.sim.views[connection.session.id].previous
+                focus=(view or {}).get('body',{}).get('focus') or {}
+                assert av.actor.position==exit_.tile and focus.get('id')==exit_.id and focus.get('verb')=='go to', focus
                 await connection.caller.write(b"e")
             await wait(lambda:av.zone==destination)
         await wait(lambda:self.service.world.zones[destination].template.meta.name in connection.caller.screen.screen_text().splitlines()[0])

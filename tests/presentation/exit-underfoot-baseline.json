@@ -1,0 +1,1224 @@
+{
+  "shipped-street": {
+    "e": {
+      "predicted": "contracts",
+      "focus": [
+        {
+          "id": "test-origin:npc:6",
+          "label": "Sodium regular",
+          "verb": "talk to"
+        },
+        null
+      ],
+      "outcome": {
+        "handler": "contracts",
+        "menus": {},
+        "body": [
+          "sodium-row",
+          94,
+          26,
+          "normal",
+          130,
+          70
+        ],
+        "presence": null,
+        "travel": null,
+        "logs": [
+          "You wake on a gurney under a number. White light, warm plastic, a floor drain. Past the cards, a corridor. Past the corridor, a terminal.",
+          "Sodium regular: First time down the Stair? Walk to the end. Everybody does."
+        ],
+        "pending": false,
+        "waiting": 0,
+        "dialogue": "row-street-regular",
+        "missions": []
+      }
+    },
+    "j": {
+      "predicted": "lattice",
+      "focus": [
+        {
+          "id": "test-origin:npc:6",
+          "label": "Sodium regular",
+          "verb": "talk to"
+        },
+        null
+      ],
+      "outcome": {
+        "handler": "lattice",
+        "menus": {},
+        "body": [
+          "sodium-row",
+          94,
+          26,
+          "normal",
+          130,
+          70
+        ],
+        "presence": null,
+        "travel": null,
+        "logs": [
+          "You wake on a gurney under a number. White light, warm plastic, a floor drain. Past the cards, a corridor. Past the corridor, a terminal.",
+          "Move next to a public terminal, or carry a rig."
+        ],
+        "pending": false,
+        "waiting": 0,
+        "dialogue": null,
+        "missions": []
+      }
+    }
+  },
+  "talker-off-exit": {
+    "e": {
+      "predicted": "contracts",
+      "focus": [
+        {
+          "id": "test-origin:npc:6",
+          "label": "Sodium regular",
+          "verb": "talk to"
+        },
+        null
+      ],
+      "outcome": {
+        "handler": "contracts",
+        "menus": {},
+        "body": [
+          "sodium-row",
+          94,
+          27,
+          "normal",
+          130,
+          70
+        ],
+        "presence": null,
+        "travel": null,
+        "logs": [
+          "You wake on a gurney under a number. White light, warm plastic, a floor drain. Past the cards, a corridor. Past the corridor, a terminal.",
+          "Sodium regular: First time down the Stair? Walk to the end. Everybody does."
+        ],
+        "pending": false,
+        "waiting": 0,
+        "dialogue": "row-street-regular",
+        "missions": []
+      }
+    },
+    "j": {
+      "predicted": "lattice",
+      "focus": [
+        {
+          "id": "test-origin:npc:6",
+          "label": "Sodium regular",
+          "verb": "talk to"
+        },
+        null
+      ],
+      "outcome": {
+        "handler": "lattice",
+        "menus": {},
+        "body": [
+          "sodium-row",
+          94,
+          27,
+          "normal",
+          130,
+          70
+        ],
+        "presence": null,
+        "travel": null,
+        "logs": [
+          "You wake on a gurney under a number. White light, warm plastic, a floor drain. Past the cards, a corridor. Past the corridor, a terminal.",
+          "Move next to a public terminal, or carry a rig."
+        ],
+        "pending": false,
+        "waiting": 0,
+        "dialogue": null,
+        "missions": []
+      }
+    }
+  },
+  "hidden-exit": {
+    "e": {
+      "predicted": "contracts",
+      "focus": [
+        {
+          "id": "s39-contact",
+          "label": "Sodium regular",
+          "verb": "talk to"
+        },
+        null
+      ],
+      "outcome": {
+        "handler": "contracts",
+        "menus": {},
+        "body": [
+          "sodium-tin-halo",
+          2,
+          2,
+          "normal",
+          130,
+          70
+        ],
+        "presence": null,
+        "travel": null,
+        "logs": [
+          "You wake on a gurney under a number. White light, warm plastic, a floor drain. Past the cards, a corridor. Past the corridor, a terminal.",
+          "Sodium regular: First time down the Stair? Walk to the end. Everybody does."
+        ],
+        "pending": false,
+        "waiting": 0,
+        "dialogue": "row-street-regular",
+        "missions": []
+      }
+    },
+    "j": {
+      "predicted": "lattice",
+      "focus": [
+        {
+          "id": "s39-contact",
+          "label": "Sodium regular",
+          "verb": "talk to"
+        },
+        null
+      ],
+      "outcome": {
+        "handler": "lattice",
+        "menus": {},
+        "body": [
+          "sodium-tin-halo",
+          2,
+          2,
+          "normal",
+          130,
+          70
+        ],
+        "presence": null,
+        "travel": null,
+        "logs": [
+          "You wake on a gurney under a number. White light, warm plastic, a floor drain. Past the cards, a corridor. Past the corridor, a terminal.",
+          "Move next to a public terminal, or carry a rig."
+        ],
+        "pending": false,
+        "waiting": 0,
+        "dialogue": null,
+        "missions": []
+      }
+    }
+  },
+  "lift": {
+    "e": {
+      "predicted": "contracts",
+      "focus": [
+        {
+          "id": "s39-contact",
+          "label": "Sodium regular",
+          "verb": "talk to"
+        },
+        null
+      ],
+      "outcome": {
+        "handler": "contracts",
+        "menus": {},
+        "body": [
+          "sodium-tin-halo",
+          2,
+          2,
+          "normal",
+          130,
+          70
+        ],
+        "presence": null,
+        "travel": null,
+        "logs": [
+          "You wake on a gurney under a number. White light, warm plastic, a floor drain. Past the cards, a corridor. Past the corridor, a terminal.",
+          "Sodium regular: First time down the Stair? Walk to the end. Everybody does."
+        ],
+        "pending": false,
+        "waiting": 0,
+        "dialogue": "row-street-regular",
+        "missions": []
+      }
+    },
+    "j": {
+      "predicted": "lattice",
+      "focus": [
+        {
+          "id": "s39-contact",
+          "label": "Sodium regular",
+          "verb": "talk to"
+        },
+        null
+      ],
+      "outcome": {
+        "handler": "lattice",
+        "menus": {},
+        "body": [
+          "sodium-tin-halo",
+          2,
+          2,
+          "normal",
+          130,
+          70
+        ],
+        "presence": null,
+        "travel": null,
+        "logs": [
+          "You wake on a gurney under a number. White light, warm plastic, a floor drain. Past the cards, a corridor. Past the corridor, a terminal.",
+          "Move next to a public terminal, or carry a rig."
+        ],
+        "pending": false,
+        "waiting": 0,
+        "dialogue": null,
+        "missions": []
+      }
+    }
+  },
+  "tram": {
+    "e": {
+      "predicted": "contracts",
+      "focus": [
+        {
+          "id": "s39-contact",
+          "label": "Sodium regular",
+          "verb": "talk to"
+        },
+        null
+      ],
+      "outcome": {
+        "handler": "contracts",
+        "menus": {},
+        "body": [
+          "sodium-tin-halo",
+          2,
+          2,
+          "normal",
+          130,
+          70
+        ],
+        "presence": null,
+        "travel": null,
+        "logs": [
+          "You wake on a gurney under a number. White light, warm plastic, a floor drain. Past the cards, a corridor. Past the corridor, a terminal.",
+          "Sodium regular: First time down the Stair? Walk to the end. Everybody does."
+        ],
+        "pending": false,
+        "waiting": 0,
+        "dialogue": "row-street-regular",
+        "missions": []
+      }
+    },
+    "j": {
+      "predicted": "lattice",
+      "focus": [
+        {
+          "id": "s39-contact",
+          "label": "Sodium regular",
+          "verb": "talk to"
+        },
+        null
+      ],
+      "outcome": {
+        "handler": "lattice",
+        "menus": {},
+        "body": [
+          "sodium-tin-halo",
+          2,
+          2,
+          "normal",
+          130,
+          70
+        ],
+        "presence": null,
+        "travel": null,
+        "logs": [
+          "You wake on a gurney under a number. White light, warm plastic, a floor drain. Past the cards, a corridor. Past the corridor, a terminal.",
+          "Move next to a public terminal, or carry a rig."
+        ],
+        "pending": false,
+        "waiting": 0,
+        "dialogue": null,
+        "missions": []
+      }
+    }
+  },
+  "legacy-talker": {
+    "e": {
+      "predicted": "npcs",
+      "focus": [
+        {
+          "id": "test-origin:npc:6",
+          "label": "Sodium regular",
+          "verb": "talk to"
+        },
+        null
+      ],
+      "outcome": {
+        "handler": "npcs",
+        "menus": {},
+        "body": [
+          "sodium-row",
+          94,
+          26,
+          "normal",
+          130,
+          70
+        ],
+        "presence": null,
+        "travel": null,
+        "logs": [
+          "You wake on a gurney under a number. White light, warm plastic, a floor drain. Past the cards, a corridor. Past the corridor, a terminal."
+        ],
+        "pending": false,
+        "waiting": 0,
+        "dialogue": null,
+        "missions": []
+      }
+    },
+    "j": {
+      "predicted": "lattice",
+      "focus": [
+        {
+          "id": "test-origin:npc:6",
+          "label": "Sodium regular",
+          "verb": "talk to"
+        },
+        null
+      ],
+      "outcome": {
+        "handler": "lattice",
+        "menus": {},
+        "body": [
+          "sodium-row",
+          94,
+          26,
+          "normal",
+          130,
+          70
+        ],
+        "presence": null,
+        "travel": null,
+        "logs": [
+          "You wake on a gurney under a number. White light, warm plastic, a floor drain. Past the cards, a corridor. Past the corridor, a terminal.",
+          "Move next to a public terminal, or carry a rig."
+        ],
+        "pending": false,
+        "waiting": 0,
+        "dialogue": null,
+        "missions": []
+      }
+    }
+  },
+  "vendor-adjacent": {
+    "e": {
+      "predicted": "commerce",
+      "focus": [
+        {
+          "id": "s39-vendor",
+          "label": "Threshold counter",
+          "verb": "open"
+        },
+        null
+      ],
+      "outcome": {
+        "handler": "commerce",
+        "menus": {
+          "commerce": {
+            "kind": "vendor",
+            "target": "s39-vendor",
+            "cursor": 0,
+            "sell": false,
+            "opened": 11
+          }
+        },
+        "body": [
+          "sodium-tin-halo",
+          2,
+          2,
+          "normal",
+          130,
+          70
+        ],
+        "presence": null,
+        "travel": null,
+        "logs": [
+          "You wake on a gurney under a number. White light, warm plastic, a floor drain. Past the cards, a corridor. Past the corridor, a terminal."
+        ],
+        "pending": false,
+        "waiting": 0,
+        "dialogue": null,
+        "missions": []
+      }
+    },
+    "j": {
+      "predicted": "lattice",
+      "focus": [
+        {
+          "id": "s39-vendor",
+          "label": "Threshold counter",
+          "verb": "open"
+        },
+        null
+      ],
+      "outcome": {
+        "handler": "lattice",
+        "menus": {},
+        "body": [
+          "sodium-tin-halo",
+          2,
+          2,
+          "normal",
+          130,
+          70
+        ],
+        "presence": null,
+        "travel": null,
+        "logs": [
+          "You wake on a gurney under a number. White light, warm plastic, a floor drain. Past the cards, a corridor. Past the corridor, a terminal.",
+          "Move next to a public terminal, or carry a rig."
+        ],
+        "pending": false,
+        "waiting": 0,
+        "dialogue": null,
+        "missions": []
+      }
+    }
+  },
+  "vendor-off-exit": {
+    "e": {
+      "predicted": "commerce",
+      "focus": [
+        {
+          "id": "s39-vendor",
+          "label": "Threshold counter",
+          "verb": "open"
+        },
+        null
+      ],
+      "outcome": {
+        "handler": "commerce",
+        "menus": {
+          "commerce": {
+            "kind": "vendor",
+            "target": "s39-vendor",
+            "cursor": 0,
+            "sell": false,
+            "opened": 11
+          }
+        },
+        "body": [
+          "sodium-tin-halo",
+          2,
+          3,
+          "normal",
+          130,
+          70
+        ],
+        "presence": null,
+        "travel": null,
+        "logs": [
+          "You wake on a gurney under a number. White light, warm plastic, a floor drain. Past the cards, a corridor. Past the corridor, a terminal."
+        ],
+        "pending": false,
+        "waiting": 0,
+        "dialogue": null,
+        "missions": []
+      }
+    },
+    "j": {
+      "predicted": "lattice",
+      "focus": [
+        {
+          "id": "s39-vendor",
+          "label": "Threshold counter",
+          "verb": "open"
+        },
+        null
+      ],
+      "outcome": {
+        "handler": "lattice",
+        "menus": {},
+        "body": [
+          "sodium-tin-halo",
+          2,
+          3,
+          "normal",
+          130,
+          70
+        ],
+        "presence": null,
+        "travel": null,
+        "logs": [
+          "You wake on a gurney under a number. White light, warm plastic, a floor drain. Past the cards, a corridor. Past the corridor, a terminal.",
+          "Move next to a public terminal, or carry a rig."
+        ],
+        "pending": false,
+        "waiting": 0,
+        "dialogue": null,
+        "missions": []
+      }
+    }
+  },
+  "vendor-underfoot": {
+    "e": {
+      "predicted": "commerce",
+      "focus": [
+        {
+          "id": "s39-vendor",
+          "label": "Threshold counter",
+          "verb": "open"
+        },
+        null
+      ],
+      "outcome": {
+        "handler": "commerce",
+        "menus": {
+          "commerce": {
+            "kind": "vendor",
+            "target": "s39-vendor",
+            "cursor": 0,
+            "sell": false,
+            "opened": 11
+          }
+        },
+        "body": [
+          "sodium-tin-halo",
+          2,
+          2,
+          "normal",
+          130,
+          70
+        ],
+        "presence": null,
+        "travel": null,
+        "logs": [
+          "You wake on a gurney under a number. White light, warm plastic, a floor drain. Past the cards, a corridor. Past the corridor, a terminal."
+        ],
+        "pending": false,
+        "waiting": 0,
+        "dialogue": null,
+        "missions": []
+      }
+    },
+    "j": {
+      "predicted": "lattice",
+      "focus": [
+        {
+          "id": "s39-vendor",
+          "label": "Threshold counter",
+          "verb": "open"
+        },
+        null
+      ],
+      "outcome": {
+        "handler": "lattice",
+        "menus": {},
+        "body": [
+          "sodium-tin-halo",
+          2,
+          2,
+          "normal",
+          130,
+          70
+        ],
+        "presence": null,
+        "travel": null,
+        "logs": [
+          "You wake on a gurney under a number. White light, warm plastic, a floor drain. Past the cards, a corridor. Past the corridor, a terminal.",
+          "Move next to a public terminal, or carry a rig."
+        ],
+        "pending": false,
+        "waiting": 0,
+        "dialogue": null,
+        "missions": []
+      }
+    }
+  },
+  "prop-underfoot": {
+    "e": {
+      "predicted": "commerce",
+      "focus": [
+        {
+          "id": "s39-bank",
+          "label": "Threshold bank",
+          "verb": "open"
+        },
+        null
+      ],
+      "outcome": {
+        "handler": "commerce",
+        "menus": {
+          "commerce": {
+            "kind": "bank",
+            "target": "s39-bank",
+            "cursor": 0,
+            "sell": false,
+            "opened": 11
+          }
+        },
+        "body": [
+          "sodium-tin-halo",
+          2,
+          2,
+          "normal",
+          130,
+          70
+        ],
+        "presence": null,
+        "travel": null,
+        "logs": [
+          "You wake on a gurney under a number. White light, warm plastic, a floor drain. Past the cards, a corridor. Past the corridor, a terminal."
+        ],
+        "pending": false,
+        "waiting": 0,
+        "dialogue": null,
+        "missions": []
+      }
+    },
+    "j": {
+      "predicted": "lattice",
+      "focus": [
+        {
+          "id": "s39-bank",
+          "label": "Threshold bank",
+          "verb": "open"
+        },
+        null
+      ],
+      "outcome": {
+        "handler": "lattice",
+        "menus": {},
+        "body": [
+          "sodium-tin-halo",
+          2,
+          2,
+          "normal",
+          130,
+          70
+        ],
+        "presence": null,
+        "travel": null,
+        "logs": [
+          "You wake on a gurney under a number. White light, warm plastic, a floor drain. Past the cards, a corridor. Past the corridor, a terminal.",
+          "Move next to a public terminal, or carry a rig."
+        ],
+        "pending": false,
+        "waiting": 0,
+        "dialogue": null,
+        "missions": []
+      }
+    }
+  },
+  "open-dialogue": {
+    "e": {
+      "predicted": "contracts",
+      "focus": [
+        null,
+        null
+      ],
+      "outcome": {
+        "handler": "contracts",
+        "menus": {},
+        "body": [
+          "sodium-tin-halo",
+          2,
+          2,
+          "normal",
+          130,
+          70
+        ],
+        "presence": null,
+        "travel": null,
+        "logs": [
+          "You wake on a gurney under a number. White light, warm plastic, a floor drain. Past the cards, a corridor. Past the corridor, a terminal.",
+          "Sodium regular: First time down the Stair? Walk to the end. Everybody does."
+        ],
+        "pending": false,
+        "waiting": 0,
+        "dialogue": "row-street-regular",
+        "missions": []
+      }
+    },
+    "j": {
+      "predicted": "contracts",
+      "focus": [
+        null,
+        null
+      ],
+      "outcome": {
+        "handler": "contracts",
+        "menus": {},
+        "body": [
+          "sodium-tin-halo",
+          2,
+          2,
+          "normal",
+          130,
+          70
+        ],
+        "presence": null,
+        "travel": null,
+        "logs": [
+          "You wake on a gurney under a number. White light, warm plastic, a floor drain. Past the cards, a corridor. Past the corridor, a terminal.",
+          "Sodium regular: First time down the Stair? Walk to the end. Everybody does."
+        ],
+        "pending": false,
+        "waiting": 0,
+        "dialogue": "row-street-regular",
+        "missions": []
+      }
+    }
+  },
+  "open-shop": {
+    "e": {
+      "predicted": "commerce",
+      "focus": [
+        null,
+        null
+      ],
+      "outcome": {
+        "handler": "commerce",
+        "menus": {
+          "commerce": {
+            "kind": "vendor",
+            "target": "s39-vendor",
+            "cursor": 0,
+            "sell": false,
+            "opened": 11
+          }
+        },
+        "body": [
+          "sodium-tin-halo",
+          2,
+          2,
+          "normal",
+          130,
+          70
+        ],
+        "presence": null,
+        "travel": null,
+        "logs": [
+          "You wake on a gurney under a number. White light, warm plastic, a floor drain. Past the cards, a corridor. Past the corridor, a terminal."
+        ],
+        "pending": false,
+        "waiting": 0,
+        "dialogue": null,
+        "missions": []
+      }
+    },
+    "j": {
+      "predicted": "lattice",
+      "focus": [
+        null,
+        null
+      ],
+      "outcome": {
+        "handler": "lattice",
+        "menus": {
+          "commerce": {
+            "kind": "vendor",
+            "target": "s39-vendor",
+            "cursor": 0,
+            "sell": false,
+            "opened": 11
+          }
+        },
+        "body": [
+          "sodium-tin-halo",
+          2,
+          2,
+          "normal",
+          130,
+          70
+        ],
+        "presence": null,
+        "travel": null,
+        "logs": [
+          "You wake on a gurney under a number. White light, warm plastic, a floor drain. Past the cards, a corridor. Past the corridor, a terminal.",
+          "Return to the street before you jack in."
+        ],
+        "pending": false,
+        "waiting": 0,
+        "dialogue": null,
+        "missions": []
+      }
+    }
+  },
+  "contract-giver": {
+    "e": {
+      "predicted": "contracts",
+      "focus": [
+        {
+          "id": "s39-contact",
+          "label": "Vesper",
+          "verb": "talk to"
+        },
+        null
+      ],
+      "outcome": {
+        "handler": "contracts",
+        "menus": {},
+        "body": [
+          "sodium-tin-halo",
+          2,
+          2,
+          "normal",
+          130,
+          70
+        ],
+        "presence": null,
+        "travel": null,
+        "logs": [
+          "You wake on a gurney under a number. White light, warm plastic, a floor drain. Past the cards, a corridor. Past the corridor, a terminal.",
+          "Vesper: Sweetheart. You've got the card. Sit. First one's on Vantongeren; she pays me to say that."
+        ],
+        "pending": false,
+        "waiting": 0,
+        "dialogue": "s39-giver",
+        "missions": []
+      }
+    },
+    "j": {
+      "predicted": "lattice",
+      "focus": [
+        {
+          "id": "s39-contact",
+          "label": "Vesper",
+          "verb": "talk to"
+        },
+        null
+      ],
+      "outcome": {
+        "handler": "lattice",
+        "menus": {},
+        "body": [
+          "sodium-tin-halo",
+          2,
+          2,
+          "normal",
+          130,
+          70
+        ],
+        "presence": null,
+        "travel": null,
+        "logs": [
+          "You wake on a gurney under a number. White light, warm plastic, a floor drain. Past the cards, a corridor. Past the corridor, a terminal.",
+          "Move next to a public terminal, or carry a rig."
+        ],
+        "pending": false,
+        "waiting": 0,
+        "dialogue": null,
+        "missions": []
+      }
+    }
+  },
+  "mission-action": {
+    "e": {
+      "predicted": "contracts",
+      "focus": [
+        {
+          "id": "s39-contact",
+          "label": "Threshold contact",
+          "verb": "survey"
+        },
+        null
+      ],
+      "outcome": {
+        "handler": "contracts",
+        "menus": {},
+        "body": [
+          "sodium-tin-halo",
+          2,
+          2,
+          "normal",
+          130,
+          70
+        ],
+        "presence": null,
+        "travel": null,
+        "logs": [
+          "You wake on a gurney under a number. White light, warm plastic, a floor drain. Past the cards, a corridor. Past the corridor, a terminal.",
+          "Objective recorded."
+        ],
+        "pending": false,
+        "waiting": 0,
+        "dialogue": null,
+        "missions": [
+          [
+            "s39-survey",
+            1,
+            "complete"
+          ]
+        ]
+      }
+    },
+    "j": {
+      "predicted": "lattice",
+      "focus": [
+        {
+          "id": "s39-contact",
+          "label": "Threshold contact",
+          "verb": "survey"
+        },
+        null
+      ],
+      "outcome": {
+        "handler": "lattice",
+        "menus": {},
+        "body": [
+          "sodium-tin-halo",
+          2,
+          2,
+          "normal",
+          130,
+          70
+        ],
+        "presence": null,
+        "travel": null,
+        "logs": [
+          "You wake on a gurney under a number. White light, warm plastic, a floor drain. Past the cards, a corridor. Past the corridor, a terminal.",
+          "Move next to a public terminal, or carry a rig."
+        ],
+        "pending": false,
+        "waiting": 0,
+        "dialogue": null,
+        "missions": [
+          [
+            "s39-survey",
+            0,
+            "active"
+          ]
+        ]
+      }
+    }
+  },
+  "board": {
+    "e": {
+      "predicted": "contracts",
+      "focus": [
+        {
+          "id": "s39-board",
+          "label": "Threshold board",
+          "verb": "open"
+        },
+        {
+          "id": "s39-board",
+          "label": "Threshold board",
+          "verb": "jack in at"
+        }
+      ],
+      "outcome": {
+        "handler": "contracts",
+        "menus": {
+          "contracts": {
+            "opened": 11,
+            "target": "s39-board",
+            "handler": "vesper",
+            "tab": "jobs",
+            "cursor": 0,
+            "page": 0,
+            "confirmation": null,
+            "prose": false
+          }
+        },
+        "body": [
+          "sodium-tin-halo",
+          2,
+          2,
+          "normal",
+          130,
+          70
+        ],
+        "presence": null,
+        "travel": null,
+        "logs": [
+          "You wake on a gurney under a number. White light, warm plastic, a floor drain. Past the cards, a corridor. Past the corridor, a terminal."
+        ],
+        "pending": false,
+        "waiting": 0,
+        "dialogue": null,
+        "missions": []
+      }
+    },
+    "j": {
+      "predicted": "lattice",
+      "focus": [
+        {
+          "id": "s39-board",
+          "label": "Threshold board",
+          "verb": "open"
+        },
+        {
+          "id": "s39-board",
+          "label": "Threshold board",
+          "verb": "jack in at"
+        }
+      ],
+      "outcome": {
+        "handler": "lattice",
+        "menus": {},
+        "body": [
+          "sodium-tin-halo",
+          2,
+          2,
+          "jacked",
+          130,
+          70
+        ],
+        "presence": [
+          "lat-sodium-row",
+          "lat-sodium-row-c01",
+          null,
+          null,
+          true,
+          null
+        ],
+        "travel": null,
+        "logs": [
+          "You wake on a gurney under a number. White light, warm plastic, a floor drain. Past the cards, a corridor. Past the corridor, a terminal.",
+          "The city goes quiet. Cells resolve under your feet.",
+          "Your body stays upstairs. Its shelter still matters.",
+          "Arrows follow links. J brings you back from a public cell.",
+          "You enter Sodium Row. House Lights resolves.",
+          "You gain 5 XP."
+        ],
+        "pending": false,
+        "waiting": 0,
+        "dialogue": null,
+        "missions": []
+      }
+    }
+  },
+  "doorstep": {
+    "e": {
+      "predicted": "apartments",
+      "focus": [
+        {
+          "id": "s39-home",
+          "label": "Threshold home",
+          "verb": "use"
+        },
+        null
+      ],
+      "outcome": {
+        "handler": "apartments",
+        "menus": {},
+        "body": [
+          "vatside-wake-hall",
+          4,
+          11,
+          "normal",
+          130,
+          70
+        ],
+        "presence": null,
+        "travel": null,
+        "logs": [
+          "You wake on a gurney under a number. White light, warm plastic, a floor drain. Past the cards, a corridor. Past the corridor, a terminal."
+        ],
+        "pending": false,
+        "waiting": 0,
+        "dialogue": null,
+        "missions": []
+      }
+    },
+    "j": {
+      "predicted": "lattice",
+      "focus": [
+        {
+          "id": "s39-home",
+          "label": "Threshold home",
+          "verb": "use"
+        },
+        null
+      ],
+      "outcome": {
+        "handler": "lattice",
+        "menus": {},
+        "body": [
+          "vatside-wake-hall",
+          4,
+          11,
+          "normal",
+          130,
+          70
+        ],
+        "presence": null,
+        "travel": null,
+        "logs": [
+          "You wake on a gurney under a number. White light, warm plastic, a floor drain. Past the cards, a corridor. Past the corridor, a terminal.",
+          "Move next to a public terminal, or carry a rig."
+        ],
+        "pending": false,
+        "waiting": 0,
+        "dialogue": null,
+        "missions": []
+      }
+    }
+  },
+  "talker-before-terminal": {
+    "e": {
+      "predicted": "contracts",
+      "focus": [
+        {
+          "id": "s39-contact",
+          "label": "Sodium regular",
+          "verb": "talk to"
+        },
+        null
+      ],
+      "outcome": {
+        "handler": "contracts",
+        "menus": {},
+        "body": [
+          "sodium-tin-halo",
+          2,
+          2,
+          "normal",
+          130,
+          70
+        ],
+        "presence": null,
+        "travel": null,
+        "logs": [
+          "You wake on a gurney under a number. White light, warm plastic, a floor drain. Past the cards, a corridor. Past the corridor, a terminal.",
+          "Sodium regular: First time down the Stair? Walk to the end. Everybody does."
+        ],
+        "pending": false,
+        "waiting": 0,
+        "dialogue": "row-street-regular",
+        "missions": []
+      }
+    },
+    "j": {
+      "predicted": "lattice",
+      "focus": [
+        {
+          "id": "s39-contact",
+          "label": "Sodium regular",
+          "verb": "talk to"
+        },
+        null
+      ],
+      "outcome": {
+        "handler": "lattice",
+        "menus": {},
+        "body": [
+          "sodium-tin-halo",
+          2,
+          2,
+          "normal",
+          130,
+          70
+        ],
+        "presence": null,
+        "travel": null,
+        "logs": [
+          "You wake on a gurney under a number. White light, warm plastic, a floor drain. Past the cards, a corridor. Past the corridor, a terminal.",
+          "This terminal has no live district link."
+        ],
+        "pending": false,
+        "waiting": 0,
+        "dialogue": null,
+        "missions": []
+      }
+    }
+  }
+}

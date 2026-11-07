@@ -3,6 +3,7 @@
 from collections.abc import Callable
 from typing import Any
 
+from blacksite.content.schema import Exit
 from blacksite.server.interaction import InputRoute, Interaction, ResolvedInteraction, interact, key_action
 from blacksite.server.world.sight import private_visible, sees_actor, sight_radius, visible_tiles
 from blacksite.server import admin_endpoint
@@ -230,11 +231,30 @@ class Core:
 
     def resolve_interaction(self, session: Session, frame: Frame,
                             routes: list[InputRoute] | None = None) -> ResolvedInteraction | None:
+        # Game 5.6 / architecture 5.5.2: only an exit underfoot can pass
+        # physical dialogue and adjacent commerce. A different choice, even
+        # an empty open-screen marker, is a barrier to that promotion.
+        sim = self.characters.sim if self.characters else self.simulation
+        avatar = sim.avatars.get(session.user_id) if sim else None
+        promote = avatar is not None and (interact(frame) or key_action(self.keymap, session, frame) == 'interact')
+        first: ResolvedInteraction | None = None
         for index, route in enumerate(self.input_routes() if routes is None else routes):
             choice = route.query(session, frame)
-            if choice is not None:
-                return ResolvedInteraction(index, route, choice)
-        return None
+            if choice is None:
+                continue
+            result = ResolvedInteraction(index, route, choice)
+            if first is None:
+                first = result
+            if not promote:
+                return first
+            if isinstance(choice.value, Exit) and choice.tile == avatar.actor.position:
+                return result
+            if (choice.kind == 'dialogue' and choice.tile is not None
+                    or route.name == 'commerce' and choice.value is not None
+                    and choice.tile is not None and choice.tile != avatar.actor.position):
+                continue
+            return first
+        return first
 
     def interaction_views(self, session: Session) -> tuple[dict[str, str] | None, dict[str, str] | None]:
         sim = self.characters.sim if self.characters else self.simulation
@@ -279,11 +299,11 @@ class Core:
         routes = self.input_routes()
         action = key_action(self.keymap, session, frame)
         selected = self.resolve_interaction(session, frame, routes) if interact(frame) or action in ('interact', 'jack') else None
-        for index, route in enumerate(routes):
-            if selected is not None and index == selected.index:
-                consumed = route.handler(session, frame, event.data['tick'], interaction=selected.choice)
-            else:
-                consumed = route.handler(session, frame, event.data['tick'])
+        if selected is not None:
+            selected.route.handler(session, frame, event.data['tick'], interaction=selected.choice)
+            return
+        for route in routes:
+            consumed = route.handler(session, frame, event.data['tick'])
             if consumed or route.final:
                 return
         # Echo only the verb, never args, arbitrary chat, or private data.

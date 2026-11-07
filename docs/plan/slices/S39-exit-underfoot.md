@@ -1,12 +1,12 @@
 # S39 — Exit underfoot: a door on your tile outranks an adjacent talker or vendor
 
-**Status:** planned (approved by the owner 2026-11-04)
+**Status:** in review (PR #167; technical and presentation acceptance pending)
 **Primary model:** Codex · **Reviewer:** automated review, technical lead, presentation lead (presentation acceptance)
 **Depends on:** P3, #126 (P6b; its travel probe carries the interim wait this slice removes) · **Milestone:** interaction
 **Issue:** https://github.com/Thiesi/Blacksite/issues/155
 
-Canon: game design 5.5 (Interact precedence) and architecture 5.5.2
-(focus contract), both marked "planned, S39". Where this file and canon
+Canon: game design 5.6 (Interact precedence) and architecture 5.5.2
+(focus contract). Where this file and canon
 differ, canon wins.
 
 ## Goal
@@ -15,8 +15,9 @@ What you stand on beats what stands beside you. A caller standing on
 an exit or door tile who presses E goes through it, even when a talker
 has wandered alongside. Today a Sodium regular beside the Tin Halo door
 takes both the focus prompt and E. Nobody designed that order:
-`Core.input_routes` just happens to list `npcs` before `simulation`,
-where exits live.
+`Core.input_routes` lists dialogue before simulation, where exits live.
+The S27 dialogue runtime reaches it through the composite `contracts`
+route; legacy talkers use `npcs`.
 
 Decided by the owner on 2026-11-04, from the presentation lead's rule.
 Found by #126's contracts probe (diagnosis:
@@ -46,7 +47,8 @@ https://github.com/Thiesi/Blacksite/pull/126#issuecomment-6622283046).
       and records whether it already passed on `main`.
 - **Exactly which routes the exit may jump.**
   - The exit (from `simulation`) is promoted only over:
-    - a real talker choice from `npcs`; or
+    - a real physical dialogue choice, whichever route delivers it,
+      including `contracts` and `npcs`; or
     - a vendor or object choice from `commerce` on an **adjacent**
       tile.
   - It is never promoted over:
@@ -57,7 +59,10 @@ https://github.com/Thiesi/Blacksite/pull/126#issuecomment-6622283046).
     - a `commerce` choice on the caller's own tile. A vendor or prop
       underfoot keeps its precedence (game design 5.5).
   - It is promoted only under the own-tile condition above.
-  - It never lifts above `events`, `market`, `contracts`, `factions`,
+  - It never lifts above a contract action (mission work), a contract
+    board, or an empty open-screen marker. Contract-giving talkers have
+    no special exception: their dialogue yields to the exit underfoot.
+  - It never lifts above other choices from `events`, `market`, `factions`,
     `crews`, `relays`, `apartments`, `progression`, `lattice`,
     `interlock`, `combat`, `fabrication`, `chat` or the Lattice
     `terminal`. Every pair involving those keeps the route order.
@@ -76,6 +81,8 @@ https://github.com/Thiesi/Blacksite/pull/126#issuecomment-6622283046).
     `lattice` and `terminal` keep their place, so J's selected target is
     the same as on `main`. Honouring the selection for J only makes
     dispatch match the J focus that P3 already advertises.
+  - An explicit `talk` intent with a named target is not E. It keeps
+    its existing dispatch and is never promoted to an exit.
   - Non-interaction input (movement, chat, menus already open) keeps
     today's dispatch. E pressed while a dialogue, shop or menu is open
     belongs to that open screen, never to a promoted exit underfoot.
@@ -95,7 +102,7 @@ https://github.com/Thiesi/Blacksite/pull/126#issuecomment-6622283046).
   probe-only path and no client-side guess.
 - **Scope limits.** Only an exit underfoot moves. Every other
   pair keeps today's order: props underfoot, terminals, the S25a
-  fallback rules, contracts, other commerce and the Wake Hall id
+  fallback rules, contract actions and boards, other commerce and the Wake Hall id
   ordering.
 - **Probe clean-up.** Once the rule ships, drop #126's interim "wait for
   the advertised door focus" from `NativeProbe.travel`, or keep it only
@@ -142,6 +149,11 @@ beside you") already covers it.
     travel.
   - A non-street exit (a lift or tram stop) underfoot with an adjacent
     talker: the exit wins, the same as for a street exit.
+  - An adjacent contract giver's dialogue yields to an exit underfoot.
+    A mission action, board and already open dialogue each keep their
+    precedence when E is pressed through `Core._echo`. For a giver
+    with a mission action, focus names the mission action that E does.
+  - Explicit targeted talk on an exit still reaches the named talker.
 - **Arrival-tile audit.**
   - List every shipped exit whose `target_tile` lands a caller on an exit
     tile, including the exit back.
@@ -149,6 +161,8 @@ beside you") already covers it.
     change is for the presentation lead and the consultant.
   - A caller arriving on such a tile would get the exit, not an
     adjacent talker, until they step off.
+  - Also report shipped talkers or contract givers whose only reachable
+    neighbouring interaction tile is an exit. Move nothing.
 - **Shipped street.** A headless test on Sodium Row puts a real wandering
   regular next to the Tin Halo door. A caller on the door tile sees the
   exit focus and travels on E. One tile off, the same caller gets the
@@ -174,4 +188,6 @@ beside you") already covers it.
 Native evidence: the S19 network contract route through the Tin Halo
 door at 80x24 and 132x50, run through NetBBS Telnet to native stdio,
 with no wait-for-focus step. The presentation lead gives the
-presentation acceptance.
+presentation acceptance. Include a native capture of a mission action
+winning E and focus on a door tile beside a giver. If no shipped case
+exists, say so and use a declared fixture.

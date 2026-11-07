@@ -478,7 +478,7 @@ class Npcs:
                     return Interaction(choice.focus, ('vendor', counter), counter.spec.tile)
             if any(b.kind == 'talker' for b in template.behaviours):
                 return Interaction(Focus(other.id, presentation.name(other, actor, self.content), 'talk to'),
-                                   ('talker', other), other.position, other.id)
+                                   ('talker', other), other.position, other.id, kind='dialogue')
         return None
 
     def input(self, session: Session, frame: Frame, tick: int, *, interaction: Interaction | None = None) -> bool:

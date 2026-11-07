@@ -1,0 +1,395 @@
+{
+  "transport": "NetBBS Telnet -> registered native stdio",
+  "run": 42354746481,
+  "source_head": "fa2a4d1e8dbbc652df20b83ee795fdd9a76844ee",
+  "source_tree": "ec2e6643e843e8d5c3addbfbefd268c63c815230",
+  "python_tree_sha256": "c62ae7bc8d2ccd7ff163e654c3bd1bc41616ebbceeb1eae5c911e36dbb8a0e67",
+  "wait_for_focus": false,
+  "human_layout_approval": false,
+  "captures": [
+    {
+      "capture": "s39-exit-beside-regular-80x24-16",
+      "scenario": "exit-beside-regular",
+      "size": [
+        80,
+        24
+      ],
+      "tier": "16",
+      "focus": {
+        "id": "to-sodium-tin-halo",
+        "label": "The Tin Halo",
+        "verb": "go to"
+      },
+      "sha256": {
+        ".ans": "d2b5a0702150f9a476b8429043f37fb25a785aa794c88f8eda9fcbc23963aa55",
+        ".txt": "11246fdcba2bc27ff6bd9e5ef49b0b2d22b6475cec7dd95df1dce41853738677",
+        ".json": "c4bd54d60fa95e0be6d664e5c5bb3a3b050a019b912bd9d7a69aefc7c4cc4a50"
+      },
+      "file": "s39-exit-beside-regular-80x24-16.txt",
+      "source_head": "fa2a4d1e8dbbc652df20b83ee795fdd9a76844ee",
+      "source_tree": "ec2e6643e843e8d5c3addbfbefd268c63c815230",
+      "python_tree_sha256": "c62ae7bc8d2ccd7ff163e654c3bd1bc41616ebbceeb1eae5c911e36dbb8a0e67",
+      "run": 42354746481,
+      "run_url": "https://github.com/Thiesi/Blacksite/actions/runs/42354746481",
+      "artifact": "s39-exit-underfoot-80x24",
+      "artifact_id": 13568155088,
+      "artifact_url": "https://github.com/Thiesi/Blacksite/actions/runs/42354746481/artifacts/13568155088",
+      "raw_ansi_member": "s39-exit-beside-regular-80x24-16.ans",
+      "style_member": "s39-exit-beside-regular-80x24-16.json",
+      "native_boundary_offset": 961,
+      "method": "Direct byte copy of live native text; ANSI replay verified glyphs and styles"
+    },
+    {
+      "capture": "s39-mission-beside-giver-80x24-16",
+      "scenario": "mission-beside-giver",
+      "size": [
+        80,
+        24
+      ],
+      "tier": "16",
+      "focus": {
+        "id": "s39-contact",
+        "label": "Threshold contact",
+        "verb": "survey"
+      },
+      "sha256": {
+        ".ans": "0b04978daa7c91f7b8ce83bbc965deb8c8a4ba3e03c566ed5912b445a81e73c6",
+        ".txt": "1985969d759e28cfc94bff1110529475e2754e2fd71d8848d7839226e9482635",
+        ".json": "3f3629de07880b2d19f4adbb7758663b22fcb9ca1865c2359343fa871f144558"
+      },
+      "file": "s39-mission-beside-giver-80x24-16.txt",
+      "source_head": "fa2a4d1e8dbbc652df20b83ee795fdd9a76844ee",
+      "source_tree": "ec2e6643e843e8d5c3addbfbefd268c63c815230",
+      "python_tree_sha256": "c62ae7bc8d2ccd7ff163e654c3bd1bc41616ebbceeb1eae5c911e36dbb8a0e67",
+      "run": 42354746481,
+      "run_url": "https://github.com/Thiesi/Blacksite/actions/runs/42354746481",
+      "artifact": "s39-exit-underfoot-80x24",
+      "artifact_id": 13568155088,
+      "artifact_url": "https://github.com/Thiesi/Blacksite/actions/runs/42354746481/artifacts/13568155088",
+      "raw_ansi_member": "s39-mission-beside-giver-80x24-16.ans",
+      "style_member": "s39-mission-beside-giver-80x24-16.json",
+      "native_boundary_offset": 961,
+      "method": "Direct byte copy of live native text; ANSI replay verified glyphs and styles"
+    },
+    {
+      "capture": "s39-exit-beside-regular-80x24-256",
+      "scenario": "exit-beside-regular",
+      "size": [
+        80,
+        24
+      ],
+      "tier": "256",
+      "focus": {
+        "id": "to-sodium-tin-halo",
+        "label": "The Tin Halo",
+        "verb": "go to"
+      },
+      "sha256": {
+        ".ans": "1775301af6b1ce98fcebe47a4748b44b7ebc6ec8e3fc516af9f469d118d5823c",
+        ".txt": "0a3462f7a1360fa8563e40d614c2d97f51169fa1e26cf9b86b3e20dee79193df",
+        ".json": "d78832f8dc9953249c1ebe0ed4520bb832e5b8fda3ea32373f3afde9b35282ca"
+      },
+      "file": "s39-exit-beside-regular-80x24-256.txt",
+      "source_head": "fa2a4d1e8dbbc652df20b83ee795fdd9a76844ee",
+      "source_tree": "ec2e6643e843e8d5c3addbfbefd268c63c815230",
+      "python_tree_sha256": "c62ae7bc8d2ccd7ff163e654c3bd1bc41616ebbceeb1eae5c911e36dbb8a0e67",
+      "run": 42354746481,
+      "run_url": "https://github.com/Thiesi/Blacksite/actions/runs/42354746481",
+      "artifact": "s39-exit-underfoot-80x24",
+      "artifact_id": 13568155088,
+      "artifact_url": "https://github.com/Thiesi/Blacksite/actions/runs/42354746481/artifacts/13568155088",
+      "raw_ansi_member": "s39-exit-beside-regular-80x24-256.ans",
+      "style_member": "s39-exit-beside-regular-80x24-256.json",
+      "native_boundary_offset": 1068,
+      "method": "Direct byte copy of live native text; ANSI replay verified glyphs and styles"
+    },
+    {
+      "capture": "s39-mission-beside-giver-80x24-256",
+      "scenario": "mission-beside-giver",
+      "size": [
+        80,
+        24
+      ],
+      "tier": "256",
+      "focus": {
+        "id": "s39-contact",
+        "label": "Threshold contact",
+        "verb": "survey"
+      },
+      "sha256": {
+        ".ans": "a58fe5bfdd99b8a798c077b10a7f7c602724a057c3b942637a0af92a13f809c5",
+        ".txt": "360b2ca5cf814429df45ecfe720d2457d2d8409e87385a0a36ea7461b75a93cd",
+        ".json": "fb92f8c934e59bd9821b7a362d325b3b7e2b8593dd2be3e790b269e871a6c72a"
+      },
+      "file": "s39-mission-beside-giver-80x24-256.txt",
+      "source_head": "fa2a4d1e8dbbc652df20b83ee795fdd9a76844ee",
+      "source_tree": "ec2e6643e843e8d5c3addbfbefd268c63c815230",
+      "python_tree_sha256": "c62ae7bc8d2ccd7ff163e654c3bd1bc41616ebbceeb1eae5c911e36dbb8a0e67",
+      "run": 42354746481,
+      "run_url": "https://github.com/Thiesi/Blacksite/actions/runs/42354746481",
+      "artifact": "s39-exit-underfoot-80x24",
+      "artifact_id": 13568155088,
+      "artifact_url": "https://github.com/Thiesi/Blacksite/actions/runs/42354746481/artifacts/13568155088",
+      "raw_ansi_member": "s39-mission-beside-giver-80x24-256.ans",
+      "style_member": "s39-mission-beside-giver-80x24-256.json",
+      "native_boundary_offset": 1068,
+      "method": "Direct byte copy of live native text; ANSI replay verified glyphs and styles"
+    },
+    {
+      "capture": "s39-exit-beside-regular-80x24-truecolor",
+      "scenario": "exit-beside-regular",
+      "size": [
+        80,
+        24
+      ],
+      "tier": "truecolor",
+      "focus": {
+        "id": "to-sodium-tin-halo",
+        "label": "The Tin Halo",
+        "verb": "go to"
+      },
+      "sha256": {
+        ".ans": "00acc848beeb3d9f5f814583b009f3eab94cb56d5afc9f15517dba5a94af698f",
+        ".txt": "5a7b57b49b31fe6edc44b6a61c82de7393832a5a1c7907005780d407c30585cb",
+        ".json": "50b7e375a02a9f5628aa705430e1839505612d4927e5e1943a9fd10ae5d98fd3"
+      },
+      "file": "s39-exit-beside-regular-80x24-truecolor.txt",
+      "source_head": "fa2a4d1e8dbbc652df20b83ee795fdd9a76844ee",
+      "source_tree": "ec2e6643e843e8d5c3addbfbefd268c63c815230",
+      "python_tree_sha256": "c62ae7bc8d2ccd7ff163e654c3bd1bc41616ebbceeb1eae5c911e36dbb8a0e67",
+      "run": 42354746481,
+      "run_url": "https://github.com/Thiesi/Blacksite/actions/runs/42354746481",
+      "artifact": "s39-exit-underfoot-80x24",
+      "artifact_id": 13568155088,
+      "artifact_url": "https://github.com/Thiesi/Blacksite/actions/runs/42354746481/artifacts/13568155088",
+      "raw_ansi_member": "s39-exit-beside-regular-80x24-truecolor.ans",
+      "style_member": "s39-exit-beside-regular-80x24-truecolor.json",
+      "native_boundary_offset": 1068,
+      "method": "Direct byte copy of live native text; ANSI replay verified glyphs and styles"
+    },
+    {
+      "capture": "s39-mission-beside-giver-80x24-truecolor",
+      "scenario": "mission-beside-giver",
+      "size": [
+        80,
+        24
+      ],
+      "tier": "truecolor",
+      "focus": {
+        "id": "s39-contact",
+        "label": "Threshold contact",
+        "verb": "survey"
+      },
+      "sha256": {
+        ".ans": "a349305222e65bb8f52b75b44d2dafeaf2b02bf98757502aa2868994bf5b61c2",
+        ".txt": "70f1bb35efb6aa71bdb1d3ee4d6693cd3ce5272bc1ec1e237dc78152e9b5426a",
+        ".json": "f0d8df0ee5a6c8617f84c0f62d82173d82673bd3af09b898ff29f40fe773c125"
+      },
+      "file": "s39-mission-beside-giver-80x24-truecolor.txt",
+      "source_head": "fa2a4d1e8dbbc652df20b83ee795fdd9a76844ee",
+      "source_tree": "ec2e6643e843e8d5c3addbfbefd268c63c815230",
+      "python_tree_sha256": "c62ae7bc8d2ccd7ff163e654c3bd1bc41616ebbceeb1eae5c911e36dbb8a0e67",
+      "run": 42354746481,
+      "run_url": "https://github.com/Thiesi/Blacksite/actions/runs/42354746481",
+      "artifact": "s39-exit-underfoot-80x24",
+      "artifact_id": 13568155088,
+      "artifact_url": "https://github.com/Thiesi/Blacksite/actions/runs/42354746481/artifacts/13568155088",
+      "raw_ansi_member": "s39-mission-beside-giver-80x24-truecolor.ans",
+      "style_member": "s39-mission-beside-giver-80x24-truecolor.json",
+      "native_boundary_offset": 1068,
+      "method": "Direct byte copy of live native text; ANSI replay verified glyphs and styles"
+    },
+    {
+      "capture": "s39-exit-beside-regular-132x50-16",
+      "scenario": "exit-beside-regular",
+      "size": [
+        132,
+        50
+      ],
+      "tier": "16",
+      "focus": {
+        "id": "to-sodium-tin-halo",
+        "label": "The Tin Halo",
+        "verb": "go to"
+      },
+      "sha256": {
+        ".ans": "caeb940bc06d95f7f58c23b2492812ed9ec1a42a15e5138c9c8ed235d97a5aaf",
+        ".txt": "5c6ff9c4f58fbcfd7b8c7bf653fe86d4d17703f24c3217cd3ae7cf4859a0e3a8",
+        ".json": "77231c5586da1648ab6a0d586671faa3da8484a48cc5e76a5efa5014f7161e50"
+      },
+      "file": "s39-exit-beside-regular-132x50-16.txt",
+      "source_head": "fa2a4d1e8dbbc652df20b83ee795fdd9a76844ee",
+      "source_tree": "ec2e6643e843e8d5c3addbfbefd268c63c815230",
+      "python_tree_sha256": "c62ae7bc8d2ccd7ff163e654c3bd1bc41616ebbceeb1eae5c911e36dbb8a0e67",
+      "run": 42354746481,
+      "run_url": "https://github.com/Thiesi/Blacksite/actions/runs/42354746481",
+      "artifact": "s39-exit-underfoot-132x50",
+      "artifact_id": 13567346978,
+      "artifact_url": "https://github.com/Thiesi/Blacksite/actions/runs/42354746481/artifacts/13567346978",
+      "raw_ansi_member": "s39-exit-beside-regular-132x50-16.ans",
+      "style_member": "s39-exit-beside-regular-132x50-16.json",
+      "native_boundary_offset": 1065,
+      "method": "Direct byte copy of live native text; ANSI replay verified glyphs and styles"
+    },
+    {
+      "capture": "s39-mission-beside-giver-132x50-16",
+      "scenario": "mission-beside-giver",
+      "size": [
+        132,
+        50
+      ],
+      "tier": "16",
+      "focus": {
+        "id": "s39-contact",
+        "label": "Threshold contact",
+        "verb": "survey"
+      },
+      "sha256": {
+        ".ans": "9a162fbfde26c25a4932175fd7773a91085abefae44fca3220f01c68c126b52a",
+        ".txt": "5c6d852132aa8d63ffef8d5e611a8e6fa9f5a8e1b1d9625af1388cb6e3357617",
+        ".json": "db8fd9ab45ee5938e5c19d3df599b3549afa1d3eb5520c6fb9a2f3c11bae28b7"
+      },
+      "file": "s39-mission-beside-giver-132x50-16.txt",
+      "source_head": "fa2a4d1e8dbbc652df20b83ee795fdd9a76844ee",
+      "source_tree": "ec2e6643e843e8d5c3addbfbefd268c63c815230",
+      "python_tree_sha256": "c62ae7bc8d2ccd7ff163e654c3bd1bc41616ebbceeb1eae5c911e36dbb8a0e67",
+      "run": 42354746481,
+      "run_url": "https://github.com/Thiesi/Blacksite/actions/runs/42354746481",
+      "artifact": "s39-exit-underfoot-132x50",
+      "artifact_id": 13567346978,
+      "artifact_url": "https://github.com/Thiesi/Blacksite/actions/runs/42354746481/artifacts/13567346978",
+      "raw_ansi_member": "s39-mission-beside-giver-132x50-16.ans",
+      "style_member": "s39-mission-beside-giver-132x50-16.json",
+      "native_boundary_offset": 1065,
+      "method": "Direct byte copy of live native text; ANSI replay verified glyphs and styles"
+    },
+    {
+      "capture": "s39-exit-beside-regular-132x50-256",
+      "scenario": "exit-beside-regular",
+      "size": [
+        132,
+        50
+      ],
+      "tier": "256",
+      "focus": {
+        "id": "to-sodium-tin-halo",
+        "label": "The Tin Halo",
+        "verb": "go to"
+      },
+      "sha256": {
+        ".ans": "81f9227b2f9e0cfa8bfa6c5df9cb6f32737893bac534cc1e41357d32a071ddd1",
+        ".txt": "caa1860d90720071a73751a90129e5c226f3515e6ec90af2ee0586b4c48d348e",
+        ".json": "a84803c6a5a82d020ce88d5b4a1bb9eab35b236c8d6d0d7013e9428d5dc79dd5"
+      },
+      "file": "s39-exit-beside-regular-132x50-256.txt",
+      "source_head": "fa2a4d1e8dbbc652df20b83ee795fdd9a76844ee",
+      "source_tree": "ec2e6643e843e8d5c3addbfbefd268c63c815230",
+      "python_tree_sha256": "c62ae7bc8d2ccd7ff163e654c3bd1bc41616ebbceeb1eae5c911e36dbb8a0e67",
+      "run": 42354746481,
+      "run_url": "https://github.com/Thiesi/Blacksite/actions/runs/42354746481",
+      "artifact": "s39-exit-underfoot-132x50",
+      "artifact_id": 13567346978,
+      "artifact_url": "https://github.com/Thiesi/Blacksite/actions/runs/42354746481/artifacts/13567346978",
+      "raw_ansi_member": "s39-exit-beside-regular-132x50-256.ans",
+      "style_member": "s39-exit-beside-regular-132x50-256.json",
+      "native_boundary_offset": 1172,
+      "method": "Direct byte copy of live native text; ANSI replay verified glyphs and styles"
+    },
+    {
+      "capture": "s39-mission-beside-giver-132x50-256",
+      "scenario": "mission-beside-giver",
+      "size": [
+        132,
+        50
+      ],
+      "tier": "256",
+      "focus": {
+        "id": "s39-contact",
+        "label": "Threshold contact",
+        "verb": "survey"
+      },
+      "sha256": {
+        ".ans": "a351a22fac95b034acd071f6d7552cf7c7a5057398b4fa96d3b3ef535abde606",
+        ".txt": "5f6fdab59b945a0e53bedc834e06db8fb615f2a55331bfa3eb3533ebf423f0f9",
+        ".json": "affe863ee75d7c3f9257cb40478a541b0c56a46e5ef806b10bb4193f0bc12f98"
+      },
+      "file": "s39-mission-beside-giver-132x50-256.txt",
+      "source_head": "fa2a4d1e8dbbc652df20b83ee795fdd9a76844ee",
+      "source_tree": "ec2e6643e843e8d5c3addbfbefd268c63c815230",
+      "python_tree_sha256": "c62ae7bc8d2ccd7ff163e654c3bd1bc41616ebbceeb1eae5c911e36dbb8a0e67",
+      "run": 42354746481,
+      "run_url": "https://github.com/Thiesi/Blacksite/actions/runs/42354746481",
+      "artifact": "s39-exit-underfoot-132x50",
+      "artifact_id": 13567346978,
+      "artifact_url": "https://github.com/Thiesi/Blacksite/actions/runs/42354746481/artifacts/13567346978",
+      "raw_ansi_member": "s39-mission-beside-giver-132x50-256.ans",
+      "style_member": "s39-mission-beside-giver-132x50-256.json",
+      "native_boundary_offset": 1172,
+      "method": "Direct byte copy of live native text; ANSI replay verified glyphs and styles"
+    },
+    {
+      "capture": "s39-exit-beside-regular-132x50-truecolor",
+      "scenario": "exit-beside-regular",
+      "size": [
+        132,
+        50
+      ],
+      "tier": "truecolor",
+      "focus": {
+        "id": "to-sodium-tin-halo",
+        "label": "The Tin Halo",
+        "verb": "go to"
+      },
+      "sha256": {
+        ".ans": "91c53367f5818ef904f9ffb8bf07c88f37c5ef6f1d261cff44d85681e1d03512",
+        ".txt": "0a25710bf4763a2400e36f8b89de35e5b702109af4fb62faeec4956579896394",
+        ".json": "2e2b54e6c435fb5bba8710c4724e1a9e8783baa019ba27dd33a8659ccf0fe2c5"
+      },
+      "file": "s39-exit-beside-regular-132x50-truecolor.txt",
+      "source_head": "fa2a4d1e8dbbc652df20b83ee795fdd9a76844ee",
+      "source_tree": "ec2e6643e843e8d5c3addbfbefd268c63c815230",
+      "python_tree_sha256": "c62ae7bc8d2ccd7ff163e654c3bd1bc41616ebbceeb1eae5c911e36dbb8a0e67",
+      "run": 42354746481,
+      "run_url": "https://github.com/Thiesi/Blacksite/actions/runs/42354746481",
+      "artifact": "s39-exit-underfoot-132x50",
+      "artifact_id": 13567346978,
+      "artifact_url": "https://github.com/Thiesi/Blacksite/actions/runs/42354746481/artifacts/13567346978",
+      "raw_ansi_member": "s39-exit-beside-regular-132x50-truecolor.ans",
+      "style_member": "s39-exit-beside-regular-132x50-truecolor.json",
+      "native_boundary_offset": 1172,
+      "method": "Direct byte copy of live native text; ANSI replay verified glyphs and styles"
+    },
+    {
+      "capture": "s39-mission-beside-giver-132x50-truecolor",
+      "scenario": "mission-beside-giver",
+      "size": [
+        132,
+        50
+      ],
+      "tier": "truecolor",
+      "focus": {
+        "id": "s39-contact",
+        "label": "Threshold contact",
+        "verb": "survey"
+      },
+      "sha256": {
+        ".ans": "bf5a7233c12c27413741e231ea46634463bcea69ce94cfe65597412f07f1f97b",
+        ".txt": "9d5a908a9fc099fde30b8c12d427465bbbeeb20a9d7e70c2567c63d62cde42b7",
+        ".json": "3dc39c69d45fc2cf8376373df111353e97f431c9bf18f1fd10b71492117012be"
+      },
+      "file": "s39-mission-beside-giver-132x50-truecolor.txt",
+      "source_head": "fa2a4d1e8dbbc652df20b83ee795fdd9a76844ee",
+      "source_tree": "ec2e6643e843e8d5c3addbfbefd268c63c815230",
+      "python_tree_sha256": "c62ae7bc8d2ccd7ff163e654c3bd1bc41616ebbceeb1eae5c911e36dbb8a0e67",
+      "run": 42354746481,
+      "run_url": "https://github.com/Thiesi/Blacksite/actions/runs/42354746481",
+      "artifact": "s39-exit-underfoot-132x50",
+      "artifact_id": 13567346978,
+      "artifact_url": "https://github.com/Thiesi/Blacksite/actions/runs/42354746481/artifacts/13567346978",
+      "raw_ansi_member": "s39-mission-beside-giver-132x50-truecolor.ans",
+      "style_member": "s39-mission-beside-giver-132x50-truecolor.json",
+      "native_boundary_offset": 1172,
+      "method": "Direct byte copy of live native text; ANSI replay verified glyphs and styles"
+    }
+  ]
+}
