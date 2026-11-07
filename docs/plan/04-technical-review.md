@@ -19,8 +19,8 @@ the delegation in §7.1.
 The technical review applies to every PR that changes code, content,
 canon or a slice file: slices, foundation and content PRs, and fixes
 such as #67. It does not apply to design proposals (for example #69 and
-#70), which go to the owner; the technical lead comments on their
-engineering consequences instead.
+#70), which go to the owner through the technical lead, who comments on
+their engineering consequences instead.
 
 ## 2. Requesting a review
 
@@ -126,8 +126,10 @@ navigation, collision and validation pass. A beautiful capture is not
 enough if play is hard to read or control.
 
 Creative sign-off belongs to the presentation lead. The technical
-review checks compliance with what has been approved; if the two leads
-disagree, the owner decides.
+review checks compliance with what has been approved. If the two leads
+disagree, they work it out first; if that fails, the technical lead
+decides, and if the presentation lead still withholds a sign-off that
+§7.1 requires, the PR waits for the owner, with both views.
 
 ### 5.3 Integration and the plan
 

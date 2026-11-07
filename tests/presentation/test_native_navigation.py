@@ -19,8 +19,11 @@ def helpers(**dependencies: Any) -> type:
     methods = [n for n in owner.body if isinstance(n, ast.AsyncFunctionDef) and n.name in {'walk', 'travel'}]
     module = ast.parse('from __future__ import annotations\nclass Probe: pass\n')
     module.body[1].body = methods
+    module.body.append(next(n for n in source.body if isinstance(n, ast.AsyncFunctionDef)
+                            and n.name == 's10_tram_evacuation'))
     scope = {'deque': deque, **dependencies}
     exec(compile(ast.fix_missing_locations(module), str(path), 'exec'), scope)
+    scope['Probe'].s10_tram_evacuation = scope['s10_tram_evacuation']
     return scope['Probe']
 
 
@@ -113,3 +116,66 @@ def test_travel_waits_for_arrival_ack_then_asserts_focus_without_waiting_for_a_t
         with pytest.raises(AssertionError):
             asyncio.run(probe.travel(caller, 'halo'))
         assert keys == []
+
+
+@pytest.mark.parametrize('failure', [None, 'walk-recovery', 'boarding-down', 'ride-down', 'curfew-refusal'])
+def test_s10_tram_waits_for_scheduled_arrival_and_keeps_winner_death_blocking(failure: str | None) -> None:
+    from blacksite.server.world.exits import MAX_HOLD_SECONDS
+
+    actor = NS(position=(27, 25), stance='normal', health=18, marked=True)
+    avatar = NS(actor=actor, zone='clinic', travel=None)
+    session = NS(id='winner', ack_revision=1, view_revision=1)
+    exit_ = NS(id='to-tram', kind='tram', tile=(3, 31), target_zone='core-tram-hub')
+    view = NS(previous={'body': {'focus': {'id': exit_.id, 'verb': 'go to'}}})
+    keys, onward, ride_allowances, reports = [], [], [], []
+    now = [100.0]
+
+    async def walk(caller: Any, tile: tuple[int, int]) -> None:
+        assert tile == exit_.tile
+        actor.position = tile
+        if failure == 'walk-recovery':
+            avatar.zone = 'wake-hall'  # Alive after a second death still fails.
+
+    async def write(key: bytes) -> None:
+        keys.append(key)
+        if failure != 'curfew-refusal':
+            avatar.travel = NS(exit=exit_, departure=190.0, arrival=200.0)
+
+    async def wait(condition: Any, timeout: float = 10) -> None:
+        if failure == 'boarding-down' and not keys:
+            actor.stance = 'down'
+        if failure == 'ride-down' and avatar.travel is not None:
+            actor.stance = 'dead'
+        if condition():
+            return
+        if failure == 'curfew-refusal':
+            raise TimeoutError('Curfew refuses boarding')
+        ride_allowances.append(timeout)
+        # A scheduled 90-second wait, ride, and later permitted hold must fit.
+        assert timeout >= 100 + MAX_HOLD_SECONDS
+        now[0] = 200 + MAX_HOLD_SECONDS
+        avatar.zone, avatar.travel = 'core-tram-hub', None
+        assert condition()
+
+    async def travel(caller: Any, destination: str) -> None:
+        assert avatar.zone == 'core-tram-hub'
+        onward.append(destination)
+        avatar.zone = destination
+
+    probe = helpers(wait=wait, MAX_HOLD_SECONDS=MAX_HOLD_SECONDS)()
+    probe.walk, probe.travel, probe.report = walk, travel, reports.append
+    probe.combat = NS(now=lambda: now[0])
+    probe.game = NS(sim=NS(views={session.id: view}))
+    probe.service = NS(world=NS(zones={'clinic': NS(template=NS(meta=NS(exits=[exit_])))}))
+    caller = NS(avatar=avatar, session=session, caller=NS(write=write))
+    if failure:
+        expected = TimeoutError if failure == 'curfew-refusal' else AssertionError
+        with pytest.raises(expected):
+            asyncio.run(probe.s10_tram_evacuation(caller))
+        assert onward == []
+        assert len(keys) <= 1  # No retry, resurrection or alternative event state.
+    else:
+        asyncio.run(probe.s10_tram_evacuation(caller))
+        assert keys == [b'e'] and onward == ['core-plaza']
+        assert ride_allowances and reports
+        assert actor.health == 18 and actor.marked

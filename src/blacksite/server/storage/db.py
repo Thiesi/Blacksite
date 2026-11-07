@@ -8,7 +8,9 @@ so later actions can commit before publishing success (architecture §15.2).
 import json
 import sqlite3
 import uuid
+from collections.abc import Callable
 from pathlib import Path
+from time import perf_counter_ns
 from typing import Any
 
 from blacksite.server.clock import Clock, TICK_HZ
@@ -31,6 +33,9 @@ class Storage:
         self.dirty: dict[tuple[str, str], dict[str, Any] | Any] = {}
         self.dirty_since: dict[tuple[str, str], int] = {}
         self.last_players = self.last_world = clock.now_tick()
+        # Acceptance-only observation of the existing SQLite context exit.
+        # None in normal service: no clocks, proxy or changed transaction.
+        self.commerce_commit_observer: Callable[[int, int, bool], None] | None = None
         try:
             self.db.execute("PRAGMA journal_mode=WAL")
             self.db.execute("PRAGMA synchronous=FULL")
@@ -160,54 +165,67 @@ class Storage:
     def commerce_write(self, effect: dict[str, Any]) -> None:
         """Architecture 6.2: transfer, money, ownership and receipt are atomic."""
         player = effect["player"]
-        with self.db:
-            for user, identity_record in effect.get("identities", {}).items():
-                self.db.execute("INSERT OR REPLACE INTO identities VALUES(?,?)", (user,self._json(identity_record)))
-            if "identity" in effect:
-                self.db.execute("INSERT OR REPLACE INTO identities VALUES(?,?)", (effect["user"],self._json(effect["identity"])))
-            for player_record in ([player] if player else [])+effect.get("players", []):
-                player = player_record
-                cols = list(player)
-                if not set(cols) <= self.player_columns: raise ValueError("unknown player fields")
-                quoted = ",".join(f'"{c}"' for c in cols)
-                updates = ",".join(f'"{c}"=excluded."{c}"' for c in cols if c != "id")
-                values = [self._json(player[c]) if isinstance(player[c], (dict,list,tuple)) else player[c] for c in cols]
-                self.db.execute(f'INSERT INTO players ({quoted}) VALUES ({",".join("?" for _ in cols)}) ON CONFLICT(id) DO UPDATE SET {updates}', values)
-            for item in effect["items"]:
-                self.db.execute("INSERT OR REPLACE INTO items(id,authority,data) VALUES(?,?,?)", (item["id"],self.origin,self._json(item)))
-            for iid in effect["delete_items"]:
-                self.db.execute("DELETE FROM items WHERE id=?", (iid,))
-            for key, budget in effect["budgets"].items():
-                self.db.execute("INSERT OR REPLACE INTO vendor_budgets VALUES(?,?,?)", (key,budget["hour"],budget["remaining"]))
-            self.db.execute("INSERT OR REPLACE INTO meta(key,value) VALUES('vendor_budget_state',?)",
-                            (self._json(effect['budgets']),))
-            self.db.execute("DELETE FROM caches")
-            for key, cache in effect["caches"].items():
-                self.db.execute("INSERT INTO caches VALUES(?,?)", (key,self._json(cache)))
-            self.db.execute("INSERT OR REPLACE INTO meta(key,value) VALUES('item_serial',?)", (self._json(effect["serial"]),))
-            if "interlock_state" in effect:
-                self.db.execute("INSERT OR REPLACE INTO meta(key,value) VALUES('interlock_state',?)", (self._json(effect["interlock_state"]),))
-            if "salvage_state" in effect:
-                self.db.execute("INSERT OR REPLACE INTO meta(key,value) VALUES('salvage_state',?)", (self._json(effect["salvage_state"]),))
-            if "contracts_state" in effect:
-                self.db.execute("INSERT OR REPLACE INTO meta(key,value) VALUES('contracts_state',?)", (self._json(effect["contracts_state"]),))
-            if "relays_state" in effect:
-                self.db.execute("INSERT OR REPLACE INTO meta(key,value) VALUES('relays_state',?)", (self._json(effect["relays_state"]),))
-            if 'events_state' in effect:
-                self.db.execute("INSERT OR REPLACE INTO meta(key,value) VALUES('events_state',?)", (self._json(effect['events_state']),))
-            if 'market_changes' in effect:
-                changes = effect['market_changes']
-                for key, table in (('listings', 'market_listings'), ('bids', 'market_bids'), ('bounties', 'bounties')):
-                    for row in changes.get(key, []):
-                        self.db.execute(f'INSERT OR REPLACE INTO {table}(id,data) VALUES(?,?)', (row['id'], self._json(row)))
-                self.db.execute("INSERT OR REPLACE INTO meta(key,value) VALUES('market_serials',?)", (self._json(changes['serials']),))
-            for record in effect.get('market_audit', []):
-                self.db.execute('INSERT INTO audit(at,data) VALUES(?,?)', (self.clock.now_utc().isoformat(), self._json(record)))
-            if "npc_state" in effect:
-                self.db.execute("INSERT OR REPLACE INTO meta(key,value) VALUES('npc_state',?)", (self._json(effect["npc_state"]),))
-            if "lattice_state" in effect:
-                self.db.execute("INSERT OR REPLACE INTO meta(key,value) VALUES('lattice_state',?)", (self._json(effect["lattice_state"]),))
-            self.db.execute("INSERT INTO audit(at,data) VALUES(?,?)", (self.clock.now_utc().isoformat(), self._json({"action":"item_transfer", "player":effect["player"]["id"] if effect["player"] else None})))
+        observer = self.commerce_commit_observer
+        began: int | None = None
+        committed = False
+        try:
+            with self.db:
+                for user, identity_record in effect.get("identities", {}).items():
+                    self.db.execute("INSERT OR REPLACE INTO identities VALUES(?,?)", (user,self._json(identity_record)))
+                if "identity" in effect:
+                    self.db.execute("INSERT OR REPLACE INTO identities VALUES(?,?)", (effect["user"],self._json(effect["identity"])))
+                for player_record in ([player] if player else [])+effect.get("players", []):
+                    player = player_record
+                    cols = list(player)
+                    if not set(cols) <= self.player_columns: raise ValueError("unknown player fields")
+                    quoted = ",".join(f'"{c}"' for c in cols)
+                    updates = ",".join(f'"{c}"=excluded."{c}"' for c in cols if c != "id")
+                    values = [self._json(player[c]) if isinstance(player[c], (dict,list,tuple)) else player[c] for c in cols]
+                    self.db.execute(f'INSERT INTO players ({quoted}) VALUES ({",".join("?" for _ in cols)}) ON CONFLICT(id) DO UPDATE SET {updates}', values)
+                for item in effect["items"]:
+                    self.db.execute("INSERT OR REPLACE INTO items(id,authority,data) VALUES(?,?,?)", (item["id"],self.origin,self._json(item)))
+                for iid in effect["delete_items"]:
+                    self.db.execute("DELETE FROM items WHERE id=?", (iid,))
+                for key, budget in effect["budgets"].items():
+                    self.db.execute("INSERT OR REPLACE INTO vendor_budgets VALUES(?,?,?)", (key,budget["hour"],budget["remaining"]))
+                self.db.execute("INSERT OR REPLACE INTO meta(key,value) VALUES('vendor_budget_state',?)",
+                                (self._json(effect['budgets']),))
+                self.db.execute("DELETE FROM caches")
+                for key, cache in effect["caches"].items():
+                    self.db.execute("INSERT INTO caches VALUES(?,?)", (key,self._json(cache)))
+                self.db.execute("INSERT OR REPLACE INTO meta(key,value) VALUES('item_serial',?)", (self._json(effect["serial"]),))
+                if "interlock_state" in effect:
+                    self.db.execute("INSERT OR REPLACE INTO meta(key,value) VALUES('interlock_state',?)", (self._json(effect["interlock_state"]),))
+                if "salvage_state" in effect:
+                    self.db.execute("INSERT OR REPLACE INTO meta(key,value) VALUES('salvage_state',?)", (self._json(effect["salvage_state"]),))
+                if "contracts_state" in effect:
+                    self.db.execute("INSERT OR REPLACE INTO meta(key,value) VALUES('contracts_state',?)", (self._json(effect["contracts_state"]),))
+                if "relays_state" in effect:
+                    self.db.execute("INSERT OR REPLACE INTO meta(key,value) VALUES('relays_state',?)", (self._json(effect["relays_state"]),))
+                if 'events_state' in effect:
+                    self.db.execute("INSERT OR REPLACE INTO meta(key,value) VALUES('events_state',?)", (self._json(effect['events_state']),))
+                if 'market_changes' in effect:
+                    changes = effect['market_changes']
+                    for key, table in (('listings', 'market_listings'), ('bids', 'market_bids'), ('bounties', 'bounties')):
+                        for row in changes.get(key, []):
+                            self.db.execute(f'INSERT OR REPLACE INTO {table}(id,data) VALUES(?,?)', (row['id'], self._json(row)))
+                    self.db.execute("INSERT OR REPLACE INTO meta(key,value) VALUES('market_serials',?)", (self._json(changes['serials']),))
+                for record in effect.get('market_audit', []):
+                    self.db.execute('INSERT INTO audit(at,data) VALUES(?,?)', (self.clock.now_utc().isoformat(), self._json(record)))
+                if "npc_state" in effect:
+                    self.db.execute("INSERT OR REPLACE INTO meta(key,value) VALUES('npc_state',?)", (self._json(effect["npc_state"]),))
+                if "lattice_state" in effect:
+                    self.db.execute("INSERT OR REPLACE INTO meta(key,value) VALUES('lattice_state',?)", (self._json(effect["lattice_state"]),))
+                self.db.execute("INSERT INTO audit(at,data) VALUES(?,?)", (self.clock.now_utc().isoformat(), self._json({"action":"item_transfer", "player":effect["player"]["id"] if effect["player"] else None})))
+                if observer is not None:
+                    began = perf_counter_ns()
+            committed = True
+        finally:
+            if observer is not None and began is not None:
+                ended = perf_counter_ns()
+                # Includes SQLite's rollback after a failed COMMIT. SQL
+                # failures before context exit do not claim a commit span.
+                observer(began, ended, committed)
         # Never let an older write-behind snapshot overwrite this receipt.
         settled = {("items", item["id"]) for item in effect["items"]} | {("items", iid) for iid in effect["delete_items"]}
         settled.add(('meta', 'vendor_budget_state'))

@@ -573,7 +573,7 @@ only from what this caller may know. For presentation that means:
   instance, not in content.
   A covered template must have an uncovered counterpart spawned in the
   same zone with matching name, class, colour role, behaviour kinds,
-  anchoring, interactions and dialogue binding (entities 1.8). The content
+  anchoring, interactions, dialogue binding and loot (entities 1.8). The content
   validator checks the complete counterpart, not separate partial matches.
   TARGET uses the class label and neutral NPC role for an unaffiliated
   NPC, consistent with its cover counterpart. The `Freelance` label

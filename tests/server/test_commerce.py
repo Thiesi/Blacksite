@@ -44,6 +44,30 @@ def carried(game: HeadlessServer, client, template: str) -> str:
     return next(i for i in player.inventory if game.core.commerce.items[i].template == template)
 
 
+@pytest.mark.parametrize("shock, change, expected", [(2, -10, 0), (20, -10, 10), (95, 10, 100)])
+@pytest.mark.parametrize("error", [False, True])
+def test_design_3_1_consumable_shock_bounds_publish_only_after_commit(game, shock, change, expected, error) -> None:
+    client = caller(game)
+    commerce = game.core.commerce
+    player = game.core.characters.players[client.session.player_id]
+    actor = game.core.characters.sim.avatars[client.session.user_id].actor
+    template = commerce.content.items["con_sablier_patch"]
+    commerce.content.items[template.id] = replace(template,
+        consumable=replace(template.consumable, effects={"health": 1, "shock": change}))
+    iid = carried(game, client, template.id)
+    actor.shock = player.shock = shock
+    actor.cooldowns["last_hit"] = game.clock.now_tick()  # Isolate use from normal shock decay.
+    act(game, client, Frame("intent", {"name": "inv.use", "args": {"item": iid}}))
+    assert actor.shock == player.shock == shock
+    assert iid in player.inventory
+    assert commerce.pending
+    effects = game.commit_commerce(error=error)
+    assert actor.shock == player.shock == (shock if error else expected)
+    assert (iid in player.inventory) == error
+    if not error:
+        assert effects[0]["player"]["shock"] == expected
+
+
 def test_design_8_1_8_2_prices_budget_and_no_ammo_split_arbitrage() -> None:
     assert price(100,1,80) == 80
     assert price(100,1,-50) == 130

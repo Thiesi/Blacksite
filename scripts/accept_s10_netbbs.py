@@ -28,6 +28,7 @@ from blacksite.server.app import Server
 from blacksite.server.inventory import Inventory
 from blacksite.server.items import make_item
 from blacksite.server.rules import character
+from blacksite.server.world.exits import MAX_HOLD_SECONDS
 from blacksite.version import PACKAGE_VERSION
 
 
@@ -321,6 +322,47 @@ class NativeProbe:
                 'max_write_seconds': self.console_max_seconds}, indent=2)+'\n', encoding='utf-8')
 
 
+async def s10_tram_evacuation(probe: NativeProbe, winner: Connection) -> None:
+    """Take the shorter public escape, with an S10-only scheduled ride wait."""
+    avatar = winner.avatar
+    origin, destination = avatar.zone, 'core-tram-hub'
+    zone = probe.service.world.zones[origin]
+    exit_ = next(e for e in zone.template.meta.exits if e.target_zone == destination)
+    assert exit_.kind == 'tram'
+    await probe.walk(winner, exit_.tile)
+
+    def arrived() -> bool:
+        assert avatar.actor.stance == 'normal', 'S10 winner died during evacuation'
+        assert avatar.zone in (origin, destination), 'S10 winner changed zone unexpectedly during evacuation'
+        return avatar.zone == destination
+
+    if not arrived():
+        if avatar.travel is None:
+            def boarding_ready() -> bool:
+                arrived()  # A down/dead/recovered winner fails before boarding.
+                view = probe.game.sim.views[winner.session.id].previous
+                focus = (view or {}).get('body', {}).get('focus') or {}
+                return (avatar.actor.position == exit_.tile
+                    and winner.session.ack_revision == winner.session.view_revision
+                    and focus.get('id') == exit_.id and focus.get('verb') == 'go to')
+            await wait(boarding_ready)
+            await winner.caller.write(b'e')
+            await wait(lambda: arrived() or avatar.travel is not None)
+        if avatar.travel is not None:
+            ride = avatar.travel
+            assert ride.exit.id == exit_.id
+            now = probe.combat.now()
+            # Game 5.6 / gazetteer: actual next departure and 10-second ride,
+            # plus the existing bounded hold and original transition margin.
+            allowance = max(0, ride.arrival-now) + MAX_HOLD_SECONDS + 10
+            probe.report(f'TRAM S10: departure wait {max(0, ride.departure-now):.1f}s, '
+                f'ride {ride.arrival-ride.departure:.1f}s, allowance {allowance:.1f}s; '
+                f'HP {avatar.actor.health}, Marked {avatar.actor.marked}')
+            await wait(arrived, allowance)
+    assert arrived()
+    await probe.travel(winner, 'core-plaza')
+
+
 async def accept(root: Path, door_python: Path, show: bool) -> None:
     probe=NativeProbe(root,door_python,show)
     await probe.start()
@@ -413,7 +455,7 @@ async def accept(root: Path, door_python: Path, show: bool) -> None:
             # Another winner death must fail, never be absorbed as recovery.
             assert winner.avatar.actor.stance=="normal"
             evacuation=time.monotonic()
-            await probe.travel(winner,"core-plaza")
+            await s10_tram_evacuation(probe, winner)
             assert winner.avatar.actor.stance=="normal"
             probe.report(f"PASS winner evacuation {width}x{height}: {time.monotonic()-evacuation:.1f}s, no additional death")
             await wait(lambda:loser.avatar.actor.stance=="normal",25)
