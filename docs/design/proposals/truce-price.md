@@ -57,7 +57,7 @@ threatened, a prompt is open or your target's relation is hostile, which
 includes a Marked or hostile-faction target. At 80x24 on the Row the limits for
 one unwrapped line are:
 
-- **Hint line:** 64 cells with `Ctrl-X leave`, less if `Esc/B back` shows.
+- **Hint line:** 63 cells with `Ctrl-X leaves`, less if `Esc/B back` shows.
 - **Header:** 36 cells.
 
 So the wording fits where each notice is likely to land. The keeper's name comes
@@ -68,7 +68,7 @@ from the zone.
   once per character per zone, from the saved `seen_zones`, and S38's rule line
   is emitted there [built]. The notice is sent one-shot at that moment, and the
   door remembers nothing. This one is rarely threatened, so it can use the
-  hint line (63 cells, 1 to spare). If it does land in the header, the "Sable
+  hint line (63 cells, exactly at the limit). If it does land in the header, the "Sable
   comes" half survives.
 
   > Fire: Sable comes. At a player: Marked 15 min, no Halo or work.
