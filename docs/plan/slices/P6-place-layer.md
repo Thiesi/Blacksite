@@ -1,6 +1,6 @@
 # P6 — Place layer and representative locations
 
-**Status:** P6a done (PR #118); Part A done (PR #129); A5 done (PR #130); A6 done (PR #131); A7 done (PR #133); A8 done (PR #144); P6b merged (PR #126), fingerprint approved; H1/S25 ungranted
+**Status:** P6a done (PR #118); Part A done (PR #129); A5 done (PR #130); A6 done (PR #131); A7 done (PR #133); A8 done (PR #144); A9 done (PR #180); P6b merged (PR #126), fingerprint approved; H1/S25 ungranted
 **Primary model:** Codex for P6a (engine) · the presentation lead for P6b (content), with Codex assisting · **Reviewer:** automated review, technical lead, presentation lead (co-reviewer and presentation gate)
 **Depends on:** P0 (D1 to D3 in canon), P4, P5 · **Milestone:** presentation track
 **Issue:** https://github.com/Thiesi/Blacksite/issues/115
@@ -368,7 +368,7 @@ automated and technical review. This grants no human acceptance gate.
 
 Assigned after S40, on #115
 ([gathered scope](https://github.com/Thiesi/Blacksite/issues/115#issuecomment-6701521461)).
-Status: in progress. Starts from owner-merged main bfd9a34, independently
+Status: done (PR #180). Starts from owner-merged main bfd9a34, independently
 of S39 and S41. Changes no interaction resolver, echo, talker reach rule
 or talk page. H1 and S25 layout approval remain ungranted.
 
@@ -418,6 +418,12 @@ canonical native service matrix, including S11 and S12 through NetBBS
 Telnet/native stdio at 80x24 and 132x50. Retain every outcome under the
 S40 S11 disposition procedure; a failed gate needs its own ruling, never
 a retry solely to clear it. Automated and technical reviews are required.
+
+Implementation and first complete native matrix pass at f21c97e. The
+evidence ledger and six live captures (both sizes, all colour tiers) are
+in `docs/ops/captures/a9-npc-clearance/`. The final documentation/evidence
+push changes no runtime, script or test. Final-head CI and technical
+review remain merge gates; the done mark grants no human approval.
 
 ## Related work outside the slice
 

@@ -130,3 +130,73 @@ fresh-root CI job has a 20-minute timeout, so an automatically planned
 Curfew cannot start during it. A reused or long-lived world with an old
 plan can close the hub; boarding refusal must fail the proof. S10 neither
 clears Curfew nor supplies a pass nor suppresses its restriction.
+
+## Approved route measurement and native captures
+
+At source and acceptance head
+`f21c97e542f7c3c9a3923eec4417088fa6c4ad46`, the approved route passes
+its first measurement at both sizes. Both winners board with **8 HP and
+Mark still set**, and reach Plaza without another death. At 80x24 the
+actual departure wait is 67.5 s, ride 10 s and full evacuation 89.1 s;
+at 132x50 those are 10.2 s, 10 s and 31.3 s. Combat artifact 13562450405
+on service run 42340736162 retains the raw streams and result. Its ZIP
+SHA-256 is
+`771d1e2c539a1b280e7436a7d530a04fd61b1491484e262a77ec1bf2f1a09e22`.
+This pass does not remove the remaining walk/platform risk.
+
+Root CI at that head passes **2354 tests on Ubuntu**, and **2353 with
+one skipped on Windows**, run 42340736256. Both S24 sizes pass their
+first run. Both S11 sizes pass actual ten-minute heat expiry, local
+response and the unchanged final p99 gate: **7.177 ms at 80x24** and
+**7.692 ms at 132x50**. No S11 exception or retry was needed.
+
+All 16 PR workflows finish successfully. Service run 42340736162 has
+**28 successful jobs and one intentional skipped subset**, including S12
+market, S10 combat, S11 NPCs, S24 events and the full encounter matrix.
+The two written reviews, Claude Sonnet 5.5 (6702545545 and 6702631423),
+have no actionable findings; triage is recorded in 6702573627 on #180.
+The final documentation/evidence commit keeps this head's runtime,
+scripts and tests byte-identical. Its fresh CI results and exact-head
+technical request are retained on the PR rather than extending an
+artifact/commit cycle. Only the lead can write the technical record;
+the owner merges because game design 5.5 changes.
+
+The six `truce-regular-warning-*.txt` files are unaltered live native
+screen text from canonical S38 acceptance at this same source head:
+80x24 and 132x50, each in 16 colours, 256 colours and truecolor. They
+show the affected Sodium regular scene, with canonical S38 fixtures and
+modern presentation. `manifest.json` names each scenario, exact source
+member, source head, run, artifact, ZIP digest and capture digest. Raw
+ANSI, including colour rendition, stays in those CI artifacts. Text
+captures preserve glyphs, not colour. These are engineering evidence;
+H1 and S25 layout approval remain ungranted.
+The final blank cell on each capture's bottom row is intentional terminal
+safety padding; it is retained verbatim, including trailing whitespace.
+
+## Representative playable checks
+
+These are review steps, not a claim of a separate human playtest. Use a
+fresh test world through a registered NetBBS native door. Repeat at
+80x24 and 132x50; do not weaken live rules to force an outcome.
+
+1. Enter Wake Hall with a new caller, then visit Sodium Row and the Tin
+   Halo. Observe nearby NPCs and ordinary movement. A spawn must not
+   occupy a player tile. Broad posts prefer more than five tiles of
+   clearance; small posts still populate at a farthest legal free tile,
+   including the Halo bouncer beside its arrival point.
+2. Observe a regular near the Plaza exit and a covered Warden near the
+   Halo door. Wander and patrol steps must leave the exit usable. If
+   an ordinary or covered wanderer flees beyond its authored region,
+   let it resume ordinary behaviour: it should walk home without a
+   teleport or a special faction rule. Deterministic tests cover these
+   placements and the unchanged RNG draws; a live sighting alone cannot
+   establish the spawn distance preference or every return path.
+3. On a disposable test caller, use a shipped consumable from the normal
+   inventory flow. Shock must remain within 0..100 and the item/receipt
+   must agree with successful consumption. Negative-shock and failed
+   commit cases are unit fixtures; no shipped item was added for them.
+4. For the S10 scenario, use the canonical two-player combat proof:
+   fight and loot in Clinic Row, then take the tram hub route to Plaza.
+   HP, Mark and live pursuit remain real. Waiting must follow the actual
+   schedule; another death or refused boarding must fail. The retained
+   first measurement above exercises this sequence at both sizes.
