@@ -403,7 +403,8 @@ peace here.'
 - It never opens while anything threatens you (a hazard, a target, a
   hostile nearby, combat, heat), and closes the moment one appears or
   you are hit.
-- `A` shows it again; whether it opens on entry is a setting.
+- `A` shows it again, and closes it if it's open; whether it opens on
+  entry is a setting.
 
 ### 2.7 Atmosphere: allowed and not
 

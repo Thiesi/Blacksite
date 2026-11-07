@@ -2,7 +2,7 @@
 
 **Status:** planned (approved by the owner 2026-11-06)
 **Primary model:** Codex · **Reviewer:** automated review, technical lead, presentation lead (presentation acceptance)
-**Depends on:** P5, P6a, S38 (merged; supplies `me.truce_text`) · **Milestone:** presentation track
+**Depends on:** P5, P6a, S38 (merged; supplies `me.truce_text`), S41 (#173, shipped in an earlier upgrade than this slice) · **Milestone:** presentation track
 **Issue:** https://github.com/Thiesi/Blacksite/issues/164
 
 Canon: terminal UI 2.6 and the key table in section 5, marked "planned,
@@ -78,12 +78,17 @@ this text card until V3 supplies drawn cards.
 - **Any key closes it and still acts.** A move on the card is a move, in
   the same frame and with no added delay. `Ctrl-X` and `Ctrl-L` behave as
   they always do.
+- **The one exception is the card's own key.** `A` on an open card closes
+  it and does nothing else: it sends no request and opens no second card.
+- **When the connection drops.** The door can't see a threat while it's
+  disconnected, so the card closes then.
 
-**On request.** `A` shows the current zone's card again, in both keymaps.
-`keymaps.json` leaves `a` unbound on the zone view in both; contract and
-crew menus use it, and a menu blocks the card. A card you asked for stays
-until a key or a threat closes it, since you asked to read it. While threatened, `A` opens nothing and the hint row says "Not
-with danger this close." `A` is added to `keymaps.json`, the key table
+**On request.** `A` (`a` in vi, as in the key table) shows the current
+zone's card again. `keymaps.json` leaves `a` unbound on the zone view in
+both keymaps; contract and crew menus use it, and a menu blocks the card.
+A card you asked for stays until a key or a threat closes it, since you
+asked to read it. While threatened, `A` opens nothing and the hint row says
+"Not with danger this close." `A` is added to `keymaps.json`, the key table
 and help.
 
 **Threat.** The card reads two things, and you're threatened if either
@@ -95,7 +100,7 @@ says so. The later Auto decider can use the same two.
   already-masked `hazards`, `target` and `nearby` (a `!`) and from heat, so
   a covered NPC can't leak through a second code path.
 - A danger or combat line that arrived within `PROTECT_SECONDS`: the door's
-  existing arrival-stamped check (`model.py:294`), shared rather than copied.
+  existing arrival-stamped check (in `_notice_to_header`), shared rather than copied.
   This isn't new inference under note 12. The server already sent and masked
   these lines, and the check only times them. It uses the door's own clock,
   and it agrees with the existing notice and log protection by construction.
@@ -115,23 +120,31 @@ when `discover` finds a first sight and in answer to a request intent:
 It isn't replayed on reconnect. District, name, safety and `truce_text` come
 from `me` and aren't repeated.
 
-**This frame isn't backward compatible.** `protocol.validate` raises
-`ProtocolError` on an unknown frame type (`protocol.py:172`), and the door's
-client treats that as a disconnect and redials (`door/client.py:174`). An older
-door would disconnect on every `place_card` it received. So the slice adds
-`place_card` to the protocol's frame types and to `validate`'s `server` set with
-its fields checked, and door and service upgrade in lockstep, as they ship
-today. Making unknown frames safe to ignore is separate work, not part of this
-slice.
+**This frame relies on S41.** Without S41, `protocol.validate` raises
+`ProtocolError` on an unknown frame type and the door's client treats that as a
+disconnect and redials, so a door session still running across a service
+upgrade would drop its player on the first `place_card`. S41 makes a door drop a
+frame type it doesn't know and stay connected. That door simply shows no card,
+and a request it sends gets an answer it ignores. So S41 has to reach operators
+in an earlier upgrade than this slice, and the PR says so for the operator. The
+slice adds `place_card` to the protocol's frame types and to `validate`'s
+`server` set with its fields checked, so a known frame with bad fields is still
+a protocol error. Lockstep upgrades stay the supported path, as S41 says.
 
 The frame usually arrives first. `transition` and login call `discover`
 before the new zone's first view goes out, so the door can't compare the
 frame with its current zone on arrival, or it would discard most first
 sights. The door keeps the latest frame, keyed by zone. If it already holds a
-view for that zone, that view judges the frame. Otherwise the next zone view
-does: a view for the frame's zone can open the card, and a view for any other
-zone drops the frame. Frames arrive in order on one session, so no older
-view can follow the frame.
+view for that zone from this connection, that view judges the frame. Otherwise
+the next zone view does: a view for the frame's zone can open the card, and a
+view for any other zone drops the frame. Frames arrive in order on one session,
+so no older view can follow the frame.
+
+**A redial starts clean.** `welcome` comes first on every connection and already
+replaces the door's view (`Display.receive`), so a view from before a disconnect
+can't judge a frame. The slice adds the rest to the same place: `welcome` also
+clears any held frame and held first sight. Otherwise a frame held from the old
+connection would open a card after a reconnect, and reconnecting opens nothing.
 
 A frame lost to a disconnect is lost, and that's accepted: the zone is
 already seen, the log keeps the paragraph, and `A` shows the card again.
@@ -143,7 +156,9 @@ so `A` can't read the wrong zone.
 
 **Canon.** The PR filing this slice wrote the card's behaviour into terminal
 UI 2.6 and the key table, marked "planned, P11". The implementation removes
-both marks.
+both marks. It also adds the new wire contract to architecture: `place_card`
+to the server-to-client frame table in 5.3, and `me.threat` to the `me` shape
+in 5.4.
 
 ## Owner decisions, 2026-11-06
 
@@ -191,9 +206,16 @@ both marks.
   including for a Marked or heated caller, until it reveals itself.
 - Prompt, menu and overlay block opening. `Ctrl-X` confirm still works over
   a card.
-- `A` works in both keymaps, and refuses with the approved line while
-  threatened. The server sends no card for a request during a ride, in the
-  Lattice or on a non-zone view.
+- `A` (`a` in vi) works in both keymaps, and refuses with the approved line
+  while threatened. The server sends no card for a request during a ride, in
+  the Lattice or on a non-zone view.
+- `A` on an open card, first-sight or requested, closes it, sends no frame and
+  opens nothing.
+- Redial: after a disconnect from a zone view, a `place_card` for that same zone
+  arrives after `welcome` and before the new view. The old view doesn't judge
+  it, nothing paints until the new view arrives, and a threatened new view
+  never paints the card. A frame held from before the disconnect opens nothing
+  after the redial. A disconnect with a card open closes it.
 - `validate` accepts `place_card` from the server with valid fields, and rejects
   it from a client or with invalid fields. This door's old renderer, which draws
   no card, ignores the frame and doesn't fail.
