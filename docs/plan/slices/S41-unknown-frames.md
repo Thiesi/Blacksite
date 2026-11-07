@@ -5,10 +5,10 @@
 **Depends on:** nothing unmerged · **Milestone:** protocol
 **Issue:** https://github.com/Thiesi/Blacksite/issues/173
 
-The owner queued this after S39 and ahead of A9 and P11. That is queue
-order: S41 has no code dependency on them, and they have none on it.
-Canon: architecture 5.4 (the wire protocol). Where this file and canon
-differ, canon wins.
+The owner asked for this to be scheduled. It follows S39 and comes ahead
+of P11 (#164). That is queue order, with no code dependency either way.
+Canon: architecture 5.1 and 5.3 (framing and frames). Where this file and
+canon differ, canon wins.
 
 ## Goal
 
@@ -49,7 +49,7 @@ that doesn't know it yet.
 - **One mechanism.** Add this as an explicit tolerance on the door's read
   path, not by weakening `validate` for everyone. The service and the
   door share that code, so a test must show the service side didn't move.
-- **Canon.** State the rule in architecture 5.4.
+- **Canon.** State the rule in architecture 5.3.
 
 ## Out of scope
 
