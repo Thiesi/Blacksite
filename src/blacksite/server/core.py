@@ -148,6 +148,8 @@ class Core:
         demo_speech.install(self)
         from blacksite.server import demo_seated
         demo_seated.install(self)
+        from blacksite.server import demo_exits
+        demo_exits.install(self)
 
     def _disconnect_character(self, session: Session) -> None:
         if self.dialogue:
