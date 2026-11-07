@@ -899,6 +899,8 @@ quality at all, and what each place then costs to author.
 | D-T10 | Prove the target with a live Tin Halo spike (V0) before authoring at scale | Yes (**agreed 2026-10-25**) | The target is hand-composed. Committing to authoring dozens of places before a data-driven renderer reaches it risks the largest cost in the plan. |
 | D-T11 | Authoring scope for the first release: full scenes for hub interiors and pockets, simpler looks elsewhere | Yes, extending by district after each gate (**agreed 2026-10-25**) | Item 7 is the real cost. Scoping it keeps S25 to S33 shippable. |
 
+**Owner note, 2026-11-07:** D-T11 stands for now. After a playtest of the final build the owner decides whether to widen 3D beyond it, and at what cost. The whole world gets the Sodium Row treatment in any case (#82).
+
 ### 13.4 Owner decisions and the modern tier
 
 Recorded in `paradigms.md` §10 (#70 `6467264`), relayed by the
