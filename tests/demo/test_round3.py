@@ -207,6 +207,7 @@ def test_dying_does_not_settle_a_mark(repo_root, monkeypatch):
     truce.breakers[player.id] = now + 14*60 - 5
     killed_and_back(game, caller)
     assert player.marked_until == until
+    assert 'Sable considers it settled. The Mark stays.' in [line.get('text', '') for line in caller.session.log_ring]
     assert 'Not after the Row. 14 min' in sim.travel_refusal(caller.session, door)
     with pytest.raises(ValueError, match='Come back in 14 min'):
         truce.vesper_refuses(player.id)

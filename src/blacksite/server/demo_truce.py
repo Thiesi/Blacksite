@@ -107,7 +107,8 @@ class Truce:
         def logging(actor: Any, text: str, *args: Any, **fields: Any) -> None:
             log(actor, text, *args, **fields)
             if text.startswith('You wake in the vat') and actor.id in settled:
-                log(actor, f'{settled.pop(actor.id)} considers it settled.')
+                stays = ' The Mark stays.' if self.marked_for(actor.id) > 0 else ''
+                log(actor, f'{settled.pop(actor.id)} considers it settled.{stays}')
         self.combat.respawn, self.combat.log = respawning, logging
 
     def back_door(self, sim: Any) -> None:
