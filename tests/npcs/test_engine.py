@@ -67,15 +67,35 @@ def test_design_5_5_spawn_clearance_and_farthest_fallback(city, monkeypatch, pla
     assert choices == [expected]  # Exactly one draw, including fallback ties.
 
 
-@pytest.mark.parametrize("tile", [(20, 3), (21, 3), (21, 4), (20, 4)])
-def test_design_5_5_spawn_defers_when_only_player_or_adjacent_tiles_remain(city, monkeypatch, tile):
+def test_design_5_5_spawn_never_uses_a_player_tile(city, monkeypatch):
     game, caller = city
     zone = game.core.world.zones["vatside-clinics"]
-    spec = Spawner("clearance", "npc-patient", 1, 60, tile=tile)
+    spec = Spawner("clearance", "npc-patient", 1, 60, tile=body(game, caller).position)
     def no_draw(candidates):
         pytest.fail("A deferred spawn must not draw RNG")
     monkeypatch.setattr(zone.rng, "choice", no_draw)
     assert game.core.npcs.spawners.location(zone, spec) is None
+
+
+@pytest.mark.parametrize("tile", [(21, 3), (21, 4), (20, 4)])
+def test_design_5_5_spawn_fills_an_adjacent_authored_post_when_no_farther_tile_exists(city, tile):
+    game, caller = city
+    zone = game.core.world.zones["vatside-clinics"]
+    spec = Spawner("clearance", "npc-patient", 1, 60, tile=tile)
+    assert game.core.npcs.spawners.location(zone, spec) == tile
+
+
+def test_design_5_5_shipped_halo_post_fills_beside_arriving_caller(city, repo_root):
+    game, caller = city
+    zone = game.core.world.zones["sodium-tin-halo"]
+    shipped = load_content(repo_root / "src/blacksite/content").zones[zone.id]
+    spec = next(sp for sp in shipped.meta.spawners if sp.id == "halo-bouncer")
+    zone.template = replace(zone.template, meta=replace(zone.template.meta, spawners=(spec,)))
+    place(game, caller, zone.id, zone.template.meta.spawn)
+    bouncers = [a for a in zone.actors.values() if a.behaviour.get("spawner") == spec.id]
+    assert len(bouncers) == 1
+    assert bouncers[0].position == (4, 3)
+    assert body(game, caller).position == (3, 3)
 
 
 @pytest.mark.parametrize("key", ["npc-patient", "npc-sodium-regular", "npc-plainclothes-warden"])

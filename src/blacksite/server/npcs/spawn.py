@@ -10,9 +10,8 @@ from blacksite.server.world.registry import World
 from blacksite.server.world.zone import ZoneInstance
 
 
-# Game design 5.5: prefer more than five tiles; never spawn adjacent.
+# Game design 5.5: prefer more than five tiles, then the farthest free tile.
 SPAWN_CLEARANCE = 5
-SPAWN_MIN_CLEARANCE = 1
 
 
 class Spawners:
@@ -44,8 +43,7 @@ class Spawners:
                          for t in candidates}
             preferred = [t for t in candidates if clearance[t] > SPAWN_CLEARANCE]
             farthest = max(clearance.values())
-            candidates = preferred or [t for t in candidates
-                                       if clearance[t] == farthest and farthest > SPAWN_MIN_CLEARANCE]
+            candidates = preferred or [t for t in candidates if clearance[t] == farthest]
         return zone.rng.choice(candidates) if candidates else None
 
     def process(self, zone: ZoneInstance, now: float) -> None:

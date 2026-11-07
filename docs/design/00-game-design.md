@@ -431,9 +431,10 @@ exchanges create neither combat-logout penalties nor death debt.
 
 Ordinary spawners prefer legal free tiles more than five Chebyshev tiles
 from every player in the zone. If none qualify, use a farthest legal
-free tile by its distance to the nearest player. Never spawn on or next
-to a player, including diagonally; defer the spawn if no tile clears
-that minimum. With no players, keep the ordinary legal-tile choice.
+free tile by its distance to the nearest player. Never spawn on a player.
+An adjacent tile is allowed when no more distant authored candidate
+exists, so small posts still fill. With no players, keep the ordinary
+legal-tile choice.
 Wander, patrol and flee steps never end on exit tiles. A wanderer outside
 its spawn region walks back toward its home before resuming wandering;
 this applies equally to every wanderer, including covered actors.

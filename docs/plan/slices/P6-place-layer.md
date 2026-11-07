@@ -373,8 +373,8 @@ of S39 and S41. Changes no interaction resolver, echo, talker reach rule
 or talk page. H1 and S25 layout approval remain ungranted.
 
 - Audit ordinary spawners and enforce game design 5.5's player clearance,
-  including its farthest-tile fallback. Defer if all free candidates are
-  adjacent; never weaken clearance merely to fill a slot.
+  including its farthest-tile fallback. Reject occupied player tiles;
+  allow adjacent fallback if no farther authored free tile exists.
 - Keep wander and patrol steps off exits, including the shipped Sodium
   regular/Plaza exit and plainclothes Warden/Halo door cases. Flee's
   existing #150 protection remains in place.
@@ -391,8 +391,17 @@ regression tests exercise that path without another movement rule.
 An out-of-region wanderer is confined by the region check, so cannot
 walk back. Consumables currently cap shock only at 100.
 
+The lead's follow-up ruling on #115 (6701887236) softens the original
+adjacency ban: hard deferral starves small authored posts and convoys.
+It also pins the interaction matrix's original NPC scene. Read-only
+attribution at head 836d43c showed only spawn clearance changes that
+matrix: the first Wake Hall orderly moves from (10,4) to (13,4). Pinning
+only NPC positions restores all 10,704 original outcome rows and the
+frozen SHA-256 05213f386e4ca644479f8ff80d43ca4e27ebd0acd0013e644b2072a9b9c59185.
+This changes the driver's setup, not its assertions, baseline or hash.
+
 Acceptance: root pytest, including the unchanged mechanics fingerprint;
-spawn preference/fallback/deferral; wander/patrol beside exits and the
+spawn preference/fallback/player occupancy; wander/patrol beside exits and the
 shipped door cases; uniform return-home with unchanged random draws;
 consumable bounds and receipt outcomes. If any RNG change moves a digest,
 stop and refer it to the technical lead; do not regenerate it. Run the
