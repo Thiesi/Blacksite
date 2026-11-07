@@ -80,3 +80,53 @@ Result: **59 passed in 36.80 s**, with both frozen baselines unchanged.
 The PR records subsequent exact-head root, CI, native and review results.
 Native acceptance uses the canonical NetBBS Telnet/native-stdio matrix
 at 80x24 and 132x50. Focused tests do not substitute for those runs.
+
+## S10 evacuation correction
+
+At corrected head ac606e3, root pytest passes 2346 tests with 3 skipped;
+both hosted OS jobs pass. The service matrix finishes with 27 successful
+jobs, one failed S10 combat job, and one intentional skip. Both S24 sizes
+pass first run. Both S11 sizes pass actual heat expiry and local response;
+their final p99s are 5.412 ms at 80x24 and 7.928 ms at 132x50.
+
+S10's 80x24 winner dies to Warden pursuit while walking from the corpse
+cache toward Plaza. The failed artifact is `s10-combat-proof`, ID
+13560367998, on run 42337239960; its ZIP SHA-256 is
+`910661f94c1d16df59cb2ad5ccd814d63c49b78248da560a7d6fd711ad499cfd`.
+The winner has 18/108 HP after looting, versus 78/108 in the passing
+near-base artifact 13553591387 on run 42320603678. The last failed Clinic
+frame places the winner at (76,25), the Warden at (71,28), and the Plaza
+exit at (77,2). The failure happens during the walk, before exit input.
+
+The retained comparison and its limits are on
+[#180, 6702434717](https://github.com/Thiesi/Blacksite/pull/180#issuecomment-6702434717).
+The Warden uses patrol, so the added wander return-home branch does not
+directly move it. A9 likely changes the zone RNG stream enough to expose
+this existing pursuit race, but the retained captures do not prove that
+attribution. They do not record every spawn, RNG state or unseen actor.
+
+The lead accepts lawful pursuit and authorizes a deliberate route change
+in [6702439669](https://github.com/Thiesi/Blacksite/pull/180#issuecomment-6702439669):
+Clinic to Core tram hub to Plaza. From cache (27,25), the tram at (3,31)
+is 30 movement steps away, versus 73 directly to Plaza. S10 keeps real
+HP, Mark, live NPCs and the original second-death assertions. It adds a
+local guard against a death/recovery being mistaken for a zone change.
+The shared `NativeProbe.travel` bound stays unchanged.
+
+The local tram wait reads the actual scheduled arrival. Trams depart on
+90-second intervals and take 10 seconds; the allowance also covers the
+existing bounded departure hold and original transition margin. The
+actor remains on the contested platform until departure. **Remaining
+risk:** the 30-step walk at low HP can still lose, and pursuit can also
+reach a waiting passenger. A second failure is a new measurement to
+report, not permission to retry or pin the Warden. That fixture is not
+authorized.
+
+**Curfew check:** S10 forces no event and changes no event state. Curfew
+is eligible for automatic scheduling and restricts a Marked caller's
+inbound Core entry. Ordinary plans start at least one hour after they
+are reserved (`Scheduler.reserve`, `ADVANCE_SECONDS`). The canonical
+fresh-root CI job has a 20-minute timeout, so an automatically planned
+Curfew cannot start during it. A reused or long-lived world with an old
+plan can close the hub; boarding refusal must fail the proof. S10 neither
+clears Curfew nor supplies a pass nor suppresses its restriction.

@@ -400,6 +400,15 @@ only NPC positions restores all 10,704 original outcome rows and the
 frozen SHA-256 05213f386e4ca644479f8ff80d43ca4e27ebd0acd0013e644b2072a9b9c59185.
 This changes the driver's setup, not its assertions, baseline or hash.
 
+Native S10 at ac606e3 exposes an injured Marked winner's evacuation race.
+The lead's #180 ruling (6702439669) allows the S10-local route through
+the tram hub, with the actual schedule/ride allowance. Shared travel
+bounds, real HP, Mark, live NPCs and second-death failure stay intact.
+The nearer walk and waiting platform can still be unsafe; another
+failure needs a new measurement record. Curfew remains an actual entry
+restriction; the proof starts no such event and never clears it. The
+evidence ledger records the retained comparison and fresh-root timing.
+
 Acceptance: root pytest, including the unchanged mechanics fingerprint;
 spawn preference/fallback/player occupancy; wander/patrol beside exits and the
 shipped door cases; uniform return-home with unchanged random draws;
