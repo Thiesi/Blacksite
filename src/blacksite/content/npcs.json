@@ -1055,6 +1055,7 @@
         }
       ],
       "xp": 20,
+      "dialogue": "row-enforcer",
       "weapon": "wpn_halvard_hv7",
       "armour": "arm_sable_leathers",
       "loot": [

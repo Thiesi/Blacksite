@@ -21,9 +21,8 @@ demo.
    ```
    python scripts/demo_sodium/serve.py --install-dir .test-tmp/demo-world
    ```
-   Add `--bouncer` for the Q7 variant, `--signs` for far signs at night and
-   `--seated` for the seated comparison in round 2. Each start refreshes the
-   world's copy of the content. Characters stay.
+   Add `--signs` for far signs at night and `--seated` for seated drinkers. Each
+   start refreshes the world's copy of the content. Characters stay.
 2. **Door, in Windows Terminal at 132x50 or 80x24:**
    ```
    python scripts/demo_sodium/play.py --install-dir .test-tmp/demo-world --handle Thiesi
@@ -86,8 +85,9 @@ Afterwards:
 ## Playtest 3: the price and the getaway
 
 Two callers, both grade 5 or more, from factions that are hostile to each
-other (for example Kestrel and Sable). An ordinary night, not Curfew. Run
-it twice: once with `BLACKSITE_DEMO_BOUNCER=1`, once without.
+other (for example Kestrel and Sable). An ordinary night, not Curfew. The Halo
+now refuses a Marked truce-breaker and anyone Sable is still answering, as the
+owner ruled.
 
 1. Both meet in the card court, and nothing happens for a minute.
 2. One draws on the other.
@@ -95,13 +95,16 @@ it twice: once with `BLACKSITE_DEMO_BOUNCER=1`, once without.
    passages, or into the Halo. The victim may fire back or call for help.
 4. Repeat with the attacker standing and fighting the enforcers instead
    of running.
+5. Repeat alone, shooting an NPC instead of a player.
 
 Afterwards:
 
 - Did drawing feel like a decision with a cost before you made it?
 - Standing and fighting: did you lose, and did it feel fair?
 - Running: did you get away? Was it skill or luck?
-- With the bouncer on: did being turned away from the Halo feel right?
+- Did you know the price before you fired? What told you?
+- Did being turned away from the Halo feel right? Did you know how long for?
+- At any point, did you think you were barred from somewhere you weren't?
 - Would you ever draw on the Row again? When?
 
 Optional fourth run, on Curfew (an operator starts the event with

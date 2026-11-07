@@ -1,0 +1,41 @@
+{
+  "schema": 1,
+  "id": "row-enforcer",
+  "name": "Sable enforcer",
+  "faction": "sable",
+  "title": "Keeps the Row's peace",
+  "terminal": false,
+  "machine_mind": false,
+  "lines": [
+    {
+      "id": "marked",
+      "text": "You know what you did. So do we.",
+      "when": [
+        "marked"
+      ],
+      "required": true
+    },
+    {
+      "id": "wake",
+      "text": "You're new, so once. Draw on this street and we come for you. The Halo won't have you either.",
+      "when": [
+        "is_wake"
+      ],
+      "required": true
+    },
+    {
+      "id": "greeting",
+      "text": "Hands empty and we've got nothing to say.",
+      "when": [],
+      "required": true
+    }
+  ],
+  "offers": [],
+  "barks": [
+    {
+      "text": "Nobody draws on the Row. You can. Then you pay.",
+      "weight": 1,
+      "min_interval_seconds": 90
+    }
+  ]
+}

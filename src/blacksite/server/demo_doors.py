@@ -5,8 +5,8 @@ because nothing kept the words. This writes every attempt to use an exit on the
 Row or in the Halo to logs/server.log: who, where, what they were told, and
 whether they were Marked or being answered. It changes no outcome.
 
-A locked-door tile with no exit behind it, like the alley's east end, says
-nothing and isn't an exit, so it leaves no record.
+The alley's locked east door isn't an exit, but it's recorded too. Walking into
+it without pressing E still leaves no record.
 """
 from __future__ import annotations
 
@@ -30,7 +30,8 @@ def install(core: Core, record: Callable[..., None]) -> None:
 
     def recorded(session: Any, avatar: Any, tick: int, *, street: bool = False, choice: Any = None) -> None:
         choice = choice or sim.interaction_target(avatar, street=street)
-        if not isinstance(choice.value, Exit) or avatar.zone not in ZONES:
+        back_door = getattr(getattr(choice.value, 'spec', None), 'id', '') == demo_truce.BACK_DOOR
+        if not (isinstance(choice.value, Exit) or back_door) or avatar.zone not in ZONES:
             interact(session, avatar, tick, street=street, choice=choice)
             return
         said: list[str] = []
@@ -48,7 +49,8 @@ def install(core: Core, record: Callable[..., None]) -> None:
         truce = getattr(core.combat.hostile_hook, '__self__', None) if core.combat else None
         answered = bool(zone in demo_truce.TRUCE and truce and hasattr(truce, 'engaged')
                         and truce.engaged(avatar.actor, zone))
-        record('demo door', player=avatar.actor.name, zone=zone, tile=list(tile), exit=choice.value.id,
+        record('demo door', player=avatar.actor.name, zone=zone, tile=list(tile),
+               exit=demo_truce.BACK_DOOR if back_door else choice.value.id,
                outcome='went through' if avatar.travel or avatar.zone != zone else ' '.join(said) or 'nothing said',
                marked=bool(avatar.actor.marked), answered=answered)
 

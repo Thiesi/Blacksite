@@ -154,6 +154,14 @@ DIALOGUE = {
             bark("Somebody's lease ran out tonight. You can tell by how they're buying."),
             bark("Keep your hands where Sable can count them."),
             bark("I only came down for one.")]),
+    # Round 3 (#170): the enforcer says it once, flatly. Barks are never
+    # guaranteed, so the notice carries the price and this makes it believable.
+    "row-enforcer": talker(
+        "row-enforcer", "Sable enforcer", "sable", "Keeps the Row's peace", [
+            line("marked", "You know what you did. So do we.", "marked"),
+            line("wake", "You're new, so once. Draw on this street and we come for you. The Halo won't have you either.", "is_wake"),
+            line("greeting", "Hands empty and we've got nothing to say."),
+        ], [bark("Nobody draws on the Row. You can. Then you pay.")]),
     # Round 2: company in the lit stretch outside the Halo, so the end of the
     # street looks like somewhere people go. They stand; they don't go in.
     "row-halo-doorstep": talker(
@@ -236,7 +244,7 @@ TEMPLATES = [
     # with time to break sight and escape. Estimates, to be felt in playtest 3.
     {"id": "npc-row-enforcer", "name": "Sable enforcer", "faction": "sable", "grade": 6,
      "attributes": {"frame": 35, "nerve": 30, "cortex": 10, "resonance": 5, "vitals": 50},
-     "behaviours": [{"kind": "guard", "params": {}}], "xp": 20,
+     "behaviours": [{"kind": "guard", "params": {}}], "xp": 20, "dialogue": "row-enforcer",
      "weapon": "wpn_halvard_hv7", "armour": "arm_sable_leathers",
      "loot": [{"item": "ammo_5x", "chance": 0.5, "count": 10}]},
 ]
@@ -290,8 +298,8 @@ def main() -> None:
         save(f"dialogue/{did}.json", rec)
     vesper = load("dialogue/vesper.json")
     for offer in vesper["offers"]:
-        if offer["kind"] == "contract":
-            offer["when"] = ["not_marked"]  # #143 section 5: drawing costs the Row's work
+        if offer["kind"] in ("contract", "vendor"):
+            offer["when"] = ["not_marked"]  # #143 section 5, ruled yes 2026-11-07: drawing costs the Row's work
     save("dialogue/vesper.json", vesper)
 
     items = load("items.json")
@@ -325,6 +333,7 @@ def main() -> None:
         if obj["id"] in names:
             obj["params"]["name"] = names[obj["id"]]
             obj["params"]["vendor"] = vids[obj["id"]]
+    row["objects"] = [o for o in row["objects"] if o["id"] != "row-halo-back-door"]
     row["spawners"] = ROW_SPAWNERS
     save("zones/sodium-row.json", row)
 

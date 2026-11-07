@@ -86,7 +86,9 @@
       "ref": "vesper",
       "label": "Trade",
       "hotkey": "v",
-      "when": []
+      "when": [
+        "not_marked"
+      ]
     }
   ],
   "barks": [
