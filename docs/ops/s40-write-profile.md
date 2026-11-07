@@ -1,8 +1,35 @@
 # S40 write-stage measurements
 
-This is measurement support, not a diagnosis or a persistence fix. The
-cause of the intermittent S11 stalls is still unknown. The 10 ms gate,
-nearest-rank calculation, workload and real heat wait are unchanged.
+This is measurement support, not a persistence fix. S40 identifies a
+successful SQLite commit in `commerce_write` as the stalling operation
+in one captured failure; its underlying wait mechanism remains unknown.
+The 10 ms gate, nearest-rank calculation, workload and real heat wait
+are unchanged.
+
+## Outcome and owner decision
+
+The [captured failure](https://github.com/Thiesi/Blacksite/pull/166#issuecomment-6697673052)
+at `e6ec3d6`, S11 132x50, records a 108.188959 ms successful commit at
+tick 7183. Writes took 109.447249 ms wall / 1.503110 ms thread CPU; the
+unchanged gate failed at 113.895432 ms with 99 samples. The
+[paired manifest](https://github.com/Thiesi/Blacksite/pull/166#issuecomment-6697704773)
+retains vectors, spans, hashes and artifact pointers. This names the
+operation, not a particular sync, checkpoint, locking or scheduler wait.
+
+The [extended baseline](https://github.com/Thiesi/Blacksite/pull/166#issuecomment-6698925746)
+at `fa3a108` observed 33 checkpoint/restart cycles in each 4,096-commit
+stream. No commit exceeded 5 ms; maxima were 2.146170 / 3.078415 ms.
+These fresh commerce-only controls do not reproduce the aged game's
+mixed writes or disprove intermittent stalls.
+
+On 2026-11-07 the [owner approved S40's replacement done criteria](https://github.com/Thiesi/Blacksite/pull/166#issuecomment-6699732646):
+name the operation with evidence, save the exact gate samples and commit
+timer in S11 artifacts, and keep the
+[off-loop FULL design note](https://github.com/Thiesi/Blacksite/pull/166#issuecomment-6698930471)
+on file. The worker is not built now; it is reopened if stalls appear
+on real hardware or under real load. Commits stay synchronous and
+`synchronous=FULL` stays. No product fix or outside-game finding is
+claimed. The previous five-run completion requirement is replaced.
 
 ## Collecting a profile
 
@@ -84,6 +111,42 @@ No estimator or sample-window change is made to smooth that boundary.
 Use this vector for the gate, not the nearby `ticks` rows' rounded or
 separately bracketed durations.
 
+## Handling an S11 failure
+
+The [owner's handling](https://github.com/Thiesi/Blacksite/pull/166#issuecomment-6699732646)
+keeps the 10 ms limit and the failed check. It changes who may rule a
+demonstrated commit stall non-blocking; it does not turn a failure into
+a pass or allow a retry to clear it.
+
+1. Retain the failed head, run, job, original artifact and its hash.
+   Reproduce the reported count/p99 from the saved `gate.samples_ms`.
+   Identify the over-limit sample and its processed tick using the
+   coarse `ticks` rows, preserving any gaps or alignment uncertainty.
+2. Inspect that tick's `commerce_commits`: start/end nanoseconds, wall
+   duration and success. Compare with its coarse write wall and
+   `writes_cpu_ms`, plus loop and total wall/CPU. The sparse commit
+   timer measures wall only; there is no new per-commit CPU clock.
+   Do not substitute a later detailed trace or disk baseline for this
+   canonical observation, or treat wall greater than CPU alone as proof.
+3. **Commit stall:** if the saved timer shows the over-limit tick was
+   mostly commit wait, with wall time far above CPU, supply those
+   readings to the technical lead. The lead can rule it non-blocking
+   and note the decision on the PR, without a retry. The owner is not
+   asked each time and gets these reported in batches. Codex and the
+   check do not grant that ruling automatically.
+4. **Any other failure blocks as normal**, including CPU-heavy near
+   misses such as the retained 10.110753 and 10.568753 ms failures.
+   A missing or ambiguous timer is not evidence for a
+   commit-wait exemption. Keep the failure and report it to the lead.
+
+Every failure stays on record, and the check still reports failure even
+after a non-blocking ruling. Do not change the assertion, estimator,
+sample window, workload, heat wait or persistence policy. S24 must pass
+at the head submitted for review without a retry; this S11 handling
+does not cover S24 or other acceptance failures. A repeat S24 failure
+is a new measurement for the lead, not an S40 investigation or a job
+to rerun only to clear it.
+
 ## Sparse canonical diagnostics
 
 `commerce_commits` records processed tick, raw start/end nanoseconds,
@@ -145,10 +208,12 @@ cannot refute intermittent game/disk stalls. No baseline precedes a gate.
 Manual service-workflow dispatch is S11-only, optionally one size.
 The first pair at e6ec3d6 captured a 108.188959 ms successful commit;
 collection stopped and no manual dispatch was used. The checkpoint
-follow-up permits one normal service run per size, with no S11-only
+follow-up used one normal service run per size, with no S11-only
 dispatch. Every outcome, including failures, is reported on PR #166.
-These measurements do not count towards the five-run completion
-criterion, grant approval, or authorise a product fix.
+Those diagnostic budgets were specific to their recorded heads, not a
+standing retry allowance. S40 now uses the owner's replacement criteria
+above. These measurements grant no human approval or product-fix
+authority.
 
 ## Reading write operations
 
