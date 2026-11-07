@@ -439,8 +439,8 @@ Wander, patrol and flee steps never end on exit tiles. A wanderer outside
 its spawn region walks back toward its home before resuming wandering;
 this applies equally to every wanderer, including covered actors.
 A wander step never takes an NPC out of reach of a player beside it who
-can talk; flee, hunt, patrol, event motion and the walk home still move
-it. This too applies to every wanderer alike (planned, S42).
+can talk and has acted in the last 30 seconds, or has its talk page
+open; flee, hunt, patrol, event motion and the walk home still move it. This too applies to every wanderer alike (planned, S42).
 
 Non-player actors run **behaviours**: idle, wander, patrol (waypoints),
 guard (hold, aggro on hostile), hunt (chase), flee (below 20 % health),

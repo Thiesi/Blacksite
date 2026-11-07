@@ -42,6 +42,11 @@ A9's return-home rule and S39's resolver.
   out of reach, the page closes as it does now.
 - **A player who can't talk holds nobody:** down, dead, asleep or jacked
   in.
+- **An idle player holds nobody either.** The hold counts only a player
+  who moved or sent a key or intent in the last 30 seconds, or who has
+  that NPC's talk page open. So an idle player, or two at a chokepoint,
+  can't pin the crowd in place, and a griefer can't keep a regular by
+  their side by standing still.
 - It uses no extra `zone.rng` draws. The random step is chosen as today
   and filtered.
 
@@ -107,8 +112,12 @@ canon "acts against a caller" rule.
    (hunt), not if it will flee. In `provoked()`, the direct
    `combat.reveal(target, source)` follows the same rule. By the owner's
    decision, shooting a plainclothes Warden shows the shooter no sign and
-   costs nothing beyond shooting any regular. The reveal for local guards
-   stays.
+   costs nothing beyond shooting any regular. It does cost exactly that:
+   on the Row it breaks the truce, and the keeper answers, as for a shot
+   at a regular. The reveal for local guards stays.
+   Architecture 5.5.4 now says "hunts" where it said "targets". Check
+   every `combat.reveal` caller, including the Tab-target view, and
+   say on the PR that none relied on targeting alone.
 3. **No Warden detector for red names.** A covered, unarmed NPC doesn't
    take the Wardens' heat and Mark rule in `hostile()`, so a Marked or
    heated player in sight doesn't make one "regular" turn and run. It
@@ -158,7 +167,9 @@ uses a declared fixture.
 - **Reach:** a wanderer beside a player never steps out of reach, over
   many ticks, from every neighbouring position. A covered wanderer
   behaves identically. A flee or hunt still takes the NPC away. A
-  down, asleep or jacked player holds nobody. `zone.rng` draws per tick
+  down, asleep or jacked player holds nobody, and neither does a player
+  idle for 30 seconds without the NPC's page open. A held wanderer outside
+  its region still walks home. `zone.rng` draws per tick
   are unchanged.
 - **Walks off:** the line appears under the presented name when the
   person leaves, including a covered NPC's cover name. No line when the
@@ -172,7 +183,8 @@ uses a declared fixture.
   the welcome keymap; a test changes the keymap and the door follows.
 - **Warden, through real views:** shoot a regular and the Warden flees
   with the crowd, name unchanged. Shoot the Warden and the regulars flee,
-  the shooter's view shows the cover, and nothing else follows. The
+  the shooter's view shows the cover, the keeper answers as for a shot
+  regular, and nothing else follows. The
   Warden and the regulars go back to wandering on the same tick. A second
   group with the same cover name in the zone doesn't react. The validator
   refuses a missing or mismatched `poses_as`. A Marked
