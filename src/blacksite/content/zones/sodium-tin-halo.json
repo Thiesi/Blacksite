@@ -75,7 +75,8 @@
       "essential": false,
       "params": {
         "name": "Halo back room",
-        "open": false
+        "open": false,
+        "locked": true
       }
     },
     {

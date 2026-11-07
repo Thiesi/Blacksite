@@ -1,6 +1,7 @@
 """Demo only: round 3's rulings (#170). The Halo, Vesper's work, being hunted, the arrival notice."""
 
 from datetime import datetime, timezone
+from types import SimpleNamespace
 
 import pytest
 
@@ -167,6 +168,39 @@ def test_the_alley_door_says_what_it_is(repo_root, monkeypatch):
     assert 'No handle this side.' in [line.get('text', '') for line in caller.session.log_ring]
     assert seen[-1]['exit'] == 'row-halo-back-door' and seen[-1]['outcome'] == 'No handle this side.'
     assert avatar.zone == 'sodium-row'
+
+
+def walkable_from(zone, start):
+    seen, todo = {start}, [start]
+    while todo:
+        x, y = todo.pop()
+        for step in ((x+dx, y+dy) for dx in (-1, 0, 1) for dy in (-1, 0, 1)):
+            if step not in seen and zone.passable(step):
+                seen.add(step)
+                todo.append(step)
+    return seen
+
+
+def test_only_the_core_opens_the_way_out_the_back(repo_root, monkeypatch):
+    game, caller = boot(repo_root, monkeypatch)
+    zone = game.core.world.zones['sodium-tin-halo']
+    door = zone.objects['halo-back-room']
+    out_back = next(e.tile for e in zone.template.meta.exits if e.id == 'to-sodium-row-back')
+    spawn_tile = zone.template.meta.spawn
+    assert out_back not in walkable_from(zone, spawn_tile)
+
+    x, y = door.spec.tile
+    place(game, caller, zone.id, next(t for t in ((x-1, y), (x+1, y), (x, y-1), (x, y+1))
+                                      if t in walkable_from(zone, spawn_tile)))
+    sim = game.core.characters.sim
+    avatar = sim.avatars[caller.session.user_id]
+    sim.interact(caller.session, avatar, 0, choice=SimpleNamespace(value=door))
+    assert not door.open
+    assert 'The door is locked. Its core controls the latch.' in [
+        line.get('text', '') for line in caller.session.log_ring]
+
+    assert zone.set_door(door.spec.id, True)  # what the core's control does
+    assert out_back in walkable_from(zone, spawn_tile)
 
 
 def killed_and_back(game, caller):

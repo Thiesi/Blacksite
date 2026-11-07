@@ -250,8 +250,9 @@ def main():
     halo = json.loads((zones/"sodium-tin-halo.json").read_text(encoding="utf-8"))
     mark_objects(h, HALO_OBJECTS, halo)
     for o in halo["objects"]:
-        if o["id"] == "halo-back-room":  # the core's back-door control opens it
+        if o["id"] == "halo-back-room":  # only the core's back-door control opens it
             o["params"]["open"] = False
+            o["params"]["locked"] = True
     halo["spawn"] = list(HALO_SPAWN)
     halo["sight_radius"] = 28  # demo: the whole room in sight (V0-3 is still open)
     halo["exits"] = [

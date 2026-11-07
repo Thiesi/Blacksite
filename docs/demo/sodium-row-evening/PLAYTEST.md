@@ -89,6 +89,12 @@ other (for example Kestrel and Sable). An ordinary night, not Curfew. The Halo
 now refuses a Marked truce-breaker and anyone Sable is still answering, as the
 owner ruled.
 
+The Halo's back way out is locked from inside too, in this round only. Pressing
+E on the door gets you "The door is locked." Only the back door control in the
+Halo's core opens it, for 5 minutes, so someone has to jack in and get through
+the ICE. Which door that control should open in the real game is still with the
+owner.
+
 1. Both meet in the card court, and nothing happens for a minute.
 2. One draws on the other.
 3. The attacker tries to get away: up the Stair, through the alley
