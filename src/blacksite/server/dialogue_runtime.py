@@ -207,7 +207,7 @@ class Dialogue:
         offers = eligible_offers(talker, self.facts(session, talker))
         title = talker.name+(' - '+talker.title if talker.title else '')
         leaves = 'Esc/B leaves' if screen.contact.lattice else 'Move or Esc/B leaves'  # Round 3: walking away works
-        body = menu(title, [], 0, screen.line, 'Choose an action  '+leaves)
+        body = menu(title, [], 0, screen.line, ('Choose an action  ' if offers else '')+leaves)
         body['kind'] = 'talker'
         body['actions'] = [{'key': offer.hotkey.lower(), 'label': offer.label} for offer in offers]
         body['actions'].append({'key': 'b', 'label': 'Back'})
