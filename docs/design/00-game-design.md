@@ -438,6 +438,9 @@ legal-tile choice.
 Wander, patrol and flee steps never end on exit tiles. A wanderer outside
 its spawn region walks back toward its home before resuming wandering;
 this applies equally to every wanderer, including covered actors.
+A wander step never takes an NPC out of reach of a player beside it who
+can talk; flee, hunt, patrol, event motion and the walk home still move
+it. This too applies to every wanderer alike (planned, S42).
 
 Non-player actors run **behaviours**: idle, wander, patrol (waypoints),
 guard (hold, aggro on hostile), hunt (chase), flee (below 20 % health),
@@ -453,7 +456,9 @@ the peace provokes the keeper's guards in the zone against the
 responsible player, besides the usual provocation of an attacked NPC's
 own group and guards. Firing back at a Marked player, or at an NPC that
 is already after you, breaks nothing. Wardens still engage Marked
-players. Freelance
+players, except a covered, unarmed one: it reacts only when the group
+it poses as reacts, flees with that group, and fleeing doesn't reveal it
+(planned, S42). Freelance
 characters are neutral to faction NPCs unless a declared restricted
 perimeter or hostile action gives a reason to engage. Open ground permits
 violence; it does not make traders automatic enemies. Hostile perimeters

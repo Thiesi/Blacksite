@@ -107,9 +107,10 @@ not a numeric execution order. Cross-milestone dependencies are explicit.
 | S36 | Tags: one short public mark per character (planned, #125) | Codex | S08, S09, P6 |
 | S37 | Dead drops: addressed item stacks and Kestrel returns (planned, #125) | Codex | S23, S35 |
 | S38 | Truce zones: Sodium Row keeps the peace (done, #142, PR #159) | Codex | S11, S20, #126 (P6b) |
-| S39 | Exit underfoot: a door on your tile outranks an adjacent talker or vendor for E (in review, #155, PR #167) | Codex | P3, #126 (P6b) |
+| S39 | Exit underfoot: a door on your tile outranks an adjacent talker or vendor for E (done, #155, PR #167) | Codex | P3, #126 (P6b) |
 | S40 | Tick gate: identify the character-write stall and retain its evidence and design (done, #158, PR #166) | Codex | S11 |
-| S41 | Doors ignore frames they don't know (in review, #173, PR #181) | Codex | none |
+| S41 | Doors ignore frames they don't know (done, #173, PR #181) | Codex | none |
+| S42 | Talkers stay in reach, and the talk page lets you go (planned, #182) | Codex | S38, S39, A9 |
 
 Reviews: before S03, S04, and S14 start, an **Astra** critique pass over
 the relevant spec sections is recommended (protocol, renderer, hacking
