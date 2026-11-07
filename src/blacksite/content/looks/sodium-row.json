@@ -63,6 +63,14 @@
       ]
     },
     {
+      "theme": "sodium-lamp",
+      "circle": [
+        84,
+        12,
+        3
+      ]
+    },
+    {
       "theme": "sodium-door-blue",
       "circle": [
         13,
@@ -113,7 +121,7 @@
     {
       "theme": "sodium-door-pink",
       "circle": [
-        86,
+        89,
         12,
         2
       ]
@@ -165,7 +173,7 @@
         82,
         10
       ],
-      "text": " TIN HAL",
+      "text": "TIN HA O",
       "role": "thing_sign_orange"
     },
     {
@@ -189,6 +197,22 @@
     {
       "at": [
         5,
+        14
+      ],
+      "text": "TIN HALO →",
+      "role": "paint"
+    },
+    {
+      "at": [
+        30,
+        14
+      ],
+      "text": "TIN HALO →",
+      "role": "paint"
+    },
+    {
+      "at": [
+        55,
         14
       ],
       "text": "TIN HALO →",
