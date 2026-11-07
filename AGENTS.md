@@ -210,7 +210,7 @@ offline disk check. These rules keep it bounded:
 - Do not add a runtime dependency.
 - Do not add a plain-text or ASCII-only display tier; the floor is ANSI
   colour plus cursor addressing at 80×24 with UTF-8.
-- Do not add a ninth joinable faction, magic, or a way out of Karst.
+- Do not add a tenth joinable faction, magic, or a way out of Karst.
 - Do not widen a slice. If the spec is wrong, say so in the issue and
   stop; if it is merely incomplete, do the spec and note the gap.
 - Do not spawn the game server from the door client.

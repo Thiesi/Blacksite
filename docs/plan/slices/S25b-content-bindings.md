@@ -1,6 +1,6 @@
 # S25b — S25 content bindings and generator fixes
 
-**Status:** in progress (engineering; district layout gates remain held)
+**Status:** engineering done (PR #97); generated content publishes per district with S25c under H2 and H3
 **Primary model:** Sonnet · **Reviewer:** automated review, technical lead, owner (layout)
 **Depends on:** S25a · **Milestone:** M5
 **Issue:** https://github.com/Thiesi/Blacksite/issues/78
