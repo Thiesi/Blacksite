@@ -357,7 +357,7 @@ class Npcs:
                 destinations = [ex.tile for ex in zone.template.meta.exits] + [o.spec.tile for o in zone.objects.values() if o.spec.kind == "vat"]
                 destinations.sort(key=lambda p: (distance(actor.position, p)-distance(target.position, p), p))
                 away = (actor.x + (1 if actor.x >= target.x else -1), actor.y + (1 if actor.y >= target.y else -1))
-                step_toward(actor, zone, destinations[0] if destinations else away, tick)
+                step_toward(actor, zone, destinations[0] if destinations else away, tick, avoid=avoid)
                 return
             arm = weapon(self.content, template)
             if arm and self.combat.visible(actor, target) and distance(actor.position, target.position) <= (1.5 if arm.melee else arm.range):
@@ -376,7 +376,12 @@ class Npcs:
                 if tick < int(actor.behaviour.get("pause", 0)):
                     return
                 tile = actor.x+zone.rng.choice((-1, 0, 1)), actor.y+zone.rng.choice((-1, 0, 1))
-                step_toward(actor, zone, tile, tick, actor.behaviour.get("region"), keep_reach(actor, zone, avoid))
+                region = actor.behaviour.get("region")
+                if region and not region.contains(actor.position):
+                    # Round 2: after fleeing, walk home; a region step alone would never move.
+                    step_toward(actor, zone, tuple(actor.behaviour["home"]), tick, avoid=keep_reach(actor, zone, avoid))
+                else:
+                    step_toward(actor, zone, tile, tick, region, keep_reach(actor, zone, avoid))
                 actor.behaviour["pause"] = tick + zone.rng.randint(*WANDER_PAUSE_TICKS)
                 return
             if behaviour.kind == "patrol":

@@ -5,8 +5,9 @@ because nothing kept the words. This writes every attempt to use an exit on the
 Row or in the Halo to logs/server.log: who, where, what they were told, and
 whether they were Marked or being answered. It changes no outcome.
 
-The alley's locked east door isn't an exit, but it's recorded too. Walking into
-it without pressing E still leaves no record.
+A talker taking E beside an exit is recorded too, because that's what round 1's
+refusal most likely was. The alley's locked east door isn't an exit, but it's
+recorded as well. Walking into it without pressing E still leaves no record.
 """
 from __future__ import annotations
 
@@ -55,3 +56,20 @@ def install(core: Core, record: Callable[..., None]) -> None:
                marked=bool(avatar.actor.marked), answered=answered)
 
     sim.interact = recorded
+    if core.dialogue is None:
+        return
+    show = core.dialogue.show
+
+    def showing(session: Any, contact: Any, text: str, tick: int) -> bool:
+        shown = show(session, contact, text, tick)
+        avatar = sim.avatars.get(session.user_id)
+        zone = sim.world.zones.get(avatar.zone) if avatar else None
+        if shown and zone and avatar.zone in ZONES:
+            actor = avatar.actor
+            beside = [ex.id for ex in zone.template.meta.exits
+                      if max(abs(ex.tile[0]-actor.x), abs(ex.tile[1]-actor.y)) <= 1]
+            if beside:
+                record('demo door', player=actor.name, zone=avatar.zone, tile=list(actor.position), exit=beside[0],
+                       outcome=f'a talker took E: {text}', marked=bool(actor.marked), answered=False)
+        return shown
+    core.dialogue.show = showing
