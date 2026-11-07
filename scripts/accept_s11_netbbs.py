@@ -8,6 +8,7 @@ import argparse
 import asyncio
 import gc
 from collections import deque
+from dataclasses import asdict
 import json
 from pathlib import Path
 import time
@@ -19,6 +20,8 @@ from blacksite.admin.client import request
 from blacksite.server.loop import TickContext
 from blacksite.server.world.actors import Actor
 from blacksite.server.world.sight import line_of_sight
+from write_profile import WriteProfile
+from minimal_s40_profile import MinimalProfile
 
 
 async def approach(probe: NativeProbe, caller: Connection, target: Actor,
@@ -61,6 +64,15 @@ async def approach(probe: NativeProbe, caller: Connection, target: Actor,
 
 
 async def profile(probe: NativeProbe, width: int, height: int) -> float:
+    # Only status, sparse commit exits and two loop boundaries are added.
+    # Detailed write wrappers/proxies remain in the later diagnostic.
+    with (WriteProfile(probe.service, trace_writes=False) as writes_profile,
+          MinimalProfile(probe.service) as minimal):
+        return await _profile(probe, width, height, writes_profile, minimal)
+
+
+async def _profile(probe: NativeProbe, width: int, height: int,
+                   writes_profile: WriteProfile, minimal: MinimalProfile) -> float:
     loop = probe.service.core.loop
     original_subsystems, original_step = loop.subsystems, loop.step
     original_writes = probe.service._character_writes
@@ -111,12 +123,15 @@ async def profile(probe: NativeProbe, width: int, height: int) -> float:
         nonlocal current
         current = {'tick': probe.service.clock.now_tick(), 'segments': {},
                    '_wall': time.perf_counter(), '_cpu': time.thread_time()}
-        wall, cpu = time.perf_counter(), time.thread_time()
+        wall, cpu = time.perf_counter_ns(), time.thread_time()
         try:
             original_step()
         finally:
-            current['loop_wall_ms'] = (time.perf_counter()-wall)*1000
+            ended = time.perf_counter_ns()
+            current['tick'] = loop.last_tick
+            current['loop_wall_ms'] = (ended-wall)/1_000_000
             current['loop_cpu_ms'] = (time.thread_time()-cpu)*1000
+            current.update(minimal.intervals(wall, ended))
 
     def writes() -> None:
         nonlocal current
@@ -163,7 +178,56 @@ async def profile(probe: NativeProbe, width: int, height: int) -> float:
             'status': status, 'sampling_started_tick': sampling_tick,
             'instrumentation': 'wall/thread CPU, GC and storage flush probes; same 10 ms gate including overhead',
             'gc_pauses': gc_pauses, 'storage_flushes': flushes,
-            'ticks': rows}, indent=2)+'\n', encoding='utf-8')
+            'ticks': rows, 'write_probe': writes_profile.metadata(),
+            'commerce_commits': minimal.export(),
+            'canonical_observer': {
+                'commit': 'Two perf_counter_ns reads around existing SQLite context exit; wall only',
+                'loop': 'Two extra perf_counter_ns reads: after inputs, before publishers',
+                'limits': 'Commit failure may include SQLite rollback; no thread CPU or rusage; no gate correction'},
+            'write_calls': list(writes_profile.calls),
+            'gate': writes_profile.gate(status) if status else None}, indent=2)+'\n', encoding='utf-8')
+
+
+async def write_diagnostic(probe: NativeProbe, width: int, height: int) -> None:
+    """Collect detailed all-hub writes after the canonical result is saved."""
+    loop = probe.service.core.loop
+    # Model the NPC armour-learning receipt after the canonical result is
+    # saved. This is a current snapshot, not the stalled receipt's payload.
+    game, commerce = probe.service.core.characters, probe.service.core.commerce
+    records = [player.record() for player in game.players.values()]
+    player = max(records, key=lambda row: len(json.dumps(row).encode('utf-8')))
+    shape = {'basis': 'Post-result largest current player; record_use player-only receipt',
+             'tick': loop.last_tick, 'not_captured_stalled_payload': True,
+             'effect': {'player': player, 'players': [], 'items': [], 'delete_items': [],
+                        'budgets': {key: asdict(value) for key, value in commerce.budgets.items()},
+                        'caches': commerce.caches, 'serial': commerce.serial}}
+    (probe.root/'disk-baseline-shape.json').write_text(
+        json.dumps(shape, ensure_ascii=False)+'\n', encoding='utf-8')
+    began_tick, began = loop.last_tick, time.perf_counter()
+    for zone in probe.service.world.zones.values():
+        zone.activate('s40-write-diagnostic', probe.service.clock.now_tick())
+    trace = WriteProfile(probe.service)
+    try:
+        with trace:
+            await asyncio.sleep(120)
+    finally:
+        try:
+            path = probe.root/f'npc-write-diagnostic-{width}x{height}.json'
+            manifest = trace.export_trace(path, {
+                'diagnostic_only': True, 'phase': 'after_final_canonical_gate',
+                'began_tick': began_tick, 'ended_tick': loop.last_tick,
+                'all_hub_zones': len(probe.service.world.zones),
+                'requested_seconds': 120, 'elapsed_seconds': time.perf_counter()-began,
+                'retention': 'Latest calls only, bounded by loop.timings.maxlen',
+                'limits': 'Detailed probe overhead is included here; these are not gate samples.'})
+            (probe.root/f'npc-write-shape-{width}x{height}.json').write_text(
+                json.dumps(manifest, indent=2)+'\n', encoding='utf-8')
+            probe.report(f"S40 DIAGNOSTIC {width}x{height}: {manifest['exported_calls']} calls, "
+                         f"{manifest['trace_bytes']} bytes, export {manifest['export_seconds']:.3f}s; not a gate")
+        finally:
+            for zone in probe.service.world.zones.values():
+                zone.deactivate('s40-write-diagnostic', probe.service.clock.now_tick())
+            del trace
 
 
 async def sodium_response(probe: NativeProbe, caller: Connection, width: int, height: int) -> None:
@@ -264,7 +328,17 @@ async def accept(root: Path, door_python: Path, show: bool,
             await probe.travel(caller,"core-plaza")
             await probe.travel(caller,"sodium-row")
             await sodium_response(probe,caller,width,height)
-            p99=await profile(probe,width,height)
+            try:
+                p99=await profile(probe,width,height)
+            except AssertionError:
+                probe.report(f"S40 DIAGNOSTIC {width}x{height}: final canonical gate FAILED; preserving result before detailed capture")
+                await write_diagnostic(probe,width,height)
+                raise
+            # With both sizes in one service, leave every canonical window
+            # ahead of detailed collection. CI uses one service per size.
+            if (width, height) == sizes[-1]:
+                probe.report(f"S40 DIAGNOSTIC {width}x{height}: final canonical gate passed; collecting supplementary evidence")
+                await write_diagnostic(probe,width,height)
             await probe.leave(caller,f"s11-complete-{width}x{height}")
             results.append({"size":[width,height],"warning_seconds":response,"heat_wait":"actual 600-second deadline",
                 "safe_damage":False,"local_guards":True,"all_hub_p99_ms":p99})

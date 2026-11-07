@@ -1,0 +1,574 @@
+{
+  "schema": 1,
+  "head": "e6ec3d656bcabaf03c5e5d9a682dd0e8628b99df",
+  "service_run": 42303060812,
+  "transport": "NetBBS v7.45.0 Telnet to registered native stdio; source-matched installed door; no teleports or human playtest",
+  "python_tree_sha256": "dc07d56ea928f9939699358d2a7217fa91f1950ecc45977448fef1457fb127df",
+  "source_records": [
+    "https://github.com/Thiesi/Blacksite/pull/166#issuecomment-6697673052",
+    "https://github.com/Thiesi/Blacksite/pull/166#issuecomment-6697704773"
+  ],
+  "interpretation": "Historical measurement: 132x50 final gate failed, preserved without retry or replacement. A successful108.188959ms commerce commit/context exit at tick7183 occupies most of109.447249ms write wall, with1.503110ms write thread CPU. This names the operation, not the internal sync/checkpoint/locking/scheduling wait. No product fix or outside-game finding. This is not final-head acceptance.",
+  "records": [
+    {
+      "size": "80x24",
+      "artifact_id": 13546776947,
+      "job": 128186358313,
+      "artifact_url": "https://github.com/Thiesi/Blacksite/actions/runs/42303060812/artifacts/13546776947",
+      "archive_sha256": "c546b41546bb9e0499b94e716a4e7bf1c61d4b1294b4e11aada9fd50a1cd51d3",
+      "job_verdict": "success",
+      "native_client": {
+        "version": "0.0.20",
+        "file": "/home/runner/work/_temp/s11-venv/lib/python3.12/site-packages/blacksite/__init__.py",
+        "python_tree_sha256": "dc07d56ea928f9939699358d2a7217fa91f1950ecc45977448fef1457fb127df"
+      },
+      "native_result": {
+        "passed": true,
+        "transport": "NetBBS Telnet native stdio",
+        "teleports": false,
+        "human_playtest": false,
+        "runs": [
+          {
+            "size": [
+              80,
+              24
+            ],
+            "warning_seconds": 0.10760125599999526,
+            "heat_wait": "actual 600-second deadline",
+            "safe_damage": false,
+            "local_guards": true,
+            "all_hub_p99_ms": 7.920361999936176
+          }
+        ]
+      },
+      "profiles": [
+        {
+          "file": "npc-profile-80x24-2.json",
+          "sha256": "be58ec37206c3db7d12cac43ec6ef9a44fc2edd296e7bdfd9c8140bf681920b6",
+          "gate": {
+            "id": 0,
+            "samples_ms": [
+              4.1456989999915095,
+              2.734523000071931,
+              2.587263999998868,
+              2.7891450000652185,
+              2.925212000036481,
+              2.694584999971994,
+              2.812693999999283,
+              4.138590000025033,
+              2.8078199999299613,
+              2.717807000067296,
+              2.730713999994805,
+              2.6168539999389395,
+              2.666676999979245,
+              2.5935469999467387,
+              2.829712999982803,
+              8.42342999999346,
+              4.046981999977106,
+              2.6917380000668345,
+              2.735312000027079,
+              2.8051200000618337,
+              2.7518790000158333,
+              2.72159600001487,
+              2.737578000051144,
+              7.920361999936176,
+              2.934207999942373,
+              2.578760999995211,
+              2.982584000051247,
+              2.486871999963114,
+              2.69621500001449,
+              2.637088000028598,
+              2.7698909999571697,
+              5.766645999983666,
+              2.8831920000129685,
+              2.6415489999180863,
+              2.863100000013219,
+              2.7705210000021907,
+              2.7197539999406217,
+              2.736228999992818,
+              2.7945109999336637,
+              7.272780999983297,
+              6.187542000020585,
+              2.647882000019308,
+              2.6413179999735803,
+              2.675224999961756,
+              2.8605829999150956,
+              2.638820000015585,
+              2.764329000001453,
+              5.734947000064494,
+              4.522421000046961,
+              3.3892829999331298,
+              2.823269000032269,
+              2.731228999891755,
+              2.686854999979005,
+              2.631916000041201,
+              2.7015199999596007,
+              5.7975019999503274,
+              4.40667099996972,
+              2.575097999965692,
+              2.799827999979243,
+              2.6353840000865603,
+              2.688723000005666,
+              2.6618430000553417,
+              2.7209690000518094,
+              4.005783000025076,
+              2.696628999956374,
+              2.7529989999948157,
+              2.7168249999931504,
+              2.7084880000529665,
+              2.8250050000906413,
+              2.368738999962261,
+              2.771227000039289,
+              7.1109489999798825,
+              6.169065999984014,
+              2.751730999989377,
+              2.6638640000555824,
+              2.7342289999978675,
+              3.032842000038727,
+              2.8283069999588406,
+              2.755530999934308,
+              5.530361999944944,
+              4.163336000033269,
+              4.04977499999859,
+              2.811548999943625,
+              2.7607379998926262,
+              2.7212740000095437,
+              2.6730569999244835,
+              2.896598000006634,
+              6.23923199998444,
+              2.7907779999623017,
+              2.6487740000220583,
+              2.7007699999330725,
+              2.8343800000811825,
+              2.7191980000225158,
+              2.667738000013742,
+              2.7842790000249806,
+              6.094996999991054,
+              4.309032000037405,
+              3.669515000069623,
+              2.856631999975434,
+              2.6410409999471085,
+              2.6507980001042597
+            ],
+            "count": 101,
+            "reported": {
+              "p50_ms": 2.7607379998926262,
+              "p99_ms": 7.920361999936176
+            }
+          },
+          "alignment": {
+            "offset": 20,
+            "mean_abs_error_ms": 0.004766544551253757,
+            "max_error_ms": 0.006840999958512839,
+            "next_best_mean_abs_error_ms": 0.4542901386090793,
+            "ticks": [
+              7274,
+              7374
+            ]
+          },
+          "p99_row": {
+            "tick": 7297,
+            "loop_wall_ms": 3.986175,
+            "loop_cpu_ms": 3.987579000000352,
+            "inputs_wall_ms": 0.019853,
+            "subsystems_wall_ms": 2.205708,
+            "publishers_wall_ms": 1.760614,
+            "writes_wall_ms": 3.9163600000620136,
+            "writes_cpu_ms": 2.0543700000033027,
+            "total_wall_ms": 7.915396000043984,
+            "total_cpu_ms": 6.051350999999983,
+            "npc_wall_ms": 1.567590999911772
+          },
+          "commerce_commits": [
+            {
+              "tick": 7273,
+              "start_ns": 783967087398,
+              "end_ns": 783968292123,
+              "wall_ms": 1.204725,
+              "success": true,
+              "operation": "commerce_write.sqlite_context_exit"
+            },
+            {
+              "tick": 7273,
+              "start_ns": 783969509947,
+              "end_ns": 783970325022,
+              "wall_ms": 0.815075,
+              "success": true,
+              "operation": "commerce_write.sqlite_context_exit"
+            },
+            {
+              "tick": 7289,
+              "start_ns": 785592856193,
+              "end_ns": 785593881427,
+              "wall_ms": 1.025234,
+              "success": true,
+              "operation": "commerce_write.sqlite_context_exit"
+            },
+            {
+              "tick": 7289,
+              "start_ns": 785595171298,
+              "end_ns": 785596058336,
+              "wall_ms": 0.887038,
+              "success": true,
+              "operation": "commerce_write.sqlite_context_exit"
+            },
+            {
+              "tick": 7297,
+              "start_ns": 786385262807,
+              "end_ns": 786387683204,
+              "wall_ms": 2.420397,
+              "success": true,
+              "operation": "commerce_write.sqlite_context_exit"
+            },
+            {
+              "tick": 7305,
+              "start_ns": 787171656820,
+              "end_ns": 787172107847,
+              "wall_ms": 0.451027,
+              "success": true,
+              "operation": "commerce_write.sqlite_context_exit"
+            },
+            {
+              "tick": 7313,
+              "start_ns": 787959392475,
+              "end_ns": 787959990570,
+              "wall_ms": 0.598095,
+              "success": true,
+              "operation": "commerce_write.sqlite_context_exit"
+            },
+            {
+              "tick": 7313,
+              "start_ns": 787961211794,
+              "end_ns": 787961524291,
+              "wall_ms": 0.312497,
+              "success": true,
+              "operation": "commerce_write.sqlite_context_exit"
+            },
+            {
+              "tick": 7321,
+              "start_ns": 788749389824,
+              "end_ns": 788749896697,
+              "wall_ms": 0.506873,
+              "success": true,
+              "operation": "commerce_write.sqlite_context_exit"
+            },
+            {
+              "tick": 7329,
+              "start_ns": 789588028861,
+              "end_ns": 789588470013,
+              "wall_ms": 0.441152,
+              "success": true,
+              "operation": "commerce_write.sqlite_context_exit"
+            },
+            {
+              "tick": 7345,
+              "start_ns": 791159157727,
+              "end_ns": 791159553131,
+              "wall_ms": 0.395404,
+              "success": true,
+              "operation": "commerce_write.sqlite_context_exit"
+            },
+            {
+              "tick": 7345,
+              "start_ns": 791160748353,
+              "end_ns": 791161058148,
+              "wall_ms": 0.309795,
+              "success": true,
+              "operation": "commerce_write.sqlite_context_exit"
+            },
+            {
+              "tick": 7353,
+              "start_ns": 791950212034,
+              "end_ns": 791950693417,
+              "wall_ms": 0.481383,
+              "success": true,
+              "operation": "commerce_write.sqlite_context_exit"
+            },
+            {
+              "tick": 7361,
+              "start_ns": 792790829819,
+              "end_ns": 792791588195,
+              "wall_ms": 0.758376,
+              "success": true,
+              "operation": "commerce_write.sqlite_context_exit"
+            },
+            {
+              "tick": 7369,
+              "start_ns": 793579207438,
+              "end_ns": 793579759767,
+              "wall_ms": 0.552329,
+              "success": true,
+              "operation": "commerce_write.sqlite_context_exit"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "size": "132x50",
+      "artifact_id": 13545379410,
+      "job": 128186358423,
+      "artifact_url": "https://github.com/Thiesi/Blacksite/actions/runs/42303060812/artifacts/13545379410",
+      "archive_sha256": "f5a5d8fff081c41db5bb4511d669537a6959807ac9aeaf78833579b11fe3ca64",
+      "job_verdict": "failure",
+      "native_client": {
+        "version": "0.0.20",
+        "file": "/home/runner/work/_temp/s11-venv/lib/python3.12/site-packages/blacksite/__init__.py",
+        "python_tree_sha256": "dc07d56ea928f9939699358d2a7217fa91f1950ecc45977448fef1457fb127df"
+      },
+      "native_result": null,
+      "profiles": [
+        {
+          "file": "npc-profile-132x50-2.json",
+          "sha256": "854148b30c935ec9348a4312f4b93419f73e4567e34831ce67b5112a8ef6e5c5",
+          "gate": {
+            "id": 0,
+            "samples_ms": [
+              2.4500780000380473,
+              2.3123490000216407,
+              3.917663000038374,
+              2.351048000036826,
+              3.9309020000928285,
+              2.2826949999625867,
+              113.89543200004937,
+              2.48854599999504,
+              2.2358339999755117,
+              2.475827000012032,
+              2.3245080000151574,
+              2.401644999963537,
+              2.3432369999909497,
+              6.228900999985854,
+              2.8141070000629043,
+              2.4164169999494334,
+              2.3835369999005707,
+              2.5218060000042897,
+              2.1481320000020787,
+              2.387704000057056,
+              2.399551999928917,
+              6.076071000052252,
+              3.2521680000172637,
+              2.458369999999377,
+              2.4238080000031914,
+              2.3125199999185497,
+              2.3861109999643304,
+              2.583189000006314,
+              2.383446999942862,
+              6.139196000049196,
+              2.1918579999464782,
+              2.3686949999728313,
+              2.2956349999958547,
+              2.433853000070485,
+              2.3579400000244277,
+              2.497159000085958,
+              2.238378000015473,
+              6.144304000031298,
+              2.736320999929376,
+              2.3804630000086036,
+              2.261352999994415,
+              2.4611340001001736,
+              2.316405999977178,
+              2.428243999929691,
+              2.337066999984927,
+              6.838962000074389,
+              2.789509999956863,
+              4.068071000006057,
+              2.3972779999894556,
+              2.360512999985076,
+              2.3989810000557554,
+              2.2184390001029897,
+              4.282874000068659,
+              5.7799629998953606,
+              2.4603430000524895,
+              2.449817000069743,
+              2.4481149999928675,
+              4.157073999977001,
+              2.2980380000490186,
+              2.4166780000314247,
+              2.3614740000539314,
+              5.696498000020256,
+              2.5060730000632248,
+              2.4005829999396155,
+              2.3830369999586765,
+              2.3484549999466253,
+              2.3548739999341706,
+              2.5975300000027346,
+              2.4305489999960628,
+              6.746171000031609,
+              6.624418000001242,
+              2.306140999962736,
+              2.6604559999441335,
+              2.534445000037522,
+              2.399341000000277,
+              2.446802999997999,
+              2.3554750000585045,
+              5.889849000027425,
+              2.4119500000097105,
+              2.381784999897718,
+              2.331248000018604,
+              2.407554000001255,
+              2.2839169999997466,
+              2.4424960000715146,
+              2.3856100000330116,
+              6.908145000011245,
+              4.282762999991974,
+              2.4475840000377502,
+              2.357888999995339,
+              2.3586289999002474,
+              2.241923000042334,
+              2.424938999979531,
+              2.3593409999875803,
+              5.967526000063117,
+              2.4577989998988414,
+              2.4138329999914276,
+              2.3706879999281227,
+              2.5202530000569823,
+              2.438630000028752
+            ],
+            "count": 99,
+            "reported": {
+              "p50_ms": 2.4166780000314247,
+              "p99_ms": 113.89543200004937
+            }
+          },
+          "alignment": {
+            "offset": 20,
+            "mean_abs_error_ms": 0.004841454555885734,
+            "max_error_ms": 0.006270000085351057,
+            "next_best_mean_abs_error_ms": 2.7122543838472803,
+            "ticks": [
+              7177,
+              7276
+            ]
+          },
+          "p99_row": {
+            "tick": 7183,
+            "loop_wall_ms": 4.42578,
+            "loop_cpu_ms": 4.427577000001293,
+            "inputs_wall_ms": 0.01998,
+            "subsystems_wall_ms": 2.049714,
+            "publishers_wall_ms": 2.356086,
+            "writes_wall_ms": 109.44724900002711,
+            "writes_cpu_ms": 1.503110000001584,
+            "total_wall_ms": 113.88916199996402,
+            "total_cpu_ms": 5.941531999997807,
+            "npc_wall_ms": 1.4466229999925417
+          },
+          "commerce_commits": [
+            {
+              "tick": 7183,
+              "start_ns": 835765125305,
+              "end_ns": 835873314264,
+              "wall_ms": 108.188959,
+              "success": true,
+              "operation": "commerce_write.sqlite_context_exit"
+            },
+            {
+              "tick": 7191,
+              "start_ns": 836554997446,
+              "end_ns": 836555627908,
+              "wall_ms": 0.630462,
+              "success": true,
+              "operation": "commerce_write.sqlite_context_exit"
+            },
+            {
+              "tick": 7199,
+              "start_ns": 837341365170,
+              "end_ns": 837342048842,
+              "wall_ms": 0.683672,
+              "success": true,
+              "operation": "commerce_write.sqlite_context_exit"
+            },
+            {
+              "tick": 7207,
+              "start_ns": 838179252361,
+              "end_ns": 838180048412,
+              "wall_ms": 0.796051,
+              "success": true,
+              "operation": "commerce_write.sqlite_context_exit"
+            },
+            {
+              "tick": 7215,
+              "start_ns": 838962311310,
+              "end_ns": 838963026710,
+              "wall_ms": 0.7154,
+              "success": true,
+              "operation": "commerce_write.sqlite_context_exit"
+            },
+            {
+              "tick": 7223,
+              "start_ns": 839748461134,
+              "end_ns": 839749858774,
+              "wall_ms": 1.39764,
+              "success": true,
+              "operation": "commerce_write.sqlite_context_exit"
+            },
+            {
+              "tick": 7231,
+              "start_ns": 840539289019,
+              "end_ns": 840539654721,
+              "wall_ms": 0.365702,
+              "success": true,
+              "operation": "commerce_write.sqlite_context_exit"
+            },
+            {
+              "tick": 7239,
+              "start_ns": 841378810868,
+              "end_ns": 841379051040,
+              "wall_ms": 0.240172,
+              "success": true,
+              "operation": "commerce_write.sqlite_context_exit"
+            },
+            {
+              "tick": 7247,
+              "start_ns": 842165259654,
+              "end_ns": 842165507057,
+              "wall_ms": 0.247403,
+              "success": true,
+              "operation": "commerce_write.sqlite_context_exit"
+            },
+            {
+              "tick": 7247,
+              "start_ns": 842166399374,
+              "end_ns": 842166566827,
+              "wall_ms": 0.167453,
+              "success": true,
+              "operation": "commerce_write.sqlite_context_exit"
+            },
+            {
+              "tick": 7255,
+              "start_ns": 842956405673,
+              "end_ns": 842956619616,
+              "wall_ms": 0.213943,
+              "success": true,
+              "operation": "commerce_write.sqlite_context_exit"
+            },
+            {
+              "tick": 7263,
+              "start_ns": 843741952426,
+              "end_ns": 843742188733,
+              "wall_ms": 0.236307,
+              "success": true,
+              "operation": "commerce_write.sqlite_context_exit"
+            },
+            {
+              "tick": 7263,
+              "start_ns": 843743109693,
+              "end_ns": 843743371157,
+              "wall_ms": 0.261464,
+              "success": true,
+              "operation": "commerce_write.sqlite_context_exit"
+            },
+            {
+              "tick": 7271,
+              "start_ns": 844532533233,
+              "end_ns": 844532776240,
+              "wall_ms": 0.243007,
+              "success": true,
+              "operation": "commerce_write.sqlite_context_exit"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

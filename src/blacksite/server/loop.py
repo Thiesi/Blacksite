@@ -34,6 +34,9 @@ class TickLoop:
         self.publishers: list[Callable[[TickContext], None]] = []
         self.timings: deque[float] = deque(maxlen=6000)
         self.last_tick = clock.now_tick()
+        # Acceptance-only boundary observer. The I/O-side observer owns
+        # its clocks; the simulation never reads wall time.
+        self.phase_observer: Callable[[str, int], None] | None = None
 
     def step(self) -> None:
         tick = self.clock.now_tick()
@@ -50,8 +53,13 @@ class TickLoop:
                 if frame.type.startswith("admin."):
                     # Operator replies are views too: at most one per tick.
                     break
+        observer = self.phase_observer
+        if observer is not None:
+            observer("inputs_done", tick)
         for subsystem in self.subsystems:
             subsystem.tick(ctx)
+        if observer is not None:
+            observer("publishers_start", tick)
         for publish in self.publishers:
             publish(ctx)
 
