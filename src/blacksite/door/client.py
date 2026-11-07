@@ -8,12 +8,12 @@ import uuid
 
 from blacksite.door import doorinfo
 from blacksite.door.cells import CellBuffer
-from blacksite.door.connection import Connection, Reconnect
+from blacksite.door.connection import Connection, Reconnect, ServerFrames
 from blacksite.door.doorinfo import DoorInfo
 from blacksite.door.keys import KeyDecoder, ESCAPE_TIMEOUT_SECONDS
 from blacksite.door.model import Display
 from blacksite.door.terminal import Terminal
-from blacksite.server.protocol import Frame, ProtocolError, read_frame
+from blacksite.server.protocol import Frame, ProtocolError
 
 
 async def read_input(terminal: Terminal, decoder: KeyDecoder) -> bytes | None:
@@ -46,6 +46,7 @@ async def run(info: DoorInfo, terminal: Terminal) -> None:
     # One per-launch switch, off by default; no input key or protocol field.
     model = Display(info, uuid.uuid4().hex, presentation=os.environ.get('DOOR_BLACKSITE_PRESENTATION') == '1')
     connection = Connection()
+    server_frames = ServerFrames()
     decoder = KeyDecoder()
     changed = asyncio.Event()
     retry = Reconnect()
@@ -180,7 +181,7 @@ async def run(info: DoorInfo, terminal: Terminal) -> None:
                     # rendered frame leaves no reader to wake us for the next
                     # one, accumulating a second of lag per social/view frame.
                     assert connection.reader is not None
-                    incoming = asyncio.create_task(read_frame(connection.reader, "server"))
+                    incoming = asyncio.create_task(server_frames.read(connection.reader))
                     incoming.add_done_callback(lambda task: changed.set())
                 if model.connected and now - last_ping >= 10:
                     await send([Frame("ping", {"t": int((now - started) * 1000)})])

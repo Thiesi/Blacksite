@@ -1,6 +1,7 @@
 """Bounded, strict JSON frames (02-architecture.md §5).
 
-Unknown additive fields survive decoding. Unknown frame types do not.
+Unknown additive fields survive decoding. Unknown types remain errors;
+only the door's post-handshake read policy handles UnsupportedFrame.
 The envelope is immutable; payloads are validated before use by the core.
 """
 
@@ -14,6 +15,7 @@ from typing import Any, Literal, NotRequired, TypedDict
 from blacksite.version import PROTOCOL_MAJOR
 
 MAX_FRAME = 256 * 1024  # Architecture §5.1, bytes excluding header.
+VIEW_KINDS = frozenset({"zone", "lattice", "menu", "wake", "dead", "text"})
 
 FrameType = Literal[
     "hello", "resize", "key", "intent", "line", "ack", "ping", "bye",
@@ -170,6 +172,8 @@ def validate(kind: str, data: dict[str, Any], direction: str | None = None) -> N
     server = {"welcome", "view", "delta", "log", "prompt", "toast", "pong", "bye"}
     allowed = client if direction == "client" else server if direction == "server" else client | server
     if kind not in allowed:
+        if kind not in client | server:
+            raise UnsupportedFrame(Frame(kind, data))
         raise ProtocolError("unknown or wrong-direction frame type")
     if kind in ('admin.market.list', 'admin.bounty.list', 'admin.event.list'):
         if 'page' in data:
@@ -231,8 +235,10 @@ def validate(kind: str, data: dict[str, Any], direction: str | None = None) -> N
     elif kind in {"ack", "view", "delta"}:
         _need(data, "rev", _integer(data.get("rev")))
         if kind == "view":
-            _need(data, "kind", data.get("kind") in {"zone", "lattice", "menu", "wake", "dead", "text"})
+            _need(data, "kind", isinstance(data.get("kind"), str) and bool(data["kind"]))
             _need(data, "body", isinstance(data.get("body"), dict))
+            if data["kind"] not in VIEW_KINDS:
+                raise UnsupportedFrame(Frame(kind, data))
         if kind == "delta":
             _need(data, "base", _integer(data.get("base"), 0, data["rev"]))
             _need(data, "ops", isinstance(data.get("ops"), list) and all(isinstance(op, dict) for op in data["ops"]))
@@ -277,6 +283,18 @@ class Frame:
         return {**self.data, "type": self.type}
 
 
+class UnsupportedFrame(ProtocolError):
+    """Strict rejection with enough context for the door's read policy.
+
+    Known wrong-direction or malformed frames never use this exception.
+    A view has already passed the shared revision/kind/body envelope checks.
+    """
+
+    def __init__(self, frame: Frame) -> None:
+        super().__init__("unknown view kind" if frame.type == "view" else "unknown frame type")
+        self.frame = frame
+
+
 def encode(frame: Frame) -> bytes:
     validate(frame.type, frame.data)
     try:
@@ -319,6 +337,8 @@ def decode(payload: bytes, direction: str | None = None) -> Frame:
         kind = obj.pop("type")
         validate(kind, obj, direction)
         return Frame(kind, obj)
+    except UnsupportedFrame:
+        raise
     except (UnicodeError, ValueError, TypeError, RecursionError) as exc:
         raise ProtocolError(str(exc)) from exc
 

@@ -321,6 +321,29 @@ disconnect rather than assuming that every disconnect is an auth error.
 | bye | reason, text | |
 | pong | t | |
 
+After the strict `welcome`/`bye` handshake, the door drops unknown server
+frame types and emits one diagnostic per type per launch through its
+standard-library logger at INFO level. The door installs no terminal log
+handler. Known wrong-direction frames and invalid known frames remain
+protocol errors. The service's reads, the shared validator and `encode`
+remain strict. JSON syntax, duplicate-key and finite-number checks, the
+256 KiB bound and protocol-major rejection are unchanged.
+
+For an unknown full-view kind, the door retains its last screen and
+rendered revision. It does not acknowledge the discarded revision or
+request resync. It ignores subsequent deltas until a known full view
+arrives; that view restores ordinary delta handling. A valid delta that
+introduces an unknown kind also suspends updates without partially
+changing the screen. Local repaint or other messages can still acknowledge
+the last rendered revision. This avoids reconnect loops and resync storms;
+the server's ordinary acknowledgement lag may cause further full views.
+
+This makes additive mismatches survivable, not supported. Door and service
+upgrades remain lockstep. S41 must reach operators in an earlier upgrade
+than P11's first additional server frame; shipping them together would not
+protect a door still older than S41. See the
+[operator upgrade note](../ops/protocol-upgrades.md).
+
 The server sends at most one `view` or `delta` per session per tick, and
 only when something the session can see changed. It coalesces if the
 client is more than 3 revisions behind (`ack`), sending a fresh `view`

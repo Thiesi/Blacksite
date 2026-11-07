@@ -19,7 +19,7 @@ from blacksite.door.present.context import Context
 from blacksite.door.present.paint import Paint
 from blacksite.door.present import screen as presentation_screen
 from blacksite.door.present.chrome import NOTICE_SECONDS, PROTECT_SECONDS
-from blacksite.server.protocol import Frame
+from blacksite.server.protocol import Frame, VIEW_KINDS
 
 
 class Display:
@@ -52,6 +52,7 @@ class Display:
         self.last_render = -1.0
         self.previous: CellBuffer | None = None
         self.resync_pending = False
+        self.unsupported_view = False
         self.hit_flash = False
         self.counter = 0
         self.request_prefix = request_prefix
@@ -82,24 +83,34 @@ class Display:
             if self.local is not None and self.local.get("title") == "HELP":
                 self.local_lines = help_pages(self.keymap)
             self.resync_pending = False
+            self.unsupported_view = False
             self.prompt = None
             self.key_prompt = None
             self.force_full = True
         elif frame.type == "view":
+            if data["kind"] not in VIEW_KINDS:
+                self.unsupported_view = True
+                return []
             self.revision, self.kind, self.body = data["rev"], data["kind"], deepcopy(data["body"])
             self.resync_pending = False
+            self.unsupported_view = False
             self.force_full = True
             shown = self.body.get("body", {}) if self.kind == "wake" else self.body
             if shown.get("clear_prompt"):
                 self.prompt = self.key_prompt = None
         elif frame.type == "delta":
+            if self.unsupported_view:
+                return []
             try:
                 if self.resync_pending or data["base"] != self.revision or data["rev"] <= self.revision:
                     raise ValueError("delta base mismatch")
                 document = {"kind": self.kind, "body": deepcopy(self.body)}
                 self._patch(document, data["ops"])
-                if not isinstance(document.get("body"), dict) or document.get("kind") not in ("zone", "lattice", "menu", "wake", "dead", "text"):
+                if not isinstance(document.get("body"), dict) or not isinstance(document.get("kind"), str) or not document["kind"]:
                     raise ValueError("invalid patched view")
+                if document["kind"] not in VIEW_KINDS:
+                    self.unsupported_view = True
+                    return []
                 self.kind, self.body, self.revision = document["kind"], document["body"], data["rev"]
             except (ValueError, KeyError, IndexError, TypeError):
                 if not self.resync_pending:

@@ -1,6 +1,6 @@
 # S41 — Doors ignore frames they don't know
 
-**Status:** planned (requested by the owner 2026-11-07)
+**Status:** in progress (requested by the owner 2026-11-07)
 **Primary model:** Codex · **Reviewer:** automated review, technical lead
 **Depends on:** nothing unmerged · **Milestone:** protocol
 **Issue:** https://github.com/Thiesi/Blacksite/issues/173
@@ -8,8 +8,8 @@
 The owner asked for this to be scheduled. It follows S39 and comes ahead
 of P11 (#164). There's no code dependency either way, but P11 has a
 deployment-order dependency on this slice: S41 must reach operators in an
-earlier upgrade than P11. Canon: architecture 5.1 and 5.3 (framing and frames). Where this file and
-canon differ, canon wins.
+earlier upgrade than P11. Canon: architecture 5.1 and 5.3 (framing and
+frames). Where this file and canon differ, canon wins.
 
 ## Goal
 
