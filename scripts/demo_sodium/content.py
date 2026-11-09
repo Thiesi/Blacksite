@@ -29,6 +29,8 @@ def install_overlay(install: Path) -> None:
     manifest = install / '.round4-content.json'
     previous = json.loads(manifest.read_text(encoding='utf-8')) if manifest.exists() else []
     files = [p for p in OVERLAY.rglob('*') if p.is_file()]
+    if not files or not (OVERLAY / 'zones/sodium-row.map').is_file():
+        raise ValueError('The round4 content overlay is missing; use the demo checkout.')
     current = [p.relative_to(OVERLAY).as_posix() for p in files]
     for name in set(previous) | set(current):
         path = (target / name).resolve()
