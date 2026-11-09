@@ -722,6 +722,8 @@ class _Validator:
                     elif ((npc_channels(crowd)['name'], npc_channels(crowd)['class'])
                           != (npc.cover_name, npc.presents)):
                         self.report(*owner, f'{label}: poses_as must match the cover name and class', sp.id)
+                    if crowd is not None and npc.steady != crowd.steady:
+                        self.report(*owner, f'{label}: poses_as must match steady', sp.id)
             if sp.condition == "per_player" and npc and not npc.training:
                 self.report(*owner, f"{label}: per_player requires private training", sp.id)
             if npc:

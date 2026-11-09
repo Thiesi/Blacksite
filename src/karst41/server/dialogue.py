@@ -41,11 +41,16 @@ class Facts:
     season_stage: str = 'open'
     chronicle: Mapping[int, str] = field(default_factory=dict)
     events: frozenset[str] = frozenset()
+    drawn: bool = False
+    provoked: bool = False
+    hunted: bool = False
 
 
 def condition(text: str, talker: Talker, facts: Facts) -> bool:
     """Evaluate the validated closed condition set from entities 1.11."""
     name, *args = text.split()
+    if name in ('drawn', 'provoked', 'hunted'):
+        return bool(getattr(facts, name))
     if name == 'first_meeting':
         return talker.id not in facts.met
     if name in ('grade_below', 'grade_at_least'):
@@ -110,6 +115,8 @@ def evaluate(talker: Talker, facts: Facts, rng: Random) -> DialogueLine:
 
 
 def eligible_offers(talker: Talker, facts: Facts) -> tuple[Offer, ...]:
+    if facts.provoked or facts.drawn and not talker.drawn_open:
+        return ()
     return tuple(offer for offer in talker.offers if matches(offer.when, talker, facts))
 
 

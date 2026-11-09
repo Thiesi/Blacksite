@@ -8,6 +8,22 @@
   "machine_mind": false,
   "lines": [
     {
+      "id": "round4-provoked",
+      "text": "We heard it. Everyone heard it. Go.",
+      "when": [
+        "provoked"
+      ],
+      "required": true
+    },
+    {
+      "id": "round4-drawn",
+      "text": "Shh. Not now.",
+      "when": [
+        "drawn"
+      ],
+      "required": true
+    },
+    {
       "id": "cantor",
       "text": "You hear it too, don't you. Sit. The music's kept low so we can.",
       "when": [

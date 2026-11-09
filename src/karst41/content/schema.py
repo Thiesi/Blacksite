@@ -919,6 +919,7 @@ class Vendor:
     daily_rotation: bool = False
     clinic: Literal["sablier", "black"] | None = None
     relay: str | None = None
+    drawn_open: bool = False
     schema: int = CONTENT_SCHEMA
 
 
@@ -1008,6 +1009,7 @@ class NpcTemplate:
     schema: int = CONTENT_SCHEMA
     presents: Literal["civilian", "warden", "security", "service", "hostile"] | None = None
     cover_name: str | None = None
+    steady: bool = False  # Round4: authored, identical for a cover and its crowd.
 
 
 @dataclass(frozen=True)
@@ -1272,6 +1274,9 @@ DIALOGUE_CONDITIONS: dict[str, tuple[str, ...]] = {
     "enemy_of_me": (),
     "marked": (),
     "not_marked": (),
+    "drawn": (),
+    "provoked": (),
+    "hunted": (),
     "has_contract": ("CONTRACT",),
     "contract_stage": ("CONTRACT", "N"),
     "completed_contract": ("CONTRACT",),
@@ -1334,6 +1339,7 @@ class DialogueNode:
     title: str = ""
     offers: tuple[Offer, ...] = ()
     barks: tuple[Bark, ...] = ()
+    drawn_open: bool = False  # Round4: Vesper keeps working.
     terminal: bool = False
     machine_mind: bool = False
     """Scripted machine-mind encounters need a line in each voice."""

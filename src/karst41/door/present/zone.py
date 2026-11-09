@@ -9,6 +9,8 @@ import json
 import os
 from typing import Any
 
+from karst41.door.drawn import label as drawn_label
+
 from karst41.door.cells import CellBuffer, clean_text, display_width, truncate
 import re
 from karst41.door.layout import Layout
@@ -360,7 +362,8 @@ def panel(buffer: CellBuffer, body: dict[str, Any], layout: Layout, paint: Paint
     # UI 2: reserve a target and one crew member before optional nearby rows.
     crew_reserve = 3 if crew else 0
     target_reserve = 4 if body.get('target') else 2
-    limit = vy - 1 - crew_reserve - target_reserve
+    weapon_reserve = (3 if wide else 2) if me.get('drawn') else 0
+    limit = vy - 1 - crew_reserve - target_reserve - weapon_reserve
     active = False
 
     def line(text: str, role: str = "panel_text", indent: int = 1, *, bold: bool = False) -> None:
@@ -400,7 +403,12 @@ def panel(buffer: CellBuffer, body: dict[str, Any], layout: Layout, paint: Paint
     section("TARGET")
     if target:
         tag = TAGS.get({"hostile": "!", "allied": "+"}.get(target.get("relation", ""), "~"), "neutral")
-        line(target["name"], target.get("name_role", "panel_text"), bold=True)
+        if target.get('drawn') and active and y < limit:
+            drawn_label(buffer, x + 1, y, w - 2, target['name'], 'drawn',
+                        paint(target.get('name_role', 'panel_text'), bold=True), paint('warning', bold=True))
+            y += 1
+        else:
+            line(target['name'], target.get('name_role', 'panel_text'), bold=True)
         if y < limit:
             health = f"{target['hp']:g}" if "hp" in target else f"{target.get('hp_percent', target.get('hp_pct', 0))}%"
             chrome.bar(buffer, paint, x + 1, y, "HP", target.get("hp_percent", target.get("hp_pct", 0)), 100, "bar_hp", health, width=10)
@@ -409,10 +417,19 @@ def panel(buffer: CellBuffer, body: dict[str, Any], layout: Layout, paint: Paint
         line(f"{target['range']:g} m  {cover}  {tag}", "panel_label")
         if target.get("warning"):
             line(target["warning"], "log_danger")
-        if me.get("weapon") and me["weapon"] != "None":
+        if not me.get("drawn") and me.get("weapon") and me["weapon"] != "None":
             line("with " + me["weapon"], "panel_label")
     else:
         line("none   Tab picks", "panel_dim")
+    limit += weapon_reserve
+    if me.get('drawn'):
+        section('WEAPON')
+        if active and y < limit:
+            drawn_label(buffer, x + 1, y, w - 2, me.get('weapon', 'None'), 'DRAWN',
+                        paint('panel_text'), paint('warning', bold=True))
+            y += 1
+        if wide:
+            line('d holsters', 'hint')
     nearby = body.get("nearby", [])
     if nearby and y < limit - 2:
         section("NEARBY")
@@ -432,7 +449,11 @@ def panel(buffer: CellBuffer, body: dict[str, Any], layout: Layout, paint: Paint
             relation = relation if relation in TAGS else '~'
             suffix = (' jacked' if jacked else '') + ' ' + relation
             label = truncate(entry.get('name', 'Someone'), w - 4 - len(suffix)) + suffix
-            buffer.put(x + 3, y, label, paint("log_danger" if hostile else "panel_text"))
+            if entry.get('drawn'):
+                drawn_label(buffer, x + 3, y, w - 4, label, 'drawn',
+                            paint('log_danger' if hostile else 'panel_text'), paint('warning', bold=True))
+            else:
+                buffer.put(x + 3, y, label, paint('log_danger' if hostile else 'panel_text'))
             y += 1
     limit = vy - 1
     if crew and y < limit - 1:

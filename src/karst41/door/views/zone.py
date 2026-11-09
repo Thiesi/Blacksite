@@ -3,6 +3,7 @@
 from dataclasses import replace
 from typing import Any
 
+from karst41.door.drawn import label as drawn_label
 from karst41.door.cells import CellBuffer, truncate
 from karst41.layout import Layout
 from karst41.door.palette import Palette
@@ -43,6 +44,7 @@ def render_zone(buffer: CellBuffer, body: dict[str, Any], layout: Layout, palett
     me = body["me"]
     side_x, side_w = layout.side.x, layout.side.width
     rows: list[str] = []
+    marks: dict[int, str] = {}
     event_rows = [str(plan['summary']) for plan in (body.get('event') or {}).get('plans', [])]
     rows += event_rows
     objective = body.get("objective")
@@ -54,15 +56,24 @@ def render_zone(buffer: CellBuffer, body: dict[str, Any], layout: Layout, palett
     if target:
         filled=max(0,min(8,target["hp_percent"]*8//100))
         health = f"{target['hp']:g}/{target['hp_max']:g}" if "hp" in target else f"{target['hp_percent']}%"
+        if target.get("drawn"):
+            marks[len(rows)+1] = "drawn"
         rows += ["TARGET",target["name"],f"HP {'#'*filled}{'.'*(8-filled)} {health}",
             f"Range {target['range']:g} Cover {target['cover']}",target["faction"],target["relation"]]
         if target.get("warning"): rows.append(target["warning"])
     else:
         rows += ["TARGET", "None"]
     if me.get("weapon") and me["weapon"] != "None":
-        rows += ["WEAPON", me["weapon"]]
+        if me.get('drawn'):
+            marks[len(rows)+1] = 'DRAWN'
+        rows += ['WEAPON', me['weapon']]
+        if me.get('drawn') and layout.height >= 40:
+            rows.append('d holsters')
     rows += ["NEARBY"]
-    rows += [f"{entry.get('relation', '~')} {entry.get('name', 'Another Wake')}" for entry in body.get("nearby", [])[:3]]
+    for entry in body.get('nearby', [])[:3]:
+        if entry.get('drawn'):
+            marks[len(rows)] = 'drawn'
+        rows.append(f"{entry.get('relation', '~')} {entry.get('name', 'Another Wake')}")
     crew = body.get('crew', [])
     crew_rows = ['CREW']
     for member in crew:
@@ -72,7 +83,7 @@ def render_zone(buffer: CellBuffer, body: dict[str, Any], layout: Layout, palett
                       str(member['zone'])+(' / '+member['direction'] if member.get('beacon') and member.get('direction') else '')]
     rows += crew_rows if crew else ["CREW", "None"]
     extra = 4 if me.get("grade") is not None else 0
-    if (crew or event_rows) and len(rows) > max(0, area.height-6-extra):
+    if (crew or event_rows or me.get("drawn")) and len(rows) > max(0, area.height-6-extra):
         # Keep one ally visible on the small terminal; G holds the full roster.
         compact = list(event_rows)
         if body.get('hazards'):
@@ -82,8 +93,17 @@ def render_zone(buffer: CellBuffer, body: dict[str, Any], layout: Layout, palett
                 compact.append(f"WARNING {hazard.get('warning', 0):g}s Exit {exits}")
             else:
                 compact += [f"WARNING {hazard.get('warning', 0):g}s", 'Escape: '+exits]
+        marks = {}
+        if me.get('drawn'):
+            budget = max(0, area.height-6-extra)
+            compact = compact[:max(0, budget-(3 if target else 1)-(2 if crew else 0))]
         if target:
+            if target.get('drawn'):
+                marks[len(compact)] = 'drawn'
             compact += [target['name'], f"HP {target['hp_percent']}% {target['relation']} R{target['range']:g}"]
+        if me.get('drawn'):
+            marks[len(compact)] = 'DRAWN'
+            compact.append(me.get('weapon', 'None'))
         optional = []
         if crew:
             peers = [m for m in crew if m['name'] != me.get('name')]
@@ -92,7 +112,7 @@ def render_zone(buffer: CellBuffer, body: dict[str, Any], layout: Layout, palett
             compact += ['CREW / G', truncate(first['name'], side_w-len(suffix))+suffix]
             optional.append(str(first['zone']))
         budget = max(0, area.height-6-extra)
-        optional += [me['weapon']] if me.get('weapon') else []
+        optional += [me['weapon']] if me.get('weapon') and not me.get('drawn') else []
         if objective:
             optional.append(str(objective.get('next_action', '')))
         rows = compact+optional[:max(0, budget-len(compact))]
@@ -102,7 +122,13 @@ def render_zone(buffer: CellBuffer, body: dict[str, Any], layout: Layout, palett
     if target:
         name_roles[target["name"]] = target.get("name_role", "text")
     for index, text in enumerate(rows[:max(0, area.height - 6 - extra)]):
-        buffer.put(side_x, area.y + index, truncate(text, side_w), palette.style(name_roles.get(text, "text")))
+        if index in marks:
+            from dataclasses import replace as style_replace
+            drawn_label(buffer, side_x, area.y + index, side_w, text, marks[index],
+                        palette.style(name_roles.get(text, 'text')),
+                        style_replace(palette.style('warning'), attrs=(1,)))
+        else:
+            buffer.put(side_x, area.y + index, truncate(text, side_w), palette.style(name_roles.get(text, 'hint' if text == 'd holsters' else 'text')))
     bottom = area.y + area.height - 5 - extra
     buffer.put(side_x, bottom, truncate(me.get("name", me.get("handle", "")), side_w), palette.style(me.get("name_role", "title")))
     handle_row = int(bool(extra))

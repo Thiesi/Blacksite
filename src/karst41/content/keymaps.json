@@ -212,6 +212,10 @@
     "relays": {
       "context": "zone",
       "label": "territory at terminal"
+    },
+    "draw": {
+      "context": "zone",
+      "label": "Draw / holster"
     }
   },
   "keymaps": [
@@ -395,6 +399,10 @@
         ],
         "relays": [
           "f8"
+        ],
+        "draw": [
+          "d",
+          "D"
         ]
       }
     },
@@ -565,6 +573,9 @@
         ],
         "relays": [
           "f8"
+        ],
+        "draw": [
+          "d"
         ]
       }
     }

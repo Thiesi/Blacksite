@@ -8,6 +8,22 @@
   "machine_mind": false,
   "lines": [
     {
+      "id": "round4-provoked",
+      "text": "I'll patch you if I have to. I won't talk to you.",
+      "when": [
+        "provoked"
+      ],
+      "required": true
+    },
+    {
+      "id": "round4-drawn",
+      "text": "Point that somewhere I won't have to stitch.",
+      "when": [
+        "drawn"
+      ],
+      "required": true
+    },
+    {
       "id": "member",
       "text": "Clinic shift ended an hour ago. Don't make me look at anything.",
       "when": [

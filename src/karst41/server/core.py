@@ -151,6 +151,8 @@ class Core:
         demo_seated.install(self)
         from karst41.server import demo_exits
         demo_exits.install(self)
+        from karst41.server import demo_drawn
+        demo_drawn.install(self)
 
     def _disconnect_character(self, session: Session) -> None:
         if self.dialogue:

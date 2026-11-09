@@ -93,6 +93,8 @@ class Commerce:
         if not vendor or not self.content.active("vendors", vid) or not (
                 obj.spec.kind == "vendor" or vendor.relay and obj.spec.kind == "relay"):
             raise ValueError("That counter is not open.")
+        if self.sim.avatars[session.user_id].actor.behaviour.get('drawn') and not vendor.drawn_open:
+            raise ValueError('Not with that out.')
         if vendor.relay:
             relays = getattr(self.game, 'relays', None)
             player = self.game.players[session.player_id]
