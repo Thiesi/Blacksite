@@ -15,6 +15,7 @@ from karst41.server.items import make_item
 from karst41.server.loop import TickContext
 from karst41.server.npcs.behaviours import patrol, step_toward
 from karst41.server.npcs.spawn import Spawners
+from karst41.server.npcs.posts import Posts
 from karst41.server.npcs.templates import (
     DORMANT_SECONDS, EVALUATION_TICKS, FLEE_FRACTION, HEAT_SECONDS,
     LOST_SIGHT_SECONDS, PROVOCATION_SECONDS, WANDER_PAUSE_TICKS,
@@ -43,6 +44,7 @@ class Npcs:
         self.content, self.sim = combat.content, combat.sim
         self.game.npcs = self
         self.spawners = Spawners(self.world, deepcopy(state), self.game.sessions.origin)
+        self.posts = Posts(self)
         self.dormant: dict[str, float] = {}
         self.provocations: dict[tuple[str, str, str], float] = {}
         self.menus: set[str] = set()
@@ -480,6 +482,7 @@ class Npcs:
             # unassigned escorts or move them while their worker is away.
             return
         if target and state in ("hunt", "flee"):
+            self.posts.interrupt(actor)
             if self.shared_crowd(actor) and not self.hostile(actor, target):
                 # One declared crowd shares its deadline, independent of
                 # each member's five-tick evaluation phase.
@@ -505,6 +508,8 @@ class Npcs:
                 step_toward(actor, zone, tuple(actor.behaviour.get("last_position", actor.position)), tick, avoid=avoid)
             return
         if self.event_motion(actor, zone, tick, avoid):
+            return
+        if self.posts.act(actor, zone, tick, avoid):
             return
         for behaviour in template.behaviours:
             params = behaviour.params
