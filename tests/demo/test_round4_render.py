@@ -49,14 +49,18 @@ def test_drawn_survives_target_crew_event_and_hazard(content, size, enabled, tie
 @pytest.mark.parametrize('size', [(80, 24), (132, 50)])
 @pytest.mark.parametrize('enabled', [False, True])
 @pytest.mark.parametrize('tier', ['16', '256', 'truecolor'])
-def test_nearby_drawn_keeps_its_whole_word(content, size, enabled, tier):
+@pytest.mark.parametrize('relation', ['!', '~', '+'])
+def test_nearby_drawn_keeps_its_word_and_relation(content, size, enabled, tier, relation):
     width, height = size
     model = display(content, width, height, tier=tier, enabled=enabled)
     body = zone_body(content, width, height)
     body.update(target=None, crew=[], event=None, hazards=[])
     body['nearby'] = [{'id': 'peer', 'name': 'Another\u754cVeryLongPlayer', 'role': 'player_neutral',
-                       'class': 'player', 'drawn': True, 'relation': '~'}]
+                       'class': 'player', 'drawn': True, 'relation': relation}]
     model.receive(Frame('view', {'rev': 1, 'kind': 'zone', 'body': body}), 0)
     terminal = FakeTerminal(width, height)
     terminal.write(model.render(0)[0])
-    assert 'drawn' in terminal.screen_text()
+    y = next(i for i, row in enumerate(terminal.screen_text().splitlines()) if 'drawn' in row)
+    row = ''.join(terminal.grid[y][model.layout.side.x:model.layout.side.right])
+    assert relation in row
+    assert 'drawn' in row

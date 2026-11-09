@@ -448,7 +448,8 @@ def panel(buffer: CellBuffer, body: dict[str, Any], layout: Layout, paint: Paint
             relation = entry.get('relation', '~')
             relation = relation if relation in TAGS else '~'
             suffix = (' jacked' if jacked else '') + ' ' + relation
-            label = truncate(entry.get('name', 'Someone'), w - 4 - len(suffix)) + suffix
+            reserved = len('drawn') + 1 if entry.get('drawn') else 0
+            label = truncate(entry.get('name', 'Someone'), w - 4 - len(suffix) - reserved) + suffix
             if entry.get('drawn'):
                 drawn_label(buffer, x + 3, y, w - 4, label, 'drawn',
                             paint('log_danger' if hostile else 'panel_text'), paint('warning', bold=True))

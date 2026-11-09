@@ -93,6 +93,8 @@ async def run(root: Path, python: Path) -> None:
             await probe.target(peer, actor.id)
             await wait(lambda: any('Round4' in line and 'drawn' in line
                                   for line in peer.caller.screen.screen_text().splitlines()[1:4]))
+            await wait(lambda: any('Round4' in row and '~' in row and 'drawn' in row
+                                  for row in peer.caller.screen.screen_text().split('NEARBY', 1)[-1].splitlines()))
             save(probe, peer, f'peer-target-drawn-{width}x{height}')
             position(probe, source, 'sodium-row', (89, 12))
             await position_ack(probe, source)
