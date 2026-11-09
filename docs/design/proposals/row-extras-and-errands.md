@@ -199,3 +199,36 @@ moving switches stay for comparison.
 4. **Swaps** for leaving and arriving now, with real arrivals at the
    Stair later as a canon change (§4)?
 5. **Demo first,** on round 4 (§7)?
+
+## 9. A handful more lines, for the sets that repeat soonest [new]
+
+The owner heard one or two lines repeat and asked for "a handful more
+lines", not triple. The sets that repeat soonest are the ones with few
+barks, or with pointer lines weighted 2 (they play twice as often). All
+of these are new lines the owner hasn't heard.
+
+**Street regulars** (7 barks, two pointers at weight 2; on `main`, so
+in the Row rules slice). Add 3, all at weight 1:
+
+- "Six doors, six songs. You learn to hear the one you want."
+- "Loudest street in Karst, and nobody raises their voice."
+- "Puddles never dry on the Row. Nobody remembers it raining."
+
+The plainclothes Warden shares this set, so none of them may hint at
+watching, reporting or the Wardens. These three don't.
+
+**Sable enforcers** (1 bark: the reference line, every interval; Row
+rules slice with the enforcer). Add 2, and raise the reference line to
+weight 2 so it stays the line you hear most:
+
+- "Everybody's welcome. Nobody's exempt."
+- "We're not here to stop you. We're here after."
+
+**Doorstep pair** (2 barks; population PR). Add 2:
+
+- "She knows I'm out here. She always knows."
+- "I came to ask her one thing. I'm working up to it."
+
+That's 7 lines in all. If a set still repeats once the extras put more
+speakers of it in earshot, the next step is lowering the weight-2
+pointers to 1, not writing more.
