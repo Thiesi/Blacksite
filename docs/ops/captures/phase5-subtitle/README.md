@@ -21,5 +21,5 @@ the new subtitle `a real-time door for NetBBS . the year of the Exhale` at
 | `title-80x24.txt` | `netbbs-80x24.ans` | `76ca8825dde8a58ccff3f14dbeca2a54ee5bee60b1afbd1d8c4ccb1de0948ca6` |
 | `title-132x50.txt` | `netbbs-132x50.ans` | `72f73f2ada3be0b1de2eb5fda2c3bddda76175fbc37aa3e24f05493cab556d75` |
 
-At 80x24 the subtitle fits the 54-column title column with two cells to
-spare. At 132x50 it's untruncated.
+At 80x24 the 52-character subtitle fits the title column, which holds 53
+cells. At 132x50 it is untruncated.
