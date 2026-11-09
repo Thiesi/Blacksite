@@ -1,0 +1,30 @@
+{
+  "schema": 1,
+  "id": "row-haggler",
+  "name": "Haggler",
+  "faction": null,
+  "title": "Sodium Row",
+  "terminal": false,
+  "machine_mind": false,
+  "lines": [
+    {
+      "id": "greeting",
+      "text": "He wants forty chits for a seat on a truck. Forty. For a truck.",
+      "when": [],
+      "required": true
+    }
+  ],
+  "offers": [],
+  "barks": [
+    {
+      "text": "Twenty-five and I bring my own water.",
+      "weight": 1,
+      "min_interval_seconds": 90
+    },
+    {
+      "text": "Last time the seat was a crate. A wet crate.",
+      "weight": 1,
+      "min_interval_seconds": 90
+    }
+  ]
+}

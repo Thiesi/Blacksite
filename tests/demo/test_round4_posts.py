@@ -77,6 +77,10 @@ def test_swap_reserves_two_slots_and_exchanges_homes_atomically(repo_root, monke
     assert (posts.home(seat), posts.home(partner)) == original[::-1]
     assert seat.behaviour['post_trip'] and partner.behaviour['post_trip']
     assert len(posts.reserved_ids(zone, 11)) == 4
+    assert partner.behaviour['post_wait'] == seat.id
+    doorway_position = partner.position
+    posts.act(partner, zone, 12, set())
+    assert partner.position == doorway_position
     for tick in range(12, 250):
         for actor in pair:
             posts.act(actor, zone, tick, game.core.npcs.spawners.reserved(zone))
@@ -127,3 +131,73 @@ def test_talk_reach_pauses_start_and_flight_returns_home(repo_root, monkeypatch)
         posts.act(actor, zone, tick, set())
     assert actor.position == posts.home(actor) == (30, 12)
     assert not actor.behaviour['post_trip']
+
+
+def test_drawer_cannot_pin_the_shy_step_with_talk_reach(repo_root, monkeypatch):
+    game, caller, zone, posts = rig(repo_root, monkeypatch)
+    actor, = add(game, zone, 'street', [(30, 12)])
+    place(game, caller, zone.id, (29, 12))
+    drawer = body(game, caller)
+    drawer.behaviour['drawn'] = True
+    before = actor.position
+    posts.shy(actor, zone, 100, drawer, set())
+    assert actor.position != before
+
+
+def test_shying_cancels_a_counter_hold_and_returns_home(repo_root, monkeypatch):
+    game, caller, zone, posts = rig(repo_root, monkeypatch)
+    actor, = add(game, zone, 'street', [(30, 12)], [(30, 18)])
+    game.core.world.enter(actor, zone.id, (30, 18))
+    actor.behaviour['post_until'] = 10000
+    place(game, caller, zone.id, (28, 18))
+    drawer = body(game, caller)
+    drawer.behaviour['drawn'] = True
+    posts.shy(actor, zone, 100, drawer, set())
+    assert actor.behaviour['post_goal'] == (30, 12)
+    assert posts.reserved_ids(zone, 100) == {actor.id}
+    for tick in range(101, 130):
+        posts.shy(actor, zone, tick, drawer, set())
+    assert actor.position == (30, 12)
+
+
+def test_arrival_keeps_its_step_in_this_ticks_budget(repo_root, monkeypatch):
+    game, _, zone, posts = rig(repo_root, monkeypatch)
+    zone.template = replace(zone.template, meta=replace(zone.template.meta, moving_budget=1))
+    first, = add(game, zone, 'first', [(20, 12)], [(21, 12)])
+    second, = add(game, zone, 'second', [(25, 12)], [(26, 12)])
+    posts.start(first, (21, 12))
+    posts.act(first, zone, 100, set())
+    assert first.position == (21, 12) and not first.behaviour['post_trip']
+    posts.act(second, zone, 100, set())
+    assert second.position == (25, 12)
+    assert posts.reserved_ids(zone, 100) == {first.id}
+    posts.act(second, zone, 101, set())
+    assert second.position == (26, 12)
+
+
+def test_interrupted_swap_preserves_new_homes_and_releases_waiter(repo_root, monkeypatch):
+    game, _, zone, posts = rig(repo_root, monkeypatch)
+    pair = add(game, zone, 'bar', [(27, 4), (34, 9)], seated=True, swap=True)
+    seat = next(a for a in pair if posts.post_at(a, a.position).seated)
+    partner = next(a for a in pair if a is not seat)
+    homes = posts.home(seat), posts.home(partner)
+    posts.act(seat, zone, 10, set())
+    assert partner.behaviour.get('post_wait') == seat.id
+    posts.interrupt(seat)
+    assert 'post_wait' not in partner.behaviour
+    assert (posts.home(seat), posts.home(partner)) == homes[::-1]
+
+
+def test_holstering_allows_a_later_draw_to_shy_again(repo_root, monkeypatch):
+    game, caller, zone, posts = rig(repo_root, monkeypatch)
+    actor, = add(game, zone, 'street', [(30, 12)])
+    place(game, caller, zone.id, (28, 12))
+    drawer = body(game, caller)
+    drawer.behaviour['drawn'] = True
+    posts.shy(actor, zone, 100, drawer, set())
+    before = actor.position
+    drawer.behaviour['drawn'] = False
+    posts.act(actor, zone, 101, set())
+    drawer.behaviour['drawn'] = True
+    posts.shy(actor, zone, 110, drawer, set())
+    assert actor.position != before

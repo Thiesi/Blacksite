@@ -1,6 +1,6 @@
 """Demo only: start the Sodium Row demo server from this checkout.
 
-    python scripts/demo_sodium/serve.py --install-dir <dir> [--signs] [--seated]
+    python scripts/demo_sodium/serve.py --install-dir <dir> [--signs]
 
 The shared venv installs `karst41` from the main checkout, so a plain
 `python -m karst41.server` would run main without the demo. This script
@@ -26,7 +26,6 @@ def main(argv: list[str] | None = None) -> int:
     parser = argparse.ArgumentParser(description='Start the Sodium Row demo server (demo only).')
     parser.add_argument('--install-dir', required=True, type=Path)
     parser.add_argument('--signs', action='store_true', help='far signs at night (pass --signs to play.py too)')
-    parser.add_argument('--seated', action='store_true', help='bar and Halo drinkers sit still (round 2 comparison)')
     args = parser.parse_args(argv)
 
     env = {**os.environ, 'PYTHONPATH': str(SOURCE), 'KARST41_DEMO': 'sodium-row-evening'}
@@ -34,8 +33,6 @@ def main(argv: list[str] | None = None) -> int:
     env.pop('KARST41_DEMO_SEATED', None)
     if args.signs:
         env['KARST41_DEMO_SIGNS'] = 'charted'
-    if args.seated:
-        env['KARST41_DEMO_SEATED'] = '1'
 
     found = subprocess.run([sys.executable, '-c', 'import karst41; print(karst41.__file__)'],
                            env=env, capture_output=True, text=True, check=False).stdout.strip()
@@ -43,7 +40,7 @@ def main(argv: list[str] | None = None) -> int:
         print(f'Refusing to start: karst41 comes from {found or "nowhere"}, not {SOURCE}.')
         return 2
     print(f'Demo server from {SOURCE}. Signs {"charted" if args.signs else "dark"}, '
-          f'drinkers {"seated" if args.seated else "moving"}.')
+          'posted cast with errands.')
     args.install_dir.mkdir(parents=True, exist_ok=True)
     sys.path.insert(0, str(SOURCE))
     from karst41.server.storage.lease import Lease

@@ -1,0 +1,25 @@
+{
+  "schema": 1,
+  "id": "halo-kestrel-crew",
+  "name": "Kestrel crew, off shift",
+  "faction": "kestrel",
+  "title": "Tin Halo regular",
+  "terminal": false,
+  "machine_mind": false,
+  "lines": [
+    {
+      "id": "greeting",
+      "text": "Double shift, then a bar. Then the next double.",
+      "when": [],
+      "required": true
+    }
+  ],
+  "offers": [],
+  "barks": [
+    {
+      "text": "Double shift, then a bar. Then the next double.",
+      "weight": 1,
+      "min_interval_seconds": 90
+    }
+  ]
+}

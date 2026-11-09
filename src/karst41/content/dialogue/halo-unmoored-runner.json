@@ -1,0 +1,30 @@
+{
+  "schema": 1,
+  "id": "halo-unmoored-runner",
+  "name": "Unmoored runner",
+  "faction": "unmoored",
+  "title": "Tin Halo regular",
+  "terminal": false,
+  "machine_mind": false,
+  "lines": [
+    {
+      "id": "greeting",
+      "text": "Everything's salvage eventually. Some of us just got there early.",
+      "when": [],
+      "required": true
+    }
+  ],
+  "offers": [],
+  "barks": [
+    {
+      "text": "Everything's salvage eventually. Some of us just got there early.",
+      "weight": 1,
+      "min_interval_seconds": 90
+    },
+    {
+      "text": "Back room's on Vesper's system. Jack in from the board if you want out the quiet way.",
+      "weight": 1,
+      "min_interval_seconds": 90
+    }
+  ]
+}

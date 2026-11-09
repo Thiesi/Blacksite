@@ -176,43 +176,206 @@
     },
     {
       "id": "halo-regular-crew",
-      "npc": "npc-row-kestrel-crew",
+      "npc": "npc-halo-kestrel-crew",
       "count": 1,
       "respawn_seconds": 60,
       "condition": "always",
-      "region": {
-        "x": 12,
-        "y": 10,
-        "w": 18,
-        "h": 3
-      }
+      "posts": [
+        {
+          "tile": [
+            18,
+            8
+          ],
+          "home": true,
+          "seated": true,
+          "weight": 1,
+          "hold_seconds": [
+            60,
+            180
+          ],
+          "swap": false
+        },
+        {
+          "tile": [
+            23,
+            9
+          ],
+          "home": false,
+          "seated": false,
+          "weight": 50,
+          "hold_seconds": [
+            5,
+            10
+          ],
+          "swap": false
+        },
+        {
+          "tile": [
+            32,
+            10
+          ],
+          "home": false,
+          "seated": false,
+          "weight": 30,
+          "hold_seconds": [
+            10,
+            20
+          ],
+          "swap": false
+        },
+        {
+          "tile": [
+            18,
+            10
+          ],
+          "home": false,
+          "seated": false,
+          "weight": 20,
+          "hold_seconds": [
+            10,
+            20
+          ],
+          "swap": false
+        }
+      ],
+      "moving_cap": 1,
+      "crowd": "halo-regulars"
     },
     {
       "id": "halo-regular-stray",
-      "npc": "npc-row-clause-regular",
+      "npc": "npc-halo-clause-regular",
       "count": 1,
       "respawn_seconds": 60,
       "condition": "always",
-      "region": {
-        "x": 12,
-        "y": 10,
-        "w": 18,
-        "h": 3
-      }
+      "posts": [
+        {
+          "tile": [
+            28,
+            8
+          ],
+          "home": true,
+          "seated": true,
+          "weight": 1,
+          "hold_seconds": [
+            60,
+            180
+          ],
+          "swap": false
+        },
+        {
+          "tile": [
+            23,
+            9
+          ],
+          "home": false,
+          "seated": false,
+          "weight": 50,
+          "hold_seconds": [
+            5,
+            10
+          ],
+          "swap": false
+        },
+        {
+          "tile": [
+            32,
+            10
+          ],
+          "home": false,
+          "seated": false,
+          "weight": 30,
+          "hold_seconds": [
+            10,
+            20
+          ],
+          "swap": false
+        },
+        {
+          "tile": [
+            18,
+            10
+          ],
+          "home": false,
+          "seated": false,
+          "weight": 20,
+          "hold_seconds": [
+            10,
+            20
+          ],
+          "swap": false
+        }
+      ],
+      "moving_cap": 1,
+      "crowd": "halo-regulars"
     },
     {
       "id": "halo-regular-runner",
-      "npc": "npc-row-unmoored-runner",
+      "npc": "npc-halo-unmoored-runner",
       "count": 1,
       "respawn_seconds": 60,
       "condition": "always",
-      "region": {
-        "x": 12,
-        "y": 10,
-        "w": 18,
-        "h": 3
-      }
+      "posts": [
+        {
+          "tile": [
+            29,
+            13
+          ],
+          "home": true,
+          "seated": true,
+          "weight": 1,
+          "hold_seconds": [
+            60,
+            180
+          ],
+          "swap": false
+        },
+        {
+          "tile": [
+            23,
+            9
+          ],
+          "home": false,
+          "seated": false,
+          "weight": 50,
+          "hold_seconds": [
+            5,
+            10
+          ],
+          "swap": false
+        },
+        {
+          "tile": [
+            32,
+            10
+          ],
+          "home": false,
+          "seated": false,
+          "weight": 30,
+          "hold_seconds": [
+            10,
+            20
+          ],
+          "swap": false
+        },
+        {
+          "tile": [
+            18,
+            10
+          ],
+          "home": false,
+          "seated": false,
+          "weight": 20,
+          "hold_seconds": [
+            10,
+            20
+          ],
+          "swap": false
+        }
+      ],
+      "moving_cap": 1,
+      "crowd": "halo-regulars"
     }
   ],
-  "sector": "lat-sodium-row"
+  "sector": "lat-sodium-row",
+  "moving_budget": 1
 }

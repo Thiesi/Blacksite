@@ -8,6 +8,22 @@
   "machine_mind": false,
   "lines": [
     {
+      "id": "back-way-marked",
+      "text": "Back door's on the house system. I don't know anything about it. Ask the board.",
+      "when": [
+        "marked"
+      ],
+      "required": true
+    },
+    {
+      "id": "back-way-hunted",
+      "text": "Back door's on the house system. I don't know anything about it. Ask the board.",
+      "when": [
+        "hunted"
+      ],
+      "required": true
+    },
+    {
       "id": "round4-drawn",
       "text": "Not with that out.",
       "when": [

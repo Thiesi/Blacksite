@@ -118,15 +118,19 @@ def seated_world(repo_root, monkeypatch):
 
 def seated_drinkers(game, zone_id):
     return [a for a in game.core.world.zones[zone_id].actors.values()
-            if '-seat' in str(a.behaviour.get('spawner'))]
+            if a.behaviour.get('spawner') in demo_seated.SEATS[zone_id]
+            and a.behaviour.get('posts') and any(p.seated and p.tile == tuple(a.behaviour['home'])
+                                               for p in a.behaviour['posts'])]
 
 
-def test_every_seat_is_filled_and_nobody_leaves_it(repo_root, monkeypatch):
+def test_posted_drinkers_fill_their_seats_and_hold_before_errands(repo_root, monkeypatch):
     game, caller = seated_world(repo_root, monkeypatch)
     place(game, caller, 'sodium-row', (3, 12))  # wakes the Row
     game.step(5)
     row = seated_drinkers(game, 'sodium-row')
-    want = {tuple(seat) for seats in demo_seated.SEATS['sodium-row'].values() for seat in seats}
+    want = {p.tile for sp in game.core.world.zones['sodium-row'].template.meta.spawners
+            if sp.id in demo_seated.SEATS['sodium-row'] for p in sp.posts if p.home and p.seated}
+    assert len(want) == 6
     assert {a.position for a in row} == want
     game.step(200)
     assert {a.position for a in row} == want
@@ -136,7 +140,9 @@ def test_every_halo_seat_is_filled(repo_root, monkeypatch):
     game, caller = seated_world(repo_root, monkeypatch)
     place(game, caller, 'sodium-tin-halo', (12, 12))
     game.step(5)
-    want = {tuple(seat) for seats in demo_seated.SEATS['sodium-tin-halo'].values() for seat in seats}
+    want = {p.tile for sp in game.core.world.zones['sodium-tin-halo'].template.meta.spawners
+            for p in sp.posts if p.home and p.seated}
+    assert len(want) == 3
     assert {a.position for a in seated_drinkers(game, 'sodium-tin-halo')} == want
 
 
@@ -149,7 +155,7 @@ def test_seated_drinkers_stay_civilian_and_can_be_talked_to(repo_root, monkeypat
     assert game.core.dialogue.contact(caller.session, drinker.id) is not None
 
 
-def test_only_the_drinkers_sit_and_the_switch_is_off_by_default(repo_root, monkeypatch):
+def test_posts_replace_the_old_seated_switch(repo_root, monkeypatch):
     game, caller = seated_world(repo_root, monkeypatch)
     content = game.core.world.content
     assert [b.kind for b in content.npcs['npc-sodium-regular'].behaviours] == ['wander']
@@ -159,6 +165,7 @@ def test_only_the_drinkers_sit_and_the_switch_is_off_by_default(repo_root, monke
     spawners = plain.core.world.zones['sodium-row'].template.meta.spawners
     assert not any('-seat' in sp.id for sp in spawners)
     assert [b.kind for b in plain.core.world.content.npcs['npc-row-clause-regular'].behaviours] == ['wander']
+    assert plain.core.world.zones['sodium-row'].template.meta.moving_budget == 4
 
 
 def test_the_doorstep_pair_stands_in_the_light_and_leaves_the_door_clear(repo_root, monkeypatch):
@@ -185,7 +192,7 @@ def test_barks_keep_the_disclosure_and_voice_rules(repo_root):
                'row-clause-regular', 'row-unmoored-runner', 'row-card-player', 'row-street-regular',
                'solenne', 'dolf')
     barks = [bark.text for did in records for bark in content.dialogue[did].barks]
-    assert 40 <= len(barks) <= 50
+    assert len(barks) == 51  # Round 3's 48 plus the three approved regular barks.
     assert len(set(barks)) == len(barks)
     lowered = ' '.join(barks).lower()
     for banned in ('—', 'cyberpunk', 'hacker', 'cyberspace', 'arranged', 'back room', 'alley door',

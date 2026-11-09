@@ -48,3 +48,23 @@ def test_cover_must_match_all_post_numbers(repo_root):
     content.zones[zone.id] = replace(zone, meta=replace(zone.meta,
         moving_budget=4, spawners=(regular, cover)))
     assert any('poses_as must match posts' in p.message for p in validate(content))
+
+
+def test_authored_cast_counts_names_and_sign_clearance(repo_root):
+    content = load_content(repo_root / 'src/karst41/content')
+    row, halo = content.zones['sodium-row'], content.zones['sodium-tin-halo']
+    assert sum(sp.count for sp in row.meta.spawners) == 23
+    assert sum(sp.count for sp in row.meta.spawners if sp.id not in (
+        'sable-enforcer-stair', 'sable-enforcer-strip', 'plainclothes-warden')) == 20
+    assert sum(sp.count for sp in halo.meta.spawners) == 6
+    assert row.meta.moving_budget == 4 and halo.meta.moving_budget == 1
+    assert 'row-ticket-tout' not in {o.id for o in row.meta.objects}
+    for sid, tile in (('ticket-tout', (4, 11)), ('haggler', (5, 11))):
+        sp = next(sp for sp in row.meta.spawners if sp.id == sid)
+        assert sp.posts[0].tile == tile
+        assert len(content.npcs[sp.npc].name) <= 14
+        assert content.npcs[sp.npc].faction is None
+        assert not content.dialogue[content.npcs[sp.npc].dialogue].offers
+    assert not any(p.tile[1] == 10 and 2 <= p.tile[0] <= 13
+                   or p.tile[1] == 14 and 5 <= p.tile[0] <= 14
+                   for sp in row.meta.spawners for p in sp.posts)

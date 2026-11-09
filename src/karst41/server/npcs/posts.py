@@ -116,17 +116,18 @@ class Posts:
                 pending.append(tile)
         return []
 
-    def walk(self, actor: Actor, zone: ZoneInstance, tick: int, avoid: set[Tile]) -> None:
+    def walk(self, actor: Actor, zone: ZoneInstance, tick: int, avoid: set[Tile],
+             *, ignore_holder: Tile | None = None) -> None:
         if waiting := actor.behaviour.get('post_wait'):
             leader = zone.actors.get(waiting)
             if leader and self.ordinary(leader) and leader.behaviour.get('post_trip'):
                 return
             actor.behaviour.pop('post_wait', None)
         if actor.position == actor.behaviour['post_goal']:
-            self.hold(actor, zone, tick)
+            self.arrive(actor, zone, tick)
             return
         if (tick < actor.cooldowns.get('move', 0) or tick < actor.behaviour.get('post_retry', 0)
-                or self.npcs.reach_holders(actor, zone, tick)):
+                or any(tile != ignore_holder for tile in self.npcs.reach_holders(actor, zone, tick))):
             return
         goal = actor.behaviour['post_goal']
         path = actor.behaviour.get('post_path', [])
@@ -142,17 +143,23 @@ class Posts:
         dx, dy = path[0][0] - actor.x, path[0][1] - actor.y
         direction = {(1, 0): 'right', (-1, 0): 'left', (0, 1): 'down', (0, -1): 'up'}.get((dx, dy))
         if direction and move(actor, zone, direction, tick):
+            self.reserved_ids(zone, tick)
+            self.ledger[zone.id][1].add(actor.id)
             path.pop(0)
         else:
             actor.behaviour.pop('post_path', None)
         if actor.position == goal:
-            if final := actor.behaviour.pop('post_swap_final', None):
-                partner = zone.actors.get(actor.behaviour.get('post_swap_partner'))
-                if partner:
-                    partner.behaviour.pop('post_wait', None)
-                self.start(actor, final)
-            else:
-                self.hold(actor, zone, tick)
+            self.arrive(actor, zone, tick)
+
+    def arrive(self, actor: Actor, zone: ZoneInstance, tick: int) -> None:
+        if final := actor.behaviour.pop('post_swap_final', None):
+            partner = zone.actors.get(actor.behaviour.get('post_swap_partner'))
+            if partner:
+                partner.behaviour.pop('post_wait', None)
+            self.start(actor, final)
+        else:
+            actor.behaviour.pop('post_swap_partner', None)
+            self.hold(actor, zone, tick)
 
     def start(self, actor: Actor, goal: Tile) -> None:
         actor.behaviour.update(post_goal=goal, post_trip=True, post_retry=0)
@@ -161,9 +168,13 @@ class Posts:
     def act(self, actor: Actor, zone: ZoneInstance, tick: int, avoid: set[Tile]) -> bool:
         if not actor.behaviour.get('posts'):
             return False
+        if seen := actor.behaviour.get('post_shied'):
+            seen.intersection_update(a.id for a in zone.actors.values() if a.behaviour.get('drawn'))
         if actor.behaviour.get('post_trip'):
             self.walk(actor, zone, tick, avoid)
             return True
+        if actor.position == self.home(actor) and all(p.home and not p.swap for p in actor.behaviour['posts']):
+            return True  # Fixed extras do no scheduling, budget scan or RNG work.
         if 'post_until' not in actor.behaviour:
             if actor.position == self.home(actor):
                 self.hold(actor, zone, tick)
@@ -193,7 +204,11 @@ class Posts:
                     choices.append((Post(other.tile, other.hold_seconds, weight=30), partner))
         if not choices:
             return True
-        post, partner = zone.rng.choices(choices, weights=[p.weight for p, _ in choices])[0]
+        # A swap and a free doorway errand share the authored doorway weight,
+        # rather than doubling its 30 against counter 50 / table 20.
+        doorways = sum(p.weight == 30 for p, _ in choices) if any(a for _, a in choices) else 1
+        weights = [p.weight / doorways if p.weight == 30 else p.weight for p, _ in choices]
+        post, partner = zone.rng.choices(choices, weights=weights)[0]
         if partner is not None:
             # Clear the one-tile door before the other person starts. The
             # drinker waits one tile beside the street approach, then takes
@@ -231,16 +246,19 @@ class Posts:
         own = self.post_at(actor, actor.position)
         if own and own.seated:
             return True
-        if actor.behaviour.get('post_trip') or actor.position != self.home(actor) and actor.behaviour.get('post_goal'):
-            self.start(actor, self.home(actor))
+        if actor.behaviour.get('post_trip') or own and not own.home:
+            actor.behaviour.setdefault('post_shied', set()).add(drawer.id)
+            if actor.behaviour.get('post_goal') != self.home(actor) or actor.behaviour.get('post_swap_final'):
+                self.interrupt(actor)
+                self.start(actor, self.home(actor))
             if self.reserve(zone, tick, (actor,)):
-                self.walk(actor, zone, tick, avoid)
+                self.walk(actor, zone, tick, avoid, ignore_holder=drawer.position)
             else:
                 actor.behaviour['post_trip'] = False
             return True
         seen = actor.behaviour.setdefault('post_shied', set())
         seen.intersection_update(a.id for a in zone.actors.values() if a.behaviour.get('drawn'))
-        if drawer.id in seen or self.npcs.reach_holders(actor, zone, tick):
+        if drawer.id in seen or any(tile != drawer.position for tile in self.npcs.reach_holders(actor, zone, tick)):
             return True
         distance = lambda tile: max(abs(tile[0] - drawer.x), abs(tile[1] - drawer.y))
         options = [(actor.x + 1, actor.y), (actor.x, actor.y + 1),

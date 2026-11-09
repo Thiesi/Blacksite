@@ -1,0 +1,25 @@
+{
+  "schema": 1,
+  "id": "halo-clause-regular",
+  "name": "Clause regular",
+  "faction": null,
+  "title": "Tin Halo regular",
+  "terminal": false,
+  "machine_mind": false,
+  "lines": [
+    {
+      "id": "greeting",
+      "text": "Day forty and I still check the lease. Nothing on it. I check.",
+      "when": [],
+      "required": true
+    }
+  ],
+  "offers": [],
+  "barks": [
+    {
+      "text": "Day forty and I still check the lease. Nothing on it. I check.",
+      "weight": 1,
+      "min_interval_seconds": 90
+    }
+  ]
+}

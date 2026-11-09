@@ -50,6 +50,8 @@ def install(core: Core) -> None:
         zone = core.world.zones.get(zone_id)
         if zone is None:
             continue
+        if zone.template.meta.moving_budget:
+            continue  # Round 4's posted cast replaces the old comparison.
         spawners = []
         for spawner in zone.template.meta.spawners:
             if spawner.id not in seats:

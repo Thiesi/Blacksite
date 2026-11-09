@@ -363,7 +363,8 @@
           "chance": 0.5,
           "count": 10
         }
-      ]
+      ],
+      "steady": true
     },
     {
       "id": "npc-halo-regular",
@@ -611,7 +612,8 @@
       ],
       "xp": 0,
       "vendor": "vesper",
-      "dialogue": "vesper"
+      "dialogue": "vesper",
+      "steady": true
     },
     {
       "id": "npc-walked-template",
@@ -867,7 +869,8 @@
           "chance": 1,
           "count": 1
         }
-      ]
+      ],
+      "steady": true
     },
     {
       "id": "npc-row-clause-regular",
@@ -981,7 +984,8 @@
           "chance": 1,
           "count": 1
         }
-      ]
+      ],
+      "steady": true
     },
     {
       "id": "npc-row-solenne",
@@ -1011,7 +1015,8 @@
           "chance": 1,
           "count": 1
         }
-      ]
+      ],
+      "steady": true
     },
     {
       "id": "npc-halo-dolf",
@@ -1041,7 +1046,8 @@
           "chance": 1,
           "count": 1
         }
-      ]
+      ],
+      "steady": true
     },
     {
       "id": "npc-row-enforcer",
@@ -1072,6 +1078,148 @@
           "count": 10
         }
       ]
+    },
+    {
+      "id": "npc-halo-kestrel-crew",
+      "name": "Kestrel crew",
+      "faction": "kestrel",
+      "grade": 1,
+      "attributes": {
+        "frame": 20,
+        "nerve": 20,
+        "cortex": 10,
+        "resonance": 5,
+        "vitals": 20
+      },
+      "behaviours": [
+        {
+          "kind": "wander",
+          "params": {}
+        }
+      ],
+      "xp": 0,
+      "dialogue": "halo-kestrel-crew",
+      "loot": [
+        {
+          "item": "con_kestrel_ration",
+          "chance": 1,
+          "count": 1
+        }
+      ]
+    },
+    {
+      "id": "npc-halo-clause-regular",
+      "name": "Clause regular",
+      "faction": null,
+      "grade": 1,
+      "attributes": {
+        "frame": 20,
+        "nerve": 20,
+        "cortex": 10,
+        "resonance": 5,
+        "vitals": 20
+      },
+      "behaviours": [
+        {
+          "kind": "wander",
+          "params": {}
+        }
+      ],
+      "xp": 0,
+      "dialogue": "halo-clause-regular",
+      "loot": [
+        {
+          "item": "con_kestrel_ration",
+          "chance": 1,
+          "count": 1
+        }
+      ]
+    },
+    {
+      "id": "npc-halo-unmoored-runner",
+      "name": "Unmoored runner",
+      "faction": "unmoored",
+      "grade": 1,
+      "attributes": {
+        "frame": 20,
+        "nerve": 20,
+        "cortex": 10,
+        "resonance": 5,
+        "vitals": 20
+      },
+      "behaviours": [
+        {
+          "kind": "wander",
+          "params": {}
+        }
+      ],
+      "xp": 0,
+      "dialogue": "halo-unmoored-runner",
+      "loot": [
+        {
+          "item": "con_kestrel_ration",
+          "chance": 1,
+          "count": 1
+        }
+      ]
+    },
+    {
+      "id": "npc-row-ticket-tout",
+      "name": "Ticket tout",
+      "faction": null,
+      "grade": 1,
+      "attributes": {
+        "frame": 20,
+        "nerve": 20,
+        "cortex": 10,
+        "resonance": 5,
+        "vitals": 20
+      },
+      "behaviours": [
+        {
+          "kind": "idle",
+          "params": {}
+        }
+      ],
+      "xp": 0,
+      "dialogue": "row-ticket-tout",
+      "loot": [
+        {
+          "item": "con_kestrel_ration",
+          "chance": 1,
+          "count": 1
+        }
+      ],
+      "steady": false
+    },
+    {
+      "id": "npc-row-haggler",
+      "name": "Haggler",
+      "faction": null,
+      "grade": 1,
+      "attributes": {
+        "frame": 20,
+        "nerve": 20,
+        "cortex": 10,
+        "resonance": 5,
+        "vitals": 20
+      },
+      "behaviours": [
+        {
+          "kind": "idle",
+          "params": {}
+        }
+      ],
+      "xp": 0,
+      "dialogue": "row-haggler",
+      "loot": [
+        {
+          "item": "con_kestrel_ration",
+          "chance": 1,
+          "count": 1
+        }
+      ],
+      "steady": false
     }
   ]
 }

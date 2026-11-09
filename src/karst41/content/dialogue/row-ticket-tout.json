@@ -1,0 +1,43 @@
+{
+  "schema": 1,
+  "id": "row-ticket-tout",
+  "name": "Ticket tout",
+  "faction": null,
+  "title": "Sodium Row",
+  "terminal": false,
+  "machine_mind": false,
+  "lines": [
+    {
+      "id": "wake",
+      "text": "Fresh out of the vats and already thinking about leaving? Smart. Convoy seat, under the Kestrel price.",
+      "when": [
+        "is_wake"
+      ],
+      "required": true
+    },
+    {
+      "id": "greeting",
+      "text": "Convoy seats, Scour rides, no questions on the manifest. Ask me tomorrow and the price is worse.",
+      "when": [],
+      "required": true
+    }
+  ],
+  "offers": [],
+  "barks": [
+    {
+      "text": "Rim run, end of the week. Two seats. One if you're big.",
+      "weight": 1,
+      "min_interval_seconds": 90
+    },
+    {
+      "text": "Kestrel sells the tickets. I sell the ones Kestrel forgot it sold.",
+      "weight": 1,
+      "min_interval_seconds": 90
+    },
+    {
+      "text": "Ring-fall's coming. Rides go up when the sky comes down.",
+      "weight": 1,
+      "min_interval_seconds": 90
+    }
+  ]
+}
