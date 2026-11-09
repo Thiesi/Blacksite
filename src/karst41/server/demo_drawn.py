@@ -82,8 +82,17 @@ class Drawn:
                             return
                     elif player and self.active(player) and self.combat.visible(actor, player):
                         watch.seen = tick
-                        if self.distance(actor, player) > WATCH_DISTANCE:
-                            step_toward(actor, zone, player.position, tick, avoid=avoid)
+                        distance = self.distance(actor, player)
+                        gap = lambda tile: max(abs(tile[0]-player.x), abs(tile[1]-player.y))
+                        if distance > WATCH_DISTANCE:
+                            step_toward(actor, zone, player.position, tick, avoid=avoid,
+                                        permit=lambda tile: gap(tile) >= 2)
+                        elif distance < 2:
+                            # Proposal 3.3: keep 2-4 tiles when the drawer closes
+                            # in, using the same local step and reserved exits.
+                            away = (actor.x + (actor.x-player.x or 1), actor.y + actor.y-player.y)
+                            step_toward(actor, zone, away, tick, avoid=avoid,
+                                        permit=lambda tile: gap(tile) > distance)
                         return
                     elif tick - watch.seen < LOST_TICKS:
                         return  # No last-known-position pursuit in this demo.

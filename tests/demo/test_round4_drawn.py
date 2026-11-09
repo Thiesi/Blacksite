@@ -2,6 +2,8 @@
 
 from dataclasses import replace
 
+import pytest
+
 from karst41.server.dialogue import eligible_offers
 from karst41.server.dialogue import Facts
 from karst41.content.schema import Offer
@@ -191,3 +193,16 @@ def test_drawn_frame_preserves_stance_and_map_glyph(repo_root, monkeypatch):
     entry = next(a for a in body_['actors'] if a['id'] == actor.id)
     nearby = next(a for a in body_['nearby'] if a['id'] == actor.id)
     assert nearby['drawn'] is True and entry['glyph_id'] == 'actor-player'
+
+
+@pytest.mark.parametrize("approach", [(62, 12), (62, 11)])
+def test_watcher_keeps_room_when_the_drawer_approaches(repo_root, monkeypatch, approach):
+    game, caller, actor, drawn = row(repo_root, monkeypatch)
+    guard = spawn(game, 'sodium-row', 'npc-row-enforcer', (63, 12), group='watch')
+    drawn.draw(actor)
+    place(game, caller, 'sodium-row', approach)
+    hp = actor.health
+    game.step(15)
+    assert 2 <= drawn.distance(guard, actor) <= 4
+    assert guard.target is None and actor.health == hp
+    assert not game.core.npcs.provocations

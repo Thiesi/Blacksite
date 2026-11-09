@@ -71,6 +71,11 @@ async def run(root: Path, python: Path) -> None:
                 probe.game.players[connection.session.player_id].progress['wake_combat'] = 'skipped'
                 connection.avatar.actor.shock = 0
                 connection.avatar.actor.target = None
+            position(probe, source, 'sodium-row', (4, 12))
+            await position_ack(probe, source)
+            await wait(lambda: 'Ticket tout' in source.caller.screen.screen_text()
+                       and 'Haggler' in source.caller.screen.screen_text())
+            save(probe, source, f'stair-speakers-{width}x{height}')
             position(probe, source, 'sodium-row', (41, 12))
             position(probe, peer, 'sodium-row', (42, 13))
             await position_ack(probe, source)
@@ -127,7 +132,7 @@ async def run(root: Path, python: Path) -> None:
             assert next(r for r in core.rooms if r.id == 'room-3').label == 'Back room'
             results.append({'size': [width,height], 'first_fire_draws': True, 'watch': True,
                             'peer_drawn': True, 'halo_refusal': True, 'holstered_entry': True,
-                            'locked_core_name': True, 'back_room_label': True})
+                            'locked_core_name': True, 'back_room_label': True, 'new_speakers': True})
             await probe.leave(peer, f'peer-return-{width}x{height}')
             await probe.leave(source, f'owner-return-{width}x{height}')
         assert not probe.errors, probe.errors
