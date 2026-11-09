@@ -1,7 +1,8 @@
 """Round4 native smoke, through a real NetBBS registered stdio door.
 
-Disclosed fixtures: grade/funding, initial positions and zero shock. No
-timing acceptance, human playtest or S11 credit. Raw ANSI is retained.
+Disclosed fixtures: grade/funding, initial positions, skipped combat
+tutorial and zero shock. No timing acceptance, human playtest or S11
+credit. Raw ANSI and directly rendered terminal-grid PNGs are retained.
 """
 
 from __future__ import annotations
@@ -33,6 +34,27 @@ def position(probe: NativeProbe, connection: Any, zone_id: str, tile: tuple[int,
     sim.reset_view(connection.session, avatar)
 
 
+def save(probe: NativeProbe, connection: Any, label: str) -> None:
+    """Save actual caller bytes/grid; PNG is a replay, not a new rendering."""
+    from scripts.presentation_mockups.website.screenshot import png
+    probe.save(connection, label)
+    png(connection.caller.screen, probe.root / (label + '.png'))
+
+
+async def position_ack(probe: NativeProbe, connection: Any) -> None:
+    """Wait for this placement's published view, not a prior acknowledged one."""
+    avatar = connection.avatar
+    zone, tile = avatar.zone, avatar.actor.position
+    def current() -> bool:
+        view = probe.game.sim.views[connection.session.id].previous or {}
+        body = view.get('body', {})
+        return (view.get('kind') == 'zone' and body.get('me', {}).get('zone') == zone
+                and any(actor['id'] == avatar.actor.id and (actor['x'], actor['y']) == tile
+                        for actor in body.get('actors', []))
+                and connection.session.ack_revision == connection.session.view_revision)
+    await wait(current)
+
+
 async def run(root: Path, python: Path) -> None:
     os.environ['KARST41_DEMO'] = 'sodium-row-evening'
     probe = NativeProbe(root, python, False, door_environment={'DOOR_KARST41_PRESENTATION': '1'})
@@ -46,11 +68,12 @@ async def run(root: Path, python: Path) -> None:
             peer = await probe.open(width, height, 'Peer', truecolor=width == 132)
             for connection in (source, peer):
                 probe.fixture(connection)
+                probe.game.players[connection.session.player_id].progress['wake_combat'] = 'skipped'
                 connection.avatar.actor.shock = 0
                 connection.avatar.actor.target = None
             position(probe, source, 'sodium-row', (41, 12))
             position(probe, peer, 'sodium-row', (42, 13))
-            await wait(lambda: source.session.ack_revision == source.session.view_revision)
+            await position_ack(probe, source)
             before = len(probe.service.core.npcs.provocations)
             await source.caller.write(b'f')
             actor = source.avatar.actor
@@ -61,22 +84,25 @@ async def run(root: Path, python: Path) -> None:
             watch = probe.service.core.demo_weapons.watchers['sodium-row']
             guard = probe.service.world.actors[watch.guard]
             await wait(lambda: max(abs(guard.x-actor.x), abs(guard.y-actor.y)) <= 4)
-            probe.save(source, f'drawn-watch-{width}x{height}')
+            save(probe, source, f'drawn-watch-{width}x{height}')
             await probe.target(peer, actor.id)
-            await wait(lambda: 'drawn' in peer.caller.screen.screen_text())
-            probe.save(peer, f'peer-target-drawn-{width}x{height}')
+            await wait(lambda: any('Round4' in line and 'drawn' in line
+                                  for line in peer.caller.screen.screen_text().splitlines()[1:4]))
+            save(probe, peer, f'peer-target-drawn-{width}x{height}')
             position(probe, source, 'sodium-row', (89, 12))
-            await wait(lambda: source.session.ack_revision == source.session.view_revision)
+            await position_ack(probe, source)
             await source.caller.write(b'e')
             await wait(lambda: any('Put it away first.' in line.get('text', '') for line in source.session.log_ring))
             assert source.avatar.zone == 'sodium-row'
-            probe.save(source, f'halo-drawn-refusal-{width}x{height}')
+            await wait(lambda: 'Put it away first.' in source.caller.screen.screen_text())
+            save(probe, source, f'halo-drawn-refusal-{width}x{height}')
             await source.caller.write(b'd')
             await wait(lambda: actor.behaviour.get('drawn') is False)
             await source.caller.write(b'e')
             await wait(lambda: source.avatar.zone == 'sodium-tin-halo')
-            await wait(lambda: source.session.ack_revision == source.session.view_revision)
-            probe.save(source, f'halo-holstered-entry-{width}x{height}')
+            await position_ack(probe, source)
+            await wait(lambda: 'The Tin Halo' in source.caller.screen.screen_text().splitlines()[0])
+            save(probe, source, f'halo-holstered-entry-{width}x{height}')
             halo = probe.service.world.zones['sodium-tin-halo']
             door = halo.objects['halo-back-room']
             choices = [(door.spec.tile[0]+dx, door.spec.tile[1]+dy)
@@ -88,13 +114,15 @@ async def run(root: Path, python: Path) -> None:
                 choice = probe.game.sim.interaction_target(source.avatar)
                 if getattr(getattr(choice.value, 'spec', None), 'id', '') != door.spec.id:
                     continue
+                await position_ack(probe, source)
                 await source.caller.write(b'e')
                 await wait(lambda: any('Locked. The latch runs off the Tin Halo core.' in line.get('text', '')
                                        for line in source.session.log_ring))
+                await wait(lambda: 'latch runs off the Tin Halo core.' in source.caller.screen.screen_text())
                 break
             else:
                 raise AssertionError('No usable back-room door approach')
-            probe.save(source, f'back-way-core-name-{width}x{height}')
+            save(probe, source, f'back-way-core-name-{width}x{height}')
             core = probe.game.content.cores['lat-tin-halo']
             assert next(r for r in core.rooms if r.id == 'room-3').label == 'Back room'
             results.append({'size': [width,height], 'first_fire_draws': True, 'watch': True,
@@ -104,7 +132,7 @@ async def run(root: Path, python: Path) -> None:
             await probe.leave(source, f'owner-return-{width}x{height}')
         assert not probe.errors, probe.errors
         (root/'result.json').write_text(json.dumps({'passed': True, 'transport': 'NetBBS Telnet native stdio',
-            'fixtures': ['grade5/funding/ammunition', 'zero shock', 'initial positions'], 'teleports': True,
+            'fixtures': ['grade5/funding/ammunition', 'zero shock', 'initial positions', 'skipped combat tutorial'], 'teleports': True,
             'human_playtest': False, 's11_credit': False, 'runs': results}, indent=2)+'\n', encoding='utf-8')
     finally:
         if hasattr(probe, 'node'):
