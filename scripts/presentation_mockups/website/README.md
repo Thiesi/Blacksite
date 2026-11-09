@@ -14,3 +14,9 @@ to that historical reproduction, not current proof storage.
 R1 does not update the website or banner art. The presentation lead owns
 that later work. Current native title evidence uses
 `scripts/accept_r1_netbbs.py` and the R1 review packet instead.
+
+The `karst_maps` generators don't import the package, so they run as they
+are. In phase 5 of the rename, the city map's title block and the corner
+line of Karst by Ringlight were changed to KARST 41 and both maps were
+regenerated with `python render.py`. The banner title was edited by
+`scripts/presentation_mockups/banner_retitle.py`.
