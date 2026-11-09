@@ -1,10 +1,10 @@
-┌─Sodium Row  CONTESTED─TRUCE─PvP G5+───────────────────────────────────────────────────────────────────────────────────────01:46──┐
+┌─Sodium Row  CONTESTED─TRUCE─PvP G5+───────────────────────────────────────────────────────────────────────────────────────03:11──┐
 │███████████████                                                                                            │TARGET                │
 │█·················                                                                                         │Sodium regular        │
-│█·»···············                                                                                         │HP ######.. 87%       │
-│█··················                                                                                        │Range 3 Cover 0       │
+│█·»···············                                                                                         │HP ######## 100%      │
+│█··················                                                                                        │Range 2 Cover 0       │
 │█··················                                                                                        │Civilian              │
-│█····@··☻··········                                                                                        │hostile               │
+│█····@·☻···········                                                                                        │hostile               │
 │█·················                                                                                         │WEAPON                │
 │█·······$·········                                                                                         │Kestrel Issue Sidearm │
 │█·················                                                                                         │NEARBY                │
@@ -43,7 +43,7 @@
 │[zone] Sodium regular: First time down the Stair? Walk to the end. Everybody does.                                                │
 │[combat] You raise your weapon. Fire again after two seconds; the target can move to safety.                                      │
 │[combat] Sable is coming for you.                                                                                                 │
-│[combat] Hit: Sodium regular.                                                                                                     │
+│[combat] Miss: Sodium regular.                                                                                                    │
 │[zone] Sodium regular: First time down the Stair? Walk to the end. Everybody does.                                                │
 │[sys] Sodium regular walks off.                                                                                                   │
 │Tab target  F fire  X weapon  1-5 quick  V abilities  E interact  I inventory  ? help                                             │

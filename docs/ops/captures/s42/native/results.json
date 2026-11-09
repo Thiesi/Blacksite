@@ -3,99 +3,135 @@
   "runs": [
     {
       "artifact": "s42-talker-80x24-16",
-      "source_head": "e1a126c847b7a6f6b609a30003e70342c6eb1818",
+      "source_head": "1f80fefab79153b0fe2301a5f32c32c2419f0289",
       "shot": {
         "health_before": 90,
         "health_after": 78,
-        "target": "b686ea0f54c24a6099725a4905951d75:player:1",
+        "target": "b4a359e58f56490aa0e1fc1433f32a5f:player:1",
         "state": "flee"
+      },
+      "covered_shot": {
+        "template": "npc-plainclothes-warden",
+        "line": "Hit: Sodium regular.",
+        "revealed_to_caller": false
       },
       "fixtures": [
         "one regular relocated beside the walked-to caller",
         "regular ambient pause; ordinary flee ignores it",
-        "first flee movement cooldown 25 ticks"
+        "first flee movement cooldown 25 ticks",
+        "covered actor relocated for a real F shot; move cooldown 100 ticks"
       ],
-      "captures_verified": 3
+      "captures_verified": 4
     },
     {
       "artifact": "s42-talker-80x24-256",
-      "source_head": "e1a126c847b7a6f6b609a30003e70342c6eb1818",
+      "source_head": "1f80fefab79153b0fe2301a5f32c32c2419f0289",
       "shot": {
         "health_before": 90,
         "health_after": 90,
-        "target": "71a1e39e2b904bdfafe15dab463f1789:player:1",
+        "target": "26275e4ab9d04a14a9848d63a2fdf24f:player:1",
         "state": "flee"
+      },
+      "covered_shot": {
+        "template": "npc-plainclothes-warden",
+        "line": "Miss: Sodium regular.",
+        "revealed_to_caller": false
       },
       "fixtures": [
         "one regular relocated beside the walked-to caller",
         "regular ambient pause; ordinary flee ignores it",
-        "first flee movement cooldown 25 ticks"
+        "first flee movement cooldown 25 ticks",
+        "covered actor relocated for a real F shot; move cooldown 100 ticks"
       ],
-      "captures_verified": 3
+      "captures_verified": 4
     },
     {
       "artifact": "s42-talker-80x24-truecolor",
-      "source_head": "e1a126c847b7a6f6b609a30003e70342c6eb1818",
+      "source_head": "1f80fefab79153b0fe2301a5f32c32c2419f0289",
       "shot": {
         "health_before": 90,
-        "health_after": 90,
-        "target": "de6b45e3b52d44dc81c43b393c13a229:player:1",
+        "health_after": 78,
+        "target": "258b73ade43c45918e808a0f073fd0db:player:1",
         "state": "flee"
+      },
+      "covered_shot": {
+        "template": "npc-plainclothes-warden",
+        "line": "Miss: Sodium regular.",
+        "revealed_to_caller": false
       },
       "fixtures": [
         "one regular relocated beside the walked-to caller",
         "regular ambient pause; ordinary flee ignores it",
-        "first flee movement cooldown 25 ticks"
+        "first flee movement cooldown 25 ticks",
+        "covered actor relocated for a real F shot; move cooldown 100 ticks"
       ],
-      "captures_verified": 3
+      "captures_verified": 4
     },
     {
       "artifact": "s42-talker-132x50-16",
-      "source_head": "e1a126c847b7a6f6b609a30003e70342c6eb1818",
+      "source_head": "1f80fefab79153b0fe2301a5f32c32c2419f0289",
       "shot": {
         "health_before": 90,
         "health_after": 78,
-        "target": "892851b8aa3a41b4bda7881d4952f480:player:1",
+        "target": "d38851b4fc2646e788100283451dcd5e:player:1",
         "state": "flee"
+      },
+      "covered_shot": {
+        "template": "npc-plainclothes-warden",
+        "line": "Miss: Sodium regular.",
+        "revealed_to_caller": false
       },
       "fixtures": [
         "one regular relocated beside the walked-to caller",
         "regular ambient pause; ordinary flee ignores it",
-        "first flee movement cooldown 25 ticks"
+        "first flee movement cooldown 25 ticks",
+        "covered actor relocated for a real F shot; move cooldown 100 ticks"
       ],
-      "captures_verified": 3
+      "captures_verified": 4
     },
     {
       "artifact": "s42-talker-132x50-256",
-      "source_head": "e1a126c847b7a6f6b609a30003e70342c6eb1818",
+      "source_head": "1f80fefab79153b0fe2301a5f32c32c2419f0289",
       "shot": {
         "health_before": 90,
-        "health_after": 78,
-        "target": "cd9cbc3168df4d8b94a6e35b74491759:player:1",
+        "health_after": 90,
+        "target": "e3b2b903de3c4bf8a1734523833d69c1:player:1",
         "state": "flee"
+      },
+      "covered_shot": {
+        "template": "npc-plainclothes-warden",
+        "line": "Miss: Sodium regular.",
+        "revealed_to_caller": false
       },
       "fixtures": [
         "one regular relocated beside the walked-to caller",
         "regular ambient pause; ordinary flee ignores it",
-        "first flee movement cooldown 25 ticks"
+        "first flee movement cooldown 25 ticks",
+        "covered actor relocated for a real F shot; move cooldown 100 ticks"
       ],
-      "captures_verified": 3
+      "captures_verified": 4
     },
     {
       "artifact": "s42-talker-132x50-truecolor",
-      "source_head": "e1a126c847b7a6f6b609a30003e70342c6eb1818",
+      "source_head": "1f80fefab79153b0fe2301a5f32c32c2419f0289",
       "shot": {
         "health_before": 90,
         "health_after": 78,
-        "target": "770aede8f42a4634a3597eaaa86e13bf:player:1",
+        "target": "2ef5e6b4252b41ccab9029ce17c7aab6:player:1",
         "state": "flee"
+      },
+      "covered_shot": {
+        "template": "npc-plainclothes-warden",
+        "line": "Miss: Sodium regular.",
+        "revealed_to_caller": false
       },
       "fixtures": [
         "one regular relocated beside the walked-to caller",
         "regular ambient pause; ordinary flee ignores it",
-        "first flee movement cooldown 25 ticks"
+        "first flee movement cooldown 25 ticks",
+        "covered actor relocated for a real F shot; move cooldown 100 ticks"
       ],
-      "captures_verified": 3
+      "captures_verified": 4
     }
   ]
 }

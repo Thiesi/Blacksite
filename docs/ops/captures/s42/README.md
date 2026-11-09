@@ -4,37 +4,47 @@ Base: `aef69d989ba48658d7feb2ba5e3f3375d167c90b` (S42 filing,
 PR #183). Implementation and review belong to issue #182. This packet
 does not grant presentation acceptance, H1 or S25 layout approval.
 
-## Earlier-runtime native packet
+## Current-runtime native packet
 
 The final author audit found true names in Hit/Miss combat feedback.
 The correction uses the existing per-caller presentation service,
-including the controlling caller for player drones. Fresh current-source
-native proof is pending; the packet below remains historical evidence.
+including the controlling caller for player drones. The new packet
+includes an actual covered-actor shot at every size and colour tier.
 
 [Manifest](native/manifest.json) and [results](native/results.json) retain
-18 live captures from successful [run 42547068997](https://github.com/Thiesi/Blacksite/actions/runs/42547068997):
+24 live captures from successful [run 42554076114](https://github.com/Thiesi/Blacksite/actions/runs/42554076114):
 both 80x24 and 132x50, in 16, 256 and truecolor. Source head:
-`e1a126c847b7a6f6b609a30003e70342c6eb1818`; source tree:
-`3632d9db75a51cb5f365f92047ba9fdebc1bc96d`; Python tree SHA-256:
-`3e25ae2e2d8c8342db06e36f923b8d903379f198c57233b233e8cef70a9a57cb`.
+`1f80fefab79153b0fe2301a5f32c32c2419f0289`; source tree:
+`c31b7cd892440449e3c834232c8670fc76a3087e`; Python tree SHA-256:
+`c5b58d97b60536562be354cbde46cfdd54580540728f90ace91e45ff77b09974`.
 
-Each of the six size/tier combinations has three checkpoints:
+Each of the six size/tier combinations has four checkpoints:
 
 - `talk-hint`: an actual regular's page shows "Move or Esc/B leaves".
 - `one-press-walk-away`: one movement press closes and moves the caller.
 - `shot-flee-walks-off`: actual F firing, its committed attack, and
   ordinary flee movement close the page with the captured system line.
+- `covered-shot-label`: actual F firing at the covered actor logs its
+  cover name, with no true name or caller reveal.
 
 The retained `.txt` files are direct byte copies, including terminal
 padding. Raw `.ans` streams and large style snapshots remain in the six
 CI artifacts linked in the manifest. `scripts/packet_s42.py` verified
 every file hash, independently replayed each ANSI stream for glyphs and
 styles, and checked the source-matched client against the pinned Git
-tree. The packet is 123,762 bytes, within the 200 KB evidence budget.
+tree. The packet is 165,216 bytes, within the 200 KB evidence budget.
 It refuses failed/incomplete runs, source/hash/replay mismatches and an
 existing destination. The source head is never relabelled as a later
 packet-only head. Current-head CI and review are recorded separately
-on PR #188. This packet predates the combat-feedback correction.
+on PR #188. The earlier 18-capture packet remains available at
+[e2e4fcd](https://github.com/Thiesi/Blacksite/tree/e2e4fcdfff002b07fc7affbe9bef734c51f053c9/docs/ops/captures/s42/native),
+pinned to its original runtime, before the combat-feedback correction.
+
+The full S42 evidence directory is about 274 KB because it also preserves
+the first local native proof and the original failed focused-test logs.
+Those historical records explain failures and setup limits; neither is
+relabeled as current-runtime proof. The large new ANSI/style streams
+remain CI artifacts rather than being added to the repository.
 
 ## Frozen values
 
@@ -89,6 +99,8 @@ Full branch CI history (the root suite, not a local full suite):
 | `f485335` | [42543547211](https://github.com/Thiesi/Blacksite/actions/runs/42543547211) | 3 failed, 2502 passed | 3 failed, 2501 passed, 1 skipped |
 | `43225d0` | [42544238313](https://github.com/Thiesi/Blacksite/actions/runs/42544238313) | 3 failed, 2503 passed | 3 failed, 2502 passed, 1 skipped |
 | `e1a126c` | [42545805798](https://github.com/Thiesi/Blacksite/actions/runs/42545805798) | 2509 passed | 2508 passed, 1 skipped |
+| `e2e4fcd` | [42548574546](https://github.com/Thiesi/Blacksite/actions/runs/42548574546) | 2509 passed | 2508 passed, 1 skipped |
+| `1f80fef` | [42554070213](https://github.com/Thiesi/Blacksite/actions/runs/42554070213) | 2511 passed | 2510 passed, 1 skipped |
 
 Both runs found the same three fixture adaptations: the legacy NPC test
 removed the cover but retained its new `poses_as` binding, and the two
@@ -107,7 +119,9 @@ records the adaptation. Pinned JSON/map bytes, their hashes, geometry,
 all three validator phases and all assertions remain unchanged. The
 shipped case gets no adaptation. The full local comparison then passed
 all three datasets/phases, with zero final errors and max final CPU
-0.28125s; current-head CI must still verify the complete budget job.
+0.28125s. The complete P6 workflow passed at `e2e4fcd`
+([42548574496](https://github.com/Thiesi/Blacksite/actions/runs/42548574496));
+fresh current-head acceptance is recorded on the PR.
 
 The initial standalone frozen-value helper also exited after completing
 the matrix because it named `mechanics-baseline.json`; the existing file
@@ -173,11 +187,11 @@ initial 25-tick movement cooldown. It injects no shot, flee step, player
 movement, page close or log line. Shipped NPC positions and counts do
 not change.
 
-All six earlier-runtime native cases passed, as recorded above. The
-updated driver adds a fourth checkpoint: an actual shot at the covered
+All six current-runtime native cases passed, as recorded above. The
+driver adds a fourth checkpoint: an actual shot at the covered
 actor prints only "Hit: Sodium regular." or "Miss: Sodium regular."
 Its declared fixture relocates that actor and delays movement for
-100 ticks. Fresh native proof and presentation acceptance are pending.
+100 ticks. Presentation acceptance is pending.
 
 ## Automated review record
 
@@ -187,8 +201,25 @@ test or playthrough. [Triage](https://github.com/Thiesi/Blacksite/pull/188#issue
 accepts the bounded boot activity grace and confirms that posed-faction
 guards/no extra Warden heat are the intended owner-approved outcome.
 Neither observation requested a change. The reviewer did not review
-this evidence packet or Windows CI. The new packet/fixture head needs
-fresh automated review and current-head CI before technical review.
+this evidence packet or Windows CI.
+
+All three delivered reviews at `e2e4fcd` were triaged on the PR with no
+actionable findings. Claude Sonnet 5.5 then reviewed `1f80fef` twice:
+[full diff](https://github.com/Thiesi/Blacksite/pull/188#issuecomment-6731226440)
+and [requested incremental pass](https://github.com/Thiesi/Blacksite/pull/188#issuecomment-6731245654).
+Both report no actionable findings and were static reads, with no tests
+or capture verification. Their dispositions are recorded
+[here](https://github.com/Thiesi/Blacksite/pull/188#issuecomment-6731235000)
+and [here](https://github.com/Thiesi/Blacksite/pull/188#issuecomment-6731288535).
+
+The incremental review suggested checking other combat-name logs. Exact
+current source confirms that warning/damage lines name the attacker
+after its reveal, while these unarmed NPCs flee without attacking.
+Pickup is a player/crew path. NPC death emits no victim-name message;
+both shipped crowd templates have XP 0 and identical ration loot, so
+the eligible-kill standing/reward branch does not distinguish them.
+This is a source audit, not a native death-scenario claim. The graph
+server was unavailable for this final check; exact source was used.
 
 ### Passing local proof at an earlier head
 
@@ -210,4 +241,4 @@ build backend; an isolated wheel build succeeded. Attempts to execute
 the NetBBS interpreter or read its dependencies inside the sandbox were
 denied before acceptance started; the authorized non-PTY execution
 completed on its first actual native run. No failing native gate was
-rerun. The complete capture matrix still needs current-source CI.
+rerun. The new complete capture matrix is recorded separately above.
