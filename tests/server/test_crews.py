@@ -4,18 +4,18 @@ from pathlib import Path
 
 import pytest
 
-from blacksite.content.loader import load_content
-from blacksite.server.protocol import Frame
-from blacksite.server.progression import Grant
-from blacksite.server.rules.character import grade_threshold
-from blacksite.server.skills import Use
+from karst41.content.loader import load_content
+from karst41.server.protocol import Frame
+from karst41.server.progression import Grant
+from karst41.server.rules.character import grade_threshold
+from karst41.server.skills import Use
 from tests.character_helpers import act, create, place
 from tests.harness import HeadlessServer
 
 
 @pytest.fixture(scope='module')
 def content():
-    return load_content(Path(__file__).parents[2]/'src/blacksite/content')
+    return load_content(Path(__file__).parents[2]/'src/karst41/content')
 
 
 @pytest.fixture
@@ -175,8 +175,8 @@ def test_game_10_late_join_needs_contribution_and_recipient_run_cap(callers):
 
 def test_game_10_same_tick_npc_drops_rotate_through_source_queue(callers):
     from dataclasses import replace
-    from blacksite.content.schema import LootEntry
-    from blacksite.server.npcs.templates import make_actor
+    from karst41.content.schema import LootEntry
+    from karst41.server.npcs.templates import make_actor
 
     game, one, two, _ = callers
     crew = invite(game, one, two)
@@ -243,8 +243,8 @@ def test_game_10_data_offer_frozen_mode_utc_deadline_and_commit_rotation(callers
 
 
 def test_game_10_guarding_uses_elapsed_ticks_and_roster_uses_real_integrity_max(callers):
-    from blacksite.server.crews import GUARD_SECONDS, SILT_SHARE_SECONDS
-    from blacksite.server.lattice.presence import Presence
+    from karst41.server.crews import GUARD_SECONDS, SILT_SHARE_SECONDS
+    from karst41.server.lattice.presence import Presence
     game, one, two, _ = callers
     invite(game, one, two)
     crews = game.core.crews

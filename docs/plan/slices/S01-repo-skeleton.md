@@ -3,14 +3,14 @@
 **Status:** done (PR #39)
 **Primary model:** Sonnet · **Reviewer:** none
 **Depends on:** — · **Milestone:** M0
-**Issue:** https://github.com/Thiesi/blacksite/issues/1
+**Issue:** https://github.com/Thiesi/Karst41/issues/1
 
 ## Goal
 
 Turn the documentation-only repository into an installable Python
 package with a test runner, a CI workflow, and the module skeleton every
 later slice fills in. After this slice, `pip install -e .` works,
-`pytest` runs one trivial passing test, and `python -m blacksite.door`
+`pytest` runs one trivial passing test, and `python -m karst41.door`
 prints a one-line "not implemented" and exits 0.
 
 ## Spec references
@@ -21,20 +21,20 @@ prints a one-line "not implemented" and exits 0.
 
 ## Scope
 
-- `pyproject.toml`: package `blacksite`, `requires-python >= 3.12`, no
+- `pyproject.toml`: package `karst41`, `requires-python >= 3.12`, no
   runtime dependencies, `pytest` as the only test dependency, setuptools
-  `src/` layout, package data include for `src/blacksite/content/**`,
-  console entry points `blacksite-server`, `blacksite-door`,
-  `blacksite-admin`, `blacksite-bot` mapping to `blacksite.<sub>.__main__:main`.
-- Module skeleton with docstrings and a `main()` that prints "blacksite
+  `src/` layout, package data include for `src/karst41/content/**`,
+  console entry points `karst41-server`, `karst41-door`,
+  `karst41-admin`, `karst41-bot` mapping to `karst41.<sub>.__main__:main`.
+- Module skeleton with docstrings and a `main()` that prints "karst41
   <module>: not implemented (see docs/plan/slices/)" and exits 0:
-  `src/blacksite/__init__.py` (`__version__ = "0.0.1"`),
+  `src/karst41/__init__.py` (`__version__ = "0.0.1"`),
   `server/__init__.py`, `server/__main__.py`, `door/__init__.py`,
   `door/__main__.py`, `admin/__init__.py`, `admin/__main__.py`,
   `bot/__init__.py`, `bot/__main__.py`, `content/__init__.py`
   (empty package with a `README.md` explaining the tree from
   `01-entities.md` §1).
-- `src/blacksite/version.py`: `PACKAGE_VERSION`, `PROTOCOL_MAJOR = 1`,
+- `src/karst41/version.py`: `PACKAGE_VERSION`, `PROTOCOL_MAJOR = 1`,
   `CONTENT_SCHEMA = 1`, `WORLD_SCHEMA = 1` as named constants with a
   comment citing `02-architecture.md` §5.1 and §6.2.
 - `tests/conftest.py` with a `repo_root` fixture and a `scratch_dir`
@@ -59,7 +59,7 @@ prints a one-line "not implemented" and exits 0.
 
 ## Data and content
 
-None. `src/blacksite/content/README.md` documents the intended tree only.
+None. `src/karst41/content/README.md` documents the intended tree only.
 
 ## Protocol and view models
 
@@ -68,7 +68,7 @@ constant.
 
 ## Tests
 
-- `tests/test_skeleton.py::test_packages_import` — every `blacksite.*`
+- `tests/test_skeleton.py::test_packages_import` — every `karst41.*`
   package imports.
 - `tests/test_skeleton.py::test_version_constants` — `PACKAGE_VERSION`
   matches `pyproject.toml`, `PROTOCOL_MAJOR == 1`.
@@ -81,7 +81,7 @@ constant.
 
 1. `python -m venv .venv`, activate, `pip install -e .[test]`.
 2. `pytest -q` → 4 passed.
-3. `python -m blacksite.door` → one line, exit 0.
+3. `python -m karst41.door` → one line, exit 0.
 4. Push a branch; CI green on both runners.
 
 ## Definition of done
@@ -95,8 +95,8 @@ constant.
 
 - NetBBS launches doors with an argv list, never a shell; the console
   entry points are conveniences for humans. The door profile will name
-  the venv interpreter and `-m blacksite.door` explicitly
-  (`02-architecture.md` §8.1), so `python -m blacksite.door` must always
+  the venv interpreter and `-m karst41.door` explicitly
+  (`02-architecture.md` §8.1), so `python -m karst41.door` must always
   work without the console script.
 - Windows is a supported development host for tests and the client
   (`AGENTS.md` §5). Keep paths through `pathlib`, no `os.fork`.

@@ -6,18 +6,18 @@ from pathlib import Path
 
 import pytest
 
-from blacksite.door.cells import display_width
-from blacksite.door.doorinfo import DoorInfo, read
-from blacksite.door.layout import compute
-from blacksite.door.model import Display
-from blacksite.door.palette import Palette, Style, resolve_tier
-from blacksite.door.screens import SessionWarnings
-from blacksite.server.protocol import Frame
+from karst41.door.cells import display_width
+from karst41.door.doorinfo import DoorInfo, read
+from karst41.door.layout import compute
+from karst41.door.model import Display
+from karst41.door.palette import Palette, Style, resolve_tier
+from karst41.door.screens import SessionWarnings
+from karst41.server.protocol import Frame
 from tests.fake_terminal import FakeTerminal
 
 
 def welcome(repo_root: Path) -> Frame:
-    root = repo_root / "src" / "blacksite" / "content"
+    root = repo_root / "src" / "karst41" / "content"
     return Frame("welcome", {"proto": 1, "server_version": "0.0.1", "player": None,
         "palette": json.loads((root / "palette.json").read_text(encoding="utf-8")),
         "keymap": json.loads((root / "keymaps.json").read_text(encoding="utf-8")), "motd": "You hear the vents."})
@@ -55,7 +55,7 @@ def test_title_help_and_wide_handle(info: DoorInfo, repo_root: Path, width: int,
     terminal = FakeTerminal(width, height)
     data, ack = model.render(0)
     terminal.write(data)
-    assert "BLACKSITE" in terminal.screen_text() and "You hear the vents." in terminal.screen_text()
+    assert "KARST 41" in terminal.screen_text() and "You hear the vents." in terminal.screen_text()
     assert "..." in terminal.screen_text().splitlines()[0]
     assert ack.data["rev"] == 0
     model.key("?", .2)
@@ -66,7 +66,7 @@ def test_title_help_and_wide_handle(info: DoorInfo, repo_root: Path, width: int,
     assert "Page 2/" in terminal.screen_text()
     model.key("escape", .6)
     terminal.write(model.render(.6)[0])
-    assert "BLACKSITE" in terminal.screen_text()
+    assert "KARST 41" in terminal.screen_text()
 
 
 @pytest.mark.parametrize("width,height", [(80, 24), (132, 50)])
@@ -158,16 +158,27 @@ def test_doorinfo_optional_fields_and_limits(scratch_dir: Path) -> None:
     raw = {"handle": "Wide界", "user_id": 1, "terminal_width": 80, "terminal_height": 24,
            "color_depth": "16", "node_name": "test", "session_limit_seconds": 120, "door_api": 5}
     path.write_text(json.dumps(raw), encoding="utf-8")
-    info = read({"NETBBS_DOOR_INFO": str(path), "BLACKSITE_INSTALL_DIR": str(scratch_dir)})
+    info = read({"NETBBS_DOOR_INFO": str(path), "KARST41_INSTALL_DIR": str(scratch_dir)})
     assert info.raw == raw and info.session_limit == 120
-    assert read({"NETBBS_DOOR_INFO": str(path), "BLACKSITE_INSTALL_DIR": str(scratch_dir), "BLACKSITE_SESSION_LIMIT": "60"}).session_limit == 60
-    aliased = read({"NETBBS_DOOR_INFO": str(path), "DOOR_BLACKSITE_INSTALL_DIR": str(scratch_dir), "DOOR_BLACKSITE_SESSION_LIMIT": "3600"})
+    assert read({"NETBBS_DOOR_INFO": str(path), "KARST41_INSTALL_DIR": str(scratch_dir), "KARST41_SESSION_LIMIT": "60"}).session_limit == 60
+    aliased = read({"NETBBS_DOOR_INFO": str(path), "DOOR_KARST41_INSTALL_DIR": str(scratch_dir), "DOOR_KARST41_SESSION_LIMIT": "3600"})
     assert aliased.install == scratch_dir and aliased.session_limit == 120
     raw["outbound"] = {"credential": "must-not-cross-the-game-link"}
     path.write_text(json.dumps(raw), encoding="utf-8")
-    assert "outbound" not in read({"NETBBS_DOOR_INFO": str(path), "BLACKSITE_INSTALL_DIR": str(scratch_dir)}).raw
+    assert "outbound" not in read({"NETBBS_DOOR_INFO": str(path), "KARST41_INSTALL_DIR": str(scratch_dir)}).raw
     with pytest.raises(ValueError):
         read({})
+
+
+def test_r1_introduction_action_depends_on_screen_identity(info: DoorInfo) -> None:
+    model = Display(info)
+    model.body['title'] = 'Translated title'
+    model.key('i', 0)
+    assert model.local is not None and model.local['title'] == 'WHAT THIS IS'
+    model = Display(info)
+    model.body = {'title': 'KARST 41', 'lines': []}
+    model.key('i', 0)
+    assert model.local is None
 
 
 @pytest.mark.parametrize('tier', ['16', '256', 'truecolor'])

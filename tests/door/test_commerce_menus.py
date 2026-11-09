@@ -5,10 +5,10 @@ from pathlib import Path
 
 import pytest
 
-from blacksite.content.loader import load_content
-from blacksite.door.model import Display
-from blacksite.server.commerce import CommerceMenu
-from blacksite.server.protocol import Frame, encode
+from karst41.content.loader import load_content
+from karst41.door.model import Display
+from karst41.server.commerce import CommerceMenu
+from karst41.server.protocol import Frame, encode
 from tests.character_helpers import create, place
 from tests.fake_terminal import FakeTerminal
 from tests.harness import HeadlessServer
@@ -17,7 +17,7 @@ from tests.harness import HeadlessServer
 @pytest.mark.parametrize("width,height",[(80,24),(132,50)])
 @pytest.mark.parametrize("tier",["16","256","truecolor"])
 def test_commerce_menus_wide_handles_esc_and_no_stale_purchase(info,repo_root: Path,width,height,tier) -> None:
-    game=HeadlessServer(load_content(repo_root/"src/blacksite/content"),character_state={})
+    game=HeadlessServer(load_content(repo_root/"src/karst41/content"),character_state={})
     client=game.connect(width=width,height=height)
     create(game,client,name="Wake界")
     display=Display(replace(info,width=width,height=height,color_depth=tier))
@@ -60,7 +60,7 @@ def test_commerce_menus_wide_handles_esc_and_no_stale_purchase(info,repo_root: P
 
 
 def test_bank_prompt_cancel_and_duplicate_line_have_no_extra_transfer(repo_root: Path) -> None:
-    game=HeadlessServer(load_content(repo_root/"src/blacksite/content"),character_state={})
+    game=HeadlessServer(load_content(repo_root/"src/karst41/content"),character_state={})
     client=game.connect(); create(game,client)
     place(game,client,"core-tram-hub",(12,7))
     commerce=game.core.commerce

@@ -43,7 +43,7 @@ The presentation switch remains off by default.
 
 ## Golden exception
 
-The lead's [clarification on #115](https://github.com/Thiesi/Blacksite/issues/115#issuecomment-6536245124)
+The lead's [clarification on #115](https://github.com/Thiesi/Karst41/issues/115#issuecomment-6536245124)
 allows the six P5 zone goldens to change only in HERE rows and a header
 row sharing a notice. `scripts/p6_golden_diff.py` decodes style runs and
 asserts the six current changes affect only row 2, zero-based. The map,

@@ -11,8 +11,8 @@ import time
 from typing import Any
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[1]/'src'))
-from blacksite.server.clock import ManualClock
-from blacksite.server.storage.db import Storage
+from karst41.server.clock import ManualClock
+from karst41.server.storage.db import Storage
 
 
 def wal_state(path: Path) -> dict[str, int]:

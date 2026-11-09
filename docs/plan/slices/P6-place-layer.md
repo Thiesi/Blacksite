@@ -3,7 +3,7 @@
 **Status:** P6a done (PR #118); Part A done (PR #129); A5 done (PR #130); A6 done (PR #131); A7 done (PR #133); A8 done (PR #144); A9 done (PR #180); P6b merged (PR #126), fingerprint approved; H1/S25 ungranted
 **Primary model:** Codex for P6a (engine) · the presentation lead for P6b (content), with Codex assisting · **Reviewer:** automated review, technical lead, presentation lead (co-reviewer and presentation gate)
 **Depends on:** P0 (D1 to D3 in canon), P4, P5 · **Milestone:** presentation track
-**Issue:** https://github.com/Thiesi/Blacksite/issues/115
+**Issue:** https://github.com/Thiesi/Karst41/issues/115
 
 From `docs/plan/03-presentation-integration.md` §7.3 (P6), §10.1
 (class C; P6b also carries the human gate H1) and §11 notes 5 to 8,
@@ -334,7 +334,7 @@ The final validation incorporates owner-merged P6b dd489f9. At head
 `4ab6470b10821f9fddbac718615af7d56c6048eb`, all 18 required 132x50
 cases pass <=108 CPU s/h (maximum 94.00947392152614). All 39 paired
 cases match ANSI output and workloads and pass frame budgets.
-[Current run](https://github.com/Thiesi/Blacksite/actions/runs/41966224396).
+[Current run](https://github.com/Thiesi/Karst41/actions/runs/41966224396).
 The older Clinic 111.3507 miss remains historical evidence, not the
 final result. The workflow objection on the renderer sign-off was
 resolved before merge, by the pinned audit workflow. The merged head,
@@ -342,7 +342,7 @@ resolved before merge, by the pinned audit workflow. The merged head,
 block A8: P4, in `goal()` while walking to the plainclothes Warden,
 probably because Sable enforcers had killed it, and S11's final profile
 gate, at 20.105 ms against 10 ms
-([record](https://github.com/Thiesi/Blacksite/pull/144#issuecomment-6671666999)).
+([record](https://github.com/Thiesi/Karst41/pull/144#issuecomment-6671666999)).
 H1 and S25 remain ungranted; the owner approved the
 specific P6b fingerprint move in #126 (6649759185).
 Evidence and retained misses: `docs/ops/captures/p6-a8-cpu/`.
@@ -367,7 +367,7 @@ automated and technical review. This grants no human acceptance gate.
 ## A9: NPC clearance and bounded consumable shock (Codex)
 
 Assigned after S40, on #115
-([gathered scope](https://github.com/Thiesi/Blacksite/issues/115#issuecomment-6701521461)).
+([gathered scope](https://github.com/Thiesi/Karst41/issues/115#issuecomment-6701521461)).
 Status: done (PR #180). Starts from owner-merged main bfd9a34, independently
 of S39 and S41. Changes no interaction resolver, echo, talker reach rule
 or talk page. H1 and S25 layout approval remain ungranted.

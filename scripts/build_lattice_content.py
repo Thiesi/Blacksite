@@ -8,7 +8,7 @@ import json
 from pathlib import Path
 import re
 
-ROOT = Path("src/blacksite/content")
+ROOT = Path("src/karst41/content")
 WORLD = Path("docs/world/03-lattice.md")
 DISTRICTS = (
     ("spire","Spire","Lobby Register","Sump","hidden"),

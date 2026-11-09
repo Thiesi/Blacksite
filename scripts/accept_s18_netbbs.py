@@ -18,13 +18,13 @@ import traceback
 from accept_s10_netbbs import NativeProbe, CombatCaller, Connection, wait
 from accept_s16_netbbs import key, commit_key, select, loan
 from housing_fixture import build_fixture
-from blacksite.server.clock import ManualClock
-from blacksite.server.rules.character import grade_threshold
+from karst41.server.clock import ManualClock
+from karst41.server.rules.character import grade_threshold
 from netbbs.auth.users import get_user_by_id
 
 
 async def finish_bed_logout(probe: NativeProbe, connection: Connection, label: str) -> None:
-    await wait(lambda: b"Left Blacksite." in connection.caller.output)
+    await wait(lambda: b"Left Karst 41." in connection.caller.output)
     mark = len(connection.caller.output)
     await connection.caller.write(b" ")
     await wait(lambda: b"Available doors" in re.sub(rb"\x1b\[[0-?]*[ -/]*[@-~]", b"", bytes(connection.caller.output[mark:])))
@@ -164,7 +164,7 @@ async def run_size(probe: NativeProbe, width: int, height: int) -> dict:
 
 
 async def accept(root: Path, python: Path, show: bool) -> None:
-    shipped = Path(__file__).resolve().parents[1]/"src/blacksite/content"
+    shipped = Path(__file__).resolve().parents[1]/"src/karst41/content"
     build_fixture(shipped, root/"world/content.local")
     probe = NativeProbe(root, python, show)
     await probe.start()

@@ -3,7 +3,7 @@
 **Status:** done (PR #65)
 **Primary model:** Opus · **Reviewer:** Claude Sonnet 5.5 (automated)
 **Depends on:** S11, S14, S17, S19, S21 · **Milestone:** M5
-**Issue:** https://github.com/Thiesi/blacksite/issues/24
+**Issue:** https://github.com/Thiesi/Karst41/issues/24
 
 ## Goal
 
@@ -109,13 +109,13 @@ commit event receipt and spawned nodes together. Preserve baseline nodes,
 partial units, RNG and uptime deadlines. Event downtime must not replay
 a bulk spawn; Crash grade bonuses cannot manufacture intact salvage.
 
-This carries the accepted [PR #38](https://github.com/Thiesi/Blacksite/pull/38)
+This carries the accepted [PR #38](https://github.com/Thiesi/Karst41/pull/38)
 findings 12/14 forward; see [S17](S17-salvage-and-fabrication.md).
 
 
 ### S20 faction integration handoff
 
-Reference: [PR #38](https://github.com/Thiesi/Blacksite/pull/38) and S20.
+Reference: [PR #38](https://github.com/Thiesi/Karst41/pull/38) and S20.
 
 Bind S20 Factions.preview(player, perk_faction) to immutable
 EventOffer(plan_id, text) from already committed Convoy/Surge/Ring-fall
@@ -126,16 +126,16 @@ an announced plan cannot claim these benefits live.
 
 ### S22 crew integration handoff
 
-S22 [PR #61](https://github.com/Thiesi/Blacksite/pull/61) supplies live
+S22 [PR #61](https://github.com/Thiesi/Karst41/pull/61) supplies live
 crew hooks. Publish committed event facts; never use an ephemeral crew
 ID as durable event participation or reward authority.
 
 <!-- s19-services:start -->
 ### S19 source and service handoff
 
-Reference: [S19 PR #62](https://github.com/Thiesi/Blacksite/pull/62),
+Reference: [S19 PR #62](https://github.com/Thiesi/Karst41/pull/62),
 [acceptance record](../../ops/s19-acceptance.md) and
-[PR #38](https://github.com/Thiesi/Blacksite/pull/38).
+[PR #38](https://github.com/Thiesi/Karst41/pull/38).
 
 S19 supplies the implemented source interfaces, 68 authored contracts
 and four service nodes. Full root pytest passed 1344 tests with one
@@ -189,4 +189,4 @@ salvage markers, waypoints and public/free approaches before activation.
 Source/receipt fixtures and native hub/service-bay acceptance do not
 prove full-city navigation, affordability or S25/S26 human pacing.
 The dependent slice files and GitHub issues carry those obligations,
-retaining [PR #38](https://github.com/Thiesi/Blacksite/pull/38) and #56.
+retaining [PR #38](https://github.com/Thiesi/Karst41/pull/38) and #56.

@@ -19,11 +19,11 @@ from typing import Any
 
 from accept_s10_netbbs import NativeProbe, wait
 from accept_s11_netbbs import approach
-from blacksite.npc_presentation import channels
+from karst41.npc_presentation import channels
 from tests.presentation.snapshots import snapshot
-from blacksite.server.items import make_item
-from blacksite.server.world.actors import Actor
-from blacksite.server.world.sight import line_of_sight
+from karst41.server.items import make_item
+from karst41.server.world.actors import Actor
+from karst41.server.world.sight import line_of_sight
 
 
 async def navigate(probe: NativeProbe, caller: Any, target: Actor) -> None:

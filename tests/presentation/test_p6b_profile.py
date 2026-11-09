@@ -2,10 +2,10 @@
 
 from pathlib import Path
 
-from blacksite.content.loader import load_content
-from blacksite.door.cells import CellBuffer
-from blacksite.door.present import zone
-from blacksite.door.present.places import Places
+from karst41.content.loader import load_content
+from karst41.door.cells import CellBuffer
+from karst41.door.present import zone
+from karst41.door.present.places import Places
 from scripts.presentation_p6b_profile import emitted_cells, profile
 from tests.fake_terminal import FakeTerminal
 
@@ -26,7 +26,7 @@ def test_emitted_columns_match_wide_combining_delta_and_reserved_corner() -> Non
 
 
 def test_profile_retains_entry_same_viewport_revisit_and_real_diff_counts() -> None:
-    content = load_content(Path(__file__).resolve().parents[2]/'src/blacksite/content')
+    content = load_content(Path(__file__).resolve().parents[2]/'src/karst41/content')
     original = zone.terrain, CellBuffer.diff, Places.cell
     ordinary = profile(content, 'vatside-clinics', '256', False)
     assert [p['phase'] for p in ordinary['phases']] == ['cold', 'warm']

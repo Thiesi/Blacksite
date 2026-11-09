@@ -3,7 +3,7 @@ name: P5 client foundations acceptance
 on:
   pull_request:
     paths:
-      - 'src/blacksite/**'
+      - 'src/karst41/**'
       - 'tests/**'
       - 'scripts/accept_p5_netbbs.py'
       - 'scripts/accept_s10_netbbs.py'

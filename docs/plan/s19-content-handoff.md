@@ -6,9 +6,9 @@ contracts and the three other service orders behind authoring manifests.
 The content validator must reject activation until every reference is
 resolved. Pure receipt replays do not prove city navigation or pacing.
 
-Reference: [PR #38](https://github.com/Thiesi/Blacksite/pull/38),
-[issue #19](https://github.com/Thiesi/Blacksite/issues/19), and
-[NetBBS issue #56](https://github.com/Thiesi/Blacksite/issues/56).
+Reference: [PR #38](https://github.com/Thiesi/Karst41/pull/38),
+[issue #19](https://github.com/Thiesi/Karst41/issues/19), and
+[NetBBS issue #56](https://github.com/Thiesi/Karst41/issues/56).
 
 ## S25 maps and sources
 

@@ -7,12 +7,12 @@ from pathlib import Path
 
 import pytest
 
-from blacksite.server.app import Server
-from blacksite.content.loader import content_hash
-from blacksite.server.auth import load_secret
-from blacksite.server.protocol import Frame, encode, read_frame
-from blacksite.server.transport import connect
-from blacksite.version import PACKAGE_VERSION
+from karst41.server.app import Server
+from karst41.content.loader import content_hash
+from karst41.server.auth import load_secret
+from karst41.server.protocol import Frame, encode, read_frame
+from karst41.server.transport import connect
+from karst41.version import PACKAGE_VERSION
 from tests.harness import hello
 
 
@@ -147,12 +147,12 @@ def test_unix_socket_permissions_and_stale_probe(scratch_dir: Path) -> None:
         run = scratch_dir / "run"
         run.mkdir()
         stale = socket.socket(socket.AF_UNIX)
-        stale.bind(str(run / "blacksite.sock"))
+        stale.bind(str(run / "karst41.sock"))
         stale.close()
         server = Server(scratch_dir)
         await server.start()
         try:
-            assert (run / "blacksite.sock").stat().st_mode & 0o777 == 0o600
+            assert (run / "karst41.sock").stat().st_mode & 0o777 == 0o600
             reader, writer = await login(scratch_dir)
             writer.close()
             await writer.wait_closed()

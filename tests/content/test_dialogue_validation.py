@@ -5,9 +5,9 @@ from dataclasses import replace
 
 import pytest
 
-from blacksite.content.loader import ContentTree
-from blacksite.content.schema import Bark, DialogueLine, Offer
-from blacksite.content.validate import validate
+from karst41.content.loader import ContentTree
+from karst41.content.schema import Bark, DialogueLine, Offer
+from karst41.content.validate import validate
 from tests.test_dialogue_runtime import content
 
 

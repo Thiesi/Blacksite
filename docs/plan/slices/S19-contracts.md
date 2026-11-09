@@ -3,7 +3,7 @@
 **Status:** done (PR #62)
 **Primary model:** Opus (engine) · **Reviewer:** Gemini or Sonnet writes the content half from the world docs; Opus reviews it
 **Depends on:** S11, S14, S15, S16, S22 · **Milestone:** M3
-**Issue:** https://github.com/Thiesi/blacksite/issues/19
+**Issue:** https://github.com/Thiesi/Karst41/issues/19
 
 ## Goal
 
@@ -169,7 +169,7 @@ inactive Season 1 dependency is declared for S26 integration.
 
 ### S20 faction integration handoff
 
-Reference: [PR #38](https://github.com/Thiesi/Blacksite/pull/38) and S20.
+Reference: [PR #38](https://github.com/Thiesi/Karst41/pull/38) and S20.
 
 Use S20 Factions.standing_patch with Reward.standing_mode in the owning
 reward transaction. Do not pay reputation from an after-commit notification.
@@ -182,7 +182,7 @@ drop. A board must not be derived from FactionSite.hall for this faction.
 
 ### S22 crew integration handoff
 
-Reference: [PR #61](https://github.com/Thiesi/Blacksite/pull/61).
+Reference: [PR #61](https://github.com/Thiesi/Karst41/pull/61).
 
 Use the live registry through `game.crews` / `progression.crew_of` as the
 membership authority, then freeze the accepted objective roster in the

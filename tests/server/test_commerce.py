@@ -8,22 +8,22 @@ import sqlite3
 
 import pytest
 
-from blacksite.content.loader import load_content
-from blacksite.content.schema import Vendor, VendorStock
-from blacksite.server.bank import transfer
-from blacksite.server.inventory import Inventory
-from blacksite.server.items import ItemInstance, make_item
-from blacksite.server.players import Player
-from blacksite.server.protocol import Frame
-from blacksite.server.storage.db import Storage
-from blacksite.server.vendors import BUYBACK_BUDGET, VendorBudget, permitted, price
+from karst41.content.loader import load_content
+from karst41.content.schema import Vendor, VendorStock
+from karst41.server.bank import transfer
+from karst41.server.inventory import Inventory
+from karst41.server.items import ItemInstance, make_item
+from karst41.server.players import Player
+from karst41.server.protocol import Frame
+from karst41.server.storage.db import Storage
+from karst41.server.vendors import BUYBACK_BUDGET, VendorBudget, permitted, price
 from tests.character_helpers import act, create, place
 from tests.harness import HeadlessServer
 
 
 @pytest.fixture
 def game(repo_root: Path) -> HeadlessServer:
-    return HeadlessServer(load_content(repo_root / "src/blacksite/content"), character_state={})
+    return HeadlessServer(load_content(repo_root / "src/karst41/content"), character_state={})
 
 
 def caller(game: HeadlessServer, user: int = 1):
@@ -141,7 +141,7 @@ def test_carry_frame_half_and_double_movement_time(game) -> None:
     actor=game.core.characters.sim.avatars[client.session.user_id].actor
     assert Inventory(game.core.commerce.items,game.core.loop.content.items).weight(player)>player.attributes["frame"]/2
     assert actor.overweight
-    from blacksite.server.world.movement import move
+    from karst41.server.world.movement import move
     zone=game.core.world.zones[actor.zone]
     actor.cooldowns.clear()
     assert move(actor,zone,"right",100)

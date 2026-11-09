@@ -4,10 +4,10 @@ from dataclasses import replace
 
 import pytest
 
-from blacksite.content.schema import Exit, Requirement
-from blacksite.server.protocol import Frame
-from blacksite.server.world.actors import Actor
-from blacksite.server.world.exits import schedule, TRAM_INTERVAL_SECONDS, TRAM_RIDE_SECONDS, LIFT_SECONDS, CABLE_SECONDS
+from karst41.content.schema import Exit, Requirement
+from karst41.server.protocol import Frame
+from karst41.server.world.actors import Actor
+from karst41.server.world.exits import schedule, TRAM_INTERVAL_SECONDS, TRAM_RIDE_SECONDS, LIFT_SECONDS, CABLE_SECONDS
 from tests.character_helpers import act, create, place, state
 from tests.harness import HeadlessServer
 
@@ -128,7 +128,7 @@ def test_waiting_caller_can_leave_platform_without_logout(content_tree,key):
 
 
 def test_s15_hold_bounded_then_immune_and_in_flight_unaffected():
-    from blacksite.server.world.exits import DepartureHolds, MAX_HOLD_SECONDS, HOLD_IMMUNITY_SECONDS
+    from karst41.server.world.exits import DepartureHolds, MAX_HOLD_SECONDS, HOLD_IMMUNITY_SECONDS
     assert (MAX_HOLD_SECONDS,HOLD_IMMUNITY_SECONDS)==(30,120)
     holds=DepartureHolds()
     platform=("core-tram-hub","to-clinics")

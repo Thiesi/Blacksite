@@ -3,9 +3,9 @@
 import asyncio
 from pathlib import Path
 
-from blacksite.bot.__main__ import run
-from blacksite.server.app import Server
-from blacksite.version import PACKAGE_VERSION
+from karst41.bot.__main__ import run
+from karst41.server.app import Server
+from karst41.version import PACKAGE_VERSION
 
 
 def test_zone_upgrade_seed_restart_and_walk_bot(scratch_dir: Path, capsys: object) -> None:

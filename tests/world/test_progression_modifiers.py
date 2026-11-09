@@ -2,9 +2,9 @@
 
 import pytest
 
-from blacksite.server.world.actors import Actor
-from blacksite.server.world.movement import move, regenerate
-from blacksite.server.world.sight import sight_radius, visible_tiles, sees_actor
+from karst41.server.world.actors import Actor
+from karst41.server.world.movement import move, regenerate
+from karst41.server.world.sight import sight_radius, visible_tiles, sees_actor
 
 
 def test_game_8_5_sprint_legs_keep_80ms_average_and_no_idle_burst(world):

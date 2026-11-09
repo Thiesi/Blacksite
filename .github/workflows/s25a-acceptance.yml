@@ -3,7 +3,7 @@ name: S25a engine acceptance
 on:
   pull_request:
     paths:
-      - 'src/blacksite/**'
+      - 'src/karst41/**'
       - 'scripts/accept_s25a_netbbs.py'
       - 'scripts/accept_s10_netbbs.py'
       - 'scripts/accept_s11_netbbs.py'

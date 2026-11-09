@@ -3,7 +3,7 @@
 **Status:** planned (approved by the owner 2026-11-06)
 **Primary model:** Codex · **Reviewer:** automated review, technical lead, presentation lead (presentation acceptance)
 **Depends on:** P5, P6a, S38 (merged; supplies `me.truce_text`), S41 (#173, see **This frame relies on S41** and the definition of done) · **Milestone:** presentation track
-**Issue:** https://github.com/Thiesi/Blacksite/issues/164
+**Issue:** https://github.com/Thiesi/Karst41/issues/164
 
 Canon: terminal UI 2.6 and the key table in section 5, marked "planned,
 P11". Where this file and canon differ, canon wins.

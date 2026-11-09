@@ -28,10 +28,10 @@ Add an optional **service** to the door profile:
 
 ```json
 "service": {
-  "argv": ["-m", "blacksite.server", "--install-dir", "{install_dir}"],
+  "argv": ["-m", "karst41.server", "--install-dir", "{install_dir}"],
   "start": "with_node",
   "stop_grace_seconds": 10,
-  "health": {"kind": "socket", "path": "{install_dir}/run/blacksite.sock"}
+  "health": {"kind": "socket", "path": "{install_dir}/run/karst41.sock"}
 }
 ```
 
@@ -77,6 +77,6 @@ Add an optional **service** to the door profile:
 
 ## What Blacksite does meanwhile
 
-`blacksite serve` runs in the foreground and the repo ships `rc.d` and
+`karst41 serve` runs in the foreground and the repo ships `rc.d` and
 `systemd` examples. The door client never spawns the server. See
 `docs/design/02-architecture.md` §3.2.

@@ -42,13 +42,13 @@ Private apartment cores are owned instances added by S18.
 Operators can inspect live presences without reading the world database:
 
 ```text
-blacksite admin --install-dir WORLD lattice who --json
+karst41 admin --install-dir WORLD lattice who --json
 ```
 
 For a private debugging world, reveal one cell to one character:
 
 ```text
-blacksite admin --install-dir WORLD lattice reveal PLAYER SECTOR CELL
+karst41 admin --install-dir WORLD lattice reveal PLAYER SECTOR CELL
 ```
 
 This authenticated, audited operator command is the only S13 discovery
@@ -60,7 +60,7 @@ and the Blacksite client interpreter:
 
 ```powershell
 & ../NetBBS/.venv/Scripts/python.exe scripts/accept_s13_netbbs.py `
-  --root C:/Temp/blacksite-s13-proof `
+  --root C:/Temp/karst41-s13-proof `
   --door-python .venv/Scripts/python.exe --show
 ```
 

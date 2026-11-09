@@ -61,8 +61,8 @@ it and the fields below are always present on a supported node.
   account's identity.
 - Native stdio resize uses rewritten door info plus opt-in `SIGUSR1`
   (`resize_signal: true`). Custom profile environment uses `DOOR_*`,
-  including `DOOR_BLACKSITE_INSTALL_DIR` and an optional
-  `DOOR_BLACKSITE_SESSION_LIMIT`; old `BLACKSITE_*` aliases are standalone
+  including `DOOR_KARST41_INSTALL_DIR` and an optional
+  `DOOR_KARST41_SESSION_LIMIT`; old `KARST41_*` aliases are standalone
   conveniences, not valid custom profile keys.
 - The native subprocess receives a minimal environment, not its parent's
   `PYTHONPATH`. Install Karst 41 in the exact interpreter named by the
@@ -85,32 +85,32 @@ claims that the remaining Karst 41 work is already implemented.
 
 ```
 NetBBS node process
- ├─ caller session A ── stdio ── blacksite.door (client A) ─┐
- ├─ caller session B ── stdio ── blacksite.door (client B) ─┤  local socket
- └─ NetBBS door service supervisor ───────────────────────┼─► blacksite.server
+ ├─ caller session A ── stdio ── karst41.door (client A) ─┐
+ ├─ caller session B ── stdio ── karst41.door (client B) ─┤  local socket
+ └─ NetBBS door service supervisor ───────────────────────┼─► karst41.server
                                                            │     ├─ simulation (10 Hz)
-   SysOp shell ── blacksite admin ──────────────────────────┘     ├─ SQLite world.db (WAL)
+   SysOp shell ── karst41 admin ──────────────────────────┘     ├─ SQLite world.db (WAL)
                                                                   └─ content (read-only)
 ```
 
-### 2.1 `blacksite.server` (the game service)
+### 2.1 `karst41.server` (the game service)
 
-- One process per node. `python -m blacksite.server --install-dir DIR`.
+- One process per node. `python -m karst41.server --install-dir DIR`.
 - Owns the world: content loaded at start, live simulation in memory,
   persistent state in `DIR/world.db`.
-- Listens on `DIR/run/blacksite.sock` (Unix domain socket; `127.0.0.1`
+- Listens on `DIR/run/karst41.sock` (Unix domain socket; `127.0.0.1`
   TCP with a port file `DIR/run/port` on Windows development hosts only).
 - Runs the tick loop, the event engine, persistence, and the admin
   endpoint.
 - Restartable at any time: persistence is designed so a crash loses at
   most the last write-behind interval (§6).
 
-### 2.2 `blacksite.door` (the caller client)
+### 2.2 `karst41.door` (the caller client)
 
 - One process per caller, launched by NetBBS as a native stdio door:
   executable = the interpreter of the venv Karst 41 is installed in,
-  argv = `-m blacksite.door`, profile environment
-  `DOOR_BLACKSITE_INSTALL_DIR` (standalone: `BLACKSITE_INSTALL_DIR`).
+  argv = `-m karst41.door`, profile environment
+  `DOOR_KARST41_INSTALL_DIR` (standalone: `KARST41_INSTALL_DIR`).
 - Reads `NETBBS_DOOR_INFO`, connects to the socket, authenticates (§4),
   then runs two loops: terminal input → protocol commands, protocol
   view models → terminal output.
@@ -120,9 +120,9 @@ NetBBS node process
   restarts, the client reconnects with backoff for up to 60 s and
   resumes; if it cannot, it says so and exits 0.
 
-### 2.3 `blacksite admin` (operator CLI)
+### 2.3 `karst41 admin` (operator CLI)
 
-- `python -m blacksite.admin --install-dir DIR <command>` talks to the
+- `python -m karst41.admin --install-dir DIR <command>` talks to the
   same socket with an operator credential (§4) and runs commands: status,
   who, kick, mute, ban, unban, teleport, refund, give, reports, characters
   allow (raise a user's character cap), event force, event cancel, season
@@ -141,10 +141,10 @@ DIR/
   content.local/  operator overrides (same layout; wins on ID collision; may be empty)
   world.db        SQLite, WAL mode
   world.db.sessions   advisory-lock sidecar (same pattern War Dialer uses)
-  run/            socket, blacksite.pid, port file (created/removed by server)
+  run/            socket, karst41.pid, port file (created/removed by server)
   secrets/        door.secret, admin.secret (0600, created on first start)
   logs/           server.log (rotating), audit.log
-  backups/        created by `blacksite admin backup`
+  backups/        created by `karst41 admin backup`
 ```
 
 The content tree is copied out of the installed package on first start
@@ -162,11 +162,11 @@ services shipped in v7.3.0; the block is no longer speculative:
 
 ```json
 {
-  "argv": ["-m", "blacksite.server", "--install-dir", "{install_dir}"],
+  "argv": ["-m", "karst41.server", "--install-dir", "{install_dir}"],
   "start": "with_node",
   "stop_grace_seconds": 10,
   "service_memory_mb": 512,
-  "health": {"kind": "socket", "path": "{install_dir}/run/blacksite.sock"}
+  "health": {"kind": "socket", "path": "{install_dir}/run/karst41.sock"}
 }
 ```
 
@@ -186,7 +186,7 @@ with SIGTERM then the configured grace and SIGKILL.
 
 ### 3.2 Alternative: externally managed service
 
-`blacksite serve` remains a foreground command and the repo ships example
+`karst41 serve` remains a foreground command and the repo ships example
 `rc.d` (NetBSD) and `systemd` units in `deploy/`. Remove the `service`
 block when choosing this alternative; never run both owners. The door
 client, when it cannot connect, tells the caller "The city is dark right
@@ -211,7 +211,7 @@ minimum-version line. This external path also supports local development.
 
 ### 3.4 Server stop
 
-`SIGTERM` or `blacksite admin stop`: stop accepting, tell clients
+`SIGTERM` or `karst41 admin stop`: stop accepting, tell clients
 `bye {reason: "maintenance"}`, apply the sleeper rule to everyone as if
 they had logged out, flush persistence, remove `run/` files, exit 0.
 Hard limit 10 s, then exit anyway; persistence is crash-safe.
@@ -749,7 +749,7 @@ supplies combat flags and clone-debt consequences; S07 has no combat.
   and health. Rewarded actions and their receipts are committed before
   success is acknowledged or broadcast; ordinary dirty-state flushes
   cannot make that guarantee on their own.
-- Backups: `blacksite admin backup` uses SQLite's online backup API into
+- Backups: `karst41 admin backup` uses SQLite's online backup API into
   `backups/<timestamp>/world.db` plus a manifest with content hash and
   schema version, the pattern War Dialer established.
   NetBBS's optional directory copy neither quiesces the service nor
@@ -757,14 +757,14 @@ supplies combat flags and clone-debt consequences; S07 has no combat.
   consistent snapshot and verify restore with the service stopped and
   the exclusive lease held. A node backup reporting success is not proof
   that its copied live game directory is recoverable.
-- Migrations: numbered Python modules under `blacksite/server/storage/migrations`,
+- Migrations: numbered Python modules under `karst41/server/storage/migrations`,
   applied in a transaction at start; refuse to open a newer schema.
 
 ### 6.3 Content loading
 
 - Content is data files (`01-entities.md` §1). A validator runs every
   invariant at load and as a test over the shipped tree.
-- `content.local/` overrides by ID. `blacksite admin reload zones`
+- `content.local/` overrides by ID. `karst41 admin reload zones`
   hot-swaps zones with no players in them; everything else requires a
   restart.
 
@@ -819,7 +819,7 @@ per hour efficiency target before S31 certifies the preset. An operator
 choosing a finite wall cap must size any finite CPU cap from measured
 whole-session CPU plus headroom, not mistake it for a per-hour budget.
 
-Custom environment uses `DOOR_BLACKSITE_INSTALL_DIR=<DIR>`; a separate
+Custom environment uses `DOOR_KARST41_INSTALL_DIR=<DIR>`; a separate
 game session cap is optional. A preset JSON is shipped in `deploy/` for
 import on the Compatibility screen. S31 records the registered-only
 play level separately, tests Check setup and both service ownership paths,
@@ -829,7 +829,7 @@ and publishes the minimum NetBBS version in the install guide.
 
 S30 represents the deadline as optional. A positive host
 `session_limit_seconds` always bounds the launch. A positive explicit
-`DOOR_BLACKSITE_SESSION_LIMIT` (standalone `BLACKSITE_SESSION_LIMIT`)
+`DOOR_KARST41_SESSION_LIMIT` (standalone `KARST41_SESSION_LIMIT`)
 can shorten it; zero/unset means no additional game cap. Use the minimum
 positive bound. If neither exists, omit countdowns and timeout exit;
 do not silently insert the current client's 3600-second fallback.
@@ -940,7 +940,7 @@ Decisions that cost nothing now and prevent a rewrite later:
 - **Client**: the renderer over a fake terminal at 80×24, 132×50, and a
   wide-character handle; key decoder tables.
 - **Protocol**: golden frames; version rejection; delta/ack coalescing.
-- **Load**: a bot client (`blacksite.bot`) that plays a scripted loop;
+- **Load**: a bot client (`karst41.bot`) that plays a scripted loop;
   16 bots for an hour keep tick time under 40 ms. Measure actual client
   CPU at both terminal sizes against §11; record configured/inherited
   ceilings and whole-session headroom separately. A CPU limit is not a
@@ -970,7 +970,7 @@ machine.
 
 - `logs/server.log`: structured lines (JSON per line), rotating, levels.
 - `logs/audit.log`: every operator action and every player report.
-- `blacksite admin status`: uptime, players, active zones, tick p50/p99,
+- `karst41 admin status`: uptime, players, active zones, tick p50/p99,
   persistence lag, event state, season depth.
 - No telemetry leaves the machine.
 
@@ -988,7 +988,7 @@ machine.
 
 ## 14. Packaging
 
-- A single Python package `blacksite` with `server`, `door`, `admin`,
+- A single Python package `karst41` with `server`, `door`, `admin`,
   `bot` entry points, `content/` as package data, and `deploy/` templates
   in the sdist.
 - Python 3.12+, no runtime dependencies outside the standard library

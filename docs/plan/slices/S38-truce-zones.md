@@ -3,7 +3,7 @@
 **Status:** done (PR #159)
 **Primary model:** Codex · **Reviewer:** automated review, technical lead, presentation lead (wording and header)
 **Depends on:** S11, S20, #126 (P6b; it also edits `sodium-row.json`, so S38 starts after #126 merges) · **Milestone:** world rules
-**Issue:** https://github.com/Thiesi/Blacksite/issues/142
+**Issue:** https://github.com/Thiesi/Karst41/issues/142
 
 Canon: game design 5.5 and 7.3, terminal UI 2.1 and entities, all
 marked "planned, S38". The gazetteer's Sodium Row entry already describes

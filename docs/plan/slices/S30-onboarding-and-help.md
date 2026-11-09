@@ -3,7 +3,7 @@
 **Status:** planned
 **Primary model:** Sonnet · **Reviewer:** Human (a first-time player pass by the user)
 **Depends on:** S07, S09, S13, S19 · **Milestone:** M6
-**Issue:** https://github.com/Thiesi/blacksite/issues/30
+**Issue:** https://github.com/Thiesi/Karst41/issues/30
 
 S18 housing help must teach the `*` storage, `$` safe and `b` bed, bed
 management/logout, and Personal impound at banks. Half the class storage
@@ -14,7 +14,7 @@ rent funds. Keys and Passkey open only a 30-second visitor vestibule;
 crew membership grants no resident permissions. Explain the first paid
 week and two-week unpaid lapse, and distinguish S25's actual locations
 from S18's native fixtures. See game design 8.7, [S18](S18-apartments.md)
-and accepted [PR #38](https://github.com/Thiesi/Blacksite/pull/38).
+and accepted [PR #38](https://github.com/Thiesi/Karst41/pull/38).
 
 ## Goal
 
@@ -46,8 +46,8 @@ together. Nothing here changes a rule; it explains them.
   (sitrep visibility trade), §15 (accessibility, no plain mode, refuse
   below 80×24).
 - `docs/design/02-architecture.md` §2.2 (reconnect backoff up to 60 s),
-  §8.2 (`DOOR_BLACKSITE_SESSION_LIMIT`, standalone alias
-  `BLACKSITE_SESSION_LIMIT`, optional deadline and reconnect),
+  §8.2 (`DOOR_KARST41_SESSION_LIMIT`, standalone alias
+  `KARST41_SESSION_LIMIT`, optional deadline and reconnect),
   §5.4 (`hint` in views; `TextView`).
 - `docs/design/01-entities.md` §2.1 (`settings`).
 - `docs/world/08-found-texts.md` (title tagline block, the 16-line
@@ -59,7 +59,7 @@ together. Nothing here changes a rule; it explains them.
 
 ## Scope
 
-- Hint engine (`src/blacksite/server/hints.py`): an ordered list of
+- Hint engine (`src/karst41/server/hints.py`): an ordered list of
   hints keyed by context (zone, lattice, menu kind) and a "used"
   predicate (the player performed the action). For a character's first
   three sessions, the view's `hint` shows the first unused hint for the
@@ -73,9 +73,9 @@ together. Nothing here changes a rule; it explains them.
 - First-run screen: shown once per BBS user before the Wake, from the
   found-texts asset, any key continues; stored as a flag on the player
   row.
-- Session-limit UX (`blacksite.door`): take the minimum positive host
-  `session_limit_seconds` and explicit `DOOR_BLACKSITE_SESSION_LIMIT`
-  (standalone `BLACKSITE_SESSION_LIMIT`). Zero/unset game override
+- Session-limit UX (`karst41.door`): take the minimum positive host
+  `session_limit_seconds` and explicit `DOOR_KARST41_SESSION_LIMIT`
+  (standalone `KARST41_SESSION_LIMIT`). Zero/unset game override
   adds no limit; absent host deadline plus no positive override is
   unlimited, not an implicit 3600 seconds. With a deadline, `toast`
   at T−300 s and T−60 s ("The line drops in five
@@ -164,7 +164,7 @@ unbounded or at least 420 seconds for the seven-minute override test.
 3. Open settings, choose the deutan palette: hostile and crew colours
    change and the `!`/`+` tags remain; switch to 16 colours: the screen
    redraws fully and stays readable.
-4. Register the door with `DOOR_BLACKSITE_SESSION_LIMIT=420` in the profile
+4. Register the door with `DOOR_KARST41_SESSION_LIMIT=420` in the profile
    environment: at 2 minutes and at 6 minutes the toasts appear; at 7
    minutes the client leaves cleanly to the door picker; re-enter within
    a minute and you are exactly where you were.
@@ -220,13 +220,13 @@ carried/required inputs, skill minimum and quality range. Use the same
 `server.quality` selector for effective stats and help examples: fixed
 permissions, slots, tolerance, durations and pack sizes never scale.
 
-This carries the accepted [PR #38](https://github.com/Thiesi/Blacksite/pull/38)
+This carries the accepted [PR #38](https://github.com/Thiesi/Karst41/pull/38)
 findings 12/14 forward; see [S17](S17-salvage-and-fabrication.md).
 
 
 ### S20 faction integration handoff
 
-Reference: [PR #38](https://github.com/Thiesi/Blacksite/pull/38) and S20.
+Reference: [PR #38](https://github.com/Thiesi/Karst41/pull/38) and S20.
 
 Explain card +10 versus membership +30/legal discharge, once-only red-sable
 standing migration, seven-day leave cooldown, four title thresholds and
@@ -237,7 +237,7 @@ programs/installed hardware survive membership loss.
 
 ### S22 crew integration handoff
 
-Teach S22 [PR #61](https://github.com/Thiesi/Blacksite/pull/61)'s actual
+Teach S22 [PR #61](https://github.com/Thiesi/Karst41/pull/61)'s actual
 two-to-five-person crews: sixty-second invites, leadership on logout,
 ten-second loot offers, useful-action/guard participation and private
 interior limits. Show names, not opaque IDs. Escape decoding follows
@@ -247,9 +247,9 @@ as a lone Escape.
 <!-- s19-services:start -->
 ### S19 source and service handoff
 
-Reference: [S19 PR #62](https://github.com/Thiesi/Blacksite/pull/62),
+Reference: [S19 PR #62](https://github.com/Thiesi/Karst41/pull/62),
 [acceptance record](../../ops/s19-acceptance.md) and
-[PR #38](https://github.com/Thiesi/Blacksite/pull/38).
+[PR #38](https://github.com/Thiesi/Karst41/pull/38).
 
 S19 supplies the implemented source interfaces, 68 authored contracts
 and four service nodes. Full root pytest passed 1344 tests with one
@@ -267,7 +267,7 @@ silently increase the bill.
 ### S23 market handoff
 
 Consume terminal UI 4 and S23, retaining the accepted
-[PR #38](https://github.com/Thiesi/Blacksite/pull/38) product boundaries.
+[PR #38](https://github.com/Thiesi/Karst41/pull/38) product boundaries.
 F9 beside a public terminal opens services even where E opens a contract
 board. Services use M market, O bounties, J jack and C collection. Street
 M/O/C remain map/drone/chat. Market D bids, U buys out, L lists, M shows
@@ -280,9 +280,9 @@ the return of unsold inventory weight. Bounties grant no combat exemption.
 <!-- s24-handoff:start -->
 ### S24 event integration and acceptance handoff
 
-Reference: [S24 #24](https://github.com/Thiesi/Blacksite/issues/24),
-[PR #38](https://github.com/Thiesi/Blacksite/pull/38) and
-[platform #56](https://github.com/Thiesi/Blacksite/issues/56).
+Reference: [S24 #24](https://github.com/Thiesi/Karst41/issues/24),
+[PR #38](https://github.com/Thiesi/Karst41/pull/38) and
+[platform #56](https://github.com/Thiesi/Karst41/issues/56).
 
 Explain F9 public services -> V forecasts, R to save/read, H held
 forecasts and Esc/B back. A carried Ring-fall Chart uses the same reader
@@ -299,8 +299,8 @@ S25 must verify discoverability and pacing on actual full-city routes.
 <!-- s24-review-policy:start -->
 ### S24 practical review follow-up
 
-Reference: [PR #65](https://github.com/Thiesi/Blacksite/pull/65), retaining
-[PR #38](https://github.com/Thiesi/Blacksite/pull/38) and #56.
+Reference: [PR #65](https://github.com/Thiesi/Karst41/pull/65), retaining
+[PR #38](https://github.com/Thiesi/Karst41/pull/38) and #56.
 
 H shows the caller's 128 recent forecast reads, including compact final
 outcomes after global history retirement and restart. Explain unread

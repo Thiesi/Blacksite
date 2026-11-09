@@ -7,20 +7,20 @@ from random import Random
 
 import pytest
 
-from blacksite.content.loader import load_content
-from blacksite.content.schema import Behaviour, Region, Spawner
-from blacksite.content.validate import validate
-from blacksite.server.npcs.behaviours import patrol
-from blacksite.server.npcs.templates import WANDER_PAUSE_TICKS, make_actor, relation
-from blacksite.server.protocol import Frame
-from blacksite.server.storage.db import Storage
+from karst41.content.loader import load_content
+from karst41.content.schema import Behaviour, Region, Spawner
+from karst41.content.validate import validate
+from karst41.server.npcs.behaviours import patrol
+from karst41.server.npcs.templates import WANDER_PAUSE_TICKS, make_actor, relation
+from karst41.server.protocol import Frame
+from karst41.server.storage.db import Storage
 from tests.character_helpers import act, create, place, state
 from tests.harness import FakeClient, HeadlessServer
 
 
 @pytest.fixture
 def city(repo_root):
-    content = load_content(repo_root/"src/blacksite/content")
+    content = load_content(repo_root/"src/karst41/content")
     content.zones = {key: replace(z, meta=replace(z.meta, spawners=())) for key,z in content.zones.items()}
     game = HeadlessServer(content, character_state={})
     caller = game.connect()
@@ -88,7 +88,7 @@ def test_design_5_5_spawn_fills_an_adjacent_authored_post_when_no_farther_tile_e
 def test_design_5_5_shipped_halo_post_fills_beside_arriving_caller(city, repo_root):
     game, caller = city
     zone = game.core.world.zones["sodium-tin-halo"]
-    shipped = load_content(repo_root / "src/blacksite/content").zones[zone.id]
+    shipped = load_content(repo_root / "src/karst41/content").zones[zone.id]
     spec = next(sp for sp in shipped.meta.spawners if sp.id == "halo-bouncer")
     zone.template = replace(zone.template, meta=replace(zone.template.meta, spawners=(spec,)))
     place(game, caller, zone.id, zone.template.meta.spawn)
@@ -154,7 +154,7 @@ def test_design_5_5_shipped_row_wanderers_keep_plaza_and_halo_exits_clear(city, 
     place(game, caller, "sodium-row", (44, 20))
     zone = game.core.world.zones["sodium-row"]
     # Restore the shipped region, removed only by the isolated city fixture.
-    shipped = load_content(repo_root / "src/blacksite/content").zones["sodium-row"]
+    shipped = load_content(repo_root / "src/karst41/content").zones["sodium-row"]
     spec = next(sp for sp in shipped.meta.spawners if sp.npc == key)
     home = (max(spec.region.x, min(start[0], spec.region.x + spec.region.w - 1)),
             max(spec.region.y, min(start[1], spec.region.y + spec.region.h - 1)))
@@ -300,7 +300,7 @@ def test_design_5_5_local_guard_investigates_report_beyond_sight(city):
     zone=game.core.world.zones[guard.zone]
     runner=body(game,caller)
     game.core.world.enter(guard,zone.id,(50,3))
-    from blacksite.server.npcs.templates import make_actor
+    from karst41.server.npcs.templates import make_actor
     # This fixture exercises same-faction reporting, not the Row's now
     # unaffiliated street crowd (#147; keeper-wide response waits for S38).
     resident_template=replace(game.core.world.content.npcs["npc-sodium-regular"],faction="sable")
@@ -340,7 +340,7 @@ def test_design_5_5_warning_heat_response_and_no_safe_damage(city):
     place(game,caller,"core-plaza",(20,3))
     source=body(game,caller)
     npc=game.core.world.content.npcs["npc-civilian"]
-    from blacksite.server.npcs.templates import make_actor
+    from karst41.server.npcs.templates import make_actor
     target=make_actor(npc,"test-civilian",{})
     game.core.world.enter(target,source.zone,(22,3))
     hp=(source.health,target.health)
@@ -460,7 +460,7 @@ def test_design_5_5_npc_loot_commits_once_and_respawn_receipt(city,tmp_path,fail
 
 
 def test_design_7_2_shipped_matrix_matches_canon_and_hub_validates(repo_root):
-    content=load_content(repo_root/"src/blacksite/content")
+    content=load_content(repo_root/"src/karst41/content")
     assert validate(content)==[]
     assert len(content.factions)==8
     assert all(zone.meta.spawners for zone in content.zones.values())
@@ -520,7 +520,7 @@ def test_design_18_maintenance_drone_warns_before_harm(city):
 
 
 def test_design_5_5_npc_sight_matches_full_fov_for_walls_radius_and_stealth(city):
-    from blacksite.server.world.sight import sees_actor, visible_tiles
+    from karst41.server.world.sight import sees_actor, visible_tiles
     game,caller=city
     observer=spawn(game)[0];target=body(game,caller)
     zone=game.core.world.zones[observer.zone]
@@ -571,7 +571,7 @@ def test_game_7_2_unaffiliated_row_regular_does_not_alert_sable(
     guard = spawn(game)[0]
     zone = game.core.world.zones[guard.zone]
     runner = body(game, caller)
-    from blacksite.server.npcs.templates import make_actor
+    from karst41.server.npcs.templates import make_actor
     resident = make_actor(game.core.world.content.npcs['npc-sodium-regular'], 'row-regular', {})
     assert resident.faction is None
     game.core.world.enter(resident, zone.id, (22, 3))

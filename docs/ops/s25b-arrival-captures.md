@@ -38,7 +38,7 @@ the first local attempt.
 ```sh
 python scripts/accept_s25b_arrivals.py \
   --root /tmp/s25b-arrivals-16 \
-  --door-python /path/to/installed/blacksite/python --tier 16
+  --door-python /path/to/installed/karst41/python --tier 16
 ```
 
 Repeat with fresh roots and `--tier 256` and `--tier truecolor`.

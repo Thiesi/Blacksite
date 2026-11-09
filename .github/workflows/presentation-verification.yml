@@ -3,7 +3,7 @@ name: Presentation verification
 on:
   pull_request:
     paths:
-      - 'src/blacksite/**'
+      - 'src/karst41/**'
       - 'tests/**'
       - 'scripts/presentation_*.py'
       - '.github/workflows/presentation-verification.yml'

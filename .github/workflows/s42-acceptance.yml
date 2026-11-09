@@ -3,7 +3,7 @@ name: S42 talker reach acceptance
 on:
   pull_request:
     paths:
-      - 'src/blacksite/**'
+      - 'src/karst41/**'
       - 'scripts/accept_s42_netbbs.py'
       - '.github/workflows/s42-acceptance.yml'
   workflow_dispatch:
@@ -35,23 +35,23 @@ jobs:
         shell: bash
         run: |
           python -m pip install './.test-tmp/netbbs[ssh,web]'
-          python -m pip wheel --no-deps . -w "$RUNNER_TEMP/blacksite-proof/s42/wheels"
-          python -m venv "$RUNNER_TEMP/blacksite-proof/s42/venv"
-          "$RUNNER_TEMP/blacksite-proof/s42/venv/bin/python" -m pip install "$RUNNER_TEMP"/blacksite-proof/s42/wheels/*.whl
+          python -m pip wheel --no-deps . -w "$RUNNER_TEMP/karst41-proof/s42/wheels"
+          python -m venv "$RUNNER_TEMP/karst41-proof/s42/venv"
+          "$RUNNER_TEMP/karst41-proof/s42/venv/bin/python" -m pip install "$RUNNER_TEMP"/karst41-proof/s42/wheels/*.whl
       - name: Capture talk hint, one-press escape, flee and covered shot label
         shell: bash
         run: |
-          python scripts/accept_s42_netbbs.py --root "$RUNNER_TEMP/blacksite-proof/s42/captures" --door-python "$RUNNER_TEMP/blacksite-proof/s42/venv/bin/python" --size '${{ matrix.size }}' --tier '${{ matrix.tier }}'
+          python scripts/accept_s42_netbbs.py --root "$RUNNER_TEMP/karst41-proof/s42/captures" --door-python "$RUNNER_TEMP/karst41-proof/s42/venv/bin/python" --size '${{ matrix.size }}' --tier '${{ matrix.tier }}'
       - uses: actions/upload-artifact@v4
         if: always()
         with:
           name: s42-talker-${{ matrix.size }}-${{ matrix.tier }}
           path: |
-            ${{ runner.temp }}/blacksite-proof/s42/captures/*.ans
-            ${{ runner.temp }}/blacksite-proof/s42/captures/*.txt
-            ${{ runner.temp }}/blacksite-proof/s42/captures/*.json
-            ${{ runner.temp }}/blacksite-proof/s42/captures/progress.log
+            ${{ runner.temp }}/karst41-proof/s42/captures/*.ans
+            ${{ runner.temp }}/karst41-proof/s42/captures/*.txt
+            ${{ runner.temp }}/karst41-proof/s42/captures/*.json
+            ${{ runner.temp }}/karst41-proof/s42/captures/progress.log
       - name: Remove native proof scratch
         if: always()
         shell: bash
-        run: rm -rf -- "$RUNNER_TEMP/blacksite-proof/s42"
+        run: rm -rf -- "$RUNNER_TEMP/karst41-proof/s42"

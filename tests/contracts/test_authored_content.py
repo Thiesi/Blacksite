@@ -9,16 +9,16 @@ from pathlib import Path
 
 import pytest
 
-from blacksite.content.loader import load_content
-from blacksite.content.validate import validate
-from blacksite.server.contracts.engine import Engine, Fact, Participant
-from blacksite.server.contracts.ledger import Ledger
+from karst41.content.loader import load_content
+from karst41.content.validate import validate
+from karst41.server.contracts.engine import Engine, Fact, Participant
+from karst41.server.contracts.ledger import Ledger
 from tests.contracts.test_engine import finish
 
 
 @pytest.fixture(scope='module')
 def authored():
-    content = load_content(Path(__file__).parents[2]/'src/blacksite/content')
+    content = load_content(Path(__file__).parents[2]/'src/karst41/content')
     assert not validate(content)
     return content
 

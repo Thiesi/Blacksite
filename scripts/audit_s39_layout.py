@@ -10,14 +10,14 @@ from typing import Any
 ROOT = Path(__file__).resolve().parents[1]
 sys.path[:0] = [str(ROOT/'src'), str(ROOT)]
 
-from blacksite.content.loader import load_content
-from blacksite.server.world.registry import World
+from karst41.content.loader import load_content
+from karst41.server.world.registry import World
 
 
 def audit(root: Path = ROOT) -> dict[str, Any]:
-    content = load_content(root/'src/blacksite/content')
+    content = load_content(root/'src/karst41/content')
     assert not content.load_problems, content.load_problems
-    assert len(content.zones) == len(list((root/'src/blacksite/content/zones').glob('*.json')))
+    assert len(content.zones) == len(list((root/'src/karst41/content/zones').glob('*.json')))
     world = World(content, {zid: 0 for zid in content.zones})
     arrivals, stranded, unreachable, threshold_givers = [], [], [], []
     checked_positions = 0

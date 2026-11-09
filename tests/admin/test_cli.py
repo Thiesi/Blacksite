@@ -9,17 +9,17 @@ import sys
 
 import pytest
 
-from blacksite.admin.__main__ import emit, main, rotate
-from blacksite.admin.client import request
-from blacksite.server.app import Server
-from blacksite.server.protocol import Frame, encode, read_frame
+from karst41.admin.__main__ import emit, main, rotate
+from karst41.admin.client import request
+from karst41.server.app import Server
+from karst41.server.protocol import Frame, encode, read_frame
 from tests.harness import HeadlessServer
 
 
 def test_who_lists_sessions_and_connected_time() -> None:
     server = HeadlessServer()
     caller = server.connect()
-    from blacksite.server.admin_endpoint import dispatch
+    from karst41.server.admin_endpoint import dispatch
     from tests.harness import ADMIN_SECRET, hello
     operator = server.connect(frame=hello(secret=ADMIN_SECRET))
     server.frames_for(operator)
@@ -36,10 +36,10 @@ def test_status_json_shape_and_stop_sends_bye_then_exits(scratch_dir: Path) -> N
         server = Server(scratch_dir, tcp=True, characters=False)
         await server.start()
         # Use a real caller and the real foreground lifecycle after bootstrap.
-        from blacksite.server.auth import sign
+        from karst41.server.auth import sign
         info = {"user_id": 42, "handle": "Caller界"}
         secret = bytes.fromhex((scratch_dir / "secrets/door.secret").read_text().strip())
-        from blacksite.server.transport import connect
+        from karst41.server.transport import connect
         reader, writer = await connect(scratch_dir)
         writer.write(encode(Frame("hello", {"proto": 1, "door_info": info, "hmac": sign(info, secret),
             "client_version": "test", "caps": {"width": 80, "height": 24, "tier": "256", "unicode": True}})))
@@ -51,7 +51,7 @@ def test_status_json_shape_and_stop_sends_bye_then_exits(scratch_dir: Path) -> N
                     "persist_lag_s", "content_hash", "season"} <= result.keys()
             assert result["players"] == 1 and len(result["content_hash"]) == 64
             assert (await request(scratch_dir, "who"))[0]["handle"] == "Caller界"
-            pidfile = scratch_dir / "run/blacksite.pid"
+            pidfile = scratch_dir / "run/karst41.pid"
             assert int(pidfile.read_text()) == os.getpid()
             with pytest.raises(RuntimeError):
                 rotate(scratch_dir)
@@ -92,19 +92,19 @@ def test_validate_runs_validator_and_offline_rotation(scratch_dir: Path, capsys:
 
 def test_real_console_alias_serve_status_stop(scratch_dir: Path) -> None:
     async def scenario() -> None:
-        env = {**os.environ, "BLACKSITE_INSTALL_DIR": str(scratch_dir)}
-        process = await asyncio.create_subprocess_exec(sys.executable, "-m", "blacksite", "serve", "--tcp",
+        env = {**os.environ, "KARST41_INSTALL_DIR": str(scratch_dir)}
+        process = await asyncio.create_subprocess_exec(sys.executable, "-m", "karst41", "serve", "--tcp",
             env=env, stdout=asyncio.subprocess.PIPE, stderr=asyncio.subprocess.PIPE)
         try:
             # Windows cold content/bootstrap takes about 27s on the local
             # supported checkout, including unchanged S20. This is readiness,
             # not a tick-latency target; keep the Linux deadline unchanged.
             async with asyncio.timeout(60 if sys.platform == 'win32' else 10):
-                while not (scratch_dir / "run/blacksite.pid").exists():
+                while not (scratch_dir / "run/karst41.pid").exists():
                     if process.returncode is not None:
                         raise AssertionError((await process.stderr.read()).decode())
                     await asyncio.sleep(.05)
-            client = await asyncio.create_subprocess_exec(sys.executable, "-m", "blacksite", "admin", "status", "--json",
+            client = await asyncio.create_subprocess_exec(sys.executable, "-m", "karst41", "admin", "status", "--json",
                 env=env, stdout=asyncio.subprocess.PIPE, stderr=asyncio.subprocess.PIPE)
             output, errors = await asyncio.wait_for(client.communicate(), 10)
             assert client.returncode == 0 and not errors
@@ -134,4 +134,4 @@ def test_bad_admin_secret_is_an_error(scratch_dir: Path, capsys: pytest.CaptureF
     secrets.mkdir()
     (secrets / "admin.secret").write_text("not-hex", encoding="ascii")
     assert main(["--install-dir", str(scratch_dir), "stop"]) == 1
-    assert "blacksite admin:" in capsys.readouterr().err
+    assert "karst41 admin:" in capsys.readouterr().err

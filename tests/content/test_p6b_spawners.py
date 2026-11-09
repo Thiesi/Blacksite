@@ -5,7 +5,7 @@ from pathlib import Path
 
 import pytest
 
-from blacksite.content.loader import load_content
+from karst41.content.loader import load_content
 
 ROOT = Path(__file__).resolve().parents[2]
 P6B_ZONES = ("core-plaza", "vatside-clinics", "sodium-row")
@@ -17,7 +17,7 @@ ARRIVAL_CLEARANCE = 5
 
 @pytest.fixture(scope="module")
 def tree():
-    return load_content(ROOT/"src/blacksite/content")
+    return load_content(ROOT/"src/karst41/content")
 
 
 def chebyshev(a, b):

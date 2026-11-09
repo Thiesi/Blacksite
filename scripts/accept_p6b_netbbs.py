@@ -30,7 +30,7 @@ async def accept(root: Path, door_python: Path, size: tuple[int, int], tier: str
     assert version('netbbs') == '7.45.0'
     root.mkdir(parents=True, exist_ok=False)
     probe = PresentationProbe(root, door_python, show,
-        door_environment={'DOOR_BLACKSITE_PRESENTATION': '1'}, show_all_tiers=True)
+        door_environment={'DOOR_KARST41_PRESENTATION': '1'}, show_all_tiers=True)
     await probe.start()
     captures: list[str] = []
     checkpoints: list[dict[str, Any]] = []
@@ -122,7 +122,7 @@ async def accept(root: Path, door_python: Path, size: tuple[int, int], tier: str
     manifest = {p.name: {'bytes': p.stat().st_size, 'sha256': sha256(p.read_bytes()).hexdigest()}
                 for label in captures for ext in ('.ans', '.txt', '.json') for p in [root/(label+ext)]}
     (root/'result.json').write_text(json.dumps({'head': head, 'passed': True, 'cases': [case],
-        'transport': 'NetBBS 7.45.0 Telnet -> registered native stdio; DOOR_BLACKSITE_PRESENTATION=1',
+        'transport': 'NetBBS 7.45.0 Telnet -> registered native stdio; DOOR_KARST41_PRESENTATION=1',
         'source_matched_wheel': json.loads((root/'native-client.json').read_text()),
         'show': show, 'console': console, 'teleports': False, 'local_handle_override': False,
         'fixtures': 'private node/world/accounts only; ordinary creation and player keys',

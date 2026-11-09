@@ -3,7 +3,7 @@
 **Status:** done (PR #100)
 **Primary model:** Sonnet · **Reviewer:** automated review, technical lead
 **Depends on:** P0, P1 · **Milestone:** presentation track
-**Issue:** https://github.com/Thiesi/Blacksite/issues/95
+**Issue:** https://github.com/Thiesi/Karst41/issues/95
 
 From `docs/plan/03-presentation-integration.md` §4 "Extend" and §7.3,
 adopted by the owner on 2026-10-28 (D-T1). The canon is architecture

@@ -3,7 +3,7 @@
 **Status:** done (PR #51)
 **Primary model:** Opus · **Reviewer:** Sonnet (test pass)
 **Depends on:** S10 · **Milestone:** M1
-**Issue:** https://github.com/Thiesi/blacksite/issues/11
+**Issue:** https://github.com/Thiesi/Karst41/issues/11
 
 ## Goal
 
@@ -32,17 +32,17 @@ Plaza punishes anyone who draws.
 
 ## Scope
 
-- `src/blacksite/server/npcs/templates.py`: load `npcs.json` (entity
+- `src/karst41/server/npcs/templates.py`: load `npcs.json` (entity
   §1.8) into templates; `factions.json` relations matrix loaded into a
   `relation(a, b) -> H|N|A` function (data from the design doc §7.2;
   full faction mechanics in S20 — here only the matrix and IDs).
-- `src/blacksite/server/npcs/spawn.py`: spawner processing per zone:
+- `src/karst41/server/npcs/spawn.py`: spawner processing per zone:
   count, region or tile, respawn seconds, condition (`always`,
   `event:<id>` for S24, `per_player` for the Wake drone); lazy catch-up
   on zone wake (respawn timers computed from elapsed ticks, capped at
   count); despawn when a zone has been dormant 30 min (except named
   anchors).
-- `src/blacksite/server/npcs/behaviours.py`: a small behaviour tree
+- `src/karst41/server/npcs/behaviours.py`: a small behaviour tree
   per actor: `idle` (stand), `wander` (random walk within a region,
   200–1000 ms pauses), `patrol` (waypoints, loop or bounce), `guard`
   (hold tile; aggro on hostile within sight; return when lost), `hunt`

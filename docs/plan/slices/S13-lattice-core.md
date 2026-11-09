@@ -3,7 +3,7 @@
 **Status:** done (PR #52)
 **Primary model:** Opus · **Reviewer:** Astra (spec critique of the hacking model before start, per roadmap §4)
 **Depends on:** S07, S08, S12 · **Milestone:** M2
-**Issue:** https://github.com/Thiesi/blacksite/issues/13
+**Issue:** https://github.com/Thiesi/Karst41/issues/13
 
 ## Goal
 
@@ -75,7 +75,7 @@ and trace are S14.
   panel INTEGRITY / TRACE / RIG / ROOM (ROOM empty until S14).
 - Jack-in and jack-out transition frames (3 frames, from `art/` when
   present, text fallback otherwise).
-- Admin: `blacksite admin lattice who` lists presences by sector and
+- Admin: `karst41 admin lattice who` lists presences by sector and
   cell.
 
 ## Out of scope

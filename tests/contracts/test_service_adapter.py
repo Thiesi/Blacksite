@@ -2,9 +2,9 @@
 
 from dataclasses import replace
 
-from blacksite.content.schema import Allocation, Reward, ServiceNodeTemplate, Stage, StageTarget
-from blacksite.server.contracts.engine import Fact
-from blacksite.server.contracts.services import Services
+from karst41.content.schema import Allocation, Reward, ServiceNodeTemplate, Stage, StageTarget
+from karst41.server.contracts.engine import Fact
+from karst41.server.contracts.services import Services
 from tests.contracts.test_adapter import live, shipped
 from tests.contracts.test_engine import template
 
@@ -85,7 +85,7 @@ def test_game_7_5_source_xp_and_worker_reward_compose_in_one_actual_transfer(liv
     sid, target = service(live)
     instance = start(live, sid, (players[0].id,))
     player = players[0]
-    from blacksite.server.progression import Grant
+    from karst41.server.progression import Grant
     source_patch, identity, _ = owner.progression.reward_patch(player, Grant('run', 'source-unit', True,
         scope='fixture-core', core='fixture-core', tier=1))
     source_patch['chits_hand'] = player.chits_hand+80

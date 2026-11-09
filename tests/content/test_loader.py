@@ -3,7 +3,7 @@
 import shutil
 from pathlib import Path
 
-from blacksite.content.loader import content_hash, load_content
+from karst41.content.loader import content_hash, load_content
 from tests.content.support import FIXTURE_WORLD, World, find
 
 
@@ -166,12 +166,12 @@ def test_table_shape_problems(world: World) -> None:
 
 def test_loader_is_not_imported_by_the_door() -> None:
     # S02 notes: content is read by the server only.
-    import blacksite.door
-    import blacksite.door.__main__  # noqa: F401
+    import karst41.door
+    import karst41.door.__main__  # noqa: F401
     import sys
 
-    door_modules = [m for m in sys.modules if m.startswith("blacksite.door")]
+    door_modules = [m for m in sys.modules if m.startswith("karst41.door")]
     assert door_modules
     for name in door_modules:
         source = Path(sys.modules[name].__file__ or "").read_text(encoding="utf-8")
-        assert "blacksite.content" not in source
+        assert "karst41.content" not in source

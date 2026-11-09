@@ -1,8 +1,8 @@
 """S02: the shipped content tree validates (grows with every content slice)."""
 
-from blacksite.content.cp437 import round_trips
-from blacksite.content.loader import load_content
-from blacksite.content.validate import REQUIRED_ROLES, validate
+from karst41.content.cp437 import round_trips
+from karst41.content.loader import load_content
+from karst41.content.validate import REQUIRED_ROLES, validate
 from tests.content.support import SHIPPED
 
 # 04-assets.md section 2 and the gazetteer sketch legend.

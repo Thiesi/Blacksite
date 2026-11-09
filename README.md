@@ -1,4 +1,4 @@
-![Karst 41: the city beneath orbital wreckage, with the Lattice below.](docs/assets/blacksite-banner.png)
+![Karst 41: the city beneath orbital wreckage, with the Lattice below.](docs/assets/karst41-banner.png)
 
 # Karst 41
 

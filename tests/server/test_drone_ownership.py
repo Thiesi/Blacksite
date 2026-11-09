@@ -2,7 +2,7 @@
 
 import pytest
 
-from blacksite.server.protocol import Frame
+from karst41.server.protocol import Frame
 from tests.character_helpers import act, place, state
 from tests.combat.test_engine import body, build_duel
 from tests.harness import HeadlessServer

@@ -1,6 +1,6 @@
 """S05 acceptance on an isolated Linux systemd host with local NetBBS.
 
-The unit must already point at an installed Blacksite wheel and a fresh
+The unit must already point at an installed Karst 41 wheel and a fresh
 service directory owned by the current non-root account. Only the named
 test unit is started/stopped; existing nodes are never opened.
 """
@@ -30,10 +30,10 @@ async def accept(root: Path, install: Path, python: Path, unit: str) -> None:
     db = Database(root / "node.db")
     lane = DatabaseLane(db.path)
     user = create_user(db, "s05caller", password="LocalProbe-S05", user_level=10)
-    create_door(db, "Blacksite", str(python), args=("-m", "blacksite.door"), creator=user,
+    create_door(db, "Karst 41", str(python), args=("-m", "karst41.door"), creator=user,
         profile=DoorProfile(install_dir=str(root), encoding="utf-8", max_sessions=16,
             multinode_certified=True, time_limit=300,
-            environment={"DOOR_BLACKSITE_INSTALL_DIR": str(install)}).validate())
+            environment={"DOOR_KARST41_INSTALL_DIR": str(install)}).validate())
     failures: list[str] = []
 
     async def handler(session: object) -> None:
@@ -47,18 +47,18 @@ async def accept(root: Path, install: Path, python: Path, unit: str) -> None:
     node = TelnetServer("127.0.0.1", 0, handler, terminal_type_wait_seconds=.1)
 
     async def admin(verb: str) -> object:
-        return json.loads(await command(str(python), "-m", "blacksite", "admin", "--install-dir", str(install), verb, "--json"))
+        return json.loads(await command(str(python), "-m", "karst41", "admin", "--install-dir", str(install), verb, "--json"))
 
     try:
         await node.start()
         for width, height in ((80, 24), (132, 50)):
             await command("sudo", "systemctl", "start", unit)
             async with asyncio.timeout(10):
-                while not (install / "run/blacksite.pid").exists():
+                while not (install / "run/karst41.pid").exists():
                     await asyncio.sleep(.05)
             status = await admin("status")
             assert status["players"] == 0
-            pid = int((install / "run/blacksite.pid").read_text())
+            pid = int((install / "run/karst41.pid").read_text())
             reader, writer = await asyncio.open_connection("127.0.0.1", node.port)
             try:
                 writer.write(b"\xff\xfb\x1f\xff\xfa\x1f" + width.to_bytes(2, "big") + height.to_bytes(2, "big") + b"\xff\xf0")
@@ -73,7 +73,7 @@ async def accept(root: Path, install: Path, python: Path, unit: str) -> None:
                 caller.screen = FakeTerminal(width, height)
                 await caller.expect("Available doors")
                 await send(b"\x1b[B\r")
-                await caller.expect("BLACKSITE")
+                await caller.expect("KARST 41")
                 # The title precedes hello; wait for the actual login in who.
                 async with asyncio.timeout(10):
                     while not (rows := await admin("who")):
@@ -84,7 +84,7 @@ async def accept(root: Path, install: Path, python: Path, unit: str) -> None:
                 assert await admin("stop") == {"ok": True}
                 await caller.expect("The city is dark right now.", mark)
                 async with asyncio.timeout(12):
-                    while (install / "run/blacksite.pid").exists():
+                    while (install / "run/karst41.pid").exists():
                         await asyncio.sleep(.05)
                 assert list((install / "run").iterdir()) == []
                 async with asyncio.timeout(5):
@@ -100,7 +100,7 @@ async def accept(root: Path, install: Path, python: Path, unit: str) -> None:
                 assert (await command("systemctl", "show", unit, "--property=Result", "--value")).strip() == "success"
                 await send(b"\x18y")
                 await caller.expect("Karst keeps your place.", mark)
-                await caller.expect("Left Blacksite.", mark)
+                await caller.expect("Left Karst 41.", mark)
                 await send(b" ")
                 await caller.expect("Available doors", mark)
                 await send(b"b")
@@ -111,7 +111,7 @@ async def accept(root: Path, install: Path, python: Path, unit: str) -> None:
                 await writer.wait_closed()
             await command("sudo", "systemctl", "restart", unit)
             async with asyncio.timeout(10):
-                while not (install / "run/blacksite.pid").exists():
+                while not (install / "run/karst41.pid").exists():
                     await asyncio.sleep(.05)
             assert (await admin("status"))["players"] == 0
             await command("sudo", "systemctl", "stop", unit)

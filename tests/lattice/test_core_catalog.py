@@ -3,13 +3,13 @@
 from pathlib import Path
 import re
 
-from blacksite.content.loader import load_content
-from blacksite.content.validate import validate
-from blacksite.server.lattice.sectors import access
+from karst41.content.loader import load_content
+from karst41.content.validate import validate
+from karst41.server.lattice.sectors import access
 
 
 def test_world_3_complete_district_registry_and_inactive_templates(repo_root: Path):
-    tree = load_content(repo_root/'src/blacksite/content')
+    tree = load_content(repo_root/'src/karst41/content')
     assert not validate(tree)
     entries = {c.core_id or c.planned_core for s in tree.sectors.values()
                for c in s.cells if c.kind == 'core_entrance'}
@@ -36,7 +36,7 @@ def test_world_3_complete_district_registry_and_inactive_templates(repo_root: Pa
 
 
 def test_world_3_named_room_counts_and_bestiary_are_not_generic_placeholders(repo_root: Path):
-    tree = load_content(repo_root/'src/blacksite/content')
+    tree = load_content(repo_root/'src/karst41/content')
     world = (repo_root/'docs/world/03-lattice.md').read_text(encoding='utf-8')
     for name, cid, description in re.findall(r'\*\*([^\n]+?)\*\* \(`(lat-[^`]+)`\)(.*?)(?=\n\n|\Z)', world, re.S):
         match = re.search(r'tier (\d),\s*(\d+) rooms', description)
@@ -55,7 +55,7 @@ def test_world_3_named_room_counts_and_bestiary_are_not_generic_placeholders(rep
 
 
 def test_game_6_7_optional_credit_and_all_asset_references(repo_root: Path):
-    tree = load_content(repo_root/'src/blacksite/content')
+    tree = load_content(repo_root/'src/karst41/content')
     tables = {'text': tree.text, 'evidence': tree.evidence, 'schematic': tree.items,
               'salvage_data': tree.items, 'item': tree.items, 'program': tree.programs}
     for cid, core in tree.cores.items():
@@ -78,7 +78,7 @@ def test_game_6_7_optional_credit_and_all_asset_references(repo_root: Path):
 
 
 def test_world_08_finished_found_texts_are_loaded_verbatim(repo_root: Path):
-    tree = load_content(repo_root/'src/blacksite/content')
+    tree = load_content(repo_root/'src/karst41/content')
     source = (repo_root/'docs/world/08-found-texts.md').read_text(encoding='utf-8')
     assets = [key for key in tree.text if key.startswith('text-') and '## '+key+'\n' in source]
     assert len(assets) == 15  # S27 authors the dormant bar lines and graffiti.

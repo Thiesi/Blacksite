@@ -5,11 +5,11 @@ from dataclasses import replace
 
 import pytest
 
-from blacksite.content.schema import TileChange, ZoneLayout
-from blacksite.server.clock import TICK_HZ
-from blacksite.server.interlock_effects import lighting_radius
-from blacksite.server.world.actors import Actor
-from blacksite.server.world.exits import schedule
+from karst41.content.schema import TileChange, ZoneLayout
+from karst41.server.clock import TICK_HZ
+from karst41.server.interlock_effects import lighting_radius
+from karst41.server.world.actors import Actor
+from karst41.server.world.exits import schedule
 from tests.character_helpers import place
 from tests.lattice.test_engine import actor, intent, runners
 from tests.lattice.test_encounters import enter
@@ -199,7 +199,7 @@ def test_game_6_4_newer_route_effect_wins_without_erasing_older_timer(runners):
 
 
 def test_game_6_4_camera_mission_state_cannot_blind_combat_or_enable_safe_harm(runners):
-    from blacksite.server.npcs.templates import make_actor
+    from karst41.server.npcs.templates import make_actor
     game, a, b, c = runners
     presence = enter(game, a, "lat-civic-ledger")
     interlock, zone, obj, control = retarget(game, presence, "camera", action="disable")
@@ -217,7 +217,7 @@ def test_game_6_4_camera_mission_state_cannot_blind_combat_or_enable_safe_harm(r
 
 
 def test_game_6_4_patrol_beacon_moves_linked_crew_and_expires_after_15min(runners):
-    from blacksite.server.npcs.templates import make_actor
+    from karst41.server.npcs.templates import make_actor
     game, a, b, c = runners
     presence = enter(game, a, "lat-civic-ledger")
     interlock, zone, obj, control = retarget(game, presence, "patrol_beacon", action="call", reset_seconds=900)

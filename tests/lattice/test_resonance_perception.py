@@ -2,7 +2,7 @@
 
 import pytest
 
-from blacksite.server.implants import install
+from karst41.server.implants import install
 from tests.character_helpers import create, place
 from tests.lattice.test_engine import jack, runners
 from tests.lattice.test_rig_progression import hardware

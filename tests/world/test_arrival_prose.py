@@ -7,11 +7,11 @@ from textwrap import fill
 
 import pytest
 
-from blacksite.door.log import rows
-from blacksite.door.cells import display_width
-from blacksite.door.model import Display
-from blacksite.content.loader import ContentTree, load_content
-from blacksite.door.layout import compute
+from karst41.door.log import rows
+from karst41.door.cells import display_width
+from karst41.door.model import Display
+from karst41.content.loader import ContentTree, load_content
+from karst41.door.layout import compute
 from scripts import build_city_content as author
 from tests.fake_terminal import FakeTerminal
 from tests.harness import HeadlessServer
@@ -89,7 +89,7 @@ def test_arrival_paragraph_survives_wrapping_and_scrollback(content_tree: Conten
     sim.discover(caller.session, avatar)
     assert not game.frames_for(caller)
 
-    from blacksite.door.doorinfo import DoorInfo
+    from karst41.door.doorinfo import DoorInfo
     info = DoorInfo(tmp_path/'door_info.json', tmp_path,
                     {'user_id': 1, 'handle': 'Wide\u754c'}, width, height, '256', 3600)
     display = Display(replace(info, width=width, height=height))

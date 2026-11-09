@@ -3,7 +3,7 @@ name: Issue 86 Lattice glyph acceptance
 on:
   pull_request:
     paths:
-      - 'src/blacksite/**'
+      - 'src/karst41/**'
       - 'scripts/accept_issue86_netbbs.py'
       - 'scripts/accept_s10_netbbs.py'
       - '.github/workflows/issue86-acceptance.yml'

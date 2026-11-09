@@ -64,7 +64,7 @@ Native acceptance:
 ```powershell
 $env:PYTHONPATH = "$PWD/src"
 & <NetBBS-venv>/Scripts/python.exe scripts/accept_s18_netbbs.py `
-  --root .test-tmp/native-s18 --door-python <Blacksite-venv>/Scripts/python.exe --show
+  --root .test-tmp/native-s18 --door-python <karst41-venv>/Scripts/python.exe --show
 ```
 
 The probe registers an ordinary native stdio door and sends real terminal

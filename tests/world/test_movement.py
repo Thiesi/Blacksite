@@ -2,9 +2,9 @@
 
 import pytest
 
-from blacksite.server.world.actors import Actor
-from blacksite.server.world.movement import SPRINT_COST, SPRINT_TICKS, STAMINA_REGEN, WALK_TICKS, move, regenerate
-from blacksite.server.world.registry import World
+from karst41.server.world.actors import Actor
+from karst41.server.world.movement import SPRINT_COST, SPRINT_TICKS, STAMINA_REGEN, WALK_TICKS, move, regenerate
+from karst41.server.world.registry import World
 
 
 def test_walk_200ms_per_tile(world: World) -> None:

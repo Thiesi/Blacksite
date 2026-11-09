@@ -1,6 +1,6 @@
 """Game design 3.1, 5.3, 5.4: independent numeric examples."""
 
-from blacksite.server.rules import combat as c
+from karst41.server.rules import combat as c
 import pytest
 
 

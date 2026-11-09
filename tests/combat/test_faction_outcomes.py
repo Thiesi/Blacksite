@@ -1,6 +1,6 @@
 """Game 7.1: standing shares death settlement independently of XP caps."""
 from datetime import timedelta
-from blacksite.server.storage.db import Storage
+from karst41.server.storage.db import Storage
 from tests.combat.test_engine import duel, body
 from tests.combat.test_pvp_progression import kill
 
@@ -40,7 +40,7 @@ def test_game_7_1_marked_reward_is_atomic_with_clone_and_survives_xp_cap(duel, t
 
 def test_game_7_3_controlled_turret_attempt_marks_and_lethal_hit_attributes_the_controller(duel):
     from dataclasses import replace
-    from blacksite.server.world.actors import Actor
+    from karst41.server.world.actors import Actor
     game, a, b = duel
     source, target = body(game, a), body(game, b)
     combat = game.core.combat

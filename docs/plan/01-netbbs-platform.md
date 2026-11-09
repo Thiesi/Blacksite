@@ -4,7 +4,7 @@ Status: accepted implementation plan; runtime work remains in its owning
 slices. This document updates the platform assumptions, not game balance
 or the slice dependency graph. S17 is not blocked by it.
 
-Report: [Karst 41 #56](https://github.com/Thiesi/Blacksite/issues/56).
+Report: [Karst 41 #56](https://github.com/Thiesi/Karst41/issues/56).
 Architecture sections 1, 3, 6.2 and 8 are the authoritative contracts.
 The PR #38 issue checklists and S19/S25 deferred field gates still apply.
 
@@ -65,7 +65,7 @@ history.
 
 | Area | Current Karst 41 state | Owning follow-up |
 |---|---|---|
-| Profile environment | S04 reads `DOOR_BLACKSITE_*` aliases | S31 corrects preset keys; original `BLACKSITE_*` names remain standalone aliases |
+| Profile environment | S04 reads `DOOR_KARST41_*` aliases | S31 corrects preset keys; original `KARST41_*` names remain standalone aliases |
 | Session ceiling | S04 takes the tighter positive host/override limit, but defaults to 3600 and rejects zero | S30 models no deadline and zero game-cap opt-out; S31 tests unlimited profile |
 | CPU | Existing efficiency target is 120 CPU-seconds/hour; stale prose assumes fixed 300 | S29 measures actual renderer CPU and inherited limits; S31 sets explicit policy |
 | Supervisor | Server and external runner exist; no released game preset yet | S31 uses released service schema and tests admission/restart/shutdown |
@@ -87,7 +87,7 @@ already fixed by updating documentation.
 One primary `deploy/netbbs-door-profile.json` uses the service block in
 architecture 3.1. There is no second future-version preset to maintain.
 The interpreter is the same venv Python for client and service. Service
-argv is `-m blacksite.server --install-dir {install_dir}`; the process
+argv is `-m karst41.server --install-dir {install_dir}`; the process
 is never spawned by the door client. The server already accepts that
 module invocation. `install_dir`, not an arbitrary substitution, sets
 the service working directory and socket health path.

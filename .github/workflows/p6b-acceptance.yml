@@ -3,7 +3,7 @@ name: P6b shipped places acceptance
 on:
   pull_request:
     paths:
-      - 'src/blacksite/**'
+      - 'src/karst41/**'
       - 'tests/**'
       - 'scripts/accept_p6b_netbbs.py'
       - 'scripts/accept_p5_netbbs.py'

@@ -6,19 +6,19 @@ from pathlib import Path
 
 import pytest
 
-from blacksite.content.loader import load_content
-from blacksite.door.cells import CellBuffer
-from blacksite.door.palette import Palette
-from blacksite.door.present import zone
-from blacksite.door.present.paint import Paint
-from blacksite.layout import compute
+from karst41.content.loader import load_content
+from karst41.door.cells import CellBuffer
+from karst41.door.palette import Palette
+from karst41.door.present import zone
+from karst41.door.present.paint import Paint
+from karst41.layout import compute
 from tests.presentation.test_places import view
 
 
 @pytest.fixture(scope='module')
 def content():
     root = Path(__file__).resolve().parents[2]
-    return load_content(root/'src/blacksite/content', root/'tests/fixtures/p6')
+    return load_content(root/'src/karst41/content', root/'tests/fixtures/p6')
 
 
 @pytest.mark.parametrize('tier', ['16', '256', 'truecolor'])

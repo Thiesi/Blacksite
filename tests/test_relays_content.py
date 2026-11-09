@@ -2,12 +2,12 @@
 
 from pathlib import Path
 
-from blacksite.content.loader import load_content
-from blacksite.content.validate import validate
+from karst41.content.loader import load_content
+from karst41.content.validate import validate
 
 
 def test_game_7_7_exact_sixteen_relay_schedule_and_sources():
-    tree=load_content(Path(__file__).parents[1]/'src/blacksite/content')
+    tree=load_content(Path(__file__).parents[1]/'src/karst41/content')
     expected={
         'shaft':('spire-shaft-head',5,20,'shaft_telemetry',0),
         'cold-chain':('vatside-clinics',2,10,'surgery_fee',.9),
@@ -36,7 +36,7 @@ def test_game_7_7_exact_sixteen_relay_schedule_and_sources():
 
 
 def test_game_7_7_active_relays_resolve_and_future_entries_stay_unavailable():
-    tree=load_content(Path(__file__).parents[1]/'src/blacksite/content')
+    tree=load_content(Path(__file__).parents[1]/'src/karst41/content')
     assert not validate(tree)
     assert {rid for rid in tree.relays if tree.active('relays',rid)}=={'cold-chain','block'}
     for rid,relay in tree.relays.items():

@@ -4,8 +4,8 @@ from pathlib import Path
 
 import pytest
 
-from blacksite.content.loader import load_content
-from blacksite.server.lattice.programs import (
+from karst41.content.loader import load_content
+from karst41.server.lattice.programs import (
     Effects, attack_damage, bind, can_acquire, can_cast, cast_ticks,
     occupied_slots, trace_gain,
 )
@@ -13,7 +13,7 @@ from blacksite.server.lattice.programs import (
 
 @pytest.fixture(scope="module")
 def programs():
-    return load_content(Path(__file__).parents[2] / "src/blacksite/content").programs
+    return load_content(Path(__file__).parents[2] / "src/karst41/content").programs
 
 
 def test_design_17_2_all_35_numeric_rows_match_the_canon(programs, repo_root):

@@ -1,7 +1,7 @@
 """Game 6.7/13.1: source receipts, retry and uptime survive a restart."""
 
-from blacksite.content.schema import DataSpec
-from blacksite.server.lattice.cores import Sources, trace_thresholds
+from karst41.content.schema import DataSpec
+from karst41.server.lattice.cores import Sources, trace_thresholds
 import pytest
 
 

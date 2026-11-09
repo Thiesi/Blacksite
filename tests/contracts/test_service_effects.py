@@ -7,11 +7,11 @@ import sqlite3
 
 import pytest
 
-from blacksite.content.schema import Allocation, Effect, ObjectSpec, StageTarget, TileChange, ZoneLayout
-from blacksite.server.clinics import Operation
-from blacksite.server.storage.db import Storage
-from blacksite.server.vendors import VendorBudget
-from blacksite.server.world.zone import ObjectState
+from karst41.content.schema import Allocation, Effect, ObjectSpec, StageTarget, TileChange, ZoneLayout
+from karst41.server.clinics import Operation
+from karst41.server.storage.db import Storage
+from karst41.server.vendors import VendorBudget
+from karst41.server.world.zone import ObjectState
 from tests.contracts.test_adapter import live, shipped
 from tests.contracts.test_service_adapter import service, start
 

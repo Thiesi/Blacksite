@@ -3,12 +3,12 @@
 from pathlib import Path
 import re
 
-from blacksite.content.loader import load_content
-from blacksite.content.validate import validate
+from karst41.content.loader import load_content
+from karst41.content.validate import validate
 
 
 def test_hymns_and_private_training_match_canonical_schedule(repo_root: Path) -> None:
-    tree=load_content(repo_root/"src/blacksite/content")
+    tree=load_content(repo_root/"src/karst41/content")
     assert validate(tree)==[]
     source=(repo_root/"docs/design/00-game-design.md").read_text(encoding="utf-8")
     rows=re.findall(r"^\| `(hymn_\w+|dis_\w+)` \| ([^|]+) \| (hymn|dissonance) \| (\d) \| ([\d.]+) s \| ([\d.]+) s \|",source,re.M)
@@ -23,7 +23,7 @@ def test_hymns_and_private_training_match_canonical_schedule(repo_root: Path) ->
 
 
 def test_training_anchor_cannot_spawn_in_a_wall(repo_root: Path) -> None:
-    tree=load_content(repo_root/"src/blacksite/content")
+    tree=load_content(repo_root/"src/karst41/content")
     obj=next(o for o in tree.zones["vatside-wake-hall"].meta.objects if o.params.get("training_npc"))
     obj.params["training_tile"]=[0,0]
     assert any("training tile" in str(p) for p in validate(tree))

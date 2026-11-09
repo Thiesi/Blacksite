@@ -21,6 +21,7 @@ sys.path[:0] = [str(ROOT/'src'),str(ROOT)]
 
 from tests.fake_terminal import FakeTerminal
 from tests.presentation.snapshots import canonical,snapshot
+from scripts.source_layout import at_revision
 
 
 def digest(path: Path) -> str:
@@ -43,7 +44,8 @@ def source_hash(head: str, source_tree: str) -> str:
     """Tie native Python bytes to a separately pinned Git source tree."""
     require(bool(re.fullmatch('[0-9a-f]{40}',head)) and bool(re.fullmatch('[0-9a-f]{40}',source_tree)),
             'head and source-tree must be full Git object ids')
-    actual = subprocess.check_output(['git','rev-parse',f'{head}:src/blacksite'],cwd=ROOT,text=True).strip()
+    package = at_revision(head, 'src/karst41')
+    actual = subprocess.check_output(['git','rev-parse',f'{head}:{package}'],cwd=ROOT,text=True).strip()
     require(actual==source_tree, f'expected source tree {source_tree}, but {head} contains {actual}')
     archive = subprocess.check_output(['git','archive',source_tree],cwd=ROOT)
     digest = sha256()
@@ -108,7 +110,7 @@ def build_packet(root: Path, metadata: list[dict[str,Any]], run: int, head: str,
             require(digest(directory/safe_filename(filename))==expected,
                     f'{name}/{filename}: SHA-256 mismatch')
         artifacts[name] = {'id':artifact['id'],
-            'url':f'https://github.com/Thiesi/Blacksite/actions/runs/{run}/artifacts/{artifact["id"]}',
+            'url':f'https://github.com/Thiesi/Karst41/actions/runs/{run}/artifacts/{artifact["id"]}',
             'result_sha256':digest(directory/'result.json')}
         for case in result['cases']:
             cases += 1
@@ -168,7 +170,7 @@ def main() -> None:
     parser.add_argument('--metadata',type=Path,required=True)
     parser.add_argument('--run',type=int,required=True)
     parser.add_argument('--head',required=True)
-    parser.add_argument('--source-tree',required=True,help='pinned Git object id of execution head:src/blacksite')
+    parser.add_argument('--source-tree',required=True,help='pinned Git object id of execution head:src/karst41')
     parser.add_argument('--output',type=Path,required=True)
     args = parser.parse_args()
     metadata = json.loads(args.metadata.read_text(encoding='utf-8-sig'))

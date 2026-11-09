@@ -18,9 +18,9 @@ from typing import Any
 from accept_s10_netbbs import Connection, wait
 from accept_s19_netbbs import ContractProbe, first_job
 from accept_s38_netbbs import enter_row
-from blacksite.content.schema import ContractTemplate, ObjectSpec, Reward, Stage, StageTarget
-from blacksite.layout import compute
-from blacksite.server.world.zone import ObjectState
+from karst41.content.schema import ContractTemplate, ObjectSpec, Reward, Stage, StageTarget
+from karst41.layout import compute
+from karst41.server.world.zone import ObjectState
 from tests.presentation.snapshots import snapshot
 
 

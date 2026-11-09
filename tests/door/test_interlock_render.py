@@ -4,8 +4,8 @@ from dataclasses import asdict, replace
 
 import pytest
 
-from blacksite.door.model import Display
-from blacksite.server.protocol import Frame
+from karst41.door.model import Display
+from karst41.server.protocol import Frame
 from tests.character_helpers import act
 from tests.fake_terminal import FakeTerminal
 from tests.lattice.test_engine import runners

@@ -17,9 +17,9 @@ import subprocess
 
 from accept_p5_netbbs import PresentationProbe
 from accept_s10_netbbs import wait
-from blacksite.door.present.zone import origin
-from blacksite.layout import compute
-from blacksite.place import CHARTED_GROUND
+from karst41.door.present.zone import origin
+from karst41.layout import compute
+from karst41.place import CHARTED_GROUND
 from tests.ansi_style import Rendition
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -32,7 +32,7 @@ async def accept(root: Path, python: Path, size: tuple[int, int], theme: str, sh
         assert os.isatty(1) and tuple(os.get_terminal_size(1)) == size
     root.mkdir(parents=True, exist_ok=False)
     probe = PresentationProbe(root, python, show,
-        door_environment={'DOOR_BLACKSITE_PRESENTATION':'1'}, show_all_tiers=True)
+        door_environment={'DOOR_KARST41_PRESENTATION':'1'}, show_all_tiers=True)
     local = probe.service.install_dir/'content.local'
     shutil.copytree(ROOT/'tests/fixtures/p6', local)
     # A5 setup: disclose only the existing gate's public face, not the

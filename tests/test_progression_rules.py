@@ -5,11 +5,11 @@ from datetime import datetime, timedelta, timezone
 
 import pytest
 
-from blacksite.server.players import Player
-from blacksite.server.progression import Grant, award, combat_xp
-from blacksite.server.rules import character
-from blacksite.server.skills import Use, gain, spend
-from blacksite.server.modifiers import compose
+from karst41.server.players import Player
+from karst41.server.progression import Grant, award, combat_xp
+from karst41.server.rules import character
+from karst41.server.skills import Use, gain, spend
+from karst41.server.modifiers import compose
 
 
 NOW = datetime(2026, 1, 1, 23, 59, tzinfo=timezone.utc)

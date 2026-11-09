@@ -7,12 +7,12 @@ import sqlite3
 import json
 from typing import Any
 
-from blacksite.content.schema import Effect, EventTemplate, Region
-from blacksite.server.rules.events import SCHEDULES
-from blacksite.server.world.zone import GeometryLayer
+from karst41.content.schema import Effect, EventTemplate, Region
+from karst41.server.rules.events import SCHEDULES
+from karst41.server.world.zone import GeometryLayer
 from tests.harness import HeadlessServer
 from tests.server.test_event_engine import base_content, events_game, force, advance
-from blacksite.server.storage.db import Storage
+from karst41.server.storage.db import Storage
 import pytest
 
 

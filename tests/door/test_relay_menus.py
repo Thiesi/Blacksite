@@ -4,9 +4,9 @@ from dataclasses import asdict, replace
 
 import pytest
 
-from blacksite.door.model import Display
-from blacksite.server.protocol import Frame, encode
-from blacksite.server.relay_views import Panel
+from karst41.door.model import Display
+from karst41.server.protocol import Frame, encode
+from karst41.server.relay_views import Panel
 from tests.fake_terminal import FakeTerminal
 from tests.server.test_relay_engine import content, relay_game
 from tests.server.test_relay_passages import passage, passage_content

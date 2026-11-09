@@ -5,7 +5,7 @@ from dataclasses import replace
 
 import pytest
 
-from blacksite.server.clock import TICK_HZ
+from karst41.server.clock import TICK_HZ
 from tests.character_helpers import place, state
 from tests.harness import HeadlessServer
 from tests.lattice.test_engine import actor, intent, runners
@@ -192,7 +192,7 @@ def test_game_6_4_cut_any_damage_interrupts(runners):
 
 
 def test_game_6_4_hardware_hotkey_confirm_and_cancel(runners):
-    from blacksite.server.protocol import Frame
+    from karst41.server.protocol import Frame
     from tests.character_helpers import act
     game, a, b, c = runners
     zid, oid = cut_fixture(game, a)
@@ -226,7 +226,7 @@ def test_game_6_4_safe_hardware_requires_scoped_permit(runners):
 
 
 def test_game_6_4_cut_receipt_saves_both_players_and_deadline_atomically(runners, tmp_path):
-    from blacksite.server.storage.db import Storage
+    from karst41.server.storage.db import Storage
     game, a, b, c = runners
     one = enter(game, b, "lat-civic-ledger")
     enter(game, c, "lat-civic-ledger")
@@ -271,7 +271,7 @@ def test_game_6_4_silt_riser_does_not_restore_an_offline_origin(runners):
 
 
 def test_game_6_4_shaft_two_hardware_locations_cut_one_core(runners):
-    from blacksite.content.schema import HardwareLocation, ObjectSpec
+    from karst41.content.schema import HardwareLocation, ObjectSpec
     game, a, b, c = runners
     content = game.core.loop.content
     locations = []

@@ -5,10 +5,10 @@ from pathlib import Path
 
 import pytest
 
-from blacksite.content.loader import load_content
-from blacksite.door.doorinfo import DoorInfo
-from blacksite.door.model import Display
-from blacksite.server.protocol import Frame
+from karst41.content.loader import load_content
+from karst41.door.doorinfo import DoorInfo
+from karst41.door.model import Display
+from karst41.server.protocol import Frame
 from tests.fake_terminal import FakeTerminal
 from tests.harness import HeadlessServer
 
@@ -16,7 +16,7 @@ from tests.harness import HeadlessServer
 @pytest.mark.parametrize("width,height", [(80, 24), (132, 50)])
 @pytest.mark.parametrize("tier", ["16", "256", "truecolor"])
 def test_golden_zone_and_wide_name(info: DoorInfo, repo_root: Path, width: int, height: int, tier: str, golden) -> None:
-    content = load_content(repo_root / "src/blacksite/content")
+    content = load_content(repo_root / "src/karst41/content")
     game = HeadlessServer(content, "vatside-wake-hall")
     client = game.connect(width=width, height=height)
     info = replace(info, width=width, height=height, color_depth=tier)

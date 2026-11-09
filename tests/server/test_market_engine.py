@@ -6,20 +6,20 @@ from typing import Any
 
 import pytest
 
-from blacksite.content.loader import load_content
-from blacksite.server.clock import TICK_HZ
-from blacksite.server.items import make_item
-from blacksite.server.market import Bounties
-from blacksite.server.protocol import Frame
-from blacksite.server.rules.character import grade_threshold
-from blacksite.server.storage.db import Storage
+from karst41.content.loader import load_content
+from karst41.server.clock import TICK_HZ
+from karst41.server.items import make_item
+from karst41.server.market import Bounties
+from karst41.server.protocol import Frame
+from karst41.server.rules.character import grade_threshold
+from karst41.server.storage.db import Storage
 from tests.character_helpers import create, place
 from tests.harness import HeadlessServer
 
 
 @pytest.fixture(scope='module')
 def content() -> Any:
-    return load_content(Path(__file__).parents[2]/'src/blacksite/content')
+    return load_content(Path(__file__).parents[2]/'src/karst41/content')
 
 
 @pytest.fixture
@@ -137,7 +137,7 @@ def test_game_8_3_collect_preserves_instance_and_refuses_overweight(trade_game: 
     game.core.commerce.items[iid].ammo = 0
     assert owner.views.listing_item(owner.market.listings[lid]).ammo == 3
     game.core.commerce.items.pop(iid)
-    from blacksite.server.market_views import Panel
+    from karst41.server.market_views import Panel
     panel = Panel('market', terminal, 0, mine=True)
     assert owner.views.body(clients[0].session, panel)['rows'][0]['id'] == lid
 

@@ -2,10 +2,10 @@
 
 from dataclasses import replace
 
-from blacksite.content.schema import LootEntry
-from blacksite.server.progression import combat_xp
-from blacksite.server.storage.db import Storage
-from blacksite.server.world.actors import Actor
+from karst41.content.schema import LootEntry
+from karst41.server.progression import combat_xp
+from karst41.server.storage.db import Storage
+from karst41.server.world.actors import Actor
 from tests.npcs.test_engine import body, city, spawn
 
 

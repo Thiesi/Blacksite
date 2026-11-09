@@ -15,17 +15,17 @@ from unittest.mock import patch
 
 from accept_s10_netbbs import NativeProbe, wait
 from accept_s11_netbbs import profile
-from blacksite.content.loader import load_content
-from blacksite.content.schema import ObjectSpec
-from blacksite.content.validate import validate
-from blacksite.server.world.zone import ObjectState
-from blacksite.server import app as server_app
+from karst41.content.loader import load_content
+from karst41.content.schema import ObjectSpec
+from karst41.content.validate import validate
+from karst41.server.world.zone import ObjectState
+from karst41.server import app as server_app
 
 REPO = Path(__file__).resolve().parents[1]
 
 
 def fixture(root: Path) -> None:
-    source = REPO/'src/blacksite/content'
+    source = REPO/'src/karst41/content'
     local = root/'world/content.local'
     zones = local/'zones'
     zones.mkdir(parents=True, exist_ok=True)

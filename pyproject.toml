@@ -3,7 +3,7 @@ requires = ["setuptools>=68"]
 build-backend = "setuptools.build_meta"
 
 [project]
-name = "blacksite"
+name = "karst41"
 version = "0.0.20"
 description = "A real-time multiplayer door game for NetBBS."
 readme = "README.md"
@@ -17,23 +17,23 @@ dependencies = []
 test = ["pytest"]
 
 [project.scripts]
-blacksite = "blacksite.__main__:main"
+karst41 = "karst41.__main__:main"
 # Conveniences for humans. NetBBS launches the door with the venv
-# interpreter and `-m blacksite.door` (02-architecture.md section 8.1).
-blacksite-server = "blacksite.server.__main__:main"
-blacksite-door = "blacksite.door.__main__:main"
-blacksite-admin = "blacksite.admin.__main__:main"
-blacksite-bot = "blacksite.bot.__main__:main"
+# interpreter and `-m karst41.door` (02-architecture.md section 8.1).
+karst41-server = "karst41.server.__main__:main"
+karst41-door = "karst41.door.__main__:main"
+karst41-admin = "karst41.admin.__main__:main"
+karst41-bot = "karst41.bot.__main__:main"
 
 [tool.setuptools.packages.find]
 where = ["src"]
 
 [tool.setuptools.package-data]
-blacksite = ["content/**/*"]
+karst41 = ["content/**/*"]
 
 [tool.setuptools.exclude-package-data]
 # The broad content glob would otherwise ship bytecode caches.
-blacksite = ["**/__pycache__/*"]
+karst41 = ["**/__pycache__/*"]
 
 [tool.pytest.ini_options]
 testpaths = ["tests"]

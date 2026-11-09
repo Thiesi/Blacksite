@@ -3,7 +3,7 @@
 **Status:** done (PR #48)
 **Primary model:** Sonnet · **Reviewer:** none
 **Depends on:** S06 · **Milestone:** M1
-**Issue:** https://github.com/Thiesi/blacksite/issues/9
+**Issue:** https://github.com/Thiesi/Karst41/issues/9
 
 ## Goal
 
@@ -26,7 +26,7 @@ in the city.
 
 ## Scope
 
-- `src/blacksite/server/chat.py`: channels `say` (20-tile radius in the
+- `src/karst41/server/chat.py`: channels `say` (20-tile radius in the
   zone), `shout` (whole zone), `whisper` (player anywhere by character
   name or BBS handle), `faction` and `crew` (routed to members; S20/S22
   set membership), `system` (server), `zone` (ambient and object lines,

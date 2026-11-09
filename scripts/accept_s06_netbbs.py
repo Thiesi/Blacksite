@@ -17,8 +17,8 @@ import asyncssh
 
 from accept_s04_netbbs import (Caller, Database, DatabaseLane, DoorProfile,
     FakeTerminal, REPO, SSHServer, TelnetServer, browse_doors, create_door, create_user)
-from blacksite.admin.client import request
-from blacksite.server.app import Server
+from karst41.admin.client import request
+from karst41.server.app import Server
 
 
 class ZoneCaller(Caller):
@@ -55,10 +55,10 @@ async def accept(root: Path, door_python: Path, show: bool) -> None:
     lane = DatabaseLane(db.path)
     users: dict[str, object] = {}
     owner = create_user(db, "s06owner", password="LocalProbe-S06", user_level=10)
-    create_door(db, "Blacksite", str(door_python.absolute()), args=("-m", "blacksite.door"), creator=owner,
+    create_door(db, "Karst 41", str(door_python.absolute()), args=("-m", "karst41.door"), creator=owner,
         profile=DoorProfile(install_dir=str(REPO), encoding="utf-8", max_sessions=16,
             multinode_certified=True, time_limit=900,
-            environment={"DOOR_BLACKSITE_INSTALL_DIR": str(service.install_dir)}).validate())
+            environment={"DOOR_KARST41_INSTALL_DIR": str(service.install_dir)}).validate())
     failures: list[str] = []
 
     async def handler(session: object, key: str) -> None:
@@ -189,7 +189,7 @@ async def accept(root: Path, door_python: Path, show: bool) -> None:
                             mark = len(caller.output)
                             await caller.write(b"\x18y")
                             await caller.expect("Karst keeps your place.", mark)
-                            await caller.expect("Left Blacksite.", mark)
+                            await caller.expect("Left Karst 41.", mark)
                             await caller.write(b" ")
                             await caller.expect("Available doors", mark)
                             await caller.write(b"b")

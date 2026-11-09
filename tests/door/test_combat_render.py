@@ -5,9 +5,9 @@ from pathlib import Path
 
 import pytest
 
-from blacksite.content.loader import load_content
-from blacksite.door.model import Display
-from blacksite.server.protocol import Frame, encode
+from karst41.content.loader import load_content
+from karst41.door.model import Display
+from karst41.server.protocol import Frame, encode
 from tests.character_helpers import create, place
 from tests.fake_terminal import FakeTerminal
 from tests.harness import HeadlessServer
@@ -16,7 +16,7 @@ from tests.harness import HeadlessServer
 @pytest.mark.parametrize("width,height",[(80,24),(132,50)])
 @pytest.mark.parametrize("tier",["16","256","truecolor"])
 def test_target_hit_flash_and_dead_screen_keep_log_width_safe(info,repo_root: Path,width,height,tier) -> None:
-    game=HeadlessServer(load_content(repo_root/"src/blacksite/content"),character_state={})
+    game=HeadlessServer(load_content(repo_root/"src/karst41/content"),character_state={})
     clients=[]
     for uid,x in ((1,25),(2,27)):
         client=game.connect({"user_id":uid,"handle":f"BBS界{uid}","node_name":"test"},width=width,height=height)
@@ -57,7 +57,7 @@ def test_target_hit_flash_and_dead_screen_keep_log_width_safe(info,repo_root: Pa
 
 
 def test_vi_movement_and_sitrep_bindings_are_preserved(repo_root: Path) -> None:
-    tree=load_content(repo_root/"src/blacksite/content")
+    tree=load_content(repo_root/"src/karst41/content")
     vi=next(m for m in tree.keymaps.keymaps if m.id=="vi")
     assert "h" in vi.bindings["move_left"] and "H" in vi.bindings["sprint_left"]
     assert "w" in vi.bindings["sitrep"]
@@ -65,7 +65,7 @@ def test_vi_movement_and_sitrep_bindings_are_preserved(repo_root: Path) -> None:
 
 
 def test_ability_menu_close_returns_full_zone_then_quick_key_casts(info,repo_root: Path) -> None:
-    game=HeadlessServer(load_content(repo_root/"src/blacksite/content"),character_state={})
+    game=HeadlessServer(load_content(repo_root/"src/karst41/content"),character_state={})
     client=game.connect();create(game,client,archetype=2,name="Cantor",card="none")
     display=Display(info)
     def receive() -> None:

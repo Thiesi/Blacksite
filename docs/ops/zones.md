@@ -5,7 +5,7 @@ Install Blacksite 0.0.2 or newer in the door's own venv. Follow the
 dimensions and multi-session profile. Start the service separately:
 
 ```powershell
-blacksite serve --install-dir .test-tmp/world --tcp `
+karst41 serve --install-dir .test-tmp/world --tcp `
   --spawn-zone vatside-wake-hall
 ```
 
@@ -46,7 +46,7 @@ the idle measurement covers those 60 seconds.
 and `result.json` stay under the supplied root. Use a new root each run.
 The Linux service acceptance job repeats this against an installed wheel.
 
-For a disposable automated mover, use `blacksite.bot --help` and its
+For a disposable automated mover, use `karst41.bot --help` and its
 `--walk N --seed N` options with that world's credential. It acknowledges
 views and sends seeded random movement intents; no simulation rule runs
 in the bot or door client.

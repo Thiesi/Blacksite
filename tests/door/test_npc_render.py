@@ -4,9 +4,9 @@ from dataclasses import replace
 
 import pytest
 
-from blacksite.content.loader import load_content
-from blacksite.door.model import Display
-from blacksite.server.protocol import encode
+from karst41.content.loader import load_content
+from karst41.door.model import Display
+from karst41.server.protocol import encode
 from tests.character_helpers import create, place
 from tests.fake_terminal import FakeTerminal
 from tests.harness import HeadlessServer
@@ -15,7 +15,7 @@ from tests.harness import HeadlessServer
 @pytest.mark.parametrize("width,height",[(80,24),(132,50)])
 @pytest.mark.parametrize("tier",["16","256","truecolor"])
 def test_npc_glyph_heat_and_wide_handle_are_width_safe(repo_root,info,width,height,tier):
-    game=HeadlessServer(load_content(repo_root/"src/blacksite/content"),character_state={})
+    game=HeadlessServer(load_content(repo_root/"src/karst41/content"),character_state={})
     caller=game.connect(width=width,height=height)
     create(game,caller,name="Patrol界",card="none")
     place(game,caller,"core-plaza",(20,6))

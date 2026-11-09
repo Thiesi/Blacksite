@@ -15,9 +15,9 @@ import traceback
 
 from accept_s10_netbbs import NativeProbe, wait
 from accept_s16_netbbs import key, commit_key, select, use, loan
-from blacksite.content.schema import ObjectSpec
-from blacksite.server.inventory import Inventory
-from blacksite.server.world.zone import ObjectState
+from karst41.content.schema import ObjectSpec
+from karst41.server.inventory import Inventory
+from karst41.server.world.zone import ObjectState
 
 
 def fixtures(probe: NativeProbe, connection) -> None:

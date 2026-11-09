@@ -3,7 +3,7 @@ name: S38 truce acceptance
 on:
   pull_request:
     paths:
-      - 'src/blacksite/**'
+      - 'src/karst41/**'
       - 'tests/**'
       - 'scripts/accept_s38_netbbs.py'
       - 'scripts/accept_p4_netbbs.py'

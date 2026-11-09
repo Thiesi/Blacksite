@@ -8,8 +8,8 @@ from typing import Literal
 
 import pytest
 
-from blacksite.content.formats import DecodeError, decode, locate_path, parse_json
-from blacksite.content.loader import load_content
+from karst41.content.formats import DecodeError, decode, locate_path, parse_json
+from karst41.content.loader import load_content
 from tests.content.support import World, find
 
 

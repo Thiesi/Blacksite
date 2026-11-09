@@ -1,6 +1,6 @@
 """Game 3.5: Programs learns semantic changes, excluding timer refreshes."""
 
-from blacksite.server.lattice.programs import Cast
+from karst41.server.lattice.programs import Cast
 from tests.lattice.test_engine import jack, runners
 
 

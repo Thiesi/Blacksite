@@ -3,7 +3,7 @@
 **Status:** done (PR #85)
 **Primary model:** Sonnet · **Reviewer:** automated review, technical lead
 **Depends on:** none · **Milestone:** presentation track
-**Issue:** https://github.com/Thiesi/Blacksite/issues/76
+**Issue:** https://github.com/Thiesi/Karst41/issues/76
 
 From `docs/plan/03-presentation-integration.md` §7.3 and the budgets in
 §13.5, adopted by the owner on 2026-10-28 (D-T1).
@@ -58,6 +58,6 @@ authored instance of the same text still fails. There is no code-point
 or known-violation allowlist, and no rendering correction in P1 itself.
 Commands and evidence boundaries: [verification guide][guide].
 
-[cpu]: https://github.com/Thiesi/Blacksite/issues/76#issuecomment-6478100282
-[cp437]: https://github.com/Thiesi/Blacksite/issues/76#issuecomment-6485149621
+[cpu]: https://github.com/Thiesi/Karst41/issues/76#issuecomment-6478100282
+[cp437]: https://github.com/Thiesi/Karst41/issues/76#issuecomment-6485149621
 [guide]: ../../ops/presentation-verification.md

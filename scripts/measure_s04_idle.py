@@ -16,7 +16,7 @@ import time
 
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
 
-from blacksite.server.app import Server
+from karst41.server.app import Server
 from tests.fake_terminal import FakeTerminal
 
 
@@ -27,7 +27,7 @@ async def measure(root: Path, seconds: int) -> None:
     drop = root / "door_info.json"
     drop.write_text(json.dumps({"handle": "Idle界", "user_id": "idle-probe", "terminal_width": 80,
         "terminal_height": 24, "color_depth": "256", "node_name": "local"}), encoding="utf-8")
-    env = {**os.environ, "NETBBS_DOOR_INFO": str(drop.resolve()), "BLACKSITE_INSTALL_DIR": str(service.install_dir)}
+    env = {**os.environ, "NETBBS_DOOR_INFO": str(drop.resolve()), "KARST41_INSTALL_DIR": str(service.install_dir)}
     executable = sys.executable
     if os.name == "nt":
         # A Windows venv python.exe is a redirector whose CPU time excludes
@@ -35,7 +35,7 @@ async def measure(root: Path, seconds: int) -> None:
         # runtime directly, loading the same package source explicitly.
         executable = sys._base_executable
         env["PYTHONPATH"] = str(Path(__file__).resolve().parent.parent / "src")
-    child = await asyncio.create_subprocess_exec(executable, "-m", "blacksite.door", env=env,
+    child = await asyncio.create_subprocess_exec(executable, "-m", "karst41.door", env=env,
         stdin=asyncio.subprocess.PIPE, stdout=asyncio.subprocess.PIPE, stderr=asyncio.subprocess.PIPE)
     terminal = FakeTerminal()
     handle = None

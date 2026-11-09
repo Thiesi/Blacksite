@@ -3,7 +3,7 @@
 **Status:** done (PR #58)
 **Primary model:** Sonnet · **Reviewer:** none
 **Depends on:** S12, S15, S16 · **Milestone:** M3
-**Issue:** https://github.com/Thiesi/blacksite/issues/17
+**Issue:** https://github.com/Thiesi/Karst41/issues/17
 
 ## Goal
 
@@ -136,7 +136,7 @@ with its listed inputs.
   preserves permissions, slots, durations, tolerance and stack counts.
 - Workshop filters follow output capabilities: the chemical/melee
   workshop also accepts the catalog Stinger chemical drone (game 8.4).
-- Reconcile accepted [PR #38](https://github.com/Thiesi/Blacksite/pull/38)
+- Reconcile accepted [PR #38](https://github.com/Thiesi/Karst41/pull/38)
   findings 12/14. S18/S21/S23/S25/S30 preserve this quality policy.
   S25 owns real Scour and workshop placement and native acceptance.
 - Keep harvest and craft channels on the same `channel` mechanism S15
@@ -146,7 +146,7 @@ with its listed inputs.
 
 Native provenance correction: the original local run used an older
 installed client after NetBBS removed PYTHONPATH. The original separate
-installed-wheel CI remains valid. S22 [PR #61](https://github.com/Thiesi/Blacksite/pull/61)
+installed-wheel CI remains valid. S22 [PR #61](https://github.com/Thiesi/Karst41/pull/61)
 repeats all four steps on version/source-verified 0.0.16 at 80x24 and
 132x50, with wide names and 16 colours, through actual Windows TTY
 NetBBS native stdio. `.test-tmp/native-s17-current16` retains the passing

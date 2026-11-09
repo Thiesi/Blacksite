@@ -4,12 +4,12 @@ from dataclasses import asdict, replace
 
 import pytest
 
-from blacksite.content.loader import load_content
-from blacksite.door.cells import display_width
-from blacksite.door.log import rows
-from blacksite.door.layout import compute
-from blacksite.door.model import Display
-from blacksite.server.protocol import Frame
+from karst41.content.loader import load_content
+from karst41.door.cells import display_width
+from karst41.door.log import rows
+from karst41.door.layout import compute
+from karst41.door.model import Display
+from karst41.server.protocol import Frame
 from tests.fake_terminal import FakeTerminal
 
 
@@ -51,7 +51,7 @@ def test_word_that_fits_a_continuation_is_not_split() -> None:
 @pytest.mark.parametrize('width,height',[(80,24),(132,50)])
 @pytest.mark.parametrize('tier',['16','256','truecolor'])
 def test_channel_prefix_colours(info,repo_root,width,height,tier):
-    content=load_content(repo_root/'src/blacksite/content')
+    content=load_content(repo_root/'src/karst41/content')
     model=Display(replace(info,width=width,height=height,color_depth=tier))
     model.receive(Frame('welcome',{'proto':1,'server_version':'test','player':None,'keymap':{},'palette':asdict(content.palette),'motd':''}),0)
     messages=[{'channel':channel,'role':role,'text':'Wide界: hello','at':'now'} for channel,role in

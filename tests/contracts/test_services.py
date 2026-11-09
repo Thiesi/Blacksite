@@ -5,9 +5,9 @@ import json
 
 import pytest
 
-from blacksite.content.schema import Allocation, Effect, ServiceNodeTemplate, Reward
-from blacksite.server.contracts.engine import Engine
-from blacksite.server.contracts.services import (
+from karst41.content.schema import Allocation, Effect, ServiceNodeTemplate, Reward
+from karst41.server.contracts.engine import Engine
+from karst41.server.contracts.services import (
     ALLOCATION_SECONDS, FAULT_INTERVAL, FAULT_SECONDS, RESERVATION_SECONDS, Services,
 )
 from tests.contracts.test_engine import finish, party, template

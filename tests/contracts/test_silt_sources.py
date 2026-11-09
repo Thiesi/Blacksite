@@ -3,10 +3,10 @@
 import pytest
 from typing import Any
 
-from blacksite.content.schema import Bundle, DataSpec, Stage, StageTarget
-from blacksite.server.contracts.ledger import Ledger
-from blacksite.server.lattice.silt import generate
-from blacksite.server.lattice.silt_scene import BandGraph
+from karst41.content.schema import Bundle, DataSpec, Stage, StageTarget
+from karst41.server.contracts.ledger import Ledger
+from karst41.server.lattice.silt import generate
+from karst41.server.lattice.silt_scene import BandGraph
 from tests.contracts.test_engine import template
 from tests.lattice.test_engine import intent, runners
 from tests.lattice.test_silt_encounters import descend

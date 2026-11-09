@@ -2,8 +2,8 @@
 from copy import deepcopy
 from datetime import timedelta
 import pytest
-from blacksite.server.clock import TICK_HZ
-from blacksite.server.items import make_item
+from karst41.server.clock import TICK_HZ
+from karst41.server.items import make_item
 from tests.lattice.test_engine import runners, intent
 from tests.lattice.test_interlock import cut_fixture
 from tests.lattice.test_private_cores import apartment_fixture, private_entry
@@ -145,7 +145,7 @@ def test_ui_5_manual_cut_is_only_offered_adjacent_and_charge_quote_is_visible(ru
 
 
 def test_ui_5_stale_hardware_confirmation_does_not_start_a_paid_cut(runners):
-    from blacksite.server.protocol import Frame
+    from karst41.server.protocol import Frame
     game, a, _, _ = runners
     zid, oid = cut_fixture(game, a)
     interlock = game.core.lattice.interlock

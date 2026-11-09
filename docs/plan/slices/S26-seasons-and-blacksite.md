@@ -3,7 +3,7 @@
 **Status:** planned
 **Primary model:** Opus · **Reviewer:** Fable (level design and finale review before merge)
 **Depends on:** S21, S19, S24, S25, S27, S22 · **Milestone:** M5
-**Issue:** https://github.com/Thiesi/blacksite/issues/26
+**Issue:** https://github.com/Thiesi/Karst41/issues/26
 
 ## Goal
 
@@ -149,7 +149,7 @@ season bundles or the game balance are already complete.
 
 ### S20 faction integration handoff
 
-Reference: [PR #38](https://github.com/Thiesi/Blacksite/pull/38) and S20.
+Reference: [PR #38](https://github.com/Thiesi/Karst41/pull/38) and S20.
 
 Keep immutable event plan IDs and current rank eligibility when settling
 event/season state. Expire Convoy reservations explicitly. Free Kin
@@ -159,7 +159,7 @@ faction-membership authority.
 
 ### S22 crew integration handoff
 
-Reference: [PR #61](https://github.com/Thiesi/Blacksite/pull/61).
+Reference: [PR #61](https://github.com/Thiesi/Karst41/pull/61).
 
 Live crew IDs and five-minute Silt sharing do not identify a persistent
 expedition. Freeze consenting player/identity IDs under the expedition's
@@ -171,9 +171,9 @@ and inactive later-season authoring requirements.
 <!-- s19-services:start -->
 ### S19 source and service handoff
 
-Reference: [S19 PR #62](https://github.com/Thiesi/Blacksite/pull/62),
+Reference: [S19 PR #62](https://github.com/Thiesi/Karst41/pull/62),
 [acceptance record](../../ops/s19-acceptance.md) and
-[PR #38](https://github.com/Thiesi/Blacksite/pull/38).
+[PR #38](https://github.com/Thiesi/Karst41/pull/38).
 
 S19 supplies the implemented source interfaces, 68 authored contracts
 and four service nodes. Full root pytest passed 1344 tests with one
@@ -214,9 +214,9 @@ Close the S25/S26 human relay/earning/clinic pacing gate with actual play.
 <!-- s24-handoff:start -->
 ### S24 event integration and acceptance handoff
 
-Reference: [S24 #24](https://github.com/Thiesi/Blacksite/issues/24),
-[PR #38](https://github.com/Thiesi/Blacksite/pull/38) and
-[platform #56](https://github.com/Thiesi/Blacksite/issues/56).
+Reference: [S24 #24](https://github.com/Thiesi/Karst41/issues/24),
+[PR #38](https://github.com/Thiesi/Karst41/pull/38) and
+[platform #56](https://github.com/Thiesi/Karst41/issues/56).
 
 Bind `Events.tuning(event_id, kind)` to committed season modifiers:
 `weight` (1..10), `spawn_rate` (1..3), `wave_cap_bonus` (0..2), and
@@ -237,8 +237,8 @@ positive opt-in gate; gameplay warnings stay in game.
 <!-- s24-review-policy:start -->
 ### S24 practical review follow-up
 
-Reference: [PR #65](https://github.com/Thiesi/Blacksite/pull/65), retaining
-[PR #38](https://github.com/Thiesi/Blacksite/pull/38) and #56.
+Reference: [PR #65](https://github.com/Thiesi/Karst41/pull/65), retaining
+[PR #38](https://github.com/Thiesi/Karst41/pull/38) and #56.
 
 The hot event receipt retains 128 closed plans plus live/current
 transitions. Personal forecasts retain 128 recent reads and compact final

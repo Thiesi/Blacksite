@@ -64,11 +64,11 @@ The existing P6 door reference remains a separate required workflow.
 ## Pinned packet source
 
 The packet command now requires `--source-tree <Git object id>` naming
-the trusted execution head's `src/blacksite` tree. Supply that pin from
+the trusted execution head's `src/karst41` tree. Supply that pin from
 the reviewed checkout, not from an artifact:
 
 ```text
-git rev-parse <execution-head>:src/blacksite
+git rev-parse <execution-head>:src/karst41
 python scripts/presentation_p6_packet.py --artifacts-root <downloads>
   --metadata <artifacts.json> --run <run-id> --head <execution-head>
   --source-tree <pinned-source-tree> --output <new-packet-directory>

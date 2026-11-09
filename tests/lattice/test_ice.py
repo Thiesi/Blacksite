@@ -5,14 +5,14 @@ from random import Random
 
 import pytest
 
-from blacksite.content.loader import load_content
-from blacksite.server.lattice.ice import Ice, Runner
-from blacksite.server.lattice.programs import Effects, trace_gain
+from karst41.content.loader import load_content
+from karst41.server.lattice.ice import Ice, Runner
+from karst41.server.lattice.programs import Effects, trace_gain
 
 
 @pytest.fixture(scope="module")
 def catalog():
-    return load_content(Path(__file__).parents[2] / "src/blacksite/content")
+    return load_content(Path(__file__).parents[2] / "src/karst41/content")
 
 
 def defender(catalog, kind, tier=3):

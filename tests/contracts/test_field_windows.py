@@ -2,9 +2,9 @@
 from dataclasses import replace
 from pathlib import Path
 
-from blacksite.content.loader import load_content
-from blacksite.content.schema import Stage, StageTarget
-from blacksite.server.contracts.engine import Engine, Fact, Participant
+from karst41.content.loader import load_content
+from karst41.content.schema import Stage, StageTarget
+from karst41.server.contracts.engine import Engine, Fact, Participant
 from tests.contracts.test_engine import template
 from tests.contracts.test_adapter import live, shipped
 
@@ -50,7 +50,7 @@ def test_game_9_4_window_starts_on_launch_commit_and_survives_restart_then_retri
 
 
 def test_game_9_4_authored_race_discloses_window_and_relaunch_point():
-    content=load_content(Path(__file__).parents[2]/'src/blacksite/content')
+    content=load_content(Path(__file__).parents[2]/'src/karst41/content')
     job=content.contracts['fer-s1-1-race']
     assert job.stages[0].target.zone == 'scour-landing'
     assert job.stages[1].window_seconds == 180

@@ -6,9 +6,9 @@ from pathlib import Path
 
 import pytest
 
-from blacksite.content.loader import load_content
-from blacksite.door.model import Display
-from blacksite.server.protocol import Frame, encode
+from karst41.content.loader import load_content
+from karst41.door.model import Display
+from karst41.server.protocol import Frame, encode
 from tests.character_helpers import act, create, place
 from tests.fake_terminal import FakeTerminal
 from tests.harness import HeadlessServer, LATTICE_PEER
@@ -16,7 +16,7 @@ from tests.harness import HeadlessServer, LATTICE_PEER
 
 @pytest.fixture(scope="module")
 def sector_views():
-    content = load_content(Path(__file__).parents[2]/"src/blacksite/content")
+    content = load_content(Path(__file__).parents[2]/"src/karst41/content")
     game = HeadlessServer(content, character_state={})
     callers = []
     for uid, name, tile in ((1, "First", (30, 5)), (2, LATTICE_PEER.text, (31, 6))):

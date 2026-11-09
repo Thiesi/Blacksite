@@ -38,6 +38,6 @@ No change to the default constants for existing doors.
 ## What Blacksite does meanwhile
 
 The client warns at five and one minutes before the cap, reading the
-cap from the profile environment variable `BLACKSITE_SESSION_LIMIT`
+cap from the profile environment variable `KARST41_SESSION_LIMIT`
 (default 3600) because the platform does not tell the door; the server
 treats a reconnect within 60 s as the same session with no penalty.

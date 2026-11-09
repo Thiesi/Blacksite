@@ -2,7 +2,7 @@
 
 import pytest
 
-from blacksite.server.lattice.presence import (
+from karst41.server.lattice.presence import (
     EscapeChannel, Presence, directional_neighbour, movement_ticks, recover_integrity,
 )
 

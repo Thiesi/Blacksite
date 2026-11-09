@@ -4,8 +4,8 @@ from dataclasses import asdict, replace
 
 import pytest
 
-from blacksite.door.model import Display
-from blacksite.server.protocol import Frame
+from karst41.door.model import Display
+from karst41.server.protocol import Frame
 from tests.door.test_progression_menus import render
 from tests.server.test_clinics import clinic, review
 from tests.server.test_substances import give

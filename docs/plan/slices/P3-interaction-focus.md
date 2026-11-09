@@ -3,7 +3,7 @@
 **Status:** done (PR #103)
 **Primary model:** Opus · **Reviewer:** automated review, technical lead, presentation lead (wording)
 **Depends on:** P1 · **Milestone:** presentation track
-**Issue:** https://github.com/Thiesi/Blacksite/issues/94
+**Issue:** https://github.com/Thiesi/Karst41/issues/94
 
 From `docs/plan/03-presentation-integration.md` §3.5, §4 Refactor 2 and
 §7.3, adopted by the owner on 2026-10-28 (D-T1). The canon is

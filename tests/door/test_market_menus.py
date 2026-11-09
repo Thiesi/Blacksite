@@ -6,10 +6,10 @@ from typing import Any
 
 import pytest
 
-from blacksite.server.commerce import CommerceMenu
-from blacksite.door.model import Display
-from blacksite.server.market_views import Panel
-from blacksite.server.protocol import Frame, ProtocolError, encode
+from karst41.server.commerce import CommerceMenu
+from karst41.door.model import Display
+from karst41.server.market_views import Panel
+from karst41.server.protocol import Frame, ProtocolError, encode
 from tests.character_helpers import act, place
 from tests.door.test_relay_menus import render
 from tests.server.test_market_engine import content, listed, trade_game

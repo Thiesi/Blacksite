@@ -6,10 +6,10 @@ from typing import Any
 
 import pytest
 
-from blacksite.content.schema import (
+from karst41.content.schema import (
     ContractApproach, ContractTemplate, Permit, PublicationOption, Reward, Stage, StageTarget,
 )
-from blacksite.server.contracts.engine import Engine, Fact, Participant, objective_count
+from karst41.server.contracts.engine import Engine, Fact, Participant, objective_count
 
 
 def template(tid: str = 'clear', **changes: Any) -> ContractTemplate:

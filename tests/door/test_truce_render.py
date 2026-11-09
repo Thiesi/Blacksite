@@ -4,9 +4,9 @@ from dataclasses import replace
 
 import pytest
 
-from blacksite.content.loader import load_content
-from blacksite.door.model import Display
-from blacksite.server.protocol import Frame
+from karst41.content.loader import load_content
+from karst41.door.model import Display
+from karst41.server.protocol import Frame
 from tests.character_helpers import create, place
 from tests.fake_terminal import FakeTerminal
 from tests.harness import HeadlessServer
@@ -18,7 +18,7 @@ from tests.presentation.snapshots import assert_golden
 @pytest.mark.parametrize("presentation", [False, True])
 @pytest.mark.parametrize("keeper", ["sable", "unmoored"])
 def test_ui_2_1_truce_header_and_warning(repo_root, info, request, caller_provenance, width, height, tier, presentation, keeper):
-    game = HeadlessServer(load_content(repo_root/"src/blacksite/content"), character_state={})
+    game = HeadlessServer(load_content(repo_root/"src/karst41/content"), character_state={})
     caller = game.connect({"user_id": 1, "handle": "Truce界", "node_name": "S38"}, width=width, height=height)
     create(game, caller, card="none")
     place(game, caller, "sodium-row", (25, 3))

@@ -5,10 +5,10 @@ from pathlib import Path
 
 import pytest
 
-from blacksite.content.loader import load_content
-from blacksite.door.model import Display
-from blacksite.server.protocol import Frame, encode
-from blacksite.server.commerce import CommerceMenu
+from karst41.content.loader import load_content
+from karst41.door.model import Display
+from karst41.server.protocol import Frame, encode
+from karst41.server.commerce import CommerceMenu
 from tests.fake_terminal import FakeTerminal
 from tests.harness import HeadlessServer
 from tests.test_fabrication import caller, setup_recipe, grant
@@ -16,7 +16,7 @@ from tests.test_fabrication import caller, setup_recipe, grant
 
 @pytest.mark.parametrize("size", [(80, 24), (132, 50)])
 def test_ui_5_workshop_shows_inputs_skill_roll_and_back(info, repo_root, size):
-    content = load_content(repo_root/"src/blacksite/content")
+    content = load_content(repo_root/"src/karst41/content")
     game = HeadlessServer(content, character_state={})
     client, player = caller(game)
     target = setup_recipe(game, client, player, "sch_ring_wrench")
@@ -38,7 +38,7 @@ def test_ui_5_workshop_shows_inputs_skill_roll_and_back(info, repo_root, size):
 
 @pytest.mark.parametrize("size", [(80, 24), (132, 50)])
 def test_ui_5_effective_crafted_damage_precedes_flavour_in_inventory(info, repo_root, size):
-    content = load_content(repo_root/"src/blacksite/content")
+    content = load_content(repo_root/"src/karst41/content")
     game = HeadlessServer(content, character_state={})
     client, player = caller(game)
     item = grant(game, player, "wpn_ferry_wrench")

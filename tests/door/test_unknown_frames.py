@@ -10,11 +10,11 @@ from typing import Any
 
 import pytest
 
-from blacksite.door.client import run
-from blacksite.door.connection import Connection, ServerFrames
-from blacksite.door.doorinfo import DoorInfo
-from blacksite.door.model import Display
-from blacksite.server.protocol import MAX_FRAME, Frame, ProtocolError, decode, encode, read_frame
+from karst41.door.client import run
+from karst41.door.connection import Connection, ServerFrames
+from karst41.door.doorinfo import DoorInfo
+from karst41.door.model import Display
+from karst41.server.protocol import MAX_FRAME, Frame, ProtocolError, decode, encode, read_frame
 from tests.door.test_display import welcome
 from tests.fake_terminal import FakeTerminal
 from tests.harness import HeadlessServer
@@ -43,7 +43,7 @@ def test_unknown_type_burst_logs_once_and_preserves_following_frame(caplog: pyte
         assert await policy.read(reader_for(wire({"type": "future"})
                     + encode(Frame("pong", {"t": 43})))) == Frame("pong", {"t": 43})
 
-    with caplog.at_level(logging.INFO, logger="blacksite.door.connection"):
+    with caplog.at_level(logging.INFO, logger="karst41.door.connection"):
         asyncio.run(scenario())
     assert [record.args for record in caplog.records] == [("future",), ("other-future",)]
 
@@ -169,7 +169,7 @@ def test_handshake_does_not_tolerate_extensions(
         writer = Writer()
         async def connect(install: Path) -> tuple[asyncio.StreamReader, Writer]:
             return reader_for(wire(response)), writer
-        monkeypatch.setattr("blacksite.door.connection.connect", connect)
+        monkeypatch.setattr("karst41.door.connection.connect", connect)
         (info.install / "secrets").mkdir()
         (info.install / "secrets" / "door.secret").write_text("00" * 32, encoding="ascii")
         connection = Connection()
@@ -244,7 +244,7 @@ def test_two_pumps_ignore_unknown_type_but_disconnect_for_invalid_known_frame(
             def leave(self, farewell: bytes) -> None:
                 pass
         link = Link()
-        monkeypatch.setattr("blacksite.door.client.Connection", lambda: link)
+        monkeypatch.setattr("karst41.door.client.Connection", lambda: link)
         terminal = Terminal()
         await asyncio.wait_for(run(info, terminal), 3)
         assert finished.is_set() and link.opens == 1

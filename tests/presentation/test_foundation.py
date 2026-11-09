@@ -9,22 +9,22 @@ from types import SimpleNamespace
 
 import pytest
 
-from blacksite.content.loader import ContentTree, load_content
-from blacksite.door.cells import CellBuffer
-from blacksite.door.palette import Palette, Style
+from karst41.content.loader import ContentTree, load_content
+from karst41.door.cells import CellBuffer
+from karst41.door.palette import Palette, Style
 from tests.ansi_style import Rendition
 from tests.fake_terminal import FakeTerminal
 from tests.presentation.mechanics import fingerprint, walk, zone_seed
 from tests.presentation.snapshots import assert_golden, canonical, cp437_problems, snapshot, write_packet
-from blacksite.door.doorinfo import DoorInfo
-from blacksite.door.model import Display
-from blacksite.server.protocol import Frame
+from karst41.door.doorinfo import DoorInfo
+from karst41.door.model import Display
+from karst41.server.protocol import Frame
 from tests.harness import WIDE_HANDLE
 
 
 @pytest.fixture(scope='module')
 def content() -> ContentTree:
-    return load_content(Path(__file__).parents[2]/'src/blacksite/content')
+    return load_content(Path(__file__).parents[2]/'src/karst41/content')
 
 
 def test_sgr_semantics_normalize_resets_incremental_colours_and_attributes() -> None:

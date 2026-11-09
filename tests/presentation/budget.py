@@ -10,9 +10,9 @@ from pathlib import Path
 import time
 from typing import Any, Callable, TypeVar
 
-from blacksite.content.loader import ContentTree
-from blacksite.door.doorinfo import DoorInfo
-from blacksite.door.model import Display
+from karst41.content.loader import ContentTree
+from karst41.door.doorinfo import DoorInfo
+from karst41.door.model import Display
 from tests.character_helpers import place
 from tests.presentation.mechanics import character_game
 

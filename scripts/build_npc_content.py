@@ -6,7 +6,7 @@ Run from the repository root. Runtime loads the generated JSON only.
 import json
 from pathlib import Path
 
-ROOT = Path("src/blacksite/content")
+ROOT = Path("src/karst41/content")
 
 
 def write(path: Path, value: object) -> None:

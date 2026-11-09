@@ -3,7 +3,7 @@ name: Issue 67 display acceptance
 on:
   pull_request:
     paths:
-      - 'src/blacksite/**'
+      - 'src/karst41/**'
       - 'scripts/accept_issue67_netbbs.py'
       - 'scripts/accept_s10_netbbs.py'
       - '.github/workflows/issue67-acceptance.yml'

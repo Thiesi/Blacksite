@@ -8,26 +8,26 @@ are unchanged.
 
 ## Outcome and owner decision
 
-The [captured failure](https://github.com/Thiesi/Blacksite/pull/166#issuecomment-6697673052)
+The [captured failure](https://github.com/Thiesi/Karst41/pull/166#issuecomment-6697673052)
 at `e6ec3d6`, S11 132x50, records a 108.188959 ms successful commit at
 tick 7183. Writes took 109.447249 ms wall / 1.503110 ms thread CPU; the
 unchanged gate failed at 113.895432 ms with 99 samples. The
-[paired manifest](https://github.com/Thiesi/Blacksite/pull/166#issuecomment-6697704773)
+[paired manifest](https://github.com/Thiesi/Karst41/pull/166#issuecomment-6697704773)
 retains vectors, spans, hashes and artifact pointers. The committed
 [summary](s40-evidence/e6ec3d6.json) preserves both final gate vectors
 and commit spans from that record. This names the operation, not a
 particular sync, checkpoint, locking or scheduler wait.
 
-The [extended baseline](https://github.com/Thiesi/Blacksite/pull/166#issuecomment-6698925746)
+The [extended baseline](https://github.com/Thiesi/Karst41/pull/166#issuecomment-6698925746)
 at `fa3a108` observed 33 checkpoint/restart cycles in each 4,096-commit
 stream. No commit exceeded 5 ms; maxima were 2.146170 / 3.078415 ms.
 These fresh commerce-only controls do not reproduce the aged game's
 mixed writes or disprove intermittent stalls.
 
-On 2026-11-07 the [owner approved S40's replacement done criteria](https://github.com/Thiesi/Blacksite/pull/166#issuecomment-6699732646):
+On 2026-11-07 the [owner approved S40's replacement done criteria](https://github.com/Thiesi/Karst41/pull/166#issuecomment-6699732646):
 name the operation with evidence, save the exact gate samples and commit
 timer in S11 artifacts, and keep the
-[off-loop FULL design note](https://github.com/Thiesi/Blacksite/pull/166#issuecomment-6698930471)
+[off-loop FULL design note](https://github.com/Thiesi/Karst41/pull/166#issuecomment-6698930471)
 on file. The worker is not built now; it is reopened if stalls appear
 on real hardware or under real load. Commits stay synchronous and
 `synchronous=FULL` stays. No product fix or outside-game finding is
@@ -44,7 +44,7 @@ for ten seconds.
 
 The canonical windows use `WriteProfile(trace_writes=False)` for the
 synchronous status snapshot. Following technical-lead record
-[6696717829](https://github.com/Thiesi/Blacksite/pull/166#issuecomment-6696717829),
+[6696717829](https://github.com/Thiesi/Karst41/pull/166#issuecomment-6696717829),
 `MinimalProfile` adds a sparse commerce-commit timer and two coarse loop
 boundaries. There are no write wrappers, SQLite proxy, rusage calls or
 new thread CPU clocks in these windows. The original subsystem, GC and
@@ -86,7 +86,7 @@ The small `npc-write-shape-<size>.json` manifest records its SHA-256,
 byte count, export duration and richest call's labels/parent indices.
 The benchmark reads that manifest instead of loading the whole trace.
 
-Use one fixed local proof root, `blacksite-proof/s40` under the system
+Use one fixed local proof root, `karst41-proof/s40` under the system
 temp folder. Publish durable evidence as a GitHub artifact, on the PR
 or under `docs/`, then delete proof outputs, environments, wheels,
 clones and downloads. TEMP is not storage. The merged guard applies.
@@ -115,7 +115,7 @@ separately bracketed durations.
 
 ## Handling an S11 failure
 
-The [owner's handling](https://github.com/Thiesi/Blacksite/pull/166#issuecomment-6699732646)
+The [owner's handling](https://github.com/Thiesi/Karst41/pull/166#issuecomment-6699732646)
 keeps the 10 ms limit and the failed check. It changes who may rule a
 demonstrated commit stall non-blocking; it does not turn a failure into
 a pass or allow a retry to clear it.
@@ -183,7 +183,7 @@ After the final canonical result is saved, the workflow runs
 `benchmark_s40_disk.py` in a new database under the same proof `world/`
 directory. The original 256-commit, 4 KiB baseline did not demonstrate
 checkpoint coverage. Following lead record
-[6697695642](https://github.com/Thiesi/Blacksite/pull/166#issuecomment-6697695642),
+[6697695642](https://github.com/Thiesi/Karst41/pull/166#issuecomment-6697695642),
 the extended baseline runs 4,096 actual `Storage.commerce_write` calls.
 Its representative player-only skill receipt is frozen after the
 canonical result, using the largest current player record plus current
@@ -273,7 +273,7 @@ first native measurement below exposed that limit.
 
 ## First native measurement: 90a6981
 
-[Service run 42274954910](https://github.com/Thiesi/Blacksite/actions/runs/42274954910)
+[Service run 42274954910](https://github.com/Thiesi/Karst41/actions/runs/42274954910)
 used released NetBBS v7.45.0, Telnet to registered native stdio. It
 passed actual 600-second heat expiry and local response at both sizes.
 Each of the four gate vectors has 100 samples; selecting index 98
@@ -321,7 +321,7 @@ game or persistence fix, root cause, or slice completion is claimed.
 
 ## Second native measurement: cd16740
 
-[Service run 42282914816](https://github.com/Thiesi/Blacksite/actions/runs/42282914816)
+[Service run 42282914816](https://github.com/Thiesi/Karst41/actions/runs/42282914816)
 passed actual heat expiry/local response at both sizes, and S24 passed
 both sizes without retrying the old failed job. Its
 [summary](s40-evidence/cd16740.json) preserves the second timing failure.

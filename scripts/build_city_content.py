@@ -3,7 +3,7 @@
 Draft output defaults to .test-tmp/s25-city-draft. Source sketches supply
 proportions, not tile counts. Public paths and actual anchors are checked
 after scaling. The shipped source is changed only with --output pointing
-explicitly at src/blacksite/content.
+explicitly at src/karst41/content.
 """
 
 import argparse
@@ -23,9 +23,9 @@ from typing import Any
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT/'src'))
 
-from blacksite.content.validate import door_wall_axis
+from karst41.content.validate import door_wall_axis
 
-SHIPPED = ROOT/'src/blacksite/content'
+SHIPPED = ROOT/'src/karst41/content'
 SECTORS = {'spire': 'lat-spire', 'tramyard': 'lat-tramyard', 'sink': 'lat-sink',
            'chapel': 'lat-chapel-ward', 'oldworks': 'lat-old-works',
            'under': 'lat-undercity', 'scour': 'lat-scour'}

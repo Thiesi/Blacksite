@@ -1,4 +1,4 @@
-"""Shared fixtures for the Blacksite test suite.
+"""Shared fixtures for the Karst 41 test suite.
 
 Tests never write outside pytest's temporary tree and never leave the
 machine (AGENTS.md section 5).
@@ -11,9 +11,9 @@ import pytest
 
 from tests.presentation.snapshots import assert_golden
 from tests.fake_terminal import FakeTerminal
-from blacksite.door.model import Display
+from karst41.door.model import Display
 from tests.presentation.provenance import render_with_provenance
-from blacksite.server.protocol import Frame
+from karst41.server.protocol import Frame
 
 
 class Golden(Protocol):

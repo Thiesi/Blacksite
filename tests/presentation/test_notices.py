@@ -7,13 +7,13 @@ from typing import Any
 
 import pytest
 
-from blacksite.content.loader import load_content
-from blacksite.door import chrome as shared_chrome
-from blacksite.door.cells import display_width
-from blacksite.door.model import Display
-from blacksite.door.palette import Color
-from blacksite.door.present import chrome, paint as paint_module
-from blacksite.server.protocol import Frame
+from karst41.content.loader import load_content
+from karst41.door import chrome as shared_chrome
+from karst41.door.cells import display_width
+from karst41.door.model import Display
+from karst41.door.palette import Color
+from karst41.door.present import chrome, paint as paint_module
+from karst41.server.protocol import Frame
 from tests.fake_terminal import FakeTerminal
 from tests.presentation.test_client_foundations import content, display, zone_body, SIZES, TIERS  # noqa: F401
 

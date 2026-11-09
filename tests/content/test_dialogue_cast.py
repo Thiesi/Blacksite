@@ -6,10 +6,10 @@ import re
 
 import pytest
 
-from blacksite.content.loader import ContentTree, load_content
-from blacksite.content.schema import DIALOGUE_CONDITIONS
-from blacksite.content.validate import validate
-from blacksite.server.dialogue import Facts, eligible_offers, evaluate, matches
+from karst41.content.loader import ContentTree, load_content
+from karst41.content.schema import DIALOGUE_CONDITIONS
+from karst41.content.validate import validate
+from karst41.server.dialogue import Facts, eligible_offers, evaluate, matches
 
 
 FIXED = {'vantongeren', 'brann', 'halvard', 'quell', 'reyes', 'anouk',
@@ -23,7 +23,7 @@ RECRUITERS = {'vael', 'achterberg', 'quaye', 'iloh', 'vance', 'achebe-roux', 'ke
 
 @pytest.fixture(scope='module')
 def cast() -> ContentTree:
-    return load_content(Path(__file__).parents[2]/'src/blacksite/content')
+    return load_content(Path(__file__).parents[2]/'src/karst41/content')
 
 
 def test_game_13_4_complete_cast_loads_without_activating_placement(cast: ContentTree) -> None:

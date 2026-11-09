@@ -18,10 +18,10 @@ from unittest.mock import patch
 ROOT = Path(__file__).resolve().parents[1]
 sys.path[:0] = [str(ROOT/'src'), str(ROOT), str(ROOT/'scripts')]
 
-from blacksite.content.loader import ContentTree, load_content
-from blacksite.door.cells import CellBuffer, cell_width
-from blacksite.door.present import zone
-from blacksite.door.present.places import Places
+from karst41.content.loader import ContentTree, load_content
+from karst41.door.cells import CellBuffer, cell_width
+from karst41.door.present import zone
+from karst41.door.present.places import Places
 from presentation_p6b import ZONES, route
 from tests.presentation.budget import Caller, KEYS, stats
 
@@ -143,7 +143,7 @@ def main() -> None:
         parser.error('preserve evidence; choose a new output path')
     result: dict[str, Any] = {'schema': 1,
         'head': subprocess.check_output(['git', 'rev-parse', 'HEAD'], cwd=ROOT, text=True).strip(),
-        'source_tree': subprocess.check_output(['git', 'rev-parse', 'HEAD:src/blacksite'], cwd=ROOT, text=True).strip(),
+        'source_tree': subprocess.check_output(['git', 'rev-parse', 'HEAD:src/karst41'], cwd=ROOT, text=True).strip(),
         'dirty': bool(subprocess.check_output(['git', 'status', '--porcelain'], cwd=ROOT).strip()),
         'created_utc': datetime.now(timezone.utc).isoformat(), 'platform': platform.platform(),
         'python': sys.version, 'method': 'P1 Caller/frames order; 10-Hz ticks, 5-Hz keys; '
@@ -154,7 +154,7 @@ def main() -> None:
         'warm_policy': 'retain caches and knowledge; do not force a cache hit or hide invalidations',
         'cases': [], 'complete': False}
     result['linux_timing_reference'] = platform.system() == 'Linux' and not result['dirty']
-    content = load_content(ROOT/'src/blacksite/content')
+    content = load_content(ROOT/'src/karst41/content')
     args.output.parent.mkdir(parents=True, exist_ok=True)
     try:
         for tier in ((args.tier,) if args.tier else ('16', '256', 'truecolor')):

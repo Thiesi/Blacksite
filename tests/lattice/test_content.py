@@ -3,14 +3,14 @@
 from pathlib import Path
 import re
 
-from blacksite.content.loader import load_content
-from blacksite.content.validate import validate
-from blacksite.server.lattice.sectors import Sectors, access
+from karst41.content.loader import load_content
+from karst41.content.validate import validate
+from karst41.server.lattice.sectors import Sectors, access
 
 
 def test_world_2_sector_counts_layout_access_and_baseline_routes() -> None:
     root = Path(__file__).parents[2]
-    tree = load_content(root / "src/blacksite/content")
+    tree = load_content(root / "src/karst41/content")
     assert not validate(tree)
     table = (root / "docs/world/03-lattice.md").read_text(encoding="utf-8").split("## 2. Sectors")[1].split("Notes:")[0]
     expected, planned = {}, set()
@@ -60,7 +60,7 @@ def test_world_2_sector_counts_layout_access_and_baseline_routes() -> None:
 
 def test_game_7_7_all_sixteen_relay_instances_and_service_cores() -> None:
     root = Path(__file__).parents[2]
-    tree = load_content(root/"src/blacksite/content")
+    tree = load_content(root/"src/karst41/content")
     design = (root/"docs/design/00-game-design.md").read_text(encoding="utf-8")
     schedule = design.split("### 7.7 Relay schedule", 1)[1].split("Cable fare", 1)[0]
     rows = re.findall(r"^\| `([^`]+)` /(.*)$", schedule, re.MULTILINE)
@@ -79,12 +79,12 @@ def test_game_7_7_all_sixteen_relay_instances_and_service_cores() -> None:
 
 def test_s25_complete_city_must_activate_all_district_core_entrances() -> None:
     root = Path(__file__).parents[2]
-    tree = load_content(root/"src/blacksite/content")
+    tree = load_content(root/"src/karst41/content")
     gazetteer = (root/"docs/world/01-gazetteer.md").read_text(encoding="utf-8")
     sections = re.split(r"^### `", gazetteer, flags=re.MULTILINE)[1:]
     zones = {section.split("`", 1)[0]: section for section in sections}
     canon_only = {z for z, section in zones.items() if "**Status:** planned (#" in section}
-    ordinary = {z for z in zones if not z.startswith("blacksite-")} - canon_only
+    ordinary = {z for z in zones if not z.startswith("karst41-")} - canon_only
     assert len(ordinary) == 34
     assert len(canon_only) == 12 and not canon_only & tree.zones.keys()
     if ordinary <= tree.zones.keys():

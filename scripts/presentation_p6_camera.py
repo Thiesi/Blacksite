@@ -19,15 +19,15 @@ from unittest.mock import patch
 ROOT = Path(__file__).resolve().parents[1]
 sys.path[:0] = [str(ROOT/'src'),str(ROOT),str(ROOT/'scripts')]
 
-from blacksite.content.loader import ContentTree, load_content
-from blacksite.door.present import zone
-from blacksite.door.present.places import Places
+from karst41.content.loader import ContentTree, load_content
+from karst41.door.present import zone
+from karst41.door.present.places import Places
 from presentation_p6_validation import git, module, snapshot
 from tests.presentation import budget
 
 BASE = 'fd4020e7eaa413301145eca969333f2239a6cfcf'
 INPUT = '0c4b19db5152c159601fafe63d55743549cc2474'
-SOURCE = 'src/blacksite/door/present/zone.py'
+SOURCE = 'src/karst41/door/present/zone.py'
 STARTS = {'core-plaza':(41,26),'vatside-clinics':(36,17),'sodium-row':(46,14)}
 
 
@@ -87,7 +87,7 @@ def run(input_ref: str) -> dict[str, Any]:
               'terrain wrapper counts Places.cell calls, excludes initial draw',
               'boundary':'paired Display frames and zone.terrain only; no hourly CPU verdict',
               'cpu_120s_per_hour_verdict':None,'cases':[]}
-    with TemporaryDirectory(prefix='blacksite-a7-') as temporary:
+    with TemporaryDirectory(prefix='karst41-a7-') as temporary:
         data = Path(temporary)/'content'
         result['input_files_sha256'] = snapshot(data,input_ref)
         content = load_content(data)

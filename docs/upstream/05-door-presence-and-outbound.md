@@ -41,4 +41,4 @@ No door-driven reads of BBS data, no mail, no user lookups.
 ## What Blacksite does meanwhile
 
 The Chronicle lives inside the game; the SysOp can export it with
-`blacksite admin export chronicle` and post it by hand.
+`karst41 admin export chronicle` and post it by hand.

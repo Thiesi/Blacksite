@@ -3,9 +3,9 @@
 **Status:** planned
 **Primary model:** Opus · **Reviewer:** Astra (independent read of the profiling conclusions)
 **Depends on:** S15, S22, S24, S26 · **Milestone:** M6
-**Issue:** https://github.com/Thiesi/blacksite/issues/29
+**Issue:** https://github.com/Thiesi/Karst41/issues/29
 
-S22 [PR #61](https://github.com/Thiesi/Blacksite/pull/61) installs actual
+S22 [PR #61](https://github.com/Thiesi/Karst41/pull/61) installs actual
 crew membership and remote HP/integrity/zone/beacon
 views. Include split-layer crews in the sixteen-caller profile and
 measure crew view composition before proposing optimizations. Preserve
@@ -41,14 +41,14 @@ tool every later slice runs.
 
 ## Scope
 
-- `src/blacksite/bot/`: `blacksite.bot` entry point that speaks the
+- `src/karst41/bot/`: `karst41.bot` entry point that speaks the
   client protocol without a terminal: `--count 16 --minutes 60
   --script mixed`, scripts `walker` (random movement in a zone),
   `fighter` (targets and fires at NPCs and other bots in a contested
   zone), `runner` (jacks in, walks cells, fights ICE), `talker` (chat
   every 5 s), `mixed` (round-robin). Bots respect the input rate limit
   and `ack` every view.
-- A `blacksite.bot --render` mode that runs the real renderer over a
+- A `karst41.bot --render` mode that runs the real renderer over a
   fake terminal at 80×24 for one bot, to measure client CPU without a
   NetBBS session.
 - Server instrumentation: per-tick timing histogram (p50/p95/p99),
@@ -110,12 +110,12 @@ tool every later slice runs.
 
 ## Acceptance script
 
-1. On the NetBSD node with the service running, start `blacksite bot
+1. On the NetBSD node with the service running, start `karst41 bot
    --count 16 --minutes 60 --script mixed --perf`.
 2. Meanwhile log in as a real caller over SSH at 80×24 into
    `sink-rim`, where fighters are active: movement feels immediate
    (under ~250 ms perceived), the log keeps up, no tearing on redraw.
-3. After the hour, `blacksite admin status --json` shows tick p99 ≤ 40
+3. After the hour, `karst41 admin status --json` shows tick p99 ≤ 40
    ms, RSS ≤ 200 MiB; `logs/perf.log` shows delta sizes within budget;
    the `--render` bot reports client CPU ≤ 120 s.
 4. Repeat for ten minutes on the Windows dev box with the TCP fallback
@@ -154,9 +154,9 @@ tool every later slice runs.
 <!-- s19-services:start -->
 ### S19 source and service handoff
 
-Reference: [S19 PR #62](https://github.com/Thiesi/Blacksite/pull/62),
+Reference: [S19 PR #62](https://github.com/Thiesi/Karst41/pull/62),
 [acceptance record](../../ops/s19-acceptance.md) and
-[PR #38](https://github.com/Thiesi/Blacksite/pull/38).
+[PR #38](https://github.com/Thiesi/Karst41/pull/38).
 
 S19 supplies the implemented source interfaces, 68 authored contracts
 and four service nodes. Full root pytest passed 1344 tests with one
@@ -173,7 +173,7 @@ still work for a stationary caller.
 
 ### S23 market handoff
 
-Retain [PR #38](https://github.com/Thiesi/Blacksite/pull/38)'s realistic
+Retain [PR #38](https://github.com/Thiesi/Karst41/pull/38)'s realistic
 product-impact standard. Profile market/menu tick and source costs with
 thousands of retained listings and bids as well as a fresh world. S23
 bounds menu frames to 12 rows and operator list pages to 100 records;
@@ -197,9 +197,9 @@ exercise the remaining item and state copy costs.
 <!-- s24-handoff:start -->
 ### S24 event integration and acceptance handoff
 
-Reference: [S24 #24](https://github.com/Thiesi/Blacksite/issues/24),
-[PR #38](https://github.com/Thiesi/Blacksite/pull/38) and
-[platform #56](https://github.com/Thiesi/Blacksite/issues/56).
+Reference: [S24 #24](https://github.com/Thiesi/Karst41/issues/24),
+[PR #38](https://github.com/Thiesi/Karst41/pull/38) and
+[platform #56](https://github.com/Thiesi/Karst41/issues/56).
 
 Include two active/planned events, public Convoy attendance/death/jobs,
 salvage/key receipts, composed service/relay/season layers, and long
@@ -215,8 +215,8 @@ travel or earning acceptance.
 <!-- s24-review-policy:start -->
 ### S24 practical review follow-up
 
-Reference: [PR #65](https://github.com/Thiesi/Blacksite/pull/65), retaining
-[PR #38](https://github.com/Thiesi/Blacksite/pull/38) and #56.
+Reference: [PR #65](https://github.com/Thiesi/Karst41/pull/65), retaining
+[PR #38](https://github.com/Thiesi/Karst41/pull/38) and #56.
 
 The hot event receipt is now bounded at 128 closed plans plus live/current
 transitions; personal reads are bounded at 128. Exercise 1,000-event/read

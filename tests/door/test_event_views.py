@@ -6,13 +6,13 @@ from typing import Any
 
 import pytest
 
-from blacksite.content.schema import EventTemplate
-from blacksite.door.model import Display
-from blacksite.server.commerce import CommerceMenu
-from blacksite.server.items import make_item
-from blacksite.server.market_views import Panel as ServicesPanel
-from blacksite.server.protocol import Frame, encode
-from blacksite.server.rules.events import SCHEDULES
+from karst41.content.schema import EventTemplate
+from karst41.door.model import Display
+from karst41.server.commerce import CommerceMenu
+from karst41.server.items import make_item
+from karst41.server.market_views import Panel as ServicesPanel
+from karst41.server.protocol import Frame, encode
+from karst41.server.rules.events import SCHEDULES
 from tests.character_helpers import act, place
 from tests.fake_terminal import FakeTerminal
 from tests.server.test_event_engine import base_content, events_game, force

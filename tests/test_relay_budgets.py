@@ -2,7 +2,7 @@
 
 from dataclasses import asdict
 
-from blacksite.server.vendors import VendorBudget
+from karst41.server.vendors import VendorBudget
 
 
 def test_game_7_7_half_hour_refill_and_ownership_loss_never_reset_same_boundary():

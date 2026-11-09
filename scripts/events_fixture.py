@@ -9,7 +9,7 @@ import json
 from pathlib import Path
 from typing import Any
 
-from blacksite.content.loader import load_content
+from karst41.content.loader import load_content
 from contracts_fixture import build_fixture as service_fixture
 
 

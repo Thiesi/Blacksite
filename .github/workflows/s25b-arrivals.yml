@@ -3,7 +3,7 @@ name: S25b live arrival captures
 on:
   pull_request:
     paths:
-      - 'src/blacksite/**'
+      - 'src/karst41/**'
       - 'scripts/accept_s25b_arrivals.py'
       - 'scripts/build_city_content.py'
       - 'scripts/accept_s04_netbbs.py'

@@ -3,7 +3,7 @@
 **Status:** done (PR #181)
 **Primary model:** Codex · **Reviewer:** automated review, technical lead
 **Depends on:** nothing unmerged · **Milestone:** protocol
-**Issue:** https://github.com/Thiesi/Blacksite/issues/173
+**Issue:** https://github.com/Thiesi/Karst41/issues/173
 
 The owner asked for this to be scheduled. It follows S39 and comes ahead
 of P11 (#164). There's no code dependency either way, but P11 has a
