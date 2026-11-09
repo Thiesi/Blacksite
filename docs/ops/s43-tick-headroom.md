@@ -126,3 +126,55 @@ No native or canonical gate was run or retried.
 
 H1 and S25 layout approval remain NOT GRANTED. These counts grant no
 technical review, presentation acceptance or owner approval.
+
+## S43 implementation candidate
+
+Implementation ownership passed from t6 to t4 under technical-lead
+acceptance comment 6744095432 on #194. Main `25b0ca6` was merged normally;
+no rebase or force was used. The approved scope is only cheaper
+`line_of_sight` traversal, with no cache-key or shared-cache redesign.
+
+Tests were committed first at `9fed56c`. On the unmodified runtime,
+29 focused checks passed in 14.19 seconds: frozen reference rays,
+door/light/actor invalidation, real light-control expiry, resize/scouting
+and all twenty committed frame/body/actor fingerprints. The exhaustive
+small-grid check covers every ordered endpoint pair and every possible
+single blocker in its bounding box, plus longer rays. Endpoints remain
+ignored; canonical tie cells remain identical in both directions.
+
+The candidate streams the same canonical integer Bresenham cells and
+returns at the first opaque interior cell. It avoids the complete list,
+reverse and slice. `line()` itself is unchanged for callers that need
+its list. No other runtime file changes. Cache keys, content, workload,
+S11 scripts, its gate and its sampling are untouched.
+
+After the candidate, 86 focused checks passed in 54.17 seconds, including
+the mechanics fingerprint and the complete P3 interaction matrix. The
+P3 count remains 10,704 and SHA-256 remains
+`05213f386e4ca644479f8ff80d43ca4e27ebd0acd0013e644b2072a9b9c59185`.
+No frozen value, golden or pre-implementation capture was rewritten.
+These focused checks are not the full suite or native acceptance.
+
+### Predeclared hosted comparison
+
+`replay_s43_publishers.py` is a current-namespace successor of the
+`6d6fc30` publisher rig. The fixed before head is
+`6bf5d94ddc804008edca8264f78f8658f34ecac0`; after is the exact event head.
+One hosted runner executes before1, after1, after2, before2 in separate
+interpreters. Each arm preserves all three frozen target scenes and
+both warm/invalidated modes: 50 warmup publications, 1,000 unprofiled
+wall/thread-CPU samples and a separate 200-publication cProfile.
+The same declared HP parity input forces ordinary publication/deltas.
+Scene and two reference-body fingerprints must match across all arms.
+
+All raw samples, GC records, profiles and comparisons are retained.
+The report shows each arm and every numerical mean change, including
+warm increases; none is corrected, hidden or rerun for a favorable
+value. Invalidated-scene mean CPU must decrease in all three scenes.
+Warm-path noise and changed-function call counts are reported for
+technical interpretation; a successful job alone grants no performance
+acceptance. No local timing benchmark or full local suite was run.
+
+Full hosted Linux/Windows suites, automated review and unchanged
+final-head S04/S05/S10/S11/S24 remain required. A CPU failure in this
+runtime-changing PR gets no rerun. H1/S25 remain NOT GRANTED.

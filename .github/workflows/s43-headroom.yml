@@ -1,0 +1,95 @@
+name: S43 matched publisher replay
+
+on:
+  push:
+    branches: [slice/S43-tick-headroom]
+    paths:
+      - src/karst41/server/world/sight.py
+      - scripts/replay_s43_publishers.py
+      - .github/workflows/s43-headroom.yml
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  matched-replay:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    env:
+      PYTHONDONTWRITEBYTECODE: '1'
+      BEFORE: 6bf5d94ddc804008edca8264f78f8658f34ecac0
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.sha }}
+          fetch-depth: 0
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Prepare the pinned source comparison
+        env:
+          EXPECTED_HEAD: ${{ github.sha }}
+        shell: bash
+        run: |
+          test "$(git rev-parse HEAD)" = "$EXPECTED_HEAD"
+          proof="$RUNNER_TEMP/karst41-proof/s43-headroom"
+          echo "PROOF=$proof" >> "$GITHUB_ENV"
+          mkdir -p "$proof/output"
+          git worktree add --detach "$proof/before" "$BEFORE"
+          test "$(git rev-parse "$BEFORE:src/karst41")" = 3cc647ceb05a066feabda4424450d1eb7771c7fa
+          python -B - <<'PY'
+          import os, subprocess
+          changed = subprocess.check_output(['git', 'diff', '--name-only', os.environ['BEFORE'],
+              'HEAD', '--', 'src/karst41'], text=True).splitlines()
+          assert changed == ['src/karst41/server/world/sight.py'], changed
+          PY
+      - name: Replay before after after before on this runner
+        shell: bash
+        run: |
+          for arm in before1 after1 after2 before2; do
+            source="$PROOF/before"
+            [[ "$arm" == after* ]] && source="$GITHUB_WORKSPACE"
+            python -B scripts/replay_s43_publishers.py --source "$source" \
+              --output "$PROOF/output/$arm.json" --label "$arm"
+          done
+      - name: Verify matching fingerprints and retain every comparison
+        shell: python
+        run: |
+          import json, os, pathlib, statistics
+          root = pathlib.Path(os.environ['PROOF'])/'output'
+          reports = {arm: json.loads((root/(arm+'.json')).read_text())
+              for arm in ('before1', 'after1', 'after2', 'before2')}
+          assert reports['before1']['head'] == reports['before2']['head'] == os.environ['BEFORE']
+          assert reports['after1']['head'] == reports['after2']['head'] == os.environ['GITHUB_SHA']
+          rows = []
+          for index in range(6):
+              cases = [r['cases'][index] for r in reports.values()]
+              assert len({(c['case'], c['cache_mode'], c['fixture_sha256'], c['nearby_count']) for c in cases}) == 1
+              assert len({json.dumps(c['body_sha256'], sort_keys=True) for c in cases}) == 1
+              assert all(c['unprofiled_calls'] == 1000 and c['profiled_calls'] == 200 for c in cases)
+              means = {arm: reports[arm]['cases'][index]['publisher_thread_cpu_ms']['mean'] for arm in reports}
+              before = statistics.mean(means[a] for a in ('before1', 'before2'))
+              after = statistics.mean(means[a] for a in ('after1', 'after2'))
+              rows.append({'case': cases[0]['case'], 'cache_mode': cases[0]['cache_mode'],
+                  'arm_means_ms': means, 'before_mean_ms': before, 'after_mean_ms': after,
+                  'after_minus_before_ms': after-before, 'numerically_increased': after > before})
+          summary = {'acceptance_credit': False, 'comparisons': rows,
+              'limits': 'One frozen scene/runner, ABBA order. All samples retained; no noise correction. Warm increases are reported, not hidden or retried. Technical interpretation and native S11 remain separate.'}
+          (root/'comparison.json').write_text(json.dumps(summary, indent=2)+'\n')
+          print(json.dumps(summary, indent=2))
+          assert all(c['after_mean_ms'] < c['before_mean_ms'] for c in rows
+              if c['cache_mode'] == 'invalidate'), 'Invalidated-scene headroom not demonstrated'
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: s43-publisher-replay
+          path: ${{ runner.temp }}/karst41-proof/s43-headroom/output
+          if-no-files-found: error
+      - name: Remove source worktree and proof scratch
+        if: always()
+        shell: bash
+        run: |
+          proof="$RUNNER_TEMP/karst41-proof/s43-headroom"
+          if [ -d "$proof/before" ]; then git worktree remove "$proof/before"; fi
+          rm -rf -- "$proof"

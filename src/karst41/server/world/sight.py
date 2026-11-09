@@ -46,7 +46,28 @@ def line(a: Tile, b: Tile) -> list[Tile]:
 
 
 def line_of_sight(zone: ZoneInstance, a: Tile, b: Tile) -> bool:
-    return not any(zone.opaque(tile) for tile in line(a, b)[1:-1])
+    # Walk the canonical ray directly, preserving line()'s tie cells and
+    # ignoring both endpoints. No full list, reverse or slice is needed.
+    if a > b:
+        a, b = b, a
+    x, y = a
+    end_x, end_y = b
+    dx, dy = abs(end_x - x), -abs(end_y - y)
+    sx, sy = (1 if x < end_x else -1), (1 if y < end_y else -1)
+    error = dx + dy
+    while x != end_x or y != end_y:
+        doubled = 2 * error
+        if doubled >= dy:
+            error += dy
+            x += sx
+        if doubled <= dx:
+            error += dx
+            y += sy
+        if x == end_x and y == end_y:
+            return True
+        if zone.opaque((x, y)):
+            return False
+    return True
 
 
 def visible_tiles(actor: Actor, zone: ZoneInstance, radius: int) -> set[Tile]:
