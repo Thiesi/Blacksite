@@ -207,6 +207,51 @@ there is a statement, not a threat.
   impressed. That says more about her than any label.
 - **The Halo bar** says "Not with that out." like every bar.
 
+### 4.4 After a shot: the crowd remembers [new]
+
+The S42 captures (#188, presentation lead) show the gap. Shoot a Sodium
+regular, press E on it as it walks off, and it opens its page with its
+friendly first line: "First time down the Stair? Walk to the end.
+Everybody does." [built] The drawn line covers the weapon. Nothing yet
+covers what you did with it.
+
+- **While it runs or hunts:** no page. E on an NPC that is fleeing or
+  hunting opens nothing. A page closes on movement anyway [built], so
+  this only stops it from opening for one frame. Whether E logs a muted
+  line is the presentation lead's call.
+- **Afterwards, for as long as the crowd is provoked** (300 s,
+  `PROVOCATION_SECONDS` [built]): the page opens with one line written
+  for it, and its offers stay shut. For street regulars:
+  **"Not you. Keep walking."** It's short and in their voice. It names no
+  cause and no consequence, and hints at no watching or reporting.
+- **The whole crowd, not just the one you hit.** Provocation is already
+  recorded per spawner group [built], and the crowd scatters together.
+  So every regular in that crowd answers the same way, including the
+  one you missed. Other crowds that saw it keep their own lines. Each
+  crowd keeps its own book.
+- **The covered Warden gives the same answer.** It shares the regulars'
+  set, so the line itself is the same. The condition has to read the
+  same thing too:
+  - **For the Warden, "provoked" means its counterpart's crowd** (the
+    `poses_as` group, S42). Shooting a regular makes the Warden answer
+    "Not you. Keep walking." too.
+  - **Shooting the Warden** counts for its crowd, so the regulars answer
+    the same as well.
+  - Today `provoked()` writes the provocation under the target's own
+    spawner group. The Warden's spawner is its own group, so the engine
+    needs this mapping. It belongs with S42's "reacts with its
+    counterpart's group, both ways" rule. The mapping must not touch
+    `hostile()`: a covered, unarmed NPC still skips the heat and Mark
+    rule there (#179).
+- **New condition:** `provoked`, true while this NPC's crowd has a
+  provocation against you. A set puts its provoked line first, then its
+  drawn line, then the rest. `evaluate` returns the first eligible line,
+  so that order decides which one plays.
+- **Lines:** one provoked line per set, written in my population PR for
+  the sets that arrive there. The regulars' line goes with the regulars'
+  set in the Row rules slice, or in the second step here, whichever
+  carries the condition.
+
 ## 5. Engine and content, and where it goes
 
 | Piece | Kind | Where I'd put it |
@@ -218,6 +263,7 @@ there is a statement, not a threat.
 | Shy wander filter | engine (wander filter, like S42) | second step, after the demo |
 | `steady` flag and its validator link to `poses_as` | content schema plus validator | second step |
 | `drawn` dialogue condition and one drawn line per set; offers shut while drawn | engine (one condition) plus content | second step, with my population PR for the sets that arrive there |
+| No page while fleeing or hunting; `provoked` condition (counterpart crowd for a covered NPC), one provoked line per set, offers shut (§4.4) | engine (one condition, S42 mapping) plus content | second step, beside `drawn` |
 
 **Not in the Row rules slice.** That slice already carries the notices,
 Q7, HUNTED, settling, the bark scheduler and the street lines. The drawn
@@ -256,3 +302,6 @@ stand-down before any of it is canon.
 5. **The new lines** in §3.2, §3.4, §4.2 and §4.3, which you haven't
    heard yet.
 6. **Demo first,** on a round 4 branch with errands (§5)?
+7. **After a shot** (§4.4): no page while an NPC flees or hunts, then
+   "Not you. Keep walking." from the whole crowd, offers shut, for the
+   5-minute provocation?
