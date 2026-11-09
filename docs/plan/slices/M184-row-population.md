@@ -1,6 +1,6 @@
 # M184: Row population measurement
 
-Status: in progress (issue #184).
+Status: done (PR #186, issue #184).
 Primary model: Codex. Review: automated Claude, then technical lead.
 Base: owner-merged main 5416b5d; A8, A9 and S39 are merged.
 
@@ -34,3 +34,10 @@ source provenance; a readable evidence report; automated-review triage
 and an exact-head technical decision record. Measurement failures and
 budget misses are findings, not authority to change game behaviour.
 H1 and S25 layout approval remain NOT GRANTED. The owner merges.
+
+The first hosted execution at 1ee8bbe records all 72 ordinary cells and
+24 known corners, with no retry. Five ordinary cells meet 108. The packet
+retains every result, 102 marginal differences and eight separate corner
+profiles; stationary extras incur both door and server cost. All activity
+cadence/fixture assertions pass. Final-head review and merge requirements
+are recorded on #186; this done mark grants no population or human gate.

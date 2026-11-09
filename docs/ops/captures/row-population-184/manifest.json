@@ -1,0 +1,69 @@
+{
+  "schema": 1,
+  "measurement_head": "1ee8bbe25961f6677f8ce402f0b0d15c8a87506e",
+  "base": "5416b5d611573a91bba09d445b8503a730dafd53",
+  "run": 42538074504,
+  "runtime_tree": "88de66159e2542cd243505d4bd4cac29fb574f55",
+  "content_tree": "b6e2b1f89d99597aa1c03443958e53ea375d0e92",
+  "source_sha256": {
+    "tests/presentation/budget.py": "efba2c6c567b147411f4d42e8079be16cb43644d8d3a351bc0748dd3ea0f5c2f",
+    "scripts/measure_row_population.py": "48fd117d0de22d279240300a018e5f9e1e68849a6bc2083397e0b3aba0d51603"
+  },
+  "summary_sha256": "a983ab47a6ac96694abab85a56d9ecf9d3c140a634e7052a093abea105521344",
+  "artifacts": [
+    {
+      "id": 13640707578,
+      "name": "row-population-1-16",
+      "url": "https://github.com/Thiesi/Blacksite/actions/runs/42538074504/artifacts/13640707578",
+      "zip_sha256": "bb2c9c111a89c1db92a47bde6a0201fb562b64b6ed3769d04a15e46a64e4547c",
+      "source_member": "report.json",
+      "report_name": "row-population-1-16.json",
+      "report_sha256": "b53f2043e2a9b891b257c089e9f919ffc59c55bdb9905745671baf97c7eb7d4f"
+    },
+    {
+      "id": 13641080036,
+      "name": "row-population-1-256",
+      "url": "https://github.com/Thiesi/Blacksite/actions/runs/42538074504/artifacts/13641080036",
+      "zip_sha256": "ac94132d1b40bafb6772fd84996fac6ca47d4016f0bb65de2e2451435a46022a",
+      "source_member": "report.json",
+      "report_name": "row-population-1-256.json",
+      "report_sha256": "f88837771d1d92e54822e3a7922851f86cc4249ed2ed40b4a12d545c1732c5ab"
+    },
+    {
+      "id": 13640602032,
+      "name": "row-population-1-truecolor",
+      "url": "https://github.com/Thiesi/Blacksite/actions/runs/42538074504/artifacts/13640602032",
+      "zip_sha256": "1f1e8f7db8ff511c633ea1bf7f0ea93cc87f6801f1d493ad811812819b109d1a",
+      "source_member": "report.json",
+      "report_name": "row-population-1-truecolor.json",
+      "report_sha256": "e39e51cc36ef60da12a75ded4ee518f7b20300cc2ec0b3ec5f6e41a4e3d7dcef"
+    },
+    {
+      "id": 13641050288,
+      "name": "row-population-4-16",
+      "url": "https://github.com/Thiesi/Blacksite/actions/runs/42538074504/artifacts/13641050288",
+      "zip_sha256": "763e8eae33f4377951990d106a0fa4bbae974e48b8a004b2ba83573e98a3318d",
+      "source_member": "report.json",
+      "report_name": "row-population-4-16.json",
+      "report_sha256": "9c7261afa602b96f4c0fd971a9da7a209453d1e8df3115838309c6693cf40065"
+    },
+    {
+      "id": 13640985729,
+      "name": "row-population-4-256",
+      "url": "https://github.com/Thiesi/Blacksite/actions/runs/42538074504/artifacts/13640985729",
+      "zip_sha256": "dee3da2a3748b1b05593f50b2ece745a20f1942a9a6d1530fe5c1e706fec3ede",
+      "source_member": "report.json",
+      "report_name": "row-population-4-256.json",
+      "report_sha256": "a4b74be72eac68842760f83b3e9a1c2f00258fd61d25a84cf107f99b125e1ac0"
+    },
+    {
+      "id": 13640588372,
+      "name": "row-population-4-truecolor",
+      "url": "https://github.com/Thiesi/Blacksite/actions/runs/42538074504/artifacts/13640588372",
+      "zip_sha256": "ee1088b27d524e7b98a586c43f90664a6382b73a9180a23852978e2dc3c5dab1",
+      "source_member": "report.json",
+      "report_name": "row-population-4-truecolor.json",
+      "report_sha256": "d5140aaafc73127d1a5b5a42c0e0c4fd3117323eb7e0bbb280516562df7b35db"
+    }
+  ]
+}
