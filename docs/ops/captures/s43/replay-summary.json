@@ -1,0 +1,1041 @@
+{
+  "schema": 1,
+  "before_head": "6bf5d94ddc804008edca8264f78f8658f34ecac0",
+  "after_head": "b639dfb6e87848b0f0c94d9bcf59544bc1cea4c9",
+  "before_runtime_tree": "3cc647ceb05a066feabda4424450d1eb7771c7fa",
+  "after_runtime_tree": "c5c65a4c39d9cc9c9c844a03ab4b50b436931f9c",
+  "run": 42648936644,
+  "job": 129269703994,
+  "artifact": 13688864091,
+  "artifact_bytes": 824329,
+  "zip_sha256": "02a43ace29beed293969bea971f9d62a58cde6c77dcb8f7816859ed4a73a71fe",
+  "python": "3.12.16 (main, Oct 26 2026, 02:48:44) [GCC 15.2.0]",
+  "order": [
+    "before1",
+    "after1",
+    "after2",
+    "before2"
+  ],
+  "unprofiled_calls_per_arm_scene": 1000,
+  "profiled_calls_per_arm_scene": 200,
+  "acceptance_credit": false,
+  "comparisons": [
+    {
+      "case": "sable_target",
+      "cache_mode": "warm",
+      "fixture_sha256": "03df4d81e8e9c97e9fece7bb52cf39f0e78c66fca19d03058fabf46c624383c3",
+      "body_sha256": {
+        "0": "45735c76c6bb14fb83ee6c1140c365ca7cee0b6c04dfa358b4bedc79079e32ad",
+        "1": "4f87ec4a06841a9276be83be6929145b95ad84f0f60b5fd2589213ea3eca475d"
+      },
+      "nearby_count": 2,
+      "arms": {
+        "before1": {
+          "publisher_wall_ms": {
+            "mean": 2.512394134,
+            "median": 2.4881545,
+            "p99": 2.955981,
+            "max": 4.6931
+          },
+          "publisher_thread_cpu_ms": {
+            "mean": 2.510186377,
+            "median": 2.4857424999999997,
+            "p99": 2.953835,
+            "max": 4.690832
+          },
+          "sight_profile": [
+            {
+              "name": "visible_tiles",
+              "calls": 800,
+              "self_ms": 0.796483,
+              "cumulative_ms": 1.367228
+            },
+            {
+              "name": "line",
+              "calls": 200,
+              "self_ms": 0.481532,
+              "cumulative_ms": 0.6576150000000001
+            }
+          ],
+          "gc_counts": {
+            "warmup/gen0": 5,
+            "warmup/gen1": 1
+          }
+        },
+        "after1": {
+          "publisher_wall_ms": {
+            "mean": 2.484661451,
+            "median": 2.4772109999999996,
+            "p99": 2.625416,
+            "max": 3.219067
+          },
+          "publisher_thread_cpu_ms": {
+            "mean": 2.482584399,
+            "median": 2.475293,
+            "p99": 2.62358,
+            "max": 3.216935
+          },
+          "sight_profile": [
+            {
+              "name": "visible_tiles",
+              "calls": 800,
+              "self_ms": 0.818397,
+              "cumulative_ms": 1.383095
+            },
+            {
+              "name": "line",
+              "calls": 200,
+              "self_ms": 0.476217,
+              "cumulative_ms": 0.635993
+            }
+          ],
+          "gc_counts": {
+            "warmup/gen0": 5,
+            "warmup/gen1": 1
+          }
+        },
+        "after2": {
+          "publisher_wall_ms": {
+            "mean": 2.490939709,
+            "median": 2.4837035,
+            "p99": 2.630345,
+            "max": 3.080025
+          },
+          "publisher_thread_cpu_ms": {
+            "mean": 2.488856933,
+            "median": 2.4816195,
+            "p99": 2.628529,
+            "max": 3.078096
+          },
+          "sight_profile": [
+            {
+              "name": "visible_tiles",
+              "calls": 800,
+              "self_ms": 0.8242860000000001,
+              "cumulative_ms": 1.371019
+            },
+            {
+              "name": "line",
+              "calls": 200,
+              "self_ms": 0.49001700000000004,
+              "cumulative_ms": 0.664119
+            }
+          ],
+          "gc_counts": {
+            "warmup/gen0": 5,
+            "warmup/gen1": 1
+          }
+        },
+        "before2": {
+          "publisher_wall_ms": {
+            "mean": 2.481867004,
+            "median": 2.4795665,
+            "p99": 2.585641,
+            "max": 2.696962
+          },
+          "publisher_thread_cpu_ms": {
+            "mean": 2.479851256,
+            "median": 2.4776825000000002,
+            "p99": 2.583595,
+            "max": 2.694782
+          },
+          "sight_profile": [
+            {
+              "name": "visible_tiles",
+              "calls": 800,
+              "self_ms": 0.8812540000000001,
+              "cumulative_ms": 1.444486
+            },
+            {
+              "name": "line",
+              "calls": 200,
+              "self_ms": 0.5193110000000001,
+              "cumulative_ms": 0.680865
+            }
+          ],
+          "gc_counts": {
+            "warmup/gen0": 5,
+            "warmup/gen1": 1
+          }
+        }
+      },
+      "before_mean_ms": 2.4950188165,
+      "after_mean_ms": 2.4857206659999997,
+      "after_minus_before_ms": -0.009298150500000268,
+      "percent_change": -0.3726685521772355
+    },
+    {
+      "case": "sable_target",
+      "cache_mode": "invalidate",
+      "fixture_sha256": "03df4d81e8e9c97e9fece7bb52cf39f0e78c66fca19d03058fabf46c624383c3",
+      "body_sha256": {
+        "0": "45735c76c6bb14fb83ee6c1140c365ca7cee0b6c04dfa358b4bedc79079e32ad",
+        "1": "4f87ec4a06841a9276be83be6929145b95ad84f0f60b5fd2589213ea3eca475d"
+      },
+      "nearby_count": 2,
+      "arms": {
+        "before1": {
+          "publisher_wall_ms": {
+            "mean": 7.314926697,
+            "median": 7.214301,
+            "p99": 8.019792,
+            "max": 16.906371
+          },
+          "publisher_thread_cpu_ms": {
+            "mean": 7.311837345,
+            "median": 7.2113499999999995,
+            "p99": 8.016952,
+            "max": 16.903784
+          },
+          "sight_profile": [
+            {
+              "name": "visible_tiles",
+              "calls": 800,
+              "self_ms": 74.768602,
+              "cumulative_ms": 1524.5816060000002
+            },
+            {
+              "name": "line_of_sight",
+              "calls": 80600,
+              "self_ms": 76.30563500000001,
+              "cumulative_ms": 1432.817974
+            },
+            {
+              "name": "line",
+              "calls": 120200,
+              "self_ms": 303.89315100000005,
+              "cumulative_ms": 421.676574
+            }
+          ],
+          "gc_counts": {
+            "warmup/gen0": 80,
+            "warmup/gen1": 7,
+            "warmup/gen2": 1,
+            "unprofiled/gen0": 983,
+            "unprofiled/gen1": 89,
+            "unprofiled/gen2": 3,
+            "profiled/gen0": 183,
+            "profiled/gen1": 17
+          }
+        },
+        "after1": {
+          "publisher_wall_ms": {
+            "mean": 6.537384869,
+            "median": 6.4773075,
+            "p99": 7.285864,
+            "max": 15.395653
+          },
+          "publisher_thread_cpu_ms": {
+            "mean": 6.534763534,
+            "median": 6.474461,
+            "p99": 7.281961,
+            "max": 15.392046
+          },
+          "sight_profile": [
+            {
+              "name": "visible_tiles",
+              "calls": 800,
+              "self_ms": 67.844979,
+              "cumulative_ms": 1003.0622890000001
+            },
+            {
+              "name": "line_of_sight",
+              "calls": 80600,
+              "self_ms": 228.38767900000002,
+              "cumulative_ms": 918.758819
+            },
+            {
+              "name": "line",
+              "calls": 200,
+              "self_ms": 0.539547,
+              "cumulative_ms": 0.7077500000000001
+            }
+          ],
+          "gc_counts": {
+            "warmup/gen0": 80,
+            "warmup/gen1": 7,
+            "warmup/gen2": 1,
+            "unprofiled/gen0": 983,
+            "unprofiled/gen1": 89,
+            "unprofiled/gen2": 3,
+            "profiled/gen0": 183,
+            "profiled/gen1": 17
+          }
+        },
+        "after2": {
+          "publisher_wall_ms": {
+            "mean": 6.550961745,
+            "median": 6.4755044999999996,
+            "p99": 7.18279,
+            "max": 19.250182
+          },
+          "publisher_thread_cpu_ms": {
+            "mean": 6.548275784,
+            "median": 6.473293999999999,
+            "p99": 7.179941,
+            "max": 19.246569
+          },
+          "sight_profile": [
+            {
+              "name": "visible_tiles",
+              "calls": 800,
+              "self_ms": 66.646809,
+              "cumulative_ms": 1004.5996660000001
+            },
+            {
+              "name": "line_of_sight",
+              "calls": 80600,
+              "self_ms": 228.02458000000001,
+              "cumulative_ms": 921.790655
+            },
+            {
+              "name": "line",
+              "calls": 200,
+              "self_ms": 0.5176940000000001,
+              "cumulative_ms": 0.682868
+            }
+          ],
+          "gc_counts": {
+            "warmup/gen0": 80,
+            "warmup/gen1": 7,
+            "warmup/gen2": 1,
+            "unprofiled/gen0": 983,
+            "unprofiled/gen1": 89,
+            "unprofiled/gen2": 3,
+            "profiled/gen0": 183,
+            "profiled/gen1": 17
+          }
+        },
+        "before2": {
+          "publisher_wall_ms": {
+            "mean": 7.31818443,
+            "median": 7.2193760000000005,
+            "p99": 8.309851,
+            "max": 19.711513
+          },
+          "publisher_thread_cpu_ms": {
+            "mean": 7.31551548,
+            "median": 7.2167645,
+            "p99": 8.306471,
+            "max": 19.708239
+          },
+          "sight_profile": [
+            {
+              "name": "visible_tiles",
+              "calls": 800,
+              "self_ms": 74.63449500000002,
+              "cumulative_ms": 1522.472827
+            },
+            {
+              "name": "line_of_sight",
+              "calls": 80600,
+              "self_ms": 76.604062,
+              "cumulative_ms": 1430.63704
+            },
+            {
+              "name": "line",
+              "calls": 120200,
+              "self_ms": 299.541351,
+              "cumulative_ms": 416.72197400000005
+            }
+          ],
+          "gc_counts": {
+            "warmup/gen0": 80,
+            "warmup/gen1": 7,
+            "warmup/gen2": 1,
+            "unprofiled/gen0": 983,
+            "unprofiled/gen1": 89,
+            "unprofiled/gen2": 3,
+            "profiled/gen0": 183,
+            "profiled/gen1": 17
+          }
+        }
+      },
+      "before_mean_ms": 7.3136764125,
+      "after_mean_ms": 6.541519659,
+      "after_minus_before_ms": -0.7721567534999991,
+      "percent_change": -10.557710102955687
+    },
+    {
+      "case": "covered_target",
+      "cache_mode": "warm",
+      "fixture_sha256": "be2c74ec1481e84b5ef8f1c8025e75228966c6467ed94e7825b5347bcb3942cb",
+      "body_sha256": {
+        "0": "0b48258ad6750356a0f838571ef8568c6607b193cfaeab326441fa06fdefea42",
+        "1": "3a00a848052c4c7e58a058b6f364781c3624579b6221ee4c2ce0e8b77f3f6496"
+      },
+      "nearby_count": 2,
+      "arms": {
+        "before1": {
+          "publisher_wall_ms": {
+            "mean": 2.4920964,
+            "median": 2.4799935,
+            "p99": 2.652566,
+            "max": 3.387556
+          },
+          "publisher_thread_cpu_ms": {
+            "mean": 2.490004796,
+            "median": 2.477998,
+            "p99": 2.6506,
+            "max": 3.384948
+          },
+          "sight_profile": [
+            {
+              "name": "visible_tiles",
+              "calls": 800,
+              "self_ms": 0.8187120000000001,
+              "cumulative_ms": 1.3747200000000002
+            },
+            {
+              "name": "line",
+              "calls": 200,
+              "self_ms": 0.503346,
+              "cumulative_ms": 0.681864
+            }
+          ],
+          "gc_counts": {
+            "warmup/gen0": 5,
+            "warmup/gen1": 1
+          }
+        },
+        "after1": {
+          "publisher_wall_ms": {
+            "mean": 2.495378095,
+            "median": 2.488017,
+            "p99": 2.619676,
+            "max": 3.007197
+          },
+          "publisher_thread_cpu_ms": {
+            "mean": 2.493253888,
+            "median": 2.4860785,
+            "p99": 2.617699,
+            "max": 3.00515
+          },
+          "sight_profile": [
+            {
+              "name": "visible_tiles",
+              "calls": 800,
+              "self_ms": 0.8732110000000001,
+              "cumulative_ms": 1.4336890000000002
+            },
+            {
+              "name": "line",
+              "calls": 200,
+              "self_ms": 0.487309,
+              "cumulative_ms": 0.651761
+            }
+          ],
+          "gc_counts": {
+            "warmup/gen0": 5,
+            "warmup/gen1": 1
+          }
+        },
+        "after2": {
+          "publisher_wall_ms": {
+            "mean": 2.501126736,
+            "median": 2.476309,
+            "p99": 3.141801,
+            "max": 5.297991
+          },
+          "publisher_thread_cpu_ms": {
+            "mean": 2.498966454,
+            "median": 2.474406,
+            "p99": 3.139892,
+            "max": 5.29601
+          },
+          "sight_profile": [
+            {
+              "name": "visible_tiles",
+              "calls": 800,
+              "self_ms": 0.8288390000000001,
+              "cumulative_ms": 1.383635
+            },
+            {
+              "name": "line",
+              "calls": 200,
+              "self_ms": 0.501233,
+              "cumulative_ms": 0.666121
+            }
+          ],
+          "gc_counts": {
+            "warmup/gen0": 5,
+            "warmup/gen1": 1
+          }
+        },
+        "before2": {
+          "publisher_wall_ms": {
+            "mean": 2.498092912,
+            "median": 2.4903915,
+            "p99": 2.614767,
+            "max": 2.68572
+          },
+          "publisher_thread_cpu_ms": {
+            "mean": 2.495956296,
+            "median": 2.4883325,
+            "p99": 2.612619,
+            "max": 2.670818
+          },
+          "sight_profile": [
+            {
+              "name": "visible_tiles",
+              "calls": 800,
+              "self_ms": 0.852186,
+              "cumulative_ms": 1.412182
+            },
+            {
+              "name": "line",
+              "calls": 200,
+              "self_ms": 0.482686,
+              "cumulative_ms": 0.648028
+            }
+          ],
+          "gc_counts": {
+            "warmup/gen0": 5,
+            "warmup/gen1": 1
+          }
+        }
+      },
+      "before_mean_ms": 2.492980546,
+      "after_mean_ms": 2.4961101709999998,
+      "after_minus_before_ms": 0.0031296249999996917,
+      "percent_change": 0.12553748183159463
+    },
+    {
+      "case": "covered_target",
+      "cache_mode": "invalidate",
+      "fixture_sha256": "be2c74ec1481e84b5ef8f1c8025e75228966c6467ed94e7825b5347bcb3942cb",
+      "body_sha256": {
+        "0": "0b48258ad6750356a0f838571ef8568c6607b193cfaeab326441fa06fdefea42",
+        "1": "3a00a848052c4c7e58a058b6f364781c3624579b6221ee4c2ce0e8b77f3f6496"
+      },
+      "nearby_count": 2,
+      "arms": {
+        "before1": {
+          "publisher_wall_ms": {
+            "mean": 7.354501294,
+            "median": 7.25991,
+            "p99": 8.15803,
+            "max": 22.744236
+          },
+          "publisher_thread_cpu_ms": {
+            "mean": 7.351705635,
+            "median": 7.257591,
+            "p99": 8.155369,
+            "max": 22.741252
+          },
+          "sight_profile": [
+            {
+              "name": "visible_tiles",
+              "calls": 800,
+              "self_ms": 76.035426,
+              "cumulative_ms": 1566.1350380000001
+            },
+            {
+              "name": "line_of_sight",
+              "calls": 80600,
+              "self_ms": 77.956929,
+              "cumulative_ms": 1472.528221
+            },
+            {
+              "name": "line",
+              "calls": 120200,
+              "self_ms": 306.557295,
+              "cumulative_ms": 429.23998300000005
+            }
+          ],
+          "gc_counts": {
+            "warmup/gen0": 70,
+            "warmup/gen1": 6,
+            "unprofiled/gen0": 1005,
+            "unprofiled/gen1": 91,
+            "unprofiled/gen2": 4,
+            "profiled/gen0": 183,
+            "profiled/gen1": 17
+          }
+        },
+        "after1": {
+          "publisher_wall_ms": {
+            "mean": 6.756201538,
+            "median": 6.648699,
+            "p99": 7.485348,
+            "max": 18.721196
+          },
+          "publisher_thread_cpu_ms": {
+            "mean": 6.753385425,
+            "median": 6.6458165000000005,
+            "p99": 7.482725,
+            "max": 18.717082
+          },
+          "sight_profile": [
+            {
+              "name": "visible_tiles",
+              "calls": 800,
+              "self_ms": 66.853734,
+              "cumulative_ms": 1004.5048490000001
+            },
+            {
+              "name": "line_of_sight",
+              "calls": 80600,
+              "self_ms": 228.56746700000002,
+              "cumulative_ms": 921.2045280000001
+            },
+            {
+              "name": "line",
+              "calls": 200,
+              "self_ms": 0.523931,
+              "cumulative_ms": 0.699953
+            }
+          ],
+          "gc_counts": {
+            "warmup/gen0": 70,
+            "warmup/gen1": 6,
+            "unprofiled/gen0": 1005,
+            "unprofiled/gen1": 91,
+            "unprofiled/gen2": 4,
+            "profiled/gen0": 183,
+            "profiled/gen1": 17
+          }
+        },
+        "after2": {
+          "publisher_wall_ms": {
+            "mean": 6.655866052,
+            "median": 6.5564095,
+            "p99": 7.302164,
+            "max": 20.895996
+          },
+          "publisher_thread_cpu_ms": {
+            "mean": 6.653089042,
+            "median": 6.554285,
+            "p99": 7.300005,
+            "max": 20.892396
+          },
+          "sight_profile": [
+            {
+              "name": "visible_tiles",
+              "calls": 800,
+              "self_ms": 66.562914,
+              "cumulative_ms": 1005.7135620000001
+            },
+            {
+              "name": "line_of_sight",
+              "calls": 80600,
+              "self_ms": 228.47905000000003,
+              "cumulative_ms": 922.9278410000001
+            },
+            {
+              "name": "line",
+              "calls": 200,
+              "self_ms": 0.502397,
+              "cumulative_ms": 0.667991
+            }
+          ],
+          "gc_counts": {
+            "warmup/gen0": 70,
+            "warmup/gen1": 6,
+            "unprofiled/gen0": 1005,
+            "unprofiled/gen1": 91,
+            "unprofiled/gen2": 4,
+            "profiled/gen0": 183,
+            "profiled/gen1": 17
+          }
+        },
+        "before2": {
+          "publisher_wall_ms": {
+            "mean": 7.349034745,
+            "median": 7.2687755,
+            "p99": 7.943479,
+            "max": 19.102013
+          },
+          "publisher_thread_cpu_ms": {
+            "mean": 7.346439118,
+            "median": 7.2664175,
+            "p99": 7.940849,
+            "max": 19.098053
+          },
+          "sight_profile": [
+            {
+              "name": "visible_tiles",
+              "calls": 800,
+              "self_ms": 74.765813,
+              "cumulative_ms": 1541.539849
+            },
+            {
+              "name": "line_of_sight",
+              "calls": 80600,
+              "self_ms": 77.30765600000001,
+              "cumulative_ms": 1449.357354
+            },
+            {
+              "name": "line",
+              "calls": 120200,
+              "self_ms": 300.24016200000005,
+              "cumulative_ms": 418.35150200000004
+            }
+          ],
+          "gc_counts": {
+            "warmup/gen0": 70,
+            "warmup/gen1": 6,
+            "unprofiled/gen0": 1005,
+            "unprofiled/gen1": 91,
+            "unprofiled/gen2": 4,
+            "profiled/gen0": 183,
+            "profiled/gen1": 17
+          }
+        }
+      },
+      "before_mean_ms": 7.349072376500001,
+      "after_mean_ms": 6.7032372335,
+      "after_minus_before_ms": -0.6458351430000002,
+      "percent_change": -8.787981801147804
+    },
+    {
+      "case": "no_cover",
+      "cache_mode": "warm",
+      "fixture_sha256": "d87ffaab63109286eb1c885b672a55a0b718d2074fed0afbc686072f817b45a4",
+      "body_sha256": {
+        "0": "78c31292719933bc30f5b58c32ebce9e63fb4cc142c868f6108fe391053300a3",
+        "1": "e68edd23716d03868dad4bcfdfa9695e279343933bc3fffa3d310076a41b31d1"
+      },
+      "nearby_count": 1,
+      "arms": {
+        "before1": {
+          "publisher_wall_ms": {
+            "mean": 2.430860848,
+            "median": 2.421394,
+            "p99": 2.566956,
+            "max": 3.269156
+          },
+          "publisher_thread_cpu_ms": {
+            "mean": 2.428752666,
+            "median": 2.4195539999999998,
+            "p99": 2.56507,
+            "max": 3.266678
+          },
+          "sight_profile": [
+            {
+              "name": "visible_tiles",
+              "calls": 600,
+              "self_ms": 0.658045,
+              "cumulative_ms": 1.1155030000000001
+            },
+            {
+              "name": "line",
+              "calls": 200,
+              "self_ms": 0.490676,
+              "cumulative_ms": 0.6681030000000001
+            }
+          ],
+          "gc_counts": {
+            "warmup/gen0": 5,
+            "warmup/gen1": 1
+          }
+        },
+        "after1": {
+          "publisher_wall_ms": {
+            "mean": 2.415281216,
+            "median": 2.404744,
+            "p99": 2.560644,
+            "max": 3.283128
+          },
+          "publisher_thread_cpu_ms": {
+            "mean": 2.413236414,
+            "median": 2.402913,
+            "p99": 2.558448,
+            "max": 3.280394
+          },
+          "sight_profile": [
+            {
+              "name": "visible_tiles",
+              "calls": 600,
+              "self_ms": 0.67617,
+              "cumulative_ms": 1.1186180000000001
+            },
+            {
+              "name": "line",
+              "calls": 200,
+              "self_ms": 0.476314,
+              "cumulative_ms": 0.649031
+            }
+          ],
+          "gc_counts": {
+            "warmup/gen0": 5,
+            "warmup/gen1": 1
+          }
+        },
+        "after2": {
+          "publisher_wall_ms": {
+            "mean": 2.438006737,
+            "median": 2.432544,
+            "p99": 2.556025,
+            "max": 2.615768
+          },
+          "publisher_thread_cpu_ms": {
+            "mean": 2.435856021,
+            "median": 2.4304595,
+            "p99": 2.55419,
+            "max": 2.613861
+          },
+          "sight_profile": [
+            {
+              "name": "visible_tiles",
+              "calls": 600,
+              "self_ms": 0.666432,
+              "cumulative_ms": 1.117488
+            },
+            {
+              "name": "line",
+              "calls": 200,
+              "self_ms": 0.47952300000000003,
+              "cumulative_ms": 0.6421290000000001
+            }
+          ],
+          "gc_counts": {
+            "warmup/gen0": 5,
+            "warmup/gen1": 1
+          }
+        },
+        "before2": {
+          "publisher_wall_ms": {
+            "mean": 2.416837841,
+            "median": 2.40748,
+            "p99": 2.552368,
+            "max": 3.528311
+          },
+          "publisher_thread_cpu_ms": {
+            "mean": 2.414794697,
+            "median": 2.405503,
+            "p99": 2.550273,
+            "max": 3.526232
+          },
+          "sight_profile": [
+            {
+              "name": "visible_tiles",
+              "calls": 600,
+              "self_ms": 0.69706,
+              "cumulative_ms": 1.140159
+            },
+            {
+              "name": "line",
+              "calls": 200,
+              "self_ms": 0.487968,
+              "cumulative_ms": 0.653431
+            }
+          ],
+          "gc_counts": {
+            "warmup/gen0": 5,
+            "warmup/gen1": 1
+          }
+        }
+      },
+      "before_mean_ms": 2.4217736815,
+      "after_mean_ms": 2.4245462175,
+      "after_minus_before_ms": 0.0027725360000001587,
+      "percent_change": 0.11448369520157264
+    },
+    {
+      "case": "no_cover",
+      "cache_mode": "invalidate",
+      "fixture_sha256": "d87ffaab63109286eb1c885b672a55a0b718d2074fed0afbc686072f817b45a4",
+      "body_sha256": {
+        "0": "78c31292719933bc30f5b58c32ebce9e63fb4cc142c868f6108fe391053300a3",
+        "1": "e68edd23716d03868dad4bcfdfa9695e279343933bc3fffa3d310076a41b31d1"
+      },
+      "nearby_count": 1,
+      "arms": {
+        "before1": {
+          "publisher_wall_ms": {
+            "mean": 7.302115315,
+            "median": 7.223231999999999,
+            "p99": 7.948572,
+            "max": 18.535568
+          },
+          "publisher_thread_cpu_ms": {
+            "mean": 7.299231178,
+            "median": 7.220371999999999,
+            "p99": 7.946269,
+            "max": 18.532419
+          },
+          "sight_profile": [
+            {
+              "name": "visible_tiles",
+              "calls": 600,
+              "self_ms": 74.41247100000001,
+              "cumulative_ms": 1522.359423
+            },
+            {
+              "name": "line_of_sight",
+              "calls": 80600,
+              "self_ms": 76.386465,
+              "cumulative_ms": 1431.0895030000001
+            },
+            {
+              "name": "line",
+              "calls": 120200,
+              "self_ms": 300.801612,
+              "cumulative_ms": 418.543855
+            }
+          ],
+          "gc_counts": {
+            "warmup/gen0": 76,
+            "warmup/gen1": 6,
+            "warmup/gen2": 1,
+            "unprofiled/gen0": 982,
+            "unprofiled/gen1": 90,
+            "unprofiled/gen2": 3,
+            "profiled/gen0": 184,
+            "profiled/gen1": 16
+          }
+        },
+        "after1": {
+          "publisher_wall_ms": {
+            "mean": 6.605544234,
+            "median": 6.5414034999999995,
+            "p99": 7.170838,
+            "max": 19.938508
+          },
+          "publisher_thread_cpu_ms": {
+            "mean": 6.6029320910000004,
+            "median": 6.5379345,
+            "p99": 7.165614,
+            "max": 19.934401
+          },
+          "sight_profile": [
+            {
+              "name": "visible_tiles",
+              "calls": 600,
+              "self_ms": 66.39339400000001,
+              "cumulative_ms": 1000.009079
+            },
+            {
+              "name": "line_of_sight",
+              "calls": 80600,
+              "self_ms": 228.33519800000002,
+              "cumulative_ms": 917.373368
+            },
+            {
+              "name": "line",
+              "calls": 200,
+              "self_ms": 0.5268520000000001,
+              "cumulative_ms": 0.690011
+            }
+          ],
+          "gc_counts": {
+            "warmup/gen0": 76,
+            "warmup/gen1": 6,
+            "warmup/gen2": 1,
+            "unprofiled/gen0": 982,
+            "unprofiled/gen1": 90,
+            "unprofiled/gen2": 3,
+            "profiled/gen0": 184,
+            "profiled/gen1": 16
+          }
+        },
+        "after2": {
+          "publisher_wall_ms": {
+            "mean": 6.584058828,
+            "median": 6.512524,
+            "p99": 7.037264,
+            "max": 17.174742
+          },
+          "publisher_thread_cpu_ms": {
+            "mean": 6.581209229,
+            "median": 6.5097974999999995,
+            "p99": 7.03423,
+            "max": 17.171092
+          },
+          "sight_profile": [
+            {
+              "name": "visible_tiles",
+              "calls": 600,
+              "self_ms": 66.00767,
+              "cumulative_ms": 1008.7572220000001
+            },
+            {
+              "name": "line_of_sight",
+              "calls": 80600,
+              "self_ms": 228.23887200000001,
+              "cumulative_ms": 926.7240340000001
+            },
+            {
+              "name": "line",
+              "calls": 200,
+              "self_ms": 0.5022260000000001,
+              "cumulative_ms": 0.6651680000000001
+            }
+          ],
+          "gc_counts": {
+            "warmup/gen0": 76,
+            "warmup/gen1": 6,
+            "warmup/gen2": 1,
+            "unprofiled/gen0": 982,
+            "unprofiled/gen1": 90,
+            "unprofiled/gen2": 3,
+            "profiled/gen0": 184,
+            "profiled/gen1": 16
+          }
+        },
+        "before2": {
+          "publisher_wall_ms": {
+            "mean": 7.278234057,
+            "median": 7.176649,
+            "p99": 8.138054,
+            "max": 20.314774
+          },
+          "publisher_thread_cpu_ms": {
+            "mean": 7.275516527,
+            "median": 7.1738395,
+            "p99": 8.135051,
+            "max": 20.302707
+          },
+          "sight_profile": [
+            {
+              "name": "visible_tiles",
+              "calls": 600,
+              "self_ms": 74.62001800000002,
+              "cumulative_ms": 1556.438373
+            },
+            {
+              "name": "line_of_sight",
+              "calls": 80600,
+              "self_ms": 76.328147,
+              "cumulative_ms": 1463.640861
+            },
+            {
+              "name": "line",
+              "calls": 120200,
+              "self_ms": 299.37300500000003,
+              "cumulative_ms": 417.105216
+            }
+          ],
+          "gc_counts": {
+            "warmup/gen0": 76,
+            "warmup/gen1": 6,
+            "warmup/gen2": 1,
+            "unprofiled/gen0": 982,
+            "unprofiled/gen1": 90,
+            "unprofiled/gen2": 3,
+            "profiled/gen0": 184,
+            "profiled/gen1": 16
+          }
+        }
+      },
+      "before_mean_ms": 7.2873738525,
+      "after_mean_ms": 6.59207066,
+      "after_minus_before_ms": -0.6953031925,
+      "percent_change": -9.541203821476374
+    }
+  ],
+  "limits": [
+    "Frozen synthetic Sodium fixtures, one hosted runner and two arms per version, not a bound for all states.",
+    "All 24 raw wall/thread CPU distributions were independently recomputed; source heads and fixture/reference-body hashes match.",
+    "All raw vectors, GC records and 24 pstats remain in the artifact. Profiled inclusive values have overhead and are nested.",
+    "Warm numerical increases are retained without correction or rerun. Technical lead accepted the warm criterion in ruling6744772541; this is not a threshold-derived pass.",
+    "No native S11 has been started for S43. Runtime CPU failures get no rerun."
+  ],
+  "runner_name": "GitHub Actions 1000029077",
+  "technical_lead_warm_ruling": {
+    "comment": 6744772541,
+    "outcome": "satisfied, proceed",
+    "basis": "Changed function absent from warm profiles; unchanged line() consumer; overlapping arm ranges. Raw values retained; not a threshold-derived pass."
+  }
+}

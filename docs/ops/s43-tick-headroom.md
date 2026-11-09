@@ -178,3 +178,68 @@ acceptance. No local timing benchmark or full local suite was run.
 Full hosted Linux/Windows suites, automated review and unchanged
 final-head S04/S05/S10/S11/S24 remain required. A CPU failure in this
 runtime-changing PR gets no rerun. H1/S25 remain NOT GRANTED.
+
+### Hosted replay results
+
+First execution [42648936644], job 129269703994, runner
+`GitHub Actions 1000029077`, Python 3.12.16. Before is `6bf5d94`; after
+is `b639dfb6e87848b0f0c94d9bcf59544bc1cea4c9`. All declared arms and
+scene/reference-body fingerprints match. Each raw wall/thread-CPU
+distribution and its mean, median, p99 and maximum were independently
+recomputed, along with comparison arithmetic and the archive SHA-256.
+
+Unprofiled mean publisher thread CPU, milliseconds, averaging the two
+equal-size arms per version:
+
+| Scene | Cache | Before | After | Change |
+|---|---|---:|---:|---:|
+| Sable target | warm | 2.495019 | 2.485721 | -0.373% |
+| Sable target | invalidated | 7.313676 | 6.541520 | -10.558% |
+| Covered target | warm | 2.492981 | 2.496110 | +0.126% |
+| Covered target | invalidated | 7.349072 | 6.703237 | -8.788% |
+| No covered actor | warm | 2.421774 | 2.424546 | +0.114% |
+| No covered actor | invalidated | 7.287374 | 6.592071 | -9.541% |
+
+Every invalidated scene saves 0.645835 to 0.772157 ms/publication. Both
+candidate arm means are lower than both before arm means in each such
+scene. This is a result for the declared fixtures, not a bound on all
+states or a native gate pass.
+
+The two positive warm shifts are retained: 3.129625 and 2.772536
+microseconds. Their before/after arm ranges overlap, and the changed
+`line_of_sight` has zero calls in all twelve warm cProfile phases. The
+unchanged `line()` has one call/publication there. No warm phase has GC
+after warmup. The author recommendation is neutral-control variation;
+acceptance interpretation was requested on #194, comment 6744756546.
+The technical lead ruled the warm criterion satisfied in comment
+6744772541, based on the unchanged executed path and overlapping arm
+ranges. This is the lead's ruling, not a pass selected by a threshold.
+Every raw numerical increase remains unchanged in the packet.
+
+All cold profiles retain 403 LoS calls/publication. Total `line()` calls,
+including recursive reversal, drop from 120,200 to 200 per 200-call
+profile, leaving the independent cover-list consumer. LoS inclusive
+profile cost drops from about 7.15-7.36 to 4.59-4.63 ms/publication.
+Profiler overhead and nested work are included; these values are never
+added to other nested totals or substituted for unprofiled CPU or S11.
+
+The compact [replay summary](captures/s43/replay-summary.json) retains
+every arm's mean/median/p99/max, fingerprints, selected function counts
+and GC counts. Raw samples, GC records, four full reports, 24 pstats and
+comparison.json are in [artifact 13688864091], 824,329 bytes, ZIP SHA-256
+`02a43ace29beed293969bea971f9d62a58cde6c77dcb8f7816859ed4a73a71fe`.
+No measurement was repeated or corrected.
+
+[42648936644]: https://github.com/Thiesi/Karst41/actions/runs/42648936644
+[artifact 13688864091]: https://github.com/Thiesi/Karst41/actions/runs/42648936644/artifacts/13688864091
+
+### Candidate full suites
+
+Hosted root CI [42648936562] passed at `b639dfb`: Linux 2,584 tests,
+Windows 2,583 tests and one skipped. Focused checks, the immutable
+before-data and the performance packet above refer to this code head.
+The final PR metadata/evidence commit changes no runtime, test or replay
+code. Final-head CI and native acceptance remain required; no S11 result
+is claimed yet. No full local suite was run.
+
+[42648936562]: https://github.com/Thiesi/Karst41/actions/runs/42648936562

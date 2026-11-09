@@ -1,6 +1,6 @@
 # S43 — Tick headroom: cheaper sight and grid rebuilds
 
-**Status:** planned
+**Status:** done (PR #199; final-head acceptance and technical record on the PR)
 **Primary model:** Codex · **Reviewer:** automated review, technical lead
 **Depends on:** S11, S40 · **Milestone:** service health
 **Issue:** https://github.com/Thiesi/Karst41/issues/194
@@ -106,3 +106,13 @@ technical lead's standing ruling for commit-stall failures is
 unchanged.
 
 [6739011979]: https://github.com/Thiesi/Karst41/issues/194#issuecomment-6739011979
+
+Implementation follows the narrower technical-lead ruling 6744095432:
+stream the existing canonical LoS ray, with no cache redesign. Tests were
+committed first; all frozen output/equivalence/invalidation checks pass.
+The first same-runner replay saves 8.8-10.6% publisher thread CPU in all
+invalidated scenes. The technical lead accepted the warm-control
+criterion in ruling 6744772541; all raw increases remain retained.
+The evidence note and compact replay summary are in docs/ops. Native
+final-head gates and the technical record remain required before merge;
+this done mark grants no gate or human approval.
