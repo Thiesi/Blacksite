@@ -54,6 +54,30 @@ shipped content, frozen mechanics and P3 baselines remain unchanged.
   door control. Flip the latch and take the existing back way before its
   ordinary reset. No routing or jack-in redesign is included.
 
+## Integration notes
+
+Full CI at 8d62a60 failed on both systems with two failures caused
+by the demo schema and conditions
+([run 42698477129](https://github.com/Thiesi/Karst41/actions/runs/42698477129)).
+Both were fixed at 1037fcc; the full suites then passed. The failures
+remain on record, and no frozen baseline or assertion was weakened.
+
+- `tests/content/test_validate_rules.py::test_rule[spawner tile and region]`:
+  adding posts changed the diagnostic expected by the existing fixture.
+  The validator now preserves "tile and region" for non-post spawners
+  and names posts when present. The original fixture stays intact;
+  demo post-content checks cover the added post constraints.
+- `tests/test_dialogue.py::test_game_13_4_closed_condition_set_is_fully_exercised`:
+  the new `drawn`, `provoked` and `hunted` conditions lacked cases in
+  the exhaustive condition table. Each now has positive and negative
+  Facts cases exercising the evaluator. The closed-set assertion is
+  unchanged; the fix does not merely widen an accepted set.
+
+Where round 3 talk-page fixtures conflicted with main, main's S42
+reaction-group and interaction behavior wins. The demo retains that
+behavior and adds its drawn/provoked responses on top. Shipped city
+coordinates and frozen mechanics/P3/S43 values stay unchanged.
+
 ## Evidence boundaries
 
 Local focused checks cover the demo, both renderers at both sizes and
