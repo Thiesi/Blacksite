@@ -21,9 +21,12 @@ def helpers(**dependencies: Any) -> type:
     module.body[1].body = methods
     module.body.append(next(n for n in source.body if isinstance(n, ast.AsyncFunctionDef)
                             and n.name == 's10_tram_evacuation'))
+    module.body.append(next(n for n in source.body if isinstance(n, ast.FunctionDef)
+                            and n.name == 's10_patrol_fixture'))
     scope = {'deque': deque, **dependencies}
     exec(compile(ast.fix_missing_locations(module), str(path), 'exec'), scope)
     scope['Probe'].s10_tram_evacuation = scope['s10_tram_evacuation']
+    scope['Probe'].s10_patrol_fixture = staticmethod(scope['s10_patrol_fixture'])
     return scope['Probe']
 
 
@@ -179,3 +182,65 @@ def test_s10_tram_waits_for_scheduled_arrival_and_keeps_winner_death_blocking(fa
         assert keys == [b'e'] and onward == ['core-plaza']
         assert ride_allowances and reports
         assert actor.health == 18 and actor.marked
+
+
+def test_s10_position_fixture_keeps_live_patrol_and_marked_pursuit(repo_root: Path) -> None:
+    from dataclasses import replace
+    from datetime import timedelta
+
+    from blacksite.content.loader import load_content
+    from tests.character_helpers import create, place
+    from tests.harness import HeadlessServer
+
+    content = load_content(repo_root/'src/blacksite/content')
+    original = content.npcs['npc-warden-patrol']
+    old_zones, old_npcs = dict(content.zones), dict(content.npcs)
+    helpers(replace=replace).s10_patrol_fixture(content)
+    zone = content.zones['vatside-clinics']
+    patrol = next(sp for sp in zone.meta.spawners if sp.id == 'warden-patrol')
+    scoped = content.npcs[patrol.npc]
+    # The clone changes positional data only; the original/plaza stay intact.
+    assert replace(scoped, id=original.id, behaviours=original.behaviours) == original
+    assert len(scoped.behaviours) == len(original.behaviours)
+    for before, after in zip(original.behaviours, scoped.behaviours):
+        assert before.kind == after.kind
+        assert {k: v for k, v in after.params.items() if k != 'waypoints'} == {
+            k: v for k, v in before.params.items() if k != 'waypoints'}
+    assert content.npcs == {**old_npcs, patrol.npc: scoped}
+    assert {k: v for k, v in content.zones.items() if k != zone.meta.id} == {
+        k: v for k, v in old_zones.items() if k != zone.meta.id}
+    original_patrol = next(sp for sp in old_zones[zone.meta.id].meta.spawners
+                          if sp.id == patrol.id)
+    assert replace(patrol, npc=original_patrol.npc, region=original_patrol.region,
+                   tile=original_patrol.tile) == original_patrol
+    assert replace(zone, meta=replace(zone.meta,
+        spawners=old_zones[zone.meta.id].meta.spawners)) == old_zones[zone.meta.id]
+
+    game = HeadlessServer(content, character_state={})
+    client = game.connect({'user_id': 1, 'handle': 'Winner', 'node_name': 'fixture'})
+    create(game, client)
+    place(game, client, zone.meta.id, (27, 25))
+    avatar = game.core.characters.sim.avatars[client.session.user_id]
+    winner = avatar.actor
+    winner.health, winner.marked = 18, True
+    game.core.characters.players[winner.id].marked_until = (
+        game.clock.now_utc()+timedelta(minutes=15)).isoformat()
+    live = game.core.world.zones[zone.meta.id]
+    wardens = [actor for actor in live.actors.values()
+               if actor.behaviour.get('template') == scoped.id]
+    assert len(wardens) == original_patrol.count == 1
+    warden = wardens[0]
+    poses = set()
+    for _ in range(120):
+        game.step()
+        poses.add(warden.position)
+        assert 70 <= warden.x <= 74 and 23 <= warden.y <= 26
+        assert warden.target != winner.id
+        assert winner.health == 18 and winner.marked and winner.stance == 'normal'
+    assert len(poses) > 1  # Not frozen, removed or turned into a training NPC.
+    assert not warden.behaviour.get('training')
+    assert game.core.npcs.hostile(warden, winner)
+    # Position is the isolation: a nearby Marked caller is still hunted.
+    place(game, client, zone.meta.id, (warden.x-1, warden.y))
+    game.core.npcs.evaluate(warden, live, game.clock.now_tick())
+    assert warden.target == winner.id and warden.behaviour['state'] == 'hunt'
