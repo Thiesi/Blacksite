@@ -1,0 +1,446 @@
+{
+  "schema": 1,
+  "id": "core-plaza",
+  "name": "Meridian Plaza",
+  "district": "The Core",
+  "safety": "safe",
+  "sight_radius": 12,
+  "spawn": [
+    3,
+    3
+  ],
+  "charted": true,
+  "public": [
+    [
+      0,
+      0,
+      90,
+      2
+    ],
+    [
+      0,
+      2,
+      2,
+      2
+    ],
+    [
+      3,
+      2,
+      87,
+      2
+    ],
+    [
+      0,
+      4,
+      90,
+      1
+    ],
+    [
+      0,
+      5,
+      10,
+      1
+    ],
+    [
+      11,
+      5,
+      79,
+      1
+    ],
+    [
+      0,
+      6,
+      90,
+      23
+    ],
+    [
+      0,
+      29,
+      65,
+      1
+    ],
+    [
+      66,
+      29,
+      24,
+      1
+    ],
+    [
+      0,
+      30,
+      90,
+      10
+    ],
+    [
+      2,
+      2,
+      1,
+      1
+    ],
+    [
+      2,
+      3,
+      1,
+      1
+    ],
+    [
+      10,
+      5,
+      1,
+      1
+    ],
+    [
+      65,
+      29,
+      1,
+      1
+    ]
+  ],
+  "exits": [
+    {
+      "id": "to-clinics",
+      "tile": [
+        87,
+        2
+      ],
+      "target_zone": "vatside-clinics",
+      "target_tile": [
+        77,
+        3
+      ],
+      "kind": "street"
+    },
+    {
+      "id": "to-tram-hub",
+      "tile": [
+        3,
+        37
+      ],
+      "target_zone": "core-tram-hub",
+      "target_tile": [
+        18,
+        28
+      ],
+      "kind": "street"
+    },
+    {
+      "id": "to-core-precinct",
+      "tile": [
+        33,
+        37
+      ],
+      "target_zone": "core-precinct",
+      "target_tile": [
+        24,
+        22
+      ],
+      "kind": "street"
+    },
+    {
+      "id": "to-sodium-row",
+      "tile": [
+        62,
+        37
+      ],
+      "target_zone": "sodium-row",
+      "target_tile": [
+        2,
+        12
+      ],
+      "kind": "street"
+    },
+    {
+      "id": "to-terraces-blocks",
+      "tile": [
+        86,
+        37
+      ],
+      "target_zone": "terraces-blocks",
+      "target_tile": [
+        45,
+        3
+      ],
+      "kind": "street"
+    }
+  ],
+  "objects": [
+    {
+      "id": "kestrel-bank",
+      "tile": [
+        9,
+        5
+      ],
+      "kind": "bank",
+      "essential": true,
+      "params": {
+        "name": "Kestrel bank"
+      }
+    },
+    {
+      "id": "plaza-general-vendor",
+      "tile": [
+        76,
+        5
+      ],
+      "kind": "vendor",
+      "essential": false,
+      "params": {
+        "name": "Ostrom Showroom",
+        "vendor": "ostrom-showroom"
+      }
+    },
+    {
+      "id": "warden-recruiter",
+      "tile": [
+        17,
+        30
+      ],
+      "kind": "vendor",
+      "essential": false,
+      "params": {
+        "name": "Warden recruiter",
+        "inspect_verb": "look at"
+      }
+    },
+    {
+      "id": "civic-notice-board",
+      "tile": [
+        69,
+        30
+      ],
+      "kind": "terminal",
+      "essential": false,
+      "params": {
+        "name": "Civic notice board"
+      }
+    },
+    {
+      "id": "civic-descent",
+      "tile": [
+        72,
+        30
+      ],
+      "kind": "descent_console",
+      "essential": false,
+      "params": {
+        "name": "Civic descent"
+      }
+    },
+    {
+      "id": "plaza-light-west",
+      "tile": [
+        36,
+        13
+      ],
+      "kind": "light",
+      "essential": false,
+      "params": {
+        "name": "Plaza light west"
+      }
+    },
+    {
+      "id": "plaza-light-east",
+      "tile": [
+        54,
+        13
+      ],
+      "kind": "light",
+      "essential": false,
+      "params": {
+        "name": "Plaza light east"
+      }
+    },
+    {
+      "id": "plaza-public-1",
+      "tile": [
+        31,
+        5
+      ],
+      "kind": "terminal",
+      "essential": true,
+      "params": {
+        "name": "Public terminal (Plaza 1)"
+      }
+    },
+    {
+      "id": "plaza-public-2",
+      "tile": [
+        57,
+        5
+      ],
+      "kind": "terminal",
+      "essential": true,
+      "params": {
+        "name": "Public terminal (Plaza 2)"
+      }
+    },
+    {
+      "id": "plaza-public-3",
+      "tile": [
+        9,
+        30
+      ],
+      "kind": "terminal",
+      "essential": true,
+      "params": {
+        "name": "Public terminal (Plaza 3)"
+      }
+    },
+    {
+      "id": "plaza-public-4",
+      "tile": [
+        80,
+        30
+      ],
+      "kind": "terminal",
+      "essential": true,
+      "params": {
+        "name": "Public terminal (Plaza 4)"
+      }
+    },
+    {
+      "id": "boundary-spire-atrium",
+      "tile": [
+        2,
+        2
+      ],
+      "kind": "door",
+      "params": {
+        "open": true,
+        "unavailable_target": "spire-atrium",
+        "name": "Construction boundary"
+      }
+    },
+    {
+      "id": "civic-records-hardware",
+      "kind": "hardware",
+      "tile": [
+        66,
+        29
+      ],
+      "params": {
+        "name": "Records annex cabinet",
+        "core": "lat-civic-ledger"
+      }
+    },
+    {
+      "id": "branch-vault-hardware",
+      "tile": [
+        11,
+        5
+      ],
+      "kind": "hardware",
+      "params": {
+        "name": "Kestrel Branch hardware",
+        "core": "lat-kestrel-branch"
+      }
+    },
+    {
+      "id": "precinct-camera-net",
+      "tile": [
+        3,
+        3
+      ],
+      "kind": "terminal",
+      "params": {
+        "name": "Camera net",
+        "control": "camera-net"
+      }
+    },
+    {
+      "id": "precinct-curfew-shutters",
+      "tile": [
+        2,
+        3
+      ],
+      "kind": "door",
+      "params": {
+        "name": "Curfew shutters",
+        "control": "curfew-shutters"
+      }
+    },
+    {
+      "id": "civic-ledger-hall-doors",
+      "tile": [
+        65,
+        29
+      ],
+      "kind": "door",
+      "params": {
+        "name": "hall doors",
+        "control": "hall-doors"
+      }
+    },
+    {
+      "id": "kestrel-branch-branch-shutters",
+      "tile": [
+        10,
+        5
+      ],
+      "kind": "door",
+      "params": {
+        "name": "branch shutters",
+        "control": "branch-shutters"
+      }
+    }
+  ],
+  "pockets": [],
+  "lore": [
+    "zone-core-plaza"
+  ],
+  "spawners": [
+    {
+      "id": "warden-patrol",
+      "npc": "npc-warden-patrol",
+      "count": 2,
+      "respawn_seconds": 60,
+      "condition": "always",
+      "region": {
+        "x": 9,
+        "y": 6,
+        "w": 72,
+        "h": 27
+      }
+    },
+    {
+      "id": "civilian",
+      "npc": "npc-civilian",
+      "count": 5,
+      "respawn_seconds": 60,
+      "condition": "always",
+      "region": {
+        "x": 3,
+        "y": 4,
+        "w": 84,
+        "h": 31
+      }
+    },
+    {
+      "id": "courier",
+      "npc": "npc-courier",
+      "count": 1,
+      "respawn_seconds": 60,
+      "condition": "always",
+      "region": {
+        "x": 3,
+        "y": 2,
+        "w": 82,
+        "h": 3
+      }
+    },
+    {
+      "id": "vendor-core-plaza-plaza-general-vendor",
+      "npc": "npc-vendor-core-plaza-plaza-general-vendor",
+      "count": 1,
+      "respawn_seconds": 60,
+      "condition": "always",
+      "region": {
+        "x": 75,
+        "y": 4,
+        "w": 3,
+        "h": 3
+      }
+    }
+  ],
+  "sector": "lat-core"
+}

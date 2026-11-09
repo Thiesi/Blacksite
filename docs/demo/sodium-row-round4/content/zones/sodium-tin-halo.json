@@ -1,0 +1,218 @@
+{
+  "schema": 1,
+  "id": "sodium-tin-halo",
+  "name": "The Tin Halo",
+  "district": "Sodium Row",
+  "safety": "pocket",
+  "sight_radius": 28,
+  "spawn": [
+    9,
+    11
+  ],
+  "exits": [
+    {
+      "id": "to-sodium-row",
+      "tile": [
+        7,
+        10
+      ],
+      "target_zone": "sodium-row",
+      "target_tile": [
+        89,
+        12
+      ],
+      "kind": "door"
+    },
+    {
+      "id": "to-sodium-row-back",
+      "tile": [
+        34,
+        2
+      ],
+      "target_zone": "sodium-row",
+      "target_tile": [
+        89,
+        24
+      ],
+      "kind": "door"
+    }
+  ],
+  "objects": [
+    {
+      "id": "vesper",
+      "tile": [
+        34,
+        10
+      ],
+      "kind": "vendor",
+      "essential": false,
+      "params": {
+        "name": "The Tin Halo",
+        "vendor": "vesper",
+        "contract_handler": "vesper",
+        "trade_counter": "vesper"
+      }
+    },
+    {
+      "id": "halo-bar",
+      "tile": [
+        24,
+        8
+      ],
+      "kind": "vendor",
+      "essential": false,
+      "params": {
+        "name": "Halo bar"
+      }
+    },
+    {
+      "id": "halo-back-room",
+      "tile": [
+        30,
+        4
+      ],
+      "kind": "door",
+      "essential": false,
+      "params": {
+        "name": "Halo back room",
+        "open": false,
+        "locked": true
+      }
+    },
+    {
+      "id": "ferrymen-liaison",
+      "tile": [
+        31,
+        14
+      ],
+      "kind": "vendor",
+      "essential": false,
+      "params": {
+        "name": "Ferrymen liaison",
+        "inspect_verb": "look at"
+      }
+    },
+    {
+      "id": "halo-contract-board",
+      "tile": [
+        9,
+        6
+      ],
+      "kind": "terminal",
+      "essential": false,
+      "params": {
+        "name": "Halo contract board",
+        "contract_handler": "vesper"
+      }
+    },
+    {
+      "id": "halo-market-board",
+      "tile": [
+        9,
+        14
+      ],
+      "kind": "terminal",
+      "essential": false,
+      "params": {
+        "name": "Halo market board"
+      }
+    },
+    {
+      "id": "halo-cabinet-hardware",
+      "tile": [
+        25,
+        8
+      ],
+      "kind": "hardware",
+      "params": {
+        "name": "Tin Halo hardware",
+        "core": "lat-tin-halo"
+      }
+    }
+  ],
+  "pockets": [],
+  "lore": [
+    "zone-sodium-tin-halo"
+  ],
+  "spawners": [
+    {
+      "id": "halo-bouncer",
+      "npc": "npc-halo-bouncer",
+      "count": 1,
+      "respawn_seconds": 60,
+      "condition": "always",
+      "region": {
+        "x": 9,
+        "y": 9,
+        "w": 1,
+        "h": 1
+      }
+    },
+    {
+      "id": "vendor-sodium-tin-halo-vesper",
+      "npc": "npc-vendor-sodium-tin-halo-vesper",
+      "count": 1,
+      "respawn_seconds": 60,
+      "condition": "always",
+      "region": {
+        "x": 33,
+        "y": 9,
+        "w": 1,
+        "h": 3
+      }
+    },
+    {
+      "id": "halo-dolf",
+      "npc": "npc-halo-dolf",
+      "count": 1,
+      "respawn_seconds": 60,
+      "condition": "always",
+      "region": {
+        "x": 16,
+        "y": 6,
+        "w": 14,
+        "h": 1
+      }
+    },
+    {
+      "id": "halo-regular-crew",
+      "npc": "npc-row-kestrel-crew",
+      "count": 1,
+      "respawn_seconds": 60,
+      "condition": "always",
+      "region": {
+        "x": 12,
+        "y": 10,
+        "w": 18,
+        "h": 3
+      }
+    },
+    {
+      "id": "halo-regular-stray",
+      "npc": "npc-row-clause-regular",
+      "count": 1,
+      "respawn_seconds": 60,
+      "condition": "always",
+      "region": {
+        "x": 12,
+        "y": 10,
+        "w": 18,
+        "h": 3
+      }
+    },
+    {
+      "id": "halo-regular-runner",
+      "npc": "npc-row-unmoored-runner",
+      "count": 1,
+      "respawn_seconds": 60,
+      "condition": "always",
+      "region": {
+        "x": 12,
+        "y": 10,
+        "w": 18,
+        "h": 3
+      }
+    }
+  ],
+  "sector": "lat-sodium-row"
+}

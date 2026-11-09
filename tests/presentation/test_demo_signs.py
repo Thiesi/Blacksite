@@ -2,7 +2,7 @@
 
 from pathlib import Path
 
-from karst41.content.loader import load_content
+from scripts.demo_sodium.content import load_demo_content as load_content
 from karst41.server.views import looks
 
 ROOT = Path(__file__).resolve().parents[2]

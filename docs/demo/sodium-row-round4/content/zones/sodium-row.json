@@ -1,0 +1,538 @@
+{
+  "schema": 1,
+  "id": "sodium-row",
+  "name": "Sodium Row",
+  "district": "Sodium Row",
+  "safety": "contested",
+  "truce": "sable",
+  "sight_radius": 13,
+  "spawn": [
+    3,
+    12
+  ],
+  "charted": true,
+  "public": [
+    [
+      0,
+      2,
+      22,
+      6
+    ],
+    [
+      0,
+      21,
+      35,
+      2
+    ],
+    [
+      0,
+      0,
+      100,
+      2
+    ],
+    [
+      0,
+      8,
+      100,
+      13
+    ],
+    [
+      0,
+      23,
+      100,
+      7
+    ],
+    [
+      37,
+      2,
+      1,
+      6
+    ],
+    [
+      43,
+      2,
+      1,
+      2
+    ],
+    [
+      43,
+      21,
+      57,
+      2
+    ],
+    [
+      45,
+      5,
+      10,
+      3
+    ],
+    [
+      47,
+      2,
+      1,
+      2
+    ],
+    [
+      53,
+      4,
+      2,
+      1
+    ],
+    [
+      53,
+      3,
+      21,
+      1
+    ],
+    [
+      53,
+      2,
+      23,
+      1
+    ],
+    [
+      60,
+      5,
+      10,
+      3
+    ],
+    [
+      60,
+      4,
+      14,
+      1
+    ],
+    [
+      79,
+      2,
+      5,
+      1
+    ],
+    [
+      81,
+      3,
+      3,
+      2
+    ],
+    [
+      83,
+      6,
+      17,
+      2
+    ],
+    [
+      85,
+      2,
+      15,
+      4
+    ]
+  ],
+  "exits": [
+    {
+      "id": "to-core-plaza",
+      "tile": [
+        1,
+        12
+      ],
+      "target_zone": "core-plaza",
+      "target_tile": [
+        62,
+        38
+      ],
+      "kind": "street"
+    },
+    {
+      "id": "to-sodium-tin-halo",
+      "tile": [
+        90,
+        12
+      ],
+      "target_zone": "sodium-tin-halo",
+      "target_tile": [
+        8,
+        10
+      ],
+      "kind": "door"
+    }
+  ],
+  "objects": [
+    {
+      "id": "row-drug-dealer",
+      "tile": [
+        60,
+        21
+      ],
+      "kind": "vendor",
+      "essential": false,
+      "params": {
+        "name": "Row drug dealer",
+        "inspect_verb": "look at"
+      }
+    },
+    {
+      "id": "row-ticket-tout",
+      "tile": [
+        92,
+        5
+      ],
+      "kind": "vendor",
+      "essential": false,
+      "params": {
+        "name": "Row ticket tout",
+        "inspect_verb": "look at"
+      }
+    },
+    {
+      "id": "row-stage",
+      "tile": [
+        26,
+        21
+      ],
+      "kind": "light",
+      "essential": false,
+      "params": {
+        "name": "Row stage"
+      }
+    },
+    {
+      "id": "row-card-table",
+      "tile": [
+        52,
+        19
+      ],
+      "kind": "light",
+      "essential": false,
+      "params": {
+        "name": "Row card table"
+      }
+    },
+    {
+      "id": "row-bar-1",
+      "tile": [
+        13,
+        5
+      ],
+      "kind": "vendor",
+      "essential": false,
+      "params": {
+        "name": "Upstairs",
+        "vendor": "row-upstairs"
+      }
+    },
+    {
+      "id": "row-bar-2",
+      "tile": [
+        23,
+        4
+      ],
+      "kind": "vendor",
+      "essential": false,
+      "params": {
+        "name": "The Long Shift",
+        "vendor": "row-long-shift"
+      }
+    },
+    {
+      "id": "row-bar-3",
+      "tile": [
+        51,
+        3
+      ],
+      "kind": "vendor",
+      "essential": false,
+      "params": {
+        "name": "The Quarter Tone",
+        "vendor": "row-quarter-tone"
+      }
+    },
+    {
+      "id": "row-bar-4",
+      "tile": [
+        57,
+        4
+      ],
+      "kind": "vendor",
+      "essential": false,
+      "params": {
+        "name": "The Clause",
+        "vendor": "row-clause"
+      }
+    },
+    {
+      "id": "row-bar-5",
+      "tile": [
+        77,
+        3
+      ],
+      "kind": "vendor",
+      "essential": false,
+      "params": {
+        "name": "Spare Parts",
+        "vendor": "row-spare-parts"
+      }
+    },
+    {
+      "id": "row-public-1",
+      "tile": [
+        3,
+        15
+      ],
+      "kind": "terminal",
+      "essential": true,
+      "params": {
+        "name": "Public terminal (Row 1)"
+      }
+    },
+    {
+      "id": "row-public-2",
+      "tile": [
+        40,
+        16
+      ],
+      "kind": "terminal",
+      "essential": true,
+      "params": {
+        "name": "Public terminal (Row 2)"
+      }
+    },
+    {
+      "id": "row-public-3",
+      "tile": [
+        84,
+        2
+      ],
+      "kind": "terminal",
+      "essential": true,
+      "params": {
+        "name": "Public terminal (Row 3)"
+      }
+    },
+    {
+      "id": "boundary-oldworks-main",
+      "tile": [
+        96,
+        2
+      ],
+      "kind": "door",
+      "params": {
+        "open": true,
+        "unavailable_target": "oldworks-main",
+        "name": "Construction boundary"
+      }
+    },
+    {
+      "id": "sign-grid-hardware",
+      "tile": [
+        38,
+        21
+      ],
+      "kind": "hardware",
+      "params": {
+        "name": "House Lights hardware",
+        "core": "lat-house-lights"
+      }
+    },
+    {
+      "id": "house-lights-sign-grid",
+      "tile": [
+        37,
+        21
+      ],
+      "kind": "terminal",
+      "params": {
+        "name": "Sign grid",
+        "control": "sign-grid"
+      }
+    }
+  ],
+  "pockets": [],
+  "lore": [
+    "zone-sodium-row"
+  ],
+  "spawners": [
+    {
+      "id": "sable-enforcer-stair",
+      "npc": "npc-row-enforcer",
+      "count": 1,
+      "respawn_seconds": 60,
+      "condition": "always",
+      "region": {
+        "x": 8,
+        "y": 11,
+        "w": 1,
+        "h": 3
+      }
+    },
+    {
+      "id": "sable-enforcer-strip",
+      "npc": "npc-row-enforcer",
+      "count": 1,
+      "respawn_seconds": 60,
+      "condition": "always",
+      "region": {
+        "x": 45,
+        "y": 9,
+        "w": 2,
+        "h": 1
+      }
+    },
+    {
+      "id": "upstairs-halvard",
+      "npc": "npc-row-halvard-offduty",
+      "count": 1,
+      "respawn_seconds": 60,
+      "condition": "always",
+      "region": {
+        "x": 8,
+        "y": 5,
+        "w": 11,
+        "h": 3
+      }
+    },
+    {
+      "id": "upstairs-sablier",
+      "npc": "npc-row-sablier-offduty",
+      "count": 1,
+      "respawn_seconds": 60,
+      "condition": "always",
+      "region": {
+        "x": 8,
+        "y": 5,
+        "w": 11,
+        "h": 3
+      }
+    },
+    {
+      "id": "long-shift-crew",
+      "npc": "npc-row-kestrel-crew",
+      "count": 2,
+      "respawn_seconds": 60,
+      "condition": "always",
+      "region": {
+        "x": 25,
+        "y": 2,
+        "w": 11,
+        "h": 5
+      }
+    },
+    {
+      "id": "quarter-tone-listeners",
+      "npc": "npc-row-choir-listener",
+      "count": 2,
+      "respawn_seconds": 60,
+      "condition": "always",
+      "region": {
+        "x": 39,
+        "y": 2,
+        "w": 13,
+        "h": 5
+      }
+    },
+    {
+      "id": "clause-regulars",
+      "npc": "npc-row-clause-regular",
+      "count": 2,
+      "respawn_seconds": 60,
+      "condition": "always",
+      "region": {
+        "x": 55,
+        "y": 4,
+        "w": 5,
+        "h": 3
+      }
+    },
+    {
+      "id": "spare-parts-runners",
+      "npc": "npc-row-unmoored-runner",
+      "count": 2,
+      "respawn_seconds": 60,
+      "condition": "always",
+      "region": {
+        "x": 71,
+        "y": 3,
+        "w": 12,
+        "h": 4
+      }
+    },
+    {
+      "id": "card-court-players",
+      "npc": "npc-row-card-player",
+      "count": 2,
+      "respawn_seconds": 60,
+      "condition": "always",
+      "region": {
+        "x": 49,
+        "y": 18,
+        "w": 7,
+        "h": 1
+      }
+    },
+    {
+      "id": "card-court-solenne",
+      "npc": "npc-row-solenne",
+      "count": 1,
+      "respawn_seconds": 60,
+      "condition": "always",
+      "region": {
+        "x": 59,
+        "y": 20,
+        "w": 1,
+        "h": 1
+      }
+    },
+    {
+      "id": "halo-doorstep-1",
+      "npc": "npc-row-halo-doorstep",
+      "count": 1,
+      "respawn_seconds": 60,
+      "condition": "always",
+      "region": {
+        "x": 85,
+        "y": 11,
+        "w": 1,
+        "h": 1
+      }
+    },
+    {
+      "id": "halo-doorstep-2",
+      "npc": "npc-row-halo-doorstep",
+      "count": 1,
+      "respawn_seconds": 60,
+      "condition": "always",
+      "region": {
+        "x": 87,
+        "y": 13,
+        "w": 1,
+        "h": 1
+      }
+    },
+    {
+      "id": "sodium-regular",
+      "npc": "npc-sodium-regular",
+      "count": 3,
+      "respawn_seconds": 60,
+      "condition": "always",
+      "region": {
+        "x": 10,
+        "y": 9,
+        "w": 70,
+        "h": 8
+      }
+    },
+    {
+      "id": "plainclothes-warden",
+      "npc": "npc-plainclothes-warden",
+      "poses_as": "sodium-regular",
+      "count": 1,
+      "respawn_seconds": 60,
+      "condition": "always",
+      "region": {
+        "x": 10,
+        "y": 9,
+        "w": 70,
+        "h": 8
+      }
+    }
+  ],
+  "sector": "lat-sodium-row"
+}

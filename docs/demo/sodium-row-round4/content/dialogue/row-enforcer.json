@@ -1,0 +1,59 @@
+{
+  "schema": 1,
+  "id": "row-enforcer",
+  "name": "Sable enforcer",
+  "faction": "sable",
+  "title": "Keeps the Row's peace",
+  "terminal": false,
+  "machine_mind": false,
+  "lines": [
+    {
+      "id": "round4-drawn",
+      "text": "I see it. Put it away, or pay for it.",
+      "when": [
+        "drawn"
+      ],
+      "required": true
+    },
+    {
+      "id": "marked",
+      "text": "You know what you did. So do we.",
+      "when": [
+        "marked"
+      ],
+      "required": true
+    },
+    {
+      "id": "wake",
+      "text": "You're new, so once. Draw on this street and we come for you. The Halo won't have you either.",
+      "when": [
+        "is_wake"
+      ],
+      "required": true
+    },
+    {
+      "id": "greeting",
+      "text": "Hands empty and we've got nothing to say.",
+      "when": [],
+      "required": true
+    }
+  ],
+  "offers": [],
+  "barks": [
+    {
+      "text": "Nobody draws on the Row. You can. Then you pay.",
+      "weight": 2,
+      "min_interval_seconds": 90
+    },
+    {
+      "text": "Everybody's welcome. Nobody's exempt.",
+      "weight": 1,
+      "min_interval_seconds": 90
+    },
+    {
+      "text": "We're not here to stop you. We're here after.",
+      "weight": 1,
+      "min_interval_seconds": 90
+    }
+  ]
+}

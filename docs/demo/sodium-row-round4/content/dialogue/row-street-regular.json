@@ -1,0 +1,102 @@
+{
+  "schema": 1,
+  "id": "row-street-regular",
+  "name": "Sodium regular",
+  "faction": null,
+  "title": "Sodium Row",
+  "terminal": false,
+  "machine_mind": false,
+  "lines": [
+    {
+      "id": "round4-provoked",
+      "text": "Not you. Keep walking.",
+      "when": [
+        "provoked"
+      ],
+      "required": true
+    },
+    {
+      "id": "round4-drawn",
+      "text": "Easy. Easy. I'm just standing here.",
+      "when": [
+        "drawn"
+      ],
+      "required": true
+    },
+    {
+      "id": "marked",
+      "text": "Not near me. Not tonight.",
+      "when": [
+        "marked"
+      ],
+      "required": true
+    },
+    {
+      "id": "wake",
+      "text": "First time down the Stair? Walk to the end. Everybody does.",
+      "when": [
+        "is_wake"
+      ],
+      "required": true
+    },
+    {
+      "id": "greeting",
+      "text": "Keep walking, the stage is full.",
+      "when": [],
+      "required": true
+    }
+  ],
+  "offers": [],
+  "barks": [
+    {
+      "text": "A tram goes over somewhere above the roofs. The puddles shiver.",
+      "weight": 1,
+      "min_interval_seconds": 90
+    },
+    {
+      "text": "Everyone walks to the end eventually. That's where the Halo is.",
+      "weight": 2,
+      "min_interval_seconds": 90
+    },
+    {
+      "text": "Past Spare Parts, then the street gives up. That's your Halo.",
+      "weight": 2,
+      "min_interval_seconds": 90
+    },
+    {
+      "text": "Music from every door and I can't name one song.",
+      "weight": 1,
+      "min_interval_seconds": 90
+    },
+    {
+      "text": "Somebody's lease ran out tonight. You can tell by how they're buying.",
+      "weight": 1,
+      "min_interval_seconds": 90
+    },
+    {
+      "text": "Keep your hands where Sable can count them.",
+      "weight": 1,
+      "min_interval_seconds": 90
+    },
+    {
+      "text": "I only came down for one.",
+      "weight": 1,
+      "min_interval_seconds": 90
+    },
+    {
+      "text": "Six doors, six songs. You learn to hear the one you want.",
+      "weight": 1,
+      "min_interval_seconds": 90
+    },
+    {
+      "text": "Loudest street in Karst, and nobody raises their voice.",
+      "weight": 1,
+      "min_interval_seconds": 90
+    },
+    {
+      "text": "Puddles never dry on the Row. Nobody remembers it raining.",
+      "weight": 1,
+      "min_interval_seconds": 90
+    }
+  ]
+}

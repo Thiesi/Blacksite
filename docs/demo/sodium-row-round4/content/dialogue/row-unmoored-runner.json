@@ -1,0 +1,85 @@
+{
+  "schema": 1,
+  "id": "row-unmoored-runner",
+  "name": "Unmoored runner",
+  "faction": "unmoored",
+  "title": "Spare Parts regular",
+  "terminal": false,
+  "machine_mind": false,
+  "lines": [
+    {
+      "id": "round4-provoked",
+      "text": "You made the street loud. Don't stand near me.",
+      "when": [
+        "provoked"
+      ],
+      "required": true
+    },
+    {
+      "id": "round4-drawn",
+      "text": "Wrong kind of loud. Put it away.",
+      "when": [
+        "drawn"
+      ],
+      "required": true
+    },
+    {
+      "id": "member",
+      "text": "Terminal's behind the counter. Trace down here is Sable's, so jack light.",
+      "when": [
+        "member_of unmoored"
+      ],
+      "required": true
+    },
+    {
+      "id": "enemy",
+      "text": "Truce holds. Doesn't mean we talk.",
+      "when": [
+        "enemy_of_me"
+      ],
+      "required": true
+    },
+    {
+      "id": "ghost",
+      "text": "Ghost template. You'll want the House Lights core one night. Everybody does once.",
+      "when": [
+        "archetype ghost"
+      ],
+      "required": true
+    },
+    {
+      "id": "greeting",
+      "text": "Spare Parts. Everything in here used to be something else. Us too.",
+      "when": [],
+      "required": true
+    }
+  ],
+  "offers": [],
+  "barks": [
+    {
+      "text": "Thirty seconds of dark. You'd be amazed what thirty seconds is worth on this street.",
+      "weight": 1,
+      "min_interval_seconds": 90
+    },
+    {
+      "text": "Halo's the next door along. End of the street. You can't miss it. People do.",
+      "weight": 2,
+      "min_interval_seconds": 90
+    },
+    {
+      "text": "Old Works is loud tonight. That's not a complaint.",
+      "weight": 1,
+      "min_interval_seconds": 90
+    },
+    {
+      "text": "Everything's salvage eventually. Some of us just got there early.",
+      "weight": 1,
+      "min_interval_seconds": 90
+    },
+    {
+      "text": "Don't buy a program off anyone who's smiling.",
+      "weight": 1,
+      "min_interval_seconds": 90
+    }
+  ]
+}

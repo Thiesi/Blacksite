@@ -44,6 +44,7 @@ def main(argv: list[str] | None = None) -> int:
         return 2
     print(f'Demo server from {SOURCE}. Signs {"charted" if args.signs else "dark"}, '
           f'drinkers {"seated" if args.seated else "moving"}.')
+    args.install_dir = args.install_dir.resolve()
     args.install_dir.mkdir(parents=True, exist_ok=True)
     sys.path.insert(0, str(SOURCE))
     from karst41.server.storage.lease import Lease
@@ -54,7 +55,13 @@ def main(argv: list[str] | None = None) -> int:
         print('Refusing to start: another server holds this install directory.')
         return 2
     try:
-        shutil.rmtree(args.install_dir / 'content', ignore_errors=True)
+        sys.path.insert(0, str(SOURCE.parent))
+        from scripts.demo_sodium.content import install_overlay
+        install_overlay(args.install_dir)
+        target = (args.install_dir / 'content').resolve()
+        if target.parent != args.install_dir:
+            raise ValueError('Demo content must stay inside its install directory.')
+        shutil.rmtree(target, ignore_errors=True)
     finally:
         lease.release()
     return subprocess.call([sys.executable, '-m', 'karst41.server', '--install-dir', str(args.install_dir), '--tcp'], env=env)

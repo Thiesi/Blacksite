@@ -9,7 +9,7 @@ from pathlib import Path
 ROOT = Path.cwd()
 sys.path[:0] = [str(ROOT/'src'), str(ROOT), str(ROOT/'scripts/presentation_mockups/website')]
 
-from karst41.content.loader import load_content
+from scripts.demo_sodium.content import load_demo_content as load_content
 from karst41.door.doorinfo import DoorInfo
 from karst41.door.model import Display
 from karst41.server.views import zone_view

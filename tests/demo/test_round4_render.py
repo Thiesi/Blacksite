@@ -4,7 +4,13 @@ import pytest
 
 from karst41.server.protocol import Frame
 from tests.fake_terminal import FakeTerminal
-from tests.presentation.test_client_foundations import content, display, zone_body  # noqa: F401
+from tests.presentation.test_client_foundations import display, zone_body
+from scripts.demo_sodium.content import load_demo_content
+
+
+@pytest.fixture(scope="module")
+def content():
+    return load_demo_content()
 
 
 @pytest.mark.parametrize('size', [(80, 24), (132, 50)])

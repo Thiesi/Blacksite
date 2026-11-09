@@ -1,0 +1,90 @@
+{
+  "schema": 1,
+  "id": "row-clause-regular",
+  "name": "Clause regular",
+  "faction": null,
+  "title": "The Clause",
+  "terminal": false,
+  "machine_mind": false,
+  "lines": [
+    {
+      "id": "round4-provoked",
+      "text": "Nobody chalks for you tonight.",
+      "when": [
+        "provoked"
+      ],
+      "required": true
+    },
+    {
+      "id": "round4-drawn",
+      "text": "Put it down. Some of us are still counting.",
+      "when": [
+        "drawn"
+      ],
+      "required": true
+    },
+    {
+      "id": "legal",
+      "text": "Day zero. Nobody here owns your lease. Chalk a line for somebody who hasn't made it.",
+      "when": [
+        "legal"
+      ],
+      "required": true
+    },
+    {
+      "id": "wake",
+      "text": "Day what? Chalk it. We all chalk it. Next round's on whoever's closest to ninety.",
+      "when": [
+        "is_wake"
+      ],
+      "required": true
+    },
+    {
+      "id": "veteran",
+      "text": "Grade five and still drinking with us. Most of them move up the street.",
+      "when": [
+        "grade_at_least 5"
+      ],
+      "required": true
+    },
+    {
+      "id": "greeting",
+      "text": "The Clause doesn't care who decanted you. It cares who's buying.",
+      "when": [],
+      "required": true
+    }
+  ],
+  "offers": [],
+  "barks": [
+    {
+      "text": "Somebody's tally stopped at sixty-one. Nobody rubs it out.",
+      "weight": 1,
+      "min_interval_seconds": 90
+    },
+    {
+      "text": "Stray's no insult on the Row. Say it two streets over and see.",
+      "weight": 1,
+      "min_interval_seconds": 90
+    },
+    {
+      "text": "Looking for Vesper? Everybody is, first week. Last door on the street, past Spare Parts.",
+      "weight": 2,
+      "min_interval_seconds": 90
+    },
+    {
+      "text": "Day forty and I still check the lease. Nothing on it. I check.",
+      "weight": 1,
+      "min_interval_seconds": 90
+    },
+    {
+      "text": "Ninety days, the paper says. Nobody here has read the rest.",
+      "weight": 1,
+      "min_interval_seconds": 90
+    },
+    {
+      "text": "A Ferryman drank here last night. Paid up front and left before the round.",
+      "weight": 1,
+      "min_interval_seconds": 90
+    }
+  ]
+}

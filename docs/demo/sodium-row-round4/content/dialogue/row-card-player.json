@@ -1,0 +1,101 @@
+{
+  "schema": 1,
+  "id": "row-card-player",
+  "name": "Card player",
+  "faction": "sable",
+  "title": "Sable's card court",
+  "terminal": false,
+  "machine_mind": false,
+  "lines": [
+    {
+      "id": "round4-provoked",
+      "text": "Table's closed. You know why.",
+      "when": [
+        "provoked"
+      ],
+      "required": true
+    },
+    {
+      "id": "round4-drawn",
+      "text": "Sit down or put it away. The cards don't care.",
+      "when": [
+        "drawn"
+      ],
+      "required": true
+    },
+    {
+      "id": "marked",
+      "text": "You drew on the Row. We saw. Everybody saw. Run, or sit very still.",
+      "when": [
+        "marked"
+      ],
+      "required": true
+    },
+    {
+      "id": "curfew",
+      "text": "Curfew. The Stair's shut. House rule: nobody leaves the table till the Wardens open it.",
+      "when": [
+        "event_active curfew"
+      ],
+      "required": true
+    },
+    {
+      "id": "surge",
+      "text": "The Choir lot are all smiling. Means the Lattice is strange tonight. Don't play a Cantor.",
+      "when": [
+        "event_active choir-surge"
+      ],
+      "required": true
+    },
+    {
+      "id": "member",
+      "text": "Deal you in? You know the house rules. You wrote half of them.",
+      "when": [
+        "member_of sable"
+      ],
+      "required": true
+    },
+    {
+      "id": "enemy",
+      "text": "We don't bite on the Row. That's the arrangement. Don't ask whose.",
+      "when": [
+        "enemy_of_me"
+      ],
+      "required": true
+    },
+    {
+      "id": "greeting",
+      "text": "Cards are Sable's. So's the peace. Pull up a crate.",
+      "when": [],
+      "required": true
+    }
+  ],
+  "offers": [],
+  "barks": [
+    {
+      "text": "Somebody sold a Halvard pass for two hundred. Expired, of course.",
+      "weight": 1,
+      "min_interval_seconds": 90
+    },
+    {
+      "text": "Nobody draws on the Row. Somebody always thinks they're the exception.",
+      "weight": 1,
+      "min_interval_seconds": 90
+    },
+    {
+      "text": "Halo's down the end. Vesper sees you before you see her. Cards are quicker.",
+      "weight": 2,
+      "min_interval_seconds": 90
+    },
+    {
+      "text": "Enforcers don't play. They watch the hands. Not the cards, the hands.",
+      "weight": 1,
+      "min_interval_seconds": 90
+    },
+    {
+      "text": "Sable doesn't run this street. Sable just knows what it costs.",
+      "weight": 1,
+      "min_interval_seconds": 90
+    }
+  ]
+}

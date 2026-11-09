@@ -5,7 +5,7 @@ from types import SimpleNamespace
 
 import pytest
 
-from karst41.content.loader import load_content
+from scripts.demo_sodium.content import load_demo_content as load_content
 from karst41.server import demo_doors
 from karst41.server.protocol import Frame
 from karst41.server.views import presentation

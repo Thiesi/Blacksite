@@ -1,0 +1,72 @@
+{
+  "schema": 1,
+  "id": "row-halo-doorstep",
+  "name": "Doorstep regular",
+  "faction": null,
+  "title": "Outside the Tin Halo",
+  "terminal": false,
+  "machine_mind": false,
+  "lines": [
+    {
+      "id": "round4-provoked",
+      "text": "Go away. You'll ruin it.",
+      "when": [
+        "provoked"
+      ],
+      "required": true
+    },
+    {
+      "id": "round4-drawn",
+      "text": "Don't. She'll know it was out here.",
+      "when": [
+        "drawn"
+      ],
+      "required": true
+    },
+    {
+      "id": "marked",
+      "text": "Not this door. Not tonight.",
+      "when": [
+        "marked"
+      ],
+      "required": true
+    },
+    {
+      "id": "wake",
+      "text": "That's the Halo. Go on, she's expecting somebody. Might as well be you.",
+      "when": [
+        "is_wake"
+      ],
+      "required": true
+    },
+    {
+      "id": "greeting",
+      "text": "I'm waiting for someone. They're late. They're always late.",
+      "when": [],
+      "required": true
+    }
+  ],
+  "offers": [],
+  "barks": [
+    {
+      "text": "One more and I'll go in. I said that an hour ago.",
+      "weight": 1,
+      "min_interval_seconds": 90
+    },
+    {
+      "text": "Door's open. Door's always open. That's not the same as welcome.",
+      "weight": 1,
+      "min_interval_seconds": 90
+    },
+    {
+      "text": "She knows I'm out here. She always knows.",
+      "weight": 1,
+      "min_interval_seconds": 90
+    },
+    {
+      "text": "I came to ask her one thing. I'm working up to it.",
+      "weight": 1,
+      "min_interval_seconds": 90
+    }
+  ]
+}
