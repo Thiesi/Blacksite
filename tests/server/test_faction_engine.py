@@ -5,15 +5,15 @@ from pathlib import Path
 
 import pytest
 
-from blacksite.content.loader import load_content
-from blacksite.server.protocol import Frame
+from karst41.content.loader import load_content
+from karst41.server.protocol import Frame
 from tests.character_helpers import act, create, place, state
 from tests.harness import HeadlessServer
 
 
 @pytest.fixture(scope="module")
 def content():
-    return load_content(Path(__file__).parents[2]/"src/blacksite/content")
+    return load_content(Path(__file__).parents[2]/"src/karst41/content")
 
 
 @pytest.fixture
@@ -149,7 +149,7 @@ def member(game, client, fid):
 
 def test_game_7_6_inspector_sees_only_active_marked_zone_even_if_sitrep_hidden(contacts):
     from datetime import timedelta
-    from blacksite.server.chat import Sitrep
+    from karst41.server.chat import Sitrep
     game, caller, target, _ = contacts
     inspector, other = member(game, caller, "wardens"), player(game, target)
     other.marked_until = (game.clock.now_utc()+timedelta(minutes=15)).isoformat()
@@ -250,7 +250,7 @@ def test_game_7_6_sable_reservation_serializes_two_members_and_never_blocks_fixe
 
 
 def test_game_7_6_residual_bonus_caps_at_100_and_jackout_consumes_without_touching_permanent_skill(contacts):
-    from blacksite.server.lattice.presence import Presence
+    from karst41.server.lattice.presence import Presence
     game, caller, _, _ = contacts
     p = member(game, caller, "unmoored")
     f = game.core.factions
@@ -269,7 +269,7 @@ def test_game_7_6_residual_bonus_caps_at_100_and_jackout_consumes_without_touchi
 
 
 def test_game_7_6_event_offer_pins_convoy_plan_and_kin_threshold_is_90(contacts):
-    from blacksite.server.factions import EventOffer
+    from karst41.server.factions import EventOffer
     game, caller, _, _ = contacts
     f = game.core.factions
     p = member(game, caller, "kestrel")

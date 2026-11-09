@@ -4,9 +4,9 @@
 **Outcome:** closed; presence and board file drops shipped in NetBBS
 v7.3.0 (PRs #499/#506); chat in v7.12.0/API 4; events/standings in
 v7.31.0/API 5. Outbound requires min_play_level zero, conflicting with
-Blacksite's default guest-safe gate; optional publicity is deferred.
+Karst 41's default guest-safe gate; optional publicity is deferred.
 See [issue #56 catch-up](../plan/01-netbbs-platform.md). Proposal below archived.
-**Blocks:** nothing. Blacksite S28 has an optional step behind it.
+**Blocks:** nothing. Karst 41 S28 has an optional step behind it.
 **Recommended model for the NetBBS side:** Opus 5 for the outbound hook (touches the capability model discussed under issue #200 in design doc §16); Sonnet for the presence half alone.
 
 ## The gap
@@ -15,10 +15,10 @@ Two separate, small things:
 
 1. **Presence.** NetBBS's activity and who-is-online show a caller as
    "in a door" (to be verified in `netbbs.activity`); they do not show
-   which door. For a multiplayer door, "3 callers in Blacksite" on the
+   which door. For a multiplayer door, "3 callers in Karst 41" on the
    main menu is the single best recruitment tool the game can have on a
    BBS.
-2. **Outbound.** A door has no way to tell the BBS anything. Blacksite
+2. **Outbound.** A door has no way to tell the BBS anything. Karst 41
    would like, once per season, to post the season's Chronicle entry to
    a SysOp-chosen board, and optionally to post relay-capture one-liners
    to a chat channel. Design doc §16 (issue #200 notes) already sketches
@@ -38,7 +38,7 @@ Two separate, small things:
 
 No door-driven reads of BBS data, no mail, no user lookups.
 
-## What Blacksite does meanwhile
+## What Karst 41 does meanwhile
 
 The Chronicle lives inside the game; the SysOp can export it with
-`blacksite admin export chronicle` and post it by hand.
+`karst41 admin export chronicle` and post it by hand.

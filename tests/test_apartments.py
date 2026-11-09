@@ -7,13 +7,13 @@ from pathlib import Path
 
 import pytest
 
-from blacksite.content.loader import load_content
-from blacksite.content.validate import validate
-from blacksite.server.apartments import HousingMenu
-from blacksite.server.clock import TICK_HZ
-from blacksite.server.housing_rules import LAPSE_SECONDS, WEEK_SECONDS
-from blacksite.server.items import make_item
-from blacksite.server.protocol import Frame
+from karst41.content.loader import load_content
+from karst41.content.validate import validate
+from karst41.server.apartments import HousingMenu
+from karst41.server.clock import TICK_HZ
+from karst41.server.housing_rules import LAPSE_SECONDS, WEEK_SECONDS
+from karst41.server.items import make_item
+from karst41.server.protocol import Frame
 from scripts.housing_fixture import build_fixture
 from tests.character_helpers import act, create, place, state
 from tests.harness import HeadlessServer
@@ -22,7 +22,7 @@ from tests.harness import HeadlessServer
 @pytest.fixture(scope="module")
 def housing_content(tmp_path_factory):
     local = tmp_path_factory.mktemp("housing-content")
-    shipped = Path(__file__).parents[1]/"src/blacksite/content"
+    shipped = Path(__file__).parents[1]/"src/karst41/content"
     build_fixture(shipped, local)
     content = load_content(shipped, local)
     problems = validate(content)
@@ -106,7 +106,7 @@ def test_game_8_7_dropped_goods_beside_doorstep_do_not_steal_entry(housing):
 
 def test_architecture_6_1_public_crowd_shares_housing_escape_search(housing):
     game, client, _ = housing
-    from blacksite.server.world.actors import Actor
+    from karst41.server.world.actors import Actor
     zone = game.core.world.zones['vatside-wake-hall']
     zone.actors.clear()
     for n in range(30):
@@ -404,8 +404,8 @@ def test_game_8_7_bed_safe_logout_returns_to_the_same_room(housing):
 
 
 def test_game_8_7_visitor_cannot_see_or_target_resident_even_with_scouting(housing):
-    from blacksite.server.world.sight import sees_actor
-    from blacksite.server.views.zone_view import Perception, build
+    from karst41.server.world.sight import sees_actor
+    from karst41.server.views.zone_view import Perception, build
     game, owner, visitor = housing
     a, record, unit = rent(game, owner)
     inside(game, owner, unit)
@@ -421,7 +421,7 @@ def test_game_8_7_visitor_cannot_see_or_target_resident_even_with_scouting(housi
 
 
 def test_game_8_7_passkey_lock_tier_and_no_resident_privileges(housing):
-    from blacksite.server.lattice.presence import Presence
+    from karst41.server.lattice.presence import Presence
     game, owner, visitor = housing
     a, record, unit = rent(game, owner)
     inside(game, owner, unit)
@@ -440,7 +440,7 @@ def test_game_8_7_passkey_lock_tier_and_no_resident_privileges(housing):
 
 
 def test_game_8_7_persistence_storage_safe_eviction_and_reclaim_round_trip(housing, housing_content, tmp_path):
-    from blacksite.server.storage.db import Storage
+    from karst41.server.storage.db import Storage
     game, client, _ = housing
     a, record, unit = rent(game, client)
     inside(game, client, unit)
@@ -500,7 +500,7 @@ def test_game_8_7_persistence_storage_safe_eviction_and_reclaim_round_trip(housi
 
 
 def test_game_6_4_8_7_one_unit_cap_belongs_to_physical_home_across_tenancies(housing):
-    from blacksite.server.lattice.presence import Presence, Procedure
+    from karst41.server.lattice.presence import Presence, Procedure
     game, owner, thief = housing
     a, record, unit = rent(game, owner)
     inside(game, owner, unit)
@@ -524,7 +524,7 @@ def test_game_6_4_8_7_one_unit_cap_belongs_to_physical_home_across_tenancies(hou
 
 
 def test_game_8_7_ammunition_impound_fee_counts_packs_and_rounds_halves_up(housing):
-    from blacksite.server.housing_rules import reclaim_fee
+    from karst41.server.housing_rules import reclaim_fee
     game, client, _ = housing
     supplied = item(game, client, "ammo_9x", count=10)
     template = game.core.loop.content.items[supplied.template]
@@ -565,7 +565,7 @@ def test_game_8_7_safe_chits_survive_actual_clone_settlement(housing):
 
 
 def test_game_8_7_saved_vestibule_control_recomposes_on_restart(housing, housing_content):
-    from blacksite.server.lattice.presence import Presence
+    from karst41.server.lattice.presence import Presence
     game, owner, visitor = housing
     a, record, unit = rent(game, owner)
     presence = Presence("fixture-passkey", player(game, visitor).id, unit.anchor.sector, unit.anchor.cell, (),
@@ -585,7 +585,7 @@ def test_game_8_7_saved_vestibule_control_recomposes_on_restart(housing, housing
 
 @pytest.mark.parametrize("broken", ["shared_cell", "public_object", "missing_room", "bad_doorstep"])
 def test_entities_1_1_active_housing_rejects_unresolved_or_obstructed_anchors(housing_content, broken):
-    from blacksite.content.schema import ObjectSpec
+    from karst41.content.schema import ObjectSpec
     content = deepcopy(housing_content)
     zone = content.zones["vatside-wake-hall"]
     objects = list(zone.meta.objects)

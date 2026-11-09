@@ -2,11 +2,11 @@
 
 import pytest
 
-from blacksite.content.schema import WeaponBlock, DamageOverTime
-from blacksite.server.sessions import QUEUE_LIMIT
-from blacksite.server.items import make_item
-from blacksite.server.protocol import Frame
-from blacksite.server.rules import combat as rules
+from karst41.content.schema import WeaponBlock, DamageOverTime
+from karst41.server.sessions import QUEUE_LIMIT
+from karst41.server.items import make_item
+from karst41.server.protocol import Frame
+from karst41.server.rules import combat as rules
 from tests.character_helpers import place
 from tests.combat.test_engine import body, build_duel, count as item_count
 

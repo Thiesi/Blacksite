@@ -5,13 +5,13 @@ from copy import deepcopy
 
 import pytest
 
-from blacksite.content.loader import ContentTree
-from blacksite.door.doorinfo import DoorInfo
-from blacksite.door.model import Display
+from karst41.content.loader import ContentTree
+from karst41.door.doorinfo import DoorInfo
+from karst41.door.model import Display
 from tests.character_helpers import act
 from tests.fake_terminal import FakeTerminal
 from tests.test_dialogue_runtime import content, open_talker, setup
-from blacksite.server.protocol import Frame
+from karst41.server.protocol import Frame
 
 
 @pytest.mark.parametrize('width,height', [(80, 24), (132, 50)])

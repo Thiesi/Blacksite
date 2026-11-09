@@ -3,7 +3,7 @@
 **Status:** planned
 **Primary model:** Fable · **Reviewer:** Astra (independent critique of the bridge design)
 **Depends on:** S21, S26 · **Milestone:** M6
-**Issue:** https://github.com/Thiesi/blacksite/issues/32
+**Issue:** https://github.com/Thiesi/Karst41/issues/32
 
 S18 adds origin-prefixed tenancy IDs, server-issued item `key_for` and
 `key_tier`, and protected apartment/impound ownership records. Audit
@@ -12,7 +12,7 @@ theft allowance survives re-letting, while old keys and private cores
 expire. Local `zone:door` unit IDs have authority only inside their
 origin's world. Visitors and crews never inherit resident permissions;
 safe/bank chits are outside the theft manifest. See entity 2.3, game
-design 8.7 and accepted [PR #38](https://github.com/Thiesi/Blacksite/pull/38).
+design 8.7 and accepted [PR #38](https://github.com/Thiesi/Karst41/pull/38).
 
 ## Goal
 
@@ -158,7 +158,7 @@ This slice is a document review:
 
 ### S22 crew integration handoff
 
-S22 [PR #61](https://github.com/Thiesi/Blacksite/pull/61)'s live crew IDs
+S22 [PR #61](https://github.com/Thiesi/Karst41/pull/61)'s live crew IDs
 include a per-service-boot nonce. They are not durable federation or
 expedition identities. Keep node_id opaque and preserve source-owned
 loot/reward entitlements separately from social membership.
@@ -166,9 +166,9 @@ loot/reward entitlements separately from social membership.
 <!-- s19-services:start -->
 ### S19 source and service handoff
 
-Reference: [S19 PR #62](https://github.com/Thiesi/Blacksite/pull/62),
+Reference: [S19 PR #62](https://github.com/Thiesi/Karst41/pull/62),
 [acceptance record](../../ops/s19-acceptance.md) and
-[PR #38](https://github.com/Thiesi/Blacksite/pull/38).
+[PR #38](https://github.com/Thiesi/Karst41/pull/38).
 
 S19 supplies the implemented source interfaces, 68 authored contracts
 and four service nodes. Full root pytest passed 1344 tests with one
@@ -184,8 +184,8 @@ boundaries; a native door NodeID remains an opaque session identifier.
 
 ### S23 financial history handoff
 
-[S23 PR #64](https://github.com/Thiesi/Blacksite/pull/64) retains the
-accepted [PR #38](https://github.com/Thiesi/Blacksite/pull/38) source and
+[S23 PR #64](https://github.com/Thiesi/Karst41/pull/64) retains the
+accepted [PR #38](https://github.com/Thiesi/Karst41/pull/38) source and
 ownership boundaries. Closed listings, bids and bounties are immutable
 history. Proposals copy open listings, held bids and active bounties;
 terminal history may be shared read-only. A new mutable federation state
@@ -196,9 +196,9 @@ sale-time item snapshots, private audit and exact-instance delivery.
 <!-- s24-handoff:start -->
 ### S24 event integration and acceptance handoff
 
-Reference: [S24 #24](https://github.com/Thiesi/Blacksite/issues/24),
-[PR #38](https://github.com/Thiesi/Blacksite/pull/38) and
-[platform #56](https://github.com/Thiesi/Blacksite/issues/56).
+Reference: [S24 #24](https://github.com/Thiesi/Karst41/issues/24),
+[PR #38](https://github.com/Thiesi/Karst41/pull/38) and
+[platform #56](https://github.com/Thiesi/Karst41/issues/56).
 
 Audit event authority by committed plan/source ID, not process-local
 crew IDs or wall-clock reads inside simulation. The injected clock,
@@ -213,8 +213,8 @@ do not turn a preview, telemetry flag or host announcement into authority.
 <!-- s24-review-policy:start -->
 ### S24 practical review follow-up
 
-Reference: [PR #65](https://github.com/Thiesi/Blacksite/pull/65), retaining
-[PR #38](https://github.com/Thiesi/Blacksite/pull/38) and #56.
+Reference: [PR #65](https://github.com/Thiesi/Karst41/pull/65), retaining
+[PR #38](https://github.com/Thiesi/Karst41/pull/38) and #56.
 
 The hot event receipt is a bounded working set, not a permanent global
 archive: 128 closed plans plus live/current transitions. Personal forecasts

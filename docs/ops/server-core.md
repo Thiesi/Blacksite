@@ -4,7 +4,7 @@ The interim runner and deployment units arrive in S05. For now, start
 the foreground service from an installed checkout:
 
 ```powershell
-python -m blacksite.server --install-dir .test-tmp/world --tcp
+python -m karst41.server --install-dir .test-tmp/world --tcp
 ```
 
 On Unix, omit `--tcp` for the private Unix socket. The TCP listener
@@ -16,7 +16,7 @@ inherits the install directory's ACL, so use a private directory.
 In a second terminal:
 
 ```powershell
-python -m blacksite.bot --install-dir .test-tmp/world --watch
+python -m karst41.bot --install-dir .test-tmp/world --watch
 ```
 
 The bot prints one pong latency and waits for the maintenance bye.

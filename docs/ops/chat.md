@@ -1,6 +1,6 @@
 # Chat and log (S09)
 
-Blacksite 0.0.5 adds social play to the saved-character service. Start the
+Karst 41 0.0.5 adds social play to the saved-character service. Start the
 service separately and use the registered native stdio door from the
 [door guide](door-client.md). The server routes every message; the client
 only edits prompts and renders authorized lines.
@@ -76,4 +76,4 @@ and four ANSI captures remain under the private root.
 NetBBS currently restricts account usernames, and therefore door handles,
 to ASCII. The live probe uses real wide-character game names. Headless
 and fake-terminal tests additionally cover wide BBS handles, which the
-Blacksite protocol supports. No NetBBS code change is needed here.
+Karst 41 protocol supports. No NetBBS code change is needed here.

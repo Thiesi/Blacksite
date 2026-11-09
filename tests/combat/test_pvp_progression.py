@@ -2,8 +2,8 @@
 
 from copy import deepcopy
 
-from blacksite.server.progression import combat_xp
-from blacksite.server.storage.db import Storage
+from karst41.server.progression import combat_xp
+from karst41.server.storage.db import Storage
 from tests.character_helpers import place
 from tests.combat.test_engine import body, duel
 

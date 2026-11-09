@@ -3,9 +3,9 @@
 **Status:** in progress; implementation and acceptance under review
 **Primary model:** Opus · **Reviewer:** automated review, technical lead
 **Depends on:** S24 · **Milestone:** M5
-**Issue:** https://github.com/Thiesi/Blacksite/issues/77
+**Issue:** https://github.com/Thiesi/Karst41/issues/77
 
-Split from S25 ([PR #66](https://github.com/Thiesi/Blacksite/pull/66)) by
+Split from S25 ([PR #66](https://github.com/Thiesi/Karst41/pull/66)) by
 the owner's decision D-T2 on 2026-10-28
 (`docs/plan/03-presentation-integration.md` §14). S25's human layout
 approval stays **not granted**; this slice neither needs nor grants it.
@@ -20,7 +20,7 @@ is in plan §14.2; this slice implements exactly those decisions.
 ## Scope
 
 Engine, ported from `slice/S25-city-content` at `1224c30` (the code is
-unchanged at `a97906b`). The `src/blacksite/server` diff there is about
+unchanged at `a97906b`). The `src/karst41/server` diff there is about
 165 lines:
 
 - route credentials: typed member and story credentials, alternative

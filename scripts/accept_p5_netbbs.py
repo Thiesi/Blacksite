@@ -13,8 +13,8 @@ from pathlib import Path
 import subprocess
 
 from accept_s10_netbbs import Connection, NativeProbe, wait
-from blacksite.door.palette import Palette
-from blacksite.door.present.paint import Paint, light_distance
+from karst41.door.palette import Palette
+from karst41.door.present.paint import Paint, light_distance
 from tests.presentation.snapshots import snapshot
 
 
@@ -38,7 +38,7 @@ async def accept(root: Path, door_python: Path, show: bool,
             assert tuple(console['size']) == sizes[0], 'Resize the attached terminal to --size'
     root.mkdir(parents=True, exist_ok=False)
     probe = PresentationProbe(root, door_python, show,
-                              door_environment={'DOOR_BLACKSITE_PRESENTATION': '1'}, show_all_tiers=True)
+                              door_environment={'DOOR_KARST41_PRESENTATION': '1'}, show_all_tiers=True)
     await probe.start()
     cases = []
     try:
@@ -99,7 +99,7 @@ async def accept(root: Path, door_python: Path, show: bool,
                 person_lift = None
                 if tier == 'truecolor':
                     data = json.loads((Path(__file__).resolve().parents[1] /
-                        'src/blacksite/content/palette.json').read_text(encoding='utf-8'))
+                        'src/karst41/content/palette.json').read_text(encoding='utf-8'))
                     palette = Palette(data, tier)
                     paint = Paint(palette)
                     original, lifted = palette.style('npc_wardens').fg, paint('npc_wardens').fg
@@ -143,7 +143,7 @@ async def accept(root: Path, door_python: Path, show: bool,
                 for case in cases for label in case['captures']
                 for ext in ('.ans', '.txt', '.json') for path in [root / (label + ext)]}
     (root / 'result.json').write_text(json.dumps({'head': head, 'passed': True, 'cases': cases,
-        'transport': 'NetBBS Telnet -> registered native stdio, DOOR_BLACKSITE_PRESENTATION=1',
+        'transport': 'NetBBS Telnet -> registered native stdio, DOOR_KARST41_PRESENTATION=1',
         'source_matched_wheel': json.loads((root / 'native-client.json').read_text()),
         'show': show, 'console': console, 'human_approval': False, 'fixtures': 'private node/world/accounts only; normal game rules',
         'manifest': manifest}, ensure_ascii=False, indent=2) + '\n', encoding='utf-8', newline='\n')

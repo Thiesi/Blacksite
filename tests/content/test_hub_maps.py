@@ -4,8 +4,8 @@ from dataclasses import replace
 from pathlib import Path
 from time import process_time
 
-from blacksite.content.loader import load_content
-from blacksite.content.validate import validate, exit_warnings
+from karst41.content.loader import load_content
+from karst41.content.validate import validate, exit_warnings
 
 ROOT = Path(__file__).resolve().parents[2]
 SIZES = {"core-plaza":(90,40),"core-tram-hub":(80,30),"core-precinct":(50,24),
@@ -14,7 +14,7 @@ SIZES = {"core-plaza":(90,40),"core-tram-hub":(80,30),"core-precinct":(50,24),
 
 
 def test_ten_hub_zones_validate():
-    tree = load_content(ROOT/"src/blacksite/content")
+    tree = load_content(ROOT/"src/karst41/content")
     assert set(tree.zones) == SIZES.keys()
     start = process_time()
     assert validate(tree) == []
@@ -26,12 +26,12 @@ def test_ten_hub_zones_validate():
 
 
 def test_sizes_match_gazetteer():
-    tree = load_content(ROOT/"src/blacksite/content")
+    tree = load_content(ROOT/"src/karst41/content")
     assert {z.id:(z.width,z.height) for z in tree.zones.values()} == SIZES
 
 
 def test_exits_bidirectional():
-    tree = load_content(ROOT/"src/blacksite/content")
+    tree = load_content(ROOT/"src/karst41/content")
     assert exit_warnings(tree) == []
     for zone in tree.zones.values():
         for ex in zone.meta.exits:
@@ -44,7 +44,7 @@ def test_exits_bidirectional():
 
 
 def test_every_gazetteer_object_present_by_id():
-    tree = load_content(ROOT/"src/blacksite/content")
+    tree = load_content(ROOT/"src/karst41/content")
     required = {
         "vatside-wake-hall":{"vantongeren-desk","recruiter-cards","wake-terminal","wake-door","corridor-door",*[f"decant-vat-{i}" for i in range(1,5)]},
         "core-plaza":{"kestrel-bank","plaza-general-vendor","warden-recruiter","civic-notice-board","civic-descent",*[f"plaza-public-{i}" for i in range(1,5)]},
@@ -67,7 +67,7 @@ def test_every_gazetteer_object_present_by_id():
 
 
 def test_future_boundaries_have_no_dangling_target():
-    tree = load_content(ROOT/"src/blacksite/content")
+    tree = load_content(ROOT/"src/karst41/content")
     boundaries = [obj for zone in tree.zones.values() for obj in zone.meta.objects if "unavailable_target" in obj.params]
     assert len(boundaries) == 7
     assert all(obj.params["unavailable_target"] not in tree.zones for obj in boundaries)

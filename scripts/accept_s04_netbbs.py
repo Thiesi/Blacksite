@@ -1,7 +1,7 @@
 """Run the registered door through NetBBS's real picker and three transports.
 
 Use the local NetBBS checkout's venv (with its SSH/web extras), passing
-Blacksite's venv interpreter as --door-python. All databases, profiles
+Karst 41's venv interpreter as --door-python. All databases, profiles
 and listeners are private to --root. No existing node is modified.
 """
 
@@ -30,7 +30,7 @@ from netbbs.net.web import WebServer
 from netbbs.storage.database import Database
 from netbbs.storage.execution import DatabaseLane
 
-from blacksite.server.app import Server
+from karst41.server.app import Server
 from tests.fake_terminal import FakeTerminal
 
 
@@ -80,7 +80,7 @@ class Caller:
         await self.expect("Available doors")
         mark = len(self.output)
         await self.write(b"\x1b[B\r")
-        await self.expect("BLACKSITE", mark)
+        await self.expect("KARST 41", mark)
         # Any first frame can beat the handshake. Help must survive welcome.
         mark = len(self.output)
         await self.write(b"?")
@@ -90,7 +90,7 @@ class Caller:
         await self.expect("Page 2/", mark)
         mark = len(self.output)
         await self.write(b"\x1b\x0c")
-        await self.expect("BLACKSITE", mark)
+        await self.expect("KARST 41", mark)
         mark = len(self.output)
         if service is not None:
             started = time.monotonic()
@@ -103,7 +103,7 @@ class Caller:
         else:
             await self.write(b"\x18y")
             await self.expect("Karst keeps your place.", mark)
-        await self.expect("Left Blacksite.", mark)
+        await self.expect("Left Karst 41.", mark)
         mark = len(self.output)
         await self.write(b" ")
         await self.expect("Available doors", mark)
@@ -121,10 +121,11 @@ async def accept(root: Path, door_python: Path) -> None:
     db = Database(root / "node.db")
     lane = DatabaseLane(db.path)
     user = create_user(db, "s04caller", password="LocalProbe-S04", user_level=10)
-    create_door(db, "Blacksite", str(door_python.resolve()), args=("-m", "blacksite.door"), creator=user,
+    # Preserve the venv interpreter: resolving Unix symlinks selects system Python.
+    create_door(db, "Karst 41", str(door_python.absolute()), args=("-m", "karst41.door"), creator=user,
         profile=DoorProfile(install_dir=str(REPO), encoding="utf-8",
             max_sessions=16, multinode_certified=True, time_limit=900,
-            environment={"DOOR_BLACKSITE_INSTALL_DIR": str(service.install_dir)}).validate())
+            environment={"DOOR_KARST41_INSTALL_DIR": str(service.install_dir)}).validate())
     failures = []
 
     async def handler(session: object) -> None:

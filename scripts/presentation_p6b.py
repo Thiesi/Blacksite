@@ -18,8 +18,8 @@ from unittest.mock import patch
 ROOT = Path(__file__).resolve().parents[1]
 sys.path[:0] = [str(ROOT/'src'), str(ROOT), str(ROOT/'scripts')]
 
-from blacksite.content.loader import ContentTree, load_content
-from blacksite.door.present import zone
+from karst41.content.loader import ContentTree, load_content
+from karst41.door.present import zone
 from presentation_p6 import wire_walk
 from presentation_p6_validation import module
 from tests.presentation.budget import MIX, activity, frames, hourly
@@ -40,7 +40,7 @@ def origin_control(content: ContentTree, zid: str, start: tuple[int, int],
     separately attribute those two effects or explain every P5 change.
     """
     source = subprocess.check_output(
-        ['git', 'show', f'{ORIGIN_BASE}:src/blacksite/door/present/zone.py'], cwd=ROOT)
+        ['git', 'show', f'{ORIGIN_BASE}:src/blacksite/door/present/zone.py'], cwd=ROOT)  # Historical evidence.
     old = module('_b2_origin_control', source).origin
     with patch.object(zone, 'origin', old):
         activities = {what: activity(content, *size, tier, what, seconds,
@@ -123,7 +123,7 @@ def main() -> None:
     if not 0 < args.seconds <= 600 or args.output.exists():
         parser.error('choose positive seconds <=600 and a new output path')
     dirty = bool(subprocess.check_output(['git', 'status', '--porcelain'], cwd=ROOT).strip())
-    content = load_content(ROOT/'src/blacksite/content')
+    content = load_content(ROOT/'src/karst41/content')
     assert content.zones[args.zone].meta.charted and args.zone in content.looks
     bare = deepcopy(content)
     bare.looks.clear()

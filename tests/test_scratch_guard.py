@@ -42,7 +42,7 @@ def test_counting_stops_early(tmp_path: Path) -> None:
 
 
 def test_temp_over_the_limit_is_refused_and_only_our_folders_count(tmp_path: Path) -> None:
-    for rel in ('blacksite-s38/a/b', 'blacksite-s38/c', 'native-proof-1/d', 'blacksite-demo.json',
+    for rel in ('karst41-s38/a/b', 'karst41-s38/c', 'native-proof-1/d', 'karst41-demo.json',
                 'claude/session/scratchpad/e', 'pytest-of-me/f', 'other/g'):
         path = tmp_path / rel
         path.parent.mkdir(parents=True, exist_ok=True)
@@ -57,6 +57,16 @@ def test_an_empty_temp_folder_is_fine(tmp_path: Path) -> None:
     assert temp_problem(tmp_path, limit=0) is None
 
 
+def test_r1_guard_counts_both_generations_of_scratch(tmp_path: Path) -> None:
+    # Remove in S31: old scratch must remain visible to the disk guard.
+    for name in ('karst41-proof', 'blacksite-proof'):
+        folder = tmp_path/name
+        folder.mkdir()
+        (folder/'one').write_text('proof')
+    assert temp_files(tmp_path) == 2
+    assert temp_problem(tmp_path, limit=1) is not None
+
+
 def test_a_link_counts_once_and_its_target_is_not_walked(tmp_path: Path) -> None:
     target = tmp_path / 'elsewhere'
     target.mkdir()
@@ -65,7 +75,7 @@ def test_a_link_counts_once_and_its_target_is_not_walked(tmp_path: Path) -> None
     temp = tmp_path / 'temp'
     temp.mkdir()
     try:
-        (temp / 'blacksite-link').symlink_to(target, target_is_directory=True)
+        (temp / 'karst41-link').symlink_to(target, target_is_directory=True)
     except OSError:
         pytest.skip('this account cannot create symlinks')
     assert temp_files(temp) == 1

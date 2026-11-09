@@ -3,7 +3,7 @@
 **Status:** done (PR #45)
 **Primary model:** Opus · **Reviewer:** Sonnet (test pass)
 **Depends on:** S02, S03, S04 · **Milestone:** M1
-**Issue:** https://github.com/Thiesi/blacksite/issues/6
+**Issue:** https://github.com/Thiesi/Karst41/issues/6
 
 ## Goal
 
@@ -30,29 +30,29 @@ first real zone. No combat, no NPCs, no chat yet.
 
 ## Scope
 
-- `src/blacksite/server/world/zone.py`: `ZoneInstance` per entity §3.2
+- `src/karst41/server/world/zone.py`: `ZoneInstance` per entity §3.2
   (actors, objects with live state, listeners, seeded RNG from
   `meta.rng_seeds[zone]`, tick counter, dormant flag); `wake()` computes
   elapsed ticks lazily; `activate/deactivate` on first/last listener.
-- `src/blacksite/server/world/actors.py`: `Actor` per entity §3.1 with
+- `src/karst41/server/world/actors.py`: `Actor` per entity §3.1 with
   kinds `player` (NPC and drone kinds are fields now, behaviour in S11).
-- `src/blacksite/server/world/movement.py`: intents `move(dir)` and
+- `src/karst41/server/world/movement.py`: intents `move(dir)` and
   `sprint(dir)` with 200 ms/100 ms per tile (2 and 1 ticks), diagonal
   same cost, passability from tile type, actor blocking (players do not
   pass through players), zone edge clamp; stamina drain for sprint
   (`00-game-design.md` §3.1: stamina pool; drain 2 per sprint tile;
   regen 1/tick when not sprinting; at 0 stamina sprint falls back to
   walk).
-- `src/blacksite/server/world/sight.py`: symmetric line-of-sight
+- `src/karst41/server/world/sight.py`: symmetric line-of-sight
   (Bresenham over `opaque` tiles) within `sight_radius`; per-actor
   visible set recomputed only when the actor or an opaque object
   changes; stealth stance halves the range at which others see you
   (stance exists; setting it is S10/S16).
-- `src/blacksite/server/world/registry.py`: `World` holding zone
+- `src/karst41/server/world/registry.py`: `World` holding zone
   instances built from S02 content on start; `enter(actor, zone,
   tile)`, `leave(actor)`; the invariant that an actor is in at most one
   zone.
-- `src/blacksite/server/views/zone_view.py`: builds `ZoneView.body`
+- `src/karst41/server/views/zone_view.py`: builds `ZoneView.body`
   per §5.4 for a session: viewport rectangle centred on the actor
   (scroll in whole-tile steps when within 4 tiles of an edge), `tiles`
   with `-1` unseen / `-2` remembered (remembered set kept per player
@@ -61,11 +61,11 @@ first real zone. No combat, no NPCs, no chat yet.
   `name` only when targeted or in crew (both later; for now name shown
   for self), `objects`, `me` (name, handle, hp/sta placeholders from
   the actor, zone, safety), `hint`.
-- `src/blacksite/server/views/delta.py`: revisioned view store per
+- `src/karst41/server/views/delta.py`: revisioned view store per
   session, JSON-pointer `add`, `replace` and `remove` operations per the
   existing architecture 5.3 contract, full `view` when >3 revisions behind or
   the viewport moved.
-- `src/blacksite/door/views/zone.py`: renders `ZoneView` into the cell
+- `src/karst41/door/views/zone.py`: renders `ZoneView` into the cell
   buffer per `03-terminal-ui.md` §2: header (zone, safety word in its
   role colour, clock from `me.clock`), viewport with tile glyphs and
   role colours per tier, remembered tiles dimmed, actors over tiles,
@@ -80,7 +80,7 @@ first real zone. No combat, no NPCs, no chat yet.
   tiles render now), plus a temporary `--spawn-zone` server flag so a
   session without a character (S07) enters `vatside-wake-hall` at its
   spawn tile as a placeholder actor named after the handle.
-- Bot: `blacksite.bot` walks a random path in the zone (used in S29).
+- Bot: `karst41.bot` walks a random path in the zone (used in S29).
 
 ## Out of scope
 
@@ -205,7 +205,7 @@ the broader validation exposed that real CLI race while testing S06.
 - Linux wheel-installed acceptance repeats both terminal sizes through
   NetBBS Telnet/SSH and passes, alongside the real systemd lifecycle.
   Movement-phase tick p99 is 2.300 ms; idle p99 is 0.150 ms. Proof is
-  attached to [run 39593458588](https://github.com/Thiesi/Blacksite/actions/runs/39593458588).
+  attached to [run 39593458588](https://github.com/Thiesi/Karst41/actions/runs/39593458588).
 - Full CI: 452 passed on Linux; 451 passed, 1 skipped on Windows.
   Claude reports no blockers. Timezone hardening was rejected after
   tracing NetBBS's validated producer and checking the actual Python

@@ -2,7 +2,7 @@
 
 import pytest
 
-from blacksite.server.protocol import Frame
+from karst41.server.protocol import Frame
 from tests.character_helpers import act, place
 from tests.combat.test_engine import body
 from tests.server.test_drone_combat import deploy

@@ -1,6 +1,6 @@
 """S02: the `.map` grid format (04-assets.md section 3)."""
 
-from blacksite.content.formats import dump_map, parse_map
+from karst41.content.formats import dump_map, parse_map
 
 LEGEND = {"#": "wall", ".": "floor", " ": "void", "~": "water"}
 CHARS = {v: k for k, v in LEGEND.items()}

@@ -3,7 +3,7 @@
 **Status:** in progress
 **Primary model:** Sonnet · **Reviewer:** automated review, technical lead
 **Depends on:** P1 · **Milestone:** presentation track
-**Issue:** https://github.com/Thiesi/Blacksite/issues/93
+**Issue:** https://github.com/Thiesi/Karst41/issues/93
 
 From `docs/plan/03-presentation-integration.md` §3.4, §4 Refactors 1 and
 3, and §7.3, adopted by the owner on 2026-10-28 (D-T1). The canon is

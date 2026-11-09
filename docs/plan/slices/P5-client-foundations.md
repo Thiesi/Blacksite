@@ -3,7 +3,7 @@
 **Status:** done (PR #110)
 **Primary model:** Codex (the plan's owner) · **Reviewer:** automated review, technical lead, presentation lead (co-reviewer and presentation gate)
 **Depends on:** P0, P2, P4 (P3 for HERE) · **Milestone:** presentation track
-**Issue:** https://github.com/Thiesi/Blacksite/issues/106
+**Issue:** https://github.com/Thiesi/Karst41/issues/106
 
 From `docs/plan/03-presentation-integration.md` §7.3 (P5), §10.1
 (class C) and §11, adopted by the owner on 2026-10-28 (D-T1). The canon

@@ -3,7 +3,7 @@
 **Status:** done (PR #63)
 **Primary model:** Opus · **Reviewer:** automated Claude; actual model in PR
 **Depends on:** S20, S15, S17, S18, S22 · **Milestone:** M4
-**Issue:** https://github.com/Thiesi/blacksite/issues/21
+**Issue:** https://github.com/Thiesi/Karst41/issues/21
 
 ## Goal
 
@@ -72,7 +72,7 @@ architecture's test list is a real evening.
   narrative; no mechanics.
 - Season tally: `faction_state.influence` resets at season end (S26
   calls `reset_season`); relays return to neutral at season end.
-- Admin: `blacksite admin relay list|set <id> <faction|neutral>`.
+- Admin: `karst41 admin relay list|set <id> <faction|neutral>`.
 - Persistence: relay state rows; flush on every state change and on
   influence pay-out.
 
@@ -188,7 +188,7 @@ Wire Crash Relay into `Salvage.crash_relay_bonus(zone)`: Ring Three only,
 one grade step, capped at compute. Preserve per-template quality and
 persisted RNG; relay changes cannot reroll already spawned nodes.
 
-This carries the accepted [PR #38](https://github.com/Thiesi/Blacksite/pull/38)
+This carries the accepted [PR #38](https://github.com/Thiesi/Karst41/pull/38)
 findings 12/14 forward; see [S17](S17-salvage-and-fabrication.md).
 
 ## S18 housing handoff
@@ -203,12 +203,12 @@ active defenders when ownership changes, retaining theft receipts.
 Apartment storage protects half its class capacity in place, separately
 from carried secured slots. A relay benefit never grants room-service
 permission to crew, faction members or visitors. See game design 8.7,
-[S18](S18-apartments.md) and accepted [PR #38](https://github.com/Thiesi/Blacksite/pull/38).
+[S18](S18-apartments.md) and accepted [PR #38](https://github.com/Thiesi/Karst41/pull/38).
 
 
 ### S20 faction integration handoff
 
-Reference: [PR #38](https://github.com/Thiesi/Blacksite/pull/38) and S20.
+Reference: [PR #38](https://github.com/Thiesi/Karst41/pull/38) and S20.
 
 Use S20 explicit capture vectors once and bind
 Factions.before_membership_change to reconcile/freeze due apartment rent
@@ -222,7 +222,7 @@ preserve game 7.1 joining/leaving rules.
 
 ### S22 crew integration handoff
 
-Reference: [PR #61](https://github.com/Thiesi/Blacksite/pull/61).
+Reference: [PR #61](https://github.com/Thiesi/Karst41/pull/61).
 
 Use the installed live crew authority for collaboration, while relay
 capture/hold owns its fixed participation roster and reward transaction.
@@ -233,9 +233,9 @@ Membership never grants private apartment access or bypasses safety.
 <!-- s19-services:start -->
 ### S19 source and service handoff
 
-Reference: [S19 PR #62](https://github.com/Thiesi/Blacksite/pull/62),
+Reference: [S19 PR #62](https://github.com/Thiesi/Karst41/pull/62),
 [acceptance record](../../ops/s19-acceptance.md) and
-[PR #38](https://github.com/Thiesi/Blacksite/pull/38).
+[PR #38](https://github.com/Thiesi/Karst41/pull/38).
 
 S19 supplies the implemented source interfaces, 68 authored contracts
 and four service nodes. Full root pytest passed 1344 tests with one

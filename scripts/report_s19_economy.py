@@ -13,17 +13,17 @@ import json
 from pathlib import Path
 from typing import Any
 
-from blacksite.content.loader import load_content
-from blacksite.server.clinics import Operation
-from blacksite.server.npcs.templates import make_actor
-from blacksite.server.protocol import Frame
+from karst41.content.loader import load_content
+from karst41.server.clinics import Operation
+from karst41.server.npcs.templates import make_actor
+from karst41.server.protocol import Frame
 from tests.character_helpers import act, create, place
 from tests.harness import HeadlessServer
 from scripts.report_s16_progression import report as progression_report
 
 
 def setup(size: int = 1) -> tuple[Any, ...]:
-    content = load_content(Path(__file__).parents[1]/'src/blacksite/content')
+    content = load_content(Path(__file__).parents[1]/'src/karst41/content')
     content.zones = {k:replace(z,meta=replace(z.meta,spawners=())) for k,z in content.zones.items()}
     game = HeadlessServer(content,character_state={})
     clients,players = [],[]

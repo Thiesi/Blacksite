@@ -8,20 +8,20 @@ from typing import Any
 
 import pytest
 
-from blacksite.content.loader import load_content
-from blacksite.content.schema import ObjectSpec, StageTarget
-from blacksite.door import chrome
-from blacksite.door.cells import display_width
-from blacksite.door.model import Display
-from blacksite.layout import compute
-from blacksite.server.bus import Event
-from blacksite.server.commerce import CommerceMenu
-from blacksite.server.lattice.presence import Presence
-from blacksite.server.loop import TickContext
-from blacksite.server.interaction import object_interaction
-from blacksite.server.views import presentation
-from blacksite.server.protocol import Frame
-from blacksite.server.world.zone import ObjectState
+from karst41.content.loader import load_content
+from karst41.content.schema import ObjectSpec, StageTarget
+from karst41.door import chrome
+from karst41.door.cells import display_width
+from karst41.door.model import Display
+from karst41.layout import compute
+from karst41.server.bus import Event
+from karst41.server.commerce import CommerceMenu
+from karst41.server.lattice.presence import Presence
+from karst41.server.loop import TickContext
+from karst41.server.interaction import object_interaction
+from karst41.server.views import presentation
+from karst41.server.protocol import Frame
+from karst41.server.world.zone import ObjectState
 from tests.character_helpers import create, place
 from tests.harness import HeadlessServer
 from tests.fake_terminal import FakeTerminal
@@ -34,7 +34,7 @@ E = Frame('key', {'k': 'e', 't': 0})
 
 @pytest.fixture
 def focus_game(repo_root: Path) -> tuple[HeadlessServer, Any]:
-    game = HeadlessServer(load_content(repo_root/'src/blacksite/content'), character_state={})
+    game = HeadlessServer(load_content(repo_root/'src/karst41/content'), character_state={})
     caller = game.connect()
     create(game, caller, archetype=0, card='none')
     game.commit_characters()
@@ -282,7 +282,7 @@ def test_arch_5_5_2_modal_and_disabled_states_do_not_advertise_world_targets(
         else:
             expected = 'chat'
     elif mode == 'travel':
-        from blacksite.server.world.exits import schedule
+        from karst41.server.world.exits import schedule
         avatar = core.characters.sim.avatars[session.user_id]
         ex = core.world.zones[avatar.zone].template.meta.exits[0]
         avatar.travel = schedule(replace(ex, kind='lift'), game.clock.now_utc().timestamp())

@@ -3,7 +3,7 @@
 import pytest
 from typing import Any
 
-from blacksite.server.contracts.engine import Offer
+from karst41.server.contracts.engine import Offer
 
 from tests.contracts.test_adapter import live, shipped
 from tests.contracts.test_engine import template

@@ -1,14 +1,14 @@
 """Game 7.5/9.4: explicit native fixture bindings validate independently."""
 from pathlib import Path
 
-from blacksite.content.loader import load_content
-from blacksite.content.validate import validate
-from blacksite.server.contracts.ledger import Ledger
+from karst41.content.loader import load_content
+from karst41.content.validate import validate
+from karst41.server.contracts.ledger import Ledger
 from scripts.contracts_fixture import build_fixture
 
 
 def test_game_7_5_9_4_native_fixture_activates_only_its_resolved_services_and_story_copies(repo_root: Path,tmp_path: Path) -> None:
-    shipped=repo_root/'src/blacksite/content'
+    shipped=repo_root/'src/karst41/content'
     local=tmp_path/'content.local'
     descriptor=build_fixture(shipped,local)
     fixture=load_content(shipped,local)

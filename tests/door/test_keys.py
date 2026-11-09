@@ -2,7 +2,7 @@
 
 import pytest
 
-from blacksite.door.keys import KeyDecoder, ESCAPE_TIMEOUT_SECONDS
+from karst41.door.keys import KeyDecoder, ESCAPE_TIMEOUT_SECONDS
 
 
 @pytest.mark.parametrize("sequence,key", [

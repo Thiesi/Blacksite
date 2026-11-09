@@ -4,10 +4,10 @@ from typing import Any
 
 import pytest
 
-from blacksite.content.schema import Effect, EventTemplate, ObjectSpec, Region
-from blacksite.server.clock import TICK_HZ
-from blacksite.server.rules.events import ROLL_SECONDS, SCHEDULES
-from blacksite.server.world.zone import ObjectState
+from karst41.content.schema import Effect, EventTemplate, ObjectSpec, Region
+from karst41.server.clock import TICK_HZ
+from karst41.server.rules.events import ROLL_SECONDS, SCHEDULES
+from karst41.server.world.zone import ObjectState
 from tests.server.test_event_engine import base_content, events_game
 
 

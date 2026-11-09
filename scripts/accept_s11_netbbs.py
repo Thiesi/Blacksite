@@ -16,10 +16,10 @@ import threading
 from typing import Any
 
 from accept_s10_netbbs import Connection, NativeProbe, wait
-from blacksite.admin.client import request
-from blacksite.server.loop import TickContext
-from blacksite.server.world.actors import Actor
-from blacksite.server.world.sight import line_of_sight
+from karst41.admin.client import request
+from karst41.server.loop import TickContext
+from karst41.server.world.actors import Actor
+from karst41.server.world.sight import line_of_sight
 from write_profile import WriteProfile
 from minimal_s40_profile import MinimalProfile
 

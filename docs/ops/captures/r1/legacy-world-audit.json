@@ -1,0 +1,109 @@
+{
+  "database_sha256": "7372e26a581ae4f73fc00036b1ab26e60eb25a5fb73b77d440517b4186a5e2b8",
+  "mode": "offline, read-only; acceptance service closed",
+  "tables": 13,
+  "rows": 38,
+  "text_values": 120,
+  "blob_values": 0,
+  "json_values": 40,
+  "canonical_place_values": 0,
+  "findings": [],
+  "migration_required": false,
+  "provenance": {
+    "runtime_head": "7597dce6f1263a27421c51ec97cff1b0b91b6f68",
+    "driver": "scripts/accept_s42_netbbs.py at the runtime head",
+    "transport": "real NetBBS node, registered native stdio door",
+    "size": "80x24",
+    "tier": "16",
+    "wheel": [
+      {
+        "name": "blacksite-0.0.20-py3-none-any.whl",
+        "bytes": 744194,
+        "sha256": "dafc30ceb8e7deaaea8ec331151c9f6d9935326cc3a85325a81ba30114a49c7d"
+      }
+    ],
+    "native_result": {
+      "passed": true,
+      "head": "7597dce6f1263a27421c51ec97cff1b0b91b6f68",
+      "transport": "NetBBS Telnet -> registered native stdio",
+      "captures": [
+        {
+          "capture": "s42-talk-hint-80x24-16",
+          "scenario": "talk-hint",
+          "size": [
+            80,
+            24
+          ],
+          "tier": "16",
+          "sha256": {
+            ".ans": "926fd550fc091fe871dcc51a5e8e275cbd61d799fcef48fb6e6b647e50495fc1",
+            ".txt": "b7276f502734160fb29569377187ec54027e7214938d7b0fb635ab11d11b6da9",
+            ".json": "0eeacadab32d707ef0d60cb5bb887aceccc7f16b490b756fffc508f57238fb49"
+          }
+        },
+        {
+          "capture": "s42-one-press-walk-away-80x24-16",
+          "scenario": "one-press-walk-away",
+          "size": [
+            80,
+            24
+          ],
+          "tier": "16",
+          "sha256": {
+            ".ans": "aaca31ce4b0ebfe5e77ca1b68928694729cb295187aef923dbeb25c872ae5dbc",
+            ".txt": "f391d6d4fe8c73fa497879bf47ab23a492ce2e1ead5684a59353e2dcba3f6d9d",
+            ".json": "84aed86c4b3950c568e14775598ff16cae7242133a6a1cbce4226a7c34408beb"
+          }
+        },
+        {
+          "capture": "s42-shot-flee-walks-off-80x24-16",
+          "scenario": "shot-flee-walks-off",
+          "size": [
+            80,
+            24
+          ],
+          "tier": "16",
+          "sha256": {
+            ".ans": "1c36e7227b00e7adcdf10176930f6f25af1b2718e5d1fbe36388bc6e00e58f41",
+            ".txt": "7e23c949f5fb453b86c079cc9ebab2d4b8b25addedcaa2ea51a88effdc691f0c",
+            ".json": "3441fedb34db5a7e857af9280d669965ee2fad91ca14e59dd419c1c946a35291"
+          }
+        },
+        {
+          "capture": "s42-covered-shot-label-80x24-16",
+          "scenario": "covered-shot-label",
+          "size": [
+            80,
+            24
+          ],
+          "tier": "16",
+          "sha256": {
+            ".ans": "c4661aa7ab9cea102c22ad71c1a5c05717f117e02774368a34bab81ee96659a1",
+            ".txt": "4cbc2b8732e00fe07a9ea5a775d1376981ccc14917d4c58968ece510a08da04b",
+            ".json": "d30b6ab0ff11f44b825c311b5c47906401a424dae74b75f77d53a93ef9ade97f"
+          }
+        }
+      ],
+      "shot": {
+        "health_before": 90,
+        "health_after": 90,
+        "target": "65eeefc68e3d406f9f45c43bad281984:player:1",
+        "state": "flee"
+      },
+      "covered_shot": {
+        "template": "npc-plainclothes-warden",
+        "line": "Hit: Sodium regular.",
+        "revealed_to_caller": false
+      },
+      "fixtures": [
+        "one regular relocated beside the walked-to caller",
+        "regular ambient pause; ordinary flee ignores it",
+        "first flee movement cooldown 25 ticks",
+        "covered actor relocated for a real F shot; move cooldown 100 ticks"
+      ],
+      "presentation_acceptance": false,
+      "h1_layout_approval": false,
+      "s25_layout_approval": false
+    }
+  }
+}

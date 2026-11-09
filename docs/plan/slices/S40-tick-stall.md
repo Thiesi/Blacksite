@@ -3,7 +3,7 @@
 **Status:** done (PR #166)
 **Primary model:** Codex · **Reviewer:** automated review, technical lead
 **Depends on:** S11 · **Milestone:** service health
-**Issue:** https://github.com/Thiesi/Blacksite/issues/158
+**Issue:** https://github.com/Thiesi/Karst41/issues/158
 
 The owner queued this right after S38 (#159). That is queue order: S40
 has no code dependency on S38.
@@ -154,10 +154,10 @@ has to pass at the submitted review head without a retry; the S11 rule
 does not cover S24 or other acceptance failures. The owner merges this
 PR because it records owner decisions and re-scopes a slice.
 
-[owner decision]: https://github.com/Thiesi/Blacksite/pull/166#issuecomment-6699732646
-[captured failure]: https://github.com/Thiesi/Blacksite/pull/166#issuecomment-6697673052
-[paired evidence]: https://github.com/Thiesi/Blacksite/pull/166#issuecomment-6697704773
+[owner decision]: https://github.com/Thiesi/Karst41/pull/166#issuecomment-6699732646
+[captured failure]: https://github.com/Thiesi/Karst41/pull/166#issuecomment-6697673052
+[paired evidence]: https://github.com/Thiesi/Karst41/pull/166#issuecomment-6697704773
 [retained summary]: ../../ops/s40-evidence/e6ec3d6.json
-[checkpoint baseline]: https://github.com/Thiesi/Blacksite/pull/166#issuecomment-6698925746
-[design note]: https://github.com/Thiesi/Blacksite/pull/166#issuecomment-6698930471
-[read-only cost analysis]: https://github.com/Thiesi/Blacksite/pull/166#issuecomment-6699245842
+[checkpoint baseline]: https://github.com/Thiesi/Karst41/pull/166#issuecomment-6698925746
+[design note]: https://github.com/Thiesi/Karst41/pull/166#issuecomment-6698930471
+[read-only cost analysis]: https://github.com/Thiesi/Karst41/pull/166#issuecomment-6699245842

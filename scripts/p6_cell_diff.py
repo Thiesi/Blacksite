@@ -12,13 +12,13 @@ from typing import Any
 ROOT = Path(__file__).resolve().parents[1]
 sys.path[:0] = [str(ROOT/'src'),str(ROOT)]
 
-from blacksite.content.loader import load_content
-from blacksite.door.cells import CellBuffer, display_width
-from blacksite.door.palette import Palette
-from blacksite.door.present import zone as drawing
-from blacksite.door.present.paint import Paint
-from blacksite.layout import compute
-from blacksite.place import CHARTED_GROUND
+from karst41.content.loader import load_content
+from karst41.door.cells import CellBuffer, display_width
+from karst41.door.palette import Palette
+from karst41.door.present import zone as drawing
+from karst41.door.present.paint import Paint
+from karst41.layout import compute
+from karst41.place import CHARTED_GROUND
 from tests.fake_terminal import FakeTerminal
 from tests.presentation.snapshots import canonical, snapshot
 from tests.presentation.test_places import view
@@ -57,7 +57,7 @@ def report(base: str) -> dict[str,Any]:
                  for x,(a,b) in enumerate(zip(old,new)) if a!=b]
     if map_cells != [(10,5,'.','T')]:
         raise ValueError(f'only floor -> terminal at the existing Clinic binding is permitted: {map_cells}')
-    content = load_content(ROOT/'src/blacksite/content',ROOT/'tests/fixtures/p6')
+    content = load_content(ROOT/'src/karst41/content',ROOT/'tests/fixtures/p6')
     rows = []
     for light in (False,True):
         for width,height in ((80,24),(132,50)):

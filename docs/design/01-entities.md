@@ -26,7 +26,7 @@ Conventions:
 ## 1. World and content (loaded from files)
 
 Every content file is decoded into the typed records of
-`blacksite/content/schema.py`; JSON keys equal the field names below.
+`karst41/content/schema.py`; JSON keys equal the field names below.
 Unknown keys, missing required fields and values outside a closed set
 fail at load with the file and, where it can be found, the line. Table
 files are `{"schema": 1, "<kind>": [records]}`; one-record files

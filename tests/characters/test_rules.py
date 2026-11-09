@@ -2,7 +2,7 @@
 
 from datetime import datetime, timedelta, timezone
 import pytest
-from blacksite.server.rules import character as c
+from karst41.server.rules import character as c
 
 
 @pytest.mark.parametrize("vitals,health", [(1, 52), (20, 90), (40, 130), (100, 250)])
@@ -52,9 +52,9 @@ def test_name_width_and_characters(name: str, valid: bool) -> None:
 
 def test_starter_melee_uses_design_5_3_accuracy_but_ranged_requires_it(repo_root: object) -> None:
     from dataclasses import replace
-    from blacksite.content.loader import load_content
-    from blacksite.content.validate import validate
-    content=load_content(repo_root/"src/blacksite/content")
+    from karst41.content.loader import load_content
+    from karst41.content.validate import validate
+    content=load_content(repo_root/"src/karst41/content")
     assert content.items["wpn_kestrel_baton"].weapon.accuracy == 75
     ranged=content.items["wpn_kestrel_sidearm"]
     content.items[ranged.id]=replace(ranged,weapon=replace(ranged.weapon,accuracy=None))

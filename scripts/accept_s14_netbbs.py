@@ -18,9 +18,9 @@ from collections.abc import Callable
 
 from accept_s10_netbbs import Connection, NativeProbe, wait
 from accept_s13_netbbs import lat_walk
-from blacksite.server.lattice.silt import generate
-from blacksite import content as content_package
-from blacksite.server.rules import character
+from karst41.server.lattice.silt import generate
+from karst41 import content as content_package
+from karst41.server.rules import character
 
 
 async def menu(probe: NativeProbe, connection: Connection, row_id: str, *, changes: bool = True) -> None:

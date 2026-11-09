@@ -2,8 +2,8 @@
 
 import pytest
 
-from blacksite.content.schema import WeaponBlock
-from blacksite.server.rules import combat as rules
+from karst41.content.schema import WeaponBlock
+from karst41.server.rules import combat as rules
 from tests.character_helpers import place
 from tests.combat.test_engine import body
 from tests.server.test_drone_ownership import operator

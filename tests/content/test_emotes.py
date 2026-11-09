@@ -2,12 +2,12 @@
 
 from dataclasses import replace
 
-from blacksite.content.loader import load_content
-from blacksite.content.validate import validate
+from karst41.content.loader import load_content
+from karst41.content.validate import validate
 
 
 def test_shipped_emotes_and_fixture_validate(repo_root):
-    shipped=load_content(repo_root/'src/blacksite/content')
+    shipped=load_content(repo_root/'src/karst41/content')
     assert len(shipped.emotes)==10
     assert validate(shipped)==[]
     assert validate(load_content(repo_root/'tests/fixtures/world'))==[]

@@ -1,6 +1,6 @@
 """S19 registered native stdio acceptance, with unmodified hub first jobs.
 
-Use the NetBBS interpreter and an installed current Blacksite wheel.
+Use the NetBBS interpreter and an installed current Karst 41 wheel.
 --show forwards the actual ANSI stream to the hosting real terminal.
 """
 from __future__ import annotations

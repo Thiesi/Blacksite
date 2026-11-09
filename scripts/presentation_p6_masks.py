@@ -15,24 +15,24 @@ from typing import Any
 ROOT = Path(__file__).resolve().parents[1]
 sys.path[:0] = [str(ROOT/'src'),str(ROOT)]
 
-from blacksite.content import schema as s
-from blacksite.content.formats import decode
-from blacksite.content.loader import ContentTree, load_content
-from blacksite.content.places import region_tiles, theme_over, DEFAULT_THEME
-from blacksite.layout import compute
-from blacksite.server.views.looks import masked
+from karst41.content import schema as s
+from karst41.content.formats import decode
+from karst41.content.loader import ContentTree, load_content
+from karst41.content.places import region_tiles, theme_over, DEFAULT_THEME
+from karst41.layout import compute
+from karst41.server.views.looks import masked
 from tests.presentation.budget import stats
 
 
 def geometry() -> tuple[ContentTree,dict[str,Any]]:
     fixture = json.loads((ROOT/'tests/fixtures/p6-mask-geometry.json').read_text(encoding='utf-8'))
-    content = load_content(ROOT/'src/blacksite/content')
+    content = load_content(ROOT/'src/karst41/content')
     content.themes = decode(s.ThemeTable,fixture['themes'])
     for zid,record in fixture['zones'].items():
         zone = content.zones[zid]
         if [zone.width,zone.height]!=record['size']:
             raise ValueError(f'{zid}: map dimensions differ from the supplied geometry')
-        data = (ROOT/f'src/blacksite/content/zones/{zid}.map').read_bytes().replace(b'\r\n',b'\n')
+        data = (ROOT/f'src/karst41/content/zones/{zid}.map').read_bytes().replace(b'\r\n',b'\n')
         if sha256(data).hexdigest()!=record['map_sha256']:
             raise ValueError(f'{zid}: shipped map differs from the pinned author input')
         content.looks[zid] = decode(s.Look,{'id':zid,'theme':record['theme'],'regions':record['regions']})

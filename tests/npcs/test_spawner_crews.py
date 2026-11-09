@@ -3,7 +3,7 @@
 from dataclasses import replace
 from typing import Any
 
-from blacksite.server.world.actors import Actor
+from karst41.server.world.actors import Actor
 from tests.npcs.test_engine import body, city, spawn
 
 

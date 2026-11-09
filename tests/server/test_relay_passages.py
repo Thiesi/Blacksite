@@ -6,9 +6,9 @@ from pathlib import Path
 
 import pytest
 
-from blacksite.content.loader import load_content
-from blacksite.content.validate import validate
-from blacksite.server.relay_passages import GATE_INTERVAL_SECONDS, GATE_OPEN_SECONDS, gate_departure
+from karst41.content.loader import load_content
+from karst41.content.validate import validate
+from karst41.server.relay_passages import GATE_INTERVAL_SECONDS, GATE_OPEN_SECONDS, gate_departure
 from scripts.relay_fixture import build_passage_fixture
 from tests.character_helpers import create, place, state
 from tests.harness import HeadlessServer
@@ -17,7 +17,7 @@ from tests.server.test_relay_benefits import owned
 
 @pytest.fixture(scope='module')
 def passage_content(tmp_path_factory):
-    shipped=Path(__file__).parents[2]/'src/blacksite/content'
+    shipped=Path(__file__).parents[2]/'src/karst41/content'
     local=tmp_path_factory.mktemp('s21-passage-content')
     routes=build_passage_fixture(shipped,local)
     tree=load_content(shipped,local)

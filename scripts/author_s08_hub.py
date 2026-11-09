@@ -8,7 +8,7 @@ from pathlib import Path
 import textwrap
 
 ROOT = Path(__file__).resolve().parents[1]
-CONTENT = ROOT / "src/blacksite/content"
+CONTENT = ROOT / "src/karst41/content"
 
 
 def dump(path: Path, data: object) -> None:

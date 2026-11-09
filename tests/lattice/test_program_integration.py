@@ -2,7 +2,7 @@
 
 from dataclasses import replace
 
-from blacksite.content.schema import ContractTemplate, Stage, StageTarget
+from karst41.content.schema import ContractTemplate, Stage, StageTarget
 
 from tests.lattice.test_engine import intent, jack, runners
 from tests.lattice.test_encounters import cast, enter

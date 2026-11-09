@@ -6,7 +6,7 @@ from pathlib import Path
 
 import pytest
 
-from blacksite.server.protocol import Decoder, Frame, MAX_FRAME, ProtocolError, decode, encode
+from karst41.server.protocol import Decoder, Frame, MAX_FRAME, ProtocolError, decode, encode
 from tests.harness import hello
 
 

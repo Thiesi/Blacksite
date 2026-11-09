@@ -4,10 +4,10 @@ from pathlib import Path
 
 import pytest
 
-from blacksite.layout import Page, Rect, compute
-from blacksite.door.layout import compute as door_layout
-from blacksite.door.log import rows
-from blacksite.door.cells import display_width
+from karst41.layout import Page, Rect, compute
+from karst41.door.layout import compute as door_layout
+from karst41.door.log import rows
+from karst41.door.cells import display_width
 from tests.presentation.geometry_guard import geometry_copies
 
 
@@ -61,7 +61,7 @@ def test_minimum_log_width_preserves_whole_wide_glyph() -> None:
 
 
 def test_no_server_terminal_geometry_copies(repo_root: Path) -> None:
-    failures = [failure for path in (repo_root/'src/blacksite/server').rglob('*.py')
+    failures = [failure for path in (repo_root/'src/karst41/server').rglob('*.py')
                 for failure in geometry_copies(path)]
     assert failures == []
 
@@ -72,7 +72,7 @@ def test_guard_catches_new_copy_and_dimension_aliases(tmp_path: Path) -> None:
     assert geometry_copies(scratch)
     scratch.write_text('def panel(width, height):\n    return min(width - 25, height - 7)\n')
     assert geometry_copies(scratch)
-    scratch.write_text('from blacksite.layout import compute as screen\ndef panel(session):\n    return screen(session.caps["width"], session.caps["height"]).viewport\n')
+    scratch.write_text('from karst41.layout import compute as screen\ndef panel(session):\n    return screen(session.caps["width"], session.caps["height"]).viewport\n')
     assert geometry_copies(scratch) == []
     scratch.write_text('def changed(session, old):\n    stamp = (session.caps["width"], session.caps["height"])\n    return stamp != old\n')
     assert geometry_copies(scratch) == []

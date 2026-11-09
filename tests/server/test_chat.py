@@ -5,20 +5,20 @@ import json
 
 import pytest
 
-from blacksite.content.loader import load_content
-from blacksite.server.chat import CHAT_COLUMNS, SAY_RADIUS, LOG_LINE_BYTES, sanitize
-from blacksite.server.clock import ManualClock
-from blacksite.server.logging import Logs
-from blacksite.server.protocol import Frame, encode
-from blacksite.server.sessions import CHAT_PER_WINDOW, CHAT_WINDOW_SECONDS, LOG_RING_LINES, LOG_REPLAY_LINES
-from blacksite.server.storage.db import Storage
+from karst41.content.loader import load_content
+from karst41.server.chat import CHAT_COLUMNS, SAY_RADIUS, LOG_LINE_BYTES, sanitize
+from karst41.server.clock import ManualClock
+from karst41.server.logging import Logs
+from karst41.server.protocol import Frame, encode
+from karst41.server.sessions import CHAT_PER_WINDOW, CHAT_WINDOW_SECONDS, LOG_RING_LINES, LOG_REPLAY_LINES
+from karst41.server.storage.db import Storage
 from tests.character_helpers import act, create, place, state
 from tests.harness import HeadlessServer
 
 
 @pytest.fixture
 def social(repo_root: Path):
-    game=HeadlessServer(load_content(repo_root/'src/blacksite/content'),character_state={})
+    game=HeadlessServer(load_content(repo_root/'src/karst41/content'),character_state={})
     a=game.connect({'user_id':1,'handle':'First界','node_name':'test'})
     create(game,a,name='Alpha')
     b=game.connect({'user_id':2,'handle':'Second界','node_name':'test'})

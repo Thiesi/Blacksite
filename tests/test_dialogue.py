@@ -5,8 +5,8 @@ from random import Random
 
 import pytest
 
-from blacksite.content.schema import Bark, DIALOGUE_CONDITIONS, DialogueLine, DialogueNode, Offer
-from blacksite.server.dialogue import BarkScheduler, Facts, condition, eligible_offers, evaluate
+from karst41.content.schema import Bark, DIALOGUE_CONDITIONS, DialogueLine, DialogueNode, Offer
+from karst41.server.dialogue import BarkScheduler, Facts, condition, eligible_offers, evaluate
 
 
 TALKER = DialogueNode('vesper', 'Vesper', (DialogueLine('fallback', 'Sit. The door stays open.'),))

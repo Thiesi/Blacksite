@@ -6,11 +6,11 @@ from typing import Any
 
 import pytest
 
-from blacksite.content.schema import EventTemplate
-from blacksite.server.events import Scheduler
-from blacksite.server.event_forecasts import remember
-from blacksite.server.rules.events import HISTORY_PLANS, HELD_FORECASTS, SCHEDULES
-from blacksite.server.clock import TICK_HZ
+from karst41.content.schema import EventTemplate
+from karst41.server.events import Scheduler
+from karst41.server.event_forecasts import remember
+from karst41.server.rules.events import HISTORY_PLANS, HELD_FORECASTS, SCHEDULES
+from karst41.server.clock import TICK_HZ
 from tests.character_helpers import place
 from tests.harness import HeadlessServer
 from tests.server.test_event_engine import base_content, events_game, force

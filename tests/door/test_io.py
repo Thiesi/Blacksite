@@ -8,12 +8,12 @@ from pathlib import Path
 
 import pytest
 
-from blacksite.door.client import run
-from blacksite.door.connection import Connection, Reconnect
-from blacksite.door.doorinfo import DoorInfo
-from blacksite.door.terminal import ENTER, LEAVE
-from blacksite.server.app import Server
-from blacksite.server.protocol import Frame
+from karst41.door.client import run
+from karst41.door.connection import Connection, Reconnect
+from karst41.door.doorinfo import DoorInfo
+from karst41.door.terminal import ENTER, LEAVE
+from karst41.server.app import Server
+from karst41.server.protocol import Frame
 from tests.fake_terminal import FakeTerminal
 
 
@@ -22,8 +22,8 @@ def test_escape_timeout_drains_queued_native_input_first(
     monkeypatch: pytest.MonkeyPatch, pending: bytes | None, expected: list[str],
 ) -> None:
     """UI 5.3: a late timer must not turn a queued arrow into Say."""
-    from blacksite.door.client import read_input
-    from blacksite.door.keys import KeyDecoder
+    from karst41.door.client import read_input
+    from karst41.door.keys import KeyDecoder
 
     class PausedPipe:
         async def read(self) -> bytes:
@@ -34,7 +34,7 @@ def test_escape_timeout_drains_queued_native_input_first(
 
     decoder = KeyDecoder()
     assert decoder.feed(b"\x1b", 100) == []
-    monkeypatch.setattr("blacksite.door.client.time.monotonic", lambda: 100.3)
+    monkeypatch.setattr("karst41.door.client.time.monotonic", lambda: 100.3)
     data = asyncio.run(read_input(PausedPipe(), decoder))
     if data == b"":
         # EOF closes the client; it must not synthesize a hotkey.
@@ -46,8 +46,8 @@ def test_escape_timeout_drains_queued_native_input_first(
 
 
 def test_ui_5_3_successful_native_read_survives_deadline_observation_race(monkeypatch: pytest.MonkeyPatch) -> None:
-    from blacksite.door.client import read_input
-    from blacksite.door.keys import KeyDecoder
+    from karst41.door.client import read_input
+    from karst41.door.keys import KeyDecoder
 
     class ConsumedPipe:
         async def read(self) -> bytes:
@@ -148,7 +148,7 @@ def test_connection_uses_server_hmac_and_rejects_missing_secrets(info: DoorInfo)
         try:
             assert (await connection.open(info)).type == "welcome"
             await connection.send(Frame("ping", {"t": 42}))
-            from blacksite.server.protocol import read_frame
+            from karst41.server.protocol import read_frame
             assert (await read_frame(connection.reader)).data["t"] == 42
         finally:
             await connection.close()
@@ -220,16 +220,16 @@ def test_log_burst_does_not_delay_the_following_view(info: DoorInfo) -> None:
 
 
 def test_entry_configuration_error_and_small_terminal(monkeypatch: pytest.MonkeyPatch, capsys: pytest.CaptureFixture[str]) -> None:
-    from blacksite.door import __main__ as entry
+    from karst41.door import __main__ as entry
     monkeypatch.delenv("NETBBS_DOOR_INFO", raising=False)
-    monkeypatch.delenv("BLACKSITE_INSTALL_DIR", raising=False)
+    monkeypatch.delenv("KARST41_INSTALL_DIR", raising=False)
     assert entry.main([]) == 2
     assert len(capsys.readouterr().out.splitlines()) == 1
 
 
 def test_refuse_below_80x24_without_entering_terminal(info: DoorInfo, monkeypatch: pytest.MonkeyPatch) -> None:
     from dataclasses import replace
-    from blacksite.door import __main__ as entry
+    from karst41.door import __main__ as entry
     terminal = FakeTerminal(40, 10)
     monkeypatch.setattr(entry, "read", lambda env: replace(info, width=40, height=10))
     monkeypatch.setattr(entry, "Terminal", lambda local: terminal)
@@ -247,8 +247,8 @@ def test_real_module_uses_native_stdio_pipes(info: DoorInfo, minimal_environment
         env = {} if minimal_environment else dict(os.environ)
         if os.name == "nt" and "USERPROFILE" in os.environ:
             env["USERPROFILE"] = os.environ["USERPROFILE"]
-        env.update(NETBBS_DOOR_INFO=str(info.path), DOOR_BLACKSITE_INSTALL_DIR=str(info.install))
-        process = await asyncio.create_subprocess_exec(sys.executable, "-m", "blacksite.door", env=env,
+        env.update(NETBBS_DOOR_INFO=str(info.path), DOOR_KARST41_INSTALL_DIR=str(info.install))
+        process = await asyncio.create_subprocess_exec(sys.executable, "-m", "karst41.door", env=env,
             stdin=asyncio.subprocess.PIPE, stdout=asyncio.subprocess.PIPE, stderr=asyncio.subprocess.PIPE)
         terminal = FakeTerminal()
 
@@ -263,7 +263,7 @@ def test_real_module_uses_native_stdio_pipes(info: DoorInfo, minimal_environment
             # Cold Windows venv startup exceeds five seconds on the local
             # OneDrive checkout. A 30s diagnostic reached the title and
             # completed help/exit; keep their latency gates at five seconds.
-            await expect("BLACKSITE", 30 if os.name == "nt" else 5)
+            await expect("KARST 41", 30 if os.name == "nt" else 5)
             process.stdin.write(b"?")
             await process.stdin.drain()
             await expect("HELP")

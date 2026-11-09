@@ -4,7 +4,7 @@ on:
   pull_request:
     paths:
       - 'scripts/build_city_content.py'
-      - 'src/blacksite/**'
+      - 'src/karst41/**'
       - 'tests/**'
       - 'docs/world/01-gazetteer.md'
       - 'pyproject.toml'
@@ -27,7 +27,7 @@ jobs:
       - name: Generate the held city proposal outside shipped content
         run: python scripts/build_city_content.py --output "$RUNNER_TEMP/s25b-authored"
       - name: Validate all 34 scoped zones
-        run: python -m blacksite.content.validate "$RUNNER_TEMP/s25b-authored"
+        run: python -m karst41.content.validate "$RUNNER_TEMP/s25b-authored"
       - uses: actions/upload-artifact@v4
         if: always()
         with:

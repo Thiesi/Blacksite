@@ -4,11 +4,11 @@ from pathlib import Path
 
 import pytest
 
-from blacksite.content.loader import load_content
-from blacksite.server.protocol import Frame
-from blacksite.server.storage.db import Storage
-from blacksite.server.clock import TICK_HZ
-from blacksite.server.relay_engine import CAPTURE_RETRY_SECONDS
+from karst41.content.loader import load_content
+from karst41.server.protocol import Frame
+from karst41.server.storage.db import Storage
+from karst41.server.clock import TICK_HZ
+from karst41.server.relay_engine import CAPTURE_RETRY_SECONDS
 from tests.character_helpers import act, create, place
 from tests.harness import HeadlessServer
 from tests.lattice.test_engine import runners, intent, jack
@@ -17,7 +17,7 @@ from tests.lattice.test_interlock import control_room
 
 @pytest.fixture(scope='module')
 def content():
-    return load_content(Path(__file__).parents[2]/'src/blacksite/content')
+    return load_content(Path(__file__).parents[2]/'src/karst41/content')
 
 
 @pytest.fixture

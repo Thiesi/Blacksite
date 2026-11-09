@@ -9,7 +9,7 @@ model that works here. `CLAUDE.md` only points at this file.
 ## 1. What this repository is
 
 - The game's design, world, and build plan (`docs/`), and, as slices
-  land, its code (`src/blacksite/`), content (`src/blacksite/content/`),
+  land, its code (`src/karst41/`), content (`src/karst41/content/`),
   tests (`tests/`), and deployment templates (`deploy/`).
 - Python 3.12+, standard library only at runtime (asyncio, sqlite3,
   json). Test dependency: pytest. Nothing else without a design change.
@@ -89,7 +89,7 @@ contradiction by editing only the lower document.
 ## 4. Coding rules
 
 - **Server-authoritative.** The client never decides game state. If you
-  find yourself computing a rule in `blacksite.door`, stop.
+  find yourself computing a rule in `karst41.door`, stop.
 - **The simulation never touches sockets, files, or wall clocks
   directly.** It receives ticks, inputs, and a clock; it returns state
   changes and messages. That is what makes it testable and, later,
@@ -152,7 +152,7 @@ offline disk check. These rules keep it bounded:
   suite refuses any other `--basetemp` inside the worktree.
 - **The system temp folder is not storage.** Native proofs, review
   packets, captures, wheels, venvs and clones use one fixed folder per
-  kind, reused by every run: `blacksite-proof/<kind>` in the temp folder,
+  kind, reused by every run: `karst41-proof/<kind>` in the temp folder,
   or `.test-tmp/<kind>` in the worktree. Never a new folder per run or
   per head. Delete it when the run is done, including anything you
   downloaded to verify.
@@ -165,8 +165,9 @@ offline disk check. These rules keep it bounded:
   the worktree's ignored scratch (`.test-tmp`, `.pytest_cache`,
   `__pycache__`, `*.egg-info`; never `.venv` or tracked files).
 - The test suite and native proofs built on `NativeProbe` also refuse to
-  start when this project's `blacksite-*` and `native-proof-*` entries in
-  the temp folder hold more than 50,000 files.
+  start when this project's `karst41-*` and `native-proof-*` entries in
+  the temp folder hold more than 50,000 files. Until S31 it also counts
+  legacy `blacksite-*` entries, so a moved project cannot hide old scratch.
   `python scripts/clean_scratch.py --temp` removes those entries that
   have had nothing written for 24 hours, and nothing else in the temp
   folder. If recent folders are the problem, check no proof is running,
@@ -184,8 +185,8 @@ offline disk check. These rules keep it bounded:
   Karst 41's own code.
 - Test caller-facing changes through a real NetBBS node: a local checkout
   of NetBBS, a registered native stdio door pointing at this repo's venv
-  interpreter with argv `-m blacksite.door`, and the game service started
-  with `blacksite serve`. The SysOp guide (once S28/S31 land) has the
+  interpreter with argv `-m karst41.door`, and the game service started
+  with `karst41 serve`. The SysOp guide (once S28/S31 land) has the
   exact steps; until then `docs/design/02-architecture.md` §8.
 - Track the NetBBS door guide and `netbbs.doors.runtime` for changes to
   the door API; the architecture document §1 records the facts we build
@@ -228,7 +229,7 @@ docs/
   plan/      00-roadmap, slices/S01 … S33
   upstream/  README, 01 … 06
   ops/       sysop-guide (from S28/S31)
-src/blacksite/
+src/karst41/
   server/    simulation, storage, protocol, sessions, events, admin endpoint
   door/      terminal, keys, renderer, views, client loop
   admin/     CLI

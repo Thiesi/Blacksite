@@ -1,8 +1,8 @@
 # S21 relay consumers and full-city acceptance
 
 Reference: [S21](slices/S21-relays-and-territory.md),
-[PR #38](https://github.com/Thiesi/Blacksite/pull/38) and
-[NetBBS #56](https://github.com/Thiesi/Blacksite/issues/56).
+[PR #38](https://github.com/Thiesi/Karst41/pull/38) and
+[NetBBS #56](https://github.com/Thiesi/Karst41/issues/56).
 
 The two live anchors are Cold Chain and Block. Fourteen definitions,
 cores and small curated member counters remain authoring content until

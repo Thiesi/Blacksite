@@ -7,11 +7,12 @@ import subprocess
 import pytest
 
 from scripts.presentation_p6_packet import ROOT, build_packet, source_hash
+from scripts.source_layout import at_revision
 
 
 def git_sources() -> tuple[str,str]:
     head = subprocess.check_output(['git','rev-parse','HEAD'],cwd=ROOT,text=True).strip()
-    tree = subprocess.check_output(['git','rev-parse',f'{head}:src/blacksite'],cwd=ROOT,text=True).strip()
+    tree = subprocess.check_output(['git','rev-parse',f'{head}:{at_revision(head, "src/karst41")}'],cwd=ROOT,text=True).strip()
     return head,tree
 
 

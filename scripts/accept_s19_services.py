@@ -21,7 +21,7 @@ from accept_s16_netbbs import commit_key, key, select
 from accept_s18_netbbs import get_user_by_id
 from accept_s19_netbbs import ContractProbe, board_row, close_jobs, encounter_row, objective_key
 from contracts_fixture import build_fixture
-from blacksite.server.app import Server
+from karst41.server.app import Server
 
 
 async def reconnect(probe: ContractProbe, previous: Connection, width: int, height: int) -> Connection:
@@ -220,7 +220,7 @@ async def settle_story(probe: ContractProbe, caller: Connection, tid: str, board
 
 
 async def run_case(root: Path, python: Path, show: bool, width: int, height: int, allocation: str, stage: str) -> dict[str,Any]:
-    shipped=Path(__file__).parents[1]/'src/blacksite/content'
+    shipped=Path(__file__).parents[1]/'src/karst41/content'
     descriptor=build_fixture(shipped,root/'world/content.local')
     probe=ContractProbe(root,python,show)
     await probe.start()

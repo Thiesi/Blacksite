@@ -5,9 +5,9 @@ import json
 
 import pytest
 
-from blacksite.content.schema import Effect, EventTemplate, EventVariant, Route, Waypoint
-from blacksite.server.events import Scheduler
-from blacksite.server.rules.events import (
+from karst41.content.schema import Effect, EventTemplate, EventVariant, Route, Waypoint
+from karst41.server.events import Scheduler
+from karst41.server.rules.events import (
     ADVANCE_SECONDS, BEACON_SECONDS, CURFEW_HEAT, EXHALE_RATE,
     MAX_RESERVED, ROLL_SECONDS, SCHEDULES, SURGE_MAGNITUDE, WARNING_SECONDS,
 )

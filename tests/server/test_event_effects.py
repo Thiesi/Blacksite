@@ -4,9 +4,9 @@ from dataclasses import replace
 
 import pytest
 
-from blacksite.content.schema import IceTemplate
-from blacksite.server.event_effects import beneficial, compatible, swap
-from blacksite.server.lattice.ice import Activation, Ice
+from karst41.content.schema import IceTemplate
+from karst41.server.event_effects import beneficial, compatible, swap
+from karst41.server.lattice.ice import Activation, Ice
 
 
 def test_game_12_benefits_preserve_damage_range_duration_and_restrictions() -> None:

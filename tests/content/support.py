@@ -6,11 +6,11 @@ from collections.abc import Callable
 from pathlib import Path
 from typing import Any
 
-from blacksite.content.loader import ContentTree, load_content
-from blacksite.content.validate import Problem, validate
+from karst41.content.loader import ContentTree, load_content
+from karst41.content.validate import Problem, validate
 
 FIXTURE_WORLD = Path(__file__).resolve().parent.parent / "fixtures" / "world"
-SHIPPED = Path(__file__).resolve().parents[2] / "src" / "blacksite" / "content"
+SHIPPED = Path(__file__).resolve().parents[2] / "src" / "karst41" / "content"
 
 
 class World:

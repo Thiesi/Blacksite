@@ -13,7 +13,7 @@ import subprocess
 from typing import Any
 
 from accept_s10_netbbs import NativeProbe, wait
-from blacksite.layout import compute
+from karst41.layout import compute
 from tests.presentation.snapshots import snapshot
 
 

@@ -8,14 +8,14 @@ import pytest
 from scripts.presentation_scope import full_native
 from tests.presentation.budget import MIX, hourly, stats
 from tests.presentation.budget import Caller, frames
-from blacksite.content.loader import load_content
+from karst41.content.loader import load_content
 
 
 @pytest.mark.parametrize('paths', [
-    ['src/blacksite/door/model.py'],
-    ['src/blacksite/content/palette.json', 'tests/door/test_display.py'],
-    ['src/blacksite/content/text/help.md'],
-    ['src/blacksite/content/art/title.ans'],
+    ['src/karst41/door/model.py'],
+    ['src/karst41/content/palette.json', 'tests/door/test_display.py'],
+    ['src/karst41/content/text/help.md'],
+    ['src/karst41/content/art/title.ans'],
 ])
 def test_draft_presentation_subset_and_ready_full(paths: list[str]) -> None:
     assert full_native(paths, True)[0] is False
@@ -23,12 +23,12 @@ def test_draft_presentation_subset_and_ready_full(paths: list[str]) -> None:
 
 
 @pytest.mark.parametrize('paths', [[], ['tests/door/test_display.py'],
-    ['src/blacksite/door/model.py', 'src/blacksite/server/world/zone.py'],
-    ['src/blacksite/content/zones/sodium-row.json'],
-    ['src/blacksite/door/model.py', '.github/workflows/service-acceptance.yml'],
-    ['src/blacksite/door/../../server/core.py'], ['docs/design/03-terminal-ui.md'],
-    ['src/blacksite/content/text/emotes.json'],
-    *[[f'src/blacksite/door/{name}.py'] for name in
+    ['src/karst41/door/model.py', 'src/karst41/server/world/zone.py'],
+    ['src/karst41/content/zones/sodium-row.json'],
+    ['src/karst41/door/model.py', '.github/workflows/service-acceptance.yml'],
+    ['src/karst41/door/../../server/core.py'], ['docs/design/03-terminal-ui.md'],
+    ['src/karst41/content/text/emotes.json'],
+    *[[f'src/karst41/door/{name}.py'] for name in
       ('connection', 'client', 'keys', '__main__', 'terminal', 'doorinfo', 'windows_env', 'unknown')]])
 def test_uncertain_or_mixed_changes_keep_full_matrix(paths: list[str]) -> None:
     assert full_native(paths, True)[0] is True
@@ -54,7 +54,7 @@ def test_budget_aggregation_uses_minutes_without_rounding() -> None:
 
 
 def test_frame_measurement_exercises_live_input_and_both_output_classes(repo_root: Path) -> None:
-    result = frames(load_content(repo_root/'src/blacksite/content'), 80, 24, '256')
+    result = frames(load_content(repo_root/'src/karst41/content'), 80, 24, '256')
     assert result['successful_moves'] > 0
     assert result['summary']['full']['bytes']['count'] > 0
     assert result['summary']['delta']['bytes']['count'] > 0
@@ -62,7 +62,7 @@ def test_frame_measurement_exercises_live_input_and_both_output_classes(repo_roo
 
 
 def test_cpu_caller_keeps_shipped_spawners_and_a_settled_zone_view(repo_root: Path) -> None:
-    content = load_content(repo_root/'src/blacksite/content')
+    content = load_content(repo_root/'src/karst41/content')
     caller = Caller(content, 80, 24, '256', 'sodium-tin-halo')
     assert caller.game.core.world.content.zones['sodium-tin-halo'].meta.spawners == content.zones['sodium-tin-halo'].meta.spawners
     assert content.zones['sodium-tin-halo'].meta.spawners

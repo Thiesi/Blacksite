@@ -2,8 +2,8 @@
 
 import pytest
 
-from blacksite.server.items import make_item
-from blacksite.server.protocol import Frame
+from karst41.server.items import make_item
+from karst41.server.protocol import Frame
 from tests.character_helpers import act
 from tests.server.test_commerce import caller, execute, game
 

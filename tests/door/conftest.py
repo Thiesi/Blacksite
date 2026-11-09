@@ -2,7 +2,7 @@ from pathlib import Path
 
 import pytest
 
-from blacksite.door.doorinfo import DoorInfo
+from karst41.door.doorinfo import DoorInfo
 from tests.harness import WIDE_HANDLE
 
 

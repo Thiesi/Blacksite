@@ -5,10 +5,10 @@ from pathlib import Path
 
 import pytest
 
-from blacksite.content.formats import read_record
-from blacksite.content.loader import load_content
-from blacksite.content.schema import ContractTemplate
-from blacksite.content.validate import validate
+from karst41.content.formats import read_record
+from karst41.content.loader import load_content
+from karst41.content.schema import ContractTemplate
+from karst41.content.validate import validate
 
 
 @pytest.mark.parametrize('broken,expected', [
@@ -34,7 +34,7 @@ def test_entity_1_10_silt_target_uses_its_own_mission_record(repo_root: Path, br
         record['mission_data'][0]['kind'] = 'chits'
     job, problems = read_record(json.dumps(record), 'fixture-contract.json', ContractTemplate)
     assert not problems and job is not None
-    tree = load_content(repo_root/'src/blacksite/content')
+    tree = load_content(repo_root/'src/karst41/content')
     tree.contracts[job.id] = job
     messages = [p.message for p in validate(tree)]
     if broken:

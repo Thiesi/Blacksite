@@ -1,7 +1,7 @@
 """Game 7.4: active participation, pauses and single-source payments."""
 
-from blacksite.server.clock import TICK_HZ
-from blacksite.server.relays import Claims, Ledger, Participant
+from karst41.server.clock import TICK_HZ
+from karst41.server.relays import Claims, Ledger, Participant
 
 
 def person(pid='holder', faction='halvard', identity=None):

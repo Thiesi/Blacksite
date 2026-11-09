@@ -4,8 +4,8 @@ from fractions import Fraction
 
 import pytest
 
-from blacksite.server.market import Bounties, Market
-from blacksite.server.rules.market import (BOUNTY_MIN_CHITS, BOUNTY_MIN_TARGET_GRADE,
+from karst41.server.market import Bounties, Market
+from karst41.server.rules.market import (BOUNTY_MIN_CHITS, BOUNTY_MIN_TARGET_GRADE,
     BOUNTY_SECONDS, LISTING_EXPIRIES, MARKET_ACTION_SECONDS, MARKET_FEE, fee)
 
 

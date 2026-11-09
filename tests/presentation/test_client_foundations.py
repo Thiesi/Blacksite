@@ -6,17 +6,17 @@ from pathlib import Path
 
 import pytest
 
-from blacksite.content.loader import load_content
-from blacksite.door.cells import CellBuffer, display_width
-from blacksite.door import chrome as shared_chrome
-from blacksite.door.doorinfo import DoorInfo
-from blacksite.door.model import Display
-from blacksite.door.palette import Palette
-from blacksite.door.present import chrome, screen, zone
-from blacksite.door.present.context import Context
-from blacksite.door.present.paint import Paint, BAND_STEP, light_distance
-from blacksite.layout import compute
-from blacksite.server.protocol import Frame
+from karst41.content.loader import load_content
+from karst41.door.cells import CellBuffer, display_width
+from karst41.door import chrome as shared_chrome
+from karst41.door.doorinfo import DoorInfo
+from karst41.door.model import Display
+from karst41.door.palette import Palette
+from karst41.door.present import chrome, screen, zone
+from karst41.door.present.context import Context
+from karst41.door.present.paint import Paint, BAND_STEP, light_distance
+from karst41.layout import compute
+from karst41.server.protocol import Frame
 from tests.door.test_lattice_render import sector_views  # noqa: F401
 from tests.fake_terminal import FakeTerminal
 from tests.harness import HeadlessServer, WIDE_HANDLE
@@ -29,7 +29,7 @@ TIERS = ['16', '256', 'truecolor']
 
 @pytest.fixture(scope='module')
 def content():
-    return load_content(ROOT / 'src/blacksite/content')
+    return load_content(ROOT / 'src/karst41/content')
 
 
 def display(content, width=80, height=24, tier='256', enabled=True):
@@ -181,7 +181,7 @@ def test_p5_context_is_pure_map_only_and_keys_keep_their_meaning(content):
 
 @pytest.mark.parametrize('size', SIZES)
 def test_ui_11_new_hint_hosts_the_single_p3_fitter(content, size):
-    from blacksite.hints import focus_context
+    from karst41.hints import focus_context
     width, height = size
     body = zone_body(content, width, height)
     body['objective'] = None
@@ -216,7 +216,7 @@ def test_ui_11_new_hint_hosts_the_single_p3_fitter(content, size):
 
 @pytest.mark.parametrize('size', SIZES)
 def test_ui_6_long_wide_prompt_retains_borders_and_matches_legacy(content, size):
-    from blacksite.door.views import LinePrompt
+    from karst41.door.views import LinePrompt
     width, height = size
     interiors = []
     for enabled in (False, True):
@@ -391,8 +391,8 @@ def test_ui_2_4_nearby_always_has_an_explicit_relation_tag(content, size):
 @pytest.mark.parametrize('variant', ['default', 'deutan', 'protan'])
 def test_ui_2_2_every_band_and_jacked_floor_after_actual_tier_mapping(content, tier, variant, monkeypatch):
     from math import atan2, degrees, hypot
-    from blacksite.door.present.paint import HUE_TOLERANCE, hue_distance, lab
-    from blacksite.door.present import paint as paint_module
+    from karst41.door.present.paint import HUE_TOLERANCE, hue_distance, lab
+    from karst41.door.present import paint as paint_module
     def forbid_fallback(colour):
         pytest.fail('The shipped palette must meet its floors without fallback')
     monkeypatch.setattr(paint_module, '_unreachable', forbid_fallback)
@@ -421,7 +421,7 @@ def test_ui_2_2_every_band_and_jacked_floor_after_actual_tier_mapping(content, t
 
 @pytest.mark.parametrize('variant', ['default', 'deutan', 'protan'])
 def test_ui_2_2_people_16_categories_and_halvard_exception(content, variant):
-    from blacksite.door.present.paint import HALVARD_16, JACKED_16, PEOPLE_16
+    from karst41.door.present.paint import HALVARD_16, JACKED_16, PEOPLE_16
     palette = Palette(asdict(content.palette), '16', variant)
     paint = Paint(palette)
     for role in palette.roles:
@@ -436,7 +436,7 @@ def test_ui_2_2_people_16_categories_and_halvard_exception(content, variant):
 @pytest.mark.parametrize('tier', ['256', 'truecolor'])
 @pytest.mark.parametrize('variant', ['default', 'deutan', 'protan'])
 def test_ui_2_2_shared_distance_helper_handles_a_synthetic_light_ground(content, tier, variant):
-    from blacksite.door.present.paint import lift
+    from karst41.door.present.paint import lift
     palette = Palette(asdict(content.palette), tier, variant)
     ground, structure, thing = ((238, 238, 238), (198, 198, 198), (128, 128, 128)) if tier == 'truecolor' else (255, 251, 244)
     structure_floor, things_floor = light_distance(structure, ground), light_distance(thing, ground)
@@ -451,7 +451,7 @@ def test_ui_2_2_shared_distance_helper_handles_a_synthetic_light_ground(content,
 
 
 def test_ui_2_2_lift_is_cached_and_does_not_mutate_palette(content, monkeypatch):
-    from blacksite.door.present import paint as paint_module
+    from karst41.door.present import paint as paint_module
     data = asdict(content.palette)
     saved = deepcopy(data)
     palette = Palette(data, '256')
@@ -476,7 +476,7 @@ def test_ui_2_2_lift_is_cached_and_does_not_mutate_palette(content, monkeypatch)
 
 
 def test_ui_2_2_cie_d65_reference_anchors():
-    from blacksite.door.present.paint import lab
+    from karst41.door.present.paint import lab
     assert lab((0, 0, 0))[0] == 0
     assert lab((255, 255, 255))[0] == pytest.approx(100)
     assert lab((255, 0, 0))[0] == pytest.approx(53.24, abs=.05)

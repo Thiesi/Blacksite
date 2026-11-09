@@ -35,7 +35,7 @@ def build(root: Path, metadata: list[dict[str, Any]], run: int, head: str,
     for name, artifact in artifacts.items():
         require(artifact.get('workflow_run', {}).get('head_sha') == head, f'{name}: artifact head mismatch')
         provenance[name] = {'id': artifact['id'], 'archive_digest': artifact['digest'],
-            'url': f'https://github.com/Thiesi/Blacksite/actions/runs/{run}/artifacts/{artifact["id"]}'}
+            'url': f'https://github.com/Thiesi/Karst41/actions/runs/{run}/artifacts/{artifact["id"]}'}
     for size,tier in CONFIGS:
         name = f'p6b-native-{size}-{tier}'
         directory = root/name/'p6b-proof'

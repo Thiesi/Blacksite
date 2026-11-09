@@ -3,7 +3,7 @@
 **Status:** done (PR #47)
 **Primary model:** Sonnet · **Reviewer:** Opus (map review of the hub zones)
 **Depends on:** S06 · **Milestone:** M1
-**Issue:** https://github.com/Thiesi/blacksite/issues/8
+**Issue:** https://github.com/Thiesi/Karst41/issues/8
 
 ## Goal
 
@@ -30,7 +30,7 @@ Clinic Row to Meridian Plaza, ride the tram, and reach the Tin Halo.
 
 ## Scope
 
-- `src/blacksite/server/world/exits.py`: interact on an exit tile (or
+- `src/karst41/server/world/exits.py`: interact on an exit tile (or
   walking onto a `street` exit) moves the actor to the target zone and
   tile; kinds `street` (instant), `door` (instant, may be locked:
   requirement `key`, `pass`, `faction standing`, or a control state set
@@ -39,7 +39,7 @@ Clinic Row to Meridian Plaza, ride the tram, and reach the Tin Halo.
   clock; 10 s ride shown as a `TextView` "The tram hums."; arrival at
   the destination platform); requirement failures post a log line and
   do nothing else.
-- `src/blacksite/server/world/safety.py`: `safety_at(zone, tile)`
+- `src/karst41/server/world/safety.py`: `safety_at(zone, tile)`
   returning `safe`, `pocket`, `contested`, `open` from the zone class
   and pocket regions; exposed on `ZoneView.me.safety` and used by
   S07's logout rule (safe and pocket → instant, else sleeper).

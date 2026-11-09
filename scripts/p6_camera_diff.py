@@ -13,13 +13,13 @@ from unittest.mock import patch
 ROOT = Path(__file__).resolve().parents[1]
 sys.path[:0] = [str(ROOT/'src'),str(ROOT),str(ROOT/'scripts')]
 
-from blacksite.content.loader import load_content
-from blacksite.door.cells import CellBuffer
-from blacksite.door.palette import Palette
-from blacksite.door.present import zone
-from blacksite.door.present.paint import Paint
-from blacksite.layout import compute
-from blacksite.server.protocol import Frame
+from karst41.content.loader import load_content
+from karst41.door.cells import CellBuffer
+from karst41.door.palette import Palette
+from karst41.door.present import zone
+from karst41.door.present.paint import Paint
+from karst41.layout import compute
+from karst41.server.protocol import Frame
 from p6_cell_diff import cells
 from presentation_p6_validation import git, module
 from presentation_p6_camera import BASE, SOURCE
@@ -43,8 +43,8 @@ def report() -> dict[str, Any]:
     if git('diff','--name-only',BASE,'--','tests/fixtures').strip():
         raise ValueError('test fixtures changed')
     old_origin = module('_a7_golden_origin',old_source).origin
-    shipped = load_content(ROOT/'src/blacksite/content')
-    fixture = load_content(ROOT/'src/blacksite/content',ROOT/'tests/fixtures/p6')
+    shipped = load_content(ROOT/'src/karst41/content')
+    fixture = load_content(ROOT/'src/karst41/content',ROOT/'tests/fixtures/p6')
     records = []
     for kind in ('p5','dark','light'):
         content = deepcopy(shipped if kind=='p5' else fixture)

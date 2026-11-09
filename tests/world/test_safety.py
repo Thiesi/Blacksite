@@ -1,6 +1,6 @@
 """Safety flags consumed by character logout; game design §2 and §5.1."""
 
-from blacksite.server.world.safety import safety_at
+from karst41.server.world.safety import safety_at
 from tests.character_helpers import place
 from tests.world.test_exits import character_game
 

@@ -6,10 +6,10 @@ from dataclasses import asdict, replace
 
 import pytest
 
-from blacksite.server.lattice.presence import EscapeChannel
-from blacksite.server.lattice.encounters import EncounterMenu
-from blacksite.door.model import Display
-from blacksite.server.protocol import Frame
+from karst41.server.lattice.presence import EscapeChannel
+from karst41.server.lattice.encounters import EncounterMenu
+from karst41.door.model import Display
+from karst41.server.protocol import Frame
 from tests.fake_terminal import FakeTerminal
 from tests.door.test_lattice_render import draw
 from tests.lattice.test_engine import jack, runners

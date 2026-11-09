@@ -29,16 +29,19 @@ import os
 from pathlib import Path
 import tempfile
 
+from karst41.environment import setting
+
 SCRATCH_DIRS = ('.test-tmp', '.pytest_cache')
 LOCAL_BASETEMP = Path('.test-tmp') / 'pytest'
 DEFAULT_LIMIT = 50_000
 # pytest-of-* is left out: pytest bounds it, and concurrent full runs would
 # otherwise trip the limit with nothing to clean.
-TEMP_PATTERNS = ('blacksite-*', 'native-proof-*')
+# Remove in S31: keep counting legacy scratch until its aliases retire.
+TEMP_PATTERNS = ('karst41-*', 'blacksite-*', 'native-proof-*')
 
 
 def scratch_limit() -> int:
-    return int(os.environ.get('BLACKSITE_SCRATCH_LIMIT', DEFAULT_LIMIT))
+    return int(setting(os.environ, ('KARST41_SCRATCH_LIMIT',), str(DEFAULT_LIMIT)))
 
 
 def count_files(root: Path, stop_after: int) -> int:
@@ -84,7 +87,7 @@ def scratch_problem(root: Path, limit: int | None = None) -> str | None:
                 return (f'This worktree holds more than {limit:,} scratch files in '
                         f'{" and ".join(SCRATCH_DIRS)}. Run `python scripts/clean_scratch.py` '
                         f'(keep any evidence you need in docs/ or on the PR first). '
-                        f'BLACKSITE_SCRATCH_LIMIT raises the limit for one run.')
+                        f'KARST41_SCRATCH_LIMIT raises the limit for one run.')
     return None
 
 
@@ -111,5 +114,5 @@ def temp_problem(temp: Path | None = None, limit: int | None = None) -> str | No
                 f'entries it has taken this host down. Run `python scripts/clean_scratch.py --temp`, '
                 f'and keep any evidence you need on the PR or in docs/ first. That keeps folders written '
                 f'to in the last 24 hours; once no proof is running, `--temp --older-than 0` removes them too. '
-                f'BLACKSITE_SCRATCH_LIMIT raises the limit for one run.')
+                f'KARST41_SCRATCH_LIMIT raises the limit for one run.')
     return None

@@ -5,10 +5,10 @@ from pathlib import Path
 
 import pytest
 
-from blacksite.content.loader import load_content
-from blacksite.door.doorinfo import DoorInfo
-from blacksite.door.model import Display
-from blacksite.server.protocol import Frame, encode
+from karst41.content.loader import load_content
+from karst41.door.doorinfo import DoorInfo
+from karst41.door.model import Display
+from karst41.server.protocol import Frame, encode
 from tests.fake_terminal import FakeTerminal
 from tests.character_helpers import act, create, place
 from tests.harness import HeadlessServer
@@ -17,7 +17,7 @@ from tests.harness import HeadlessServer
 @pytest.mark.parametrize("width,height",[(80,24),(132,50)])
 @pytest.mark.parametrize("tier",["16","256","truecolor"])
 def test_city_map_and_tram_log_escape(info: DoorInfo,repo_root: Path,width: int,height: int,tier: str) -> None:
-    game=HeadlessServer(load_content(repo_root/"src/blacksite/content"),character_state={})
+    game=HeadlessServer(load_content(repo_root/"src/karst41/content"),character_state={})
     client=game.connect(width=width,height=height)
     create(game,client)
     display=Display(replace(info,width=width,height=height,color_depth=tier))

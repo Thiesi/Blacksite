@@ -12,7 +12,7 @@ on:
   pull_request:
     types: [opened, synchronize, reopened, ready_for_review, converted_to_draft]
     paths:
-      - 'src/blacksite/**'
+      - 'src/karst41/**'
       - 'tests/**'
       - 'scripts/presentation*'
       - 'deploy/**'
@@ -709,31 +709,31 @@ jobs:
           python -m venv "$RUNNER_TEMP/s05-venv"
           "$RUNNER_TEMP/s05-venv/bin/python" -m pip install "$RUNNER_TEMP"/s05-wheels/*.whl
           mkdir "$RUNNER_TEMP/s05-world"
-          "$RUNNER_TEMP/s05-venv/bin/blacksite" admin --install-dir "$RUNNER_TEMP/s05-world" validate --json
+          "$RUNNER_TEMP/s05-venv/bin/karst41" admin --install-dir "$RUNNER_TEMP/s05-world" validate --json
           python - <<'PY'
           import grp, os, pwd
           from pathlib import Path
           root = Path(os.environ['RUNNER_TEMP'])
-          unit = Path('deploy/systemd/blacksite.service').read_text()
-          unit = unit.replace('/opt/blacksite/venv', str(root / 's05-venv'))
-          unit = unit.replace('/var/db/blacksite', str(root / 's05-world'))
+          unit = Path('deploy/systemd/karst41.service').read_text()
+          unit = unit.replace('/opt/karst41/venv', str(root / 's05-venv'))
+          unit = unit.replace('/var/db/karst41', str(root / 's05-world'))
           unit = unit.replace('User=netbbs', 'User=' + pwd.getpwuid(os.getuid()).pw_name)
           unit = unit.replace('Group=netbbs', 'Group=' + grp.getgrgid(os.getgid()).gr_name)
-          (root / 'blacksite-s05.service').write_text(unit)
+          (root / 'karst41-s05.service').write_text(unit)
           PY
-          sudo cp "$RUNNER_TEMP/blacksite-s05.service" /etc/systemd/system/blacksite-s05.service
+          sudo cp "$RUNNER_TEMP/karst41-s05.service" /etc/systemd/system/karst41-s05.service
           sudo systemctl daemon-reload
-          sudo systemctl enable blacksite-s05.service
+          sudo systemctl enable karst41-s05.service
       - name: Accept real systemd lifecycle through NetBBS native stdio
         shell: bash
         run: |
-          python scripts/accept_s05_systemd.py --root "$RUNNER_TEMP/s05-proof" --install-dir "$RUNNER_TEMP/s05-world" --python "$RUNNER_TEMP/s05-venv/bin/python" --unit blacksite-s05.service
+          python scripts/accept_s05_systemd.py --root "$RUNNER_TEMP/s05-proof" --install-dir "$RUNNER_TEMP/s05-world" --python "$RUNNER_TEMP/s05-venv/bin/python" --unit karst41-s05.service
       - name: Service diagnostics and cleanup
         if: always()
         shell: bash
         run: |
-          sudo journalctl -u blacksite-s05 --no-pager || true
-          sudo systemctl stop blacksite-s05.service || true
+          sudo journalctl -u karst41-s05 --no-pager || true
+          sudo systemctl stop karst41-s05.service || true
       - name: Accept shared zones through NetBBS Telnet and SSH
         shell: bash
         run: |

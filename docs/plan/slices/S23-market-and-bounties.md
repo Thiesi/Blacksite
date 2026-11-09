@@ -3,7 +3,7 @@
 **Status:** done (PR #64)
 **Primary model:** Sonnet · **Reviewer:** Opus
 **Depends on:** S12, S18, S20, S21 · **Milestone:** M4
-**Issue:** https://github.com/Thiesi/blacksite/issues/23
+**Issue:** https://github.com/Thiesi/Karst41/issues/23
 
 S18 is an explicit dependency because this slice delivers to personal
 impound. Append market goods to `interlock_state.impounds[player]` in
@@ -13,7 +13,7 @@ charges, drone condition and secured status. The housing eviction fee
 must not tax a paid market delivery. Collection at terminals rechecks
 normal terminal access; visitors and crew members do not acquire an
 apartment resident's permissions. See game design 8.7, entity 2.3 and
-accepted [PR #38](https://github.com/Thiesi/Blacksite/pull/38).
+accepted [PR #38](https://github.com/Thiesi/Karst41/pull/38).
 
 S21 is an explicit dependency for the single faction treasury authority.
 Join the Kestrel fee to its committed relay ledger in the same source
@@ -24,7 +24,7 @@ earned treasury. See the [S21 handoff](../s21-relay-handoff.md).
 
 ## Goal
 
-Implementation and evidence: [PR #64](https://github.com/Thiesi/Blacksite/pull/64)
+Implementation and evidence: [PR #64](https://github.com/Thiesi/Karst41/pull/64)
 and the [S23 acceptance record](../../ops/s23-acceptance.md). Future Sink
 geography and ordinary earning/clinic/human pacing remain S25/S26 gates;
 the disclosed transaction fixtures do not satisfy them.
@@ -52,7 +52,7 @@ persistent rows, resolved by the server, with no new real-time mechanics.
 
 ## Scope
 
-- `src/blacksite/server/market.py`: `Market` service with `list_item`,
+- `src/karst41/server/market.py`: `Market` service with `list_item`,
   `bid`, `buyout`, `cancel`, `expire`, `collect`; `Bounties` service with
   `post`, `claim`, `expire`, `refund`.
 - Listings: seller, item instance (moved to `owner = market` on listing),
@@ -103,7 +103,7 @@ persistent rows, resolved by the server, with no new real-time mechanics.
 - New tables per entities §2.6: `market_listings`, `market_bids`,
   `bounties`. Reuse S18's protected impound records in
   `meta.interlock_state`; do not create a second collection authority.
-- Constants in `src/blacksite/server/rules/market.py`: exact
+- Constants in `src/karst41/server/rules/market.py`: exact
   `MARKET_FEE = 5/100`,
   `BOUNTY_MIN_CHITS = 100`, `BOUNTY_MIN_TARGET_GRADE = 5`,
   `LISTING_EXPIRIES = (24h, 72h, 7d)`, each with a comment citing design
@@ -154,7 +154,7 @@ persistent rows, resolved by the server, with no new real-time mechanics.
 2. B opens the market from the Tin Halo terminal, sees the listing with
    A's handle, bids 60. A's log shows "bid received". B then presses `U`
    for buyout; B's bank drops by 100, A's bank rises by 95, and
-   `blacksite admin status` shows the Kestrel treasury up by 5.
+   `karst41 admin status` shows the Kestrel treasury up by 5.
 3. B opens a bank menu and presses `C`, then confirms collection: the
    pistol arrives in B's inventory. Outside menus, `C` remains chat.
 4. A (grade ≥ 5) posts a 200-chit bounty on B (grade ≥ 5). Both logs show
@@ -226,13 +226,13 @@ through listings, bids, delivery and return. Display actual selected
 stats with `server.quality.detail`; template base stats plus a quality
 label alone are insufficient. Slots, permissions and durations stay fixed.
 
-This carries the accepted [PR #38](https://github.com/Thiesi/Blacksite/pull/38)
+This carries the accepted [PR #38](https://github.com/Thiesi/Karst41/pull/38)
 findings 12/14 forward; see [S17](S17-salvage-and-fabrication.md).
 
 
 ### S20 faction integration handoff
 
-Reference: [PR #38](https://github.com/Thiesi/Blacksite/pull/38) and S20.
+Reference: [PR #38](https://github.com/Thiesi/Karst41/pull/38) and S20.
 
 Use S20 actual membership and active Marked deadlines when validating
 bounties. Permission to post a bounty never grants a combat exemption. Sable
@@ -241,16 +241,16 @@ delivery keeps S18 protected personal impound.
 
 ### S22 crew integration handoff
 
-S22 [PR #61](https://github.com/Thiesi/Blacksite/pull/61) supplies the live
+S22 [PR #61](https://github.com/Thiesi/Karst41/pull/61) supplies the live
 crew authority. Crew affiliation never bypasses combat legality,
 actual-victim cache recovery, personal impound or market ownership.
 
 <!-- s19-services:start -->
 ### S19 source and service handoff
 
-Reference: [S19 PR #62](https://github.com/Thiesi/Blacksite/pull/62),
+Reference: [S19 PR #62](https://github.com/Thiesi/Karst41/pull/62),
 [acceptance record](../../ops/s19-acceptance.md) and
-[PR #38](https://github.com/Thiesi/Blacksite/pull/38).
+[PR #38](https://github.com/Thiesi/Karst41/pull/38).
 
 S19 supplies the implemented source interfaces, 68 authored contracts
 and four service nodes. Full root pytest passed 1344 tests with one

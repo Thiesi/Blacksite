@@ -3,7 +3,7 @@
 **Status:** done (PR #167)
 **Primary model:** Codex · **Reviewer:** automated review, technical lead, presentation lead (presentation acceptance)
 **Depends on:** P3, #126 (P6b; its travel probe carries the interim wait this slice removes) · **Milestone:** interaction
-**Issue:** https://github.com/Thiesi/Blacksite/issues/155
+**Issue:** https://github.com/Thiesi/Karst41/issues/155
 
 Canon: game design 5.6 (Interact precedence) and architecture 5.5.2
 (focus contract). Where this file and canon
@@ -21,7 +21,7 @@ route; legacy talkers use `npcs`.
 
 Decided by the owner on 2026-11-04, from the presentation lead's rule.
 Found by #126's contracts probe (diagnosis:
-https://github.com/Thiesi/Blacksite/pull/126#issuecomment-6622283046).
+https://github.com/Thiesi/Karst41/pull/126#issuecomment-6622283046).
 
 ## Scope
 

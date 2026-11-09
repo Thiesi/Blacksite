@@ -15,18 +15,18 @@ from typing import Any
 ROOT = Path(__file__).resolve().parents[1]
 sys.path[:0] = [str(ROOT/'src'), str(ROOT)]
 
-from blacksite.content.loader import ContentTree, load_content
-from blacksite.content.schema import LookRegion, Region, Zone
-from blacksite.content.places import charting_problems
-from blacksite.server.protocol import encode
-from blacksite.server.views.zone_view import Perception, build
-from blacksite.server.world.actors import Actor
-from blacksite.server.world.zone import ZoneInstance
+from karst41.content.loader import ContentTree, load_content
+from karst41.content.schema import LookRegion, Region, Zone
+from karst41.content.places import charting_problems
+from karst41.server.protocol import encode
+from karst41.server.views.zone_view import Perception, build
+from karst41.server.world.actors import Actor
+from karst41.server.world.zone import ZoneInstance
 from tests.presentation.budget import Caller, MIX, KEYS, activity, frames, hourly, stats
 
 
 def fixture_content() -> ContentTree:
-    content = load_content(ROOT/'src/blacksite/content', ROOT/'tests/fixtures/p6')
+    content = load_content(ROOT/'src/karst41/content', ROOT/'tests/fixtures/p6')
     for zid in ('sodium-row','sodium-tin-halo'):
         template = content.zones[zid]
         width,height = max(120,template.width),max(50,template.height)

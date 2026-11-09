@@ -15,10 +15,10 @@ def pinned_content(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> tuple[Pat
             ['git', '-c', 'commit.gpgsign=false', '-C', str(tmp_path), *args], text=True).strip()
 
     git('init', '-q')
-    git('config', 'user.name', 'Blacksite test')
+    git('config', 'user.name', 'Karst 41 test')
     git('config', 'user.email', 'test@example.invalid')
     git('config', 'core.autocrlf', 'false')
-    data = tmp_path/'src/blacksite/content'
+    data = tmp_path/'src/karst41/content'
     (data/'looks').mkdir(parents=True)
     (data/'npcs.json').write_text('{"faction":"sable"}\n', encoding='utf-8')
     (data/'looks/sodium-row.json').write_text('{"theme":"authored"}\n', encoding='utf-8')

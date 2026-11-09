@@ -3,7 +3,7 @@
 **Status:** done (PR #46)
 **Primary model:** Opus · **Reviewer:** Astra (Wake flow and onboarding read)
 **Depends on:** S06 · **Milestone:** M1
-**Issue:** https://github.com/Thiesi/blacksite/issues/7
+**Issue:** https://github.com/Thiesi/Karst41/issues/7
 
 ## Goal
 
@@ -31,7 +31,7 @@ right numbers on the side panel.
 
 ## Scope
 
-- `src/blacksite/server/rules/character.py`: pure functions with the
+- `src/karst41/server/rules/character.py`: pure functions with the
   design doc's numbers: `health_max(vitals) = 50 + 2*vitals`,
   `stamina_max(nerve, frame) = 30 + nerve + frame//2`, `tolerance(vitals)
   = max(4, vitals//10)`, `evasion(nerve, equipment) = nerve//3 + equipment`
@@ -43,7 +43,7 @@ right numbers on the side panel.
   attribute by 1; Vitals only via grade and implants), grade table
   (1–30 from cumulative XP, 3 grade points and +1 Vitals per grade,
   grade names), `legal_at` set at grade 5 or after 90 real days, whichever is earlier.
-- `src/blacksite/server/players.py`: `Player` (entity §2.1) creation,
+- `src/karst41/server/players.py`: `Player` (entity §2.1) creation,
   lookup by `(origin, bbs_user_id)`, one character per BBS user
   (SysOp-raisable cap stored in `meta`), load on `hello`, attach to the
   session, place into the world (last zone/tile; safe zone → as saved;
@@ -52,7 +52,7 @@ right numbers on the side panel.
   by S10), detach on `bye` or disconnect.
 - Reconnect: a `hello` for the same identity within 60 s reuses the
   player and skips the sleeper rule.
-- `src/blacksite/server/wake.py`: the Wake state machine as a sequence
+- `src/karst41/server/wake.py`: the Wake state machine as a sequence
   of `TextView` and `MenuView` frames: screen 1 archetype cards (four
   rows, detail pane with the one-paragraph card), screen 2 name line
   prompt (default the BBS handle; 2–24 columns display width; letters,
@@ -224,7 +224,7 @@ the view cache includes zone ID as well as revision.
   inherited body ownership until selection. The focused post-fix gate is
   218 passed, 1 Windows platform skip. Re-review is required before merge.
 - Linux installed-wheel acceptance passes in
-  [run 39602781456](https://github.com/Thiesi/Blacksite/actions/runs/39602781456):
+  [run 39602781456](https://github.com/Thiesi/Karst41/actions/runs/39602781456):
   full Wake, saved return, restart and actual 120-second recovery, plus
   the S05/S06 native-door/service checks. CI before the review fix is
   496 passed on Linux; 495 passed, 1 skipped on Windows.

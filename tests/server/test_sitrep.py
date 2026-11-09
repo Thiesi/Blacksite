@@ -1,6 +1,6 @@
 """Social privacy from game design §11; real names in visible nearby."""
 
-from blacksite.server.protocol import Frame
+from karst41.server.protocol import Frame
 from tests.character_helpers import act
 from tests.server.test_chat import social
 

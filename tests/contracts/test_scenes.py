@@ -3,11 +3,11 @@
 from dataclasses import replace
 from typing import Any
 
-from blacksite.content.schema import StageTarget
-from blacksite.server.contracts.engine import Engine
-from blacksite.server.world.actors import Actor, mission_pair
-from blacksite.server.world.movement import move
-from blacksite.server.world.sight import private_visible
+from karst41.content.schema import StageTarget
+from karst41.server.contracts.engine import Engine
+from karst41.server.world.actors import Actor, mission_pair
+from karst41.server.world.movement import move
+from karst41.server.world.sight import private_visible
 from tests.character_helpers import create, place
 from tests.contracts.test_engine import template
 from tests.npcs.test_engine import city, body

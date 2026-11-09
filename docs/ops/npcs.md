@@ -38,7 +38,7 @@ the mandatory live proof, use the NetBBS interpreter in a real terminal:
 ```powershell
 $env:PYTHONPATH = (Join-Path (Get-Location) 'src')
 & ../NetBBS/.venv/Scripts/python.exe scripts/accept_s11_netbbs.py `
-  --root C:/Temp/blacksite-s11-proof `
+  --root C:/Temp/karst41-s11-proof `
   --door-python .venv/Scripts/python.exe --show
 ```
 

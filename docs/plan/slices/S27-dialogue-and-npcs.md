@@ -3,7 +3,7 @@
 **Status:** in progress; presentation-dependent completion on hold (#68)
 **Primary model:** Sonnet (engine) · Gemini or Sonnet (content) · **Reviewer:** Sonnet reads every talker file; Opus reads the ten fixed-cast files
 **Depends on:** S19, S20, S24 · **Milestone:** M5
-**Issue:** https://github.com/Thiesi/blacksite/issues/27
+**Issue:** https://github.com/Thiesi/Karst41/issues/27
 
 ## Goal
 
@@ -16,7 +16,7 @@ assets remain in an authoring bundle; placement and native delivery
 await P8 and S25c anchors. No independent bark emitter is installed.
 
 **Presentation review hold (2026-10-24):** S25 human layout approval is
-**not granted**. [Issue #68](https://github.com/Thiesi/Blacksite/issues/68)
+**not granted**. [Issue #68](https://github.com/Thiesi/Karst41/issues/68)
 requires a separate comprehensive review against the world bible and
 terminal UI. Preserve the unfinished dialogue/referral work. Backend
 facts, prerequisites, consent, transaction and reward-routing checks can
@@ -53,7 +53,7 @@ the work.
 
 ## Scope
 
-- `src/blacksite/server/dialogue.py`: `Talker` loader, `evaluate(talker,
+- `src/karst41/server/dialogue.py`: `Talker` loader, `evaluate(talker,
   player, world) -> line`, `eligible_offers(...)`, `bark_scheduler`
   (one bark per talker per 90 s by default, only with a player within
   6 tiles, suppressed during interaction), balance-tag weighting with
@@ -189,7 +189,7 @@ condition and remain inactive until their complete content exists.
 
 ### S20 faction integration handoff
 
-Reference: [PR #38](https://github.com/Thiesi/Blacksite/pull/38) and S20.
+Reference: [PR #38](https://github.com/Thiesi/Karst41/pull/38) and S20.
 
 Bind Faction.recruiter to each actual named NPC template and place it at the
 faction site recruiter_zone. The Wake desk remains a valid all-eight
@@ -203,16 +203,16 @@ the pre-S27 E-to-recruitment fallback swallow the named NPC dialogue.
 
 ### S22 crew integration handoff
 
-S22 [PR #61](https://github.com/Thiesi/Blacksite/pull/61) owns live crew
+S22 [PR #61](https://github.com/Thiesi/Karst41/pull/61) owns live crew
 consent. Chosen NPC dialogue/admission must preserve individual choices;
 talking or joining a faction cannot silently add a crew participant.
 
 <!-- s19-services:start -->
 ### S19 source and service handoff
 
-Reference: [S19 PR #62](https://github.com/Thiesi/Blacksite/pull/62),
+Reference: [S19 PR #62](https://github.com/Thiesi/Karst41/pull/62),
 [acceptance record](../../ops/s19-acceptance.md) and
-[PR #38](https://github.com/Thiesi/Blacksite/pull/38).
+[PR #38](https://github.com/Thiesi/Karst41/pull/38).
 
 S19 supplies the implemented source interfaces, 68 authored contracts
 and four service nodes. Full root pytest passed 1344 tests with one
@@ -247,9 +247,9 @@ before S26 activation. Keep the two permissions distinct.
 <!-- s24-handoff:start -->
 ### S24 event integration and acceptance handoff
 
-Reference: [S24 #24](https://github.com/Thiesi/Blacksite/issues/24),
-[PR #38](https://github.com/Thiesi/Blacksite/pull/38) and
-[platform #56](https://github.com/Thiesi/Blacksite/issues/56).
+Reference: [S24 #24](https://github.com/Thiesi/Karst41/issues/24),
+[PR #38](https://github.com/Thiesi/Karst41/pull/38) and
+[platform #56](https://github.com/Thiesi/Karst41/issues/56).
 
 Dialogue event conditions must read `Contracts.event_active` and
 committed event IDs; an announced proposal is not an active event.
@@ -266,8 +266,8 @@ without presenting fixture geography or caller telemetry as lore.
 <!-- s24-review-policy:start -->
 ### S24 practical review follow-up
 
-Reference: [PR #65](https://github.com/Thiesi/Blacksite/pull/65), retaining
-[PR #38](https://github.com/Thiesi/Blacksite/pull/38) and #56.
+Reference: [PR #65](https://github.com/Thiesi/Karst41/pull/65), retaining
+[PR #38](https://github.com/Thiesi/Karst41/pull/38) and #56.
 
 Read current Convoy arrival/loss revisions rather than announcing an
 available escort after its NPC has finished or died. Personal held records

@@ -12,23 +12,23 @@ from typing import Any
 
 import pytest
 
-from blacksite.content.loader import load_content
-from blacksite.content.schema import (
+from karst41.content.loader import load_content
+from karst41.content.schema import (
     ContractTemplate, Effect, EventTemplate, Reward, Route, Stage, StageTarget, Waypoint,
     ObjectSpec,
     TileChange, ZoneLayout,
 )
-from blacksite.server.clock import ManualClock, TICK_HZ
-from blacksite.server.rules.events import ROLL_SECONDS, SCHEDULES
-from blacksite.server.world.zone import ObjectState, GeometryLayer
-from blacksite.server.items import make_item
+from karst41.server.clock import ManualClock, TICK_HZ
+from karst41.server.rules.events import ROLL_SECONDS, SCHEDULES
+from karst41.server.world.zone import ObjectState, GeometryLayer
+from karst41.server.items import make_item
 from tests.character_helpers import create, place
 from tests.harness import HeadlessServer
 
 
 @pytest.fixture(scope='module')
 def base_content() -> Any:
-    return load_content(Path(__file__).parents[2]/'src/blacksite/content')
+    return load_content(Path(__file__).parents[2]/'src/karst41/content')
 
 
 @pytest.fixture

@@ -6,8 +6,8 @@ from pathlib import Path
 
 import pytest
 
-from blacksite.content.loader import load_content
-from blacksite.content.validate import main
+from karst41.content.loader import load_content
+from karst41.content.validate import main
 from tests.content.support import FIXTURE_WORLD
 
 

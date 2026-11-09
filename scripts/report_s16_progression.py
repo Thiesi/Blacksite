@@ -12,8 +12,8 @@ from datetime import datetime, timedelta, timezone
 import json
 from typing import Any
 
-from blacksite.server.players import Player
-from blacksite.server.progression import Grant, award
+from karst41.server.players import Player
+from karst41.server.progression import Grant, award
 
 
 def report(profile: str, minutes: int = 360, *, contract_xp: int = 0,

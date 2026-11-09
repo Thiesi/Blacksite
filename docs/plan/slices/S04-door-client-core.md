@@ -3,7 +3,7 @@
 **Status:** done (PR #43)
 **Primary model:** Opus · **Reviewer:** Astra (renderer and key decoding critique before start)
 **Depends on:** S01 · **Milestone:** M0
-**Issue:** https://github.com/Thiesi/blacksite/issues/4
+**Issue:** https://github.com/Thiesi/Karst41/issues/4
 
 ## Goal
 
@@ -27,59 +27,59 @@ and can leave with `Ctrl-X`.
 
 ## Scope
 
-- `src/blacksite/door/doorinfo.py`: read `NETBBS_DOOR_INFO`; fields
+- `src/karst41/door/doorinfo.py`: read `NETBBS_DOOR_INFO`; fields
   `handle`, `user_id`, `terminal_width`, `terminal_height`,
   `color_depth`, `node_name`; every upstream-04 field optional
   (`unicode_style`, `timezone`, `transport`, `node_id`, `door_api`,
-  `session_limit_seconds`); `BLACKSITE_INSTALL_DIR` and
-  `BLACKSITE_SESSION_LIMIT` from the environment; re-read on `SIGUSR1`
+  `session_limit_seconds`); `KARST41_INSTALL_DIR` and
+  `KARST41_SESSION_LIMIT` from the environment; re-read on `SIGUSR1`
   where available (upstream 03).
-- `src/blacksite/door/connection.py`: connect to `DIR/run/blacksite.sock`
+- `src/karst41/door/connection.py`: connect to `DIR/run/karst41.sock`
   (or the TCP port file), send `hello` with HMAC from `DIR/secrets/
   door.secret`, receive `welcome`, keep `ping` every 10 s, reconnect
   with backoff 1, 2, 4, 8, 16, 30 s up to 60 s total, then the
   "The city is dark right now." screen and exit 0.
-- `src/blacksite/door/terminal.py`: raw byte I/O over stdin/stdout
+- `src/karst41/door/terminal.py`: raw byte I/O over stdin/stdout
   (binary, unbuffered), enter/leave sequences (alternate screen, hide
   cursor, reset attributes; on exit reset colours, show cursor, clear,
   print "Karst keeps your place."), never enables mouse reporting,
   never emits the bell, refuses below 80×24 with the requirement text.
-- `src/blacksite/door/keys.py`: decoder for everything in
+- `src/karst41/door/keys.py`: decoder for everything in
   `03-terminal-ui.md` §5.3 (CSI/SS3 arrows, Home/End/PgUp/PgDn in both
   forms, F1–F12, `CSI 1;2 A` shift-arrows, lone `Esc` with 200 ms
   timeout, Ctrl letters, CR/LF/CRLF as Enter, DEL/BS as Backspace, Tab,
   UTF-8 text, mouse and bracketed paste recognised and discarded,
   unknown CSI dropped whole). Output: normalised key names as the
   protocol's `key.k` values (document the name table in the module).
-- `src/blacksite/door/cells.py`: `CellBuffer(width, height)` of
+- `src/karst41/door/cells.py`: `CellBuffer(width, height)` of
   `(glyph, fg, bg, attrs)`; `put(x, y, text, style)` measuring East
   Asian width, refusing wide glyphs at the last column, clipping by
   display width, never writing the last cell of the last row;
   `diff(prev) -> bytes` with cursor-move minimisation and SGR change
   minimisation; `full() -> bytes`.
-- `src/blacksite/door/palette.py`: tier resolution (`truecolor`, `256`,
+- `src/karst41/door/palette.py`: tier resolution (`truecolor`, `256`,
   `16`) from `color_depth` and player settings; palette roles from
   `welcome.palette`; SGR emitters for each tier; the `deutan`/`protan`
   variants.
-- `src/blacksite/door/layout.py`: computes header, viewport, side panel,
+- `src/karst41/door/layout.py`: computes header, viewport, side panel,
   log rows, hint row from the terminal size per §2 (55×17 viewport at
   80×24; log rows 3 at height 24 growing to 8 at ≥40).
-- `src/blacksite/door/views/`: renderers for `TextView` (title, lines,
+- `src/karst41/door/views/`: renderers for `TextView` (title, lines,
   paging), `MenuView` (overlay up to 70×20, cursor row reverse, detail
   pane right at ≥100 columns else below, action bar), log panel, hint
   line, line prompt (local echo, Backspace, Ctrl-U, Esc, Enter, bounded
   200 columns), toast. `ZoneView`/`LatticeView` renderers are S06/S13;
   this slice defines the renderer interface they implement.
-- `src/blacksite/door/screens.py`: title screen (art with text fallback
+- `src/karst41/door/screens.py`: title screen (art with text fallback
   if `art/title.ans` is missing or too wide), first-run "what is this"
   text, disconnected, banned, session-limit toasts at 5 and 1 minutes
-  before `BLACKSITE_SESSION_LIMIT` (default 3600).
-- `src/blacksite/door/client.py`: the two pumps (stdin → keys →
+  before `KARST41_SESSION_LIMIT` (default 3600).
+- `src/karst41/door/client.py`: the two pumps (stdin → keys →
   frames; frames → views → render), frame-rate bound of 10 renders/s
   with coalescing, `ack` after each render, `Ctrl-L` full redraw,
   `Ctrl-X` + confirm key to leave, `?` opens help `TextView` from the
   server (or a local fallback page listing the keymap).
-- `src/blacksite/door/__main__.py`: wires it all; exit codes 0 for
+- `src/karst41/door/__main__.py`: wires it all; exit codes 0 for
   every user-facing end, 2 only for a configuration error before the
   terminal is entered (printed as one plain line).
 - Fake terminal `tests/fake_terminal.py`: records emitted bytes,
@@ -137,8 +137,8 @@ and can leave with `Ctrl-X`.
 ## Acceptance script
 
 1. Register the door on a local NetBBS node (native stdio, executable =
-   venv python, args `-m blacksite.door`, environment
-   `BLACKSITE_INSTALL_DIR`, `max_sessions` 16, `encoding` utf-8).
+   venv python, args `-m karst41.door`, environment
+   `KARST41_INSTALL_DIR`, `max_sessions` 16, `encoding` utf-8).
    Start the server from S03.
 2. Enter the door over Telnet at 80×24: title screen, MOTD line, hint
    row. Press `?`: help text pages with PgDn. `Esc` returns.
@@ -165,7 +165,7 @@ and can leave with `Ctrl-X`.
   layout with a full redraw.
 - `RLIMIT_CPU` is 300 s per door process; rendering must stay lazy
   (render only on new revisions, coalesce). The wall cap is 3600 s
-  unless the profile says otherwise; `BLACKSITE_SESSION_LIMIT` is how
+  unless the profile says otherwise; `KARST41_SESSION_LIMIT` is how
   the SysOp tells the client.
 - Telnet clients may send CR NUL or CR LF for Enter; the web transport
   (xterm.js) sends CR; SSH sends CR. Handle all three as one Enter.

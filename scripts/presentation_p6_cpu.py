@@ -22,18 +22,18 @@ from unittest.mock import patch
 ROOT = Path(__file__).resolve().parents[1]
 sys.path[:0] = [str(ROOT/'src'), str(ROOT), str(ROOT/'scripts')]
 
-from blacksite.content.loader import ContentTree, load_content
-from blacksite.door.cells import CellBuffer
-from blacksite.door.model import Display
-from blacksite.door.present import places, zone
+from karst41.content.loader import ContentTree, load_content
+from karst41.door.cells import CellBuffer
+from karst41.door.model import Display
+from karst41.door.present import places, zone
 from presentation_p6_validation import git, module, snapshot
 from tests.presentation import budget
 
 BASE = 'dd489f9ec7676b2c37b553fa7587c4d0a4ed6d56'
 INPUT = BASE
 STARTS = {'core-plaza': (41, 26), 'vatside-clinics': (36, 17), 'sodium-row': (46, 14)}
-SOURCES = ('src/blacksite/door/present/zone.py', 'src/blacksite/door/cells.py',
-           'src/blacksite/door/present/places.py')
+SOURCES = ('src/karst41/door/present/zone.py', 'src/karst41/door/cells.py',
+           'src/karst41/door/present/places.py')
 
 
 @contextmanager
@@ -109,7 +109,7 @@ def main() -> None:
     def retain() -> None:
         args.output.write_text(json.dumps(result, indent=2)+'\n', encoding='utf-8', newline='\n')
 
-    with TemporaryDirectory(prefix='blacksite-a8-') as temporary:
+    with TemporaryDirectory(prefix='karst41-a8-') as temporary:
         data = Path(temporary)/'content'
         result['input_files_sha256'] = snapshot(data, args.input_ref)
         content = load_content(data)

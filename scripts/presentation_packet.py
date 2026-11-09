@@ -28,7 +28,7 @@ def main() -> int:
     env = {**os.environ, 'PYTHONPATH': str(ROOT/'src')+os.pathsep+str(ROOT)}
     # pytest's own scratch stays in the system temp folder and is removed afterwards
     # (AGENTS.md section 5, local disk hygiene); only the packet lands in output.
-    with tempfile.TemporaryDirectory(prefix='blacksite-packet-', ignore_cleanup_errors=True) as scratch:
+    with tempfile.TemporaryDirectory(prefix='karst41-packet-', ignore_cleanup_errors=True) as scratch:
         result = subprocess.run([sys.executable, '-m', 'pytest', '-q', *CASES,
             '--review-packet', str(output), '--basetemp', str(Path(scratch)/'pytest')], cwd=ROOT, env=env)
     if result.returncode:

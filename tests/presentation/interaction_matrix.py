@@ -15,10 +15,10 @@ from pathlib import Path
 from typing import Any
 from collections.abc import Callable
 
-from blacksite.content.loader import load_content
-from blacksite.server.bus import Event
-from blacksite.server.lattice.presence import Presence
-from blacksite.server.protocol import Frame
+from karst41.content.loader import load_content
+from karst41.server.bus import Event
+from karst41.server.lattice.presence import Presence
+from karst41.server.protocol import Frame
 from tests.character_helpers import create
 from tests.harness import HeadlessServer
 
@@ -29,7 +29,7 @@ ORDER = ('events', 'market', 'contracts', 'factions', 'crews', 'relays',
 
 
 def matrix_content(root: Path) -> tuple[Any, list[str]]:
-    content = load_content(root/'src/blacksite/content')
+    content = load_content(root/'src/karst41/content')
     fixture = load_content(root/'tests/fixtures/world')
     # Add the fixture world to the complete game, preserving shipped records
     # with shared catalog ids. This exercises the same subsystem composition.
@@ -38,7 +38,7 @@ def matrix_content(root: Path) -> tuple[Any, list[str]]:
         target = getattr(content, name)
         for key, value in getattr(fixture, name).items():
             target.setdefault(key, value)
-    hubs = json.loads((root/'src/blacksite/content/bundles/m1-zone-preview.json').read_text())['members']['zones']
+    hubs = json.loads((root/'src/karst41/content/bundles/m1-zone-preview.json').read_text())['members']['zones']
     assert len(hubs) == 10
     return content, sorted([*hubs, *fixture.zones])
 

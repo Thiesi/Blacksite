@@ -16,8 +16,8 @@ from collections.abc import Callable
 from accept_s10_netbbs import Connection, NativeProbe, wait
 from accept_p4_netbbs import navigate
 from accept_s16_netbbs import commit_key, key, loan
-from blacksite.layout import compute
-from blacksite.server.world.actors import Actor
+from karst41.layout import compute
+from karst41.server.world.actors import Actor
 
 
 async def enter_row(probe: NativeProbe, caller: Connection) -> None:
@@ -80,7 +80,7 @@ async def accept(root: Path, door_python: Path, width: int, height: int,
     assert not subprocess.check_output(["git", "status", "--porcelain"], text=True).strip()
     root.mkdir(parents=True, exist_ok=False)
     probe = NativeProbe(root, door_python, show, door_environment={
-        "DOOR_BLACKSITE_PRESENTATION": "1" if modern else "0"}, show_all_tiers=True)
+        "DOOR_KARST41_PRESENTATION": "1" if modern else "0"}, show_all_tiers=True)
     await probe.start()
     cases = []
     try:

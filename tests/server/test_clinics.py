@@ -6,8 +6,8 @@ from random import Random
 
 import pytest
 
-from blacksite.content.loader import load_content
-from blacksite.server.protocol import Frame
+from karst41.content.loader import load_content
+from karst41.server.protocol import Frame
 from tests.character_helpers import act, place, state
 from tests.harness import HeadlessServer
 from tests.server.test_commerce import caller, execute
@@ -16,7 +16,7 @@ from tests.server.test_substances import give
 
 @pytest.fixture
 def clinic(repo_root):
-    content = load_content(repo_root/"src/blacksite/content")
+    content = load_content(repo_root/"src/karst41/content")
     content.zones = {k:replace(z,meta=replace(z.meta,spawners=())) for k,z in content.zones.items()}
     game = HeadlessServer(content,character_state={})
     client = caller(game)

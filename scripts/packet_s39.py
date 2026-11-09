@@ -15,6 +15,7 @@ ROOT = Path(__file__).resolve().parents[1]
 sys.path[:0] = [str(ROOT/'src'), str(ROOT)]
 
 from scripts.presentation_p6_packet import require, source_hash, verify_capture
+from scripts.source_layout import at_revision
 
 
 def build_packet(root: Path, run: dict[str, Any], artifacts: dict[str, Any],
@@ -22,7 +23,7 @@ def build_packet(root: Path, run: dict[str, Any], artifacts: dict[str, Any],
     require(run['status'] == 'completed' and run['conclusion'] == 'success', 'native run did not pass')
     head, run_id = run['head_sha'], run['id']
     import subprocess
-    tree = subprocess.check_output(['git', 'rev-parse', head+':src/blacksite'], cwd=ROOT, text=True).strip()
+    tree = subprocess.check_output(['git', 'rev-parse', head+':'+at_revision(head, 'src/karst41')], cwd=ROOT, text=True).strip()
     expected_source = source_hash(head, tree)
     records: list[dict[str, Any]] = []
     files: dict[str, bytes] = {}
@@ -65,7 +66,7 @@ def build_packet(root: Path, run: dict[str, Any], artifacts: dict[str, Any],
                 'source_tree': tree, 'python_tree_sha256': expected_source,
                 'run': run_id, 'run_url': run['html_url'], 'artifact': name,
                 'artifact_id': artifact['id'], 'artifact_url':
-                    f'https://github.com/Thiesi/Blacksite/actions/runs/{run_id}/artifacts/{artifact["id"]}',
+                    f'https://github.com/Thiesi/Karst41/actions/runs/{run_id}/artifacts/{artifact["id"]}',
                 'raw_ansi_member': stem+'.ans', 'style_member': stem+'.json',
                 'native_boundary_offset': start,
                 'method': 'Direct byte copy of live native text; ANSI replay verified glyphs and styles'})

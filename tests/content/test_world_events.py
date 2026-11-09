@@ -2,14 +2,14 @@
 
 from pathlib import Path
 
-from blacksite.content.loader import load_content
-from blacksite.content.validate import validate
-from blacksite.server.event_effects import compatible
-from blacksite.server.rules.events import SCHEDULES
+from karst41.content.loader import load_content
+from karst41.content.validate import validate
+from karst41.server.event_effects import compatible
+from karst41.server.rules.events import SCHEDULES
 
 
 def test_game_12_all_five_authored_events_match_canon_and_activation_boundaries(repo_root: Path) -> None:
-    tree = load_content(repo_root/'src/blacksite/content')
+    tree = load_content(repo_root/'src/karst41/content')
     assert not validate(tree)
     assert set(tree.events) == set(SCHEDULES)
     for eid, expected in SCHEDULES.items():
@@ -27,7 +27,7 @@ def test_game_12_all_five_authored_events_match_canon_and_activation_boundaries(
 
 
 def test_game_12_authored_source_caps_and_public_convoy_terms_match_canon(repo_root: Path) -> None:
-    tree = load_content(repo_root/'src/blacksite/content')
+    tree = load_content(repo_root/'src/karst41/content')
     for effect in tree.events['ring-fall'].effects:
         if effect.type == 'salvage':
             assert (effect.params['count'],effect.params['cap']) == (10,40)

@@ -6,11 +6,11 @@ from random import Random
 
 import pytest
 
-from blacksite.content.schema import ObjectSpec
-from blacksite.server.clock import TICK_HZ
-from blacksite.server.world.zone import ObjectState
-from blacksite.server.salvage import Salvage
-from blacksite.server.storage.db import Storage
+from karst41.content.schema import ObjectSpec
+from karst41.server.clock import TICK_HZ
+from karst41.server.world.zone import ObjectState
+from karst41.server.salvage import Salvage
+from karst41.server.storage.db import Storage
 from tests.test_fabrication import content, game, caller, grant
 from tests.character_helpers import place
 

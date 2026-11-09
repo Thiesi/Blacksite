@@ -1,7 +1,7 @@
 """Game 6.5/6.6: seeded live scenes, visible procedures and free escape."""
 
-from blacksite.server.lattice.silt import generate
-from blacksite.server.lattice.silt_scene import BandGraph
+from karst41.server.lattice.silt import generate
+from karst41.server.lattice.silt_scene import BandGraph
 from tests.lattice.test_engine import actor, intent, jack, runners
 
 

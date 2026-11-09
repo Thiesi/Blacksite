@@ -2,7 +2,7 @@
 
 import pytest
 
-from blacksite.server.world.exits import schedule
+from karst41.server.world.exits import schedule
 from tests.lattice.test_engine import intent, jack, runners
 
 

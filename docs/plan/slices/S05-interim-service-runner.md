@@ -3,7 +3,7 @@
 **Status:** done (PR #44)
 **Primary model:** Sonnet · **Reviewer:** none
 **Depends on:** S03 · **Milestone:** M0
-**Issue:** https://github.com/Thiesi/blacksite/issues/5
+**Issue:** https://github.com/Thiesi/Karst41/issues/5
 
 ## Goal
 
@@ -13,7 +13,7 @@ This runner remains the explicit external/development alternative. See
 `docs/plan/01-netbbs-platform.md` (issue #56); S05 is not reopened.
 
 Give a SysOp a way to run the game service today, before NetBBS gains
-door services (upstream 01): a foreground `blacksite serve` command,
+door services (upstream 01): a foreground `karst41 serve` command,
 NetBSD `rc.d` and `systemd` unit examples, and the admin CLI skeleton
 with the first commands. After this slice a SysOp on NetBSD can start
 the service at boot and check its status from a shell.
@@ -27,30 +27,30 @@ the service at boot and check its status from a shell.
 
 ## Scope
 
-- `src/blacksite/admin/__main__.py`: argparse with `--install-dir`
-  (default from `BLACKSITE_INSTALL_DIR`), subcommands `serve` (runs the
-  server in the foreground; alias for `python -m blacksite.server`),
+- `src/karst41/admin/__main__.py`: argparse with `--install-dir`
+  (default from `KARST41_INSTALL_DIR`), subcommands `serve` (runs the
+  server in the foreground; alias for `python -m karst41.server`),
   `status`, `who`, `stop`, `validate` (S02's validator over
   `DIR/content` + `DIR/content.local`), `secrets rotate`, `--json` for
   machine output.
-- `src/blacksite/admin/client.py`: connects with `admin.secret`, sends
+- `src/karst41/admin/client.py`: connects with `admin.secret`, sends
   `admin.*` frames, prints results; exits 1 with a one-line message if
-  the socket is absent ("service not running; start it with `blacksite
+  the socket is absent ("service not running; start it with `karst41
   serve` or your rc.d script").
-- `deploy/rc.d/blacksite`: NetBSD `rc.subr` script with `name`,
+- `deploy/rc.d/karst41`: NetBSD `rc.subr` script with `name`,
   `rcvar`, `command` as the venv interpreter, `command_args` running
-  `-m blacksite.server --install-dir ...` daemonised via
-  `command_interpreter` and a pidfile at `DIR/run/blacksite.pid`
-  written by the server itself (S03), `blacksite_user` defaulting to
-  `netbbs`, `stop_cmd` using `blacksite admin stop` with a 10 s wait
+  `-m karst41.server --install-dir ...` daemonised via
+  `command_interpreter` and a pidfile at `DIR/run/karst41.pid`
+  written by the server itself (S03), `karst41_user` defaulting to
+  `netbbs`, `stop_cmd` using `karst41 admin stop` with a 10 s wait
   then `kill -TERM`. NetBSD has no `daemon(8)`; do not use it. The
   pidfile name must not collide with NetBBS's own or its backup job's.
-- `deploy/systemd/blacksite.service`: `Type=simple`, `User=netbbs`,
-  `ExecStart` the interpreter with `-m blacksite.server`, `ExecStop`
-  `blacksite admin stop`, `TimeoutStopSec=15`, `Restart=on-failure`,
+- `deploy/systemd/karst41.service`: `Type=simple`, `User=netbbs`,
+  `ExecStart` the interpreter with `-m karst41.server`, `ExecStop`
+  `karst41 admin stop`, `TimeoutStopSec=15`, `Restart=on-failure`,
   `RestartSec=2`.
 - `deploy/README.md`: install steps (venv owned by the service account,
-  `pip install` the wheel, choose `DIR`, run `blacksite admin validate`,
+  `pip install` the wheel, choose `DIR`, run `karst41 admin validate`,
   enable the unit), and the sentence "This is the interim path until
   NetBBS supervises door services (NetBBS issue #…)".
 - Server side (small additions to S03): `admin.stop` sends `bye
@@ -88,11 +88,11 @@ None.
 
 1. On the ReLink-style NetBSD box or a Linux host: install the wheel
    into a venv owned by the service account, copy the unit, set `DIR`.
-2. Start via `service blacksite start` (or `systemctl start blacksite`);
-   `blacksite admin status` prints uptime and `players: 0`.
-3. Enter the door from NetBBS (S04): `blacksite admin who` lists the
+2. Start via `service karst41 start` (or `systemctl start karst41`);
+   `karst41 admin status` prints uptime and `players: 0`.
+3. Enter the door from NetBBS (S04): `karst41 admin who` lists the
    caller.
-4. `service blacksite stop`: the caller sees "The city is dark right
+4. `service karst41 stop`: the caller sees "The city is dark right
    now."; `run/` is empty; no process remains (`ps`).
 5. Reboot (or restart the unit): the service comes back.
 
@@ -113,7 +113,7 @@ None.
   this interim path; the unit runs it as the same service account NetBBS
   uses so the socket's 0600 mode and the install directory permissions
   line up.
-- `blacksite admin stop` is preferred over signals in the units so that
+- `karst41 admin stop` is preferred over signals in the units so that
   callers get `bye` before the socket disappears; the units still fall
   back to `SIGTERM`.
 - Keep every deploy file ASCII; SysOps edit them on the box.
@@ -122,14 +122,14 @@ None.
 
 Implemented by Codex; Sonnet is the preferred primary model. Reuses the
 S03 authenticated operator endpoint and maintenance shutdown. The
-`blacksite` convenience command and module now expose `serve` and
+`karst41` convenience command and module now expose `serve` and
 `admin`; existing module/console aliases remain available. Command
 options work before or after the subcommand.
 
 Status adds the specified field names while retaining S03 status keys.
 Who reports handles and connection duration; player names and zone stay
 null until S06/S07 own that state. The server writes its own
-`run/blacksite.pid`, removed during shutdown. Secret rotation is offline,
+`run/karst41.pid`, removed during shutdown. Secret rotation is offline,
 holds the same exclusive lease, atomically replaces each secret, and
 never prints credentials. Fresh-install validation uses packaged content
 plus local overrides before the server bootstraps the readable copy.
@@ -156,7 +156,7 @@ execution remains a separate platform check.
   exit and enabled-unit restart pass at 80x24 and 132x50.
 - The final unit result remains successful after a direct admin stop.
   Proof and ANSI captures are attached to service acceptance run
-  [39585522074](https://github.com/Thiesi/Blacksite/actions/runs/39585522074).
+  [39585522074](https://github.com/Thiesi/Karst41/actions/runs/39585522074).
 - Full local suite before the review fixes: 416 passed, 1 skipped on
   Windows. Final focused operator/deploy checks: 9 passed. Final full CI:
   419 passed on Ubuntu; 418 passed, 1 skipped on Windows Python 3.12.

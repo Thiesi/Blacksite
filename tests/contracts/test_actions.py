@@ -5,9 +5,9 @@ from copy import deepcopy
 
 import pytest
 
-from blacksite.content.schema import Stage, StageTarget
-from blacksite.server.contracts.ledger import Ledger
-from blacksite.server.inventory import Inventory
+from karst41.content.schema import Stage, StageTarget
+from karst41.server.contracts.ledger import Ledger
+from karst41.server.inventory import Inventory
 from tests.contracts.test_engine import template
 from tests.npcs.test_engine import city, body
 

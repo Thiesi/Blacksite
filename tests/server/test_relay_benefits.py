@@ -1,8 +1,8 @@
 """Game 7.7 consumers; future eligibility is an explicit unit fixture."""
 
 from dataclasses import replace
-from blacksite.content.schema import Behaviour
-from blacksite.server.npcs.templates import make_actor
+from karst41.content.schema import Behaviour
+from karst41.server.npcs.templates import make_actor
 
 import pytest
 

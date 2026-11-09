@@ -1,11 +1,11 @@
 # Characters and the Wake (S07)
 
-Install Blacksite 0.0.3 or newer in the door's own venv and start the
+Install Karst 41 0.0.3 or newer in the door's own venv and start the
 ordinary service. Registration follows the [door guide](door-client.md).
 The door connects to the service; it never starts one.
 
 ```powershell
-blacksite serve --install-dir .test-tmp/world --tcp
+karst41 serve --install-dir .test-tmp/world --tcp
 ```
 
 New callers choose an archetype, enter a name (Enter keeps the displayed
@@ -34,7 +34,7 @@ One character per BBS identity is the default. To raise the world cap,
 stop the service and use the offline command, which takes the same lease:
 
 ```powershell
-blacksite admin --install-dir .test-tmp/world character-cap 2
+karst41 admin --install-dir .test-tmp/world character-cap 2
 ```
 
 Returning callers then choose among their characters or a free slot.

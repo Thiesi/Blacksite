@@ -4,18 +4,18 @@ from pathlib import Path
 
 import pytest
 
-from blacksite.content.loader import load_content
-from blacksite.server.progression_engine import ProgressionEngine
-from blacksite.server.progression import Grant
-from blacksite.server.skills import Use
-from blacksite.server.protocol import Frame
+from karst41.content.loader import load_content
+from karst41.server.progression_engine import ProgressionEngine
+from karst41.server.progression import Grant
+from karst41.server.skills import Use
+from karst41.server.protocol import Frame
 from tests.character_helpers import act, create
 from tests.harness import HeadlessServer
 
 
 @pytest.fixture
 def skills_game(repo_root: Path):
-    game = HeadlessServer(load_content(repo_root/"src/blacksite/content"), character_state={})
+    game = HeadlessServer(load_content(repo_root/"src/karst41/content"), character_state={})
     client = game.connect()
     create(game, client, archetype=0)
     engine = game.core.progression

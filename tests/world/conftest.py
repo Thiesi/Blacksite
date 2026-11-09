@@ -4,14 +4,14 @@ from pathlib import Path
 
 import pytest
 
-from blacksite.content.loader import ContentTree, load_content
-from blacksite.server.world.registry import World
+from karst41.content.loader import ContentTree, load_content
+from karst41.server.world.registry import World
 from tests.harness import HeadlessServer
 
 
 @pytest.fixture(scope="session")
 def content_tree() -> ContentTree:
-    return load_content(Path(__file__).resolve().parents[2] / "src/blacksite/content")
+    return load_content(Path(__file__).resolve().parents[2] / "src/karst41/content")
 
 
 @pytest.fixture

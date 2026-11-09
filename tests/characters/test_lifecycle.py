@@ -3,9 +3,9 @@
 from datetime import timedelta
 from pathlib import Path
 import base64,json,zlib
-from blacksite.server.players import pack_memory,unpack_memory
-from blacksite.server.protocol import Frame
-from blacksite.server.storage.db import Storage
+from karst41.server.players import pack_memory,unpack_memory
+from karst41.server.protocol import Frame
+from karst41.server.storage.db import Storage
 from tests.harness import HeadlessServer
 from tests.character_helpers import act,create,place,state
 import pytest
@@ -242,8 +242,8 @@ def test_failed_storage_creation_rolls_back_all_reward_rows(game: HeadlessServer
 
 
 def test_offline_character_cap_holds_service_lease_and_preserves_characters(scratch_dir: Path) -> None:
-    from blacksite.admin.__main__ import character_cap
-    from blacksite.server.storage.lease import Lease
+    from karst41.admin.__main__ import character_cap
+    from karst41.server.storage.lease import Lease
     assert character_cap(scratch_dir,2)=={"character_cap":2}
     lease=Lease(scratch_dir/"world.db.sessions");lease.acquire()
     try:
@@ -290,7 +290,7 @@ def test_failed_logout_flush_retains_latest_position_for_retry(game: HeadlessSer
 
 
 def test_idle_online_character_gets_full_reconnect_grace_after_crash(game: HeadlessServer) -> None:
-    from blacksite.server.clock import ManualClock
+    from karst41.server.clock import ManualClock
     a=game.connect();create(game,a)
     place(game,a,"vatside-clinics",(30,18))
     game.step(1200) # Two minutes idle online is not two minutes offline.
@@ -316,15 +316,15 @@ def test_shock_decays_five_per_second_after_three_second_hit_grace(game: Headles
 def test_upgrade_from_shipped_schema_one_preserves_origin_and_old_rows(scratch_dir: Path) -> None:
     import sqlite3
     from importlib import import_module
-    from blacksite.server.clock import ManualClock
+    from karst41.server.clock import ManualClock
     path=scratch_dir/"world.db"
     with sqlite3.connect(path) as db:
-        import_module("blacksite.server.storage.migrations.0001_initial").apply(db)
+        import_module("karst41.server.storage.migrations.0001_initial").apply(db)
         db.executemany("INSERT INTO meta(key,value) VALUES(?,?)",[("schema_version","1"),("origin",json.dumps("existing-origin"))])
         db.execute("INSERT INTO players(id,origin,bbs_user_id,health) VALUES('old','existing-origin','1',130)")
     store=Storage(path,ManualClock())
     try:
-        from blacksite.version import WORLD_SCHEMA
+        from karst41.version import WORLD_SCHEMA
         assert store.origin=="existing-origin" and store.meta("schema_version")==WORLD_SCHEMA
         assert store.db.execute("SELECT health FROM players WHERE id='old'").fetchone()[0]==130
         assert {"name_key","progress"} <= store.player_columns

@@ -6,15 +6,15 @@ from typing import Any
 
 import pytest
 
-from blacksite.content.schema import ObjectSpec
-from blacksite.content.validate import validate
-from blacksite.door import chrome
-from blacksite.door.model import Display
-from blacksite.hints import focus_context
-from blacksite.layout import compute
-from blacksite.server.interaction import object_interaction
-from blacksite.server.protocol import Frame
-from blacksite.server.world.zone import ObjectState
+from karst41.content.schema import ObjectSpec
+from karst41.content.validate import validate
+from karst41.door import chrome
+from karst41.door.model import Display
+from karst41.hints import focus_context
+from karst41.layout import compute
+from karst41.server.interaction import object_interaction
+from karst41.server.protocol import Frame
+from karst41.server.world.zone import ObjectState
 from tests.character_helpers import place
 from tests.door.conftest import info
 from tests.fake_terminal import FakeTerminal

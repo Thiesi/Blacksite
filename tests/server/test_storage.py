@@ -5,9 +5,9 @@ from pathlib import Path
 
 import pytest
 
-from blacksite.server.clock import ManualClock
-from blacksite.server.storage.db import Storage
-from blacksite.version import WORLD_SCHEMA
+from karst41.server.clock import ManualClock
+from karst41.server.storage.db import Storage
+from karst41.version import WORLD_SCHEMA
 
 
 def test_migrate_from_empty(scratch_dir: Path) -> None:
@@ -86,7 +86,7 @@ def test_failed_flush_rolls_back_every_row_and_can_retry(scratch_dir: Path) -> N
 
 
 def test_migration_ddl_rolls_back_on_failure(scratch_dir: Path, monkeypatch: pytest.MonkeyPatch) -> None:
-    from blacksite.server.storage import migrations
+    from karst41.server.storage import migrations
 
     class BrokenMigration:
         @staticmethod

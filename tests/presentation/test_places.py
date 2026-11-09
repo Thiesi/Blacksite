@@ -7,23 +7,23 @@ from pathlib import Path
 
 import pytest
 
-from blacksite.content import schema as s
-from blacksite.content.formats import decode
-from blacksite.content.loader import load_content
-from blacksite.content.place_validation import validate_places
-from blacksite.content.places import charting_problems, public_tiles
-from blacksite.content.validate import validate
-from blacksite.door.cells import CellBuffer, display_width
-from blacksite.door.palette import Palette
-from blacksite.door.present import zone as drawing, chrome
-from blacksite.door.present.paint import Paint, BAND_STEP, light_distance, theme_roles
-from blacksite.door.present.places import for_frame
-from blacksite.layout import compute
-from blacksite.place import CHARTED_GROUND
-from blacksite.server.views.delta import changes
-from blacksite.server.views.zone_view import build, Perception
-from blacksite.server.world.actors import Actor
-from blacksite.server.world.zone import ZoneInstance
+from karst41.content import schema as s
+from karst41.content.formats import decode
+from karst41.content.loader import load_content
+from karst41.content.place_validation import validate_places
+from karst41.content.places import charting_problems, public_tiles
+from karst41.content.validate import validate
+from karst41.door.cells import CellBuffer, display_width
+from karst41.door.palette import Palette
+from karst41.door.present import zone as drawing, chrome
+from karst41.door.present.paint import Paint, BAND_STEP, light_distance, theme_roles
+from karst41.door.present.places import for_frame
+from karst41.layout import compute
+from karst41.place import CHARTED_GROUND
+from karst41.server.views.delta import changes
+from karst41.server.views.zone_view import build, Perception
+from karst41.server.world.actors import Actor
+from karst41.server.world.zone import ZoneInstance
 from tests.fake_terminal import FakeTerminal
 from tests.presentation.mechanics import projection
 from tests.presentation.snapshots import canonical, snapshot
@@ -34,7 +34,7 @@ FIXTURE = ROOT / 'tests/fixtures/p6'
 
 @pytest.fixture(scope='module')
 def fixtures():
-    return load_content(ROOT / 'src/blacksite/content', FIXTURE)
+    return load_content(ROOT / 'src/karst41/content', FIXTURE)
 
 
 def problems(content):
@@ -529,7 +529,7 @@ def test_arch_5_5_4_charting_does_not_disclose_live_actors_or_object_state(fixtu
     body, caller, instance, perception = view(fixtures)
     unseen = Actor('test:unseen','Unseen',x=14,y=5,kind='npc',zone=instance.id)
     instance.actors[unseen.id] = unseen
-    from blacksite.server.world.zone import ObjectState
+    from karst41.server.world.zone import ObjectState
     obj = s.ObjectSpec('unseen-state',(14,6),'door')
     instance.objects[obj.id] = ObjectState(obj,open=True)
     body = build(caller,instance,perception,fixtures,80,24,'12:00',False,1)
@@ -590,7 +590,7 @@ def test_arch_5_5_4_mask_cache_does_not_enumerate_whole_memory(fixtures):
 
 def test_ui_2_legacy_renderer_ignores_places_and_charting(fixtures):
     from tests.presentation.test_client_foundations import display
-    from blacksite.server.protocol import Frame
+    from karst41.server.protocol import Frame
     body, *_ = view(fixtures)
     bare = deepcopy(body)
     bare.pop('looks')
@@ -634,7 +634,7 @@ def test_ui_2_cached_terrain_matches_fresh_paint_through_movement(fixtures,tier)
 
 
 def test_arch_5_5_4_whole_known_ring_and_sign_can_cross_viewport(fixtures):
-    from blacksite.server.views.looks import masked
+    from karst41.server.views.looks import masked
     content = deepcopy(fixtures)
     zone = content.zones['p6-fixture']
     content.zones[zone.id] = replace(zone,

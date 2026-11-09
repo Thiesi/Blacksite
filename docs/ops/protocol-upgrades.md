@@ -8,7 +8,7 @@ contains S41.
 
 After its welcome handshake, an S41 door ignores unknown server frame
 types. It emits an INFO diagnostic once per type per door launch through
-`blacksite.door.connection` when a host enables standard Python logging.
+`karst41.door.connection` when a host enables standard Python logging.
 The door configures no console handler and sends no diagnostic to the
 game terminal.
 

@@ -20,33 +20,41 @@ from tempfile import TemporaryDirectory
 from time import process_time
 from types import ModuleType
 from typing import Any, Callable
+import io
+import tokenize
 
 ROOT = Path(__file__).resolve().parents[1]
 sys.path[:0] = [str(ROOT/'src'), str(ROOT)]
 
-from blacksite.content import place_validation
-from blacksite.content.loader import ContentTree, load_content
-from blacksite.content.validate import validate
-from blacksite.door.present.paint import Paint
+from karst41.content import place_validation
+from karst41.content.loader import ContentTree, load_content
+from karst41.content.validate import validate
+from karst41.door.present.paint import Paint
+from scripts.source_layout import at_revision, revision_argument
 
 Reporter = Callable[[str, str, str], None]
 PlaceValidator = Callable[[ContentTree, Reporter], None]
 
 BASE = 'c2f990312d1c6cf88200f56dc4722fe83f9f7321'
 INPUT = '3e585c71eebf8c8cd19a591016dfe78a788c5b9b'
-PREFIX = 'src/blacksite/content/'
+PREFIX = 'src/karst41/content/'
 VALIDATION_CPU_SECONDS = 3.0  # Existing S25b TR-8 / test_hub_maps gate.
 
 
 def git(*args: str) -> bytes:
-    return subprocess.check_output(['git', *args], cwd=ROOT)
+    return subprocess.check_output(['git', *(revision_argument(arg, root=ROOT) for arg in args)], cwd=ROOT)
 
 
 def module(name: str, source: bytes) -> ModuleType:
     # Dataclasses resolve their defining module while trusted Git code loads.
     result = ModuleType(name)
     sys.modules[name] = result
-    exec(compile(source, name, 'exec'), result.__dict__)
+    # Historical evidence: compile trusted old source against the renamed
+    # runtime. Only Python identifiers change; strings and raw Git bytes do not.
+    tokens = tokenize.tokenize(io.BytesIO(source).readline)
+    names = ((token.type, 'karst41' if token.type == tokenize.NAME
+              and token.string == 'blacksite' else token.string) for token in tokens)
+    exec(compile(tokenize.untokenize(names), name, 'exec'), result.__dict__)
     return result
 
 
@@ -96,14 +104,18 @@ def measure(tree: ContentTree, function: PlaceValidator, counts: dict[str, int],
 def snapshot(destination: Path, input_ref: str) -> dict[str, str]:
     shutil.copytree(ROOT/PREFIX, destination,
                     ignore=shutil.ignore_patterns('*.py', '__pycache__'))
-    names = {name for name in git('diff', '--name-only', BASE, input_ref, '--', PREFIX).decode().splitlines()
+    prefix = at_revision(input_ref, PREFIX, root=ROOT)
+    base_prefix = at_revision(BASE, PREFIX, root=ROOT)
+    # Diff subtree objects so the rename itself is never a content change.
+    names = {prefix+name for name in git('diff', '--name-only',
+             BASE+':'+base_prefix.rstrip('/'), input_ref+':'+prefix.rstrip('/')).decode().splitlines()
              if name.endswith(('.json', '.map'))}
     names.update(str(Path(name).with_suffix('.map')).replace('\\','/')
-                 for name in tuple(names) if name.startswith(PREFIX+'zones/') and name.endswith('.json'))
+                 for name in tuple(names) if name.startswith(prefix+'zones/') and name.endswith('.json'))
     hashes = {}
     for name in sorted(names):
         data = git('show', f'{input_ref}:{name}')
-        target = destination/Path(name).relative_to(PREFIX)
+        target = destination/Path(name).relative_to(prefix)
         target.parent.mkdir(parents=True, exist_ok=True)
         target.write_bytes(data)
         hashes[name] = sha256(data).hexdigest()
@@ -131,7 +143,7 @@ def bind_pinned_crowd(tree: ContentTree) -> list[dict[str, str]]:
 def run(input_ref: str, repeats: int) -> dict[str, Any]:
     if not re.fullmatch('[0-9a-f]{40}', input_ref) or repeats < 1:
         raise ValueError('input-ref must be a full Git id; repeats must be positive')
-    paint_path = 'src/blacksite/door/present/paint.py'
+    paint_path = 'src/karst41/door/present/paint.py'
     validation_path = PREFIX+'place_validation.py'
     before_paint = module('_a6_before_paint', git('show', f'{BASE}:{paint_path}')).Paint
     old_source = git('show', f'{BASE}:{validation_path}')
@@ -144,7 +156,7 @@ def run(input_ref: str, repeats: int) -> dict[str, Any]:
               'platform': platform.platform(), 'boundary': 'full validate(tree), CPU only; load/I/O excluded',
               'source_sha256': {path:sha256((ROOT/path).read_bytes()).hexdigest()
                                 for path in (paint_path, validation_path)}, 'cases': []}
-    with TemporaryDirectory(prefix='blacksite-a6-') as temporary:
+    with TemporaryDirectory(prefix='karst41-a6-') as temporary:
         content = Path(temporary)/'p6b'
         report['input_files_sha256'] = snapshot(content, input_ref)
         trees = [('shipped', load_content(ROOT/PREFIX)),

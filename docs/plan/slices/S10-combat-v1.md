@@ -3,7 +3,7 @@
 **Status:** done (PR #50)
 **Primary model:** Opus · **Reviewer:** Astra or Fable (balance read against the catalog before merge)
 **Depends on:** S07, S08, S12 · **Milestone:** M1
-**Issue:** https://github.com/Thiesi/blacksite/issues/10
+**Issue:** https://github.com/Thiesi/Karst41/issues/10
 
 ## Goal
 
@@ -34,7 +34,7 @@ can wake up in a vat.
 
 ## Scope
 
-- `src/blacksite/server/rules/combat.py`: pure functions:
+- `src/karst41/server/rules/combat.py`: pure functions:
   `to_hit(accuracy, skill, evasion, cover, range_penalty)` = accuracy +
   skill/2 − evasion − cover×10 − range_penalty (range penalty 5 per
   tile beyond half the weapon's range; 0 within); `damage(base, skill,
@@ -45,7 +45,7 @@ can wake up in a vat.
   knockdown 2 s; shock decays 5/s when not damaged for 3 s; chemical
   damage-over-time from the catalog's `(+n/s, t s)` fields; dissonance
   reduced only by `arm_d`.
-- `src/blacksite/server/combat/engine.py`: per-zone combat subsystem ticked
+- `src/karst41/server/combat/engine.py`: per-zone combat subsystem ticked
   at 10 Hz: target selection (`target_next/prev` cycling visible hostiles by
   distance; implement the design safety and under-grade refusal now using
   fixture faction relations; S20 supplies membership/Marked integration),
@@ -89,7 +89,7 @@ can wake up in a vat.
   renders the TARGET block (name, faction placeholder, HP bar as
   percent, range, cover, relation), flashes the border on being hit
   at every tier, shows cooldown ticks on the hint line.
-- Bot: `blacksite.bot` gains a "fire at nearest" loop.
+- Bot: `karst41.bot` gains a "fire at nearest" loop.
 
 ## Out of scope
 

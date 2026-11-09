@@ -16,10 +16,10 @@ from typing import Any
 from collections.abc import Callable
 
 from accept_s10_netbbs import Connection, NativeProbe, wait
-from blacksite.server.drugs import detox_until
-from blacksite.server.inventory import Inventory
-from blacksite.server.items import make_item
-from blacksite.server.npcs.templates import make_actor
+from karst41.server.drugs import detox_until
+from karst41.server.inventory import Inventory
+from karst41.server.items import make_item
+from karst41.server.npcs.templates import make_actor
 
 
 def loan(probe: NativeProbe, connection: Connection, template: str) -> str:

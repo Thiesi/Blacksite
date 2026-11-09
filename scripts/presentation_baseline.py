@@ -11,7 +11,7 @@ import sys
 ROOT = Path(__file__).resolve().parents[1]
 sys.path[:0] = [str(ROOT/'src'), str(ROOT)]
 
-from blacksite.content.loader import load_content
+from karst41.content.loader import load_content
 from tests.presentation.budget import MIX, activity, frames, hourly
 from tests.presentation.mechanics import fingerprint
 
@@ -23,7 +23,7 @@ def main() -> None:
     args = parser.parse_args()
     if not 0 < args.seconds <= 600:
         parser.error('seconds must be positive and at most 600')
-    content = load_content(ROOT/'src/blacksite/content')
+    content = load_content(ROOT/'src/karst41/content')
     cpu_budget_reference = platform.system() == 'Linux' and args.seconds == 12.0
     rows = []
     for width, height in ((80, 24), (132, 50)):

@@ -119,7 +119,7 @@ long as the result is checked at 16 colours.
 |---|---|
 | SysOp guide `docs/ops/sysop-guide.md` (install, register, service, backup, restore, moderation, seasons) | S28, S31 |
 | `deploy/netbbs-door-profile.json` preset | S31 |
-| `deploy/rc.d/blacksite` (NetBSD) and `deploy/systemd/blacksite.service` | S05 |
+| `deploy/rc.d/karst41` (NetBSD) and `deploy/systemd/karst41.service` | S05 |
 | Admin CLI reference | S28 |
 | Release notes per version | every release |
 

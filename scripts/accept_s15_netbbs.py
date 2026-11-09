@@ -17,9 +17,9 @@ from typing import Any
 from accept_s10_netbbs import Connection, NativeProbe, wait
 from accept_s13_netbbs import lat_walk
 from accept_s14_netbbs import choose, hub, menu, program, room_walk
-from blacksite import content as content_package
-from blacksite.content.loader import load_content
-from blacksite.server.items import make_item
+from karst41 import content as content_package
+from karst41.content.loader import load_content
+from karst41.server.items import make_item
 
 
 def fixture(probe: NativeProbe, stage: str) -> dict[str, Any]:

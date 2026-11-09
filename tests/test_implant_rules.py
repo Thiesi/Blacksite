@@ -4,16 +4,16 @@ from pathlib import Path
 
 import pytest
 
-from blacksite.content.loader import load_content
-from blacksite.server.implants import enforce_tolerance, install as operate, quote, removal_price, remove
-from blacksite.server.items import ItemInstance
-from blacksite.server.modifiers import collect, compose
-from blacksite.server.players import Player
+from karst41.content.loader import load_content
+from karst41.server.implants import enforce_tolerance, install as operate, quote, removal_price, remove
+from karst41.server.items import ItemInstance
+from karst41.server.modifiers import collect, compose
+from karst41.server.players import Player
 
 
 @pytest.fixture(scope="module")
 def catalog():
-    return load_content(Path(__file__).resolve().parents[1]/"src/blacksite/content").items
+    return load_content(Path(__file__).resolve().parents[1]/"src/karst41/content").items
 
 
 def runner(archetype="hardline"):
