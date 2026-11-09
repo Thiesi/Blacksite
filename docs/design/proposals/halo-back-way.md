@@ -31,14 +31,17 @@ The chain breaks between the second and the fourth step. The door says
 
 ## 3. The fix: three small things [new]
 
-**1. The door names its core.** The locked line names the place, not the
-mechanism:
+**1. The door names its core.** The locked line is `main`'s generic
+message for every locked door (`world/simulation.py:201`), so it names
+whichever core has a control that targets the door, by the core's
+Lattice name (presentation lead's wording, #185):
 
-> "Locked. The latch runs off the Halo's own system."
+> "Locked. The latch runs off the Tin Halo core."
 
-The cabinet beside the bar is already "Tin Halo hardware". With this
-line, a player who has seen a core and a hardware object can connect the
-two. The wording is the presentation lead's.
+That gives one name across the door, the cabinet ("Tin Halo hardware")
+and the core. A private core reads "a private core". A locked door with
+no control says just "Locked." The spoken lines below keep their own
+words ("Vesper's system", "house system").
 
 **2. Somebody in the Halo says it, sideways.** In round 3 people
 learned the Row from its talk, and they can learn this the same way. One
@@ -57,10 +60,12 @@ They tell anyone in the room. That's right for a door canon puts in
 plain sight, and the gazetteer has the back room as a known place. This
 hides nothing, because the hard part is the ICE, not the knowledge.
 
-**3. The control is findable once you're in.** The `back-door` control
-keeps its label, and the core's room with the control is called "Back
-room" rather than a numbered service room. Its first-time Lattice view
-says what the control does: "back door: unlatch for 5 min".
+**3. The control is findable once you're in.** The room that holds the
+`back-door` control, room-3, is relabelled "Back room" (today it's
+"Archive"). The control keeps its label, "back door". The Lattice
+already builds "Flip back door / off / 300s ordinary reset" and the
+channel log line from that label. Showing the reset as minutes is a
+generic Lattice change, and the presentation lead carries it.
 
 ## 4. What it changes in play
 
@@ -76,7 +81,7 @@ says what the control does: "back door: unlatch for 5 min".
 
 ## 5. Where it goes
 
-- The locked line and the room label: the Row rules slice, if the back
+- The locked line (generic, for every door with a controlling core) and the room label: the Row rules slice, if the back
   door's target is settled by then. Otherwise with it.
 - The runner bark: my population PR (the Halo copy of the runner set).
 - Dolf's line: my population PR (Dolf arrives there).

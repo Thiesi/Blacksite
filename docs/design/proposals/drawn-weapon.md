@@ -61,10 +61,11 @@ that everyone can see, before anyone is a target.
 - **Outside truce zones,** firing works as today, and it also draws. A
   player who has just fought is visibly drawn until they holster. That
   changes nothing about firing.
-- **Visible to others.** The status line shows your own state. Other
-  players see a drawn weapon on the figure, the name line or the target
-  panel. The look is the presentation lead's. The target panel already
-  sends a `stance` field.
+- **Visible to others.** Presentation lead's first read (#185): your own
+  state shows as `DRAWN` on the WEAPON line, not the header. Other
+  players see it through TARGET's `stance` and a NEARBY marker, never
+  the map glyph. The presentation lead picks the toggle key at slice
+  time (`a`/`A` is now P11's).
 - **The draw is the warning.** In a truce zone, the 2 s count runs from
   the draw. Nobody gets a second "raises a weapon at you" after it. The
   second press fires once the drawn player has been drawn for 2 s,
