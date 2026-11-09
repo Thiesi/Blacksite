@@ -10,6 +10,7 @@ from karst41.server.clock import TICK_HZ
 from karst41.server.interlock_effects import lighting_radius
 from karst41.server.world.actors import Actor
 from karst41.server.world.exits import schedule
+from karst41.server.world.sight import sight_radius, visible_tiles
 from tests.character_helpers import place
 from tests.lattice.test_engine import actor, intent, runners
 from tests.lattice.test_encounters import enter
@@ -56,14 +57,22 @@ def test_game_6_4_lighting_changes_actual_sight_locally(runners):
     presence = enter(game, a, "lat-civic-ledger")
     interlock, zone, obj, control = retarget(game, presence, "light", action="toggle")
     obj.spec = replace(obj.spec, tile=(31, 5))
+    viewer = actor(game, a)
+    before = visible_tiles(viewer, zone, sight_radius(viewer, zone, False))
+    geometry = zone.geometry_revision
     flip(game, a)
     game.commit_commerce()
     assert lighting_radius(actor(game, a), zone, 12) == 5
+    dimmed = visible_tiles(viewer, zone, sight_radius(viewer, zone, False))
+    assert zone.geometry_revision > geometry
+    assert dimmed is not before and dimmed < before
     distant = Actor("distant", "Distant", "Distant", x=60, y=5)
     assert lighting_radius(distant, zone, 12) == 12
     game.clock.advance(control.reset_seconds*TICK_HZ)
     interlock.compose()
     assert lighting_radius(actor(game, a), zone, 12) == 12
+    restored = visible_tiles(viewer, zone, sight_radius(viewer, zone, False))
+    assert restored is not dimmed and restored == before
 
 
 def test_game_6_4_tram_hold_is_one_platform_30s_and_120s_immunity(runners):
