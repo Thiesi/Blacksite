@@ -32,8 +32,13 @@ class Spawners:
         return {ex.tile for ex in meta.exits} | {obj.spec.tile for obj in zone.objects.values()} | ({meta.spawn} if meta.spawn else set())
 
     def location(self, zone: ZoneInstance, spawner: Spawner) -> Tile | None:
-        candidates = spawner.region.tiles() if spawner.region else [spawner.tile]
+        candidates = ([post.tile for post in spawner.posts if post.home] if spawner.posts else
+                      spawner.region.tiles() if spawner.region else [spawner.tile])
         occupied = {a.position for a in zone.actors.values() if not a.behaviour.get("training")}
+        if spawner.posts:
+            # An errand or flight doesn't release ownership of a person's seat.
+            occupied |= {tuple(a.behaviour['home']) for a in zone.actors.values()
+                         if a.behaviour.get('posts') and 'home' in a.behaviour}
         reserved = self.reserved(zone)
         candidates = [t for t in candidates if t is not None and zone.can_enter(None, t)
                       and not zone.tiles[zone.tile_id(t)].hazard and t not in occupied | reserved]
@@ -67,6 +72,9 @@ class Spawners:
                 actor = make_actor(template, aid, {"slot": key, "spawner": sp.id,
                     "home": tile, "region": sp.region, "respawn": respawn,
                     "phase": sum(aid.encode()) % EVALUATION_TICKS})
+                if sp.posts:
+                    actor.behaviour.update(posts=sp.posts, post_crowd=sp.crowd or sp.poses_as or sp.id,
+                                           post_cap=sp.moving_cap)
                 slot["actor"] = aid
                 self.revision += 1
                 self.world.enter(actor, zone.id, tile)

@@ -52,6 +52,7 @@ class Drawn:
     def __init__(self, core: Core) -> None:
         self.core, self.combat, self.npcs = core, core.combat, core.npcs
         self.sim, self.world = self.combat.sim, self.combat.world
+        self.sim.round4 = True
         self.draws: dict[str, Draw] = {}
         self.watchers: dict[str, Watch] = {}
         self.last_warning: dict[str, int] = {}

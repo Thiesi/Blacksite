@@ -699,6 +699,8 @@ class _Validator:
 
     def _check_spawners(self, zone: s.Zone) -> None:
         owner = ("zones", zone.id)
+        if zone.meta.moving_budget < 0:
+            self.report(*owner, 'moving budget must be nonnegative')
         for sp in zone.meta.spawners:
             label = f"spawner {sp.id}"
             self.ref("npcs", sp.npc, owner, label, sp.id)
@@ -722,6 +724,8 @@ class _Validator:
                     elif ((npc_channels(crowd)['name'], npc_channels(crowd)['class'])
                           != (npc.cover_name, npc.presents)):
                         self.report(*owner, f'{label}: poses_as must match the cover name and class', sp.id)
+                    elif sp.posts != counterpart.posts or sp.moving_cap != counterpart.moving_cap or sp.crowd != counterpart.crowd:
+                        self.report(*owner, f'{label}: poses_as must match posts, hold ranges, weights and moving cap', sp.id)
                     if crowd is not None and npc.steady != crowd.steady:
                         self.report(*owner, f'{label}: poses_as must match steady', sp.id)
             if sp.condition == "per_player" and npc and not npc.training:
@@ -734,8 +738,8 @@ class _Validator:
                             self.report(*owner, f"{label}: patrol needs passable waypoints", sp.id)
             if sp.count < 1:
                 self.report(*owner, f"{label}: count must be at least 1", sp.id)
-            if (sp.tile is None) == (sp.region is None):
-                self.report(*owner, f"{label}: give exactly one of tile and region", sp.id)
+            if sum((sp.tile is not None, sp.region is not None, bool(sp.posts))) != 1:
+                self.report(*owner, f"{label}: give exactly one of tile, region and posts", sp.id)
             elif sp.tile is not None and not self.passable(zone, sp.tile):
                 self.report(*owner, f"{label}: tile {list(sp.tile)} is not passable", sp.id)
             elif sp.region is not None and not (
@@ -743,6 +747,23 @@ class _Validator:
                 and any(self.passable(zone, t) for t in sp.region.tiles())
             ):
                 self.report(*owner, f"{label}: region is empty (no passable tile inside the map)", sp.id)
+            if sp.posts:
+                reserved = {ex.tile for ex in zone.meta.exits} | {obj.tile for obj in zone.meta.objects}
+                if zone.meta.spawn:
+                    reserved.add(zone.meta.spawn)
+                if zone.meta.moving_budget < 1 or sp.moving_cap < 1:
+                    self.report(*owner, f'{label}: posts need positive crowd and zone budgets', sp.id)
+                if sum(post.home for post in sp.posts) < sp.count:
+                    self.report(*owner, f'{label}: posts need one home per person', sp.id)
+                if len({post.tile for post in sp.posts}) != len(sp.posts):
+                    self.report(*owner, f'{label}: duplicate post tile', sp.id)
+                for post in sp.posts:
+                    if not self.passable(zone, post.tile) or post.tile in reserved:
+                        self.report(*owner, f'{label}: post must be passable and clear of objects, exits and spawn', sp.id)
+                    elif self.t.tiles[zone.tile_at(post.tile)].hazard:
+                        self.report(*owner, f'{label}: post must be free of hazards', sp.id)
+                    if not 0 < post.hold_seconds[0] <= post.hold_seconds[1] or post.weight < 1:
+                        self.report(*owner, f'{label}: post needs a positive weight and ordered positive hold range', sp.id)
 
     def object_at(self, zone_id: str, object_id: str) -> s.ObjectSpec | None:
         zone = self.t.zones.get(zone_id)

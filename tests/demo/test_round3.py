@@ -196,7 +196,7 @@ def test_only_the_core_opens_the_way_out_the_back(repo_root, monkeypatch):
     avatar = sim.avatars[caller.session.user_id]
     sim.interact(caller.session, avatar, 0, choice=SimpleNamespace(value=door))
     assert not door.open
-    assert 'The door is locked. Its core controls the latch.' in [
+    assert 'Locked. The latch runs off the Tin Halo core.' in [
         line.get('text', '') for line in caller.session.log_ring]
 
     assert zone.set_door(door.spec.id, True)  # what the core's control does

@@ -259,6 +259,18 @@ class Pocket(Region):
 
 
 @dataclass(frozen=True)
+class Post:
+    """Round 4 demo: an authored home or weighted errand destination."""
+
+    tile: Tile
+    hold_seconds: tuple[int, int] = (120, 300)
+    home: bool = False
+    seated: bool = False
+    weight: int = 1
+    swap: bool = False
+
+
+@dataclass(frozen=True)
 class Spawner:
     id: str
     npc: str
@@ -268,6 +280,9 @@ class Spawner:
     region: Region | None = None
     condition: str | None = None
     poses_as: str | None = None
+    posts: tuple[Post, ...] = ()
+    crowd: str | None = None
+    moving_cap: int = 1
 
 
 @dataclass(frozen=True)
@@ -367,6 +382,7 @@ class ZoneMeta:
     public: tuple[Region, ...] = ()
     schema: int = CONTENT_SCHEMA
     truce: str | None = None  # Game design 5.5/7.3: contested-zone keeper.
+    moving_budget: int = 0  # Round 4 demo; ordinary posts and shy steps share it.
 
 
 @dataclass(frozen=True)

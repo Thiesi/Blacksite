@@ -170,19 +170,6 @@
       }
     },
     {
-      "id": "row-ticket-tout",
-      "tile": [
-        92,
-        5
-      ],
-      "kind": "vendor",
-      "essential": false,
-      "params": {
-        "name": "Row ticket tout",
-        "inspect_verb": "look at"
-      }
-    },
-    {
       "id": "row-stage",
       "tile": [
         26,
@@ -382,12 +369,66 @@
       "count": 1,
       "respawn_seconds": 60,
       "condition": "always",
-      "region": {
-        "x": 8,
-        "y": 5,
-        "w": 11,
-        "h": 3
-      }
+      "posts": [
+        {
+          "tile": [
+            12,
+            6
+          ],
+          "home": true,
+          "seated": true,
+          "weight": 1,
+          "hold_seconds": [
+            60,
+            180
+          ],
+          "swap": false
+        },
+        {
+          "tile": [
+            14,
+            6
+          ],
+          "home": false,
+          "seated": false,
+          "weight": 50,
+          "hold_seconds": [
+            5,
+            10
+          ],
+          "swap": false
+        },
+        {
+          "tile": [
+            13,
+            9
+          ],
+          "home": false,
+          "seated": false,
+          "weight": 30,
+          "hold_seconds": [
+            10,
+            20
+          ],
+          "swap": false
+        },
+        {
+          "tile": [
+            15,
+            6
+          ],
+          "home": false,
+          "seated": false,
+          "weight": 20,
+          "hold_seconds": [
+            10,
+            20
+          ],
+          "swap": false
+        }
+      ],
+      "moving_cap": 1,
+      "crowd": "upstairs"
     },
     {
       "id": "upstairs-sablier",
@@ -395,12 +436,66 @@
       "count": 1,
       "respawn_seconds": 60,
       "condition": "always",
-      "region": {
-        "x": 8,
-        "y": 5,
-        "w": 11,
-        "h": 3
-      }
+      "posts": [
+        {
+          "tile": [
+            9,
+            6
+          ],
+          "home": true,
+          "seated": true,
+          "weight": 1,
+          "hold_seconds": [
+            60,
+            180
+          ],
+          "swap": false
+        },
+        {
+          "tile": [
+            14,
+            6
+          ],
+          "home": false,
+          "seated": false,
+          "weight": 50,
+          "hold_seconds": [
+            5,
+            10
+          ],
+          "swap": false
+        },
+        {
+          "tile": [
+            13,
+            9
+          ],
+          "home": false,
+          "seated": false,
+          "weight": 30,
+          "hold_seconds": [
+            10,
+            20
+          ],
+          "swap": false
+        },
+        {
+          "tile": [
+            15,
+            6
+          ],
+          "home": false,
+          "seated": false,
+          "weight": 20,
+          "hold_seconds": [
+            10,
+            20
+          ],
+          "swap": false
+        }
+      ],
+      "moving_cap": 1,
+      "crowd": "upstairs"
     },
     {
       "id": "long-shift-crew",
@@ -408,12 +503,79 @@
       "count": 2,
       "respawn_seconds": 60,
       "condition": "always",
-      "region": {
-        "x": 25,
-        "y": 2,
-        "w": 11,
-        "h": 5
-      }
+      "posts": [
+        {
+          "tile": [
+            27,
+            4
+          ],
+          "home": true,
+          "seated": true,
+          "weight": 1,
+          "hold_seconds": [
+            60,
+            180
+          ],
+          "swap": true
+        },
+        {
+          "tile": [
+            34,
+            9
+          ],
+          "home": true,
+          "seated": false,
+          "weight": 1,
+          "hold_seconds": [
+            120,
+            300
+          ],
+          "swap": true
+        },
+        {
+          "tile": [
+            24,
+            4
+          ],
+          "home": false,
+          "seated": false,
+          "weight": 50,
+          "hold_seconds": [
+            5,
+            10
+          ],
+          "swap": false
+        },
+        {
+          "tile": [
+            36,
+            9
+          ],
+          "home": false,
+          "seated": false,
+          "weight": 30,
+          "hold_seconds": [
+            10,
+            20
+          ],
+          "swap": false
+        },
+        {
+          "tile": [
+            30,
+            3
+          ],
+          "home": false,
+          "seated": false,
+          "weight": 20,
+          "hold_seconds": [
+            10,
+            20
+          ],
+          "swap": false
+        }
+      ],
+      "moving_cap": 1
     },
     {
       "id": "quarter-tone-listeners",
@@ -421,12 +583,65 @@
       "count": 2,
       "respawn_seconds": 60,
       "condition": "always",
-      "region": {
-        "x": 39,
-        "y": 2,
-        "w": 13,
-        "h": 5
-      }
+      "posts": [
+        {
+          "tile": [
+            40,
+            6
+          ],
+          "home": true,
+          "seated": true,
+          "weight": 1,
+          "hold_seconds": [
+            60,
+            180
+          ],
+          "swap": true
+        },
+        {
+          "tile": [
+            39,
+            9
+          ],
+          "home": true,
+          "seated": false,
+          "weight": 1,
+          "hold_seconds": [
+            120,
+            300
+          ],
+          "swap": true
+        },
+        {
+          "tile": [
+            50,
+            3
+          ],
+          "home": false,
+          "seated": false,
+          "weight": 50,
+          "hold_seconds": [
+            5,
+            10
+          ],
+          "swap": false
+        },
+        {
+          "tile": [
+            48,
+            4
+          ],
+          "home": false,
+          "seated": false,
+          "weight": 20,
+          "hold_seconds": [
+            10,
+            20
+          ],
+          "swap": false
+        }
+      ],
+      "moving_cap": 1
     },
     {
       "id": "clause-regulars",
@@ -434,12 +649,65 @@
       "count": 2,
       "respawn_seconds": 60,
       "condition": "always",
-      "region": {
-        "x": 55,
-        "y": 4,
-        "w": 5,
-        "h": 3
-      }
+      "posts": [
+        {
+          "tile": [
+            55,
+            5
+          ],
+          "home": true,
+          "seated": true,
+          "weight": 1,
+          "hold_seconds": [
+            60,
+            180
+          ],
+          "swap": true
+        },
+        {
+          "tile": [
+            56,
+            9
+          ],
+          "home": true,
+          "seated": false,
+          "weight": 1,
+          "hold_seconds": [
+            120,
+            300
+          ],
+          "swap": true
+        },
+        {
+          "tile": [
+            57,
+            5
+          ],
+          "home": false,
+          "seated": false,
+          "weight": 50,
+          "hold_seconds": [
+            5,
+            10
+          ],
+          "swap": false
+        },
+        {
+          "tile": [
+            58,
+            9
+          ],
+          "home": false,
+          "seated": false,
+          "weight": 30,
+          "hold_seconds": [
+            10,
+            20
+          ],
+          "swap": false
+        }
+      ],
+      "moving_cap": 1
     },
     {
       "id": "spare-parts-runners",
@@ -447,12 +715,65 @@
       "count": 2,
       "respawn_seconds": 60,
       "condition": "always",
-      "region": {
-        "x": 71,
-        "y": 3,
-        "w": 12,
-        "h": 4
-      }
+      "posts": [
+        {
+          "tile": [
+            73,
+            5
+          ],
+          "home": true,
+          "seated": true,
+          "weight": 1,
+          "hold_seconds": [
+            60,
+            180
+          ],
+          "swap": true
+        },
+        {
+          "tile": [
+            71,
+            9
+          ],
+          "home": true,
+          "seated": false,
+          "weight": 1,
+          "hold_seconds": [
+            120,
+            300
+          ],
+          "swap": true
+        },
+        {
+          "tile": [
+            77,
+            4
+          ],
+          "home": false,
+          "seated": false,
+          "weight": 50,
+          "hold_seconds": [
+            5,
+            10
+          ],
+          "swap": false
+        },
+        {
+          "tile": [
+            84,
+            3
+          ],
+          "home": false,
+          "seated": false,
+          "weight": 30,
+          "hold_seconds": [
+            10,
+            20
+          ],
+          "swap": false
+        }
+      ],
+      "moving_cap": 1
     },
     {
       "id": "card-court-players",
@@ -460,12 +781,37 @@
       "count": 2,
       "respawn_seconds": 60,
       "condition": "always",
-      "region": {
-        "x": 49,
-        "y": 18,
-        "w": 7,
-        "h": 1
-      }
+      "posts": [
+        {
+          "tile": [
+            49,
+            18
+          ],
+          "home": true,
+          "seated": true,
+          "weight": 1,
+          "hold_seconds": [
+            60,
+            180
+          ],
+          "swap": false
+        },
+        {
+          "tile": [
+            55,
+            18
+          ],
+          "home": true,
+          "seated": true,
+          "weight": 1,
+          "hold_seconds": [
+            60,
+            180
+          ],
+          "swap": false
+        }
+      ],
+      "moving_cap": 1
     },
     {
       "id": "card-court-solenne",
@@ -473,12 +819,23 @@
       "count": 1,
       "respawn_seconds": 60,
       "condition": "always",
-      "region": {
-        "x": 59,
-        "y": 20,
-        "w": 1,
-        "h": 1
-      }
+      "posts": [
+        {
+          "tile": [
+            59,
+            20
+          ],
+          "home": true,
+          "seated": false,
+          "weight": 1,
+          "hold_seconds": [
+            120,
+            300
+          ],
+          "swap": false
+        }
+      ],
+      "moving_cap": 1
     },
     {
       "id": "halo-doorstep-1",
@@ -486,12 +843,23 @@
       "count": 1,
       "respawn_seconds": 60,
       "condition": "always",
-      "region": {
-        "x": 85,
-        "y": 11,
-        "w": 1,
-        "h": 1
-      }
+      "posts": [
+        {
+          "tile": [
+            85,
+            11
+          ],
+          "home": true,
+          "seated": false,
+          "weight": 1,
+          "hold_seconds": [
+            120,
+            300
+          ],
+          "swap": false
+        }
+      ],
+      "moving_cap": 1
     },
     {
       "id": "halo-doorstep-2",
@@ -499,12 +867,23 @@
       "count": 1,
       "respawn_seconds": 60,
       "condition": "always",
-      "region": {
-        "x": 87,
-        "y": 13,
-        "w": 1,
-        "h": 1
-      }
+      "posts": [
+        {
+          "tile": [
+            87,
+            13
+          ],
+          "home": true,
+          "seated": false,
+          "weight": 1,
+          "hold_seconds": [
+            120,
+            300
+          ],
+          "swap": false
+        }
+      ],
+      "moving_cap": 1
     },
     {
       "id": "sodium-regular",
@@ -512,12 +891,135 @@
       "count": 3,
       "respawn_seconds": 60,
       "condition": "always",
-      "region": {
-        "x": 10,
-        "y": 9,
-        "w": 70,
-        "h": 8
-      }
+      "posts": [
+        {
+          "tile": [
+            46,
+            17
+          ],
+          "home": true,
+          "seated": false,
+          "weight": 1,
+          "hold_seconds": [
+            120,
+            300
+          ],
+          "swap": false
+        },
+        {
+          "tile": [
+            58,
+            17
+          ],
+          "home": true,
+          "seated": false,
+          "weight": 1,
+          "hold_seconds": [
+            120,
+            300
+          ],
+          "swap": false
+        },
+        {
+          "tile": [
+            46,
+            21
+          ],
+          "home": true,
+          "seated": false,
+          "weight": 1,
+          "hold_seconds": [
+            120,
+            300
+          ],
+          "swap": false
+        },
+        {
+          "tile": [
+            58,
+            21
+          ],
+          "home": true,
+          "seated": false,
+          "weight": 1,
+          "hold_seconds": [
+            120,
+            300
+          ],
+          "swap": false
+        },
+        {
+          "tile": [
+            44,
+            9
+          ],
+          "home": false,
+          "seated": false,
+          "weight": 1,
+          "hold_seconds": [
+            120,
+            300
+          ],
+          "swap": false
+        },
+        {
+          "tile": [
+            48,
+            9
+          ],
+          "home": false,
+          "seated": false,
+          "weight": 1,
+          "hold_seconds": [
+            120,
+            300
+          ],
+          "swap": false
+        },
+        {
+          "tile": [
+            52,
+            9
+          ],
+          "home": false,
+          "seated": false,
+          "weight": 1,
+          "hold_seconds": [
+            120,
+            300
+          ],
+          "swap": false
+        },
+        {
+          "tile": [
+            30,
+            16
+          ],
+          "home": false,
+          "seated": false,
+          "weight": 1,
+          "hold_seconds": [
+            120,
+            300
+          ],
+          "swap": false
+        },
+        {
+          "tile": [
+            64,
+            15
+          ],
+          "home": false,
+          "seated": false,
+          "weight": 1,
+          "hold_seconds": [
+            120,
+            300
+          ],
+          "swap": false
+        }
+      ],
+      "moving_cap": 1
     },
     {
       "id": "plainclothes-warden",
@@ -526,13 +1028,185 @@
       "count": 1,
       "respawn_seconds": 60,
       "condition": "always",
-      "region": {
-        "x": 10,
-        "y": 9,
-        "w": 70,
-        "h": 8
-      }
+      "posts": [
+        {
+          "tile": [
+            46,
+            17
+          ],
+          "home": true,
+          "seated": false,
+          "weight": 1,
+          "hold_seconds": [
+            120,
+            300
+          ],
+          "swap": false
+        },
+        {
+          "tile": [
+            58,
+            17
+          ],
+          "home": true,
+          "seated": false,
+          "weight": 1,
+          "hold_seconds": [
+            120,
+            300
+          ],
+          "swap": false
+        },
+        {
+          "tile": [
+            46,
+            21
+          ],
+          "home": true,
+          "seated": false,
+          "weight": 1,
+          "hold_seconds": [
+            120,
+            300
+          ],
+          "swap": false
+        },
+        {
+          "tile": [
+            58,
+            21
+          ],
+          "home": true,
+          "seated": false,
+          "weight": 1,
+          "hold_seconds": [
+            120,
+            300
+          ],
+          "swap": false
+        },
+        {
+          "tile": [
+            44,
+            9
+          ],
+          "home": false,
+          "seated": false,
+          "weight": 1,
+          "hold_seconds": [
+            120,
+            300
+          ],
+          "swap": false
+        },
+        {
+          "tile": [
+            48,
+            9
+          ],
+          "home": false,
+          "seated": false,
+          "weight": 1,
+          "hold_seconds": [
+            120,
+            300
+          ],
+          "swap": false
+        },
+        {
+          "tile": [
+            52,
+            9
+          ],
+          "home": false,
+          "seated": false,
+          "weight": 1,
+          "hold_seconds": [
+            120,
+            300
+          ],
+          "swap": false
+        },
+        {
+          "tile": [
+            30,
+            16
+          ],
+          "home": false,
+          "seated": false,
+          "weight": 1,
+          "hold_seconds": [
+            120,
+            300
+          ],
+          "swap": false
+        },
+        {
+          "tile": [
+            64,
+            15
+          ],
+          "home": false,
+          "seated": false,
+          "weight": 1,
+          "hold_seconds": [
+            120,
+            300
+          ],
+          "swap": false
+        }
+      ],
+      "moving_cap": 1
+    },
+    {
+      "id": "ticket-tout",
+      "npc": "npc-row-ticket-tout",
+      "count": 1,
+      "respawn_seconds": 60,
+      "condition": "always",
+      "posts": [
+        {
+          "tile": [
+            4,
+            11
+          ],
+          "home": true,
+          "seated": false,
+          "weight": 1,
+          "hold_seconds": [
+            120,
+            300
+          ],
+          "swap": false
+        }
+      ],
+      "moving_cap": 1
+    },
+    {
+      "id": "haggler",
+      "npc": "npc-row-haggler",
+      "count": 1,
+      "respawn_seconds": 60,
+      "condition": "always",
+      "posts": [
+        {
+          "tile": [
+            5,
+            11
+          ],
+          "home": true,
+          "seated": false,
+          "weight": 1,
+          "hold_seconds": [
+            120,
+            300
+          ],
+          "swap": false
+        }
+      ],
+      "moving_cap": 1
     }
   ],
-  "sector": "lat-sodium-row"
+  "sector": "lat-sodium-row",
+  "moving_budget": 4
 }

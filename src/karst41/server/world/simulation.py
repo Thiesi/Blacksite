@@ -199,11 +199,23 @@ class ZoneSimulation:
             if obj.spec.params.get("unavailable_target"):
                 self.log(session, "Construction blocks this route.")
             elif obj.spec.kind in ("door", "apartment_door", "gate", "shutter") and obj.spec.params.get("locked") and not obj.open:
-                self.log(session, "The door is locked. Its core controls the latch.")
+                self.log(session, self.locked_line(zone.id, obj.spec.id) if getattr(self, "round4", False)
+                         else "The door is locked. Its core controls the latch.")
             elif obj.spec.kind in ("door", "apartment_door", "gate", "shutter"):
                 zone.set_door(obj.spec.id, not obj.open)
             else:
                 self.log(session, str(obj.spec.params.get("name", obj.spec.id)))
+
+    def locked_line(self, zone: str, object_id: str) -> str:
+        """Name the authored latch binding, respecting private-core disclosure."""
+        for core in self.world.content.cores.values():
+            if core.template or not self.world.content.active('cores', core.id):
+                continue
+            if any(control.target.zone == zone and control.target.object == object_id
+                   for room in core.rooms for control in room.controls):
+                name = 'a private' if core.owner_kind == 'private' else 'the ' + core.name
+                return f'Locked. The latch runs off {name} core.'
+        return 'Locked.'
 
     def connect(self, session: Session) -> None:
         if session.role != "caller":

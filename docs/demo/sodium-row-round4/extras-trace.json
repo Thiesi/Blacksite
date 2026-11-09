@@ -1,0 +1,37 @@
+{
+  "kind": "manual-clock functional trace; not native or CPU proof",
+  "ticks": 6000,
+  "zones": {
+    "sodium-row": {
+      "budget": 4,
+      "max_reservations": 3,
+      "max_moved_in_one_tick": 2,
+      "moves": 593,
+      "movers_by_spawner": {
+        "clause-regulars": 42,
+        "long-shift-crew": 102,
+        "plainclothes-warden": 70,
+        "quarter-tone-listeners": 83,
+        "sodium-regular": 92,
+        "spare-parts-runners": 124,
+        "upstairs-halvard": 24,
+        "upstairs-sablier": 56
+      },
+      "swaps_started": 5,
+      "population": 23
+    },
+    "sodium-tin-halo": {
+      "budget": 1,
+      "max_reservations": 1,
+      "max_moved_in_one_tick": 1,
+      "moves": 256,
+      "movers_by_spawner": {
+        "halo-regular-crew": 60,
+        "halo-regular-runner": 136,
+        "halo-regular-stray": 60
+      },
+      "swaps_started": 0,
+      "population": 6
+    }
+  }
+}
