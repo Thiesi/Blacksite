@@ -28,6 +28,6 @@ def test_exact_snapshot_is_whole_old_data_not_a_checkout_overlay(
     destination = tmp_path/'snapshot'
     hashes = control.exact_snapshot(checkout, destination, 'a'*40)
     assert (destination/'zones/old.json').read_bytes() == old
-    assert hashes == {'zones/old.json': sha256(old).hexdigest()}
+    assert hashes == {str(Path('zones')/'old.json'): sha256(old).hexdigest()}
     assert not (destination/'late.json').exists()
     assert not (destination/'__init__.py').exists()
