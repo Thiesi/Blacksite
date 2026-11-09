@@ -9,7 +9,6 @@ jobs:
     timeout-minutes: 15
     env:
       PYTHONDONTWRITEBYTECODE: '1'
-      PROOF: ${{ runner.temp }}/blacksite-proof/s11-publishers
     steps:
       - uses: actions/checkout@v4
         with:
@@ -20,6 +19,8 @@ jobs:
       - name: Prepare unchanged source trees
         shell: bash
         run: |
+          PROOF="$RUNNER_TEMP/blacksite-proof/s11-publishers"
+          echo "PROOF=$PROOF" >> "$GITHUB_ENV"
           mkdir -p "$PROOF/output"
           git worktree add --detach "$PROOF/pre" aef69d989ba48658d7feb2ba5e3f3375d167c90b
           git worktree add --detach "$PROOF/main" 7597dce6f1263a27421c51ec97cff1b0b91b6f68
