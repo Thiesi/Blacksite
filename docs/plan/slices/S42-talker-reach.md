@@ -1,6 +1,6 @@
 # S42 — Talkers stay in reach, and the talk page lets you go
 
-**Status:** planned (filed 2026-11-07; the owner merges the filing)
+**Status:** in progress (implementation; filing merged in PR #183)
 **Primary model:** Codex · **Reviewer:** automated review, technical lead, presentation lead (presentation acceptance)
 **Depends on:** S38, S39, A9 (all merged) · **Milestone:** interaction
 **Issue:** https://github.com/Thiesi/Blacksite/issues/182
@@ -9,8 +9,8 @@ This comes before P11 (#164). P11's `me.threat` disclosure test would
 fail on `main` today because of the Warden tells in part 4.
 
 Canon: game design 5.5 (NPCs), entities 1.8 (`poses_as`), architecture
-5.5.4 (disguise reveal) and terminal UI 4 (overlays). This PR writes the new rules there, marked
-"planned, S42". The implementation removes the marks. Where this file
+5.5.4 (disguise reveal) and terminal UI 4 (overlays). The filing wrote the new rules there. The implementation removes their
+"planned, S42" marks. Where this file
 and canon differ, canon wins.
 
 ## Goal
@@ -33,7 +33,7 @@ A9's return-home rule and S39's resolver.
 - **A wander step never takes an NPC out of reach of a player beside it.**
   "Beside" means within one tile (Chebyshev), as for talking. When a
   player stands next to a wanderer, the step's candidate tiles that would
-  leave every adjacent player out of reach are avoided. The NPC can still
+  leave any adjacent player out of reach are avoided. The NPC can still
   shuffle, and can stay put if no step qualifies.
 - **It applies to every wanderer alike,** covered or not. Otherwise
   movement would tell the Warden from the regulars.

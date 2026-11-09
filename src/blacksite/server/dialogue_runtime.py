@@ -12,7 +12,7 @@ from blacksite.server.commerce import CommerceMenu
 from blacksite.server.contracts.panels import Panel as ContractPanel
 from blacksite.server.dialogue import Facts, eligible_offers, evaluate
 from blacksite.server.factions import relation
-from blacksite.server.interaction import Focus, Interaction, interact
+from blacksite.server.interaction import Focus, Interaction, interact, key_action
 from blacksite.server.views import presentation
 from blacksite.server.loop import TickContext
 from blacksite.server.protocol import Frame
@@ -42,6 +42,9 @@ class TalkerMenu:
     contact: Contact
     line: str
     opened: int
+    caller_zone: str
+    caller_tile: tuple[int, int]
+    hit_serial: int
 
 
 class Dialogue:
@@ -50,6 +53,10 @@ class Dialogue:
         self.content, self.world, self.commerce = self.game.content, core.world, core.commerce
         self.sim = self.game.sim
         self.menus: dict[str, TalkerMenu] = {}
+        if core.npcs:
+            core.npcs.talking = lambda sid, aid: (sid in self.menus
+                and not self.menus[sid].contact.lattice
+                and self.menus[sid].contact.target == aid)
         # S26 binds only its committed settlement. No placement or pending
         # finale proposal supplies a historical outcome.
         self.season_facts: Callable[[Any], SeasonFacts] = lambda player: SeasonFacts()
@@ -131,10 +138,12 @@ class Dialogue:
         if avatar:
             self.sim.reset_view(session, avatar)
 
-    def show(self, session: Session, contact: Contact, text: str, tick: int) -> None:
+    def show(self, session: Session, contact: Contact, text: str, tick: int) -> bool:
         if session.closed or self.contact(session, contact.target) is None:
-            return
-        self.menus[session.id] = TalkerMenu(contact, text, tick)
+            return False
+        caller = self.sim.avatars[session.user_id].actor
+        self.menus[session.id] = TalkerMenu(contact, text, tick, caller.zone,
+                                          caller.position, int(caller.behaviour.get('hit_serial', 0)))
         talker = self.content.dialogue[contact.talker]
         actor = self.world.zones[contact.zone].actors.get(contact.target)
         if actor is not None and not contact.lattice:
@@ -146,6 +155,21 @@ class Dialogue:
                          at=self.clock.now_utc().isoformat(),
                          speaker=talker.name, speaker_role='service')
         self.publish(session)
+        return True
+
+    def undo_meeting(self, player: Any, talker: str) -> None:
+        """Compensate a committed introduction that never reached the caller."""
+        def restore() -> None:
+            progress = deepcopy(player.progress)
+            progress['met_talkers'] = sorted(set(progress.get('met_talkers', ())) - {talker})
+            self.commerce.settle(player, {'progress': progress}, self.commerce.items,
+                                 self.commerce.caches, self.commerce.serial, lambda success: None)
+        try:
+            self.commerce.enqueue_system(restore)
+        except ValueError:
+            # A full commerce queue may leave the encounter met and lose
+            # its first line. Never bypass durability to repair live state.
+            pass
 
     def open(self, session: Session, contact: Contact, tick: int) -> None:
         talker = self.content.dialogue[contact.talker]
@@ -160,11 +184,12 @@ class Dialogue:
         def committed(success: bool) -> None:
             if success:
                 # A read-only inventory may have opened during the write.
-                # Record the encounter without overwriting another menu.
                 external = self.sim.external_views.get(session.id)
                 if ((external is None or contact.lattice and external[0] == 'lattice')
                         and session.id not in self.commerce.menus):
-                    self.show(session, contact, line, tick)
+                    if self.show(session, contact, line, tick):
+                        return
+                self.undo_meeting(player, talker.id)
             else:
                 self.commerce.toast(session, 'The introduction could not be saved. Try again.')
         if not self.commerce.settle(player, {'progress': progress}, self.commerce.items,
@@ -183,8 +208,11 @@ class Dialogue:
                 viewer = self.sim.avatars[session.user_id].actor
                 label = presentation.name(actor, viewer, self.content)
         title = label+(' - '+talker.title if talker.title else '')
-        body = menu(title, [], 0, screen.line, 'Choose an action  Esc/B leaves')
+        hint = ('Choose an action; move' if offers else 'Move') + ' or Esc/B leaves'
+        body = menu(title, [], 0, screen.line,
+                    'Choose an action  Esc/B leaves' if screen.contact.lattice else hint)
         body['kind'] = 'talker'
+        body['walk_away'] = not screen.contact.lattice
         body['actions'] = [{'key': offer.hotkey.lower(), 'label': offer.label} for offer in offers]
         body['actions'].append({'key': 'b', 'label': 'Back'})
         self.sim.external_views[session.id] = 'menu', body
@@ -302,6 +330,11 @@ class Dialogue:
                                   if offer.hotkey.lower() == action), None)
                     if offer:
                         self.dispatch(session, offer)
+                    elif not screen.contact.lattice:
+                        movement = key_action(self.core.keymap, session, frame)
+                        if movement in ('move', 'sprint') or movement.startswith(('move_', 'sprint_')):
+                            self.close(session)
+                            return False
                 return True
             if interaction is not None and interaction.kind != 'dialogue':
                 return False  # The composite route selected a mission or board.
@@ -324,9 +357,21 @@ class Dialogue:
                 self.menus.pop(sid, None)
                 self.sim.external_views.pop(sid, None)
                 continue
+            caller = self.sim.avatars[session.user_id].actor
+            if int(caller.behaviour.get('hit_serial', 0)) != screen.hit_serial:
+                self.close(session)
+                continue
             contact = self.contact(session, screen.contact.target)
             if (contact is None or ctx.tick-screen.opened >= MENU_TIMEOUT_SECONDS*TICK_HZ
                     and self.world.zones[contact.zone].allows_hostile(contact.tile)):
+                target = self.world.actors.get(screen.contact.target)
+                if (contact is None and not screen.contact.lattice and target is not None
+                        and target.health > 0 and target.stance not in ('down', 'dead')
+                        and (caller.zone, caller.position) == (screen.caller_zone, screen.caller_tile)
+                        and (target.zone != caller.zone or max(abs(target.x-caller.x), abs(target.y-caller.y)) > 1)):
+                    session.emit(presentation.name(target, caller, self.content)+' walks off.',
+                                 kind='system', channel='system', role='muted',
+                                 at=self.clock.now_utc().isoformat())
                 self.close(session)
             else:
                 self.publish(session)

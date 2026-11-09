@@ -1,5 +1,7 @@
 """Small, deterministic behaviour decisions; movement uses ordinary rules."""
 
+from collections.abc import Callable
+
 from blacksite.content.schema import Region, Tile
 from blacksite.server.world.actors import Actor
 from blacksite.server.world.movement import move
@@ -7,7 +9,8 @@ from blacksite.server.world.zone import ZoneInstance
 
 
 def step_toward(actor: Actor, zone: ZoneInstance, target: Tile, tick: int,
-                region: Region | None = None, avoid: set[Tile] | None = None) -> bool:
+                region: Region | None = None, avoid: set[Tile] | None = None,
+                permit: Callable[[Tile], bool] | None = None) -> bool:
     if actor.position == target or tick < actor.cooldowns.get("move", 0):
         return False
     dx, dy = target[0] - actor.x, target[1] - actor.y
@@ -26,6 +29,8 @@ def step_toward(actor: Actor, zone: ZoneInstance, target: Tile, tick: int,
         vx, vy = vectors[name]
         tile = actor.x + vx, actor.y + vy
         if tile in recent or (region and not region.contains(tile)) or tile in (avoid or set()):
+            continue
+        if permit is not None and not permit(tile):
             continue
         before = actor.position
         if move(actor, zone, name, tick):

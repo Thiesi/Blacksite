@@ -708,6 +708,18 @@ class _Validator:
                 if not sp.condition.startswith("event:") or not sp.condition[6:]:
                     self.report(*owner, f"{label}: unknown condition", sp.id)
             npc = self.t.npcs.get(sp.npc)
+            if npc:
+                item = self.t.items.get(npc.weapon)
+                unarmed = npc.attack is None and (item is None or item.weapon is None)
+                if sp.poses_as is not None or npc.presents and unarmed:
+                    counterpart = next((other for other in zone.meta.spawners
+                                        if other.id == sp.poses_as and other.id != sp.id), None)
+                    crowd = self.t.npcs.get(counterpart.npc) if counterpart else None
+                    if crowd is None:
+                        self.report(*owner, f'{label}: poses_as must name another spawner in the same zone', sp.id)
+                    elif ((npc_channels(crowd)['name'], npc_channels(crowd)['class'])
+                          != (npc.cover_name, npc.presents)):
+                        self.report(*owner, f'{label}: poses_as must match the cover name and class', sp.id)
             if sp.condition == "per_player" and npc and not npc.training:
                 self.report(*owner, f"{label}: per_player requires private training", sp.id)
             if npc:
