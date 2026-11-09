@@ -50,6 +50,7 @@ class ZoneSimulation:
         self.serial = 0
         self.me_provider: Callable[[Session], dict[str, Any]] = lambda session: {}
         self.target_provider: Callable[[Actor], dict[str, Any] | None] | None = None
+        self.cover_relation_provider: Callable[[Actor, Actor, bool], str] | None = None
         self.interaction_provider: Callable[[Session], tuple[dict[str, str] | None, dict[str, str] | None]] = lambda session: (None, None)
         self.access_provider: Callable[[Session], dict[str, Any]] = lambda session: {}
         self.maps: dict[str, tuple[int, int | None]] = {}
@@ -388,7 +389,7 @@ class ZoneSimulation:
             scouted,scouted_actors = self.scout_provider(session)
             body = build(avatar.actor, zone, avatar.perception, self.world.content,
                          session.caps["width"], session.caps["height"], local, night, ctx.tick,
-                         scouted,scouted_actors)
+                         scouted,scouted_actors, self.cover_relation_provider)
             body["me"].update(self.me_provider(session))
             body["me"].update(self.place_context(avatar.actor))
             if self.target_provider:
