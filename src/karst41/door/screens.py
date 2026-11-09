@@ -5,7 +5,7 @@ from typing import Any
 
 def title(motd: str = "") -> dict[str, Any]:
     return {"screen": "title", "title": "KARST 41", "lines": ["", "The city was built to keep something in.",
-        "Nobody remembers what.", "", "a real-time door for NetBBS   .   Karst, Year 41", "", motd,
+        "Nobody remembers what.", "", "a real-time door for NetBBS . the year of the Exhale", "", motd,
         "", "? help    Ctrl-X leave"], "page": 1, "pages": 1}
 
 

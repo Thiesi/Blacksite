@@ -641,7 +641,7 @@ look up. no, really. look up.
                        The city was built to keep something in.
                               Nobody remembers what.
 
-                  a real-time door for NetBBS   .   Karst, Year 41
+                a real-time door for NetBBS . the year of the Exhale
 ```
 
 ---
