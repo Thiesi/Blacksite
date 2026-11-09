@@ -3,6 +3,9 @@
 from dataclasses import replace
 
 from karst41.server.dialogue import eligible_offers
+from karst41.server.dialogue import Facts
+from karst41.content.schema import Offer
+from scripts.demo_sodium.content import load_demo_content
 from karst41.server.protocol import Frame
 from tests.character_helpers import act, place
 from tests.demo.test_truce_standin import boot, body, spawn, two_players
@@ -34,6 +37,31 @@ def test_witness_credit_requires_two_seconds_and_no_second_warning(repo_root, mo
     assert drawn.warn(actor, other, start + 19) is False
     assert drawn.warn(actor, other, start + 20) is True
     assert not any('raises a weapon at you' in line['text'] for line in caller.session.log_ring)
+
+
+def test_real_fire_path_waits_then_settles_one_shot(repo_root, monkeypatch):
+    game, caller, actor, drawn = row(repo_root, monkeypatch)
+    other = spawn(game, 'sodium-row', 'npc-sodium-regular', (61, 13), group='regular')
+    drawn.combat.fire(actor.id, other.id)
+    assert drawn.drawn(actor)
+    drawn.combat.fire(actor.id, other.id)
+    assert actor.cooldowns.get('weapon', 0) <= game.clock.now_tick()
+    assert not game.core.commerce.pending
+    game.step(20)
+    drawn.combat.fire(actor.id, other.id)
+    game.commit_commerce()
+    assert actor.cooldowns['weapon'] > game.clock.now_tick()
+    assert drawn.combat.warnings[actor.id, other.id] == drawn.draws[actor.id].tick
+
+
+def test_drawn_offers_close_except_the_authored_vesper_exception():
+    content = load_demo_content()
+    vesper = content.dialogue['vesper']
+    assert vesper.drawn_open and eligible_offers(vesper, Facts(drawn=True))
+    regular = replace(content.dialogue['row-street-regular'], offers=(Offer('vendor', 'Trade', 'v', 'vesper'),))
+    assert eligible_offers(regular, Facts())
+    assert not eligible_offers(regular, Facts(drawn=True))
+    assert not eligible_offers(regular, Facts(provoked=True))
 
 
 def test_late_target_still_gets_a_per_target_warning(repo_root, monkeypatch):
