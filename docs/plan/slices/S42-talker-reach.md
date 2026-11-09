@@ -137,6 +137,8 @@ canon "acts against a caller" rule.
      name, class, role and colour stay unchanged. Armed undercover
      masking stays unchanged until the actor acts. Compare both actors
      through real views after a real shot in both directions.
+     Hit/Miss feedback also uses the caller's presented name, including
+     when the weapon belongs to the caller's drone.
 3. **No Warden detector for red names.** A covered, unarmed NPC doesn't
    take the Wardens' heat and Mark rule in `hostile()`, so a Marked or
    heated player in sight doesn't make one "regular" turn and run. It

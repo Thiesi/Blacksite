@@ -1,7 +1,8 @@
-"""S42: real talk, one-press walk away, and a real shot's flee close.
+"""S42: real talk, walk away, flee close and masked shot feedback.
 
 One relocated regular and a 2.5-second initial movement cooldown make
-the presentation scenario repeatable. No shot, flee step, player move,
+the flee scenario repeatable. A relocated covered actor has a 10-second
+movement cooldown for its shot capture. No shot, flee step, player move,
 page close, or log message is injected. Shipped layout stays untouched.
 """
 
@@ -87,18 +88,55 @@ async def accept(root: Path, python: Path, size: tuple[int, int], tier: str, sho
         assert regular.behaviour['state'] == 'flee'
         await delivered()
         save('shot-flee-walks-off')
+
+        # Audit the actual combat log too: suppressing the old reveal must
+        # not leave the true template name in Hit/Miss feedback.
+        covered = next(actor for actor in zone.actors.values()
+                       if actor.behaviour.get('template') == 'npc-plainclothes-warden')
+        probe.service.world.enter(covered, zone.id, (6, 5))
+        covered.cooldowns['move'] = probe.service.clock.now_tick()+100
+        await probe.target(caller, covered.id)
+        await caller.caller.write(b'f')
+        await wait(lambda: (source.id, covered.id) in probe.combat.warnings)
+        await wait(lambda: probe.service.clock.now_tick() >= probe.combat.warnings[source.id, covered.id]+20)
+        mark = len(caller.session.log_ring)
+        await caller.caller.write(b'f')
+        def shot_lines() -> list[str]:
+            return [line['text'] for line in list(caller.session.log_ring)[mark:]
+                    if line['text'].startswith(('Hit:', 'Miss:'))]
+        await wait(lambda: bool(shot_lines()) and not probe.commerce.pending)
+        covered_line = shot_lines()[-1]
+        assert covered_line in ('Hit: Sodium regular.', 'Miss: Sodium regular.'), covered_line
+        assert source.id not in covered.revealed_to
+        # A fresh view ACK follows the ordered log frame. Ctrl-L then
+        # redraws that received state through the real client, even when
+        # the old regular's identical name was already on screen.
+        previous = caller.session.view_revision
+        probe.game.sim.reset_view(caller.session, caller.avatar)
+        await wait(lambda: caller.session.view_revision > previous
+                   and caller.session.ack_revision == caller.session.view_revision)
+        output_mark = len(caller.caller.output)
+        await caller.caller.write(b'\x0c')
+        await wait(lambda: b'\x1b[1;1H' in caller.caller.output[output_mark:]
+                   and f'\x1b[{height};1H'.encode() in caller.caller.output[output_mark:])
+        await wait(lambda: covered_line in caller.caller.screen.screen_text())
+        assert 'Plainclothes Warden' not in caller.caller.screen.screen_text()
+        save('covered-shot-label')
         await probe.leave(caller, f's42-left-{width}x{height}-{tier}')
         assert not probe.errors and probe.service.failure is None
         (root/'s42-results.json').write_text(json.dumps({'passed': True, 'head': head,
             'transport': 'NetBBS Telnet -> registered native stdio', 'captures': rows,
             'shot': {'health_before': health, 'health_after': regular.health,
                      'target': regular.target, 'state': regular.behaviour['state']},
+            'covered_shot': {'template': covered.behaviour['template'],
+                             'line': covered_line, 'revealed_to_caller': source.id in covered.revealed_to},
             'fixtures': ['one regular relocated beside the walked-to caller',
                          'regular ambient pause; ordinary flee ignores it',
-                         'first flee movement cooldown 25 ticks'],
+                         'first flee movement cooldown 25 ticks',
+                         'covered actor relocated for a real F shot; move cooldown 100 ticks'],
             'presentation_acceptance': False, 'h1_layout_approval': False,
             's25_layout_approval': False}, indent=2)+'\n', encoding='utf-8')
-        probe.report(f'S42 PASS {width}x{height}/{tier}: talk hint, one press, real shot/flee walk-off')
+        probe.report(f'S42 PASS {width}x{height}/{tier}: talk hint, one press, real shot/flee walk-off, covered shot label')
     except BaseException:
         (root/'failure-trace.txt').write_text(traceback.format_exc(), encoding='utf-8')
         raise

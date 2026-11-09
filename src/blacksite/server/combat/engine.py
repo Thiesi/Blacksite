@@ -412,7 +412,9 @@ class Combat:
         roll = zone.rng.random()*100
         self.exchange(source,target)
         hit = roll < chance
-        self.log(source,f"{'Hit' if hit else 'Miss'}: {target.name}." + (f" Roll {roll:.1f}, hit {chance:.1f}%, cover {self.cover(source,target)}." if source.id in self.verbose else ""))
+        viewer = self.world.actors.get(source.owner or '', source) if source.behaviour.get('player_drone') else source
+        label = presentation.name(target, viewer, self.content)
+        self.log(source,f"{'Hit' if hit else 'Miss'}: {label}." + (f" Roll {roll:.1f}, hit {chance:.1f}%, cover {self.cover(source,target)}." if source.id in self.verbose else ""))
         if not hit: return
         amount = rules.damage(weapon.damage*quality,skill,self.armour(target,weapon.damage_type),weapon.melee)
         progression = self.game.progression

@@ -10,8 +10,10 @@ from blacksite.content.validate import validate
 from blacksite.server.npcs.templates import REACH_ACTIVE_TICKS, PROVOCATION_SECONDS, make_actor
 from tests.npcs.test_engine import city, body
 from tests.npcs.test_truce import row, npc, guard
-from tests.character_helpers import act
+from tests.character_helpers import act, place
 from blacksite.server.protocol import Frame
+from tests.server.test_drone_ownership import operator
+from tests.server.test_substances import give
 
 
 @pytest.mark.parametrize('template', ['npc-sodium-regular', 'npc-plainclothes-warden'])
@@ -91,7 +93,11 @@ def test_game_5_5_declared_crowd_flees_and_calms_together_without_reveal(row, vi
     source = body(game, caller)
     keeper = guard(game)
     arm = game.core.characters.content.items['wpn_kestrel_sidearm'].weapon
+    caller.session.log_ring.clear()
     game.core.combat.shot(source, (regular, covered)[victim], arm)
+    combat_lines = [line['text'] for line in caller.session.log_ring]
+    assert any(line.startswith(('Hit: Sodium regular.', 'Miss: Sodium regular.')) for line in combat_lines)
+    assert not any('Plainclothes Warden' in line for line in combat_lines)
     assert keeper.target == source.id
     source.target = covered.id
     view = game.core.combat.target_view(source)
@@ -214,6 +220,25 @@ def test_arch_5_5_4_armed_cover_keeps_mask_until_it_hunts(row):
     assert not covered.revealed_to
     game.core.npcs.evaluate(covered, zone, game.clock.now_tick())
     assert covered.behaviour['state'] == 'hunt' and covered.revealed_to == {source.id}
+
+
+@pytest.mark.parametrize('revealed', [False, True])
+def test_arch_5_5_4_drone_hit_feedback_uses_its_callers_cover(revealed, operator):
+    game, caller, peer, player, drones = operator
+    place(game, caller, 'sodium-row', (25, 3))
+    zone, (_, covered, _) = crowd(game)
+    iid = give(game, caller, 'drn_halvard_sentry')
+    drones.command(player, iid, 'deploy')
+    game.commit_commerce()
+    drone = drones.actors[iid]
+    if revealed:
+        game.core.combat.reveal(covered, drone)
+    caller.session.log_ring.clear()
+    game.core.combat.shot(drone, covered, game.core.characters.content.items['wpn_kestrel_sidearm'].weapon)
+    name = 'Plainclothes Warden' if revealed else 'Sodium regular'
+    assert any(line['text'].startswith((f'Hit: {name}.', f'Miss: {name}.'))
+               for line in caller.session.log_ring)
+    assert (player.id in covered.revealed_to) == revealed
 
 
 def test_entities_1_8_poses_as_validator_rejects_missing_wrong_zone_and_mismatch(repo_root):

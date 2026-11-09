@@ -1,4 +1,4 @@
-"""Verify the 18 S42 native captures and retain a source-pinned packet.
+"""Verify the 24 S42 native captures and retain a source-pinned packet.
 
 Download the six named artifacts into one fixed scratch root. Large raw
 ANSI streams and style snapshots remain in their linked CI artifacts.
@@ -39,10 +39,14 @@ def build_packet(root: Path, run: dict[str, Any], artifacts: dict[str, Any], des
             require(client['python_tree_sha256'] == expected_source, f'{name}: client source mismatch')
             require(result['transport'] == 'NetBBS Telnet -> registered native stdio', 'wrong transport')
             require(result['shot']['state'] == 'flee' and result['shot']['target'], 'missing real-shot flee result')
+            covered = result['covered_shot']
+            require(covered['template'] == 'npc-plainclothes-warden' and not covered['revealed_to_caller']
+                    and covered['line'] in ('Hit: Sodium regular.', 'Miss: Sodium regular.'),
+                    'missing masked real-shot feedback')
             require(not result['presentation_acceptance'] and not result['h1_layout_approval']
                     and not result['s25_layout_approval'], 'engineering proof cannot grant human gates')
             expected = {f's42-{scenario}-{width}x{height}-{tier}' for scenario in (
-                'talk-hint', 'one-press-walk-away', 'shot-flee-walks-off')}
+                'talk-hint', 'one-press-walk-away', 'shot-flee-walks-off', 'covered-shot-label')}
             actual = [row['capture'] for row in result['captures']]
             require(len(actual) == len(expected) and set(actual) == expected, f'{name}: incomplete capture matrix')
             for capture in result['captures']:
@@ -58,6 +62,9 @@ def build_packet(root: Path, run: dict[str, Any], artifacts: dict[str, Any], des
                     require('Move or Esc/B leaves' in text, f'{stem}: missing walk-away hint')
                 elif capture['scenario'] == 'shot-flee-walks-off':
                     require('Sodium regular walks off.' in text, f'{stem}: missing flee close line')
+                elif capture['scenario'] == 'covered-shot-label':
+                    require(covered['line'] in text and 'Plainclothes Warden' not in text,
+                            f'{stem}: combat feedback exposed the cover')
                 files[stem+'.txt'] = (directory/(stem+'.txt')).read_bytes()
                 records.append({**capture, 'file': stem+'.txt', 'source_head': head,
                     'source_tree': tree, 'python_tree_sha256': expected_source,
@@ -68,6 +75,7 @@ def build_packet(root: Path, run: dict[str, Any], artifacts: dict[str, Any], des
                     'native_boundary_offset': start,
                     'method': 'Direct byte copy of live native text; ANSI replay verified glyphs and styles'})
             summaries.append({'artifact': name, 'source_head': head, 'shot': result['shot'],
+                              'covered_shot': covered,
                               'fixtures': result['fixtures'], 'captures_verified': len(actual)})
     manifest = {'transport': 'NetBBS Telnet -> registered native stdio', 'run': run_id,
         'source_head': head, 'source_tree': tree, 'python_tree_sha256': expected_source,

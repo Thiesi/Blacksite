@@ -4,7 +4,12 @@ Base: `aef69d989ba48658d7feb2ba5e3f3375d167c90b` (S42 filing,
 PR #183). Implementation and review belong to issue #182. This packet
 does not grant presentation acceptance, H1 or S25 layout approval.
 
-## Current-runtime native packet
+## Earlier-runtime native packet
+
+The final author audit found true names in Hit/Miss combat feedback.
+The correction uses the existing per-caller presentation service,
+including the controlling caller for player drones. Fresh current-source
+native proof is pending; the packet below remains historical evidence.
 
 [Manifest](native/manifest.json) and [results](native/results.json) retain
 18 live captures from successful [run 42547068997](https://github.com/Thiesi/Blacksite/actions/runs/42547068997):
@@ -28,9 +33,8 @@ styles, and checked the source-matched client against the pinned Git
 tree. The packet is 123,762 bytes, within the 200 KB evidence budget.
 It refuses failed/incomplete runs, source/hash/replay mismatches and an
 existing destination. The source head is never relabelled as a later
-packet-only head. Later evidence, test and historical-fixture changes
-retain the recorded `src/blacksite` tree; current-head CI and review
-are recorded separately on PR #188.
+packet-only head. Current-head CI and review are recorded separately
+on PR #188. This packet predates the combat-feedback correction.
 
 ## Frozen values
 
@@ -74,6 +78,9 @@ All pytest commands use `PYTHONPATH=src` and
    view-semantics and world/session tests: **119 passed** in 54.96 seconds.
    The two actual-shot parity cases then passed with a farther hostile
    keeper, which would outrank a cover wrongly left in the neutral bucket.
+8. Actual-shot feedback for either crowd member, both revealed/covered
+   drone cases, and existing combat/drone ownership modules:
+   **80 passed** in 34.09 seconds.
 
 Full branch CI history (the root suite, not a local full suite):
 
@@ -166,8 +173,11 @@ initial 25-tick movement cooldown. It injects no shot, flee step, player
 movement, page close or log line. Shipped NPC positions and counts do
 not change.
 
-All six current-runtime native cases passed, as recorded above.
-Presentation acceptance is pending.
+All six earlier-runtime native cases passed, as recorded above. The
+updated driver adds a fourth checkpoint: an actual shot at the covered
+actor prints only "Hit: Sodium regular." or "Miss: Sodium regular."
+Its declared fixture relocates that actor and delays movement for
+100 ticks. Fresh native proof and presentation acceptance are pending.
 
 ## Automated review record
 

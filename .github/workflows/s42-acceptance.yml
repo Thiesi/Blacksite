@@ -38,7 +38,7 @@ jobs:
           python -m pip wheel --no-deps . -w "$RUNNER_TEMP/blacksite-proof/s42/wheels"
           python -m venv "$RUNNER_TEMP/blacksite-proof/s42/venv"
           "$RUNNER_TEMP/blacksite-proof/s42/venv/bin/python" -m pip install "$RUNNER_TEMP"/blacksite-proof/s42/wheels/*.whl
-      - name: Capture talk hint, one-press escape and shot-induced flee
+      - name: Capture talk hint, one-press escape, flee and covered shot label
         shell: bash
         run: |
           python scripts/accept_s42_netbbs.py --root "$RUNNER_TEMP/blacksite-proof/s42/captures" --door-python "$RUNNER_TEMP/blacksite-proof/s42/venv/bin/python" --size '${{ matrix.size }}' --tier '${{ matrix.tier }}'
