@@ -4,8 +4,8 @@ import json
 
 import pytest
 
-from blacksite.admin import __main__ as cli
-from blacksite.server.protocol import Frame
+from karst41.admin import __main__ as cli
+from karst41.server.protocol import Frame
 from tests.harness import ADMIN_SECRET, hello
 from tests.server.test_relay_engine import relay_game, content, player
 

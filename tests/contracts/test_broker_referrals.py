@@ -4,12 +4,12 @@ from dataclasses import replace
 
 import pytest
 
-from blacksite.content.loader import ContentTree
-from blacksite.content.schema import ContractTemplate
-from blacksite.server.contract_engine import Contracts
-from blacksite.server.contracts.panels import Panel, takes_turnin
-from blacksite.server.factions import relation
-from blacksite.server.players import Player
+from karst41.content.loader import ContentTree
+from karst41.content.schema import ContractTemplate
+from karst41.server.contract_engine import Contracts
+from karst41.server.contracts.panels import Panel, takes_turnin
+from karst41.server.factions import relation
+from karst41.server.players import Player
 from tests.character_helpers import place
 from tests.harness import FakeClient, HeadlessServer
 from tests.test_dialogue_runtime import content, setup

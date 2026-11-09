@@ -5,8 +5,8 @@ from pathlib import Path
 
 import pytest
 
-from blacksite.content.validate import door_wall_axis, route_door_warnings, validate
-from blacksite.content.loader import load_content
+from karst41.content.validate import door_wall_axis, route_door_warnings, validate
+from karst41.content.loader import load_content
 from tests.content.support import World
 
 
@@ -43,7 +43,7 @@ def test_wall_axis_requires_open_sides() -> None:
 
 
 def test_s08_warning_is_named_and_future_zones_are_errors(repo_root: Path) -> None:
-    content_tree = load_content(repo_root/'src/blacksite/content')
+    content_tree = load_content(repo_root/'src/karst41/content')
     warnings = route_door_warnings(content_tree)
     assert len(warnings) == 7
     assert all('C1 #92' in p.message for p in warnings)
@@ -58,7 +58,7 @@ def test_s08_warning_is_named_and_future_zones_are_errors(repo_root: Path) -> No
 
 
 def test_new_bad_route_door_in_s08_hub_is_an_error(repo_root: Path) -> None:
-    tree = load_content(repo_root/'src/blacksite/content')
+    tree = load_content(repo_root/'src/karst41/content')
     zone = tree.zones['core-precinct']
     used = {obj.tile for obj in zone.meta.objects}
     def floor(tile: tuple[int, int]) -> bool:
@@ -76,7 +76,7 @@ def test_new_bad_route_door_in_s08_hub_is_an_error(repo_root: Path) -> None:
 
 
 def test_repairing_a_known_door_removes_its_warning(repo_root: Path) -> None:
-    tree = load_content(repo_root/'src/blacksite/content')
+    tree = load_content(repo_root/'src/karst41/content')
     zone = tree.zones['sodium-tin-halo']
     door = next(obj for obj in zone.meta.objects if obj.id == 'halo-back-room')
     x, y = door.tile

@@ -2,8 +2,8 @@
 from fractions import Fraction
 import pytest
 
-from blacksite.server.clock import TICK_HZ
-from blacksite.server.crews import Registry, share_multiplier, shared_xp
+from karst41.server.clock import TICK_HZ
+from karst41.server.crews import Registry, share_multiplier, shared_xp
 
 
 def party(count=2):

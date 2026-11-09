@@ -2,8 +2,8 @@
 
 from dataclasses import replace
 
-from blacksite.content.schema import Cell, Sector, Uplink
-from blacksite.server.lattice.sectors import Credentials, Sectors, permitted, requirement_label
+from karst41.content.schema import Cell, Sector, Uplink
+from karst41.server.lattice.sectors import Credentials, Sectors, permitted, requirement_label
 
 
 def test_design_6_1_hidden_descent_is_not_disclosed() -> None:

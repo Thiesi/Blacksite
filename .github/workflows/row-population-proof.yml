@@ -1,13 +1,6 @@
 name: Row population measurement
 
 on:
-  push:
-    branches: [measure/row-population-184]
-    paths:
-      - scripts/measure_row_population.py
-      - scripts/summarize_row_population.py
-      - tests/presentation/test_row_population_measurement.py
-      - .github/workflows/row-population-proof.yml
   workflow_dispatch:
 
 permissions:
@@ -41,7 +34,7 @@ jobs:
           EXPECTED_HEAD: ${{ github.sha }}
         run: |
           test "$(git rev-parse HEAD)" = "$EXPECTED_HEAD"
-          proof="$RUNNER_TEMP/blacksite-proof/row-population-184"
+          proof="$RUNNER_TEMP/karst41-proof/row-population-184"
           mkdir -p "$proof"
           python -B scripts/measure_row_population.py \
             --callers '${{ matrix.callers }}' --tier '${{ matrix.tier }}' \
@@ -51,9 +44,9 @@ jobs:
         if: always()
         with:
           name: row-population-${{ matrix.callers }}-${{ matrix.tier }}
-          path: ${{ runner.temp }}/blacksite-proof/row-population-184/report.json
+          path: ${{ runner.temp }}/karst41-proof/row-population-184/report.json
           if-no-files-found: error
       - name: Delete measurement scratch
         if: always()
         shell: bash
-        run: rm -rf -- "$RUNNER_TEMP/blacksite-proof/row-population-184"
+        run: rm -rf -- "$RUNNER_TEMP/karst41-proof/row-population-184"

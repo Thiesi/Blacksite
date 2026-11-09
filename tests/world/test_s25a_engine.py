@@ -6,13 +6,13 @@ from random import Random
 
 import pytest
 
-from blacksite.content.loader import ContentTree
-from blacksite.content.schema import ObjectSpec, Tile
-from blacksite.server.protocol import Frame
-from blacksite.server.world.actors import Actor
-from blacksite.server.world.registry import World
-from blacksite.server.world.sight import sight_radius
-from blacksite.server.world.zone import ObjectState
+from karst41.content.loader import ContentTree
+from karst41.content.schema import ObjectSpec, Tile
+from karst41.server.protocol import Frame
+from karst41.server.world.actors import Actor
+from karst41.server.world.registry import World
+from karst41.server.world.sight import sight_radius
+from karst41.server.world.zone import ObjectState
 from tests.character_helpers import act, create, place
 from tests.harness import HeadlessServer
 

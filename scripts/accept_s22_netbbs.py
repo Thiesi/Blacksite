@@ -14,8 +14,8 @@ import traceback
 
 from accept_s10_netbbs import Connection, NativeProbe, wait
 from accept_s16_netbbs import commit_key, key, select
-from blacksite.server.npcs.templates import make_actor
-from blacksite.server.rules.character import grade_threshold
+from karst41.server.npcs.templates import make_actor
+from karst41.server.rules.character import grade_threshold
 
 
 class CrewProbe(NativeProbe):

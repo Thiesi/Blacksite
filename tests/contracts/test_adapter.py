@@ -6,10 +6,10 @@ from typing import Any
 
 import pytest
 
-from blacksite.content.loader import ContentTree, load_content
-from blacksite.server.contracts.engine import Fact
-from blacksite.server.crews import GUARD_SECONDS
-from blacksite.server.clock import TICK_HZ
+from karst41.content.loader import ContentTree, load_content
+from karst41.server.contracts.engine import Fact
+from karst41.server.crews import GUARD_SECONDS
+from karst41.server.clock import TICK_HZ
 from tests.character_helpers import create
 from tests.contracts.test_engine import template
 from tests.harness import HeadlessServer
@@ -18,7 +18,7 @@ from tests.character_helpers import place
 
 @pytest.fixture(scope='module')
 def shipped() -> ContentTree:
-    return load_content(Path(__file__).parents[2]/'src/blacksite/content')
+    return load_content(Path(__file__).parents[2]/'src/karst41/content')
 
 
 @pytest.fixture

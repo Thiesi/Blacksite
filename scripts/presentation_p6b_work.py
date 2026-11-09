@@ -17,9 +17,9 @@ from unittest.mock import patch
 ROOT = Path(__file__).resolve().parents[1]
 sys.path[:0] = [str(ROOT/'src'), str(ROOT), str(ROOT/'scripts')]
 
-from blacksite.content.loader import ContentTree, load_content
-from blacksite.door.cells import CellBuffer
-from blacksite.door.present import zone
+from karst41.content.loader import ContentTree, load_content
+from karst41.door.cells import CellBuffer
+from karst41.door.present import zone
 from presentation_p6b import ORIGIN_BASE, ZONES, route
 from presentation_p6_validation import module
 from tests.presentation import budget
@@ -76,14 +76,14 @@ def main() -> None:
     args = parser.parse_args()
     if args.output.exists():
         parser.error('preserve evidence; choose a new output path')
-    if subprocess.run(['git', 'diff', '--quiet', 'HEAD', '--', 'src/blacksite',
+    if subprocess.run(['git', 'diff', '--quiet', 'HEAD', '--', 'src/karst41',
                        'tests/presentation/budget.py'], cwd=ROOT).returncode:
         parser.error('tracked runtime and P1 harness must match HEAD')
-    content = deepcopy(load_content(ROOT/'src/blacksite/content'))
+    content = deepcopy(load_content(ROOT/'src/karst41/content'))
     content.looks.clear()
     content.themes = None
     old = module('_b2_generic_old_origin', subprocess.check_output(
-        ['git', 'show', f'{ORIGIN_BASE}:src/blacksite/door/present/zone.py'], cwd=ROOT)).origin
+        ['git', 'show', f'{ORIGIN_BASE}:src/blacksite/door/present/zone.py'], cwd=ROOT)).origin  # Historical evidence.
     current = zone.origin
     cases = []
     for zid in ZONES:
@@ -100,7 +100,7 @@ def main() -> None:
                 cases.append({'zone': zid, 'pose': pose, 'start': start, 'size': [132, 50],
                               'tier': tier, 'fully_known': True, 'arms': arms})
     report = {'head': subprocess.check_output(['git', 'rev-parse', 'HEAD'], cwd=ROOT, text=True).strip(),
-        'source_tree': subprocess.check_output(['git', 'rev-parse', 'HEAD:src/blacksite'], cwd=ROOT, text=True).strip(),
+        'source_tree': subprocess.check_output(['git', 'rev-parse', 'HEAD:src/karst41'], cwd=ROOT, text=True).strip(),
         'probe_sha256': sha256(Path(__file__).read_bytes()).hexdigest(),
         'local_cpu_or_timing_reference': False,
         'method': 'P1 frames: 80 ticks/40 keys, live seeded NPCs, fully known; generic content as B2; '

@@ -26,10 +26,10 @@ from unittest.mock import patch
 ROOT = Path(__file__).resolve().parents[1]
 sys.path[:0] = [str(ROOT / 'src'), str(ROOT)]
 
-from blacksite.content.loader import ContentTree, load_content
-from blacksite.content.schema import Behaviour, Region
-from blacksite.server.npcs.templates import make_actor
-from blacksite.server.world.sight import line_of_sight
+from karst41.content.loader import ContentTree, load_content
+from karst41.content.schema import Behaviour, Region
+from karst41.server.npcs.templates import make_actor
+from karst41.server.world.sight import line_of_sight
 from tests.character_helpers import create
 from tests.presentation import budget
 from tests.scratch_guard import scratch_problem, temp_problem
@@ -259,7 +259,7 @@ def profile(content: ContentTree, stationary: int, moving: int,
     rows = []
     stats = pstats.Stats(profiler)
     for (filename, line, function), (primitive, calls, own, cumulative, _) in stats.stats.items():
-        if 'blacksite' in filename or filename.endswith('harness.py'):
+        if 'karst41' in filename or filename.endswith('harness.py'):
             rows.append({'file': filename.replace(str(ROOT), '.'), 'line': line,
                 'function': function, 'calls': calls, 'primitive_calls': primitive,
                 'own_s': own, 'cumulative_s': cumulative})
@@ -283,12 +283,12 @@ def main() -> None:
         parser.error(problem)
     if args.output.exists():
         parser.error('remove the previous fixed-path report before starting a new run')
-    content = load_content(ROOT/'src/blacksite/content')
+    content = load_content(ROOT/'src/karst41/content')
     assert not content.load_problems
     dirty = bool(git('status', '--porcelain'))
     result: dict[str, Any] = {'schema': 1, 'head': git('rev-parse', 'HEAD'),
         'runtime_tree': git('rev-parse', 'HEAD:src'), 'dirty': dirty,
-        'content_tree': git('rev-parse', 'HEAD:src/blacksite/content'),
+        'content_tree': git('rev-parse', 'HEAD:src/karst41/content'),
         'platform': platform.platform(), 'python': sys.version, 'seconds': 12.,
         'cpu_budget_reference': platform.system() == 'Linux' and not dirty,
         'minutes': budget.MIX, 'size': [132, 50], 'tier': args.tier,

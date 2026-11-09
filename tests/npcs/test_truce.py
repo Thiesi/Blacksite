@@ -5,12 +5,12 @@ from datetime import datetime, timezone
 
 import pytest
 
-from blacksite.content.loader import load_content
-from blacksite.content.schema import Behaviour
-from blacksite.content.validate import validate
-from blacksite.server.rules import combat as rules
-from blacksite.server.npcs.templates import HEAT_SECONDS, make_actor
-from blacksite.server.world.actors import Actor
+from karst41.content.loader import load_content
+from karst41.content.schema import Behaviour
+from karst41.content.validate import validate
+from karst41.server.rules import combat as rules
+from karst41.server.npcs.templates import HEAT_SECONDS, make_actor
+from karst41.server.world.actors import Actor
 from tests.character_helpers import create, place
 from tests.combat.test_engine import body, build_duel
 from tests.harness import HeadlessServer
@@ -295,21 +295,21 @@ def test_game_7_3_grade_and_crew_protection_still_apply(row):
 
 @pytest.mark.parametrize("safety", ["safe", "pocket", "open"])
 def test_game_5_5_truce_validator_rejects_other_zone_classes(repo_root, safety):
-    content = load_content(repo_root/"src/blacksite/content")
+    content = load_content(repo_root/"src/karst41/content")
     zone = content.zones["sodium-row"]
     content.zones[zone.id] = replace(zone, meta=replace(zone.meta, safety=safety))
     assert any("truce requires" in p.message for p in validate(content))
 
 
 def test_game_5_5_truce_validator_rejects_unknown_keeper(repo_root):
-    content = load_content(repo_root/"src/blacksite/content")
+    content = load_content(repo_root/"src/karst41/content")
     zone = content.zones["sodium-row"]
     content.zones[zone.id] = replace(zone, meta=replace(zone.meta, truce="unknown-keeper"))
     assert any("truce" in p.message for p in validate(content))
 
 
 def test_game_5_5_shipped_enforcer_never_selects_or_hurts_covered_warden(repo_root):
-    content = load_content(repo_root/"src/blacksite/content")
+    content = load_content(repo_root/"src/karst41/content")
     game = HeadlessServer(content, character_state={})
     caller = game.connect()
     create(game, caller, archetype=3, card="none")

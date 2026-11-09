@@ -5,8 +5,8 @@ from dataclasses import replace
 
 import pytest
 
-from blacksite.content.schema import DataSpec, Stage, StageTarget
-from blacksite.server.protocol import Frame
+from karst41.content.schema import DataSpec, Stage, StageTarget
+from karst41.server.protocol import Frame
 from tests.character_helpers import act, place
 from tests.contracts.test_adapter import live, shipped
 from tests.contracts.test_engine import template

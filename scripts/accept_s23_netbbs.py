@@ -15,8 +15,8 @@ from typing import Any
 from accept_s10_netbbs import Connection, wait
 from accept_s16_netbbs import commit_key, key, select
 from accept_s19_netbbs import ContractProbe
-from blacksite.admin.client import request
-from blacksite.server.rules.character import grade_threshold
+from karst41.admin.client import request
+from karst41.server.rules.character import grade_threshold
 
 
 async def close_market(probe: ContractProbe, caller: Connection) -> None:

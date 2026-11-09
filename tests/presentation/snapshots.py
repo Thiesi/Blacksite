@@ -5,7 +5,7 @@ import json
 from pathlib import Path
 from typing import Any, Iterable
 
-from blacksite.content.cp437 import round_trips
+from karst41.content.cp437 import round_trips
 from tests.ansi_style import Rendition
 from tests.fake_terminal import FakeTerminal
 

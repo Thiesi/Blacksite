@@ -5,11 +5,11 @@ from datetime import datetime, timezone
 import json
 from pathlib import Path
 
-from blacksite.content.loader import ContentTree
-from blacksite.door.doorinfo import DoorInfo
-from blacksite.door.model import Display
-from blacksite.server.protocol import Frame, encode
-from blacksite.server.views.zone_view import camera
+from karst41.content.loader import ContentTree
+from karst41.door.doorinfo import DoorInfo
+from karst41.door.model import Display
+from karst41.server.protocol import Frame, encode
+from karst41.server.views.zone_view import camera
 from tests.harness import FakeClient, HeadlessServer
 
 

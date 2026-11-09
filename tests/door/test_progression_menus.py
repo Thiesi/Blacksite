@@ -5,12 +5,12 @@ from pathlib import Path
 
 import pytest
 
-from blacksite.content.loader import load_content
-from blacksite.door.model import Display
-from blacksite.server.items import ItemInstance
-from blacksite.server.players import Player
-from blacksite.server.progression_views import character_sheet, skill_menu
-from blacksite.server.protocol import Frame, encode
+from karst41.content.loader import load_content
+from karst41.door.model import Display
+from karst41.server.items import ItemInstance
+from karst41.server.players import Player
+from karst41.server.progression_views import character_sheet, skill_menu
+from karst41.server.protocol import Frame, encode
 from tests.fake_terminal import FakeTerminal
 
 
@@ -26,7 +26,7 @@ def render(info, content, body, size):
 
 
 def records(repo_root: Path):
-    content = load_content(repo_root/"src/blacksite/content")
+    content = load_content(repo_root/"src/karst41/content")
     player = Player("runner", "node", "bbs", "Wide\u754c", "Runner\u754c", "hardline", "2026-01-01T00:00:00+00:00")
     player.update_progression(1500)
     return content, player

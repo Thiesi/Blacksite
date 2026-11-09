@@ -9,12 +9,12 @@ from dataclasses import replace
 from pathlib import Path
 from typing import Any
 
-from blacksite.content.loader import ContentTree, load_content
-from blacksite.content.schema import Behaviour, HousingAnchor, ObjectSpec, Stage, StageTarget
-from blacksite.server.bus import Event
-from blacksite.server.commerce import CommerceMenu
-from blacksite.server.protocol import Frame
-from blacksite.server.world.zone import ObjectState
+from karst41.content.loader import ContentTree, load_content
+from karst41.content.schema import Behaviour, HousingAnchor, ObjectSpec, Stage, StageTarget
+from karst41.server.bus import Event
+from karst41.server.commerce import CommerceMenu
+from karst41.server.protocol import Frame
+from karst41.server.world.zone import ObjectState
 from tests.character_helpers import create, place
 from tests.contracts.test_engine import template
 from tests.harness import FakeClient, HeadlessServer
@@ -149,6 +149,6 @@ def execute(game: HeadlessServer, caller: FakeClient, frame: Frame) -> dict[str,
 
 
 def run(root: Path) -> dict[str, Any]:
-    content = load_content(root/'src/blacksite/content')
+    content = load_content(root/'src/karst41/content')
     return {case: {key: execute(*setup(content, case), Frame('key', {'k': key}))
                    for key in ('e', 'j')} for case in CASES}

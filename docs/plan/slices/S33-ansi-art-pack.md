@@ -3,7 +3,7 @@
 **Status:** planned
 **Primary model:** Opus (composition and `.ans` authoring) · Sonnet (sidecars, loader, fallbacks) · **Reviewer:** Human (view every piece on a real terminal at three tiers)
 **Depends on:** S04 · **Milestone:** M6
-**Issue:** https://github.com/Thiesi/blacksite/issues/33
+**Issue:** https://github.com/Thiesi/Karst41/issues/33
 
 ## Goal
 
@@ -55,7 +55,7 @@ row per line, plus `<id>.json` sidecar:
 - Sidecar: `{"id", "width", "height", "min_tier": "16|256|truecolor",
   "variants": {"256": file, "16": file, "w132": file}, "fallback":
   text asset id or null, "glyphs_used": [...]}`.
-- Loader (`src/blacksite/door/art.py`): reads a piece for the session's
+- Loader (`src/karst41/door/art.py`): reads a piece for the session's
   tier and width (prefers `-w132` when the viewport is ≥ 132 columns),
   measures every row by display width, rejects a piece whose rows
   exceed the target area or use glyphs outside `glyphs.json`, and
@@ -160,7 +160,7 @@ pre-encode output bytes or add PTY newline transformations to stdio.
 
 ### S22 crew integration handoff
 
-Preserve S22 [PR #61](https://github.com/Thiesi/Blacksite/pull/61)'s crew
+Preserve S22 [PR #61](https://github.com/Thiesi/Karst41/pull/61)'s crew
 and beacon glyphs through the cell buffer, including compact warnings,
 wide names and the existing CP437 transport. No ASCII-only display tier.
 Native proof uses the version/source-verified installed client.
@@ -168,9 +168,9 @@ Native proof uses the version/source-verified installed client.
 <!-- s19-services:start -->
 ### S19 source and service handoff
 
-Reference: [S19 PR #62](https://github.com/Thiesi/Blacksite/pull/62),
+Reference: [S19 PR #62](https://github.com/Thiesi/Karst41/pull/62),
 [acceptance record](../../ops/s19-acceptance.md) and
-[PR #38](https://github.com/Thiesi/Blacksite/pull/38).
+[PR #38](https://github.com/Thiesi/Karst41/pull/38).
 
 S19 supplies the implemented source interfaces, 68 authored contracts
 and four service nodes. Full root pytest passed 1344 tests with one

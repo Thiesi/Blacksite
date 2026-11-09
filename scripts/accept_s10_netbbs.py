@@ -23,14 +23,14 @@ from typing import Any
 
 from accept_s04_netbbs import Database, DatabaseLane, DoorProfile, REPO, TelnetServer, browse_doors, create_door, create_user
 from accept_s06_netbbs import ZoneCaller
-import blacksite
-from blacksite.content.loader import ContentTree
-from blacksite.server.app import Server
-from blacksite.server.inventory import Inventory
-from blacksite.server.items import make_item
-from blacksite.server.rules import character
-from blacksite.server.world.exits import MAX_HOLD_SECONDS
-from blacksite.version import PACKAGE_VERSION
+import karst41
+from karst41.content.loader import ContentTree
+from karst41.server.app import Server
+from karst41.server.inventory import Inventory
+from karst41.server.items import make_item
+from karst41.server.rules import character
+from karst41.server.world.exits import MAX_HOLD_SECONDS
+from karst41.version import PACKAGE_VERSION
 
 
 async def wait(condition: Any, timeout: float = 10) -> None:
@@ -102,11 +102,11 @@ class NativeProbe:
         # NetBBS sanitizes PYTHONPATH. Verify the interpreter in isolation,
         # so a source-server/old-installed-client run cannot count as proof.
         check = await asyncio.create_subprocess_exec(str(self.python), '-I', '-c',
-            'import json,blacksite; from pathlib import Path; from hashlib import sha256\n'
-            'root=Path(blacksite.__file__).parent; digest=sha256()\n'
+            'import json,karst41; from pathlib import Path; from hashlib import sha256\n'
+            'root=Path(karst41.__file__).parent; digest=sha256()\n'
             'for path in sorted(root.rglob("*.py")):\n'
             ' digest.update(path.relative_to(root).as_posix().encode()+b"\\0"+path.read_bytes().replace(b"\\r\\n",b"\\n")+b"\\0")\n'
-            'print(json.dumps({"version":blacksite.__version__,"file":blacksite.__file__,"python_tree_sha256":digest.hexdigest()}))',
+            'print(json.dumps({"version":karst41.__version__,"file":karst41.__file__,"python_tree_sha256":digest.hexdigest()}))',
             stdout=asyncio.subprocess.PIPE, stderr=asyncio.subprocess.PIPE)
         output, errors = await asyncio.wait_for(check.communicate(), 30)
         if check.returncode:
@@ -114,7 +114,7 @@ class NativeProbe:
         client = json.loads(output)
         if client['version'] != PACKAGE_VERSION:
             raise RuntimeError(f"Native client {client['version']} differs from server {PACKAGE_VERSION}; install the current wheel in --door-python.")
-        root, digest = Path(blacksite.__file__).parent, sha256()
+        root, digest = Path(karst41.__file__).parent, sha256()
         for path in sorted(root.rglob('*.py')):
             digest.update(path.relative_to(root).as_posix().encode()+b'\0'+path.read_bytes().replace(b'\r\n', b'\n')+b'\0')
         if client['python_tree_sha256'] != digest.hexdigest():
@@ -126,9 +126,9 @@ class NativeProbe:
         self.game,self.commerce,self.combat = self.service.core.characters,self.service.core.commerce,self.service.core.combat
         self.db = Database(self.root/"node.db"); self.lane = DatabaseLane(self.db.path)
         owner = create_user(self.db,"S10SysOp",password="LocalProbe-S10",user_level=10)
-        create_door(self.db,"Blacksite",str(self.python),args=("-m","blacksite.door"),creator=owner,
+        create_door(self.db,"Karst 41",str(self.python),args=("-m","karst41.door"),creator=owner,
             profile=DoorProfile(install_dir=str(REPO),encoding="utf-8",max_sessions=16,multinode_certified=True,
-                time_limit=900,environment={**self.door_environment, "DOOR_BLACKSITE_INSTALL_DIR":str(self.service.install_dir)}).validate())
+                time_limit=900,environment={**self.door_environment, "DOOR_KARST41_INSTALL_DIR":str(self.service.install_dir)}).validate())
         async def handler(session: Any) -> None:
             user,sixteen = self.accounts.popleft()
             # Exercise NetBBS's real native-door 16-colour capability path.
@@ -297,7 +297,7 @@ class NativeProbe:
 
     async def leave(self, connection: Connection, label: str) -> None:
         caller=connection.caller;mark=len(caller.output)
-        await caller.write(b"\x18y");await wait(lambda:b"Left Blacksite." in caller.output[mark:])
+        await caller.write(b"\x18y");await wait(lambda:b"Left Karst 41." in caller.output[mark:])
         await caller.write(b" ")
         await wait(lambda:b"Available doors" in re.sub(rb"\x1b\[[0-?]*[ -/]*[@-~]",b"",bytes(caller.output[mark:])))
         await caller.write(b"b");await wait(lambda:b"You return to the node." in caller.output[mark:])

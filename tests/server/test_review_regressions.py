@@ -9,13 +9,13 @@ from pathlib import Path
 
 import pytest
 
-from blacksite.content.loader import ContentTree
-from blacksite.server import __main__ as entry
-from blacksite.server.app import Server
-from blacksite.server.clock import ManualClock
-from blacksite.server.protocol import Decoder, encode
-from blacksite.server.storage import migrations
-from blacksite.server.storage.db import Storage
+from karst41.content.loader import ContentTree
+from karst41.server import __main__ as entry
+from karst41.server.app import Server
+from karst41.server.clock import ManualClock
+from karst41.server.protocol import Decoder, encode
+from karst41.server.storage import migrations
+from karst41.server.storage.db import Storage
 from tests.harness import HeadlessServer, hello
 
 
@@ -91,7 +91,7 @@ def test_sigterm_during_bootstrap_is_honored_after_start(
 def test_interrupted_content_bootstrap_can_retry_without_manual_cleanup(
     scratch_dir: Path, monkeypatch: pytest.MonkeyPatch, failure: str,
 ) -> None:
-    from blacksite.server import app
+    from karst41.server import app
 
     async def scenario() -> None:
         local = scratch_dir / "content.local" / "text"

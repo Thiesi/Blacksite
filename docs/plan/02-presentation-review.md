@@ -1,6 +1,6 @@
 # Player-facing presentation review
 
-Status: review required. [Issue #68](https://github.com/Thiesi/Blacksite/issues/68).
+Status: review required. [Issue #68](https://github.com/Thiesi/Karst41/issues/68).
 S25 human layout approval is **not granted** following the user's review
 on 2026-10-24. This brief records the hold and review scope. It adopts no
 new visual design or gameplay rules.
@@ -15,7 +15,7 @@ context. The user cannot assess coherence, navigation, atmosphere or
 enjoyable exploration, or recognize the written Shaft Foot and Far Ring
 in the presented environments.
 
-This affects the connection between Blacksite's world and the caller's
+This affects the connection between Karst 41's world and the caller's
 experience across the project. It is not confined to decoration in two
 zones. S33 district art is not assumed to solve it.
 
@@ -82,8 +82,8 @@ not visual or human acceptance. Local installed-wheel native cases
 passed at 132x50 (Relay Zero reserve, real gate activation/walking,
 2.485-second startup) and 80x24 (Sump common, 2.547-second startup).
 Fixtures and remaining acceptance scopes are retained in
-[the acceptance record](https://github.com/Thiesi/Blacksite/pull/66) and
-[PR #66](https://github.com/Thiesi/Blacksite/pull/66).
+[the acceptance record](https://github.com/Thiesi/Karst41/pull/66) and
+[PR #66](https://github.com/Thiesi/Karst41/pull/66).
 
 S27's separate branch preserves unfinished dialogue/referral work.
 Focused tests cover its backend behavior, input/rendering correctness

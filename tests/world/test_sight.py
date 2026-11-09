@@ -1,8 +1,8 @@
 """Game design 5.2 sight and reciprocal wall occlusion."""
 
-from blacksite.server.world.actors import Actor
-from blacksite.server.world.registry import World
-from blacksite.server.world.sight import line, line_of_sight, sees_actor, visible_tiles
+from karst41.server.world.actors import Actor
+from karst41.server.world.registry import World
+from karst41.server.world.sight import line, line_of_sight, sees_actor, visible_tiles
 
 
 def test_radius_10_in_wake_hall_and_cache(world: World) -> None:

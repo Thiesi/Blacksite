@@ -3,9 +3,9 @@
 **Status:** engineering done (PR #97); generated content publishes per district with S25c under H2 and H3
 **Primary model:** Sonnet · **Reviewer:** automated review, technical lead, owner (layout)
 **Depends on:** S25a · **Milestone:** M5
-**Issue:** https://github.com/Thiesi/Blacksite/issues/78
+**Issue:** https://github.com/Thiesi/Karst41/issues/78
 
-Split from S25 ([PR #66](https://github.com/Thiesi/Blacksite/pull/66)) by
+Split from S25 ([PR #66](https://github.com/Thiesi/Karst41/pull/66)) by
 D-T2 (`docs/plan/03-presentation-integration.md` §14). S25's human layout
 approval stays **not granted**.
 
@@ -28,7 +28,7 @@ S25c redoes geometry on a sound generator.
 - The 24 maps from #66, produced by `scripts/build_city_content.py`,
   with the content bindings from #66.
 - Fixes from the technical review of #66
-  ([record](https://github.com/Thiesi/Blacksite/pull/66#issuecomment-6401874198)):
+  ([record](https://github.com/Thiesi/Karst41/pull/66#issuecomment-6401874198)):
   - **TR-1:** non-hidden exits use the exit tile (`>`); hidden exits
     draw as floor. Test: every non-hidden exit tile has the exit tile id.
   - **TR-4:** route-bearing doors stand between impassable neighbours
@@ -89,5 +89,5 @@ Deferred to district publication with C1/S25c:
   distinct 4/3/6/10 values; no global Undercity-radius substitution.
 - H2/H3 owner layout approval for each district.
 
-[doors]: https://github.com/Thiesi/Blacksite/issues/78#issuecomment-6491134281
-[homes]: https://github.com/Thiesi/Blacksite/issues/78#issuecomment-6491941496
+[doors]: https://github.com/Thiesi/Karst41/issues/78#issuecomment-6491134281
+[homes]: https://github.com/Thiesi/Karst41/issues/78#issuecomment-6491941496

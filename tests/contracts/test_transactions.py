@@ -9,11 +9,11 @@ from typing import Any
 
 import pytest
 
-from blacksite.content.loader import ContentTree, load_content
-from blacksite.server.contracts.engine import Engine, Participant
-from blacksite.server.contracts.transactions import join_state
-from blacksite.server.progression import Grant
-from blacksite.server.storage.db import Storage
+from karst41.content.loader import ContentTree, load_content
+from karst41.server.contracts.engine import Engine, Participant
+from karst41.server.contracts.transactions import join_state
+from karst41.server.progression import Grant
+from karst41.server.storage.db import Storage
 from tests.character_helpers import create
 from tests.contracts.test_engine import finish, template
 from tests.harness import HeadlessServer
@@ -21,7 +21,7 @@ from tests.harness import HeadlessServer
 
 @pytest.fixture(scope='module')
 def content() -> ContentTree:
-    return load_content(Path(__file__).parents[2]/'src/blacksite/content')
+    return load_content(Path(__file__).parents[2]/'src/karst41/content')
 
 
 @pytest.fixture

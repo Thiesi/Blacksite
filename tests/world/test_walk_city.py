@@ -1,6 +1,6 @@
 """Headless multi-session route through the ten-zone hub (S08)."""
 
-from blacksite.server.protocol import Frame
+from karst41.server.protocol import Frame
 from tests.character_helpers import act, create, place
 from tests.world.test_exits import character_game, exit_at
 

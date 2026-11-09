@@ -1,7 +1,7 @@
 """Game 12: source-bound jobs preserve a completed worker's return trip."""
 
-from blacksite.content.schema import ContractTemplate, Reward, Stage, StageTarget
-from blacksite.server.contracts.engine import Engine, Fact, Participant
+from karst41.content.schema import ContractTemplate, Reward, Stage, StageTarget
+from karst41.server.contracts.engine import Engine, Fact, Participant
 
 
 def test_game_12_completed_event_job_keeps_standard_turnin_window() -> None:

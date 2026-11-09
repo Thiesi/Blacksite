@@ -1,6 +1,6 @@
 """Terminal UI §6: independent replay checks destructive terminal behavior."""
 
-from blacksite.door.cells import CellBuffer, display_width, truncate
+from karst41.door.cells import CellBuffer, display_width, truncate
 from tests.fake_terminal import FakeTerminal
 
 

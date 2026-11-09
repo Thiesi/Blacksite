@@ -41,11 +41,11 @@ def view_counts(display: Any) -> dict[str, Any]:
 
 
 def p1(runtime: Path, seconds: float, charted: bool = False) -> dict[str, Any]:
-    os.environ.pop('BLACKSITE_PRESENTATION_TRIAL', None)
+    os.environ.pop('KARST41_PRESENTATION_TRIAL', None)
     if charted:
-        os.environ['BLACKSITE_PRESENTATION_TRIAL'] = '1'
+        os.environ['KARST41_PRESENTATION_TRIAL'] = '1'
     sys.path[:0] = [str(runtime/'src'), str(ROOT), str(runtime)]
-    from blacksite.content.loader import load_content
+    from karst41.content.loader import load_content
     from tests.presentation import budget
 
     meters = []
@@ -86,7 +86,7 @@ def p1(runtime: Path, seconds: float, charted: bool = False) -> dict[str, Any]:
 
     budget.Meter = DualMeter
     budget.Caller = ProbedCaller
-    measured = budget.activity(load_content(runtime/'src/blacksite/content'),
+    measured = budget.activity(load_content(runtime/'src/karst41/content'),
                               132, 50, 'truecolor', ACTIVITY, seconds)
     meter = meters[-1]  # The constructor resets the meter after warm-up.
     elapsed = measured['elapsed_s']

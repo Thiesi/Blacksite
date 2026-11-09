@@ -1,6 +1,6 @@
 # Upstream requests to NetBBS
 
-Blacksite is developed as a third-party native door: no commit access to
+Karst 41 is developed as a third-party native door: no commit access to
 NetBBS, no control over its release cycle. Everything the game needs
 from the platform is written up here first and then filed as an issue in
 the NetBBS repository (`Thiesi/NetBBS`). Each file below is one request;
@@ -10,7 +10,7 @@ below each header is historical, not the current API specification.
 
 Verified 2026-10-22 against released NetBBS v7.33.0 and its guide/source;
 see [issue #56 catch-up](../plan/01-netbbs-platform.md) for pinned sources,
-Blacksite ownership and the supported NetBBS >= 7.45.0 release baseline.
+Karst 41 ownership and the supported NetBBS >= 7.45.0 release baseline.
 The initial implementation was NetBBS v7.3.0, PRs
 [#499](https://github.com/Thiesi/NetBBS/pull/499) and
 [#506](https://github.com/Thiesi/NetBBS/pull/506).
@@ -24,7 +24,7 @@ The initial implementation was NetBBS v7.3.0, PRs
 | 05 | Show the door name in who-is-online and a narrow outbound hook (post to a board) | none; S28 optional | [Thiesi/NetBBS#470](https://github.com/Thiesi/NetBBS/issues/470) |
 | 06 | Third-party door install path: interpreter-module preset and guide section | none; S31 documents the manual path | [Thiesi/NetBBS#471](https://github.com/Thiesi/NetBBS/issues/471) |
 
-| Request | Released outcome and difference from proposal | Blacksite consumer |
+| Request | Released outcome and difference from proposal | Karst 41 consumer |
 |---|---|---|
 | 01 | v7.3.0: one service, exact five-key schema, own memory/no CPU ceiling; install-dir backup is opt-in/unquiesced/manual restore | S31 supervisor; S28 consistent snapshots |
 | 02 | v7.3.0: `time_limit`/`cpu_seconds` 0-86400, zero opts out of node ceiling; finite CPU limit can SIGKILL without warning | S29 measured budget; S30 optional deadline; S31 explicit preset |
@@ -35,8 +35,8 @@ The initial implementation was NetBBS v7.3.0, PRs
 
 Rules for this directory:
 
-- A request describes the platform gap, why Blacksite needs it, the
-  smallest change that closes it, and what Blacksite does meanwhile. It
+- A request describes the platform gap, why Karst 41 needs it, the
+  smallest change that closes it, and what Karst 41 does meanwhile. It
   does not contain NetBBS code.
 - Once filed, add the issue URL to the file header and do not edit the
   request text further; discussion happens on the NetBBS issue. Header

@@ -5,7 +5,7 @@ from pathlib import Path
 
 import pytest
 
-from blacksite.content.loader import load_content
+from karst41.content.loader import load_content
 from scripts.measure_row_population import Group, EXTRA_TEMPLATE, fixture_content
 from scripts.summarize_row_population import summarize
 from tests.presentation.budget import KEYS
@@ -13,7 +13,7 @@ from tests.presentation.budget import KEYS
 
 @pytest.mark.parametrize('callers', [1, 4])
 def test_visible_stationary_extras_and_one_shared_tick(repo_root: Path, callers: int) -> None:
-    content = load_content(repo_root/'src/blacksite/content')
+    content = load_content(repo_root/'src/karst41/content')
     original = content.zones['sodium-row'].meta.spawners
     group = Group(content, 80, 12, callers, '16')
     assert all(c.game is group.game for c in group.callers)
@@ -38,7 +38,7 @@ def test_visible_stationary_extras_and_one_shared_tick(repo_root: Path, callers:
 
 
 def test_nested_population_fixture_keeps_authored_posts(repo_root: Path) -> None:
-    content = load_content(repo_root/'src/blacksite/content')
+    content = load_content(repo_root/'src/karst41/content')
     fixture = fixture_content(content, 12)
     assert fixture.npcs[EXTRA_TEMPLATE].behaviours[0].kind == 'talker'
     assert fixture.npcs[EXTRA_TEMPLATE].behaviours[0].params['anchor']

@@ -4,7 +4,7 @@ from typing import Any
 
 import pytest
 
-from blacksite.server.clock import TICK_HZ
+from karst41.server.clock import TICK_HZ
 from tests.character_helpers import place
 from tests.lattice.test_engine import runners
 from tests.lattice.test_silt_encounters import descend

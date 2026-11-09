@@ -10,9 +10,9 @@ from copy import deepcopy
 from dataclasses import replace
 from typing import Any, Callable
 
-from blacksite.door.cells import cell_width
-from blacksite.door.model import Display
-from blacksite.server.protocol import Frame
+from karst41.door.cells import cell_width
+from karst41.door.model import Display
+from karst41.server.protocol import Frame
 from tests.harness import CALLER_INPUTS
 
 

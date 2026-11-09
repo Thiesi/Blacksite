@@ -25,7 +25,7 @@ def geometry_copies(path: Path) -> list[str]:
     source = path.read_text(encoding='utf-8')
     tree = ast.parse(source)
     shared = {alias.asname or alias.name for node in tree.body
-              if isinstance(node, ast.ImportFrom) and node.module == 'blacksite.layout'
+              if isinstance(node, ast.ImportFrom) and node.module == 'karst41.layout'
               for alias in node.names if alias.name == 'compute'}
     scopes = [tree, *(node for node in ast.walk(tree)
                      if isinstance(node, (ast.FunctionDef, ast.AsyncFunctionDef)))]

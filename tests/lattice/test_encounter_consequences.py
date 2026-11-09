@@ -2,15 +2,15 @@
 
 from dataclasses import replace
 
-from blacksite.server.protocol import Frame
+from karst41.server.protocol import Frame
 from tests.character_helpers import act
 import sqlite3
 
 import pytest
 
-from blacksite.server.lattice.ice import IceEvent
-from blacksite.server.lattice.presence import EscapeChannel
-from blacksite.server.storage.db import Storage
+from karst41.server.lattice.ice import IceEvent
+from karst41.server.lattice.presence import EscapeChannel
+from karst41.server.storage.db import Storage
 from tests.lattice.test_engine import actor, intent, jack, runners
 from tests.lattice.test_encounters import cast, enter
 from tests.lattice.test_silt_encounters import descend

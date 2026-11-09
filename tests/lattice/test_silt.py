@@ -8,13 +8,13 @@ import sys
 
 import pytest
 
-from blacksite.content.loader import load_content
-from blacksite.server.lattice.silt import adjacent_hidden, descent_seed, generate, survey_directions
+from karst41.content.loader import load_content
+from karst41.server.lattice.silt import adjacent_hidden, descent_seed, generate, survey_directions
 
 
 @pytest.fixture(scope="module")
 def rules():
-    return load_content(Path(__file__).parents[2] / "src/blacksite/content").silt
+    return load_content(Path(__file__).parents[2] / "src/karst41/content").silt
 
 
 def test_design_6_5_seed_replays_and_changes_with_descent(rules):
@@ -26,7 +26,7 @@ def test_design_6_5_seed_replays_and_changes_with_descent(rules):
 
 
 def test_design_6_5_seed_ignores_process_hash_randomization():
-    command = [sys.executable, "-c", "from blacksite.server.lattice.silt import descent_seed; print(descent_seed(1,'lat-core',7))"]
+    command = [sys.executable, "-c", "from karst41.server.lattice.silt import descent_seed; print(descent_seed(1,'lat-core',7))"]
     outputs = [subprocess.check_output(command, env={**os.environ, "PYTHONHASHSEED": value}, text=True).strip()
                for value in ("1", "932")]
     assert outputs == [str(descent_seed(1, "lat-core", 7))] * 2
@@ -93,8 +93,8 @@ def test_valid_silt_override_without_hidden_cells_stays_inside_the_terminal(rule
 
 
 def test_silt_band_cannot_alias_two_rewards_to_one_source(repo_root):
-    from blacksite.content.validate import validate
-    tree = load_content(repo_root / "src/blacksite/content")
+    from karst41.content.validate import validate
+    tree = load_content(repo_root / "src/karst41/content")
     band = tree.silt.bands[0]
     tree.silt = replace(tree.silt, bands=(replace(band, data=(*band.data, band.data[0])), *tree.silt.bands[1:]))
     assert any("duplicate data ids" in p.message for p in validate(tree))

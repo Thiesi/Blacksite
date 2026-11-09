@@ -3,13 +3,13 @@
 from dataclasses import replace
 from typing import Any
 
-from blacksite.server.event_relays import Readers
+from karst41.server.event_relays import Readers
 from tests.character_helpers import place
 from tests.server.test_event_engine import base_content, events_game, force
 from tests.server.test_event_world import author
 from tests.server.test_relay_benefits import owned
 from tests.server.test_event_convoy import convoy_game
-from blacksite.server.clock import TICK_HZ
+from karst41.server.clock import TICK_HZ
 
 
 def relay(game: Any, kind: str) -> None:

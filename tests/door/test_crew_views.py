@@ -4,9 +4,9 @@ from dataclasses import asdict, replace
 
 import pytest
 
-from blacksite.door.model import Display
-from blacksite.server.crew_engine import CrewMenu
-from blacksite.server.protocol import Frame, encode
+from karst41.door.model import Display
+from karst41.server.crew_engine import CrewMenu
+from karst41.server.protocol import Frame, encode
 from tests.fake_terminal import FakeTerminal
 from tests.server.test_crews import content, callers, invite
 

@@ -4,7 +4,7 @@ Status: done (PR #186, issue #184; final technical disposition on the PR).
 Primary model: Codex. Review: automated Claude, then technical lead.
 Base: owner-merged main 5416b5d; A8, A9 and S39 are merged.
 
-The brief is [issue #184](https://github.com/Thiesi/Blacksite/issues/184).
+The brief is [issue #184](https://github.com/Thiesi/Karst41/issues/184).
 This is measurement only. It decides no population and grants no gate.
 Do not change shipped content, the engine, the renderer or canon numbers.
 
@@ -58,3 +58,16 @@ discount is established. All outcomes and limitations are retained in
 the packet. The Windows-only expected-path assertion is fixed at b087219;
 hosted root passes on both systems. A new-head technical record and owner
 merge remain required; this done mark grants no population or human gate.
+
+R1 integration updates current helpers to the `karst41` namespace and
+resolves historical content paths at their pinned revision. Archived
+measurements, source hashes and captures remain unchanged. Completed
+measurement workflows are manual-only; merging main does not repeat the
+96-case grid or seven controls. A future explicit control also retains
+raw method hashes and checks equivalence apart from R1's declared import,
+package-path and scratch-prefix spellings. It grants no new measurement.
+
+The CPU-bound S11 failure at bf1cb84 remains on record. Under the owner's
+interim rule (PR comment 6742888669), CI after this merge is the one
+permitted rerun for this PR with no runtime changes. A second CPU failure
+blocks until S43; no gate, sample or assertion changes are authorised.

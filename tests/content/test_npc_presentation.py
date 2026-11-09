@@ -3,24 +3,24 @@
 from dataclasses import replace
 from pathlib import Path
 
-from blacksite.content.schema import Behaviour
+from karst41.content.schema import Behaviour
 
 import pytest
 
-from blacksite.content.loader import load_content
-from blacksite.content.validate import validate
+from karst41.content.loader import load_content
+from karst41.content.validate import validate
 
 
 @pytest.mark.parametrize('cover_name', [None, '', '   ', 'Sodium\nregular', '\x1b[31mSodium regular'])
 def test_entities_1_8_presents_requires_valid_cover_name(repo_root, cover_name):
-    content = load_content(repo_root/'src/blacksite/content')
+    content = load_content(repo_root/'src/karst41/content')
     npc = content.npcs['npc-plainclothes-warden']
     content.npcs[npc.id] = replace(npc, cover_name=cover_name)
     assert any('cover_name' in problem.message for problem in validate(content))
 
 
 def test_entities_1_8_shipped_cover_is_valid_and_reuses_civilian_name(repo_root):
-    content = load_content(repo_root/'src/blacksite/content')
+    content = load_content(repo_root/'src/karst41/content')
     npc = content.npcs['npc-plainclothes-warden']
     assert npc.presents == 'civilian'
     assert npc.cover_name == content.npcs['npc-sodium-regular'].name
@@ -28,7 +28,7 @@ def test_entities_1_8_shipped_cover_is_valid_and_reuses_civilian_name(repo_root)
 
 
 def test_entities_1_8_legacy_npc_does_not_need_a_cover_name(repo_root):
-    content = load_content(repo_root/'src/blacksite/content')
+    content = load_content(repo_root/'src/karst41/content')
     npc = content.npcs['npc-plainclothes-warden']
     content.npcs[npc.id] = replace(npc, presents=None, cover_name=None)
     zone = content.zones['sodium-row']
@@ -40,7 +40,7 @@ def test_entities_1_8_legacy_npc_does_not_need_a_cover_name(repo_root):
 @pytest.mark.parametrize('channel', ['name', 'class', 'colour_role', 'behaviour_kinds',
                                     'anchored', 'interactions', 'dialogue', 'loot'])
 def test_arch_5_5_4_cover_rejects_each_presented_channel(repo_root: Path, channel: str) -> None:
-    content = load_content(repo_root/'src/blacksite/content')
+    content = load_content(repo_root/'src/karst41/content')
     warden = content.npcs['npc-plainclothes-warden']
     peer = content.npcs['npc-sodium-regular']
     if channel == 'name':
@@ -67,7 +67,7 @@ def test_arch_5_5_4_cover_rejects_each_presented_channel(repo_root: Path, channe
 
 @pytest.mark.parametrize('kind', ['different_zone', 'zero_count', 'covered_peer'])
 def test_arch_5_5_4_cover_needs_a_real_uncovered_local_crowd(repo_root: Path, kind: str) -> None:
-    content = load_content(repo_root/'src/blacksite/content')
+    content = load_content(repo_root/'src/karst41/content')
     zone = content.zones['sodium-row']
     if kind == 'covered_peer':
         peer = content.npcs['npc-sodium-regular']
@@ -86,7 +86,7 @@ def test_arch_5_5_4_cover_needs_a_real_uncovered_local_crowd(repo_root: Path, ki
 
 @pytest.mark.parametrize('complete_peer', [False, True])
 def test_arch_5_5_4_cover_requires_one_complete_counterpart(repo_root: Path, complete_peer: bool) -> None:
-    content = load_content(repo_root/'src/blacksite/content')
+    content = load_content(repo_root/'src/karst41/content')
     peer = content.npcs['npc-sodium-regular']
     content.npcs[peer.id] = replace(peer, name='A different regular')
     partial = replace(peer, id='test-partial-peer', faction='sable')

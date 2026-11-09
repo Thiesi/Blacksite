@@ -7,10 +7,10 @@ from typing import Any
 
 import pytest
 
-from blacksite.server.clock import ManualClock
-from blacksite.server.protocol import Frame
-from blacksite.server.players import Player
-from blacksite.server.storage.db import Storage
+from karst41.server.clock import ManualClock
+from karst41.server.protocol import Frame
+from karst41.server.players import Player
+from karst41.server.storage.db import Storage
 from scripts.benchmark_s40_disk import baseline
 from scripts.minimal_s40_profile import MinimalProfile
 from tests.harness import HeadlessServer
@@ -31,7 +31,7 @@ def test_s40_commit_clock_brackets_only_existing_commit_and_freezes_tick(
     def clock() -> int:
         events.append('clock')
         return next(stamps)
-    monkeypatch.setattr('blacksite.server.storage.db.perf_counter_ns', clock)
+    monkeypatch.setattr('karst41.server.storage.db.perf_counter_ns', clock)
     store.db.set_trace_callback(lambda sql: events.append('commit') if sql == 'COMMIT' else None)
     original = store.db
     try:
@@ -54,7 +54,7 @@ def test_s40_disabled_and_precommit_failure_read_no_clock(
     store = Storage(scratch_dir/'world.db', ManualClock())
     def forbidden() -> int:
         raise AssertionError('Disabled/precommit timer read a clock')
-    monkeypatch.setattr('blacksite.server.storage.db.perf_counter_ns', forbidden)
+    monkeypatch.setattr('karst41.server.storage.db.perf_counter_ns', forbidden)
     try:
         store.commerce_write(effect())
         store.commerce_commit_observer = lambda *args: pytest.fail('No commit was attempted')
@@ -80,7 +80,7 @@ def test_s40_failed_commit_is_observed_without_losing_rollback_or_dirty_state(
     monkeypatch.setattr(sqlite3, 'connect', lambda *a, **kw: connect(*a, **kw, factory=RejectedCommit))
     store = Storage(scratch_dir/'world.db', ManualClock())
     stamps = iter((10, 20))
-    monkeypatch.setattr('blacksite.server.storage.db.perf_counter_ns', lambda: next(stamps))
+    monkeypatch.setattr('karst41.server.storage.db.perf_counter_ns', lambda: next(stamps))
     observed = []
     store.commerce_commit_observer = lambda *args: observed.append(args)
     store.mark_dirty('meta', 'item_serial', 4)

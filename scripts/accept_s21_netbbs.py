@@ -18,8 +18,8 @@ from accept_s13_netbbs import lat_walk
 from accept_s14_netbbs import choose, room_walk
 from accept_s19_netbbs import encounter_row
 from accept_s16_netbbs import key, commit_key, select
-from blacksite import content as content_package
-from blacksite.admin.client import request
+from karst41 import content as content_package
+from karst41.admin.client import request
 
 
 async def card(probe: NativeProbe, connection: Connection) -> None:

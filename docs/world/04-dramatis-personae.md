@@ -1,4 +1,4 @@
-# Blacksite — Dramatis Personae
+# Karst 41 — Dramatis Personae
 
 Every named non-player character in Karst. Expands `00-bible.md` §8.2 and
 must not contradict it. Zone slugs are the working names the content
@@ -985,7 +985,7 @@ the escort contract. Nervous, competent, hates the Dispatcher's calm.
 ## Part III — Dialogue system notes
 
 This section is the specification the dialogue slice builds to. It is
-deliberately small: Blacksite NPCs are **talkers**, not conversation
+deliberately small: Karst 41 NPCs are **talkers**, not conversation
 trees. A talker delivers the *one right line* for the situation and, when
 it has something to offer, exposes it as an action, never as a question
 the player must answer to leave (design doc §3.5 lineage: no dialog

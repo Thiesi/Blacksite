@@ -6,7 +6,7 @@ integer door_api 3, not requested 2; node_id exists, node_fingerprint
 does not. API 4 adds chat and 5 events; an absent session_limit_seconds
 means unlimited. See [issue #56 catch-up](../plan/01-netbbs-platform.md).
 Proposal below archived; S30/S31/S32 consume the actual contract.
-**Blocks:** nothing hard. Blacksite S04 reads what exists; S32 (federation readiness) wants the node identity field.
+**Blocks:** nothing hard. Karst 41 S04 reads what exists; S32 (federation readiness) wants the node identity field.
 **Recommended model for the NetBBS side:** Sonnet (a few fields in `_write_door_info`, the door guide's metadata table, and tests).
 
 ## The gap
@@ -36,7 +36,7 @@ existing doors are unaffected.
 
 No credentials, no email, no user level, no IP address.
 
-## What Blacksite does meanwhile
+## What Karst 41 does meanwhile
 
 Treats every field as optional with defaults: Unicode glyphs always,
 node-local time from the server, transport unknown, origin id generated

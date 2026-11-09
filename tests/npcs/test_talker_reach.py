@@ -5,13 +5,13 @@ from dataclasses import replace
 
 import pytest
 
-from blacksite.content.schema import Behaviour, Region, Spawner
-from blacksite.content.validate import validate
-from blacksite.server.npcs.templates import REACH_ACTIVE_TICKS, PROVOCATION_SECONDS, make_actor
+from karst41.content.schema import Behaviour, Region, Spawner
+from karst41.content.validate import validate
+from karst41.server.npcs.templates import REACH_ACTIVE_TICKS, PROVOCATION_SECONDS, make_actor
 from tests.npcs.test_engine import city, body
 from tests.npcs.test_truce import row, npc, guard
 from tests.character_helpers import act, place
-from blacksite.server.protocol import Frame
+from karst41.server.protocol import Frame
 from tests.server.test_drone_ownership import operator
 from tests.server.test_substances import give
 
@@ -242,8 +242,8 @@ def test_arch_5_5_4_drone_hit_feedback_uses_its_callers_cover(revealed, operator
 
 
 def test_entities_1_8_poses_as_validator_rejects_missing_wrong_zone_and_mismatch(repo_root):
-    from blacksite.content.loader import load_content
-    content = load_content(repo_root/'src/blacksite/content')
+    from karst41.content.loader import load_content
+    content = load_content(repo_root/'src/karst41/content')
     assert not validate(content)
     zone = content.zones['sodium-row']
     foreign = next(sp.id for other in content.zones.values() if other.id != zone.id

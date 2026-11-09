@@ -6,11 +6,11 @@ from typing import Any
 
 import pytest
 
-from blacksite.server.clock import TICK_HZ
-from blacksite.server.modifiers import compose
-from blacksite.server.protocol import Frame
-from blacksite.server.storage import migrations
-from blacksite.server.storage.db import Storage
+from karst41.server.clock import TICK_HZ
+from karst41.server.modifiers import compose
+from karst41.server.protocol import Frame
+from karst41.server.storage import migrations
+from karst41.server.storage.db import Storage
 from tests.character_helpers import act
 from tests.server.test_market_engine import content, listed, trade_game
 

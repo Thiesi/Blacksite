@@ -3,13 +3,13 @@
 from dataclasses import replace
 from pathlib import Path
 
-from blacksite.content.loader import load_content
-from blacksite.content.validate import validate
-from blacksite.server.world.registry import World
+from karst41.content.loader import load_content
+from karst41.content.validate import validate
+from karst41.server.world.registry import World
 
 
 def test_game_5_1_whole_zone_pocket_protects_clinic_but_contested_requires_region(repo_root: Path) -> None:
-    tree = load_content(repo_root/'src/blacksite/content')
+    tree = load_content(repo_root/'src/karst41/content')
     zone = tree.zones['vatside-wake-hall']
     source = next(obj for obj in tree.zones['vatside-clinics'].meta.objects
                   if obj.params.get('vendor') == 'sablier-clinic')

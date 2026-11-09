@@ -1,8 +1,8 @@
-# Blacksite — Terminal UI
+# Karst 41 — Terminal UI
 
 How the game looks and how it is driven, on every terminal NetBBS can
 present: Telnet, SSH, and the web (xterm.js) transport, from 80×24 up.
-The client (`blacksite.door`) implements this document; the server sends
+The client (`karst41.door`) implements this document; the server sends
 view models (`02-architecture.md` §5.4) and never escape sequences.
 
 ---

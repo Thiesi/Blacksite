@@ -9,20 +9,20 @@ Register a native **stdio** door in a local NetBBS checkout:
 | Field | Value |
 |---|---|
 | Executable | absolute path to this checkout's venv interpreter |
-| Arguments | `-m blacksite.door` |
+| Arguments | `-m karst41.door` |
 | Encoding | `utf-8` |
-| Environment | `DOOR_BLACKSITE_INSTALL_DIR` = absolute service directory |
+| Environment | `DOOR_KARST41_INSTALL_DIR` = absolute service directory |
 | Sessions | 16; multi-node certification enabled |
 | Width/height | leave zero to use the negotiated terminal size |
 | Resize signal | optional, on Unix when the host supports it |
 
 Current NetBBS profile dimensions pin the door's dimensions as well as
 checking the caller's minimum. Leaving them zero permits 132×50 callers
-to use their full terminal; Blacksite enforces its own 80×24 minimum.
+to use their full terminal; Karst 41 enforces its own 80×24 minimum.
 Current profiles accept custom environment keys under `DOOR_*` only.
-`BLACKSITE_INSTALL_DIR` and `BLACKSITE_SESSION_LIMIT` remain accepted for
-standalone development; profiles use `DOOR_BLACKSITE_INSTALL_DIR` and
-`DOOR_BLACKSITE_SESSION_LIMIT`. The effective limit in the drop-file can
+`KARST41_INSTALL_DIR` and `KARST41_SESSION_LIMIT` remain accepted for
+standalone development; profiles use `DOOR_KARST41_INSTALL_DIR` and
+`DOOR_KARST41_SESSION_LIMIT`. The effective limit in the drop-file can
 reduce either configured limit.
 
 On a Windows development console, use `--local` to select console key
@@ -52,7 +52,7 @@ NETBBS_PYTHON scripts/accept_s04_netbbs.py `
   --root .test-tmp/netbbs-acceptance `
   --door-python .venv/Scripts/python.exe
 
-# Run with Blacksite's venv. This takes ten real minutes.
+# Run with Karst 41's venv. This takes ten real minutes.
 python scripts/measure_s04_idle.py --root .test-tmp/idle --seconds 600
 ```
 

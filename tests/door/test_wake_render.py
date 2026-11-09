@@ -3,20 +3,20 @@
 from dataclasses import asdict, replace
 from pathlib import Path
 import pytest
-from blacksite.content.loader import load_content
-from blacksite.door.model import Display
-from blacksite.door.doorinfo import DoorInfo
-from blacksite.server.protocol import Frame
+from karst41.content.loader import load_content
+from karst41.door.model import Display
+from karst41.door.doorinfo import DoorInfo
+from karst41.server.protocol import Frame
 from tests.fake_terminal import FakeTerminal
 from tests.harness import HeadlessServer
 from tests.character_helpers import create
-from blacksite.server.wake import Wake
+from karst41.server.wake import Wake
 
 
 @pytest.mark.parametrize("width,height",[(80,24),(132,50)])
 @pytest.mark.parametrize("tier",["16","256","truecolor"])
 def test_wake_golden_wide_name_scroll_and_character_sheet(info: DoorInfo,repo_root: Path,width: int,height: int,tier: str,golden) -> None:
-    game=HeadlessServer(load_content(repo_root/"src/blacksite/content"),character_state={})
+    game=HeadlessServer(load_content(repo_root/"src/karst41/content"),character_state={})
     client=game.connect(width=width,height=height)
     model=Display(replace(info,width=width,height=height,color_depth=tier))
     terminal=FakeTerminal(width,height)
@@ -47,7 +47,7 @@ def test_wake_golden_wide_name_scroll_and_character_sheet(info: DoorInfo,repo_ro
 @pytest.mark.parametrize('tier', ['16', '256', 'truecolor'])
 def test_issue_67_all_recruiters_visible_with_no_card_selected(
         info: DoorInfo, repo_root: Path, width: int, height: int, tier: str) -> None:
-    content = load_content(repo_root/'src/blacksite/content')
+    content = load_content(repo_root/'src/karst41/content')
     wake = Wake(stage='card', cursor=len(content.wake_cards))
     body = wake.body(content, 'Wide界', width, height)['body']
     model = Display(replace(info, width=width, height=height, color_depth=tier))

@@ -15,10 +15,11 @@ from typing import Any
 ROOT = Path(__file__).resolve().parents[1]
 sys.path[:0] = [str(ROOT/'src'), str(ROOT), str(ROOT/'scripts')]
 
-from blacksite.content.loader import load_content
+from karst41.content.loader import load_content
 from p6_cell_diff import cells
 from tests.presentation.mechanics import fingerprint
 from tests.presentation.snapshots import canonical
+from scripts.source_layout import revision_argument
 
 BASE = '54adc53c6686eb5b2430f2e90cd457a09332b833'
 # Presentation lead's published fixed-post data, signed off on #126.
@@ -27,8 +28,8 @@ CONTENT = 'f69541473704f1164cd5b5e8dbd315c2fa811504'
 # Keep the author's looks, palettes and zone/spawner files pinned separately.
 PREREQUISITE = 'db54b245a75b02fa2394ddfa41e17a986e9e0851'
 PREREQUISITE_DATA = (
-    'src/blacksite/content/npcs.json',
-    'src/blacksite/content/dialogue/row-street-regular.json',
+    'src/karst41/content/npcs.json',
+    'src/karst41/content/dialogue/row-street-regular.json',
 )
 ZONES = ('core-plaza', 'sodium-row', 'vatside-clinics')
 # Freeze this B3 exception at its reviewed candidates. A future rebaseline
@@ -48,14 +49,14 @@ MECHANICS = 'tests/presentation/mechanics.json'
 
 
 def git(*args: str) -> bytes:
-    return subprocess.check_output(['git', *args], cwd=ROOT)
+    return subprocess.check_output(['git', *(revision_argument(arg, root=ROOT) for arg in args)], cwd=ROOT)
 
 
 def check_content(content_ref: str) -> list[dict[str, str]]:
     """Admit only the exact merged prerequisite beside the author's data."""
     git('merge-base','--is-ancestor',content_ref,'HEAD')
     git('merge-base','--is-ancestor',PREREQUISITE,'HEAD')
-    data_changes = git('diff','--name-only',content_ref,'--','src/blacksite/content').decode().splitlines()
+    data_changes = git('diff','--name-only',content_ref,'--','src/karst41/content').decode().splitlines()
     if any(not path.endswith('.py') and path not in PREREQUISITE_DATA for path in data_changes):
         raise ValueError('presentation-owned content was modified')
     updates = []
@@ -74,7 +75,7 @@ def report(base: str, content_ref: str, propose: bool) -> dict[str, Any]:
         raise ValueError('baseline/content refs must be full Git ids')
     updates = check_content(content_ref)
     old = json.loads(git('show',f'{base}:{MECHANICS}'))
-    new = json.loads(canonical(fingerprint(load_content(ROOT/'src/blacksite/content'))))
+    new = json.loads(canonical(fingerprint(load_content(ROOT/'src/karst41/content'))))
     if {k:v for k,v in old.items() if k not in ('projection','sha256')} != {
             k:v for k,v in new.items() if k not in ('projection','sha256')}:
         raise ValueError('mechanics walk/policy/schema changed')

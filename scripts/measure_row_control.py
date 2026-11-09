@@ -21,9 +21,24 @@ import time
 from typing import Any
 
 ROOT = Path(__file__).resolve().parents[1]
+sys.path.insert(0, str(ROOT))
+from scripts.source_layout import at_revision
+
 A8 = '4ab6470b10821f9fddbac718615af7d56c6048eb'
 OLD_INPUT = 'dd489f9ec7676b2c37b553fa7587c4d0a4ed6d56'
-PREFIX = 'src/blacksite/content/'
+CONTENT = 'src/karst41/content'
+
+
+def method_sha256(source: bytes) -> str:
+    """Ignore only R1's three mechanical spellings in the A8/P1 sources.
+
+    Raw source hashes stay in the audit. Every other byte must match.
+    This is source identity, not permission to compare different methods.
+    """
+    source = source.replace(b'from blacksite.', b'from karst41.')
+    source = source.replace(b'src/blacksite/', b'src/karst41/')
+    source = source.replace(b"prefix='blacksite-a8-'", b"prefix='karst41-a8-'")
+    return sha256(source).hexdigest()
 
 
 def git(root: Path, *args: str) -> str:
@@ -31,12 +46,13 @@ def git(root: Path, *args: str) -> str:
 
 
 def exact_snapshot(root: Path, destination: Path, ref: str) -> dict[str, str]:
-    data = subprocess.check_output(['git', 'archive', '--format=tar', ref, PREFIX], cwd=root)
+    prefix = at_revision(ref, CONTENT, root=root)+'/'
+    data = subprocess.check_output(['git', 'archive', '--format=tar', ref, prefix], cwd=root)
     with tarfile.open(fileobj=io.BytesIO(data)) as archive:
         for member in archive.getmembers():
             if not member.isfile() or member.name.endswith('.py'):
                 continue
-            relative = Path(member.name).relative_to(PREFIX)
+            relative = Path(member.name).relative_to(prefix)
             if relative.is_absolute() or '..' in relative.parts:
                 raise ValueError('unsafe Git content member')
             target = destination/relative
@@ -48,7 +64,7 @@ def exact_snapshot(root: Path, destination: Path, ref: str) -> dict[str, str]:
 
 
 def a8_arm(root: Path, ref: str, output: Path, exact: bool) -> None:
-    # This entry point imports no current Blacksite/tests module first.
+    # This entry point imports no current game/tests module first.
     sys.path[:0] = [str(root/'src'), str(root), str(root/'scripts')]
     script = root/'scripts/presentation_p6_cpu.py'
     spec = importlib.util.spec_from_file_location('_row184_a8_control', script)
@@ -57,10 +73,12 @@ def a8_arm(root: Path, ref: str, output: Path, exact: bool) -> None:
     original = module.snapshot
     audit: dict[str, Any] = {'head': git(root, 'rev-parse', 'HEAD'),
         'runtime_tree': git(root, 'rev-parse', 'HEAD:src'),
-        'input_ref': ref, 'input_tree': git(root, 'rev-parse', ref+':src/blacksite/content'),
+        'input_ref': ref, 'input_tree': git(root, 'rev-parse', ref+':'+at_revision(ref, CONTENT, root=root)),
         'exact_snapshot_adapter': exact,
         'script_sha256': sha256(script.read_bytes()).hexdigest(),
-        'budget_sha256': sha256((root/'tests/presentation/budget.py').read_bytes()).hexdigest()}
+        'budget_sha256': sha256((root/'tests/presentation/budget.py').read_bytes()).hexdigest(),
+        'script_method_sha256': method_sha256(script.read_bytes()),
+        'budget_method_sha256': method_sha256((root/'tests/presentation/budget.py').read_bytes())}
 
     def snapshot(destination: Path, input_ref: str) -> dict[str, str]:
         result = (exact_snapshot(root, destination, input_ref) if exact
@@ -130,10 +148,10 @@ def main() -> None:
     # Only now import current helpers in the parent. Old runtime imports
     # were isolated in child processes, not monkeypatched into this one.
     sys.path[:0] = [str(ROOT/'src'), str(ROOT), str(ROOT/'scripts')]
-    from blacksite.content.loader import load_content
+    from karst41.content.loader import load_content
     from measure_row_population import activity
     from tests.presentation import budget
-    content = load_content(ROOT/'src/blacksite/content')
+    content = load_content(ROOT/CONTENT)
     assert not content.load_problems
     for moving, callers in ((8, 1), (8, 4), (4, 1), (4, 4)):
         arm: dict[str, Any] = {'label': f'group-{callers}-m{moving}', 'stationary': 0,
@@ -166,7 +184,9 @@ def main() -> None:
         audits[0]['actual_input_sha256'] == audits[1]['actual_input_sha256'])
     result['a8_scripts_identical'] = len(audits) == 3 and len({a['script_sha256'] for a in audits}) == 1
     result['p1_budgets_identical'] = len(audits) == 3 and len({a['budget_sha256'] for a in audits}) == 1
-    if not all(result[key] for key in ('old_inputs_identical', 'a8_scripts_identical', 'p1_budgets_identical')):
+    result['a8_methods_identical'] = len(audits) == 3 and len({a['script_method_sha256'] for a in audits}) == 1
+    result['p1_methods_identical'] = len(audits) == 3 and len({a['budget_method_sha256'] for a in audits}) == 1
+    if not all(result[key] for key in ('old_inputs_identical', 'a8_methods_identical', 'p1_methods_identical')):
         failures.append('input-or-method-audit')
     result['complete'] = not failures
     retain()

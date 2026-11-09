@@ -5,8 +5,8 @@ from typing import Any
 
 import pytest
 
-from blacksite.content.schema import DataSpec, Reward, Stage, StageTarget, VendorStock
-from blacksite.server.clock import TICK_HZ
+from karst41.content.schema import DataSpec, Reward, Stage, StageTarget, VendorStock
+from karst41.server.clock import TICK_HZ
 from tests.character_helpers import place
 from tests.contracts.test_engine import template
 from tests.lattice.test_engine import runners

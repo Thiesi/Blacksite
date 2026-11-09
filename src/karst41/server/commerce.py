@@ -1,0 +1,726 @@
+"""S12 social-world adapter. Proposals commit in the I/O layer, then publish."""
+
+from karst41.server.interaction import Interaction, interact, key_action, object_interaction
+from copy import deepcopy
+from collections import deque
+from dataclasses import asdict, dataclass, replace
+from fractions import Fraction
+from typing import Any
+from collections.abc import Callable
+
+from karst41.content.schema import ObjectSpec, Vendor, VendorStock
+from karst41.server import bank, drugs
+from karst41.server.characters import Characters
+from karst41.server.inventory import Inventory
+from karst41.server.items import CACHE_SECONDS, CONSUMABLE_SECONDS, ItemInstance, availability, make_item
+from karst41.server.lattice.programs import can_acquire, learn as learn_program
+from karst41.server.loop import TickContext
+from karst41.server.players import Player
+from karst41.server.protocol import Frame
+from karst41.server.sessions import QUEUE_LIMIT, Session
+from karst41.server.vendors import BUYBACK_BUDGET, VendorBudget, permitted, price
+from karst41.server.wake import menu
+from karst41.server.world.simulation import MENU_TIMEOUT_SECONDS
+from karst41.server.world.zone import ObjectState
+from karst41.server.clock import TICK_HZ
+from karst41.server.quality import detail as quality_detail
+
+
+@dataclass
+class CommerceMenu:
+    kind: str
+    target: str = ""
+    cursor: int = 0
+    sell: bool = False
+    opened: int = 0
+
+
+class Commerce:
+    def __init__(self, characters: Characters, state: dict[str, Any]) -> None:
+        self.game, self.sim = characters, characters.sim
+        self.clock, self.content = characters.clock, characters.content
+        self.items = characters.items
+        self.budgets = {key: VendorBudget(**value) for key, value in state.get("budgets", {}).items()}
+        self.caches: dict[str, dict[str, Any]] = deepcopy(state.get("caches", {}))
+        self.serial = state.get("item_serial", 0)
+        self.menus: dict[str, CommerceMenu] = {}
+        self.prompts: dict[str, dict[str, Any]] = {}
+        self.using: dict[str, dict[str, Any]] = {}
+        self.requests: dict[str, list[str]] = {}
+        self.outbox: list[dict[str, Any]] = []
+        self.pending = False
+        self.waiting: deque[tuple[str,str,dict[str,Any],bool] | Callable[[], None]] = deque()
+        self.prompt_serial = 0
+        self.after_settle: Callable[[], None] = lambda: None
+        self.program_season: Callable[[], int] = lambda: 0  # The Lattice binds its current season.
+        self.budget_multiplier: Callable[[Vendor, str], float] = lambda vendor, counter: 1
+        self.budget_period: Callable[[Vendor, str], int] = lambda vendor, counter: 3600  # Game 8.2 / 7.7.
+        self.vendor_available: Callable[[Vendor, str], bool] = lambda vendor, counter: True
+        self.item_label: Callable[[ItemInstance], str] = lambda item: self.content.items[item.template].name
+        self.special_use: Callable[[Session, ItemInstance], bool] = lambda session, item: False
+        self.sync_caches()
+
+    def ready(self, session: Session) -> bool:
+        av = self.sim.avatars.get(session.user_id)
+        return bool(session.role == "caller" and not session.closed and av and session.player_id == av.actor.id
+                    and session.player_id in self.game.players
+                    and session.id not in self.game.screens and not av.travel and av.actor.zone
+                    and av.actor.stance not in ("down", "dead", "sleeper", "jacked"))
+
+    def toast(self, session: Session, text: str) -> None:
+        session.send(Frame("toast", {"text": text, "role": "ui_text", "seconds": 4}))
+
+    def close(self, session: Session) -> None:
+        self.menus.pop(session.id, None)
+        self.prompts.pop(session.id, None)
+        self.using.pop(session.id, None)
+        self.sim.external_views.pop(session.id, None)
+        self.sim.reset_view(session, self.sim.avatars[session.user_id])
+
+    def nearby(self, session: Session, target: str) -> Any:
+        av = self.sim.avatars[session.user_id]
+        obj = self.sim.world.zones[av.zone].objects.get(target)
+        if obj is None or max(abs(obj.spec.tile[0]-av.actor.x), abs(obj.spec.tile[1]-av.actor.y)) > 1:
+            raise ValueError("Move next to the counter or cache.")
+        if not self.game.world.object_access(av.actor, obj.spec):
+            raise ValueError("Only the resident may use this room's services.")
+        return obj
+
+    def vendor(self, session: Session, target: str) -> tuple[Vendor, str]:
+        obj = self.nearby(session, target)
+        vid = obj.spec.params.get("vendor")
+        vendor = self.content.vendors.get(vid)
+        if not vendor or not self.content.active("vendors", vid) or not (
+                obj.spec.kind == "vendor" or vendor.relay and obj.spec.kind == "relay"):
+            raise ValueError("That counter is not open.")
+        if vendor.relay:
+            relays = getattr(self.game, 'relays', None)
+            player = self.game.players[session.player_id]
+            faction = relays.owner(vendor.relay) if relays and relays.active(vendor.relay) else None
+            if not faction or player.faction != faction or obj.spec.params.get('relay') != vendor.relay:
+                raise ValueError('This relay counter serves members of its current holder only.')
+            vendor = replace(vendor, tier='member', faction=faction)
+        if not self.vendor_available(vendor, self.sim.avatars[session.user_id].zone+':'+target):
+            raise ValueError('This surplus counter is closed until its public work order is repaired.')
+        # The local, server-owned object is the authority. A clinic template
+        # serves several halls, with a distinct budget for each object.
+        return vendor, self.sim.avatars[session.user_id].zone + ":" + target
+
+    def stock(self, vendor: Vendor) -> list[VendorStock]:
+        entries = list(vendor.stock)
+        # The catalog requires ammunition alongside every weapon sold.
+        seen = {s.item for s in entries}
+        if vendor.daily_rotation:
+            candidates = sorted(i.id for i in self.content.items.values()
+                                if i.tier == 2 and i.base_price > 0 and not i.id.startswith("story_")
+                                and i.class_ in ("weapon", "armour", "gear") and not i.no_vendor_sale
+                                and i.id not in seen and self.content.active("items", i.id))
+            if candidates:
+                entries.append(VendorStock(candidates[self.clock.now_utc().date().toordinal() % len(candidates)], price_multiplier=1.4))
+        # Rotation is optional stock too: its weapon must bring ammunition.
+        for entry in tuple(entries):
+            template = self.content.items.get(entry.item)
+            ammo = template.weapon.ammo if template and template.weapon else None
+            if ammo and ammo not in seen:
+                entries.append(VendorStock(ammo))
+                seen.add(ammo)
+        return entries
+
+    def quote(self, player: Player, vendor: Vendor, entry: VendorStock, count: int, quality: float = 1) -> int:
+        from fractions import Fraction
+        template = self.content.items.get(entry.item)
+        base = template.base_price if template else self.content.programs[entry.item].price
+        pack = template.stack_max if template and template.class_ == "ammo" else 1
+        return price(Fraction(base * count, pack), quality, player.standing.get(vendor.faction or "", 0),
+                     player.faction is None, vendor.price_multiplier * entry.price_multiplier)
+
+    def propose(self, session: Session, name: str, args: dict[str, Any], from_channel: bool = False) -> None:
+        if self.pending:
+            if len(self.waiting) >= QUEUE_LIMIT:
+                raise ValueError("The counter is busy. Try again.")
+            self.waiting.append((session.id,name,deepcopy(args),from_channel))
+            return
+        if name == "vendor.reserve":
+            self.game.factions.reserve_stock(session, args.get("target", ""), args.get("item", ""))
+            return
+        player = self.game.players[session.player_id]
+        av = self.sim.avatars[session.user_id]
+        self.game.snapshot(player, av)
+        draft = deepcopy(player)
+        items, caches, budgets = deepcopy(self.items), deepcopy(self.caches), deepcopy(self.budgets)
+        inventory = Inventory(items, self.content.items, self.game.progression.modifiers(draft).secured_slots)
+        serial = max(self.serial, max((int(i.rsplit(":", 1)[-1]) for i in items), default=0))
+        def next_id() -> str:
+            nonlocal serial
+            serial += 1
+            return f"{self.game.sessions.origin}:item:{serial}"
+        now = self.clock.now_utc().timestamp()
+        iid = args.get("item", "")
+        if not isinstance(iid, str):
+            raise ValueError("Choose an item.")
+        target = args.get("target", "")
+        if not isinstance(target, str):
+            raise ValueError("Choose a counter or cache.")
+        message = "Your transfer settles."
+        actor_effects: list[dict[str, Any]] | None = None
+        if name.startswith("vendor."):
+            vendor, budget_key = self.vendor(session, target)
+            if not permitted(player, vendor):
+                raise ValueError("This counter requires membership.")
+            if not session.allow("trade", self.clock.now_tick(), 1, 1):
+                raise ValueError("One counter trade per second.")
+            if name == "vendor.buy":
+                entry = next((entry for entry in self.stock(vendor) if entry.item == iid), None)
+                if entry is None or not permitted(player, vendor, entry):
+                    raise ValueError("That stock is not available to you.")
+                if hasattr(self.game, "factions") and not self.game.factions.stock_available(player, vendor, budget_key, iid):
+                    raise ValueError("This optional item is reserved for up to ten minutes. Fixed stock remains open.")
+                if draft.progress.get("faction_reservation", {}).get("counter") == budget_key and draft.progress["faction_reservation"].get("item") == iid:
+                    draft.progress.pop("faction_reservation")
+                template = self.content.items.get(iid)
+                count = args.get("qty", template.stack_max if template and template.class_ == "ammo" else 1)
+                if type(count) is not int or not 1 <= count <= (template.stack_max if template else 1):
+                    raise ValueError("Choose one available pack.")
+                cost = self.quote(player, vendor, entry, count)
+                if cost <= 0:
+                    raise ValueError("That item is not for sale.")
+                if draft.chits_hand < cost:
+                    raise ValueError("You do not have enough chits on hand.")
+                if template and template.no_vendor_sale:
+                    raise ValueError("That item cannot be bought from a counter.")
+                if iid.startswith("prg_"):
+                    learn_program(self.content.programs[iid], draft.progress, draft.archetype,
+                                  draft.standing, self.program_season())
+                else:
+                    inventory.add(draft, make_item(next_id(), template, draft.id, self.clock.now_utc().isoformat(), count))
+                draft.chits_hand -= cost
+                message = f"Bought {template.name if template else self.content.programs[iid].name} for {cost} chits."
+            elif name == "vendor.sell":
+                item = inventory.owned(draft, iid)
+                template = self.content.items[item.template]
+                if item.bound or item.template.startswith("story_") or template.no_vendor_sale or item.template == "slv_intact" or item.secured:
+                    raise ValueError("That item cannot be sold. Unsecure ordinary goods first.")
+                count = args.get("qty", item.stack)
+                if type(count) is not int or not 1 <= count <= item.stack:
+                    raise ValueError("Choose a quantity you carry.")
+                proceeds = self.resale(vendor, item, count)
+                if not proceeds:
+                    raise ValueError("That quantity has no resale value.")
+                budget = budgets.setdefault(budget_key, VendorBudget(int(now) // 3600))
+                budget.refill(now, int(BUYBACK_BUDGET*self.budget_multiplier(vendor, budget_key)),
+                              self.budget_period(vendor, budget_key))
+                if budget.remaining < proceeds:
+                    raise ValueError("This counter's buy-back budget is spent.")
+                inventory.remove(draft, iid, count, next_id)
+                budget.spend(proceeds)
+                draft.chits_hand += proceeds
+                message = f"Sold {template.name} for {proceeds} chits."
+            else:
+                raise ValueError("Choose buy or sell.")
+        elif name.startswith("bank."):
+            if name not in ("bank.deposit", "bank.withdraw"): raise ValueError("Choose deposit or withdraw.")
+            if self.nearby(session, target).spec.kind != "bank":
+                raise ValueError("Choose a bank branch.")
+            bank.transfer(draft, args.get("amount"), name == "bank.deposit")
+            message = f"Bank balance: {draft.chits_bank}. Hand: {draft.chits_hand}."
+        elif name == "inv.equip": inventory.equip(draft, iid, args.get("slot", ""))
+        elif name == "inv.unequip": inventory.unequip(draft, args.get("slot", ""))
+        elif name == "inv.secure": inventory.secure(draft, iid)
+        elif name == "inv.split": inventory.split(draft, iid, args.get("qty"), next_id)
+        elif name == "inv.drop":
+            item = inventory.owned(draft, iid)
+            if item.bound or item.template.startswith("story_"):
+                raise ValueError("Bound and story items stay with you.")
+            part = inventory.remove(draft, iid, args.get("qty", item.stack), next_id)
+            if part.secured:
+                raise ValueError("Unsecure that item before dropping it.")
+            cache_id = f"{self.game.sessions.origin}:cache:{next_id().rsplit(':', 1)[1]}"
+            part.owner = cache_id
+            items[part.id] = part
+            caches[cache_id] = {"zone": av.zone, "tile": list(av.actor.position), "items": [part.id], "expires": now + CACHE_SECONDS}
+            message = f"Dropped {self.content.items[part.template].name}."
+        elif name == "inv.pickup":
+            self.nearby(session, target)
+            cache = caches.get(target)
+            if not cache or cache["expires"] <= now or iid not in cache["items"]:
+                raise ValueError("That cache is empty.")
+            if not self.game.crews.cache_permits(draft.id, cache, now):
+                raise ValueError("Recovery rights or a ten-second crew offer protect that item.")
+            item = items[iid]
+            if item.owner != target:
+                raise ValueError("That item is no longer in the cache.")
+            cache["items"].remove(iid)
+            inventory.add(draft, item)
+            if not cache["items"]: del caches[target]
+            message = "You pick up the item."
+        elif name == "inv.use" and self.content.items[inventory.owned(draft, iid).template].schematic:
+            item = inventory.owned(draft, iid)
+            template = self.content.items[item.template]
+            if template.schematic.single_use:
+                charges = draft.progress.setdefault("schematic_charges", {})
+                charges[template.id] = charges.get(template.id, 0)+1
+            else:
+                learned = draft.progress.setdefault("known_schematics", [])
+                if template.id in learned:
+                    raise ValueError("You already know that schematic. The item remains.")
+                learned.append(template.id)
+            inventory.remove(draft, iid, 1, next_id)
+            message = f"Learned {template.name}."
+        elif name == "inv.use" and self.content.items[inventory.owned(draft, iid).template].drug:
+            if any(effect.get("hush") for effect in av.actor.effects):
+                raise ValueError("You cannot use consumables yet.")
+            item = inventory.owned(draft, iid)
+            template = self.content.items[item.template]
+            note = self.game.progression.substances.consume(draft, template, now, items)
+            inventory.remove(draft, iid, 1, next_id)
+            message = f"Used {template.name}."+note
+        elif name == "inv.use":
+            item = inventory.owned(draft, iid)
+            if self.special_use(session, item):
+                return
+            if any(effect.get("hush") for effect in av.actor.effects):
+                raise ValueError("You cannot use consumables yet.")
+            item = inventory.owned(draft, iid)
+            template = self.content.items[item.template]
+            block = template.consumable
+            if not block:
+                raise ValueError(availability(template) or "You cannot use that item here.")
+            if draft.progress.get("item_cooldowns", {}).get(block.cooldown_class, 0) > now:
+                raise ValueError("That consumable class is cooling down.")
+            if block.use_seconds and not from_channel:
+                self.using[session.id] = {"item": iid, "zone": av.zone, "tile": av.actor.position,
+                    "until": now + block.use_seconds, "last_hit": av.actor.cooldowns.get("last_hit")}
+                self.toast(session, "You use the kit. Stay still; Esc cancels.")
+                return
+            effects = block.effects
+            actor_effects = deepcopy(av.actor.effects)
+            supported = False
+            if "health" in effects:
+                draft.health = min(av.actor.health_max, draft.health + effects["health"]); supported = True
+            if "stamina" in effects or "stamina_full" in effects:
+                draft.stamina = av.actor.stamina_max if effects.get("stamina_full") else min(av.actor.stamina_max, draft.stamina + effects["stamina"])
+                supported = True
+            draft.shock = max(0, min(100, draft.shock + effects.get("shock", 0)))
+            if effects.get("remove_ring_dust_crash"):
+                actor_effects = [e for e in actor_effects if e.get("kind") != "ring_dust_crash"]
+                drugs.end_ringdust_crash(draft, now); supported = True
+            if effects.get("end_chemical_dot"):
+                actor_effects = [e for e in actor_effects if e.get("damage_type") != "chemical"]; supported = True
+            if effects.get("recharge_cell"):
+                cell = next((i for i in items.values() if i.owner == draft.id and i.template == "ammo_cell"
+                    and i.stack < self.content.items["ammo_cell"].stack_max), None)
+                if not cell: raise ValueError("You carry no depleted energy cell.")
+                cell.stack = self.content.items["ammo_cell"].stack_max; supported = True
+            if effects.get("dark_sight"):
+                actor_effects.append({"kind": "flare", "dark_sight": effects["dark_sight"], "expires": now + effects["seconds"]}); supported = True
+            draft.progress["item_effects"] = [e for e in actor_effects if e.get("kind") == "flare"]
+            if not supported: raise ValueError(availability(template))
+            if item.charges > 1: item.charges -= 1
+            else: inventory.remove(draft, iid, 1, next_id)
+            draft.progress.setdefault("item_cooldowns", {})[block.cooldown_class] = now + CONSUMABLE_SECONDS
+            message = f"Used {template.name}."
+        else: raise ValueError("Unknown item action.")
+        if message == "Your transfer settles.":
+            verb = {"inv.equip":"Equipped", "inv.unequip":"Unequipped", "inv.secure":"Changed secured status for", "inv.split":"Split"}.get(name, "Updated")
+            label = self.content.items[self.items[iid].template].name if iid in self.items else args.get("slot", "equipment")
+            message = f"{verb} {label}."
+        patches = {key: deepcopy(getattr(draft, key)) for key in ("inventory", "equipment", "chits_hand", "chits_bank", "health", "stamina", "shock", "implants", "drugs_active", "dependencies", "progress")
+                   if getattr(draft, key) != getattr(player, key)}
+        self.outbox.append({"session": session.id, "player_id": player.id, "patch": patches,
+            "progress_base":deepcopy(player.progress),
+            "items": {key: item for key, item in items.items() if item != self.items.get(key)},
+            "delete_items": sorted(set(self.items) - set(items)), "caches": caches, "budgets": budgets, "serial": serial,
+            "message": message, "actor_effects": actor_effects})
+        self.pending = True
+
+    def can_commit(self, effect: dict[str, Any]) -> bool:
+        """A character deletion invalidates all of its pending transfers."""
+        recipients = {pid for pid in (effect.get("player_id"),*effect.get("player_patches",{})) if pid}
+        return all(pid in self.game.players and pid not in self.game.deleting for pid in recipients)
+
+    def prepare(self, effect: dict[str, Any]) -> dict[str, Any]:
+        player = self.game.players.get(effect["player_id"])
+        return {"player": {**player.record(), **self.settled_patch(effect)} if player else None,
+            "players": [{**self.game.players[pid].record(), **self.secondary_patch(pid, patch)} for pid, patch in effect.get("player_patches", {}).items()],
+            "items": [item.record() for item in effect["items"].values()],
+            "delete_items": effect["delete_items"], "caches": effect["caches"],
+            "budgets": {key: asdict(value) for key, value in effect["budgets"].items()}, "serial": effect["serial"],
+            **({"identities": deepcopy(effect["identities"])} if "identities" in effect else {}),
+            **({"interlock_state": deepcopy(effect["interlock_state"])} if "interlock_state" in effect else {}),
+            **({"salvage_state": deepcopy(effect["salvage_state"])} if "salvage_state" in effect else {}),
+            **({"contracts_state": deepcopy(effect["contracts_state"])} if "contracts_state" in effect else {}),
+            **({"relays_state": deepcopy(effect["relays_state"])} if "relays_state" in effect else {}),
+            **({'events_state': deepcopy(effect['events_state'])} if 'events_state' in effect else {}),
+            **({"market_changes": deepcopy(effect["market_changes"])} if "market_changes" in effect else {}),
+            **({"market_audit": deepcopy(effect["market_audit"])} if "market_audit" in effect else {}),
+            **({"npc_state": effect['npc_state']() if callable(effect['npc_state']) else effect['npc_state']}
+               if 'npc_state' in effect else {}),
+            **({"lattice_state": effect["lattice_state"]()} if "lattice_state" in effect else {}),
+            **({"identity":effect["identity"], "user":player.bbs_user_id} if "identity" in effect else {})}
+
+    def secondary_patch(self, pid: str, patch: dict[str, Any]) -> dict[str, Any]:
+        patch = deepcopy(patch)
+        if "progress" in patch:
+            patch["progress"] = {**deepcopy(self.game.players[pid].progress), **patch["progress"]}
+        return patch
+
+    def settled_patch(self, effect: dict[str, Any]) -> dict[str, Any]:
+        patch = deepcopy(effect["patch"])
+        player = self.game.players.get(effect["player_id"])
+        if player and "progress" in patch and "progress_base" in effect:
+            base,desired = effect["progress_base"],patch["progress"]
+            current = deepcopy(player.progress)
+            for key in base.keys()|desired.keys():
+                if key not in desired: current.pop(key,None)
+                elif key not in base or desired[key] != base[key]: current[key] = deepcopy(desired[key])
+            patch["progress"] = current
+        return patch
+
+    def enqueue_system(self, action: Callable[[], None]) -> None:
+        """Server-owned combat actions share the bounded transfer queue."""
+        if self.pending:
+            if len(self.waiting) >= QUEUE_LIMIT:
+                raise ValueError("The city is busy. Try again.")
+            self.waiting.append(action)
+        else:
+            action()
+
+    def settle(self, player: Player | None, patch: dict[str, Any], items: dict[str, ItemInstance],
+               caches: dict[str, dict[str, Any]], serial: int,
+               callback: Callable[[bool], None], identity: dict[str, Any] | None = None) -> bool:
+        """A server proposal; only its commit callback changes live combat."""
+        if self.pending:
+            return False
+        effect = {"session":"", "player_id":player.id if player else "", "patch":deepcopy(patch),
+            "progress_base":deepcopy(player.progress) if player else {},
+            "items":{key:value for key,value in items.items() if value != self.items.get(key)},
+            "delete_items":sorted(set(self.items)-set(items)), "caches":deepcopy(caches),
+            "budgets":deepcopy(self.budgets), "serial":serial, "message":"", "actor_effects":None,
+            "callback":callback}
+        if identity is not None: effect["identity"] = deepcopy(identity)
+        self.outbox.append(effect)
+        self.pending = True
+        return True
+
+    def committed(self, effect: dict[str, Any], success: bool) -> None:
+        self.pending = False
+        session = self.game.sessions.active.get(effect["session"])
+        if success:
+            self.game.identities.update(deepcopy(effect.get("identities", {})))
+            for pid, patch in effect.get("player_patches", {}).items():
+                for key, value in self.secondary_patch(pid, patch).items():
+                    setattr(self.game.players[pid], key, deepcopy(value))
+                    actor = self.sim.world.actors.get(pid)
+                    if actor and key in ("health", "shock", "stamina"):
+                        setattr(actor, key, value)
+            player = self.game.players.get(effect["player_id"])
+            if player:
+                for key, value in self.settled_patch(effect).items(): setattr(player, key, value)
+                if "identity" in effect: self.game.identities[player.bbs_user_id] = effect["identity"]
+            for iid in effect["delete_items"]: self.items.pop(iid, None)
+            self.items.update(effect["items"])
+            self.game.item_templates = {key: item.template for key, item in self.items.items()}
+            self.caches, self.budgets, self.serial = effect["caches"], effect["budgets"], effect["serial"]
+            self.sync_caches()
+            if session and session.player_id == effect["player_id"]:
+                av = self.sim.avatars.get(session.user_id)
+                if av:
+                    av.actor.overweight = Inventory(self.items, self.content.items).weight(player) > player.attributes["frame"] / 2
+                    for key in ("health", "stamina", "shock"):
+                        if key in effect["patch"]: setattr(av.actor, key, effect["patch"][key])
+                    if effect["actor_effects"] is not None: av.actor.effects = effect["actor_effects"]
+                    self.sim.world.zones[av.zone].revision += 1
+                session.emit(effect["message"], kind="system", channel="system", role="chan_sys",
+                             at=self.clock.now_utc().isoformat())
+                self.toast(session, effect["message"])
+        elif session:
+            self.toast(session, "The transfer could not be saved. Your goods remain.")
+        if effect.get("callback"): effect["callback"](success)
+        # Deferred impacts can immediately propose another durable source.
+        # Retire this source and install its contract draft first.
+        self.after_settle()
+        if success:
+            # Callbacks can queue ordinary player snapshots while this
+            # outbox is draining. A later reward receipt must not be
+            # overwritten by one of those older snapshots next tick.
+            changed = {effect["player_id"], *effect.get("player_patches", {})}
+            for queued in self.game.outbox:
+                record = queued.get("player")
+                if queued["action"] == "save" and record and record["id"] in changed:
+                    current = self.game.players.get(record["id"])
+                    if current:
+                        queued["player"] = current.record()
+                        queued["identity"] = deepcopy(self.game.identities[current.bbs_user_id])
+        while self.waiting and not self.pending:
+            job = self.waiting.popleft()
+            if callable(job):
+                job()
+                continue
+            sid,name,args,from_channel = job
+            queued = self.game.sessions.active.get(sid)
+            if queued is None or not self.ready(queued): continue
+            try:
+                self.propose(queued,name,args,from_channel)
+            except (ValueError,KeyError,TypeError) as exc:
+                self.toast(queued,str(exc) if isinstance(exc,ValueError) else "That action is no longer available.")
+
+    def sync_caches(self) -> None:
+        for zone in self.sim.world.zones.values():
+            for key in tuple(zone.objects):
+                if zone.objects[key].spec.params.get("dropped_item") and key not in self.caches:
+                    del zone.objects[key]; zone.revision += 1
+        for key, cache in self.caches.items():
+            zone = self.sim.world.zones.get(cache["zone"])
+            if zone and key not in zone.objects:
+                zone.objects[key] = ObjectState(ObjectSpec(key, tuple(cache["tile"]), "cache", params={"dropped_item": True,
+                    "name": "Corpse cache" if cache.get("victim") else "Dropped goods",
+                    "cache_state":{"items":len(cache["items"]),"killer_only_until":cache.get("private_until",0)}}))
+                zone.revision += 1
+
+    def prompt(self, session: Session, name: str, args: dict[str, Any]) -> None:
+        self.prompt_serial += 1
+        token = f"item:{session.id}:{self.prompt_serial}"
+        self.prompts[session.id] = {"id": token, "name": name, "args": args}
+        session.send(Frame("prompt", {"id": token, "kind": "line", "label": "Chits" if name.startswith("bank.") else "Quantity", "max_len": 10}))
+
+    def interaction(self, session: Session, frame: Frame) -> Interaction | None:
+        if not self.ready(session) or session.pending_prompts.get('chat'):
+            return None
+        if session.id in self.prompts or session.id in self.menus:
+            return Interaction()
+        if session.id in self.game.screens or session.id in self.sim.maps or session.id in self.sim.external_views:
+            return None
+        if interact(frame) or key_action(self.sim.keymap, session, frame) == 'interact':
+            av = self.sim.avatars[session.user_id]
+            zone = self.sim.world.zones[av.zone]
+            objects = sorted((o for o in zone.objects.values()
+                if max(abs(o.spec.tile[0]-av.actor.x), abs(o.spec.tile[1]-av.actor.y)) <= 1),
+                key=lambda o: (o.spec.tile != av.actor.position, o.spec.id))
+            if objects:
+                obj = objects[0]
+                if obj.spec.kind == 'bank' or obj.spec.id in self.caches or obj.spec.params.get('vendor'):
+                    return object_interaction(obj)
+        return None
+
+    def input(self, session: Session, frame: Frame, tick: int, *, interaction: Interaction | None = None) -> bool:
+        if not self.ready(session): return False
+        if session.pending_prompts.get("chat"): return False
+        name = frame.data.get("name", "") if frame.type == "intent" else ""
+        args = frame.data.get("args", {})
+        key = frame.data.get("k", "") if frame.type == "key" else ""
+        pending = self.prompts.get(session.id)
+        try:
+            if pending:
+                if name == "prompt_cancel" and args.get("id") == pending["id"]:
+                    self.prompts.pop(session.id); return True
+                if frame.type == "line" and frame.data["id"] == pending["id"]:
+                    self.prompts.pop(session.id)
+                    value = frame.data["text"]
+                    if not value.isascii() or not value.isdigit(): raise ValueError("Enter a positive whole number.")
+                    self.propose(session, pending["name"], {**pending["args"], "amount" if pending["name"].startswith("bank.") else "qty": int(value)})
+                return True
+            if session.id in self.using and key in ("escape", "b", "B"):
+                self.using.pop(session.id); return True
+            if name.startswith(("inv.", "vendor.", "bank.")):
+                if name == "inv.open":
+                    self.menus[session.id] = CommerceMenu("inventory", opened=tick)
+                else:
+                    request = frame.data.get("request_id")
+                    if request and request in self.requests.get(session.id, []): return True
+                    self.propose(session, name, args)
+                    if request:
+                        self.requests.setdefault(session.id, []).append(request)
+                        self.requests[session.id] = self.requests[session.id][-128:]
+                return True
+            screen = self.menus.get(session.id)
+            if screen:
+                if name == "menu_close": self.close(session)
+                elif name == "menu_cursor" and type(args.get("delta")) is int:
+                    screen.cursor = max(0, min(screen.cursor + args["delta"], len(self.body(session, screen)["rows"])-1))
+                elif name == "menu_select":
+                    if frame.data.get("expected_revision") != session.view_revision: return True
+                    request = frame.data.get("request_id", "")
+                    if request and request in self.requests.get(session.id, []): return True
+                    self.requests.setdefault(session.id, []).append(request)
+                    self.requests[session.id] = self.requests[session.id][-128:]
+                    action, row = args.get("key", "enter"), args.get("row", "")
+                    self.select(session, screen, action, row)
+                return True
+            if session.id in self.game.screens or session.id in self.sim.maps or session.id in self.sim.external_views: return False
+            table = next((m for m in self.sim.keymap.get("keymaps", []) if m["id"] == session.keymap_id), {})
+            action = next((a for a, keys in table.get("bindings", {}).items() if key in keys), name)
+            if action == "inventory": self.menus[session.id] = CommerceMenu("inventory", opened=tick); return True
+            if action == "equipment": self.menus[session.id] = CommerceMenu("equipment", opened=tick); return True
+            if action == "interact" or key in ("e", "E"):
+                choice = interaction or self.interaction(session, frame)
+                if choice:
+                    obj = choice.value
+                    kind = "bank" if obj.spec.kind == "bank" else "cache" if obj.spec.id in self.caches else "vendor"
+                    self.menus[session.id] = CommerceMenu(kind, obj.spec.id, opened=tick); return True
+        except (ValueError, KeyError, TypeError) as exc:
+            self.toast(session, str(exc) if isinstance(exc, ValueError) else "That action is no longer available.")
+            return True
+        return False
+
+    def select(self, session: Session, screen: CommerceMenu, action: str, row: str) -> None:
+        if screen.kind == "vendor":
+            if action == "t": screen.sell, screen.cursor = not screen.sell, 0; return
+            self.propose(session, "vendor.reserve" if action == "r" and not screen.sell else "vendor.sell" if screen.sell else "vendor.buy", {"target": screen.target, "item": row})
+        elif screen.kind == "bank":
+            self.prompt(session, "bank.withdraw" if row == "withdraw" else "bank.deposit", {"target": screen.target})
+        elif screen.kind == "cache": self.propose(session, "inv.pickup", {"target": screen.target, "item": row})
+        elif screen.kind == "equipment":
+            if action == "enter": self.propose(session, "inv.unequip", {"slot": row})
+        elif screen.kind == "slots":
+            self.propose(session, "inv.equip", {"item": screen.target, "slot": row})
+            self.menus[session.id] = CommerceMenu("inventory", opened=screen.opened)
+        else:
+            if action == "e": self.menus[session.id] = CommerceMenu("equipment", opened=screen.opened); return
+            if action == "f":
+                player = self.game.players[session.player_id]
+                Inventory(self.items,self.content.items).slots(player,row)
+                self.menus[session.id] = CommerceMenu("slots",row,opened=screen.opened); return
+            command = {"enter":"inv.equip", "q":"inv.equip", "s":"inv.secure", "d":"inv.drop", "u":"inv.use", "x":"inv.split"}.get(action)
+            if command == "inv.split": self.prompt(session, command, {"item": row})
+            elif command: self.propose(session, command, {"item": row})
+
+    def resale(self, vendor: Vendor, item: ItemInstance, count: int) -> int:
+        template = self.content.items[item.template]
+        pack = template.stack_max if template.class_ == "ammo" else 1
+        multiplier = vendor.salvage_multiplier if template.class_ == "salvage" else 1
+        if template.class_ == "salvage":
+            return price(Fraction(template.base_price*count, pack), item.quality, freelance=True, multiplier=multiplier)
+        return price(Fraction(template.base_price * count, pack), item.quality, multiplier=multiplier, resale=True)
+
+    def body(self, session: Session, screen: CommerceMenu) -> dict[str, Any]:
+        player = self.game.players[session.player_id]
+        rows: list[dict[str, Any]] = []
+        detail, title, actions = "", screen.kind.upper(), []
+        inventory = Inventory(self.items, self.content.items, self.game.progression.modifiers(player).secured_slots)
+        if screen.kind == "vendor":
+            vendor, budget_key = self.vendor(session, screen.target)
+            budget = deepcopy(self.budgets.get(budget_key, VendorBudget(int(self.clock.now_utc().timestamp())//3600)))
+            budget.refill(self.clock.now_utc().timestamp(), int(BUYBACK_BUDGET*self.budget_multiplier(vendor, budget_key)),
+                          self.budget_period(vendor, budget_key))
+            title = vendor.name
+            title += " - " + ("SELL" if screen.sell else "BUY")
+            detail = f"Hand {player.chits_hand}  Buy-back budget {budget.remaining}/{budget.limit}"
+            if screen.sell:
+                for iid in player.inventory:
+                    item = self.items[iid]
+                    locked = (item.bound or item.secured or item.template.startswith("story_")
+                              or item.template == "slv_intact" or iid in player.implants.values())
+                    proceeds = self.resale(vendor, item, item.stack)
+                    rows.append({"id": iid, "cells": [self.content.items[item.template].name,
+                        str(item.stack), str(proceeds) if proceeds and not locked else "not for sale"]})
+            else:
+                for entry in self.stock(vendor):
+                    template = self.content.items.get(entry.item)
+                    count = template.stack_max if template and template.class_ == "ammo" else 1
+                    label = template.name if template else self.content.programs.get(entry.item).name if entry.item in self.content.programs else entry.item
+                    allowed = permitted(player, vendor, entry) and self.content.active("items", entry.item)
+                    if not template and entry.item in self.content.programs:
+                        acquired = set(player.progress.get('program_acquisitions', {}).get(str(self.program_season()), ()))
+                        allowed = allowed and entry.item not in player.progress.get('known_programs', ()) and can_acquire(
+                            self.content.programs[entry.item], player.archetype, player.standing, acquired)
+                    if hasattr(self.game, "factions") and not self.game.factions.stock_available(player, vendor, budget_key, entry.item):
+                        allowed = False
+                    cost = self.quote(player, vendor, entry, count) if template or entry.item in self.content.programs else 0
+                    rows.append({"id": entry.item, "cells": [label, str(count), str(cost) if cost else "not for sale", "" if allowed else "locked"]})
+            actions = [{"key":"enter", "label":"sell" if screen.sell else "buy"}, {"key":"t","label":"buy/sell"}]
+            if not screen.sell and hasattr(self.game, "factions"):
+                from karst41.server.factions import perk
+                if perk(player, "sable") and vendor.faction == "sable":
+                    actions.append({"key": "r", "label": "reserve optional stock 10 min"})
+            if vendor.clinic:
+                actions.append({"key":"c","label":"clinic"})
+        elif screen.kind == "bank":
+            self.nearby(session, screen.target)
+            title = "KESTREL BANK"
+            rows = [{"id": "deposit", "cells": ["Deposit", str(player.chits_hand)]}, {"id":"withdraw", "cells":["Withdraw",str(player.chits_bank)]}]
+            rows.append({"id": "impound", "cells": ["Personal impound", "Protected goods and chits"]})
+            if hasattr(self.game, 'market'):
+                rows.append({'id': 'market_delivery', 'cells': ['Market deliveries [C]', 'Fee-free exact items']})
+                actions.append({'key': 'c', 'label': 'market deliveries'})
+            detail = f"Hand {player.chits_hand}\nBank {player.chits_bank}\nChoose an action, then enter chits."
+        elif screen.kind == "equipment":
+            rows = [{"id": slot, "cells": [slot.replace("_"," ").title(), self.content.items[self.items[iid].template].name]} for slot,iid in player.equipment.items() if iid in self.items]
+            actions = [{"key":"enter", "label":"unequip"}]
+        elif screen.kind == "slots":
+            title = "CHOOSE EQUIPMENT SLOT"
+            rows = [{"id":slot,"cells":[slot.replace("_"," ").title(), self.content.items[self.items[player.equipment[slot]].template].name if slot in player.equipment else "Empty"]}
+                    for slot in inventory.slots(player,screen.target)]
+        else:
+            ids = player.inventory if screen.kind == "inventory" else self.caches.get(screen.target, {}).get("items", [])
+            if screen.kind == "cache": self.nearby(session, screen.target)
+            for iid in ids:
+                item = self.items[iid]
+                slot = next((key for key,value in player.equipment.items() if value == iid), "")
+                rows.append({"id": iid, "cells": [self.item_label(item), str(item.stack), f"{self.content.items[item.template].weight*item.stack:g}kg", "S" if item.secured else "", slot]})
+            mods = self.game.progression.modifiers(player)
+            detail = f"Carry {inventory.weight(player):g}/{mods.attribute(player,'frame')/2+mods.bonus('carry_kg'):g} kg. {inventory.secured_slots} secured slots."
+            if screen.kind == 'cache':
+                cache = self.caches.get(screen.target, {})
+                turn = self.game.crews.offer_label(cache.get('crew_offer', {}))
+                if turn:
+                    detail += '\n'+turn
+                if player.id == cache.get('victim'):
+                    detail += '\nYou can recover your own goods during that turn.'
+            if screen.kind == "inventory":
+                actions = [{"key":k,"label":v} for k,v in (("q","equip"),("f","slot"),("e","equipment"),("s","secure"),("d","drop"),("x","split"),("u","use"))]
+        screen.cursor = max(0, min(screen.cursor, len(rows)-1))
+        if rows:
+            selected = rows[screen.cursor]["id"]
+            template = self.content.items.get(selected) if screen.kind == "vendor" and not screen.sell else self.content.items.get(self.items[selected].template) if selected in self.items else None
+            if template:
+                selected_item = self.items.get(selected)
+                detail += "\n" + quality_detail(template, selected_item.quality if selected_item else 1)
+                if selected_item and selected_item.key_for:
+                    detail += f"\nDoor key tier {selected_item.key_tier}."
+                detail += "\n" + "\n".join(line for line in (availability(template), template.description) if line)
+                if template.implant and not template.implant.portable:
+                    detail += "\nInstall or remove at a clinic. Open its counter and press C."
+                    if template.implant.effects.get("surge_inspect") and self.game.progression.surge_preview(player) is None:
+                        detail += "\nNo effect yet: Surge forecasts are not available."
+        return {**menu(title, rows, screen.cursor, detail, "Esc/B returns"), "actions": actions,
+                "page": 2 if screen.sell else 1}
+
+    def tick(self, ctx: TickContext) -> None:
+        now = self.clock.now_utc().timestamp()
+        self.requests = {sid: rows for sid,rows in self.requests.items() if sid in self.game.sessions.active}
+        self.prompts = {sid: prompt for sid,prompt in self.prompts.items() if sid in self.game.sessions.active}
+        for session in ctx.sessions:
+            av = self.sim.avatars.get(session.user_id)
+            if av and session.player_id in self.game.players:
+                player = self.game.players[session.player_id]
+                av.actor.overweight = Inventory(self.items, self.content.items).weight(player) > player.attributes["frame"] / 2
+                before = deepcopy(av.actor.effects)
+                for effect in player.progress.get("item_effects", []):
+                    if effect.get("expires",0) > now and effect not in av.actor.effects: av.actor.effects.append(effect)
+                av.actor.effects[:] = [effect for effect in av.actor.effects if effect.get("expires", now+1) > now]
+                if before != av.actor.effects: self.sim.world.zones[av.zone].revision += 1
+        for sid, use in tuple(self.using.items()):
+            session = self.game.sessions.active.get(sid)
+            av = self.sim.avatars.get(session.user_id) if session else None
+            if not session or not self.ready(session) or (av.zone, av.actor.position, av.actor.cooldowns.get("last_hit")) != (use["zone"],use["tile"],use["last_hit"]):
+                self.using.pop(sid); continue
+            if now >= use["until"] and not self.pending:
+                self.using.pop(sid)
+                try: self.propose(session, "inv.use", {"item":use["item"]}, from_channel=True)
+                except ValueError as exc: self.toast(session, str(exc))
+        if not self.pending:
+            expired = {key for key, value in self.caches.items() if value["expires"] <= now}
+            if expired:
+                self.outbox.append({"session":"", "player_id":None, "patch":{}, "items":{}, "delete_items":[key for key,item in self.items.items() if item.owner in expired],
+                    "caches":{key:cache for key,cache in self.caches.items() if key not in expired}, "budgets":deepcopy(self.budgets), "serial":self.serial,
+                    "message":"", "actor_effects":None})
+                self.pending = True
+        for sid, screen in tuple(self.menus.items()):
+            session = self.game.sessions.active.get(sid)
+            if session is None or not self.ready(session):
+                self.menus.pop(sid); self.prompts.pop(sid,None); self.sim.external_views.pop(sid,None); continue
+            av = self.sim.avatars[session.user_id]
+            if ctx.tick-screen.opened >= MENU_TIMEOUT_SECONDS*TICK_HZ and self.sim.world.zones[av.zone].allows_hostile(av.actor.position):
+                self.close(session); continue
+            try: self.sim.external_views[sid] = "menu", self.body(session, screen)
+            except (ValueError, KeyError): self.close(session)

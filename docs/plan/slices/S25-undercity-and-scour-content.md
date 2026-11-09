@@ -3,7 +3,7 @@
 **Status:** split on 2026-10-28 (D-T2): engine fixes and canon in [S25a](S25a-engine-fixes-and-canon.md) (#77), content bindings and generator fixes in [S25b](S25b-content-bindings.md) (#78), geometry and place identity in S25c (filed after H1; `docs/plan/03-presentation-integration.md` §7.3). Human layout approval: **not granted**.
 **Primary model:** Gemini or Sonnet · **Reviewer:** Sonnet (validator plus a read of each zone), Human for `under-shaft-foot` and `scour-ring-4`
 **Depends on:** S08, S11, S14, S17, S21, S24 · **Milestone:** M5
-**Issue:** https://github.com/Thiesi/blacksite/issues/25
+**Issue:** https://github.com/Thiesi/Karst41/issues/25
 
 ## Goal
 
@@ -111,7 +111,7 @@ None. Content only.
 
 ## Acceptance script
 
-1. Start the server with the full content tree; `blacksite admin status`
+1. Start the server with the full content tree; `karst41 admin status`
    reports 34 ordinary zones loaded; the 35th is S26's instanced finale.
 2. At 80×24, walk from `vatside-vat-row` down the ladder into
    `under-service`; the sight radius visibly drops to 5; find both orphan
@@ -122,7 +122,7 @@ None. Content only.
 3. From `tramyard-wall-gate` walk `scour-ring-1` → `-2` → `-3` → `-4`,
    touching each relay's terminal (interaction shows its name) and the
    Far Relay's orphan terminal.
-4. `blacksite admin event force ringfall scour-ring-3`: salvage nodes
+4. `karst41 admin event force ringfall scour-ring-3`: salvage nodes
    appear inside the ring's regions only.
 5. Open the zone map overview (`M`) in `under-caverns` at 132×50: the
    overview scales to its rectangle and the detailed map pans without
@@ -220,7 +220,7 @@ Sink clinic, Gate Nine, all ordinary cores/vendors/banks and crowded
 Sweeper acceptance obligations remain mandatory. Preserve game 8.4
 quality and seeded state when placing the content.
 
-This carries the accepted [PR #38](https://github.com/Thiesi/Blacksite/pull/38)
+This carries the accepted [PR #38](https://github.com/Thiesi/Karst41/pull/38)
 findings 12/14 forward; see [S17](S17-salvage-and-fabrication.md).
 
 ## S18 housing handoff
@@ -241,13 +241,13 @@ storage slots are protectable in place (20/40/60), independently of
 carried secured capacity. Physical keys and Passkey grant only the
 30-second vestibule. Preserve each unit's theft watermark across leases.
 See game design 8.7, [S18](S18-apartments.md) and accepted
-[PR #38](https://github.com/Thiesi/Blacksite/pull/38). All earlier commerce,
+[PR #38](https://github.com/Thiesi/Karst41/pull/38). All earlier commerce,
 clinic, Scour, core, Gate Nine and Sweeper acceptance gates remain.
 
 
 ### S20 faction integration handoff
 
-Reference: [PR #38](https://github.com/Thiesi/Blacksite/pull/38) and S20.
+Reference: [PR #38](https://github.com/Thiesi/Karst41/pull/38) and S20.
 
 Commission all eight S20 faction_sites with real hall/counter/protected-vat
 anchors; six bindings remain in the s25-faction-sites authoring bundle.
@@ -258,7 +258,7 @@ Preserve all existing S16-S18 commerce, housing and core gates.
 
 ### S22 crew integration handoff
 
-S22 [PR #61](https://github.com/Thiesi/Blacksite/pull/61) adds remote crew
+S22 [PR #61](https://github.com/Thiesi/Karst41/pull/61) adds remote crew
 rosters and beacons. Exercise them in crowded actual maps without
 revealing private interiors. All real city, relay, vendor, housing,
 workshop and clinic acceptance obligations below remain required.
@@ -266,9 +266,9 @@ workshop and clinic acceptance obligations below remain required.
 <!-- s19-services:start -->
 ### S19 source and service handoff
 
-Reference: [S19 PR #62](https://github.com/Thiesi/Blacksite/pull/62),
+Reference: [S19 PR #62](https://github.com/Thiesi/Karst41/pull/62),
 [acceptance record](../../ops/s19-acceptance.md) and
-[PR #38](https://github.com/Thiesi/Blacksite/pull/38).
+[PR #38](https://github.com/Thiesi/Karst41/pull/38).
 
 S19 supplies the implemented source interfaces, 68 authored contracts
 and four service nodes. Full root pytest passed 1344 tests with one
@@ -315,9 +315,9 @@ terminal and Kestrel bank access usable for protected market delivery;
 <!-- s24-handoff:start -->
 ### S24 event integration and acceptance handoff
 
-Reference: [S24 #24](https://github.com/Thiesi/Blacksite/issues/24),
-[PR #38](https://github.com/Thiesi/Blacksite/pull/38) and
-[platform #56](https://github.com/Thiesi/Blacksite/issues/56).
+Reference: [S24 #24](https://github.com/Thiesi/Karst41/issues/24),
+[PR #38](https://github.com/Thiesi/Karst41/pull/38) and
+[platform #56](https://github.com/Thiesi/Karst41/issues/56).
 
 Activate `s24-future-events` only after its actual Ring-fall regions,
 salvage-field markers, recovery-crew sites, Exhale key site and optional
@@ -341,8 +341,8 @@ Native event fixtures on hubs do not satisfy either gate.
 <!-- s24-review-policy:start -->
 ### S24 practical review follow-up
 
-Reference: [PR #65](https://github.com/Thiesi/Blacksite/pull/65), retaining
-[PR #38](https://github.com/Thiesi/Blacksite/pull/38) and #56.
+Reference: [PR #65](https://github.com/Thiesi/Karst41/pull/65), retaining
+[PR #38](https://github.com/Thiesi/Karst41/pull/38) and #56.
 
 Verify Convoy paths around actual walls and body traffic. A paid Beacon
 diversion ends on arrival or after 60 seconds of wall time, then resumes the

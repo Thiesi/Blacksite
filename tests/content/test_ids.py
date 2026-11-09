@@ -1,7 +1,7 @@
 """S02: ID rules (04-assets.md section 8, 00-game-design.md section 17)."""
 
-from blacksite.content.cp437 import CP437_GRAPHIC, round_trips
-from blacksite.content.ids import display_width, is_catalog_id, is_slug, valid_id
+from karst41.content.cp437 import CP437_GRAPHIC, round_trips
+from karst41.content.ids import display_width, is_catalog_id, is_slug, valid_id
 
 
 def test_slug_rules() -> None:

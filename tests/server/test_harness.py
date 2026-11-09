@@ -2,7 +2,7 @@
 
 import pytest
 
-from blacksite.server.protocol import Frame
+from karst41.server.protocol import Frame
 from tests.harness import ADMIN_SECRET, HeadlessServer, hello
 
 

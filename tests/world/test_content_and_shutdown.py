@@ -3,10 +3,10 @@
 from copy import deepcopy
 from dataclasses import replace
 
-from blacksite.content.loader import ContentTree
-from blacksite.content.schema import TileChange, ZoneLayout
-from blacksite.content.validate import validate
-from blacksite.server.protocol import Frame
+from karst41.content.loader import ContentTree
+from karst41.content.schema import TileChange, ZoneLayout
+from karst41.content.validate import validate
+from karst41.server.protocol import Frame
 from tests.harness import ADMIN_SECRET, HeadlessServer, hello
 
 

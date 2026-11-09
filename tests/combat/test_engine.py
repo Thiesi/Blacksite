@@ -6,19 +6,19 @@ from pathlib import Path
 
 import pytest
 
-from blacksite.content.loader import load_content
-from blacksite.content.schema import Faction
-from blacksite.server.items import make_item
-from blacksite.server.inventory import Inventory
-from blacksite.server.protocol import Frame
-from blacksite.server.rules import character, combat as rules
-from blacksite.server.storage.db import Storage
+from karst41.content.loader import load_content
+from karst41.content.schema import Faction
+from karst41.server.items import make_item
+from karst41.server.inventory import Inventory
+from karst41.server.protocol import Frame
+from karst41.server.rules import character, combat as rules
+from karst41.server.storage.db import Storage
 from tests.character_helpers import act, create, place, state
 from tests.harness import HeadlessServer
 
 
 def build_duel(repo_root: Path, *, first_archetype: int = 0):
-    content = load_content(repo_root/"src/blacksite/content")
+    content = load_content(repo_root/"src/karst41/content")
     # Controlled duel scenarios exclude unrelated city traffic. S11 tests
     # exercise the integrated population and patrol response separately.
     content.zones = {key: replace(zone, meta=replace(zone.meta, spawners=tuple(
@@ -383,7 +383,7 @@ def test_design_5_3_reconnect_restores_cooldown_before_first_input(cantor_duel):
 
 
 def test_design_5_3_grade5_hv7_documented_model(repo_root: Path):
-    tree=load_content(repo_root/"src/blacksite/content")
+    tree=load_content(repo_root/"src/karst41/content")
     weapon=tree.items["wpn_halvard_hv7"].weapon
     armour=tree.items["arm_sable_leathers"].armour.armour.kinetic
     hp=character.health_max(character.attributes("ghost",grade=5)["vitals"])
@@ -460,7 +460,7 @@ def test_design_5_4_public_vat_recovery_is_bounded_and_requires_proximity(duel):
 
 
 def test_design_5_3_secondary_targets_obey_pocket_safety(duel):
-    from blacksite.content.schema import Region
+    from karst41.content.schema import Region
     game,a,b=duel
     c=game.connect({"user_id":3,"handle":"Safe","node_name":"test"});create(game,c,name="Safe",card="none")
     game.core.characters.players[c.session.player_id].grade=5

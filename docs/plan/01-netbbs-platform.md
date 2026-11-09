@@ -4,7 +4,7 @@ Status: accepted implementation plan; runtime work remains in its owning
 slices. This document updates the platform assumptions, not game balance
 or the slice dependency graph. S17 is not blocked by it.
 
-Report: [Blacksite #56](https://github.com/Thiesi/Blacksite/issues/56).
+Report: [Karst 41 #56](https://github.com/Thiesi/Karst41/issues/56).
 Architecture sections 1, 3, 6.2 and 8 are the authoritative contracts.
 The PR #38 issue checklists and S19/S25 deferred field gates still apply.
 
@@ -56,16 +56,16 @@ launcher, character preference and both guides from v7.31.0:
 
 No NetBBS notice of these changes reached this repository; this audit is
 the record. The owner raised the floor to v7.45.0, the freeze release:
-Blacksite has no installed base yet, and one target removes the
+Karst 41 has no installed base yet, and one target removes the
 missing-`charset` fallback and the second CI matrix. Every native CI job
 pins v7.45.0. Evidence recorded earlier against v7.31.0 stays valid as
 history.
 
 ## 2. Current implementation versus remaining work
 
-| Area | Current Blacksite state | Owning follow-up |
+| Area | Current Karst 41 state | Owning follow-up |
 |---|---|---|
-| Profile environment | S04 reads `DOOR_BLACKSITE_*` aliases | S31 corrects preset keys; original `BLACKSITE_*` names remain standalone aliases |
+| Profile environment | S04 reads `DOOR_KARST41_*` aliases | S31 corrects preset keys; original `KARST41_*` names remain standalone aliases |
 | Session ceiling | S04 takes the tighter positive host/override limit, but defaults to 3600 and rejects zero | S30 models no deadline and zero game-cap opt-out; S31 tests unlimited profile |
 | CPU | Existing efficiency target is 120 CPU-seconds/hour; stale prose assumes fixed 300 | S29 measures actual renderer CPU and inherited limits; S31 sets explicit policy |
 | Supervisor | Server and external runner exist; no released game preset yet | S31 uses released service schema and tests admission/restart/shutdown |
@@ -77,7 +77,7 @@ history.
 | BBS presence | Host feature already released | S31 verifies allowed callers see the correct door name |
 | Outbound | Credentials filtered out; no publication adapter | S21/S26 provide committed semantic facts; S31 records policy gate and defers default publication |
 | Node identity | Game origin is independent; `node_id` metadata exists | S32 treats node ID as opaque provenance, not a key fingerprint |
-| PTY | Blacksite uses stdio | No PTY newline conversion change; test only if a future PTY profile is introduced |
+| PTY | Karst 41 uses stdio | No PTY newline conversion change; test only if a future PTY profile is introduced |
 
 This plan does not claim these pending client/preset/admin changes are
 already fixed by updating documentation.
@@ -87,7 +87,7 @@ already fixed by updating documentation.
 One primary `deploy/netbbs-door-profile.json` uses the service block in
 architecture 3.1. There is no second future-version preset to maintain.
 The interpreter is the same venv Python for client and service. Service
-argv is `-m blacksite.server --install-dir {install_dir}`; the process
+argv is `-m karst41.server --install-dir {install_dir}`; the process
 is never spawned by the door client. The server already accepts that
 module invocation. `install_dir`, not an arbitrary substitution, sets
 the service working directory and socket health path.
@@ -110,7 +110,7 @@ Older manual setups are historical, not a new support promise.
 Real acceptance must distinguish:
 
 1. Supervised down/unhealthy admission: NetBBS refuses entry and returns
-   to its door list before the Blacksite client starts.
+   to its door list before the Karst 41 client starts.
 2. External service down: the client starts, shows the city-unavailable
    text and returns cleanly under the existing bounded reconnect policy.
 3. Existing clients during service/node stop: authoritative state and
@@ -176,7 +176,7 @@ The future adapter contract, when that condition is met:
 
 ## 5. Terminal and version rules
 
-`door_api` is an integer, not Blacksite's protocol major or a semver.
+`door_api` is an integer, not Karst 41's protocol major or a semver.
 For the certified release S31 supports API 5. Recognize missing as the
 legacy API-2 case for a useful upgrade message, then refuse unsupported
 old/new/malformed versions before creating or attaching a world session.

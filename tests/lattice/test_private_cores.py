@@ -5,10 +5,10 @@ from dataclasses import replace
 
 import pytest
 
-from blacksite.content.schema import ObjectSpec
-from blacksite.server.clock import TICK_HZ
-from blacksite.server.items import make_item
-from blacksite.server.world.zone import ObjectState
+from karst41.content.schema import ObjectSpec
+from karst41.server.clock import TICK_HZ
+from karst41.server.items import make_item
+from karst41.server.world.zone import ObjectState
 from tests.character_helpers import place, state
 from tests.harness import HeadlessServer
 from tests.lattice.test_engine import actor, intent, jack, runners

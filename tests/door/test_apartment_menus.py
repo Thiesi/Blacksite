@@ -4,9 +4,9 @@ from dataclasses import asdict, replace
 
 import pytest
 
-from blacksite.door.model import Display
-from blacksite.server.apartments import HousingMenu
-from blacksite.server.protocol import Frame, encode
+from karst41.door.model import Display
+from karst41.server.apartments import HousingMenu
+from karst41.server.protocol import Frame, encode
 from tests.fake_terminal import FakeTerminal
 from tests.test_apartments import housing_content, housing, rent, inside, item, action
 

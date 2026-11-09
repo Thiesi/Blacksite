@@ -14,9 +14,9 @@ from typing import Any
 
 from accept_s10_netbbs import Connection, NativeProbe, wait
 from build_city_content import build, read, write
-from blacksite.content.loader import load_content
-from blacksite.content.validate import validate
-from blacksite.door.layout import compute
+from karst41.content.loader import load_content
+from karst41.content.validate import validate
+from karst41.door.layout import compute
 from tests.presentation.snapshots import snapshot
 
 

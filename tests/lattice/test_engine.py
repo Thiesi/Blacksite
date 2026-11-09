@@ -5,17 +5,17 @@ from pathlib import Path
 
 import pytest
 
-from blacksite.content.loader import load_content
-from blacksite.server.items import make_item
-from blacksite.server.protocol import Frame, encode
-from blacksite.server.world.movement import move
+from karst41.content.loader import load_content
+from karst41.server.items import make_item
+from karst41.server.protocol import Frame, encode
+from karst41.server.world.movement import move
 from tests.character_helpers import act, create, place, state
 from tests.harness import ADMIN_SECRET, HeadlessServer, hello
 
 
 @pytest.fixture
 def runners(repo_root: Path):
-    content = load_content(repo_root/"src/blacksite/content")
+    content = load_content(repo_root/"src/karst41/content")
     # Isolated rule scenarios; live acceptance keeps all city traffic.
     content.zones = {k: replace(z, meta=replace(z.meta, spawners=())) for k, z in content.zones.items()}
     game = HeadlessServer(content, character_state={})

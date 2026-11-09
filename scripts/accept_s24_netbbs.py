@@ -20,11 +20,11 @@ from accept_s19_netbbs import ContractProbe
 from accept_s19_services import reconnect, enter_core, leave_network, reserve, drive_job
 from accept_s23_netbbs import fixture, services
 from events_fixture import build_fixture
-from blacksite.admin.client import request
-from blacksite.server.app import Server
-from blacksite.server.clock import RealClock, TICK_HZ
-from blacksite.server.rules.events import ROLL_SECONDS
-from blacksite.server.storage.db import Storage
+from karst41.admin.client import request
+from karst41.server.app import Server
+from karst41.server.clock import RealClock, TICK_HZ
+from karst41.server.rules.events import ROLL_SECONDS
+from karst41.server.storage.db import Storage
 
 
 class FixtureClock(RealClock):
@@ -253,7 +253,7 @@ async def run(probe: Any, descriptor: dict[str, Any], size: tuple[int, int]) -> 
 
 
 async def accept(root: Path, python: Path, show: bool, size: tuple[int, int]) -> None:
-    shipped = Path(__file__).parents[1]/'src/blacksite/content'
+    shipped = Path(__file__).parents[1]/'src/karst41/content'
     descriptor = build_fixture(shipped, root/'world/content.local')
     clock = FixtureClock()
     # Suppress only the initial random roll; explicit source publication and

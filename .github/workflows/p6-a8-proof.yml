@@ -101,6 +101,8 @@ jobs:
         working-directory: ${{ runner.temp }}/a8-proof
         shell: bash
         run: |
+          # Historical evidence: both refs are inside the pinned pre-R1 tree.
+          # Its package path must remain old; changing it would skip content.
           git diff --exit-code dd489f9ec7676b2c37b553fa7587c4d0a4ed6d56 HEAD -- src/blacksite/content tests/presentation/golden tests/door/golden tests/presentation/mechanics.json
           git fetch --no-tags origin refs/pull/126/head
           test "$(git rev-parse FETCH_HEAD)" = fe89d3266c7af07f0ea9a38d057ae2db3d8a83e6

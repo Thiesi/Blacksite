@@ -2,9 +2,9 @@
 
 from dataclasses import replace
 
-from blacksite.content.loader import load_content
-from blacksite.content.schema import Sector, Uplink
-from blacksite.content.validate import validate
+from karst41.content.loader import load_content
+from karst41.content.schema import Sector, Uplink
+from karst41.content.validate import validate
 
 
 def test_placeholder_is_explicit_and_cannot_hide_an_active_core(repo_root) -> None:

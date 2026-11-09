@@ -183,8 +183,8 @@ def build(root: Path) -> None:
         if not item["name"]:
             output = item.get("schematic", {}).get("output")
             item["name"] = "Plan: " + next((r["name"] for r in records if r["id"] == output), "Hunter-killer")
-    write(root / "src/blacksite/content/items.json", {"schema": 1, "items": records})
-    programs_path = root / "src/blacksite/content/programs.json"
+    write(root / "src/karst41/content/items.json", {"schema": 1, "items": records})
+    programs_path = root / "src/karst41/content/programs.json"
     programs = json.loads(programs_path.read_text(encoding="utf-8"))
     if not any(p["id"] == "prg_hunter_killer" for p in programs["programs"]):
         programs["programs"].append({"id": "prg_hunter_killer", "name": "Hunter-killer", "class": "attack",
@@ -234,7 +234,7 @@ def build_vendors(root: Path, design: str, records: list[dict[str, Any]]) -> Non
         if vid == "sablier-clinic":
             ids += [i for i, t in templates.items() if t["class"] == "implant" and t.get("maker") == "Sablier"]
         if vid == "wake-outfitter":
-            starts = json.loads((root / "src/blacksite/content/starts.json").read_text(encoding="utf-8"))
+            starts = json.loads((root / "src/karst41/content/starts.json").read_text(encoding="utf-8"))
             ids += [i for start in starts["starts"] for i in start["items"]]
         if vid == "sink-market":
             ids += [i for i, t in templates.items() if t["class"] == "drug" and t.get("maker") == "Sable Works"]
@@ -283,12 +283,12 @@ def build_vendors(root: Path, design: str, records: list[dict[str, Any]]) -> Non
         if vid == "landing-trade": vendor["salvage_multiplier"] = 1.2
         if vid == "vesper": vendor["daily_rotation"] = True
         vendors.append(vendor)
-    write(root / "src/blacksite/content/items.json", {"schema": 1, "items": records})
-    write(root / "src/blacksite/content/vendors.json", {"schema": 1, "vendors": vendors})
-    write(root / "src/blacksite/content/bundles/s25-commerce.json", {"schema": 1, "id": "s25-commerce", "status": "authoring", "depends": [], "members": {"vendors": deferred}})
+    write(root / "src/karst41/content/items.json", {"schema": 1, "items": records})
+    write(root / "src/karst41/content/vendors.json", {"schema": 1, "vendors": vendors})
+    write(root / "src/karst41/content/bundles/s25-commerce.json", {"schema": 1, "id": "s25-commerce", "status": "authoring", "depends": [], "members": {"vendors": deferred}})
     for vendor in vendors:
         if not vendor.get("object_id"): continue
-        path = root / "src/blacksite/content/zones" / (vendor["zone"] + ".json")
+        path = root / "src/karst41/content/zones" / (vendor["zone"] + ".json")
         zone = json.loads(path.read_text(encoding="utf-8"))
         obj = next((o for o in zone["objects"] if o["id"] == vendor["object_id"]), None)
         if obj is None:
@@ -299,12 +299,12 @@ def build_vendors(root: Path, design: str, records: list[dict[str, Any]]) -> Non
         obj["params"].update(vendor=vendor["id"], name=vendor["name"])
         write(path, zone)
     for zid, tile in (("core-tram-hub",[12,7]),("core-precinct",[10,6]),("vatside-clinics",[12,10])):
-        path = root / "src/blacksite/content/zones" / (zid + ".json")
+        path = root / "src/karst41/content/zones" / (zid + ".json")
         zone = json.loads(path.read_text(encoding="utf-8"))
         if not any(o["kind"] == "bank" for o in zone["objects"]):
             zone["objects"].append({"id":"kestrel-bank", "tile":tile, "kind":"bank", "essential":True, "params":{"name":"Kestrel bank"}})
             write(path, zone)
-    path = root / "src/blacksite/content/zones/core-precinct.json"
+    path = root / "src/karst41/content/zones/core-precinct.json"
     zone = json.loads(path.read_text(encoding="utf-8"))
     if not any(o.get("params",{}).get("vendor") == "sablier-clinic" for o in zone["objects"]):
         zone["objects"].append({"id":"precinct-clinic", "tile":[15,6], "kind":"vendor", "essential":True,

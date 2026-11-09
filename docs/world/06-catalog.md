@@ -1,4 +1,4 @@
-# Blacksite — Catalog
+# Karst 41 — Catalog
 
 Every item class in the game with initial equipment schedules. Canon for what things *are* is
 `00-bible.md` §9; the rules these numbers plug into are
@@ -27,7 +27,7 @@ Conventions:
   select their named benefit, never permissions, slots or schedules;
   equipment with only fixed effects selects `none`. Carrier/healer
   drones scale carry/healing; armed drones scale direct damage. S17
-  reconciles the accepted [PR #38](https://github.com/Thiesi/Blacksite/pull/38)
+  reconciles the accepted [PR #38](https://github.com/Thiesi/Karst41/pull/38)
   findings 12/14 without changing any quality-1 catalog value.
 
 Manufacturers, so the brand language stays consistent:

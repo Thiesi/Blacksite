@@ -37,7 +37,7 @@ salvage cannot be bought or sold at NPC counters; player trade remains
 an owning slice's responsibility.
 
 For the real NetBBS engine acceptance, run `scripts/accept_s17_netbbs.py`
-with the NetBBS venv interpreter, `--door-python` pointing at Blacksite's
+with the NetBBS venv interpreter, `--door-python` pointing at Karst 41's
 interpreter, a fresh private `--root`, and `--show` in a real terminal.
 It uses the actual NetBBS picker, Telnet and native stdio door, at 80x24
 and 132x50 with wide names and 16 colours. It records ANSI/text captures

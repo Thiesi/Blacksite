@@ -9,10 +9,10 @@ from typing import Any
 
 import pytest
 
-from blacksite.content.loader import ContentTree, load_content
-from blacksite.content.schema import Region, Tile, Zone
-from blacksite.content.validate import validate
-from blacksite.server.protocol import Frame
+from karst41.content.loader import ContentTree, load_content
+from karst41.content.schema import Region, Tile, Zone
+from karst41.content.validate import validate
+from karst41.server.protocol import Frame
 from scripts import build_city_content as author
 from tests.character_helpers import act, create, place
 from tests.harness import HeadlessServer

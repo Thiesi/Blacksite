@@ -1,11 +1,6 @@
 name: Row population matched control
 
 on:
-  push:
-    branches: [measure/row-population-184]
-    paths:
-      - scripts/measure_row_control.py
-      - .github/workflows/row-population-control.yml
   workflow_dispatch:
 
 permissions:
@@ -35,17 +30,26 @@ jobs:
           EXPECTED_HEAD: ${{ github.sha }}
         run: |
           test "$(git rev-parse HEAD)" = "$EXPECTED_HEAD"
-          proof="$RUNNER_TEMP/blacksite-proof/row-population-184"
+          proof="$RUNNER_TEMP/karst41-proof/row-population-184"
           mkdir -p "$proof/temp"
           git fetch --no-tags origin refs/pull/144/head
           git merge-base --is-ancestor 4ab6470b10821f9fddbac718615af7d56c6048eb FETCH_HEAD
           git fetch --no-tags origin dd489f9ec7676b2c37b553fa7587c4d0a4ed6d56
           git worktree add --detach "$proof/a8" 4ab6470b10821f9fddbac718615af7d56c6048eb
-          git diff --exit-code 4ab6470b10821f9fddbac718615af7d56c6048eb HEAD -- scripts/presentation_p6_cpu.py tests/presentation/budget.py
+          python -B - <<'PY'
+          import subprocess
+          from pathlib import Path
+          from scripts.measure_row_control import A8, method_sha256
+          for name in ('scripts/presentation_p6_cpu.py', 'tests/presentation/budget.py'):
+              old = subprocess.check_output(['git', 'show', A8+':'+name])
+              current = Path(name).read_bytes()
+              assert method_sha256(old) == method_sha256(current), name
+          print('A8/P1 method bytes match apart from the declared R1 spellings.')
+          PY
       - name: Execute every predeclared arm on this one runner
         shell: bash
         run: |
-          proof="$RUNNER_TEMP/blacksite-proof/row-population-184"
+          proof="$RUNNER_TEMP/karst41-proof/row-population-184"
           TMPDIR="$proof/temp" python -B scripts/measure_row_control.py \
             --a8-root "$proof/a8" --output "$proof/control.json"
       - uses: actions/upload-artifact@v4
@@ -53,13 +57,13 @@ jobs:
         with:
           name: row-population-matched-control
           path: |
-            ${{ runner.temp }}/blacksite-proof/row-population-184/*.json
-            ${{ runner.temp }}/blacksite-proof/row-population-184/*.log
+            ${{ runner.temp }}/karst41-proof/row-population-184/*.json
+            ${{ runner.temp }}/karst41-proof/row-population-184/*.log
           if-no-files-found: error
       - name: Remove historical worktree and scratch
         if: always()
         shell: bash
         run: |
-          proof="$RUNNER_TEMP/blacksite-proof/row-population-184"
+          proof="$RUNNER_TEMP/karst41-proof/row-population-184"
           if [ -d "$proof/a8" ]; then git worktree remove "$proof/a8"; fi
           rm -rf -- "$proof"

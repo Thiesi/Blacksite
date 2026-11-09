@@ -5,10 +5,10 @@ from dataclasses import asdict, replace
 from hashlib import sha256
 from typing import Any
 
-from blacksite.content.loader import ContentTree
-from blacksite.server.protocol import Frame
-from blacksite.server.world.registry import World
-from blacksite.server.world.sight import sight_radius
+from karst41.content.loader import ContentTree
+from karst41.server.protocol import Frame
+from karst41.server.world.registry import World
+from karst41.server.world.sight import sight_radius
 from tests.character_helpers import create, place
 from tests.harness import FakeClient, HeadlessServer
 from tests.presentation.snapshots import canonical

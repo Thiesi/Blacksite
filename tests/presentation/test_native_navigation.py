@@ -123,7 +123,7 @@ def test_travel_waits_for_arrival_ack_then_asserts_focus_without_waiting_for_a_t
 
 @pytest.mark.parametrize('failure', [None, 'walk-recovery', 'boarding-down', 'ride-down', 'curfew-refusal'])
 def test_s10_tram_waits_for_scheduled_arrival_and_keeps_winner_death_blocking(failure: str | None) -> None:
-    from blacksite.server.world.exits import MAX_HOLD_SECONDS
+    from karst41.server.world.exits import MAX_HOLD_SECONDS
 
     actor = NS(position=(27, 25), stance='normal', health=18, marked=True)
     avatar = NS(actor=actor, zone='clinic', travel=None)
@@ -188,11 +188,11 @@ def test_s10_position_fixture_keeps_live_patrol_and_marked_pursuit(repo_root: Pa
     from dataclasses import replace
     from datetime import timedelta
 
-    from blacksite.content.loader import load_content
+    from karst41.content.loader import load_content
     from tests.character_helpers import create, place
     from tests.harness import HeadlessServer
 
-    content = load_content(repo_root/'src/blacksite/content')
+    content = load_content(repo_root/'src/karst41/content')
     original = content.npcs['npc-warden-patrol']
     old_zones, old_npcs = dict(content.zones), dict(content.npcs)
     helpers(replace=replace).s10_patrol_fixture(content)

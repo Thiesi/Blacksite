@@ -5,7 +5,7 @@
 time_limit and cpu_seconds accept 0-86400; zero removes the node ceiling,
 not host hard limits. Finite CPU exhaustion has no graceful signal.
 See [issue #56 catch-up](../plan/01-netbbs-platform.md). Proposal below archived.
-**Blocks:** nothing hard. Blacksite S30 (session-limit UX) and S29 (client CPU budget) work around it.
+**Blocks:** nothing hard. Karst 41 S30 (session-limit UX) and S29 (client CPU budget) work around it.
 **Recommended model for the NetBBS side:** Sonnet (small, well-bounded change in `runtime.py`, `profiles.py`, the profile editor, and the door guide).
 
 ## The gap
@@ -15,7 +15,7 @@ caps wall time at `min(profile.time_limit, 3600)`. Both are right for a
 classic door where an hour is a long session and CPU is idle waiting for
 keys. A real-time client renders continuously (bounded at 10 frames per
 second) and a player may want to stay in the world for an evening.
-Blacksite budgets its client at 120 CPU-seconds per hour and warns at
+Karst 41 budgets its client at 120 CPU-seconds per hour and warns at
 the wall-time cap, but a SysOp cannot choose otherwise today.
 
 ## Requested change
@@ -35,9 +35,9 @@ the wall-time cap, but a SysOp cannot choose otherwise today.
 
 No change to the default constants for existing doors.
 
-## What Blacksite does meanwhile
+## What Karst 41 does meanwhile
 
 The client warns at five and one minutes before the cap, reading the
-cap from the profile environment variable `BLACKSITE_SESSION_LIMIT`
+cap from the profile environment variable `KARST41_SESSION_LIMIT`
 (default 3600) because the platform does not tell the door; the server
 treats a reconnect within 60 s as the same session with no penalty.

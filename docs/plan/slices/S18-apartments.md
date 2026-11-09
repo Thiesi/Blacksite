@@ -3,7 +3,7 @@
 **Status:** done (PR #59)
 **Primary model:** Sonnet · **Reviewer:** none
 **Depends on:** S12, S15, S16 · **Milestone:** M3
-**Issue:** https://github.com/Thiesi/blacksite/issues/18
+**Issue:** https://github.com/Thiesi/Karst41/issues/18
 
 ## Goal
 
@@ -174,7 +174,7 @@ without duplication or loss in a persistence test.
 - S32 audits origin-scoped tenancy/key/impound authority and preserves
   the physical-unit theft receipt across tenancy changes.
 
-These implement the accepted [PR #38](https://github.com/Thiesi/Blacksite/pull/38)
+These implement the accepted [PR #38](https://github.com/Thiesi/Karst41/pull/38)
 quality, geography and permission follow-ups without changing class
 capacities, rents, upgrade tariffs or reclaim percentages.
 
@@ -182,7 +182,7 @@ capacities, rents, upgrade tariffs or reclaim percentages.
 
 Native provenance correction: the original local run used an older
 installed client after NetBBS removed PYTHONPATH. The original separate
-installed-wheel CI remains valid. S22 [PR #61](https://github.com/Thiesi/Blacksite/pull/61)
+installed-wheel CI remains valid. S22 [PR #61](https://github.com/Thiesi/Karst41/pull/61)
 repeats signing, quality-preserving storage, visitor refusal, bed
 reconnect, eviction and reclaim on version/source-verified 0.0.16 at
 80x24 and 132x50, with wide names and 16 colours, through actual Windows
@@ -204,5 +204,5 @@ entity 1.7; use `server.quality` for effective details. Rig permissions,
 slots and tolerance stay fixed. Never reconstruct a stored item at
 quality 1 or derive private-core tier from quality.
 
-This carries the accepted [PR #38](https://github.com/Thiesi/Blacksite/pull/38)
+This carries the accepted [PR #38](https://github.com/Thiesi/Karst41/pull/38)
 findings 12/14 forward; see [S17](S17-salvage-and-fabrication.md).

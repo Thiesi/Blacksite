@@ -4,9 +4,9 @@ from dataclasses import replace
 
 import pytest
 
-from blacksite.content.schema import Allocation, DataSpec, Effect, EvidenceRecord, Stage, StageTarget
+from karst41.content.schema import Allocation, DataSpec, Effect, EvidenceRecord, Stage, StageTarget
 from tests.contracts.test_engine import template
-from blacksite.server.protocol import Frame
+from karst41.server.protocol import Frame
 from tests.character_helpers import act
 from tests.lattice.test_engine import runners, intent, jack
 from tests.lattice.test_encounters import enter

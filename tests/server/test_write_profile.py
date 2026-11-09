@@ -9,8 +9,8 @@ from typing import Any
 
 import pytest
 
-from blacksite.server.clock import ManualClock
-from blacksite.server.storage.db import Storage
+from karst41.server.clock import ManualClock
+from karst41.server.storage.db import Storage
 from scripts.write_profile import Sample, WriteProfile, difference
 from tests.harness import HeadlessServer
 

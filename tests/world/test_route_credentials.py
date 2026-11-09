@@ -6,13 +6,13 @@ from typing import Any
 
 import pytest
 
-from blacksite.content.loader import ContentTree
-from blacksite.content.schema import Exit, Requirement
-from blacksite.content.schema import ObjectSpec
-from blacksite.content.validate import validate
-from blacksite.server.protocol import Frame
-from blacksite.server.world.exits import permitted
-from blacksite.server.world.zone import ObjectState
+from karst41.content.loader import ContentTree
+from karst41.content.schema import Exit, Requirement
+from karst41.content.schema import ObjectSpec
+from karst41.content.validate import validate
+from karst41.server.protocol import Frame
+from karst41.server.world.exits import permitted
+from karst41.server.world.zone import ObjectState
 from tests.character_helpers import act, create, place, state
 from tests.harness import HeadlessServer
 

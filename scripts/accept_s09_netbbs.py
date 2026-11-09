@@ -12,7 +12,7 @@ import re
 
 from accept_s04_netbbs import Database, DatabaseLane, DoorProfile, REPO, TelnetServer, browse_doors, create_door, create_user
 from accept_s06_netbbs import ZoneCaller
-from blacksite.server.app import Server
+from karst41.server.app import Server
 
 
 async def wait(condition: object, timeout: float = 10) -> None:
@@ -28,9 +28,9 @@ async def accept(root: Path, door_python: Path, show: bool) -> None:
     db=Database(root/'node.db');lane=DatabaseLane(db.path)
     users=[create_user(db,f'{label}{width}',password='LocalProbe-S09',user_level=10)
            for width in (80,132) for label in ('Caller','Peer')]
-    create_door(db,'Blacksite',str(door_python.absolute()),args=('-m','blacksite.door'),creator=users[0],
+    create_door(db,'Karst 41',str(door_python.absolute()),args=('-m','karst41.door'),creator=users[0],
         profile=DoorProfile(install_dir=str(REPO),encoding='utf-8',max_sessions=16,multinode_certified=True,
-                           time_limit=900,environment={'DOOR_BLACKSITE_INSTALL_DIR':str(service.install_dir)}).validate())
+                           time_limit=900,environment={'DOOR_KARST41_INSTALL_DIR':str(service.install_dir)}).validate())
     next_user=0
     failures=[]
     async def handler(session: object) -> None:
@@ -103,7 +103,7 @@ async def accept(root: Path, door_python: Path, show: bool) -> None:
         caller,writer,task,_,_=connection
         mark=len(caller.output)
         await caller.write(b'\x18y')
-        await wait(lambda:b'Left Blacksite.' in caller.output[mark:])
+        await wait(lambda:b'Left Karst 41.' in caller.output[mark:])
         await caller.write(b' ')
         await wait(lambda:b'Available doors' in re.sub(rb'\x1b\[[0-?]*[ -/]*[@-~]',b'',bytes(caller.output[mark:])))
         await caller.write(b'b');await wait(lambda:b'You return to the node.' in caller.output[mark:])

@@ -4,10 +4,10 @@ from dataclasses import replace
 
 import pytest
 
-from blacksite.content.schema import TileChange, ZoneLayout
-from blacksite.server.world.actors import Actor
-from blacksite.server.world.movement import move
-from blacksite.server.world.registry import World
+from karst41.content.schema import TileChange, ZoneLayout
+from karst41.server.world.actors import Actor
+from karst41.server.world.movement import move
+from karst41.server.world.registry import World
 
 
 def test_dormant_lazy_wake_and_seeded_rng(world: World) -> None:
@@ -32,7 +32,7 @@ def test_actor_in_one_zone_only(world: World) -> None:
 
 
 def test_closed_member_door_blocks_movement_and_invalidates_sight(world: World) -> None:
-    from blacksite.server.world.sight import visible_tiles
+    from karst41.server.world.sight import visible_tiles
 
     zone = world.zones["vatside-clinics"]
     door = next(obj for obj in zone.objects.values() if obj.spec.kind == "door" and obj.spec.tile == (70, 12))

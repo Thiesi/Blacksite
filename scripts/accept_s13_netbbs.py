@@ -11,7 +11,7 @@ import json
 from pathlib import Path
 
 from accept_s10_netbbs import Connection, NativeProbe, wait
-from blacksite.admin.client import request
+from karst41.admin.client import request
 
 
 async def lat_walk(probe: NativeProbe, caller: Connection, target: str) -> None:

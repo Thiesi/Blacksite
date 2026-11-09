@@ -7,11 +7,11 @@ from pathlib import Path
 
 import pytest
 
-from blacksite.content.loader import ContentTree, load_content
-from blacksite.content.schema import Bark, DialogueLine, DialogueNode, Offer
-from blacksite.server.players import Player
-from blacksite.server.npcs.templates import make_actor
-from blacksite.server.protocol import Frame
+from karst41.content.loader import ContentTree, load_content
+from karst41.content.schema import Bark, DialogueLine, DialogueNode, Offer
+from karst41.server.players import Player
+from karst41.server.npcs.templates import make_actor
+from karst41.server.protocol import Frame
 from tests.character_helpers import act, create, place
 from tests.harness import FakeClient, HeadlessServer
 from tests.combat.test_engine import body, build_duel, fire
@@ -19,7 +19,7 @@ from tests.combat.test_engine import body, build_duel, fire
 
 @pytest.fixture(scope='module')
 def content() -> ContentTree:
-    tree = load_content(Path(__file__).parents[1]/'src/blacksite/content')
+    tree = load_content(Path(__file__).parents[1]/'src/karst41/content')
     # Only this fixture's Vesper is active. Shipped cast and all future
     # placement remain authoring content under issue #82.
     bundle = tree.bundles['s27-cast']
@@ -323,7 +323,7 @@ def test_game_13_4_talking_preserves_real_world_damage_and_safe_room_refusal(
     open_talker(game, listener)
     assert listener.session.id in game.core.dialogue.menus
     before = actor.health
-    from blacksite.server.rules import combat as combat_rules
+    from karst41.server.rules import combat as combat_rules
     monkeypatch.setattr(combat_rules, 'to_hit', lambda *args: 100)
     fire(game, shooter, listener)  # Ordinary neutral-fire warning.
     game.step(20)  # Respect the ordinary two-second warning window.

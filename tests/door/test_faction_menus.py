@@ -1,9 +1,9 @@
 """UI 5: recruitment, pitch and last-key confirmation at both widths."""
 from dataclasses import asdict, replace
 import pytest
-from blacksite.door.model import Display
-from blacksite.server.faction_engine import FactionMenu
-from blacksite.server.protocol import Frame, encode
+from karst41.door.model import Display
+from karst41.server.faction_engine import FactionMenu
+from karst41.server.protocol import Frame, encode
 from tests.fake_terminal import FakeTerminal
 from tests.server.test_faction_engine import content, contacts
 

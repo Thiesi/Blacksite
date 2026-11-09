@@ -1,9 +1,9 @@
 # S42 — Talkers stay in reach, and the talk page lets you go
 
-**Status:** in review (PR #188; acceptance gates pending)
+**Status:** done (PR #188)
 **Primary model:** Codex · **Reviewer:** automated review, technical lead, presentation lead (presentation acceptance)
 **Depends on:** S38, S39, A9 (all merged) · **Milestone:** interaction
-**Issue:** https://github.com/Thiesi/Blacksite/issues/182
+**Issue:** https://github.com/Thiesi/Karst41/issues/182
 
 This comes before P11 (#164). P11's `me.threat` disclosure test would
 fail on `main` today because of the Warden tells in part 4.

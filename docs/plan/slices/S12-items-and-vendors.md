@@ -3,7 +3,7 @@
 **Status:** done (PR #49)
 **Primary model:** Sonnet · **Reviewer:** Opus (data model review before merge)
 **Depends on:** S07 · **Milestone:** M1
-**Issue:** https://github.com/Thiesi/blacksite/issues/12
+**Issue:** https://github.com/Thiesi/Karst41/issues/12
 
 ## Goal
 
@@ -31,7 +31,7 @@ bank chits, and die without losing what is banked or secured.
 
 ## Scope
 
-- `src/blacksite/content/items.json`: every row of the catalog's
+- `src/karst41/content/items.json`: every row of the catalog's
   weapons, ammunition, armour, consumables, drones (as items; drone
   behaviour is S11/S16), salvage, portable rigs, passes, keys, and the
   `arm_wake_coverall`. Implants, resonance, drugs, schematics, and

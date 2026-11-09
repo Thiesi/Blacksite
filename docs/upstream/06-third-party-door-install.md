@@ -5,7 +5,7 @@
 guide shipped in NetBBS v7.3.0 (PRs #499/#506). S31 targets the released
 contract, with one supervised preset and explicit version requirement.
 See [issue #56 catch-up](../plan/01-netbbs-platform.md). Proposal below archived.
-**Blocks:** nothing. Blacksite S31 documents the manual path either way.
+**Blocks:** nothing. Karst 41 S31 documents the manual path either way.
 **Recommended model for the NetBBS side:** Sonnet (a preset JSON, a door-guide section, and a Gallery-adjacent hint).
 
 ## The gap
@@ -34,7 +34,7 @@ preset and the same paragraph.
   Compatibility screen's import accepts, so the author's preset is one
   file the SysOp imports.
 
-## What Blacksite does meanwhile
+## What Karst 41 does meanwhile
 
 `deploy/netbbs-door-profile.json` is exactly such a preset and the SysOp
 guide walks through the import.

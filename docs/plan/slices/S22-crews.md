@@ -3,7 +3,7 @@
 **Status:** done (PR #61)
 **Primary model:** Sonnet · **Reviewer:** none
 **Depends on:** S09, S10, S13, S16 · **Milestone:** M4
-**Issue:** https://github.com/Thiesi/blacksite/issues/22
+**Issue:** https://github.com/Thiesi/Karst41/issues/22
 
 Note: lasting crews (game design §10.1, planned, #125) supersede this
 slice's live-only crew rules once they are built; until then this slice
@@ -16,7 +16,7 @@ outside scouting and target views. A key or Passkey opens only a
 30-second delivery vestibule. Keep the existing victim-cache recovery
 regression separate from protected apartment impound. See game design
 8.7, [S18](S18-apartments.md) and accepted
-[PR #38](https://github.com/Thiesi/Blacksite/pull/38).
+[PR #38](https://github.com/Thiesi/Karst41/pull/38).
 
 ## Goal
 
@@ -216,7 +216,7 @@ chat, jacking, pickup and firing use real keys. The installed 0.0.16
 client's Python-tree SHA256 is
 `a5f107aa068b4b41cbc9399e50722df68e0aa02b7ab613d26c5e6c7ee0288994`.
 Final Windows gates, installed-wheel CI and written review are tracked
-in [PR #61](https://github.com/Thiesi/Blacksite/pull/61) before merge.
+in [PR #61](https://github.com/Thiesi/Karst41/pull/61) before merge.
 
 Actual native input exposed a pre-existing 50ms framing failure: a split
 Right arrow became Esc, left bracket and C, opening Say during movement.
@@ -233,7 +233,7 @@ change. S04's reference and the common UI contract are reconciled here.
 
 ### S20 faction integration handoff
 
-Reference: [PR #38](https://github.com/Thiesi/Blacksite/pull/38) and S20.
+Reference: [PR #38](https://github.com/Thiesi/Karst41/pull/38) and S20.
 
 Preserve S20 faction outcomes and Marked body attribution when adding crew
 affiliation. Crew relation overrides compose with the shared matrix rather

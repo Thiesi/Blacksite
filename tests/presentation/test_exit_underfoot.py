@@ -6,17 +6,17 @@ from pathlib import Path
 import pytest
 from dataclasses import replace
 
-from blacksite.content.loader import ContentTree, load_content
-from blacksite.server.protocol import Frame
-from blacksite.content.schema import ObjectSpec
-from blacksite.server.npcs.templates import make_actor
-from blacksite.server.world.zone import ObjectState
+from karst41.content.loader import ContentTree, load_content
+from karst41.server.protocol import Frame
+from karst41.content.schema import ObjectSpec
+from karst41.server.npcs.templates import make_actor
+from karst41.server.world.zone import ObjectState
 from tests.presentation.exit_underfoot_matrix import CASES, PROMOTED, execute, setup
 
 
 @pytest.fixture(scope='module')
 def content() -> ContentTree:
-    return load_content(Path(__file__).resolve().parents[2]/'src/blacksite/content')
+    return load_content(Path(__file__).resolve().parents[2]/'src/karst41/content')
 
 
 @pytest.mark.parametrize('case', CASES)

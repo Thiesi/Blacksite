@@ -11,11 +11,11 @@ from types import SimpleNamespace
 from typing import Any
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[1]/'src'))
-from blacksite.server.bus import EventBus
-from blacksite.server.clock import ManualClock
-from blacksite.server.loop import TickLoop
-from blacksite.server.sessions import Sessions
-from blacksite.server.storage.db import Storage
+from karst41.server.bus import EventBus
+from karst41.server.clock import ManualClock
+from karst41.server.loop import TickLoop
+from karst41.server.sessions import Sessions
+from karst41.server.storage.db import Storage
 from minimal_s40_profile import MinimalProfile
 
 

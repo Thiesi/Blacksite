@@ -3,13 +3,13 @@
 from dataclasses import replace
 from pathlib import Path
 
-from blacksite.content.loader import load_content
-from blacksite.content.validate import validate
-from blacksite.server.rules.character import grade_threshold
+from karst41.content.loader import load_content
+from karst41.content.validate import validate
+from karst41.server.rules.character import grade_threshold
 
 
 def shipped():
-    return load_content(Path(__file__).resolve().parents[2]/"src/blacksite/content")
+    return load_content(Path(__file__).resolve().parents[2]/"src/karst41/content")
 
 
 def test_game_3_4_grade_titles_and_thresholds_have_no_creation_benefit():

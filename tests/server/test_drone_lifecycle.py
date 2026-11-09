@@ -1,7 +1,7 @@
 """Game 5.3: background tool saves cannot resurrect a deleted character."""
 
-from blacksite.server.app import Server
-from blacksite.server.storage.db import Storage
+from karst41.server.app import Server
+from karst41.server.storage.db import Storage
 from tests.server.test_drone_ownership import operator
 from tests.server.test_substances import give
 

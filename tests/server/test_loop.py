@@ -1,8 +1,8 @@
 """Architecture §6.1: manual ticks, ordered effects, no I/O in hooks."""
 
-from blacksite.server.bus import Event
-from blacksite.server.loop import TickContext
-from blacksite.server.protocol import Frame
+from karst41.server.bus import Event
+from karst41.server.loop import TickContext
+from karst41.server.protocol import Frame
 from tests.harness import HeadlessServer
 
 

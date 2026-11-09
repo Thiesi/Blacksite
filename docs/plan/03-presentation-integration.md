@@ -32,7 +32,7 @@ Contents:
 14. Adoption and owner decisions, 2026-10-28
 
 Evidence labels: **[V]** read in code, content or git at the stated
-commit; **[I]** inference. File paths are relative to `src/blacksite/`
+commit; **[I]** inference. File paths are relative to `src/karst41/`
 unless they start with `docs/`, `tests/` or `scripts/`.
 
 ---
@@ -810,7 +810,7 @@ E prompt, so P1 to P5 stay in place and in order.
 
 | Slice | Change |
 |---|---|
-| P1 | Adds a decider trace format and a replay test: a recorded view sequence must produce the same view choices. Principle 6 becomes verifiable rather than a debug aid. Starting point: #70's JSONL trace (`BLACKSITE_AUTO_TRACE`, one record per change: `at, t, from, to, view, looking, rule, why, zone, pos, inputs`). |
+| P1 | Adds a decider trace format and a replay test: a recorded view sequence must produce the same view choices. Principle 6 becomes verifiable rather than a debug aid. Starting point: #70's JSONL trace (`KARST41_AUTO_TRACE`, one record per change: `at, t, from, to, view, looking, rule, why, zone, pos, inputs`). |
 | P2 | The layout module gains named view shapes (map, scene, look). The deep camera becomes one of them, and the server and door read the same definition. |
 | P3 | Extends from the E focus resolver to the key contract. Principle 5 is tested: across every view, each movement key maps to the same intent. #70's current proposal: arrows step, Enter talks, and `,` `.` Space choose ways. |
 | P4 | Adds a server-declared `threat` state and reason, with a disclosure test. The decider reads only that field, never door-side inference (§11 note 12). It also adds `places`, `here` and known exits, routed over the disclosed set (§11 note 9). |
@@ -842,7 +842,7 @@ None of these slices is filed or started before D-T1.
   the presentation lead). The owner will not judge them from deliberate
   trial sessions in the `playtest_68` harness. They are judged in PT1 or
   a later playtest with real sessions. Until then Auto ships them as
-  tunable defaults, with the decider's trace (`BLACKSITE_AUTO_TRACE`)
+  tunable defaults, with the decider's trace (`KARST41_AUTO_TRACE`)
   available, so a real session's complaint can be traced to the rule
   that caused it. Engineering consequence: P5's decider keeps each rule
   as a named, separately tunable default, not inlined logic.
@@ -1068,7 +1068,7 @@ stacked on #73 (`design/presentation-v1`), to retire the performance
 risk early. Porting onto P2's view shapes and P5's client switch is a
 later step, and V1's acceptance runs after that port. Terms:
 
-- Like V0: behind `BLACKSITE_PRESENTATION_TRIAL`, no shipped path
+- Like V0: behind `KARST41_PRESENTATION_TRIAL`, no shipped path
   changes, not merged. The code is the draft for V1 proper.
 - Scope: coalescing; the lit layer cached per tile and heading, with
   idle prefetch; the reduced byte class while moving; the fixed-camera

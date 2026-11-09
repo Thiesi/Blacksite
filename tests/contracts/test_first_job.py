@@ -7,18 +7,18 @@ from typing import Any
 
 import pytest
 
-from blacksite.content.loader import load_content
-from blacksite.content.validate import validate
-from blacksite.server.contracts.panels import Panel
+from karst41.content.loader import load_content
+from karst41.content.validate import validate
+from karst41.server.contracts.panels import Panel
 from tests.character_helpers import act, create, place
-from blacksite.server.protocol import Frame
+from karst41.server.protocol import Frame
 from tests.harness import HeadlessServer
 from tests.lattice.test_engine import intent
 from tests.lattice.test_interlock import flip
 
 
 def first_job(repo_root: Path, archetype: int = 0) -> tuple[Any, ...]:
-    content = load_content(repo_root/'src/blacksite/content')
+    content = load_content(repo_root/'src/karst41/content')
     assert not validate(content)
     # Route mechanics are isolated from NPC scheduling. Native acceptance
     # retains shipped traffic and proves the actual sheltered release.

@@ -5,12 +5,12 @@ from typing import Any
 
 import pytest
 
-from blacksite.content.schema import EvidenceRecord, ObjectSpec, StageTarget
-from blacksite.door.doorinfo import DoorInfo
-from blacksite.door.model import Display
-from blacksite.server.contracts.panels import Panel
-from blacksite.server.protocol import Frame
-from blacksite.server.world.zone import ObjectState
+from karst41.content.schema import EvidenceRecord, ObjectSpec, StageTarget
+from karst41.door.doorinfo import DoorInfo
+from karst41.door.model import Display
+from karst41.server.contracts.panels import Panel
+from karst41.server.protocol import Frame
+from karst41.server.world.zone import ObjectState
 from tests.contracts.test_adapter import live, shipped
 from tests.fake_terminal import FakeTerminal
 from tests.contracts.test_adapter import accept, complete
@@ -164,6 +164,6 @@ def test_ui_11_contract_social_overlay_preserves_crew_and_chat_panels(live) -> N
     owner.panels.menus[session.id] = Panel(0)
     assert owner.lat.social_overlay(session)
     owner.panels.close(session)
-    from blacksite.server.crew_engine import CrewMenu
+    from karst41.server.crew_engine import CrewMenu
     game.core.crews.menus[session.id] = CrewMenu(0, 0)
     assert owner.lat.social_overlay(session)

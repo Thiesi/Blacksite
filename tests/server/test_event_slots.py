@@ -8,10 +8,10 @@ import json
 import sqlite3
 import pytest
 
-from blacksite.content.schema import Spawner
+from karst41.content.schema import Spawner
 from tests.harness import HeadlessServer
 from tests.server.test_event_convoy import base_content, convoy_game
-from blacksite.server.storage.db import Storage
+from karst41.server.storage.db import Storage
 
 
 def cancel(game: Any, pid: str) -> None:

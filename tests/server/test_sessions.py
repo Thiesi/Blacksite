@@ -1,7 +1,7 @@
 """Design §14 limits, architecture §5.3 coalescing and §8.2 reconnects."""
 
-from blacksite.server.protocol import Frame
-from blacksite.server.sessions import QUEUE_LIMIT
+from karst41.server.protocol import Frame
+from karst41.server.sessions import QUEUE_LIMIT
 from tests.harness import HeadlessServer
 
 

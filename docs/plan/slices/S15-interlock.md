@@ -3,7 +3,7 @@
 **Status:** done (PR #54)
 **Primary model:** Opus · **Reviewer:** none
 **Depends on:** S14, S11 · **Milestone:** M2
-**Issue:** https://github.com/Thiesi/blacksite/issues/15
+**Issue:** https://github.com/Thiesi/Karst41/issues/15
 
 ## Goal
 

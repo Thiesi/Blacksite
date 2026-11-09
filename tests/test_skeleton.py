@@ -4,17 +4,17 @@ import importlib
 import tomllib
 from pathlib import Path
 
-import blacksite
-from blacksite import version
+import karst41
+from karst41 import version
 
 PACKAGES = [
-    "blacksite",
-    "blacksite.version",
-    "blacksite.server",
-    "blacksite.door",
-    "blacksite.admin",
-    "blacksite.bot",
-    "blacksite.content",
+    "karst41",
+    "karst41.version",
+    "karst41.server",
+    "karst41.door",
+    "karst41.admin",
+    "karst41.bot",
+    "karst41.content",
 ]
 
 def _pyproject(repo_root: Path) -> dict:
@@ -31,7 +31,7 @@ def test_version_constants(repo_root: Path) -> None:
     # 02-architecture.md section 5.1 and section 6.2.
     project = _pyproject(repo_root)["project"]
     assert version.PACKAGE_VERSION == project["version"]
-    assert blacksite.__version__ == version.PACKAGE_VERSION
+    assert karst41.__version__ == version.PACKAGE_VERSION
     assert version.PROTOCOL_MAJOR == 1
     assert version.CONTENT_SCHEMA == 1
     assert version.WORLD_SCHEMA == 4

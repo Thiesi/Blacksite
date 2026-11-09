@@ -3,7 +3,7 @@
 **Status:** planned
 **Primary model:** Sonnet · **Reviewer:** Opus (backup/restore and migrations)
 **Depends on:** S05, S16, S23, S26 · **Milestone:** M6
-**Issue:** https://github.com/Thiesi/blacksite/issues/28
+**Issue:** https://github.com/Thiesi/Karst41/issues/28
 
 S18 hands off lazy rent reconciliation via
 `Apartments.ensure_rent(player_id)`. After an authorized operator clock
@@ -15,12 +15,12 @@ days with no remaining rent funds. S18's native jump is explicitly an
 injected housing-clock fixture, not production admin tooling. Backups
 include `interlock_state` tenancy, key, safe and impound records in the
 same SQLite snapshot as items and players. See game design 8.7, entity
-2.3 and accepted [PR #38](https://github.com/Thiesi/Blacksite/pull/38).
+2.3 and accepted [PR #38](https://github.com/Thiesi/Karst41/pull/38).
 
 ## Goal
 
 Give the SysOp everything they need to run a world without reading
-code: the complete `blacksite admin` command set over the server's
+code: the complete `karst41 admin` command set over the server's
 socket, an offline mode for backup, restore, and migrations, moderation
 that keys on the BBS user id, an audit log of every operator action, and
 a SysOp guide that walks from install to a season rollover. Every
@@ -49,7 +49,7 @@ gets one here; this slice makes them one coherent tool.
 
 ## Scope
 
-- `src/blacksite/admin/cli.py`: argparse tree, `--install-dir`,
+- `src/karst41/admin/cli.py`: argparse tree, `--install-dir`,
   `--offline`, `--json` output for every read command, exit codes
   (0 ok, 1 refused, 2 usage, 3 cannot connect).
 - Online commands (socket, `operator` role): `status`, `who` (players,
@@ -106,7 +106,7 @@ gets one here; this slice makes them one coherent tool.
 
 - `bans`, `mutes`, `audit` (file, not table), `reports` per entities
   §2.10; `character_cap` per user in world meta.
-- Migration module naming: `src/blacksite/server/storage/migrations/
+- Migration module naming: `src/karst41/server/storage/migrations/
   m0001_initial.py` … with `up(conn)` only (no downgrades; restore is
   the downgrade).
 
@@ -140,7 +140,7 @@ gets one here; this slice makes them one coherent tool.
 
 ## Acceptance script
 
-1. With the service running and one caller online, run `blacksite
+1. With the service running and one caller online, run `karst41
    admin --install-dir DIR status` and `who`: the caller appears with
    handle and zone.
 2. `mute <user> 5 "test"`: the caller sees the toast and cannot say;
@@ -168,7 +168,7 @@ gets one here; this slice makes them one coherent tool.
 
 Issue #56: follow `docs/plan/01-netbbs-platform.md` and architecture 6.2.
 NetBBS's installation-directory backup is node-wide opt-in, unquiesced
-and not restored automatically. Retain Blacksite's SQLite backup API
+and not restored automatically. Retain Karst 41's SQLite backup API
 snapshot and manifest. Verify online backup during writes, integrity and
 service-stopped/exclusive-lease restoration; a raw copy of world.db/WAL
 must not be presented as recovery proof. Document both stop grace budgets,
@@ -188,7 +188,7 @@ cannot be advertised as working under the registered-only default gate.
 
 ### S22 crew integration handoff
 
-S22 [PR #61](https://github.com/Thiesi/Blacksite/pull/61) crews dissolve
+S22 [PR #61](https://github.com/Thiesi/Karst41/pull/61) crews dissolve
 on restart and remove deleted/disconnected members immediately; there
 is no crew table to back up. Existing frozen loot entitlements persist
 with their owning source. Preserve consistent SQLite backup semantics.
@@ -196,9 +196,9 @@ with their owning source. Preserve consistent SQLite backup semantics.
 <!-- s19-services:start -->
 ### S19 source and service handoff
 
-Reference: [S19 PR #62](https://github.com/Thiesi/Blacksite/pull/62),
+Reference: [S19 PR #62](https://github.com/Thiesi/Karst41/pull/62),
 [acceptance record](../../ops/s19-acceptance.md) and
-[PR #38](https://github.com/Thiesi/Blacksite/pull/38).
+[PR #38](https://github.com/Thiesi/Karst41/pull/38).
 
 S19 supplies the implemented source interfaces, 68 authored contracts
 and four service nodes. Full root pytest passed 1344 tests with one
@@ -216,7 +216,7 @@ acknowledgement.
 ### S23 market handoff
 
 Consume architecture 15.2 and S23, retaining the accepted
-[PR #38](https://github.com/Thiesi/Blacksite/pull/38) product boundaries.
+[PR #38](https://github.com/Thiesi/Karst41/pull/38) product boundaries.
 Schema 4 adds market listings, bid history and bounties, with market
 serials in meta and private financial audit. Include all in backups.
 `admin.market.list` and `admin.bounty.list` take optional positive `page`
@@ -228,9 +228,9 @@ Cancellation/refund replies follow the durable atomic source commit.
 <!-- s24-handoff:start -->
 ### S24 event integration and acceptance handoff
 
-Reference: [S24 #24](https://github.com/Thiesi/Blacksite/issues/24),
-[PR #38](https://github.com/Thiesi/Blacksite/pull/38) and
-[platform #56](https://github.com/Thiesi/Blacksite/issues/56).
+Reference: [S24 #24](https://github.com/Thiesi/Karst41/issues/24),
+[PR #38](https://github.com/Thiesi/Karst41/pull/38) and
+[platform #56](https://github.com/Thiesi/Karst41/issues/56).
 
 Retain authenticated, audited `event list [--page N]`, `event force ID
 [--where SCOPE]`, and `event cancel PLAN` (also under `admin event`).
@@ -254,8 +254,8 @@ the service. Include those records in operator troubleshooting.
 <!-- s24-review-policy:start -->
 ### S24 practical review follow-up
 
-Reference: [PR #65](https://github.com/Thiesi/Blacksite/pull/65), retaining
-[PR #38](https://github.com/Thiesi/Blacksite/pull/38) and #56.
+Reference: [PR #65](https://github.com/Thiesi/Karst41/pull/65), retaining
+[PR #38](https://github.com/Thiesi/Karst41/pull/38) and #56.
 
 Event list shows recent bounded history: 128 closed plans plus live/current
 transitions. Personal held outcomes remain separate. Content changes can

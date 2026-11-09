@@ -6,15 +6,15 @@ from pathlib import Path
 
 import pytest
 
-from blacksite.content.loader import load_content
-from blacksite.content.schema import Rank
-from blacksite.server import factions as rules
-from blacksite.server.players import Player
+from karst41.content.loader import load_content
+from karst41.content.schema import Rank
+from karst41.server import factions as rules
+from karst41.server.players import Player
 
 
 @pytest.fixture(scope="module")
 def factions():
-    return load_content(Path(__file__).parents[1]/"src/blacksite/content").factions
+    return load_content(Path(__file__).parents[1]/"src/karst41/content").factions
 
 
 @pytest.fixture
@@ -127,7 +127,7 @@ def test_game_7_1_marked_kill_has_identity_scoped_rolling_day_cap(factions, play
 
 
 def test_game_7_1_card_alias_migrates_once_and_never_grants_membership(player):
-    content = load_content(Path(__file__).parents[1]/"src/blacksite/content")
+    content = load_content(Path(__file__).parents[1]/"src/karst41/content")
     player.standing = {"red-sable": 10, "sable": 4}
     assert rules.normalize_card_standing(player, content.wake_cards)
     assert player.standing == {"sable": 14} and player.faction is None
@@ -138,7 +138,7 @@ def test_game_7_1_card_alias_migrates_once_and_never_grants_membership(player):
 def test_game_7_1_actual_sable_wake_card_grants_ten_to_real_faction():
     from tests.harness import HeadlessServer
     from tests.character_helpers import create
-    content = load_content(Path(__file__).parents[1]/"src/blacksite/content")
+    content = load_content(Path(__file__).parents[1]/"src/karst41/content")
     game = HeadlessServer(content, character_state={})
     client = game.connect()
     create(game, client, card="red-sable")
@@ -147,8 +147,8 @@ def test_game_7_1_actual_sable_wake_card_grants_ten_to_real_faction():
 
 
 def test_entities_1_9_sites_preserve_hall_contract_without_activating_future_maps():
-    from blacksite.content.validate import validate
-    content = load_content(Path(__file__).parents[1]/"src/blacksite/content")
+    from karst41.content.validate import validate
+    content = load_content(Path(__file__).parents[1]/"src/karst41/content")
     assert not validate(content)
     assert len(content.factions) == len(content.faction_sites) == 8
     assert all(content.active("factions", fid) for fid in content.factions)

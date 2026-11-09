@@ -6,21 +6,21 @@ from pathlib import Path
 
 import pytest
 
-from blacksite.content.loader import load_content
-from blacksite.content.schema import ObjectSpec, QualitySpec
-from blacksite.server.clock import TICK_HZ
-from blacksite.server.items import make_item
-from blacksite.server.quality import detail, roll, validate_policy
-from blacksite.server.protocol import Frame
-from blacksite.server.storage.db import Storage
-from blacksite.server.world.zone import ObjectState
+from karst41.content.loader import load_content
+from karst41.content.schema import ObjectSpec, QualitySpec
+from karst41.server.clock import TICK_HZ
+from karst41.server.items import make_item
+from karst41.server.quality import detail, roll, validate_policy
+from karst41.server.protocol import Frame
+from karst41.server.storage.db import Storage
+from karst41.server.world.zone import ObjectState
 from tests.character_helpers import create
 from tests.harness import HeadlessServer
 
 
 @pytest.fixture(scope="module")
 def content():
-    return load_content(Path(__file__).parents[1]/"src/blacksite/content")
+    return load_content(Path(__file__).parents[1]/"src/karst41/content")
 
 
 @pytest.fixture
@@ -190,7 +190,7 @@ def test_game_8_4_quality_floor_cap_and_no_roll(content):
 
 
 def test_game_8_4_repeated_crafts_keep_reward_watermark_and_daily_skill_cap(game):
-    from blacksite.server.rules.character import attributes
+    from karst41.server.rules.character import attributes
     client, player = caller(game)
     target = setup_recipe(game, client, player, "sch_ring_wrench")
     for _ in range(4):
@@ -210,7 +210,7 @@ def test_game_8_4_repeated_crafts_keep_reward_watermark_and_daily_skill_cap(game
 
 
 def test_game_8_4_quality_selects_one_armour_resistance_and_real_implant_effect(game):
-    from blacksite.server.quality import effects
+    from karst41.server.quality import effects
     client, player = caller(game)
     armour = grant(game, player, "arm_ostrom_mirror")
     armour.quality = 1.15

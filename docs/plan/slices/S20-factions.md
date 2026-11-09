@@ -3,7 +3,7 @@
 **Status:** done (PR #60)
 **Primary model:** Opus · **Reviewer:** none
 **Depends on:** S11, S12, S16 · **Milestone:** M4
-**Issue:** https://github.com/Thiesi/blacksite/issues/20
+**Issue:** https://github.com/Thiesi/Karst41/issues/20
 
 ## Goal
 
@@ -229,7 +229,7 @@ fixtures are grade/+30 admission standing, delayed Warden attacks and
 zone, a charge/zero chits, +90 Halvard membership after the refusal and
 a between-size core cooldown reset. Real Sink geography remains S25.
 
-[CI artifact](https://github.com/Thiesi/Blacksite/actions/runs/39864555607/artifacts/12464036114):
+[CI artifact](https://github.com/Thiesi/Karst41/actions/runs/39864555607/artifacts/12464036114):
 99 files, 437659 bytes; independently downloaded and checked against
 SHA256 `ecb47ace76f110a48d4ca06ecbb7a96fc55c9b807c47c40c251664d3b5aef553`.
 Both result JSON files contain passing runs at both terminal sizes.
@@ -246,7 +246,7 @@ Final PR checks still govern merge; this marker is published with it.
 
 The original local TTY runs used an older installed client after NetBBS
 removed PYTHONPATH. The original installed-wheel Linux CI remains valid.
-S22 [PR #61](https://github.com/Thiesi/Blacksite/pull/61) repeats faction
+S22 [PR #61](https://github.com/Thiesi/Karst41/pull/61) repeats faction
 and hardware acceptance on version/source-verified 0.0.16 at 80x24 and
 132x50, with wide names and 16 colours, through actual Windows TTY
 NetBBS native stdio. Both stages pass; the combined process exits zero.

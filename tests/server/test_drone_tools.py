@@ -2,10 +2,10 @@
 
 import pytest
 
-import blacksite.server.views.zone_view as zone_view
-from blacksite.server.inventory import Inventory
-from blacksite.server.rules import character
-from blacksite.server.world.actors import Actor
+import karst41.server.views.zone_view as zone_view
+from karst41.server.inventory import Inventory
+from karst41.server.rules import character
+from karst41.server.world.actors import Actor
 from tests.character_helpers import create, place
 from tests.combat.test_engine import body
 from tests.server.test_drone_combat import deploy

@@ -2,7 +2,7 @@
 
 from copy import deepcopy
 from typing import Any
-from blacksite.server.protocol import Frame
+from karst41.server.protocol import Frame
 from tests.harness import FakeClient, HeadlessServer
 
 

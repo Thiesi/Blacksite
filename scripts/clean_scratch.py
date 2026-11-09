@@ -8,7 +8,8 @@
 Cleaning deletes only ignored, reproducible scratch: `.test-tmp`,
 `.pytest_cache`, `__pycache__` and `*.egg-info` (never `.venv`, never
 tracked files). Keep any evidence you need in docs/ or on the PR first.
-`--temp` deletes only top-level `blacksite-*` and `native-proof-*` entries
+`--temp` deletes only top-level `karst41-*`, legacy `blacksite-*` and
+`native-proof-*` entries (legacy counting/removal retires in S31)
 in the system temp folder with nothing written for 24 hours, so a proof
 that is still running is left alone. `--older-than HOURS` changes the 24.
 It never touches anything else there.
@@ -29,7 +30,7 @@ import tempfile
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parent.parent
-sys.path.insert(0, str(ROOT))
+sys.path[:0] = [str(ROOT/'src'), str(ROOT)]
 from tests.scratch_guard import DEFAULT_LIMIT, SCRATCH_DIRS, count_files, temp_files, temp_folders  # noqa: E402
 
 SKIP = {'.git', '.venv', '.worktrees', 'node_modules'}

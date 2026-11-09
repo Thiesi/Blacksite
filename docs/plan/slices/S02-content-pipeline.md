@@ -3,7 +3,7 @@
 **Status:** done (PR #40)
 **Primary model:** Opus · **Reviewer:** Sonnet (test coverage)
 **Depends on:** S01 · **Milestone:** M0
-**Issue:** https://github.com/Thiesi/blacksite/issues/2
+**Issue:** https://github.com/Thiesi/Karst41/issues/2
 
 ## Goal
 
@@ -26,13 +26,13 @@ file and line.
 
 ## Scope
 
-- `src/blacksite/content/schema.py`: frozen dataclasses for `Zone`,
+- `src/karst41/content/schema.py`: frozen dataclasses for `Zone`,
   `TileType`, `Exit`, `Spawner`, `ObjectSpec`, `Region`, `Sector`,
   `Cell`, `Core`, `Room`, `DataSpec`, `ControlSpec`, `IceTemplate`,
   `ProgramTemplate`, `ItemTemplate` (with per-class blocks), `NpcTemplate`,
   `Faction`, `ContractTemplate`, `DialogueNode`, `EventTemplate`,
   `SeasonDefinition`, `TextAsset`, `ArtAsset`, all with `schema: int`.
-- `src/blacksite/content/formats.py`: the `.map` grid format (UTF-8 text,
+- `src/karst41/content/formats.py`: the `.map` grid format (UTF-8 text,
   one row per line, glyph → tile id via `tiles.json`, trailing whitespace
   significant) and the JSON sidecar; readers for `tiles.json`,
   `glyphs.json`, `palette.json`, `keymaps.json`, `factions.json`,
@@ -41,11 +41,11 @@ file and line.
   `seasons/<n>.json`, `sectors/<id>.json`, `cores/<id>.json`,
   `zones/<id>.map` + `.json`, `dialogue/<npc>.json`, `text/<id>.md|.txt`,
   `art/<id>.ans` + `.json`.
-- `src/blacksite/content/loader.py`: `load_content(root: Path, local:
+- `src/karst41/content/loader.py`: `load_content(root: Path, local:
   Path | None) -> ContentTree`, applying `content.local/` overrides by
   ID, computing a content hash (SHA-256 over sorted file bytes) exposed
   as `ContentTree.hash`.
-- `src/blacksite/content/validate.py`: `validate(tree) -> list[Problem]`
+- `src/karst41/content/validate.py`: `validate(tree) -> list[Problem]`
   where `Problem(path, line | None, message)`; enforces every invariant
   in `01-entities.md` §5 that is content-only: exits resolve to existing
   zones and passable tiles; every core control resolves to a zone object;
@@ -58,7 +58,7 @@ file and line.
   rows equal width. The Shaft Head/Shaft Foot shared-core case
   (gazetteer) is allowed only when the core declares `hardware` as a
   list of exactly two locations.
-- `src/blacksite/content/ids.py`: slug validation (`^[a-z0-9]+(-[a-z0-9]+)*$`
+- `src/karst41/content/ids.py`: slug validation (`^[a-z0-9]+(-[a-z0-9]+)*$`
   for content, catalog-style `^[a-z]+_[a-z0-9_]+$` accepted for item,
   program, ICE, hymn IDs as the catalog uses them).
 - Shipped starter data (real, minimal): `tiles.json` with the gazetteer
@@ -75,8 +75,8 @@ file and line.
   sidearm, ammo, coverall, patch by their catalog IDs), two ICE, three
   programs, two NPC templates, one contract template, one event, one
   text asset, one art asset.
-- `blacksite admin validate --content DIR` stub wired in S05; here only
-  the function and a `python -m blacksite.content.validate DIR` entry.
+- `karst41 admin validate --content DIR` stub wired in S05; here only
+  the function and a `python -m karst41.content.validate DIR` entry.
 
 ## Out of scope
 
@@ -87,7 +87,7 @@ file and line.
 
 ## Data and content
 
-Everything under `src/blacksite/content/` listed above, plus the
+Everything under `src/karst41/content/` listed above, plus the
 fixture tree. Directory names and file names follow `04-assets.md` §8.
 
 ## Protocol and view models
@@ -109,12 +109,12 @@ None.
   `::test_shared_hardware_only_when_declared`.
 - `tests/content/test_ids.py::test_slug_rules`.
 - `tests/content/test_shipped_tree.py::test_shipped_content_validates` —
-  runs the validator over `src/blacksite/content/` and asserts zero
+  runs the validator over `src/karst41/content/` and asserts zero
   problems (grows with every content slice).
 
 ## Acceptance script
 
-1. `python -m blacksite.content.validate tests/fixtures/world` → "ok,
+1. `python -m karst41.content.validate tests/fixtures/world` → "ok,
    3 zones, 1 sector, 2 cores, hash …".
 2. Edit `fx-street.json` to point an exit at `nowhere`; rerun → one
    problem naming the file and the exit.
@@ -134,7 +134,7 @@ None.
   same East Asian width rule the client will use (`unicodedata.
   east_asian_width in ("W", "F")` → 2); reject wide glyphs in maps.
 - Content is read by the server only; the client receives view models.
-  Do not import the loader from `blacksite.door`.
+  Do not import the loader from `karst41.door`.
 - Keep loaders pure (no logging, no globals) so S03 can reload zones in
   a background task.
 - Windows: open files with explicit `encoding="utf-8"`, `newline=""`

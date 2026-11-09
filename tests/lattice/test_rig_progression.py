@@ -2,9 +2,9 @@
 
 import pytest
 
-from blacksite.server.drugs import dose
-from blacksite.server.implants import install
-from blacksite.server.items import make_item
+from karst41.server.drugs import dose
+from karst41.server.implants import install
+from karst41.server.items import make_item
 from tests.character_helpers import create, place
 from tests.lattice.test_engine import jack, runners
 from tests.lattice.test_encounters import enter

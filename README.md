@@ -1,10 +1,10 @@
-![Blacksite: Karst beneath orbital wreckage, with the Lattice below.](docs/assets/blacksite-banner.png)
+![Karst 41: the city beneath orbital wreckage, with the Lattice below.](docs/assets/blacksite-banner.png)
 
-# Blacksite
+# Karst 41
 
 *The city was built to keep something in. Nobody remembers what.*
 
-Blacksite is a real-time multiplayer door game for
+Karst 41 is a real-time multiplayer door game for
 [NetBBS](https://github.com/Thiesi/NetBBS): a cyberpunk city called Karst,
 sealed off from the world for forty-one years under a sky full of
 orbital wreckage, with a network underneath it that has been very
@@ -61,7 +61,7 @@ storage, protected safes, private cores and impound. Its native proof uses
 three labelled room anchors and an injected housing clock; S25 still
 owns the real Terraces letting terminal and 24-door pool.
 
-Blacksite is developed as a third-party native door: it has no commit
+Karst 41 is developed as a third-party native door: it has no commit
 access to NetBBS. What it needs from the platform is written up in
 `docs/upstream/` and filed in the NetBBS repository.
 

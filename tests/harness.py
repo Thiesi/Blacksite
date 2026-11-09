@@ -3,14 +3,14 @@
 from dataclasses import asdict, dataclass
 from typing import Any
 
-from blacksite.server.auth import Authenticator, sign
-from blacksite.server.clock import ManualClock
-from blacksite.server.core import Core
-from blacksite.server.protocol import Frame, ProtocolError
-from blacksite.server.sessions import Session
-from blacksite.version import PACKAGE_VERSION, PROTOCOL_MAJOR
-from blacksite.content.loader import ContentTree
-from blacksite.server.world.registry import World
+from karst41.server.auth import Authenticator, sign
+from karst41.server.clock import ManualClock
+from karst41.server.core import Core
+from karst41.server.protocol import Frame, ProtocolError
+from karst41.server.sessions import Session
+from karst41.version import PACKAGE_VERSION, PROTOCOL_MAJOR
+from karst41.content.loader import ContentTree
+from karst41.server.world.registry import World
 
 DOOR_SECRET = b"d" * 32
 ADMIN_SECRET = b"a" * 32

@@ -5,19 +5,19 @@ from pathlib import Path
 
 import pytest
 
-from blacksite.content.loader import ContentTree, load_content
-from blacksite.door.present.zone import origin
-from blacksite.layout import compute
-from blacksite.server.views.zone_view import camera
-from blacksite.server.world.actors import Actor
-from blacksite.server.world.zone import ZoneInstance
+from karst41.content.loader import ContentTree, load_content
+from karst41.door.present.zone import origin
+from karst41.layout import compute
+from karst41.server.views.zone_view import camera
+from karst41.server.world.actors import Actor
+from karst41.server.world.zone import ZoneInstance
 
 ROOT = Path(__file__).resolve().parents[2]
 
 
 @pytest.fixture(scope='module')
 def content() -> ContentTree:
-    return load_content(ROOT/'src/blacksite/content')
+    return load_content(ROOT/'src/karst41/content')
 
 
 @pytest.mark.parametrize('size', [(80,24),(132,50)])

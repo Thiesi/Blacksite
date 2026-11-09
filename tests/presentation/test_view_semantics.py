@@ -5,12 +5,12 @@ from dataclasses import replace
 
 import pytest
 
-from blacksite.content.loader import load_content
-from blacksite.npc_presentation import channels
-from blacksite.server.lattice.presence import Procedure
-from blacksite.server.npcs.templates import make_actor
-from blacksite.server.dialogue_runtime import Contact, TalkerMenu
-from blacksite.server.views.zone_view import Perception, build
+from karst41.content.loader import load_content
+from karst41.npc_presentation import channels
+from karst41.server.lattice.presence import Procedure
+from karst41.server.npcs.templates import make_actor
+from karst41.server.dialogue_runtime import Contact, TalkerMenu
+from karst41.server.views.zone_view import Perception, build
 from tests.character_helpers import create, place
 from tests.harness import HeadlessServer
 from tests.lattice.test_engine import actor, intent, jack, runners
@@ -23,7 +23,7 @@ from tests.server.test_drone_combat import deploy
 
 @pytest.mark.parametrize('width,height', [(80, 24), (132, 50)])
 def test_arch_5_5_4_shipped_sodium_warden_cover_and_per_caller_reveal(repo_root, info, width, height):
-    content = load_content(repo_root/'src/blacksite/content')
+    content = load_content(repo_root/'src/karst41/content')
     template = content.npcs['npc-plainclothes-warden']
     assert template.presents == 'civilian' and template.cover_name == 'Sodium regular'
     # Keep every shipped spawner/template; do not manufacture a Warden.
@@ -295,7 +295,7 @@ def test_arch_5_5_3_single_emit_and_complete_replay_metadata(runners, repo_root)
     session.replay_log()
     assert session.send_queue[-1].data['lines'][-1] == before[-1]
     bypasses = []
-    for path in (repo_root/'src/blacksite/server').rglob('*.py'):
+    for path in (repo_root/'src/karst41/server').rglob('*.py'):
         if path.name == 'sessions.py':
             continue  # Delivery/replay; all authored lines enter Session.emit.
         for node in ast.walk(ast.parse(path.read_text(encoding='utf-8'))):
