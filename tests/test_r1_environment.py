@@ -2,7 +2,10 @@
 
 import json
 import logging
+import os
 from pathlib import Path
+import subprocess
+import sys
 
 import pytest
 
@@ -75,3 +78,28 @@ def test_r1_unused_legacy_alias_does_not_log(caplog: pytest.LogCaptureFixture) -
         assert setting({'KARST41_INSTALL_DIR': 'new', 'BLACKSITE_INSTALL_DIR': 'old'},
                        ('KARST41_INSTALL_DIR',)) == 'new'
     assert not caplog.records
+
+
+def test_r1_operator_sees_one_warning_and_native_door_stays_quiet(
+        tmp_path: Path, repo_root: Path) -> None:
+    # Remove in S31: exercise actual process logging defaults for old names.
+    environment = {**os.environ, 'PYTHONPATH': str(repo_root/'src')}
+    for name in NAMES:
+        environment.pop(name, None)
+        environment.pop(name.replace('KARST41', 'BLACKSITE'), None)
+    result = subprocess.run([sys.executable, '-c',
+        'from karst41.environment import setting; '
+        'setting({"BLACKSITE_INSTALL_DIR":"private"}, ("KARST41_INSTALL_DIR",)); '
+        'setting({"BLACKSITE_SESSION_LIMIT":"60"}, ("KARST41_SESSION_LIMIT",))'],
+        env=environment, cwd=repo_root, capture_output=True, text=True, check=True)
+    assert result.stderr.count('Deprecated') == 1 and not result.stdout
+    assert 'private' not in result.stderr
+    path = tmp_path/'door.json'
+    path.write_text(json.dumps({'handle': 'Wide界', 'user_id': 1,
+        'terminal_width': 10, 'terminal_height': 4}))
+    environment.update(NETBBS_DOOR_INFO=str(path), DOOR_BLACKSITE_INSTALL_DIR=str(tmp_path))
+    for name in ('DOOR_KARST41_INSTALL_DIR', 'KARST41_INSTALL_DIR'):
+        environment.pop(name, None)
+    result = subprocess.run([sys.executable, '-m', 'karst41.door'], env=environment,
+        cwd=repo_root, capture_output=True, check=True)
+    assert not result.stderr and b'Deprecated' not in result.stdout

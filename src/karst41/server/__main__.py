@@ -30,7 +30,7 @@ async def run(args: argparse.Namespace) -> None:
 
 
 def main(argv: list[str] | None = None) -> int:
-    parser = argparse.ArgumentParser(description="karst41 server")
+    parser = argparse.ArgumentParser(prog='karst41-server', description="Karst 41 server")
     parser.add_argument("--install-dir", type=Path, required=True)
     parser.add_argument("--tcp", action="store_true")
     parser.add_argument("--spawn-zone", help="preview a supplied zone before character entry")

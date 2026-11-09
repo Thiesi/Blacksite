@@ -1,0 +1,41 @@
+{
+  "protected_files": 1258,
+  "authorized_title_updates": [
+    "tests/door/golden/styles/cp437/16/title_132x50.json",
+    "tests/door/golden/styles/cp437/16/title_80x24.json",
+    "tests/door/golden/styles/cp437/256/title_132x50.json",
+    "tests/door/golden/styles/cp437/256/title_80x24.json",
+    "tests/door/golden/styles/cp437/truecolor/title_132x50.json",
+    "tests/door/golden/styles/cp437/truecolor/title_80x24.json",
+    "tests/door/golden/title_132x50.txt",
+    "tests/door/golden/title_80x24.txt",
+    "tests/presentation/golden/p5/title_132x50_16.json",
+    "tests/presentation/golden/p5/title_132x50_256.json",
+    "tests/presentation/golden/p5/title_132x50_truecolor.json",
+    "tests/presentation/golden/p5/title_80x24_16.json",
+    "tests/presentation/golden/p5/title_80x24_256.json",
+    "tests/presentation/golden/p5/title_80x24_truecolor.json"
+  ],
+  "unexpected_changes": [],
+  "allowed_plan_metadata": [
+    "docs/plan/slices/R1-karst41-rename.md"
+  ],
+  "canon_audit": {
+    "canonical_literal_bindings_checked": 5,
+    "lost_canon_literals": [],
+    "named_symbols": [],
+    "renamed_existing_filenames": [],
+    "matching_changed_lines": 301
+  },
+  "historical_notes_restored": {
+    "docs/ops/p2-layout-geometry.md": "7426e2b5f8ac6b0db8033cd0af227232ce6362d629e2808b3f0498545c549a6a",
+    "docs/ops/p3-interaction-focus.md": "4e86ee32de98c7c0a98c05f3ca4da3ad4e7fedcd4f47fe163fcf15176b0566f1",
+    "docs/ops/p5-client-foundations.md": "3df0bb92a5694bf04ca90a106e0b74d059082527301572fcf52f510593e9b4a7",
+    "docs/ops/p6-engine-follow-up.md": "3eca6c9265acc0c4e32afe472886d90257a5638ecb7664fc830d92bbed60e3e7",
+    "docs/ops/p6-place-engine.md": "f47aba4f8b0ecf65725cb0996ddac616559e403def2f5e3d66ce4276e0ab1bcd",
+    "docs/ops/presentation-verification.md": "0019d51a1f8957297f8660e2cbc4fe68682740d7bd82efe58e4f2125bb235db3",
+    "docs/ops/s25b-arrival-captures.md": "37881ea2e17dd5d549e6560a2756a4f74bb8217fd1d1d7d64edb2c03c12b3d00",
+    "docs/ops/s25b-content-bindings.md": "e2bb5ce581f9cf774418aa6e040715eb1ef6da02b2a16d99d1b11d574d0e41f7",
+    "docs/ops/s40-write-profile.md": "9fde18cb5dfdddde2053bfaf408ed7ea24a455d643ed308ee649e3714ec1e98a"
+  }
+}

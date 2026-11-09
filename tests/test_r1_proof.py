@@ -15,9 +15,9 @@ from scripts.audit_r1_world import audit
 from scripts.r1_title import title_prefix
 
 
-def title_frames(tmp_path: Path) -> tuple[bytes, bytes, bytes]:
+def title_frames(tmp_path: Path, presentation: bool = False) -> tuple[bytes, bytes, bytes]:
     info = DoorInfo(tmp_path/'unused', tmp_path, {'handle': 'Wide界', 'user_id': 1}, 80, 24, '256', 3600)
-    model = Display(info)
+    model = Display(info, presentation=presentation)
     first = model.render(0)[0]
     model.body = title('Latest welcome')
     model.force_full = model.dirty = True
@@ -27,8 +27,9 @@ def title_frames(tmp_path: Path) -> tuple[bytes, bytes, bytes]:
     return first, second, model.render(2)[0]
 
 
-def test_r1_title_is_last_complete_original_prefix(tmp_path: Path) -> None:
-    first, second, wake = title_frames(tmp_path)
+@pytest.mark.parametrize("presentation", (False, True))
+def test_r1_title_is_last_complete_original_prefix(tmp_path: Path, presentation: bool) -> None:
+    first, second, wake = title_frames(tmp_path, presentation)
     raw = ENTER+first+second+wake
     captured, terminal = title_prefix(raw, 80, 24)
     assert captured == ENTER+first+second
@@ -36,8 +37,9 @@ def test_r1_title_is_last_complete_original_prefix(tmp_path: Path) -> None:
     assert 'THE WAKE' not in terminal.screen_text()
 
 
-def test_r1_partial_title_cannot_be_claimed_as_capture(tmp_path: Path) -> None:
-    first, _, wake = title_frames(tmp_path)
+@pytest.mark.parametrize("presentation", (False, True))
+def test_r1_partial_title_cannot_be_claimed_as_capture(tmp_path: Path, presentation: bool) -> None:
+    first, _, wake = title_frames(tmp_path, presentation)
     incomplete = first.split(b'\x1b[24;1H')[0]
     with pytest.raises(AssertionError, match='No complete'):
         title_prefix(ENTER+incomplete+wake, 80, 24)

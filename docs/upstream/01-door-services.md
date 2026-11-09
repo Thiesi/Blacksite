@@ -6,7 +6,7 @@ service uses exactly argv/start/stop_grace_seconds/service_memory_mb/health.
 Install-dir backup is opt-in, unquiesced and manually restored, not an
 automatic consistent backup. See architecture 3/6/8 and
 [issue #56 catch-up](../plan/01-netbbs-platform.md). Proposal below archived.
-**Blocks:** Blacksite S31 (target integration). S05 ships the interim path.
+**Blocks:** Karst 41 S31 (target integration). S05 ships the interim path.
 **Recommended model for the NetBBS side:** Opus 5 (touches `netbbs.doors.runtime`, the SysOp door screens, shutdown ordering, and NetBSD rc.d behaviour; needs the shutdown-hang lessons from PRs #228/#283).
 
 ## The gap
@@ -75,7 +75,7 @@ Add an optional **service** to the door profile:
 - No privilege separation beyond what native doors already have.
 - No generic process manager; one service per door, at most.
 
-## What Blacksite does meanwhile
+## What Karst 41 does meanwhile
 
 `karst41 serve` runs in the foreground and the repo ships `rc.d` and
 `systemd` examples. The door client never spawns the server. See

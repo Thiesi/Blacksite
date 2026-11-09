@@ -102,7 +102,7 @@ async def run(install: Path, watch: bool, width: int, height: int, steps: int = 
 
 
 def main(argv: list[str] | None = None) -> int:
-    parser = argparse.ArgumentParser(description="karst41 bot")
+    parser = argparse.ArgumentParser(prog='karst41-bot', description="Karst 41 bot")
     parser.add_argument("--install-dir", type=Path, required=True)
     parser.add_argument("--watch", action="store_true", help="wait for the maintenance bye")
     parser.add_argument("--width", type=int, default=80)

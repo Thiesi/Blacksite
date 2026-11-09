@@ -17,7 +17,7 @@ and then E if needed, and only then shortens objective target text.
 Keys, verbs, `Next:` and the current cost remain intact. Remaining help
 groups stay whole, with help first when it fits. Channels own the row.
 
-The presentation lead's [wording review](https://github.com/Thiesi/Karst41/pull/103#issuecomment-6510595595)
+The presentation lead's [wording review](https://github.com/Thiesi/Blacksite/pull/103#issuecomment-6510595595)
 is addressed by the corrected implementation and captures. Exit hints say
 `go to`, unlabelled rig actions say `jack in` / `jack out`, contract fetch
 says `take`, object planting says `plant at`, and tile objectives say

@@ -10,7 +10,7 @@ The original P5 integration and earlier capture runs used
 
 ## Launch switch
 
-Set `DOOR_KARST41_PRESENTATION=1` in the registered native door's launch
+Set `DOOR_BLACKSITE_PRESENTATION=1` in the registered native door's launch
 environment to enable P5. Leave it absent for the existing renderer.
 The default is off. The switch covers every view kind, nested Wake
 screens, dialogue menus and local help. There is no toggle key or
@@ -23,7 +23,7 @@ under `DOOR_*`; the launch variable uses that namespace.
 The client and server must use the same package, as before. This changes
 no gameplay rule, simulation, persisted data, view contract or geometry.
 The palette adds roles without changing existing role values. Both paths
-use P2's `karst41.layout`, P3's focus and hint fitter, and the existing
+use P2's `blacksite.layout`, P3's focus and hint fitter, and the existing
 palette lookup and cell buffer. The old content renderers remain intact.
 Text uses an additional full-width rectangle computed in the shared
 layout; server pagination and existing rectangles remain unchanged.
@@ -33,8 +33,8 @@ safety; opening a local screen does not imply safe ground.
 ## Trial corrections
 
 Canon is UI sections 1, 2, 4 and 11 and architecture section 5.5.
-The [technical answer](https://github.com/Thiesi/Karst41/issues/106#issuecomment-6524134331)
-and [HERE addendum](https://github.com/Thiesi/Karst41/issues/106#issuecomment-6524153930)
+The [technical answer](https://github.com/Thiesi/Blacksite/issues/106#issuecomment-6524134331)
+and [HERE addendum](https://github.com/Thiesi/Blacksite/issues/106#issuecomment-6524153930)
 resolve the preflight differences without changing canon or server data.
 
 | Trial behavior | P5 behavior |
@@ -82,7 +82,7 @@ adjacent grain for every shipped opaque tile class, jacked-hostile
 precedence, HERE disclosure, map-only context, unchanged keys and the
 hint row.
 
-The [TR-1 decision](https://github.com/Thiesi/Karst41/pull/110#issuecomment-6528855270)
+The [TR-1 decision](https://github.com/Thiesi/Blacksite/pull/110#issuecomment-6528855270)
 fixes contrast in CIE L* (sRGB/D65), after the colour tier maps it. Mean
 sRGB is not the contrast metric. The shared `BAND_STEP` is 8 L*: structure
 stands above ground, the darkest thing above structure, and the darkest
@@ -108,8 +108,8 @@ keep their existing treatment. Every palette variant is checked. P5 draws
 no light grounds, but the same helper measures L* distance from a synthetic
 light ground in tests; P6 must apply it to its real `_light` themes.
 
-The [creative blockers](https://github.com/Thiesi/Karst41/pull/110#issuecomment-6528893124)
-and [engineering limits](https://github.com/Thiesi/Karst41/pull/110#issuecomment-6528908391)
+The [creative blockers](https://github.com/Thiesi/Blacksite/pull/110#issuecomment-6528893124)
+and [engineering limits](https://github.com/Thiesi/Blacksite/pull/110#issuecomment-6528908391)
 also require these corrections:
 
 - Both log paths share #97's word wrapper; only an overlong word splits.
@@ -123,7 +123,7 @@ also require these corrections:
   those declarations clear. Each arrival adds one local notice entry to
   scrollback; the visible world log excludes it. The server and legacy
   toast remain unchanged. This corrects the earlier log-placement scope:
-  [notice decision](https://github.com/Thiesi/Karst41/pull/110#issuecomment-6532427268).
+  [notice decision](https://github.com/Thiesi/Blacksite/pull/110#issuecomment-6532427268).
 - Every new hint uses P3's one fitter, including empty focus, menus, text
   and priority prompts. Legacy fitting keeps its existing defaults.
 - One origin centres small viewport axes on the disclosed player and
@@ -165,7 +165,7 @@ and its door API uses that username as `handle`: no wide BBS handle can
 be tested natively without bypassing the host's supported contract. The
 headless cases still exercise a synthetic wide BBS handle. This native
 acceptance distinction is
-[accepted for P5](https://github.com/Thiesi/Karst41/issues/106#issuecomment-6526049298).
+[accepted for P5](https://github.com/Thiesi/Blacksite/issues/106#issuecomment-6526049298).
 Short native test names keep the wide name and differing ASCII handle
 visible together in full at 132x50. The live packet covers both sizes
 in 16 and 256 colours as well as truecolor.

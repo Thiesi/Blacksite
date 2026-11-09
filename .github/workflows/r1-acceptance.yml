@@ -8,6 +8,7 @@ on:
       - 'scripts/accept_r1_netbbs.py'
       - 'scripts/audit_r1_world.py'
       - 'scripts/r1_title.py'
+      - 'scripts/check_r1_titles.py'
       - '.github/workflows/r1-acceptance.yml'
   workflow_dispatch:
 
@@ -15,6 +16,23 @@ permissions:
   contents: read
 
 jobs:
+  title-only-diff:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
+          fetch-depth: 0
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Verify only the approved title and fill cells changed
+        run: python scripts/check_r1_titles.py --output "$RUNNER_TEMP/karst41-proof/r1-title-diff/result.json"
+      - uses: actions/upload-artifact@v4
+        with:
+          name: r1-title-only-diff
+          path: ${{ runner.temp }}/karst41-proof/r1-title-diff/result.json
+
   door-s04:
     runs-on: ubuntu-latest
     timeout-minutes: 15
@@ -59,6 +77,7 @@ jobs:
       matrix:
         size: ['80x24', '132x50']
         tier: ['16', '256', 'truecolor']
+        presentation: ['default', 'p5']
     steps:
       - uses: actions/checkout@v4
         with:
@@ -81,11 +100,11 @@ jobs:
       - name: Capture the live title and audit the real persisted world
         shell: bash
         run: |
-          python scripts/accept_r1_netbbs.py --root "$RUNNER_TEMP/karst41-proof/r1/captures" --door-python "$RUNNER_TEMP/karst41-proof/r1/venv/bin/python" --size '${{ matrix.size }}' --tier '${{ matrix.tier }}'
+          python scripts/accept_r1_netbbs.py --root "$RUNNER_TEMP/karst41-proof/r1/captures" --door-python "$RUNNER_TEMP/karst41-proof/r1/venv/bin/python" --size '${{ matrix.size }}' --tier '${{ matrix.tier }}' --presentation '${{ matrix.presentation }}'
       - uses: actions/upload-artifact@v4
         if: always()
         with:
-          name: r1-title-${{ matrix.size }}-${{ matrix.tier }}
+          name: r1-title-${{ matrix.presentation }}-${{ matrix.size }}-${{ matrix.tier }}
           path: |
             ${{ runner.temp }}/karst41-proof/r1/captures/*.ans
             ${{ runner.temp }}/karst41-proof/r1/captures/*.txt

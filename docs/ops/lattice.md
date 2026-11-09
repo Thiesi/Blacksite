@@ -56,7 +56,7 @@ path. S14/S16/S24 supply player discovery actions. It grants no items,
 gate credentials, movement or discovery to another character.
 
 Run the live acceptance from a real terminal using the NetBBS interpreter
-and the Blacksite client interpreter:
+and the Karst 41 client interpreter:
 
 ```powershell
 & ../NetBBS/.venv/Scripts/python.exe scripts/accept_s13_netbbs.py `

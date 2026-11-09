@@ -5,7 +5,7 @@
 Native stdio opts into rewritten door info and SIGUSR1 with resize_signal;
 S04 already consumes this. S31 retains real resize acceptance. See
 [issue #56 catch-up](../plan/01-netbbs-platform.md). Proposal below archived.
-**Blocks:** nothing. Blacksite S04 lays out for the size at launch.
+**Blocks:** nothing. Karst 41 S04 lays out for the size at launch.
 **Recommended model for the NetBBS side:** Opus 5 (touches the session resize path for Telnet NAWS, SSH window-change, and the web transport, plus PTY window-size ioctls and a side channel for stdio doors).
 
 ## The gap
@@ -36,7 +36,7 @@ instead of forcing the caller to leave and re-enter.
 
 No change for DOS doors; their geometry is fixed by design.
 
-## What Blacksite does meanwhile
+## What Karst 41 does meanwhile
 
 The client reads the size once at start and handles `SIGUSR1` plus a
 `door_info.json` re-read if it ever arrives, so the day this lands the

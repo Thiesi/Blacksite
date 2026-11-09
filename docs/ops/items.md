@@ -58,7 +58,7 @@ activation/anchors or its required bank.
 ## Acceptance
 
 Captured on NetBBS v7.31.0. To reproduce, run with the supported floor's
-(v7.45.0) Python environment and the installed Blacksite
+(v7.45.0) Python environment and the installed Karst 41
 door interpreter, in a real terminal:
 
 ```powershell

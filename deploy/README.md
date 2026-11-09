@@ -41,9 +41,18 @@ Until S31, old `BLACKSITE_*`/`DOOR_BLACKSITE_*` environment names remain
 fallbacks. Every new spelling wins over every old spelling; within each
 generation, `DOOR_*` takes precedence over the standalone name. Explicit
 CLI arguments still win. Empty new values are set, not missing. Using
-an old name emits one deprecation record per process through Python's
-`karst41.environment` INFO logger, with no terminal handler in the door.
+an old name emits one deprecation warning per process through Python's
+`karst41.environment` logger. Operator CLI use shows it on stderr; the
+door suppresses default terminal logging and retains the record for
+host-configured diagnostics.
 The socket, pid and installed Python package have no legacy alias.
+
+R1 has no installed production base. For a local development setup, stop
+the old process before replacing it. Keep the existing world directory
+and pass that same absolute `--install-dir` to the new command; do not
+start on an empty default directory by accident. Replace the local
+service/unit names and NetBBS registration argv with those shown here.
+There is no runtime-file, rc.conf or old-package compatibility service.
 An absent service returns exit 1 and a start instruction. `--json` emits
 one JSON result. Status includes uptime, callers, tick timings, content
 hash and persistence lag. Who lists caller handles; character and zone

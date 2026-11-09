@@ -18,7 +18,7 @@ Register a native **stdio** door in a local NetBBS checkout:
 
 Current NetBBS profile dimensions pin the door's dimensions as well as
 checking the caller's minimum. Leaving them zero permits 132×50 callers
-to use their full terminal; Blacksite enforces its own 80×24 minimum.
+to use their full terminal; Karst 41 enforces its own 80×24 minimum.
 Current profiles accept custom environment keys under `DOOR_*` only.
 `KARST41_INSTALL_DIR` and `KARST41_SESSION_LIMIT` remain accepted for
 standalone development; profiles use `DOOR_KARST41_INSTALL_DIR` and
@@ -52,7 +52,7 @@ NETBBS_PYTHON scripts/accept_s04_netbbs.py `
   --root .test-tmp/netbbs-acceptance `
   --door-python .venv/Scripts/python.exe
 
-# Run with Blacksite's venv. This takes ten real minutes.
+# Run with Karst 41's venv. This takes ten real minutes.
 python scripts/measure_s04_idle.py --root .test-tmp/idle --seconds 600
 ```
 

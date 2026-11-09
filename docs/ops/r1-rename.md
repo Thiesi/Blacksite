@@ -6,9 +6,10 @@ the Blacksite remains an in-world installation and its content IDs stay.
 
 ## Current state
 
-Draft implementation. Full Linux/Windows CI, native S04/S05/S10/S11/S24,
-the clean-wheel/native title matrix, the real persisted-data audit and
-the complete leftover-hit inventory remain mandatory and pending.
+Draft implementation. Current-head full Linux/Windows CI, native
+S04/S05/S10/S11/S24 and the clean-wheel/native title matrix remain
+mandatory. The offline persisted-data audit and leftover inventory are
+retained beside this note.
 Presentation acceptance, technical review and the owner's merge are
 pending. H1 and S25 layout approval remain NOT GRANTED.
 
@@ -28,9 +29,19 @@ pending. H1 and S25 layout approval remain NOT GRANTED.
   unchanged 3-second gate. This local one-repeat comparison does not
   replace the complete CI performance proof.
 
-Only `tests/door/golden/title_*` and their six colour-style files were
-regenerated, as R1 explicitly requires. No general golden-update switch
-was used. The unchanged tagline and other screen geometry remain.
+The eight door title files and, under technical ruling
+[6738034888](https://github.com/Thiesi/Karst41/pull/193#issuecomment-6738034888),
+the six P5 title files are the only changed goldens. No general golden
+update switch was used. `scripts/check_r1_titles.py` compares each P5
+file to its original Git object and requires only the title replacement
+and its one-cell-shorter fill. Palette, rectangles and every other cell
+must match. Its actual output is on the PR. Native evidence covers both
+default and P5 at both sizes in all three tiers (twelve cases).
+
+The latest focused checks passed **106 tests**, including the original
+mechanics fingerprint and P3 matrix; a separate subprocess/environment
+and title-prefix set passed **42 tests**. Both renderers reject incomplete
+native title captures.
 
 ## Failures retained
 
@@ -44,6 +55,17 @@ was used. The unchanged tagline and other screen geometry remain.
   independent Git-fixture checkouts exposed a resolver using the main
   repository instead of the caller's root. The resolver now receives
   that root explicitly; all 33 checks passed.
+- At `8cb9f6d`, Linux CI had **7 failed, 2546 passed** and Windows had
+  **7 failed, 2545 passed, 1 skipped**. Six failures were the P5 title
+  goldens subsequently authorized above. The seventh exposed an
+  over-renamed canonical level prefix in a test; it is restored below.
+  No mechanics/P3 baseline failed or was changed.
+- S04 at that head exited before its first title. Its retained node
+  registration points at the system Python rather than the clean venv:
+  `Path.resolve()` followed the Unix interpreter symlink. The probe now
+  uses `Path.absolute()`, as the later native probes already do. No
+  timeout or assertion was relaxed. The original failed job is
+  [129102964745](https://github.com/Thiesi/Karst41/actions/runs/42600349891/job/129102964745).
 
 Original outputs are retained in the adjacent R1 capture/validation
 directory. A failed run is never relabelled as successful.
@@ -67,8 +89,53 @@ evidence, not an import shim or an exemption from current-head checks.
 New names take precedence over all old aliases, with `DOOR_*` priority
 within each generation. Empty new values are set and do not revive old
 values. Aliases and old scratch-prefix counting are marked for removal
-in S31. Deprecation uses the opt-in INFO logger once per process, never
-the game's terminal output. The Python package, socket and pid have no
+in S31. Deprecation uses one warning record per process. Operator CLI
+use shows it on stderr; the door installs a null handler to keep default
+logging out of game output. The Python package, socket and pid have no
 legacy alias. The old presentation-trial name survives only as a
 configuration-compatibility case and in historical proof context; no
 retired presentation behavior is reintroduced.
+
+## Canon and historical scope audit
+
+The complete changed-line audit for `blacksite-` and `Blacksite` found
+one incorrect place use: `tests/lattice/test_content.py` must exclude
+the unchanged `blacksite-` sector prefix. That test filter is restored.
+S26, `blacksite-l1`, `art-blacksite-l1`, Outworks, the maintenance drone
+and the content/lore bytes remain unchanged. Existing Python canonical
+literal bindings are preserved; no function/class named for the old
+brand was present to confuse a place name with a package rename.
+
+The banner link again names the existing image. Nine older evidence
+notes (P2, P3, P5, P6a, P6 engine follow-up, P1 verification, both S25b
+notes and S40 measurements) are restored byte for byte to the base.
+Their commands and URLs describe their original revisions. Living
+operator guides, upstream contracts and workflow labels use the new
+game name. No art, map, lore or historical capture is rewritten.
+
+The 1,258-file protected-byte audit allows exactly fourteen title
+goldens plus this slice's status metadata, and found no other changes.
+The compressed [leftover inventory](captures/r1/leftovers.json.gz)
+lists every exact `git grep -n -i blacksite` result by path and line,
+with a category, reason, matching-line hash and bounded excerpt. Its
+four groups are place (canon), historical evidence, S31 fallback and
+redirecting URL. It includes binary capture hits. New runtime imports
+and launch paths have no old-package alias.
+
+## Persisted-data proof
+
+The [pre-rename world audit](captures/r1/legacy-world-audit.json) uses a
+wheel built at `7597dce`, installed into a separate clean venv, and the
+unmodified S42 acceptance driver from that revision. The actual NetBBS
+native run passed at 80x24/16. After the service closed, a read-only
+SQLite scan checked schema, all text/BLOB values and JSON keys/type
+tags: **13 tables, 38 rows, 120 text values, 40 JSON values, no BLOBs,
+no findings**. It never executes a pickle. No migration is required.
+Wheel and native-result provenance are retained in that audit record.
+This is synthetic acceptance data, not an existing operator deployment.
+
+The first R1 clean-wheel native run at `8cb9f6d` also passed at
+80x24/16, with no old package import available. Its fresh-world audit
+had 13 tables, 32 rows, 108 text values, 34 JSON values and no findings.
+That is first-head evidence; the twelve-case CI matrix supplies the
+source-matched final-head captures and fresh-world audits.

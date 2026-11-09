@@ -1,6 +1,6 @@
 # P2 geometry and chrome verification
 
-`karst41.layout` owns the current layout tier. The door compatibility
+`blacksite.layout` owns the current layout tier. The door compatibility
 module re-exports its types and computation. The camera crops the shared
 viewport to the world and snapshot budget; it does not repeat terminal
 geometry. No protocol field, world data or presentation tier is added.

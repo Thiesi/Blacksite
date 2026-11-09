@@ -1,6 +1,6 @@
 # Characters and the Wake (S07)
 
-Install Blacksite 0.0.3 or newer in the door's own venv and start the
+Install Karst 41 0.0.3 or newer in the door's own venv and start the
 ordinary service. Registration follows the [door guide](door-client.md).
 The door connects to the service; it never starts one.
 

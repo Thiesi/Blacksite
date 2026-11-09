@@ -224,7 +224,7 @@ runs the comparison and full six-case reference on the same runner.
 The [hosted run][paired-run] retains the comparison and baseline artifacts.
 
 [paired]: baselines/p1-v1-comparison-00470f9.json
-[paired-run]: https://github.com/Thiesi/Karst41/actions/runs/40829008369
+[paired-run]: https://github.com/Thiesi/Blacksite/actions/runs/40829008369
 
 An early clean-head [Windows diagnostic][local] records commit `325576b`,
 Python 3.12.10, Windows 11 and an Intel Family 6 Model 186 host. This is a
@@ -262,4 +262,4 @@ own workflow/tools changes use the full matrix. No label skips checks.
 cover their integration with every gameplay system. That coverage comes
 from the required full matrix on the ready-for-review head.
 
-[cp437]: https://github.com/Thiesi/Karst41/issues/76#issuecomment-6485149621
+[cp437]: https://github.com/Thiesi/Blacksite/issues/76#issuecomment-6485149621

@@ -70,7 +70,7 @@ def parser() -> argparse.ArgumentParser:
     common = argparse.ArgumentParser(add_help=False)
     common.add_argument("--install-dir", type=Path, default=argparse.SUPPRESS)
     common.add_argument("--json", action="store_true", default=argparse.SUPPRESS)
-    root = argparse.ArgumentParser(description="Karst 41 service and operator tools", parents=[common])
+    root = argparse.ArgumentParser(prog='karst41', description="Karst 41 service and operator tools", parents=[common])
     commands = root.add_subparsers(dest="command", required=True)
     serve = commands.add_parser("serve", parents=[common], help="run the service in the foreground")
     serve.add_argument("--tcp", action="store_true")

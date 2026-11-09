@@ -12,6 +12,7 @@ restore_system_root()  # Winsock must initialize before importing asyncio.
 
 import argparse
 import asyncio
+import logging
 import sys
 
 from karst41.door.client import run
@@ -21,7 +22,10 @@ from karst41.door.terminal import Terminal
 
 
 def main(argv: list[str] | None = None) -> int:
-    parser = argparse.ArgumentParser(description="Karst 41 native door")
+    # Native stderr can reach the caller too. Retain warning records for
+    # host-configured logging, without Python's default stderr fallback.
+    logging.getLogger('karst41.environment').addHandler(logging.NullHandler())
+    parser = argparse.ArgumentParser(prog='karst41-door', description="Karst 41 native door")
     parser.add_argument("--local", action="store_true", help="use Windows console input for development")
     args = parser.parse_args(argv)
     try:

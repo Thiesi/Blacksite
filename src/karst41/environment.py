@@ -7,8 +7,9 @@ import logging
 
 @cache
 def _legacy_notice() -> None:
-    # Like other door diagnostics, this is opt-in logging, never game text.
-    logging.getLogger(__name__).info(
+    # Operator entry points get one visible warning. The door installs no
+    # terminal logging handler; its diagnostics remain out of game output.
+    logging.getLogger(__name__).warning(
         'Deprecated BLACKSITE configuration used; use KARST41 names. '
         'Legacy aliases will be removed in S31.')
 

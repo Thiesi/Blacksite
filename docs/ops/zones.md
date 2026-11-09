@@ -1,6 +1,6 @@
 # Shared-zone development preview (S06)
 
-Install Blacksite 0.0.2 or newer in the door's own venv. Follow the
+Install Karst 41 0.0.2 or newer in the door's own venv. Follow the
 [door registration guide](door-client.md), including its negotiated
 dimensions and multi-session profile. Start the service separately:
 
@@ -28,7 +28,7 @@ the existing validated staging procedure. Keep local overrides under
 `content.local`; do not edit the package-owned copy.
 
 Run acceptance with the NetBBS checkout's interpreter, including SSH/web
-extras, and Blacksite's installed door interpreter:
+extras, and Karst 41's installed door interpreter:
 
 ```powershell
 NETBBS_PYTHON scripts/accept_s06_netbbs.py `

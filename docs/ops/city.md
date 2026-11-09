@@ -1,6 +1,6 @@
 # City travel (S08)
 
-Blacksite 0.0.4 supplies the ten-zone M1 hub. Start the service separately
+Karst 41 0.0.4 supplies the ten-zone M1 hub. Start the service separately
 and register the native stdio door as in [the door guide](door-client.md).
 New callers complete the Wake; returning callers resume their character.
 

@@ -121,7 +121,8 @@ async def accept(root: Path, door_python: Path) -> None:
     db = Database(root / "node.db")
     lane = DatabaseLane(db.path)
     user = create_user(db, "s04caller", password="LocalProbe-S04", user_level=10)
-    create_door(db, "Karst 41", str(door_python.resolve()), args=("-m", "karst41.door"), creator=user,
+    # Preserve the venv interpreter: resolving Unix symlinks selects system Python.
+    create_door(db, "Karst 41", str(door_python.absolute()), args=("-m", "karst41.door"), creator=user,
         profile=DoorProfile(install_dir=str(REPO), encoding="utf-8",
             max_sessions=16, multinode_certified=True, time_limit=900,
             environment={"DOOR_KARST41_INSTALL_DIR": str(service.install_dir)}).validate())

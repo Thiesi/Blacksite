@@ -9,7 +9,7 @@ Generate a review tree from the repository root:
 
 ```sh
 python scripts/build_city_content.py --output .test-tmp/s25b-city
-python -m karst41.content.validate .test-tmp/s25b-city
+python -m blacksite.content.validate .test-tmp/s25b-city
 pytest -q tests/content/test_commissioned_city.py
 ```
 
