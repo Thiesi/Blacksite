@@ -53,7 +53,7 @@ after their id.
 | sector | sector id, optional | native/portable rig's district entry; terminals may override with `params.sector` |
 | layouts | list of ZoneLayout, optional | named service/event geometry variants |
 | exits | list of Exit | id, tile, target zone, target tile, kind (street, door, tram, ladder, lift, gate, cable), requirement, optional alternatives and locked_text, hidden, optional relay |
-| spawners | list of Spawner | id, tile or region, npc template, count, respawn seconds, condition |
+| spawners | list of Spawner | id, tile or region, npc template, count, respawn seconds, condition, poses_as (covered spawners only, planned, S42) |
 | objects | list of ObjectSpec | id, tile, kind (door, terminal, vendor, vat, relay, cache, tram_stop, apartment_door, light, hardware, descent_console, workshop, bank, turret, camera, shutter, cable_car, pump, lift, patrol_beacon, gate, gantry), params, essential (clinic, public vat, public uplink) |
 | pockets | list of Pocket | rectangles that are `pocket` safety inside a contested zone; each a Region with `lit` and `charted` (bools, default false), as for the zone. A charted pocket's rectangle joins the zone's public region, under the same checks |
 | lore | list of asset ids | ambient log lines, found texts |
@@ -354,6 +354,13 @@ behaviour kinds and anchoring, offered interactions, dialogue binding, and
 loot, because a death leaves a cache only if there is loot to fill it.
 The validator reports a content error for a mismatch. Hidden faction
 and combat rules remain independent of that presentation match.
+
+A spawner of a covered template names the group it poses as with
+`poses_as`, the id of a spawner in the same zone whose template presents
+the same `cover_name` and class (planned, S42). A covered, unarmed NPC
+reacts with that group, both ways (game 5.5). The validator refuses a
+covered, unarmed spawner without `poses_as`, or one that names a spawner
+in another zone or with a different name or class.
 
 An optional explicit `health` pool and embedded `attack` weapon block
 support private training actors. `training` requires both and scopes

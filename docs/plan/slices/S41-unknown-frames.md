@@ -1,6 +1,6 @@
 # S41 — Doors ignore frames they don't know
 
-**Status:** in review (PR #181; technical review pending)
+**Status:** done (PR #181)
 **Primary model:** Codex · **Reviewer:** automated review, technical lead
 **Depends on:** nothing unmerged · **Milestone:** protocol
 **Issue:** https://github.com/Thiesi/Blacksite/issues/173
