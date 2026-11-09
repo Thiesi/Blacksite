@@ -1,7 +1,6 @@
 """Game 13.4: rowless talker actions and wide names at both native sizes."""
 
-from dataclasses import replace
-from dataclasses import asdict
+from dataclasses import asdict, replace
 from copy import deepcopy
 
 import pytest

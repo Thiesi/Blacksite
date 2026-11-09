@@ -8,8 +8,6 @@ import pytest
 from blacksite.content.schema import Behaviour, Region, Spawner
 from blacksite.content.validate import validate
 from blacksite.server.npcs.templates import REACH_ACTIVE_TICKS, PROVOCATION_SECONDS, make_actor
-from blacksite.server.loop import TickContext
-from blacksite.server.protocol import Frame
 from tests.npcs.test_engine import city, body
 from tests.npcs.test_truce import row, npc, guard
 
@@ -80,6 +78,7 @@ def crowd(game):
         ('npc-sodium-regular', 'other', (28, 5))) ]
     for actor, group in zip(actors, ('crowd', 'cover', 'other-crowd')):
         actor.behaviour['spawner'] = group
+        game.core.npcs.spawners.slots[f'{zone.id}:{group}:0'] = {'actor': actor.id, 'until': 0}
     return zone, actors
 
 
@@ -141,12 +140,30 @@ def test_game_5_5_unarmed_cover_never_joins_secret_faction_guard_response(row):
     assert actors[1].target is None and not actors[1].revealed_to
 
 
+def test_game_5_5_crowd_lost_sight_close_is_shared_across_evaluation_phases(row):
+    game, caller, _ = row
+    zone, (regular, covered, _) = crowd(game)
+    source = body(game, caller)
+    game.core.npcs.provoked(source, regular)
+    tick = game.clock.now_tick()
+    regular.behaviour.update(last_seen=tick-199, phase=(tick+1) % 5)
+    covered.behaviour.update(last_seen=tick-197, phase=(tick+2) % 5)
+    game.core.world.enter(source, zone.id, (90, 3))
+    for elapsed in (1, 2, 3):
+        game.step()
+        for actor in (regular, covered):
+            assert actor.behaviour['state'] == ('flee' if elapsed < 3 else 'base')
+            assert (actor.target is None) == (elapsed == 3)
+
+
 def test_entities_1_8_poses_as_validator_rejects_missing_wrong_zone_and_mismatch(repo_root):
     from blacksite.content.loader import load_content
     content = load_content(repo_root/'src/blacksite/content')
     assert not validate(content)
     zone = content.zones['sodium-row']
-    for counterpart in (None, 'clinic-patient', 'plainclothes-warden'):
+    foreign = next(sp.id for other in content.zones.values() if other.id != zone.id
+                   for sp in other.meta.spawners if sp.id not in {sp.id for sp in zone.meta.spawners})
+    for counterpart in (None, 'missing-crowd', foreign, 'plainclothes-warden'):
         content.zones[zone.id] = replace(zone, meta=replace(zone.meta, spawners=tuple(
             replace(sp, poses_as=counterpart) if sp.id == 'plainclothes-warden' else sp
             for sp in zone.meta.spawners)))
@@ -157,3 +174,9 @@ def test_entities_1_8_poses_as_validator_rejects_missing_wrong_zone_and_mismatch
         content.npcs[regular.id] = replace(regular, **change)
         assert any('poses_as' in problem.message for problem in validate(content))
     content.npcs[regular.id] = regular
+    content.npcs['other-cover'] = replace(content.npcs['npc-plainclothes-warden'], id='other-cover')
+    content.zones[zone.id] = replace(zone, meta=replace(zone.meta, spawners=(
+        *(replace(sp, poses_as='other-cover') if sp.id == 'plainclothes-warden' else sp
+          for sp in zone.meta.spawners),
+        Spawner('other-cover', 'other-cover', 1, 60, tile=(10, 3), poses_as='sodium-regular'))))
+    assert any('uncovered counterpart' in problem.message for problem in validate(content))

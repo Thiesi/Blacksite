@@ -436,7 +436,8 @@ class Npcs:
             actor.behaviour["last_seen"] = tick
             actor.behaviour["last_position"] = target.position
         elif target and (not self.combat.legal(actor, target) or not self.hostile(actor, target)
-                or tick-int(actor.behaviour.get("last_seen", tick)) >= ticks(LOST_SIGHT_SECONDS)):
+                or not self.shared_crowd(actor)
+                and tick-int(actor.behaviour.get("last_seen", tick)) >= ticks(LOST_SIGHT_SECONDS)):
             actor.target = None
             target = None
         state = "flee" if target and (actor.health < actor.health_max * FLEE_FRACTION or weapon(self.content, template) is None) else "hunt" if target else "base"
@@ -623,3 +624,24 @@ class Npcs:
                 if ctx.tick % EVALUATION_TICKS == actor.behaviour.get("phase", 0):
                     self.evaluate(actor, zone, ctx.tick)
                 self.act(actor, zone, ctx.tick, avoid)
+            self.calm_crowds(zone, ctx.tick)
+
+    def calm_crowds(self, zone: ZoneInstance, tick: int) -> None:
+        """Game 5.5: a declared crowd shares its last sight and calm tick.
+
+        Finish after every member's ordinary five-tick observation. Actor
+        iteration order must not give the covered member an earlier close.
+        The existing twenty-second lost-sight interval remains unchanged.
+        """
+        groups: dict[tuple[str, str], list[Actor]] = {}
+        for actor in zone.actors.values():
+            if (actor.kind == 'npc' and actor.target and actor.stance not in ('down', 'dead')
+                    and actor.behaviour.get('state') in ('hunt', 'flee') and self.shared_crowd(actor)):
+                groups.setdefault((self.reaction_group(actor), actor.target), []).append(actor)
+        for members in groups.values():
+            last_seen = max(int(actor.behaviour.get('last_seen', tick)) for actor in members)
+            for actor in members:
+                actor.behaviour['last_seen'] = last_seen
+                if tick-last_seen >= ticks(LOST_SIGHT_SECONDS):
+                    actor.target = None
+                    actor.behaviour['state'] = 'base'

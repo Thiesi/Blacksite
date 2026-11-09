@@ -37,6 +37,9 @@ All pytest commands use `PYTHONPATH=src` and
    first-meeting and overlay cases, plus existing dialogue runtime,
    NPC engine/truce, door dialogue and S39 modules: **243 passed**
    in 66.02 seconds. The command named those seven test modules.
+5. NPC reach/engine/truce after adding a shared lost-sight close across
+   evaluation phases: **137 passed** in 59.76 seconds. The extra
+   `poses_as` validator cases then passed separately (**1 passed**).
 
 The initial standalone frozen-value helper also exited after completing
 the matrix because it named `mechanics-baseline.json`; the existing file
@@ -52,6 +55,11 @@ that a wander step never leaves a player beside it behind. The slice's
 lower-level "every" wording was corrected to "any" to match canon.
 No extra zone RNG draw is introduced. Patrol, hunt, flee, event motion
 and A9's return-home route retain their movement paths.
+Declared crowd members share the latest ordinary observation of their
+current attacker. Their existing 20-second lost-sight interval ends on
+one tick, after every member's observation phase, rather than exposing
+the cover through different five-tick evaluation phases. Their common
+provocation deadline also ends the reaction on one tick.
 
 Every production `Combat.reveal` call was inspected in current source:
 

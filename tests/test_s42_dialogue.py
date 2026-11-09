@@ -6,11 +6,9 @@ from dataclasses import replace
 import pytest
 
 from blacksite.server.npcs.templates import make_actor, REACH_ACTIVE_TICKS
-from blacksite.server.protocol import Frame
-from blacksite.server.rules import combat as rules
 from blacksite.content.schema import ObjectSpec
 from blacksite.server.world.zone import ObjectState
-from tests.character_helpers import act, place
+from tests.character_helpers import place
 from tests.combat.test_engine import body
 from tests.test_dialogue_runtime import content, setup, open_talker, press
 
