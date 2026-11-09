@@ -48,11 +48,13 @@ class Combat:
         self.npc_death_hook: Callable[[Actor, Actor], None] = lambda source, target: None
         self.npc_armour: Callable[[Actor, str], int] = lambda actor, kind: 0
         self.relation_provider: Callable[[Actor, Actor], str] | None = None
+        self.cover_relation_provider: Callable[[Actor, Actor, bool], str | None] = lambda viewer, target, nearby: None
         self.training_provider: Callable[[Player, Actor, int], None] = lambda player, actor, tick: None
         self.allies_provider: Callable[[Actor], list[Actor]] = lambda actor:[actor]  # S22 supplies local crew.
         self.crew_together: Callable[[str, str], bool] = lambda one, other: False
         self.ability_effect: Callable[[Player, HymnTemplate], dict[str, Any]] = lambda player, ability: dict(ability.effect)
         self.sim.target_provider = self.target_view
+        self.sim.cover_relation_provider = self.presented_relation
         self.sim.pvp_provider = self.pvp_eligible
         self.game.combat = self
 
@@ -91,6 +93,12 @@ class Combat:
         faction = self.content.factions.get(source.faction)
         value = faction.relations.get(target.faction,"N") if faction else "N"
         return {"H":"hostile","N":"neutral","A":"allied"}[value]
+
+    def presented_relation(self, source: Actor, target: Actor, nearby: bool = False) -> str:
+        """Architecture 5.5.4: public reaction can be visible without reveal."""
+        if presentation.covered(target, source, self.content):
+            return self.cover_relation_provider(source, target, nearby) or 'neutral'
+        return self.relation(source, target)
 
     def legal(self, source: Actor, target: Actor) -> bool:
         if source.behaviour.get("powered") is False:
@@ -164,7 +172,7 @@ class Combat:
     def select(self, actor: Actor, backwards: bool = False) -> None:
         candidates = sorted((a for a in self.world.zones[actor.zone].actors.values()
             if a is not actor and a.stance not in ("down", "dead") and self.visible(actor, a)),
-            key=lambda a:(presentation.covered(a, actor, self.content) or self.relation(actor,a)!="hostile",
+            key=lambda a:(self.presented_relation(actor, a)!="hostile",
                           rules.distance(actor.position, a.position), a.id))
         ids = [a.id for a in candidates]
         if not ids: actor.target = None
@@ -230,7 +238,7 @@ class Combat:
             "hp_percent":max(0,ceil(100 * target.health / target.health_max)),
             **({"hp": target.health, "hp_max": target.health_max} if actor.modifiers.get("target_through_cover") else {}),
             "range":round(rules.distance(actor.position,target.position),1), "cover":self.cover(actor,target),
-            "relation":"neutral" if hidden else self.relation(actor,target), "stance":target.stance,
+            "relation":self.presented_relation(actor, target), "stance":target.stance,
             "protected":not self.legal(actor,target),
             "warning":"Protected" if not self.legal(actor,target) else "Obscured; no clear shot" if obscured
                 else "Firing marks you" if self.would_mark(actor, target,

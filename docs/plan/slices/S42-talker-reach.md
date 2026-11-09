@@ -130,6 +130,13 @@ canon "acts against a caller" rule.
    Architecture 5.5.4 now says "hunts" where it said "targets". Check
    every `combat.reveal` caller, including the Tab-target view, and
    say on the PR that none relied on targeting alone.
+   - **Public reaction parity.** By the technical lead's ruling on #182
+     (6729956315), a still-covered, unarmed NPC with a declared `poses_as`
+     shows its crowd's public provocation relation in TARGET and NEARBY,
+     and uses the same Tab ordering, whichever member was shot. Cover
+     name, class, role and colour stay unchanged. Armed undercover
+     masking stays unchanged until the actor acts. Compare both actors
+     through real views after a real shot in both directions.
 3. **No Warden detector for red names.** A covered, unarmed NPC doesn't
    take the Wardens' heat and Mark rule in `hostile()`, so a Marked or
    heated player in sight doesn't make one "regular" turn and run. It

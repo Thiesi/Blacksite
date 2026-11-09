@@ -40,6 +40,25 @@ All pytest commands use `PYTHONPATH=src` and
 5. NPC reach/engine/truce after adding a shared lost-sight close across
    evaluation phases: **137 passed** in 59.76 seconds. The extra
    `poses_as` validator cases then passed separately (**1 passed**).
+6. Corrected legacy-content and manually constructed talk-menu fixtures:
+   **36 passed** in 17.63 seconds across their two modules.
+7. Ruled TARGET/NEARBY/Tab parity, armed-cover control, existing truce,
+   view-semantics and world/session tests: **119 passed** in 54.96 seconds.
+
+Full branch CI history (the root suite, not a local full suite):
+
+| Head | Run | Linux | Windows |
+| --- | --- | --- | --- |
+| `f485335` | [42543547211](https://github.com/Thiesi/Blacksite/actions/runs/42543547211) | 3 failed, 2502 passed | 3 failed, 2501 passed, 1 skipped |
+| `43225d0` | [42544238313](https://github.com/Thiesi/Blacksite/actions/runs/42544238313) | 3 failed, 2503 passed | 3 failed, 2502 passed, 1 skipped |
+
+Both runs found the same three fixture adaptations: the legacy NPC test
+removed the cover but retained its new `poses_as` binding, and the two
+size variants of a view test constructed `TalkerMenu` without the new
+caller pose/hit fields. The fixtures now provide the matching state;
+their original disclosure assertions remain. The second head was pushed
+for the crowd timeout correction before the first CI finished. Neither
+failed head was rerun unchanged.
 
 The initial standalone frozen-value helper also exited after completing
 the matrix because it named `mechanics-baseline.json`; the existing file
@@ -81,6 +100,18 @@ Covered, unarmed actors are also excluded from secret-faction guard
 recruitment: they enforce nothing until a separately specified action
 can make them act against a caller.
 
+The real-shot view comparison exposed another tell: the regular's
+TARGET relation became `hostile`, while the fleeing covered NPC stayed
+`neutral`. The [technical lead's ruling](https://github.com/Thiesi/Blacksite/issues/182#issuecomment-6729956315)
+includes that correction in S42. Only a still-covered, unarmed actor
+with a declared crowd gets its public provocation relation in TARGET,
+NEARBY and Tab ordering. Real-shot tests compare both actors' complete
+TARGET and NEARBY records, excluding actor identity, after shooting
+either member. Equal-range/high-HP fixtures remove ordinary range and
+displayed damage differences. Actual Tab inputs select both in the
+same public hostility/distance order without revealing either. An armed
+covered fixture retains its mask until it hunts.
+
 ## Native capture route
 
 `scripts/accept_s42_netbbs.py` runs real NetBBS Telnet to the registered
@@ -94,3 +125,25 @@ movement, page close or log line. Shipped NPC positions and counts do
 not change.
 
 Native results and the presentation lead's acceptance are pending.
+
+### Passing local proof at an earlier head
+
+The [local manifest](local-80x24-16/manifest.json) pins three passing
+80x24/16-colour captures to head
+`43225d06505dbb871e4c2f1ca321d789ee2a9862`, before the ruled view-parity
+correction. They show the [hint](local-80x24-16/s42-talk-hint-80x24-16.txt),
+[one-press move](local-80x24-16/s42-one-press-walk-away-80x24-16.txt) and
+[real-shot flee close](local-80x24-16/s42-shot-flee-walks-off-80x24-16.txt).
+All three raw ANSI prefixes were replayed independently against the
+retained text and style snapshots. Their common cumulative ANSI stream
+is retained losslessly as gzip; the manifest records each prefix length
+and hash, the compressed hash and the source-matched Python tree hash.
+
+This was actual local NetBBS Telnet/native stdio output, forwarded with
+`--show` to exec output. PTY creation was unavailable, so it is not a
+physical-terminal or human-acceptance claim. Local setup first lacked a
+build backend; an isolated wheel build succeeded. Attempts to execute
+the NetBBS interpreter or read its dependencies inside the sandbox were
+denied before acceptance started; the authorized non-PTY execution
+completed on its first actual native run. No failing native gate was
+rerun. The complete capture matrix still needs current-source CI.

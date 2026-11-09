@@ -106,7 +106,9 @@ def test_arch_5_5_4_shipped_sodium_warden_cover_and_per_caller_reveal(repo_root,
     for client, shown in ((one, template.name), (two, template.cover_name)):
         dialogue = game.core.dialogue
         contact = Contact(template.dialogue, npc.id, zone.id, npc.position)
-        dialogue.menus[client.session.id] = TalkerMenu(contact, 'Keep walking, the stage is full.', 0)
+        caller = actor(game, client)
+        dialogue.menus[client.session.id] = TalkerMenu(contact, 'Keep walking, the stage is full.', 0,
+            caller.zone, caller.position, int(caller.behaviour.get('hit_serial', 0)))
         dialogue.publish(client.session)
         assert sim.external_views[client.session.id][1]['title'] == shown+' - Sodium Row'
         dialogue.close(client.session)

@@ -63,6 +63,7 @@ class Npcs:
         combat.training_provider = self.training
         combat.npc_armour = self.armour
         combat.relation_provider = self.actor_relation
+        combat.cover_relation_provider = self.public_relation
 
     def spawn_mission(self, owner: Actor, mission: str, template_id: str,
                       tile: tuple[int, int], willing: bool = False) -> Actor:
@@ -148,6 +149,17 @@ class Npcs:
     def reaction_group(self, actor: Actor) -> str:
         posed = self.posed_spawner(actor)
         return posed.id if posed else str(actor.behaviour.get('spawner'))
+
+    def public_relation(self, viewer: Actor, actor: Actor, nearby: bool) -> str | None:
+        """S42/#182 ruling: show the declared crowd's public reaction only."""
+        posed = self.posed_spawner(actor)
+        if posed is None or not presentation.covered(actor, viewer, self.content):
+            return None
+        provoked = self.provocations.get((actor.zone, posed.id, viewer.id), 0) > self.combat.now()
+        # TARGET/Tab use disposition; NEARBY's ordinary marker names a
+        # current pursuer. Preserve those existing surface semantics.
+        hostile = provoked and (not nearby or actor.target == viewer.id)
+        return 'hostile' if hostile else 'neutral'
 
     def shared_crowd(self, actor: Actor) -> bool:
         group = self.reaction_group(actor)

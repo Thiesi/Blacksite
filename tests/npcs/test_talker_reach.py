@@ -10,6 +10,8 @@ from blacksite.content.validate import validate
 from blacksite.server.npcs.templates import REACH_ACTIVE_TICKS, PROVOCATION_SECONDS, make_actor
 from tests.npcs.test_engine import city, body
 from tests.npcs.test_truce import row, npc, guard
+from tests.character_helpers import act
+from blacksite.server.protocol import Frame
 
 
 @pytest.mark.parametrize('template', ['npc-sodium-regular', 'npc-plainclothes-warden'])
@@ -154,6 +156,58 @@ def test_game_5_5_crowd_lost_sight_close_is_shared_across_evaluation_phases(row)
         for actor in (regular, covered):
             assert actor.behaviour['state'] == ('flee' if elapsed < 3 else 'base')
             assert (actor.target is None) == (elapsed == 3)
+
+
+@pytest.mark.parametrize('victim', [0, 1])
+def test_arch_5_5_4_real_shot_preserves_target_nearby_and_tab_parity(row, victim):
+    game, caller, _ = row
+    zone, (regular, covered, _) = crowd(game)
+    source = body(game, caller)
+    # Equal range and full displayed HP remove ordinary damage/position
+    # differences while retaining a real shot through exchange/provoked.
+    for actor, tile in ((regular, (24, 3)), (covered, (26, 3))):
+        game.core.world.enter(actor, zone.id, tile)
+        actor.health = actor.health_max = 100000
+        actor.cooldowns['move'] = game.clock.now_tick()+10000
+    arm = game.core.characters.content.items['wpn_kestrel_sidearm'].weapon
+    game.core.combat.shot(source, (regular, covered)[victim], arm)
+    targets = []
+    for actor in (regular, covered):
+        source.target = actor.id
+        targets.append({key: value for key, value in game.core.combat.target_view(source).items() if key != 'id'})
+    assert targets[0] == targets[1]
+    assert targets[0]['relation'] == 'hostile' and targets[0]['name'] == 'Sodium regular'
+    caller.session.needs_full_view = True
+    game.step()
+    view = game.core.characters.sim.views[caller.session.id].previous['body']
+    nearby = [{key: value for key, value in next(entry for entry in view['nearby'] if entry['id'] == actor.id).items()
+               if key != 'id'} for actor in (regular, covered)]
+    assert nearby[0] == nearby[1] and nearby[0]['relation'] == '!'
+    source.target = None
+    act(game, caller, Frame('key', {'k': 'tab', 't': 0}))
+    assert source.target == regular.id
+    act(game, caller, Frame('key', {'k': 'tab', 't': 0}))
+    assert source.target == covered.id
+    assert not regular.revealed_to and not covered.revealed_to
+
+
+def test_arch_5_5_4_armed_cover_keeps_mask_until_it_hunts(row):
+    game, caller, _ = row
+    zone, (regular, covered, _) = crowd(game)
+    content = game.core.characters.content
+    template = content.npcs['npc-plainclothes-warden']
+    content.npcs[template.id] = replace(template, weapon='wpn_kestrel_sidearm')
+    source = body(game, caller)
+    game.core.combat.shot(source, regular, content.items['wpn_kestrel_sidearm'].weapon)
+    source.marked = True
+    assert game.core.npcs.hostile(covered, source)
+    assert game.core.npcs.public_relation(source, covered, False) is None
+    source.target = covered.id
+    view = game.core.combat.target_view(source)
+    assert view['relation'] == 'neutral' and view['name'] == 'Sodium regular'
+    assert not covered.revealed_to
+    game.core.npcs.evaluate(covered, zone, game.clock.now_tick())
+    assert covered.behaviour['state'] == 'hunt' and covered.revealed_to == {source.id}
 
 
 def test_entities_1_8_poses_as_validator_rejects_missing_wrong_zone_and_mismatch(repo_root):
