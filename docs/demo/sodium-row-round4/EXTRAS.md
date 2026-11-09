@@ -96,6 +96,21 @@ ground. t4 owns the explicit content-overlay integration, restoring
 main's shipped content and correcting the overlay's public declarations.
 No canonical test, golden, mechanics or P3 baseline was changed here.
 
+The three coordinate cases have explicit demo equivalents in
+`tests/demo/test_round4_coordinates.py`, so the content-layer integration
+can keep main's original cases and also check the demo:
+
+| Original main case | Demo coordinates and check |
+|---|---|
+| `test_design_5_5_shipped_halo_post_fills_beside_arriving_caller` | Bouncer (9,9), beside the Halo arrival; exactly one spawns |
+| `test_design_5_5_shipped_row_wanderers_keep_plaza_and_halo_exits_clear`, regular | Start (3,12), next to Stair exit (2,12); a post trip moves away without occupying the exit |
+| Same test, Warden | Start (89,12), next to Halo exit (90,12); the same post rule keeps the exit clear |
+
+The three demo cases pass separately on the extras component. At overlay
+integration, use `scripts.demo_sodium.content.load_demo_content` in their
+content import, as the other demo tests do. The plain content loader is
+used on this pre-overlay component branch.
+
 The head still needs t4's new-set reaction overlays, final content layer,
 hosted full-suite checks, native captures and lead review. No full local
 suite, S11, native acceptance or presentation acceptance is claimed by
