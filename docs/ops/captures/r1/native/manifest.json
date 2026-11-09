@@ -1,0 +1,611 @@
+{
+  "source_head": "8e568d44858ae8d1d5e633febd9fc90d51c735c8",
+  "source_tree": "3cc647ceb05a066feabda4424450d1eb7771c7fa",
+  "python_tree_sha256": "b5b731d3357c288b8720316250bd499f1e2c7171121f4cc233721819404758ce",
+  "run": 42607267444,
+  "captures": [
+    {
+      "passed": true,
+      "head": "8e568d44858ae8d1d5e633febd9fc90d51c735c8",
+      "transport": "NetBBS Telnet -> registered native stdio",
+      "size": [
+        80,
+        24
+      ],
+      "tier": "16",
+      "presentation": "default",
+      "capture": "r1-title-default-80x24-16",
+      "sha256": {
+        ".ans": "10f84d39bf0eee95a3244103a4293cd51c0b782ee99dc9cd4f7c710026e33318",
+        ".txt": "640f4baec4fc307d2a9ad9aed6950f480b9dbaee34ec2751865de7c0e0e24237",
+        ".json": "7e4dc854bc426ce1532dfc07dc52099ba86362dc26347d37564d9da8882406fb"
+      },
+      "ansi_prefix_bytes": 3636,
+      "method": "Last complete title repaint before Wake; unchanged live ANSI prefix",
+      "clean_wheel": {
+        "version": "0.0.20",
+        "old_import_available": false,
+        "module_door_help": true,
+        "native_module_door_started": true
+      },
+      "world_audit": {
+        "database_sha256": "45e3a12fad009fcfeb73ff1367cbb47e5caa6777094699863bcf4abe3a4d0534",
+        "mode": "offline, read-only; acceptance service closed",
+        "tables": 13,
+        "rows": 32,
+        "text_values": 108,
+        "blob_values": 0,
+        "json_values": 34,
+        "canonical_place_values": 0,
+        "findings": [],
+        "migration_required": false
+      },
+      "presentation_acceptance": false,
+      "h1_layout_approval": false,
+      "s25_layout_approval": false,
+      "file": "r1-title-default-80x24-16.txt",
+      "source_tree": "3cc647ceb05a066feabda4424450d1eb7771c7fa",
+      "python_tree_sha256": "b5b731d3357c288b8720316250bd499f1e2c7171121f4cc233721819404758ce",
+      "run": 42607267444,
+      "run_url": "https://github.com/Thiesi/Karst41/actions/runs/42607267444",
+      "artifact": "r1-title-default-80x24-16",
+      "artifact_id": 13668878340,
+      "artifact_url": "https://github.com/Thiesi/Karst41/actions/runs/42607267444/artifacts/13668878340",
+      "native_boundary_offset": 958,
+      "verification": "Original ANSI replay matches retained text and full glyph/style snapshot"
+    },
+    {
+      "passed": true,
+      "head": "8e568d44858ae8d1d5e633febd9fc90d51c735c8",
+      "transport": "NetBBS Telnet -> registered native stdio",
+      "size": [
+        80,
+        24
+      ],
+      "tier": "256",
+      "presentation": "default",
+      "capture": "r1-title-default-80x24-256",
+      "sha256": {
+        ".ans": "101cd22b7bff6d12752e7d3de602f71fd699bbf57407027ed172065d46029239",
+        ".txt": "0b7f3f4dfe560b37deb9d18ed584c57f686e029e616ca304433d170d3d50a3f8",
+        ".json": "deef788ffa429ce3395165b3d654c6b11cf79325dc34123755a8682415f327cc"
+      },
+      "ansi_prefix_bytes": 3749,
+      "method": "Last complete title repaint before Wake; unchanged live ANSI prefix",
+      "clean_wheel": {
+        "version": "0.0.20",
+        "old_import_available": false,
+        "module_door_help": true,
+        "native_module_door_started": true
+      },
+      "world_audit": {
+        "database_sha256": "de86f95bb5d0ddf98f28c40c8378ba648ab5cb678185986a9ff73da630c6ed16",
+        "mode": "offline, read-only; acceptance service closed",
+        "tables": 13,
+        "rows": 32,
+        "text_values": 108,
+        "blob_values": 0,
+        "json_values": 34,
+        "canonical_place_values": 0,
+        "findings": [],
+        "migration_required": false
+      },
+      "presentation_acceptance": false,
+      "h1_layout_approval": false,
+      "s25_layout_approval": false,
+      "file": "r1-title-default-80x24-256.txt",
+      "source_tree": "3cc647ceb05a066feabda4424450d1eb7771c7fa",
+      "python_tree_sha256": "b5b731d3357c288b8720316250bd499f1e2c7171121f4cc233721819404758ce",
+      "run": 42607267444,
+      "run_url": "https://github.com/Thiesi/Karst41/actions/runs/42607267444",
+      "artifact": "r1-title-default-80x24-256",
+      "artifact_id": 13669511975,
+      "artifact_url": "https://github.com/Thiesi/Karst41/actions/runs/42607267444/artifacts/13669511975",
+      "native_boundary_offset": 1065,
+      "verification": "Original ANSI replay matches retained text and full glyph/style snapshot"
+    },
+    {
+      "passed": true,
+      "head": "8e568d44858ae8d1d5e633febd9fc90d51c735c8",
+      "transport": "NetBBS Telnet -> registered native stdio",
+      "size": [
+        80,
+        24
+      ],
+      "tier": "truecolor",
+      "presentation": "default",
+      "capture": "r1-title-default-80x24-truecolor",
+      "sha256": {
+        ".ans": "3766aaee6c9e23463a9d580bb7709633079113bbb0971b3fbf098206fe2abfa3",
+        ".txt": "f9816f6f36fcae0be12c757afafc7f2af5b6b8796826bd9265b6485d40265ac4",
+        ".json": "714e6fe7057a516804d82f8db5d40063ca2f82d0d877182bec5ee49f9817eedc"
+      },
+      "ansi_prefix_bytes": 3737,
+      "method": "Last complete title repaint before Wake; unchanged live ANSI prefix",
+      "clean_wheel": {
+        "version": "0.0.20",
+        "old_import_available": false,
+        "module_door_help": true,
+        "native_module_door_started": true
+      },
+      "world_audit": {
+        "database_sha256": "024a96b4d80d8272261fd6b5657169d6cde0aaa4fd00b2a1c1d5aa588f918a36",
+        "mode": "offline, read-only; acceptance service closed",
+        "tables": 13,
+        "rows": 32,
+        "text_values": 108,
+        "blob_values": 0,
+        "json_values": 34,
+        "canonical_place_values": 0,
+        "findings": [],
+        "migration_required": false
+      },
+      "presentation_acceptance": false,
+      "h1_layout_approval": false,
+      "s25_layout_approval": false,
+      "file": "r1-title-default-80x24-truecolor.txt",
+      "source_tree": "3cc647ceb05a066feabda4424450d1eb7771c7fa",
+      "python_tree_sha256": "b5b731d3357c288b8720316250bd499f1e2c7171121f4cc233721819404758ce",
+      "run": 42607267444,
+      "run_url": "https://github.com/Thiesi/Karst41/actions/runs/42607267444",
+      "artifact": "r1-title-default-80x24-truecolor",
+      "artifact_id": 13668379521,
+      "artifact_url": "https://github.com/Thiesi/Karst41/actions/runs/42607267444/artifacts/13668379521",
+      "native_boundary_offset": 1065,
+      "verification": "Original ANSI replay matches retained text and full glyph/style snapshot"
+    },
+    {
+      "passed": true,
+      "head": "8e568d44858ae8d1d5e633febd9fc90d51c735c8",
+      "transport": "NetBBS Telnet -> registered native stdio",
+      "size": [
+        132,
+        50
+      ],
+      "tier": "16",
+      "presentation": "default",
+      "capture": "r1-title-default-132x50-16",
+      "sha256": {
+        ".ans": "d7bee569dd5aacb111cc56036b8917fbb1f771df1a64cfd51e3ae435252519cf",
+        ".txt": "838de7e6ee2f0e3d735c59ddc0fa4714e71d687145dbfcedbd73d1ed2c7b6fd2",
+        ".json": "d641969a92844416b21d2be6b905232e715aa7472fb356b5e32bfec79a04263f"
+      },
+      "ansi_prefix_bytes": 9058,
+      "method": "Last complete title repaint before Wake; unchanged live ANSI prefix",
+      "clean_wheel": {
+        "version": "0.0.20",
+        "old_import_available": false,
+        "module_door_help": true,
+        "native_module_door_started": true
+      },
+      "world_audit": {
+        "database_sha256": "3deee305a5d94618e936f40b78cf388fc7d2ee7af23f503fed5db3ac4aba8cb3",
+        "mode": "offline, read-only; acceptance service closed",
+        "tables": 13,
+        "rows": 32,
+        "text_values": 108,
+        "blob_values": 0,
+        "json_values": 34,
+        "canonical_place_values": 0,
+        "findings": [],
+        "migration_required": false
+      },
+      "presentation_acceptance": false,
+      "h1_layout_approval": false,
+      "s25_layout_approval": false,
+      "file": "r1-title-default-132x50-16.txt",
+      "source_tree": "3cc647ceb05a066feabda4424450d1eb7771c7fa",
+      "python_tree_sha256": "b5b731d3357c288b8720316250bd499f1e2c7171121f4cc233721819404758ce",
+      "run": 42607267444,
+      "run_url": "https://github.com/Thiesi/Karst41/actions/runs/42607267444",
+      "artifact": "r1-title-default-132x50-16",
+      "artifact_id": 13670061393,
+      "artifact_url": "https://github.com/Thiesi/Karst41/actions/runs/42607267444/artifacts/13670061393",
+      "native_boundary_offset": 1062,
+      "verification": "Original ANSI replay matches retained text and full glyph/style snapshot"
+    },
+    {
+      "passed": true,
+      "head": "8e568d44858ae8d1d5e633febd9fc90d51c735c8",
+      "transport": "NetBBS Telnet -> registered native stdio",
+      "size": [
+        132,
+        50
+      ],
+      "tier": "256",
+      "presentation": "default",
+      "capture": "r1-title-default-132x50-256",
+      "sha256": {
+        ".ans": "7c3396202ba11a9269a9f006de17546158725fda7b55b6baa5f679b812479df4",
+        ".txt": "7441a6db2bbd1ac9f10c53216715a995e7d0d77cf93a496435fe3098b42fbb46",
+        ".json": "cd7259a2094341e6101142ffa430c7c7eabe604163b3f05d310682c0b8a852b8"
+      },
+      "ansi_prefix_bytes": 9171,
+      "method": "Last complete title repaint before Wake; unchanged live ANSI prefix",
+      "clean_wheel": {
+        "version": "0.0.20",
+        "old_import_available": false,
+        "module_door_help": true,
+        "native_module_door_started": true
+      },
+      "world_audit": {
+        "database_sha256": "9847a188f105395b1fc4623ad0e3fbe304ae12ee9fea809e41b21de2587df992",
+        "mode": "offline, read-only; acceptance service closed",
+        "tables": 13,
+        "rows": 32,
+        "text_values": 108,
+        "blob_values": 0,
+        "json_values": 34,
+        "canonical_place_values": 0,
+        "findings": [],
+        "migration_required": false
+      },
+      "presentation_acceptance": false,
+      "h1_layout_approval": false,
+      "s25_layout_approval": false,
+      "file": "r1-title-default-132x50-256.txt",
+      "source_tree": "3cc647ceb05a066feabda4424450d1eb7771c7fa",
+      "python_tree_sha256": "b5b731d3357c288b8720316250bd499f1e2c7171121f4cc233721819404758ce",
+      "run": 42607267444,
+      "run_url": "https://github.com/Thiesi/Karst41/actions/runs/42607267444",
+      "artifact": "r1-title-default-132x50-256",
+      "artifact_id": 13669630355,
+      "artifact_url": "https://github.com/Thiesi/Karst41/actions/runs/42607267444/artifacts/13669630355",
+      "native_boundary_offset": 1169,
+      "verification": "Original ANSI replay matches retained text and full glyph/style snapshot"
+    },
+    {
+      "passed": true,
+      "head": "8e568d44858ae8d1d5e633febd9fc90d51c735c8",
+      "transport": "NetBBS Telnet -> registered native stdio",
+      "size": [
+        132,
+        50
+      ],
+      "tier": "truecolor",
+      "presentation": "default",
+      "capture": "r1-title-default-132x50-truecolor",
+      "sha256": {
+        ".ans": "1beade4c40d3fc7dcd0684d0867a59530b1107df4ac3510dbe21774188d28863",
+        ".txt": "65006b17318e45541ee2d1c6658c7620e0c5927012b2b0a6586cd00daf03ee20",
+        ".json": "b7506f836263c575551eab96e9c7426020f3b5ecbb140aad2e8d7a98c4cc229e"
+      },
+      "ansi_prefix_bytes": 9159,
+      "method": "Last complete title repaint before Wake; unchanged live ANSI prefix",
+      "clean_wheel": {
+        "version": "0.0.20",
+        "old_import_available": false,
+        "module_door_help": true,
+        "native_module_door_started": true
+      },
+      "world_audit": {
+        "database_sha256": "4bac36fb50ccdb6484455051ca617dd3408db62b0bec9ac3eb9b770c9f02674f",
+        "mode": "offline, read-only; acceptance service closed",
+        "tables": 13,
+        "rows": 32,
+        "text_values": 108,
+        "blob_values": 0,
+        "json_values": 34,
+        "canonical_place_values": 0,
+        "findings": [],
+        "migration_required": false
+      },
+      "presentation_acceptance": false,
+      "h1_layout_approval": false,
+      "s25_layout_approval": false,
+      "file": "r1-title-default-132x50-truecolor.txt",
+      "source_tree": "3cc647ceb05a066feabda4424450d1eb7771c7fa",
+      "python_tree_sha256": "b5b731d3357c288b8720316250bd499f1e2c7171121f4cc233721819404758ce",
+      "run": 42607267444,
+      "run_url": "https://github.com/Thiesi/Karst41/actions/runs/42607267444",
+      "artifact": "r1-title-default-132x50-truecolor",
+      "artifact_id": 13668229730,
+      "artifact_url": "https://github.com/Thiesi/Karst41/actions/runs/42607267444/artifacts/13668229730",
+      "native_boundary_offset": 1169,
+      "verification": "Original ANSI replay matches retained text and full glyph/style snapshot"
+    },
+    {
+      "passed": true,
+      "head": "8e568d44858ae8d1d5e633febd9fc90d51c735c8",
+      "transport": "NetBBS Telnet -> registered native stdio",
+      "size": [
+        80,
+        24
+      ],
+      "tier": "16",
+      "presentation": "p5",
+      "capture": "r1-title-p5-80x24-16",
+      "sha256": {
+        ".ans": "9c634c14c836d55a1c16ecd953d49d7c484a4b9839acb0d319d12f9d6ed4349b",
+        ".txt": "407fb63283ad92e912445c2cf5a9fb3dd7c0ce5e83c604d5c74269673975a657",
+        ".json": "9a0bc8be310e3f7998b4273c415cf97295b5a5df580e85fb3fca9b113d2a91a4"
+      },
+      "ansi_prefix_bytes": 3597,
+      "method": "Last complete title repaint before Wake; unchanged live ANSI prefix",
+      "clean_wheel": {
+        "version": "0.0.20",
+        "old_import_available": false,
+        "module_door_help": true,
+        "native_module_door_started": true
+      },
+      "world_audit": {
+        "database_sha256": "89efdff4321d515416ca3c5ac83b3273ee5a49803b1b752b87c803b42f3e65c7",
+        "mode": "offline, read-only; acceptance service closed",
+        "tables": 13,
+        "rows": 32,
+        "text_values": 108,
+        "blob_values": 0,
+        "json_values": 34,
+        "canonical_place_values": 0,
+        "findings": [],
+        "migration_required": false
+      },
+      "presentation_acceptance": false,
+      "h1_layout_approval": false,
+      "s25_layout_approval": false,
+      "file": "r1-title-p5-80x24-16.txt",
+      "source_tree": "3cc647ceb05a066feabda4424450d1eb7771c7fa",
+      "python_tree_sha256": "b5b731d3357c288b8720316250bd499f1e2c7171121f4cc233721819404758ce",
+      "run": 42607267444,
+      "run_url": "https://github.com/Thiesi/Karst41/actions/runs/42607267444",
+      "artifact": "r1-title-p5-80x24-16",
+      "artifact_id": 13668274836,
+      "artifact_url": "https://github.com/Thiesi/Karst41/actions/runs/42607267444/artifacts/13668274836",
+      "native_boundary_offset": 958,
+      "verification": "Original ANSI replay matches retained text and full glyph/style snapshot"
+    },
+    {
+      "passed": true,
+      "head": "8e568d44858ae8d1d5e633febd9fc90d51c735c8",
+      "transport": "NetBBS Telnet -> registered native stdio",
+      "size": [
+        80,
+        24
+      ],
+      "tier": "256",
+      "presentation": "p5",
+      "capture": "r1-title-p5-80x24-256",
+      "sha256": {
+        ".ans": "a7e1fedc3fa9c611fec829e62b0bfba312f5f230bd6c389ccec051c3aba61f15",
+        ".txt": "73fe6a0414f56b7d287e61801cbd4cec68eb13c1809c84502eb1eecf628eec7c",
+        ".json": "5359882bec8017947f2713ae90f34329db9bc1f96005e5d84e480f88f36090b9"
+      },
+      "ansi_prefix_bytes": 3786,
+      "method": "Last complete title repaint before Wake; unchanged live ANSI prefix",
+      "clean_wheel": {
+        "version": "0.0.20",
+        "old_import_available": false,
+        "module_door_help": true,
+        "native_module_door_started": true
+      },
+      "world_audit": {
+        "database_sha256": "91faf4dd5d7768688172664dca42f63b74f2e2570b0f9111d5c49b24cab106a1",
+        "mode": "offline, read-only; acceptance service closed",
+        "tables": 13,
+        "rows": 32,
+        "text_values": 108,
+        "blob_values": 0,
+        "json_values": 34,
+        "canonical_place_values": 0,
+        "findings": [],
+        "migration_required": false
+      },
+      "presentation_acceptance": false,
+      "h1_layout_approval": false,
+      "s25_layout_approval": false,
+      "file": "r1-title-p5-80x24-256.txt",
+      "source_tree": "3cc647ceb05a066feabda4424450d1eb7771c7fa",
+      "python_tree_sha256": "b5b731d3357c288b8720316250bd499f1e2c7171121f4cc233721819404758ce",
+      "run": 42607267444,
+      "run_url": "https://github.com/Thiesi/Karst41/actions/runs/42607267444",
+      "artifact": "r1-title-p5-80x24-256",
+      "artifact_id": 13668859584,
+      "artifact_url": "https://github.com/Thiesi/Karst41/actions/runs/42607267444/artifacts/13668859584",
+      "native_boundary_offset": 1065,
+      "verification": "Original ANSI replay matches retained text and full glyph/style snapshot"
+    },
+    {
+      "passed": true,
+      "head": "8e568d44858ae8d1d5e633febd9fc90d51c735c8",
+      "transport": "NetBBS Telnet -> registered native stdio",
+      "size": [
+        80,
+        24
+      ],
+      "tier": "truecolor",
+      "presentation": "p5",
+      "capture": "r1-title-p5-80x24-truecolor",
+      "sha256": {
+        ".ans": "a9b1603bfb14f459452a312618c24af435b4ef25f68a6d46c8096622238764db",
+        ".txt": "f29b79981ae6808fed65cef5617cc8304b413b4a7b9c6d7febcbd94428923b07",
+        ".json": "3fbdf4f01d4784b0677e5b2848a291907d7dc6250a94f9ff497cf7f299124b37"
+      },
+      "ansi_prefix_bytes": 3774,
+      "method": "Last complete title repaint before Wake; unchanged live ANSI prefix",
+      "clean_wheel": {
+        "version": "0.0.20",
+        "old_import_available": false,
+        "module_door_help": true,
+        "native_module_door_started": true
+      },
+      "world_audit": {
+        "database_sha256": "e601c84e040ca0c2896d38149c5739673832577218660cfad5e3b2c7f274b6e5",
+        "mode": "offline, read-only; acceptance service closed",
+        "tables": 13,
+        "rows": 32,
+        "text_values": 108,
+        "blob_values": 0,
+        "json_values": 34,
+        "canonical_place_values": 0,
+        "findings": [],
+        "migration_required": false
+      },
+      "presentation_acceptance": false,
+      "h1_layout_approval": false,
+      "s25_layout_approval": false,
+      "file": "r1-title-p5-80x24-truecolor.txt",
+      "source_tree": "3cc647ceb05a066feabda4424450d1eb7771c7fa",
+      "python_tree_sha256": "b5b731d3357c288b8720316250bd499f1e2c7171121f4cc233721819404758ce",
+      "run": 42607267444,
+      "run_url": "https://github.com/Thiesi/Karst41/actions/runs/42607267444",
+      "artifact": "r1-title-p5-80x24-truecolor",
+      "artifact_id": 13668873376,
+      "artifact_url": "https://github.com/Thiesi/Karst41/actions/runs/42607267444/artifacts/13668873376",
+      "native_boundary_offset": 1065,
+      "verification": "Original ANSI replay matches retained text and full glyph/style snapshot"
+    },
+    {
+      "passed": true,
+      "head": "8e568d44858ae8d1d5e633febd9fc90d51c735c8",
+      "transport": "NetBBS Telnet -> registered native stdio",
+      "size": [
+        132,
+        50
+      ],
+      "tier": "16",
+      "presentation": "p5",
+      "capture": "r1-title-p5-132x50-16",
+      "sha256": {
+        ".ans": "94edb7d5cb15fa4c2b2bc11a5afa0ceb913aee80699f51b5d7d5295c2ed9913f",
+        ".txt": "be8f14e2fe965186a951b93c2e288469c3613c79dc719a68119a1223f9172db9",
+        ".json": "2762cb03b521a54865570acbba0ace40f21335d79634713f0ac5457db67023ef"
+      },
+      "ansi_prefix_bytes": 8977,
+      "method": "Last complete title repaint before Wake; unchanged live ANSI prefix",
+      "clean_wheel": {
+        "version": "0.0.20",
+        "old_import_available": false,
+        "module_door_help": true,
+        "native_module_door_started": true
+      },
+      "world_audit": {
+        "database_sha256": "4d2665499cf1628791bda5ecb254575b9ff86b9b65f74dc13b4f91e0f6b8d339",
+        "mode": "offline, read-only; acceptance service closed",
+        "tables": 13,
+        "rows": 32,
+        "text_values": 108,
+        "blob_values": 0,
+        "json_values": 34,
+        "canonical_place_values": 0,
+        "findings": [],
+        "migration_required": false
+      },
+      "presentation_acceptance": false,
+      "h1_layout_approval": false,
+      "s25_layout_approval": false,
+      "file": "r1-title-p5-132x50-16.txt",
+      "source_tree": "3cc647ceb05a066feabda4424450d1eb7771c7fa",
+      "python_tree_sha256": "b5b731d3357c288b8720316250bd499f1e2c7171121f4cc233721819404758ce",
+      "run": 42607267444,
+      "run_url": "https://github.com/Thiesi/Karst41/actions/runs/42607267444",
+      "artifact": "r1-title-p5-132x50-16",
+      "artifact_id": 13669676797,
+      "artifact_url": "https://github.com/Thiesi/Karst41/actions/runs/42607267444/artifacts/13669676797",
+      "native_boundary_offset": 1062,
+      "verification": "Original ANSI replay matches retained text and full glyph/style snapshot"
+    },
+    {
+      "passed": true,
+      "head": "8e568d44858ae8d1d5e633febd9fc90d51c735c8",
+      "transport": "NetBBS Telnet -> registered native stdio",
+      "size": [
+        132,
+        50
+      ],
+      "tier": "256",
+      "presentation": "p5",
+      "capture": "r1-title-p5-132x50-256",
+      "sha256": {
+        ".ans": "84030d48ecbfddc9ce9112009609146d6791c529ff365129ce54da986237544c",
+        ".txt": "576374ee6bdcd8e784f77748f571fb32d89af4e0aa797cb6c3ed67527f4f5202",
+        ".json": "d812f515c854400ba4c83ded42425b98b1979ea69835b6cd9cecce103a711056"
+      },
+      "ansi_prefix_bytes": 19076,
+      "method": "Last complete title repaint before Wake; unchanged live ANSI prefix",
+      "clean_wheel": {
+        "version": "0.0.20",
+        "old_import_available": false,
+        "module_door_help": true,
+        "native_module_door_started": true
+      },
+      "world_audit": {
+        "database_sha256": "99f8f75969693b5d0c1b4fc4c669f84395f9f3207898fb7091bbbd660f36a613",
+        "mode": "offline, read-only; acceptance service closed",
+        "tables": 13,
+        "rows": 32,
+        "text_values": 108,
+        "blob_values": 0,
+        "json_values": 34,
+        "canonical_place_values": 0,
+        "findings": [],
+        "migration_required": false
+      },
+      "presentation_acceptance": false,
+      "h1_layout_approval": false,
+      "s25_layout_approval": false,
+      "file": "r1-title-p5-132x50-256.txt",
+      "source_tree": "3cc647ceb05a066feabda4424450d1eb7771c7fa",
+      "python_tree_sha256": "b5b731d3357c288b8720316250bd499f1e2c7171121f4cc233721819404758ce",
+      "run": 42607267444,
+      "run_url": "https://github.com/Thiesi/Karst41/actions/runs/42607267444",
+      "artifact": "r1-title-p5-132x50-256",
+      "artifact_id": 13670320431,
+      "artifact_url": "https://github.com/Thiesi/Karst41/actions/runs/42607267444/artifacts/13670320431",
+      "native_boundary_offset": 1169,
+      "verification": "Original ANSI replay matches retained text and full glyph/style snapshot"
+    },
+    {
+      "passed": true,
+      "head": "8e568d44858ae8d1d5e633febd9fc90d51c735c8",
+      "transport": "NetBBS Telnet -> registered native stdio",
+      "size": [
+        132,
+        50
+      ],
+      "tier": "truecolor",
+      "presentation": "p5",
+      "capture": "r1-title-p5-132x50-truecolor",
+      "sha256": {
+        ".ans": "273769d89899675d372978a6a4c99d9f36cfa6ff5d9dad5fafc330bf1efba7d5",
+        ".txt": "53894366b4614eb767b489b8cec6a1f029989fb08ef677570a1f0a203191d339",
+        ".json": "676ccac0e0358dcc7354fd632a97794caf61a6c99b6aa4c5447c4a2af5e6722a"
+      },
+      "ansi_prefix_bytes": 9154,
+      "method": "Last complete title repaint before Wake; unchanged live ANSI prefix",
+      "clean_wheel": {
+        "version": "0.0.20",
+        "old_import_available": false,
+        "module_door_help": true,
+        "native_module_door_started": true
+      },
+      "world_audit": {
+        "database_sha256": "de1e3184fcf80a3d4f98350afce3473d7f801b265b8208d82c2329fd77134f9d",
+        "mode": "offline, read-only; acceptance service closed",
+        "tables": 13,
+        "rows": 32,
+        "text_values": 108,
+        "blob_values": 0,
+        "json_values": 34,
+        "canonical_place_values": 0,
+        "findings": [],
+        "migration_required": false
+      },
+      "presentation_acceptance": false,
+      "h1_layout_approval": false,
+      "s25_layout_approval": false,
+      "file": "r1-title-p5-132x50-truecolor.txt",
+      "source_tree": "3cc647ceb05a066feabda4424450d1eb7771c7fa",
+      "python_tree_sha256": "b5b731d3357c288b8720316250bd499f1e2c7171121f4cc233721819404758ce",
+      "run": 42607267444,
+      "run_url": "https://github.com/Thiesi/Karst41/actions/runs/42607267444",
+      "artifact": "r1-title-p5-132x50-truecolor",
+      "artifact_id": 13670315194,
+      "artifact_url": "https://github.com/Thiesi/Karst41/actions/runs/42607267444/artifacts/13670315194",
+      "native_boundary_offset": 1169,
+      "verification": "Original ANSI replay matches retained text and full glyph/style snapshot"
+    }
+  ],
+  "presentation_acceptance": false,
+  "h1_layout_approval": false,
+  "s25_layout_approval": false
+}

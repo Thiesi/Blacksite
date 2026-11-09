@@ -6,10 +6,11 @@ the Blacksite remains an in-world installation and its content IDs stay.
 
 ## Current state
 
-Draft implementation. Current-head full Linux/Windows CI, native
-S04/S05/S10/S11/S24 and the clean-wheel/native title matrix remain
-mandatory. The offline persisted-data audit and leftover inventory are
-retained beside this note.
+Implementation and title packet complete. Final-head full Linux/Windows
+CI and S04/S05/S10/S11/S24 remain mandatory before review. The offline
+persisted-data audit and leftover inventory are retained beside this
+note. The published packet's execution head is recorded explicitly;
+later evidence-only changes do not rename that provenance.
 Presentation acceptance, technical review and the owner's merge are
 pending. H1 and S25 layout approval remain NOT GRANTED.
 
@@ -42,6 +43,11 @@ The latest focused checks passed **106 tests**, including the original
 mechanics fingerprint and P3 matrix; a separate subprocess/environment
 and title-prefix set passed **42 tests**. Both renderers reject incomplete
 native title captures.
+
+At `8e568d4`, the full hosted suite passed on both platforms: **2,556
+passed** on Linux and **2,555 passed, 1 skipped** on Windows. The corrected
+S04 proof also passed at both sizes over Telnet, SSH and WebSocket into
+the registered native stdio door. No full local suite was run.
 
 ## Failures retained
 
@@ -139,3 +145,22 @@ The first R1 clean-wheel native run at `8cb9f6d` also passed at
 had 13 tables, 32 rows, 108 text values, 34 JSON values and no findings.
 That is first-head evidence; the twelve-case CI matrix supplies the
 source-matched final-head captures and fresh-world audits.
+
+Hosted [run 42607267444](https://github.com/Thiesi/Karst41/actions/runs/42607267444)
+passed S04, the six-file P5 title-only comparison and all twelve native
+title cases at `8e568d4`. The [manifest](captures/r1/native/manifest.json)
+pins every text capture and its raw ANSI/style artifact, with all hashes
+and complete glyph/style replay checks. The wheel's Python tree hash is
+`b5b731d3357c288b8720316250bd499f1e2c7171121f4cc233721819404758ce`;
+the source Git tree is `3cc647ceb05a066feabda4424450d1eb7771c7fa`.
+All twelve offline fresh-world audits have no findings. The retained R1
+capture/validation material totals about 192 KB.
+
+The separate Windows clean-venv proof at `8e568d4` passed all twelve
+default/P5, size and tier cases. Its wheel identity and fresh-world
+audits are in [the local summary](captures/r1/local-title-summary.json).
+The packet verifier replayed those twelve original native streams and
+rejected a tampered ANSI hash, a wrong wheel-source hash, an incomplete
+matrix and an unfinished run before writing output. This self-check
+used explicitly synthetic run metadata, never a purported hosted run.
+The published native packet uses actual GitHub run/artifact metadata.

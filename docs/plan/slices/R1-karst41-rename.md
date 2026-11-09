@@ -1,6 +1,6 @@
 # R1 — The game is called Karst 41: rename the code and its names
 
-**Status:** in progress (draft PR #193; the owner merges)
+**Status:** done (PR #193; acceptance, review and owner merge pending)
 **Primary model:** Codex · **Reviewer:** automated review, technical lead, presentation lead (title screen acceptance)
 **Depends on:** the canon rename PR (creative lead, owner-approved) · **Milestone:** housekeeping
 **Issue:** https://github.com/Thiesi/Karst41/issues/190
