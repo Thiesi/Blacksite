@@ -1,0 +1,59 @@
+name: Row population measurement
+
+on:
+  push:
+    branches: [measure/row-population-184]
+    paths:
+      - scripts/measure_row_population.py
+      - scripts/summarize_row_population.py
+      - tests/presentation/test_row_population_measurement.py
+      - .github/workflows/row-population-proof.yml
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: row-population-${{ github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  measure:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    strategy:
+      fail-fast: false
+      matrix:
+        callers: [1, 4]
+        tier: ['16', '256', truecolor]
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.sha }}
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Install exact event head
+        run: python -m pip install -e .[test]
+      - name: Measure required grid, then known corners
+        shell: bash
+        env:
+          EXPECTED_HEAD: ${{ github.sha }}
+        run: |
+          test "$(git rev-parse HEAD)" = "$EXPECTED_HEAD"
+          proof="$RUNNER_TEMP/blacksite-proof/row-population-184"
+          mkdir -p "$proof"
+          python -B scripts/measure_row_population.py \
+            --callers '${{ matrix.callers }}' --tier '${{ matrix.tier }}' \
+            --known-corners ${{ matrix.tier == 'truecolor' && '--profiles' || '' }} \
+            --output "$proof/report.json"
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: row-population-${{ matrix.callers }}-${{ matrix.tier }}
+          path: ${{ runner.temp }}/blacksite-proof/row-population-184/report.json
+          if-no-files-found: error
+      - name: Delete measurement scratch
+        if: always()
+        shell: bash
+        run: rm -rf -- "$RUNNER_TEMP/blacksite-proof/row-population-184"
