@@ -1,6 +1,6 @@
 # S39 — Exit underfoot: a door on your tile outranks an adjacent talker or vendor
 
-**Status:** in review (PR #167; technical and presentation acceptance pending)
+**Status:** done (PR #167)
 **Primary model:** Codex · **Reviewer:** automated review, technical lead, presentation lead (presentation acceptance)
 **Depends on:** P3, #126 (P6b; its travel probe carries the interim wait this slice removes) · **Milestone:** interaction
 **Issue:** https://github.com/Thiesi/Blacksite/issues/155

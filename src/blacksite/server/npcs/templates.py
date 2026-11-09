@@ -3,6 +3,7 @@
 from blacksite.content.loader import ContentTree
 from blacksite.content.schema import NpcTemplate, WeaponBlock
 from blacksite.server.world.actors import Actor
+from blacksite.server.clock import TICK_HZ
 from blacksite.server.rules.character import health_max
 from blacksite.server.factions import relation as faction_relation
 
@@ -16,6 +17,7 @@ RESPONSE_RADIUS = 3
 HEAT_SAVE_SECONDS = 1  # Game design 5.5: coalesce repeated refused inputs.
 FLEE_FRACTION = .20
 WANDER_PAUSE_TICKS = (2, 10)
+REACH_ACTIVE_TICKS = 30 * TICK_HZ  # Game design 5.5: thirty seconds.
 SUBDUE_SECONDS = 3  # Game design 5.3.
 SUBDUE_SHOCK = 80
 

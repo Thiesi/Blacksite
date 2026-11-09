@@ -6,7 +6,7 @@ Baseline Python comes from merged A5; the snapshot copies JSON/map data.
 
 import argparse
 from collections import Counter
-from dataclasses import asdict
+from dataclasses import asdict, replace
 from hashlib import sha256
 import json
 from pathlib import Path
@@ -110,6 +110,24 @@ def snapshot(destination: Path, input_ref: str) -> dict[str, str]:
     return hashes
 
 
+def bind_pinned_crowd(tree: ContentTree) -> list[dict[str, str]]:
+    """Supply S42's required link without altering pinned geometry/files."""
+    zone = tree.zones.get('sodium-row')
+    if zone is None:
+        return []
+    covered = next((sp for sp in zone.meta.spawners if sp.id == 'plainclothes-warden'
+                    and sp.npc == 'npc-plainclothes-warden'), None)
+    if covered is None or covered.poses_as is not None:
+        return []
+    if not any(sp.id == 'sodium-regular' and sp.npc == 'npc-sodium-regular' for sp in zone.meta.spawners):
+        raise ValueError('pinned Row has no declared Sodium regular counterpart')
+    tree.zones[zone.id] = replace(zone, meta=replace(zone.meta, spawners=tuple(
+        replace(sp, poses_as='sodium-regular') if sp.id == covered.id else sp
+        for sp in zone.meta.spawners)))
+    return [{'zone': zone.id, 'spawner': covered.id, 'field': 'poses_as',
+             'value': 'sodium-regular', 'reason': 'S42 required crowd binding; pinned files unchanged'}]
+
+
 def run(input_ref: str, repeats: int) -> dict[str, Any]:
     if not re.fullmatch('[0-9a-f]{40}', input_ref) or repeats < 1:
         raise ValueError('input-ref must be a full Git id; repeats must be positive')
@@ -133,7 +151,8 @@ def run(input_ref: str, repeats: int) -> dict[str, Any]:
                  ('shipped_plus_p6b', load_content(content)),
                  ('p6b_plus_light_fixture', load_content(content, ROOT/'tests/fixtures/p6'))]
         for label, tree in trees:
-            result, diagnostics = {'case': label}, {}
+            adaptations = bind_pinned_crowd(tree) if label != 'shipped' else []
+            result, diagnostics = {'case': label, 'schema_adaptations': adaptations}, {}
             for name, function, counts in phases:
                 result[name], diagnostics[name] = measure(tree, function, counts, repeats)
                 print(json.dumps({'case': label, 'phase': name,

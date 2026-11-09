@@ -36,6 +36,7 @@ class Session:
     rate_counters: dict[str, deque[int]] = field(default_factory=dict)
     pending_prompts: dict[str, Any] = field(default_factory=dict)
     last_input_tick: int = 0
+    last_action_tick: int = 0
     connected_tick: int = 0
     view_revision: int = 0
     ack_revision: int = 0
@@ -143,6 +144,8 @@ class Session:
         if not self.market_managed and name.startswith("market") and not self.allow("market", tick, MARKET_PER_SECOND, 1):
             return False
         self.last_input_tick = tick
+        if frame.type in ('key', 'intent'):
+            self.last_action_tick = tick
         self.input_queue.append(frame)
         return True
 

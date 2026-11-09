@@ -1,0 +1,272 @@
+....................................................................F... [ 60%]
+..............................FFFFFFFF.........                          [100%]
+================================== FAILURES ===================================
+__ test_game_5_5_truce_suppresses_explicit_hostility_and_retains_warden_heat __
+
+row = (<tests.harness.HeadlessServer object at 0x000001D03878D730>, FakeClient(core=<blacksite.server.core.Core object at 0x...:00:1'}], maxlen=500), log_token='test-origin:session:2:2026-01-01T00:00:01.100000+00:00', log_serial=1), rejected=[]))
+
+    def test_game_5_5_truce_suppresses_explicit_hostility_and_retains_warden_heat(row):
+        game, a, _ = row
+        keeper = guard(game)
+        content = game.core.loop.content
+        template = content.npcs["npc-sable-enforcer"]
+        content.npcs[template.id] = replace(template, behaviours=(Behaviour("guard", {"hostile_all": True}),))
+        assert not game.core.npcs.hostile(keeper, body(game, a))
+        warden = npc(game, "npc-plainclothes-warden", "warden", (29, 3))
+        body(game, a).marked = True
+>       assert game.core.npcs.hostile(warden, body(game, a))
+E       AssertionError: assert False
+E        +  where False = hostile(Actor(id='warden', name='Plainclothes Warden', handle='', kind='npc', zone='sodium-row', x=29, y=3, facing='down', hea... 'home': (29, 3)}, owner=None, last_sprint_tick=-1, sight_key=None, visible=set(), overweight=False, revealed_to=set()), Actor(id='test-origin:player:1', name='Runner1', handle='Wake\u754c1', kind='player', zone='sodium-row', x=25, y=3, facing=...1, 6), (23, 2), (23, 11), (34, 8), (22, 15), (15, 3), (26, 3), (26, 12), (18, 8)}, overweight=False, revealed_to=set()))
+E        +    where hostile = <blacksite.server.npcs.engine.Npcs object at 0x000001D03A787920>.hostile
+E        +      where <blacksite.server.npcs.engine.Npcs object at 0x000001D03A787920> = <blacksite.server.core.Core object at 0x000001D039ABD760>.npcs
+E        +        where <blacksite.server.core.Core object at 0x000001D039ABD760> = <tests.harness.HeadlessServer object at 0x000001D03878D730>.core
+E        +    and   Actor(id='test-origin:player:1', name='Runner1', handle='Wake\u754c1', kind='player', zone='sodium-row', x=25, y=3, facing=...1, 6), (23, 2), (23, 11), (34, 8), (22, 15), (15, 3), (26, 3), (26, 12), (18, 8)}, overweight=False, revealed_to=set()) = body(<tests.harness.HeadlessServer object at 0x000001D03878D730>, FakeClient(core=<blacksite.server.core.Core object at 0x000001D039ABD760>, session=Session(id='test-origin:session:1',...00:00+00:00:1'}], maxlen=500), log_token='test-origin:session:1:2026-01-01T00:00:00+00:00', log_serial=1), rejected=[]))
+
+tests\npcs\test_truce.py:64: AssertionError
+___ test_ui_2_1_truce_warning_keeps_warden_cover_until_provocation[marked] ____
+
+row = (<tests.harness.HeadlessServer object at 0x000001D039E36C90>, FakeClient(core=<blacksite.server.core.Core object at 0x...:00:1'}], maxlen=500), log_token='test-origin:session:2:2026-01-01T00:00:01.100000+00:00', log_serial=1), rejected=[]))
+alert = 'marked'
+
+    @pytest.mark.parametrize("alert", ["marked", "heat"])
+    def test_ui_2_1_truce_warning_keeps_warden_cover_until_provocation(row, alert):
+        game, a, _ = row
+        source = body(game, a)
+        player = game.core.characters.players[source.id]
+        if alert == "marked":
+            source.marked = True
+            player.marked_until = datetime.fromtimestamp(
+                game.core.combat.now() + rules.MARKED_SECONDS, timezone.utc).isoformat()
+        else:
+            player.warden_heat_until = datetime.fromtimestamp(
+                game.core.combat.now() + HEAT_SECONDS, timezone.utc).isoformat()
+        keeper = guard(game)
+        regular = npc(game, "npc-sodium-regular", "regular", (28, 3))
+        warden = npc(game, "npc-plainclothes-warden", "covered-warden", (29, 3))
+>       assert game.core.npcs.hostile(warden, source)
+E       AssertionError: assert False
+E        +  where False = hostile(Actor(id='covered-warden', name='Plainclothes Warden', handle='', kind='npc', zone='sodium-row', x=29, y=3, facing='do... 'home': (29, 3)}, owner=None, last_sprint_tick=-1, sight_key=None, visible=set(), overweight=False, revealed_to=set()), Actor(id='test-origin:player:1', name='Runner1', handle='Wake\u754c1', kind='player', zone='sodium-row', x=25, y=3, facing=...1, 6), (23, 2), (23, 11), (34, 8), (22, 15), (15, 3), (26, 3), (26, 12), (18, 8)}, overweight=False, revealed_to=set()))
+E        +    where hostile = <blacksite.server.npcs.engine.Npcs object at 0x000001D0388ABC50>.hostile
+E        +      where <blacksite.server.npcs.engine.Npcs object at 0x000001D0388ABC50> = <blacksite.server.core.Core object at 0x000001D0388A93D0>.npcs
+E        +        where <blacksite.server.core.Core object at 0x000001D0388A93D0> = <tests.harness.HeadlessServer object at 0x000001D039E36C90>.core
+
+tests\npcs\test_truce.py:373: AssertionError
+____ test_ui_2_1_truce_warning_keeps_warden_cover_until_provocation[heat] _____
+
+row = (<tests.harness.HeadlessServer object at 0x000001D03A493590>, FakeClient(core=<blacksite.server.core.Core object at 0x...:00:1'}], maxlen=500), log_token='test-origin:session:2:2026-01-01T00:00:01.100000+00:00', log_serial=1), rejected=[]))
+alert = 'heat'
+
+    @pytest.mark.parametrize("alert", ["marked", "heat"])
+    def test_ui_2_1_truce_warning_keeps_warden_cover_until_provocation(row, alert):
+        game, a, _ = row
+        source = body(game, a)
+        player = game.core.characters.players[source.id]
+        if alert == "marked":
+            source.marked = True
+            player.marked_until = datetime.fromtimestamp(
+                game.core.combat.now() + rules.MARKED_SECONDS, timezone.utc).isoformat()
+        else:
+            player.warden_heat_until = datetime.fromtimestamp(
+                game.core.combat.now() + HEAT_SECONDS, timezone.utc).isoformat()
+        keeper = guard(game)
+        regular = npc(game, "npc-sodium-regular", "regular", (28, 3))
+        warden = npc(game, "npc-plainclothes-warden", "covered-warden", (29, 3))
+>       assert game.core.npcs.hostile(warden, source)
+E       AssertionError: assert False
+E        +  where False = hostile(Actor(id='covered-warden', name='Plainclothes Warden', handle='', kind='npc', zone='sodium-row', x=29, y=3, facing='do... 'home': (29, 3)}, owner=None, last_sprint_tick=-1, sight_key=None, visible=set(), overweight=False, revealed_to=set()), Actor(id='test-origin:player:1', name='Runner1', handle='Wake\u754c1', kind='player', zone='sodium-row', x=25, y=3, facing=...1, 6), (23, 2), (23, 11), (34, 8), (22, 15), (15, 3), (26, 3), (26, 12), (18, 8)}, overweight=False, revealed_to=set()))
+E        +    where hostile = <blacksite.server.npcs.engine.Npcs object at 0x000001D038796CF0>.hostile
+E        +      where <blacksite.server.npcs.engine.Npcs object at 0x000001D038796CF0> = <blacksite.server.core.Core object at 0x000001D03A17AC60>.npcs
+E        +        where <blacksite.server.core.Core object at 0x000001D03A17AC60> = <tests.harness.HeadlessServer object at 0x000001D03A493590>.core
+
+tests\npcs\test_truce.py:373: AssertionError
+__ test_ui_2_1_tab_respects_warden_cover_and_distance[regular-False-marked] ___
+
+row = (<tests.harness.HeadlessServer object at 0x000001D03886D8E0>, FakeClient(core=<blacksite.server.core.Core object at 0x...:00:1'}], maxlen=500), log_token='test-origin:session:2:2026-01-01T00:00:01.100000+00:00', log_serial=1), rejected=[]))
+alert = 'marked', closer = 'regular', revealed = False
+
+    @pytest.mark.parametrize("alert", ["marked", "heat"])
+    @pytest.mark.parametrize("closer,revealed", [("regular", False), ("warden", False), ("regular", True)])
+    def test_ui_2_1_tab_respects_warden_cover_and_distance(row, alert, closer, revealed):
+        game, a, b = row
+        place(game, b, "vatside-clinics", (25, 3))
+        source = body(game, a)
+        regular = npc(game, "npc-sodium-regular", "regular", (27 if closer == "regular" else 29, 3))
+        warden = npc(game, "npc-plainclothes-warden", "covered-warden", (27 if closer == "warden" else 29, 3))
+        player = game.core.characters.players[source.id]
+        if alert == "marked":
+            source.marked = True
+            player.marked_until = datetime.fromtimestamp(
+                game.core.combat.now() + rules.MARKED_SECONDS, timezone.utc).isoformat()
+        else:
+            player.warden_heat_until = datetime.fromtimestamp(
+                game.core.combat.now() + HEAT_SECONDS, timezone.utc).isoformat()
+        if revealed:
+            game.core.combat.reveal(warden, source)
+>       assert game.core.combat.relation(source, warden) == "hostile"
+E       AssertionError: assert 'neutral' == 'hostile'
+E         
+E         - hostile
+E         + neutral
+
+tests\npcs\test_truce.py:405: AssertionError
+___ test_ui_2_1_tab_respects_warden_cover_and_distance[regular-False-heat] ____
+
+row = (<tests.harness.HeadlessServer object at 0x000001D039DFE660>, FakeClient(core=<blacksite.server.core.Core object at 0x...:00:1'}], maxlen=500), log_token='test-origin:session:2:2026-01-01T00:00:01.100000+00:00', log_serial=1), rejected=[]))
+alert = 'heat', closer = 'regular', revealed = False
+
+    @pytest.mark.parametrize("alert", ["marked", "heat"])
+    @pytest.mark.parametrize("closer,revealed", [("regular", False), ("warden", False), ("regular", True)])
+    def test_ui_2_1_tab_respects_warden_cover_and_distance(row, alert, closer, revealed):
+        game, a, b = row
+        place(game, b, "vatside-clinics", (25, 3))
+        source = body(game, a)
+        regular = npc(game, "npc-sodium-regular", "regular", (27 if closer == "regular" else 29, 3))
+        warden = npc(game, "npc-plainclothes-warden", "covered-warden", (27 if closer == "warden" else 29, 3))
+        player = game.core.characters.players[source.id]
+        if alert == "marked":
+            source.marked = True
+            player.marked_until = datetime.fromtimestamp(
+                game.core.combat.now() + rules.MARKED_SECONDS, timezone.utc).isoformat()
+        else:
+            player.warden_heat_until = datetime.fromtimestamp(
+                game.core.combat.now() + HEAT_SECONDS, timezone.utc).isoformat()
+        if revealed:
+            game.core.combat.reveal(warden, source)
+>       assert game.core.combat.relation(source, warden) == "hostile"
+E       AssertionError: assert 'neutral' == 'hostile'
+E         
+E         - hostile
+E         + neutral
+
+tests\npcs\test_truce.py:405: AssertionError
+___ test_ui_2_1_tab_respects_warden_cover_and_distance[warden-False-marked] ___
+
+row = (<tests.harness.HeadlessServer object at 0x000001D03A6200E0>, FakeClient(core=<blacksite.server.core.Core object at 0x...:00:1'}], maxlen=500), log_token='test-origin:session:2:2026-01-01T00:00:01.100000+00:00', log_serial=1), rejected=[]))
+alert = 'marked', closer = 'warden', revealed = False
+
+    @pytest.mark.parametrize("alert", ["marked", "heat"])
+    @pytest.mark.parametrize("closer,revealed", [("regular", False), ("warden", False), ("regular", True)])
+    def test_ui_2_1_tab_respects_warden_cover_and_distance(row, alert, closer, revealed):
+        game, a, b = row
+        place(game, b, "vatside-clinics", (25, 3))
+        source = body(game, a)
+        regular = npc(game, "npc-sodium-regular", "regular", (27 if closer == "regular" else 29, 3))
+        warden = npc(game, "npc-plainclothes-warden", "covered-warden", (27 if closer == "warden" else 29, 3))
+        player = game.core.characters.players[source.id]
+        if alert == "marked":
+            source.marked = True
+            player.marked_until = datetime.fromtimestamp(
+                game.core.combat.now() + rules.MARKED_SECONDS, timezone.utc).isoformat()
+        else:
+            player.warden_heat_until = datetime.fromtimestamp(
+                game.core.combat.now() + HEAT_SECONDS, timezone.utc).isoformat()
+        if revealed:
+            game.core.combat.reveal(warden, source)
+>       assert game.core.combat.relation(source, warden) == "hostile"
+E       AssertionError: assert 'neutral' == 'hostile'
+E         
+E         - hostile
+E         + neutral
+
+tests\npcs\test_truce.py:405: AssertionError
+____ test_ui_2_1_tab_respects_warden_cover_and_distance[warden-False-heat] ____
+
+row = (<tests.harness.HeadlessServer object at 0x000001D0399028A0>, FakeClient(core=<blacksite.server.core.Core object at 0x...:00:1'}], maxlen=500), log_token='test-origin:session:2:2026-01-01T00:00:01.100000+00:00', log_serial=1), rejected=[]))
+alert = 'heat', closer = 'warden', revealed = False
+
+    @pytest.mark.parametrize("alert", ["marked", "heat"])
+    @pytest.mark.parametrize("closer,revealed", [("regular", False), ("warden", False), ("regular", True)])
+    def test_ui_2_1_tab_respects_warden_cover_and_distance(row, alert, closer, revealed):
+        game, a, b = row
+        place(game, b, "vatside-clinics", (25, 3))
+        source = body(game, a)
+        regular = npc(game, "npc-sodium-regular", "regular", (27 if closer == "regular" else 29, 3))
+        warden = npc(game, "npc-plainclothes-warden", "covered-warden", (27 if closer == "warden" else 29, 3))
+        player = game.core.characters.players[source.id]
+        if alert == "marked":
+            source.marked = True
+            player.marked_until = datetime.fromtimestamp(
+                game.core.combat.now() + rules.MARKED_SECONDS, timezone.utc).isoformat()
+        else:
+            player.warden_heat_until = datetime.fromtimestamp(
+                game.core.combat.now() + HEAT_SECONDS, timezone.utc).isoformat()
+        if revealed:
+            game.core.combat.reveal(warden, source)
+>       assert game.core.combat.relation(source, warden) == "hostile"
+E       AssertionError: assert 'neutral' == 'hostile'
+E         
+E         - hostile
+E         + neutral
+
+tests\npcs\test_truce.py:405: AssertionError
+___ test_ui_2_1_tab_respects_warden_cover_and_distance[regular-True-marked] ___
+
+row = (<tests.harness.HeadlessServer object at 0x000001D03A7DCF50>, FakeClient(core=<blacksite.server.core.Core object at 0x...:00:1'}], maxlen=500), log_token='test-origin:session:2:2026-01-01T00:00:01.100000+00:00', log_serial=1), rejected=[]))
+alert = 'marked', closer = 'regular', revealed = True
+
+    @pytest.mark.parametrize("alert", ["marked", "heat"])
+    @pytest.mark.parametrize("closer,revealed", [("regular", False), ("warden", False), ("regular", True)])
+    def test_ui_2_1_tab_respects_warden_cover_and_distance(row, alert, closer, revealed):
+        game, a, b = row
+        place(game, b, "vatside-clinics", (25, 3))
+        source = body(game, a)
+        regular = npc(game, "npc-sodium-regular", "regular", (27 if closer == "regular" else 29, 3))
+        warden = npc(game, "npc-plainclothes-warden", "covered-warden", (27 if closer == "warden" else 29, 3))
+        player = game.core.characters.players[source.id]
+        if alert == "marked":
+            source.marked = True
+            player.marked_until = datetime.fromtimestamp(
+                game.core.combat.now() + rules.MARKED_SECONDS, timezone.utc).isoformat()
+        else:
+            player.warden_heat_until = datetime.fromtimestamp(
+                game.core.combat.now() + HEAT_SECONDS, timezone.utc).isoformat()
+        if revealed:
+            game.core.combat.reveal(warden, source)
+>       assert game.core.combat.relation(source, warden) == "hostile"
+E       AssertionError: assert 'neutral' == 'hostile'
+E         
+E         - hostile
+E         + neutral
+
+tests\npcs\test_truce.py:405: AssertionError
+____ test_ui_2_1_tab_respects_warden_cover_and_distance[regular-True-heat] ____
+
+row = (<tests.harness.HeadlessServer object at 0x000001D039E38440>, FakeClient(core=<blacksite.server.core.Core object at 0x...:00:1'}], maxlen=500), log_token='test-origin:session:2:2026-01-01T00:00:01.100000+00:00', log_serial=1), rejected=[]))
+alert = 'heat', closer = 'regular', revealed = True
+
+    @pytest.mark.parametrize("alert", ["marked", "heat"])
+    @pytest.mark.parametrize("closer,revealed", [("regular", False), ("warden", False), ("regular", True)])
+    def test_ui_2_1_tab_respects_warden_cover_and_distance(row, alert, closer, revealed):
+        game, a, b = row
+        place(game, b, "vatside-clinics", (25, 3))
+        source = body(game, a)
+        regular = npc(game, "npc-sodium-regular", "regular", (27 if closer == "regular" else 29, 3))
+        warden = npc(game, "npc-plainclothes-warden", "covered-warden", (27 if closer == "warden" else 29, 3))
+        player = game.core.characters.players[source.id]
+        if alert == "marked":
+            source.marked = True
+            player.marked_until = datetime.fromtimestamp(
+                game.core.combat.now() + rules.MARKED_SECONDS, timezone.utc).isoformat()
+        else:
+            player.warden_heat_until = datetime.fromtimestamp(
+                game.core.combat.now() + HEAT_SECONDS, timezone.utc).isoformat()
+        if revealed:
+            game.core.combat.reveal(warden, source)
+>       assert game.core.combat.relation(source, warden) == "hostile"
+E       AssertionError: assert 'neutral' == 'hostile'
+E         
+E         - hostile
+E         + neutral
+
+tests\npcs\test_truce.py:405: AssertionError
+=========================== short test summary info ===========================
+FAILED tests/npcs/test_truce.py::test_game_5_5_truce_suppresses_explicit_hostility_and_retains_warden_heat
+FAILED tests/npcs/test_truce.py::test_ui_2_1_truce_warning_keeps_warden_cover_until_provocation[marked]
+FAILED tests/npcs/test_truce.py::test_ui_2_1_truce_warning_keeps_warden_cover_until_provocation[heat]
+FAILED tests/npcs/test_truce.py::test_ui_2_1_tab_respects_warden_cover_and_distance[regular-False-marked]
+FAILED tests/npcs/test_truce.py::test_ui_2_1_tab_respects_warden_cover_and_distance[regular-False-heat]
+FAILED tests/npcs/test_truce.py::test_ui_2_1_tab_respects_warden_cover_and_distance[warden-False-marked]
+FAILED tests/npcs/test_truce.py::test_ui_2_1_tab_respects_warden_cover_and_distance[warden-False-heat]
+FAILED tests/npcs/test_truce.py::test_ui_2_1_tab_respects_warden_cover_and_distance[regular-True-marked]
+FAILED tests/npcs/test_truce.py::test_ui_2_1_tab_respects_warden_cover_and_distance[regular-True-heat]
+9 failed, 110 passed in 49.94s

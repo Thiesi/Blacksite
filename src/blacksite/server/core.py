@@ -250,7 +250,7 @@ class Core:
             if isinstance(choice.value, Exit) and choice.tile == avatar.actor.position:
                 return result
             if (choice.kind == 'dialogue' and choice.tile is not None
-                    or route.name == 'commerce' and choice.value is not None
+                    or (route.name == 'commerce' or choice.kind == 'vendor') and choice.value is not None
                     and choice.tile is not None and choice.tile != avatar.actor.position):
                 continue
             return first

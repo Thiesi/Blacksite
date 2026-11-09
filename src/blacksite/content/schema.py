@@ -267,6 +267,7 @@ class Spawner:
     tile: Tile | None = None
     region: Region | None = None
     condition: str | None = None
+    poses_as: str | None = None
 
 
 @dataclass(frozen=True)

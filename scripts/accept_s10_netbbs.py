@@ -10,7 +10,7 @@ import argparse
 import asyncio
 from collections import deque
 from collections.abc import Callable
-from dataclasses import dataclass
+from dataclasses import dataclass, replace
 import json
 from hashlib import sha256
 import importlib.util
@@ -24,6 +24,7 @@ from typing import Any
 from accept_s04_netbbs import Database, DatabaseLane, DoorProfile, REPO, TelnetServer, browse_doors, create_door, create_user
 from accept_s06_netbbs import ZoneCaller
 import blacksite
+from blacksite.content.loader import ContentTree
 from blacksite.server.app import Server
 from blacksite.server.inventory import Inventory
 from blacksite.server.items import make_item
@@ -322,6 +323,29 @@ class NativeProbe:
                 'max_write_seconds': self.console_max_seconds}, indent=2)+'\n', encoding='utf-8')
 
 
+def s10_patrol_fixture(content: ContentTree) -> ContentTree:
+    """A9's carried-over fixture: a live Clinic patrol on the east side.
+
+    Only S10 installs this in-memory copy. The duel and tram route stay
+    west of x=28; the patrol's spawn and ordinary walking loop are east
+    of x=69. HP, Mark, detection, pursuit and firing rules are untouched.
+    S11 retains the authored patrol and integrated pursuit proof.
+    """
+    original = content.npcs['npc-warden-patrol']
+    scoped_id = 'npc-warden-patrol-s10'
+    points = [[70, 23], [74, 23], [74, 26], [70, 26]]
+    content.npcs[scoped_id] = replace(original, id=scoped_id, behaviours=tuple(
+        replace(behaviour, params={**behaviour.params, 'waypoints': points})
+        if behaviour.kind == 'patrol' else behaviour
+        for behaviour in original.behaviours))
+    zone = content.zones['vatside-clinics']
+    content.zones[zone.meta.id] = replace(zone, meta=replace(zone.meta,
+        spawners=tuple(replace(spawner, npc=scoped_id, region=None, tile=(70, 23))
+            if spawner.id == 'warden-patrol' else spawner
+            for spawner in zone.meta.spawners)))
+    return content
+
+
 async def s10_tram_evacuation(probe: NativeProbe, winner: Connection) -> None:
     """Take the shorter public escape, with an S10-only scheduled ride wait."""
     avatar = winner.avatar
@@ -365,7 +389,11 @@ async def s10_tram_evacuation(probe: NativeProbe, winner: Connection) -> None:
 
 async def accept(root: Path, door_python: Path, show: bool) -> None:
     probe=NativeProbe(root,door_python,show)
+    original_content = probe.service._content
+    probe.service._content = lambda: s10_patrol_fixture(original_content())
     await probe.start()
+    probe.report('FIXTURE S10: Clinic Warden spawn (70,23), patrol '
+        '(70,23)-(74,23)-(74,26)-(70,26); live NPC, unchanged pursuit rules')
     results=[]
     try:
         for width,height in ((80,24),(132,50)):
@@ -479,6 +507,8 @@ async def accept(root: Path, door_python: Path, show: bool) -> None:
                 "shock_slow":shock_seen,"jam":jam,"clone_charge":100,"bank":500,"cache_loot":True,"safe_refusal":True,"hit_flash_16":True})
         assert not probe.errors,probe.errors
         (probe.root/"result.json").write_text(json.dumps({"passed":True,"transport":"NetBBS Telnet native stdio",
+            "warden_position_fixture": {"zone": "vatside-clinics", "spawn": [70,23],
+                "waypoints": [[70,23],[74,23],[74,26],[70,26]]},
             "scenario_funding":True,"grade_fixture":5,"shock_fixture":75,"teleports":False,"human_playtest":False,"runs":results},indent=2),encoding="utf-8")
     finally: await probe.close()
 

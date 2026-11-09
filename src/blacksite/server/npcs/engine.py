@@ -1,6 +1,7 @@
 """NPC lifecycle, relations, legal combat and service interactions (5.5)."""
 
 from blacksite.server.interaction import Focus, Interaction, interact, object_interaction
+from blacksite.content.schema import Spawner
 from collections.abc import Callable
 from copy import deepcopy
 from datetime import datetime, timezone
@@ -19,7 +20,7 @@ from blacksite.server.npcs.templates import (
     LOST_SIGHT_SECONDS, PROVOCATION_SECONDS, WANDER_PAUSE_TICKS,
     SUBDUE_SECONDS, SUBDUE_SHOCK, make_actor, relation, weapon,
     RESPONSE_COUNT, RESPONSE_RADIUS,
-    HEAT_SAVE_SECONDS,
+    HEAT_SAVE_SECONDS, REACH_ACTIVE_TICKS,
 )
 from blacksite.server.players import Player
 from blacksite.server.progression import Grant
@@ -45,6 +46,7 @@ class Npcs:
         self.dormant: dict[str, float] = {}
         self.provocations: dict[tuple[str, str, str], float] = {}
         self.menus: set[str] = set()
+        self.talking: Callable[[str, str], bool] = lambda sid, aid: False
         self.pending_deaths: set[str] = set()
         self.restraints: dict[str, dict[str, Any]] = {}
         self.heat_saved_at: dict[str, float] = {}
@@ -61,6 +63,7 @@ class Npcs:
         combat.training_provider = self.training
         combat.npc_armour = self.armour
         combat.relation_provider = self.actor_relation
+        combat.cover_relation_provider = self.public_relation
 
     def spawn_mission(self, owner: Actor, mission: str, template_id: str,
                       tile: tuple[int, int], willing: bool = False) -> Actor:
@@ -114,8 +117,10 @@ class Npcs:
         if template is None:
             return False
         now = self.combat.now()
-        if self.provocations.get((actor.zone, str(actor.behaviour.get("spawner")), other.id), 0) > now:
+        if self.provocations.get((actor.zone, self.reaction_group(actor), other.id), 0) > now:
             return True
+        if self.covered_unarmed(actor):
+            return False  # Game 5.5: the cover enforces nothing while unarmed.
         player = self.game.players.get(other.id)
         if actor.faction == "wardens" and player:
             if other.marked or (player.warden_heat_until and datetime.fromisoformat(player.warden_heat_until).timestamp() > now):
@@ -129,6 +134,49 @@ class Npcs:
         template = self.content.npcs.get(actor.behaviour.get("template"))
         item = self.content.items.get(template.armour) if template else None
         return int(getattr(item.armour.armour, kind)) if item and item.armour else 0
+
+    def covered_unarmed(self, actor: Actor) -> bool:
+        template = self.content.npcs.get(actor.behaviour.get('template'))
+        return bool(template and template.presents and weapon(self.content, template) is None)
+
+    def posed_spawner(self, actor: Actor) -> Spawner | None:
+        if not self.covered_unarmed(actor):
+            return None
+        spawners = self.world.zones[actor.zone].template.meta.spawners
+        own = next((sp for sp in spawners if sp.id == actor.behaviour.get('spawner')), None)
+        return next((sp for sp in spawners if own and sp.id == own.poses_as), None)
+
+    def reaction_group(self, actor: Actor) -> str:
+        posed = self.posed_spawner(actor)
+        return posed.id if posed else str(actor.behaviour.get('spawner'))
+
+    def public_relation(self, viewer: Actor, actor: Actor, nearby: bool) -> str | None:
+        """S42/#182 ruling: show the declared crowd's public reaction only."""
+        posed = self.posed_spawner(actor)
+        if posed is None or not presentation.covered(actor, viewer, self.content):
+            return None
+        provoked = self.provocations.get((actor.zone, posed.id, viewer.id), 0) > self.combat.now()
+        # TARGET/Tab use disposition; NEARBY's ordinary marker names a
+        # current pursuer. Preserve those existing surface semantics.
+        hostile = provoked and (not nearby or actor.target == viewer.id)
+        return 'hostile' if hostile else 'neutral'
+
+    def shared_crowd(self, actor: Actor) -> bool:
+        group = self.reaction_group(actor)
+        return any(sp.poses_as == group for sp in self.world.zones[actor.zone].template.meta.spawners)
+
+    def reach_holders(self, actor: Actor, zone: ZoneInstance, tick: int) -> list[tuple[int, int]]:
+        """Game 5.5: only active, talk-capable callers constrain wandering."""
+        holders = []
+        for session in self.game.sessions.active.values():
+            body = zone.actors.get(session.player_id)
+            if (session.closed or body is None or body.kind != 'player' or body.health <= 0
+                    or body.stance in ('down', 'dead', 'sleeper', 'jacked')
+                    or max(abs(body.x-actor.x), abs(body.y-actor.y)) > 1):
+                continue
+            if tick-session.last_action_tick <= REACH_ACTIVE_TICKS or self.talking(session.id, actor.id):
+                holders.append(body.position)
+        return holders
 
     def truce_keeper(self, source: Actor, target: Actor) -> str | None:
         """Game 5.5/7.3: one predicate for the warning and keeper response."""
@@ -148,7 +196,7 @@ class Npcs:
         else:
             attackers = {source.id, body.id}
             provoked = any(self.provocations.get(
-                (target.zone, str(target.behaviour.get("spawner")), attacker), 0) > self.combat.now()
+                (target.zone, self.reaction_group(target), attacker), 0) > self.combat.now()
                 for attacker in attackers)
             breaks = not (provoked or target.target in attackers and target.behaviour.get("state") == "hunt")
         return zone.template.meta.truce if breaks else None
@@ -170,6 +218,7 @@ class Npcs:
         for guard in zone.actors.values():
             template = self.content.npcs.get(guard.behaviour.get("template"))
             if (guard.faction != keeper or not template
+                    or self.covered_unarmed(guard)
                     or not any(b.kind == "guard" for b in template.behaviours)):
                 continue
             guards.append(guard)
@@ -196,19 +245,29 @@ class Npcs:
         if (source.kind != "player" and not source.behaviour.get("player_drone")
                 or target.kind == "player" or target.behaviour.get("player_drone") or target.behaviour.get("training")):
             return
-        group = str(target.behaviour.get("spawner"))
+        group = self.reaction_group(target)
         self.provocations[target.zone, group, source.id] = self.combat.now() + PROVOCATION_SECONDS
         controller = self.game.progression.controller(source)
         if controller:
             self.provocations[target.zone,group,controller.id] = self.combat.now()+PROVOCATION_SECONDS
+        crowd = self.shared_crowd(target)
         if source.zone == target.zone:
-            target.target = source.id
-            self.combat.reveal(target, source)
-            target.behaviour.update(last_seen=self.clock.now_tick(), last_position=source.position, state="hunt")
+            members = [actor for actor in self.world.zones[target.zone].actors.values()
+                       if crowd and self.reaction_group(actor) == group] if crowd else [target]
+            for member in members:
+                template = self.content.npcs[member.behaviour['template']]
+                state = 'flee' if (crowd or self.covered_unarmed(member)) and weapon(self.content, template) is None else 'hunt'
+                member.target = source.id
+                if state == 'hunt':
+                    self.combat.reveal(member, source)
+                member.behaviour.update(last_seen=self.clock.now_tick(), last_position=source.position, state=state)
         # Local faction guards protect their residents, without summoning
         # rival police into a district. The same safety checks still apply.
+        posed = self.posed_spawner(target)
+        faction = self.content.npcs[posed.npc].faction if posed else target.faction
         for actor in self.world.zones[target.zone].actors.values():
-            if actor.kind != "player" and actor.faction == target.faction and actor.faction:
+            if (actor.kind != "player" and actor.faction == faction and actor.faction
+                    and not self.covered_unarmed(actor)):
                 template = self.content.npcs.get(actor.behaviour.get("template"))
                 if template and any(b.kind in ("guard", "warden") for b in template.behaviours):
                     self.provocations[actor.zone, str(actor.behaviour.get("spawner")), source.id] = self.combat.now() + PROVOCATION_SECONDS
@@ -386,15 +445,17 @@ class Npcs:
         if candidates:
             target = candidates[0]
             actor.target = target.id
-            self.combat.reveal(actor, target)
             actor.behaviour["last_seen"] = tick
             actor.behaviour["last_position"] = target.position
         elif target and (not self.combat.legal(actor, target) or not self.hostile(actor, target)
-                or tick-int(actor.behaviour.get("last_seen", tick)) >= ticks(LOST_SIGHT_SECONDS)):
+                or not self.shared_crowd(actor)
+                and tick-int(actor.behaviour.get("last_seen", tick)) >= ticks(LOST_SIGHT_SECONDS)):
             actor.target = None
             target = None
         state = "flee" if target and (actor.health < actor.health_max * FLEE_FRACTION or weapon(self.content, template) is None) else "hunt" if target else "base"
         actor.behaviour["state"] = state
+        if target and state == 'hunt':
+            self.combat.reveal(actor, target)
         actor.behaviour["evaluated"] = tick
 
     def act(self, actor: Actor, zone: ZoneInstance, tick: int, avoid: set[tuple[int,int]]) -> None:
@@ -419,6 +480,12 @@ class Npcs:
             # unassigned escorts or move them while their worker is away.
             return
         if target and state in ("hunt", "flee"):
+            if self.shared_crowd(actor) and not self.hostile(actor, target):
+                # One declared crowd shares its deadline, independent of
+                # each member's five-tick evaluation phase.
+                actor.target = None
+                actor.behaviour['state'] = 'base'
+                return
             if not self.combat.legal(actor, target):
                 actor.target = None
                 return
@@ -449,7 +516,10 @@ class Npcs:
                 if region and not region.contains(actor.position):
                     step_toward(actor, zone, tuple(actor.behaviour["home"]), tick, avoid=avoid)
                 else:
-                    step_toward(actor, zone, tile, tick, region, avoid)
+                    holders = self.reach_holders(actor, zone, tick)
+                    step_toward(actor, zone, tile, tick, region, avoid,
+                        permit=lambda candidate: all(max(abs(candidate[0]-p[0]), abs(candidate[1]-p[1])) <= 1
+                                                     for p in holders))
                 actor.behaviour["pause"] = tick + zone.rng.randint(*WANDER_PAUSE_TICKS)
                 return
             if behaviour.kind == "patrol":
@@ -475,7 +545,7 @@ class Npcs:
                                 and distance(actor.position, o.spec.tile) <= 1.5), None)
                 if counter:
                     choice = object_interaction(counter)
-                    return Interaction(choice.focus, ('vendor', counter), counter.spec.tile)
+                    return Interaction(choice.focus, ('vendor', counter), counter.spec.tile, kind='vendor')
             if any(b.kind == 'talker' for b in template.behaviours):
                 return Interaction(Focus(other.id, presentation.name(other, actor, self.content), 'talk to'),
                                    ('talker', other), other.position, other.id, kind='dialogue')
@@ -566,3 +636,24 @@ class Npcs:
                 if ctx.tick % EVALUATION_TICKS == actor.behaviour.get("phase", 0):
                     self.evaluate(actor, zone, ctx.tick)
                 self.act(actor, zone, ctx.tick, avoid)
+            self.calm_crowds(zone, ctx.tick)
+
+    def calm_crowds(self, zone: ZoneInstance, tick: int) -> None:
+        """Game 5.5: a declared crowd shares its last sight and calm tick.
+
+        Finish after every member's ordinary five-tick observation. Actor
+        iteration order must not give the covered member an earlier close.
+        The existing twenty-second lost-sight interval remains unchanged.
+        """
+        groups: dict[tuple[str, str], list[Actor]] = {}
+        for actor in zone.actors.values():
+            if (actor.kind == 'npc' and actor.target and actor.stance not in ('down', 'dead')
+                    and actor.behaviour.get('state') in ('hunt', 'flee') and self.shared_crowd(actor)):
+                groups.setdefault((self.reaction_group(actor), actor.target), []).append(actor)
+        for members in groups.values():
+            last_seen = max(int(actor.behaviour.get('last_seen', tick)) for actor in members)
+            for actor in members:
+                actor.behaviour['last_seen'] = last_seen
+                if tick-last_seen >= ticks(LOST_SIGHT_SECONDS):
+                    actor.target = None
+                    actor.behaviour['state'] = 'base'

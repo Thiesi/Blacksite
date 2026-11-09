@@ -589,8 +589,9 @@ only from what this caller may know. For presentation that means:
   speech until reveal. The view sends a name, colour and figure
   consistent with the presented class, never the true faction of a
   disguised NPC (D-T8), with one exception: once a disguised NPC acts
-  against a caller (attacks, arrests or targets them), that caller's
-  views show its true class for as long as that NPC instance exists.
+  against a caller (attacks, arrests or hunts them; fleeing from them
+  is not acting against them), that caller's views show its true class
+  for as long as that NPC instance exists.
   The reveal is per caller: other callers keep seeing the cover until
   it acts against them. The server keeps the reveal with the NPC
   instance, not in content.

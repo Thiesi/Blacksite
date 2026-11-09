@@ -31,6 +31,9 @@ def test_entities_1_8_legacy_npc_does_not_need_a_cover_name(repo_root):
     content = load_content(repo_root/'src/blacksite/content')
     npc = content.npcs['npc-plainclothes-warden']
     content.npcs[npc.id] = replace(npc, presents=None, cover_name=None)
+    zone = content.zones['sodium-row']
+    content.zones[zone.id] = replace(zone, meta=replace(zone.meta, spawners=tuple(
+        replace(sp, poses_as=None) if sp.npc == npc.id else sp for sp in zone.meta.spawners)))
     assert not validate(content)
 
 
