@@ -45,7 +45,8 @@ data, _ = display.render(now)
 term = FakeTerminal(W, H)
 term.write(data)
 name = f"demo-{zone}-{x}-{y}-{W}x{H}-{tier}"
-out = Path(tempfile.gettempdir())
+out = ROOT / '.test-tmp/demo-captures'
+out.mkdir(parents=True, exist_ok=True)
 (out/f"{name}.txt").write_text(term.screen_text(), encoding='utf-8')
 screenshot.png(term, out/f"{name}.png")
 print(term.screen_text())

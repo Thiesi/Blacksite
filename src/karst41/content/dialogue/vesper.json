@@ -8,14 +8,6 @@
   "machine_mind": false,
   "lines": [
     {
-      "id": "round4-drawn",
-      "text": "Point it at the board or put it away. Either way, I'm working.",
-      "when": [
-        "drawn"
-      ],
-      "required": true
-    },
-    {
       "id": "marked",
       "text": "Red name. Sit at the back. The Row's neutral; that's a thing I arrange, not a thing that happens.",
       "when": [
@@ -85,18 +77,14 @@
       "ref": "vesper-first-thing",
       "label": "Work board",
       "hotkey": "c",
-      "when": [
-        "not_marked"
-      ]
+      "when": []
     },
     {
       "kind": "vendor",
       "ref": "vesper",
       "label": "Trade",
       "hotkey": "v",
-      "when": [
-        "not_marked"
-      ]
+      "when": []
     }
   ],
   "barks": [
@@ -105,6 +93,5 @@
       "weight": 1,
       "min_interval_seconds": 90
     }
-  ],
-  "drawn_open": true
+  ]
 }

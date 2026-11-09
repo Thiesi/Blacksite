@@ -77,7 +77,7 @@ class Dialogue:
         screen = self.menus.get(session.id)
         contact = contact or (screen.contact if screen else None)
         other = self.world.actors.get(contact.target) if contact else None
-        provoked = bool(other and self.core.npcs.provocations.get(
+        provoked = bool(getattr(self.core, 'demo_weapons', None) and other and self.core.npcs.provocations.get(
             (other.zone, self.core.npcs.reaction_group(other), player.id), 0) > self.clock.now_utc().timestamp())
         truce = getattr(self.core.combat.hostile_hook, '__self__', None)
         hunted = bool(truce and hasattr(truce, 'hunted') and truce.hunted(player.id))
@@ -181,7 +181,7 @@ class Dialogue:
 
     def open(self, session: Session, contact: Contact, tick: int) -> None:
         actor = self.world.actors.get(contact.target)
-        if actor and actor.behaviour.get('state') in ('flee', 'hunt'):
+        if getattr(self.core, 'demo_weapons', None) and actor and actor.behaviour.get('state') in ('flee', 'hunt'):
             viewer = self.sim.avatars[session.user_id].actor
             text = presentation.name(actor, viewer, self.content) + " won't stop."
             if not session.log_ring or session.log_ring[-1].get('text') != text:

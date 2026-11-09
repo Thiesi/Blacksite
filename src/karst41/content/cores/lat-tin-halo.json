@@ -10,8 +10,8 @@
     {
       "zone": "sodium-tin-halo",
       "tile": [
-        25,
-        8
+        18,
+        15
       ],
       "object_id": "halo-cabinet-hardware",
       "label": "sodium tin halo cabinet"

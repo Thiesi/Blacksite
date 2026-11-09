@@ -8,51 +8,18 @@
   "machine_mind": false,
   "lines": [
     {
-      "id": "round4-drawn",
-      "text": "Not with that out.",
-      "when": [
-        "drawn"
-      ],
-      "required": true
-    },
-    {
-      "id": "marked",
-      "text": "You know what you did out there. Drink slow. Sable's outside.",
-      "when": [
-        "marked"
-      ],
-      "required": true
-    },
-    {
       "id": "situation",
       "text": "Hardline template. Same as some of you. Chose the bar. You can choose too.",
       "when": [
-        "first_meeting",
         "archetype hardline"
       ],
       "required": true
     },
     {
       "id": "first",
-      "text": "Vesper's at the end. Drink first. It's a rule; it's her rule.",
+      "text": "Vesper's at the end. Drink if you want. Row's neutral; the chair's free.",
       "when": [
         "first_meeting"
-      ],
-      "required": true
-    },
-    {
-      "id": "veteran",
-      "text": "You can be shot on the Row now. Notice how nobody does.",
-      "when": [
-        "grade_at_least 5"
-      ],
-      "required": true
-    },
-    {
-      "id": "returned",
-      "text": "Good. You came back. Most don't, the first week.",
-      "when": [
-        "completed_contract vesper-first-thing"
       ],
       "required": true
     },
@@ -64,21 +31,5 @@
     }
   ],
   "offers": [],
-  "barks": [
-    {
-      "text": "Hardline template. Hands this size, and all they do is pour.",
-      "weight": 1,
-      "min_interval_seconds": 90
-    },
-    {
-      "text": "Sit anywhere. She's already seen you.",
-      "weight": 1,
-      "min_interval_seconds": 90
-    },
-    {
-      "text": "Nobody's been shot in here. Nobody's been told why.",
-      "weight": 1,
-      "min_interval_seconds": 90
-    }
-  ]
+  "barks": []
 }
