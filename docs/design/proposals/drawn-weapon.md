@@ -217,8 +217,19 @@ covers what you did with it.
 
 - **While it runs or hunts:** no page. E on an NPC that is fleeing or
   hunting opens nothing. A page closes on movement anyway [built], so
-  this only stops it from opening for one frame. Whether E logs a muted
-  line is the presentation lead's call.
+  this only stops it from opening for one frame. Instead E logs a muted
+  system line, in the same style as "walks off" (presentation lead's
+  wording and call, #185):
+  > **"<on-screen name> won't stop."** For example, "Sodium regular
+  > won't stop."
+  - It uses the name the screen shows, so the covered Warden prints its
+    cover name.
+  - It says what you see, not why. It doesn't tell a flee from a hunt,
+    or a cover from a regular.
+  - A press that does nothing would read as a broken key, and the talk
+    hint has taught players that E always answers.
+  - It never repeats while it's still the newest log line, so mashing E
+    doesn't flood the log.
 - **Afterwards, for as long as the crowd is provoked** (300 s,
   `PROVOCATION_SECONDS` [built]): the page opens with one line written
   for it, and its offers stay shut. For street regulars:
@@ -299,6 +310,8 @@ stand-down before any of it is canon.
 5. **The new lines** in §3.2, §3.4, §4.2 and §4.3, which you haven't
    heard yet.
 6. **Demo first,** on a round 4 branch with errands (§5)?
-7. **After a shot** (§4.4): no page while an NPC flees or hunts, then
-   "Not you. Keep walking." from the whole crowd, offers shut, for the
-   5-minute provocation?
+7. **After a shot** (§4.4), decided together:
+   - No page while an NPC flees or hunts. E logs "<on-screen name> won't
+     stop." instead (presentation lead's line).
+   - Then "Not you. Keep walking." from the whole crowd, with offers
+     shut, for the 5-minute provocation.
