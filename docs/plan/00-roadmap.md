@@ -1,10 +1,10 @@
-# Blacksite — Build Roadmap
+# Karst 41 — Build Roadmap
 
 The implementation plan: milestones, slices, dependencies, and which
 model each slice is written for. Every slice has its own file in
 `docs/plan/slices/` with the full specification and is filed as a GitHub
 issue in this repository; the issue links the file and the file is the
-source of truth. Platform work Blacksite needs from NetBBS is in
+source of truth. Platform work Karst 41 needs from NetBBS is in
 `docs/upstream/` and filed in the NetBBS repository, never here.
 
 ---

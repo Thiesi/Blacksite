@@ -15,7 +15,7 @@ context. The user cannot assess coherence, navigation, atmosphere or
 enjoyable exploration, or recognize the written Shaft Foot and Far Ring
 in the presented environments.
 
-This affects the connection between Blacksite's world and the caller's
+This affects the connection between Karst 41's world and the caller's
 experience across the project. It is not confined to decoration in two
 zones. S33 district art is not assumed to solve it.
 

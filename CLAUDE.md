@@ -1,7 +1,7 @@
 # Claude Code guidance
 
 Read and follow `AGENTS.md` as the canonical project guidance for
-Blacksite. It covers the canon hierarchy, the slice workflow, coding and
+Karst 41. It covers the canon hierarchy, the slice workflow, coding and
 testing rules, and how this repository relates to NetBBS.
 
 Add material here only when it is specific to Claude Code and does not

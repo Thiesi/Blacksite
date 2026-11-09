@@ -1,4 +1,4 @@
-# Blacksite — Faction Dossiers
+# Karst 41 — Faction Dossiers
 
 Expands `docs/world/00-bible.md` §7. The mechanical rules for standing,
 membership, relations, Marked, and relays are in

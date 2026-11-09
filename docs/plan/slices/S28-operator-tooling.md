@@ -168,7 +168,7 @@ gets one here; this slice makes them one coherent tool.
 
 Issue #56: follow `docs/plan/01-netbbs-platform.md` and architecture 6.2.
 NetBBS's installation-directory backup is node-wide opt-in, unquiesced
-and not restored automatically. Retain Blacksite's SQLite backup API
+and not restored automatically. Retain Karst 41's SQLite backup API
 snapshot and manifest. Verify online backup during writes, integrity and
 service-stopped/exclusive-lease restoration; a raw copy of world.db/WAL
 must not be presented as recovery proof. Document both stop grace budgets,

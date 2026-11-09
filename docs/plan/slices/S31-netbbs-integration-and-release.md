@@ -92,11 +92,11 @@ not a second speculative future-version preset.
 - Platform API handling: accept integer API 5 for the certified release;
   missing means legacy 2 for a useful upgrade refusal. Reject unsupported
   older/newer, malformed and boolean values before world entry. This is
-  independent of Blacksite's protocol major; additive optional fields
+  independent of Karst 41's protocol major; additive optional fields
   within a supported API remain optional. Do not probe unknown versions.
 - Preserve S30's optional deadline, no implicit 3600-second cutoff,
   ASCII-preference refusal, CP437-compatible graphics and resize support.
-- Verify host presence already names Blacksite. Optional outbound is
+- Verify host presence already names Karst 41. Optional outbound is
   disabled with the positive registered-only play gate: test that result,
   not a fabricated successful announcement. Do not lower the gate to
   zero. The future opt-in adapter is conditional on a guest-safe,
@@ -149,7 +149,7 @@ not a second speculative future-version preset.
 1. On the ReLink test node (NetBSD), as the service account: create the
    venv and install dir per `docs/ops/install.md`, install the wheel,
    run the first `blacksite serve`; secrets and content appear.
-2. In NetBBS as SysOp: register "Blacksite", import
+2. In NetBBS as SysOp: register "Karst 41", import
    `deploy/netbbs-door-profile.json`, set the interpreter path, **Check
    setup** reports no problems, **Test as SysOp** shows the title screen
    at your terminal size; leave; lower only to the registered-only gate.

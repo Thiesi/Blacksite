@@ -1,4 +1,4 @@
-# Blacksite — Terminal UI
+# Karst 41 — Terminal UI
 
 How the game looks and how it is driven, on every terminal NetBBS can
 present: Telnet, SSH, and the web (xterm.js) transport, from 80×24 up.

@@ -1,6 +1,6 @@
-# Blacksite — guidance for development agents
+# Karst 41 — guidance for development agents
 
-Blacksite is a real-time multiplayer cyberpunk door game for NetBBS,
+Karst 41 is a real-time multiplayer cyberpunk door game for NetBBS,
 developed as a **third-party native door**: this repository has no commit
 access to NetBBS and no say in its release cycle. Read this file before
 doing anything; it is the canonical guidance for every agent and every
@@ -181,7 +181,7 @@ offline disk check. These rules keep it bounded:
 - **Never commit to NetBBS from here.** Anything the platform needs is
   written up in `docs/upstream/` and filed as an issue in `Thiesi/NetBBS`.
   Keep this repository limited to what is implemented entirely in
-  Blacksite's own code.
+  Karst 41's own code.
 - Test caller-facing changes through a real NetBBS node: a local checkout
   of NetBBS, a registered native stdio door pointing at this repo's venv
   interpreter with argv `-m blacksite.door`, and the game service started
