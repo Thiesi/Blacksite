@@ -1,39 +1,18 @@
-name: R1 package and native title acceptance
-
-# R1 merged as 98b83d2 (PR #193). This was R1's one-off acceptance and
-# pins R1's title, subtitle and base 7597dce, so it no longer runs on
-# pull requests. Dispatch it at an R1-era ref to reproduce the evidence.
+name: S43 S04 acceptance at pinned submitted source
 on:
   workflow_dispatch:
-
 permissions:
   contents: read
-
 jobs:
-  title-only-diff:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
-        with:
-          ref: ${{ github.event.pull_request.head.sha || github.sha }}
-          fetch-depth: 0
-      - uses: actions/setup-python@v5
-        with:
-          python-version: '3.12'
-      - name: Verify only the approved title and fill cells changed
-        run: python scripts/check_r1_titles.py --output "$RUNNER_TEMP/karst41-proof/r1-title-diff/result.json"
-      - uses: actions/upload-artifact@v4
-        with:
-          name: r1-title-only-diff
-          path: ${{ runner.temp }}/karst41-proof/r1-title-diff/result.json
-
   door-s04:
     runs-on: ubuntu-latest
     timeout-minutes: 15
+    env:
+      SOURCE_HEAD: a0b1a15f155889228e59e2071f8d9deaada05abb
     steps:
       - uses: actions/checkout@v4
         with:
-          ref: ${{ github.event.pull_request.head.sha || github.sha }}
+          ref: ${{ env.SOURCE_HEAD }}
       - uses: actions/setup-python@v5
         with:
           python-version: '3.12'
@@ -42,69 +21,45 @@ jobs:
           repository: Thiesi/NetBBS
           ref: v7.45.0
           path: .test-tmp/netbbs
-      - name: Install NetBBS and the isolated door wheel
+      - name: Build an isolated wheel from the exact S43 source
         shell: bash
         run: |
+          test "$(git rev-parse HEAD)" = "$SOURCE_HEAD"
+          proof="$RUNNER_TEMP/karst41-proof/s43-s04"
           python -m pip install './.test-tmp/netbbs[ssh,web]'
-          python -m pip wheel --no-deps . -w "$RUNNER_TEMP/karst41-proof/r1-s04/wheels"
-          python -m venv "$RUNNER_TEMP/karst41-proof/r1-s04/venv"
-          "$RUNNER_TEMP/karst41-proof/r1-s04/venv/bin/python" -m pip install --no-index "$RUNNER_TEMP"/karst41-proof/r1-s04/wheels/*.whl
-      - name: Run complete S04 acceptance at both sizes
+          python -m pip wheel --no-deps . -w "$proof/wheels"
+          python -m venv "$proof/venv"
+          "$proof/venv/bin/python" -m pip install --no-index "$proof"/wheels/*.whl
+      - name: Verify source and installed client identity
+        shell: python
+        run: |
+          import hashlib, json, os, pathlib, subprocess
+          proof = pathlib.Path(os.environ['RUNNER_TEMP'])/'karst41-proof/s43-s04'
+          source = pathlib.Path('src/karst41')
+          def digest(root):
+              h = hashlib.sha256()
+              for p in sorted(root.rglob('*.py')):
+                  h.update(p.relative_to(root).as_posix().encode()+b'\0'+p.read_bytes().replace(b'\r\n',b'\n')+b'\0')
+              return h.hexdigest()
+          checker = "import hashlib,json,karst41;from pathlib import Path\nroot=Path(karst41.__file__).parent;h=hashlib.sha256()\nfor p in sorted(root.rglob('*.py')): h.update(p.relative_to(root).as_posix().encode()+b'\\0'+p.read_bytes().replace(b'\\r\\n',b'\\n')+b'\\0')\nprint(json.dumps({'version':karst41.__version__,'python_tree_sha256':h.hexdigest()}))"
+          client = json.loads(subprocess.check_output([str(proof/'venv/bin/python'),'-I','-c',checker]))
+          head = subprocess.check_output(['git','rev-parse','HEAD'],text=True).strip()
+          assert head == os.environ['SOURCE_HEAD']
+          assert digest(source) == client['python_tree_sha256'] == '84f609a7602278c0def16831492dec96c98782ee913ae2e10f3ce67588fddeda'
+          out = proof/'captures'
+          out.mkdir(parents=True,exist_ok=True)
+          (out/'source-identity.json').write_text(json.dumps({'source_head':head,'workflow_head':os.environ['GITHUB_SHA'],'client':client,'python_tree_sha256':digest(source)},indent=2)+'\n')
+      - name: Run unchanged S04 at both sizes and all transports
         shell: bash
         run: |
-          python scripts/accept_s04_netbbs.py --root "$RUNNER_TEMP/karst41-proof/r1-s04/captures" --door-python "$RUNNER_TEMP/karst41-proof/r1-s04/venv/bin/python"
+          proof="$RUNNER_TEMP/karst41-proof/s43-s04"
+          python scripts/accept_s04_netbbs.py --root "$proof/captures" --door-python "$proof/venv/bin/python"
       - uses: actions/upload-artifact@v4
         if: always()
         with:
-          name: r1-s04-proof
-          path: ${{ runner.temp }}/karst41-proof/r1-s04/captures
-      - name: Remove proof scratch
+          name: s43-s04-pinned-proof
+          path: ${{ runner.temp }}/karst41-proof/s43-s04/captures
+      - name: Remove fixed proof scratch
         if: always()
         shell: bash
-        run: rm -rf -- "$RUNNER_TEMP/karst41-proof/r1-s04"
-
-  title-netbbs:
-    runs-on: ubuntu-latest
-    timeout-minutes: 15
-    strategy:
-      fail-fast: false
-      matrix:
-        size: ['80x24', '132x50']
-        tier: ['16', '256', 'truecolor']
-        presentation: ['default', 'p5']
-    steps:
-      - uses: actions/checkout@v4
-        with:
-          ref: ${{ github.event.pull_request.head.sha || github.sha }}
-      - uses: actions/setup-python@v5
-        with:
-          python-version: '3.12'
-      - uses: actions/checkout@v4
-        with:
-          repository: Thiesi/NetBBS
-          ref: v7.45.0
-          path: .test-tmp/netbbs
-      - name: Build the wheel and install it in a clean venv
-        shell: bash
-        run: |
-          python -m pip install './.test-tmp/netbbs[ssh,web]'
-          python -m pip wheel --no-deps . -w "$RUNNER_TEMP/karst41-proof/r1/wheels"
-          python -m venv "$RUNNER_TEMP/karst41-proof/r1/venv"
-          "$RUNNER_TEMP/karst41-proof/r1/venv/bin/python" -m pip install --no-index "$RUNNER_TEMP"/karst41-proof/r1/wheels/*.whl
-      - name: Capture the live title and audit the real persisted world
-        shell: bash
-        run: |
-          python scripts/accept_r1_netbbs.py --root "$RUNNER_TEMP/karst41-proof/r1/captures" --door-python "$RUNNER_TEMP/karst41-proof/r1/venv/bin/python" --size '${{ matrix.size }}' --tier '${{ matrix.tier }}' --presentation '${{ matrix.presentation }}'
-      - uses: actions/upload-artifact@v4
-        if: always()
-        with:
-          name: r1-title-${{ matrix.presentation }}-${{ matrix.size }}-${{ matrix.tier }}
-          path: |
-            ${{ runner.temp }}/karst41-proof/r1/captures/*.ans
-            ${{ runner.temp }}/karst41-proof/r1/captures/*.txt
-            ${{ runner.temp }}/karst41-proof/r1/captures/*.json
-            ${{ runner.temp }}/karst41-proof/r1/captures/progress.log
-      - name: Remove native proof scratch
-        if: always()
-        shell: bash
-        run: rm -rf -- "$RUNNER_TEMP/karst41-proof/r1"
+        run: rm -rf -- "$RUNNER_TEMP/karst41-proof/s43-s04"
