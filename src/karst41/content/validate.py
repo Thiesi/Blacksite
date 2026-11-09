@@ -739,7 +739,8 @@ class _Validator:
             if sp.count < 1:
                 self.report(*owner, f"{label}: count must be at least 1", sp.id)
             if sum((sp.tile is not None, sp.region is not None, bool(sp.posts))) != 1:
-                self.report(*owner, f"{label}: give exactly one of tile, region and posts", sp.id)
+                kinds = "tile, region and posts" if sp.posts else "tile and region"
+                self.report(*owner, f"{label}: give exactly one of {kinds}", sp.id)
             elif sp.tile is not None and not self.passable(zone, sp.tile):
                 self.report(*owner, f"{label}: tile {list(sp.tile)} is not passable", sp.id)
             elif sp.region is not None and not (
