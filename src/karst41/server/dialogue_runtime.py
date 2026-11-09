@@ -61,7 +61,7 @@ class Dialogue:
         # finale proposal supplies a historical outcome.
         self.season_facts: Callable[[Any], SeasonFacts] = lambda player: SeasonFacts()
 
-    def facts(self, session: Session, talker: DialogueNode) -> Facts:
+    def facts(self, session: Session, talker: DialogueNode, contact: Contact | None = None) -> Facts:
         player = self.game.players[session.player_id]
         contracts = self.core.contracts
         assigned = {job.template: job.index for job in contracts.state.engine.instances.values()
@@ -73,7 +73,15 @@ class Dialogue:
         season = self.season_facts(player)
         marked = bool(player.marked_until and
                       datetime.fromisoformat(player.marked_until) > self.clock.now_utc())
-        return Facts(grade=player.grade, archetype=player.archetype, faction=player.faction,
+        viewer = self.sim.avatars[session.user_id].actor
+        screen = self.menus.get(session.id)
+        contact = contact or (screen.contact if screen else None)
+        other = self.world.actors.get(contact.target) if contact else None
+        provoked = bool(other and self.core.npcs.provocations.get(
+            (other.zone, self.core.npcs.reaction_group(other), player.id), 0) > self.clock.now_utc().timestamp())
+        truce = getattr(self.core.combat.hostile_hook, '__self__', None)
+        hunted = bool(truce and hasattr(truce, 'hunted') and truce.hunted(player.id))
+        return Facts(drawn=bool(viewer.behaviour.get('drawn')), provoked=provoked, hunted=hunted, grade=player.grade, archetype=player.archetype, faction=player.faction,
             standing=dict(player.standing), legal=player.legal_at is not None, marked=marked,
             enemy=relation(self.content.factions, player.faction, talker.faction) == 'H',
             balance=season.balance, met=frozenset(player.progress.get('met_talkers', ())),
@@ -172,8 +180,16 @@ class Dialogue:
             pass
 
     def open(self, session: Session, contact: Contact, tick: int) -> None:
+        actor = self.world.actors.get(contact.target)
+        if actor and actor.behaviour.get('state') in ('flee', 'hunt'):
+            viewer = self.sim.avatars[session.user_id].actor
+            text = presentation.name(actor, viewer, self.content) + " won't stop."
+            if not session.log_ring or session.log_ring[-1].get('text') != text:
+                session.emit(text, kind='system', channel='system', role='muted',
+                             at=self.clock.now_utc().isoformat())
+            return
         talker = self.content.dialogue[contact.talker]
-        facts = self.facts(session, talker)
+        facts = self.facts(session, talker, contact)
         line = evaluate(talker, facts, self.world.zones[contact.zone].rng).text
         if talker.id in facts.met:
             self.show(session, contact, line, tick)

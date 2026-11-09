@@ -1,0 +1,65 @@
+{
+  "source": "#185 comments 6735113691, 6749988072",
+  "sets": {
+    "row-card-player": [
+      "Sit down or put it away. The cards don't care.",
+      "Table's closed. You know why."
+    ],
+    "solenne": [
+      "Put that away, sweetheart. You'll scare the customers.",
+      "Not today, sweetheart. Not anything."
+    ],
+    "row-choir-listener": [
+      "Shh. Not now.",
+      "We heard it. Everyone heard it. Go."
+    ],
+    "row-kestrel-crew": [
+      "Put that away. I'm off shift.",
+      "Find another bar. This one's full."
+    ],
+    "row-halvard-offduty": [
+      "Put it away. We came down here to get away from that.",
+      "Drink somewhere else. Anywhere else."
+    ],
+    "row-sablier-offduty": [
+      "Point that somewhere I won't have to stitch.",
+      "I'll patch you if I have to. I won't talk to you."
+    ],
+    "row-clause-regular": [
+      "Put it down. Some of us are still counting.",
+      "Nobody chalks for you tonight."
+    ],
+    "row-unmoored-runner": [
+      "Wrong kind of loud. Put it away.",
+      "You made the street loud. Don't stand near me."
+    ],
+    "row-street-regular": [
+      "Easy. Easy. I'm just standing here.",
+      "Not you. Keep walking."
+    ],
+    "row-halo-doorstep": [
+      "Don't. She'll know it was out here.",
+      "Go away. You'll ruin it."
+    ],
+    "row-ticket-tout": [
+      "Rides are for people going somewhere. Put it away and go somewhere.",
+      "No seats for you. Not on any convoy."
+    ],
+    "row-haggler": [
+      "Fine, fine. He'll take less. Just put it away.",
+      "I don't know you. I never knew you."
+    ],
+    "vesper": [
+      "Point it at the board or put it away. Either way, I'm working.",
+      null
+    ],
+    "dolf": [
+      "Not with that out.",
+      null
+    ],
+    "row-enforcer": [
+      "I see it. Put it away, or pay for it.",
+      null
+    ]
+  }
+}

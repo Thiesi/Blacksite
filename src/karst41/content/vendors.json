@@ -796,7 +796,8 @@
       "faction": "sable",
       "zone": "sodium-tin-halo",
       "object_id": "vesper",
-      "daily_rotation": true
+      "daily_rotation": true,
+      "drawn_open": true
     },
     {
       "id": "relay-shaft-counter",

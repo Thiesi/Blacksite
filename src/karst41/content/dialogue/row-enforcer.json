@@ -8,6 +8,14 @@
   "machine_mind": false,
   "lines": [
     {
+      "id": "round4-drawn",
+      "text": "I see it. Put it away, or pay for it.",
+      "when": [
+        "drawn"
+      ],
+      "required": true
+    },
+    {
       "id": "marked",
       "text": "You know what you did. So do we.",
       "when": [
@@ -34,6 +42,16 @@
   "barks": [
     {
       "text": "Nobody draws on the Row. You can. Then you pay.",
+      "weight": 2,
+      "min_interval_seconds": 90
+    },
+    {
+      "text": "Everybody's welcome. Nobody's exempt.",
+      "weight": 1,
+      "min_interval_seconds": 90
+    },
+    {
+      "text": "We're not here to stop you. We're here after.",
       "weight": 1,
       "min_interval_seconds": 90
     }

@@ -8,6 +8,22 @@
   "machine_mind": false,
   "lines": [
     {
+      "id": "round4-provoked",
+      "text": "Go away. You'll ruin it.",
+      "when": [
+        "provoked"
+      ],
+      "required": true
+    },
+    {
+      "id": "round4-drawn",
+      "text": "Don't. She'll know it was out here.",
+      "when": [
+        "drawn"
+      ],
+      "required": true
+    },
+    {
       "id": "marked",
       "text": "Not this door. Not tonight.",
       "when": [
@@ -39,6 +55,16 @@
     },
     {
       "text": "Door's open. Door's always open. That's not the same as welcome.",
+      "weight": 1,
+      "min_interval_seconds": 90
+    },
+    {
+      "text": "She knows I'm out here. She always knows.",
+      "weight": 1,
+      "min_interval_seconds": 90
+    },
+    {
+      "text": "I came to ask her one thing. I'm working up to it.",
       "weight": 1,
       "min_interval_seconds": 90
     }

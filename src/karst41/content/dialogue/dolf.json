@@ -8,6 +8,14 @@
   "machine_mind": false,
   "lines": [
     {
+      "id": "round4-drawn",
+      "text": "Not with that out.",
+      "when": [
+        "drawn"
+      ],
+      "required": true
+    },
+    {
       "id": "marked",
       "text": "You know what you did out there. Drink slow. Sable's outside.",
       "when": [

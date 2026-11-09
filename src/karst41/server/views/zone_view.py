@@ -146,7 +146,9 @@ def build(actor: Actor, zone: ZoneInstance, perception: Perception, content: Con
 
     nearby = [{"id": entry["id"], "name": presentation.name(zone.actors[entry["id"]], actor, content), "role": entry["role"],
                "class": entry["class"], "jacked": entry["jacked"],
-               "relation": nearby_relation(zone.actors[entry['id']])}
+               "relation": nearby_relation(zone.actors[entry['id']]),
+               **({'drawn': bool(zone.actors[entry['id']].behaviour['drawn'])}
+                  if zone.actors[entry['id']].kind == 'player' and 'drawn' in zone.actors[entry['id']].behaviour else {})}
               for entry in actors if entry["id"] != actor.id]
     nearby.sort(key=lambda entry: (entry["relation"] != "!", zone.actors[entry["id"]].kind != "player",
         (zone.actors[entry["id"]].x-actor.x)**2+(zone.actors[entry["id"]].y-actor.y)**2, entry["id"]))

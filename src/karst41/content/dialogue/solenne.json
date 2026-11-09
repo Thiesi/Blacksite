@@ -8,6 +8,22 @@
   "machine_mind": false,
   "lines": [
     {
+      "id": "round4-provoked",
+      "text": "Not today, sweetheart. Not anything.",
+      "when": [
+        "provoked"
+      ],
+      "required": true
+    },
+    {
+      "id": "round4-drawn",
+      "text": "Put that away, sweetheart. You'll scare the customers.",
+      "when": [
+        "drawn"
+      ],
+      "required": true
+    },
+    {
       "id": "marked",
       "text": "Red name at my counter. Cash only, sweetheart, and quick.",
       "when": [

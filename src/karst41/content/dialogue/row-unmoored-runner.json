@@ -8,6 +8,22 @@
   "machine_mind": false,
   "lines": [
     {
+      "id": "round4-provoked",
+      "text": "You made the street loud. Don't stand near me.",
+      "when": [
+        "provoked"
+      ],
+      "required": true
+    },
+    {
+      "id": "round4-drawn",
+      "text": "Wrong kind of loud. Put it away.",
+      "when": [
+        "drawn"
+      ],
+      "required": true
+    },
+    {
       "id": "member",
       "text": "Terminal's behind the counter. Trace down here is Sable's, so jack light.",
       "when": [

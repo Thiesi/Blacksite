@@ -726,6 +726,8 @@ class _Validator:
                         self.report(*owner, f'{label}: poses_as must match the cover name and class', sp.id)
                     elif sp.posts != counterpart.posts or sp.moving_cap != counterpart.moving_cap or sp.crowd != counterpart.crowd:
                         self.report(*owner, f'{label}: poses_as must match posts, hold ranges, weights and moving cap', sp.id)
+                    if crowd is not None and npc.steady != crowd.steady:
+                        self.report(*owner, f'{label}: poses_as must match steady', sp.id)
             if sp.condition == "per_player" and npc and not npc.training:
                 self.report(*owner, f"{label}: per_player requires private training", sp.id)
             if npc:
