@@ -1,6 +1,6 @@
 # S42 — Talkers stay in reach, and the talk page lets you go
 
-**Status:** in progress (implementation; filing merged in PR #183)
+**Status:** in review (PR #188; acceptance gates pending)
 **Primary model:** Codex · **Reviewer:** automated review, technical lead, presentation lead (presentation acceptance)
 **Depends on:** S38, S39, A9 (all merged) · **Milestone:** interaction
 **Issue:** https://github.com/Thiesi/Blacksite/issues/182

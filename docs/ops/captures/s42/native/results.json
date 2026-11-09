@@ -1,0 +1,101 @@
+{
+  "passed": true,
+  "runs": [
+    {
+      "artifact": "s42-talker-80x24-16",
+      "source_head": "e1a126c847b7a6f6b609a30003e70342c6eb1818",
+      "shot": {
+        "health_before": 90,
+        "health_after": 78,
+        "target": "b686ea0f54c24a6099725a4905951d75:player:1",
+        "state": "flee"
+      },
+      "fixtures": [
+        "one regular relocated beside the walked-to caller",
+        "regular ambient pause; ordinary flee ignores it",
+        "first flee movement cooldown 25 ticks"
+      ],
+      "captures_verified": 3
+    },
+    {
+      "artifact": "s42-talker-80x24-256",
+      "source_head": "e1a126c847b7a6f6b609a30003e70342c6eb1818",
+      "shot": {
+        "health_before": 90,
+        "health_after": 90,
+        "target": "71a1e39e2b904bdfafe15dab463f1789:player:1",
+        "state": "flee"
+      },
+      "fixtures": [
+        "one regular relocated beside the walked-to caller",
+        "regular ambient pause; ordinary flee ignores it",
+        "first flee movement cooldown 25 ticks"
+      ],
+      "captures_verified": 3
+    },
+    {
+      "artifact": "s42-talker-80x24-truecolor",
+      "source_head": "e1a126c847b7a6f6b609a30003e70342c6eb1818",
+      "shot": {
+        "health_before": 90,
+        "health_after": 90,
+        "target": "de6b45e3b52d44dc81c43b393c13a229:player:1",
+        "state": "flee"
+      },
+      "fixtures": [
+        "one regular relocated beside the walked-to caller",
+        "regular ambient pause; ordinary flee ignores it",
+        "first flee movement cooldown 25 ticks"
+      ],
+      "captures_verified": 3
+    },
+    {
+      "artifact": "s42-talker-132x50-16",
+      "source_head": "e1a126c847b7a6f6b609a30003e70342c6eb1818",
+      "shot": {
+        "health_before": 90,
+        "health_after": 78,
+        "target": "892851b8aa3a41b4bda7881d4952f480:player:1",
+        "state": "flee"
+      },
+      "fixtures": [
+        "one regular relocated beside the walked-to caller",
+        "regular ambient pause; ordinary flee ignores it",
+        "first flee movement cooldown 25 ticks"
+      ],
+      "captures_verified": 3
+    },
+    {
+      "artifact": "s42-talker-132x50-256",
+      "source_head": "e1a126c847b7a6f6b609a30003e70342c6eb1818",
+      "shot": {
+        "health_before": 90,
+        "health_after": 78,
+        "target": "cd9cbc3168df4d8b94a6e35b74491759:player:1",
+        "state": "flee"
+      },
+      "fixtures": [
+        "one regular relocated beside the walked-to caller",
+        "regular ambient pause; ordinary flee ignores it",
+        "first flee movement cooldown 25 ticks"
+      ],
+      "captures_verified": 3
+    },
+    {
+      "artifact": "s42-talker-132x50-truecolor",
+      "source_head": "e1a126c847b7a6f6b609a30003e70342c6eb1818",
+      "shot": {
+        "health_before": 90,
+        "health_after": 78,
+        "target": "770aede8f42a4634a3597eaaa86e13bf:player:1",
+        "state": "flee"
+      },
+      "fixtures": [
+        "one regular relocated beside the walked-to caller",
+        "regular ambient pause; ordinary flee ignores it",
+        "first flee movement cooldown 25 ticks"
+      ],
+      "captures_verified": 3
+    }
+  ]
+}

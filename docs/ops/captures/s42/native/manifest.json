@@ -1,0 +1,497 @@
+{
+  "transport": "NetBBS Telnet -> registered native stdio",
+  "run": 42547068997,
+  "source_head": "e1a126c847b7a6f6b609a30003e70342c6eb1818",
+  "source_tree": "3632d9db75a51cb5f365f92047ba9fdebc1bc96d",
+  "python_tree_sha256": "3e25ae2e2d8c8342db06e36f923b8d903379f198c57233b233e8cef70a9a57cb",
+  "presentation_acceptance": false,
+  "human_layout_approval": false,
+  "captures": [
+    {
+      "capture": "s42-talk-hint-80x24-16",
+      "scenario": "talk-hint",
+      "size": [
+        80,
+        24
+      ],
+      "tier": "16",
+      "sha256": {
+        ".ans": "9a25fa65d7f42fa19b91eb6530e2c988ec263ecf7bae02e292b3f9ea94d9a48c",
+        ".txt": "b6a3910f6e70ca5f364aab0c7f8ccb000cd35cdefbcb0e6b6b9c7cff107fb596",
+        ".json": "29a84aa0a7e6f3cd4d0b235b6ff9b04b9f5f281bbbf52eb825c0214aa4b60e44"
+      },
+      "file": "s42-talk-hint-80x24-16.txt",
+      "source_head": "e1a126c847b7a6f6b609a30003e70342c6eb1818",
+      "source_tree": "3632d9db75a51cb5f365f92047ba9fdebc1bc96d",
+      "python_tree_sha256": "3e25ae2e2d8c8342db06e36f923b8d903379f198c57233b233e8cef70a9a57cb",
+      "run": 42547068997,
+      "run_url": "https://github.com/Thiesi/Blacksite/actions/runs/42547068997",
+      "artifact": "s42-talker-80x24-16",
+      "artifact_id": 13643659040,
+      "artifact_url": "https://github.com/Thiesi/Blacksite/actions/runs/42547068997/artifacts/13643659040",
+      "raw_ansi_member": "s42-talk-hint-80x24-16.ans",
+      "style_member": "s42-talk-hint-80x24-16.json",
+      "native_boundary_offset": 961,
+      "method": "Direct byte copy of live native text; ANSI replay verified glyphs and styles"
+    },
+    {
+      "capture": "s42-one-press-walk-away-80x24-16",
+      "scenario": "one-press-walk-away",
+      "size": [
+        80,
+        24
+      ],
+      "tier": "16",
+      "sha256": {
+        ".ans": "85ae50ea549eb4b2eefd3549d26b44d3513c63a7fcd12efe08cb5ac854985121",
+        ".txt": "4ada21cfa1e55c3cb5ff2c09a1c05817c5b811750c28a2868608e8778920e906",
+        ".json": "4756a31c7627aeecca9220f707d0da5a2b8a7a08557dcd11808060887ce40276"
+      },
+      "file": "s42-one-press-walk-away-80x24-16.txt",
+      "source_head": "e1a126c847b7a6f6b609a30003e70342c6eb1818",
+      "source_tree": "3632d9db75a51cb5f365f92047ba9fdebc1bc96d",
+      "python_tree_sha256": "3e25ae2e2d8c8342db06e36f923b8d903379f198c57233b233e8cef70a9a57cb",
+      "run": 42547068997,
+      "run_url": "https://github.com/Thiesi/Blacksite/actions/runs/42547068997",
+      "artifact": "s42-talker-80x24-16",
+      "artifact_id": 13643659040,
+      "artifact_url": "https://github.com/Thiesi/Blacksite/actions/runs/42547068997/artifacts/13643659040",
+      "raw_ansi_member": "s42-one-press-walk-away-80x24-16.ans",
+      "style_member": "s42-one-press-walk-away-80x24-16.json",
+      "native_boundary_offset": 961,
+      "method": "Direct byte copy of live native text; ANSI replay verified glyphs and styles"
+    },
+    {
+      "capture": "s42-shot-flee-walks-off-80x24-16",
+      "scenario": "shot-flee-walks-off",
+      "size": [
+        80,
+        24
+      ],
+      "tier": "16",
+      "sha256": {
+        ".ans": "3fd52c382dea811e4be3bc8061cbdd1ed570151b8e79d4137287ecf6ca5d104d",
+        ".txt": "53c493f4013ade631b00323f80826e0b9698b53f73d8772bca911ba8db4bf60c",
+        ".json": "7ecdb82b77b96734c58ef0a6fb80918ad518bcd4c395d4c779292f28ccad3e0b"
+      },
+      "file": "s42-shot-flee-walks-off-80x24-16.txt",
+      "source_head": "e1a126c847b7a6f6b609a30003e70342c6eb1818",
+      "source_tree": "3632d9db75a51cb5f365f92047ba9fdebc1bc96d",
+      "python_tree_sha256": "3e25ae2e2d8c8342db06e36f923b8d903379f198c57233b233e8cef70a9a57cb",
+      "run": 42547068997,
+      "run_url": "https://github.com/Thiesi/Blacksite/actions/runs/42547068997",
+      "artifact": "s42-talker-80x24-16",
+      "artifact_id": 13643659040,
+      "artifact_url": "https://github.com/Thiesi/Blacksite/actions/runs/42547068997/artifacts/13643659040",
+      "raw_ansi_member": "s42-shot-flee-walks-off-80x24-16.ans",
+      "style_member": "s42-shot-flee-walks-off-80x24-16.json",
+      "native_boundary_offset": 961,
+      "method": "Direct byte copy of live native text; ANSI replay verified glyphs and styles"
+    },
+    {
+      "capture": "s42-talk-hint-80x24-256",
+      "scenario": "talk-hint",
+      "size": [
+        80,
+        24
+      ],
+      "tier": "256",
+      "sha256": {
+        ".ans": "ec3722ab9dbae07baaa5dd2027314a2101e5100b3b3e0a96bb9a9b99d4624f28",
+        ".txt": "081c0ca0fae6492b73cf65cf497e54685b24a9807bf454712df84298b9b65e55",
+        ".json": "cc3db69e86dbe602f1f70d3e7d6192e1268f9fcaea3502631d50d595116ec62e"
+      },
+      "file": "s42-talk-hint-80x24-256.txt",
+      "source_head": "e1a126c847b7a6f6b609a30003e70342c6eb1818",
+      "source_tree": "3632d9db75a51cb5f365f92047ba9fdebc1bc96d",
+      "python_tree_sha256": "3e25ae2e2d8c8342db06e36f923b8d903379f198c57233b233e8cef70a9a57cb",
+      "run": 42547068997,
+      "run_url": "https://github.com/Thiesi/Blacksite/actions/runs/42547068997",
+      "artifact": "s42-talker-80x24-256",
+      "artifact_id": 13644135520,
+      "artifact_url": "https://github.com/Thiesi/Blacksite/actions/runs/42547068997/artifacts/13644135520",
+      "raw_ansi_member": "s42-talk-hint-80x24-256.ans",
+      "style_member": "s42-talk-hint-80x24-256.json",
+      "native_boundary_offset": 1068,
+      "method": "Direct byte copy of live native text; ANSI replay verified glyphs and styles"
+    },
+    {
+      "capture": "s42-one-press-walk-away-80x24-256",
+      "scenario": "one-press-walk-away",
+      "size": [
+        80,
+        24
+      ],
+      "tier": "256",
+      "sha256": {
+        ".ans": "3a8ff32a819e0524d606a8d3bb32e4ca4d15475a6ae1958601080ffda34f5ad2",
+        ".txt": "6fb837a9906e7ee74fc632d265547de5bd27590ea1483a5d1244f9c015ab8d2c",
+        ".json": "1e8da90b8f79a391b7a1a8bb4f21877a03b87f0d99a0824eef947ad1eeac52fc"
+      },
+      "file": "s42-one-press-walk-away-80x24-256.txt",
+      "source_head": "e1a126c847b7a6f6b609a30003e70342c6eb1818",
+      "source_tree": "3632d9db75a51cb5f365f92047ba9fdebc1bc96d",
+      "python_tree_sha256": "3e25ae2e2d8c8342db06e36f923b8d903379f198c57233b233e8cef70a9a57cb",
+      "run": 42547068997,
+      "run_url": "https://github.com/Thiesi/Blacksite/actions/runs/42547068997",
+      "artifact": "s42-talker-80x24-256",
+      "artifact_id": 13644135520,
+      "artifact_url": "https://github.com/Thiesi/Blacksite/actions/runs/42547068997/artifacts/13644135520",
+      "raw_ansi_member": "s42-one-press-walk-away-80x24-256.ans",
+      "style_member": "s42-one-press-walk-away-80x24-256.json",
+      "native_boundary_offset": 1068,
+      "method": "Direct byte copy of live native text; ANSI replay verified glyphs and styles"
+    },
+    {
+      "capture": "s42-shot-flee-walks-off-80x24-256",
+      "scenario": "shot-flee-walks-off",
+      "size": [
+        80,
+        24
+      ],
+      "tier": "256",
+      "sha256": {
+        ".ans": "52f62545fff6b10b2d05d82fb15e74c3b596647f5e2a8b99ca9eda6b8d11fe6c",
+        ".txt": "fabf55b79727a58368dd5ee71e5f183e99bb5c74dabe802150d7a0939439d1b8",
+        ".json": "325043d198659b7d7d375dc7221feaac51e71dac8950b937127ff40d740c3596"
+      },
+      "file": "s42-shot-flee-walks-off-80x24-256.txt",
+      "source_head": "e1a126c847b7a6f6b609a30003e70342c6eb1818",
+      "source_tree": "3632d9db75a51cb5f365f92047ba9fdebc1bc96d",
+      "python_tree_sha256": "3e25ae2e2d8c8342db06e36f923b8d903379f198c57233b233e8cef70a9a57cb",
+      "run": 42547068997,
+      "run_url": "https://github.com/Thiesi/Blacksite/actions/runs/42547068997",
+      "artifact": "s42-talker-80x24-256",
+      "artifact_id": 13644135520,
+      "artifact_url": "https://github.com/Thiesi/Blacksite/actions/runs/42547068997/artifacts/13644135520",
+      "raw_ansi_member": "s42-shot-flee-walks-off-80x24-256.ans",
+      "style_member": "s42-shot-flee-walks-off-80x24-256.json",
+      "native_boundary_offset": 1068,
+      "method": "Direct byte copy of live native text; ANSI replay verified glyphs and styles"
+    },
+    {
+      "capture": "s42-talk-hint-80x24-truecolor",
+      "scenario": "talk-hint",
+      "size": [
+        80,
+        24
+      ],
+      "tier": "truecolor",
+      "sha256": {
+        ".ans": "4f3fb09a1d7fb80f67682d89e8388c3290c47a900f7ea2b9108911e29106dcdb",
+        ".txt": "5890d129e72b9153be7fa45b8345d1edab5cd35205d7182cd47323c30cd5b09d",
+        ".json": "b20e3bf96c0f2285daed4d2a83c1bf0e785c2364a51f94982231cc848f4394dd"
+      },
+      "file": "s42-talk-hint-80x24-truecolor.txt",
+      "source_head": "e1a126c847b7a6f6b609a30003e70342c6eb1818",
+      "source_tree": "3632d9db75a51cb5f365f92047ba9fdebc1bc96d",
+      "python_tree_sha256": "3e25ae2e2d8c8342db06e36f923b8d903379f198c57233b233e8cef70a9a57cb",
+      "run": 42547068997,
+      "run_url": "https://github.com/Thiesi/Blacksite/actions/runs/42547068997",
+      "artifact": "s42-talker-80x24-truecolor",
+      "artifact_id": 13644066599,
+      "artifact_url": "https://github.com/Thiesi/Blacksite/actions/runs/42547068997/artifacts/13644066599",
+      "raw_ansi_member": "s42-talk-hint-80x24-truecolor.ans",
+      "style_member": "s42-talk-hint-80x24-truecolor.json",
+      "native_boundary_offset": 1068,
+      "method": "Direct byte copy of live native text; ANSI replay verified glyphs and styles"
+    },
+    {
+      "capture": "s42-one-press-walk-away-80x24-truecolor",
+      "scenario": "one-press-walk-away",
+      "size": [
+        80,
+        24
+      ],
+      "tier": "truecolor",
+      "sha256": {
+        ".ans": "efa3c5886fbb2465d3f3e16459e6346dc10d237df1552f291548b353c6018bfc",
+        ".txt": "8fe7748c8df9bd56fe66d66b4af3d4cabb6f3c272b85eeca8a0beb5f6ebcf2f9",
+        ".json": "24da970457db12666cdd4c1f4d00e8442e2b4d2f52ed57e85d595db21abfe82c"
+      },
+      "file": "s42-one-press-walk-away-80x24-truecolor.txt",
+      "source_head": "e1a126c847b7a6f6b609a30003e70342c6eb1818",
+      "source_tree": "3632d9db75a51cb5f365f92047ba9fdebc1bc96d",
+      "python_tree_sha256": "3e25ae2e2d8c8342db06e36f923b8d903379f198c57233b233e8cef70a9a57cb",
+      "run": 42547068997,
+      "run_url": "https://github.com/Thiesi/Blacksite/actions/runs/42547068997",
+      "artifact": "s42-talker-80x24-truecolor",
+      "artifact_id": 13644066599,
+      "artifact_url": "https://github.com/Thiesi/Blacksite/actions/runs/42547068997/artifacts/13644066599",
+      "raw_ansi_member": "s42-one-press-walk-away-80x24-truecolor.ans",
+      "style_member": "s42-one-press-walk-away-80x24-truecolor.json",
+      "native_boundary_offset": 1068,
+      "method": "Direct byte copy of live native text; ANSI replay verified glyphs and styles"
+    },
+    {
+      "capture": "s42-shot-flee-walks-off-80x24-truecolor",
+      "scenario": "shot-flee-walks-off",
+      "size": [
+        80,
+        24
+      ],
+      "tier": "truecolor",
+      "sha256": {
+        ".ans": "ca3a503d232e2020f2834f58269e7164cda2d3f5a5bf965ec98b8954e31ac0ae",
+        ".txt": "15977af0cf2f3756bac2f18a6faab554ca636436d5e2f1fede3dd01db79d9b9b",
+        ".json": "91040dd3b6bdc7853c1bd88d88518dd12d31301fd6a2eab787df920c45ee20ed"
+      },
+      "file": "s42-shot-flee-walks-off-80x24-truecolor.txt",
+      "source_head": "e1a126c847b7a6f6b609a30003e70342c6eb1818",
+      "source_tree": "3632d9db75a51cb5f365f92047ba9fdebc1bc96d",
+      "python_tree_sha256": "3e25ae2e2d8c8342db06e36f923b8d903379f198c57233b233e8cef70a9a57cb",
+      "run": 42547068997,
+      "run_url": "https://github.com/Thiesi/Blacksite/actions/runs/42547068997",
+      "artifact": "s42-talker-80x24-truecolor",
+      "artifact_id": 13644066599,
+      "artifact_url": "https://github.com/Thiesi/Blacksite/actions/runs/42547068997/artifacts/13644066599",
+      "raw_ansi_member": "s42-shot-flee-walks-off-80x24-truecolor.ans",
+      "style_member": "s42-shot-flee-walks-off-80x24-truecolor.json",
+      "native_boundary_offset": 1068,
+      "method": "Direct byte copy of live native text; ANSI replay verified glyphs and styles"
+    },
+    {
+      "capture": "s42-talk-hint-132x50-16",
+      "scenario": "talk-hint",
+      "size": [
+        132,
+        50
+      ],
+      "tier": "16",
+      "sha256": {
+        ".ans": "f3e1cad38fdc62103973a6581e061fd4f2d3f7e427fe9d1e4eed6a24d1841968",
+        ".txt": "96fbf9fb5ad3bb04d184d0f5b57822166b6b2f9df626c2ab7f6df80ecec8ac00",
+        ".json": "ddbad9a4fe4360192907b640bf5576f1f5169e5418a5810ae3bfb8082dc6ed91"
+      },
+      "file": "s42-talk-hint-132x50-16.txt",
+      "source_head": "e1a126c847b7a6f6b609a30003e70342c6eb1818",
+      "source_tree": "3632d9db75a51cb5f365f92047ba9fdebc1bc96d",
+      "python_tree_sha256": "3e25ae2e2d8c8342db06e36f923b8d903379f198c57233b233e8cef70a9a57cb",
+      "run": 42547068997,
+      "run_url": "https://github.com/Thiesi/Blacksite/actions/runs/42547068997",
+      "artifact": "s42-talker-132x50-16",
+      "artifact_id": 13643543970,
+      "artifact_url": "https://github.com/Thiesi/Blacksite/actions/runs/42547068997/artifacts/13643543970",
+      "raw_ansi_member": "s42-talk-hint-132x50-16.ans",
+      "style_member": "s42-talk-hint-132x50-16.json",
+      "native_boundary_offset": 1065,
+      "method": "Direct byte copy of live native text; ANSI replay verified glyphs and styles"
+    },
+    {
+      "capture": "s42-one-press-walk-away-132x50-16",
+      "scenario": "one-press-walk-away",
+      "size": [
+        132,
+        50
+      ],
+      "tier": "16",
+      "sha256": {
+        ".ans": "4ca1bdf8111bbe2ad450c2b8ad32ee6a2f3aae774fed1fac37d4f04ea0d4e953",
+        ".txt": "673fe54b8427674940bab55e7a45a562033070b20b8c6f3e0e006c543c7e1d43",
+        ".json": "279c4806d2b2f525a493d2b2ec537a1adf617eab9dad79d46381412952d26a5f"
+      },
+      "file": "s42-one-press-walk-away-132x50-16.txt",
+      "source_head": "e1a126c847b7a6f6b609a30003e70342c6eb1818",
+      "source_tree": "3632d9db75a51cb5f365f92047ba9fdebc1bc96d",
+      "python_tree_sha256": "3e25ae2e2d8c8342db06e36f923b8d903379f198c57233b233e8cef70a9a57cb",
+      "run": 42547068997,
+      "run_url": "https://github.com/Thiesi/Blacksite/actions/runs/42547068997",
+      "artifact": "s42-talker-132x50-16",
+      "artifact_id": 13643543970,
+      "artifact_url": "https://github.com/Thiesi/Blacksite/actions/runs/42547068997/artifacts/13643543970",
+      "raw_ansi_member": "s42-one-press-walk-away-132x50-16.ans",
+      "style_member": "s42-one-press-walk-away-132x50-16.json",
+      "native_boundary_offset": 1065,
+      "method": "Direct byte copy of live native text; ANSI replay verified glyphs and styles"
+    },
+    {
+      "capture": "s42-shot-flee-walks-off-132x50-16",
+      "scenario": "shot-flee-walks-off",
+      "size": [
+        132,
+        50
+      ],
+      "tier": "16",
+      "sha256": {
+        ".ans": "ac96e3a862f4ece83ec76e5ec1f00b139d715cbb215748cc739310887e8076d2",
+        ".txt": "dc8e64ce71510f67851b81504ee650b73e807f7f963851f14ecc6080187301ae",
+        ".json": "821078e188bdabf9cb060da05ed1851d0bcdbad4572b2864c646e16b4ca25bef"
+      },
+      "file": "s42-shot-flee-walks-off-132x50-16.txt",
+      "source_head": "e1a126c847b7a6f6b609a30003e70342c6eb1818",
+      "source_tree": "3632d9db75a51cb5f365f92047ba9fdebc1bc96d",
+      "python_tree_sha256": "3e25ae2e2d8c8342db06e36f923b8d903379f198c57233b233e8cef70a9a57cb",
+      "run": 42547068997,
+      "run_url": "https://github.com/Thiesi/Blacksite/actions/runs/42547068997",
+      "artifact": "s42-talker-132x50-16",
+      "artifact_id": 13643543970,
+      "artifact_url": "https://github.com/Thiesi/Blacksite/actions/runs/42547068997/artifacts/13643543970",
+      "raw_ansi_member": "s42-shot-flee-walks-off-132x50-16.ans",
+      "style_member": "s42-shot-flee-walks-off-132x50-16.json",
+      "native_boundary_offset": 1065,
+      "method": "Direct byte copy of live native text; ANSI replay verified glyphs and styles"
+    },
+    {
+      "capture": "s42-talk-hint-132x50-256",
+      "scenario": "talk-hint",
+      "size": [
+        132,
+        50
+      ],
+      "tier": "256",
+      "sha256": {
+        ".ans": "1ad1f178ed058ab29e672e1b31c6d49aae5c1d572a8290e6a838eb5bd269d8be",
+        ".txt": "e2b3e96637c1ceee5d2f63480fb0b28fbac1f6523b8f4b698d9f817e0e87ff7b",
+        ".json": "adc8e162b7c87311e8386fcdf5ac19b40d72465899b3c1d9f69beba88f909890"
+      },
+      "file": "s42-talk-hint-132x50-256.txt",
+      "source_head": "e1a126c847b7a6f6b609a30003e70342c6eb1818",
+      "source_tree": "3632d9db75a51cb5f365f92047ba9fdebc1bc96d",
+      "python_tree_sha256": "3e25ae2e2d8c8342db06e36f923b8d903379f198c57233b233e8cef70a9a57cb",
+      "run": 42547068997,
+      "run_url": "https://github.com/Thiesi/Blacksite/actions/runs/42547068997",
+      "artifact": "s42-talker-132x50-256",
+      "artifact_id": 13643449459,
+      "artifact_url": "https://github.com/Thiesi/Blacksite/actions/runs/42547068997/artifacts/13643449459",
+      "raw_ansi_member": "s42-talk-hint-132x50-256.ans",
+      "style_member": "s42-talk-hint-132x50-256.json",
+      "native_boundary_offset": 1172,
+      "method": "Direct byte copy of live native text; ANSI replay verified glyphs and styles"
+    },
+    {
+      "capture": "s42-one-press-walk-away-132x50-256",
+      "scenario": "one-press-walk-away",
+      "size": [
+        132,
+        50
+      ],
+      "tier": "256",
+      "sha256": {
+        ".ans": "8ad7a8081525f518e8d16670476e33b66e4f7e09f29dca8afd1ed84dd6060d72",
+        ".txt": "961dee7377bbaeaa9454d5d22209b40b597868bfdd1f94ede06e919834e94530",
+        ".json": "d30360a603ea45099231a65550b801593a5fde957b83b8e634dc468db53c9ffa"
+      },
+      "file": "s42-one-press-walk-away-132x50-256.txt",
+      "source_head": "e1a126c847b7a6f6b609a30003e70342c6eb1818",
+      "source_tree": "3632d9db75a51cb5f365f92047ba9fdebc1bc96d",
+      "python_tree_sha256": "3e25ae2e2d8c8342db06e36f923b8d903379f198c57233b233e8cef70a9a57cb",
+      "run": 42547068997,
+      "run_url": "https://github.com/Thiesi/Blacksite/actions/runs/42547068997",
+      "artifact": "s42-talker-132x50-256",
+      "artifact_id": 13643449459,
+      "artifact_url": "https://github.com/Thiesi/Blacksite/actions/runs/42547068997/artifacts/13643449459",
+      "raw_ansi_member": "s42-one-press-walk-away-132x50-256.ans",
+      "style_member": "s42-one-press-walk-away-132x50-256.json",
+      "native_boundary_offset": 1172,
+      "method": "Direct byte copy of live native text; ANSI replay verified glyphs and styles"
+    },
+    {
+      "capture": "s42-shot-flee-walks-off-132x50-256",
+      "scenario": "shot-flee-walks-off",
+      "size": [
+        132,
+        50
+      ],
+      "tier": "256",
+      "sha256": {
+        ".ans": "805e41675b9d88731255b37ed7eba77ee1c5a3342c5e52869c948797943d495e",
+        ".txt": "2a77312e8d0bf66c9c6e06deb33787571717264d067dac8f969ffdf456c68218",
+        ".json": "fa09a86a998ad478be54df2e00d967124c9543cb3046d85be8c22e97efc7c0e3"
+      },
+      "file": "s42-shot-flee-walks-off-132x50-256.txt",
+      "source_head": "e1a126c847b7a6f6b609a30003e70342c6eb1818",
+      "source_tree": "3632d9db75a51cb5f365f92047ba9fdebc1bc96d",
+      "python_tree_sha256": "3e25ae2e2d8c8342db06e36f923b8d903379f198c57233b233e8cef70a9a57cb",
+      "run": 42547068997,
+      "run_url": "https://github.com/Thiesi/Blacksite/actions/runs/42547068997",
+      "artifact": "s42-talker-132x50-256",
+      "artifact_id": 13643449459,
+      "artifact_url": "https://github.com/Thiesi/Blacksite/actions/runs/42547068997/artifacts/13643449459",
+      "raw_ansi_member": "s42-shot-flee-walks-off-132x50-256.ans",
+      "style_member": "s42-shot-flee-walks-off-132x50-256.json",
+      "native_boundary_offset": 1172,
+      "method": "Direct byte copy of live native text; ANSI replay verified glyphs and styles"
+    },
+    {
+      "capture": "s42-talk-hint-132x50-truecolor",
+      "scenario": "talk-hint",
+      "size": [
+        132,
+        50
+      ],
+      "tier": "truecolor",
+      "sha256": {
+        ".ans": "1214bb21079154f2d571b0f6f8acba2c6ed55539b1fa9cb101f78c48d298d791",
+        ".txt": "357dbbc84821112a529b32e992765a08de48f219d2d981f983ab8a96482d7489",
+        ".json": "c2b0763d484b3ada9e9a210bdb2a100b64bbfe92811b921808806379041bcf23"
+      },
+      "file": "s42-talk-hint-132x50-truecolor.txt",
+      "source_head": "e1a126c847b7a6f6b609a30003e70342c6eb1818",
+      "source_tree": "3632d9db75a51cb5f365f92047ba9fdebc1bc96d",
+      "python_tree_sha256": "3e25ae2e2d8c8342db06e36f923b8d903379f198c57233b233e8cef70a9a57cb",
+      "run": 42547068997,
+      "run_url": "https://github.com/Thiesi/Blacksite/actions/runs/42547068997",
+      "artifact": "s42-talker-132x50-truecolor",
+      "artifact_id": 13644156086,
+      "artifact_url": "https://github.com/Thiesi/Blacksite/actions/runs/42547068997/artifacts/13644156086",
+      "raw_ansi_member": "s42-talk-hint-132x50-truecolor.ans",
+      "style_member": "s42-talk-hint-132x50-truecolor.json",
+      "native_boundary_offset": 1172,
+      "method": "Direct byte copy of live native text; ANSI replay verified glyphs and styles"
+    },
+    {
+      "capture": "s42-one-press-walk-away-132x50-truecolor",
+      "scenario": "one-press-walk-away",
+      "size": [
+        132,
+        50
+      ],
+      "tier": "truecolor",
+      "sha256": {
+        ".ans": "e5d7a348935ad146f8afd9a761d8a05f566a1773c5edff3e774da49b57d4670b",
+        ".txt": "ab45f1076c23b0773ca2d3822db6c3053f7945cd10bedc3facc80626d92369f0",
+        ".json": "fc70821c430aa779e2d484d0769d68491895540ce1d60155d7c7694c17fae0ea"
+      },
+      "file": "s42-one-press-walk-away-132x50-truecolor.txt",
+      "source_head": "e1a126c847b7a6f6b609a30003e70342c6eb1818",
+      "source_tree": "3632d9db75a51cb5f365f92047ba9fdebc1bc96d",
+      "python_tree_sha256": "3e25ae2e2d8c8342db06e36f923b8d903379f198c57233b233e8cef70a9a57cb",
+      "run": 42547068997,
+      "run_url": "https://github.com/Thiesi/Blacksite/actions/runs/42547068997",
+      "artifact": "s42-talker-132x50-truecolor",
+      "artifact_id": 13644156086,
+      "artifact_url": "https://github.com/Thiesi/Blacksite/actions/runs/42547068997/artifacts/13644156086",
+      "raw_ansi_member": "s42-one-press-walk-away-132x50-truecolor.ans",
+      "style_member": "s42-one-press-walk-away-132x50-truecolor.json",
+      "native_boundary_offset": 1172,
+      "method": "Direct byte copy of live native text; ANSI replay verified glyphs and styles"
+    },
+    {
+      "capture": "s42-shot-flee-walks-off-132x50-truecolor",
+      "scenario": "shot-flee-walks-off",
+      "size": [
+        132,
+        50
+      ],
+      "tier": "truecolor",
+      "sha256": {
+        ".ans": "4ee25d193d701b221aa763b5a4025a25cab87b5d33a0dd19969f78f752b54873",
+        ".txt": "d42eb1c6febd5eb64b1f4c1167391c1f9fb7a51406830ebe194fb2a340d31759",
+        ".json": "e8464b3f560fb076c9b8a475eac81aadf5b2c8ae7776c3f1e31ce40c7cb805fd"
+      },
+      "file": "s42-shot-flee-walks-off-132x50-truecolor.txt",
+      "source_head": "e1a126c847b7a6f6b609a30003e70342c6eb1818",
+      "source_tree": "3632d9db75a51cb5f365f92047ba9fdebc1bc96d",
+      "python_tree_sha256": "3e25ae2e2d8c8342db06e36f923b8d903379f198c57233b233e8cef70a9a57cb",
+      "run": 42547068997,
+      "run_url": "https://github.com/Thiesi/Blacksite/actions/runs/42547068997",
+      "artifact": "s42-talker-132x50-truecolor",
+      "artifact_id": 13644156086,
+      "artifact_url": "https://github.com/Thiesi/Blacksite/actions/runs/42547068997/artifacts/13644156086",
+      "raw_ansi_member": "s42-shot-flee-walks-off-132x50-truecolor.ans",
+      "style_member": "s42-shot-flee-walks-off-132x50-truecolor.json",
+      "native_boundary_offset": 1172,
+      "method": "Direct byte copy of live native text; ANSI replay verified glyphs and styles"
+    }
+  ]
+}

@@ -4,6 +4,34 @@ Base: `aef69d989ba48658d7feb2ba5e3f3375d167c90b` (S42 filing,
 PR #183). Implementation and review belong to issue #182. This packet
 does not grant presentation acceptance, H1 or S25 layout approval.
 
+## Current-runtime native packet
+
+[Manifest](native/manifest.json) and [results](native/results.json) retain
+18 live captures from successful [run 42547068997](https://github.com/Thiesi/Blacksite/actions/runs/42547068997):
+both 80x24 and 132x50, in 16, 256 and truecolor. Source head:
+`e1a126c847b7a6f6b609a30003e70342c6eb1818`; source tree:
+`3632d9db75a51cb5f365f92047ba9fdebc1bc96d`; Python tree SHA-256:
+`3e25ae2e2d8c8342db06e36f923b8d903379f198c57233b233e8cef70a9a57cb`.
+
+Each of the six size/tier combinations has three checkpoints:
+
+- `talk-hint`: an actual regular's page shows "Move or Esc/B leaves".
+- `one-press-walk-away`: one movement press closes and moves the caller.
+- `shot-flee-walks-off`: actual F firing, its committed attack, and
+  ordinary flee movement close the page with the captured system line.
+
+The retained `.txt` files are direct byte copies, including terminal
+padding. Raw `.ans` streams and large style snapshots remain in the six
+CI artifacts linked in the manifest. `scripts/packet_s42.py` verified
+every file hash, independently replayed each ANSI stream for glyphs and
+styles, and checked the source-matched client against the pinned Git
+tree. The packet is 123,762 bytes, within the 200 KB evidence budget.
+It refuses failed/incomplete runs, source/hash/replay mismatches and an
+existing destination. The source head is never relabelled as a later
+packet-only head. Later evidence, test and historical-fixture changes
+retain the recorded `src/blacksite` tree; current-head CI and review
+are recorded separately on PR #188.
+
 ## Frozen values
 
 [`frozen-values.json`](frozen-values.json) records an unchanged mechanics
@@ -44,6 +72,8 @@ All pytest commands use `PYTHONPATH=src` and
    **36 passed** in 17.63 seconds across their two modules.
 7. Ruled TARGET/NEARBY/Tab parity, armed-cover control, existing truce,
    view-semantics and world/session tests: **119 passed** in 54.96 seconds.
+   The two actual-shot parity cases then passed with a farther hostile
+   keeper, which would outrank a cover wrongly left in the neutral bucket.
 
 Full branch CI history (the root suite, not a local full suite):
 
@@ -51,6 +81,7 @@ Full branch CI history (the root suite, not a local full suite):
 | --- | --- | --- | --- |
 | `f485335` | [42543547211](https://github.com/Thiesi/Blacksite/actions/runs/42543547211) | 3 failed, 2502 passed | 3 failed, 2501 passed, 1 skipped |
 | `43225d0` | [42544238313](https://github.com/Thiesi/Blacksite/actions/runs/42544238313) | 3 failed, 2503 passed | 3 failed, 2502 passed, 1 skipped |
+| `e1a126c` | [42545805798](https://github.com/Thiesi/Blacksite/actions/runs/42545805798) | 2509 passed | 2508 passed, 1 skipped |
 
 Both runs found the same three fixture adaptations: the legacy NPC test
 removed the cover but retained its new `poses_as` binding, and the two
@@ -59,6 +90,17 @@ caller pose/hit fields. The fixtures now provide the matching state;
 their original disclosure assertions remain. The second head was pushed
 for the crowd timeout correction before the first CI finished. Neither
 failed head was rerun unchanged.
+
+The first PR's [P6 charted-budget job](https://github.com/Thiesi/Blacksite/actions/runs/42547068957/job/128934251671)
+also failed. The historical Row metadata lacked S42's required
+`poses_as`; there was one final validation error, with max CPU 0.312s
+below the unchanged 3s limit. `presentation_p6_validation.py` now supplies
+only that declared link in memory for its two pinned-data cases and
+records the adaptation. Pinned JSON/map bytes, their hashes, geometry,
+all three validator phases and all assertions remain unchanged. The
+shipped case gets no adaptation. The full local comparison then passed
+all three datasets/phases, with zero final errors and max final CPU
+0.28125s; current-head CI must still verify the complete budget job.
 
 The initial standalone frozen-value helper also exited after completing
 the matrix because it named `mechanics-baseline.json`; the existing file
@@ -124,7 +166,19 @@ initial 25-tick movement cooldown. It injects no shot, flee step, player
 movement, page close or log line. Shipped NPC positions and counts do
 not change.
 
-Native results and the presentation lead's acceptance are pending.
+All six current-runtime native cases passed, as recorded above.
+Presentation acceptance is pending.
+
+## Automated review record
+
+[Claude Sonnet 5.5 reviewed `e1a126c`](https://github.com/Thiesi/Blacksite/pull/188#issuecomment-6730270932)
+and reported no actionable findings. This was static review, not a
+test or playthrough. [Triage](https://github.com/Thiesi/Blacksite/pull/188#issuecomment-6730413557)
+accepts the bounded boot activity grace and confirms that posed-faction
+guards/no extra Warden heat are the intended owner-approved outcome.
+Neither observation requested a change. The reviewer did not review
+this evidence packet or Windows CI. The new packet/fixture head needs
+fresh automated review and current-head CI before technical review.
 
 ### Passing local proof at an earlier head
 

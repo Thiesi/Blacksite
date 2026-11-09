@@ -163,6 +163,8 @@ def test_arch_5_5_4_real_shot_preserves_target_nearby_and_tab_parity(row, victim
     game, caller, _ = row
     zone, (regular, covered, _) = crowd(game)
     source = body(game, caller)
+    keeper = guard(game)
+    keeper.cooldowns.update(move=game.clock.now_tick()+10000, weapon=game.clock.now_tick()+10000)
     # Equal range and full displayed HP remove ordinary damage/position
     # differences while retaining a real shot through exchange/provoked.
     for actor, tile in ((regular, (24, 3)), (covered, (26, 3))):
@@ -183,6 +185,10 @@ def test_arch_5_5_4_real_shot_preserves_target_nearby_and_tab_parity(row, victim
     nearby = [{key: value for key, value in next(entry for entry in view['nearby'] if entry['id'] == actor.id).items()
                if key != 'id'} for actor in (regular, covered)]
     assert nearby[0] == nearby[1] and nearby[0]['relation'] == '!'
+    assert [entry['id'] for entry in view['nearby'][:3]] == [regular.id, covered.id, keeper.id]
+    # A farther hostile keeper exposes a cover incorrectly left in the
+    # neutral Tab bucket: it would be selected before the nearer cover.
+    assert game.core.combat.relation(source, keeper) == 'hostile'
     source.target = None
     act(game, caller, Frame('key', {'k': 'tab', 't': 0}))
     assert source.target == regular.id

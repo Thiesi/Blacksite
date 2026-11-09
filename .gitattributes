@@ -12,3 +12,5 @@ deploy/** text eol=lf
 # Local native evidence retains the exact Windows capture bytes and padding.
 docs/ops/captures/s42/local-80x24-16/*.txt -text -whitespace
 docs/ops/captures/s42/local-80x24-16/*.json -text -whitespace
+docs/ops/captures/s42/validation/*.log -whitespace
+docs/ops/captures/s42/native/*.txt -whitespace
