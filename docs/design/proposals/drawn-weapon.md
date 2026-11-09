@@ -229,22 +229,19 @@ covers what you did with it.
   So every regular in that crowd answers the same way, including the
   one you missed. Other crowds that saw it keep their own lines. Each
   crowd keeps its own book.
-- **The covered Warden gives the same answer.** It shares the regulars'
-  set, so the line itself is the same. The condition has to read the
-  same thing too:
-  - **For the Warden, "provoked" means its counterpart's crowd** (the
-    `poses_as` group, S42). Shooting a regular makes the Warden answer
-    "Not you. Keep walking." too.
-  - **Shooting the Warden** counts for its crowd, so the regulars answer
-    the same as well.
-  - Today `provoked()` writes the provocation under the target's own
-    spawner group. The Warden's spawner is its own group, so the engine
-    needs this mapping. It belongs with S42's "reacts with its
-    counterpart's group, both ways" rule. The mapping must not touch
-    `hostile()`: a covered, unarmed NPC still skips the heat and Mark
-    rule there (#179).
-- **New condition:** `provoked`, true while this NPC's crowd has a
-  provocation against you. A set puts its provoked line first, then its
+- **The covered Warden gives the same answer, with nothing special.**
+  It shares the regulars' set, so the line is the same. S42 (#188)
+  gives the engine one key for "this NPC's crowd": **`reaction_group`**.
+  For a covered, unarmed NPC it is the `poses_as` group, and otherwise
+  the NPC's own spawner group. `provoked()` writes the provocation under
+  `reaction_group(target)`, and the truce keeper reads it the same way.
+  Shooting a regular therefore counts for the Warden, and shooting the
+  Warden counts for the regulars. Use `reaction_group` as the only key,
+  and don't derive the crowd any other way.
+- **New condition:** `provoked`, true while
+  `provocations[(zone, reaction_group(npc), player)] > now`. It's the
+  same test for every member of the crowd, Warden or not. It needs #188
+  on `main`. A set puts its provoked line first, then its
   drawn line, then the rest. `evaluate` returns the first eligible line,
   so that order decides which one plays.
 - **Lines:** one provoked line per set, written in my population PR for
@@ -263,7 +260,7 @@ covers what you did with it.
 | Shy wander filter | engine (wander filter, like S42) | second step, after the demo |
 | `steady` flag and its validator link to `poses_as` | content schema plus validator | second step |
 | `drawn` dialogue condition and one drawn line per set; offers shut while drawn | engine (one condition) plus content | second step, with my population PR for the sets that arrive there |
-| No page while fleeing or hunting; `provoked` condition (counterpart crowd for a covered NPC), one provoked line per set, offers shut (§4.4) | engine (one condition, S42 mapping) plus content | second step, beside `drawn` |
+| No page while fleeing or hunting; `provoked` condition keyed by `reaction_group`, one provoked line per set, offers shut (§4.4) | engine (one condition, after #188) plus content | second step, beside `drawn` |
 
 **Not in the Row rules slice.** That slice already carries the notices,
 Q7, HUNTED, settling, the bark scheduler and the street lines. The drawn
