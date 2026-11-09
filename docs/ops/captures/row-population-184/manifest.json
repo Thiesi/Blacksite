@@ -65,5 +65,25 @@
       "report_name": "row-population-4-truecolor.json",
       "report_sha256": "d5140aaafc73127d1a5b5a42c0e0c4fd3117323eb7e0bbb280516562df7b35db"
     }
-  ]
+  ],
+  "matched_control": {
+    "head": "2cc576ff0c31ac9f96f8b0c38a6705078fce751e",
+    "run": 42541369142,
+    "artifact_id": 13641534595,
+    "artifact_url": "https://github.com/Thiesi/Blacksite/actions/runs/42541369142/artifacts/13641534595",
+    "zip_sha256": "197e4e6dea2e5cb4dfe7c1eaf0dfa206c3a483ba650533c7c84c7e28866adf24",
+    "predeclared_plan": 6729408184,
+    "snapshot_amendment": 6729459082,
+    "summary_file": "control-summary.json",
+    "summary_sha256": "038cb525204e9f912d15ce335e4d27f79754ccec1297c32cbd271e9ae5a1581f",
+    "raw_members_sha256": {
+      "control.json": "56d37d00172ec3edb5d08dfbe4a8a8aea7de38aa2f92a26cf6ed3757d349d8f0",
+      "current-content.input.json": "fa7c12d4f75d7fab6a211677c68e70d399efe6397d817e1201882f30095c47b2",
+      "current-content.json": "28ec2ee7d4f2064cce1eaa1466394c6b2ad4d85f80183d0ebf44abd4fcf304c7",
+      "current-old-content.input.json": "520ea265aabbefbbea07fb0d1a21d043ea5f10dfee2db71aee18185bad58d673",
+      "current-old-content.json": "0fcc43d88bedc6b5f44e464648c79a5cf89ddf27f1633e17b0791bb1f67c5d79",
+      "historical-a8.input.json": "bd77db716888a0adcd5cb8a8198a076e39fb104f1e75f5acf3fa3915cb76054c",
+      "historical-a8.json": "9f7b9ec53290fbb90e73942fa4197363f988699af16bf84dfbe4a3393f3acc67"
+    }
+  }
 }

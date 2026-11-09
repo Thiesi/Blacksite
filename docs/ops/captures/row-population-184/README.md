@@ -1,6 +1,6 @@
 # Row population cost (issue #184)
 
-Status: initial grid measured; matched controls requested on PR #186.
+Status: initial grid and matched controls recorded; final review on PR #186.
 Plan: [6728923533](https://github.com/Thiesi/Blacksite/issues/184#issuecomment-6728923533).
 Starting main: `5416b5d611573a91bba09d445b8503a730dafd53`.
 This measurement grants no population decision or human acceptance gate.
@@ -317,3 +317,138 @@ head, checks, automated-review triage and technical request are on #186.
 The hosted measurement source remains pinned to 1ee8bbe; artifacts are
 not relabelled as another execution. No population, human-layout or
 performance threshold decision is granted. H1/S25 remain NOT GRANTED.
+
+
+## Predeclared same-runner control
+
+The follow-up executes the fixed plan6729408184, amended6729459082,
+**once**, on one hosted Linux runner. Source:
+`2cc576ff0c31ac9f96f8b0c38a6705078fce751e`,
+[run42541369142](https://github.com/Thiesi/Blacksite/actions/runs/42541369142),
+[artifact13641534595](https://github.com/Thiesi/Blacksite/actions/runs/42541369142/artifacts/13641534595).
+ZIP SHA-256:
+`197e4e6dea2e5cb4dfe7c1eaf0dfa206c3a483ba650533c7c84c7e28866adf24`.
+`control-summary.json` retains every arm and its source/report hashes;
+the manifest links the full raw reports, actual-input audits and logs.
+
+All arms finish, without a retry. Every activity has120 ticks; walking
+completes59 keys per caller. All A8 before/after workload, ANSI equality
+and frame-budget comparisons pass. Independent arithmetic from raw CPU
+seconds and elapsed durations reproduces the reported weighted totals.
+The three A8 script hashes and P1 budget hashes match exactly. Historical
+and current-runtime/old-data arms load identical full input manifests.
+The current data differs in `npcs.json` and `zones/sodium-row.json`.
+
+### Baseline finding: fixture and runtime/data evolution both matter
+
+This matched comparison uses **eleven total NPCs**: eight regulars and
+the unchanged two posts/Warden. It matches A8's eleven-NPC sweep to the
+new M8 cell, avoiding an unequal-population comparison. The original
+headline73.7 refers to A8's eight-NPC maximum across cases, not this
+single ordinary sixteen-colour row. No published maximum is used as a
+matched scalar here.
+
+The historical/current A8 arms run in separate interpreters. The old-data
+arm at current runtime supplies an exact Git content export because A8's
+historical loader first copies the checkout then overlays selected files.
+That data-only adapter does not change the script, activity, Meter or MIX.
+The other two arms retain their original loader, audited after loading.
+
+CPU s/h; A8's unmodified script also retains the before renderer and known
+companion. All values below are from this one runner and fixed order.
+
+| Runtime / input | Knowledge | Before renderer | After renderer |
+|---|---|---:|---:|
+| historical-a8 | ordinary | 88.065470 | 64.401890 |
+| historical-a8 | known | 90.515846 | 64.498255 |
+| current-old-content | ordinary | 107.522158 | 78.864754 |
+| current-old-content | known | 111.663288 | 84.053351 |
+| current-content | ordinary | 119.213858 | 92.260771 |
+| current-content | known | 132.179950 | 98.495619 |
+
+For ordinary knowledge, the after-renderer observations are:
+
+- historical A8/runtime and old data: **64.401890**;
+- current runtime on those identical old data: **78.864754**, +14.462863
+  (+22.457%) in this sample;
+- current runtime/current authored data: **92.260771**, another13.396017
+  (+16.986%);
+- current one-caller dense Group fixture, same11 NPCs: **137.768557**,
+  another45.507786 (+49.325%) over the current A8 distributed fixture.
+
+Thus the grid's dense visible fixture is not the shipped A8 baseline.
+There is also observed cost growth with runtime evolution at held data,
+and with current data at held runtime. Runtime evolution includes changed
+simulated behaviour and positions, not merely a per-function speed change.
+This execution does not attribute either difference to S38, S39, A9 or an
+individual code path, and it is not a confidence-bounded regression study.
+
+The controlled current A8 eleven-NPC/16-colour after case remains below
+108 here (ordinary92.260771, known98.495619). That is **not** a claim that
+all shipped populations, zones and tiers pass their budget. It explains
+why the dense zero-extra grid miss alone cannot establish a shipped A8
+budget failure. A population choice must not substitute the old published
+maximum as the new dense fixture's intercept or extrapolate its marginals
+into an unmeasured layout.
+
+### Caller finding: the large discount is not reproduced
+
+All rows below are ordinary knowledge, sixteen colours, zero extras,
+132x50 on that same runner. Callers use the same eight-right/eight-left
+P1 route, in distinct lanes. Door total is the sum of their separate
+meters; the server column is the one shared simulation and view meter.
+
+| Wanderers | Callers | Door total | Door mean | Door maximum | Shared server |
+|---:|---:|---:|---:|---:|---:|
+| 8 | 1 | 137.768557 | 137.768557 | 137.768557 | 171.479573 |
+| 8 | 4 | 536.043234 | 134.010809 | 145.842474 | 582.370192 |
+| 4 | 1 | 119.962335 | 119.962335 | 119.962335 | 158.334130 |
+| 4 | 4 | 455.527828 | 113.881957 | 124.070858 | 523.033906 |
+
+At M8 the one-caller cost137.768557 becomes134.010809 mean with four,
+but the first caller at the same (46,14) start costs145.842474: **5.860%
+more**, and it is the maximum. At M4,119.962335 becomes113.881957 mean,
+but that first caller costs124.070858: **3.425% more**, again the maximum.
+Four total door meters cost about3.89 and3.80 times the one-caller meter,
+not one rendering divided by four.
+
+Each caller independently records **120 render and120 update calls per
+activity**, with its own CPU meter; each walking caller executes59 keys.
+The adapter shares the authoritative server tick, not one caller's draw
+or its measured CPU bill. The first caller's viewport matches the
+one-caller start, but other callers occupy different lanes and see other
+moving players. Averaging those distinct live views is not an identical-
+workload per-caller comparison. Their nonempty frame counts also differ:
+M8 walking gives74/72 frames for one caller,64/63 per caller with four;
+M4 gives75/75 versus63/65. These are recorded output differences under
+P1's unchanged loop, not a tick or input slip.
+
+The original large, consistent maximum-per-caller discount disappears in
+this same-runner pair; the matched maximum is higher with four in both
+populations. The remaining mean difference is only2.728% (M8) or5.069%
+(M4), across different views and realized outputs. This supports treating
+the earlier cross-runner discount as a confounded comparison, not an
+intrinsic four-caller saving. It does not isolate host variance alone
+from lane, live-state, output-timing or fixed-order effects; no unmeasured
+cause is asserted. No population or optimization decision follows.
+
+### Follow-up validation ledger
+
+The new exact-snapshot test initially failed on Windows at2cc576f:
+**1 failed,2429 passed,1 skipped in693.86s**, solely its POSIX-literal
+expected path versus the helper's Windows Path string. File bytes and
+hashes agreed. [Retained job128916818098](https://github.com/Thiesi/Blacksite/actions/runs/42541369099/job/128916818098).
+The test-only fix atb087219 uses `str(Path(...))`; measurement/helper code
+and the already-running Linux control remain unchanged. The first failed
+outcome is not erased or retried unchanged.
+
+The control-head automated review, Sonnet5.5 (6729503690), has no
+actionable findings; triage6729549936 distinguishes new control code
+from the unchanged original grid. A new-head technical disposition is
+requested on #186 for the control evidence. The previous record remains
+Awaiting evidence or approval until the lead updates it. H1/S25 NOT GRANTED.
+
+The test-only fix head b087219 then passes hosted root on both systems:
+**2431 Linux passed in582.13 s; 2430 Windows passed, one skipped, in
+342.89 s**, [run42542139498](https://github.com/Thiesi/Blacksite/actions/runs/42542139498).
+This validates the changed expected path, not a second control execution.

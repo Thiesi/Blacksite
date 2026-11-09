@@ -1,6 +1,6 @@
 # M184: Row population measurement
 
-Status: in progress (PR #186, issue #184; matched controls requested).
+Status: done (PR #186, issue #184; final technical disposition on the PR).
 Primary model: Codex. Review: automated Claude, then technical lead.
 Base: owner-merged main 5416b5d; A8, A9 and S39 are merged.
 
@@ -47,3 +47,14 @@ for matched A8/current and one/four-caller controls before absolute figures
 are used. The predeclared same-runner plan is 6729408184 on #186, with the
 exact-snapshot amendment recorded before execution. Retain every arm,
 including failures. No optimization is part of this follow-up.
+
+The single control execution at 2cc576f completes all seven arms. Full
+old-input manifests and A8/P1 method hashes match. The current A8 ordinary
+16-colour eleven-NPC case measures 92.260771 CPU s/h; the dense one-caller
+fixture at the same population measures 137.768557. Runtime and data
+evolution also increase measured cost. The same-runner four-caller maximum
+is higher than one caller for both M8 and M4, so no intrinsic caller
+discount is established. All outcomes and limitations are retained in
+the packet. The Windows-only expected-path assertion is fixed at b087219;
+hosted root passes on both systems. A new-head technical record and owner
+merge remain required; this done mark grants no population or human gate.
