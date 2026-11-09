@@ -1,0 +1,24 @@
+┌─ Karst · s05caller ──────────────────────────────────────────────────────────┐
+│ KARST 41                                              │                      │
+│                                                       │                      │
+│ The city was built to keep something in.              │                      │
+│ Nobody remembers what.                                │                      │
+│                                                       │                      │
+│ a real-time door for NetBBS . the year of the Exhale  │                      │
+│                                                       │                      │
+│                                                       │                      │
+│                                                       │                      │
+│ ? help    Ctrl-X leave                                │                      │
+│                                                       │                      │
+│                                                       │                      │
+│                                                       │                      │
+│                                                       │                      │
+│                                                       │                      │
+│                                                       │                      │
+│                                                       │                      │
+├──────────────────────────────────────────────────────────────────────────────┤
+│                                                                              │
+│                                                                              │
+│                                                                              │
+│? help  I what is this  Ctrl-X leave                                          │
+└────────────────────────────────────────────────────────────────────────────── 

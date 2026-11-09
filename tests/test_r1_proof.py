@@ -9,17 +9,24 @@ import pytest
 
 from karst41.door.doorinfo import DoorInfo
 from karst41.door.model import Display
-from karst41.door.screens import title
 from karst41.door.terminal import ENTER
 from scripts.audit_r1_world import audit
 from scripts.r1_title import title_prefix
+
+
+def r1_title(motd: str) -> dict:
+    """The title body as R1 shipped it. scripts/r1_title.py pins R1's subtitle,
+    so this proof replays R1's screen rather than the current one."""
+    return {"screen": "title", "title": "KARST 41", "lines": ["", "The city was built to keep something in.",
+        "Nobody remembers what.", "", "a real-time door for NetBBS   .   Karst, Year 41", "", motd,
+        "", "? help    Ctrl-X leave"], "page": 1, "pages": 1}
 
 
 def title_frames(tmp_path: Path, presentation: bool = False) -> tuple[bytes, bytes, bytes]:
     info = DoorInfo(tmp_path/'unused', tmp_path, {'handle': 'Wide界', 'user_id': 1}, 80, 24, '256', 3600)
     model = Display(info, presentation=presentation)
     first = model.render(0)[0]
-    model.body = title('Latest welcome')
+    model.body = r1_title('Latest welcome')
     model.force_full = model.dirty = True
     second = model.render(1)[0]
     model.body = {'title': 'THE WAKE', 'lines': ['Continue']}
