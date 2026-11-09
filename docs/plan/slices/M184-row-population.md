@@ -1,6 +1,6 @@
 # M184: Row population measurement
 
-Status: done (PR #186, issue #184).
+Status: in progress (PR #186, issue #184; matched controls requested).
 Primary model: Codex. Review: automated Claude, then technical lead.
 Base: owner-merged main 5416b5d; A8, A9 and S39 are merged.
 
@@ -40,4 +40,10 @@ The first hosted execution at 1ee8bbe records all 72 ordinary cells and
 retains every result, 102 marginal differences and eight separate corner
 profiles; stationary extras incur both door and server cost. All activity
 cadence/fixture assertions pass. Final-head review and merge requirements
-are recorded on #186; this done mark grants no population or human gate.
+are recorded on #186; this measurement grants no population or human gate.
+
+Technical record 6729363372 accepts the within-runner marginals and asks
+for matched A8/current and one/four-caller controls before absolute figures
+are used. The predeclared same-runner plan is 6729408184 on #186, with the
+exact-snapshot amendment recorded before execution. Retain every arm,
+including failures. No optimization is part of this follow-up.

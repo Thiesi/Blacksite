@@ -1,9 +1,17 @@
 # Row population cost (issue #184)
 
-Status: measured at 1ee8bbe; final-head review on PR #186.
+Status: initial grid measured; matched controls requested on PR #186.
 Plan: [6728923533](https://github.com/Thiesi/Blacksite/issues/184#issuecomment-6728923533).
 Starting main: `5416b5d611573a91bba09d445b8503a730dafd53`.
 This measurement grants no population decision or human acceptance gate.
+
+Technical record
+[6729363372](https://github.com/Thiesi/Blacksite/pull/186#issuecomment-6729363372)
+accepts within-runner marginals but requires matched controls before using
+absolute figures. The predeclared plan is
+[6729408184](https://github.com/Thiesi/Blacksite/pull/186#issuecomment-6729408184),
+with the exact-snapshot amendment in the following comment. Original grid
+data below stays intact. No second favorable-sample grid run is planned.
 
 ## Method
 
