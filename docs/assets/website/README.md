@@ -1,6 +1,6 @@
 # Website screens
 
-Three mockups of Blacksite at its highest fidelity: a 132x50 terminal in
+Three mockups of Karst 41 at its highest fidelity: a 132x50 terminal in
 truecolor with Unicode glyphs, rendered at 2112x1600 (16x32 pixels per
 cell). Together they told one evening in Sodium Row: the street, the bar
 you sit down in, and the Lattice you go down into from its chair. Since

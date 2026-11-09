@@ -168,7 +168,7 @@ o.append('''<div style="position: absolute; left: 64px; top: 930px; width: 420px
 <h1 style="margin: 0; font-family: 'Big Shoulders Display', sans-serif; font-weight: 900; font-size: 72px; line-height: 0.9; letter-spacing: 2px; color: #E6E1D6">BY RINGLIGHT</h1>
 <p style="margin: 0; font-size: 15px; line-height: 1.5; font-style: italic; color: #C9C4BA">The city was built to keep something in. Nobody remembers what. At night you can see where everyone is: the Spire burning over the shaft, the vats of Vatside cold and blue, the Sink a black mouth with a red rim, and out past Gate Nine, the salvage fires of the Scour.</p>
 </div>
-<p style="position: absolute; right: 64px; bottom: 48px; margin: 0; font-family: 'IBM Plex Mono', monospace; font-size: 11px; letter-spacing: 2px; color: #7E8796">BLACKSITE · A NATIVE NETBBS DOOR</p>
+<p style="position: absolute; right: 64px; bottom: 48px; margin: 0; font-family: 'IBM Plex Mono', monospace; font-size: 11px; letter-spacing: 2px; color: #7E8796">KARST 41 · A NATIVE NETBBS DOOR</p>
 ''')
 o.append('</div>')
 

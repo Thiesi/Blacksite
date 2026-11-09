@@ -223,7 +223,7 @@ fac = ''.join(f'<div style="display: flex; align-items: center; gap: 8px"><span 
 o(f'''<div style="position: absolute; left: 1240px; top: 180px; width: 500px; display: flex; flex-direction: column; gap: 22px">
 <div style="display: flex; flex-direction: column; gap: 6px">
 <p style="margin: 0; font-size: 13px; letter-spacing: 3px; color: #F2D9A0">A REAL-TIME MULTIPLAYER TERMINAL RPG</p>
-<h1 style="margin: 0; font-family: 'Big Shoulders Display', sans-serif; font-weight: 900; font-size: 132px; line-height: 0.9; letter-spacing: 2px; color: #E6E1D6">BLACKSITE</h1>
+<h1 style="margin: 0; font-family: 'Big Shoulders Display', sans-serif; font-weight: 900; font-size: 132px; line-height: 0.9; letter-spacing: 2px; color: #E6E1D6">KARST 41</h1>
 </div>
 <p style="margin: 0; font-size: 17px; line-height: 1.5; font-style: italic; color: #E6E1D6">The city was built to keep something in. Nobody remembers what.</p>
 <p style="margin: 0; font-size: 14px; line-height: 1.65; color: #A3ACBA">Four million people on a limestone plateau, sealed inside one wall for forty-one years. Eleven districts, forty-seven places: the Spire over the sealed shaft, the safe Core at its foot, nine districts in a ring, the Undercity beneath, and the Scour outside the only gate that opens.</p>
@@ -245,7 +245,7 @@ o('</div>')
 
 props = '{"showPlanned":{"editor":"boolean","default":true},"showTram":{"editor":"boolean","default":true},"showHidden":{"editor":"boolean","default":true},"ringColor":{"editor":"color","default":"#F2D9A0","options":["#F2D9A0","#BFD7F2","#F2B8A0"]}}'
 vals = "{ plannedOpacity: (this.props.showPlanned ?? true) ? 1 : 0, tramOpacity: (this.props.showTram ?? true) ? 1 : 0, hiddenOpacity: (this.props.showHidden ?? true) ? 1 : 0, ringColor: this.props.ringColor ?? '#F2D9A0' }"
-html = page('Blacksite: the city of Karst', 1800, 1200, '\n'.join(out),
+html = page('Karst 41: the city of Karst', 1800, 1200, '\n'.join(out),
             'family=Big+Shoulders+Display:wght@700;900&amp;family=IBM+Plex+Mono:ital,wght@0,400;0,600;1,400', props, vals)
 io.open('project/Main.dc.html', 'w', encoding='utf-8', newline='\n').write(html)
 
