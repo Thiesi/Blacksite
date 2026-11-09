@@ -1,15 +1,9 @@
 name: R1 package and native title acceptance
 
+# R1 merged as 98b83d2 (PR #193). This was R1's one-off acceptance and
+# pins R1's title, subtitle and base 7597dce, so it no longer runs on
+# pull requests. Dispatch it at an R1-era ref to reproduce the evidence.
 on:
-  pull_request:
-    paths:
-      - 'src/karst41/**'
-      - 'pyproject.toml'
-      - 'scripts/accept_r1_netbbs.py'
-      - 'scripts/audit_r1_world.py'
-      - 'scripts/r1_title.py'
-      - 'scripts/check_r1_titles.py'
-      - '.github/workflows/r1-acceptance.yml'
   workflow_dispatch:
 
 permissions:
