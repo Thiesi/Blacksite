@@ -6,6 +6,7 @@ the P5 tile drawing. Geometry and focus remain their shared contracts.
 """
 
 import json
+import os
 from typing import Any
 
 from karst41.door.cells import CellBuffer, clean_text, display_width, truncate
@@ -29,6 +30,10 @@ TILE_ROLES = {"wall": "wall", "door": "thing_door", "locked-door": "thing_door",
               "vat": "thing_vat", "light": "thing_light", "hardware": "thing_hardware",
               "cover-1": "thing_cover", "cover-2": "thing_cover", "cover-3": "thing_cover"}
 TAGS = {"!": "hostile", "~": "neutral", "+": "ally"}
+# Demo only (demo/sodium-row-evening): public signs read from a distance.
+# A sign letter on a wall face that borders charted ground is drawn before
+# its wall is seen, as remembered lettering; the wall itself stays unknown.
+DEMO_SIGNS = os.environ.get('DOOR_KARST41_DEMO_SIGNS') == 'charted'
 OPAQUE = frozenset(('wall', 'locked-door'))  # Shipped opaque rule-tile classes; tested against content.
 
 
@@ -50,6 +55,17 @@ def origin(body: dict[str, Any], layout: Layout) -> tuple[int, int]:
     area, vp = layout.viewport, body['viewport']
     return (area.x + max(0, (area.width - vp['w']) // 2),
             area.y + max(0, (area.height - vp['h']) // 2))
+
+
+def _beside_charted(resolved: list[list[int]], ids: list[list[str]], opaque: frozenset[str],
+                    x: int, y: int) -> bool:
+    for dx, dy in ((-1, 0), (1, 0), (0, -1), (0, 1)):
+        ny, nx = y + dy, x + dx
+        if 0 <= ny < len(resolved) and 0 <= nx < len(resolved[ny]):
+            index = resolved[ny][nx]
+            if index == CHARTED_GROUND or (index >= 0 and ids[ny][nx] not in opaque):
+                return True
+    return False
 
 
 def terrain(buffer: CellBuffer, body: dict[str, Any], layout: Layout, paint: Paint,
@@ -157,7 +173,12 @@ def terrain(buffer: CellBuffer, body: dict[str, Any], layout: Layout, paint: Pai
                 places.terrain_states[x,y] = state
             if index < 0 and index != CHARTED_GROUND:
                 if places:
-                    target.put(ox+x,oy+y,' ')
+                    at = vp['x'] + x, vp['y'] + y
+                    if DEMO_SIGNS and at in places.signs and _beside_charted(resolved, ids, opaque, x, y):
+                        ch, role = places.signs[at]
+                        target.put(ox+x, oy+y, ch, paint.known(paint(role, 'ground_black')))
+                    else:
+                        target.put(ox+x,oy+y,' ')
                 continue
             # Ground-only carries no tile class or rule shape. It also makes
             # no claim about passability for the neighbouring roof test.
@@ -450,6 +471,9 @@ def head(buffer: CellBuffer, body: dict[str, Any], layout: Layout, paint: Paint,
         left.append(('HEAT', 'log_danger'))
     if me.get('marked_until'):
         left.append(('MARKED', 'log_danger'))
+    if me.get('hunted'):
+        # Demo round 3 (#170): the keeper's guards are answering you.
+        left.append(('HUNTED', 'log_danger'))
     if me.get('district'):
         left.append((str(me['district']).upper(), 'head_district'))
     if service := body.get('service'):

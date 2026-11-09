@@ -1,0 +1,69 @@
+{
+  "schema": 1,
+  "id": "row-choir-listener",
+  "name": "Choir listener",
+  "faction": "choir",
+  "title": "Quarter Tone regular",
+  "terminal": false,
+  "machine_mind": false,
+  "lines": [
+    {
+      "id": "cantor",
+      "text": "You hear it too, don't you. Sit. The music's kept low so we can.",
+      "when": [
+        "archetype cantor"
+      ],
+      "required": true
+    },
+    {
+      "id": "member",
+      "text": "Nine listened first. We keep the volume down out of respect.",
+      "when": [
+        "member_of choir"
+      ],
+      "required": true
+    },
+    {
+      "id": "enemy",
+      "text": "Halvard drinks two doors up. We don't mind. They mind.",
+      "when": [
+        "enemy_of_me"
+      ],
+      "required": true
+    },
+    {
+      "id": "greeting",
+      "text": "Keep your voice down, please. Not for us.",
+      "when": [],
+      "required": true
+    }
+  ],
+  "offers": [],
+  "barks": [
+    {
+      "text": "There. Under the bass. Did you hear it?",
+      "weight": 1,
+      "min_interval_seconds": 90
+    },
+    {
+      "text": "Solenne says we buy more than Sable does. That's not a sin. It's a ledger.",
+      "weight": 1,
+      "min_interval_seconds": 90
+    },
+    {
+      "text": "Follow the street to where it stops. That's Vesper's door. She doesn't sing.",
+      "weight": 2,
+      "min_interval_seconds": 90
+    },
+    {
+      "text": "Turn it down. Thank you. Now listen.",
+      "weight": 1,
+      "min_interval_seconds": 90
+    },
+    {
+      "text": "Some nights the whole room stops talking at once. Nobody decides to.",
+      "weight": 1,
+      "min_interval_seconds": 90
+    }
+  ]
+}

@@ -8,6 +8,22 @@
   "machine_mind": false,
   "lines": [
     {
+      "id": "marked",
+      "text": "Red name at my counter. Cash only, sweetheart, and quick.",
+      "when": [
+        "marked"
+      ],
+      "required": true
+    },
+    {
+      "id": "cantor",
+      "text": "Cantor. Your tab's open. You lot crash hardest and tip best.",
+      "when": [
+        "archetype cantor"
+      ],
+      "required": true
+    },
+    {
       "id": "first",
       "text": "Pink for the shakes, blue for the jack-in, nothing for the crash. The crash is the price.",
       "when": [
@@ -23,5 +39,21 @@
     }
   ],
   "offers": [],
-  "barks": []
+  "barks": [
+    {
+      "text": "Three in a day and you're mine for a week. Business model, sweetheart.",
+      "weight": 1,
+      "min_interval_seconds": 90
+    },
+    {
+      "text": "Vesper's end of the street charges for the truth. I charge for the morning after.",
+      "weight": 2,
+      "min_interval_seconds": 90
+    },
+    {
+      "text": "Nobody's ever come back to complain about the pink. Think about that.",
+      "weight": 1,
+      "min_interval_seconds": 90
+    }
+  ]
 }

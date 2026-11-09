@@ -1,0 +1,69 @@
+{
+  "schema": 1,
+  "id": "row-halvard-offduty",
+  "name": "Halvard staff, off duty",
+  "faction": "halvard",
+  "title": "Upstairs regular",
+  "terminal": false,
+  "machine_mind": false,
+  "lines": [
+    {
+      "id": "member",
+      "text": "Sit with us. Nobody here asks about your shift, and nobody upstairs asks about this bar.",
+      "when": [
+        "member_of halvard"
+      ],
+      "required": true
+    },
+    {
+      "id": "enemy",
+      "text": "Truce, friend. I drink here so I don't have to see you anywhere else.",
+      "when": [
+        "enemy_of_me"
+      ],
+      "required": true
+    },
+    {
+      "id": "wake",
+      "text": "A Wake on the Row. Stay near the Stair. That's what we do.",
+      "when": [
+        "is_wake"
+      ],
+      "required": true
+    },
+    {
+      "id": "greeting",
+      "text": "Best glass on the Row and the shortest walk home. You pay for both.",
+      "when": [],
+      "required": true
+    }
+  ],
+  "offers": [],
+  "barks": [
+    {
+      "text": "Two flights up and you're back under Warden blue. That's the whole charm.",
+      "weight": 1,
+      "min_interval_seconds": 90
+    },
+    {
+      "text": "Ring's bright tonight. Somebody's salvage bill just went up.",
+      "weight": 1,
+      "min_interval_seconds": 90
+    },
+    {
+      "text": "You want the Halo? Far end of the street. We don't go that far.",
+      "weight": 2,
+      "min_interval_seconds": 90
+    },
+    {
+      "text": "Nobody upstairs knows I come down here. Everybody upstairs comes down here.",
+      "weight": 1,
+      "min_interval_seconds": 90
+    },
+    {
+      "text": "Badge stays in the coat pocket. The coat stays on.",
+      "weight": 1,
+      "min_interval_seconds": 90
+    }
+  ]
+}

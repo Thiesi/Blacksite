@@ -4,106 +4,125 @@
   "theme": "sodium-street",
   "regions": [
     {
+      "theme": "sodium-alley",
+      "rect": [
+        6,
+        24,
+        84,
+        2
+      ]
+    },
+    {
+      "theme": "sodium-alley",
+      "rect": [
+        17,
+        17,
+        2,
+        7
+      ]
+    },
+    {
+      "theme": "sodium-alley",
+      "rect": [
+        62,
+        17,
+        2,
+        7
+      ]
+    },
+    {
       "theme": "sodium-lamp",
+      "circle": [
+        10,
+        12,
+        3
+      ]
+    },
+    {
+      "theme": "sodium-lamp",
+      "circle": [
+        32,
+        10,
+        3
+      ]
+    },
+    {
+      "theme": "sodium-lamp",
+      "circle": [
+        54,
+        14,
+        3
+      ]
+    },
+    {
+      "theme": "sodium-lamp",
+      "circle": [
+        76,
+        10,
+        3
+      ]
+    },
+    {
+      "theme": "sodium-lamp",
+      "circle": [
+        84,
+        12,
+        3
+      ]
+    },
+    {
+      "theme": "sodium-door-blue",
       "circle": [
         13,
-        11,
-        3
-      ]
-    },
-    {
-      "theme": "sodium-lamp",
-      "circle": [
-        37,
-        11,
-        3
-      ]
-    },
-    {
-      "theme": "sodium-lamp",
-      "circle": [
-        61,
-        11,
-        3
-      ]
-    },
-    {
-      "theme": "sodium-lamp",
-      "circle": [
-        85,
-        11,
-        3
-      ]
-    },
-    {
-      "theme": "sodium-lamp",
-      "circle": [
-        25,
-        24,
-        3
-      ]
-    },
-    {
-      "theme": "sodium-lamp",
-      "circle": [
-        49,
-        24,
-        3
-      ]
-    },
-    {
-      "theme": "sodium-lamp",
-      "circle": [
-        73,
-        24,
-        3
-      ]
-    },
-    {
-      "theme": "sodium-door-pink",
-      "circle": [
-        8,
-        7,
+        9,
         2
       ]
     },
     {
-      "theme": "sodium-door-teal",
+      "theme": "sodium-door-orange",
       "circle": [
-        18,
-        7,
+        35,
+        9,
         2
       ]
     },
     {
-      "theme": "sodium-door-pink",
+      "theme": "sodium-door-violet",
       "circle": [
-        50,
-        7,
+        38,
+        9,
         2
       ]
     },
     {
-      "theme": "sodium-door-teal",
+      "theme": "sodium-door-chalk",
       "circle": [
-        63,
-        7,
+        57,
+        9,
         2
       ]
     },
     {
-      "theme": "sodium-door-pink",
+      "theme": "sodium-door-green",
       "circle": [
-        75,
-        7,
+        70,
+        9,
         2
       ]
     },
     {
       "theme": "sodium-stage",
       "circle": [
-        30,
-        7,
+        26,
+        19,
+        3
+      ]
+    },
+    {
+      "theme": "sodium-door-pink",
+      "circle": [
+        89,
+        12,
         2
       ]
     }
@@ -111,84 +130,108 @@
   "signs": [
     {
       "at": [
-        3,
-        0
+        5,
+        8
       ],
-      "text": " DRINKS ",
-      "role": "thing_sign_pink"
+      "text": "UPSTAIRS",
+      "role": "thing_sign_blue"
     },
     {
       "at": [
-        14,
-        0
+        21,
+        8
       ],
-      "text": " LIVE MUSIC ",
-      "role": "thing_sign_cyan"
+      "text": "24H LONG SHIFT",
+      "role": "thing_sign_orange"
     },
     {
       "at": [
-        26,
-        0
+        39,
+        8
       ],
-      "text": " STAGE ",
-      "role": "thing_sign_amber"
-    },
-    {
-      "at": [
-        45,
-        0
-      ],
-      "text": " DRINKS ",
+      "text": " quarter tone ",
       "role": "thing_sign_pink"
     },
     {
       "at": [
         58,
-        0
+        8
       ],
-      "text": " TICKETS ",
-      "role": "thing_sign_cyan"
+      "text": " THE CLAUSE ",
+      "role": "thing_sign_street"
     },
     {
       "at": [
         71,
-        0
+        8
       ],
-      "text": " OPEN LATE ",
+      "text": " SPA E PA TS ",
+      "role": "thing_sign_green"
+    },
+    {
+      "at": [
+        82,
+        10
+      ],
+      "text": "TIN HA O",
       "role": "thing_sign_orange"
     },
     {
       "at": [
-        86,
-        29
+        19,
+        21
       ],
-      "text": " TIN HAL",
-      "role": "thing_sign_orange"
-    },
-    {
-      "at": [
-        94,
-        29
-      ],
-      "text": "O ",
-      "role": "thing_sign_orange"
+      "text": " STAGE ",
+      "role": "thing_sign_amber"
     }
   ],
   "marks": [
     {
       "at": [
-        3,
-        2
+        2,
+        10
       ],
       "text": "← NEON STAIR",
       "role": "paint"
     },
     {
       "at": [
-        82,
-        27
+        5,
+        14
       ],
       "text": "TIN HALO →",
+      "role": "paint"
+    },
+    {
+      "at": [
+        5,
+        12
+      ],
+      "text": "NOBODY DRAWS",
+      "role": "paint"
+    },
+    {
+      "at": [
+        30,
+        14
+      ],
+      "text": "TIN HALO →",
+      "role": "paint"
+    },
+    {
+      "at": [
+        55,
+        14
+      ],
+      "text": "TIN HALO →",
+      "role": "paint"
+    },
+    {
+      "at": [
+        58,
+        10
+      ],
+      "text": "||||/ ||||/ ||||/ ||",
       "role": "paint"
     }
   ],

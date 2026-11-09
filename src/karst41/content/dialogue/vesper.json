@@ -77,14 +77,18 @@
       "ref": "vesper-first-thing",
       "label": "Work board",
       "hotkey": "c",
-      "when": []
+      "when": [
+        "not_marked"
+      ]
     },
     {
       "kind": "vendor",
       "ref": "vesper",
       "label": "Trade",
       "hotkey": "v",
-      "when": []
+      "when": [
+        "not_marked"
+      ]
     }
   ],
   "barks": [

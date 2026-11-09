@@ -10,8 +10,8 @@
     {
       "zone": "sodium-row",
       "tile": [
-        52,
-        7
+        38,
+        21
       ],
       "object_id": "sign-grid-hardware",
       "label": "sodium row cabinet"

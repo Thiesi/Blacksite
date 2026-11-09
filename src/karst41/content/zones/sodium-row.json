@@ -8,7 +8,7 @@
   "sight_radius": 13,
   "spawn": [
     3,
-    3
+    12
   ],
   "charted": true,
   "public": [
@@ -71,8 +71,8 @@
     {
       "id": "to-core-plaza",
       "tile": [
-        2,
-        2
+        1,
+        12
       ],
       "target_zone": "core-plaza",
       "target_tile": [
@@ -84,13 +84,13 @@
     {
       "id": "to-sodium-tin-halo",
       "tile": [
-        94,
-        26
+        90,
+        12
       ],
       "target_zone": "sodium-tin-halo",
       "target_tile": [
-        2,
-        3
+        8,
+        10
       ],
       "kind": "door"
     }
@@ -99,8 +99,8 @@
     {
       "id": "row-drug-dealer",
       "tile": [
-        48,
-        20
+        60,
+        21
       ],
       "kind": "vendor",
       "essential": false,
@@ -112,8 +112,8 @@
     {
       "id": "row-ticket-tout",
       "tile": [
-        64,
-        20
+        92,
+        5
       ],
       "kind": "vendor",
       "essential": false,
@@ -125,8 +125,8 @@
     {
       "id": "row-stage",
       "tile": [
-        30,
-        7
+        26,
+        21
       ],
       "kind": "light",
       "essential": false,
@@ -137,8 +137,8 @@
     {
       "id": "row-card-table",
       "tile": [
-        38,
-        20
+        52,
+        19
       ],
       "kind": "light",
       "essential": false,
@@ -149,67 +149,72 @@
     {
       "id": "row-bar-1",
       "tile": [
-        8,
-        7
+        13,
+        5
       ],
       "kind": "vendor",
       "essential": false,
       "params": {
-        "name": "Row bar 1"
+        "name": "Upstairs",
+        "vendor": "row-upstairs"
       }
     },
     {
       "id": "row-bar-2",
       "tile": [
-        18,
-        7
+        23,
+        4
       ],
       "kind": "vendor",
       "essential": false,
       "params": {
-        "name": "Row bar 2"
+        "name": "The Long Shift",
+        "vendor": "row-long-shift"
       }
     },
     {
       "id": "row-bar-3",
       "tile": [
-        50,
-        7
+        51,
+        3
       ],
       "kind": "vendor",
       "essential": false,
       "params": {
-        "name": "Row bar 3"
+        "name": "The Quarter Tone",
+        "vendor": "row-quarter-tone"
       }
     },
     {
       "id": "row-bar-4",
       "tile": [
-        63,
-        7
+        57,
+        4
       ],
       "kind": "vendor",
       "essential": false,
       "params": {
-        "name": "Row bar 4"
+        "name": "The Clause",
+        "vendor": "row-clause"
       }
     },
     {
       "id": "row-bar-5",
       "tile": [
-        75,
-        7
+        77,
+        3
       ],
       "kind": "vendor",
       "essential": false,
       "params": {
-        "name": "Row bar 5"
+        "name": "Spare Parts",
+        "vendor": "row-spare-parts"
       }
     },
     {
       "id": "row-public-1",
       "tile": [
-        19,
+        3,
         15
       ],
       "kind": "terminal",
@@ -221,8 +226,8 @@
     {
       "id": "row-public-2",
       "tile": [
-        50,
-        15
+        40,
+        16
       ],
       "kind": "terminal",
       "essential": true,
@@ -233,8 +238,8 @@
     {
       "id": "row-public-3",
       "tile": [
-        80,
-        15
+        84,
+        2
       ],
       "kind": "terminal",
       "essential": true,
@@ -258,8 +263,8 @@
     {
       "id": "sign-grid-hardware",
       "tile": [
-        52,
-        7
+        38,
+        21
       ],
       "kind": "hardware",
       "params": {
@@ -270,8 +275,8 @@
     {
       "id": "house-lights-sign-grid",
       "tile": [
-        51,
-        7
+        37,
+        21
       ],
       "kind": "terminal",
       "params": {
@@ -286,29 +291,172 @@
   ],
   "spawners": [
     {
-      "id": "sable-enforcer",
-      "npc": "npc-sable-enforcer",
+      "id": "sable-enforcer-stair",
+      "npc": "npc-row-enforcer",
+      "count": 1,
+      "respawn_seconds": 60,
+      "condition": "always",
+      "region": {
+        "x": 8,
+        "y": 11,
+        "w": 1,
+        "h": 3
+      }
+    },
+    {
+      "id": "sable-enforcer-strip",
+      "npc": "npc-row-enforcer",
+      "count": 1,
+      "respawn_seconds": 60,
+      "condition": "always",
+      "region": {
+        "x": 45,
+        "y": 9,
+        "w": 2,
+        "h": 1
+      }
+    },
+    {
+      "id": "upstairs-halvard",
+      "npc": "npc-row-halvard-offduty",
+      "count": 1,
+      "respawn_seconds": 60,
+      "condition": "always",
+      "region": {
+        "x": 8,
+        "y": 5,
+        "w": 11,
+        "h": 3
+      }
+    },
+    {
+      "id": "upstairs-sablier",
+      "npc": "npc-row-sablier-offduty",
+      "count": 1,
+      "respawn_seconds": 60,
+      "condition": "always",
+      "region": {
+        "x": 8,
+        "y": 5,
+        "w": 11,
+        "h": 3
+      }
+    },
+    {
+      "id": "long-shift-crew",
+      "npc": "npc-row-kestrel-crew",
       "count": 2,
       "respawn_seconds": 60,
       "condition": "always",
       "region": {
-        "x": 43,
+        "x": 25,
+        "y": 2,
+        "w": 11,
+        "h": 5
+      }
+    },
+    {
+      "id": "quarter-tone-listeners",
+      "npc": "npc-row-choir-listener",
+      "count": 2,
+      "respawn_seconds": 60,
+      "condition": "always",
+      "region": {
+        "x": 39,
+        "y": 2,
+        "w": 13,
+        "h": 5
+      }
+    },
+    {
+      "id": "clause-regulars",
+      "npc": "npc-row-clause-regular",
+      "count": 2,
+      "respawn_seconds": 60,
+      "condition": "always",
+      "region": {
+        "x": 55,
+        "y": 4,
+        "w": 5,
+        "h": 3
+      }
+    },
+    {
+      "id": "spare-parts-runners",
+      "npc": "npc-row-unmoored-runner",
+      "count": 2,
+      "respawn_seconds": 60,
+      "condition": "always",
+      "region": {
+        "x": 71,
+        "y": 3,
+        "w": 12,
+        "h": 4
+      }
+    },
+    {
+      "id": "card-court-players",
+      "npc": "npc-row-card-player",
+      "count": 2,
+      "respawn_seconds": 60,
+      "condition": "always",
+      "region": {
+        "x": 49,
+        "y": 18,
+        "w": 7,
+        "h": 1
+      }
+    },
+    {
+      "id": "card-court-solenne",
+      "npc": "npc-row-solenne",
+      "count": 1,
+      "respawn_seconds": 60,
+      "condition": "always",
+      "region": {
+        "x": 59,
         "y": 20,
-        "w": 2,
+        "w": 1,
+        "h": 1
+      }
+    },
+    {
+      "id": "halo-doorstep-1",
+      "npc": "npc-row-halo-doorstep",
+      "count": 1,
+      "respawn_seconds": 60,
+      "condition": "always",
+      "region": {
+        "x": 85,
+        "y": 11,
+        "w": 1,
+        "h": 1
+      }
+    },
+    {
+      "id": "halo-doorstep-2",
+      "npc": "npc-row-halo-doorstep",
+      "count": 1,
+      "respawn_seconds": 60,
+      "condition": "always",
+      "region": {
+        "x": 87,
+        "y": 13,
+        "w": 1,
         "h": 1
       }
     },
     {
       "id": "sodium-regular",
       "npc": "npc-sodium-regular",
-      "count": 5,
+      "count": 3,
       "respawn_seconds": 60,
       "condition": "always",
       "region": {
-        "x": 3,
-        "y": 3,
-        "w": 92,
-        "h": 24
+        "x": 10,
+        "y": 9,
+        "w": 70,
+        "h": 8
       }
     },
     {
@@ -319,10 +467,10 @@
       "respawn_seconds": 60,
       "condition": "always",
       "region": {
-        "x": 55,
-        "y": 14,
-        "w": 40,
-        "h": 12
+        "x": 10,
+        "y": 9,
+        "w": 70,
+        "h": 8
       }
     }
   ],

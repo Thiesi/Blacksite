@@ -2737,6 +2737,210 @@
         "deutan": 7,
         "protan": 7
       }
+    },
+    "ground_sodium_door_blue": {
+      "truecolor": {
+        "default": "#1E2A44",
+        "deutan": "#1E2A44",
+        "protan": "#1E2A44"
+      },
+      "256": {
+        "default": 17,
+        "deutan": 17,
+        "protan": 17
+      },
+      "16": {
+        "default": 0,
+        "deutan": 0,
+        "protan": 0
+      }
+    },
+    "grain_sodium_door_blue": {
+      "truecolor": {
+        "default": "#2E4A7A",
+        "deutan": "#2E4A7A",
+        "protan": "#2E4A7A"
+      },
+      "256": {
+        "default": 24,
+        "deutan": 24,
+        "protan": 24
+      },
+      "16": {
+        "default": 4,
+        "deutan": 4,
+        "protan": 4
+      }
+    },
+    "ground_sodium_door_orange": {
+      "truecolor": {
+        "default": "#4A2A0E",
+        "deutan": "#4A2A0E",
+        "protan": "#4A2A0E"
+      },
+      "256": {
+        "default": 52,
+        "deutan": 52,
+        "protan": 52
+      },
+      "16": {
+        "default": 0,
+        "deutan": 0,
+        "protan": 0
+      }
+    },
+    "grain_sodium_door_orange": {
+      "truecolor": {
+        "default": "#7A4210",
+        "deutan": "#7A4210",
+        "protan": "#7A4210"
+      },
+      "256": {
+        "default": 94,
+        "deutan": 94,
+        "protan": 94
+      },
+      "16": {
+        "default": 3,
+        "deutan": 3,
+        "protan": 3
+      }
+    },
+    "ground_sodium_door_violet": {
+      "truecolor": {
+        "default": "#2E1F4A",
+        "deutan": "#2E1F4A",
+        "protan": "#2E1F4A"
+      },
+      "256": {
+        "default": 54,
+        "deutan": 54,
+        "protan": 54
+      },
+      "16": {
+        "default": 0,
+        "deutan": 0,
+        "protan": 0
+      }
+    },
+    "grain_sodium_door_violet": {
+      "truecolor": {
+        "default": "#4E3780",
+        "deutan": "#4E3780",
+        "protan": "#4E3780"
+      },
+      "256": {
+        "default": 61,
+        "deutan": 61,
+        "protan": 61
+      },
+      "16": {
+        "default": 5,
+        "deutan": 5,
+        "protan": 5
+      }
+    },
+    "ground_sodium_door_chalk": {
+      "truecolor": {
+        "default": "#2E2E2C",
+        "deutan": "#2E2E2C",
+        "protan": "#2E2E2C"
+      },
+      "256": {
+        "default": 236,
+        "deutan": 236,
+        "protan": 236
+      },
+      "16": {
+        "default": 0,
+        "deutan": 0,
+        "protan": 0
+      }
+    },
+    "grain_sodium_door_chalk": {
+      "truecolor": {
+        "default": "#6A6A66",
+        "deutan": "#6A6A66",
+        "protan": "#6A6A66"
+      },
+      "256": {
+        "default": 242,
+        "deutan": 242,
+        "protan": 242
+      },
+      "16": {
+        "default": 7,
+        "deutan": 7,
+        "protan": 7
+      }
+    },
+    "ground_sodium_door_green": {
+      "truecolor": {
+        "default": "#13321F",
+        "deutan": "#13321F",
+        "protan": "#13321F"
+      },
+      "256": {
+        "default": 235,
+        "deutan": 235,
+        "protan": 235
+      },
+      "16": {
+        "default": 0,
+        "deutan": 0,
+        "protan": 0
+      }
+    },
+    "grain_sodium_door_green": {
+      "truecolor": {
+        "default": "#1F5A34",
+        "deutan": "#1F5A34",
+        "protan": "#1F5A34"
+      },
+      "256": {
+        "default": 29,
+        "deutan": 29,
+        "protan": 29
+      },
+      "16": {
+        "default": 2,
+        "deutan": 2,
+        "protan": 2
+      }
+    },
+    "ground_sodium_alley": {
+      "truecolor": {
+        "default": "#1A1816",
+        "deutan": "#1A1816",
+        "protan": "#1A1816"
+      },
+      "256": {
+        "default": 234,
+        "deutan": 234,
+        "protan": 234
+      },
+      "16": {
+        "default": 0,
+        "deutan": 0,
+        "protan": 0
+      }
+    },
+    "grain_sodium_alley": {
+      "truecolor": {
+        "default": "#2C2722",
+        "deutan": "#2C2722",
+        "protan": "#2C2722"
+      },
+      "256": {
+        "default": 235,
+        "deutan": 235,
+        "protan": 235
+      },
+      "16": {
+        "default": 8,
+        "deutan": 8,
+        "protan": 8
+      }
     }
   }
 }

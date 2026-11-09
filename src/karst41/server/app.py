@@ -144,6 +144,8 @@ class Server:
             self._character_writes()
             self.core.audit = self._audit
             self.core.status_provider = self.status
+            from karst41.server import demo_doors  # Demo only: inert unless KARST41_DEMO is set.
+            demo_doors.install(self.core, self.logs.event)
             if self.stop_requested:
                 self.core.request_stop()
                 return

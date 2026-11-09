@@ -1,0 +1,69 @@
+{
+  "schema": 1,
+  "id": "row-kestrel-crew",
+  "name": "Kestrel crew, off shift",
+  "faction": "kestrel",
+  "title": "Long Shift regular",
+  "terminal": false,
+  "machine_mind": false,
+  "lines": [
+    {
+      "id": "member",
+      "text": "Shift's on the board, drinks are on the slate. Sit, you're blocking the door.",
+      "when": [
+        "member_of kestrel"
+      ],
+      "required": true
+    },
+    {
+      "id": "enemy",
+      "text": "You're Sable's problem tonight, not mine. Hands on the bar.",
+      "when": [
+        "enemy_of_me"
+      ],
+      "required": true
+    },
+    {
+      "id": "veteran",
+      "text": "You've got the look of somebody who's been shot at. Gate Nine or the Sink?",
+      "when": [
+        "grade_at_least 5"
+      ],
+      "required": true
+    },
+    {
+      "id": "greeting",
+      "text": "Long Shift's open every hour a tram runs. That's every hour.",
+      "when": [],
+      "required": true
+    }
+  ],
+  "offers": [],
+  "barks": [
+    {
+      "text": "Dispatcher held me at the Rim for nine minutes. No reason given. There's never a reason.",
+      "weight": 1,
+      "min_interval_seconds": 90
+    },
+    {
+      "text": "Ration count's off again. Off by the same amount as last week.",
+      "weight": 1,
+      "min_interval_seconds": 90
+    },
+    {
+      "text": "Halo? Keep walking till the street stops. Long way on foot. Should've put a tram in.",
+      "weight": 2,
+      "min_interval_seconds": 90
+    },
+    {
+      "text": "Double shift, then a bar. Then the next double.",
+      "weight": 1,
+      "min_interval_seconds": 90
+    },
+    {
+      "text": "Market closes, we open. Nobody's ever seen both of us awake.",
+      "weight": 1,
+      "min_interval_seconds": 90
+    }
+  ]
+}

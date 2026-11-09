@@ -1,0 +1,50 @@
+┌─SODIUM ROW─Sodium Row─CONTESTED─TRUCE─PvP G5+─────────────────────────────────────────────────────────────┬────────────00:00─────┐
+│                                                                                                           │─ TARGET ─────────────│
+│                                                                                                           │ none   Tab picks     │
+│                                                                                                           │─ NEARBY ─────────────│
+│                                                                                                           │ ☻ Sable enforcer ~   │
+│                                                                                                           │ ☻ Sodium regular ~   │
+│                                                                                                           │ ☻ Sodium regular ~   │
+│                                                                                          · ,    ·· ,      │ ☻ Sodium regular ~   │
+│                                                                                           ··    , ··      │ ☻ Card player ~      │
+│                                                                                              ,··          │ ☻ Card player ~      │
+│          ·,     ··,                                                                      ·,     ··,       │                      │
+│             ·· ,    ··                                                                      ·· ,    ·     │                      │
+│             , ··    ,                                                                       , ··    ,     │                      │
+│        UPSTAIRS∙·      24H LONG SHIFT·  + quarter tone     ∙ THE CLAUSE · SPA E PA TS    ,··              │                      │
+│     ··,    · ·· ·∙∙ ··,     ·∙ · ▒▒∙∙∙∙·∙·····,☻······, ∙      ∙     ·    ∙ ·· · ∙ ···,                   │                      │
+│    ,← NEON STAIR∙∙∙,    ·· ,·∙∙∙  ▒∙∙   ∙  ·    ·· ,       ·||||/ ||||/ ||||/ ||·∙ ∙ TIN HAL              │                      │
+│    ·    ··∙·∙ ··· ··    , ··  ·∙∙∙ ·∙∙··∙ ··    , ··      ··    , ··    ··  ···  ∙ · ∙  · ·               │                      │
+│      ,    ∙·  ·∙···  ,··     ,  ∙   ∙∙∙·  ☻  ,·@    ·    ·   ,··     ,··  ∙··  ∙ ··  ·∙··∙ ·∙             │                      │
+│        ·· ·  ∙  ∙∙,     ··,     ··      ☻·,     ··,· ·∙·∙ ··    ··,     ··,   · ··,    ·∙∙ ·              │                      │
+│     ·· TIN HALO →   ·· ,    ·· ,    ·· ,    ·· ,  ·  ∙·  ·∙∙··∙,    ·· ,                                  │                      │
+│     , ··     ▒▒·    , ··    , ··    , ··    , ··   ·▒▒·☻· · · ··    , ▒▒                                  │                      │
+│    ·     ,··  ▒▒ ,··     ,··∙    ,·· ····,§···   ,·· ▒▒·· ·∙·    ,··   ▒ ,··                              │                      │
+│                     , , ··∙ ··∙·∙             ,     ··, ·   ··,                                           │                      │
+│                        ∙·∙·∙ ···∙  ,            ·· ,   ☻☻· ,    ·,                                        │                      │
+│                    ·  ··∙· ∙∙∙ ∙∙· ·            ,▒▒·  ☼ , ▒▒                                              │                      │
+│                       ·  · · ∙·∙·∙            ··     ,··     ,·                                           │                      │
+│                       STAGE ∙                 ····,·······,     ,·                                        │                      │
+│                     ·                                                                                     │                      │
+│                                                                                                           │                      │
+│           ·,      ·,      ·,      ·,      ·,      ·,      ·,      ·,      ·,      ·,      ·,              │                      │
+│             ,·      ,·      ,·      ,·      ,·      ,·      ,·      ,·      ,·      ,·                    │                      │
+│                                                                                                           │                      │
+│                                                                                                           │──────────────────────│
+│                                                                                                           │ Verifier界       G1  │
+│                                                                                                           │ HP  ██████████ 130   │
+│                                                                                                           │ STA ██████████ 70    │
+│                                                                                                           │ SHK ░░░░░░░░░░ 0     │
+│                                                                                                           │ 200 ch   lease 0/90  │
+│                                                                                                           │ discharge 0/1500     │
+├───────────────────────────────────────────────────────────────────────────────────────────────────────────┴──────────────────────┤
+│» You wake on a gurney under a number. White light, warm plastic, a floor drain. Past the cards, a corridor. Past the corridor, a │
+│  terminal.                                                                                                                       │
+│" Kestrel crew: Dispatcher held me at the Rim for nine minutes. No reason given. There's never a reason.                          │
+│" Choir listener: There. Under the bass. Did you hear it?                                                                         │
+│" Clause regular: Somebody's tally stopped at sixty-one. Nobody rubs it out.                                                      │
+│" Card player: Nobody draws on the Row. Somebody always thinks they're the exception.                                             │
+│" Mira Solenne: Three in a day and you're mine for a week. Business model, sweetheart.                                            │
+│                                                                                                                                  │
+│The corridor teaches targeting. Tab selects; F fires; B skips training.  Ctrl-X leaves                                            │
+└────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────── 
