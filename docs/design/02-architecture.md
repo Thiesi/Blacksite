@@ -1,4 +1,4 @@
-# Blacksite — Technical Architecture
+# Karst 41 — Technical Architecture
 
 How the game runs as a native NetBBS door: one long-lived, authoritative
 game service per node and one thin door client per caller, joined by a
@@ -15,7 +15,7 @@ First verified on 2026-10-22 against released NetBBS v7.33.0, source commit
 `f354e898dc2664b13c35a4e2cbbbbfa80d84776d`: its door guide, Developer
 Handbook and `src/netbbs/doors/{runtime,profiles,services,outbound,events}.py`.
 [Platform catch-up](../plan/01-netbbs-platform.md) links the exact sources,
-release history and Blacksite implementation gaps reported in issue #56.
+release history and Karst 41 implementation gaps reported in issue #56.
 The S31 supported installation floor is **NetBBS >= 7.45.0** (raised
 from 7.31.0 by the owner on 2026-10-30).
 
@@ -25,7 +25,7 @@ every change to those files and guides since v7.31.0. `door_api` is
 still 5. Profiles, services, the launcher and account validation are
 unchanged. The changes inside API 5 are additive door info fields, the
 optional `season` event type, a host Enter guard at launch and quarter
-block substitution. Blacksite reads `charset` (§8.4) and draws no
+block substitution. Karst 41 reads `charset` (§8.4) and draws no
 quarter blocks. It does not use `datetime_format`: game time is shown in
 the game's own terms. `season` matters only to the deferred opt-in
 publication adapter (§8.3). The Enter guard only drops an Enter typed
@@ -44,7 +44,7 @@ it and the fields below are always present on a supported node.
   remains shared by the UID. Caller `stop_grace_seconds` is 1-60, default
   5, distinct from the companion service grace. Reaping is bounded even
   if a descendant holds output open: grace plus about four seconds.
-- Blacksite uses native **stdio**, `encoding: utf-8`. Since v7.14.0 NetBBS
+- Karst 41 uses native **stdio**, `encoding: utf-8`. Since v7.14.0 NetBBS
   transcodes output for CP437 callers; UTF-8 inside the subprocess does
   not mean every terminal uses UTF-8. PTY `OPOST|ONLCR` is irrelevant to
   this profile. ANSI colour/cursor addressing remains the game floor.
@@ -65,7 +65,7 @@ it and the fields below are always present on a supported node.
   `DOOR_BLACKSITE_SESSION_LIMIT`; old `BLACKSITE_*` aliases are standalone
   conveniences, not valid custom profile keys.
 - The native subprocess receives a minimal environment, not its parent's
-  `PYTHONPATH`. Install Blacksite in the exact interpreter named by the
+  `PYTHONPATH`. Install Karst 41 in the exact interpreter named by the
   profile; changing a development server's import path never updates a
   separately installed client. S22's native harness verifies the isolated
   interpreter's version and Python source digest before accepting proof.
@@ -77,9 +77,9 @@ it and the fields below are always present on a supported node.
   to enter it. Optional outbound board/chat/event/standings file drops
   exist, but require the door's minimum play level to be zero (§8.3).
 
-Blacksite still consists of two programs and a directory. These are
+Karst 41 still consists of two programs and a directory. These are
 verified platform facts and planned S28-S31 integration contracts, not
-claims that the remaining Blacksite work is already implemented.
+claims that the remaining Karst 41 work is already implemented.
 
 ## 2. Components
 
@@ -108,7 +108,7 @@ NetBBS node process
 ### 2.2 `blacksite.door` (the caller client)
 
 - One process per caller, launched by NetBBS as a native stdio door:
-  executable = the interpreter of the venv Blacksite is installed in,
+  executable = the interpreter of the venv Karst 41 is installed in,
   argv = `-m blacksite.door`, profile environment
   `DOOR_BLACKSITE_INSTALL_DIR` (standalone: `BLACKSITE_INSTALL_DIR`).
 - Reads `NETBBS_DOOR_INFO`, connects to the socket, authenticates (§4),
@@ -798,7 +798,7 @@ Detailed in `03-terminal-ui.md`. Architectural points:
 ## 8. NetBBS integration
 
 Local acceptance must use an installed current client, as deployment does.
-Run the profile interpreter with `-I` to check its installed Blacksite
+Run the profile interpreter with `-I` to check its installed Karst 41
 version before launching a node. The native harness writes
 `native-client.json` and refuses a version or source mismatch. Retain that
 receipt with the terminal transcripts; a source server paired with an old
@@ -864,7 +864,7 @@ event/standings/receipt requirements for that future optional work.
 
 ### 8.4 Platform API and terminal admission
 
-`door_api` is a single integer, independent of Blacksite's protocol
+`door_api` is a single integer, independent of Karst 41's protocol
 major. Historical missing fields mean legacy API 2; API 3 shipped with
 v7.3.0, 4 with v7.12.0, 5 with v7.31.0. S31 supports API 5 for the
 certified release, clearly refusing older/missing, malformed (including
@@ -894,7 +894,7 @@ calls the door info malformed. A present value other than `utf-8`,
 `door_api`. Check in that order: `door_api`, then a missing `charset`
 (the floor message), then its value, then the `ascii` return, so a host
 below the floor always gets the floor message.
-Blacksite draws no quarter blocks; any future art that does must follow
+Karst 41 draws no quarter blocks; any future art that does must follow
 `quadrants`, or draw half blocks itself.
 Do not force a preference change or add an ASCII tier. True permits the
 CP437-compatible glyph set, and the modern tier when the first-play check

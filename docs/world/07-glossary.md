@@ -1,4 +1,4 @@
-# Blacksite — Glossary
+# Karst 41 — Glossary
 
 Every proper noun and term of art in `00-bible.md` and
 `../design/00-game-design.md`, one or two lines each, with its source.
@@ -70,7 +70,7 @@ body. (bible §5.1, design §6.3)
 opens when the Depth meter fills. (design §13)
 
 **Blacksite, the** — Site Zero's popular and now official name: the
-sealed installation under the Spire. Also the game. (bible §3.3, §4.6)
+sealed installation under the Spire. (bible §3.3, §4.6)
 
 **Block Street** — the Terraces' main street. (gazetteer)
 
@@ -374,6 +374,9 @@ through a rig. (bible §5.2)
 
 **Karst** — The city: four million people on a limestone plateau, sealed
 for forty-one years. (bible §1)
+
+**Karst 41** — The game's title: the city, and the year of the Exhale.
+(bible §3.5)
 
 **Karst Civic Authority** — The nominal government; its police are the
 Wardens. (bible §7)

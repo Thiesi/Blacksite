@@ -1,4 +1,4 @@
-# Blacksite — Catalog
+# Karst 41 — Catalog
 
 Every item class in the game with initial equipment schedules. Canon for what things *are* is
 `00-bible.md` §9; the rules these numbers plug into are

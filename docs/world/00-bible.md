@@ -1,14 +1,14 @@
-# BLACKSITE — World Bible
+# KARST 41 — World Bible
 
 *The city was built to keep something in. Nobody remembers what.*
 
-This is the canonical description of the Blacksite setting. Every other
+This is the canonical description of the Karst 41 setting. Every other
 document in `docs/world/` expands a section of this one and must not
 contradict it. Where an expansion document and this bible disagree, this
 bible wins and the expansion is wrong. Change canon here first, then
 propagate.
 
-Blacksite is an original setting. Its tone owes a debt to *Neocron* (a
+Karst 41 is an original setting. Its tone owes a debt to *Neocron* (a
 domed city, factions, implants, a wasteland outside the wall) and to
 *Neuromancer* (cyberspace, ICE, a machine mind with two faces). None of
 their names, places, characters, or trademarks appear here, and none may be
@@ -149,18 +149,22 @@ The Civic Authority, glad of anything that weakened Sable, licensed the
 houses to the workers' own compact instead of to their landlords. The
 Lamp Compact has owned Warmwater since.
 
-### 3.5 Now (Year 41)
+### 3.5 The Exhale (Year 41)
 
 The Wake program is Sablier's answer to a labour shortage: decant clones
 from the old specialist templates, wipe them, and lease them to whoever
 pays. Wakes receive personhood after ninety days, or earlier through a
 Civic-certified discharge earned by completed work. Many disappear from
 the lease rolls before either milestone; a missing entry is not proof of
-a final death. Players are Wakes. The Blacksite has begun, for the first time in
-forty years, to exhale: warm air and old data rising up the sealed shafts
-into the Undercity, and the Lattice beneath the sectors is lighting up
-level by level, as if something down there were turning the lights on for
-visitors.
+a final death. Players are Wakes.
+
+In Year 41 the Blacksite began, for the first time in forty years, to
+exhale: warm air and old data rising up the sealed shafts into the
+Undercity, and the Lattice beneath the sectors lighting up level by level,
+as if something down there were turning the lights on for visitors. Every
+season of play since has started from that year. Karst keeps real time: a
+day in the city is a day for the caller, and four seasons make about a
+year. Year 41 stays the year of the Exhale whatever the calendar now says.
 
 ### 3.6 What keeps four million people alive
 
@@ -525,7 +529,8 @@ artifacts from the outer Scour, keys from the Undercity). When it fills,
 the next Blacksite level opens for expeditions of one to five residents.
 Crews work in parallel; lone residents prepare and switch layers in
 sequence. Both reach the same choices. The season's outcome is written
-into the **Chronicle**, an in-game history every player can read.
+into the **Chronicle**, an in-game history every player can read. The
+Chronicle dates each settlement by Karst's calendar.
 
 Every participating resident records their own decision. A published
 settlement rule combines those decisions once; repeating a raid cannot
@@ -562,7 +567,7 @@ faction standings are tallied per season for the leaderboards.
 
 ## 14. What the player should have to decide
 
-Blacksite's recurring question is who gets the next working piece of a
+Karst 41's recurring question is who gets the next working piece of a
 city that cannot replace itself. The scale stays human: a cold-store
 compressor, a flooded stair, an escort who can cover only one load.
 Choices expose a faction's useful work and the exclusion that pays for

@@ -1,4 +1,4 @@
-# Could Blacksite have a different visual client? An audit (proposal input)
+# Could Karst 41 have a different visual client? An audit (proposal input)
 
 **Status:** input for a later owner decision. Nothing here is approved or
 planned, apart from S41. Written by the technical lead, 2026-11-07, at the
@@ -12,18 +12,18 @@ Everything else is one careful reading. Code cited here will drift.
 ## Why this exists
 
 After the first Sodium Row playtest the owner said: "I wanna see it all!"
-The owner's concern is broader than one view. Blacksite competes for
+The owner's concern is broader than one view. Karst 41 competes for
 people's time with games that look far better, and people judge a game
 partly by how it looks. The owner might one day want a different visual
 subsystem, a proprietary client or a stand-alone version, and doesn't yet
 know. So the question was whether the architecture allows that without
-throwing away what Blacksite is and how it feels.
+throwing away what Karst 41 is and how it feels.
 
 ## The answer
 
 **Yes.** The door holds no game rules. The server sends no terminal colour
-codes, and its menus are structured data. What makes Blacksite feel like
-Blacksite lives on the server: the rules, factions, the Row's truce, the
+codes, and its menus are structured data. What makes Karst 41 feel like
+Karst 41 lives on the server: the rules, factions, the Row's truce, the
 persistent world and the short session.
 
 The architecture isn't the main obstacle. **Art production and leaving

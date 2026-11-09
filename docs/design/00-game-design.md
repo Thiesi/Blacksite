@@ -1,4 +1,4 @@
-# Blacksite — Game Design
+# Karst 41 — Game Design
 
 This document defines the rules of the game: the systems, their numbers,
 and how they connect. It is written for the people who will build the

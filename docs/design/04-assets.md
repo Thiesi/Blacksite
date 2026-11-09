@@ -1,4 +1,4 @@
-# Blacksite — Asset Manifest
+# Karst 41 — Asset Manifest
 
 Everything that must exist for the game to ship, grouped by kind, with
 where it is authored, who is expected to make it, and which slice

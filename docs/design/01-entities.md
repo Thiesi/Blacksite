@@ -1,4 +1,4 @@
-# Blacksite — Entity Model
+# Karst 41 — Entity Model
 
 The technical mirror of `00-game-design.md`. Every persistent or simulated
 thing in the game is one of the entities below. The server owns all of
