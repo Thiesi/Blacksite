@@ -8,7 +8,7 @@ import pytest
 
 from dataclasses import replace
 
-from karst41.content.loader import load_content
+from scripts.demo_sodium.content import load_demo_content as load_content
 from karst41.server.npcs.templates import make_actor
 from tests.character_helpers import place
 from tests.demo.test_truce_standin import boot
