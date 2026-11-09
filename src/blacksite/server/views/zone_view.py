@@ -3,6 +3,7 @@
 from dataclasses import dataclass, field
 from copy import deepcopy
 from typing import Any
+from collections.abc import Callable
 
 from blacksite.layout import compute as screen_layout
 from blacksite.content.loader import ContentTree
@@ -65,7 +66,8 @@ def camera(actor: Actor, zone: ZoneInstance, width: int, height: int,
 
 def build(actor: Actor, zone: ZoneInstance, perception: Perception, content: ContentTree,
           width: int, height: int, clock: str, night: bool, tick: int,
-          scouted: set[tuple[int,int]] | None = None, scouted_actors: set[str] | None = None) -> dict[str, Any]:
+          scouted: set[tuple[int,int]] | None = None, scouted_actors: set[str] | None = None,
+          cover_relation: Callable[[Actor, Actor, bool], str] | None = None) -> dict[str, Any]:
     radius = sight_radius(actor, zone, night)
     body_visible = visible_tiles(actor, zone, radius)
     visible = body_visible | (scouted or set())
@@ -133,9 +135,18 @@ def build(actor: Actor, zone: ZoneInstance, perception: Perception, content: Con
                 "escape": list(layer.layout.alternate_routes)} for layer in zone.layers.values()
                if any(tile in visible for tile in layer.layout.warning_tiles)]
     escapes = [ex.id for ex in zone.template.meta.exits if not ex.hidden and ex.tile in visible]
+    def nearby_relation(other: Actor) -> str:
+        if presentation.covered(other, actor, content):
+            return '!' if cover_relation and cover_relation(actor, other, True) == 'hostile' else '~'
+        if other.marked or other.target == actor.id or other.behaviour.get('training'):
+            return '!'
+        if zone.template.meta.truce and other.kind != 'player':
+            return '~'
+        return {'H': '!', 'N': '~', 'A': '+'}[relation(content, actor.faction, other.faction)]
+
     nearby = [{"id": entry["id"], "name": presentation.name(zone.actors[entry["id"]], actor, content), "role": entry["role"],
                "class": entry["class"], "jacked": entry["jacked"],
-               "relation": "~" if presentation.covered(zone.actors[entry["id"]], actor, content) else "!" if zone.actors[entry["id"]].marked or zone.actors[entry["id"]].target == actor.id or zone.actors[entry["id"]].behaviour.get("training") else "~" if zone.template.meta.truce and zone.actors[entry["id"]].kind != "player" else {"H":"!","N":"~","A":"+"}[relation(content, actor.faction, zone.actors[entry["id"]].faction)]}
+               "relation": nearby_relation(zone.actors[entry['id']])}
               for entry in actors if entry["id"] != actor.id]
     nearby.sort(key=lambda entry: (entry["relation"] != "!", zone.actors[entry["id"]].kind != "player",
         (zone.actors[entry["id"]].x-actor.x)**2+(zone.actors[entry["id"]].y-actor.y)**2, entry["id"]))

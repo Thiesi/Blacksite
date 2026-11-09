@@ -1,0 +1,24 @@
+┌─Sodium Row  CONTESTED─TRUCE─PvP G5+───────────────────────────────────03:03──┐
+│███████████████                                        │TARGET                │
+│█·················                                     │Sodium regular        │
+│█·»···············                                     │HP ######## 100%      │
+│█··················                                    │Range 1 Cover 0       │
+│█··················                                    │Civilian              │
+│█····@☻············                                    │hostile               │
+│█·················                                     │WEAPON                │
+│█·······$·········                                     │                      │
+│█·················                                     │S42truecolor界80      │
+│█·················                                     │BBS: S10S42truecolor80│
+│█·················                                     │HP ######## 130/130   │
+│█········▒▒▒▒····                                      │STA ######## 70/70    │
+│█········▒▒▒▒···                                       │Chits 200  Grade 1    │
+│█···············                                       │Lease days 0/90       │
+│█··············                                        │Discharge XP 75/1500  │
+│█·············                                         │Shock 0               │
+│ ···········                                           │Ctrl-X leaves         │
+├──────────────────────────────────────────────────────────────────────────────┤
+│[combat] You raise your weapon. Fire again after two seconds; the target can  │
+│  move to safety.                                                             │
+│[combat] Miss: Sodium regular.                                                │
+│E talk to Sodium regular  ? help  Weapon 0.6s  Tab target  F fire  X weapon   │
+└────────────────────────────────────────────────────────────────────────────── 

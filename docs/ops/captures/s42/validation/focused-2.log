@@ -1,0 +1,231 @@
+.FF.....F.................................F............................. [ 65%]
+..............................FFFF....                                   [100%]
+================================== FAILURES ===================================
+_ test_ui_4_talker_movement_is_one_press_and_back_wins[arrows-pageup-delta1] __
+
+content = ContentTree(root=WindowsPath('C:/Users/Thiesi/Local/Dev/Blacksite/.worktrees/s42-talker-reach/src/blacksite/content'),... 1], "kind": "light"}\n  ]\n}\n', 'content/rooms/apartment.map': '......\n......\n......\n......\n'}, load_problems=[])
+keymap = 'arrows', key = 'pageup', delta = (1, -1)
+
+    @pytest.mark.parametrize('keymap,key,delta', [
+        ('arrows', 'down', (0, 1)), ('arrows', 'pageup', (1, -1)),
+        ('arrows', 'pagedown', (1, 1)), ('arrows', 'home', (-1, -1)),
+        ('arrows', 'end', (-1, 1)), ('vi', 'j', (0, 1)),
+        ('vi', 'b', (0, 0)), ('vi', 'down', (0, 0)),
+    ])
+    def test_ui_4_talker_movement_is_one_press_and_back_wins(content, keymap, key, delta):
+        game, caller, _, _ = street(content)
+        caller.session.keymap_id = keymap
+        open_talker(game, caller)
+        assert caller.session.id in game.core.dialogue.menus
+        source = body(game, caller)
+        before = source.position
+        press(game, caller, key)
+>       assert source.position == (before[0]+delta[0], before[1]+delta[1])
+E       assert (25, 3) == (26, 2)
+E         
+E         At index 0 diff: 25 != 26
+E         Use -v to get more diff
+
+tests\test_s42_dialogue.py:44: AssertionError
+_ test_ui_4_talker_movement_is_one_press_and_back_wins[arrows-pagedown-delta2] _
+
+content = ContentTree(root=WindowsPath('C:/Users/Thiesi/Local/Dev/Blacksite/.worktrees/s42-talker-reach/src/blacksite/content'),... 1], "kind": "light"}\n  ]\n}\n', 'content/rooms/apartment.map': '......\n......\n......\n......\n'}, load_problems=[])
+keymap = 'arrows', key = 'pagedown', delta = (1, 1)
+
+    @pytest.mark.parametrize('keymap,key,delta', [
+        ('arrows', 'down', (0, 1)), ('arrows', 'pageup', (1, -1)),
+        ('arrows', 'pagedown', (1, 1)), ('arrows', 'home', (-1, -1)),
+        ('arrows', 'end', (-1, 1)), ('vi', 'j', (0, 1)),
+        ('vi', 'b', (0, 0)), ('vi', 'down', (0, 0)),
+    ])
+    def test_ui_4_talker_movement_is_one_press_and_back_wins(content, keymap, key, delta):
+        game, caller, _, _ = street(content)
+        caller.session.keymap_id = keymap
+        open_talker(game, caller)
+        assert caller.session.id in game.core.dialogue.menus
+        source = body(game, caller)
+        before = source.position
+        press(game, caller, key)
+>       assert source.position == (before[0]+delta[0], before[1]+delta[1])
+E       assert (25, 3) == (26, 4)
+E         
+E         At index 0 diff: 25 != 26
+E         Use -v to get more diff
+
+tests\test_s42_dialogue.py:44: AssertionError
+______________________ test_ui_4_offer_beats_vi_movement ______________________
+
+content = ContentTree(root=WindowsPath('C:/Users/Thiesi/Local/Dev/Blacksite/.worktrees/s42-talker-reach/src/blacksite/content'),... 1], "kind": "light"}\n  ]\n}\n', 'content/rooms/apartment.map': '......\n......\n......\n......\n'}, load_problems=[])
+
+    def test_ui_4_offer_beats_vi_movement(content):
+        game, caller, _, _ = street(content)
+        caller.session.keymap_id = 'vi'
+        node = game.core.characters.content.dialogue['vesper']
+        game.core.characters.content.dialogue[node.id] = replace(node, offers=(replace(node.offers[0], hotkey='j'),))
+        open_talker(game, caller)
+        before = body(game, caller).position
+        press(game, caller, 'j')
+        assert body(game, caller).position == before
+>       assert caller.session.id not in game.core.dialogue.menus
+E       AssertionError: assert 'test-origin:session:1' not in {'test-origin:session:1': TalkerMenu(contact=Contact(talker='vesper', target='talker', zone='sodium-row', tile=(26, 3), lattice=False), line='Show me the card.', opened=15, caller_zone='sodium-row', caller_tile=(25, 3), hit_serial=0)}
+E        +  where 'test-origin:session:1' = Session(id='test-origin:session:1', role='caller', door_info={'user_id': 1, 'handle': 'Wide\u754c', 'node_name': 'test'}, c...2026-01-01T00:00:00+00:00:2'}], maxlen=500), log_token='test-origin:session:1:2026-01-01T00:00:00+00:00', log_serial=2).id
+E        +    where Session(id='test-origin:session:1', role='caller', door_info={'user_id': 1, 'handle': 'Wide\u754c', 'node_name': 'test'}, c...2026-01-01T00:00:00+00:00:2'}], maxlen=500), log_token='test-origin:session:1:2026-01-01T00:00:00+00:00', log_serial=2) = FakeClient(core=<blacksite.server.core.Core object at 0x000001C8693B3B90>, session=Session(id='test-origin:session:1',...00:00+00:00:2'}], maxlen=500), log_token='test-origin:session:1:2026-01-01T00:00:00+00:00', log_serial=2), rejected=[]).session
+E        +  and   {'test-origin:session:1': TalkerMenu(contact=Contact(talker='vesper', target='talker', zone='sodium-row', tile=(26, 3), lattice=False), line='Show me the card.', opened=15, caller_zone='sodium-row', caller_tile=(25, 3), hit_serial=0)} = <blacksite.server.dialogue_runtime.Dialogue object at 0x000001C8696266F0>.menus
+E        +    where <blacksite.server.dialogue_runtime.Dialogue object at 0x000001C8696266F0> = <blacksite.server.core.Core object at 0x000001C8693B3B90>.dialogue
+E        +      where <blacksite.server.core.Core object at 0x000001C8693B3B90> = <tests.harness.HeadlessServer object at 0x000001C8693EDF10>.core
+
+tests\test_s42_dialogue.py:57: AssertionError
+__ test_game_5_5_truce_suppresses_explicit_hostility_and_retains_warden_heat __
+
+row = (<tests.harness.HeadlessServer object at 0x000001C868EFC470>, FakeClient(core=<blacksite.server.core.Core object at 0x...:00:1'}], maxlen=500), log_token='test-origin:session:2:2026-01-01T00:00:01.100000+00:00', log_serial=1), rejected=[]))
+
+    def test_game_5_5_truce_suppresses_explicit_hostility_and_retains_warden_heat(row):
+        game, a, _ = row
+        keeper = guard(game)
+        content = game.core.loop.content
+        template = content.npcs["npc-sable-enforcer"]
+        content.npcs[template.id] = replace(template, behaviours=(Behaviour("guard", {"hostile_all": True}),))
+        assert not game.core.npcs.hostile(keeper, body(game, a))
+        warden = npc(game, "npc-plainclothes-warden", "warden", (29, 3))
+>       patrol = npc(game, 'npc-warden-response', 'real-warden', (30, 3))
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests\npcs\test_truce.py:63: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+tests\npcs\test_truce.py:34: in npc
+    game.core.world.enter(actor, "sodium-row", tile)
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+self = <blacksite.server.world.registry.World object at 0x000001C8693E4590>
+actor = Actor(id='real-warden', name='Warden responder', handle='', kind='npc', zone=None, x=0, y=0, facing='down', health=90,... 'home': (30, 3)}, owner=None, last_sprint_tick=-1, sight_key=None, visible=set(), overweight=False, revealed_to=set())
+zone_id = 'sodium-row', tile = (30, 3)
+
+    def enter(self, actor: Actor, zone_id: str, tile: Tile) -> None:
+        if actor.id in self.actors and self.actors[actor.id] is not actor:
+            raise ValueError("actor id is already owned by another body")
+        zone = self.zones[zone_id]
+        if not zone.can_enter(actor, tile) or any(a.id != actor.id and a.position == tile
+                and not a.behaviour.get('training') and mission_pair(actor, a) for a in zone.actors.values()):
+>           raise ValueError("entry tile is blocked")
+E           ValueError: entry tile is blocked
+
+src\blacksite\server\world\registry.py:58: ValueError
+____ test_ui_4_physical_talker_keys_use_welcome_keymap[arrows-pageup-key] _____
+
+content = ContentTree(root=WindowsPath('C:/Users/Thiesi/Local/Dev/Blacksite/.worktrees/s42-talker-reach/src/blacksite/content'),... 1], "kind": "light"}\n  ]\n}\n', 'content/rooms/apartment.map': '......\n......\n......\n......\n'}, load_problems=[])
+info = DoorInfo(path=WindowsPath('C:/Users/Thiesi/Local/Dev/Blacksite/.worktrees/s42-talker-reach/.test-tmp/pytest/test_ui_4_...raw={'user_id': 1, 'handle': 'Wide\u754c', 'node_name': 'test'}, width=80, height=24, color_depth='256', session_limit=3600)
+keymap = 'arrows', key = 'pageup', expected = 'key'
+
+    @pytest.mark.parametrize('keymap,key,expected', [
+        ('arrows', 'up', 'key'), ('arrows', 'home', 'key'),
+        ('arrows', 'end', 'key'), ('arrows', 'pageup', 'key'),
+        ('arrows', 'pagedown', 'key'), ('vi', 'h', 'key'),
+        ('vi', 'down', None), ('vi', 'pageup', None),
+        ('vi', 'j', 'menu_select'), ('vi', 'b', 'menu_close'),
+    ])
+    def test_ui_4_physical_talker_keys_use_welcome_keymap(content, info, keymap, key, expected):
+        display = Display(info)
+        display.receive(Frame('welcome', {'keymap': asdict(content.keymaps), 'settings': {'keymap': keymap}}), 0)
+        display.receive(Frame('view', {'rev': 1, 'kind': 'menu', 'body': {
+            'kind': 'talker', 'walk_away': True, 'title': 'Person', 'rows': [],
+            'actions': [{'key': 'j', 'label': 'Job'}, {'key': 'b', 'label': 'Back'}]}}), 0)
+        frames = display.key(key, 1)
+        if expected is None:
+            assert not frames
+        elif expected == 'key':
+>           assert len(frames) == 1 and frames[0].type == 'key' and frames[0].data['k'] == key
+E           assert (0 == 1)
+E            +  where 0 = len([])
+
+tests\door\test_dialogue_render.py:58: AssertionError
+___ test_ui_4_physical_talker_keys_use_welcome_keymap[arrows-pagedown-key] ____
+
+content = ContentTree(root=WindowsPath('C:/Users/Thiesi/Local/Dev/Blacksite/.worktrees/s42-talker-reach/src/blacksite/content'),... 1], "kind": "light"}\n  ]\n}\n', 'content/rooms/apartment.map': '......\n......\n......\n......\n'}, load_problems=[])
+info = DoorInfo(path=WindowsPath('C:/Users/Thiesi/Local/Dev/Blacksite/.worktrees/s42-talker-reach/.test-tmp/pytest/test_ui_4_...raw={'user_id': 1, 'handle': 'Wide\u754c', 'node_name': 'test'}, width=80, height=24, color_depth='256', session_limit=3600)
+keymap = 'arrows', key = 'pagedown', expected = 'key'
+
+    @pytest.mark.parametrize('keymap,key,expected', [
+        ('arrows', 'up', 'key'), ('arrows', 'home', 'key'),
+        ('arrows', 'end', 'key'), ('arrows', 'pageup', 'key'),
+        ('arrows', 'pagedown', 'key'), ('vi', 'h', 'key'),
+        ('vi', 'down', None), ('vi', 'pageup', None),
+        ('vi', 'j', 'menu_select'), ('vi', 'b', 'menu_close'),
+    ])
+    def test_ui_4_physical_talker_keys_use_welcome_keymap(content, info, keymap, key, expected):
+        display = Display(info)
+        display.receive(Frame('welcome', {'keymap': asdict(content.keymaps), 'settings': {'keymap': keymap}}), 0)
+        display.receive(Frame('view', {'rev': 1, 'kind': 'menu', 'body': {
+            'kind': 'talker', 'walk_away': True, 'title': 'Person', 'rows': [],
+            'actions': [{'key': 'j', 'label': 'Job'}, {'key': 'b', 'label': 'Back'}]}}), 0)
+        frames = display.key(key, 1)
+        if expected is None:
+            assert not frames
+        elif expected == 'key':
+>           assert len(frames) == 1 and frames[0].type == 'key' and frames[0].data['k'] == key
+E           assert (0 == 1)
+E            +  where 0 = len([])
+
+tests\door\test_dialogue_render.py:58: AssertionError
+_________ test_ui_4_physical_talker_keys_use_welcome_keymap[vi-h-key] _________
+
+content = ContentTree(root=WindowsPath('C:/Users/Thiesi/Local/Dev/Blacksite/.worktrees/s42-talker-reach/src/blacksite/content'),... 1], "kind": "light"}\n  ]\n}\n', 'content/rooms/apartment.map': '......\n......\n......\n......\n'}, load_problems=[])
+info = DoorInfo(path=WindowsPath('C:/Users/Thiesi/Local/Dev/Blacksite/.worktrees/s42-talker-reach/.test-tmp/pytest/test_ui_4_...raw={'user_id': 1, 'handle': 'Wide\u754c', 'node_name': 'test'}, width=80, height=24, color_depth='256', session_limit=3600)
+keymap = 'vi', key = 'h', expected = 'key'
+
+    @pytest.mark.parametrize('keymap,key,expected', [
+        ('arrows', 'up', 'key'), ('arrows', 'home', 'key'),
+        ('arrows', 'end', 'key'), ('arrows', 'pageup', 'key'),
+        ('arrows', 'pagedown', 'key'), ('vi', 'h', 'key'),
+        ('vi', 'down', None), ('vi', 'pageup', None),
+        ('vi', 'j', 'menu_select'), ('vi', 'b', 'menu_close'),
+    ])
+    def test_ui_4_physical_talker_keys_use_welcome_keymap(content, info, keymap, key, expected):
+        display = Display(info)
+        display.receive(Frame('welcome', {'keymap': asdict(content.keymaps), 'settings': {'keymap': keymap}}), 0)
+        display.receive(Frame('view', {'rev': 1, 'kind': 'menu', 'body': {
+            'kind': 'talker', 'walk_away': True, 'title': 'Person', 'rows': [],
+            'actions': [{'key': 'j', 'label': 'Job'}, {'key': 'b', 'label': 'Back'}]}}), 0)
+        frames = display.key(key, 1)
+        if expected is None:
+            assert not frames
+        elif expected == 'key':
+>           assert len(frames) == 1 and frames[0].type == 'key' and frames[0].data['k'] == key
+E           assert (0 == 1)
+E            +  where 0 = len([])
+
+tests\door\test_dialogue_render.py:58: AssertionError
+_______ test_ui_4_physical_talker_keys_use_welcome_keymap[vi-down-None] _______
+
+content = ContentTree(root=WindowsPath('C:/Users/Thiesi/Local/Dev/Blacksite/.worktrees/s42-talker-reach/src/blacksite/content'),... 1], "kind": "light"}\n  ]\n}\n', 'content/rooms/apartment.map': '......\n......\n......\n......\n'}, load_problems=[])
+info = DoorInfo(path=WindowsPath('C:/Users/Thiesi/Local/Dev/Blacksite/.worktrees/s42-talker-reach/.test-tmp/pytest/test_ui_4_...raw={'user_id': 1, 'handle': 'Wide\u754c', 'node_name': 'test'}, width=80, height=24, color_depth='256', session_limit=3600)
+keymap = 'vi', key = 'down', expected = None
+
+    @pytest.mark.parametrize('keymap,key,expected', [
+        ('arrows', 'up', 'key'), ('arrows', 'home', 'key'),
+        ('arrows', 'end', 'key'), ('arrows', 'pageup', 'key'),
+        ('arrows', 'pagedown', 'key'), ('vi', 'h', 'key'),
+        ('vi', 'down', None), ('vi', 'pageup', None),
+        ('vi', 'j', 'menu_select'), ('vi', 'b', 'menu_close'),
+    ])
+    def test_ui_4_physical_talker_keys_use_welcome_keymap(content, info, keymap, key, expected):
+        display = Display(info)
+        display.receive(Frame('welcome', {'keymap': asdict(content.keymaps), 'settings': {'keymap': keymap}}), 0)
+        display.receive(Frame('view', {'rev': 1, 'kind': 'menu', 'body': {
+            'kind': 'talker', 'walk_away': True, 'title': 'Person', 'rows': [],
+            'actions': [{'key': 'j', 'label': 'Job'}, {'key': 'b', 'label': 'Back'}]}}), 0)
+        frames = display.key(key, 1)
+        if expected is None:
+>           assert not frames
+E           AssertionError: assert not [Frame(type='key', data={'k': 'down', 't': 1000})]
+
+tests\door\test_dialogue_render.py:56: AssertionError
+=========================== short test summary info ===========================
+FAILED tests/test_s42_dialogue.py::test_ui_4_talker_movement_is_one_press_and_back_wins[arrows-pageup-delta1]
+FAILED tests/test_s42_dialogue.py::test_ui_4_talker_movement_is_one_press_and_back_wins[arrows-pagedown-delta2]
+FAILED tests/test_s42_dialogue.py::test_ui_4_offer_beats_vi_movement - Assert...
+FAILED tests/npcs/test_truce.py::test_game_5_5_truce_suppresses_explicit_hostility_and_retains_warden_heat
+FAILED tests/door/test_dialogue_render.py::test_ui_4_physical_talker_keys_use_welcome_keymap[arrows-pageup-key]
+FAILED tests/door/test_dialogue_render.py::test_ui_4_physical_talker_keys_use_welcome_keymap[arrows-pagedown-key]
+FAILED tests/door/test_dialogue_render.py::test_ui_4_physical_talker_keys_use_welcome_keymap[vi-h-key]
+FAILED tests/door/test_dialogue_render.py::test_ui_4_physical_talker_keys_use_welcome_keymap[vi-down-None]
+8 failed, 102 passed in 34.44s

@@ -60,12 +60,15 @@ def test_game_5_5_truce_suppresses_explicit_hostility_and_retains_warden_heat(ro
     content.npcs[template.id] = replace(template, behaviours=(Behaviour("guard", {"hostile_all": True}),))
     assert not game.core.npcs.hostile(keeper, body(game, a))
     warden = npc(game, "npc-plainclothes-warden", "warden", (29, 3))
+    patrol = npc(game, 'npc-warden-response', 'real-warden', (31, 3))
     body(game, a).marked = True
-    assert game.core.npcs.hostile(warden, body(game, a))
+    assert not game.core.npcs.hostile(warden, body(game, a))
+    assert game.core.npcs.hostile(patrol, body(game, a))
     body(game, a).marked = False
     player = game.core.characters.players[a.session.player_id]
     player.warden_heat_until = datetime.fromtimestamp(game.core.combat.now()+HEAT_SECONDS, timezone.utc).isoformat()
-    assert game.core.npcs.hostile(warden, body(game, a))
+    assert not game.core.npcs.hostile(warden, body(game, a))
+    assert game.core.npcs.hostile(patrol, body(game, a))
 
 
 @pytest.mark.parametrize("template", ["npc-sodium-regular", "npc-plainclothes-warden", "npc-sable-enforcer"])
@@ -370,7 +373,7 @@ def test_ui_2_1_truce_warning_keeps_warden_cover_until_provocation(row, alert):
     keeper = guard(game)
     regular = npc(game, "npc-sodium-regular", "regular", (28, 3))
     warden = npc(game, "npc-plainclothes-warden", "covered-warden", (29, 3))
-    assert game.core.npcs.hostile(warden, source)
+    assert not game.core.npcs.hostile(warden, source)
     views = []
     for target in (regular, warden):
         source.target = target.id
@@ -390,6 +393,11 @@ def test_ui_2_1_tab_respects_warden_cover_and_distance(row, alert, closer, revea
     game, a, b = row
     place(game, b, "vatside-clinics", (25, 3))
     source = body(game, a)
+    # S42: only an armed undercover NPC still enforces Marked/heat.
+    # Preserve this test's hostile-but-covered Tab ordering scenario.
+    content = game.core.characters.content
+    template = content.npcs['npc-plainclothes-warden']
+    content.npcs[template.id] = replace(template, weapon='wpn_kestrel_sidearm')
     regular = npc(game, "npc-sodium-regular", "regular", (27 if closer == "regular" else 29, 3))
     warden = npc(game, "npc-plainclothes-warden", "covered-warden", (27 if closer == "warden" else 29, 3))
     player = game.core.characters.players[source.id]

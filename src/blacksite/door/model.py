@@ -262,6 +262,18 @@ class Display:
                 return [Frame("intent", {"name": "lat.jack_out", "args": {}})]
             if key in ("escape", "b", "B"):
                 return [Frame("intent", {"name": "menu_close", "args": {}})]
+            if effective_body.get('kind') == 'talker' and effective_body.get('walk_away'):
+                actions = {action.get('key', '').lower() for action in effective_body.get('actions', [])}
+                table = next((table for table in self.keymap.get('keymaps', [])
+                              if table['id'] == self.selected_keymap), {})
+                walking = {bound for action, keys in table.get('bindings', {}).items()
+                           if action in ('move', 'sprint') or action.startswith(('move_', 'sprint_'))
+                           for bound in keys}
+                if key in walking and key.lower() not in actions:
+                    return [Frame('key', {'k': key, 't': max(0, int(now * 1000))})]
+                # Talkers have no row cursor. Unbound keys never page them.
+                if key.lower() not in actions and key != 'enter':
+                    return []
             if key in ("up", "down", "pageup", "pagedown", "pgup", "pgdn"):
                 page = self.layout.menu.cursor_page
                 distance = 1 if key in ("up", "down") else page

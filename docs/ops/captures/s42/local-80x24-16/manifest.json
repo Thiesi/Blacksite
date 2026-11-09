@@ -1,0 +1,76 @@
+{
+  "passed": true,
+  "head": "43225d06505dbb871e4c2f1ca321d789ee2a9862",
+  "transport": "NetBBS Telnet -> registered native stdio",
+  "captures": [
+    {
+      "capture": "s42-talk-hint-80x24-16",
+      "scenario": "talk-hint",
+      "size": [
+        80,
+        24
+      ],
+      "tier": "16",
+      "sha256": {
+        ".ans": "7901f82249ecc416a428bc6e1167e91d84392da2c856322eb168932594ddfc77",
+        ".txt": "b7276f502734160fb29569377187ec54027e7214938d7b0fb635ab11d11b6da9",
+        ".json": "0eeacadab32d707ef0d60cb5bb887aceccc7f16b490b756fffc508f57238fb49"
+      },
+      "raw_prefix_bytes": 329900
+    },
+    {
+      "capture": "s42-one-press-walk-away-80x24-16",
+      "scenario": "one-press-walk-away",
+      "size": [
+        80,
+        24
+      ],
+      "tier": "16",
+      "sha256": {
+        ".ans": "167a4db89fbfcfc2e6459d53c789a192e1f76798f931f5edcd7c58916ac1db9a",
+        ".txt": "c151f447e04698e80e3a2845986ddf6ffc91754d489f28a2f04d29ce8b5ec3e7",
+        ".json": "b1df8dc0b23b0a140d70390e319d010fc584536069d3d99fa13034a36daeeb0a"
+      },
+      "raw_prefix_bytes": 334253
+    },
+    {
+      "capture": "s42-shot-flee-walks-off-80x24-16",
+      "scenario": "shot-flee-walks-off",
+      "size": [
+        80,
+        24
+      ],
+      "tier": "16",
+      "sha256": {
+        ".ans": "1c6033c0067b2edd9904de04dc847e643107975f38490d6c14d708a11c835956",
+        ".txt": "a47192e14bb7cb547ce1572497c9d2f77fb5a20531c80ce2c12b5ae95e909d1d",
+        ".json": "59fdd83e5e344bf51deaf285ed1d12699bd794d4da95d033db1b202c72f1a5eb"
+      },
+      "raw_prefix_bytes": 343812
+    }
+  ],
+  "shot": {
+    "health_before": 90,
+    "health_after": 78,
+    "target": "8182d8dbaf5242938911d5ec59daf9b1:player:1",
+    "state": "flee"
+  },
+  "fixtures": [
+    "one regular relocated beside the walked-to caller",
+    "regular ambient pause; ordinary flee ignores it",
+    "first flee movement cooldown 25 ticks"
+  ],
+  "presentation_acceptance": false,
+  "h1_layout_approval": false,
+  "s25_layout_approval": false,
+  "source_tree": "e216e7f5e1fc23c65bcf8b75322f0793b14df79d",
+  "python_tree_sha256": "c7e554db0ca4f1edab9b168985b67128982a0f67cebcdde3e2258672d9536668",
+  "method": "Actual localhost NetBBS Telnet/native stdio output, forwarded with --show to exec output; no PTY was available. Raw prefixes replayed against glyph/style snapshots.",
+  "raw_stream": {
+    "file": "native-stream.ans.gz",
+    "compression": "gzip",
+    "sha256": "2f18723e378792668ce69bd647ef512307b9de95935d43bac0ec01aa78dfcaff",
+    "uncompressed_sha256": "1c6033c0067b2edd9904de04dc847e643107975f38490d6c14d708a11c835956"
+  },
+  "review_head": "43225d06505dbb871e4c2f1ca321d789ee2a9862"
+}

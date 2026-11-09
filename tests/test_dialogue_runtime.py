@@ -171,6 +171,9 @@ def test_game_13_4_terminal_talker_uses_its_current_lattice_cell_and_colour_role
     logs = [line for frame in game.frames_for(caller) if frame.type == 'log' for line in frame.data['lines']]
     assert any(line['text'].endswith('//99') and line['channel'] == 'lat'
                and line['role'] == 'chan_lat' for line in logs)
+    cell = presence.cell
+    press(game, caller, 'down')
+    assert presence.cell == cell and caller.session.id in game.core.dialogue.menus
     press(game, caller, 'b')
     assert game.core.lattice.presences[player.id] is presence
     assert player.progress['met_talkers'] == ['ninety-nine']

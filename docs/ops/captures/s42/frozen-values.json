@@ -1,0 +1,37 @@
+{
+  "interaction": {
+    "sha256": "05213f386e4ca644479f8ff80d43ca4e27ebd0acd0013e644b2072a9b9c59185",
+    "cases": 10704,
+    "zones": [
+      "core-plaza",
+      "core-precinct",
+      "core-tram-hub",
+      "fx-open",
+      "fx-safe",
+      "fx-street",
+      "sodium-row",
+      "sodium-tin-halo",
+      "terraces-blocks",
+      "terraces-lobby",
+      "vatside-clinics",
+      "vatside-vat-row",
+      "vatside-wake-hall"
+    ],
+    "handlers": {
+      "characters": 1468,
+      "combat": 108,
+      "commerce": 166,
+      "contracts": 72,
+      "factions": 18,
+      "interlock": 422,
+      "lattice": 8028,
+      "npcs": 30,
+      "relays": 36,
+      "terminal": 356
+    }
+  },
+  "interaction_unchanged": true,
+  "mechanics_unchanged": true,
+  "mechanics_sha256": "b145e1d13f146c6ad1a47879a2325e3e93bb4f0951caea17628feb92896e6f8b",
+  "changed_cases": []
+}
