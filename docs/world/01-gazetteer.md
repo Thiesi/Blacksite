@@ -1270,8 +1270,7 @@ music from six doorways at once, and the unwritten rule that nobody
 draws on Sodium Row, enforced by the people most likely to break it
 anywhere else. Fixers work here. Deals get made in the doorways and
 unmade in the alleys behind, and the Tin Halo's sign at the end of the
-street has been half burnt out for so long that "Tin Hal" is what people
-call it.
+street is the one sign on the Row that always works.
 
 **The bars.** Five bars open onto the street, and with the Halo they
 are the six doorways. Nobody owns a bar's crowd; each crowd drinks
