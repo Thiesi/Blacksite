@@ -101,7 +101,7 @@ is the intent the gate judges, not an authored map.
 - **Purpose:** the threshold where Warden law ends and Sable's truce
   begins. It's also the only way back to the safe Core [built].
 - **Distinct because:** you arrive above the street, on the landing.
-  The Strip runs away from you to the Tin Halo's half-burnt sign, which
+  The Strip runs away from you to the Tin Halo's lit sign, which
   closes the far end of the view.
 - **You perceive:** the Halo sign straight ahead, enforcers posted at the
   bottom of the steps, the header `CONTESTED─TRUCE─PvP G5+` (S38).
