@@ -591,6 +591,16 @@ server-declared `me.threat` field that §11 note 12 called for. *Excludes:*
 drawn 16-colour art (V3). *Depends:* P5, P6a, S38, S41. *Owner:* Codex.
 *Gate:* automated review, technical lead, presentation lead.
 
+**P12 Talk lines and log entries are never cut (proposed 2026-11-10,
+round 4 owner finding).** *Purpose:* the talk page cut every line to one
+row (255 of 405 lines at 80x24), and the log could drop the head of an
+entry. *Scope:* [`P12-talk-and-log-fit.md`](slices/P12-talk-and-log-fit.md):
+talk line wrap, vertical talk actions with one leave row, menu detail
+wrap, a dialogue fit check, whole-entry log, in both renderers. Its only
+server change: talkers lose the appended `b Back` action. *Depends:* P5.
+*Lands before:* the Row rules slice's talk content. *Owner:* Codex.
+*Gate:* automated review, technical lead, presentation lead.
+
 **C1 Hub place records.** The seven remaining S08 hubs, by the
 presentation lead or Sonnet against P6's format. Geometry changes only
 if D-T3 allows. *Gate:* H3 per hub.
