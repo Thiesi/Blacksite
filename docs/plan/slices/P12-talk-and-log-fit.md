@@ -3,7 +3,7 @@
 **Status:** proposed (owner finding, round 4 demo, 2026-11-10; spec in
 #185 comment 6755448631; technical lead agreed to a separate P-slice)
 **Primary model:** Codex · **Reviewer:** automated review, technical lead, presentation lead (presentation acceptance)
-**Depends on:** P5 (merged) · **Lands before:** the talk content in the Row rules slice (V Trade, Ask about…) · **Milestone:** presentation track
+**Depends on:** P5 (merged) · **Lands before:** P10, and the talk content in the Row rules slice (V Trade, Ask about…) · **Milestone:** presentation track
 
 Canon: terminal UI 2.5 (the log) and the talk page as S42 left it. Where
 this file and canon differ, canon wins.
@@ -112,7 +112,10 @@ not rows. An entry is shown complete or not at all.
   its first rows show and the last of them ends with `… Ctrl-P`. This is
   the only entry that is ever shown in part.
 - Rows display in arrival order, newest at the bottom.
-- If the newest entry is itself protected, it's still handled in step 1.
+- **If the newest entry is itself protected,** it comes first and wins:
+  in step 1 it takes rows up to its full height (the whole log if it needs
+  it), and older protected entries fill only what's left in step 2. The
+  freshest alert is never cut to make room for an older one.
 - Continuation rows keep today's look: no gutter, indented to the text.
 - Coalescing (`(x2)`) and the XP merge are unchanged.
 
@@ -160,6 +163,9 @@ page keeps its row. The hint line doesn't change; it's already full at
     combat lines above it. The same case with a 2-row speech line shows
     the speech's first row ending `… Ctrl-P`, plus the two newest combat
     lines.
+  - **A 1-row combat line, then a 3-row danger line, both protected:**
+    the danger line shows whole on all 3 rows, and the combat line
+    doesn't show.
 - **Goldens:** regenerated where a detail or log screen changes. The PR
   lists them.
 
