@@ -99,11 +99,20 @@ creative lead's new answers fail at authoring time, not in play.
 
 **5. The log shows whole entries.** Both renderers select **entries**,
 not rows. An entry is shown complete or not at all.
-- Protected danger and combat entries are taken first, as `_select`
-  does now. The newest other entries then fill what's left, newest at the
-  bottom, in arrival order.
-- **The one exception:** if the newest entry alone is taller than the
-  log, its first rows show, and the last visible row ends with `… Ctrl-P`.
+- **The newest entry always shows,** at least its first row. A line just
+  said is never pushed off the page. Selection runs in this order:
+  1. Reserve one row for the newest entry.
+  2. Protected danger and combat entries (within `PROTECT_SECONDS`, as
+     `_select` judges now) fill the remaining rows, newest first, whole
+     only.
+  3. The newest entry takes back any rows still free, up to its full
+     height.
+  4. Other entries fill whatever is left, newest first, whole only.
+- **Cut newest entry:** if the newest entry gets fewer rows than it needs,
+  its first rows show and the last of them ends with `… Ctrl-P`. This is
+  the only entry that is ever shown in part.
+- Rows display in arrival order, newest at the bottom.
+- If the newest entry is itself protected, it's still handled in step 1.
 - Continuation rows keep today's look: no gutter, indented to the text.
 - Coalescing (`(x2)`) and the XP merge are unchanged.
 
@@ -146,6 +155,11 @@ page keeps its row. The hint line doesn't change; it's already full at
   - With a protected danger line plus two speech entries, every entry
     shown is complete.
   - A newest entry taller than the log shows its head and `… Ctrl-P`.
+  - **Three 1-row combat lines, all protected, then a 1-row speech
+    line:** the speech line shows on the bottom row, with the two newest
+    combat lines above it. The same case with a 2-row speech line shows
+    the speech's first row ending `… Ctrl-P`, plus the two newest combat
+    lines.
 - **Goldens:** regenerated where a detail or log screen changes. The PR
   lists them.
 

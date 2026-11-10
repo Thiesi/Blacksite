@@ -580,7 +580,7 @@ of the map at both sizes.
 **P10 Cutover.** *Purpose:* one grammar everywhere. *Scope:* switch
 default on; old zone and Lattice renderers and old chrome removed;
 goldens regenerated; every shipped zone has a place record (validator
-becomes strict). *Depends:* P5 to P8, P11, C1, S25c complete. *Owner:*
+becomes strict). *Depends:* P5 to P8, P11, P12, C1, S25c complete. *Owner:*
 Codex. *Gate:* technical lead, presentation lead, owner.
 
 **P11 Text place card (approved by the owner 2026-11-06, #164).**
