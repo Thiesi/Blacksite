@@ -91,6 +91,8 @@ cut.
   over today's longest line.
 - Every offer label is at most 40 cells.
 - No offer hotkey is `b`, and no talker has two offers on the same key.
+  The validator already checks both (`content/validate.py`, case
+  insensitive). Keep that check; only the row and label checks are new.
 
 The validator reports the talker, the line id and the row count, so the
 creative lead's new answers fail at authoring time, not in play.
@@ -127,7 +129,8 @@ page keeps its row. The hint line doesn't change; it's already full at
   cut, there's exactly one leave row, and no `b Back`.
 - **Fallback:** a synthetic 20-row line ends its last visible row with
   `…`.
-- **Server:** `publish()` sends no `b` action for talkers. `b` and `Esc`
+- **Server:** `publish()` sends no `b` action for talkers. Update
+  fixtures that still carry it, such as `tests/door/test_dialogue_render.py`. `b` and `Esc`
   still close the page. A move still walks away, and an offer key still
   wins over a move binding.
 - **Menu detail wrap:** a vendor or contract detail longer than one row
