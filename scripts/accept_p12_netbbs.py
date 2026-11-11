@@ -93,12 +93,21 @@ async def accept(root: Path, door_python: Path, width: int, height: int, modern:
                     await caller.caller.write(b'\x1b[B')
                     await wait(lambda: menu.cursor == index+1)
                 description = core.commerce.content.items[SIDEARM].description
-                first_row = wrap_text(description, layout.menu.detail.width)[0]
-                await wait(lambda: first_row in caller.caller.screen.screen_text())
+                await wait(lambda: 'The starter pistol.' in caller.caller.screen.screen_text())
                 await delivered()
                 detail = layout.menu.detail
                 shown = [row[detail.x:detail.right].rstrip() for row in screen()[detail.y:detail.bottom]]
-                save('vendor-detail-wraps', {'item': SIDEARM, 'description': description, 'detail_rows': shown})
+                wrapped = wrap_text(description, detail.width)
+                assert len(wrapped) >= 2  # the description wraps at this width
+                whole = all(row in shown for row in wrapped)
+                if width == 132:
+                    # Presentation lead: the 86-char description wraps whole.
+                    assert whole, shown
+                else:
+                    # 4-row detail rect: rule 3's fallback ends row 4 with `...`.
+                    assert not whole and shown[detail.height-1].endswith('...'), shown
+                save('vendor-detail-wraps', {'item': SIDEARM, 'description': description, 'detail_rows': shown,
+                                             'description_whole': whole, 'rule_3_fallback': not whole})
                 await caller.caller.write(b'\x1b')
                 await wait(lambda: caller.session.id not in core.commerce.menus)
 
