@@ -171,10 +171,17 @@ async def accept(root: Path, door_python: Path, width: int, height: int, modern:
                 save(scenario, {'talker': did, 'line': text, 'line_rows': len(body), 'talk_rows': shown})
                 await caller.caller.write(b'\x1b')
                 await wait(lambda: caller.session.id not in core.dialogue.menus)
-                del zone.objects['p12-contact']
                 return text
 
+            async def remove_contact() -> None:
+                del zone.objects['p12-contact']
+                previous = caller.session.view_revision
+                probe.game.sim.reset_view(caller.session, caller.avatar)
+                await wait(lambda: caller.session.view_revision > previous)
+                await delivered()
+
             halvard = await talk('p12-halvard', 'talk-halvard', 'record-hal-s1-1-recovery')
+            await remove_contact()
             if full:
                 vesper = await talk('p12-vesper', 'talk-vesper', None)
                 speaker = dialogue['p12-vesper'].name
@@ -183,6 +190,7 @@ async def accept(root: Path, door_python: Path, width: int, height: int, modern:
                 await delivered()
                 log_rows = [row.rstrip() for row in screen()[layout.log.y:layout.log.bottom]]
                 save('log-after-talk', {'older': halvard, 'newer': vesper, 'log_rows': log_rows})
+                await remove_contact()
             await probe.leave(caller, f'p12-left-{width}x{height}-{tier}-{renderer}')
         assert not probe.errors and probe.service.failure is None
         (root/'p12-results.json').write_text(json.dumps({
