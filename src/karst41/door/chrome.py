@@ -9,7 +9,7 @@ from typing import Any
 from karst41.layout import Layout, Rect
 from karst41.door.cells import CellBuffer, clean_text, display_width, truncate
 from karst41.door.palette import Palette
-from karst41.door.log import rows as log_rows
+from karst41.door.fit import default_log_rows
 
 
 def box(buffer: CellBuffer, rect: Rect, palette: Palette, title: str = "") -> None:
@@ -108,7 +108,7 @@ def render_frame(buffer: CellBuffer, layout: Layout, palette: Palette, header: s
     buffer.put(layout.separator.x, layout.separator.y, "├" + "─" * (layout.separator.width - 2) + "┤", style)
     for y in range(layout.divider.y, layout.divider.bottom):
         buffer.put(layout.divider.x, y, "│", style)
-    for index, line in enumerate(log_rows(lines[-layout.log.height:], layout.log.width)[-layout.log.height:]):
+    for index, line in enumerate(default_log_rows(lines, layout.log.width, layout.log.height)):
         buffer.put(layout.log.x, layout.log.y + index, line["text"], palette.style(line["role"]))
     buffer.put(layout.hint.x, layout.hint.y, truncate(hint, layout.hint.width), palette.style("hint"))
 

@@ -9,7 +9,8 @@ from dataclasses import replace
 from typing import Any
 
 from karst41.door.cells import CellBuffer, display_width, truncate
-from karst41.layout import Layout
+from karst41.door.fit import fit_text, talk_rows
+from karst41.layout import Layout, Rect
 from karst41.door.present import chrome, zone
 from karst41.door.present.paint import Paint
 from karst41.door.views import render_text
@@ -24,6 +25,9 @@ def safety(body: dict[str, Any], last_body: str | None = None) -> str:
 def menu(buffer: CellBuffer, body: dict[str, Any], layout: Layout, paint: Paint) -> None:
     """Trial menu colours, with the existing shared P2 menu geometry."""
     shape = layout.menu_for(body.get('kind') == 'contracts')
+    if body.get('kind') == 'talker':
+        talker(buffer, body, shape.talk, paint)
+        return
     rows, cursor = body.get('rows', []), body.get('cursor', 0)
     label = '  '.join(str(c.get('label', c)) if isinstance(c, dict) else str(c) for c in body.get('columns', []))
     buffer.put(shape.columns.x, shape.columns.y, truncate(label, shape.columns.width), paint('panel_label'))
@@ -35,10 +39,20 @@ def menu(buffer: CellBuffer, body: dict[str, Any], layout: Layout, paint: Paint)
         text += ' ' * (shape.listing.width - display_width(text))
         buffer.put(shape.listing.x, shape.listing.y + index - first, text,
                    paint('panel_text', reverse=cursor == index or cursor == row.get('id')))
-    for index, line in enumerate(str(body.get('detail', '')).splitlines()[:shape.detail.height]):
-        buffer.put(shape.detail.x, shape.detail.y + index, truncate(line, shape.detail.width), paint('panel_text'))
+    for index, line in enumerate(fit_text(str(body.get('detail', '')), shape.detail.width, shape.detail.height)):
+        buffer.put(shape.detail.x, shape.detail.y + index, line, paint('panel_text'))
     actions = '  '.join(f"{a.get('key', '')} {a.get('label', '')}" for a in body.get('actions', []))
     buffer.put(shape.actions.x, shape.actions.y, truncate(actions + '  Esc/B back', shape.actions.width), paint('key_text'))
+
+
+def talker(buffer: CellBuffer, body: dict[str, Any], area: Rect, paint: Paint) -> None:
+    """P12: the line across the whole page, then one action per row."""
+    for index, row in enumerate(talk_rows(str(body.get('detail', '')), body.get('actions', []), area.width, area.height)):
+        if row.key:
+            buffer.put(area.x, area.y + index, row.key, paint('key_text'))
+            buffer.put(area.x + display_width(row.key), area.y + index, row.label, paint('panel_text'))
+        else:
+            buffer.put(area.x, area.y + index, row.text, paint('panel_text'))
 
 
 def render(buffer: CellBuffer, layout: Layout, paint: Paint, kind: str, body: dict[str, Any],

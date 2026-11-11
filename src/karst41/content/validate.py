@@ -30,6 +30,9 @@ from karst41.content.cp437 import round_trips
 from karst41.content.formats import Problem, find_line, id_needles
 from karst41.content.ids import display_width
 from karst41.content.loader import ContentTree, load_content
+from karst41.door.cells import display_width as text_width
+from karst41.door.fit import TALK_LABEL_CELLS, TALK_LINE_ROWS, wrap_text
+from karst41.layout import compute
 from karst41.npc_presentation import channels as npc_channels
 
 __all__ = ["Problem", "validate", "exit_warnings", "route_door_warnings", "door_wall_axis", "main"]
@@ -69,6 +72,8 @@ HAZARD_WARNING_SECONDS = 5
 BALANCE_RANGE = (-3, 3)
 # 04-dramatis-personae.md Part III: no line exceeds 200 characters.
 DIALOGUE_LINE_MAX = 200
+# P12 rule 4: a dialogue line fits the 80x24 talk page, using the client's wrap.
+TALK_WIDTH = compute(80, 24).menu.talk.width
 # 01-gazetteer.md content notes: lat-shaft is the only core with two
 # hardware locations, and the loader asserts it.
 SHARED_HARDWARE_CORES = frozenset({"lat-shaft"})
@@ -1929,6 +1934,9 @@ class _Validator:
             for ln in node.lines:
                 if len(ln.text) > DIALOGUE_LINE_MAX:
                     self.report(*owner, f"line {ln.id}: longer than {DIALOGUE_LINE_MAX} characters", ln.id)
+                if (rows := len(wrap_text(ln.text, TALK_WIDTH))) > TALK_LINE_ROWS:
+                    self.report(*owner, f"line {ln.id}: wraps to {rows} rows on the 80x24 talk page "
+                                f"({TALK_WIDTH} cells); at most {TALK_LINE_ROWS}", ln.id)
                 for cond in ln.when:
                     self.condition(cond, owner, f"line {ln.id}")
             if node.lines and node.lines[-1].tag and not node.lines[-1].required:
@@ -1945,6 +1953,9 @@ class _Validator:
                         self.report(*owner, f"a machine-mind talker needs a {tag} line")
             hotkeys: set[str] = set()
             for offer in node.offers:
+                if (cells := text_width(offer.label)) > TALK_LABEL_CELLS:
+                    self.report(*owner, f"offer {offer.label!r}: label is {cells} cells; "
+                                f"at most {TALK_LABEL_CELLS}")
                 if (len(offer.hotkey) != 1 or offer.hotkey.lower() in hotkeys
                         or offer.hotkey.lower() == 'b'):
                     self.report(*owner, f"offer {offer.label!r}: hotkey {offer.hotkey!r} is not a unique single key")

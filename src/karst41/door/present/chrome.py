@@ -10,6 +10,7 @@ import re
 from typing import Any
 
 from karst41.door.cells import CellBuffer, clean_text, display_width, truncate
+from karst41.door.fit import log_cut, select_entries
 from karst41.door.log import wrap as word_wrap
 from karst41.layout import Layout
 from karst41.door.present.paint import Paint
@@ -162,34 +163,33 @@ def digest(lines: list[dict[str, Any]]) -> list[LogEntry]:
     return out
 
 
-def _rows(lines: list[dict[str, Any]], width: int) -> list[tuple[LogEntry, str, bool]]:
-    rows = []
+def _entries(lines: list[dict[str, Any]], width: int) -> list[tuple[LogEntry, list[str]]]:
+    out = []
     for entry in digest(lines):
         text = entry.shown
         if entry.kind == 'speech' and entry.speaker and not text.startswith(entry.speaker + ': '):
             text = entry.speaker + ': ' + text
-        rows.extend((entry, line, index == 0)
-                    for index, line in enumerate(word_wrap(text, width - 2, continuation=0)))
-    return rows
+        out.append((entry, word_wrap(text, width - 2, continuation=0)))
+    return out
 
 
-def _select(rows: list[tuple[LogEntry, str, bool]], height: int,
+def _select(entries: list[tuple[LogEntry, list[str]]], height: int, width: int,
             now: float) -> list[tuple[LogEntry, str, bool]]:
-    if height <= 0:
-        return []
-    protected = [i for i, (entry, _, _) in enumerate(rows)
-                 if entry.kind in ('danger', 'combat') and 0 <= now - entry.arrived < PROTECT_SECONDS]
-    selected = set(protected[-height:])
-    for index in range(len(rows) - 1, -1, -1):
-        if len(selected) >= height:
-            break
-        selected.add(index)
-    return [rows[i] for i in sorted(selected)]
+    """P12 rule 5 (#202): whole entries; the newest always shows."""
+    protected = [entry.kind in ('danger', 'combat') and 0 <= now - entry.arrived < PROTECT_SECONDS
+                 for entry, _ in entries]
+    shown = select_entries([len(rows) for _, rows in entries], protected, height)
+    out = []
+    for index, ((entry, rows), count) in enumerate(zip(entries, shown)):
+        if index == len(entries) - 1:
+            rows = log_cut(rows, count, width - 2)
+        out.extend((entry, line, i == 0) for i, line in enumerate(rows[:count]))
+    return out
 
 
 def visible_rows(lines: list[dict[str, Any]], width: int, height: int,
                  now: float) -> list[tuple[LogEntry, str, bool]]:
-    return _select(_rows(lines, width), height, now)
+    return _select(_entries(lines, width), height, width, now)
 
 
 def log(buffer: CellBuffer, layout: Layout, paint: Paint, lines: list[dict[str, Any]], now: float) -> None:
