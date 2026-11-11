@@ -564,8 +564,10 @@ cross the Vatside sector, enter and leave a core, at both sizes.
 **P8 Voice and ambience.** *Purpose:* the place speaks without drowning
 danger. *Scope:* one ambient emitter for zone ambience and S27 barks,
 with a per-caller budget, its own RNG derived per zone instance (never
-`zone.rng`), suppression in combat and travel, and the verbosity
-setting. *Depends:* P4, S27 engine, S30a settings path. *Owner:* Codex
+`zone.rng`), suppression in combat and travel. The log verbosity setting moves to
+S30b. *Slice:*
+[`P8-voice-and-ambience.md`](slices/P8-voice-and-ambience.md), #209.
+*Depends:* P4, S27 engine. *Owner:* Codex
 with S27. *Tests:* ambient never draws from `zone.rng`; rate limits;
 danger and combat lines never coalesced or pushed out by ambient within
 ten seconds. *Presentation criteria:* §10.3 item 8. *Gate:* automated
