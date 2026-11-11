@@ -1,8 +1,17 @@
 name: ci
 
 on:
+  # Feature branches are tested through their PR; pushing a PR branch used to
+  # start this workflow twice per commit.
   push:
+    branches: [main, 'demo/**']
   pull_request:
+
+# A new commit supersedes earlier runs of the same PR or branch; main is
+# never cancelled, and each main commit keeps its own group.
+concurrency:
+  group: ci-${{ github.event.pull_request.number || (github.ref == 'refs/heads/main' && github.sha) || github.ref }}
+  cancel-in-progress: ${{ github.ref != 'refs/heads/main' }}
 
 jobs:
   test:

@@ -9,6 +9,12 @@ on:
       - '.github/workflows/s39-acceptance.yml'
   workflow_dispatch:
 
+# A new commit supersedes earlier runs of the same PR or branch; main is
+# never cancelled, and each main commit keeps its own group.
+concurrency:
+  group: s39-acceptance-${{ github.event.pull_request.number || (github.ref == 'refs/heads/main' && github.sha) || github.ref }}
+  cancel-in-progress: ${{ github.ref != 'refs/heads/main' }}
+
 jobs:
   exit-netbbs:
     runs-on: ubuntu-latest
