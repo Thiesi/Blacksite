@@ -1,0 +1,205 @@
+# S44 — The Row's truce rules: hunted, the Halo's refusal, settling the debt
+
+**Status:** planned (filed 2026-11-11; the owner merges the filing)
+**Primary model:** Claude Opus 5.5 (the engineer) · **Reviewer:** automated review, technical lead, presentation lead (presentation acceptance)
+**Depends on:** S38, S42, P12 (P12 before part 5 only) · **Milestone:** interaction
+**Issue:** https://github.com/Thiesi/Karst41/issues/207
+
+Canon: game design 5.5 and 7.3, architecture (`me.hunted?`), terminal
+UI 2.1 and 2.5, and the gazetteer's Row and Halo entries. #203 (e7c5d50)
+wrote the rules there, marked "planned, S44". The implementation
+removes those marks. Where this file and canon differ, canon wins.
+
+## Goal
+
+S38 built the truce: an attack on the Row breaks the peace, Marks a
+player attacker, and brings Sable's enforcers. The owner then decided
+what the truce costs afterwards (#170: 6700329493, 6700422611,
+6700602227; 2026-11-11: 6806566489) and played it on the round 3 and
+round 4 demo branches. On `main` none of it exists yet. The enforcers
+also lose a player who steps into a bar (#187, round 4 finding 1).
+
+This slice brings the decided rules to `main`. The demo branches
+(`demo/sodium-row-round3` at d305537, `demo/sodium-row-round4` at
+fd63b6f) are a guide, not a patch: they use demo switches and an
+overlay, and `main` has S42 and S43 since.
+
+## Scope
+
+### 1. Hunted
+
+- A player is **hunted** while a truce keeper's guards answer them:
+  the keeper's provocation against that player is live
+  (`PROVOCATION_SECONDS`, five minutes). One predicate serves the
+  header, the Halo's refusal and the log; nothing derives it twice.
+- It holds wherever the body is, online or offline. It runs on the
+  injected clock (AGENTS.md §4), so a restart doesn't extend or drop
+  it. Store whatever expiry survives a restart the way the existing
+  provocation and Mark expiries are stored. If the provocation is
+  memory-only today, say so in the PR and propose the storage before
+  building it.
+- The view carries `me.hunted` (additive; absent when false).
+
+### 2. Pursuit to the last seen position (#187)
+
+- The keeper's guards pursue a hunted player through the street and
+  its bar alcoves to `last_position`, give up 20 s after losing sight
+  (`LOST_SIGHT_SECONDS`, unchanged), and never cross a zone exit.
+- Replace the greedy step for **hunt** with routing that is
+  deterministic, bounded and cached: a shortest path over the zone's
+  passable tiles to `last_position`, under the ordinary movement,
+  cooldown, collision and avoidance rules, recomputed only when the
+  goal or the blocking set changes. No `zone.rng` draws. It must fit
+  the CPU budget: #186 shows per-NPC server cost already matters.
+- Bring t6's failing reproduction (`diagnose/187-row-hunt` at 087aa96,
+  `docs/ops/diagnostics/issue187/`) into `tests/` as a passing test.
+  Add the round 4 case: a hunted player leaves a bar, and the guard
+  follows them out instead of waiting for line of sight.
+- **Other callers:** list every other `step_toward` caller (patrol,
+  flee, A9's walk home, escort, contract scenes, drones) and say which
+  share the doorway blindness. Don't switch them in this slice without
+  a ruling.
+- **Not in scope:** searching unseen tiles after reaching the spot.
+  The owner never approved it (#187 6729514230 said it needs owner
+  approval first). If the playtest finding can't be met without it,
+  stop and ask.
+
+### 3. The Halo's refusal, Vesper, and being shown out
+
+- The Tin Halo refuses, at every entrance:
+  - a hunted player, for as long as the answer lasts;
+  - a player Marked for breaking the Row's truce, until the Mark ends.
+- The bouncer's line gives the minutes left, rounded up so it never
+  says 0, using the canon wording (terminal UI 2.1). When both apply,
+  the longer time wins, in that condition's words, and the Mark's words
+  on a tie.
+- A player who becomes hunted or Marked while inside the Halo (a drone
+  or burn sent out from there) is shown out through the street door
+  with the same line.
+- Vesper's work (board, counter, talk offers) closes to **any** Marked
+  player, whatever earned the Mark, with her canon line. The Halo's door
+  keeps to truce-breakers. The two differ on purpose (#170).
+- Accepted work is kept: it can't be advanced at the Halo or with
+  Vesper until the Mark ends. No deadline pauses.
+- These are travel and service refusals through the existing refusal
+  paths (S38's and the travel rules). No new movement mechanics.
+
+### 4. Death settles the debt
+
+- A death of the character's body, from any cause, clears that
+  player's keeper provocation, the Halo's hunted refusal and hunted
+  itself. The clone cost stands.
+- On respawn the log follows the vat's line with "<Keeper> considers it
+  settled.", plus " The Mark stays." while a Mark runs.
+- A combat logout is not a death and settles nothing.
+- A Mark outlasts death: no Halo and no work for its 15 minutes, and
+  Wardens still engage. The keeper's guards don't come back over the
+  settled breach. A **new** breach after respawn starts a fresh
+  five-minute answer, Mark or no Mark (owner, 2026-11-11).
+
+### 5. Notices and the header (after P12)
+
+- **The price, as notices** (terminal UI 2.1 and 2.5):
+  - the arrival notice on a character's first arrival in a truce zone,
+    from the existing first-discovery moment;
+  - the first-target notice, once per session, chosen by the TARGET
+    warning already shown.
+  - Wording is canon's, word for word. Numbers come from the constants
+    (`MARKED_SECONDS`, `PROVOCATION_SECONDS`), never literals.
+- Price notices are exempt from the new-Wake five-minute quiet; node
+  notices stay held.
+- A price notice that first lands in the header because the player is
+  threatened returns to the hint line when the threat ends. Its 8 s and
+  its key press count from the return.
+- HUNTED alone, like MARKED alone, is not a threatened state for notice
+  placement.
+- `HUNTED` shows in the header as a danger fact, beside `MARKED` when
+  both apply, and drops no earlier than `MARKED` or heat.
+
+### 6. Talk content for speakers already on `main`
+
+Lands after P12, so the action list fits.
+
+- **Sodium regulars** (`row-street-regular`): the approved Ask line,
+  "Ask about the end" (#185 6755418093).
+- **Sable enforcers:** `npc-sable-enforcer` gets the round 3 enforcer
+  set (`row-enforcer`, from the demo), including its approved Ask line
+  "Ask about the peace" and the reference line "Nobody draws on the Row.
+  You can. Then you pay." Bring the test that a talking enforcer still
+  presents as security, not service.
+- Lines are the approved text, word for word, with each set's speaker.
+  The other approved sets (card players, tout, haggler, Clause, Kestrel,
+  choir, doorstep, off-duty, runner, Halo copies, and the Dolf and Mira
+  Trade lines) arrive with their speakers in the creative lead's
+  population PR, not here.
+
+## Out of scope
+
+- **Barks.** Ambient emission belongs to P8 (one emitter, a derived
+  RNG, a per-caller budget; plan 03 §P8). The regulars' approved barks
+  wait for P8. This slice adds no emitter.
+- The drawn weapon (S45) and posts and crowds (S46), including the
+  Clause doorway deadlock, which lives in demo-only post code.
+- The Halo back door's locked line and the core room label: the door's
+  target is still the owner's decision.
+- Search at the last known spot (see part 2).
+- NPC counts, spawns and layouts.
+
+## Edge cases the PR must cover
+
+From the #203 triage. Each needs a test or a stated reason:
+
+- expiry storage and restart, against the injected clock;
+- the sequence Marked → die → respawn → shoot an unmarked player →
+  the guards answer again;
+- a combat logout during an answer: nothing settles, the timer runs on;
+- notice numbers taken from the constants;
+- a fit test over every shipped keeper's short name at 80x24. The
+  arrival and first-target lines fit only names of 7 cells or fewer, so
+  the test fails any longer name;
+- truncation uses ASCII `...`;
+- a drone or burn sent from inside the Halo;
+- the overlapping-refusal wording, including the change after a death
+  settles the answer while the Mark runs on;
+- Vesper refusing a non-truce Mark while the Halo door admits that
+  player.
+
+## Tests
+
+- Hunted: the predicate, `me.hunted`, the header fact and its drop
+  order, and restart behaviour through the injected clock.
+- Pursuit: the #187 reproduction passes; the bar-exit case; routing
+  makes no `zone.rng` draws; a path is recomputed only when its goal or
+  blockers change; the guard never crosses an exit; the 20 s give-up is
+  unchanged.
+- Refusals: every Halo entrance, both conditions and their overlap, the
+  shown-out case, Vesper's three surfaces, and kept work with a
+  deadline that still expires.
+- Death: each death cause settles; a combat logout doesn't; the respawn
+  line with and without a Mark; the new-breach sequence.
+- Notices: arrival once per character, first target once per session,
+  the new-Wake exemption, the threat-then-return timing, goldens at
+  80x24 and 132x50.
+- Talk: the regulars' and the enforcers' Ask lines through real views,
+  and enforcers still present as security.
+- **Frozen values:** the mechanics fingerprint and P3's 10,704-case
+  digest may change only where hunted, the refusals or the new talk
+  actions are involved. The PR lists every changed case with the
+  reason. Anything else moving stops the PR for a ruling.
+
+## Definition of done
+
+Roadmap §7, plus native evidence through NetBBS Telnet to native stdio
+at 80x24 and 132x50, in all three tiers, on an isolated node:
+- arrive on the Row and see the price notice;
+- shoot a regular and see `HUNTED`, be followed into a bar and out
+  again, and be refused at the Halo with the minutes;
+- die and respawn to "Sable considers it settled.";
+- open an enforcer's page and see "Ask about the peace".
+
+The presentation lead accepts from the captures. S10, S11 and S24 still
+pass. S11 is handled under #194's rule, and this is a runtime-changing
+slice, so a CPU near miss blocks.
+
+H1 and S25 layout approval are not part of this slice and aren't granted
+by it.
