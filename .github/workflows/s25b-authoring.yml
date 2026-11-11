@@ -15,9 +15,9 @@ permissions:
   contents: read
 
 # A new commit supersedes earlier runs of the same PR or branch; main is
-# never cancelled.
+# never cancelled, and each main commit keeps its own group.
 concurrency:
-  group: s25b-authoring-${{ github.event.pull_request.number || github.ref }}
+  group: s25b-authoring-${{ github.event.pull_request.number || (github.ref == 'refs/heads/main' && github.sha) || github.ref }}
   cancel-in-progress: ${{ github.ref != 'refs/heads/main' }}
 
 jobs:
