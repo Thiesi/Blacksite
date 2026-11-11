@@ -152,8 +152,8 @@ Computed from the terminal size at start; never hard-coded. At 80×24:
 Rules:
 
 - **Header** (1 row): district (dim), zone (bright), the safety word, then
-  live facts (heat, Marked, `PvP G5+` on contested ground, event
-  summary); the clock at the right. Lower-priority segments drop first.
+  live facts (heat, Marked, `HUNTED` in a truce zone (planned, S44),
+  `PvP G5+` on contested ground, event summary); the clock at the right. Lower-priority segments drop first.
   The frame around it shows safety by line style (2.1); the sketch draws
   single lines throughout.
 - **Viewport**: width = columns - 2 outer borders - 1 divider - 22
@@ -213,6 +213,32 @@ is outside the zone it logs "<Keeper> is waiting for you on <zone>."
 instead, because guards do not cross zones. These are danger lines,
 and the Mark line comes first. Truce rules add no fire confirmation
 and no HERE entry.
+
+Planned, S44: the price, the hunted state and the refusals.
+
+- **The price, as notices (2.5).** On a character's first arrival in a
+  truce zone, once, from the existing first-discovery moment: "Fire:
+  <Keeper> comes, no Halo. At a player: Marked 15m, no work." The first
+  time in a session that TARGET shows a truce warning, a notice says
+  only what applies to that target: "Fire: Marked 15m. No Halo, no
+  work." beside "Firing marks you", or "Fire here and <Keeper> comes. No
+  Halo." beside "Truce: <Keeper> answers". Both target lines fit the
+  36-cell header at 80x24. The door reads the existing TARGET warning,
+  so this needs no new field or key, and it adds no fire confirmation.
+- **`HUNTED`** shows in the header as a danger fact while the keeper's
+  guards are answering you, beside `MARKED` when both apply. The view
+  carries it as `me.hunted`.
+- **The Halo's door** refuses in the bouncer's voice and gives the
+  minutes left, rounded up so it never says 0: for a Marked
+  truce-breaker, 'The bouncer looks at your red name. "Not tonight. Not
+  after the Row. <n> min."'; while the keeper is still answering, 'The
+  bouncer doesn't move. "<Keeper>'s still asking about you. Try me in
+  <n> min."'
+- **Vesper** refuses a Marked player's work: 'Vesper: "Not with that
+  name. Come back in <n> min."'
+- **On respawn** after a death that settled the keeper's answer, a log
+  line follows the vat's: "<Keeper> considers it settled.", with " The
+  Mark stays." added while a Mark is still running.
 
 Safe ground is Warden blue, not green (D4). Safe and pocket ground both
 use double lines; the header word tells them apart, so colour is never
@@ -373,15 +399,18 @@ kind is told apart by colour alone.
   within 5 seconds merge into one.
 - Danger lines never coalesce with other kinds, and no other line pushes
   a danger or combat line out of the visible log within 10 seconds.
-- **Notices** (kind `notice`: restarts, maintenance, news from the node)
-  are not world-log lines. A notice takes the hint line over key help
+- **Notices** (kind `notice`: restarts, maintenance, news from the node,
+  and, planned for S44, a rule's price stated before you pay it, such as
+  a truce zone's, section 2.1) are not world-log lines. A notice takes the hint line over key help
   and stays there until a key is pressed and at least 8 seconds have
   passed. It never hides a prompt or escape keys: while a prompt is open,
   or while you are threatened (a DANGER state, combat, a hazard), it
   shows in the header's right end instead, and returns to the hint line
   afterwards. Each notice also keeps
   one line in scrollback (`Ctrl-P`) and stays in help (section 10). A
-  new Wake sees none in its world log in the first five minutes.
+  new Wake sees no node notice in its world log in the first five
+  minutes; a rule's price notice still shows, because it warns before
+  a cost.
 
 ### 2.6 The place card
 

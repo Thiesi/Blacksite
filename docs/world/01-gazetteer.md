@@ -1255,7 +1255,10 @@ number is the whole point.
   `sodium-tin-halo` (the Halo's door); several bar interiors folded into
   the street map as alcoves.
 - **Relays:** none, by agreement. The agreement is enforced by Sable
-  enforcers who attack anyone who attacks anyone.
+  enforcers who attack anyone who attacks anyone. They follow a
+  truce-breaker into the bars, not past the street's exits, and any
+  death squares it with them; a Mark outlasts the death (planned, S44;
+  game design 5.5 and 7.3).
 - **Terminals:** three public terminals.
 - **Vendors / anchors:** five bars (drinks: cheap consumables with a
   small shock reduction; see "The bars" below), a drug dealer (street
@@ -1313,7 +1316,10 @@ some doorways than in others.
   contract card's destination), the bar, a back room (crew invitations
   and bounty postings happen anywhere, but this is where the fiction
   says they do), a Ferrymen liaison who is sometimes in.
-- **Spawners:** regulars (talkers), one bouncer.
+- **Spawners:** regulars (talkers), one bouncer. The bouncer turns away
+  anyone Sable is still answering, and anyone Marked for breaking the
+  Row's truce, and says for how long. Vesper doesn't work for a red
+  name (planned, S44; game design 5.5 and 7.3).
 
 The bar at the end of the street, with a halo of tin cans over the door
 that a drunk welded up forty years ago and nobody has taken down.
