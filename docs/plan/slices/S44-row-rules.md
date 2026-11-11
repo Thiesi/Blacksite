@@ -53,6 +53,21 @@ overlay, and `main` has S42 and S43 since.
   dict stays the in-memory engine for everything else. Any storage
   migration and any P3 or fingerprint movement this causes are listed
   in the PR.
+- **The record exists whether or not a guard is present.** The answer
+  is the keeper's, not one guard's: every breach writes it, even when
+  every guard is dead or absent. A keeper guard that spawns or wakes
+  while the record is live takes up the answer. So killing the
+  enforcers first doesn't buy a clean breach (technical lead's ruling).
+- **A truce-breaking Mark is told apart from any other Mark.**
+  `Player.marked_until` is a bare timestamp written from several causes
+  (combat, the Lattice channel). Persist a second expiry,
+  `truce_marked_until`, set with the Mark whenever the Mark comes from a
+  truce breach, to that Mark's expiry. A later Mark of another cause
+  extends `marked_until` by the existing rules and leaves
+  `truce_marked_until` alone. A later truce Mark refreshes both. The
+  Halo's door reads `truce_marked_until`; Vesper and everything else
+  read `marked_until`. Both survive a restart, with the same migration
+  note.
 - The view carries `me.hunted` (additive; absent when false).
 
 ### 2. Pursuit to the last seen position (#187)
@@ -184,6 +199,11 @@ From the #203 triage. Each needs a test or a stated reason:
   leaves the Halo open;
 - a drone or burn attack on the Row records the answer against the
   controller's body;
+- a breach with no live guard writes the record; a guard spawning while
+  it's live pursues;
+- a Lattice-channel Mark shuts Vesper but not the Halo's door; a truce
+  Mark followed by a non-truce Mark keeps the door shut until the truce
+  Mark's own expiry; both expiries survive a restart;
 - notice numbers taken from the constants;
 - a fit test over every shipped keeper's short name at 80x24. The
   arrival and first-target lines fit only names of 7 cells or fewer, so
