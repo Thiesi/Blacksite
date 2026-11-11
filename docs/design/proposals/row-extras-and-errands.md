@@ -43,9 +43,9 @@ bars run the same rule.
   from their own crowd's list, walks there and holds again. From an
   errand post they always go back home next.
 - **The moving budget.** The person moves only if their crowd is under
-  its cap of people walking (1 per bar, 2 for the Halo and for each
-  street crowd), and the zone is under its budget (§6). Otherwise they
-  hold a little longer. That bounds how many move at once, whatever the
+  its cap of people walking (1 per crowd; a swap is the exception, see
+  §4) and the zone is under its budget (§6). Otherwise they hold a
+  little longer. [round 4 numbers] That bounds how many move at once, whatever the
   head count.
 - **Reach (S42).** Nobody starts a move while a player who can talk is
   beside them. A walk already under way pauses while a player stands
@@ -109,8 +109,8 @@ The same rule indoors. Every drinker's home post is their seat.
 | Beside another seated drinker | 20 | 10–20 s | a word at another table |
 
 - **The rhythm:** each drinker holds their seat for 60–180 s (uniform,
-  drawn per hold). At most **1 per bar and 2 in the Halo** are up at
-  once. With 2 to 4 drinkers per bar, someone gets up roughly every
+  drawn per hold). At most **1 per bar** is up at once, and the
+  Halo's budget is 1. [round 4 numbers] With 2 to 4 drinkers per bar, someone gets up roughly every
   minute per bar, so walking the Row you nearly always see one person
   on their feet somewhere.
 - **Leaving and arriving without spawning.** The bars are alcoves in the
@@ -118,7 +118,18 @@ The same rule indoors. Every drinker's home post is their seat.
   A **swap** is the leave-and-arrive: a drinker walks out to their
   crowd's doorway post on the street, and the person standing there
   walks in and takes the seat. Nobody spawns in sight, so canon 5.5's
-  spawn rule stands.
+  spawn rule stands. [round 4 rulings, #185 6750417314]
+  - A swap is **2 walkers**, the one exception to the crowd cap of 1.
+    It reserves 2 of the zone's moving slots and doesn't start unless 2
+    are free.
+  - **Homes exchange when the swap starts.** If it's interrupted (a
+    shot, a full budget), each person goes to their new home, and
+    nobody is left without one.
+  - **Stagger:** the seated drinker starts first. The doorway person
+    starts once the drinker has stepped out onto the street. Until then
+    they hold, still counting as one of the swap's 2 reserved slots.
+    The bar doors are one tile wide, so this avoids a deadlock in the
+    doorway.
 - **Real arrivals** down the Stair, and departures up it, would need
   people to spawn and despawn at an exit in view. That's a change to
   canon 5.5's spawn rule, so it's later and the owner's call (§8).
@@ -164,6 +175,13 @@ whatever that measurement allows:**
   the measurement. My starting guess for the Row is 6 people walking at
   once, plus the enforcers when they watch or hunt. The bars add their
   1 each.
+- **Round 4 numbers (measured, TL-confirmed; these replace the guesses
+  above).** M184 (#186) found that only about 20 stationary plus 4
+  moving met the 108 target. The Row zone holds **20 posted people**,
+  bars included; the enforcers and the Warden are extra. The zone's
+  moving budget is **4**. The Warden's moves count; enforcers on watch
+  or hunt don't. The crowd cap is **1**, except a swap (§4). The Halo
+  keeps **6 people with a budget of 1**.
 - **A scatter case belongs in the grid:** a shot on the middle stretch
   makes that crowd flee all at once. That's the worst burst.
 - **Barks don't scale with head count.** The scheduler limits what each

@@ -87,12 +87,18 @@ addressed to you, not to the street.
 - **No enforcer in sight:** a muted system line, "Drawn on the Row.
   Sable's people will see it." No enforcer moves (§3.3 needs sight).
 - **Other players in sight** get a muted line, "<name> draws a weapon."
-  This replaces the per-target warning on the Row.
+  Seeing the draw counts as their warning, so it replaces the per-target
+  warning for them. A player who arrives later, comes into sight later
+  or didn't see the draw still gets the per-target warning when
+  targeted, and so does anyone who walks onto the Row already drawn.
+  [round 4 ruling, #185 6750114273 Q2]
 - **Drawing again within 2 minutes** gets the shorter line "Again?" The
   first warning has already been given.
-- **Self-defence:** if the drawer was hit in the last 10 s, or the
-  person they face is Marked, there's no warning and no watch. Firing
-  back breaks nothing (canon 5.5), so the Row says nothing.
+- **Self-defence:** the existing aggressor and Marked rules decide it
+  (canon 5.5). Drawing on your aggressor, or on a Marked player, gets no
+  warning and no watch. Firing back breaks nothing, so the Row says
+  nothing. There is no separate "hit in the last 10 s" test. [round 4
+  ruling, #185 6750114273 Q3]
 
 ### 3.3 Watch: the enforcer comes over [new]
 
@@ -107,8 +113,12 @@ hunt and flee.
 - **It never attacks** while watching. If the player fires, the
   enforcer is already beside them, and the truce response (hunt) takes
   over from watch on the same tick.
-- **One watcher per drawn player.** The other enforcer holds its post,
-  so the Stair stays covered.
+- **One watcher per zone.** Only one enforcer watches at a time. The
+  other holds its post, so the Stair stays covered. When the watched
+  player holsters and another drawn player is in sight, the watcher
+  switches to them. A second player who draws while someone is already
+  being watched gets the spoken warning but no walk-over. [round 4
+  ruling, #185 6750114273 Q3]
 - **How long:** for as long as the player stays drawn and in its sight.
   There's no time limit. If it loses sight for 20 s (the hunt rule) it
   goes back to its post.
@@ -117,8 +127,10 @@ hunt and flee.
   attacker draws where the watcher's walk is long, and that's
   geometry, which is what the owner's "unless you are very skilled" asks
   for.
-- **Cost:** one moving NPC per drawn player, on the existing 5-tick
-  decision cadence, using the same step as hunt.
+- **Cost:** at most one extra moving NPC per zone, on the existing
+  5-tick decision cadence, using the same step as hunt. Enforcers on
+  watch or hunt don't count against the zone's moving budget (row
+  extras §6).
 
 ### 3.4 Standing down [new]
 
@@ -158,6 +170,10 @@ hunt and flee.
   short and goes back to their seat. Seated people stay seated. That's
   one step each, not a stampede, and the Warden does exactly what its
   crowd does because it runs the same rule.
+- **A step back is a move.** It counts against the zone's moving budget
+  like any other walk. If the budget is full, the person holds where
+  they are and doesn't step. Shying is in the round 4 build, not a later
+  step. [round 4 ruling, #185 6750114273 Q4]
 - **Talking while drawn.** A talker you speak to while drawn answers
   with a line from its own set, written for the drawn case. Its offers
   stay shut until you holster. Bar vendors say "Not with that out." and
@@ -268,7 +284,7 @@ covers what you did with it.
 | Warning line, "Again?", "Better.", self-defence skip | content plus a small hook | same slice |
 | Watch state for guards | engine (NPC state) | same slice |
 | Halo door refusal while drawn | engine (travel refusal) plus a line | same slice, if the owner approves the access rule |
-| Shy wander filter | engine (wander filter, like S42) | second step, after the demo |
+| Shy filter (wander and posts; a step back counts against the moving budget) | engine (filter, like S42) | with posts; built in round 4 |
 | `steady` flag and its validator link to `poses_as` | content schema plus validator | second step |
 | `drawn` dialogue condition and one drawn line per set; offers shut while drawn | engine (one condition) plus content | second step, with my population PR for the sets that arrive there |
 | No page while fleeing or hunting; `provoked` condition keyed by `reaction_group`, one provoked line per set, offers shut (§4.4) | engine (one condition, after #188) plus content | second step, beside `drawn` |
