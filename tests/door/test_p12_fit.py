@@ -144,6 +144,8 @@ def test_p12_talk_rows_key_column_follows_the_widest_key():
     ({'lines': (DialogueLine('fallback', ' '.join(['word'] * 60)),)}, 'wraps to 5 rows'),
     ({'offers': (Offer('vendor', 'x' * 41, 'v', 'vesper'),)}, 'label is 41 cells'),
     ({'offers': (Offer('vendor', 'Trade', 'b', 'vesper'),)}, 'unique single key'),
+    ({'offers': tuple(Offer('vendor', f'Trade {key}', key, 'vesper') for key in 'acdefghij')},
+     '9 offers; the 80x24 talk page fits at most 8'),
     ({'offers': (Offer('vendor', 'Trade', 'v', 'vesper'), Offer('vendor', 'Shop', 'V', 'vesper'))},
      'unique single key'),
 ])
@@ -160,6 +162,14 @@ def test_p12_validator_accepts_a_four_row_line_and_a_40_cell_label(content):  # 
     tree.dialogue['vesper'] = replace(tree.dialogue['vesper'],
         lines=(DialogueLine('fallback', line),), offers=(Offer('vendor', 'x' * 40, 'v', 'vesper'),))
     assert not [p for p in validate(tree) if 'rows' in p.message or 'cells' in p.message]
+
+
+def test_p12_eight_offers_and_a_four_row_line_fit_the_80x24_talk_page():
+    line = ' '.join(['word'] * 52)
+    offers = [{'key': key, 'label': 'x' * 40} for key in 'acdefghi']
+    rows = talk_rows(line, offers, 66, compute(80, 24).menu.talk.height)
+    assert [r.text for r in rows[:4]] == wrap_text(line, 66) and rows[4] == type(rows[4])()
+    assert [r.label for r in rows[5:]] == ['x' * 40] * 8 + ['Leave']
 
 
 def test_p12_every_shipped_dialogue_line_fits():

@@ -74,6 +74,9 @@ BALANCE_RANGE = (-3, 3)
 DIALOGUE_LINE_MAX = 200
 # P12 rule 4: a dialogue line fits the 80x24 talk page, using the client's wrap.
 TALK_WIDTH = compute(80, 24).menu.talk.width
+# P12 rules 2 and 4: a 4-row line, one blank row, the offers and the leave
+# row all fit the 80x24 talk page.
+TALK_OFFERS_MAX = compute(80, 24).menu.talk.height - TALK_LINE_ROWS - 2
 # 01-gazetteer.md content notes: lat-shaft is the only core with two
 # hardware locations, and the loader asserts it.
 SHARED_HARDWARE_CORES = frozenset({"lat-shaft"})
@@ -1951,6 +1954,8 @@ class _Validator:
                 for tag in ("CUST", "TEN"):
                     if tag not in tags:
                         self.report(*owner, f"a machine-mind talker needs a {tag} line")
+            if len(node.offers) > TALK_OFFERS_MAX:
+                self.report(*owner, f"{len(node.offers)} offers; the 80x24 talk page fits at most {TALK_OFFERS_MAX}")
             hotkeys: set[str] = set()
             for offer in node.offers:
                 if (cells := text_width(offer.label)) > TALK_LABEL_CELLS:
