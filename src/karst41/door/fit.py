@@ -6,7 +6,7 @@ is marked with ASCII `...`, as terminal UI canon says for truncation
 (03-terminal-ui.md); CP437 has no single-glyph ellipsis.
 """
 
-from collections.abc import Sequence
+from collections.abc import Callable, Sequence
 from typing import Any
 from dataclasses import dataclass
 
@@ -78,8 +78,29 @@ def talk_rows(line: str, actions: Sequence[dict[str, str]], width: int, height: 
     return [*shown, TalkRow(), *listed][:max(0, height)]
 
 
-def select_entries(heights: Sequence[int], protected: Sequence[bool], height: int) -> list[int]:
-    """P12 rule 5 (#202): rows each entry shows, oldest first; 0 hides it.
+# P12 rule 5 bound (technical review 6808753030): unprotected entries are
+# looked for at most this many entries per log row behind the newest one.
+# A 500-line ring of ordinary lines then costs at most
+# LOG_LOOKBACK_PER_ROW * height + 1 wraps per render, never the whole
+# ring; 1-row entries stop after `height`. Protected entries are never
+# bounded by it: each one still inside PROTECT_SECONDS is considered.
+LOG_LOOKBACK_PER_ROW = 2
+# The presentation log digests (coalesces) this many newest lines per
+# lookback entry, plus every line still inside PROTECT_SECONDS, so a full
+# ring never costs a full digest. A run of identical lines longer than the
+# window shows a lower (xN) count in the log; Ctrl-P scrollback still has
+# every line.
+LOG_DIGEST_LINES_PER_ENTRY = 4
+
+
+def log_window(height: int) -> int:
+    """Newest log lines the presentation log digests at this log height."""
+    return LOG_DIGEST_LINES_PER_ENTRY * (LOG_LOOKBACK_PER_ROW * max(0, height) + 1)
+
+
+def select_lazy(count: int, rows_of: Callable[[int], Sequence[Any]],
+                protected: Callable[[int], bool], height: int) -> dict[int, int]:
+    """P12 rule 5 (#202): rows each shown entry gets, by index; absent hides it.
 
     The newest entry always gets at least one row. Protected entries then
     fill what's left, newest first and whole only; the newest takes back
@@ -88,30 +109,50 @@ def select_entries(heights: Sequence[int], protected: Sequence[bool], height: in
     the newest entry is ever shown in part. An entry that doesn't fit whole
     is skipped and the pass goes on to older ones, as steps 2 and 4 say:
     "fill the remaining rows", "fill whatever is left".
+
+    Work is bounded: `rows_of` (the wrap) is called newest first, only
+    for entries the passes reach, and each pass stops once the rows are
+    full. The protected pass wraps only protected entries; the pass for
+    other entries looks back at most LOG_LOOKBACK_PER_ROW * height
+    entries. `protected` must be cheap and must not wrap.
     """
-    shown = [0] * len(heights)
-    if height <= 0 or not heights:
+    shown: dict[int, int] = {}
+    if height <= 0 or count <= 0:
         return shown
-    newest = len(heights) - 1
-    shown[newest] = min(heights[newest], height) if protected[newest] else min(1, heights[newest])
+    heights: dict[int, int] = {}
+
+    def size(index: int) -> int:
+        if index not in heights:
+            heights[index] = len(rows_of(index))
+        return heights[index]
+
+    newest = count - 1
+    oldest = max(0, newest - LOG_LOOKBACK_PER_ROW * height)
+    shown[newest] = min(size(newest), height) if protected(newest) else min(1, size(newest))
     left = height - shown[newest]
 
     def fill(want_protected: bool, left: int) -> int:
-        for index in range(newest - 1, -1, -1):
+        for index in range(newest - 1, -1 if want_protected else oldest - 1, -1):
             if left <= 0:
                 break
-            if protected[index] != want_protected or heights[index] > left:
+            if protected(index) != want_protected or size(index) > left:
                 continue
-            shown[index] = heights[index]
-            left -= heights[index]
+            shown[index] = size(index)
+            left -= size(index)
         return left
 
     left = fill(True, left)
-    extra = min(heights[newest] - shown[newest], left)
+    extra = min(size(newest) - shown[newest], left)
     shown[newest] += extra
     left -= extra
     fill(False, left)
-    return shown
+    return {index: rows for index, rows in shown.items() if rows}
+
+
+def select_entries(heights: Sequence[int], protected: Sequence[bool], height: int) -> list[int]:
+    """select_lazy over known heights, as a list in arrival order; 0 hides."""
+    shown = select_lazy(len(heights), lambda i: range(heights[i]), lambda i: protected[i], height)
+    return [shown.get(index, 0) for index in range(len(heights))]
 
 
 def log_cut(rows: list[str], shown: int, width: int) -> list[str]:
@@ -125,13 +166,22 @@ def default_log_rows(lines: Sequence[dict[str, Any]], width: int, height: int) -
     """The default renderer's log under rule 5: whole entries, newest always shown.
 
     Its lines carry no arrival time, so nothing is protected here (P12
-    ruling Q2, #202 6805937648); the presentation log protects.
+    ruling Q2, #202 6805937648); the presentation log protects. Only the
+    entries select_lazy reaches are wrapped.
     """
-    entries = [log_rows([line], width) for line in lines] if height > 0 else []
-    shown = select_entries([len(rows) for rows in entries], [False] * len(entries), height)
+    lines = list(lines)
+    wrapped: dict[int, list[dict[str, str]]] = {}
+
+    def rows_of(index: int) -> list[dict[str, str]]:
+        if index not in wrapped:
+            wrapped[index] = log_rows([lines[index]], width)
+        return wrapped[index]
+
+    shown = select_lazy(len(lines), rows_of, lambda index: False, height)
     out: list[dict[str, str]] = []
-    for index, (rows, count) in enumerate(zip(entries, shown)):
-        if count and index == len(entries) - 1 and count < len(rows):
+    for index in sorted(shown):
+        rows, count = wrapped[index], shown[index]
+        if index == len(lines) - 1 and count < len(rows):
             texts = log_cut([row['text'] for row in rows], count, width)
             rows = [{**row, 'text': text} for row, text in zip(rows, texts)]
         out.extend(rows[:count])

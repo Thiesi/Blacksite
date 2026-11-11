@@ -10,7 +10,7 @@ import re
 from typing import Any
 
 from karst41.door.cells import CellBuffer, clean_text, display_width, truncate
-from karst41.door.fit import log_cut, select_entries
+from karst41.door.fit import log_cut, log_window, select_lazy
 from karst41.door.log import wrap as word_wrap
 from karst41.layout import Layout
 from karst41.door.present.paint import Paint
@@ -163,33 +163,50 @@ def digest(lines: list[dict[str, Any]]) -> list[LogEntry]:
     return out
 
 
-def _entries(lines: list[dict[str, Any]], width: int) -> list[tuple[LogEntry, list[str]]]:
-    out = []
-    for entry in digest(lines):
-        text = entry.shown
-        if entry.kind == 'speech' and entry.speaker and not text.startswith(entry.speaker + ': '):
-            text = entry.speaker + ': ' + text
-        out.append((entry, word_wrap(text, width - 2, continuation=0)))
-    return out
-
-
-def _select(entries: list[tuple[LogEntry, list[str]]], height: int, width: int,
-            now: float) -> list[tuple[LogEntry, str, bool]]:
-    """P12 rule 5 (#202): whole entries; the newest always shows."""
-    protected = [entry.kind in ('danger', 'combat') and 0 <= now - entry.arrived < PROTECT_SECONDS
-                 for entry, _ in entries]
-    shown = select_entries([len(rows) for _, rows in entries], protected, height)
-    out = []
-    for index, ((entry, rows), count) in enumerate(zip(entries, shown)):
-        if index == len(entries) - 1:
-            rows = log_cut(rows, count, width - 2)
-        out.extend((entry, line, i == 0) for i, line in enumerate(rows[:count]))
-    return out
+def _text(entry: LogEntry) -> str:
+    text = entry.shown
+    if entry.kind == 'speech' and entry.speaker and not text.startswith(entry.speaker + ': '):
+        text = entry.speaker + ': ' + text
+    return text
 
 
 def visible_rows(lines: list[dict[str, Any]], width: int, height: int,
                  now: float) -> list[tuple[LogEntry, str, bool]]:
-    return _select(_entries(lines, width), height, width, now)
+    """P12 rule 5 (#202): whole entries; the newest always shows.
+
+    Bounded work (technical review 6808753030): only the newest
+    log_window(height) lines, plus any still inside PROTECT_SECONDS, are
+    digested, and only entries the selection reaches are wrapped
+    (fit.select_lazy).
+    """
+    if height <= 0:
+        return []
+    lines = list(lines)
+    start = max(0, len(lines) - log_window(height))
+    # Never cut off a line that may still be protected (rule 5 step 2).
+    # Lines arrive in order, so the scan stops at the first older one.
+    while start > 0 and 0 <= now - float(lines[start - 1].get('_arrived', -1e30)) < PROTECT_SECONDS:
+        start -= 1
+    entries = digest(lines[start:])
+    wrapped: dict[int, list[str]] = {}
+
+    def rows_of(index: int) -> list[str]:
+        if index not in wrapped:
+            wrapped[index] = word_wrap(_text(entries[index]), width - 2, continuation=0)
+        return wrapped[index]
+
+    def protected(index: int) -> bool:
+        entry = entries[index]
+        return entry.kind in ('danger', 'combat') and 0 <= now - entry.arrived < PROTECT_SECONDS
+
+    shown = select_lazy(len(entries), rows_of, protected, height)
+    out = []
+    for index in sorted(shown):
+        rows = wrapped[index]
+        if index == len(entries) - 1:
+            rows = log_cut(rows, shown[index], width - 2)
+        out.extend((entries[index], line, i == 0) for i, line in enumerate(rows[:shown[index]]))
+    return out
 
 
 def log(buffer: CellBuffer, layout: Layout, paint: Paint, lines: list[dict[str, Any]], now: float) -> None:

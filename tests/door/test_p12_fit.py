@@ -12,8 +12,9 @@ from karst41.content.schema import DialogueLine, Offer
 from karst41.content.validate import validate
 from karst41.door.cells import display_width
 from karst41.door.doorinfo import DoorInfo
-from karst41.door.fit import (LOG_CUT, TALK_LINE_ROWS, default_log_rows, fit_text,
-                              select_entries, talk_rows, wrap_text)
+from karst41.door import fit
+from karst41.door.fit import (LOG_CUT, LOG_LOOKBACK_PER_ROW, TALK_LINE_ROWS, default_log_rows, fit_text,
+                              log_window, select_entries, talk_rows, wrap_text)
 from karst41.door.layout import compute
 from karst41.door.model import Display
 from karst41.door.present import chrome
@@ -229,8 +230,8 @@ def test_p12_log_protected_danger_plus_two_speech_entries_are_all_whole():
     lines = [line('danger', 'The floor is live.', 0), speech(TWO_ROWS, 1), speech('Go.', 2)]
     rows = present_log(lines)
     for text in {entry for entry, _ in rows}:
-        assert sum(1 for entry, _ in rows if entry == text) == len(chrome._entries(
-            [next(l for l in lines if l['text'] == text)], 78)[0][1])
+        alone = chrome.visible_rows([next(l for l in lines if l['text'] == text)], 78, 100, 1)
+        assert sum(1 for entry, _ in rows if entry == text) == len(alone)
 
 
 def test_p12_log_newest_entry_taller_than_the_log_shows_head_and_ctrl_p():
@@ -251,7 +252,7 @@ def test_p12_log_three_combat_lines_then_speech_keeps_the_speech():
 def test_p12_log_newest_protected_danger_wins_over_older_combat():
     tall = 'Move now. ' + ' '.join(['The vat line is venting into this corridor'] * 4)
     lines = [line('combat', 'A drone fires.', 0), line('danger', tall, 1)]
-    assert len(chrome._entries(lines[1:], 78)[0][1]) == 3
+    assert len(chrome.visible_rows(lines[1:], 78, 100, 1)) == 3
     assert {entry for entry, _ in present_log(lines)} == {tall}
 
 
@@ -265,3 +266,52 @@ def test_p12_log_renders_whole_entries_at_80x24(info, presentation):
     log = compute(80, 24).log
     text = '\n'.join(screen[log.y:log.bottom])
     assert 'Front room' in text and 'Back room' not in text and 'quiet way' in text.replace('\n', ' ')
+
+
+# --- rule 5: bounded work on a full log ring (technical review 6808753030) ---
+
+RING = 500  # Display.logs maxlen, game design 11
+
+
+def ring(text: str, kind: str = 'system') -> list[dict]:
+    return [{'kind': kind, 'channel': 'system', 'text': f'{text} {i}',
+             'at': f'2026-11-11T12:{i // 60 % 60:02}:{i % 60:02}+00:00', '_arrived': 0} for i in range(RING)]
+
+
+@pytest.mark.parametrize('height', [3, 8])
+def test_p12_default_log_wraps_a_bounded_number_of_entries(monkeypatch, height):
+    calls = []
+    real = fit.log_rows
+    monkeypatch.setattr(fit, 'log_rows', lambda lines, width: calls.append(1) or real(lines, width))
+    # One-row entries: the passes stop once the rows are full.
+    assert len(default_log_rows(ring('Short.'), 78, height)) == height
+    assert len(calls) == height
+    calls.clear()
+    # Entries too tall to fit: the skip-ahead stops at its lookback bound.
+    lines = [*ring(' '.join(['word'] * 200))[1:], {'kind': 'system', 'channel': 'system', 'text': 'Now.'}]
+    assert len(default_log_rows(lines, 78, height)) == 1  # nothing older fits whole
+    assert len(calls) == LOG_LOOKBACK_PER_ROW * height + 1
+
+
+@pytest.mark.parametrize('height', [3, 8])
+def test_p12_presentation_log_digests_and_wraps_a_bounded_window(monkeypatch, height):
+    digested, wrapped = [], []
+    real_digest, real_wrap = chrome.digest, chrome.word_wrap
+    monkeypatch.setattr(chrome, 'digest', lambda lines: digested.append(len(lines)) or real_digest(lines))
+    monkeypatch.setattr(chrome, 'word_wrap', lambda *a, **k: wrapped.append(1) or real_wrap(*a, **k))
+    # The ring arrived long ago (now=1000), so no line is still protected.
+    assert len(chrome.visible_rows(ring('Short.'), 78, height, 1000)) == height
+    assert digested == [log_window(height)] and len(wrapped) == height
+    digested.clear(), wrapped.clear()
+    lines = [*ring(' '.join(['word'] * 200))[1:], {'kind': 'system', 'text': 'Now.'}]
+    assert len(chrome.visible_rows(lines, 78, height, 1000)) == 1
+    assert digested == [log_window(height)] and len(wrapped) == LOG_LOOKBACK_PER_ROW * height + 1
+
+
+def test_p12_bounded_window_never_drops_a_protected_entry():
+    # A danger line behind more lines than the lookback and digest window
+    # still shows while it is inside PROTECT_SECONDS, and drops after.
+    lines = [line('danger', 'The floor is live.', 0, arrived=0)]
+    lines += [line('system', f'Message {i}', 1 + i % 50, arrived=1) for i in range(log_window(3) + 20)]
+    assert 'The floor is live.' in {entry for entry, _ in present_log(lines, now=9.9)}
+    assert 'The floor is live.' not in {entry for entry, _ in present_log(lines, now=10.1)}
