@@ -1257,8 +1257,9 @@ number is the whole point.
 - **Relays:** none, by agreement. The agreement is enforced by Sable
   enforcers who attack anyone who attacks anyone. They follow a
   truce-breaker into the bars, not past the street's exits, and any
-  death squares it with them; a Mark outlasts the death (planned, S44;
-  game design 5.5 and 7.3).
+  death squares it with them; a Mark outlasts the death, and a new
+  breach after it brings them again (planned, S44; game design 5.5 and
+  7.3).
 - **Terminals:** three public terminals.
 - **Vendors / anchors:** five bars (drinks: cheap consumables with a
   small shock reduction; see "The bars" below), a drug dealer (street

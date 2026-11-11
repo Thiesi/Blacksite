@@ -233,7 +233,10 @@ Planned, S44: the price, the hunted state and the refusals.
   truce-breaker, 'The bouncer looks at your red name. "Not tonight. Not
   after the Row. <n> min."'; while the keeper is still answering, 'The
   bouncer doesn't move. "<Keeper>'s still asking about you. Try me in
-  <n> min."'
+  <n> min."' When both apply, the line belongs to whichever condition
+  gives the longer time, and the Mark's line wins a tie, so after a
+  death settles the answer the wording can change while the wait goes
+  on.
 - **Vesper** refuses a Marked player's work: 'Vesper: "Not with that
   name. Come back in <n> min."'
 - **On respawn** after a death that settled the keeper's answer, a log
