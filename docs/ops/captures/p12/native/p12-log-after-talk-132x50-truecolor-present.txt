@@ -1,0 +1,50 @@
+╔═SODIUM ROW═The Tin Halo═POCKET════════════════════════════════════════════════════════════════════════════╤════════════21:41═════╗
+║                                                                                                           │─ HERE ───────────────║
+║                                                                                                           │ $ Vesper             ║
+║                                                                                                           │─ TARGET ─────────────║
+║                                                                                                           │ none   Tab picks     ║
+║                                                                                                           │─ NEARBY ─────────────║
+║                                                                                                           │ ☻ Halo bouncer ~     ║
+║                                                                                                           │                      ║
+║                                                                                                           │                      ║
+║                                                                                                           │                      ║
+║                                ·········                                                                  │                      ║
+║                                ·+·······                                                                  │                      ║
+║                                ···☻······                                                                 │                      ║
+║                                ··········                                                                 │                      ║
+║                                @$········                                                                 │                      ║
+║                                ·········                                                                  │                      ║
+║                                ·······▒▒                                                                  │                      ║
+║                                ·······▒▒                                                                  │                      ║
+║                                ········                                                                   │                      ║
+║                                ········                                                                   │                      ║
+║                                ·······                                                                    │                      ║
+║                                ·····                                                                      │                      ║
+║                                ··                                                                         │                      ║
+║                                                                                                           │                      ║
+║                                                                                                           │                      ║
+║                                                                                                           │                      ║
+║                                                                                                           │                      ║
+║                                                                                                           │                      ║
+║                                                                                                           │                      ║
+║                                                                                                           │                      ║
+║                                                                                                           │                      ║
+║                                                                                                           │                      ║
+║                                                                                                           │──────────────────────║
+║                                                                                                           │ P12truecolor...  G1  ║
+║                                                                                                           │ HP  ██████████ 130   ║
+║                                                                                                           │ STA ██████████ 70    ║
+║                                                                                                           │ SHK ░░░░░░░░░░ 0     ║
+║                                                                                                           │ 200 ch   lease 0/90  ║
+║                                                                                                           │ discharge 100/1500   ║
+╟───────────────────────────────────────────────────────────────────────────────────────────────────────────┴──────────────────────╢
+║» Nobody draws on Sodium Row. Sable makes sure of it.                                                                             ║
+║√ You gain 25 XP.                                                                                                                 ║
+║+ You arrive at The Tin Halo.                                                                                                     ║
+║» You step under a halo of tin cans. You see Vesper at the end of the bar, three screens beside a drink. You come here for work.  ║
+║√ You gain 25 XP.                                                                                                                 ║
+║" Director Anselm Halvard: Maartens lists the unit as Directorate property. You record its warmth. You will appreciate that its   ║
+║  temperature does not identify the source of that heat.                                                                          ║
+║" Vesper: Sweetheart. You've got the card. Sit. First one's on Vantongeren; she pays me to say that.                              ║
+║E talk to Vesper  ? help  Tab target  F fire  X weapon  1-5 quick  V abilities  I inventory                                       ║
+╚══════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════ 

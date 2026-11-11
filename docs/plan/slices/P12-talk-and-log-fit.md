@@ -1,7 +1,7 @@
 # P12 — Talk lines and log entries are never cut
 
-**Status:** proposed (owner finding, round 4 demo, 2026-11-10; spec in
-#185 comment 6755448631; technical lead agreed to a separate P-slice)
+**Status:** done (PR #206; owner finding, round 4 demo, 2026-11-10; spec
+in #185 comment 6755448631; technical lead agreed to a separate P-slice)
 **Primary model:** Codex · **Reviewer:** automated review, technical lead, presentation lead (presentation acceptance)
 **Depends on:** P5 (merged) · **Lands before:** P10, and the talk content in the Row rules slice (V Trade, Ask about…) · **Milestone:** presentation track
 

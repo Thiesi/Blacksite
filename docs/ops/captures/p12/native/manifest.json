@@ -1,0 +1,413 @@
+{
+  "run": "https://github.com/Thiesi/Karst41/actions/runs/43103576913",
+  "head": "dbec9c41d89533025522aa8002242ec71aeb4940",
+  "transport": "NetBBS v7.45.0 Telnet -> registered native stdio",
+  "artifacts": [
+    {
+      "name": "p12-132x50-legacy",
+      "id": 13893985393,
+      "raw": "the .ans streams and .json style snapshots stay in this CI artifact"
+    },
+    {
+      "name": "p12-132x50-modern",
+      "id": 13893991133,
+      "raw": "the .ans streams and .json style snapshots stay in this CI artifact"
+    },
+    {
+      "name": "p12-80x24-legacy",
+      "id": 13894795336,
+      "raw": "the .ans streams and .json style snapshots stay in this CI artifact"
+    },
+    {
+      "name": "p12-80x24-modern",
+      "id": 13893602083,
+      "raw": "the .ans streams and .json style snapshots stay in this CI artifact"
+    }
+  ],
+  "captures": [
+    {
+      "file": "p12-talk-halvard-132x50-16-legacy.txt",
+      "artifact": "p12-132x50-legacy",
+      "scenario": "talk-halvard",
+      "size": [
+        132,
+        50
+      ],
+      "tier": "16",
+      "renderer": "legacy",
+      "sha256": {
+        ".ans": "274f0106a7560b9847574d3339e8a641c0e38a7c078891ca3b46c82b220bf09d",
+        ".txt": "156824ba84f8ce7ce8c2246bd82b71dec97151e50e7c8c5bfefd8a506019ccae",
+        ".json": "34b5a235b5a9c1ccfc26c7be4cd522c5479cf16a4d47a042548d3da232cbcdc3"
+      }
+    },
+    {
+      "file": "p12-talk-halvard-132x50-256-legacy.txt",
+      "artifact": "p12-132x50-legacy",
+      "scenario": "talk-halvard",
+      "size": [
+        132,
+        50
+      ],
+      "tier": "256",
+      "renderer": "legacy",
+      "sha256": {
+        ".ans": "90f7798064d4f2827fa55710c383ab19a11876372688fd764b23e625fc4637d2",
+        ".txt": "55658ce627f4a9750aba1caddfe44c95179c5bdb4dfe33abd48d2fa3f1c83c9c",
+        ".json": "a511851c6bb1315ed987a990377b3ab0a9297590a8b60ba6540c69e61a766a23"
+      }
+    },
+    {
+      "file": "p12-vendor-detail-wraps-132x50-truecolor-legacy.txt",
+      "artifact": "p12-132x50-legacy",
+      "scenario": "vendor-detail-wraps",
+      "size": [
+        132,
+        50
+      ],
+      "tier": "truecolor",
+      "renderer": "legacy",
+      "sha256": {
+        ".ans": "2016fcf56d30717f4ddd68cef7564f07fd32e9583e0aa54b236b799fd6892bc6",
+        ".txt": "0a4e551dc8db6c6ddf877b8744015276df78e15173b8c87ce1336b2418251fdf",
+        ".json": "2bff3d46300a129ba86cc329719f79dc0946dff39a1ef6918f2bc7e4e81070ee"
+      }
+    },
+    {
+      "file": "p12-talk-halvard-132x50-truecolor-legacy.txt",
+      "artifact": "p12-132x50-legacy",
+      "scenario": "talk-halvard",
+      "size": [
+        132,
+        50
+      ],
+      "tier": "truecolor",
+      "renderer": "legacy",
+      "sha256": {
+        ".ans": "f6d2f6eb7652684bc7cfadae9432840c75c9a57121afe19114c486f94ee5e84a",
+        ".txt": "4af3fa2b89642a57ed1a9c2a58c797fbf4338201ca835a34568a666c0b13ea57",
+        ".json": "7ac642b89f9a922369388790290b849bef63226d2a2549a930ee375afb04daef"
+      }
+    },
+    {
+      "file": "p12-talk-vesper-132x50-truecolor-legacy.txt",
+      "artifact": "p12-132x50-legacy",
+      "scenario": "talk-vesper",
+      "size": [
+        132,
+        50
+      ],
+      "tier": "truecolor",
+      "renderer": "legacy",
+      "sha256": {
+        ".ans": "0ca50cb62becd4ff9198a8752fbc3aafc18de25c78bc716de706b3cd2a858a65",
+        ".txt": "4d48dd05edcc4ac1ce16e7414262d2a61e23405c4307ecfd6fac1a3b884aa302",
+        ".json": "1d4a8955bfe0c599c4bb5fdfc46f19ba0caa2b84417200310c7161053aa417f2"
+      }
+    },
+    {
+      "file": "p12-log-after-talk-132x50-truecolor-legacy.txt",
+      "artifact": "p12-132x50-legacy",
+      "scenario": "log-after-talk",
+      "size": [
+        132,
+        50
+      ],
+      "tier": "truecolor",
+      "renderer": "legacy",
+      "sha256": {
+        ".ans": "54f2fed351cd7ecd5ec7128a65e308d6e884906c01dbb67e94e84c6a37f160ec",
+        ".txt": "5df37a419190d5b19d4acaa25f3bc51df3d8ca3a7015d7893d9a1b749fc9423c",
+        ".json": "704b97aa0ee3509a4e20049cd1565540e5ceba9f240e71353096c73edf0458e8"
+      }
+    },
+    {
+      "file": "p12-talk-halvard-132x50-16-present.txt",
+      "artifact": "p12-132x50-modern",
+      "scenario": "talk-halvard",
+      "size": [
+        132,
+        50
+      ],
+      "tier": "16",
+      "renderer": "present",
+      "sha256": {
+        ".ans": "673dd8dbc835fdb3686989c55ea70049eeb21bf18e4e975f33e9d35715a681cd",
+        ".txt": "f2fa6dfe3b17e8746b7c3ee55bab4544f53504150d018fcdc8c36f2ebdc48b9c",
+        ".json": "413589389c559e251efd1f77f5a0d87e91a20fc4564ff17485bc5b8ae2f5a81b"
+      }
+    },
+    {
+      "file": "p12-talk-halvard-132x50-256-present.txt",
+      "artifact": "p12-132x50-modern",
+      "scenario": "talk-halvard",
+      "size": [
+        132,
+        50
+      ],
+      "tier": "256",
+      "renderer": "present",
+      "sha256": {
+        ".ans": "a8015047124fc6dad72077447a81e0ad62d14a5fc382a928eb286ac0840ba5ec",
+        ".txt": "aec477a264605b5ed29de0644b57307d6174563f0a17b7ff85c98edf9856d6e2",
+        ".json": "d2576f2885b6d930d125b8819a13532accf4e61ba675e3b9440f8dd7bde48310"
+      }
+    },
+    {
+      "file": "p12-vendor-detail-wraps-132x50-truecolor-present.txt",
+      "artifact": "p12-132x50-modern",
+      "scenario": "vendor-detail-wraps",
+      "size": [
+        132,
+        50
+      ],
+      "tier": "truecolor",
+      "renderer": "present",
+      "sha256": {
+        ".ans": "c9506e12e47464fc75ca00175c71b7649742c3568149ea0964481a22a5021c0a",
+        ".txt": "d7f4fc00ad93f2d4c63206c5282e0d850347a866ed2946ccf6bcfb8e73493443",
+        ".json": "0e8f8593847af2331723b7d6d059e7e3629f0190a6dc6b0bdfd3f8e4a4afb129"
+      }
+    },
+    {
+      "file": "p12-talk-halvard-132x50-truecolor-present.txt",
+      "artifact": "p12-132x50-modern",
+      "scenario": "talk-halvard",
+      "size": [
+        132,
+        50
+      ],
+      "tier": "truecolor",
+      "renderer": "present",
+      "sha256": {
+        ".ans": "5417f35a12ef13f7fbf32f0ea33efcfe9c449854d5b96d1db36606cbbff66348",
+        ".txt": "77547b2769229d027162ce2af683c6533963d1c7aeab319beb07f795d4479f9f",
+        ".json": "b6a2a6180a2572b6f9ad5d64b3b36a67fc59e92a64b480ee250a46a96e9f2822"
+      }
+    },
+    {
+      "file": "p12-talk-vesper-132x50-truecolor-present.txt",
+      "artifact": "p12-132x50-modern",
+      "scenario": "talk-vesper",
+      "size": [
+        132,
+        50
+      ],
+      "tier": "truecolor",
+      "renderer": "present",
+      "sha256": {
+        ".ans": "564dbb294d8fe586f905ef51ff1468dc9c91f5a450efac178af6f354993b095a",
+        ".txt": "ba53bdea9ff5b2718c531ae1b350950ee12328b4ba7e8e9b119f83de7980502a",
+        ".json": "dbfb790b963bd882632c78e0153bd52f8eb65c1a6f2b7f7f3a1015e09c70e21a"
+      }
+    },
+    {
+      "file": "p12-log-after-talk-132x50-truecolor-present.txt",
+      "artifact": "p12-132x50-modern",
+      "scenario": "log-after-talk",
+      "size": [
+        132,
+        50
+      ],
+      "tier": "truecolor",
+      "renderer": "present",
+      "sha256": {
+        ".ans": "8659c0b2afdebba2503d4e390023b057483f9ad1f43d3b48ab9e30d9435a00df",
+        ".txt": "12f0c69803334cc32b206dc68fc0077cee7dd48d3e3403131e3531d11ae19632",
+        ".json": "545cd64de2cf478951fe37897770c3932dd1c6310fbf82aa3f8ef7d3c840fea4"
+      }
+    },
+    {
+      "file": "p12-talk-halvard-80x24-16-legacy.txt",
+      "artifact": "p12-80x24-legacy",
+      "scenario": "talk-halvard",
+      "size": [
+        80,
+        24
+      ],
+      "tier": "16",
+      "renderer": "legacy",
+      "sha256": {
+        ".ans": "670d1fd1872d23a80c6575377febc1b16b3110e7e23ef5966c9e45a3cde30714",
+        ".txt": "efd7394ece0095bb74e509ce9e93fcb4bac367231bbca614bfe6b2c886d0f46a",
+        ".json": "6325477e96b0a763c9dec8f88842eb5eb8e25f1fea219f658c93fc52beac9499"
+      }
+    },
+    {
+      "file": "p12-talk-halvard-80x24-256-legacy.txt",
+      "artifact": "p12-80x24-legacy",
+      "scenario": "talk-halvard",
+      "size": [
+        80,
+        24
+      ],
+      "tier": "256",
+      "renderer": "legacy",
+      "sha256": {
+        ".ans": "87f4aff615972d9f001fe1ed7dcc03854481887522bdb765176720e2f538d79e",
+        ".txt": "7f0aff7b89b9c2f03f7fe81d3e333ff6c8f063078b6b4de397088f9e647fbd20",
+        ".json": "5afa41e40b041f6096ca63ec0cb42a5067faa06b9bf9403e3149af4c708861a8"
+      }
+    },
+    {
+      "file": "p12-vendor-detail-wraps-80x24-truecolor-legacy.txt",
+      "artifact": "p12-80x24-legacy",
+      "scenario": "vendor-detail-wraps",
+      "size": [
+        80,
+        24
+      ],
+      "tier": "truecolor",
+      "renderer": "legacy",
+      "sha256": {
+        ".ans": "51a1f15ba0665bcdfcb09aaea3bae647837b87ae9331a5e44f33339a54c30805",
+        ".txt": "d9eacac82764f3bd1e089d8c505f89b0e7dafb4388589f6328ac1f5eab307f8c",
+        ".json": "0820cec4203c9c6ac75047f1ea8b13a263f85419690dad757e82e671a0858f57"
+      }
+    },
+    {
+      "file": "p12-talk-halvard-80x24-truecolor-legacy.txt",
+      "artifact": "p12-80x24-legacy",
+      "scenario": "talk-halvard",
+      "size": [
+        80,
+        24
+      ],
+      "tier": "truecolor",
+      "renderer": "legacy",
+      "sha256": {
+        ".ans": "ebdbbeb9a945025f44c0efc470d62b957357074edee88b26dff1230d030cc4ec",
+        ".txt": "eee4d02cb6ff11f4ee0af50f5ab15619c89b822cc8ea15a3d029513959c2f6fe",
+        ".json": "2f5459213574d5d8e9d41c69453f5e0f4d90f7b13cec5aceee5b0bdf579d2834"
+      }
+    },
+    {
+      "file": "p12-talk-vesper-80x24-truecolor-legacy.txt",
+      "artifact": "p12-80x24-legacy",
+      "scenario": "talk-vesper",
+      "size": [
+        80,
+        24
+      ],
+      "tier": "truecolor",
+      "renderer": "legacy",
+      "sha256": {
+        ".ans": "e78e5f79a95bdf0410398b86ee21b53aab3e75344a42785027247272a578f8bf",
+        ".txt": "af08644a584035248a10cdbfe216a162e5cddeac5b24323198d6638da4e6a725",
+        ".json": "5e9a9a377d8e43f240a2a4820dcbe0630c4af8a6ebca54602771b707a79389ef"
+      }
+    },
+    {
+      "file": "p12-log-after-talk-80x24-truecolor-legacy.txt",
+      "artifact": "p12-80x24-legacy",
+      "scenario": "log-after-talk",
+      "size": [
+        80,
+        24
+      ],
+      "tier": "truecolor",
+      "renderer": "legacy",
+      "sha256": {
+        ".ans": "a96f4b84b6d157549b89ba7206518f2df2c156364193082f6dcedc36cfc6ad7a",
+        ".txt": "f7fd13f4c0681daf2e5ce6fda6a62bfad705d7b9118905243e08a2f0d2e05caf",
+        ".json": "c314a31baa4d7f36a3af026f93ede2829bf14b5e7f03796cc9809d6a56baf5ed"
+      }
+    },
+    {
+      "file": "p12-talk-halvard-80x24-16-present.txt",
+      "artifact": "p12-80x24-modern",
+      "scenario": "talk-halvard",
+      "size": [
+        80,
+        24
+      ],
+      "tier": "16",
+      "renderer": "present",
+      "sha256": {
+        ".ans": "10e86955c759ae8704603d93436aafe480af418f4910f303a6011528bb4ba00e",
+        ".txt": "b5356072718c32e97e142efd0e44a4fd473931f21275f18b6bb251225a6b7d11",
+        ".json": "566741084688f24d708f1da5d0393a307eb6af3499d649c9697ed513bb2a23c8"
+      }
+    },
+    {
+      "file": "p12-talk-halvard-80x24-256-present.txt",
+      "artifact": "p12-80x24-modern",
+      "scenario": "talk-halvard",
+      "size": [
+        80,
+        24
+      ],
+      "tier": "256",
+      "renderer": "present",
+      "sha256": {
+        ".ans": "1b9cc8e3cdb63e8decb723accb088341e4f0a8b1260cae20b1a7f160d79192c2",
+        ".txt": "6880c447b53e2de4a47b581942708f7b8cb9261576705e36d7c6e5b4692d2df9",
+        ".json": "ba2d579544df710147e1251c3cb4bc2e9a2d15a2f0a0990198a0c37f5dd0cc82"
+      }
+    },
+    {
+      "file": "p12-vendor-detail-wraps-80x24-truecolor-present.txt",
+      "artifact": "p12-80x24-modern",
+      "scenario": "vendor-detail-wraps",
+      "size": [
+        80,
+        24
+      ],
+      "tier": "truecolor",
+      "renderer": "present",
+      "sha256": {
+        ".ans": "f0c04867d4272d5807204c516d04028350120d0cc236569011c6dcba08b3874e",
+        ".txt": "7c1e3f560021e5171a22810901bc684d532582e27e236476dff70a0ca29286ee",
+        ".json": "7fc7d89f0116b07055be3ff01684227a668a36d9818c30c69c43d090484e252f"
+      }
+    },
+    {
+      "file": "p12-talk-halvard-80x24-truecolor-present.txt",
+      "artifact": "p12-80x24-modern",
+      "scenario": "talk-halvard",
+      "size": [
+        80,
+        24
+      ],
+      "tier": "truecolor",
+      "renderer": "present",
+      "sha256": {
+        ".ans": "4f90a35f626f88693e645a23cfd2fed4f03570926e69377170d355e32b01527d",
+        ".txt": "2367e1cc98f71a9aeadb947b027631fc5e6681cf1663afd7b5c4f7fde252db76",
+        ".json": "f1f343298c0827893ca11d520ee6a1b3f9fe2f01895ea4a121922ab8c372c8cc"
+      }
+    },
+    {
+      "file": "p12-talk-vesper-80x24-truecolor-present.txt",
+      "artifact": "p12-80x24-modern",
+      "scenario": "talk-vesper",
+      "size": [
+        80,
+        24
+      ],
+      "tier": "truecolor",
+      "renderer": "present",
+      "sha256": {
+        ".ans": "86cec2b286a7b57a422339df0bac0e7b62a368df4d1089d7101f93414598530d",
+        ".txt": "4758a205325d490732aaab73c128904f0fc0a10d77345168cc90cbde73472b17",
+        ".json": "9bf760e6885043a8b3e9a7eaae48591c7d56f30072fb14e0ab8f84f18053d998"
+      }
+    },
+    {
+      "file": "p12-log-after-talk-80x24-truecolor-present.txt",
+      "artifact": "p12-80x24-modern",
+      "scenario": "log-after-talk",
+      "size": [
+        80,
+        24
+      ],
+      "tier": "truecolor",
+      "renderer": "present",
+      "sha256": {
+        ".ans": "791ceff2cda7c6fac1b338a103df119f81032a55f02f476b664dde809aa7eeff",
+        ".txt": "7a84d24a0d510041d882ca604209a0f85a65315b3faff695f5f9ff0ec89922bb",
+        ".json": "88905ad0651d6dde7f326e6e98a996795cd2e94d61c3e9be916263159a8722df"
+      }
+    }
+  ]
+}

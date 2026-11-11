@@ -1,0 +1,50 @@
+┌─ Karst · S10P12256132 ───────────────────────────────────────────────────────────────────────────────────────────────────────────┐
+│          ┌─ Director Anselm Halvard - Director of the Spire ──────────────────────────────────────────────────────────┐          │
+│          │                                                                                                            │          │
+│          │ Maartens lists the unit as Directorate property. You record its warmth. You will appreciate that its       │          │
+│          │ temperature does not identify the source of that heat.                                                     │          │
+│          │                                                                                                            │          │
+│          │ c      Work board                                                                                          │          │
+│          │ Esc/B  Leave                                                                                               │          │
+│          │                                                                                                            │          │
+│          │                                                                                                            │          │
+│          │                                                                                                            │          │
+│          │                                                                                                            │          │
+│          │                                                                                                            │          │
+│          │                                                                                                            │          │
+│          │                                                                                                            │          │
+│          │                                                                                                            │          │
+│          │                                                                                                            │          │
+│          │                                                                                                            │          │
+│          │                                                                                                            │          │
+│          │                                                                                                            │          │
+│          │                                                                                                            │          │
+│          │                                                                                                            │          │
+│          │                                                                                                            │          │
+│          │                                                                                                            │          │
+│          │                                                                                                            │          │
+│          │                                                                                                            │          │
+│          │                                                                                                            │          │
+│          │                                                                                                            │          │
+│          │                                                                                                            │          │
+│          │                                                                                                            │          │
+│          │                                                                                                            │          │
+│          │                                                                                                            │          │
+│          │                                                                                                            │          │
+│          │                                                                                                            │          │
+│          │                                                                                                            │          │
+│          │                                                                                                            │          │
+│          │                                                                                                            │          │
+│          │                                                                                                            │          │
+│          └────────────────────────────────────────────────────────────────────────────────────────────────────────────┘          │
+├──────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────┤
+│[zone] Nobody draws on Sodium Row. Sable makes sure of it.                                                                        │
+│[sys] You gain 25 XP.                                                                                                             │
+│[zone] You arrive at The Tin Halo.                                                                                                │
+│[zone] You step under a halo of tin cans. You see Vesper at the end of the bar, three screens beside a drink. You come here for   │
+│  work.                                                                                                                           │
+│[sys] You gain 25 XP.                                                                                                             │
+│[zone] Director Anselm Halvard: Maartens lists the unit as Directorate property. You record its warmth. You will appreciate that  │
+│  its temperature does not identify the source of that heat.                                                                      │
+│Choose an action; move or Esc/B leaves                                                                                            │
+└────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────── 
