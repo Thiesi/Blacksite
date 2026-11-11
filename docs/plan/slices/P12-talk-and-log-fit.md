@@ -3,7 +3,7 @@
 **Status:** proposed (owner finding, round 4 demo, 2026-11-10; spec in
 #185 comment 6755448631; technical lead agreed to a separate P-slice)
 **Primary model:** Codex · **Reviewer:** automated review, technical lead, presentation lead (presentation acceptance)
-**Depends on:** P5 (merged) · **Lands before:** the talk content in the Row rules slice (V Trade, Ask about…) · **Milestone:** presentation track
+**Depends on:** P5 (merged) · **Lands before:** P10, and the talk content in the Row rules slice (V Trade, Ask about…) · **Milestone:** presentation track
 
 Canon: terminal UI 2.5 (the log) and the talk page as S42 left it. Where
 this file and canon differ, canon wins.
@@ -99,11 +99,23 @@ creative lead's new answers fail at authoring time, not in play.
 
 **5. The log shows whole entries.** Both renderers select **entries**,
 not rows. An entry is shown complete or not at all.
-- Protected danger and combat entries are taken first, as `_select`
-  does now. The newest other entries then fill what's left, newest at the
-  bottom, in arrival order.
-- **The one exception:** if the newest entry alone is taller than the
-  log, its first rows show, and the last visible row ends with `… Ctrl-P`.
+- **The newest entry always shows,** at least its first row. A line just
+  said is never pushed off the page. Selection runs in this order:
+  1. Reserve one row for the newest entry.
+  2. Protected danger and combat entries (within `PROTECT_SECONDS`, as
+     `_select` judges now) fill the remaining rows, newest first, whole
+     only.
+  3. The newest entry takes back any rows still free, up to its full
+     height.
+  4. Other entries fill whatever is left, newest first, whole only.
+- **Cut newest entry:** if the newest entry gets fewer rows than it needs,
+  its first rows show and the last of them ends with `… Ctrl-P`. This is
+  the only entry that is ever shown in part.
+- Rows display in arrival order, newest at the bottom.
+- **If the newest entry is itself protected,** it comes first and wins:
+  in step 1 it takes rows up to its full height (the whole log if it needs
+  it), and older protected entries fill only what's left in step 2. The
+  freshest alert is never cut to make room for an older one.
 - Continuation rows keep today's look: no gutter, indented to the text.
 - Coalescing (`(x2)`) and the XP merge are unchanged.
 
@@ -146,6 +158,14 @@ page keeps its row. The hint line doesn't change; it's already full at
   - With a protected danger line plus two speech entries, every entry
     shown is complete.
   - A newest entry taller than the log shows its head and `… Ctrl-P`.
+  - **Three 1-row combat lines, all protected, then a 1-row speech
+    line:** the speech line shows on the bottom row, with the two newest
+    combat lines above it. The same case with a 2-row speech line shows
+    the speech's first row ending `… Ctrl-P`, plus the two newest combat
+    lines.
+  - **A 1-row combat line, then a 3-row danger line, both protected:**
+    the danger line shows whole on all 3 rows, and the combat line
+    doesn't show.
 - **Goldens:** regenerated where a detail or log screen changes. The PR
   lists them.
 

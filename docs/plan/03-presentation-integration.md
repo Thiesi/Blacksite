@@ -436,6 +436,7 @@ after P2 + P4 (P3 for HERE) ─────────────────�
  P5 client foundations (behind switch)
 after P5 ────────────────────────────────────────────────────────────────
  P6 place layer + 3 representative zones   P7 Lattice   P8 voice (+S27)
+ P12 talk and log fit (before P10 and the Row rules talk content)
  ── H1 human gate: representative locations ──     PT1 D8 playtest
 after H1 ────────────────────────────────────────────────────────────────
  C1 remaining hub place records       S25c geometry pilots: Shaft Foot,
@@ -580,7 +581,7 @@ of the map at both sizes.
 **P10 Cutover.** *Purpose:* one grammar everywhere. *Scope:* switch
 default on; old zone and Lattice renderers and old chrome removed;
 goldens regenerated; every shipped zone has a place record (validator
-becomes strict). *Depends:* P5 to P8, P11, C1, S25c complete. *Owner:*
+becomes strict). *Depends:* P5 to P8, P11, P12, C1, S25c complete. *Owner:*
 Codex. *Gate:* technical lead, presentation lead, owner.
 
 **P11 Text place card (approved by the owner 2026-11-06, #164).**
@@ -598,7 +599,7 @@ entry. *Scope:* [`P12-talk-and-log-fit.md`](slices/P12-talk-and-log-fit.md):
 talk line wrap, vertical talk actions with one leave row, menu detail
 wrap, a dialogue fit check, whole-entry log, in both renderers. Its only
 server change: talkers lose the appended `b Back` action. *Depends:* P5.
-*Lands before:* the Row rules slice's talk content. *Owner:* Codex.
+*Lands before:* P10, and the Row rules slice's talk content. *Owner:* Codex.
 *Gate:* automated review, technical lead, presentation lead.
 
 **C1 Hub place records.** The seven remaining S08 hubs, by the
