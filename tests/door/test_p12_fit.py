@@ -178,6 +178,11 @@ def test_p12_select_entries_rules():
     assert select_entries([1, 3], [True, True], 3) == [0, 3]
     assert select_entries([5], [False], 3) == [3]
     assert select_entries([1, 2, 1], [True, False, False], 3) == [1, 0, 1]
+    # Steps 2 and 4 fill whatever is left: an entry too tall to fit whole is
+    # skipped and an older, shorter one still fills the free row.
+    assert select_entries([1, 3, 1], [False, False, False], 3) == [1, 0, 1]
+    assert select_entries([1, 3, 1, 1], [False, False, False, False], 3) == [1, 0, 1, 1]
+    assert select_entries([1, 3, 1], [True, True, False], 3) == [1, 0, 1]
 
 
 def speech(text: str, second: int, arrived: float = 0) -> dict:

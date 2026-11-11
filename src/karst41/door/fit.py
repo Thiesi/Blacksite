@@ -85,9 +85,9 @@ def select_entries(heights: Sequence[int], protected: Sequence[bool], height: in
     fill what's left, newest first and whole only; the newest takes back
     free rows; other entries fill the rest, newest first and whole only.
     A protected newest entry takes rows up to its full height first. Only
-    the newest entry is ever shown in part. Each pass stops at the first
-    entry that doesn't fit whole, so what shows of each group is its most
-    recent run.
+    the newest entry is ever shown in part. An entry that doesn't fit whole
+    is skipped and the pass goes on to older ones, as steps 2 and 4 say:
+    "fill the remaining rows", "fill whatever is left".
     """
     shown = [0] * len(heights)
     if height <= 0 or not heights:
@@ -98,10 +98,10 @@ def select_entries(heights: Sequence[int], protected: Sequence[bool], height: in
 
     def fill(want_protected: bool, left: int) -> int:
         for index in range(newest - 1, -1, -1):
-            if protected[index] != want_protected:
-                continue
-            if heights[index] > left:
+            if left <= 0:
                 break
+            if protected[index] != want_protected or heights[index] > left:
+                continue
             shown[index] = heights[index]
             left -= heights[index]
         return left
@@ -127,7 +127,7 @@ def default_log_rows(lines: Sequence[dict[str, Any]], width: int, height: int) -
     Its lines carry no arrival time, so nothing is protected here (P12
     ruling Q2, #202 6805937648); the presentation log protects.
     """
-    entries = [log_rows([line], width) for line in lines[-max(0, height):]]
+    entries = [log_rows([line], width) for line in lines] if height > 0 else []
     shown = select_entries([len(rows) for rows in entries], [False] * len(entries), height)
     out: list[dict[str, str]] = []
     for index, (rows, count) in enumerate(zip(entries, shown)):
