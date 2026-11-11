@@ -1,0 +1,12 @@
+{
+  "sodium-row-idle": {
+    "body_sha256": "ef31684dc3e9d988be1a74445aba586600a1dea767f09e1d263c27c83324bc87",
+    "reason": "#200 Tin Halo sign and arrival text",
+    "pr": 200
+  },
+  "sodium-row-walk": {
+    "body_sha256": "5df0e02882719defe7325a982b4466c53206e33b5ad3299511ee8d2c2f9ce932",
+    "reason": "#200 Tin Halo sign and arrival text",
+    "pr": 200
+  }
+}
