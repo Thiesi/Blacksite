@@ -457,6 +457,20 @@ the peace provokes the keeper's guards in the zone against the
 responsible player, besides the usual provocation of an attacked NPC's
 own group and guards. Firing back at a Marked player, or at an NPC that
 is already after you, breaks nothing.
+Wardens still engage Marked
+players, except a covered, unarmed one: it reacts only when the group
+it poses as reacts, flees with that group, and fleeing doesn't reveal it.
+Freelance
+characters are neutral to faction NPCs unless a declared restricted
+perimeter or hostile action gives a reason to engage. Open ground permits
+violence; it does not make traders automatic enemies. Hostile perimeters
+display a warning before entry. A hunting NPC gives up 20 s after losing
+sight; wander pauses last 200 to 1000 ms; NPCs in a zone that has been
+dormant for 30 minutes are despawned and respawn from their spawners on
+wake. Wardens log refused attacks in safe zones and issue a warning within 2
+seconds. Warden **heat** lasts 10 minutes and causes pursuit only outside
+safe/pocket areas. Curfew doubles new heat durations, not damage.
+
 (planned, S44) While the keeper's guards answer a player (their
 provocation, five minutes), that player is **hunted**, wherever their
 body is. On the zone's ground the guards pursue them through the street
@@ -477,19 +491,6 @@ respawn log says "<Keeper> considers it settled." A combat logout is not
 a death and settles nothing. The answer runs on real time whether or not
 the player is online, so waiting it out is always possible. A Mark is
 not settled by death (section 7.3).
-Wardens still engage Marked
-players, except a covered, unarmed one: it reacts only when the group
-it poses as reacts, flees with that group, and fleeing doesn't reveal it.
-Freelance
-characters are neutral to faction NPCs unless a declared restricted
-perimeter or hostile action gives a reason to engage. Open ground permits
-violence; it does not make traders automatic enemies. Hostile perimeters
-display a warning before entry. A hunting NPC gives up 20 s after losing
-sight; wander pauses last 200 to 1000 ms; NPCs in a zone that has been
-dormant for 30 minutes are despawned and respawn from their spawners on
-wake. Wardens log refused attacks in safe zones and issue a warning within 2
-seconds. Warden **heat** lasts 10 minutes and causes pursuit only outside
-safe/pocket areas. Curfew doubles new heat durations, not damage.
 
 S11 evaluates decisions every five ticks, staggered by actor identity;
 movement and weapon cooldowns still run at ten ticks per second. Patrols
