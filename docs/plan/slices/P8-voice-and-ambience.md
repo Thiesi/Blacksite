@@ -45,8 +45,11 @@ demo is a guide only.
   authored `min_interval_seconds`), silence while anyone is
   interacting with that talker, and the authored weights.
 - A bark is speech: kind `speech`, with `speaker` and `speaker_role`
-  as presented to each recipient. A covered NPC barks under its cover
-  name and presented class, never its true faction (5.5.4).
+  as presented to **that recipient** (5.5.4). A covered NPC barks under
+  its cover name and presented class to callers it hasn't acted
+  against. A caller it has revealed itself to (it attacked, arrested or
+  hunted them) sees its true name and class, consistent with the rest
+  of that caller's view.
 - Only talkers with active dialogue and an NPC in the zone bark. On
   `main` that is the Sodium regulars (`row-street-regular`). Other
   speakers arrive with their content.
@@ -64,6 +67,12 @@ demo is a guide only.
 - **Per-caller budget:** across barks and ambience together, a caller
   receives at most one line per N seconds (state N; propose a value).
   Lines over budget are dropped, never queued.
+- **Who pays for a drop.** A talker's interval and its weighted pick are
+  consumed when the scheduler fires, whether or not any recipient
+  receives the line. The budget and suppression are then applied per
+  recipient at emit time: one bark can reach some callers and be dropped
+  for others. So a busy spot thins out instead of bursting when the
+  budget reopens, and no talker retries every tick.
 - **Suppressed** for a caller in combat (threatened, a DANGER state, a
   hazard) or travelling. The canon wording is "suppressed in combat
   and travel".
@@ -87,8 +96,13 @@ demo is a guide only.
 - Barks:
   - radius, interval, authored interval and weights;
   - silence while a talker is in use;
-  - a covered NPC barks under its cover name and class in every
-    recipient's view.
+  - a covered NPC barks under its cover name and class to an unrevealed
+    caller, and under its true name and class to a caller it revealed
+    itself to, in the same tick.
+- Drops: a dropped bark still consumes its talker's interval; with
+  several talkers in range and the budget full, nothing bursts when the
+  budget reopens; one bark reaches one caller and is dropped for another
+  whose budget is spent.
 - Zone ambience: emitted only in zones that author it, at the stated
   cadence.
 - Budget: one line per caller per N seconds across both sources;
