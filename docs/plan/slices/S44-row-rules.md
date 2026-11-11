@@ -29,9 +29,17 @@ overlay, and `main` has S42 and S43 since.
 ### 1. Hunted
 
 - A player is **hunted** while a truce keeper's guards answer them:
-  the keeper's provocation against that player is live
-  (`PROVOCATION_SECONDS`, five minutes). One predicate serves the
-  header, the Halo's refusal and the log; nothing derives it twice.
+  five minutes (`PROVOCATION_SECONDS`) from the breach. One predicate
+  serves the header, the Halo's refusal and the log; nothing derives it
+  twice.
+- **The predicate reads only the stored keeper record** (below), never
+  `Npcs.provocations`. That dict also holds ordinary faction reactions
+  for any NPC attack, keyed per spawner group and by body and
+  controller ids. Shooting a non-truce NPC elsewhere must not make a
+  player hunted or shut the Halo. The record is written by the truce
+  keeper's response (`keep_truce`) and keyed by the responsible
+  player's body, resolving a drone or burn to its controller's body as
+  `keep_truce` already does.
 - It holds wherever the body is, online or offline. It runs on the
   injected clock (AGENTS.md §4).
 - **It survives a restart.** Today the keeper's provocation is
@@ -96,6 +104,14 @@ overlay, and `main` has S42 and S43 since.
 - A death of the character's body, from any cause, clears that
   player's keeper provocation, the Halo's hunted refusal and hunted
   itself. The clone cost stands.
+- **Settling writes the stored record** and clears the in-memory
+  answer. It also stands down every keeper guard that holds that player
+  as its target: target cleared, back to its post, no lingering hunt
+  until the 20 s give-up. Otherwise a guard still in `hunt` kills the
+  player again at the vat after "considers it settled".
+- It applies whether or not the player is online. A body killed while
+  its player is offline, after a combat logout, settles the same way,
+  and a restart restores nothing.
 - On respawn the log follows the vat's line with "<Keeper> considers it
   settled.", plus " The Mark stays." while a Mark runs.
 - A combat logout is not a death and settles nothing.
@@ -160,6 +176,14 @@ From the #203 triage. Each needs a test or a stated reason:
 - the sequence Marked → die → respawn → shoot an unmarked player →
   the guards answer again;
 - a combat logout during an answer: nothing settles, the timer runs on;
+- the body killed while its player is offline, then a restart: nothing
+  is restored, and the Halo admits the player;
+- after a settling death, no guard still targets the player: respawn at
+  the vat in the same zone and nobody attacks;
+- shooting a non-truce NPC in another zone makes nobody hunted and
+  leaves the Halo open;
+- a drone or burn attack on the Row records the answer against the
+  controller's body;
 - notice numbers taken from the constants;
 - a fit test over every shipped keeper's short name at 80x24. The
   arrival and first-target lines fit only names of 7 cells or fewer, so
