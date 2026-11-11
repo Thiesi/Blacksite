@@ -458,16 +458,17 @@ responsible player, besides the usual provocation of an attacked NPC's
 own group and guards. Firing back at a Marked player, or at an NPC that
 is already after you, breaks nothing.
 (planned, S44) While the keeper's guards answer a player (their
-provocation, five minutes), that player is **hunted** on the zone's
-ground: the guards pursue them through the street and its bar alcoves
-to the last seen position, give up 20 s after losing sight as any hunt
-does, and never cross a zone exit. The Tin Halo refuses a hunted player
-at every entrance for as long as the answer lasts, and its bouncer
-says how long. An attack on an NPC brings no Mark, so Vesper's work
-stays open to them. **Any death settles the debt with the keeper:** it
-clears the keeper's provocation, the Halo's refusal and the hunted
-state. The clone cost stands, and the respawn log says "<Keeper>
-considers it settled." A Mark is not settled by death (section 7.3).
+provocation, five minutes), that player is **hunted**, wherever their
+body is. On the zone's ground the guards pursue them through the street
+and its bar alcoves to the last seen position, give up 20 s after losing
+sight as any hunt does, and never cross a zone exit. The Tin Halo
+refuses a hunted player at every entrance for as long as the answer
+lasts, and its bouncer says how long. An attack on an NPC brings no
+Mark, so Vesper's work stays open to them. **Any death settles the debt
+with the keeper:** it clears the keeper's provocation, the Halo's
+refusal and the hunted state. The clone cost stands, and the respawn log
+says "<Keeper> considers it settled." A Mark is not settled by death
+(section 7.3).
 Wardens still engage Marked
 players, except a covered, unarmed one: it reacts only when the group
 it poses as reacts, flees with that group, and fleeing doesn't reveal it.
@@ -980,17 +981,20 @@ attacker, drone or burn comes from. Firing back at a Marked attacker
 stays exempt, and grade protection is unchanged.
 
 (planned, S44) A player Marked for breaking the Row's truce is refused
-by the Tin Halo at every entrance until the Mark runs out, and
-Vesper's work (her board, her counter and her talk offers) is closed to
-any Marked player. When the Mark and a hunt overlap, the bouncer gives
-the longer time, in the words of whichever condition supplies it, and
-the Mark's words on a tie. Death does not end a Mark: it keeps its 15 minutes, no
-Halo and no work, and anyone may still hunt the Marked player, Wardens
-included. But the keeper is finished with that breach: its guards do
-not come back for a Marked player who returns after dying. Death
-settles only the answer that exists at that moment. A new breach after
-respawn, such as an attack on another player who is not Marked, or on
-an NPC that was not after you, starts a fresh five-minute answer.
+by the Tin Halo at every entrance until the Mark runs out, and Vesper's
+work (her board, her counter and her talk offers) is closed to any
+Marked player. Work already accepted is kept, not failed or abandoned:
+it simply can't be advanced at the Halo or with Vesper until the Mark
+ends, and crewmates who aren't Marked carry on as normal. When the Mark
+and a hunt overlap, the bouncer gives the longer time, in the words of
+whichever condition supplies it, and the Mark's words on a tie. Death
+does not end a Mark: it keeps its 15 minutes, no Halo and no work, and
+anyone may still hunt the Marked player, Wardens included. But the
+keeper is finished with that breach: its guards do not come back for a
+Marked player who returns after dying. Death settles only the answer
+that exists at that moment. A new breach after respawn, such as an
+attack on another player who is not Marked, or on an NPC that was not
+after you, starts a fresh five-minute answer.
 
 Check legality at hostile action commitment, including misses, controls,
 drones, and burning; attribute it once to the responsible player.

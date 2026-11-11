@@ -152,8 +152,9 @@ Computed from the terminal size at start; never hard-coded. At 80×24:
 Rules:
 
 - **Header** (1 row): district (dim), zone (bright), the safety word, then
-  live facts (heat, Marked, `HUNTED` in a truce zone (planned, S44),
-  `PvP G5+` on contested ground, event summary); the clock at the right. Lower-priority segments drop first.
+  live facts (heat, Marked, `HUNTED` (planned, S44), `PvP G5+` on
+  contested ground, event summary); the clock at the right.
+  Lower-priority segments drop first.
   The frame around it shows safety by line style (2.1); the sketch draws
   single lines throughout.
 - **Viewport**: width = columns - 2 outer borders - 1 divider - 22
@@ -225,9 +226,13 @@ Planned, S44: the price, the hunted state and the refusals.
   Halo." beside "Truce: <Keeper> answers". Both target lines fit the
   36-cell header at 80x24. The door reads the existing TARGET warning,
   so this needs no new field or key, and it adds no fire confirmation.
-- **`HUNTED`** shows in the header as a danger fact while the keeper's
-  guards are answering you, beside `MARKED` when both apply. The view
-  carries it as `me.hunted`.
+- **`HUNTED`** shows in the header as a danger fact for as long as the
+  keeper's guards are answering you, wherever you are: off the keeper's
+  ground it says that going back means pursuit, and that the Halo is
+  shut, as the log line "<Keeper> is waiting for you on <zone>." does.
+  It sits beside `MARKED` when both apply and drops no earlier than
+  `MARKED` or heat. The view carries it as `me.hunted`, the same answer
+  the Halo's refusal reads.
 - **The Halo's door** refuses in the bouncer's voice and gives the
   minutes left, rounded up so it never says 0: for a Marked
   truce-breaker, 'The bouncer looks at your red name. "Not tonight. Not
@@ -404,13 +409,13 @@ kind is told apart by colour alone.
   a danger or combat line out of the visible log within 10 seconds.
 - **Notices** (kind `notice`: restarts, maintenance, news from the node,
   and, planned for S44, a rule's price stated before you pay it, such as
-  a truce zone's, section 2.1) are not world-log lines. A notice takes the hint line over key help
-  and stays there until a key is pressed and at least 8 seconds have
-  passed. It never hides a prompt or escape keys: while a prompt is open,
-  or while you are threatened (a DANGER state, combat, a hazard), it
-  shows in the header's right end instead, and returns to the hint line
-  afterwards. Each notice also keeps
-  one line in scrollback (`Ctrl-P`) and stays in help (section 10). A
+  a truce zone's, section 2.1) are not world-log lines. A notice takes
+  the hint line over key help and stays there until a key is pressed and
+  at least 8 seconds have passed. It never hides a prompt or escape
+  keys: while a prompt is open, or while you are threatened (a DANGER
+  state, combat, a hazard), it shows in the header's right end instead,
+  and returns to the hint line afterwards. Each notice also keeps one
+  line in scrollback (`Ctrl-P`) and stays in help (section 10). A
   new Wake sees no node notice in its world log in the first five
   minutes; a rule's price notice still shows, because it warns before
   a cost.
