@@ -92,6 +92,10 @@ async def accept(root: Path, door_python: Path, width: int, height: int, modern:
                 await caller.caller.write(b'e')
                 await wait(lambda: caller.session.id in core.commerce.menus)
                 menu = core.commerce.menus[caller.session.id]
+                # The client must hold the vendor page before Down means
+                # "next row" rather than a step (CI race at 0f70009).
+                await wait(lambda: 'Wake Outfitter - BUY' in caller.caller.screen.screen_text())
+                await delivered()
                 stock = [entry.item for entry in core.commerce.stock(core.commerce.content.vendors[OUTFITTER])]
                 for index in range(stock.index(SIDEARM)):
                     await caller.caller.write(b'\x1b[B')
