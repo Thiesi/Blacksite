@@ -456,7 +456,8 @@ attack on an NPC that was not already hostile to the attacker. Breaking
 the peace provokes the keeper's guards in the zone against the
 responsible player, besides the usual provocation of an attacked NPC's
 own group and guards. Firing back at a Marked player, or at an NPC that
-is already after you, breaks nothing. Wardens still engage Marked
+is already after you, breaks nothing.
+Wardens still engage Marked
 players, except a covered, unarmed one: it reacts only when the group
 it poses as reacts, flees with that group, and fleeing doesn't reveal it.
 Freelance
@@ -469,6 +470,27 @@ dormant for 30 minutes are despawned and respawn from their spawners on
 wake. Wardens log refused attacks in safe zones and issue a warning within 2
 seconds. Warden **heat** lasts 10 minutes and causes pursuit only outside
 safe/pocket areas. Curfew doubles new heat durations, not damage.
+
+(planned, S44) While the keeper's guards answer a player (their
+provocation, five minutes), that player is **hunted**, wherever their
+body is. On the zone's ground the guards pursue them through the street
+and its bar alcoves to the last seen position, give up 20 s after losing
+sight as any hunt does, and never cross a zone exit. The Tin Halo
+refuses a hunted player at every entrance for as long as the answer
+lasts, and its bouncer says how long. A player who is already inside
+when they become hunted, by a drone or a burn sent out from the Halo, is
+shown out: the bouncer puts them through the street door with the same
+line, so the Halo is never a place to sit out an answer. An attack on an
+NPC brings no Mark, so it doesn't close Vesper's work as a Mark does:
+the Halo's refusal is the only gate, and it lifts when the answer ends.
+Accepted work is kept meanwhile, and as for a Mark, no deadline pauses.
+**Any death settles the debt with the keeper:** a death of the
+character's body, from any cause, clears the keeper's provocation, the
+Halo's refusal and the hunted state. The clone cost stands, and the
+respawn log says "<Keeper> considers it settled." A combat logout is not
+a death and settles nothing. The answer runs on real time whether or not
+the player is online, so waiting it out is always possible. A Mark is
+not settled by death (section 7.3).
 
 S11 evaluates decisions every five ticks, staggered by actor identity;
 movement and weapon cooldowns still run at ten ticks per second. Patrols
@@ -966,6 +988,26 @@ the attacker Marked, whatever the two factions. The truce follows the
 target: it applies when the target's body is in the zone, wherever the
 attacker, drone or burn comes from. Firing back at a Marked attacker
 stays exempt, and grade protection is unchanged.
+
+(planned, S44) A player Marked for breaking the Row's truce is refused
+by the Tin Halo at every entrance until the Mark runs out, and shown out
+if already inside (section 5.5), and Vesper's work (her board, her
+counter and her talk offers) is closed to any Marked player, whatever
+earned the Mark. The two differ on purpose (#170): the Halo's door keeps
+to truce-breakers, while Vesper doesn't work for any red name. Work
+already accepted is kept, not failed or abandoned: it simply can't be
+advanced at the Halo or with Vesper until the Mark ends, and crewmates
+who aren't Marked carry on as normal. The Mark pauses no deadline: work
+whose own deadline passes meanwhile ends as it would anyway. When the
+Mark and a hunt overlap, the bouncer gives the longer time, in the words
+of whichever condition supplies it, and the Mark's words on a tie. Death
+does not end a Mark: it keeps its 15 minutes, no Halo and no work, and
+anyone may still hunt the Marked player, Wardens included. But the
+keeper is finished with that breach: its guards do not come back over
+that breach for a Marked player who returns after dying. Death settles
+only the answer that exists at that moment. A new breach after respawn,
+such as an attack on another player who is not Marked, or on an NPC that
+was not after you, starts a fresh five-minute answer, Mark or no Mark.
 
 Check legality at hostile action commitment, including misses, controls,
 drones, and burning; attribute it once to the responsible player.
