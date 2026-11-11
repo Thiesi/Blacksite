@@ -991,7 +991,9 @@ stays exempt, and grade protection is unchanged.
 (planned, S44) A player Marked for breaking the Row's truce is refused
 by the Tin Halo at every entrance until the Mark runs out, and shown out
 if already inside (section 5.5), and Vesper's work (her board, her
-counter and her talk offers) is closed to any Marked player. Work
+counter and her talk offers) is closed to any Marked player, whatever
+earned the Mark. The two differ on purpose (#170): the Halo's door keeps
+to truce-breakers, while Vesper doesn't work for any red name. Work
 already accepted is kept, not failed or abandoned: it simply can't be
 advanced at the Halo or with Vesper until the Mark ends, and crewmates
 who aren't Marked carry on as normal. The Mark pauses no deadline: work
