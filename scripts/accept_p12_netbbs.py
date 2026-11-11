@@ -26,9 +26,8 @@ import subprocess
 import traceback
 from typing import Any
 
-from accept_s10_netbbs import Connection, wait
+from accept_s10_netbbs import wait
 from accept_s19_netbbs import ContractProbe
-from accept_s38_netbbs import enter_row
 from karst41.content.schema import ObjectSpec
 from karst41.door.fit import wrap_text
 from karst41.layout import compute
@@ -82,6 +81,11 @@ async def accept(root: Path, door_python: Path, width: int, height: int, modern:
                 area = layout.menu.talk
                 return [row[area.x:area.right].rstrip() for row in screen()[area.y:area.bottom]]
 
+            # Skip the Wake's training fight first (as enter_row does), so
+            # no drone fires while the caller shops.
+            await probe.walk(caller, (21, 14))
+            await caller.caller.write(b'b')
+            await wait(lambda: probe.game.players[caller.session.player_id].progress.get('wake_combat') == 'skipped')
             if full:
                 await probe.near(caller, OUTFITTER)
                 await delivered()
@@ -111,7 +115,8 @@ async def accept(root: Path, door_python: Path, width: int, height: int, modern:
                 await caller.caller.write(b'\x1b')
                 await wait(lambda: caller.session.id not in core.commerce.menus)
 
-            await enter_row(probe, caller)
+            for destination in ('vatside-clinics', 'core-plaza', 'sodium-row'):
+                await probe.travel(caller, destination)
             await probe.travel(caller, 'sodium-tin-halo')
             zone = probe.service.world.zones['sodium-tin-halo']
             actor = caller.avatar.actor
