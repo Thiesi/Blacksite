@@ -2,7 +2,7 @@
 
 **Status:** planned (filed 2026-11-11; the owner merges the filing)
 **Primary model:** Claude Opus 5.5 (the engineer) · **Reviewer:** automated review, technical lead, presentation lead (presentation acceptance)
-**Depends on:** S38, S42, P12 (P12 before part 5 only) · **Milestone:** interaction
+**Depends on:** S38, S42 for parts 1–4; P12 (#204) for parts 5 and 6 only. Parts 1–4 may start before P12 merges. · **Milestone:** interaction
 **Issue:** https://github.com/Thiesi/Karst41/issues/207
 
 Canon: game design 5.5 and 7.3, architecture (`me.hunted?`), terminal
@@ -33,11 +33,18 @@ overlay, and `main` has S42 and S43 since.
   (`PROVOCATION_SECONDS`, five minutes). One predicate serves the
   header, the Halo's refusal and the log; nothing derives it twice.
 - It holds wherever the body is, online or offline. It runs on the
-  injected clock (AGENTS.md §4), so a restart doesn't extend or drop
-  it. Store whatever expiry survives a restart the way the existing
-  provocation and Mark expiries are stored. If the provocation is
-  memory-only today, say so in the PR and propose the storage before
-  building it.
+  injected clock (AGENTS.md §4).
+- **It survives a restart.** Today the keeper's provocation is
+  memory-only (`Npcs.provocations`, `npcs/engine.py:47`, never
+  persisted), so a restart would silently drop hunted and the Halo
+  would admit a player the keeper still answers. Ruling (technical
+  lead): persist the keeper's answer per player as a UTC expiry with
+  its keeper and zone, beside `Player.marked_until` and saved the same
+  way. On load, a live expiry restores both hunted and the guards'
+  provocation; an expired one is dropped. The NPC-side provocation
+  dict stays the in-memory engine for everything else. Any storage
+  migration and any P3 or fingerprint movement this causes are listed
+  in the PR.
 - The view carries `me.hunted` (additive; absent when false).
 
 ### 2. Pursuit to the last seen position (#187)
@@ -149,7 +156,7 @@ Lands after P12, so the action list fits.
 
 From the #203 triage. Each needs a test or a stated reason:
 
-- expiry storage and restart, against the injected clock;
+- the persisted answer across a restart, against the injected clock: a live expiry restores hunted and the guards' answer, an expired one is dropped;
 - the sequence Marked → die → respawn → shoot an unmarked player →
   the guards answer again;
 - a combat logout during an answer: nothing settles, the timer runs on;
