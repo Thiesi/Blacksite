@@ -465,10 +465,13 @@ sight as any hunt does, and never cross a zone exit. The Tin Halo
 refuses a hunted player at every entrance for as long as the answer
 lasts, and its bouncer says how long. An attack on an NPC brings no
 Mark, so Vesper's work stays open to them. **Any death settles the debt
-with the keeper:** it clears the keeper's provocation, the Halo's
-refusal and the hunted state. The clone cost stands, and the respawn log
-says "<Keeper> considers it settled." A Mark is not settled by death
-(section 7.3).
+with the keeper:** a death of the character's body, from any cause,
+clears the keeper's provocation, the Halo's refusal and the hunted
+state. The clone cost stands, and the respawn log says "<Keeper>
+considers it settled." A combat logout is not a death and settles
+nothing. The answer runs on real time whether or not the player is
+online, so waiting it out is always possible. A Mark is not settled by
+death (section 7.3).
 Wardens still engage Marked
 players, except a covered, unarmed one: it reacts only when the group
 it poses as reacts, flees with that group, and fleeing doesn't reveal it.

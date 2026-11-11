@@ -225,7 +225,10 @@ Planned, S44: the price, the hunted state and the refusals.
   work." beside "Firing marks you", or "Fire here and <Keeper> comes. No
   Halo." beside "Truce: <Keeper> answers". Both target lines fit the
   36-cell header at 80x24. The door reads the existing TARGET warning,
-  so this needs no new field or key, and it adds no fire confirmation.
+  so this needs no new field or key, and it adds no fire confirmation. A
+  price notice that first lands in the header because you are threatened
+  returns to the hint line when the threat ends, and its 8 seconds count
+  from there, so the one-time warning is always seen whole.
 - **`HUNTED`** shows in the header as a danger fact for as long as the
   keeper's guards are answering you, wherever you are: off the keeper's
   ground it says that going back means pursuit, and that the Halo is
