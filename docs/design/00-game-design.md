@@ -1002,11 +1002,11 @@ Mark and a hunt overlap, the bouncer gives the longer time, in the words
 of whichever condition supplies it, and the Mark's words on a tie. Death
 does not end a Mark: it keeps its 15 minutes, no Halo and no work, and
 anyone may still hunt the Marked player, Wardens included. But the
-keeper is finished with that breach: its guards do not come back for a
-Marked player who returns after dying. Death settles only the answer
-that exists at that moment. A new breach after respawn, such as an
-attack on another player who is not Marked, or on an NPC that was not
-after you, starts a fresh five-minute answer.
+keeper is finished with that breach: its guards do not come back over
+that breach for a Marked player who returns after dying. Death settles
+only the answer that exists at that moment. A new breach after respawn,
+such as an attack on another player who is not Marked, or on an NPC that
+was not after you, starts a fresh five-minute answer, Mark or no Mark.
 
 Check legality at hostile action commitment, including misses, controls,
 drones, and burning; attribute it once to the responsible player.
