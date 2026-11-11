@@ -10,7 +10,7 @@ import re
 from typing import Any
 
 from karst41.door.cells import CellBuffer, clean_text, display_width, truncate
-from karst41.door.fit import log_cut, log_window, select_lazy
+from karst41.door.fit import LOG_PROTECT_EXTRA, log_cut, log_window, select_lazy
 from karst41.door.log import wrap as word_wrap
 from karst41.layout import Layout
 from karst41.door.present.paint import Paint
@@ -174,19 +174,28 @@ def visible_rows(lines: list[dict[str, Any]], width: int, height: int,
                  now: float) -> list[tuple[LogEntry, str, bool]]:
     """P12 rule 5 (#202): whole entries; the newest always shows.
 
-    Bounded work (technical review 6808753030): only the newest
-    log_window(height) lines, plus any still inside PROTECT_SECONDS, are
-    digested, and only entries the selection reaches are wrapped
-    (fit.select_lazy).
+    Bounded work (technical review 6808753030): at most the newest
+    log_window(height) + LOG_PROTECT_EXTRA lines are digested, and only
+    entries the selection reaches are wrapped (fit.select_lazy).
     """
     if height <= 0:
         return []
     lines = list(lines)
     start = max(0, len(lines) - log_window(height))
-    # Never cut off a line that may still be protected (rule 5 step 2).
-    # Lines arrive in order, so the scan stops at the first older one.
-    while start > 0 and 0 <= now - float(lines[start - 1].get('_arrived', -1e30)) < PROTECT_SECONDS:
+    # Rule 5 step 2: reach back for protected lines the window cut off,
+    # but only while they could still show. At most `height` protected
+    # entries fit, so stop once that many distinct ones are in; never go
+    # past PROTECT_SECONDS (lines arrive in order) or LOG_PROTECT_EXTRA.
+    def protected_line(line: dict[str, Any]) -> bool:
+        return (line.get('kind') in ('danger', 'combat')
+                and 0 <= now - float(line.get('_arrived', -1e30)) < PROTECT_SECONDS)
+    found = {(line.get('kind'), line.get('text')) for line in lines[start:] if protected_line(line)}
+    floor = max(0, start - LOG_PROTECT_EXTRA)
+    while (start > floor and len(found) < height
+           and 0 <= now - float(lines[start - 1].get('_arrived', -1e30)) < PROTECT_SECONDS):
         start -= 1
+        if protected_line(lines[start]):
+            found.add((lines[start].get('kind'), lines[start].get('text')))
     entries = digest(lines[start:])
     wrapped: dict[int, list[str]] = {}
 

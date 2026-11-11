@@ -86,11 +86,16 @@ def talk_rows(line: str, actions: Sequence[dict[str, str]], width: int, height: 
 # bounded by it: each one still inside PROTECT_SECONDS is considered.
 LOG_LOOKBACK_PER_ROW = 2
 # The presentation log digests (coalesces) this many newest lines per
-# lookback entry, plus every line still inside PROTECT_SECONDS, so a full
-# ring never costs a full digest. A run of identical lines longer than the
+# lookback entry, so a full ring never costs a full digest. A run of identical lines longer than the
 # window shows a lower (xN) count in the log; Ctrl-P scrollback still has
 # every line.
 LOG_DIGEST_LINES_PER_ENTRY = 4
+# Past that window, the presentation log reaches back for still-protected
+# lines only until it holds `height` distinct ones (no more can show), and
+# never more than this many extra lines. 100 is about ten seconds of heavy
+# combat (10 Hz ticks, several shooters). A protected line further back
+# than that, behind a flood of newer unprotected lines, can drop early.
+LOG_PROTECT_EXTRA = 100
 
 
 def log_window(height: int) -> int:

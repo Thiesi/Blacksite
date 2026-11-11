@@ -13,7 +13,7 @@ from karst41.content.validate import validate
 from karst41.door.cells import display_width
 from karst41.door.doorinfo import DoorInfo
 from karst41.door import fit
-from karst41.door.fit import (LOG_CUT, LOG_LOOKBACK_PER_ROW, TALK_LINE_ROWS, default_log_rows, fit_text,
+from karst41.door.fit import (LOG_CUT, LOG_LOOKBACK_PER_ROW, LOG_PROTECT_EXTRA, TALK_LINE_ROWS, default_log_rows, fit_text,
                               log_window, select_entries, talk_rows, wrap_text)
 from karst41.door.layout import compute
 from karst41.door.model import Display
@@ -315,3 +315,20 @@ def test_p12_bounded_window_never_drops_a_protected_entry():
     lines += [line('system', f'Message {i}', 1 + i % 50, arrived=1) for i in range(log_window(3) + 20)]
     assert 'The floor is live.' in {entry for entry, _ in present_log(lines, now=9.9)}
     assert 'The floor is live.' not in {entry for entry, _ in present_log(lines, now=10.1)}
+
+
+@pytest.mark.parametrize('height', [3, 8])
+def test_p12_protected_reach_back_is_bounded(monkeypatch, height):
+    digested = []
+    real = chrome.digest
+    monkeypatch.setattr(chrome, 'digest', lambda lines: digested.append(len(lines)) or real(lines))
+    # Combat spam: every line protected. The window already holds `height`
+    # distinct protected lines, so nothing older is digested.
+    chrome.visible_rows(ring('Hit: Sodium regular', kind='combat'), 78, height, 5)
+    # A flood of unprotected lines inside PROTECT_SECONDS, one old danger
+    # line at the far end: the reach-back stops at LOG_PROTECT_EXTRA.
+    flood = [{**line, '_arrived': 0} for line in ring('Chatter')]
+    flood[0] = {'kind': 'danger', 'channel': 'system', 'text': 'Too far back.', '_arrived': 0}
+    rows = chrome.visible_rows(flood, 78, height, 5)
+    assert digested == [log_window(height), log_window(height) + LOG_PROTECT_EXTRA]
+    assert 'Too far back.' not in {entry.text for entry, _, _ in rows}
