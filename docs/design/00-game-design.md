@@ -150,7 +150,10 @@ signature. A Signatory may rent one tenancy in their own name and may
 join a faction (joining also requires standing +30). Personhood is
 calendar only: it arrives 90 calendar days after the identity's first
 decant (`first_decanted_at`, entities), absence included, and nothing shortens it (owner,
-2026-11-12). The remaining lease carries across a season change. Set
+2026-11-12). Personhood also grants everything a Signatory has, so
+renting and faction membership come at grade 5 or day 90, whichever is
+first; personhood stays the bigger milestone. The remaining lease
+carries across a season change. Set
 `legal_at` once; debt, death, leaving a faction, and season changes
 cannot remove it. PvP protections depend on grade, independently of
 personhood (§7.3). Show elapsed lease days and the Signatory XP target
@@ -925,7 +928,7 @@ Other repeatable Silt loot uses 30-minute uptime availability periods.
   set by the Wake recruiter choice (+10 with one faction, 0 elsewhere).
 - Contracts, kills, and relay actions move standing with the relevant
   factions and their allies and enemies (halved).
-- At standing +30 a Signatory (grade 5, §3.4) may **join** through its
+- At standing +30 a Signatory or a person (§3.4) may **join** through its
   recruiter, if the faction is accepting members (§13.5). One faction at a time. Leaving costs −50 with the former
   faction and a 7-day cooldown before joining another.
 - Members get: faction chat, faction vats, faction vendors, faction
@@ -938,7 +941,7 @@ Other repeatable Silt loot uses 30-minute uptime availability periods.
 The existing Wake Hall recruiter-card desk keeps an admission contact
 open for all eight factions; nine once the Lamp Compact is built (planned, #90). Which of them accept members at a
 given time follows the population switches (§13.5); the rest still recruit for work and standing. A Signatory
-(grade 5, §3.4) with +30 standing can join there or through a placed recruiter talker. Taking a card during
+or a person (§3.4) with +30 standing can join there or through a placed recruiter talker. Taking a card during
 the Wake still grants only the starting +10 standing, never membership.
 Cards name their faction explicitly; the old Red Sable card key is
 migrated to Sable standing once, preserving the intended reputation.
@@ -1527,8 +1530,8 @@ adds twelve public cells to the existing 36-cell sector: one connects
 reciprocally to the public entry, and eleven complete the 24 unit slots.
 Existing hidden/gated cells and public inter-district links stay intact.
 
-A Signatory (grade 5, §3.4) may hold one tenancy per character;
-personhood is not required. Signing pays one week. Due invoices use the bank first,
+A Signatory or a person (grade 5 or day 90, §3.4) may hold one tenancy
+per character. Signing pays one week. Due invoices use the bank first,
 then hand chits, without splitting a paid invoice across later visits.
 The first unpaid deadline starts a 14-day lapse; checking again never
 restarts that grace period. The next successful payment advances the

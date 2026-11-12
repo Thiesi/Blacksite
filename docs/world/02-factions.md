@@ -1199,7 +1199,7 @@ Compact keeps the baths open to everyone, holder or not.
 **Sigil:** none (ASCII `-` in lists).
 
 Freelance is not a faction. It is the state of not having joined one,
-and every character is Freelance until they are a Signatory (grade 5) with standing +30 with a
+and every character is Freelance until they are a Signatory (grade 5) or a person (day 90) with standing +30 with a
 faction, and again after leaving one during the seven-day cooldown.
 
 What Freelance means in play:

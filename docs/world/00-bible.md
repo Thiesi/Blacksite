@@ -449,8 +449,9 @@ counts ninety calendar days from a Wake's first decant, absence
 included, and nothing shortens it: not work, not money, not a season
 ending. Civic-certified work registers a Wake's signature instead (grade
 5, **Signatory**): a tenancy in their own name and the right to join a
-faction, while the days stay leased. Neither debt nor decanting restarts
-the count.
+faction, while the days stay leased. The ninetieth day brings the same
+rights and the bigger thing besides: being your own. Neither debt nor
+decanting restarts the count.
 The lease grants a labour claim, not permission to sell a person between
 players. Legal status cannot be revoked by a faction or season result.
 

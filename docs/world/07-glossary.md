@@ -484,7 +484,8 @@ weapons. (design §3.1)
 
 **Ninety-Day** - personhood, ninety calendar days after a Wake's own
 first decant. Nothing shortens it, and the remaining lease carries across
-a season change. Contested-zone grade protection is a separate rule.
+a season change. It brings renting and faction membership if Signatory
+hasn't already. Contested-zone grade protection is a separate rule.
 (design section 3.4)
 
 **Ninety-Nine** — A residual: the recording of a runner who went into the
@@ -657,7 +658,8 @@ default. (design §5.4)
 
 **Signatory** — Grade 5. Civic registers the Wake's signature: one
 tenancy in their own name and the right to join a faction. It doesn't
-end the lease. (design §3.4)
+end the lease; day ninety grants the same rights if it comes first.
+(design §3.4)
 
 **Severance, the** — Year 0: the orbital network collided with itself and
 the global net partitioned in the same hour. (bible §3.2)
