@@ -122,7 +122,7 @@ at 80x24 and 132x50, in all three tiers: stand on Sodium Row and see a
 regular's bark and a Row ambience line arrive, then see them stop
 during combat. The presentation lead accepts from the captures,
 against plan 03 §10.3 item 8. S10, S11 and S24 still pass. This is
-runtime-changing, so under #194 a CPU near miss blocks. Keep the
+runtime-changing, so under #194 a CPU near miss blocks. (Since 2026-11-12, owner: S11 blocks at p99 20 ms and warns from 10 ms; #194's interim rule has ended. See #229.) Keep the
 emitter cheap and say what it costs.
 
 H1 and S25 layout approval are not part of this slice and aren't granted

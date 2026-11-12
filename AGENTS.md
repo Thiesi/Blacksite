@@ -62,6 +62,14 @@ contradiction by editing only the lower document.
   containing `@claude review`, wait for the result, and apply the same
   triage. Validate fixes and resolve all worthwhile findings before
   merging.
+- Every PR in scope runs in one of **two lanes** (technical review
+  §1.1, owner 2026-11-12). The **feel lane** is for content and
+  presentation strings only: no other Python, no fingerprint move, no
+  persistence or visibility code. It needs the automated review, green
+  tests, one before-and-after capture pair and the owning lead's yes.
+  Everything else is the **rule lane**, reviewed in full as below. Name
+  the lane in the PR description. A slice's own acceptance workflow is
+  retired after the slice merges.
 - After the automated review, every implementation PR also needs a
   **technical review**: a project-level check against the slice spec,
   canon, the approved presentation design, shared abstractions, player
@@ -77,7 +85,12 @@ contradiction by editing only the lower document.
 - **Who reports to whom.** The technical lead is the overall lead,
   responsible for the product as a whole. Every other lead and agent
   reports to the technical lead and only to the technical lead, unless
-  the owner asks them directly. If you need an owner decision, explain
+  the owner asks them directly. One exception (owner, 2026-11-12): the
+  creative lead and the presentation lead may talk to the owner directly
+  about voice and look (lines, signs, place feel, captures and
+  acceptance), copying the technical lead on every decision. Rules,
+  mechanics, work order and gates still go through the technical lead.
+  If you need an owner decision on anything else, explain
   it to the technical lead with your recommendation; the technical lead
   asks the owner. Work out disagreements with the technical lead or
   another lead first. If that fails, the technical lead decides. Your

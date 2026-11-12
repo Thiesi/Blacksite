@@ -647,8 +647,12 @@ Codex builds, owner plays. Feeds S33b and S30b.
 **Reporting** (owner, 2026-11-06). The technical lead is the overall lead,
 responsible for the product as a whole. The other parties above report to
 the technical lead and only to the technical lead, unless the owner asks
-them directly. A party that needs an owner decision explains it to the
-technical lead, who asks the owner. Disagreements are worked out between
+them directly. Since 2026-11-12 (owner), the creative lead and the
+presentation lead may also talk to the owner directly about voice and look
+(lines, signs, place feel, captures and acceptance), copying the technical
+lead on every decision; rules, mechanics, work order and gates still go
+through the technical lead. A party that needs any other owner decision
+explains it to the technical lead, who asks the owner. Disagreements are worked out between
 the parties first; if that fails, the technical lead decides. This changes
 no ownership above: each party's reviews and sign-offs stay its own, and
 human gates and merges stay as stated. A decision of that kind doesn't
