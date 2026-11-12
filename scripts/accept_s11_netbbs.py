@@ -180,7 +180,7 @@ async def _profile(probe: NativeProbe, width: int, height: int,
         number = len(list(probe.root.glob(f'npc-profile-{width}x{height}-*.json')))+1
         (probe.root/f'npc-profile-{width}x{height}-{number}.json').write_text(json.dumps({
             'status': status, 'sampling_started_tick': sampling_tick,
-            'instrumentation': 'wall/thread CPU, GC and storage flush probes; same 10 ms gate including overhead',
+            'instrumentation': 'wall/thread CPU, GC and storage flush probes; S11 gate including overhead: p99 at or above 20 ms blocks, at or above 10 ms warns (2026-11-12)',
             'gc_pauses': gc_pauses, 'storage_flushes': flushes,
             'ticks': rows, 'write_probe': writes_profile.metadata(),
             'commerce_commits': minimal.export(),
