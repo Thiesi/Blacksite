@@ -21,4 +21,4 @@ CONTENT_SCHEMA: Final[int] = 1
 
 # 02-architecture.md section 6.2: migrations bring world.db up to this
 # schema at start; the server refuses to open a newer one.
-WORLD_SCHEMA: Final[int] = 4
+WORLD_SCHEMA: Final[int] = 5

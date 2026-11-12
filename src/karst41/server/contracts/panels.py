@@ -67,6 +67,8 @@ class Panels:
         handler = obj.spec.params.get('contract_handler', '')
         if handler not in (*self.owner.content.factions, 'vesper'):
             raise ValueError('That object is not a commissioned contract board.')
+        if reason := self.owner.commerce.service_refusal(session, handler):
+            raise ValueError(reason)  # S44: Vesper's board closes to a Mark.
         return handler
 
     def close(self, session: Session) -> None:

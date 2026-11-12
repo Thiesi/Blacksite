@@ -129,7 +129,7 @@ class Storage:
     def character_state(self) -> dict[str, Any]:
         """Load once in the I/O layer; the simulation owns pure copies."""
         json_columns = {"attributes", "skills", "standing", "tile", "implants", "equipment", "inventory", "rig",
-                        "drugs_active", "dependencies", "settings", "stats", "progress"}
+                        "drugs_active", "dependencies", "settings", "stats", "progress", "keeper_answer"}
         players = []
         for row in self.db.execute("SELECT * FROM players WHERE archetype IS NOT NULL"):
             players.append({key: json.loads(value) if key in json_columns and value is not None else value

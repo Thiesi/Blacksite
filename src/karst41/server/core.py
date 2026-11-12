@@ -142,6 +142,10 @@ class Core:
             self.loop.subsystems.append(self.dialogue)
             social = self.lattice.social_overlay
             self.lattice.social_overlay = lambda session, previous=social: previous(session) or session.id in self.dialogue.menus
+        from karst41.server.truce import Truce
+        self.truce = Truce(self) if self.dialogue else None
+        if self.truce:
+            self.loop.subsystems.append(self.truce)
 
     def _disconnect_character(self, session: Session) -> None:
         if self.dialogue:

@@ -13,7 +13,7 @@ from karst41.server.commerce import CommerceMenu
 from karst41.server.clock import TICK_HZ
 from karst41.server.items import make_item
 from karst41.server.loop import TickContext
-from karst41.server.npcs.behaviours import patrol, step_toward
+from karst41.server.npcs.behaviours import Route, patrol, route_toward, step_toward
 from karst41.server.npcs.spawn import Spawners
 from karst41.server.npcs.templates import (
     DORMANT_SECONDS, EVALUATION_TICKS, FLEE_FRACTION, HEAT_SECONDS,
@@ -34,6 +34,7 @@ from karst41.server.world.actors import Actor
 from karst41.server.world.sight import detection_limit, sight_radius
 from karst41.server.world.zone import ZoneInstance
 from karst41.server.views import presentation
+from karst41.server import truce as truce_rules
 
 
 class Npcs:
@@ -45,6 +46,11 @@ class Npcs:
         self.spawners = Spawners(self.world, deepcopy(state), self.game.sessions.origin)
         self.dormant: dict[str, float] = {}
         self.provocations: dict[tuple[str, str, str], float] = {}
+        # S44: zone -> player -> expiry of the keeper's stored answer. A
+        # mirror of Player.keeper_answer, so a guard that spawns or wakes
+        # while it is live takes it up; `hunted` reads only the record.
+        self.answers: dict[str, dict[str, float]] = {}
+        self.routes: dict[str, Route] = {}  # S44: hunt routes by actor id.
         self.menus: set[str] = set()
         self.talking: Callable[[str, str], bool] = lambda sid, aid: False
         self.pending_deaths: set[str] = set()
@@ -64,6 +70,86 @@ class Npcs:
         combat.npc_armour = self.armour
         combat.relation_provider = self.actor_relation
         combat.cover_relation_provider = self.public_relation
+        combat.keeper_settles = self.keeper_settles
+        combat.settle_hook = self.settle
+        self.restore_answers()
+
+    def keeper_groups(self, zone: ZoneInstance, keeper: str) -> set[str]:
+        """The keeper's guard spawners in a zone, live or not.
+
+        The answer is the keeper's, not one guard's: a breach with every
+        guard dead still provokes the groups their respawns come from.
+        """
+        groups = set()
+        for spawner in zone.template.meta.spawners:
+            template = self.content.npcs.get(spawner.npc)
+            if (template and template.faction == keeper and not spawner.poses_as
+                    and any(b.kind == "guard" for b in template.behaviours)):
+                groups.add(spawner.id)
+        for guard in self.keeper_guards(zone, keeper):
+            groups.add(str(guard.behaviour.get("spawner")))
+        return groups
+
+    def keeper_guards(self, zone: ZoneInstance, keeper: str) -> list[Actor]:
+        guards = []
+        for guard in zone.actors.values():
+            template = self.content.npcs.get(guard.behaviour.get("template"))
+            if (guard.kind != "player" and guard.faction == keeper and template
+                    and not self.covered_unarmed(guard)
+                    and any(b.kind == "guard" for b in template.behaviours)):
+                guards.append(guard)
+        return guards
+
+    def keeper_guard(self, actor: Actor, zone: ZoneInstance) -> bool:
+        keeper = zone.template.meta.truce
+        template = self.content.npcs.get(actor.behaviour.get("template"))
+        return bool(keeper and actor.kind != "player" and actor.faction == keeper and template
+                    and not self.covered_unarmed(actor)
+                    and any(b.kind == "guard" for b in template.behaviours))
+
+    def restore_answers(self) -> None:
+        """S44 ruling: a live stored answer restores the guards' provocation."""
+        now = self.combat.now()
+        for player in self.game.players.values():
+            until = truce_rules.answer_until(player)
+            record = player.keeper_answer or {}
+            zone = self.world.zones.get(str(record.get("zone", "")))
+            if until <= now or zone is None or not zone.template.meta.truce:
+                if until <= now:
+                    player.keeper_answer = None  # An expired answer is dropped.
+                continue
+            for group in self.keeper_groups(zone, zone.template.meta.truce):
+                self.provocations[zone.id, group, player.id] = until
+            self.answers.setdefault(zone.id, {})[player.id] = until
+
+    def keeper_settles(self, player: Player) -> str | None:
+        """The keeper's short name when a death would settle a live answer."""
+        if not truce_rules.hunted(player, self.combat.now()):
+            return None
+        return truce_rules.keeper_name(self.content, str((player.keeper_answer or {}).get("keeper", "")))
+
+    def settle(self, player: Player) -> None:
+        """Game 5.5: any death settles the debt with the keeper.
+
+        Clears the keeper's provocation and stands down every keeper guard
+        holding the player, in the tick the death commits. The stored
+        record is cleared by the death's own durable patch.
+        """
+        player.keeper_answer = None
+        for answers in self.answers.values():
+            answers.pop(player.id, None)
+        for zone in self.world.zones.values():
+            keeper = zone.template.meta.truce
+            if not keeper:
+                continue
+            for group in self.keeper_groups(zone, keeper):
+                self.provocations.pop((zone.id, group, player.id), None)
+            for guard in self.keeper_guards(zone, keeper):
+                guard.behaviour.get("answered", {}).pop(player.id, None)
+                if guard.target == player.id:
+                    guard.target = None
+                    guard.behaviour["state"] = "base"
+                    guard.behaviour.pop("last_position", None)
 
     def spawn_mission(self, owner: Actor, mission: str, template_id: str,
                       tile: tuple[int, int], willing: bool = False) -> Actor:
@@ -202,7 +288,11 @@ class Npcs:
         return zone.template.meta.truce if breaks else None
 
     def keep_truce(self, source: Actor, target: Actor, keeper: str) -> None:
-        """Alert the target zone's guards; remote controllers are not chased out."""
+        """Alert the target zone's guards; remote controllers are not chased out.
+
+        S44: every breach writes the keeper's stored answer against the
+        responsible player's body, whether or not a guard is present.
+        """
         if target.behaviour.get("player_drone"):
             target = self.game.progression.drones.controller_body(target, acting=False)
             if target is None:
@@ -214,29 +304,33 @@ class Npcs:
             return
         now = self.combat.now()
         until = now + PROVOCATION_SECONDS
-        guards = []
-        for guard in zone.actors.values():
-            template = self.content.npcs.get(guard.behaviour.get("template"))
-            if (guard.faction != keeper or not template
-                    or self.covered_unarmed(guard)
-                    or not any(b.kind == "guard" for b in template.behaviours)):
-                continue
-            guards.append(guard)
-        already_provoked = any(self.provocations.get(
-            (zone.id, str(guard.behaviour.get("spawner")), body.id), 0) > now for guard in guards)
-        for guard in guards:
-            group = str(guard.behaviour.get("spawner"))
+        player = self.game.players.get(body.id)
+        guards = self.keeper_guards(zone, keeper)
+        if player is not None:
+            already_provoked = truce_rules.hunted(player, now)
+        else:
+            already_provoked = any(self.provocations.get(
+                (zone.id, str(guard.behaviour.get("spawner")), body.id), 0) > now for guard in guards)
+        groups = self.keeper_groups(zone, keeper)
+        for group in groups:
             for attacker in {source.id, body.id}:
                 self.provocations[zone.id, group, attacker] = until
+        for guard in guards:
+            guard.behaviour.setdefault("answered", {})[body.id] = until
             if source.zone == zone.id:
                 guard.target = source.id
                 self.combat.reveal(guard, source)
                 guard.behaviour.update(last_seen=self.clock.now_tick(),
                                        last_position=source.position, state="hunt")
+        if player is not None:
+            player.keeper_answer = {"keeper": keeper, "zone": zone.id, "until": truce_rules.iso(until)}
+            self.answers.setdefault(zone.id, {})[body.id] = until
+            self.game.queue("save", player.bbs_user_id, player, immediate=True)
         name = self.content.factions[keeper].short
         line = (f"{name} is coming for you." if body.zone == zone.id else
                 f"{name} is waiting for you on {zone.template.meta.name}.")
-        if guards and not already_provoked:
+        # The line names guards who will come: live ones, or a spawner's.
+        if groups and not already_provoked:
             self.combat.log(body, line, True)
 
     def provoked(self, source: Actor, target: Actor) -> None:
@@ -447,6 +541,8 @@ class Npcs:
             actor.target = target.id
             actor.behaviour["last_seen"] = tick
             actor.behaviour["last_position"] = target.position
+        elif target is None and (taken := self.take_up_answer(actor, zone, tick)):
+            target = taken
         elif target and (not self.combat.legal(actor, target) or not self.hostile(actor, target)
                 or not self.shared_crowd(actor)
                 and tick-int(actor.behaviour.get("last_seen", tick)) >= ticks(LOST_SIGHT_SECONDS)):
@@ -457,6 +553,26 @@ class Npcs:
         if target and state == 'hunt':
             self.combat.reveal(actor, target)
         actor.behaviour["evaluated"] = tick
+
+    def take_up_answer(self, actor: Actor, zone: ZoneInstance, tick: int) -> Actor | None:
+        """S44: a keeper guard that spawns or wakes during a live answer goes
+        to the answered body's position once; the 20 s give-up then applies."""
+        answers = self.answers.get(zone.id)
+        if not answers or not self.keeper_guard(actor, zone):
+            return None
+        now = self.combat.now()
+        taken = actor.behaviour.setdefault("answered", {})
+        for pid, until in sorted(answers.items()):
+            body = zone.actors.get(pid)
+            if (until <= now or taken.get(pid) == until or body is None
+                    or body.stance in ("down", "dead")
+                    or not self.hostile(actor, body) or not self.combat.legal(actor, body)):
+                continue
+            taken[pid] = until
+            actor.target = body.id
+            actor.behaviour.update(last_seen=tick, last_position=body.position)
+            return body
+        return None
 
     def act(self, actor: Actor, zone: ZoneInstance, tick: int, avoid: set[tuple[int,int]]) -> None:
         if actor.behaviour.get("powered") is False:
@@ -502,7 +618,9 @@ class Npcs:
                     actor.cooldowns["weapon"] = tick + ticks(action_seconds(arm.cooldown, actor.shock, jam))
                     self.combat.shot(actor, target, arm)
             else:
-                step_toward(actor, zone, tuple(actor.behaviour.get("last_position", actor.position)), tick, avoid=avoid)
+                # S44 (#187): hunt follows a bounded, cached shortest path.
+                route_toward(actor, zone, tuple(actor.behaviour.get("last_position", actor.position)), tick,
+                             self.routes.setdefault(actor.id, Route()), avoid)
             return
         if self.event_motion(actor, zone, tick, avoid):
             return
@@ -582,6 +700,8 @@ class Npcs:
                 self.menus.discard(sid)
                 self.sim.external_views.pop(sid, None)
         if ctx.tick % EVALUATION_TICKS == 0:
+            self.routes = {aid: route for aid, route in self.routes.items()
+                           if (actor := self.world.actors.get(aid)) and actor.behaviour.get("state") == "hunt"}
             self.combat.warnings = {pair: tick for pair, tick in self.combat.warnings.items()
                 if pair[0] in self.world.actors and pair[1] in self.world.actors}
         for source_id, channel in tuple(self.restraints.items()):
