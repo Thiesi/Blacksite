@@ -1060,8 +1060,8 @@ says grade five earns an early discharge. Lines 3.3 and 4.4 agree with
 (`S48-first-evening.md`, "doesn't start before it merges"); the build
 should also test that the briefing content equals the fixed script in
 `docs/world/05-story-arcs.md` as merged, so that the one line that is
-never dropped can't say the opposite of the rules. The login lines that contradicted the lease are
-fixed in #219.
+never dropped can't say the opposite of the rules. The login lines
+that contradicted the lease are fixed in #219.
 
 ## 5. The voice in the walls: Wake Hall portion
 
