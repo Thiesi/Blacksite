@@ -2,7 +2,7 @@
 
 **Status:** planned (filed 2026-11-12; the owner merges the filing)
 **Primary model:** Claude Opus 5.5 (the engineer) · **Reviewer:** automated review, technical lead
-**Depends on:** S40 (design), S43, S44 (lands first) · **Milestone:** headroom
+**Depends on:** S40 (design), S43, S44, S48 (lands first; owner 2026-11-12) · **Milestone:** headroom
 **Issue:** https://github.com/Thiesi/Karst41/issues/212
 
 Canon: architecture §6.2 (persistence; acknowledgement after commit),
