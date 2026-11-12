@@ -23,6 +23,11 @@ budget is missed, fix the hot path or switch `ZoneView` deltas to the
 compact encoding the protocol reserves. The bot is also the regression
 tool every later slice runs.
 
+**Gate (owner, 2026-11-12).** When S29a's bot run lands, it becomes the
+real tick gate in CI, against the 40 ms p99 budget. Until then S11's
+native check stands in for it: it blocks at p99 20 ms and warns from
+10 ms (`scripts/tick_budget.py`).
+
 ## Spec references
 
 - `docs/design/02-architecture.md` §11 (budgets: tick ≤ 40 ms p99 with

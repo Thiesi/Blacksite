@@ -7,6 +7,7 @@ on:
       - 'scripts/accept_s25a_netbbs.py'
       - 'scripts/accept_s10_netbbs.py'
       - 'scripts/accept_s11_netbbs.py'
+      - 'scripts/tick_budget.py'
       - '.github/workflows/s25a-acceptance.yml'
   workflow_dispatch:
 

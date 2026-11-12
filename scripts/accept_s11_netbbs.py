@@ -22,6 +22,7 @@ from karst41.server.world.actors import Actor
 from karst41.server.world.sight import line_of_sight
 from write_profile import WriteProfile
 from minimal_s40_profile import MinimalProfile
+from tick_budget import enforce
 
 
 async def approach(probe: NativeProbe, caller: Connection, target: Actor,
@@ -162,8 +163,9 @@ async def _profile(probe: NativeProbe, width: int, height: int,
         await asyncio.sleep(10)
         status=await request(probe.service.install_dir,"status")
         count = len(probe.service.world.zones)
-        assert status["active_zones"]==count and status["tick_p99_ms"]<10,status
-        probe.report(f"PASS admin status {width}x{height}: all {count} zones active, p99 {status['tick_p99_ms']:.3f} ms")
+        assert status["active_zones"]==count,status
+        verdict=enforce(status["tick_p99_ms"],f"S11 admin status {width}x{height}")
+        probe.report(f"PASS admin status {width}x{height}: all {count} zones active, p99 {status['tick_p99_ms']:.3f} ms ({verdict})")
         return status["tick_p99_ms"]
     finally:
         loop.subsystems, loop.step = original_subsystems, original_step

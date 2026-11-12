@@ -22,6 +22,50 @@ such as #67. It does not apply to design proposals (for example #69 and
 #70), which go to the owner through the technical lead, who comments on
 their engineering consequences instead.
 
+### 1.1 Two lanes
+
+Decided by the owner on 2026-11-12. Every PR in scope runs in one of
+two lanes. The PR names its lane in its description.
+
+**Feel lane.** For changes to how the game reads and sounds, not to how
+it works. A PR is in the feel lane only if all of these hold:
+
+- it changes no Python outside content (`src/karst41/content/`) and
+  presentation strings: player-visible text constants and their fit
+  limits, never logic;
+- it moves no fingerprint: neither P3's digest nor the mechanics
+  fingerprint, nor any fingerprint under an owner approval;
+- it touches no saving, loading, persistence or migration code, and no
+  visibility or disclosure code (sight, NEARBY, disguise, what one
+  caller is shown about another).
+
+A feel-lane PR needs:
+
+- the automated review, triaged;
+- the test suite green at the head;
+- one capture pair, before and after, at 80x24, of the screen it
+  changes;
+- the owning lead's written yes on the PR: the creative lead for lines
+  and voice, the presentation lead for looks and layout.
+
+Its evidence is kept as CI artifacts, not committed, apart from that one
+capture pair. The technical lead still writes the record (§6), checking
+that the PR stays inside the lane and that the lead's yes is there. A CI
+check enforces the three conditions above. Until that check exists
+(§8.2), the technical lead checks them by hand and says so in the
+record. A PR that fails any condition is in the rule lane.
+
+**Rule lane.** Everything else, reviewed as the rest of this document
+says, unchanged.
+
+**Per-slice acceptance workflows.** A slice's own acceptance workflow
+(`.github/workflows/<slice>-acceptance.yml` and similar) proves that
+slice's PR. After the slice merges it is retired: it's deleted in a
+follow-up PR, with its committed evidence kept. Behaviour that must keep
+holding moves into the standing suites (`ci.yml`,
+`service-acceptance.yml`, `presentation-verification.yml`) instead of
+living in a per-slice workflow.
+
 ## 2. Requesting a review
 
 Nothing starts a review automatically (see §8). A review happens when
@@ -69,6 +113,7 @@ an earlier review's notes. Then read:
 | Visible on screen | Captures of the affected screens at 80x24 and 132x50, in truecolor, 256 and 16 colours, taken from live play rather than a composed frame, and named by scenario. |
 | A significant player experience, new or changed | A representative playable acceptance scenario: a written sequence of steps a person plays from a stated starting point, with the expected result at each step. |
 | Rules, numbers or protocol | The canon section changed in the same PR, and any fingerprint or golden rebaseline named and justified. |
+| Feel lane only (§1.1) | Instead of the rows above: the automated review and its triage, the test suite green, one before-and-after capture pair at 80x24, and the owning lead's yes. |
 
 Where evidence lives:
 
@@ -303,6 +348,11 @@ Limits:
 
 ### 8.2 Not built
 
+0. **The feel-lane check (§1.1).** A CI job that fails a PR declaring
+   the feel lane when it changes Python outside content and presentation
+   strings, moves a fingerprint, or touches persistence or visibility
+   code. Until it is built the technical lead checks the lane by hand.
+   Tracked in #228.
 1. **Label-triggered review in CI.** A second `claude-code-action` job,
    started by the `needs-technical-review` label, given this document
    as its prompt. It could read canon and the diff and run headless door

@@ -133,6 +133,12 @@ Plaza punishes anyone who draws.
    dormant actors are rebuilt from their spawners on return.
 6. `admin status` tick p99 under 10 ms with all hub zones active.
 
+   **Since 2026-11-12 (owner):** in CI this check blocks at p99 20 ms
+   and reports 10 ms and above as a warning that doesn't fail
+   (`scripts/tick_budget.py`). #194's interim once-only CPU rerun rule
+   has ended. S29a's bot run later becomes the real gate, against the
+   architecture's 40 ms p99 budget.
+
 ## Definition of done
 
 - Roadmap §7 holds; step 6 recorded in the PR.
