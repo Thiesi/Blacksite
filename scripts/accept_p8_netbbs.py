@@ -108,9 +108,10 @@ async def accept(root: Path, door_python: Path, width: int, height: int, modern:
 
             # 2. A Row ambience line arrives.
             await budget_open()
+            mark = len(heard)  # The trip here passed zones with their own ambience.
             voice.ambient_due = clock.now_tick()
-            await wait(lambda: any(kind == 'ambient' for _, kind, _ in heard))
-            line = next(text for _, kind, text in heard if kind == 'ambient')
+            await wait(lambda: any(kind == 'ambient' for _, kind, _ in heard[mark:]))
+            line = next(text for _, kind, text in heard[mark:] if kind == 'ambient')
             assert line in look.ambient
             await wait(lambda: line in screen())
             await delivered()
