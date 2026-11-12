@@ -216,6 +216,11 @@ The Wake is staged as a scene, not a menu (owner, 2026-11-12). The
 caller wakes first and can move; nothing is chosen before they have
 seen what fighting and jacking in are.
 
+Reading the decant record, which is the archetype choice (step 6), is
+the one required step before the street. Both lessons, the drone and
+the terminal, stay skippable. The record opens only on a key the caller
+pressed, never on its own.
+
 1. Open your eyes in the vat room. You can move at once. The room has
    one obvious way on.
 2. Dr. Vantongeren's briefing is spoken a line or two at a time in the
