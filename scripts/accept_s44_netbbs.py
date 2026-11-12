@@ -39,7 +39,8 @@ from tests.presentation.snapshots import snapshot
 ROOT = Path(__file__).resolve().parents[1]
 FIXTURE = ROOT/'tests/npcs/fixtures/issue187-row-demo.map'
 BAR = (6, 4, 20, 8)  # Upstairs, walls included: x0, y0, x1, y1.
-INSIDE, DOORWAY = (8, 6), {(13, 8), (14, 8)}
+# Behind the doorway, seen from the street (SEEN); out of that line (INSIDE).
+SEEN, INSIDE, DOORWAY = (13, 6), (8, 6), {(13, 8), (14, 8)}
 ROW, HALO = 'sodium-row', 'sodium-tin-halo'
 SETTLED = 'Sable considers it settled.'
 LAYER = 's44-acceptance-bar-fixture'
@@ -59,7 +60,7 @@ def inject_bar(probe: NativeProbe) -> list[list[int]]:
     zone.layers[LAYER] = GeometryLayer(LAYER, ZoneLayout(LAYER, changes), 0, 10**12)
     zone.compose(probe.service.core.clock.now_tick())
     assert all(not zone.passable(change.tile) for change in changes), 'fixture walls rejected'
-    assert all(zone.passable(tile) for tile in DOORWAY | {INSIDE})
+    assert all(zone.passable(tile) for tile in DOORWAY | {INSIDE, SEEN})
     return [list(change.tile) for change in changes]
 
 
@@ -147,6 +148,11 @@ async def accept(root: Path, door_python: Path, width: int, height: int, modern:
             save(caller, 'hunted-pursuit', {'hunted': True, 'guards': [list(g.position) for g in guards]})
 
             # 3. Into the bar; a guard follows in. Then out; it follows out.
+            # The #187 shape: be seen behind the doorway, then step out of
+            # its sight line, so the guard routes in to where it saw you.
+            await probe.walk(caller, SEEN)
+            await wait(lambda: any(g.target == me.id and tuple(g.behaviour.get('last_position', ())) == SEEN
+                                   and core.combat.visible(g, me) for g in guards), 60)
             await probe.walk(caller, INSIDE)
             await wait(lambda: any(in_bar(g) and g.target == me.id for g in guards), 60)
             await delivered()
