@@ -40,6 +40,11 @@ accept members, and Cold Chain, Block and Relay Zero are contested.
   the first measure and every switch below threshold. No fallback
   effects run then, so a later season's re-evaluation always compares
   against initialised state.
+- **An upgraded node** (one that predates S50): factions that were
+  joinable before become closed to new members at initialisation, and
+  existing members keep their membership. The operator view says this
+  is the population rule, not a fault. A closed faction's hall gives
+  the reason in its own voice.
 
 ### 2. The switches
 

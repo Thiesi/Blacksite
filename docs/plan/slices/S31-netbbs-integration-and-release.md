@@ -2,7 +2,7 @@
 
 **Status:** planned
 **Primary model:** Sonnet · **Reviewer:** Human (install on the ReLink test node)
-**Depends on:** S49 (Season 0), S50 (population switches), S28, S29 and S32 (part A), S30, S33 · **Milestone:** M6 and the alpha
+**Depends on:** S48 (H1), S47, S49 (Season 0), S50 (population switches), S28, S29 and S32 (part A), S30, S33 · **Milestone:** M6 and the alpha
 **Issue:** https://github.com/Thiesi/Karst41/issues/31
 
 ## Goal

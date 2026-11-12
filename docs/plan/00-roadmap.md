@@ -100,7 +100,7 @@ not a numeric execution order. Cross-milestone dependencies are explicit.
 | S28 | Operator tooling: full admin CLI, moderation, backup/restore, migrations, audit, SysOp guide | Sonnet | S05, S16, S23; S49 and S50 for part A (alpha), S26 for part B |
 | S29 | Load and latency: bot client, 16-bot hour, profiling, delta compaction if needed | Opus | S15, S22, S24; S49 for part A (alpha), S26 for part B |
 | S30 | Onboarding and help: hint system, help pages, first-run screen, session-limit UX, colour-blind palettes, settings | Sonnet | S07, S09, S13, S19 |
-| S31 | NetBBS >= 7.45 integration: supervised preset, guest-safe admission, install guide, packaging, first release (Season 0, the alpha) | Sonnet | S49, S50, S28, S29, S30, S32, S33 |
+| S31 | NetBBS >= 7.45 integration: supervised preset, guest-safe admission, install guide, packaging, first release (Season 0, the alpha) | Sonnet | S48, S47, S49, S50, S28, S29, S32 (part A), S30, S33 |
 | S32 | Federation readiness audit (design only): origin/authority invariants, protocol reservations, a written bridge design against NetBBS #168 | Fable, Astra review | S21; S49 for part A (alpha), S26 for part B |
 | S33 | ANSI art pack: title, sigils, vignettes, the Ring, Wake Hall, dead screen, transitions | Opus composition, Human pass | S04 |
 | S34 | Lasting crews: persistent rosters, offline invitations, notes, handoffs (planned, #125) | Codex | S22, S19, S23 |
@@ -147,8 +147,8 @@ S34 -> S35 -> S36 -> S37 follow the owner's timing of 2026-10-31: after
 H1, beside C1 and S25c.
 
 The alpha (owner, 2026-11-12): S48 (the first evening, H1) -> S47 -> S49
-(Season 0) -> S50 (population switches) -> S28, S29 and S32 part A ->
-S31's first release. S28, S29 and S32 are split into part A (the alpha,
+(Season 0) -> S50 (population switches) -> S28, S29 and S32 part A, with
+S30 and S33 -> S31's first release. S28, S29 and S32 are split into part A (the alpha,
 which depends on S49) and part B (Season 1, which depends on S26), each
 named in its header. S26 follows the alpha as Season 1's content
 arrives.

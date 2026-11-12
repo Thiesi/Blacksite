@@ -70,7 +70,9 @@ A node running Season 0:
 - **Existing databases.** A node whose database predates S49 (the H1
   build, the ReLink test node) has no season record. A migration treats
   it as Season 0 and runs the first-start initialisation once, exactly
-  as for a new node, with characters and progression untouched.
+  as for a new node, with characters and progression untouched. The
+  season record and S50's initial switch state are written in one
+  transaction, so a crash can't leave half an initialisation.
 - **The first season start.** A new node's Season 0 start fires the
   hook once, as an initialisation. S50 stores its first measure and
   every switch in the below-threshold state, and none of the fallback
@@ -241,6 +243,8 @@ The slice proposes each of these in its PR:
   - an existing pre-S49 database migrates to Season 0 and initialises
     once, with characters unchanged, and a second start doesn't
     re-initialise;
+  - a crash between the season record and the switch state leaves
+    neither, and the next start initialises cleanly;
   - the season status command reports season, ending and next bundle;
   - the operator's advance is audited and works exactly once;
   - the no-outcome acknowledgement is required when there's no
