@@ -1,6 +1,6 @@
 # S44 — The Row's truce rules: hunted, the Halo's refusal, settling the debt
 
-**Status:** planned (filed 2026-11-11; the owner merges the filing)
+**Status:** done (#207; PRs #214 parts 1–4 and #215 parts 5–6, split by the technical lead; filed 2026-11-11)
 **Primary model:** Claude Opus 5.5 (the engineer) · **Reviewer:** automated review, technical lead, presentation lead (presentation acceptance)
 **Depends on:** S38, S42 for parts 1–4; P12 (#204) for parts 5 and 6 only. Parts 1–4 may start before P12 merges. · **Milestone:** interaction
 **Issue:** https://github.com/Thiesi/Karst41/issues/207
@@ -257,3 +257,30 @@ slice, so a CPU near miss blocks.
 
 H1 and S25 layout approval are not part of this slice and aren't granted
 by it.
+
+## Implementation notes
+
+- **Storage:** migration 0005 (`WORLD_SCHEMA` 5) adds `players.truce_marked_until`
+  and `players.keeper_answer {keeper, zone, until}`. One answer per player:
+  a breach under a second keeper would replace it (one truce zone today).
+- **Pursuit bound:** at most 1024 tiles expanded per search, in the box around
+  hunter and goal widened by 8. A miss falls back to the greedy step for 8
+  moves, then searches again.
+- **Ask offers:** entities 1.11's `ask` kind (technical lead's ruling), with the
+  regulars' and the enforcers' approved lines.
+- **Keeper names:** the validator holds a truce keeper's short name to 6 cells
+  (the first-target notice in the 80x24 header), corrected from 7.
+- **Not on main:** the new-Wake five-minute notice quiet (terminal UI 2.5) is
+  not implemented anywhere, so the price notices need no exemption. The
+  technical lead holds that gap.
+- **Bar evidence:** main's Row has no alcoves. The native bar captures use
+  Upstairs' walls from the #187 test fixture, injected in the acceptance
+  server only.
+
+## Follow-ups
+
+- A loot cache next to an exit takes E before the exit (found in S44's native
+  run). It's in S48's scope with #211.
+- The other `step_toward` callers (flee, patrol, walk home, escort, scenes,
+  drones) keep the greedy step and its doorway blindness. Switching any of
+  them needs a ruling.
