@@ -5,11 +5,13 @@
 **Depends on:** S40 (design), S43, S44 (lands first) · **Milestone:** headroom
 **Issue:** https://github.com/Thiesi/Karst41/issues/212
 
-Canon: architecture §6.2 (acknowledgement after commit), AGENTS.md
-§4 (the simulation stays synchronous) and S11's 10 ms gate. The design basis is S40's
-note, PR #166 comment 6698930471. That note is the detailed spec for
-this slice. Where this file and the note differ, this file wins. Where
-either differs from canon, canon wins.
+Canon: architecture §6.2 (persistence; acknowledgement after commit),
+§3.4 (server stop), AGENTS.md §4 (the simulation stays synchronous) and
+S11's 10 ms gate. The design basis is S40's note, PR #166 comment
+6698930471. This file carries every point from that note that the build
+must honour; the note adds the reasoning. Where this file and the note
+differ, this file wins. Where either differs from canon, canon wins,
+except for the edits §7 below tells the build to make.
 
 ## Why
 
@@ -116,8 +118,32 @@ flight waits until it settles.
   - drain accepted work within the existing single 10 s total deadline;
   - close on the owner thread.
 - Never close the connection from another thread, and never release the
-  lease while a writer can still write. The PR states the hard-deadline
-  exit policy, since cancelling a future doesn't cancel an fsync.
+  lease explicitly while the writer can still write.
+- **At the hard deadline, the process exits** (architecture §3.4: "Hard
+  limit 10 s, then exit anyway; persistence is crash-safe").
+  - Cancelling a future doesn't cancel an fsync, so the worker must not
+    keep the interpreter alive past the deadline. Make it a daemon
+    thread, or end the process explicitly.
+  - The OS drops the lease with the process. No live write survives it.
+  - On restart, WAL recovery applies. Anything not acknowledged counts
+    as not committed, and a commit whose reply was lost follows the
+    unknown-outcome rule above.
+  - A stop that hits the deadline logs which commands were still queued
+    or in flight.
+
+### 7. Canon
+
+AGENTS.md §2: canon changes first, in the same PR. The implementation
+PR updates architecture:
+- **§6.2:** the line "SQLite in WAL mode with a single writer task" now
+  names the connection-owning worker thread. It also gets the one
+  ordered queue, the settlement barrier and the loop-side read cache.
+- **§3.4:** the stop sequence drains the writer queue within the
+  existing 10 s, then exits as in §6.
+
+This filing doesn't edit canon. It names the edits the build must make.
+Until then, read "single writer task" in §6.2 as this owner thread, not
+an asyncio task.
 
 ## Out of scope
 

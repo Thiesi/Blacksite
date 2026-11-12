@@ -132,6 +132,10 @@ on 2026-11-07 in the [owner decision]:
 > the design note is on file. The worker is reopened if stalls appear on
 > real hardware or under real load.
 
+On 2026-11-12 the owner reopened the worker after four S11 commit-stall
+failures on CI (#188, #198, #206 twice). It is scheduled after S44 as
+[S47](S47-off-loop-writer.md) (#212).
+
 - The PR names the operation that stalled, with the artifacts showing
   it, and separates what was observed from what was inferred.
 - No golden or mechanics fingerprint moves.
