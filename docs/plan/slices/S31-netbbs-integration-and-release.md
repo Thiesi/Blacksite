@@ -96,8 +96,10 @@ not a second speculative future-version preset.
 - The first release: `v0.1.0` is **Season 0, the alpha** (owner,
   2026-11-12; roadmap §6). It ships once S48, S47, S49 and S50 have
   merged, together with part A of S28, S29 and S32 (each slice's header
-  names its parts). This slice performs the first
-  release. Season 1 (S26) ships in a later release.
+  names its parts). It doesn't ship before the owner has given the
+  layout approval for S49's two new maps (`oldworks-main` and
+  `oldworks-drop`). No review or capture stands in for that approval.
+  This slice performs the first release. Season 1 (S26) ships in a later release.
 - Platform API handling: accept integer API 5 for the certified release;
   missing means legacy 2 for a useful upgrade refusal. Reject unsupported
   older/newer, malformed and boolean values before world entry. This is

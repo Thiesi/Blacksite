@@ -222,7 +222,9 @@ The slice proposes each of these in its PR:
   - the flip and Strand's line, word for word;
   - the way beyond stays closed;
   - the behaviour chosen for open items 1 and 2, including a second
-    finisher and a restart after the flip.
+    finisher and a restart after the flip. The restart test runs on the
+    production persistence path (S47's writer flushes the flag), not a
+    fixture.
 - **Nothing promised:** no Season 0 screen names Depth, a console, a
   ballot or an expedition.
 - **Fingerprints:** P3 and the mechanics fingerprint don't move unless

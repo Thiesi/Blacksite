@@ -90,9 +90,11 @@ The slice proposes each in its PR. The technical lead rules, and brings
 anything that changes the economy to the owner.
 - **A one-day spike** (from #219's review). A promo weekend can open a
   switch for the whole season, because switches only open within a
-  season. That follows the owner's rule. The slice may propose a hold
-  before a switch opens, for example two consecutive daily samples above
-  the threshold.
+  season. Throwaway BBS accounts can do the same. That follows the
+  owner's rule. Settle it before the build starts, because market bids
+  and escrow opened too early are hard to undo within a season. A hold
+  before a switch opens is one option, for example two consecutive daily
+  samples above the threshold.
 - **Market listings at a season change** (from #219's review). When a
   season change closes bids, open bids are refunded (canon). Still to
   settle:
