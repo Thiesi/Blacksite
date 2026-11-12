@@ -527,7 +527,7 @@ were cut; padlocked, key in the director's office. (found texts)
 a vat area. (design §5.1, §14)
 
 **Population switch** — A feature that opens as a node's weekly active
-characters grow: more joinable factions, more contested relays, market
+players (distinct BBS users) grow: more joinable factions, more contested relays, market
 bids, the Depth target. Opens within a season, never closes until the
 next. (design §13.5)
 

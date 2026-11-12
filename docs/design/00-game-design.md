@@ -2240,7 +2240,7 @@ changes the machine balance; both kinds of work enable investigation.
 The Depth target follows the node's population, like the other
 population switches (§13.5; owner, 2026-11-12): small node 10 000,
 standard 100 000, large 250 000. A season starts at the band its weekly
-active characters reach, and the target may step up to a larger band
+active players reach, and the target may step up to a larger band
 during the season, never down. No SysOp chooses it. When the target
 steps up, progress already delivered is kept, and a level that has
 opened stays open (owner, 2026-11-12).
@@ -2356,9 +2356,10 @@ Talking never pauses the world or changes the location's safety rules.
 
 A node has a handful of players (pillar 6). Systems built for a crowd
 open as the crowd arrives, by rule, so no SysOp has to guess up front
-(owner, 2026-11-12). The game measures **weekly active characters**:
-distinct characters who played in the last seven days. The I/O layer
-computes it from `last_seen_at` once a day and hands it to the
+(owner, 2026-11-12). The game measures **weekly active players**:
+distinct BBS users who played any character in the last seven days, so
+one person's alts count once. The I/O layer computes it from last-seen
+data once a day and hands it to the
 simulation as an input; the simulation reads no clock for it. A new
 node starts below every threshold.
 
@@ -2368,7 +2369,9 @@ node starts below every threshold.
 - When a new season finds the measure below a threshold that was open
   (owner, 2026-11-12): existing members keep their membership, but that
   faction takes no new members; relays that fall out of the contested
-  set reset; open market bids are refunded to the bidder's bank.
+  set reset; open market bids are refunded to the bidder's bank. A
+  member who leaves such a faction can't rejoin it until the population
+  grows back past its threshold.
 - The city announces each opening in its own voice, in the place it
   concerns. Growth is something players notice, not a configuration.
 - Starting thresholds, tuned in playtests:
@@ -2414,8 +2417,8 @@ them.
 - **The season ends on the door.** Step 5 opens `shaft-door-east` from
   the Lattice side, and Strand says "Forty-one years. Somebody had to."
   The way beyond the door stays closed until the next season goes
-  through it. Opening the door makes the season eligible to advance;
-  the operator still advances it explicitly (§13.1).
+  through it. Opening the door is the season's intended ending; the
+  operator advances the season as §13.1 says.
 
 ## 14. Anti-abuse and fairness
 
