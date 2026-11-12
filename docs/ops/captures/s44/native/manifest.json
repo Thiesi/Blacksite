@@ -1,0 +1,1757 @@
+{
+  "run": "https://github.com/Thiesi/Karst41/actions/runs/43189288477",
+  "head": "2ab65d9fec92c6bbba5d1902812cdaa185edf84b",
+  "transport": "NetBBS v7.45.0 Telnet -> registered native stdio",
+  "artifacts": [
+    {
+      "name": "s44-132x50-legacy",
+      "id": 13929969063,
+      "raw": "the .ans streams and .json style snapshots stay in this CI artifact"
+    },
+    {
+      "name": "s44-132x50-modern",
+      "id": 13930348239,
+      "raw": "the .ans streams and .json style snapshots stay in this CI artifact"
+    },
+    {
+      "name": "s44-80x24-legacy",
+      "id": 13931340513,
+      "raw": "the .ans streams and .json style snapshots stay in this CI artifact"
+    },
+    {
+      "name": "s44-80x24-modern",
+      "id": 13931545117,
+      "raw": "the .ans streams and .json style snapshots stay in this CI artifact"
+    }
+  ],
+  "captures": [
+    {
+      "file": "s44-price-arrival-132x50-16-legacy.txt",
+      "artifact": "s44-132x50-legacy",
+      "scenario": "price-arrival",
+      "size": [
+        132,
+        50
+      ],
+      "tier": "16",
+      "renderer": "legacy",
+      "sha256": {
+        ".ans": "da7fc14a650d370d18803083da0eb965c620679574f4f198fb6618b9e1f77035",
+        ".txt": "dd4815b72876510e13a71e495ffaace6467fd6608ddcf3ab61b01e224de63d4b",
+        ".json": "15f79725cd9f1d72fd248e3e3baa51e8a44e3db052cd32c2fb2e93b9cf3d31ce"
+      }
+    },
+    {
+      "file": "s44-price-target-132x50-16-legacy.txt",
+      "artifact": "s44-132x50-legacy",
+      "scenario": "price-target",
+      "size": [
+        132,
+        50
+      ],
+      "tier": "16",
+      "renderer": "legacy",
+      "sha256": {
+        ".ans": "674ec6d00deb3c02506769fbe3ca3b6806b3698009736ec2fc0a5ef21120fdad",
+        ".txt": "b9cd28071df7fc437b6f0384d035cc07a53b34e1ae1ad641c6cafa2f1f687d7d",
+        ".json": "010d93bbe2b435b7335006a12b4dd3338ed19617ad2d873bb193e5c1daf3d24c"
+      }
+    },
+    {
+      "file": "s44-hunted-pursuit-132x50-16-legacy.txt",
+      "artifact": "s44-132x50-legacy",
+      "scenario": "hunted-pursuit",
+      "size": [
+        132,
+        50
+      ],
+      "tier": "16",
+      "renderer": "legacy",
+      "sha256": {
+        ".ans": "4316829812d4e431b6245d270aec9747cb6cec079e994ea8211bd83176ab26f6",
+        ".txt": "5b19faf6b15e82396199d306c6132af2a48099df1aad8bf50b65139688031a0e",
+        ".json": "447324f26f2d46bd7a7fc471fdc42de7ee0fe221be892e0152a89528f8f3f129"
+      }
+    },
+    {
+      "file": "s44-bar-pursuit-in-132x50-16-legacy.txt",
+      "artifact": "s44-132x50-legacy",
+      "scenario": "bar-pursuit-in",
+      "size": [
+        132,
+        50
+      ],
+      "tier": "16",
+      "renderer": "legacy",
+      "sha256": {
+        ".ans": "5fa714027324a21236bd1aea33cb7aa587a2d2962533b15993d41ed85b90cc78",
+        ".txt": "46e7b19ffb77adc3b541e0cb13c50335a44017301eb366b08e420a739c4e195e",
+        ".json": "4d319203c4c3c14bb50bc785ce09d771758dc31e72c1d33379e35187b100a13f"
+      }
+    },
+    {
+      "file": "s44-bar-pursuit-out-132x50-16-legacy.txt",
+      "artifact": "s44-132x50-legacy",
+      "scenario": "bar-pursuit-out",
+      "size": [
+        132,
+        50
+      ],
+      "tier": "16",
+      "renderer": "legacy",
+      "sha256": {
+        ".ans": "5c90e1fc2a056a203304f8bfe8cc3483b759466f8671d0dcdf2b0147c240c5c3",
+        ".txt": "378005e7ef6858e3943841adb2c22fa3fee7b55872eec9332b150b410ae0a881",
+        ".json": "c299704b63dd94008b13827e074f76649bcb180add92d89f54024f6ebc3eab9a"
+      }
+    },
+    {
+      "file": "s44-halo-refused-132x50-16-legacy.txt",
+      "artifact": "s44-132x50-legacy",
+      "scenario": "halo-refused",
+      "size": [
+        132,
+        50
+      ],
+      "tier": "16",
+      "renderer": "legacy",
+      "sha256": {
+        ".ans": "ec59aa966c1e5cf57e3dc98172709abf43cb963b9a7e953c95f472b5908560e6",
+        ".txt": "355cdd75b5f174c666871ebfec7d482d1efc5d4ab998c162be42b8652a4e0350",
+        ".json": "eeb5f6c87ecebb3691e19c5b7a0d930807d9bf4c766267a4c67e5ce558108661"
+      }
+    },
+    {
+      "file": "s44-settled-132x50-16-legacy.txt",
+      "artifact": "s44-132x50-legacy",
+      "scenario": "settled",
+      "size": [
+        132,
+        50
+      ],
+      "tier": "16",
+      "renderer": "legacy",
+      "sha256": {
+        ".ans": "cc506a026a1f177040589950b741929f30b704001965b69d40b6a3b0bc69ba95",
+        ".txt": "2f7df39e93f93013e41a57ff0c250cbc4f0514f606753de0f58c7a368755ae20",
+        ".json": "61ac4e114664fe360aad5a8d41672004ed9c6c930fc80e1e7a5a2a8545d77c5c"
+      }
+    },
+    {
+      "file": "s44-enforcer-talk-132x50-16-legacy.txt",
+      "artifact": "s44-132x50-legacy",
+      "scenario": "enforcer-talk",
+      "size": [
+        132,
+        50
+      ],
+      "tier": "16",
+      "renderer": "legacy",
+      "sha256": {
+        ".ans": "bb588ebe8960b68e894d8dc0b25994cb3014db4ae9bfeeaae3a65efbf23ae1c5",
+        ".txt": "af5fab81196ce79e3700c5d7439a11765143681aaf2386f129d169166026a940",
+        ".json": "c123aeeeec33f768cb4ba8165de0984c913369181ba49dd567613c663cdb2442"
+      }
+    },
+    {
+      "file": "s44-enforcer-ask-132x50-16-legacy.txt",
+      "artifact": "s44-132x50-legacy",
+      "scenario": "enforcer-ask",
+      "size": [
+        132,
+        50
+      ],
+      "tier": "16",
+      "renderer": "legacy",
+      "sha256": {
+        ".ans": "07f185c5652ac1dbc114277b47e4e4cb51dc6e96262a31f43174c05b88f583e3",
+        ".txt": "c574f354d3b13585e0b2f28ed0f68b6977c78e2044e47244879d4943a3dcd9c8",
+        ".json": "24ce1d5b10aae4f43025cb040063209a402399d9c888a0284d3a1607df388c66"
+      }
+    },
+    {
+      "file": "s44-price-arrival-132x50-256-legacy.txt",
+      "artifact": "s44-132x50-legacy",
+      "scenario": "price-arrival",
+      "size": [
+        132,
+        50
+      ],
+      "tier": "256",
+      "renderer": "legacy",
+      "sha256": {
+        ".ans": "7b4f4744e49179952013c865b152346e5760e034f9dc12b69792771aa8e4a0c8",
+        ".txt": "8307f3faa7e4b00e6ac5a8f879ae71ff3b885277f72136c82f912d94c7f43f96",
+        ".json": "e820e10ec2fa1e0a6a88e650e5a0a69dc853fc58f8d70224ebe3667d3db5fffd"
+      }
+    },
+    {
+      "file": "s44-price-target-132x50-256-legacy.txt",
+      "artifact": "s44-132x50-legacy",
+      "scenario": "price-target",
+      "size": [
+        132,
+        50
+      ],
+      "tier": "256",
+      "renderer": "legacy",
+      "sha256": {
+        ".ans": "e296ff25236b7dad1b0bcd866c85cdff8e730712a50d9f64b4ecbfcbcf74b91d",
+        ".txt": "90b953f8ba12a2d6a4ade9043bd1e4d3bc21a91df70553e49a97ca7fcb3beb13",
+        ".json": "3582f48f6973f894015050595716eed1ff5eb35535c698391690ff644efe91a8"
+      }
+    },
+    {
+      "file": "s44-hunted-pursuit-132x50-256-legacy.txt",
+      "artifact": "s44-132x50-legacy",
+      "scenario": "hunted-pursuit",
+      "size": [
+        132,
+        50
+      ],
+      "tier": "256",
+      "renderer": "legacy",
+      "sha256": {
+        ".ans": "47eb1cbe2c07dc2982c5e070e86660ac97779b04630fd68fca0ab2c3af199f89",
+        ".txt": "bf0f990e6bbb8c21cfa941200ff4b5a4b9afbcba45f73bc81cc9f4c55f7a4320",
+        ".json": "c009d892c3facc4f44ec69aa74134ee7dfc892d93547f2f9b9b36077b15603d6"
+      }
+    },
+    {
+      "file": "s44-bar-pursuit-in-132x50-256-legacy.txt",
+      "artifact": "s44-132x50-legacy",
+      "scenario": "bar-pursuit-in",
+      "size": [
+        132,
+        50
+      ],
+      "tier": "256",
+      "renderer": "legacy",
+      "sha256": {
+        ".ans": "0ddb05799b7f7ac8471781ffcb0a1ef12e727ec10cbdd90aadda60e9d105b98c",
+        ".txt": "cf57c19e656759c5eb10199681e6bf0bced9d37721a5397a70f828bdfaaec97d",
+        ".json": "eff23a126f3b4a4e3d0ecd4d9c7bcba1339dc4d41abe022dcbc762357ec8588f"
+      }
+    },
+    {
+      "file": "s44-bar-pursuit-out-132x50-256-legacy.txt",
+      "artifact": "s44-132x50-legacy",
+      "scenario": "bar-pursuit-out",
+      "size": [
+        132,
+        50
+      ],
+      "tier": "256",
+      "renderer": "legacy",
+      "sha256": {
+        ".ans": "fe6cd22d67322ca9f01731987c572ca2996297b331e65be7d5f36307205a93b1",
+        ".txt": "767c6ad2be392c45cb90c10fb77e4c02a79d40f173d5f6dda56964ba4f9e0117",
+        ".json": "32b652782063b836187e9c6c40f4949455d09a9b542998febe3dc1786fe7a88f"
+      }
+    },
+    {
+      "file": "s44-halo-refused-132x50-256-legacy.txt",
+      "artifact": "s44-132x50-legacy",
+      "scenario": "halo-refused",
+      "size": [
+        132,
+        50
+      ],
+      "tier": "256",
+      "renderer": "legacy",
+      "sha256": {
+        ".ans": "eb55ca477be248abaa87ef65d1e306458bce9c7dbd6204d63bc811cd60cecbe5",
+        ".txt": "966b2e6e86a6ae8e65cb83b373bfa27ef27bdb92d1795053d021667392ea3f15",
+        ".json": "26812c2c5e812c11f715ae82b6b5bd1720c330ab7d11b6f3e7cae5c5f1cb0d97"
+      }
+    },
+    {
+      "file": "s44-settled-132x50-256-legacy.txt",
+      "artifact": "s44-132x50-legacy",
+      "scenario": "settled",
+      "size": [
+        132,
+        50
+      ],
+      "tier": "256",
+      "renderer": "legacy",
+      "sha256": {
+        ".ans": "d133f1b792e89c2f7ec7829f4e20ab1b804dc54ab068dbd3a99a2d3c2d40a702",
+        ".txt": "e657bf81ef832f994333e73d748e53e2bf11bafa6a490490850fc8662d8638e6",
+        ".json": "9ed713bbfcb22cf0c1822c236866b3e6a4f55e0e7b79ade0fa5beb0a6f0397b4"
+      }
+    },
+    {
+      "file": "s44-enforcer-talk-132x50-256-legacy.txt",
+      "artifact": "s44-132x50-legacy",
+      "scenario": "enforcer-talk",
+      "size": [
+        132,
+        50
+      ],
+      "tier": "256",
+      "renderer": "legacy",
+      "sha256": {
+        ".ans": "1ca341d3a0234fd597566a4a34da6e956e71ee310ceefe49cfd8c80498fb6923",
+        ".txt": "bf3fc22a9ba3d33b2ed2d9a10c9eb702e4f8c0498bc0f6491f5667fd480f0f4f",
+        ".json": "e33890612e9492db9d2bc20d06eeb9905764e70745294eeee4c6da25db00fd6d"
+      }
+    },
+    {
+      "file": "s44-enforcer-ask-132x50-256-legacy.txt",
+      "artifact": "s44-132x50-legacy",
+      "scenario": "enforcer-ask",
+      "size": [
+        132,
+        50
+      ],
+      "tier": "256",
+      "renderer": "legacy",
+      "sha256": {
+        ".ans": "a1d27678d4be2b2cc9c3967237584ce56b1cb4a08b0828f42e3304b845a56295",
+        ".txt": "54c0c306d58a9b2f7186d4f46cad205648e06411cae8c622165bfd490d4e5f52",
+        ".json": "2a3bc35913c371d667f2c73bef2f725c0116be265545d23d3d1ea84c5b3102a4"
+      }
+    },
+    {
+      "file": "s44-price-arrival-132x50-truecolor-legacy.txt",
+      "artifact": "s44-132x50-legacy",
+      "scenario": "price-arrival",
+      "size": [
+        132,
+        50
+      ],
+      "tier": "truecolor",
+      "renderer": "legacy",
+      "sha256": {
+        ".ans": "539aba0d90496bdbc7f7228a13a7d94f31aacfc7d732f5310de675cc15c894a3",
+        ".txt": "b1a87eff0fc308380c337eb0a695ec5bfd94721a26674c548d117c3d729d79a9",
+        ".json": "a2cd18079ca3c83fac3a712b8a874674e9054fae207a6e4883106c2eb26dae6b"
+      }
+    },
+    {
+      "file": "s44-price-target-132x50-truecolor-legacy.txt",
+      "artifact": "s44-132x50-legacy",
+      "scenario": "price-target",
+      "size": [
+        132,
+        50
+      ],
+      "tier": "truecolor",
+      "renderer": "legacy",
+      "sha256": {
+        ".ans": "cea0c3970df9eef920f5436e0b588314f84b6ed20f64aed4560c8d6b947ed667",
+        ".txt": "20a5a7bd73da9d6fcd16317d0db27b9634f21c0a516a946f99cfc1f8c916cb4e",
+        ".json": "5f694aa585d91a866b3d49221517aa91ce63c7abe666468b2b0afa986d5f33f5"
+      }
+    },
+    {
+      "file": "s44-hunted-pursuit-132x50-truecolor-legacy.txt",
+      "artifact": "s44-132x50-legacy",
+      "scenario": "hunted-pursuit",
+      "size": [
+        132,
+        50
+      ],
+      "tier": "truecolor",
+      "renderer": "legacy",
+      "sha256": {
+        ".ans": "f8cec94ec8c10fdbddb6006783764f74db014b88748cf29770807f2926688c31",
+        ".txt": "1337c9c50d6fe753ca64b47ef718765951e9bcbb835489bca14fa543b92a3348",
+        ".json": "ff77a9c4539fa25e0f82b08670afb2a43c0a448458c89962408a6ae710a1fc1e"
+      }
+    },
+    {
+      "file": "s44-bar-pursuit-in-132x50-truecolor-legacy.txt",
+      "artifact": "s44-132x50-legacy",
+      "scenario": "bar-pursuit-in",
+      "size": [
+        132,
+        50
+      ],
+      "tier": "truecolor",
+      "renderer": "legacy",
+      "sha256": {
+        ".ans": "0e54b0e0a46728b87ef8a50302781dad9338e3ec27305c6358b372189a071090",
+        ".txt": "9a5f8383042618b8e5360221c26404168e1a5e92ab06f2a745ff6052d45ad55d",
+        ".json": "914a2c61174b22c58bee4c7c808b57686ca92739bb155d7f5c30c94ec90489d0"
+      }
+    },
+    {
+      "file": "s44-bar-pursuit-out-132x50-truecolor-legacy.txt",
+      "artifact": "s44-132x50-legacy",
+      "scenario": "bar-pursuit-out",
+      "size": [
+        132,
+        50
+      ],
+      "tier": "truecolor",
+      "renderer": "legacy",
+      "sha256": {
+        ".ans": "dfc6d5375e816d84f756da97316c1590ff77c9c165d0a1253f4166791a7386ec",
+        ".txt": "be4e40872dde897b926cd0380a794aa49c970226c533c1574a0195bf15d0c627",
+        ".json": "d6476e0e04411b5bc78c43a8d2962b7c3ca74f1c2fae827b46d6c9cd2c66c924"
+      }
+    },
+    {
+      "file": "s44-halo-refused-132x50-truecolor-legacy.txt",
+      "artifact": "s44-132x50-legacy",
+      "scenario": "halo-refused",
+      "size": [
+        132,
+        50
+      ],
+      "tier": "truecolor",
+      "renderer": "legacy",
+      "sha256": {
+        ".ans": "b3c41ad2692877a527de178d1a4fe0822646f689d552b778e80fa001c2475948",
+        ".txt": "dfb0ada60eac96d19c8c7a702af2d9cb9935decb3c2f447e5433f077345e1b93",
+        ".json": "9b18a7524b741a17d96a7981fc497f218f552f97017a6712c04378bfd2d3ce91"
+      }
+    },
+    {
+      "file": "s44-settled-132x50-truecolor-legacy.txt",
+      "artifact": "s44-132x50-legacy",
+      "scenario": "settled",
+      "size": [
+        132,
+        50
+      ],
+      "tier": "truecolor",
+      "renderer": "legacy",
+      "sha256": {
+        ".ans": "ba76ee45d496cffe6162aede6e9f8d1c401c42bb34c80527072fa942d8c4255a",
+        ".txt": "7561b8a036225ace6d308111ab802695e834ceeb194ae68a12d6c14348114631",
+        ".json": "bc8b6ba19e5711650e01256eedd3a0eecfb31bf3dd52671957ba9898e61b4600"
+      }
+    },
+    {
+      "file": "s44-enforcer-talk-132x50-truecolor-legacy.txt",
+      "artifact": "s44-132x50-legacy",
+      "scenario": "enforcer-talk",
+      "size": [
+        132,
+        50
+      ],
+      "tier": "truecolor",
+      "renderer": "legacy",
+      "sha256": {
+        ".ans": "c76f6c2ddeb7b961e79516397f2fed7179cec86a1fcaf97643a101bb99a1301a",
+        ".txt": "befaba2b3b06c029314f9292d9da30e32cc7333f4fe41f4cb503dad8cbcdb577",
+        ".json": "59339b88c338c4628fed025fdb08fa5f7779a805c4bf84641bcd7f73d8dda6f2"
+      }
+    },
+    {
+      "file": "s44-enforcer-ask-132x50-truecolor-legacy.txt",
+      "artifact": "s44-132x50-legacy",
+      "scenario": "enforcer-ask",
+      "size": [
+        132,
+        50
+      ],
+      "tier": "truecolor",
+      "renderer": "legacy",
+      "sha256": {
+        ".ans": "505779762b636529d3cf22bfa5533dd8e087e52f36c3848e6cc327c4de3c8426",
+        ".txt": "9cb55763a2d52c037a7412acd87586701cd2536387bb84f4af5fbbabb9621796",
+        ".json": "f1218381223d9c72f77444caf1689c880946f308177fef26632cef0cffc7a64d"
+      }
+    },
+    {
+      "file": "s44-price-arrival-132x50-16-present.txt",
+      "artifact": "s44-132x50-modern",
+      "scenario": "price-arrival",
+      "size": [
+        132,
+        50
+      ],
+      "tier": "16",
+      "renderer": "present",
+      "sha256": {
+        ".ans": "da82b09accfd5e4fa975ba9f3d14ad9a1b983026dfc88ce9f131bceb7f9ec2f9",
+        ".txt": "ab3c870fa95960b612315732d8361d0d5ddb0971998adc4f80d42c80e36a1cda",
+        ".json": "49f95ecd14bc4fca892c5f5e56277840a43298a629f85913b00fc548bafb81ec"
+      }
+    },
+    {
+      "file": "s44-price-target-132x50-16-present.txt",
+      "artifact": "s44-132x50-modern",
+      "scenario": "price-target",
+      "size": [
+        132,
+        50
+      ],
+      "tier": "16",
+      "renderer": "present",
+      "sha256": {
+        ".ans": "529418481f80e7b59adf9a82988280fe36d16647769b8620cfef5186aba09c99",
+        ".txt": "325e91cebf34b721d631a5b9334427a2a2d8197de60053d109daab3130636cef",
+        ".json": "a29c7908359677b2d74bdaf09b2537c02b1fd470b407f4f1c46e6127e1298242"
+      }
+    },
+    {
+      "file": "s44-hunted-pursuit-132x50-16-present.txt",
+      "artifact": "s44-132x50-modern",
+      "scenario": "hunted-pursuit",
+      "size": [
+        132,
+        50
+      ],
+      "tier": "16",
+      "renderer": "present",
+      "sha256": {
+        ".ans": "97b317e50cd3b4e7d53ca8b6e53c6db2b223ff4693ecae1e7ecf7c7bdd62d650",
+        ".txt": "d0868ecff4abe6995b4270f83cbbc4ecafbcae4ff11c1f59c8b02ad1f38a051b",
+        ".json": "4c7038886742f9b89f7300aba08c9eb2a241b2a9ad760438790aa02cd7046706"
+      }
+    },
+    {
+      "file": "s44-bar-pursuit-in-132x50-16-present.txt",
+      "artifact": "s44-132x50-modern",
+      "scenario": "bar-pursuit-in",
+      "size": [
+        132,
+        50
+      ],
+      "tier": "16",
+      "renderer": "present",
+      "sha256": {
+        ".ans": "7d7f8f09488c5459d7f2f8547a93db9084fe740169ad4bb5ffb7bbf46c2228c4",
+        ".txt": "9b292b53781d2bfac06cc284905098c488952fd7916d90e94f9fe51fd7ac8850",
+        ".json": "3af0ada24a585cb4ca3b307a575726cb8404778acf232bb5f3a6eb43771c4ec5"
+      }
+    },
+    {
+      "file": "s44-bar-pursuit-out-132x50-16-present.txt",
+      "artifact": "s44-132x50-modern",
+      "scenario": "bar-pursuit-out",
+      "size": [
+        132,
+        50
+      ],
+      "tier": "16",
+      "renderer": "present",
+      "sha256": {
+        ".ans": "8ea83845167e38675975c74d0de85d41694ab71c9ba6ef58306cd42cc840022f",
+        ".txt": "db3f83eed4cb3c87548e393100f4c5e1f17ec534117e84193c8dbb33b33f9809",
+        ".json": "a8ccc792cd82f2681b89c836e51d6fc8dc6a2f9b4ac8391cec0c4f63b6f65679"
+      }
+    },
+    {
+      "file": "s44-halo-refused-132x50-16-present.txt",
+      "artifact": "s44-132x50-modern",
+      "scenario": "halo-refused",
+      "size": [
+        132,
+        50
+      ],
+      "tier": "16",
+      "renderer": "present",
+      "sha256": {
+        ".ans": "0255c4bb16a5dfd176c5a65a047108af7ec79d4ff0320cba12fcabe4845f4104",
+        ".txt": "cbf2f6626b9902ba00bf208532066cdcd4798b402eca869673a735d7e5dd8126",
+        ".json": "60a2f7762b84c75ecf38d1fc8072c742b4364bf6ee4c534d1fd87116cdf8207a"
+      }
+    },
+    {
+      "file": "s44-settled-132x50-16-present.txt",
+      "artifact": "s44-132x50-modern",
+      "scenario": "settled",
+      "size": [
+        132,
+        50
+      ],
+      "tier": "16",
+      "renderer": "present",
+      "sha256": {
+        ".ans": "c51d0419cf9cd04b1cd6cee831878ebe3ba3cf00e067bd840691080586404be1",
+        ".txt": "b61b403f7432c90b3036e98215ba2a951e0b0aea440c23f060a01557bbb30a71",
+        ".json": "8cf53aa9b93484fbb9737e1ffe2e96ac4180c9a789c21fe9166a542fa34805d5"
+      }
+    },
+    {
+      "file": "s44-enforcer-talk-132x50-16-present.txt",
+      "artifact": "s44-132x50-modern",
+      "scenario": "enforcer-talk",
+      "size": [
+        132,
+        50
+      ],
+      "tier": "16",
+      "renderer": "present",
+      "sha256": {
+        ".ans": "00aa89cab6f72df1ec8bb3322f919d76bb81a39f6e80bce3501e8b98a495851b",
+        ".txt": "02da21280bd6e579c1b61346d76b972db38ad203dda1967134d43877a63ab089",
+        ".json": "741ce6947e5651aa5b8bbffd7a810021fe0fd15ef4702fa93277adaafc5b7fa3"
+      }
+    },
+    {
+      "file": "s44-enforcer-ask-132x50-16-present.txt",
+      "artifact": "s44-132x50-modern",
+      "scenario": "enforcer-ask",
+      "size": [
+        132,
+        50
+      ],
+      "tier": "16",
+      "renderer": "present",
+      "sha256": {
+        ".ans": "ea58d3f1d0ef624de570834647ce60d0013efa5f4dee19f638b779418975e374",
+        ".txt": "9b0b70c4049dd460feff21e51206d3c67d9502bedc7ad55d7c2cd34f74d23f7a",
+        ".json": "3906a8e76ffa033acb96cf139c83d2d6ac119b1a9adb828c76dd165fa1522b4f"
+      }
+    },
+    {
+      "file": "s44-price-arrival-132x50-256-present.txt",
+      "artifact": "s44-132x50-modern",
+      "scenario": "price-arrival",
+      "size": [
+        132,
+        50
+      ],
+      "tier": "256",
+      "renderer": "present",
+      "sha256": {
+        ".ans": "a989e22687040c2494e7a5b81cc4a750cd3cb16f2a3b13a41a3ad5b7f879f75b",
+        ".txt": "fbf452e31073a1be04eb38f1f0fc5a04d1b0744b413b20d5a7d214713ff56e9b",
+        ".json": "3b7ef381f446dea72c4c754a3f8027aeb2e0fa2dd6f0c8afd4f418af7e8d940d"
+      }
+    },
+    {
+      "file": "s44-price-target-132x50-256-present.txt",
+      "artifact": "s44-132x50-modern",
+      "scenario": "price-target",
+      "size": [
+        132,
+        50
+      ],
+      "tier": "256",
+      "renderer": "present",
+      "sha256": {
+        ".ans": "0671954544ab5030acfd3075ceea1b7b58b0b13379026ba8cb5a04aad794ee28",
+        ".txt": "d381ccbd8ac07f5a840f8dccb685fffc8c0fe4a503324b6eb449c4f1676bd89f",
+        ".json": "0c4819a745682ad2c1a1c4d40200a4e0dbfad4aced331fad712a7608b576ceff"
+      }
+    },
+    {
+      "file": "s44-hunted-pursuit-132x50-256-present.txt",
+      "artifact": "s44-132x50-modern",
+      "scenario": "hunted-pursuit",
+      "size": [
+        132,
+        50
+      ],
+      "tier": "256",
+      "renderer": "present",
+      "sha256": {
+        ".ans": "6c4ffbd7e4b322e7424452d0f1d410b36569973d5caa550fd8c77fb12b852549",
+        ".txt": "b0ffa2c088aa00ab424e5a99fe944bfd6d9ec2ff09748bb76feba3ec77f7d08d",
+        ".json": "c34381cba85dc31a2708b0d320665cf398cd27325534f73818ff113c068fa311"
+      }
+    },
+    {
+      "file": "s44-bar-pursuit-in-132x50-256-present.txt",
+      "artifact": "s44-132x50-modern",
+      "scenario": "bar-pursuit-in",
+      "size": [
+        132,
+        50
+      ],
+      "tier": "256",
+      "renderer": "present",
+      "sha256": {
+        ".ans": "56da51638e573af894f60a85fba334566f6ec287870a7411c9715f1b47d65942",
+        ".txt": "3f8e52b5dd76ab3b6f5a2faacae75e1fec753bcdc26c080e8d447c2d5dd3ddae",
+        ".json": "c3811f6cfd7b806f2465f2b2d64bbfe5dab81300190f523544415769a911bda1"
+      }
+    },
+    {
+      "file": "s44-bar-pursuit-out-132x50-256-present.txt",
+      "artifact": "s44-132x50-modern",
+      "scenario": "bar-pursuit-out",
+      "size": [
+        132,
+        50
+      ],
+      "tier": "256",
+      "renderer": "present",
+      "sha256": {
+        ".ans": "946bc9edabf79f07e757b819febf3c2f981fa564a945fd495b90e2b8c99a16ee",
+        ".txt": "cb39d5286be3b568321d288fe33d0cc92468f4a7a2607692d8591890d3770c72",
+        ".json": "e00e39e5d207bd89cf17fa8e2fd762a007c9ba6b616f7698465c0139bba6e169"
+      }
+    },
+    {
+      "file": "s44-halo-refused-132x50-256-present.txt",
+      "artifact": "s44-132x50-modern",
+      "scenario": "halo-refused",
+      "size": [
+        132,
+        50
+      ],
+      "tier": "256",
+      "renderer": "present",
+      "sha256": {
+        ".ans": "9fe1d499f5e57a0f45073a2698e47ba7016da0cb3d4f44981d3bfe1cc76ce2d6",
+        ".txt": "ac27b995223a5f29b11ebfa5b44a281167950147ce8cd8b6e99a92fed2737566",
+        ".json": "c9a0f1ba9408507cdbfc101d03cd7e12d8ce7e7d02cd4fbfde1a1a6d13444fdf"
+      }
+    },
+    {
+      "file": "s44-settled-132x50-256-present.txt",
+      "artifact": "s44-132x50-modern",
+      "scenario": "settled",
+      "size": [
+        132,
+        50
+      ],
+      "tier": "256",
+      "renderer": "present",
+      "sha256": {
+        ".ans": "f54c29c0bcb1f4ff5f99fa8307e9f7754f141851ae239e2155264b3124bf355a",
+        ".txt": "677acf94caa7273f9734824234a46a9f7721ff8eab5a476f7bdeb101328eecfd",
+        ".json": "80efb3306c3b7df1954693b217458e178e029299b2b96ee8a2ed4769f80ccd22"
+      }
+    },
+    {
+      "file": "s44-enforcer-talk-132x50-256-present.txt",
+      "artifact": "s44-132x50-modern",
+      "scenario": "enforcer-talk",
+      "size": [
+        132,
+        50
+      ],
+      "tier": "256",
+      "renderer": "present",
+      "sha256": {
+        ".ans": "f35fa7d599c1ec789901fd4df8f7bccbbf5a46979ebcb7cf39ade7a0566684f4",
+        ".txt": "0036ec6e6a6b397fb2bf4ec10e55f941db95771ad9ab850a461332fc38e1a58f",
+        ".json": "468bf3dd0d1d1d0a82ee19a8a4f7a3296fe1a5060e44c36e37756cc2db5eaec7"
+      }
+    },
+    {
+      "file": "s44-enforcer-ask-132x50-256-present.txt",
+      "artifact": "s44-132x50-modern",
+      "scenario": "enforcer-ask",
+      "size": [
+        132,
+        50
+      ],
+      "tier": "256",
+      "renderer": "present",
+      "sha256": {
+        ".ans": "2bdf36a362a8f8a24744fa99a19dda2a0548fa0554e81517a127a092a24d8800",
+        ".txt": "ba9840638d198cd20dc8fd86cd2c555d659ad3155fcbea38fa165520217ba49c",
+        ".json": "ab65ef05610ecfbff6b8240109a5722c935fdcc91fb4342690f9a9c725369085"
+      }
+    },
+    {
+      "file": "s44-price-arrival-132x50-truecolor-present.txt",
+      "artifact": "s44-132x50-modern",
+      "scenario": "price-arrival",
+      "size": [
+        132,
+        50
+      ],
+      "tier": "truecolor",
+      "renderer": "present",
+      "sha256": {
+        ".ans": "a5f4064046cd831a64b24286ca8c659890cf2b02432a8798dcde9db2d1a39b39",
+        ".txt": "768b7b101d178d708ca0701119d112c8e0ad5fff4ffc6bca1b35737e4b1870d2",
+        ".json": "9eecb617e5853ab64985e2755255d9627742c3775d1a74bb2ec61603a4ef718d"
+      }
+    },
+    {
+      "file": "s44-price-target-132x50-truecolor-present.txt",
+      "artifact": "s44-132x50-modern",
+      "scenario": "price-target",
+      "size": [
+        132,
+        50
+      ],
+      "tier": "truecolor",
+      "renderer": "present",
+      "sha256": {
+        ".ans": "6f0d0fb6bc262716bad4f7a7d2de620ebb43d74dccbf4e617216f95e2839ecce",
+        ".txt": "9b0a582af2363f2a3639035b077558118b2419b614dd002c7e3b6022eb03b1dd",
+        ".json": "a6a5fb12c9d338aace88b18fb6c3b23ae7306ca11b1e8487527d1d8d25dd1aa6"
+      }
+    },
+    {
+      "file": "s44-hunted-pursuit-132x50-truecolor-present.txt",
+      "artifact": "s44-132x50-modern",
+      "scenario": "hunted-pursuit",
+      "size": [
+        132,
+        50
+      ],
+      "tier": "truecolor",
+      "renderer": "present",
+      "sha256": {
+        ".ans": "046e50f0088fcc399cf747c37078b46c8eab9350b693244f9db4e9bda0015621",
+        ".txt": "dc30eda5eadae245ff03d6adfa3c6df4b9bde775d9ddb093018e9258d6d3dd6f",
+        ".json": "d2660230532b9c62ecacb659a82b5869d8994db4dc9cce3b98eae1be842dd9ff"
+      }
+    },
+    {
+      "file": "s44-bar-pursuit-in-132x50-truecolor-present.txt",
+      "artifact": "s44-132x50-modern",
+      "scenario": "bar-pursuit-in",
+      "size": [
+        132,
+        50
+      ],
+      "tier": "truecolor",
+      "renderer": "present",
+      "sha256": {
+        ".ans": "7ec9a3d44f47308c52ec11da8ad3650207097d89d6c65bb44d60df6b2ccb0e74",
+        ".txt": "4fd0a0a3c8f7008a511ac1ca0a851181b4010186bd859c56abbd66905bdc8c57",
+        ".json": "ce90883b10c2f56f8dcf5115c751bca59003e498eb930aa60fb8b3b803b9b391"
+      }
+    },
+    {
+      "file": "s44-bar-pursuit-out-132x50-truecolor-present.txt",
+      "artifact": "s44-132x50-modern",
+      "scenario": "bar-pursuit-out",
+      "size": [
+        132,
+        50
+      ],
+      "tier": "truecolor",
+      "renderer": "present",
+      "sha256": {
+        ".ans": "406cdf79d85003b29a22a4868993be82a80fa85a838465b6cf281f1aa9070eed",
+        ".txt": "01e498f650dc88793789a4f68848ba79c4c16bc06a1c35aa1bc42159e8e4bc62",
+        ".json": "fd9df88c8f873918bc7d72cb526d4cb3405ccddc332841b0b6c6b73cf0b6c9c9"
+      }
+    },
+    {
+      "file": "s44-halo-refused-132x50-truecolor-present.txt",
+      "artifact": "s44-132x50-modern",
+      "scenario": "halo-refused",
+      "size": [
+        132,
+        50
+      ],
+      "tier": "truecolor",
+      "renderer": "present",
+      "sha256": {
+        ".ans": "7d375d0cab5a61a402cabf0bc5a06c469252a9e80c38f6181483c0d07f1cc200",
+        ".txt": "da1d0e240be830e6333ee16d99968c30a537707769dbbe08dec359ee9d3751fc",
+        ".json": "d39e99c67ae66002ccb9a6cb3f7375810f7981c2c36912d13e9f0028d1131ba3"
+      }
+    },
+    {
+      "file": "s44-settled-132x50-truecolor-present.txt",
+      "artifact": "s44-132x50-modern",
+      "scenario": "settled",
+      "size": [
+        132,
+        50
+      ],
+      "tier": "truecolor",
+      "renderer": "present",
+      "sha256": {
+        ".ans": "0caac6734620359a3fc18cf37b04a7b120c5f71f83581a957f8c99953f3dffd7",
+        ".txt": "e1283ac99d3994da45f33b6abcf395323b1151c3c91693558ea3fea540202908",
+        ".json": "20e0b2614fd3cd98575c31ec020aa7507c70bf6a4334aa2aca6fd702acba80a0"
+      }
+    },
+    {
+      "file": "s44-enforcer-talk-132x50-truecolor-present.txt",
+      "artifact": "s44-132x50-modern",
+      "scenario": "enforcer-talk",
+      "size": [
+        132,
+        50
+      ],
+      "tier": "truecolor",
+      "renderer": "present",
+      "sha256": {
+        ".ans": "3edb8328a6474596eec5fc4519d0ee73b2821845063d3c58774f037da044f607",
+        ".txt": "f539cf1bee1b7180716b33b6d701cea482c13e426ee5c241850f3dbf02327823",
+        ".json": "6a4c0bd184ad58938f3673c1b3d7ada775fcda05f88ac0443007feeffc4a2ac6"
+      }
+    },
+    {
+      "file": "s44-enforcer-ask-132x50-truecolor-present.txt",
+      "artifact": "s44-132x50-modern",
+      "scenario": "enforcer-ask",
+      "size": [
+        132,
+        50
+      ],
+      "tier": "truecolor",
+      "renderer": "present",
+      "sha256": {
+        ".ans": "37979190262968e8d2ed12865dbec5c44edecce97261d452578031ae0fdc9b02",
+        ".txt": "fe52085490069ad528831dd58bfc587fe7e9eb6afce91ff1a53abc8bfaa07777",
+        ".json": "cd5ccfe626b124bd830cb96186cd26cb6d44903e14c35e9f6ac8b4d9cd5be2da"
+      }
+    },
+    {
+      "file": "s44-price-arrival-80x24-16-legacy.txt",
+      "artifact": "s44-80x24-legacy",
+      "scenario": "price-arrival",
+      "size": [
+        80,
+        24
+      ],
+      "tier": "16",
+      "renderer": "legacy",
+      "sha256": {
+        ".ans": "8462e3b793f674188bccbd3b317ad5759cc1789f56f3857f8413850468dfbfed",
+        ".txt": "9690d73b4d4b1f0498578720f0ca64e3a8daf95a5b105de941f57713290a7cb3",
+        ".json": "4d13c697c9d624556ccbd4e3f75521097a581dc74a31e3f4bd9b89a7cb611144"
+      }
+    },
+    {
+      "file": "s44-price-target-80x24-16-legacy.txt",
+      "artifact": "s44-80x24-legacy",
+      "scenario": "price-target",
+      "size": [
+        80,
+        24
+      ],
+      "tier": "16",
+      "renderer": "legacy",
+      "sha256": {
+        ".ans": "ad0f08a5cf6cfe091dd3400cc07087fb69a0fc235598efb990cd0c9842239136",
+        ".txt": "32a3979b3ae6a28c2f77d9b5efa2b43a31eb0d31b27f1b3c41547ddf31fa8982",
+        ".json": "5c6385ed3b544da99f14ca00f31b0241b538d6ae1c068744b559004791939738"
+      }
+    },
+    {
+      "file": "s44-hunted-pursuit-80x24-16-legacy.txt",
+      "artifact": "s44-80x24-legacy",
+      "scenario": "hunted-pursuit",
+      "size": [
+        80,
+        24
+      ],
+      "tier": "16",
+      "renderer": "legacy",
+      "sha256": {
+        ".ans": "ae5952328cf956b6a0c4c48aeb93b5341313ffa92129f0e18c75314b514693ca",
+        ".txt": "343a21e055103bb57f3006b3ff333eeb1cdf59c8a8aad3235a22936819b639c0",
+        ".json": "8f47a137d4421b776665973d68bec3aec60e48d7b4f1e7ca51eb72d44611ec05"
+      }
+    },
+    {
+      "file": "s44-bar-pursuit-in-80x24-16-legacy.txt",
+      "artifact": "s44-80x24-legacy",
+      "scenario": "bar-pursuit-in",
+      "size": [
+        80,
+        24
+      ],
+      "tier": "16",
+      "renderer": "legacy",
+      "sha256": {
+        ".ans": "7b043b10e4304bd701d28501e85d27a8d1b8fb3fe55a1ae24a961d0ee8bed6c6",
+        ".txt": "f0cbb556192634a72bddbaf0f95d1a1ec1b86d44a000b31cad50395f7e084b90",
+        ".json": "54d89ed39899bd2f8487074f9879bfe14cdd2152e346e2d07fd604171dda888a"
+      }
+    },
+    {
+      "file": "s44-bar-pursuit-out-80x24-16-legacy.txt",
+      "artifact": "s44-80x24-legacy",
+      "scenario": "bar-pursuit-out",
+      "size": [
+        80,
+        24
+      ],
+      "tier": "16",
+      "renderer": "legacy",
+      "sha256": {
+        ".ans": "dbbbc759e726e676a459efb05a2f1e3fcd32f8c9f6b8bb743284cfb4e5cebe23",
+        ".txt": "58cbf2fcb1a36504a77a2a4047be72f7382c91e09fc78489d30e934f1dc66d1e",
+        ".json": "aa6015404cf8e0864a6951690595511577bbe6fc640e7966da59badcfae70dfc"
+      }
+    },
+    {
+      "file": "s44-halo-refused-80x24-16-legacy.txt",
+      "artifact": "s44-80x24-legacy",
+      "scenario": "halo-refused",
+      "size": [
+        80,
+        24
+      ],
+      "tier": "16",
+      "renderer": "legacy",
+      "sha256": {
+        ".ans": "7e8ba75b278b07e087f8006caf4d9dbe43ee24898122b991665774dd87cfde08",
+        ".txt": "46834042535314a0be174a25532dcac28086ce6e4099b0f997f203b212b021b2",
+        ".json": "205fac7a6dbb55ad074a278a2e81a26f39feb5022b629f93a0f34b464f21552b"
+      }
+    },
+    {
+      "file": "s44-settled-80x24-16-legacy.txt",
+      "artifact": "s44-80x24-legacy",
+      "scenario": "settled",
+      "size": [
+        80,
+        24
+      ],
+      "tier": "16",
+      "renderer": "legacy",
+      "sha256": {
+        ".ans": "8071f5abbf4f6d8f885483f605223a91d7aeb4eaa0f2b6293b58033ba15e8367",
+        ".txt": "8b6368433b6d1f31cb9035e6002a091f60fad8da88c483287a4d1b5794b093b4",
+        ".json": "703204a87aa4325c5fa7dcb22c4a962bb5e2162aea6a3848361053f197af10a6"
+      }
+    },
+    {
+      "file": "s44-enforcer-talk-80x24-16-legacy.txt",
+      "artifact": "s44-80x24-legacy",
+      "scenario": "enforcer-talk",
+      "size": [
+        80,
+        24
+      ],
+      "tier": "16",
+      "renderer": "legacy",
+      "sha256": {
+        ".ans": "2b54a6f2f5688762dc44b7d1d6147a2d5985ac4060650cdd64edcc3f922f22f3",
+        ".txt": "52238358d803be3ce8227b946be48225025c9fe372f90044c1e482935e604d46",
+        ".json": "4aab71245c97d32f56bd0c8f13befc2cdc97e34e0579c5fa01e68de9af9c6046"
+      }
+    },
+    {
+      "file": "s44-enforcer-ask-80x24-16-legacy.txt",
+      "artifact": "s44-80x24-legacy",
+      "scenario": "enforcer-ask",
+      "size": [
+        80,
+        24
+      ],
+      "tier": "16",
+      "renderer": "legacy",
+      "sha256": {
+        ".ans": "1a4fb689d2e76b782f91a4f1d2f32cfd52bda1fa99cff884e302ddcd1be68229",
+        ".txt": "d54246138487f8f3e3fba60d726f515cc0ef76705ba19fd288c512a0316c003e",
+        ".json": "a0a6441926d058c67a53718fbef15a28f9e099b4db4f504be12480e996a4f44b"
+      }
+    },
+    {
+      "file": "s44-price-arrival-80x24-256-legacy.txt",
+      "artifact": "s44-80x24-legacy",
+      "scenario": "price-arrival",
+      "size": [
+        80,
+        24
+      ],
+      "tier": "256",
+      "renderer": "legacy",
+      "sha256": {
+        ".ans": "80757595e39516c6d971392cc17640486175b351a374a5c3de9b7b84e195c933",
+        ".txt": "871db42b177f4646e8dea3e50b0a2542a2b03632ca06e088194592968234996e",
+        ".json": "e2563ca1649bfa1a955fc94d1f2f7e12522bce362bb0124361560a6696d446cf"
+      }
+    },
+    {
+      "file": "s44-price-target-80x24-256-legacy.txt",
+      "artifact": "s44-80x24-legacy",
+      "scenario": "price-target",
+      "size": [
+        80,
+        24
+      ],
+      "tier": "256",
+      "renderer": "legacy",
+      "sha256": {
+        ".ans": "f421e35d76e510086eb69ed02a39f1ee1e1a1b2fbf030623c6bb9f8f8f36cd7e",
+        ".txt": "b38bd9bd1eb4c79872e40f1d158a29f85c15e62c2236e7eacfd0d0666f6381f4",
+        ".json": "49400d0386c9db95d59f8bebef775a9bc04a301ca7eaac7a1bed2be91898e19e"
+      }
+    },
+    {
+      "file": "s44-hunted-pursuit-80x24-256-legacy.txt",
+      "artifact": "s44-80x24-legacy",
+      "scenario": "hunted-pursuit",
+      "size": [
+        80,
+        24
+      ],
+      "tier": "256",
+      "renderer": "legacy",
+      "sha256": {
+        ".ans": "9698979722134ef2e0be025f8e8b31f5ea2f7514594d2d858e12f8e350304dc9",
+        ".txt": "ff09b68583c0c7bf315427542610d36472b4e061c1f674749ef76e02260deac9",
+        ".json": "cd45121db16cb25d8f45e3e1c891768552eac3e04e8519d5734596e252353415"
+      }
+    },
+    {
+      "file": "s44-bar-pursuit-in-80x24-256-legacy.txt",
+      "artifact": "s44-80x24-legacy",
+      "scenario": "bar-pursuit-in",
+      "size": [
+        80,
+        24
+      ],
+      "tier": "256",
+      "renderer": "legacy",
+      "sha256": {
+        ".ans": "47eaf10ffd27b7deac5c98fae7710debc64a74fa64f13c04b1dea183e85e59fc",
+        ".txt": "68624df829f35d05d4e0f0822a5ba7d8f38b9aac62e24c89d6e42d08a90b6e1d",
+        ".json": "e811c4a20171d6a116e7cb0c928b00773da97d083c44ea788080a63f8ea79ca1"
+      }
+    },
+    {
+      "file": "s44-bar-pursuit-out-80x24-256-legacy.txt",
+      "artifact": "s44-80x24-legacy",
+      "scenario": "bar-pursuit-out",
+      "size": [
+        80,
+        24
+      ],
+      "tier": "256",
+      "renderer": "legacy",
+      "sha256": {
+        ".ans": "f13ab18f6b81456922503ec7a994f50ab949520401b3568e33c4cac8af61a414",
+        ".txt": "3ccd5e5c180aaea3644e126a1900f292a74db215ded0f1cd824047d4683fbf9c",
+        ".json": "76292a366513da01761c1eeae21e7090230d9dbf2f025af21991c3047ea20042"
+      }
+    },
+    {
+      "file": "s44-halo-refused-80x24-256-legacy.txt",
+      "artifact": "s44-80x24-legacy",
+      "scenario": "halo-refused",
+      "size": [
+        80,
+        24
+      ],
+      "tier": "256",
+      "renderer": "legacy",
+      "sha256": {
+        ".ans": "e1fa1b1886fda353ea9a99afa37479f507bfbd26f016293f0c54af1407dae714",
+        ".txt": "56aff5e1167a8eb2f04c1a20674a95a6b709ff2ae84199036ff5dcd60cd2596c",
+        ".json": "aaba2c6ade8315534250607ce8d8a93e1ba509cb5e95798ee820d37708ec5917"
+      }
+    },
+    {
+      "file": "s44-settled-80x24-256-legacy.txt",
+      "artifact": "s44-80x24-legacy",
+      "scenario": "settled",
+      "size": [
+        80,
+        24
+      ],
+      "tier": "256",
+      "renderer": "legacy",
+      "sha256": {
+        ".ans": "63a50a22e60a64a513f3b135c504a9dee9c3833b44062d76cf6f0628f234f653",
+        ".txt": "930cf59e05aeb422fe5ecf257b3c4f00d9225b593f8d66e069e8f1e51c0756f1",
+        ".json": "25854328107f74d8424d183c5556fcc041ff160d282627ceced95b2b6515617a"
+      }
+    },
+    {
+      "file": "s44-enforcer-talk-80x24-256-legacy.txt",
+      "artifact": "s44-80x24-legacy",
+      "scenario": "enforcer-talk",
+      "size": [
+        80,
+        24
+      ],
+      "tier": "256",
+      "renderer": "legacy",
+      "sha256": {
+        ".ans": "550cae3192fac6ab918cc21fe07e6da1fc9b24c7308ef933612f93895db277a4",
+        ".txt": "dce191949965ea68868bf13396cdbe0be681a894b2241c28b10d30fdb6d9bb05",
+        ".json": "9f1b3b9b1443d244166875dc6efc9f382c539617cbc6813146ea8927e6d3694b"
+      }
+    },
+    {
+      "file": "s44-enforcer-ask-80x24-256-legacy.txt",
+      "artifact": "s44-80x24-legacy",
+      "scenario": "enforcer-ask",
+      "size": [
+        80,
+        24
+      ],
+      "tier": "256",
+      "renderer": "legacy",
+      "sha256": {
+        ".ans": "ffc8f3f7aaba9de57a8e6ddb48b98016c422dca15437695959c6bf9c0e89e5bf",
+        ".txt": "a901e1803bd3a17e54646f8d1a67207f584754dd2dd89c456e5b5bda3bb97871",
+        ".json": "177c2c4d265a98ca5c5039ebc3407453c7a48c3c47d611d627331e7632d4ab1e"
+      }
+    },
+    {
+      "file": "s44-price-arrival-80x24-truecolor-legacy.txt",
+      "artifact": "s44-80x24-legacy",
+      "scenario": "price-arrival",
+      "size": [
+        80,
+        24
+      ],
+      "tier": "truecolor",
+      "renderer": "legacy",
+      "sha256": {
+        ".ans": "bb09156d67ba78acb26a81635ca5ddeb507ca33e0a10cd2f3e9ba5d96780d916",
+        ".txt": "3401b01e875e8852f1d5f1df182b853cb1483ae55353602a35067ac5af2602b9",
+        ".json": "76366551b22fb6baa6dc2350ff02604952c2071dd9905578d1977ad57be1a5cc"
+      }
+    },
+    {
+      "file": "s44-price-target-80x24-truecolor-legacy.txt",
+      "artifact": "s44-80x24-legacy",
+      "scenario": "price-target",
+      "size": [
+        80,
+        24
+      ],
+      "tier": "truecolor",
+      "renderer": "legacy",
+      "sha256": {
+        ".ans": "5194aff4635f0fc74bbc7b4167603aa51258da2ca740fcb6235829450393a447",
+        ".txt": "8e1439c5a71da5b77828c4b2a14cf3413bc3f50db60167c268e1adbb74c200d5",
+        ".json": "3e0a4fcdd807596709cb70297fe7992700f36929c4074d8d856e18ad8929d0a2"
+      }
+    },
+    {
+      "file": "s44-hunted-pursuit-80x24-truecolor-legacy.txt",
+      "artifact": "s44-80x24-legacy",
+      "scenario": "hunted-pursuit",
+      "size": [
+        80,
+        24
+      ],
+      "tier": "truecolor",
+      "renderer": "legacy",
+      "sha256": {
+        ".ans": "d9df8d7367f3bce667e9f6752ef275496ac73ede33a6c35bde9252da5615d1ec",
+        ".txt": "43105882bff843f8e3ea03fc1c88c02e7949d3851b93b74be5128717a0807b75",
+        ".json": "0ddd4e219b23f9ed528ffb7360c9e4e4baaee6c3f2ce2f9ce52ad436e0c0abfd"
+      }
+    },
+    {
+      "file": "s44-bar-pursuit-in-80x24-truecolor-legacy.txt",
+      "artifact": "s44-80x24-legacy",
+      "scenario": "bar-pursuit-in",
+      "size": [
+        80,
+        24
+      ],
+      "tier": "truecolor",
+      "renderer": "legacy",
+      "sha256": {
+        ".ans": "7e85f3c6cefa5d8fd2cdc0a1917f6828860d8ab65bb34db363472039e61a0909",
+        ".txt": "ae62fa822f34ff5ded67c9e63cdbd2f246b250888284551ba778f8dbdcc3f5e2",
+        ".json": "6b68216ed6311fc9d87011bd84e6cbc0de72b93684d705d535750b1f47f3b963"
+      }
+    },
+    {
+      "file": "s44-bar-pursuit-out-80x24-truecolor-legacy.txt",
+      "artifact": "s44-80x24-legacy",
+      "scenario": "bar-pursuit-out",
+      "size": [
+        80,
+        24
+      ],
+      "tier": "truecolor",
+      "renderer": "legacy",
+      "sha256": {
+        ".ans": "b0f5439895341f51af508655a2e14c9dddedb84f0aa9979b21261afe37a7b153",
+        ".txt": "848eda9a99e93beade6891ebeb3d2022668e048be0ebbbf70487fde824399f0a",
+        ".json": "a2933f782c94dc7c2081f9d4c47e1633713f0ccbe7b736a9b68811e445e8d380"
+      }
+    },
+    {
+      "file": "s44-halo-refused-80x24-truecolor-legacy.txt",
+      "artifact": "s44-80x24-legacy",
+      "scenario": "halo-refused",
+      "size": [
+        80,
+        24
+      ],
+      "tier": "truecolor",
+      "renderer": "legacy",
+      "sha256": {
+        ".ans": "ac8863492b8fc87d1d255e6707b373e97c9727174c66f3d4670aa377795ccb0a",
+        ".txt": "b0e112a6b6061c3aaada564938bb79750046451200716f09cf111937055bea30",
+        ".json": "7469159a32e226a45bc8c4eba18e68148b1130b8a967f078fb53a153e2a436ff"
+      }
+    },
+    {
+      "file": "s44-settled-80x24-truecolor-legacy.txt",
+      "artifact": "s44-80x24-legacy",
+      "scenario": "settled",
+      "size": [
+        80,
+        24
+      ],
+      "tier": "truecolor",
+      "renderer": "legacy",
+      "sha256": {
+        ".ans": "264d5b637b8d39c203d567dc6e8ff372caa835c82f5883409c76dfc896f3ede0",
+        ".txt": "2114547d83dcf65487201e8fb2edb8f8eafdbd92cddadc641dd1123e6ac60339",
+        ".json": "f314d63d7a7172b97d4a46050aa992a3720f52771563dff053ba8d9b8a417ccd"
+      }
+    },
+    {
+      "file": "s44-enforcer-talk-80x24-truecolor-legacy.txt",
+      "artifact": "s44-80x24-legacy",
+      "scenario": "enforcer-talk",
+      "size": [
+        80,
+        24
+      ],
+      "tier": "truecolor",
+      "renderer": "legacy",
+      "sha256": {
+        ".ans": "504636959d4f4cc642524bea30449c47a428d048513f14cf053b227d663d8986",
+        ".txt": "4c22ba48dd96e858717f5e9863aa2b69303266c1c5aa4e7a32dbc95c905c1d8f",
+        ".json": "a51fee771979cf3e4ab9ad67d1fed190372a31a65b79589d0a87daacfdc5b322"
+      }
+    },
+    {
+      "file": "s44-enforcer-ask-80x24-truecolor-legacy.txt",
+      "artifact": "s44-80x24-legacy",
+      "scenario": "enforcer-ask",
+      "size": [
+        80,
+        24
+      ],
+      "tier": "truecolor",
+      "renderer": "legacy",
+      "sha256": {
+        ".ans": "59a79cbf2ff64c505c31bc4fef440c99804cb18efe2b9ff8e29cc93df4c7172d",
+        ".txt": "30fe5471f5155767d82dcb7b3367ef16af8b86f70b7dfd85ac84d17e11302571",
+        ".json": "4076f83a5d030cd36a4da15d6f4e1dc9d57c4bfdc5e99b1687c4d4c8ccdb16fd"
+      }
+    },
+    {
+      "file": "s44-price-arrival-80x24-16-present.txt",
+      "artifact": "s44-80x24-modern",
+      "scenario": "price-arrival",
+      "size": [
+        80,
+        24
+      ],
+      "tier": "16",
+      "renderer": "present",
+      "sha256": {
+        ".ans": "b76123c186e49b971b5f72ebe97c85ad8ef54a315cc9cf0190ef7c1fce44aceb",
+        ".txt": "3ac35696d709e5536c5028438bc08eb864a2f5fd68b31cd1ed73fbdcfbc93f79",
+        ".json": "fb1b1da42d7bb435fb15d2c6c8981ab9ff1aab413e98e287f32ff1e41078558f"
+      }
+    },
+    {
+      "file": "s44-price-target-80x24-16-present.txt",
+      "artifact": "s44-80x24-modern",
+      "scenario": "price-target",
+      "size": [
+        80,
+        24
+      ],
+      "tier": "16",
+      "renderer": "present",
+      "sha256": {
+        ".ans": "fb1d21eaaf1607deaf6116fbbeb0d507208a8ce9c14c39905eae35f18457c9d3",
+        ".txt": "aed6d76abff010148c10b5637819e197bc8fa17452a5a45fd1616d842bc29ab2",
+        ".json": "9ac0bec37a2d074f308bfeda296d350eed4f072ab52333a868b9e52f03c411e2"
+      }
+    },
+    {
+      "file": "s44-hunted-pursuit-80x24-16-present.txt",
+      "artifact": "s44-80x24-modern",
+      "scenario": "hunted-pursuit",
+      "size": [
+        80,
+        24
+      ],
+      "tier": "16",
+      "renderer": "present",
+      "sha256": {
+        ".ans": "37b942cb8a0b59301c2a8b2439f6577a13da3506cc4bf87376b046fff0b85053",
+        ".txt": "a440720a50e549fee238b2b15914b61873ef4798e76a6d226cabadf684604979",
+        ".json": "5ea5b66cd76d3c8b37a0dd8ce600d980d6bb0c22b6c5d32fadb083b9cd6f5313"
+      }
+    },
+    {
+      "file": "s44-bar-pursuit-in-80x24-16-present.txt",
+      "artifact": "s44-80x24-modern",
+      "scenario": "bar-pursuit-in",
+      "size": [
+        80,
+        24
+      ],
+      "tier": "16",
+      "renderer": "present",
+      "sha256": {
+        ".ans": "9736b7feba4c55a7f5fbde72fa4feab36f81f909263c03faaaf8fedd23b571be",
+        ".txt": "990328b30a92e3e9904c2dbc29bc572f8202df5a2c1c6f841f9ab6ce9e4742b4",
+        ".json": "24a5e5da242c61cf06d84a0be63f931208c888ed10d56dfd6a38fc2034196632"
+      }
+    },
+    {
+      "file": "s44-bar-pursuit-out-80x24-16-present.txt",
+      "artifact": "s44-80x24-modern",
+      "scenario": "bar-pursuit-out",
+      "size": [
+        80,
+        24
+      ],
+      "tier": "16",
+      "renderer": "present",
+      "sha256": {
+        ".ans": "a29151040e8b4b97490407036bc4ae54469ca4ddde3322f522a2cabe6d549652",
+        ".txt": "3e98367b88f7f57059ff6d61d12c420e0e1f6736079b236a28712da1b29a9ea2",
+        ".json": "9cfaff17fabe363e9ee71643337ce19cca864120f4b51dbf8e9c8d57646bce4c"
+      }
+    },
+    {
+      "file": "s44-halo-refused-80x24-16-present.txt",
+      "artifact": "s44-80x24-modern",
+      "scenario": "halo-refused",
+      "size": [
+        80,
+        24
+      ],
+      "tier": "16",
+      "renderer": "present",
+      "sha256": {
+        ".ans": "c27f1a576d0534c18d7eba76ccd1170b62a5bd9bbf0221661bb68994dfa112c7",
+        ".txt": "f8907875c0504191063c842bb9f63eaf3d4af5cf346742b91644efb250008b6e",
+        ".json": "94ae7c742ec54a8f2dc999131b503ec5a7f4cbb4559e6cc292d7e8e75aafa7d3"
+      }
+    },
+    {
+      "file": "s44-settled-80x24-16-present.txt",
+      "artifact": "s44-80x24-modern",
+      "scenario": "settled",
+      "size": [
+        80,
+        24
+      ],
+      "tier": "16",
+      "renderer": "present",
+      "sha256": {
+        ".ans": "8ff3472597b79b74e8173f30eb1e78f1455a02517e9a0b9b0c835595a833649b",
+        ".txt": "9e39b0326db972fa60678096580b8a62e8e760bf0350319e1f43d9709b69937a",
+        ".json": "48f9150970ec83d6e105e9525a031cc5a3d902af8f0b37e3e948aebf5dd8a480"
+      }
+    },
+    {
+      "file": "s44-enforcer-talk-80x24-16-present.txt",
+      "artifact": "s44-80x24-modern",
+      "scenario": "enforcer-talk",
+      "size": [
+        80,
+        24
+      ],
+      "tier": "16",
+      "renderer": "present",
+      "sha256": {
+        ".ans": "9db851a8e8d0229eeabfcb7f8bd039dd89d878ec2e84b652e6c30f81910bf342",
+        ".txt": "5f655586d2903b610232fb190f5811bf08869fff91297db344491e84fc843769",
+        ".json": "9fcec8742fa6b1b3ebd89deb83938db0c8557afd4aa73071798201c19598f532"
+      }
+    },
+    {
+      "file": "s44-enforcer-ask-80x24-16-present.txt",
+      "artifact": "s44-80x24-modern",
+      "scenario": "enforcer-ask",
+      "size": [
+        80,
+        24
+      ],
+      "tier": "16",
+      "renderer": "present",
+      "sha256": {
+        ".ans": "5d949d7caef12515a2ff92a3f5a40405520a6a4c00b170c55284fc6f82f9bcd5",
+        ".txt": "5551df0f889069f3e5e5e6ceea942cee1c379797460e08ab95fac160d2d2ce05",
+        ".json": "057c04c1c2ba8d552f1fabe620115195328206b74bc159115554e7ee2b63ce47"
+      }
+    },
+    {
+      "file": "s44-price-arrival-80x24-256-present.txt",
+      "artifact": "s44-80x24-modern",
+      "scenario": "price-arrival",
+      "size": [
+        80,
+        24
+      ],
+      "tier": "256",
+      "renderer": "present",
+      "sha256": {
+        ".ans": "4ddfd9977d669475c6970e734c4b155d06501b047c4cc66f24920bb69c17d489",
+        ".txt": "d2d63f7b124722c73fac8640923493404019e18624aca26f0948cd03caeaae60",
+        ".json": "95ded9b96120239e98351c5d1d8ed6e41e332c3b61525fb6c6c5a6c28764ab0a"
+      }
+    },
+    {
+      "file": "s44-price-target-80x24-256-present.txt",
+      "artifact": "s44-80x24-modern",
+      "scenario": "price-target",
+      "size": [
+        80,
+        24
+      ],
+      "tier": "256",
+      "renderer": "present",
+      "sha256": {
+        ".ans": "27247f65a6a6c8ab9d44f548827d86ef3e34ed176e3e7940479e146155380dcd",
+        ".txt": "4826daf47f54cd031279e73e5b7a855aee18fa0c085ad85589d8e4b58b1fd8e2",
+        ".json": "62f23f36fa6c920350e2bfeafe2cd73ad39256ffa69efdbb38de43dc7f3c6db7"
+      }
+    },
+    {
+      "file": "s44-hunted-pursuit-80x24-256-present.txt",
+      "artifact": "s44-80x24-modern",
+      "scenario": "hunted-pursuit",
+      "size": [
+        80,
+        24
+      ],
+      "tier": "256",
+      "renderer": "present",
+      "sha256": {
+        ".ans": "cfaa6bf92088732c6a4746ad4460adf7eb794adcf51d24f36eb8a4788e7ca81f",
+        ".txt": "bdb46d7bb15b3b5ad0bb407ae5465c291ec40dff74cdcd38b548a14fb49c7e35",
+        ".json": "6f0325ba58da48539d3ea66f0139d6131d1f912b798fc80d79cea2115936e9c1"
+      }
+    },
+    {
+      "file": "s44-bar-pursuit-in-80x24-256-present.txt",
+      "artifact": "s44-80x24-modern",
+      "scenario": "bar-pursuit-in",
+      "size": [
+        80,
+        24
+      ],
+      "tier": "256",
+      "renderer": "present",
+      "sha256": {
+        ".ans": "844b232278f565968ffd88e58bd574d06c51eb44d4b8010ae93fd9ab2d3fb832",
+        ".txt": "b41cbe0c917f1e49f5f5b974eb20177b3e529f0fbfc6d52d7c17ec5fc71b02e4",
+        ".json": "c3c4145bb4f4c7f2cc0cb0db64a4fc948943633c4c43b0698b55afc2d867eed1"
+      }
+    },
+    {
+      "file": "s44-bar-pursuit-out-80x24-256-present.txt",
+      "artifact": "s44-80x24-modern",
+      "scenario": "bar-pursuit-out",
+      "size": [
+        80,
+        24
+      ],
+      "tier": "256",
+      "renderer": "present",
+      "sha256": {
+        ".ans": "fdd87c5fc5a40993afb233fafb80ee9c03254e7fa2c3fde6bd18376a2a7592f1",
+        ".txt": "6686a8a49d5ae5c13c667e4982ffa3243bd0807836c35ae39000f36048d2e41a",
+        ".json": "89067a3a69fc536582cd68bd7feff70ca573071915dfeef8db745dc2aa153438"
+      }
+    },
+    {
+      "file": "s44-halo-refused-80x24-256-present.txt",
+      "artifact": "s44-80x24-modern",
+      "scenario": "halo-refused",
+      "size": [
+        80,
+        24
+      ],
+      "tier": "256",
+      "renderer": "present",
+      "sha256": {
+        ".ans": "5be3cc2e567ab5b5cded7bff02ccf7e94db3e6401fef4d9ca331ddbf49ae420f",
+        ".txt": "7c5d221e1f54b67149e89728e369b12f24e92a2524e65ab26818d9e8232329cd",
+        ".json": "1b365d97186097ed0d60558f37db495662adc897eea75d742cce9cf9e63607a5"
+      }
+    },
+    {
+      "file": "s44-settled-80x24-256-present.txt",
+      "artifact": "s44-80x24-modern",
+      "scenario": "settled",
+      "size": [
+        80,
+        24
+      ],
+      "tier": "256",
+      "renderer": "present",
+      "sha256": {
+        ".ans": "4fe4fc854d800fb540a7640de78daf1d262dcc910f5ea1642d16566fa1207082",
+        ".txt": "50cbcf386e4874fcf1581d2817e4889233b5cf3f601a2e191830e409299451ce",
+        ".json": "1bdc726f01b027d979a1ad9b2458ac5c3994a7bcf369fcabed57c4b2e173cf54"
+      }
+    },
+    {
+      "file": "s44-enforcer-talk-80x24-256-present.txt",
+      "artifact": "s44-80x24-modern",
+      "scenario": "enforcer-talk",
+      "size": [
+        80,
+        24
+      ],
+      "tier": "256",
+      "renderer": "present",
+      "sha256": {
+        ".ans": "9660cec1ac4f866ce28eb0836db4434730b2d5a715f39cbb5e24dd914b7cf810",
+        ".txt": "90d12013a977e393733d8ba1dc71068b22981d6203f323487031cc381f064e97",
+        ".json": "cd793b1739c09d8b8ad0b162700dc54b5bbe391aea0fca20e13d93d67ccf8717"
+      }
+    },
+    {
+      "file": "s44-enforcer-ask-80x24-256-present.txt",
+      "artifact": "s44-80x24-modern",
+      "scenario": "enforcer-ask",
+      "size": [
+        80,
+        24
+      ],
+      "tier": "256",
+      "renderer": "present",
+      "sha256": {
+        ".ans": "66ff5a474355684ec6de299c8efd765bd489b7e913da531629bb6726f4d8c46c",
+        ".txt": "c38e7051e22930afe90b32df411cdbfacb56cf83636f0019eed440b69ec292b0",
+        ".json": "6610fbe92e0d4a8d24d23e6f23eca302c74d58f41c76c2c6e0f33ef4f6ae7e81"
+      }
+    },
+    {
+      "file": "s44-price-arrival-80x24-truecolor-present.txt",
+      "artifact": "s44-80x24-modern",
+      "scenario": "price-arrival",
+      "size": [
+        80,
+        24
+      ],
+      "tier": "truecolor",
+      "renderer": "present",
+      "sha256": {
+        ".ans": "f669c6be27903b3364aa00145682ebd1e78d149a2822ebc66567a1d0dad0a4ed",
+        ".txt": "75d630e853e85edcea3f70e65c3f51f2ee0757cbd3057ce54150dc71e49d9ecc",
+        ".json": "24b767c39c27d0ad3f8a2491e195509396018e12fa3420f609397d718f967bec"
+      }
+    },
+    {
+      "file": "s44-price-target-80x24-truecolor-present.txt",
+      "artifact": "s44-80x24-modern",
+      "scenario": "price-target",
+      "size": [
+        80,
+        24
+      ],
+      "tier": "truecolor",
+      "renderer": "present",
+      "sha256": {
+        ".ans": "9e986107569ab890a6d0884a97b66763d73c2cbb30affbaeccf5df6852fe8816",
+        ".txt": "4bb62761697efb94895e5ad56a1c31be596dad746634643dada7ec26b964ed2d",
+        ".json": "2c9e10b6c5dee1bef5832dbd696e17938a3b4fc6d84c525b0aadf67c38bcd557"
+      }
+    },
+    {
+      "file": "s44-hunted-pursuit-80x24-truecolor-present.txt",
+      "artifact": "s44-80x24-modern",
+      "scenario": "hunted-pursuit",
+      "size": [
+        80,
+        24
+      ],
+      "tier": "truecolor",
+      "renderer": "present",
+      "sha256": {
+        ".ans": "923c150ac21149fb3a5def5cffa57918844cba90aa8af51da7c4096a5f1efd6c",
+        ".txt": "2d0e42baf38b68424de3f10403892fe2b5d8ac67f6f25d6e7885fdeac3a5bb45",
+        ".json": "9cfe13f15563f5a2faf53db1f2c72397d20cc16aa06e76c22df0978aaa9cffe2"
+      }
+    },
+    {
+      "file": "s44-bar-pursuit-in-80x24-truecolor-present.txt",
+      "artifact": "s44-80x24-modern",
+      "scenario": "bar-pursuit-in",
+      "size": [
+        80,
+        24
+      ],
+      "tier": "truecolor",
+      "renderer": "present",
+      "sha256": {
+        ".ans": "977ea459bd49661aa8d31e5b4343c27a643bc615b61cae79578cd1ad4035585b",
+        ".txt": "3bb50814b8658c324deab5fd1c7baf494406bcfede511e0e0a31c3e42fad8e48",
+        ".json": "b262cf6663aa64f54ec38e474a17978fc31644e7ce6c118fd7420b7f347debdd"
+      }
+    },
+    {
+      "file": "s44-bar-pursuit-out-80x24-truecolor-present.txt",
+      "artifact": "s44-80x24-modern",
+      "scenario": "bar-pursuit-out",
+      "size": [
+        80,
+        24
+      ],
+      "tier": "truecolor",
+      "renderer": "present",
+      "sha256": {
+        ".ans": "d6055acae63e44203e4ff05060826bc1c1e32c7c3f94ec798250f8d2b16b80ea",
+        ".txt": "6701e37cb1c3384d556b466a6ae72a10c4c72e7db9d7a4454e5fd636b7c6a887",
+        ".json": "e534a0d27a63d9749d0db14cbafeb8e01d7cc3a847805a74edd8f5859ff91de0"
+      }
+    },
+    {
+      "file": "s44-halo-refused-80x24-truecolor-present.txt",
+      "artifact": "s44-80x24-modern",
+      "scenario": "halo-refused",
+      "size": [
+        80,
+        24
+      ],
+      "tier": "truecolor",
+      "renderer": "present",
+      "sha256": {
+        ".ans": "704c6b775c117f6ff66f99d29458a62a04d21501692670340b21f2520b70eac6",
+        ".txt": "202ba311cf377047b8dc16c028b24fd7206bc9cd069f2c53fc75ea816d5067aa",
+        ".json": "f4785537b4c8eb4c75b6da79d510b33c51a27f2d24732057c2f79fc06adf96c5"
+      }
+    },
+    {
+      "file": "s44-settled-80x24-truecolor-present.txt",
+      "artifact": "s44-80x24-modern",
+      "scenario": "settled",
+      "size": [
+        80,
+        24
+      ],
+      "tier": "truecolor",
+      "renderer": "present",
+      "sha256": {
+        ".ans": "498f55eed9ff19bed025100403e21170267ba1478fab4649a1cb052b1f2e8b7f",
+        ".txt": "b762a9aaae520a2409fb14bd0468ab31e56f3bfde6ef745741ff900f9614f65f",
+        ".json": "7a6df69989155682277c5019c2c4c847e95a12bcb437439c15bcf7ca20ad4555"
+      }
+    },
+    {
+      "file": "s44-enforcer-talk-80x24-truecolor-present.txt",
+      "artifact": "s44-80x24-modern",
+      "scenario": "enforcer-talk",
+      "size": [
+        80,
+        24
+      ],
+      "tier": "truecolor",
+      "renderer": "present",
+      "sha256": {
+        ".ans": "4fb637af73a296d809300d49e5be0ab66063170ea71680bc05ef2838b80c14cb",
+        ".txt": "5f01d9a8612f00af84c85de161943276acda3799391ada99ec3a4c9ed1711517",
+        ".json": "d62391968cc3f42d9b40a9554b5b4179371d536e37cd5094ddcb3c0cc3387a91"
+      }
+    },
+    {
+      "file": "s44-enforcer-ask-80x24-truecolor-present.txt",
+      "artifact": "s44-80x24-modern",
+      "scenario": "enforcer-ask",
+      "size": [
+        80,
+        24
+      ],
+      "tier": "truecolor",
+      "renderer": "present",
+      "sha256": {
+        ".ans": "582354ed1f17679c74229be06d9849d7d9530282fcca77fb4d839db878e7aa68",
+        ".txt": "556e85ff3245f661f9374a33fca5302d551ec58f866a8c3cd5ba8a461a6da52d",
+        ".json": "2ffefe2366b8ca085b815122bd7655e395165ae67ce233757ec87563db66bd7c"
+      }
+    }
+  ]
+}

@@ -1,0 +1,50 @@
+┌─ Karst · S10Asktruecolor132 ─────────────────────────────────────────────────────────────────────────────────────────────────────┐
+│          ┌─ Sable enforcer - Keeps the Row's peace ───────────────────────────────────────────────────────────────────┐          │
+│          │                                                                                                            │          │
+│          │ Nobody draws. Somebody does, we come for them, whoever they are. They pay. A few think they're quicker     │          │
+│          │ than us. Fewer are.                                                                                        │          │
+│          │                                                                                                            │          │
+│          │ a      Ask about the peace                                                                                 │          │
+│          │ Esc/B  Leave                                                                                               │          │
+│          │                                                                                                            │          │
+│          │                                                                                                            │          │
+│          │                                                                                                            │          │
+│          │                                                                                                            │          │
+│          │                                                                                                            │          │
+│          │                                                                                                            │          │
+│          │                                                                                                            │          │
+│          │                                                                                                            │          │
+│          │                                                                                                            │          │
+│          │                                                                                                            │          │
+│          │                                                                                                            │          │
+│          │                                                                                                            │          │
+│          │                                                                                                            │          │
+│          │                                                                                                            │          │
+│          │                                                                                                            │          │
+│          │                                                                                                            │          │
+│          │                                                                                                            │          │
+│          │                                                                                                            │          │
+│          │                                                                                                            │          │
+│          │                                                                                                            │          │
+│          │                                                                                                            │          │
+│          │                                                                                                            │          │
+│          │                                                                                                            │          │
+│          │                                                                                                            │          │
+│          │                                                                                                            │          │
+│          │                                                                                                            │          │
+│          │                                                                                                            │          │
+│          │                                                                                                            │          │
+│          │                                                                                                            │          │
+│          │                                                                                                            │          │
+│          └────────────────────────────────────────────────────────────────────────────────────────────────────────────┘          │
+├──────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────┤
+│[zone] You walk under orange lamps on wet pavement. You hear music from six doorways. At the street's end, you see the Tin Halo's │
+│  sign, lit whole.                                                                                                                │
+│[zone] Nobody draws on Sodium Row. Sable makes sure of it.                                                                        │
+│[sys] You gain 25 XP.                                                                                                             │
+│[zone] Sable enforcer: You're new, so once. Draw on this street and we come for you. The Halo won't have you either.              │
+│[zone] Asktruecolor界132: What's the arrangement here?                                                                            │
+│[zone] Sable enforcer: Nobody draws. Somebody does, we come for them, whoever they are. They pay. A few think they're quicker than│
+│  us. Fewer are.                                                                                                                  │
+│Choose an action; move or Esc/B leaves                                                                                            │
+└────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────── 

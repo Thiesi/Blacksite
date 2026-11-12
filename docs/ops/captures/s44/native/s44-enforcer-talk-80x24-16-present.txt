@@ -1,0 +1,24 @@
+┌─Sable enforcer - Keeps the Row's peace─CONTESTED─────────────S10Ask1680──────┐
+│    ┌─ Sable enforcer - Keeps the Row's peace ───────────────────────────┐    │
+│    │                                                                    │    │
+│    │ You're new, so once. Draw on this street and we come for you. The  │    │
+│    │ Halo won't have you either.                                        │    │
+│    │                                                                    │    │
+│    │ a      Ask about the peace                                         │    │
+│    │ Esc/B  Leave                                                       │    │
+│    │                                                                    │    │
+│    │                                                                    │    │
+│    │                                                                    │    │
+│    │                                                                    │    │
+│    │                                                                    │    │
+│    │                                                                    │    │
+│    │                                                                    │    │
+│    │                                                                    │    │
+│    │                                                                    │    │
+│    └────────────────────────────────────────────────────────────────────┘    │
+├──────────────────────────────────────────────────────────────────────────────┤
+│√ You gain 25 XP.                                                             │
+│" Sable enforcer: You're new, so once. Draw on this street and we come for    │
+│  you. The Halo won't have you either.                                        │
+│? help  Choose an action; move or Esc/B leaves                                │
+└────────────────────────────────────────────────────────────────────────────── 
