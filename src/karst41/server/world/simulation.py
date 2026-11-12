@@ -76,13 +76,14 @@ class ZoneSimulation:
                     "truce_text": self.world.content.factions[zone.template.meta.truce].short + " keeps the peace here."}
                    if zone and zone.template.meta.truce else {})}
 
-    def speak(self, session: Session, speaker: Actor, text: str) -> None:
+    def speak(self, session: Session, speaker: Actor, text: str, *, replay: bool = True) -> None:
         """Speech metadata uses the same disclosure as the recipient's view."""
         viewer = self.avatars[session.user_id].actor
         label = presentation.name(speaker, viewer, self.world.content)
         session.emit(f"{label}: {text}", kind="speech", channel="zone", role="chan_zone",
                      at=self.clock.now_utc().isoformat(), speaker=label,
-                     speaker_role=presentation.presented_class(speaker, viewer, self.world.content))
+                     speaker_role=presentation.presented_class(speaker, viewer, self.world.content),
+                     replay=replay)
 
     def discover(self, session: Session, avatar: Avatar) -> None:
         if avatar.zone in avatar.seen_zones:
