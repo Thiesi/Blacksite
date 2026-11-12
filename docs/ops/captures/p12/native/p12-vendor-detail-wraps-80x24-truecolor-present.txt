@@ -1,0 +1,24 @@
+╔═Sablier Wake Outfitter - BUY═POCKET═══════════════════S10P12truecolor80══════╗
+║    ┌─ Sablier Wake Outfitter - BUY ─────────────────────────────────────┐    ║
+║    │ Choice                                                             │    ║
+║    │ Sablier Wake Coverall  1  not for sale                             │    ║
+║    │ Kestrel Issue Sidearm  1  120                                      │    ║
+║    │ 9x pistol rounds  50  25                                           │    ║
+║    │ Kestrel Issue Baton  1  40                                         │    ║
+║    │ Sablier Med Patch  1  40                                           │    ║
+║    │ Kestrel Ration Bar  1  10                                          │    ║
+║    │ Vesper's Card  1  not for sale                                     │    ║
+║    │ Kestrel Issue Vest  1  220                                         │    ║
+║    │ Chapel First Ear  1  900                                           │    ║
+║    │ Hand 200  Buy-back budget 2000/2000                                │    ║
+║    │ Quality 100%                                                       │    ║
+║    │ Damage 12, range 6.                                                │    ║
+║    │ The starter pistol. Everyone in Karst has fired one; most of th... │    ║
+║    │ enter buy  t buy/sell  Esc/B back                                  │    ║
+║    └────────────────────────────────────────────────────────────────────┘    ║
+╟──────────────────────────────────────────────────────────────────────────────╢
+║‼ Your training drone wakes. Tab targets; F fires; B skips. Its shots cannot  ║
+║  kill.                                                                       ║
+║                                                                              ║
+║? help  Esc/B returns                                                         ║
+╚══════════════════════════════════════════════════════════════════════════════ 

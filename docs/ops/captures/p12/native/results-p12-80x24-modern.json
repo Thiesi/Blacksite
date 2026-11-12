@@ -1,0 +1,204 @@
+{
+  "passed": true,
+  "head": "dbec9c41d89533025522aa8002242ec71aeb4940",
+  "transport": "NetBBS Telnet -> registered native stdio",
+  "renderer": "present",
+  "size": [
+    80,
+    24
+  ],
+  "captures": [
+    {
+      "capture": "p12-talk-halvard-80x24-16-present",
+      "scenario": "talk-halvard",
+      "size": [
+        80,
+        24
+      ],
+      "tier": "16",
+      "renderer": "present",
+      "talker": "p12-halvard",
+      "line": "Maartens lists the unit as Directorate property. You record its warmth. You will appreciate that its temperature does not identify the source of that heat.",
+      "line_rows": 3,
+      "talk_rows": [
+        "Maartens lists the unit as Directorate property. You record its",
+        "warmth. You will appreciate that its temperature does not identify",
+        "the source of that heat.",
+        "",
+        "c      Work board",
+        "Esc/B  Leave",
+        "",
+        "",
+        "",
+        "",
+        "",
+        "",
+        "",
+        ""
+      ],
+      "sha256": {
+        ".ans": "10e86955c759ae8704603d93436aafe480af418f4910f303a6011528bb4ba00e",
+        ".txt": "b5356072718c32e97e142efd0e44a4fd473931f21275f18b6bb251225a6b7d11",
+        ".json": "566741084688f24d708f1da5d0393a307eb6af3499d649c9697ed513bb2a23c8"
+      }
+    },
+    {
+      "capture": "p12-talk-halvard-80x24-256-present",
+      "scenario": "talk-halvard",
+      "size": [
+        80,
+        24
+      ],
+      "tier": "256",
+      "renderer": "present",
+      "talker": "p12-halvard",
+      "line": "Maartens lists the unit as Directorate property. You record its warmth. You will appreciate that its temperature does not identify the source of that heat.",
+      "line_rows": 3,
+      "talk_rows": [
+        "Maartens lists the unit as Directorate property. You record its",
+        "warmth. You will appreciate that its temperature does not identify",
+        "the source of that heat.",
+        "",
+        "c      Work board",
+        "Esc/B  Leave",
+        "",
+        "",
+        "",
+        "",
+        "",
+        "",
+        "",
+        ""
+      ],
+      "sha256": {
+        ".ans": "1b9cc8e3cdb63e8decb723accb088341e4f0a8b1260cae20b1a7f160d79192c2",
+        ".txt": "6880c447b53e2de4a47b581942708f7b8cb9261576705e36d7c6e5b4692d2df9",
+        ".json": "ba2d579544df710147e1251c3cb4bc2e9a2d15a2f0a0990198a0c37f5dd0cc82"
+      }
+    },
+    {
+      "capture": "p12-vendor-detail-wraps-80x24-truecolor-present",
+      "scenario": "vendor-detail-wraps",
+      "size": [
+        80,
+        24
+      ],
+      "tier": "truecolor",
+      "renderer": "present",
+      "item": "wpn_kestrel_sidearm",
+      "description": "The starter pistol. Everyone in Karst has fired one; most of them at the wrong person.",
+      "detail_rows": [
+        "Hand 200  Buy-back budget 2000/2000",
+        "Quality 100%",
+        "Damage 12, range 6.",
+        "The starter pistol. Everyone in Karst has fired one; most of th..."
+      ],
+      "description_whole": false,
+      "rule_3_fallback": true,
+      "sha256": {
+        ".ans": "f0c04867d4272d5807204c516d04028350120d0cc236569011c6dcba08b3874e",
+        ".txt": "7c1e3f560021e5171a22810901bc684d532582e27e236476dff70a0ca29286ee",
+        ".json": "7fc7d89f0116b07055be3ff01684227a668a36d9818c30c69c43d090484e252f"
+      }
+    },
+    {
+      "capture": "p12-talk-halvard-80x24-truecolor-present",
+      "scenario": "talk-halvard",
+      "size": [
+        80,
+        24
+      ],
+      "tier": "truecolor",
+      "renderer": "present",
+      "talker": "p12-halvard",
+      "line": "Maartens lists the unit as Directorate property. You record its warmth. You will appreciate that its temperature does not identify the source of that heat.",
+      "line_rows": 3,
+      "talk_rows": [
+        "Maartens lists the unit as Directorate property. You record its",
+        "warmth. You will appreciate that its temperature does not identify",
+        "the source of that heat.",
+        "",
+        "c      Work board",
+        "Esc/B  Leave",
+        "",
+        "",
+        "",
+        "",
+        "",
+        "",
+        "",
+        ""
+      ],
+      "sha256": {
+        ".ans": "4f90a35f626f88693e645a23cfd2fed4f03570926e69377170d355e32b01527d",
+        ".txt": "2367e1cc98f71a9aeadb947b027631fc5e6681cf1663afd7b5c4f7fde252db76",
+        ".json": "f1f343298c0827893ca11d520ee6a1b3f9fe2f01895ea4a121922ab8c372c8cc"
+      }
+    },
+    {
+      "capture": "p12-talk-vesper-80x24-truecolor-present",
+      "scenario": "talk-vesper",
+      "size": [
+        80,
+        24
+      ],
+      "tier": "truecolor",
+      "renderer": "present",
+      "talker": "p12-vesper",
+      "line": "Sweetheart. You've got the card. Sit. First one's on Vantongeren; she pays me to say that.",
+      "line_rows": 2,
+      "talk_rows": [
+        "Sweetheart. You've got the card. Sit. First one's on Vantongeren;",
+        "she pays me to say that.",
+        "",
+        "c      Work board",
+        "v      Trade",
+        "Esc/B  Leave",
+        "",
+        "",
+        "",
+        "",
+        "",
+        "",
+        "",
+        ""
+      ],
+      "sha256": {
+        ".ans": "86cec2b286a7b57a422339df0bac0e7b62a368df4d1089d7101f93414598530d",
+        ".txt": "4758a205325d490732aaab73c128904f0fc0a10d77345168cc90cbde73472b17",
+        ".json": "9bf760e6885043a8b3e9a7eaae48591c7d56f30072fb14e0ab8f84f18053d998"
+      }
+    },
+    {
+      "capture": "p12-log-after-talk-80x24-truecolor-present",
+      "scenario": "log-after-talk",
+      "size": [
+        80,
+        24
+      ],
+      "tier": "truecolor",
+      "renderer": "present",
+      "older": "Maartens lists the unit as Directorate property. You record its warmth. You will appreciate that its temperature does not identify the source of that heat.",
+      "newer": "Sweetheart. You've got the card. Sit. First one's on Vantongeren; she pays me to say that.",
+      "log_rows": [
+        "║√ You gain 25 XP.                                                             ║",
+        "║\" Vesper: Sweetheart. You've got the card. Sit. First one's on Vantongeren;   ║",
+        "║  she pays me to say that.                                                    ║"
+      ],
+      "sha256": {
+        ".ans": "791ceff2cda7c6fac1b338a103df119f81032a55f02f476b664dde809aa7eeff",
+        ".txt": "7a84d24a0d510041d882ca604209a0f85a65315b3faff695f5f9ff0ec89922bb",
+        ".json": "88905ad0651d6dde7f326e6e98a996795cd2e94d61c3e9be916263159a8722df"
+      }
+    }
+  ],
+  "fixtures": [
+    "p12-halvard: shipped halvard dialogue, id changed only; contact object in the Tin Halo",
+    "p12-vesper: shipped vesper dialogue, id changed only; contact object in the Tin Halo",
+    "journal evidence s19-hal-s1-1-recovery granted; p12-halvard marked as met",
+    "the s27-cast originals stay \"authoring\" on main and are not placed"
+  ],
+  "presentation_acceptance": false,
+  "h1_layout_approval": false,
+  "s25_layout_approval": false
+}

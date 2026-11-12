@@ -1,0 +1,24 @@
+┌─ Karst · S10P1225680 ────────────────────────────────────────────────────────┐
+│    ┌─ Director Anselm Halvard - Director of the Spire ──────────────────┐    │
+│    │                                                                    │    │
+│    │ Maartens lists the unit as Directorate property. You record its    │    │
+│    │ warmth. You will appreciate that its temperature does not identify │    │
+│    │ the source of that heat.                                           │    │
+│    │                                                                    │    │
+│    │ c      Work board                                                  │    │
+│    │ Esc/B  Leave                                                       │    │
+│    │                                                                    │    │
+│    │                                                                    │    │
+│    │                                                                    │    │
+│    │                                                                    │    │
+│    │                                                                    │    │
+│    │                                                                    │    │
+│    │                                                                    │    │
+│    │                                                                    │    │
+│    └────────────────────────────────────────────────────────────────────┘    │
+├──────────────────────────────────────────────────────────────────────────────┤
+│[zone] Director Anselm Halvard: Maartens lists the unit as Directorate        │
+│  property. You record its warmth. You will appreciate that its temperature   │
+│  does not identify the source of that heat.                                  │
+│Choose an action; move or Esc/B leaves                                        │
+└────────────────────────────────────────────────────────────────────────────── 

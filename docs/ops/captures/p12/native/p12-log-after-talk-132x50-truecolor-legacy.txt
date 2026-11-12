@@ -1,0 +1,50 @@
+┌─The Tin Halo  POCKET──────────────────────────────────────────────────────────────────────────────────────────────────────21:38──┐
+│█████████                                                                                                  │TARGET                │
+│█·········                                                                                                 │None                  │
+│█·+·······                                                                                                 │WEAPON                │
+│█···☻······                                                                                                │Kestrel Issue Sidearm │
+│█··········                                                                                                │NEARBY                │
+│█@$········                                                                                                │~ Halo bouncer        │
+│█·········                                                                                                 │CREW                  │
+│█·······▒▒                                                                                                 │None                  │
+│█·······▒▒                                                                                                 │                      │
+│█········                                                                                                  │                      │
+│ ········                                                                                                  │                      │
+│ ·······                                                                                                   │                      │
+│ ·····                                                                                                     │                      │
+│ ··                                                                                                        │                      │
+│                                                                                                           │                      │
+│                                                                                                           │                      │
+│                                                                                                           │                      │
+│                                                                                                           │                      │
+│                                                                                                           │                      │
+│                                                                                                           │                      │
+│                                                                                                           │                      │
+│                                                                                                           │                      │
+│                                                                                                           │                      │
+│                                                                                                           │                      │
+│                                                                                                           │                      │
+│                                                                                                           │                      │
+│                                                                                                           │                      │
+│                                                                                                           │                      │
+│                                                                                                           │                      │
+│                                                                                                           │P12truecolor界132     │
+│                                                                                                           │BBS: S10P12truecolo...│
+│                                                                                                           │HP ######## 130/130   │
+│                                                                                                           │STA ######## 70/70    │
+│                                                                                                           │Chits 200  Grade 1    │
+│                                                                                                           │Lease days 0/90       │
+│                                                                                                           │Discharge XP 100/1500 │
+│                                                                                                           │Shock 0               │
+│                                                                                                           │Ctrl-X leaves         │
+├──────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────┤
+│[sys] You gain 25 XP.                                                                                                             │
+│[zone] You arrive at The Tin Halo.                                                                                                │
+│[zone] You step under a halo of tin cans. You see Vesper at the end of the bar, three screens beside a drink. You come here for   │
+│  work.                                                                                                                           │
+│[sys] You gain 25 XP.                                                                                                             │
+│[zone] Director Anselm Halvard: Maartens lists the unit as Directorate property. You record its warmth. You will appreciate that  │
+│  its temperature does not identify the source of that heat.                                                                      │
+│[zone] Vesper: Sweetheart. You've got the card. Sit. First one's on Vantongeren; she pays me to say that.                         │
+│E talk to Vesper  ? help  Tab target  F fire  X weapon  1-5 quick  V abilities  I inventory                                       │
+└────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────── 

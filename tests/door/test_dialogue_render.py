@@ -44,13 +44,14 @@ def test_game_13_4_rowless_talker_renders_and_dispatches_its_advertised_hotkey(
     ('arrows', 'pgdn', 'key'), ('vi', 'h', 'key'),
     ('vi', 'down', None), ('vi', 'pageup', None),
     ('vi', 'j', 'menu_select'), ('vi', 'b', 'menu_close'),
+    ('vi', 'k', 'key'),  # P12: vi j takes the offer, k still walks away
 ])
 def test_ui_4_physical_talker_keys_use_welcome_keymap(content, info, keymap, key, expected):
     display = Display(info)
     display.receive(Frame('welcome', {'keymap': asdict(content.keymaps), 'player': {'settings': {'keymap': keymap}}}), 0)
     display.receive(Frame('view', {'rev': 1, 'kind': 'menu', 'body': {
         'kind': 'talker', 'walk_away': True, 'title': 'Person', 'rows': [],
-        'actions': [{'key': 'j', 'label': 'Job'}, {'key': 'b', 'label': 'Back'}]}}), 0)
+        'actions': [{'key': 'j', 'label': 'Job'}]}}), 0)
     frames = display.key(key, 1)
     if expected is None:
         assert not frames

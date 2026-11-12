@@ -7,6 +7,7 @@ from textwrap import fill
 
 import pytest
 
+from karst41.door.fit import default_log_rows
 from karst41.door.log import rows
 from karst41.door.cells import display_width
 from karst41.door.model import Display
@@ -61,7 +62,8 @@ def test_travel_logs_paragraph_after_hook_and_arrival_notice(content_tree: Conte
                  for line in frame.data['lines']]
     assert any(line['text'] == 'You gain 25 XP.' for line in committed)
     layout = compute(80, 24)
-    visible = rows([*lines, *committed], layout.log.width)[-layout.log.height:]
+    # P12 rule 5: the default renderer's own whole-entry selection.
+    visible = default_log_rows([*lines, *committed], layout.log.width, layout.log.height)
     assert paragraph in ' '.join(row['text'].strip() for row in visible)
 
 

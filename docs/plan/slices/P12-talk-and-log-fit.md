@@ -1,7 +1,7 @@
 # P12 — Talk lines and log entries are never cut
 
-**Status:** proposed (owner finding, round 4 demo, 2026-11-10; spec in
-#185 comment 6755448631; technical lead agreed to a separate P-slice)
+**Status:** done (PR #206; owner finding, round 4 demo, 2026-11-10; spec
+in #185 comment 6755448631; technical lead agreed to a separate P-slice)
 **Primary model:** Codex · **Reviewer:** automated review, technical lead, presentation lead (presentation acceptance)
 **Depends on:** P5 (merged) · **Lands before:** P10, and the talk content in the Row rules slice (V Trade, Ask about…) · **Milestone:** presentation track
 
@@ -119,6 +119,21 @@ not rows. An entry is shown complete or not at all.
 - Continuation rows keep today's look: no gutter, indented to the text.
 - Coalescing (`(x2)`) and the XP merge are unchanged.
 
+**Known limits against terminal UI 2.5** (technical review 6810346039).
+Canon's 10-second protection has no exception; as built, it holds with
+these limits. Ctrl-P scrollback keeps every line in both cases.
+- **Presentation log.** Each render digests the newest
+  `log_window(height)` lines and reaches back past them for protected
+  lines only until it has `height` distinct ones, a line older than
+  `PROTECT_SECONDS`, or `LOG_PROTECT_EXTRA` (100) extra lines
+  (`door/fit.py`). So a danger or combat line still inside 10 s can leave
+  view early when more than about `log_window(height)` + 100 newer lines
+  arrive after it within those 10 s.
+- **Default renderer.** It protects nothing (ruling Q2, #202
+  6805937648): its lines carry no kind or arrival time. A danger or
+  combat line leaves view as soon as newer entries fill the log. It
+  becomes the protected presentation log at P10.
+
 **6. The way to the full text.** Ctrl-P already works everywhere. The
 `… Ctrl-P` marker from rule 5 points to it where it's needed. The help
 page keeps its row. The hint line doesn't change; it's already full at
@@ -168,6 +183,14 @@ page keeps its row. The hint line doesn't change; it's already full at
     doesn't show.
 - **Goldens:** regenerated where a detail or log screen changes. The PR
   lists them.
+
+## Follow-ups
+
+- **`(xN+)` at the digest-window edge.** The presentation log digests a
+  bounded window, so a run of identical lines longer than the window shows
+  a lower `(xN)` count. When the run reaches the window's edge, show
+  `(xN+)`, so the count is never understated. Carried by the presentation
+  lead (technical review 6810346039); not built in P12.
 
 ## Captures I'll accept
 

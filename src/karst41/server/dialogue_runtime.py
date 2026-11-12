@@ -214,7 +214,7 @@ class Dialogue:
         body['kind'] = 'talker'
         body['walk_away'] = not screen.contact.lattice
         body['actions'] = [{'key': offer.hotkey.lower(), 'label': offer.label} for offer in offers]
-        body['actions'].append({'key': 'b', 'label': 'Back'})
+        # P12: no 'b Back' action; b and Esc close the page in the client.
         self.sim.external_views[session.id] = 'menu', body
 
     def board(self, session: Session, giver: str, wanted: str = '') -> None:

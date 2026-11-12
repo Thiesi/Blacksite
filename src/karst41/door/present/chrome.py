@@ -10,6 +10,7 @@ import re
 from typing import Any
 
 from karst41.door.cells import CellBuffer, clean_text, display_width, truncate
+from karst41.door.fit import LOG_PROTECT_EXTRA, log_cut, log_window, select_lazy
 from karst41.door.log import wrap as word_wrap
 from karst41.layout import Layout
 from karst41.door.present.paint import Paint
@@ -162,34 +163,59 @@ def digest(lines: list[dict[str, Any]]) -> list[LogEntry]:
     return out
 
 
-def _rows(lines: list[dict[str, Any]], width: int) -> list[tuple[LogEntry, str, bool]]:
-    rows = []
-    for entry in digest(lines):
-        text = entry.shown
-        if entry.kind == 'speech' and entry.speaker and not text.startswith(entry.speaker + ': '):
-            text = entry.speaker + ': ' + text
-        rows.extend((entry, line, index == 0)
-                    for index, line in enumerate(word_wrap(text, width - 2, continuation=0)))
-    return rows
-
-
-def _select(rows: list[tuple[LogEntry, str, bool]], height: int,
-            now: float) -> list[tuple[LogEntry, str, bool]]:
-    if height <= 0:
-        return []
-    protected = [i for i, (entry, _, _) in enumerate(rows)
-                 if entry.kind in ('danger', 'combat') and 0 <= now - entry.arrived < PROTECT_SECONDS]
-    selected = set(protected[-height:])
-    for index in range(len(rows) - 1, -1, -1):
-        if len(selected) >= height:
-            break
-        selected.add(index)
-    return [rows[i] for i in sorted(selected)]
+def _text(entry: LogEntry) -> str:
+    text = entry.shown
+    if entry.kind == 'speech' and entry.speaker and not text.startswith(entry.speaker + ': '):
+        text = entry.speaker + ': ' + text
+    return text
 
 
 def visible_rows(lines: list[dict[str, Any]], width: int, height: int,
                  now: float) -> list[tuple[LogEntry, str, bool]]:
-    return _select(_rows(lines, width), height, now)
+    """P12 rule 5 (#202): whole entries; the newest always shows.
+
+    Bounded work (technical review 6808753030): at most the newest
+    log_window(height) + LOG_PROTECT_EXTRA lines are digested, and only
+    entries the selection reaches are wrapped (fit.select_lazy).
+    """
+    if height <= 0:
+        return []
+    lines = list(lines)
+    start = max(0, len(lines) - log_window(height))
+    # Rule 5 step 2: reach back for protected lines the window cut off,
+    # but only while they could still show. At most `height` protected
+    # entries fit, so stop once that many distinct ones are in; never go
+    # past PROTECT_SECONDS (lines arrive in order) or LOG_PROTECT_EXTRA.
+    def protected_line(line: dict[str, Any]) -> bool:
+        return (line.get('kind') in ('danger', 'combat')
+                and 0 <= now - float(line.get('_arrived', -1e30)) < PROTECT_SECONDS)
+    found = {(line.get('kind'), line.get('text')) for line in lines[start:] if protected_line(line)}
+    floor = max(0, start - LOG_PROTECT_EXTRA)
+    while (start > floor and len(found) < height
+           and 0 <= now - float(lines[start - 1].get('_arrived', -1e30)) < PROTECT_SECONDS):
+        start -= 1
+        if protected_line(lines[start]):
+            found.add((lines[start].get('kind'), lines[start].get('text')))
+    entries = digest(lines[start:])
+    wrapped: dict[int, list[str]] = {}
+
+    def rows_of(index: int) -> list[str]:
+        if index not in wrapped:
+            wrapped[index] = word_wrap(_text(entries[index]), width - 2, continuation=0)
+        return wrapped[index]
+
+    def protected(index: int) -> bool:
+        entry = entries[index]
+        return entry.kind in ('danger', 'combat') and 0 <= now - entry.arrived < PROTECT_SECONDS
+
+    shown = select_lazy(len(entries), rows_of, protected, height)
+    out = []
+    for index in sorted(shown):
+        rows = wrapped[index]
+        if index == len(entries) - 1:
+            rows = log_cut(rows, shown[index], width - 2)
+        out.extend((entries[index], line, i == 0) for i, line in enumerate(rows[:shown[index]]))
+    return out
 
 
 def log(buffer: CellBuffer, layout: Layout, paint: Paint, lines: list[dict[str, Any]], now: float) -> None:

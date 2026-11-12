@@ -6,6 +6,7 @@ from typing import Any
 
 from karst41.door.cells import CellBuffer, clean_text, display_width, truncate
 from karst41.door.chrome import box, render_frame
+from karst41.door.fit import fit_text, talk_rows
 from karst41.door.layout import Layout, Rect
 from karst41.door.palette import Palette
 
@@ -30,6 +31,9 @@ def menu_rect(layout: Layout) -> Rect:
 
 def render_menu(buffer: CellBuffer, body: dict[str, Any], layout: Layout, palette: Palette) -> None:
     shape = layout.menu_for(body.get('kind') == 'contracts')
+    if body.get('kind') == 'talker':
+        _render_talker(buffer, body, shape.talk, palette)
+        return
     rows = body.get("rows", [])
     available = shape.listing.height
     columns = body.get("columns", [])
@@ -43,10 +47,21 @@ def render_menu(buffer: CellBuffer, body: dict[str, Any], layout: Layout, palett
         selected = cursor == index or cursor == row.get("id")
         buffer.put(shape.listing.x, shape.listing.y + index - first,
                    truncate(text, shape.listing.width).ljust(shape.listing.width), palette.style("text", reverse=selected))
-    for index, line in enumerate(str(body.get("detail", "")).splitlines()[:shape.detail.height]):
-        buffer.put(shape.detail.x, shape.detail.y + index, truncate(line, shape.detail.width), palette.style())
+    for index, line in enumerate(fit_text(str(body.get("detail", "")), shape.detail.width, shape.detail.height)):
+        buffer.put(shape.detail.x, shape.detail.y + index, line, palette.style())
     actions = "  ".join(f"{a.get('key', '')} {a.get('label', '')}" for a in body.get("actions", []))
     buffer.put(shape.actions.x, shape.actions.y, truncate(actions + "  Esc/B back", shape.actions.width), palette.style("hint"))
+
+
+def _render_talker(buffer: CellBuffer, body: dict[str, Any], area: Rect, palette: Palette) -> None:
+    """P12: the line across the whole page, then one action per row."""
+    rows = talk_rows(str(body.get('detail', '')), body.get('actions', []), area.width, area.height)
+    for index, row in enumerate(rows):
+        if row.key:
+            buffer.put(area.x, area.y + index, row.key, palette.style('hint'))
+            buffer.put(area.x + display_width(row.key), area.y + index, row.label, palette.style())
+        else:
+            buffer.put(area.x, area.y + index, row.text, palette.style())
 
 
 @dataclass

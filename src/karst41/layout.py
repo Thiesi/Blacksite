@@ -40,6 +40,9 @@ class MenuLayout:
     detail: Rect
     actions: Rect
     cursor_page: int
+    # P12: a talker page (no rows) uses the whole inner width from the
+    # listing's top row through the actions row for its line and actions.
+    talk: Rect
 
 
 @dataclass(frozen=True)
@@ -106,13 +109,14 @@ def compute(width: int, height: int, tier: LayoutTier = "current") -> Layout:
     columns = Rect(overlay.x + 2, overlay.y + 1, list_width, 1)
     actions = Rect(overlay.x + 2, overlay.bottom - 2, menu_width - 4, 1)
     cursor_page = max(1, menu_height - (5 if wide else 9))
+    talk = Rect(actions.x, overlay.y + 2, actions.width, actions.bottom - (overlay.y + 2))
     menu = MenuLayout(columns, Rect(overlay.x + 2, overlay.y + 2, list_width,
                                    menu_height - (5 if wide else 8)),
-                      detail, actions, cursor_page)
+                      detail, actions, cursor_page, talk)
     contract_menu = menu if wide else MenuLayout(columns,
         Rect(overlay.x + 2, overlay.y + 2, list_width, 1),
         Rect(overlay.x + 2, overlay.y + 4, detail_width, max(0, menu_height - 6)),
-        actions, cursor_page)
+        actions, cursor_page, talk)
     return Layout(
         width=width, height=height, tier=tier, frame=Rect(0, 0, width, height),
         header=Rect(2, 0, width - 8, 1),

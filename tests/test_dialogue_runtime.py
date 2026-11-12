@@ -71,7 +71,8 @@ def test_game_13_4_talker_precedes_the_board_and_records_only_a_committed_meetin
     kind, body = game.core.characters.sim.external_views[caller.session.id]
     assert kind == 'menu' and body['kind'] == 'talker'
     assert body['title'] == 'Vesper - fixer' and body['detail'] == 'Show me the card.'
-    assert {action['key'] for action in body['actions']} == {'c', 'v', 'b'}
+    # P12: talkers no longer carry a 'b Back' action; b still closes below.
+    assert {action['key'] for action in body['actions']} == {'c', 'v'}
     assert Player.from_record(player.record()).progress['met_talkers'] == ['vesper']
     press(game, caller, 'b')
     assert caller.session.id not in game.core.dialogue.menus
