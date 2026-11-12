@@ -152,7 +152,7 @@ Computed from the terminal size at start; never hard-coded. At 80×24:
 Rules:
 
 - **Header** (1 row): district (dim), zone (bright), the safety word, then
-  live facts (heat, Marked, `HUNTED` (planned, S44), `PvP G5+` on
+  live facts (heat, Marked, `HUNTED`, `PvP G5+` on
   contested ground, event summary); the clock at the right.
   Lower-priority segments drop first.
   The frame around it shows safety by line style (2.1); the sketch draws
@@ -215,7 +215,7 @@ instead, because guards do not cross zones. These are danger lines,
 and the Mark line comes first. Truce rules add no fire confirmation
 and no HERE entry.
 
-Planned, S44: the price, the hunted state and the refusals.
+The price, the hunted state and the refusals (S44).
 
 - **The price, as notices (2.5).** On a character's first arrival in a
   truce zone, once, from the existing first-discovery moment: "Fire:
@@ -412,7 +412,7 @@ kind is told apart by colour alone.
 - Danger lines never coalesce with other kinds, and no other line pushes
   a danger or combat line out of the visible log within 10 seconds.
 - **Notices** (kind `notice`: restarts, maintenance, news from the node,
-  and, planned for S44, a rule's price stated before you pay it, such as
+  and a rule's price stated before you pay it, such as
   a truce zone's, section 2.1) are not world-log lines. A notice takes
   the hint line over key help and stays there until a key is pressed and
   at least 8 seconds have passed. It never hides a prompt or escape

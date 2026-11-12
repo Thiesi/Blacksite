@@ -206,8 +206,11 @@ From the #203 triage. Each needs a test or a stated reason:
   Mark's own expiry; both expiries survive a restart;
 - notice numbers taken from the constants;
 - a fit test over every shipped keeper's short name at 80x24. The
-  arrival and first-target lines fit only names of 7 cells or fewer, so
-  the test fails any longer name;
+  first-target line "Fire here and <Keeper> comes. No Halo." fits the
+  36-cell header notice only for names of 6 cells or fewer (corrected
+  from 7 at implementation, technical lead's ruling), and the arrival
+  line fits the hint row. The validator rejects a longer keeper name, and
+  the test fails it;
 - truncation uses ASCII `...`;
 - a drone or burn sent from inside the Halo;
 - the overlapping-refusal wording, including the change after a death
