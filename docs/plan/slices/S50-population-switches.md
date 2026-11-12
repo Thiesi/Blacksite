@@ -36,10 +36,13 @@ accept members, and Cold Chain, Block and Relay Zero are contested.
   simulation reads no clock for it (AGENTS §4).
 - **Persistence:** the last measure is stored, so a restart doesn't
   reopen or re-close anything.
-- **A new node:** S49's first season start (an initialisation) stores
-  the first measure and every switch below threshold. No fallback
-  effects run then, so a later season's re-evaluation always compares
-  against initialised state.
+- **Initialisation is S50's own,** an idempotent step run at startup by
+  S50's migration: if there's no switch state, store every switch below
+  threshold and the first measure, with no fallback effects and no
+  announcements. That covers a new node and a node that already ran
+  S49's build, whose first season start fired before S50 existed. S49's
+  season-start hook calls the same step, so a later season's
+  re-evaluation always compares against initialised state.
 - **An upgraded node** (one that predates S50): factions that were
   joinable before become closed to new members at initialisation, and
   existing members keep their membership. The operator view says this
@@ -136,7 +139,7 @@ anything that changes the economy to the owner.
   - relays outside the set reset;
   - open bids are refunded exactly once.
 - **Season 0:**
-  - a fresh node's first season start initialises the measure and the switches with no fallback effects;
+  - initialisation runs once at startup when there's no switch state, on a fresh node and on a node that already ran S49's build, with no fallback effects and no announcements, and a crash during it leaves no partial state;
   - a new node accepts members only for Sablier, Wardens and Unmoored;
   - contests only Cold Chain, Block and Relay Zero;
   - other factions still offer work and standing.
