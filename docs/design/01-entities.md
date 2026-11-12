@@ -757,7 +757,7 @@ remain legal.
 | settings | keymap variant, palette, sitrep visibility, log verbosity |
 | stats | kills, deaths, runs, contributions, relays; per season |
 | clone_debt, recovery_kit_id, listened_enabled | debt survives decant; calibration is reversible |
-| created_at, last_seen_at, legal_at | legal_at is stamped once, when 90 calendar days have passed since the identity's first_decanted_at; it is never pre-computed and has no grade shortcut (game design §3.4). Signatory is derived (grade ≥ 5), not stored. Renting and joining check `grade ≥ 5 or legal_at is not None`. A legal_at already stamped under the old grade 5 rule stays: legal status is never removed (bible §8.1). |
+| created_at, last_seen_at, legal_at | legal_at is stamped once, when 90 calendar days have passed since the identity's first_decanted_at, with the value first_decanted_at + 90 days even if first observed later (for example at the next login); it is never pre-computed and has no grade shortcut (game design §3.4). Signatory is derived (grade ≥ 5), not stored. Renting and joining check `grade ≥ 5 or legal_at is not None`. A legal_at already stamped under the old grade 5 rule stays: legal status is never removed (bible §8.1). |
 | name_key | NFC-normalized Unicode casefold; unique per origin |
 | progress | unspent points, learned programs/hymns, seen zones, compressed terrain memory, offline timestamp |
 

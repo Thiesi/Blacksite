@@ -237,7 +237,7 @@ the Core. This is the social hub and the safe place to log out.
 Each district leans toward one faction, has one or more **relays** that
 factions can capture, and is policed weakly or not at all. Player-versus-
 player combat is allowed once both players reach grade 5. Below that,
-contested-zone attacks are refused in both directions. Discharge does
+contested-zone attacks are refused in both directions. Personhood does
 not remove this protection. Attacking an eligible player whose faction is not hostile
 to yours makes you **Marked**, which has consequences described in the
 design document.

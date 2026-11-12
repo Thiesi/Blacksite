@@ -1032,7 +1032,7 @@ slice change:
 | `balance CUST` / `balance TEN` / `balance EVEN` | settled internal voice weight |
 | `has_evidence ID` / `receipt ID` | recorded discovery or completed action |
 | `service_state ID STATE` | current bounded work-order state |
-| `legal` / `not_legal` | recorded discharge status |
+| `legal` / `not_legal` | personhood only: `legal_at` is set. A Signatory without it is `not_legal` |
 
 Tagged ambient lines use game design §13.4's seeded weights. Required
 instructions and one line from each voice register in a finale cannot
