@@ -73,7 +73,7 @@ files this and tells nobody but Brann.
 **Voice.** Measured. Complete sentences. Never uses a Wake's name until
 they have chosen one, then uses it constantly. Says "you'll find" instead
 of "you will". Never swears. Her tic is precision about numbers followed
-by a softening: "Ninety days. Or bring me the work certificate."
+by a softening: "Ninety days. You'll find they pass."
 
 **Sample lines.**
 
@@ -1033,6 +1033,7 @@ slice change:
 | `has_evidence ID` / `receipt ID` | recorded discovery or completed action |
 | `service_state ID STATE` | current bounded work-order state |
 | `legal` / `not_legal` | personhood only: `legal_at` is set. A Signatory without it is `not_legal` |
+| `signatory` / `not_signatory` | may rent and join: grade 5 or `legal_at` is set (game design §3.4). A `legal_at` stamped early under the old grade 5 rule counts; `legal` alone does not mean day 90 has passed |
 
 Tagged ambient lines use game design §13.4's seeded weights. Required
 instructions and one line from each voice register in a finale cannot
