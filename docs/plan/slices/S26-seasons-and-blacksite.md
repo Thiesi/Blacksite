@@ -21,7 +21,10 @@ and carries into Season 1 as its entry chain. How its door state and
 credit carry over follows the owner's answer to S49's open item 3. The
 Depth target is read from S50's population switch (§13.1), never chosen
 by a SysOp. Where the presets below say an operator picks the target,
-§13.1 as amended in #219 wins.
+§13.1 as amended in #219 wins. Freezing the leaderboards and resetting
+seasonal relay and influence counters (below) happen only when a season
+with an installed bundle starts, through S49's season-start hook. An
+advance that only parks progression resets and freezes nothing.
 
 ## Spec references
 

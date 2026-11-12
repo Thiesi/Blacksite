@@ -117,7 +117,7 @@ not a numeric execution order. Cross-milestone dependencies are explicit.
 | S44 | The Row's truce rules: hunted, the Halo's refusal, settling the debt, pursuit (done, #207, PRs #214 and #215) | Claude Opus 5.5 | S38, S42; P12 for parts 5–6 only |
 | S47 | Off-loop storage writer: database saves never stall a tick (planned, #212) | Claude Opus 5.5 | S40, S43, S44, S48 |
 | S48 | The first evening: one whole evening of the real game, the H1 session (planned, #217) | Claude Opus 5.5 | S44, P8, P12, #219, #220 |
-| S49 | Season 0, the alpha: the season frame, "Ninety-Nine" and the Old Works (planned, #232) | Claude Opus 5.5 | S48, S47 |
+| S49 | Season 0, the alpha: the season frame, "Ninety-Nine" and the Old Works (planned, #232) | Claude Opus 5.5 | S48, S47, S25a, S25b |
 | S50 | Population switches: features open as the node grows (planned, #233) | Claude Opus 5.5 | S49 |
 
 Reviews: before S03, S04, and S14 start, an **Astra** critique pass over

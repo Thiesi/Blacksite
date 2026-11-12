@@ -2,7 +2,7 @@
 
 **Status:** planned (filed 2026-11-12; the owner merges the filing)
 **Primary model:** Claude Opus 5.5 (the engineer) · **Maps, people and lines:** creative lead · **Looks, layout and acceptance:** presentation lead · **Reviewer:** automated review, technical lead
-**Depends on:** S48 (the first evening, H1), S47 (off-loop writer); S19, S20 and S21 (merged: the chain's contracts, faction site and relay are authored and dormant); S27's dialogue engine (merged; S27 itself is still in progress, with its presentation-dependent completion on hold, and S49 doesn't wait for that) · **Lands before:** S50 and S31 (S31's first release ships Season 0) · **Milestone:** the alpha
+**Depends on:** S48 (the first evening, H1), S47 (off-loop writer); S19, S20 and S21 (merged: the chain's contracts, faction site and relay are authored and dormant); S27's dialogue engine (merged; S27 itself is still in progress, with its presentation-dependent completion on hold, and S49 doesn't wait for that); S25a (engine fixes, in progress) and S25b (bindings and generator, engineering done), because the Lattice cells and cores it activates come from S25's generated `s25-cores` bundle · **Lands before:** S50 and S31 (S31's first release ships Season 0) · **Milestone:** the alpha
 **Issue:** https://github.com/Thiesi/Karst41/issues/232
 
 Canon: game design §13.1 and §13.6, story arcs "Season 0 — *The Door*"
@@ -47,6 +47,9 @@ A node running Season 0:
   §4).
 - **The operator's advance**, through the admin CLI, following §13.1:
   - explicit and audited;
+  - when no next season's bundle is installed, the confirmation says so
+    plainly ("No next season is installed. Progression will park.")
+    before the operator confirms;
   - never automatic on a calendar;
   - advancing with no eligible completion requires the no-outcome
     acknowledgement and records no settled choice.
@@ -94,9 +97,9 @@ A node running Season 0:
   and layout intent. The presentation lead owns looks, signs and
   acceptance. The engineer builds both maps against the existing map,
   looks and validator rules.
-- **Layout approval.** New maps come under the owner's layout approval,
-  as S25c does. This slice doesn't grant that approval, and neither does
-  any review.
+- **Layout approval.** The two maps come under the owner's H3 layout
+  approval for the Old Works district, as S25c's districts do (plan 03).
+  This slice doesn't grant that approval, and neither does any review.
 - **Gazetteer exits not built in Season 0.** Draw them as closed or
   blocked, never as live exits to missing zones. The validator already
   rejects references to missing zones.
@@ -197,6 +200,11 @@ The slice proposes each of these in its PR:
   (Part 2; the creative lead and the presentation lead.)
 - **The season-start hook's contract:** exactly what S50 and S26 can
   rely on.
+- **Activating S25-generated Lattice content.** Does activating the
+  Sink and Old Works cells and cores from `s25-cores` count as a publish
+  under S25b's per-district H2/H3 hold? If it does, the alpha waits for
+  the owner's gate for those districts. The technical lead rules on this
+  before the build starts.
 
 ## Out of scope
 
@@ -219,7 +227,8 @@ The slice proposes each of these in its PR:
   - advancing with no next bundle parks progression and keeps
     characters;
   - the start hook fires once per season start, and not on an advance
-    that parks (no next bundle installed). It fires once when a
+    that parks (no next bundle installed). The parked advance's
+    confirmation shows the "no next season installed" line. It fires once when a
     bundle-backed season later starts.
 - **Maps:**
   - both zones load and validate;
