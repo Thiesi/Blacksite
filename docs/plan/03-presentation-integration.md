@@ -332,7 +332,7 @@ decisions; **3** after representative-location approval.
 | Place layer | new `looks/*.json`, `themes.json`, `content/schema.py`, `validate.py`, `server/views/looks.py`, `zone_view.py` | `01-entities.md` place record; `04-assets.md` §3 | none, except charted terrain shows layout (D1) | absent record means no dressing | validator rules; sight-mask test; charted masking of hidden-exit corridors and private interiors | yes (D1 to D3) | 2, Codex engine, presentation lead content (P6) |
 | Spawner spread | zone sidecars (Plaza civilians held in x5-22, y3-8 by `wander` clamp, `npcs/engine.py:360`) | none | NPCs occupy more of the space | content only | existing spawner validator | placement intent | 3, content (P6, C1) |
 | Lattice | `door/views/lattice.py`, `lattice/engine.py`, `content/sectors/*.json` (179 placeholder labels) | additive LatticeView fields | none | labels change, ids and topology unchanged | Lattice goldens regenerated; no `(nn)` remains | yes (D7), label voice | 2, Codex renderer, Sonnet labels (P7) |
-| Ambient and barks | prototype `ZoneSimulation.ambient`; S27 `BarkScheduler` | one emitter, per-caller budget | none | — | derived RNG test: ambient leaves `zone.rng` sequence untouched; rate test | ambient content | 2, Codex with S27 (P8) |
+| Ambient and barks | prototype `ZoneSimulation.ambient`; S27 `BarkScheduler` | one emitter, per-caller budget | none | — | derived RNG test: ambient leaves `zone.rng` sequence untouched; rate test | ambient content | 2, the engineer (P8, #209) |
 | City Map | `world/city.py`, `world/simulation.py:228-306` | new map view kind; district geography content | none | list remains until replaced | disclosure test (visited only) | geography (D-T7) | 3, after canon (P9) |
 | Map geometry | S25 `scripts/build_city_content.py`, 24 S25 maps, S08 hub maps | none in format | movement and sight change where geometry changes | fingerprint rebaselined per approved zone; S25 coordinate-bound receipts re-run | BFS walkability, size, gates; human layout gate | yes, geometry direction | 3, S25 owner under human gate |
 | Settings | `server/players.py:66`, `chat.py:276` | settings write intents | none | defaults preserve current behaviour | persistence tests | settings list | 2, S30a |
@@ -564,9 +564,11 @@ cross the Vatside sector, enter and leave a core, at both sizes.
 **P8 Voice and ambience.** *Purpose:* the place speaks without drowning
 danger. *Scope:* one ambient emitter for zone ambience and S27 barks,
 with a per-caller budget, its own RNG derived per zone instance (never
-`zone.rng`), suppression in combat and travel, and the verbosity
-setting. *Depends:* P4, S27 engine, S30a settings path. *Owner:* Codex
-with S27. *Tests:* ambient never draws from `zone.rng`; rate limits;
+`zone.rng`), suppression in combat and travel. The log verbosity setting moves to
+S30b. *Slice:*
+[`P8-voice-and-ambience.md`](slices/P8-voice-and-ambience.md), #209.
+*Depends:* P4, S27 engine. *Owner:* the engineer (Claude Opus 5.5,
+since the Codex sessions retired on 2026-11-11). *Tests:* ambient never draws from `zone.rng`; rate limits;
 danger and combat lines never coalesced or pushed out by ambient within
 ten seconds. *Presentation criteria:* §10.3 item 8. *Gate:* automated
 review, technical lead, presentation lead.
@@ -637,7 +639,7 @@ Codex builds, owner plays. Feeds S33b and S30b.
 |---|---|
 | **Presentation lead** | Experience and interaction design: D1 to D8 drafts; themes, palette values, glyph choices; place records for representative zones; geometry vocabulary per district; Lattice label voice; City Map geography proposal; the perceptual acceptance scenarios; the D8 playtest design; creative sign-off on every player-visible PR. |
 | **Technical lead (this role)** | Architecture and integration: this plan and the slice files; engineering contract sections of P0; P3 interface (and implementation, unless the owner prefers Codex); dependency graph and status; review of every PR for cross-subsystem effect, disclosure and canon consistency; rebaseline approvals; keeping docs, roadmap and decisions consistent; surfacing decisions to the owner. |
-| **Codex** (the implementing agent; slice files carry the roadmap §3 model label, and an implementer that differs says so in its PR) | Implementation: P1, P2, P4 to P8, P10, P9 view, S25a/b, S26a, S27 backend, S28, S29a, S30a, S33a, #67; S25c generator work under the human gate. |
+| **Engineer** (the implementing agent: the Codex sessions until 2026-11-11, now one Claude Opus 5.5 session; slice files carry the roadmap §3 model label, and an implementer that differs says so in its PR) | Implementation: P1, P2, P4 to P8, P10, P9 view, S25a/b, S26a, S27 backend, S28, S29a, S30a, S33a, #67; S25c generator work under the human gate. |
 | **Sonnet or Gemini** | Content batches: Lattice labels, C1 records, S27 cast files, through the validator and a review. |
 | **Automated Claude review** | Independent code review on every PR, unchanged. |
 | **Owner** | Product decisions (§9), human gates H1 to H4 and PT1, S25 layout approval, merges (delegated to the technical lead within technical review §7.1). |
