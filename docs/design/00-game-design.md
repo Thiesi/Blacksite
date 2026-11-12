@@ -228,7 +228,7 @@ seen what fighting and jacking in are.
    record and jack out. The exit remains open if you leave early.
 6. Choose archetype (four cards with one paragraph each), now that the
    drone and the terminal have shown what each card is for.
-7. Choose a name (the BBS handle is the default and always shown).
+7. Choose a name (the BBS handle is the prompt's default and always shown there).
    Names are 2 to 24 display columns of letters, digits, spaces,
    hyphens, underscores, and apostrophes, unique per node
    (case-insensitive). One character per BBS user per node by default;
@@ -240,7 +240,7 @@ seen what fighting and jacking in are.
 8. The briefing's one choice: which faction's recruiter's card to take,
    or none. The choice sets initial standing, not membership.
 9. Out into Vatside with 200 chits, a starter weapon, a med patch, and a
-   contract card for Vesper at the Tin Halo.
+   card for Vesper at the Tin Halo.
 
 The full starter kit is in §17. All archetypes receive Pick and
 Umbrella. Public terminals supply a three-slot loan rig while connected;
@@ -2370,8 +2370,13 @@ node starts below every threshold.
 | Depth target (§13.1) | small node | standard and large at thresholds set with the others |
 
 The away report is always on. A faction that doesn't accept members
-still offers work and standing and keeps its place in the story. Which
-factions and relays come first is content, not a rule here.
+still offers work and standing and keeps its place in the story.
+
+Below the first threshold, the factions accepting members are Sablier,
+the Wardens and the Unmoored, and the contested relays are Cold Chain,
+Block and Relay Zero: the ones whose halls and relays stand on Season
+0's maps (§13.6). Red Sable is first in line when factions open further
+at about 15.
 
 ### 13.6 Season 0
 
@@ -2380,6 +2385,13 @@ on the hubs already built, plus `oldworks-main` (Contractor Street) and
 `oldworks-drop` (The Drop), and carries one story chain: the Unmoored's
 "Ninety-Nine" (story arcs, Season 1 chains). The other chains and
 districts arrive in later seasons as content.
+
+The chain also needs its Lattice: the Sink sector cells of step 1,
+including the hidden black-core entrance; the Silt below the Old Works
+sector (step 3); and the cores `lat-ninety-nines-drop` and
+`lat-outworks-seal`. The door's own zone, `under-outworks`, isn't built
+in Season 0. Step 5 flips `shaft-door-east` from the Lattice side, and
+that flip is the season's last act.
 
 - In Season 0, step 2's lock against `sab-s1-1-retrieval` stays dormant,
   because no Sablier chain runs. Step 5's Halvard beacon report stays

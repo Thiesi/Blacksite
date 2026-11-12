@@ -208,7 +208,7 @@ I am writing this down so I can stop saying it in meetings.
 
 A Wake is a person when ninety full days have elapsed. Nothing
 makes one sooner. Civic records may certify a Wake's work and
-register their signature, good for a lease and a faction card,
+register their signature, good for a tenancy and a faction's roll,
 and that is all it is. Not a supervisor's favour. Neither a death
 nor a new body starts the lease again. The Wardens have the same
 record. If a supervisor loses a Wake's record, I will investigate.
