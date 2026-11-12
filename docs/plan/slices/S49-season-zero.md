@@ -166,7 +166,7 @@ expedition.
 
 ## Owner decisions (provisional)
 
-**Decided 2026-11-13: all four as recommended, and provisional.** The
+**Decided 2026-11-13 (the day after this filing): all four as recommended, and provisional.** The
 owner's words: they chose these "only because they are your
 recommendations", because such decisions "are almost impossible to make
 without having actually played the game", and "we might need to change
@@ -174,9 +174,8 @@ that once the game actually landed". No playtest settles them, only how
 they feel in a real season.
 
 What that means for this slice:
-- **Build them as recommended.** S49's PR records them in canon first
-  (game design §13.6, with a note that they are provisional), so canon
-  stays the source of truth.
+- **Build them as recommended.** They're already in canon (game design
+  §13.6, marked provisional; this filing PR).
 - **Keep each one cheap to change.** It changes in content or one
   clearly named rule, not across systems:
   - who opens the door (world flag vs per player);

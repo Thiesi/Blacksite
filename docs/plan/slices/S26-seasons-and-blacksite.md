@@ -16,7 +16,9 @@ A crew leader never chooses another player's name, standing or ballot.
 game design §13.6), which has no Depth and no expeditions. This slice
 builds Season 1 on S49's season frame: the active season, the operator's
 advance and its season-start hook. It extends that frame and doesn't
-replace it. The Unmoored's "Ninety-Nine" is already active from Season 0
+replace it. The same goes for the Chronicle: S49 builds the smallest
+append-only Chronicle, holding Season 0's door record, and this slice
+extends that store rather than creating a second one. The Unmoored's "Ninety-Nine" is already active from Season 0
 and carries into Season 1 as its entry chain. How its door state and
 credit carry over follows the owner's answer to S49's open item 3. The
 Depth target is read from S50's population switch (§13.1), never chosen
