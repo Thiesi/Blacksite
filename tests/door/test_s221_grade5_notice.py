@@ -64,6 +64,8 @@ def test_221_grade5_reached_offline_shows_at_the_next_attach(repo_root):
     shown = [t for t in toasts(game.frames_for(again)) if t["text"] == TEXT]
     assert len(shown) == 1 and shown[0]["price"] is True
     assert player.progress["grade5_notice"] == "shown"
+    saves = [e for e in game.commit_characters() if e["action"] == "save" and e["player"]["id"] == player.id]
+    assert saves[-1]["player"]["progress"]["grade5_notice"] == "shown"  # Persisted, not left to a checkpoint.
 
 
 def test_221_grade5_notice_held_in_header_counts_from_its_return(info):

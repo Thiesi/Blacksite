@@ -289,6 +289,7 @@ class ProgressionEngine:
         if player.progress.get("grade5_notice") != "due" or session is None or session.closed:
             return
         player.progress["grade5_notice"] = "shown"
+        self.game.queue("save", player.bbs_user_id, player, immediate=True)  # Never shown twice on reconnect.
         session.emit(character.GRADE5_NOTICE, kind="notice", channel="system", role="warning",
                      at=self.clock.now_utc().isoformat(), price=True)
 
