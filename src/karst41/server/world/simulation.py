@@ -10,7 +10,7 @@ from karst41.hints import focus_context
 from karst41.server.clock import Clock, TICK_HZ
 from karst41.server.loop import TickContext
 from karst41.server.protocol import Frame, LogKind
-from karst41.server.rules.combat import MARKED_SECONDS
+from karst41 import truce_text
 from karst41.server.sessions import Session, Sessions
 from karst41.server.views.delta import ViewStore
 from karst41.server.views.zone_view import Perception, build
@@ -102,7 +102,7 @@ class ZoneSimulation:
             self.log(session, f"Nobody draws on {zone.template.meta.name}. {keeper} makes sure of it.", kind="place")
             # S44 (UI 2.1): the price, once per character, before it is paid.
             # Exempt from any new-Wake notice quiet: it warns before a cost.
-            session.emit(f"Fire: {keeper} comes, no Halo. At a player: Marked {MARKED_SECONDS // 60}m, no work.",
+            session.emit(truce_text.arrival(keeper),
                          kind="notice", channel="system", role="warning",
                          at=self.clock.now_utc().isoformat(), price=True)
 

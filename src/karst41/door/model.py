@@ -21,7 +21,7 @@ from karst41.door.present.paint import Paint
 from karst41.door.present import screen as presentation_screen
 from karst41.door.present.chrome import NOTICE_SECONDS, PROTECT_SECONDS
 from karst41.server.protocol import Frame, VIEW_KINDS
-from karst41.server.rules.combat import MARKED_SECONDS
+from karst41 import truce_text
 
 
 class Display:
@@ -309,9 +309,9 @@ class Display:
         if not keeper:
             return
         if warning == 'Firing marks you':
-            text = f'Fire: Marked {MARKED_SECONDS // 60}m. No Halo, no work.'
+            text = truce_text.at_player()
         elif re.fullmatch(r'(Truce: )?.+ answers', warning):
-            text = f'Fire here and {keeper} comes. No Halo.'
+            text = truce_text.at_npc(keeper)
         else:
             return
         self.price_noticed = True

@@ -1294,7 +1294,7 @@ BALANCES = ("CUST", "TEN", "EVEN")
 SERVICE_STATES = ("normal", "fault", "repairing", "allocated")
 ARCHETYPES = ("hardline", "ghost", "cantor", "operator")
 
-OfferKind = Literal["contract", "vendor", "service", "recruit", "travel"]
+OfferKind = Literal["contract", "vendor", "service", "recruit", "travel", "ask"]
 
 
 @dataclass(frozen=True)
@@ -1314,6 +1314,9 @@ class Offer:
     hotkey: str
     ref: str
     when: tuple[str, ...] = ()
+    # Entities 1.11 (S44): an `ask` offer's player question; `ref` names the
+    # talker's own answer line, which ordinary selection never picks.
+    asks: str = ""
 
 
 @dataclass(frozen=True)

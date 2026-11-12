@@ -17,6 +17,7 @@ from tests.fake_terminal import FakeTerminal
 from tests.harness import HeadlessServer
 from tests.presentation.snapshots import assert_golden
 
+# Canon text, word for word (terminal UI 2.1); numbers from the constants.
 ARRIVAL = "Fire: {} comes, no Halo. At a player: Marked {}m, no work."
 AT_PLAYER = "Fire: Marked {}m. No Halo, no work."
 AT_NPC = "Fire here and {} comes. No Halo."
@@ -164,22 +165,20 @@ def test_s44_hunted_header_golden(repo_root, info, request, width, height, tier,
                   trim=True, update=request.config.getoption("--update-goldens"))
 
 
-def test_s44_hunted_drops_no_earlier_than_marked_or_heat(repo_root):
+def test_s44_hunted_drops_no_earlier_than_marked_or_heat(info):
+    display = Display(replace(info, width=80, height=24), presentation=True)
+    me = {"zone_name": "A Very Long Zone Name Indeed For Testing Drops", "safety": "contested", "truce": "Sable",
+          "heat_until": "x", "marked_until": "x", "hunted": True, "district": "Lower Ring", "clock": "21:00",
+          "zone": "sodium-row", "hp": 10, "hp_max": 10, "sta": 10, "sta_max": 10, "grade": 1, "name": "Runner"}
+    display.receive(Frame("view", {"rev": 1, "kind": "zone", "body": {
+        "me": me, "service": {"summary": "service summary"}, "hint": "", "tiles": [], "actors": []}}), 0)
     from karst41.door.cells import CellBuffer
-    from karst41.door.palette import Palette
     from karst41.door.present import zone
-    from karst41.door.present.paint import Paint
-    layout = compute(80, 24)
-    buffer = CellBuffer(80, 24, Palette({}, "256").style())
-    body = {"me": {"zone_name": "A Very Long Zone Name Indeed For Testing", "safety": "contested", "truce": "Sable",
-                   "heat_until": "x", "marked_until": "x", "hunted": True, "district": "Lower Ring",
-                   "clock": "21:00"}, "service": {"summary": "service summary"}}
-    zone.head(buffer, body, layout, Paint(Palette({}, "256")))
-    top = "".join(buffer.cells[0][x].char for x in range(80)) if hasattr(buffer, "cells") else ""
-    if not top:
-        terminal = FakeTerminal(80, 24)
-        terminal.write(buffer.render_full() if hasattr(buffer, "render_full") else b"")
-        top = terminal.screen_text().splitlines()[0]
+    buffer = CellBuffer(80, 24, display.palette.style())
+    zone.head(buffer, display.body, display.layout, display.paint)
+    terminal = FakeTerminal(80, 24)
+    terminal.write(buffer.diff(None) if hasattr(buffer, "diff") else b"")
+    top = terminal.screen_text().splitlines()[0] if terminal.screen_text() else ""
     for fact in ("HEAT", "MARKED", "HUNTED"):
-        assert fact in top
+        assert fact in top, top
     assert "LOWER RING" not in top and "service summary" not in top
