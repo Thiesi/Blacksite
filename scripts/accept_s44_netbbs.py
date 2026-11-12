@@ -266,10 +266,14 @@ async def accept(root: Path, door_python: Path, width: int, height: int, modern:
             answer = 'Nobody draws. Somebody does, we come for them'
             await wait(lambda: answer in asker.caller.screen.screen_text())
             await delivered(asker)
-            save(asker, 'enforcer-ask', {'question': "What's the arrangement here?",
-                                         'answer': core.dialogue.menus[asker.session.id].line})
-            await asker.caller.write(b'\x1b')
-            await wait(lambda: asker.session.id not in core.dialogue.menus)
+            shipped = next(line.text for line in core.characters.content.dialogue['row-enforcer'].lines
+                           if line.id == 'ask-peace')
+            save(asker, 'enforcer-ask', {'question': "What's the arrangement here?", 'answer': shipped})
+            # A guard walking back to its post leaves reach, which closes the
+            # page by itself (S42); close it here only if it is still open.
+            if asker.session.id in core.dialogue.menus:
+                await asker.caller.write(b'\x1b')
+                await wait(lambda: asker.session.id not in core.dialogue.menus)
             await probe.leave(asker, f's44-left-b-{width}x{height}-{tier}-{renderer}')
         assert not probe.errors and probe.service.failure is None
         (root/'s44-results.json').write_text(json.dumps({
