@@ -101,8 +101,8 @@ async def accept(root: Path, door_python: Path, width: int, height: int, modern:
                                         for suffix in ('.ans', '.txt', '.json')}})
 
             async def budget_open() -> None:
-                await wait(lambda: (state := voice_of.callers.get(caller.session.id)) is not None and (
-                    state.last_line is None or clock.now_tick() - state.last_line >= amb.LINE_BUDGET_SECONDS * TICK_HZ),
+                await wait(lambda: caller.session.voice_tick is None or (
+                    clock.now_tick() - caller.session.voice_tick >= amb.LINE_BUDGET_SECONDS * TICK_HZ),
                     amb.LINE_BUDGET_SECONDS + 5)
 
             await enter_row(probe, caller)

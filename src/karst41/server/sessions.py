@@ -49,8 +49,10 @@ class Session:
     log_ring: deque[dict[str, Any]] = field(default_factory=lambda: deque(maxlen=LOG_RING_LINES))
     log_token: str = ""
     log_serial: int = 0
-    danger_serial: int = 0
-    """log_serial of the newest danger or combat line (P8's ten-second hold)."""
+    danger_at: str | None = None
+    """Server-clock stamp of the newest danger or combat line (P8's 10 s hold)."""
+    voice_tick: int | None = None
+    """Tick of the newest bark or ambient line admitted (P8's budget)."""
     notify: Callable[[], None] = field(default=lambda: None, repr=False)
 
     @property
@@ -73,7 +75,7 @@ class Session:
                 line = {key: value for key, value in original.items() if key != "_transient"}
                 line["id"] = f"{self.log_token or self.id}:{self.log_serial}"
                 if line.get("kind") in ("danger", "combat"):
-                    self.danger_serial = self.log_serial
+                    self.danger_at = line.get("at") or self.danger_at
                 if not transient:  # P8: barks and ambience are never replayed.
                     self.log_ring.append(line)
                 lines.append(line)
@@ -212,6 +214,8 @@ class Sessions:
             session.rate_counters = previous.rate_counters
             session.log_ring, previous.log_ring = previous.log_ring, deque(maxlen=LOG_RING_LINES)
             session.log_token, session.log_serial = previous.log_token, previous.log_serial
+            # P8: the danger hold and the voice budget survive a reconnect.
+            session.danger_at, session.voice_tick = previous.danger_at, previous.voice_tick
         self.active[session.id] = session
         return session
 

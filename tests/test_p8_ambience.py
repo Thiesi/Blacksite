@@ -166,7 +166,7 @@ def test_p8_a_dropped_bark_still_spends_its_interval(shipped):
     game = HeadlessServer(quiet(shipped), character_state={})
     client = caller(game, 1)
     game.step(TICK_HZ)  # The emitter runs on whole seconds.
-    emitter(game).callers[client.session.id].last_line = game.clock.now_tick()  # Budget spent.
+    client.session.voice_tick = game.clock.now_tick()  # Budget spent.
     actor = regular(game, 'r1', (27, 6))
     heard = run(game, [client], 5)
     assert heard[0] == []
@@ -178,7 +178,7 @@ def test_p8_one_bark_reaches_one_caller_and_is_dropped_for_another(shipped):
     game = HeadlessServer(quiet(shipped), character_state={})
     fresh, spent = caller(game, 1, (25, 6)), caller(game, 2, (25, 7))
     game.step(TICK_HZ)
-    emitter(game).callers[spent.session.id].last_line = game.clock.now_tick()
+    spent.session.voice_tick = game.clock.now_tick()
     regular(game, 'r1', (27, 6))
     heard = run(game, [fresh, spent], 3)
     assert len(heard[0]) == 1 and heard[1] == []
@@ -264,10 +264,12 @@ def test_p8_ten_second_hold_after_a_danger_or_combat_line(shipped):
     game.step(TICK_HZ)
     client.session.emit('You are hit.', kind='combat', channel='zone', role='log_combat',
                         at=game.clock.now_utc().isoformat())
-    start, gate = game.clock.now_tick(), emitter(game)
-    assert not gate.admit(client.session, start)
-    assert not gate.admit(client.session, start + (amb.DANGER_HOLD_SECONDS * TICK_HZ - 1))
-    assert gate.admit(client.session, start + amb.DANGER_HOLD_SECONDS * TICK_HZ)
+    gate = emitter(game)
+    assert not gate.admit(client.session, game.clock.now_tick())
+    game.step(amb.DANGER_HOLD_SECONDS * TICK_HZ - 1)
+    assert not gate.admit(client.session, game.clock.now_tick())
+    game.step(1)
+    assert gate.admit(client.session, game.clock.now_tick())
     # A bark that fires inside the hold is dropped and still spends its interval.
     game2 = HeadlessServer(quiet(shipped), character_state={})
     other = caller(game2, 1)
@@ -278,19 +280,54 @@ def test_p8_ten_second_hold_after_a_danger_or_combat_line(shipped):
     assert run(game2, [other], 30)[0] == []
 
 
+def test_p8_a_menu_does_not_reset_the_hold_or_the_budget(shipped):
+    """Review 6838509882: the sheet must not clear the danger hold."""
+    game = HeadlessServer(quiet(shipped), character_state={})
+    client = caller(game, 1)
+    game.step(TICK_HZ)
+    client.session.emit('You are hit.', kind='combat', channel='zone', role='log_combat',
+                        at=game.clock.now_utc().isoformat())
+    game.core.characters.screens[client.session.id] = ('sheet', 0)  # The record is open.
+    game.step(3 * TICK_HZ)
+    game.core.characters.screens.pop(client.session.id)
+    regular(game, 'r1', (27, 6))
+    heard = run(game, [client], amb.DANGER_HOLD_SECONDS - 4)[0]
+    assert heard == []
+
+
+def test_p8_a_reconnect_keeps_the_hold_and_the_budget(shipped):
+    """Review 6838509882: the hold survives a dropped link."""
+    game = HeadlessServer(quiet(shipped), character_state={})
+    client = caller(game, 1)
+    game.step(TICK_HZ)
+    client.session.emit('You are hit.', kind='combat', channel='zone', role='log_combat',
+                        at=game.clock.now_utc().isoformat())
+    stamp = client.session.danger_at
+    game.core.sessions.disconnect(client.session)
+    game.step(TICK_HZ)
+    again = game.connect({'user_id': 1, 'handle': 'Ear1', 'node_name': 'P8'})
+    assert again.session.danger_at == stamp
+    game.step(TICK_HZ)
+    assert not emitter(game).admit(again.session, game.clock.now_tick())
+    game.step((amb.DANGER_HOLD_SECONDS - 2) * TICK_HZ)
+    assert emitter(game).admit(again.session, game.clock.now_tick())
+    tick = again.session.voice_tick
+    game.core.sessions.disconnect(again.session)
+    third = game.connect({'user_id': 1, 'handle': 'Ear1', 'node_name': 'P8'})
+    assert third.session.voice_tick == tick  # The budget carries over too.
+
+
 # --- reconnect ---------------------------------------------------------------------
 
-def test_p8_reconnect_never_replays_ambience_and_drops_session_state(shipped):
+def test_p8_reconnect_never_replays_ambience(shipped):
     game = HeadlessServer(quiet(shipped), character_state={})
     client = caller(game, 1)
     regular(game, 'r1', (27, 6))
     heard = run(game, [client], 5)[0]
     assert [line for _, line in heard if TRAM in line['text']]
     assert not [line for line in client.session.log_ring if TRAM in line.get('text', '')]
-    sid = client.session.id
     game.core.sessions.disconnect(client.session)
     game.step(TICK_HZ)
-    assert sid not in emitter(game).callers
     again = game.connect({'user_id': 1, 'handle': 'Ear1', 'node_name': 'P8'})
     game.step(2)
     replayed = [line for frame in game.frames_for(again) if frame.type == 'log' and frame.data.get('replay')

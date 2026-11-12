@@ -148,8 +148,8 @@ by it.
   - a hostile presented target;
   - a hazard warning in sight;
   - a down or dead stage;
-  - 10 s after any danger or combat line sent to that caller, from a
-    per-session `danger_serial`.
+  - 10 s after any danger or combat line sent to that caller, from the
+    session's `danger_at` (server clock).
   HUNTED or MARKED alone does not suppress. The server-side hold
   complements P12's whole-entry rule (which covers the presentation
   renderer); it also protects the default renderer, which has no such
@@ -161,8 +161,11 @@ by it.
     `revealed_to`, S44's truce reveals included.
   - Silent while any caller has that talker's page open.
 - **No replay.** `emit(..., replay=False)` keeps barks and ambience out of
-  the session ring, so reconnect never replays them. Emitter state is
-  dropped on detach.
+  the session ring, so reconnect never replays them. The emitter keeps no
+  per-session state of its own. The danger stamp (`danger_at`) and the
+  budget (`voice_tick`) sit on the session and move with the ring on a
+  reconnect, so neither a menu nor a dropped link resets the hold
+  (automated review 6838509882). Nothing is replayed.
 - **Cost.** Measured in CI by the `p8-cost` job
   (`scripts/measure_p8_cost.py`): about 5 µs a tick averaged, 0.2–0.4% of
   the headless loop, on the shipped Row with one and three callers.

@@ -15,6 +15,7 @@ thins out instead of bursting when the budget reopens.
 from __future__ import annotations
 
 from dataclasses import dataclass, field
+from datetime import datetime
 from hashlib import sha256
 from random import Random
 from typing import Any, Callable, Iterable
@@ -38,16 +39,6 @@ def stream(zone_id: str) -> Random:
 
 
 @dataclass
-class Caller:
-    """Per-session emitter state; dropped on detach, never replayed."""
-
-    player: str
-    last_line: int | None = None
-    last_danger: int | None = None
-    seen_danger: int = 0
-
-
-@dataclass
 class ZoneVoice:
     rng: Random
     ambient_due: int
@@ -62,7 +53,6 @@ class Ambience:
                  talking: Callable[[str], bool]) -> None:
         self.world, self.content, self.sim, self.clock = world, content, sim, clock
         self.threatened, self.talking = threatened, talking
-        self.callers: dict[str, Caller] = {}
         self.zones: dict[str, ZoneVoice] = {}
 
     # --- the shared per-caller gate (S48's runner may call it) -------------
@@ -73,21 +63,21 @@ class Ambience:
         True spends the caller's budget. Suppressed: travelling, threatened
         (the declared danger inputs), or within ten seconds of a danger or
         combat line sent to this caller, so no renderer has an ambient
-        line pushing one out of view.
+        line pushing one out of view. The hold and the budget live on the
+        session (carried across a reconnect), so a menu or a reconnect
+        never resets them.
         """
-        state = self.callers.get(session.id)
         avatar = self.sim.avatars.get(session.user_id)
-        if state is None or avatar is None or avatar.travel is not None:
+        if avatar is None or avatar.travel is not None:
             return False
-        if session.danger_serial != state.seen_danger:  # A danger or combat line since the last look.
-            state.seen_danger, state.last_danger = session.danger_serial, tick
-        if state.last_danger is not None and tick - state.last_danger < DANGER_HOLD_SECONDS * TICK_HZ:
+        if session.danger_at is not None and (
+                self.clock.now_utc() - datetime.fromisoformat(session.danger_at)).total_seconds() < DANGER_HOLD_SECONDS:
             return False
-        if state.last_line is not None and tick - state.last_line < LINE_BUDGET_SECONDS * TICK_HZ:
+        if session.voice_tick is not None and tick - session.voice_tick < LINE_BUDGET_SECONDS * TICK_HZ:
             return False
         if self.threatened(session, avatar.actor):
             return False
-        state.last_line = tick
+        session.voice_tick = tick
         return True
 
     # --- the tick ------------------------------------------------------------
@@ -96,23 +86,13 @@ class Ambience:
         if tick % STRIDE:
             return  # Cost: once a second, not every tick (PR notes give the figures).
         present: dict[str, list[tuple[Session, Actor]]] = {}
-        live = set()
         for session in sessions:
             if session.closed or session.role != "caller" or not playing(session):
                 continue
             avatar = self.sim.avatars.get(session.user_id)
             if avatar is None or not avatar.actor.zone:
                 continue
-            live.add(session.id)
-            state = self.callers.get(session.id)
-            if state is None or state.player != session.player_id:
-                state = self.callers[session.id] = Caller(session.player_id, seen_danger=session.danger_serial)
-            if session.danger_serial != state.seen_danger:
-                state.seen_danger, state.last_danger = session.danger_serial, tick
             present.setdefault(avatar.actor.zone, []).append((session, avatar.actor))
-        for sid in tuple(self.callers):
-            if sid not in live:
-                del self.callers[sid]
         for zone_id, callers in present.items():
             zone = self.world.zones.get(zone_id)
             if zone is None:
