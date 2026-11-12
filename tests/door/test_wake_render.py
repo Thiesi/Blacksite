@@ -30,7 +30,7 @@ def test_wake_golden_wide_name_scroll_and_character_sheet(info: DoorInfo,repo_ro
     model.toast=None
     terminal.write(model.render(2)[0])
     assert "Wide界" in terminal.screen_text() and "Chits 200" in terminal.screen_text()
-    assert "Lease days" in terminal.screen_text() and "Discharge XP" in terminal.screen_text()
+    assert "Lease days" in terminal.screen_text() and "Signatory XP" in terminal.screen_text()
     client.send(Frame("key",{"k":"P","t":0}));game.step()
     for frame in game.frames_for(client):model.receive(frame,3)
     terminal.write(model.render(3)[0])

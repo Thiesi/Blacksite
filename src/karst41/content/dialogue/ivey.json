@@ -9,9 +9,9 @@
   "lines": [
     {
       "id": "situation",
-      "text": "A Wake wants a lease? Bring the discharge receipt. I don't rent to numbers.",
+      "text": "A Wake wants a lease? Show me a Civic signature. I don't rent to numbers.",
       "when": [
-        "is_wake"
+        "not_signatory"
       ],
       "required": true
     },

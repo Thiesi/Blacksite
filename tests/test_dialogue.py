@@ -38,6 +38,8 @@ CONDITION_CASES = (
     ('service_state sump allocated', Facts(services={'sump': 'allocated'}), Facts(services={'sump': 'fault'})),
     ('legal', Facts(legal=True), Facts()),
     ('not_legal', Facts(), Facts(legal=True)),
+    ('signatory', Facts(grade=5), Facts(grade=4)),
+    ('not_signatory', Facts(grade=4), Facts(legal=True)),
 )
 
 

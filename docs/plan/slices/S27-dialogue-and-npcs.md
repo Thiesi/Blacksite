@@ -176,7 +176,7 @@ the work.
 Entity model 1.11 and main design 13.4 govern the talker contract; the
 world personae supply voice and situational examples. Required warnings,
 objectives and both finale registers never disappear through weighting.
-`is_wake` means legal_at unset; day-count lines use actual elapsed days
+`is_wake` means legal_at unset, so it includes Signatories (grade 5, #219); `signatory`/`not_signatory` gate renting and joining (#221); day-count lines use actual elapsed days
 and never fixed sample values. Evidence observations differ from source
 claims. No narrator line certifies the Custodian/Tenant, clone origin or
 Dispatcher identity. Dialogue adds interest, never a correct-answer gate.

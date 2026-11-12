@@ -31,11 +31,12 @@ def test_game_3_4_grade1_zero_grade5_1500_and_retained_benefits():
     assert result.xp == 14 and player.grade == 5
     assert player.attributes["vitals"] == before_vitals+1
     assert player.progress["points"] == before_points+3 and player.health == 69
-    assert result.discharged and player.legal_at == NOW.isoformat()
-    legal = player.legal_at
+    # #219/#221: grade 5 is Signatory, not personhood; the lease still runs.
+    assert not result.discharged and player.legal_at is None
+    assert character.signatory(player.grade, player.legal_at)
     player.update_progression(0)
     player.update_personhood(identity, NOW+timedelta(days=1))
-    assert player.grade == 5 and player.legal_at == legal
+    assert player.grade == 5 and player.legal_at is None
 
 
 def test_game_3_4_grade_up_keeps_ratio_of_effective_implant_health_pool():

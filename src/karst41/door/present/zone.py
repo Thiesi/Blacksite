@@ -435,7 +435,7 @@ def panel(buffer: CellBuffer, body: dict[str, Any], layout: Layout, paint: Paint
         buffer.put(x + 1, vy + 4, truncate(f"{me['chits']} ch", 9), paint("panel_text"))
         buffer.put(x + 10, vy + 4, f"lease {me['lease_days']}/90", paint("panel_label"))
         if wide:
-            buffer.put(x + 1, vy + 5, truncate(f"discharge {me['xp']}/{me['discharge_xp']}", w - 1), paint("panel_label"))
+            buffer.put(x + 1, vy + 5, truncate(f"signatory {me['xp']}/{me['discharge_xp']}", w - 1), paint("panel_label"))
 
 
 def head(buffer: CellBuffer, body: dict[str, Any], layout: Layout, paint: Paint, *,

@@ -16,7 +16,7 @@ def test_game_3_4_grade_titles_and_thresholds_have_no_creation_benefit():
     tree = shipped()
     grades = {row.grade: row for row in tree.grades.values()}
     assert set(grades) == set(range(1, 31))
-    assert grades[1].title == "Wake" and grades[5].title == "Ninety-Day"
+    assert grades[1].title == "Wake" and grades[5].title == "Signatory"
     assert [grade_threshold(g) for g in (1, 5, 10, 30)] == [0, 1500, 5500, 46500]
     assert all(row.promotion and "—" not in row.promotion for row in grades.values())
 

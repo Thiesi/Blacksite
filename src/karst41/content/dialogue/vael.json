@@ -9,7 +9,7 @@
   "lines": [
     {
       "id": "wake",
-      "text": "You can earn the discharge. Until then the lease is still a lease.",
+      "text": "Work gets you a signature, not a way out. The lease is still a lease.",
       "when": [
         "is_wake"
       ],

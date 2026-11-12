@@ -40,8 +40,12 @@ karst41 admin --install-dir .test-tmp/world character-cap 2
 Returning callers then choose among their characters or a free slot.
 Lowering the cap does not erase existing characters. BBS handles may
 change; identity is the origin and BBS user ID. The character name and
-BBS handle remain separate on the screen. Lease days and the grade-five
-XP target are also separate; personhood does not remove grade protection.
+BBS handle remain separate on the screen. Lease days and the Signatory
+(grade 5) XP target are also separate; grade 5 does not shorten the lease,
+and personhood does not remove grade protection (#219, #221). A character
+whose name falls under the reserved gurney form (`no` plus digits once
+spaces and punctuation are removed) chooses a new name at its next login;
+all stored references are by id, so nothing else changes.
 
 The package upgrades world schema 1 to 2 transactionally. Ordinary player
 and terrain-memory changes flush every five seconds, logout immediately.

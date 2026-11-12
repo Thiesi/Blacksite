@@ -5,8 +5,8 @@ letting terminal or apartment doors yet. S25 commissions the Terraces
 lobby and at least 24 door anchors. Do not claim fixture locations are
 production content.
 
-A legally discharged character may rent one home: grade 5 or 90 calendar
-days since the identity's first decant. Signing pays one real-time week.
+A Signatory may rent one home: grade 5, or 90 calendar days since the
+identity's first decant (personhood), whichever comes first (#219, #221). Signing pays one real-time week.
 Weekly invoices use bank chits first, then hand, as a single payment.
 Rent is checked on login, room interactions and private-core access.
 There is no background rent timer. An invoice freezes when issued; relay

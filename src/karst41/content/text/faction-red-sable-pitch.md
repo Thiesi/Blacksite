@@ -1,4 +1,4 @@
-Ninety days, right? Less if you earn the discharge. Then what? The
+Ninety days, right? Then what? The
 corps want you on a patrol, the badges want you on a plaza, the Choir
 wants you on your knees. Sable wants you *paid*. We run the Sink, we
 run the Row, we run the only clinics that don't ask what template you

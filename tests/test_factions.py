@@ -42,10 +42,10 @@ def test_game_7_1_clamps_only_after_combining_a_complete_vector(factions, player
 
 
 @pytest.mark.parametrize("calendar", [False, True])
-def test_game_3_4_7_1_join_requires_30_and_grade_or_calendar_discharge(factions, player, calendar):
+def test_game_3_4_7_1_join_requires_30_and_signatory_or_day_90(factions, player, calendar):
     now = datetime(2026, 1, 1, tzinfo=timezone.utc)
     player.standing["choir"] = 30
-    with pytest.raises(ValueError, match="discharge"):
+    with pytest.raises(ValueError, match=r"Signatory \(grade 5\) or day 90"):
         rules.join(player, factions, "choir", now)
     identity = {"first_decanted_at": now.isoformat(), "legal_at": None}
     if calendar:
@@ -53,6 +53,7 @@ def test_game_3_4_7_1_join_requires_30_and_grade_or_calendar_discharge(factions,
     else:
         player.grade = 5
     player.update_personhood(identity, now)
+    assert bool(player.legal_at) is calendar
     player.standing["choir"] = 29
     with pytest.raises(ValueError, match="30"):
         rules.join(player, factions, "choir", now)

@@ -364,7 +364,7 @@ class Factions:
             return "menu", body
         site = self.site(fid)
         hall = self.content.zones[site.hall].meta.name if site and site.hall in self.content.zones else "not yet open"
-        detail = f"Standing {rules.standing(player, fid):+d}. Join: discharged and +30.\nTaking a card is not membership.\nHall: {hall}."
+        detail = f"Standing {rules.standing(player, fid):+d}. Join: Signatory or day 90, and +30.\nTaking a card is not membership.\nHall: {hall}."
         cooldown = player.progress.get("faction_cooldown_until", 0)
         if cooldown > self.clock.now_utc().timestamp():
             detail = detail.rsplit("\nHall:", 1)[0]+"\nJoin after "+datetime.fromtimestamp(cooldown, timezone.utc).strftime("%Y-%m-%d %H:%M UTC")+"."

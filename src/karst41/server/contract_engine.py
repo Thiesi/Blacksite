@@ -21,6 +21,7 @@ from karst41.server.loop import TickContext
 from karst41.server.progression import Grant, award
 from karst41.server.factions import apply_vector, relation
 from karst41.server.protocol import Frame
+from karst41.server.rules import character
 from karst41.server.sessions import Session
 
 if TYPE_CHECKING:
@@ -565,6 +566,8 @@ class Contracts:
             elif name == 'event_active': ready = self.event_active(args[0])
             elif name == 'legal': ready = player.legal_at is not None
             elif name == 'not_legal': ready = player.legal_at is None
+            elif name in ('signatory', 'not_signatory'):
+                ready = character.signatory(player.grade, player.legal_at) == (name == 'signatory')
             else: ready = False  # Dialogue/season facts arrive with their owning slices.
             if not ready:
                 missing.append(condition)
