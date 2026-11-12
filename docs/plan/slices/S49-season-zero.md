@@ -164,10 +164,34 @@ in Season 0. How they're kept out of sight is open item 4. Whatever the
 answer, no Season 0 screen names Depth, a console, a ballot or an
 expedition.
 
-## Open items for the owner
+## Owner decisions (provisional)
 
-Each comes with the technical lead's recommendation. None of them is
-canon until the owner answers and a canon PR records it.
+**Decided 2026-11-13: all four as recommended, and provisional.** The
+owner's words: they chose these "only because they are your
+recommendations", because such decisions "are almost impossible to make
+without having actually played the game", and "we might need to change
+that once the game actually landed". No playtest settles them, only how
+they feel in a real season.
+
+What that means for this slice:
+- **Build them as recommended.** S49's PR records them in canon first
+  (game design §13.6, with a note that they are provisional), so canon
+  stays the source of truth.
+- **Keep each one cheap to change.** It changes in content or one
+  clearly named rule, not across systems:
+  - who opens the door (world flag vs per player);
+  - whether the flip counts as completion;
+  - whether the door carries into Season 1;
+  - whether Depth is hidden.
+
+  Don't build switches or settings for the alternatives. Each choice
+  has one obvious place to change it, and the PR names those places.
+- **Review after Season 0 has run.** The technical lead brings these
+  four back to the owner, with what the season showed: who opened the
+  door, how long after the start, and what later finishers and the rest
+  of the node did. They're kept, changed for Season 1, or both.
+
+The four items as answered:
 
 1. **The door flip.** One finisher ends the season's story for the
    whole node. On a node of a handful of players, that may be one
