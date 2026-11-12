@@ -21,6 +21,8 @@ from karst41.door.present.paint import Paint
 from karst41.door.present import screen as presentation_screen
 from karst41.door.present.chrome import NOTICE_SECONDS, PROTECT_SECONDS
 from karst41.server.protocol import Frame, VIEW_KINDS
+
+NOTICE_QUEUE = 4  # S44: notices waiting behind the shown one.
 from karst41 import truce_text
 
 
@@ -50,10 +52,11 @@ class Display:
         # S44: a rule's price, stated before it is paid (terminal UI 2.1).
         self.notice_price = False  # The shown notice is a price notice.
         self.price_noticed = False  # The first-target notice, once per session.
-        # A price notice never replaces an unread notice, and no notice
-        # replaces an unread price notice: it waits its turn (text, role,
-        # seconds, price).
-        self.notice_queue: deque[tuple[str, str, float, bool]] = deque(maxlen=4)
+        # Notices waiting their turn (text, role, seconds, price). A price
+        # notice waits behind an unread notice. An ordinary notice shows at
+        # once, and an interrupted price notice comes back after it. Price
+        # notices are never dropped (at most two a session).
+        self.notice_queue: deque[tuple[str, str, float, bool]] = deque()
         self.confirm_exit = False
         self.leaving = False
         self.connected = False
@@ -140,9 +143,12 @@ class Display:
             self.key_prompt = data if data["kind"] == "key" else None
         elif frame.type == "toast":
             price = bool(data.get('price'))
-            if self.toast is not None and (price or self.notice_price):
-                self.notice_queue.append((data['text'], data['role'], data['seconds'], price))
+            if price and self.toast is not None:
+                self._queue((data['text'], data['role'], data['seconds'], True))
             else:
+                if self.toast is not None and self.notice_price:
+                    # Feedback is never held back; the price returns after it.
+                    self.notice_queue.appendleft((self.toast[0], self.toast[1], NOTICE_SECONDS, True))
                 self._show(data['text'], data['role'], data['seconds'], price, now)
         elif frame.type == "bye":
             self.connected = False
@@ -321,9 +327,18 @@ class Display:
             return
         self.price_noticed = True
         if self.toast is not None:
-            self.notice_queue.append((text, 'warning', NOTICE_SECONDS, True))
+            self._queue((text, 'warning', NOTICE_SECONDS, True))
         else:
             self._show(text, 'warning', NOTICE_SECONDS, True, now)
+
+    def _queue(self, entry: tuple[str, str, float, bool]) -> None:
+        self.notice_queue.append(entry)
+        while len(self.notice_queue) > NOTICE_QUEUE:
+            # Drop the oldest ordinary notice; a price notice always stays.
+            ordinary = next((item for item in self.notice_queue if not item[3]), None)
+            if ordinary is None:
+                break
+            self.notice_queue.remove(ordinary)
 
     def _show(self, text: str, role: str, seconds: float, price: bool, now: float) -> None:
         if self.presentation:

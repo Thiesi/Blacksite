@@ -217,15 +217,28 @@ def test_s44_price_notice_waits_behind_an_unread_notice(info, presentation):
 
 
 @pytest.mark.parametrize("presentation", [False, True])
-def test_s44_ordinary_notice_waits_behind_an_unread_price_notice(info, presentation):
-    """Review 6817782239: the arrival price notice is once per character; nothing replaces it unread."""
+def test_s44_ordinary_notice_shows_and_the_price_notice_returns(info, presentation):
+    """Reviews 6817782239 and 6818171629: feedback is never held back, and the
+    once-per-character price notice is never lost."""
     display = Display(info, presentation=presentation)
     arrival = ARRIVAL.format("Sable", MARKED_SECONDS // 60)
     display.receive(Frame("toast", {"text": arrival, "role": "warning", "seconds": 4, "kind": "notice",
                                     "price": True}), 0)
-    display.receive(Frame("toast", {"text": "The introduction could not be saved. Try again.",
-                                    "role": "ui_text", "seconds": 4}), 1)
-    assert display.toast[0] == arrival
+    feedback = "Let the current transfer settle before talking."
+    display.receive(Frame("toast", {"text": feedback, "role": "ui_text", "seconds": 4}), 1)
+    assert display.toast[0] == feedback
     display.key("x", 2)
-    display.update(NOTICE_SECONDS + 1, NOTICE_SECONDS + 1)
-    assert display.toast[0] == "The introduction could not be saved. Try again."
+    display.update(NOTICE_SECONDS + 2, NOTICE_SECONDS + 2)
+    assert display.toast[0] == arrival
+
+
+def test_s44_held_price_notice_never_blocks_feedback_and_is_never_dropped(info):
+    display = Display(info, presentation=True)
+    threatened = {"warning": "Firing marks you", "relation": "hostile"}
+    display.receive(view({"truce": "Sable"}, threatened), 0)  # The first-target price, held in the header.
+    price = display.toast[0]
+    for index in range(10):
+        display.receive(Frame("toast", {"text": f"feedback {index}", "role": "ui_text", "seconds": 4}), 1 + index)
+        assert display.toast[0] == f"feedback {index}"  # Shown at once, even while threatened.
+    assert sum(1 for item in display.notice_queue if item[0] == price) == 1
+    assert len(display.notice_queue) <= 4
