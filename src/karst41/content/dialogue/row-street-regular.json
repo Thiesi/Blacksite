@@ -42,7 +42,10 @@
       "label": "Ask about the end",
       "hotkey": "a",
       "ref": "ask-end",
-      "asks": "What's down the end?"
+      "asks": "What's down the end?",
+      "when": [
+        "not_marked"
+      ]
     }
   ],
   "barks": [
