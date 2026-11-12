@@ -278,8 +278,12 @@ class Combat:
             return
         player = self.game.players[source.id]
         player.marked_until = datetime.fromtimestamp(self.now()+rules.MARKED_SECONDS, timezone.utc).isoformat()
+        zone = self.world.zones[target.zone]
+        if zone.template.meta.truce:
+            # S44: the Halo's door reads this Mark's own expiry; a later Mark
+            # of another cause extends marked_until and leaves it alone.
+            player.truce_marked_until = player.marked_until
         if not source.marked:
-            zone = self.world.zones[target.zone]
             line = (f"You break {zone.template.meta.name}'s truce. You are Marked for 15 min."
                     if zone.template.meta.truce else "You are Marked for fifteen minutes.")
             self.log(source, line, True)
@@ -568,6 +572,11 @@ class Combat:
                 equipment = {s:i for s,i in equipment.items() if i not in dropped}
         hand,debt,xp,charge = rules.clone_settlement(player.chits_hand,player.grade,player.xp,character.grade_threshold(player.grade),player.clone_debt)
         state["charge"] = charge
+        # S44: the death's own durable patch clears the keeper's answer,
+        # online or offline, and keeps the respawn line across a restart.
+        settled = self.keeper_settles(player)
+        if settled:
+            progress["truce_settled"] = settled
         identity = deepcopy(self.game.identities[player.bbs_user_id]); identity["clone_debt"] = debt
         progression = self.game.progression
         killer = self.game.players.get(state.get("killer"))
@@ -595,6 +604,7 @@ class Combat:
                 progression.notify_reward(killer, reward)
                 self.game.factions.notify_standing(killer, before_standing, "player kill")
             actor.stance = "dead"; actor.target = None
+            self.settle_hook(player)
             if actor.zone:
                 self.world.zones[actor.zone].deactivate("sleeper:"+actor.id,self.clock.now_tick())
                 session = self.session(player.id)
@@ -608,7 +618,7 @@ class Combat:
                 self.game.screens.pop(session.id,None)
                 self.menus.pop(session.id,None)
         self.commerce.settle(player,{"inventory":inventory,"equipment":equipment,"progress":progress,
-            "health":0,"chits_hand":hand,"clone_debt":debt,"xp":xp},items,caches,serial,committed,identity)
+            "health":0,"chits_hand":hand,"clone_debt":debt,"xp":xp,"keeper_answer":None},items,caches,serial,committed,identity)
         if killer_patch or (killer_identity is not None and killer_identity != self.game.identities[killer.bbs_user_id]):
             if "progress" in killer_patch:
                 killer_patch["progress"] = {key: value for key, value in killer_patch["progress"].items()
@@ -625,6 +635,10 @@ class Combat:
             market.stage_death(self.commerce.outbox[-1], player, killer)
 
     faction_vat: Callable[[Player], tuple[str, tuple[int, int]] | None] = staticmethod(lambda player: None)
+    # S44 (game design 5.5): any death settles a live keeper answer. The
+    # NPC engine names the keeper and stands its guards down at commit.
+    keeper_settles: Callable[[Player], str | None] = staticmethod(lambda player: None)
+    settle_hook: Callable[[Player], None] = staticmethod(lambda player: None)
 
     def vat(self, player: Player) -> tuple[str, tuple[int,int]]:
         faction = self.faction_vat(player)
@@ -682,6 +696,7 @@ class Combat:
         progress.pop("faction_vat", None)
         progress.pop("combat",None); progress.pop("offline_at",None)
         progress.pop("combat_effects",None); progress.pop("combat_cooldowns",None)
+        settled = progress.pop("truce_settled", None)
         self.pending_deaths.add(player.id)
         def committed(success: bool) -> None:
             self.pending_deaths.discard(player.id)
@@ -696,6 +711,10 @@ class Combat:
                 self.sim.external_views.pop(session.id,None)
                 self.sim.reset_view(session,av)
                 self.log(actor,"You wake in the vat. Missing recovery supplies are bound to you.")
+                if settled:
+                    # Terminal UI 2.1: the settled answer follows the vat's line.
+                    marked = bool(player.marked_until and datetime.fromisoformat(player.marked_until).timestamp() > self.now())
+                    self.log(actor, f"{settled} considers it settled." + (" The Mark stays." if marked else ""))
         self.commerce.settle(player,{"zone":zid,"tile":tile,"inventory":draft.inventory,"equipment":draft.equipment,
             "recovery_kit_id":draft.recovery_kit_id,"progress":progress,"health":actor.health_max,"stamina":actor.stamina_max,"shock":0},
             items,self.commerce.caches,serial,committed)
@@ -958,6 +977,9 @@ class Combat:
                 expired = True
                 if was_marked:
                     self.log(actor, "Your Mark ends.")
+            if player.truce_marked_until and datetime.fromisoformat(player.truce_marked_until).timestamp() <= now:
+                player.truce_marked_until = None
+                expired = True
             if player.warden_heat_until and datetime.fromisoformat(player.warden_heat_until).timestamp() <= now:
                 player.warden_heat_until = None
                 expired = True

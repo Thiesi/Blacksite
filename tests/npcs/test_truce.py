@@ -125,7 +125,9 @@ def test_ui_2_1_keeper_announces_once_while_hits_refresh_provocation(row):
     assert lines.count("Sable is coming for you.") == 1
     assert keeper.target == source.id
     # A genuinely expired response is announced again without waiting in real time.
+    # S44: the stored keeper record is the answer; expire it with the dict.
     game.core.npcs.provocations[key] = combat.now() - 1
+    game.core.characters.players[source.id].keeper_answer["until"] = "2000-01-01T00:00:00+00:00"
     combat.exchange(source, target)
     assert [line["text"] for line in a.session.log_ring].count("Sable is coming for you.") == 2
 

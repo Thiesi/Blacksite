@@ -34,7 +34,7 @@ def test_version_constants(repo_root: Path) -> None:
     assert karst41.__version__ == version.PACKAGE_VERSION
     assert version.PROTOCOL_MAJOR == 1
     assert version.CONTENT_SCHEMA == 1
-    assert version.WORLD_SCHEMA == 4
+    assert version.WORLD_SCHEMA == 5  # S44: migration 0005 (truce columns).
 
 
 def test_no_runtime_dependencies(repo_root: Path) -> None:

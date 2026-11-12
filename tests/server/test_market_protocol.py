@@ -168,7 +168,10 @@ def test_arch_6_2_schema_3_upgrade_preserves_existing_bank_and_item(trade_game: 
     with monkeypatch.context() as patch:
         patch.setattr(migrations, 'WORLD_SCHEMA', 3)
         old = Storage(path, game.clock)
-        old.mark_dirty('players', players[0].id, players[0].record())
+        # A schema-3 world predates S44's migration 0005 columns.
+        record = {key: value for key, value in players[0].record().items()
+                  if key not in ('truce_marked_until', 'keeper_answer')}
+        old.mark_dirty('players', players[0].id, record)
         old.mark_dirty('items', iid, game.core.commerce.items[iid].record())
         old.flush_now()
         old.close()

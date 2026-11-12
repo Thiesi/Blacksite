@@ -70,6 +70,10 @@ class Player:
     last_seen_at: str | None = None
     facing: str = "down"
     marked_until: str | None = None
+    # S44: a truce-breaking Mark's own expiry, and the keeper's answer
+    # ({keeper, zone, until}), both beside marked_until (migration 0005).
+    truce_marked_until: str | None = None
+    keeper_answer: dict[str, Any] | None = None
     warden_heat_until: str | None = None
     drugs_active: list[Any] = field(default_factory=list)
     dependencies: list[Any] = field(default_factory=list)
