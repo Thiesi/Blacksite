@@ -448,7 +448,7 @@ arrives.
 |---|---|---|---|
 | 6.0 | the drone wakes | system | You take the training pistol off the rack. It stays in the hall. **(new)** |
 | 6.1 | the drone wakes | danger | A drone turns in the corridor. It has seen you. Its shots can't kill. **(changed)** |
-| 6.2 † | its first hit on you | Vantongeren | If you die, you'll wake up here, or somewhere like here, with a bill. Sablier keeps a copy. **(kept)** |
+| 6.2 † | its first hit on you, or see below | Vantongeren | If you die, you'll wake up here, or somewhere like here, with a bill. Sablier keeps a copy. **(kept)** |
 | 6.3 | four seconds later | Vantongeren | It's not free and it's not perfect and you'll lose a little of yourself each time. But it's a copy. **(kept)** |
 | 6.4 | four seconds later | Vantongeren | It's more than the city outside the wall gets. **(kept)** |
 | 6.5 | after 6.2, once | Okafor | That's her on the hall channel. She watches every first one. **(new, creative lead)** |
@@ -458,6 +458,12 @@ arrives.
 
 6.0 and 6.8 are mine and came after the creative lead's review; they
 are the creative lead's to reword.
+
+**6.2 always gets said.** A player who skips the drone with `B`, or
+downs it before it lands a hit, never fires "its first hit". Then 6.2
+is spoken when the lesson ends, straight after 6.6 or 6.7 and ahead of
+any older anchor, and 6.5 follows it as usual. The next thing this
+player does is take a job, so they hear what dying costs first.
 
 Combat lines (`* Miss: Training drone.`, `‼ Training drone hits you for
 3.`) are unchanged [built]. 6.2 and 6.5 are spoken during the fight
@@ -1216,7 +1222,7 @@ Nothing new is drawn. What changes:
 
 | Seam | Where | Change |
 |---|---|---|
-| A body before a template | `server/characters.py:284-330` (creation), `server/wake.py` (stages), `server/rules/character.py` | Today the character is created after archetype, name and card. The scene needs a body in the hall first. See open item 2 for the two ways to do it. |
+| A body before a template | `server/characters.py:284-330` (creation), `server/wake.py` (stages), `server/rules/character.py` | Today the character is created after archetype, name and card. The scene needs a body in the hall first. See open item 2 for the two ways to do it. Either way the per-user cap is checked before the caller is put in the hall, and `create` reports a refusal: today its cap check (`characters.py:284-285`) returns with no message and no stage change. |
 | Writes that assume a stored character | `server/lattice/engine.py:301` (`queue("save", ..., immediate=True)` on jack-in) and `:339` (on jack-out); `server/combat/engine.py:518` and `:926` (`player.progress["wake_combat"]`, then `remember`); the card's standing (`server/characters.py:296-298`, where `create` sets it today); zone discovery (`server/progression_engine.py:43`, `record_discovery`) | Every one of these is reachable from the hall before the record is read. Under open item 2(a) each must be held in the wake record and applied at creation, or suppressed; none may queue a save for an id `create` has not committed. The two saves come first; the skip path through `:926` counts as much as the win path through `:518`. Under 2(b) they work as they are. The build lists each writer and says which it does. |
 | The stage machine | `server/wake.py` | From `archetype → name → briefing → card → saving` to: in the hall from the first frame; `record → name → saving` on a key; cards at the table. |
 | The number and the reserved name | `server/rules/character.py` (naming rule), the panel and NEARBY name paths | The gurney number is shown until a name is entered; `No. <digits>` is refused as a name. |
@@ -1279,6 +1285,13 @@ the reserved name form and the login lines are canon PR #219's.
    (b) leaves those writes alone, but adds a stored state the rest of
    the game has never seen and must refuse at the street door. I lean
    to (a); the cost of each is the technical lead's to weigh.
+   **The cap.** Today `create` runs after a short menu, and its cap
+   check returns silently. Here it would run after the whole opening.
+   A user already at the cap who opens a second session would play
+   four minutes, read the record, enter a name, and get nothing. So
+   under either option the cap is checked on entry, before the hall,
+   where a user at the cap gets the existing character screen; and a
+   refusal at `create` is shown, as the name collision already is.
    Either way the design doc has to give the unread body its numbers.
    The mocks assume the lowest starting value of each attribute across
    the four templates (HP 90, STA 55). Also open: a caller who
