@@ -482,9 +482,10 @@ from any terminal, with a Kestrel fee. (design §8.3)
 **Nerve** — Attribute for reflexes, evasion, stealth, drones and energy
 weapons. (design §3.1)
 
-**Ninety-Day** - legal discharge at grade 5 or after ninety real days,
-whichever comes first. Allows apartment rental and faction membership;
-contested-zone grade protection is a separate rule. (design section 3.4)
+**Ninety-Day** - personhood, ninety calendar days after a Wake's own
+first decant. Nothing shortens it, and the remaining lease carries across
+a season change. Contested-zone grade protection is a separate rule.
+(design section 3.4)
 
 **Ninety-Nine** — A residual: the recording of a runner who went into the
 Silt and came back as a voice. Lives in an Unmoored dead drop. (bible
@@ -523,6 +524,11 @@ were cut; padlocked, key in the director's office. (found texts)
 
 **Pocket** — A safe area inside a contested zone, such as the Wake Hall or
 a vat area. (design §5.1, §14)
+
+**Population switch** — A feature that opens as a node's weekly active
+characters grow: more joinable factions, more contested relays, market
+bids, the Depth target. Opens within a season, never closes until the
+next. (design §13.5)
 
 **Portable rig** — a carried rig usable only at a terminal. (catalog)
 
@@ -634,6 +640,10 @@ danger outward. (bible §4.5)
 **Season** — Roughly three months of real time; one Descent. (bible §11,
 design §13)
 
+**Season 0** — The first released season: the built hubs, Contractor
+Street and The Drop, and the Unmoored chain "Ninety-Nine". It ends on
+the door in the concrete. (design §13.6)
+
 **The season door** — the door in the floor at Shaft Foot. (gazetteer)
 
 **Sector** — A Lattice region mirroring a district. (bible §5.1)
@@ -644,6 +654,10 @@ default. (design §5.4)
 **Senn, Auda** — First Lamp, head of the Lamp Compact. (bible §8.2; factions)
 
 **Settling Beds, the** — The Intake's basins under work lamps, where the Tap stands. (gazetteer)
+
+**Signatory** — Grade 5. Civic registers the Wake's signature: one
+tenancy in their own name and the right to join a faction. It doesn't
+end the lease. (design §3.4)
 
 **Severance, the** — Year 0: the orbital network collided with itself and
 the global net partitioned in the same hour. (bible §3.2)

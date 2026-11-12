@@ -1230,7 +1230,7 @@ Between the blocks, alleys where the block lights do not reach.
 
 Every block shares a lobby, in the way that every apartment in the game
 shares a floor plan. A concierge who remembers faces, a lift, a wall of
-mailboxes, and a door with your name on it, which after a discharged lease as a
+mailboxes, and a door with your name on it, which after a lease as a
 number is the whole point.
 
 ```

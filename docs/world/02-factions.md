@@ -100,7 +100,7 @@ the company's own word and it does not like being asked about it.
   right. *"Do you know what the word 'custodian' meant originally? A
   janitor. Isn't that lovely."*
 - **Petra Vael**, Recruiter. Wake Hall liaison, brisk, good at her job,
-  visibly counting the days until her own calendar anniversary after an earned early discharge. She
+  visibly counting the days until her own calendar anniversary. She
   was a Wake too.
 
 **Hall:** `spire-atrium` (the Spire's public levels). Halvard's
@@ -199,8 +199,9 @@ clinic hall.
 
 The Wake program (Year 38) is Sablier's answer to a city that is running
 out of specialists: decant the old templates, wipe them, lease them.
-Legally a Wake is under a Sablier labour lease for ninety days,
-unless completed work earns Civic-certified early discharge. The company calls
+Legally a Wake is under a Sablier labour lease for ninety days, and
+nothing shortens it; completed work earns a registered signature, not an
+exit. The company calls
 this "the onboarding period" and Dr. Vantongeren, who runs it, calls it
 what it is in private and defends it in public.
 
@@ -237,8 +238,8 @@ Sablier's vat is the city's default vat.
 ### Recruiter's pitch (Dr. Vantongeren, who does her own recruiting)
 
 > I'm not supposed to do this part, but the recruiters they send are
-> terrible. Sablier owns you for ninety days. That's the lease. Earn grade
-> five and you can clear it early. After discharge you're a person, and
+> terrible. Sablier owns you for ninety days. That's the lease, and nobody
+> gets out of it early. After that you're a person, and
 > people need a clinic that answers the door. The floor staff mend what the
 > security staff send back. We are also the only faction that knows what
 > you're made of, and I'll be honest, that's the part that should interest
@@ -486,8 +487,8 @@ under a Civic contract.
 > That's not luck and it's not the Spire; it's us, and it's a lot less
 > glamorous than it sounds. We do the Districts too, when we can. We
 > don't do the Blacksite. Wardens get a Sablier policy, a lamp, a badge
-> that's real brass, and the only pension in Karst. Make it to your
-> clear the lease first. Ninety days or the work certificate. Take the
+> that's real brass, and the only pension in Karst. Get your signature
+> on the Civic roll first. Do the work and it comes. Take the
 > card, come find me.
 
 ### Vendor
@@ -728,7 +729,7 @@ Sable's vat is the unlabelled clinic's Sablier-built unit.
 
 ### Recruiter's pitch (Lio Vance)
 
-> Ninety days, right? Less if you earn the discharge. Then what? The
+> Ninety days, right? Then what? The
 > corps want you on a patrol, the badges want you on a plaza, the Choir
 > wants you on your knees. Sable wants you *paid*. We run the Sink, we
 > run the Row, we run the only clinics that don't ask what template you
@@ -1198,7 +1199,7 @@ Compact keeps the baths open to everyone, holder or not.
 **Sigil:** none (ASCII `-` in lists).
 
 Freelance is not a faction. It is the state of not having joined one,
-and every character is Freelance until legal personhood and standing +30 with a
+and every character is Freelance until they are a Signatory (grade 5) with standing +30 with a
 faction, and again after leaving one during the seven-day cooldown.
 
 What Freelance means in play:

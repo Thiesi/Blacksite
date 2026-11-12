@@ -38,8 +38,8 @@ She built the Wake program because she believed the alternative was worse.
 Sablier's board wanted to decant labour under a service contract with no
 personhood path at all; Vantongeren wrote the ninety-day rule into the
 concession agreement with the Civic Authority and then made herself
-indispensable to enforcing it, including the Civic early-discharge
-certificate. She is the reason a Wake is a person at all. She is also the
+indispensable to enforcing it, including the Civic signature that lets
+a working Wake rent and join before their day comes. She is the reason a Wake is a person at all. She is also the
 reason there are Wakes, and she knows that many disappear from the lease
 records before discharge, and she has a number for that, too. She does not
 say it out loud.
@@ -879,7 +879,7 @@ rent status to the day and will say it out loud in the lobby.
   rule. Now you do."
 - "Private core comes with the flat. Tier one. Runners get in; that's
   your problem, sweetheart, not mine."
-- "A Wake wants a lease? Bring the discharge receipt. I don't rent to numbers."
+- "A Wake wants a lease? Show me a Civic signature. I don't rent to numbers."
 
 **Warden Constable Teo Marsh** [Wardens] — The Terraces' lone outpost
 Warden. Slow to respond, and knows it, and is bitter about being the

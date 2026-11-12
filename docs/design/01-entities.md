@@ -757,7 +757,7 @@ remain legal.
 | settings | keymap variant, palette, sitrep visibility, log verbosity |
 | stats | kills, deaths, runs, contributions, relays; per season |
 | clone_debt, recovery_kit_id, listened_enabled | debt survives decant; calibration is reversible |
-| created_at, last_seen_at, legal_at | legal_at = earlier of grade-5 timestamp and created_at + 90 days |
+| created_at, last_seen_at, legal_at | legal_at = the identity's first_decanted_at + 90 calendar days; no grade shortcut (game design §3.4) |
 | name_key | NFC-normalized Unicode casefold; unique per origin |
 | progress | unspent points, learned programs/hymns, seen zones, compressed terrain memory, offline timestamp |
 
