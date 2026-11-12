@@ -7,6 +7,7 @@ on:
       - 'src/karst41/server/**'
       - 'src/karst41/content/**'
       - 'scripts/accept_p8_netbbs.py'
+      - 'scripts/measure_p8_cost.py'
       - '.github/workflows/p8-acceptance.yml'
   workflow_dispatch:
 
@@ -58,3 +59,26 @@ jobs:
         if: always()
         shell: bash
         run: rm -rf -- "$RUNNER_TEMP/karst41-proof/p8"
+
+  p8-cost:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    permissions:
+      contents: read
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Measure the emitter on Sodium Row (1 and 3 callers, 10 simulated minutes)
+        shell: bash
+        run: |
+          python -m pip install -e .
+          PYTHONPATH=. python scripts/measure_p8_cost.py --out "$RUNNER_TEMP/p8-cost/p8-cost.json"
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: p8-cost
+          path: ${{ runner.temp }}/p8-cost/p8-cost.json
