@@ -22,6 +22,7 @@ from karst41.server.world.actors import Actor
 from karst41.server.world.sight import line_of_sight
 from write_profile import WriteProfile
 from minimal_s40_profile import MinimalProfile
+from tick_budget import enforce
 
 
 async def approach(probe: NativeProbe, caller: Connection, target: Actor,
@@ -63,16 +64,18 @@ async def approach(probe: NativeProbe, caller: Connection, target: Actor,
 
 
 
-async def profile(probe: NativeProbe, width: int, height: int) -> float:
+async def profile(probe: NativeProbe, width: int, height: int,
+                  title: str = 'S11 tick budget') -> float:
     # Only status, sparse commit exits and two loop boundaries are added.
     # Detailed write wrappers/proxies remain in the later diagnostic.
     with (WriteProfile(probe.service, trace_writes=False) as writes_profile,
           MinimalProfile(probe.service) as minimal):
-        return await _profile(probe, width, height, writes_profile, minimal)
+        return await _profile(probe, width, height, writes_profile, minimal, title)
 
 
 async def _profile(probe: NativeProbe, width: int, height: int,
-                   writes_profile: WriteProfile, minimal: MinimalProfile) -> float:
+                   writes_profile: WriteProfile, minimal: MinimalProfile,
+                   title: str = 'S11 tick budget') -> float:
     loop = probe.service.core.loop
     original_subsystems, original_step = loop.subsystems, loop.step
     original_writes = probe.service._character_writes
@@ -162,8 +165,9 @@ async def _profile(probe: NativeProbe, width: int, height: int,
         await asyncio.sleep(10)
         status=await request(probe.service.install_dir,"status")
         count = len(probe.service.world.zones)
-        assert status["active_zones"]==count and status["tick_p99_ms"]<10,status
-        probe.report(f"PASS admin status {width}x{height}: all {count} zones active, p99 {status['tick_p99_ms']:.3f} ms")
+        assert status["active_zones"]==count,status
+        verdict=enforce(status["tick_p99_ms"],f"admin status {width}x{height}",title=title)
+        probe.report(f"PASS admin status {width}x{height}: all {count} zones active, p99 {status['tick_p99_ms']:.3f} ms ({verdict})")
         return status["tick_p99_ms"]
     finally:
         loop.subsystems, loop.step = original_subsystems, original_step
@@ -176,7 +180,7 @@ async def _profile(probe: NativeProbe, width: int, height: int,
         number = len(list(probe.root.glob(f'npc-profile-{width}x{height}-*.json')))+1
         (probe.root/f'npc-profile-{width}x{height}-{number}.json').write_text(json.dumps({
             'status': status, 'sampling_started_tick': sampling_tick,
-            'instrumentation': 'wall/thread CPU, GC and storage flush probes; same 10 ms gate including overhead',
+            'instrumentation': 'wall/thread CPU, GC and storage flush probes; S11 gate including overhead: p99 at or above 20 ms blocks, at or above 10 ms warns (2026-11-12)',
             'gc_pauses': gc_pauses, 'storage_flushes': flushes,
             'ticks': rows, 'write_probe': writes_profile.metadata(),
             'commerce_commits': minimal.export(),

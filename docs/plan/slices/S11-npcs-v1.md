@@ -131,7 +131,14 @@ Plaza punishes anyone who draws.
    and do not summon Sable guards until S38 adds the keeper rule.
 5. Leave a zone for 35 minutes (or use a manual-clock test): the
    dormant actors are rebuilt from their spawners on return.
-6. `admin status` tick p99 under 10 ms with all hub zones active.
+6. `admin status` tick p99 under 20 ms with all hub zones active (10 ms
+   when the slice was done).
+
+   **Since 2026-11-12 (owner):** in CI this check blocks at p99 20 ms
+   and reports 10 ms and above as a warning that doesn't fail
+   (`scripts/tick_budget.py`). #194's interim once-only CPU rerun rule
+   has ended. S29a's bot run later becomes the real gate, against the
+   architecture's 40 ms p99 budget.
 
 ## Definition of done
 

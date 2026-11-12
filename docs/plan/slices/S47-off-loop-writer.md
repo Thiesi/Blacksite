@@ -151,7 +151,7 @@ an asyncio task.
 - The checkpoint-only alternative from the S40 note. Use it only if the
   worker can't be made safe, and with the technical lead's agreement.
 - Any change to the S11 gate, the interim CPU rule (#194), or game
-  rules.
+  rules. (Since 2026-11-12, owner: S11 blocks at p99 20 ms and warns from 10 ms; #194's interim rule has ended. See #229.)
 - Online backup. It belongs to the worker later, as a queued operation.
 
 ## Tests
@@ -183,7 +183,8 @@ Roadmap §7, plus:
 - S10, S24 and the persistence suites pass.
 - Every write path above is listed in the PR with its new owner.
 
-This changes runtime code, so under #194 a CPU near miss blocks. After
+This changes runtime code, so under #194 a CPU near miss blocks.
+(Since 2026-11-12, owner: S11 blocks at p99 20 ms and warns from 10 ms; #194's interim rule has ended. See #229.) After
 this slice, a stall like the four above should no longer show up in
 S11. If one does, the technical lead looks into it before ruling.
 

@@ -24,6 +24,7 @@ on:
       - 'scripts/accept_s12_netbbs.py'
       - 'scripts/accept_s10_netbbs.py'
       - 'scripts/accept_s11_netbbs.py'
+      - 'scripts/tick_budget.py'
       - 'scripts/benchmark_s40_probe.py'
       - 'scripts/benchmark_s40_minimal.py'
       - 'scripts/benchmark_s40_disk.py'
