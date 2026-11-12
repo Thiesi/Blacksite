@@ -19,6 +19,9 @@ Declared fixtures (technical lead's ruling on #214):
   fire stands still while it sees you, so two inside can box the doorway).
   Routing, sight and the 20 s give-up are untouched. Fire is released for
   the death.
+- For the price-target step only, the targeted regular holds still (#225):
+  a wanderer can leave the target slot before the warning is filmed, and
+  the first-target notice comes once per session.
 """
 
 import argparse
@@ -137,10 +140,12 @@ async def accept(root: Path, door_python: Path, width: int, height: int, modern:
             await navigate(probe, caller, regular)
             await probe.target(caller, regular.id)
             at_npc = truce_text.at_npc('Sable')
-            await wait(lambda: 'Truce: Sable answers' in screen() and at_npc in screen())
-            save(caller, 'price-target', {'notice': at_npc, 'warning': 'Truce: Sable answers',
-                                          'fixture': 'regular held still (#225)'})
-            regular.behaviour['pause'] = pause
+            try:
+                await wait(lambda: 'Truce: Sable answers' in screen() and at_npc in screen())
+                save(caller, 'price-target', {'notice': at_npc, 'warning': 'Truce: Sable answers',
+                                              'fixture': 'regular held still (#225)'})
+            finally:
+                regular.behaviour['pause'] = pause
 
             # 2. The breach: HUNTED, and the keeper in pursuit on the open Row.
             async def hold_fire() -> None:
@@ -306,7 +311,8 @@ async def accept(root: Path, door_python: Path, width: int, height: int, modern:
                          'Row as a geometry layer in this acceptance server only; main\'s Row has no alcoves',
                          'grade 5 for the player-vs-player rules (S38 precedent)',
                          'keeper guards (and any that spawn) hold fire until the death scene; released for the death',
-                         'one pursuer in the bar scene: the other guard leaves the world and respawns from its spawner'],
+                         'one pursuer in the bar scene: the other guard leaves the world and respawns from its spawner',
+                         'price-target: the targeted regular holds still for that step, then wanders again (#225)'],
             'fixture_walls': walls,
             'presentation_acceptance': False, 'h1_layout_approval': False,
             's25_layout_approval': False}, indent=2)+'\n', encoding='utf-8', newline='\n')
