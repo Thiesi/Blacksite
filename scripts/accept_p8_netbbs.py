@@ -9,7 +9,9 @@ Declared fixtures:
 - One Sodium regular is relocated beside the caller and holds still, so
   it is inside the six-tile bark radius when filmed.
 - That regular's bark is made due, and the Row's ambience is made due once
-  the caller's budget has reopened. That saves waiting the 90 s interval
+  the caller's budget has reopened. While the ambience is filmed, other
+  barks wait, so a regular firing in the same second can't spend the
+  budget first. That saves waiting the 90 s interval
   and the 60-90 s cadence. The budget, the suppression and the line
   choice are untouched.
 - The keeper's guards hold fire (as in S44), so the shot doesn't end the
@@ -123,15 +125,23 @@ async def accept(root: Path, door_python: Path, width: int, height: int, modern:
             save('bark', {'line': bark, 'regular': list(regular.position), 'player': list(me.position)})
 
             # 2. A Row ambience line arrives.
-            await budget_open()
-            mark = len(heard)  # The trip here passed zones with their own ambience.
-            voice.ambient_due = clock.now_tick()
-            await wait(lambda: any(kind == 'ambient' for _, kind, _ in heard[mark:]))
-            line = next(text for _, kind, text in heard[mark:] if kind == 'ambient')
-            assert line in look.ambient
-            await wait(lambda: shows(line))
-            await delivered()
-            save('ambience', {'line': line})
+            # Declared: other barks wait for this step, so a regular firing in
+            # the same second can't take the budget (it would be dropped and
+            # rescheduled 60-90 s later, which is right but slow to film).
+            barks_due = dict(voice.barks.next_due)
+            voice.barks.next_due.update({a.id: 1 << 40 for a in zone.actors.values()})
+            try:
+                await budget_open()
+                mark = len(heard)  # The trip here passed zones with their own ambience.
+                voice.ambient_due = clock.now_tick()
+                await wait(lambda: any(kind == 'ambient' for _, kind, _ in heard[mark:]))
+                line = next(text for _, kind, text in heard[mark:] if kind == 'ambient')
+                assert line in look.ambient
+                await wait(lambda: shows(line))
+                await delivered()
+                save('ambience', {'line': line, 'fixture': 'other barks held for this step'})
+            finally:
+                voice.barks.next_due = barks_due
 
             # 3. Combat: a real shot. Barks and ambience stop.
             async def hold_fire() -> None:
@@ -175,7 +185,8 @@ async def accept(root: Path, door_python: Path, width: int, height: int, modern:
                         'ambient_jitter_seconds': amb.AMBIENT_JITTER_SECONDS,
                         'danger_hold_seconds': amb.DANGER_HOLD_SECONDS},
             'fixtures': ['one Sodium regular relocated beside the caller and holding still',
-                         'its bark made due, and the Row ambience made due once the budget reopened',
+                         'its bark made due, and the Row ambience made due once the budget reopened '
+                         '(other barks held during the ambience step)',
                          'keeper guards hold fire (S44 precedent); during the quiet window bark and ambience '
                          'are forced due every 0.5 s'],
             'presentation_acceptance': False, 'h1_layout_approval': False,
