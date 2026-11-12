@@ -70,8 +70,20 @@ async def accept(root: Path, door_python: Path, width: int, height: int, modern:
                 return caller.caller.screen.screen_text()
 
             def shows(text: str) -> bool:
-                # A log line can wrap at 80x24; its opening words sit on one row.
-                return text[:28] in screen()
+                """The whole line is drawn in the log (P12: whole entries).
+
+                A line can wrap at 80x24. Join each entry's rows (a wrapped
+                row is indented) and compare the full text, so a cut or
+                half-drawn line fails.
+                """
+                entries: list[str] = []
+                for row in screen().splitlines():
+                    cells = row[1:-1].rstrip()  # Inside the frame's side bars (both renderers).
+                    if cells.startswith('  ') and entries:
+                        entries[-1] += ' ' + cells.strip()
+                    elif cells:
+                        entries.append(cells)
+                return any(text in entry for entry in entries)
 
             async def delivered(who: Connection = caller) -> None:
                 await wait(lambda: who.session.ack_revision == who.session.view_revision)
