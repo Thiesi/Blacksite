@@ -727,9 +727,11 @@ lead has adopted that framing.
 | 9.11 | kit issued | reward | 200 chits. A card, on top: Vesper, the Tin Halo, Sodium Row. **(new)** |
 
 9.3 to 9.6 are caller-only like everything else: nobody else in the
-hall learns the template from Okafor. They never claim something the
-player didn't do: if the drone was skipped, 9.3 is "Hardline. Thought
-so." alone, and the others stand as written.
+hall learns the template from Okafor. They never claim something that
+didn't happen. 9.3's second sentence needs the drone to have hit the
+player: if the drone was skipped, or went down before it landed a hit,
+9.3 is "Hardline. Thought so." alone. The script's "first hit" trigger
+already records that. The others stand as written.
 
 Detail text per row (the existing paragraph, then the new line):
 
@@ -739,6 +741,12 @@ Detail text per row (the existing paragraph, then the new line):
 | Ghost | You carry a native rig. You can jack in anywhere. You move quietly and use stealth. Your nerve and cortex do the work. **(kept)** | You wouldn't have needed the terminal. You carry your own. |
 | Cantor | You hear the signal. You can use resonance implants, hymns and dissonance. Your First Ear starts with Steady. **(kept)** | The hum under the floor is louder for you. Some people will want to know what you hear. **(creative lead)** |
 | Operator | You direct the work. You can control two drones. Your Mule carries the load. You watch the costs and keep your crew together. **(kept)** | You'd have sent something else down that corridor first. |
+
+The same care applies to the new last lines. Each is shown only when
+what it points at happened: Hardline's when the drone hit the player,
+Ghost's when the player jacked in at the terminal, Operator's when the
+drone woke. Cantor's is always shown. Without its last line a detail
+is the existing paragraph alone.
 
 The validator should check each of these four details against 4 rows
 at 66 columns, as it checks other menu details, and the build should
@@ -1044,7 +1052,15 @@ canon PR #219 takes it where the two differ, so there is one text.
 | object names in `vatside-wake-hall.json` | "Tutorial terminal", "Sablier Wake Outfitter" | "Hall terminal", "Wake Outfitter" | The second is cut in HERE today. |
 
 Everything else Vantongeren says is her existing text, in its existing
-order, cut into lines. The login lines that contradicted the lease are
+order, cut into lines.
+
+**Order of merging.** The "Today" column is `main`, where canon still
+says grade five earns an early discharge. Lines 3.3 and 4.4 agree with
+#219, not with `main`. S48 already waits for the canon PR
+(`S48-first-evening.md`, "doesn't start before it merges"); the build
+should also test that the briefing content equals the fixed script in
+`docs/world/05-story-arcs.md` as merged, so that the one line that is
+never dropped can't say the opposite of the rules. The login lines that contradicted the lease are
 fixed in #219.
 
 ## 5. The voice in the walls: Wake Hall portion
