@@ -176,6 +176,13 @@ async def accept(root: Path, door_python: Path, width: int, height: int, modern:
             door = next(ex for ex in zone.template.meta.exits if ex.target_zone == HALO)
             await probe.walk(caller, door.tile)
             await delivered()
+
+            def door_focused() -> bool:
+                view = probe.game.sim.views[caller.session.id].previous or {}
+                return ((view.get('body', {}).get('focus') or {}).get('id') == door.id
+                        and not any(abs(o.spec.tile[0]-me.x) <= 1 and abs(o.spec.tile[1]-me.y) <= 1
+                                    and o.spec.id in core.commerce.caches for o in zone.objects.values()))
+            await wait(door_focused)
             await caller.caller.write(b'e')
             refusal = 'Sable\'s still asking about you. Try me in'
             await wait(lambda: any(refusal in ln['text'] for ln in caller.session.log_ring))
@@ -184,7 +191,10 @@ async def accept(root: Path, door_python: Path, width: int, height: int, modern:
             line = next(ln['text'] for ln in caller.session.log_ring if refusal in ln['text'])
             save(caller, 'halo-refused', {'line': line})
 
-            # 5. Death settles the debt.
+            # 5. Death settles the debt. Die away from the Halo's door and the
+            # guard posts: the death's loot cache would otherwise sit beside
+            # the door, and E there opens the cache before the exit.
+            await probe.walk(caller, (70, 6))
             for guard in guards:
                 guard.cooldowns['weapon'] = 0  # Fire released.
             await wait(lambda: me.stance in ('down', 'dead'), 120)
