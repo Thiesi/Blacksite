@@ -25,7 +25,8 @@ from tests.character_helpers import create, place
 from tests.harness import HeadlessServer
 
 FIXTURE = Path(__file__).with_name("fixtures") / "issue187-row-demo.map"
-START, HIDDEN, POST = (10, 6), (9, 6), (15, 9)  # Inside Upstairs; its door is (13, 8)/(14, 8).
+START, HIDDEN, POST = (10, 6), (9, 6), (15, 9)  # Inside Upstairs.
+DOORWAY = {(13, 8), (14, 8)}  # Upstairs' doorway.
 
 
 def advance(game: HeadlessServer, client: Any, count: int = 1) -> None:
@@ -273,3 +274,27 @@ def test_s44_far_hunter_searches_again_from_closer(repo_root):
         route_toward(hunter, zone, START, tick, route, set())
     assert hunter.position == START, (hunter.position, route.searches)
     assert route.searches <= 12
+
+
+def test_s44_route_passes_through_an_open_door_object(repo_root):
+    """Spawn reservations list every object tile; an open door is still a way through."""
+    from karst41.content.schema import ObjectSpec
+    from karst41.server.world.zone import ObjectState
+    game, _ = row_world(repo_root)
+    zone = game.core.world.zones["sodium-row"]
+    doors = []
+    for index, tile in enumerate(sorted(DOORWAY)):
+        door = ObjectState(ObjectSpec(f"bar-door-{index}", tile, "door", {"open": True}), True)
+        zone.objects[door.spec.id] = door
+        zone.doors[tile] = door
+        doors.append(door)
+    hunter = make_actor(game.core.loop.content.npcs["npc-sable-enforcer"], "via-door",
+                        {"spawner": "via-door", "home": POST, "phase": 0})
+    game.core.world.enter(hunter, "sodium-row", POST)
+    avoid = game.core.npcs.spawners.reserved(zone)
+    assert DOORWAY <= avoid
+    path = search(hunter, zone, START, avoid, frozenset())
+    assert path and DOORWAY & set(path)
+    for door in doors:
+        door.open = False
+    assert search(hunter, zone, START, avoid, frozenset()) == []  # The bar is shut.
