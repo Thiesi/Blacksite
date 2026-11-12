@@ -439,8 +439,10 @@ four-tile scrolling are unchanged. Camera changes send a full snapshot;
 other updates use the JSON-pointer operations in section 5.3.
 
 S07 adds `me.grade`, `chits`, `lease_days`, `legal_at`, `xp` and
-`discharge_xp`. Lease days and the early-discharge XP target are separate
-visible fields; personhood does not remove grade-based protection.
+`discharge_xp`. Since 2026-11-12 `discharge_xp` carries the grade 5
+Signatory XP target (game design §3.4); the field keeps its name. Lease
+days and that XP target are separate visible fields; personhood does not
+remove grade-based protection.
 `WakeView.body` is `{kind: "menu" | "text", body, stage, hint}`. The nested
 body uses the existing menu/text renderer and input contract. Art remains
 the S33 extension. A name prompt shows its BBS-derived default; an empty
