@@ -91,14 +91,18 @@ the lease early" no longer holds under the calendar-only lease.
 - The old renderer stays available as a fallback for this slice only,
   through the existing per-launch environment variable:
   `DOOR_KARST41_PRESENTATION=0` in the door's launch configuration
-  turns the new presentation off. Only the exact value `0` selects the
-  old renderer. Any other value, such as `false` or empty, keeps the new
-  one and logs one line naming the value it ignored. No input key and no
-  protocol field.
+  turns the new presentation off. The values `0`, `false`, `off` and
+  `no` (any case) select the old renderer, so an operator who used a
+  falsy value to keep the old screens keeps them. Any other value, or
+  none, gives the new one. Nothing is written to the caller's terminal
+  about it (AGENTS §4). No input key and no protocol field.
   The setting goes in the operator docs, along with a release note for
   SysOps that the default changed, so the owner, the novice or an
   operator can switch back if they hit a screen the coverage list
-  missed.
+  missed. The release note says plainly that an unset or `1` value now
+  means the new presentation. The operator-docs edit also fixes
+  `docs/ops/p5-client-foundations.md`, which still names the old
+  `DOOR_BLACKSITE_PRESENTATION`.
 - **List every screen the new presentation doesn't cover**, such as
   menus, the market, apartments or the Lattice view. Fix the ones on the
   evening path. List the rest in the PR for step two.
@@ -107,12 +111,12 @@ the lease early" no longer holds under the calendar-only lease.
 
 ### 4. The hub cast is switched on
 
-- **Owner decision, taken by merging this filing:** the hub cast is
-  switched on in this slice, ahead of plan 03's P4/P8/S25c sequence for
+- **Owner decision:** merging this filing approves switching the hub
+  cast on in this slice, ahead of plan 03's P4/P8/S25c sequence for
   speaker placement (the Row proposal's Q6). Talkers go only on existing
   walkable tiles. A talker whose spot S25c later moves is re-placed in
-  S25c, and that's accepted. If the owner declines, this part is dropped
-  and the cast stays dormant.
+  S25c, and that's accepted. (Should the owner want the cast kept
+  dormant, they say so before merging and this part is removed first.)
 - Switch on the named talkers in `s27-cast.json` who stand in the ten
   built areas: place them and switch them to active, so the Wake Hall
   orderlies and the hub people speak.
@@ -148,8 +152,21 @@ on it:
   or they're asked to rename at next login. Gurney numbers are checked
   against names already taken. This goes together with the #221
   migration.
+- **A redial in the middle of the drone fight (from #220's review).**
+  Say whether a half-won fight restarts the drone or counts as skipped.
+  Either way, the training pistol is never left equipped with no drone.
 - **The S24 empty focus and the cache beside the exit (#211).** Fix them
   if the evening path meets them.
+
+### CI while this slice is open
+
+S47, the fix for S11 commit-stall failures, now lands after this slice.
+Until it does, the owner's S11 rule applies to this branch as to any
+other: the technical lead may rule a failure that is shown to be a
+commit stall non-blocking, reported in batches, and every other failure
+blocks. Once the S11 20 ms/10 ms gate lands, it applies here too. The
+ordering was weighed against these stalls on 2026-11-12: the owner put
+the first evening first.
 
 ## Out of scope
 
@@ -171,7 +188,8 @@ on it:
   - every lesson can be skipped;
   - the Wake completes in five minutes on the walk.
 - **The new presentation is the default,** and
-  `DOOR_KARST41_PRESENTATION=0` restores the old one; any other value keeps the new one and logs the ignored value.
+  `0`/`false`/`off`/`no` restore the old one, any other value or none
+  keeps the new one, and nothing reaches the caller's terminal.
 - **Voice:**
   - each trigger fires once per character;
   - the per-evening cap holds;
