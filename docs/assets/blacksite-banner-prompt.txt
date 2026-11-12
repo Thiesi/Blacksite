@@ -22,3 +22,10 @@ is the original B's upper half on the original K's lower leg; 4 and 1 are
 drawn in the same stroke widths with a paper fill matched to the letters.
 The old title was removed by masked blur and the dark scrim behind the
 letters was redrawn around the new title. Everything else is unchanged.
+
+Social sizes (2026-11-12): karst41-social-preview.jpg (1280x640, GitHub
+social preview), karst41-og.jpg (1200x630, link previews) and
+karst41-header.jpg (1500x500, full art) are centred crops and Lanczos
+resizes of blacksite-banner.png, the retitled KARST 41 banner, with no
+repainting. They replace blacksite-social-preview.jpg, which still showed
+the old BLACKSITE title.
