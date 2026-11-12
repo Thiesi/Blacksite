@@ -117,8 +117,9 @@ async def prepare(probe: NativeProbe, width: int, height: int) -> tuple[Connecti
         while player.grade < 5:
             await key(connection,b'f'); await asyncio.sleep(.25)
     assert player.progress['points'] == before[1]+3
-    assert connection.avatar.actor.health_max > before[2] and player.legal_at
-    await wait(lambda:'Ninety-Day' in connection.caller.screen.screen_text())
+    # Grade 5 is Signatory, not personhood (#219, #221): the lease still runs.
+    assert connection.avatar.actor.health_max > before[2] and player.legal_at is None
+    await wait(lambda:'Signatory' in connection.caller.screen.screen_text())
     probe.save(connection,f's16-grade-toast-{width}')
     await key(connection,b'p')
     await wait(lambda:connection.session.id in probe.game.screens)

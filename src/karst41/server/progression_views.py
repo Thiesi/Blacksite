@@ -81,7 +81,7 @@ def character_sheet(player: Player, content: ContentTree,
         Row("stamina", "Stamina", f"{player.stamina}/{character.stamina_max(mods.attribute(player, 'nerve'), mods.attribute(player, 'frame'))}", "Nerve and Frame determine your stamina pool."),
         Row("carry", "Carry kg", f"{Inventory(dict(items), content.items).weight(player):g}/{character.carry_kg(mods.attribute(player, 'frame'))+mods.bonus('carry_kg'):g}", "Carried mass / current capacity.\nAbove capacity your walk and sprint take twice as long."),
         Row("tolerance", "Tolerance", f"{tolerance_used(player, items, content.items)}/{mods.tolerance(player)}", "Installed tolerance used / current capacity.\nChrome adds one temporarily; expiry may unseat hardware."),
-        Row("identity", "Personhood", "Granted" if player.legal_at else "Under lease", f"Elapsed lease: {lease_days}/90 days.\nSignatory: {player.xp}/1500 XP, grade 5. Rent and join early.\nPvP grade protection is separate from personhood."),
+        Row("identity", "Personhood", "Granted" if player.legal_at else "Under lease", f"Elapsed lease: {lease_days}/90 days.\nSignatory: {player.xp}/1500 XP, grade 5. Rent and join.\nPvP grade protection is separate from personhood."),
         Row("hand", "Hand chits", str(player.chits_hand), "Carried chits pay ordinary counters and surgery."),
         Row("bank", "Bank chits", str(player.chits_bank), "Banked chits remain separate from carried money.")]
     gear_evasion = sum(content.items[items[iid].template].armour.evasion

@@ -87,3 +87,15 @@ def test_221_grade5_notice_held_in_header_counts_from_its_return(info):
     display.key("x", 32)
     display.update(32 + NOTICE_SECONDS, 32 + NOTICE_SECONDS)
     assert display.toast is None
+
+
+def test_221_side_panel_grade_follows_the_promotion_at_once(repo_root):
+    """A promotion with no other change in the zone still republishes me.grade."""
+    game, caller, player = game_with(repo_root)
+    game.step(4)
+    game.frames_for(caller)
+    player.update_progression(1500)
+    game.core.progression.notify_reward(player, promoted(4, 5))
+    game.step(2)
+    views = [f for f in game.frames_for(caller) if f.type == "view"]
+    assert views and views[-1].data["body"]["me"]["grade"] == 5
