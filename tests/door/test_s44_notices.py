@@ -214,3 +214,18 @@ def test_s44_price_notice_waits_behind_an_unread_notice(info, presentation):
     display.key("x", 2)
     display.update(NOTICE_SECONDS + 1, NOTICE_SECONDS + 1)
     assert display.toast[0] == AT_NPC.format("Sable")
+
+
+@pytest.mark.parametrize("presentation", [False, True])
+def test_s44_ordinary_notice_waits_behind_an_unread_price_notice(info, presentation):
+    """Review 6817782239: the arrival price notice is once per character; nothing replaces it unread."""
+    display = Display(info, presentation=presentation)
+    arrival = ARRIVAL.format("Sable", MARKED_SECONDS // 60)
+    display.receive(Frame("toast", {"text": arrival, "role": "warning", "seconds": 4, "kind": "notice",
+                                    "price": True}), 0)
+    display.receive(Frame("toast", {"text": "The introduction could not be saved. Try again.",
+                                    "role": "ui_text", "seconds": 4}), 1)
+    assert display.toast[0] == arrival
+    display.key("x", 2)
+    display.update(NOTICE_SECONDS + 1, NOTICE_SECONDS + 1)
+    assert display.toast[0] == "The introduction could not be saved. Try again."

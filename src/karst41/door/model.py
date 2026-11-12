@@ -50,8 +50,10 @@ class Display:
         # S44: a rule's price, stated before it is paid (terminal UI 2.1).
         self.notice_price = False  # The shown notice is a price notice.
         self.price_noticed = False  # The first-target notice, once per session.
-        # A price notice never replaces an unread notice; it waits its turn.
-        self.notice_queue: deque[tuple[str, str]] = deque(maxlen=4)
+        # A price notice never replaces an unread notice, and no notice
+        # replaces an unread price notice: it waits its turn (text, role,
+        # seconds, price).
+        self.notice_queue: deque[tuple[str, str, float, bool]] = deque(maxlen=4)
         self.confirm_exit = False
         self.leaving = False
         self.connected = False
@@ -137,12 +139,11 @@ class Display:
             self.prompt = LinePrompt(data["id"], data["label"], min(200, data["max_len"])) if data["kind"] == "line" else None
             self.key_prompt = data if data["kind"] == "key" else None
         elif frame.type == "toast":
-            if data.get('price') and self.toast is not None:
-                self.notice_queue.append((data['text'], data['role']))
-            elif self.presentation:
-                self._notice(data['text'], data['role'], data['seconds'], now, price=bool(data.get('price')))
+            price = bool(data.get('price'))
+            if self.toast is not None and (price or self.notice_price):
+                self.notice_queue.append((data['text'], data['role'], data['seconds'], price))
             else:
-                self.toast = (data["text"], data["role"], now + data["seconds"])
+                self._show(data['text'], data['role'], data['seconds'], price, now)
         elif frame.type == "bye":
             self.connected = False
         elif frame.type == "pong":
@@ -320,15 +321,17 @@ class Display:
             return
         self.price_noticed = True
         if self.toast is not None:
-            self.notice_queue.append((text, 'warning'))
+            self.notice_queue.append((text, 'warning', NOTICE_SECONDS, True))
         else:
-            self._show_price(text, 'warning', now)
+            self._show(text, 'warning', NOTICE_SECONDS, True, now)
 
-    def _show_price(self, text: str, role: str, now: float) -> None:
+    def _show(self, text: str, role: str, seconds: float, price: bool, now: float) -> None:
         if self.presentation:
-            self._notice(text, role, NOTICE_SECONDS, now, price=True)
+            self._notice(text, role, seconds, now, price=price)
         else:
-            self.toast = (text, role, now + NOTICE_SECONDS)
+            # The default renderer's toast; a price notice stays its 8 s.
+            self.toast = (text, role, now + (max(NOTICE_SECONDS, seconds) if price else seconds))
+            self.notice_price = price
 
     def _notice(self, text: str, role: str, seconds: float, now: float, *, price: bool = False) -> None:
         """UI 2.5: one local history entry, separate from the world log."""
@@ -353,8 +356,9 @@ class Display:
                 and (not self.presentation or self.notice_pressed)):
             self.toast = None
             self.dirty = True
+            self.notice_price = False
             if self.notice_queue:
-                self._show_price(*self.notice_queue.popleft(), now)
+                self._show(*self.notice_queue.popleft(), now)
 
     def _notice_to_header(self, now: float) -> bool:
         """Only declared fields protect prompts and current danger; no inference."""
