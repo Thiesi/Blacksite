@@ -212,10 +212,11 @@ async def accept(root: Path, door_python: Path, width: int, height: int, modern:
             # back within sight of the guards' posts (a guard that lost sight
             # 20 s ago has given up, as canon says). Not beside the Halo's
             # door or a post: the death's loot cache would take a later E.
+            # Walk there first: a death mid-walk would time the walk out.
+            await probe.walk(caller, (52, 14))
             guards = [a for a in zone.actors.values() if a.behaviour.get('template') == 'npc-sable-enforcer']
             for guard in guards:
                 guard.cooldowns['weapon'] = 0  # Fire released (respawned guards never held it).
-            await probe.walk(caller, (52, 14))
             await wait(lambda: me.stance in ('down', 'dead'), 120)
             await wait(lambda: me.stance == 'normal' and SETTLED in [ln['text'] for ln in caller.session.log_ring], 90)
             assert player.keeper_answer is None
