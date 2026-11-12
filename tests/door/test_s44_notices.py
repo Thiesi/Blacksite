@@ -182,3 +182,21 @@ def test_s44_hunted_drops_no_earlier_than_marked_or_heat(info):
     for fact in ("HEAT", "MARKED", "HUNTED"):
         assert fact in top, top
     assert "LOWER RING" not in top and "service summary" not in top
+
+
+@pytest.mark.parametrize("presentation", [False, True])
+def test_s44_real_server_warning_drives_the_first_target_notice(repo_root, info, presentation):
+    """Pins the door's match to the server's own TARGET wording (review 6817177879)."""
+    game, caller = arrive(repo_root)
+    zone = game.core.world.zones["sodium-row"]
+    source = game.core.world.actors[caller.session.player_id]
+    target = next(a for a in zone.actors.values() if a.behaviour.get("template") == "npc-sodium-regular")
+    game.core.world.enter(target, zone.id, game.core.world.free_tile(zone.id, (27, 3), target))
+    source.target = target.id
+    game.step()
+    assert game.core.combat.target_view(source)["warning"] == "Truce: Sable answers"
+    display = Display(info, presentation=presentation)
+    for frame in game.frames_for(caller):
+        if frame.type != "toast":  # Only the TARGET path, not the arrival notice.
+            display.receive(frame, 0)
+    assert display.price_noticed and display.toast[0] == AT_NPC.format("Sable")
