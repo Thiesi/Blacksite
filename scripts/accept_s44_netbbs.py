@@ -154,13 +154,20 @@ async def accept(root: Path, door_python: Path, width: int, height: int, modern:
             save(caller, 'bar-pursuit-in', {'fixture_walls': len(walls), 'guard': list(follower.position),
                                             'player': list(me.position)})
             trail = [follower.position]
-            await probe.walk(caller, (40, 12))
 
-            def followed_out() -> bool:
-                if follower.position != trail[-1]:
-                    trail.append(follower.position)
-                return follower.y >= 9 and follower.target == me.id
-            await wait(followed_out, 60)
+            async def record() -> None:
+                # Sample the guard's every step (the server ticks at 10 Hz)
+                # while the player walks out, not only after the walk.
+                while True:
+                    if follower.position != trail[-1]:
+                        trail.append(follower.position)
+                    await asyncio.sleep(.02)
+            recorder = asyncio.create_task(record())
+            try:
+                await probe.walk(caller, (40, 12))
+                await wait(lambda: follower.y >= 9 and follower.target == me.id, 60)
+            finally:
+                recorder.cancel()
             assert DOORWAY & set(trail), trail
             await delivered()
             save(caller, 'bar-pursuit-out', {'guard_trail': [list(t) for t in trail], 'player': list(me.position)})
