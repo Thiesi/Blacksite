@@ -2,13 +2,21 @@
 
 **Status:** planned (filed 2026-11-12; the owner merges the filing)
 **Primary model:** Claude Opus 5.5 (the engineer) · **Lines and staging:** creative lead · **Layout and acceptance:** presentation lead · **Reviewer:** automated review, technical lead
-**Depends on:** S44 (both PRs), P8 (the emitter for part 5) · **Lands before:** S47 · **Gate:** this slice's build is the **H1 session**
+**Depends on:** S44 (both PRs), P8 (the emitter for part 5), P12 (merged; the danger and fit rules part 5 tests against), the canon PR #219 (the Wake's new step order) and the opening design #220 · **Lands before:** S47 · **Gate:** this slice's build is the **H1 session**
 **Issue:** https://github.com/Thiesi/Karst41/issues/217
 
 Canon: game design §4 (the Wake) and §9 (Vesper's first thing), the
 bible, and plan 03 §10.3 (the H1 criteria). The Wake's step order
-changes in the canon PR that records the owner's 2026-11-12 decisions.
-This slice builds against that PR and doesn't start before it merges.
+changes in #219, the canon PR that records the owner's 2026-11-12
+decisions. The opening's staging is the approved design in #220
+(`docs/design/proposals/first-ten-minutes.md`). This slice builds
+against both and doesn't start before both merge.
+
+**Geometry.** This slice changes no geometry: no wall, door or room
+moves, in the Wake Hall or anywhere else. #220 meets "one obvious way
+on" without moving a wall. If the evening needs a geometry change, it
+becomes a finding for the technical lead, not part of this slice. Layout
+belongs to S25c and its owner approval, which this slice doesn't grant.
 Where this file and canon differ, canon wins.
 
 ## Why
@@ -80,8 +88,14 @@ the lease early" no longer holds under the calendar-only lease.
 - The door client starts in the new presentation (`door/present/`) for
   every caller. Today it starts there only when
   `DOOR_KARST41_PRESENTATION=1` (`door/client.py:48`).
-- The old renderer stays behind a setting, as a fallback for this slice
-  only.
+- The old renderer stays available as a fallback for this slice only,
+  through the existing per-launch environment variable:
+  `DOOR_KARST41_PRESENTATION=0` in the door's launch configuration
+  turns the new presentation off. No input key and no protocol field.
+  The setting goes in the operator docs, along with a release note for
+  SysOps that the default changed, so the owner, the novice or an
+  operator can switch back if they hit a screen the coverage list
+  missed.
 - **List every screen the new presentation doesn't cover**, such as
   menus, the market, apartments or the Lattice view. Fix the ones on the
   evening path. List the rest in the PR for step two.
@@ -90,6 +104,10 @@ the lease early" no longer holds under the calendar-only lease.
 
 ### 4. The hub cast is switched on
 
+- The owner decided on 2026-11-12 to switch the hub cast on in this
+  slice, ahead of plan 03's P4/P8/S25c sequence for speaker placement.
+  Talkers go only on existing walkable tiles. A talker whose spot S25c
+  later moves is re-placed in S25c, and that's accepted.
 - Switch on the named talkers in `s27-cast.json` who stand in the ten
   built areas: place them and switch them to active, so the Wake Hall
   orderlies and the hub people speak.
@@ -112,6 +130,22 @@ the lease early" no longer holds under the calendar-only lease.
 - One content switch turns the whole layer off, so it can be removed
   after the playtest with no code change.
 
+### Open items this slice must settle
+
+The slice proposes each of these in its PR, and the technical lead rules
+on it:
+- **Skipping the terminal (from #219's review).** The decant record is
+  the one required step before the street, but the terminal lesson that
+  lifts it can be skipped. Say where a caller who skips reaches the
+  record. It still opens only on a key the caller presses.
+- **Reserved names (from #219's review).** Existing characters whose
+  normalised name matches `No.` followed by digits: either they keep it,
+  or they're asked to rename at next login. Gurney numbers are checked
+  against names already taken. This goes together with the #221
+  migration.
+- **The S24 empty focus and the cache beside the exit (#211).** Fix them
+  if the evening path meets them.
+
 ## Out of scope
 
 - Season 0's maps (Contractor Street, The Drop) and the Ninety-Nine
@@ -131,8 +165,8 @@ the lease early" no longer holds under the calendar-only lease.
   - the archetype is chosen after the drone and terminal lessons;
   - every lesson can be skipped;
   - the Wake completes in five minutes on the walk.
-- **The new presentation is the default,** and the fallback setting
-  restores the old one.
+- **The new presentation is the default,** and
+  `DOOR_KARST41_PRESENTATION=0` restores the old one.
 - **Voice:**
   - each trigger fires once per character;
   - the per-evening cap holds;
