@@ -144,15 +144,21 @@ fastest). Vitals raises only through **grade** (below) and implants.
 
 Character **grade** is the level analog: 1 to 30, from cumulative XP.
 Each grade grants 3 grade points and +1 Vitals. Grade names are flavour
-(Wake, Ninety-Day, Resident, Citizen, Notable, Name, and beyond) and the
-first milestone is grade 5, **Ninety-Day**: completed work earns early
-discharge of the Wake lease. Personhood arrives at the earlier of grade
-5 or 90 elapsed real days from first decant. Set `legal_at` once; debt,
-death, leaving a faction, and season changes cannot remove it. Renting
-requires personhood; joining also requires standing +30. PvP protections
-depend on grade, independently of personhood (§7.3). Show elapsed lease
-days and the early-discharge XP target separately. NPC day-count lines
-use actual elapsed days, never a fixed day selected only by grade.
+(Wake, Signatory, Resident, Citizen, Notable, Name, and beyond) and the
+first milestone is grade 5, **Signatory**: Civic registers the Wake's
+signature. A Signatory may rent one tenancy in their own name and may
+join a faction (joining also requires standing +30). Personhood is
+calendar only: it arrives 90 calendar days after the identity's first
+decant (`first_decanted_at`, entities), absence included, and nothing shortens it (owner,
+2026-11-12). Personhood also grants everything a Signatory has, so
+renting and faction membership come at grade 5 or day 90, whichever is
+first; personhood stays the bigger milestone. The remaining lease
+carries across a season change. Set
+`legal_at` once; debt, death, leaving a faction, and season changes
+cannot remove it. PvP protections depend on grade, independently of
+personhood (§7.3). Show elapsed lease days and the Signatory XP target
+separately. NPC day-count lines use actual elapsed days, never a fixed
+day selected only by grade.
 
 Grade 1 starts at 0 XP. For n = 2..30 the cumulative threshold is
 100 × n × (n + 1) / 2 (grade 5: 1 500; grade 10: 5 500; grade 30:
@@ -206,21 +212,40 @@ leave a lesson and use the open exit; lessons remain available afterward.
 Returning identities do not have to repeat them after deletion. Training
 teaches actions without becoming a compulsory gate before the street.
 
-1. Open your eyes. Choose archetype (four cards with one paragraph each).
-2. Choose a name (the BBS handle is the default and always shown).
+The Wake is staged as a scene, not a menu (owner, 2026-11-12). The
+caller wakes first and can move; nothing is chosen before they have
+seen what fighting and jacking in are.
+
+Reading the decant record, which is the archetype choice (step 6), is
+the one required step before the street. Both lessons, the drone and
+the terminal, stay skippable. The record opens only on a key the caller
+pressed, never on its own.
+
+1. Open your eyes in the vat room. You can move at once. The room has
+   one obvious way on.
+2. Dr. Vantongeren's briefing is spoken a line or two at a time in the
+   log while you move, not shown as pages. Where a briefing page is
+   shown (resuming, or reading it again), its text keeps paragraph
+   breaks and uses the frame's width.
+3. Walk to the door: movement keys, look, interact.
+4. The corridor: one hostile drone. Targeting, fire, cooldown, the log.
+5. The terminal: jack in, one private room, one weak ICE, lift your decant
+   record and jack out. The exit remains open if you leave early.
+6. Choose archetype (four cards with one paragraph each), now that the
+   drone and the terminal have shown what each card is for.
+7. Choose a name (the BBS handle is the prompt's default and always shown there).
    Names are 2 to 24 display columns of letters, digits, spaces,
    hyphens, underscores, and apostrophes, unique per node
    (case-insensitive). One character per BBS user per node by default;
-   the cap is a world setting the SysOp can raise.
-3. Dr. Vantongeren's briefing: three screens, one choice (which faction's
-   recruiter's card to take, or none). The choice sets initial standing,
-   not membership.
-4. Walk to the door: movement keys, look, interact.
-5. The corridor: one hostile drone. Targeting, fire, cooldown, the log.
-6. The terminal: jack in, one private room, one weak ICE, lift your decant
-   record and jack out. The exit remains open if you leave early.
-7. Out into Vatside with 200 chits, a starter weapon, a med patch, and a
-   contract card for Vesper at the Tin Halo.
+   the cap is a world setting the SysOp can raise. Until a name is
+   entered, the character shows its gurney number, for example
+   `No. 0431`, in the panel and to others. A name whose normalised key,
+   with spaces and punctuation removed, is `no` followed only by digits
+   is reserved and can't be chosen.
+8. The briefing's one choice: which faction's recruiter's card to take,
+   or none. The choice sets initial standing, not membership.
+9. Out into Vatside with 200 chits, a starter weapon, a med patch, and a
+   card for Vesper at the Tin Halo.
 
 The full starter kit is in §17. All archetypes receive Pick and
 Umbrella. Public terminals supply a three-slot loan rig while connected;
@@ -912,8 +937,8 @@ Other repeatable Silt loot uses 30-minute uptime availability periods.
   set by the Wake recruiter choice (+10 with one faction, 0 elsewhere).
 - Contracts, kills, and relay actions move standing with the relevant
   factions and their allies and enemies (halved).
-- At standing +30 and legal personhood a player may **join** through its
-  recruiter. One faction at a time. Leaving costs −50 with the former
+- At standing +30 a Signatory or a person (§3.4) may **join** through its
+  recruiter, if the faction is accepting members (§13.5). One faction at a time. Leaving costs −50 with the former
   faction and a 7-day cooldown before joining another.
 - Members get: faction chat, faction vats, faction vendors, faction
   contracts, the right to capture relays, and the faction's colour.
@@ -923,8 +948,9 @@ Other repeatable Silt loot uses 30-minute uptime availability periods.
   perk must never be a flat combat multiplier.
 
 The existing Wake Hall recruiter-card desk keeps an admission contact
-open for all eight factions; nine once the Lamp Compact is built (planned, #90). A discharged caller with +30 standing can
-join there or through a placed recruiter talker. Taking a card during
+open for all eight factions; nine once the Lamp Compact is built (planned, #90). Which of them accept members at a
+given time follows the population switches (§13.5); the rest still recruit for work and standing. A Signatory
+or a person (§3.4) with +30 standing can join there or through a placed recruiter talker. Taking a card during
 the Wake still grants only the starting +10 standing, never membership.
 Cards name their faction explicitly; the old Red Sable card key is
 migrated to Sable standing once, preserving the intended reputation.
@@ -1247,6 +1273,7 @@ physical relay, terminal, and uplink hardware share the listed zone;
 service controls are separate scoped targets. Every member benefit
 ends with ownership and stacks only once. Defaults outside this table
 are not additional perks. Scour cores remain reachable when neutral.
+How many relays are contested follows the population switches (§13.5).
 
 | Relay slug / name | Zone | Tier | Member effect |
 |---|---|---|---|
@@ -1346,7 +1373,8 @@ to NPC vendors. Learned programs and schematics are journal state.
 ### 8.3 Market board
 
 A player-to-player asynchronous market (listing, bid, buyout) with a 5 %
-Kestrel fee, browsable from any terminal. Listings run 24 hours, 72
+Kestrel fee, browsable from any terminal. Until the population switch
+opens bids (§13.5), listings are buyout only and nothing is escrowed. Listings run 24 hours, 72
 hours, or 7 days; bids are escrowed from the bidder's bank; a bought
 item is delivered to the buyer's Kestrel impound (free to collect at any
 Kestrel branch or an accessible terminal). Prices and bids are positive
@@ -1511,7 +1539,7 @@ adds twelve public cells to the existing 36-cell sector: one connects
 reciprocally to the public entry, and eleven complete the 24 unit slots.
 Existing hidden/gated cells and public inter-district links stay intact.
 
-Legal discharge, by grade 5 or the 90-day calendar, permits one tenancy
+A Signatory or a person (grade 5 or day 90, §3.4) may hold one tenancy
 per character. Signing pays one week. Due invoices use the bank first,
 then hand chits, without splitting a paid invoice across later visits.
 The first unpaid deadline starts a 14-day lapse; checking again never
@@ -1736,8 +1764,9 @@ challenge while keeping the story available during ordinary sessions.
 S19 delivers the engine, generated templates, and the first job on maps
 already shipped. It defines and validates future story bundles against
 an explicit manifest, but does not activate unresolved references.
-S25 supplies remaining maps; S26 activates Season 1 chains and finales
-with their complete referenced content. Seasons 2 and 3 remain design
+Season 0 (§13.6) ships first with one chain. S25 supplies remaining
+maps; S26 activates Season 1 chains and finales with their complete
+referenced content. Seasons 2 and 3 remain design
 specifications until separately authored and accepted.
 
 ## 10. Crews
@@ -2208,9 +2237,13 @@ contribution unit. Each source respawns at most once per 60 minutes of
 server uptime. XP is 25 per contribution unit, once. Delivery never
 changes the machine balance; both kinds of work enable investigation.
 
-At season creation the SysOp selects a published Depth target: small
-node 10 000, standard 100 000, large 250 000; default small. The setting
-is fixed during ordinary play, not scaled by concurrent login count.
+The Depth target follows the node's population, like the other
+population switches (§13.5; owner, 2026-11-12): small node 10 000,
+standard 100 000, large 250 000. A season starts at the band its weekly
+active players reach, and the target may step up to a larger band
+during the season, never down. No SysOp chooses it. When the target
+steps up, progress already delivered is kept, and a level that has
+opened stays open (owner, 2026-11-12).
 A season has a suggested 90-day duration, but transitions only on the
 operator's explicit advance. No player loses access because a silent
 calendar expired. Advance with no eligible completion requires an
@@ -2318,6 +2351,74 @@ actions without requiring a reply. An idle bark requires a player
 within six tiles, defaults to a 90-second per-talker interval, and stays
 silent while anyone is interacting. Authored bark intervals may differ.
 Talking never pauses the world or changes the location's safety rules.
+
+### 13.5 Population switches
+
+A node has a handful of players (pillar 6). Systems built for a crowd
+open as the crowd arrives, by rule, so no SysOp has to guess up front
+(owner, 2026-11-12). The game measures **weekly active players**:
+distinct BBS users who played any character in the last seven days, so
+one person's alts count once. The I/O layer computes it from last-seen
+data once a day and hands it to the
+simulation as an input; the simulation reads no clock for it. A new
+node starts below every threshold.
+
+- A switch opens when the measure reaches its threshold. Within a
+  season a switch only opens; it never closes, even if the population
+  falls. A new season re-evaluates every switch from the measure.
+- When a new season finds the measure below a threshold that was open
+  (owner, 2026-11-12): existing members keep their membership, but that
+  faction takes no new members; relays that fall out of the contested
+  set reset; open market bids are refunded to the bidder's bank. A
+  member who leaves such a faction can't rejoin it until the population
+  grows back past its threshold.
+- The city announces each opening in its own voice, in the place it
+  concerns. Growth is something players notice, not a configuration.
+- Starting thresholds, tuned in playtests:
+
+| Switch | Below the first threshold | Opens further |
+|---|---|---|
+| Joinable factions | three accept members | more at about 15; all nine at about 30 |
+| Contested relays | three | six at about 15; all sixteen at about 40 |
+| Market | plain listings | bids and escrow at about 50 |
+| Depth target (§13.1) | small node | standard and large at thresholds set with the others |
+
+The away report is always on. A faction that doesn't accept members
+still offers work and standing and keeps its place in the story.
+
+Below the first threshold, the factions accepting members are Sablier,
+the Wardens and the Unmoored, and the contested relays are Cold Chain,
+Block and Relay Zero: the ones whose halls and relays stand on Season
+0's maps (§13.6). Red Sable is first in line when factions open further
+at about 15.
+
+### 13.6 Season 0
+
+The first released season is **Season 0** (owner, 2026-11-12). It runs
+on the hubs already built, plus `oldworks-main` (Contractor Street) and
+`oldworks-drop` (The Drop), and carries one story chain: the Unmoored's
+"Ninety-Nine" (story arcs, Season 1 chains). The other chains and
+districts arrive in later seasons as content. Season 0 has no Depth
+meter and no expeditions (owner, 2026-11-12); its end is the chain, not
+a Depth target. "Ninety-Nine" stays in Season 1 as its entry chain.
+
+The chain also needs its Lattice: the Sink sector cells of step 1,
+including the hidden black-core entrance; the Silt below the Old Works
+sector (step 3); and the cores `lat-ninety-nines-drop` and
+`lat-outworks-seal`. The door's own zone, `under-outworks`, isn't built
+in Season 0. Step 5 flips `shaft-door-east` from the Lattice side, and
+that flip is the season's last act. Season 0 ships only once these maps,
+cells and cores exist, since the Unmoored's hall and Relay Zero stand on
+them.
+
+- In Season 0, step 2's lock against `sab-s1-1-retrieval` stays dormant,
+  because no Sablier chain runs. Step 5's Halvard beacon report stays
+  off for the same reason.
+- **The season ends on the door.** Step 5 opens `shaft-door-east` from
+  the Lattice side, and Strand says "Forty-one years. Somebody had to."
+  The way beyond the door stays closed until the next season goes
+  through it. Opening the door is the season's intended ending; the
+  operator advances the season as §13.1 says.
 
 ## 14. Anti-abuse and fairness
 

@@ -379,7 +379,7 @@ TARGET and the pinned vitals.
    relation tag; it shrinks first.
 6. **CREW** (with a crew): beacon `♦`, leader `+`, health, zone.
 7. **Pinned to the bottom**: name (and handle at 132x50 if it differs),
-   grade, HP, STA and SHK bars, chits, lease days; discharge at 132x50.
+   grade, HP, STA and SHK bars, chits, lease days; the Signatory XP target at 132x50.
 
 Sections are introduced by a dim rule with a label (`─ TARGET ───`); no
 brackets anywhere. Bars are ten cells of `█ ▌ ░` with the digits after;

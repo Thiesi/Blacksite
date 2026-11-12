@@ -580,7 +580,7 @@ scheduler; it does not install an independent emission loop.
 The closed condition set and terminal delivery are specified in
 "Dialogue system notes" in `docs/world/04-dramatis-personae.md`.
 Conditions read the viewing player's committed facts. An unset
-`legal_at` means Wake regardless of grade. Contract stage numbers match
+`legal_at` means Wake regardless of grade, so `is_wake` includes Signatories. Contract stage numbers match
 the engine's zero-based index. Historical choices read settled Chronicle
 records; actor placement or another crew's recent outcome grants none.
 Tags and internal facts never enter a client menu or journal.
@@ -767,7 +767,7 @@ remain legal.
 | settings | keymap variant, palette, sitrep visibility, log verbosity |
 | stats | kills, deaths, runs, contributions, relays; per season |
 | clone_debt, recovery_kit_id, listened_enabled | debt survives decant; calibration is reversible |
-| created_at, last_seen_at, legal_at | legal_at = earlier of grade-5 timestamp and created_at + 90 days |
+| created_at, last_seen_at, legal_at | legal_at is stamped once, when 90 calendar days have passed since the identity's first_decanted_at, with the value first_decanted_at + 90 days even if first observed later (for example at the next login); it is never pre-computed and has no grade shortcut (game design §3.4). Signatory is derived (grade ≥ 5), not stored. Renting and joining check `grade ≥ 5 or legal_at is not None`. A legal_at already stamped under the old grade 5 rule stays: legal status is never removed (bible §8.1). |
 | name_key | NFC-normalized Unicode casefold; unique per origin |
 | progress | unspent points, learned programs/hymns, seen zones, compressed terrain memory, offline timestamp |
 
