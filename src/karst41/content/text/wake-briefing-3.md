@@ -4,7 +4,7 @@ I hand them out without preference; they all resent that and none of
 them can prove it.
 
 Take one, or don't. It's an introduction, not a contract. No recruiter owns
-your choice. Sablier holds the lease until it is discharged.
+your choice.
 
 When you're ready, walk to the door. There's a drone in the corridor
 that's been malfunctioning since Tuesday. Deal with it; consider it the

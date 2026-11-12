@@ -1,0 +1,50 @@
+╔═THE CORE═Warden Precinct═SAFE═════════════════════════════════════════════════════════════════════════════╤════════════09:25═════╗
+║                                                                                                           │─ HERE ───────────────║
+║                                                                                                           │ Θ Warden faction vat ║
+║                                                                                                           │─ TARGET ─────────────║
+║                                                                                                           │ none   Tab picks     ║
+║                                                                                                           │                      ║
+║                                                                                                           │                      ║
+║                                                                                                           │                      ║
+║                                                                                                           │                      ║
+║                                                                                                           │                      ║
+║                                                                                                           │                      ║
+║                                                                                                           │                      ║
+║                                                                                                           │                      ║
+║                                                                                                           │                      ║
+║                                                                                                           │                      ║
+║                                                                                                           │                      ║
+║                                                                                                           │                      ║
+║                                                                                                           │                      ║
+║                                                                                                           │                      ║
+║                                                                     ··                                    │                      ║
+║                                                                     ···                                   │                      ║
+║                                                                    ·····                                  │                      ║
+║                                                    ·              ······                                  │                      ║
+║                                                   ····           ········                                 │                      ║
+║                                                   ·················+·····                                 │                      ║
+║                                                   ·······················                                 │                      ║
+║                                                   ·······················                                 │                      ║
+║                                                  ············@·······§····                                │                      ║
+║                                                   ·······················                                 │                      ║
+║                                                   ·»·····················                                 │                      ║
+║                                                   ·······················                                 │                      ║
+║                                                                                                           │                      ║
+║                                                                                                           │──────────────────────║
+║                                                                                                           │ Rowtruecolor...  G5  ║
+║                                                                                                           │ HP  ██████████ 118   ║
+║                                                                                                           │ STA ██████████ 70    ║
+║                                                                                                           │ SHK ░░░░░░░░░░ 0     ║
+║                                                                                                           │ 140 ch   lease 0/90  ║
+║                                                                                                           │ discharge 75/1500    ║
+╟───────────────────────────────────────────────────────────────────────────────────────────────────────────┴──────────────────────╢
+║* Hit: Sodium regular.                                                                                                            ║
+║+ The bouncer doesn't move. "Sable's still asking about you. Try me in 5 min."                                                    ║
+║‼ Sable enforcer raises a weapon at you. Move to cover or safety. (x2)                                                            ║
+║‼ Sable enforcer hits you for 10. (x11)                                                                                           ║
+║‼ You are down. A nearby ally can press E to pick you up.                                                                         ║
+║* Clone charge 60. Hand remaining 140; owed 0.                                                                                    ║
+║* You wake in the vat. Missing recovery supplies are bound to you.                                                                ║
+║* Sable considers it settled.                                                                                                     ║
+║E use Warden faction vat  ? help  Tab target  F fire  X weapon  1-5 quick  V abilities  I inventory                               ║
+╚══════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════ 

@@ -2,6 +2,7 @@
 
 from collections import deque
 from copy import deepcopy
+import re
 from typing import Any
 
 from karst41.hints import focus_context
@@ -20,6 +21,9 @@ from karst41.door.present.paint import Paint
 from karst41.door.present import screen as presentation_screen
 from karst41.door.present.chrome import NOTICE_SECONDS, PROTECT_SECONDS
 from karst41.server.protocol import Frame, VIEW_KINDS
+
+NOTICE_QUEUE = 4  # S44: notices waiting behind the shown one.
+from karst41 import truce_text
 
 
 class Display:
@@ -45,6 +49,14 @@ class Display:
         self.toast: tuple[str, str, float] | None = None
         self.notice_started = 0.0
         self.notice_pressed = self.notice_header = False
+        # S44: a rule's price, stated before it is paid (terminal UI 2.1).
+        self.notice_price = False  # The shown notice is a price notice.
+        self.price_noticed = False  # The first-target notice, once per session.
+        # Notices waiting their turn (text, role, seconds, price). A price
+        # notice waits behind an unread notice. An ordinary notice shows at
+        # once, and an interrupted price notice comes back after it. Price
+        # notices are never dropped (at most two a session).
+        self.notice_queue: deque[tuple[str, str, float, bool]] = deque()
         self.confirm_exit = False
         self.leaving = False
         self.connected = False
@@ -130,14 +142,20 @@ class Display:
             self.prompt = LinePrompt(data["id"], data["label"], min(200, data["max_len"])) if data["kind"] == "line" else None
             self.key_prompt = data if data["kind"] == "key" else None
         elif frame.type == "toast":
-            if self.presentation:
-                self._notice(data['text'], data['role'], data['seconds'], now)
+            price = bool(data.get('price'))
+            if price and self.toast is not None:
+                self._queue((data['text'], data['role'], data['seconds'], True))
             else:
-                self.toast = (data["text"], data["role"], now + data["seconds"])
+                if self.toast is not None and self.notice_price:
+                    # Feedback is never held back; the price returns after it.
+                    self.notice_queue.appendleft((self.toast[0], self.toast[1], NOTICE_SECONDS, True))
+                self._show(data['text'], data['role'], data['seconds'], price, now)
         elif frame.type == "bye":
             self.connected = False
         elif frame.type == "pong":
             return []
+        if frame.type in ("view", "delta"):
+            self._target_price(now)
         new_hit = self.body.get("me",{}).get("hit_serial")
         if old_hit is not None and new_hit is not None and new_hit != old_hit:
             self.hit_flash = True
@@ -291,10 +309,50 @@ class Display:
             return []
         return [Frame("key", {"k": key, "t": max(0, int(now * 1000))})]
 
-    def _notice(self, text: str, role: str, seconds: float, now: float) -> None:
+    def _target_price(self, now: float) -> None:
+        """UI 2.1 (S44): the first truce warning on TARGET in a session states
+        only the price that applies to that target. It reads the existing
+        warning; no new field, key or fire confirmation."""
+        if self.price_noticed or self.kind != 'zone':
+            return
+        keeper = self.body.get('me', {}).get('truce')
+        warning = str((self.body.get('target') or {}).get('warning') or '')
+        if not keeper:
+            return
+        if warning == 'Firing marks you':
+            text = truce_text.at_player()
+        elif re.fullmatch(r'(Truce: )?.+ answers', warning):
+            text = truce_text.at_npc(keeper)
+        else:
+            return
+        self.price_noticed = True
+        if self.toast is not None:
+            self._queue((text, 'warning', NOTICE_SECONDS, True))
+        else:
+            self._show(text, 'warning', NOTICE_SECONDS, True, now)
+
+    def _queue(self, entry: tuple[str, str, float, bool]) -> None:
+        self.notice_queue.append(entry)
+        while len(self.notice_queue) > NOTICE_QUEUE:
+            # Drop the oldest ordinary notice; a price notice always stays.
+            ordinary = next((item for item in self.notice_queue if not item[3]), None)
+            if ordinary is None:
+                break
+            self.notice_queue.remove(ordinary)
+
+    def _show(self, text: str, role: str, seconds: float, price: bool, now: float) -> None:
+        if self.presentation:
+            self._notice(text, role, seconds, now, price=price)
+        else:
+            # The default renderer's toast; a price notice stays its 8 s.
+            self.toast = (text, role, now + (max(NOTICE_SECONDS, seconds) if price else seconds))
+            self.notice_price = price
+
+    def _notice(self, text: str, role: str, seconds: float, now: float, *, price: bool = False) -> None:
         """UI 2.5: one local history entry, separate from the world log."""
         self.toast = (text, role, now + max(NOTICE_SECONDS, seconds))
         self.notice_started, self.notice_pressed = now, False
+        self.notice_price = price
         if len(self.logs) == self.logs.maxlen:
             self.log_ids.discard(self.logs[0].get('id'))
         self.logs.append({'kind': 'notice', 'channel': 'system', 'text': text,
@@ -302,10 +360,20 @@ class Display:
         self.dirty = True
 
     def _expire_notice(self, now: float) -> None:
+        if (self.presentation and self.toast is not None and self.notice_price
+                and self._notice_to_header(now)):
+            # UI 2.1 (S44): a price notice held in the header while you are
+            # threatened counts its 8 s and its key press from the return.
+            self.toast = (self.toast[0], self.toast[1], now + NOTICE_SECONDS)
+            self.notice_started, self.notice_pressed = now, False
+            return
         if (self.toast is not None and now >= self.toast[2]
                 and (not self.presentation or self.notice_pressed)):
             self.toast = None
             self.dirty = True
+            self.notice_price = False
+            if self.notice_queue:
+                self._show(*self.notice_queue.popleft(), now)
 
     def _notice_to_header(self, now: float) -> bool:
         """Only declared fields protect prompts and current danger; no inference."""

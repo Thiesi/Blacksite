@@ -1,0 +1,24 @@
+┌─Sodium Row  CONTESTED─TRUCE─PvP G5+───────────────────────────────────09:17──┐
+│████████                                               │TARGET                │
+│█··············                                        │None                  │
+│█·»············                                        │WEAPON                │
+│█·@·············                                       │Kestrel Issue Sidearm │
+│█·····█                                                │NEARBY                │
+│█·····█                                                │~ Sodium regular      │
+│█·····█                                                │CREW                  │
+│█·····█                                                │                      │
+│ ·····█                                                │Row256界80            │
+│ ······                                                │BBS: S10Row25680      │
+│ ······                                                │HP #######. 110/118   │
+│ ·······                                               │STA ######## 70/70    │
+│ ··☻·····                                              │Chits 200  Grade 5    │
+│ ········                                              │Lease days 0/90       │
+│ ········                                              │Discharge XP 50/1500  │
+│ ·······                                               │Shock 0               │
+│  ·                                                    │Ctrl-X leaves         │
+├Fire: Sable comes, no Halo. At a player: Marked 15m, no work.─────────────────┤
+│[zone] You arrive at Sodium Row.                                              │
+│[zone] Nobody draws on Sodium Row. Sable makes sure of it.                    │
+│[sys] You gain 25 XP.                                                         │
+│E go to Meridian Plaza  ? help  Tab target  F fire  X weapon  1-5 quick       │
+└────────────────────────────────────────────────────────────────────────────── 

@@ -32,6 +32,7 @@ from karst41.content.ids import display_width
 from karst41.content.loader import ContentTree, load_content
 from karst41.door.cells import display_width as text_width
 from karst41.door.fit import TALK_LABEL_CELLS, TALK_LINE_ROWS, wrap_text
+from karst41 import truce_text
 from karst41.layout import compute
 from karst41.npc_presentation import channels as npc_channels
 
@@ -475,6 +476,11 @@ class _Validator:
                 self.ref("factions", meta.lean, owner, "lean")
             if meta.truce is not None:
                 self.ref("factions", meta.truce, owner, "truce")
+                keeper = self.t.factions.get(meta.truce)
+                if keeper and (cells := text_width(keeper.short)) > truce_text.KEEPER_NAME_CELLS:
+                    # S44: the keeper's price lines must fit the 80x24 header.
+                    self.report(*owner, f"truce keeper {keeper.short!r} is {cells} cells; the price notice "
+                                f"fits at most {truce_text.KEEPER_NAME_CELLS}", "truce")
                 if meta.safety != "contested":
                     self.report(*owner, "truce requires a contested zone", "truce")
             for asset in meta.lore:
@@ -1222,8 +1228,8 @@ class _Validator:
         for gid, grade in grades:
             if not grade.title.strip() or not grade.promotion.strip():
                 self.report("grades", gid, "a grade needs a title and promotion line")
-            if grade.grade == 5 and grade.title != "Ninety-Day":
-                self.report("grades", gid, "grade 5 is the Ninety-Day milestone")
+            if grade.grade == 5 and grade.title != "Signatory":
+                self.report("grades", gid, "grade 5 is the Signatory milestone")
         skills = list(self.each("skills"))
         expected = {"kinetic", "melee", "armour", "energy", "stealth", "drones",
                     "lattice", "programs", "fabrication", "hymns", "dissonance", "listening"}
@@ -1965,6 +1971,11 @@ class _Validator:
                         or offer.hotkey.lower() == 'b'):
                     self.report(*owner, f"offer {offer.label!r}: hotkey {offer.hotkey!r} is not a unique single key")
                 hotkeys.add(offer.hotkey.lower())
+                if offer.kind == 'ask' or offer.asks:
+                    self.check_ask(node, offer, owner)
+                    for cond in offer.when:
+                        self.condition(cond, owner, f"offer {offer.label!r}")
+                    continue
                 kind = {"contract": "contracts", "vendor": "vendors", "service": "services",
                         "recruit": "factions", "travel": "zones"}[offer.kind]
                 if offer.kind == 'service' and offer.ref in self.t.vendors:
@@ -1975,6 +1986,23 @@ class _Validator:
                     self.ref(kind, offer.ref, owner, f"offer {offer.label!r}")
                 for cond in offer.when:
                     self.condition(cond, owner, f"offer {offer.label!r}")
+
+    def check_ask(self, node: s.DialogueNode, offer: s.Offer, owner: tuple[str, str]) -> None:
+        """Entities 1.11 (S44): an ask names its question and its own answer line."""
+        where = f"offer {offer.label!r}"
+        if offer.kind != 'ask':
+            self.report(*owner, f"{where}: only an ask offer carries a question")
+            return
+        if not offer.asks or len(offer.asks) > DIALOGUE_LINE_MAX:
+            self.report(*owner, f"{where}: the question must contain 1..{DIALOGUE_LINE_MAX} characters")
+        elif (rows := len(wrap_text(offer.asks, TALK_WIDTH))) > TALK_LINE_ROWS:
+            self.report(*owner, f"{where}: the question wraps to {rows} rows on the 80x24 talk page "
+                        f"({TALK_WIDTH} cells); at most {TALK_LINE_ROWS}")
+        ids = [ln.id for ln in node.lines]
+        if offer.ref not in ids:
+            self.report(*owner, f"{where}: answer line {offer.ref!r} is not one of this talker's lines")
+        elif offer.ref == ids[-1]:
+            self.report(*owner, f"{where}: the fallback line cannot be an answer", offer.ref)
 
     def check_seasons(self) -> None:
         for sid, season in self.each("seasons"):

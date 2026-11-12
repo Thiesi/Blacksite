@@ -35,4 +35,8 @@ def describe(condition: str, content: ContentTree) -> str:
         return 'legal status'
     if name == 'not_legal':
         return 'not legally registered'
+    if name == 'signatory':
+        return 'Signatory (grade 5) or day 90'
+    if name == 'not_signatory':
+        return 'not yet a Signatory'
     return 'further story progress'

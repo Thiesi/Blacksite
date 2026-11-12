@@ -24,6 +24,20 @@ documents; where those documents disagree, they win.
 
 ---
 
+## Season 0 — *The Door*
+
+The first released season (design §13.6) runs one chain from Season 1:
+the Unmoored's "Ninety-Nine", below, on the built hubs plus
+`oldworks-main` and `oldworks-drop`. Step 2's lock against
+`sab-s1-1-retrieval` and step 5's Halvard beacon report stay dormant,
+because neither chain runs. The season ends when step 5 opens
+`shaft-door-east`. Strand's line stands: "Forty-one years. Somebody had
+to." The way beyond stays closed, and Season 1 goes through it. Season 0
+has no Depth meter and no expeditions. "Ninety-Nine" stays in Season 1
+as its entry chain.
+
+---
+
 ## Season 1 — *The Exhale*
 
 **Premise.** Year 41. The Blacksite has begun to breathe. Warm air and old
@@ -766,9 +780,9 @@ must answer to leave: `[N]one` is the default and Back selects it.
 > For ninety days you're Sablier property under lease. You'll find that
 > means less than it sounds like: you can go where you want, work for who
 > you want, and nobody can sell you. After ninety days you're a person, with
-> a name on the civic roll and the right to rent a flat and join whoever
-> will have you. Grade five earns an early discharge. It counts
-> completed work, not time spent waiting.
+> a name on the civic roll. Nothing gets you there sooner. The days count
+> without you. Work registers your signature sooner: a flat in your own
+> name, and a side, if one will have you. It isn't personhood. It's a pen.
 >
 > Many names vanish from the lease rolls. Some leave the work; some
 > disappear. The roll does not tell me which. Keep your own record.
@@ -786,7 +800,7 @@ must answer to leave: `[N]one` is the default and Back selects it.
 > them can prove it.
 >
 > Take one, or don't. It's an introduction, not a contract. No recruiter owns
-> your choice. Sablier holds the lease until it is discharged.
+> your choice.
 >
 > When you're ready, walk to the door. There's a drone in the corridor
 > that's been malfunctioning since Tuesday. Deal with it; consider it the
@@ -888,7 +902,7 @@ Shown one per session on the title screen or the first log line, weighted
 evenly, in voice, unattributed.
 
 1. The Ring's up. It's always up. That's not the news.
-2. Day count's yours. Grade five can clear the lease early.
+2. Day count's yours. Nobody gets chalked off early.
 3. Forty-one years. The concrete's nine metres. Both are holding.
 4. Vesper pays on time. It's rarer than it should be.
 5. The vats hum a quarter-tone flat when it breathes. You'll find you hear it.
@@ -904,7 +918,7 @@ evenly, in voice, unattributed.
 15. The lamps go out when it breathes. Somebody relights them.
 16. You will appreciate that the invoice does not mention a door.
 17. Rails hum at forty hertz. Under the Ward, forty-one. That's not the rails.
-18. A Wake wants a lease? Bring a discharge receipt. Nobody rents to numbers.
+18. A Wake wants a lease? Show a Civic signature. Nobody rents to numbers.
 19. Everything below Nine hums. Everything above Nine pretends not to.
 20. Escort's short by one. Rating amber. It's always amber.
 21. Halvard gets the compute. Ferrymen get the hull. That's not a deal.

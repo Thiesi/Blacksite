@@ -218,6 +218,8 @@ def test_grade_benefits_and_personhood_remain_after_xp_fade(game: HeadlessServer
     player.update_progression(1500)
     game.step()
     assert player.grade==5 and player.attributes["vitals"]==24 and player.progress["points"]==12
+    assert player.legal_at is None  # Signatory, not a person (#221).
+    game.clock.epoch+=timedelta(days=90);game.step()
     legal=player.legal_at
     assert legal is not None
     player.update_progression(0);game.step()

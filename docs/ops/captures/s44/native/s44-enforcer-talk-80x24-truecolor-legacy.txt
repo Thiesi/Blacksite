@@ -1,0 +1,24 @@
+┌─ Karst · S10Asktruecolor80 ──────────────────────────────────────────────────┐
+│    ┌─ Sable enforcer - Keeps the Row's peace ───────────────────────────┐    │
+│    │                                                                    │    │
+│    │ You're new, so once. Draw on this street and we come for you. The  │    │
+│    │ Halo won't have you either.                                        │    │
+│    │                                                                    │    │
+│    │ a      Ask about the peace                                         │    │
+│    │ Esc/B  Leave                                                       │    │
+│    │                                                                    │    │
+│    │                                                                    │    │
+│    │                                                                    │    │
+│    │                                                                    │    │
+│    │                                                                    │    │
+│    │                                                                    │    │
+│    │                                                                    │    │
+│    │                                                                    │    │
+│    │                                                                    │    │
+│    └────────────────────────────────────────────────────────────────────┘    │
+├──────────────────────────────────────────────────────────────────────────────┤
+│[sys] You gain 25 XP.                                                         │
+│[zone] Sable enforcer: You're new, so once. Draw on this street and we come   │
+│  for you. The Halo won't have you either.                                    │
+│Choose an action; move or Esc/B leaves                                        │
+└────────────────────────────────────────────────────────────────────────────── 

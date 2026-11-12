@@ -38,8 +38,8 @@ She built the Wake program because she believed the alternative was worse.
 Sablier's board wanted to decant labour under a service contract with no
 personhood path at all; Vantongeren wrote the ninety-day rule into the
 concession agreement with the Civic Authority and then made herself
-indispensable to enforcing it, including the Civic early-discharge
-certificate. She is the reason a Wake is a person at all. She is also the
+indispensable to enforcing it, including the Civic signature that lets
+a working Wake rent and join before their day comes. She is the reason a Wake is a person at all. She is also the
 reason there are Wakes, and she knows that many disappear from the lease
 records before discharge, and she has a number for that, too. She does not
 say it out loud.
@@ -73,7 +73,7 @@ files this and tells nobody but Brann.
 **Voice.** Measured. Complete sentences. Never uses a Wake's name until
 they have chosen one, then uses it constantly. Says "you'll find" instead
 of "you will". Never swears. Her tic is precision about numbers followed
-by a softening: "Ninety days. Or bring me the work certificate."
+by a softening: "Ninety days. You'll find they pass."
 
 **Sample lines.**
 
@@ -879,7 +879,7 @@ rent status to the day and will say it out loud in the lobby.
   rule. Now you do."
 - "Private core comes with the flat. Tier one. Runners get in; that's
   your problem, sweetheart, not mine."
-- "A Wake wants a lease? Bring the discharge receipt. I don't rent to numbers."
+- "A Wake wants a lease? Show me a Civic signature. I don't rent to numbers."
 
 **Warden Constable Teo Marsh** [Wardens] — The Terraces' lone outpost
 Warden. Slow to respond, and knows it, and is bitter about being the
@@ -1032,7 +1032,8 @@ slice change:
 | `balance CUST` / `balance TEN` / `balance EVEN` | settled internal voice weight |
 | `has_evidence ID` / `receipt ID` | recorded discovery or completed action |
 | `service_state ID STATE` | current bounded work-order state |
-| `legal` / `not_legal` | recorded discharge status |
+| `legal` / `not_legal` | personhood only: `legal_at` is set. A Signatory without it is `not_legal` |
+| `signatory` / `not_signatory` | may rent and join: grade 5 or `legal_at` is set (game design §3.4). A `legal_at` stamped early under the old grade 5 rule counts; `legal` alone does not mean day 90 has passed |
 
 Tagged ambient lines use game design §13.4's seeded weights. Required
 instructions and one line from each voice register in a finale cannot

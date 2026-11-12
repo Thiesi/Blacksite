@@ -5,6 +5,14 @@
 **Depends on:** S10, S12, S14 · **Milestone:** M3
 **Issue:** https://github.com/Thiesi/Karst41/issues/16
 
+> **Superseded in part (2026-11-12, canon #219, code #221).** Grade 5 is now
+> **Signatory**: it allows renting and joining but is not personhood.
+> `legal_at` is stamped only at day 90 of the lease, with the value
+> `first_decanted_at + 90 days`, and grade never shortens it. Early stamps
+> from the old rule stay. Renting and joining check `grade >= 5 or legal_at`.
+> Lines below that give grade 5 an early discharge or `legal_at`, or name
+> grade 5 "Ninety-Day", record the old rule. Don't follow them.
+
 ## Goal
 
 Make characters grow. XP from every source in the design doc, grades 1

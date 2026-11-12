@@ -65,7 +65,7 @@
     },
     {
       "id": "wake",
-      "text": "Your lease still runs. You'll find the elapsed days on your record. Grade five earns an early discharge. Time does not earn a grade.",
+      "text": "Your lease still runs. You'll find the days on your record. They count without you.",
       "when": [
         "is_wake"
       ],

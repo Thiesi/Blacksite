@@ -113,7 +113,7 @@ not a numeric execution order. Cross-milestone dependencies are explicit.
 | S42 | Talkers stay in reach, and the talk page lets you go (done, #182, PR #188) | Codex | S38, S39, A9 |
 | R1 | The game is called Karst 41: rename the code and its names (done, #190, PR #193) | Codex | canon rename PR |
 | S43 | Tick headroom: cheaper sight and grid rebuilds (done, #194, PR #199) | Codex | S11, S40 |
-| S44 | The Row's truce rules: hunted, the Halo's refusal, settling the debt, pursuit (planned, #207) | Claude Opus 5.5 | S38, S42; P12 for parts 5–6 only |
+| S44 | The Row's truce rules: hunted, the Halo's refusal, settling the debt, pursuit (done, #207, PRs #214 and #215) | Claude Opus 5.5 | S38, S42; P12 for parts 5–6 only |
 | S47 | Off-loop storage writer: database saves never stall a tick (planned, #212) | Claude Opus 5.5 | S40, S43, S44, S48 |
 | S48 | The first evening: one whole evening of the real game, the H1 session (planned, #217) | Claude Opus 5.5 | S44, P8, P12, #219, #220 |
 

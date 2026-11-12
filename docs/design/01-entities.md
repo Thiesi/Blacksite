@@ -554,12 +554,21 @@ unskippable fallback. Required instructions, costs, warnings and clues
 must use `required: true`. Machine-mind records retain both voice tags;
 their lines never resolve the identity question.
 
-Offers are `kind (contract, vendor, service, recruit, travel), label,
-hotkey, ref, when[]`. Hotkeys are unique single characters; Esc/B always
-leaves. Showing a line or offer grants nothing. The selected hotkey
-dispatches to the owning subsystem and its live eligibility checks.
-Service references resolve either a work-order node or a vendor with a
-clinic; both retain the owning system's normal counter/board checks.
+Offers are `kind (contract, vendor, service, recruit, travel, ask), label,
+hotkey, ref, when[]`, and `asks` for an ask. Hotkeys are unique single
+characters; Esc/B always leaves. Showing a line or offer grants nothing. The
+selected hotkey dispatches to the owning subsystem and its live eligibility
+checks. Service references resolve either a work-order node or a vendor with
+a clinic; both retain the owning system's normal counter/board checks.
+
+An **ask** offer (S44) is a question the player can put to the talker.
+`asks` is the player's question (at most 200 characters, and it fits the
+talk page as a line does). `ref` names one of the same talker's lines,
+which holds the answer. That line is never picked by ordinary line
+selection, and it cannot be the fallback line. Choosing the offer logs the
+question as the caller's speech, then the talker says the answer as speech,
+and the answer replaces the page's line. The offer stays listed and grants
+nothing. Ask offers use the hotkey `a`.
 
 Barks are `text, weight (positive integer), min_interval_seconds
 (positive integer, default 90)`. P8's single ambient emitter uses a
@@ -571,7 +580,7 @@ scheduler; it does not install an independent emission loop.
 The closed condition set and terminal delivery are specified in
 "Dialogue system notes" in `docs/world/04-dramatis-personae.md`.
 Conditions read the viewing player's committed facts. An unset
-`legal_at` means Wake regardless of grade. Contract stage numbers match
+`legal_at` means Wake regardless of grade, so `is_wake` includes Signatories. Contract stage numbers match
 the engine's zero-based index. Historical choices read settled Chronicle
 records; actor placement or another crew's recent outcome grants none.
 Tags and internal facts never enter a client menu or journal.
@@ -746,6 +755,7 @@ remain legal.
 | health, stamina, shock | saved at logout |
 | chits_hand, chits_bank | |
 | faction, standing {faction id → int}, marked_until, warden_heat_until | |
+| truce_marked_until, keeper_answer {keeper, zone, until} | a truce-breaking Mark's own expiry, and a truce keeper's stored answer behind `hunted` (S44, game design 5.5 and 7.3); UTC, survive restart, any death clears the answer |
 | zone, tile, facing | last position; sleeper rule applied at logout |
 | implants {slot → item instance id} | |
 | equipment {slots} | |
@@ -757,7 +767,7 @@ remain legal.
 | settings | keymap variant, palette, sitrep visibility, log verbosity |
 | stats | kills, deaths, runs, contributions, relays; per season |
 | clone_debt, recovery_kit_id, listened_enabled | debt survives decant; calibration is reversible |
-| created_at, last_seen_at, legal_at | legal_at = earlier of grade-5 timestamp and created_at + 90 days |
+| created_at, last_seen_at, legal_at | legal_at is stamped once, when 90 calendar days have passed since the identity's first_decanted_at, with the value first_decanted_at + 90 days even if first observed later (for example at the next login); it is never pre-computed and has no grade shortcut (game design §3.4). Signatory is derived (grade ≥ 5), not stored. Renting and joining check `grade ≥ 5 or legal_at is not None`. A legal_at already stamped under the old grade 5 rule stays: legal status is never removed (bible §8.1). |
 | name_key | NFC-normalized Unicode casefold; unique per origin |
 | progress | unspent points, learned programs/hymns, seen zones, compressed terrain memory, offline timestamp |
 

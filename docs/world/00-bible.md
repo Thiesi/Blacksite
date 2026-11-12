@@ -153,10 +153,12 @@ Lamp Compact has owned Warmwater since.
 
 The Wake program is Sablier's answer to a labour shortage: decant clones
 from the old specialist templates, wipe them, and lease them to whoever
-pays. Wakes receive personhood after ninety days, or earlier through a
-Civic-certified discharge earned by completed work. Many disappear from
-the lease rolls before either milestone; a missing entry is not proof of
-a final death. Players are Wakes.
+pays. Wakes receive personhood after ninety days of their own, counted
+from their first decant. There is no earlier way out. Completed work can
+earn a Civic-registered signature, good enough to sign a tenancy or join
+a faction, but the days stay leased. Many disappear from the lease rolls
+before the ninetieth day; a missing entry is not proof of a final death.
+Players are Wakes.
 
 In Year 41 the Blacksite began, for the first time in forty years, to
 exhale: warm air and old data rising up the sealed shafts into the
@@ -235,8 +237,8 @@ the Core. This is the social hub and the safe place to log out.
 Each district leans toward one faction, has one or more **relays** that
 factions can capture, and is policed weakly or not at all. Player-versus-
 player combat is allowed once both players reach grade 5. Below that,
-contested-zone attacks are refused in both directions. Calendar discharge
-does not remove this protection. Attacking an eligible player whose faction is not hostile
+contested-zone attacks are refused in both directions. Personhood does
+not remove this protection. Attacking an eligible player whose faction is not hostile
 to yours makes you **Marked**, which has consequences described in the
 design document.
 
@@ -419,9 +421,12 @@ Player characters and the named cast.
 
 Every player character is a Wake: decanted in the Wake Hall in Vatside
 from one of Sablier's old specialist templates, wiped, and under a
-ninety-day lease with an earned early-discharge route. The template is your
-**archetype**; the name you choose is your own, and the BBS handle you
-carry is how the city knows you.
+ninety-day lease that only the calendar ends. The template is your
+**archetype**. It is fixed at decanting but stays unread until you read
+your own decant record, after the drone and the terminal; that is when
+you learn what you were made from and choose to be it (design §4). The
+name you choose is your own, and the BBS handle you carry is how the
+city knows you.
 
 - **Hardline** — decanted from a Site Zero security template. Heavy frame,
   high implant tolerance, built for the front of a fight.
@@ -442,9 +447,14 @@ training, not a second character wipe. Secured kit is insured and
 replaced; it does not teleport out of a corpse.
 
 The ninety-day clause originated with specialist clones before the Wake
-program. Vantongeren defended it when mass leasing began. Civic-certified
-work can discharge the lease early; grade 5 is that mechanical milestone.
-The calendar route remains, and neither debt nor decanting restarts it.
+program. Vantongeren defended it when mass leasing began. The clause
+counts ninety calendar days from a Wake's first decant, absence
+included, and nothing shortens it: not work, not money, not a season
+ending. Civic-certified work registers a Wake's signature instead (grade
+5, **Signatory**): a tenancy in their own name and the right to join a
+faction, while the days stay leased. The ninetieth day brings the same
+rights and the bigger thing besides: being your own. Neither debt nor
+decanting restarts the count.
 The lease grants a labour claim, not permission to sell a person between
 players. Legal status cannot be revoked by a faction or season result.
 
@@ -540,7 +550,18 @@ behaviour shifts for the next season. Custodian and Tenant are names for
 interpretations, not a morality meter or a revealed count of minds.
 
 Characters persist across seasons. The world does not reset. Relays and
-faction standings are tallied per season for the leaderboards.
+faction standings are tallied per season for the leaderboards. A Wake's
+lease keeps counting across a season change.
+
+The city grows with its people. Features built for a crowd (more
+factions taking members, more contested relays, market bidding, a deeper
+Depth target) open as a node's population grows, and the city says so
+when they do (design §13.5).
+
+The first released season is **Season 0**. It carries one thread, the
+Unmoored's "Ninety-Nine", on the built hubs plus the Old Works, and it
+ends with the door in the concrete opening and nobody yet going through.
+Season 1 begins on the other side (design §13.6).
 
 ## 12. What the game is, in one line per audience
 

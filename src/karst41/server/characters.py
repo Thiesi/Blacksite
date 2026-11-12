@@ -44,6 +44,8 @@ class Characters:
         self.items = {row["id"]: ItemInstance.from_record(row) for row in state.get("items", [])}
         self.wakes: dict[str, Wake] = {}
         self.screens: dict[str, tuple[str, int]] = {}
+        # Forced rename (game design 4 step 7, #221): session -> (player id, error).
+        self.renaming: dict[str, tuple[str, str]] = {}
         self.dirty_screens: set[str] = set()
         self.outbox: list[dict[str, Any]] = []
         self.pending: dict[str, tuple[Player, list[dict[str, Any]]]] = {}
@@ -140,7 +142,7 @@ class Characters:
         identity = self.identity(session.user_id)
         owned = self.owned(session.user_id)
         if len(owned) == 1 and self.cap == 1:
-            self.attach(session, owned[0])
+            self.enter(session, owned[0])
         elif owned:
             self.screens[session.id] = ("characters", 0)
             self.dirty_screens.add(session.id)
@@ -149,10 +151,45 @@ class Characters:
             if self.wakes[session.id].stage == "saving":
                 self.wakes[session.id].stage = "card"
 
+    def enter(self, session: Session, player: Player) -> None:
+        """Attach, unless the name falls under the reserved gurney form (#221).
+
+        Such a character first chooses a new name. Every stored reference is
+        keyed by id, so only the name itself changes.
+        """
+        if rules.reserved_name(player.name):
+            self.renaming[session.id] = (player.id, "")
+            self.screens[session.id] = ("rename", 0)
+            self.dirty_screens.add(session.id)
+        else:
+            self.attach(session, player)
+
+    def rename(self, session: Session, text: str) -> None:
+        pid, _ = self.renaming[session.id]
+        player = self.players.get(pid)
+        if player is None or player.id in self.deleting:
+            self.renaming.pop(session.id, None)
+            self.screens[session.id] = ("characters", 0)
+            return
+        candidate = rules.normalize_name(text)
+        if rules.reserved_name(candidate):
+            error = rules.GURNEY_TYPED
+        elif not rules.valid_name(candidate):
+            error = "Use 2-24 columns of letters, digits, spaces, - _ '."
+        elif not self.name_available(candidate):
+            error = "That name is already in use. Choose another."
+        else:
+            self.renaming.pop(session.id)
+            player.name = candidate
+            self.attach(session, player)  # Saves at once, so no other rename races the unique index.
+            return
+        self.renaming[session.id] = (pid, error)
+
     def attach(self, session: Session, player: Player) -> None:
         retained = self.retained_avatar(player)
         sleeper = self.sleepers.pop(player.id, None)
         actor = retained.actor if retained else sleeper[0] if sleeper else player.actor()
+        actor.name = player.name  # A sleeper or retained body may predate a rename.
         actor.overweight = Inventory(self.items,self.content.items).weight(player) > player.attributes["frame"] / 2
         if sleeper:
             self.world.zones[player.zone].deactivate("sleeper:" + player.id, self.clock.now_tick())
@@ -217,6 +254,7 @@ class Characters:
     def disconnect(self, session: Session, avatar_override: Avatar | None = None) -> None:
         wake = self.wakes.pop(session.id, None)
         self.screens.pop(session.id, None)
+        self.renaming.pop(session.id, None)
         self.dirty_screens.discard(session.id)
         if session.role != "caller":
             return
@@ -286,6 +324,9 @@ class Characters:
             return
         if not self.name_available(wake.name):
             wake.stage, wake.error = "name", "That name is already in use. Choose another."
+            return
+        if rules.reserved_name(wake.name):  # A Wake saved before the rule.
+            wake.stage, wake.error = "name", rules.GURNEY_TYPED
             return
         self.serial += 1
         player = Player(f"{self.sessions.origin}:player:{self.serial}", self.sessions.origin, session.user_id,
@@ -392,7 +433,9 @@ class Characters:
                     wake.stage = "archetype"
                 elif frame.type == "line" and frame.data["id"] == wake.prompt_id:
                     candidate = rules.normalize_name(frame.data["text"]) or rules.default_name(session.door_info["handle"])
-                    if not rules.valid_name(candidate):
+                    if rules.reserved_name(candidate):
+                        wake.error = rules.GURNEY_TYPED
+                    elif not rules.valid_name(candidate):
                         wake.error = "Use 2-24 columns of letters, digits, spaces, - _ '."
                     elif not self.name_available(candidate):
                         wake.error = "That name is already in use. Choose another."
@@ -416,12 +459,24 @@ class Characters:
                 self.screens[session.id] = (screen, cursor)
             elif name == "menu_select":
                 if cursor < len(owned):
-                    self.attach(session, owned[cursor])
+                    self.enter(session, owned[cursor])
                 else:
                     self.screens.pop(session.id, None)
                     self.wakes[session.id] = Wake()
             elif name == "menu_close":
                 session.send(Frame("bye", {"reason": "logout", "text": "You leave your place."}))
+            self.dirty_screens.add(session.id)
+            return
+        if screen == "rename" and session.id in self.renaming:
+            pid = self.renaming[session.id][0]
+            if name == "prompt_cancel":
+                self.renaming.pop(session.id)
+                if len(self.owned(session.user_id)) > 1 or self.cap > 1:
+                    self.screens[session.id] = ("characters", 0)
+                else:
+                    session.send(Frame("bye", {"reason": "logout", "text": "You leave your place."}))
+            elif frame.type == "line" and frame.data["id"] == "rename:" + pid:
+                self.rename(session, frame.data["text"])
             self.dirty_screens.add(session.id)
             return
         if player is None:
@@ -498,7 +553,7 @@ class Characters:
                   ("Stamina", f"{player.stamina}/{rules.stamina_max(player.attributes['nerve'], player.attributes['frame'])}"),
                   ("Tolerance", rules.tolerance(player.attributes["vitals"], player.archetype)),
                   ("Evasion", rules.evasion(player.attributes["nerve"])), ("Carry kg", rules.carry_kg(player.attributes["frame"])),
-                  ("Lease days", f"{me['lease_days']} / 90"), ("Early discharge XP", f"{player.xp} / {me['discharge_xp']}"),
+                  ("Lease days", f"{me['lease_days']} / 90"), ("Signatory XP", f"{player.xp} / {me['discharge_xp']}"),
                   ("Personhood", player.legal_at or "Under lease"), *[(k.title(), v) for k, v in player.attributes.items()],
                   *[(k.title(), f"{v:g}") for k, v in player.skills.items()]]
         rows = [{"id": str(i), "cells": [k, str(v)]} for i, (k, v) in enumerate(values)]
@@ -565,6 +620,11 @@ class Characters:
                     body = menu("YOUR CHARACTERS", rows, cursor, "One active body per BBS identity.")
                 elif screen == "sheet":
                     body = self.sheet(player, cursor)
+                elif screen == "rename":
+                    pid, error = self.renaming.get(session.id, ("", ""))
+                    target = self.players.get(pid)
+                    body = {"title": "CHOOSE A NAME", "lines": [rules.gurney_rename(target.name if target else ""),
+                            *([error] if error else [])], "hint": "Esc cancels", "clear_prompt": False}
                 else:
                     body = {"title": "DELETE CHARACTER" if screen == "delete" else "SAVING", "lines": [
                         "This removes your character and its items.", "Your identity clock and receipts remain.", "Type the exact name: " + player.name],
@@ -574,6 +634,8 @@ class Characters:
                     self.dirty_screens.discard(session.id)
                     if screen == "delete":
                         session.send(Frame("prompt", {"id": "delete:" + player.id, "kind": "line", "label": "Type name to delete", "max_len": 24}))
+                    elif screen == "rename" and session.id in self.renaming:
+                        session.send(Frame("prompt", {"id": "rename:" + self.renaming[session.id][0], "kind": "line", "label": "New name", "max_len": 24}))
             if player and player.id not in self.deleting and session.user_id in self.sim.avatars:
                 avatar = self.sim.avatars[session.user_id]
                 actor = avatar.actor

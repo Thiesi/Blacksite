@@ -17,6 +17,7 @@ from karst41.server.players import Player
 from karst41.server.progression import Award, Grant, award
 from karst41.server.progression_views import character_sheet, skill_menu
 from karst41.server.protocol import Frame
+from karst41.server.rules import character
 from karst41.server.sessions import QUEUE_LIMIT, Session
 from karst41.server.skills import ENCOUNTER_IDLE_SECONDS, LINE_GROUP, Use, gain, spend
 from karst41.server.world.actors import Actor
@@ -41,6 +42,12 @@ class ProgressionEngine:
         self.crew_of: Callable[[str], str | None] = lambda pid: None  # S22.
         self.permit_combat: Callable[[str, str], bool] = lambda source, target: True  # S19.
         self.sim.arrival_hook = lambda session, avatar: self.record_discovery(session.player_id, "zone", avatar.zone)
+        attached = self.game.attached
+
+        def on_attach(session: Session, player: Player) -> None:
+            attached(session, player)
+            self.grade5_notice(player, session)
+        self.game.attached = on_attach
         from karst41.server.substances import Substances
         self.substances = Substances(self)
         from karst41.server.clinics import Clinics
@@ -273,6 +280,18 @@ class ProgressionEngine:
                 self.commerce.toast(session, text)
             session.emit(text, kind="reward", channel="system", role="chan_sys",
                          at=self.clock.now_utc().isoformat())
+        if result.old_grade < character.SIGNATORY_GRADE <= result.grade and "grade5_notice" not in player.progress:
+            player.progress["grade5_notice"] = "due"
+        self.grade5_notice(player, session)
+
+    def grade5_notice(self, player: Player, session: Session | None) -> None:
+        """#223: once per character, now or at the next attach if offline."""
+        if player.progress.get("grade5_notice") != "due" or session is None or session.closed:
+            return
+        player.progress["grade5_notice"] = "shown"
+        self.game.queue("save", player.bbs_user_id, player, immediate=True)  # Never shown twice on reconnect.
+        session.emit(character.GRADE5_NOTICE, kind="notice", channel="system", role="warning",
+                     at=self.clock.now_utc().isoformat(), price=True)
 
     def open_skills(self, session: Session) -> None:
         self.game.screens.pop(session.id, None)

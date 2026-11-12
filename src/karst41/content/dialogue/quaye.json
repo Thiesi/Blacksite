@@ -9,7 +9,7 @@
   "lines": [
     {
       "id": "wake",
-      "text": "Ninety days or the work certificate. The lease is a number, not a metaphor.",
+      "text": "Ninety days is ninety days. The lease is a number, not a metaphor.",
       "when": [
         "is_wake"
       ],

@@ -28,15 +28,16 @@ def cast() -> ContentTree:
 
 def test_game_13_4_complete_cast_loads_without_activating_placement(cast: ContentTree) -> None:
     held_cast = FIXED | MINOR | RECRUITERS | {'machine-mind-encounter'}
-    assert set(cast.dialogue) == held_cast | {'row-street-regular'}
+    assert set(cast.dialogue) == held_cast | {'row-street-regular', 'row-enforcer'}
     assert validate(cast) == []
     assert set(cast.bundles['s27-cast'].members['dialogue']) == held_cast
     assert all(not cast.active('dialogue', did) for did in held_cast)
     assert cast.active('dialogue', 'row-street-regular')  # #147's explicit street binding.
+    assert cast.active('dialogue', 'row-enforcer')  # S44: the Sable enforcers' set.
     assert not any(obj.params.get('dialogue') for zone in cast.zones.values() for obj in zone.meta.objects)
     assert not any(npc.dialogue in held_cast for npc in cast.npcs.values())
     assert {npc.id for npc in cast.npcs.values() if npc.dialogue} == {
-        'npc-sodium-regular', 'npc-plainclothes-warden'}
+        'npc-sodium-regular', 'npc-plainclothes-warden', 'npc-sable-enforcer'}
     assert not any(cell.dialogue for sector in cast.sectors.values() for cell in sector.cells)
 
 
@@ -82,6 +83,9 @@ def test_game_13_4_authored_references_resolve_even_while_bundle_is_dormant(cast
                 if kind in kinds:
                     assert arg in getattr(cast, kinds[kind]), (talker.id, condition)
         for offer in talker.offers:
+            if offer.kind == 'ask':  # Entities 1.11 (S44): the talker's own answer line.
+                assert offer.ref in {line.id for line in talker.lines[:-1]}, (talker.id, offer)
+                continue
             assert offer.ref in (cast.services | cast.vendors if offer.kind == 'service'
                                  else getattr(cast, offers[offer.kind])), (talker.id, offer)
 

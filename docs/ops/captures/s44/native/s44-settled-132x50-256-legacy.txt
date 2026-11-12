@@ -1,0 +1,50 @@
+┌─Warden Precinct  SAFE─────────────────────────────────────────────────────────────────────────────────────────────────────09:19──┐
+│                                                                                                           │TARGET                │
+│                                                                                                           │None                  │
+│                                                                                                           │WEAPON                │
+│                                                                                                           │Kestrel Issue Sidearm │
+│                                                                                                           │NEARBY                │
+│                                                                                                           │CREW                  │
+│                                                                                                           │None                  │
+│                                                                                                           │                      │
+│                                                                                                           │                      │
+│                                                                                                           │                      │
+│                                                                                                           │                      │
+│                                         ··                                                                │                      │
+│                                         ···                                                               │                      │
+│                                        ·····                                                              │                      │
+│                        ·              ······                                                              │                      │
+│                       ····███████████········                                                             │                      │
+│                       ·················+·····                                                             │                      │
+│                       ·······················                                                             │                      │
+│                       ·······················                                                             │                      │
+│                      ············@·······§····                                                            │                      │
+│                       ·······················                                                             │                      │
+│                       ·»·····················                                                             │                      │
+│                       ·······················                                                             │                      │
+│                          ████████████████                                                                 │                      │
+│                                                                                                           │                      │
+│                                                                                                           │                      │
+│                                                                                                           │                      │
+│                                                                                                           │                      │
+│                                                                                                           │                      │
+│                                                                                                           │Row256界132           │
+│                                                                                                           │BBS: S10Row256132     │
+│                                                                                                           │HP ######## 118/118   │
+│                                                                                                           │STA ######## 70/70    │
+│                                                                                                           │Chits 140  Grade 5    │
+│                                                                                                           │Lease days 0/90       │
+│                                                                                                           │Discharge XP 75/1500  │
+│                                                                                                           │Shock 0               │
+│                                                                                                           │Ctrl-X leaves         │
+├──────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────┤
+│[combat] Sable enforcer hits you for 10.                                                                                          │
+│[combat] Sable enforcer hits you for 10.                                                                                          │
+│[combat] Sable enforcer hits you for 10.                                                                                          │
+│[combat] Sable enforcer hits you for 10.                                                                                          │
+│[combat] You are down. A nearby ally can press E to pick you up.                                                                  │
+│[combat] Clone charge 60. Hand remaining 140; owed 0.                                                                             │
+│[combat] You wake in the vat. Missing recovery supplies are bound to you.                                                         │
+│[combat] Sable considers it settled.                                                                                              │
+│E use Warden faction vat  ? help  Tab target  F fire  X weapon  1-5 quick  V abilities  I inventory                               │
+└────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────── 

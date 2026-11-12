@@ -144,12 +144,12 @@ def action(game, client, name, record, **args):
 
 
 @pytest.mark.parametrize("calendar", [False, True])
-def test_game_3_4_8_7_legal_discharge_required_grade_or_calendar(housing, calendar):
+def test_game_3_4_8_7_signatory_or_day_90_required(housing, calendar):
     game, client, _ = housing
     a, p = game.core.apartments, player(game, client)
     place(game, client, "vatside-wake-hall", (6, 8))
     args = {"target": "fixture-letting", "unit": next(iter(a.geometry.units))}
-    with pytest.raises(ValueError, match="Legal discharge"):
+    with pytest.raises(ValueError, match=r"Signatory \(grade 5\) or day 90 is required\."):
         a.propose(client.session, "rent", args)
     if calendar:
         game.clock.epoch += timedelta(days=90)
@@ -159,7 +159,7 @@ def test_game_3_4_8_7_legal_discharge_required_grade_or_calendar(housing, calend
     p.chits_bank = 1000
     a.propose(client.session, "rent", args)
     game.commit_commerce()
-    assert p.apartment_id and p.legal_at
+    assert p.apartment_id and bool(p.legal_at) is calendar  # A Signatory is still under lease.
 
 
 def test_game_8_7_one_apartment_and_failed_signing_keeps_funds_and_cell(housing):

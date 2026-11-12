@@ -1,0 +1,969 @@
+{
+  "passed": true,
+  "head": "2ab65d9fec92c6bbba5d1902812cdaa185edf84b",
+  "transport": "NetBBS Telnet -> registered native stdio",
+  "renderer": "legacy",
+  "size": [
+    80,
+    24
+  ],
+  "captures": [
+    {
+      "capture": "s44-price-arrival-80x24-16-legacy",
+      "scenario": "price-arrival",
+      "size": [
+        80,
+        24
+      ],
+      "tier": "16",
+      "renderer": "legacy",
+      "notice": "Fire: Sable comes, no Halo. At a player: Marked 15m, no work.",
+      "sha256": {
+        ".ans": "8462e3b793f674188bccbd3b317ad5759cc1789f56f3857f8413850468dfbfed",
+        ".txt": "9690d73b4d4b1f0498578720f0ca64e3a8daf95a5b105de941f57713290a7cb3",
+        ".json": "4d13c697c9d624556ccbd4e3f75521097a581dc74a31e3f4bd9b89a7cb611144"
+      }
+    },
+    {
+      "capture": "s44-price-target-80x24-16-legacy",
+      "scenario": "price-target",
+      "size": [
+        80,
+        24
+      ],
+      "tier": "16",
+      "renderer": "legacy",
+      "notice": "Fire here and Sable comes. No Halo.",
+      "warning": "Truce: Sable answers",
+      "sha256": {
+        ".ans": "ad0f08a5cf6cfe091dd3400cc07087fb69a0fc235598efb990cd0c9842239136",
+        ".txt": "32a3979b3ae6a28c2f77d9b5efa2b43a31eb0d31b27f1b3c41547ddf31fa8982",
+        ".json": "5c6385ed3b544da99f14ca00f31b0241b538d6ae1c068744b559004791939738"
+      }
+    },
+    {
+      "capture": "s44-hunted-pursuit-80x24-16-legacy",
+      "scenario": "hunted-pursuit",
+      "size": [
+        80,
+        24
+      ],
+      "tier": "16",
+      "renderer": "legacy",
+      "hunted": true,
+      "guards": [
+        [
+          32,
+          22
+        ],
+        [
+          30,
+          21
+        ]
+      ],
+      "sha256": {
+        ".ans": "ae5952328cf956b6a0c4c48aeb93b5341313ffa92129f0e18c75314b514693ca",
+        ".txt": "343a21e055103bb57f3006b3ff333eeb1cdf59c8a8aad3235a22936819b639c0",
+        ".json": "8f47a137d4421b776665973d68bec3aec60e48d7b4f1e7ca51eb72d44611ec05"
+      }
+    },
+    {
+      "capture": "s44-bar-pursuit-in-80x24-16-legacy",
+      "scenario": "bar-pursuit-in",
+      "size": [
+        80,
+        24
+      ],
+      "tier": "16",
+      "renderer": "legacy",
+      "fixture_walls": 34,
+      "guard": [
+        13,
+        7
+      ],
+      "player": [
+        8,
+        6
+      ],
+      "sha256": {
+        ".ans": "7b043b10e4304bd701d28501e85d27a8d1b8fb3fe55a1ae24a961d0ee8bed6c6",
+        ".txt": "f0cbb556192634a72bddbaf0f95d1a1ec1b86d44a000b31cad50395f7e084b90",
+        ".json": "54d89ed39899bd2f8487074f9879bfe14cdd2152e346e2d07fd604171dda888a"
+      }
+    },
+    {
+      "capture": "s44-bar-pursuit-out-80x24-16-legacy",
+      "scenario": "bar-pursuit-out",
+      "size": [
+        80,
+        24
+      ],
+      "tier": "16",
+      "renderer": "legacy",
+      "guard_trail": [
+        [
+          13,
+          7
+        ],
+        [
+          14,
+          7
+        ],
+        [
+          14,
+          8
+        ],
+        [
+          14,
+          9
+        ],
+        [
+          15,
+          9
+        ],
+        [
+          16,
+          9
+        ],
+        [
+          17,
+          9
+        ],
+        [
+          18,
+          9
+        ],
+        [
+          19,
+          9
+        ],
+        [
+          20,
+          9
+        ],
+        [
+          21,
+          9
+        ],
+        [
+          22,
+          9
+        ],
+        [
+          23,
+          9
+        ],
+        [
+          24,
+          9
+        ],
+        [
+          25,
+          9
+        ],
+        [
+          26,
+          9
+        ],
+        [
+          27,
+          9
+        ],
+        [
+          28,
+          9
+        ],
+        [
+          29,
+          9
+        ],
+        [
+          30,
+          9
+        ],
+        [
+          31,
+          9
+        ],
+        [
+          32,
+          9
+        ],
+        [
+          33,
+          9
+        ],
+        [
+          34,
+          9
+        ],
+        [
+          35,
+          9
+        ]
+      ],
+      "player": [
+        40,
+        12
+      ],
+      "sha256": {
+        ".ans": "dbbbc759e726e676a459efb05a2f1e3fcd32f8c9f6b8bb743284cfb4e5cebe23",
+        ".txt": "58cbf2fcb1a36504a77a2a4047be72f7382c91e09fc78489d30e934f1dc66d1e",
+        ".json": "aa6015404cf8e0864a6951690595511577bbe6fc640e7966da59badcfae70dfc"
+      }
+    },
+    {
+      "capture": "s44-halo-refused-80x24-16-legacy",
+      "scenario": "halo-refused",
+      "size": [
+        80,
+        24
+      ],
+      "tier": "16",
+      "renderer": "legacy",
+      "line": "The bouncer doesn't move. \"Sable's still asking about you. Try me in 5 min.\"",
+      "sha256": {
+        ".ans": "7e8ba75b278b07e087f8006caf4d9dbe43ee24898122b991665774dd87cfde08",
+        ".txt": "46834042535314a0be174a25532dcac28086ce6e4099b0f997f203b212b021b2",
+        ".json": "205fac7a6dbb55ad074a278a2e81a26f39feb5022b629f93a0f34b464f21552b"
+      }
+    },
+    {
+      "capture": "s44-settled-80x24-16-legacy",
+      "scenario": "settled",
+      "size": [
+        80,
+        24
+      ],
+      "tier": "16",
+      "renderer": "legacy",
+      "line": "Sable considers it settled.",
+      "zone": "core-precinct",
+      "sha256": {
+        ".ans": "8071f5abbf4f6d8f885483f605223a91d7aeb4eaa0f2b6293b58033ba15e8367",
+        ".txt": "8b6368433b6d1f31cb9035e6002a091f60fad8da88c483287a4d1b5794b093b4",
+        ".json": "703204a87aa4325c5fa7dcb22c4a962bb5e2162aea6a3848361053f197af10a6"
+      }
+    },
+    {
+      "capture": "s44-enforcer-talk-80x24-16-legacy",
+      "scenario": "enforcer-talk",
+      "size": [
+        80,
+        24
+      ],
+      "tier": "16",
+      "renderer": "legacy",
+      "label": "Ask about the peace",
+      "sha256": {
+        ".ans": "2b54a6f2f5688762dc44b7d1d6147a2d5985ac4060650cdd64edcc3f922f22f3",
+        ".txt": "52238358d803be3ce8227b946be48225025c9fe372f90044c1e482935e604d46",
+        ".json": "4aab71245c97d32f56bd0c8f13befc2cdc97e34e0579c5fa01e68de9af9c6046"
+      }
+    },
+    {
+      "capture": "s44-enforcer-ask-80x24-16-legacy",
+      "scenario": "enforcer-ask",
+      "size": [
+        80,
+        24
+      ],
+      "tier": "16",
+      "renderer": "legacy",
+      "question": "What's the arrangement here?",
+      "answer": "Nobody draws. Somebody does, we come for them, whoever they are. They pay. A few think they're quicker than us. Fewer are.",
+      "sha256": {
+        ".ans": "1a4fb689d2e76b782f91a4f1d2f32cfd52bda1fa99cff884e302ddcd1be68229",
+        ".txt": "d54246138487f8f3e3fba60d726f515cc0ef76705ba19fd288c512a0316c003e",
+        ".json": "a0a6441926d058c67a53718fbef15a28f9e099b4db4f504be12480e996a4f44b"
+      }
+    },
+    {
+      "capture": "s44-price-arrival-80x24-256-legacy",
+      "scenario": "price-arrival",
+      "size": [
+        80,
+        24
+      ],
+      "tier": "256",
+      "renderer": "legacy",
+      "notice": "Fire: Sable comes, no Halo. At a player: Marked 15m, no work.",
+      "sha256": {
+        ".ans": "80757595e39516c6d971392cc17640486175b351a374a5c3de9b7b84e195c933",
+        ".txt": "871db42b177f4646e8dea3e50b0a2542a2b03632ca06e088194592968234996e",
+        ".json": "e2563ca1649bfa1a955fc94d1f2f7e12522bce362bb0124361560a6696d446cf"
+      }
+    },
+    {
+      "capture": "s44-price-target-80x24-256-legacy",
+      "scenario": "price-target",
+      "size": [
+        80,
+        24
+      ],
+      "tier": "256",
+      "renderer": "legacy",
+      "notice": "Fire here and Sable comes. No Halo.",
+      "warning": "Truce: Sable answers",
+      "sha256": {
+        ".ans": "f421e35d76e510086eb69ed02a39f1ee1e1a1b2fbf030623c6bb9f8f8f36cd7e",
+        ".txt": "b38bd9bd1eb4c79872e40f1d158a29f85c15e62c2236e7eacfd0d0666f6381f4",
+        ".json": "49400d0386c9db95d59f8bebef775a9bc04a301ca7eaac7a1bed2be91898e19e"
+      }
+    },
+    {
+      "capture": "s44-hunted-pursuit-80x24-256-legacy",
+      "scenario": "hunted-pursuit",
+      "size": [
+        80,
+        24
+      ],
+      "tier": "256",
+      "renderer": "legacy",
+      "hunted": true,
+      "guards": [
+        [
+          9,
+          19
+        ],
+        [
+          10,
+          19
+        ]
+      ],
+      "sha256": {
+        ".ans": "9698979722134ef2e0be025f8e8b31f5ea2f7514594d2d858e12f8e350304dc9",
+        ".txt": "ff09b68583c0c7bf315427542610d36472b4e061c1f674749ef76e02260deac9",
+        ".json": "cd45121db16cb25d8f45e3e1c891768552eac3e04e8519d5734596e252353415"
+      }
+    },
+    {
+      "capture": "s44-bar-pursuit-in-80x24-256-legacy",
+      "scenario": "bar-pursuit-in",
+      "size": [
+        80,
+        24
+      ],
+      "tier": "256",
+      "renderer": "legacy",
+      "fixture_walls": 34,
+      "guard": [
+        13,
+        7
+      ],
+      "player": [
+        8,
+        6
+      ],
+      "sha256": {
+        ".ans": "47eaf10ffd27b7deac5c98fae7710debc64a74fa64f13c04b1dea183e85e59fc",
+        ".txt": "68624df829f35d05d4e0f0822a5ba7d8f38b9aac62e24c89d6e42d08a90b6e1d",
+        ".json": "e811c4a20171d6a116e7cb0c928b00773da97d083c44ea788080a63f8ea79ca1"
+      }
+    },
+    {
+      "capture": "s44-bar-pursuit-out-80x24-256-legacy",
+      "scenario": "bar-pursuit-out",
+      "size": [
+        80,
+        24
+      ],
+      "tier": "256",
+      "renderer": "legacy",
+      "guard_trail": [
+        [
+          13,
+          7
+        ],
+        [
+          14,
+          7
+        ],
+        [
+          14,
+          8
+        ],
+        [
+          14,
+          9
+        ],
+        [
+          15,
+          9
+        ],
+        [
+          16,
+          9
+        ],
+        [
+          17,
+          9
+        ],
+        [
+          18,
+          9
+        ],
+        [
+          19,
+          9
+        ],
+        [
+          20,
+          9
+        ],
+        [
+          21,
+          9
+        ],
+        [
+          22,
+          9
+        ],
+        [
+          23,
+          9
+        ],
+        [
+          24,
+          9
+        ],
+        [
+          25,
+          9
+        ],
+        [
+          26,
+          9
+        ],
+        [
+          27,
+          9
+        ],
+        [
+          28,
+          9
+        ],
+        [
+          29,
+          9
+        ],
+        [
+          30,
+          9
+        ],
+        [
+          31,
+          9
+        ],
+        [
+          32,
+          9
+        ],
+        [
+          33,
+          9
+        ],
+        [
+          34,
+          9
+        ],
+        [
+          35,
+          9
+        ]
+      ],
+      "player": [
+        40,
+        12
+      ],
+      "sha256": {
+        ".ans": "f13ab18f6b81456922503ec7a994f50ab949520401b3568e33c4cac8af61a414",
+        ".txt": "3ccd5e5c180aaea3644e126a1900f292a74db215ded0f1cd824047d4683fbf9c",
+        ".json": "76292a366513da01761c1eeae21e7090230d9dbf2f025af21991c3047ea20042"
+      }
+    },
+    {
+      "capture": "s44-halo-refused-80x24-256-legacy",
+      "scenario": "halo-refused",
+      "size": [
+        80,
+        24
+      ],
+      "tier": "256",
+      "renderer": "legacy",
+      "line": "The bouncer doesn't move. \"Sable's still asking about you. Try me in 5 min.\"",
+      "sha256": {
+        ".ans": "e1fa1b1886fda353ea9a99afa37479f507bfbd26f016293f0c54af1407dae714",
+        ".txt": "56aff5e1167a8eb2f04c1a20674a95a6b709ff2ae84199036ff5dcd60cd2596c",
+        ".json": "aaba2c6ade8315534250607ce8d8a93e1ba509cb5e95798ee820d37708ec5917"
+      }
+    },
+    {
+      "capture": "s44-settled-80x24-256-legacy",
+      "scenario": "settled",
+      "size": [
+        80,
+        24
+      ],
+      "tier": "256",
+      "renderer": "legacy",
+      "line": "Sable considers it settled.",
+      "zone": "core-precinct",
+      "sha256": {
+        ".ans": "63a50a22e60a64a513f3b135c504a9dee9c3833b44062d76cf6f0628f234f653",
+        ".txt": "930cf59e05aeb422fe5ecf257b3c4f00d9225b593f8d66e069e8f1e51c0756f1",
+        ".json": "25854328107f74d8424d183c5556fcc041ff160d282627ceced95b2b6515617a"
+      }
+    },
+    {
+      "capture": "s44-enforcer-talk-80x24-256-legacy",
+      "scenario": "enforcer-talk",
+      "size": [
+        80,
+        24
+      ],
+      "tier": "256",
+      "renderer": "legacy",
+      "label": "Ask about the peace",
+      "sha256": {
+        ".ans": "550cae3192fac6ab918cc21fe07e6da1fc9b24c7308ef933612f93895db277a4",
+        ".txt": "dce191949965ea68868bf13396cdbe0be681a894b2241c28b10d30fdb6d9bb05",
+        ".json": "9f1b3b9b1443d244166875dc6efc9f382c539617cbc6813146ea8927e6d3694b"
+      }
+    },
+    {
+      "capture": "s44-enforcer-ask-80x24-256-legacy",
+      "scenario": "enforcer-ask",
+      "size": [
+        80,
+        24
+      ],
+      "tier": "256",
+      "renderer": "legacy",
+      "question": "What's the arrangement here?",
+      "answer": "Nobody draws. Somebody does, we come for them, whoever they are. They pay. A few think they're quicker than us. Fewer are.",
+      "sha256": {
+        ".ans": "ffc8f3f7aaba9de57a8e6ddb48b98016c422dca15437695959c6bf9c0e89e5bf",
+        ".txt": "a901e1803bd3a17e54646f8d1a67207f584754dd2dd89c456e5b5bda3bb97871",
+        ".json": "177c2c4d265a98ca5c5039ebc3407453c7a48c3c47d611d627331e7632d4ab1e"
+      }
+    },
+    {
+      "capture": "s44-price-arrival-80x24-truecolor-legacy",
+      "scenario": "price-arrival",
+      "size": [
+        80,
+        24
+      ],
+      "tier": "truecolor",
+      "renderer": "legacy",
+      "notice": "Fire: Sable comes, no Halo. At a player: Marked 15m, no work.",
+      "sha256": {
+        ".ans": "bb09156d67ba78acb26a81635ca5ddeb507ca33e0a10cd2f3e9ba5d96780d916",
+        ".txt": "3401b01e875e8852f1d5f1df182b853cb1483ae55353602a35067ac5af2602b9",
+        ".json": "76366551b22fb6baa6dc2350ff02604952c2071dd9905578d1977ad57be1a5cc"
+      }
+    },
+    {
+      "capture": "s44-price-target-80x24-truecolor-legacy",
+      "scenario": "price-target",
+      "size": [
+        80,
+        24
+      ],
+      "tier": "truecolor",
+      "renderer": "legacy",
+      "notice": "Fire here and Sable comes. No Halo.",
+      "warning": "Truce: Sable answers",
+      "sha256": {
+        ".ans": "5194aff4635f0fc74bbc7b4167603aa51258da2ca740fcb6235829450393a447",
+        ".txt": "8e1439c5a71da5b77828c4b2a14cf3413bc3f50db60167c268e1adbb74c200d5",
+        ".json": "3e0a4fcdd807596709cb70297fe7992700f36929c4074d8d856e18ad8929d0a2"
+      }
+    },
+    {
+      "capture": "s44-hunted-pursuit-80x24-truecolor-legacy",
+      "scenario": "hunted-pursuit",
+      "size": [
+        80,
+        24
+      ],
+      "tier": "truecolor",
+      "renderer": "legacy",
+      "hunted": true,
+      "guards": [
+        [
+          2,
+          15
+        ],
+        [
+          2,
+          13
+        ]
+      ],
+      "sha256": {
+        ".ans": "d9df8d7367f3bce667e9f6752ef275496ac73ede33a6c35bde9252da5615d1ec",
+        ".txt": "43105882bff843f8e3ea03fc1c88c02e7949d3851b93b74be5128717a0807b75",
+        ".json": "0ddd4e219b23f9ed528ffb7360c9e4e4baaee6c3f2ce2f9ce52ad436e0c0abfd"
+      }
+    },
+    {
+      "capture": "s44-bar-pursuit-in-80x24-truecolor-legacy",
+      "scenario": "bar-pursuit-in",
+      "size": [
+        80,
+        24
+      ],
+      "tier": "truecolor",
+      "renderer": "legacy",
+      "fixture_walls": 34,
+      "guard": [
+        13,
+        7
+      ],
+      "player": [
+        8,
+        6
+      ],
+      "sha256": {
+        ".ans": "7e85f3c6cefa5d8fd2cdc0a1917f6828860d8ab65bb34db363472039e61a0909",
+        ".txt": "ae62fa822f34ff5ded67c9e63cdbd2f246b250888284551ba778f8dbdcc3f5e2",
+        ".json": "6b68216ed6311fc9d87011bd84e6cbc0de72b93684d705d535750b1f47f3b963"
+      }
+    },
+    {
+      "capture": "s44-bar-pursuit-out-80x24-truecolor-legacy",
+      "scenario": "bar-pursuit-out",
+      "size": [
+        80,
+        24
+      ],
+      "tier": "truecolor",
+      "renderer": "legacy",
+      "guard_trail": [
+        [
+          13,
+          7
+        ],
+        [
+          14,
+          7
+        ],
+        [
+          14,
+          8
+        ],
+        [
+          14,
+          9
+        ],
+        [
+          15,
+          9
+        ],
+        [
+          16,
+          9
+        ],
+        [
+          17,
+          9
+        ],
+        [
+          18,
+          9
+        ],
+        [
+          19,
+          9
+        ],
+        [
+          20,
+          9
+        ],
+        [
+          21,
+          9
+        ],
+        [
+          22,
+          9
+        ],
+        [
+          23,
+          9
+        ],
+        [
+          24,
+          9
+        ],
+        [
+          25,
+          9
+        ],
+        [
+          26,
+          9
+        ],
+        [
+          27,
+          9
+        ],
+        [
+          28,
+          9
+        ],
+        [
+          29,
+          9
+        ],
+        [
+          30,
+          9
+        ],
+        [
+          31,
+          9
+        ],
+        [
+          32,
+          9
+        ],
+        [
+          33,
+          9
+        ],
+        [
+          34,
+          9
+        ],
+        [
+          35,
+          9
+        ]
+      ],
+      "player": [
+        40,
+        12
+      ],
+      "sha256": {
+        ".ans": "b0f5439895341f51af508655a2e14c9dddedb84f0aa9979b21261afe37a7b153",
+        ".txt": "848eda9a99e93beade6891ebeb3d2022668e048be0ebbbf70487fde824399f0a",
+        ".json": "a2933f782c94dc7c2081f9d4c47e1633713f0ccbe7b736a9b68811e445e8d380"
+      }
+    },
+    {
+      "capture": "s44-halo-refused-80x24-truecolor-legacy",
+      "scenario": "halo-refused",
+      "size": [
+        80,
+        24
+      ],
+      "tier": "truecolor",
+      "renderer": "legacy",
+      "line": "The bouncer doesn't move. \"Sable's still asking about you. Try me in 5 min.\"",
+      "sha256": {
+        ".ans": "ac8863492b8fc87d1d255e6707b373e97c9727174c66f3d4670aa377795ccb0a",
+        ".txt": "b0e112a6b6061c3aaada564938bb79750046451200716f09cf111937055bea30",
+        ".json": "7469159a32e226a45bc8c4eba18e68148b1130b8a967f078fb53a153e2a436ff"
+      }
+    },
+    {
+      "capture": "s44-settled-80x24-truecolor-legacy",
+      "scenario": "settled",
+      "size": [
+        80,
+        24
+      ],
+      "tier": "truecolor",
+      "renderer": "legacy",
+      "line": "Sable considers it settled.",
+      "zone": "core-precinct",
+      "sha256": {
+        ".ans": "264d5b637b8d39c203d567dc6e8ff372caa835c82f5883409c76dfc896f3ede0",
+        ".txt": "2114547d83dcf65487201e8fb2edb8f8eafdbd92cddadc641dd1123e6ac60339",
+        ".json": "f314d63d7a7172b97d4a46050aa992a3720f52771563dff053ba8d9b8a417ccd"
+      }
+    },
+    {
+      "capture": "s44-enforcer-talk-80x24-truecolor-legacy",
+      "scenario": "enforcer-talk",
+      "size": [
+        80,
+        24
+      ],
+      "tier": "truecolor",
+      "renderer": "legacy",
+      "label": "Ask about the peace",
+      "sha256": {
+        ".ans": "504636959d4f4cc642524bea30449c47a428d048513f14cf053b227d663d8986",
+        ".txt": "4c22ba48dd96e858717f5e9863aa2b69303266c1c5aa4e7a32dbc95c905c1d8f",
+        ".json": "a51fee771979cf3e4ab9ad67d1fed190372a31a65b79589d0a87daacfdc5b322"
+      }
+    },
+    {
+      "capture": "s44-enforcer-ask-80x24-truecolor-legacy",
+      "scenario": "enforcer-ask",
+      "size": [
+        80,
+        24
+      ],
+      "tier": "truecolor",
+      "renderer": "legacy",
+      "question": "What's the arrangement here?",
+      "answer": "Nobody draws. Somebody does, we come for them, whoever they are. They pay. A few think they're quicker than us. Fewer are.",
+      "sha256": {
+        ".ans": "59a79cbf2ff64c505c31bc4fef440c99804cb18efe2b9ff8e29cc93df4c7172d",
+        ".txt": "30fe5471f5155767d82dcb7b3367ef16af8b86f70b7dfd85ac84d17e11302571",
+        ".json": "4076f83a5d030cd36a4da15d6f4e1dc9d57c4bfdc5e99b1687c4d4c8ccdb16fd"
+      }
+    }
+  ],
+  "fixtures": [
+    "bar: Upstairs' walls copied from tests/npcs/fixtures/issue187-row-demo.map onto the live Row as a geometry layer in this acceptance server only; main's Row has no alcoves",
+    "grade 5 for the player-vs-player rules (S38 precedent)",
+    "keeper guards (and any that spawn) hold fire until the death scene; released for the death",
+    "one pursuer in the bar scene: the other guard leaves the world and respawns from its spawner"
+  ],
+  "fixture_walls": [
+    [
+      6,
+      4
+    ],
+    [
+      7,
+      4
+    ],
+    [
+      8,
+      4
+    ],
+    [
+      9,
+      4
+    ],
+    [
+      10,
+      4
+    ],
+    [
+      11,
+      4
+    ],
+    [
+      12,
+      4
+    ],
+    [
+      13,
+      4
+    ],
+    [
+      14,
+      4
+    ],
+    [
+      15,
+      4
+    ],
+    [
+      16,
+      4
+    ],
+    [
+      17,
+      4
+    ],
+    [
+      18,
+      4
+    ],
+    [
+      19,
+      4
+    ],
+    [
+      20,
+      4
+    ],
+    [
+      6,
+      5
+    ],
+    [
+      20,
+      5
+    ],
+    [
+      6,
+      6
+    ],
+    [
+      20,
+      6
+    ],
+    [
+      6,
+      7
+    ],
+    [
+      20,
+      7
+    ],
+    [
+      6,
+      8
+    ],
+    [
+      7,
+      8
+    ],
+    [
+      8,
+      8
+    ],
+    [
+      9,
+      8
+    ],
+    [
+      10,
+      8
+    ],
+    [
+      11,
+      8
+    ],
+    [
+      12,
+      8
+    ],
+    [
+      15,
+      8
+    ],
+    [
+      16,
+      8
+    ],
+    [
+      17,
+      8
+    ],
+    [
+      18,
+      8
+    ],
+    [
+      19,
+      8
+    ],
+    [
+      20,
+      8
+    ]
+  ],
+  "presentation_acceptance": false,
+  "h1_layout_approval": false,
+  "s25_layout_approval": false
+}

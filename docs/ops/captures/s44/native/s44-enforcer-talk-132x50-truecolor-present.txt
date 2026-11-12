@@ -1,0 +1,50 @@
+┌─Sable enforcer - Keeps the Row's peace─CONTESTED─────────────────────────────────────────────────────────S10Asktruecolor132──────┐
+│          ┌─ Sable enforcer - Keeps the Row's peace ───────────────────────────────────────────────────────────────────┐          │
+│          │                                                                                                            │          │
+│          │ You're new, so once. Draw on this street and we come for you. The Halo won't have you either.              │          │
+│          │                                                                                                            │          │
+│          │ a      Ask about the peace                                                                                 │          │
+│          │ Esc/B  Leave                                                                                               │          │
+│          │                                                                                                            │          │
+│          │                                                                                                            │          │
+│          │                                                                                                            │          │
+│          │                                                                                                            │          │
+│          │                                                                                                            │          │
+│          │                                                                                                            │          │
+│          │                                                                                                            │          │
+│          │                                                                                                            │          │
+│          │                                                                                                            │          │
+│          │                                                                                                            │          │
+│          │                                                                                                            │          │
+│          │                                                                                                            │          │
+│          │                                                                                                            │          │
+│          │                                                                                                            │          │
+│          │                                                                                                            │          │
+│          │                                                                                                            │          │
+│          │                                                                                                            │          │
+│          │                                                                                                            │          │
+│          │                                                                                                            │          │
+│          │                                                                                                            │          │
+│          │                                                                                                            │          │
+│          │                                                                                                            │          │
+│          │                                                                                                            │          │
+│          │                                                                                                            │          │
+│          │                                                                                                            │          │
+│          │                                                                                                            │          │
+│          │                                                                                                            │          │
+│          │                                                                                                            │          │
+│          │                                                                                                            │          │
+│          │                                                                                                            │          │
+│          │                                                                                                            │          │
+│          └────────────────────────────────────────────────────────────────────────────────────────────────────────────┘          │
+├──────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────┤
+│» You cross Meridian Plaza under the Ring. You hear tram bells and the fountain. Wardens watch every corner.                      │
+│√ You gain 25 XP.                                                                                                                 │
+│+ You arrive at Sodium Row.                                                                                                       │
+│» You walk under orange lamps on wet pavement. You hear music from six doorways. At the street's end, you see the Tin Halo's sign,│
+│  lit whole.                                                                                                                      │
+│» Nobody draws on Sodium Row. Sable makes sure of it.                                                                             │
+│√ You gain 25 XP.                                                                                                                 │
+│" Sable enforcer: You're new, so once. Draw on this street and we come for you. The Halo won't have you either.                   │
+│? help  Choose an action; move or Esc/B leaves                                                                                    │
+└────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────── 

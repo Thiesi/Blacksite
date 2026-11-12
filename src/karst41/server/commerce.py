@@ -44,6 +44,8 @@ class Commerce:
         self.caches: dict[str, dict[str, Any]] = deepcopy(state.get("caches", {}))
         self.serial = state.get("item_serial", 0)
         self.menus: dict[str, CommerceMenu] = {}
+        # S44: a service's refusal line by handler (Vesper's for a Mark).
+        self.service_refusal: Callable[[Session, str], str | None] = lambda session, handler: None
         self.prompts: dict[str, dict[str, Any]] = {}
         self.using: dict[str, dict[str, Any]] = {}
         self.requests: dict[str, list[str]] = {}
@@ -89,6 +91,9 @@ class Commerce:
     def vendor(self, session: Session, target: str) -> tuple[Vendor, str]:
         obj = self.nearby(session, target)
         vid = obj.spec.params.get("vendor")
+        handler = obj.spec.params.get("contract_handler") or vid
+        if reason := self.service_refusal(session, str(handler)):
+            raise ValueError(reason)  # S44: Vesper's counter closes to a Mark.
         vendor = self.content.vendors.get(vid)
         if not vendor or not self.content.active("vendors", vid) or not (
                 obj.spec.kind == "vendor" or vendor.relay and obj.spec.kind == "relay"):

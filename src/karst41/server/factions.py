@@ -11,6 +11,7 @@ from typing import Any
 
 from karst41.content.schema import Faction, WakeCard
 from karst41.server.players import Player
+from karst41.server.rules import character
 
 @dataclass(frozen=True)
 class EventOffer:
@@ -122,8 +123,8 @@ def join(player: Player, factions: dict[str, Faction], faction: str, now: dateti
         raise ValueError("Choose one of the eight factions.")
     if player.faction:
         raise ValueError("Leave your current faction first.")
-    if not player.legal_at:
-        raise ValueError("Legal discharge is required: grade 5 or ninety days.")
+    if not character.signatory(player.grade, player.legal_at):
+        raise ValueError(character.SIGNATORY_REQUIRED)
     if player.progress.get("faction_cooldown_until", 0) > now.timestamp():
         raise ValueError("Seven days must pass after leaving a faction.")
     if standing(player, faction) < JOIN_STANDING:

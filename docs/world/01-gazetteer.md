@@ -1230,7 +1230,7 @@ Between the blocks, alleys where the block lights do not reach.
 
 Every block shares a lobby, in the way that every apartment in the game
 shares a floor plan. A concierge who remembers faces, a lift, a wall of
-mailboxes, and a door with your name on it, which after a discharged lease as a
+mailboxes, and a door with your name on it, which after life as a
 number is the whole point.
 
 ```
@@ -1258,7 +1258,7 @@ number is the whole point.
   enforcers who attack anyone who attacks anyone. They follow a
   truce-breaker into the bars, not past the street's exits, and any
   death squares it with them; a Mark outlasts the death, and a new
-  breach after it brings them again (planned, S44; game design 5.5 and
+  breach after it brings them again (game design 5.5 and
   7.3).
 - **Terminals:** three public terminals.
 - **Vendors / anchors:** five bars (drinks: cheap consumables with a
@@ -1319,7 +1319,7 @@ some doorways than in others.
 - **Spawners:** regulars (talkers), one bouncer. The bouncer turns away
   anyone Sable is still answering, and anyone Marked for breaking the
   Row's truce, and says for how long. Vesper doesn't work for a red
-  name (planned, S44; game design 5.5 and 7.3).
+  name (game design 5.5 and 7.3).
 
 The bar at the end of the street, with a halo of tin cans over the door
 that a drunk welded up forty years ago and nobody has taken down.

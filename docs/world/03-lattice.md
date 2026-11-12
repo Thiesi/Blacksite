@@ -170,7 +170,7 @@ core-precinct`. ICE: Tripwire ×2, Ticker, Bluecoat ×2, Mastiff.
 
 **Civic Ledger** (`lat-civic-ledger`) — Civic Authority, tier 2, 5 rooms. Hardware: records
 annex @ `core-plaza`. Data: ration registry, personhood records (a story
-contract forges a Ninety-Day early for an NPC; players cannot forge their
+contract forges a Ninety-Day record for an NPC; players cannot forge their
 own). Controls: `hall doors @ core-plaza`. ICE: Tripwire, Turnstile,
 Ticker.
 
