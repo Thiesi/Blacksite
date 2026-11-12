@@ -1228,8 +1228,8 @@ class _Validator:
         for gid, grade in grades:
             if not grade.title.strip() or not grade.promotion.strip():
                 self.report("grades", gid, "a grade needs a title and promotion line")
-            if grade.grade == 5 and grade.title != "Ninety-Day":
-                self.report("grades", gid, "grade 5 is the Ninety-Day milestone")
+            if grade.grade == 5 and grade.title != "Signatory":
+                self.report("grades", gid, "grade 5 is the Signatory milestone")
         skills = list(self.each("skills"))
         expected = {"kinetic", "melee", "armour", "energy", "stealth", "drones",
                     "lattice", "programs", "fabrication", "hymns", "dissonance", "listening"}

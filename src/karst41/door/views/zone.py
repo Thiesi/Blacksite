@@ -116,6 +116,6 @@ def render_zone(buffer: CellBuffer, body: dict[str, Any], layout: Layout, palett
     if extra:
         buffer.put(side_x, bottom + 4, truncate(f"Chits {me['chits']}  Grade {me['grade']}", side_w), palette.style())
         buffer.put(side_x, bottom + 5, truncate(f"Lease days {me['lease_days']}/90", side_w), palette.style())
-        buffer.put(side_x, bottom + 6, truncate(f"Discharge XP {me['xp']}/{me['discharge_xp']}", side_w), palette.style())
+        buffer.put(side_x, bottom + 6, truncate(f"Signatory XP {me['xp']}/{me['discharge_xp']}", side_w), palette.style())
     buffer.put(side_x, bottom + 3 + extra, truncate(f"Shock {me.get('shock', 0):g}", side_w), palette.style())
     buffer.put(side_x, bottom + 4 + extra, "Ctrl-X leaves", palette.style("hint"))

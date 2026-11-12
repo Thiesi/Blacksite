@@ -37,6 +37,9 @@ def build_duel(repo_root: Path, *, first_archetype: int = 0):
     return game,*clients
 
 
+LEGAL="2025-10-03T00:00:00+00:00"  # A stamped legal_at; no grade sets it (#221).
+
+
 @pytest.fixture
 def duel(repo_root: Path):
     return build_duel(repo_root)
@@ -134,6 +137,8 @@ def test_design_5_4_down_pickup_dead_debt_cache_and_decant(duel):
     engine=game.core.combat
     victim=game.core.characters.players[b.session.player_id]
     victim.chits_hand=1000;victim.chits_bank=500;victim.xp=1700
+    # Personhood is calendar only (#221); stamp it so death can be shown not to remove it.
+    game.core.characters.identities[victim.bbs_user_id]["legal_at"]=victim.legal_at=LEGAL
     engine.hurt(body(game,a),body(game,b),1000)
     assert body(game,b).stance=="down"
     game.step(49)
@@ -152,7 +157,7 @@ def test_design_5_4_down_pickup_dead_debt_cache_and_decant(duel):
     loan=[game.core.commerce.items[i] for i in victim.inventory if game.core.commerce.items[i].bound]
     assert any(i.template=="wpn_kestrel_sidearm" for i in loan)
     assert count(game,b,"ammo_9x")==50
-    assert victim.legal_at  # Death never removes early discharge.
+    assert victim.legal_at==LEGAL  # Death never removes personhood.
 
 
 def test_design_5_4_pickup_crew_ally_before_timer(duel):
@@ -290,11 +295,12 @@ def test_design_2_combat_logout_settles_after_sixty_seconds_without_banked_loss(
     game,a,b=duel
     player=game.core.characters.players[a.session.player_id]
     player.chits_hand=1000;player.chits_bank=900
+    game.core.characters.identities[player.bbs_user_id]["legal_at"]=player.legal_at=LEGAL
     game.core.combat.exchange(body(game,a),body(game,b))
     game.core.sessions.disconnect(a.session)
     game.step(600)
     assert player.zone=="vatside-wake-hall" and player.chits_hand==900 and player.chits_bank==900
-    assert player.legal_at
+    assert player.legal_at==LEGAL
 
 
 def test_design_5_3_last_energy_charge_preserves_rechargeable_cell(duel):

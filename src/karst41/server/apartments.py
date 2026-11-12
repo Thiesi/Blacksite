@@ -19,6 +19,8 @@ from karst41.server.players import Player
 from karst41.server.progression_engine import ProgressionEngine
 from karst41.server.protocol import Frame
 from karst41.server.quality import detail as item_detail
+from karst41.server.rules import character as rules
+from karst41.server.rules.character import SIGNATORY_REQUIRED
 from karst41.server.sessions import Session
 from karst41.server.wake import menu
 from karst41.server.world.simulation import MENU_TIMEOUT_SECONDS
@@ -305,8 +307,8 @@ class Apartments:
         after: Callable[[], None] = lambda: None
         if action == "rent":
             self.counter(session, target, letting=True)
-            if not player.legal_at:
-                raise ValueError("Legal discharge is required: grade 5 or 90 days since your first decant.")
+            if not rules.signatory(player.grade, player.legal_at):
+                raise ValueError(SIGNATORY_REQUIRED)
             if player.apartment_id or any(a["resident"] == player.id for a in proposal["apartments"].values()):
                 raise ValueError("You already rent an apartment.")
             unit = self.geometry.units.get(args.get("unit", ""))
@@ -487,7 +489,7 @@ class Apartments:
                         d = unit.definition
                         rows.append({"id": unit.id, "cells": [self.unit_label(unit),
                             f"{rent_amount(d, self.rent_modifier(player, self.now()))}/week", f"{d.storage_slots} slots / core {d.core_tier}"]})
-                detail = "Legal discharge required. First week paid from bank, then hand."
+                detail = "Signatory or day 90 required. First week paid from bank, then hand."
                 if not rows:
                     detail += "\nNo commissioned apartments are available."
             detail += f"\nBank {player.chits_bank} / hand {player.chits_hand}."

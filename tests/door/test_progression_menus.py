@@ -53,7 +53,7 @@ def test_ui_4_character_sheet_keeps_grade_implant_and_dependency_readable(info, 
     player.implants["torso"] = item.id
     player.dependencies = [{"template": "drug_sable_redline", "since": 0}]
     rows = character_sheet(player, content, items, 0, 2)["rows"]
-    for rid, expected in [("grade", "5: Ninety-Day"), ("implant:torso", "quality 1.12"),
+    for rid, expected in [("grade", "5: Signatory"), ("implant:torso", "quality 1.12"),
                            ("dependency:drug_sable_redline", "400 chits, 10 minutes")]:
         cursor = next(i for i, row in enumerate(rows) if row["id"] == rid)
         text = render(info, content, character_sheet(player, content, items, 0, 2, cursor), size)

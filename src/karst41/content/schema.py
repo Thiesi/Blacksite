@@ -1286,6 +1286,8 @@ DIALOGUE_CONDITIONS: dict[str, tuple[str, ...]] = {
     "service_state": ("SERVICE", "STATE"),
     "legal": (),
     "not_legal": (),
+    "signatory": (),
+    "not_signatory": (),
 }
 """The closed condition set and each condition's argument kinds."""
 

@@ -10,6 +10,7 @@ from random import Random
 
 from karst41.content.schema import Bark, DialogueLine, DialogueNode, Offer
 from karst41.server.clock import TICK_HZ
+from karst41.server.rules.character import signatory
 
 BARK_RADIUS = 6  # Game 13.4: nearby audience, measured by the adapter.
 DEFAULT_BARK_SECONDS = 90  # Game 13.4; content can specify its own interval.
@@ -87,6 +88,9 @@ def condition(text: str, talker: Talker, facts: Facts) -> bool:
         return facts.services.get(args[0]) == args[1]
     if name in ('legal', 'not_legal'):
         return facts.legal if name == 'legal' else not facts.legal
+    if name in ('signatory', 'not_signatory'):  # Grade 5 or personhood: renting and joining.
+        held = signatory(facts.grade, 'legal' if facts.legal else None)
+        return held if name == 'signatory' else not held
     raise ValueError(f'Unknown dialogue condition: {name}')
 
 
