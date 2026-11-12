@@ -100,3 +100,36 @@ def test_s44_validator_fails_an_over_long_keeper_name(content):
     tree = deepcopy(content)
     tree.factions['sable'] = replace(tree.factions['sable'], short='Sablish')  # 7 cells.
     assert any('price notice fits at most 6' in p.message for p in validate(tree))
+
+
+MARKED_LINES = {'npc-sodium-regular': 'Not near me. Not tonight.',
+                'npc-plainclothes-warden': 'Not near me. Not tonight.',
+                'npc-sable-enforcer': 'You know what you did. So do we.'}
+
+
+@pytest.mark.parametrize('template', sorted(MARKED_LINES))
+def test_s44_marked_player_gets_the_marked_line_and_no_ask(content, template):
+    """Creative lead's ruling (follow-up to #215): no Ask for a red name."""
+    from karst41.server import truce as truce_rules
+    from karst41.server.rules.combat import MARKED_SECONDS
+    game, caller, player, actor = row(content, template, 'marked-asker')
+    player.marked_until = truce_rules.iso(game.core.combat.now() + MARKED_SECONDS)
+    open_talker(game, caller)
+    body = page(game, caller)
+    assert MARKED_LINES[template] in str(body)
+    assert body['actions'] == []  # The page shows only the line and Esc/B  Leave.
+    press(game, caller, 'a')
+    assert caller.session.id in game.core.dialogue.menus and not any(
+        speaker == player.name for speaker, _, _ in speech(caller))
+
+
+@pytest.mark.parametrize('template,label', [('npc-sodium-regular', 'Ask about the end'),
+                                            ('npc-plainclothes-warden', 'Ask about the end'),
+                                            ('npc-sable-enforcer', 'Ask about the peace')])
+def test_s44_hunted_but_unmarked_player_still_gets_the_ask(content, template, label):
+    from karst41.server import truce as truce_rules
+    game, caller, player, actor = row(content, template, 'hunted-asker')
+    player.keeper_answer = {'keeper': 'sable', 'zone': 'sodium-row',
+                            'until': truce_rules.iso(game.core.combat.now() + 300)}
+    open_talker(game, caller)
+    assert {'key': 'a', 'label': label} in page(game, caller)['actions']
