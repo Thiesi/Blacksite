@@ -731,7 +731,12 @@ hall learns the template from Okafor. They never claim something that
 didn't happen. 9.3's second sentence needs the drone to have hit the
 player: if the drone was skipped, or went down before it landed a hit,
 9.3 is "Hardline. Thought so." alone. The script's "first hit" trigger
-already records that. The others stand as written.
+already records that. 9.4 is the same kind of claim: its second and
+third sentences need the player never to have fired in the hall;
+otherwise it is "Ghost. Thought so." alone. 9.5 is an instruction and
+9.6 is Okafor's opinion of you, so neither depends on what happened.
+The guard on 9.4 is mine, added after the creative lead adopted the
+line; the wording of the short forms is theirs.
 
 Detail text per row (the existing paragraph, then the new line):
 
@@ -748,8 +753,13 @@ Ghost's when the player jacked in at the terminal, Operator's when the
 drone woke. Cantor's is always shown. Without its last line a detail
 is the existing paragraph alone.
 
-The validator should check each of these four details against 4 rows
-at 66 columns, as it checks other menu details, and the build should
+These facts (was hit, fired, jacked in, the drone woke) are lesson
+progress. They are kept in the stored wake record with the rest of it
+(ruling on item 2), so a caller who drops and returns sees the record
+they earned.
+
+The validator should check each of these four details, with and
+without its last line, against 4 rows at 66 columns, as it checks other menu details, and the build should
 capture all four at both sizes.
 
 ```text
@@ -1260,6 +1270,7 @@ Nothing new is drawn. What changes:
 | Lesson strings out of the engines | `server/npcs/engine.py:423`, `server/combat/engine.py:519` | The two drone lines move to the script. |
 | Cards at the table | `server/faction_engine.py:265-285` and `:428` | `E` on the table opens the card menu for a character who has not taken a card, on the first visit or any later one; the card counts when it is taken [decided, item 4]. For a character who has one, the table is the recruitment contact, as today. |
 | Training terminal entry | `server/lattice/engine.py:290-302` | A terminal with `training_core` enters that core's entry room, with lines 8.1 and 8.2 [decided, item 6]. |
+| The record's conditional lines | `server/wake.py` (`body`, which already builds the menu detail per caller), the stored wake record | The detail's last line and the second sentences of 9.3 and 9.4 depend on four facts held as lesson progress: was hit, fired, jacked in, the drone woke. The detail is chosen when the menu body is built; nothing changes in the door. |
 | The record on jack-out | `server/lattice/engine.py` `leave`, `server/wake.py` | Leaving the training core with the record lifted opens the record menu. |
 | Hint row | `hints.py`, `door/present/chrome.py`, `server/views/zone_view.py` | A lesson hint or errand line in the objective slot; the errand's short form before `E`/`J` is dropped; no other key help beside a lesson hint; key names from the caller's keymap. |
 | The errand | the script runner, `server/dialogue_runtime.py` | Set when the kit is issued; cleared when Vesper's talk page first opens. No contract record. |
