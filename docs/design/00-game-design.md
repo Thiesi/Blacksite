@@ -2375,7 +2375,7 @@ node starts below every threshold.
 
 | Switch | Below the first threshold | Opens further |
 |---|---|---|
-| Joinable factions | three or four accept members | more at about 15; all nine at about 30 |
+| Joinable factions | three accept members | more at about 15; all nine at about 30 |
 | Contested relays | three | six at about 15; all sixteen at about 40 |
 | Market | plain listings | bids and escrow at about 50 |
 | Depth target (§13.1) | small node | standard and large at thresholds set with the others |
@@ -2404,7 +2404,9 @@ including the hidden black-core entrance; the Silt below the Old Works
 sector (step 3); and the cores `lat-ninety-nines-drop` and
 `lat-outworks-seal`. The door's own zone, `under-outworks`, isn't built
 in Season 0. Step 5 flips `shaft-door-east` from the Lattice side, and
-that flip is the season's last act.
+that flip is the season's last act. Season 0 ships only once these maps,
+cells and cores exist, since the Unmoored's hall and Relay Zero stand on
+them.
 
 - In Season 0, step 2's lock against `sab-s1-1-retrieval` stays dormant,
   because no Sablier chain runs. Step 5's Halvard beacon report stays
