@@ -2,8 +2,10 @@
 
 **Status:** planned
 **Primary model:** Sonnet · **Reviewer:** Opus (backup/restore and migrations)
-**Depends on:** S05, S16, S23, S26 · **Milestone:** M6
+**Depends on:** S05, S16, S23, and S49 for the alpha part; S26 for the Season 1 part · **Milestone:** M6 and the alpha
 **Issue:** https://github.com/Thiesi/Karst41/issues/28
+
+**Alpha (owner, 2026-11-12):** this slice ships in two parts. **Part A (the alpha)** may start once S49 merges. It covers everything a Season 0 node needs: the admin CLI, moderation, backup and restore, migrations, audit, the SysOp guide, and the season commands S49 provides (status, the audited advance with its acknowledgement, and the population-switch status from S50). **Part B (Season 1)** waits for S26: Depth recovery, expedition, leaderboard and Chronicle admin beyond S49's minimum.
 
 S18 hands off lazy rent reconciliation via
 `Apartments.ensure_rent(player_id)`. After an authorized operator clock

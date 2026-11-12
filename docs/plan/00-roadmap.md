@@ -97,11 +97,11 @@ not a numeric execution order. Cross-milestone dependencies are explicit.
 | S25 | Undercity and Scour content: all remaining zone maps, spawners, salvage rings | Gemini or Sonnet, Sonnet review | S08, S11, S14, S17, S21, S24 |
 | S26 | Seasons: Depth meter, descent consoles, leaderboards, the Chronicle, Blacksite level 1 (instanced zone and sector), for Season 1 on S49's season frame | Opus, Fable for the level design review | S21, S19, S24, S25, S27, S22, S49 |
 | S27 | Dialogue and named NPCs: dialogue engine, all major and minor NPC files, ambient logs | Sonnet engine, Gemini or Sonnet content | S19, S20, S24 |
-| S28 | Operator tooling: full admin CLI, moderation, backup/restore, migrations, audit, SysOp guide | Sonnet | S05, S16, S23, S26 |
-| S29 | Load and latency: bot client, 16-bot hour, profiling, delta compaction if needed | Opus | S15, S22, S24, S26 |
+| S28 | Operator tooling: full admin CLI, moderation, backup/restore, migrations, audit, SysOp guide | Sonnet | S05, S16, S23; S49 for part A (alpha), S26 for part B |
+| S29 | Load and latency: bot client, 16-bot hour, profiling, delta compaction if needed | Opus | S15, S22, S24; S49 for part A (alpha), S26 for part B |
 | S30 | Onboarding and help: hint system, help pages, first-run screen, session-limit UX, colour-blind palettes, settings | Sonnet | S07, S09, S13, S19 |
 | S31 | NetBBS >= 7.45 integration: supervised preset, guest-safe admission, install guide, packaging, first release (Season 0, the alpha) | Sonnet | S49, S50, S28, S29, S30, S32, S33 |
-| S32 | Federation readiness audit (design only): origin/authority invariants, protocol reservations, a written bridge design against NetBBS #168 | Fable, Astra review | S21, S26 |
+| S32 | Federation readiness audit (design only): origin/authority invariants, protocol reservations, a written bridge design against NetBBS #168 | Fable, Astra review | S21; S49 for part A (alpha), S26 for part B |
 | S33 | ANSI art pack: title, sigils, vignettes, the Ring, Wake Hall, dead screen, transitions | Opus composition, Human pass | S04 |
 | S34 | Lasting crews: persistent rosters, offline invitations, notes, handoffs (planned, #125) | Codex | S22, S19, S23 |
 | S35 | The away report: persisted public records and the login screen (planned, #125) | Codex | S34 |
@@ -143,10 +143,11 @@ S34 -> S35 -> S36 -> S37 follow the owner's timing of 2026-10-31: after
 H1, beside C1 and S25c.
 
 The alpha (owner, 2026-11-12): S48 (the first evening, H1) -> S47 -> S49
-(Season 0) -> S50 (population switches) -> S31's first release. Where
-S28, S29 or S32 depend on S26, the alpha needs only their Season 0 parts,
-against S49's season frame. Their Season 1 parts still wait for S26. S26
-follows the alpha as Season 1's content arrives.
+(Season 0) -> S50 (population switches) -> S28, S29 and S32 part A ->
+S31's first release. S28, S29 and S32 are split into part A (the alpha,
+which depends on S49) and part B (Season 1, which depends on S26), each
+named in its header. S26 follows the alpha as Season 1's content
+arrives.
 
 ## 6. Parallel planning
 

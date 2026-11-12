@@ -2,7 +2,7 @@
 
 **Status:** planned (filed 2026-11-12; the owner merges the filing)
 **Primary model:** Claude Opus 5.5 (the engineer) · **Maps, people and lines:** creative lead · **Looks, layout and acceptance:** presentation lead · **Reviewer:** automated review, technical lead
-**Depends on:** S48 (the first evening, H1), S47 (off-loop writer), S19, S20, S21 and S27 (all merged; the chain's contracts, faction site, relay and talkers are authored and dormant) · **Lands before:** S50 and S31 (S31's first release ships Season 0) · **Milestone:** the alpha
+**Depends on:** S48 (the first evening, H1), S47 (off-loop writer); S19, S20 and S21 (merged: the chain's contracts, faction site and relay are authored and dormant); S27's dialogue engine (merged; S27 itself is still in progress, with its presentation-dependent completion on hold, and S49 doesn't wait for that) · **Lands before:** S50 and S31 (S31's first release ships Season 0) · **Milestone:** the alpha
 **Issue:** https://github.com/Thiesi/Karst41/issues/232
 
 Canon: game design §13.1 and §13.6, story arcs "Season 0 — *The Door*"
@@ -76,6 +76,14 @@ A node running Season 0:
 - **`oldworks-drop`, The Drop** (40x20, pocket, Unmoored): the
   Unmoored's hall (`site-unmoored`), Strand at the Unmoored terminal,
   and the `oldworks-deep` vendor.
+- **These two maps are built here, not in S25c.** S25c (plan 03 §7.3)
+  keeps the other remaining maps. S49 follows S25c's place-identity
+  method for these two: place purpose, a place card, signs and looks.
+  S25c doesn't build or re-lay them.
+- **Talkers.** Strand's and Ninety-Nine's talker files exist from S27's
+  content (`strand.json`, `ninety-nine.json`). S49 places and activates
+  them. Any line changes are the creative lead's within this slice, so
+  S27's held completion isn't needed.
 - **Who owns what.** The creative lead owns place purpose, inhabitants
   and layout intent. The presentation lead owns looks, signs and
   acceptance. The engineer builds both maps against the existing map,
