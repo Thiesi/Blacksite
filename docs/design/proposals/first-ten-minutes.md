@@ -151,28 +151,46 @@ Conventions:
   beat's lines wait for that gap. The beats are only a few steps apart,
   so a player who keeps walking will trigger the next beat while lines
   are still waiting. Then:
-  - a line marked **†** is an anchor. It is never dropped: it keeps its
-    place in the queue and is spoken when the gap allows, even if the
-    player has walked on. There are six: 1.1, 2.1, 3.1, 3.3, 6.2 and
+  - a line marked **†** is an anchor. It is never dropped while the
+    player is in the hall. There are six: 1.1, 2.1, 3.1, 3.3, 6.2 and
     10.1. Together they say what you are, how long the lease is, what
     death costs and where to go;
-  - every other waiting line from the earlier beat is dropped;
-  - nothing is spoken while a target is set or an ICE is warned. The
-    queue waits.
-  Every line, dropped or not, stays readable at Vantongeren's desk
-  (4.11). So the talk never outruns the walk: a player who stops to
-  listen hears all of it, and one who runs the line still learns what
-  they are and how long the lease is.
+  - every other waiting line from an earlier beat is dropped.
 
-  Worked example, from the tile distances. The gurney is at (6,5), the
-  line starts at (7,6), the cards are at (8,10) and the drone wakes
-  when the player is within two tiles of (23,14): about 22 steps, six
-  or seven seconds without a pause. That player hears 1.1 at once and
-  2.1 four seconds later, then meets the drone. 3.1 and 3.3 are still
-  queued. They are spoken after the fight, from the ceiling, four
-  seconds apart, while the player walks to the terminal. Everything
-  else from beats 1 to 5 was dropped. A player who stands still for
-  the first half minute hears beats 1 to 3 in full.
+  **Order.** The current beat's lines always go first, in their own
+  order. An older anchor is spoken only when no current line is
+  waiting, oldest first. So a lesson line is never held up by the
+  briefing.
+
+  **Quiet times.** No briefing line is spoken while a target is set,
+  while an ICE is warned, in a menu or text page, or while jacked in.
+  The lines that belong to a fight are the exception: 6.2 and 6.5 are
+  spoken during the drone fight, at the first hit, because that is
+  the moment they are about. At 80x24 line 6.2 takes two of the three
+  log rows and the newest danger line keeps the third, so no danger
+  line leaves the log inside ten seconds (terminal UI 2.5).
+
+  **What a runner misses.** An anchor still unspoken when the player
+  leaves the hall is dropped. A player who skips both lessons and
+  never pauses can reach the street in about a minute having heard
+  four or five lines. That is their choice. The lease is still on the
+  side panel, and every line stays readable at Vantongeren's desk
+  (4.11).
+
+  Worked example, from the tile distances. Walking is one tile per
+  200 ms, diagonals included (game design 5.2). The gurney is at
+  (6,5), the line starts at (7,6), and the drone wakes when the player
+  is within two tiles of (23,14): 23 steps, a little under five
+  seconds without a pause. That player hears 1.1 at once and 2.1 four
+  seconds later, and then the drone wakes. 6.1 is a danger line and
+  comes at once. 6.2 and 6.5 come at the first hit. After the fight
+  6.6 comes at once; then, on the walk to the terminal, 7.1 and 7.2
+  when their tiles are reached, and 3.1 and 3.3 in the gaps between
+  them. If the player jacks in before those two are spoken, they wait,
+  and follow 9.8 and 9.9 after the record. Lines 1.2, 1.3, 2.2, 2.3,
+  3.2 and all of beats 4 and 5 were dropped. A player who stands
+  still for the first half minute hears beats 1 to 3 in full, in
+  order.
 - **Hints** are the bottom row. A lesson hint shows until its key has
   been used once, then never again for that character. `? help` always
   ends the row. Key names come from the caller's keymap; the text below
@@ -387,10 +405,10 @@ The full text stays as the zone's lore.
 | 6.7 | the drone is skipped | system | You walk past it. It keeps trying. **(new)** |
 
 Combat lines (`* Miss: Training drone.`, `‼ Training drone hits you for
-3.`) are unchanged [built]. Under the pacing rule Vantongeren's lines
-never push a danger line out inside ten seconds (terminal UI 2.5). 6.2
-waits for the fight to end if it has to; 6.3 and 6.4 are dropped if
-the player has moved on by then.
+3.`) are unchanged [built]. 6.2 and 6.5 are spoken during the fight
+(see Pacing). 6.3 and 6.4 are ordinary lines: they follow 6.2 at the
+gap, and are dropped if the fight has ended and the player has reached
+the next beat.
 
 She is in the other room for 6.2 to 6.4, and for any anchor line that
 was still queued when the player went through the door. Okafor's line
@@ -1067,7 +1085,7 @@ Nothing new is drawn. What changes:
 | Seam | Where | Change |
 |---|---|---|
 | A body before a template | `server/characters.py:284-330` (creation), `server/wake.py` (stages), `server/rules/character.py` | Today the character is created after archetype, name and card. The scene needs a body in the hall first. See open item 2 for the two ways to do it. |
-| Writes that assume a stored character | `server/lattice/engine.py:301` (`queue("save", ..., immediate=True)` on jack-in) and `:339` (on jack-out); `server/combat/engine.py:518` and `:926` (`player.progress["wake_combat"]`, then `remember`); the card's standing (`server/characters.py:297`); zone discovery (`server/progression_engine.py:43`, `record_discovery`) | Every one of these is reachable from the hall before the record is read. Under open item 2(a) each must be held in the wake record and applied at creation, or suppressed; none may queue a save for an id `create` has not committed. Under 2(b) they work as they are. The build lists each writer and says which it does. |
+| Writes that assume a stored character | `server/lattice/engine.py:301` (`queue("save", ..., immediate=True)` on jack-in) and `:339` (on jack-out); `server/combat/engine.py:518` and `:926` (`player.progress["wake_combat"]`, then `remember`); the card's standing (`server/characters.py:296-298`, where `create` sets it today); zone discovery (`server/progression_engine.py:43`, `record_discovery`) | Every one of these is reachable from the hall before the record is read. Under open item 2(a) each must be held in the wake record and applied at creation, or suppressed; none may queue a save for an id `create` has not committed. The two saves come first; the skip path through `:926` counts as much as the win path through `:518`. Under 2(b) they work as they are. The build lists each writer and says which it does. |
 | The stage machine | `server/wake.py` | From `archetype → name → briefing → card → saving` to: in the hall from the first frame; `record → name → saving` on a key; cards at the table. |
 | The scripted beats | new, beside `server/dialogue_runtime.py` | A small runner for an ordered list of beats with a closed set of triggers (entered a region, a step count, seconds, target set, drone down or skipped, jacked in, ICE down, data lifted, jacked out, template read, name entered, zone entered). It emits `speech` lines through the one emit entry point (P4) and sets the view's `hint`. Lines and triggers are content, not code. It replaces the toast at `characters.py:330`. |
 | Lesson strings out of the engines | `server/npcs/engine.py:423`, `server/combat/engine.py:519` | The two drone lines move to the script. |
