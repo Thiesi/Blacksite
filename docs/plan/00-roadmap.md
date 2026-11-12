@@ -97,7 +97,7 @@ not a numeric execution order. Cross-milestone dependencies are explicit.
 | S25 | Undercity and Scour content: all remaining zone maps, spawners, salvage rings | Gemini or Sonnet, Sonnet review | S08, S11, S14, S17, S21, S24 |
 | S26 | Seasons: Depth meter, descent consoles, leaderboards, the Chronicle, Blacksite level 1 (instanced zone and sector), for Season 1 on S49's season frame | Opus, Fable for the level design review | S21, S19, S24, S25, S27, S22, S49 |
 | S27 | Dialogue and named NPCs: dialogue engine, all major and minor NPC files, ambient logs | Sonnet engine, Gemini or Sonnet content | S19, S20, S24 |
-| S28 | Operator tooling: full admin CLI, moderation, backup/restore, migrations, audit, SysOp guide | Sonnet | S05, S16, S23; S49 for part A (alpha), S26 for part B |
+| S28 | Operator tooling: full admin CLI, moderation, backup/restore, migrations, audit, SysOp guide | Sonnet | S05, S16, S23; S49 and S50 for part A (alpha), S26 for part B |
 | S29 | Load and latency: bot client, 16-bot hour, profiling, delta compaction if needed | Opus | S15, S22, S24; S49 for part A (alpha), S26 for part B |
 | S30 | Onboarding and help: hint system, help pages, first-run screen, session-limit UX, colour-blind palettes, settings | Sonnet | S07, S09, S13, S19 |
 | S31 | NetBBS >= 7.45 integration: supervised preset, guest-safe admission, install guide, packaging, first release (Season 0, the alpha) | Sonnet | S49, S50, S28, S29, S30, S32, S33 |

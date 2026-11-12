@@ -60,6 +60,12 @@ A node running Season 0:
   parks progression between seasons (S26's existing rule). It never
   unlocks a missing map. Characters, progression and personal receipts
   carry over.
+- **Parking isn't a season start.** The season-start hook fires only
+  when a season whose bundle is installed actually starts. So nothing
+  hung on the hook (S50's re-evaluation, relay resets, bid refunds) runs
+  into a season without content. While parked, the world stays as
+  Season 0 left it, and the hook fires once when the next season with
+  content starts.
 
 ### 2. The Old Works maps
 
@@ -158,9 +164,15 @@ canon until the owner answers and a canon PR records it.
      - It counts as Season 0's completion for §13.1, so the operator
        isn't shown the no-outcome acknowledgement.
      - Advancing before the flip uses the acknowledgement as usual.
-   - **Consequence if accepted:** this slice builds the smallest
-     Chronicle that can hold the record (append-only, operator-readable),
-     and S26 extends it.
+   - **Consequence if accepted:**
+     - This slice builds the smallest Chronicle that can hold the record
+       (append-only, operator-readable), and S26 extends it.
+     - Because one player's flip ends the season's story, the audit
+       records who flipped it and when. The operator's advance shows
+       both before confirming, so the operator never sees a bare
+       "completed".
+     - The public Chronicle record names no player unless a later
+       decision says so.
 3. **Season 1 reuse.**
    - **Recommendation:**
      - The door stays open into Season 1, and Season 1's "Ninety-Nine"
@@ -206,7 +218,9 @@ The slice proposes each of these in its PR:
     completion;
   - advancing with no next bundle parks progression and keeps
     characters;
-  - the start hook fires once per season start.
+  - the start hook fires once per season start, and not on an advance
+    that parks (no next bundle installed). It fires once when a
+    bundle-backed season later starts.
 - **Maps:**
   - both zones load and validate;
   - Sodium Row ↔ Contractor Street works both ways;
