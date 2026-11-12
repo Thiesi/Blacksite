@@ -13,8 +13,11 @@ Declared fixtures (technical lead's ruling on #214):
 - Grade 5 for the player-vs-player rules, as in S38.
 - During the bar capture only, the keeper's guards hold fire (their weapon
   cooldown is pushed out), so the pursuit in and out of the bar can be
-  filmed before the player dies. Routing, sight and the 20 s give-up are
-  untouched. Fire is released for the death.
+  filmed before the player dies, and only the nearest guard pursues: the
+  other leaves the world and respawns from its spawner (a guard holding
+  fire stands still while it sees you, so two inside can box the doorway).
+  Routing, sight and the 20 s give-up are untouched. Fire is released for
+  the death.
 """
 
 import argparse
@@ -148,6 +151,14 @@ async def accept(root: Path, door_python: Path, width: int, height: int, modern:
             save(caller, 'hunted-pursuit', {'hunted': True, 'guards': [list(g.position) for g in guards]})
 
             # 3. Into the bar; a guard follows in. Then out; it follows out.
+            # Declared: one pursuer for this scene. Holding fire, a guard that
+            # sees you stands still, so two guards inside can box the doorway.
+            # The other leaves the world; its spawner brings it back.
+            pursuer = min(guards, key=lambda g: ((g.x-me.x)**2+(g.y-me.y)**2, g.id))
+            for guard in guards:
+                if guard is not pursuer:
+                    probe.service.world.leave(guard)
+            guards = [pursuer]
             # The #187 shape: be seen behind the doorway, then step out of
             # its sight line, so the guard routes in to where it saw you.
             await probe.walk(caller, SEEN)
@@ -201,8 +212,9 @@ async def accept(root: Path, door_python: Path, width: int, height: int, modern:
             # guard posts: the death's loot cache would otherwise sit beside
             # the door, and E there opens the cache before the exit.
             await probe.walk(caller, (70, 6))
+            guards = [a for a in zone.actors.values() if a.behaviour.get('template') == 'npc-sable-enforcer']
             for guard in guards:
-                guard.cooldowns['weapon'] = 0  # Fire released.
+                guard.cooldowns['weapon'] = 0  # Fire released (respawned guards never held it).
             await wait(lambda: me.stance in ('down', 'dead'), 120)
             await wait(lambda: me.stance == 'normal' and SETTLED in [ln['text'] for ln in caller.session.log_ring], 90)
             assert player.keeper_answer is None
@@ -246,7 +258,8 @@ async def accept(root: Path, door_python: Path, width: int, height: int, modern:
             'fixtures': ["bar: Upstairs' walls copied from tests/npcs/fixtures/issue187-row-demo.map onto the live "
                          'Row as a geometry layer in this acceptance server only; main\'s Row has no alcoves',
                          'grade 5 for the player-vs-player rules (S38 precedent)',
-                         'keeper guards hold fire during the bar pursuit capture only; released for the death'],
+                         'keeper guards hold fire during the bar pursuit capture only; released for the death',
+                         'one pursuer in the bar scene: the other guard leaves the world and respawns from its spawner'],
             'fixture_walls': walls,
             'presentation_acceptance': False, 'h1_layout_approval': False,
             's25_layout_approval': False}, indent=2)+'\n', encoding='utf-8', newline='\n')
