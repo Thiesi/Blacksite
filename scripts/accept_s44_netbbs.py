@@ -128,11 +128,19 @@ async def accept(root: Path, door_python: Path, width: int, height: int, modern:
             assert guards
             regular = next(a for a in zone.actors.values() if a.behaviour.get('template') == 'npc-sodium-regular')
             await caller.caller.write(b' ')  # The arrival notice has been seen.
+            # Declared (#225): the regular holds still for this step. A wanderer
+            # can leave the target slot before the warning is filmed, and the
+            # first-target notice comes once per session, so re-targeting can't
+            # recover it.
+            pause = regular.behaviour.get('pause', 0)
+            regular.behaviour['pause'] = 1 << 40
             await navigate(probe, caller, regular)
             await probe.target(caller, regular.id)
             at_npc = truce_text.at_npc('Sable')
             await wait(lambda: 'Truce: Sable answers' in screen() and at_npc in screen())
-            save(caller, 'price-target', {'notice': at_npc, 'warning': 'Truce: Sable answers'})
+            save(caller, 'price-target', {'notice': at_npc, 'warning': 'Truce: Sable answers',
+                                          'fixture': 'regular held still (#225)'})
+            regular.behaviour['pause'] = pause
 
             # 2. The breach: HUNTED, and the keeper in pursuit on the open Row.
             async def hold_fire() -> None:
