@@ -759,7 +759,8 @@ progress. They are kept in the stored wake record with the rest of it
 they earned.
 
 The validator should check each of these four details, with and
-without its last line, against 4 rows at 66 columns, as it checks other menu details, and the build should
+without its last line, against 4 rows at 66 columns, as it checks other
+menu details, and the build should
 capture all four at both sizes.
 
 ```text
