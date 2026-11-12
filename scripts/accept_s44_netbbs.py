@@ -208,13 +208,14 @@ async def accept(root: Path, door_python: Path, width: int, height: int, modern:
             line = next(ln['text'] for ln in caller.session.log_ring if refusal in ln['text'])
             save(caller, 'halo-refused', {'line': line})
 
-            # 5. Death settles the debt. Die away from the Halo's door and the
-            # guard posts: the death's loot cache would otherwise sit beside
-            # the door, and E there opens the cache before the exit.
-            await probe.walk(caller, (70, 6))
+            # 5. Death settles the debt. Fire is released, and the player goes
+            # back within sight of the guards' posts (a guard that lost sight
+            # 20 s ago has given up, as canon says). Not beside the Halo's
+            # door or a post: the death's loot cache would take a later E.
             guards = [a for a in zone.actors.values() if a.behaviour.get('template') == 'npc-sable-enforcer']
             for guard in guards:
                 guard.cooldowns['weapon'] = 0  # Fire released (respawned guards never held it).
+            await probe.walk(caller, (52, 14))
             await wait(lambda: me.stance in ('down', 'dead'), 120)
             await wait(lambda: me.stance == 'normal' and SETTLED in [ln['text'] for ln in caller.session.log_ring], 90)
             assert player.keeper_answer is None
