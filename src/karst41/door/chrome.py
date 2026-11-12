@@ -121,8 +121,12 @@ def _zone_header(buffer: CellBuffer, layout: Layout, body: dict[str, Any], palet
     safety = "CONTESTED─TRUCE─PvP G5+" if me["safety"] == "contested" and me.get("truce") else me["safety"].upper()
     sx = min((slots.heat_safety_right if me.get("heat_until") else slots.safety_right) - len(safety), slots.zone_title.x + display_width(header))
     buffer.put(sx, slots.zone_title.y, safety, palette.style("safety_" + me["safety"]))
+    start = sx+len(safety)+2
+    if me.get("hunted"):
+        # UI 2.1 (S44): HUNTED is a danger fact; it comes before the service summary.
+        buffer.put(start, slots.zone_title.y, truncate("HUNTED", max(0, slots.service_right-start)), palette.style("warning"))
+        start += len("HUNTED")+2
     if service := body.get('service'):
-        start = sx+len(safety)+2
         buffer.put(start, slots.zone_title.y, truncate(service.get('summary', ''), max(0, slots.service_right-start)), palette.style('ui_highlight'))
     buffer.put(slots.clock.x, slots.clock.y, me.get("clock", ""), palette.style("title"))
     if me.get("heat_until"):

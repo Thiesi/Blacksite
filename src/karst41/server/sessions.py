@@ -95,7 +95,7 @@ class Session:
 
     def emit(self, text: str, *, kind: LogKind, channel: str, role: str,
              at: str, speaker: str | None = None,
-             speaker_role: str | None = None) -> bool:
+             speaker_role: str | None = None, price: bool = False) -> bool:
         """Architecture 5.5.3: the sole entry for newly authored log lines.
 
         Service notices reach the existing toast surface, outside world
@@ -111,8 +111,9 @@ class Session:
                 raise ValueError("speech requires a speaker and presented class")
             line.update(speaker=speaker, speaker_role=speaker_role)
         if kind == "notice":
+            # S44: a rule's price is flagged so the door holds it until seen.
             return self.send(Frame("toast", {"text": text, "role": role,
-                                            "seconds": 4, "kind": kind}))
+                                            "seconds": 4, "kind": kind, **({"price": True} if price else {})}))
         return self.send(Frame("log", {"lines": [line]}))
 
     def allow(self, bucket: str, tick: int, count: int, seconds: int) -> bool:
