@@ -3,7 +3,8 @@
 **Status:** proposal for S48 part 2 ("the opening as a scene"), revised
 on 2026-11-12 to fold in the creative lead's reviews (#220, comments
 6818289355 and 6818712685), the presentation lead's (6818330068 and
-6818720000) and the technical lead's rulings (6818687523). **This file is the single source S48 builds
+6818720000) and the technical lead's rulings (6818687523). **This file
+is the single source S48 builds
 the opening from.** It changes no canon and no code. Where it and canon
 differ, canon wins; canon PR #219 records the owner's decisions of
 2026-11-12, and section 8 says which canon text S48's implementation PR
