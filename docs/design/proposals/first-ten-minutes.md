@@ -148,11 +148,31 @@ Conventions:
   marked **(new)** or **(changed)** are mine. Section 4.12 lists every
   change to existing text.
 - **Pacing** [new]: at least four seconds between two spoken lines. A
-  beat's lines wait for that gap. If the player has already triggered
-  the next beat, the lines still waiting from the earlier beat are
-  dropped, not queued. Every dropped line stays readable at
-  Vantongeren's desk (4.11). So the talk never outruns the walk, and a
-  player who runs the line reaches the street in under a minute.
+  beat's lines wait for that gap. The beats are only a few steps apart,
+  so a player who keeps walking will trigger the next beat while lines
+  are still waiting. Then:
+  - a line marked **†** is an anchor. It is never dropped: it keeps its
+    place in the queue and is spoken when the gap allows, even if the
+    player has walked on. There are six: 1.1, 2.1, 3.1, 3.3, 6.2 and
+    10.1. Together they say what you are, how long the lease is, what
+    death costs and where to go;
+  - every other waiting line from the earlier beat is dropped;
+  - nothing is spoken while a target is set or an ICE is warned. The
+    queue waits.
+  Every line, dropped or not, stays readable at Vantongeren's desk
+  (4.11). So the talk never outruns the walk: a player who stops to
+  listen hears all of it, and one who runs the line still learns what
+  they are and how long the lease is.
+
+  Worked example, from the tile distances. The gurney is at (6,5), the
+  line starts at (7,6), the cards are at (8,10) and the drone wakes
+  when the player is within two tiles of (23,14): about 22 steps, six
+  or seven seconds without a pause. That player hears 1.1 at once and
+  2.1 four seconds later, then meets the drone. 3.1 and 3.3 are still
+  queued. They are spoken after the fight, from the ceiling, four
+  seconds apart, while the player walks to the terminal. Everything
+  else from beats 1 to 5 was dropped. A player who stands still for
+  the first half minute hears beats 1 to 3 in full.
 - **Hints** are the bottom row. A lesson hint shows until its key has
   been used once, then never again for that character. `? help` always
   ends the row. Key names come from the caller's keymap; the text below
@@ -172,7 +192,7 @@ Conventions:
 | # | Speaker | Line |
 |---|---|---|
 | 1.0 | place | You wake on a gurney under a number. **(kept, first sentence)** |
-| 1.1 | Vantongeren | Open your eyes slowly. The light's cheap and it stays on. **(kept)** |
+| 1.1 † | Vantongeren | Open your eyes slowly. The light's cheap and it stays on. **(kept)** |
 | 1.2 | Vantongeren | I'm Vantongeren. I run this hall. I was decanted here too, a long time ago, from a template like yours. **(kept)** |
 | 1.3 | Vantongeren | I'm telling you that first because it's the only thing I can say that you'll believe. **(kept)** |
 
@@ -265,23 +285,24 @@ The full text stays as the zone's lore.
 ### 4.2 Beat 2: the shape
 
 - **Screen.** Unchanged. You are on the line.
-- **Next.** Beat 3 when you reach row 8 or below.
+- **Next.** Beat 3 when you reach row 8.
 
 | # | Speaker | Line |
 |---|---|---|
-| 2.1 | Vantongeren | You're a Wake. You came out of a vat this morning from a Sablier template that's older than the wall. **(kept)** |
+| 2.1 † | Vantongeren | You're a Wake. You came out of a vat this morning from a Sablier template that's older than the wall. **(kept)** |
 | 2.2 | Vantongeren | You don't remember anything because there's nothing to remember; the template doesn't carry memories, only a shape. **(kept)** |
 | 2.3 | Vantongeren | The shape is yours now. What you put in it is your business. **(kept)** |
 
 ### 4.3 Beat 3: the lease
 
-- **Next.** Beat 4 when you are within two tiles of the cards table.
+- **Next.** Beat 4 when you are one step from the cards table (rows 9
+  to 11 on the line).
 
 | # | Speaker | Line |
 |---|---|---|
-| 3.1 | Vantongeren | Here's the part they make me say and the part I'd say anyway. For ninety days you're Sablier property under lease. **(kept)** |
+| 3.1 † | Vantongeren | Here's the part they make me say and the part I'd say anyway. For ninety days you're Sablier property under lease. **(kept)** |
 | 3.2 | Vantongeren | You'll find that means less than it sounds like: you can go where you want, work for who you want, and nobody can sell you. **(kept)** |
-| 3.3 | Vantongeren | After ninety days you're a person, with a name on the civic roll. The days count whether you spend them or not. **(changed)** |
+| 3.3 † | Vantongeren | After ninety days you're a person, with a name on the civic roll. The days count whether you spend them or not. **(changed)** |
 
 ### 4.4 Beat 4: the cards
 
@@ -358,7 +379,7 @@ The full text stays as the zone's lore.
 | # | When | Speaker | Line |
 |---|---|---|---|
 | 6.1 | the drone wakes | danger | A drone turns in the corridor. It has seen you. Its shots can't kill. **(changed)** |
-| 6.2 | its first hit on you | Vantongeren | If you die, you'll wake up here, or somewhere like here, with a bill. Sablier keeps a copy. **(kept)** |
+| 6.2 † | its first hit on you | Vantongeren | If you die, you'll wake up here, or somewhere like here, with a bill. Sablier keeps a copy. **(kept)** |
 | 6.3 | four seconds later | Vantongeren | It's not free and it's not perfect and you'll lose a little of yourself each time. But it's a copy. **(kept)** |
 | 6.4 | four seconds later | Vantongeren | It's more than the city outside the wall gets. **(kept)** |
 | 6.5 | after 6.2, once | Okafor | That's her on the ceiling. She watches every first one. **(new)** |
@@ -367,11 +388,13 @@ The full text stays as the zone's lore.
 
 Combat lines (`* Miss: Training drone.`, `‼ Training drone hits you for
 3.`) are unchanged [built]. Under the pacing rule Vantongeren's lines
-never push a danger line out inside ten seconds (terminal UI 2.5); 6.3
-and 6.4 are dropped if the fight is still loud.
+never push a danger line out inside ten seconds (terminal UI 2.5). 6.2
+waits for the fight to end if it has to; 6.3 and 6.4 are dropped if
+the player has moved on by then.
 
-She is in the other room for 6.2 to 6.4. Okafor's line says how you can
-hear her. See open item 9.
+She is in the other room for 6.2 to 6.4, and for any anchor line that
+was still queued when the player went through the door. Okafor's line
+says how you can hear her. See open item 9.
 
 ```text
 ╔═VATSIDE═Wake Hall═POCKET══════════════════════════════╤════════════00:00═════╗
@@ -697,7 +720,7 @@ Detail text per row (the existing paragraph, then the new line):
 
 | # | When | Speaker | Line |
 |---|---|---|---|
-| 10.1 | within two tiles of the street door, kit issued | Vantongeren | Vesper, at the Tin Halo on Sodium Row, pays on time. Her card's the one I put on top. **(kept)** |
+| 10.1 † | within two tiles of the street door, kit issued | Vantongeren | Vesper, at the Tin Halo on Sodium Row, pays on time. Her card's the one I put on top. **(kept)** |
 | 10.2 | at the door | Okafor | Clinic Row's past the step. It isn't ours out there. Walk like you know that. **(new)** |
 
 ```text
@@ -981,7 +1004,7 @@ names HERE uses. The existing pages follow.
 | `☻` | a person | NEARBY: `☻ Dr. Vantongeren ~`; HERE when beside them |
 | `Θ` | decant vat | the ` DECANT ` sign; HERE: `Θ Decant vat` [built] |
 | `$` | a desk, table or counter | HERE: `$ Recruiter cards`, `$ Wake Outfitter` [built]; `CARDS` and ` ISSUE ` |
-| `│ ─` on the floor | the painted line | Vantongeren's hint row in beat 1; orderly line O1 |
+| `│ ─` on the floor | the painted line | the hint row in beat 1; orderly line O1 |
 | blank or `█` | wall | you can't walk into it; floor beside a wall always has grain (terminal UI 2.2) |
 | `+` | door | HERE: `+ Corridor door` [built] |
 | `τ` | drone | NEARBY: `τ Training drone !`; TARGET after `Tab`; line 6.1 |
@@ -1044,6 +1067,7 @@ Nothing new is drawn. What changes:
 | Seam | Where | Change |
 |---|---|---|
 | A body before a template | `server/characters.py:284-330` (creation), `server/wake.py` (stages), `server/rules/character.py` | Today the character is created after archetype, name and card. The scene needs a body in the hall first. See open item 2 for the two ways to do it. |
+| Writes that assume a stored character | `server/lattice/engine.py:301` (`queue("save", ..., immediate=True)` on jack-in) and `:339` (on jack-out); `server/combat/engine.py:518` and `:926` (`player.progress["wake_combat"]`, then `remember`); the card's standing (`server/characters.py:297`); zone discovery (`server/progression_engine.py:43`, `record_discovery`) | Every one of these is reachable from the hall before the record is read. Under open item 2(a) each must be held in the wake record and applied at creation, or suppressed; none may queue a save for an id `create` has not committed. Under 2(b) they work as they are. The build lists each writer and says which it does. |
 | The stage machine | `server/wake.py` | From `archetype → name → briefing → card → saving` to: in the hall from the first frame; `record → name → saving` on a key; cards at the table. |
 | The scripted beats | new, beside `server/dialogue_runtime.py` | A small runner for an ordered list of beats with a closed set of triggers (entered a region, a step count, seconds, target set, drone down or skipped, jacked in, ICE down, data lifted, jacked out, template read, name entered, zone entered). It emits `speech` lines through the one emit entry point (P4) and sets the view's `hint`. Lines and triggers are content, not code. It replaces the toast at `characters.py:330`. |
 | Lesson strings out of the engines | `server/npcs/engine.py:423`, `server/combat/engine.py:519` | The two drone lines move to the script. |
@@ -1068,7 +1092,14 @@ Not decided here. Each needs a ruling, a canon edit, or both.
    record, placed in the hall, and replaced by the real character when
    the record is read; or
    (b) a stored character with no archetype yet.
-   I'd take (a): it keeps the stored schema and `create` as they are.
+   (a) keeps the stored schema, the per-user cap and the name check in
+   `create` as they are, but every write the lessons make today has to
+   be held or suppressed until the record is read (the seam table in
+   section 7 lists them). A save queued for an uncommitted id would
+   either fail or store a half-built row, which is (b) by accident.
+   (b) leaves those writes alone, but adds a stored state the rest of
+   the game has never seen and must refuse at the street door. I lean
+   to (a); the cost of each is the technical lead's to weigh.
    Either way the design doc has to give the unread body its numbers.
    The mocks assume the lowest starting value of each attribute across
    the four templates (HP 90, STA 55) and the kit all four share. Also
@@ -1123,6 +1154,10 @@ Not decided here. Each needs a ruling, a canon edit, or both.
 18. **The five-minute target.** Read at walking pace with both lessons,
     I estimate three and a half to four and a half minutes. It needs a
     timed walk on the build, with someone who hasn't read this.
+19. **The record is required before the street.** Game design §4 says
+    training is never a compulsory gate. The record isn't training: it
+    is the character's creation, and both lessons can still be
+    skipped. The canon PR should say so in §4's step list.
 
 ## 9. What to watch in the H1 session
 
