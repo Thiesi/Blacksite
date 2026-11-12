@@ -2,7 +2,7 @@
 
 **Status:** planned
 **Primary model:** Sonnet · **Reviewer:** Human (install on the ReLink test node)
-**Depends on:** S26, S28, S29, S30, S32, S33 · **Milestone:** M6
+**Depends on:** S49 (Season 0), S50 (population switches), S28, S29, S30, S32, S33 · **Milestone:** M6 and the alpha
 **Issue:** https://github.com/Thiesi/Karst41/issues/31
 
 ## Goal
@@ -93,8 +93,11 @@ not a second speculative future-version preset.
   wheel attached, README status line updated.
 - README: replace the "Design complete" status with install pointers
   and a player section (what to expect, minimum terminal).
-- The first release: `v0.1.0` after M4 is merged, or whatever the
-  roadmap says at the time; this slice performs the first one.
+- The first release: `v0.1.0` is **Season 0, the alpha** (owner,
+  2026-11-12; roadmap §6). It ships once S48, S47, S49 and S50 have
+  merged. Where S28, S29 or S32 are needed, only their Season 0 parts
+  are, against S49's season frame. This slice performs the first
+  release. Season 1 (S26) ships in a later release.
 - Platform API handling: accept integer API 5 for the certified release;
   missing means legacy 2 for a useful upgrade refusal. Reject unsupported
   older/newer, malformed and boolean values before world entry. This is

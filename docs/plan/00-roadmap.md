@@ -39,6 +39,7 @@ source of truth. Platform work Karst 41 needs from NetBBS is in
 | M4 Factions and conflict | Factions, standing, Marked, relays, crews, market and bounties | S20–S23 |
 | M5 World depth | Events, remaining city/Undercity/Scour content, seasons and the Blacksite, named NPCs and dialogue | S24–S27 |
 | M6 Ship | Admin tooling, load test, onboarding and help, NetBBS integration, federation audit, art | S28–S33 |
+| Alpha | Season 0 as the first release (owner, 2026-11-12): the first evening, the season frame, "Ninety-Nine" and the Old Works, population switches | S48, S47, S49, S50, S31 |
 
 After M1 the game is demonstrable on a NetBBS node. After M2 it is the
 game. After M4 it is worth a public release as 0.x. M5 and M6 make it
@@ -94,12 +95,12 @@ not a numeric execution order. Cross-milestone dependencies are explicit.
 | S23 | Market and bounties: listings, bids, fees, bounty rules | Sonnet | S12, S18, S20, S21 |
 | S24 | World events engine and the five events | Opus | S11, S14, S17, S19, S21 |
 | S25 | Undercity and Scour content: all remaining zone maps, spawners, salvage rings | Gemini or Sonnet, Sonnet review | S08, S11, S14, S17, S21, S24 |
-| S26 | Seasons: Depth meter, descent consoles, leaderboards, the Chronicle, Blacksite level 1 (instanced zone and sector) | Opus, Fable for the level design review | S21, S19, S24, S25, S27, S22 |
+| S26 | Seasons: Depth meter, descent consoles, leaderboards, the Chronicle, Blacksite level 1 (instanced zone and sector), for Season 1 on S49's season frame | Opus, Fable for the level design review | S21, S19, S24, S25, S27, S22, S49 |
 | S27 | Dialogue and named NPCs: dialogue engine, all major and minor NPC files, ambient logs | Sonnet engine, Gemini or Sonnet content | S19, S20, S24 |
 | S28 | Operator tooling: full admin CLI, moderation, backup/restore, migrations, audit, SysOp guide | Sonnet | S05, S16, S23, S26 |
 | S29 | Load and latency: bot client, 16-bot hour, profiling, delta compaction if needed | Opus | S15, S22, S24, S26 |
 | S30 | Onboarding and help: hint system, help pages, first-run screen, session-limit UX, colour-blind palettes, settings | Sonnet | S07, S09, S13, S19 |
-| S31 | NetBBS >= 7.45 integration: supervised preset, guest-safe admission, install guide, packaging, first release | Sonnet | S26, S28, S29, S30, S32, S33 |
+| S31 | NetBBS >= 7.45 integration: supervised preset, guest-safe admission, install guide, packaging, first release (Season 0, the alpha) | Sonnet | S49, S50, S28, S29, S30, S32, S33 |
 | S32 | Federation readiness audit (design only): origin/authority invariants, protocol reservations, a written bridge design against NetBBS #168 | Fable, Astra review | S21, S26 |
 | S33 | ANSI art pack: title, sigils, vignettes, the Ring, Wake Hall, dead screen, transitions | Opus composition, Human pass | S04 |
 | S34 | Lasting crews: persistent rosters, offline invitations, notes, handoffs (planned, #125) | Codex | S22, S19, S23 |
@@ -116,6 +117,8 @@ not a numeric execution order. Cross-milestone dependencies are explicit.
 | S44 | The Row's truce rules: hunted, the Halo's refusal, settling the debt, pursuit (done, #207, PRs #214 and #215) | Claude Opus 5.5 | S38, S42; P12 for parts 5–6 only |
 | S47 | Off-loop storage writer: database saves never stall a tick (planned, #212) | Claude Opus 5.5 | S40, S43, S44, S48 |
 | S48 | The first evening: one whole evening of the real game, the H1 session (planned, #217) | Claude Opus 5.5 | S44, P8, P12, #219, #220 |
+| S49 | Season 0, the alpha: the season frame, "Ninety-Nine" and the Old Works (planned, #232) | Claude Opus 5.5 | S48, S47 |
+| S50 | Population switches: features open as the node grows (planned, #233) | Claude Opus 5.5 | S49 |
 
 Reviews: before S03, S04, and S14 start, an **Astra** critique pass over
 the relevant spec sections is recommended (protocol, renderer, hacking
@@ -139,6 +142,12 @@ S23 -> S24 -> S25 -> S27 -> S26 -> S28 -> S30 -> S29 -> S33 -> S32 -> S31
 S34 -> S35 -> S36 -> S37 follow the owner's timing of 2026-10-31: after
 H1, beside C1 and S25c.
 
+The alpha (owner, 2026-11-12): S48 (the first evening, H1) -> S47 -> S49
+(Season 0) -> S50 (population switches) -> S31's first release. Where
+S28, S29 or S32 depend on S26, the alpha needs only their Season 0 parts,
+against S49's season frame. Their Season 1 parts still wait for S26. S26
+follows the alpha as Season 1's content arrives.
+
 ## 6. Parallel planning
 
 [Issue #56 platform catch-up](01-netbbs-platform.md) owns the verified
@@ -152,9 +161,28 @@ The dependency table is authoritative for scheduling. The client can
 advance after S04 while simulation work proceeds; content can be drafted
 against S02's manifests. No drafted bundle activates until its references
 and consuming engine slices have landed. S25 completes 24 remaining
-ordinary maps; S27 completes voices; S26 integrates the full Season 1
-bundle, all eight chains and solo/multiplayer finales. S31 waits for those
-features, load/ops/onboarding, art and the federation design audit.
+ordinary maps; S27 completes voices.
+
+The first release is **Season 0, the alpha** (owner, 2026-11-12; game
+design §13.6):
+- **Places:** the hubs already built, plus the maps "Ninety-Nine" needs:
+  `oldworks-main` (Contractor Street, 110x34) and `oldworks-drop` (The
+  Drop, 40x20), with their Lattice cells and cores.
+- **Story:** one chain, the Unmoored's "Ninety-Nine". The season ends
+  when step 5 opens `shaft-door-east`.
+- **Factions and relays:** below every population threshold, three
+  factions accept members (Sablier, the Wardens, the Unmoored) and three
+  relays are contested (Cold Chain, Block, Relay Zero).
+- **Not in Season 0:** no Depth meter and no expeditions.
+- **Ships only when its maps exist.**
+- **Slices:** S49 builds Season 0 and the season frame, and S50 builds
+  the population switches. S31's first release ships them, after S48 (H1)
+  and S47.
+
+S26 then integrates the full Season 1 bundle on S49's frame: Depth,
+consoles, expeditions, all eight chains and the solo and multiplayer
+finales. "Ninety-Nine" carries into Season 1 as its entry chain. Other
+chains and districts arrive as content after the alpha.
 
 ## 7. Definition of done for any slice
 
