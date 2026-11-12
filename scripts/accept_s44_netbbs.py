@@ -250,15 +250,30 @@ async def accept(root: Path, door_python: Path, width: int, height: int, modern:
             asker = await probe.open(width, height, 'Ask'+tier, **kwargs)
             await enter_row(probe, asker)
             await asker.caller.write(b' ')
-            guard = min((g for g in zone.actors.values() if g.behaviour.get('template') == 'npc-sable-enforcer'),
-                        key=lambda g: g.id)
-            spot = next(t for t in ((guard.x-1, guard.y), (guard.x+1, guard.y), (guard.x, guard.y-1),
-                                    (guard.x, guard.y+1))
-                        if zone.passable(t) and not any(a.position == t for a in zone.actors.values()))
-            await probe.walk(asker, spot)
-            await delivered(asker)
-            await asker.caller.write(b'e')
-            await wait(lambda: asker.session.id in core.dialogue.menus)
+            def posted() -> list[Actor]:
+                # Guards back at their posts (after a hunt they walk home).
+                return sorted((g for g in zone.actors.values()
+                               if g.behaviour.get('template') == 'npc-sable-enforcer' and not g.target
+                               and g.position == tuple(g.behaviour.get('home', ()))), key=lambda g: g.id)
+            await wait(lambda: bool(posted()), 60)
+            async with asyncio.timeout(60):
+                while asker.session.id not in core.dialogue.menus:
+                    guard = posted()[0] if posted() else None
+                    if guard is None:
+                        await asyncio.sleep(.2)
+                        continue
+                    spot = next(t for t in ((guard.x-1, guard.y), (guard.x+1, guard.y), (guard.x, guard.y-1),
+                                            (guard.x, guard.y+1))
+                                if zone.passable(t) and not any(a.position == t for a in zone.actors.values()))
+                    await probe.walk(asker, spot)
+                    await delivered(asker)
+                    if max(abs(guard.x-asker.avatar.actor.x), abs(guard.y-asker.avatar.actor.y)) > 1:
+                        continue  # It moved on; find it again.
+                    await asker.caller.write(b'e')
+                    try:
+                        await wait(lambda: asker.session.id in core.dialogue.menus, 3)
+                    except TimeoutError:
+                        continue
             await wait(lambda: 'Ask about the peace' in asker.caller.screen.screen_text())
             await delivered(asker)
             save(asker, 'enforcer-talk', {'label': 'Ask about the peace'})
