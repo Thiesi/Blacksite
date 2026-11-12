@@ -32,7 +32,9 @@ the Unmoored's "Ninety-Nine", below, on the built hubs plus
 `sab-s1-1-retrieval` and step 5's Halvard beacon report stay dormant,
 because neither chain runs. The season ends when step 5 opens
 `shaft-door-east`. Strand's line stands: "Forty-one years. Somebody had
-to." The way beyond stays closed, and Season 1 goes through it.
+to." The way beyond stays closed, and Season 1 goes through it. Season 0
+has no Depth meter and no expeditions. "Ninety-Nine" stays in Season 1
+as its entry chain.
 
 ---
 

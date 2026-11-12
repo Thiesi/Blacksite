@@ -2241,7 +2241,9 @@ The Depth target follows the node's population, like the other
 population switches (§13.5; owner, 2026-11-12): small node 10 000,
 standard 100 000, large 250 000. A season starts at the band its weekly
 active characters reach, and the target may step up to a larger band
-during the season, never down. No SysOp chooses it.
+during the season, never down. No SysOp chooses it. When the target
+steps up, progress already delivered is kept, and a level that has
+opened stays open (owner, 2026-11-12).
 A season has a suggested 90-day duration, but transitions only on the
 operator's explicit advance. No player loses access because a silent
 calendar expired. Advance with no eligible completion requires an
@@ -2363,6 +2365,10 @@ node starts below every threshold.
 - A switch opens when the measure reaches its threshold. Within a
   season a switch only opens; it never closes, even if the population
   falls. A new season re-evaluates every switch from the measure.
+- When a new season finds the measure below a threshold that was open
+  (owner, 2026-11-12): existing members keep their membership, but that
+  faction takes no new members; relays that fall out of the contested
+  set reset; open market bids are refunded to the bidder's bank.
 - The city announces each opening in its own voice, in the place it
   concerns. Growth is something players notice, not a configuration.
 - Starting thresholds, tuned in playtests:
@@ -2389,7 +2395,9 @@ The first released season is **Season 0** (owner, 2026-11-12). It runs
 on the hubs already built, plus `oldworks-main` (Contractor Street) and
 `oldworks-drop` (The Drop), and carries one story chain: the Unmoored's
 "Ninety-Nine" (story arcs, Season 1 chains). The other chains and
-districts arrive in later seasons as content.
+districts arrive in later seasons as content. Season 0 has no Depth
+meter and no expeditions (owner, 2026-11-12); its end is the chain, not
+a Depth target. "Ninety-Nine" stays in Season 1 as its entry chain.
 
 The chain also needs its Lattice: the Sink sector cells of step 1,
 including the hidden black-core entrance; the Silt below the Old Works

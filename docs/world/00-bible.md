@@ -422,8 +422,11 @@ Player characters and the named cast.
 Every player character is a Wake: decanted in the Wake Hall in Vatside
 from one of Sablier's old specialist templates, wiped, and under a
 ninety-day lease that only the calendar ends. The template is your
-**archetype**; the name you choose is your own, and the BBS handle you
-carry is how the city knows you.
+**archetype**. It is fixed at decanting but stays unread until you read
+your own decant record, after the drone and the terminal; that is when
+you learn what you were made from and choose to be it (design §4). The
+name you choose is your own, and the BBS handle you carry is how the
+city knows you.
 
 - **Hardline** — decanted from a Site Zero security template. Heavy frame,
   high implant tolerance, built for the front of a fight.
