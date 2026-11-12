@@ -348,3 +348,30 @@ def test_s44_offline_body_killed_settles_and_restart_restores_nothing(row, repo_
     restored = reboot.core.characters.players[pid]
     assert not truce_rules.hunted(restored, reboot.core.combat.now())
     assert truce_rules.halo_refusal(content, restored, reboot.core.combat.now()) is None
+
+
+def test_s44_schema_4_upgrade_adds_truce_columns_and_keeps_players(row, tmp_path, monkeypatch):
+    from karst41.server.storage import migrations
+    game, _, a, _ = row
+    record = {key: value for key, value in player(game, a).record().items()
+              if key not in ("truce_marked_until", "keeper_answer")}
+    path = tmp_path/"upgrade.db"
+    with monkeypatch.context() as patch:
+        patch.setattr(migrations, "WORLD_SCHEMA", 4)
+        old = Storage(path, game.clock)
+        assert "keeper_answer" not in old.player_columns
+        old.mark_dirty("players", record["id"], record)
+        old.flush_now()
+        old.close()
+    upgraded = Storage(path, game.clock)
+    try:
+        assert {"truce_marked_until", "keeper_answer"} <= upgraded.player_columns
+        saved = next(p for p in upgraded.character_state()["players"] if p["id"] == record["id"])
+        assert saved["name"] == record["name"] and saved["keeper_answer"] is None
+        breach(game, a)
+        upgraded.mark_dirty("players", record["id"], player(game, a).record())
+        upgraded.flush_now()
+        saved = next(p for p in upgraded.character_state()["players"] if p["id"] == record["id"])
+        assert saved["keeper_answer"]["keeper"] == "sable"
+    finally:
+        upgraded.close()
