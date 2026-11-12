@@ -1,10 +1,13 @@
 # The first ten minutes (proposal)
 
-**Status:** proposal for S48 part 2 ("the opening as a scene"). Nothing
-here changes canon or code. It builds on the owner's decisions of
-2026-11-12, which are not in canon on `main` yet; the canon PR that
-records them comes first, and where this file and canon differ, canon
-wins.
+**Status:** proposal for S48 part 2 ("the opening as a scene"), revised
+on 2026-11-12 to fold in the creative lead's review (#220, comment
+6818289355), the presentation lead's review (6818330068) and the
+technical lead's rulings. **This file is the single source S48 builds
+the opening from.** It changes no canon and no code. Where it and canon
+differ, canon wins; canon PR #219 records the owner's decisions of
+2026-11-12, and section 8 says which canon text S48's implementation PR
+edits first.
 **Author:** outside reviewer (Claude Fable 5.2), 2026-11-12.
 **Base:** `main` at a959921. Slice: `S48-first-evening.md` (PR #218).
 **Scope:** from opening your eyes in the Wake Hall to standing on Sodium
@@ -17,7 +20,8 @@ Each claim is labelled:
 
 - **[built]**: works on `main` today. I ran it through the production
   `Core` and the real door renderer at 80x24 and 132x50.
-- **[decided]**: an owner decision of 2026-11-12.
+- **[decided]**: an owner decision of 2026-11-12, or a lead's ruling
+  recorded in section 8.
 - **[new]**: proposed here.
 
 The mocks are wider than this file's 76-column wrap on purpose: they are
@@ -108,27 +112,36 @@ The geometry [built], which this proposal does not change:
 ## 3. The room [new]
 
 "One obvious way on" [decided] is met without moving a wall, a door or
-an object. Four content changes do it:
+an object. Five content changes do it:
 
 1. **A place record,** `looks/vatside-wake-hall.json`, so the hall has
    walls, like the three places P6b shipped.
-2. **A painted line** (marks, glyphs `│ ─ └ ┐`, the paint role) from the
-   tile beside the gurney, down past the cards, through the corridor
-   door, past the terminal, to the street door:
-   - (7,6) to (7,13), corner at (7,14);
-   - (8,14) to (19,14), and (21,14) to (36,14);
-   - corner at (37,14), then (37,15).
+2. **A painted line** (the paint role) from the tile beside the gurney,
+   down past the cards, through the corridor door, past the terminal,
+   and ending at the street door:
+   - `│` from (7,6) to (7,13), corner `└` at (7,14);
+   - `─` from (8,14) to (19,14), and from (21,14) to (36,14);
+   - corner `┐` at (37,14), `│` at (37,15), and a last `└` at (37,16),
+     the tile beside the street door, so the line visibly ends there.
    The corners are one-character paint words, since a line mark takes
-   one glyph.
+   one glyph. On the floor these shapes can't be taken for a wall:
+   walls are `█` at 16 colours and blank facade cells otherwise. People
+   and objects draw over the line.
    Every interactable on the way is one step from the line, so HERE
    names each one as the player passes it.
 3. **Signs and paint words:** ` DECANT ` on the wall above the vats,
    ` RANGE ` and ` ISSUE ` on the wall above the east room, `CARDS`
    painted by the table, `CLINIC ROW →` painted before the street door.
+   A Sablier clinic is kept up: every sign whole, no worn letters, no
+   flicker. Arrows are CP437's four (`← → ↑ ↓`) and never diagonal,
+   here and in the street paint of 4.10.
 4. **The hall is charted** (terminal UI 2.3), with the two rooms on the
    way as its public region. The player sees the room, the line and the
    door before taking a step. The sealed north-east room stays out of
    the region and is never drawn.
+5. **The street door is drawn `»`** [decided, item 16]: `»` marks a way
+   out of a place, `+` a door inside one. The corridor door stays `+`.
+   The tile now agrees with HERE, which already says `» Clinic Row`.
 
 In the mocks, wall faces are drawn as `█`, which is how 16 colours draws
 them. At 256 colours and truecolor they are blank cells on the facade
@@ -144,9 +157,24 @@ Conventions:
   tiles in `vatside-wake-hall`.
 - Speech is a log line of kind `speech` (gutter `"`). Every spoken line
   below fits two log rows at 80x24 with its speaker's name.
+- **Every scripted line goes to the caller alone** [decided]: the
+  briefing, the lessons, Okafor's read-out of the record and the voice
+  layer. A veteran decanting after a death, or a second Wake on the
+  next gurney, never hears someone else's opening or learns their
+  template.
+- **Nobody moves for the opening** [decided]. Vantongeren stays at her
+  desk, the orderlies by the vats, Okafor by the street door, the
+  outfitter at the counter. Anything else would be seen by everyone in
+  the hall.
+- **Vantongeren's lines reach the caller anywhere in the hall's public
+  region** [decided, item 9]. They are scripted and caller-only; there
+  is no general rule for speech out of sight. In the fiction it is the
+  hall channel, and one line of Okafor's names it.
 - Lines marked **(kept)** are the existing text, word for word. Lines
-  marked **(new)** or **(changed)** are mine. Section 4.12 lists every
-  change to existing text.
+  marked **(new)** or **(changed)** are not. Section 4.12 lists every
+  change to existing text. The creative lead has adopted every line
+  below; where a line is the creative lead's own wording it says
+  **(creative lead)**.
 - **Pacing** [new]: at least four seconds between two spoken lines. A
   beat's lines wait for that gap. The beats are only a few steps apart,
   so a player who keeps walking will trigger the next beat while lines
@@ -192,17 +220,22 @@ Conventions:
   still for the first half minute hears beats 1 to 3 in full, in
   order.
 - **Hints** are the bottom row. A lesson hint shows until its key has
-  been used once, then never again for that character. `? help` always
-  ends the row. Key names come from the caller's keymap; the text below
-  is the arrows keymap.
+  been used once, then never again for that character. It takes the
+  objective slot of the row [decided, item 10]. **While a lesson hint
+  shows, the row holds only that hint, any `E`/`J` context and
+  `? help`** [decided]: none of the other key-help groups. On zone
+  screens `? help` ends the row; on menu and text pages the built row
+  leads with it. Key names come from the caller's keymap; the text
+  below is the arrows keymap.
 
 ### 4.1 Beat 1: eyes open
 
 - **Screen.** The hall, in the new frame: double lines, `POCKET`. You
   are `@` beside the vats. Vantongeren stands at her desk, two orderlies
   near the vats. The line runs from your feet to the door. The side
-  panel shows your handle, `Wake` where the grade will be [new], and
-  full bars.
+  panel shows your gurney number, `No. 0431`, where your name will be
+  [decided, item 3], `Wake` where the grade will be, `day 1/90`
+  [decided, item 13], and full bars.
 - **Can do.** Walk. Nothing else is needed.
 - **Hint.** `Arrow keys walk. Follow the line on the floor.  ? help`
 - **Next.** Beat 2 on your third step, or after 12 seconds.
@@ -220,6 +253,9 @@ corridor, a terminal.") is now what the screen shows, and at 80x24 the
 full paragraph would fill two of the three log rows before she speaks.
 The full text stays as the zone's lore.
 
+A second Wake in the hall shows in NEARBY as `☻ No. 0388 ~`. It is the
+first other person a new player sees, and it needs no explaining.
+
 ```text
 ╔═VATSIDE═Wake Hall═POCKET══════════════════════════════╤════════════00:00═════╗
 ║       ██ DECANT ███████████                           │─ TARGET ─────────────║
@@ -234,11 +270,11 @@ The full text stays as the zone's lore.
 ║       █······│············█                           │                      ║
 ║       █······│$···········█                           │                      ║
 ║       █······│·CARDS······██ RANGE ██ ISSUE ██        │──────────────────────║
-║       █······│············█··················█        │ Stan           Wake  ║
+║       █······│············█··················█        │ No. 0431       Wake  ║
 ║       █······│············█··················█        │ HP  ██████████ 90    ║
 ║       █······└────────────+────────────────┐·█        │ STA ██████████ 55    ║
 ║       █···················█·············$§·│·█        │ SHK ░░░░░░░░░░ 0     ║
-║       █···················█·················+█        │ 0 ch     lease 0/90  ║
+║       █···················█················└»█        │ 0 ch     day 1/90    ║
 ╟───────────────────────────────────────────────────────┴──────────────────────╢
 ║» You wake on a gurney under a number.                                        ║
 ║" Vantongeren: Open your eyes slowly. The light's cheap and it stays on.      ║
@@ -274,7 +310,7 @@ The full text stays as the zone's lore.
 ║                                 █······│············█··················█                                  │                      ║
 ║                                 █······└────────────+────────────────┐·█                                  │                      ║
 ║                                 █···················█·············$§·│·█                                  │                      ║
-║                                 █···················█·················+█                                  │                      ║
+║                                 █···················█················└»█                                  │                      ║
 ║                                 █···················█···CLINIC ROW →···█                                  │                      ║
 ║                                 █···················█··················█                                  │                      ║
 ║                                 ████████████████████████████████████████                                  │                      ║
@@ -282,11 +318,11 @@ The full text stays as the zone's lore.
 ║                                                                                                           │                      ║
 ║                                                                                                           │                      ║
 ║                                                                                                           │──────────────────────║
-║                                                                                                           │ Stan           Wake  ║
+║                                                                                                           │ No. 0431       Wake  ║
 ║                                                                                                           │ HP  ██████████ 90    ║
 ║                                                                                                           │ STA ██████████ 55    ║
 ║                                                                                                           │ SHK ░░░░░░░░░░ 0     ║
-║                                                                                                           │ 0 ch     lease 0/90  ║
+║                                                                                                           │ 0 ch     day 1/90    ║
 ╟───────────────────────────────────────────────────────────────────────────────────────────────────────────┴──────────────────────╢
 ║» You wake on a gurney under a number.                                                                                            ║
 ║" Vantongeren: Open your eyes slowly. The light's cheap and it stays on.                                                          ║
@@ -320,7 +356,10 @@ The full text stays as the zone's lore.
 |---|---|---|
 | 3.1 † | Vantongeren | Here's the part they make me say and the part I'd say anyway. For ninety days you're Sablier property under lease. **(kept)** |
 | 3.2 | Vantongeren | You'll find that means less than it sounds like: you can go where you want, work for who you want, and nobody can sell you. **(kept)** |
-| 3.3 † | Vantongeren | After ninety days you're a person, with a name on the civic roll. The days count whether you spend them or not. **(changed)** |
+| 3.3 † | Vantongeren | After ninety days you're a person, with a name on the civic roll. Nothing gets you there sooner. The days count without you. **(changed, creative lead)** |
+
+"Nothing gets you there sooner" is canon PR #219's sentence. "They
+count without you" is repeated in her talk line (4.12) on purpose.
 
 ### 4.4 Beat 4: the cards
 
@@ -341,7 +380,10 @@ The full text stays as the zone's lore.
 | 4.1 | Vantongeren | The city's run by eight groups who'd each like you to think they're the only one that matters. **(kept)** |
 | 4.2 | Vantongeren | Every one of them has left a card on my desk. I hand them out without preference. **(kept)** |
 | 4.3 | Vantongeren | They all resent that and none of them can prove it. Take one, or don't. It's an introduction, not a contract. **(kept)** |
-| 4.4 | Vantongeren | Work enough and the roll lets you sign early: a room, a side. Signatory. It isn't personhood. It's a pen. **(new)** |
+| 4.4 | Vantongeren | Work registers your signature sooner: a flat in your own name, and a side, if one will have you. It isn't personhood. It's a pen. **(new, creative lead)** |
+
+She never says "Signatory". The panel shows the grade's name when it
+arrives.
 
 ```text
 ╔═VATSIDE═Wake Hall═POCKET══════════════════════════════╤════════════00:00═════╗
@@ -352,16 +394,16 @@ The full text stays as the zone's lore.
 ║       █········☻··········█                           │─ NEARBY ─────────────║
 ║       █···········$☻······█                           │ ☻ Dr. Vantongeren ~  ║
 ║       █······│············█                           │ ☻ Sablier orderly ~  ║
-║       █······│············█                           │                      ║
+║       █······│············█                           │ ☻ Sablier orderly ~  ║
 ║       █······│············█                           │                      ║
 ║       █······│············█                           │                      ║
 ║       █······@$···········█                           │                      ║
 ║       █······│·CARDS······██ RANGE ██ ISSUE ██        │──────────────────────║
-║       █······│············█··················█        │ Stan           Wake  ║
+║       █······│············█··················█        │ No. 0431       Wake  ║
 ║       █······│············█··················█        │ HP  ██████████ 90    ║
 ║       █······└────────────+────────────────┐·█        │ STA ██████████ 55    ║
 ║       █···················█·············$§·│·█        │ SHK ░░░░░░░░░░ 0     ║
-║       █···················█·················+█        │ 0 ch     lease 0/90  ║
+║       █···················█················└»█        │ 0 ch     day 1/90    ║
 ╟───────────────────────────────────────────────────────┴──────────────────────╢
 ║" Vantongeren: The city's run by eight groups who'd each like you to think    ║
 ║  they're the only one that matters.                                          ║
@@ -385,9 +427,17 @@ The full text stays as the zone's lore.
 
 ### 4.6 Beat 6: the drone
 
-- **Screen.** A `τ` on the line ahead. NEARBY shows `τ Training drone
-  !`. After `Tab`, TARGET fills in: name, health bar, range, `hostile`,
-  your weapon.
+- **The weapon** [decided]. The lesson is fought with a **hall training
+  pistol**, issued for the lesson only. It is in the player's hand when
+  the drone wakes, it is bound, it never leaves the Wake Hall, and it
+  is removed when the lesson ends (drone down or skipped) or the player
+  leaves. The Kestrel sidearm comes with the starter kit, after the
+  record (9.10). So TARGET reads `with Training pistol` here.
+- **Screen.** A `τ` on the line ahead. NEARBY lists what is in sight in
+  this room, hostile first: `τ Training drone !`, then Okafor and the
+  outfitter. Vantongeren and the orderlies are behind the wall and are
+  neither drawn nor listed. After `Tab`, TARGET fills in: name, health
+  bar, range, `hostile`, your weapon.
 - **Can do.** `Tab`, then `F`. `B` walks past the lesson [built].
 - **Hints,** one at a time:
   - `Tab picks the drone.  B walks past it  ? help`
@@ -396,13 +446,18 @@ The full text stays as the zone's lore.
 
 | # | When | Speaker | Line |
 |---|---|---|---|
+| 6.0 | the drone wakes | system | You take the training pistol off the rack. It stays in the hall. **(new)** |
 | 6.1 | the drone wakes | danger | A drone turns in the corridor. It has seen you. Its shots can't kill. **(changed)** |
 | 6.2 † | its first hit on you | Vantongeren | If you die, you'll wake up here, or somewhere like here, with a bill. Sablier keeps a copy. **(kept)** |
 | 6.3 | four seconds later | Vantongeren | It's not free and it's not perfect and you'll lose a little of yourself each time. But it's a copy. **(kept)** |
 | 6.4 | four seconds later | Vantongeren | It's more than the city outside the wall gets. **(kept)** |
-| 6.5 | after 6.2, once | Okafor | That's her on the ceiling. She watches every first one. **(new)** |
+| 6.5 | after 6.2, once | Okafor | That's her on the hall channel. She watches every first one. **(new, creative lead)** |
 | 6.6 | the drone is down | combat | The drone stops. It had been trying since Tuesday. **(changed)** |
 | 6.7 | the drone is skipped | system | You walk past it. It keeps trying. **(new)** |
+| 6.8 | the lesson ends | system | You rack the training pistol. **(new)** |
+
+6.0 and 6.8 are mine and came after the creative lead's review; they
+are the creative lead's to reword.
 
 Combat lines (`* Miss: Training drone.`, `‼ Training drone hits you for
 3.`) are unchanged [built]. 6.2 and 6.5 are spoken during the fight
@@ -410,29 +465,29 @@ Combat lines (`* Miss: Training drone.`, `‼ Training drone hits you for
 gap, and are dropped if the fight has ended and the player has reached
 the next beat.
 
-She is in the other room for 6.2 to 6.4, and for any anchor line that
-was still queued when the player went through the door. Okafor's line
-says how you can hear her. See open item 9.
+Vantongeren is in the other room for 6.2 to 6.4, and for any anchor
+line still queued when the player went through the door. That is the
+hall channel (conventions), and 6.5 is the one line that names it.
 
 ```text
 ╔═VATSIDE═Wake Hall═POCKET══════════════════════════════╤════════════00:00═════╗
 ║       █···················█                           │─ HERE ───────────────║
-║       █··Θ·Θ·Θ·Θ·☻········█                           │ + Corridor door      ║
-║       █········☻··········█                           │─ TARGET ─────────────║
-║       █···········$☻······█                           │ Training drone       ║
+║       █··Θ·Θ·Θ·Θ··········█                           │ + Corridor door      ║
+║       █···················█                           │─ TARGET ─────────────║
+║       █···········$·······█                           │ Training drone       ║
 ║       █······│············█                           │ HP  ██████░░░░ 60%   ║
 ║       █······│············█                           │ 3 m  open  hostile   ║
-║       █······│············█                           │ with Kestrel Issue...║
+║       █······│············█                           │ with Training pistol ║
 ║       █······│············█                           │─ NEARBY ─────────────║
 ║       █······│$···········█                           │ τ Training drone !   ║
-║       █······│·CARDS······██ RANGE ██ ISSUE ██        │                      ║
-║       █······│············█··················█        │                      ║
+║       █······│·CARDS······██ RANGE ██ ISSUE ██        │ ☻ Nurse Okafor ~     ║
+║       █······│············█··················█        │ ☻ Wake Outfitter ~   ║
 ║       █······│············█··················█        │──────────────────────║
-║       █······└────────────+@──τ────────────┐·█        │ Stan           Wake  ║
+║       █······└────────────+@──τ────────────┐·█        │ No. 0431       Wake  ║
 ║       █···················█·············$§·│·█        │ HP  ████████▌░ 78    ║
-║       █···················█············☻··☻·+█        │ STA ██████████ 55    ║
+║       █···················█············☻··☻└»█        │ STA ██████████ 55    ║
 ║       █···················█···CLINIC ROW →···█        │ SHK ▌░░░░░░░░░ 2     ║
-║       █···················█··················█        │ 0 ch     lease 0/90  ║
+║       █···················█··················█        │ 0 ch     day 1/90    ║
 ╟───────────────────────────────────────────────────────┴──────────────────────╢
 ║‼ Training drone hits you for 3. (x4)                                         ║
 ║" Vantongeren: If you die, you'll wake up here, or somewhere like here, with a║
@@ -449,15 +504,15 @@ says how you can hear her. See open item 9.
 ║                                                                                                           │ Training drone       ║
 ║                                                                                                           │ HP  ██████░░░░ 60%   ║
 ║                                                                                                           │ 3 m  open  hostile   ║
-║                                                                                                           │ with Kestrel Issue...║
+║                                                                                                           │ with Training pistol ║
 ║                                                                                                           │─ NEARBY ─────────────║
 ║                                                                                                           │ τ Training drone !   ║
-║                                 ██ DECANT ███████████                                                     │                      ║
+║                                 ██ DECANT ███████████                                                     │ ☻ Nurse Okafor ~     ║
+║                                 █···················█                                                     │ ☻ Wake Outfitter ~   ║
 ║                                 █···················█                                                     │                      ║
+║                                 █··Θ·Θ·Θ·Θ··········█                                                     │                      ║
 ║                                 █···················█                                                     │                      ║
-║                                 █··Θ·Θ·Θ·Θ·☻········█                                                     │                      ║
-║                                 █········☻··········█                                                     │                      ║
-║                                 █···········$☻······█                                                     │                      ║
+║                                 █···········$·······█                                                     │                      ║
 ║                                 █······│············█                                                     │                      ║
 ║                                 █······│············█                                                     │                      ║
 ║                                 █······│············█                                                     │                      ║
@@ -468,7 +523,7 @@ says how you can hear her. See open item 9.
 ║                                 █······│············█··················█                                  │                      ║
 ║                                 █······└────────────+@──τ────────────┐·█                                  │                      ║
 ║                                 █···················█·············$§·│·█                                  │                      ║
-║                                 █···················█············☻··☻·+█                                  │                      ║
+║                                 █···················█············☻··☻└»█                                  │                      ║
 ║                                 █···················█···CLINIC ROW →···█                                  │                      ║
 ║                                 █···················█··················█                                  │                      ║
 ║                                 ████████████████████████████████████████                                  │                      ║
@@ -476,11 +531,11 @@ says how you can hear her. See open item 9.
 ║                                                                                                           │                      ║
 ║                                                                                                           │                      ║
 ║                                                                                                           │──────────────────────║
-║                                                                                                           │ Stan           Wake  ║
+║                                                                                                           │ No. 0431       Wake  ║
 ║                                                                                                           │ HP  ████████▌░ 78    ║
 ║                                                                                                           │ STA ██████████ 55    ║
 ║                                                                                                           │ SHK ▌░░░░░░░░░ 2     ║
-║                                                                                                           │ 0 ch     lease 0/90  ║
+║                                                                                                           │ 0 ch     day 1/90    ║
 ╟───────────────────────────────────────────────────────────────────────────────────────────────────────────┴──────────────────────╢
 ║‼ Training drone hits you for 3. (x4)                                                                                             ║
 ║" Vantongeren: If you die, you'll wake up here, or somewhere like here, with a bill. Sablier keeps a copy.                        ║
@@ -500,8 +555,8 @@ says how you can hear her. See open item 9.
   (renamed so both fit the panel). Okafor stands by the street door.
 - **Can do.** `J`.
 - **Hint.** The context the door already builds: `J jack in at Hall
-  terminal  E open Wake Outfitter  ? help`. Once, after the fight:
-  `Ctrl-P reads back what you missed.  ? help` for eight seconds.
+  terminal  E open Wake Outfitter  ? help`. Nothing else takes the row
+  in this beat.
 - **Next.** Beat 8 on `J`. Beat 9 directly if the player presses `E` on
   the outfitter, Okafor or the street door instead: the terminal is a
   lesson, and lessons can be skipped [decided].
@@ -509,7 +564,9 @@ says how you can hear her. See open item 9.
 | # | When | Speaker | Line |
 |---|---|---|---|
 | 7.1 | you pass (27,14) | Okafor | Up you get. Vantongeren does the speech; I do the walking. **(kept)** |
-| 7.2 | within two tiles of the terminal | Okafor | Stand close. J puts you in. Your body stays up here with me. **(new)** |
+| 7.2 | within two tiles of the terminal | Okafor | Stand close and jack in. Your body stays up here with me. **(new, creative lead)** |
+
+No key name is spoken by a person. The hint row says `J`.
 
 ```text
 ╔═VATSIDE═Wake Hall═POCKET══════════════════════════════╤════════════00:00═════╗
@@ -525,14 +582,14 @@ says how you can hear her. See open item 9.
 ║       █······│·CARDS······██ RANGE ██ ISSUE ██        │                      ║
 ║       █······│············█··················█        │                      ║
 ║       █······│············█··················█        │──────────────────────║
-║       █······└────────────+──────────────@─┐·█        │ Stan           Wake  ║
+║       █······└────────────+──────────────@─┐·█        │ No. 0431       Wake  ║
 ║       █···················█·············$§·│·█        │ HP  ██████████ 90    ║
-║       █···················█············☻··☻·+█        │ STA ██████████ 55    ║
+║       █···················█············☻··☻└»█        │ STA ██████████ 55    ║
 ║       █···················█···CLINIC ROW →···█        │ SHK ░░░░░░░░░░ 0     ║
-║       █···················█··················█        │ 0 ch     lease 0/90  ║
+║       █···················█··················█        │ 0 ch     day 1/90    ║
 ╟───────────────────────────────────────────────────────┴──────────────────────╢
 ║* The drone stops. It had been trying since Tuesday.                          ║
-║" Okafor: Stand close. J puts you in. Your body stays up here with me.        ║
+║" Okafor: Stand close and jack in. Your body stays up here with me.           ║
 ║                                                                              ║
 ║J jack in at Hall terminal  E open Wake Outfitter  ? help                     ║
 ╚══════════════════════════════════════════════════════════════════════════════
@@ -576,7 +633,7 @@ to cast again. The hint `1 casts Pick. Let it land.` stays up until a
 cast lands.
 
 ```text
-╔═WAKE HALL / CORE═POCKET═══════════════════════════════╤════════════Stan══════╗
+╔═WAKE HALL / CORE═POCKET═══════════════════════════════╤════════No. 0431══════╗
 ║ (01)                                                  │INTEGRITY 100/100     ║
 ║                                                       │TRACE 0               ║
 ║                                                       │BODY POCKET           ║
@@ -586,10 +643,10 @@ cast lands.
 ║                                                       │2 Umbrella            ║
 ║                                                       │3 Empty               ║
 ║                                                       │ROOM                  ║
-║                                                       │Hall terminal         ║
+║                                                       │Training terminal     ║
 ║                                                       │                      ║
 ║                                                       │                      ║
-║ ROOM / Hall terminal                                  │                      ║
+║ ROOM / Training terminal                              │                      ║
 ║ > Training Tripwire 10/10 [warning 1.4s]              │                      ║
 ║ alarm / entry / 5 integrity, 0 body damage            │                      ║
 ║ Pick; J leaves the lesson                             │                      ║
@@ -606,23 +663,36 @@ cast lands.
 
 This is the archetype choice [decided: after both lessons]. In the
 fiction nothing is chosen: the template was fixed in the vat (bible
-8.1), and the player is reading their own record aloud. See open item 1.
+8.1), and the player is reading their own record aloud. The creative
+lead has adopted that framing.
 
 - **Opens when** the player comes back from the terminal with the
   record, or presses `E` on the outfitter, on Okafor, or on the street
   door without a template. It never opens by itself anywhere else.
   `Esc` puts it down and returns to the hall; the street door asks
   again.
-- **Screen.** The existing menu frame. Title `DECANT RECORD - No.
-  <serial> - Template`. Four rows. The detail is the existing archetype
-  paragraph plus one new line that points back at what the player just
-  did.
-- **Then** the existing name prompt, reworded: `Name for the roll
-  (Enter keeps Stan):`.
-- **Then** the kit is issued and the side panel changes: the grade
-  appears, and the bars move to the template's real numbers. A Hardline
-  sees HP go from 90 to 130. That change is the lesson in what a
-  template is.
+- **Screen.** The built menu geometry [built, P12], with a new title,
+  `DECANT RECORD - No. <digits> - Template`, and four rows:
+  - at 80x24 the detail is the fixed box of 66 columns by 4 rows at
+    y=12, above the action bar;
+  - at 132x50 the list is on the left and the detail is the right-hand
+    column, 53 wide.
+  The detail is the existing archetype paragraph and one new last line
+  that points back at what the player just did, **with no blank line
+  between them**, so all four fit 66x4 (Cantor exactly). The selected
+  row is shown by the menu's highlight, which plain text can't show:
+  the 80x24 mock has Cantor selected and the 132x50 mock Ghost.
+- **Action bar:** `enter read this line  Esc/B put the record down`.
+  **Hint row:** `? help  Enter read this line  Esc/B put the record
+  down`, the same verbs.
+- **Then** the existing name prompt: `Name for the roll (Enter keeps
+  Stan):`. The handle is the default; the gurney number is never a
+  name, and names of the form `No. <digits>` are reserved [decided,
+  item 3].
+- **Then** the kit is issued and the side panel changes: the name
+  replaces the number, the grade appears, and the bars move to the
+  template's real numbers. A Hardline sees HP go from 90 to 130. That
+  change is the lesson in what a template is.
 
 | # | When | Speaker | Line |
 |---|---|---|---|
@@ -638,9 +708,10 @@ fiction nothing is chosen: the template was fixed in the vat (bible
 | 9.10 | kit issued | reward | Issued: sidearm, 50 rounds, baton, two patches, two rations. **(new)** |
 | 9.11 | kit issued | reward | 200 chits. A card, on top: Vesper, the Tin Halo, Sodium Row. **(new)** |
 
-9.3 to 9.6 never claim something the player didn't do: if the drone was
-skipped, 9.3 is "Hardline. Thought so." alone, and the others stand as
-written.
+9.3 to 9.6 are caller-only like everything else: nobody else in the
+hall learns the template from Okafor. They never claim something the
+player didn't do: if the drone was skipped, 9.3 is "Hardline. Thought
+so." alone, and the others stand as written.
 
 Detail text per row (the existing paragraph, then the new line):
 
@@ -648,76 +719,80 @@ Detail text per row (the existing paragraph, then the new line):
 |---|---|---|
 | Hardline | You hold the heavy end. You can use heavy weapons and armour. Your frame takes the load. Your body takes two more implants than most. **(last sentence changed)** | That drone would have hurt you less. |
 | Ghost | You carry a native rig. You can jack in anywhere. You move quietly and use stealth. Your nerve and cortex do the work. **(kept)** | You wouldn't have needed the terminal. You carry your own. |
-| Cantor | You hear the signal. You can use resonance implants, hymns and dissonance. Your First Ear starts with Steady. **(kept)** | The hum under the floor is louder for you. The Choir will know you on sight. |
+| Cantor | You hear the signal. You can use resonance implants, hymns and dissonance. Your First Ear starts with Steady. **(kept)** | The hum under the floor is louder for you. Some people will want to know what you hear. **(creative lead)** |
 | Operator | You direct the work. You can control two drones. Your Mule carries the load. You watch the costs and keep your crew together. **(kept)** | You'd have sent something else down that corridor first. |
 
+The validator should check each of these four details against 4 rows
+at 66 columns, as it checks other menu details, and the build should
+capture all four at both sizes.
+
 ```text
-╔═DECANT RECORD═POCKET═══════════════════════════════════════════════Stan══════╗
+╔═DECANT RECORD═POCKET═══════════════════════════════════════════No. 0431══════╗
 ║    ┌─ DECANT RECORD - No. 0431 - Template ──────────────────────────────┐    ║
-║    │ > Hardline                                                         │    ║
-║    │   Ghost                                                            │    ║
-║    │   Cantor                                                           │    ║
-║    │   Operator                                                         │    ║
-║    │                                                                    │    ║
-║    │ You hold the heavy end. You can use heavy weapons and armour.      │    ║
-║    │ Your frame takes the load. Your body takes two more implants than  │    ║
-║    │ most.                                                              │    ║
-║    │                                                                    │    ║
-║    │ That drone would have hurt you less.                               │    ║
+║    │ Choice                                                             │    ║
+║    │ Hardline                                                           │    ║
+║    │ Ghost                                                              │    ║
+║    │ Cantor                                                             │    ║
+║    │ Operator                                                           │    ║
 ║    │                                                                    │    ║
 ║    │                                                                    │    ║
 ║    │                                                                    │    ║
 ║    │                                                                    │    ║
+║    │                                                                    │    ║
+║    │ You hear the signal. You can use resonance implants, hymns and     │    ║
+║    │ dissonance. Your First Ear starts with Steady.                     │    ║
+║    │ The hum under the floor is louder for you. Some people will want   │    ║
+║    │ to know what you hear.                                             │    ║
 ║    │ enter read this line  Esc/B put the record down                    │    ║
 ║    └────────────────────────────────────────────────────────────────────┘    ║
 ╟──────────────────────────────────────────────────────────────────────────────╢
 ║+ Transfer committed: Your decant record.                                     ║
 ║" Okafor: Read me the template line. I have to hear you say it.               ║
 ║                                                                              ║
-║? help  Enter reads the line  Esc/B puts it down                              ║
+║? help  Enter read this line  Esc/B put the record down                       ║
 ╚══════════════════════════════════════════════════════════════════════════════
 ```
 
 ```text
-╔═DECANT RECORD═POCKET═══════════════════════════════════════════════════════════════════════════════════════════════════Stan══════╗
-║    ┌─ DECANT RECORD - No. 0431 - Template ──────────────────────────────────────────────────────────────────────────────────┐    ║
-║    │   Hardline                                                                                                             │    ║
-║    │ > Ghost                                                                                                                │    ║
-║    │   Cantor                                                                                                               │    ║
-║    │   Operator                                                                                                             │    ║
-║    │                                                                                                                        │    ║
-║    │ You carry a native rig. You can jack in anywhere. You move quietly and use stealth. Your nerve and cortex do the       │    ║
-║    │ work.                                                                                                                  │    ║
-║    │                                                                                                                        │    ║
-║    │ You wouldn't have needed the terminal. You carry your own.                                                             │    ║
-║    │                                                                                                                        │    ║
-║    │                                                                                                                        │    ║
-║    │                                                                                                                        │    ║
-║    │                                                                                                                        │    ║
-║    │                                                                                                                        │    ║
-║    │                                                                                                                        │    ║
-║    │                                                                                                                        │    ║
-║    │                                                                                                                        │    ║
-║    │                                                                                                                        │    ║
-║    │                                                                                                                        │    ║
-║    │                                                                                                                        │    ║
-║    │                                                                                                                        │    ║
-║    │                                                                                                                        │    ║
-║    │                                                                                                                        │    ║
-║    │                                                                                                                        │    ║
-║    │                                                                                                                        │    ║
-║    │                                                                                                                        │    ║
-║    │                                                                                                                        │    ║
-║    │                                                                                                                        │    ║
-║    │                                                                                                                        │    ║
-║    │                                                                                                                        │    ║
-║    │                                                                                                                        │    ║
-║    │                                                                                                                        │    ║
-║    │                                                                                                                        │    ║
-║    │                                                                                                                        │    ║
-║    │                                                                                                                        │    ║
-║    │ enter read this line  Esc/B put the record down                                                                        │    ║
-║    └────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────┘    ║
+╔═DECANT RECORD═POCKET═══════════════════════════════════════════════════════════════════════════════════════════════No. 0431══════╗
+║          ┌─ DECANT RECORD - No. 0431 - Template ──────────────────────────────────────────────────────────────────────┐          ║
+║          │ Choice                                               You carry a native rig. You can jack in anywhere. You │          ║
+║          │ Hardline                                             move quietly and use stealth. Your nerve and cortex   │          ║
+║          │ Ghost                                                do the work.                                          │          ║
+║          │ Cantor                                               You wouldn't have needed the terminal. You carry your │          ║
+║          │ Operator                                             own.                                                  │          ║
+║          │                                                                                                            │          ║
+║          │                                                                                                            │          ║
+║          │                                                                                                            │          ║
+║          │                                                                                                            │          ║
+║          │                                                                                                            │          ║
+║          │                                                                                                            │          ║
+║          │                                                                                                            │          ║
+║          │                                                                                                            │          ║
+║          │                                                                                                            │          ║
+║          │                                                                                                            │          ║
+║          │                                                                                                            │          ║
+║          │                                                                                                            │          ║
+║          │                                                                                                            │          ║
+║          │                                                                                                            │          ║
+║          │                                                                                                            │          ║
+║          │                                                                                                            │          ║
+║          │                                                                                                            │          ║
+║          │                                                                                                            │          ║
+║          │                                                                                                            │          ║
+║          │                                                                                                            │          ║
+║          │                                                                                                            │          ║
+║          │                                                                                                            │          ║
+║          │                                                                                                            │          ║
+║          │                                                                                                            │          ║
+║          │                                                                                                            │          ║
+║          │                                                                                                            │          ║
+║          │                                                                                                            │          ║
+║          │                                                                                                            │          ║
+║          │                                                                                                            │          ║
+║          │                                                                                                            │          ║
+║          │ enter read this line  Esc/B put the record down                                                            │          ║
+║          └────────────────────────────────────────────────────────────────────────────────────────────────────────────┘          ║
 ╟──────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────╢
 ║+ You jack out. Your body is here.                                                                                                ║
 ║+ Transfer committed: Your decant record.                                                                                         ║
@@ -727,19 +802,20 @@ Detail text per row (the existing paragraph, then the new line):
 ║                                                                                                                                  ║
 ║                                                                                                                                  ║
 ║                                                                                                                                  ║
-║? help  Enter reads the line  Esc/B puts it down                                                                                  ║
+║? help  Enter read this line  Esc/B put the record down                                                                           ║
 ╚══════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════
 ```
 
 ### 4.10 Beat 10: the door, the street, the Row
 
-- **Screen.** HERE shows `» Clinic Row`; the floor says `CLINIC ROW →`.
+- **Screen.** HERE shows `» Clinic Row`; the door tile is `»`; the line
+  ends beside it; the floor says `CLINIC ROW →`.
 - **Hint.** `E go to Clinic Row  ? help` [built].
 
 | # | When | Speaker | Line |
 |---|---|---|---|
 | 10.1 † | within two tiles of the street door, kit issued | Vantongeren | Vesper, at the Tin Halo on Sodium Row, pays on time. Her card's the one I put on top. **(kept)** |
-| 10.2 | at the door | Okafor | Clinic Row's past the step. It isn't ours out there. Walk like you know that. **(new)** |
+| 10.2 | at the door | Okafor | Past the step it's Clinic Row. Our name's on it, not our protection. Walk like you know that. **(new, creative lead)** |
 
 ```text
 ╔═VATSIDE═Wake Hall═POCKET══════════════════════════════╤════════════00:00═════╗
@@ -756,10 +832,10 @@ Detail text per row (the existing paragraph, then the new line):
 ║       █······│············█··················█        │                      ║
 ║       █······└────────────+────────────────┐·█        │──────────────────────║
 ║       █···················█·············$§·│·█        │ Stan             G1  ║
-║       █···················█············☻··☻@+█        │ HP  ██████████ 130   ║
+║       █···················█············☻··☻@»█        │ HP  ██████████ 130   ║
 ║       █···················█···CLINIC ROW →···█        │ STA ██████████ 70    ║
 ║       █···················█··················█        │ SHK ░░░░░░░░░░ 0     ║
-║       ████████████████████████████████████████        │ 200 ch   lease 0/90  ║
+║       ████████████████████████████████████████        │ 200 ch   day 1/90    ║
 ╟───────────────────────────────────────────────────────┴──────────────────────╢
 ║√ 200 chits. A card, on top: Vesper, the Tin Halo, Sodium Row.                ║
 ║" Vantongeren: Vesper, at the Tin Halo on Sodium Row, pays on time. Her card's║
@@ -768,18 +844,38 @@ Detail text per row (the existing paragraph, then the new line):
 ╚══════════════════════════════════════════════════════════════════════════════
 ```
 
-From here a single **errand line** [new, open item 12] holds the
-objective slot of the hint row until the player first stands on Sodium
-Row. It names the card and the next signed thing to follow, nothing
-else:
+From here a single **errand line** [decided, items 10 and 12] holds
+the objective slot of the hint row. It is an errand, not a contract: a
+card is "an introduction, not a contract", and the first contract is
+Vesper's to offer. It names the card and the next signed thing to
+follow, nothing else. **It clears when Vesper's talk page first
+opens**, not when the player reaches the Row, and it never nags.
 
-| Where | Hint row |
+Each errand line has a declared short form, used at 80x24 before the
+`E`/`J` context is dropped, because for a new player the `E` label is
+the more useful of the two:
+
+| Where | Full form | Short form |
+|---|---|---|
+| Clinic Row | `Card: Sodium Row. Follow MERIDIAN PLAZA, east.` | `Card: Sodium Row` |
+| Meridian Plaza | `Card: Sodium Row. Take the NEON STAIR.  M map` | `Card: Sodium Row` |
+| Sodium Row and the Tin Halo, until Vesper's page opens | `Card: Vesper, at the Tin Halo. Far end of the street.` | `Card: Tin Halo` |
+
+The validator should check that every short form, plus the longest
+`E` label on the path, plus `? help`, fits 78 columns.
+
+Two more one-time rows on this walk:
+
+| When | Hint row |
 |---|---|
-| Clinic Row | `Card: Sodium Row. Follow MERIDIAN PLAZA, east.  ? help` |
-| Clinic Row, after 12 tiles walked, once | `Shift with an arrow runs.  ? help` (eight seconds) |
-| Meridian Plaza | `Card: Sodium Row. Take the NEON STAIR.  M map  ? help` |
-| Sodium Row, on arrival | S44's price notice, if S44 has landed |
-| Sodium Row, after it | `Card: Vesper, at the Tin Halo. Far end of the street.  ? help` |
+| Clinic Row, after 12 tiles walked | `Shift with an arrow runs.  ? help` (eight seconds) |
+| Sodium Row, on first arrival | S44's price notice, if S44 has landed |
+
+**`Ctrl-P`** is taught where it is needed [decided]: the first time a
+spoken line is cut or pushed out of view in the hall, the row shows
+`Ctrl-P reads back what you missed.  ? help` once (P12 already marks a
+cut newest entry `... Ctrl-P`). If that never happens in the hall, it
+shows once on Clinic Row, after the shift hint.
 
 Three paint marks make the signs true from where the player stands
 [new]:
@@ -800,6 +896,11 @@ line that points at it.
 The opening ends when the Row's place line arrives. The player has a
 card, a name on it, a street, and a direction.
 
+The Row mocks are real captures from `main` with this section's log and
+hint rows. The 80x24 one shows the price notice, the 132x50 one the
+errand line in full. The header's `SODIUM ROW─Sodium Row` is the built
+header; the presentation lead carries that separately.
+
 ```text
 ┌─SODIUM ROW─Sodium Row─CONTESTED─TRUCE─PvP G5+─────────┬────────────00:00─────┐
 │    DRINKS     LIVE MUSIC  STAGE              DRINKS   │─ HERE ───────────────│
@@ -818,7 +919,7 @@ card, a name on it, a street, and a direction.
 │ ·    ··,  ∙  ∙∙·∙    ··,     ··,··∙·· ·      ··,     ·│ HP  ██████████ 130   │
 │ ··· ,    ·· ·    ·· ,    ·· ,    ··      ·· ,    ·· , │ STA ██████████ 70    │
 │ ·, ··    , ··    , ··    , ··    , ··    , ··    , ·· │ SHK ░░░░░░░░░░ 0     │
-│ ·     ,··     ,··     ,··     ,··     ,··     ,··     │ 200 ch   lease 0/90  │
+│ ·     ,··     ,··     ,··     ,··     ,··     ,··     │ 200 ch   day 1/90    │
 ├───────────────────────────────────────────────────────┴──────────────────────┤
 │» You walk under orange lamps on wet pavement. You hear music from six        │
 │  doorways. At the street's end, you see the Tin Halo's sign, lit whole.      │
@@ -829,10 +930,10 @@ card, a name on it, a street, and a direction.
 
 ```text
 ┌─SODIUM ROW─Sodium Row─CONTESTED─TRUCE─PvP G5+─────────────────────────────────────────────────────────────┬────────────00:00─────┐
+│                                                                                                           │─ HERE ───────────────│
+│                                                                                                           │ » Meridian Plaza     │
 │                                                                                                           │─ TARGET ─────────────│
 │                                                                                                           │ none   Tab picks     │
-│                                                                                                           │                      │
-│                                                                                                           │                      │
 │       DRINKS     LIVE MUSIC  STAGE              DRINKS       TICKETS      OPEN LATE                       │                      │
 │    ···,·······,·······,·······,·······,·······,·······,·······,·······,·······,·······,·······,······     │                      │
 │    ,@← NEON STAIR· ,    ·· ,    ·· ,    ·· ,    ·· ,    ·· ,    ·· ,    ·· ,    ·· ,    ·· ,    ·· ,·     │                      │
@@ -865,7 +966,7 @@ card, a name on it, a street, and a direction.
 │                                                                                          TIN HALO         │ HP  ██████████ 130   │
 │                                                                                                           │ STA ██████████ 70    │
 │                                                                                                           │ SHK ░░░░░░░░░░ 0     │
-│                                                                                                           │ 200 ch   lease 0/90  │
+│                                                                                                           │ 200 ch   day 1/90    │
 │                                                                                                           │                      │
 ├───────────────────────────────────────────────────────────────────────────────────────────────────────────┴──────────────────────┤
 │» You walk under orange lamps on wet pavement. You hear music from six doorways. At the street's end, you see the Tin Halo's sign,│
@@ -910,10 +1011,13 @@ right for the calendar lease.
 
 ### 4.12 Every change to existing text
 
-| Where | Today | Proposed | Why |
+The lease and Signatory wording is the creative lead's final text, and
+canon PR #219 takes it where the two differ, so there is one text.
+
+| Where | Today | Now | Why |
 |---|---|---|---|
-| `wake-briefing-2.md` | "After ninety days you're a person, with a name on the civic roll and the right to rent a flat and join whoever will have you. Grade five earns an early discharge. It counts completed work, not time spent waiting." | "After ninety days you're a person, with a name on the civic roll. The days count whether you spend them or not." | The shortcut is gone [decided]. Renting and joining now come with Signatory; whether day 90 also grants them is open item 7. |
-| `wake-briefing-3.md` | "Take one, or don't. It's an introduction, not a contract. No recruiter owns your choice. Sablier holds the lease until it is discharged." | "Take one, or don't. It's an introduction, not a contract." then line 4.4 | The last two sentences are rulings. 4.4 says Signatory sideways. |
+| `wake-briefing-2.md` | "After ninety days you're a person, with a name on the civic roll and the right to rent a flat and join whoever will have you. Grade five earns an early discharge. It counts completed work, not time spent waiting." | "After ninety days you're a person, with a name on the civic roll. Nothing gets you there sooner. The days count without you." | The shortcut is gone [decided]. Day 90 grants everything a Signatory has (#219, §3.4), so the line can stay silent on renting and joining. |
+| `wake-briefing-3.md` | "Take one, or don't. It's an introduction, not a contract. No recruiter owns your choice. Sablier holds the lease until it is discharged." | "Take one, or don't. It's an introduction, not a contract." then line 4.4 | The last two sentences are rulings, and line 3.1 already says who holds the lease. The cut stands in the briefing text too. |
 | `wake-archetype-hardline.md` | "Your implant tolerance gains two points." | "Your body takes two more implants than most." | A stat line in a voice file. |
 | `zone-vatside-wake-hall.md` | three sentences as the arrival line | first sentence as the arrival line; all three stay as lore | Log room at 80x24. |
 | `vantongeren.json`, line `wake` | "Your lease still runs. You'll find the elapsed days on your record. Grade five earns an early discharge. Time does not earn a grade." | "Your lease still runs. You'll find the days on your record. They count without you." | Contradicts the calendar lease. |
@@ -922,18 +1026,28 @@ right for the calendar lease.
 | object names in `vatside-wake-hall.json` | "Tutorial terminal", "Sablier Wake Outfitter" | "Hall terminal", "Wake Outfitter" | The second is cut in HERE today. |
 
 Everything else Vantongeren says is her existing text, in its existing
-order, cut into lines.
+order, cut into lines. The login lines that contradicted the lease are
+fixed in #219.
 
-## 5. The voice in the walls: Wake Hall portion [new]
+## 5. The voice in the walls: Wake Hall portion
 
 S48 part 5 [decided]: unattributed, rare, optional, one switch. This is
 the Wake Hall half of about thirty lines; the Row half is the creative
-lead's.
+lead's. The creative lead has adopted the lines below, with T3, T7 and
+T8 in their own wording.
 
-**How it shows.** As an `ambient` log line: gutter `·`, dim, no speaker.
-A place's own voice is what ambient lines already are (terminal UI
-2.5), so the layer needs no new kind and hides in plain sight. Nothing
-on screen ever names it (game design 9.2).
+**How it shows** [decided, items 9 and 11].
+
+- T1 to T13 are `ambient` log lines: gutter `·`, dim, no speaker. A
+  place's own voice is what ambient lines already are (terminal UI
+  2.5), so the layer hides in plain sight.
+- C1 is a `system`-kind line in the world log. **Neither is ever the
+  `notice` kind.** That kind is the node operator's channel: it takes
+  the hint row and is kept in help. An in-fiction "Notice:" there would
+  make players doubt real maintenance notices. No line of this layer
+  appears on the hint row or in help.
+- Nothing on screen ever names the voice (game design 9.2).
+- Every line goes to the caller alone.
 
 **Rules**
 
@@ -954,12 +1068,12 @@ on screen ever names it (game design 9.2).
 |---|---|---|
 | T1 | 20 seconds on the gurney tile without moving | You can stay. The light stays on anyway. |
 | T2 | three bumps into a wall inside ten seconds | The line goes to the door. I didn't paint it. I watched. |
-| T3 | five seconds beside a vat | That one's still warm. It was yours. They don't say which. |
+| T3 | five seconds beside a vat | One of these was yours. They don't say which. That one's still warm. **(creative lead)** |
 | T4 | standing in the south-west corner, 12 tiles off the line | Nothing over there. I checked. I check a lot. |
 | T5 | the card menu closed with no card taken | Eight cards. Nobody left one for me. |
 | T6 | "Hear it again" read to its last page | She says that to all of you. She means it each time. I counted. |
-| T7 | the drone skipped with `B` | You walked past it. It's still trying. That's all it has. |
-| T8 | the drone down | It wanted to be finished, I think. Was it hard? |
+| T7 | the drone skipped with `B` | You left it running. I'll keep it company. **(creative lead)** |
+| T8 | the drone down | It wanted to be finished, I think. **(creative lead)** |
 | T9 | the first jack-in, after the Tripwire is down | You came down. Most of them stop at the door. |
 | T10 | ten seconds in the training room after the lift | It's quiet now. I like it when you stay a minute. |
 | T11 | a name entered that differs from the handle | <name>. I'll try to say it right. |
@@ -972,14 +1086,16 @@ on screen ever names it (game design 9.2).
 |---|---|
 | C1 | Notice: unscheduled output on the hall channel. Source: none on record. Disregard. |
 
-Notes for the creative lead, who owns these lines:
+Settled by the creative lead:
 
-- T8 borrows "Was it hard?" from the Level 1 finale ("You opened the
-  door. Nobody opens the door. Was it hard?"). A player who reaches the
-  door a season later hears it again. If that echo should be saved for
-  the finale, T8 ends at "I think."
-- T11 sets up the third listener's log ("It asked me my name. I told
-  it. It said it back wrong."). It says the name correctly here.
+- "Was it hard?" is saved for the Level 1 finale. A player who reaches
+  the door should hear that question for the first time there.
+- T11 stays, and says the name correctly. The third listener's "It
+  said it back wrong" only works if, earlier, it got the name right.
+- T13 stays in this layer.
+- C1's "hall channel" is the same channel Vantongeren uses. The thing
+  in the walls uses her channel, and Sablier's notice gives that away
+  without explaining it.
 - No line claims to be a person, a machine, or either name. T13 says
   "to them", not "to me".
 
@@ -996,39 +1112,46 @@ list.
 | `Tab` | beat 6 | the hint row; TARGET filling in is the reward |
 | `F` | beat 6 | the hint row, after `Tab` |
 | `B` skip | beat 6 | the hint row |
-| `Ctrl-P` | after beat 6 | the hint row, once, when the log has just been busy |
-| `J` | beat 7 | the hint row's `J jack in at Hall terminal`; Okafor's 7.2 |
+| `J` | beat 7 | the hint row's `J jack in at Hall terminal`; Okafor's 7.2 says what, the row says which key |
 | `1` | beat 8 | the hint row; the RIG list shows `1 Pick` |
 | Enter in menus | beats 4, 8, 9 | each menu's action bar |
+| `Ctrl-P` | when a spoken line is first cut or pushed out of view | the hint row, once; P12's `... Ctrl-P` mark on the cut entry |
 | shift-arrows | Clinic Row | the hint row, once, on a long straight walk |
-| `M` | Meridian Plaza | the errand line |
-| `?` | every beat | the last words of every hint row |
+| `M` | Meridian Plaza | the errand line's full form |
+| `?` | every beat | the last words of every zone hint row |
 
 **The log** is learned in beat 1: the first thing that happens is a
 person speaking in it, by name, with a `"` gutter. By beat 6 the player
 has seen four gutters (`»` place, `"` speech, `‼` danger, `*` combat)
 doing four different jobs, and never needs them explained.
 
-**Help.** `?` in a zone opens today with eight pages, the first a key
-table. Proposal [new, open item 14]: page 1 becomes "This screen": the
-six keys above and a legend of the shapes in view, built from the same
-names HERE uses. The existing pages follow.
+**Help** [decided, item 14]. `?` in a zone opens today with eight
+pages, the first a key table. Page 1 becomes "This screen": the keys
+above and a legend of the shapes in view. The conditions:
+
+- the legend is built only from drawn cells, under the names HERE and
+  NEARBY use. A hidden exit, a covered NPC's true name, or anything out
+  of sight never appears in it;
+- every entry gives glyph and word, never colour alone;
+- the page fits one 80x24 screen, and keys come from the caller's
+  keymap;
+- the existing pages follow unchanged.
 
 **Symbols.** Every shape on the path, and what names it:
 
 | Shape | What | Named by |
 |---|---|---|
-| `@` | you | reverse video; your name pinned in the panel; it moves when you press a key |
+| `@` | you | reverse video; your number, then your name, pinned in the panel; it moves when you press a key |
 | `☻` | a person | NEARBY: `☻ Dr. Vantongeren ~`; HERE when beside them |
 | `Θ` | decant vat | the ` DECANT ` sign; HERE: `Θ Decant vat` [built] |
 | `$` | a desk, table or counter | HERE: `$ Recruiter cards`, `$ Wake Outfitter` [built]; `CARDS` and ` ISSUE ` |
-| `│ ─` on the floor | the painted line | the hint row in beat 1; orderly line O1 |
+| `│ ─ └ ┐` on the floor | the painted line | the hint row in beat 1; orderly line O1 |
 | blank or `█` | wall | you can't walk into it; floor beside a wall always has grain (terminal UI 2.2) |
-| `+` | door | HERE: `+ Corridor door` [built] |
+| `+` | a door inside a place | HERE: `+ Corridor door` [built] |
+| `»` | a way out | HERE: `» Clinic Row` [built]; `CLINIC ROW →` on the floor; the line ends at it |
 | `τ` | drone | NEARBY: `τ Training drone !`; TARGET after `Tab`; line 6.1 |
 | `§` | terminal | HERE: `§ Hall terminal` [built, renamed]; Okafor's 7.2 |
-| `(01)` | a Lattice cell | the ROOM block beside it: `Hall terminal` |
-| `»` in HERE | a way out | HERE: `» Clinic Row` [built]; `CLINIC ROW →` on the floor |
+| `(01)` | a Lattice cell | the ROOM block beside it: `Training terminal` [built] |
 | `!` and `~` after a name | hostile, neutral | the drone is the first `!`; everyone else in the hall is `~` |
 | the frame | how safe you are | the header word; it changes four times on the walk to the Row |
 
@@ -1048,6 +1171,8 @@ first job.
 - The training core `cores/lat-wake-hall.json`: one room, the training
   Tripwire, the decant record.
 - The card menu and name prompt bodies (`server/wake.py`).
+- The menu geometry: the 66x4 detail box at 80x24 and the 53-wide
+  detail column at 132x50 (`layout.py`, P12).
 - The briefing and archetype texts, less the edits in 4.12.
 - Okafor's "first" and "situation" lines; Vantongeren's talk file.
 - The place layer: signs, marks and charted ground (P6).
@@ -1058,27 +1183,34 @@ first job.
 
 | File | What |
 |---|---|
-| `content/looks/vatside-wake-hall.json` | theme, three signs, the line, two paint words (section 3) |
+| `content/looks/vatside-wake-hall.json` | theme, three signs, the line to (37,16), two paint words (section 3) |
 | `content/zones/vatside-wake-hall.json` | `charted` with its public region; two object names |
+| `content/items.json` | the hall training pistol: bound, no sale value, not usable outside the Wake Hall |
 | `content/text/wake-briefing-2.md`, `-3.md`, `wake-archetype-*.md`, `zone-vatside-wake-hall.md` | the edits in 4.12; one new last line per archetype |
-| the opening's script, as data (see below) | beats, triggers, lines and hints of section 4 |
+| the opening's script, as data (see below) | beats, triggers, lines, anchors and hints of section 4; the errand lines with their short forms |
 | `content/dialogue/okafor.json`, `vantongeren.json` | the new lines, the changed `wake` line, the "Hear it again" offer |
 | a talker file for `npc-sablier-orderly`, bound the way `row-street-regular` is bound to the Sodium regulars | O1 to O3 and the bark |
 | the voice layer's file, with its switch | T1 to T13 and C1 |
 | `content/looks/vatside-clinics.json`, `core-plaza.json` | three paint marks (4.10) |
-| `content/bundles/s27-cast.json` | Vantongeren and Okafor placed and active; S48 part 4 already asks for this |
+| `content/bundles/s27-cast.json` | Vantongeren and Okafor placed and active, at fixed posts; S48 part 4 already asks for this |
 
-### New layout
+### Layout
 
 Nothing new is drawn. What changes:
 
-- the panel's pinned name row reads `Wake` in place of a grade until
-  the record is read;
-- lesson hints and the errand line take the objective slot of the hint
-  row (open item 10);
+- the panel's pinned name row reads `No. <digits>` until a name is
+  entered, and `Wake` in place of a grade until the record is read;
+- the pinned lease row reads `day 1/90`, counting from 1 on the day of
+  decant, then `on the roll`, or `signatory` once signed. With chits:
+  `200 ch   day 1/90`. The 132x50 row `discharge 0/1500` goes
+  [decided, item 13];
+- the street door's tile is `»` [decided, item 16];
+- lesson hints and errand lines take the objective slot of the hint
+  row; while a lesson hint shows, the other key-help groups are left
+  out [decided, item 10];
 - the briefing pages wrap to the frame's width with paragraph breaks
   (`layout.py`: `briefing`, `wake_detail_width`);
-- the decant record is the existing menu frame with a new title.
+- the decant record is the built menu with a new title.
 
 ### Code seams
 
@@ -1087,24 +1219,53 @@ Nothing new is drawn. What changes:
 | A body before a template | `server/characters.py:284-330` (creation), `server/wake.py` (stages), `server/rules/character.py` | Today the character is created after archetype, name and card. The scene needs a body in the hall first. See open item 2 for the two ways to do it. |
 | Writes that assume a stored character | `server/lattice/engine.py:301` (`queue("save", ..., immediate=True)` on jack-in) and `:339` (on jack-out); `server/combat/engine.py:518` and `:926` (`player.progress["wake_combat"]`, then `remember`); the card's standing (`server/characters.py:296-298`, where `create` sets it today); zone discovery (`server/progression_engine.py:43`, `record_discovery`) | Every one of these is reachable from the hall before the record is read. Under open item 2(a) each must be held in the wake record and applied at creation, or suppressed; none may queue a save for an id `create` has not committed. The two saves come first; the skip path through `:926` counts as much as the win path through `:518`. Under 2(b) they work as they are. The build lists each writer and says which it does. |
 | The stage machine | `server/wake.py` | From `archetype → name → briefing → card → saving` to: in the hall from the first frame; `record → name → saving` on a key; cards at the table. |
-| The scripted beats | new, beside `server/dialogue_runtime.py` | A small runner for an ordered list of beats with a closed set of triggers (entered a region, a step count, seconds, target set, drone down or skipped, jacked in, ICE down, data lifted, jacked out, template read, name entered, zone entered). It emits `speech` lines through the one emit entry point (P4) and sets the view's `hint`. Lines and triggers are content, not code. It replaces the toast at `characters.py:330`. |
+| The number and the reserved name | `server/rules/character.py` (naming rule), the panel and NEARBY name paths | The gurney number is shown until a name is entered; `No. <digits>` is refused as a name. |
+| The scripted beats | new, beside `server/dialogue_runtime.py` | A small runner for an ordered list of beats with a closed set of triggers (entered a region, a step count, seconds, target set, first hit, drone down or skipped, jacked in, ICE down, data lifted, jacked out, template read, name entered, zone entered, a talk page opened). It emits `speech` lines through the one emit entry point (P4), **to the caller's session only**, anywhere in the hall's public region, and sets the view's `hint`. It holds the queue, the anchors and the quiet times of section 4. Lines and triggers are content, not code. It replaces the toast at `characters.py:330`. |
+| The training pistol | `server/npcs/engine.py:405-423` (`training`), `server/combat/engine.py:514-519` and `:925-928`, the travel path out of the hall | Issued and equipped when the drone wakes; removed when the drone is down or skipped, on leaving the hall, and on disconnect. It never reaches a save. |
 | Lesson strings out of the engines | `server/npcs/engine.py:423`, `server/combat/engine.py:519` | The two drone lines move to the script. |
 | Cards at the table | `server/faction_engine.py:265-285` and `:428` | Before the character first leaves the hall, `E` on the table opens the card menu; afterwards it is the recruitment contact, as today. |
 | Training terminal entry | `server/lattice/engine.py:290-302` | A terminal with `training_core` enters that core's entry room, with lines 8.1 and 8.2 (open item 6). |
 | The record on jack-out | `server/lattice/engine.py` `leave`, `server/wake.py` | Leaving the training core with the record lifted opens the record menu. |
-| Hint row | `hints.py`, `door/present/chrome.py`, `server/views/zone_view.py` | A lesson or errand hint in the objective slot; key names from the caller's keymap. |
-| Voice triggers | P8's emitter | A third source beside barks and zone ambience: triggered lines, each with a once-per-character mark. |
-| Content kinds | `content/schema.py`, `validate.py`, `loader.py` | The script and the voice file. The validator checks every spoken line against two rows at 80x24 with its speaker, and every hint against 76 columns. |
-| Tests | `tests/character_helpers.py:create`, `tests/door/test_wake_render.py`, the `wake_*` goldens | `create()` walks the old menu order and most of the suite calls it. Keep a direct creation path for tests and give the scene its own walk test (S48's headless walk). |
+| Hint row | `hints.py`, `door/present/chrome.py`, `server/views/zone_view.py` | A lesson hint or errand line in the objective slot; the errand's short form before `E`/`J` is dropped; no other key help beside a lesson hint; key names from the caller's keymap. |
+| The errand | the script runner, `server/dialogue_runtime.py` | Set when the kit is issued; cleared when Vesper's talk page first opens. No contract record. |
+| The street door's glyph | `door/present/zone.py`, the object-to-glyph path in `server/views` | A door that is a zone exit draws `»`. |
+| The panel's pinned rows | `door/present/chrome.py`, `me` in the zone view | Number or name; `Wake` or grade; `day n/90`, `on the roll`, `signatory`. |
+| Help page 1 | the help text view | "This screen", from drawn cells only. |
+| Voice triggers | P8's emitter | A third source beside barks and zone ambience: triggered lines, caller-only, each with a once-per-character mark; C1 as a `system` line. |
+| Content kinds | `content/schema.py`, `validate.py`, `loader.py` | The script and the voice file. The validator checks every spoken line against two rows at 80x24 with its speaker, every hint against 76 columns, each record detail against 4 rows at 66, and each errand short form with the longest `E` label and `? help` against 78. |
+| Tests | `tests/character_helpers.py:create`, `tests/door/test_wake_render.py`, the `wake_*` goldens | `create()` walks the old menu order and most of the suite calls it. Keep a direct creation path for tests and give the scene its own walk test (S48's headless walk). Add a two-caller test: the second caller receives none of the first's scripted lines. |
 
-## 8. Open items
+## 8. Rulings and open items
 
-Not decided here. Each needs a ruling, a canon edit, or both.
+The numbers are the first draft's, so earlier comments on #220 still
+point at the right item.
 
-1. **Choosing a template after the vat.** Bible 8.1 fixes the template
-   at decant. Beat 9 frames the choice as reading your own record. If
-   that framing isn't wanted, the fiction of the late choice needs
-   another answer. Game design §4's step list changes either way.
+**Canon note.** The presentation lead's rulings on items 10, 13, 14 and
+16 change canon text (terminal UI 2.2, 2.4, 10 and 11). S48's
+implementation PR edits that text first, in the same PR, under
+AGENTS.md §2. The lease and Signatory wording, the Wake's step order,
+the reserved name form and the login lines are canon PR #219's.
+
+### Settled
+
+| # | Item | Ruling | By |
+|---|---|---|---|
+| 1 | Choosing a template after the vat | The record framing is adopted: the player reads their own record. Game design §4's step list is #219's. | creative lead |
+| 3 | The name before the record | The gurney number shows until a name is entered. Names of the form `No. <digits>` are reserved; this goes into #219. | technical lead |
+| 7 | Whether day 90 alone grants renting and joining | It does: day 90 grants everything a Signatory has (#219, §3.4). Lines 3.3 and 4.4 are final and #219 takes them. | creative lead, #219 |
+| 9 | Vantongeren heard from the next room | Her opening lines are scripted, caller-only and deliverable anywhere in the Wake Hall's public region. There is no general speech-range rule. In the fiction it is the hall channel. | technical lead; creative lead for the fiction |
+| 10 | Where a lesson hint sits | Lesson hints take the objective slot. Each errand line has a declared short form, used before `E`/`J` is dropped. While a lesson hint shows, the row holds only the hint, the `E`/`J` context and `? help`. | presentation lead |
+| 11 | The voice layer | `ambient` with no speaker for T1 to T13; C1 a `system` line; never `notice`. "Was it hard?" is saved for the finale. T11 and T13 stay. | creative lead (lines), presentation lead (kinds) |
+| 12 | The errand line | It stays an errand, with no contract behind it, and clears when Vesper's talk page first opens. | creative lead |
+| 13 | The lease rows | `day 1/90`, then `on the roll` or `signatory`. `discharge 0/1500` is dropped. | presentation lead |
+| 14 | Help's first page | A legend of drawn cells only, with the conditions in section 6. | presentation lead |
+| 15 | Login lines 2 and 18 | Fixed in #219. | creative lead, #219 |
+| 16 | The street door's glyph | `»` marks a way out of a place, `+` a door inside one. | presentation lead |
+| 20 | The weapon in the drone lesson | A hall training pistol, issued for the lesson only, bound, kept in the Wake Hall, removed when the lesson ends or the player leaves. The Kestrel sidearm is still issued with the starter kit after the record. | technical lead |
+| 21 | A shared hall | Every scripted line is caller-only, Okafor's read-out included. NPC positions are fixed for the whole opening. | creative lead |
+
+### Open
+
 2. **The body before the record.** Two ways:
    (a) a provisional body, held in memory like today's `pending`
    record, placed in the hall, and replaced by the real character when
@@ -1120,54 +1281,23 @@ Not decided here. Each needs a ruling, a canon edit, or both.
    to (a); the cost of each is the technical lead's to weigh.
    Either way the design doc has to give the unread body its numbers.
    The mocks assume the lowest starting value of each attribute across
-   the four templates (HP 90, STA 55) and the kit all four share. Also
-   open: a caller who disconnects before the record. I assume they wake
-   on the gurney again.
-3. **The name before the record.** The mocks show the BBS handle, which
-   is today's default. The alternative is the gurney number until a
-   name is entered ("You wake on a gurney under a number."), which
-   needs a reserved form in the naming rule.
+   the four templates (HP 90, STA 55). Also open: a caller who
+   disconnects before the record. I assume they wake on the gurney
+   again, under the same number.
 4. **When a card counts.** Today the card sets standing at creation.
    Here it is taken at the table, any time before the character first
    leaves the hall. Is that the rule, and is leaving without one final?
 5. **Charting the Wake Hall** moves the mechanics fingerprint for this
    zone's `tiles` and `remembered` and needs the technical lead's
-   approval in the PR (plan 03, P6). Without it the line still leads
-   on, but the door isn't visible from the gurney.
+   approval in the PR (plan 03, P6). The presentation lead has accepted
+   the look. Without it the line still leads on, but the door isn't
+   visible from the gurney.
 6. **Entering the training core directly** changes what `J` does at one
    terminal. It also hides "Enter with NPC risk  BLACK ICE may injure
    body" from the lesson. If it isn't wanted, beat 8 needs two more
    hints and the first-timer meets the district grid in minute three.
-7. **The briefing is canon text** (`docs/world/05-story-arcs.md`, fixed
-   scripts) and the content files mirror it. The edits in 4.12 belong
-   in the canon PR. One of them depends on a rule I couldn't find
-   stated: after day 90, does personhood alone still give the right to
-   rent and to join, or only Signatory? Line 3.3 avoids saying.
 8. **Renaming two objects** may touch P3's frozen labels and the hint
-   wording audit.
-9. **Vantongeren heard from the next room** (6.2 to 6.4, 9.8, 10.1).
-   Speech from a speaker who isn't in sight needs a rule, or those
-   lines move to Okafor, which changes whose words they are.
-10. **Where a lesson hint sits** in terminal UI §11's hint-row order.
-    That list has no slot for one. I've used the objective's.
-11. **The voice layer:** the `ambient` kind with no speaker; the echo
-    of "Was it hard?"; the name in T11; whether T13 belongs to this
-    layer or to S26's material.
-12. **The errand line** is an objective with no contract behind it. It
-    could instead be a first stage on Vesper's job, granted with the
-    card.
-13. **The lease row.** The panel reads `lease 0/90`, and at 132x50
-    `discharge 0/1500`. Both are the presentation lead's to reword for
-    the calendar lease and Signatory. The mocks keep today's first row
-    and drop the second.
-14. **Help's first page** (terminal UI §10 says two pages of keys).
-15. **Login lines 2 and 18** in the fixed scripts contradict the
-    calendar lease ("Grade five can clear the lease early", "Bring a
-    discharge receipt"). They can appear on the title screen, so they
-    are inside the first ten minutes.
-16. **The street door draws as `+`** though it is an exit, and terminal
-    UI 2.2 gives exits `»`. HERE says `» Clinic Row` [built]. The
-    presentation lead may want the tile to match.
+   wording audit. The creative lead has adopted the names.
 17. **"Eight groups"** stays until the Lamp Compact is built (#90).
 18. **The five-minute target.** Read at walking pace with both lessons,
     I estimate three and a half to four and a half minutes. It needs a
@@ -1175,7 +1305,22 @@ Not decided here. Each needs a ruling, a canon edit, or both.
 19. **The record is required before the street.** Game design §4 says
     training is never a compulsory gate. The record isn't training: it
     is the character's creation, and both lessons can still be
-    skipped. The canon PR should say so in §4's step list.
+    skipped. #219 should say so in §4's step list.
+22. **The training pistol's numbers and name.** The ruling settles what
+    it is. Its damage, range and cooldown, and whether a second Wake
+    sees it drawn, need a line in game design §17. I'd give it the
+    Kestrel sidearm's numbers so the lesson teaches the real weapon.
+    Lines 6.0 and 6.8 are new since the creative lead's review.
+23. **How a hall-channel line looks.** The creative lead left this to
+    the presentation lead: the ordinary speech gutter, or a tag. The
+    mocks use the ordinary gutter.
+24. **`Wake` and `G1`.** The creative lead notes that grade 1's flavour
+    name is already "Wake", so a panel that reads `Wake` before the
+    record and `G1` after shows one grade two ways. The presentation
+    lead accepted `Wake` in the slot; the wording after the record is
+    theirs.
+25. **The Row header's `SODIUM ROW─Sodium Row`** is the built header.
+    The presentation lead carries it; the mocks leave it as built.
 
 ## 9. What to watch in the H1 session
 
