@@ -21,7 +21,9 @@ Declared fixtures (technical lead's ruling on #214):
   the death.
 - For the price-target step only, the targeted regular holds still (#225):
   a wanderer can leave the target slot before the warning is filmed, and
-  the first-target notice comes once per session.
+  the first-target notice comes once per session. Likewise the asked
+  enforcer holds still while its page is open: a step out of reach closes
+  the page before the answer is filmed.
 """
 
 import argparse
@@ -282,10 +284,15 @@ async def accept(root: Path, door_python: Path, width: int, height: int, modern:
                     await delivered(asker)
                     if max(abs(guard.x-asker.avatar.actor.x), abs(guard.y-asker.avatar.actor.y)) > 1:
                         continue  # It moved on; find it again.
+                    # Declared (#225): the asked guard holds still for the
+                    # page; a step out of reach closes it before the answer.
+                    held_guard, held_move = guard, guard.cooldowns.get('move', 0)
+                    guard.cooldowns['move'] = 10**12
                     await asker.caller.write(b'e')
                     try:
                         await wait(lambda: asker.session.id in core.dialogue.menus, 3)
                     except TimeoutError:
+                        guard.cooldowns['move'] = held_move
                         continue
             await wait(lambda: 'Ask about the peace' in asker.caller.screen.screen_text())
             await delivered(asker)
@@ -296,7 +303,9 @@ async def accept(root: Path, door_python: Path, width: int, height: int, modern:
             await delivered(asker)
             shipped = next(line.text for line in core.characters.content.dialogue['row-enforcer'].lines
                            if line.id == 'ask-peace')
-            save(asker, 'enforcer-ask', {'question': "What's the arrangement here?", 'answer': shipped})
+            save(asker, 'enforcer-ask', {'question': "What's the arrangement here?", 'answer': shipped,
+                                         'fixture': 'asked guard held still for the page (#225)'})
+            held_guard.cooldowns['move'] = held_move
             # A guard walking back to its post leaves reach, which closes the
             # page by itself (S42); close it here only if it is still open.
             if asker.session.id in core.dialogue.menus:
@@ -312,7 +321,8 @@ async def accept(root: Path, door_python: Path, width: int, height: int, modern:
                          'grade 5 for the player-vs-player rules (S38 precedent)',
                          'keeper guards (and any that spawn) hold fire until the death scene; released for the death',
                          'one pursuer in the bar scene: the other guard leaves the world and respawns from its spawner',
-                         'price-target: the targeted regular holds still for that step, then wanders again (#225)'],
+                         'price-target: the targeted regular holds still for that step, then wanders again (#225)',
+                         'enforcer-ask: the asked guard holds still while its page is open, then is released (#225)'],
             'fixture_walls': walls,
             'presentation_acceptance': False, 'h1_layout_approval': False,
             's25_layout_approval': False}, indent=2)+'\n', encoding='utf-8', newline='\n')
