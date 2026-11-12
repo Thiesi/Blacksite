@@ -32,3 +32,9 @@ def test_block_fails_without_annotating() -> None:
     with pytest.raises(AssertionError, match='20 ms limit'):
         enforce(20.105, 'S11 132x50', lines.append)
     assert lines == []
+
+
+def test_warning_title_names_the_caller() -> None:
+    lines: list[str] = []
+    enforce(15.0, 'admin status 80x24', lines.append, title='S25a tick budget')
+    assert lines[0].startswith('::warning title=S25a tick budget::admin status 80x24')

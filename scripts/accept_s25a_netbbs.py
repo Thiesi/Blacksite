@@ -15,7 +15,7 @@ from unittest.mock import patch
 
 from accept_s10_netbbs import NativeProbe, wait
 from accept_s11_netbbs import profile
-from tick_budget import BLOCK_MS
+from tick_budget import verdict
 from karst41.content.loader import load_content
 from karst41.content.schema import ObjectSpec
 from karst41.content.validate import validate
@@ -106,7 +106,7 @@ async def accept(root: Path, door_python: Path, show: bool,
             await wait(lambda: 'Wake Hall' in caller.caller.screen.screen_text().splitlines()[0])
             del zone.objects['s25a-fixture-prop']
             try:
-                p99 = await profile(probe, width, height)
+                p99 = await profile(probe, width, height, title='S25a tick budget')
             except AssertionError:
                 # Retain a failed budget sample while finishing functional
                 # evidence at every requested size. The final exit fails.
@@ -118,7 +118,7 @@ async def accept(root: Path, door_python: Path, show: bool,
                 'passive_props_jack': True, 'console_interact_and_J': True, 'npc_p99_ms': p99})
             await probe.leave(caller, f's25a-complete-{width}x{height}')
         assert not probe.errors, probe.errors
-        budgets_ok = probe.server_start_seconds <= 3 and all(row['npc_p99_ms'] < BLOCK_MS for row in results)
+        budgets_ok = probe.server_start_seconds <= 3 and all(verdict(row['npc_p99_ms']) != 'block' for row in results)
         (root/'result.json').write_text(json.dumps({'passed': budgets_ok, 'functional_passed': True,
             'transport': 'NetBBS Telnet native stdio', 'human_playtest': False,
             'fixtures': 'private hub overlay, one water tile and underfoot props',

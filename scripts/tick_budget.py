@@ -20,13 +20,14 @@ def verdict(p99_ms: float) -> str:
     return 'pass'
 
 
-def enforce(p99_ms: float, label: str, emit: Callable[[str], None] = print) -> str:
+def enforce(p99_ms: float, label: str, emit: Callable[[str], None] = print,
+            title: str = 'S11 tick budget') -> str:
     """Fail on a block, annotate a warning, and return the verdict."""
     result = verdict(p99_ms)
     if result == 'block':
         raise AssertionError(f'{label}: tick p99 {p99_ms:.3f} ms is at or over the '
                              f'{BLOCK_MS:g} ms limit')
     if result == 'warn':
-        emit(f'::warning title=S11 tick budget::{label}: tick p99 {p99_ms:.3f} ms is at or over '
+        emit(f'::warning title={title}::{label}: tick p99 {p99_ms:.3f} ms is at or over '
              f'{WARN_MS:g} ms (warning only; the check blocks at {BLOCK_MS:g} ms)')
     return result

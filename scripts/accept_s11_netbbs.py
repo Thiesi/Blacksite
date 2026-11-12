@@ -64,16 +64,18 @@ async def approach(probe: NativeProbe, caller: Connection, target: Actor,
 
 
 
-async def profile(probe: NativeProbe, width: int, height: int) -> float:
+async def profile(probe: NativeProbe, width: int, height: int,
+                  title: str = 'S11 tick budget') -> float:
     # Only status, sparse commit exits and two loop boundaries are added.
     # Detailed write wrappers/proxies remain in the later diagnostic.
     with (WriteProfile(probe.service, trace_writes=False) as writes_profile,
           MinimalProfile(probe.service) as minimal):
-        return await _profile(probe, width, height, writes_profile, minimal)
+        return await _profile(probe, width, height, writes_profile, minimal, title)
 
 
 async def _profile(probe: NativeProbe, width: int, height: int,
-                   writes_profile: WriteProfile, minimal: MinimalProfile) -> float:
+                   writes_profile: WriteProfile, minimal: MinimalProfile,
+                   title: str = 'S11 tick budget') -> float:
     loop = probe.service.core.loop
     original_subsystems, original_step = loop.subsystems, loop.step
     original_writes = probe.service._character_writes
@@ -164,7 +166,7 @@ async def _profile(probe: NativeProbe, width: int, height: int,
         status=await request(probe.service.install_dir,"status")
         count = len(probe.service.world.zones)
         assert status["active_zones"]==count,status
-        verdict=enforce(status["tick_p99_ms"],f"S11 admin status {width}x{height}")
+        verdict=enforce(status["tick_p99_ms"],f"admin status {width}x{height}",title=title)
         probe.report(f"PASS admin status {width}x{height}: all {count} zones active, p99 {status['tick_p99_ms']:.3f} ms ({verdict})")
         return status["tick_p99_ms"]
     finally:

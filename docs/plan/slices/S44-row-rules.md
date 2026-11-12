@@ -253,7 +253,7 @@ at 80x24 and 132x50, in all three tiers, on an isolated node:
 
 The presentation lead accepts from the captures. S10, S11 and S24 still
 pass. S11 is handled under #194's rule, and this is a runtime-changing
-slice, so a CPU near miss blocks.
+slice, so a CPU near miss blocks. (Since 2026-11-12, owner: S11 blocks at p99 20 ms and warns from 10 ms; #194's interim rule has ended. See #229.)
 
 H1 and S25 layout approval are not part of this slice and aren't granted
 by it.
