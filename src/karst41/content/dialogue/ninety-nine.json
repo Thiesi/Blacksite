@@ -75,7 +75,8 @@
       "id": "wake",
       "text": "Fresh decant. I was born, actually, or the guy I'm a copy of was. Neither of us remembers it. We've got that in common. //99",
       "when": [
-        "is_wake"
+        "is_wake",
+        "not_signatory"
       ],
       "required": true
     },

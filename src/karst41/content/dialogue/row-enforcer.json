@@ -19,7 +19,8 @@
       "id": "wake",
       "text": "You're new, so once. Draw on this street and we come for you. The Halo won't have you either.",
       "when": [
-        "is_wake"
+        "is_wake",
+        "not_signatory"
       ],
       "required": true
     },
