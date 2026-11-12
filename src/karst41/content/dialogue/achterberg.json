@@ -11,7 +11,8 @@
       "id": "wake",
       "text": "Wake. New boots, then. Read the route before you volunteer for it.",
       "when": [
-        "is_wake"
+        "is_wake",
+        "not_signatory"
       ],
       "required": true
     },

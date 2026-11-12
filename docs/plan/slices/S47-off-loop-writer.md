@@ -2,7 +2,7 @@
 
 **Status:** planned (filed 2026-11-12; the owner merges the filing)
 **Primary model:** Claude Opus 5.5 (the engineer) · **Reviewer:** automated review, technical lead
-**Depends on:** S40 (design), S43, S44 (lands first) · **Milestone:** headroom
+**Depends on:** S40 (design), S43, S44, S48 (lands first; owner 2026-11-12) · **Milestone:** headroom
 **Issue:** https://github.com/Thiesi/Karst41/issues/212
 
 Canon: architecture §6.2 (persistence; acknowledgement after commit),
@@ -17,7 +17,8 @@ except for the edits §7 below tells the build to make.
 
 The owner held this worker on 2026-11-07 (S40). On 2026-11-12, after
 four S11 failures caused by commit stalls, they scheduled it to follow
-S44. Each failure spent nearly all its over-limit time in one SQLite
+S44; the same day they put the first evening (S48) ahead of it, so it
+follows S48. Each failure spent nearly all its over-limit time in one SQLite
 commit in `Storage.commerce_write`, on the event loop:
 
 | PR | Tick | Commit |
