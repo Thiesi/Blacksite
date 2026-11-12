@@ -63,6 +63,11 @@ A node running Season 0:
   parks progression between seasons (S26's existing rule). It never
   unlocks a missing map. Characters, progression and personal receipts
   carry over.
+- **The first season start.** A new node's Season 0 start fires the
+  hook once, as an initialisation. S50 stores its first measure and
+  every switch in the below-threshold state, and none of the fallback
+  effects run (no membership, relay or bid changes). Every later
+  bundle-backed season start runs the full re-evaluation.
 - **Parking isn't a season start.** The season-start hook fires only
   when a season whose bundle is installed actually starts. So nothing
   hung on the hook (S50's re-evaluation, relay resets, bid refunds) runs
@@ -153,7 +158,10 @@ expedition.
 Each comes with the technical lead's recommendation. None of them is
 canon until the owner answers and a canon PR records it.
 
-1. **The door flip.**
+1. **The door flip.** One finisher ends the season's story for the
+   whole node. On a node of a handful of players, that may be one
+   person, even one on a throwaway account. That's the choice being
+   made.
    - **Recommendation:** a one-time world flag.
      - The first player to finish step 5 opens `shaft-door-east` for
        everyone, and Strand's line plays for them.
@@ -220,7 +228,8 @@ The slice proposes each of these in its PR:
 ## Tests
 
 - **The season frame:**
-  - a new node starts in Season 0;
+  - a new node starts in Season 0, and its start fires the hook once as
+    an initialisation with no fallback effects;
   - the operator's advance is audited and works exactly once;
   - the no-outcome acknowledgement is required when there's no
     completion;

@@ -98,7 +98,10 @@ not a second speculative future-version preset.
   merged, together with part A of S28, S29 and S32 (each slice's header
   names its parts). It doesn't ship before the owner has given the
   layout approval for S49's two new maps (`oldworks-main` and
-  `oldworks-drop`). No review or capture stands in for that approval.
+  `oldworks-drop`). If the technical lead rules (S49) that activating
+  the Sink and Old Works Lattice content from `s25-cores` is a publish
+  under S25b's per-district H2/H3 hold, it also waits for those gates.
+  No review or capture stands in for either.
   This slice performs the first release. Season 1 (S26) ships in a later release.
 - Platform API handling: accept integer API 5 for the certified release;
   missing means legacy 2 for a useful upgrade refusal. Reject unsupported

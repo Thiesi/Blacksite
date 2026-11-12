@@ -175,7 +175,9 @@ design §13.6):
   factions accept members (Sablier, the Wardens, the Unmoored) and three
   relays are contested (Cold Chain, Block, Relay Zero).
 - **Not in Season 0:** no Depth meter and no expeditions.
-- **Ships only when its maps exist.**
+- **Ships only when its maps exist**, after the owner's H3 layout
+  approval for them, and after any H2/H3 gate that the technical lead
+  rules applies to the Lattice content S49 activates (S31).
 - **Slices:** S49 builds Season 0 and the season frame, and S50 builds
   the population switches. S31's first release ships them, after S48 (H1)
   and S47.
