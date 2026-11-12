@@ -234,8 +234,9 @@ seen what fighting and jacking in are.
    (case-insensitive). One character per BBS user per node by default;
    the cap is a world setting the SysOp can raise. Until a name is
    entered, the character shows its gurney number, for example
-   `No. 0431`, in the panel and to others. Names of the form
-   `No. <digits>` are reserved and can't be chosen.
+   `No. 0431`, in the panel and to others. A name whose normalised key,
+   with spaces and punctuation removed, is `no` followed only by digits
+   is reserved and can't be chosen.
 8. The briefing's one choice: which faction's recruiter's card to take,
    or none. The choice sets initial standing, not membership.
 9. Out into Vatside with 200 chits, a starter weapon, a med patch, and a
@@ -2349,7 +2350,10 @@ Talking never pauses the world or changes the location's safety rules.
 A node has a handful of players (pillar 6). Systems built for a crowd
 open as the crowd arrives, by rule, so no SysOp has to guess up front
 (owner, 2026-11-12). The game measures **weekly active characters**:
-distinct characters who played in the last seven days.
+distinct characters who played in the last seven days. The I/O layer
+computes it from `last_seen_at` once a day and hands it to the
+simulation as an input; the simulation reads no clock for it. A new
+node starts below every threshold.
 
 - A switch opens when the measure reaches its threshold. Within a
   season a switch only opens; it never closes, even if the population
