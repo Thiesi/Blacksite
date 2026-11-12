@@ -2377,7 +2377,8 @@ districts arrive in later seasons as content.
 - **The season ends on the door.** Step 5 opens `shaft-door-east` from
   the Lattice side, and Strand says "Forty-one years. Somebody had to."
   The way beyond the door stays closed until the next season goes
-  through it.
+  through it. Opening the door makes the season eligible to advance;
+  the operator still advances it explicitly (§13.1).
 
 ## 14. Anti-abuse and fairness
 
