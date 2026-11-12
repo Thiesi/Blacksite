@@ -165,7 +165,7 @@ def test_p8_covered_npc_barks_as_its_cover_until_it_reveals_itself(shipped):
 def test_p8_a_dropped_bark_still_spends_its_interval(shipped):
     game = HeadlessServer(quiet(shipped), character_state={})
     client = caller(game, 1)
-    game.step()
+    game.step(TICK_HZ)  # The emitter runs on whole seconds.
     emitter(game).callers[client.session.id].last_line = game.clock.now_tick()  # Budget spent.
     actor = regular(game, 'r1', (27, 6))
     heard = run(game, [client], 5)
@@ -177,7 +177,7 @@ def test_p8_a_dropped_bark_still_spends_its_interval(shipped):
 def test_p8_one_bark_reaches_one_caller_and_is_dropped_for_another(shipped):
     game = HeadlessServer(quiet(shipped), character_state={})
     fresh, spent = caller(game, 1, (25, 6)), caller(game, 2, (25, 7))
-    game.step()
+    game.step(TICK_HZ)
     emitter(game).callers[spent.session.id].last_line = game.clock.now_tick()
     regular(game, 'r1', (27, 6))
     heard = run(game, [fresh, spent], 3)
@@ -250,7 +250,7 @@ def test_p8_hunted_alone_is_not_threatened(shipped):
 def test_p8_suppressed_while_travelling(shipped):
     game = HeadlessServer(quiet(shipped), character_state={})
     client = caller(game, 1)
-    game.step()
+    game.step(TICK_HZ)
     avatar = game.core.characters.sim.avatars[client.session.user_id]
     avatar.travel, travel = object(), avatar.travel  # Any travel state suppresses.
     assert not emitter(game).admit(client.session, game.clock.now_tick())
@@ -261,7 +261,7 @@ def test_p8_suppressed_while_travelling(shipped):
 def test_p8_ten_second_hold_after_a_danger_or_combat_line(shipped):
     game = HeadlessServer(quiet(shipped), character_state={})
     client = caller(game, 1)
-    game.step()
+    game.step(TICK_HZ)
     client.session.emit('You are hit.', kind='combat', channel='zone', role='log_combat',
                         at=game.clock.now_utc().isoformat())
     start, gate = game.clock.now_tick(), emitter(game)
@@ -271,7 +271,7 @@ def test_p8_ten_second_hold_after_a_danger_or_combat_line(shipped):
     # A bark that fires inside the hold is dropped and still spends its interval.
     game2 = HeadlessServer(quiet(shipped), character_state={})
     other = caller(game2, 1)
-    game2.step()
+    game2.step(TICK_HZ)
     other.session.emit('Danger.', kind='danger', channel='zone', role='log_danger',
                        at=game2.clock.now_utc().isoformat())
     regular(game2, 'r1', (27, 6))
@@ -289,7 +289,7 @@ def test_p8_reconnect_never_replays_ambience_and_drops_session_state(shipped):
     assert not [line for line in client.session.log_ring if TRAM in line.get('text', '')]
     sid = client.session.id
     game.core.sessions.disconnect(client.session)
-    game.step(2)
+    game.step(TICK_HZ)
     assert sid not in emitter(game).callers
     again = game.connect({'user_id': 1, 'handle': 'Ear1', 'node_name': 'P8'})
     game.step(2)

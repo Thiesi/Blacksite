@@ -29,6 +29,7 @@ LINE_BUDGET_SECONDS = 20  # N: at most one bark or ambient line per caller per 2
 AMBIENT_SECONDS = 60      # A zone's ambience fires at most once a minute...
 AMBIENT_JITTER_SECONDS = 30  # ...plus up to 30 s, from the zone's own stream.
 DANGER_HOLD_SECONDS = 10  # Terminal UI 2.5: never push danger or combat out of view.
+STRIDE = TICK_HZ  # The emitter runs once a second; every number above is whole seconds.
 
 
 def stream(zone_id: str) -> Random:
@@ -92,6 +93,8 @@ class Ambience:
     # --- the tick ------------------------------------------------------------
 
     def tick(self, tick: int, sessions: Iterable[Session], playing: Callable[[Session], bool]) -> None:
+        if tick % STRIDE:
+            return  # Cost: once a second, not every tick (PR notes give the figures).
         present: dict[str, list[tuple[Session, Actor]]] = {}
         live = set()
         for session in sessions:

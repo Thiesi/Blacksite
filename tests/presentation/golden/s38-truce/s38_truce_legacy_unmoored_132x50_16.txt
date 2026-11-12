@@ -43,7 +43,7 @@
 │[zone] You walk under orange lamps on wet pavement. You hear music from six doorways. At the street's end, you see the Tin Halo's │
 │  sign, lit whole.                                                                                                                │
 │[zone] Nobody draws on Sodium Row. Unmoored makes sure of it.                                                                     │
-│[zone] Sodium regular: A tram goes over somewhere above the roofs. The puddles shiver.                                            │
+│                                                                                                                                  │
 │                                                                                                                                  │
 │                                                                                                                                  │
 │J jack in  ? help  Tab target  F fire  X weapon  1-5 quick  V abilities  I inventory                                              │
