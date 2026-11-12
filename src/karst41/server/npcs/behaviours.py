@@ -93,7 +93,9 @@ def search(actor: Actor, zone: ZoneInstance, goal: Tile, avoid: set[Tile] | None
     """
     start = actor.position
     exits = {ex.tile for ex in zone.template.meta.exits}
-    skip = (set(avoid or ()) | exits | blocked) - {goal}
+    # Spawn reservations cover every object tile; an open door is still a way through.
+    doors = {tile for tile, obj in zone.doors.items() if obj.open}
+    skip = ((set(avoid or ()) - doors) | exits | blocked) - {goal}
     x0, x1 = min(start[0], goal[0]) - ROUTE_MARGIN, max(start[0], goal[0]) + ROUTE_MARGIN
     y0, y1 = min(start[1], goal[1]) - ROUTE_MARGIN, max(start[1], goal[1]) + ROUTE_MARGIN
     parents: dict[Tile, Tile | None] = {start: None}

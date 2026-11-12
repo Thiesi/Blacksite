@@ -375,3 +375,17 @@ def test_s44_schema_4_upgrade_adds_truce_columns_and_keeps_players(row, tmp_path
         assert saved["keeper_answer"]["keeper"] == "sable"
     finally:
         upgraded.close()
+
+
+def test_s44_repeated_hits_coalesce_answer_saves(row):
+    game, _, a, _ = row
+    target = regular(game)
+    game.core.characters.outbox.clear()
+    for _ in range(10):
+        game.core.npcs.keep_truce(body(game, a), target, "sable")
+    saves = [e for e in game.core.characters.outbox if e["action"] == "save" and e["player"]["id"] == body(game, a).id]
+    assert len(saves) == 1  # The new answer; refreshes in the same second coalesce.
+    game.step(11)
+    game.core.npcs.keep_truce(body(game, a), target, "sable")
+    saves = [e for e in game.core.characters.outbox if e["action"] == "save" and e["player"]["id"] == body(game, a).id]
+    assert len(saves) == 2 and saves[-1]["player"]["keeper_answer"]["until"] == player(game, a).keeper_answer["until"]

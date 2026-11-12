@@ -51,6 +51,7 @@ class Npcs:
         # while it is live takes it up; `hunted` reads only the record.
         self.answers: dict[str, dict[str, float]] = {}
         self.routes: dict[str, Route] = {}  # S44: hunt routes by actor id.
+        self.answer_saved_at: dict[str, float] = {}
         self.menus: set[str] = set()
         self.talking: Callable[[str, str], bool] = lambda sid, aid: False
         self.pending_deaths: set[str] = set()
@@ -323,9 +324,16 @@ class Npcs:
                 guard.behaviour.update(last_seen=self.clock.now_tick(),
                                        last_position=source.position, state="hunt")
         if player is not None:
+            previous = player.keeper_answer or {}
             player.keeper_answer = {"keeper": keeper, "zone": zone.id, "until": truce_rules.iso(until)}
             self.answers.setdefault(zone.id, {})[body.id] = until
-            self.game.queue("save", player.bbs_user_id, player, immediate=True)
+            # A new answer saves at once. Refreshes of `until` from repeated
+            # hits coalesce to one save a second, as heat refreshes do; a
+            # crash can shorten the final refresh by less than a second.
+            fresh = not already_provoked or (previous.get("keeper"), previous.get("zone")) != (keeper, zone.id)
+            if fresh or now-self.answer_saved_at.get(player.id, -HEAT_SAVE_SECONDS) >= HEAT_SAVE_SECONDS:
+                self.answer_saved_at[player.id] = now
+                self.game.queue("save", player.bbs_user_id, player, immediate=True)
         name = self.content.factions[keeper].short
         line = (f"{name} is coming for you." if body.zone == zone.id else
                 f"{name} is waiting for you on {zone.template.meta.name}.")

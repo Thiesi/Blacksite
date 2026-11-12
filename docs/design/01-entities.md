@@ -755,6 +755,7 @@ remain legal.
 | health, stamina, shock | saved at logout |
 | chits_hand, chits_bank | |
 | faction, standing {faction id → int}, marked_until, warden_heat_until | |
+| truce_marked_until, keeper_answer {keeper, zone, until} | a truce-breaking Mark's own expiry, and a truce keeper's stored answer behind `hunted` (S44, game design 5.5 and 7.3); UTC, survive restart, any death clears the answer |
 | zone, tile, facing | last position; sleeper rule applied at logout |
 | implants {slot → item instance id} | |
 | equipment {slots} | |
