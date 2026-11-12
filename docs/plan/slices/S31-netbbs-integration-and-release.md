@@ -237,7 +237,8 @@ S19 supplies the implemented source interfaces, 68 authored contracts
 and four service nodes. Full root pytest passed 1344 tests with one
 skip. Installed native acceptance covers both sizes and allocations,
 forks, repair reconnect and paid restart. Consume the merged PR;
-S25/S27/S26 still own real geography, referrals and activation.
+S25/S27/S26 still own real geography, referrals and activation (for
+`v0.1.0`, S49 activates only Season 0's subset).
 
 Retain current installed-client version/source-tree proof, full pytest and
 actual native acceptance at both sizes. Verify
@@ -258,8 +259,10 @@ publication policy from #56. There is no NetBBS callback in the event
 simulation, and essential warnings never depend on BBS chat delivery.
 Retain full-suite and installed-wheel native evidence separately from
 fixture geography, production transport and human pacing. Release
-acceptance must repeat full-city Curfew/Surge/Ring-fall/Exhale/Convoy
-composition after S25/S26 activate their actual content. Preserve paid
+acceptance must repeat Curfew/Surge/Ring-fall/Exhale/Convoy composition
+on the content active in that release: for `v0.1.0`, Season 0's maps
+(the built hubs and the Old Works), and the full city once S25 and S26
+activate it for a later release. Preserve paid
 source receipts, forecast corrections and the one-hour completed-job
 return window across upgrade/restart. Record the supported NetBBS floor.
 <!-- s24-handoff:end -->

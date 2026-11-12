@@ -135,6 +135,10 @@ first, then P2 to P4 once P1 merged.
 
 ## 5. Suggested order for one developer at a time
 
+This chain is the original single-developer order. From S26 on it is
+superseded by the alpha order below (2026-11-12): S26 comes after the
+first release, not before S28 and S31.
+
 S01 -> S02 -> S03 -> S04 -> S05 -> S06 -> S07 -> S08 -> S09 -> S12 -> S10 ->
 S11 -> S13 -> S14 -> S15 -> S16 -> S17 -> S18 -> S20 -> S22 -> S19 -> S21 ->
 S23 -> S24 -> S25 -> S27 -> S26 -> S28 -> S30 -> S29 -> S33 -> S32 -> S31

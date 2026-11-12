@@ -63,6 +63,14 @@ A node running Season 0:
   parks progression between seasons (S26's existing rule). It never
   unlocks a missing map. Characters, progression and personal receipts
   carry over.
+- **A season status command** (read-only) in the admin CLI: the
+  active season, whether its ending has happened, and whether a next
+  season's bundle is installed. S28 part A wraps it in the full CLI and
+  the SysOp guide.
+- **Existing databases.** A node whose database predates S49 (the H1
+  build, the ReLink test node) has no season record. A migration treats
+  it as Season 0 and runs the first-start initialisation once, exactly
+  as for a new node, with characters and progression untouched.
 - **The first season start.** A new node's Season 0 start fires the
   hook once, as an initialisation. S50 stores its first measure and
   every switch in the below-threshold state, and none of the fallback
@@ -230,6 +238,10 @@ The slice proposes each of these in its PR:
 - **The season frame:**
   - a new node starts in Season 0, and its start fires the hook once as
     an initialisation with no fallback effects;
+  - an existing pre-S49 database migrates to Season 0 and initialises
+    once, with characters unchanged, and a second start doesn't
+    re-initialise;
+  - the season status command reports season, ending and next bundle;
   - the operator's advance is audited and works exactly once;
   - the no-outcome acknowledgement is required when there's no
     completion;
