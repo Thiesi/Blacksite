@@ -11,9 +11,10 @@ Declared fixtures (technical lead's ruling on #214):
   3 demo geometry) onto the live Row as a geometry layer in this
   acceptance server only. They never enter shipped content or the wheel.
 - Grade 5 for the player-vs-player rules, as in S38.
-- During the bar capture only, the keeper's guards hold fire (their weapon
-  cooldown is pushed out), so the pursuit in and out of the bar can be
-  filmed before the player dies, and only the nearest guard pursues: the
+- Until the death scene, the keeper's guards hold fire (their weapon
+  cooldown is pushed out, including a guard that spawns meanwhile), so the
+  pursuit in and out of the bar and the Halo's door can be filmed before
+  the player dies, and in the bar scene only the nearest guard pursues: the
   other leaves the world and respawns from its spawner (a guard holding
   fire stands still while it sees you, so two inside can box the doorway).
   Routing, sight and the 20 s give-up are untouched. Fire is released for
@@ -134,8 +135,16 @@ async def accept(root: Path, door_python: Path, width: int, height: int, modern:
             save(caller, 'price-target', {'notice': at_npc, 'warning': 'Truce: Sable answers'})
 
             # 2. The breach: HUNTED, and the keeper in pursuit on the open Row.
-            for guard in guards:
-                guard.cooldowns['weapon'] = 10**12  # Declared: hold fire for the pursuit capture.
+            async def hold_fire() -> None:
+                # Declared: every keeper guard holds fire until the death scene,
+                # including one that spawns meanwhile and takes up the answer.
+                while True:
+                    for guard in zone.actors.values():
+                        if guard.behaviour.get('template') == 'npc-sable-enforcer':
+                            guard.cooldowns['weapon'] = 10**12
+                    await asyncio.sleep(.05)
+            holding = asyncio.create_task(hold_fire())
+            await asyncio.sleep(.1)
             async with asyncio.timeout(40):
                 while not any(g.target == me.id for g in guards):
                     await navigate(probe, caller, regular)
@@ -214,9 +223,10 @@ async def accept(root: Path, door_python: Path, width: int, height: int, modern:
             # door or a post: the death's loot cache would take a later E.
             # Walk there first: a death mid-walk would time the walk out.
             await probe.walk(caller, (52, 14))
+            holding.cancel()
             guards = [a for a in zone.actors.values() if a.behaviour.get('template') == 'npc-sable-enforcer']
             for guard in guards:
-                guard.cooldowns['weapon'] = 0  # Fire released (respawned guards never held it).
+                guard.cooldowns['weapon'] = 0  # Fire released.
             await wait(lambda: me.stance in ('down', 'dead'), 120)
             await wait(lambda: me.stance == 'normal' and SETTLED in [ln['text'] for ln in caller.session.log_ring], 90)
             assert player.keeper_answer is None
@@ -260,7 +270,7 @@ async def accept(root: Path, door_python: Path, width: int, height: int, modern:
             'fixtures': ["bar: Upstairs' walls copied from tests/npcs/fixtures/issue187-row-demo.map onto the live "
                          'Row as a geometry layer in this acceptance server only; main\'s Row has no alcoves',
                          'grade 5 for the player-vs-player rules (S38 precedent)',
-                         'keeper guards hold fire during the bar pursuit capture only; released for the death',
+                         'keeper guards (and any that spawn) hold fire until the death scene; released for the death',
                          'one pursuer in the bar scene: the other guard leaves the world and respawns from its spawner'],
             'fixture_walls': walls,
             'presentation_acceptance': False, 'h1_layout_approval': False,
