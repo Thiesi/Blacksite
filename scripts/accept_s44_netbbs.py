@@ -19,6 +19,11 @@ Declared fixtures (technical lead's ruling on #214):
   fire stands still while it sees you, so two inside can box the doorway).
   Routing, sight and the 20 s give-up are untouched. Fire is released for
   the death.
+- For the price-target step only, the targeted regular holds still (#225):
+  a wanderer can leave the target slot before the warning is filmed, and
+  the first-target notice comes once per session. Likewise the asked
+  enforcer holds still while its page is open: a step out of reach closes
+  the page before the answer is filmed.
 """
 
 import argparse
@@ -128,11 +133,21 @@ async def accept(root: Path, door_python: Path, width: int, height: int, modern:
             assert guards
             regular = next(a for a in zone.actors.values() if a.behaviour.get('template') == 'npc-sodium-regular')
             await caller.caller.write(b' ')  # The arrival notice has been seen.
+            # Declared (#225): the regular holds still for this step. A wanderer
+            # can leave the target slot before the warning is filmed, and the
+            # first-target notice comes once per session, so re-targeting can't
+            # recover it.
+            pause = regular.behaviour.get('pause', 0)
+            regular.behaviour['pause'] = 1 << 40
             await navigate(probe, caller, regular)
             await probe.target(caller, regular.id)
             at_npc = truce_text.at_npc('Sable')
-            await wait(lambda: 'Truce: Sable answers' in screen() and at_npc in screen())
-            save(caller, 'price-target', {'notice': at_npc, 'warning': 'Truce: Sable answers'})
+            try:
+                await wait(lambda: 'Truce: Sable answers' in screen() and at_npc in screen())
+                save(caller, 'price-target', {'notice': at_npc, 'warning': 'Truce: Sable answers',
+                                              'fixture': 'regular held still (#225)'})
+            finally:
+                regular.behaviour['pause'] = pause
 
             # 2. The breach: HUNTED, and the keeper in pursuit on the open Row.
             async def hold_fire() -> None:
@@ -269,10 +284,15 @@ async def accept(root: Path, door_python: Path, width: int, height: int, modern:
                     await delivered(asker)
                     if max(abs(guard.x-asker.avatar.actor.x), abs(guard.y-asker.avatar.actor.y)) > 1:
                         continue  # It moved on; find it again.
+                    # Declared (#225): the asked guard holds still for the
+                    # page; a step out of reach closes it before the answer.
+                    held_guard, held_move = guard, guard.cooldowns.get('move', 0)
+                    guard.cooldowns['move'] = 10**12
                     await asker.caller.write(b'e')
                     try:
                         await wait(lambda: asker.session.id in core.dialogue.menus, 3)
                     except TimeoutError:
+                        guard.cooldowns['move'] = held_move
                         continue
             await wait(lambda: 'Ask about the peace' in asker.caller.screen.screen_text())
             await delivered(asker)
@@ -283,7 +303,9 @@ async def accept(root: Path, door_python: Path, width: int, height: int, modern:
             await delivered(asker)
             shipped = next(line.text for line in core.characters.content.dialogue['row-enforcer'].lines
                            if line.id == 'ask-peace')
-            save(asker, 'enforcer-ask', {'question': "What's the arrangement here?", 'answer': shipped})
+            save(asker, 'enforcer-ask', {'question': "What's the arrangement here?", 'answer': shipped,
+                                         'fixture': 'asked guard held still for the page (#225)'})
+            held_guard.cooldowns['move'] = held_move
             # A guard walking back to its post leaves reach, which closes the
             # page by itself (S42); close it here only if it is still open.
             if asker.session.id in core.dialogue.menus:
@@ -298,7 +320,9 @@ async def accept(root: Path, door_python: Path, width: int, height: int, modern:
                          'Row as a geometry layer in this acceptance server only; main\'s Row has no alcoves',
                          'grade 5 for the player-vs-player rules (S38 precedent)',
                          'keeper guards (and any that spawn) hold fire until the death scene; released for the death',
-                         'one pursuer in the bar scene: the other guard leaves the world and respawns from its spawner'],
+                         'one pursuer in the bar scene: the other guard leaves the world and respawns from its spawner',
+                         'price-target: the targeted regular holds still for that step, then wanders again (#225)',
+                         'enforcer-ask: the asked guard holds still while its page is open, then is released (#225)'],
             'fixture_walls': walls,
             'presentation_acceptance': False, 'h1_layout_approval': False,
             's25_layout_approval': False}, indent=2)+'\n', encoding='utf-8', newline='\n')
