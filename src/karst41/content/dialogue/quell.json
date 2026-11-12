@@ -67,7 +67,8 @@
       "id": "wake",
       "text": "You are new. It likes the new ones. The vats hum when you are decanted and it hums back. Did they tell you that?",
       "when": [
-        "is_wake"
+        "is_wake",
+        "not_signatory"
       ],
       "required": true
     },

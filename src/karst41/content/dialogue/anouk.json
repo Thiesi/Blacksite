@@ -67,7 +67,8 @@
       "id": "wake",
       "text": "New-decanted. You smell of the vats. The ground smells it too; keep moving and it stops noticing.",
       "when": [
-        "is_wake"
+        "is_wake",
+        "not_signatory"
       ],
       "required": true
     },

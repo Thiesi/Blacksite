@@ -19,7 +19,8 @@
       "id": "wake",
       "text": "First time down the Stair? Walk to the end. Everybody does.",
       "when": [
-        "is_wake"
+        "is_wake",
+        "not_signatory"
       ],
       "required": true
     },

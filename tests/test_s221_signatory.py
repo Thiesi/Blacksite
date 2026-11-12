@@ -54,3 +54,22 @@ def test_221_no_shipped_line_promises_an_early_discharge(content):
         lowered = text.lower()
         assert 'early discharge' not in lowered and 'earn the discharge' not in lowered
         assert 'work certificate' not in lowered and 'clear it early' not in lowered
+
+
+NEWCOMER = ('row-enforcer', 'row-street-regular', 'anouk', 'ninety-nine', 'achterberg', 'quell')
+
+
+@pytest.mark.parametrize('slug', NEWCOMER)
+def test_221_newcomer_lines_are_not_for_a_signatory(content, slug):
+    """Creative lead: someone who has earned a signature isn't new to anyone on the street."""
+    talker = content.dialogue[slug]
+    wake = next(line for line in talker.lines if line.id == 'wake')
+    assert list(wake.when) == ['is_wake', 'not_signatory']
+    met = frozenset({slug})
+    assert evaluate(talker, Facts(grade=1, met=met), Random(0)).id == 'wake'
+    assert evaluate(talker, Facts(grade=5, met=met), Random(0)).id != 'wake'  # Signatory before day 90.
+
+
+def test_221_lease_lines_still_reach_a_signatory_before_day_90(content):
+    for slug in ('vantongeren', 'vael', 'quaye', 'okafor'):
+        assert any(list(line.when) == ['is_wake'] for line in content.dialogue[slug].lines), slug
