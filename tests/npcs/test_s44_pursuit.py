@@ -235,3 +235,41 @@ def test_s44_lost_sight_give_up_is_unchanged(repo_root):
         assert hunter.target == source.id
     advance(game, client, 10)
     assert hunter.target is None
+
+
+def test_s44_unreachable_goal_searches_once_then_steps_greedily(repo_root):
+    game, _ = row_world(repo_root)
+    zone = game.core.world.zones["sodium-row"]
+    hunter = make_actor(game.core.loop.content.npcs["npc-sable-enforcer"], "stuck",
+                        {"spawner": "stuck", "home": (2, 10), "phase": 0})
+    game.core.world.enter(hunter, "sodium-row", (2, 10))
+    route, tick = Route(), game.clock.now_tick()
+    moves = 0
+    while moves < behaviours.ROUTE_RETRY_MOVES:
+        tick += 10
+        moves += route_toward(hunter, zone, (95, 28), tick, route, set())
+    assert route.searches == 1 and route.path == []  # One search per 8 greedy moves.
+    tick += 10
+    route_toward(hunter, zone, (95, 28), tick, route, set())
+    assert route.searches == 2
+
+
+def test_s44_far_hunter_searches_again_from_closer(repo_root):
+    """Past the bound the hunter steps greedily, then finds the doorway from closer."""
+    content = load_content(repo_root/"src/karst41/content")
+    content.zones = {key: replace(zone, meta=replace(zone.meta, spawners=()))
+                     for key, zone in content.zones.items()}
+    grid, _ = parse_map(FIXTURE.read_text(encoding="utf-8"), "fx", {t.char: t.id for t in content.tiles.values()})
+    content.zones["sodium-row"] = replace(content.zones["sodium-row"], grid=grid)
+    game = HeadlessServer(content, character_state={})
+    zone = game.core.world.zones["sodium-row"]
+    hunter = make_actor(content.npcs["npc-sable-enforcer"], "far", {"spawner": "far", "home": (80, 12), "phase": 0})
+    game.core.world.enter(hunter, "sodium-row", (80, 12))
+    route, tick = Route(), game.clock.now_tick()
+    for _ in range(400):
+        if hunter.position == START:
+            break
+        tick += 10
+        route_toward(hunter, zone, START, tick, route, set())
+    assert hunter.position == START, (hunter.position, route.searches)
+    assert route.searches <= 12

@@ -62,6 +62,10 @@ def patrol(actor: Actor, zone: ZoneInstance, waypoints: list[Tile], tick: int,
 # expanded in a fixed order and no RNG is drawn, so a route is deterministic.
 ROUTE_NODES = 1024
 ROUTE_MARGIN = 8
+# A search that hits the bound finds no path. The greedy step is used for
+# this many moves, then the search runs again from closer (a smaller box),
+# so a far hunter is never left greedy-walking into a wall.
+ROUTE_RETRY_MOVES = 8
 STEPS = (("left", (-1, 0)), ("right", (1, 0)), ("up", (0, -1)), ("down", (0, 1)))
 
 
@@ -72,6 +76,7 @@ class Route:
     path: list[Tile] = field(default_factory=list)
     blocked: frozenset[Tile] = frozenset()
     searches: int = 0  # Tests count recomputations.
+    retry: int = 0  # Greedy moves left before a missed search runs again.
 
 
 def blocking(zone: ZoneInstance, avoid: set[Tile] | None, blocked: frozenset[Tile]) -> tuple:
@@ -132,11 +137,17 @@ def route_toward(actor: Actor, zone: ZoneInstance, target: Tile, tick: int, rout
         route.blocked = route.blocked & held
     for _ in range(2):
         key = (target, *blocking(zone, avoid, route.blocked))
-        if key != route.key or actor.position not in route.path[:-1]:
+        # A missed search (past the bound) is cached for ROUTE_RETRY_MOVES
+        # greedy moves; a found path is kept until the goal or blockers change.
+        stale = route.path and actor.position not in route.path[:-1]
+        if key != route.key or stale or (not route.path and route.retry <= 0):
             route.key, route.path = key, search(actor, zone, target, avoid, route.blocked)
             route.searches += 1
+            route.retry = ROUTE_RETRY_MOVES
         if not route.path:
-            return step_toward(actor, zone, target, tick, avoid=avoid)
+            moved = step_toward(actor, zone, target, tick, avoid=avoid)
+            route.retry -= moved
+            return moved
         nxt = route.path[route.path.index(actor.position) + 1]
         if any(other.id != actor.id and other.position == nxt and mission_pair(actor, other)
                and not (other.behaviour.get("training") and other.owner != actor.id)
