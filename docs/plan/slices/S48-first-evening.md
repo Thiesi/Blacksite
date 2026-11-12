@@ -104,10 +104,12 @@ the lease early" no longer holds under the calendar-only lease.
 
 ### 4. The hub cast is switched on
 
-- The owner decided on 2026-11-12 to switch the hub cast on in this
-  slice, ahead of plan 03's P4/P8/S25c sequence for speaker placement.
-  Talkers go only on existing walkable tiles. A talker whose spot S25c
-  later moves is re-placed in S25c, and that's accepted.
+- **Owner decision, taken by merging this filing:** the hub cast is
+  switched on in this slice, ahead of plan 03's P4/P8/S25c sequence for
+  speaker placement (the Row proposal's Q6). Talkers go only on existing
+  walkable tiles. A talker whose spot S25c later moves is re-placed in
+  S25c, and that's accepted. If the owner declines, this part is dropped
+  and the cast stays dormant.
 - Switch on the named talkers in `s27-cast.json` who stand in the ten
   built areas: place them and switch them to active, so the Wake Hall
   orderlies and the hub people speak.
