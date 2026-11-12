@@ -1,9 +1,9 @@
 # The first ten minutes (proposal)
 
 **Status:** proposal for S48 part 2 ("the opening as a scene"), revised
-on 2026-11-12 to fold in the creative lead's review (#220, comment
-6818289355), the presentation lead's review (6818330068) and the
-technical lead's rulings. **This file is the single source S48 builds
+on 2026-11-12 to fold in the creative lead's reviews (#220, comments
+6818289355 and 6818712685), the presentation lead's (6818330068 and
+6818720000) and the technical lead's rulings (6818687523). **This file is the single source S48 builds
 the opening from.** It changes no canon and no code. Where it and canon
 differ, canon wins; canon PR #219 records the owner's decisions of
 2026-11-12, and section 8 says which canon text S48's implementation PR
@@ -169,7 +169,9 @@ Conventions:
 - **Vantongeren's lines reach the caller anywhere in the hall's public
   region** [decided, item 9]. They are scripted and caller-only; there
   is no general rule for speech out of sight. In the fiction it is the
-  hall channel, and one line of Okafor's names it.
+  hall channel, and one line of Okafor's names it. A hall-channel line
+  looks like any spoken line: the ordinary speech gutter and her name,
+  with no tag [decided, item 23].
 - Lines marked **(kept)** are the existing text, word for word. Lines
   marked **(new)** or **(changed)** are not. Section 4.12 lists every
   change to existing text. The creative lead has adopted every line
@@ -234,8 +236,8 @@ Conventions:
   are `@` beside the vats. Vantongeren stands at her desk, two orderlies
   near the vats. The line runs from your feet to the door. The side
   panel shows your gurney number, `No. 0431`, where your name will be
-  [decided, item 3], `Wake` where the grade will be, `day 1/90`
-  [decided, item 13], and full bars.
+  [decided, item 3], an empty grade slot until the record is read
+  [decided, item 24], `day 1/90` [decided, item 13], and full bars.
 - **Can do.** Walk. Nothing else is needed.
 - **Hint.** `Arrow keys walk. Follow the line on the floor.  ? help`
 - **Next.** Beat 2 on your third step, or after 12 seconds.
@@ -270,7 +272,7 @@ first other person a new player sees, and it needs no explaining.
 ║       █······│············█                           │                      ║
 ║       █······│$···········█                           │                      ║
 ║       █······│·CARDS······██ RANGE ██ ISSUE ██        │──────────────────────║
-║       █······│············█··················█        │ No. 0431       Wake  ║
+║       █······│············█··················█        │ No. 0431             ║
 ║       █······│············█··················█        │ HP  ██████████ 90    ║
 ║       █······└────────────+────────────────┐·█        │ STA ██████████ 55    ║
 ║       █···················█·············$§·│·█        │ SHK ░░░░░░░░░░ 0     ║
@@ -318,7 +320,7 @@ first other person a new player sees, and it needs no explaining.
 ║                                                                                                           │                      ║
 ║                                                                                                           │                      ║
 ║                                                                                                           │──────────────────────║
-║                                                                                                           │ No. 0431       Wake  ║
+║                                                                                                           │ No. 0431             ║
 ║                                                                                                           │ HP  ██████████ 90    ║
 ║                                                                                                           │ STA ██████████ 55    ║
 ║                                                                                                           │ SHK ░░░░░░░░░░ 0     ║
@@ -371,7 +373,9 @@ count without you" is repeated in her talk line (4.12) on purpose.
 - **`E`** opens the existing card menu (the eight pitches, "Take no
   card"), with its action bar `enter take this card  Esc/B put them
   down`. A taken card logs `√ You take the <faction> card.` and the
-  table then reads as the existing recruitment contact.
+  table then reads as the existing recruitment contact. A card counts
+  when it is taken here. Leaving without one is not final: the table
+  stays open in the Wake Hall afterwards [decided, item 4].
 - **Next.** Beat 5 when you reach column 12 or beyond on row 12 or
   below. The cards are never required.
 
@@ -399,7 +403,7 @@ arrives.
 ║       █······│············█                           │                      ║
 ║       █······@$···········█                           │                      ║
 ║       █······│·CARDS······██ RANGE ██ ISSUE ██        │──────────────────────║
-║       █······│············█··················█        │ No. 0431       Wake  ║
+║       █······│············█··················█        │ No. 0431             ║
 ║       █······│············█··················█        │ HP  ██████████ 90    ║
 ║       █······└────────────+────────────────┐·█        │ STA ██████████ 55    ║
 ║       █···················█·············$§·│·█        │ SHK ░░░░░░░░░░ 0     ║
@@ -428,8 +432,10 @@ arrives.
 ### 4.6 Beat 6: the drone
 
 - **The weapon** [decided]. The lesson is fought with a **hall training
-  pistol**, issued for the lesson only. It is in the player's hand when
-  the drone wakes, it is bound, it never leaves the Wake Hall, and it
+  pistol**, issued for the lesson only. It hangs on a cable by the
+  corridor door; nothing new has to be drawn for it. It is in the
+  player's hand when the drone wakes, it is bound, it never leaves the
+  Wake Hall, and it
   is removed when the lesson ends (drone down or skipped) or the player
   leaves. The Kestrel sidearm comes with the starter kit, after the
   record (9.10). So TARGET reads `with Training pistol` here.
@@ -446,7 +452,7 @@ arrives.
 
 | # | When | Speaker | Line |
 |---|---|---|---|
-| 6.0 | the drone wakes | system | You take the training pistol off the rack. It stays in the hall. **(new)** |
+| 6.0 | the drone wakes | system | A pistol on a cable by the door. Your hand takes it before you decide. **(creative lead)** |
 | 6.1 | the drone wakes | danger | A drone turns in the corridor. It has seen you. Its shots can't kill. **(changed)** |
 | 6.2 † | its first hit on you, or see below | Vantongeren | If you die, you'll wake up here, or somewhere like here, with a bill. Sablier keeps a copy. **(kept)** |
 | 6.3 | four seconds later | Vantongeren | It's not free and it's not perfect and you'll lose a little of yourself each time. But it's a copy. **(kept)** |
@@ -454,14 +460,18 @@ arrives.
 | 6.5 | after 6.2, once | Okafor | That's her on the hall channel. She watches every first one. **(new, creative lead)** |
 | 6.6 | the drone is down | combat | The drone stops. It had been trying since Tuesday. **(changed)** |
 | 6.7 | the drone is skipped | system | You walk past it. It keeps trying. **(new)** |
-| 6.8 | the lesson ends | system | You rack the training pistol. **(new)** |
+| 6.8 | the lesson ends, or you leave the hall | system | The cable reels the pistol back to the wall. **(creative lead)** |
 
-6.0 and 6.8 are mine and came after the creative lead's review; they
-are the creative lead's to reword.
+**Order.** When the drone wakes: 6.0, then 6.1, both at once. At the
+end: 6.6 or 6.7, then 6.8, then 6.2 if it is still owed. A disconnect
+shows no line. 6.0 and 6.8 are the creative lead's (#220, comment
+6818712685). The cable carries the rule, so nobody has to say the
+pistol stays in the hall; and the hand that moves first is the
+template's, two beats before the record says so.
 
 **6.2 always gets said.** A player who skips the drone with `B`, or
 downs it before it lands a hit, never fires "its first hit". Then 6.2
-is spoken when the lesson ends, straight after 6.6 or 6.7 and ahead of
+is spoken when the lesson ends, after 6.6 or 6.7 and 6.8, and ahead of
 any older anchor, and 6.5 follows it as usual. The next thing this
 player does is take a job, so they hear what dying costs first.
 
@@ -489,7 +499,7 @@ hall channel (conventions), and 6.5 is the one line that names it.
 ║       █······│·CARDS······██ RANGE ██ ISSUE ██        │ ☻ Nurse Okafor ~     ║
 ║       █······│············█··················█        │ ☻ Wake Outfitter ~   ║
 ║       █······│············█··················█        │──────────────────────║
-║       █······└────────────+@──τ────────────┐·█        │ No. 0431       Wake  ║
+║       █······└────────────+@──τ────────────┐·█        │ No. 0431             ║
 ║       █···················█·············$§·│·█        │ HP  ████████▌░ 78    ║
 ║       █···················█············☻··☻└»█        │ STA ██████████ 55    ║
 ║       █···················█···CLINIC ROW →···█        │ SHK ▌░░░░░░░░░ 2     ║
@@ -537,7 +547,7 @@ hall channel (conventions), and 6.5 is the one line that names it.
 ║                                                                                                           │                      ║
 ║                                                                                                           │                      ║
 ║                                                                                                           │──────────────────────║
-║                                                                                                           │ No. 0431       Wake  ║
+║                                                                                                           │ No. 0431             ║
 ║                                                                                                           │ HP  ████████▌░ 78    ║
 ║                                                                                                           │ STA ██████████ 55    ║
 ║                                                                                                           │ SHK ▌░░░░░░░░░ 2     ║
@@ -588,7 +598,7 @@ No key name is spoken by a person. The hint row says `J`.
 ║       █······│·CARDS······██ RANGE ██ ISSUE ██        │                      ║
 ║       █······│············█··················█        │                      ║
 ║       █······│············█··················█        │──────────────────────║
-║       █······└────────────+──────────────@─┐·█        │ No. 0431       Wake  ║
+║       █······└────────────+──────────────@─┐·█        │ No. 0431             ║
 ║       █···················█·············$§·│·█        │ HP  ██████████ 90    ║
 ║       █···················█············☻··☻└»█        │ STA ██████████ 55    ║
 ║       █···················█···CLINIC ROW →···█        │ SHK ░░░░░░░░░░ 0     ║
@@ -605,8 +615,9 @@ No key name is spoken by a person. The hint row says `J`.
 
 - **Screen.** The Lattice view of the training core: one room, one
   Tripwire. **The training terminal enters its own core directly**
-  [new, open item 6], so the player never sees the district grid or the
-  BLACK ICE row in the first five minutes.
+  [decided, item 6], so the player never sees the district grid or the
+  BLACK ICE row in the first five minutes. The grid first appears on
+  the player's first real jack-in.
 - **Can do.** `Tab`, `1`, `E`, `J`.
 - **Hints,** one at a time:
   - `Tab picks the Tripwire.  J leaves  ? help`
@@ -1205,7 +1216,8 @@ first job.
 Nothing new is drawn. What changes:
 
 - the panel's pinned name row reads `No. <digits>` until a name is
-  entered, and `Wake` in place of a grade until the record is read;
+  entered. The grade slot stays empty until the record is read, and
+  `G1` appears with the record, as the bars change [decided, item 24];
 - the pinned lease row reads `day 1/90`, counting from 1 on the day of
   decant, then `on the roll`, or `signatory` once signed. With chits:
   `200 ch   day 1/90`. The 132x50 row `discharge 0/1500` goes
@@ -1222,20 +1234,20 @@ Nothing new is drawn. What changes:
 
 | Seam | Where | Change |
 |---|---|---|
-| A body before a template | `server/characters.py:284-330` (creation), `server/wake.py` (stages), `server/rules/character.py` | Today the character is created after archetype, name and card. The scene needs a body in the hall first. See open item 2 for the two ways to do it. Either way the per-user cap is checked before the caller is put in the hall, and `create` reports a refusal: today its cap check (`characters.py:284-285`) returns with no message and no stage change. |
-| Writes that assume a stored character | `server/lattice/engine.py:301` (`queue("save", ..., immediate=True)` on jack-in) and `:339` (on jack-out); `server/combat/engine.py:518` and `:926` (`player.progress["wake_combat"]`, then `remember`); the card's standing (`server/characters.py:296-298`, where `create` sets it today); zone discovery (`server/progression_engine.py:43`, `record_discovery`) | Every one of these is reachable from the hall before the record is read. Under open item 2(a) each must be held in the wake record and applied at creation, or suppressed; none may queue a save for an id `create` has not committed. The two saves come first; the skip path through `:926` counts as much as the win path through `:518`. Under 2(b) they work as they are. The build lists each writer and says which it does. |
+| A body before a template | `server/characters.py:284-330` (creation), `server/wake.py` (stages), `server/rules/character.py` | Today the character is created after archetype, name and card. The scene needs a body in the hall first. The body is provisional and held in memory; the character row is created when the record is read [decided, item 2]. The per-user cap is checked before the caller is put in the hall, and `create` reports a refusal: today its cap check (`characters.py:284-285`) returns with no message and no stage change. |
+| Writes that assume a stored character | `server/lattice/engine.py:301` (`queue("save", ..., immediate=True)` on jack-in) and `:339` (on jack-out); `server/combat/engine.py:518` and `:926` (`player.progress["wake_combat"]`, then `remember`); the card's standing (`server/characters.py:296-298`, where `create` sets it today); zone discovery (`server/progression_engine.py:43`, `record_discovery`) | Every one of these is reachable from the hall before the record is read. The body is provisional [decided, item 2], so each must be held in the stored wake record and applied at creation, or suppressed; none may queue a save for an id `create` has not committed. The two saves come first; the skip path through `:926` counts as much as the win path through `:518`. The stored wake record holds the lesson progress, so a caller who drops mid-scene resumes where they were. The build lists each writer and says which it does. |
 | The stage machine | `server/wake.py` | From `archetype → name → briefing → card → saving` to: in the hall from the first frame; `record → name → saving` on a key; cards at the table. |
-| The number and the reserved name | `server/rules/character.py` (naming rule), `server/characters.py` (`serial`, the stored wake record in `identities[user]["wake"]`), the panel and NEARBY name paths | The gurney number is shown until a name is entered; `No. <digits>` is refused as a name. Proposed source: the number is the player serial, taken when the caller is first put in the hall and kept in the stored wake record, which already survives a disconnect. It is then unique across callers and restarts, and a caller who drops and returns wakes under the same number. A Wake that is never finished uses up a serial. |
+| The number and the reserved name | `server/rules/character.py` (naming rule), `server/characters.py` (`serial`, the stored wake record in `identities[user]["wake"]`), the panel and NEARBY name paths | The gurney number is shown until a name is entered; `No. <digits>` is refused as a name. Source [decided, item 2]: the number is the player serial, taken when the caller is first put in the hall and kept in the stored wake record, which already survives a disconnect. It is then unique across callers and restarts, and a caller who drops and returns has the same number. A Wake that is never finished uses up a serial. |
 | The scripted beats | new, beside `server/dialogue_runtime.py` | A small runner for an ordered list of beats with a closed set of triggers (entered a region, a step count, seconds, target set, first hit, drone down or skipped, jacked in, ICE down, data lifted, jacked out, template read, name entered, zone entered, a talk page opened). It emits `speech` lines through the one emit entry point (P4), **to the caller's session only**, anywhere in the hall's public region, and sets the view's `hint`. It holds the queue, the anchors and the quiet times of section 4. Lines and triggers are content, not code. It replaces the toast at `characters.py:330`. |
-| The training pistol | `server/npcs/engine.py:405-423` (`training`), `server/combat/engine.py:514-520` and `:925-928`, the travel path out of the hall, the character save and load paths | Issued and equipped when the drone wakes; removed when the drone is down or skipped, on leaving the hall, and on disconnect. It never reaches a save, under either option of open item 2. Three things make that true: on both the win path and the skip path the removal runs **before** `remember`; every character save leaves the training pistol out, so a save that fires mid-lesson can't store it; and a character loaded with one has it dropped, which covers a crash between the wake and the removal. |
+| The training pistol | `server/npcs/engine.py:405-423` (`training`), `server/combat/engine.py:514-520` and `:925-928`, the travel path out of the hall, the character save and load paths | Issued and equipped when the drone wakes; removed when the drone is down or skipped, on leaving the hall, and on disconnect. It never reaches a save. Three things make that true: on both the win path and the skip path the removal runs **before** `remember`; every character save leaves the training pistol out, so a save that fires mid-lesson can't store it; and a character loaded with one has it dropped, which covers a crash between the wake and the removal. |
 | Lesson strings out of the engines | `server/npcs/engine.py:423`, `server/combat/engine.py:519` | The two drone lines move to the script. |
-| Cards at the table | `server/faction_engine.py:265-285` and `:428` | Before the character first leaves the hall, `E` on the table opens the card menu; afterwards it is the recruitment contact, as today. |
-| Training terminal entry | `server/lattice/engine.py:290-302` | A terminal with `training_core` enters that core's entry room, with lines 8.1 and 8.2 (open item 6). |
+| Cards at the table | `server/faction_engine.py:265-285` and `:428` | `E` on the table opens the card menu for a character who has not taken a card, on the first visit or any later one; the card counts when it is taken [decided, item 4]. For a character who has one, the table is the recruitment contact, as today. |
+| Training terminal entry | `server/lattice/engine.py:290-302` | A terminal with `training_core` enters that core's entry room, with lines 8.1 and 8.2 [decided, item 6]. |
 | The record on jack-out | `server/lattice/engine.py` `leave`, `server/wake.py` | Leaving the training core with the record lifted opens the record menu. |
 | Hint row | `hints.py`, `door/present/chrome.py`, `server/views/zone_view.py` | A lesson hint or errand line in the objective slot; the errand's short form before `E`/`J` is dropped; no other key help beside a lesson hint; key names from the caller's keymap. |
 | The errand | the script runner, `server/dialogue_runtime.py` | Set when the kit is issued; cleared when Vesper's talk page first opens. No contract record. |
 | The street door's glyph | `door/present/zone.py`, the object-to-glyph path in `server/views` | A door that is a zone exit draws `»`. |
-| The panel's pinned rows | `door/present/chrome.py`, `me` in the zone view | Number or name; `Wake` or grade; `day n/90`, `on the roll`, `signatory`. |
+| The panel's pinned rows | `door/present/chrome.py`, `me` in the zone view | Number or name; an empty grade slot, then the grade; `day n/90`, `on the roll`, `signatory`. |
 | Help page 1 | the help text view | "This screen", from drawn cells only. |
 | Voice triggers | P8's emitter | A third source beside barks and zone ambience: triggered lines, caller-only, each with a once-per-character mark; C1 as a `system` line. |
 | Content kinds | `content/schema.py`, `validate.py`, `loader.py` | The script and the voice file. The validator checks every spoken line against two rows at 80x24 with its speaker, every hint against 76 columns, each record detail against 4 rows at 66, and each errand short form with the longest `E` label and `? help` against 78. |
@@ -1257,85 +1269,52 @@ the reserved name form and the login lines are canon PR #219's.
 | # | Item | Ruling | By |
 |---|---|---|---|
 | 1 | Choosing a template after the vat | The record framing is adopted: the player reads their own record. Game design §4's step list is #219's. | creative lead |
+| 2 | The body before the record | A provisional body held in memory. The stored wake record holds the gurney serial and the lesson progress, so a caller who drops mid-scene resumes where they were. The character row is created when the record is read, so storage only ever loads characters with an archetype. The serial is the source of the gurney number. The unread body's numbers are the engineer's to propose in S48: flat, and below every template. | technical lead |
 | 3 | The name before the record | The gurney number shows until a name is entered. Names of the form `No. <digits>` are reserved; this goes into #219. | technical lead |
+| 4 | When a recruiter card counts | When it is taken at the table. Leaving without one is not final: the table stays open in the Wake Hall afterwards. | technical lead |
+| 5 | Charting the Wake Hall | Approved. S48 declares the fingerprint move and re-pins it in the same PR. | technical lead |
+| 6 | The training terminal | Approved: it enters its own core directly. The sector grid first appears on the player's first real jack-in. | technical lead |
 | 7 | Whether day 90 alone grants renting and joining | It does: day 90 grants everything a Signatory has (#219, §3.4). Lines 3.3 and 4.4 are final and #219 takes them. | creative lead, #219 |
+| 8 | Renaming two objects | Allowed. S48 declares any change to P3's frozen labels and re-pins the digest with a reason. | technical lead |
 | 9 | Vantongeren heard from the next room | Her opening lines are scripted, caller-only and deliverable anywhere in the Wake Hall's public region. There is no general speech-range rule. In the fiction it is the hall channel. | technical lead; creative lead for the fiction |
 | 10 | Where a lesson hint sits | Lesson hints take the objective slot. Each errand line has a declared short form, used before `E`/`J` is dropped. While a lesson hint shows, the row holds only the hint, the `E`/`J` context and `? help`. | presentation lead |
-| 11 | The voice layer | `ambient` with no speaker for T1 to T13; C1 a `system` line; never `notice`. "Was it hard?" is saved for the finale. T11 and T13 stay. | creative lead (lines), presentation lead (kinds) |
+| 11 | The voice layer | `ambient` with no speaker for T1 to T13; C1 a `system` line; never `notice`. "Was it hard?" is saved for the finale. T11 and T13 stay. | creative lead (lines), presentation lead (kinds), confirmed by the technical lead |
 | 12 | The errand line | It stays an errand, with no contract behind it, and clears when Vesper's talk page first opens. | creative lead |
 | 13 | The lease rows | `day 1/90`, then `on the roll` or `signatory`. `discharge 0/1500` is dropped. | presentation lead |
 | 14 | Help's first page | A legend of drawn cells only, with the conditions in section 6. | presentation lead |
 | 15 | Login lines 2 and 18 | Fixed in #219. | creative lead, #219 |
 | 16 | The street door's glyph | `»` marks a way out of a place, `+` a door inside one. | presentation lead |
+| 19 | The record is required before the street | Going into #219: game design §4 states that the record is the one required step before the street. | technical lead |
 | 20 | The weapon in the drone lesson | A hall training pistol, issued for the lesson only, bound, kept in the Wake Hall, removed when the lesson ends or the player leaves. The Kestrel sidearm is still issued with the starter kit after the record. | technical lead |
 | 21 | A shared hall | Every scripted line is caller-only, Okafor's read-out included. NPC positions are fixed for the whole opening. | creative lead |
+| 22 (lines) | Lines 6.0 and 6.8 | The creative lead's wording (6818712685): the pistol is on a cable. A disconnect shows no line. | creative lead |
+| 23 | How a hall-channel line looks | The ordinary speech gutter and name, with no tag. | presentation lead |
+| 24 | The grade slot before the record | Empty until the record is read. The name row shows only `No. <digits>`, and `G1` appears with the record. | presentation lead |
 
 ### Open
 
-2. **The body before the record.** Two ways:
-   (a) a provisional body, held in memory like today's `pending`
-   record, placed in the hall, and replaced by the real character when
-   the record is read; or
-   (b) a stored character with no archetype yet.
-   (a) keeps the stored schema, the per-user cap and the name check in
-   `create` as they are, but every write the lessons make today has to
-   be held or suppressed until the record is read (the seam table in
-   section 7 lists them). A save queued for an uncommitted id would
-   either fail or store a half-built row, which is (b) by accident.
-   (b) leaves those writes alone, but adds a stored state the rest of
-   the game has never seen and must refuse at the street door. I lean
-   to (a); the cost of each is the technical lead's to weigh.
-   **The cap.** Today `create` runs after a short menu, and its cap
-   check returns silently. Here it would run after the whole opening.
-   A user already at the cap who opens a second session would play
-   four minutes, read the record, enter a name, and get nothing. So
-   under either option the cap is checked on entry, before the hall,
-   where a user at the cap gets the existing character screen; and a
-   refusal at `create` is shown, as the name collision already is.
-   Either way the design doc has to give the unread body its numbers.
-   The mocks assume the lowest starting value of each attribute across
-   the four templates (HP 90, STA 55). Also open: a caller who
-   disconnects before the record. I assume they wake on the gurney
-   again, under the same number. That needs the number to be kept
-   somewhere that outlives the session under either option; the seam
-   table proposes the player serial, held in the stored wake record.
-4. **When a card counts.** Today the card sets standing at creation.
-   Here it is taken at the table, any time before the character first
-   leaves the hall. Is that the rule, and is leaving without one final?
-5. **Charting the Wake Hall** moves the mechanics fingerprint for this
-   zone's `tiles` and `remembered` and needs the technical lead's
-   approval in the PR (plan 03, P6). The presentation lead has accepted
-   the look. Without it the line still leads on, but the door isn't
-   visible from the gurney.
-6. **Entering the training core directly** changes what `J` does at one
-   terminal. It also hides "Enter with NPC risk  BLACK ICE may injure
-   body" from the lesson. If it isn't wanted, beat 8 needs two more
-   hints and the first-timer meets the district grid in minute three.
-8. **Renaming two objects** may touch P3's frozen labels and the hint
-   wording audit. The creative lead has adopted the names.
-17. **"Eight groups"** stays until the Lamp Compact is built (#90).
+17. **"Eight groups"** stays as written until the Lamp Compact is built
+    (#90).
 18. **The five-minute target.** Read at walking pace with both lessons,
-    I estimate three and a half to four and a half minutes. It needs a
-    timed walk on the build, with someone who hasn't read this.
-19. **The record is required before the street.** Game design §4 says
-    training is never a compulsory gate. The record isn't training: it
-    is the character's creation, and both lessons can still be
-    skipped. #219 should say so in §4's step list.
-22. **The training pistol's numbers and name.** The ruling settles what
-    it is. Its damage, range and cooldown, and whether a second Wake
-    sees it drawn, need a line in game design §17. I'd give it the
-    Kestrel sidearm's numbers so the lesson teaches the real weapon.
-    Lines 6.0 and 6.8 are new since the creative lead's review.
-23. **How a hall-channel line looks.** The creative lead left this to
-    the presentation lead: the ordinary speech gutter, or a tag. The
-    mocks use the ordinary gutter.
-24. **`Wake` and `G1`.** The creative lead notes that grade 1's flavour
-    name is already "Wake", so a panel that reads `Wake` before the
-    record and `G1` after shows one grade two ways. The presentation
-    lead accepted `Wake` in the slot; the wording after the record is
-    theirs.
+    I estimate three and a half to four and a half minutes. It is
+    settled by a timed walk on the S48 build, with someone who hasn't
+    read this.
+22. **The numbers S48 has to propose.** Two sets, both for game design
+    §17 in the implementation PR:
+    - the unread body's attributes, flat and below every template
+      (ruling on item 2). The mocks show HP 90 and STA 55, the lowest
+      template values, as a placeholder; the real numbers will be
+      lower;
+    - the training pistol's damage, range and cooldown, and whether a
+      second Wake sees it drawn. I'd give it the Kestrel sidearm's
+      numbers, so the lesson teaches the real weapon.
 25. **The Row header's `SODIUM ROW─Sodium Row`** is the built header.
     The presentation lead carries it; the mocks leave it as built.
+
+Two notes the presentation lead carries, neither blocking: the built
+menu's `Choice` label above the record's four rows is redundant under
+this title and will go with the vendor pages' follow-up; and a mark
+for the cable mount by the corridor door is optional.
 
 ## 9. What to watch in the H1 session
 
