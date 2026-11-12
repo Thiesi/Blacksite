@@ -50,6 +50,8 @@ class Display:
         # S44: a rule's price, stated before it is paid (terminal UI 2.1).
         self.notice_price = False  # The shown notice is a price notice.
         self.price_noticed = False  # The first-target notice, once per session.
+        # A price notice never replaces an unread notice; it waits its turn.
+        self.notice_queue: deque[tuple[str, str]] = deque(maxlen=4)
         self.confirm_exit = False
         self.leaving = False
         self.connected = False
@@ -135,7 +137,9 @@ class Display:
             self.prompt = LinePrompt(data["id"], data["label"], min(200, data["max_len"])) if data["kind"] == "line" else None
             self.key_prompt = data if data["kind"] == "key" else None
         elif frame.type == "toast":
-            if self.presentation:
+            if data.get('price') and self.toast is not None:
+                self.notice_queue.append((data['text'], data['role']))
+            elif self.presentation:
                 self._notice(data['text'], data['role'], data['seconds'], now, price=bool(data.get('price')))
             else:
                 self.toast = (data["text"], data["role"], now + data["seconds"])
@@ -315,10 +319,16 @@ class Display:
         else:
             return
         self.price_noticed = True
-        if self.presentation:
-            self._notice(text, 'warning', NOTICE_SECONDS, now, price=True)
+        if self.toast is not None:
+            self.notice_queue.append((text, 'warning'))
         else:
-            self.toast = (text, 'warning', now + NOTICE_SECONDS)
+            self._show_price(text, 'warning', now)
+
+    def _show_price(self, text: str, role: str, now: float) -> None:
+        if self.presentation:
+            self._notice(text, role, NOTICE_SECONDS, now, price=True)
+        else:
+            self.toast = (text, role, now + NOTICE_SECONDS)
 
     def _notice(self, text: str, role: str, seconds: float, now: float, *, price: bool = False) -> None:
         """UI 2.5: one local history entry, separate from the world log."""
@@ -343,6 +353,8 @@ class Display:
                 and (not self.presentation or self.notice_pressed)):
             self.toast = None
             self.dirty = True
+            if self.notice_queue:
+                self._show_price(*self.notice_queue.popleft(), now)
 
     def _notice_to_header(self, now: float) -> bool:
         """Only declared fields protect prompts and current danger; no inference."""

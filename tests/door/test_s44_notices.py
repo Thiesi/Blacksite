@@ -200,3 +200,17 @@ def test_s44_real_server_warning_drives_the_first_target_notice(repo_root, info,
         if frame.type != "toast":  # Only the TARGET path, not the arrival notice.
             display.receive(frame, 0)
     assert display.price_noticed and display.toast[0] == AT_NPC.format("Sable")
+
+
+@pytest.mark.parametrize("presentation", [False, True])
+def test_s44_price_notice_waits_behind_an_unread_notice(info, presentation):
+    """Review 6817410615: a price notice queues instead of replacing one."""
+    display = Display(info, presentation=presentation)
+    arrival = ARRIVAL.format("Sable", MARKED_SECONDS // 60)
+    display.receive(Frame("toast", {"text": arrival, "role": "warning", "seconds": 4, "kind": "notice",
+                                    "price": True}), 0)
+    display.receive(view({"truce": "Sable"}, {"warning": "Truce: Sable answers"}), 1)
+    assert display.toast[0] == arrival  # The arrival notice is still being read.
+    display.key("x", 2)
+    display.update(NOTICE_SECONDS + 1, NOTICE_SECONDS + 1)
+    assert display.toast[0] == AT_NPC.format("Sable")
