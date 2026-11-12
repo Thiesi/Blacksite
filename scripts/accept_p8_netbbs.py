@@ -69,6 +69,10 @@ async def accept(root: Path, door_python: Path, width: int, height: int, modern:
             def screen() -> str:
                 return caller.caller.screen.screen_text()
 
+            def shows(text: str) -> bool:
+                # A log line can wrap at 80x24; its opening words sit on one row.
+                return text[:28] in screen()
+
             async def delivered(who: Connection = caller) -> None:
                 await wait(lambda: who.session.ack_revision == who.session.view_revision)
 
@@ -101,7 +105,7 @@ async def accept(root: Path, door_python: Path, width: int, height: int, modern:
             await budget_open()
             voice.barks.next_due[regular.id] = 0
             await wait(lambda: any(kind == 'speech' and tram in text for _, kind, text in heard))
-            await wait(lambda: tram in screen())
+            await wait(lambda: shows(tram))
             await delivered()
             bark = next(text for _, kind, text in heard if kind == 'speech' and tram in text)
             save('bark', {'line': bark, 'regular': list(regular.position), 'player': list(me.position)})
@@ -113,7 +117,7 @@ async def accept(root: Path, door_python: Path, width: int, height: int, modern:
             await wait(lambda: any(kind == 'ambient' for _, kind, _ in heard[mark:]))
             line = next(text for _, kind, text in heard[mark:] if kind == 'ambient')
             assert line in look.ambient
-            await wait(lambda: line in screen())
+            await wait(lambda: shows(line))
             await delivered()
             save('ambience', {'line': line})
 
@@ -144,7 +148,7 @@ async def accept(root: Path, door_python: Path, width: int, height: int, modern:
                 late = [(t, kind, text) for t, kind, text in heard if t > shot and kind in ('ambient', 'speech')
                         and (kind == 'ambient' or tram in text)]
                 assert not late, late
-                await wait(lambda: combat in screen())
+                await wait(lambda: shows(combat))
                 await delivered()
                 save('combat-quiet', {'combat_line': combat, 'quiet_seconds': (clock.now_tick()-shot)/TICK_HZ,
                                       'forced_due_every_seconds': .5, 'delivered_in_window': late})
