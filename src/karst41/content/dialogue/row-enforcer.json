@@ -43,7 +43,10 @@
       "label": "Ask about the peace",
       "hotkey": "a",
       "ref": "ask-peace",
-      "asks": "What's the arrangement here?"
+      "asks": "What's the arrangement here?",
+      "when": [
+        "not_marked"
+      ]
     }
   ],
   "barks": [
