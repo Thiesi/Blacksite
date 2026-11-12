@@ -232,7 +232,10 @@ seen what fighting and jacking in are.
    Names are 2 to 24 display columns of letters, digits, spaces,
    hyphens, underscores, and apostrophes, unique per node
    (case-insensitive). One character per BBS user per node by default;
-   the cap is a world setting the SysOp can raise.
+   the cap is a world setting the SysOp can raise. Until a name is
+   entered, the character shows its gurney number, for example
+   `No. 0431`, in the panel and to others. Names of the form
+   `No. <digits>` are reserved and can't be chosen.
 8. The briefing's one choice: which faction's recruiter's card to take,
    or none. The choice sets initial standing, not membership.
 9. Out into Vatside with 200 chits, a starter weapon, a med patch, and a
