@@ -164,9 +164,15 @@ async def accept(root: Path, door_python: Path, width: int, height: int, modern:
             # sees you stands still, so two guards inside can box the doorway.
             # The other leaves the world; its spawner brings it back.
             pursuer = min(guards, key=lambda g: ((g.x-me.x)**2+(g.y-me.y)**2, g.id))
+            slots = core.npcs.spawners.slots
+            held_slots = []
             for guard in guards:
                 if guard is not pursuer:
+                    # Its spawner slot waits until the death scene, so it
+                    # cannot respawn mid-scene and box the doorway.
+                    held_slots.append(guard.behaviour['slot'])
                     probe.service.world.leave(guard)
+                    slots[guard.behaviour['slot']]['until'] = 10**12
             guards = [pursuer]
             # The #187 shape: be seen behind the doorway, then step out of
             # its sight line, so the guard routes in to where it saw you.
@@ -224,6 +230,8 @@ async def accept(root: Path, door_python: Path, width: int, height: int, modern:
             # Walk there first: a death mid-walk would time the walk out.
             await probe.walk(caller, (52, 14))
             holding.cancel()
+            for key in held_slots:
+                slots[key]['until'] = 0  # The held guard may respawn now.
             guards = [a for a in zone.actors.values() if a.behaviour.get('template') == 'npc-sable-enforcer']
             for guard in guards:
                 guard.cooldowns['weapon'] = 0  # Fire released.
