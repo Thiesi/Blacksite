@@ -1,0 +1,24 @@
+┌─ Karst · S10Ask1680 ─────────────────────────────────────────────────────────┐
+│    ┌─ Sable enforcer - Keeps the Row's peace ───────────────────────────┐    │
+│    │                                                                    │    │
+│    │ Nobody draws. Somebody does, we come for them, whoever they are.   │    │
+│    │ They pay. A few think they're quicker than us. Fewer are.          │    │
+│    │                                                                    │    │
+│    │ a      Ask about the peace                                         │    │
+│    │ Esc/B  Leave                                                       │    │
+│    │                                                                    │    │
+│    │                                                                    │    │
+│    │                                                                    │    │
+│    │                                                                    │    │
+│    │                                                                    │    │
+│    │                                                                    │    │
+│    │                                                                    │    │
+│    │                                                                    │    │
+│    │                                                                    │    │
+│    └────────────────────────────────────────────────────────────────────┘    │
+├──────────────────────────────────────────────────────────────────────────────┤
+│[zone] Ask16界80: What's the arrangement here?                                │
+│[zone] Sable enforcer: Nobody draws. Somebody does, we come for them, whoever │
+│  they are. They pay. A few think they're quicker than us. Fewer are.         │
+│Choose an action; move or Esc/B leaves                                        │
+└────────────────────────────────────────────────────────────────────────────── 

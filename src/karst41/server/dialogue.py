@@ -96,8 +96,9 @@ def matches(conditions: tuple[str, ...], talker: Talker, facts: Facts) -> bool:
 
 def evaluate(talker: Talker, facts: Facts, rng: Random) -> DialogueLine:
     """First eligible line, with optional opposing voice weighting only."""
+    answers = {offer.ref for offer in talker.offers if offer.kind == 'ask'}
     for line in talker.lines:
-        if not matches(line.when, talker, facts):
+        if line.id in answers or not matches(line.when, talker, facts):
             continue
         opposing = (line.tag == 'CUST' and facts.balance > 0
                     or line.tag == 'TEN' and facts.balance < 0)

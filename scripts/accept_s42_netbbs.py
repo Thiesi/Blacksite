@@ -56,12 +56,13 @@ async def accept(root: Path, python: Path, size: tuple[int, int], tier: str, sho
             await delivered()
             await caller.caller.write(b'e')
             await wait(lambda: caller.session.id in core.dialogue.menus)
-            await wait(lambda: 'Move or Esc/B leaves' in caller.caller.screen.screen_text())
+            # S44 gave the regulars an Ask, so their page shows the offer hint.
+            await wait(lambda: 'Choose an action; move or Esc/B leaves' in caller.caller.screen.screen_text())
             await delivered()
 
         await talk()
         hint = caller.caller.screen.screen_text().splitlines()[compute(width, height).hint.y]
-        assert 'Move or Esc/B leaves' in hint, hint
+        assert 'Choose an action; move or Esc/B leaves' in hint, hint
         save('talk-hint')
         await caller.caller.write(b'\x1b[D')
         await wait(lambda: caller.avatar.actor.position == (4, 5))

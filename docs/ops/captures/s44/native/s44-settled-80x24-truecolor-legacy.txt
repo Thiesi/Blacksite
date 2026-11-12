@@ -1,0 +1,24 @@
+┌─Warden Precinct  SAFE─────────────────────────────────────────────────09:22──┐
+│                                                       │TARGET                │
+│                                                       │None                  │
+│                                                       │WEAPON                │
+│                                                       │Kestrel Issue Sidearm │
+│                                         ··            │NEARBY                │
+│                                         ···           │CREW                  │
+│                                        ·····          │None                  │
+│                        ·              ······          │                      │
+│                       ····███████████········         │Rowtruecolor界80      │
+│                       ·················+·····         │BBS: S10Rowtruecolor80│
+│                       ·······················         │HP ######## 118/118   │
+│                       ·······················         │STA ######## 70/70    │
+│                      ············@·······§····        │Chits 140  Grade 5    │
+│                       ·······················         │Lease days 0/90       │
+│                       ·»·····················         │Discharge XP 75/1500  │
+│                       ·······················         │Shock 0               │
+│                          ████████████████             │Ctrl-X leaves         │
+├──────────────────────────────────────────────────────────────────────────────┤
+│[combat] Clone charge 60. Hand remaining 140; owed 0.                         │
+│[combat] You wake in the vat. Missing recovery supplies are bound to you.     │
+│[combat] Sable considers it settled.                                          │
+│E use Warden faction vat  ? help  Tab target  F fire  X weapon  1-5 quick     │
+└────────────────────────────────────────────────────────────────────────────── 

@@ -277,6 +277,23 @@ class Dialogue:
             self.core.factions.input(session, Frame('intent', {
                 'name': 'faction.open', 'args': {'target': target}}), self.clock.now_tick())
             self.core.factions.menus[session.id].cursor = factions.index(offer.ref)
+        elif offer.kind == 'ask':
+            # Entities 1.11 (S44): the question as the caller's speech, the
+            # answer as the talker's, which replaces the page line. Grants nothing.
+            screen = self.menus[session.id]
+            talker = self.content.dialogue[screen.contact.talker]
+            answer = next(line.text for line in talker.lines if line.id == offer.ref)
+            player = self.game.players[session.player_id]
+            session.emit(f'{player.name}: {offer.asks}', kind='speech', channel='zone', role='chan_zone',
+                         at=self.clock.now_utc().isoformat(), speaker=player.name, speaker_role='caller')
+            screen.line = answer
+            actor = self.world.zones[screen.contact.zone].actors.get(screen.contact.target)
+            if actor is not None:
+                self.sim.speak(session, actor, answer)
+            else:
+                session.emit(talker.name+': '+answer, kind='speech', channel='zone', role='chan_zone',
+                             at=self.clock.now_utc().isoformat(), speaker=talker.name, speaker_role='service')
+            self.publish(session)
         elif offer.kind == 'travel':
             avatar = self.sim.avatars[session.user_id]
             choice = self.sim.interaction_target(avatar)

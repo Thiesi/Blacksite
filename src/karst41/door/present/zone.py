@@ -450,6 +450,9 @@ def head(buffer: CellBuffer, body: dict[str, Any], layout: Layout, paint: Paint,
         left.append(('HEAT', 'log_danger'))
     if me.get('marked_until'):
         left.append(('MARKED', 'log_danger'))
+    if me.get('hunted'):
+        # UI 2.1 (S44): a danger fact, never dropped before MARKED or HEAT.
+        left.append(('HUNTED', 'log_danger'))
     if me.get('district'):
         left.append((str(me['district']).upper(), 'head_district'))
     if service := body.get('service'):

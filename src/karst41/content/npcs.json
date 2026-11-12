@@ -298,6 +298,7 @@
         }
       ],
       "xp": 20,
+      "dialogue": "row-enforcer",
       "weapon": "wpn_kestrel_sidearm",
       "armour": "arm_wake_coverall",
       "loot": [

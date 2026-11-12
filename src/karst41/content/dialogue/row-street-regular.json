@@ -24,13 +24,27 @@
       "required": true
     },
     {
+      "id": "ask-end",
+      "text": "The Halo. Vesper. Work if you want it, a price on it either way. Everybody ends up there.",
+      "when": [],
+      "required": false
+    },
+    {
       "id": "greeting",
       "text": "Keep walking, the stage is full.",
       "when": [],
       "required": true
     }
   ],
-  "offers": [],
+  "offers": [
+    {
+      "kind": "ask",
+      "label": "Ask about the end",
+      "hotkey": "a",
+      "ref": "ask-end",
+      "asks": "What's down the end?"
+    }
+  ],
   "barks": [
     {
       "text": "A tram goes over somewhere above the roofs. The puddles shiver.",

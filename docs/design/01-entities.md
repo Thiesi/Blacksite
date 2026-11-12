@@ -554,12 +554,21 @@ unskippable fallback. Required instructions, costs, warnings and clues
 must use `required: true`. Machine-mind records retain both voice tags;
 their lines never resolve the identity question.
 
-Offers are `kind (contract, vendor, service, recruit, travel), label,
-hotkey, ref, when[]`. Hotkeys are unique single characters; Esc/B always
-leaves. Showing a line or offer grants nothing. The selected hotkey
-dispatches to the owning subsystem and its live eligibility checks.
-Service references resolve either a work-order node or a vendor with a
-clinic; both retain the owning system's normal counter/board checks.
+Offers are `kind (contract, vendor, service, recruit, travel, ask), label,
+hotkey, ref, when[]`, and `asks` for an ask. Hotkeys are unique single
+characters; Esc/B always leaves. Showing a line or offer grants nothing. The
+selected hotkey dispatches to the owning subsystem and its live eligibility
+checks. Service references resolve either a work-order node or a vendor with
+a clinic; both retain the owning system's normal counter/board checks.
+
+An **ask** offer (S44) is a question the player can put to the talker.
+`asks` is the player's question (at most 200 characters, and it fits the
+talk page as a line does). `ref` names one of the same talker's lines,
+which holds the answer. That line is never picked by ordinary line
+selection, and it cannot be the fallback line. Choosing the offer logs the
+question as the caller's speech, then the talker says the answer as speech,
+and the answer replaces the page's line. The offer stays listed and grants
+nothing. Ask offers use the hotkey `a`.
 
 Barks are `text, weight (positive integer), min_interval_seconds
 (positive integer, default 90)`. P8's single ambient emitter uses a

@@ -496,7 +496,7 @@ wake. Wardens log refused attacks in safe zones and issue a warning within 2
 seconds. Warden **heat** lasts 10 minutes and causes pursuit only outside
 safe/pocket areas. Curfew doubles new heat durations, not damage.
 
-(planned, S44) While the keeper's guards answer a player (their
+While the keeper's guards answer a player (their
 provocation, five minutes), that player is **hunted**, wherever their
 body is. On the zone's ground the guards pursue them through the street
 and its bar alcoves to the last seen position, give up 20 s after losing
@@ -1015,7 +1015,7 @@ target: it applies when the target's body is in the zone, wherever the
 attacker, drone or burn comes from. Firing back at a Marked attacker
 stays exempt, and grade protection is unchanged.
 
-(planned, S44) A player Marked for breaking the Row's truce is refused
+A player Marked for breaking the Row's truce is refused
 by the Tin Halo at every entrance until the Mark runs out, and shown out
 if already inside (section 5.5), and Vesper's work (her board, her
 counter and her talk offers) is closed to any Marked player, whatever
