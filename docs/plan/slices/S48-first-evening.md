@@ -2,7 +2,7 @@
 
 **Status:** planned (filed 2026-11-12; the owner merges the filing)
 **Primary model:** Claude Opus 5.5 (the engineer) · **Lines and staging:** creative lead · **Layout and acceptance:** presentation lead · **Reviewer:** automated review, technical lead
-**Depends on:** S44 (both PRs), P8 (the emitter for part 5), P12 (merged; the danger and fit rules part 5 tests against), the canon PR #219 (the Wake's new step order) and the opening design #220 · **Lands before:** S47 · **Gate:** this slice's build is the **H1 session**
+**Depends on:** S44 (both PRs), P8 (the emitter for part 5), P12 (merged; the danger and fit rules part 5 tests against), the canon PR #219 (the Wake's new step order) and the opening design #220 · **Lands before:** S47 (S47 may start once this slice's PR merges; it doesn't wait for the H1 or novice sessions) · **Gate:** this slice's build is the **H1 session**
 **Issue:** https://github.com/Thiesi/Karst41/issues/217
 
 Canon: game design §4 (the Wake) and §9 (Vesper's first thing), the
@@ -91,7 +91,10 @@ the lease early" no longer holds under the calendar-only lease.
 - The old renderer stays available as a fallback for this slice only,
   through the existing per-launch environment variable:
   `DOOR_KARST41_PRESENTATION=0` in the door's launch configuration
-  turns the new presentation off. No input key and no protocol field.
+  turns the new presentation off. Only the exact value `0` selects the
+  old renderer. Any other value, such as `false` or empty, keeps the new
+  one and logs one line naming the value it ignored. No input key and no
+  protocol field.
   The setting goes in the operator docs, along with a release note for
   SysOps that the default changed, so the owner, the novice or an
   operator can switch back if they hit a screen the coverage list
@@ -168,7 +171,7 @@ on it:
   - every lesson can be skipped;
   - the Wake completes in five minutes on the walk.
 - **The new presentation is the default,** and
-  `DOOR_KARST41_PRESENTATION=0` restores the old one.
+  `DOOR_KARST41_PRESENTATION=0` restores the old one; any other value keeps the new one and logs the ignored value.
 - **Voice:**
   - each trigger fires once per character;
   - the per-evening cap holds;

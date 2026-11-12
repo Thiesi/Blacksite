@@ -17,7 +17,8 @@ except for the edits §7 below tells the build to make.
 
 The owner held this worker on 2026-11-07 (S40). On 2026-11-12, after
 four S11 failures caused by commit stalls, they scheduled it to follow
-S44. Each failure spent nearly all its over-limit time in one SQLite
+S44; the same day they put the first evening (S48) ahead of it, so it
+follows S48. Each failure spent nearly all its over-limit time in one SQLite
 commit in `Storage.commerce_write`, on the event loop:
 
 | PR | Tick | Commit |
