@@ -12,6 +12,7 @@ import time
 
 from accept_s04_netbbs import Database, DatabaseLane, DoorProfile, REPO, TelnetServer, browse_doors, create_door, create_user
 from accept_s06_netbbs import ZoneCaller
+from acceptance_hall import create_reading
 from karst41.admin.client import request
 from karst41.server.app import Server
 
@@ -84,34 +85,14 @@ async def accept(root: Path, door_python: Path, show: bool) -> None:
     try:
         caller, writer = await open_caller(80,24)
         began = time.monotonic()
-        await caller.until(lambda: "Choose your archetype" in caller.screen.screen_text())
-        await caller.write(b"\x1b[B")
-        await caller.until(lambda: "native rig" in caller.screen.screen_text())
-        await caller.write(b"\r")
-        await caller.until(lambda: "Name (Enter keeps default):" in caller.screen.screen_text())
-        await caller.write(b"\r")
-        await caller.until(lambda: "VANTONGEREN" in caller.screen.screen_text())
-        while wake().stage == "briefing":
-            current = wake().screen, wake().page
-            await caller.write(b" ")
-            async with asyncio.timeout(3):
-                while wake().stage == "briefing" and (wake().screen,wake().page) == current:
-                    await asyncio.sleep(.01)
-            if wake().stage == "briefing":
-                marker = f"Briefing {wake().screen}/3 ({wake().page + 1}/"
-                await caller.until(lambda: marker in caller.screen.screen_text())
-            else:
-                await caller.until(lambda: "Recruiter cards" in caller.screen.screen_text())
-        # None is the default; two Up keys reach Unmoored, at 80x24.
-        for _ in range(2):
-            cursor = wake().cursor
-            await caller.write(b"\x1b[A")
-            async with asyncio.timeout(3):
-                while wake().cursor == cursor:
-                    await asyncio.sleep(.01)
-            await asyncio.sleep(.12)
-        await caller.until(lambda: "Here's your lease." in caller.screen.screen_text())
-        await caller.write(b"\r")
+        # S48c1a: the caller wakes in the hall with an unread body, takes the
+        # Unmoored card at the table, opens the decant record with E beside the
+        # street door, chooses Ghost (the second template) and keeps the
+        # default name. The briefing pages are not screens until c2 stages
+        # them in the log (slice §2), so there are none to page through.
+        await caller.until(lambda: "Wake Hall" in caller.screen.screen_text() and bool(manager().wakes))
+        session = next(s for s in service.core.sessions.active.values() if s.id in manager().wakes)
+        await create_reading(caller, service, session, archetype=1, card="unmoored")
         await caller.until(lambda: "Chits 200" in caller.screen.screen_text())
         elapsed = time.monotonic() - began
         assert elapsed < 300, elapsed
@@ -129,7 +110,7 @@ async def accept(root: Path, door_python: Path, show: bool) -> None:
                 await asyncio.sleep(.01)
         tile, pid = avatar().actor.position, player.id
         await leave(caller,writer,"wake-80x24")
-        print(f"PASS Wake Telnet 80x24: Ghost, handle, three briefings, Unmoored, kit/200 chits, P, {elapsed:.2f}s",flush=True)
+        print(f"PASS Wake Telnet 80x24: Ghost, handle, decant record, Unmoored, kit/200 chits, P, {elapsed:.2f}s",flush=True)
         runs.append({"size":[80,24],"wake_seconds":elapsed,"saved_tile":tile})
 
         for width,height,restart in ((80,24,False),(132,50,True)):
