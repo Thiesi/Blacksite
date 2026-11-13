@@ -46,6 +46,11 @@ class Characters:
         self.screens: dict[str, tuple[str, int]] = {}
         # Forced rename (game design 4 step 7, #221): session -> (player id, error).
         self.renaming: dict[str, tuple[str, str]] = {}
+        # S48 (#220): provisional bodies in the Wake Hall, before the decant
+        # record is read. They live in `players` so every engine finds them,
+        # but nothing about them is ever stored (write guards in queue() and
+        # Commerce).
+        self.unread_ids: set[str] = set()
         self.dirty_screens: set[str] = set()
         self.outbox: list[dict[str, Any]] = []
         self.pending: dict[str, tuple[Player, list[dict[str, Any]]]] = {}
@@ -76,8 +81,13 @@ class Characters:
                     self.sleepers[player.id] = (actor, clock.now_tick() + int(remaining * TICK_HZ))
                     world.zones[player.zone].activate("sleeper:" + player.id, clock.now_tick())
 
+    def unread(self, pid: str | None) -> bool:
+        """An unread body: a Wake that has not yet read its decant record (S48)."""
+        return pid in self.unread_ids
+
     def owned(self, user: str) -> list[Player]:
-        return sorted((p for p in self.players.values() if p.bbs_user_id == user and p.origin == self.sessions.origin), key=lambda p: p.id)
+        return sorted((p for p in self.players.values() if p.bbs_user_id == user and p.origin == self.sessions.origin
+                       and p.id not in self.unread_ids), key=lambda p: p.id)
 
     def arrive_offline(self, player: Player) -> None:
         travel = player.progress.get("travel")
@@ -129,6 +139,8 @@ class Characters:
     def queue(self, action: str, user: str, player: Player | None = None, **extra: Any) -> None:
         if action == "save" and player and (player.id in self.deleting or player.id not in self.players):
             return
+        if action in ("save", "delete") and player and player.id in self.unread_ids:
+            return  # S48 write guard 1: an unread body is never stored.
         effect = {"action": action, "user": user, "identity": deepcopy(self.identities[user]),
                   "player": player.record() if player else None, **extra}
         self.outbox.append(effect)
@@ -351,7 +363,8 @@ class Characters:
 
     def name_available(self, name: str) -> bool:
         key = rules.name_key(name)
-        return all(rules.name_key(p.name) != key for p in [*self.players.values(), *(v[0] for v in self.pending.values())])
+        return all(rules.name_key(p.name) != key for p in [*self.players.values(), *(v[0] for v in self.pending.values())]
+                   if p.id not in self.unread_ids)
 
     def committed(self, effect: dict[str, Any], error: bool = False) -> None:
         token, action = effect.get("token"), effect["action"]

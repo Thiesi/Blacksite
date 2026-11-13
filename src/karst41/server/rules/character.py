@@ -12,6 +12,10 @@ def display_width(text: str) -> int:
 ATTRIBUTE_NAMES = ("frame", "nerve", "cortex", "resonance", "vitals")
 ARCHETYPES = (("hardline", (40, 20, 15, 5, 40)), ("ghost", (15, 40, 35, 10, 20)),
               ("cantor", (10, 20, 25, 45, 25)), ("operator", (20, 30, 30, 5, 30)))
+# S48 (#220): before the decant record is read the Wake wears an unread
+# body, flat and below every template (game design 17).
+UNREAD = ""
+UNREAD_ATTRIBUTE = 4
 SKILL_GROUPS = (("frame", ("kinetic", "melee", "armour")),
                 ("nerve", ("energy", "stealth", "drones")),
                 ("cortex", ("lattice", "programs", "fabrication")),
@@ -46,7 +50,8 @@ def carry_kg(frame: int) -> float:
 
 
 def attributes(archetype: str, skills: dict[str, float] | None = None, grade: int = 1) -> dict[str, int]:
-    result = dict(zip(ATTRIBUTE_NAMES, dict(ARCHETYPES)[archetype]))
+    base = (UNREAD_ATTRIBUTE,) * len(ATTRIBUTE_NAMES) if archetype == UNREAD else dict(ARCHETYPES)[archetype]
+    result = dict(zip(ATTRIBUTE_NAMES, base))
     for attribute, lines in SKILL_GROUPS:
         result[attribute] = min(100, result[attribute] + int(sum((skills or {}).get(line, 0) for line in lines) // 10))
     result["vitals"] = min(100, result["vitals"] + grade - 1)
@@ -109,6 +114,18 @@ def reserved_name(name: str) -> bool:
 
 
 GURNEY_TYPED = "That form is a gurney number. Choose another name."
+
+
+def gurney_name(serial: int) -> str:
+    """The number a Wake shows until it enters a name (terminal UI 2.4)."""
+    return f"No. {serial:04d}"
+
+
+def gurney_number(name: str) -> int | None:
+    """The serial a reserved gurney-form name would claim, if any."""
+    if not reserved_name(name):
+        return None
+    return int("".join(c for c in name_key(name) if c.isalnum())[2:])
 
 
 def gurney_rename(name: str) -> str:

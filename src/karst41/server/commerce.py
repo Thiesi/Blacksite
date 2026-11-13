@@ -66,8 +66,13 @@ class Commerce:
         av = self.sim.avatars.get(session.user_id)
         return bool(session.role == "caller" and not session.closed and av and session.player_id == av.actor.id
                     and session.player_id in self.game.players
+                    and not self.unread(session.player_id)
                     and session.id not in self.game.screens and not av.travel and av.actor.zone
                     and av.actor.stance not in ("down", "dead", "sleeper", "jacked"))
+
+    def unread(self, pid: str | None) -> bool:
+        """S48 write guard 2: an unread Wake body never reaches commerce."""
+        return bool(pid) and pid in getattr(self.game, 'unread_ids', ())
 
     def toast(self, session: Session, text: str) -> None:
         session.send(Frame("toast", {"text": text, "role": "ui_text", "seconds": 4}))
@@ -140,6 +145,8 @@ class Commerce:
                      player.faction is None, vendor.price_multiplier * entry.price_multiplier)
 
     def propose(self, session: Session, name: str, args: dict[str, Any], from_channel: bool = False) -> None:
+        if self.unread(session.player_id):
+            raise ValueError("Read your decant record first.")
         if self.pending:
             if len(self.waiting) >= QUEUE_LIMIT:
                 raise ValueError("The counter is busy. Try again.")
@@ -341,7 +348,8 @@ class Commerce:
     def can_commit(self, effect: dict[str, Any]) -> bool:
         """A character deletion invalidates all of its pending transfers."""
         recipients = {pid for pid in (effect.get("player_id"),*effect.get("player_patches",{})) if pid}
-        return all(pid in self.game.players and pid not in self.game.deleting for pid in recipients)
+        return all(pid in self.game.players and pid not in self.game.deleting and not self.unread(pid)
+                   for pid in recipients)
 
     def prepare(self, effect: dict[str, Any]) -> dict[str, Any]:
         player = self.game.players.get(effect["player_id"])
@@ -394,7 +402,7 @@ class Commerce:
                caches: dict[str, dict[str, Any]], serial: int,
                callback: Callable[[bool], None], identity: dict[str, Any] | None = None) -> bool:
         """A server proposal; only its commit callback changes live combat."""
-        if self.pending:
+        if self.pending or (player is not None and self.unread(player.id)):
             return False
         effect = {"session":"", "player_id":player.id if player else "", "patch":deepcopy(patch),
             "progress_base":deepcopy(player.progress) if player else {},
