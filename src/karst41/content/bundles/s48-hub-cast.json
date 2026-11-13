@@ -1,0 +1,22 @@
+{
+  "schema": 1,
+  "id": "s48-hub-cast",
+  "status": "active",
+  "depends": [],
+  "members": {
+    "dialogue": [
+      "achterberg",
+      "amsel",
+      "brann",
+      "dolf",
+      "ivey",
+      "lindgren",
+      "marsh",
+      "quaye",
+      "ranke",
+      "solenne",
+      "vane",
+      "vesper"
+    ]
+  }
+}

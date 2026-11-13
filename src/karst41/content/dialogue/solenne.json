@@ -8,10 +8,35 @@
   "machine_mind": false,
   "lines": [
     {
+      "id": "marked",
+      "text": "Red name. Not my business. Sable's, maybe.",
+      "when": [
+        "marked"
+      ],
+      "required": true
+    },
+    {
       "id": "first",
       "text": "Pink for the shakes, blue for the jack-in, nothing for the crash. The crash is the price.",
       "when": [
         "first_meeting"
+      ],
+      "required": true
+    },
+    {
+      "id": "cantor",
+      "text": "Cantor. I like your kind. You crash hardest and you tip best.",
+      "when": [
+        "archetype cantor"
+      ],
+      "required": true
+    },
+    {
+      "id": "wake",
+      "text": "Fresh off the gurney and already shopping. I like you. Start with pink.",
+      "when": [
+        "is_wake",
+        "not_signatory"
       ],
       "required": true
     },

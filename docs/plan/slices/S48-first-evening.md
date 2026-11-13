@@ -210,3 +210,37 @@ not part of this slice and isn't granted by it.
 
 After the owner, the novice plays it alone, and the technical lead
 re-ranks the plan from both sessions' findings.
+
+## Implementation notes (S48b)
+
+- **Switched on:** 12 talkers outside the Wake Hall, moved from `s27-cast`
+  into the new active bundle `s48-hub-cast`. The rest of `s27-cast` stays
+  authoring and unchanged:
+  - Core Precinct: Amsel, Brann (beside her `marshal-office` door marker;
+    the office isn't built) and Lindgren;
+  - Meridian Plaza: Quaye and Ranke;
+  - Central Tram Hub: Achterberg;
+  - Block Street: Ivey and Marsh;
+  - Clinic Row: Vane;
+  - Sodium Row: Solenne;
+  - The Tin Halo: Dolf and Vesper.
+- **Placement.** Each stands on an existing walkable tile beside their
+  counter or desk, on a one-tile `talker` spawner, and answers E from one
+  step away (S42 reach). Lindgren and Vesper are their counters' existing
+  NPCs, now named for them.
+- **Vesper.** Vesper's talk page wins E over her vendor counter. A Marked
+  caller gets the counter's refusal; a hunted caller in the Halo gets the
+  bouncer's line, with no page and no meeting recorded. Each offer
+  re-checks at dispatch.
+- **Dormant until S48c:** the Wake Hall talkers (Okafor, Vantongeren) and
+  the orderlies, because S48c restages the hall and its P3 changes land
+  there once. The four Wake Hall door recruiters (Achebe-Roux, Kettle,
+  Vance, Vael) stay dormant, per the creative lead.
+- **Held back:** Season 1 lines and offers that reference authoring
+  content (Amsel, Brann, Marsh, Vane), and Brann's finale and Curfew bark.
+  The validator rejects active content that references authoring content,
+  and a test pins that.
+- **New lines:** the creative lead's fillers for Vane, Ranke and Solenne,
+  and three fixes to Vesper's record.
+- **P3:** the interaction digest is unchanged from main (10,704 cases,
+  same sha256).

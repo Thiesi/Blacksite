@@ -22,9 +22,10 @@ def content() -> ContentTree:
     tree = load_content(Path(__file__).parents[1]/'src/karst41/content')
     # Only this fixture's Vesper is active. Shipped cast and all future
     # placement remain authoring content under issue #82.
-    bundle = tree.bundles['s27-cast']
-    tree.bundles[bundle.id] = replace(bundle, members={
-        **bundle.members, 'dialogue': tuple(did for did in bundle.members['dialogue'] if did != 'vesper')})
+    for bundle in tuple(tree.bundles.values()):  # S48b moved her to s48-hub-cast.
+        if 'vesper' in bundle.members.get('dialogue', ()):
+            tree.bundles[bundle.id] = replace(bundle, members={
+                **bundle.members, 'dialogue': tuple(did for did in bundle.members['dialogue'] if did != 'vesper')})
     tree.dialogue['vesper'] = DialogueNode('vesper', 'Vesper', (
         DialogueLine('marked', 'Take the back seat.', ('marked',)),
         DialogueLine('first', 'Show me the card.', ('first_meeting',)),
