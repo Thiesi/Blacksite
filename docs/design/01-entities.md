@@ -686,8 +686,14 @@ and an active bundle depends only on active bundles.
 the start does not grant. These records carry no equipment or combat
 execution; the consuming slices supply those systems.
 
-`wake_cards.json`: `id` (card ID), `name`, `pitch` (text asset), optional
-`faction` (the actual faction ID; old fixtures default to the card ID).
+`wake_cards.json`: `id` (card ID), `name`, `pitch` (text asset),
+`pitch_short` (text asset), optional `faction` (the actual faction ID;
+old fixtures default to the card ID). `pitch_short` is the recruiter's
+own short speech, not `pitch` cut down. The door shows it in the 80x24
+detail box and shows `pitch` at 132x50, choosing by frame size, with no
+protocol field. Neither is ever cut on screen. The validator rejects a
+card whose `pitch_short` is missing or does not wrap to 66 by 4, or
+whose `pitch` does not fit the 132x50 detail column (#242).
 The `red-sable` card maps to `sable`. Existing standing under a card-only
 alias moves once to its faction key, combining and clamping at -100/100.
 The eight introductions (nine once the Lamp Compact is built, planned, #90) set standing, not membership. They do not
