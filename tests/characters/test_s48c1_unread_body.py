@@ -184,3 +184,18 @@ def test_a_restart_keeps_none_taken_apart_from_a_pre_s48_identity(game: Headless
     assert not HeadlessServer(game.core.loop.content, character_state=snapshot).core.characters.card_taken("1")
     snapshot["identities"]["1"].pop("wake_card")  # As stored before S48: the card menu was in the Wake.
     assert HeadlessServer(game.core.loop.content, character_state=snapshot).core.characters.card_taken("1")
+
+
+def test_an_unread_body_reaches_only_the_halls_own_systems(game: HeadlessServer) -> None:
+    client, manager = woken(game)
+    names = {route.name for route in game.core.routes_for(client.session)}
+    assert names <= game.core.UNREAD_ROUTES and "wake" in names
+    assert not names & {"market", "commerce", "factions", "crews", "apartments", "relays", "events", "progression"}
+    other = game.connect({"user_id": 2, "handle": "Other", "node_name": "test"})
+    create(game, other, name="Other", card="none")
+    assert "market" in {route.name for route in game.core.routes_for(other.session)}
+    # Nobody can put a price on an unread body.
+    panel = type("Panel", (), {"kind": "targets"})()
+    rows = game.core.market.views.rows(other.session, panel)
+    assert other.session.player_id in {row["id"] for row in rows}
+    assert client.session.player_id not in {row["id"] for row in rows}

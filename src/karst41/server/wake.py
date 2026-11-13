@@ -54,7 +54,8 @@ def cards(content: ContentTree, cursor: int, width: int, height: int) -> dict[st
     cursor = min(cursor, len(rows) - 1)
     detail = content.text[deck[cursor].pitch].body if cursor < len(deck) else "You leave the cards. No standing changes."
     return menu("THE WAKE - Recruiter cards", rows, cursor, "\n".join(wrapped(detail, detail_width)),
-                "Enter takes card  Esc/B puts them down")
+                # Words: presentation lead, S48c1a (imperative, names the object).
+                "Enter take a card  Esc/B put the cards down", "take a card", "put the cards down")
 
 
 # S48 (#220): the stages that show a menu over the hall; `hall` is play.
@@ -62,10 +63,14 @@ MENU_STAGES = ("record", "name", "saving")
 SAVED = ("stage", "archetype", "name", "cursor", "screen", "page", "serial", "card", "lessons", "met", "tile", "source")
 
 
-def menu(title: str, rows: list[dict[str, Any]], cursor: int, detail: str, hint: str = "Enter selects") -> dict[str, Any]:
-    return {"title": title, "kind": "select", "columns": ["Choice"], "rows": rows,
-            "cursor": cursor, "actions": [{"key": "enter", "label": "select"}],
+def menu(title: str, rows: list[dict[str, Any]], cursor: int, detail: str, hint: str = "Enter selects",
+         action: str = "select", back: str = "") -> dict[str, Any]:
+    body = {"title": title, "kind": "select", "columns": ["Choice"], "rows": rows,
+            "cursor": cursor, "actions": [{"key": "enter", "label": action}],
             "page": 1, "pages": 1, "detail": detail, "hint": hint, "clear_prompt": True}
+    if back:
+        body["back"] = back  # The action bar's Esc/B label; renderers default to "back".
+    return body
 
 
 @dataclass
@@ -108,7 +113,9 @@ class Wake:
             slug = rows[self.cursor]["id"]
             detail = "\n".join(wrapped(content.text["wake-archetype-" + slug].body, detail_width))
             body = menu(f"DECANT RECORD - {gurney_name(self.serial)} - Template", rows, self.cursor, detail,
-                        "Enter reads this one  Esc/B closes the record")
+                        # Words: #220 beat 7, as the presentation lead applied them (S48c1a).
+                        "? help  Enter read this line  Esc/B put the record down",
+                        "read this line", "put the record down")
             kind = "menu"
         else:
             kind = "text"

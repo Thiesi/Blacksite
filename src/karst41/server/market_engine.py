@@ -207,7 +207,8 @@ class Trading:
                 draft.notes.append((player.id, 'Market delivery collected. No fee.'))
             elif action == 'post':
                 target = self.game.players.get(args['target'])
-                if not target or target.origin != player.origin or target.id in self.game.deleting:
+                if (not target or target.origin != player.origin or target.id in self.game.deleting
+                        or target.id in self.game.unread_ids):
                     raise ValueError('Choose a character on this origin.')
                 row = draft.bounties.post(player.id, target.id, target.grade, args['chits'], self.now())
                 self.bank(draft, player.id, -row.chits)

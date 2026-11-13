@@ -50,7 +50,7 @@ def render_menu(buffer: CellBuffer, body: dict[str, Any], layout: Layout, palett
     for index, line in enumerate(fit_text(str(body.get("detail", "")), shape.detail.width, shape.detail.height)):
         buffer.put(shape.detail.x, shape.detail.y + index, line, palette.style())
     actions = "  ".join(f"{a.get('key', '')} {a.get('label', '')}" for a in body.get("actions", []))
-    buffer.put(shape.actions.x, shape.actions.y, truncate(actions + "  Esc/B back", shape.actions.width), palette.style("hint"))
+    buffer.put(shape.actions.x, shape.actions.y, truncate(actions + "  Esc/B " + str(body.get("back") or "back"), shape.actions.width), palette.style("hint"))
 
 
 def _render_talker(buffer: CellBuffer, body: dict[str, Any], area: Rect, palette: Palette) -> None:

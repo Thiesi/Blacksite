@@ -235,6 +235,17 @@ class Core:
             routes.append(InputRoute('characters', self.characters.input, self.characters.interaction, True))
         return routes
 
+    # S48c1: an unread body (before the decant record) reaches only the hall's
+    # own systems; trade, housing, crews and the rest wait for the record.
+    UNREAD_ROUTES = frozenset(('wake', 'contracts', 'lattice', 'interlock', 'combat', 'chat',
+                               'terminal', 'simulation', 'characters'))
+
+    def routes_for(self, session: Session) -> list[InputRoute]:
+        routes = self.input_routes()
+        if self.characters is not None and self.characters.unread(session.player_id):
+            routes = [route for route in routes if route.name in self.UNREAD_ROUTES]
+        return routes
+
     def resolve_interaction(self, session: Session, frame: Frame,
                             routes: list[InputRoute] | None = None) -> ResolvedInteraction | None:
         # Game 5.6 / architecture 5.5.2: only an exit underfoot can pass
@@ -244,7 +255,7 @@ class Core:
         avatar = sim.avatars.get(session.user_id) if sim else None
         promote = avatar is not None and (interact(frame) or key_action(self.keymap, session, frame) == 'interact')
         first: ResolvedInteraction | None = None
-        for index, route in enumerate(self.input_routes() if routes is None else routes):
+        for index, route in enumerate(self.routes_for(session) if routes is None else routes):
             choice = route.query(session, frame)
             if choice is None:
                 continue
@@ -302,7 +313,7 @@ class Core:
             return
         if frame.type == "intent" and frame.data["name"] == "resync":
             session.replay_log()
-        routes = self.input_routes()
+        routes = self.routes_for(session)
         action = key_action(self.keymap, session, frame)
         selected = self.resolve_interaction(session, frame, routes) if interact(frame) or action in ('interact', 'jack') else None
         if selected is not None:

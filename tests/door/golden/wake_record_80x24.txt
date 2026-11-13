@@ -14,11 +14,11 @@
 │    │ frame takes the load. Your implant tolerance gains two points.     │    │
 │    │                                                                    │    │
 │    │                                                                    │    │
-│    │ enter select  Esc/B back                                           │    │
+│    │ enter read this line  Esc/B put the record down                    │    │
 │    └────────────────────────────────────────────────────────────────────┘    │
 ├──────────────────────────────────────────────────────────────────────────────┤
 │[zone] You wake on a gurney under a number. White light, warm plastic, a floor│
 │  drain. Past the cards, a corridor. Past the corridor, a terminal.           │
 │                                                                              │
-│Enter reads this one  Esc/B closes the record                                 │
+│? help  Enter read this line  Esc/B put the record down                       │
 └──────────────────────────────────────────────────────────────────────────────

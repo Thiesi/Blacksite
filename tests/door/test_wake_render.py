@@ -62,3 +62,22 @@ def test_issue_67_all_recruiters_visible_with_no_card_selected(
         assert card.name in screen
     assert 'Take no card' in screen and 'No standing changes.' in screen
     assert body['rows'][body['cursor']]['id'] == 'none'
+
+
+@pytest.mark.parametrize("width,height", [(80, 24), (132, 50)])
+@pytest.mark.parametrize("tier", ["16", "256", "truecolor"])
+def test_s48c1_card_table_in_the_hall(info: DoorInfo, repo_root: Path, width: int, height: int, tier: str, golden) -> None:
+    from tests.character_helpers import act, place
+    game = HeadlessServer(load_content(repo_root/"src/karst41/content"), character_state={})
+    client = game.connect(width=width, height=height)
+    model = Display(replace(info, width=width, height=height, color_depth=tier))
+    terminal = FakeTerminal(width, height)
+    game.step(2)
+    place(game, client, "vatside-wake-hall", (8, 9))
+    act(game, client, Frame("key", {"k": "e", "t": 0}))
+    assert game.core.characters.screens[client.session.id][0] == "cards"
+    for frame in game.frames_for(client):
+        model.receive(frame, 0)
+    terminal.write(model.render(0)[0])
+    golden(f"wake_cards_{width}x{height}", terminal, tier, trim=True)
+    assert "Esc/B put the cards down" in terminal.screen_text()

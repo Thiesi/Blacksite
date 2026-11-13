@@ -125,7 +125,8 @@ class Views:
         if panel.kind == 'targets':
             return [{'id': p.id, 'cells': [p.name, p.bbs_handle, f'Grade {p.grade}']}
                     for p in sorted(owner.game.players.values(), key=lambda p: (p.name, p.id))
-                    if p.origin == player.origin and p.id not in owner.game.deleting]
+                    if p.origin == player.origin and p.id not in owner.game.deleting
+                    and p.id not in owner.game.unread_ids]  # S48: no price on an unread body.
         if panel.kind == 'bounties':
             targets: dict[str, list[Any]] = {}
             for row in owner.bounties.rows.values():

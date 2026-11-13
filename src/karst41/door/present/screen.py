@@ -62,7 +62,7 @@ def menu(buffer: CellBuffer, body: dict[str, Any], layout: Layout, paint: Paint)
     for index, line in enumerate(fit_text(str(body.get('detail', '')), shape.detail.width, shape.detail.height)):
         buffer.put(shape.detail.x, shape.detail.y + index, line, paint('panel_text'))
     actions = '  '.join(f"{a.get('key', '')} {a.get('label', '')}" for a in body.get('actions', []))
-    buffer.put(shape.actions.x, shape.actions.y, truncate(actions + '  Esc/B back', shape.actions.width), paint('key_text'))
+    buffer.put(shape.actions.x, shape.actions.y, truncate(actions + '  Esc/B ' + str(body.get('back') or 'back'), shape.actions.width), paint('key_text'))
 
 
 def talker(buffer: CellBuffer, body: dict[str, Any], area: Rect, paint: Paint) -> None:
