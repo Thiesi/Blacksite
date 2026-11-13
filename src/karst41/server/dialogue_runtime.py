@@ -7,6 +7,7 @@ from datetime import datetime
 from typing import Any
 
 from karst41.content.schema import DialogueNode, Exit, Offer
+from karst41.server.ambience import Ambience
 from karst41.server.clock import TICK_HZ
 from karst41.server.commerce import CommerceMenu
 from karst41.server.contracts.panels import Panel as ContractPanel
@@ -60,6 +61,36 @@ class Dialogue:
         # S26 binds only its committed settlement. No placement or pending
         # finale proposal supplies a historical outcome.
         self.season_facts: Callable[[Any], SeasonFacts] = lambda player: SeasonFacts()
+        # P8: the one ambient emitter (architecture 5.5.3).
+        self.ambience = Ambience(self.world, self.content, self.sim, self.clock,
+                                 threatened=self.threatened, talking=self.talking)
+
+    def talking(self, actor_id: str) -> bool:
+        """Game 13.4: a talker is silent while anyone is interacting with it."""
+        return any(screen.contact.target == actor_id and not screen.contact.lattice
+                   for screen in self.menus.values())
+
+    def playing(self, session: Session) -> bool:
+        return (session.player_id in self.game.players and session.id not in self.game.wakes
+                and session.id not in self.game.screens)
+
+    def threatened(self, session: Session, actor: Any) -> bool:
+        """The declared danger inputs, read from server state (P5/P12 fields).
+
+        A channel, a hostile target, a hazard warning in sight, or a
+        down/dead stage. HUNTED or MARKED alone is not threatened (S44).
+        """
+        if actor.behaviour.get('channel'):
+            return True
+        player = self.game.players.get(session.player_id)
+        if player and player.progress.get('combat', {}).get('stage') in ('down', 'dead'):
+            return True
+        zone = self.world.zones.get(actor.zone)
+        target = zone.actors.get(actor.target) if zone and actor.target else None
+        if target is not None and self.core.combat and self.core.combat.presented_relation(actor, target) == 'hostile':
+            return True
+        return bool(zone and any(tile in actor.visible for layer in zone.layers.values()
+                                 for tile in layer.layout.warning_tiles))
 
     def facts(self, session: Session, talker: DialogueNode) -> Facts:
         player = self.game.players[session.player_id]
@@ -366,6 +397,7 @@ class Dialogue:
         return False
 
     def tick(self, ctx: TickContext) -> None:
+        self.ambience.tick(ctx.tick, ctx.sessions, self.playing)
         if not self.content.dialogue:
             return
         for sid, screen in tuple(self.menus.items()):
@@ -392,5 +424,3 @@ class Dialogue:
                 self.close(session)
             else:
                 self.publish(session)
-        # P8 owns ambient emission and its derived RNG (architecture 5.5.3).
-        # Authored barks and the pure scheduler remain dormant until then.

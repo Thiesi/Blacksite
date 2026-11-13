@@ -2,7 +2,7 @@
 
 **Status:** planned
 **Primary model:** Sonnet · **Reviewer:** Human (install on the ReLink test node)
-**Depends on:** S26, S28, S29, S30, S32, S33 · **Milestone:** M6
+**Depends on:** S48 (H1), S47, S49 (Season 0), S50 (population switches), S28, S29 and S32 (part A), S30, S33 · **Milestone:** M6 and the alpha
 **Issue:** https://github.com/Thiesi/Karst41/issues/31
 
 ## Goal
@@ -93,8 +93,16 @@ not a second speculative future-version preset.
   wheel attached, README status line updated.
 - README: replace the "Design complete" status with install pointers
   and a player section (what to expect, minimum terminal).
-- The first release: `v0.1.0` after M4 is merged, or whatever the
-  roadmap says at the time; this slice performs the first one.
+- The first release: `v0.1.0` is **Season 0, the alpha** (owner,
+  2026-11-12; roadmap §6). It ships once S48, S47, S49 and S50 have
+  merged, together with part A of S28, S29 and S32 (each slice's header
+  names its parts). It doesn't ship before the owner has given the
+  layout approval for S49's two new maps (`oldworks-main` and
+  `oldworks-drop`). If the technical lead rules (S49) that activating
+  the Sink and Old Works Lattice content from `s25-cores` is a publish
+  under S25b's per-district H2/H3 hold, it also waits for those gates.
+  No review or capture stands in for either.
+  This slice performs the first release. Season 1 (S26) ships in a later release.
 - Platform API handling: accept integer API 5 for the certified release;
   missing means legacy 2 for a useful upgrade refusal. Reject unsupported
   older/newer, malformed and boolean values before world entry. This is
@@ -229,7 +237,8 @@ S19 supplies the implemented source interfaces, 68 authored contracts
 and four service nodes. Full root pytest passed 1344 tests with one
 skip. Installed native acceptance covers both sizes and allocations,
 forks, repair reconnect and paid restart. Consume the merged PR;
-S25/S27/S26 still own real geography, referrals and activation.
+S25/S27/S26 still own real geography, referrals and activation (for
+`v0.1.0`, S49 activates only Season 0's subset).
 
 Retain current installed-client version/source-tree proof, full pytest and
 actual native acceptance at both sizes. Verify
@@ -250,8 +259,10 @@ publication policy from #56. There is no NetBBS callback in the event
 simulation, and essential warnings never depend on BBS chat delivery.
 Retain full-suite and installed-wheel native evidence separately from
 fixture geography, production transport and human pacing. Release
-acceptance must repeat full-city Curfew/Surge/Ring-fall/Exhale/Convoy
-composition after S25/S26 activate their actual content. Preserve paid
+acceptance must repeat Curfew/Surge/Ring-fall/Exhale/Convoy composition
+on the content active in that release: for `v0.1.0`, Season 0's maps
+(the built hubs and the Old Works), and the full city once S25 and S26
+activate it for a later release. Preserve paid
 source receipts, forecast corrections and the one-hour completed-job
 return window across upgrade/restart. Record the supported NetBBS floor.
 <!-- s24-handoff:end -->

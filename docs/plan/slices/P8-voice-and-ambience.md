@@ -1,6 +1,6 @@
 # P8 — Voice and ambience: one emitter for barks and zone ambience
 
-**Status:** planned (filed 2026-11-11; the owner merges the filing)
+**Status:** done (PR #230)
 **Primary model:** Claude Opus 5.5 (the engineer) · **Reviewer:** automated review, technical lead, presentation lead (presentation acceptance)
 **Depends on:** P4, S27 engine (both merged) · **Milestone:** presentation track
 **Issue:** https://github.com/Thiesi/Karst41/issues/209
@@ -36,7 +36,7 @@ demo is a guide only.
   because ambience exists.
 - It runs on ticks (AGENTS.md §4), with no wall-clock reads, so tests
   step it without sleeping.
-- Session state is dropped on detach. Reconnect never replays ambience.
+- The emitter keeps no per-session state. The danger stamp (`danger_at`) and the budget (`voice_tick`) move with the session across a reconnect, as the log ring does. Reconnect never replays ambience (technical lead, #230).
 
 ### 2. Barks
 
@@ -127,3 +127,47 @@ emitter cheap and say what it costs.
 
 H1 and S25 layout approval are not part of this slice and aren't granted
 by it.
+
+## Implementation notes (PR #230)
+
+- **The emitter.** `server/ambience.py`, owned by the dialogue runtime,
+  runs once a second (every P8 number is whole seconds). Each zone
+  instance has its own `Random` seeded from `sha256(salt + zone id)`. It
+  never touches `zone.rng`, and a test shows the zones' `zone.rng` states
+  are identical with the emitter on or off.
+- **One gate.** `Ambience.admit(session, tick)` holds the per-caller
+  budget and every suppression in one function. S48's runner can call it
+  and decide whether its lines pay into the budget.
+- **Numbers.** Technical lead accepted these as proposed.
+  - N = 20 s: one bark or ambient line per caller per 20 s.
+  - Zone ambience: once every 60 s plus 0–30 s from the zone's stream.
+  - Danger hold: 10 s.
+- **Suppression** reads server state only:
+  - travelling;
+  - a channel;
+  - a hostile presented target;
+  - a hazard warning in sight;
+  - a down or dead stage;
+  - 10 s after any danger or combat line sent to that caller, from the
+    session's `danger_at` (server clock).
+  HUNTED or MARKED alone does not suppress. The server-side hold
+  complements P12's whole-entry rule (which covers the presentation
+  renderer); it also protects the default renderer, which has no such
+  rule.
+- **Barks.**
+  - Each NPC instance keeps its own interval (`BarkScheduler.choose`
+    gains `key`).
+  - A bark speaks through `sim.speak`, so disclosure follows
+    `revealed_to`, S44's truce reveals included.
+  - Silent while any caller has that talker's page open.
+- **No replay.** `emit(..., replay=False)` keeps barks and ambience out of
+  the session ring, so reconnect never replays them. The emitter keeps no
+  per-session state of its own. The danger stamp (`danger_at`) and the
+  budget (`voice_tick`) sit on the session and move with the ring on a
+  reconnect, so neither a menu nor a dropped link resets the hold
+  (automated review 6838509882). Nothing is replayed.
+- **Cost.** Measured in CI by the `p8-cost` job
+  (`scripts/measure_p8_cost.py`): about 5 µs a tick averaged, 0.2–0.4% of
+  the headless loop, on the shipped Row with one and three callers.
+- **Evidence.** `scripts/accept_p8_netbbs.py` and
+  `.github/workflows/p8-acceptance.yml`.

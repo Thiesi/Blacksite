@@ -157,7 +157,8 @@ carries across a season change. Set
 `legal_at` once; debt, death, leaving a faction, and season changes
 cannot remove it. PvP protections depend on grade, independently of
 personhood (§7.3). Show elapsed lease days and the Signatory XP target
-separately. NPC day-count lines use actual elapsed days, never a fixed
+separately: the panel carries the lease days, and the record (`P`)
+carries both. NPC day-count lines use actual elapsed days, never a fixed
 day selected only by grade.
 
 Grade 1 starts at 0 XP. For n = 2..30 the cumulative threshold is
@@ -2419,6 +2420,20 @@ them.
   The way beyond the door stays closed until the next season goes
   through it. Opening the door is the season's intended ending; the
   operator advances the season as §13.1 says.
+- **Provisional (owner, 2026-11-13).** These four hold for Season 0, to
+  be reviewed after it has run, because only a real season shows how
+  they feel:
+  - The door opens once, for the node. The first player to finish step
+    5 opens it for everyone and hears Strand's line. Later finishers get
+    a short variant line and full chain credit.
+  - Opening the door writes one Chronicle record ("Season 0: the shaft
+    door opened"), which names no player. It counts as Season 0's
+    completion for §13.1, so no no-outcome acknowledgement is needed
+    after it. The operator's advance shows who opened it and when.
+  - The door stays open into Season 1, whose "Ninety-Nine" starts from
+    the open door. Season 0 finishers keep their credit.
+  - §13.1's consoles, delivery XP and Depth meter are hidden in Season 0:
+    not placed, not shown and not awarded.
 
 ## 14. Anti-abuse and fairness
 
