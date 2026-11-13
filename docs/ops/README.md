@@ -9,6 +9,8 @@ Until then, `docs/design/02-architecture.md` §2.4 (install directory),
 The [S03 development smoke test](server-core.md) covers the foreground
 server, local bot, logs and graceful shutdown.
 The [S04 client guide](door-client.md) covers native profile registration,
-transport acceptance and the ten-minute client CPU measurement.
+the renderer setting, transport acceptance and the ten-minute client CPU
+measurement. [Release notes for SysOps](release-notes.md) list
+operator-visible changes; S48a made the new presentation the default.
 The [S05 deployment guide](../../deploy/README.md) covers the admin CLI,
 offline credential rotation and interim rc.d/systemd service units.

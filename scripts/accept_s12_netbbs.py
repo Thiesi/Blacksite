@@ -33,7 +33,7 @@ async def accept(root: Path, door_python: Path, show: bool) -> None:
            for width in (80,132) for label in ("Caller","Peer")]
     create_door(db,"Karst 41",str(door_python.absolute()),args=("-m","karst41.door"),creator=users[0],
         profile=DoorProfile(install_dir=str(REPO),encoding="utf-8",max_sessions=16,multinode_certified=True,time_limit=900,
-                           environment={"DOOR_KARST41_INSTALL_DIR":str(service.install_dir)}).validate())
+                           environment={"DOOR_KARST41_PRESENTATION": "0", "DOOR_KARST41_INSTALL_DIR": str(service.install_dir)}).validate())
     next_user=0
     failures=[]
     async def handler(session: Any) -> None:

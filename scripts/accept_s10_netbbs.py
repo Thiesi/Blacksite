@@ -25,6 +25,7 @@ from accept_s04_netbbs import Database, DatabaseLane, DoorProfile, REPO, TelnetS
 from accept_s06_netbbs import ZoneCaller
 import karst41
 from karst41.content.loader import ContentTree
+from karst41.door.client import presentation_on
 from karst41.server.app import Server
 from karst41.server.inventory import Inventory
 from karst41.server.items import make_item
@@ -72,7 +73,11 @@ class NativeProbe:
         # Resolving a Unix venv's Python symlink launches the base interpreter
         # instead, losing the installed wheel. Preserve the venv path.
         self.root,self.python,self.show = root.resolve(),python.absolute(),show
-        self.door_environment = dict(door_environment or {})
+        # S48 made the new presentation the door's default. A script that
+        # names no renderer keeps the old one it was written against
+        # (technical lead, S48a); the renderer that ran is recorded.
+        self.door_environment = {'DOOR_KARST41_PRESENTATION': '0', **(door_environment or {})}
+        self.renderer = 'present' if presentation_on(self.door_environment) else 'legacy'
         self.show_all_tiers = show_all_tiers
         self.service = Server(self.root/"world",tcp=True)
         self.connections: list[Connection] = []
@@ -119,6 +124,7 @@ class NativeProbe:
             digest.update(path.relative_to(root).as_posix().encode()+b'\0'+path.read_bytes().replace(b'\r\n', b'\n')+b'\0')
         if client['python_tree_sha256'] != digest.hexdigest():
             raise RuntimeError('Native client source differs from the server; rebuild and install the current wheel.')
+        client['renderer'] = self.renderer
         (self.root/'native-client.json').write_text(json.dumps(client, indent=2)+'\n', encoding='utf-8')
         started = time.monotonic()
         await self.service.start()
@@ -310,6 +316,12 @@ class NativeProbe:
         (self.root/(label+".txt")).write_text(connection.caller.screen.screen_text(),encoding="utf-8")
 
     async def close(self) -> None:
+        # Every results file names the renderer that actually ran (S48a).
+        for results in self.root.glob('*results*.json'):
+            data = json.loads(results.read_text(encoding='utf-8'))
+            if isinstance(data, dict) and 'renderer_ran' not in data:
+                data['renderer_ran'] = self.renderer
+                results.write_text(json.dumps(data, indent=2)+'\n', encoding='utf-8', newline='\n')
         for index,connection in enumerate(self.connections):
             self.save(connection,f"unfinished-{index}")
             connection.writer.close();connection.pump.cancel()

@@ -5,6 +5,7 @@ until P7. Every kind shares this frame/header/log/hint. No place card,
 scene, street, trial key, threat inference or Toast.full is imported.
 """
 
+import textwrap
 from dataclasses import replace
 from typing import Any
 
@@ -15,6 +16,25 @@ from karst41.door.present import chrome, zone
 from karst41.door.present.paint import Paint
 from karst41.door.views import render_text
 from karst41.door.views.lattice import render_lattice
+
+
+def flow(lines: list[object], width: int) -> list[str]:
+    """Re-wrap server-wrapped prose to `width`; a blank line keeps a paragraph break."""
+    out: list[str] = []
+    paragraph: list[str] = []
+    for line in [*lines, '']:
+        text = str(line.get('text', '')) if isinstance(line, dict) else str(line)
+        if text.strip():
+            paragraph.append(text.strip())
+            continue
+        if paragraph:
+            out.extend(textwrap.wrap(' '.join(paragraph), max(12, width)))
+            paragraph = []
+        if out and out[-1] != '':
+            out.append('')
+    while out and out[-1] == '':
+        out.pop()
+    return out
 
 
 def safety(body: dict[str, Any], last_body: str | None = None) -> str:
@@ -80,7 +100,10 @@ def render(buffer: CellBuffer, layout: Layout, paint: Paint, kind: str, body: di
         buffer.put(area.x + 2, area.y, truncate(' ' + str(body.get('title', '')) + ' ', area.width - 4), paint('head_zone', bold=True))
         menu(buffer, body, layout, paint)
     else:
-        render_text(buffer, body, replace(layout, text_area=layout.full_text_area), paint.palette)
+        area = layout.full_text_area
+        if body.get('flow'):  # Prose (the Wake briefing): paragraphs use the frame's width.
+            body = {**body, 'lines': flow(body.get('lines', []), area.width)}
+        render_text(buffer, body, replace(layout, text_area=area), paint.palette)
     if kind != 'zone':
         me = body.get('me', {})
         chrome.header(buffer, layout, paint,
