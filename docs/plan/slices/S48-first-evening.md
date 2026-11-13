@@ -215,7 +215,7 @@ not part of this slice and isn't granted by it.
 After the owner, the novice plays it alone, and the technical lead
 re-ranks the plan from both sessions' findings.
 
-## Implementation notes (PR #232, S48a)
+## Implementation notes (PR #235, S48a)
 
 - **The new presentation is the default.**
   - `door/client.py` `presentation_on()`: `DOOR_KARST41_PRESENTATION` set
