@@ -23,6 +23,7 @@ from typing import Any
 
 from accept_s04_netbbs import Database, DatabaseLane, DoorProfile, REPO, TelnetServer, browse_doors, create_door, create_user
 from accept_s06_netbbs import ZoneCaller
+from acceptance_renderer import stamp as stamp_renderer
 import karst41
 from karst41.content.loader import ContentTree
 from karst41.door.client import presentation_on
@@ -78,6 +79,7 @@ class NativeProbe:
         # (technical lead, S48a); the renderer that ran is recorded.
         self.door_environment = {'DOOR_KARST41_PRESENTATION': '0', **(door_environment or {})}
         self.renderer = 'present' if presentation_on(self.door_environment) else 'legacy'
+        self.started_at = time.time()  # Only results this run writes get its renderer.
         self.show_all_tiers = show_all_tiers
         self.service = Server(self.root/"world",tcp=True)
         self.connections: list[Connection] = []
@@ -316,12 +318,6 @@ class NativeProbe:
         (self.root/(label+".txt")).write_text(connection.caller.screen.screen_text(),encoding="utf-8")
 
     async def close(self) -> None:
-        # Every results file names the renderer that actually ran (S48a).
-        for results in self.root.glob('*results*.json'):
-            data = json.loads(results.read_text(encoding='utf-8'))
-            if isinstance(data, dict) and 'renderer_ran' not in data:
-                data['renderer_ran'] = self.renderer
-                results.write_text(json.dumps(data, indent=2)+'\n', encoding='utf-8', newline='\n')
         for index,connection in enumerate(self.connections):
             self.save(connection,f"unfinished-{index}")
             connection.writer.close();connection.pump.cancel()
@@ -333,6 +329,7 @@ class NativeProbe:
             (self.root/'console-output.json').write_text(json.dumps({
                 'threaded': True, 'writes': len(self.console_jobs),
                 'max_write_seconds': self.console_max_seconds}, indent=2)+'\n', encoding='utf-8')
+        stamp_renderer(self.root, self.renderer, self.started_at)  # After cleanup, so a bad file can't skip it.
 
 
 def s10_patrol_fixture(content: ContentTree) -> ContentTree:

@@ -229,7 +229,8 @@ re-ranks the plan from both sessions' findings.
 - **Acceptance scripts keep their renderer.** NativeProbe passes
   `DOOR_KARST41_PRESENTATION=0` when a script names no renderer. It
   records the renderer that ran in `native-client.json`, and as
-  `renderer_ran` in each results file. The six scripts that launch the
+  `renderer_ran` in each `result.json` or `*-results.json` (stamped after
+  the probe's cleanup; a half-written file is skipped). The six scripts that launch the
   door themselves (S04, S06, S07, S08, S09, S12) set `0` explicitly.
   S48e's evidence runs on the default.
 - **#216.** A briefing page could hold only the blank line after the last
