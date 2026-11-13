@@ -125,10 +125,12 @@ class BarkScheduler:
     next_due: dict[str, int] = field(default_factory=dict)
 
     def choose(self, talker: Talker, tick: int, rng: Random, *,
-               nearby: bool, interacting: bool) -> Bark | None:
+               nearby: bool, interacting: bool, key: str | None = None) -> Bark | None:
+        """`key` names the speaker (P8: one NPC instance); it defaults to the talker."""
+        key = key or talker.id
         if (not nearby or interacting or not talker.barks
-                or tick < self.next_due.get(talker.id, 0)):
+                or tick < self.next_due.get(key, 0)):
             return None
         bark = rng.choices(talker.barks, weights=[b.weight for b in talker.barks], k=1)[0]
-        self.next_due[talker.id] = tick+bark.min_interval_seconds*TICK_HZ
+        self.next_due[key] = tick+bark.min_interval_seconds*TICK_HZ
         return bark
