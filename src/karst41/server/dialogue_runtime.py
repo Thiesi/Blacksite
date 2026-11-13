@@ -203,6 +203,17 @@ class Dialogue:
             pass
 
     def open(self, session: Session, contact: Contact, tick: int) -> None:
+        # S48b: a talker who is also a counter (Vesper) refuses on E exactly
+        # as the counter would, so no page opens and no meeting is recorded.
+        # Each offer re-checks at dispatch, for a state that changes later.
+        actor = None if contact.lattice else self.world.zones[contact.zone].actors.get(contact.target)
+        template = self.content.npcs.get(actor.behaviour.get('template')) if actor else None
+        if template and template.vendor:
+            truce = getattr(self.core, 'truce', None)
+            reason = (truce.talk(session, template.vendor) if truce
+                      else self.commerce.service_refusal(session, template.vendor))
+            if reason:
+                raise ValueError(reason)
         talker = self.content.dialogue[contact.talker]
         facts = self.facts(session, talker)
         line = evaluate(talker, facts, self.world.zones[contact.zone].rng).text

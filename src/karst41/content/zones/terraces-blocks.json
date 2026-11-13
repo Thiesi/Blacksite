@@ -429,6 +429,32 @@
         "w": 22,
         "h": 2
       }
+    },
+    {
+      "id": "cast-ivey",
+      "npc": "npc-cast-ivey",
+      "count": 1,
+      "respawn_seconds": 60,
+      "condition": "always",
+      "region": {
+        "x": 103,
+        "y": 9,
+        "w": 1,
+        "h": 1
+      }
+    },
+    {
+      "id": "cast-marsh",
+      "npc": "npc-cast-marsh",
+      "count": 1,
+      "respawn_seconds": 60,
+      "condition": "always",
+      "region": {
+        "x": 108,
+        "y": 29,
+        "w": 1,
+        "h": 1
+      }
     }
   ],
   "sector": "lat-terraces"

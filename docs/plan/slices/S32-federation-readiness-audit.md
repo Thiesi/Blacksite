@@ -2,8 +2,10 @@
 
 **Status:** planned
 **Primary model:** Fable · **Reviewer:** Astra (independent critique of the bridge design)
-**Depends on:** S21, S26 · **Milestone:** M6
+**Depends on:** S21, and S49 for the alpha part; S26 for the Season 1 part · **Milestone:** M6 and the alpha
 **Issue:** https://github.com/Thiesi/Karst41/issues/32
+
+**Alpha (owner, 2026-11-12):** this is design only. **Part A (the alpha)** may start once S49 merges. It covers the origin and authority invariants and the protocol reservations for everything Season 0 runs, including S49's season frame and S50's population measure (distinct BBS users, so origin matters). **Part B** waits for S26: expedition rosters, ballots and settlement across origins.
 
 S18 adds origin-prefixed tenancy IDs, server-issued item `key_for` and
 `key_tier`, and protected apartment/impound ownership records. Audit

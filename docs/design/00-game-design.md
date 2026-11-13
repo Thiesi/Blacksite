@@ -157,7 +157,8 @@ carries across a season change. Set
 `legal_at` once; debt, death, leaving a faction, and season changes
 cannot remove it. PvP protections depend on grade, independently of
 personhood (§7.3). Show elapsed lease days and the Signatory XP target
-separately. NPC day-count lines use actual elapsed days, never a fixed
+separately: the panel carries the lease days, and the record (`P`)
+carries both. NPC day-count lines use actual elapsed days, never a fixed
 day selected only by grade.
 
 Grade 1 starts at 0 XP. For n = 2..30 the cumulative threshold is
@@ -2419,6 +2420,20 @@ them.
   The way beyond the door stays closed until the next season goes
   through it. Opening the door is the season's intended ending; the
   operator advances the season as §13.1 says.
+- **Provisional (owner, 2026-11-13).** These four hold for Season 0, to
+  be reviewed after it has run, because only a real season shows how
+  they feel:
+  - The door opens once, for the node. The first player to finish step
+    5 opens it for everyone and hears Strand's line. Later finishers get
+    a short variant line and full chain credit.
+  - Opening the door writes one Chronicle record ("Season 0: the shaft
+    door opened"), which names no player. It counts as Season 0's
+    completion for §13.1, so no no-outcome acknowledgement is needed
+    after it. The operator's advance shows who opened it and when.
+  - The door stays open into Season 1, whose "Ninety-Nine" starts from
+    the open door. Season 0 finishers keep their credit.
+  - §13.1's consoles, delivery XP and Depth meter are hidden in Season 0:
+    not placed, not shown and not awarded.
 
 ## 14. Anti-abuse and fairness
 
@@ -2749,6 +2764,35 @@ valid; zone/core instance IDs retain their own documented convention.
 | `con_kestrel_ration` | 2 |
 | chits | 200 |
 | `story_vesper_card` (*Vesper, Tin Halo, Sodium Row*) | 1 |
+
+Before the starter kit, during the Wake (design §4), the caller wears an
+**unread body** and may carry the **hall training pistol** (#220 item
+22, S48):
+
+- The unread body has 4 in each of Frame, Nerve, Cortex, Resonance and
+  Vitals: flat, and below every template, whose lowest attribute is 5.
+  That gives HP 58, STA 36, evasion 1 and a 2 kg carry limit. The
+  template's attributes replace it when the decant record is read. Pick
+  does not depend on Resonance, so the terminal lesson still works.
+- The hall training pistol has the Kestrel Issue Sidearm's numbers
+  (kinetic, range 6, damage 12, cooldown 0.8, accuracy 55), so the drone
+  lesson teaches the real starter weapon. It needs no ammunition, has no
+  price and cannot be sold. It is issued for the drone lesson only and
+  never stored: it is removed when the drone is down or skipped, when the
+  caller leaves the Wake Hall, and on disconnect. It does not count
+  against the carry limit.
+- The archetype is chosen when the decant record is read (§4 step 6);
+  the terminal lesson only lifts it (step 5). A caller who skips may read
+  it earlier, by E at the street door or the outfitter (#220 beat 7).
+  Reading the decant record during the drone lesson changes the body,
+  not the lesson: the pistol stays until one of its removal conditions
+  above, and current HP and STA are set to the template's maximums.
+- A finished character who replays the drone lesson (§4) is issued the
+  same training pistol for that lesson only, under the same removal
+  conditions, and uses their own attributes; the weapon they carried
+  stays in their inventory, unequipped while the pistol is in hand. When
+  the pistol is removed, the weapon they had equipped is equipped again,
+  and a save never records the pistol in place of it.
 
 #### 12. Vendor inventories
 

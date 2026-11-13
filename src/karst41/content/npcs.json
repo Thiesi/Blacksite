@@ -500,7 +500,7 @@
     },
     {
       "id": "npc-vendor-core-precinct-warden-quartermaster",
-      "name": "Warden Quartermaster",
+      "name": "Hanne Lindgren",
       "faction": null,
       "grade": 1,
       "attributes": {
@@ -519,7 +519,8 @@
         }
       ],
       "xp": 0,
-      "vendor": "warden-quartermaster"
+      "vendor": "warden-quartermaster",
+      "dialogue": "lindgren"
     },
     {
       "id": "npc-vendor-core-precinct-precinct-clinic",
@@ -592,7 +593,7 @@
     },
     {
       "id": "npc-vendor-sodium-tin-halo-vesper",
-      "name": "The Tin Halo",
+      "name": "Vesper",
       "faction": null,
       "grade": 1,
       "attributes": {
@@ -611,7 +612,8 @@
         }
       ],
       "xp": 0,
-      "vendor": "vesper"
+      "vendor": "vesper",
+      "dialogue": "vesper"
     },
     {
       "id": "npc-walked-template",
@@ -756,6 +758,236 @@
         "accuracy": 60,
         "damage_type": "kinetic"
       }
+    },
+    {
+      "id": "npc-cast-vane",
+      "name": "Kasimir Vane",
+      "faction": "sablier",
+      "grade": 1,
+      "attributes": {
+        "frame": 20,
+        "nerve": 20,
+        "cortex": 10,
+        "resonance": 5,
+        "vitals": 20
+      },
+      "behaviours": [
+        {
+          "kind": "talker",
+          "params": {
+            "anchor": true
+          }
+        }
+      ],
+      "xp": 0,
+      "dialogue": "vane"
+    },
+    {
+      "id": "npc-cast-quaye",
+      "name": "Sergeant Ama Quaye",
+      "faction": "wardens",
+      "grade": 1,
+      "attributes": {
+        "frame": 20,
+        "nerve": 20,
+        "cortex": 10,
+        "resonance": 5,
+        "vitals": 20
+      },
+      "behaviours": [
+        {
+          "kind": "talker",
+          "params": {
+            "anchor": true
+          }
+        }
+      ],
+      "xp": 0,
+      "dialogue": "quaye"
+    },
+    {
+      "id": "npc-cast-ranke",
+      "name": "Yusuf Ranke",
+      "faction": null,
+      "grade": 1,
+      "attributes": {
+        "frame": 20,
+        "nerve": 20,
+        "cortex": 10,
+        "resonance": 5,
+        "vitals": 20
+      },
+      "behaviours": [
+        {
+          "kind": "talker",
+          "params": {
+            "anchor": true
+          }
+        }
+      ],
+      "xp": 0,
+      "dialogue": "ranke"
+    },
+    {
+      "id": "npc-cast-amsel",
+      "name": "Sergeant Pieter Amsel",
+      "faction": "wardens",
+      "grade": 1,
+      "attributes": {
+        "frame": 20,
+        "nerve": 20,
+        "cortex": 10,
+        "resonance": 5,
+        "vitals": 20
+      },
+      "behaviours": [
+        {
+          "kind": "talker",
+          "params": {
+            "anchor": true
+          }
+        }
+      ],
+      "xp": 0,
+      "dialogue": "amsel"
+    },
+    {
+      "id": "npc-cast-brann",
+      "name": "Marshal Odile Brann",
+      "faction": "wardens",
+      "grade": 1,
+      "attributes": {
+        "frame": 20,
+        "nerve": 20,
+        "cortex": 10,
+        "resonance": 5,
+        "vitals": 20
+      },
+      "behaviours": [
+        {
+          "kind": "talker",
+          "params": {
+            "anchor": true
+          }
+        }
+      ],
+      "xp": 0,
+      "dialogue": "brann"
+    },
+    {
+      "id": "npc-cast-achterberg",
+      "name": "Sunny Achterberg",
+      "faction": "kestrel",
+      "grade": 1,
+      "attributes": {
+        "frame": 20,
+        "nerve": 20,
+        "cortex": 10,
+        "resonance": 5,
+        "vitals": 20
+      },
+      "behaviours": [
+        {
+          "kind": "talker",
+          "params": {
+            "anchor": true
+          }
+        }
+      ],
+      "xp": 0,
+      "dialogue": "achterberg"
+    },
+    {
+      "id": "npc-cast-ivey",
+      "name": "Superintendent Rasa Ivey",
+      "faction": null,
+      "grade": 1,
+      "attributes": {
+        "frame": 20,
+        "nerve": 20,
+        "cortex": 10,
+        "resonance": 5,
+        "vitals": 20
+      },
+      "behaviours": [
+        {
+          "kind": "talker",
+          "params": {
+            "anchor": true
+          }
+        }
+      ],
+      "xp": 0,
+      "dialogue": "ivey"
+    },
+    {
+      "id": "npc-cast-marsh",
+      "name": "Warden Constable Teo Marsh",
+      "faction": "wardens",
+      "grade": 1,
+      "attributes": {
+        "frame": 20,
+        "nerve": 20,
+        "cortex": 10,
+        "resonance": 5,
+        "vitals": 20
+      },
+      "behaviours": [
+        {
+          "kind": "talker",
+          "params": {
+            "anchor": true
+          }
+        }
+      ],
+      "xp": 0,
+      "dialogue": "marsh"
+    },
+    {
+      "id": "npc-cast-solenne",
+      "name": "Mira Solenne",
+      "faction": "sable",
+      "grade": 1,
+      "attributes": {
+        "frame": 20,
+        "nerve": 20,
+        "cortex": 10,
+        "resonance": 5,
+        "vitals": 20
+      },
+      "behaviours": [
+        {
+          "kind": "talker",
+          "params": {
+            "anchor": true
+          }
+        }
+      ],
+      "xp": 0,
+      "dialogue": "solenne"
+    },
+    {
+      "id": "npc-cast-dolf",
+      "name": "Dolf",
+      "faction": null,
+      "grade": 1,
+      "attributes": {
+        "frame": 20,
+        "nerve": 20,
+        "cortex": 10,
+        "resonance": 5,
+        "vitals": 20
+      },
+      "behaviours": [
+        {
+          "kind": "talker",
+          "params": {
+            "anchor": true
+          }
+        }
+      ],
+      "xp": 0,
+      "dialogue": "dolf"
     }
   ]
 }

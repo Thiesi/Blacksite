@@ -2,7 +2,7 @@
 
 **Status:** planned
 **Primary model:** Opus · **Reviewer:** Fable (level design and finale review before merge)
-**Depends on:** S21, S19, S24, S25, S27, S22 · **Milestone:** M5
+**Depends on:** S21, S19, S24, S25, S27, S22, S49 (the season frame) · **Milestone:** M5
 **Issue:** https://github.com/Thiesi/Karst41/issues/26
 
 ## Goal
@@ -11,6 +11,22 @@ Ship Season 1, The Exhale, as a complete playable bundle: contribution,
 solo or crew expedition, individual choices and one durable public
 settlement. Activate all eight story chains against the complete city.
 A crew leader never chooses another player's name, standing or ballot.
+
+**After the alpha (2026-11-12).** The first release is Season 0 (S49,
+game design §13.6), which has no Depth and no expeditions. This slice
+builds Season 1 on S49's season frame: the active season, the operator's
+advance and its season-start hook. It extends that frame and doesn't
+replace it. The same goes for the Chronicle: S49 builds the smallest
+append-only Chronicle, holding Season 0's door record, and this slice
+extends that store rather than creating a second one. The Unmoored's "Ninety-Nine" is already active from Season 0
+and carries into Season 1 as its entry chain. How its door state and
+credit carry over follows the owner's answer to S49's open item 3. The
+Depth target is read from S50's population switch (§13.1), never chosen
+by a SysOp. Where the presets below say an operator picks the target,
+§13.1 as amended in #219 wins. Freezing the leaderboards and resetting
+seasonal relay and influence counters (below) happen only when a season
+with an installed bundle starts, through S49's season-start hook. An
+advance that only parks progression resets and freezes nothing.
 
 ## Spec references
 
@@ -65,6 +81,9 @@ Chronicle voices. Main design 13.3 owns all outcome numbers and effects.
 - Integrate S19 story-chain manifests, S25 ordinary maps and S27 NPCs,
   dialogue and records. Validate and activate every Season 1 reference.
   Test both walked-template/ration forks and all eight chains end to end.
+- Restore the lines, offers and barks S48b held back from the active hub
+  cast (list in S48's implementation notes, PR #237) when their Season 1
+  content becomes active.
 - Admin status, audited set-depth recovery aid, advance confirmation,
   Chronicle append (operator attribution), leaderboard export, archive
   status. No fake clock-changing production CLI for acceptance tests.

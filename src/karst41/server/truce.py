@@ -113,6 +113,16 @@ class Truce:
     def service(self, session: Session, handler: str) -> str | None:
         return vesper_refusal(self.player(session), self.now()) if handler == VESPER else None
 
+    def talk(self, session: Session, handler: str) -> str | None:
+        """S48b: E on a counter's person. The counter's refusal, and inside
+        the Halo the bouncer's (a hunted caller is shown out anyway)."""
+        if reason := self.service(session, handler):
+            return reason
+        avatar = self.sim.avatars.get(session.user_id)
+        if avatar is not None and avatar.zone == HALO:
+            return halo_refusal(self.content, self.player(session), self.now())
+        return None
+
     def tick(self, ctx: Any) -> None:
         """Show out of the Halo anyone it refuses, through its street door."""
         tick = ctx.tick
