@@ -36,7 +36,7 @@ demo is a guide only.
   because ambience exists.
 - It runs on ticks (AGENTS.md §4), with no wall-clock reads, so tests
   step it without sleeping.
-- Session state is dropped on detach. Reconnect never replays ambience.
+- The emitter keeps no per-session state. The danger stamp (`danger_at`) and the budget (`voice_tick`) move with the session across a reconnect, as the log ring does. Reconnect never replays ambience (technical lead, #230).
 
 ### 2. Barks
 
