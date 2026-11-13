@@ -237,9 +237,21 @@ re-ranks the plan from both sessions' findings.
   there once. The four Wake Hall door recruiters (Achebe-Roux, Kettle,
   Vance, Vael) stay dormant, per the creative lead.
 - **Held back:** Season 1 lines and offers that reference authoring
-  content (Amsel, Brann, Marsh, Vane), and Brann's finale and Curfew bark.
-  The validator rejects active content that references authoring content,
-  and a test pins that.
+  content, and Brann's finale and Curfew bark. The validator rejects active
+  content that references authoring content, and a test pins that. S26
+  restores them when Season 1 content goes active. The source is
+  `src/karst41/content/dialogue/<talker>.json` as of `b96051c`:
+  - Amsel: lines `record-war-s1-4-line`, `record-war-s1-3-book`,
+    `record-war-s1-2-curfew`, `record-war-s1-1-stairwell` and `work`, plus
+    the Work board offer (`war-s1-1-stairwell`).
+  - Brann: lines `record-war-s1-4-line`, `record-war-s1-3-book`,
+    `record-war-s1-2-curfew`, `record-war-s1-1-stairwell` and `finale`, the
+    Work board offer (`war-s1-1-stairwell`), and her bark ("Curfew drills
+    at oh-four-hundred…").
+  - Marsh: line `work` and the Work board offer (`war-s1-1-stairwell`).
+  - Vane: lines `record-sab-s1-4-batch`, `record-sab-s1-3-dreaming`,
+    `record-sab-s1-2-provenance`, `record-sab-s1-1-retrieval` and `work`,
+    plus the Work board offer (`sab-s1-1-retrieval`).
 - **New lines:** the creative lead's fillers for Vane, Ranke and Solenne,
   and three fixes to Vesper's record.
 - **P3:** the interaction digest is unchanged from main (10,704 cases,

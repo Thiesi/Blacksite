@@ -65,6 +65,9 @@ Chronicle voices. Main design 13.3 owns all outcome numbers and effects.
 - Integrate S19 story-chain manifests, S25 ordinary maps and S27 NPCs,
   dialogue and records. Validate and activate every Season 1 reference.
   Test both walked-template/ration forks and all eight chains end to end.
+- Restore the lines, offers and barks S48b held back from the active hub
+  cast (list in S48's implementation notes, PR #237) when their Season 1
+  content becomes active.
 - Admin status, audited set-depth recovery aid, advance confirmation,
   Chronicle append (operator attribution), leaderboard export, archive
   status. No fake clock-changing production CLI for acceptance tests.
