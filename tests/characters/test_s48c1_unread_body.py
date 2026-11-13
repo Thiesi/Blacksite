@@ -224,3 +224,27 @@ def test_a_refused_death_proposes_nothing_and_patches_no_other_effect(game: Head
     combat.die(manager.players[pid], actor)
     assert combat.commerce.outbox[-1] is other and set(other) == {"action", "user"}
     assert pid not in combat.pending_deaths
+
+
+def test_an_unread_body_can_be_reported_and_the_report_outlives_it(game: HeadlessServer, tmp_path) -> None:
+    # Technical lead, #241 row 39: moderation reaches a newcomer, and the
+    # report row needs no character row (it is JSON in `reports`, no join).
+    import json
+    from karst41.server.storage.db import Storage
+    reporter = game.connect({"user_id": 2, "handle": "STRASSE"})
+    create(game, reporter)
+    client, manager = woken(game)
+    pid, name = client.session.player_id, manager.players[client.session.player_id].name
+    act(game, reporter, Frame("intent", {"name": "report", "args": {"name": name, "text": "griefing at the cards"}}))
+    effect = game.core.chat.outbox.pop()
+    assert effect["row"]["target"] == pid and effect["row"]["target_name"] == name
+    game.core.sessions.disconnect(client.session)  # A no-show: the body is never created.
+    game.step()
+    store = Storage(tmp_path/"world.db", game.clock)
+    try:
+        store.report(effect["row"])
+        row = json.loads(store.db.execute("SELECT data FROM reports").fetchone()[0])
+        assert row["target"] == pid and row["target_user"] == client.session.user_id and row["text"] == "griefing at the cards"
+        assert store.db.execute("SELECT count(*) FROM players WHERE id=?", (pid,)).fetchone()[0] == 0
+    finally:
+        store.close()

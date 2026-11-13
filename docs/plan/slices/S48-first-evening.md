@@ -336,6 +336,15 @@ lessons yet (c1b) and no new lines (c2).
 - **Interim, until c2:** the briefing pages are no longer shown as
   screens. Slice §2 moves Vantongeren's lines into the log while you move,
   which is c2's staging; `wake.briefing` and #216's paging stay for it.
+- **Writer table.** The PR body maps the 38 writers reachable from the hall,
+  checked against this code. Several of the planning table's holds (drone
+  outcome, lift, hit, jacked and jacked out, meetings) are c1b's or not yet
+  built; in c1a those writers are suppressed by the write guards or
+  unreachable. The check found and fixed two leaks: an unread body could
+  start a delete, and a refused death patched another effect. The second fix
+  is interim, because c1b's direct core entry closes that route. A chat
+  report may name an unread body (technical lead): it is moderation, and the
+  report row needs no character row.
 - **Panel:** an unread body sends no grade, so the panel shows name and
   bars only. The terminal UI §2.4 panel (gurney number, empty grade slot,
   lease row) is presentation work for the S48 panel pass.
