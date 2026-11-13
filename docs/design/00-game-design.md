@@ -2765,6 +2765,22 @@ valid; zone/core instance IDs retain their own documented convention.
 | chits | 200 |
 | `story_vesper_card` (*Vesper, Tin Halo, Sodium Row*) | 1 |
 
+Before the starter kit, during the Wake (design §4), the caller wears an
+**unread body** and may carry the **hall training pistol** (#220 item
+22, S48):
+
+- The unread body has 4 in each of Frame, Nerve, Cortex, Resonance and
+  Vitals: flat, and below every template, whose lowest attribute is 5.
+  That gives HP 58, STA 36, evasion 1 and a 2 kg carry limit. The
+  template's attributes replace it when the decant record is read. Pick
+  does not depend on Resonance, so the terminal lesson still works.
+- The hall training pistol has the Kestrel Issue Sidearm's numbers
+  (kinetic, range 6, damage 12, cooldown 0.8, accuracy 55), so the drone
+  lesson teaches the real starter weapon. It needs no ammunition, has no
+  price and cannot be sold. It is issued for the drone lesson only and
+  never stored: it is removed when the drone is down or skipped, when the
+  caller leaves the Wake Hall, and on disconnect.
+
 #### 12. Vendor inventories
 
 | Vendor | Zone | Stock | Tier |
