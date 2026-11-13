@@ -2779,7 +2779,15 @@ Before the starter kit, during the Wake (design §4), the caller wears an
   lesson teaches the real starter weapon. It needs no ammunition, has no
   price and cannot be sold. It is issued for the drone lesson only and
   never stored: it is removed when the drone is down or skipped, when the
-  caller leaves the Wake Hall, and on disconnect.
+  caller leaves the Wake Hall, and on disconnect. It does not count
+  against the carry limit.
+- Reading the decant record during the drone lesson changes the body,
+  not the lesson: the pistol stays until one of its removal conditions
+  above, and current HP and STA are set to the template's maximums.
+- A finished character who replays the drone lesson (§4) is issued the
+  same training pistol for that lesson only, under the same removal
+  conditions, and uses their own attributes; the weapon they carried
+  stays in their inventory, unequipped while the pistol is in hand.
 
 #### 12. Vendor inventories
 
