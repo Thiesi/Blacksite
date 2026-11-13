@@ -3,10 +3,10 @@
 Shared by the acceptance drivers that launch the door themselves. The
 caller wakes in the hall with an unread body. Optionally they take a card
 at the table, open the decant record with E beside the street door,
-choose a template and a name. The body stays beside the street door: the
-training drone's post is in the corridor every route crosses, and it
-despawns this far away, so the state is as before (drone not yet fought,
-no outcome recorded). Each script's walks plan from here.
+choose a template and a name, all with keys. Then a disclosed setup step
+puts the body back on its arrival tile, so a script carries on from the
+same place and state as under the old Wake screens (drone not yet fought,
+no outcome recorded). Walking back would cross the drone's corridor.
 """
 
 from __future__ import annotations
@@ -34,7 +34,8 @@ async def walk(service: Any, avatar: Any, write: Callable[[bytes], Awaitable[Non
     deadline = time.monotonic() + timeout
     while avatar.actor.position != target:
         assert time.monotonic() < deadline, ("walk timeout", zone.id, avatar.actor.position, target)
-            occupied = {a.position for a in zone.actors.values() if a is not avatar.actor
+        start = avatar.actor.position
+        occupied = {a.position for a in zone.actors.values() if a is not avatar.actor
                     and not (a.behaviour.get("training") and a.owner != avatar.actor.id)}
         exits = {e.tile for e in zone.template.meta.exits if e.kind == "street"}
         pending, previous = deque([start]), {start: None}
@@ -59,12 +60,26 @@ async def walk(service: Any, avatar: Any, write: Callable[[bytes], Awaitable[Non
             pass  # Traffic took the tile first; replan from where the body is.
 
 
+def return_to(service: Any, session: Any, tile: tuple[int, int]) -> None:
+    """Disclosed setup step: put the new character back on its arrival tile,
+    as `world.enter` (S09 places its callers in the Plaza the same way).
+    A walk back west would cross the training drone's corridor and wake it."""
+    manager = service.core.characters
+    avatar = manager.sim.avatars[session.user_id]
+    zone = service.world.zones[avatar.zone]
+    zone.deactivate(session.id, service.clock.now_tick())
+    service.world.enter(avatar.actor, avatar.zone, service.world.free_tile(avatar.zone, tile))
+    zone.activate(session.id, service.clock.now_tick())
+    manager.sim.reset_view(session, avatar)
+
+
 async def create(service: Any, session: Any, write: Callable[[bytes], Awaitable[None]], *,
                  archetype: int = 0, name: str = "", card: str | None = None) -> Any:
     """Create a character the S48 way; returns the promoted player."""
     manager = service.core.characters
     avatar = manager.sim.avatars[session.user_id]
     wake = manager.wakes[session.id]
+    home = avatar.actor.position
 
     def settled() -> bool:
         return session.ack_revision == session.view_revision
@@ -92,6 +107,7 @@ async def create(service: Any, session: Any, write: Callable[[bytes], Awaitable[
     await until(lambda: wake.stage == "name" and settled())
     await write(name.encode()+b"\r")
     await until(lambda: session.player_id in manager.players and not manager.unread(session.player_id))
+    return_to(service, session, home)
     return manager.players[session.player_id]
 
 
