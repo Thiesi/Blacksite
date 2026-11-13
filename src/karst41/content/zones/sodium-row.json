@@ -324,6 +324,19 @@
         "w": 40,
         "h": 12
       }
+    },
+    {
+      "id": "cast-solenne",
+      "npc": "npc-cast-solenne",
+      "count": 1,
+      "respawn_seconds": 60,
+      "condition": "always",
+      "region": {
+        "x": 48,
+        "y": 19,
+        "w": 1,
+        "h": 1
+      }
     }
   ],
   "sector": "lat-sodium-row"

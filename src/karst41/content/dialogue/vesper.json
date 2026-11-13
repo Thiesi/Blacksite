@@ -44,7 +44,8 @@
       "id": "first-done",
       "text": "Good. That's a thing done. You'll find there are more.",
       "when": [
-        "completed_contract vesper-first-thing"
+        "completed_contract vesper-first-thing",
+        "not_signatory"
       ],
       "required": true
     },
@@ -52,7 +53,8 @@
       "id": "wake",
       "text": "Vantongeren's card. She sends me the ones she thinks will last. Don't make her wrong.",
       "when": [
-        "is_wake"
+        "is_wake",
+        "not_signatory"
       ],
       "required": true
     },
@@ -66,7 +68,7 @@
     },
     {
       "id": "greeting",
-      "text": "Sweetheart. Sit. A thing on the tablet, a price on the card. You can look before you choose.",
+      "text": "Back, sweetheart. The tablet's had a day. Look before you choose.",
       "when": [],
       "required": true
     }

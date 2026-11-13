@@ -22,9 +22,10 @@ def content() -> ContentTree:
     tree = load_content(Path(__file__).parents[1]/'src/karst41/content')
     # Only this fixture's Vesper is active. Shipped cast and all future
     # placement remain authoring content under issue #82.
-    bundle = tree.bundles['s27-cast']
-    tree.bundles[bundle.id] = replace(bundle, members={
-        **bundle.members, 'dialogue': tuple(did for did in bundle.members['dialogue'] if did != 'vesper')})
+    for bundle in tuple(tree.bundles.values()):  # S48b moved her to s48-hub-cast.
+        if 'vesper' in bundle.members.get('dialogue', ()):
+            tree.bundles[bundle.id] = replace(bundle, members={
+                **bundle.members, 'dialogue': tuple(did for did in bundle.members['dialogue'] if did != 'vesper')})
     tree.dialogue['vesper'] = DialogueNode('vesper', 'Vesper', (
         DialogueLine('marked', 'Take the back seat.', ('marked',)),
         DialogueLine('first', 'Show me the card.', ('first_meeting',)),
@@ -180,18 +181,22 @@ def test_game_13_4_terminal_talker_uses_its_current_lattice_cell_and_colour_role
     assert player.progress['met_talkers'] == ['ninety-nine']
 
 
-def test_arch_5_5_3_authored_barks_stay_dormant_until_p8(content: ContentTree) -> None:
+def test_arch_5_5_3_authored_barks_come_only_through_the_p8_emitter(content: ContentTree) -> None:
+    """P8 landed (#230): barks come from the one emitter and never draw zone.rng.
+
+    S48b made Vesper an active talker, so her bark now plays.
+    """
     game, caller, player = setup(content)
     zone = game.core.world.zones[player.zone]
     game.frames_for(caller)
     state = zone.rng.getstate()
-    # The dialogue subsystem must not run a competing emitter or consume
-    # simulation randomness while P8 is pending.
     from types import SimpleNamespace
     game.core.dialogue.tick(SimpleNamespace(tick=900, sessions=[caller.session]))
     assert zone.rng.getstate() == state
-    assert not [line for frame in game.frames_for(caller) if frame.type == 'log'
-                for line in frame.data['lines'] if 'The ring stays dark.' in line['text']]
+    barks = [line for frame in game.frames_for(caller) if frame.type == 'log'
+             for line in frame.data['lines'] if 'The ring stays dark.' in line['text']]
+    assert all(line['kind'] == 'speech' and line['speaker'] == 'Vesper' for line in barks)
+    assert not [line for line in caller.session.log_ring if 'The ring stays dark.' in line.get('text', '')]
 
 
 def test_arch_5_5_2_talker_focus_is_pure_and_matches_e(content: ContentTree) -> None:
