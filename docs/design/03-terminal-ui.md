@@ -386,7 +386,8 @@ TARGET and the pinned vitals.
    on the lease row until personhood, whatever the grade. The row is the
    same at both sizes: chits keep a 9-cell field, and the lease part
    starts at panel column 10 with 12 cells. Precedence is `on the roll`,
-   then `sig`, then plain:
+   then `sig`, then plain; grades never fall, so `sig` never reverts to
+   `day`:
    - below grade 5, before day 90: `day 12/90`, counting from 1 on the
      day of decant;
    - grade 5 or higher, before day 90: `sig 12/90`; the count stays;
