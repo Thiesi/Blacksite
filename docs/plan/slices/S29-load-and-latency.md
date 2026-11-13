@@ -2,8 +2,10 @@
 
 **Status:** planned
 **Primary model:** Opus · **Reviewer:** Astra (independent read of the profiling conclusions)
-**Depends on:** S15, S22, S24, S26 · **Milestone:** M6
+**Depends on:** S15, S22, S24, and S49 for the alpha part; S26 for the Season 1 part · **Milestone:** M6 and the alpha
 **Issue:** https://github.com/Thiesi/Karst41/issues/29
+
+**Alpha (owner, 2026-11-12):** **Part A (the alpha)** may start once S49 merges. It runs the bot client and the 16-bot hour on Season 0's maps (the built hubs plus the Old Works), with profiling. Since 2026-11-12, S29a's bot run is also the real tick gate against the 40 ms budget (#229). **Part B (Season 1)** waits for S26: the same run with expeditions and Depth contribution in the mix.
 
 S22 [PR #61](https://github.com/Thiesi/Karst41/pull/61) installs actual
 crew membership and remote HP/integrity/zone/beacon
