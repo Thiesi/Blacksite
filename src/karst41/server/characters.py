@@ -733,7 +733,10 @@ class Characters:
         if session.id in self.sim.maps or (self.sim.avatars.get(session.user_id) and self.sim.avatars[session.user_id].travel):
             self.sim.input(session, frame, tick, interaction=interaction)
             return
-        if screen == "delete":
+        if screen == "delete" and player.id in self.unread_ids:
+            self.screens[session.id] = ("sheet", 0)  # S48: an unread body has nothing to delete.
+            self.dirty_screens.add(session.id)
+        elif screen == "delete":
             if name == "prompt_cancel":
                 self.screens[session.id] = ("sheet", 0)
             elif frame.type == "line" and frame.data["id"] == "delete:" + player.id:
@@ -752,7 +755,8 @@ class Characters:
                 else:
                     self.screens[session.id] = ("sheet", 0)
             self.dirty_screens.add(session.id)
-        elif name == "delete_character" or (screen == "sheet" and name == "menu_select" and frame.data.get("args", {}).get("key") == "d"):
+        elif (name == "delete_character" or (screen == "sheet" and name == "menu_select" and frame.data.get("args", {}).get("key") == "d")) \
+                and player.id not in self.unread_ids:
             self.screens[session.id] = ("delete", 0)
             self.dirty_screens.add(session.id)
         elif screen == "sheet":

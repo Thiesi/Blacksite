@@ -199,3 +199,28 @@ def test_an_unread_body_reaches_only_the_halls_own_systems(game: HeadlessServer)
     rows = game.core.market.views.rows(other.session, panel)
     assert other.session.player_id in {row["id"] for row in rows}
     assert client.session.player_id not in {row["id"] for row in rows}
+
+
+def test_an_unread_body_cannot_start_a_delete(game: HeadlessServer) -> None:
+    client, manager = woken(game)
+    pid = client.session.player_id
+    name = manager.players[pid].name
+    act(game, client, Frame("key", {"k": "p", "t": 0}))
+    act(game, client, Frame("intent", {"name": "delete_character", "args": {}}))
+    act(game, client, Frame("line", {"id": "delete:" + pid, "text": name}))
+    assert pid not in manager.deleting
+    assert manager.screens.get(client.session.id, ("",))[0] != "saving"
+    assert not [e for e in manager.outbox if e["action"] == "delete"]
+
+
+def test_a_refused_death_proposes_nothing_and_patches_no_other_effect(game: HeadlessServer) -> None:
+    client, manager = woken(game)
+    pid = client.session.player_id
+    combat = game.core.combat
+    actor = game.core.world.actors[pid]
+    manager.players[pid].progress["combat"] = {"stage": "down", "until": 0}  # As a downed body has it.
+    other = {"action": "save", "user": "other"}
+    combat.commerce.outbox.append(other)
+    combat.die(manager.players[pid], actor)
+    assert combat.commerce.outbox[-1] is other and set(other) == {"action", "user"}
+    assert pid not in combat.pending_deaths

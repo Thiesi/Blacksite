@@ -618,8 +618,12 @@ class Combat:
                 self.commerce.close(session)
                 self.game.screens.pop(session.id,None)
                 self.menus.pop(session.id,None)
-        self.commerce.settle(player,{"inventory":inventory,"equipment":equipment,"progress":progress,
-            "health":0,"chits_hand":hand,"clone_debt":debt,"xp":xp,"keeper_answer":None},items,caches,serial,committed,identity)
+        if not self.commerce.settle(player,{"inventory":inventory,"equipment":equipment,"progress":progress,
+                "health":0,"chits_hand":hand,"clone_debt":debt,"xp":xp,"keeper_answer":None},items,caches,serial,committed,identity):
+            # A refused death (S48: an unread body) proposes nothing, so the
+            # patches below must not land on another effect.
+            self.pending_deaths.discard(player.id)
+            return
         if killer_patch or (killer_identity is not None and killer_identity != self.game.identities[killer.bbs_user_id]):
             if "progress" in killer_patch:
                 killer_patch["progress"] = {key: value for key, value in killer_patch["progress"].items()
