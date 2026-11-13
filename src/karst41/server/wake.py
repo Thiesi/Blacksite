@@ -46,16 +46,34 @@ def briefing(content: ContentTree, screen: int, width: int, height: int) -> list
     return pages(wrapped(content.text[f"wake-briefing-{screen}"].body, layout.briefing.width), layout.briefing.rows)
 
 
-def cards(content: ContentTree, cursor: int, width: int, height: int) -> dict[str, Any]:
+# The card table's rows after the deck (#220 decision 4: the table stays open
+# until a card is taken). A character with a template also gets a way to the
+# recruiter menu (technical lead, #241 ruling (b)); an unread body does not.
+# Words: creative lead; order and the verbs following the row: presentation lead.
+ASK_ROW = ("ask", "Ask about joining", "ask about joining",
+           "Joining isn't a card. See who's recruiting, what they ask, and where you stand.")
+NONE_ROW = ("none", "Take no card", "take none", "You leave the cards. No standing changes.")
+
+
+def card_rows(content: ContentTree, ask: bool) -> list[str]:
+    """Row ids in menu order: the cards, then `ask` (if offered), then `none`."""
+    return [*content.wake_cards, *(["ask"] if ask else []), "none"]
+
+
+def cards(content: ContentTree, cursor: int, width: int, height: int, ask: bool = False) -> dict[str, Any]:
     """The recruiter cards at the Wake Hall table (S48: taken at the table)."""
     detail_width = screen_layout(width, height).wake_detail_width
     deck = list(content.wake_cards.values())
-    rows = [{"id": card.id, "cells": [card.name]} for card in deck] + [{"id": "none", "cells": ["Take no card"]}]
+    extra = [*([ASK_ROW] if ask else []), NONE_ROW]
+    rows = [{"id": card.id, "cells": [card.name]} for card in deck] + [{"id": rid, "cells": [label]} for rid, label, _, _ in extra]
     cursor = min(cursor, len(rows) - 1)
-    detail = content.text[deck[cursor].pitch].body if cursor < len(deck) else "You leave the cards. No standing changes."
+    if cursor < len(deck):
+        detail, verb = content.text[deck[cursor].pitch].body, "take a card"
+    else:
+        _, _, verb, detail = extra[cursor - len(deck)]
     return menu("THE WAKE - Recruiter cards", rows, cursor, "\n".join(wrapped(detail, detail_width)),
                 # Words: presentation lead, S48c1a (imperative, names the object).
-                "Enter take a card  Esc/B put the cards down", "take a card", "put the cards down")
+                f"Enter {verb}  Esc/B put the cards down", verb, "put the cards down")
 
 
 # S48 (#220): the stages that show a menu over the hall; `hall` is play.

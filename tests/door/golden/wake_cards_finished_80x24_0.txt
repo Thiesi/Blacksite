@@ -1,0 +1,24 @@
+┌─ Karst · Wide界 ─────────────────────────────────────────────────────────────┐
+│    ┌─ THE WAKE - Recruiter cards ───────────────────────────────────────┐    │
+│    │ Halvard-Ostrom                                                     │    │
+│    │ Sablier                                                            │    │
+│    │ Kestrel                                                            │    │
+│    │ Wardens                                                            │    │
+│    │ Ninefold Choir                                                     │    │
+│    │ Red Sable                                                          │    │
+│    │ Unmoored                                                           │    │
+│    │ Ferrymen                                                           │    │
+│    │ Ask about joining                                                  │    │
+│    │ Take no card                                                       │    │
+│    │ You were decanted from one of our templates, did you know that?    │    │
+│    │ Most of the Wake Hall was. Halvard-Ostrom built this city, cut the │    │
+│    │ cables that saved it, and has kept the shaft sealed for forty-one  │    │
+│    │ years while everyone else argued about what to do. We are not...   │    │
+│    │ enter take a card  Esc/B put the cards down                        │    │
+│    └────────────────────────────────────────────────────────────────────┘    │
+├Crews end on a service restart. Use G to invite.──────────────────────────────┤
+│[zone] You wake on a gurney under a number. White light, warm plastic, a floor│
+│  drain. Past the cards, a corridor. Past the corridor, a terminal.           │
+│                                                                              │
+│Enter take a card  Esc/B put the cards down                                   │
+└──────────────────────────────────────────────────────────────────────────────

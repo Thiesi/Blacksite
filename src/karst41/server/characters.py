@@ -18,7 +18,7 @@ from karst41.server.rules import character as rules
 from karst41.server.rules import combat as combat_rules
 from karst41.server.sessions import Session, Sessions
 from karst41.server.views.delta import ViewStore
-from karst41.server.wake import MENU_STAGES, Wake, cards, menu, wrapped
+from karst41.server.wake import MENU_STAGES, Wake, card_rows, cards, menu, wrapped
 from karst41.server.world.registry import World
 from karst41.server.world.simulation import Avatar, ZoneSimulation
 from karst41.server.world.exits import Travel, complete_paid_pass
@@ -49,6 +49,7 @@ class Characters:
         self.screens: dict[str, tuple[str, int]] = {}
         # Forced rename (game design 4 step 7, #221): session -> (player id, error).
         self.renaming: dict[str, tuple[str, str]] = {}
+        self.card_tables: dict[str, str] = {}  # The table a card menu was opened at (its recruiter target).
         # S48 (#220): provisional bodies in the Wake Hall, before the decant
         # record is read. They live in `players` so every engine finds them,
         # but nothing about them is ever stored (write guards in queue() and
@@ -623,6 +624,7 @@ class Characters:
             kind, target = interaction.value
             if kind == "cards":
                 self.screens[session.id] = ("cards", 0)
+                self.card_tables[session.id] = target
                 self.dirty_screens.add(session.id)
             else:
                 self.open_record(session, target)
@@ -633,7 +635,8 @@ class Characters:
         key = frame.data.get("k", "") if frame.type == "key" else ""
         screen = self.screens.get(session.id, ("", 0))
         if screen[0] == "cards":
-            count = len(self.content.wake_cards) + 1
+            ids = card_rows(self.content, not self.unread(session.player_id))
+            count = len(ids)
             cursor = screen[1]
             if name == "menu_cursor":
                 delta = frame.data.get("args", {}).get("delta", frame.data.get("args", {}).get("dir", 0))
@@ -643,13 +646,18 @@ class Characters:
                 self.screens.pop(session.id, None)
                 self._reset_view(session)
             elif name == "menu_select":
-                card = [*self.content.wake_cards, "none"][cursor]
-                try:
-                    self.take_card(session, card)
-                except ValueError as exc:
-                    session.send(Frame("toast", {"text": str(exc), "role": "ui_text", "seconds": 4}))
+                card = ids[min(cursor, count - 1)]
                 self.screens.pop(session.id, None)
                 self._reset_view(session)
+                if card == "ask":
+                    # The table's ordinary recruiter menu, by its own checks.
+                    target = self.card_tables.get(session.id, "")
+                    self.factions.input(session, Frame("intent", {"name": "faction.open", "args": {"target": target}}), tick)
+                else:
+                    try:
+                        self.take_card(session, card)
+                    except ValueError as exc:
+                        session.send(Frame("toast", {"text": str(exc), "role": "ui_text", "seconds": 4}))
             self.dirty_screens.add(session.id)
             return True
         wake = self.wakes[session.id]
@@ -875,7 +883,8 @@ class Characters:
                 elif screen == "sheet":
                     body = self.sheet(player, cursor)
                 elif screen == "cards":
-                    body = cards(self.content, cursor, session.caps["width"], session.caps["height"])
+                    body = cards(self.content, cursor, session.caps["width"], session.caps["height"],
+                                 ask=not self.unread(session.player_id))
                 elif screen == "rename":
                     pid, error = self.renaming.get(session.id, ("", ""))
                     target = self.players.get(pid)

@@ -1,0 +1,50 @@
+┌─ Karst · Wide界 ─────────────────────────────────────────────────────────────────────────────────────────────────────────────────┐
+│          ┌─ THE WAKE - Recruiter cards ───────────────────────────────────────────────────────────────────────────────┐          │
+│          │ Choice                                               You leave the cards. No standing changes.             │          │
+│          │ Halvard-Ostrom                                                                                             │          │
+│          │ Sablier                                                                                                    │          │
+│          │ Kestrel                                                                                                    │          │
+│          │ Wardens                                                                                                    │          │
+│          │ Ninefold Choir                                                                                             │          │
+│          │ Red Sable                                                                                                  │          │
+│          │ Unmoored                                                                                                   │          │
+│          │ Ferrymen                                                                                                   │          │
+│          │ Ask about joining                                                                                          │          │
+│          │ Take no card                                                                                               │          │
+│          │                                                                                                            │          │
+│          │                                                                                                            │          │
+│          │                                                                                                            │          │
+│          │                                                                                                            │          │
+│          │                                                                                                            │          │
+│          │                                                                                                            │          │
+│          │                                                                                                            │          │
+│          │                                                                                                            │          │
+│          │                                                                                                            │          │
+│          │                                                                                                            │          │
+│          │                                                                                                            │          │
+│          │                                                                                                            │          │
+│          │                                                                                                            │          │
+│          │                                                                                                            │          │
+│          │                                                                                                            │          │
+│          │                                                                                                            │          │
+│          │                                                                                                            │          │
+│          │                                                                                                            │          │
+│          │                                                                                                            │          │
+│          │                                                                                                            │          │
+│          │                                                                                                            │          │
+│          │                                                                                                            │          │
+│          │                                                                                                            │          │
+│          │                                                                                                            │          │
+│          │ enter take none  Esc/B put the cards down                                                                  │          │
+│          └────────────────────────────────────────────────────────────────────────────────────────────────────────────┘          │
+├Crews end on a service restart. Use G to invite.──────────────────────────────────────────────────────────────────────────────────┤
+│[zone] You wake on a gurney under a number. White light, warm plastic, a floor drain. Past the cards, a corridor. Past the        │
+│  corridor, a terminal.                                                                                                           │
+│                                                                                                                                  │
+│                                                                                                                                  │
+│                                                                                                                                  │
+│                                                                                                                                  │
+│                                                                                                                                  │
+│                                                                                                                                  │
+│Enter take none  Esc/B put the cards down                                                                                         │
+└──────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────

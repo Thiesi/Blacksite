@@ -49,15 +49,17 @@ def menu(buffer: CellBuffer, body: dict[str, Any], layout: Layout, paint: Paint)
         talker(buffer, body, shape.talk, paint)
         return
     rows, cursor = body.get('rows', []), body.get('cursor', 0)
-    label = '  '.join(str(c.get('label', c)) if isinstance(c, dict) else str(c) for c in body.get('columns', []))
-    buffer.put(shape.columns.x, shape.columns.y, truncate(label, shape.columns.width), paint('panel_label'))
+    header, listing = shape.listing_for(len(rows))
+    if header:
+        label = '  '.join(str(c.get('label', c)) if isinstance(c, dict) else str(c) for c in body.get('columns', []))
+        buffer.put(shape.columns.x, shape.columns.y, truncate(label, shape.columns.width), paint('panel_label'))
     selected = cursor if type(cursor) is int else next((i for i, row in enumerate(rows) if row.get('id') == cursor), 0)
-    available = shape.listing.height
+    available = listing.height
     first = max(0, min(len(rows) - max(1, available), selected - max(1, available) + 1))
     for index, row in enumerate(rows[first:first + available], first):
-        text = truncate('  '.join(str(cell) for cell in row.get('cells', [])), shape.listing.width)
-        text += ' ' * (shape.listing.width - display_width(text))
-        buffer.put(shape.listing.x, shape.listing.y + index - first, text,
+        text = truncate('  '.join(str(cell) for cell in row.get('cells', [])), listing.width)
+        text += ' ' * (listing.width - display_width(text))
+        buffer.put(listing.x, listing.y + index - first, text,
                    paint('panel_text', reverse=cursor == index or cursor == row.get('id')))
     for index, line in enumerate(fit_text(str(body.get('detail', '')), shape.detail.width, shape.detail.height)):
         buffer.put(shape.detail.x, shape.detail.y + index, line, paint('panel_text'))

@@ -16,12 +16,24 @@ from accept_s10_netbbs import NativeProbe, Connection, wait
 from accept_s16_netbbs import key, commit_key, select
 from karst41.server.npcs.templates import make_actor
 from karst41.server.rules.character import grade_threshold
+from karst41.server.wake import card_rows
 
 
 async def admission(probe: NativeProbe, connection: Connection, faction: str, cancel: bool = False) -> None:
     f = probe.service.core.factions
     await probe.walk(connection, (8, 10))
     await key(connection, b'e')
+    # S48c1a (#241 ruling (b)): until a card is taken, E at the table opens
+    # the cards; the "Ask about joining" row leads to the recruiter menu.
+    game, sid = probe.game, connection.session.id
+    await wait(lambda: sid in f.menus or game.screens.get(sid, ("",))[0] == "cards")
+    if sid not in f.menus:
+        ask = card_rows(game.content, True).index("ask")
+        while game.screens[sid][1] != ask:
+            old = game.screens[sid][1]
+            await key(connection, b'\x1b[B')
+            await wait(lambda: game.screens[sid][1] != old)
+        await key(connection, b'\r')
     await wait(lambda: connection.session.id in f.menus)
     screen = f.menus[connection.session.id]
     await select(connection, lambda: f.body(connection.session, screen)[1]['rows'], screen, faction)

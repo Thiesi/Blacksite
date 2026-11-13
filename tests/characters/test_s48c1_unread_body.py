@@ -248,3 +248,64 @@ def test_an_unread_body_can_be_reported_and_the_report_outlives_it(game: Headles
         assert store.db.execute("SELECT count(*) FROM players WHERE id=?", (pid,)).fetchone()[0] == 0
     finally:
         store.close()
+
+
+def _at_the_table(game: HeadlessServer, client) -> None:
+    place(game, client, HALL, (8, 9))
+    act(game, client, E)
+
+
+def _select(game: HeadlessServer, client, row: str) -> None:
+    from karst41.server.wake import card_rows
+    manager = game.core.characters
+    ids = card_rows(manager.content, not manager.unread(client.session.player_id))
+    for _ in range(ids.index(row)):
+        act(game, client, Frame("intent", {"name": "menu_cursor", "args": {"delta": 1}}))
+    act(game, client, Frame("intent", {"name": "menu_select", "args": {}}))
+
+
+def test_a_finished_character_with_no_card_reaches_the_recruiters_through_the_table(game: HeadlessServer) -> None:
+    # #241 ruling (b): until a card is taken the table opens the cards, and a
+    # character with a template gets one row to the table's recruiter menu.
+    client = game.connect()
+    create(game, client, card="none")
+    manager = game.core.characters
+    _at_the_table(game, client)
+    assert manager.screens[client.session.id][0] == "cards"
+    _select(game, client, "ask")
+    assert client.session.id in game.core.factions.menus
+    assert manager.identity(client.session.user_id)["wake_card"] == ""
+
+
+def test_take_no_card_records_nothing_and_the_card_can_still_be_taken_later(game: HeadlessServer) -> None:
+    client = game.connect()
+    create(game, client, card="none")
+    manager = game.core.characters
+    _at_the_table(game, client)
+    _select(game, client, "none")
+    assert manager.identity(client.session.user_id)["wake_card"] == "" and not manager.card_taken(client.session.user_id)
+    _at_the_table(game, client)
+    assert manager.screens[client.session.id][0] == "cards"  # The table stays open (#220 decision 4).
+    _select(game, client, "unmoored")
+    game.commit_commerce()
+    game.step()
+    assert manager.identity(client.session.user_id)["wake_card"] == "unmoored"
+
+
+def test_an_unread_body_sees_no_recruiter_row(game: HeadlessServer) -> None:
+    client, manager = woken(game)
+    _at_the_table(game, client)
+    from karst41.server.wake import card_rows, cards
+    assert "ask" not in card_rows(manager.content, not manager.unread(client.session.player_id))
+    rows = [r["id"] for r in cards(manager.content, 0, 80, 24, ask=not manager.unread(client.session.player_id))["rows"]]
+    assert "ask" not in rows and rows[-1] == "none"
+
+
+def test_after_a_card_e_at_the_table_opens_the_recruiter_menu(game: HeadlessServer) -> None:
+    client = game.connect()
+    create(game, client, card="unmoored")
+    manager = game.core.characters
+    assert manager.card_taken(client.session.user_id)
+    _at_the_table(game, client)
+    assert manager.screens.get(client.session.id, ("",))[0] != "cards"
+    assert client.session.id in game.core.factions.menus
