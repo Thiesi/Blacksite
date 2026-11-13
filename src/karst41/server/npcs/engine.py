@@ -513,6 +513,7 @@ class Npcs:
         tile = tuple(anchor.spec.params.get("training_tile",anchor.spec.tile)) if anchor else None
         if not anchor or distance(actor.position,tile)>6:
             if drone: self.world.leave(drone)
+            self.combat.disarm(player.id)  # The pistol goes with the drone (S48c1b).
             return
         if drone is None:
             if distance(actor.position,tile)>2: return
@@ -523,6 +524,7 @@ class Npcs:
             self.world.enter(drone,actor.zone,tile)
             self.combat.warnings.pop((player.id,drone.id),None)
             self.combat.log(actor,"Your training drone wakes. Tab targets; F fires; B skips. Its shots cannot kill.",True)
+        self.combat.arm(player)  # In hand while the drone is up (game design 17).
         template = self.content.npcs[drone.behaviour["template"]]
         if tick>=int(drone.behaviour["warned"])+ticks(WARNING_SECONDS) and tick>=drone.cooldowns.get("weapon",0):
             if self.combat.visible(drone,actor) and distance(drone.position,actor.position)<=template.attack.range:

@@ -2,6 +2,25 @@
   "schema": 1,
   "items": [
     {
+      "id": "wpn_hall_training_pistol",
+      "name": "Training pistol",
+      "class": "weapon",
+      "tier": 1,
+      "weight": 1.0,
+      "base_price": 0,
+      "description": "A Kestrel sidearm on a cable by the corridor door. It fires for the lesson and goes back on its hook.",
+      "maker": "Kestrel Issue",
+      "weapon": {
+        "damage": 12,
+        "cooldown": 0.8,
+        "accuracy": 55,
+        "damage_type": "kinetic",
+        "melee": false,
+        "heavy": false,
+        "range": 6
+      }
+    },
+    {
       "id": "wpn_kestrel_sidearm",
       "name": "Kestrel Issue Sidearm",
       "class": "weapon",

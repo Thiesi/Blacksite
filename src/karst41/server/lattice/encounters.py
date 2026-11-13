@@ -230,6 +230,9 @@ class Encounters:
         instance = self.core(presence)
         if not instance:
             return
+        if instance.graph.spec.training:
+            self.lat.leave(session)  # S48c1b: the lesson entered its core directly.
+            return
         if presence.descent:
             if presence.room != instance.graph.entry:
                 known = presence.found_silt.setdefault(instance.id, set())
@@ -774,6 +777,16 @@ class Encounters:
         key, player = self.source(presence, data), self.game.players[presence.player_id]
         if key != procedure.source:
             raise ValueError("The contract or source changed before the lift completed.")
+        if self.game.unread(player.id):
+            if not instance.graph.spec.training:
+                raise ValueError("Read your decant record first.")
+            wake = self.game.wakes.get(self.lat.session(player.id).id) if self.lat.session(player.id) else None
+            if wake is None or wake.lessons.get("lifted"):
+                return  # Idempotent: a second lift writes and logs nothing.
+            self.game.lesson(player, "lifted", {"key": key, "unit": self.lat.sources.unit_id(key, procedure.generation),
+                                               "asset": data.asset or data.id})
+            self.log(presence, "Transfer committed: "+(data.label or data.id)+".")
+            return
         mission = self.mission_of(player.id, data.id) if data.scope == 'mission' else None
         if data.scope == 'mission' and mission is None:
             raise ValueError('That mission is no longer active.')

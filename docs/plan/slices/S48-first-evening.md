@@ -285,3 +285,35 @@ lessons yet (c1b) and no new lines (c2).
 - **Panel:** an unread body sends no grade, so the panel shows name and
   bars only. The terminal UI §2.4 panel (gurney number, empty grade slot,
   lease row) is presentation work for the S48 panel pass.
+
+## Implementation notes (PR #TBD, S48c1b)
+
+The lessons on the provisional body (#220 beats 6-9; game design 17).
+Lines and hints stay c2.
+
+- **The hall training pistol** (`wpn_hall_training_pistol`, Kestrel
+  sidearm numbers, no ammo, no price) is held in `Combat.training_arms`,
+  never in inventory or equipment. It is in hand while the training
+  drone is up and goes when the drone is down or skipped, out of range,
+  out of the hall, or on disconnect. Firing it consumes and settles
+  nothing. Equipment is never touched, so a character's own weapon comes
+  back the moment it goes and no save can hold it (canon #238, clause 2).
+- **Lesson facts** go through `Characters.lesson`: an unread body's into
+  the wake record, applied at creation; a character's into the existing
+  `progress` keys. `lesson_hook` is for c2.
+- **The training terminal enters its own core directly** (#220 item 6);
+  B in that core leaves the Lattice. An unread body that disconnects in
+  the core leaves at once (there is no body to orphan).
+- **Lift for an unread body (technical lead, Q1):** settles nothing when
+  it happens; records `lessons.lifted` and logs 8.6; idempotent (a second
+  lift writes and logs nothing); applied at creation as the identity
+  receipt and `lattice_records`, with no run grant. Coming back after the
+  lift opens the record (beat 9).
+- **Disconnect mid-drone (technical lead, Q3): the lesson stays open.**
+  This replaces the earlier ruling that it counts as skipped. The drone
+  and pistol go before anything is saved; a redial starts the lesson
+  fresh, and the fact written is the win, not a skip.
+- **Replay trigger:** deferred to #239 (technical lead, Q2). Whenever the
+  drone does spawn for a finished character, the pistol and lesson work.
+- **Lift for a character (Q4):** unchanged, identity-scoped.
+- The pistol's item description is a placeholder for the creative lead.

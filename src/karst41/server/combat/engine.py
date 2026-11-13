@@ -51,6 +51,10 @@ class Combat:
         self.relation_provider: Callable[[Actor, Actor], str] | None = None
         self.cover_relation_provider: Callable[[Actor, Actor, bool], str | None] = lambda viewer, target, nearby: None
         self.training_provider: Callable[[Player, Actor, int], None] = lambda player, actor, tick: None
+        # S48c1b (game design 17, canon #238): the hall training pistol, held
+        # for the drone lesson only. Never in inventory or equipment, so the
+        # equipped weapon comes back the moment it goes, and no save holds it.
+        self.training_arms: dict[str, ItemInstance] = {}
         self.allies_provider: Callable[[Actor], list[Actor]] = lambda actor:[actor]  # S22 supplies local crew.
         self.crew_together: Callable[[str, str], bool] = lambda one, other: False
         self.ability_effect: Callable[[Player, HymnTemplate], dict[str, Any]] = lambda player, ability: dict(ability.effect)
@@ -312,7 +316,21 @@ class Combat:
         if zone and zone.template.meta.truce:
             self.hostile_hook(source, target)
 
+    TRAINING_PISTOL = "wpn_hall_training_pistol"
+
+    def arm(self, player: Player) -> None:
+        """Put the training pistol in hand for the drone lesson."""
+        if player.id not in self.training_arms and self.TRAINING_PISTOL in self.content.items:
+            self.training_arms[player.id] = make_item("training:" + player.id, self.content.items[self.TRAINING_PISTOL],
+                                                      player.id, self.clock.now_utc().isoformat())
+
+    def disarm(self, pid: str) -> None:
+        self.training_arms.pop(pid, None)
+
     def weapon(self, player: Player) -> tuple[Any, WeaponBlock] | None:
+        training = self.training_arms.get(player.id)
+        if training is not None:
+            return training, self.content.items[training.template].weapon
         slots = [player.progress.get("weapon_slot",""), "weapon_main", "weapon_side", "melee"]
         for slot in dict.fromkeys(slots):
             item = self.commerce.items.get(player.equipment.get(slot))
@@ -345,9 +363,12 @@ class Combat:
         warned = [self.warn(actor,other,tick) for other in targets]
         if not all(warned): return
         if weapon.melee and actor.stamina < weapon.stamina: self.log(actor,"You need stamina."); return
+        training = item.id.startswith("training:")
         items = deepcopy(self.commerce.items)
         inventory = list(player.inventory)
-        if weapon.ammo:
+        if training:
+            pass  # The training pistol needs no ammunition and no interface.
+        elif weapon.ammo:
             ammo = next((i for i in items.values() if i.id in inventory and i.owner == pid and i.template == weapon.ammo and i.stack>0), None)
             if not ammo: self.log(actor,"Click. No matching ammunition."); return
             ammo.stack -= 1
@@ -374,6 +395,9 @@ class Combat:
                 self.mark(actor,other)
                 for _ in range(weapon.hits): self.shot(actor,other,weapon,damage_multiplier(self.content.items[item.template],item.quality),player.skills.get("melee" if weapon.melee else "energy" if weapon.damage_type == "energy" else "kinetic",0))
             self.remember(player,actor)
+        if training:
+            resolved(True)  # Nothing is consumed, so nothing settles.
+            return
         self.commerce.settle(player,{"inventory":inventory,
             "equipment":{s:i for s,i in player.equipment.items() if i in inventory}},items,self.commerce.caches,self.commerce.serial,resolved)
 
@@ -519,8 +543,10 @@ class Combat:
             if target.behaviour.get("training"):
                 self.world.leave(target)
                 player = self.game.players.get(target.owner)
+                if player:
+                    self.disarm(player.id)
                 if player and source is not None:
-                    player.progress["wake_combat"] = "done"
+                    self.game.lesson(player, "drone", "done")
                     self.log(source,"The training drone falls silent. The tutorial terminal is ahead.")
                     self.remember(player,source)
             elif target.id in self.game.players:
@@ -943,7 +969,7 @@ class Combat:
             if name == "recovery":
                 self.commerce.enqueue_system(lambda:self.recover_at_vat(player.id,str(args.get("target","")))); return True
             if key in ("b","B") and any(a.owner == actor.id and a.behaviour.get("training") for a in self.world.actors.values()):
-                player.progress["wake_combat"] = "skipped"; self.remember(player,actor)
+                self.game.lesson(player, "drone", "skipped"); self.disarm(player.id); self.remember(player,actor)
                 for drone in tuple(self.world.actors.values()):
                     if drone.owner == actor.id and drone.behaviour.get("training"): self.world.leave(drone)
                 return True
