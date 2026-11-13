@@ -211,7 +211,7 @@ not part of this slice and isn't granted by it.
 After the owner, the novice plays it alone, and the technical lead
 re-ranks the plan from both sessions' findings.
 
-## Implementation notes (S48b)
+## Implementation notes (PR #237, S48b)
 
 - **Switched on:** 12 talkers outside the Wake Hall, moved from `s27-cast`
   into the new active bundle `s48-hub-cast`. The rest of `s27-cast` stays
