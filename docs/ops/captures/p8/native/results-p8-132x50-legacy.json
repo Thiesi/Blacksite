@@ -1,0 +1,206 @@
+{
+  "passed": true,
+  "head": "3cf85142493bb7301b51ee3493310d2e6dbcd360",
+  "transport": "NetBBS Telnet -> registered native stdio",
+  "renderer": "legacy",
+  "size": [
+    132,
+    50
+  ],
+  "captures": [
+    {
+      "capture": "p8-bark-132x50-16-legacy",
+      "scenario": "bark",
+      "size": [
+        132,
+        50
+      ],
+      "tier": "16",
+      "renderer": "legacy",
+      "line": "Sodium regular: A tram goes over somewhere above the roofs. The puddles shiver.",
+      "regular": [
+        27,
+        6
+      ],
+      "player": [
+        25,
+        6
+      ],
+      "sha256": {
+        ".ans": "0779da152b3cf72bc267d3ef6ba2df7b982338d26a20d84d55056ebcc1f1a9c5",
+        ".txt": "b04da4a3260c56b7e704c660f40d4f5fc93937ab8b6772a97e3d898351972f16",
+        ".json": "858873c1abed9a01f0d93e39a8aa8a4d5a322913d6b824f58cea5eba7c8e09ef"
+      }
+    },
+    {
+      "capture": "p8-ambience-132x50-16-legacy",
+      "scenario": "ambience",
+      "size": [
+        132,
+        50
+      ],
+      "tier": "16",
+      "renderer": "legacy",
+      "line": "Somebody laughs too loud in a doorway behind you.",
+      "fixture": "other barks held for this step",
+      "sha256": {
+        ".ans": "2bc7bc3ba6a455ae84b6f3d4cde95dc947a6bbb2e08f9fe1f59b54074b494beb",
+        ".txt": "1f5358556179da775d4afde85ae71b04fc5ad09fe288a364a868af98a267f620",
+        ".json": "93bdc335813545b57234c97119a7720961a7df7fdd29af68690eb99bb6ddc2b1"
+      }
+    },
+    {
+      "capture": "p8-combat-quiet-132x50-16-legacy",
+      "scenario": "combat-quiet",
+      "size": [
+        132,
+        50
+      ],
+      "tier": "16",
+      "renderer": "legacy",
+      "combat_line": "You raise your weapon. Fire again after two seconds; the target can move to safety.",
+      "quiet_seconds": 8.0,
+      "forced_due_every_seconds": 0.5,
+      "delivered_in_window": [],
+      "sha256": {
+        ".ans": "03aa53893a488ce808a8bed17d640402863f58b44bec270218e35bdd90fa3234",
+        ".txt": "06a06a22cfad6cd273133ddaf8d250e9db5ce6a6eed3bbd59e75cd5145f6f661",
+        ".json": "c87ecec9760030f6d41e5ac2cc1f3e8942e6e9853a06addfe8725ac2c86e6bb8"
+      }
+    },
+    {
+      "capture": "p8-bark-132x50-256-legacy",
+      "scenario": "bark",
+      "size": [
+        132,
+        50
+      ],
+      "tier": "256",
+      "renderer": "legacy",
+      "line": "Sodium regular: A tram goes over somewhere above the roofs. The puddles shiver.",
+      "regular": [
+        28,
+        6
+      ],
+      "player": [
+        25,
+        6
+      ],
+      "sha256": {
+        ".ans": "b23b11d7a39b4801dbd43b195882967ec3ccc84f4c5108768779ce1ac5e02109",
+        ".txt": "ce64251a0c0ca2f435dabc344775fa7d5b77b04b68db5ce67f0b8a96c0b6b641",
+        ".json": "3629384d606d17784311022374e8427393b8312316eeacbe6767fefebb35feb6"
+      }
+    },
+    {
+      "capture": "p8-ambience-132x50-256-legacy",
+      "scenario": "ambience",
+      "size": [
+        132,
+        50
+      ],
+      "tier": "256",
+      "renderer": "legacy",
+      "line": "A sodium lamp buzzes, dims and steadies.",
+      "fixture": "other barks held for this step",
+      "sha256": {
+        ".ans": "7d17f3b8223e41ad49b0422b662d171ca5feb774a015fe4725506b6551b60f73",
+        ".txt": "a8b004dda129c2cff08bf35b8f710fa3e72a0cb42e29d74bf2f5e00e7e9d9f02",
+        ".json": "8d285afd049f40d663bff634631d2c39692467bcb88001e001f9f8724e6e1023"
+      }
+    },
+    {
+      "capture": "p8-combat-quiet-132x50-256-legacy",
+      "scenario": "combat-quiet",
+      "size": [
+        132,
+        50
+      ],
+      "tier": "256",
+      "renderer": "legacy",
+      "combat_line": "You raise your weapon. Fire again after two seconds; the target can move to safety.",
+      "quiet_seconds": 8.0,
+      "forced_due_every_seconds": 0.5,
+      "delivered_in_window": [],
+      "sha256": {
+        ".ans": "4e0b2bf5618874a3c1af8ad8481bd3bf89300aa35dba375c4db7752d8019a5c9",
+        ".txt": "32c0e29d22ecadb8c76283cf642500a56825b2be138e9d9fda71e9070e3a3386",
+        ".json": "4cbf7ee54456517cdf043181e22e0f20ff7542d22ed765ca26f59239720bf5b3"
+      }
+    },
+    {
+      "capture": "p8-bark-132x50-truecolor-legacy",
+      "scenario": "bark",
+      "size": [
+        132,
+        50
+      ],
+      "tier": "truecolor",
+      "renderer": "legacy",
+      "line": "Sodium regular: A tram goes over somewhere above the roofs. The puddles shiver.",
+      "regular": [
+        27,
+        6
+      ],
+      "player": [
+        25,
+        6
+      ],
+      "sha256": {
+        ".ans": "c92c811c3ee247745be5a620b8220a1e2cc01bba91e4598e757bff6cabeb9b54",
+        ".txt": "5454130fbb34606088cd093d0f6424bf931755cfb05a7c654ad46ca1725cb247",
+        ".json": "99d728c128b4bf196babebd4c3327b54a88983b926cb49921a302f384ea01737"
+      }
+    },
+    {
+      "capture": "p8-ambience-132x50-truecolor-legacy",
+      "scenario": "ambience",
+      "size": [
+        132,
+        50
+      ],
+      "tier": "truecolor",
+      "renderer": "legacy",
+      "line": "A sodium lamp buzzes, dims and steadies.",
+      "fixture": "other barks held for this step",
+      "sha256": {
+        ".ans": "1b29b6d719181254dd1f0e1bd262da11f796bfcd255e93308055af9a8f92bf1f",
+        ".txt": "abc5290aacca50dae21f5fc7f8cdf5b8dd77cc767ae623676005ceccaa9371e9",
+        ".json": "a40a746d149e7f31add5c546f86c68312c6ed045d4d42d6c92230c1eb398c108"
+      }
+    },
+    {
+      "capture": "p8-combat-quiet-132x50-truecolor-legacy",
+      "scenario": "combat-quiet",
+      "size": [
+        132,
+        50
+      ],
+      "tier": "truecolor",
+      "renderer": "legacy",
+      "combat_line": "You raise your weapon. Fire again after two seconds; the target can move to safety.",
+      "quiet_seconds": 8.0,
+      "forced_due_every_seconds": 0.5,
+      "delivered_in_window": [],
+      "sha256": {
+        ".ans": "a866a0be192feb613836822c875e87398711322a86d500aa986e9744cb9fafaa",
+        ".txt": "598775d5133d6eb50f42263f5e83c3f7396f7f68924b91cb98346cf31d385df0",
+        ".json": "f9d4903c1fdbfc6f25ddbd635824dbe3391c9391698a6b26ab978537c94f1612"
+      }
+    }
+  ],
+  "numbers": {
+    "line_budget_seconds": 20,
+    "ambient_seconds": 60,
+    "ambient_jitter_seconds": 30,
+    "danger_hold_seconds": 10
+  },
+  "fixtures": [
+    "one Sodium regular relocated beside the caller and holding still",
+    "its bark made due, and the Row ambience made due once the budget reopened (other barks held during the ambience step)",
+    "keeper guards hold fire (S44 precedent); during the quiet window bark and ambience are forced due every 0.5 s"
+  ],
+  "presentation_acceptance": false,
+  "h1_layout_approval": false,
+  "s25_layout_approval": false
+}
