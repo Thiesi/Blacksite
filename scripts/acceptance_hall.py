@@ -3,8 +3,10 @@
 Shared by the acceptance drivers that launch the door themselves. The
 caller wakes in the hall with an unread body. Optionally they take a card
 at the table, open the decant record with E beside the street door,
-choose a template and a name, and walk back to the arrival tile, so a
-script carries on from the same place as under the old Wake screens.
+choose a template and a name. The body stays beside the street door: the
+training drone's post is in the corridor every route crosses, and it
+despawns this far away, so the state is as before (drone not yet fought,
+no outcome recorded). Each script's walks plan from here.
 """
 
 from __future__ import annotations
@@ -32,8 +34,7 @@ async def walk(service: Any, avatar: Any, write: Callable[[bytes], Awaitable[Non
     deadline = time.monotonic() + timeout
     while avatar.actor.position != target:
         assert time.monotonic() < deadline, ("walk timeout", zone.id, avatar.actor.position, target)
-        start = avatar.actor.position
-        occupied = {a.position for a in zone.actors.values() if a is not avatar.actor
+            occupied = {a.position for a in zone.actors.values() if a is not avatar.actor
                     and not (a.behaviour.get("training") and a.owner != avatar.actor.id)}
         exits = {e.tile for e in zone.template.meta.exits if e.kind == "street"}
         pending, previous = deque([start]), {start: None}
@@ -59,12 +60,11 @@ async def walk(service: Any, avatar: Any, write: Callable[[bytes], Awaitable[Non
 
 
 async def create(service: Any, session: Any, write: Callable[[bytes], Awaitable[None]], *,
-                 archetype: int = 0, name: str = "", card: str | None = None, home: bool = True) -> Any:
+                 archetype: int = 0, name: str = "", card: str | None = None) -> Any:
     """Create a character the S48 way; returns the promoted player."""
     manager = service.core.characters
     avatar = manager.sim.avatars[session.user_id]
     wake = manager.wakes[session.id]
-    start = avatar.actor.position
 
     def settled() -> bool:
         return session.ack_revision == session.view_revision
@@ -92,8 +92,6 @@ async def create(service: Any, session: Any, write: Callable[[bytes], Awaitable[
     await until(lambda: wake.stage == "name" and settled())
     await write(name.encode()+b"\r")
     await until(lambda: session.player_id in manager.players and not manager.unread(session.player_id))
-    if home:
-        await walk(service, avatar, write, start)
     return manager.players[session.player_id]
 
 

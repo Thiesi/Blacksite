@@ -192,11 +192,12 @@ class NativeProbe:
         # S48c1a creation, with ordinary keys: the caller wakes in the hall
         # with an unread body (looking at the card table only to capture it;
         # Esc leaves no card taken), opens the decant record with E at the street door,
-        # chooses a template and a name, and walks back to the arrival tile,
-        # so every script starts from the same place and state as before.
+        # chooses a template and a name. The body stays beside the street door:
+        # the drone's post is in the corridor every route crosses, and it
+        # despawns this far away, so the state is as before (drone not yet
+        # fought, no outcome) and each script's walks plan from here.
         connection.avatar=self.game.sim.avatars[session.user_id]
         wake=self.game.wakes[session.id]
-        home=connection.avatar.actor.position
         settled=lambda:session.ack_revision==session.view_revision
         if capture_cards:
             await self.walk(connection,(8,9))
@@ -218,7 +219,6 @@ class NativeProbe:
         await caller.write(b"\r");await wait(lambda:"Name (Enter keeps default):" in caller.screen.screen_text())
         await caller.write(f"{label}界{width}".encode()+b"\r")
         await wait(lambda:session.player_id in self.game.players and not self.game.unread(session.player_id))
-        await self.walk(connection,home)
         await wait(lambda:"Wake Hall" in caller.screen.screen_text().splitlines()[0] and settled())
         if sixteen: assert session.caps["tier"]=="16",session.caps
         return connection
