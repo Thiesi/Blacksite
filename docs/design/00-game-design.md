@@ -157,7 +157,8 @@ carries across a season change. Set
 `legal_at` once; debt, death, leaving a faction, and season changes
 cannot remove it. PvP protections depend on grade, independently of
 personhood (§7.3). Show elapsed lease days and the Signatory XP target
-separately. NPC day-count lines use actual elapsed days, never a fixed
+separately: the panel carries the lease days, and the record (`P`)
+carries both. NPC day-count lines use actual elapsed days, never a fixed
 day selected only by grade.
 
 Grade 1 starts at 0 XP. For n = 2..30 the cumulative threshold is
