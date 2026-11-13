@@ -1,47 +1,116 @@
 {
-  "sodium-row-idle": {
-    "body_sha256": "ef31684dc3e9d988be1a74445aba586600a1dea767f09e1d263c27c83324bc87",
-    "reason": "#200 Tin Halo sign and arrival text",
-    "pr": 200
+  "core-plaza-idle": {
+    "frame_sha256": "e023b6f7bd3e1c798a81628dd5136bebe3536703fd71d750ff4f260a8859c70a",
+    "body_sha256": "b9e84f091ec7f940ff1628012e11060bd662189d175252d7e20d635e73906ac7",
+    "reason": "#241 S48c1a setup path: bodies match the capture with base/rev normalised; traces, inputs and moves unchanged",
+    "pr": 241
   },
-  "sodium-row-walk": {
-    "body_sha256": "5df0e02882719defe7325a982b4466c53206e33b5ad3299511ee8d2c2f9ce932",
-    "reason": "#200 Tin Halo sign and arrival text",
-    "pr": 200
+  "core-plaza-walk": {
+    "frame_sha256": "97fcf8f7dbfde6530e4d6daef3458a4f75c079c9a85ba0ff08e1aada2ea954ff",
+    "body_sha256": "8c95831863db2870d246ca139f0d531627cce217ac4fc5167d73ad90bfdfef78",
+    "reason": "#241 S48c1a setup path: bodies match the capture with base/rev normalised; traces, inputs and moves unchanged",
+    "pr": 241
   },
   "core-precinct-idle": {
-    "body_sha256": "c37a2ed15cf516baf49b05a87d46eb165783ae02cf25c6e3ee184daa663ef6a2",
-    "reason": "#237 S48b hub cast: new talker posts in view",
-    "pr": 237
+    "body_sha256": "dc6bf28a7df4194a967af80aa6228d73b1e1c8a40ef7307bd83057d008e96c36",
+    "reason": "#237 S48b hub cast: new talker posts in view; #241 S48c1a setup path: bodies match the capture with base/rev normalised; traces, inputs and moves unchanged",
+    "pr": 241
   },
   "core-precinct-walk": {
-    "frame_sha256": "46167e08a469821ad0cb6c4dd4c59bf5583ca3438f0e541d4982985e893f4df4",
-    "body_sha256": "fd6960869e3ab88acb3e48c75931094191d085db5720ceddf09d3de655b4ee71",
-    "reason": "#237 S48b hub cast: new talker posts in view",
-    "pr": 237
+    "frame_sha256": "35d65eb495cca2b044a36734a9bbd164a6e06c0fb04c67b1b660f89dfbd4ea61",
+    "body_sha256": "9b0ab77f40f70bce5bdbbbc7bf4f6b325bf2c2074937d0ee091d799f7e9deb95",
+    "reason": "#237 S48b hub cast: new talker posts in view; #241 S48c1a setup path: bodies match the capture with base/rev normalised; traces, inputs and moves unchanged",
+    "pr": 241
+  },
+  "core-tram-hub-idle": {
+    "body_sha256": "24093d05ad65ba989db03cc27ff6195abac264d2bc38701b158fade17765a372",
+    "reason": "#241 S48c1a setup path: bodies match the capture with base/rev normalised; traces, inputs and moves unchanged",
+    "pr": 241
+  },
+  "core-tram-hub-walk": {
+    "frame_sha256": "75e589f10761ddd7750c02188ea1f04358e3760325f5a1fd64ff3a4bb88af259",
+    "body_sha256": "9536c931d4a0560430bf639dc898d3223550b3b66680c8ba9252b8d4e0c860e1",
+    "reason": "#241 S48c1a setup path: bodies match the capture with base/rev normalised; traces, inputs and moves unchanged",
+    "pr": 241
+  },
+  "sodium-row-idle": {
+    "body_sha256": "a57faf354acf76ab9f3be735bc9068fad475ca1f75ef9204085d6ea86bd95925",
+    "reason": "#200 Tin Halo sign and arrival text; #241 S48c1a setup path: bodies match the capture with base/rev normalised; traces, inputs and moves unchanged",
+    "pr": 241
+  },
+  "sodium-row-walk": {
+    "frame_sha256": "cde88752421c105255152b4a34deda371c785357bb00e7f053d8f0042426541c",
+    "body_sha256": "fe53c4feccdfb6dbff58637b696cdda9f5bc5ade1170a88bdaab08f715012584",
+    "reason": "#200 Tin Halo sign and arrival text; #241 S48c1a setup path: bodies match the capture with base/rev normalised; traces, inputs and moves unchanged",
+    "pr": 241
+  },
+  "sodium-tin-halo-idle": {
+    "body_sha256": "4dd8b6b702dcd02694e85ff1f007de4fc2d029842faa2534128ccd95e57c9af4",
+    "reason": "#241 S48c1a setup path: bodies match the capture with base/rev normalised; traces, inputs and moves unchanged",
+    "pr": 241
+  },
+  "sodium-tin-halo-walk": {
+    "frame_sha256": "c65a68dc91345f4f5a38d67ecbcea241dcb9efc012dbac10c5fab2b4e03c023d",
+    "body_sha256": "27a7e026d6b6aadc3663acdf83ac2e83b3760073b9e004a7fa3e7fda9c54968e",
+    "reason": "#241 S48c1a setup path: bodies match the capture with base/rev normalised; traces, inputs and moves unchanged",
+    "pr": 241
   },
   "terraces-blocks-idle": {
-    "frame_sha256": "cb6f4933b23206f8ab43121b96e74c653b66fda7b537abebf4ab7219cda5bdf9",
-    "body_sha256": "6fe064419ed78ec1ff2ee428465289b3c39bd4d88d7db06fe9c0e0d634fdb038",
-    "reason": "#237 S48b hub cast: new talker posts in view",
-    "pr": 237
+    "frame_sha256": "dc1e850004810f8aa4aa20fecf1813b4c4529f1e88aeb0c3d47ab4e700e4c286",
+    "body_sha256": "8a49580c52488a62225b35ebccee821c12df8ca918aa1289f3a498048983a725",
+    "reason": "#237 S48b hub cast: new talker posts in view; #241 S48c1a setup path: bodies match the capture with base/rev normalised; traces, inputs and moves unchanged",
+    "pr": 241
   },
   "terraces-blocks-walk": {
-    "frame_sha256": "21a751032e8cc5b454e234e6fb4ee32fab19c3dae70ea49c110adee10c49f602",
-    "body_sha256": "02eb8caed0a623cf9563aaae2b275461884821af48487499b509bd811c69b081",
-    "reason": "#237 S48b hub cast: new talker posts in view",
-    "pr": 237
+    "frame_sha256": "33aeeaec8522ea002f348f13ab6c39a9e543b84305cf54f448e8666b9a68358f",
+    "body_sha256": "b1bdef212a7dc3e6f5822ccf746661a960fcc70d7cd6cf383327a45c48a3a7d8",
+    "reason": "#237 S48b hub cast: new talker posts in view; #241 S48c1a setup path: bodies match the capture with base/rev normalised; traces, inputs and moves unchanged",
+    "pr": 241
+  },
+  "terraces-lobby-idle": {
+    "frame_sha256": "94f4a4d48be4f0506d64beee4989d133c7ab84111a63975618e52f28e5bddeac",
+    "body_sha256": "92079f735448cada8e0d4302ad6e60c52c38aa556a2461a80f3961d930f44f10",
+    "reason": "#241 S48c1a setup path: bodies match the capture with base/rev normalised; traces, inputs and moves unchanged",
+    "pr": 241
+  },
+  "terraces-lobby-walk": {
+    "frame_sha256": "6d5e79c7861a7098cf7e026db905c099f8374c41fcf7e32f74d6bf61d710ae73",
+    "body_sha256": "37e6a42522302cebd44ad3daab4fbd1621a5bfde688032ade10595e8e0cfcfe5",
+    "reason": "#241 S48c1a setup path: bodies match the capture with base/rev normalised; traces, inputs and moves unchanged",
+    "pr": 241
   },
   "vatside-clinics-idle": {
-    "frame_sha256": "7f8b1a499fce99f04ac4faefcaf937fe912f6cdb61285524454cae853172f1c9",
-    "body_sha256": "071db7a25ec7c36f37a51bbda4f37587fc0a4c7ae40f760a7b8b518f21e63fc1",
-    "reason": "#237 S48b hub cast: new talker posts in view",
-    "pr": 237
+    "frame_sha256": "a32ee20e9776ac689b58bd8092d994db303da4f474d35a21aa942fcfcdcf9218",
+    "body_sha256": "612f5b4ea9c1e70b4dcae2068bb8e0d8a042895065d7685eeec927dedebe1c35",
+    "reason": "#237 S48b hub cast: new talker posts in view; #241 S48c1a setup path: bodies match the capture with base/rev normalised; traces, inputs and moves unchanged",
+    "pr": 241
   },
   "vatside-clinics-walk": {
-    "frame_sha256": "12a91ecd31e2f908283ff4f9fe7fc9c8f9e1a69b72fd6f93d485306b63b3f2e0",
-    "body_sha256": "77c7e8d42df74f80f35da849c33a992169b7f839d18334ec9cdecac2026f2dba",
-    "reason": "#237 S48b hub cast: new talker posts in view",
-    "pr": 237
+    "frame_sha256": "d96c5c1f6e88d82ca39ad9911a267b88ef3b7856771c1d64fffbd8c2152c5604",
+    "body_sha256": "579ca6d2b9817bc43da143ec99c004c5ffaa24ab39bc87d5bee7b904a6029497",
+    "reason": "#237 S48b hub cast: new talker posts in view; #241 S48c1a setup path: bodies match the capture with base/rev normalised; traces, inputs and moves unchanged",
+    "pr": 241
+  },
+  "vatside-vat-row-idle": {
+    "body_sha256": "e74ec8213e17d6d746ab59c4bd5c2b4e1885a9944f811929661edc4330ca3c19",
+    "reason": "#241 S48c1a setup path: bodies match the capture with base/rev normalised; traces, inputs and moves unchanged",
+    "pr": 241
+  },
+  "vatside-vat-row-walk": {
+    "frame_sha256": "42532952ed422f4845fb997e01971d8145e51cdb2c58b6c8f07b6561b826f161",
+    "body_sha256": "ed49656a1c37377249bc8f01b2c55e658c0f2710c5ee777e6d647d64a1dc25a3",
+    "reason": "#241 S48c1a setup path: bodies match the capture with base/rev normalised; traces, inputs and moves unchanged",
+    "pr": 241
+  },
+  "vatside-wake-hall-idle": {
+    "body_sha256": "3bee0277699aa38432cdc2143b194538cd401c2e60b01e1e4577022f428a8614",
+    "reason": "#241 S48c1a setup path: bodies match the capture with base/rev normalised; traces, inputs and moves unchanged",
+    "pr": 241
+  },
+  "vatside-wake-hall-walk": {
+    "frame_sha256": "9efd0719dfe57964353c9d4b54cd0a8aaf9e8bc5ef30d1b4e9f57a51bbe102df",
+    "body_sha256": "34febcc5d35b7522b665d8e67e6bb1e35dd2b9949c766263abb2366bde391d61",
+    "reason": "#241 S48c1a setup path: bodies match the capture with base/rev normalised; traces, inputs and moves unchanged",
+    "pr": 241
   }
 }

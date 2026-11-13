@@ -297,7 +297,7 @@ re-ranks the plan from both sessions' findings.
 - **Acceptance:** Ranke stands at (34,7), off the S09 walk row. S19 opens
   Vesper's board from her talk page's "Work board" offer, the S42 order.
 
-## Implementation notes (PR #TBD, S48c1a)
+## Implementation notes (PR #241, S48c1a)
 
 The body before the record (#220; game design 4 and 17, canon #238). No
 lessons yet (c1b) and no new lines (c2).
