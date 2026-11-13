@@ -1,0 +1,30 @@
+[
+  {
+    "callers": 1,
+    "seconds": 600,
+    "emitter_mean_us_per_tick": 4.9,
+    "emitter_1hz_tick_mean_us": 39.7,
+    "emitter_1hz_tick_p99_us": 76.7,
+    "emitter_1hz_tick_max_us": 109.1,
+    "loop_tick_mean_ms": 1.156,
+    "emitter_share_of_loop_percent": 0.425,
+    "lines_per_caller": [
+      8
+    ]
+  },
+  {
+    "callers": 3,
+    "seconds": 600,
+    "emitter_mean_us_per_tick": 6.0,
+    "emitter_1hz_tick_mean_us": 48.7,
+    "emitter_1hz_tick_p99_us": 103.0,
+    "emitter_1hz_tick_max_us": 147.2,
+    "loop_tick_mean_ms": 2.785,
+    "emitter_share_of_loop_percent": 0.214,
+    "lines_per_caller": [
+      12,
+      9,
+      11
+    ]
+  }
+]
