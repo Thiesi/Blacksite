@@ -275,8 +275,10 @@ lessons yet (c1b) and no new lines (c2).
   it settles with the same standing by an ordinary save. An identity that
   has taken one gets the table's ordinary recruiter menu, and keeps that
   state after deletion. `identity["wake_card"]` holds it; `""` is "none
-  yet", and a pre-S48 identity with a stored character counts as having
-  had its card. The late taker's narration is c2's.
+  yet". **Ruling (technical lead):** a pre-S48 identity with a stored
+  character counts as having taken its card, because its Wake had the
+  card menu. There is no "already taken" line; the recruiter menu is the
+  table's ordinary answer. The late taker's narration is c2's.
 - **Interim, until c2:** the briefing pages are no longer shown as
   screens. Slice §2 moves Vantongeren's lines into the log while you move,
   which is c2's staging; `wake.briefing` and #216's paging stay for it.
