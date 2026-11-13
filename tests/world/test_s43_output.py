@@ -15,9 +15,22 @@ BASELINE = Path(__file__).resolve().parents[2]/'docs/ops/captures/s43/invalidati
 RAW = BASELINE.read_bytes()
 assert sha256(RAW).hexdigest() == 'd3e5286031f82ea17d8c132ae13a7f21fb89a1566fc1e3df8c0a2136ae32fd12'
 CASES = json.loads(gzip.decompress(RAW))['cases']
-# Content changes after S43 may re-pin a case's body hash only; the original
-# capture stays untouched as evidence, and every other key must still match it.
+# S43's claim is that the off-loop work does not change what the server does.
+# Content changes after S43 (new actors or text in view) may re-pin a case's
+# frame and body hashes, each with a reason; they may never re-pin the actor
+# trace, the inputs or the successful moves. The original capture stays
+# untouched as evidence (technical lead, #237).
 REPINS = json.loads((BASELINE.parent/'content-repins.json').read_text(encoding='utf-8'))
+REPINNABLE = ('frame_sha256', 'body_sha256')
+
+
+def test_content_repins_carry_only_frame_and_body_with_a_reason() -> None:
+    known = {f"{c['zone']}-{c['mode']}" for c in CASES}
+    for case, entry in REPINS.items():
+        assert case in known, case
+        assert entry.get('reason') and isinstance(entry.get('pr'), int), case
+        assert set(entry) - {'reason', 'pr'} <= set(REPINNABLE), (case, sorted(entry))
+        assert set(entry) & set(REPINNABLE), case
 
 
 @pytest.mark.parametrize('before', CASES, ids=[f"{c['zone']}-{c['mode']}" for c in CASES])
@@ -25,5 +38,5 @@ def test_pre_s43_encoded_frames_bodies_and_actor_traces(before: dict[str, Any]) 
     after = execute(before['zone'], before['mode'], before['ticks'], observed=False)
     repin = REPINS.get(f"{before['zone']}-{before['mode']}", {})
     for key in ('frame_sha256', 'body_sha256', 'actor_trace_sha256', 'inputs', 'successful_moves'):
-        expected = repin['body_sha256'] if key == 'body_sha256' and 'body_sha256' in repin else before[key]
+        expected = repin[key] if key in REPINNABLE and key in repin else before[key]
         assert after[key] == expected, (before['zone'], before['mode'], key)

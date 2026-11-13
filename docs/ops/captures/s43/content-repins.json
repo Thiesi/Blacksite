@@ -8,5 +8,40 @@
     "body_sha256": "5df0e02882719defe7325a982b4466c53206e33b5ad3299511ee8d2c2f9ce932",
     "reason": "#200 Tin Halo sign and arrival text",
     "pr": 200
+  },
+  "core-precinct-idle": {
+    "body_sha256": "c37a2ed15cf516baf49b05a87d46eb165783ae02cf25c6e3ee184daa663ef6a2",
+    "reason": "#237 S48b hub cast: new talker posts in view",
+    "pr": 237
+  },
+  "core-precinct-walk": {
+    "frame_sha256": "46167e08a469821ad0cb6c4dd4c59bf5583ca3438f0e541d4982985e893f4df4",
+    "body_sha256": "fd6960869e3ab88acb3e48c75931094191d085db5720ceddf09d3de655b4ee71",
+    "reason": "#237 S48b hub cast: new talker posts in view",
+    "pr": 237
+  },
+  "terraces-blocks-idle": {
+    "frame_sha256": "cb6f4933b23206f8ab43121b96e74c653b66fda7b537abebf4ab7219cda5bdf9",
+    "body_sha256": "6fe064419ed78ec1ff2ee428465289b3c39bd4d88d7db06fe9c0e0d634fdb038",
+    "reason": "#237 S48b hub cast: new talker posts in view",
+    "pr": 237
+  },
+  "terraces-blocks-walk": {
+    "frame_sha256": "21a751032e8cc5b454e234e6fb4ee32fab19c3dae70ea49c110adee10c49f602",
+    "body_sha256": "02eb8caed0a623cf9563aaae2b275461884821af48487499b509bd811c69b081",
+    "reason": "#237 S48b hub cast: new talker posts in view",
+    "pr": 237
+  },
+  "vatside-clinics-idle": {
+    "frame_sha256": "7f8b1a499fce99f04ac4faefcaf937fe912f6cdb61285524454cae853172f1c9",
+    "body_sha256": "071db7a25ec7c36f37a51bbda4f37587fc0a4c7ae40f760a7b8b518f21e63fc1",
+    "reason": "#237 S48b hub cast: new talker posts in view",
+    "pr": 237
+  },
+  "vatside-clinics-walk": {
+    "frame_sha256": "12a91ecd31e2f908283ff4f9fe7fc9c8f9e1a69b72fd6f93d485306b63b3f2e0",
+    "body_sha256": "77c7e8d42df74f80f35da849c33a992169b7f839d18334ec9cdecac2026f2dba",
+    "reason": "#237 S48b hub cast: new talker posts in view",
+    "pr": 237
   }
 }

@@ -256,3 +256,11 @@ re-ranks the plan from both sessions' findings.
   and three fixes to Vesper's record.
 - **P3:** the interaction digest is unchanged from main (10,704 cases,
   same sha256).
+- **S43 output pin:** six scenes (precinct, blocks and clinics, idle and
+  walk) now have the new talker posts in view, so their frame and body
+  hashes are re-pinned in `docs/ops/captures/s43/content-repins.json`. The
+  actor traces, inputs and moves are unchanged. By the technical lead's
+  ruling, content may re-pin frame and body only; the test rejects a
+  re-pin of anything else.
+- **Acceptance:** Ranke stands at (34,7), off the S09 walk row. S19 opens
+  Vesper's board from her talk page's "Work board" offer, the S42 order.
