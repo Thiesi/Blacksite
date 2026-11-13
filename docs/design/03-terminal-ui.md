@@ -381,12 +381,22 @@ TARGET and the pinned vitals.
 7. **Pinned to the bottom**: name (and handle at 132x50 if it differs),
    grade, HP, STA and SHK bars, chits and the lease row. Until a Wake
    enters a name, the name row shows its gurney number (`No. 0431`), and
-   the grade slot stays empty until the decant record is read. The lease
-   row reads `day n/90`, counting from 1 on the day of decant, then
-   `signatory` once the Wake signs (grade 5) or `on the roll` at
-   personhood. With chits at 80x24: `200 ch   day 1/90`. The panel shows
-   no Signatory XP row; that target is on the record (`P`), so lease days
-   and the XP target stay separate (game design 3.4).
+   the grade slot stays empty until the decant record is read. Grade 5
+   and day 90 are independent (game design 3.4), so the day count stays
+   on the lease row until personhood, whatever the grade. The row is the
+   same at both sizes: chits keep a 9-cell field, and the lease part
+   starts at panel column 10 with 12 cells. Precedence is `on the roll`,
+   then `sig`, then plain:
+   - below grade 5, before day 90: `day 12/90`, counting from 1 on the
+     day of decant;
+   - grade 5 or higher, before day 90: `sig 12/90`; the count stays;
+   - at personhood: `on the roll`, and the count goes.
+
+   The widest cases are `9999 ch   sig 89/90` and `9999 ch   on the roll`.
+   The promotion toast introduces "sig", and help's first page names it.
+   The panel shows no Signatory XP row. The target is on the record
+   (`P`), which keeps it separate from the lease days as game design 3.4
+   requires.
 
 Sections are introduced by a dim rule with a label (`─ TARGET ───`); no
 brackets anywhere. Bars are ten cells of `█ ▌ ░` with the digits after;
@@ -725,7 +735,11 @@ legend is built only from drawn cells, under the names HERE and NEARBY
 use, so a hidden exit, a covered NPC's true name, or anything out of
 sight never appears in it. Every entry gives glyph and word, never colour
 alone. The page fits one 80x24 screen, keys come from the caller's
-keymap, and the existing pages follow unchanged. Every menu's action bar
+keymap, and the existing pages follow unchanged. Its legend names the
+lease mark: `sig 12/90  Signatory: you may rent and join`. If the legend
+would not fit, it lists the shapes nearest the caller first and ends
+with a `+n more` line, and the full legend follows on the next page;
+page 1 never scrolls. Every menu's action bar
 is its own help. The first three sessions of a new character show a
 one-line hint on the hint line for the next useful key until the player
 uses it; the hint system is server-driven (`hint` in the view).
