@@ -181,18 +181,22 @@ def test_game_13_4_terminal_talker_uses_its_current_lattice_cell_and_colour_role
     assert player.progress['met_talkers'] == ['ninety-nine']
 
 
-def test_arch_5_5_3_authored_barks_stay_dormant_until_p8(content: ContentTree) -> None:
+def test_arch_5_5_3_authored_barks_come_only_through_the_p8_emitter(content: ContentTree) -> None:
+    """P8 landed (#230): barks come from the one emitter and never draw zone.rng.
+
+    S48b made Vesper an active talker, so her bark now plays.
+    """
     game, caller, player = setup(content)
     zone = game.core.world.zones[player.zone]
     game.frames_for(caller)
     state = zone.rng.getstate()
-    # The dialogue subsystem must not run a competing emitter or consume
-    # simulation randomness while P8 is pending.
     from types import SimpleNamespace
     game.core.dialogue.tick(SimpleNamespace(tick=900, sessions=[caller.session]))
     assert zone.rng.getstate() == state
-    assert not [line for frame in game.frames_for(caller) if frame.type == 'log'
-                for line in frame.data['lines'] if 'The ring stays dark.' in line['text']]
+    barks = [line for frame in game.frames_for(caller) if frame.type == 'log'
+             for line in frame.data['lines'] if 'The ring stays dark.' in line['text']]
+    assert all(line['kind'] == 'speech' and line['speaker'] == 'Vesper' for line in barks)
+    assert not [line for line in caller.session.log_ring if 'The ring stays dark.' in line.get('text', '')]
 
 
 def test_arch_5_5_2_talker_focus_is_pure_and_matches_e(content: ContentTree) -> None:
