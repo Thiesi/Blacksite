@@ -4,7 +4,7 @@ import pytest
 
 from karst41.server.protocol import Frame
 from karst41.server.rules import character as rules
-from tests.character_helpers import act, create, place
+from tests.character_helpers import act, create, place, state
 from tests.harness import HeadlessServer
 
 HALL = "vatside-wake-hall"
@@ -128,3 +128,59 @@ def test_a_card_counts_when_it_is_taken_at_the_table(game: HeadlessServer) -> No
     player = manager.players[client.session.player_id]
     selected = game.core.loop.content.wake_cards[first]
     assert player.standing == {selected.faction or first: rules.CARD_STANDING}
+
+
+def take_first_card_at_table(game: HeadlessServer, client) -> str:
+    manager = game.core.characters
+    place(game, client, HALL, (8, 9))
+    act(game, client, E)
+    assert manager.screens[client.session.id][0] == "cards"
+    act(game, client, Frame("intent", {"name": "menu_select", "args": {}}))
+    return next(iter(game.core.loop.content.wake_cards))
+
+
+def test_a_card_can_be_taken_once_after_the_record_by_an_ordinary_save(game: HeadlessServer) -> None:
+    client = game.connect()
+    create(game, client, name="Noor", card="none")
+    manager = game.core.characters
+    player = manager.players[client.session.player_id]
+    assert not player.standing and not manager.card_taken("1")
+    first = take_first_card_at_table(game, client)
+    effect = next(e for e in game.core.commerce.outbox if e.get("player_id") == player.id)
+    assert effect["identity"]["wake_card"] == first  # Committed with the standing, not before.
+    game.commit_commerce()
+    game.step()
+    selected = game.core.loop.content.wake_cards[first]
+    assert player.standing == {selected.faction or first: rules.CARD_STANDING}
+    assert manager.card_taken("1")
+    # A second card is refused: the table gives its ordinary recruiter answer.
+    act(game, client, ESC)
+    act(game, client, E)
+    assert client.session.id not in manager.screens
+    assert player.standing == {selected.faction or first: rules.CARD_STANDING}
+
+
+def test_a_returning_identity_keeps_its_card_after_deletion(game: HeadlessServer) -> None:
+    client = game.connect()
+    create(game, client, name="Noor", card="unmoored")
+    manager = game.core.characters
+    pid = client.session.player_id
+    act(game, client, Frame("intent", {"name": "delete_character", "args": {}}))
+    act(game, client, Frame("line", {"id": "delete:" + pid, "text": "Noor"}))
+    game.commit_characters()
+    game.step(4)
+    assert manager.unread(client.session.player_id) and manager.card_taken("1")
+    place(game, client, HALL, (8, 9))
+    act(game, client, E)
+    assert client.session.id not in manager.screens  # No card table for this identity again.
+    create(game, client, name="Again", card="kestrel")
+    assert not manager.players[client.session.player_id].standing
+
+
+def test_a_restart_keeps_none_taken_apart_from_a_pre_s48_identity(game: HeadlessServer) -> None:
+    client = game.connect()
+    create(game, client, name="Noor", card="none")
+    snapshot = state(game)
+    assert not HeadlessServer(game.core.loop.content, character_state=snapshot).core.characters.card_taken("1")
+    snapshot["identities"]["1"].pop("wake_card")  # As stored before S48: the card menu was in the Wake.
+    assert HeadlessServer(game.core.loop.content, character_state=snapshot).core.characters.card_taken("1")

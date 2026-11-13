@@ -54,6 +54,14 @@ class Characters:
         # but nothing about them is ever stored (write guards in queue() and
         # Commerce).
         self.unread_ids: set[str] = set()
+        # A recruiter card is taken once per identity (technical lead, S48c1):
+        # identity["wake_card"] holds it. Identities from before S48 had the
+        # card menu in their Wake, so one with a stored character counts as
+        # having had its card.
+        owners = {p.bbs_user_id for p in self.players.values()}
+        for user, identity in self.identities.items():
+            if user in owners and "wake_card" not in identity:
+                identity["wake_card"] = "legacy"
         self.dirty_screens: set[str] = set()
         self.outbox: list[dict[str, Any]] = []
         self.pending: dict[str, tuple[Player, list[dict[str, Any]]]] = {}
@@ -131,6 +139,9 @@ class Characters:
                 "zone": player.zone,
                 "open_objects": frozenset(key for key, obj in self.world.zones[player.zone].objects.items() if obj.open),
                 "items": [self.item_templates.get(iid, iid) for iid in player.inventory]}
+
+    def card_taken(self, user: str) -> bool:
+        return bool(self.identity(user).get("wake_card"))
 
     def identity(self, user: str) -> dict[str, Any]:
         if user not in self.identities:
@@ -226,15 +237,29 @@ class Characters:
     def take_card(self, session: Session, card: str) -> None:
         """A recruiter card counts when it is taken at the table (#220 ruling 4).
 
-        Before the record it is held in the wake record and applied at
-        creation. Whether a finished character may still take one is open.
+        Once per identity, in the Wake Hall. Before the record it is held in
+        the wake record and applied at creation; afterwards it is applied
+        with the same standing, by an ordinary save (technical lead, S48c1).
         """
-        wake = self.wakes.get(session.id)
-        if card == "none" or wake is None or not self.unread(session.player_id):
+        if card == "none" or self.card_taken(session.user_id):
             return
-        wake.card = card
-        self.identities[session.user_id]["wake"] = wake.saved()
-        self.queue("identity", session.user_id)
+        wake = self.wakes.get(session.id)
+        if wake is not None and self.unread(session.player_id):
+            wake.card = card
+            self.identities[session.user_id]["wake"] = wake.saved()
+            self.queue("identity", session.user_id)
+            return
+        player = self.players.get(session.player_id)
+        if player is None:
+            return
+        selected = self.content.wake_cards[card]
+        key = selected.faction or card
+        standing = {**player.standing, key: max(player.standing.get(key, 0), rules.CARD_STANDING)}
+        identity = {**deepcopy(self.identity(session.user_id)), "wake_card": card}
+        commerce = self.combat.commerce
+        if not commerce.settle(player, {"standing": standing}, commerce.items, commerce.caches,
+                               commerce.serial, lambda ok: None, identity):
+            raise ValueError("Let the current transfer settle before taking a card.")
 
     def enter(self, session: Session, player: Player) -> None:
         """Attach, unless the name falls under the reserved gurney form (#221).
@@ -449,6 +474,8 @@ class Characters:
             wake.stage, wake.error = "name", "This BBS identity already has its characters."
             return
         card = wake.card if card is None else card
+        if self.card_taken(session.user_id):
+            card = None  # Once per identity, deletion included (game design 4).
         if not self.name_available(wake.name):
             wake.stage, wake.error = "name", "That name is already in use. Choose another."
             return
@@ -483,6 +510,9 @@ class Characters:
             player.progress["wake_combat"] = wake.lessons["drone"]
         player.rig = {"native": bool(start.rig_slots), "slots": (list(start.programs) + [None] * start.rig_slots)[:start.rig_slots]}
         identity = self.identity(session.user_id)
+        # Saved with the create effect's identity; "" records "none taken yet"
+        # so a restart cannot mistake this identity for a pre-S48 one.
+        identity["wake_card"] = card if card and card != "none" else identity.get("wake_card", "")
         player.clone_debt = identity.get("clone_debt", 0)
         player.update_personhood(identity, self.clock.now_utc())
         self.pending[session.id] = player, items
@@ -504,6 +534,9 @@ class Characters:
             session = self.sessions.active.get(owner)
             if error:
                 wake = self.wakes.get(owner)
+                identity = self.identities.get(player.bbs_user_id, {})
+                if wake and wake.card and identity.get("wake_card") == wake.card:
+                    identity["wake_card"] = ""  # The card was not settled either; it stays held.
                 if wake:  # Back at the name, with the reason; never bodiless, never two bodies.
                     wake.stage, wake.error, wake.dirty = "name", "The record did not settle. Enter tries again.", True
                 if session is not None and not session.closed and session.player_id is None:
@@ -559,8 +592,10 @@ class Characters:
             return None
         avatar = self.sim.avatars.get(session.user_id)
         # The card table, the record door and the outfitter are the Wake Hall's.
-        if avatar is None or avatar.travel or avatar.actor.zone != Player.zone:
-            return None
+        if (avatar is None or avatar.travel or avatar.actor.zone != Player.zone
+                or avatar.actor.stance == "jacked" or session.id in self.sim.external_views
+                or session.pending_prompts):
+            return None  # Jacked in, the Lattice owns E; the hall is physical.
         unread = self.unread(session.player_id)
         zone = self.world.zones[avatar.actor.zone]
         here = avatar.actor.position
@@ -568,7 +603,8 @@ class Characters:
         for obj in zone.objects.values():
             if not near(obj.spec.tile):
                 continue
-            if obj.spec.params.get("recruiters") and unread and self.wakes[session.id].card is None:
+            if (obj.spec.params.get("recruiters") and not self.card_taken(session.user_id)
+                    and (not unread or self.wakes[session.id].card is None)):
                 return Interaction(Focus(obj.spec.id, str(obj.spec.params.get("name", "Recruiter cards")), "look at"),
                                    ("cards", obj.spec.id), obj.spec.tile, kind="wake")
             if unread and obj.spec.params.get("vendor") == "wake-outfitter":

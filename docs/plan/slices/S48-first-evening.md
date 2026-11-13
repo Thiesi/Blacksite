@@ -269,11 +269,14 @@ lessons yet (c1b) and no new lines (c2).
 - **Rulings applied:** a redial while saving waits for that commit; a
   failed commit returns to the name with the reason, keeping one body;
   a Wake saved in a menu resumes in the hall.
-- **Recruiter cards are taken at the table** (E at the cards). A card
-  taken before the record is held in the wake record and applied at
-  creation. Whether a finished character who took none may still take
-  one is open (asked of the technical lead); the table answers E only
-  before the record for now.
+- **Recruiter cards are taken at the table** (E at the cards), once per
+  identity and only in the Wake Hall (technical lead). Before the record
+  the card is held in the wake record and applied at creation; afterwards
+  it settles with the same standing by an ordinary save. An identity that
+  has taken one gets the table's ordinary recruiter menu, and keeps that
+  state after deletion. `identity["wake_card"]` holds it; `""` is "none
+  yet", and a pre-S48 identity with a stored character counts as having
+  had its card. The late taker's narration is c2's.
 - **Interim, until c2:** the briefing pages are no longer shown as
   screens. Slice §2 moves Vantongeren's lines into the log while you move,
   which is c2's staging; `wake.briefing` and #216's paging stay for it.
