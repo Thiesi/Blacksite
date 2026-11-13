@@ -243,6 +243,60 @@ re-ranks the plan from both sessions' findings.
 - **Hint fit and symbol labels** along the path move to S48e, where the
   headless walk of the evening finds them.
 
+## Implementation notes (PR #237, S48b)
+
+- **Switched on:** 12 talkers outside the Wake Hall, moved from `s27-cast`
+  into the new active bundle `s48-hub-cast`. The rest of `s27-cast` stays
+  authoring and unchanged:
+  - Core Precinct: Amsel, Brann (beside her `marshal-office` door marker;
+    the office isn't built) and Lindgren;
+  - Meridian Plaza: Quaye and Ranke;
+  - Central Tram Hub: Achterberg;
+  - Block Street: Ivey and Marsh;
+  - Clinic Row: Vane;
+  - Sodium Row: Solenne;
+  - The Tin Halo: Dolf and Vesper.
+- **Placement.** Each stands on an existing walkable tile beside their
+  counter or desk, on a one-tile `talker` spawner, and answers E from one
+  step away (S42 reach). Lindgren and Vesper are their counters' existing
+  NPCs, now named for them.
+- **Vesper.** Vesper's talk page wins E over her vendor counter. A Marked
+  caller gets the counter's refusal; a hunted caller in the Halo gets the
+  bouncer's line, with no page and no meeting recorded. Each offer
+  re-checks at dispatch.
+- **Dormant until S48c:** the Wake Hall talkers (Okafor, Vantongeren) and
+  the orderlies, because S48c restages the hall and its P3 changes land
+  there once. The four Wake Hall door recruiters (Achebe-Roux, Kettle,
+  Vance, Vael) stay dormant, per the creative lead.
+- **Held back:** Season 1 lines and offers that reference authoring
+  content, and Brann's finale and Curfew bark. The validator rejects active
+  content that references authoring content, and a test pins that. S26
+  restores them when Season 1 content goes active. The source is
+  `src/karst41/content/dialogue/<talker>.json` as of `b96051c`:
+  - Amsel: lines `record-war-s1-4-line`, `record-war-s1-3-book`,
+    `record-war-s1-2-curfew`, `record-war-s1-1-stairwell` and `work`, plus
+    the Work board offer (`war-s1-1-stairwell`).
+  - Brann: lines `record-war-s1-4-line`, `record-war-s1-3-book`,
+    `record-war-s1-2-curfew`, `record-war-s1-1-stairwell` and `finale`, the
+    Work board offer (`war-s1-1-stairwell`), and her bark ("Curfew drills
+    at oh-four-hundred…").
+  - Marsh: line `work` and the Work board offer (`war-s1-1-stairwell`).
+  - Vane: lines `record-sab-s1-4-batch`, `record-sab-s1-3-dreaming`,
+    `record-sab-s1-2-provenance`, `record-sab-s1-1-retrieval` and `work`,
+    plus the Work board offer (`sab-s1-1-retrieval`).
+- **New lines:** the creative lead's fillers for Vane, Ranke and Solenne,
+  and three fixes to Vesper's record.
+- **P3:** the interaction digest is unchanged from main (10,704 cases,
+  same sha256).
+- **S43 output pin:** six scenes (precinct, blocks and clinics, idle and
+  walk) now have the new talker posts in view, so their frame and body
+  hashes are re-pinned in `docs/ops/captures/s43/content-repins.json`. The
+  actor traces, inputs and moves are unchanged. By the technical lead's
+  ruling, content may re-pin frame and body only; the test rejects a
+  re-pin of anything else.
+- **Acceptance:** Ranke stands at (34,7), off the S09 walk row. S19 opens
+  Vesper's board from her talk page's "Work board" offer, the S42 order.
+
 ## Implementation notes (PR #TBD, S48c1a)
 
 The body before the record (#220; game design 4 and 17, canon #238). No

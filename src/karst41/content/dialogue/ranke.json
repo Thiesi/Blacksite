@@ -8,10 +8,35 @@
   "machine_mind": false,
   "lines": [
     {
+      "id": "marked",
+      "text": "Red, and on my terminal. Be quick, and be somewhere else next time.",
+      "when": [
+        "marked"
+      ],
+      "required": true
+    },
+    {
       "id": "first",
       "text": "Public sector's public. Everything past the gate cells isn't. Watch your trace. I mean it.",
       "when": [
         "first_meeting"
+      ],
+      "required": true
+    },
+    {
+      "id": "operator",
+      "text": "Operator. You'll want to be clever early. Don't. Not yet.",
+      "when": [
+        "archetype operator"
+      ],
+      "required": true
+    },
+    {
+      "id": "wake",
+      "text": "New. Learn on the public cells. It's cheaper to be stupid there.",
+      "when": [
+        "is_wake",
+        "not_signatory"
       ],
       "required": true
     },

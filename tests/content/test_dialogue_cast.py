@@ -19,6 +19,13 @@ MINOR = {'amsel', 'lindgren', 'ranke', 'maartens', 'stroud', 'okafor', 'vane',
          'ode', 'strand', 'loos', 'ivey', 'marsh', 'dolf', 'solenne',
          'lamplighter', 'sefa', 'wren', 'bram', 'ute', 'kroll', 'aalto'}
 RECRUITERS = {'vael', 'achterberg', 'quaye', 'iloh', 'vance', 'achebe-roux', 'kettle'}
+# S48b: the hub cast outside the Wake Hall, active in s48-hub-cast.
+HUB = {'achterberg', 'amsel', 'brann', 'dolf', 'ivey', 'lindgren', 'marsh', 'quaye', 'ranke',
+       'solenne', 'vane', 'vesper'}
+# S48b held these back (Season 1 evidence, Brann's Curfew and finale); they
+# return with their chains.
+HELD = {('brann', 'season_stage finale_done')}
+HELD_RECORDS = {'s19-war-s1-1-stairwell', 's19-war-s1-2-curfew', 's19-war-s1-3-book', 's19-war-s1-4-line'}
 
 
 @pytest.fixture(scope='module')
@@ -30,14 +37,18 @@ def test_game_13_4_complete_cast_loads_without_activating_placement(cast: Conten
     held_cast = FIXED | MINOR | RECRUITERS | {'machine-mind-encounter'}
     assert set(cast.dialogue) == held_cast | {'row-street-regular', 'row-enforcer'}
     assert validate(cast) == []
-    assert set(cast.bundles['s27-cast'].members['dialogue']) == held_cast
-    assert all(not cast.active('dialogue', did) for did in held_cast)
+    assert set(cast.bundles['s27-cast'].members['dialogue']) == held_cast - HUB
+    assert set(cast.bundles['s48-hub-cast'].members['dialogue']) == HUB
+    assert all(not cast.active('dialogue', did) for did in held_cast - HUB)
+    assert all(cast.active('dialogue', did) for did in HUB)
     assert cast.active('dialogue', 'row-street-regular')  # #147's explicit street binding.
     assert cast.active('dialogue', 'row-enforcer')  # S44: the Sable enforcers' set.
     assert not any(obj.params.get('dialogue') for zone in cast.zones.values() for obj in zone.meta.objects)
-    assert not any(npc.dialogue in held_cast for npc in cast.npcs.values())
+    assert not any(npc.dialogue in held_cast - HUB for npc in cast.npcs.values())
     assert {npc.id for npc in cast.npcs.values() if npc.dialogue} == {
-        'npc-sodium-regular', 'npc-plainclothes-warden', 'npc-sable-enforcer'}
+        'npc-sodium-regular', 'npc-plainclothes-warden', 'npc-sable-enforcer',
+        'npc-vendor-sodium-tin-halo-vesper', 'npc-vendor-core-precinct-warden-quartermaster',
+        *(f'npc-cast-{did}' for did in HUB - {'vesper', 'lindgren'})}
     assert not any(cell.dialogue for sector in cast.sectors.values() for cell in sector.cells)
 
 
@@ -45,6 +56,8 @@ def test_game_13_4_complete_cast_loads_without_activating_placement(cast: Conten
 def test_game_13_4_every_fixed_talker_has_required_situations(cast: ContentTree, slug: str) -> None:
     talker = cast.dialogue[slug]
     for condition in ('first_meeting', 'marked', 'is_wake', 'enemy_of_me', 'season_stage finale_done'):
+        if (slug, condition) in HELD:
+            continue
         assert any(condition in line.when and line.required for line in talker.lines), (slug, condition)
     assert not talker.lines[-1].when
     # No hard-coded lease day or predicted event becomes an idle fact.
@@ -60,7 +73,8 @@ def test_game_13_4_late_arrival_keeps_personal_dialogue_ahead_of_global_finale(
     returning = Facts(met=frozenset({slug}), season_stage='finale_done')
     assert evaluate(talker, returning, Random(0)).id == 'wake'
     discharged = Facts(legal=True, met=frozenset({slug}), season_stage='finale_done')
-    assert evaluate(talker, discharged, Random(0)).id == 'finale'
+    expected = 'greeting' if (slug, 'season_stage finale_done') in HELD else 'finale'
+    assert evaluate(talker, discharged, Random(0)).id == expected
 
 
 @pytest.mark.parametrize('legal', [False, True])
@@ -68,7 +82,9 @@ def test_game_9_1_vesper_acknowledges_the_paid_first_job_before_generic_status(
         cast: ContentTree, legal: bool) -> None:
     facts = Facts(legal=legal, met=frozenset({'vesper'}),
                   completed=frozenset({'vesper-first-thing'}), season_stage='finale_done')
-    assert evaluate(cast.dialogue['vesper'], facts, Random(0)).id == 'first-done'
+    # S48b (creative lead): first-done covers the novice stretch, then gives way.
+    expected = 'finale' if legal else 'first-done'
+    assert evaluate(cast.dialogue['vesper'], facts, Random(0)).id == expected
 
 
 def test_game_13_4_authored_references_resolve_even_while_bundle_is_dormant(cast: ContentTree) -> None:
@@ -106,7 +122,7 @@ def test_game_13_4_source_reactions_require_each_viewers_actual_record(cast: Con
                 assert evaluate(talker, facts, Random(0)) is line
             # A second caller's empty journal cannot see this historical line.
             assert not evaluate(talker, Facts(legal=True, met=frozenset({talker.id})), Random(0)).id.startswith('record-')
-    assert covered == records
+    assert covered == records - HELD_RECORDS
 
 
 def test_game_13_4_terminal_and_encounter_records_keep_distinct_delivery(cast: ContentTree) -> None:
