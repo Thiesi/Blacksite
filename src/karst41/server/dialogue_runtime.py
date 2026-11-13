@@ -71,7 +71,7 @@ class Dialogue:
                    for screen in self.menus.values())
 
     def playing(self, session: Session) -> bool:
-        return (session.player_id in self.game.players and session.id not in self.game.wakes
+        return (session.player_id in self.game.players and not self.game.menu_open(session)
                 and session.id not in self.game.screens)
 
     def threatened(self, session: Session, actor: Any) -> bool:

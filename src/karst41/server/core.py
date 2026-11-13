@@ -218,7 +218,9 @@ class Core:
 
     def input_routes(self) -> list[InputRoute]:
         """The existing priority, shared by focus and all input dispatch."""
-        routes = [InputRoute(name, owner.input, owner.interaction) for name, owner in (
+        # S48c1: the Wake's record, name and card table come first, over the hall.
+        wake = [InputRoute('wake', self.characters.wake_input, self.characters.wake_interaction)] if self.characters else []
+        routes = wake + [InputRoute(name, owner.input, owner.interaction) for name, owner in (
             ('events', self.events), ('market', self.market), ('contracts', self.contracts),
             ('factions', self.factions), ('crews', self.crews), ('relays', self.relays),
             ('apartments', self.apartments), ('progression', self.progression),

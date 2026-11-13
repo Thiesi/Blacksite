@@ -3,6 +3,7 @@
 Game design 4, 5.3, 5.4 and 7.3. No I/O or wall-clock reads occur here.
 """
 
+from karst41.server.starts import start_for
 from karst41.server.interaction import Focus, Interaction, interact, key_action, object_interaction
 from collections import deque
 from copy import deepcopy
@@ -673,7 +674,7 @@ class Combat:
                     usable = True
         if not usable or not body_gear or player.recovery_kit_id:
             draft.recovery_kit_id = player.recovery_kit_id or player.id+":loan"
-            for tid,quantity in self.content.starts[player.archetype].recovery_items.items():
+            for tid,quantity in start_for(self.content, player.archetype).recovery_items.items():
                 missing = quantity-sum(items[i].stack for i in draft.inventory if items[i].template == tid)
                 while missing > 0:
                     count = min(missing,self.content.items[tid].stack_max)

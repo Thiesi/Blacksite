@@ -23,7 +23,7 @@ from tests.character_helpers import create
 from tests.harness import HeadlessServer
 
 
-ORDER = ('events', 'market', 'contracts', 'factions', 'crews', 'relays',
+ORDER = ('wake', 'events', 'market', 'contracts', 'factions', 'crews', 'relays',
          'apartments', 'progression', 'lattice', 'interlock', 'combat',
          'fabrication', 'commerce', 'npcs', 'chat', 'terminal', 'characters')
 
@@ -122,11 +122,11 @@ def run_matrix(root: Path, *, verify: bool = True,
     # Observe the actual return values, independently of Core's resolver.
     observed: list[str] = []
     owners = {name: getattr(core, name) for name in ORDER
-              if name not in ('interlock', 'terminal', 'characters')}
-    owners.update(interlock=lat.interlock, terminal=lat, characters=core.characters)
+              if name not in ('wake', 'interlock', 'terminal', 'characters')}
+    owners.update(wake=core.characters, interlock=lat.interlock, terminal=lat, characters=core.characters)
     for name in ORDER:
         owner = owners[name]
-        attr = 'terminal_input' if name == 'terminal' else 'input'
+        attr = {'terminal': 'terminal_input', 'wake': 'wake_input'}.get(name, 'input')
         original = getattr(owner, attr)
         def record(*args: Any, _fn: Any = original, _name: str = name, **kwargs: Any) -> Any:
             result = _fn(*args, **kwargs)

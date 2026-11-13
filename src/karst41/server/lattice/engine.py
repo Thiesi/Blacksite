@@ -4,6 +4,7 @@ The body remains in its physical zone. Only its owner's subscription and
 view change; the street continues to simulate and can still hurt it.
 """
 
+from karst41.server.starts import start_for
 from karst41.server.interaction import Focus, Interaction, interact, key_action, object_interaction
 from karst41.server.views import presentation
 from collections.abc import Callable
@@ -190,7 +191,7 @@ class Lattice:
             return
         presence.integrity_max = self.integrity_limit(player)
         presence.integrity = min(presence.integrity, presence.integrity_max)
-        slots = max(self.content.starts[player.archetype].rig_slots or 0, self.carried_slots(player))
+        slots = max(start_for(self.content, player.archetype).rig_slots or 0, self.carried_slots(player))
         if not slots:
             if not presence.loaned_rig:
                 self.encounters.force_out(presence)
@@ -251,7 +252,7 @@ class Lattice:
         if target is not None and terminal is None:
             self.log(session, "Move next to that terminal.", True)
             return
-        slots = max(self.content.starts[player.archetype].rig_slots or 0,
+        slots = max(start_for(self.content, player.archetype).rig_slots or 0,
                     self.carried_slots(player))
         if not terminal and not slots:
             self.log(session, "Move next to a public terminal, or carry a rig.", True)
@@ -267,7 +268,7 @@ class Lattice:
             slots = PUBLIC_LOAN_SLOTS
         configured = player.rig.get("slots", [])
         if not configured:
-            configured = list(self.content.starts[player.archetype].programs)
+            configured = list(start_for(self.content, player.archetype).programs)
         rig = self.fit_rig(configured, slots)
         cell = str(terminal.spec.params.get("cell", self.sectors.entrance(sector))) if terminal else self.sectors.entrance(sector)
         entry = self.sectors.cells[sector].get(cell)
@@ -412,7 +413,7 @@ class Lattice:
         terminal = self.terminal(actor, target)
         if target is not None and terminal is None:
             return Interaction()
-        slots = max(self.content.starts[player.archetype].rig_slots or 0, self.carried_slots(player))
+        slots = max(start_for(self.content, player.archetype).rig_slots or 0, self.carried_slots(player))
         if not terminal and not slots:
             return Interaction()
         zone = self.game.world.zones[actor.zone]
@@ -439,7 +440,7 @@ class Lattice:
         presence = self.presences.get(session.player_id)
         # input's modifier sync forces out a non-loaned presence after rig loss.
         if presence and player and not presence.loaned_rig and not max(
-                self.content.starts[player.archetype].rig_slots or 0, self.carried_slots(player)):
+                start_for(self.content, player.archetype).rig_slots or 0, self.carried_slots(player)):
             presence = None
         if presence and presence.jack_source and (presence.link_failed or self.mobile_link_status(presence) != 'ready'):
             return Interaction()

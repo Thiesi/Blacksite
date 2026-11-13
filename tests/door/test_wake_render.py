@@ -10,7 +10,7 @@ from karst41.server.protocol import Frame
 from tests.fake_terminal import FakeTerminal
 from tests.harness import HeadlessServer
 from tests.character_helpers import create
-from karst41.server.wake import Wake
+from karst41.server.wake import cards
 
 
 @pytest.mark.parametrize("width,height",[(80,24),(132,50)])
@@ -21,9 +21,11 @@ def test_wake_golden_wide_name_scroll_and_character_sheet(info: DoorInfo,repo_ro
     model=Display(replace(info,width=width,height=height,color_depth=tier))
     terminal=FakeTerminal(width,height)
     game.step()
+    assert game.core.characters.open_record(client.session,"door")  # S48c1: E at the street door.
+    game.step()
     for frame in game.frames_for(client):model.receive(frame,0)
     terminal.write(model.render(0)[0])
-    golden(f'wake_archetype_{width}x{height}', terminal, tier, trim=True)
+    golden(f'wake_record_{width}x{height}', terminal, tier, trim=True)
     assert model.key("down",1)[0].data["name"]=="menu_cursor"
     create(game,client)
     for frame in game.frames_for(client):model.receive(frame,2)
@@ -48,8 +50,7 @@ def test_wake_golden_wide_name_scroll_and_character_sheet(info: DoorInfo,repo_ro
 def test_issue_67_all_recruiters_visible_with_no_card_selected(
         info: DoorInfo, repo_root: Path, width: int, height: int, tier: str) -> None:
     content = load_content(repo_root/'src/karst41/content')
-    wake = Wake(stage='card', cursor=len(content.wake_cards))
-    body = wake.body(content, 'Wide界', width, height)['body']
+    body = cards(content, len(content.wake_cards), width, height)  # The table in the hall (S48c1).
     model = Display(replace(info, width=width, height=height, color_depth=tier))
     model.receive(Frame('welcome', {'palette': asdict(content.palette),
         'keymap': asdict(content.keymaps)}), 0)

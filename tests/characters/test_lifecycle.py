@@ -7,18 +7,25 @@ from karst41.server.players import pack_memory,unpack_memory
 from karst41.server.protocol import Frame
 from karst41.server.storage.db import Storage
 from tests.harness import HeadlessServer
-from tests.character_helpers import act,create,place,state
+from tests.character_helpers import act,create,place,read_record,state
 import pytest
 
 
 def test_create_is_committed_before_rewards_or_body_and_retry_is_single(game: HeadlessServer) -> None:
     client=game.connect()
     create(game,client,commit=False)
-    assert client.session.player_id is None and not game.core.world.actors
+    manager=game.core.characters
+    # S48c1: the unread body is in the hall, but nothing about it is stored.
+    assert manager.unread(client.session.player_id)
+    assert not [e for e in manager.outbox if e["action"] in ("save","delete")]
     game.commit_characters(error=True)
-    assert not game.core.characters.players
-    assert game.core.characters.wakes[client.session.id].stage == "card"
-    act(game,client,Frame("intent",{"name":"menu_select","args":{}}))
+    game.step()
+    # A failed record returns to the name, with the reason: one body, never none or two.
+    wake=manager.wakes[client.session.id]
+    assert (wake.stage,wake.error)==("name","The record did not settle. Enter tries again.")
+    assert list(manager.players)==[client.session.player_id] and manager.unread(client.session.player_id)
+    assert sum(a.kind=="player" for a in game.core.world.actors.values())==1
+    act(game,client,Frame("line",{"id":wake.prompt_id,"text":""}))
     effects=game.commit_characters()
     game.step()
     player=game.core.characters.players[client.session.player_id]
@@ -91,7 +98,7 @@ def test_contested_offline_restart_reconciles_real_elapsed_time(game: HeadlessSe
 def test_name_uniqueness_and_default_one_character(game: HeadlessServer) -> None:
     a=game.connect();create(game,a,name="Straße")
     b=game.connect({"user_id":2,"handle":"STRASSE"})
-    game.step()
+    read_record(game,b)
     act(game,b,Frame("intent",{"name":"menu_select","args":{}}))
     wake=game.core.characters.wakes[b.session.id]
     act(game,b,Frame("line",{"id":wake.prompt_id,"text":""}))
@@ -115,7 +122,8 @@ def test_delete_requires_name_and_identity_clock_receipts_debt_survive(game: Hea
         if typed=="wrong":
             assert pid in manager.players and not manager.deleting
     effects=game.commit_characters()
-    assert pid not in manager.players and not any(a.kind == "player" for a in game.core.world.actors.values())
+    # The caller wakes again in the hall, with a new unread body (S48c1).
+    assert pid not in manager.players and set(manager.players)==manager.unread_ids=={a.session.player_id}
     assert not any(e["action"]=="save" and e["player"]["id"]==pid for e in effects[1:])
     game.step(20)
     create(game,a,name="New Wake",card="none")
@@ -180,22 +188,26 @@ def test_all_starter_abilities_gear_and_no_card(game: HeadlessServer,archetype: 
         assert any(item["template"]=="drn_kestrel_mule" for item in items)
 
 
-def test_briefing_resume_full_flow_and_frame_budget(game: HeadlessServer) -> None:
-    a=game.connect();game.step()
+def test_wake_saved_in_a_menu_resumes_in_the_hall_with_its_number(game: HeadlessServer) -> None:
+    manager=game.core.characters
+    a=game.connect();read_record(game,a)
     act(game,a,Frame("intent",{"name":"menu_select","args":{}}))
-    wake=game.core.characters.wakes[a.session.id]
-    act(game,a,Frame("line",{"id":wake.prompt_id,"text":""}))
+    wake=manager.wakes[a.session.id]
+    serial,body=wake.serial,a.session.player_id
+    assert wake.stage=="name" and manager.players[body].name==f"No. {serial:04d}"
     game.core.sessions.disconnect(a.session)
+    assert not manager.players and not manager.unread_ids  # Nothing of the body stays.
     back=game.connect();game.step()
-    wake=game.core.characters.wakes[back.session.id]
-    assert wake.stage=="briefing" and wake.name=="Wide界"
-    count=3
-    while wake.stage=="briefing":
-        act(game,back,Frame("key",{"k":" ","t":0}));count+=1
-    assert count<20 and wake.stage=="card"
-    act(game,back,Frame("intent",{"name":"menu_close","args":{}}))
+    wake=manager.wakes[back.session.id]
+    # The record only opens on a key the caller presses (S48c1).
+    assert wake.stage=="hall" and wake.serial==serial and back.session.player_id==body
+    assert wake.archetype=="hardline" and back.session.id not in manager.screens
+    read_record(game,back)
+    act(game,back,Frame("intent",{"name":"menu_select","args":{}}))
+    act(game,back,Frame("line",{"id":wake.prompt_id,"text":""}))
     game.commit_characters();game.step()
-    assert back.session.player_id and not game.core.characters.players[back.session.player_id].standing
+    player=manager.players[back.session.player_id]
+    assert player.id==body and not manager.unread(body) and player.name=="Wide界" and not player.standing
 
 
 def test_raised_cap_offers_selection_without_changing_identity(game: HeadlessServer) -> None:

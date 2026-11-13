@@ -242,3 +242,41 @@ re-ranks the plan from both sessions' findings.
   frame's width. The old renderer draws the lines as sent.
 - **Hint fit and symbol labels** along the path move to S48e, where the
   headless walk of the evening finds them.
+
+## Implementation notes (PR #TBD, S48c1a)
+
+The body before the record (#220; game design 4 and 17, canon #238). No
+lessons yet (c1b) and no new lines (c2).
+
+- **You wake in the hall.** A caller with no character gets an unread
+  body at once: gurney name `No. nnnn`, no template, 4 in every attribute
+  (HP and STA follow from `rules.character`), no chits. The gurney serial
+  is taken on waking and kept in the identity's wake record, so a redial
+  is the same number and the same player id.
+- **Nothing about an unread body is stored.** It lives in `players` so
+  every engine finds it, but `Characters.queue` never saves or deletes it
+  (write guard 1), and Commerce refuses it in `ready`, `propose`,
+  `settle` and `can_commit` (write guard 2). Disconnecting drops the body;
+  only the wake record (serial, tile, card, lessons, meetings) is kept.
+- **The record opens on a key the caller presses** (beat 7): E at the
+  street door or at the outfitter. The training terminal stays J-only.
+  Any route to the street refuses an unread body and opens the record.
+  Esc closes the record and the hall goes on.
+- **Reading the record promotes the body in place:** same player id,
+  actor and tile; HP and STA set to the template's maximums (canon #238).
+  The creation commit runs first, as before; until it lands the caller
+  sees "saving".
+- **Rulings applied:** a redial while saving waits for that commit; a
+  failed commit returns to the name with the reason, keeping one body;
+  a Wake saved in a menu resumes in the hall.
+- **Recruiter cards are taken at the table** (E at the cards). A card
+  taken before the record is held in the wake record and applied at
+  creation. Whether a finished character who took none may still take
+  one is open (asked of the technical lead); the table answers E only
+  before the record for now.
+- **Interim, until c2:** the briefing pages are no longer shown as
+  screens. Slice §2 moves Vantongeren's lines into the log while you move,
+  which is c2's staging; `wake.briefing` and #216's paging stay for it.
+- **Panel:** an unread body sends no grade, so the panel shows name and
+  bars only. The terminal UI §2.4 panel (gurney number, empty grade slot,
+  lease row) is presentation work for the S48 panel pass.
