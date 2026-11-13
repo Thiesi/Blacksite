@@ -13,6 +13,38 @@ def wrapped(text: str, width: int) -> list[str]:
     return [line for paragraph in text.split("\n\n") for line in [*textwrap.wrap(paragraph.replace("\n", " "), max(12, width)), ""]]
 
 
+def pages(lines: list[str], count: int) -> list[list[str]]:
+    """Pages of at most `count` rows, filled by whole paragraphs (#216).
+
+    A paragraph moves to the next page rather than break mid-sentence,
+    unless it alone is longer than a page. No page starts with, ends with
+    or is only blank lines.
+    """
+    paragraphs: list[list[str]] = [[]]
+    for line in lines:
+        if line.strip():
+            paragraphs[-1].append(line)
+        elif paragraphs[-1]:
+            paragraphs.append([])
+    result: list[list[str]] = [[]]
+    for paragraph in (p for p in paragraphs if p):
+        need = len(paragraph) + (1 if result[-1] else 0)
+        if result[-1] and len(result[-1]) + need > count:
+            result.append([])
+        if result[-1]:
+            result[-1].append("")
+        for line in paragraph:
+            if len(result[-1]) == count:
+                result.append([])
+            result[-1].append(line)
+    return result
+
+
+def briefing(content: ContentTree, screen: int, width: int, height: int) -> list[list[str]]:
+    layout = screen_layout(width, height)
+    return pages(wrapped(content.text[f"wake-briefing-{screen}"].body, layout.briefing.width), layout.briefing.rows)
+
+
 def menu(title: str, rows: list[dict[str, Any]], cursor: int, detail: str, hint: str = "Enter selects") -> dict[str, Any]:
     return {"title": title, "kind": "select", "columns": ["Choice"], "rows": rows,
             "cursor": cursor, "actions": [{"key": "enter", "label": "select"}],
@@ -62,16 +94,16 @@ class Wake:
                          "Enter keeps: " + default_name(handle), self.error]
                 title, hint = "THE WAKE - Choose your name", "Enter keeps default  Esc returns"
             elif self.stage == "briefing":
-                all_lines = wrapped(content.text[f"wake-briefing-{self.screen}"].body, layout.briefing.width)
-                count = layout.briefing.rows
-                pages = max(1, (len(all_lines) + count - 1) // count)
-                self.page = min(self.page, pages - 1)
-                lines = all_lines[self.page * count:(self.page + 1) * count]
-                title = f"VANTONGEREN - Briefing {self.screen}/3 ({self.page + 1}/{pages})"
+                book = briefing(content, self.screen, width, height)
+                self.page = min(self.page, len(book) - 1)
+                lines = book[self.page]
+                title = f"VANTONGEREN - Briefing {self.screen}/3 ({self.page + 1}/{len(book)})"
                 hint = "Any key continues  S skips to cards  Esc/B leaves"
             else:
                 title, lines, hint = "THE WAKE", ["You wait for the record to settle."], "Saving your place."
             body = {"title": title, "lines": lines, "page": 1, "pages": 1, "hint": hint, "clear_prompt": self.stage != "name"}
+            if self.stage == "briefing":
+                body["flow"] = True  # Prose: a renderer may re-wrap each paragraph to its own width.
         if self.error and self.stage != "name":
             body["hint"] = self.error
         return {"kind": kind, "body": body, "stage": self.stage, "hint": body["hint"]}
@@ -80,11 +112,8 @@ class Wake:
         if key.lower() == "s":
             self.stage, self.cursor = "card", len(content.wake_cards)
             return
-        layout = screen_layout(width, height)
-        all_lines = wrapped(content.text[f"wake-briefing-{self.screen}"].body, layout.briefing.width)
-        count = layout.briefing.rows
         self.page += 1
-        if self.page * count >= len(all_lines):
+        if self.page >= len(briefing(content, self.screen, width, height)):
             self.screen, self.page = self.screen + 1, 0
             if self.screen > 3:
                 self.stage, self.cursor = "card", len(content.wake_cards)

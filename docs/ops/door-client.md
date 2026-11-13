@@ -25,6 +25,22 @@ standalone development; profiles use `DOOR_KARST41_INSTALL_DIR` and
 `DOOR_KARST41_SESSION_LIMIT`. The effective limit in the drop-file can
 reduce either configured limit.
 
+## Renderer (S48, step one of two)
+
+The door starts in the new presentation (`door/present/`) for every
+caller. `DOOR_KARST41_PRESENTATION` in the door's launch environment is
+a fallback for this step only:
+
+| Value | Renderer |
+|---|---|
+| unset, `1`, or any other value | the new presentation (the default) |
+| `0`, `false`, `off` or `no`, in any case | the old renderer |
+
+It is read once per launch. Nothing about it is written to the caller's
+terminal, and there is no input key or protocol field. An operator who
+hits a screen the new presentation doesn't cover can set it to `0` and
+relaunch. Step two removes the old renderer and this setting.
+
 On a Windows development console, use `--local` to select console key
 input. A NetBBS stdio door omits that flag and reads its binary pipe.
 The entry point restores a missing Windows `SystemRoot` from the OS

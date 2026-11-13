@@ -5,6 +5,7 @@ import os
 import signal
 import time
 import uuid
+from collections.abc import Mapping
 
 from karst41.door import doorinfo
 from karst41.environment import setting
@@ -43,9 +44,23 @@ async def read_input(terminal: Terminal, decoder: KeyDecoder) -> bytes | None:
             await asyncio.gather(reading, return_exceptions=True)
 
 
+OLD_RENDERER = frozenset({'0', 'false', 'off', 'no'})
+
+
+def presentation_on(environment: Mapping[str, str]) -> bool:
+    """S48 (step one of two): the new presentation is the default.
+
+    `DOOR_KARST41_PRESENTATION` set to 0, false, off or no (any case) keeps
+    the old renderer as a fallback; any other value, or none, gives the new
+    one. A per-launch operator setting: no input key, no protocol field,
+    and nothing about it is written to the caller's terminal.
+    """
+    value = setting(environment, ('DOOR_KARST41_PRESENTATION',))
+    return value is None or value.strip().lower() not in OLD_RENDERER
+
+
 async def run(info: DoorInfo, terminal: Terminal) -> None:
-    # One per-launch switch, off by default; no input key or protocol field.
-    model = Display(info, uuid.uuid4().hex, presentation=setting(os.environ, ('DOOR_KARST41_PRESENTATION',)) == '1')
+    model = Display(info, uuid.uuid4().hex, presentation=presentation_on(os.environ))
     connection = Connection()
     server_frames = ServerFrames()
     decoder = KeyDecoder()

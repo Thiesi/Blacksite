@@ -23,8 +23,10 @@ from typing import Any
 
 from accept_s04_netbbs import Database, DatabaseLane, DoorProfile, REPO, TelnetServer, browse_doors, create_door, create_user
 from accept_s06_netbbs import ZoneCaller
+from acceptance_renderer import stamp as stamp_renderer
 import karst41
 from karst41.content.loader import ContentTree
+from karst41.door.client import presentation_on
 from karst41.server.app import Server
 from karst41.server.inventory import Inventory
 from karst41.server.items import make_item
@@ -72,7 +74,12 @@ class NativeProbe:
         # Resolving a Unix venv's Python symlink launches the base interpreter
         # instead, losing the installed wheel. Preserve the venv path.
         self.root,self.python,self.show = root.resolve(),python.absolute(),show
-        self.door_environment = dict(door_environment or {})
+        # S48 made the new presentation the door's default. A script that
+        # names no renderer keeps the old one it was written against
+        # (technical lead, S48a); the renderer that ran is recorded.
+        self.door_environment = {'DOOR_KARST41_PRESENTATION': '0', **(door_environment or {})}
+        self.renderer = 'present' if presentation_on(self.door_environment) else 'legacy'
+        self.started_at = time.time()  # Only results this run writes get its renderer.
         self.show_all_tiers = show_all_tiers
         self.service = Server(self.root/"world",tcp=True)
         self.connections: list[Connection] = []
@@ -119,6 +126,7 @@ class NativeProbe:
             digest.update(path.relative_to(root).as_posix().encode()+b'\0'+path.read_bytes().replace(b'\r\n', b'\n')+b'\0')
         if client['python_tree_sha256'] != digest.hexdigest():
             raise RuntimeError('Native client source differs from the server; rebuild and install the current wheel.')
+        client['renderer'] = self.renderer
         (self.root/'native-client.json').write_text(json.dumps(client, indent=2)+'\n', encoding='utf-8')
         started = time.monotonic()
         await self.service.start()
@@ -321,6 +329,7 @@ class NativeProbe:
             (self.root/'console-output.json').write_text(json.dumps({
                 'threaded': True, 'writes': len(self.console_jobs),
                 'max_write_seconds': self.console_max_seconds}, indent=2)+'\n', encoding='utf-8')
+        stamp_renderer(self.root, self.renderer, self.started_at)  # After cleanup, so a bad file can't skip it.
 
 
 def s10_patrol_fixture(content: ContentTree) -> ContentTree:

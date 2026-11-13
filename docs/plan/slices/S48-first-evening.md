@@ -107,7 +107,11 @@ the lease early" no longer holds under the calendar-only lease.
   menus, the market, apartments or the Lattice view. Fix the ones on the
   evening path. List the rest in the PR for step two.
 - Step two is a separate cleanup PR after the owner has played: delete
-  the old renderer and its captures. It is not part of this slice.
+  the old renderer and its captures. It is not part of this slice. When
+  it deletes the old renderer, each NetBBS acceptance script that S48a
+  pinned to the old renderer (every script that names none) is either
+  moved to the new renderer or retired under #229, decided script by
+  script (technical lead, S48a).
 
 ### 4. The hub cast is switched on
 
@@ -210,6 +214,34 @@ not part of this slice and isn't granted by it.
 
 After the owner, the novice plays it alone, and the technical lead
 re-ranks the plan from both sessions' findings.
+
+## Implementation notes (PR #235, S48a)
+
+- **The new presentation is the default.**
+  - `door/client.py` `presentation_on()`: `DOOR_KARST41_PRESENTATION` set
+    to `0`, `false`, `off` or `no` (any case) keeps the old renderer. Any
+    other value, or none, gives the new presentation.
+  - It reads the operator environment once per launch. It writes nothing
+    to the caller's terminal, with no input key and no protocol field.
+  - The setting and a SysOp release note are in `docs/ops/door-client.md`
+    and `docs/ops/release-notes.md`. `docs/ops/p5-client-foundations.md`
+    no longer names the old `DOOR_BLACKSITE_PRESENTATION` as the switch.
+- **Acceptance scripts keep their renderer.** NativeProbe passes
+  `DOOR_KARST41_PRESENTATION=0` when a script names no renderer. It
+  records the renderer that ran in `native-client.json`, and as
+  `renderer_ran` in each `result.json` or `*-results.json` (stamped after
+  the probe's cleanup; a half-written file is skipped). The six scripts that launch the
+  door themselves (S04, S06, S07, S08, S09, S12) set `0` explicitly.
+  S48e's evidence runs on the default.
+- **#216.** A briefing page could hold only the blank line after the last
+  paragraph. Briefing pages are now filled by whole paragraphs, measured
+  at the old renderer's narrower width so both renderers fit. A paragraph
+  moves to the next page rather than break mid-sentence, and no page
+  starts with, ends with or is only blank lines. Briefing bodies carry
+  `flow: true`, and the presentation re-wraps each paragraph to the
+  frame's width. The old renderer draws the lines as sent.
+- **Hint fit and symbol labels** along the path move to S48e, where the
+  headless walk of the evening finds them.
 
 ## Implementation notes (PR #237, S48b)
 

@@ -10,9 +10,11 @@ The original P5 integration and earlier capture runs used
 
 ## Launch switch
 
-Set `DOOR_BLACKSITE_PRESENTATION=1` in the registered native door's launch
-environment to enable P5. Leave it absent for the existing renderer.
-The default is off. The switch covers every view kind, nested Wake
+Since S48 the presentation is the door's default: see
+[door-client.md](door-client.md#renderer-s48-step-one-of-two). The
+launch switch is `DOOR_KARST41_PRESENTATION` (the pre-R1 name
+`DOOR_BLACKSITE_PRESENTATION` is a deprecated alias until S31). When P5
+landed it was off by default and enabled with `1`. The switch covers every view kind, nested Wake
 screens, dialogue menus and local help. There is no toggle key or
 protocol field. F9 retains public-terminal services; F5, F7 and F10 gain
 no presentation binding.
