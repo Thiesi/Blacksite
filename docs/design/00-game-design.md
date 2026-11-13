@@ -2781,13 +2781,18 @@ Before the starter kit, during the Wake (design §4), the caller wears an
   never stored: it is removed when the drone is down or skipped, when the
   caller leaves the Wake Hall, and on disconnect. It does not count
   against the carry limit.
-- Reading the decant record during the drone lesson changes the body,
+- The archetype is chosen when the decant record is read (§4 step 6);
+  the terminal lesson only lifts it (step 5). A caller who skips may read
+  it earlier, by E at the street door or the outfitter (#220 beat 7).
+  Reading the decant record during the drone lesson changes the body,
   not the lesson: the pistol stays until one of its removal conditions
   above, and current HP and STA are set to the template's maximums.
 - A finished character who replays the drone lesson (§4) is issued the
   same training pistol for that lesson only, under the same removal
   conditions, and uses their own attributes; the weapon they carried
-  stays in their inventory, unequipped while the pistol is in hand.
+  stays in their inventory, unequipped while the pistol is in hand. When
+  the pistol is removed, the weapon they had equipped is equipped again,
+  and a save never records the pistol in place of it.
 
 #### 12. Vendor inventories
 
