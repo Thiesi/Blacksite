@@ -15,7 +15,7 @@ from tests.harness import HeadlessServer
 from tests.test_dialogue_runtime import press
 
 SPOTS = {
-    'vane': ('vatside-clinics', (44, 7)), 'quaye': ('core-plaza', (17, 29)), 'ranke': ('core-plaza', (34, 5)),
+    'vane': ('vatside-clinics', (44, 7)), 'quaye': ('core-plaza', (17, 29)), 'ranke': ('core-plaza', (34, 7)),
     'amsel': ('core-precinct', (27, 2)), 'brann': ('core-precinct', (41, 16)),
     'achterberg': ('core-tram-hub', (38, 3)), 'ivey': ('terraces-blocks', (103, 9)),
     'marsh': ('terraces-blocks', (108, 29)), 'solenne': ('sodium-row', (48, 19)), 'dolf': ('sodium-tin-halo', (16, 14)),
