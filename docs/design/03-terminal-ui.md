@@ -303,8 +303,8 @@ Things:
 | Lattice terminal, descent console, relay | `§` / `Ω` | cyan |
 | Vendor, bank | `$` | gold |
 | Hardware | `■` | violet |
-| Door / closed or locked door | `+` / `≡` | brass |
-| Exit | `»` | white, with a painted or signed destination; a hidden exit is not drawn as one (below) |
+| Door inside a place / closed or locked door | `+` / `≡` | brass |
+| Exit: a way out of a place, a street door included | `»` | white, with a painted or signed destination; a hidden exit is not drawn as one (below) |
 | Light source (a rule light) | `☼` | warm white |
 | Clone vat | `Θ` | vat green |
 | Dropped cache | `*` | gold |
@@ -379,7 +379,14 @@ TARGET and the pinned vitals.
    relation tag; it shrinks first.
 6. **CREW** (with a crew): beacon `♦`, leader `+`, health, zone.
 7. **Pinned to the bottom**: name (and handle at 132x50 if it differs),
-   grade, HP, STA and SHK bars, chits, lease days; the Signatory XP target at 132x50.
+   grade, HP, STA and SHK bars, chits and the lease row. Until a Wake
+   enters a name, the name row shows its gurney number (`No. 0431`), and
+   the grade slot stays empty until the decant record is read. The lease
+   row reads `day n/90`, counting from 1 on the day of decant, then
+   `signatory` once the Wake signs (grade 5) or `on the roll` at
+   personhood. With chits at 80x24: `200 ch   day 1/90`. The panel shows
+   no Signatory XP row; that target is on the record (`P`), so lease days
+   and the XP target stay separate (game design 3.4).
 
 Sections are introduced by a dim rule with a label (`─ TARGET ───`); no
 brackets anywhere. Bars are ten cells of `█ ▌ ░` with the digits after;
@@ -711,9 +718,15 @@ None. Terminal bell is never emitted.
 
 ## 10. Help
 
-`?` opens a two-page `TextView` of the current context's keys (zone,
-Lattice, menu) followed by the full keymap. Every menu's action bar is
-its own help. The first three sessions of a new character show a
+`?` opens a `TextView` of the current context's keys (zone, Lattice,
+menu) followed by the full keymap. In a zone its first page is **This
+screen**: the keys in use there and a legend of the shapes in view. The
+legend is built only from drawn cells, under the names HERE and NEARBY
+use, so a hidden exit, a covered NPC's true name, or anything out of
+sight never appears in it. Every entry gives glyph and word, never colour
+alone. The page fits one 80x24 screen, keys come from the caller's
+keymap, and the existing pages follow unchanged. Every menu's action bar
+is its own help. The first three sessions of a new character show a
 one-line hint on the hint line for the next useful key until the player
 uses it; the hint system is server-driven (`hint` in the view).
 
@@ -761,6 +774,13 @@ Shorten E/J labels first, keeping at least the first word of each name
 and never cutting a key or verb. If that cannot fit, drop J, then E.
 Only then shorten the objective's target text; keep `Next:`, its verb
 and the current cost. This uses the existing hint row, not a new panel.
+
+A lesson hint or an errand line takes the objective slot. A lesson hint
+shows until its key has been used once, then never again for that
+character. While it shows, the row holds only that hint, any `E`/`J`
+context and `? help`: none of the other key-help groups. Each errand line
+declares a short form, used at 80x24 before the `E`/`J` context is
+dropped, so the `E` label outlives the errand's full text.
 
 Work-order panels show reservation owner, stage, supplied item, target,
 public/worker allocation, recipients and expiry. The reserving player's
