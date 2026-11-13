@@ -172,6 +172,31 @@ blocks. Once the S11 20 ms/10 ms gate lands, it applies here too. The
 ordering was weighed against these stalls on 2026-11-12: the owner put
 the first evening first.
 
+### Delivery: the PR split (technical lead, 2026-11-13)
+
+The slice lands as a series of PRs, in this order. Each one stacks on
+the one before it and merges main in. The H1 gate stays on the last one.
+
+- **S48a** (#235, merged): the new presentation by default (part 3).
+- **S48b** (#237, merged): the hub cast outside the Wake Hall (part 4).
+- **S48c1a** (#241): the body before the record. This covers the unread
+  body, the card table and the record at the street door.
+- **S48c1b**: the lessons. This covers the training terminal and the
+  drone and pistol beat. Once a character has a template, the drone is
+  inert (creative lead's beat, technical lead's mechanics).
+- **S48c2**: the opening's script. This covers the runner, the hint row,
+  staging and the #220 §4.12 text.
+- **S48c3**, panel and paint:
+  - the `»` door glyph, the §2.4 panel rows, help page 1, and the
+    painted floor line and marks;
+  - the orderlies;
+  - the door-side signal for the in-hall Ctrl-P hint;
+  - the whole-word NEARBY cut;
+  - the short recruiter pitches (#242).
+- **S48d**: a voice in the walls (part 5).
+- **S48e**: the walk and the native evidence. This build is the H1
+  session.
+
 ## Out of scope
 
 - Season 0's maps (Contractor Street, The Drop) and the Ninety-Nine

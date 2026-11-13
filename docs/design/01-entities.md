@@ -686,8 +686,22 @@ and an active bundle depends only on active bundles.
 the start does not grant. These records carry no equipment or combat
 execution; the consuming slices supply those systems.
 
-`wake_cards.json`: `id` (card ID), `name`, `pitch` (text asset), optional
-`faction` (the actual faction ID; old fixtures default to the card ID).
+`wake_cards.json`: `id` (card ID), `name`, `pitch` (text asset),
+`pitch_short` (text asset), optional `faction` (the actual faction ID;
+old fixtures default to the card ID). `pitch_short` is the recruiter's
+own short speech, not `pitch` cut down. The server chooses between them
+when it builds the card menu's detail, from the frame size it already
+has: `pitch` when it fits the card detail area, otherwise `pitch_short`.
+No protocol field is added. A resize re-renders the menu and chooses
+again, with nothing saved. Neither text is ever cut on screen.
+"Fits" means that the text, wrapped at the card detail width, takes no
+more lines than the card detail area has rows. Both values come from
+`layout.py`, the one source for the server, the renderer and the
+validator. At 80 columns the detail width is 66. The validator rejects
+a card that has no `pitch_short`, whose `pitch_short` does not fit the
+card detail area at 80x24, or whose `pitch` does not fit it at 132x50.
+Every shipped card and fixture gains a `pitch_short` in the same change
+(#242).
 The `red-sable` card maps to `sable`. Existing standing under a card-only
 alias moves once to its faction key, combining and clamping at -100/100.
 The eight introductions (nine once the Lamp Compact is built, planned, #90) set standing, not membership. They do not

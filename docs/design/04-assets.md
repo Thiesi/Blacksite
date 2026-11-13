@@ -161,7 +161,7 @@ broken world copy it into a scratch directory and change one thing.
 
 - Asset IDs are lowercase slugs with hyphens.
 - Text assets: `text-<topic>-<n>` (found texts), `zone-<zone id>`,
-  `faction-<id>-pitch`, `event-<id>-start|mid|end`, `npc-<id>-<line id>`.
+  `faction-<id>-pitch`, `faction-<id>-pitch-short`, `event-<id>-start|mid|end`, `npc-<id>-<line id>`.
 - Art assets: `art-<name>` with `-256` and `-16` suffixes for tier
   variants, `-w132` for the wide variant.
 
