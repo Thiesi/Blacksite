@@ -27,7 +27,9 @@ async def measure(root: Path, seconds: int) -> None:
     drop = root / "door_info.json"
     drop.write_text(json.dumps({"handle": "Idle界", "user_id": "idle-probe", "terminal_width": 80,
         "terminal_height": 24, "color_depth": "256", "node_name": "local"}), encoding="utf-8")
-    env = {**os.environ, "NETBBS_DOOR_INFO": str(drop.resolve()), "KARST41_INSTALL_DIR": str(service.install_dir)}
+    # S48a: the S04 idle budget was set against the old renderer; keep it.
+    env = {**os.environ, "NETBBS_DOOR_INFO": str(drop.resolve()), "KARST41_INSTALL_DIR": str(service.install_dir),
+           "DOOR_KARST41_PRESENTATION": "0"}
     executable = sys.executable
     if os.name == "nt":
         # A Windows venv python.exe is a redirector whose CPU time excludes

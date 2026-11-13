@@ -33,7 +33,7 @@ async def accept(root: Path, install: Path, python: Path, unit: str) -> None:
     create_door(db, "Karst 41", str(python), args=("-m", "karst41.door"), creator=user,
         profile=DoorProfile(install_dir=str(root), encoding="utf-8", max_sessions=16,
             multinode_certified=True, time_limit=300,
-            environment={"DOOR_KARST41_INSTALL_DIR": str(install)}).validate())
+            environment={"DOOR_KARST41_PRESENTATION": "0", "DOOR_KARST41_INSTALL_DIR": str(install)}).validate())
     failures: list[str] = []
 
     async def handler(session: object) -> None:
