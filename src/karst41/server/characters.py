@@ -1,6 +1,6 @@
 """Pure character/Wake lifecycle. The I/O layer executes the write outbox."""
 
-from karst41.server.interaction import Focus, Interaction, interact
+from karst41.server.interaction import Focus, Interaction, interact, object_interaction
 from copy import deepcopy
 from collections.abc import Callable
 from dataclasses import asdict, replace
@@ -605,8 +605,8 @@ class Characters:
                 continue
             if (obj.spec.params.get("recruiters") and not self.card_taken(session.user_id)
                     and (not unread or self.wakes[session.id].card is None)):
-                return Interaction(Focus(obj.spec.id, str(obj.spec.params.get("name", "Recruiter cards")), "look at"),
-                                   ("cards", obj.spec.id), obj.spec.tile, kind="wake")
+                # The same hint the recruiter menu gave at this table (#104 labels).
+                return replace(object_interaction(obj), value=("cards", obj.spec.id), kind="wake")
             if unread and obj.spec.params.get("vendor") == "wake-outfitter":
                 return Interaction(Focus(obj.spec.id, str(obj.spec.params.get("name", "Wake Outfitter")), "ask"),
                                    ("record", "outfitter"), obj.spec.tile, kind="wake")

@@ -2,18 +2,25 @@
   "source_base": "9907c90a66c036c0876803a180c22f9d53b403d3",
   "reference_checkout": "4142cc31850be2daa8e68c480bc8c84569d65222",
   "note": "Runtime Python source, harness and character helpers match source_base; both independent executions used the same matrix driver and content.",
-  "sha256": "45fa0bd0cc75bf123314f69b8d5c06860e94a5591ec1b5a0782bb7accf39632a",
+  "sha256": "c2b7775f48e71c5c370dc722755a2a9adffd9d6b822dbb12e8f57217d88048fb",
   "cases": 10704,
   "handlers": {
     "characters": 1468,
     "combat": 108,
     "commerce": 166,
     "contracts": 72,
-    "factions": 18,
     "interlock": 422,
     "lattice": 8028,
     "npcs": 30,
     "relays": 36,
-    "terminal": 356
-  }
+    "terminal": 356,
+    "wake": 18
+  },
+  "repins": [
+    {
+      "sha256_from": "45fa0bd0cc75bf123314f69b8d5c06860e94a5591ec1b5a0782bb7accf39632a",
+      "reason": "S48c1a: the Wake Hall card table offers the cards to a character who has taken none (#220 ruling 4, late-taker ruling); 18 cases, factions -> wake, around recruiter-cards",
+      "approval": "https://github.com/Thiesi/Karst41/issues/217#issuecomment-6846598728"
+    }
+  ]
 }

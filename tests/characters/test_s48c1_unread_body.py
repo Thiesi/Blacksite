@@ -37,15 +37,15 @@ def test_the_caller_wakes_in_the_hall_with_an_unread_body(game: HeadlessServer) 
 def test_e_at_the_street_door_or_the_outfitter_opens_the_record_but_not_the_terminal(game: HeadlessServer) -> None:
     client, manager = woken(game)
     wake = manager.wakes[client.session.id]
-    place(game, client, HALL, (36, 14))  # Beside the training terminal only: J, never E (S48c1).
-    act(game, client, E)
-    assert wake.stage == "hall"
     for tile, source in (((37, 16), "door"), ((33, 16), "outfitter")):
         place(game, client, HALL, tile)
         act(game, client, E)
         assert (wake.stage, wake.source) == ("record", source)
         act(game, client, ESC)
         assert wake.stage == "hall"
+    place(game, client, HALL, (36, 14))  # Beside the training terminal only: it never opens the record.
+    act(game, client, E)
+    assert wake.stage == "hall"
 
 
 def test_the_street_door_never_lets_an_unread_body_out(game: HeadlessServer) -> None:
