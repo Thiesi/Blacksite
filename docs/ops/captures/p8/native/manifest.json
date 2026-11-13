@@ -1,0 +1,605 @@
+{
+  "run": "https://github.com/Thiesi/Karst41/actions/runs/43340009052",
+  "head": "3cf85142493bb7301b51ee3493310d2e6dbcd360",
+  "transport": "NetBBS v7.45.0 Telnet -> registered native stdio",
+  "artifacts": [
+    {
+      "name": "p8-132x50-legacy",
+      "id": 14000506119,
+      "raw": "the .ans streams and .json style snapshots stay in this CI artifact"
+    },
+    {
+      "name": "p8-132x50-modern",
+      "id": 13999852487,
+      "raw": "the .ans streams and .json style snapshots stay in this CI artifact"
+    },
+    {
+      "name": "p8-80x24-legacy",
+      "id": 14000760873,
+      "raw": "the .ans streams and .json style snapshots stay in this CI artifact"
+    },
+    {
+      "name": "p8-80x24-modern",
+      "id": 14000680663,
+      "raw": "the .ans streams and .json style snapshots stay in this CI artifact"
+    }
+  ],
+  "captures": [
+    {
+      "file": "p8-bark-132x50-16-legacy.txt",
+      "artifact": "p8-132x50-legacy",
+      "scenario": "bark",
+      "size": [
+        132,
+        50
+      ],
+      "tier": "16",
+      "renderer": "legacy",
+      "sha256": {
+        ".ans": "0779da152b3cf72bc267d3ef6ba2df7b982338d26a20d84d55056ebcc1f1a9c5",
+        ".txt": "b04da4a3260c56b7e704c660f40d4f5fc93937ab8b6772a97e3d898351972f16",
+        ".json": "858873c1abed9a01f0d93e39a8aa8a4d5a322913d6b824f58cea5eba7c8e09ef"
+      }
+    },
+    {
+      "file": "p8-ambience-132x50-16-legacy.txt",
+      "artifact": "p8-132x50-legacy",
+      "scenario": "ambience",
+      "size": [
+        132,
+        50
+      ],
+      "tier": "16",
+      "renderer": "legacy",
+      "sha256": {
+        ".ans": "2bc7bc3ba6a455ae84b6f3d4cde95dc947a6bbb2e08f9fe1f59b54074b494beb",
+        ".txt": "1f5358556179da775d4afde85ae71b04fc5ad09fe288a364a868af98a267f620",
+        ".json": "93bdc335813545b57234c97119a7720961a7df7fdd29af68690eb99bb6ddc2b1"
+      }
+    },
+    {
+      "file": "p8-combat-quiet-132x50-16-legacy.txt",
+      "artifact": "p8-132x50-legacy",
+      "scenario": "combat-quiet",
+      "size": [
+        132,
+        50
+      ],
+      "tier": "16",
+      "renderer": "legacy",
+      "sha256": {
+        ".ans": "03aa53893a488ce808a8bed17d640402863f58b44bec270218e35bdd90fa3234",
+        ".txt": "06a06a22cfad6cd273133ddaf8d250e9db5ce6a6eed3bbd59e75cd5145f6f661",
+        ".json": "c87ecec9760030f6d41e5ac2cc1f3e8942e6e9853a06addfe8725ac2c86e6bb8"
+      }
+    },
+    {
+      "file": "p8-bark-132x50-256-legacy.txt",
+      "artifact": "p8-132x50-legacy",
+      "scenario": "bark",
+      "size": [
+        132,
+        50
+      ],
+      "tier": "256",
+      "renderer": "legacy",
+      "sha256": {
+        ".ans": "b23b11d7a39b4801dbd43b195882967ec3ccc84f4c5108768779ce1ac5e02109",
+        ".txt": "ce64251a0c0ca2f435dabc344775fa7d5b77b04b68db5ce67f0b8a96c0b6b641",
+        ".json": "3629384d606d17784311022374e8427393b8312316eeacbe6767fefebb35feb6"
+      }
+    },
+    {
+      "file": "p8-ambience-132x50-256-legacy.txt",
+      "artifact": "p8-132x50-legacy",
+      "scenario": "ambience",
+      "size": [
+        132,
+        50
+      ],
+      "tier": "256",
+      "renderer": "legacy",
+      "sha256": {
+        ".ans": "7d17f3b8223e41ad49b0422b662d171ca5feb774a015fe4725506b6551b60f73",
+        ".txt": "a8b004dda129c2cff08bf35b8f710fa3e72a0cb42e29d74bf2f5e00e7e9d9f02",
+        ".json": "8d285afd049f40d663bff634631d2c39692467bcb88001e001f9f8724e6e1023"
+      }
+    },
+    {
+      "file": "p8-combat-quiet-132x50-256-legacy.txt",
+      "artifact": "p8-132x50-legacy",
+      "scenario": "combat-quiet",
+      "size": [
+        132,
+        50
+      ],
+      "tier": "256",
+      "renderer": "legacy",
+      "sha256": {
+        ".ans": "4e0b2bf5618874a3c1af8ad8481bd3bf89300aa35dba375c4db7752d8019a5c9",
+        ".txt": "32c0e29d22ecadb8c76283cf642500a56825b2be138e9d9fda71e9070e3a3386",
+        ".json": "4cbf7ee54456517cdf043181e22e0f20ff7542d22ed765ca26f59239720bf5b3"
+      }
+    },
+    {
+      "file": "p8-bark-132x50-truecolor-legacy.txt",
+      "artifact": "p8-132x50-legacy",
+      "scenario": "bark",
+      "size": [
+        132,
+        50
+      ],
+      "tier": "truecolor",
+      "renderer": "legacy",
+      "sha256": {
+        ".ans": "c92c811c3ee247745be5a620b8220a1e2cc01bba91e4598e757bff6cabeb9b54",
+        ".txt": "5454130fbb34606088cd093d0f6424bf931755cfb05a7c654ad46ca1725cb247",
+        ".json": "99d728c128b4bf196babebd4c3327b54a88983b926cb49921a302f384ea01737"
+      }
+    },
+    {
+      "file": "p8-ambience-132x50-truecolor-legacy.txt",
+      "artifact": "p8-132x50-legacy",
+      "scenario": "ambience",
+      "size": [
+        132,
+        50
+      ],
+      "tier": "truecolor",
+      "renderer": "legacy",
+      "sha256": {
+        ".ans": "1b29b6d719181254dd1f0e1bd262da11f796bfcd255e93308055af9a8f92bf1f",
+        ".txt": "abc5290aacca50dae21f5fc7f8cdf5b8dd77cc767ae623676005ceccaa9371e9",
+        ".json": "a40a746d149e7f31add5c546f86c68312c6ed045d4d42d6c92230c1eb398c108"
+      }
+    },
+    {
+      "file": "p8-combat-quiet-132x50-truecolor-legacy.txt",
+      "artifact": "p8-132x50-legacy",
+      "scenario": "combat-quiet",
+      "size": [
+        132,
+        50
+      ],
+      "tier": "truecolor",
+      "renderer": "legacy",
+      "sha256": {
+        ".ans": "a866a0be192feb613836822c875e87398711322a86d500aa986e9744cb9fafaa",
+        ".txt": "598775d5133d6eb50f42263f5e83c3f7396f7f68924b91cb98346cf31d385df0",
+        ".json": "f9d4903c1fdbfc6f25ddbd635824dbe3391c9391698a6b26ab978537c94f1612"
+      }
+    },
+    {
+      "file": "p8-bark-132x50-16-present.txt",
+      "artifact": "p8-132x50-modern",
+      "scenario": "bark",
+      "size": [
+        132,
+        50
+      ],
+      "tier": "16",
+      "renderer": "present",
+      "sha256": {
+        ".ans": "bb7710bc545c845403d18e79d57b229641650b6ad5952708355273826115636f",
+        ".txt": "0994448f4de419ff8f0d67f49d12933749c86b30cd708496c8bc8e32a91ba46e",
+        ".json": "04b1a290bc3cbb6f63b059c10e7e352c99342cf4874d3ba0ceb311bef58de696"
+      }
+    },
+    {
+      "file": "p8-ambience-132x50-16-present.txt",
+      "artifact": "p8-132x50-modern",
+      "scenario": "ambience",
+      "size": [
+        132,
+        50
+      ],
+      "tier": "16",
+      "renderer": "present",
+      "sha256": {
+        ".ans": "7ed6b9cec6ad8c8cad5dd6412e19ba725fd36fd710610dc4fb2e01a938c27b2f",
+        ".txt": "0c59cf92e1dcb792b23ea3149501ef9fdc91fe453f31f23f06afa33a2edcf525",
+        ".json": "56f2a3df2d4a103a1d37d103d1c72e4c54a40ad6eceafa4b3be3231a92b58282"
+      }
+    },
+    {
+      "file": "p8-combat-quiet-132x50-16-present.txt",
+      "artifact": "p8-132x50-modern",
+      "scenario": "combat-quiet",
+      "size": [
+        132,
+        50
+      ],
+      "tier": "16",
+      "renderer": "present",
+      "sha256": {
+        ".ans": "22655a8aa589013cca698ba02ab7f90ec3c429cecb7323974cae4e309589f956",
+        ".txt": "27f0855258e5fc3882bff0be8f56b7b1b4869f87cc632d1f1acfad520a98d83d",
+        ".json": "c99f7cd34d39a2be8b52ae49b7f3b9b1c9e8ee17b453ac85473107811a4fd9fb"
+      }
+    },
+    {
+      "file": "p8-bark-132x50-256-present.txt",
+      "artifact": "p8-132x50-modern",
+      "scenario": "bark",
+      "size": [
+        132,
+        50
+      ],
+      "tier": "256",
+      "renderer": "present",
+      "sha256": {
+        ".ans": "346561e2e72c8b9a1820a21a43a09deba657607121ba56b62f630127f970900e",
+        ".txt": "efa9536561e1575922a8daf18c9dc1aaadb54c11f89baa700f667a2326a904fd",
+        ".json": "8b21a73d0c9777053b0780a193bf46fe5170819ba9e51aeeb0fc1ea6f56a7bea"
+      }
+    },
+    {
+      "file": "p8-ambience-132x50-256-present.txt",
+      "artifact": "p8-132x50-modern",
+      "scenario": "ambience",
+      "size": [
+        132,
+        50
+      ],
+      "tier": "256",
+      "renderer": "present",
+      "sha256": {
+        ".ans": "150b051d48eb213300dda955e12fd683ee3a69910a6686f2fcde622319e62b05",
+        ".txt": "b57ea3441c63f9daca2b6d09b876a5439af4256426708c0e2b352ca58f734513",
+        ".json": "9c5a949b498eb4a2d092b122d968452b0964f6d43ecf9014215f0e78a97a9e08"
+      }
+    },
+    {
+      "file": "p8-combat-quiet-132x50-256-present.txt",
+      "artifact": "p8-132x50-modern",
+      "scenario": "combat-quiet",
+      "size": [
+        132,
+        50
+      ],
+      "tier": "256",
+      "renderer": "present",
+      "sha256": {
+        ".ans": "925ffe0cf3df118d2ce089d00be35e6ff12292fdda44838e21da9b42bd9e31e7",
+        ".txt": "0a3788893708982da5f4b445a8f3d93b6cc5cd643069ec7777b698b332df8aae",
+        ".json": "fe15409bac4ebac74a6bfd9ef2376ea2ed586ea87a241931bbca98c689892184"
+      }
+    },
+    {
+      "file": "p8-bark-132x50-truecolor-present.txt",
+      "artifact": "p8-132x50-modern",
+      "scenario": "bark",
+      "size": [
+        132,
+        50
+      ],
+      "tier": "truecolor",
+      "renderer": "present",
+      "sha256": {
+        ".ans": "8239883206276973750e43167023627bb5a4269074c74941e880dba8c6592139",
+        ".txt": "534f4a0d5461dba243f9e56a1dd443f3c75a79a7961eb17481a1beb40feafc6b",
+        ".json": "dcfa88a25b39fe4b01001ff3eab0dc7d75210e491abd1e41f98cf1176b4a1e22"
+      }
+    },
+    {
+      "file": "p8-ambience-132x50-truecolor-present.txt",
+      "artifact": "p8-132x50-modern",
+      "scenario": "ambience",
+      "size": [
+        132,
+        50
+      ],
+      "tier": "truecolor",
+      "renderer": "present",
+      "sha256": {
+        ".ans": "9509b6eb236982fc52f65818e4683647b739f953459a9b2da798ee6e8d24a030",
+        ".txt": "73a397961636a729879beda7f9be169ddcb2ba95144559e6087ce45a5a491071",
+        ".json": "dc10b27fdb72e8797076e3581053941dc2534d9b093827d62d4ccec8c16c1843"
+      }
+    },
+    {
+      "file": "p8-combat-quiet-132x50-truecolor-present.txt",
+      "artifact": "p8-132x50-modern",
+      "scenario": "combat-quiet",
+      "size": [
+        132,
+        50
+      ],
+      "tier": "truecolor",
+      "renderer": "present",
+      "sha256": {
+        ".ans": "f237584d0f892b509c0c77c349f8595dd93ae7889fd980a9dd749d3e4018da36",
+        ".txt": "50899c43b57f108dc8cd1e8a368b5618012bc768d4da56c1a681e1a5c0bc49a1",
+        ".json": "c74534c41aa2a1ac4e43dcf878a7435137ee472b04c04ed55b811c69e0cbad0e"
+      }
+    },
+    {
+      "file": "p8-bark-80x24-16-legacy.txt",
+      "artifact": "p8-80x24-legacy",
+      "scenario": "bark",
+      "size": [
+        80,
+        24
+      ],
+      "tier": "16",
+      "renderer": "legacy",
+      "sha256": {
+        ".ans": "0daf08159714d09573061e750ffac10d5e2e3881a2c252fecd3243afdbefda25",
+        ".txt": "a9098e02b478a88907db9f3b2952797596894d367d65e5dec3772b1ab3f9b597",
+        ".json": "5345e45677090764691282c13783b47255ecfc708ff8ca7c8b893a24273af301"
+      }
+    },
+    {
+      "file": "p8-ambience-80x24-16-legacy.txt",
+      "artifact": "p8-80x24-legacy",
+      "scenario": "ambience",
+      "size": [
+        80,
+        24
+      ],
+      "tier": "16",
+      "renderer": "legacy",
+      "sha256": {
+        ".ans": "0836915f4feaec8db97ad104732254d18d6cd9ccc2128afd2634b6bd01f64ca8",
+        ".txt": "34d0f54a1d52130a7b9f6529ca171685c72a205e2d030d41412af32709f39b91",
+        ".json": "16d1a2e9620f08e100d951e25453fc79d8335f08be9635eddb02f6cb15deea20"
+      }
+    },
+    {
+      "file": "p8-combat-quiet-80x24-16-legacy.txt",
+      "artifact": "p8-80x24-legacy",
+      "scenario": "combat-quiet",
+      "size": [
+        80,
+        24
+      ],
+      "tier": "16",
+      "renderer": "legacy",
+      "sha256": {
+        ".ans": "d73df7becc300362f1e17e4d6fd4c292bfb88b22bd3b283b5deb984fb06a4acf",
+        ".txt": "28ad2bad93f3318fb3896f2e6665b8c2624eb9f579cade7fb78ee7030fc41e78",
+        ".json": "eccad491388c399f5506c569552a52a38bbee6e20f5ff30d0e49180658158892"
+      }
+    },
+    {
+      "file": "p8-bark-80x24-256-legacy.txt",
+      "artifact": "p8-80x24-legacy",
+      "scenario": "bark",
+      "size": [
+        80,
+        24
+      ],
+      "tier": "256",
+      "renderer": "legacy",
+      "sha256": {
+        ".ans": "3f87d5b0fd10d0fc0298de9691157d8d658a2e64987e46369aed916785ca38f8",
+        ".txt": "82d0ae2f8c844dd24edfdb39603dac9b36649c55936b3e46d558d6af9ff75383",
+        ".json": "c98dc0a6109f09f4760601cfbf7276dcb568b9ce0b041cf700577fe88f809f23"
+      }
+    },
+    {
+      "file": "p8-ambience-80x24-256-legacy.txt",
+      "artifact": "p8-80x24-legacy",
+      "scenario": "ambience",
+      "size": [
+        80,
+        24
+      ],
+      "tier": "256",
+      "renderer": "legacy",
+      "sha256": {
+        ".ans": "c0b5a8bacf0b53c9f2b55f37cc98ff8a74512b25f5ffd0861a6812fe9e1d0371",
+        ".txt": "dd70f1c90e6a67bedaf34b2f9515fef9832d8cfe389db10e0dbdfe6549a058c7",
+        ".json": "f89ac9bc05698563af6be8e9343593dee1a1a8a698344ed2ec2ae5b576bbbfd4"
+      }
+    },
+    {
+      "file": "p8-combat-quiet-80x24-256-legacy.txt",
+      "artifact": "p8-80x24-legacy",
+      "scenario": "combat-quiet",
+      "size": [
+        80,
+        24
+      ],
+      "tier": "256",
+      "renderer": "legacy",
+      "sha256": {
+        ".ans": "a1512d03e818f2189bcba65515cc1966b9dfdcf3f067ed48a9166a5129943134",
+        ".txt": "7a0570268f148766b00bbcf28d096928f2b028e5e4c8f472ef51ff497121e4f7",
+        ".json": "2343e28e7988ebeb9c094c3a8ea11a92ca47794962a5ef3645bca3851a2f7574"
+      }
+    },
+    {
+      "file": "p8-bark-80x24-truecolor-legacy.txt",
+      "artifact": "p8-80x24-legacy",
+      "scenario": "bark",
+      "size": [
+        80,
+        24
+      ],
+      "tier": "truecolor",
+      "renderer": "legacy",
+      "sha256": {
+        ".ans": "dd9a6c1f05d4d1ea38fc3b67b0c8be4ca5140cd2f3bbca3c0a086107cd7189c2",
+        ".txt": "7519c97c606fe47f7500a620d0c70dc51fe5552789e9794886e0d8542f743784",
+        ".json": "5e792390527434607882b14b1b4d2f1a5cfd6e0d84a49af641c1b79e0610d3d4"
+      }
+    },
+    {
+      "file": "p8-ambience-80x24-truecolor-legacy.txt",
+      "artifact": "p8-80x24-legacy",
+      "scenario": "ambience",
+      "size": [
+        80,
+        24
+      ],
+      "tier": "truecolor",
+      "renderer": "legacy",
+      "sha256": {
+        ".ans": "896b9245614341e2f62d28a1e37d765e61312a5368fd3a28ca2d916b3ec4399b",
+        ".txt": "690288ae8eb3c83d4785f601806be5ec333d3464ef4a87a4ef681a03b413e070",
+        ".json": "4c42e5069648bc06a20c5d1d720887c298f93693cf9ff178faf80682481bf90e"
+      }
+    },
+    {
+      "file": "p8-combat-quiet-80x24-truecolor-legacy.txt",
+      "artifact": "p8-80x24-legacy",
+      "scenario": "combat-quiet",
+      "size": [
+        80,
+        24
+      ],
+      "tier": "truecolor",
+      "renderer": "legacy",
+      "sha256": {
+        ".ans": "c55f804314d7fbd7aef2444a6c4a12fd55449c1d2c6aa8767a928eafcd83555b",
+        ".txt": "f5e62e0125f3abe17f8b71a5c01d3e240451fdd809f941fdc2bb13a65663068c",
+        ".json": "879bf09cd6eb5bccc15c2a43c73ff93afc487b4dcf5ffe2434b64d73223b4667"
+      }
+    },
+    {
+      "file": "p8-bark-80x24-16-present.txt",
+      "artifact": "p8-80x24-modern",
+      "scenario": "bark",
+      "size": [
+        80,
+        24
+      ],
+      "tier": "16",
+      "renderer": "present",
+      "sha256": {
+        ".ans": "b7423a7f6fe1cb92c21af4ad3d73cc53b7e557e6dfcc049000da0488b817a349",
+        ".txt": "558c91ff5462a36412717bf80aad80c06d2676f4ee3a73592000d7ee74e6cacc",
+        ".json": "19675fce8d801d523c5ec95605fc64e4df891076fe5d80be861b2eaefc0335df"
+      }
+    },
+    {
+      "file": "p8-ambience-80x24-16-present.txt",
+      "artifact": "p8-80x24-modern",
+      "scenario": "ambience",
+      "size": [
+        80,
+        24
+      ],
+      "tier": "16",
+      "renderer": "present",
+      "sha256": {
+        ".ans": "8e594da0323caa1d75aa8f131b98eb01e7336afd88beb05451c6281f3cac291e",
+        ".txt": "e971822633b89984b68b0732c5fb0ad43f75c887292c1e3624fa26454770698e",
+        ".json": "e624e7f8bf24aabf0ac13e9bf7d5fc3847cf12cabca7711db0aebbe9d32e412e"
+      }
+    },
+    {
+      "file": "p8-combat-quiet-80x24-16-present.txt",
+      "artifact": "p8-80x24-modern",
+      "scenario": "combat-quiet",
+      "size": [
+        80,
+        24
+      ],
+      "tier": "16",
+      "renderer": "present",
+      "sha256": {
+        ".ans": "2a994b375375715bd925d3f7a50c02a34d50bb7074b036fc893b1f332122b97e",
+        ".txt": "4f5e8cc2d8b68fa25c4578034b5fef4467e2a43c2409964f46693420cf64d2e4",
+        ".json": "e17250e7a71a126bfd43d12d59ef6f2ce30e0b9f58cbaeb35790b9f5012cc7f0"
+      }
+    },
+    {
+      "file": "p8-bark-80x24-256-present.txt",
+      "artifact": "p8-80x24-modern",
+      "scenario": "bark",
+      "size": [
+        80,
+        24
+      ],
+      "tier": "256",
+      "renderer": "present",
+      "sha256": {
+        ".ans": "7489e951b8d0bea59619b62df1c0bddb3ff0a0371e9f43144e90759b1e6c4970",
+        ".txt": "613140c06837775d6ca1d27d89285ab90a446309d918de6356c00927aad0d470",
+        ".json": "be093c64a3f1df7bc4e0d33f5faaee0d1d00fead1f5c990ef1fdc211b28a72f3"
+      }
+    },
+    {
+      "file": "p8-ambience-80x24-256-present.txt",
+      "artifact": "p8-80x24-modern",
+      "scenario": "ambience",
+      "size": [
+        80,
+        24
+      ],
+      "tier": "256",
+      "renderer": "present",
+      "sha256": {
+        ".ans": "00f509895f185e748c4badf5df328b82876cae7a507c2d8c53c3a74b723f88b4",
+        ".txt": "2bc7b86113703f7f8a2450308833d0ad187d1f2d691869b7bca7762efb4a9dc9",
+        ".json": "3fe897a5e89281ea6306970049d5c0fb7f90b7abf7fa6625d018f8f8058d53dc"
+      }
+    },
+    {
+      "file": "p8-combat-quiet-80x24-256-present.txt",
+      "artifact": "p8-80x24-modern",
+      "scenario": "combat-quiet",
+      "size": [
+        80,
+        24
+      ],
+      "tier": "256",
+      "renderer": "present",
+      "sha256": {
+        ".ans": "43e2146964eab528c1499a53df0fe40f7e1c605d3f5e40990a22ac1fe198ced0",
+        ".txt": "597e7881ecd8162140315bddbcb468ed5978f8fbc3e9d23436a90fda3733eaaa",
+        ".json": "6afee753c76a30fa511f5818da838c39c456e58de7ac37121fcba83f413a5869"
+      }
+    },
+    {
+      "file": "p8-bark-80x24-truecolor-present.txt",
+      "artifact": "p8-80x24-modern",
+      "scenario": "bark",
+      "size": [
+        80,
+        24
+      ],
+      "tier": "truecolor",
+      "renderer": "present",
+      "sha256": {
+        ".ans": "174db5cddf15210c984d4d63923d313e3f260c2a7c504a9f0c7c2986d1badb51",
+        ".txt": "33dccfc55ee4cecc6eed27be5e0fd46ed188c4e0fea315a9f08e54cfb32cd812",
+        ".json": "378e7e87a71bd192097832b354f9939968d4bf6b02770c19ae0b359c6256d024"
+      }
+    },
+    {
+      "file": "p8-ambience-80x24-truecolor-present.txt",
+      "artifact": "p8-80x24-modern",
+      "scenario": "ambience",
+      "size": [
+        80,
+        24
+      ],
+      "tier": "truecolor",
+      "renderer": "present",
+      "sha256": {
+        ".ans": "5fd17cc465066089d1ff268544d91501c261b259eef6bb2deec1baae2df151d7",
+        ".txt": "ea1e75123e81606e787df857a5da31bbc74fe0e7be5da7ad661f227dd4951c62",
+        ".json": "8b48c622abd3ce20c964a0e39c426e6dc51cd3ff2409ebdfa31f68037c49a777"
+      }
+    },
+    {
+      "file": "p8-combat-quiet-80x24-truecolor-present.txt",
+      "artifact": "p8-80x24-modern",
+      "scenario": "combat-quiet",
+      "size": [
+        80,
+        24
+      ],
+      "tier": "truecolor",
+      "renderer": "present",
+      "sha256": {
+        ".ans": "360a7a00ff611553ca5d90e6193e52b2ac0d30f29bf17355eb67d5330135d0ac",
+        ".txt": "0a8aa3fd870ceae50eab3ac0160f7311fa825a9fc10645b31c20db97622b89eb",
+        ".json": "464a05cc82c9692890fac69b3eac3e6b6cbfb001064ab1e87e8c591a7eb4692d"
+      }
+    }
+  ]
+}
