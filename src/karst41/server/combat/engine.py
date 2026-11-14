@@ -93,7 +93,8 @@ class Combat:
             return "allied"
         if self.relation_provider:
             return self.relation_provider(source, target)
-        if target.owner == source.id and target.behaviour.get("training"): return "hostile"
+        if target.owner == source.id and target.behaviour.get("training"):
+            return "neutral" if target.behaviour.get("inert") else "hostile"
         if target.marked: return "hostile"
         faction = self.content.factions.get(source.faction)
         value = faction.relations.get(target.faction,"N") if faction else "N"
@@ -126,7 +127,8 @@ class Combat:
             return False
         training = source if source.behaviour.get("training") else target if target.behaviour.get("training") else None
         if training:
-            return training.owner == (target.id if source is training else source.id)
+            # S48c1b: an inert drone (a character's, by any route) is never in a fight.
+            return not training.behaviour.get("inert") and training.owner == (target.id if source is training else source.id)
         return self.permits_indirect(source, target)
 
     def permits_indirect(self, source: Actor, target: Actor) -> bool:
@@ -176,7 +178,8 @@ class Combat:
 
     def select(self, actor: Actor, backwards: bool = False) -> None:
         candidates = sorted((a for a in self.world.zones[actor.zone].actors.values()
-            if a is not actor and a.stance not in ("down", "dead") and self.visible(actor, a)),
+            if a is not actor and a.stance not in ("down", "dead") and self.visible(actor, a)
+            and not (a.behaviour.get("training") and a.behaviour.get("inert"))),
             key=lambda a:(self.presented_relation(actor, a)!="hostile",
                           rules.distance(actor.position, a.position), a.id))
         ids = [a.id for a in candidates]
@@ -346,7 +349,8 @@ class Combat:
         tick = self.clock.now_tick()
         if tick < max(actor.cooldowns.get("weapon",0),actor.cooldowns.get("knockdown",0)) or pid in self.casts: return
         target = self.world.actors.get(requested or actor.target)
-        if not target or target.stance in ("down","dead") or not self.visible(actor,target):
+        if (not target or target.stance in ("down","dead") or not self.visible(actor,target)
+                or (target.behaviour.get("training") and target.behaviour.get("inert"))):
             self.log(actor,"Select a visible target with Tab."); return
         if not self.legal(actor,target):
             self.log(actor,self.game.crews.text("friendly_fire") if self.crew_together(actor.id, target.id) else "Protected: you cannot harm that body.",True)
@@ -972,7 +976,7 @@ class Combat:
                     return True
             if name == "recovery":
                 self.commerce.enqueue_system(lambda:self.recover_at_vat(player.id,str(args.get("target","")))); return True
-            if key in ("b","B") and any(a.owner == actor.id and a.behaviour.get("training") for a in self.world.actors.values()):
+            if key in ("b","B") and any(a.owner == actor.id and a.behaviour.get("training") and not a.behaviour.get("inert") for a in self.world.actors.values()):
                 self.game.lesson(player, "drone", "skipped"); self.disarm(player.id); self.remember(player,actor)
                 for drone in tuple(self.world.actors.values()):
                     if drone.owner == actor.id and drone.behaviour.get("training"): self.world.leave(drone)

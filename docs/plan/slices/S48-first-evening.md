@@ -401,7 +401,41 @@ Lines and hints stay c2.
   This replaces the earlier ruling that it counts as skipped. The drone
   and pistol go before anything is saved; a redial starts the lesson
   fresh, and the fact written is the win, not a skip.
-- **Replay trigger:** deferred to #239 (technical lead, Q2). Whenever the
-  drone does spawn for a finished character, the pistol and lesson work.
+- **The drone wakes only for an unread body** (creative lead, beat (a);
+  technical lead, mechanics). For any character with a template, by any
+  route, it never wakes: no ring trigger, no line (6.7 is only for the
+  opening's skip) and no `wake_combat` write. A skipper who read the
+  record at the door and a winner who comes back both cross the ring and
+  nothing happens. A drone that is already up when its owner becomes a
+  character stays drawn as `τ` but inert: no Tab target, no hit either
+  way, no B skip, and `~` in NEARBY rather than `!`, under its own name
+  (presentation lead); if it was the target, TARGET clears to
+  `none   Tab picks` on that frame. It goes when its
+  owner moves out of range or leaves the hall, and does not come back.
+  The redial ruling stands for unread bodies.
+- **The drone holds fire while its target's record or name prompt is
+  open** (technical lead), and resumes when it closes.
+- **Record read mid-fight** (technical lead): the drone goes inert, the
+  pistol is reeled back, and `wake_combat = "skipped"` is held in the wake
+  record and applied at creation. Esc instead closes the record and the
+  fight resumes unchanged. c2 carries the line: only 6.8 plays in that
+  case (creative lead). Every key that opens the record (street door,
+  outfitter, training terminal) is outside the drone's range in today's
+  hall, so this guards later layouts; the tests open the record directly.
+- **Replay trigger:** deferred to #239 (technical lead, Q2). With the
+  ruling above the drone never wakes for a finished character, so #239
+  decides whether any replay exists and how.
 - **Lift for a character (Q4):** unchanged, identity-scoped.
-- The pistol's item description is a placeholder for the creative lead.
+- **Write guards, call-site test** (technical lead, review 6873460059 on
+  #241): `tests/characters/test_s48c1b_write_guards.py` walks the server
+  source for every `queue(...)` and `commerce.settle(...)` call, every
+  direct outbox write, every write into the live identity store, every
+  live identity accessor that is not only read or copied, and every
+  clone-debt write. It fails when a site appears or disappears without
+  its table changing, and each entry says why it is safe for an unread
+  body. `Characters.recover` now returns at once for an unread body.
+- **Acceptance `return_to`** may stay for stable starts. It is no longer
+  needed for safety: a created character no longer wakes the drone.
+- **Known gaps, waiting for c2:** the core entry line that says B returns
+  along the entry, and the pistol's item description (a placeholder for
+  the creative lead).

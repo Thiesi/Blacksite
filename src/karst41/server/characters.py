@@ -250,6 +250,24 @@ class Characters:
             if actor.owner == pid and actor.behaviour.get("training"):
                 self.world.leave(actor)
 
+    def wake_menu_open(self, pid: str) -> bool:
+        """The record or name prompt is open over the hall for this body."""
+        return any(s.player_id == pid and not s.closed and (w := self.wakes.get(s.id)) is not None
+                   and w.stage in MENU_STAGES for s in self.sessions.active.values())
+
+    def quiet_drone(self, pid: str, drone: Any | None) -> None:
+        """A character's training drone: drawn as before, never in a fight (S48c1b)."""
+        if hasattr(self, "combat"):
+            self.combat.disarm(pid)
+        if drone is None or drone.behaviour.get("inert"):
+            return
+        drone.behaviour["inert"] = True
+        owner = self.world.actors.get(pid)
+        if owner is not None and owner.target == drone.id:
+            owner.target = None
+        if drone.zone in self.world.zones:
+            self.world.zones[drone.zone].revision += 1
+
     def lesson(self, player: Player, key: str, value: Any) -> None:
         """A Wake lesson fact (S48c1b, D2).
 
@@ -491,6 +509,8 @@ class Characters:
         self.queue("save", session.user_id, player, immediate=True)
 
     def recover(self, player: Player) -> None:
+        if self.unread(player.id):
+            return  # Write guard 1: an unread body has no stored place or debt to recover.
         # Zone graph distance, then authored exit order. Ignore destinations
         # that remain in an incomplete authoring bundle (travel itself is S08).
         pending, seen = [(player.zone, player.tile)], set()
@@ -559,6 +579,13 @@ class Characters:
         start = self.content.starts[player.archetype]
         items = grant_starter_kit(player, start, self.content.items, serial)
         player.progress = {"points": 0, "known_programs": list(start.programs), "known_hymns": list(start.hymns), "memory": {}}
+        # Read mid-fight (S48c1b, technical lead): the drone goes inert, the
+        # pistol reels back, and "skipped" is held and applied at creation.
+        drone = next((a for a in self.world.actors.values() if a.owner == player.id and a.behaviour.get("training")), None)
+        if drone is not None and body is not None and self.unread(body.id) and not wake.lessons.get("drone"):
+            self.lesson(body, "drone", "skipped")
+        if drone is not None:
+            self.quiet_drone(player.id, drone)
         # Held facts from the hall (S48c1), applied at creation.
         if wake.met:
             player.progress["met_talkers"] = sorted(set(wake.met))

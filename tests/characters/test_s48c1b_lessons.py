@@ -1,7 +1,13 @@
 """S48c1b: the Wake lessons on the provisional body (#220 beats 6-9; game design 17)."""
 
+from copy import deepcopy
+from pathlib import Path
+
+from karst41.door.doorinfo import DoorInfo
+from karst41.door.model import Display
 from karst41.server.protocol import Frame
 from tests.character_helpers import act, create, place, state
+from tests.fake_terminal import FakeTerminal
 from tests.harness import HeadlessServer
 
 HALL = "vatside-wake-hall"
@@ -87,43 +93,201 @@ def test_skipping_the_drone_puts_the_pistol_back(game: HeadlessServer) -> None:
     assert manager.wakes[client.session.id].lessons["drone"] == "skipped"
 
 
-def replaying(game: HeadlessServer):
-    """Q2: no replay trigger yet (#239); spawn the drone for a finished character directly."""
+def logged(game: HeadlessServer, client) -> list[str]:
+    return [line["text"] for f in game.frames_for(client) if f.type == "log" for line in f.data["lines"]]
+
+
+def wakes_line(lines: list[str]) -> bool:
+    return any(text.startswith("Your training drone wakes.") for text in lines)
+
+
+def test_a_skipper_crossing_the_ring_wakes_nothing(game: HeadlessServer) -> None:
+    """Creative lead beat (a): the drone wakes only for an unread body."""
     client = game.connect()
-    create(game, client, name="Noor", card="none")
+    create(game, client, name="Noor", card="none")  # The record read at the door: never fought.
     manager, combat = game.core.characters, game.core.combat
     player = manager.players[client.session.player_id]
-    own = combat.weapon(player)
-    assert own is not None and own[0].template != PISTOL
-    player.progress.pop("wake_combat", None)
+    assert "wake_combat" not in player.progress
+    game.frames_for(client)
     approach(game, client)
-    assert drone_of(game, player.id) is not None
-    return client, manager, combat, player, own
+    game.step(40)
+    assert drone_of(game, player.id) is None and player.id not in combat.training_arms
+    assert "wake_combat" not in player.progress
+    assert not wakes_line(logged(game, client))
 
 
-def test_a_replay_holds_the_pistol_over_the_characters_own_weapon(game: HeadlessServer) -> None:
-    client, manager, combat, player, own = replaying(game)
-    equipment = dict(player.equipment)
-    assert combat.weapon(player)[0].template == PISTOL
-    assert player.equipment == equipment  # Equipment is never touched.
+def test_a_winner_coming_back_wakes_nothing(game: HeadlessServer) -> None:
+    client = game.connect()
+    game.step(2)
+    manager = game.core.characters
+    approach(game, client)
     fight(game, client)
-    assert combat.weapon(player)[0].id == own[0].id
-
-
-def test_leaving_or_disconnecting_mid_replay_restores_the_weapon_and_saves_no_pistol(game: HeadlessServer) -> None:
-    client, manager, combat, player, own = replaying(game)
+    create(game, client, name="Noor", card="none")
+    player = manager.players[client.session.player_id]
+    assert player.progress["wake_combat"] == "done"
     place(game, client, "vatside-clinics", (30, 18))
     game.step(2)
-    assert combat.weapon(player)[0].id == own[0].id and drone_of(game, player.id) is None
-    place(game, client, HALL, NEAR_DRONE)
+    game.frames_for(client)
+    approach(game, client)
+    game.step(40)
+    assert drone_of(game, player.id) is None
+    assert player.progress["wake_combat"] == "done"
+    assert not wakes_line(logged(game, client))
+
+
+def test_a_character_never_wakes_the_drone_whatever_its_lesson_state(game: HeadlessServer) -> None:
+    """By any route: even with no lesson recorded (a pre-S48 character), no drone."""
+    client = game.connect()
+    create(game, client, name="Noor", card="none")
+    player = game.core.characters.players[client.session.player_id]
+    player.progress.pop("wake_combat", None)
+    approach(game, client)
+    game.step(40)
+    assert drone_of(game, player.id) is None and "wake_combat" not in player.progress
+
+
+def armed_and_warned(game: HeadlessServer, client):
+    """An unread body at the drone, past the drone's warning, the fight on."""
+    game.step(2)
+    approach(game, client)
+    pid = client.session.player_id
+    drone = drone_of(game, pid)
+    assert drone is not None
+    actor = game.core.world.actors[pid]
+    for _ in range(200):
+        game.step()
+        if actor.health < actor.health_max:
+            break
+    assert actor.health < actor.health_max, "the drone should be firing"
+    return pid, drone, actor
+
+
+def test_the_drone_holds_fire_while_the_record_is_open_and_resumes_after(game: HeadlessServer) -> None:
+    client = game.connect()
+    manager = game.core.characters
+    pid, drone, actor = armed_and_warned(game, client)
+    actor.health = actor.health_max
+    assert manager.open_record(client.session, "door")
+    game.step(80)
+    assert actor.health == actor.health_max  # Not one hit while the record is open.
+    assert drone_of(game, pid) is drone and not drone.behaviour.get("inert")
+    act(game, client, Frame("intent", {"name": "menu_close", "args": {}}))
+    assert manager.wakes[client.session.id].stage == "hall"
+    game.step(80)
+    assert actor.health < actor.health_max  # Esc: the fight resumes unchanged.
+    assert "drone" not in manager.wakes[client.session.id].lessons
+
+
+def test_the_drone_holds_fire_at_the_name_prompt_too(game: HeadlessServer) -> None:
+    client = game.connect()
+    manager = game.core.characters
+    pid, drone, actor = armed_and_warned(game, client)
+    assert manager.open_record(client.session, "door")
+    act(game, client, Frame("intent", {"name": "menu_select", "args": {}}))
+    assert manager.wakes[client.session.id].stage == "name"
+    actor.health = actor.health_max
+    game.step(80)
+    assert actor.health == actor.health_max
+
+
+def test_reading_the_record_mid_fight_quiets_the_drone_and_holds_skipped(game: HeadlessServer) -> None:
+    client = game.connect()
+    manager, combat = game.core.characters, game.core.combat
+    pid, drone, actor = armed_and_warned(game, client)
+    assert combat.weapon(manager.players[pid])[0].template == PISTOL
+    actor.target = drone.id
+    effects = create(game, client, name="Noor", card="none")
+    assert client.session.player_id == pid  # Promoted in place.
+    player = manager.players[pid]
+    assert drone_of(game, pid) is drone and drone.behaviour["inert"]  # Still drawn, never in a fight.
+    assert pid not in combat.training_arms and combat.weapon(player)[0].template != PISTOL  # Reeled back.
+    assert actor.target is None
+    assert player.progress["wake_combat"] == "skipped"
+    created = next(e for e in effects if e["action"] == "create")
+    assert created["player"]["progress"]["wake_combat"] == "skipped"
+    assert "training:" not in str(created)
+    health = actor.health
+    game.step(80)
+    assert actor.health >= health  # It never fires again.
+    assert drone_of(game, pid) is drone
+
+
+def test_a_characters_inert_drone_is_no_target_and_writes_nothing(game: HeadlessServer) -> None:
+    client = game.connect()
+    manager, combat = game.core.characters, game.core.combat
+    pid, drone, actor = armed_and_warned(game, client)
+    create(game, client, name="Noor", card="none")
+    player = manager.players[pid]
+    progress = deepcopy(player.progress)
+    health = drone.health
+    outbox = len(manager.outbox)
+    game.frames_for(client)
+    act(game, client, Frame("key", {"k": "tab", "t": 0}))
+    assert actor.target != drone.id
+    combat.select(actor)
+    assert actor.target != drone.id
+    combat.fire(pid, drone.id)
+    assert "Select a visible target with Tab." in logged(game, client)
+    act(game, client, Frame("key", {"k": "b", "t": 0}))  # B skips nothing: there is no lesson.
+    game.step(10)
+    assert drone.health == health and drone_of(game, pid) is drone
+    assert not combat.legal(actor, drone) and not combat.legal(drone, actor)
+    assert combat.relation(actor, drone) == "neutral"
+    assert player.progress == progress
+    assert not [e for e in manager.outbox[outbox:] if e["action"] in ("save", "identity")]
+
+
+def test_an_inert_drone_reads_neutral_in_nearby_and_leaves_the_target_panel(game: HeadlessServer) -> None:
+    """Presentation lead: NEARBY keeps the name with `~`; TARGET clears on that frame."""
+    client = game.connect()
+    pid, drone, actor = armed_and_warned(game, client)
+    model = Display(DoorInfo(Path('.'), Path('.'), client.session.door_info, 80, 24, "256", 3600), presentation=True)
+    terminal = FakeTerminal(80, 24)  # One terminal: later renders send only what changed.
+    clock = iter(range(20, 10_000, 20))
+
+    def screen() -> str:
+        for frame in game.frames_for(client):
+            model.receive(frame, 0)
+            if frame.type in ("view", "delta"):
+                client.send(Frame("ack", {"rev": frame.data["rev"]}))
+        model.toast = None
+        now = next(clock)
+        model.update(now, now)
+        terminal.write(model.render(now)[0])
+        return terminal.screen_text()
+
+    actor.target = drone.id
+    game.core.world.zones[actor.zone].revision += 1
+    game.step(2)
+    screen()
+    assert model.body["target"] and model.body["target"]["id"] == drone.id
+    create(game, client, name="Noor", card="none")
     game.step(3)
-    assert combat.weapon(player)[0].template == PISTOL
+    text = screen()
+    row = next(entry for entry in model.body["nearby"] if entry["id"] == drone.id)
+    assert row["relation"] == "~" and row["name"] == "Training drone"
+    shown = next(entry for entry in model.body["actors"] if entry["id"] == drone.id)
+    assert shown["glyph_id"] == "actor-drone"  # Still drawn as the drone.
+    assert model.body["target"] is None
+    assert "none   Tab picks" in text and "Training drone" in text
+
+
+def test_leaving_an_inert_drone_removes_it_and_no_save_holds_the_pistol(game: HeadlessServer) -> None:
+    client = game.connect()
+    manager = game.core.characters
+    pid, drone, actor = armed_and_warned(game, client)
+    create(game, client, name="Noor", card="none")
+    place(game, client, "vatside-clinics", (30, 18))
+    game.step(2)
+    assert drone_of(game, pid) is None
+    approach(game, client)
+    game.step(20)
+    assert drone_of(game, pid) is None  # Gone for good: a character never wakes it.
     game.core.sessions.disconnect(client.session)
-    saved = [e for e in manager.outbox if e["action"] == "save" and e["player"]["id"] == player.id]
+    saved = [e for e in manager.outbox if e["action"] in ("save", "create") and e["player"]["id"] == pid]
     assert saved and all("training:" not in str(e["player"]) for e in saved)
-    assert saved[-1]["player"]["equipment"] == player.equipment
     back = HeadlessServer(game.core.loop.content, character_state=state(game)).connect()
-    assert back.session.player_id == player.id
+    assert back.session.player_id == pid
 
 
 def intent(game: HeadlessServer, client, name: str, **args) -> None:

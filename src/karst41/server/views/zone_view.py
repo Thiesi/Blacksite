@@ -138,6 +138,8 @@ def build(actor: Actor, zone: ZoneInstance, perception: Perception, content: Con
     def nearby_relation(other: Actor) -> str:
         if presentation.covered(other, actor, content):
             return '!' if cover_relation and cover_relation(actor, other, True) == 'hostile' else '~'
+        if other.behaviour.get('training') and other.behaviour.get('inert'):
+            return '~'  # S48c1b: drawn, never in a fight.
         if other.marked or other.target == actor.id or other.behaviour.get('training'):
             return '!'
         if zone.template.meta.truce and other.kind != 'player':
