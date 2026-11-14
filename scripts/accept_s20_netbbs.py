@@ -19,13 +19,14 @@ from karst41.server.rules.character import grade_threshold
 from karst41.server.wake import card_rows
 
 
-async def admission(probe: NativeProbe, connection: Connection, faction: str, cancel: bool = False) -> None:
-    f = probe.service.core.factions
+async def recruiters(probe: NativeProbe, connection: Connection) -> None:
+    """E at the Wake Hall table, then the recruiter menu.
+
+    S48c1a (#241 ruling (b)): until a card is taken, E at the table opens the
+    cards, and the "Ask about joining" row leads to the recruiter menu."""
+    f, game, sid = probe.service.core.factions, probe.game, connection.session.id
     await probe.walk(connection, (8, 10))
     await key(connection, b'e')
-    # S48c1a (#241 ruling (b)): until a card is taken, E at the table opens
-    # the cards; the "Ask about joining" row leads to the recruiter menu.
-    game, sid = probe.game, connection.session.id
     await wait(lambda: sid in f.menus or game.screens.get(sid, ("",))[0] == "cards")
     if sid not in f.menus:
         ask = card_rows(game.content, True).index("ask")
@@ -34,7 +35,12 @@ async def admission(probe: NativeProbe, connection: Connection, faction: str, ca
             await key(connection, b'\x1b[B')
             await wait(lambda: game.screens[sid][1] != old)
         await key(connection, b'\r')
-    await wait(lambda: connection.session.id in f.menus)
+    await wait(lambda: sid in f.menus)
+
+
+async def admission(probe: NativeProbe, connection: Connection, faction: str, cancel: bool = False) -> None:
+    f = probe.service.core.factions
+    await recruiters(probe, connection)
     screen = f.menus[connection.session.id]
     await select(connection, lambda: f.body(connection.session, screen)[1]['rows'], screen, faction)
     await commit_key(probe, connection, b'j', lambda: bool(screen.confirm))
@@ -99,8 +105,7 @@ async def run_size(probe: NativeProbe, width: int, height: int) -> dict:
     assert token.encode() not in b.caller.output[outsider_mark:]
     probe.save(d, f's20-faction-chat-{width}')
     f = probe.service.core.factions
-    await probe.walk(d, (8, 10))
-    await key(d, b'e'); await wait(lambda: d.session.id in f.menus)
+    await recruiters(probe, d)
     screen = f.menus[d.session.id]
     await select(d, lambda: f.body(d.session, screen)[1]['rows'], screen, 'halvard')
     await commit_key(probe, d, b'l', lambda: bool(screen.confirm))
