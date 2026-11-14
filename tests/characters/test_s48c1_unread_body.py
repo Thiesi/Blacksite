@@ -321,3 +321,24 @@ def test_a_pre_s48_identity_with_every_character_deleted_may_take_a_card_again(g
     snapshot["players"] = []  # Every character deleted before S48.
     manager = HeadlessServer(game.core.loop.content, character_state=snapshot).core.characters
     assert not manager.card_taken("1")
+
+
+def test_a_held_card_survives_a_failed_commit_after_a_disconnect_while_saving(game: HeadlessServer) -> None:
+    # Review 6872191661 (technical lead): the error path restores wake_card from
+    # the pending creation, not from the Wake that the disconnect took away.
+    client = game.connect()
+    manager = game.core.characters
+    create(game, client, card="unmoored", commit=False)  # Card held, then the name.
+    assert manager.identity("1")["wake_card"] == "unmoored"  # Set with the pending creation.
+    game.core.sessions.disconnect(client.session)
+    game.step()
+    game.commit_characters(error=True)
+    game.step()
+    assert manager.identity("1")["wake_card"] == "" and not manager.card_taken("1")
+    back = game.connect()
+    game.step(2)
+    assert manager.unread(back.session.player_id)
+    assert manager.wakes[back.session.id].card == "unmoored"  # Still held in the wake record.
+    create(game, back, card="unmoored")
+    player = manager.players[back.session.player_id]
+    assert player.standing == {"unmoored": rules.CARD_STANDING} and manager.identity("1")["wake_card"] == "unmoored"

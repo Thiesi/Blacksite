@@ -69,6 +69,9 @@ class Characters:
         self.dirty_screens: set[str] = set()
         self.outbox: list[dict[str, Any]] = []
         self.pending: dict[str, tuple[Player, list[dict[str, Any]]]] = {}
+        # identity["wake_card"] before each pending creation, by player id, so
+        # a failed commit restores it even when the Wake left with the caller.
+        self.pending_cards: dict[str, str] = {}
         self.sleepers: dict[str, tuple[Any, int]] = {}
         self.saved_stamps: dict[str, tuple[Any, ...]] = {}
         self.deleting: set[str] = set()
@@ -514,6 +517,7 @@ class Characters:
             player.progress["wake_combat"] = wake.lessons["drone"]
         player.rig = {"native": bool(start.rig_slots), "slots": (list(start.programs) + [None] * start.rig_slots)[:start.rig_slots]}
         identity = self.identity(session.user_id)
+        self.pending_cards[player.id] = identity.get("wake_card", "")
         # Saved with the create effect's identity; "" records "none taken yet"
         # so a restart cannot mistake this identity for a pre-S48 one.
         identity["wake_card"] = card if card and card != "none" else identity.get("wake_card", "")
@@ -535,12 +539,16 @@ class Characters:
         if action == "create":
             owner = next((sid for sid, (p, _) in self.pending.items() if p.id == effect["player"]["id"]), token)
             player, _ = self.pending.pop(owner)
+            previous_card = self.pending_cards.pop(player.id, None)
             session = self.sessions.active.get(owner)
             if error:
                 wake = self.wakes.get(owner)
                 identity = self.identities.get(player.bbs_user_id, {})
-                if wake and wake.card and identity.get("wake_card") == wake.card:
-                    identity["wake_card"] = ""  # The card was not settled either; it stays held.
+                if previous_card is not None:
+                    # The card was not settled either; it stays held in the
+                    # wake record. Restored from the pending creation, not the
+                    # live Wake, which a disconnect while saving has taken.
+                    identity["wake_card"] = previous_card
                 if wake:  # Back at the name, with the reason; never bodiless, never two bodies.
                     wake.stage, wake.error, wake.dirty = "name", "The record did not settle. Enter tries again.", True
                 if session is not None and not session.closed and session.player_id is None:
