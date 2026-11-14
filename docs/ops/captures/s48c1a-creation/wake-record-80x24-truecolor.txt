@@ -1,0 +1,24 @@
+╔═DECANT RECORD - No. 0003 - Template═SAFE═════════════════════════S10R80══════╗
+║    ┌─ DECANT RECORD - No. 0003 - Template ──────────────────────────────┐    ║
+║    │ Choice                                                             │    ║
+║    │ Hardline                                                           │    ║
+║    │ Ghost                                                              │    ║
+║    │ Cantor                                                             │    ║
+║    │ Operator                                                           │    ║
+║    │                                                                    │    ║
+║    │                                                                    │    ║
+║    │                                                                    │    ║
+║    │                                                                    │    ║
+║    │                                                                    │    ║
+║    │ You hold the heavy end. You can use heavy weapons and armour. Your │    ║
+║    │ frame takes the load. Your implant tolerance gains two points.     │    ║
+║    │                                                                    │    ║
+║    │                                                                    │    ║
+║    │ enter read this line  Esc/B put the record down                    │    ║
+║    └────────────────────────────────────────────────────────────────────┘    ║
+╟──────────────────────────────────────────────────────────────────────────────╢
+║‼ Your training drone wakes. Tab targets; F fires; B skips. Its shots cannot  ║
+║  kill.                                                                       ║
+║‼ Training drone hits you for 5.                                              ║
+║? help  Enter read this line  Esc/B put the record down                       ║
+╚══════════════════════════════════════════════════════════════════════════════ 
