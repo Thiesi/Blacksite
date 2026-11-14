@@ -133,3 +133,25 @@ def test_a_select_list_drops_its_column_header_only_when_it_would_not_fit() -> N
     assert not header and listing.y == shape.columns.y and listing.height == fits + 1  # Every row visible.
     header, listing = shape.listing_for(fits + 5)
     assert not header and listing.height == fits + 1  # Beyond that, the list scrolls.
+
+
+@pytest.mark.parametrize("width,height", [(80, 24), (132, 50)])
+def test_the_record_header_carries_the_halls_real_safety_word(info: DoorInfo, repo_root: Path, width: int, height: int) -> None:
+    # Game design 2.1 / presentation lead (#241): the record opens over the
+    # Wake Hall, which is POCKET; the header must not fall back to SAFE.
+    game = HeadlessServer(load_content(repo_root/"src/karst41/content"), character_state={})
+    client = game.connect(width=width, height=height)
+    model = Display(replace(info, width=width, height=height), presentation=True)
+    terminal = FakeTerminal(width, height)
+    game.step()
+    manager = game.core.characters
+    avatar = manager.sim.avatars[client.session.user_id]
+    expected = game.core.world.zones[avatar.actor.zone].safety_at(avatar.actor.position)
+    assert expected == "pocket"
+    assert manager.open_record(client.session, "door")
+    game.step()
+    for frame in game.frames_for(client):
+        model.receive(frame, 0)
+    terminal.write(model.render(0)[0])
+    header = terminal.screen_text().splitlines()[0]
+    assert "POCKET" in header and "SAFE" not in header, header

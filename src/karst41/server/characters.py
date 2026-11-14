@@ -58,7 +58,10 @@ class Characters:
         # A recruiter card is taken once per identity (technical lead, S48c1):
         # identity["wake_card"] holds it. Identities from before S48 had the
         # card menu in their Wake, so one with a stored character counts as
-        # having had its card.
+        # having had its card. Known pre-S48 data gap (technical lead, #241):
+        # an identity whose characters were all deleted before S48 leaves no
+        # stored trace of its creation (deletion removes the player row and
+        # writes no tombstone), so it may take one card again.
         owners = {p.bbs_user_id for p in self.players.values()}
         for user, identity in self.identities.items():
             if user in owners and "wake_card" not in identity:
@@ -864,6 +867,13 @@ class Characters:
                 if not wake.dirty and not session.needs_full_view:
                     continue
                 body = wake.body(self.content, session.door_info["handle"], session.caps["width"], session.caps["height"])
+                avatar = self.sim.avatars.get(session.user_id)
+                if avatar is not None and avatar.actor.zone in self.world.zones:
+                    # The record opens over the hall: the header carries the
+                    # place's real safety word (game design 2.1), not the
+                    # renderer's default for a Wake with no body.
+                    # The door reads it from the inner body it renders.
+                    body.setdefault("body", {})["body_safety"] = self.world.zones[avatar.actor.zone].safety_at(avatar.actor.position)
                 full = Frame("view", {"rev": session.view_revision + 1, "kind": "wake", "body": body})
                 if session.publish_view(full, None, ctx.tick):
                     wake.dirty = False

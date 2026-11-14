@@ -309,3 +309,15 @@ def test_after_a_card_e_at_the_table_opens_the_recruiter_menu(game: HeadlessServ
     _at_the_table(game, client)
     assert manager.screens.get(client.session.id, ("",))[0] != "cards"
     assert client.session.id in game.core.factions.menus
+
+
+def test_a_pre_s48_identity_with_every_character_deleted_may_take_a_card_again(game: HeadlessServer) -> None:
+    # Known pre-S48 data gap (technical lead, #241): deletion leaves no stored
+    # trace of the old Wake's card stage, so such an identity is "none yet".
+    client = game.connect()
+    create(game, client, name="Noor", card="none")
+    snapshot = state(game)
+    snapshot["identities"]["1"].pop("wake_card")  # As stored before S48.
+    snapshot["players"] = []  # Every character deleted before S48.
+    manager = HeadlessServer(game.core.loop.content, character_state=snapshot).core.characters
+    assert not manager.card_taken("1")
