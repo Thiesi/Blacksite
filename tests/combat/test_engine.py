@@ -279,16 +279,21 @@ def test_design_5_3_hymn_cast_cooldown_jam_hush_and_safe_delivery(cantor_duel):
 
 def test_design_4_training_drone_private_nonlethal_and_completion(duel):
     game,a,b=duel
+    # S48c1b: the drone wakes only for an unread body (creative lead beat (a)).
+    fresh=game.connect({"user_id":9,"handle":"Fresh"})
+    game.step(2)
     place(game,a,"vatside-wake-hall",(21,14))
+    place(game,fresh,"vatside-wake-hall",(22,14))
     game.step()
-    drone=next(actor for actor in game.core.world.actors.values() if actor.owner==body(game,a).id)
+    assert not any(actor.owner==body(game,a).id and actor.behaviour.get("training") for actor in game.core.world.actors.values())
+    drone=next(actor for actor in game.core.world.actors.values() if actor.owner==body(game,fresh).id)
     assert not game.core.combat.legal(body(game,b),drone)
     assert not game.core.combat.visible(body(game,b),drone)
     game.step(400)
-    assert body(game,a).health>=1 and body(game,a).stance!="dead"
-    game.core.combat.hurt(body(game,a),drone,100)
+    assert body(game,fresh).health>=1 and body(game,fresh).stance!="dead"
+    game.core.combat.hurt(body(game,fresh),drone,100)
     assert drone.id not in game.core.world.actors
-    assert game.core.characters.players[a.session.player_id].progress["wake_combat"]=="done"
+    assert game.core.characters.wakes[fresh.session.id].lessons["drone"]=="done"
 
 
 def test_design_2_combat_logout_settles_after_sixty_seconds_without_banked_loss(duel):

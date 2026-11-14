@@ -55,6 +55,8 @@ class Characters:
         # but nothing about them is ever stored (write guards in queue() and
         # Commerce).
         self.unread_ids: set[str] = set()
+        # c2 subscribes to lesson facts (lines, objectives).
+        self.lesson_hook: Callable[[Player, str, Any], None] = lambda player, key, value: None
         # A recruiter card is taken once per identity (technical lead, S48c1):
         # identity["wake_card"] holds it. Identities from before S48 had the
         # card menu in their Wake, so one with a stored character counts as
@@ -234,6 +236,54 @@ class Characters:
         pid = f"{self.sessions.origin}:player:{serial}"
         return pid in self.players or any(p.id == pid for p, _ in self.pending.values())
 
+    def jacked_out(self, session: Session) -> None:
+        """Back in the body with the record lifted, the record opens (#220 beat 9)."""
+        wake = self.wakes.get(session.id)
+        if wake is not None and wake.lessons.get("lifted") and self.unread(session.player_id):
+            self.open_record(session, "terminal")
+
+    def end_drone_lesson(self, pid: str) -> None:
+        """Remove the training drone and pistol; the lesson stays as it was."""
+        if hasattr(self, "combat"):
+            self.combat.disarm(pid)
+        for actor in tuple(self.world.actors.values()):
+            if actor.owner == pid and actor.behaviour.get("training"):
+                self.world.leave(actor)
+
+    def wake_menu_open(self, pid: str) -> bool:
+        """The record or name prompt is open over the hall for this body."""
+        return any(s.player_id == pid and not s.closed and (w := self.wakes.get(s.id)) is not None
+                   and w.stage in MENU_STAGES for s in self.sessions.active.values())
+
+    def quiet_drone(self, pid: str, drone: Any | None) -> None:
+        """A character's training drone: drawn as before, never in a fight (S48c1b)."""
+        if hasattr(self, "combat"):
+            self.combat.disarm(pid)
+        if drone is None or drone.behaviour.get("inert"):
+            return
+        drone.behaviour["inert"] = True
+        owner = self.world.actors.get(pid)
+        if owner is not None and owner.target == drone.id:
+            owner.target = None
+        if drone.zone in self.world.zones:
+            self.world.zones[drone.zone].revision += 1
+
+    def lesson(self, player: Player, key: str, value: Any) -> None:
+        """A Wake lesson fact (S48c1b, D2).
+
+        An unread body's facts live in the wake record, applied at creation;
+        a character's go to the existing progress keys and are saved with it.
+        """
+        if key == "drone":
+            player.progress["wake_combat"] = value  # In memory for an unread body.
+        session = next((s for s in self.sessions.active.values() if s.player_id == player.id and not s.closed), None)
+        wake = self.wakes.get(session.id) if session else None
+        if self.unread(player.id) and wake is not None:
+            wake.lessons[key] = value
+            self.identities[player.bbs_user_id]["wake"] = wake.saved()
+            self.queue("identity", player.bbs_user_id)
+        self.lesson_hook(player, key, value)
+
     def unread_door(self, session: Session, exit: Any) -> str | None:
         if not self.unread(session.player_id):
             return None
@@ -402,6 +452,8 @@ class Characters:
             player.progress.pop("travel", None)
 
     def disconnect(self, session: Session, avatar_override: Avatar | None = None) -> None:
+        if session.role == "caller" and session.player_id:
+            self.end_drone_lesson(session.player_id)
         wake = self.wakes.pop(session.id, None)
         self.screens.pop(session.id, None)
         self.renaming.pop(session.id, None)
@@ -457,6 +509,8 @@ class Characters:
         self.queue("save", session.user_id, player, immediate=True)
 
     def recover(self, player: Player) -> None:
+        if self.unread(player.id):
+            return  # Write guard 1: an unread body has no stored place or debt to recover.
         # Zone graph distance, then authored exit order. Ignore destinations
         # that remain in an incomplete authoring bundle (travel itself is S08).
         pending, seen = [(player.zone, player.tile)], set()
@@ -525,14 +579,26 @@ class Characters:
         start = self.content.starts[player.archetype]
         items = grant_starter_kit(player, start, self.content.items, serial)
         player.progress = {"points": 0, "known_programs": list(start.programs), "known_hymns": list(start.hymns), "memory": {}}
+        # Read mid-fight (S48c1b, technical lead): the drone goes inert, the
+        # pistol reels back, and "skipped" is held and applied at creation.
+        drone = next((a for a in self.world.actors.values() if a.owner == player.id and a.behaviour.get("training")), None)
+        if drone is not None and body is not None and self.unread(body.id) and not wake.lessons.get("drone"):
+            self.lesson(body, "drone", "skipped")
+        if drone is not None:
+            self.quiet_drone(player.id, drone)
         # Held facts from the hall (S48c1), applied at creation.
         if wake.met:
             player.progress["met_talkers"] = sorted(set(wake.met))
         if wake.lessons.get("drone") in ("done", "skipped"):
             player.progress["wake_combat"] = wake.lessons["drone"]
+        lifted = wake.lessons.get("lifted")
         player.rig = {"native": bool(start.rig_slots), "slots": (list(start.programs) + [None] * start.rig_slots)[:start.rig_slots]}
         identity = self.identity(session.user_id)
         self.pending_cards[player.id] = identity.get("wake_card", "")
+        if lifted:  # The held lift: receipt and record, no run grant (tier-0 training).
+            identity.setdefault("lattice_receipts", {})[lifted["key"]] = lifted["unit"]
+            player.progress.setdefault("lattice_receipts", {})[lifted["key"]] = lifted["unit"]
+            player.progress.setdefault("lattice_records", {})[lifted["asset"]] = lifted["unit"]
         # Saved with the create effect's identity; "" records "none taken yet"
         # so a restart cannot mistake this identity for a pre-S48 one.
         identity["wake_card"] = card if card and card != "none" else identity.get("wake_card", "")

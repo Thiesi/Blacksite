@@ -60,10 +60,10 @@ def test_game_4_private_training_defeat_lift_and_leave(runners):
     assert view[0] == "menu" and view[1]["title"] == "YOUR DECANT RECORD"
     assert any("decant" in row["cells"][0] for row in view[1]["rows"])
     intent(game, a, "menu_close")
+    # S48c1b (#220 item 6): the lesson entered its core directly, so leaving
+    # the core leaves the Lattice; there is no district grid to return to.
     intent(game, a, "lat.leave")
-    assert presence.instance is None and actor(game, a).stance == "jacked"
-    intent(game, a, "lat.jack_out")
-    assert actor(game, a).stance == "normal"
+    assert presence.player_id not in game.core.lattice.presences and actor(game, a).stance == "normal"
 
 
 def test_issue_67_hit_log_rounds_text_and_preserves_fractional_combat(runners):

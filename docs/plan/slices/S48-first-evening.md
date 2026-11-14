@@ -373,3 +373,69 @@ lessons yet (c1b) and no new lines (c2).
 - **Panel:** an unread body sends no grade, so the panel shows name and
   bars only. The terminal UI §2.4 panel (gurney number, empty grade slot,
   lease row) is presentation work for the S48 panel pass.
+
+## Implementation notes (PR #TBD, S48c1b)
+
+The lessons on the provisional body (#220 beats 6-9; game design 17).
+Lines and hints stay c2.
+
+- **The hall training pistol** (`wpn_hall_training_pistol`, Kestrel
+  sidearm numbers, no ammo, no price) is held in `Combat.training_arms`,
+  never in inventory or equipment. It is in hand while the training
+  drone is up and goes when the drone is down or skipped, out of range,
+  out of the hall, or on disconnect. Firing it consumes and settles
+  nothing. Equipment is never touched, so a character's own weapon comes
+  back the moment it goes and no save can hold it (canon #238, clause 2).
+- **Lesson facts** go through `Characters.lesson`: an unread body's into
+  the wake record, applied at creation; a character's into the existing
+  `progress` keys. `lesson_hook` is for c2.
+- **The training terminal enters its own core directly** (#220 item 6);
+  B in that core leaves the Lattice. An unread body that disconnects in
+  the core leaves at once (there is no body to orphan).
+- **Lift for an unread body (technical lead, Q1):** settles nothing when
+  it happens; records `lessons.lifted` and logs 8.6; idempotent (a second
+  lift writes and logs nothing); applied at creation as the identity
+  receipt and `lattice_records`, with no run grant. Coming back after the
+  lift opens the record (beat 9).
+- **Disconnect mid-drone (technical lead, Q3): the lesson stays open.**
+  This replaces the earlier ruling that it counts as skipped. The drone
+  and pistol go before anything is saved; a redial starts the lesson
+  fresh, and the fact written is the win, not a skip.
+- **The drone wakes only for an unread body** (creative lead, beat (a);
+  technical lead, mechanics). For any character with a template, by any
+  route, it never wakes: no ring trigger, no line (6.7 is only for the
+  opening's skip) and no `wake_combat` write. A skipper who read the
+  record at the door and a winner who comes back both cross the ring and
+  nothing happens. A drone that is already up when its owner becomes a
+  character stays drawn as `τ` but inert: no Tab target, no hit either
+  way, no B skip, and `~` in NEARBY rather than `!`, under its own name
+  (presentation lead); if it was the target, TARGET clears to
+  `none   Tab picks` on that frame. It goes when its
+  owner moves out of range or leaves the hall, and does not come back.
+  The redial ruling stands for unread bodies.
+- **The drone holds fire while its target's record or name prompt is
+  open** (technical lead), and resumes when it closes.
+- **Record read mid-fight** (technical lead): the drone goes inert, the
+  pistol is reeled back, and `wake_combat = "skipped"` is held in the wake
+  record and applied at creation. Esc instead closes the record and the
+  fight resumes unchanged. c2 carries the line: only 6.8 plays in that
+  case (creative lead). Every key that opens the record (street door,
+  outfitter, training terminal) is outside the drone's range in today's
+  hall, so this guards later layouts; the tests open the record directly.
+- **Replay trigger:** deferred to #239 (technical lead, Q2). With the
+  ruling above the drone never wakes for a finished character, so #239
+  decides whether any replay exists and how.
+- **Lift for a character (Q4):** unchanged, identity-scoped.
+- **Write guards, call-site test** (technical lead, review 6873460059 on
+  #241): `tests/characters/test_s48c1b_write_guards.py` walks the server
+  source for every `queue(...)` and `commerce.settle(...)` call, every
+  direct outbox write, every write into the live identity store, every
+  live identity accessor that is not only read or copied, and every
+  clone-debt write. It fails when a site appears or disappears without
+  its table changing, and each entry says why it is safe for an unread
+  body. `Characters.recover` now returns at once for an unread body.
+- **Acceptance `return_to`** may stay for stable starts. It is no longer
+  needed for safety: a created character no longer wakes the drone.
+- **Known gaps, waiting for c2:** the core entry line that says B returns
+  along the entry, and the pistol's item description (a placeholder for
+  the creative lead).

@@ -184,7 +184,7 @@ class Npcs:
 
     def actor_relation(self, source: Actor, target: Actor) -> str:
         if target.behaviour.get("training"):
-            return "hostile" if target.owner == source.id else "neutral"
+            return "hostile" if target.owner == source.id and not target.behaviour.get("inert") else "neutral"
         if target.marked or self.hostile(target, source) or self.hostile(source, target):
             return "hostile"
         zone = self.world.zones.get(target.zone)
@@ -196,7 +196,7 @@ class Npcs:
         if actor is other or actor.kind == "player" or actor.zone != other.zone:
             return False
         if actor.behaviour.get("training"):
-            return actor.owner == other.id
+            return actor.owner == other.id and not actor.behaviour.get("inert")
         group = actor.behaviour.get("spawner")
         if group and group == other.behaviour.get("spawner"):
             return False  # Game 5.5: packs and cohorts do not hunt siblings.
@@ -505,14 +505,22 @@ class Npcs:
         self.commerce.enqueue_system(propose)
 
     def training(self, player: Player, actor: Actor, tick: int) -> None:
-        if player.progress.get("wake_combat") in ("done","skipped"): return
+        drone = next((a for a in self.world.actors.values() if a.owner==player.id and a.behaviour.get("training")),None)
+        unread = self.game.unread(player.id)
+        if drone is None and (not unread or player.progress.get("wake_combat") in ("done","skipped")): return
         zone = self.world.zones[actor.zone]
         sp = next((sp for sp in zone.template.meta.spawners if sp.condition == "per_player"), None)
         anchor = next((o for o in zone.objects.values() if sp and o.spec.params.get("training_npc") == sp.npc),None)
-        drone = next((a for a in self.world.actors.values() if a.owner==player.id and a.behaviour.get("training")),None)
         tile = tuple(anchor.spec.params.get("training_tile",anchor.spec.tile)) if anchor else None
-        if not anchor or distance(actor.position,tile)>6:
+        if not anchor or distance(actor.position,tile)>6 or (drone is not None and drone.zone != actor.zone):
             if drone: self.world.leave(drone)
+            self.combat.disarm(player.id)  # The pistol goes with the drone (S48c1b).
+            return
+        if not unread or drone is not None and drone.behaviour.get("inert"):
+            # S48c1b (creative lead beat (a), technical lead): the drone wakes
+            # only for an unread body. A character's, by any route, stays
+            # drawn but inert: no fire, no line, no wake_combat write.
+            self.game.quiet_drone(player.id, drone)
             return
         if drone is None:
             if distance(actor.position,tile)>2: return
@@ -523,7 +531,10 @@ class Npcs:
             self.world.enter(drone,actor.zone,tile)
             self.combat.warnings.pop((player.id,drone.id),None)
             self.combat.log(actor,"Your training drone wakes. Tab targets; F fires; B skips. Its shots cannot kill.",True)
+        self.combat.arm(player)  # In hand while the drone is up (game design 17).
         template = self.content.npcs[drone.behaviour["template"]]
+        if self.game.wake_menu_open(player.id):
+            return  # Holds fire while the target's record or name prompt is open (S48c1b).
         if tick>=int(drone.behaviour["warned"])+ticks(WARNING_SECONDS) and tick>=drone.cooldowns.get("weapon",0):
             if self.combat.visible(drone,actor) and distance(drone.position,actor.position)<=template.attack.range:
                 self.combat.shot(drone,actor,template.attack)
