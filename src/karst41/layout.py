@@ -44,6 +44,17 @@ class MenuLayout:
     # listing's top row through the actions row for its line and actions.
     talk: Rect
 
+    def listing_for(self, count: int) -> tuple[bool, Rect]:
+        """Whether a select menu shows its column header, and its list area.
+
+        The header is the lowest-priority row (presentation lead, #241):
+        when the list would not fit with it, the header gives way and the
+        list takes its row. Only a list that still does not fit scrolls.
+        """
+        if count <= self.listing.height or self.columns.bottom != self.listing.y:
+            return True, self.listing
+        return False, Rect(self.listing.x, self.columns.y, self.listing.width, self.listing.height + self.columns.height)
+
 
 @dataclass(frozen=True)
 class HeaderLayout:

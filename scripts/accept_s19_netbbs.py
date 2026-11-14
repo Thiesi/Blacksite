@@ -84,7 +84,14 @@ async def objective_key(probe: ContractProbe, caller: Connection, completed: Cal
 
 async def board_row(probe: ContractProbe, caller: Connection, row: str) -> Any:
     owner = probe.service.core.contracts
-    await commit_key(probe,caller,b'e',lambda:caller.session.id in owner.panels.menus)
+    talk = probe.service.core.dialogue
+    sid = caller.session.id
+    await commit_key(probe,caller,b'e',lambda:sid in owner.panels.menus or talk is not None and sid in talk.menus)
+    if talk is not None and sid in talk.menus:
+        # S48b: a giver who is also a talker opens the board from the talk page (S42).
+        talker = probe.service.core.characters.content.dialogue[talk.menus[sid].contact.talker]
+        hotkey = next(o.hotkey.lower() for o in talker.offers if o.kind in ('contract', 'service'))
+        await commit_key(probe,caller,hotkey.encode(),lambda:sid in owner.panels.menus)
     panel = owner.panels.menus[caller.session.id]
     await select(caller,lambda:owner.panels.rows(caller.session,panel),panel,row)
     return panel

@@ -538,6 +538,12 @@ allows (≥ 100 columns) or below when it does not, and an action bar. They
 follow the NetBBS §3.5 rule: opening a menu never asks a question; every
 action is a hotkey; `Esc` or `B` closes without side effects.
 
+The column header is the lowest-priority row of a menu. When the rows do
+not fit the list area with it, the header is left out and its row goes
+to the list; a menu whose rows fit keeps its header. A list scrolls only
+when it still does not fit without the header, and the selected row is
+always in view (#241).
+
 Menus: inventory, equipment, rig, character sheet, skills and grade
 points, contract board, active contracts, vendor, market, bounties, crew,
 sitrep, settings (keymap, palette, log verbosity, sitrep visibility),

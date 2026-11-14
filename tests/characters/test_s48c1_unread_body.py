@@ -199,3 +199,199 @@ def test_an_unread_body_reaches_only_the_halls_own_systems(game: HeadlessServer)
     rows = game.core.market.views.rows(other.session, panel)
     assert other.session.player_id in {row["id"] for row in rows}
     assert client.session.player_id not in {row["id"] for row in rows}
+
+
+def test_an_unread_body_cannot_start_a_delete(game: HeadlessServer) -> None:
+    client, manager = woken(game)
+    pid = client.session.player_id
+    name = manager.players[pid].name
+    act(game, client, Frame("key", {"k": "p", "t": 0}))
+    act(game, client, Frame("intent", {"name": "delete_character", "args": {}}))
+    act(game, client, Frame("line", {"id": "delete:" + pid, "text": name}))
+    assert pid not in manager.deleting
+    assert manager.screens.get(client.session.id, ("",))[0] != "saving"
+    assert not [e for e in manager.outbox if e["action"] == "delete"]
+
+
+def test_a_refused_death_proposes_nothing_and_patches_no_other_effect(game: HeadlessServer) -> None:
+    client, manager = woken(game)
+    pid = client.session.player_id
+    combat = game.core.combat
+    actor = game.core.world.actors[pid]
+    manager.players[pid].progress["combat"] = {"stage": "down", "until": 0}  # As a downed body has it.
+    other = {"action": "save", "user": "other"}
+    combat.commerce.outbox.append(other)
+    combat.die(manager.players[pid], actor)
+    assert combat.commerce.outbox[-1] is other and set(other) == {"action", "user"}
+    assert pid not in combat.pending_deaths
+
+
+def test_an_unread_body_can_be_reported_and_the_report_outlives_it(game: HeadlessServer, tmp_path) -> None:
+    # Technical lead, #241 row 39: moderation reaches a newcomer, and the
+    # report row needs no character row (it is JSON in `reports`, no join).
+    import json
+    from karst41.server.storage.db import Storage
+    reporter = game.connect({"user_id": 2, "handle": "STRASSE"})
+    create(game, reporter)
+    client, manager = woken(game)
+    pid, name = client.session.player_id, manager.players[client.session.player_id].name
+    act(game, reporter, Frame("intent", {"name": "report", "args": {"name": name, "text": "griefing at the cards"}}))
+    effect = game.core.chat.outbox.pop()
+    assert effect["row"]["target"] == pid and effect["row"]["target_name"] == name
+    game.core.sessions.disconnect(client.session)  # A no-show: the body is never created.
+    game.step()
+    store = Storage(tmp_path/"world.db", game.clock)
+    try:
+        store.report(effect["row"])
+        row = json.loads(store.db.execute("SELECT data FROM reports").fetchone()[0])
+        assert row["target"] == pid and row["target_user"] == client.session.user_id and row["text"] == "griefing at the cards"
+        assert store.db.execute("SELECT count(*) FROM players WHERE id=?", (pid,)).fetchone()[0] == 0
+    finally:
+        store.close()
+
+
+def _at_the_table(game: HeadlessServer, client) -> None:
+    place(game, client, HALL, (8, 9))
+    act(game, client, E)
+
+
+def _select(game: HeadlessServer, client, row: str) -> None:
+    from karst41.server.wake import card_rows
+    manager = game.core.characters
+    ids = card_rows(manager.content, not manager.unread(client.session.player_id))
+    for _ in range(ids.index(row)):
+        act(game, client, Frame("intent", {"name": "menu_cursor", "args": {"delta": 1}}))
+    act(game, client, Frame("intent", {"name": "menu_select", "args": {}}))
+
+
+def test_a_finished_character_with_no_card_reaches_the_recruiters_through_the_table(game: HeadlessServer) -> None:
+    # #241 ruling (b): until a card is taken the table opens the cards, and a
+    # character with a template gets one row to the table's recruiter menu.
+    client = game.connect()
+    create(game, client, card="none")
+    manager = game.core.characters
+    _at_the_table(game, client)
+    assert manager.screens[client.session.id][0] == "cards"
+    _select(game, client, "ask")
+    assert client.session.id in game.core.factions.menus
+    assert manager.identity(client.session.user_id)["wake_card"] == ""
+
+
+def test_take_no_card_records_nothing_and_the_card_can_still_be_taken_later(game: HeadlessServer) -> None:
+    client = game.connect()
+    create(game, client, card="none")
+    manager = game.core.characters
+    _at_the_table(game, client)
+    _select(game, client, "none")
+    assert manager.identity(client.session.user_id)["wake_card"] == "" and not manager.card_taken(client.session.user_id)
+    _at_the_table(game, client)
+    assert manager.screens[client.session.id][0] == "cards"  # The table stays open (#220 decision 4).
+    _select(game, client, "unmoored")
+    game.commit_commerce()
+    game.step()
+    assert manager.identity(client.session.user_id)["wake_card"] == "unmoored"
+
+
+def test_an_unread_body_sees_no_recruiter_row(game: HeadlessServer) -> None:
+    client, manager = woken(game)
+    _at_the_table(game, client)
+    from karst41.server.wake import card_rows, cards
+    assert "ask" not in card_rows(manager.content, not manager.unread(client.session.player_id))
+    rows = [r["id"] for r in cards(manager.content, 0, 80, 24, ask=not manager.unread(client.session.player_id))["rows"]]
+    assert "ask" not in rows and rows[-1] == "none"
+
+
+def test_after_a_card_e_at_the_table_opens_the_recruiter_menu(game: HeadlessServer) -> None:
+    client = game.connect()
+    create(game, client, card="unmoored")
+    manager = game.core.characters
+    assert manager.card_taken(client.session.user_id)
+    _at_the_table(game, client)
+    assert manager.screens.get(client.session.id, ("",))[0] != "cards"
+    assert client.session.id in game.core.factions.menus
+
+
+def test_a_pre_s48_identity_with_every_character_deleted_may_take_a_card_again(game: HeadlessServer) -> None:
+    # Known pre-S48 data gap (technical lead, #241): deletion leaves no stored
+    # trace of the old Wake's card stage, so such an identity is "none yet".
+    client = game.connect()
+    create(game, client, name="Noor", card="none")
+    snapshot = state(game)
+    snapshot["identities"]["1"].pop("wake_card")  # As stored before S48.
+    snapshot["players"] = []  # Every character deleted before S48.
+    manager = HeadlessServer(game.core.loop.content, character_state=snapshot).core.characters
+    assert not manager.card_taken("1")
+
+
+def test_a_held_card_survives_a_failed_commit_after_a_disconnect_while_saving(game: HeadlessServer) -> None:
+    # Review 6872191661 (technical lead): the error path restores wake_card from
+    # the pending creation, not from the Wake that the disconnect took away.
+    client = game.connect()
+    manager = game.core.characters
+    create(game, client, card="unmoored", commit=False)  # Card held, then the name.
+    assert manager.identity("1")["wake_card"] == "unmoored"  # Set with the pending creation.
+    game.core.sessions.disconnect(client.session)
+    game.step()
+    game.commit_characters(error=True)
+    game.step()
+    assert manager.identity("1")["wake_card"] == "" and not manager.card_taken("1")
+    back = game.connect()
+    game.step(2)
+    assert manager.unread(back.session.player_id)
+    assert manager.wakes[back.session.id].card == "unmoored"  # Still held in the wake record.
+    create(game, back, card="unmoored")
+    player = manager.players[back.session.player_id]
+    assert player.standing == {"unmoored": rules.CARD_STANDING} and manager.identity("1")["wake_card"] == "unmoored"
+
+
+def test_a_stored_serial_that_outlived_its_creation_is_never_reused(game: HeadlessServer) -> None:
+    # Review 6872808103: drop while saving, the creation commits with no
+    # session, then a restart. The stored wake must not carry the used serial,
+    # and a stale one must never overwrite the real character.
+    client = game.connect()
+    manager = game.core.characters
+    create(game, client, name="Noor", commit=False)
+    game.core.sessions.disconnect(client.session)
+    game.step()
+    used = int(next(p for p, _ in manager.pending.values()).id.rsplit(":", 1)[1])
+    effects = game.commit_characters()  # Commits the creation and anything it queues.
+    game.step()
+    created = next(i for i, e in enumerate(effects) if e["action"] == "create")
+    stored = [e for e in effects[created + 1:] if e["action"] == "identity" and e["user"] == "1"]
+    assert stored and stored[-1]["identity"]["wake"] == {}  # Durable, with no session attached.
+    snapshot = state(game)
+    snapshot["cap"] = 2
+    stale = {"stage": "hall", "serial": used}  # As if an older store still held it.
+    snapshot["identities"]["1"]["wake"] = stale
+    restarted = HeadlessServer(game.core.loop.content, character_state=snapshot)
+    again = restarted.core.characters
+    noor = next(p for p in again.players.values() if p.name == "Noor")
+    record = noor.record()
+    back = restarted.connect()
+    restarted.step()
+    assert again.screens[back.session.id][0] == "characters"
+    act(restarted, back, Frame("intent", {"name": "menu_cursor", "args": {"delta": 1}}))
+    act(restarted, back, Frame("intent", {"name": "menu_select", "args": {}}))
+    body = again.players[back.session.player_id]
+    assert again.unread(body.id) and body.id != noor.id
+    assert again.players[noor.id] is noor and noor.record() == record and not again.unread(noor.id)
+
+
+def test_create_refuses_to_build_over_a_stored_character(game: HeadlessServer) -> None:
+    client = game.connect()
+    manager = game.core.characters
+    create(game, client, name="Noor")
+    noor = manager.players[client.session.player_id]
+    manager.cap = 2
+    game.core.sessions.disconnect(client.session)
+    back = game.connect()
+    game.step()
+    act(game, back, Frame("intent", {"name": "menu_cursor", "args": {"delta": 1}}))
+    act(game, back, Frame("intent", {"name": "menu_select", "args": {}}))
+    wake = manager.wakes[back.session.id]
+    wake.serial = int(noor.id.rsplit(":", 1)[1])  # A stale serial reaching create().
+    wake.name, wake.archetype = "Other", "ghost"
+    manager.create(back.session, "none")
+    assert wake.stage == "name" and "did not settle" in wake.error
+    assert manager.players[noor.id] is noor and noor.name == "Noor"
+    assert not any(e["action"] == "create" and e["player"]["name"] == "Other" for e in manager.outbox)

@@ -753,11 +753,12 @@ should add a layer that disagrees with the third.
 
 ### The Wake briefing (Dr. Vantongeren, three screens)
 
-Delivered in the Wake Hall after archetype and name selection. Each screen
-is one `Press any key` pause. Screen 3 ends with the recruiter-card
-choice as an action bar (`[H]alvard [S]ablier [K]estrel [W]ardens [C]hoir
-[R]ed Sable [U]nmoored [F]errymen [N]one`), never a question the player
-must answer to leave: `[N]one` is the default and Back selects it.
+Spoken in the Wake Hall as the opening's scripted lines, beat by beat,
+before the decant record and the name (`docs/design/proposals/first-ten-minutes.md`
+§4). The three screens below are the full text. Vantongeren's
+`Hear it again` offer shows them as three text pages. Cards are taken
+at the hall's card table, never from a menu the player must answer to
+leave.
 
 **Screen 1**
 
@@ -781,8 +782,7 @@ must answer to leave: `[N]one` is the default and Back selects it.
 > means less than it sounds like: you can go where you want, work for who
 > you want, and nobody can sell you. After ninety days you're a person, with
 > a name on the civic roll. Nothing gets you there sooner. The days count
-> without you. Work registers your signature sooner: a flat in your own
-> name, and a side, if one will have you. It isn't personhood. It's a pen.
+> without you.
 >
 > Many names vanish from the lease rolls. Some leave the work; some
 > disappear. The roll does not tell me which. Keep your own record.
@@ -799,8 +799,9 @@ must answer to leave: `[N]one` is the default and Back selects it.
 > I hand them out without preference; they all resent that and none of
 > them can prove it.
 >
-> Take one, or don't. It's an introduction, not a contract. No recruiter owns
-> your choice.
+> Take one, or don't. It's an introduction, not a contract. Work registers
+> your signature sooner: a flat in your own name, and a side, if one will
+> have you. It isn't personhood. It's a pen.
 >
 > When you're ready, walk to the door. There's a drone in the corridor
 > that's been malfunctioning since Tuesday. Deal with it; consider it the

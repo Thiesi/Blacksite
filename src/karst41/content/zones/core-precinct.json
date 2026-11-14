@@ -210,6 +210,32 @@
         "w": 3,
         "h": 3
       }
+    },
+    {
+      "id": "cast-amsel",
+      "npc": "npc-cast-amsel",
+      "count": 1,
+      "respawn_seconds": 60,
+      "condition": "always",
+      "region": {
+        "x": 27,
+        "y": 2,
+        "w": 1,
+        "h": 1
+      }
+    },
+    {
+      "id": "cast-brann",
+      "npc": "npc-cast-brann",
+      "count": 1,
+      "respawn_seconds": 60,
+      "condition": "always",
+      "region": {
+        "x": 41,
+        "y": 16,
+        "w": 1,
+        "h": 1
+      }
     }
   ],
   "sector": "lat-core"
