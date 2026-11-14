@@ -13,17 +13,29 @@ def act(game: HeadlessServer, client: FakeClient, frame: Frame) -> None:
     game.step(2)
 
 
-def create(game: HeadlessServer, client: FakeClient, archetype: int = 1, name: str = "", card: str = "unmoored", commit: bool = True) -> list[dict[str, Any]]:
+def read_record(game: HeadlessServer, client: FakeClient) -> None:
+    """Open the decant record over the hall, as E at the street door does."""
     game.step()
+    assert game.core.characters.open_record(client.session, "door")
+    game.step(2)
+
+
+def create(game: HeadlessServer, client: FakeClient, archetype: int = 1, name: str = "", card: str = "unmoored", commit: bool = True) -> list[dict[str, Any]]:
+    """The S48 opening's direct path: take a card at the table, open the
+    decant record (as E at the door would), choose a template and a name."""
+    game.step()
+    manager = game.core.characters
+    manager.take_card(client.session, card)
+    assert (manager.open_record(client.session, "door")
+            or manager.wakes[client.session.id].stage == "record"), "no unread body to read a record for"
+    # Four ticks: the same count the pre-S48 menus took (briefing skip and
+    # card select), so tick-stamped fixtures such as the S43 traces still line up.
+    game.step(4)
     for _ in range(archetype):
         act(game, client, Frame("intent", {"name": "menu_cursor", "args": {"delta": 1}}))
     act(game, client, Frame("intent", {"name": "menu_select", "args": {}}))
-    wake = game.core.characters.wakes[client.session.id]
+    wake = manager.wakes[client.session.id]
     act(game, client, Frame("line", {"id": wake.prompt_id, "text": name}))
-    act(game, client, Frame("key", {"k": "s", "t": 0}))
-    choices = [*game.core.loop.content.wake_cards, "none"]
-    wake.cursor = choices.index(card)
-    act(game, client, Frame("intent", {"name": "menu_select", "args": {}}))
     if not commit:
         return []
     effects = game.commit_characters()
@@ -34,7 +46,8 @@ def create(game: HeadlessServer, client: FakeClient, archetype: int = 1, name: s
 
 def state(game: HeadlessServer) -> dict[str, Any]:
     manager = game.core.characters
-    return deepcopy({"players": [p.record() for p in manager.players.values()], "identities": manager.identities,
+    return deepcopy({"players": [p.record() for p in manager.players.values() if p.id not in manager.unread_ids],
+                     "identities": manager.identities,
                      "serial": manager.serial, "cap": manager.cap,
                      "items": [item.record() for item in manager.items.values()]})
 

@@ -131,7 +131,8 @@ class Storage:
         json_columns = {"attributes", "skills", "standing", "tile", "implants", "equipment", "inventory", "rig",
                         "drugs_active", "dependencies", "settings", "stats", "progress", "keeper_answer"}
         players = []
-        for row in self.db.execute("SELECT * FROM players WHERE archetype IS NOT NULL"):
+        # S48: an unread body is never stored; a row without a template never loads.
+        for row in self.db.execute("SELECT * FROM players WHERE archetype IS NOT NULL AND archetype <> ''"):
             players.append({key: json.loads(value) if key in json_columns and value is not None else value
                             for key, value in dict(row).items()})
         details = self.meta('vendor_budget_state') or {}
@@ -267,7 +268,7 @@ class Storage:
                 self.mark_dirty("players", effect["player"]["id"], effect["player"])
             for item in effect.get("items", []):
                 self.mark_dirty("items", item["id"], item)
-            if action == "create":
+            if "serial" in effect:  # S48: a Wake takes its gurney serial before creation.
                 self.mark_dirty("meta", "player_serial", effect["serial"])
             if action in ("create", "identity") or effect.get("immediate"):
                 self.flush_now()

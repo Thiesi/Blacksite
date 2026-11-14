@@ -3,6 +3,7 @@
 Game design 4, 5.3, 5.4 and 7.3. No I/O or wall-clock reads occur here.
 """
 
+from karst41.server.starts import start_for
 from karst41.server.interaction import Focus, Interaction, interact, key_action, object_interaction
 from collections import deque
 from copy import deepcopy
@@ -617,8 +618,12 @@ class Combat:
                 self.commerce.close(session)
                 self.game.screens.pop(session.id,None)
                 self.menus.pop(session.id,None)
-        self.commerce.settle(player,{"inventory":inventory,"equipment":equipment,"progress":progress,
-            "health":0,"chits_hand":hand,"clone_debt":debt,"xp":xp,"keeper_answer":None},items,caches,serial,committed,identity)
+        if not self.commerce.settle(player,{"inventory":inventory,"equipment":equipment,"progress":progress,
+                "health":0,"chits_hand":hand,"clone_debt":debt,"xp":xp,"keeper_answer":None},items,caches,serial,committed,identity):
+            # A refused death (S48: an unread body) proposes nothing, so the
+            # patches below must not land on another effect.
+            self.pending_deaths.discard(player.id)
+            return
         if killer_patch or (killer_identity is not None and killer_identity != self.game.identities[killer.bbs_user_id]):
             if "progress" in killer_patch:
                 killer_patch["progress"] = {key: value for key, value in killer_patch["progress"].items()
@@ -673,7 +678,7 @@ class Combat:
                     usable = True
         if not usable or not body_gear or player.recovery_kit_id:
             draft.recovery_kit_id = player.recovery_kit_id or player.id+":loan"
-            for tid,quantity in self.content.starts[player.archetype].recovery_items.items():
+            for tid,quantity in start_for(self.content, player.archetype).recovery_items.items():
                 missing = quantity-sum(items[i].stack for i in draft.inventory if items[i].template == tid)
                 while missing > 0:
                     count = min(missing,self.content.items[tid].stack_max)

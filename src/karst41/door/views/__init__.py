@@ -35,22 +35,24 @@ def render_menu(buffer: CellBuffer, body: dict[str, Any], layout: Layout, palett
         _render_talker(buffer, body, shape.talk, palette)
         return
     rows = body.get("rows", [])
-    available = shape.listing.height
-    columns = body.get("columns", [])
-    label = "  ".join(str(c.get("label", c)) if isinstance(c, dict) else str(c) for c in columns)
-    buffer.put(shape.columns.x, shape.columns.y, truncate(label, shape.columns.width), palette.style("muted"))
+    header, listing = shape.listing_for(len(rows))
+    available = listing.height
+    if header:
+        columns = body.get("columns", [])
+        label = "  ".join(str(c.get("label", c)) if isinstance(c, dict) else str(c) for c in columns)
+        buffer.put(shape.columns.x, shape.columns.y, truncate(label, shape.columns.width), palette.style("muted"))
     cursor = body.get("cursor", 0)
     selected_index = cursor if type(cursor) is int else next((i for i, row in enumerate(rows) if row.get("id") == cursor), 0)
     first = max(0, min(len(rows) - max(1, available), selected_index - max(1, available) + 1))
     for index, row in enumerate(rows[first:first + max(0, available)], first):
         text = "  ".join(str(cell) for cell in row.get("cells", []))
         selected = cursor == index or cursor == row.get("id")
-        buffer.put(shape.listing.x, shape.listing.y + index - first,
-                   truncate(text, shape.listing.width).ljust(shape.listing.width), palette.style("text", reverse=selected))
+        buffer.put(listing.x, listing.y + index - first,
+                   truncate(text, listing.width).ljust(listing.width), palette.style("text", reverse=selected))
     for index, line in enumerate(fit_text(str(body.get("detail", "")), shape.detail.width, shape.detail.height)):
         buffer.put(shape.detail.x, shape.detail.y + index, line, palette.style())
     actions = "  ".join(f"{a.get('key', '')} {a.get('label', '')}" for a in body.get("actions", []))
-    buffer.put(shape.actions.x, shape.actions.y, truncate(actions + "  Esc/B back", shape.actions.width), palette.style("hint"))
+    buffer.put(shape.actions.x, shape.actions.y, truncate(actions + "  Esc/B " + str(body.get("back") or "back"), shape.actions.width), palette.style("hint"))
 
 
 def _render_talker(buffer: CellBuffer, body: dict[str, Any], area: Rect, palette: Palette) -> None:

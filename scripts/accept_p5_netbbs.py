@@ -55,7 +55,7 @@ async def accept(root: Path, door_python: Path, show: bool,
                 name = probe.game.players[caller.session.player_id].name
                 assert '界' in name
                 display = caller.caller.screen
-                captures = [f'wake-{width}x{height}-{tier}']
+                captures = [f'wake-record-{width}x{height}-{tier}']
 
                 async def settled() -> None:
                     await wait(lambda: caller.session.ack_revision == caller.session.view_revision)

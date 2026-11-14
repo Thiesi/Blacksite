@@ -44,7 +44,8 @@ def prompt(game: HeadlessServer, client: Any) -> Frame:
 def test_221_a_new_wake_cannot_choose_the_gurney_form(content: Any) -> None:
     game = HeadlessServer(content, character_state={})
     client = game.connect(info(1))
-    game.step()
+    assert game.core.characters.open_record(client.session, 'door')
+    game.step(2)
     act(game, client, Frame('intent', {'name': 'menu_cursor', 'args': {'delta': 1}}))
     act(game, client, Frame('intent', {'name': 'menu_select', 'args': {}}))
     wake = game.core.characters.wakes[client.session.id]
@@ -52,7 +53,7 @@ def test_221_a_new_wake_cannot_choose_the_gurney_form(content: Any) -> None:
         act(game, client, Frame('line', {'id': wake.prompt_id, 'text': name}))
         assert wake.stage == 'name' and wake.error == rules.GURNEY_TYPED
     act(game, client, Frame('line', {'id': wake.prompt_id, 'text': 'Noor'}))
-    assert wake.stage == 'briefing' and wake.name == 'Noor'
+    assert wake.stage == 'saving' and wake.name == 'Noor'
 
 
 @pytest.fixture

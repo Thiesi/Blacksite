@@ -1,6 +1,6 @@
 """Pure character/Wake lifecycle. The I/O layer executes the write outbox."""
 
-from karst41.server.interaction import Interaction
+from karst41.server.interaction import Focus, Interaction, interact, object_interaction
 from copy import deepcopy
 from collections.abc import Callable
 from dataclasses import asdict, replace
@@ -18,7 +18,7 @@ from karst41.server.rules import character as rules
 from karst41.server.rules import combat as combat_rules
 from karst41.server.sessions import Session, Sessions
 from karst41.server.views.delta import ViewStore
-from karst41.server.wake import Wake, menu, wrapped
+from karst41.server.wake import MENU_STAGES, Wake, card_rows, cards, menu, wrapped
 from karst41.server.world.registry import World
 from karst41.server.world.simulation import Avatar, ZoneSimulation
 from karst41.server.world.exits import Travel, complete_paid_pass
@@ -38,6 +38,9 @@ class Characters:
         self.sim = ZoneSimulation(world, sessions, clock, "vatside-wake-hall", keymap)
         self.sim.me_provider = self.me
         self.sim.access_provider = self.access
+        # S48 (#220 beat 7): an unread body cannot leave the hall; the street
+        # door opens the decant record instead, on E or on a step.
+        self.sim.travel_refusal = self.unread_door
         # Game 5.6: S26 supplies committed story/season route permissions.
         self.route_permissions: Callable[[Player], frozenset[str]] = lambda player: frozenset()
         self.item_templates = {row["id"]: row["template"] for row in state.get("items", [])}
@@ -46,9 +49,29 @@ class Characters:
         self.screens: dict[str, tuple[str, int]] = {}
         # Forced rename (game design 4 step 7, #221): session -> (player id, error).
         self.renaming: dict[str, tuple[str, str]] = {}
+        self.card_tables: dict[str, str] = {}  # The table a card menu was opened at (its recruiter target).
+        # S48 (#220): provisional bodies in the Wake Hall, before the decant
+        # record is read. They live in `players` so every engine finds them,
+        # but nothing about them is ever stored (write guards in queue() and
+        # Commerce).
+        self.unread_ids: set[str] = set()
+        # A recruiter card is taken once per identity (technical lead, S48c1):
+        # identity["wake_card"] holds it. Identities from before S48 had the
+        # card menu in their Wake, so one with a stored character counts as
+        # having had its card. Known pre-S48 data gap (technical lead, #241):
+        # an identity whose characters were all deleted before S48 leaves no
+        # stored trace of its creation (deletion removes the player row and
+        # writes no tombstone), so it may take one card again.
+        owners = {p.bbs_user_id for p in self.players.values()}
+        for user, identity in self.identities.items():
+            if user in owners and "wake_card" not in identity:
+                identity["wake_card"] = "legacy"
         self.dirty_screens: set[str] = set()
         self.outbox: list[dict[str, Any]] = []
         self.pending: dict[str, tuple[Player, list[dict[str, Any]]]] = {}
+        # identity["wake_card"] before each pending creation, by player id, so
+        # a failed commit restores it even when the Wake left with the caller.
+        self.pending_cards: dict[str, str] = {}
         self.sleepers: dict[str, tuple[Any, int]] = {}
         self.saved_stamps: dict[str, tuple[Any, ...]] = {}
         self.deleting: set[str] = set()
@@ -76,8 +99,13 @@ class Characters:
                     self.sleepers[player.id] = (actor, clock.now_tick() + int(remaining * TICK_HZ))
                     world.zones[player.zone].activate("sleeper:" + player.id, clock.now_tick())
 
+    def unread(self, pid: str | None) -> bool:
+        """An unread body: a Wake that has not yet read its decant record (S48)."""
+        return pid in self.unread_ids
+
     def owned(self, user: str) -> list[Player]:
-        return sorted((p for p in self.players.values() if p.bbs_user_id == user and p.origin == self.sessions.origin), key=lambda p: p.id)
+        return sorted((p for p in self.players.values() if p.bbs_user_id == user and p.origin == self.sessions.origin
+                       and p.id not in self.unread_ids), key=lambda p: p.id)
 
     def arrive_offline(self, player: Player) -> None:
         travel = player.progress.get("travel")
@@ -119,6 +147,9 @@ class Characters:
                 "open_objects": frozenset(key for key, obj in self.world.zones[player.zone].objects.items() if obj.open),
                 "items": [self.item_templates.get(iid, iid) for iid in player.inventory]}
 
+    def card_taken(self, user: str) -> bool:
+        return bool(self.identity(user).get("wake_card"))
+
     def identity(self, user: str) -> dict[str, Any]:
         if user not in self.identities:
             self.identities[user] = {"first_decanted_at": self.clock.now_utc().isoformat(), "legal_at": None,
@@ -129,6 +160,8 @@ class Characters:
     def queue(self, action: str, user: str, player: Player | None = None, **extra: Any) -> None:
         if action == "save" and player and (player.id in self.deleting or player.id not in self.players):
             return
+        if action in ("save", "delete") and player and player.id in self.unread_ids:
+            return  # S48 write guard 1: an unread body is never stored.
         effect = {"action": action, "user": user, "identity": deepcopy(self.identities[user]),
                   "player": player.record() if player else None, **extra}
         self.outbox.append(effect)
@@ -147,9 +180,102 @@ class Characters:
             self.screens[session.id] = ("characters", 0)
             self.dirty_screens.add(session.id)
         else:
-            self.wakes[session.id] = Wake.restore(identity.get("wake", {}))
-            if self.wakes[session.id].stage == "saving":
-                self.wakes[session.id].stage = "card"
+            pending = next((token for token, (p, _) in self.pending.items() if p.bbs_user_id == session.user_id), None)
+            if pending is not None:
+                # A redial while the record settles waits for the commit (S48c1).
+                wake = Wake.restore(identity.get("wake", {}))
+                wake.stage = "saving"
+                self.wakes[session.id] = wake
+                self.pending[session.id] = self.pending.pop(pending)
+            else:
+                self.enter_hall(session, Wake.restore(identity.get("wake", {})))
+
+    def menu_open(self, session: Session) -> bool:
+        """A Wake menu (record, name, saving) or the card table is over the hall."""
+        wake = self.wakes.get(session.id)
+        return bool(wake and wake.stage in MENU_STAGES) or self.screens.get(session.id, ("",))[0] == "cards"
+
+    def enter_hall(self, session: Session, wake: Wake) -> None:
+        """S48 (#220): wake in the hall with an unread body, before any record.
+
+        The body is held in memory only. Its gurney serial is taken here and
+        kept in the stored wake record, so a redial resumes the same number.
+        """
+        identity = self.identity(session.user_id)
+        if wake.serial and self._serial_taken(wake.serial):
+            # A stored Wake can outlive the creation that used its serial
+            # (review 6872808103): never reuse it over a real character.
+            wake.serial = 0
+        if not wake.serial:
+            self.serial += 1
+            while self._serial_taken(self.serial):
+                self.serial += 1
+            wake.serial = self.serial
+            identity["wake"] = wake.saved()
+            self.queue("identity", session.user_id, serial=self.serial)
+        pid = f"{self.sessions.origin}:player:{wake.serial}"
+        player = Player(pid, self.sessions.origin, session.user_id, session.door_info["handle"],
+                        rules.gurney_name(wake.serial), rules.UNREAD, self.clock.now_utc().isoformat())
+        spawn = self.world.zones[player.zone].template.meta.spawn
+        player.tile = tuple(wake.tile) if wake.tile else spawn
+        player.chits_hand = 0
+        player.health = rules.health_max(player.attributes["vitals"])
+        player.stamina = rules.stamina_max(player.attributes["nerve"], player.attributes["frame"])
+        player.progress = {"memory": {}, "met_talkers": list(wake.met)}
+        if wake.lessons.get("drone") in ("done", "skipped"):
+            player.progress["wake_combat"] = wake.lessons["drone"]
+        self.players[pid] = player
+        self.unread_ids.add(pid)
+        self.wakes[session.id] = wake
+        self._place(session, player)
+
+    def _serial_taken(self, serial: int) -> bool:
+        """A player id already held by a character, a pending creation or another body."""
+        pid = f"{self.sessions.origin}:player:{serial}"
+        return pid in self.players or any(p.id == pid for p, _ in self.pending.values())
+
+    def unread_door(self, session: Session, exit: Any) -> str | None:
+        if not self.unread(session.player_id):
+            return None
+        self.open_record(session, "door")
+        return "Read your decant record first."
+
+    def open_record(self, session: Session, source: str) -> bool:
+        """The decant record opens on a key the caller pressed (#220 beat 9)."""
+        wake = self.wakes.get(session.id)
+        if wake is None or wake.stage != "hall" or not self.unread(session.player_id):
+            return False
+        names = [slug for slug, _ in rules.ARCHETYPES]
+        wake.stage, wake.source, wake.error, wake.dirty = "record", source, "", True
+        wake.cursor = names.index(wake.archetype) if wake.archetype in names else 0
+        return True
+
+    def take_card(self, session: Session, card: str) -> None:
+        """A recruiter card counts when it is taken at the table (#220 ruling 4).
+
+        Once per identity, in the Wake Hall. Before the record it is held in
+        the wake record and applied at creation; afterwards it is applied
+        with the same standing, by an ordinary save (technical lead, S48c1).
+        """
+        if card == "none" or self.card_taken(session.user_id):
+            return
+        wake = self.wakes.get(session.id)
+        if wake is not None and self.unread(session.player_id):
+            wake.card = card
+            self.identities[session.user_id]["wake"] = wake.saved()
+            self.queue("identity", session.user_id)
+            return
+        player = self.players.get(session.player_id)
+        if player is None:
+            return
+        selected = self.content.wake_cards[card]
+        key = selected.faction or card
+        standing = {**player.standing, key: max(player.standing.get(key, 0), rules.CARD_STANDING)}
+        identity = {**deepcopy(self.identity(session.user_id)), "wake_card": card}
+        commerce = self.combat.commerce
+        if not commerce.settle(player, {"standing": standing}, commerce.items, commerce.caches,
+                               commerce.serial, lambda ok: None, identity):
+            raise ValueError("Let the current transfer settle before taking a card.")
 
     def enter(self, session: Session, player: Player) -> None:
         """Attach, unless the name falls under the reserved gurney form (#221).
@@ -186,6 +312,36 @@ class Characters:
         self.renaming[session.id] = (pid, error)
 
     def attach(self, session: Session, player: Player) -> None:
+        self._place(session, player)
+        self.wakes.pop(session.id, None)
+        self.screens.pop(session.id, None)
+        player.progress.pop("offline_at", None)
+        player.update_personhood(self.identity(session.user_id), self.clock.now_utc())
+        self.queue("save", session.user_id, player, immediate=True)
+        self.attached(session, player)
+
+    def promote(self, session: Session, player: Player) -> None:
+        """The record is read: the unread body becomes the character in place."""
+        avatar = self.sim.avatars.get(session.user_id)
+        self.unread_ids.discard(player.id)
+        self.players[player.id] = player
+        if avatar is not None:
+            actor = avatar.actor
+            actor.name, actor.handle = player.name, session.door_info["handle"]
+            actor.health_max = rules.health_max(player.attributes["vitals"])
+            actor.stamina_max = rules.stamina_max(player.attributes["nerve"], player.attributes["frame"])
+            actor.health, actor.stamina = actor.health_max, actor.stamina_max  # Game design 17 (#238).
+            player.zone, player.tile = avatar.zone, actor.position
+            self.world.zones[avatar.zone].revision += 1
+        session.player_name = player.name
+        self.wakes.pop(session.id, None)
+        self.screens.pop(session.id, None)
+        self.identities[player.bbs_user_id]["wake"] = {}
+        player.update_personhood(self.identity(session.user_id), self.clock.now_utc())
+        self.queue("save", session.user_id, player, immediate=True)
+        self.attached(session, player)
+
+    def _place(self, session: Session, player: Player) -> None:
         retained = self.retained_avatar(player)
         sleeper = self.sleepers.pop(player.id, None)
         actor = retained.actor if retained else sleeper[0] if sleeper else player.actor()
@@ -226,12 +382,6 @@ class Characters:
             self.sim.transition(session, avatar, self.clock.now_utc().timestamp(), self.clock.now_tick())
         else:
             self.sim.discover(session, avatar)
-        self.wakes.pop(session.id, None)
-        self.screens.pop(session.id, None)
-        player.progress.pop("offline_at", None)
-        player.update_personhood(self.identity(session.user_id), self.clock.now_utc())
-        self.queue("save", session.user_id, player, immediate=True)
-        self.attached(session, player)
 
     def snapshot(self, player: Player, avatar: Avatar) -> None:
         actor = avatar.actor
@@ -258,11 +408,25 @@ class Characters:
         self.dirty_screens.discard(session.id)
         if session.role != "caller":
             return
-        if wake:
-            self.identities[session.user_id]["wake"] = wake.saved()
-            self.queue("identity", session.user_id)
         player = self.players.get(session.player_id)
         avatar = avatar_override or self.sim.avatars.get(session.user_id)
+        if wake:
+            if player is not None and self.unread(player.id) and avatar is not None:
+                wake.tile = list(avatar.actor.position)
+            self.identities[session.user_id]["wake"] = wake.saved()
+            self.queue("identity", session.user_id)
+        if player is not None and self.unread(player.id):
+            # S48: nothing about an unread body is stored; the redial rebuilds it.
+            for store in (self.sim.views, self.sim.published, self.sim.maps, self.sim.map_opened, self.sim.overlays):
+                store.pop(session.id, None)
+            if avatar is not None and avatar.actor.zone:
+                self.world.zones[avatar.actor.zone].deactivate(session.id, self.clock.now_tick())
+                self.world.leave(avatar.actor)
+            self.sim.avatars.pop(session.user_id, None)
+            self.players.pop(player.id, None)
+            self.unread_ids.discard(player.id)
+            self.saved_stamps.pop(player.id, None)
+            return
         if player is None or avatar is None or avatar.actor.id != player.id:
             return
         self.snapshot(player, avatar)
@@ -318,57 +482,109 @@ class Characters:
             player.health,player.shock = rules.health_max(player.attributes["vitals"]),0
         self.queue("save", player.bbs_user_id, player, immediate=True)
 
-    def create(self, session: Session, card: str) -> None:
+    def create(self, session: Session, card: str | None = None) -> None:
         wake = self.wakes[session.id]
-        if len(self.owned(session.user_id)) >= self.cap or session.id in self.pending:
+        if session.id in self.pending:
             return
+        if len(self.owned(session.user_id)) >= self.cap:
+            wake.stage, wake.error = "name", "This BBS identity already has its characters."
+            return
+        card = wake.card if card is None else card
+        if self.card_taken(session.user_id):
+            card = None  # Once per identity, deletion included (game design 4).
         if not self.name_available(wake.name):
             wake.stage, wake.error = "name", "That name is already in use. Choose another."
             return
         if rules.reserved_name(wake.name):  # A Wake saved before the rule.
             wake.stage, wake.error = "name", rules.GURNEY_TYPED
             return
-        self.serial += 1
-        player = Player(f"{self.sessions.origin}:player:{self.serial}", self.sessions.origin, session.user_id,
+        if not wake.serial:  # A direct creation path (tests) may skip the hall.
+            self.serial += 1
+            while self._serial_taken(self.serial):
+                self.serial += 1
+            wake.serial = self.serial
+        serial = wake.serial
+        player = Player(f"{self.sessions.origin}:player:{serial}", self.sessions.origin, session.user_id,
                         session.door_info["handle"], wake.name, wake.archetype, self.clock.now_utc().isoformat())
-        player.tile = self.world.zones[player.zone].template.meta.spawn
+        body = self.players.get(player.id)
+        if (body is not None and not self.unread(body.id)) or any(p.id == player.id for p, _ in self.pending.values()):
+            # Never build over a stored character or another pending creation.
+            wake.stage, wake.error, wake.dirty = "name", "The record did not settle. Enter tries again.", True
+            return
+        avatar = self.sim.avatars.get(session.user_id)
+        if body is not None and self.unread(body.id) and avatar is not None:
+            player.zone, player.tile = avatar.zone, avatar.actor.position
+            player.settings = deepcopy(body.settings)
+        else:
+            player.tile = self.world.zones[player.zone].template.meta.spawn
         player.health = rules.health_max(player.attributes["vitals"])
         player.stamina = rules.stamina_max(player.attributes["nerve"], player.attributes["frame"])
-        if card != "none":
+        if card and card != "none":
             selected = self.content.wake_cards[card]
             player.standing[selected.faction or card] = rules.CARD_STANDING
         start = self.content.starts[player.archetype]
-        items = grant_starter_kit(player, start, self.content.items, self.serial)
+        items = grant_starter_kit(player, start, self.content.items, serial)
         player.progress = {"points": 0, "known_programs": list(start.programs), "known_hymns": list(start.hymns), "memory": {}}
+        # Held facts from the hall (S48c1), applied at creation.
+        if wake.met:
+            player.progress["met_talkers"] = sorted(set(wake.met))
+        if wake.lessons.get("drone") in ("done", "skipped"):
+            player.progress["wake_combat"] = wake.lessons["drone"]
         player.rig = {"native": bool(start.rig_slots), "slots": (list(start.programs) + [None] * start.rig_slots)[:start.rig_slots]}
         identity = self.identity(session.user_id)
+        self.pending_cards[player.id] = identity.get("wake_card", "")
+        # Saved with the create effect's identity; "" records "none taken yet"
+        # so a restart cannot mistake this identity for a pre-S48 one.
+        identity["wake_card"] = card if card and card != "none" else identity.get("wake_card", "")
         player.clone_debt = identity.get("clone_debt", 0)
         player.update_personhood(identity, self.clock.now_utc())
         self.pending[session.id] = player, items
         self.item_templates.update({item["id"]: item["template"] for item in items})
         wake.stage = "saving"
-        self.queue("create", session.user_id, player, items=items, serial=self.serial, token=session.id)
+        self.queue("create", session.user_id, player, items=items, serial=max(self.serial, serial), token=session.id)
 
     def name_available(self, name: str) -> bool:
         key = rules.name_key(name)
-        return all(rules.name_key(p.name) != key for p in [*self.players.values(), *(v[0] for v in self.pending.values())])
+        return all(rules.name_key(p.name) != key for p in [*self.players.values(), *(v[0] for v in self.pending.values())]
+                   if p.id not in self.unread_ids)
 
     def committed(self, effect: dict[str, Any], error: bool = False) -> None:
         token, action = effect.get("token"), effect["action"]
         session = self.sessions.active.get(token)
         if action == "create":
-            player, _ = self.pending.pop(token)
+            owner = next((sid for sid, (p, _) in self.pending.items() if p.id == effect["player"]["id"]), token)
+            player, _ = self.pending.pop(owner)
+            previous_card = self.pending_cards.pop(player.id, None)
+            session = self.sessions.active.get(owner)
             if error:
-                wake = self.wakes.get(token)
-                if wake:
-                    wake.stage, wake.error, wake.dirty = "card", "The record did not settle. Enter retries; Esc takes no card.", True
+                wake = self.wakes.get(owner)
+                identity = self.identities.get(player.bbs_user_id, {})
+                if previous_card is not None:
+                    # The card was not settled either; it stays held in the
+                    # wake record. Restored from the pending creation, not the
+                    # live Wake, which a disconnect while saving has taken.
+                    identity["wake_card"] = previous_card
+                if wake:  # Back at the name, with the reason; never bodiless, never two bodies.
+                    wake.stage, wake.error, wake.dirty = "name", "The record did not settle. Enter tries again.", True
+                if session is not None and not session.closed and session.player_id is None:
+                    self.wakes.pop(owner, None)
+                    self.enter_hall(session, wake or Wake())
+                    self.wakes[owner].stage, self.wakes[owner].error = "name", "The record did not settle. Enter tries again."
                 return
-            self.players[player.id] = player
             self.items.update({row["id"]: ItemInstance.from_record(row) for row in effect["items"]})
             self.identities[player.bbs_user_id]["wake"] = {}
+            # Durably, even with no session attached: storage must never keep a
+            # used serial in a wake record (review 6872808103).
+            self.queue("identity", player.bbs_user_id)
             if session is not None and not session.closed:
-                self.attach(session, player)
-                session.send(Frame("toast", {"text": "The corridor teaches targeting. Tab selects; F fires; B skips training.", "role": "ui_text", "seconds": 8}))
+                if self.unread(session.player_id) and session.player_id == player.id:
+                    self.promote(session, player)
+                else:
+                    self.players[player.id] = player
+                    self.attach(session, player)
+            else:
+                self.players[player.id] = player
+                self.unread_ids.discard(player.id)
         elif action == "delete":
             self.deleting.discard(effect["player"]["id"])
             if not error:
@@ -391,64 +607,134 @@ class Characters:
                     self.sim.avatars.pop(session.user_id, None)
                     session.player_id = session.subscribed = session.player_name = None
                     self.screens.pop(token, None)
-                    self.wakes[token] = Wake()
+                    self.enter_hall(session, Wake())
                 self.dirty_screens.add(token)
 
     def interaction(self, session: Session, frame: Frame) -> Interaction:
-        if (session.id in self.wakes or session.id in self.screens
+        if (self.menu_open(session) or session.id in self.screens
                 or session.player_id not in self.players):
             return Interaction()
         return self.sim.interaction(session, frame)
+
+    def wake_interaction(self, session: Session, frame: Frame) -> Interaction | None:
+        """E in the hall before the record: the door, the outfitter or the cards (#220)."""
+        if self.menu_open(session) or not interact(frame):
+            return None
+        avatar = self.sim.avatars.get(session.user_id)
+        # The card table, the record door and the outfitter are the Wake Hall's.
+        if (avatar is None or avatar.travel or avatar.actor.zone != Player.zone
+                or avatar.actor.stance == "jacked" or session.id in self.sim.external_views
+                or session.pending_prompts):
+            return None  # Jacked in, the Lattice owns E; the hall is physical.
+        unread = self.unread(session.player_id)
+        zone = self.world.zones[avatar.actor.zone]
+        here = avatar.actor.position
+        near = lambda tile: max(abs(tile[0]-here[0]), abs(tile[1]-here[1])) <= 1
+        for obj in zone.objects.values():
+            if not near(obj.spec.tile):
+                continue
+            if (obj.spec.params.get("recruiters") and not self.card_taken(session.user_id)
+                    and (not unread or self.wakes[session.id].card is None)):
+                # The same hint the recruiter menu gave at this table (#104 labels).
+                return replace(object_interaction(obj), value=("cards", obj.spec.id), kind="wake")
+            if unread and obj.spec.params.get("vendor") == "wake-outfitter":
+                return Interaction(Focus(obj.spec.id, str(obj.spec.params.get("name", "Wake Outfitter")), "ask"),
+                                   ("record", "outfitter"), obj.spec.tile, kind="wake")
+        if unread:
+            for exit in zone.template.meta.exits:
+                if near(exit.tile) and not exit.hidden:
+                    return Interaction(Focus(exit.id, self.world.zones[exit.target_zone].template.meta.name, "go to"),
+                                       ("record", "door"), exit.tile, kind="wake")
+        return None
+
+    def wake_input(self, session: Session, frame: Frame, tick: int, *, interaction: Interaction | None = None) -> bool:
+        """The record, the name prompt and the card table, over the hall (S48c1)."""
+        if interaction is not None and interaction.kind == "wake" and interaction.value:
+            kind, target = interaction.value
+            if kind == "cards":
+                self.screens[session.id] = ("cards", 0)
+                self.card_tables[session.id] = target
+                self.dirty_screens.add(session.id)
+            else:
+                self.open_record(session, target)
+            return True
+        if not self.menu_open(session):
+            return False
+        name = frame.data.get("name", "") if frame.type == "intent" else ""
+        key = frame.data.get("k", "") if frame.type == "key" else ""
+        screen = self.screens.get(session.id, ("", 0))
+        if screen[0] == "cards":
+            ids = card_rows(self.content, not self.unread(session.player_id))
+            count = len(ids)
+            cursor = screen[1]
+            if name == "menu_cursor":
+                delta = frame.data.get("args", {}).get("delta", frame.data.get("args", {}).get("dir", 0))
+                cursor = max(0, min(count - 1, cursor + (-1 if delta in (-1, "up") else 1)))
+                self.screens[session.id] = ("cards", cursor)
+            elif name == "menu_close" or key in ("escape", "b", "B"):
+                self.screens.pop(session.id, None)
+                self._reset_view(session)
+            elif name == "menu_select":
+                card = ids[min(cursor, count - 1)]
+                self.screens.pop(session.id, None)
+                self._reset_view(session)
+                if card == "ask":
+                    # The table's ordinary recruiter menu, by its own checks.
+                    target = self.card_tables.get(session.id, "")
+                    self.factions.input(session, Frame("intent", {"name": "faction.open", "args": {"target": target}}), tick)
+                else:
+                    try:
+                        self.take_card(session, card)
+                    except ValueError as exc:
+                        session.send(Frame("toast", {"text": str(exc), "role": "ui_text", "seconds": 4}))
+            self.dirty_screens.add(session.id)
+            return True
+        wake = self.wakes[session.id]
+        if wake.stage == "saving":
+            return True
+        if wake.stage == "record":
+            count = len(rules.ARCHETYPES)
+            if name == "menu_cursor":
+                delta = frame.data.get("args", {}).get("delta", frame.data.get("args", {}).get("dir", 0))
+                wake.cursor = max(0, min(count - 1, wake.cursor + (-1 if delta in (-1, "up") else 1)))
+            elif name == "menu_close" or key in ("escape", "b", "B"):
+                wake.stage = "hall"  # The record closes; the hall goes on.
+                self._reset_view(session)
+            elif name == "menu_select":
+                if frame.data.get("expected_revision", session.view_revision) != session.view_revision:
+                    wake.dirty = True
+                    return True
+                wake.archetype, wake.stage, wake.error = rules.ARCHETYPES[wake.cursor][0], "name", ""
+        elif wake.stage == "name":
+            if name == "prompt_cancel":
+                wake.stage = "record"
+            elif frame.type == "line" and frame.data["id"] == wake.prompt_id:
+                candidate = rules.normalize_name(frame.data["text"]) or rules.default_name(session.door_info["handle"])
+                if rules.reserved_name(candidate):
+                    wake.error = rules.GURNEY_TYPED
+                elif not rules.valid_name(candidate):
+                    wake.error = "Use 2-24 columns of letters, digits, spaces, - _ '."
+                elif not self.name_available(candidate):
+                    wake.error = "That name is already in use. Choose another."
+                else:
+                    wake.name, wake.error = candidate, ""
+                    self.create(session)
+        wake.dirty = True
+        self.identities[session.user_id]["wake"] = wake.saved()
+        self.queue("identity", session.user_id)
+        return True
+
+    def _reset_view(self, session: Session) -> None:
+        avatar = self.sim.avatars.get(session.user_id)
+        if avatar is not None:
+            self.sim.reset_view(session, avatar)
 
     def input(self, session: Session, frame: Frame, tick: int, *, interaction: Interaction | None = None) -> None:
         name = frame.data.get("name", "") if frame.type == "intent" else ""
         key = frame.data.get("k", "") if frame.type == "key" else ""
         if name == "resync":
             session.needs_full_view = True
-        wake = self.wakes.get(session.id)
-        if wake:
-            if wake.stage == "saving":
-                return
-            if wake.stage in ("archetype", "card"):
-                count = len(rules.ARCHETYPES) if wake.stage == "archetype" else len(self.content.wake_cards) + 1
-                if name == "menu_cursor":
-                    delta = frame.data.get("args", {}).get("delta", frame.data.get("args", {}).get("dir", 0))
-                    wake.cursor = max(0, min(count - 1, wake.cursor + (-1 if delta in (-1, "up") else 1)))
-                elif name == "menu_close" or key in ("escape", "b", "B"):
-                    if wake.stage == "card":
-                        self.create(session, "none")
-                    else:
-                        session.send(Frame("bye", {"reason": "logout", "text": "You leave the hall."}))
-                elif name == "menu_select":
-                    if frame.data.get("expected_revision", session.view_revision) != session.view_revision:
-                        wake.dirty = True
-                        return
-                    if wake.stage == "archetype":
-                        wake.archetype, wake.stage, wake.error = rules.ARCHETYPES[wake.cursor][0], "name", ""
-                    else:
-                        card = [*self.content.wake_cards, "none"][wake.cursor]
-                        self.create(session, card)
-            elif wake.stage == "name":
-                if name == "prompt_cancel":
-                    wake.stage = "archetype"
-                elif frame.type == "line" and frame.data["id"] == wake.prompt_id:
-                    candidate = rules.normalize_name(frame.data["text"]) or rules.default_name(session.door_info["handle"])
-                    if rules.reserved_name(candidate):
-                        wake.error = rules.GURNEY_TYPED
-                    elif not rules.valid_name(candidate):
-                        wake.error = "Use 2-24 columns of letters, digits, spaces, - _ '."
-                    elif not self.name_available(candidate):
-                        wake.error = "That name is already in use. Choose another."
-                    else:
-                        wake.name, wake.stage, wake.screen, wake.page, wake.error = candidate, "briefing", 1, 0, ""
-            elif wake.stage == "briefing" and key:
-                if key in ("escape", "b", "B"):
-                    session.send(Frame("bye", {"reason": "logout", "text": "You leave the hall."}))
-                else:
-                    wake.advance_briefing(self.content, session.caps["width"], session.caps["height"], key)
-            wake.dirty = True
-            self.identities[session.user_id]["wake"] = wake.saved()
-            self.queue("identity", session.user_id)
+        if self.wake_input(session, frame, tick):
             return
         screen, cursor = self.screens.get(session.id, ("", 0))
         player = self.players.get(session.player_id)
@@ -462,7 +748,7 @@ class Characters:
                     self.enter(session, owned[cursor])
                 else:
                     self.screens.pop(session.id, None)
-                    self.wakes[session.id] = Wake()
+                    self.enter_hall(session, Wake.restore(self.identity(session.user_id).get("wake", {})))
             elif name == "menu_close":
                 session.send(Frame("bye", {"reason": "logout", "text": "You leave your place."}))
             self.dirty_screens.add(session.id)
@@ -484,7 +770,10 @@ class Characters:
         if session.id in self.sim.maps or (self.sim.avatars.get(session.user_id) and self.sim.avatars[session.user_id].travel):
             self.sim.input(session, frame, tick, interaction=interaction)
             return
-        if screen == "delete":
+        if screen == "delete" and player.id in self.unread_ids:
+            self.screens[session.id] = ("sheet", 0)  # S48: an unread body has nothing to delete.
+            self.dirty_screens.add(session.id)
+        elif screen == "delete":
             if name == "prompt_cancel":
                 self.screens[session.id] = ("sheet", 0)
             elif frame.type == "line" and frame.data["id"] == "delete:" + player.id:
@@ -503,7 +792,8 @@ class Characters:
                 else:
                     self.screens[session.id] = ("sheet", 0)
             self.dirty_screens.add(session.id)
-        elif name == "delete_character" or (screen == "sheet" and name == "menu_select" and frame.data.get("args", {}).get("key") == "d"):
+        elif (name == "delete_character" or (screen == "sheet" and name == "menu_select" and frame.data.get("args", {}).get("key") == "d")) \
+                and player.id not in self.unread_ids:
             self.screens[session.id] = ("delete", 0)
             self.dirty_screens.add(session.id)
         elif screen == "sheet":
@@ -532,7 +822,8 @@ class Characters:
         equipped = self.combat.weapon(player) if hasattr(self,"combat") else None
         return {"name_role": "player_hostile" if player.marked_until and datetime.fromisoformat(player.marked_until) > self.clock.now_utc() else self.content.factions[player.faction].colour if player.faction in self.content.factions else "title",
                 "faction": player.faction, "rank": self.factions.rank_of(session) if hasattr(self, "factions") else "",
-                "name": player.name, "handle": player.bbs_handle, "grade": player.grade,
+                "name": player.name, "handle": player.bbs_handle,
+                "grade": None if self.unread(player.id) else player.grade,
                 "chits": player.chits_hand, "weapon": self.content.items[equipped[0].template].name if equipped else "None",
                 "in_combat": self.clock.now_utc().timestamp()-player.progress.get("last_exchange",0)<combat_rules.COMBAT_SECONDS,
                 "hit_serial": self.sim.avatars[session.user_id].actor.behaviour.get("hit_serial",0),
@@ -592,16 +883,23 @@ class Characters:
                 self.world.zones[actor.zone].revision += 1
 
     def publish(self, ctx: TickContext) -> None:
-        playing = tuple(s for s in ctx.sessions if s.id not in self.wakes and s.id not in self.screens)
+        playing = tuple(s for s in ctx.sessions if not self.menu_open(s) and s.id not in self.screens)
         self.sim.publish(replace(ctx, sessions=playing))
         for session in ctx.sessions:
             if session.closed or session.role != "caller":
                 continue
             wake = self.wakes.get(session.id)
-            if wake is not None:
+            if wake is not None and wake.stage in MENU_STAGES:
                 if not wake.dirty and not session.needs_full_view:
                     continue
                 body = wake.body(self.content, session.door_info["handle"], session.caps["width"], session.caps["height"])
+                avatar = self.sim.avatars.get(session.user_id)
+                if avatar is not None and avatar.actor.zone in self.world.zones:
+                    # The record opens over the hall: the header carries the
+                    # place's real safety word (game design 2.1), not the
+                    # renderer's default for a Wake with no body.
+                    # The door reads it from the inner body it renders.
+                    body.setdefault("body", {})["body_safety"] = self.world.zones[avatar.actor.zone].safety_at(avatar.actor.position)
                 full = Frame("view", {"rev": session.view_revision + 1, "kind": "wake", "body": body})
                 if session.publish_view(full, None, ctx.tick):
                     wake.dirty = False
@@ -620,6 +918,9 @@ class Characters:
                     body = menu("YOUR CHARACTERS", rows, cursor, "One active body per BBS identity.")
                 elif screen == "sheet":
                     body = self.sheet(player, cursor)
+                elif screen == "cards":
+                    body = cards(self.content, cursor, session.caps["width"], session.caps["height"],
+                                 ask=not self.unread(session.player_id))
                 elif screen == "rename":
                     pid, error = self.renaming.get(session.id, ("", ""))
                     target = self.players.get(pid)
@@ -629,7 +930,7 @@ class Characters:
                     body = {"title": "DELETE CHARACTER" if screen == "delete" else "SAVING", "lines": [
                         "This removes your character and its items.", "Your identity clock and receipts remain.", "Type the exact name: " + player.name],
                         "hint": "Esc cancels", "clear_prompt": screen != "delete"}
-                kind = "menu" if screen in ("characters", "sheet") else "text"
+                kind = "menu" if screen in ("characters", "sheet", "cards") else "text"
                 if session.publish_view(Frame("view", {"rev": session.view_revision + 1, "kind": kind, "body": body}), None, ctx.tick):
                     self.dirty_screens.discard(session.id)
                     if screen == "delete":

@@ -16,6 +16,7 @@ from typing import Any
 
 from accept_s04_netbbs import Database, DatabaseLane, DoorProfile, REPO, TelnetServer, browse_doors, create_door, create_user
 from accept_s06_netbbs import ZoneCaller
+from acceptance_hall import create
 from karst41.server.app import Server
 
 
@@ -62,17 +63,14 @@ async def accept(root: Path, door_python: Path, show: bool) -> None:
         writer.write(b"\xff\xfb\x18\xff\xfa\x18\x00xterm-256color\xff\xf0"); await writer.drain()
         caller=ZoneCaller(lambda:reader.read(65536),send,width,height,visible)
         await caller.expect("Available doors"); await caller.write(b"\x1b[B\r")
-        await caller.until(lambda:"THE WAKE" in caller.screen.screen_text())
+        await caller.until(lambda:"Wake Hall" in caller.screen.screen_text().splitlines()[0])
         async def pump() -> None:
             while chunk:=await reader.read(65536):
                 caller.output.extend(chunk); caller.replay()
         task=asyncio.create_task(pump())
         session=next(s for s in game.sessions.active.values() if s.id in game.wakes)
-        wake=game.wakes[session.id]
-        await caller.write(b"\r"); await wait(lambda:"Name (Enter keeps default):" in caller.screen.screen_text())
-        await caller.write(name.encode()+b"\r"); await wait(lambda:"Briefing" in caller.screen.screen_text())
-        await caller.write(b"s"); await wait(lambda:"Recruiter cards" in caller.screen.screen_text())
-        await caller.write(b"\r"); await wait(lambda:session.player_id in game.players)
+        # S48c1a: wake in the hall, open the record beside the street door, then template and name.
+        await create(service, session, caller.write, name=name)
         await wait(lambda:"Wake Hall" in caller.screen.screen_text().splitlines()[0])
         connection=caller,writer,task,session,game.sim.avatars[session.user_id]
         connections.append(connection)

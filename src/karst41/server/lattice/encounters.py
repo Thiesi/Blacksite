@@ -4,6 +4,7 @@ Defenders return attributed events; reward proposals share Commerce's
 transaction outbox. Caller views expose costs and phases before an action.
 """
 
+from karst41.server.starts import start_for
 from karst41.server.interaction import Focus, Interaction
 from collections.abc import Callable
 from copy import deepcopy
@@ -83,7 +84,7 @@ class Encounters:
 
     def known_programs(self, player: Player) -> set[str]:
         loans = self.game.factions.loan_programs(player) if hasattr(self.game, "factions") else set()
-        return set(self.content.starts[player.archetype].programs) | set(player.progress.get("known_programs", [])) | loans
+        return set(start_for(self.content, player.archetype).programs) | set(player.progress.get("known_programs", [])) | loans
 
     def move_multiplier(self, player: Player) -> float:
         return self.game.progression.modifiers(player).multiplier("cell_move_multiplier")

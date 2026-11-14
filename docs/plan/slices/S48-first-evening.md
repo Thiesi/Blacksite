@@ -321,3 +321,55 @@ re-ranks the plan from both sessions' findings.
   re-pin of anything else.
 - **Acceptance:** Ranke stands at (34,7), off the S09 walk row. S19 opens
   Vesper's board from her talk page's "Work board" offer, the S42 order.
+
+## Implementation notes (PR #241, S48c1a)
+
+The body before the record (#220; game design 4 and 17, canon #238). No
+lessons yet (c1b) and no new lines (c2).
+
+- **You wake in the hall.** A caller with no character gets an unread
+  body at once: gurney name `No. nnnn`, no template, 4 in every attribute
+  (HP and STA follow from `rules.character`), no chits. The gurney serial
+  is taken on waking and kept in the identity's wake record, so a redial
+  is the same number and the same player id.
+- **Nothing about an unread body is stored.** It lives in `players` so
+  every engine finds it, but `Characters.queue` never saves or deletes it
+  (write guard 1), and Commerce refuses it in `ready`, `propose`,
+  `settle` and `can_commit` (write guard 2). Disconnecting drops the body;
+  only the wake record (serial, tile, card, lessons, meetings) is kept.
+- **The record opens on a key the caller presses** (beat 7): E at the
+  street door or at the outfitter. The training terminal stays J-only.
+  Any route to the street refuses an unread body and opens the record.
+  Esc closes the record and the hall goes on.
+- **Reading the record promotes the body in place:** same player id,
+  actor and tile; HP and STA set to the template's maximums (canon #238).
+  The creation commit runs first, as before; until it lands the caller
+  sees "saving".
+- **Rulings applied:** a redial while saving waits for that commit; a
+  failed commit returns to the name with the reason, keeping one body;
+  a Wake saved in a menu resumes in the hall.
+- **Recruiter cards are taken at the table** (E at the cards), once per
+  identity and only in the Wake Hall (technical lead). Before the record
+  the card is held in the wake record and applied at creation; afterwards
+  it settles with the same standing by an ordinary save. An identity that
+  has taken one gets the table's ordinary recruiter menu, and keeps that
+  state after deletion. `identity["wake_card"]` holds it; `""` is "none
+  yet". **Ruling (technical lead):** a pre-S48 identity with a stored
+  character counts as having taken its card, because its Wake had the
+  card menu. There is no "already taken" line; the recruiter menu is the
+  table's ordinary answer. The late taker's narration is c2's.
+- **Interim, until c2:** the briefing pages are no longer shown as
+  screens. Slice §2 moves Vantongeren's lines into the log while you move,
+  which is c2's staging; `wake.briefing` and #216's paging stay for it.
+- **Writer table.** The PR body maps the 38 writers reachable from the hall,
+  checked against this code. Several of the planning table's holds (drone
+  outcome, lift, hit, jacked and jacked out, meetings) are c1b's or not yet
+  built; in c1a those writers are suppressed by the write guards or
+  unreachable. The check found and fixed two leaks: an unread body could
+  start a delete, and a refused death patched another effect. The second fix
+  is interim, because c1b's direct core entry closes that route. A chat
+  report may name an unread body (technical lead): it is moderation, and the
+  report row needs no character row.
+- **Panel:** an unread body sends no grade, so the panel shows name and
+  bars only. The terminal UI §2.4 panel (gurney number, empty grade slot,
+  lease row) is presentation work for the S48 panel pass.

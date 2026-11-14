@@ -78,7 +78,9 @@ async def accept(root: Path, install: Path, python: Path, unit: str) -> None:
                 async with asyncio.timeout(10):
                     while not (rows := await admin("who")):
                         await asyncio.sleep(.05)
-                assert rows[0]["handle"] == "s05caller" and rows[0]["player_name"] is None
+                # S48c1a: a caller with no character wakes as an unread body, and who
+                # names the body by its gurney number (it was None before S48).
+                assert rows[0]["handle"] == "s05caller" and str(rows[0]["player_name"]).startswith("No. ")
                 assert (await admin("status"))["players"] == 1
                 mark = len(caller.output)
                 assert await admin("stop") == {"ok": True}

@@ -422,6 +422,10 @@ def test_arch_5_5_2_unnamed_recruiter_still_opens_selected_board(
     # Input fixture, not movement acceptance: the board's own tile wins.
     place(game, caller, zone.id, board.spec.tile)
     game.commit_commerce()
+    # S48c1a: a character with no card yet gets the card table, still unnamed.
+    choice = game.core.resolve_interaction(caller.session, E)
+    assert choice.route.name == 'wake' and choice.choice.focus is None
+    game.core.characters.identities[caller.session.user_id]['wake_card'] = 'unmoored'
     choice = game.core.resolve_interaction(caller.session, E)
     assert choice.route.name == 'factions' and choice.choice.focus is None
     dispatch(game, caller)

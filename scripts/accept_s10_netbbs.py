@@ -23,6 +23,7 @@ from typing import Any
 
 from accept_s04_netbbs import Database, DatabaseLane, DoorProfile, REPO, TelnetServer, browse_doors, create_door, create_user
 from accept_s06_netbbs import ZoneCaller
+from acceptance_hall import return_to
 from acceptance_renderer import stamp as stamp_renderer
 import karst41
 from karst41.content.loader import ContentTree
@@ -176,7 +177,7 @@ class NativeProbe:
         try:
             # Local Windows venv startup can exceed ten seconds; this is
             # readiness, not the game's input or simulation latency gate.
-            await caller.until(lambda:"THE WAKE" in caller.screen.screen_text(),timeout=30 if os.name == 'nt' else 10)
+            await caller.until(lambda:"Wake Hall" in caller.screen.screen_text().splitlines()[0],timeout=30 if os.name == 'nt' else 10)
         except BaseException:
             (self.root/f"failed-launch-{label}-{width}.ans").write_bytes(caller.output)
             (self.root/f"failed-launch-{label}-{width}.txt").write_text(caller.screen.screen_text(),encoding="utf-8")
@@ -185,28 +186,42 @@ class NativeProbe:
         async def pump() -> None:
             while chunk:=await reader.read(65536): caller.output.extend(chunk);caller.replay()
         task=asyncio.create_task(pump())
-        session=next(s for s in self.game.sessions.active.values() if s.id in self.game.wakes)
+        known={c.session.id for c in self.connections}
+        session=next(s for s in self.game.sessions.active.values() if s.id in self.game.wakes and s.id not in known)
         connection=Connection(caller,writer,task,session,None)
         self.connections.append(connection)
+        # S48c1a creation, with ordinary keys: the caller wakes in the hall
+        # with an unread body (looking at the card table only to capture it;
+        # Esc leaves no card taken), opens the decant record with E at the street door,
+        # chooses a template and a name, all with keys. A disclosed setup step
+        # then puts the body back on its arrival tile (acceptance_hall.return_to),
+        # so every script starts from the same place and state as before.
+        connection.avatar=self.game.sim.avatars[session.user_id]
+        wake=self.game.wakes[session.id]
+        home=connection.avatar.actor.position
+        settled=lambda:session.ack_revision==session.view_revision
+        if capture_cards:
+            await self.walk(connection,(8,9))
+            await wait(settled);await caller.write(b"e")
+            await wait(lambda:'Take no card' in caller.screen.screen_text() and 'Halvard-Ostrom' in caller.screen.screen_text()
+                       and settled())
+            self.save(connection, f'issue67-recruiters-{width}x{height}')
+            await caller.write(b"\x1b")
+            await wait(lambda:session.id not in self.game.screens and settled())
+        await self.walk(connection,(37,16))
+        await wait(settled);await caller.write(b"e")
+        await wait(lambda:wake.stage=="record" and "DECANT RECORD" in caller.screen.screen_text() and settled())
         if capture_wake:
-            await wait(lambda:session.ack_revision==session.view_revision)
-            self.save(connection, f'wake-{width}x{height}-{session.caps["tier"]}')
+            self.save(connection, f'wake-record-{width}x{height}-{session.caps["tier"]}')
         for index in range(archetype):
             await caller.write(b"\x1b[B")
-            await wait(lambda:self.game.wakes[session.id].cursor==index+1)
-        await wait(lambda:session.ack_revision==session.view_revision)
+            await wait(lambda:wake.cursor==index+1)
+        await wait(settled)
         await caller.write(b"\r");await wait(lambda:"Name (Enter keeps default):" in caller.screen.screen_text())
         await caller.write(f"{label}界{width}".encode()+b"\r")
-        await wait(lambda:"Briefing" in caller.screen.screen_text());await caller.write(b"s")
-        await wait(lambda:"Recruiter cards" in caller.screen.screen_text())
-        if capture_cards:
-            await wait(lambda: 'Halvard-Ostrom' in caller.screen.screen_text()
-                and 'Take no card' in caller.screen.screen_text())
-            self.save(connection, f'issue67-recruiters-{width}x{height}')
-        await caller.write(b"\x1b")
-        await wait(lambda:session.player_id in self.game.players)
-        await wait(lambda:"Wake Hall" in caller.screen.screen_text().splitlines()[0])
-        connection.avatar=self.game.sim.avatars[session.user_id]
+        await wait(lambda:session.player_id in self.game.players and not self.game.unread(session.player_id))
+        return_to(self.service,session,home)
+        await wait(lambda:"Wake Hall" in caller.screen.screen_text().splitlines()[0] and settled())
         if sixteen: assert session.caps["tier"]=="16",session.caps
         return connection
 

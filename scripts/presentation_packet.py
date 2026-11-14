@@ -12,6 +12,8 @@ ROOT = Path(__file__).resolve().parents[1]
 CASES = ['tests/door/test_display.py::test_golden_screens',
     'tests/door/test_zone_render.py::test_golden_zone_and_wide_name',
     'tests/door/test_wake_render.py::test_wake_golden_wide_name_scroll_and_character_sheet',
+    'tests/door/test_wake_render.py::test_s48c1_card_table_in_the_hall',
+    'tests/door/test_wake_render.py::test_s48c1_card_table_for_a_finished_character_offers_the_recruiters',
     'tests/door/test_lattice_render.py::test_design_ui_3_all_eleven_layouts_no_overlap_and_wide_peer',
     'tests/door/test_encounter_render.py::test_ui_3_encounter_warnings_costs_and_escape_remain_visible']
 

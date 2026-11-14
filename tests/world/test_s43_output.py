@@ -16,10 +16,14 @@ RAW = BASELINE.read_bytes()
 assert sha256(RAW).hexdigest() == 'd3e5286031f82ea17d8c132ae13a7f21fb89a1566fc1e3df8c0a2136ae32fd12'
 CASES = json.loads(gzip.decompress(RAW))['cases']
 # S43's claim is that the off-loop work does not change what the server does.
-# Content changes after S43 (new actors or text in view) may re-pin a case's
-# frame and body hashes, each with a reason; they may never re-pin the actor
-# trace, the inputs or the successful moves. The original capture stays
-# untouched as evidence (technical lead, #237).
+# Two kinds of change after S43 may re-pin a case's frame and body hashes,
+# each with a reason:
+# - a content change (new actors or text in view; technical lead, #237);
+# - a setup-path change where the bodies match the capture once `base`/`rev`
+#   are normalised, and the traces, inputs and moves are unchanged
+#   (technical lead, S48c1a; checked by scripts/compare_s43_normalised.py).
+# Neither may re-pin the actor trace, the inputs or the successful moves. The
+# original capture stays untouched as evidence.
 REPINS = json.loads((BASELINE.parent/'content-repins.json').read_text(encoding='utf-8'))
 REPINNABLE = ('frame_sha256', 'body_sha256')
 

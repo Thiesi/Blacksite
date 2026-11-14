@@ -1,0 +1,54 @@
+{
+  "repins": [
+    {
+      "added": "wake-record-80x24-16.txt",
+      "replaces": "../p5-client-foundations/wake-80x24-16.txt",
+      "reason": "S48c1a: the template choice is the decant record, opened with E beside the street door; the old Wake screen is gone",
+      "pr": 241
+    },
+    {
+      "added": "wake-hall-80x24-16.txt",
+      "replaces": "../p5-client-foundations/wake-hall-80x24-16.txt",
+      "reason": "S48c1a: the character is made in the hall, so the hall frame follows the record; it also shows every change merged since the historical P5 packet (e.g. #237's dormant Wake Hall orderlies)",
+      "pr": 241
+    },
+    {
+      "added": "wake-record-80x24-256.txt",
+      "replaces": "../p5-client-foundations/wake-80x24-256.txt",
+      "reason": "S48c1a: the template choice is the decant record, opened with E beside the street door; the old Wake screen is gone",
+      "pr": 241
+    },
+    {
+      "added": "wake-hall-80x24-256.txt",
+      "replaces": "../p5-client-foundations/wake-hall-80x24-256.txt",
+      "reason": "S48c1a: the character is made in the hall, so the hall frame follows the record; it also shows every change merged since the historical P5 packet (e.g. #237's dormant Wake Hall orderlies)",
+      "pr": 241
+    },
+    {
+      "added": "wake-record-80x24-truecolor.txt",
+      "replaces": "../p5-client-foundations/wake-80x24-truecolor.txt",
+      "reason": "S48c1a: the template choice is the decant record, opened with E beside the street door; the old Wake screen is gone",
+      "pr": 241
+    },
+    {
+      "added": "wake-hall-80x24-truecolor.txt",
+      "replaces": "../p5-client-foundations/wake-hall-80x24-truecolor.txt",
+      "reason": "S48c1a: the character is made in the hall, so the hall frame follows the record; it also shows every change merged since the historical P5 packet (e.g. #237's dormant Wake Hall orderlies)",
+      "pr": 241
+    },
+    {
+      "added": "issue67-recruiters-80x24-256.txt",
+      "replaces": "issue67-recruiters-80x24 (CI artifact, issue 67 display acceptance; never committed)",
+      "reason": "S48c1a: the recruiter cards are taken at the table in the hall, not as a Wake stage",
+      "pr": 241
+    },
+    {
+      "added": "issue67-recruiters-132x50-256.txt",
+      "replaces": "issue67-recruiters-132x50 (CI artifact, issue 67 display acceptance; never committed)",
+      "reason": "S48c1a: the recruiter cards are taken at the table in the hall, not as a Wake stage",
+      "pr": 241
+    }
+  ],
+  "originals_untouched": true,
+  "presentation_acceptance": "pending (presentation lead, from this record)"
+}
