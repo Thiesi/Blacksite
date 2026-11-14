@@ -342,3 +342,56 @@ def test_a_held_card_survives_a_failed_commit_after_a_disconnect_while_saving(ga
     create(game, back, card="unmoored")
     player = manager.players[back.session.player_id]
     assert player.standing == {"unmoored": rules.CARD_STANDING} and manager.identity("1")["wake_card"] == "unmoored"
+
+
+def test_a_stored_serial_that_outlived_its_creation_is_never_reused(game: HeadlessServer) -> None:
+    # Review 6872808103: drop while saving, the creation commits with no
+    # session, then a restart. The stored wake must not carry the used serial,
+    # and a stale one must never overwrite the real character.
+    client = game.connect()
+    manager = game.core.characters
+    create(game, client, name="Noor", commit=False)
+    game.core.sessions.disconnect(client.session)
+    game.step()
+    used = int(next(p for p, _ in manager.pending.values()).id.rsplit(":", 1)[1])
+    effects = game.commit_characters()  # Commits the creation and anything it queues.
+    game.step()
+    created = next(i for i, e in enumerate(effects) if e["action"] == "create")
+    stored = [e for e in effects[created + 1:] if e["action"] == "identity" and e["user"] == "1"]
+    assert stored and stored[-1]["identity"]["wake"] == {}  # Durable, with no session attached.
+    snapshot = state(game)
+    snapshot["cap"] = 2
+    stale = {"stage": "hall", "serial": used}  # As if an older store still held it.
+    snapshot["identities"]["1"]["wake"] = stale
+    restarted = HeadlessServer(game.core.loop.content, character_state=snapshot)
+    again = restarted.core.characters
+    noor = next(p for p in again.players.values() if p.name == "Noor")
+    record = noor.record()
+    back = restarted.connect()
+    restarted.step()
+    assert again.screens[back.session.id][0] == "characters"
+    act(restarted, back, Frame("intent", {"name": "menu_cursor", "args": {"delta": 1}}))
+    act(restarted, back, Frame("intent", {"name": "menu_select", "args": {}}))
+    body = again.players[back.session.player_id]
+    assert again.unread(body.id) and body.id != noor.id
+    assert again.players[noor.id] is noor and noor.record() == record and not again.unread(noor.id)
+
+
+def test_create_refuses_to_build_over_a_stored_character(game: HeadlessServer) -> None:
+    client = game.connect()
+    manager = game.core.characters
+    create(game, client, name="Noor")
+    noor = manager.players[client.session.player_id]
+    manager.cap = 2
+    game.core.sessions.disconnect(client.session)
+    back = game.connect()
+    game.step()
+    act(game, back, Frame("intent", {"name": "menu_cursor", "args": {"delta": 1}}))
+    act(game, back, Frame("intent", {"name": "menu_select", "args": {}}))
+    wake = manager.wakes[back.session.id]
+    wake.serial = int(noor.id.rsplit(":", 1)[1])  # A stale serial reaching create().
+    wake.name, wake.archetype = "Other", "ghost"
+    manager.create(back.session, "none")
+    assert wake.stage == "name" and "did not settle" in wake.error
+    assert manager.players[noor.id] is noor and noor.name == "Noor"
+    assert not any(e["action"] == "create" and e["player"]["name"] == "Other" for e in manager.outbox)

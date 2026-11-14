@@ -202,9 +202,13 @@ class Characters:
         kept in the stored wake record, so a redial resumes the same number.
         """
         identity = self.identity(session.user_id)
+        if wake.serial and self._serial_taken(wake.serial):
+            # A stored Wake can outlive the creation that used its serial
+            # (review 6872808103): never reuse it over a real character.
+            wake.serial = 0
         if not wake.serial:
             self.serial += 1
-            while f"{self.sessions.origin}:player:{self.serial}" in self.players:
+            while self._serial_taken(self.serial):
                 self.serial += 1
             wake.serial = self.serial
             identity["wake"] = wake.saved()
@@ -224,6 +228,11 @@ class Characters:
         self.unread_ids.add(pid)
         self.wakes[session.id] = wake
         self._place(session, player)
+
+    def _serial_taken(self, serial: int) -> bool:
+        """A player id already held by a character, a pending creation or another body."""
+        pid = f"{self.sessions.origin}:player:{serial}"
+        return pid in self.players or any(p.id == pid for p, _ in self.pending.values())
 
     def unread_door(self, session: Session, exit: Any) -> str | None:
         if not self.unread(session.player_id):
@@ -491,11 +500,17 @@ class Characters:
             return
         if not wake.serial:  # A direct creation path (tests) may skip the hall.
             self.serial += 1
+            while self._serial_taken(self.serial):
+                self.serial += 1
             wake.serial = self.serial
         serial = wake.serial
         player = Player(f"{self.sessions.origin}:player:{serial}", self.sessions.origin, session.user_id,
                         session.door_info["handle"], wake.name, wake.archetype, self.clock.now_utc().isoformat())
         body = self.players.get(player.id)
+        if (body is not None and not self.unread(body.id)) or any(p.id == player.id for p, _ in self.pending.values()):
+            # Never build over a stored character or another pending creation.
+            wake.stage, wake.error, wake.dirty = "name", "The record did not settle. Enter tries again.", True
+            return
         avatar = self.sim.avatars.get(session.user_id)
         if body is not None and self.unread(body.id) and avatar is not None:
             player.zone, player.tile = avatar.zone, avatar.actor.position
@@ -558,6 +573,9 @@ class Characters:
                 return
             self.items.update({row["id"]: ItemInstance.from_record(row) for row in effect["items"]})
             self.identities[player.bbs_user_id]["wake"] = {}
+            # Durably, even with no session attached: storage must never keep a
+            # used serial in a wake record (review 6872808103).
+            self.queue("identity", player.bbs_user_id)
             if session is not None and not session.closed:
                 if self.unread(session.player_id) and session.player_id == player.id:
                     self.promote(session, player)
